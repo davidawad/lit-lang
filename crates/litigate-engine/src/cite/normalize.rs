@@ -106,6 +106,21 @@ impl<'a> CiteGrammar<'a> {
             shorthands: &syntax.shorthands,
         }
     }
+
+    /// The rule prefix `piece` is written with and the text after it,
+    /// when `piece` continues one of this grammar's rule prefixes without
+    /// a word break (`SDCL 15-6-4(` then `z)`): text there is the
+    /// citation's own section or pinpoint, never prose that merely starts
+    /// with the prefix (`RCFC Appendix A`).
+    #[must_use]
+    pub fn glued_rule_prefix<'p>(&self, piece: &'p str) -> Option<(&'a str, &'p str)> {
+        self.rules.iter().find_map(|&(prefix, _)| {
+            let rest = &piece[prefix_byte_len(piece, prefix)?..];
+            let glued = !prefix.ends_with(char::is_whitespace)
+                && rest.starts_with(|c: char| !c.is_whitespace());
+            glued.then_some((prefix, rest))
+        })
+    }
 }
 
 /// Split `raw` into one [`CiteRef`] per citation and normalize each under

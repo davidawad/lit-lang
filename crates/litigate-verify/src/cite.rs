@@ -197,26 +197,37 @@ fn within(inner: &Span, outer: &Span) -> bool {
         && (inner.end_line, inner.end_col) <= (outer.end_line, outer.end_col)
 }
 
-/// Rule or statute citations that do not normalize to a heading at all.
+/// Rule or statute citations that do not normalize to a heading at all,
+/// and citations that continue a declared rule prefix with a section or
+/// pinpoint that does not parse (`SDCL 15-6-4(z)` under the prefix
+/// `SDCL 15-6-4(`): the parser leaves those out of scope, so nothing else
+/// would check them.
 fn unkeyed(
     citations: &Citations<'_>,
     text: &str,
     span: &Span,
     cx: &Context<'_>,
 ) -> Vec<Diagnostic> {
-    parse_cite_string(text, &CiteGrammar::new(citations.syntax()))
+    let grammar = CiteGrammar::new(citations.syntax());
+    parse_cite_string(text, &grammar)
         .into_iter()
-        .filter(|r| !r.is_out_of_scope() && r.heading().is_none())
-        .map(|r| {
-            emit(
-                C::UnboundCite,
-                cx.profile,
-                span.clone(),
+        .filter_map(|r| {
+            let why = if r.is_out_of_scope() {
+                let (prefix, rest) = grammar.glued_rule_prefix(&r.raw)?;
+                format!(
+                    "`{}` in `{text}` is written with the rule prefix `{prefix}`, but its \
+                     section and pinpoint `{rest}` do not parse",
+                    r.raw
+                )
+            } else if r.heading().is_none() {
                 format!(
                     "`{}` in `{text}` does not normalize to a source heading",
                     r.raw
-                ),
-            )
+                )
+            } else {
+                return None;
+            };
+            Some(emit(C::UnboundCite, cx.profile, span.clone(), why))
         })
         .collect()
 }

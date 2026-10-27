@@ -46,6 +46,8 @@ extend-exclude = [
                                # (OCR/PDF text), same reason as sources/*.txt
     "sources/*/*.txt",  # per-forum vendored rule text (lg-f3q8): the courts' own
                         # misspellings ("BANRUPTCY") are theirs, kept verbatim
+    "sources/**/original/",  # as-served originals (lg-f3q8.80): the courts' bytes,
+                             # markup and misspellings included, never edited
     # litigate tests and snapshots misspell names on purpose to exercise
     # did-you-mean suggestions and unresolved-name diagnostics.
     "crates/litigate-*/tests/",

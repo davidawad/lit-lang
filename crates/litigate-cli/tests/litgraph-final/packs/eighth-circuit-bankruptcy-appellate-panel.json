@@ -1,0 +1,52 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "solve",
+  "result": {
+    "start": {
+      "id": "eighth-circuit-bankruptcy-appellate-panel::notice-filed",
+      "label": "Bankruptcy order appealed"
+    },
+    "value": 0.0,
+    "converged": true,
+    "iterations": 0,
+    "fee_shift_rounds": 0,
+    "best_line": [
+      {
+        "id": "eighth-circuit-bankruptcy-appellate-panel::edge-notice-filed-dismissed",
+        "label": "Notice filed outside the period",
+        "from": "eighth-circuit-bankruptcy-appellate-panel::notice-filed",
+        "to": "eighth-circuit-bankruptcy-appellate-panel::dismissed",
+        "role": "self",
+        "authority": "FRBP 8002(a)(1)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 0.0
+      }
+    ],
+    "policy_size": 2,
+    "policy": null,
+    "values": null
+  },
+  "warnings": [
+    {
+      "code": "payoff-not-authored",
+      "count": 1,
+      "example": "2 terminal(s) use a heuristic or zero payoff; override with scenario.payoffs or author `payoff` in the pack",
+      "at": []
+    },
+    {
+      "code": "probability-fill",
+      "count": 6,
+      "example": "5 of 5 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "eighth-circuit-bankruptcy-appellate-panel::appealability",
+        "eighth-circuit-bankruptcy-appellate-panel::argument",
+        "eighth-circuit-bankruptcy-appellate-panel::circuit-handoff",
+        "eighth-circuit-bankruptcy-appellate-panel::decision",
+        "eighth-circuit-bankruptcy-appellate-panel::district-handoff",
+        "eighth-circuit-bankruptcy-appellate-panel::rehearing"
+      ]
+    }
+  ]
+}

@@ -28,6 +28,9 @@
 //! residual fills, at the same value and best line. An engine change is
 //! re-recorded the same way: `ptab-calibrated-institution` after explain at
 //! a base node reports its replayed flag context and the others (4f4fad3).
+//! The eighth-circuit bankruptcy appellate panel package was added on main
+//! after litgraph-final, so its initial solve has no legacy JSON baseline;
+//! its current compiled solve is recorded here to keep every package covered.
 // Test helpers below may unwrap: a panic is the failed assertion.
 #![allow(clippy::unwrap_used)]
 mod support;

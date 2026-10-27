@@ -16,8 +16,8 @@ of this file's own entries below).
   Regulations) — no copyright restriction on redistributing the text.
 - **Small where it is embedded.** The binary embeds only the `.txt`
   extractions, the same way `packs/*.json` is. The as-served originals sit
-  beside them in `original/` (see "Originals" below), PDFs in git LFS, and
-  are never embedded.
+  beside them in `original/` (see "Originals" below) as plain git blobs,
+  and are never embedded.
 - **Deterministic, offline tests.** `cargo nextest run` must not need network
   access (repo quality bar). A `litgraph sources fetch` command hitting
   live .gov/Cornell endpoints in CI would be slow and flaky (rate limits,
@@ -73,12 +73,12 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 ## Originals
 
 Every vendored extraction keeps the bytes the court or agency served
-(lg-f3q8.80): `<dir>/original/<extraction stem>.<pdf|html|docx>`, with PDF
-and DOCX in git LFS (`.gitattributes`). The extraction's entry records it
+(lg-f3q8.80): `<dir>/original/<extraction stem>.<pdf|html|docx>`, as
+plain git blobs (no LFS, lg-f3q8.85). The extraction's entry records it
 with one line, ``- Original: `<path>` as served (sha256 <original>);
 extraction sha256 <extraction>.`` Paths are relative to `sources/`.
-`scripts/ci-scoped provenance` checks an added original against that line
-(an LFS pointer by its oid). Entries live in the forum's own
+`scripts/ci-scoped provenance` checks an added original against that line.
+Entries live in the forum's own
 `sources/<forum>/PROVENANCE.md`; this file records top-level files only.
 
 ## Files

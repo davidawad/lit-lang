@@ -204,14 +204,9 @@ original_entry() {
   ' "$@"
 }
 
-# A file -> its sha256: the oid of a git-lfs pointer (a pod clones with
-# GIT_LFS_SKIP_SMUDGE=1, so an LFS original is its pointer there), else
-# the bytes' own.
+# A file -> its sha256. Originals are plain git blobs (no LFS, lg-f3q8.85).
 content_sha256() {
-  local oid
-  oid="$(head -c 200 "$1" | awk 'NR == 1 && $0 != "version https://git-lfs.github.com/spec/v1" { exit }
-    /^oid sha256:/ { sub(/^oid sha256:/, ""); print; exit }')"
-  if [ -n "$oid" ]; then echo "$oid"; else sha256sum "$1" | cut -d' ' -f1; fi
+  sha256sum "$1" | cut -d' ' -f1
 }
 
 # One file (repo-relative, under sources/) -> 0, or the reasons it fails.
@@ -648,18 +643,12 @@ provenance_self_test() {
      entry fed-x/new.txt https://example.gov/new.pdf 2026-10-27 '$m' - >> sources/fed-x/PROVENANCE.md
      entry fed-x/other.txt https://example.gov/o.pdf 2026-10-27 '$m' $ok >> sources/fed-x/PROVENANCE.md"
   # As-served originals (lg-f3q8.80): recorded by an "- Original:" line on
-  # the extraction's entry; an LFS pointer counts by its oid.
-  local pdf ptr
+  # the extraction's entry.
+  local pdf
   pdf="$(sha '%PDF new rule')"
-  ptr="version https://git-lfs.github.com/spec/v1\noid sha256:$pdf\nsize 14\n"
   pcase pass "an original recorded on its extraction's entry" yes \
     "printf 'new rule' > sources/fed-x/new.txt && mkdir -p sources/fed-x/original
      printf '%%PDF new rule' > sources/fed-x/original/new.pdf
-     entry fed-x/new.txt https://example.gov/new.pdf 2026-10-27 '$m' $ok >> sources/fed-x/PROVENANCE.md
-     printf -- '- Original: \`fed-x/original/new.pdf\` as served (sha256 $pdf).\n' >> sources/fed-x/PROVENANCE.md"
-  pcase pass "an original that is an LFS pointer counts by its oid" yes \
-    "printf 'new rule' > sources/fed-x/new.txt && mkdir -p sources/fed-x/original
-     printf '$ptr' > sources/fed-x/original/new.pdf
      entry fed-x/new.txt https://example.gov/new.pdf 2026-10-27 '$m' $ok >> sources/fed-x/PROVENANCE.md
      printf -- '- Original: \`fed-x/original/new.pdf\` as served (sha256 $pdf).\n' >> sources/fed-x/PROVENANCE.md"
   pcase pass "a top-level original is recorded in sources/PROVENANCE.md" yes \

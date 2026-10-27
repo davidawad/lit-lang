@@ -331,16 +331,20 @@ Type         = Ident, [ "<", Type, { ",", Type }, ">" ] | RefinedType ;   (* Ref
 
 ### 3.2 Matters (`.case`)
 
-Items appear in exactly this order. Only `uses`, `as_of`, and `summary` are
-required.
+Items appear in exactly this order. Only `as_of`, `summary`, and `uses` or
+`forum` are required.
 
 ```ebnf
-CaseFile     = [ EditionDecl ], "case", Ident, UsesDecl, { UsesDecl }, "as_of", Date, [ "known_at", Date ],
+CaseFile     = [ EditionDecl ], "case", Ident,
+               ( ForumDecl, [ GoverningLawDecl ], { UsesDecl } | [ GoverningLawDecl ], UsesDecl, { UsesDecl } ),
+               "as_of", Date, [ "known_at", Date ],
                "summary", String, [ "notes", String ], { SourceDecl },
                [ "start", Ref ], [ PerspectiveDecl ], [ PartiesBlock ],
                [ EventsBlock ], [ FactsBlock ], [ StakesBlock ], [ BeliefsBlock ],
                [ AnalysisBlock ] ;
 UsesDecl     = "uses", UseItem, { ",", UseItem } ;
+ForumDecl    = "forum", UseItem ;
+GoverningLawDecl = "governing_law", UseItem ;
 UseItem      = Ident, VersionReq ;
 VersionReq   = ("^" | "~" | ">=" | "="), SemVer ;      (* tokens adjacent, no trivia *)
 SourceDecl   = "source", String, [ "{", { ("url", String | "as_of", (Date | Hole)), Sep },
@@ -761,6 +765,7 @@ known_at = "2025-01-01"         # default corpus date
 unknown_before = "2009-12-01"   # optional; no declaration's law is encoded before (§5.4)
 counting = "frcp6"              # optional; Pack.counting (v3): a counting-rule id
 kind = "base"                   # optional; the instrument class (§5.7), default base
+law = "procedure"               # optional; procedure (default) | substantive (§5.6)
 
 [package.instrument]            # required exactly when kind is not base (§5.7)
 source = "order"                # a [sources.*] key with a vendored `path`
@@ -1858,6 +1863,29 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
 - `uses` pins resolve through `Lit.lock`. A matter may write one `uses`
   per package or list several in one; the pins are every `uses`, in
   order. The first package is primary: unqualified refs resolve in it.
+- Erie composition (lg-fg2h.3). `forum P` names the procedure the court
+  applies: it is pinned like a `uses`, before every `uses`, so it is
+  primary. `governing_law S` names the package rooting the tree of the
+  sovereign whose substantive law governs: `S` and its transitive
+  dependencies, each pinned through `Lit.lock` under the requirement its
+  dependent states. The packages of that tree whose `Lit.toml` has `law =
+  "substantive"` join the matter's pins after its own, in breadth-first
+  order (a federal court in diversity applies the governing state's
+  substantive law, Erie R. Co. v. Tompkins, 304 U.S. 64 (1938), and a
+  limitations period is substantive for that purpose, Guaranty Trust Co.
+  v. York, 326 U.S. 99 (1945)); the tree's procedure packages never join
+  it (Hanna v. Plumer, 380 U.S. 460 (1965)). L4015, leaving the matter
+  unresolved: a `forum` with `law = "substantive"`, a `governing_law`
+  with no `forum`, a tree with no substantive package, or a `uses` of a
+  procedure package of the tree other than the forum. A substantive
+  layer's deadlines replay as any used package's, so its period runs from
+  its own trigger and is answered by an edge naming it (an `anytime` edge
+  of the layer: commencing the action, which the governing law dates,
+  Walker v. Armco Steel Corp., 446 U.S. 740 (1980)). Which state's law
+  governs is the matter's to name; the forum state's choice-of-law rules
+  (Klaxon Co. v. Stentor Elec. Mfg. Co., 313 U.S. 487 (1941)) are not
+  applied. `litigate lock` pins the forum and the governing law's tree
+  like `uses`.
 - An event constructor is named among the matter's vocabulary: the used
   packages and their dependencies. A bare `Name` is the primary
   package's, else the one package of the vocabulary declaring it (an
@@ -2903,6 +2931,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | | | L4012 | extension by an interpretation |
 | | | L4013 | late under a claim-processing rule |
 | | | L4014 | concurrent tracks at as_of |
+| | | L4015 | invalid governing law (Erie composition) |
 | L2002 | invalid operation | L5001 | verification failed (generic) |
 | L2003 | invalid distribution | L5002 | hole in strict |
 | L2004 | unit mismatch | L5003 | unreachable node |

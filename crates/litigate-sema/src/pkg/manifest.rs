@@ -3,7 +3,7 @@
 use super::semver::{Requirement, Version};
 use crate::db::span::{Report, TextRange};
 use crate::hir::{
-    ActorRole, CiteSyntax, Instrument, Interval, Kind, Manifest, Scope, SourceBinding,
+    ActorRole, CiteSyntax, Instrument, Interval, Kind, Law, Manifest, Scope, SourceBinding,
 };
 use crate::types::date;
 use litigate_base::DiagnosticCode as C;
@@ -71,6 +71,8 @@ struct RawPackage {
     description: Option<Spanned<String>>,
     jurisdiction: Option<Spanned<String>>,
     counting: Option<Spanned<String>>,
+    // Procedure (default) or substantive law (SPEC §4.1, §5.6).
+    law: Option<Spanned<String>>,
     in_force: Spanned<String>,
     in_force_until: Option<Spanned<String>>,
     known_at: Spanned<String>,
@@ -224,6 +226,7 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
             )
         });
     }
+    let law = law(&mut c, p);
     let (kind, instrument) = kind(&mut c, p, &roles, &sources);
     let families = family::check(&mut c, p.name.get_ref(), &raw.family);
     if !c.reports.is_empty() {
@@ -257,11 +260,29 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
         kind,
         instrument,
         families,
+        law,
     };
     Ok(ParsedManifest {
         manifest,
         dependency_paths,
     })
+}
+
+/// `package.law`: `procedure` (the default) or `substantive`.
+fn law(c: &mut Checker, p: &RawPackage) -> Law {
+    let Some(law) = &p.law else {
+        return Law::Procedure;
+    };
+    match law.get_ref().as_str() {
+        "procedure" => Law::Procedure,
+        "substantive" => Law::Substantive,
+        other => {
+            c.check(false, range(law), || {
+                format!("`law` must be `procedure` or `substantive`, found `{other}`")
+            });
+            Law::Procedure
+        }
+    }
 }
 
 fn package_table(c: &mut Checker, p: &RawPackage) {
@@ -334,6 +355,7 @@ fn identity(c: &mut Checker, text: &str, raw: &RawManifest) -> bool {
         ("description", p.description.as_ref().map(range)),
         ("jurisdiction", p.jurisdiction.as_ref().map(range)),
         ("counting", p.counting.as_ref().map(range)),
+        ("law", p.law.as_ref().map(range)),
         ("cite_syntax", raw.cite_syntax.as_ref().map(range)),
         ("sources", raw.sources.0.first().map(|(_, s)| range(s))),
         ("kind", p.kind.as_ref().map(range)),

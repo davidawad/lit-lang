@@ -9,6 +9,8 @@ use litigate_base::DiagnosticCode;
 
 /// `(keyword, node kind, repeatable)` in the required §3.2 order.
 const ORDER: &[(SyntaxKind, SyntaxKind, bool)] = &[
+    (KwForum, ForumDecl, false),
+    (KwGoverningLaw, GoverningLawDecl, false),
     (KwUses, UsesDecl, true),
     (KwAsOf, AsOfDecl, false),
     (KwKnownAt, KnownAtDecl, false),
@@ -25,9 +27,10 @@ const ORDER: &[(SyntaxKind, SyntaxKind, bool)] = &[
     (KwAnalysis, AnalysisBlock, false),
 ];
 
-const REQUIRED: [SyntaxKind; 3] = [KwUses, KwAsOf, KwSummary];
+const REQUIRED: [SyntaxKind; 2] = [KwAsOf, KwSummary];
 
-/// `CaseFile = "case" Ident UsesDecl {UsesDecl} "as_of" Date ...`.
+/// `CaseFile = "case" Ident ( ForumDecl [GoverningLawDecl] {UsesDecl}
+/// | UsesDecl {UsesDecl} ) "as_of" Date ...`.
 pub(crate) fn case_file(p: &mut Parser<'_>) {
     p.start_root(CaseFile);
     super::edition(p);
@@ -64,10 +67,17 @@ pub(crate) fn case_file(p: &mut Parser<'_>) {
             p.bump_error();
         }
     }
-    let missing: Vec<std::string::String> = REQUIRED
-        .iter()
-        .filter(|kw| !seen.contains(kw))
-        .filter_map(|kw| kw.text().map(|text| format!("`{text}`")))
+    // A matter names its packages in `uses`, or names its forum.
+    let packages =
+        (!seen.contains(&KwUses) && !seen.contains(&KwForum)).then(|| "`uses`".to_owned());
+    let missing: Vec<std::string::String> = packages
+        .into_iter()
+        .chain(
+            REQUIRED
+                .iter()
+                .filter(|kw| !seen.contains(kw))
+                .filter_map(|kw| kw.text().map(|text| format!("`{text}`"))),
+        )
         .collect();
     if !missing.is_empty() {
         p.push_error(SyntaxError::new(
@@ -84,7 +94,7 @@ fn order_error(p: &mut Parser<'_>, kw: SyntaxKind, repeated: bool) {
         format!("`{text}` may appear only once")
     } else {
         format!(
-            "`{text}` is out of order: case items go uses, as_of, known_at, summary, notes, \
+            "`{text}` is out of order: case items go forum, governing_law, uses, as_of, known_at, summary, notes, \
              source, start, perspective, parties, events, facts, stakes, beliefs, analysis"
         )
     };
@@ -101,6 +111,13 @@ fn case_item(p: &mut Parser<'_>, kw: SyntaxKind, kind: SyntaxKind) {
     p.bump_as(kw);
     match kw {
         KwUses => uses(p),
+        KwForum | KwGoverningLaw => {
+            if p.at(Ident) {
+                use_item(p);
+            } else {
+                p.error_expected(&[Ident]);
+            }
+        }
         KwAsOf | KwKnownAt => {
             require(p, date, &[Date]);
         }
@@ -152,14 +169,19 @@ fn uses(p: &mut Parser<'_>) {
             p.error_expected(&[Ident]);
             return;
         }
-        p.start(UseItem);
-        p.bump();
-        version_req(p);
-        p.finish();
+        use_item(p);
         if !p.eat(Comma) {
             return;
         }
     }
+}
+
+/// One `pkg version-req` pin, at its name.
+fn use_item(p: &mut Parser<'_>) {
+    p.start(UseItem);
+    p.bump();
+    version_req(p);
+    p.finish();
 }
 
 /// `("^" | "~" | ">=" | "=") MAJOR.MINOR.PATCH[-pre]`, tokens adjacent.

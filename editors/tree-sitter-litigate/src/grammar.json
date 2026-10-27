@@ -6004,11 +6004,61 @@
           }
         },
         {
-          "type": "REPEAT1",
-          "content": {
-            "type": "SYMBOL",
-            "name": "uses_decl"
-          }
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "SYMBOL",
+                  "name": "forum_decl"
+                },
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "governing_law_decl"
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                },
+                {
+                  "type": "REPEAT",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "uses_decl"
+                  }
+                }
+              ]
+            },
+            {
+              "type": "SEQ",
+              "members": [
+                {
+                  "type": "CHOICE",
+                  "members": [
+                    {
+                      "type": "SYMBOL",
+                      "name": "governing_law_decl"
+                    },
+                    {
+                      "type": "BLANK"
+                    }
+                  ]
+                },
+                {
+                  "type": "REPEAT1",
+                  "content": {
+                    "type": "SYMBOL",
+                    "name": "uses_decl"
+                  }
+                }
+              ]
+            }
+          ]
         },
         {
           "type": "SYMBOL",
@@ -6144,6 +6194,32 @@
               "type": "BLANK"
             }
           ]
+        }
+      ]
+    },
+    "forum_decl": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "forum"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "use_item"
+        }
+      ]
+    },
+    "governing_law_decl": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "governing_law"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "use_item"
         }
       ]
     },

@@ -1,0 +1,35 @@
+module erie-nj-court-rules.pleading
+
+/// New Jersey's court rules rank below its statutes.
+authority Statute > StateCourtRule
+
+/// The summons and complaint are served on the defendant (R. 4:4).
+event SummonsServed()
+/// The defendant serves an answer.
+event AnswerServed()
+
+/// Calendar days, the day of service excluded and the last day included.
+/// The fixture encodes none of New Jersey's legal holidays.
+counting nj-days cite "N.J. Ct. R. 4:6-1" { exclude_trigger_day, include_last_day, holidays nj-none }
+calendar nj-none { }
+
+/// R. 4:6-1(a): an answer within 35 days after service of the summons and
+/// complaint on that defendant.
+deadline answer-period: 35.days after SummonsServed() counted_by nj-days cite "N.J. Ct. R. 4:6-1"
+
+test "an answer is due 35 days after service" cite "N.J. Ct. R. 4:6-1"
+{
+  given SummonsServed() on 2024-03-05
+  expect deadline(answer-period) == 2024-04-09
+}
+
+start served
+
+decision served: "Answer or default" by Defendant
+{
+  answer "Answer" -> answered { event AnswerServed(), within answer-period }
+  default "Default" -> defaulted
+}
+
+terminal answered: "Answered" { payoff 0.usd }
+terminal defaulted: "Defaulted" { payoff 0.usd }

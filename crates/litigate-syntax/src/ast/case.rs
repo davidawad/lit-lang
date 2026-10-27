@@ -1,8 +1,9 @@
 //! Accessors for `.case` matters.
 use super::{
     child, children, fields_of, token, tokens, CallExpr, CaseBlock, CaseEvent, CaseFile, Cite,
-    Field, Literal, Node, ObserveDecl, PartyDecl, PerspectiveDecl, PriorDecl, RecordExpr,
-    RecordField, Ref, SourceDecl, StartDecl, Token, UseItem, UsesDecl, VersionReq,
+    Field, ForumDecl, GoverningLawDecl, Literal, Node, ObserveDecl, PartyDecl, PerspectiveDecl,
+    PriorDecl, RecordExpr, RecordField, Ref, SourceDecl, StartDecl, Token, UseItem, UsesDecl,
+    VersionReq,
 };
 use crate::syntax_kind::SyntaxKind;
 
@@ -30,14 +31,36 @@ impl CaseFile {
         child(self.syntax())
     }
 
-    /// Every pin of every `uses` declaration, in order (the first is the
-    /// primary package): a matter may write one `uses` per package.
+    /// Every pin the matter writes, in order: the `forum` (the primary
+    /// package), every pin of every `uses` declaration (a matter may write
+    /// one `uses` per package), then the `governing_law`.
     #[must_use]
     pub fn use_items(&self) -> Vec<UseItem> {
-        children::<UsesDecl>(self.syntax())
-            .iter()
-            .flat_map(UsesDecl::items)
+        let forum = self.forum().and_then(|f| child::<UseItem>(f.syntax()));
+        let law = self
+            .governing_law()
+            .and_then(|g| child::<UseItem>(g.syntax()));
+        forum
+            .into_iter()
+            .chain(
+                children::<UsesDecl>(self.syntax())
+                    .iter()
+                    .flat_map(UsesDecl::items),
+            )
+            .chain(law)
             .collect()
+    }
+
+    /// The `forum` declaration.
+    #[must_use]
+    pub fn forum(&self) -> Option<ForumDecl> {
+        child(self.syntax())
+    }
+
+    /// The `governing_law` declaration.
+    #[must_use]
+    pub fn governing_law(&self) -> Option<GoverningLawDecl> {
+        child(self.syntax())
     }
 
     /// `as_of` date.

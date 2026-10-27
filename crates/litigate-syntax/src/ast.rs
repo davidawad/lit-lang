@@ -140,6 +140,8 @@ ast_node!(MatchArm, MatchArm);
 ast_node!(GivenStmt, GivenStmt);
 ast_node!(ExpectStmt, ExpectStmt);
 ast_node!(UseItem, UseItem);
+ast_node!(ForumDecl, ForumDecl);
+ast_node!(GoverningLawDecl, GoverningLawDecl);
 ast_node!(VersionReq, VersionReq);
 ast_node!(SourceDecl, SourceDecl);
 ast_node!(ObserveDecl, ObserveDecl);

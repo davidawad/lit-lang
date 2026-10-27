@@ -1,0 +1,33 @@
+# Erie composition fixture (SPEC §5.6, lg-fg2h.3): New Jersey's tree, rooted
+# at its Rules of Court (procedure), with its limitations statute
+# (substantive) as a dependency. A matter whose governing law is this tree
+# takes only the substantive layer: in federal court the forum's procedure
+# governs, so the 35-day answer period of R. 4:6-1(a) never applies there.
+[package]
+name = "erie-nj-court-rules"
+version = "1.0.0"
+language = 1
+pack_id = "erie-nj-court-rules"
+forum = "nj"
+authority = "StateCourtRule"
+title = "Erie fixture: New Jersey Rules of Court"
+in_force = "2009-12-01"
+known_at = "2026-09-01"
+
+[package.roles]
+Plaintiff = "self"
+Defendant = "opponent"
+Court = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../../../lit/core" }
+erie-nj-limitations = { version = "^1.0.0", path = "../erie-nj-limitations" }
+
+[sources.nj-rules]
+title = "New Jersey Rules of Court (cited civil rules), amendments effective on or before Sept. 1, 2026"
+url = "https://www.njcourts.gov/attorneys/rules-of-court"
+path = "sources/nj-superior-law/rules-of-court-cited-2026-09-01.txt"
+path_sha256 = "5421bdb6bac199cfd0872d7591a33dfdd3b8bec216156e3ea7aaeb5ebf3f9088"
+as_of = "2026-09-01"
+cite_prefixes = ["N.J. Ct. R."]
+section_heading = "N.J. Ct. R. {n}"

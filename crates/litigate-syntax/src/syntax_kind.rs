@@ -147,6 +147,7 @@ syntax_kinds! {
         KwSpawn = "spawn", KwJoins = "joins", KwAnytime = "anytime",
         KwLock = "lock", KwAgainst = "against", KwRuleIndex = "Rule",
         KwRecharacterize = "recharacterize", KwInvalidate = "invalidate",
+        KwGoverningLaw = "governing_law",
     }
     nodes {
         SourceFile => "Root of a `.lit` module.",
@@ -209,6 +210,8 @@ syntax_kinds! {
         MatchArm => "`pattern => expr`.",
         UsesDecl => "`uses pkg ^1.0.0, ...`.",
         UseItem => "One `pkg version-req` pin.",
+        ForumDecl => "`forum pkg ^1.0.0`: the matter's procedure package, primary.",
+        GoverningLawDecl => "`governing_law pkg ^1.0.0`: the package rooting the tree whose substantive layers govern.",
         AsOfDecl => "`as_of date`.",
         KnownAtDecl => "`known_at date` in a case.",
         SummaryDecl => "`summary \"...\"`.",

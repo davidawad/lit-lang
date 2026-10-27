@@ -116,6 +116,34 @@ pub struct Manifest {
     /// declares (docs/litigate/CHANGE.md §3).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub families: Vec<Family>,
+    /// Which law the package states (`package.law`, SPEC §4.1): a court's
+    /// procedure, or a sovereign's substantive law, which a matter's
+    /// `governing_law` composes with its forum's procedure (SPEC §5.6).
+    #[serde(default, skip_serializing_if = "Law::is_procedure")]
+    pub law: Law,
+}
+
+/// What a package's law governs (SPEC §4.1, §5.6): under Erie R. Co. v.
+/// Tompkins, 304 U.S. 64 (1938), a federal court applies its own
+/// procedure and the governing state's substantive law, and a statute of
+/// limitations is substantive for that purpose (Guaranty Trust Co. v.
+/// York, 326 U.S. 99 (1945)).
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "kebab-case")]
+pub enum Law {
+    /// A court's rules of procedure: the forum's govern.
+    #[default]
+    Procedure,
+    /// A sovereign's substantive law: the governing law's govern.
+    Substantive,
+}
+
+impl Law {
+    /// Whether this is [`Law::Procedure`].
+    #[must_use]
+    pub fn is_procedure(&self) -> bool {
+        *self == Self::Procedure
+    }
 }
 
 /// `[[cite_syntax.*]]` tables in declared order.

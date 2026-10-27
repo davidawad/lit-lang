@@ -1,0 +1,33 @@
+module erie-nj-limitations.limitations
+
+/// The cause of action accrues.
+event ClaimAccrued()
+/// The action is commenced.
+event ActionCommenced()
+
+/// Calendar years from the day of accrual, to its anniversary. The fixture
+/// encodes none of New Jersey's legal holidays.
+counting nj-years cite "N.J.S.A. 2A:14-1" { exclude_trigger_day, include_last_day, end_of_month clamp, holidays nj-none }
+calendar nj-none { }
+
+/// N.J.S.A. 2A:14-1: an action for recovery upon a contractual claim or
+/// liability "shall be commenced within six years next after the cause of
+/// any such action shall have accrued".
+deadline contract-period: 6.years after ClaimAccrued() counted_by nj-years cite "N.J.S.A. 2A:14-1"
+
+test "a contract action is commenced within six years of accrual" cite "N.J.S.A. 2A:14-1"
+{
+  given ClaimAccrued() on 2018-01-10
+  expect deadline(contract-period) == 2024-01-10
+}
+
+start accrued
+
+/// Commencing the action answers the limitations period wherever the
+/// matter stands.
+state accrued: "Claim accrued" by Plaintiff
+{
+  commence "Commence the action" -> commenced { event ActionCommenced(), within contract-period, anytime }
+}
+
+terminal commenced: "Action commenced" { payoff 0.usd }

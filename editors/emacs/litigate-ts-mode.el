@@ -76,7 +76,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
     "state" "decision" "chance" "terminal" "link" "instance" "rule"
     "deadline" "counting" "calendar" "transition" "authority" "default"
     "exception" "test" "limit" "grant" "recharacterize" "invalidate"
-    "case" "uses" "as_of" "known_at" "summary" "notes" "source" "perspective"
+    "case" "governing_law" "uses" "as_of" "known_at" "summary" "notes" "source" "perspective"
     "parties" "events" "facts" "stakes" "beliefs" "prior" "observe" "analysis")
   "Keywords that open a declaration.")
 

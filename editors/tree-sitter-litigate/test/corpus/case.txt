@@ -52,6 +52,40 @@ summary "s"
         (string_content)))))
 
 ================================================================================
+Forum and governing law
+================================================================================
+
+case diversity
+forum frcp ^1.0.0
+governing_law nj ^1.0.0
+uses sdny-local ^1.0.0
+as_of 2025-06-01
+summary "s"
+
+---
+
+(source_file
+  (case_file
+    (identifier)
+    (forum_decl
+      (use_item
+        (identifier)
+        (version_req)))
+    (governing_law_decl
+      (use_item
+        (identifier)
+        (version_req)))
+    (uses_decl
+      (use_item
+        (identifier)
+        (version_req)))
+    (as_of_decl
+      (date))
+    (summary_decl
+      (string
+        (string_content)))))
+
+================================================================================
 Full case
 ================================================================================
 

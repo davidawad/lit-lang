@@ -16,8 +16,8 @@ use crate::db::parse::tree::{Expr as Src, ExprKind as S, RefPath};
 use crate::db::parse::{ref_path, Lower};
 use crate::db::span::{to_span, Report, TextRange};
 use crate::hir::{
-    ActorRole, Analysis, Case, CaseSource, Event, EventParty, Money, Package, PackagePin, Party,
-    Perspective,
+    ActorRole, Analysis, Case, CaseSource, Event, EventParty, Law, Money, Package, PackagePin,
+    Party, Perspective,
 };
 use crate::pkg::lock::{LockFile, LockedPackage};
 use crate::pkg::semver::{Requirement, Version};
@@ -140,6 +140,15 @@ fn children(node: &SyntaxNode, kind: K) -> impl Iterator<Item = SyntaxNode> {
 /// The value expression node of a `RecordField` (after its `:`).
 fn field_value(f: &SyntaxNode) -> Option<SyntaxNode> {
     crate::db::parse::nodes_after(f, K::Colon).find(|n| crate::db::parse::is_expr(n.kind()))
+}
+
+/// A `UseItem`'s package name and version requirement text.
+fn use_item(item: &SyntaxNode) -> (String, String) {
+    let name = token_text(item, K::Ident).map_or_else(String::new, |t| t.0);
+    let req = child(item, K::VersionReq).map_or_else(String::new, |v| {
+        v.text().to_string().split_whitespace().collect::<String>()
+    });
+    (name, req)
 }
 
 /// Resolves `.case` source `text` (repository-relative `file`) against the
@@ -274,31 +283,138 @@ impl<'g> R<'_, 'g> {
         })
     }
 
-    /// `uses` pins through `Lit.lock`; builds the graph of used packages.
+    /// The matter's pins through `Lit.lock`: the `forum` (primary), every
+    /// `uses`, then the substantive layers of the `governing_law` (SPEC
+    /// §5.6); builds the graph of used packages.
     fn uses(&mut self, root: &SyntaxNode) -> Option<Vec<crate::hir::PackagePin>> {
         // A matter may write one `uses` per package: the pins are every
-        // declaration's, in order.
-        let decls: Vec<SyntaxNode> = children(root, K::UsesDecl).collect();
-        let items: Vec<SyntaxNode> = (!decls.is_empty())
-            .then(|| decls.iter().flat_map(|u| children(u, K::UseItem)).collect())?;
+        // declaration's, in order, after the forum's.
+        let forum = child(root, K::ForumDecl).and_then(|f| child(&f, K::UseItem));
+        let items: Vec<SyntaxNode> = forum
+            .iter()
+            .cloned()
+            .chain(children(root, K::UsesDecl).flat_map(|u| children(&u, K::UseItem)))
+            .collect();
+        if items.is_empty() {
+            return None;
+        }
         let mut pins = Vec::new();
         let mut used = Vec::new();
-        for item in &items {
+        let mut at = Vec::new();
+        for (i, item) in items.iter().enumerate() {
             let range = sig(item);
             self.spans.uses.push(Some(self.s(range)));
             // The parser starts a `UseItem` at its name and always gives it
             // a `VersionReq` (empty after a syntax error).
-            let name = token_text(item, K::Ident).map_or_else(String::new, |t| t.0);
-            let req_text = child(item, K::VersionReq).map_or_else(String::new, |v| {
-                v.text().to_string().split_whitespace().collect::<String>()
-            });
+            let (name, req_text) = use_item(item);
             if let Some((pin, pkg)) = self.pin(&name, &req_text, range) {
+                if i == 0 && forum.is_some() && pkg.manifest.law == Law::Substantive {
+                    self.out.push(Report::new(
+                        C::InvalidGoverningLaw,
+                        range,
+                        format!("forum `{name}` states substantive law: a forum is the procedure the court applies"),
+                    ));
+                }
                 pins.push(pin);
                 used.push(pkg);
+                at.push(range);
             }
+        }
+        if let Some(law) = child(root, K::GoverningLawDecl) {
+            self.governing_law(&law, forum.is_some(), &at, &mut pins, &mut used);
         }
         (!used.is_empty()).then(|| self.graph = Some(Graph::new(used, self.packages)));
         Some(pins)
+    }
+
+    /// Erie composition (SPEC §5.6): the `governing_law` package and its
+    /// dependencies are the governing sovereign's tree; its substantive
+    /// layers (`law = "substantive"`) join the matter after its own pins,
+    /// and its procedure never governs, since the forum applies its own
+    /// (Hanna v. Plumer, 380 U.S. 460 (1965)).
+    fn governing_law(
+        &mut self,
+        decl: &SyntaxNode,
+        forum: bool,
+        at: &[TextRange],
+        pins: &mut Vec<crate::hir::PackagePin>,
+        used: &mut Vec<&'g Package>,
+    ) {
+        let Some(item) = child(decl, K::UseItem) else {
+            return;
+        };
+        let range = sig(&item);
+        let (name, req_text) = use_item(&item);
+        if !forum {
+            self.out.push(Report::new(
+                C::InvalidGoverningLaw,
+                sig(decl),
+                format!(
+                    "`governing_law {name}` needs a `forum`: the forum's procedure governs with it"
+                ),
+            ));
+            return;
+        }
+        let Some((_, root)) = self.pin(&name, &req_text, range) else {
+            return;
+        };
+        // The tree, breadth first: each package pinned through the lock
+        // under the requirement its dependent states.
+        let mut tree: Vec<&'g Package> = vec![root];
+        let mut next = 0;
+        while let Some(&p) = tree.get(next) {
+            next += 1;
+            for (dep, req) in &p.manifest.dependencies {
+                if tree.iter().any(|t| &t.manifest.name == dep) {
+                    continue;
+                }
+                if let Some((_, pkg)) = self.pin(dep, req, range) {
+                    tree.push(pkg);
+                }
+            }
+        }
+        // The forum (first) governs its own procedure.
+        for (pkg, &at) in used.iter().zip(at).skip(1) {
+            let in_tree = tree.iter().any(|t| t.manifest.name == pkg.manifest.name);
+            if in_tree && pkg.manifest.law == Law::Procedure {
+                self.out.push(
+                    Report::new(
+                        C::InvalidGoverningLaw,
+                        at,
+                        format!(
+                            "`{}` is procedure of the governing law `{name}`: the forum applies its own procedure",
+                            pkg.manifest.name
+                        ),
+                    )
+                    .note("only the governing law's substantive layers join the matter"),
+                );
+            }
+        }
+        let layers: Vec<&'g Package> = tree
+            .into_iter()
+            .filter(|p| p.manifest.law == Law::Substantive)
+            .collect();
+        if layers.is_empty() {
+            self.out.push(Report::new(
+                C::InvalidGoverningLaw,
+                range,
+                format!("governing law `{name}` states no substantive law: no package of its tree has `law = \"substantive\"`"),
+            ));
+            return;
+        }
+        for pkg in layers {
+            if used.iter().any(|u| u.manifest.name == pkg.manifest.name) {
+                continue;
+            }
+            self.spans.uses.push(Some(self.s(range)));
+            pins.push(PackagePin {
+                name: pkg.manifest.name.clone(),
+                pack_id: pkg.manifest.pack_id.clone(),
+                version: pkg.manifest.version.clone(),
+                content_hash: pkg.digest.clone(),
+            });
+            used.push(pkg);
+        }
     }
 
     /// One `uses` item pinned through `Lit.lock`: the pin and the loaded

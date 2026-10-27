@@ -21,6 +21,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   package. `--check` writes nothing and exits 2 when the committed table
   is stale; `just coverage-check` runs it in `just ci`, `just ci-scoped`
   and the CI `lit-sync` job.
+- **A diversity matter runs its forum's procedure with the governing
+  state's substantive law** (lg-fg2h.3; SPEC §5.6). A `.case` may name
+  `forum P ^x.y.z` (the primary procedure package) and `governing_law S
+  ^x.y.z` (the package rooting the governing sovereign's tree); the
+  resolver adds the tree's packages whose `Lit.toml` says `law =
+  "substantive"` to the matter's pins and leaves its procedure out. A
+  substantive forum, a governing law with no forum or no substantive
+  layer, or a `uses` of the tree's procedure is L4015. The test fixture
+  (`crates/litigate-sema/tests/fixtures/erie`) is an S.D.N.Y. contract
+  action under New Jersey's six-year period (N.J.S.A. 2A:14-1): FRCP
+  12(a)'s 21-day answer governs, not R. 4:6-1(a)'s 35 days, and a
+  commencement after six years is L4002.
 - **An act can be legal from any posture while its own deadline is open**
   (lg-xqu8; SPEC §5.6). An edge marked `anytime` (`oppose "File the
   opposition" -> fee-clock { event OppositionFiled(), within

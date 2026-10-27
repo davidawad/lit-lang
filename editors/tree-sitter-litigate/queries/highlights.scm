@@ -12,7 +12,7 @@
   "deadline" "counting" "calendar" "transition" "authority" "default"
   "exception" "test" "limit" "grant"
   "recharacterize" "invalidate"
-  "case" "uses" "as_of" "known_at" "summary" "notes" "source" "perspective"
+  "case" "governing_law" "uses" "as_of" "known_at" "summary" "notes" "source" "perspective"
   "parties" "events" "facts" "stakes" "beliefs" "prior" "observe" "analysis"
 ] @keyword
 

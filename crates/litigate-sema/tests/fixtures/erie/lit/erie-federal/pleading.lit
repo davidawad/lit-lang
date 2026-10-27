@@ -1,0 +1,41 @@
+module erie-federal.pleading
+
+import core.frcp6.{ frcp6 }
+
+/// The complaint is filed (FRCP 3).
+event ComplaintFiled()
+/// The summons and complaint are served on the defendant (FRCP 4).
+event ProcessServed()
+/// The defendant serves an answer.
+event AnswerServed()
+
+/// FRCP 12(a)(1)(A)(i): an answer within 21 days after being served with
+/// the summons and complaint.
+deadline answer-period: 21.days after ProcessServed() counted_by frcp6 cite "FRCP 12(a)(1)(A)(i)"
+
+test "an answer is due 21 days after service" cite "FRCP 12(a)(1)(A)(i)"
+{
+  given ProcessServed() on 2024-03-05
+  expect deadline(answer-period) == 2024-03-26
+}
+
+start pre-filing
+
+state pre-filing: "Before the complaint" by Plaintiff
+{
+  file "File the complaint" -> service { event ComplaintFiled() }
+}
+
+state service: "Serve process" by Plaintiff
+{
+  serve "Serve the summons and complaint" -> answer-due { event ProcessServed() }
+}
+
+decision answer-due: "Answer or default" by Defendant
+{
+  answer "Answer" -> pleadings-closed { event AnswerServed(), within answer-period }
+  default "Default" -> default-entered
+}
+
+terminal pleadings-closed: "Pleadings closed" { payoff 0.usd }
+terminal default-entered: "Default entered" { payoff 0.usd }

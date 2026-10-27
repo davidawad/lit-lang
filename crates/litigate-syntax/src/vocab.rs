@@ -41,6 +41,8 @@ pub const RESERVED_ITEM_KEYWORDS: &[SyntaxKind] = &[];
 /// Top-level item keywords of `.case` files.
 pub const CASE_ITEM_KEYWORDS: &[SyntaxKind] = &[
     KwCase,
+    KwForum,
+    KwGoverningLaw,
     KwUses,
     KwAsOf,
     KwKnownAt,

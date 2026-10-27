@@ -1,0 +1,30 @@
+# Erie composition fixture (SPEC §5.6, lg-fg2h.3): the forum's procedure, a
+# district court's pleading stage under the FRCP. It states no limitations
+# period: in a diversity case the governing state's law sets it.
+[package]
+name = "erie-federal"
+version = "1.0.0"
+language = 1
+pack_id = "erie-federal"
+forum = "frcp"
+authority = "FederalRule"
+title = "Erie fixture: federal pleading"
+in_force = "2009-12-01"
+known_at = "2024-12-01"
+
+[package.roles]
+Plaintiff = "self"
+Defendant = "opponent"
+Court = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../../../lit/core" }
+
+[sources.frcp]
+title = "Federal Rules of Civil Procedure"
+url = "https://www.law.cornell.edu/rules/frcp"
+path = "sources/frcp.txt"
+path_sha256 = "cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44"
+as_of = "2024-12-01"
+cite_prefixes = ["FRCP"]
+section_heading = "Rule {n}"

@@ -342,7 +342,8 @@ lit-sync: merge-drivers
       docs/litigate/examples/timelines/Lit.lock docs/litigate/examples/timelines/*/Lit.lock \
       docs/litigate/validation/Lit.lock docs/litigate/validation/cases/replay/Lit.lock \
       docs/litigate/validation/cases/Lit.lock docs/litigate/change/*/Lit.lock \
-      docs/litigate/change/Lit.lock; do
+      docs/litigate/change/Lit.lock crates/litigate-sema/tests/fixtures/erie/lit/*/Lit.lock \
+      crates/litigate-sema/tests/fixtures/erie/cases/Lit.lock; do
       "${lit[@]}" lock "${lockfile%/Lit.lock}" > /dev/null
     done
     "${lit[@]}" lock cases > /dev/null

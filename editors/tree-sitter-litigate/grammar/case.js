@@ -12,7 +12,10 @@ module.exports = {
   case_file: $ => seq(
     'case',
     field('name', $.identifier),
-    repeat1($.uses_decl),
+    choice(
+      seq($.forum_decl, optional($.governing_law_decl), repeat($.uses_decl)),
+      seq(optional($.governing_law_decl), repeat1($.uses_decl)),
+    ),
     $.as_of_decl,
     optional($.known_at_decl),
     $.summary_decl,
@@ -27,6 +30,12 @@ module.exports = {
     optional($.beliefs_block),
     optional($.analysis_block),
   ),
+
+  // `forum pkg ^1.0.0`: the procedure package, primary (SPEC §5.6).
+  forum_decl: $ => seq('forum', $.use_item),
+
+  // `governing_law pkg ^1.0.0`: the tree whose substantive layers govern.
+  governing_law_decl: $ => seq('governing_law', $.use_item),
 
   uses_decl: $ => seq('uses', $.use_item, repeat(seq(',', $.use_item))),
 

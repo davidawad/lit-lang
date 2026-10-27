@@ -124,6 +124,7 @@ registry! {
     ExtensionByInterpretation = "L4012" => "An extension is licensed by a grant that rests on an interpretation: the extension stands, with a warning naming the interpretation",
     LateClaimProcessing = "L4013" => "An act missed a claim-processing deadline: it is untimely if the opponent objects, and the objection may be forfeited",
     ConcurrentTracks = "L4014" => "The matter is on more than one track at as_of: a lowered scenario starts at the first, since the engine walks one track",
+    InvalidGoverningLaw = "L4015" => "A matter's forum is substantive law, its governing law states no substantive law or has no forum, or it uses a procedure package of its governing law",
     VerificationFailed = "L5001" => "A required static verification obligation was not discharged",
     HoleInStrict = "L5002" => "Strict profile does not permit unresolved holes",
     UnreachableNode = "L5003" => "A node is not reachable from start and is not tagged entry",

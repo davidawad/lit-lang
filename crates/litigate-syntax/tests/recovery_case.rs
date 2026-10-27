@@ -4,7 +4,7 @@ mod support;
 use litigate_syntax::{parse, FileKind};
 use support::diag::check_all;
 
-const ITEMS: &str = "one of `case`, `uses`, `as_of`, `known_at`, `summary`, `notes`, `source`, \
+const ITEMS: &str = "one of `case`, `forum`, `governing_law`, `uses`, `as_of`, `known_at`, `summary`, `notes`, `source`, \
                      `start`, `perspective`, `parties`, `events`, `facts`, `stakes`, `beliefs`, \
                      or `analysis`";
 

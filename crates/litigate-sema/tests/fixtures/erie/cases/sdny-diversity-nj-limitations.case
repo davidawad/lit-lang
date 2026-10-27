@@ -1,0 +1,22 @@
+case sdny-diversity-nj-limitations
+forum erie-federal ^1.0.0
+governing_law erie-nj-court-rules ^1.0.0
+as_of 2024-06-03
+summary "A contract action in the Southern District of New York in diversity, under New Jersey limitations law: commenced within its six years."
+notes "Synthetic facts, no real parties. The court applies its own procedure (FRCP 12(a)'s 21-day answer, not New Jersey's 35 days under R. 4:6-1(a)) and New Jersey's six-year contract period (N.J.S.A. 2A:14-1), which is substantive under Guaranty Trust Co. v. York, 326 U.S. 99 (1945); New York's choice of law (Klaxon Co. v. Stentor Elec. Mfg. Co., 313 U.S. 487 (1941)) is taken as selecting it and is not modelled. Under Walker v. Armco Steel Corp., 446 U.S. 740 (1980), state law says when the action is commenced for the state period, so commencement is its own event."
+
+perspective acme
+
+parties {
+  acme: Plaintiff Corporation
+  globex: Defendant Corporation
+}
+
+events {
+  accrued: 2018-01-10 erie-nj-limitations::ClaimAccrued() on acme
+  commenced: 2023-11-20 docket 1 erie-nj-limitations::ActionCommenced() by acme
+  filed: 2023-11-20 docket 2 ComplaintFiled() by acme
+  served: 2023-11-27 docket 3 ProcessServed() on globex
+}
+
+stakes { pleadings-closed: 0.usd, default-entered: 0.usd }

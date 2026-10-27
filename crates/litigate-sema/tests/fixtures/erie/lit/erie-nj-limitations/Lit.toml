@@ -1,0 +1,29 @@
+# Erie composition fixture (SPEC §5.6, lg-fg2h.3): New Jersey's limitations
+# law for a contract claim, substantive for Erie purposes (Guaranty Trust
+# Co. v. York, 326 U.S. 99 (1945)). The statute's text is not vendored; the
+# binding names the official compilation.
+[package]
+name = "erie-nj-limitations"
+version = "1.0.0"
+language = 1
+pack_id = "erie-nj-limitations"
+forum = "nj"
+authority = "Statute"
+law = "substantive"
+title = "Erie fixture: N.J.S.A. 2A:14-1"
+in_force = "2009-12-01"
+known_at = "2026-09-01"
+
+[package.roles]
+Plaintiff = "self"
+Defendant = "opponent"
+Court = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../../../lit/core" }
+
+[sources.njsa]
+title = "New Jersey Statutes Annotated, Title 2A"
+url = "https://lis.njleg.state.nj.us/"
+as_of = "2026-09-01"
+cite_prefixes = ["N.J.S.A."]

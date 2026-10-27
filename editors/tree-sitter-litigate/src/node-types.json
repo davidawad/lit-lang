@@ -793,6 +793,14 @@
           "named": true
         },
         {
+          "type": "forum_decl",
+          "named": true
+        },
+        {
+          "type": "governing_law_decl",
+          "named": true
+        },
+        {
           "type": "known_at_decl",
           "named": true
         },
@@ -2266,6 +2274,21 @@
     }
   },
   {
+    "type": "forum_decl",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "use_item",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "fraction",
     "named": true,
     "fields": {
@@ -2322,6 +2345,21 @@
       "types": [
         {
           "type": "by_clause",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "governing_law_decl",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "use_item",
           "named": true
         }
       ]
@@ -5568,6 +5606,10 @@
   },
   {
     "type": "given",
+    "named": false
+  },
+  {
+    "type": "governing_law",
     "named": false
   },
   {

@@ -103,7 +103,7 @@ cov-html:
 # lines, regions and branches -- no exclusions. (litigate-engine, the
 # renamed litgraph engine, keeps the `cov` floor above.) Branch coverage needs a
 # nightly toolchain (`rustup toolchain install nightly -c llvm-tools-preview`).
-litigate_crates := "litigate-base litigate-syntax litigate-sema litigate-lower litigate-verify litigate-import litigate-cli litigate-lsp litigate-smt litigate-wasm"
+litigate_crates := "litigate-base litigate-syntax litigate-sema litigate-lower litigate-verify litigate-import litigate-cli litigate-lsp litigate-smt litigate-wasm litigate-feed"
 
 cov-litigate *CRATES=litigate_crates:
     #!/usr/bin/env bash
@@ -133,6 +133,12 @@ cov-gate-test:
 # including the divergence refusal (maintenance/mirror-sync/README.md).
 mirror-sync-test:
     scripts/mirror-sync self-test
+
+# One poll of the opinion feed (maintenance/opinion-feed/README.md): new
+# CourtListener opinions from the modeled courts or citing a precedent
+# layer, one bead each. Without `--file` it only prints what it would file.
+opinion-feed *ARGS:
+    cargo run -q --release -p litigate-feed -- --repo . {{ARGS}}
 
 # Ten-minute local parser and case-input fuzz smoke (five minutes each).
 fuzz:

@@ -1,0 +1,52 @@
+# The CourtListener court ids whose opinions the opinion feed polls, per
+# promoted package (a package under lit/ with a pack identity, by its
+# `[package].name`). Every such package is listed: `courts` are the ids of
+# the court whose procedure it models
+# (https://www.courtlistener.com/api/rest/v4/courts/), or `none` says why it
+# models no single court CourtListener publishes. A newly promoted package
+# fails `cargo test -p litigate-feed` until it is listed here.
+
+[packages.first-circuit-court-of-appeals]
+courts = ["ca1"]
+
+[packages.ca8-court-of-appeals]
+courts = ["ca8"]
+
+[packages.dc-circuit-court-of-appeals]
+courts = ["cadc"]
+
+[packages.cafc]
+courts = ["cafc"]
+
+[packages.cofc]
+courts = ["uscfc"]
+
+[packages.eighth-circuit-bankruptcy-appellate-panel]
+courts = ["bap8"]
+
+[packages.frap-appellate-procedure]
+none = "national rules for every court of appeals: reached through the circuit packages and cites"
+
+[packages.frcp-civil-procedure]
+none = "national rules for every district court; no district court is modeled"
+
+[packages.frcrimp-criminal-procedure]
+none = "national rules for every district court; no district court is modeled"
+
+[packages.frcp-rule12-example]
+none = "a teaching example, not a court"
+
+[packages.core]
+none = "the shared library: no court"
+
+[packages.itc-337]
+none = "the USITC is an agency; CourtListener publishes no ITC opinions"
+
+[packages.mpep-prosecution]
+none = "USPTO examination is an agency proceeding; CourtListener publishes no USPTO decisions"
+
+[packages.ptab-patent-trial-appeal-board]
+none = "the PTAB is an agency tribunal; CourtListener publishes no PTAB decisions"
+
+[packages.ttab-trademark-trial-and-appeal-board]
+none = "the TTAB is an agency tribunal; CourtListener publishes no TTAB decisions"

@@ -5,3 +5,4 @@
 - Edition: Sixth Circuit "Full Rules w FRAP" compilation dated July 13, 2026: FRAP [Last Amended December 1, 2025]; 6 Cir. R. [Last Amended July 13, 2026]; I.O.P. [Last Amended October 1, 2025]; E-filing Guide [Last Amended December 1, 2024]; linked from https://www.ca6.uscourts.gov/rules-and-procedures/local-rules-frap-local-rules-iops.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 ff570075b1e925d47db246c09df8ccdeee46b29512c75fead10ea1bffba9a5e3. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+- Fetched via curl (single document, first request succeeded, no block encountered; desktop UA, no Referer).

@@ -2,14 +2,16 @@
 //! every court a promoted package models and for opinions citing a
 //! precedent layer, and files one bead per opinion with its URL, court,
 //! date and the elements it may edit (an eyecite-style cite match plus an
-//! element-name match). Opinions are deduped by `CourtListener` opinion id
-//! against a state file, and requests are paced to `CourtListener`'s rate
-//! limits. Public law only: it reads published opinions and the packages'
-//! own manifests and builds.
+//! element-name match). Every bead carries the external ref
+//! `courtlistener:opinion:<id>` (lg-8fdj.4): the store (or the pod
+//! dispatcher applying `br create` intents) dedupes on it, so the feed
+//! keeps no state and a rerun over the same window proposes the same refs.
+//! Requests are paced to `CourtListener`'s rate limits. Public law only: it
+//! reads published opinions and the packages' own manifests and builds.
 //!
-//! `litigate-feed --repo . --state feed-state.json --file` is the daily
-//! run (maintenance/opinion-feed/README.md); without `--file` it prints the
-//! beads it would file and records nothing.
+//! `litigate-feed --repo . --file` is the daily run
+//! (maintenance/opinion-feed/README.md); without `--file` it prints the
+//! beads it would file and runs nothing.
 
 pub mod bead;
 pub mod candidates;
@@ -18,14 +20,12 @@ pub mod courtlistener;
 pub mod date;
 pub mod http;
 pub mod inventory;
-pub mod state;
 
 use bead::{Draft, Filer};
 use cite::Extractor;
 use courtlistener::{Client, Hit, Transport};
 use inventory::{Element, Inventory};
 use serde::Serialize;
-use state::State;
 use std::collections::{BTreeMap, BTreeSet};
 
 /// One poll's bounds.
@@ -33,8 +33,6 @@ use std::collections::{BTreeMap, BTreeSet};
 pub struct Options {
     /// The earliest filing date polled (`YYYY-MM-DD`).
     pub since: String,
-    /// Today: recorded as the last poll when every bead was filed.
-    pub today: String,
     /// The most opinions read (and beads filed) in one run; the rest wait
     /// for the next run.
     pub max_opinions: usize,
@@ -53,8 +51,6 @@ pub struct Report {
     pub beads: Vec<Draft>,
     /// Whether `beads` were filed.
     pub filed: bool,
-    /// Clusters skipped as already filed.
-    pub already_filed: Vec<u64>,
     /// Opinions left for the next run by `max_opinions`.
     pub deferred: usize,
     /// Requests sent to `CourtListener`.
@@ -65,12 +61,12 @@ pub struct Report {
     pub errors: Vec<String>,
 }
 
-/// The default first day to poll: the day before the last complete poll
-/// (an overlap the dedupe absorbs), else yesterday.
+/// The default first day to poll: yesterday, so a daily run overlaps the
+/// last one by a day (late-indexed opinions) and the store's dedupe on the
+/// external ref absorbs the overlap.
 #[must_use]
-pub fn default_since(state: &State, today: &str) -> String {
-    let from = state.last_poll.as_deref().unwrap_or(today);
-    date::add_days(from, -1).unwrap_or_else(|| from.to_owned())
+pub fn default_since(today: &str) -> String {
+    date::add_days(today, -1).unwrap_or_else(|| today.to_owned())
 }
 
 /// The packages whose elements a poll of `inventory` can match: the
@@ -96,10 +92,9 @@ struct Found {
 
 /// Polls `CourtListener` through `client` for opinions filed since
 /// `options.since` from the courts in `inventory` or citing its
-/// precedents, skips those `state` has filed, and drafts a bead for each
-/// with its candidate `elements`; with a `filer`, files each and records
-/// it in `state` (and `options.today` as the last poll when nothing failed
-/// or was deferred).
+/// precedents, and drafts a bead for each with its candidate `elements`;
+/// with a `filer`, files each. Nothing is recorded: a rerun over the same
+/// window drafts the same beads with the same external refs.
 ///
 /// # Errors
 /// A failed search (before anything is filed).
@@ -107,7 +102,6 @@ pub fn poll<T: Transport>(
     inventory: &Inventory,
     elements: &BTreeMap<String, Vec<Element>>,
     client: &mut Client<T>,
-    state: &mut State,
     mut filer: Option<&mut dyn Filer>,
     options: &Options,
 ) -> Result<Report, String> {
@@ -120,10 +114,6 @@ pub fn poll<T: Transport>(
     let found = search(inventory, client, &options.since, &mut report)?;
     let extractor = Extractor::new(&inventory.prefix_groups());
     for Found { hit, why, packages } in found.into_values() {
-        if state.seen_any(&hit.opinions) {
-            report.already_filed.push(hit.cluster);
-            continue;
-        }
         if report.beads.len() >= options.max_opinions {
             report.deferred += 1;
             continue;
@@ -152,14 +142,8 @@ pub fn poll<T: Transport>(
                 report.errors.push(format!("cluster {}: {e}", hit.cluster));
                 continue;
             }
-            for id in &draft.opinions {
-                state.seen.insert(*id, draft.title.clone());
-            }
         }
         report.beads.push(draft);
-    }
-    if report.filed && report.errors.is_empty() && report.deferred == 0 {
-        state.last_poll = Some(options.today.clone());
     }
     report.requests = client.requests;
     Ok(report)

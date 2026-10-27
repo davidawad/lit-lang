@@ -18,8 +18,8 @@ pub struct Draft {
     pub description: String,
     /// Its labels.
     pub labels: Vec<String>,
-    /// `courtlistener-opinion-<lead opinion id>`: the store's own dedupe
-    /// key.
+    /// `courtlistener:opinion:<lead opinion id>`: the dedupe key the store
+    /// (or the dispatcher applying `br create` intents) dedupes on.
     pub external_ref: String,
     /// The opinion ids it covers (the feed's dedupe key).
     pub opinions: Vec<u64>,
@@ -92,7 +92,7 @@ impl Draft {
             ),
             description,
             labels,
-            external_ref: format!("courtlistener-opinion-{lead}"),
+            external_ref: external_ref(lead),
             opinions: hit.opinions.clone(),
             url: hit.url.clone(),
             court: hit.court.clone(),
@@ -125,6 +125,12 @@ impl Draft {
     }
 }
 
+/// The external ref of the bead for `CourtListener` opinion `id`.
+#[must_use]
+pub fn external_ref(id: u64) -> String {
+    format!("courtlistener:opinion:{id}")
+}
+
 fn join(ids: &[u64]) -> String {
     ids.iter()
         .map(u64::to_string)
@@ -141,7 +147,9 @@ pub trait Filer {
     fn file(&mut self, draft: &Draft) -> Result<(), String>;
 }
 
-/// Files with `<program> create ...` (`br`).
+/// Files with `<program> create ... --external-ref courtlistener:opinion:<id>`
+/// (`br`). In a pod `br` is the shim recording each call as a `BR_INTENT`
+/// line for the dispatcher to apply, so filing needs no writable store.
 pub struct Br {
     /// The `br` program.
     pub program: String,

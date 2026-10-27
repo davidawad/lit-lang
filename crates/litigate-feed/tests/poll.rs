@@ -1,12 +1,11 @@
 //! One poll over a scripted `CourtListener`: court and citing searches,
-//! dedupe by opinion id, the candidate elements, filing, and the client's
+//! one bead per cluster with its external ref, the candidate elements, filing, and the client's
 //! pacing and rate-limit retries.
 #![allow(clippy::unwrap_used, clippy::too_many_lines, clippy::unnecessary_wraps)]
 
 use litigate_feed::bead::{Draft, Filer};
 use litigate_feed::courtlistener::{Client, Request, Response, Transport};
 use litigate_feed::inventory::{Element, Inventory, Package, Precedent};
-use litigate_feed::state::State;
 use litigate_feed::{default_since, poll, watched, Options};
 use serde_json::json;
 use std::collections::BTreeMap;
@@ -154,7 +153,6 @@ fn elements() -> BTreeMap<String, Vec<Element>> {
 fn options(max: usize) -> Options {
     Options {
         since: "2026-10-26".to_owned(),
-        today: "2026-10-27".to_owned(),
         max_opinions: max,
     }
 }
@@ -234,13 +232,11 @@ fn a_court_opinion_and_a_citing_opinion_are_filed_once_each_with_their_candidate
         .on("opinions/22/", vec![ok(&json!({"plain_text": "Dissent."}))]);
     let mut client =
         Client::new(script, "https://cl.test/").min_interval(Duration::from_millis(500));
-    let mut state = State::default();
     let mut filer = Recorder::default();
     let report = poll(
         &inventory,
         &elements(),
         &mut client,
-        &mut state,
         Some(&mut filer),
         &options(10),
     )
@@ -273,13 +269,12 @@ fn a_court_opinion_and_a_citing_opinion_are_filed_once_each_with_their_candidate
     assert!(doe.labels.contains(&"pkg:frap".to_owned()));
     let poe = &report.beads[1];
     assert_eq!(poe.opinions, [21, 22]);
-    assert_eq!(poe.external_ref, "courtlistener-opinion-21");
+    assert_eq!(doe.external_ref, "courtlistener:opinion:11");
+    assert_eq!(poe.external_ref, "courtlistener:opinion:21");
     assert_eq!(poe.candidates.len(), 1, "{:?}", poe.candidates);
     assert_eq!(report.precedents["bowles"], [501, 502]);
     assert_eq!(report.precedents["cited"], [601]);
     assert!(report.warnings[0].contains("`orphan`"));
-    assert_eq!(state.last_poll.as_deref(), Some("2026-10-27"));
-    assert_eq!(state.seen.keys().copied().collect::<Vec<_>>(), [11, 21, 22]);
     assert_eq!(report.requests, 9);
     // Requests after the first are paced: the fake clock never moves on its
     // own, so each waits the whole interval.
@@ -288,23 +283,25 @@ fn a_court_opinion_and_a_citing_opinion_are_filed_once_each_with_their_candidate
         vec![Duration::from_millis(500); 8]
     );
 
-    // The next poll files nothing new: every opinion is already filed.
+    // The next poll over the same window drafts the same beads with the
+    // same refs: the store dedupes on them.
     let mut again = Recorder::default();
     let report = poll(
         &inventory,
         &elements(),
         &mut client,
-        &mut state,
         Some(&mut again),
         &options(10),
     )
     .unwrap();
-    assert!(again.filed.is_empty());
-    assert_eq!(report.already_filed, [1, 2]);
+    let refs =
+        |beads: &[Draft]| -> Vec<String> { beads.iter().map(|b| b.external_ref.clone()).collect() };
+    assert_eq!(refs(&again.filed), refs(&filer.filed));
+    assert_eq!(report.beads, filer.filed);
 }
 
 #[test]
-fn deferred_failed_and_dry_runs_record_no_complete_poll() {
+fn deferred_failed_refused_and_dry_runs() {
     let inventory = inventory(Vec::new());
     let script = || {
         Script::default()
@@ -318,14 +315,12 @@ fn deferred_failed_and_dry_runs_record_no_complete_poll() {
             .on("opinions/11/", vec![ok(&json!({"plain_text": "nothing"}))])
             .on("opinions/21/", vec![Err("connection reset".to_owned())])
     };
-    let mut state = State::default();
     let mut filer = Recorder::default();
     let mut client = Client::new(script(), "https://cl.test");
     let report = poll(
         &inventory,
         &elements(),
         &mut client,
-        &mut state,
         Some(&mut filer),
         &options(1),
     )
@@ -333,23 +328,18 @@ fn deferred_failed_and_dry_runs_record_no_complete_poll() {
     assert_eq!((report.beads.len(), report.deferred), (1, 1));
     assert!(report.beads[0].title.ends_with("0 candidate elements"));
     assert!(report.beads[0].description.contains("none matched"));
-    assert_eq!(state.last_poll, None);
 
-    let mut state = State::default();
     let mut client = Client::new(script(), "https://cl.test");
     let report = poll(
         &inventory,
         &elements(),
         &mut client,
-        &mut state,
         Some(&mut filer),
         &options(5),
     )
     .unwrap();
     assert_eq!(report.errors, ["cluster 2: connection reset"]);
-    assert_eq!(state.last_poll, None);
 
-    let mut state = State::default();
     let mut refusing = Recorder {
         refuse: Some("ca8".to_owned()),
         ..Recorder::default()
@@ -359,26 +349,15 @@ fn deferred_failed_and_dry_runs_record_no_complete_poll() {
         &inventory,
         &elements(),
         &mut client,
-        &mut state,
         Some(&mut refusing),
         &options(5),
     )
     .unwrap();
     assert_eq!(report.errors[0], "cluster 1: store refused");
-    assert!(state.seen.is_empty());
 
     let mut client = Client::new(script(), "https://cl.test");
-    let report = poll(
-        &inventory,
-        &elements(),
-        &mut client,
-        &mut state,
-        None,
-        &options(5),
-    )
-    .unwrap();
-    assert!(!report.filed && report.beads.len() == 1 && state.seen.is_empty());
-    assert_eq!(state.last_poll, None);
+    let report = poll(&inventory, &elements(), &mut client, None, &options(5)).unwrap();
+    assert!(!report.filed && report.beads.len() == 1);
 }
 
 #[test]
@@ -389,15 +368,7 @@ fn an_empty_inventory_sends_nothing() {
         precedents: Vec::new(),
     };
     let mut client = Client::new(Script::default(), "https://cl.test");
-    let report = poll(
-        &empty,
-        &BTreeMap::new(),
-        &mut client,
-        &mut State::default(),
-        None,
-        &options(5),
-    )
-    .unwrap();
+    let report = poll(&empty, &BTreeMap::new(), &mut client, None, &options(5)).unwrap();
     assert_eq!(report.requests, 0);
     assert!(watched(&empty).is_empty());
 }
@@ -476,24 +447,13 @@ fn a_failed_search_fails_the_poll() {
         .on("court=ca8", vec![ok(&json!({"results": []}))])
         .on("citation-lookup", vec![status(400, None)]);
     let mut client = Client::new(script, "https://cl.test").min_interval(Duration::ZERO);
-    let err = poll(
-        &inventory,
-        &elements(),
-        &mut client,
-        &mut State::default(),
-        None,
-        &options(5),
-    )
-    .unwrap_err();
+    let err = poll(&inventory, &elements(), &mut client, None, &options(5)).unwrap_err();
     assert!(err.contains("citation-lookup"), "{err}");
 }
 
 #[test]
-fn polls_start_the_day_before_the_last_complete_one() {
-    let mut state = State::default();
-    assert_eq!(default_since(&state, "2026-10-27"), "2026-10-26");
-    state.last_poll = Some("2026-10-20".to_owned());
-    assert_eq!(default_since(&state, "2026-10-27"), "2026-10-19");
-    state.last_poll = Some("garbled".to_owned());
-    assert_eq!(default_since(&state, "2026-10-27"), "garbled");
+fn polls_start_yesterday() {
+    assert_eq!(default_since("2026-10-27"), "2026-10-26");
+    assert_eq!(default_since("2026-03-01"), "2026-02-28");
+    assert_eq!(default_since("garbled"), "garbled");
 }

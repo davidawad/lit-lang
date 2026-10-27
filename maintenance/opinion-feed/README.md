@@ -31,34 +31,36 @@ packages (and their dependencies), each with its reason:
 
 The candidates are leads for review, not edits. The bead is a task at
 priority 3, labelled `opinion-feed`, `court:<id>` and `pkg:<package>` per
-candidate package, with `--external-ref courtlistener-opinion-<lead opinion
-id>`.
+candidate package, with `--external-ref courtlistener:opinion:<lead opinion
+id>` (lg-8fdj.4). The dry run prints the same `external_ref` on every bead.
 
 ## Running it
 
 ```bash
-# what it would file since yesterday (no state written, nothing filed)
+# what it would file since yesterday (nothing filed, nothing written)
 just opinion-feed --since 2026-10-26
-# the daily run: file the beads, record them
-COURTLISTENER_API_TOKEN=... just opinion-feed --state /var/lib/litgraph/opinion-feed-state.json --file
+# the daily run: file the beads
+COURTLISTENER_API_TOKEN=... just opinion-feed --file
 ```
 
-The daily run is pod-dispatched (a scheduled agent pod with the bead
-store), never a build on carbon. Its line is
-`litigate-feed --repo /work/repo --state $STATE --file`. Its stdout is the
-JSON report: `beads`, `already_filed`, `deferred`, `requests`, `warnings`
-and `errors`. It exits 1 when any opinion was not filed. The next run then
-starts from the last complete poll again.
+The daily run is pod-dispatched (infra dot-7o4c2d), never a build on
+carbon. Its line is `litigate-feed --repo /work/repo --file`. In the pod
+`br` is the shim that records each call as a `BR_INTENT` line, so the run
+emits one `br create ... --external-ref courtlistener:opinion:<id>` intent
+per opinion and needs no writable store; the dispatcher applies the
+intents. The run keeps no state file and commits nothing. Its stdout is the
+JSON report: `beads`, `deferred`, `requests`, `warnings` and `errors`. It
+exits 1 when any opinion was not filed.
 
-- **Dedupe** is by CourtListener opinion id. The state file records every
-  opinion id it filed a bead for, and an opinion seen again (the next day's
-  overlap, or one found both by its court and by a citation) is skipped.
-  The external ref lets the store dedupe too.
-- **Window.** A run polls from `--since`, by default the day before the
-  last complete poll (the overlap absorbs late-indexed opinions), else
-  yesterday. A run that filed everything it found records today as its
-  last complete poll. A failure or a `--max-opinions` cap (default 100)
-  leaves the window open, so nothing is lost.
+- **Dedupe** is on the external ref, by the dispatcher (or the store). A
+  run over the same window proposes the identical refs, so rerunning a
+  failed or capped day, or the daily one-day overlap, files nothing twice.
+  Within a run an opinion found both by its court and by a citation is one
+  bead.
+- **Window.** A run polls from `--since`, by default yesterday (the
+  overlap absorbs late-indexed opinions). A `--max-opinions` cap (default
+  100) reports the rest as `deferred`; rerun with the same `--since` to
+  file them.
 - **Rate limits.** Requests are at least `--min-interval-ms` apart
   (default 1000; CourtListener allows 5,000 an hour with a token). A 429
   or 503 waits its `Retry-After`, else 30 s doubling, and is retried up to

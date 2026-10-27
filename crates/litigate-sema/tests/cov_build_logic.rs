@@ -95,6 +95,18 @@ instance base@one { pack base,\n  patch go { basis estimate }\n}\n",
     insta::assert_debug_snapshot!(out);
 }
 
+/// A patch may not make an edge `anytime` (SPEC §5.6): replay binds the
+/// postures the base edge is legal from.
+#[test]
+fn patches_do_not_write_anytime() {
+    let out = links("module links\ninstance base@one { pack base,\n  patch go { anytime }\n}\n");
+    assert!(
+        out.iter()
+            .any(|l| l.contains("`anytime` is not allowed in a `patch`")),
+        "{out:#?}"
+    );
+}
+
 #[test]
 fn instances_check_pack_probabilities_roles_and_patches() {
     let out = links(

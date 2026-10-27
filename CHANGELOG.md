@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **An act can be legal from any posture while its own deadline is open**
+  (lg-xqu8; SPEC §5.6). An edge marked `anytime` (`oppose "File the
+  opposition" -> fee-clock { event OppositionFiled(), within
+  opposition-period, anytime }`) is taken off every track by an event no
+  track's edge takes, while an instance of its `within` deadline is open
+  for the party: it discharges that instance (late is still L4002), the
+  marking does not move, and a track reaching the edge's source later
+  takes it. `lint-filing` and replay accept an opposition filed during a
+  pending consent decision without `spawn` tracks, and the package still
+  lowers serially (no L6001); `lint-filing` lists the edge among its
+  deadline's `file` moves. Replay steps gain the `anytime` effect.
+
 - **A protective fee motion is supplemented, not filed twice** (lg-4nma;
   `lit/frcp/fees.lit`). The court's order setting when the full motion is
   due, `FeeSupplementScheduled(due)`, opens `fee-supplement-period` on the

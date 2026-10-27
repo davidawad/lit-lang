@@ -250,7 +250,7 @@ EdgeField    = "event", CallExpr | "authority", (String | Cite) | "effort", Dura
              | "forbids", IdList | "replaces", ReplaceList | "when", Expr
              | "basis", Expr | "formerly", IdList ;
              | "basis", Expr
-             | "spawn", IdList | "joins", IdList ;
+             | "spawn", IdList | "joins", IdList | "anytime" ;
 ReplaceList  = "[", [ (Ref | String), { ",", (Ref | String) }, [","] ], "]" ;
 DeadlineOpts = "{", { ("extendable", Bool | "extension_authority", (String | Hole)
              | "note", String | "counting", String), Sep }, "}" ;
@@ -1945,6 +1945,26 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   starts at the first. A package declaring `spawn` or `joins` checks and
   replays but does not build: concurrent tracks have no lowering in the
   litgraph schema yet (L6001, §8.1).
+- Anytime edges. An edge marked `anytime` is legal from any posture while
+  an instance of its own `within` deadline is open: an opposition the
+  rules allow while a consent decision is pending, in a package that
+  stays on one track and so still lowers. An event that takes no edge of
+  any track (and has no effect) takes the one `anytime` edge in force on
+  its date whose pattern it matches, whose actor its party plays, whose
+  option no event removed, and whose deadline has an instance open for
+  the party (or unbound); two such edges are ambiguous (L4001). It
+  discharges that instance under the obligation rules below, late
+  included (L4002), fires the triggers it matches, and is recorded as an
+  `anytime` step; the marking does not move. A track that later reaches
+  the edge's source takes the edge at once (a `took` step dated the
+  arriving event), so the matter does not wait for an act already done.
+  Otherwise the event is judged as above, and an L4001 for an event an
+  `anytime` edge matches notes why it was not legal off its track. An
+  `anytime` edge needs an `event` and a `within` deadline and neither
+  `spawn`s nor `joins` (L2007), and a `patch` may not write it. It is
+  replay only: lowering ignores it, and the lowered edge leaves its own
+  source as any other. `lint-filing` lists it among the `file` moves of
+  its deadline's open instances wherever the matter stands.
 - Obligation instances. After an event is handled, every in-force deadline
   whose trigger it matches creates instances under its `bearer` and
   `trigger` policy (§5.3). The declaration governing a deadline may be a

@@ -36,12 +36,12 @@ fn printed(all: &[&hir::Package], used: &[&hir::Package]) -> BTreeSet<String> {
         law: &vocabulary,
         vocabulary: &vocabulary,
     };
-    let nodes: Vec<(&str, &hir::Node)> = used
+    let edges: Vec<(&str, &hir::Edge)> = used
         .iter()
         .flat_map(|p| {
             hirx::nodes(p)
                 .into_iter()
-                .map(|n| (p.manifest.pack_id.as_str(), n))
+                .flat_map(|n| n.edges.iter().map(|e| (p.manifest.pack_id.as_str(), e)))
         })
         .collect();
     let deadlines = used.iter().flat_map(|p| {
@@ -56,7 +56,7 @@ fn printed(all: &[&hir::Package], used: &[&hir::Package]) -> BTreeSet<String> {
     let signatures = signatures(&vocabulary);
     let mut out = BTreeSet::new();
     for (deadline, version) in deadlines {
-        let m = moves(law, &nodes, &deadline, &version);
+        let m = moves(law, &edges, &deadline, &version);
         let events = m["file"]
             .as_array()
             .into_iter()

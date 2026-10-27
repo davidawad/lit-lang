@@ -9,7 +9,8 @@
 //!
 //! Each obligation open before the filing carries its `moves`, the
 //! actions that protect it (SPEC §9.3): the acts out of any track of the
-//! matter's marking that discharge it (`file`), the extension grants of the
+//! matter's marking, and the `anytime` acts legal from any posture (SPEC
+//! §5.6), that discharge it (`file`), the extension grants of the
 //! version counting it, each with the request it rests on (`extend`),
 //! and the order events that exercise them (`orders`). Proposing one of
 //! them through `lint-filing` judges it: each is printed as the matter
@@ -732,7 +733,11 @@ mod tests {
                 law: &law,
                 vocabulary: &law,
             },
-            &[(pack.as_str(), &node)],
+            &node
+                .edges
+                .iter()
+                .map(|e| (pack.as_str(), e))
+                .collect::<Vec<_>>(),
             &format!("{pack}::answer-period"),
             "answer-period@none",
         );

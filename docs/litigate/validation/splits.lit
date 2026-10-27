@@ -57,11 +57,26 @@ deadline reopen-window-actual: 7.days after NoticeLearned() counted_by frap26 ef
   forum frap
 }
 
-/// From December 1, 2005, FRAP 4(a)(6)(A) itself settles the split: 14
-/// days "after the moving party receives or observes written notice of the
-/// entry from any source" (reading B, with a longer window). The amendment
-/// ends the other readings.
-deadline reopen-window-written: 14.days after WrittenNoticeReceived() counted_by frap26 effective [2005-12-01, ..) supersedes reopen-window-written@1991-12-01 supersedes reopen-window-clerk-or-party supersedes reopen-window-actual cite "FRAP (2008 ed.) 4(a)(6)"
+/// The moving party is served formal notice of entry under FRCP 77(d)
+/// (by the clerk or a party, under FRCP 5(b)).
+event Rule77dNoticeServed()
+
+/// From December 1, 2005, FRAP 4(a)(6)(B) itself settles the split: the
+/// window is still 7 days, "after the moving party receives notice under
+/// Federal Rule of Civil Procedure 77(d) of the entry" (order of April 25,
+/// 2005), and "only formal notice of the entry of a judgment or order under
+/// Civil Rule 77(d) will trigger the 7-day period" (2005 Committee Note,
+/// which cites Bass, Benavides and Ryan). The published draft's "written
+/// notice of the entry from any source" (reading B) was not adopted (the
+/// Note's "Changes Made After Publication"). The amendment ends every
+/// reading.
+deadline reopen-window-rule-77d: 7.days after Rule77dNoticeServed() counted_by frap26 effective [2005-12-01, 2009-12-01) known_at 2005-04-25 supersedes reopen-window-written supersedes reopen-window-clerk-or-party supersedes reopen-window-actual cite "FRAP (2008 ed.) 4(a)(6)"
+{
+  forum frap
+}
+
+/// From December 1, 2009 the window is 14 days (order of March 26, 2009).
+deadline reopen-window-rule-77d: 14.days after Rule77dNoticeServed() counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes reopen-window-rule-77d@2005-12-01 cite "FRAP (2009) 4(a)(6)"
 {
   forum frap
 }
@@ -115,4 +130,16 @@ test "frap-4a6-notice, Bass's facts at ca8 (reading C): the call of May 26 opene
   given NoticeLearned() on 1999-05-26
   expect deadline(reopen-window-actual) == 1999-06-02
   expect deadline(reopen-window-actual) < 1999-06-03
+}
+
+test "frap-4a6-notice, after the 2005 amendment: formal notice under Rule 77(d) opens a 7-day window in every circuit" cite "FRAP (2008 ed.) 4(a)(6)"
+{
+  given Rule77dNoticeServed() on 2007-03-02
+  expect deadline(reopen-window-rule-77d) == 2007-03-13
+}
+
+test "frap-4a6-notice, after the 2009 amendment: the window is 14 days" cite "FRAP (2009) 4(a)(6)"
+{
+  given Rule77dNoticeServed() on 2012-03-02
+  expect deadline(reopen-window-rule-77d) == 2012-03-16
 }

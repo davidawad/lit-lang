@@ -1,7 +1,9 @@
 # Validation: the deadline domain
 
 Status: lg-fq2.5, measured 2026-10-27 on the corpus of lg-fq2.2 (rule
-history) and lg-fq2.3 (rulings). Scope: federal deadline computation,
+history) and lg-fq2.3 (rulings); D1 fixed and the rates re-measured by
+lg-fq2.6 the same day, whose change files replay the rulings again through
+separately versioned layers (CHANGE-REPORT.md). Scope: federal deadline computation,
 FRCP 6 and FRAP 26 and the periods they count (lg-fq2; CHANGE.md). Every
 number below is checked by `crates/litigate-cli/tests/change_validation.rs`
 against the tests themselves, so this file cannot state a rate the tests
@@ -104,12 +106,12 @@ counts under the rules in force on the trigger date.
 | bass-5cir-2000 | 4(a)(6) 7 days (1996) | 1999-05-28 | timely (06-02 if May 26) | 1999-06-04 | 1999-06-03 | timely | yes |
 | wilkens-5cir-2001 | 4(a)(6) 7 days (1996) | 1999-09-07 | 1999-09-14 † | 1999-09-14 | 1999-10-04 | late | yes |
 | vencor-11cir-2002 | 4(a)(6) 180 days (1996) | 1999-10-26 | 2000-04-24 † | 2000-04-24 | 2000-10-17 | late | yes |
-| flanagan-5cir-1998 | AEDPA grace year (FRCP 6, 1985) | 1996-04-24 | 1997-04-24 | refused | 1997-04-24 | timely | refused (D1) |
-| hernandez-4cir-2000 | AEDPA grace year, tolled (1985) | 1996-04-24 | 1997-09-09 | refused | 1997-09-09 | timely | refused (D1) |
-| patterson-9cir-2001 | § 2244(d) year after tolling (1985) | 1997-06-19 | 1998-06-19 | refused | 1998-06-19 | timely | refused (D1) |
-| moore-8cir-1999 | AEDPA grace year (1985) | 1996-04-24 | 1997-04-24 | refused | 1997-04-24 | timely | refused (D1) |
-| mickens-2cir-1998 | AEDPA grace year (1985) | 1996-04-24 | 1997-04-24 | refused | 1997-04-23 | timely | refused (D1) |
-| burns-3cir-1998 | AEDPA grace year (1985) | 1996-04-24 | "on or before April 23" (dictum) | refused | 1997-04-22 | timely | refused (D1) |
+| flanagan-5cir-1998 | AEDPA grace year (FRCP 6, 1985) | 1996-04-24 | 1997-04-24 | 1997-04-24 | 1997-04-24 | timely | yes (D1) |
+| hernandez-4cir-2000 | AEDPA grace year, tolled (1985) | 1996-04-24 | 1997-04-24; 1997-09-09 | 1997-04-24; 1997-09-09 | 1997-09-09 | timely | yes (D1) |
+| patterson-9cir-2001 | § 2244(d) year after tolling (1985) | 1997-06-19 | 1998-06-19 | 1998-06-19 | 1998-06-19 | timely | yes (D1) |
+| moore-8cir-1999 | AEDPA grace year (1985) | 1996-04-24 | 1997-04-24 | 1997-04-24 | 1997-04-24 | timely | yes (D1) |
+| mickens-2cir-1998 | AEDPA grace year (1985) | 1996-04-24 | 1997-04-24 | 1997-04-24 | 1997-04-23 | timely | yes (D1) |
+| burns-3cir-1998 | AEDPA grace year (1985) | 1996-04-24 | "on or before April 23" (dictum) | 1997-04-24 | 1997-04-22 | timely | yes, on the holding (§4) |
 | fletcher-5cir-2000 | 42 U.S.C. § 405(g) 60 days (1985) | 1997-02-25 | 1997-05-07, assuming tolling | 1997-04-28 | 1997-05-08 | late | yes (D9) |
 | eastman-3cir-2013 | FRCP 23(f) 14 days (FRCP 6, 2009) | 2013-07-31 | 2013-08-14 | 2013-08-14 | 2013-08-19 | late | yes |
 | serna-5cir-2013 | 15 U.S.C. § 1692k(d) one year (2009) | 2010-08-14 | 2011-08-15 | 2011-08-15 | 2011-08-12 | timely | yes (D9) |
@@ -145,13 +147,19 @@ that circuit's precedent adopts:
 
 The outcome differs by circuit on both cases' facts. The selection of the
 reading per circuit is the test's, not the engine's (D3). From December 1,
-2005 the rule's own text settles the split ("written notice of the entry
-from any source", 14 days): the readings end there.
+2005 the rule's own text settles the split: only formal notice of entry
+under Civil Rule 77(d) opens the window, still 7 days (14 from December 1,
+2009), in every circuit; the readings end there (two more golden tests;
+D10).
 
-**`aedpa-grace-end`.** Not counted. The April 24 side counts the year under
-FRCP 6(a) as in force in 1996-1998, which the model refuses (D1); the April
-23 side counts the effective date as the year's first day, which no
-counting rule can state (D3).
+**`aedpa-grace-end`.** One side counted. The April 24 side counts the year
+under FRCP 6(a) as in force in 1996-1998, to its anniversary, and each of
+its rulings agrees (Flanagan, Moore, Mickens, Hernandez, Patterson;
+`rulings.lit`). The April 23 side counts the effective date as the year's
+first day, which no counting rule can state (D3); its statements are dicta
+in cases the date did not decide (the split's own caveat), and Burns, its
+one validation ruling, held a petition of April 22 timely, which agrees on
+either side.
 
 **Replay before an overruling.** Bowles v. Russell (2007) overrules
 Thompson v. INS (1964) from June 14, 2007, and `invalidate`s its "unique
@@ -176,18 +184,19 @@ the same reason, and the corpus has no ruling that Thompson saved.
 
 ## 5. Disagreements and gaps
 
-- **D1, modelling error (lit/core).** `frcp6@1963-07-01` and
-  `frcp6@1985-08-01` have no month or year provision (`end_of_month`), so a
-  year period counted under them is refused, never counted. The six AEDPA
-  rulings of 1998-2001 (Flanagan, Hernandez, Patterson, Moore, Mickens,
-  Burns) count a year from 1996-1997 dates and are refused. The rulings
-  themselves state the method: "When a statute of limitations is measured
-  in years, the last day for instituting the action is the anniversary
-  date of the start of the limitations period" (Ross, 2d Cir. 1998, in the
-  corpus as `ross-2cir-1998`); counted that way, as lit/core's 2001 version counts years, all
-  six agree (`d1_the_aedpa_rulings_are_refused_under_the_1985_rule`). The
-  fix belongs to the rule history (lg-fq2.6), with these rulings as its
-  authority and not as its validation.
+- **D1, modelling error (lit/core), fixed by lg-fq2.6.** `frcp6@1963-07-01`
+  and `frcp6@1985-08-01` had no month or year provision (`end_of_month`),
+  so the six AEDPA rulings of 1998-2001 (Flanagan, Hernandez, Patterson,
+  Moore, Mickens, Burns), which count a year from 1996-1997 dates, were
+  refused. Both versions now count a year to its anniversary, the method
+  Ross v. Artuz states for Rule 6(a) ("When a statute of limitations is
+  measured in years, the last day for instituting the action is the
+  anniversary date of the start of the limitations period", 150 F.3d at
+  103; `ross-2cir-1998`, not itself a validation ruling), and as lit/core's
+  later versions count years. All six agree (`rulings.lit`;
+  `d1_the_1985_rule_counts_the_aedpa_year_to_its_anniversary`). The
+  February 29 reading (`end_of_month clamp`) stays UNVERIFIED: no ruling in
+  the corpus counts from one.
 - **D2, modelling gap (language).** SPEC §5.3 step 4 says inaccessible
   days "come from case events", but no event form states one, so neither a
   `.lit` test nor a matter can say the clerk's office was closed. The
@@ -242,14 +251,25 @@ the same reason, and the corpus has no ruling that Thompson saved.
   (April 28) and agrees on the outcome. Serna's refiling with the fee
   after the IFP denial is not modelled; the model judges the complaint
   filed with the IFP application, as the court did.
+- **D10, modelling error (this package), fixed by lg-fq2.6.** FRAP
+  4(a)(6)'s window to move to reopen was 14 days from December 1, 2005,
+  opened by "written notice of the entry from any source" (`rulings.lit`,
+  `splits.lit`). That was the published draft of the 2005 amendment, not
+  the rule: the order of April 25, 2005 kept 7 days, opened only by formal
+  notice under Civil Rule 77(d) (the 2005 Committee Note, "Changes Made
+  After Publication"); the order of March 26, 2009 made it 14
+  (`sources/change-frap-2005-2009-rule-4-excerpt.txt`). No ruling counts a
+  window opened after 2005, so no ruling's outcome changes.
 
 ## 6. Rates
 
 - 2009 Committee Note examples: 23 of 25 agree, 0 disagree, 2 cannot be stated.
-- Timeliness rulings: 29 of 35 agree with the court, 0 disagree, 6 are refused (D1).
-- Circuit split `frap-4a6-notice`: 6 golden tests, the outcome differing by circuit on both split cases' facts.
+- Timeliness rulings: 35 of 35 agree with the court, 0 disagree, 0 are refused.
+- Circuit split `frap-4a6-notice`: 8 golden tests, the outcome differing by circuit on both split cases' facts.
 - Replay before an overruling (Bowles of Thompson): 1 of 1 reproduces the outcome decided at the time.
-- Circuit split `aedpa-grace-end`: not counted (D1, D3).
+- Circuit split `aedpa-grace-end`: the April 24 side counted, every ruling agreeing; the April 23 side not countable (D3).
 
-Of the 29 agreeing rulings, 9 compare against a DERIVED date (†), where the
-opinion holds the filing late or timely without stating the last day.
+Of the 35 agreeing rulings, 9 compare against a DERIVED date (†), where the
+opinion holds the filing late or timely without stating the last day, and
+Burns agrees on its holding only: its April 23 is a dictum of the other
+side of the split (§4).

@@ -281,8 +281,8 @@ the register's §8.
 
 Counting is per forum, never one FRCP 6 function: FRCP 6, FRCrimP 45,
 FRAP 26, RCFC 6, 37 C.F.R. § 1.7 (PTAB, via § 42.1(a)), § 2.196 (TTAB)
-and 19 C.F.R. § 201.14 (ITC) are distinct counting rules of `lit/core`
-(lg-fq2.6 owns their data). The never-extendable sets differ by forum
+and 19 C.F.R. § 201.14 (ITC) are distinct counting rules of `lit/core`,
+each amending order a version of its rule (CHANGE-REPORT.md lists them). The never-extendable sets differ by forum
 (FRCP 6(b)(2), RCFC 6(b)(2) without 50(b), FRCrimP 45(b)(2) Rule 35
 only, FRAP 26(b)) and are `extend { never }` locks an emergency `grant`
 can `unlock`.
@@ -307,6 +307,14 @@ docs/litigate/examples/change` checks them all (test
 | guidance | `guidance/` | Fed. Cir. Practice Note to Rule 26 | fixes the court's draw on waiving a late notice (p 0) |
 | precedent | `precedent/` over `ptab-base/` | Light & Wonder, Paper 30 (designated June 22, 2026) | waives § 42.75(c)(1): 14 days → 30 |
 | overruling | `overruling/` over `overruled/` | Bowles v. Russell (2007) overruling Thompson v. INS (1964) | withdraws Thompson from June 14, 2007, and invalidates its "unique circumstances" default |
+
+`docs/litigate/change/` holds the deadline domain's own change files
+(lg-fq2.6): the FRCP and FRAP periods the collected rulings count as base
+layers, the orders of 2005 and 2009 as amendment layers on them, the
+actual world at each circuit, and each ruling as a matter replayed under
+it (`crates/litigate-cli/tests/change_files.rs`). CHANGE-REPORT.md lists
+every change file of the domain, the agreement rates and the open
+failures.
 
 `docs/litigate/examples/timelines/` holds a procedure over the base
 periods (`post-judgment/`: a Rule 59(e) motion `within` the base's
@@ -515,8 +523,11 @@ metadata, kept as metadata about instruments, never as edit scripts
   disagreement are in VALIDATION.md (lg-fq2.5).
 - A modification layer that declares no node has no `start` (lg-fq2.7);
   `lit/core`, a base library, still declares its placeholder.
-- The COFC general-order example records its closed day; wiring a
-  court's own closures into its counting rule's calendar is lg-fq2.6.
+- The COFC general-order example records its closed day; no counting
+  rule reads a layer's calendar, so the closure is not counted
+  (CHANGE-REPORT.md, open failure 1). A counting rule is versioned only
+  within its package, so the orders amending FRCP 6 and FRAP 26 are
+  versions in `lit/core`, not amendment layers (open failure 2).
 - No corpus package changed class: each `lit/` package is a forum's base
   law (the CAFC package encodes FRAP with the Federal Circuit Rules
   interleaved, a procedure graph at the `LocalRule` rung).

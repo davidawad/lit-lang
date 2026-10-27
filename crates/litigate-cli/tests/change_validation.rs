@@ -15,8 +15,8 @@
 mod support;
 
 use litigate_engine::clock::{
-    compute_due_date, compute_hour_deadline, Clock, ClockConfig, ClockLibrary, ComputedDeadline,
-    Date, DayDeadline, Direction, HourDeadline, Unit,
+    compute_due_date, compute_hour_deadline, Clock, ClockConfig, ClockLibrary, Date, DayDeadline,
+    Direction, HourDeadline, Unit,
 };
 use litigate_lower::{Lowerer, Options};
 use litigate_sema::hir;
@@ -48,18 +48,6 @@ const NOTE_NOT_STATED: [&str; 2] = ["A13", "A14"];
 /// Rulings whose outcome is counted here: the closed courthouse of
 /// Circuitronix is an inaccessible clerk's office (D2).
 const RULINGS_ON_THE_ENGINE: [&str; 1] = ["circuitronix-11cir-2021"];
-
-/// Rulings the model refuses to count: their one-year periods run under
-/// FRCP 6 as amended in 1985, which lit/core gives no month or year
-/// provision (D1).
-const RULINGS_REFUSED: [&str; 6] = [
-    "flanagan-5cir-1998",
-    "hernandez-4cir-2000",
-    "patterson-9cir-2001",
-    "moore-8cir-1999",
-    "mickens-2cir-1998",
-    "burns-3cir-1998",
-];
 
 fn d(s: &str) -> Date {
     Date::parse_iso(s).unwrap()
@@ -193,13 +181,9 @@ fn every_ruling_has_its_golden_test_or_its_reason() {
         "the lg-fq2.3 corpus counts 35 validation rulings"
     );
     for id in &all {
-        let refused = RULINGS_REFUSED.contains(&id.as_str());
-        assert!(
-            covered(id) != refused,
-            "{id}: a golden test, or refused (D1); exactly one"
-        );
+        assert!(covered(id), "{id}: a golden test");
     }
-    for id in RULINGS_REFUSED.iter().chain(&RULINGS_ON_THE_ENGINE) {
+    for id in &RULINGS_ON_THE_ENGINE {
         assert!(all.iter().any(|r| r == id), "{id} is a validation ruling");
     }
     // Every golden test names a Note example, a ruling, the split, or a
@@ -360,53 +344,30 @@ fn bowles_replayed_before_the_overruling_is_late_as_the_sixth_circuit_held() {
 }
 
 /// One year from `trigger` under `clock`.
-fn year(trigger: &str, clock: &Clock) -> litigate_engine::error::Result<ComputedDeadline> {
+fn year(trigger: &str, clock: &Clock) -> String {
     let dl = DayDeadline {
         unit: Unit::Year,
         ..days(trigger, 1, Direction::Forward)
     };
     compute_due_date(&dl, clock, &ClockConfig::default())
+        .unwrap()
+        .due_date
 }
 
-/// D1 (a modelling error, pinned): the AEDPA rulings count a one-year
-/// period from 1996 and 1997 dates under FRCP 6 as amended in 1985, which
-/// lit/core gives no month or year provision, so the model refuses them.
-/// Counted by the anniversary method these rulings apply (and lit/core's
-/// 2001 version uses), every one agrees with its court: this test fails
-/// once the 1985 version counts years, and VALIDATION.md must then move
-/// them to the agreements.
+/// D1, fixed (lg-fq2.6): FRCP 6 as amended in 1985 counts a year to the
+/// anniversary of its start, as the AEDPA rulings of 1998-2001 count it
+/// (Ross v. Artuz, 150 F.3d at 103), on the clock IR lit/core lowers to as
+/// well as in the golden tests of `rulings.lit`: the grace year from April
+/// 24, 1996 ends Thursday, April 24, 1997, and Patterson's year from June
+/// 19, 1997 ends Friday, June 19, 1998. The 1963 version counts the same
+/// way.
 #[test]
-fn d1_the_aedpa_rulings_are_refused_under_the_1985_rule() {
-    let core = lowered("core", "1997-01-01");
-    let rule1985 = rule(&core, "frcp6");
-    for trigger in ["1996-04-24", "1997-06-19"] {
-        let err = year(trigger, &rule1985).unwrap_err().to_string();
-        assert!(err.contains("no calendar-month provision"), "{err}");
-    }
-    let core2001 = lowered("core", "2002-01-01");
-    let anniversary = rule(&core2001, "frcp6");
-    let grace = year("1996-04-24", &anniversary).unwrap().due_date;
-    assert_eq!(grace, "1997-04-24");
-    // (ruling, last day, filed, timely): Hernandez's state motion of April
-    // 23, 1997 tolled the period, leaving one day once certiorari was
-    // denied on September 8 (1997-04-24 plus the 138 days tolled).
-    let hernandez = d(&grace).add_days(138);
-    for (id, last, filed, timely) in [
-        ("flanagan-5cir-1998", d(&grace), "1997-04-24", true),
-        ("moore-8cir-1999", d(&grace), "1997-04-24", true),
-        ("mickens-2cir-1998", d(&grace), "1997-04-23", true),
-        ("burns-3cir-1998", d(&grace), "1997-04-22", true),
-        ("hernandez-4cir-2000", hernandez, "1997-09-09", true),
-        (
-            "patterson-9cir-2001",
-            d(&year("1997-06-19", &anniversary).unwrap().due_date),
-            "1998-06-19",
-            true,
-        ),
-    ] {
-        assert!(RULINGS_REFUSED.contains(&id));
-        assert_eq!(last >= d(filed), timely, "{id}: last day {last}");
-    }
+fn d1_the_1985_rule_counts_the_aedpa_year_to_its_anniversary() {
+    let rule1985 = lowered("core", "1997-01-01");
+    assert_eq!(year("1996-04-24", &rule(&rule1985, "frcp6")), "1997-04-24");
+    assert_eq!(year("1997-06-19", &rule(&rule1985, "frcp6")), "1998-06-19");
+    let rule1963 = lowered("core", "1980-01-01");
+    assert_eq!(year("1979-04-24", &rule(&rule1963, "frcp6")), "1980-04-24");
 }
 
 /// VALIDATION.md states the rates these tests give.
@@ -435,9 +396,8 @@ fn the_report_states_the_agreement_rates() {
             NOTE_NOT_STATED.len()
         ),
         format!(
-            "- Timeliness rulings: {ruling_agree} of {} agree with the court, 0 disagree, {} are refused (D1).",
-            all.len(),
-            RULINGS_REFUSED.len()
+            "- Timeliness rulings: {ruling_agree} of {} agree with the court, 0 disagree, 0 are refused.",
+            all.len()
         ),
         format!(
             "- Circuit split `frap-4a6-notice`: {split_tests} golden tests, the outcome differing by circuit on both split cases' facts."

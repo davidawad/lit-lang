@@ -20,6 +20,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   pending consent decision without `spawn` tracks, and the package still
   lowers serially (no L6001); `lint-filing` lists the edge among its
   deadline's `file` moves. Replay steps gain the `anytime` effect.
+- **The deadline domain's change files and agreement report** (lg-fq2.6;
+  docs/litigate/CHANGE-REPORT.md). `docs/litigate/change/` layers the
+  FRCP and FRAP periods the collected rulings count: FRCP 23(f), 50(b),
+  59(b), 59(e) and FRAP 4(a)(1), 4(a)(5), 4(a)(6) as base layers, the
+  Supreme Court's orders of April 25, 2005 and March 26, 2009 as
+  separately versioned amendment layers on them (each on its vendored
+  order text), the actual world at each circuit, and 19 rulings as
+  matters: `litigate worlds` replays 18 of them as the court decided
+  (Circuitronix's closed courthouse cannot be stated, D2). FRCP 6 as
+  amended in 1963 and 1985 counts months and years (`end_of_month
+  clamp`): a year ends on its anniversary (Ross v. Artuz), so the six
+  AEDPA rulings VALIDATION.md refused now agree, 35 of 35. FRAP
+  4(a)(6)'s window from December 1, 2005 is 7 days after formal Rule
+  77(d) notice, 14 from 2009, not the published draft's 14 days after
+  "written notice ... from any source" (VALIDATION.md D10).
 
 - **A protective fee motion is supplemented, not filed twice** (lg-4nma;
   `lit/frcp/fees.lit`). The court's order setting when the full motion is

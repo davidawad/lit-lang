@@ -1,0 +1,22 @@
+module change-validation-replay.appeal
+
+import change-validation.rulings.{ reopened-appeal }
+
+/// Once the district court reopens the time to appeal (FRAP 4(a)(6)), the
+/// appellant may file a notice of appeal within the reopened period.
+start reopened
+
+/// The appellant files a notice of appeal (FRAP 3, 4(a)).
+event NoticeOfAppealFiled()
+
+decision reopened: "Time to appeal reopened: file the notice of appeal?" by appellant effective [1991-12-01, ..) known_at 1991-04-30 cite "FRAP 4(a)(6)"
+{
+  file "File the notice of appeal" -> appeal-noticed {
+    event NoticeOfAppealFiled()
+    within reopened-appeal
+  }
+  forgo "Let the judgment stand" -> judgment-stands
+}
+
+terminal appeal-noticed: "Notice of appeal filed" effective [1991-12-01, ..) known_at 1991-04-30
+terminal judgment-stands: "The judgment stands" effective [1991-12-01, ..) known_at 1991-04-30

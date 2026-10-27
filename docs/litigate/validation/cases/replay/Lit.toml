@@ -1,0 +1,32 @@
+# The step a reopened appeal takes (lg-fq2.5; docs/litigate/VALIDATION.md
+# §4): filing the notice of appeal within the reopened period of FRAP
+# 4(a)(6), so a matter replays the filing against the period the
+# validation package declares, in a world before and after an overruling.
+# It declares no period of its own.
+[package]
+name = "change-validation-replay"
+version = "1.0.0"
+language = 1
+pack_id = "change-validation-replay"
+forum = "frap"
+authority = "FederalRule"
+title = "Validation: a notice of appeal in a reopened appeal period"
+in_force = "1991-12-01"
+known_at = "2026-10-27"
+
+[package.roles]
+appellant = "self"
+court = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../lit/core" }
+change-validation = { version = "^1.0.0", path = "../.." }
+
+[sources.frap]
+title = "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2024"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-appellate-procedure-dec-1-2024_0.pdf"
+path = "sources/frap.txt"
+path_sha256 = "87d71a1f443c5c084cc9f11932a66436ab300f83146ee2c5ce2654a8a4824479"
+as_of = "2024-12-01"
+cite_prefixes = ["FRAP"]
+section_heading = "FRAP {n}"

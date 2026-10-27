@@ -307,6 +307,58 @@ fn circuitronix_the_closed_courthouse_makes_the_monday_motion_timely() {
     assert!(d(&got.due_date) >= d("2019-07-08"), "the court: timely");
 }
 
+/// `litigate worlds` on Bowles's appeal (`cases/bowles.case`) at
+/// `date`, its `as_of` and `known_at`: Thompson v. INS's `in_force`, and
+/// each filing's worlds by outcome.
+fn bowles_at(date: &str) -> (bool, Value) {
+    let run = litigate(&[
+        "worlds",
+        "docs/litigate/validation/cases/bowles.case",
+        "--world",
+        "docs/litigate/validation/cases/bowles.world",
+        "--path",
+        "docs/litigate/examples/change",
+        "--path",
+        PACKAGE,
+        "--as-of",
+        date,
+        "--known-at",
+        date,
+    ]);
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    let [world] = run.json["result"]["worlds"].as_array().unwrap().as_slice() else {
+        panic!("one world: {}", run.stdout);
+    };
+    let thompson = world["layers"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|l| l["name"] == "change-thompson-v-ins")
+        .unwrap();
+    assert_eq!(
+        world["deadlines"][0]["due"], "2004-02-24",
+        "FRAP 4(a)(6)'s 14 days from February 10, 2004"
+    );
+    (
+        thompson["in_force"].as_bool().unwrap(),
+        world["filings"].clone(),
+    )
+}
+
+/// Replay before an overruling (VALIDATION.md §4): in the world holding
+/// Thompson v. INS and Bowles v. Russell, Bowles's notice of appeal of
+/// February 26, 2004 replayed at a date before June 14, 2007 has Thompson
+/// in force and is late: "The Sixth Circuit held that the notice was
+/// untimely" (Bowles, 551 U.S. at 205, syllabus); from the overruling's date
+/// Thompson is withdrawn and the notice is late, as the Supreme Court
+/// held.
+#[test]
+fn bowles_replayed_before_the_overruling_is_late_as_the_sixth_circuit_held() {
+    let notice_late = serde_json::json!({"notice": "late"});
+    assert_eq!(bowles_at("2007-06-13"), (true, notice_late.clone()));
+    assert_eq!(bowles_at("2007-06-14"), (false, notice_late));
+}
+
 /// One year from `trigger` under `clock`.
 fn year(trigger: &str, clock: &Clock) -> litigate_engine::error::Result<ComputedDeadline> {
     let dl = DayDeadline {
@@ -390,6 +442,8 @@ fn the_report_states_the_agreement_rates() {
         format!(
             "- Circuit split `frap-4a6-notice`: {split_tests} golden tests, the outcome differing by circuit on both split cases' facts."
         ),
+        // bowles_replayed_before_the_overruling_is_late_as_the_sixth_circuit_held
+        "- Replay before an overruling (Bowles of Thompson): 1 of 1 reproduces the outcome decided at the time.".to_owned(),
     ] {
         assert!(report.contains(&line), "VALIDATION.md lacks: {line}");
     }

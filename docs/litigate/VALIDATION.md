@@ -18,7 +18,8 @@ do not give.
 - **Where.** `docs/litigate/validation/` (package `change-validation`):
   `note-2009.lit` (the Notes' examples), `rulings.lit` (one test per
   ruling, named by its `MANIFEST.json` id), `splits.lit` (the circuit
-  split). What a `.lit` test cannot state, a time of day or an
+  split); `cases/` the Bowles matter and world replayed before and after
+  an overruling (§4). What a `.lit` test cannot state, a time of day or an
   inaccessible clerk's office, the harness counts on the clock IR the same
   packages lower to (`litigate_lower`, then `litigate_engine::clock`).
   `litigate test docs/litigate/validation` runs the golden tests; `cargo
@@ -152,14 +153,26 @@ FRCP 6(a) as in force in 1996-1998, which the model refuses (D1); the April
 23 side counts the effective date as the year's first day, which no
 counting rule can state (D3).
 
-**Replay before an overruling.** Not shown. The corpus's one overruling in
-the deadline domain, Bowles v. Russell (2007) of Thompson v. INS (1964),
-withdraws an equitable excuse of a late notice, which a precedent cannot
-state in language 1 (its row has no `grant-cap`, CHANGE.md §2.8), and the
-corpus has no ruling decided under Thompson. A world replays a withdrawn
-precedent before the overruling's date (`Layer::in_force_at`, tested in
-`litigate-sema`), but no corpus precedent has a deadline effect for the
-replay to reproduce (D3).
+**Replay before an overruling.** Bowles v. Russell (2007) overrules
+Thompson v. INS (1964) from June 14, 2007, and `invalidate`s its "unique
+circumstances" default (docs/litigate/examples/change/overruling).
+`cases/bowles.case` is Bowles's appeal on the opinion's facts: the order
+reopening the time to appeal entered February 10, 2004, the notice of
+appeal filed February 26 (the district court had allowed 17 days).
+`litigate worlds cases/bowles.case --world cases/bowles.world` (the two
+precedents, at the Sixth Circuit; `cases/replay` is the one step the
+filing takes) replays it at an `as_of` and `known_at`:
+
+| Replayed at | Thompson | Reopened period (FRAP 4(a)(6)) | Notice | Decided at the time |
+|---|---|---|---|---|
+| 2007-06-13, before the overruling | in force | due 2004-02-24 | late | "The Sixth Circuit held that the notice was untimely" (551 U.S. at 205) |
+| 2007-06-14, the overruling's date | withdrawn | due 2004-02-24 | late | untimely (the Supreme Court) |
+
+The world before the overruling reproduces the outcome decided then
+(`bowles_replayed_before_the_overruling_is_late_as_the_sixth_circuit_held`).
+It does not discriminate the doctrine: Thompson's excuse has no effect on
+a deadline in language 1 (D3), so the notice is late in both worlds for
+the same reason, and the corpus has no ruling that Thompson saved.
 
 ## 5. Disagreements and gaps
 
@@ -185,9 +198,12 @@ replay to reproduce (D3).
   a deadline's trigger or its counting (CHANGE.md §7: `recharacterize` and
   `interpret` of a deadline have rows but no form; a precedent's only
   deadline effect is a waiver under a delegation, which neither FRAP
-  4(a)(6) nor AEDPA's period grants). So a world cannot compute which
-  reading binds at a circuit, and a replay before an overruling has no
-  precedent effect on a deadline to reproduce. Also: no counting rule
+  4(a)(6) nor AEDPA's period grants; lg-fq2.7's `recharacterize` changes
+  a deadline's character, not its trigger, and neither it nor `invalidate`
+  is applied when a world's layers merge yet). So a world cannot compute
+  which reading binds at a circuit, and Thompson's "unique circumstances"
+  excuse, a default no deadline consults, cannot make a late notice
+  timely in the world before Bowles. Also: no counting rule
   includes the trigger day (SPEC §5.3 step 2; L6001), so the April 23
   reading of the AEDPA split cannot be counted; and lit/core declares no
   state's holidays (FRCP 6(a)(6)(C)), so C9-C11 and A9-A11 use fixture
@@ -232,7 +248,8 @@ replay to reproduce (D3).
 - 2009 Committee Note examples: 23 of 25 agree, 0 disagree, 2 cannot be stated.
 - Timeliness rulings: 29 of 35 agree with the court, 0 disagree, 6 are refused (D1).
 - Circuit split `frap-4a6-notice`: 6 golden tests, the outcome differing by circuit on both split cases' facts.
-- Circuit split `aedpa-grace-end` and replay before an overruling: not counted (D1, D3).
+- Replay before an overruling (Bowles of Thompson): 1 of 1 reproduces the outcome decided at the time.
+- Circuit split `aedpa-grace-end`: not counted (D1, D3).
 
 Of the 29 agreeing rulings, 9 compare against a DERIVED date (†), where the
 opinion holds the filing late or timely without stating the last day.

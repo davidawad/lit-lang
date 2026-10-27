@@ -1,0 +1,18 @@
+case bowles-v-russell
+uses change-validation-replay ^1.0.0, change-validation ^1.0.0
+as_of 2007-06-13
+summary "Bowles v. Russell, 551 U.S. 205 (2007): the reopening order of February 10, 2004 and the notice of appeal of February 26."
+notes "Public-record facts of bowles-scotus-2007 (sources/change-corpus/rulings). Run under bowles.world (`litigate worlds`): late at an as_of before June 14, 2007, with Thompson v. INS in force, as the Sixth Circuit held; late after, Thompson withdrawn (docs/litigate/VALIDATION.md §4)."
+
+perspective bowles
+
+parties {
+  bowles: appellant Person
+}
+
+events {
+  reopened: 2004-02-10 change-validation::ReopeningOrderEntered() on bowles
+  notice: 2004-02-26 NoticeOfAppealFiled() by bowles
+}
+
+stakes { appeal-noticed: 0.usd, judgment-stands: 0.usd }

@@ -1,0 +1,113 @@
+module bap8.main
+
+import bap8.deadlines.{
+  appellant-brief-period,
+  appellant-election-period,
+  appellee-designation-period,
+  appellant-designation-period,
+  default-cure-period,
+  direct-authorization-petition-period,
+  direct-certification-request-period,
+  election-validity-period,
+  notice-period,
+  other-party-election-period,
+  rehearing-period,
+  mandate-after-denial-period,
+  mandate-after-window-period,
+  reply-brief-period,
+  transcript-order-period,
+}
+
+start notice-filed
+
+state notice-filed: "Bankruptcy order appealed" by applicant cite "FRBP 8002(a)(1)"
+{
+  note "The notice of appeal is filed with the bankruptcy clerk. Final and specified interlocutory bankruptcy orders are appealable under 28 U.S.C. § 158(a). Appealability of a specific order remains a matter fact."
+  edge-notice-filed-appealability "Notice filed within 14 days" -> appealability {
+    authority cite "FRBP 8002(a)(1)"
+    within notice-period
+  }
+  edge-notice-filed-dismissed "Notice filed outside the period" -> dismissed {
+    authority cite "FRBP 8002(a)(1)"
+  }
+}
+
+decision appealability: "Appeal route" by court cite "28 U.S.C. § 158(c)(1)"
+{
+  note "The Eighth Circuit BAP hears appeals unless the appellant elects district court at filing or another party elects within 30 days after service of notice. A motion challenging the validity of an election is due within 14 days after it is filed. A district court election hands the matter to the district court; its district local rules are outside this BAP package. A direct-review certification request is due within 60 days after entry; a petition for court of appeals authorization is due within 30 days after certification becomes effective."
+  edge-appealability-bap "BAP appeal proceeds" -> record { authority cite "28 U.S.C. § 158(c)(1)" }
+  edge-appealability-appellant-election "Appellant elects district court when filing" -> district-handoff {
+    authority cite "28 U.S.C. § 158(c)(1)(A)"
+  }
+  edge-appealability-election-challenge "Election validity challenged" -> record {
+    authority cite "FRBP 8005(c)"
+    within election-validity-period
+  }
+  edge-appealability-district "District court election" -> district-handoff {
+    authority cite "FRBP 8005(a)"
+    within other-party-election-period
+  }
+  edge-appealability-direct-request "Request direct-review certification" -> circuit-handoff {
+    authority cite "FRBP 8006(f)(1)"
+    within direct-certification-request-period
+  }
+}
+
+terminal dismissed: "Untimely notice; appeal dismissed" outcome [loss] cite "FRBP 8002"
+
+state district-handoff: "Appeal transferred to district court" cite "FRBP 8005(b)"
+{
+  note "The bankruptcy clerk or BAP clerk transmits the appeal papers as the rule directs. Applicable district local rules depend on the district and are not modeled here."
+  edge-district-handoff-done "District court receives appeal" -> terminal {
+    authority cite "FRBP 8005(b)"
+  }
+}
+
+state circuit-handoff: "Direct appeal to court of appeals" cite "FRBP 8006(a)"
+{
+  note "The certification is effective only when filed, a timely appeal is taken, and the notice becomes effective. The Eighth Circuit rules and IOPs govern subsequent court of appeals proceedings where applicable."
+  edge-circuit-handoff-done "Court of appeals receives appeal" -> terminal {
+    authority cite "FRBP 8006(g)"
+    within direct-authorization-petition-period
+  }
+}
+
+state record: "Record and briefing" by applicant cite "FRBP 8009; FRBP 8018"
+{
+  note "The appellant's brief is due 30 days after notice that the record was sent or is available electronically; the appellee's brief is due 30 days after service; a reply is due 14 days after service of the appellee's brief and at least 7 days before argument unless the BAP allows later filing for cause. Under FRBP 8015, a principal brief is limited to 30 pages or, with a compliance certificate, 13,000 words or 1,300 monospaced lines; a reply is limited to 15 pages or half that type volume. BAP Local Rule 8015A permits the panel to accept a brief that does not meet all Rule 8015 requirements. The appellant must designate the record and order any transcript within 14 days after the notice of appeal becomes effective; the appellee may designate additional record items within 14 days after service of the appellant's designation. The record designation is governed by FRBP 8009 and BAP Local Rule 8009A."
+  edge-record-argument "Briefing complete; argument or submission" -> argument {
+    authority cite "FRBP 8018(a); FRBP 8019"
+    within appellant-brief-period
+  }
+}
+
+state argument: "Oral argument or submission" by court cite "FRBP 8019"
+{
+  note "The panel may hear argument or submit the matter on the briefs under FRBP 8019. BAP IOPs describe panel assignment, conference, decision, and publication practice."
+  edge-argument-decision "Panel decision entered" -> decision {
+    authority cite "FRBP 8013; FRBP 8024"
+  }
+}
+
+decision decision: "BAP disposition and rehearing" by court cite "FRBP 8013"
+{
+  note "The rule text supplies no merits outcome probabilities or payoffs. A rehearing motion is due within 14 days after entry of judgment unless shortened or extended by order or local rule. BAP Local Rule 8024A addresses mandate issuance and stays."
+  edge-decision-rehearing "Rehearing sought" -> rehearing {
+    authority cite "FRBP 8022(a)(1)"
+    within rehearing-period
+  }
+  edge-decision-final "No rehearing" -> terminal {
+    authority cite "L.R. BAP 8th Cir. 8024A(b)"
+    within mandate-after-window-period
+  }
+}
+
+state rehearing: "Rehearing disposition" by court cite "FRBP 8022"
+{
+  edge-rehearing-final "Rehearing resolved" -> terminal {
+    authority cite "L.R. BAP 8th Cir. 8024A(c)(1)"
+    within mandate-after-denial-period
+  }
+}
+
+terminal terminal: "BAP appeal stage complete" outcome [procedural] cite "FRBP 8024"

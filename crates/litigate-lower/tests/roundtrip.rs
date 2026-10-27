@@ -43,7 +43,7 @@ fn import_then_lower_is_semantically_equal() {
         );
         checked.push(origin.clone());
     }
-    assert_eq!(checked.len(), 10, "{checked:?}");
+    assert_eq!(checked.len(), 11, "{checked:?}");
 }
 
 /// The lowered documents, re-read from their rendered text, compile into

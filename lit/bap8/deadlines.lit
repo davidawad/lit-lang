@@ -1,0 +1,210 @@
+module bap8.deadlines
+
+import bap8.events.{
+  AppellantBriefServed,
+  AppellantDesignationServed,
+  AppellantTranscriptOrderFiled,
+  AppelleeBriefServed,
+  BapJudgmentEntered,
+  BankruptcyOrderEntered,
+  CertificationEffective,
+  ClerkNoticeOfDefaultIssued,
+  DirectCertificationRequestFiled,
+  ElectionStatementFiled,
+  NoticeOfAppealEffective,
+  NoticeOfAppealFiled,
+  NoticeOfAppealServed,
+  RecordMadeAvailable,
+  RehearingDenied,
+  RehearingWindowExpired,
+}
+
+import core.frcp6.{ frcp6 }
+
+rule duty appeal-notice-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "FRBP 8002(a)(1)"
+{
+  deadline notice-period: 14.days after BankruptcyOrderEntered() counted_by frcp6 cite "FRBP 8002(a)(1)"
+  {
+    forum frcp
+  }
+}
+
+rule duty election-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "28 U.S.C. § 158(c)(1)"
+{
+  deadline appellant-election-period: 0.days after NoticeOfAppealFiled() counted_by frcp6 cite "28 U.S.C. § 158(c)(1)(A)"
+  {
+    forum frcp
+  }
+  deadline other-party-election-period: 30.days after NoticeOfAppealServed() counted_by frcp6 cite "28 U.S.C. § 158(c)(1)(B)"
+  {
+    forum frcp
+  }
+  deadline election-validity-period: 14.days after ElectionStatementFiled() counted_by frcp6 cite "FRBP 8005(c)"
+  {
+    forum frcp
+  }
+}
+
+rule duty default-cure-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "L.R. BAP 8th Cir. 8005A(c)"
+{
+  deadline default-cure-period: 14.days after ClerkNoticeOfDefaultIssued() counted_by frcp6 cite "L.R. BAP 8th Cir. 8005A(c)"
+  {
+    forum frcp
+  }
+}
+
+rule duty record-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "FRBP 8009(a)(1)(B)"
+{
+  deadline appellant-designation-period: 14.days after NoticeOfAppealEffective() counted_by frcp6 cite "FRBP 8009(a)(1)(B)"
+  {
+    forum frcp
+  }
+  deadline appellee-designation-period: 14.days after AppellantDesignationServed() counted_by frcp6 cite "FRBP 8009(a)(2)(A)"
+  {
+    forum frcp
+  }
+  deadline transcript-order-period: 14.days after NoticeOfAppealEffective() counted_by frcp6 cite "FRBP 8009(b)(1)"
+  {
+    forum frcp
+  }
+}
+
+rule duty briefing-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "FRBP 8018(a)"
+{
+  deadline appellant-brief-period: 30.days after RecordMadeAvailable() counted_by frcp6 cite "FRBP 8018(a)(1)"
+  {
+    forum frcp
+  }
+  deadline appellee-brief-period: 30.days after AppellantBriefServed() counted_by frcp6 cite "FRBP 8018(a)(2)"
+  {
+    forum frcp
+  }
+  deadline reply-brief-period: 14.days after AppelleeBriefServed() counted_by frcp6 cite "FRBP 8018(a)(3)"
+  {
+    forum frcp
+  }
+}
+
+rule duty direct-review-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "FRBP 8006(f)(1)"
+{
+  deadline direct-certification-request-period: 60.days after BankruptcyOrderEntered() counted_by frcp6 cite "FRBP 8006(f)(1)"
+  {
+    forum frcp
+  }
+  deadline direct-authorization-petition-period: 30.days after CertificationEffective() counted_by frcp6 cite "FRBP 8006(g)"
+  {
+    forum frcp
+  }
+}
+
+rule duty rehearing-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "FRBP 8022(a)(1)"
+{
+  deadline rehearing-period: 14.days after BapJudgmentEntered() counted_by frcp6 cite "FRBP 8022(a)(1)"
+  {
+    forum frcp
+  }
+  deadline mandate-after-window-period: 7.days after RehearingWindowExpired() counted_by frcp6 cite "L.R. BAP 8th Cir. 8024A(b)"
+  {
+    forum frcp
+  }
+  deadline mandate-after-denial-period: 7.days after RehearingDenied() counted_by frcp6 cite "L.R. BAP 8th Cir. 8024A(c)(1)"
+  {
+    forum frcp
+  }
+}
+
+test "bankruptcy notice deadline is 14 days from entry" cite "FRBP 8002(a)(1)"
+{
+  given BankruptcyOrderEntered() on 2026-03-03
+  expect deadline(notice-period) == 2026-03-17
+}
+
+test "an appellant election is filed with its notice" cite "28 U.S.C. § 158(c)(1)(A)"
+{
+  given NoticeOfAppealFiled() on 2026-03-03
+  expect deadline(appellant-election-period) == 2026-03-03
+}
+
+test "another party has 30 days after service of notice to elect district court" cite "28 U.S.C. § 158(c)(1)(B)"
+{
+  given NoticeOfAppealServed() on 2026-03-03
+  expect deadline(other-party-election-period) == 2026-04-02
+}
+
+test "a challenge to an election is due within 14 days of filing" cite "FRBP 8005(c)"
+{
+  given ElectionStatementFiled() on 2026-03-03
+  expect deadline(election-validity-period) == 2026-03-17
+}
+
+test "default can be cured within 14 days after clerk notice" cite "L.R. BAP 8th Cir. 8005A(c)"
+{
+  given ClerkNoticeOfDefaultIssued() on 2026-03-03
+  expect deadline(default-cure-period) == 2026-03-17
+}
+
+test "appellant record designation is due within 14 days after notice becomes effective" cite "FRBP 8009(a)(1)(B)"
+{
+  given NoticeOfAppealEffective() on 2026-03-03
+  expect deadline(appellant-designation-period) == 2026-03-17
+}
+
+test "appellee additional record designation is due within 14 days after service" cite "FRBP 8009(a)(2)(A)"
+{
+  given AppellantDesignationServed() on 2026-03-03
+  expect deadline(appellee-designation-period) == 2026-03-17
+}
+
+test "appellant transcript order is due within the record designation period" cite "FRBP 8009(b)(1)"
+{
+  given NoticeOfAppealEffective() on 2026-03-03
+  expect deadline(transcript-order-period) == 2026-03-17
+}
+
+test "appellant brief is due 30 days after record availability notice" cite "FRBP 8018(a)(1)"
+{
+  given RecordMadeAvailable() on 2026-03-03
+  expect deadline(appellant-brief-period) == 2026-04-02
+}
+
+test "appellee brief is due 30 days after appellant brief service" cite "FRBP 8018(a)(2)"
+{
+  given AppellantBriefServed() on 2026-03-03
+  expect deadline(appellee-brief-period) == 2026-04-02
+}
+
+test "reply brief is due 14 days after appellee brief service" cite "FRBP 8018(a)(3)"
+{
+  given AppelleeBriefServed() on 2026-03-03
+  expect deadline(reply-brief-period) == 2026-03-17
+}
+
+test "certification request is due within 60 days after entry" cite "FRBP 8006(f)(1)"
+{
+  given BankruptcyOrderEntered() on 2026-03-03
+  expect deadline(direct-certification-request-period) == 2026-05-04
+}
+
+test "petition to authorize direct appeal is due within 30 days after certification" cite "FRBP 8006(g)"
+{
+  given CertificationEffective() on 2026-03-03
+  expect deadline(direct-authorization-petition-period) == 2026-04-02
+}
+
+test "rehearing is due 14 days after BAP judgment" cite "FRBP 8022(a)(1)"
+{
+  given BapJudgmentEntered() on 2026-03-03
+  expect deadline(rehearing-period) == 2026-03-17
+}
+
+test "mandate issues seven days after the rehearing window expires" cite "L.R. BAP 8th Cir. 8024A(b)"
+{
+  given RehearingWindowExpired() on 2026-03-17
+  expect deadline(mandate-after-window-period) == 2026-03-24
+}
+
+test "mandate issues seven days after rehearing is denied" cite "L.R. BAP 8th Cir. 8024A(c)(1)"
+{
+  given RehearingDenied() on 2026-03-03
+  expect deadline(mandate-after-denial-period) == 2026-03-10
+}

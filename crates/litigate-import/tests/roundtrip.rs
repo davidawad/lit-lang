@@ -24,8 +24,8 @@ fn the_corpus_is_found() {
     let scenarios = inputs.len() - packs;
     assert_eq!(
         (packs, scenarios),
-        (10, 5),
-        "nine packs + links.json, five scenarios"
+        (11, 5),
+        "ten packs + links.json, five scenarios"
     );
 }
 

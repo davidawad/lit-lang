@@ -983,3 +983,51 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   - https://www.ndcourts.gov/legal-resources/rules/ndrappp/48
   - https://www.ndcourts.gov/legal-resources/rules/ndrappp/49
   - https://www.ndcourts.gov/legal-resources/rules/ndrappp/tables
+
+
+### Eighth Circuit Bankruptcy Appellate Panel source set (retrieved 2026-10-27)
+
+- `frbp.txt` — Federal Rules of Bankruptcy Procedure, December 1, 2025
+  edition. Extracted from the Administrative Office of the U.S. Courts official
+  PDF at `https://www.uscourts.gov/sites/default/files/document/federal-rules-of-bankruptcy-procedure.pdf`
+  with `pdftotext -layout`; headings were segmented by rule number and the
+  extracted rule text retained. This is the current edition listed on the
+  official current-rules page, which identifies the 2025 amendments effective
+  December 1, 2025. sha256: `0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8`.
+- `ca8-bap-local-rules.txt` — Eighth Circuit Bankruptcy Appellate Panel Local
+  Rules, revised December 1, 2023. Extracted from the official court PDF at
+  `https://ecf.ca8.uscourts.gov/newbap/rules/localrules_bapDec2023.pdf` with
+  `pdftotext -layout`; each local rule is headed by its canonical rule
+  reference. The official Panel Rules and Publications page lists this edition.
+  sha256: `ccc1e2198d478e0b31cd6c4d700bd699eb7e4993f073b3b894cb2f0cf48108ca`.
+- `ca8-bap-iop.txt` — Eighth Circuit Bankruptcy Appellate Panel Internal
+  Operating Procedures Manual, revised January 2024. Extracted from the
+  official court PDF at
+  `https://www.ca8.uscourts.gov/sites/ca8/files/iops%20jan%202024.pdf` with
+  `pdftotext -layout`. sha256:
+  `2fb5815bf87b25d8af30298fa0fa21e148d81ddc6992c305bd94716c68fb0485`.
+- `ca8-local-rules.txt` — Eighth Circuit Local Rules, June 17, 2024. Extracted
+  from the official court PDF at
+  `https://www.ca8.uscourts.gov/sites/ca8/files/Eighth%20Circuit%20Local%20Rules%206.17.24.pdf`
+  with `pdftotext -layout`; the Rules & Procedures page lists this edition.
+  sha256: `74b1a57311b9f597caac5a9778ede3e8328b6076d816e5a19eb62c3bfd14f907`.
+- `ca8-iop.txt` — Eighth Circuit Internal Operating Procedures, extracted from
+  the official court PDF at `https://ecf.ca8.uscourts.gov/newrules/coa/iops.pdf`
+  with `pdftotext -layout`; the Rules & Procedures page links this edition.
+  sha256: `a346115379cdf130c46d5d6c33462f03a0984fcebac95a8617b2d0222e6bc8f8`.
+- `usc-28-158.txt` — 28 U.S.C. § 158, extracted from the official Office of the
+  Law Revision Counsel page at `https://uscode.house.gov/us/usc/119-118/t28/s158/`
+  (text current through Public Law 119-120, October 7, 2026). HTML navigation
+  removed; statutory text retained. sha256:
+  `a0f615748b6a10805e6eeec6a05e94d7a3fc2dcd5fafbe94efae7af8ebf9987b`.
+- Leading decisions named in the outline were checked against their published
+  United States Reports: *Catlin v. United States*, 324 U.S. 229 (1945),
+  official Library of Congress scan at
+  `https://tile.loc.gov/storage-services/service/ll/usrep/usrep324/usrep324229/usrep324229.pdf`,
+  and *Bowles v. Russell*, 551 U.S. 205 (2007), official scan at
+  `https://tile.loc.gov/storage-services/service/ll/usrep/usrep551/usrep551205/usrep551205.pdf`.
+  They are omitted from the promoted package: *Catlin* addresses the finality
+  rule under the former 28 U.S.C. § 1291, not the bankruptcy appellate routes
+  modeled here; *Bowles* holds the statutory civil notice period in 28 U.S.C.
+  § 2107 jurisdictional, while the modeled bankruptcy notice period is set by
+  FRBP 8002. Neither decision supports a proposition needed by this outline.

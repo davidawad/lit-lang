@@ -1,0 +1,68 @@
+[package]
+name = "eighth-circuit-bankruptcy-appellate-panel"
+version = "0.1.0"
+language = 1
+pack_id = "eighth-circuit-bankruptcy-appellate-panel"
+forum = "bap8"
+authority = "FederalRule"
+title = "Eighth Circuit Bankruptcy Appellate Panel Procedure"
+description = "Appeals before the Eighth Circuit Bankruptcy Appellate Panel under the current Federal Rules of Bankruptcy Procedure and panel rules. A district court election is a handoff; district local rules are outside this panel package."
+in_force = "2025-12-01"
+known_at = "2026-10-07"
+unknown_before = "2025-12-01"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+appellee = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.frbp]
+title = "Federal Rules of Bankruptcy Procedure, December 1, 2025 edition"
+url = "https://www.uscourts.gov/sites/default/files/document/federal-rules-of-bankruptcy-procedure.pdf"
+path = "sources/frbp.txt"
+path_sha256 = "0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8"
+as_of = "2025-12-01"
+
+[sources.bap-local-rules]
+title = "Local Rules of the United States Bankruptcy Appellate Panel for the Eighth Circuit, revised December 1, 2023"
+url = "https://ecf.ca8.uscourts.gov/newbap/rules/localrules_bapDec2023.pdf"
+path = "sources/ca8-bap-local-rules.txt"
+path_sha256 = "ccc1e2198d478e0b31cd6c4d700bd699eb7e4993f073b3b894cb2f0cf48108ca"
+cite_prefixes = ["L.R. BAP 8th Cir."]
+section_heading = "L.R. BAP 8th Cir. {n}"
+as_of = "2023-12-01"
+
+[sources.bap-iop]
+title = "Internal Operating Procedures Manual of the Eighth Circuit Bankruptcy Appellate Panel, revised January 2024"
+url = "https://www.ca8.uscourts.gov/sites/ca8/files/iops%20jan%202024.pdf"
+path = "sources/ca8-bap-iop.txt"
+path_sha256 = "2fb5815bf87b25d8af30298fa0fa21e148d81ddc6992c305bd94716c68fb0485"
+as_of = "2024-01-01"
+
+[sources.ca8-rules]
+title = "Eighth Circuit Local Rules, June 17, 2024"
+url = "https://www.ca8.uscourts.gov/sites/ca8/files/Eighth%20Circuit%20Local%20Rules%206.17.24.pdf"
+path = "sources/ca8-local-rules.txt"
+path_sha256 = "74b1a57311b9f597caac5a9778ede3e8328b6076d816e5a19eb62c3bfd14f907"
+as_of = "2024-06-17"
+
+[sources.ca8-iop]
+title = "Internal Operating Procedures of the United States Court of Appeals for the Eighth Circuit"
+url = "https://ecf.ca8.uscourts.gov/newrules/coa/iops.pdf"
+path = "sources/ca8-iop.txt"
+path_sha256 = "a346115379cdf130c46d5d6c33462f03a0984fcebac95a8617b2d0222e6bc8f8"
+as_of = "2013-05-20"
+
+[sources.usc28-158]
+title = "28 U.S.C. § 158, current preliminary edition"
+url = "https://uscode.house.gov/us/usc/119-118/t28/s158/"
+path = "sources/usc-28-158.txt"
+path_sha256 = "a0f615748b6a10805e6eeec6a05e94d7a3fc2dcd5fafbe94efae7af8ebf9987b"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+as_of = "2026-10-07"

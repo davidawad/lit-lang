@@ -54,6 +54,7 @@ fn every_imported_package_passes_core_checks_and_lowers_to_hir() {
     assert_eq!(
         dirs,
         [
+            "lit/bap8",
             "lit/cafc",
             "lit/cofc",
             "lit/frap",

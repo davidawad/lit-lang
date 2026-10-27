@@ -749,3 +749,10 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 - Edition: title: "Rules of the Supreme Court and Court of Appeals of the State of Arkansas (current through December 15, 2025)"; listed current to 12/15/2025 on https://opinions.arcourts.gov/ark/cr/en/nav_date.do.
 - Retrieved 2026-10-27 on carbon (the court site refuses agent pods: lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 039cb6ae5df1eeb38a0be219ebf093b41622768649397394a82652bbaf3c3052. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+### `ca8/ca8-local-rules.txt` — Local Rules of the United States Court of Appeals for the Eighth Circuit
+
+- Source: https://www.ca8.uscourts.gov/sites/ca8/files/Eighth%20Circuit%20Local%20Rules%206.17.24.pdf (official site; 39 pages, sha256 26cfe150aa5813ffdc7f5c55ef5a2604c02ecc76526d5ee21669806b937a41ac).
+- Edition: dated June 17, 2024 on its first page; listed as "Local Rules of the Eighth Circuit, June 2024" on https://www.ca8.uscourts.gov/rules-procedures.
+- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 462e6deddebce2f420f7628c80ce8c617971bdecbfebb4be817ca99772d375b8. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

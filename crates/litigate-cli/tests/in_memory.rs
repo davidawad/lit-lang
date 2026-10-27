@@ -6,7 +6,7 @@
 #![allow(clippy::unwrap_used)]
 mod support;
 
-use litigate_cli::LitigateRun;
+use litigate_cli::{IN_MEMORY_COMMANDS, LitigateRun};
 use serde_json::Value;
 use std::collections::BTreeMap;
 use std::path::Path;
@@ -208,7 +208,10 @@ fn other_commands_do_not_run_in_memory() {
     assert_eq!(run.code, 1);
     assert_eq!(
         run.stderr,
-        "litigate explain: only check, build, worlds, run and the op subcommands run over an in-memory source\n"
+        format!(
+            "litigate explain: only {} and the op subcommands run over an in-memory source\n",
+            IN_MEMORY_COMMANDS.join(", ")
+        )
     );
     let usage = litigate_cli::execute_in_memory([], &["frobnicate".into()], None);
     assert_eq!((usage.code, usage.stdout.as_str()), (1, ""));

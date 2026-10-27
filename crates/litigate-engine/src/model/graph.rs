@@ -8,7 +8,7 @@ use std::collections::{BTreeMap, HashMap};
 
 use super::entities::{CompileOptions, Edge, Node, PackMeta, PayoffSource};
 use super::links::{local_edge_ids, LinkFile};
-use super::schema::{default_roles, NodeKind, Pack, RawEdge, Role};
+use super::schema::{default_roles, NodeKind, Pack, RawEdge, RawNode, Role};
 use crate::error::{Error, Result};
 
 /// Dense node index.
@@ -172,39 +172,9 @@ impl Graph {
             if self.node_ix.contains_key(&qid) {
                 return Err(Error::Invalid(format!("duplicate node id {qid}")));
             }
-            let kind = n.kind.unwrap_or(NodeKind::State);
-            let (payoff, payoff_source) = match (n.payoff, kind == NodeKind::Terminal) {
-                (Some(p), _) => (p, PayoffSource::Authored),
-                (None, true) => heuristic_payoff(&n.id, &n.label)
-                    .map_or((0.0, PayoffSource::Default), |p| {
-                        (p, PayoffSource::Heuristic)
-                    }),
-                (None, false) => (0.0, PayoffSource::Default),
-            };
-            check_fee_shift(&qid, kind, n.fee_shift)?;
-            self.node_ix.insert(qid.clone(), self.nodes.len());
-            self.nodes.push(Node {
-                id: qid.clone(),
-                pack: pack.id.clone(),
-                local_id: n.id.clone(),
-                kind,
-                label: n.label.clone(),
-                cite: n.cite.clone(),
-                note: n.note.clone(),
-                group: n.group.clone(),
-                valence: n.valence.clone(),
-                payoff,
-                payoff_source,
-                outcome: n.outcome.clone(),
-                tags: n.tags.clone(),
-                attrs: n.attrs.clone(),
-                payoff_by_flag: n.payoff_by_flag.clone(),
-                fee_shift: n.fee_shift,
-                synthetic: false,
-                flags: vec![],
-                base_id: qid,
-                marking: vec![],
-            });
+            let node = pack_node(&pack.id, n, qid.clone())?;
+            self.node_ix.insert(qid, self.nodes.len());
+            self.nodes.push(node);
         }
         for (e, local) in pack.edges.iter().zip(local_edge_ids(&pack.edges)) {
             let (from, to) = (qualify(&pack.id, &e.from), qualify(&pack.id, &e.to));
@@ -382,4 +352,40 @@ impl Graph {
             self.inc[e.to].push(i);
         }
     }
+}
+
+/// The engine node for pack `pack`'s raw node `n`, qualified as `qid`.
+fn pack_node(pack: &str, n: &RawNode, qid: String) -> Result<Node> {
+    let kind = n.kind.unwrap_or(NodeKind::State);
+    let (payoff, payoff_source) = match (n.payoff, kind == NodeKind::Terminal) {
+        (Some(p), _) => (p, PayoffSource::Authored),
+        (None, true) => heuristic_payoff(&n.id, &n.label)
+            .map_or((0.0, PayoffSource::Default), |p| {
+                (p, PayoffSource::Heuristic)
+            }),
+        (None, false) => (0.0, PayoffSource::Default),
+    };
+    check_fee_shift(&qid, kind, n.fee_shift)?;
+    Ok(Node {
+        id: qid.clone(),
+        pack: pack.to_string(),
+        local_id: n.id.clone(),
+        kind,
+        label: n.label.clone(),
+        cite: n.cite.clone(),
+        note: n.note.clone(),
+        group: n.group.clone(),
+        valence: n.valence.clone(),
+        payoff,
+        payoff_source,
+        outcome: n.outcome.clone(),
+        tags: n.tags.clone(),
+        attrs: n.attrs.clone(),
+        payoff_by_flag: n.payoff_by_flag.clone(),
+        fee_shift: n.fee_shift,
+        synthetic: false,
+        flags: vec![],
+        base_id: qid,
+        marking: vec![],
+    })
 }

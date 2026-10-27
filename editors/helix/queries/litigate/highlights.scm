@@ -18,7 +18,7 @@
   "authority" "default" "exception" "test" "link" "instance" "event" "case"
   "uses" "as_of" "known_at" "summary" "notes" "source" "perspective" "parties"
   "events" "facts" "stakes" "beliefs" "observe" "prior" "analysis" "edition"
-  "limit" "grant" "recharacterize" "invalidate" "governing_law"
+  "limit" "grant" "recharacterize" "invalidate" "governing_law" "calibration"
 ] @keyword
 
 ; Clause and field keywords.
@@ -38,7 +38,8 @@
   "interpretation" "formerly" "forums" "forward_holidays" "declared_holidays"
   "quote" "words" "pages" "lines" "certificate" "excludes" "ecf" "for" "paper"
   "delegable" "op" "unlock" "characterization" "retracted" "unknown_before"
-  "commenced" "spawn" "joins" "anytime" "lock" "against" "Rule"
+  "commenced" "spawn" "joins" "anytime" "lock" "against" "Rule" "vintage"
+  "retrieved" "n" "method" "attr"
 ] @keyword
 
 (discretion) @keyword

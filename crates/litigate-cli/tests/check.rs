@@ -94,7 +94,12 @@ fn ttab_check_human_output_groups_library_noise_and_verbose_restores_it() {
             .output()
             .unwrap()
     };
-    let default = run(&["--format", "human", "check", "cases/e2e-ttab-short.case"]);
+    let default = run(&[
+        "--format",
+        "human",
+        "check",
+        "crates/litigate-cli/tests/fixtures/e2e-ttab-short/e2e-ttab-short.case",
+    ]);
     assert_eq!(default.status.code(), Some(2));
     let default_text = String::from_utf8_lossy(&default.stdout);
     assert!(default_text.contains("designates `answer-period` due 2026-11-05"));
@@ -108,7 +113,7 @@ fn ttab_check_human_output_groups_library_noise_and_verbose_restores_it() {
         "human",
         "check",
         "--verbose",
-        "cases/e2e-ttab-short.case",
+        "crates/litigate-cli/tests/fixtures/e2e-ttab-short/e2e-ttab-short.case",
     ]);
     assert_eq!(verbose.status.code(), Some(2));
     let verbose_text = String::from_utf8_lossy(&verbose.stdout);
@@ -116,7 +121,12 @@ fn ttab_check_human_output_groups_library_noise_and_verbose_restores_it() {
     assert!(!verbose_text.contains("--verbose to show"));
     insta::assert_snapshot!("ttab_check_human_verbose", verbose_text);
 
-    let json = run(&["--format", "json", "check", "cases/e2e-ttab-short.case"]);
+    let json = run(&[
+        "--format",
+        "json",
+        "check",
+        "crates/litigate-cli/tests/fixtures/e2e-ttab-short/e2e-ttab-short.case",
+    ]);
     let document: serde_json::Value = serde_json::from_slice(&json.stdout).unwrap();
     assert_eq!(document["diagnostics"].as_array().unwrap().len(), 125);
     assert!(document["diagnostics"]

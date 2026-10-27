@@ -3,7 +3,7 @@ source: crates/litigate-cli/tests/check.rs
 expression: verbose_text
 ---
 [L4001] Error: `InstitutionNoticed` on 2026-10-21 designates `answer-period` due 2026-11-05, earlier than the least time the rule allows, 30 calendar days from 2026-10-21 (2026-11-20) (37 CFR 2.105(a))
-    ╭─[ cases/e2e-ttab-short.case:12:26 ]
+    ╭─[ crates/litigate-cli/tests/fixtures/e2e-ttab-short/e2e-ttab-short.case:12:26 ]
     │
  12 │   instituted: 2026-10-21 InstitutionNoticed(2026-11-05) on applicant
     │                          ───────────────┬──────────────  
@@ -994,7 +994,7 @@ litigate check: failed (1 error(s), 124 warning(s))
 {
   "profile": "dev",
   "files": [
-    "cases/e2e-ttab-short.case",
+    "crates/litigate-cli/tests/fixtures/e2e-ttab-short/e2e-ttab-short.case",
     "lit/ttab/../core/Lit.toml",
     "lit/ttab/../core/authority.lit",
     "lit/ttab/../core/calendar.lit",
@@ -1165,7 +1165,7 @@ litigate check: failed (1 error(s), 124 warning(s))
       "status": "failed",
       "count": 1,
       "examples": [
-        "cases/e2e-ttab-short.case:12:26: L4001 `InstitutionNoticed` on 2026-10-21 designates `answer-period` due 2026-11-05, earlier than the least time the rule allows, 30 calendar days from 2026-10-21 (2026-11-20) (37 CFR 2.105(a))"
+        "crates/litigate-cli/tests/fixtures/e2e-ttab-short/e2e-ttab-short.case:12:26: L4001 `InstitutionNoticed` on 2026-10-21 designates `answer-period` due 2026-11-05, earlier than the least time the rule allows, 30 calendar days from 2026-10-21 (2026-11-20) (37 CFR 2.105(a))"
       ],
       "evidence": {
         "checked": 1,
@@ -1230,7 +1230,7 @@ litigate check: failed (1 error(s), 124 warning(s))
   ],
   "cases": [
     {
-      "path": "cases/e2e-ttab-short.case",
+      "path": "crates/litigate-cli/tests/fixtures/e2e-ttab-short/e2e-ttab-short.case",
       "id": "e2e-ttab-short",
       "start": null,
       "replay": [

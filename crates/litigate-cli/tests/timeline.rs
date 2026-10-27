@@ -426,9 +426,7 @@ fn cases_under(dir: &Path) -> Vec<String> {
 fn keys_are_unique_in_every_world_view_of_every_case() {
     let cases = cases_under(&repo().join("cases"));
     assert!(cases.len() >= 20, "{cases:?}");
-    // The end-to-end matter rejected by design (L4001, `e2e_ttab.rs`)
-    // exits 2; its timeline is golden-tested there.
-    for case in cases.iter().filter(|c| !c.ends_with("e2e-ttab-short.case")) {
+    for case in &cases {
         let t = timeline(&[case]);
         // The only row the op re-emits is a parent's deadline a world
         // triggers (superseded, with `replaced_by`), so any other key

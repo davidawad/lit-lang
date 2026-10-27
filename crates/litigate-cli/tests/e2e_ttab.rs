@@ -4,7 +4,9 @@
 //! `?`. A designated date the matter does not record leaves the answer
 //! deadline with status `unknown` and the reason, naming the notice, in
 //! the schedule, in `explain-value` and on the timeline: never `open`,
-//! never `lapsed`.
+//! never `lapsed`. The short one is wrong by design, so it lives under
+//! `tests/fixtures/e2e-ttab-short/`, outside the `cases/` corpus that
+//! `litigate check lit cases` must pass clean (lg-1ura).
 // Test helpers below may unwrap: a panic is the failed assertion.
 #![allow(clippy::unwrap_used)]
 mod support;
@@ -12,23 +14,21 @@ mod support;
 use serde_json::{json, Value};
 use support::litigate;
 
-/// What `litigate check` and `explain-value` report for
-/// `cases/e2e-ttab-{name}.case`: the exit code, the matter's own
-/// diagnostics, its deadline schedule, the answer period's trace head,
-/// and its timeline rows.
-fn golden(name: &str) -> Value {
-    let case = format!("cases/e2e-ttab-{name}.case");
-    let run = litigate(&["check", &case]);
+/// What `litigate check` and `explain-value` report for `case`: the exit
+/// code, the matter's own diagnostics, its deadline schedule, the answer
+/// period's trace head, and its timeline rows.
+fn golden(case: &str) -> Value {
+    let run = litigate(&["check", case]);
     let own: Vec<Value> = run.json["diagnostics"]
         .as_array()
         .unwrap()
         .iter()
-        .filter(|d| d["span"]["file"] == case.as_str())
+        .filter(|d| d["span"]["file"] == case)
         .map(|d| json!({"code": d["code"], "severity": d["severity"], "message": d["message"]}))
         .collect();
-    let explained = litigate(&["explain-value", &case, "answer-period"]);
+    let explained = litigate(&["explain-value", case, "answer-period"]);
     let e = &explained.json["result"];
-    let timeline = litigate(&["timeline", &case]);
+    let timeline = litigate(&["timeline", case]);
     let answer: Vec<Value> = timeline.json["result"]["rows"]
         .as_array()
         .map(Vec::as_slice)
@@ -48,7 +48,7 @@ fn golden(name: &str) -> Value {
 
 #[test]
 fn a_notice_designating_thirty_days_or_more_is_open() {
-    let g = golden("ok");
+    let g = golden("cases/e2e-ttab-ok.case");
     assert_eq!(g["code"], 0);
     assert_eq!(g["deadlines"][0]["due"], "2026-11-30");
     assert_eq!(g["deadlines"][0]["status"], "open");
@@ -57,7 +57,7 @@ fn a_notice_designating_thirty_days_or_more_is_open() {
 
 #[test]
 fn a_notice_designating_less_is_rejected() {
-    let g = golden("short");
+    let g = golden("crates/litigate-cli/tests/fixtures/e2e-ttab-short/e2e-ttab-short.case");
     assert_eq!(g["code"], 2);
     assert_eq!(g["diagnostics"][0]["code"], "L4001");
     insta::assert_json_snapshot!("e2e_ttab_short", g);
@@ -65,7 +65,7 @@ fn a_notice_designating_less_is_rejected() {
 
 #[test]
 fn a_notice_without_its_due_date_is_unknown_with_the_reason() {
-    let g = golden("unknown");
+    let g = golden("cases/e2e-ttab-unknown.case");
     assert_eq!(g["code"], 0);
     let d = &g["deadlines"][0];
     assert_eq!(d["due"], Value::Null);

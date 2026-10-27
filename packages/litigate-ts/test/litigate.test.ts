@@ -75,8 +75,7 @@ describe("check matches the CLI", () => {
 
   it("finds a matter's packages in the embedded library", () => {
     const cases: Files = tree("cases");
-    // Every matter but the one rejected by design (L4001, lg-flu.46).
-    const accepted = Object.keys(cases).filter((p) => p.endsWith(".case") && p !== "cases/e2e-ttab-short.case");
+    const accepted = Object.keys(cases).filter((p) => p.endsWith(".case"));
     const expected = native(["check", ...accepted]);
     expect(expected.code).toBe(0);
     expect(expected.envelope?.diagnostics.some((d) => d.code === "L4016")).toBe(true);

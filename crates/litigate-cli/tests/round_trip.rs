@@ -9,9 +9,6 @@ mod support;
 use std::path::Path;
 use support::{litigate, repo};
 
-/// Matters that fail their check on purpose, with the error they carry.
-const FAILING: [(&str, &str); 1] = [("cases/e2e-ttab-short.case", "L4001")];
-
 /// Every package directory under `lit/` and every `.case` under `cases/`,
 /// repository-relative.
 fn targets() -> Vec<String> {
@@ -58,12 +55,6 @@ fn every_package_and_matter_compiles_and_solves() {
         handles.into_iter().map(|h| h.join().unwrap()).collect()
     });
     for (target, run) in runs {
-        if let Some((_, code)) = FAILING.iter().find(|(f, _)| *f == target) {
-            assert_eq!(run.code, 2, "{target}: {}", run.stdout);
-            assert!(run.json.get("result").is_none(), "{target}");
-            assert!(run.stdout.contains(code), "{target}: {}", run.stdout);
-            continue;
-        }
         assert_eq!(run.code, 0, "{target}: {}{}", run.stdout, run.stderr);
         let solved = &run.json["result"];
         assert_eq!(solved["ok"], true, "{target}: {solved}");

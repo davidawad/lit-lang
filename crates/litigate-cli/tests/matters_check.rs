@@ -2,8 +2,7 @@
 //! end-to-end TTAB matters among them) and the timeline fixture matters,
 //! with every rule package they use, is `ok: true` with no error in
 //! `litigate check` and `litigate timeline`, so a package whose cite pins
-//! do not bind to the vendored text cannot pass the gate. A matter wrong
-//! by design (`REJECTED`) must fail with its one error code and no other.
+//! do not bind to the vendored text cannot pass the gate.
 //! A binary's corpus is the `sources/` it embedded when built, so a
 //! `litigate` older than a pin (the PM's 5 L1010 on `Sup. Ct. R.` after
 //! the 2026 Rules were vendored) reports the mismatch with how to fix it,
@@ -32,19 +31,6 @@ fn cases_under(root: &Path, dir: &Path) -> Vec<String> {
     found
 }
 
-/// The matters that are wrong by design, each with the one error code it
-/// must report: a notice designating less than the thirty days 37 C.F.R.
-/// § 2.105(a) allows (`e2e_ttab.rs`). Every other matter is clean.
-const REJECTED: &[(&str, &str)] = &[("cases/e2e-ttab-short.case", "L4001")];
-
-/// The code `case` is rejected with by design, if any.
-fn rejected(case: &str) -> Option<&'static str> {
-    REJECTED
-        .iter()
-        .find(|(file, _)| *file == case)
-        .map(|(_, code)| *code)
-}
-
 /// The error diagnostics of `run`, as `file code message`.
 fn errors(run: &Run) -> Vec<String> {
     run.json["diagnostics"]
@@ -70,62 +56,20 @@ fn assert_clean(what: &str, run: &Run) {
     assert_eq!(run.code, 0, "{what}: {}", run.stderr);
 }
 
-/// `run` fails (exit 2, `ok: false`) on errors in `cases` alone, each of
-/// them `rejected`'s code for its file, and on each of `cases` at least once.
-fn assert_rejected(what: &str, run: &Run, cases: &[&str]) {
-    let errors = errors(run);
-    for e in &errors {
-        let mut words = e.split(' ');
-        let (file, code) = (words.next().unwrap(), words.next().unwrap());
-        assert!(
-            cases.contains(&file) && rejected(file) == Some(code),
-            "{what}: {e}"
-        );
-    }
-    for case in cases {
-        assert!(
-            errors.iter().any(|e| e.starts_with(&format!("{case} "))),
-            "{what}: {case} is no longer rejected: {errors:#?}"
-        );
-    }
-    assert_eq!(run.json["ok"], Value::Bool(false), "{what}: {}", run.stdout);
-    assert_eq!(run.code, 2, "{what}: {}", run.stderr);
-}
-
-/// `run` is clean, or rejected for `rejects` alone when there are any.
-fn assert_clean_but(what: &str, run: &Run, rejects: &[&str]) {
-    if rejects.is_empty() {
-        assert_clean(what, run);
-    } else {
-        assert_rejected(what, run, rejects);
-    }
-}
-
 /// `litigate check` of every package under `dir/lit` and every matter
-/// under `dir/cases` is clean but for the `REJECTED` ones and covers each
-/// matter, and so is the `timeline` of each (which carries the same
-/// check's diagnostics, as the PM's run did).
+/// under `dir/cases` is clean and covers each matter, and so is the
+/// `timeline` of each (which carries the same check's diagnostics, as the
+/// PM's run did).
 fn every_matter_is_clean(dir: &Path) -> Vec<String> {
     let cases = cases_under(dir, &dir.join("cases"));
-    let rejects: Vec<&str> = cases
-        .iter()
-        .map(String::as_str)
-        .filter(|c| rejected(c).is_some())
-        .collect();
     let check = litigate_in(dir, &["check", "lit", "cases"]);
-    assert_clean_but("check lit cases", &check, &rejects);
+    assert_clean("check lit cases", &check);
     let files = check.json["result"]["files"].as_array().unwrap();
     for case in &cases {
         assert!(files.iter().any(|f| f == case.as_str()), "{case}");
-        let own: &[&str] = if rejected(case).is_some() {
-            &[case.as_str()]
-        } else {
-            &[]
-        };
-        assert_clean_but(
+        assert_clean(
             &format!("timeline {case}"),
             &litigate_in(dir, &["timeline", case]),
-            own,
         );
     }
     cases
@@ -135,9 +79,6 @@ fn every_matter_is_clean(dir: &Path) -> Vec<String> {
 fn every_matter_under_cases_checks_ok_with_no_error() {
     let cases = every_matter_is_clean(&repo());
     assert!(cases.len() >= 20, "{cases:?}");
-    for (case, _) in REJECTED {
-        assert!(cases.contains(&(*case).to_owned()), "{case}");
-    }
     for case in [
         "cases/ttab-opposition-applicant-defense.case",
         "cases/e2e-ttab-ok.case",

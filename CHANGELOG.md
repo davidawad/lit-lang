@@ -282,14 +282,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   timeline (`status.state` `unknown`, reason "InstitutionNoticed due date
   not recorded"); it never
   lapses however late `as_of` is. Three end-to-end TTAB matters,
-  `cases/e2e-ttab-{ok,short,unknown}.case` (one notice mailed 2026-10-21
-  designating 2026-11-30, 2026-11-05 and `?`), are golden-tested through
+  `cases/e2e-ttab-{ok,unknown}.case` and, wrong by design and so outside
+  the `cases/` corpus, `crates/litigate-cli/tests/fixtures/e2e-ttab-short/`
+  (one notice mailed 2026-10-21 designating 2026-11-30, `?` and
+  2026-11-05), are golden-tested through
   `litigate check` and `explain-value`.
 - **Every matter checks clean, as a gate** (lg-flu.48).
   `crates/litigate-cli/tests/matters_check.rs` checks `lit` and every
   `.case` under `cases/` (the TTAB end-to-end matters among them) and the
-  timeline fixtures, and the `timeline` of each, requiring `ok: true` and no error;
-  `cases/e2e-ttab-short.case`, wrong by design, must fail with L4001 alone.
+  timeline fixtures, and the `timeline` of each, requiring `ok: true` and no error.
   The PM's 5 L1010 on `Sup. Ct. R.` cites (`sources/scotus-rules.txt` "is
   not the text source `scotus` pins") came from a `litigate` built before
   lg-flu.41 re-vendored the 2026 Rules: a binary verifies pins against the
@@ -612,6 +613,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   the shim goes with lg-dfv4.7.
 
 ### Fixed
+
+- **`litigate check lit cases` passes clean** (lg-1ura). The TTAB matter
+  whose notice designates an answer date short of the 30 days 37 C.F.R.
+  § 2.105(a) requires (L4001) is a negative fixture, not a matter: it moved
+  from `cases/e2e-ttab-short.case` to
+  `crates/litigate-cli/tests/fixtures/e2e-ttab-short/` (locked by
+  `just lit-sync`), so the corpus has no error by design.
 
 - **Wasm `litigate check` judges deadlines at today, as native does**
   (lg-2ie2). lg-rpmf made the native binary judge `check` and

@@ -1,0 +1,7 @@
+
+### `innd/innd-local-rules.txt` — N.D. Indiana Local Rules
+
+- Source: https://www.innd.uscourts.gov/sites/innd/files/CurrentLocalRules.pdf (official site; 136 pages, sha256 380ac564b7712f1836d4d0b8a3b89fae0e7de750abb0658d524212dfb016e097).
+- Edition: Local Rules effective February 25, 2022 (the "Current Local Rules" link on https://www.innd.uscourts.gov/court-info/local-rules-and-orders; page lists no later adopted amendments); fetched by curl.
+- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 bed2beeced8a3fd2c10b8759752b1b160d4be978f9243e9fbf6e304f5f27783a. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

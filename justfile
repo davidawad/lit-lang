@@ -285,13 +285,19 @@ ci: fmt-check lint cov-gate-test mirror-sync-test lit-sync-check coverage-check 
 
 # The per-bead gate (scripts/ci-scoped): global checks (fmt, typos,
 # lit-sync-check, coverage-check, tree-sitter-test when the grammar changed, cargo check
-# --workspace, audit, deny), then clippy, one instrumented nextest run and
-# doctests for the packages changed since BASE (default: the merge-base
-# with origin/main) plus their workspace reverse dependencies. Coverage
-# from that run: a litigate crate below 100% prints COV_WAIVED, which
-# `ci` (cov-litigate) still enforces. Ends `CI_SCOPED: pass|fail scope=...`.
+# --workspace, audit, deny), then clippy, a nextest run under the `gate`
+# profile (parallel, no whole-corpus sweeps, no coverage) and doctests for
+# the packages changed since BASE (default: the merge-base with
+# origin/main) plus their workspace reverse dependencies. Ends
+# `GATE_SECONDS ...` and `CI_SCOPED: pass|fail scope=...`.
 ci-scoped BASE='':
-    LITIGATE_CRATES="{{litigate_crates}}" scripts/ci-scoped run {{BASE}}
+    scripts/ci-scoped run {{BASE}}
+
+# The post-land nightly on HEAD (lg-kuei): the whole workspace with every
+# sweep, every doctest and `cov-litigate`; a red files a P0 bead naming
+# the commit. Ends `NIGHTLY: pass|fail commit=SHA`.
+nightly:
+    scripts/ci-scoped nightly
 
 # The scope computation's self-test (no build; `ci-scoped` runs it first).
 ci-scoped-test:

@@ -1,12 +1,58 @@
+# Tests run in parallel, one per available CPU (the cgroup quota in a pod);
+# each is its own process. The LSP tests time cancellation against a
+# running check, so they run one at a time (lg-kuei).
+[test-groups]
+serial-lsp = { max-threads = 1 }
+
+[[profile.default.overrides]]
+filter = "package(litigate-lsp)"
+test-group = "serial-lsp"
+
 [profile.default]
 fail-fast = false
 retries = 0
-test-threads = 1
+test-threads = "num-cpus"
 
 [profile.ci]
 fail-fast = false
 retries = 0
-test-threads = 1
+test-threads = "num-cpus"
 
 [profile.ci.junit]
+path = "junit.xml"
+
+# The land gate (`scripts/ci-scoped run`, lg-kuei): every test except the
+# whole-corpus sweeps below, each of which recompiles or replays every
+# package, matter, scenario or ruling (one to nine minutes apiece). Each
+# family keeps smaller per-case tests in the gate; the sweeps run in the
+# post-land nightly (`scripts/ci-scoped nightly`, profile `nightly`), which
+# files a red as a P0 bead naming the commit.
+[profile.gate]
+fail-fast = false
+retries = 0
+test-threads = "num-cpus"
+default-filter = """
+not (
+    (package(litgraph-packs) & binary(merge_safe))
+  | (package(litigate-cli) & (
+        test(=cmd::filing::round_trip::every_printed_move_is_accepted_back)
+      | (binary(cases_port) & test(/every_|reproduces_every|on_every/))
+      | (binary(change_files) & test(=every_ruling_replays_under_its_world))
+      | (binary(matters_check) & test(/^every_/))
+      | (binary(queries) & test(=every_corpus_verdict_equals_the_verdict_over_every_package))
+      | (binary(round_trip) & test(=every_package_and_matter_compiles_and_solves))
+      | (binary(printed_names) & test(=every_printed_move_is_accepted_back))
+      | (binary(delegation_conversion) & test(=the_delegable_conversion_lowers_the_corpus_identically))
+      | (binary(impact) & test(=a_layer_edit_lists_every_moved_deadline_verdict_and_expectation))
+      | (binary(in_memory) & test(=engine_serves_the_compiled_lit_and_cases_in_memory))
+    ))
+)
+"""
+
+[profile.nightly]
+fail-fast = false
+retries = 0
+test-threads = "num-cpus"
+
+[profile.nightly.junit]
 path = "junit.xml"

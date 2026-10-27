@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **A faster land gate, and a post-land nightly** (lg-kuei). `just
+  ci-scoped` runs its tests under the nextest `gate` profile: in parallel
+  (one per CPU; the LSP tests stay serial), at `[profile.test]`
+  opt-level 1 (about 3x faster on the corpus tests), through sccache when
+  the pod has it, without coverage instrumentation and without the
+  whole-corpus sweeps (roundtrip `every_package_*`, the scenario and
+  matter sweeps, `merge_safe`). It ends with one `GATE_SECONDS total=N
+  stage=N ...` line, also appended to `target/gate-seconds.log`. `just
+  nightly` (`scripts/ci-scoped nightly`) runs the whole workspace with
+  every sweep, every doctest and `cov-litigate` on HEAD, and files a red
+  as a P0 bead naming the commit.
 - **docs/COVERAGE.md, the per-jurisdiction coverage table, generated**
   (lg-wvlf.2). `litigate coverage [ROOT]` (`just coverage`) walks `lit/`
   and `outlines/` and writes one row per `lit/` package and per US state,

@@ -65,6 +65,12 @@ todo = "deny"
 [profile.dev.package.sha2]
 opt-level = 3
 
+# Tests compile and solve the whole lit/ corpus; at opt-level 1 they run
+# about three times faster than unoptimized, for a modestly longer build
+# (lg-kuei: the land gate's test stage was 90% of its time).
+[profile.test]
+opt-level = 1
+
 [profile.release]
 lto = "thin"
 codegen-units = 1

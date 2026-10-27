@@ -199,12 +199,12 @@ objective or `opponent_objective` differs is warned
 The counts and prices in these files are illustrative inputs, not facts
 about any real judge or vendor.
 
-- `examples/ptab-robust-institution.json`: robust solve on the calibrated
+- `cases/requests/ptab-robust-institution.case`: robust solve on the calibrated
   PTAB pack. The prior strength at the institution decision is the
   calibration's `n`; elsewhere it is the warned default.
-- `examples/cofc-posterior-observed-judge.json`: a hypothetical "this judge
+- `cases/requests/cofc-posterior-observed-judge.case`: a hypothetical "this judge
   granted the government summary judgment 3 of 4 times" observation, then
   the posterior interval on the case value.
-- `examples/cofc-voi-mock-sj-panel.json`: which CoFC chance nodes are worth
+- `cases/requests/cofc-voi-mock-sj-panel.case`: which CoFC chance nodes are worth
   learning about, and whether a $25,000 study worth five comparable
   summary-judgment rulings pays for itself.

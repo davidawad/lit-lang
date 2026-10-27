@@ -1,0 +1,79 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "posterior",
+  "result": {
+    "start": {
+      "id": "cofc::claim-accrues",
+      "label": "Claim Against the United States Accrues"
+    },
+    "node": {
+      "id": "cofc::claim-accrues",
+      "label": "Claim Against the United States Accrues"
+    },
+    "samples": 300,
+    "credibility": 0.9,
+    "uncertain_nodes": 10,
+    "value": {
+      "nominal": 48423.073363,
+      "mean": 53964.044009,
+      "lo": -9174.01933,
+      "hi": 163317.850061
+    },
+    "options": [],
+    "unconverged_samples": 0
+  },
+  "warnings": [
+    {
+      "code": "fact-unset",
+      "count": 2,
+      "example": "matter fact not set via scenario.facts; using the authored prior (2 of 2 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
+      "at": [
+        "cofc::limitations-check",
+        "cofc::section-1500-check"
+      ]
+    },
+    {
+      "code": "mixed-node",
+      "count": 5,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "cofc::discovery-open",
+        "cofc::patent-14b-notice-fork",
+        "cofc::patent-claim-fork",
+        "cofc::post-trial-motion-window",
+        "cofc::service-on-united-states"
+      ]
+    },
+    {
+      "code": "prior-concentration-estimated",
+      "count": 11,
+      "example": "`posterior` rests on a default prior strength of 10 pseudo-observations here (an estimate, not a sample size); set scenario.uncertainty.concentration or apply a calibration set with `n`",
+      "at": [
+        "cofc::adr-outcome-ruling",
+        "cofc::bid-protest-merits-ruling",
+        "cofc::discovery-dispute-ruling",
+        "cofc::limitations-check",
+        "cofc::patent-settlement-fork",
+        "cofc::prevailing-party-fork",
+        "cofc::rule59-motion-ruling",
+        "cofc::ruling-12b"
+      ]
+    },
+    {
+      "code": "probability-fill",
+      "count": 27,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "cofc::adr-mediation-session",
+        "cofc::answer-filed",
+        "cofc::bid-protest-complaint-filed",
+        "cofc::bid-protest-initial-status-conference",
+        "cofc::case-type-fork",
+        "cofc::claim-accrues",
+        "cofc::complaint-filed",
+        "cofc::costs-and-fees-window"
+      ]
+    }
+  ]
+}

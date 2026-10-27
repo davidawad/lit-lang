@@ -1,0 +1,184 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "solve",
+  "result": {
+    "start": {
+      "id": "mpep-prosecution::pre-filing",
+      "label": "Pre-Filing"
+    },
+    "value": 870742.686068,
+    "converged": true,
+    "iterations": 63,
+    "fee_shift_rounds": 0,
+    "best_line": [
+      {
+        "id": "mpep-prosecution::edge-pre-filing-nonprovisional-filed",
+        "label": "File nonprovisional directly (no provisional)",
+        "from": "mpep-prosecution::pre-filing",
+        "to": "mpep-prosecution::nonprovisional-filed",
+        "role": "self",
+        "authority": "35 U.S.C. 111(a); 37 CFR 1.53(b)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 870742.686068
+      },
+      {
+        "id": "mpep-prosecution::edge-nonprovisional-filed-pre-examination",
+        "label": "Application complete — assigned to examiner",
+        "from": "mpep-prosecution::nonprovisional-filed",
+        "to": "mpep-prosecution::pre-examination",
+        "role": "nature",
+        "authority": "37 CFR 1.104; MPEP 704",
+        "p": 0.85,
+        "kind": "likely-draw",
+        "step_p": 0.85,
+        "q": 892918.186068
+      },
+      {
+        "id": "mpep-prosecution::edge-pre-examination-non-final-oa",
+        "label": "Examiner issues Non-Final Office Action",
+        "from": "mpep-prosecution::pre-examination",
+        "to": "mpep-prosecution::non-final-oa",
+        "role": "nature",
+        "authority": "35 U.S.C. 132; 37 CFR 1.104; MPEP 706",
+        "p": 0.7,
+        "kind": "likely-draw",
+        "step_p": 0.7,
+        "q": 891732.892019
+      },
+      {
+        "id": "mpep-prosecution::edge-non-final-oa-applicant-response-window",
+        "label": "Receive and docket Office Action",
+        "from": "mpep-prosecution::non-final-oa",
+        "to": "mpep-prosecution::applicant-response-window",
+        "role": "self",
+        "authority": "37 CFR 1.134; 35 U.S.C. 133",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 891732.892019
+      },
+      {
+        "id": "mpep-prosecution::edge-applicant-response-window-interview-conducted",
+        "label": "Request examiner interview",
+        "from": "mpep-prosecution::applicant-response-window",
+        "to": "mpep-prosecution::interview-conducted",
+        "role": "self",
+        "authority": "37 CFR 1.133; MPEP 713",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 891982.892088
+      },
+      {
+        "id": "mpep-prosecution::edge-interview-conducted-amendment-filed",
+        "label": "Follow up interview with amendment",
+        "from": "mpep-prosecution::interview-conducted",
+        "to": "mpep-prosecution::amendment-filed",
+        "role": "self",
+        "authority": "37 CFR 1.111; MPEP 713.04",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 892982.892088
+      },
+      {
+        "id": "mpep-prosecution::edge-amendment-filed-final-rejection",
+        "label": "Examiner issues Final Rejection",
+        "from": "mpep-prosecution::amendment-filed",
+        "to": "mpep-prosecution::final-rejection",
+        "role": "nature",
+        "authority": "37 CFR 1.113; MPEP 706.07",
+        "p": 0.5,
+        "kind": "likely-draw",
+        "step_p": 0.5,
+        "q": 895835.833306
+      },
+      {
+        "id": "mpep-prosecution::edge-final-rejection-after-final-decision",
+        "label": "Receive and docket Final Rejection",
+        "from": "mpep-prosecution::final-rejection",
+        "to": "mpep-prosecution::after-final-decision",
+        "role": "self",
+        "authority": "37 CFR 1.113; 35 U.S.C. 133",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 895835.833306
+      },
+      {
+        "id": "mpep-prosecution::edge-after-final-decision-after-final-amendment",
+        "label": "File after-final amendment (37 CFR 1.116)",
+        "from": "mpep-prosecution::after-final-decision",
+        "to": "mpep-prosecution::after-final-amendment",
+        "role": "self",
+        "authority": "37 CFR 1.116; MPEP 714.12",
+        "deadline_days": 91.310625,
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 896085.833306
+      },
+      {
+        "id": "mpep-prosecution::edge-after-final-amendment-advisory-action",
+        "label": "Examiner issues Advisory Action (amendment not entered)",
+        "from": "mpep-prosecution::after-final-amendment",
+        "to": "mpep-prosecution::advisory-action",
+        "role": "nature",
+        "authority": "37 CFR 1.116; MPEP 714.13; MPEP 706.07(f)",
+        "p": 0.5,
+        "kind": "wait-likely-draw",
+        "step_p": 0.5,
+        "q": 895585.833278
+      },
+      {
+        "id": "mpep-prosecution::edge-advisory-action-after-final-decision",
+        "label": "Advisory Action received — reassess (clock still running, MPEP 714.13)",
+        "from": "mpep-prosecution::advisory-action",
+        "to": "mpep-prosecution::after-final-decision",
+        "role": "self",
+        "authority": "37 CFR 1.116; MPEP 714.13",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 895585.833306
+      }
+    ],
+    "policy_size": 53,
+    "policy": null,
+    "values": null
+  },
+  "warnings": [
+    {
+      "code": "compile",
+      "count": 7,
+      "example": "state flags expanded the graph: 50 additional node(s) for reachable flag combinations",
+      "at": []
+    },
+    {
+      "code": "mixed-node",
+      "count": 10,
+      "example": "self may act here, and 2 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "mpep-prosecution::after-final-amendment",
+        "mpep-prosecution::election-made",
+        "mpep-prosecution::federal-circuit-appeal",
+        "mpep-prosecution::patent-issued",
+        "mpep-prosecution::sec145-action",
+        "mpep-prosecution::patent-issued{rce-filed-before}",
+        "mpep-prosecution::after-final-amendment{rce-filed-before}",
+        "mpep-prosecution::election-made{rce-filed-before}"
+      ]
+    },
+    {
+      "code": "probability-fill",
+      "count": 14,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "mpep-prosecution::allowance",
+        "mpep-prosecution::appeal-brief-filed",
+        "mpep-prosecution::continuation-filed",
+        "mpep-prosecution::divisional-filed",
+        "mpep-prosecution::issue-fee-paid",
+        "mpep-prosecution::patent-challenged",
+        "mpep-prosecution::ptab-reversal",
+        "mpep-prosecution::allowance{rce-filed-before}"
+      ]
+    }
+  ]
+}

@@ -37,7 +37,7 @@ pub struct Validation {
 pub fn detect(doc: &Value) -> &'static str {
     let has = |k: &str| doc.get(k).is_some();
     if has("countingRules") || has("calendars") {
-        // A clock-library fragment (`packs/clock/*.json`) also carries a
+        // A clock-library fragment (`clock/*.json`) also carries a
         // `schemaVersion`, so it must be checked before "pack".
         "clock"
     } else if has("links") || has("instances") {
@@ -332,8 +332,8 @@ mod tests {
     #[test]
     fn validates_clock_fragments_and_pack_counting_references() -> Result<()> {
         let c = Catalog::embedded(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)?;
-        let frcp6 = include_str!("../../../../packs/clock/frcp6.json");
-        let doc: Value = serde_json::from_str(frcp6).map_err(|e| Error::Parse(e.to_string()))?;
+        let core = include_str!("../../clock/litigate-core.json");
+        let doc: Value = serde_json::from_str(core).map_err(|e| Error::Parse(e.to_string()))?;
         let v = validate(&doc, None, &c);
         assert!(v.kind == "clock" && v.valid, "{:?}", v.errors);
         let mut dangling = doc.clone();

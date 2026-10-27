@@ -10,7 +10,7 @@ const ITEMS: &str = "one of `module`, `import`, `package`, `start`, `group`, `ty
                      `enum`, `event`, `state`, `decision`, `chance`, `terminal`, `link`, \
                      `instance`, `rule`, `deadline`, `counting`, `calendar`, `transition`, \
                      `authority`, `default`, `exception`, `test`, `limit`, `grant`, \
-                     `recharacterize`, or `invalidate`";
+                     `recharacterize`, `invalidate`, or `calibration`";
 
 const EXPR: &str = "one of an identifier, a number, a string, a date `YYYY-MM-DD`, or `(`";
 

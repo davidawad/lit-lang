@@ -2,7 +2,7 @@
 //! verification report + source map + content hash, DESIGN §2 L1b) and its
 //! lowered JSON, plus each matter's scenario. The layout mirrors the
 //! repository (`packs/<id>.json`, `packs/links.json`, `packs/clock/<id>.json`,
-//! `scenarios/<id>.json`), so `diff OUT/packs packs` is the migration check.
+//! `packs/calibration/<set>.json`, `scenarios/<id>.json`), so `diff OUT/packs packs` is the migration check.
 //! `--pack-file ID=STEM` renames a pack's files to `packs/STEM.json`, which
 //! `crates/litgraph-packs/build.args` uses to keep the legacy file names.
 use super::check::{checked_in, Checked};
@@ -58,10 +58,16 @@ pub(crate) fn text<T: Serialize>(value: &T) -> String {
     render(value).unwrap_or_default()
 }
 
-/// Every generated document of a package, by relative output path.
+/// Every generated document of a package, by relative output path: its
+/// pack (or link file) and clock fragment with their sidecars, and one
+/// `packs/calibration/<id>.json` per calibration set.
 fn package_outputs(lowered: &LoweredPackage) -> Vec<Output> {
     let map = text(&lowered.source_map);
-    match &lowered.document {
+    let calibration = lowered
+        .calibration
+        .iter()
+        .map(|set| (format!("packs/calibration/{}.json", set.id), text(set)));
+    let mut out = match &lowered.document {
         Document::Pack(pack) => {
             let mut out = vec![
                 (format!("packs/{}.json", pack.id), text(pack)),
@@ -79,7 +85,9 @@ fn package_outputs(lowered: &LoweredPackage) -> Vec<Output> {
             ("packs/links.json".to_owned(), text(links)),
             ("packs/links.map.json".to_owned(), map),
         ],
-    }
+    };
+    out.extend(calibration);
+    out
 }
 
 /// The litigatable document and its content hash.
@@ -330,9 +338,10 @@ pub fn build(src: &dyn Source, args: &Args) -> Outcome {
     };
     report.result = json!({
         "outputs": {
-            "packs": kind(&|p| p.starts_with("packs/") && !p.starts_with("packs/clock/") && p != "packs/links.json" && !maps(p)),
+            "packs": kind(&|p| p.starts_with("packs/") && !p.starts_with("packs/clock/") && !p.starts_with("packs/calibration/") && p != "packs/links.json" && !maps(p)),
             "links": kind(&|p| p == "packs/links.json"),
             "clock": kind(&|p| p.starts_with("packs/clock/") && !maps(p)),
+            "calibration": kind(&|p| p.starts_with("packs/calibration/")),
             "scenarios": kind(&|p| p.starts_with("scenarios/") && !maps(p)),
             "source_maps": kind(&maps),
             "litigatables": kind(&|p| p.starts_with("litigatables/")),

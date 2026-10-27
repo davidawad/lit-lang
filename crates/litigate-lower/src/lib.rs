@@ -3,6 +3,7 @@
 //! - a rule package becomes a [`Pack`] (§8.1) and, when it declares its
 //!   counting rule, a clock-library fragment (§8.2);
 //! - a links package becomes a [`LinkFile`] (§8.4);
+//! - either one's `calibration` declarations become calibration sets;
 //! - a `.case` matter becomes a [`NamedScenario`] (§8.3).
 //!
 //! Output is built from litgraph's types and serialized by serde, never
@@ -25,6 +26,7 @@
 //! # Ok::<(), String>(())
 //! ```
 mod basis;
+mod calibration;
 mod case;
 mod clock;
 mod diag;
@@ -41,8 +43,8 @@ pub mod source_map;
 mod transform;
 
 pub use diff::{
-    semantic_diff, semantic_diff_clock, semantic_diff_json, semantic_diff_links,
-    semantic_diff_scenarios, Change, ChangeKind, DocumentKind,
+    semantic_diff, semantic_diff_calibration, semantic_diff_clock, semantic_diff_json,
+    semantic_diff_links, semantic_diff_scenarios, Change, ChangeKind, DocumentKind,
 };
 pub use engine_clock::EngineClock;
 pub use litigate_engine::clock::ClockLibrary;
@@ -90,6 +92,8 @@ pub struct LoweredPackage {
     /// and the calendars they name, with its sidecar (absent when the
     /// package declares no counting rule).
     pub clock: Option<(ClockLibrary, SourceMap)>,
+    /// The calibration sets the package declares.
+    pub calibration: Vec<litigate_engine::api::CalibrationSet>,
 }
 
 /// A lowered matter.
@@ -242,12 +246,14 @@ impl<'a> Lowerer<'a> {
         let corpus = &pkg.manifest.in_force.known_at;
         let build = self.build(&roots, corpus, Some(corpus), options);
         let mut sink = Sink::new(&manifest_file(pkg));
+        let calibration = calibration::sets(pkg, &mut sink);
         let lowered = if pkg.manifest.links {
             let (file, source_map) = links::links(&build, pkg, &mut sink);
             LoweredPackage {
                 document: Document::Links(file),
                 source_map,
                 clock: None,
+                calibration,
             }
         } else {
             let (pack, source_map) = pack::pack(&build, pkg, &mut sink);
@@ -257,6 +263,7 @@ impl<'a> Lowerer<'a> {
                 document: Document::Pack(Box::new(pack)),
                 source_map,
                 clock,
+                calibration,
             }
         };
         sink.finish(lowered)

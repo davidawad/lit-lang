@@ -9,7 +9,7 @@
 //! from, in order,
 //!
 //! 1. `scenario.uncertainty.concentration[node]` (the matter's own view);
-//! 2. the sample size `n` of a calibration entry (`calibration/*.json`) that
+//! 2. the sample size `n` of a calibration entry (a `calibration` set) that
 //!    set one of the node's edge probabilities (the smallest, if several);
 //! 3. `scenario.uncertainty.default_concentration`, else
 //!    [`DEFAULT_CONCENTRATION`] — an **estimate**, reported with a

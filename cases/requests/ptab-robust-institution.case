@@ -1,8 +1,9 @@
+// litigate run cases/requests/ptab-robust-institution.case --op '{"op":"solve"}'
 case ptab-robust-institution
 uses ptab-patent-trial-appeal-board ^0.1.0
 as_of 2026-08-26
 summary "A petitioner's IPR under the FY2024 PTAB calibration, solved robustly over the 90% credible range of the probabilities."
-notes "Ported from examples/ptab-robust-institution.json. A petitioner weighing an IPR from patent grant, with the PTAB FY2024 institution and outcome rates applied (calibration/ptab-fy2024.json); nothing has happened yet, so the matter sits at the package start. The rate is illustrative."
+notes "Ported from examples/ptab-robust-institution.json. A petitioner weighing an IPR from patent grant, with the PTAB FY2024 institution and outcome rates applied (the `ptab-fy2024` calibration set, lit/ptab/calibration-ptab-fy2024.lit); nothing has happened yet, so the matter sits at the package start. The rate is illustrative."
 perspective petitioner
 
 parties {

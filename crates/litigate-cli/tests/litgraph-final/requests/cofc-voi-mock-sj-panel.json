@@ -1,0 +1,249 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "voi",
+  "result": {
+    "start": {
+      "id": "cofc::claim-accrues",
+      "label": "Claim Against the United States Accrues"
+    },
+    "value": 48423.073363,
+    "samples": 300,
+    "evpi_total": {
+      "value": 17408.000195,
+      "std_error": 1722.719615
+    },
+    "nodes": [
+      {
+        "node": {
+          "id": "cofc::sj-ruling",
+          "label": "Court Rules on Summary Judgment"
+        },
+        "kind": "draws",
+        "outcomes": [
+          "cofc::e-sj-denied",
+          "cofc::e-sj-govt",
+          "cofc::e-sj-plaintiff",
+          "cofc::e-sj-partial"
+        ],
+        "residual": false,
+        "concentration": 10.0,
+        "prior": {
+          "from": "estimate"
+        },
+        "evpi_outcome": 32151.139427,
+        "evppi": {
+          "value": 8565.804624,
+          "std_error": 1029.561111
+        }
+      },
+      {
+        "node": {
+          "id": "cofc::prevailing-party-fork",
+          "label": "Who Prevailed?"
+        },
+        "kind": "draws",
+        "outcomes": [
+          "cofc::e-prevailing-plaintiff",
+          "cofc::e-prevailing-government"
+        ],
+        "residual": false,
+        "concentration": 10.0,
+        "prior": {
+          "from": "estimate"
+        },
+        "evpi_outcome": 91017.125,
+        "evppi": {
+          "value": 7246.758805,
+          "std_error": 1073.303245
+        }
+      },
+      {
+        "node": {
+          "id": "cofc::ruling-12b",
+          "label": "Court Rules on RCFC 12(b) Motion"
+        },
+        "kind": "draws",
+        "outcomes": [
+          "cofc::e-ruling12b-denied",
+          "cofc::e-ruling12b-leave",
+          "cofc::e-ruling12b-jurisdiction",
+          "cofc::e-ruling12b-failstate"
+        ],
+        "residual": false,
+        "concentration": 10.0,
+        "prior": {
+          "from": "estimate"
+        },
+        "evpi_outcome": null,
+        "evppi": {
+          "value": 518.25603,
+          "std_error": 260.817495
+        }
+      },
+      {
+        "node": {
+          "id": "cofc::rule59-motion-ruling",
+          "label": "Court Rules on RCFC 59 Motion"
+        },
+        "kind": "draws",
+        "outcomes": [
+          "cofc::e-rule59-newtrial",
+          "cofc::e-rule59-amend",
+          "cofc::e-rule59-denied"
+        ],
+        "residual": false,
+        "concentration": 10.0,
+        "prior": {
+          "from": "estimate"
+        },
+        "evpi_outcome": null,
+        "evppi": {
+          "value": 0.0,
+          "std_error": 0.0
+        }
+      },
+      {
+        "node": {
+          "id": "cofc::limitations-check",
+          "label": "Is the Petition Filed Within 6 Years of Accrual?"
+        },
+        "kind": "draws",
+        "outcomes": [
+          "cofc::e-limitations-timely",
+          "cofc::e-limitations-barred"
+        ],
+        "residual": false,
+        "concentration": 10.0,
+        "prior": {
+          "from": "estimate"
+        },
+        "evpi_outcome": 0.0,
+        "evppi": {
+          "value": 0.0,
+          "std_error": 0.0
+        }
+      },
+      {
+        "node": {
+          "id": "cofc::patent-settlement-fork",
+          "label": "Settlement Reached at Mandatory Discussion?"
+        },
+        "kind": "draws",
+        "outcomes": [
+          "cofc::e-settlementfork-settles",
+          "cofc::e-settlementfork-continues"
+        ],
+        "residual": false,
+        "concentration": 10.0,
+        "prior": {
+          "from": "estimate"
+        },
+        "evpi_outcome": 0.0,
+        "evppi": null
+      },
+      {
+        "node": {
+          "id": "cofc::section-1500-check",
+          "label": "Is the Same Claim Currently Pending in Any Other Court?"
+        },
+        "kind": "draws",
+        "outcomes": [
+          "cofc::e-1500-clear",
+          "cofc::e-1500-barred"
+        ],
+        "residual": false,
+        "concentration": 10.0,
+        "prior": {
+          "from": "estimate"
+        },
+        "evpi_outcome": 0.0,
+        "evppi": null
+      }
+    ],
+    "nodes_truncated": false,
+    "studies": [
+      {
+        "node": {
+          "id": "cofc::sj-ruling",
+          "label": "Court Rules on Summary Judgment"
+        },
+        "kind": "draws",
+        "outcomes": [
+          "cofc::e-sj-denied",
+          "cofc::e-sj-govt",
+          "cofc::e-sj-plaintiff",
+          "cofc::e-sj-partial"
+        ],
+        "residual": false,
+        "concentration": 10.0,
+        "prior": {
+          "from": "estimate"
+        },
+        "label": "summary-judgment expert report (worth ~5 comparable rulings)",
+        "k": 5,
+        "evsi": {
+          "value": 3460.388686,
+          "std_error": 463.82153
+        },
+        "evpi_outcome": 32151.139427,
+        "cost": 25000.0,
+        "net": -21539.611314,
+        "worth_paying": false
+      }
+    ],
+    "unconverged_solves": 0
+  },
+  "warnings": [
+    {
+      "code": "fact-unset",
+      "count": 2,
+      "example": "matter fact not set via scenario.facts; using the authored prior (2 of 2 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
+      "at": [
+        "cofc::limitations-check",
+        "cofc::section-1500-check"
+      ]
+    },
+    {
+      "code": "mixed-node",
+      "count": 5,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "cofc::discovery-open",
+        "cofc::patent-14b-notice-fork",
+        "cofc::patent-claim-fork",
+        "cofc::post-trial-motion-window",
+        "cofc::service-on-united-states"
+      ]
+    },
+    {
+      "code": "prior-concentration-estimated",
+      "count": 7,
+      "example": "`voi` rests on a default prior strength of 10 pseudo-observations here (an estimate, not a sample size); set scenario.uncertainty.concentration or apply a calibration set with `n`",
+      "at": [
+        "cofc::sj-ruling",
+        "cofc::prevailing-party-fork",
+        "cofc::ruling-12b",
+        "cofc::rule59-motion-ruling",
+        "cofc::limitations-check",
+        "cofc::patent-settlement-fork",
+        "cofc::section-1500-check"
+      ]
+    },
+    {
+      "code": "probability-fill",
+      "count": 27,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "cofc::adr-mediation-session",
+        "cofc::answer-filed",
+        "cofc::bid-protest-complaint-filed",
+        "cofc::bid-protest-initial-status-conference",
+        "cofc::case-type-fork",
+        "cofc::claim-accrues",
+        "cofc::complaint-filed",
+        "cofc::costs-and-fees-window"
+      ]
+    }
+  ]
+}

@@ -52,8 +52,9 @@ litgraph q '{"packs":["cofc","cafc"],"scenario":{...},"op":{"op":"chain"}}'
 litgraph q '{"scenario":"cofc-1498-patent-case","op":{"op":"chain"}}'   # named scenario; its own `packs` apply
 litgraph chain --scenario cofc-1498-patent-case --set rate=900          # CLI: name/file/inline JSON, --set composes via `extends`
 litgraph q - < request.json
-litgraph q - < examples/cofc-1498-settle.json   # settle: ZOPA, Nash/Rubinstein price, when to settle, Rule 68
-                                            # (needs scenario.opponent_objective; docs/SETTLEMENT.md)
+litigate run cases/requests/cofc-1498-settle.case --op settle   # settle: ZOPA, Nash/Rubinstein price, when to settle, Rule 68
+                                            # (needs scenario.opponent_objective; docs/SETTLEMENT.md;
+                                            # the case's first line is its full `litigate run`)
 ```
 
 Packs and named scenarios are **build outputs, never committed**:
@@ -62,7 +63,10 @@ litigate language). `crates/litgraph-packs` compiles them (the `litigate
 build` arguments in `crates/litgraph-packs/build.args`) at `cargo build`
 time and embeds the result; `just lit-sync` writes the same build to
 `target/lit-build/{packs,scenarios}` to read or pass as `--packs-dir`.
-`packs/` holds only the hand-authored clock library and source notes.
+`packs/` holds only source notes: the shared clock library is `lit/core`
+(lowered into `crates/litigate-engine/clock/` by `just lit-sync`), calibration
+sets are `calibration` declarations in `lit/`, and runnable requests are
+`cases/requests/*.case`. No JSON input remains; lowered JSON is internal IR.
 
 ```bash
 cargo install --path crates/litigate-cli   # binary: litigate (or `cargo run -q -p litigate-cli --`)
@@ -221,8 +225,8 @@ the gate (`scripts/cov-gate`) over fixed known-low and known-ok inputs.
 7. **Composed graphs**: set `scenario.start` explicitly; the default start
    is the first pack's start (alphabetical when `packs` is empty).
 8. **Calibrate, don't guess.** Before hand-typing a probability/duration
-   teaching estimate, check whether `calibration/*.json` already has a
-   sourced value, or whether `{"op":"calibration"}` says this input is worth
+   teaching estimate, check whether a `calibration` set (`lit/*/calibration-*.lit`) already has
+   a sourced value, or whether `{"op":"calibration"}` says this input is worth
    calibrating next. See `docs/CALIBRATION.md`.
 9. **Soft probabilities are uncertain, say how much.** Matter-specific
    evidence ("this judge granted 3 of 4") goes in `scenario.observe`, not in
@@ -253,13 +257,15 @@ crates/litgraph-cli/   the `litgraph` binary
 crates/litgraph-mcp/   the `litgraph-mcp` binary: stdio MCP server, one tool per op + litigate_* tools
 crates/litigate-*/     the authoring language: base (diagnostics), syntax, sema, verify, lower,
                        import, cli (`litigate`), lsp; editors/ holds tree-sitter + editor modes
-lit/                   .lit rule packages, one per forum (+ core stdlib, links, examples)
-cases/                 .case matters (top level → scenarios/; requests/ reproduce examples/)
-packs/                 GENERATED forum packs + links.json (and packs/clock/<pack>.json);
-                       the shared packs/clock fragments and *-SOURCES-NOTES.md are hand-written
+lit/                   .lit rule packages, one per forum (+ core stdlib, links, examples);
+                       calibration-*.lit: calibration sets (real, sourced probabilities/durations)
+cases/                 .case matters (top level → scenarios/; requests/: runnable requests, each
+                       led by its `// litigate run ...` line, checked against litgraph-final)
+packs/                 GENERATED forum packs, links.json, packs/clock/<pack>.json and
+                       packs/calibration/<set>.json; only *-SOURCES-NOTES.md are hand-written
+crates/litigate-engine/clock/ the shared clock library: lit/core lowered (rewritten by `just lit-sync`)
 scenarios/             GENERATED named scenarios
 sources/               vendored L0 primary-law text (see sources/PROVENANCE.md)
-calibration/           calibration/*.json overlay sets (real, sourced probabilities/durations)
 docs/                  ARCHITECTURE, PACK_SCHEMA, COST_FUNCTIONS, CRITIQUE, CALIBRATION, UNCERTAINTY
 docs/                  ARCHITECTURE, PACK_SCHEMA, COST_FUNCTIONS, CRITIQUE, CALIBRATION, SETTLEMENT
 tests/fixtures/ts-parity/   golden outputs from the original TS engine

@@ -1,0 +1,147 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "solve",
+  "result": {
+    "start": {
+      "id": "cofc::claim-accrues",
+      "label": "Claim Against the United States Accrues"
+    },
+    "value": -293822.499182,
+    "converged": true,
+    "iterations": 53,
+    "fee_shift_rounds": 0,
+    "best_line": [
+      {
+        "id": "cofc::e-accrual-to-patentfork",
+        "label": "Determine whether the claim is a §1498(a) patent/copyright use claim",
+        "from": "cofc::claim-accrues",
+        "to": "cofc::patent-claim-fork",
+        "role": "nature",
+        "authority": "28 U.S.C. § 2501; 28 U.S.C. § 1498(a)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": null
+      },
+      {
+        "id": "cofc::e-patentfork-patent",
+        "label": "§1498(a) claim -- the optional §286 administrative claim is open",
+        "from": "cofc::patent-claim-fork",
+        "to": "cofc::patent-admin-claim-fork",
+        "role": "self",
+        "authority": "28 U.S.C. § 1498(a)",
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": null
+      },
+      {
+        "id": "cofc::e-patentfork-skipadmin",
+        "label": "§1498(a) claim; plaintiff skips the optional administrative claim",
+        "from": "cofc::patent-admin-claim-fork",
+        "to": "cofc::limitations-check",
+        "role": "self",
+        "kind": "likely-draw",
+        "step_p": 0.5,
+        "q": null
+      },
+      {
+        "id": "cofc::e-limitations-timely",
+        "label": "Petition filed within 6 years of accrual (as tolled)",
+        "from": "cofc::limitations-check",
+        "to": "cofc::section-1500-check",
+        "role": "nature",
+        "authority": "28 U.S.C. § 2501",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": null
+      },
+      {
+        "id": "cofc::e-1500-clear",
+        "label": "No suit on the same claim currently pending in any other court",
+        "from": "cofc::section-1500-check",
+        "to": "cofc::filing-track-fork",
+        "role": "nature",
+        "authority": "28 U.S.C. § 1500",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": null
+      },
+      {
+        "id": "cofc::e-filingfork-standard",
+        "label": "File a standard RCFC 3 complaint",
+        "from": "cofc::filing-track-fork",
+        "to": "cofc::complaint-filed",
+        "role": "self",
+        "authority": "RCFC 3; RCFC 5.5",
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": null
+      },
+      {
+        "id": "cofc::e-complaint-to-service",
+        "label": "Clerk delivers the complaint to the Attorney General",
+        "from": "cofc::complaint-filed",
+        "to": "cofc::service-on-united-states",
+        "role": "nature",
+        "authority": "RCFC 4(a)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": null
+      },
+      {
+        "id": "cofc::e-service-to-voldismissal",
+        "label": "Plaintiff dismisses by notice or stipulation before an answer, SJ motion, or motion for judgment on the administrative record is served",
+        "from": "cofc::service-on-united-states",
+        "to": "cofc::voluntary-dismissal-early",
+        "role": "self",
+        "authority": "RCFC 41(a)(1)(A)",
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": null
+      }
+    ],
+    "policy_size": 0,
+    "policy": null,
+    "values": null,
+    "cvar": -293822.499182,
+    "zeta": 18668.15,
+    "alpha": 0.1,
+    "grid": 41,
+    "y_range": [
+      -1036861.0,
+      13036861.0
+    ]
+  },
+  "warnings": [
+    {
+      "code": "mixed-node",
+      "count": 4,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "cofc::discovery-open",
+        "cofc::patent-14b-notice-fork",
+        "cofc::post-trial-motion-window",
+        "cofc::service-on-united-states"
+      ]
+    },
+    {
+      "code": "probability-fill",
+      "count": 27,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "cofc::adr-mediation-session",
+        "cofc::answer-filed",
+        "cofc::bid-protest-complaint-filed",
+        "cofc::bid-protest-initial-status-conference",
+        "cofc::case-type-fork",
+        "cofc::claim-accrues",
+        "cofc::complaint-filed",
+        "cofc::costs-and-fees-window"
+      ]
+    }
+  ]
+}

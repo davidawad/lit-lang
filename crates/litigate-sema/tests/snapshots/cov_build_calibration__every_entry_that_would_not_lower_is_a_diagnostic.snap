@@ -1,0 +1,27 @@
+---
+source: crates/litigate-sema/tests/cov_build_calibration.rs
+expression: check_body(&body)
+---
+[
+    "pkgs/demo/main.lit:16:3 L2007 `note` is given more than once",
+    "pkgs/demo/main.lit:18:3 L2007 source `r` is declared more than once",
+    "pkgs/demo/main.lit:19:3 L2007 a calibration source needs `url` and `vintage [from, to)`",
+    "pkgs/demo/main.lit:20:7 L2008 probability 2 is outside [0, 1]",
+    "pkgs/demo/main.lit:21:7 L2001 `p` is a constant probability",
+    "pkgs/demo/main.lit:21:8 L2001 node `s` is not a value",
+    "pkgs/demo/main.lit:22:3 L2008 a cleared probability (`?`) needs `method` saying why it is cleared",
+    "pkgs/demo/main.lit:23:5 L1002 cannot find edge `nope` in pack `demo`",
+    "pkgs/demo/main.lit:24:5 L1002 cannot find pack `other`",
+    "pkgs/demo/main.lit:25:11 L1002 cannot find edge `nope` in pack `demo`",
+    "pkgs/demo/main.lit:26:5 L1002 no instance `ghost@x` is declared in this package",
+    "pkgs/demo/main.lit:27:5 L1002 `demo.a.b` is not a calibration target: write `local`, `pack::local` or `base@origin::local`",
+    "pkgs/demo/main.lit:28:20 L1002 no source `q` is declared in this calibration",
+    "pkgs/demo/main.lit:29:3 L2007 a calibrated value needs `source`, the source it was measured from",
+    "pkgs/demo/main.lit:30:3 L2007 a calibrated value needs `n`, the sample size behind it",
+    "pkgs/demo/main.lit:31:25 L2007 `n` is a sample size: a positive integer",
+    "pkgs/demo/main.lit:32:25 L2007 `n` is a sample size: a positive integer",
+    "pkgs/demo/main.lit:33:8 L1002 cannot find node `nope` in pack `demo`",
+    "pkgs/demo/main.lit:34:10 L2007 an attribute name is one identifier",
+    "pkgs/demo/main.lit:35:3 L2007 triangular `duration` needs `mode`",
+    "pkgs/demo/main.lit:35:16 L0001 expected `mode`, found `max`",
+]

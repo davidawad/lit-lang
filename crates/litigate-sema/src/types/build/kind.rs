@@ -41,6 +41,7 @@ fn effects<'d>(item: &Item, decl: &'d Declaration, kind: Option<&Kind>) -> Vec<U
 
 /// The effects `decl`, built from `item`, has by its form alone.
 #[allow(clippy::too_many_lines)] // one arm per declaration form
+#[allow(clippy::too_many_lines)] // one arm per declaration kind
 fn declared<'d>(item: &Item, decl: &'d Declaration) -> Vec<Use<'d>> {
     let name = item_name(item).map_or(item.range, |n| n.range);
     let mut out: Vec<Use<'d>> = Vec::new();
@@ -127,6 +128,11 @@ fn declared<'d>(item: &Item, decl: &'d Declaration) -> Vec<Use<'d>> {
         }
         // A test claims nothing.
         Declaration::Test(_) => None,
+        // A calibration set changes no package: a matter opts into it.
+        Declaration::Calibration(c) => {
+            out.push((Effect::Declare, name, None));
+            Some(&c.meta)
+        }
         Declaration::Link(_)
         | Declaration::Instance(_)
         | Declaration::TypeAlias(_)

@@ -1,0 +1,261 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "solve",
+  "result": {
+    "start": {
+      "id": "itc-337::complaint-filed",
+      "label": "Complaint Filed"
+    },
+    "value": 540260.353525,
+    "converged": true,
+    "iterations": 59,
+    "fee_shift_rounds": 0,
+    "best_line": [
+      {
+        "id": "itc-337::edge-complaint-filed-institution-decision",
+        "label": "Commission reviews the complaint for institution (30-day clock, Rule 210.10(a))",
+        "from": "itc-337::complaint-filed",
+        "to": "itc-337::institution-decision",
+        "role": "nature",
+        "authority": "cfr210.10.a",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 540260.353525
+      },
+      {
+        "id": "itc-337::edge-institution-decision-instituted",
+        "label": "Commission institutes — Federal Register notice published (Rule 210.10(b))",
+        "from": "itc-337::institution-decision",
+        "to": "itc-337::instituted",
+        "role": "nature",
+        "authority": "cfr210.10.b",
+        "p": 0.85,
+        "kind": "likely-draw",
+        "step_p": 0.85,
+        "q": 635600.415912
+      },
+      {
+        "id": "itc-337::edge-instituted-response-period-open",
+        "label": "Notice of investigation served on respondent(s) — 20-day response clock begins (Rule 210.13(a))",
+        "from": "itc-337::instituted",
+        "to": "itc-337::response-period-open",
+        "role": "nature",
+        "authority": "cfr210.13.a",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 635600.415912
+      },
+      {
+        "id": "itc-337::edge-response-period-open-default-track",
+        "label": "Fail to respond within 20 days — default exposure (Rule 210.13(default); 210.16(a))",
+        "from": "itc-337::response-period-open",
+        "to": "itc-337::default-track",
+        "role": "self",
+        "authority": "cfr210.13.default",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 635600.415912
+      },
+      {
+        "id": "itc-337::edge-default-track-show-cause-order",
+        "label": "ALJ issues sua sponte order to show cause why respondent should not be found in default (Rule 210.16(b))",
+        "from": "itc-337::default-track",
+        "to": "itc-337::show-cause-order",
+        "role": "nature",
+        "authority": "cfr210.16.b",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 635600.415912
+      },
+      {
+        "id": "itc-337::edge-show-cause-order-default-found",
+        "label": "File Notice of Intent to Default, or fail to show cause (Rule 210.16(b))",
+        "from": "itc-337::show-cause-order",
+        "to": "itc-337::default-found",
+        "role": "self",
+        "authority": "cfr210.16.b",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 635600.415912
+      },
+      {
+        "id": "itc-337::edge-default-found-default-relief-determination",
+        "label": "Facts alleged in the complaint presumed true as to the defaulting respondent (Rule 210.16(c); § 1337(g))",
+        "from": "itc-337::default-found",
+        "to": "itc-337::default-relief-determination",
+        "role": "nature",
+        "authority": "cfr210.16.c",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 636600.415912
+      },
+      {
+        "id": "itc-337::edge-default-relief-determination-violation-id",
+        "label": "ALJ issues a violation ID on the presumed-true facts, after considering public health, competitive effects, and consumer interests (§ 1337(g))",
+        "from": "itc-337::default-relief-determination",
+        "to": "itc-337::violation-id",
+        "role": "nature",
+        "authority": "usc1337.g",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 636600.415912
+      },
+      {
+        "id": "itc-337::edge-violation-id-recommended-determination",
+        "label": "ALJ issues the Recommended Determination on remedy, bonding, and public interest within 14 days (Rule 210.42(rd))",
+        "from": "itc-337::violation-id",
+        "to": "itc-337::recommended-determination",
+        "role": "nature",
+        "authority": "cfr210.42.rd",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 636600.415912
+      },
+      {
+        "id": "itc-337::edge-recommended-determination-petition-for-review-window",
+        "label": "ID and RD served — 12-day petition clock begins (Rule 210.43(a)(1))",
+        "from": "itc-337::recommended-determination",
+        "to": "itc-337::petition-for-review-window",
+        "role": "nature",
+        "authority": "cfr210.43.a.1",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 636600.415912
+      },
+      {
+        "id": "itc-337::edge-petition-for-review-window-id-becomes-commission-determination",
+        "label": "No petition filed — issues decided adversely are abandoned (Rule 210.43(a)(4))",
+        "from": "itc-337::petition-for-review-window",
+        "to": "itc-337::id-becomes-commission-determination",
+        "role": "self",
+        "authority": "cfr210.43.a.4",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 636600.415912
+      },
+      {
+        "id": "itc-337::edge-id-becomes-commission-determination-commission-final-determination",
+        "label": "Non-reviewed ID matures into the Commission's Final Determination by operation of Rule 210.42(a)(1)",
+        "from": "itc-337::id-becomes-commission-determination",
+        "to": "itc-337::commission-final-determination",
+        "role": "nature",
+        "authority": "cfr210.42.a.1",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 636600.415912
+      },
+      {
+        "id": "itc-337::edge-commission-final-determination-remedy-determined",
+        "label": "Commission's Final Determination: violation found — Commission determines remedy",
+        "from": "itc-337::commission-final-determination",
+        "to": "itc-337::remedy-determined",
+        "role": "nature",
+        "authority": "usc1337.d",
+        "p": 0.65,
+        "kind": "likely-draw",
+        "step_p": 0.65,
+        "q": 614642.111783
+      },
+      {
+        "id": "itc-337::edge-remedy-determined-presidential-review-window",
+        "label": "Commission serves the determination — the 60-day Presidential (USTR) disapproval window begins (§ 1337(j))",
+        "from": "itc-337::remedy-determined",
+        "to": "itc-337::presidential-review-window",
+        "role": "nature",
+        "authority": "usc1337.j",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 614642.111783
+      },
+      {
+        "id": "itc-337::edge-presidential-review-window-remedy-in-effect",
+        "label": "60 days elapse without disapproval — the remedy takes effect (§ 1337(j))",
+        "from": "itc-337::presidential-review-window",
+        "to": "itc-337::remedy-in-effect",
+        "role": "nature",
+        "authority": "usc1337.j",
+        "p": 0.9,
+        "kind": "likely-draw",
+        "step_p": 0.9,
+        "q": 677380.124461
+      },
+      {
+        "id": "itc-337::edge-remedy-in-effect-federal-circuit-appeal-window",
+        "label": "Respondent (or another adversely affected person) considers appeal of the violation determination and remedy",
+        "from": "itc-337::remedy-in-effect",
+        "to": "itc-337::federal-circuit-appeal-window",
+        "role": "self",
+        "authority": "usc1337.c",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 677380.124461
+      },
+      {
+        "id": "itc-337::edge-federal-circuit-appeal-window-appeal-filed",
+        "label": "File Notice of Appeal to the Federal Circuit — 60 days after the determination becomes final (§ 1337(c); 28 U.S.C. § 1295(a)(6))",
+        "from": "itc-337::federal-circuit-appeal-window",
+        "to": "itc-337::appeal-filed",
+        "role": "self",
+        "authority": "usc1337.c",
+        "deadline_days": 60.0,
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 677380.124461
+      },
+      {
+        "id": "itc-337::edge-appeal-filed-federal-circuit-review",
+        "label": "Federal Circuit reviews the Commission's determination",
+        "from": "itc-337::appeal-filed",
+        "to": "itc-337::federal-circuit-review",
+        "role": "nature",
+        "authority": "usc1337.c",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 680980.124642
+      },
+      {
+        "id": "itc-337::edge-federal-circuit-review-cafc-affirmed",
+        "label": "Federal Circuit affirms the Commission",
+        "from": "itc-337::federal-circuit-review",
+        "to": "itc-337::cafc-affirmed",
+        "role": "nature",
+        "authority": "usc1337.c",
+        "p": 0.7,
+        "kind": "likely-draw",
+        "step_p": 0.7,
+        "q": 700000.0
+      }
+    ],
+    "policy_size": 9,
+    "policy": null,
+    "values": null
+  },
+  "warnings": [
+    {
+      "code": "probability-fill",
+      "count": 24,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "itc-337::appeal-filed",
+        "itc-337::cafc-remanded",
+        "itc-337::cbi-violation-found",
+        "itc-337::commission-opinion",
+        "itc-337::complaint-filed",
+        "itc-337::default-found",
+        "itc-337::default-relief-determination",
+        "itc-337::default-track"
+      ]
+    }
+  ]
+}

@@ -213,7 +213,8 @@ PackageDecl  = "package", Ident, "{", "forum", Ident, Sep, "authority", Ident, "
 Item         = StartDecl | GroupDecl | TypeDecl | EnumDecl | EventDecl | NodeDecl
              | LinkDecl | InstanceDecl | RuleDecl | DeadlineDecl | CountingDecl
              | CalendarDecl | TransitionDecl | AuthorityDecl | DefaultDecl
-             | ExceptionDecl | TestDecl | GrantDecl | RecharDecl | InvalidDecl ;
+             | ExceptionDecl | TestDecl | GrantDecl | RecharDecl | InvalidDecl
+             | CalibrationDecl ;
 StartDecl    = "start", Ident ;
 GroupDecl    = "group", Ident, ":", String ;
 TypeDecl     = "type", Ident, "=", Type, [ WhereClause ] ;   (* refinements: §3.5 *)
@@ -309,6 +310,15 @@ RecharDecl   = "recharacterize", Ident, ":", Ref,
                "characterization", ("jurisdictional" | "claim_processing"),
                { VersionClause | Cite } ;                 (* §5.7 *)
 InvalidDecl  = "invalidate", Ident, ":", Ref, { VersionClause | Cite } ;   (* §5.7 *)
+CalibrationDecl = "calibration", Ident, ":", String, "{", { CalibrationItem, Sep }, "}" ;
+CalibrationItem = "note", String
+             | "source", Ident, String, "{", { ("url", String | "vintage", Interval
+             | "retrieved", Date), Sep }, "}"
+             | ( "p", Ref, ProbValue
+               | "duration", Ref, (Duration | "{", [ "min", Duration, Sep ], "mode", Duration,
+                                   [ Sep, "max", Duration ], "}")
+               | "attr", Ref, Ident, SignedNumber ),
+               "{", { ("source", Ident | "n", Number | "method", String), Sep }, "}" ;
 
 VersionClause= ("effective" | "commenced"), Interval
              | ("known_at" | "retracted" | "unknown_before"), Date ;
@@ -2137,6 +2147,7 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   `analysis.uncertainty.concentration` may not name the node too (L4006).
   An anonymous outcome edge cannot be named, so its node takes no prior.
 - `analysis`: litgraph `Scenario` fields that have no dedicated block (§8.3).
+  Its `calibration` names calibration sets (§5.9) by id, applied in order.
 - Posture is replayed, never asserted.
 
 ### 5.7 Instrument classes
@@ -2354,6 +2365,36 @@ uncontested choice point lowers to no node and stays worlds: `timelines`
 lists each combination of the uncontested options with its worlds (each
 with `p`, the product of its contested branches' probabilities; 1 with no
 contested question) and each filing's probability of each outcome there.
+
+### 5.9 Calibration sets
+
+A `calibration id: "Title" { ... }` declares a named set of values measured
+from public sources, which a matter opts into by id (`analysis {
+calibration: [...] }`); a package's own numbers stay its estimates. Its
+`note` (at most once, L2007) says what the set covers. Each `source name
+"Title" { url, vintage [from, to), retrieved date }` is a document the
+values come from: `url` and `vintage` are required (L2007), `vintage` is
+the half-open reporting period (`to` is the day after its last day, `..`
+when the source states no end), and source names are unique in the set
+(L2007). Each entry sets one value and names its `source` (a declared one,
+L1002) and its sample size `n` (a positive integer, L2007), with an
+optional `method`, the arithmetic deriving the value from the source's
+counts:
+
+- `p edge q`: the edge's probability, a constant in [0, 1] (L2008, L2001
+  for a non-constant); `p edge ?` clears the edge's own probability
+  instead (a stale estimate that would otherwise dilute a calibrated
+  sibling by renormalization), and needs `method` saying why (L2008).
+- `duration edge D`: the edge's elapsed time, a duration estimate as in an
+  edge's `duration` (§3.1), decimal days allowed.
+- `attr node name x`: one numeric attribute of the node.
+
+A target is `local` (an edge or node of this package), `pack::local` (of
+this package or a dependency) or `base@origin::local` (an edge of instance
+`base@origin`, declared in this links package, in its base pack). A target
+that names no edge, or for `attr` no node, of that pack is L1002, so no
+entry is dropped at request time. A set is not versioned: its vintage is
+data, and a later measurement is a new set.
 
 ## 6. Types and permitted operations
 
@@ -2610,7 +2651,7 @@ whose holes leave a number open.
 
 The engine's landed clock (DESIGN §9.1, `crates/litigate-engine/src/clock`) is the
 target. `Pack.counting` is a string: the id of a `CountingRule` in
-litgraph's shared *clock library* (`packs/clock/*.json`,
+litgraph's shared *clock library* (`lit/core` lowered, §9.4,
 `docs/PACK_SCHEMA.md` "Clock library"), a set of fragments
 `{schemaVersion: 3, calendars: [HolidayCalendar], countingRules:
 [CountingRule]}` merged by id; a generated fragment is `schemaVersion: 4`
@@ -2891,6 +2932,15 @@ parses with no diagnostics, and it follows these conventions:
   parser recognizes every citation in it under the pack's `citeSyntax`;
   otherwise it is a cite hole carrying the original text. Notes stay `note` fields (they lower to `note`).
 - `links.json` becomes the links package `lit/links/` (one module `links`).
+- A calibration set becomes `lit/<dir>/calibration-<id>.lit` (module
+  `<dir>.calibration-<id>`) in the one package its refs name: the pack's
+  directory (as above, else an existing package under the output root
+  whose `pack_id` it is, else the pack id), spelling each ref `local`, or
+  `lit/links/` when they name instances, kept qualified. Each distinct
+  source becomes a `source source-<n>`, its `vintageEnd` the day before
+  the vintage's exclusive end. Refs naming two packages, or no pack, are
+  L6002. A set going into an existing package is checked, and its
+  lowering compared, inside that package.
 - A named scenario becomes `cases/<id>.case`: `uses` every pack at
   `^0.1.0`, `as_of` the primary package's `known_at`, an explicit `start`
   (legacy scenarios assert posture; the porter replaces it with `events`),
@@ -2907,6 +2957,22 @@ parses with no diagnostics, and it follows these conventions:
   L4001), and imported packages declare no events (legacy JSON has
   none). Against packages that declare them, uncommenting the block and
   deleting what it derives replays to the same scenario.
+
+### 8.8 Calibration sets
+
+Each `calibration` declaration (§5.9) of a package, rule or links, lowers
+to one engine `CalibrationSet` beside the pack or link file, written as
+`packs/calibration/<id>.json`: `id`, `title`, `description` (the `note`),
+and one entry per value in declaration order, `target` `edge-probability`
+(`value` absent for a cleared `p ?`), `edge-duration` (`distribution`
+`{min?, mode, max?}` in days) or `node-attr` (`attr`, `value`), with `ref`
+the engine ref (`<pack-id>::<local>` or `<base>@<origin>::<local>`), `n`,
+`method`, and `source` `{title, url, vintageStart, vintageEnd?,
+retrieved?}`: `vintageStart` is the vintage's `from` and `vintageEnd` its
+last day (`to` minus one), absent for an open vintage. Numbers lower as
+§8.5. A catalog serves the sets it was built with
+(`litgraph::api::Catalog::calibration`); `$LITGRAPH_CALIBRATION` names a
+directory of sets that replaces them for a request.
 
 ## 9. Diagnostics, JSON, CLI
 
@@ -3074,7 +3140,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | `lock` | `[PKG_DIR]`, `--locked`, `--root` | `{lockfile, changed, packages:[{name,version,digest}]}` (a directory of matters: `{lockfiles:[{lockfile, changed, cases, packages}]}`); `--locked` fails (L1007) instead of writing; `--root` verifies as `--locked` does and adds `root`, the lock's Merkle root computed on read (§4.2; `null` when stale) |
 | `compat` | `OLD NEW` (two package directories) | `{package, old:{version, semantic}, new:{version, semantic}, class, required, declared, ok, changes:[{class, kind, what, now?}]}` per §4.4; L1012 when the bump is too small |
 | `check` | `PATHS...` (packages, `.lit`, `.case`, `.world`), `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at` | `{profile, files, obligations:[Finding], packages, cases}`, and `worlds:[{path, world, layers}]` when a `.world` was checked (§5.8) |
-| `build` | `PKG_OR_CASE...`, `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at`, `--out DIR`, `--pack-file ID=STEM` (repeatable) | `{outputs:{packs:[path], links:[path], clock:[path], scenarios:[path], source_maps:[path], litigatables:[path]}, litigatable_hash, litigatables, obligations}` |
+| `build` | `PKG_OR_CASE...`, `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at`, `--out DIR`, `--pack-file ID=STEM` (repeatable) | `{outputs:{packs:[path], links:[path], clock:[path], calibration:[path], scenarios:[path], source_maps:[path], litigatables:[path]}, litigatable_hash, litigatables, obligations}` |
 | `fmt` | `PATHS...`, `--check` | `{files:[{path, changed}]}`; `--check` reports L9004 instead of writing |
 | `explain` | `CODE`, or `TARGET` with the op flags below | `{code, explanation, severity:{dev, strict}}`; given a path (`.case`, `.lit`, package directory), the engine's `explain` op on it as `run` returns it |
 | `run` | `TARGET` (`.case`, `.lit`, or package directory), `--op NAME\|JSON` (default `chain`), `--arg K=V`, `--set K=V`, `--no-links`, `--lib DIR` | the engine's response verbatim (`{ok, api_version, op, result, warnings, provenance, elapsed_ms}`); exit 2 when it is `ok: false`. A matter runs under its scenario (`--set` composes params onto it through `extends`); a package runs its pack under the default scenario with the `--set` params, and a links package (§8.4) the packs it composes. A target that fails its check is not run |
@@ -3096,7 +3162,8 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | `mcp` | `--lib DIR`, `--cases DIR` (repeatable) | MCP session over stdio (no envelope; newline-delimited JSON-RPC): one tool per engine op on a compiled matter (`{target, set?, lib?, no_links?, ...op fields}`, as `run`), `litigate_engine` (a raw engine request over the packs and scenarios `engine` compiles), `litigate_describe` `litigate_check` `litigate_build` `litigate_where` `litigate_timeline` `litigate_explain`; each returns its command's envelope, a tool error when the command would exit non-zero; the compiled packs, links, named scenarios and engine manual as `litigate://` resources |
 
 `build` writes pack `ID` to `packs/ID.json` (its source map to
-`packs/ID.map.json`, its clock fragment to `packs/clock/ID.json`); `--pack-file
+`packs/ID.map.json`, its clock fragment to `packs/clock/ID.json`), and each
+`calibration` declaration of a package to `packs/calibration/SET.json`; `--pack-file
 ID=STEM` writes those as `STEM` instead. Both sides are kebab-case, an id is
 mapped once, `links` is reserved, and a mapping naming no built pack, or two
 outputs landing on one path, is a usage failure (exit 1).
@@ -3137,6 +3204,7 @@ disjoint source files and never conflict on generated output. Edit `lit/` or
 | `packs/<file>.json` | each forum package `lit/<forum>/` (not `lit/core`, a library, nor `lit/examples`) |
 | `packs/links.json` | `lit/links/` |
 | `packs/clock/<file>.json` | a forum package's own counting rules and calendars (today `mpep-prosecution` and `ttab-trademark-trial-and-appeal-board`) |
+| `packs/calibration/<id>.json` | each `calibration` declaration (§8.8), today in `lit/{cofc,frcp,ptab,links}` |
 | `scenarios/<id>.json` | each top-level `cases/<id>.case` (not `cases/requests/` nor `cases/examples/`) |
 
 `<file>` is the pack id, except where the build maps it with `--pack-file`
@@ -3147,17 +3215,23 @@ new forum package is added there. Each build starts from an empty output
 directory, so a removed package's file disappears; source maps and
 litigatables are not kept. The hand-authored clock fragments are copied
 beside the generated ones (a fragment both hand-authored and generated is a
-build failure). Not generated:
-the shared clock library is hand-written (ruling 2026-10-23).
-`packs/clock/{frap26,frcp6,frcrimp45,itc210,rcfc6,sup-ct-30,us-federal-holidays}.json`
-are committed `schemaVersion: 3` fragments with no `lowered` header (with
-`packs/clock/SOURCES-NOTES.md` and `packs/*-SOURCES-NOTES.md`); no build
-writes or rewrites them, and a build writes a forum package's own
-fragment (`clock/<pack id>.json`, `schemaVersion: 4`) only under a name
-none of them has. `lit/core`'s counting rules and calendars are a
-library packages import, not a generator for these files. Also
-hand-written: `examples/*.json` requests, which the
-`cases/requests/` matters reproduce through `litigate run`.
+build failure). The shared clock library is `lit/core` lowered (lg-dfv4.2,
+replacing the hand-written `packs/clock/*.json` of ruling 2026-10-23): the
+engine cannot run the compiler that depends on it, so its copy,
+`crates/litigate-engine/clock/litigate-core.json` (`schemaVersion: 4`, with its
+`lowered` header), is the one generated file committed. `just lit-sync`
+rewrites it from `litigate build lit/core`, `lit-sync-check` fails while
+it is stale, and the build copies it beside the generated fragments; a
+forum package's own fragment (`clock/<pack id>.json`) never takes its
+name. It reproduces the former hand-written rules' due, base and anchor
+dates, flags and refusals on every request a `.lit` deadline can make
+(`crates/litigate-cli/tests/core_stdlib.rs`, against litgraph-final's
+files); its trace texts are generated from each rule's `cite` (§8.2), and
+requests no `.lit` deadline can make (a backward period under a
+`next_business_day` rule, L3009) take the lowered rule's behaviour.
+`packs/` holds no JSON input, only `*-SOURCES-NOTES.md` prose. Runnable
+requests are `cases/requests/*.case` matters, each led by the `// litigate
+run ...` line that reproduces it; no request is JSON.
 
 `just lit-sync` and `crates/litgraph-packs` build under the `dev`
 profile (ruling 2026-10-23): `build.args` names no `--profile`, and

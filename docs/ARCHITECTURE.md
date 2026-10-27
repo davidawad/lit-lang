@@ -243,8 +243,10 @@ date, independent of the graph/scenario layers above — a deadline is a fact
 about a forum's procedure, not a scenario-dependent quantity.
 
 The clock holds no forum knowledge. It is a generic interpreter over two
-data types loaded from `packs/clock/*.json` (the *clock library*, embedded
-at build time like the packs; see `docs/PACK_SCHEMA.md`, "Clock library"):
+data types loaded from `clock/*.json` fragments (the *clock library*:
+`lit/core`'s counting rules and calendars lowered, plus each package's own,
+embedded at build time like the packs; see `docs/PACK_SCHEMA.md`, "Clock
+library"):
 
 - a **`HolidayCalendar`**: fixed-date and nth-weekday holidays, an optional
   multi-year cycle, a weekend-observance rule, and a half-open effective
@@ -269,7 +271,9 @@ calendar), `frap26` (FRCP 6's pipeline with FRAP 26(c)'s service-method
 table) and `itc210` (`19 CFR 210.6(a)`: a
 business-day anchor, business-day counting under 7 days, a forward roll in
 both directions, and a re-roll after service). Their sources and the
-interpretive choices they encode are in `packs/clock/SOURCES-NOTES.md`.
+interpretive choices they encode are in `lit/core`'s doc comments and
+`packs/clock/SOURCES-NOTES.md` (written for the hand-authored library
+`lit/core` replaced).
 
 A pack names its rule in its v3 `counting` field. The `deadlines` API op
 resolves that id against the catalog's clock library and returns the due
@@ -291,11 +295,10 @@ today's: a pre-2009 FRCP 6 short-period count, for instance, is not modeled.
   one or compose it with inline overrides (`extends`) — see
   `docs/PACK_SCHEMA.md`'s "Scenario library" section.
 - ~~Calibration pipeline: probabilities and durations from docket data~~
-  **Delivered**: `calibration/*.json` (embedded like packs; `scenario.calibration`,
-  `provenance.calibration`, the `calibration` gap-ranking op) — see
-  `docs/CALIBRATION.md`. Still open: a CourtListener/PACER-backed fetcher for
-  ongoing re-calibration (`scripts/calibrate/` currently regenerates one
-  set's arithmetic from recorded constants, not a live docket puller).
+  **Delivered**: `calibration` declarations in `lit/` (built and embedded like
+  packs; `scenario.calibration`, `provenance.calibration`, the `calibration`
+  gap-ranking op) — see `docs/CALIBRATION.md`. Still open: a
+  CourtListener/PACER-backed fetcher for ongoing re-calibration.
 - ~~CVaR-optimal policies; general-sum (opponent with its own payoffs).~~
   **Delivered**: `objective: {type: cvar, alpha}` (Rockafellar–Uryasev) and
   `scenario.opponent_objective` (subgame-perfect equilibrium by backward

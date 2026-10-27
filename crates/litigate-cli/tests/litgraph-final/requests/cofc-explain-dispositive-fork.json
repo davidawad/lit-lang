@@ -1,0 +1,143 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "explain",
+  "result": {
+    "node": {
+      "id": "cofc::patent-dispositive-motion-fork",
+      "label": "Dispositive Motion Filed Before Trial?",
+      "kind": "decision",
+      "cite": "RCFC 56",
+      "note": "After claim construction and expert discovery, either side may move for summary judgment on infringement, invalidity, or (if liability is undisputed) damages. This feeds back into the SAME RCFC 56/58/59/54/EAJA machinery already modeled on the general track -- §1498's remedy limits (no injunction, no enhanced damages, no jury) constrain what any resulting judgment can award, but not the procedural mechanics of getting there."
+    },
+    "control": "me",
+    "who_decides": "you",
+    "value": 927576.157779,
+    "interrupt_mass": 0.0,
+    "options": [
+      {
+        "id": "cofc::e-dispositivefork-sj",
+        "label": "Move for summary judgment on infringement, invalidity, or (if liability is undisputed) damages",
+        "from": "cofc::patent-dispositive-motion-fork",
+        "to": "cofc::summary-judgment-motion-filed",
+        "role": "self",
+        "authority": "RCFC 56",
+        "q": 927576.157779,
+        "cost": 25500.0,
+        "hours": 30.0,
+        "fees": 0.0,
+        "note": "Feeds back into the same RCFC 56/58/59/54/EAJA machinery already modeled on the general track.",
+        "chosen": true,
+        "kind": "choice",
+        "regret": 0.0,
+        "then": [
+          {
+            "terminal": "cert-not-sought{panel-affirmed}",
+            "p": 0.214068
+          },
+          {
+            "terminal": "cert-denied{panel-affirmed}",
+            "p": 0.198664
+          },
+          {
+            "terminal": "settled-in-mediation",
+            "p": 0.154477
+          },
+          {
+            "terminal": "settled-in-mediation",
+            "p": 0.141977
+          }
+        ]
+      },
+      {
+        "id": "cofc::e-dispositivefork-trial",
+        "label": "No dispositive motion; proceed to a bench trial on damages ('reasonable and entire compensation') and any remaining liability issues",
+        "from": "cofc::patent-dispositive-motion-fork",
+        "to": "cofc::trial-bench",
+        "role": "self",
+        "authority": "28 U.S.C. §1498(a)",
+        "q": 872157.115916,
+        "cost": 17000.0,
+        "hours": 20.0,
+        "fees": 0.0,
+        "note": "§1498(a) constrains the REMEDY (no injunction, no enhanced/treble damages, no jury) but not the procedural mechanics of reaching judgment.",
+        "chosen": false,
+        "kind": "choice",
+        "regret": 55419.041863,
+        "then": [
+          {
+            "terminal": "cert-denied{panel-affirmed}",
+            "p": 0.207425
+          },
+          {
+            "terminal": "cert-not-sought{panel-affirmed}",
+            "p": 0.205423
+          },
+          {
+            "terminal": "settled-in-mediation",
+            "p": 0.148238
+          },
+          {
+            "terminal": "settled-in-mediation",
+            "p": 0.148238
+          }
+        ]
+      }
+    ],
+    "warnings_here": []
+  },
+  "warnings": [
+    {
+      "code": "authored-hole",
+      "count": 1,
+      "example": "pack cafc: 4 explicit hole(s) left numbers unauthored, first /edges/19/probability (no published selection rate); author them in the pack's source (a strict build rejects holes)",
+      "at": []
+    },
+    {
+      "code": "compile",
+      "count": 69,
+      "example": "state flags expanded the graph: 301 additional node(s) for reachable flag combinations",
+      "at": []
+    },
+    {
+      "code": "fact-unset",
+      "count": 1,
+      "example": "matter fact not set via scenario.facts; using the authored prior (5 of 5 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
+      "at": [
+        "cafc::remand-destination"
+      ]
+    },
+    {
+      "code": "mixed-node",
+      "count": 4,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "cofc::discovery-open",
+        "cofc::patent-14b-notice-fork",
+        "cofc::post-trial-motion-window",
+        "cofc::service-on-united-states"
+      ]
+    },
+    {
+      "code": "payoff-not-authored",
+      "count": 1,
+      "example": "33 terminal(s) use a heuristic or zero payoff; override with scenario.payoffs or author `payoff` in the pack",
+      "at": []
+    },
+    {
+      "code": "probability-fill",
+      "count": 307,
+      "example": "5 of 5 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "cafc::appeal-origin",
+        "cafc::cert-petition-filed",
+        "cafc::costs-bill-filed",
+        "cafc::cross-appeal-filed",
+        "cafc::docketing-statement-filed",
+        "cafc::joint-appendix-filed",
+        "cafc::mandate-issued",
+        "cafc::mediation-conference"
+      ]
+    }
+  ]
+}

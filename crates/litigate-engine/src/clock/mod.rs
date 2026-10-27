@@ -5,7 +5,9 @@
 //! extensions, clerk-inaccessibility and hours provisions, and the cited
 //! text of each step) and every holiday calendar (fixed and nth-weekday
 //! holidays, weekend observance, multi-year cycles, effective intervals)
-//! is authored in `packs/clock/*.json` and referenced from a pack's
+//! is authored in `.lit` (`counting` and `calendar` declarations, lowered
+//! to `clock/*.json` fragments: `lit/core`'s and a package's own) and
+//! referenced from a pack's
 //! `counting` field. See `docs/PACK_SCHEMA.md` ("Clock library") and
 //! `docs/ARCHITECTURE.md` ("Deadline clock").
 //!

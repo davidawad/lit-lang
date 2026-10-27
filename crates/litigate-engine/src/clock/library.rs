@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! The clock library: holiday calendars and counting rules loaded from
-//! `packs/clock/*.json` (embedded at build time, like the packs), merged
-//! into one namespace that a pack's `counting` field resolves against.
+//! `clock/*.json` fragments (the shared library, `lit/core` lowered, is
+//! embedded at build time), merged into one namespace that a pack's
+//! `counting` field resolves against.
 //!
 //! Each file is a fragment `{ "schemaVersion": 3, "calendars": [...],
 //! "countingRules": [...] }`. Fragments merge in file-name order; a
@@ -161,7 +162,7 @@ impl ClockLibrary {
         (lib, errors)
     }
 
-    /// The library built from the embedded `packs/clock/*.json`, with any
+    /// The library built from the embedded shared clock library, with any
     /// fragment errors (none for a well-formed build; the test suite checks).
     #[must_use]
     pub fn embedded() -> &'static (ClockLibrary, Vec<(String, String)>) {

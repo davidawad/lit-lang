@@ -6,45 +6,50 @@ Calibration replaces specific ones with sourced values from published
 statistics, without editing the pack: **data plus mechanism**, the same
 split packs themselves use.
 
-## The file format: `calibration/*.json`
+## The source: a `calibration` declaration
 
-A calibration set is one JSON file, embedded into the binary at build time
-exactly like `packs/*.json` (see `crates/litigate-engine/build.rs`), and
-overridable at runtime the same way packs are: `$LITGRAPH_CALIBRATION` (or
-the CLI's `--calibration-dir`) points at a directory of `*.json` files
-instead. `litgraph schema calibration` gives the JSON Schema;
-`litgraph validate my-set.json` (or `--kind calibration`) checks a file's
-shape and resolves every `ref` against the loaded packs.
+A calibration set is a `calibration` declaration in the `.lit` package it
+calibrates (SPEC §5.9): `lit/ptab/calibration-ptab-fy2024.lit` for the
+PTAB pack, `lit/links/calibration-cafc-fy2024.lit` for a `cafc@<origin>`
+instance. The compiler resolves every target and types every value, so a
+typo is an error with a span, never an entry that silently no-ops at
+request time. `litigate build` lowers each declaration to an engine
+calibration set (`packs/calibration/<id>.json`, internal IR the binaries
+embed, SPEC §8.8); `$LITGRAPH_CALIBRATION` (or `litgraph
+--calibration-dir`) still names a directory of such sets that replaces the
+built ones for a request. `litigate import` turns a legacy set into the
+declaration.
 
-```jsonc
-{
-  "id": "ptab-fy2024",              // the name a scenario opts in with
-  "title": "PTAB IPR/PGR institution and FWD rates, FY2024",
-  "description": "...",             // what this set covers, in prose
-  "entries": [
-    {
-      "target": "edge-probability", // edge-probability | edge-duration | node-attr
-      "ref": "ptab-patent-trial-appeal-board::edge-institution-decision-institution-granted",
-      "value": 0.6810,              // required for edge-probability / node-attr
-      "source": {
-        "title": "PTAB Trial Statistics FY24 End of Year Outcome Roundup",
-        "url": "https://www.uspto.gov/sites/default/files/documents/ptab_aia_fy2024__roundup.pdf",
-        "vintageStart": "2023-10-01",
-        "vintageEnd": "2024-09-30",
-        "retrieved": "2026-09-28"
-      },
-      "n": 1087,                    // sample size / population count
-      "method": "740 instituted / (740 + 347 denied) = 0.6810"
-    }
-  ]
+```lit
+module ptab.calibration-ptab-fy2024
+
+calibration ptab-fy2024: "PTAB IPR/PGR institution and FWD rates, FY2024" {
+  note "What this set covers, in prose."
+  source fy24-roundup "PTAB Trial Statistics FY24 End of Year Outcome Roundup — IPR, PGR" {
+    url "https://www.uspto.gov/sites/default/files/documents/ptab_aia_fy2024__roundup.pdf"
+    vintage [2023-10-01, 2024-10-01)
+    retrieved 2026-09-28
+  }
+  p edge-institution-decision-institution-granted 0.681 {
+    source fy24-roundup
+    n 1087
+    method "740 instituted / (740 + 347 denied) = 0.6807"
+  }
+  p edge-institution-decision-institution-denied-merits ? {
+    source fy24-roundup
+    n 1087
+    method "Clears the pack's unsourced teaching estimate: the source gives no split."
+  }
 }
 ```
 
-| field | notes |
+| item | notes |
 |---|---|
-| `target` | `edge-probability` (sets `value`, 0..=1), `edge-duration` (sets `distribution`, a `Duration` — `{min?, mode, max?}` days), or `node-attr` (sets `attr` + `value`) |
-| `ref` | node or edge ref, same resolution as everywhere else in the engine (qualified `pack::local` recommended). An instance-qualified ref like `cafc@cofc::panel-to-affirmed` targets one `links.json` pack instance only, not the base pack or its siblings. An edge ref applies to every [state-flag](PACK_SCHEMA.md#state-flags) product-graph copy of that edge, not just the one whose id matches exactly: a calibration entry authors one value for the edge a pack describes, not one per flag-history it can be taken under (e.g. `ptab-patent-trial-appeal-board.json`'s `edge-fwd-issued-fwd-all-unpatentable` and its `{ipr-estopped}` sibling, reachable after a Director-review remand for further proceedings, both get the calibrated value from a single entry) |
-| `source` | `title`, `url` (fetched and checked to resolve when the entry was authored), `vintageStart`/`vintageEnd` (the reporting period), `retrieved` (when you checked it) |
+| `p target q` | an edge's probability, in [0, 1]; `p target ?` clears the edge's own probability (needs `method`) |
+| `duration target D` | an edge's elapsed time: `252.63.days`, or `{ min D, mode D, max D }` (min and max optional) |
+| `attr target name x` | one numeric node attribute |
+| target | `local` (this package), `pack::local`, or `base@origin::local` for one `links` instance only, not the base pack or its siblings. An edge target applies to every [state-flag](PACK_SCHEMA.md#state-flags) product-graph copy of that edge, not just the one whose id matches exactly: a calibration entry authors one value for the edge a pack describes, not one per flag-history it can be taken under (e.g. the PTAB pack's `edge-fwd-issued-fwd-all-unpatentable` and its `{ipr-estopped}` sibling, reachable after a Director-review remand for further proceedings, both get the calibrated value from a single entry) |
+| `source` | a declared source: title, `url` (fetched and checked to resolve when the entry was authored), `vintage` (the half-open reporting period: `[2023-10-01, 2024-10-01)` is FY2024), `retrieved` (when you checked it) |
 | `n` | sample size, or the count itself for a full-population annual total |
 | `method` | required whenever the value is derived arithmetic from the source's raw counts (show the arithmetic) |
 
@@ -143,15 +148,14 @@ in `crates/litigate-engine/src/api/calibration/gaps.rs` for why.
 
 ## The first calibration set
 
-`calibration/*.json` currently ships four FY2024 sets, each sourced from one
-fetched, working document:
+Four FY2024 sets ship, each sourced from one fetched, working document:
 
-| file | covers | source |
+| set (file) | covers | source |
 |---|---|---|
-| `ptab-fy2024.json` | IPR/PGR institution rate; FWD outcome split (all-unpatentable / mixed / all-confirmed) | USPTO PTAB Trial Statistics FY24 End of Year Outcome Roundup |
-| `cafc-fy2024.json` | `cafc@cofc` affirmance and vacatur/remand rates | CoFC FY2024 Statistical Report, "Appeals to the ... Federal Circuit" |
-| `cofc-fy2024.json` | annual bid-protest filing/disposition volume (node attrs) | same CoFC report |
-| `frcp-fy2024.json` | district-court time-to-disposition (voluntary dismissal, summary judgment) | AO Judicial Business Table C-5 |
+| `ptab-fy2024` (`lit/ptab/`) | IPR/PGR institution rate; FWD outcome split (all-unpatentable / mixed / all-confirmed) | USPTO PTAB Trial Statistics FY24 End of Year Outcome Roundup |
+| `cafc-fy2024` (`lit/links/`) | `cafc@cofc` affirmance and vacatur/remand rates | CoFC FY2024 Statistical Report, "Appeals to the ... Federal Circuit" |
+| `cofc-fy2024` (`lit/cofc/`) | annual bid-protest filing/disposition volume (node attrs) | same CoFC report |
+| `frcp-fy2024` (`lit/frcp/`) | district-court time-to-disposition (voluntary dismissal, summary judgment) | AO Judicial Business Table C-5 |
 
 Deliberately left uncalibrated (real gaps, not oversights — good first
 targets for the next pass, and exactly what `litgraph q -` with
@@ -167,12 +171,3 @@ targets for the next pass, and exactly what `litgraph q -` with
   left as-is rather than duplicated into a calibration entry).
 - CoFC bid-protest outcome rate (sustained vs. denied): the fetched
   statistical report gives filing/disposition volume only, not outcomes.
-
-## Regenerating entries: `scripts/calibrate/`
-
-`scripts/calibrate/build_frcp_fy2024.py` regenerates `frcp-fy2024.json`'s
-duration entries from the constants recorded in the script (the AO table's
-published months, converted to days) — a worked example of "show your
-work" for a derived number, runnable offline with no network access. It is
-optional scaffolding, not a scraper: the other three sets were transcribed
-by hand from the fetched PDFs and are not regenerated by a script.

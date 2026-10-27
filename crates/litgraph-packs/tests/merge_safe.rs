@@ -168,7 +168,7 @@ fn edit(root: &Path, file: &str, from: &str, to: &str) {
 fn two_branches(name: &str, committed: bool) -> PathBuf {
     let root = scratch(name);
     let src = repo();
-    for dir in ["lit", "cases", "packs/clock"] {
+    for dir in ["lit", "cases", "crates/litigate-engine/clock"] {
         copy_tree(&src.join(dir), &root.join(dir));
     }
     std::fs::create_dir_all(root.join("crates/litgraph-packs")).unwrap();
@@ -230,8 +230,7 @@ fn two_branches_editing_different_lit_packages_rebase_cleanly() {
     let tracked = git_ok(&root, &["ls-files"]);
     assert!(
         !tracked.lines().any(|f| f.starts_with("scenarios/")
-            || (f.starts_with("packs/") && !f.starts_with("packs/clock/"))
-            || f == "packs/clock/mpep-prosecution.json"),
+            || (f.starts_with("packs/") && Path::new(f).extension().is_some_and(|e| e == "json"))),
         "a generated file is tracked:\n{tracked}"
     );
     let changed = git_ok(&root, &["diff", "--name-only", "main", "b"]);
@@ -314,13 +313,8 @@ fn no_generated_file_is_committed_here() {
     if !has_git() || !git(&root, &["rev-parse", "--git-dir"]).0 {
         return skip("no_generated_file_is_committed_here", "not a git checkout");
     }
-    let hand: Vec<String> = std::fs::read_dir(root.join("packs/clock"))
-        .unwrap()
-        .map(|e| format!("clock/{}", e.unwrap().file_name().to_string_lossy()))
-        .collect();
     let built = litgraph_packs::PACKS
         .iter()
-        .filter(|(name, _)| !hand.iter().any(|h| h == name))
         .map(|(name, _)| format!("packs/{name}"))
         .chain(
             litgraph_packs::SCENARIOS
@@ -330,9 +324,7 @@ fn no_generated_file_is_committed_here() {
     for path in built {
         let (tracked, _) = git(&root, &["ls-files", "--error-unmatch", &path]);
         assert!(!tracked, "{path} is committed; it is a build output");
-        if !path.starts_with("packs/clock/") {
-            let (ignored, _) = git(&root, &["check-ignore", "-q", "--no-index", &path]);
-            assert!(ignored, "{path} is not gitignored");
-        }
+        let (ignored, _) = git(&root, &["check-ignore", "-q", "--no-index", &path]);
+        assert!(ignored, "{path} is not gitignored");
     }
 }

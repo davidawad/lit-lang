@@ -298,7 +298,7 @@ fn documents_litgraph_rejects_and_non_documents_are_reported_at_the_start() {
         one(
             "inputs/other.json",
             text.to_owned(),
-            "not a pack, links file, or named scenario",
+            "not a pack, links file, named scenario, or calibration set",
         );
     }
 }

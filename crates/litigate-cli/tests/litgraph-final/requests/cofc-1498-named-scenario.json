@@ -1,0 +1,123 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "chain",
+  "result": {
+    "start": {
+      "id": "cofc::claim-accrues",
+      "label": "Claim Against the United States Accrues"
+    },
+    "absorption": [
+      {
+        "terminal": "cofc::voluntary-dismissal-early",
+        "label": "VOLUNTARY DISMISSAL (Before Answer/SJ/MJAR)",
+        "p": 0.9025,
+        "utility": 0.0,
+        "outcome": [
+          "voluntary",
+          "no-prejudice-unless-second-dismissal"
+        ]
+      },
+      {
+        "terminal": "cofc::dismissed-time-barred",
+        "label": "DISMISSED -- Time-Barred Under §2501",
+        "p": 0.05,
+        "utility": 0.0,
+        "outcome": [
+          "loss",
+          "dismissal",
+          "jurisdictional"
+        ]
+      },
+      {
+        "terminal": "cofc::dismissed-1500-bar",
+        "label": "DISMISSED -- §1500 Same-Claim-Pending Bar",
+        "p": 0.0475,
+        "utility": 0.0,
+        "outcome": [
+          "loss",
+          "dismissal",
+          "jurisdictional",
+          "waiver-trap"
+        ]
+      }
+    ],
+    "expected": {
+      "dollars": 12368.7625,
+      "elapsed": 0.0,
+      "hours": 12.635
+    },
+    "expected_steps": 6.6575,
+    "expected_utility": 0.0,
+    "expected_net": -12368.7625,
+    "sink_mass": 0.0,
+    "top_visits": [
+      {
+        "node": "cofc::claim-accrues",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::limitations-check",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::patent-claim-fork",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::section-1500-check",
+        "visits": 0.95
+      },
+      {
+        "node": "cofc::complaint-filed",
+        "visits": 0.9025
+      },
+      {
+        "node": "cofc::filing-track-fork",
+        "visits": 0.9025
+      },
+      {
+        "node": "cofc::service-on-united-states",
+        "visits": 0.9025
+      }
+    ]
+  },
+  "warnings": [
+    {
+      "code": "fact-unset",
+      "count": 2,
+      "example": "matter fact not set via scenario.facts; using the authored prior (2 of 2 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
+      "at": [
+        "cofc::limitations-check",
+        "cofc::section-1500-check"
+      ]
+    },
+    {
+      "code": "mixed-node",
+      "count": 5,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "cofc::discovery-open",
+        "cofc::patent-14b-notice-fork",
+        "cofc::patent-claim-fork",
+        "cofc::post-trial-motion-window",
+        "cofc::service-on-united-states"
+      ]
+    },
+    {
+      "code": "probability-fill",
+      "count": 27,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "cofc::adr-mediation-session",
+        "cofc::answer-filed",
+        "cofc::bid-protest-complaint-filed",
+        "cofc::bid-protest-initial-status-conference",
+        "cofc::case-type-fork",
+        "cofc::claim-accrues",
+        "cofc::complaint-filed",
+        "cofc::costs-and-fees-window"
+      ]
+    }
+  ]
+}

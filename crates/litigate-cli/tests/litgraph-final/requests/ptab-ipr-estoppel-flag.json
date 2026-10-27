@@ -1,0 +1,208 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "graph",
+  "result": {
+    "nodes": [
+      {
+        "id": "ptab-patent-trial-appeal-board::fwd-all-unpatentable{ipr-estopped}",
+        "kind": "decision",
+        "label": "FWD: All Claims Unpatentable",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": [
+          "win",
+          "fwd"
+        ]
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::fwd-all-confirmed{ipr-estopped}",
+        "kind": "decision",
+        "label": "FWD: All Claims Confirmed Patentable",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": [
+          "loss",
+          "fwd",
+          "estoppel"
+        ]
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::fwd-mixed{ipr-estopped}",
+        "kind": "decision",
+        "label": "FWD: Mixed Result",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": [
+          "mixed",
+          "fwd"
+        ]
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::post-fwd-options{ipr-estopped}",
+        "kind": "decision",
+        "label": "Post-FWD Options",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::rehearing-request-filed{ipr-estopped}",
+        "kind": "state",
+        "label": "Rehearing Request Filed",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::director-review-request-filed{ipr-estopped}",
+        "kind": "state",
+        "label": "Director Review Requested",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::federal-circuit-window{ipr-estopped}",
+        "kind": "decision",
+        "label": "Federal Circuit Appeal Window",
+        "control": "chance",
+        "payoff": null,
+        "payoff_source": "default",
+        "outcome": []
+      }
+    ],
+    "edges": [
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-fwd-all-unpatentable-post-fwd-options{ipr-estopped}",
+        "label": "Patent owner considers post-FWD relief",
+        "from": "ptab-patent-trial-appeal-board::fwd-all-unpatentable{ipr-estopped}",
+        "to": "ptab-patent-trial-appeal-board::post-fwd-options{ipr-estopped}",
+        "role": "nature",
+        "authority": "37 CFR § 42.71(d)",
+        "p": 0.5,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-fwd-all-confirmed-post-fwd-options{ipr-estopped}",
+        "label": "Petitioner considers post-FWD relief",
+        "from": "ptab-patent-trial-appeal-board::fwd-all-confirmed{ipr-estopped}",
+        "to": "ptab-patent-trial-appeal-board::post-fwd-options{ipr-estopped}",
+        "role": "nature",
+        "authority": "37 CFR § 42.71(d)",
+        "p": 0.5,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-fwd-mixed-post-fwd-options{ipr-estopped}",
+        "label": "Either party considers post-FWD relief",
+        "from": "ptab-patent-trial-appeal-board::fwd-mixed{ipr-estopped}",
+        "to": "ptab-patent-trial-appeal-board::post-fwd-options{ipr-estopped}",
+        "role": "nature",
+        "authority": "37 CFR § 42.71(d)",
+        "p": 0.5,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-post-fwd-options-rehearing-request-filed{ipr-estopped}",
+        "label": "Request panel rehearing",
+        "from": "ptab-patent-trial-appeal-board::post-fwd-options{ipr-estopped}",
+        "to": "ptab-patent-trial-appeal-board::rehearing-request-filed{ipr-estopped}",
+        "role": "nature",
+        "authority": "37 CFR 42.71(d)",
+        "deadline_days": 30.0,
+        "p": 0.333333,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-post-fwd-options-director-review-request-filed{ipr-estopped}",
+        "label": "Request Director review",
+        "from": "ptab-patent-trial-appeal-board::post-fwd-options{ipr-estopped}",
+        "to": "ptab-patent-trial-appeal-board::director-review-request-filed{ipr-estopped}",
+        "role": "nature",
+        "authority": "37 CFR 42.73(d)(1)",
+        "deadline_days": 30.0,
+        "p": 0.333333,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-post-fwd-options-federal-circuit-window{ipr-estopped}",
+        "label": "Skip rehearing — go straight to appeal",
+        "from": "ptab-patent-trial-appeal-board::post-fwd-options{ipr-estopped}",
+        "to": "ptab-patent-trial-appeal-board::federal-circuit-window{ipr-estopped}",
+        "role": "nature",
+        "authority": "35 U.S.C. § 319",
+        "p": 0.333333,
+        "active": true,
+        "hours": 0.0,
+        "fees": 0.0
+      }
+    ]
+  },
+  "warnings": [
+    {
+      "code": "authored-hole",
+      "count": 1,
+      "example": "pack ptab-patent-trial-appeal-board: 4 explicit hole(s) left numbers unauthored, first /edges/10/probability (no published defect-notice rate); author them in the pack's source (a strict build rejects holes)",
+      "at": []
+    },
+    {
+      "code": "compile",
+      "count": 17,
+      "example": "state flags expanded the graph: 104 additional node(s) for reachable flag combinations",
+      "at": []
+    },
+    {
+      "code": "fact-unset",
+      "count": 2,
+      "example": "matter fact not set via scenario.facts; using the authored prior (2 of 2 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
+      "at": [
+        "ptab-patent-trial-appeal-board::petition-time-bar-check",
+        "ptab-patent-trial-appeal-board::petition-time-bar-check{prior-petition-denied}"
+      ]
+    },
+    {
+      "code": "mixed-node",
+      "count": 5,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "ptab-patent-trial-appeal-board::patent-granted",
+        "ptab-patent-trial-appeal-board::patent-owner-response-filed",
+        "ptab-patent-trial-appeal-board::patent-owner-response-filed{ipr-estopped}",
+        "ptab-patent-trial-appeal-board::patent-owner-response-filed{prior-petition-denied}",
+        "ptab-patent-trial-appeal-board::patent-owner-response-filed{ipr-estopped,prior-petition-denied}"
+      ]
+    },
+    {
+      "code": "probability-fill",
+      "count": 105,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "ptab-patent-trial-appeal-board::adverse-judgment-request",
+        "ptab-patent-trial-appeal-board::cafc-vacates-remands",
+        "ptab-patent-trial-appeal-board::director-review-affirmed",
+        "ptab-patent-trial-appeal-board::director-review-modified",
+        "ptab-patent-trial-appeal-board::director-review-request-filed",
+        "ptab-patent-trial-appeal-board::federal-circuit-notice-of-appeal",
+        "ptab-patent-trial-appeal-board::federal-circuit-window",
+        "ptab-patent-trial-appeal-board::fwd-all-confirmed"
+      ]
+    }
+  ]
+}

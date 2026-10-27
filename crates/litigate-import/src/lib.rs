@@ -1,5 +1,5 @@
 //! `litigate import`: legacy litgraph JSON (packs, `links.json`, named
-//! scenarios) to idiomatic `.lit`/`.case` source (SPEC §8 read in reverse,
+//! scenarios, calibration sets) to idiomatic `.lit`/`.case` source (SPEC §8 read in reverse,
 //! §9.3 `import`).
 //!
 //! Every output file is canonical `litigate fmt` output and parses with no
@@ -30,6 +30,7 @@
 //! assert!(imported.files[0].text.contains("go \"Go\" -> b"));
 //! # Ok::<(), String>(())
 //! ```
+mod calibration;
 mod case;
 mod filing;
 mod issues;
@@ -44,6 +45,7 @@ mod transform;
 
 use issues::Issues;
 use litigate_base::{Diagnostic, DiagnosticCode, FileId, Label, LineIndex};
+use litigate_engine::api::CalibrationSet;
 use litigate_engine::model::{LinkFile, Pack};
 use litigate_engine::scenario::NamedScenario;
 use litigate_syntax::FileKind;
@@ -125,17 +127,30 @@ impl Emitted {
     }
 }
 
-/// Imports packs, `links.json` files and named scenarios together, so links
-/// and cases see the packs they reference (citation syntax, package
+/// Imports packs, `links.json` files, named scenarios and calibration sets
+/// together, so links, cases and calibration see the packs they reference (citation syntax, package
 /// directories, `known_at`). The document kind is detected from its keys.
 ///
 /// # Errors
 /// Every diagnostic, sorted, when any input is invalid or holds a value
 /// with no lossless `.lit`/`.case` spelling (L6002).
 pub fn import(inputs: &[Input]) -> Result<Imported, Vec<Diagnostic>> {
+    import_into(inputs, &BTreeMap::new())
+}
+
+/// [`import`] into a tree that already holds packages: `existing` maps a
+/// pack id to its package directory (`lit/<dir>`), where a calibration
+/// set of a pack not among `inputs` is written.
+///
+/// # Errors
+/// As [`import`].
+pub fn import_into(
+    inputs: &[Input],
+    existing: &BTreeMap<String, String>,
+) -> Result<Imported, Vec<Diagnostic>> {
     let mut diagnostics = Vec::new();
     let docs = read(inputs, &mut diagnostics);
-    let emitted = docs.emit(&mut diagnostics);
+    let emitted = docs.emit(existing, &mut diagnostics);
     // Output of an input that already failed is discarded unformatted, so
     // its errors aren't repeated as parse failures.
     let failed: Vec<String> = diagnostics.iter().map(|d| d.span.file.0.clone()).collect();
@@ -181,6 +196,7 @@ struct Docs<'a> {
     packs: Vec<(&'a Input, Pack)>,
     links: Vec<(&'a Input, LinkFile)>,
     scenarios: Vec<(&'a Input, NamedScenario, Map<String, Value>)>,
+    calibration: Vec<(&'a Input, CalibrationSet)>,
 }
 
 /// Detects and strictly parses every input.
@@ -219,7 +235,17 @@ fn read<'a>(inputs: &'a [Input], diagnostics: &mut Vec<Diagnostic>) -> Docs<'a> 
                     docs.scenarios.push((input, named, raw.unwrap_or_default()));
                 }
             }
-            None => issues.invalid(1, 1, "not a pack, links file, or named scenario"),
+            Some(Doc::Calibration) => {
+                let validate = |text: &str| CalibrationSet::from_json(text).map(|_| ());
+                if let Some(set) = parse::<CalibrationSet>(input, &mut issues, validate) {
+                    docs.calibration.push((input, set));
+                }
+            }
+            None => issues.invalid(
+                1,
+                1,
+                "not a pack, links file, named scenario, or calibration set",
+            ),
         }
         diagnostics.extend(issues.into_vec());
     }
@@ -228,9 +254,17 @@ fn read<'a>(inputs: &'a [Input], diagnostics: &mut Vec<Diagnostic>) -> Docs<'a> 
 
 impl Docs<'_> {
     /// Every generated file, paired with the input path it came from.
-    fn emit(&self, diagnostics: &mut Vec<Diagnostic>) -> Vec<(String, Emitted)> {
+    fn emit(
+        &self,
+        existing: &BTreeMap<String, String>,
+        diagnostics: &mut Vec<Diagnostic>,
+    ) -> Vec<(String, Emitted)> {
         let dirs = package_dirs(&self.packs);
-        let dir_of = |id: &str| dirs.get(id).map_or(id.to_owned(), Clone::clone);
+        let dir_of = |id: &str| {
+            dirs.get(id)
+                .or_else(|| existing.get(id))
+                .map_or(id.to_owned(), Clone::clone)
+        };
         let mut emitted = Vec::new();
         let mut run =
             |input: &Input,
@@ -278,6 +312,11 @@ impl Docs<'_> {
                 case::import_case(named, raw, from, &by_id, issues)
             });
         }
+        for (input, set) in &self.calibration {
+            run(input, None, &mut |from, issues| {
+                calibration::import_calibration(set, from, &dir_of, issues)
+            });
+        }
         emitted
     }
 }
@@ -287,6 +326,7 @@ enum Doc {
     Pack,
     Links,
     Scenario,
+    Calibration,
 }
 
 /// The kind of a parsed JSON document, from its keys.
@@ -298,6 +338,8 @@ fn detect(value: &Value) -> Option<Doc> {
         Some(Doc::Links)
     } else if object.contains_key("scenario") || object.contains_key("summary") {
         Some(Doc::Scenario)
+    } else if object.contains_key("entries") {
+        Some(Doc::Calibration)
     } else {
         None
     }

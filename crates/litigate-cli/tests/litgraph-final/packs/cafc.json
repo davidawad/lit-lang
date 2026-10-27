@@ -1,0 +1,192 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "solve",
+  "result": {
+    "start": {
+      "id": "cafc::appeal-origin",
+      "label": "Adverse Ruling From an Origin Tribunal"
+    },
+    "value": 82518.0,
+    "converged": true,
+    "iterations": 36,
+    "fee_shift_rounds": 0,
+    "best_line": [
+      {
+        "id": "cafc::origin-to-ttab",
+        "label": "Judgment below is a TTAB final decision",
+        "from": "cafc::appeal-origin",
+        "to": "cafc::entry-ttab",
+        "role": "nature",
+        "authority": "28 U.S.C. § 1295(a)(4)(B)",
+        "p": 0.2,
+        "kind": "likely-draw",
+        "step_p": 0.2,
+        "q": 83000.0
+      },
+      {
+        "id": "cafc::ttab-file-noa",
+        "label": "File notice of appeal with the Director (USPTO)",
+        "from": "cafc::entry-ttab",
+        "to": "cafc::notice-of-appeal-filed",
+        "role": "self",
+        "authority": "15 U.S.C. § 1071(a)(2); 37 C.F.R. § 2.145(d)(1)",
+        "deadline_days": 63.0,
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 83000.0
+      },
+      {
+        "id": "cafc::noa-to-docketed",
+        "label": "Clerk dockets the appeal, assigns case number",
+        "from": "cafc::notice-of-appeal-filed",
+        "to": "cafc::docketed",
+        "role": "nature",
+        "authority": "FRAP 12(a)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 85000.0
+      },
+      {
+        "id": "cafc::docketed-to-appearance",
+        "label": "File entry of appearance and certificate of interest",
+        "from": "cafc::docketed",
+        "to": "cafc::appearance-and-coi-filed",
+        "role": "self",
+        "authority": "Fed. Cir. R. 47.3(b)(1); Fed. Cir. R. 47.4(b)",
+        "deadline_days": 14.0,
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 85000.0
+      },
+      {
+        "id": "cafc::appearance-to-docketing-statement",
+        "label": "File docketing statement (Form 26)",
+        "from": "cafc::appearance-and-coi-filed",
+        "to": "cafc::docketing-statement-filed",
+        "role": "self",
+        "authority": "Fed. Cir. R. 47.6",
+        "deadline_days": 14.0,
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 86000.0
+      },
+      {
+        "id": "cafc::docketing-statement-to-screening",
+        "label": "OGC reviews docketing statement and briefs for mediation candidacy",
+        "from": "cafc::docketing-statement-filed",
+        "to": "cafc::mediation-screening",
+        "role": "nature",
+        "authority": "Appellate Mediation Program Guidelines §§ 2-3",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 87500.0
+      },
+      {
+        "id": "cafc::screening-to-motions",
+        "label": "Case not selected for mediation, or counsel represents mediation would not be fruitful",
+        "from": "cafc::mediation-screening",
+        "to": "cafc::motions-fork",
+        "role": "nature",
+        "authority": "Appellate Mediation Program Guidelines §§ 2, 7",
+        "p": 0.5,
+        "kind": "likely-draw",
+        "step_p": 0.5,
+        "q": 0.0
+      },
+      {
+        "id": "cafc::motions-decline",
+        "label": "Decline to seek a stay — proceed",
+        "from": "cafc::motions-fork",
+        "to": "cafc::cross-appeal-fork",
+        "role": "self",
+        "authority": "FRAP 8(a)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 0.0
+      },
+      {
+        "id": "cafc::cross-appeal-decline",
+        "label": "Decline to cross-appeal",
+        "from": "cafc::cross-appeal-fork",
+        "to": "cafc::no-cross-appeal",
+        "role": "self",
+        "authority": "FRAP 4(a)(3)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 0.0
+      },
+      {
+        "id": "cafc::no-cross-appeal-to-briefing",
+        "label": "Proceed to ordinary briefing",
+        "from": "cafc::no-cross-appeal",
+        "to": "cafc::appellant-brief-window",
+        "role": "nature",
+        "authority": "Fed. Cir. R. 31(a)(1)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 0.0
+      },
+      {
+        "id": "cafc::appellant-brief-fail",
+        "label": "Fail to file the opening brief",
+        "from": "cafc::appellant-brief-window",
+        "to": "cafc::dismissed-failure-to-prosecute",
+        "role": "self",
+        "authority": "Fed. Cir. R. 31(d)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 0.0
+      }
+    ],
+    "policy_size": 169,
+    "policy": null,
+    "values": null
+  },
+  "warnings": [
+    {
+      "code": "authored-hole",
+      "count": 1,
+      "example": "pack cafc: 4 explicit hole(s) left numbers unauthored, first /edges/19/probability (no published selection rate); author them in the pack's source (a strict build rejects holes)",
+      "at": []
+    },
+    {
+      "code": "compile",
+      "count": 57,
+      "example": "state flags expanded the graph: 301 additional node(s) for reachable flag combinations",
+      "at": []
+    },
+    {
+      "code": "fact-unset",
+      "count": 1,
+      "example": "matter fact not set via scenario.facts; using the authored prior (5 of 5 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
+      "at": [
+        "cafc::remand-destination"
+      ]
+    },
+    {
+      "code": "payoff-not-authored",
+      "count": 1,
+      "example": "33 terminal(s) use a heuristic or zero payoff; override with scenario.payoffs or author `payoff` in the pack",
+      "at": []
+    },
+    {
+      "code": "probability-fill",
+      "count": 280,
+      "example": "5 of 5 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "cafc::appeal-origin",
+        "cafc::cert-petition-filed",
+        "cafc::costs-bill-filed",
+        "cafc::cross-appeal-filed",
+        "cafc::docketing-statement-filed",
+        "cafc::joint-appendix-filed",
+        "cafc::mandate-issued",
+        "cafc::mediation-conference"
+      ]
+    }
+  ]
+}

@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! Embed the repository's hand-authored clock library (`packs/clock/`),
-//! `calibration/` and `sources/` directories into the library so the
-//! binary works standalone (no directory needed at runtime).
-//! `LITGRAPH_CALIBRATION`/`--calibration-dir` and `LITGRAPH_SOURCES` still
-//! override at runtime. The packs and named scenarios are built from `lit/`
-//! and `cases/`, which needs the litigate compiler (a dependent of this
-//! crate), so the `litgraph-packs` crate builds and embeds those.
+//! Embed the shared clock library (`clock/`: `lit/core` lowered, the one
+//! generated file committed, because lowering needs the litigate compiler,
+//! a dependent of this crate; `just lit-sync` regenerates it and
+//! `lit-sync-check` fails while it is stale) and the `sources/` directory
+//! into the library so the binary works standalone (no directory needed at
+//! runtime). `LITGRAPH_SOURCES` still overrides at runtime. The packs,
+//! calibration sets and named scenarios are built from `lit/` and `cases/`
+//! by the `litgraph-packs` crate, which embeds those.
 
 use std::fmt::Write as _;
 use std::path::{Path, PathBuf};
@@ -15,20 +16,12 @@ fn main() {
     let out_dir = PathBuf::from(std::env::var("OUT_DIR").unwrap_or_default());
 
     embed_dir(
-        &manifest.join("../../packs/clock"),
+        &manifest.join("clock"),
         "json",
         Some("clock/"),
         "EMBEDDED_CLOCK",
-        "`(clock/ file name, contents)` of every embedded hand-authored clock-library fragment (counting rules and holiday calendars).",
+        "`(clock/ file name, contents)` of the shared clock library: `lit/core`'s counting rules and holiday calendars, lowered.",
         &out_dir.join("embedded_clock.rs"),
-    );
-    embed_dir(
-        &manifest.join("../../calibration"),
-        "json",
-        None,
-        "EMBEDDED_CALIBRATION",
-        "`(file name, contents)` of every embedded calibration set file.",
-        &out_dir.join("embedded_calibration.rs"),
     );
     // Without `embed-sources`, embed an empty corpus (point at a directory
     // that has no `*.txt`), keeping the static's shape identical.

@@ -1,0 +1,298 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "solve",
+  "result": {
+    "start": {
+      "id": "frcrimp-criminal-procedure::investigation",
+      "label": "Pre-Charge Investigation"
+    },
+    "value": 744095.980919,
+    "converged": true,
+    "iterations": 61,
+    "fee_shift_rounds": 0,
+    "best_line": [
+      {
+        "id": "frcrimp-criminal-procedure::edge-investigation-complaint-filed",
+        "label": "File criminal complaint",
+        "from": "frcrimp-criminal-procedure::investigation",
+        "to": "frcrimp-criminal-procedure::complaint-filed",
+        "role": "self",
+        "authority": "Fed. R. Crim. P. 3, 4",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 744095.980919
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-complaint-filed-arrest",
+        "label": "Execute arrest warrant or summons",
+        "from": "frcrimp-criminal-procedure::complaint-filed",
+        "to": "frcrimp-criminal-procedure::arrest",
+        "role": "nature",
+        "authority": "Fed. R. Crim. P. 4(c)(1)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 746595.980919
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-arrest-initial-appearance",
+        "label": "Bring defendant before magistrate",
+        "from": "frcrimp-criminal-procedure::arrest",
+        "to": "frcrimp-criminal-procedure::initial-appearance",
+        "role": "nature",
+        "authority": "Fed. R. Crim. P. 5(a); 18 U.S.C. § 3501(c)",
+        "deadline_days": 3.0,
+        "p": 1.0,
+        "kind": "wait-likely-draw",
+        "step_p": 1.0,
+        "q": 746595.981478
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-initial-appearance-detention-hearing",
+        "label": "Hold detention hearing",
+        "from": "frcrimp-criminal-procedure::initial-appearance",
+        "to": "frcrimp-criminal-procedure::detention-hearing",
+        "role": "nature",
+        "authority": "18 U.S.C. § 3142(f)",
+        "p": 0.5,
+        "kind": "likely-draw",
+        "step_p": 0.5,
+        "q": 741139.045218
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-detention-hearing-detained-pretrial",
+        "label": "Order pretrial detention",
+        "from": "frcrimp-criminal-procedure::detention-hearing",
+        "to": "frcrimp-criminal-procedure::detained-pretrial",
+        "role": "nature",
+        "authority": "18 U.S.C. § 3142(e)",
+        "p": 0.65,
+        "kind": "likely-draw",
+        "step_p": 0.65,
+        "q": 741139.045218
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-detained-pretrial-arraignment",
+        "label": "Proceed to arraignment",
+        "from": "frcrimp-criminal-procedure::detained-pretrial",
+        "to": "frcrimp-criminal-procedure::arraignment",
+        "role": "nature",
+        "authority": "Fed. R. Crim. P. 10",
+        "p": 1.0,
+        "kind": "wait-likely-draw",
+        "step_p": 1.0,
+        "q": 741139.045218
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-arraignment-not-guilty-plea",
+        "label": "Enter not guilty plea",
+        "from": "frcrimp-criminal-procedure::arraignment",
+        "to": "frcrimp-criminal-procedure::not-guilty-plea",
+        "role": "self",
+        "authority": "Fed. R. Crim. P. 10; 11(a)(1)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 741139.045218
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-not-guilty-plea-plea-negotiations",
+        "label": "Begin plea negotiations",
+        "from": "frcrimp-criminal-procedure::not-guilty-plea",
+        "to": "frcrimp-criminal-procedure::plea-negotiations",
+        "role": "nature",
+        "authority": "Fed. R. Crim. P. 11(c)",
+        "p": 0.5,
+        "kind": "likely-draw",
+        "step_p": 0.5,
+        "q": 590778.090436
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-plea-negotiations-plea-agreement-reached",
+        "label": "Reach plea agreement",
+        "from": "frcrimp-criminal-procedure::plea-negotiations",
+        "to": "frcrimp-criminal-procedure::plea-agreement-reached",
+        "role": "nature",
+        "authority": "Fed. R. Crim. P. 11(c)(1)",
+        "p": 0.9,
+        "kind": "likely-draw",
+        "step_p": 0.9,
+        "q": 590628.090436
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-plea-agreement-reached-proceed-to-trial",
+        "label": "Withdraw from plea deal",
+        "from": "frcrimp-criminal-procedure::plea-agreement-reached",
+        "to": "frcrimp-criminal-procedure::proceed-to-trial",
+        "role": "self",
+        "authority": "Fed. R. Crim. P. 11(d)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 590628.090436
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-proceed-to-trial-jury-selection",
+        "label": "Empanel jury",
+        "from": "frcrimp-criminal-procedure::proceed-to-trial",
+        "to": "frcrimp-criminal-procedure::jury-selection",
+        "role": "nature",
+        "authority": "Fed. R. Crim. P. 24; 18 U.S.C. § 3161",
+        "deadline_days": 70.0,
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 592128.090436
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-jury-selection-trial-in-progress",
+        "label": "Complete voir dire",
+        "from": "frcrimp-criminal-procedure::jury-selection",
+        "to": "frcrimp-criminal-procedure::trial-in-progress",
+        "role": "nature",
+        "authority": "Fed. R. Crim. P. 24",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 592128.090436
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-trial-in-progress-rule29-motion",
+        "label": "Move for judgment of acquittal",
+        "from": "frcrimp-criminal-procedure::trial-in-progress",
+        "to": "frcrimp-criminal-procedure::rule29-motion",
+        "role": "self",
+        "authority": "Fed. R. Crim. P. 29(a)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 592128.090436
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-rule29-motion-rule33-motion",
+        "label": "Deny post-verdict acquittal motion",
+        "from": "frcrimp-criminal-procedure::rule29-motion",
+        "to": "frcrimp-criminal-procedure::rule33-motion",
+        "role": "nature",
+        "p": 0.333333,
+        "kind": "likely-draw",
+        "step_p": 0.333333,
+        "q": 123206.798959
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-rule33-motion-presentence-report",
+        "label": "Deny new trial motion",
+        "from": "frcrimp-criminal-procedure::rule33-motion",
+        "to": "frcrimp-criminal-procedure::presentence-report",
+        "role": "nature",
+        "authority": "Fed. R. Crim. P. 33",
+        "p": 0.92,
+        "kind": "likely-draw",
+        "step_p": 0.92,
+        "q": 82431.034483
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-presentence-report-sentencing-hearing",
+        "label": "Finalize PSR",
+        "from": "frcrimp-criminal-procedure::presentence-report",
+        "to": "frcrimp-criminal-procedure::sentencing-hearing",
+        "role": "nature",
+        "authority": "Fed. R. Crim. P. 32(e)-(h)",
+        "deadline_days": 35.0,
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 82431.034483
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-sentencing-hearing-guidelines-calculation",
+        "label": "Calculate Guidelines range",
+        "from": "frcrimp-criminal-procedure::sentencing-hearing",
+        "to": "frcrimp-criminal-procedure::guidelines-calculation",
+        "role": "nature",
+        "authority": "U.S.S.G. §§ 1.1-1.4; 18 U.S.C. § 3553(a)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 82431.034483
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-guidelines-calculation-departure-variance",
+        "label": "Consider departure or variance",
+        "from": "frcrimp-criminal-procedure::guidelines-calculation",
+        "to": "frcrimp-criminal-procedure::departure-variance",
+        "role": "nature",
+        "authority": "18 U.S.C. § 3553(a); U.S.S.G. § 5K1.1",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 82431.034483
+      },
+      {
+        "id": "frcrimp-criminal-procedure::edge-departure-variance-judgment-entered",
+        "label": "Impose sentence, enter judgment",
+        "from": "frcrimp-criminal-procedure::departure-variance",
+        "to": "frcrimp-criminal-procedure::judgment-entered",
+        "role": "nature",
+        "authority": "Fed. R. Crim. P. 32(k)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 82431.034483
+      },
+      {
+        "id": "frcrimp-criminal-procedure::judgment-entered#accept",
+        "label": "Accept: Judgment and Commitment Entered",
+        "from": "frcrimp-criminal-procedure::judgment-entered",
+        "to": "frcrimp-criminal-procedure::judgment-entered#end",
+        "role": "nature",
+        "p": 0.333333,
+        "kind": "likely-draw",
+        "step_p": 0.333333,
+        "q": 50000.0
+      }
+    ],
+    "policy_size": 15,
+    "policy": null,
+    "values": null
+  },
+  "warnings": [
+    {
+      "code": "authored-hole",
+      "count": 1,
+      "example": "pack frcrimp-criminal-procedure: 3 explicit hole(s) left numbers unauthored, first /edges/60/probability (no sourced Rule 29 grant rate); author them in the pack's source (a strict build rejects holes)",
+      "at": []
+    },
+    {
+      "code": "compile",
+      "count": 3,
+      "example": "terminal frcrimp-criminal-procedure::indictment-dismissed-defective has 1 out-edge(s); modeled as a choice with an explicit accept edge",
+      "at": []
+    },
+    {
+      "code": "mixed-node",
+      "count": 5,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "frcrimp-criminal-procedure::arrest",
+        "frcrimp-criminal-procedure::detained-pretrial",
+        "frcrimp-criminal-procedure::plea-agreement-reached",
+        "frcrimp-criminal-procedure::plea-rejected-by-court",
+        "frcrimp-criminal-procedure::pretrial-motions-window"
+      ]
+    },
+    {
+      "code": "probability-fill",
+      "count": 21,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "frcrimp-criminal-procedure::appellate-briefing",
+        "frcrimp-criminal-procedure::bound-over-grand-jury",
+        "frcrimp-criminal-procedure::complaint-filed",
+        "frcrimp-criminal-procedure::discovery-sanction",
+        "frcrimp-criminal-procedure::grand-jury-convened",
+        "frcrimp-criminal-procedure::guidelines-calculation",
+        "frcrimp-criminal-procedure::indictment-returned",
+        "frcrimp-criminal-procedure::information-filed"
+      ]
+    }
+  ]
+}

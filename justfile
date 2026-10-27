@@ -335,10 +335,13 @@ lit_build_args := "crates/litgraph-packs/build.args"
 # `--scenarios-dir`, `litigate diff`).
 lit_build_dir := "target/lit-build"
 
-# Regenerate every committed Lit.lock, then build packs/, packs/links.json,
-# generated packs/clock/ fragments and scenarios/ from lit/ and cases/ into
-# target/lit-build/ (the hand-authored packs/clock/*.json copied beside
-# them, as litgraph-packs embeds them). Run it after a merge or rebase in
+# Regenerate every committed Lit.lock and the engine's shared clock library
+# (crates/litigate-engine/clock/litigate-core.json: lit/core lowered, the one
+# generated file committed, since the engine cannot run the compiler), then
+# build packs/, packs/links.json, generated packs/clock/ fragments,
+# packs/calibration/ sets and scenarios/ from lit/ and cases/ into
+# target/lit-build/ (the shared clock library copied beside them, as
+# litgraph-packs embeds them). Run it after a merge or rebase in
 # which both sides changed one package: its Lit.lock row conflicts (or is
 # stale, L1007) until it does, like a Cargo.lock.
 lit-sync: merge-drivers editor-queries
@@ -356,36 +359,40 @@ lit-sync: merge-drivers editor-queries
       "${lit[@]}" lock "${lockfile%/Lit.lock}" > /dev/null
     done
     "${lit[@]}" lock cases > /dev/null
+    core="$(mktemp -d)"
+    trap 'rm -rf "$core"' EXIT
+    "${lit[@]}" build lit/core --out "$core" > /dev/null
+    cp "$core/packs/clock/litigate-core.json" crates/litigate-engine/clock/litigate-core.json
     mapfile -t args < <(grep -v -e '^#' -e '^[[:space:]]*$' {{lit_build_args}})
     rm -rf "$out"
     "${lit[@]}" build "${args[@]}" --out "$out" > /dev/null \
       || "${lit[@]}" build "${args[@]}" --out "$out"
     find "$out" -name '*.map.json' -delete
     rm -rf "$out/litigatables"
-    cp -n packs/clock/*.json "$out/packs/clock/"
-    echo "lit-sync: regenerated Lit.lock files; built packs/ and scenarios/ into $out"
+    cp -n crates/litigate-engine/clock/*.json "$out/packs/clock/"
+    echo "lit-sync: regenerated Lit.lock files and the shared clock library; built packs/ and scenarios/ into $out"
 
-# CI gate: regenerate, then fail if a Lit.lock differs from (or is missing
-# from) what is committed, or if a generated file is tracked again.
+# CI gate: regenerate, then fail if a Lit.lock or the shared clock library
+# differs from (or is missing from) what is committed, or if a generated
+# file is tracked again.
 lit-sync-check: lit-sync
     #!/usr/bin/env bash
     set -euo pipefail
-    stale="$(git status --porcelain --untracked-files=all -- '*Lit.lock')"
+    stale="$(git status --porcelain --untracked-files=all -- '*Lit.lock' crates/litigate-engine/clock)"
     if [ -n "$stale" ]; then
       echo "$stale" >&2
-      git --no-pager diff --stat -- '*Lit.lock' >&2
-      echo "lit-sync-check: a Lit.lock is stale; run \`just lit-sync\` and commit the result" >&2
+      git --no-pager diff --stat -- '*Lit.lock' crates/litigate-engine/clock >&2
+      echo "lit-sync-check: a Lit.lock or the shared clock library is stale; run \`just lit-sync\` and commit the result" >&2
       exit 1
     fi
-    # crates/litgraph-packs refuses a generated clock fragment committed
-    # under packs/clock/, so only these two places can hold one.
-    tracked="$(git ls-files -- ':(glob)packs/*.json' scenarios)"
+    # No JSON input lives under packs/ (lit/ and cases/ are the source).
+    tracked="$(git ls-files -- ':(glob)packs/**/*.json' scenarios)"
     if [ -n "$tracked" ]; then
       echo "$tracked" >&2
       echo "lit-sync-check: generated files are committed; \`git rm --cached\` them (crates/litgraph-packs builds them)" >&2
       exit 1
     fi
-    echo "lit-sync-check: Lit.lock files are up to date; no generated file is committed"
+    echo "lit-sync-check: Lit.lock files and the shared clock library are up to date; no generated file is committed"
 
 # Semantic diff (SPEC §8.6) of a fresh build against the last `lit-sync`
 # build in target/lit-build/, without writing: what changed since then.

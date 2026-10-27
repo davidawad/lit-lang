@@ -113,7 +113,7 @@ fn a_malformed_pack_or_links_file_is_skipped_and_recorded_not_a_hard_failure() -
 fn every_embedded_pack_file_parses_individually_against_the_strict_pack_struct() {
     let mut checked = 0;
     for (name, text) in litgraph_packs::PACKS {
-        if *name == "links.json" || name.starts_with("clock/") {
+        if *name == "links.json" || name.starts_with("clock/") || name.starts_with("calibration/") {
             continue;
         }
         if let Err(e) = Pack::from_json(text) {
@@ -207,7 +207,7 @@ fn compile_without_links_uses_an_empty_link_file() -> Result<()> {
 
 /// Every shipped pack that names a counting rule resolves it against the
 /// clock library, whether loaded embedded or from `packs/` + `packs/clock/`;
-/// that library is the hand-authored one plus the generated fragments.
+/// that library is `lit/core` lowered plus the packages' own fragments.
 #[test]
 fn every_pack_counting_reference_resolves_embedded_and_from_disk() -> Result<()> {
     let dir = std::path::Path::new(litgraph_packs::PACKS_DIR);
@@ -338,4 +338,30 @@ fn resolve_rejects_a_packs_directory_with_no_pack_file() {
     assert_eq!(e.code(), "invalid");
     assert!(e.to_string().contains("--packs-dir"), "{e}");
     assert!(e.to_string().contains("holds no pack file"), "{e}");
+}
+
+/// `calibration/` files are the catalog's calibration sets, a malformed
+/// one recorded like a malformed pack; [`Catalog::load`] reads them from
+/// `dir/calibration/`.
+#[test]
+fn calibration_files_are_the_catalogs_sets() -> Result<()> {
+    let set = r#"{"id": "s", "title": "S", "entries": [{"target": "node-attr", "ref": "p::n",
+        "attr": "w", "value": 1, "n": 1, "source": {"title": "t", "url": "u", "vintageStart": "2024-01-01"}}]}"#;
+    let files = [
+        ("calibration/s.json".to_owned(), set.to_owned()),
+        ("calibration/bad.json".to_owned(), "{".to_owned()),
+    ];
+    let c = Catalog::from_files("mem".into(), files)?;
+    assert_eq!(c.calibration.origin, "mem");
+    assert_eq!(c.calibration.select("s")?.title, "S");
+    assert_eq!(c.load_errors.len(), 1);
+    assert_eq!(c.load_errors[0].file, "calibration/bad.json");
+
+    let dir = std::env::temp_dir().join(format!("litgraph-catalog-cal-{}", std::process::id()));
+    std::fs::create_dir_all(dir.join("calibration")).map_err(|e| Error::Io(e.to_string()))?;
+    std::fs::write(dir.join("calibration/s.json"), set).map_err(|e| Error::Io(e.to_string()))?;
+    let loaded = Catalog::load(&dir);
+    std::fs::remove_dir_all(&dir).map_err(|e| Error::Io(e.to_string()))?;
+    assert_eq!(loaded?.calibration.sets.len(), 1);
+    Ok(())
 }

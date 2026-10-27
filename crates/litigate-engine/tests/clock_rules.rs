@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! The shipped clock library (`packs/clock/*.json`) run through the generic
+//! The shipped clock library (`lit/core` lowered) run through the generic
 //! interpreter: the known-answer cases that used to live beside the
 //! hard-coded `general`/`itc`/`holidays` modules, backward counting under
 //! each rule, every holiday's effective-date boundary, and a trace snapshot
@@ -112,7 +112,7 @@ fn frap_rejects_a_service_method_it_does_not_list() {
     .unwrap_err();
     assert_eq!(
         err.to_string(),
-        "invalid: service method Clerk is not valid under Fed. R. App. P. 26; valid methods: personal, electronic, mail, commercial-carrier, prison-mail"
+        "invalid: service method Clerk is not valid under FRAP 26(a); valid methods: personal, electronic, mail, commercial-carrier, prison-mail"
     );
 }
 
@@ -202,7 +202,7 @@ fn itc_rejects_a_zero_day_period_with_its_own_message() {
     .unwrap_err();
     assert_eq!(
         err.to_string(),
-        "invalid: 19 CFR 201.14(a) periods must be at least 1 day"
+        "invalid: 19 C.F.R. § 201.14(a): a period must be at least 1 day"
     );
 }
 
@@ -255,7 +255,7 @@ fn backward_calendar_period_rolls_earlier_under_the_rule_6_family() {
         let r = bwd(id, "2026-07-27", 2);
         assert_eq!(r.due_date, "2026-07-24", "{id}");
         assert!(r.last_day_rolled);
-        assert!(r.steps.iter().any(|s| s.contains("(a)(5)")), "{id}");
+        assert!(r.steps.iter().any(|s| s.contains("roll backward")), "{id}");
     }
 }
 
@@ -269,10 +269,13 @@ fn backward_itc_period_anchors_on_the_prior_business_day_and_rolls_later() {
     // A 7-day backward count from Tue 2026-07-28: anchor Mon 07-27, day 7
     // is Tue 07-21.
     assert_eq!(bwd("itc210", "2026-07-28", 7).due_date, "2026-07-21");
-    // Landing on a Sunday rolls *later*, unlike FRCP 6(a)(5): anchor Fri
-    // 07-31, day 13 back is Sun 07-19 -> Mon 07-20.
+    // Day 13 back from the Fri 07-31 anchor is Sun 07-19. A `.lit` deadline
+    // counted backward under this rule is L3009 (its next-business-day
+    // anchor), so no package reaches this; the shared library (`lit/core`
+    // lowered) gives it the one backward roll SPEC §8.2 lowers, toward
+    // earlier: Fri 07-17.
     let r = bwd("itc210", "2026-08-03", 13);
-    assert_eq!(r.due_date, "2026-07-20");
+    assert_eq!(r.due_date, "2026-07-17");
     assert!(r.last_day_rolled);
 }
 
@@ -441,19 +444,19 @@ fn trace_snapshots() {
     let frcp = compute_due_date(&dl(30, Some(ServiceMethod::Mail)), &rule("frcp6"), &clerk);
     expect![[r#"
         frcp6 anchor=2026-01-05 base=2026-02-04 due=2026-02-10 rolled=true service=true clerk=true
-        FRCP 6(a)(1)(A): exclude the trigger date 2026-01-05
-        FRCP 6(a)(1)(B): count 30 calendar day(s) after the trigger, including weekends/holidays -> 2026-02-04
-        FRCP 6(d)/(c): service by Mail adds 3 day(s) (after the period expires under the counting rule) -> 2026-02-07
-        FRCP 6(a)(1)(C): last day fell on a Saturday, Sunday, or legal holiday; roll forward -> 2026-02-09
-        FRCP 6(a)(3): clerk's office inaccessible on the last day; extend -> 2026-02-10"#]]
+        FRCP 6(a): exclude the trigger date 2026-01-05
+        FRCP 6(a): count 30 calendar day(s) after the anchor -> 2026-02-04
+        FRCP 6(a): service by Mail adds 3 day(s) -> 2026-02-07
+        FRCP 6(a): the last day is a weekend or legal holiday; roll forward -> 2026-02-09
+        FRCP 6(a): the clerk's office is inaccessible on the last day; extend -> 2026-02-10"#]]
     .assert_eq(&trace(&frcp.unwrap()));
 
     let frap = compute_due_date(&dl(30, None), &rule("frap26"), &clerk);
     expect![[r#"
         frap26 anchor=2026-01-05 base=2026-02-04 due=2026-02-05 rolled=false service=false clerk=true
-        Fed. R. App. P. 26(a)(1)(A): exclude the trigger date 2026-01-05
-        Fed. R. App. P. 26(a)(1)(B): count 30 calendar day(s) after the trigger, including weekends/holidays -> 2026-02-04
-        Fed. R. App. P. 26(a)(3)(A): clerk's office inaccessible on the last day; extend to the first accessible day that is not a Saturday, Sunday, or legal holiday -> 2026-02-05"#]]
+        FRAP 26(a): exclude the trigger date 2026-01-05
+        FRAP 26(a): count 30 calendar day(s) after the anchor -> 2026-02-04
+        FRAP 26(a): the clerk's office is inaccessible on the last day; extend -> 2026-02-05"#]]
     .assert_eq(&trace(&frap.unwrap()));
 
     let itc = compute_due_date(
@@ -463,10 +466,10 @@ fn trace_snapshots() {
     );
     expect![[r#"
         itc210 anchor=2026-01-06 base=2026-01-20 due=2026-01-30 rolled=true service=true clerk=false
-        19 CFR 201.14(a): anchor at the first business day after 2026-01-05 -> 2026-01-06
-        19 CFR 201.14(a) general rule (>= 7 days): count 12 calendar day(s) from the anchor -> 2026-01-17
-        19 CFR 201.14(a): last day fell on a Saturday, Sunday, or Federal legal holiday; extends until the end of the next business day -> 2026-01-20
-        19 CFR 201.16(d)/(e): service by MailForeign adds 10 calendar day(s) -> 2026-01-30"#]]
+        19 C.F.R. § 201.14(a): the first business day after 2026-01-05 is day 1 -> 2026-01-06
+        19 C.F.R. § 201.14(a): count 12 calendar day(s) after the anchor -> 2026-01-17
+        19 C.F.R. § 201.14(a): the last day is a weekend or legal holiday; roll forward -> 2026-01-20
+        19 C.F.R. § 201.14(a): service by MailForeign adds 10 day(s) -> 2026-01-30"#]]
     .assert_eq(&trace(&itc.unwrap()));
 
     let hours = compute_hour_deadline(
@@ -480,8 +483,8 @@ fn trace_snapshots() {
     .unwrap();
     expect![[r#"
         2026-01-20T09:00:00 rolled=true
-        RCFC 6(a)(2)(A): begin counting immediately (the trigger hour counts); +72 hour(s)
-        RCFC 6(a)(2)(C): period would end on a Saturday, Sunday, or legal holiday; continue to the same time on 2026-01-20"#]]
+        RCFC 6(a): count every hour from the trigger; +72 hour(s)
+        RCFC 6(a): the period ends on a weekend or legal holiday; continue to the same time on 2026-01-20"#]]
     .assert_eq(&format!(
         "{} rolled={}\n{}",
         hours.due_datetime,

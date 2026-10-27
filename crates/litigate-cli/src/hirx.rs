@@ -65,6 +65,7 @@ pub fn decl_id(decl: &Declaration) -> Option<String> {
         Declaration::Grant(g) => Some(g.meta.id.clone()),
         Declaration::Recharacterize(r) => Some(r.meta.id.clone()),
         Declaration::Invalidate(i) => Some(i.meta.id.clone()),
+        Declaration::Calibration(c) => Some(c.meta.id.clone()),
         _ => None,
     })
 }
@@ -97,6 +98,7 @@ pub fn decl_kind(decl: &Declaration) -> &'static str {
         Declaration::Limit(_) => "limit",
         Declaration::Recharacterize(_) => "recharacterize",
         Declaration::Invalidate(_) => "invalidate",
+        Declaration::Calibration(_) => "calibration",
     }
 }
 

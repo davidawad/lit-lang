@@ -1,0 +1,16 @@
+// litigate run cases/requests/calibration-gaps.case --op '{"op":"calibration","top":10,"max_candidates":200}'
+case calibration-gaps
+uses frcp-civil-procedure ^2024.12.0
+as_of 2026-09-28
+summary "The FRCP package's uncalibrated probabilities and durations, ranked by sensitivity."
+notes "Ported from examples/calibration-gaps.json: no matter facts, only the package's own numbers that no calibration set reaches yet."
+
+// The post-dismissal remedies (`lit/frcp`, after litgraph-final) carry no
+// payoff of their own; as in cases/frcp-civil-case.case, they are worth
+// nothing here.
+stakes {
+  frcp-civil-procedure::rule41d-costs-ordered: 0.usd
+  frcp-civil-procedure::refiling-proceeds: 0.usd
+  frcp-civil-procedure::dismissal-fees-eligible: 0.usd
+  frcp-civil-procedure::dismissal-fees-ineligible: 0.usd
+}

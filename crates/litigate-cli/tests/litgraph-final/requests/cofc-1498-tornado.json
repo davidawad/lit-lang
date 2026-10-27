@@ -1,0 +1,154 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "tornado",
+  "result": {
+    "base_value": 1827748.310446,
+    "rows": [
+      {
+        "input": "param:stakes",
+        "low_value": 9.0,
+        "high_value": 15.0,
+        "v_low": 1165704.5317607732,
+        "v_high": 2489792.0919837593,
+        "swing": 1324087.5602229862,
+        "policy_changes": false
+      },
+      {
+        "input": "p:cafc@cofc::panel-to-reversed",
+        "low_value": 0.0,
+        "high_value": 0.2,
+        "v_low": 1324664.7559328293,
+        "v_high": 2198580.2142802794,
+        "swing": 873915.45834745,
+        "policy_changes": true
+      },
+      {
+        "input": "p:cofc::e-settlementfork-settles",
+        "low_value": 0.19999999999999998,
+        "high_value": 0.4,
+        "v_low": 1365205.9262235241,
+        "v_high": 2197085.1104494873,
+        "swing": 831879.1842259632,
+        "policy_changes": false
+      },
+      {
+        "input": "param:rate",
+        "low_value": 637.5,
+        "high_value": 1062.5,
+        "v_low": 2030156.0588535704,
+        "v_high": 1625340.5628058913,
+        "swing": 404815.4960476791,
+        "policy_changes": false
+      },
+      {
+        "input": "p:cofc::e-prevailing-plaintiff",
+        "low_value": 0.4,
+        "high_value": 0.6,
+        "v_low": 2001122.6895221425,
+        "v_high": 1678104.8368304912,
+        "swing": 323017.8526916513,
+        "policy_changes": true
+      },
+      {
+        "input": "p:cafc@cofc::panel-to-affirmed",
+        "low_value": 0.18000000000000002,
+        "high_value": 0.38,
+        "v_low": 1915062.6920708055,
+        "v_high": 1741659.8184507876,
+        "swing": 173402.8736200179,
+        "policy_changes": false
+      },
+      {
+        "input": "p:cafc@cofc::panel-to-rule36",
+        "low_value": 0.1,
+        "high_value": 0.30000000000000004,
+        "v_low": 1906275.3427632563,
+        "v_high": 1750214.2283776763,
+        "swing": 156061.11438557995,
+        "policy_changes": false
+      },
+      {
+        "input": "p:cofc::e-sj-plaintiff",
+        "low_value": 0.04999999999999999,
+        "high_value": 0.25,
+        "v_low": 1938290.6400269405,
+        "v_high": 1788954.981141515,
+        "swing": 149335.65888542542,
+        "policy_changes": true
+      },
+      {
+        "input": "p:cofc::e-sj-govt",
+        "low_value": 0.1,
+        "high_value": 0.30000000000000004,
+        "v_low": 1788954.981141515,
+        "v_high": 1934013.706860505,
+        "swing": 145058.72571898997,
+        "policy_changes": true
+      },
+      {
+        "input": "p:cafc@cofc::panel-to-dismissed",
+        "low_value": 0.0,
+        "high_value": 0.15000000000000002,
+        "v_low": 1861795.2867482924,
+        "v_high": 1761033.202954094,
+        "swing": 100762.08379419846,
+        "policy_changes": false
+      }
+    ]
+  },
+  "warnings": [
+    {
+      "code": "authored-hole",
+      "count": 1,
+      "example": "pack cafc: 4 explicit hole(s) left numbers unauthored, first /edges/19/probability (no published selection rate); author them in the pack's source (a strict build rejects holes)",
+      "at": []
+    },
+    {
+      "code": "compile",
+      "count": 69,
+      "example": "state flags expanded the graph: 301 additional node(s) for reachable flag combinations",
+      "at": []
+    },
+    {
+      "code": "fact-unset",
+      "count": 1,
+      "example": "matter fact not set via scenario.facts; using the authored prior (5 of 5 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
+      "at": [
+        "cafc::remand-destination"
+      ]
+    },
+    {
+      "code": "mixed-node",
+      "count": 4,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "cofc::discovery-open",
+        "cofc::patent-14b-notice-fork",
+        "cofc::post-trial-motion-window",
+        "cofc::service-on-united-states"
+      ]
+    },
+    {
+      "code": "payoff-not-authored",
+      "count": 1,
+      "example": "33 terminal(s) use a heuristic or zero payoff; override with scenario.payoffs or author `payoff` in the pack",
+      "at": []
+    },
+    {
+      "code": "probability-fill",
+      "count": 307,
+      "example": "5 of 5 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "cafc::appeal-origin",
+        "cafc::cert-petition-filed",
+        "cafc::costs-bill-filed",
+        "cafc::cross-appeal-filed",
+        "cafc::docketing-statement-filed",
+        "cafc::joint-appendix-filed",
+        "cafc::mandate-issued",
+        "cafc::mediation-conference"
+      ]
+    }
+  ]
+}

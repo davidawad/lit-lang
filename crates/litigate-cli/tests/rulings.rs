@@ -209,7 +209,7 @@ fn json_files(dir: &Path) -> Vec<(String, PathBuf)> {
 }
 
 #[test]
-fn the_shared_clock_library_is_hand_written_and_sync_builds_under_dev() {
+fn the_shared_clock_library_is_lit_core_lowered_and_sync_builds_under_dev() {
     // Sync names no profile, so `build` runs under its default, `dev`.
     assert!(
         !build_args().iter().any(|a| a.starts_with("--profile")),
@@ -234,30 +234,25 @@ fn the_shared_clock_library_is_hand_written_and_sync_builds_under_dev() {
         assert_eq!(json(path)["verification"]["profile"], "dev", "{name}");
     }
 
-    // Every committed clock file is a hand-written schema 3 fragment, and
-    // the build generates only schema 4 fragments, under other names.
-    let hand = json_files(&repo().join("packs/clock"));
+    // No clock file is committed under packs/ any more: the shared library
+    // is `lit/core` lowered (a schema 4 fragment with its `lowered` header,
+    // the engine's own copy in crates/litigate-engine/clock/), and the build
+    // generates only schema 4 fragments, under other names.
+    assert!(json_files(&repo().join("packs/clock")).is_empty());
+    let shared = json_files(&repo().join("crates/litigate-engine/clock"));
     assert_eq!(
-        hand.iter().map(|(n, _)| n.as_str()).collect::<Vec<_>>(),
-        [
-            "frap26.json",
-            "frcp6.json",
-            "frcrimp45.json",
-            "itc210.json",
-            "rcfc6.json",
-            "sup-ct-30.json",
-            "us-federal-holidays.json",
-        ]
+        shared.iter().map(|(n, _)| n.as_str()).collect::<Vec<_>>(),
+        ["litigate-core.json"]
     );
-    for (name, path) in &hand {
+    for (name, path) in &shared {
         let doc = json(path);
-        assert_eq!(doc["schemaVersion"], 3, "{name}");
-        assert!(doc.get("lowered").is_none(), "{name}");
+        assert_eq!(doc["schemaVersion"], 4, "{name}");
+        assert!(doc.get("lowered").is_some(), "{name}");
     }
     let generated = json_files(&out.join("packs/clock"));
     assert!(!generated.is_empty());
     for (name, path) in &generated {
-        assert!(hand.iter().all(|(h, _)| h != name), "{name} is generated");
+        assert!(shared.iter().all(|(h, _)| h != name), "{name} is generated");
         let doc = json(path);
         assert_eq!(doc["schemaVersion"], 4, "{name}");
         assert!(doc.get("lowered").is_some(), "{name}");

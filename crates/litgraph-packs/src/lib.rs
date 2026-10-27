@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
-//! The repository's packs, `links.json`, clock library and named scenarios,
-//! built from `lit/` and `cases/` at compile time (`build.rs`, the
-//! arguments in `build.args`) and embedded, so no generated file is
-//! committed. The binaries (`litgraph`, `litgraph-mcp`, `litgraph-wasm`)
+//! The repository's packs, `links.json`, clock library, calibration sets
+//! and named scenarios, built from `lit/` and `cases/` at compile time
+//! (`build.rs`, the arguments in `build.args`) and embedded, so no
+//! generated file is committed. The binaries (`litgraph`, `litgraph-mcp`, `litgraph-wasm`)
 //! hand these to [`litigate_engine::api::Catalog`]; tests read them through
 //! [`catalog`] or, for a directory, [`PACKS_DIR`] and [`SCENARIOS_DIR`].
 

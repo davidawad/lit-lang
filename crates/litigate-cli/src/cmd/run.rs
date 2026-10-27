@@ -160,32 +160,9 @@ pub(crate) fn compile(
         .filter(|p| targets.cases.is_empty() && is_links(p))
         .flat_map(|p| &p.dependencies)
         .collect();
-    let mut files = Vec::new();
-    let mut packs = Vec::new();
-    let mut clock = ClockLibrary::embedded().0.clone();
-    // Verification lowered every package at the default dates already.
-    let lowered = session
-        .packages
-        .iter()
-        .zip(&c.verdicts)
-        .filter(|(p, _)| {
-            p.requested || matter_packages.contains(&p.name) || linked.contains(&p.name)
-        })
-        .filter_map(|(p, (_, v))| Some((p, v.lowered.as_ref()?)));
-    for (p, out) in lowered {
-        files.push(match &out.document {
-            Document::Pack(pack) => {
-                if p.requested || linked.contains(&p.name) {
-                    packs.push(pack.id.clone());
-                }
-                (format!("{}.json", pack.id), text(pack))
-            }
-            Document::Links(links) => ("links.json".to_owned(), text(links)),
-        });
-        if let Some((fragment, _)) = &out.clock {
-            clock = merged(clock, fragment);
-        }
-    }
+    let named = |p: &crate::ws::Pkg| p.requested || linked.contains(&p.name);
+    let loaded = |p: &crate::ws::Pkg| named(p) || matter_packages.contains(&p.name);
+    let (files, packs, clock) = engine_inputs(&c, &scope, loaded, named);
     // `from_files` records unreadable files in the catalog rather than failing.
     Catalog::from_files("litigate".into(), files)
         .map(|mut catalog| {
@@ -205,6 +182,56 @@ pub(crate) fn compile(
             }
         })
         .map_err(Failure::from)
+}
+
+/// The catalog files (packs and link file of the packages `loaded` selects,
+/// and the calibration sets of `scope`), the ids of the selected packs
+/// `named` selects (requested, or composed by a named links package), and
+/// the clock library. Verification lowered every package at the default dates
+/// already. A loaded package may count under a rule a dependency declares,
+/// so the clock takes every fragment in the closure `scope`; the
+/// calibration sets a matter may name are those of the closure too.
+fn engine_inputs(
+    c: &super::check::Checked,
+    scope: &BTreeSet<String>,
+    loaded: impl Fn(&crate::ws::Pkg) -> bool,
+    named: impl Fn(&crate::ws::Pkg) -> bool,
+) -> (Vec<(String, String)>, Vec<String>, ClockLibrary) {
+    let mut files = Vec::new();
+    let mut packs = Vec::new();
+    let mut clock = ClockLibrary::embedded().0.clone();
+    let outputs = c
+        .session
+        .packages
+        .iter()
+        .zip(&c.verdicts)
+        .filter_map(|(p, (_, v))| Some((p, v.lowered.as_ref()?)));
+    for (p, out) in outputs {
+        let selected = loaded(p);
+        if selected {
+            files.push(match &out.document {
+                Document::Pack(pack) => {
+                    if named(p) {
+                        packs.push(pack.id.clone());
+                    }
+                    (format!("{}.json", pack.id), text(pack))
+                }
+                Document::Links(links) => ("links.json".to_owned(), text(links)),
+            });
+        }
+        if !(selected || scope.contains(&p.name)) {
+            continue;
+        }
+        if let Some((fragment, _)) = &out.clock {
+            clock = merged(clock, fragment);
+        }
+        files.extend(
+            out.calibration
+                .iter()
+                .map(|set| (format!("calibration/{}.json", set.id), text(set))),
+        );
+    }
+    (files, packs, clock)
 }
 
 /// A matter's lowered scenario as a catalog entry: `(file name,

@@ -355,7 +355,13 @@ fn the_cofc_1498_example_runs() {
         .unwrap()
         .with_embedded_scenarios(litgraph_packs::SCENARIOS)
         .unwrap();
-    let text = include_str!("../../../examples/cofc-1498-settle.json");
+    // The request `cases/requests/cofc-1498-settle.case` runs.
+    let text = r#"{
+        "scenario": {"extends": "cofc-1498-patent-case", "opponent_objective": "-payoff"},
+        "op": {"op": "settle", "bargaining_power": 0.5,
+               "discount_annual": {"plaintiff": 0.10, "defendant": 0.04},
+               "rule68": {"offer": 450000, "costs": 25000}}
+    }"#;
     let r = handle_json(text, &catalog);
     assert!(r.ok, "{:?}", r.error);
     let res = r.result.unwrap();

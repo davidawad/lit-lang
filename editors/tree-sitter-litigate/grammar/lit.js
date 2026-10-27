@@ -58,6 +58,7 @@ module.exports = {
     $.grant_decl,
     $.recharacterize_decl,
     $.invalidate_decl,
+    $.calibration_decl,
   ),
 
   start_decl: $ => seq('start', field('node', $.identifier)),
@@ -560,6 +561,59 @@ module.exports = {
     field('key', 'unlock'),
     seq(field('key', choice('extend', 'waive')), field('value', $.capability)),
     seq(field('key', 'delegable'), field('value', $.delegation)),
+  )),
+
+  // A calibration set: values measured from named sources that a matter
+  // opts into by id (SPEC §3.1).
+  calibration_decl: $ => seq(
+    'calibration',
+    field('name', $.identifier),
+    ':',
+    field('title', $.string),
+    field('body', $.calibration_body),
+  ),
+
+  calibration_body: $ => braced(choice(
+    seq(field('key', 'note'), field('value', $.string)),
+    $.calibration_source,
+    $.calibrated_value,
+  )),
+
+  calibration_source: $ => seq(
+    'source',
+    field('name', $.identifier),
+    field('title', $.string),
+    field('body', $.calibration_source_body),
+  ),
+
+  calibration_source_body: $ => braced(choice(
+    seq(field('key', 'url'), field('value', $.string)),
+    seq(field('key', 'vintage'), field('value', $.interval)),
+    seq(field('key', 'retrieved'), field('value', $.date)),
+  )),
+
+  calibrated_value: $ => seq(
+    choice(
+      seq(field('key', 'p'), field('target', $.ref), field('value', $._prob_value)),
+      seq(
+        field('key', 'duration'),
+        field('target', $.ref),
+        field('value', choice($.duration, $.duration_range)),
+      ),
+      seq(
+        field('key', 'attr'),
+        field('target', $.ref),
+        field('attr', $.identifier),
+        field('value', $.signed_number),
+      ),
+    ),
+    field('body', $.calibrated_value_body),
+  ),
+
+  calibrated_value_body: $ => braced(choice(
+    seq(field('key', 'source'), field('value', $.identifier)),
+    seq(field('key', 'n'), field('value', $.number)),
+    seq(field('key', 'method'), field('value', $.string)),
   )),
 
   test_decl: $ => seq(

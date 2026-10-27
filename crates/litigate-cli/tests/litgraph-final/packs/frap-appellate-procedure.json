@@ -1,0 +1,101 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "solve",
+  "result": {
+    "start": {
+      "id": "frap-appellate-procedure::trial-court-disposition",
+      "label": "District Court Order or Judgment Entered"
+    },
+    "value": 422291.25,
+    "converged": true,
+    "iterations": 2,
+    "fee_shift_rounds": 0,
+    "best_line": [
+      {
+        "id": "frap-appellate-procedure::edge-trial-court-disposition-appealability-fork",
+        "label": "Assess order for finality",
+        "from": "frap-appellate-procedure::trial-court-disposition",
+        "to": "frap-appellate-procedure::appealability-fork",
+        "role": "nature",
+        "authority": "28 U.S.C. § 1291",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 422291.25
+      },
+      {
+        "id": "frap-appellate-procedure::edge-appealability-fork-interlocutory-order-issued",
+        "label": "Order is interlocutory",
+        "from": "frap-appellate-procedure::appealability-fork",
+        "to": "frap-appellate-procedure::interlocutory-order-issued",
+        "role": "nature",
+        "authority": "28 U.S.C. § 1291",
+        "p": 0.5,
+        "kind": "likely-draw",
+        "step_p": 0.5,
+        "q": 498500.0
+      },
+      {
+        "id": "frap-appellate-procedure::edge-interlocutory-order-issued-interlocutory-review-fork",
+        "label": "Check interlocutory review doors",
+        "from": "frap-appellate-procedure::interlocutory-order-issued",
+        "to": "frap-appellate-procedure::interlocutory-review-fork",
+        "role": "self",
+        "authority": "28 U.S.C. § 1292",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 498500.0
+      },
+      {
+        "id": "frap-appellate-procedure::edge-interlocutory-review-fork-interlocutory-review-unavailable",
+        "label": "No interlocutory door applies",
+        "from": "frap-appellate-procedure::interlocutory-review-fork",
+        "to": "frap-appellate-procedure::interlocutory-review-unavailable",
+        "role": "nature",
+        "authority": "28 U.S.C. § 1291",
+        "p": 1.0,
+        "kind": "wait-likely-draw",
+        "step_p": 1.0,
+        "q": 500000.0
+      }
+    ],
+    "policy_size": 19,
+    "policy": null,
+    "values": null
+  },
+  "warnings": [
+    {
+      "code": "compile",
+      "count": 6,
+      "example": "terminal frap-appellate-procedure::affirmed has 1 out-edge(s); modeled as a choice with an explicit accept edge",
+      "at": []
+    },
+    {
+      "code": "mixed-node",
+      "count": 4,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "frap-appellate-procedure::interlocutory-review-fork",
+        "frap-appellate-procedure::mandate-issued",
+        "frap-appellate-procedure::stay-pending-appeal-fork",
+        "frap-appellate-procedure::voluntary-dismissal-fork"
+      ]
+    },
+    {
+      "code": "probability-fill",
+      "count": 24,
+      "example": "2 of 2 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "frap-appellate-procedure::appealability-fork",
+        "frap-appellate-procedure::briefing-complete",
+        "frap-appellate-procedure::cert-petition-filed",
+        "frap-appellate-procedure::cross-appeal-filed",
+        "frap-appellate-procedure::cross-appeal-not-filed",
+        "frap-appellate-procedure::final-judgment-entered",
+        "frap-appellate-procedure::immediately-appealable-interlocutory",
+        "frap-appellate-procedure::mandate-stayed-pending-cert"
+      ]
+    }
+  ]
+}

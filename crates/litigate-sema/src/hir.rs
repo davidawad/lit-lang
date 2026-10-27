@@ -9,6 +9,7 @@
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 
+mod calibration;
 mod case;
 pub(crate) use case::own_name;
 mod expr;
@@ -20,6 +21,7 @@ pub mod spans;
 mod temporal;
 mod value;
 
+pub use calibration::{CalibratedValue, Calibration, CalibrationEntry, CalibrationSource};
 pub use case::{
     Analysis, Case, CaseSource, EngineExpr, EngineOption, Event, EventParty, Observation,
     PackagePin, Param, Party, Perspective, Prior, Rate, RateUnit, Removal, Stake,
@@ -291,6 +293,8 @@ pub enum Declaration {
     Recharacterize(Recharacterization),
     /// The withdrawal of another package's declaration.
     Invalidate(Invalidation),
+    /// Calibration set.
+    Calibration(Calibration),
 }
 
 #[cfg(test)]

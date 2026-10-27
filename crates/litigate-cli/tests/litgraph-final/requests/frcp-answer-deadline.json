@@ -1,0 +1,39 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "deadlines",
+  "result": {
+    "trigger": "2026-01-05",
+    "node": "frcp-civil-procedure::service-completed",
+    "reachable": false,
+    "count": 1,
+    "deadlines": [
+      {
+        "edge": {
+          "id": "frcp-civil-procedure::edge-service-completed-rule12-response-window",
+          "label": "No removal -- Rule 12 response clock runs in the original forum",
+          "from": "frcp-civil-procedure::service-completed",
+          "to": "frcp-civil-procedure::rule12-response-window",
+          "authority": "FRCP 12(a)(1)(A)(i)"
+        },
+        "rule_set": "frcp6",
+        "rule_set_label": "FRCP 6(a)",
+        "source_url": "https://www.law.cornell.edu/rules/frcp",
+        "deadline_length": 21.0,
+        "unit": "calendar",
+        "trigger": "2026-01-05",
+        "nominal_date": "2026-01-26",
+        "base_date": "2026-01-26",
+        "due_date": "2026-01-26",
+        "last_day_rolled": false,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "FRCP 6(a): exclude the trigger date 2026-01-05",
+          "FRCP 6(a): count 21 calendar day(s) after the anchor -> 2026-01-26"
+        ]
+      }
+    ]
+  },
+  "warnings": []
+}

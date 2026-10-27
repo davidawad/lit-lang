@@ -238,3 +238,49 @@ fn a_transform_with_no_typed_spelling_fails_the_import() {
     assert_eq!(run.code, 2, "{}", run.stdout);
     insta::assert_json_snapshot!("import_untyped_transform", errors(&run.json));
 }
+
+/// A scratch tree holding `lit/{core,examples}` and a calibration set of the
+/// example pack whose first entry targets `edge`.
+fn with_example_package(name: &str, edge: &str) -> PathBuf {
+    let dir = scratch(name);
+    for pkg in ["core", "examples"] {
+        support_cmds::copy_dir(&repo().join("lit").join(pkg), &dir.join("lit").join(pkg));
+    }
+    let set = serde_json::json!({
+        "id": "rule12-fy", "title": "Rule 12 rates",
+        "entries": [{
+            "target": "edge-probability", "ref": format!("frcp-rule12-example::{edge}"),
+            "value": 0.2, "n": 50, "method": "10 / 50",
+            "source": {"title": "Report", "url": "https://example.org/r.pdf", "vintageStart": "2023-10-01", "vintageEnd": "2024-09-30"}
+        }]
+    });
+    write(&dir, "set.json", &set);
+    dir
+}
+
+/// A set of a pack already under `--out` goes into that package, checked
+/// and compared there.
+#[test]
+fn a_calibration_set_imports_into_the_package_it_calibrates() {
+    let dir = with_example_package("import-calibration", "barred");
+    let run = litigate_in(&dir, &["import", "set.json", "--out", "."]);
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    let text = std::fs::read_to_string(dir.join("lit/examples/calibration-rule12-fy.lit")).unwrap();
+    assert!(text.contains("p barred 0.2 {"), "{text}");
+}
+
+/// A target the package does not declare fails the import, unwritten.
+#[test]
+fn a_calibration_target_the_package_lacks_fails_the_import() {
+    let dir = with_example_package("import-calibration-missing", "no-such-edge");
+    let run = litigate_in(&dir, &["import", "set.json", "--out", "."]);
+    assert_eq!(run.code, 2, "{}", run.stdout);
+    assert_eq!(
+        errors(&run.json),
+        [(
+            "L6002".to_owned(),
+            "the imported source does not check".to_owned()
+        )]
+    );
+    assert!(!dir.join("lit/examples/calibration-rule12-fy.lit").exists());
+}

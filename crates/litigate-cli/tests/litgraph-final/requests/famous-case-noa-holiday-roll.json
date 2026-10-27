@@ -1,0 +1,38 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "deadlines",
+  "result": {
+    "trigger": "2015-05-01",
+    "count": 1,
+    "deadlines": [
+      {
+        "edge": {
+          "id": "cafc@ptab::ptab-file-noa",
+          "label": "File notice of appeal with the Director (USPTO)",
+          "from": "cafc@ptab::entry-ptab",
+          "to": "cafc@ptab::notice-of-appeal-filed",
+          "authority": "37 C.F.R. § 90.3(a); 35 U.S.C. § 142"
+        },
+        "rule_set": "uspto-1-7",
+        "rule_set_label": "37 CFR 1.7(a)",
+        "source_url": "https://www.ecfr.gov/current/title-37/chapter-I/subchapter-A/part-41",
+        "deadline_length": 63.0,
+        "unit": "calendar",
+        "trigger": "2015-05-01",
+        "nominal_date": "2015-07-03",
+        "base_date": "2015-07-06",
+        "due_date": "2015-07-06",
+        "last_day_rolled": true,
+        "service_days_added": false,
+        "clerk_inaccessibility_applied": false,
+        "steps": [
+          "37 CFR 1.7(a): exclude the trigger date 2015-05-01",
+          "37 CFR 1.7(a): count 63 calendar day(s) after the anchor -> 2015-07-03",
+          "37 CFR 1.7(a): the last day is a weekend or legal holiday; roll forward -> 2015-07-06"
+        ]
+      }
+    ]
+  },
+  "warnings": []
+}

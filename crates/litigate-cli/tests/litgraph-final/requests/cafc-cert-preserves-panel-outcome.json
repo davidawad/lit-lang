@@ -1,0 +1,74 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "chain",
+  "result": {
+    "start": {
+      "id": "cafc::reversed",
+      "label": "Reversed (No Remand)"
+    },
+    "absorption": [
+      {
+        "terminal": "cafc::reversed#end",
+        "label": "Reversed (No Remand)",
+        "p": 1.0,
+        "utility": 1000000.0,
+        "outcome": [
+          "win"
+        ]
+      }
+    ],
+    "expected": {
+      "dollars": 0.0,
+      "elapsed": 0.0,
+      "hours": 0.0
+    },
+    "expected_steps": 1.0,
+    "expected_utility": 1000000.0,
+    "expected_net": 1000000.0,
+    "sink_mass": 0.0,
+    "top_visits": [
+      {
+        "node": "cafc::reversed",
+        "visits": 1.0
+      }
+    ]
+  },
+  "warnings": [
+    {
+      "code": "authored-hole",
+      "count": 1,
+      "example": "pack cafc: 4 explicit hole(s) left numbers unauthored, first /edges/19/probability (no published selection rate); author them in the pack's source (a strict build rejects holes)",
+      "at": []
+    },
+    {
+      "code": "compile",
+      "count": 9,
+      "example": "state flags expanded the graph: 43 additional node(s) for reachable flag combinations",
+      "at": []
+    },
+    {
+      "code": "fact-unset",
+      "count": 1,
+      "example": "matter fact not set via scenario.facts; using the authored prior (5 of 5 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
+      "at": [
+        "cafc::remand-destination"
+      ]
+    },
+    {
+      "code": "probability-fill",
+      "count": 40,
+      "example": "5 of 5 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "cafc::appeal-origin",
+        "cafc::cert-petition-filed",
+        "cafc::costs-bill-filed",
+        "cafc::cross-appeal-filed",
+        "cafc::docketing-statement-filed",
+        "cafc::joint-appendix-filed",
+        "cafc::mandate-issued",
+        "cafc::mediation-conference"
+      ]
+    }
+  ]
+}

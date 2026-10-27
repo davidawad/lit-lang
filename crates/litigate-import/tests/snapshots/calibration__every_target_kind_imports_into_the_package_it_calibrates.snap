@@ -1,0 +1,21 @@
+---
+source: crates/litigate-import/tests/calibration.rs
+expression: file.text
+---
+// Imported by `litigate import` from calibration/demo-fy.json.
+module demo-dir.calibration-demo-fy
+
+calibration demo-fy: "Demo" {
+  note "D"
+  source source-1 "Report" {
+    url "https://example.org/r.pdf"
+    vintage [2023-10-01, 2024-10-01)
+    retrieved 2026-09-28
+  }
+  source source-2 "Report" { url "https://example.org/r.pdf", vintage [2024-01-01, ..) }
+  p a 0.25 { source source-1, n 40, method "10 / 40" }
+  p b ? { source source-1, n 40, method "cleared" }
+  duration a 3.5.days { source source-2, n 2 }
+  duration b { min 1.days, mode 2.days, max 5.days } { source source-2, n 3 }
+  attr n weight -2 { source source-2, n 1 }
+}

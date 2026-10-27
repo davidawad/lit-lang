@@ -54,6 +54,8 @@ pub enum ValueKind {
     Instance(Option<String>),
     /// A paper kind's filing requirements (`limit`, SPEC §3.7).
     Limit,
+    /// Calibration set.
+    Calibration,
 }
 
 impl ValueKind {
@@ -74,6 +76,7 @@ impl ValueKind {
             Self::Rule => "rule",
             Self::Instance(_) => "instance",
             Self::Limit => "filing limit",
+            Self::Calibration => "calibration set",
         }
     }
 }
@@ -226,6 +229,7 @@ pub fn value_of(item: &Item) -> Option<(&str, ValueKind)> {
         ItemKind::Limit(l) if l.name.is_simple() => (l.name.head.text.as_str(), ValueKind::Limit),
         ItemKind::Recharacterize(name, ..) => (name.text.as_str(), ValueKind::Recharacterization),
         ItemKind::Invalidate(name, ..) => (name.text.as_str(), ValueKind::Invalidation),
+        ItemKind::Calibration(name, ..) => (name.text.as_str(), ValueKind::Calibration),
         _ => return None,
     })
 }

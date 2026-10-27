@@ -68,8 +68,9 @@ fn json_files(
     Ok(())
 }
 
-/// How documents of two directories pair: `pack:<id>`, `links`, or
-/// `scenario:<id>` (file names need not match a pack's id). Clock fragments pair by path.
+/// How documents of two directories pair: `pack:<id>`, `links`,
+/// `scenario:<id>` or `calibration:<id>` (file names need not match a
+/// pack's id). Clock fragments pair by path.
 fn identity(text: &str) -> Option<String> {
     let value: Value = serde_json::from_str(text).ok()?;
     let id = || value.get("id").and_then(Value::as_str).map(str::to_owned);
@@ -77,6 +78,7 @@ fn identity(text: &str) -> Option<String> {
         litigate_lower::DocumentKind::Pack => Some(format!("pack:{}", id()?)),
         litigate_lower::DocumentKind::Links => Some("links".to_owned()),
         litigate_lower::DocumentKind::Scenario => Some(format!("scenario:{}", id()?)),
+        litigate_lower::DocumentKind::Calibration => Some(format!("calibration:{}", id()?)),
         litigate_lower::DocumentKind::Clock => None,
     }
 }
@@ -116,16 +118,22 @@ fn side(path: &str, as_of: Option<&String>, lib: &[String]) -> Result<Side, Fail
 }
 
 /// When exactly one side is a single file (keyed `""`), re-keys the other
-/// side's one primary document (not a clock fragment) to `""` and drops
-/// the rest, which have no counterpart by construction.
+/// side's document of the same identity (a calibration set, say), else its
+/// one primary document (not a clock fragment or calibration set), to `""`
+/// and drops the rest, which have no counterpart by construction.
 fn align(a: &mut BTreeMap<String, (String, String)>, b: &mut BTreeMap<String, (String, String)>) {
-    let single = |m: &BTreeMap<String, (String, String)>| m.len() == 1 && m.contains_key("");
-    let rekey = |m: &mut BTreeMap<String, (String, String)>| {
-        let primary: Vec<String> = m
-            .keys()
-            .filter(|k| !k.starts_with("packs/clock/"))
-            .cloned()
-            .collect();
+    type Docs = BTreeMap<String, (String, String)>;
+    let single = |m: &Docs| m.len() == 1 && m.contains_key("");
+    let rekey = |m: &mut Docs, file: &Docs| {
+        let same = file.get("").and_then(|(_, text)| identity(text));
+        let primary: Vec<String> = match same.filter(|id| m.contains_key(id)) {
+            Some(id) => vec![id],
+            None => m
+                .keys()
+                .filter(|k| !k.starts_with("packs/clock/") && !k.starts_with("calibration:"))
+                .cloned()
+                .collect(),
+        };
         if let [one] = primary.as_slice() {
             let doc = m.remove(one);
             m.clear();
@@ -133,9 +141,9 @@ fn align(a: &mut BTreeMap<String, (String, String)>, b: &mut BTreeMap<String, (S
         }
     };
     if single(a) && !single(b) {
-        rekey(b);
+        rekey(b, a);
     } else if single(b) && !single(a) {
-        rekey(a);
+        rekey(a, b);
     }
 }
 

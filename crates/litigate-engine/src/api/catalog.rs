@@ -9,13 +9,15 @@ use std::path::{Path, PathBuf};
 use schemars::JsonSchema;
 use serde::Serialize;
 
+use crate::api::calibration::{CalibrationCatalog, CalibrationSet};
 use crate::clock::ClockLibrary;
 use crate::error::{Error, Result};
 use crate::model::{CompileOptions, Graph, LinkFile, Pack};
 use crate::scenario::NamedScenario;
 
 /// `(file name, contents)` of files compiled into a binary: packs (with
-/// `links.json` and `clock/<fragment>.json`) or named scenarios, as
+/// `links.json`, `clock/<fragment>.json` and `calibration/<set>.json`) or
+/// named scenarios, as
 /// `litgraph-packs` embeds them.
 pub type EmbeddedFiles = &'static [(&'static str, &'static str)];
 
@@ -53,7 +55,12 @@ pub struct Catalog {
     /// a pack's `counting` field resolves against. A source with no
     /// `clock/` files gets the embedded library.
     pub clock: ClockLibrary,
-    /// Pack, `links.json` and `clock/` files that failed to parse and were
+    /// Calibration sets (`calibration/<set>.json` files, built from `lit/`
+    /// `calibration` declarations) a scenario opts into
+    /// by id (`scenario.calibration`); `$LITGRAPH_CALIBRATION` overrides
+    /// them per request.
+    pub calibration: CalibrationCatalog,
+    /// Pack, `links.json`, `clock/` and `calibration/` files that failed to parse and were
     /// skipped, in the order encountered. Empty in the ordinary case.
     pub load_errors: Vec<LoadError>,
     /// `embedded` or the directory the scenario library was read from.
@@ -117,7 +124,8 @@ fn source_dir(flag: &str, value: Option<&Path>, var: &str) -> Result<Option<(Pat
 
 impl Catalog {
     /// Build a catalog from `(file name, JSON text)` pairs; `links.json` is
-    /// the link file. A file that fails to parse is skipped and recorded in
+    /// the link file, `clock/*` the clock library and `calibration/*` the
+    /// calibration sets. A file that fails to parse is skipped and recorded in
     /// `load_errors` rather than failing the whole catalog -- one bad pack
     /// (hand-edited, a bad merge, truncated on disk) shouldn't cost every
     /// other pack, every op, for every user of the binary. This never
@@ -135,9 +143,20 @@ impl Catalog {
         let mut links = LinkFile::default();
         let mut load_errors = vec![];
         let mut clock_files = vec![];
+        let mut calibration = vec![];
         for (name, text) in files {
             if name.starts_with("clock/") {
                 clock_files.push((name, text));
+            } else if let Some(file) = name.strip_prefix("calibration/") {
+                match CalibrationSet::from_json(&text) {
+                    Ok(set) => {
+                        calibration.push((file.to_owned(), set, fingerprint(text.as_bytes())));
+                    }
+                    Err(e) => load_errors.push(LoadError {
+                        file: name.clone(),
+                        message: format!("{name}: {e}"),
+                    }),
+                }
             } else if name == "links.json" {
                 match LinkFile::from_json(&text) {
                     Ok(lf) => links = lf,
@@ -157,6 +176,7 @@ impl Catalog {
             }
         }
         packs.sort_by(|a, b| a.0.cmp(&b.0));
+        calibration.sort_by(|a, b| a.0.cmp(&b.0));
         let (clock, clock_errors) = if clock_files.is_empty() {
             ClockLibrary::embedded().clone()
         } else {
@@ -168,6 +188,10 @@ impl Catalog {
                 .map(|(file, message)| LoadError { file, message }),
         );
         Ok(Catalog {
+            calibration: CalibrationCatalog {
+                origin: origin.clone(),
+                sets: calibration,
+            },
             origin,
             packs,
             links,
@@ -260,7 +284,8 @@ impl Catalog {
     }
 
     /// Every `*.json` in `dir` (and `links.json` if present), plus the
-    /// clock library in `dir/clock/*.json` if that directory exists.
+    /// clock library in `dir/clock/*.json` and the calibration sets in
+    /// `dir/calibration/*.json` where those directories exist.
     ///
     /// # Errors
     /// Unreadable directory or malformed pack.
@@ -269,6 +294,10 @@ impl Catalog {
         let clock = dir.join("clock");
         if clock.is_dir() {
             files.extend(json_files(&clock, "clock/")?);
+        }
+        let calibration = dir.join("calibration");
+        if calibration.is_dir() {
+            files.extend(json_files(&calibration, "calibration/")?);
         }
         Catalog::from_files(dir.display().to_string(), files)
     }

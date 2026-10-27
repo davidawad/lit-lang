@@ -10,8 +10,6 @@ use crate::api::catalog::fingerprint;
 use crate::error::{Error, Result};
 use crate::model::Duration;
 
-include!(concat!(env!("OUT_DIR"), "/embedded_calibration.rs"));
-
 /// What one calibration entry sets.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, JsonSchema)]
 #[serde(rename_all = "kebab-case")]
@@ -137,7 +135,8 @@ impl CalibrationEntry {
     }
 }
 
-/// A named collection of calibration entries: one `calibration/*.json` file.
+/// A named collection of calibration entries: one lowered `calibration`
+/// declaration (SPEC §8.8).
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, JsonSchema)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]
 pub struct CalibrationSet {
@@ -196,19 +195,6 @@ impl CalibrationCatalog {
         Ok(CalibrationCatalog { origin, sets })
     }
 
-    /// The calibration sets built into this binary.
-    ///
-    /// # Errors
-    /// Only if an embedded set is malformed (caught by the test suite).
-    pub fn embedded() -> Result<CalibrationCatalog> {
-        CalibrationCatalog::from_files(
-            "embedded".into(),
-            EMBEDDED_CALIBRATION
-                .iter()
-                .map(|(n, t)| ((*n).to_string(), (*t).to_string())),
-        )
-    }
-
     /// Every `*.json` in `dir`.
     ///
     /// # Errors
@@ -232,22 +218,26 @@ impl CalibrationCatalog {
         CalibrationCatalog::from_files(dir.display().to_string(), files)
     }
 
-    /// `$LITGRAPH_CALIBRATION` if set, else the embedded sets.
+    /// `$LITGRAPH_CALIBRATION` if set, else `fallback` (a catalog's own
+    /// sets, [`crate::api::Catalog::calibration`]).
     ///
     /// # Errors
-    /// As [`CalibrationCatalog::load`] / [`CalibrationCatalog::embedded`].
-    pub fn default_source() -> Result<CalibrationCatalog> {
-        CalibrationCatalog::from_override(std::env::var_os("LITGRAPH_CALIBRATION"))
+    /// As [`CalibrationCatalog::load`].
+    pub fn default_source(fallback: &CalibrationCatalog) -> Result<CalibrationCatalog> {
+        CalibrationCatalog::from_override(std::env::var_os("LITGRAPH_CALIBRATION"), fallback)
     }
 
-    /// The directory `dir` if given, else the embedded sets: the body of
+    /// The directory `dir` if given, else `fallback`: the body of
     /// [`CalibrationCatalog::default_source`] with the env var already read,
     /// so tests can exercise it without mutating the process environment
     /// (which races with same-process readers under `cargo test`).
-    fn from_override(dir: Option<std::ffi::OsString>) -> Result<CalibrationCatalog> {
+    fn from_override(
+        dir: Option<std::ffi::OsString>,
+        fallback: &CalibrationCatalog,
+    ) -> Result<CalibrationCatalog> {
         match dir {
             Some(d) => CalibrationCatalog::load(&PathBuf::from(d)),
-            None => CalibrationCatalog::embedded(),
+            None => Ok(fallback.clone()),
         }
     }
 
@@ -368,7 +358,7 @@ mod tests {
     }
 
     /// Omitting `value` on an `edge-probability` entry is valid *with* a
-    /// `method` explaining the clear (see `calibration/ptab-fy2024.json`).
+    /// `method` explaining the clear (see `lit/ptab/calibration-ptab-fy2024.lit`).
     #[test]
     fn edge_probability_clear_with_method_is_valid() {
         let set = CalibrationSet::from_json(
@@ -412,25 +402,37 @@ mod tests {
         assert_eq!(err.code(), "io");
     }
 
-    /// `default_source` loads the `$LITGRAPH_CALIBRATION` directory when set
-    /// (exercised through `from_override`, so no process-env mutation).
+    /// The repository's calibration sets, as `litgraph-packs` builds them
+    /// from `lit/`.
+    fn shipped() -> CalibrationCatalog {
+        crate::api::Catalog::embedded(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)
+            .unwrap()
+            .calibration
+    }
+
+    /// `default_source` loads the `$LITGRAPH_CALIBRATION` directory when set,
+    /// else gives back the catalog's own sets (exercised through
+    /// `from_override`, so no process-env mutation).
     #[test]
     fn default_source_honors_litgraph_calibration_override() {
-        let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../calibration");
-        assert!(
-            dir.is_dir(),
-            "expected a calibration/ dir at {}",
-            dir.display()
-        );
-        let c = CalibrationCatalog::from_override(Some(dir.clone().into_os_string())).unwrap();
+        let shipped = shipped();
+        let fallback = CalibrationCatalog::from_override(None, &shipped).unwrap();
+        assert_eq!(fallback.sets.len(), shipped.sets.len());
+        let dir = std::env::temp_dir().join(format!("litgraph-calibration-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let (_, set, _) = &shipped.sets[0];
+        std::fs::write(dir.join("one.json"), serde_json::to_string(set).unwrap()).unwrap();
+        let c = CalibrationCatalog::from_override(Some(dir.clone().into_os_string()), &shipped)
+            .unwrap();
+        std::fs::remove_dir_all(&dir).unwrap();
         assert_eq!(c.origin, dir.display().to_string());
-        assert!(!c.sets.is_empty());
+        assert_eq!(c.sets.len(), 1);
     }
 
     #[test]
-    fn embedded_calibration_sets_parse() {
-        let c = CalibrationCatalog::embedded().unwrap();
-        assert!(!c.sets.is_empty(), "expected embedded calibration sets");
+    fn shipped_calibration_sets_parse() {
+        let c = shipped();
+        assert!(!c.sets.is_empty(), "expected shipped calibration sets");
         for (name, set, _) in &c.sets {
             assert!(!set.entries.is_empty(), "{name}: empty entries");
         }
@@ -438,16 +440,14 @@ mod tests {
 
     #[test]
     fn select_unknown_set_lists_available_ids() {
-        let c = CalibrationCatalog::embedded().unwrap();
-        let err = c.select("nope").unwrap_err();
+        let err = shipped().select("nope").unwrap_err();
         assert_eq!(err.code(), "not-found");
         assert!(err.to_string().contains("available"));
     }
 
     #[test]
     fn fingerprints_differ_and_are_stable() {
-        let a = CalibrationCatalog::embedded().unwrap();
-        let b = CalibrationCatalog::embedded().unwrap();
+        let (a, b) = (shipped(), shipped());
         assert_eq!(
             a.sets.iter().map(|(_, _, h)| h.clone()).collect::<Vec<_>>(),
             b.sets.iter().map(|(_, _, h)| h.clone()).collect::<Vec<_>>()

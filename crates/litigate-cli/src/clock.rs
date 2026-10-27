@@ -836,7 +836,7 @@ deadline chained-nourl: 1.days from deadline(nourl-base).nominal counted_by frcp
         };
         assert_eq!(
             refusal(&too_short, "answer-period", "2025-03-03"),
-            "invalid: 19 CFR 201.14(a) periods must be at least 1 day"
+            "invalid: 19 C.F.R. § 201.14(a): a period must be at least 1 day"
         );
     }
 

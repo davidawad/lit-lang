@@ -2,9 +2,9 @@
 //! options, counting rules, instances, packages, and sources.
 use super::clauses::keyword_field;
 use super::values::{
-    boolean, call, cite, date_or_hole, duration, duration_estimate, id_list, money_or_hole, number,
-    prob_value, record, reference, replaces_list, require, signed_money, signed_number, string,
-    string_or_hole, Key, Value,
+    boolean, call, cite, date, date_or_hole, duration, duration_estimate, id_list, interval,
+    money_or_hole, number, prob_value, record, reference, replaces_list, require, signed_money,
+    signed_number, string, string_or_hole, Key, Value,
 };
 use super::{brace_list, delimited_node, Sep};
 use crate::error::{range, SyntaxError};
@@ -148,6 +148,30 @@ pub(crate) const INSTANCE_FIELDS: &[Spec] = &[
     (KwRoles, Some(name_record)),
     (KwPayoffTransform, Some(super::expr::paren_expr)),
     (KwStake, Some(money_or_hole)),
+];
+
+/// Items of a `calibration` body: its description, the sources its values
+/// come from, and one entry per calibrated value.
+pub(crate) const CALIBRATION_ITEMS: &[Spec] = &[
+    (KwNote, Some(string)),
+    (KwSource, Some(calibration_source)),
+    (KwP, Some(calibrated_probability)),
+    (KwDuration, Some(calibrated_duration)),
+    (KwAttr, Some(calibrated_attr)),
+];
+
+/// Fields of a calibration `source`.
+const CALIBRATION_SOURCE_FIELDS: &[Spec] = &[
+    (KwUrl, Some(string)),
+    (KwVintage, Some(interval)),
+    (KwRetrieved, Some(date)),
+];
+
+/// Fields of one calibrated value.
+const CALIBRATED_FIELDS: &[Spec] = &[
+    (KwSource, Some(reference)),
+    (KwN, Some(number)),
+    (KwMethod, Some(string)),
 ];
 
 pub(crate) const SOURCE_FIELDS: &[Spec] = &[(KwUrl, Some(string)), (KwAsOf, Some(date_or_hole))];
@@ -365,6 +389,55 @@ fn duration_value(p: &mut Parser<'_>) -> bool {
         (KwMax, Some(duration_estimate)),
     ];
     duration_estimate(p) || ordered_fields(p, RANGE, false, &[KwMin, KwMax])
+}
+
+/// `Ident String { url String, vintage Interval, retrieved Date }`.
+fn calibration_source(p: &mut Parser<'_>) -> bool {
+    reference(p) && {
+        if require(p, string, &[String]) {
+            require(p, calibration_source_fields, &[LBrace]);
+        }
+        true
+    }
+}
+
+fn calibration_source_fields(p: &mut Parser<'_>) -> bool {
+    field_list(p, CALIBRATION_SOURCE_FIELDS)
+}
+
+fn calibrated_fields(p: &mut Parser<'_>) -> bool {
+    field_list(p, CALIBRATED_FIELDS)
+}
+
+/// `Ref ProbValue { source Ident, n Number, method String }`: a hole
+/// clears the edge's probability.
+fn calibrated_probability(p: &mut Parser<'_>) -> bool {
+    reference(p) && {
+        if require(p, prob_value, &[Number, Question]) {
+            require(p, calibrated_fields, &[LBrace]);
+        }
+        true
+    }
+}
+
+/// `Ref (Duration | { [min D] mode D [max D] }) { ... }`.
+fn calibrated_duration(p: &mut Parser<'_>) -> bool {
+    reference(p) && {
+        if require(p, duration_value, &[Duration, LBrace]) {
+            require(p, calibrated_fields, &[LBrace]);
+        }
+        true
+    }
+}
+
+/// `Ref Ident SignedNumber { ... }`: one numeric attribute of a node.
+fn calibrated_attr(p: &mut Parser<'_>) -> bool {
+    reference(p) && {
+        if require(p, reference, &[Ident]) && require(p, signed_number, &[Number]) {
+            require(p, calibrated_fields, &[LBrace]);
+        }
+        true
+    }
 }
 
 /// `service_extension { Method: Duration | unrecognized } [Cite]`.

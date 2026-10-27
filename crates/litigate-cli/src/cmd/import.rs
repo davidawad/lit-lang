@@ -1,17 +1,55 @@
 //! `litigate import JSON... --out DIR` (SPEC §8.7): legacy JSON to source.
 //! Nothing is written unless the generated source checks and lowers back
-//! to JSON semantically equal (§8.6) to every input; otherwise L6002.
+//! to JSON semantically equal (§8.6) to every input; otherwise L6002. A
+//! calibration set of a pack not among the inputs goes into that pack's
+//! package under `DIR/lit`, and is checked there.
 use super::build::{lower_all, write_atomic};
-use super::check::check_session;
+use super::check::{check_session, checked_in};
 use crate::out::{Failure, Outcome, Report};
 use crate::ws::{self, CaseText, Session};
 use litigate_base::{Diagnostic, DiagnosticCode as C, Label, Note, Profile, Severity, Span};
 use litigate_import::{Imported, Input};
 use litigate_lower::Options;
 use litigate_sema::pkg::load::{LoadedFile, LoadedPackage};
+use litigate_sema::pkg::manifest::parse_manifest;
+use litigate_sema::pkg::source::MemoryTree;
 use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::path::Path;
+
+/// Pack id to package directory of every package under `out/lit`.
+fn existing_packages(out: &str) -> BTreeMap<String, String> {
+    let lit = Path::new(out).join("lit");
+    let Ok(entries) = std::fs::read_dir(&lit) else {
+        return BTreeMap::new();
+    };
+    entries
+        .filter_map(Result::ok)
+        .filter_map(|entry| {
+            let text = std::fs::read_to_string(entry.path().join("Lit.toml")).ok()?;
+            let parsed = parse_manifest(&text).ok()?;
+            let dir = entry.file_name().to_string_lossy().into_owned();
+            Some((parsed.manifest.pack_id, dir))
+        })
+        .collect()
+}
+
+/// The directories of the packages `imported` generates (its `Lit.toml`s).
+fn generated_packages(imported: &Imported) -> Vec<String> {
+    imported
+        .files
+        .iter()
+        .filter_map(|f| f.path.strip_prefix("lit/")?.strip_suffix("/Lit.toml"))
+        .map(str::to_owned)
+        .collect()
+}
+
+/// The package directory of a generated `lit/<dir>/...` file.
+fn package_dir(path: &str) -> Option<&str> {
+    path.strip_prefix("lit/")?
+        .split_once('/')
+        .map(|(dir, _)| dir)
+}
 
 /// Imported files grouped into in-memory packages (`lit/<dir>/`) and matters.
 fn loaded(imported: &Imported) -> (Vec<LoadedPackage>, Vec<CaseText>) {
@@ -61,7 +99,8 @@ fn is_case(path: &str) -> bool {
 }
 
 /// The generated document an input must equal. `import` accepted the
-/// input, so it is JSON, and a pack or scenario has an `id`.
+/// input, so it is JSON, and a pack, scenario or calibration set has an
+/// `id`.
 fn counterpart(text: &str) -> String {
     let value: Value = serde_json::from_str(text).unwrap_or_default();
     let id = value.get("id").and_then(Value::as_str).unwrap_or_default();
@@ -69,6 +108,8 @@ fn counterpart(text: &str) -> String {
         format!("packs/{id}.json")
     } else if value.get("links").is_some() || value.get("instances").is_some() {
         "packs/links.json".to_owned()
+    } else if value.get("entries").is_some() {
+        format!("packs/calibration/{id}.json")
     } else {
         format!("scenarios/{id}.json")
     }
@@ -138,8 +179,88 @@ fn unchecked(
 }
 
 /// Round-trip diagnostics: generated source that does not check, or does
-/// not lower back to its input.
-fn round_trip(imported: &Imported, inputs: &[Input]) -> Vec<Diagnostic> {
+/// not lower back to its input. Files going into a package under
+/// `out/lit` that the import does not generate are checked there
+/// ([`into_existing`]); the rest on their own.
+fn round_trip(imported: &Imported, inputs: &[Input], out: &str) -> Vec<Diagnostic> {
+    let generated = generated_packages(imported);
+    let (into, own): (Vec<_>, Vec<_>) = imported
+        .files
+        .iter()
+        .cloned()
+        .partition(|f| package_dir(&f.path).is_some_and(|d| !generated.iter().any(|g| g == d)));
+    let (into_inputs, own_inputs): (Vec<Input>, Vec<Input>) = inputs
+        .iter()
+        .cloned()
+        .partition(|i| into.iter().any(|f| f.from == i.path));
+    let mut out_diagnostics = Vec::new();
+    if !into.is_empty() {
+        out_diagnostics.extend(into_existing(&Imported { files: into }, &into_inputs, out));
+    }
+    if !own_inputs.is_empty() {
+        out_diagnostics.extend(standalone(&Imported { files: own }, &own_inputs));
+    }
+    out_diagnostics
+}
+
+/// [`round_trip`] of files added to packages under `out/lit`: those
+/// packages, with every other package there, overlaid with the files.
+fn into_existing(imported: &Imported, inputs: &[Input], out: &str) -> Vec<Diagnostic> {
+    let mut files: BTreeMap<String, String> = litigate_engine::cite::SourceCorpus::embedded_ref()
+        .files
+        .iter()
+        .map(|(p, t)| (p.clone(), t.clone()))
+        .collect();
+    collect(&Path::new(out).join("lit"), "lit", &mut files);
+    files.extend(
+        imported
+            .files
+            .iter()
+            .map(|f| (f.path.clone(), f.text.clone())),
+    );
+    let tree = MemoryTree::new(files);
+    let mut dirs: Vec<String> = imported
+        .files
+        .iter()
+        .filter_map(|f| package_dir(&f.path).map(|d| format!("lit/{d}")))
+        .collect();
+    dirs.dedup();
+    let checked = match checked_in(
+        &tree,
+        &dirs,
+        Profile::Dev,
+        &Options::default(),
+        &["lit".to_owned()],
+    ) {
+        Ok(checked) => checked,
+        Err(failure) => {
+            return inputs
+                .iter()
+                .map(|i| Diagnostic::error(C::SemanticDiff, start(&i.path), failure.0.clone()))
+                .collect()
+        }
+    };
+    compare_lowered(imported, inputs, &checked)
+}
+
+/// Every file under disk directory `dir`, keyed under `prefix`.
+fn collect(dir: &Path, prefix: &str, out: &mut BTreeMap<String, String>) {
+    let Ok(entries) = std::fs::read_dir(dir) else {
+        return;
+    };
+    for entry in entries.filter_map(Result::ok) {
+        let name = format!("{prefix}/{}", entry.file_name().to_string_lossy());
+        let path = entry.path();
+        if path.is_dir() {
+            collect(&path, &name, out);
+        } else if let Ok(text) = std::fs::read_to_string(&path) {
+            out.insert(name, text);
+        }
+    }
+}
+
+/// [`round_trip`] of generated packages and matters on their own.
+fn standalone(imported: &Imported, inputs: &[Input]) -> Vec<Diagnostic> {
     let (packages, cases) = loaded(imported);
     let mut session = Session::from_loaded(&packages, cases);
     // Nothing is locked yet (`litigate lock` writes `Lit.lock` after the
@@ -150,11 +271,21 @@ fn round_trip(imported: &Imported, inputs: &[Input]) -> Vec<Diagnostic> {
         case.lock = Some(lock.clone());
     }
     let checked = check_session(session, Profile::Dev, &Options::default());
-    let mut out = unchecked(imported, inputs, &checked);
+    compare_lowered(imported, inputs, &checked)
+}
+
+/// The check errors of `imported`'s files, else each input against what
+/// its generated source lowers to.
+fn compare_lowered(
+    imported: &Imported,
+    inputs: &[Input],
+    checked: &super::check::Checked,
+) -> Vec<Diagnostic> {
+    let mut out = unchecked(imported, inputs, checked);
     if !out.is_empty() {
         return out;
     }
-    let built = lower_all(&checked, &Options::default());
+    let built = lower_all(checked, &Options::default());
     out.extend(built.diagnostics);
     let by_name: BTreeMap<&str, &str> = built
         .files
@@ -218,14 +349,14 @@ pub fn import(paths: &[String], out: &str) -> Outcome {
         .iter()
         .map(|i| (i.path.clone(), i.text.clone()))
         .collect();
-    let imported = match litigate_import::import(&inputs) {
+    let imported = match litigate_import::import_into(&inputs, &existing_packages(out)) {
         Ok(imported) => imported,
         Err(diagnostics) => {
             report.diagnostics = diagnostics;
             return Ok(report);
         }
     };
-    report.diagnostics = round_trip(&imported, &inputs);
+    report.diagnostics = round_trip(&imported, &inputs, out);
     if report.has_errors() {
         return Ok(report);
     }
@@ -328,7 +459,7 @@ mod tests {
             ),
         ];
         let imported = litigate_import::import(&plain).unwrap_or_default();
-        let round = round_trip(&imported, &plain);
+        let round = round_trip(&imported, &plain, ".");
         assert_eq!(codes(&round), [], "{round:#?}");
         let mut relabelled = pack.clone();
         relabelled["title"] = "Another title".into();
@@ -340,7 +471,7 @@ mod tests {
             ),
         ];
         assert_eq!(
-            codes(&round_trip(&imported, &extra)),
+            codes(&round_trip(&imported, &extra, ".")),
             [
                 (
                     C::SemanticDiff,
@@ -362,7 +493,7 @@ mod tests {
         ];
         let mut imported = litigate_import::import(&inputs).unwrap_or_default();
         assert_eq!(
-            codes(&round_trip(&imported, &inputs)),
+            codes(&round_trip(&imported, &inputs, ".")),
             [(
                 C::SemanticDiff,
                 "the imported source does not check".to_owned()
@@ -376,7 +507,7 @@ mod tests {
             };
         }
         assert_eq!(
-            codes(&round_trip(&imported, &inputs)),
+            codes(&round_trip(&imported, &inputs, ".")),
             [(C::SemanticDiff, "second: not a links document".to_owned())]
         );
     }

@@ -86,8 +86,8 @@ fn months_run_to_the_corresponding_day() {
     let c = count(&r, "2025-03-04", 2, Unit::Year, Direction::Forward).unwrap();
     assert_eq!(
         c.steps[1],
-        "RCFC 6: count 2 years after the anchor to the corresponding day, else the last day of \
-         that month -> 2027-03-04"
+        "RCFC 6(a): count 2 years after the anchor to the corresponding day, else the last day \
+         of that month -> 2027-03-04"
     );
     let c = count(&r, "2025-03-04", 1, Unit::Month, Direction::Forward).unwrap();
     assert!(c.steps[1].contains("count 1 month after"), "{:?}", c.steps);

@@ -371,7 +371,7 @@ impl Cx<'_, '_> {
         })
     }
 
-    fn duration(&mut self, f: &Field) -> Option<TriangularDuration> {
+    pub(super) fn duration(&mut self, f: &Field) -> Option<TriangularDuration> {
         let days = Type::Days(DayUnit::Calendar);
         // Estimates may use decimal calendar days (`13.5.days`, SPEC §6);
         // every other spelling goes through the integral-days checker.

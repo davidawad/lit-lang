@@ -10,6 +10,7 @@
 //! unlike pack edges they have no node list to regroup under). Source maps and the generated marker are sidecars and
 //! never part of a document, and a document's format version and `lowered`
 //! header (pins, dates, world digest, holes) are provenance, not meaning.
+use litigate_engine::api::CalibrationSet;
 use litigate_engine::clock::ClockLibrary;
 use litigate_engine::model::{local_edge_ids, LinkFile, NodeKind, Pack, RawEdge};
 use litigate_engine::scenario::NamedScenario;
@@ -64,6 +65,8 @@ pub enum DocumentKind {
     Scenario,
     /// A clock-library fragment.
     Clock,
+    /// A calibration set.
+    Calibration,
 }
 
 /// Differences between two packs, empty when they are semantically equal.
@@ -101,6 +104,12 @@ pub fn semantic_diff_clock(a: &ClockLibrary, b: &ClockLibrary) -> Vec<Change> {
     compare(&normalized(a), &normalized(b))
 }
 
+/// Differences between two calibration sets.
+#[must_use]
+pub fn semantic_diff_calibration(a: &CalibrationSet, b: &CalibrationSet) -> Vec<Change> {
+    compare(&normalized(a), &normalized(b))
+}
+
 /// Which kind of document `value` is, from its keys.
 #[must_use]
 pub fn detect(value: &Value) -> Option<DocumentKind> {
@@ -113,6 +122,8 @@ pub fn detect(value: &Value) -> Option<DocumentKind> {
         Some(DocumentKind::Scenario)
     } else if has("links") || has("instances") {
         Some(DocumentKind::Links)
+    } else if has("entries") {
+        Some(DocumentKind::Calibration)
     } else {
         None
     }
@@ -129,7 +140,8 @@ pub fn semantic_diff_json(a: &str, b: &str) -> Result<(DocumentKind, Vec<Change>
         serde_json::from_str(text).map_err(|e| format!("{label}: not JSON: {e}"))
     };
     let (x, y) = (parse("first", a)?, parse("second", b)?);
-    let kind = detect(&x).ok_or("first: not a litgraph pack, links, scenario or clock file")?;
+    let kind = detect(&x)
+        .ok_or("first: not a litgraph pack, links, scenario, clock or calibration file")?;
     if detect(&y) != Some(kind) {
         return Err(format!("second: not a {kind:?} document").to_lowercase());
     }
@@ -138,6 +150,9 @@ pub fn semantic_diff_json(a: &str, b: &str) -> Result<(DocumentKind, Vec<Change>
         DocumentKind::Links => semantic_diff_links(&read("first", x)?, &read("second", y)?),
         DocumentKind::Scenario => semantic_diff_scenarios(&read("first", x)?, &read("second", y)?),
         DocumentKind::Clock => semantic_diff_clock(&read("first", x)?, &read("second", y)?),
+        DocumentKind::Calibration => {
+            semantic_diff_calibration(&read("first", x)?, &read("second", y)?)
+        }
     };
     Ok((kind, changes))
 }

@@ -24,7 +24,8 @@ pub mod canonical;
 /// Cite verification against the vendored L0 corpus (`sources/*.txt`).
 pub mod cite;
 /// Deadline computation: a generic interpreter over the data-driven
-/// counting rules and holiday calendars in `packs/clock/`.
+/// counting rules and holiday calendars of the clock library (`lit/core`
+/// lowered, plus each pack's own fragment).
 pub mod clock;
 /// The crate's error type and `Result` alias.
 pub mod error;

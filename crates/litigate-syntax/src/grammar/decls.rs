@@ -27,6 +27,7 @@ pub(crate) fn decl(p: &mut Parser<'_>, kw: SyntaxKind) {
         KwGrant => grant(p),
         KwRecharacterize => recharacterize(p),
         KwInvalidate => invalidate(p),
+        KwCalibration => calibration(p),
         _ => test(p),
     }
 }
@@ -184,6 +185,16 @@ fn invalidate(p: &mut Parser<'_>) {
     if p.expect(Ident) && p.expect(Colon) && require(p, reference, &[Ident]) {
         let keywords = clauses(p, Clauses::CALENDAR);
         expect_end(p, &keywords);
+    }
+    p.finish();
+}
+
+/// `calibration id ":" String { CalibrationItem Sep }`.
+fn calibration(p: &mut Parser<'_>) {
+    p.start(CalibrationDecl);
+    p.bump_as(KwCalibration);
+    if p.expect(Ident) && p.expect(Colon) && p.expect(String) && require_body(p, &[]) {
+        field_list(p, super::fields::CALIBRATION_ITEMS);
     }
     p.finish();
 }

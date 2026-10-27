@@ -1,9 +1,13 @@
 //! `lit/core`, the standard library: the epic gate (`litigate check
-//! --profile strict lit/core`), and its lowered clock IR against the
-//! engine's hand-authored `packs/clock` declarations. Every in-force rule
-//! must reproduce the shipped rule's outputs (due, base and anchor dates,
-//! roll and service flags, refusals) on every trigger date of its window,
-//! and its calendars the shipped holidays in every year from 1978.
+//! --profile strict lit/core`), and its lowered clock IR, which is the
+//! engine's shared clock library (`crates/litigate-engine/clock/`, kept equal to
+//! the lowering here), against the hand-authored `packs/clock` declarations
+//! it replaced (litgraph-final's, in `tests/litgraph-final/clock/`). Every
+//! in-force rule must reproduce the shipped rule's outputs (due, base and
+//! anchor dates, roll and service flags, refusals) on every trigger date of
+//! its window, for every request the `.lit` surface can express, and its
+//! calendars the shipped holidays in every year from 1978. Trace texts are
+//! generated from each rule's `cite` (SPEC §8.2), so they are not compared.
 // Test code: a panic is the failed assertion.
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 mod support;
@@ -45,8 +49,25 @@ fn lowered() -> &'static ClockLibrary {
     })
 }
 
+/// litgraph-final's hand-written clock library (`packs/clock/*.json` at tag
+/// `litgraph-final`), which `lit/core` replaced.
+fn hand() -> &'static ClockLibrary {
+    static LIB: OnceLock<ClockLibrary> = OnceLock::new();
+    LIB.get_or_init(|| {
+        let dir = repo().join("crates/litigate-cli/tests/litgraph-final/clock");
+        let files = std::fs::read_dir(&dir).unwrap().map(|e| {
+            let path = e.unwrap().path();
+            let name = format!("clock/{}", path.file_name().unwrap().to_string_lossy());
+            (name, std::fs::read_to_string(&path).unwrap())
+        });
+        let (lib, errors) = ClockLibrary::merge(files);
+        assert!(errors.is_empty(), "{errors:?}");
+        lib
+    })
+}
+
 fn shipped(id: &str) -> Clock<'static> {
-    ClockLibrary::embedded().0.clock(id).unwrap()
+    hand().clock(id).unwrap()
 }
 
 fn ours(id: &str) -> Clock<'static> {
@@ -285,6 +306,25 @@ fn fixture_periods_cite_no_rule() {
     for x in fixtures {
         assert_eq!(x.meta.cite, None, "{}", x.meta.id);
     }
+}
+
+/// The engine embeds `lit/core` lowered as its shared clock library, the
+/// one generated file committed (the engine cannot run the compiler that
+/// depends on it); `just lit-sync` rewrites it.
+#[test]
+fn the_engine_clock_library_is_lit_core_lowered() {
+    let committed =
+        std::fs::read_to_string(repo().join("crates/litigate-engine/clock/litigate-core.json"))
+            .unwrap();
+    let fresh = litigate_lower::render(lowered()).unwrap();
+    assert!(
+        committed == fresh,
+        "crates/litigate-engine/clock/litigate-core.json is stale: run `just lit-sync`"
+    );
+    let (embedded, errors) = ClockLibrary::embedded();
+    assert!(errors.is_empty(), "{errors:?}");
+    assert_eq!(embedded.counting_rules, lowered().counting_rules);
+    assert_eq!(embedded.calendars, lowered().calendars);
 }
 
 #[test]

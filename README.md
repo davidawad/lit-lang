@@ -105,21 +105,23 @@ lint`, plus `explain` given a path), and `litigate run TARGET --op '{...}'`
 takes an op object. The `litgraph` binary is deprecated: it forwards to
 `litigate engine` and will be removed.
 
-Runnable requests live in [`examples/`](examples/) — a 28 U.S.C. § 1498
-patent case in the Court of Federal Claims through the Federal Circuit:
+Runnable requests live in [`cases/requests/`](cases/requests/), each a `.case`
+matter whose first line is the `litigate run` that reproduces it — a 28
+U.S.C. § 1498 patent case in the Court of Federal Claims through the Federal
+Circuit:
 
 | file | shows |
 |---|---|
-| `cofc-1498-chain.json` | expected cost/time/hours under the optimal policy |
-| `cofc-1498-risk-averse-sim.json` | 50,000-run outcome simulation |
-| `cofc-1498-tornado.json` | which inputs (rate, stakes) the answer is most sensitive to |
-| `cofc-1500-trap-compare.json` | the § 1500 same-claim-pending trap as a counterfactual |
-| `cofc-appeal-threshold-sweep.json` | the stake at which an appeal becomes worth briefing |
-| `cofc-explain-dispositive-fork.json` | `explain` at a dispositive-motion decision point |
-| `cofc-1498-settle.json` | settlement range, predicted prices, when the surplus peaks, a Rule 68 offer ([docs/SETTLEMENT.md](docs/SETTLEMENT.md)) |
+| `cofc-1498-chain.case` | expected cost/time/hours under the optimal policy |
+| `cofc-1498-risk-averse-sim.case` | 50,000-run outcome simulation |
+| `cofc-1498-tornado.case` | which inputs (rate, stakes) the answer is most sensitive to |
+| `cofc-1500-trap-compare.case` | the § 1500 same-claim-pending trap as a counterfactual |
+| `cofc-appeal-threshold-sweep.case` | the stake at which an appeal becomes worth briefing |
+| `cofc-explain-dispositive-fork.case` | `explain` at a dispositive-motion decision point |
+| `cofc-1498-settle.case` | settlement range, predicted prices, when the surplus peaks, a Rule 68 offer ([docs/SETTLEMENT.md](docs/SETTLEMENT.md)) |
 
 ```bash
-litigate engine q - < examples/cofc-1498-chain.json
+litigate run cases/requests/cofc-1498-chain.case --op '{"op":"chain","metrics":["dollars","elapsed","hours"]}'
 ```
 
 ## Install

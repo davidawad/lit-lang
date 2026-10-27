@@ -6,8 +6,9 @@
 //! clerk-inaccessibility extension), plus an optional hours provision.
 //! Every step carries its own cited `text` template, so the trace the
 //! interpreter emits is authored alongside the arithmetic it describes.
-//! The shipped rules live in `packs/clock/*.json`; the interpreter in
-//! `clock::interp` knows no forum.
+//! The shipped rules are `lit/core`'s `counting` declarations, lowered
+//! (`crates/litigate-engine/clock/`); the interpreter in `clock::interp` knows no
+//! forum.
 //!
 //! Text templates may use these placeholders (anything else is rejected
 //! when the library loads):

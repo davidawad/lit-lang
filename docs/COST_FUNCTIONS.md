@@ -168,7 +168,7 @@ always Markov) references one of them. Only
 trajectory and evaluates the utility expression per run with the real
 accumulated values — use `simulate`, not `solve`/`chain`, whenever the
 answer should reflect exact prejudgment interest or time-growing damages.
-See `examples/cofc-prejudgment-interest-sim.json`.
+See `cases/requests/cofc-prejudgment-interest-sim.case`.
 
 ## Writing new ones
 

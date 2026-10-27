@@ -14,7 +14,7 @@ macro_rules! items {
         "one of `module`, `import`, `package`, `start`, `group`, `type`, `enum`, `event`, \
          `state`, `decision`, `chance`, `terminal`, `link`, `instance`, `rule`, `deadline`, \
          `counting`, `calendar`, `transition`, `authority`, `default`, `exception`, `test`, \
-         `limit`, `grant`, `recharacterize`, or `invalidate`"
+         `limit`, `grant`, `recharacterize`, `invalidate`, or `calibration`"
     };
 }
 
@@ -555,4 +555,50 @@ fn recharacterizations_and_invalidations() {
             ),
         ],
     );
+}
+
+const CALIBRATION_SETS: Cases = &[
+    (
+        "module m\ncalibration c\n",
+        &["L0001 3:1-3:1 expected `:`, found end of file"],
+    ),
+    (
+        "module m\ncalibration c: \"C\"\n",
+        &["L0001 3:1-3:1 expected `{`, found end of file"],
+    ),
+    (
+        "module m\ncalibration c: \"C\" { source s { url \"u\" } }\n",
+        &[
+            "L0001 2:31-2:32 expected a string, found `{`",
+            concat!("L0001 2:43-2:44 expected ", items!(), ", found `}`"),
+        ],
+    ),
+    (
+        "module m\ncalibration c: \"C\" { p e }\n",
+        &["L0001 2:26-2:27 expected a number or `?`, found `}`"],
+    ),
+    (
+        "module m\ncalibration c: \"C\" { p e 0.5 }\n",
+        &["L0001 2:30-2:31 expected `{`, found `}`"],
+    ),
+    (
+        "module m\ncalibration c: \"C\" { duration e { mode 1.days } }\n",
+        &["L0001 2:49-2:50 expected `{`, found `}`"],
+    ),
+    (
+        "module m\ncalibration c: \"C\" { attr n 1 { n 1 } }\n",
+        &[
+            "L0001 2:29-2:30 expected an identifier, found `1`",
+            concat!("L0001 2:39-2:40 expected ", items!(), ", found `}`"),
+        ],
+    ),
+    (
+        "module m\ncalibration c: \"C\" { p e 0.5 { n x } }\n",
+        &["L0001 2:34-2:35 expected an identifier, found `x`"],
+    ),
+];
+
+#[test]
+fn calibration_sets() {
+    check_all(FileKind::Lit, CALIBRATION_SETS);
 }

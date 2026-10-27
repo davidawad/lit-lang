@@ -1,0 +1,99 @@
+================================================================================
+Calibration sets
+================================================================================
+
+module ptab.calibration
+
+calibration ptab-fy2024: "PTAB rates, FY2024" {
+  note "Institution rates."
+  source roundup "PTAB Trial Statistics FY24" {
+    url "https://www.uspto.gov/x.pdf"
+    vintage [2023-10-01, 2024-10-01)
+    retrieved 2026-09-28
+  }
+  p edge-granted 0.681 { source roundup, n 1087, method "740 / 1087" }
+  p edge-denied ? { source roundup, n 1087, method "cleared" }
+  duration edge-dismissal 252.63.days { source roundup, n 69436 }
+  duration edge-ruling { mode 3.days, max 9.days } { source roundup, n 5 }
+  attr filed annual_filings 266 { source roundup, n 266 }
+  p cafc@cofc::panel-to-affirmed 0.3837 { source roundup, n 86 }
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)
+        (identifier)))
+    (calibration_decl
+      (identifier)
+      (string
+        (string_content))
+      (calibration_body
+        (string
+          (string_content))
+        (calibration_source
+          (identifier)
+          (string
+            (string_content))
+          (calibration_source_body
+            (string
+              (string_content))
+            (interval
+              (date)
+              (date))
+            (date)))
+        (calibrated_value
+          (ref
+            (identifier))
+          (number)
+          (calibrated_value_body
+            (identifier)
+            (number)
+            (string
+              (string_content))))
+        (calibrated_value
+          (ref
+            (identifier))
+          (hole)
+          (calibrated_value_body
+            (identifier)
+            (number)
+            (string
+              (string_content))))
+        (calibrated_value
+          (ref
+            (identifier))
+          (duration)
+          (calibrated_value_body
+            (identifier)
+            (number)))
+        (calibrated_value
+          (ref
+            (identifier))
+          (duration_range
+            (duration)
+            (duration))
+          (calibrated_value_body
+            (identifier)
+            (number)))
+        (calibrated_value
+          (ref
+            (identifier))
+          (identifier)
+          (signed_number
+            (number))
+          (calibrated_value_body
+            (identifier)
+            (number)))
+        (calibrated_value
+          (ref
+            (identifier)
+            (identifier)
+            (identifier))
+          (number)
+          (calibrated_value_body
+            (identifier)
+            (number)))))))

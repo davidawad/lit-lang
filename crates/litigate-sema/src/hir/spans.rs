@@ -388,6 +388,29 @@ impl Spans for Limit {
     }
 }
 
+impl Spans for super::Calibration {
+    fn spans_mut(&mut self, f: &mut dyn FnMut(&mut Span)) {
+        let Self {
+            meta,
+            description: _,
+            sources: _,
+            entries,
+        } = self;
+        meta.spans_mut(f);
+        for super::CalibrationEntry {
+            target: _,
+            value: _,
+            source: _,
+            n: _,
+            method: _,
+            span,
+        } in entries
+        {
+            span.spans_mut(f);
+        }
+    }
+}
+
 impl Spans for Declaration {
     fn spans_mut(&mut self, f: &mut dyn FnMut(&mut Span)) {
         match self {
@@ -406,6 +429,7 @@ impl Spans for Declaration {
             Self::Limit(x) => x.spans_mut(f),
             Self::Recharacterize(x) => x.meta.spans_mut(f),
             Self::Invalidate(x) => x.meta.spans_mut(f),
+            Self::Calibration(x) => x.spans_mut(f),
             Self::Authority(_) | Self::TypeAlias(_) | Self::Enum(_) | Self::Event(_) => {}
         }
     }

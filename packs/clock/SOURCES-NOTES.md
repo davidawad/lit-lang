@@ -1,5 +1,12 @@
 # Clock library: sources and interpretive choices
 
+These notes describe the hand-written `packs/clock/*.json` library that
+`lit/core` replaced (lg-dfv4.2): its counting rules and calendars are now
+`lit/core`'s declarations, lowered, and reproduce these files' dates on
+every request a `.lit` deadline can make. The files themselves are kept,
+for that comparison, in `crates/litigate-cli/tests/litgraph-final/clock/`.
+The notes stay as the record of the sources and choices they encoded.
+
 The counting rules and holiday calendars in this directory were ported from
 the hard-coded `crates/litigate-engine/src/clock/{general,itc,holidays}.rs` modules
 (themselves ported from `civ-pro-the-gathering`'s `src/engine/clock/`,

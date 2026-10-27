@@ -43,6 +43,7 @@ impl Item {
                 | GrantDecl
                 | RecharacterizeDecl
                 | InvalidateDecl
+                | CalibrationDecl
         )
         .then_some(Self(node))
     }

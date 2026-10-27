@@ -2,6 +2,7 @@
 //! module, then package-level assembly (SPEC §4-§6, §11).
 mod basis;
 mod calendar;
+mod calibration;
 mod clock;
 mod cx;
 pub(crate) use cx::refs;
@@ -81,6 +82,7 @@ pub fn item_name(item: &Item) -> Option<&Name> {
         | ItemKind::Grant(n, _, _)
         | ItemKind::Recharacterize(n, _, _)
         | ItemKind::Invalidate(n, _, _)
+        | ItemKind::Calibration(n, _, _)
         | ItemKind::Default(n, _, _, _) => Some(n),
         ItemKind::Node(n) => Some(&n.name),
         ItemKind::Deadline { name, .. } | ItemKind::Exception { name, .. } => Some(name),
@@ -288,6 +290,9 @@ pub struct ModuleContext {
     pub countings: BTreeMap<String, BTreeSet<String>>,
     /// The module declares a `link` or an `instance` (`::` qualification).
     pub links: bool,
+    /// The module declares a `calibration`, whose targets resolve against
+    /// this package and its dependencies.
+    pub calibration: bool,
 }
 
 /// The [`ModuleContext`] of `tree`.
@@ -308,6 +313,7 @@ pub fn module_context(tree: &ItemTree) -> ModuleContext {
                     .or_insert_with(|| fields.iter().map(|f| f.key.text.clone()).collect());
             }
             ItemKind::Link(_) | ItemKind::Instance(..) => cx.links = true,
+            ItemKind::Calibration(..) => cx.calibration = true,
             _ => {}
         }
     }
@@ -369,7 +375,7 @@ pub fn check_decl_at<'db>(
         own,
         &context.imports,
         &import_sigs,
-        if context.links {
+        if context.links || context.calibration {
             pack_signatures(db, file)
         } else {
             Vec::new()
@@ -535,6 +541,9 @@ fn items(cx: &mut Cx<'_, '_>, top: &Item, context: &ModuleContext) -> DeclCheck 
             ItemKind::Invalidate(name, target, _) => cx
                 .invalidation(item, rule, name, target)
                 .map(Declaration::Invalidate),
+            ItemKind::Calibration(name, title, fields) => Some(Declaration::Calibration(
+                cx.calibration(item, name, title, fields),
+            )),
         };
         if let Some(d) = &d {
             out.effects = out

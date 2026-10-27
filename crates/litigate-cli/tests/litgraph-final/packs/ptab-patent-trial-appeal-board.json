@@ -1,0 +1,151 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "solve",
+  "result": {
+    "start": {
+      "id": "ptab-patent-trial-appeal-board::patent-granted",
+      "label": "Patent Granted"
+    },
+    "value": 515246.86143,
+    "converged": true,
+    "iterations": 52,
+    "fee_shift_rounds": 0,
+    "best_line": [
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-patent-granted-challenge-vehicle-decision",
+        "label": "Consider challenging without suit",
+        "from": "ptab-patent-trial-appeal-board::patent-granted",
+        "to": "ptab-patent-trial-appeal-board::challenge-vehicle-decision",
+        "role": "self",
+        "authority": "35 U.S.C. § 311; 35 U.S.C. § 321",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 515246.86143
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-challenge-vehicle-decision-institution-granted",
+        "label": "File IPR petition with a motion for joinder to an instituted IPR",
+        "from": "ptab-patent-trial-appeal-board::challenge-vehicle-decision",
+        "to": "ptab-patent-trial-appeal-board::institution-granted",
+        "role": "self",
+        "authority": "35 U.S.C. § 315(c); 37 CFR 42.122",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 516246.86143
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-institution-granted-settlement-decision",
+        "label": "Consider early settlement",
+        "from": "ptab-patent-trial-appeal-board::institution-granted",
+        "to": "ptab-patent-trial-appeal-board::settlement-decision",
+        "role": "nature",
+        "authority": "35 U.S.C. 317; 37 CFR 42.74",
+        "p": 0.5,
+        "kind": "likely-draw",
+        "step_p": 0.5,
+        "q": 610766.333628
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-settlement-decision-oral-hearing-request",
+        "label": "No settlement — proceed to hearing",
+        "from": "ptab-patent-trial-appeal-board::settlement-decision",
+        "to": "ptab-patent-trial-appeal-board::oral-hearing-request",
+        "role": "nature",
+        "authority": "37 CFR 42.70",
+        "p": 0.333333,
+        "kind": "likely-draw",
+        "step_p": 0.333333,
+        "q": 532299.000883
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-oral-hearing-request-fwd-issued",
+        "label": "Waive oral argument",
+        "from": "ptab-patent-trial-appeal-board::oral-hearing-request",
+        "to": "ptab-patent-trial-appeal-board::fwd-issued",
+        "role": "nature",
+        "authority": "37 CFR 42.70(a)",
+        "p": 0.5,
+        "kind": "likely-draw",
+        "step_p": 0.5,
+        "q": 532299.000883
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-fwd-issued-fwd-all-unpatentable",
+        "label": "Hold all instituted claims unpatentable",
+        "from": "ptab-patent-trial-appeal-board::fwd-issued",
+        "to": "ptab-patent-trial-appeal-board::fwd-all-unpatentable{ipr-estopped}",
+        "role": "nature",
+        "authority": "35 U.S.C. § 318(a)",
+        "p": 0.55,
+        "kind": "likely-draw",
+        "step_p": 0.55,
+        "q": 717299.000883
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::fwd-all-unpatentable{ipr-estopped}#accept",
+        "label": "Accept: FWD: All Claims Unpatentable",
+        "from": "ptab-patent-trial-appeal-board::fwd-all-unpatentable{ipr-estopped}",
+        "to": "ptab-patent-trial-appeal-board::fwd-all-unpatentable{ipr-estopped}#end",
+        "role": "nature",
+        "p": 0.5,
+        "kind": "likely-draw",
+        "step_p": 0.5,
+        "q": 1000000.0
+      }
+    ],
+    "policy_size": 18,
+    "policy": null,
+    "values": null
+  },
+  "warnings": [
+    {
+      "code": "authored-hole",
+      "count": 1,
+      "example": "pack ptab-patent-trial-appeal-board: 4 explicit hole(s) left numbers unauthored, first /edges/10/probability (no published defect-notice rate); author them in the pack's source (a strict build rejects holes)",
+      "at": []
+    },
+    {
+      "code": "compile",
+      "count": 17,
+      "example": "state flags expanded the graph: 104 additional node(s) for reachable flag combinations",
+      "at": []
+    },
+    {
+      "code": "fact-unset",
+      "count": 2,
+      "example": "matter fact not set via scenario.facts; using the authored prior (2 of 2 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
+      "at": [
+        "ptab-patent-trial-appeal-board::petition-time-bar-check",
+        "ptab-patent-trial-appeal-board::petition-time-bar-check{prior-petition-denied}"
+      ]
+    },
+    {
+      "code": "mixed-node",
+      "count": 5,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "ptab-patent-trial-appeal-board::patent-granted",
+        "ptab-patent-trial-appeal-board::patent-owner-response-filed",
+        "ptab-patent-trial-appeal-board::patent-owner-response-filed{ipr-estopped}",
+        "ptab-patent-trial-appeal-board::patent-owner-response-filed{prior-petition-denied}",
+        "ptab-patent-trial-appeal-board::patent-owner-response-filed{ipr-estopped,prior-petition-denied}"
+      ]
+    },
+    {
+      "code": "probability-fill",
+      "count": 105,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "ptab-patent-trial-appeal-board::adverse-judgment-request",
+        "ptab-patent-trial-appeal-board::cafc-vacates-remands",
+        "ptab-patent-trial-appeal-board::director-review-affirmed",
+        "ptab-patent-trial-appeal-board::director-review-modified",
+        "ptab-patent-trial-appeal-board::director-review-request-filed",
+        "ptab-patent-trial-appeal-board::federal-circuit-notice-of-appeal",
+        "ptab-patent-trial-appeal-board::federal-circuit-window",
+        "ptab-patent-trial-appeal-board::fwd-all-confirmed"
+      ]
+    }
+  ]
+}

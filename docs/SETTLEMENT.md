@@ -7,7 +7,7 @@ equilibrium (`scenario.opponent_objective`, see `docs/CRITIQUE.md`'s
 "General-sum opponents").
 
 ```bash
-litgraph q - < examples/cofc-1498-settle.json
+litigate run cases/requests/cofc-1498-settle.case --op '{"op":"settle","bargaining_power":0.5,"discount_annual":{"plaintiff":0.1,"defendant":0.04},"rule68":{"offer":450000,"costs":25000}}'
 litgraph settle --scenario '{"extends":"cofc-1498-patent-case","opponent_objective":"-payoff"}' --arg node=cofc::answer-filed
 ```
 
@@ -156,7 +156,7 @@ rule's settlement incentives in the same bargaining-range framework.
 
 ## Worked example: `cofc-1498-patent-case`
 
-`examples/cofc-1498-settle.json` extends the named §1498 scenario with
+`cases/requests/cofc-1498-settle.case` is the named §1498 matter with
 `opponent_objective: "-payoff"` (the United States pays the judgment and
 bears its own `opp_rate` spend). The patent-owner and government annual
 rates (10% / 4%) and the Rule 68 figures ($450,000 offer, $25,000 costs) are

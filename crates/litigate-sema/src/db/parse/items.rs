@@ -94,6 +94,15 @@ impl Lower {
         ))
     }
 
+    /// `calibration c: "Title" { items }`.
+    fn calibration(&mut self, node: &SyntaxNode) -> Option<ItemKind> {
+        Some(ItemKind::Calibration(
+            ident(node)?,
+            label(node)?,
+            self.field_list(&node_of(node, K::FieldList)?),
+        ))
+    }
+
     /// One declaration (top level or inside a `rule`); `None` for nodes that
     /// are not declarations or are missing a required part. Each declaration
     /// is parsed left to right and stops at its first missing part, so only
@@ -166,6 +175,7 @@ impl Lower {
             K::GrantDecl => self.grant(node)?,
             K::LimitDecl => ItemKind::Limit(self.limit(node)?),
             K::RecharacterizeDecl | K::InvalidateDecl => self.change(node)?,
+            K::CalibrationDecl => self.calibration(node)?,
             _ => return None,
         };
         Some(Item {

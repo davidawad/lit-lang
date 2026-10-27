@@ -1,25 +1,24 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! End-to-end coverage for the calibration pipeline (`api::calibration`):
-//! every embedded `calibration/*.json` entry resolves against the real
-//! embedded packs, `scenario.calibration` applies through `api::handle` and
+//! every entry of every calibration set `lit/` declares resolves against the
+//! real embedded packs, `scenario.calibration` applies through `api::handle` and
 //! is reported in `provenance.calibration`, an unknown set name is a
 //! request error, and the `calibration` op surfaces uncalibrated inputs.
 
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 
-use litigate_engine::api::{apply_calibration, handle, CalibrationCatalog, Request};
+use litigate_engine::api::{apply_calibration, handle, Request};
 use litigate_engine::model::CompileOptions;
 use serde_json::json;
 
 /// Every entry in every embedded calibration set must resolve against the
-/// full embedded catalog (all packs + links) — if it doesn't, the ref in the
-/// `calibration/*.json` file is wrong (a typo, or the pack it targets was
-/// renamed), and this test is what catches it instead of the entry silently
-/// no-op'ing at request time.
+/// full embedded catalog (all packs + links). The compiler resolves every
+/// target already (a typo is an error with a span); this checks the engine
+/// refs it lowers them to, which would otherwise no-op at request time.
 #[test]
 fn every_embedded_calibration_entry_resolves() {
     let packs = litgraph_packs::catalog().expect("embedded packs");
-    let calib = CalibrationCatalog::embedded().expect("embedded calibration");
+    let calib = &packs.calibration;
     assert!(
         calib.sets.len() >= 4,
         "expected at least the ptab/cafc/cofc/frcp FY2024 sets, got {}",

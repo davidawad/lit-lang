@@ -4,9 +4,9 @@
 //! A calendar is a list of holidays, each a date rule (a fixed month/day or
 //! the nth weekday of a month), an optional multi-year cycle, an
 //! observed-day rule for weekend dates, and an effective interval. Nothing
-//! here names a forum or a statute: the shipped calendars live in
-//! `packs/clock/*.json` (see `docs/PACK_SCHEMA.md`), and a counting rule
-//! names the calendars it closes on.
+//! here names a forum or a statute: the shipped calendars are `lit/core`'s
+//! `calendar` declarations, lowered (see `docs/PACK_SCHEMA.md`), and a
+//! counting rule names the calendars it closes on.
 //!
 //! Effective intervals are half-open (`from` inclusive, `until`
 //! exclusive) and are tested against the *observed* date, so a holiday

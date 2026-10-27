@@ -137,6 +137,20 @@ impl InvalidateDecl {
     }
 }
 
+impl super::CalibrationDecl {
+    /// The quoted title token.
+    #[must_use]
+    pub fn title(&self) -> Option<Token> {
+        token(self.syntax(), SyntaxKind::String)
+    }
+
+    /// Body items (`note`, `source`, `p`, `duration`, `attr`).
+    #[must_use]
+    pub fn fields(&self) -> Vec<Field> {
+        fields_of(self.syntax())
+    }
+}
+
 impl TransitionDecl {
     /// The amended declaration version (`d@2009-12-01`).
     #[must_use]

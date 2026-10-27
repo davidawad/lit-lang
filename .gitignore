@@ -36,9 +36,11 @@ scripts/git-hooks/agent-context.sh
 dist/
 
 # Generated from lit/ and cases/ at build time (crates/litgraph-packs), never
-# committed: `just lit-sync` writes the same build to target/lit-build/. The
-# hand-authored packs/clock/*.json and packs/*-SOURCES-NOTES.md stay tracked.
+# committed: `just lit-sync` writes the same build to target/lit-build/. No
+# JSON input lives under packs/; its *-SOURCES-NOTES.md stay tracked.
 /packs/*.json
+/packs/clock/*.json
+/packs/calibration/
 /scenarios/
 # Generated from the Rust schemas by `just ts-gen` (ts-build/ts-test run it).
 /packages/litigate-ts/schema/

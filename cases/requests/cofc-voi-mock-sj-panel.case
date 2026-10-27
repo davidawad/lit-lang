@@ -1,0 +1,41 @@
+// litigate run cases/requests/cofc-voi-mock-sj-panel.case --op '{"op":"voi","samples":300,"top":5,"studies":[{"node":"cofc::sj-ruling","k":5,"cost":25000,"label":"summary-judgment expert report (worth ~5 comparable rulings)"}]}'
+case cofc-voi-mock-sj-panel
+uses cofc ^0.1.0
+as_of 2026-09-28
+summary "The cofc-1498-patent-case matter: what a summary-judgment expert report (worth about five comparable rulings) is worth to learn before paying $25,000 for it."
+notes "Ported from examples/cofc-voi-mock-sj-panel.json, which runs the named scenario cofc-1498-patent-case (cases/cofc-1498-patent-case.case: the same parties, events, and stakes) unchanged."
+
+source "28 U.S.C. §1498(a) — patent/copyright use, exclusive remedy, no injunction" {
+  url "https://www.law.cornell.edu/uscode/text/28/1498"
+}
+
+source "28 U.S.C. §1491 (Tucker Act) — CoFC jurisdiction" {
+  url "https://www.law.cornell.edu/uscode/text/28/1491"
+}
+
+perspective owner
+
+parties {
+  owner: applicant Corporation
+  united-states: examiner Government
+}
+
+events {
+  elected-1: 2026-09-14 Elected(e-filingfork-standard) by owner cite "28 U.S.C. § 1498(a)"
+  elected-2: 2026-09-14 Elected(e-casetype-patent) by owner cite "28 U.S.C. § 1498(a)"
+}
+
+stakes {
+  cofc::judgment-entered: 1_000_000.usd
+  cofc::judgment-for-plaintiff: 1_000_000.usd
+  cofc::judgment-for-government: 0.usd
+  cofc::summary-judgment-for-government: 0.usd
+  cofc::settled-adr: 450_000.usd
+  cofc::dismissed-time-barred: 0.usd
+  cofc::dismissed-1500-bar: 0.usd
+  cofc::dismissed-lack-of-jurisdiction: 0.usd
+  cofc::dismissed-failure-to-state: 0.usd
+  cofc::voluntary-dismissal-early: 0.usd
+}
+
+analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }

@@ -24,14 +24,13 @@ RUN cargo chef cook --release --recipe-path recipe.json
 COPY Cargo.toml Cargo.lock ./
 COPY crates crates
 COPY editors editors
-# The hand-authored clock library; crates/litgraph-packs builds the packs
-# and named scenarios from lit/ and cases/ at compile time.
+# The hand-authored clock library; crates/litgraph-packs builds the packs,
+# calibration sets and named scenarios from lit/ and cases/ at compile time.
 COPY packs packs
 COPY lit lit
 COPY cases cases
 # litigate-cli (a litgraph-mcp dependency) embeds the language reference.
 COPY docs/litigate/SPEC.md docs/litigate/SPEC.md
-COPY calibration calibration
 COPY sources sources
 RUN cargo build --release -p litgraph-cli -p litgraph-mcp && \
     strip target/release/litgraph target/release/litgraph-mcp && \

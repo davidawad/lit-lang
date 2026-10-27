@@ -61,8 +61,8 @@ fn named(xs: &[(&str, &str)]) -> Vec<Value> {
         .collect()
 }
 
-fn calibration_sets() -> (String, Vec<Value>) {
-    match CalibrationCatalog::default_source() {
+fn calibration_sets(catalog: &Catalog) -> (String, Vec<Value>) {
+    match CalibrationCatalog::default_source(&catalog.calibration) {
         Ok(c) => (
             c.origin.clone(),
             c.sets
@@ -80,7 +80,7 @@ fn calibration_sets() -> (String, Vec<Value>) {
 /// variables, functions, parameters, packs and instances.
 #[must_use]
 pub fn describe(catalog: &Catalog) -> Value {
-    let (calibration_source, calibration_sets) = calibration_sets();
+    let (calibration_source, calibration_sets) = calibration_sets(catalog);
     json!({
         "engine": ENGINE,
         "api_version": API_VERSION,

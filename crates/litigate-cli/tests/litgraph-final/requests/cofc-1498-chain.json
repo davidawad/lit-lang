@@ -1,0 +1,264 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "chain",
+  "result": {
+    "start": {
+      "id": "cofc::claim-accrues",
+      "label": "Claim Against the United States Accrues"
+    },
+    "absorption": [
+      {
+        "terminal": "cofc::settled-adr",
+        "label": "SETTLED VIA ADR",
+        "p": 0.3,
+        "utility": 5400000.0,
+        "outcome": [
+          "settlement"
+        ]
+      },
+      {
+        "terminal": "cafc@cofc::cert-not-sought{panel-affirmed}",
+        "label": "FINAL — Certiorari Not Sought",
+        "p": 0.149848,
+        "utility": 0.0,
+        "outcome": [
+          "final"
+        ]
+      },
+      {
+        "terminal": "cafc@cofc-gov::cert-denied{panel-affirmed}",
+        "label": "CERT DENIED (Final)",
+        "p": 0.139065,
+        "utility": 0.0,
+        "outcome": [
+          "final"
+        ]
+      },
+      {
+        "terminal": "cafc@cofc::settled-in-mediation",
+        "label": "Case Settled Through Mediation",
+        "p": 0.108134,
+        "utility": 4200000.0,
+        "outcome": [
+          "settlement"
+        ]
+      },
+      {
+        "terminal": "cafc@cofc-gov::settled-in-mediation",
+        "label": "Case Settled Through Mediation",
+        "p": 0.099384,
+        "utility": 0.0,
+        "outcome": [
+          "settlement"
+        ]
+      },
+      {
+        "terminal": "cafc@cofc::affirmed-in-part-reversed-in-part{panel-mixed}#end",
+        "label": "Affirmed in Part, Reversed in Part",
+        "p": 0.057066,
+        "utility": 3000000.0,
+        "outcome": [
+          "remand"
+        ]
+      },
+      {
+        "terminal": "cafc@cofc-gov::cert-denied{panel-mixed}",
+        "label": "CERT DENIED (Final)",
+        "p": 0.049252,
+        "utility": 0.0,
+        "outcome": [
+          "final"
+        ]
+      },
+      {
+        "terminal": "cafc@cofc::reversed{panel-reversed}#end",
+        "label": "Reversed (No Remand)",
+        "p": 0.033568,
+        "utility": 12000000.0,
+        "outcome": [
+          "win"
+        ]
+      },
+      {
+        "terminal": "cafc@cofc-gov::cert-denied{panel-reversed}",
+        "label": "CERT DENIED (Final)",
+        "p": 0.028972,
+        "utility": 0.0,
+        "outcome": [
+          "final"
+        ]
+      },
+      {
+        "terminal": "cafc@cofc::dismissed-jurisdictional-defect",
+        "label": "Dismissed — Jurisdictional/Mootness Defect Found on Appeal",
+        "p": 0.016784,
+        "utility": 0.0,
+        "outcome": [
+          "procedural-default"
+        ]
+      },
+      {
+        "terminal": "cafc@cofc-gov::dismissed-jurisdictional-defect",
+        "label": "Dismissed — Jurisdictional/Mootness Defect Found on Appeal",
+        "p": 0.015734,
+        "utility": 0.0,
+        "outcome": [
+          "procedural-default"
+        ]
+      },
+      {
+        "terminal": "cafc@cofc-gov::cert-granted{panel-affirmed}",
+        "label": "CERT GRANTED — Case Transfers to the Supreme Court",
+        "p": 0.001405,
+        "utility": 0.0,
+        "outcome": [
+          "remand"
+        ]
+      },
+      {
+        "terminal": "cafc@cofc-gov::cert-granted{panel-mixed}",
+        "label": "CERT GRANTED — Case Transfers to the Supreme Court",
+        "p": 0.000497,
+        "utility": 0.0,
+        "outcome": [
+          "remand"
+        ]
+      },
+      {
+        "terminal": "cafc@cofc-gov::cert-granted{panel-reversed}",
+        "label": "CERT GRANTED — Case Transfers to the Supreme Court",
+        "p": 0.000293,
+        "utility": 0.0,
+        "outcome": [
+          "remand"
+        ]
+      }
+    ],
+    "expected": {
+      "dollars": 820426.822651,
+      "elapsed": 616.027081,
+      "hours": 952.507063
+    },
+    "expected_steps": 50.099142,
+    "expected_utility": 2648175.17596,
+    "expected_net": 1827748.353309,
+    "sink_mass": 0.0,
+    "top_visits": [
+      {
+        "node": "cofc::answer-filed",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::case-type-fork",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::claim-accrues",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::complaint-filed",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::filing-track-fork",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::government-response-fork",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::limitations-check",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::patent-14b-notice-fork",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::patent-14b-notice-served",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::patent-admin-claim-fork",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::patent-claim-construction-discovery-closed",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::patent-claim-construction-exchange",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::patent-claim-construction-hearing",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::patent-claim-construction-order",
+        "visits": 1.0
+      },
+      {
+        "node": "cofc::patent-claim-fork",
+        "visits": 1.0
+      }
+    ]
+  },
+  "warnings": [
+    {
+      "code": "authored-hole",
+      "count": 1,
+      "example": "pack cafc: 4 explicit hole(s) left numbers unauthored, first /edges/19/probability (no published selection rate); author them in the pack's source (a strict build rejects holes)",
+      "at": []
+    },
+    {
+      "code": "compile",
+      "count": 69,
+      "example": "state flags expanded the graph: 301 additional node(s) for reachable flag combinations",
+      "at": []
+    },
+    {
+      "code": "fact-unset",
+      "count": 1,
+      "example": "matter fact not set via scenario.facts; using the authored prior (5 of 5 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
+      "at": [
+        "cafc::remand-destination"
+      ]
+    },
+    {
+      "code": "mixed-node",
+      "count": 4,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "cofc::discovery-open",
+        "cofc::patent-14b-notice-fork",
+        "cofc::post-trial-motion-window",
+        "cofc::service-on-united-states"
+      ]
+    },
+    {
+      "code": "payoff-not-authored",
+      "count": 1,
+      "example": "33 terminal(s) use a heuristic or zero payoff; override with scenario.payoffs or author `payoff` in the pack",
+      "at": []
+    },
+    {
+      "code": "probability-fill",
+      "count": 307,
+      "example": "5 of 5 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "cafc::appeal-origin",
+        "cafc::cert-petition-filed",
+        "cafc::costs-bill-filed",
+        "cafc::cross-appeal-filed",
+        "cafc::docketing-statement-filed",
+        "cafc::joint-appendix-filed",
+        "cafc::mandate-issued",
+        "cafc::mediation-conference"
+      ]
+    }
+  ]
+}

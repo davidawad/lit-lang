@@ -1,0 +1,101 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "solve",
+  "result": {
+    "start": {
+      "id": "ttab-trademark-trial-and-appeal-board::published",
+      "label": "Application published for opposition"
+    },
+    "value": -74025.0,
+    "converged": true,
+    "iterations": 0,
+    "fee_shift_rounds": 0,
+    "best_line": [
+      {
+        "id": "ttab-trademark-trial-and-appeal-board::edge-01-pre-opposition-filed-1",
+        "label": "Opposer opposes within the original 30 days",
+        "from": "ttab-trademark-trial-and-appeal-board::published",
+        "to": "ttab-trademark-trial-and-appeal-board::opposition-filed",
+        "role": "opponent",
+        "authority": "37 CFR 2.101(c)",
+        "deadline_days": 30.0,
+        "kind": "opponent-choice",
+        "step_p": 1.0,
+        "q": -74025.0
+      },
+      {
+        "id": "ttab-trademark-trial-and-appeal-board::edge-07-opposition-to-trial-instituted-1",
+        "label": "Board issues notice of institution (answer clock starts)",
+        "from": "ttab-trademark-trial-and-appeal-board::opposition-filed",
+        "to": "ttab-trademark-trial-and-appeal-board::instituted",
+        "role": "nature",
+        "authority": "37 CFR 2.105(a)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": -74025.0
+      },
+      {
+        "id": "ttab-trademark-trial-and-appeal-board::edge-07-opposition-to-trial-talks-instituted-1",
+        "label": "Suspend for settlement negotiations (stipulated, up to 6 months)",
+        "from": "ttab-trademark-trial-and-appeal-board::instituted",
+        "to": "ttab-trademark-trial-and-appeal-board::talks-instituted{talked}",
+        "role": "self",
+        "authority": "37 CFR 2.117(c); TBMP 605.02",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": -72025.0
+      },
+      {
+        "id": "ttab-trademark-trial-and-appeal-board::edge-07-opposition-to-trial-answered-2{talked}",
+        "label": "Talks fail; proceedings resume",
+        "from": "ttab-trademark-trial-and-appeal-board::talks-instituted{talked}",
+        "to": "ttab-trademark-trial-and-appeal-board::answered{talked}",
+        "role": "nature",
+        "authority": "TBMP 605.02",
+        "p": 0.35,
+        "kind": "likely-draw",
+        "step_p": 0.35,
+        "q": -115500.0
+      },
+      {
+        "id": "ttab-trademark-trial-and-appeal-board::edge-07-opposition-to-trial-judgment-2135-2{talked}",
+        "label": "Abandon application without opposer's consent (judgment, 37 CFR 2.135)",
+        "from": "ttab-trademark-trial-and-appeal-board::answered{talked}",
+        "to": "ttab-trademark-trial-and-appeal-board::judgment-2135{talked}",
+        "role": "self",
+        "authority": "37 CFR 2.135; TBMP 602.01",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": -115500.0
+      }
+    ],
+    "policy_size": 78,
+    "policy": null,
+    "values": null
+  },
+  "warnings": [
+    {
+      "code": "compile",
+      "count": 1,
+      "example": "state flags expanded the graph: 202 additional node(s) for reachable flag combinations",
+      "at": []
+    },
+    {
+      "code": "probability-fill",
+      "count": 32,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "ttab-trademark-trial-and-appeal-board::abandon-chance",
+        "ttab-trademark-trial-and-appeal-board::acr-record",
+        "ttab-trademark-trial-and-appeal-board::briefs-filed",
+        "ttab-trademark-trial-and-appeal-board::ext-first-90",
+        "ttab-trademark-trial-and-appeal-board::ext-second-60",
+        "ttab-trademark-trial-and-appeal-board::initial-disclosures",
+        "ttab-trademark-trial-and-appeal-board::opposition-filed",
+        "ttab-trademark-trial-and-appeal-board::period-lapsed"
+      ]
+    }
+  ]
+}

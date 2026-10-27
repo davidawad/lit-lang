@@ -118,14 +118,12 @@ pub fn apply(g: &mut Graph, set: &CalibrationSet) -> Application {
     }
 }
 
-/// Load `name` from the default calibration source (`$LITGRAPH_CALIBRATION`
-/// or embedded) and apply it to `g`.
+/// Select `name` from `sets` and apply it to `g`.
 ///
 /// # Errors
-/// The calibration source can't be loaded, or `name` doesn't exist in it.
-pub fn apply_named(g: &mut Graph, name: &str) -> Result<Application> {
-    let catalog = CalibrationCatalog::default_source()?;
-    let set = catalog.select(name)?;
+/// `name` doesn't exist in `sets`.
+pub fn apply_named(g: &mut Graph, sets: &CalibrationCatalog, name: &str) -> Result<Application> {
+    let set = sets.select(name)?;
     Ok(apply(g, set))
 }
 
@@ -134,8 +132,12 @@ pub fn apply_named(g: &mut Graph, name: &str) -> Result<Application> {
 ///
 /// # Errors
 /// As [`apply_named`], for the first name that fails.
-pub fn apply_all(g: &mut Graph, names: &[String]) -> Result<Vec<Application>> {
-    names.iter().map(|n| apply_named(g, n)).collect()
+pub fn apply_all(
+    g: &mut Graph,
+    sets: &CalibrationCatalog,
+    names: &[String],
+) -> Result<Vec<Application>> {
+    names.iter().map(|n| apply_named(g, sets, n)).collect()
 }
 
 #[cfg(test)]
@@ -217,7 +219,8 @@ mod tests {
     #[test]
     fn apply_named_reports_not_found_for_unknown_set() {
         let mut g = demo_graph();
-        let err = apply_named(&mut g, "definitely-not-a-real-set").unwrap_err();
+        let sets = CalibrationCatalog::from_files("none".into(), []).unwrap();
+        let err = apply_named(&mut g, &sets, "definitely-not-a-real-set").unwrap_err();
         assert_eq!(err.code(), "not-found");
     }
 

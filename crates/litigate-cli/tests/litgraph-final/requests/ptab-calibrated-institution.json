@@ -1,0 +1,176 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "explain",
+  "result": {
+    "node": {
+      "id": "ptab-patent-trial-appeal-board::institution-decision",
+      "label": "Institution Decision",
+      "kind": "state",
+      "cite": "35 U.S.C. 314(a); 37 CFR 42.108",
+      "note": "Board institutes if petitioner shows a reasonable likelihood of prevailing on at least one claim — a lower bar than PGR's more-likely-than-not standard (35 U.S.C. 324(a)). Discretionary denial under the Fintiv factors and §325(d) can block institution even where the merits showing is met."
+    },
+    "control": "chance",
+    "who_decides": "tribunal/chance",
+    "value": 572733.783111,
+    "interrupt_mass": 1.0,
+    "options": [
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-institution-decision-institution-granted",
+        "label": "Institute trial on all challenged claims",
+        "from": "ptab-patent-trial-appeal-board::institution-decision",
+        "to": "ptab-patent-trial-appeal-board::institution-granted",
+        "role": "nature",
+        "authority": "35 U.S.C. 314(a); SAS Institute Inc. v. Iancu, 138 S. Ct. 1386 (2018); 37 CFR 42.120",
+        "p": 0.681,
+        "q": 631748.783111,
+        "cost": 0.0,
+        "hours": 0.0,
+        "fees": 0.0,
+        "chosen": false,
+        "kind": "draw",
+        "then": [
+          {
+            "terminal": "adverse-judgment-terminal{ipr-estopped}",
+            "p": 0.321955
+          },
+          {
+            "terminal": "ipr-terminated-settlement",
+            "p": 0.319444
+          },
+          {
+            "terminal": "fwd-all-unpatentable{ipr-estopped}#end",
+            "p": 0.130835
+          },
+          {
+            "terminal": "appeal-forfeited-unappealed{ipr-estopped}",
+            "p": 0.088987
+          }
+        ]
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-institution-decision-institution-denied-fintiv",
+        "label": "Deny institution on discretionary grounds",
+        "from": "ptab-patent-trial-appeal-board::institution-decision",
+        "to": "ptab-patent-trial-appeal-board::institution-denied-fintiv",
+        "role": "nature",
+        "authority": "Apple Inc. v. Fintiv, Inc., IPR2020-00019, Paper 11 (PTAB June 5, 2020) (precedential); 35 U.S.C. 325(d)",
+        "p": 0.1595,
+        "q": 461748.783111,
+        "cost": 0.0,
+        "hours": 0.0,
+        "fees": 0.0,
+        "chosen": false,
+        "kind": "draw",
+        "then": [
+          {
+            "terminal": "adverse-judgment-terminal{ipr-estopped,prior-petition-denied}",
+            "p": 0.321955
+          },
+          {
+            "terminal": "ipr-terminated-settlement{prior-petition-denied}",
+            "p": 0.319444
+          },
+          {
+            "terminal": "fwd-all-unpatentable{ipr-estopped,prior-petition-denied}#end",
+            "p": 0.130835
+          },
+          {
+            "terminal": "appeal-forfeited-unappealed{ipr-estopped,prior-petition-denied}",
+            "p": 0.088987
+          }
+        ]
+      },
+      {
+        "id": "ptab-patent-trial-appeal-board::edge-institution-decision-institution-denied-merits",
+        "label": "Deny institution on the merits",
+        "from": "ptab-patent-trial-appeal-board::institution-decision",
+        "to": "ptab-patent-trial-appeal-board::institution-denied-merits",
+        "role": "nature",
+        "authority": "35 U.S.C. 314(a); 37 CFR 42.108",
+        "p": 0.1595,
+        "q": 431748.783111,
+        "cost": 0.0,
+        "hours": 0.0,
+        "fees": 0.0,
+        "chosen": false,
+        "kind": "draw",
+        "then": [
+          {
+            "terminal": "adverse-judgment-terminal{ipr-estopped,prior-petition-denied}",
+            "p": 0.321955
+          },
+          {
+            "terminal": "ipr-terminated-settlement{prior-petition-denied}",
+            "p": 0.319444
+          },
+          {
+            "terminal": "fwd-all-unpatentable{ipr-estopped,prior-petition-denied}#end",
+            "p": 0.130835
+          },
+          {
+            "terminal": "appeal-forfeited-unappealed{ipr-estopped,prior-petition-denied}",
+            "p": 0.088987
+          }
+        ]
+      }
+    ],
+    "warnings_here": [
+      {
+        "code": "probability-fill",
+        "at": "ptab-patent-trial-appeal-board::institution-decision",
+        "message": "2 of 3 out-edges lack probabilities; filled (Residual)"
+      }
+    ]
+  },
+  "warnings": [
+    {
+      "code": "authored-hole",
+      "count": 1,
+      "example": "pack ptab-patent-trial-appeal-board: 4 explicit hole(s) left numbers unauthored, first /edges/10/probability (no published defect-notice rate); author them in the pack's source (a strict build rejects holes)",
+      "at": []
+    },
+    {
+      "code": "compile",
+      "count": 17,
+      "example": "state flags expanded the graph: 104 additional node(s) for reachable flag combinations",
+      "at": []
+    },
+    {
+      "code": "fact-unset",
+      "count": 2,
+      "example": "matter fact not set via scenario.facts; using the authored prior (2 of 2 out-edges authored) instead of this matter's actual fact -- see docs/PACK_SCHEMA.md#matter-facts",
+      "at": [
+        "ptab-patent-trial-appeal-board::petition-time-bar-check",
+        "ptab-patent-trial-appeal-board::petition-time-bar-check{prior-petition-denied}"
+      ]
+    },
+    {
+      "code": "mixed-node",
+      "count": 5,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "ptab-patent-trial-appeal-board::patent-granted",
+        "ptab-patent-trial-appeal-board::patent-owner-response-filed",
+        "ptab-patent-trial-appeal-board::patent-owner-response-filed{ipr-estopped}",
+        "ptab-patent-trial-appeal-board::patent-owner-response-filed{prior-petition-denied}",
+        "ptab-patent-trial-appeal-board::patent-owner-response-filed{ipr-estopped,prior-petition-denied}"
+      ]
+    },
+    {
+      "code": "probability-fill",
+      "count": 107,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "ptab-patent-trial-appeal-board::adverse-judgment-request",
+        "ptab-patent-trial-appeal-board::cafc-vacates-remands",
+        "ptab-patent-trial-appeal-board::director-review-affirmed",
+        "ptab-patent-trial-appeal-board::director-review-modified",
+        "ptab-patent-trial-appeal-board::director-review-request-filed",
+        "ptab-patent-trial-appeal-board::federal-circuit-notice-of-appeal",
+        "ptab-patent-trial-appeal-board::federal-circuit-window",
+        "ptab-patent-trial-appeal-board::fwd-all-confirmed"
+      ]
+    }
+  ]
+}

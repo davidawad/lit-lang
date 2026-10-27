@@ -1,0 +1,142 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "solve",
+  "result": {
+    "start": {
+      "id": "frcp-civil-procedure::pre-filing",
+      "label": "Pre-Filing Investigation"
+    },
+    "value": 885575.0,
+    "converged": true,
+    "iterations": 8,
+    "fee_shift_rounds": 0,
+    "best_line": [
+      {
+        "id": "frcp-civil-procedure::edge-pre-filing-jurisdiction-venue-check",
+        "label": "Conduct Rule 11 pre-filing investigation",
+        "from": "frcp-civil-procedure::pre-filing",
+        "to": "frcp-civil-procedure::jurisdiction-venue-check",
+        "role": "self",
+        "authority": "FRCP 11(b)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 885575.0
+      },
+      {
+        "id": "frcp-civil-procedure::edge-jurisdiction-venue-check-complaint-filed",
+        "label": "File complaint establishing subject-matter jurisdiction and venue",
+        "from": "frcp-civil-procedure::jurisdiction-venue-check",
+        "to": "frcp-civil-procedure::complaint-filed",
+        "role": "self",
+        "authority": "28 U.S.C. 1331; 1332(a); 1391(b); FRCP 3",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 893075.0
+      },
+      {
+        "id": "frcp-civil-procedure::edge-complaint-filed-service-window",
+        "label": "Clerk signs, seals, and issues the summons",
+        "from": "frcp-civil-procedure::complaint-filed",
+        "to": "frcp-civil-procedure::service-window",
+        "role": "nature",
+        "authority": "FRCP 4(b)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": 898480.0
+      },
+      {
+        "id": "frcp-civil-procedure::edge-service-window-waiver-requested",
+        "label": "Request waiver of service instead of formal process",
+        "from": "frcp-civil-procedure::service-window",
+        "to": "frcp-civil-procedure::waiver-requested",
+        "role": "self",
+        "authority": "FRCP 4(d)(1)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 898480.0
+      },
+      {
+        "id": "frcp-civil-procedure::edge-waiver-requested-waiver-response-window",
+        "label": "Defendant returns executed waiver",
+        "from": "frcp-civil-procedure::waiver-requested",
+        "to": "frcp-civil-procedure::waiver-response-window",
+        "role": "self",
+        "authority": "FRCP 4(d)(3)",
+        "deadline_days": 60.0,
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 899500.0
+      },
+      {
+        "id": "frcp-civil-procedure::edge-waiver-response-window-default-entered",
+        "label": "Fail to answer or move -- default exposure",
+        "from": "frcp-civil-procedure::waiver-response-window",
+        "to": "frcp-civil-procedure::default-entered",
+        "role": "self",
+        "authority": "FRCP 55(a)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": 900000.0
+      },
+      {
+        "id": "frcp-civil-procedure::edge-default-entered-default-judgment-entered",
+        "label": "Clerk or court enters default judgment",
+        "from": "frcp-civil-procedure::default-entered",
+        "to": "frcp-civil-procedure::default-judgment-entered",
+        "role": "nature",
+        "authority": "FRCP 55(b)(1); 55(b)(2)",
+        "p": 1.0,
+        "kind": "wait-likely-draw",
+        "step_p": 1.0,
+        "q": 900000.0
+      }
+    ],
+    "policy_size": 80,
+    "policy": null,
+    "values": null
+  },
+  "warnings": [
+    {
+      "code": "compile",
+      "count": 5,
+      "example": "state flags expanded the graph: 68 additional node(s) for reachable flag combinations",
+      "at": []
+    },
+    {
+      "code": "mixed-node",
+      "count": 6,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "frcp-civil-procedure::default-entered",
+        "frcp-civil-procedure::discovery-closed",
+        "frcp-civil-procedure::discovery-open",
+        "frcp-civil-procedure::default-entered{waived-12h-defenses}",
+        "frcp-civil-procedure::discovery-open{waived-12h-defenses}",
+        "frcp-civil-procedure::discovery-closed{waived-12h-defenses}"
+      ]
+    },
+    {
+      "code": "payoff-not-authored",
+      "count": 1,
+      "example": "8 terminal(s) use a heuristic or zero payoff; override with scenario.payoffs or author `payoff` in the pack",
+      "at": []
+    },
+    {
+      "code": "probability-fill",
+      "count": 21,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "frcp-civil-procedure::amended-complaint-filed",
+        "frcp-civil-procedure::complaint-filed",
+        "frcp-civil-procedure::cross-appeal-filed",
+        "frcp-civil-procedure::final-pretrial-conference",
+        "frcp-civil-procedure::notice-of-appeal-filed",
+        "frcp-civil-procedure::parties-joined",
+        "frcp-civil-procedure::reply-evidence-ruling",
+        "frcp-civil-procedure::rule60-relief-granted"
+      ]
+    }
+  ]
+}

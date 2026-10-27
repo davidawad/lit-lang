@@ -59,7 +59,7 @@ fn hours_begin_immediately_and_count_every_hour() {
     let r = hours("2026-07-22", 15, 48, &ClockConfig::default());
     assert_eq!(r.due_datetime, "2026-07-24T15:00:00");
     assert!(!r.last_day_rolled);
-    assert!(r.steps[0].contains("26(a)(2)(A)-(B)"), "{:?}", r.steps);
+    assert!(r.steps[0].contains("count every hour"), "{:?}", r.steps);
     let r = hours("2026-07-23", 9, 96, &ClockConfig::default());
     assert_eq!(r.due_datetime, "2026-07-27T09:00:00");
     assert!(!r.last_day_rolled);
@@ -71,7 +71,11 @@ fn an_hours_period_ending_on_a_closed_day_runs_to_the_same_time_next_open_day() 
     let r = hours("2026-07-24", 12, 24, &ClockConfig::default());
     assert_eq!(r.due_datetime, "2026-07-27T12:00:00");
     assert!(r.last_day_rolled);
-    assert!(r.steps[1].contains("26(a)(2)(C)"), "{:?}", r.steps);
+    assert!(
+        r.steps[1].contains("continue to the same time"),
+        "{:?}",
+        r.steps
+    );
     // A legal holiday: Thu 2026-12-24 10:00 + 24 h ends on Christmas (Fri),
     // then the weekend -> Mon 2026-12-28 10:00.
     let r = hours("2026-12-24", 10, 24, &ClockConfig::default());
@@ -84,7 +88,11 @@ fn inaccessible_during_the_last_hour_extends_to_the_same_time_next_accessible_da
     let r = hours("2026-07-24", 12, 24, &closed());
     assert_eq!(r.due_datetime, "2026-07-28T12:00:00");
     assert!(r.clerk_inaccessibility_applied);
-    assert!(r.steps.last().unwrap().contains("26(a)(3)(B)"));
+    assert!(r
+        .steps
+        .last()
+        .unwrap()
+        .contains("inaccessible during the last hour"));
     // Not a Saturday, Sunday, or legal holiday: due Fri 2026-07-24 15:00
     // -> Mon 07-27 15:00.
     let r = hours("2026-07-22", 15, 48, &closed());
@@ -107,7 +115,11 @@ fn inaccessible_on_the_last_day_extends_to_the_first_accessible_open_day() {
     let r = days("2026-07-20", 14, Direction::Forward, None, &closed());
     assert_eq!(r.due_date, "2026-08-04");
     assert!(r.clerk_inaccessibility_applied);
-    assert!(r.steps.last().unwrap().contains("26(a)(3)(A)"));
+    assert!(r
+        .steps
+        .last()
+        .unwrap()
+        .contains("inaccessible on the last day"));
     // Last day Fri 2026-07-31 (11 days): the next open day is Mon 08-03.
     assert_eq!(
         days("2026-07-20", 11, Direction::Forward, None, &closed()).due_date,
@@ -143,7 +155,11 @@ fn inaccessibility_extends_a_backward_period_to_the_first_accessible_day() {
     // extension to periods measured after an event.
     assert_eq!(r.due_date, "2026-07-27");
     assert!(r.clerk_inaccessibility_applied);
-    assert!(r.steps.last().unwrap().contains("26(a)(3)(A)"));
+    assert!(r
+        .steps
+        .last()
+        .unwrap()
+        .contains("inaccessible on the last day"));
 }
 
 #[test]

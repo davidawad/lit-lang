@@ -4,7 +4,7 @@ A **pack** is one forum's procedure as a directed graph: nodes are procedural
 postures, edges are transitions (moves, rulings, draws). Packs are JSON files in
 `packs/`. v1 packs (the civ-pro-the-gathering statechart format) load unchanged;
 v2 adds the fields marked **v2** below; v3 adds the optional `counting` reference
-to the clock library (`packs/clock/`, below); v4 the `lowered` header; v5 a
+to the clock library (`clock/*.json`, below); v4 the `lowered` header; v5 a
 designated deadline window and extension grants (**v5** below). Every added
 field is optional, so older files remain valid.
 
@@ -198,27 +198,29 @@ resolves `node_ref` to one node, then forces the same edge on every node
 sharing its `base_id` (`Graph::node_family`/`Graph::edge_family`) — the
 same reasoning as calibration's `Edge.base_id` handling above.
 
-## Clock library (v3/v4, `packs/clock/*.json`)
+## Clock library (v3/v4, `clock/*.json`)
 
-Deadline counting is data. `packs/clock/` holds the **clock library**:
-holiday calendars and counting rules, shared by every pack. A forum
-package's own counting rules and calendars are generated into the built
-`packs/clock/<pack file>.json` (today `mpep-prosecution.json`, 37 C.F.R.
-§ 1.7, and `ttab-trademark-trial-and-appeal-board.json`, 37 C.F.R. §
-2.196; a build output, not a file in the repository); the shared
-fragments (`frap26`, `frcp6`, `frcrimp45`, `itc210`, `rcfc6`, `sup-ct-30`,
-`us-federal-holidays`) are still hand-authored (SPEC §9.4). Each file is a
-fragment:
+Deadline counting is data. The **clock library** holds holiday calendars
+and counting rules, shared by every pack. Its shared rules (`frap26`,
+`frcp6`, `frcrimp45`, `itc210`, `rcfc6`, `sup-ct-30`) and calendars are
+`lit/core`'s declarations, lowered (the engine's copy is
+`crates/litigate-engine/clock/litigate-core.json`, rewritten by `just lit-sync`;
+SPEC §9.4). A forum package's own counting rules and calendars are
+generated into the built `packs/clock/<pack file>.json` (today
+`mpep-prosecution.json`, 37 C.F.R. § 1.7, and
+`ttab-trademark-trial-and-appeal-board.json`, 37 C.F.R. § 2.196; build
+outputs, not files in the repository). Each file is a fragment:
 
 ```json
 { "schemaVersion": 3, "calendars": [ ... ], "countingRules": [ ... ] }
 ```
 
-A generated fragment is `schemaVersion` 4 and carries a
-[`lowered` header](#the-lowered-header); both versions are read.
+A generated fragment, every one the repository has, is `schemaVersion` 4
+and carries a [`lowered` header](#the-lowered-header); both versions are
+read.
 
 Fragments are embedded at build time (key `clock/<file>`; the embedded
-packs carry the hand-authored and generated fragments together) and read
+packs carry the shared library and the packages' fragments together) and read
 from `<packs dir>/clock/` by `--packs-dir`/`LITGRAPH_PACKS`; in-memory
 catalogs (`Catalog::from_files`, `litigate-wasm`'s `handle_with_packs`)
 take them as files named `clock/<file>.json`. A source with no `clock/`

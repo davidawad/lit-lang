@@ -361,6 +361,8 @@ pub enum ItemKind {
     Recharacterize(Name, RefPath, Vec<Field>),
     /// `invalidate i: d clauses`.
     Invalidate(Name, RefPath, Vec<Field>),
+    /// `calibration c: "Title" { items }`.
+    Calibration(Name, Name, Vec<Field>),
 }
 
 /// Declaration with doc comment and range.
@@ -772,6 +774,11 @@ impl Ranges for ItemKind {
                 name.ranges_mut(f);
                 target.ranges_mut(f);
                 clauses.ranges_mut(f);
+            }
+            Self::Calibration(name, title, fields) => {
+                name.ranges_mut(f);
+                title.ranges_mut(f);
+                fields.ranges_mut(f);
             }
         }
     }

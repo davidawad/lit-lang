@@ -119,7 +119,8 @@ fn a_calibrated_sample_size_is_the_prior_strength() {
     ))
     .unwrap();
     let mut g = graph(&text);
-    litigate_engine::api::apply_calibration_named(&mut g, "ptab-fy2024").unwrap();
+    let sets = litgraph_packs::catalog().unwrap().calibration;
+    litigate_engine::api::apply_calibration_named(&mut g, &sets, "ptab-fy2024").unwrap();
     let edge = "ptab-patent-trial-appeal-board::edge-institution-decision-institution-granted";
     let node = "ptab-patent-trial-appeal-board::institution-decision";
     let base = View::new(&g, &Scenario::default()).unwrap();

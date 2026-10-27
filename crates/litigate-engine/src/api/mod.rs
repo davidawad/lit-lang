@@ -264,7 +264,12 @@ fn run(req: &Request, catalog: &Catalog) -> Result<Out> {
             no_flags: req.no_flags,
         },
     )?;
-    let calibration = calibration::apply_all(&mut g, &sc.calibration)?;
+    let calibration = if sc.calibration.is_empty() {
+        Vec::new()
+    } else {
+        let sets = CalibrationCatalog::default_source(&catalog.calibration)?;
+        calibration::apply_all(&mut g, &sets, &sc.calibration)?
+    };
     let prov = provenance(&g, &selected, &sc, &calibration);
     let (result, warns) = dispatch(req, catalog, &g, &packs, &sc)?;
     Ok((result, warns, prov))

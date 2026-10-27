@@ -1,0 +1,243 @@
+{
+  "ok": true,
+  "api_version": 1,
+  "op": "solve",
+  "result": {
+    "start": {
+      "id": "cofc::claim-accrues",
+      "label": "Claim Against the United States Accrues"
+    },
+    "value": -13155.0,
+    "converged": true,
+    "iterations": 41,
+    "fee_shift_rounds": 0,
+    "best_line": [
+      {
+        "id": "cofc::e-accrual-to-patentfork",
+        "label": "Determine whether the claim is a §1498(a) patent/copyright use claim",
+        "from": "cofc::claim-accrues",
+        "to": "cofc::patent-claim-fork",
+        "role": "nature",
+        "authority": "28 U.S.C. § 2501; 28 U.S.C. § 1498(a)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": -13155.0
+      },
+      {
+        "id": "cofc::e-patentfork-patent",
+        "label": "§1498(a) claim -- the optional §286 administrative claim is open",
+        "from": "cofc::patent-claim-fork",
+        "to": "cofc::patent-admin-claim-fork",
+        "role": "self",
+        "authority": "28 U.S.C. § 1498(a)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": -13155.0
+      },
+      {
+        "id": "cofc::e-patentfork-skipadmin",
+        "label": "§1498(a) claim; plaintiff skips the optional administrative claim",
+        "from": "cofc::patent-admin-claim-fork",
+        "to": "cofc::limitations-check",
+        "role": "self",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": -13155.0
+      },
+      {
+        "id": "cofc::e-limitations-timely",
+        "label": "Petition filed within 6 years of accrual (as tolled)",
+        "from": "cofc::limitations-check",
+        "to": "cofc::section-1500-check",
+        "role": "nature",
+        "authority": "28 U.S.C. § 2501",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": -12305.0
+      },
+      {
+        "id": "cofc::e-1500-clear",
+        "label": "No suit on the same claim currently pending in any other court",
+        "from": "cofc::section-1500-check",
+        "to": "cofc::filing-track-fork",
+        "role": "nature",
+        "authority": "28 U.S.C. § 1500",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": -12305.0
+      },
+      {
+        "id": "cofc::e-filingfork-standard",
+        "label": "File a standard RCFC 3 complaint",
+        "from": "cofc::filing-track-fork",
+        "to": "cofc::complaint-filed",
+        "role": "self",
+        "authority": "RCFC 3; RCFC 5.5",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": -12305.0
+      },
+      {
+        "id": "cofc::e-complaint-to-service",
+        "label": "Clerk delivers the complaint to the Attorney General",
+        "from": "cofc::complaint-filed",
+        "to": "cofc::service-on-united-states",
+        "role": "nature",
+        "authority": "RCFC 4(a)",
+        "p": 1.0,
+        "kind": "likely-draw",
+        "step_p": 1.0,
+        "q": -1700.0
+      },
+      {
+        "id": "cofc::e-service-to-voldismissal",
+        "label": "Plaintiff dismisses by notice or stipulation before an answer, SJ motion, or motion for judgment on the administrative record is served",
+        "from": "cofc::service-on-united-states",
+        "to": "cofc::voluntary-dismissal-early",
+        "role": "self",
+        "authority": "RCFC 41(a)(1)(A)",
+        "kind": "choice",
+        "step_p": 1.0,
+        "q": -1700.0
+      }
+    ],
+    "policy_size": 17,
+    "policy": [
+      {
+        "node": "cofc::adr-referral-decision",
+        "edge": "cofc::e-adrfork-decline",
+        "label": "Decline ADR for now; proceed to discovery",
+        "q": 483000.0
+      },
+      {
+        "node": "cofc::amended-complaint-refiled",
+        "edge": "cofc::e-amended-to-responsefork",
+        "label": "Government's responsive-pleading clock re-runs against the amended complaint",
+        "q": -21437.500031
+      },
+      {
+        "node": "cofc::bid-protest-injunctive-relief-fork",
+        "edge": "cofc::e-protest-no-pi",
+        "label": "No TRO/PI sought -- proceed directly to administrative-record briefing",
+        "q": -83250.0
+      },
+      {
+        "node": "cofc::bid-protest-merits-briefing",
+        "edge": "cofc::e-protest-briefing-to-ruling",
+        "label": "Complete cross-motions for judgment on the administrative record",
+        "q": -79000.0
+      },
+      {
+        "node": "cofc::bid-protest-prefiling-notice",
+        "edge": "cofc::e-protest-notice-to-complaint",
+        "label": "File the protest complaint (1-5 court days after pre-filing notice)",
+        "q": -100655.0
+      },
+      {
+        "node": "cofc::discovery-closed",
+        "edge": "cofc::e-discclosed-to-trial",
+        "label": "No dispositive motion filed; proceed directly to trial",
+        "q": 483000.0
+      },
+      {
+        "node": "cofc::discovery-open",
+        "edge": "WAIT",
+        "label": "wait (let the proceeding move)",
+        "q": 483000.0
+      },
+      {
+        "node": "cofc::filing-track-fork",
+        "edge": "cofc::e-filingfork-standard",
+        "label": "File a standard RCFC 3 complaint",
+        "q": -12305.0
+      },
+      {
+        "node": "cofc::patent-admin-claim-fork",
+        "edge": "cofc::e-patentfork-skipadmin",
+        "label": "§1498(a) claim; plaintiff skips the optional administrative claim",
+        "q": -13155.0
+      },
+      {
+        "node": "cofc::patent-claim-fork",
+        "edge": "cofc::e-patentfork-patent",
+        "label": "§1498(a) claim -- the optional §286 administrative claim is open",
+        "q": -13155.0
+      },
+      {
+        "node": "cofc::patent-dispositive-motion-fork",
+        "edge": "cofc::e-dispositivefork-trial",
+        "label": "No dispositive motion; proceed to a bench trial on damages ('reasonable and entire compensation') and any remaining liability issues",
+        "q": 483000.0
+      },
+      {
+        "node": "cofc::patent-final-contentions-expert-discovery",
+        "edge": "cofc::e-finalcontentions-to-dispositivefork",
+        "label": "Supplement final contentions, complete expert discovery on infringement/invalidity/damages",
+        "q": 330000.0
+      },
+      {
+        "node": "cofc::patent-invalidity-contentions",
+        "edge": "cofc::e-invalidity-to-ccexchange",
+        "label": "Parties identify claim terms for construction and exchange proposed constructions",
+        "q": 230000.0
+      },
+      {
+        "node": "cofc::patent-joint-claim-construction-chart",
+        "edge": "cofc::e-jcc-to-ccdiscoveryclosed",
+        "label": "Complete claim-construction discovery (including any expert depositions)",
+        "q": 315000.0
+      },
+      {
+        "node": "cofc::patent-protective-order-entered",
+        "edge": "cofc::e-po-to-infringement",
+        "label": "Plaintiff serves Preliminary Disclosure of Infringement Contentions",
+        "q": 77000.0
+      },
+      {
+        "node": "cofc::post-trial-motion-window",
+        "edge": "WAIT",
+        "label": "wait (let the proceeding move)",
+        "q": 500000.0
+      },
+      {
+        "node": "cofc::service-on-united-states",
+        "edge": "cofc::e-service-to-voldismissal",
+        "label": "Plaintiff dismisses by notice or stipulation before an answer, SJ motion, or motion for judgment on the administrative record is served",
+        "q": -1700.0
+      }
+    ],
+    "values": null,
+    "opponent_value": 0.0
+  },
+  "warnings": [
+    {
+      "code": "mixed-node",
+      "count": 4,
+      "example": "self may act here, and 1 world edge(s) have no probabilities; modeled as act-or-wait (act, or let the world edges fire). Author probabilities summing < 1 on them to model a true interrupt",
+      "at": [
+        "cofc::discovery-open",
+        "cofc::patent-14b-notice-fork",
+        "cofc::post-trial-motion-window",
+        "cofc::service-on-united-states"
+      ]
+    },
+    {
+      "code": "probability-fill",
+      "count": 27,
+      "example": "1 of 1 out-edges lack probabilities; filled (Residual)",
+      "at": [
+        "cofc::adr-mediation-session",
+        "cofc::answer-filed",
+        "cofc::bid-protest-complaint-filed",
+        "cofc::bid-protest-initial-status-conference",
+        "cofc::case-type-fork",
+        "cofc::claim-accrues",
+        "cofc::complaint-filed",
+        "cofc::costs-and-fees-window"
+      ]
+    }
+  ]
+}

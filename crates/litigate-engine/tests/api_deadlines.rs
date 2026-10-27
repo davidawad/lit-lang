@@ -287,7 +287,7 @@ fn court_days_unit_is_computed_with_business_day_steps() {
         .as_array()
         .unwrap()
         .iter()
-        .any(|s| s.as_str().unwrap().contains("court days")));
+        .any(|s| s.as_str().unwrap().contains("court day(s)")));
 }
 
 #[test]

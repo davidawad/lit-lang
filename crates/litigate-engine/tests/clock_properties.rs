@@ -11,7 +11,7 @@ use litigate_engine::clock::{
     ServiceMethod, Unit,
 };
 
-/// A shipped counting rule from the embedded clock library (`packs/clock/`).
+/// A shipped counting rule from the embedded clock library (`lit/core` lowered).
 fn rule(id: &str) -> Clock<'static> {
     ClockLibrary::embedded().0.clock(id).unwrap()
 }

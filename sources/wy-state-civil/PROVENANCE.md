@@ -5,3 +5,4 @@
 - Edition: consolidated W.R.C.P. including the amendments effective Sept 21, 2026 (Rules 4 and 41), as the court's rule page lists them.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 fef457faece9d4a479a3d211b3ce4cca258e587bb74b2d796b4fc51301d94d54. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+- Fetch method: BrowserOS neo; site served a bot challenge to plain automated requests (CoS ruling 2026-10-27). wyocourts.gov robots.txt disallows only /app/uploads/protected/ and search URLs; its privacy page bars no automated access.

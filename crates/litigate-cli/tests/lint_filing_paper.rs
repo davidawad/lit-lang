@@ -33,7 +33,8 @@ facts { time-barred: not-barred }
 "#;
 
 /// The base package's paper kinds: `brief` (100 words, a certificate,
-/// delegable to a local rule) filed by `BriefFiled()`, and `motion`.
+/// delegable to a local rule) filed by `BriefFiled()`, `motion` and
+/// `transcript` (50 lines).
 const BASE: &str = "
 limit brief delegable { to [LocalRule], op set } {
   words <= 100
@@ -41,6 +42,9 @@ limit brief delegable { to [LocalRule], op set } {
 }
 limit motion {
   pages <= 10
+}
+limit transcript {
+  lines <= 50
 }
 event BriefFiled() paper brief
 ";
@@ -302,6 +306,35 @@ fn a_violation_fails_the_lint_of_an_accepted_filing() {
     let plain = lint(&dir, "Answered(complaint)", &[]);
     assert_eq!(plain.code, 0, "{}", plain.stdout);
     assert_eq!(plain.json["result"].get("paper"), None);
+}
+
+#[test]
+fn a_lines_count_is_judged_against_the_lines_bound() {
+    let dir = matter("paper-lines");
+    let within = lint(
+        &dir,
+        "Answered(complaint)",
+        &["--paper", "transcript", "--lines", "50"],
+    );
+    assert_eq!(within.code, 0, "{}", within.stdout);
+    let paper = &within.json["result"]["paper"];
+    assert_eq!(paper["counts"]["lines"], json!(50));
+    assert_eq!(paper["length"], json!("within"));
+    let over = lint(
+        &dir,
+        "Answered(complaint)",
+        &["--paper", "transcript", "--lines", "51"],
+    );
+    assert_eq!(over.code, 2, "{}", over.stdout);
+    let paper = &over.json["result"]["paper"];
+    assert_eq!(requirements(paper), ["length"]);
+    assert!(
+        paper["violations"][0]["message"]
+            .as_str()
+            .unwrap()
+            .contains("51 lines over 50 lines"),
+        "{paper}"
+    );
 }
 
 #[test]

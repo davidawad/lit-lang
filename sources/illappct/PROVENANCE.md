@@ -3,7 +3,7 @@
 
 - Source: per-rule PDFs linked from https://www.illinoiscourts.gov/rules-law/supreme-court-rules (the court publishes per-rule PDFs only; robots.txt allows all; the site has no terms page; text via pdftotext -layout). 23 sections, each page fetched once on 2026-10-27 by curl (not BrowserOS) at most one request per second with the identifying User-Agent litgraph-rules-vendor/1.0 (public court rules); 24 GETs for this forum (limit 300). Only the rules the outlines cite were fetched (PM per-page standing rule).
 - Edition: each rule as linked from the court Supreme Court Rules page on 2026-10-27, which carries the rule history note (index status line under each heading); Rule 23 amended June 3, 2025 and the others per their notes. Amending orders not fetched separately; each rule PDF carries its own amendment history.
-- One `## <rule>` section per page, in outline-cite order; extract sha256 3a70c5b53b40b924fa22edaf53095a4d8f92574093db11af7c463e176a287fb9. Not sectioned further; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+- One `## <rule>` section per page, in outline-cite order; extract sha256 3a70c5b53b40b924fa22edaf53095a4d8f92574093db11af7c463e176a287fb9. Not sectioned further.
 - Page URLs:
   - https://www.illinoiscourts.gov/rules-law/supreme-court-rules
   - https://www.illinoiscourts.gov/resources/650f76b5-3cce-40b9-acc3-d93b1aced5f4/file

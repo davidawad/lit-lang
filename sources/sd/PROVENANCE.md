@@ -1,0 +1,7 @@
+
+### `sd/sdcl-15-26A-sections.txt` — SDCL ch. 15-26A (Rules of Civil Appellate Procedure), cited sections
+
+- Source: official South Dakota Legislature site, 7 pages, one per cited section or subsection, headed '## SDCL <section>': https://sdlegislature.gov/api/Statutes/15-26A-3.html https://sdlegislature.gov/api/Statutes/15-26A-6.html https://sdlegislature.gov/api/Statutes/15-26A-64.html https://sdlegislature.gov/api/Statutes/15-26A-66.html https://sdlegislature.gov/api/Statutes/15-26A-70.html https://sdlegislature.gov/api/Statutes/15-26A-79.html https://sdlegislature.gov/api/Statutes/15-26A-87.html 
+- Edition: South Dakota Codified Laws as published by the Legislative Research Council at sdlegislature.gov (Statutes sitemap lastmod and LastStatuesEffectiveDate 2026-09-03); each section's own Source line gives its amendment history.
+- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); per-page pass with curl-class fetch (identifying User-Agent 'litgraph-rules-vendor/1.0 (public court rules)', 1 request per 1.1 s, each page once; robots.txt allows; site disclaimer has no automated-access prohibition; bounded to outline-cited sections), HTML converted to text.
+- Extract sha256 def44fd3b4be7d28c9e529082bbcfe98f116cd88cc6331cb641d2fe99f679547. Raw extract, not yet sectioned into `## <ref>` form beyond the per-page headings noted; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

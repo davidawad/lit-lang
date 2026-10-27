@@ -13,6 +13,7 @@ The layout mirrors formbook's `courts/<circuit>/<jurisdiction>/`.
     outlines/<circuit>/court-of-appeals/                 federal court of appeals (FRAP + circuit rules/IOPs)
     outlines/<circuit>/<state>/federal-<district>/       each U.S. district court in the state (FRCP + local rules)
     outlines/<circuit>/<state>/bankruptcy-<district>/    each U.S. bankruptcy court (uses lit/frbp; local bankruptcy rules only)
+    outlines/<circuit>/bankruptcy-appellate-panel/       each circuit's BAP (1st, 6th, 9th, 10th; the 8th is lit/bap8)
     outlines/<circuit>/<state>/state-civil/              state trial court of general jurisdiction, civil
     outlines/<circuit>/<state>/state-appellate/          state intermediate appellate and supreme court, civil appeals
     outlines/federal-circuit/<court>/, outlines/national/<court>/, outlines/military/<court>/,

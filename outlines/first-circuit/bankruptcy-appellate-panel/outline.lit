@@ -1,0 +1,198 @@
+// OUTLINE (unverified). The FRBP Part 8 periods are imported from lit/frbp
+// and the further-appeal notice period from lit/frap, their cites bound to
+// the vendored rule text; this package declares only the First Circuit
+// BAP's local rule layer, every cite of which is ?(...) and every value ?.
+// The panel's Local Rules (December 1, 2014) and Amended General Order No. 2
+// (December 16, 2024) are vendored raw in sources/ca1-bap/ but not yet
+// sectioned, so a later pass verifies and promotes the package.
+module outline-ca1-bap
+
+import frap.appeal-periods.{ notice-civil-period }
+
+import frbp.appeals.{
+  appellant-brief-period,
+  appellant-designation-period,
+  appellee-brief-period,
+  direct-authorization-petition-period,
+  direct-certification-request-period,
+  election-validity-period,
+  motion-response-period,
+  notice-period,
+  other-party-election-period,
+  rehearing-period,
+  reply-brief-period,
+}
+
+start notice-filed
+
+state notice-filed: "Bankruptcy order appealed" by applicant cite "FRBP 8002(a)(1)"
+{
+  note "The notice of appeal is filed with the bankruptcy clerk (FRBP 8003). Local filing requirements and the consequence of noncompliance are holes (1st Cir. BAP L.R. 8003-1; verify). Key decisions (verify): Bullard v. Blue Hills Bank, 575 U.S. 496 (2015) (finality; arose in the First Circuit BAP); Ritzen Group, Inc. v. Jackson Masonry, LLC, 589 U.S. 35 (2020) (stay-relief orders final)."
+  edge-notice-filed-timely "Notice filed within the period" -> forum-election {
+    authority cite "FRBP 8002(a)(1)"
+    within notice-period
+  }
+  edge-notice-filed-late "Notice filed outside the period" -> dismissed-untimely {
+    authority cite "FRBP 8002(a)(1)"
+  }
+  edge-notice-filed-local "Local notice requirements" -> forum-election {
+    authority cite ?("1st Cir. BAP L.R. 8003-1")
+  }
+}
+
+decision forum-election: "BAP or district court" by applicant cite "28 U.S.C. § 158(c)(1)"
+{
+  note "The BAP hears the appeal unless the appellant elects the district court when filing or another party elects within 30 days after service of the notice (28 U.S.C. § 158(c)(1); FRBP 8005). Local election and transfer practice is a hole (1st Cir. BAP L.R. 8005-1; verify)."
+  edge-forum-election-bap "Appeal stays with the BAP" -> appealability {
+    authority cite ?("1st Cir. BAP L.R. 8005-1(a)")
+  }
+  edge-forum-election-district "Another party elects the district court" -> district-court {
+    authority cite "FRBP 8005(a)"
+    within other-party-election-period
+  }
+  edge-forum-election-challenge "Validity of the election challenged" -> appealability {
+    authority cite "FRBP 8005(c)"
+    within election-validity-period
+  }
+  edge-forum-election-direct "Direct-appeal certification requested" -> direct-appeal {
+    authority cite "FRBP 8006(f)(1)"
+    within direct-certification-request-period
+  }
+}
+
+decision appealability: "Appealable order or leave to appeal" by court cite "28 U.S.C. § 158(a)"
+{
+  note "Final orders appeal as of right (28 U.S.C. § 158(a)(1)); interlocutory orders need leave (§ 158(a)(3); FRBP 8004). Summary disposition and procedural and substantive motion practice are holes (1st Cir. BAP L.R. 8013-1; verify)."
+  edge-appealability-yes "Appealable" -> record { authority cite "28 U.S.C. § 158(a)" }
+  edge-appealability-no "Not appealable; dismissed" -> dismissed-jurisdiction {
+    authority cite "28 U.S.C. § 158(a)"
+  }
+  edge-appealability-motion "Motion to dismiss or for summary disposition" -> dismissed-jurisdiction {
+    authority cite "FRBP 8013(a)(3)(A)"
+    within motion-response-period
+  }
+}
+
+state record: "Record designated and transmitted" by applicant cite "FRBP 8009"
+{
+  note "Local inadequate-record and incomplete-transmission practice are holes (1st Cir. BAP L.R. 8009-1 and 8010-1; verify). Corporate disclosure statement (FRBP 8012; 1st Cir. BAP L.R. 8012-1; verify)."
+  edge-record-designated "Record designated" -> briefing {
+    authority cite "FRBP 8009(a)(1)(B)"
+    within appellant-designation-period
+  }
+  edge-record-local "Local record requirements" -> briefing {
+    authority cite ?("1st Cir. BAP L.R. 8009-1")
+  }
+}
+
+state briefing: "Briefs and appendix" by applicant cite "FRBP 8018(a)"
+{
+  note "Brief content, form, appendix and extension practice are holes (1st Cir. BAP L.R. 8014-1, 8015-1 and 8018-1; verify). Electronic filing under Amended General Order No. 2 (December 16, 2024; verify)."
+  edge-briefing-appellant "Appellant's brief filed" -> appellee-briefing {
+    authority cite "FRBP 8018(a)(1)"
+    within appellant-brief-period
+  }
+  edge-briefing-local "Local brief requirements" -> appellee-briefing {
+    authority cite ?("1st Cir. BAP L.R. 8018-1")
+  }
+  edge-briefing-failure "Failure to prosecute" -> dismissed-prosecution {
+    authority cite ?("1st Cir. BAP L.R. 8020-1(b)")
+  }
+}
+
+state appellee-briefing: "Appellee's brief and reply" by applicant cite "FRBP 8018(a)(2)"
+{
+  note "The FRBP periods govern unless the panel orders otherwise; local variations are holes (verify)."
+  edge-appellee-briefing-appellee "Appellee's brief filed" -> argument {
+    authority cite "FRBP 8018(a)(2)"
+    within appellee-brief-period
+  }
+  edge-appellee-briefing-reply "Reply brief filed" -> argument {
+    authority cite "FRBP 8018(a)(3)"
+    within reply-brief-period
+  }
+}
+
+decision argument: "Oral argument or submission" by court cite "FRBP 8019"
+{
+  note "Statement regarding oral argument, waiver, remote argument, exceptions and location are holes (1st Cir. BAP L.R. 8019-1; verify)."
+  edge-argument-argued "Argued" -> panel-decision { authority cite ?("1st Cir. BAP L.R. 8019-1") }
+  edge-argument-submitted "Submitted on the briefs" -> panel-decision {
+    authority cite "FRBP 8019(b)"
+  }
+}
+
+decision panel-decision: "Panel decision" by court cite "FRBP 8024"
+{
+  note "Standard of review (verify): findings for clear error, conclusions de novo; Anderson v. City of Bessemer City, 470 U.S. 564 (1985)."
+  edge-panel-decision-affirmed "Affirmed" -> affirmed { authority cite "FRBP 8024(a)" }
+  edge-panel-decision-reversed "Reversed or remanded" -> reversed { authority cite "FRBP 8024(a)" }
+  edge-panel-decision-rehearing "Motion for rehearing" -> rehearing {
+    authority cite "FRBP 8022(a)(1)"
+    within rehearing-period
+  }
+  edge-panel-decision-further "Appeal to the First Circuit" -> court-of-appeals {
+    authority cite ?("FRAP 6(b)(1)")
+    within notice-civil-period
+  }
+}
+
+state rehearing: "Rehearing" by court cite "FRBP 8022"
+{
+  note "Response practice is a hole (1st Cir. BAP L.R. 8022-1; verify). A timely rehearing motion resets the further-appeal period (FRAP 6(b)(2)(A); verify)."
+  edge-rehearing-decided "Rehearing decided" -> panel-decision {
+    authority cite ?("1st Cir. BAP L.R. 8022-1")
+  }
+}
+
+decision direct-appeal: "Direct appeal certified" by court cite "FRBP 8006"
+{
+  note "Certification under 28 U.S.C. § 158(d)(2); the First Circuit decides whether to authorize the appeal (FRAP 6(c); verify)."
+  edge-direct-appeal-petition "Petition to authorize filed" -> court-of-appeals {
+    authority cite "FRBP 8006(g)"
+    within direct-authorization-petition-period
+  }
+  edge-direct-appeal-denied "Not certified; appeal stays with the BAP" -> appealability {
+    authority cite "FRBP 8006"
+  }
+}
+
+terminal dismissed-untimely: "Dismissed: untimely notice" outcome [loss] cite "FRBP 8002(a)(1)"
+{
+  note "OUTLINE. The period is jurisdictional (28 U.S.C. § 158(c)(2)). Payoff is a hole."
+  payoff ?
+}
+
+terminal dismissed-jurisdiction: "Dismissed: no appealable order" outcome [loss] cite "28 U.S.C. § 158(a)"
+{
+  note "OUTLINE. Payoff is a hole."
+  payoff ?
+}
+
+terminal dismissed-prosecution: "Dismissed: failure to prosecute" outcome [loss] cite ?("1st Cir. BAP L.R. 8020-1(b)") {
+  note "OUTLINE. Payoff is a hole."
+  payoff ?
+}
+
+terminal district-court: "Appeal heard by the district court" outcome [neutral] cite "FRBP 8005(b)"
+{
+  note "OUTLINE. The appeal proceeds under the district court's local rules (outlines/first-circuit/<state>/federal-*)."
+  payoff ?
+}
+
+terminal affirmed: "Affirmed" outcome [loss] cite "FRBP 8024(a)"
+{
+  note "OUTLINE. Payoff is a hole."
+  payoff ?
+}
+
+terminal reversed: "Reversed or remanded" outcome [win] cite "FRBP 8024(a)"
+{
+  note "OUTLINE. Payoff is a hole."
+  payoff ?
+}
+
+terminal court-of-appeals: "Appeal to the First Circuit" outcome [appeal] cite ?("FRAP 6(b)") {
+  note "OUTLINE. Further steps are in lit/ca1 (28 U.S.C. § 158(d)(1); verify)."
+  payoff ?
+}

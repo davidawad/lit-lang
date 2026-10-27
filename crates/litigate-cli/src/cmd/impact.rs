@@ -27,9 +27,9 @@ pub const EXPECT_DIR: &str = "tests/expect";
 /// One expect test file.
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
-struct Manifest {
+pub(crate) struct Manifest {
     /// The `.case` file.
-    case: Option<String>,
+    pub(crate) case: Option<String>,
     /// The `.world` file it runs in.
     world: Option<String>,
     /// Package directories to load besides the library.

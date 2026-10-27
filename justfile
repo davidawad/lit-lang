@@ -303,8 +303,8 @@ clean:
 
 # docs/COVERAGE.md, the per-jurisdiction coverage table (rules, precedents
 # and expect tests modeled, package status for every federal package in lit/
-# and every state, DC and territory), generated from lit/ and outlines/ by
-# `litigate coverage`; never edit it by hand.
+# and every state, DC and territory), generated from lit/, outlines/ and
+# tests/expect/ by `litigate coverage`; never edit it by hand.
 coverage:
     cargo run -q -p litigate-cli -- --format human coverage > /dev/null
 

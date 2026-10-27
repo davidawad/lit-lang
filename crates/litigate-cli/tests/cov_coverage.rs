@@ -1,6 +1,6 @@
 //! `coverage`: the generated docs/COVERAGE.md for this repository is
 //! current, and on a scratch repository the table's rows, statuses and
-//! counts, writing once, `--check` on a stale table, and failures.
+//! counts (matter expect tests from tests/expect), writing once, `--check` on a stale table, and failures.
 // Test helpers below may unwrap: a panic is the failed assertion.
 #![allow(clippy::unwrap_used)]
 mod support;
@@ -84,6 +84,19 @@ fn repository(name: &str) -> std::path::PathBuf {
     outline("eleventh-circuit/florida/federal-sd-fla", "sd-fla");
     outline("third-circuit/delaware/state-civil", "de-superior-civil");
     outline("national/tax-court", "tax-court");
+    let matter = "case = \"m.case\"\nworld = \"m.world\"\n";
+    put(&root, "tests/expect/fed/a.toml", matter);
+    put(&root, "tests/expect/fed/b.toml", matter);
+    // A package's inline tests are already counted as its `test` blocks.
+    put(
+        &root,
+        "tests/expect/fed/package.toml",
+        "package = \"lit/fed\"\n",
+    );
+    put(&root, "tests/expect/fed/README", "not an expect test");
+    put(&root, "tests/expect/fed/nested/c.toml", matter);
+    put(&root, "tests/expect/README", "not an expect test");
+    put(&root, "tests/expect/fl-state-civil/a.toml", matter);
     root
 }
 
@@ -112,7 +125,8 @@ fn a_scratch_repository_is_tabled_once_then_left_alone() {
         "name": "fed",
         "rules": 3,
         "precedents": 1,
-        "tests": 1
+        "tests": 1,
+        "matters": 2
       }
     ]
     "#);
@@ -130,7 +144,8 @@ fn a_scratch_repository_is_tabled_once_then_left_alone() {
         ],
         "rules": 3,
         "precedents": 2,
-        "tests": 1
+        "tests": 1,
+        "matters": 1
       },
       {
         "name": "Delaware",
@@ -141,7 +156,8 @@ fn a_scratch_repository_is_tabled_once_then_left_alone() {
         ],
         "rules": 3,
         "precedents": 1,
-        "tests": 1
+        "tests": 1,
+        "matters": 0
       },
       {
         "name": "Guam",
@@ -150,15 +166,18 @@ fn a_scratch_repository_is_tabled_once_then_left_alone() {
         "packages": [],
         "rules": 0,
         "precedents": 0,
-        "tests": 0
+        "tests": 0,
+        "matters": 0
       }
     ]
     "#);
     let table = std::fs::read_to_string(root.join("docs/COVERAGE.md")).unwrap();
     assert!(table.starts_with("# Coverage\n\n**States with a promoted package: 1 of 50.**\n"));
-    assert!(table.contains("| fed | `lit/fed` | 3 | 1 | 1 |\n"));
-    assert!(table.contains("| Florida | state | promoted | 3 | 2 | 1 | `lit/fl-state-civil` |\n"));
-    assert!(table.contains("| District of Columbia | district | none | 0 | 0 | 0 |  |\n"));
+    assert!(table.contains("| fed | `lit/fed` | 3 | 1 | 1 | 2 |\n"));
+    assert!(
+        table.contains("| Florida | state | promoted | 3 | 2 | 1 | 1 | `lit/fl-state-civil` |\n")
+    );
+    assert!(table.contains("| District of Columbia | district | none | 0 | 0 | 0 | 0 |  |\n"));
     let again = litigate_in(&root, &["coverage"]);
     assert_eq!(again.json["result"]["changed"], false);
     let check = litigate_in(&root, &["coverage", "--check"]);
@@ -212,6 +231,14 @@ fn an_unreadable_repository_is_a_usage_error() {
         manifest("outline-atlantis", "atlantis", ""),
     );
     insta::assert_snapshot!(failure(&unknown_root), @"litigate coverage: outlines/x/atlantis/state-civil: `atlantis` is no US state, DC or territory");
+
+    let dangling = repository("coverage-dangling");
+    put(&dangling, "tests/expect/gone/a.toml", "case = \"m.case\"\n");
+    insta::assert_snapshot!(failure(&dangling), @"litigate coverage: tests/expect/gone: no package `lit/gone`");
+
+    let invalid = repository("coverage-bad-expect");
+    put(&invalid, "tests/expect/fed/bad.toml", "cases = 1\n");
+    insta::assert_snapshot!(failure(&invalid), @"litigate coverage: tests/expect/fed/bad.toml: invalid expect test");
 
     let unwritable = repository("coverage-unwritable");
     put(&unwritable, "docs", "a file, not a directory");

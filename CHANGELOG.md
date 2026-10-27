@@ -21,6 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   package. `--check` writes nothing and exits 2 when the committed table
   is stale; `just coverage-check` runs it in `just ci`, `just ci-scoped`
   and the CI `lit-sync` job.
+- **docs/COVERAGE.md counts the matter expect tests** (lg-wvlf.2).
+  `litigate coverage` also walks `tests/expect`: a **Matters** column
+  counts each `lit/<d>` package's matter expect tests
+  (`tests/expect/<d>/*.toml` naming a `case`); an expect test whose
+  `lit/<d>` is no package, or that does not parse, fails the run.
 - **A diversity matter runs its forum's procedure with the governing
   state's substantive law** (lg-fg2h.3; SPEC §5.6). A `.case` may name
   `forum P ^x.y.z` (the primary procedure package) and `governing_law S

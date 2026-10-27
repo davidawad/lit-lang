@@ -98,7 +98,7 @@ litigate compat old/lit/frcp lit/frcp      # compatibility class of a release + 
 just lit-sync                               # regenerate every Lit.lock; build packs/, scenarios/ into target/lit-build/
 just lit-sync-check                         # CI gate: fail on a stale Lit.lock or a committed generated file
 just coverage                               # regenerate docs/COVERAGE.md (`litigate coverage`): per-jurisdiction rules,
-                                            # precedents, expect tests and package status
+                                            # precedents, expect tests (inline and tests/expect) and package status
 just coverage-check                         # CI gate: fail when the committed docs/COVERAGE.md is stale
 ```
 

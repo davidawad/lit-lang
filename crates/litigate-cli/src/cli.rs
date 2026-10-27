@@ -330,7 +330,7 @@ pub enum Command {
         library: Library,
     },
     /// Write `docs/COVERAGE.md`, the per-jurisdiction coverage table,
-    /// from a repository's `lit/` and `outlines/`.
+    /// from a repository's `lit/`, `outlines/` and `tests/expect/`.
     Coverage {
         /// Repository root (default `.`).
         root: Option<String>,

@@ -265,7 +265,7 @@ const RESULTS: [(&str, &str); 23] = [
     ),
     ("check", "{profile, files, obligations:[{obligation, passed, detail}], packages, cases:[{path, id, start, replay, deadlines}]}"),
     ("build", "{outputs:{packs, links, clock, scenarios, source_maps, litigatables}, litigatable_hash, litigatables:[{package, path, content_hash}], obligations}"),
-    ("coverage", "{path, changed, promoted_states, federal:[{dir, name, rules, precedents, tests}], jurisdictions:[{name, kind, status, packages, rules, precedents, tests}]}; status is promoted | outline | none; --check writes nothing and exits 2 when docs/COVERAGE.md is stale"),
+    ("coverage", "{path, changed, promoted_states, federal:[{dir, name, rules, precedents, tests, matters}], jurisdictions:[{name, kind, status, packages, rules, precedents, tests, matters}]}; matters counts the tests/expect matter tests; status is promoted | outline | none; --check writes nothing and exits 2 when docs/COVERAGE.md is stale"),
     ("test", "{passed, failed, tests:[{package, name, cite, span, passed, expectations:[{text, passed, actual, expected, steps}]}]}; with --impact BASE (at the repository root): {base, tests, changed, changes:[{forum, case, world, field, before, after}]}, every value of the expect tests under tests/expect/<forum>/<name>.toml that differs between git revision BASE and the working tree (`-`: none on that side), as a table per forum in human output; a change never fails it"),
     ("fmt", "{files:[{path, changed}]}"),
     ("run", ENGINE_RESPONSE),

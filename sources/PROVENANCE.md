@@ -806,3 +806,10 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 - Edition: Local Rules of the U.S. District Court for the District of Minnesota, document dated June 10, 2026 (complete set; linked from https://www.mnd.uscourts.gov/local-rules-complete-set, "current Local Rules").
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 0ec9d04835b62cfe8eb3311701377d6a42aaeba62d121912039c7dc88e6eb2e6. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+### `mn-district/mn-rules-civil-procedure.txt` — Minnesota Rules of Civil Procedure
+
+- Source: https://mncourts.gov/_media/migration/appellate/supreme-court/court-rules/MN-Rules-of-Civil-Procedure.pdf (official site; 160 pages, sha256 2044ecee1b41aab5d58ee14427e8b6404f091ff2eecc14459ee4447900f0b276).
+- Edition: Minnesota Rules of Civil Procedure, "With amendments effective July 1, 2025"; linked as "Rules of Civil Procedure (effective July 1, 2025)" from https://mncourts.gov/supremecourt/court-rules (Recent Rules Orders list no later civil-procedure amendment as of 2026-10-26).
+- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 748265a1b436591f3b5a5a9949f90c801cb05e5541e5b71281c7c00cc5ffdd1b. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

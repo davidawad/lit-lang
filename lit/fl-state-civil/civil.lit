@@ -1,0 +1,143 @@
+module fl-circuit-court-civil.civil
+
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "Fla. R. Civ. P. 1.050"
+{
+  note "Every civil action is deemed commenced when the complaint or petition is filed (Fla. R. Civ. P. 1.050). Periods in this package are stated, not counted: their computation is governed by Florida Rule of General Practice and Judicial Administration 2.514 (Fla. R. Civ. P. 1.090(a)), which is not vendored."
+  edge-complaint-filed-service "Summons issued and served" -> service-check {
+    authority cite "Fla. R. Civ. P. 1.070(j)"
+  }
+}
+
+decision service-check: "Service within 120 days" by office cite "Fla. R. Civ. P. 1.070(j)"
+{
+  note "If initial process and the initial pleading are not served on a defendant within 120 days after the initial pleading directed to that defendant is filed, the court must direct service within a specified time or dismiss the action without prejudice or drop that defendant; on good cause or excusable neglect it must extend the time (Fla. R. Civ. P. 1.070(j))."
+  edge-service-check-served "Served" -> answer-due { authority cite "Fla. R. Civ. P. 1.140(a)" }
+  edge-service-check-unserved "Not served in time" -> dismissed-unserved {
+    authority cite "Fla. R. Civ. P. 1.070(j)"
+  }
+}
+
+decision answer-due: "Answer, motion or default" by office cite "Fla. R. Civ. P. 1.140(a)"
+{
+  note "Unless a statute prescribes otherwise, the answer is due within 20 days after service of original process and the initial pleading; the state, its agency, or an officer or employee sued in an official capacity has 40 days, or 30 days when sued under section 768.28, Florida Statutes (Fla. R. Civ. P. 1.140(a)(1), (2)). After a motion under rule 1.140 is denied or postponed, the responsive pleading is due within 10 days after the filing of the order (Fla. R. Civ. P. 1.140(a)(3))."
+  edge-answer-due-default "No response" -> default-entered {
+    authority cite "Fla. R. Civ. P. 1.500(a)"
+  }
+  edge-answer-due-motion "Motion under rule 1.140(b) served" -> pleading-motion {
+    authority cite "Fla. R. Civ. P. 1.140(b)"
+  }
+  edge-answer-due-answer "Answer served" -> case-management {
+    authority cite "Fla. R. Civ. P. 1.200(d)"
+  }
+}
+
+decision pleading-motion: "Motion to dismiss decided" by court cite "Fla. R. Civ. P. 1.140(b)"
+{
+  note "The defenses that may be raised by motion include failure to state a cause of action (Fla. R. Civ. P. 1.140(b)(6)); the grounds must be stated specifically and with particularity. No leading decision is named. A party pleads to an amended pleading within 10 days after its service unless the court orders otherwise (Fla. R. Civ. P. 1.190(a)); the re-pleading loop is not modeled."
+  edge-pleading-motion-dismissed "Granted with prejudice" -> dismissed-pleading {
+    authority cite "Fla. R. Civ. P. 1.140(b)"
+  }
+  edge-pleading-motion-leave "Granted with leave to amend" -> case-management {
+    authority cite "Fla. R. Civ. P. 1.190(a)"
+  }
+  edge-pleading-motion-denied "Denied: responsive pleading within 10 days after the order" -> case-management {
+    authority cite "Fla. R. Civ. P. 1.140(a)"
+  }
+}
+
+terminal default-entered: "Default entered" outcome [loss] cite "Fla. R. Civ. P. 1.500(a)"
+{
+  note "The clerk enters a default against a party who has failed to file or serve any document (Fla. R. Civ. P. 1.500(a)); the court may enter one against a party who fails to plead or otherwise defend (Fla. R. Civ. P. 1.500(b)). Setting aside a default (Fla. R. Civ. P. 1.500(d)) and a final judgment after default (Fla. R. Civ. P. 1.500(e)) are not modeled. Outcome from the defending side."
+}
+
+terminal dismissed-unserved: "Dismissed for failure to serve" outcome [loss, dismissal] cite "Fla. R. Civ. P. 1.070(j)"
+{
+  note "Dismissal is without prejudice (Fla. R. Civ. P. 1.070(j))."
+}
+
+terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] cite "Fla. R. Civ. P. 1.140(b)"
+
+state case-management: "Case management order" by court cite "Fla. R. Civ. P. 1.200(d)"
+{
+  note "Not later than 120 days after commencement the court assigns the case to the streamlined, general or complex track (Fla. R. Civ. P. 1.200(b)) and issues a case management order setting the trial period and the deadlines rule 1.200(d)(2) lists, strictly enforced unless changed by court order (Fla. R. Civ. P. 1.200(d)(3), (4)). Complex cases proceed under rule 1.201."
+  edge-case-management-discovery "Order entered" -> discovery {
+    authority cite "Fla. R. Civ. P. 1.280(a)"
+  }
+}
+
+state discovery: "Discovery" by applicant cite "Fla. R. Civ. P. 1.280(a)"
+{
+  note "Initial discovery disclosures are served without awaiting a request (Fla. R. Civ. P. 1.280(a)); a party may not seek discovery before serving its own, except by stipulation or court order (Fla. R. Civ. P. 1.280(f)(1)). Sanctions for failure to make discovery are rule 1.380's."
+  edge-discovery-sj "Summary judgment motion served" -> sj-motion {
+    authority cite "Fla. R. Civ. P. 1.510(b)"
+  }
+  edge-discovery-settle "Settled or voluntarily dismissed" -> settled {
+    authority cite "Fla. R. Civ. P. 1.420(a)"
+  }
+}
+
+decision sj-motion: "Summary judgment decided" by court cite "Fla. R. Civ. P. 1.510(a)"
+{
+  note "The summary judgment standard is construed and applied in accordance with the federal standard, and the court states on the record its reasons for granting or denying the motion (Fla. R. Civ. P. 1.510(a)). A motion may be made after 20 days from commencement, consistent with court-ordered deadlines (Fla. R. Civ. P. 1.510(b)); the nonmovant serves its response no later than 40 days after service of the motion, and a hearing is set at least 10 days after that deadline unless stipulated or ordered otherwise (Fla. R. Civ. P. 1.510(c)(5), (6))."
+  edge-sj-motion-granted "Granted" -> judgment-for-movant {
+    authority cite "Fla. R. Civ. P. 1.510(a)"
+  }
+  edge-sj-motion-denied "Denied or partly denied" -> trial {
+    authority cite "Fla. R. Civ. P. 1.510(a)"
+  }
+}
+
+terminal judgment-for-movant: "Judgment for the movant" outcome [win, judgment] cite "Fla. R. Civ. P. 1.510(a)"
+{
+  note "Partial summary judgment is not modeled. A motion for costs and attorneys' fees is served no later than 30 days after filing of the judgment (Fla. R. Civ. P. 1.525)."
+}
+
+state trial: "Trial" by court cite "Fla. R. Civ. P. 1.430(b)"
+{
+  note "A jury demand is filed no later than 10 days after service of the last pleading directed to the issue (Fla. R. Civ. P. 1.430(b))."
+  edge-trial-post "Verdict or decision" -> post-trial { authority cite "Fla. R. Civ. P. 1.480(b)" }
+}
+
+decision post-trial: "Post-trial motions decided" by court cite "Fla. R. Civ. P. 1.530(b)"
+{
+  note "A party who timely moved for a directed verdict may serve a motion for judgment in accordance with it within 15 days after the return of a verdict or the discharge of the jury (Fla. R. Civ. P. 1.480(b)). A motion for new trial or rehearing is served not later than 15 days after the return of the verdict in a jury action or the filing of the judgment in a non-jury action (Fla. R. Civ. P. 1.530(b)). The court may not extend these times (Fla. R. Civ. P. 1.090(b)(2))."
+  edge-post-trial-judgment "Motions resolved or none served" -> judgment-entered {
+    authority cite "Fla. R. Civ. P. 1.530(b)"
+  }
+  edge-post-trial-jmol "Judgment in accordance with the directed verdict motion" -> judgment-for-movant {
+    authority cite "Fla. R. Civ. P. 1.480(b)"
+  }
+}
+
+state judgment-entered: "Final judgment rendered" by office cite "Fla. R. App. P. 9.110(b)"
+{
+  note "A motion for costs and attorneys' fees is served no later than 30 days after filing of the judgment (Fla. R. Civ. P. 1.525)."
+  edge-judgment-entered-appeal "Next step" -> appeal-decision {
+    authority cite "Fla. R. App. P. 9.110(b)"
+  }
+}
+
+decision appeal-decision: "Notice of appeal within 30 days of rendition?" by applicant cite "Fla. R. App. P. 9.110(b)"
+{
+  note "Appeal jurisdiction is invoked by filing a notice with the clerk of the lower tribunal within 30 days of rendition of the order to be reviewed (Fla. R. App. P. 9.110(b)); the court may not extend the time for taking an appeal (Fla. R. Civ. P. 1.090(b)(2))."
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken {
+    authority cite "Fla. R. App. P. 9.110(b)"
+  }
+  edge-appeal-decision-none "No notice filed" -> final-no-appeal {
+    authority cite "Fla. R. App. P. 9.110(b)"
+  }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Florida appellate package" outcome [appeal] cite "Fla. R. App. P. 9.110(b)"
+{
+  note "Hand-off to lit/fl-state-appellate (fl-district-court-of-appeal)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Fla. R. App. P. 9.110(b)"
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "Fla. R. Civ. P. 1.420(a)"
+{
+  note "A plaintiff may dismiss without order by notice before a hearing on a summary judgment motion, or by a stipulation signed by all current parties; unless stated otherwise the dismissal is without prejudice (Fla. R. Civ. P. 1.420(a)(1))."
+}

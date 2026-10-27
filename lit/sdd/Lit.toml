@@ -1,0 +1,42 @@
+# The District of South Dakota's civil local rules over lit/frcp (FRCP
+# 83(a)): it declares only the periods the local rules themselves state
+# and re-encodes no FRCP deadline. It is a base package, not a
+# `kind = "local-rule"` layer, because lit/core's district-civil family
+# lists only the forum `frcp` (L2011 for `sdd`); its procedure is the
+# local motion practice of LR 7.1. Each period is counted
+# under FRCP 6(a), which governs "any local rule". The rules take effect on
+# placement on the court's website after the comment period (LR 1.1(B));
+# the document date, February 28, 2025, stands for that date.
+[package]
+name = "sdd-civil-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "sdd-civil-local-rules"
+forum = "sdd"
+authority = "LocalRule"
+title = "United States District Court, District of South Dakota: Civil Local Rules"
+description = "The District of South Dakota's civil local rules of practice as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): motion briefing, extensions of time to answer, amended pleadings, continuances, costs and attorney's fees."
+in_force = "2025-02-28"
+known_at = "2026-10-27"
+unknown_before = "2025-02-28"
+jurisdiction = "United States District Court, D. South Dakota"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.sdd-civ-lr]
+title = "Civil Local Rules of Practice, United States District Court, District of South Dakota (2/28/2025)"
+url = "https://www.sdd.uscourts.gov/sites/sdd/files/Civil%20Local%20Rules%20-%20final%2C%20approved.pdf"
+path = "sources/sdd/civil-local-rules-sectioned.txt"
+path_sha256 = "3bfff7fb9b3f9e19f786c863e5971119bb06eeab9ffa41f569bfbd556a186575"
+sha256 = "2db6120e6edcc37e1de5b70ed802e39611a00ef1c4e14b488cfc263587cf257d"
+as_of = "2025-02-28"
+cite_prefixes = ["D.S.D. Civ. LR"]
+section_heading = "LR {n}"

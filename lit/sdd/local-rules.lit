@@ -1,0 +1,214 @@
+module sdd-civil-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+/// A motion and its brief are served (LR 7.1(B)).
+event MotionAndBriefServed()
+/// The responsive brief to a motion is served (LR 7.1(B)).
+event ResponsiveBriefServed()
+/// The court grants a motion to amend or supplement a pleading (LR 15.1).
+event AmendmentGranted()
+/// A motion for a continuance is served (LR 40.1(A)).
+event ContinuanceMotionServed()
+/// A response to a motion for a continuance is filed (LR 40.1(A)).
+event ContinuanceResponseFiled()
+/// Judgment or an order of dismissal is entered (LR 54.1(A), (C)).
+event JudgmentOrDismissalEntered()
+/// A verified bill of costs is filed and served (LR 54.1(A)).
+event BillOfCostsFiled()
+/// The clerk taxes costs (LR 54.1(A)).
+event CostsTaxed()
+/// A motion for attorney's fees is served on the party against whom the
+/// award is sought (LR 54.1(C)).
+event FeeMotionServed()
+/// A response to a motion for attorney's fees is served (LR 54.1(C)).
+event FeeResponseServed()
+
+/// LR 7.1(B): opposing parties serve and file a responsive brief on or
+/// before 21 calendar days after service of the motion and brief, unless
+/// the court orders otherwise. Briefs are limited to 30 pages, exclusive of
+/// tables, certificate of service and attachments, without prior approval
+/// (LR 7.1(B)(1)).
+deadline response-brief-period: 21.days after MotionAndBriefServed() counted_by frcp6 cite "D.S.D. Civ. LR 7.1(B)"
+{
+  forum frcp
+}
+
+/// LR 7.1(B): the movant may file a reply brief within 14 calendar days
+/// after service of the responsive brief.
+deadline reply-brief-period: 14.days after ResponsiveBriefServed() counted_by frcp6 cite "D.S.D. Civ. LR 7.1(B)"
+{
+  forum frcp
+}
+
+/// LR 15.1: after a motion to amend or supplement is granted, the movant
+/// files a clean original of the amended or supplemental pleading within 7
+/// days.
+deadline amended-pleading-filing-period: 7.days after AmendmentGranted() counted_by frcp6 cite "D.S.D. Civ. LR 15.1"
+{
+  forum frcp
+}
+
+/// LR 40.1(A): a party opposing a continuance files a response no later than
+/// 7 days after the motion is served.
+deadline continuance-response-period: 7.days after ContinuanceMotionServed() counted_by frcp6 cite "D.S.D. Civ. LR 40.1(A)"
+{
+  forum frcp
+}
+
+/// LR 40.1(A): the movant may reply no later than 3 days after the
+/// response.
+deadline continuance-reply-period: 3.days after ContinuanceResponseFiled() counted_by frcp6 cite "D.S.D. Civ. LR 40.1(A)"
+{
+  forum frcp
+}
+
+/// LR 54.1(A): the prevailing party files and serves a verified bill of
+/// costs within 28 calendar days after entry of judgment or an order of
+/// dismissal.
+deadline bill-of-costs-period: 28.days after JudgmentOrDismissalEntered() counted_by frcp6 cite "D.S.D. Civ. LR 54.1(A)"
+{
+  forum frcp
+}
+
+/// LR 54.1(A): the party liable for costs may file exceptions within 14
+/// calendar days after the bill of costs is filed and served.
+deadline cost-exceptions-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "D.S.D. Civ. LR 54.1(A)"
+{
+  forum frcp
+}
+
+/// LR 54.1(A): either party may move for review of the clerk's taxation
+/// within 7 calendar days after the clerk taxes costs.
+deadline cost-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "D.S.D. Civ. LR 54.1(A)"
+{
+  forum frcp
+}
+
+/// LR 54.1(C): a motion for attorney's fees is filed no later than 28
+/// calendar days after entry of judgment, absent a showing of good cause.
+deadline fee-motion-period: 28.days after JudgmentOrDismissalEntered() counted_by frcp6 cite "D.S.D. Civ. LR 54.1(C)"
+{
+  forum frcp
+}
+
+/// LR 54.1(C): objections to an allowance of attorney's fees are filed
+/// within 21 calendar days after service on the party against whom the
+/// award is sought.
+deadline fee-objection-period: 21.days after FeeMotionServed() counted_by frcp6 cite "D.S.D. Civ. LR 54.1(C)"
+{
+  forum frcp
+}
+
+/// LR 54.1(C): the movant may file a reply brief within 14 calendar days
+/// after service of the responsive brief.
+deadline fee-reply-period: 14.days after FeeResponseServed() counted_by frcp6 cite "D.S.D. Civ. LR 54.1(C)"
+{
+  forum frcp
+}
+
+test "responsive brief is due 21 days after service of the motion" cite "D.S.D. Civ. LR 7.1(B)"
+{
+  given MotionAndBriefServed() on 2025-03-03
+  expect deadline(response-brief-period) == 2025-03-24
+}
+
+test "reply brief is due 14 days after service of the response" cite "D.S.D. Civ. LR 7.1(B)"
+{
+  given ResponsiveBriefServed() on 2025-03-24
+  expect deadline(reply-brief-period) == 2025-04-07
+}
+
+test "a period ending on a Saturday runs to Monday" cite "D.S.D. Civ. LR 7.1(B)"
+{
+  given ResponsiveBriefServed() on 2025-03-01
+  expect deadline(reply-brief-period) == 2025-03-17
+}
+
+test "clean amended pleading is due 7 days after the grant" cite "D.S.D. Civ. LR 15.1"
+{
+  given AmendmentGranted() on 2025-04-01
+  expect deadline(amended-pleading-filing-period) == 2025-04-08
+}
+
+test "continuance response is due 7 days after service" cite "D.S.D. Civ. LR 40.1(A)"
+{
+  given ContinuanceMotionServed() on 2025-04-01
+  expect deadline(continuance-response-period) == 2025-04-08
+}
+
+test "continuance reply is due 3 days after the response" cite "D.S.D. Civ. LR 40.1(A)"
+{
+  given ContinuanceResponseFiled() on 2025-04-08
+  expect deadline(continuance-reply-period) == 2025-04-11
+}
+
+test "bill of costs is due 28 days after judgment" cite "D.S.D. Civ. LR 54.1(A)"
+{
+  given JudgmentOrDismissalEntered() on 2025-06-02
+  expect deadline(bill-of-costs-period) == 2025-06-30
+}
+
+test "cost exceptions are due 14 days after the bill" cite "D.S.D. Civ. LR 54.1(A)"
+{
+  given BillOfCostsFiled() on 2025-06-30
+  expect deadline(cost-exceptions-period) == 2025-07-14
+}
+
+test "review of taxation is moved within 7 days" cite "D.S.D. Civ. LR 54.1(A)"
+{
+  given CostsTaxed() on 2025-07-15
+  expect deadline(cost-review-period) == 2025-07-22
+}
+
+test "fee motion is due 28 days after judgment" cite "D.S.D. Civ. LR 54.1(C)"
+{
+  given JudgmentOrDismissalEntered() on 2025-06-02
+  expect deadline(fee-motion-period) == 2025-06-30
+}
+
+test "fee objections are due 21 days after service" cite "D.S.D. Civ. LR 54.1(C)"
+{
+  given FeeMotionServed() on 2025-06-30
+  expect deadline(fee-objection-period) == 2025-07-21
+}
+
+test "fee reply is due 14 days after the response" cite "D.S.D. Civ. LR 54.1(C)"
+{
+  given FeeResponseServed() on 2025-07-21
+  expect deadline(fee-reply-period) == 2025-08-04
+}
+
+start motion-served
+
+state motion-served: "Opposed motion and brief served" by applicant cite "D.S.D. Civ. LR 7.1(B)"
+{
+  note "An opposed motion raising a question of law is served and filed with a brief stating the movant's arguments, authorities and the Federal Rule of Civil Procedure relied on. Briefs are limited to 30 pages without prior approval (LR 7.1(B)(1)). A summary judgment motion carries the statement of material facts LR 56.1(A) requires; facts not controverted under LR 56.1(B) are deemed admitted (LR 56.1(D)). The motion's own periods under the Federal Rules are lit/frcp's."
+  edge-motion-served-response "Responsive brief served" -> response {
+    authority cite "D.S.D. Civ. LR 7.1(B)"
+    within response-brief-period
+  }
+  edge-motion-served-ruling "No responsive brief" -> ruling {
+    authority cite "D.S.D. Civ. LR 7.1(B)"
+  }
+}
+
+state response: "Responsive brief served" by opponent cite "D.S.D. Civ. LR 7.1(B)"
+{
+  edge-response-ruling "Reply filed or time to reply expired" -> ruling {
+    authority cite "D.S.D. Civ. LR 7.1(B)"
+    within reply-brief-period
+  }
+}
+
+decision ruling: "Motion submitted and decided" by court cite "D.S.D. Civ. LR 7.1(C)"
+{
+  note "Oral argument is had only on order of the court; a request is made at the end of the motion or responsive brief or by separate document within 14 calendar days after the motion or responsive brief is filed (LR 7.1(C))."
+  edge-ruling-granted "Granted" -> decided { authority cite "D.S.D. Civ. LR 7.1(C)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "D.S.D. Civ. LR 7.1(C)" }
+}
+
+terminal decided: "Motion decided: the action continues under lit/frcp" outcome [procedural] cite "D.S.D. Civ. LR 1.1(B)"
+{
+  note "The local rules govern civil proceedings in the district to the extent they are consistent with federal statutes and Supreme Court rules and orders (LR 1.1(B))."
+}

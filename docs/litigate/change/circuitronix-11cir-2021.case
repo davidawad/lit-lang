@@ -1,0 +1,18 @@
+case circuitronix-11cir-2021
+uses change-deadline-frcp-base ^1.0.0
+as_of 2021-04-08
+summary "Circuitronix, LLC v. Shenzen Kinwong Electronic Co., Ltd., 993 F.3d 1299 (11th Cir. 2021): the judgment entered June 6, 2019 and the renewed Rule 50(b) motion filed Monday, July 8 (the courthouse was closed July 5)."
+notes "Public-record facts of circuitronix-11cir-2021 (sources/change-corpus/rulings/MANIFEST.json). Run under worlds/district-civil-ca11.world (`litigate worlds`); the court held: timely."
+
+perspective movant
+
+parties {
+  movant: movant Party
+}
+
+events {
+  entered: 2019-06-06 JudgmentEntered() on movant
+  filed: 2019-07-08 RenewedJmolMoved() by movant
+}
+
+stakes { motion-filed: 0.usd, petition-filed: 0.usd, nothing-filed: 0.usd }

@@ -20,6 +20,18 @@ import core.calendar.{ us-federal-holidays }
 /// text or ruling fixes the earlier order, and the direction of risk is a
 /// later due date, since for a period under the short-period threshold
 /// the 2005 order gives more days than adding 3 to the period first.
+///
+/// Periods in months or years. Rule 6(a) reaches "any applicable statute"
+/// and is silent on months and years; the courts count a year to the
+/// anniversary of its start: "When a statute of limitations is measured in
+/// years, the last day for instituting the action is the anniversary date
+/// of the start of the limitations period. See, e.g., Fed.R.Civ.P. 6(a)"
+/// (Ross v. Artuz, 150 F.3d 97, 103 (2d Cir. 1998);
+/// sources/change-corpus/rulings/ross-2cir-1998.txt). A month runs to the
+/// corresponding day of the later month. `end_of_month clamp` is the
+/// earlier of the two readings of a month without that day (a February 29
+/// anniversary); UNVERIFIED: no rule text or vendored decision fixes it.
+/// No ruling in the corpus counts a year under this version.
 counting frcp6 effective [1963-07-01, 1985-08-01) known_at 1963-01-21 cite "FRCP (2008 ed.) 6 (1963 Advisory Committee Note)" historical
 {
   exclude_trigger_day
@@ -40,12 +52,17 @@ counting frcp6 effective [1963-07-01, 1985-08-01) known_at 1963-01-21 cite "FRCP
   }
   holidays us-federal-holidays
   forums [frcp]
+  end_of_month clamp
 }
 
 /// The 1985 amendments (effective August 1, 1985): the short-period
 /// exclusion reaches periods of less than 11 days, and a last day on which
 /// the clerk's office is inaccessible rolls forward too (1985 Advisory
-/// Committee Note).
+/// Committee Note). Years count to the anniversary, as under the 1963
+/// version: a one-year AEDPA period starting April 24, 1996 ends April 24,
+/// 1997 under this text (Ross v. Artuz, 150 F.3d at 103; Flanagan v.
+/// Johnson, 154 F.3d 196, 202 (5th Cir. 1998); Patterson v. Stewart, 251
+/// F.3d 1243, 1246 (9th Cir. 2001)).
 counting frcp6 effective [1985-08-01, 2001-12-01) known_at 1985-04-29 supersedes frcp6@1963-07-01 cite "FRCP (2008 ed.) 6 (1985 Advisory Committee Note)" historical
 {
   exclude_trigger_day
@@ -66,6 +83,7 @@ counting frcp6 effective [1985-08-01, 2001-12-01) known_at 1985-04-29 supersedes
   }
   holidays us-federal-holidays
   forums [frcp]
+  end_of_month clamp
 }
 
 /// The 2001 amendments (effective December 1, 2001): the 3 added days reach
@@ -75,10 +93,11 @@ counting frcp6 effective [1985-08-01, 2001-12-01) known_at 1985-04-29 supersedes
 /// delivery (5(b)(2)(A)) adds nothing in any version. The order of adding
 /// them is the contested pre-2005 one (see the 1963 version).
 /// Rule 6 is silent on periods stated in months or years (Rule 60(c)(1)'s
-/// "a year"): they run to the corresponding day of the later month, and a
+/// "a year"): they run to the corresponding day of the later month, the
+/// anniversary for a year (Ross v. Artuz; see the 1963 version), and a
 /// month without that day (a February 29 anniversary) ends on its last day.
-/// `end_of_month clamp` is the earlier of the two readings; UNVERIFIED: no
-/// rule text or vendored decision fixes it.
+/// `end_of_month clamp` is the earlier of the two readings of that day;
+/// UNVERIFIED: no rule text or vendored decision fixes it.
 counting frcp6 effective [2001-12-01, 2005-12-01) known_at 2001-04-23 supersedes frcp6@1985-08-01 cite "FRCP (2008 ed.) 6 (2001 Committee Note)" historical
 {
   exclude_trigger_day
@@ -135,10 +154,11 @@ counting frcp6 effective [2005-12-01, 2009-12-01) known_at 2005-04-25 supersedes
 /// 6(a)(3). 6(d) still adds 3 days after service "under Rule 5(b)(2)(C),
 /// (D), (E), or (F)", electronic service (E) included (2011 ed.).
 /// Rule 6 is silent on periods stated in months or years (Rule 60(c)(1)'s
-/// "a year"): they run to the corresponding day of the later month, and a
+/// "a year"): they run to the corresponding day of the later month, the
+/// anniversary for a year (Ross v. Artuz; see the 1963 version), and a
 /// month without that day (a February 29 anniversary) ends on its last day.
-/// `end_of_month clamp` is the earlier of the two readings; UNVERIFIED: no
-/// rule text or vendored decision fixes it.
+/// `end_of_month clamp` is the earlier of the two readings of that day;
+/// UNVERIFIED: no rule text or vendored decision fixes it.
 counting frcp6 effective [2009-12-01, 2016-12-01) known_at 2009-03-26 supersedes frcp6@2005-12-01 cite "FRCP (2011 ed.) 6(a)"
 {
   exclude_trigger_day

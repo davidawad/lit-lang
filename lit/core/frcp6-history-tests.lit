@@ -52,6 +52,38 @@ deadline third-party-complaint: 14.days after AnswerServed() counted_by frcp6 ci
   }
 }
 
+/// A fixture period of one year counted under FRCP 6: a statute's period
+/// stated in years (Rule 6(a) reaches "any applicable statute").
+deadline frcp6-1-year: 1.years after Served() counted_by frcp6 cite "FRCP (2008 ed.) 6(a)" historical
+{
+  forum frcp
+}
+
+test "under the 1985 text AEDPA's grace year from April 24, 1996 ends on the anniversary, Thursday April 24, 1997 (Ross v. Artuz; Flanagan v. Johnson)" cite "FRCP (2008 ed.) 6(a)" historical
+{
+  given Served(Personal) on 1996-04-24
+  expect deadline(frcp6-1-year) == 1997-04-24
+}
+
+test "under the 1985 text a year ending on Sunday March 17, 1991 rolls to Monday" cite "FRCP (2008 ed.) 6(a)" historical
+{
+  given Served(Personal) on 1990-03-17
+  expect deadline(frcp6-1-year).nominal == 1991-03-17
+  expect deadline(frcp6-1-year) == 1991-03-18
+}
+
+test "under the 1963 text a year from Monday March 3, 1975 ends on the anniversary" cite "FRCP (2008 ed.) 6(a)" historical
+{
+  given Served(Personal) on 1975-03-03
+  expect deadline(frcp6-1-year) == 1976-03-03
+}
+
+test "a year from February 29, 1984 ends Thursday February 28, 1985 under the 1963 text (UNVERIFIED clamp)" cite "FRCP (2008 ed.) 6(a)" historical
+{
+  given Served(Personal) on 1984-02-29
+  expect deadline(frcp6-1-year) == 1985-02-28
+}
+
 test "Glannon: removal on Wednesday December 28, 2016; answer due Wednesday January 4, 2017" cite "FRCP 81(c)(2)(C)"
 {
   given NoticeOfRemovalFiled() on 2016-12-28

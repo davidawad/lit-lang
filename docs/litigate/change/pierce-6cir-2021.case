@@ -1,0 +1,18 @@
+case pierce-6cir-2021
+uses change-deadline-frap-base ^1.0.0
+as_of 2021-02-04
+summary "Gerald Pierce v. Ocwen Loan Servicing, LLC, 987 F.3d 577 (6th Cir. 2021): the judgment entered August 12, 2020 and the notice of appeal filed Friday, September 11."
+notes "Public-record facts of pierce-6cir-2021 (sources/change-corpus/rulings/MANIFEST.json). Run under worlds/circuit-appellate-ca6.world (`litigate worlds`); the court held: timely."
+
+perspective appellant
+
+parties {
+  appellant: appellant Party
+}
+
+events {
+  entered: 2020-08-12 JudgmentEntered() on appellant
+  filed: 2020-09-11 NoticeOfAppealFiled() by appellant
+}
+
+stakes { appealed: 0.usd, extension-moved: 0.usd, reopening-moved: 0.usd, judgment-stands: 0.usd }

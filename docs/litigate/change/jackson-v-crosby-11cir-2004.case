@@ -1,0 +1,18 @@
+case jackson-v-crosby-11cir-2004
+uses change-deadline-frcp-base ^1.0.0
+as_of 2004-07-09
+summary "Jackson v. Crosby, 375 F.3d 1291 (11th Cir. 2004): the judgment entered December 15, 2003 and the Rule 59(e) motion filed January 5, 2004."
+notes "Public-record facts of jackson-v-crosby-11cir-2004 (sources/change-corpus/rulings/MANIFEST.json). Run under worlds/district-civil-ca11.world (`litigate worlds`); the court held: untimely."
+
+perspective movant
+
+parties {
+  movant: movant Party
+}
+
+events {
+  entered: 2003-12-15 JudgmentEntered() on movant
+  filed: 2004-01-05 AlterAmendMoved() by movant
+}
+
+stakes { motion-filed: 0.usd, petition-filed: 0.usd, nothing-filed: 0.usd }

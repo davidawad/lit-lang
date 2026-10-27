@@ -1,0 +1,32 @@
+# The deadline domain's change files (lg-fq2.6; docs/litigate/CHANGE-REPORT.md):
+# the base layer of the FRCP periods the timeliness rulings count. Rules
+# 23(f), 50(b), 59(b) and 59(e) as they stood before the order of March 26,
+# 2009 that the layer `frcp-2009` records: 10 days after entry, and Rule
+# 6(b)(2) forbids extending all but 23(f). Counted under lit/core's FRCP 6,
+# by the version in force on each trigger's date.
+[package]
+name = "change-deadline-frcp-base"
+version = "1.0.0"
+language = 1
+pack_id = "change-deadline-frcp-base"
+forum = "frcp"
+authority = "FederalRule"
+title = "Deadline domain: FRCP post-judgment periods (base)"
+in_force = "1968-07-01"
+known_at = "2026-10-27"
+
+[package.roles]
+movant = "self"
+court = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../lit/core" }
+
+[sources.frcp-2007]
+title = "Federal Rules of Civil Procedure as restyled, effective Dec. 1, 2007 (order of Apr. 30, 2007): Rules 6(b)(2), 23(f), 50(b), 59(b), 59(e)"
+url = "https://www.supremecourt.gov/orders/courtorders/frcv07p.pdf"
+path = "sources/change-frcv-2007-time-periods-excerpt.txt"
+path_sha256 = "1401feb1cffb5ad4e36a8d11073e200c638b86a4e947771d2cce2e3c144cf05e"
+as_of = "2007-12-01"
+cite_prefixes = ["FRCP (2007)"]
+section_heading = "FRCP (2007) Rule {n}"

@@ -1,0 +1,39 @@
+# The deadline domain's change files (lg-fq2.6): the Supreme Court's order of
+# March 26, 2009 amending FRAP 4(a)(6), effective December 1, 2009, with
+# the time-computation amendments: the window to move to reopen becomes 14
+# days, counted under FRAP 26 as amended the same day (every day counts).
+[package]
+name = "change-deadline-frap-2009-amendment"
+version = "1.0.0"
+language = 1
+pack_id = "change-deadline-frap-2009-amendment"
+forum = "frap"
+authority = "FederalRule"
+title = "Deadline domain: the 2009 FRAP 4(a)(6) amendment"
+in_force = "2009-12-01"
+known_at = "2026-10-27"
+kind = "amendment"
+
+[package.roles]
+appellant = "self"
+court = "nature"
+
+[package.instrument]
+source = "frap-2009"
+issuer = "Supreme Court of the United States"
+date = "2009-03-26"
+designation = "Order of March 26, 2009, effective December 1, 2009 (28 U.S.C. § 2074(a))"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../lit/core" }
+change-deadline-frap-base = { version = "^1.0.0", path = "../frap-base" }
+change-deadline-frap-2005-amendment = { version = "^1.0.0", path = "../frap-2005" }
+
+[sources.frap-2009]
+title = "Supreme Court order of March 26, 2009 amending the FRAP, with the amended text of Rule 4(a)(6)"
+url = "https://www.supremecourt.gov/orders/courtorders/frap09.pdf"
+path = "sources/change-frap-2005-2009-rule-4-excerpt.txt"
+path_sha256 = "1b8b10906ed7f5b9f02ebf846440365f156877a62abce46aded271b456b57059"
+as_of = "2009-12-01"
+cite_prefixes = ["FRAP (2009)"]
+section_heading = "FRAP (2009) Rule {n}"

@@ -1,0 +1,18 @@
+case ryan-2cir-1999
+uses change-deadline-frap-base ^1.0.0
+as_of 1999-05-14
+summary "Ryan v. First Unum Life Insurance, 174 F.3d 302 (2d Cir. 1999): the copy of the judgment handed to counsel June 30, 1998 and the motion to reopen filed July 30."
+notes "Public-record facts of ryan-2cir-1999 (sources/change-corpus/rulings/MANIFEST.json). Run under worlds/circuit-appellate-ca2.world (`litigate worlds`); the court held: untimely."
+
+perspective appellant
+
+parties {
+  appellant: appellant Party
+}
+
+events {
+  entered: 1998-06-30 NoticeOfEntryReceived() on appellant
+  filed: 1998-07-30 ReopeningMoved() by appellant
+}
+
+stakes { appealed: 0.usd, extension-moved: 0.usd, reopening-moved: 0.usd, judgment-stands: 0.usd }

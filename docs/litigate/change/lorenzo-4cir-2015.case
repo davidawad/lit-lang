@@ -1,0 +1,18 @@
+case lorenzo-4cir-2015
+uses change-deadline-frcp-base ^1.0.0
+as_of 2015-11-24
+summary "Lorenzo v. Prime Communications, L.P., 806 F.3d 777 (4th Cir. 2015): the class-certification order entered March 24, 2014 and the Rule 23(f) petition filed April 10."
+notes "Public-record facts of lorenzo-4cir-2015 (sources/change-corpus/rulings/MANIFEST.json). Run under worlds/district-civil-ca4.world (`litigate worlds`); the court held: untimely, petition dismissed."
+
+perspective movant
+
+parties {
+  movant: movant Party
+}
+
+events {
+  entered: 2014-03-24 ClassOrderEntered() on movant
+  filed: 2014-04-10 ClassAppealPetitioned() by movant
+}
+
+stakes { motion-filed: 0.usd, petition-filed: 0.usd, nothing-filed: 0.usd }

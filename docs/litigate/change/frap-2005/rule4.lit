@@ -1,0 +1,20 @@
+module change-deadline-frap-2005-amendment.rule4
+
+import core.frap26.{ frap26 }
+import change-deadline-frap-base.appeal.{ NoticeOfEntryReceived, reopen-motion-window }
+
+// An amendment versions base text (docs/litigate/CHANGE.md §2.2): its
+// declaration supersedes the base's from the effective date its order
+// fixes.
+
+/// FRAP 4(a)(6)(B) as amended effective December 1, 2005: the motion to
+/// reopen is due "within 7 days after the moving party receives notice
+/// under Federal Rule of Civil Procedure 77(d) of the entry", or 180 days
+/// after entry, whichever is earlier.
+deadline reopen-motion-window-2005: 7.days after NoticeOfEntryReceived() counted_by frap26 effective [2005-12-01, ..) known_at 2005-04-25 supersedes reopen-motion-window cite "FRAP (2005) 4(a)(6)"
+
+test "from December 1, 2005 the window is still 7 days, weekends skipped" cite "FRAP (2005) 4(a)(6)"
+{
+  given NoticeOfEntryReceived() on 2007-03-02
+  expect deadline(reopen-motion-window-2005) == 2007-03-13
+}

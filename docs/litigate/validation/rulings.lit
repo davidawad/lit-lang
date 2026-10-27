@@ -32,6 +32,10 @@ event ClerkLetterDated()
 /// A one-year limitation period starts: AEDPA's effective date for a
 /// conviction final before it, or the end of statutory tolling.
 event LimitationStarted()
+/// Statutory tolling of a running limitation period ends (28 U.S.C.
+/// § 2244(d)(2)): the state court's last ruling on the collateral motion,
+/// or the denial of certiorari where the circuit counts it.
+event TollingEnded()
 /// The FDCPA violation occurs.
 event ViolationOccurred()
 /// The agency's final notice is presumed received (20 C.F.R. § 422.210(c)).
@@ -103,9 +107,17 @@ deadline reopen-motion-window: 7.days after NoticeOfEntryReceived() counted_by f
   forum frap
 }
 
-/// FRAP 4(a)(6)(A) from December 1, 2005: 14 days after the moving party
-/// receives or observes written notice of entry from any source.
-deadline reopen-motion-window: 14.days after NoticeOfEntryReceived() counted_by frap26 effective [2005-12-01, ..) supersedes reopen-motion-window@1991-12-01 cite "FRAP (2008 ed.) 4(a)(6)"
+/// FRAP 4(a)(6)(B) from December 1, 2005: still 7 days, now after the
+/// moving party receives notice of entry "under Federal Rule of Civil
+/// Procedure 77(d)" (order of April 25, 2005; the 2008 edition).
+deadline reopen-motion-window: 7.days after NoticeOfEntryReceived() counted_by frap26 effective [2005-12-01, 2009-12-01) known_at 2005-04-25 supersedes reopen-motion-window@1991-12-01 cite "FRAP (2008 ed.) 4(a)(6)"
+{
+  forum frap
+}
+
+/// FRAP 4(a)(6)(B) from December 1, 2009: 14 days after that notice
+/// (order of March 26, 2009).
+deadline reopen-motion-window: 14.days after NoticeOfEntryReceived() counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes reopen-motion-window@2005-12-01 cite "FRAP (2009) 4(a)(6)"
 {
   forum frap
 }
@@ -274,10 +286,57 @@ test "vencor-11cir-2002: 180 days from October 26, 1999 end Sunday April 23, 200
   expect deadline(reopen-motion-outer) < 2000-10-17
 }
 
-// The one-year periods of the 1996-1998 AEDPA rulings (flanagan, moore,
-// mickens, burns, patterson, hernandez) count under FRCP 6 as amended in
-// 1985, which lit/core gives no month or year provision: the period is
-// refused, never counted (VALIDATION.md §3, D1). The harness pins it.
+// The one-year periods of the 1996-1998 AEDPA rulings count under FRCP 6
+// as amended in 1985, to the anniversary of the period's start (Ross v.
+// Artuz, 150 F.3d 97, 103; VALIDATION.md §5, D1, fixed by lg-fq2.6).
+test "flanagan-5cir-1998: the grace year from April 24, 1996 ended on the anniversary; the petition of April 24, 1997 was timely" cite "FRCP (2008 ed.) 6(a)"
+{
+  given LimitationStarted() on 1996-04-24
+  expect deadline(habeas-limitation) == 1997-04-24
+  expect deadline(habeas-limitation) >= 1997-04-24
+}
+
+test "moore-8cir-1999: the § 2255 motion mailed April 24, 1997 was timely" cite "FRCP (2008 ed.) 6(a)"
+{
+  given LimitationStarted() on 1996-04-24
+  expect deadline(habeas-limitation) == 1997-04-24
+  expect deadline(habeas-limitation) >= 1997-04-24
+}
+
+test "mickens-2cir-1998: the § 2255 motion filed April 23, 1997 was not time-barred" cite "FRCP (2008 ed.) 6(a)"
+{
+  given LimitationStarted() on 1996-04-24
+  expect deadline(habeas-limitation) == 1997-04-24
+  expect deadline(habeas-limitation) >= 1997-04-23
+}
+
+// Burns states, in dictum and without analysing Rule 6(a), that motions
+// "on or before April 23, 1997" are timely: the April 23 side of the
+// `aedpa-grace-end` split, which no counting rule states (D3). The holding,
+// a petition given to prison officials April 22, is timely on either side.
+test "burns-3cir-1998: the petition of April 22, 1997 was timely" cite "FRCP (2008 ed.) 6(a)"
+{
+  given LimitationStarted() on 1996-04-24
+  expect deadline(habeas-limitation) == 1997-04-24
+  expect deadline(habeas-limitation) >= 1997-04-22
+}
+
+test "hernandez-4cir-2000: the year ran through April 24, 1997; one day was left when tolling ended September 8, so the petition of September 9 was timely" cite "FRCP (2008 ed.) 6(a)"
+{
+  given LimitationStarted() on 1996-04-24
+  given TollingEnded() on 1997-09-08
+  expect deadline(habeas-limitation) == 1997-04-24
+  expect deadline(hernandez-remaining-day) == 1997-09-09
+  expect deadline(hernandez-remaining-day) >= 1997-09-09
+}
+
+test "patterson-9cir-2001: tolling ended June 19, 1997, so the year ended June 19, 1998, the day the petitions were filed" cite "FRCP (2008 ed.) 6(a)"
+{
+  given LimitationStarted() on 1997-06-19
+  expect deadline(habeas-limitation) == 1998-06-19
+  expect deadline(habeas-limitation) >= 1998-06-19
+}
+
 test "fletcher-5cir-2000: 60 days from presumed receipt on February 25, 1997; the action filed May 8 was late" cite "FRCP (2008 ed.) 6(a)"
 {
   given AgencyNoticeReceived() on 1997-02-25
@@ -357,6 +416,12 @@ test "circuitronix-11cir-2021 (to the holiday roll): the 28th day, July 4, 2019,
   expect deadline(renewed-jmol-motion).nominal == 2019-07-04
   expect deadline(renewed-jmol-motion) == 2019-07-05
 }
+
+/// Hernandez v. Caldwell: the state motion filed April 23, 1997 tolled the
+/// grace year with one day of it left, and tolling ended when certiorari
+/// was denied on September 8, 1997: the one remaining day is the day
+/// after.
+deadline hernandez-remaining-day: 1.days after TollingEnded() counted_by frcp6 effective [1985-08-01, ..) cite ?("not vendored: 28 U.S.C. § 2244(d)(2); the remaining day as Hernandez v. Caldwell, 225 F.3d 435, 439 (4th Cir. 2000) counts it")
 
 /// Blackman v. Neven: the year from finality on November 13, 2018, extended
 /// by the 102 days of statutory tolling (28 U.S.C. § 2244(d)(2)) the court

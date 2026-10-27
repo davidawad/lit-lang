@@ -1,0 +1,18 @@
+case ultimate-appliance-6cir-2010
+uses change-deadline-frap-base ^1.0.0
+as_of 2010-04-01
+summary "Ultimate Appliance CC v. Kirby Co., 601 F.3d 414 (6th Cir. 2010): the judgment entered September 30, 2008 and the motion to extend the time to appeal filed December 2."
+notes "Public-record facts of ultimate-appliance-6cir-2010 (sources/change-corpus/rulings/MANIFEST.json). Run under worlds/circuit-appellate-ca6.world (`litigate worlds`); the court held: untimely."
+
+perspective appellant
+
+parties {
+  appellant: appellant Party
+}
+
+events {
+  entered: 2008-09-30 JudgmentEntered() on appellant
+  filed: 2008-12-02 AppealExtensionMoved() by appellant
+}
+
+stakes { appealed: 0.usd, extension-moved: 0.usd, reopening-moved: 0.usd, judgment-stands: 0.usd }

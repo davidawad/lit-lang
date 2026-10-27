@@ -1,0 +1,18 @@
+case cavaliere-11cir-1993
+uses change-deadline-frcp-base ^1.0.0
+as_of 1993-07-30
+summary "Cavaliere v. Allstate Insurance, 996 F.2d 1111 (11th Cir. 1993): the judgment entered March 24, 1992 and the motion for a new trial served April 9."
+notes "Public-record facts of cavaliere-11cir-1993 (sources/change-corpus/rulings/MANIFEST.json). Run under worlds/district-civil-ca11.world (`litigate worlds`); the court held: untimely by two days."
+
+perspective movant
+
+parties {
+  movant: movant Party
+}
+
+events {
+  entered: 1992-03-24 JudgmentEntered() on movant
+  filed: 1992-04-09 NewTrialMoved() by movant
+}
+
+stakes { motion-filed: 0.usd, petition-filed: 0.usd, nothing-filed: 0.usd }

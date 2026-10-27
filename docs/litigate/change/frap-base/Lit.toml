@@ -1,0 +1,34 @@
+# The deadline domain's change files (lg-fq2.6; docs/litigate/CHANGE-REPORT.md):
+# the base layer of the FRAP periods the timeliness rulings count. FRAP 4(a)
+# as it stood before the amendments of 2005 and 2009 that the layers
+# `frap-2005` and `frap-2009` record: the 30-day notice of appeal, the 30
+# days after it to move for an extension, and FRAP 4(a)(6) as added in 1991
+# (7 days after notice of entry to move to reopen, 14 days of reopened
+# time). Counted under lit/core's FRAP 26, by the version in force on each
+# trigger's date.
+[package]
+name = "change-deadline-frap-base"
+version = "1.0.0"
+language = 1
+pack_id = "change-deadline-frap-base"
+forum = "frap"
+authority = "FederalRule"
+title = "Deadline domain: FRAP 4(a) periods (base)"
+in_force = "1968-07-01"
+known_at = "2026-10-27"
+
+[package.roles]
+appellant = "self"
+court = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../lit/core" }
+
+[sources.frap4-2008]
+title = "Federal Rules of Appellate Procedure, Rule 4, 28 U.S.C. App. (2008 ed.)"
+url = "https://www.govinfo.gov/content/pkg/USCODE-2008-title28/html/USCODE-2008-title28-app-federalru-rule4.htm"
+path = "sources/usc-28-app-frap4-history.txt"
+path_sha256 = "c246fa771851ef008653521977a993531d589881d85354e9c9f949f9c1b1a284"
+as_of = "2005-12-01"
+cite_prefixes = ["FRAP (2008 ed.)"]
+section_heading = "FRAP (2008 ed.) Rule {n}"

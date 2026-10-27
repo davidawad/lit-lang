@@ -1,0 +1,40 @@
+# The deadline domain's change files (lg-fq2.6): the Supreme Court's order of
+# March 26, 2009 amending the FRCP, effective December 1, 2009, with the
+# time-computation amendments of Rule 6 (lit/core's `frcp6@2009-12-01`).
+# Rules 50(b), 59(b) and 59(e) go from 10 days to 28, Rule 23(f) from 10 to
+# 14: "shall govern in all proceedings thereafter commenced and, insofar as
+# just and practicable, all proceedings then pending".
+[package]
+name = "change-deadline-frcp-2009-amendment"
+version = "1.0.0"
+language = 1
+pack_id = "change-deadline-frcp-2009-amendment"
+forum = "frcp"
+authority = "FederalRule"
+title = "Deadline domain: the 2009 FRCP time amendments (Rules 23(f), 50(b), 59(b), 59(e))"
+in_force = "2009-12-01"
+known_at = "2026-10-27"
+kind = "amendment"
+
+[package.roles]
+movant = "self"
+court = "nature"
+
+[package.instrument]
+source = "frcp-2009"
+issuer = "Supreme Court of the United States"
+date = "2009-03-26"
+designation = "Order of March 26, 2009, effective December 1, 2009 (28 U.S.C. § 2074(a))"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../lit/core" }
+change-deadline-frcp-base = { version = "^1.0.0", path = "../frcp-base" }
+
+[sources.frcp-2009]
+title = "Supreme Court order of March 26, 2009 amending the FRCP, with the amended text of Rules 6(b)(2), 23(f), 50(b), 59(b), 59(e)"
+url = "https://www.supremecourt.gov/orders/courtorders/frcv09.pdf"
+path = "sources/change-frcv-2009-time-periods-excerpt.txt"
+path_sha256 = "7c07441c623854e91e225b5adad541f96c7375637999e9f998df7387cd63f173"
+as_of = "2009-12-01"
+cite_prefixes = ["FRCP (2009)"]
+section_heading = "FRCP (2009) Rule {n}"

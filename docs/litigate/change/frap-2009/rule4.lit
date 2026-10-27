@@ -1,0 +1,17 @@
+module change-deadline-frap-2009-amendment.rule4
+
+import core.frap26.{ frap26 }
+import change-deadline-frap-base.appeal.{ NoticeOfEntryReceived }
+import change-deadline-frap-2005-amendment.rule4.{ reopen-motion-window-2005 }
+
+/// FRAP 4(a)(6)(B) as amended effective December 1, 2009: "within 14 days
+/// after the moving party receives notice under Federal Rule of Civil
+/// Procedure 77(d) of the entry", or 180 days after entry, whichever is
+/// earlier. It supersedes the 2005 text, the version then in force.
+deadline reopen-motion-window-2009: 14.days after NoticeOfEntryReceived() counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes reopen-motion-window-2005 cite "FRAP (2009) 4(a)(6)"
+
+test "from December 1, 2009 the window is 14 days, every day counted" cite "FRAP (2009) 4(a)(6)"
+{
+  given NoticeOfEntryReceived() on 2012-03-02
+  expect deadline(reopen-motion-window-2009) == 2012-03-16
+}

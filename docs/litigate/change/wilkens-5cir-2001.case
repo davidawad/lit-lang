@@ -1,0 +1,18 @@
+case wilkens-5cir-2001
+uses change-deadline-frap-base ^1.0.0
+as_of 2001-01-04
+summary "Wilkens v. Johnson, 238 F.3d 328 (5th Cir. 2001): the faxed copy of the judgment received September 7, 1999 and the motion treated as one to reopen filed October 4."
+notes "Public-record facts of wilkens-5cir-2001 (sources/change-corpus/rulings/MANIFEST.json). Run under worlds/circuit-appellate-ca5.world (`litigate worlds`); the court held: untimely."
+
+perspective appellant
+
+parties {
+  appellant: appellant Party
+}
+
+events {
+  entered: 1999-09-07 NoticeOfEntryReceived() on appellant
+  filed: 1999-10-04 ReopeningMoved() by appellant
+}
+
+stakes { appealed: 0.usd, extension-moved: 0.usd, reopening-moved: 0.usd, judgment-stands: 0.usd }

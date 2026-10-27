@@ -1,0 +1,18 @@
+case midwest-employers-5cir-1998
+uses change-deadline-frcp-base ^1.0.0
+as_of 1998-11-24
+summary "Midwest Employers Casualty Co. v. Williams, 161 F.3d 877 (5th Cir. 1998): the judgment entered October 15, 1997 and the motion for a new trial filed November 3."
+notes "Public-record facts of midwest-employers-5cir-1998 (sources/change-corpus/rulings/MANIFEST.json). Run under worlds/district-civil-ca5.world (`litigate worlds`); the court held: untimely."
+
+perspective movant
+
+parties {
+  movant: movant Party
+}
+
+events {
+  entered: 1997-10-15 JudgmentEntered() on movant
+  filed: 1997-11-03 NewTrialMoved() by movant
+}
+
+stakes { motion-filed: 0.usd, petition-filed: 0.usd, nothing-filed: 0.usd }

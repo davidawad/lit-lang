@@ -1,0 +1,94 @@
+module change-deadline-frap-base.appeal
+
+// A base layer declares rules from nothing (docs/litigate/CHANGE.md §2.1).
+// Every period here runs from entry or from a dated notice, never from
+// service, so FRAP 26(c) adds nothing (VALIDATION.md §3).
+
+import core.frap26.{ frap26 }
+
+/// After the district court enters a judgment or order, the appellant
+/// may appeal, move to extend the time to appeal, or move to reopen it.
+start judgment
+
+/// The clerk enters the judgment or order appealed from (FRCP 58, 79(a)).
+event JudgmentEntered()
+/// The appellant receives the notice of entry that opens FRAP 4(a)(6)'s
+/// window to move to reopen, on the date the court held it did.
+event NoticeOfEntryReceived()
+/// The appellant files a notice of appeal (FRAP 3, 4(a)).
+event NoticeOfAppealFiled()
+/// The appellant moves to extend the time to appeal (FRAP 4(a)(5)).
+event AppealExtensionMoved()
+/// The appellant moves to reopen the time to appeal (FRAP 4(a)(6)).
+event ReopeningMoved()
+
+/// FRAP 4(a)(1)(A): a civil notice of appeal is due 30 days after entry of
+/// the judgment or order appealed from (30 days since FRAP took effect on
+/// July 1, 1968; 28 U.S.C. § 2107(a)).
+deadline notice-of-appeal: 30.days after JudgmentEntered() counted_by frap26 effective [1968-07-01, ..) cite "FRAP (2008 ed.) 4(a)(1)(A)" historical
+
+/// FRAP 4(a)(5)(A)(i): a motion to extend the time to appeal is due no
+/// later than 30 days after the time FRAP 4(a) prescribes expires.
+deadline appeal-extension-motion: 30.days after deadline(notice-of-appeal).adjusted counted_by frap26 effective [1968-07-01, ..) cite "FRAP (2008 ed.) 4(a)(5)(A)(i)" historical
+
+/// FRAP 4(a)(6) as added December 1, 1991 (order of April 30, 1991): a
+/// motion to reopen the time to appeal is due 7 days after the moving
+/// party receives notice of entry, or 180 days after entry, whichever is
+/// earlier (the 2005 Committee Note restates the 1991 conditions). Which
+/// notice opens the window is the circuit split `frap-4a6-notice`
+/// (docs/litigate/validation/splits.lit): a matter gives the receipt its
+/// court held opened it. The layers `frap-2005` and `frap-2009` amend it.
+deadline reopen-motion-window: 7.days after NoticeOfEntryReceived() counted_by frap26 effective [1991-12-01, ..) known_at 1991-04-30 cite "FRAP (2008 ed.) 4(a)(6)" historical
+
+/// FRAP 4(a)(6) since 1991: the outer bound, 180 days after entry. An act
+/// is judged against one period, the window above; the earlier of the two
+/// is not a form of the language (docs/litigate/CHANGE-REPORT.md).
+deadline reopen-motion-outer: 180.days after JudgmentEntered() counted_by frap26 effective [1991-12-01, ..) known_at 1991-04-30 cite "FRAP (2008 ed.) 4(a)(6)" historical
+
+decision judgment: "Judgment entered: appeal, move to extend the time, or move to reopen it?" by appellant effective [1968-07-01, ..) cite "FRAP (2008 ed.) 4(a)" historical
+{
+  appeal "File the notice of appeal" -> appealed {
+    event NoticeOfAppealFiled()
+    within notice-of-appeal
+  }
+  extend "Move to extend the time to appeal" -> extension-moved {
+    event AppealExtensionMoved()
+    within appeal-extension-motion
+  }
+  reopen "Move to reopen the time to appeal" -> reopening-moved {
+    event ReopeningMoved()
+    within reopen-motion-window
+  }
+  forgo "Let the judgment stand" -> judgment-stands
+}
+
+terminal appealed: "Notice of appeal filed" effective [1968-07-01, ..)
+terminal extension-moved: "Motion to extend the time to appeal filed" effective [1968-07-01, ..)
+terminal reopening-moved: "Motion to reopen the time to appeal filed" effective [1968-07-01, ..)
+terminal judgment-stands: "The judgment stands" effective [1968-07-01, ..)
+
+test "a notice of appeal is due 30 days after entry" cite "FRAP (2008 ed.) 4(a)(1)(A)" historical
+{
+  given JudgmentEntered() on 2008-09-30
+  expect deadline(notice-of-appeal) == 2008-10-30
+}
+
+test "a motion to extend is due 30 days after the appeal time expires" cite "FRAP (2008 ed.) 4(a)(5)(A)(i)" historical
+{
+  given JudgmentEntered() on 2008-09-30
+  expect deadline(appeal-extension-motion).nominal == 2008-11-29
+  expect deadline(appeal-extension-motion) == 2008-12-01
+}
+
+test "before 2005 a motion to reopen is due 7 days after notice of entry, weekends skipped" cite "FRAP (2008 ed.) 4(a)(6)" historical
+{
+  given NoticeOfEntryReceived() on 1999-05-28
+  expect deadline(reopen-motion-window) == 1999-06-04
+}
+
+test "the outer bound is 180 days after entry" cite "FRAP (2008 ed.) 4(a)(6)" historical
+{
+  given JudgmentEntered() on 1999-10-26
+  expect deadline(reopen-motion-outer).nominal == 2000-04-23
+  expect deadline(reopen-motion-outer) == 2000-04-24
+}

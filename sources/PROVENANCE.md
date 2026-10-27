@@ -655,6 +655,21 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 - The Supreme Court's order of March 26, 2009 (with its pending-case clause) and the amended text of Rule 6(b)(2) and Rule 59(e) (28 days), the lg-fq2.1 amendment example's instrument. Lines taken from `sources/change-corpus/rules/scotus/frcv09.txt` (supremecourt.gov `frcv09.pdf`), blank lines dropped; no wording changed.
 - sha256 (this file): `0eb155fa9a5911540a1b4a5f1784c944c235f6fd5fa9fe8da29ba716cc6b9690`
 
+### `change-frcv-2007-time-periods-excerpt.txt` — FRCP as restyled effective December 1, 2007: the order and Rules 6(b)(2), 23(f), 50(b), 59(b), 59(e)
+
+- The Supreme Court's order of April 30, 2007 and the restyled text of the four post-judgment periods the 2009 time amendments changed and the timeliness rulings count (10 days each) and Rule 6(b)(2), which forbids extending all but 23(f), the base of the deadline domain's change files (lg-fq2.6, `docs/litigate/change/frcp-base`). Lines taken from `sources/change-corpus/rules/scotus/frcv07p.txt` (supremecourt.gov `frcv07p.pdf`, see that corpus's MANIFEST.json), leading spaces, blank lines and running page headers dropped, runs of spaces collapsed; no wording changed. Each `##` section opens with one descriptive line naming the subdivisions it holds.
+- sha256 (this file): `1401feb1cffb5ad4e36a8d11073e200c638b86a4e947771d2cce2e3c144cf05e`
+
+### `change-frcv-2009-time-periods-excerpt.txt` — FRCP amendments effective December 1, 2009: the order and Rules 6(b)(2), 23(f), 50(b), 59(b), 59(e)
+
+- The Supreme Court's order of March 26, 2009 (with its pending-case clause) and the amended text of the same four periods (14 days for 23(f), 28 for the others) and Rule 6(b)(2), the 2009 amendment layer of the deadline domain's change files (lg-fq2.6, `docs/litigate/change/frcp-2009`). Lines taken from `sources/change-corpus/rules/scotus/frcv09.txt` (supremecourt.gov `frcv09.pdf`), prepared as the 2007 excerpt; no wording changed (the PDF's "entry ofjudgment" is kept as extracted).
+- sha256 (this file): `7c07441c623854e91e225b5adad541f96c7375637999e9f998df7387cd63f173`
+
+### `change-frap-2005-2009-rule-4-excerpt.txt` — FRAP 4(a)(6) as amended effective December 1, 2005 and December 1, 2009, with the orders
+
+- The Supreme Court's orders of April 25, 2005 and March 26, 2009 amending the FRAP, and the amended text of Rule 4(a)(6): in 2005 the 7-day window to move to reopen runs from notice "under Federal Rule of Civil Procedure 77(d)"; in 2009 it is 14 days. The FRAP amendment layers of the deadline domain's change files (lg-fq2.6, `docs/litigate/change/frap-2005`, `frap-2009`). Lines taken from `sources/change-corpus/rules/scotus/frap05p.txt` and `frap09.txt` (supremecourt.gov), prepared as the FRCP excerpts; the 2009 section keeps the paragraph's opening words and (B), the only part the 2009 order changed in (a)(6). No wording changed.
+- sha256 (this file): `1b8b10906ed7f5b9f02ebf846440365f156877a62abce46aded271b456b57059`
+
 ### `change-sdny-edny-local-civil-rule-6.txt` — S.D.N.Y./E.D.N.Y. Joint Local Civil Rules 6.1 and 6.4 (effective January 2, 2026)
 
 - Fetched 2026-10-26 from `www.nysd.uscourts.gov/sites/default/files/local_rules/2026-01-02%20-%20EDNY%20and%20SDNY%20Joint%20Local%20Rules%20As%20Amended.pdf` (sha256 `439b9e2c67fd4ca1d1be65a7f28ca53707820bcbabb4b459323ade1a773607af`), `pdftotext -layout`, the text of Local Civil Rule 6.1 and the withdrawn 6.4 with leading spaces and blank lines dropped; no wording changed. The local-rule example's instrument.

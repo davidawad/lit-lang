@@ -1,0 +1,40 @@
+# The deadline domain's change files (lg-fq2.6): the Supreme Court's order of
+# April 25, 2005 amending FRAP 4(a)(6), effective December 1, 2005. The
+# window to move to reopen stays 7 days, now after notice of entry "under
+# Federal Rule of Civil Procedure 77(d)": the amendment settles which notice
+# opens it (the circuit split `frap-4a6-notice`, VALIDATION.md §4), not how
+# long it is.
+[package]
+name = "change-deadline-frap-2005-amendment"
+version = "1.0.0"
+language = 1
+pack_id = "change-deadline-frap-2005-amendment"
+forum = "frap"
+authority = "FederalRule"
+title = "Deadline domain: the 2005 FRAP 4(a)(6) amendment"
+in_force = "2005-12-01"
+known_at = "2026-10-27"
+kind = "amendment"
+
+[package.roles]
+appellant = "self"
+court = "nature"
+
+[package.instrument]
+source = "frap-2005"
+issuer = "Supreme Court of the United States"
+date = "2005-04-25"
+designation = "Order of April 25, 2005, effective December 1, 2005 (28 U.S.C. § 2074(a))"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../lit/core" }
+change-deadline-frap-base = { version = "^1.0.0", path = "../frap-base" }
+
+[sources.frap-2005]
+title = "Supreme Court order of April 25, 2005 amending the FRAP, with the amended text of Rule 4(a)(6)"
+url = "https://www.supremecourt.gov/orders/courtorders/frap05p.pdf"
+path = "sources/change-frap-2005-2009-rule-4-excerpt.txt"
+path_sha256 = "1b8b10906ed7f5b9f02ebf846440365f156877a62abce46aded271b456b57059"
+as_of = "2005-12-01"
+cite_prefixes = ["FRAP (2005)"]
+section_heading = "FRAP (2005) Rule {n}"

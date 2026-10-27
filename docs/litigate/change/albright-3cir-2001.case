@@ -1,0 +1,18 @@
+case albright-3cir-2001
+uses change-deadline-frcp-base ^1.0.0
+as_of 2001-12-06
+summary "Albright v. Virtue, 273 F.3d 564 (3d Cir. 2001): the order entered November 13, 2000 and the motion for reconsideration filed November 30."
+notes "Public-record facts of albright-3cir-2001 (sources/change-corpus/rulings/MANIFEST.json). Run under worlds/district-civil-ca3.world (`litigate worlds`); the court held: untimely."
+
+perspective movant
+
+parties {
+  movant: movant Party
+}
+
+events {
+  entered: 2000-11-13 JudgmentEntered() on movant
+  filed: 2000-11-30 AlterAmendMoved() by movant
+}
+
+stakes { motion-filed: 0.usd, petition-filed: 0.usd, nothing-filed: 0.usd }

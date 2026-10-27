@@ -1,0 +1,18 @@
+case benavides-dccir-1996
+uses change-deadline-frap-base ^1.0.0
+as_of 1996-04-02
+summary "Benavides v. Bureau of Prisons, 79 F.3d 1211 (D.C. Cir. 1996): the written copy of the judgment received March 12, 1993 and the Rule 4(a)(6) motion given to prison authorities March 19."
+notes "Public-record facts of benavides-dccir-1996 (sources/change-corpus/rulings/MANIFEST.json). Run under worlds/circuit-appellate-cadc.world (`litigate worlds`); the court held: timely."
+
+perspective appellant
+
+parties {
+  appellant: appellant Party
+}
+
+events {
+  entered: 1993-03-12 NoticeOfEntryReceived() on appellant
+  filed: 1993-03-19 ReopeningMoved() by appellant
+}
+
+stakes { appealed: 0.usd, extension-moved: 0.usd, reopening-moved: 0.usd, judgment-stands: 0.usd }

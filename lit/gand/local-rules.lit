@@ -1,0 +1,329 @@
+module gand-civil-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+/// The first defendant appears by answer or motion (LR 16.1, 16.2, 26.1(A)).
+/// In a removed case the periods run from the filing of the removed case in
+/// this Court (LR 16.2, 26.1(B)(4)).
+event DefendantAppeared()
+/// The first defendant appears by answer to the complaint (LR 26.2(A)).
+event DefendantAnswered()
+/// An action is removed to this Court with motions pending on which briefs
+/// have not been submitted (LR 7.2(A)).
+event RemovedWithPendingMotions()
+/// The discovery period begins (LR 7.1(A)(2), 26.2(A)).
+event DiscoveryBegan()
+/// A motion is served (LR 7.1(B)).
+event MotionServed()
+/// A motion for summary judgment is served (LR 7.1(B)).
+event SummaryJudgmentMotionServed()
+/// The response to a motion is served (LR 7.1(C)).
+event ResponseServed()
+/// A district judge orally announces an order in Court (LR 7.3).
+event OralOrderAnnounced()
+/// An order or judgment is entered (LR 7.2(E)).
+event OrderOrJudgmentEntered()
+/// A motion for reconsideration is served (LR 7.2(E)).
+event ReconsiderationMotionServed()
+/// A disclosure or discovery response is served (LR 37.1(B)).
+event DiscoveryResponseServed()
+/// Discovery closes on the expiration of the original or extended period or
+/// by the parties' written notice (LR 37.1(B), 56.1(D)).
+event DiscoveryClosed()
+/// Judgment is entered (LR 54.1).
+event JudgmentEntered()
+/// A motion for attorney's fees is filed (LR 54.2(A)(2)).
+event FeeMotionFiled()
+
+/// LR 7.1(A)(2): motions without a specific filing time are filed within 30
+/// days after the beginning of discovery unless the filing party has prior
+/// permission of the Court to file later.
+deadline motion-filing-period: 30.days after DiscoveryBegan() counted_by frcp6 cite "N.D. Ga. LR 7.1(A)"
+{
+  forum frcp
+}
+
+/// LR 7.1(B): a party opposing a motion serves its response not later than
+/// 14 days after service of the motion. Failure to respond indicates no
+/// opposition. Briefs in support of or in response to a motion are limited
+/// to 25 pages absent prior permission (LR 7.1(D)).
+deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "N.D. Ga. LR 7.1(B)"
+{
+  forum frcp
+}
+
+/// LR 7.1(B): the response to a motion for summary judgment is served 21
+/// days after service of the motion.
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "N.D. Ga. LR 7.1(B)"
+{
+  forum frcp
+}
+
+/// LR 7.1(C): a reply, when the movant deems one necessary, is served not
+/// later than 14 days after service of the response. A reply brief may not
+/// exceed 15 pages (LR 7.1(D)).
+deadline reply-period: 14.days after ResponseServed() counted_by frcp6 cite "N.D. Ga. LR 7.1(C)"
+{
+  forum frcp
+}
+
+/// LR 7.2(A): on removal with motions pending on which briefs have not been
+/// submitted, the movant serves a memorandum in support within 14 days after
+/// removal.
+deadline removed-motion-memorandum-period: 14.days after RemovedWithPendingMotions() counted_by frcp6 cite "N.D. Ga. LR 7.2(A)"
+{
+  forum frcp
+}
+
+/// LR 7.2(E): a motion to reconsider an order or judgment is filed within 28
+/// days after its entry.
+deadline reconsideration-period: 28.days after OrderOrJudgmentEntered() counted_by frcp6 cite "N.D. Ga. LR 7.2(E)"
+{
+  forum frcp
+}
+
+/// LR 7.2(E): responses to a motion for reconsideration are filed not later
+/// than 14 days after service of the motion.
+deadline reconsideration-response-period: 14.days after ReconsiderationMotionServed() counted_by frcp6 cite "N.D. Ga. LR 7.2(E)"
+{
+  forum frcp
+}
+
+/// LR 7.3: unless the Court directs otherwise, the prevailing party's
+/// attorney submits the written order to the district judge within 7 days
+/// from the date of an oral pronouncement.
+deadline oral-ruling-order-period: 7.days after OralOrderAnnounced() counted_by frcp6 cite "N.D. Ga. LR 7.3"
+{
+  forum frcp
+}
+
+/// LR 16.1: lead counsel confer in person (the Rule 26(f) conference) within
+/// sixteen days after the appearance of a defendant by answer or motion.
+deadline planning-conference-period: 16.days after DefendantAppeared() counted_by frcp6 cite "N.D. Ga. LR 16.1"
+{
+  forum frcp
+}
+
+/// LR 16.2: the Joint Preliminary Report and Discovery Plan is filed within
+/// thirty days after the appearance of the first defendant by answer or
+/// motion, or within thirty days after a removed case is filed in this
+/// Court.
+deadline joint-preliminary-report-period: 30.days after DefendantAppeared() counted_by frcp6 cite "N.D. Ga. LR 16.2"
+{
+  forum frcp
+}
+
+/// LR 26.1(A): the Fed. R. Civ. P. 26(a)(1) initial disclosures are made at
+/// or within 30 days after the appearance of a defendant by answer or
+/// motion.
+deadline initial-disclosures-period: 30.days after DefendantAppeared() counted_by frcp6 cite "N.D. Ga. LR 26.1(A)"
+{
+  forum frcp
+}
+
+/// LR 26.2(A): the discovery period commences thirty days after the
+/// appearance of the first defendant by answer to the complaint, unless the
+/// parties consent to begin earlier. Its length is the case's track: zero,
+/// four or eight months (Appendix F).
+deadline discovery-commencement-period: 30.days after DefendantAnswered() counted_by frcp6 cite "N.D. Ga. LR 26.2(A)"
+{
+  forum frcp
+}
+
+/// LR 37.1(B): unless the Court orders otherwise, a motion to compel is
+/// filed within the time remaining before the close of discovery or, if
+/// longer, within 14 days after service of the response on which the
+/// objection rests. This deadline is the 14-day branch; the close of
+/// discovery governs when it is later.
+deadline motion-to-compel-period: 14.days after DiscoveryResponseServed() counted_by frcp6 cite "N.D. Ga. LR 37.1(B)"
+{
+  forum frcp
+}
+
+/// LR 16.3: the post-discovery settlement conference of lead counsel is held
+/// no later than fourteen days after the close of discovery.
+deadline settlement-conference-period: 14.days after DiscoveryClosed() counted_by frcp6 cite "N.D. Ga. LR 16.3"
+{
+  forum frcp
+}
+
+/// LR 56.1(D): unless the Court orders otherwise, a motion for summary
+/// judgment is filed not later than thirty days after the close of
+/// discovery.
+deadline summary-judgment-filing-period: 30.days after DiscoveryClosed() counted_by frcp6 cite "N.D. Ga. LR 56.1(D)"
+{
+  forum frcp
+}
+
+/// LR 16.4(A): the proposed consolidated pretrial order is filed no later
+/// than thirty days after the close of discovery or entry of the ruling on
+/// any pending motion for summary judgment, whichever is later. This
+/// deadline runs from the close of discovery; a later summary judgment
+/// ruling starts the period anew, which this package does not model.
+deadline pretrial-order-period: 30.days after DiscoveryClosed() counted_by frcp6 cite "N.D. Ga. LR 16.4(A)"
+{
+  forum frcp
+}
+
+/// LR 54.1: the prevailing party files a bill of costs within thirty days
+/// after the entry of judgment; a late bill is not taxed.
+deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "N.D. Ga. LR 54.1"
+{
+  forum frcp
+}
+
+/// LR 54.2(A)(2): within thirty days (or such other period as the Court
+/// prescribes) after filing a motion for attorney's fees, the movant files
+/// and serves a detailed specification and itemization of the award.
+deadline fee-itemization-period: 30.days after FeeMotionFiled() counted_by frcp6 cite "N.D. Ga. LR 54.2(A)"
+{
+  forum frcp
+}
+
+start motion-served
+
+state motion-served: "Motion and memorandum of law served" by applicant cite "N.D. Ga. LR 7.1(A)"
+{
+  note "Every motion is accompanied by a memorandum of law citing supporting authority, with affidavits for facts relied on (LR 7.1(A)(1)). Briefs are limited to 25 pages, a reply to 15, absent prior permission (LR 7.1(D)). A summary judgment motion carries a separate numbered statement of material facts; the respondent's facts are deemed admitted unless refuted as LR 56.1(B)(2) requires. A Daubert objection to an expert is moved no later than the date the proposed pretrial order is submitted, or it is waived (LR 26.2(C), citing Daubert v. Merrell Dow Pharms., Inc., 509 U.S. 579 (1993)). The motion's own periods under the Federal Rules are lit/frcp's."
+  edge-motion-served-response "Response served" -> response {
+    authority cite "N.D. Ga. LR 7.1(B)"
+    within response-period
+  }
+  edge-motion-served-unopposed "No response: the motion is unopposed" -> ruling {
+    authority cite "N.D. Ga. LR 7.1(B)"
+  }
+}
+
+state response: "Response served" by opponent cite "N.D. Ga. LR 7.1(B)"
+{
+  edge-response-ruling "Reply served or time to reply expired" -> ruling {
+    authority cite "N.D. Ga. LR 7.1(C)"
+    within reply-period
+  }
+}
+
+decision ruling: "Motion decided without oral hearing unless one is ordered" by court cite "N.D. Ga. LR 7.1(E)"
+{
+  note "The Court may decline to consider a motion or brief that does not conform to the local rules (LR 7.1(F)). A motion for reconsideration is not filed as routine practice; when absolutely necessary it is filed within 28 days after entry of the order (LR 7.2(E))."
+  edge-ruling-granted "Granted" -> decided { authority cite "N.D. Ga. LR 7.1(E)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "N.D. Ga. LR 7.1(E)" }
+}
+
+terminal decided: "Motion decided: the action continues under lit/frcp" outcome [procedural] cite "N.D. Ga. LR 1.1(C)"
+{
+  note "The local rules supplement the Federal Rules of Civil Procedure and are construed consistently with them (LR 1.1(C))."
+}
+
+test "other motions are due 30 days after discovery begins" cite "N.D. Ga. LR 7.1(A)"
+{
+  given DiscoveryBegan() on 2026-09-01
+  expect deadline(motion-filing-period) == 2026-10-01
+}
+
+test "a response is due 14 days after service of the motion" cite "N.D. Ga. LR 7.1(B)"
+{
+  given MotionServed() on 2026-09-08
+  expect deadline(response-period) == 2026-09-22
+}
+
+test "a summary judgment response is due 21 days after service" cite "N.D. Ga. LR 7.1(B)"
+{
+  given SummaryJudgmentMotionServed() on 2026-09-15
+  expect deadline(summary-judgment-response-period) == 2026-10-06
+}
+
+test "a reply is due 14 days after service of the response" cite "N.D. Ga. LR 7.1(C)"
+{
+  given ResponseServed() on 2026-09-22
+  expect deadline(reply-period) == 2026-10-06
+}
+
+test "a memorandum on a motion pending at removal is due in 14 days" cite "N.D. Ga. LR 7.2(A)"
+{
+  given RemovedWithPendingMotions() on 2026-09-29
+  expect deadline(removed-motion-memorandum-period) == 2026-10-13
+}
+
+test "a reconsideration motion is due 28 days after entry" cite "N.D. Ga. LR 7.2(E)"
+{
+  given OrderOrJudgmentEntered() on 2026-10-06
+  expect deadline(reconsideration-period) == 2026-11-03
+}
+
+test "a reconsideration response is due 14 days after service" cite "N.D. Ga. LR 7.2(E)"
+{
+  given ReconsiderationMotionServed() on 2026-10-13
+  expect deadline(reconsideration-response-period) == 2026-10-27
+}
+
+test "the written order is submitted 7 days after an oral ruling" cite "N.D. Ga. LR 7.3"
+{
+  given OralOrderAnnounced() on 2026-10-20
+  expect deadline(oral-ruling-order-period) == 2026-10-27
+}
+
+test "the early planning conference is held within 16 days of appearance" cite "N.D. Ga. LR 16.1"
+{
+  given DefendantAppeared() on 2026-10-27
+  expect deadline(planning-conference-period) == 2026-11-12
+}
+
+test "the joint preliminary report is due 30 days after appearance" cite "N.D. Ga. LR 16.2"
+{
+  given DefendantAppeared() on 2026-11-03
+  expect deadline(joint-preliminary-report-period) == 2026-12-03
+}
+
+test "initial disclosures are due 30 days after appearance" cite "N.D. Ga. LR 26.1(A)"
+{
+  given DefendantAppeared() on 2026-11-10
+  expect deadline(initial-disclosures-period) == 2026-12-10
+}
+
+test "discovery commences 30 days after the first answer" cite "N.D. Ga. LR 26.2(A)"
+{
+  given DefendantAnswered() on 2026-11-17
+  expect deadline(discovery-commencement-period) == 2026-12-17
+}
+
+test "a motion to compel is due 14 days after the response" cite "N.D. Ga. LR 37.1(B)"
+{
+  given DiscoveryResponseServed() on 2026-11-24
+  expect deadline(motion-to-compel-period) == 2026-12-08
+}
+
+test "the settlement conference is held within 14 days after discovery closes" cite "N.D. Ga. LR 16.3"
+{
+  given DiscoveryClosed() on 2026-12-01
+  expect deadline(settlement-conference-period) == 2026-12-15
+}
+
+test "summary judgment is moved within 30 days after discovery closes" cite "N.D. Ga. LR 56.1(D)"
+{
+  given DiscoveryClosed() on 2026-12-08
+  expect deadline(summary-judgment-filing-period) == 2027-01-07
+}
+
+test "the pretrial order is due 30 days after discovery closes" cite "N.D. Ga. LR 16.4(A)"
+{
+  given DiscoveryClosed() on 2026-12-15
+  expect deadline(pretrial-order-period) == 2027-01-14
+}
+
+test "a bill of costs is due 30 days after judgment" cite "N.D. Ga. LR 54.1"
+{
+  given JudgmentEntered() on 2026-12-22
+  expect deadline(bill-of-costs-period) == 2027-01-21
+}
+
+test "the fee itemization is due 30 days after the fee motion" cite "N.D. Ga. LR 54.2(A)"
+{
+  given FeeMotionFiled() on 2026-12-29
+  expect deadline(fee-itemization-period) == 2027-01-28
+}
+
+test "a period ending on Labor Day runs to the next day" cite "N.D. Ga. LR 7.1(B)"
+{
+  given MotionServed() on 2026-08-24
+  expect deadline(response-period) == 2026-09-08
+}

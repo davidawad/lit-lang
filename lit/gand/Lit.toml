@@ -1,0 +1,48 @@
+# The Northern District of Georgia's civil local rules over lit/frcp (FRCP
+# 83(a); LR 1.1(C): the rules "supplement the Federal Rules of Civil
+# Procedure"): a local-rule layer that declares only the periods the local
+# rules themselves state and re-encodes no FRCP deadline. Each period is
+# counted under FRCP 6(a), which governs "any local rule", so each deadline
+# names `forum frcp` (lit/core's frcp6 computes frcp periods only). The
+# rules carry no edition date of their own; the court's local-rules page
+# lists the civil rules as "Updated 8/10/2026", which stands for the date
+# (sources/nd-ga/PROVENANCE.md).
+[package]
+name = "gand-civil-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "gand-civil-local-rules"
+forum = "gand"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Northern District of Georgia: Civil Local Rules"
+description = "The Northern District of Georgia's civil local rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): motion briefing, reconsideration, the early planning conference and joint preliminary report, initial disclosures, the discovery period, motions to compel, summary judgment, the consolidated pretrial order, costs and attorney's fees."
+in_force = "2026-08-10"
+known_at = "2026-10-27"
+unknown_before = "2026-08-10"
+jurisdiction = "United States District Court, N.D. Georgia"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "gand-civ-lr"
+issuer = "United States District Court for the Northern District of Georgia"
+date = "2026-08-10"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.gand-civ-lr]
+title = "Civil Local Rules of Practice for the United States District Court for the Northern District of Georgia (updated 8/10/2026)"
+url = "https://www.gand.uscourts.gov/sites/gand/files/local_rules/NDGARulesCV_4_0_26.pdf"
+path = "sources/nd-ga/ndga-civil-local-rules-sectioned.txt"
+path_sha256 = "52d75f2de9281d261171b2938c6169b3f046895cb2c37a047d9210cd727d3c66"
+sha256 = "ab46e4c1538c4341a574a8e73d1d4e1fc7a19a3c04c5225278cb82cbe934ed38"
+as_of = "2026-08-10"
+cite_prefixes = ["N.D. Ga. LR"]
+section_heading = "LR {n}"

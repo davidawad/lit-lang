@@ -1,0 +1,46 @@
+[package]
+name = "sd-supreme-court-civil-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "sd-supreme-court-civil-appeals"
+forum = "sd"
+authority = "StateRule"
+title = "Supreme Court of South Dakota, civil appeals"
+description = "Civil appeals from the circuit courts to the Supreme Court of South Dakota under SDCL ch. 15-26A, as far as the vendored sections state. Certiorari is a federal handoff under Sup. Ct. R. 13."
+in_force = "2026-09-03"
+known_at = "2026-10-27"
+unknown_before = "2026-09-03"
+jurisdiction = "Supreme Court of South Dakota"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.sdcl-15-26a]
+title = "SDCL ch. 15-26A (Rules of Civil Appellate Procedure), cited sections, as published by the Legislative Research Council"
+url = "https://sdlegislature.gov/Statutes/15-26A"
+path = "sources/sd/sdcl-15-26A-sections.txt"
+path_sha256 = "def44fd3b4be7d28c9e529082bbcfe98f116cd88cc6331cb641d2fe99f679547"
+as_of = "2026-09-03"
+
+[sources.scotus]
+title = "Rules of the Supreme Court of the United States (adopted Feb. 17, 2026, effective Mar. 16, 2026)"
+url = "https://www.supremecourt.gov/filingandrules/2026RulesoftheCourt_WEB.pdf"
+path = "sources/scotus-rules.txt"
+path_sha256 = "881464325decc0ce5cc63ae4bac10facc84766e266dbff30454186f78dc3d5f2"
+sha256 = "5200e38d590cc40929cb719987c936dc529717b4037259d1b63a2309cb6b0f32"
+as_of = "2026-03-16"
+
+[[cite_syntax.rules]]
+prefixes = ["SDCL"]
+heading = "SDCL {}"
+source = "sdcl-15-26a"
+
+[[cite_syntax.rules]]
+prefixes = ["Sup. Ct. R."]
+heading = "Sup. Ct. R. {}"
+source = "scotus"

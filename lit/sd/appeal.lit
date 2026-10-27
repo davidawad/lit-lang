@@ -1,0 +1,91 @@
+module sd-supreme-court-civil-appeals.appeal
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "SDCL 15-26A-6"
+{
+  note "An appeal must be taken within thirty days after the judgment or order is signed, attested and filed and written notice of entry is given to the adverse party. A timely motion under SDCL 15-6-59 or 15-6-50(b) terminates the running of the time for all parties; the full time runs again from notice of entry of the order on the motion. The period is not encoded as a deadline: the South Dakota time-computation rule (SDCL 15-6-6(a)) is not vendored."
+  edge-notice-filed-appealability "Notice filed" -> appealability { authority cite "SDCL 15-26A-6" }
+}
+
+decision appealability: "Appellate jurisdiction check" by court cite "SDCL 15-26A-3"
+{
+  note "Appeals lie from a judgment, from the orders listed in SDCL 15-26A-3(2) to (5) and (7), and, by permission of the Supreme Court only, from an intermediate order under SDCL 15-26A-3(6)."
+  edge-appealability-dismissed-jurisdiction "Not an appealable order" -> dismissed-jurisdiction {
+    authority cite "SDCL 15-26A-3"
+  }
+  edge-appealability-dismissed-untimely "Notice untimely" -> dismissed-jurisdiction {
+    authority cite "SDCL 15-26A-6"
+  }
+  edge-appealability-briefing "Appealable order" -> briefing { authority cite "SDCL 15-26A-3" }
+}
+
+terminal dismissed-jurisdiction: "Appeal dismissed" outcome [loss] cite "SDCL 15-26A-3"
+{
+  note "Outcome from the applicant's side."
+}
+
+state briefing: "Briefing: opening, response, reply" cite "SDCL 15-26A-66"
+{
+  note "Monospaced briefs: appellant and appellee 40 pages, reply and amicus 20, supplemental 10. Proportionally spaced briefs: 32, 16 and 5 pages, or within the type volume of SDCL 15-26A-66(b)(2): appellant and appellee briefs the greater of 10,000 words or 50,000 characters, reply and amicus briefs half that, with a certificate of compliance under SDCL 15-26A-66(b)(4). A request to exceed the limits is filed at least ten days before the brief is due (SDCL 15-26A-66(c)). Record references name the part and pages of the record (SDCL 15-26A-64). Each brief is served on every separately represented party and filed with the clerk electronically and as an original, with proof of service (SDCL 15-26A-79). The clerk may refuse a nonconforming brief; the party then has ten days to file a compliant one (SDCL 15-26A-70). The briefing schedule is not vendored."
+  edge-briefing-refused "Brief refused as nonconforming" -> briefing {
+    authority cite "SDCL 15-26A-70"
+  }
+  edge-briefing-submission "Briefs complete" -> submission { authority cite "SDCL 15-26A-79" }
+}
+
+state submission: "Oral argument or submission on the briefs" cite "SDCL 15-26A-87"
+{
+  note "By agreement of the parties a case may be submitted on the briefs, but the court may direct argument."
+  edge-submission-disposition "Submitted for decision" -> disposition {
+    authority cite "SDCL 15-26A-87"
+  }
+}
+
+decision disposition: "Disposition" by court {
+  note "The rules on opinions, rehearing and remittitur are not vendored; this package does not model rehearing or the remittitur."
+  edge-disposition-affirmed "Affirmed" -> affirmed-review
+  edge-disposition-reversed "Reversed or vacated" -> reversed-review
+  edge-disposition-remanded "Remanded" -> remanded-review
+}
+
+decision affirmed-review: "Affirmed: certiorari election" by applicant cite "Sup. Ct. R. 13.1"
+{
+  note "A petition for certiorari to a state court of last resort is timely within 90 days after entry of the judgment (Sup. Ct. R. 13.1)."
+  edge-affirmed-review-petition "Petition for certiorari" -> federal-review {
+    authority cite "Sup. Ct. R. 13.1"
+  }
+  edge-affirmed-review-final "No petition" -> affirmed-final { authority cite "Sup. Ct. R. 13.1" }
+}
+
+decision reversed-review: "Reversed or vacated: certiorari election" by applicant cite "Sup. Ct. R. 13.1"
+{
+  note "A petition for certiorari to a state court of last resort is timely within 90 days after entry of the judgment (Sup. Ct. R. 13.1)."
+  edge-reversed-review-petition "Petition for certiorari" -> federal-review {
+    authority cite "Sup. Ct. R. 13.1"
+  }
+  edge-reversed-review-final "No petition" -> reversed-final { authority cite "Sup. Ct. R. 13.1" }
+}
+
+decision remanded-review: "Remanded: certiorari election" by applicant cite "Sup. Ct. R. 13.1"
+{
+  note "A petition for certiorari to a state court of last resort is timely within 90 days after entry of the judgment (Sup. Ct. R. 13.1)."
+  edge-remanded-review-petition "Petition for certiorari" -> federal-review {
+    authority cite "Sup. Ct. R. 13.1"
+  }
+  edge-remanded-review-final "No petition" -> remanded-final { authority cite "Sup. Ct. R. 13.1" }
+}
+
+terminal federal-review: "Certiorari sought: continue in the Supreme Court of the United States" outcome [procedural] cite "Sup. Ct. R. 13.1"
+
+terminal affirmed-final: "Affirmed: final" outcome [loss] cite "Sup. Ct. R. 13.1"
+{
+  note "Outcome from the applicant's side."
+}
+
+terminal reversed-final: "Reversed or vacated: final" outcome [win] cite "Sup. Ct. R. 13.1"
+{
+  note "Outcome from the applicant's side."
+}
+
+terminal remanded-final: "Remanded: final" outcome [procedural] cite "Sup. Ct. R. 13.1"

@@ -166,6 +166,12 @@ pub struct Edge {
     /// while each holds a token, and taking it consumes them.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub joins: Vec<String>,
+    /// Legal from any posture while an instance of its `within` deadline
+    /// is open (`anytime`, SPEC §5.6): off every track the act discharges
+    /// that instance and the marking does not move; a track reaching the
+    /// edge's source later takes it. Replay only: lowering is serial.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub anytime: bool,
     /// Guard of a fact edge (`when`): a condition over the matter's
     /// history that, when it holds, derives the fact.
     #[serde(default, skip_serializing_if = "Option::is_none")]

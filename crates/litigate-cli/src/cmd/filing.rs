@@ -270,13 +270,24 @@ fn used<'p>(all: &[&'p hir::Package], case: &hir::Case) -> Vec<&'p hir::Package>
         .collect()
 }
 
-/// The node versions of `case`'s replayed `marking` in force on its
-/// `as_of`, one per concurrent track (SPEC §5.6), each with its pack id.
+/// The edges a filing at `case`'s replayed `marking` may take on its
+/// `as_of`, each with its pack id: those of the node version of each
+/// concurrent track (SPEC §5.6), then the `anytime` edges of the used
+/// packages' other nodes, legal from any posture.
 fn posture<'p>(
     law: &[&'p hir::Package],
     case: &hir::Case,
     marking: &[String],
-) -> Vec<(&'p str, &'p hir::Node)> {
+) -> Vec<(&'p str, &'p hir::Edge)> {
+    let marked = |pack: &str, n: &hir::Node| marking.contains(&format!("{pack}::{}", n.meta.id));
+    let anytime = used(law, case).into_iter().flat_map(|p| {
+        let pack = p.manifest.pack_id.as_str();
+        hirx::nodes_at(law, p, &case.as_of, case.known_at.as_deref())
+            .into_iter()
+            .filter(move |n| !marked(pack, n))
+            .flat_map(|n| n.edges.iter().filter(|e| e.anytime))
+            .map(move |e| (pack, e))
+    });
     marking
         .iter()
         .filter_map(|m| m.split_once("::"))
@@ -290,6 +301,8 @@ fn posture<'p>(
                 })
                 .filter(move |(_, n)| n.meta.id == node)
         })
+        .flat_map(|(pack, n)| n.edges.iter().map(move |e| (pack, e)))
+        .chain(anytime)
         .collect()
 }
 
@@ -304,12 +317,11 @@ pub(super) struct Law<'a, 'p> {
 }
 
 /// The moves that protect an instance of `deadline` counted by `version`:
-/// the acts out of the posture (`nodes`) that discharge it, the grants
-/// that extend it, and their orders.
-fn moves(law: Law<'_, '_>, nodes: &[(&str, &hir::Node)], deadline: &str, version: &str) -> Value {
-    let file: Vec<Value> = nodes
+/// the acts among `edges` (out of the posture, or `anytime`) that
+/// discharge it, the grants that extend it, and their orders.
+fn moves(law: Law<'_, '_>, edges: &[(&str, &hir::Edge)], deadline: &str, version: &str) -> Value {
+    let file: Vec<Value> = edges
         .iter()
-        .flat_map(|(pack, n)| n.edges.iter().map(move |e| (pack, e)))
         .filter(|(_, e)| {
             matches!(&e.deadline, Some(hir::EdgeDeadline {
                 window: DeadlineWindow::Declared { deadline: d }, ..
@@ -450,7 +462,7 @@ pub(super) fn changes<'a>(
     filed: &'a CaseCheck,
     law: Law<'_, '_>,
 ) -> Changes<'a> {
-    let nodes = at
+    let edges = at
         .case
         .as_ref()
         .map(|case| posture(law.law, case, &at.marking))
@@ -499,7 +511,7 @@ pub(super) fn changes<'a>(
             .filter(|s| s.status == Status::Open)
             .map(|s| {
                 let mut e = entry(s);
-                e["moves"] = moves(law, &nodes, &s.deadline, &s.version);
+                e["moves"] = moves(law, &edges, &s.deadline, &s.version);
                 e
             })
             .collect(),

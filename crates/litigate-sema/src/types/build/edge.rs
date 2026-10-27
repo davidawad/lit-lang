@@ -62,6 +62,9 @@ impl Cx<'_, '_> {
         let f = self.edge_fields(&fields);
         let spawn = self.tracks(fields.get("spawn"), from, &to);
         let joins = self.tracks(fields.get("joins"), from, &to);
+        let anytime = fields
+            .get("anytime")
+            .is_some_and(|a| self.anytime(a, &fields, f.deadline.as_ref()));
         Edge {
             id: e.name.as_ref().map(|n| n.text.clone()),
             to,
@@ -86,6 +89,7 @@ impl Cx<'_, '_> {
             forbids: f.forbids.unwrap_or_default(),
             spawn,
             joins,
+            anytime,
             guard: fields
                 .get("when")
                 .and_then(|f| self.guard(f, fact, e.name.is_some())),
@@ -120,6 +124,34 @@ impl Cx<'_, '_> {
             out.push(node);
         }
         out
+    }
+
+    /// Whether `anytime` (field `a`) holds on an edge with `fields` and
+    /// `deadline` (SPEC §5.6): the act is legal off its track only while
+    /// its own deadline is open, so the edge needs an `event` and a
+    /// `within` deadline, and it moves no other track, so it neither
+    /// spawns nor joins one (L2007).
+    fn anytime(
+        &mut self,
+        a: &Field,
+        fields: &BTreeMap<&str, &Field>,
+        deadline: Option<&EdgeDeadline>,
+    ) -> bool {
+        let declared = matches!(
+            deadline.map(|d| &d.window),
+            Some(DeadlineWindow::Declared { .. })
+        );
+        let why = if !fields.contains_key("event") {
+            "on an edge without an `event`: replay takes it only by its event"
+        } else if !declared {
+            "on an edge without a `within` deadline: the act is legal off its track only while its own deadline is open"
+        } else if fields.contains_key("spawn") || fields.contains_key("joins") {
+            "on an edge that `spawn`s or `joins` tracks: an act off its track moves none"
+        } else {
+            return true;
+        };
+        self.not_allowed(a, why);
+        false
     }
 
     /// The typed values of the edge fields in `fields` that a `patch` may

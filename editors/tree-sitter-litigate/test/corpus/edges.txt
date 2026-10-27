@@ -497,3 +497,44 @@ chance c: "C" {
             (edge_field
               (string
                 (string_content)))))))))
+
+================================================================================
+Anytime edge
+================================================================================
+
+module m
+decision d: "D" by Plaintiff {
+  oppose "Oppose" -> opposed { event OppositionFiled(), within opposition-period, anytime }
+}
+
+---
+
+(source_file
+  (lit_file
+    (module_decl
+      (module_path
+        (identifier)))
+    (node_decl
+      (identifier)
+      (string
+        (string_content))
+      (by_clause
+        (ref
+          (identifier)))
+      (node_body
+        (edge_decl
+          (identifier)
+          (string
+            (string_content))
+          (ref
+            (identifier))
+          (edge_fields
+            (edge_field
+              (call_expression
+                (ref
+                  (identifier))
+                (arguments)))
+            (edge_field
+              (ref
+                (identifier)))
+            (edge_field)))))))

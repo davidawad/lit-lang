@@ -313,6 +313,7 @@ fn patch(cx: &EdgeCx<'_, '_>, sink: &mut Sink, p: &hir::EdgePatch, base: &RawEdg
         forbids: p.forbids.clone().unwrap_or_default(),
         spawn: Vec::new(),
         joins: Vec::new(),
+        anytime: false,
         guard: None,
         basis: None,
         formerly: Vec::new(),

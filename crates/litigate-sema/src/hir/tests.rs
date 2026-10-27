@@ -68,6 +68,7 @@ fn edge(id: Option<&str>, to: &str, p: Authored<Rational>) -> Edge {
         forbids: vec!["defaulted".into()],
         spawn: vec!["discovery".into()],
         joins: vec![],
+        anytime: false,
         guard: None,
         basis: None,
         formerly: vec![],

@@ -49,6 +49,7 @@ pub(crate) const EDGE_FIELDS: &[Spec] = &[
     (KwForbids, Some(id_list)),
     (KwSpawn, Some(id_list)),
     (KwJoins, Some(id_list)),
+    (KwAnytime, None),
     (KwReplaces, Some(replaces_list)),
     (KwWhen, Some(bound)),
     (KwBasis, Some(bound)),

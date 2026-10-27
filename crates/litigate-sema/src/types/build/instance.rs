@@ -177,8 +177,9 @@ impl Cx<'_, '_> {
 
     /// `patch edge { ... }`: the edge fields written, typed as on an edge
     /// declaration, and the typed operations on its guard. `event`,
-    /// declaration. `event`, `replaces`, `when`, `spawn` and `joins` are not
-    /// patchable: replay binds the base edge, its tracks, and the facts its
+    /// declaration. `event`, `replaces`, `when`, `spawn`, `joins` and
+    /// `anytime` are not patchable: replay binds the base edge, its tracks,
+    /// the postures it is legal from, and the facts its
     /// guards derive, and only a link replaces edges. A guard changes only
     /// by an explicit operation with its authority (`when and`, `when or`,
     /// `supersedes when`; SPEC §3.6), reserved today (L0010), never by an
@@ -204,7 +205,7 @@ impl Cx<'_, '_> {
             .filter_map(|f| Some((kind(f)?, f)))
             .collect();
         let fields = self.once(&written);
-        for key in ["event", "replaces", "spawn", "joins"] {
+        for key in ["event", "replaces", "spawn", "joins", "anytime"] {
             if let Some(f) = fields.get(key) {
                 self.not_allowed(f, "in a `patch`: it writes the base edge's other fields");
             }

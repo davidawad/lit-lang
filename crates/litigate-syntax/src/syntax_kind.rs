@@ -144,7 +144,7 @@ syntax_kinds! {
         KwDelegable = "delegable", KwOp = "op", KwGrant = "grant", KwUnlock = "unlock",
         KwCharacterization = "characterization", KwRetracted = "retracted",
         KwUnknownBefore = "unknown_before", KwCommenced = "commenced",
-        KwSpawn = "spawn", KwJoins = "joins",
+        KwSpawn = "spawn", KwJoins = "joins", KwAnytime = "anytime",
         KwLock = "lock", KwAgainst = "against", KwRuleIndex = "Rule",
         KwRecharacterize = "recharacterize", KwInvalidate = "invalidate",
     }

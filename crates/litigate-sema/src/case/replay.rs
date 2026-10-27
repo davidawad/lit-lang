@@ -21,6 +21,7 @@ use crate::temporal::{Inactive, MatterEvent, Miss, Ungoverned};
 use litigate_base::{Applicability, Diagnostic, DiagnosticCode as C};
 use std::collections::BTreeMap;
 
+mod anytime;
 mod facts;
 mod obligations;
 mod pending;
@@ -75,6 +76,8 @@ struct Cx<'c, 'g> {
     /// The `as_of` sentinel: a non-event dated `as_of`, read only for the
     /// versions governing that date.
     sentinel: Expr,
+    /// `anytime` edges taken off their track, awaiting one at their source.
+    early: Vec<anytime::Early>,
 }
 
 /// Events in docket order (SPEC §5.6): by date, then docket number. Events
@@ -161,6 +164,7 @@ pub(super) fn replay(
             kind: ExprKind::Literal { value: Value::Unit },
             span: None,
         },
+        early: Vec::new(),
     };
     cx.order();
     let mut marking = Some(vec![start.to_owned()]);
@@ -434,8 +438,15 @@ impl<'c, 'g> Cx<'c, 'g> {
             self.out.push(d);
         }
         let mut tracks: Vec<(String, &'g Node)> = Vec::new();
-        for p in marking {
-            tracks.push(self.follow_facts(p, k)?);
+        for mut p in marking {
+            // A track reaching an `anytime` edge taken earlier takes it.
+            tracks.push(loop {
+                let (at, node) = self.follow_facts(p, k)?;
+                p = self.caught_up(k, at.clone());
+                if p == at {
+                    break (at, node);
+                }
+            });
         }
         let ended = tracks.iter().all(|(p, n)| self.ended(p, n));
         let primary = tracks[0].0.clone();
@@ -468,6 +479,7 @@ impl<'c, 'g> Cx<'c, 'g> {
                 self.takes_removed(k, &primary, &r);
                 None
             }
+            ([], [], [], None) if !ended && self.anytime(k) => self.off_track(k, &primary, marked),
             ([], [], [], None) if !ended && self.triggers(k) => {
                 self.record(k, Effect::Triggered, &primary, &primary, None);
                 Some(marked)
@@ -545,9 +557,14 @@ impl<'c, 'g> Cx<'c, 'g> {
         for j in self.joined(marked, i, pack, edge).unwrap_or_default() {
             next[j].clear();
         }
-        next[i] = self.take(k, &marked[i], pack, edge);
+        let to = self.take(k, &marked[i], pack, edge);
+        next[i] = self.caught_up(k, to);
         next.retain(|p| !p.is_empty());
-        next.extend(edge.spawn.iter().map(|s| self.graph.qualify(pack, s)));
+        for s in &edge.spawn {
+            let s = self.graph.qualify(pack, s);
+            let s = self.caught_up(k, s);
+            next.push(s);
+        }
         self.triggers(k);
         next
     }
@@ -766,6 +783,9 @@ impl<'c, 'g> Cx<'c, 'g> {
             d = d.note(
                 "an event that takes no edge must fire the trigger of an in-force deadline, be history a transition reads, or have a type declaring `removes`, `extends`, or `waives`",
             );
+        }
+        if let Some(note) = self.anytime_note(k) {
+            d = d.note(note);
         }
         if node.tags.iter().any(|t| t == "fact") {
             d = d.note(format!(

@@ -461,6 +461,32 @@ impl<'a> Graph<'a> {
         (composed.guard.map(std::borrow::Cow::Owned), applied)
     }
 
+    /// The `anytime` edges (SPEC §5.6) of every node of a used package in
+    /// force on `date`, link edges included: `(qualified source, the
+    /// edge's pack, edge)`.
+    pub fn anytime(&self, date: &str, known_at: Option<&str>) -> Vec<(String, String, &Edge)> {
+        let nodes: BTreeSet<String> = self
+            .packages
+            .iter()
+            .flat_map(|p| {
+                declarations(p).filter_map(|d| match d {
+                    Declaration::Node(n) => Some(format!("{}::{}", p.manifest.pack_id, n.meta.id)),
+                    _ => None,
+                })
+            })
+            .collect();
+        nodes
+            .into_iter()
+            .filter_map(|q| self.node_at(&q, date, known_at).map(|n| (q, n)))
+            .flat_map(|(q, n)| {
+                self.edges(&q, n)
+                    .into_iter()
+                    .filter(|(_, e)| e.anytime)
+                    .map(move |(pack, e)| (q.clone(), pack, e))
+            })
+            .collect()
+    }
+
     /// The qualified target of `edge` declared in `pack`.
     pub fn target(&self, pack: &str, edge: &Edge) -> String {
         self.qualify(pack, &edge.to)

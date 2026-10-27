@@ -219,6 +219,8 @@ module.exports = {
     seq(field('key', 'when'), field('value', $._expression)),
     // Where the edge's numbers come from (design review §2.10).
     seq(field('key', 'basis'), field('value', $._expression)),
+    // Legal from any posture while its `within` deadline is open (SPEC §5.6).
+    field('key', 'anytime'),
   ),
 
   // `min` and `max` are optional; `mode` is required (SPEC §3.1).

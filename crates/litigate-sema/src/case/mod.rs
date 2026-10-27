@@ -192,6 +192,10 @@ pub struct Step {
 pub enum Effect {
     /// The event took an edge.
     Took,
+    /// The event took an `anytime` edge off every track (SPEC §5.6): it
+    /// discharged the edge's `within` deadline and the marking did not
+    /// move; a track reaching the edge's source later takes the edge.
+    Anytime,
     /// The event took no edge and fired the trigger of an in-force
     /// deadline: it created (or, under `first`, re-fired) an obligation.
     Triggered,

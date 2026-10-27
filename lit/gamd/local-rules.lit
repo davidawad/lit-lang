@@ -1,0 +1,183 @@
+module gamd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+/// A motion and its brief are served (L.R. 7.2).
+event MotionServed()
+/// The respondent's response, brief or affidavit is served (L.R. 7.3).
+event ResponseServed()
+/// The brief to which a surreply is desired is filed (L.R. 7.3.1(C)).
+event ReplyBriefFiled()
+/// An order is entered (L.R. 7.6).
+event OrderEntered()
+/// A motion for reconsideration is served (L.R. 7.6).
+event ReconsiderationMotionServed()
+/// A motion the Court may consider immediately after filing is served:
+/// extension of time, excess pages, hearing, surreply and the like (L.R.
+/// 7.7).
+event ExceptedMotionServed()
+/// The clerk enters judgment (L.R. 54.1, 54.2.2).
+event JudgmentEntered()
+/// The prevailing party's bill of costs is served (L.R. 54.2.2).
+event BillOfCostsServed()
+
+/// L.R. 7.2: a party desiring to respond serves its response, brief or
+/// affidavits within 21 days after service of the motion and brief. Briefs
+/// in support of or in response to a motion are limited to 20 pages except
+/// on good cause and leave (L.R. 7.4).
+deadline response-period: 21.days after MotionServed() counted_by frcp6 cite "M.D. Ga. L.R. 7.2"
+{
+  forum frcp
+}
+
+/// L.R. 7.3: a reply is served within 14 days after service of the
+/// response. The movant's reply brief may not exceed 10 pages (L.R. 7.4).
+deadline reply-period: 14.days after ResponseServed() counted_by frcp6 cite "M.D. Ga. L.R. 7.3"
+{
+  forum frcp
+}
+
+/// L.R. 7.3.1(C): briefing concludes with the reply; a party desiring to
+/// file a surreply moves in writing for permission within 14 days of the
+/// filing of the brief to which reply is desired.
+deadline surreply-motion-period: 14.days after ReplyBriefFiled() counted_by frcp6 cite "M.D. Ga. L.R. 7.3.1"
+{
+  forum frcp
+}
+
+/// L.R. 7.6: except for motions under Fed. R. Civ. P. 59(e), a motion for
+/// reconsideration is filed within 14 days after entry of the order. All
+/// briefs are limited to 5 pages, and there is no reply brief.
+deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6 cite "M.D. Ga. L.R. 7.6"
+{
+  forum frcp
+}
+
+/// L.R. 7.6: responses to a motion for reconsideration are filed not later
+/// than 14 days after service of the motion.
+deadline reconsideration-response-period: 14.days after ReconsiderationMotionServed() counted_by frcp6 cite "M.D. Ga. L.R. 7.6"
+{
+  forum frcp
+}
+
+/// L.R. 7.7: a party objecting to a motion excepted from the standard
+/// briefing schedule files a written objection within 7 days after service
+/// of the motion.
+deadline excepted-motion-objection-period: 7.days after ExceptedMotionServed() counted_by frcp6 cite "M.D. Ga. L.R. 7.7"
+{
+  forum frcp
+}
+
+/// L.R. 54.1: unless a statute provides otherwise, a motion for attorney's
+/// fees is filed within 14 days from the clerk's entry of judgment; a late
+/// motion is deemed a waiver of fees.
+deadline fee-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "M.D. Ga. L.R. 54.1"
+{
+  forum frcp
+}
+
+/// L.R. 54.2.2: the prevailing party files a bill of costs within 30 days
+/// from the entry of the judgment that awarded the costs.
+deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "M.D. Ga. L.R. 54.2.2"
+{
+  forum frcp
+}
+
+/// L.R. 54.2.2: opposing counsel has 21 days from service of the bill of
+/// costs to file a response.
+deadline bill-of-costs-response-period: 21.days after BillOfCostsServed() counted_by frcp6 cite "M.D. Ga. L.R. 54.2.2"
+{
+  forum frcp
+}
+
+start motion-served
+
+state motion-served: "Motion and memorandum of law served" by applicant cite "M.D. Ga. L.R. 7.1"
+{
+  note "Unless the assigned judge prescribes otherwise, every civil motion is accompanied by a memorandum of law citing supporting authorities, and a motion alleging facts by a statement of fact (L.R. 7.1). Briefs are limited to 20 pages, the reply to 10; a motion to exceed the limit is filed no later than 5 days before the brief is due (L.R. 7.4). The clerk may extend the time for a brief once, by no more than 14 days (L.R. 6.2). A summary judgment movant attaches a separate numbered statement of material facts; facts not specifically controverted are deemed admitted (L.R. 56). Each period is computed under Fed. R. Civ. P. 6, three days added for service under Rule 6(d) (L.R. 6.3). The motion's own periods under the Federal Rules are lit/frcp's."
+  edge-motion-served-response "Response served" -> response {
+    authority cite "M.D. Ga. L.R. 7.2"
+    within response-period
+  }
+  edge-motion-served-ruling "No response" -> ruling { authority cite "M.D. Ga. L.R. 7.2" }
+}
+
+state response: "Response served" by opponent cite "M.D. Ga. L.R. 7.2"
+{
+  edge-response-ruling "Reply served or time to reply expired" -> ruling {
+    authority cite "M.D. Ga. L.R. 7.3"
+    within reply-period
+  }
+}
+
+decision ruling: "Motion decided without a hearing unless one is ordered" by court cite "M.D. Ga. L.R. 7.5"
+{
+  note "Briefing concludes with the reply; surreplies are not favored (L.R. 7.3.1). A motion for reconsideration is not routine practice and is filed within 14 days after entry of the order (L.R. 7.6)."
+  edge-ruling-granted "Granted" -> decided { authority cite "M.D. Ga. L.R. 7.5" }
+  edge-ruling-denied "Denied" -> decided { authority cite "M.D. Ga. L.R. 7.5" }
+}
+
+terminal decided: "Motion decided: the action continues under lit/frcp" outcome [procedural] cite "M.D. Ga. L.R. 6.3"
+{
+  note "The local rules supplement the Federal Rules of Civil Procedure (Preamble), and their periods are computed under Fed. R. Civ. P. 6 (L.R. 6.3)."
+}
+
+test "a response is due 21 days after service of the motion" cite "M.D. Ga. L.R. 7.2"
+{
+  given MotionServed() on 2026-09-01
+  expect deadline(response-period) == 2026-09-22
+}
+
+test "a reply is due 14 days after service of the response" cite "M.D. Ga. L.R. 7.3"
+{
+  given ResponseServed() on 2026-09-08
+  expect deadline(reply-period) == 2026-09-22
+}
+
+test "a surreply motion is due 14 days after the reply is filed" cite "M.D. Ga. L.R. 7.3.1"
+{
+  given ReplyBriefFiled() on 2026-09-15
+  expect deadline(surreply-motion-period) == 2026-09-29
+}
+
+test "a reconsideration motion is due 14 days after entry of the order" cite "M.D. Ga. L.R. 7.6"
+{
+  given OrderEntered() on 2026-09-22
+  expect deadline(reconsideration-period) == 2026-10-06
+}
+
+test "a reconsideration response is due 14 days after service" cite "M.D. Ga. L.R. 7.6"
+{
+  given ReconsiderationMotionServed() on 2026-09-29
+  expect deadline(reconsideration-response-period) == 2026-10-13
+}
+
+test "an objection to an excepted motion is due 7 days after service" cite "M.D. Ga. L.R. 7.7"
+{
+  given ExceptedMotionServed() on 2026-10-06
+  expect deadline(excepted-motion-objection-period) == 2026-10-13
+}
+
+test "a fee motion is due 14 days after entry of judgment" cite "M.D. Ga. L.R. 54.1"
+{
+  given JudgmentEntered() on 2026-10-13
+  expect deadline(fee-motion-period) == 2026-10-27
+}
+
+test "a bill of costs is due 30 days after entry of judgment" cite "M.D. Ga. L.R. 54.2.2"
+{
+  given JudgmentEntered() on 2026-10-20
+  expect deadline(bill-of-costs-period) == 2026-11-19
+}
+
+test "a response to the bill of costs is due 21 days after service" cite "M.D. Ga. L.R. 54.2.2"
+{
+  given BillOfCostsServed() on 2026-10-27
+  expect deadline(bill-of-costs-response-period) == 2026-11-17
+}
+
+test "a period ending on Labor Day runs to the next day" cite "M.D. Ga. L.R. 7.2"
+{
+  given MotionServed() on 2026-08-17
+  expect deadline(response-period) == 2026-09-08
+}

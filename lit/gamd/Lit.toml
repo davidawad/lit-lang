@@ -1,0 +1,48 @@
+# The Middle District of Georgia's local rules for civil cases over
+# lit/frcp (FRCP 83(a); the Preamble: the rules "supplement the Federal
+# Rules of Civil Procedure"): a local-rule layer that declares only the
+# periods the local rules themselves state and re-encodes no FRCP deadline.
+# Every period is calculated as FRCP 6 directs (L.R. 6.3), so each deadline
+# names `forum frcp` (lit/core's frcp6 computes frcp periods only). The
+# edition is the one stated on the document, "As Amended March 7, 2022",
+# the most recent amendment the court's local-rules page lists
+# (sources/md-ga/PROVENANCE.md).
+[package]
+name = "gamd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "gamd-local-rules"
+forum = "gamd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Middle District of Georgia: Local Rules (civil)"
+description = "The Middle District of Georgia's local rules for civil cases as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): motion briefing, surreply, reconsideration, objections to motions decided on filing, attorney's fees and taxation of costs."
+in_force = "2022-03-07"
+known_at = "2026-10-27"
+unknown_before = "2022-03-07"
+jurisdiction = "United States District Court, M.D. Georgia"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "gamd-lr"
+issuer = "United States District Court for the Middle District of Georgia"
+date = "2022-03-07"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.gamd-lr]
+title = "Local Rules of the United States District Court for the Middle District of Georgia (as amended March 7, 2022)"
+url = "https://www.gamd.uscourts.gov/sites/gamd/files/Local_Rules-12_1_2022.pdf"
+path = "sources/md-ga/mdga-local-rules-sectioned.txt"
+path_sha256 = "bf31258f6359b4b9827bd9408addcb97f3c24e6de452a80322a5ba9d18db6976"
+sha256 = "6a38fa2a50e3cc6a9daea03964a09d50926a8bfd1dd2b186203c2bacbc6401f9"
+as_of = "2022-03-07"
+cite_prefixes = ["M.D. Ga. L.R."]
+section_heading = "L.R. {n}"

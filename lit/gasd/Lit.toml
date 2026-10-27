@@ -1,0 +1,55 @@
+# The Southern District of Georgia's local civil rules over lit/frcp (FRCP
+# 83(a); LR Gen. 1A: the rules "shall be read in a manner consistent with
+# the Federal Rules of Civil Procedure"): a local-rule layer that declares
+# only the periods the local rules themselves state and re-encodes no FRCP
+# deadline. Each period is counted under FRCP 6(a), which governs "any
+# local rule", so each deadline names `forum frcp` (lit/core's frcp6
+# computes frcp periods only). The rules take effect on October 7, 2026
+# (LR Gen. 1A).
+[package]
+name = "gasd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "gasd-local-rules"
+forum = "gasd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Southern District of Georgia: Local Rules (general and civil)"
+description = "The Southern District of Georgia's general and civil local rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): motion briefing, sealed records, the Rule 26(f) conference, report and initial disclosures, class certification, summary judgment and bills of costs."
+in_force = "2026-10-07"
+known_at = "2026-10-27"
+unknown_before = "2026-10-07"
+jurisdiction = "United States District Court, S.D. Georgia"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "gasd-lr"
+issuer = "United States District Court for the Southern District of Georgia"
+date = "2026-10-07"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.gasd-lr]
+title = "Local Rules for the Southern District of Georgia (effective October 7, 2026)"
+url = "https://www.gasd.uscourts.gov/sites/gasd/files/local_rules/SDGA_Local_Rules_Effective_10-07-2026.pdf"
+path = "sources/sd-ga/sdga-local-rules-sectioned.txt"
+path_sha256 = "6f5214a2bb86045dcae24edf5172748170dd920f2478c5c5f0240f4bd56c5f7b"
+sha256 = "878813a8fdeac35a2e87f4db51fd8ffff30172137f4943eeb88f3474185a0edf"
+as_of = "2026-10-07"
+
+[[cite_syntax.rules]]
+prefixes = ["S.D. Ga. LR Civ."]
+heading = "LR Civ. {}"
+source = "gasd-lr"
+
+[[cite_syntax.rules]]
+prefixes = ["S.D. Ga. LR Gen."]
+heading = "LR Gen. {}"
+source = "gasd-lr"

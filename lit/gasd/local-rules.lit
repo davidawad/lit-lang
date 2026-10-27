@@ -1,0 +1,214 @@
+module gasd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+/// A motion is served (LR Civ. 7(b)).
+event MotionServed()
+/// A motion for summary judgment is served (LR Civ. 7(b), 56(b)).
+event SummaryJudgmentMotionServed()
+/// A response to a motion is served (LR Civ. 7(c), 56(c)).
+event ResponseServed()
+/// A motion to seal is denied (LR Civ. 5.2).
+event SealDenied()
+/// The first answer is filed (LR Civ. 26(a)(2)).
+event FirstAnswerFiled()
+/// The action is removed to this Court (LR Civ. 26(a)(2)).
+event Removed()
+/// The parties hold the Rule 26(f) conference (LR Civ. 26(a)(3), (4)).
+event RuleTwentySixFConferenceHeld()
+/// Discovery commences (LR Civ. 23(b), 26(c)).
+event DiscoveryCommenced()
+/// Judgment or another final order from which an appeal may be taken is
+/// entered (LR Civ. 54(a)).
+event JudgmentEntered()
+/// The appellate court's mandate is filed in this Court (LR Civ. 54(b)).
+event MandateFiled()
+
+/// LR Civ. 7(b): responses to motions other than for summary judgment are
+/// filed within 14 days of service; failure to respond indicates no
+/// opposition. A typed combined motion and brief, and a response, may not
+/// exceed 6,500 words, a reply 2,500 words; handwritten filings 25 and 10
+/// pages (LR Civ. 7(e)).
+deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "S.D. Ga. LR Civ. 7(b)"
+{
+  forum frcp
+}
+
+/// LR Civ. 7(b), 56(b): responses to motions for summary judgment are filed
+/// within 21 days of service of the motion.
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "S.D. Ga. LR Civ. 56(b)"
+{
+  forum frcp
+}
+
+/// LR Civ. 7(c), 56(c): a reply may be filed within 7 days of service of the
+/// response; any further brief needs leave of court (LR Civ. 7(d), 56(d)).
+deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "S.D. Ga. LR Civ. 7(c)"
+{
+  forum frcp
+}
+
+/// LR Civ. 5.2: when a motion to seal is denied, the material is returned
+/// unless the moving party files a notice of intent to appeal the denial
+/// within 14 days.
+deadline seal-appeal-notice-period: 14.days after SealDenied() counted_by frcp6 cite "S.D. Ga. LR Civ. 5.2"
+{
+  forum frcp
+}
+
+/// LR Civ. 26(a)(2): the parties conduct the Rule 26(f) conference within
+/// 28 days from the date the first answer is filed.
+deadline planning-conference-period: 28.days after FirstAnswerFiled() counted_by frcp6 cite "S.D. Ga. LR Civ. 26(a)"
+{
+  forum frcp
+}
+
+/// LR Civ. 26(a)(2): in a removed case the conference is held within 28 days
+/// of removal whether or not an answer has been filed.
+deadline removed-planning-conference-period: 28.days after Removed() counted_by frcp6 cite "S.D. Ga. LR Civ. 26(a)"
+{
+  forum frcp
+}
+
+/// LR Civ. 26(a)(3): the joint Rule 26(f) report is filed within 7 days of
+/// the conference.
+deadline planning-report-period: 7.days after RuleTwentySixFConferenceHeld() counted_by frcp6 cite "S.D. Ga. LR Civ. 26(a)"
+{
+  forum frcp
+}
+
+/// LR Civ. 26(a)(4): initial disclosures under Rule 26(a)(1) are served
+/// within 14 days of the Rule 26(f) conference.
+deadline initial-disclosures-period: 14.days after RuleTwentySixFConferenceHeld() counted_by frcp6 cite "S.D. Ga. LR Civ. 26(a)"
+{
+  forum frcp
+}
+
+/// LR Civ. 23(b): a motion for class certification is filed within 90 days
+/// from the commencement of discovery.
+deadline class-certification-period: 90.days after DiscoveryCommenced() counted_by frcp6 cite "S.D. Ga. LR Civ. 23(b)"
+{
+  forum frcp
+}
+
+/// LR Civ. 54(a): a bill of costs under Fed. R. Civ. P. 54 is filed by the
+/// prevailing party within 14 days after entry of judgment or other final
+/// order from which an appeal may be taken.
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "S.D. Ga. LR Civ. 54(a)"
+{
+  forum frcp
+}
+
+/// LR Civ. 54(b): a bill of costs on appeal taxable in the district court
+/// under Fed. R. App. P. 39 is filed within 14 days of the filing of the
+/// appellate court's mandate in this Court.
+deadline appeal-costs-period: 14.days after MandateFiled() counted_by frcp6 cite "S.D. Ga. LR Civ. 54(b)"
+{
+  forum frcp
+}
+
+start motion-served
+
+state motion-served: "Combined motion and brief served" by applicant cite "S.D. Ga. LR Civ. 7(a)"
+{
+  note "Motions and supporting briefs are filed as one combined document (LR Civ. 7(a)), specifying the statute, rule or principle at issue (LR Civ. 7(f)) and citing the record for every factual assertion (LR Civ. 7(g)). With the parties' consent the Clerk may extend the time to respond to a pleading or motion by up to 14 days (LR Civ. 6). A summary judgment motion attaches its exhibits and a separately numbered Statement of Undisputed Material Facts (LR Civ. 56(a)). Discovery is completed within 6 months of its commencement unless the Court orders otherwise (LR Civ. 26(c)); that period is not encoded. A judge may modify any deadline in the rules (LR Gen. 1A). The motion's own periods under the Federal Rules are lit/frcp's."
+  edge-motion-served-response "Response served" -> response {
+    authority cite "S.D. Ga. LR Civ. 7(b)"
+    within response-period
+  }
+  edge-motion-served-unopposed "No timely response: no opposition" -> ruling {
+    authority cite "S.D. Ga. LR Civ. 7(b)"
+  }
+}
+
+state response: "Response served" by opponent cite "S.D. Ga. LR Civ. 7(b)"
+{
+  edge-response-ruling "Reply served or time to reply elapsed" -> ruling {
+    authority cite "S.D. Ga. LR Civ. 7(c)"
+    within reply-period
+  }
+}
+
+decision ruling: "Motion decided after the time for reply" by court cite "S.D. Ga. LR Civ. 7(k)"
+{
+  note "Typically the Court does not rule until the time for the reply has elapsed; it may rule at once on a motion for extension of time and on a joint or consent motion (LR Civ. 7(k)). A hearing is requested by separate motion (LR Civ. 7(h))."
+  edge-ruling-granted "Granted" -> decided { authority cite "S.D. Ga. LR Civ. 7(k)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "S.D. Ga. LR Civ. 7(k)" }
+}
+
+terminal decided: "Motion decided: the action continues under lit/frcp" outcome [procedural] cite "S.D. Ga. LR Gen. 1A"
+{
+  note "The local rules are read consistently with the Federal Rules of Civil Procedure, which prevail in any irreconcilable conflict (LR Gen. 1A)."
+}
+
+test "a response is due 14 days after service of the motion" cite "S.D. Ga. LR Civ. 7(b)"
+{
+  given MotionServed() on 2026-10-13
+  expect deadline(response-period) == 2026-10-27
+}
+
+test "a summary judgment response is due 21 days after service" cite "S.D. Ga. LR Civ. 56(b)"
+{
+  given SummaryJudgmentMotionServed() on 2026-10-20
+  expect deadline(summary-judgment-response-period) == 2026-11-10
+}
+
+test "a reply is due 7 days after service of the response" cite "S.D. Ga. LR Civ. 7(c)"
+{
+  given ResponseServed() on 2026-10-27
+  expect deadline(reply-period) == 2026-11-03
+}
+
+test "notice of intent to appeal a sealing denial is due in 14 days" cite "S.D. Ga. LR Civ. 5.2"
+{
+  given SealDenied() on 2026-11-03
+  expect deadline(seal-appeal-notice-period) == 2026-11-17
+}
+
+test "the Rule 26(f) conference is held within 28 days of the first answer" cite "S.D. Ga. LR Civ. 26(a)"
+{
+  given FirstAnswerFiled() on 2026-11-10
+  expect deadline(planning-conference-period) == 2026-12-08
+}
+
+test "in a removed case the conference is held within 28 days of removal" cite "S.D. Ga. LR Civ. 26(a)"
+{
+  given Removed() on 2026-11-17
+  expect deadline(removed-planning-conference-period) == 2026-12-15
+}
+
+test "the Rule 26(f) report is due 7 days after the conference" cite "S.D. Ga. LR Civ. 26(a)"
+{
+  given RuleTwentySixFConferenceHeld() on 2026-11-24
+  expect deadline(planning-report-period) == 2026-12-01
+}
+
+test "initial disclosures are due 14 days after the conference" cite "S.D. Ga. LR Civ. 26(a)"
+{
+  given RuleTwentySixFConferenceHeld() on 2026-12-01
+  expect deadline(initial-disclosures-period) == 2026-12-15
+}
+
+test "class certification is moved within 90 days of discovery commencement" cite "S.D. Ga. LR Civ. 23(b)"
+{
+  given DiscoveryCommenced() on 2026-12-08
+  expect deadline(class-certification-period) == 2027-03-08
+}
+
+test "a bill of costs is due 14 days after judgment" cite "S.D. Ga. LR Civ. 54(a)"
+{
+  given JudgmentEntered() on 2026-12-15
+  expect deadline(bill-of-costs-period) == 2026-12-29
+}
+
+test "appeal costs are due 14 days after the mandate is filed" cite "S.D. Ga. LR Civ. 54(b)"
+{
+  given MandateFiled() on 2026-12-22
+  expect deadline(appeal-costs-period) == 2027-01-05
+}
+
+test "a period ending on Thanksgiving runs to the next day" cite "S.D. Ga. LR Civ. 7(b)"
+{
+  given MotionServed() on 2026-11-12
+  expect deadline(response-period) == 2026-11-27
+}

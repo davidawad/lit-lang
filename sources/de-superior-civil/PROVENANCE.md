@@ -12,3 +12,10 @@
 - Edition: Order of Mar. 13, 2026 amending Superior Court Civil Rules 5(g) and 37(e) and creating Rules 141-146, as linked on https://courts.delaware.gov/rules/ (retrieved 2026-10-27). Amending order to the consolidated rules (de-superior-civil/rules-civ-2026-03.txt), which does not reflect it.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 f430f16d86707c30d20e34dd8da8211385913c8db48180f0966d96d0ef575bce. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+### `de-superior-civil/order-2026-09-30-rule-26b.txt` — Delaware Superior Court order amending Civil Rule 26(b) (Sept. 30, 2026)
+
+- Source: https://courts.delaware.gov/forms/download.aspx?id=345478 (official site; 4 pages, sha256 7f4c8c66297f8096fef17cfb73699954f4c97796219318806a7aec68a0a97362).
+- Edition: Order of Sept. 30, 2026 amending Superior Court Civil Rule 26(b), as linked "Amendment to Superior Court Civil Rules to Amend Rules Rule 26(b)" on https://courts.delaware.gov/rules/ (retrieved 2026-10-27). Amending order to the consolidated rules (de-superior-civil/rules-civ-2026-03.txt), which does not reflect it.
+- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 e26a1b5ccf1a557a02db384c93dfd3839a5ab88e04c723de5ddedbc667aa6083. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

@@ -5,3 +5,4 @@
 - Edition: CGCCA Rules of Appellate Procedure, Rev. 03/25, published together with the Joint Rules of Appellate Procedure effective 27 May 2024; the court's page labels it 'MAR 2025' and links no later edition.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 722c1c9a158d535dd681add788049a434d7d7fc4a84aee8ef55a8710eba55521. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+- Fetch method: BrowserOS neo; site served a bot challenge to plain automated requests (CoS ruling 2026-10-27). uscg.mil robots.txt does not disallow /Portals/; its Disclaimer page bars no automated access.

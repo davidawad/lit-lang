@@ -1,0 +1,118 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored text.
+// Sources: 10 U.S.C. §§ 948b, 948d, 949a, 950b-950g (LII headings fetched 2026-10-26).
+// Court rules are not fetched. Key decisions are unverified.
+module outline-cmcr
+
+start commission-trial
+
+state commission-trial: "Military commission trial" by office cite ?("10 U.S.C. § 948d")
+{
+  note "OUTLINE. Jurisdiction of military commissions under 10 U.S.C. § 948d, with the rules under § 949a. Trial procedure is outside this outline. Key decision (verify): Hamdan v. Rumsfeld, 548 U.S. 557 (2006) (commission jurisdiction and procedure)."
+  edge-commission-trial-action "Findings and sentence entered" -> convening-authority-action {
+    authority cite ?("10 U.S.C. § 950b")
+  }
+  edge-commission-trial-rehearing "Rehearing ordered" -> rehearing {
+    authority cite ?("10 U.S.C. § 950e")
+  }
+  edge-commission-trial-interlocutory "Government takes interlocutory appeal" -> government-interlocutory {
+    authority cite ?("10 U.S.C. § 950d")
+  }
+}
+
+decision convening-authority-action: "Review by the convening authority" by office cite ?("10 U.S.C. § 950b")
+{
+  note "OUTLINE. Review by the convening authority under § 950b. The period and the actions it may take are holes."
+  edge-ca-action-referred "Case referred on appeal" -> appellate-referral {
+    authority cite ?("10 U.S.C. § 950c")
+  }
+  edge-ca-action-disapproved "Findings or sentence disapproved" -> acquitted-by-action {
+    authority cite ?("10 U.S.C. § 950b")
+  }
+}
+
+decision appellate-referral: "Appellate referral or waiver of appeal" by applicant cite ?("10 U.S.C. § 950c")
+{
+  note "OUTLINE. Appellate referral and waiver or withdrawal of appeal under § 950c. The election period is a hole."
+  edge-appellate-referral-cmcr "Referred to the Court" -> cmcr-review {
+    authority cite ?("10 U.S.C. § 950c")
+  }
+  edge-appellate-referral-waived "Waived or withdrawn" -> waived {
+    authority cite ?("10 U.S.C. § 950c")
+  }
+}
+
+state cmcr-review: "Review by the Court of Military Commission Review" by court cite ?("10 U.S.C. § 950f")
+{
+  note "OUTLINE. Review by the Court under § 950f. The standard and the periods are holes."
+  edge-cmcr-review-decided "Court decides" -> cmcr-decision {
+    authority cite ?("10 U.S.C. § 950f")
+  }
+}
+
+decision cmcr-decision: "Court of Military Commission Review decision" by court cite ?("10 U.S.C. § 950f")
+{
+  note "OUTLINE. The Court affirms, sets aside, or returns the case. Further review is in the D.C. Circuit under § 950g."
+  edge-cmcr-decision-affirmed "Affirmed" -> dc-review {
+    authority cite ?("10 U.S.C. § 950g")
+  }
+  edge-cmcr-decision-returned "Set aside and returned" -> cmcr-returned {
+    authority cite ?("10 U.S.C. § 950f")
+  }
+}
+
+state dc-review: "Review by the United States Court of Appeals for the District of Columbia Circuit" by applicant cite ?("10 U.S.C. § 950g")
+{
+  note "OUTLINE. Review in the D.C. Circuit under § 950g. Writ of certiorari to the Supreme Court is also in § 950g. Key decision (verify): Al Bahlul v. United States, 767 F.3d 1 (D.C. Cir. 2014) (en banc) (military commission jurisdiction; verify before citing)."
+  edge-dc-review-decided "D.C. Circuit decides" -> dc-decided {
+    authority cite ?("10 U.S.C. § 950g")
+  }
+}
+
+state rehearing: "Rehearing" by court cite ?("10 U.S.C. § 950e")
+{
+  note "OUTLINE. A rehearing under § 950e returns the case to the commission. The procedure is a hole."
+  edge-rehearing-trial "Rehearing ordered" -> commission-trial {
+    authority cite ?("10 U.S.C. § 950e")
+  }
+}
+
+state government-interlocutory: "Interlocutory appeal by the United States" by office cite ?("10 U.S.C. § 950d")
+{
+  note "OUTLINE. The United States may take interlocutory appeals under § 950d. The period and scope are holes."
+  edge-government-interlocutory-decided "Appeal decided" -> interlocutory-decided {
+    authority cite ?("10 U.S.C. § 950d")
+  }
+}
+
+state cmcr-returned: "Set aside and returned for further proceedings" by court cite ?("10 U.S.C. § 950f")
+{
+  note "OUTLINE. The case returns to the convening authority or the commission. The next steps are holes."
+  edge-cmcr-returned-action "Return proceedings" -> convening-authority-action {
+    authority cite ?("10 U.S.C. § 950b")
+  }
+}
+
+terminal acquitted-by-action: "Findings and sentence disapproved at convening authority action" outcome [win] cite ?("10 U.S.C. § 950b")
+{
+  note "OUTLINE. Full disapproval at action."
+  payoff ?
+}
+
+terminal waived: "Appeal waived or withdrawn" outcome [decided] cite ?("10 U.S.C. § 950c")
+{
+  note "OUTLINE. No appellate review follows waiver."
+  payoff ?
+}
+
+terminal dc-decided: "D.C. Circuit decision" outcome [decided] cite ?("10 U.S.C. § 950g")
+{
+  note "OUTLINE. D.C. Circuit outcome. Supreme Court certiorari is in § 950g."
+  payoff ?
+}
+
+terminal interlocutory-decided: "Interlocutory appeal decided" outcome [decided] cite ?("10 U.S.C. § 950d")
+{
+  note "OUTLINE. Outcome of the government's interlocutory appeal."
+  payoff ?
+}

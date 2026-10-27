@@ -1,0 +1,135 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-oh-state-appellate
+
+start judgment-signed
+
+state judgment-signed: "Judgment signed" by applicant cite ?("R.C. 2505.02")
+{
+  note "OUTLINE. Final appealable order (R.C. 2505.02; verify). Judgment entry form under Civ.R. 58 (verify)."
+  edge-judgment-signed-notice "Appeal taken within delay" -> notice-filed {
+    authority cite ?("App.R. 4(A)")
+  }
+  edge-judgment-signed-late "Delay missed" -> time-barred {
+    authority cite ?("App.R. 4(A)")
+  }
+}
+
+state notice-filed: "Appeal taken" by applicant cite ?("App.R. 3(A)")
+{
+  note "OUTLINE. Notice of appeal within 30 days after entry of judgment (App.R. 4(A); period verify)."
+  edge-notice-filed-record "Record lodged" -> record-lodged {
+    authority cite ?("App.R. 9")
+  }
+}
+
+state record-lodged: "Record lodged" by office cite ?("App.R. 9")
+{
+  note "OUTLINE. Record contents and transcript deadlines are holes (?)."
+  edge-record-lodged-briefs "Briefing schedule set" -> briefing {
+    authority cite ?("App.R. 16")
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite ?("App.R. 16")
+{
+  note "OUTLINE. Brief length and format are holes until verified against the court's rules."
+  edge-briefing-argument "Argument set" -> argument {
+    authority cite ?("App.R. 21")
+  }
+  edge-briefing-submitted "Submitted on briefs" -> appellate-decision {
+    authority cite ?("App.R. 12")
+  }
+}
+
+state argument: "Oral argument" by office cite ?("App.R. 21")
+{
+  note "OUTLINE. Argument practice and time are holes until verified."
+  edge-argument-decision "Argued" -> appellate-decision {
+    authority cite ?("App.R. 12")
+  }
+}
+
+decision appellate-decision: "Appellate decision" by court cite ?("App.R. 12")
+{
+  note "OUTLINE. Standard of review is a hole until verified. Determination and judgment (App.R. 12; verify). Standard of review is a hole until verified."
+  edge-decision-affirmed "Affirmed" -> affirmed {
+    authority cite ?("App.R. 12")
+  }
+  edge-decision-reversed "Reversed or amended" -> reversed {
+    authority cite ?("App.R. 12")
+  }
+  edge-decision-remanded "Remanded" -> remanded {
+    authority cite ?("App.R. 12")
+  }
+  edge-decision-dismissed "Appeal dismissed" -> appeal-dismissed {
+    authority cite ?("App.R. 12")
+  }
+  edge-decision-rehearing "Rehearing sought" -> rehearing-filed {
+    authority cite ?("App.R. 26(A)")
+  }
+}
+
+state rehearing-filed: "Application for rehearing" by applicant cite ?("App.R. 26(A)")
+{
+  note "OUTLINE. Rehearing period is a hole (?). Denial or grant is a hole until verified."
+  edge-rehearing-supreme "Rehearing denied; review sought" -> supreme-review {
+    authority cite ?("S.Ct.Prac.R. 7.01")
+  }
+  edge-rehearing-decision "Rehearing granted" -> appellate-decision {
+    authority cite ?("App.R. 12")
+  }
+}
+
+state supreme-review: "Review or writ application to supreme court" by applicant cite ?("S.Ct.Prac.R. 7.01")
+{
+  note "OUTLINE. Discretionary appeal to the Supreme Court of Ohio (S.Ct.Prac.R. 7.01; verify). Time limit is a hole (?)."
+  edge-supreme-review-denied "Review denied" -> review-denied {
+    authority cite ?("S.Ct.Prac.R. 7.01")
+  }
+  edge-supreme-review-granted "Review granted" -> supreme-decided {
+    authority cite ?("S.Ct.Prac.R. 7.01")
+  }
+}
+
+terminal time-barred: "Appeal time missed" outcome [loss] cite ?("App.R. 4(A)")
+{
+  note "OUTLINE. Delay is generally jurisdictional or near-jurisdictional (verify)."
+  payoff ?
+}
+
+terminal affirmed: "Affirmed" outcome [loss] cite ?("App.R. 12")
+{
+  note "OUTLINE. Further review: see supreme-review."
+  payoff ?
+}
+
+terminal reversed: "Reversed or amended" outcome [win] cite ?("App.R. 12")
+{
+  note "OUTLINE. Fees and costs are holes."
+  payoff ?
+}
+
+terminal remanded: "Remanded" outcome [neutral] cite ?("App.R. 12")
+{
+  note "OUTLINE. Remand outcome depends on the trial court's next ruling."
+  payoff ?
+}
+
+terminal appeal-dismissed: "Appeal dismissed" outcome [loss] cite ?("App.R. 12")
+{
+  note "OUTLINE. Grounds for dismissal are holes until verified."
+  payoff ?
+}
+
+terminal review-denied: "Review denied" outcome [loss] cite ?("S.Ct.Prac.R. 7.01")
+{
+  note "OUTLINE. Denial of review ends the state appeal path."
+  payoff ?
+}
+
+terminal supreme-decided: "Supreme court decided" outcome [neutral] cite ?("S.Ct.Prac.R. 7.01")
+{
+  note "OUTLINE. Outcome is a hole until the decision is known."
+  payoff ?
+}

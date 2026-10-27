@@ -1,0 +1,27 @@
+[package]
+name = "outline-ca9-bap"
+version = "0.0.1"
+language = 1
+pack_id = "outline-ca9-bap"
+forum = "fed-ca9-bap"
+authority = "FederalRule"
+title = "OUTLINE: Ninth Circuit Bankruptcy Appellate Panel, appellate"
+description = "Outline only: structure, cites and holes. Every value is a hole until verified against vendored rule text."
+in_force = "2025-01-01"
+known_at = "2025-01-01"
+unknown_before = "2025-01-01"
+jurisdiction = "Bankruptcy Appellate Panel of the Ninth Circuit"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[sources.usc28]
+title = "28 U.S.C. (United States Code, title 28); statutory text not vendored in this outline"
+url = "https://www.law.cornell.edu/uscode/text/28"
+
+[[cite_syntax.rules]]
+prefixes = ["28 U.S.C."]
+heading = "{}"
+source = "usc28"

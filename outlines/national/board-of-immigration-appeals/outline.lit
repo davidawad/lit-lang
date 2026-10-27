@@ -1,0 +1,144 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored regulation text.
+// Sources: 8 C.F.R. §§ 1003.2, 1003.3, 1003.38 (Cornell LII, headings and deadline
+// text fetched 2026-10-26); 8 U.S.C. §§ 1229a, 1252 (LII headings, fetched 2026-10-26).
+// Key decisions are unverified.
+module outline-bia
+
+start immigration-judge-order
+
+state immigration-judge-order: "Immigration judge decision or order" by office cite ?("8 U.S.C. § 1229a; 8 C.F.R. § 1003.38")
+{
+  note "OUTLINE. An immigration judge decides removal proceedings under 8 U.S.C. § 1229a. The appeal to the Board of Immigration Appeals is under 8 C.F.R. § 1003.38. Relief decisions and bond decisions have their own routes (outside this outline)."
+  edge-ij-order-notice "Respondent or DHS files notice of appeal" -> notice-of-appeal {
+    authority cite ?("8 C.F.R. § 1003.3(a)")
+  }
+}
+
+decision notice-of-appeal: "Notice of appeal filed in time" by applicant cite ?("8 C.F.R. § 1003.3(a); 8 C.F.R. § 1003.38(b)")
+{
+  note "OUTLINE. The notice of appeal (Form EOIR-26) must be filed within the period in 8 C.F.R. § 1003.38(b). The period and the fee and waiver rules are holes. Verify the period text."
+  edge-notice-of-appeal-timely "Timely" -> briefing {
+    authority cite ?("8 C.F.R. § 1003.38(b)")
+  }
+  edge-notice-of-appeal-late "Untimely" -> dismissed-untimely {
+    authority cite ?("8 C.F.R. § 1003.38(b)")
+  }
+}
+
+state briefing: "Briefing schedule before the Board" by applicant cite ?("8 C.F.R. § 1003.3(c)")
+{
+  note "OUTLINE. Briefs on appeal and extensions are under 8 C.F.R. § 1003.3(c). The periods are holes."
+  edge-briefing-board-ruling "Briefing complete or closed" -> board-ruling {
+    authority cite ?("8 C.F.R. § 1003.3(c)")
+  }
+}
+
+decision board-ruling: "Board decision on appeal" by court cite ?("8 C.F.R. § 1003.1(d)(3)")
+{
+  note "OUTLINE. The Board reviews factual findings for clear error and legal questions and discretion de novo under 8 C.F.R. § 1003.1(d)(3) (verify the subsections). Key decision (verify): Matter of Acosta, 19 I&N Dec. 211 (BIA 1985) (persecution and the immutable-characteristic test, cited for merits review)."
+  edge-board-ruling-dismissed "Appeal dismissed or order affirmed" -> final-order {
+    authority cite ?("8 C.F.R. § 1003.1(d)")
+  }
+  edge-board-ruling-sustained "Appeal sustained; relief or termination granted" -> relief-granted {
+    authority cite ?("8 C.F.R. § 1003.1(d)")
+  }
+  edge-board-ruling-remand "Remanded to the immigration judge" -> remanded-to-ij {
+    authority cite ?("8 C.F.R. § 1003.1(d)")
+  }
+}
+
+state remanded-to-ij: "Remanded to the immigration judge" by court cite ?("8 C.F.R. § 1003.1(d)")
+{
+  note "OUTLINE. The immigration judge decides on remand. The remand outcome is not modeled further; it returns to the order stage."
+  edge-remanded-to-ij-order "Remand decision issued" -> immigration-judge-order {
+    authority cite ?("8 C.F.R. § 1003.1(d)")
+  }
+}
+
+state final-order: "Final administrative order" by office cite ?("8 C.F.R. § 1003.1(d)")
+{
+  note "OUTLINE. A final order of removal or dismissal, subject to the post-decision routes below. Key decision (verify): INS v. Cardoza-Fonseca, 480 U.S. 421 (1987) (well-founded fear standard, cited on the asylum merits)."
+  edge-final-order-post "Post-decision motion or petition" -> post-decision {
+    authority cite ?("8 C.F.R. § 1003.2")
+  }
+}
+
+decision post-decision: "Motion to reconsider, motion to reopen, or petition for review" by applicant cite ?("8 C.F.R. § 1003.2(b)(2); 8 C.F.R. § 1003.2(c)(2); 8 U.S.C. § 1252(b)(1)")
+{
+  note "OUTLINE. A motion to reconsider is due within 30 days after the mailing of the Board decision (8 C.F.R. § 1003.2(b)(2)). A motion to reopen is due within 90 days after the final administrative decision (8 C.F.R. § 1003.2(c)(2)), subject to the exceptions in § 1003.2(c)(3). A petition for review to the court of appeals is under 8 U.S.C. § 1252(b)(1), with the period stated there (verify). Confirm the periods against the current text before use."
+  edge-post-decision-reconsider "Motion to reconsider" -> reconsider-ruling {
+    authority cite ?("8 C.F.R. § 1003.2(b)(2)")
+  }
+  edge-post-decision-reopen "Motion to reopen" -> reopen-ruling {
+    authority cite ?("8 C.F.R. § 1003.2(c)(2)")
+  }
+  edge-post-decision-petition "Petition for review in court of appeals" -> petition-review {
+    authority cite ?("8 U.S.C. § 1252(b)(1)")
+  }
+}
+
+decision reconsider-ruling: "Ruling on motion to reconsider" by court cite ?("8 C.F.R. § 1003.2(b)")
+{
+  note "OUTLINE. The Board reconsiders on a showing of an error of fact or law (verify the § 1003.2(b)(1) standard)."
+  edge-reconsider-granted "Granted; decision revised" -> board-ruling {
+    authority cite ?("8 C.F.R. § 1003.2(b)")
+  }
+  edge-reconsider-denied "Denied" -> petition-review {
+    authority cite ?("8 C.F.R. § 1003.2(b)")
+  }
+}
+
+decision reopen-ruling: "Ruling on motion to reopen" by court cite ?("8 C.F.R. § 1003.2(c)")
+{
+  note "OUTLINE. The Board reopens for new material evidence or other grounds under 8 C.F.R. § 1003.2(c) (verify the grounds and the exceptions)."
+  edge-reopen-granted "Granted; proceedings reopened" -> immigration-judge-order {
+    authority cite ?("8 C.F.R. § 1003.2(c)")
+  }
+  edge-reopen-denied "Denied" -> petition-review {
+    authority cite ?("8 C.F.R. § 1003.2(c)")
+  }
+}
+
+decision petition-review: "Petition for review filed in time" by applicant cite ?("8 U.S.C. § 1252(b)(1)")
+{
+  note "OUTLINE. A petition for review lies to the court of appeals with venue under 8 U.S.C. § 1252(b)(2). The period is in § 1252(b)(1) (verify). Exclusive jurisdiction in the courts of appeals is in 8 U.S.C. § 1252(a)(5). The circuit packages cover the review."
+  edge-petition-review-filed "Petition filed" -> circuit-review {
+    authority cite ?("8 U.S.C. § 1252(a)(5)")
+  }
+  edge-petition-review-late "Not filed in time" -> petition-untimely {
+    authority cite ?("8 U.S.C. § 1252(b)(1)")
+  }
+}
+
+state circuit-review: "Review by the court of appeals" by court cite ?("8 U.S.C. § 1252(a)(5)")
+{
+  note "OUTLINE. Review by the court of appeals under 8 U.S.C. § 1252. The circuit's own packages cover the appeal."
+  edge-circuit-review-decided "Court of appeals decides" -> circuit-decided {
+    authority cite ?("8 U.S.C. § 1252(a)(5)")
+  }
+}
+
+terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss] cite ?("8 C.F.R. § 1003.38(b)")
+{
+  note "OUTLINE. A late notice of appeal is dismissed. The final order stands."
+  payoff ?
+}
+
+terminal relief-granted: "Appeal sustained; relief granted" outcome [win] cite ?("8 C.F.R. § 1003.1(d)")
+{
+  note "OUTLINE. The Board sustains the appeal and grants relief or termination. The form of relief is a hole."
+  payoff ?
+}
+
+terminal petition-untimely: "Petition for review not filed in time" outcome [loss] cite ?("8 U.S.C. § 1252(b)(1)")
+{
+  note "OUTLINE. A petition for review outside the period in 8 U.S.C. § 1252(b)(1) is barred."
+  payoff ?
+}
+
+terminal circuit-decided: "Court of appeals decision" outcome [decided] cite ?("8 U.S.C. § 1252(a)(5)")
+{
+  note "OUTLINE. The court of appeals outcome; see the circuit packages."
+  payoff ?
+}

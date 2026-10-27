@@ -1,0 +1,203 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-outline-vi-state-civil
+
+start filed
+
+state filed: "Complaint filed" by applicant cite ?("V.I. Superior Court civil rule ? (not verified) (commencement)")
+{
+  note "OUTLINE. Commencement by filing. Virgin Islands civil citations are holes until the superior court rules are pulled and verified."
+  edge-filed-served "Defendant served" -> served {
+    authority cite ?("V.I. Superior Court civil rule ? (not verified) (service)")
+  }
+}
+
+decision served: "Response due" by office cite ?("V.I. Superior Court civil rule ? (not verified) (response)")
+{
+  note "OUTLINE. Response period is a hole. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-served-answer "Answer filed" -> answered {
+    authority cite ?("V.I. Superior Court civil rule ? (not verified) (response)")
+  }
+  edge-served-motion "Motion to dismiss" -> motion-pending {
+    authority cite ?("V.I. Superior Court civil rule ? (not verified) (motion to dismiss)")
+  }
+  edge-served-default "No response by the deadline" -> default-entered {
+    authority cite ?("V.I. Superior Court civil rule ? (not verified) (default)")
+  }
+}
+
+state motion-pending: "Pleading motion pending" by applicant cite ?("V.I. Superior Court civil rule ? (not verified) (motion to dismiss)")
+{
+  note "OUTLINE. Motion to dismiss. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-motion-ruling "Court rules" -> motion-ruling {
+  }
+}
+
+chance motion-ruling: "Ruling on pleading motion" by court cite ?("V.I. Superior Court civil rule ? (not verified) (motion to dismiss)")
+{
+  note "OUTLINE. Probabilities are holes; no calibration."
+  edge-mr-dismissed "Dismissed" -> dismissed-pleading p ? {
+  }
+  edge-mr-leave "Dismissed with leave to amend" -> amend p ? {
+  }
+  edge-mr-denied "Denied" -> answered p ? {
+  }
+}
+
+state amend: "Amended pleading" by applicant cite ?("V.I. Superior Court civil rule ? (not verified) (amendment)")
+{
+  note "OUTLINE. Amendment period and consent are holes."
+  edge-amend-motion "Amended pleading tested again" -> motion-pending {
+  }
+}
+
+state default-entered: "Default entered" by office cite ?("V.I. Superior Court civil rule ? (not verified) (default)")
+{
+  note "OUTLINE. Default entry. Setting it aside: V.I. Superior Court civil rule ? (not verified) (set aside)."
+  edge-default-judgment "Default judgment sought" -> default-judgment {
+    authority cite ?("V.I. Superior Court civil rule ? (not verified) (default judgment)")
+  }
+  edge-default-vacate "Default vacated" -> answered {
+    authority cite ?("V.I. Superior Court civil rule ? (not verified) (set aside)")
+  }
+}
+
+terminal default-judgment: "Default judgment entered" outcome [loss] cite ?("V.I. Superior Court civil rule ? (not verified) (default judgment)")
+{
+  note "OUTLINE. Default judgment. Damages hearing and proof are holes."
+  payoff ?
+}
+
+terminal dismissed-pleading: "Dismissed on the pleadings" outcome [loss] cite ?("V.I. Superior Court civil rule ? (not verified) (motion to dismiss)")
+{
+  note "OUTLINE. Dismissal on a pleading motion. Appeal period is a hole. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  payoff ?
+}
+
+state answered: "Answer filed" by applicant cite ?("V.I. Superior Court civil rule ? (not verified) (answer)")
+{
+  note "OUTLINE. Answer and affirmative defenses."
+  edge-answered-discovery "Case proceeds to discovery" -> discovery {
+    authority cite ?("V.I. Superior Court civil rule ? (not verified) (discovery)")
+  }
+}
+
+state discovery: "Discovery" by applicant cite ?("V.I. Superior Court civil rule ? (not verified) (discovery)")
+{
+  note "OUTLINE. Written discovery, depositions, expert disclosure. Scope and limits are holes."
+  edge-disc-dispute "Discovery dispute" -> dispute {
+    authority cite ?("V.I. Superior Court civil rule ? (not verified) (discovery dispute)")
+  }
+  edge-disc-sj "Dispositive motion" -> sj-motion {
+    authority cite ?("V.I. Superior Court civil rule ? (not verified) (summary judgment)")
+  }
+  edge-disc-settle "Settlement" -> settled {
+  }
+}
+
+decision dispute: "Discovery dispute ruling" by court cite ?("V.I. Superior Court civil rule ? (not verified) (discovery dispute)")
+{
+  note "OUTLINE. Sanctions: V.I. Superior Court civil rule ? (not verified) (sanctions). Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-dispute-resolved "Dispute resolved" -> discovery {
+  }
+  edge-dispute-sanction "Dismissal as a sanction" -> dismissed-sanction {
+    authority cite ?("V.I. Superior Court civil rule ? (not verified) (sanctions)")
+  }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss] cite ?("V.I. Superior Court civil rule ? (not verified) (sanctions)")
+{
+  note "OUTLINE. Dismissal as a sanction. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  payoff ?
+}
+
+state sj-motion: "Summary judgment motion" by applicant cite ?("V.I. Superior Court civil rule ? (not verified) (summary judgment)")
+{
+  note "OUTLINE. Summary judgment standard and timing are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-sj-ruling "Motion decided" -> sj-ruling {
+  }
+}
+
+chance sj-ruling: "Summary judgment ruling" by court cite ?("V.I. Superior Court civil rule ? (not verified) (summary judgment)")
+{
+  note "OUTLINE. Probabilities are holes."
+  edge-sjr-granted "Granted" -> judgment-entered p ? {
+  }
+  edge-sjr-denied "Denied" -> pretrial p ? {
+  }
+}
+
+state pretrial: "Pretrial conference and motions in limine" by court cite ?("V.I. Superior Court civil rule ? (not verified) (pretrial)")
+{
+  note "OUTLINE. Pretrial conference and trial setting are holes."
+  edge-pre-settle "Settlement" -> settled {
+  }
+  edge-pre-trial "Trial" -> trial {
+    authority cite ?("V.I. Superior Court civil rule ? (not verified) (trial)")
+  }
+}
+
+state trial: "Trial" by court cite ?("V.I. Superior Court civil rule ? (not verified) (trial)")
+{
+  note "OUTLINE. Trial by jury or the court. Jury demand timing is a hole."
+  edge-trial-verdict "Verdict or decision" -> verdict {
+  }
+}
+
+chance verdict: "Verdict or decision" by court cite ?("V.I. Superior Court civil rule ? (not verified) (verdict)")
+{
+  note "OUTLINE. Probabilities are holes."
+  edge-v-favorable "For applicant" -> judgment-entered p ? {
+  }
+  edge-v-adverse "For opponent" -> judgment-entered p ? {
+  }
+}
+
+decision judgment-entered: "Judgment entered" by office cite ?("V.I. Superior Court civil rule ? (not verified) (judgment)")
+{
+  note "OUTLINE. Entry of judgment. Costs and fees are holes."
+  edge-jud-post "Post-trial motion" -> post-trial {
+    authority cite ?("V.I. Superior Court civil rule ? (not verified) (post-trial)")
+  }
+  edge-jud-appeal "Notice of appeal" -> appeal-noticed {
+    authority cite ?("V.I. Supreme Court appellate rule ? (not verified)")
+  }
+  edge-jud-final "No further action" -> judgment-final {
+    authority cite ?("V.I. Superior Court civil rule ? (not verified) (judgment)")
+  }
+}
+
+state post-trial: "Post-trial motion" by applicant cite ?("V.I. Superior Court civil rule ? (not verified) (post-trial)")
+{
+  note "OUTLINE. Post-trial motion periods are holes. Relief from judgment: V.I. Superior Court civil rule ? (not verified) (relief from judgment)."
+  edge-post-ruling "Motion decided" -> post-ruling {
+  }
+}
+
+chance post-ruling: "Ruling on post-trial motion" by court cite ?("V.I. Superior Court civil rule ? (not verified) (post-trial)")
+{
+  note "OUTLINE. Probabilities are holes."
+  edge-pr-retrial "New trial" -> trial p ? {
+  }
+  edge-pr-denied "Denied" -> judgment-entered p ? {
+  }
+}
+
+terminal settled: "Settled or dismissed" outcome [settle] cite ?("V.I. Superior Court civil rule ? (not verified) (discovery)")
+{
+  note "OUTLINE. Settlement or voluntary dismissal. Payoff is a hole."
+  payoff ?
+}
+
+terminal judgment-final: "Judgment final in trial court" outcome [final] cite ?("V.I. Superior Court civil rule ? (not verified) (judgment)")
+{
+  note "OUTLINE. Final judgment. Appeal is governed by the state-appellate package."
+  payoff ?
+}
+
+terminal appeal-noticed: "Notice of appeal filed" outcome [appeal] cite ?("V.I. Supreme Court appellate rule ? (not verified)")
+{
+  note "OUTLINE. Appeal to the state appellate court; see the state-appellate package."
+  payoff ?
+}
+

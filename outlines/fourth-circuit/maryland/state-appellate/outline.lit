@@ -1,0 +1,89 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-outline-md-state-appellate
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite ?("Md. Rule 8-202(a) (30-day period confirmed)")
+{
+  note "OUTLINE. Notice in the trial court; period, service and cross-appeal are holes. Tolling by timely post-judgment motion: Md. Rule 8-202(c). Cross-appeal: Md. Rule 8-202(e). Final judgment: Md. Code, Cts. & Jud. Proc. § 12-301 (verify)."
+  edge-notice-record "Record prepared" -> record {
+    authority cite ?("Md. Rule 8-413 (verify)")
+  }
+}
+
+state record: "Record or transcript prepared" by office cite ?("Md. Rule 8-413 (verify)")
+{
+  note "OUTLINE. Record contents, transcript and stays are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-record-brief "Briefing" -> briefing {
+    authority cite ?("Md. Rule 8-504 (verify)")
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite ?("Md. Rule 8-504 (verify)")
+{
+  note "OUTLINE. Brief form, length and reply are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-brief-argument "Argument or submission" -> argument {
+    authority cite ?("Md. Rule 8-511 (verify)")
+  }
+}
+
+decision argument: "Argument or submission" by court cite ?("Md. Rule 8-511 (verify)")
+{
+  note "OUTLINE. Argument is discretionary in some courts. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-arg-decision "Decision issued" -> decision {
+    authority cite ?("Md. Rule 8-604 (verify)")
+  }
+}
+
+chance decision: "Court decides" by court cite ?("Md. Rule 8-604 (verify)")
+{
+  note "OUTLINE. Probabilities are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-dec-affirmed "Affirmed" -> post-decision p ? {
+  }
+  edge-dec-reversed "Reversed or remanded" -> post-decision p ? {
+  }
+}
+
+decision post-decision: "Rehearing or further review decision" by applicant cite ?("Md. Rule 8-605 (verify)")
+{
+  note "OUTLINE. Rehearing and further review: Md. Rule 8-302 (certiorari) (verify). Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-pd-rehearing "Rehearing sought" -> rehearing {
+    authority cite ?("Md. Rule 8-605 (verify)")
+  }
+  edge-pd-further "Further review sought" -> further-review {
+    authority cite ?("Md. Rule 8-302 (certiorari) (verify)")
+  }
+  edge-pd-mandate "No further review" -> mandate-issued {
+    authority cite ?("Md. Rule 8-606 (verify)")
+  }
+}
+
+state rehearing: "Rehearing petition" by applicant cite ?("Md. Rule 8-605 (verify)")
+{
+  note "OUTLINE. Rehearing period and effect on finality are holes."
+  edge-rh-decision "Rehearing decided" -> post-decision {
+  }
+}
+
+state further-review: "Petition for further review" by applicant cite ?("Md. Rule 8-302 (certiorari) (verify)")
+{
+  note "OUTLINE. Petition period and grant standard are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-fr-mandate "Review denied" -> mandate-issued {
+  }
+  edge-fr-merits "Review granted" -> supreme-merits {
+  }
+}
+
+terminal mandate-issued: "Mandate or remittitur issued" outcome [final] cite ?("Md. Rule 8-606 (verify)")
+{
+  note "OUTLINE. Mandate or remittitur returns the case to the trial court. Costs: holes."
+  payoff ?
+}
+
+terminal supreme-merits: "Review granted on the merits" outcome [final] cite ?("Md. Rule 8-302 (certiorari) (verify)")
+{
+  note "OUTLINE. Merits review in the highest state court. Outcome is outside this outline."
+  payoff ?
+}
+

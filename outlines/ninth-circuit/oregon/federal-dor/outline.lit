@@ -1,0 +1,128 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+
+module outline-or-federal-dor
+
+start commenced
+
+state commenced: "Complaint Filed" by applicant cite ?("Fed. R. Civ. P. 3")
+{
+  note "Commencement by filing. Filing fee is a hole. Local rules and the assigned judge's standing orders: identify and verify."
+  edge-commenced-response-due "Summons and complaint served" -> response-due {
+    authority cite ?("Fed. R. Civ. P. 4(m)")
+  }
+}
+
+decision response-due: "Answer or Motion Due" by office cite ?("Fed. R. Civ. P. 12(a)(1)(A)")
+{
+  note "Response period is a hole. Waiver under Rule 4(d) changes the clock. Stipulated extensions are a hole."
+  edge-response-due-default-entered "No response" -> default-entered {
+    authority cite ?("Fed. R. Civ. P. 55(a)")
+  }
+  edge-response-due-motion-ruling "Motion filed" -> motion-ruling {
+    authority cite ?("Fed. R. Civ. P. 12(b)")
+  }
+  edge-response-due-discovery "Answer filed" -> discovery {
+    authority cite ?("Fed. R. Civ. P. 12(a)(1)(A)")
+  }
+}
+
+terminal default-entered: "Default entered" outcome [loss] cite ?("Fed. R. Civ. P. 55(a)")
+{
+  note "Default judgment factors: Eitel v. McCool, 782 F.2d 1470 (9th Cir. 1986). Verify. Set-aside standard is a hole."
+  payoff ?
+}
+
+decision motion-ruling: "Motion Ruling" by court cite ?("Fed. R. Civ. P. 12(b)")
+{
+  note "Pleading standard: Bell Atlantic Corp. v. Twombly, 550 U.S. 544 (2007); Ashcroft v. Iqbal, 556 U.S. 662 (2009). Verify."
+  edge-motion-ruling-dismissed "Dismissed" -> dismissed {
+    authority cite ?("Fed. R. Civ. P. 12(b)")
+  }
+  edge-motion-ruling-discovery "Denied" -> discovery {
+    authority cite ?("Fed. R. Civ. P. 12(b)")
+  }
+}
+
+terminal dismissed: "Dismissed on the pleadings" outcome [loss] cite ?("Fed. R. Civ. P. 12(b)")
+{
+  note "Leave to amend: Lopez v. Smith, 203 F.3d 1122 (9th Cir. 2000) (en banc). Verify. With or without prejudice is a hole."
+  payoff ?
+}
+
+state discovery: "Discovery" by applicant cite ?("Fed. R. Civ. P. 26")
+{
+  note "Disclosures, discovery limits and deadlines are holes. Local rules and standing orders: identify and verify."
+  edge-discovery-settled "Settlement or dismissal" -> settled {
+    authority cite ?("Fed. R. Civ. P. 41(a)")
+  }
+  edge-discovery-summary-judgment "Discovery closed; dispositive motion" -> summary-judgment {
+    authority cite ?("Fed. R. Civ. P. 56")
+  }
+}
+
+decision summary-judgment: "Summary Judgment" by court cite ?("Fed. R. Civ. P. 56")
+{
+  note "Summary judgment: Celotex Corp. v. Catrett, 477 U.S. 317 (1986); Anderson v. Liberty Lobby, Inc., 477 U.S. 242 (1986). Verify."
+  edge-summary-judgment-judgment-merits "Granted" -> judgment-merits {
+    authority cite ?("Fed. R. Civ. P. 56")
+  }
+  edge-summary-judgment-trial "Denied" -> trial {
+    authority cite ?("Fed. R. Civ. P. 56")
+  }
+}
+
+terminal judgment-merits: "Summary judgment entered" outcome [win] cite ?("Fed. R. Civ. P. 56")
+{
+  note "OUTLINE. Written from the applicant side; the winner depends on who moved (verify)."
+  payoff ?
+}
+
+decision trial: "Jury or Bench Trial" by court cite ?("Fed. R. Civ. P. 38")
+{
+  note "Jury demand timing under Rule 38 is a hole. Verify."
+  edge-trial-post-trial "Verdict or decision" -> post-trial {
+    authority cite ?("Fed. R. Civ. P. 38")
+  }
+  edge-trial-settled "Settled before verdict" -> settled {
+    authority cite ?("Fed. R. Civ. P. 41(a)")
+  }
+}
+
+decision post-trial: "Post-Trial Motions" by applicant cite ?("Fed. R. Civ. P. 50(b)")
+{
+  note "Renewed JMOL: Reeves v. Sanderson Plumbing Products, Inc., 530 U.S. 133 (2000). Verify. Motion deadline is a hole."
+  edge-post-trial-judgment-entered "Motions resolved or none filed" -> judgment-entered {
+    authority cite ?("Fed. R. Civ. P. 59")
+  }
+}
+
+decision judgment-entered: "Judgment Entered" by court cite ?("Fed. R. Civ. P. 58")
+{
+  note "Entry of judgment and Rule 54(b) finality: Catlin v. United States, 324 U.S. 229 (1945). Verify."
+  edge-judgment-entered-appeal-filed "Notice of appeal" -> appeal-filed {
+    authority cite ?("Fed. R. App. P. 4(a)(1)(A)")
+  }
+  edge-judgment-entered-judgment-final "No appeal" -> judgment-final {
+    authority cite ?("Fed. R. Civ. P. 58")
+  }
+}
+
+terminal appeal-filed: "Notice of appeal filed; continue in appellate package" outcome [appeal] cite ?("Fed. R. App. P. 4(a)(1)(A)")
+{
+  note "Notice period is a hole. Tolling by timely post-trial motions under Rule 4(a)(4)(A). Timeliness: Bowles v. Russell, 551 U.S. 205 (2007); Hamer v. Neighborhood Housing Services, Inc., 138 S. Ct. 13 (2017). Verify."
+  payoff ?
+}
+
+terminal judgment-final: "Final judgment, no appeal" outcome [judgment] cite ?("Fed. R. Civ. P. 58")
+{
+  note "OUTLINE. Outcome depends on the judgment entered (verify)."
+  payoff ?
+}
+
+terminal settled: "Settled or dismissed by agreement" outcome [settle] cite ?("Fed. R. Civ. P. 41(a)")
+{
+  note "OUTLINE. Settlement terms and any dismissal mechanics are holes."
+  payoff ?
+}
+

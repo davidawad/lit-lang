@@ -1,0 +1,174 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-wi-federal-wd
+
+start complaint-filed
+
+state complaint-filed: "Action commenced" by applicant cite ?("Fed. R. Civ. P. 3")
+{
+  note "OUTLINE. Jurisdiction: 28 U.S.C. 1331, 1332 (verify). Venue: 28 U.S.C. 1391 (verify). Assigned judge and magistrate standing orders are holes: run legal-court-research."
+  edge-complaint-filed-response-due "Summons served" -> response-due {
+    authority cite ?("Fed. R. Civ. P. 4(c), 4(m)")
+  }
+}
+
+state response-due: "Response due: answer or motion" cite ?("Fed. R. Civ. P. 12(a)(1)(A)")
+{
+  note "OUTLINE. Response period is a hole. Default: Cracco v. Vitran Express, Inc., 559 F.3d 625 (7th Cir. 2009) (Rule 55(c); verify). Motion practice under local rules and standing orders is a hole."
+  edge-response-due-default-entered "No timely response" -> default-entered {
+    authority cite ?("Fed. R. Civ. P. 55(a)")
+  }
+  edge-response-due-motion-ruling "Motion to dismiss filed" -> motion-ruling {
+    authority cite ?("Fed. R. Civ. P. 12(b)(6)")
+  }
+  edge-response-due-sched "Answer filed" -> sched {
+    authority cite ?("Fed. R. Civ. P. 12(a)(1)(A)")
+  }
+}
+
+decision motion-ruling: "Motion to dismiss ruling" by court cite ?("Fed. R. Civ. P. 12(b)(6)")
+{
+  note "OUTLINE. Pleading: Bell Atlantic Corp. v. Twombly, 550 U.S. 544 (2007), and Ashcroft v. Iqbal, 556 U.S. 662 (2009) (verify); Swanson v. Citibank, N.A., 614 F.3d 400 (7th Cir. 2010) (verify)."
+  edge-motion-ruling-dismissed-with-prejudice "Dismissed with prejudice" -> dismissed-with-prejudice {
+    authority cite ?("Fed. R. Civ. P. 41(b)")
+  }
+  edge-motion-ruling-response-due "Dismissed with leave to amend" -> response-due {
+    authority cite ?("Fed. R. Civ. P. 15(a)(1), 15(a)(3)")
+  }
+  edge-motion-ruling-sched "Denied" -> sched {
+    authority cite ?("Fed. R. Civ. P. 12(b)(6)")
+  }
+}
+
+state sched: "Scheduling order and initial disclosures" cite ?("Fed. R. Civ. P. 16(b), 26(a)(1), 26(f)")
+{
+  note "OUTLINE. Rule 16 order; judge-specific case management procedures are holes."
+  edge-sched-discovery "Order entered" -> discovery {
+    authority cite ?("Fed. R. Civ. P. 16(b), 26(a)(1), 26(f)")
+  }
+}
+
+state discovery: "Discovery" cite ?("Fed. R. Civ. P. 26(b)(1), 33, 34, 36")
+{
+  note "OUTLINE. Discovery limits, meet-and-confer and dispute procedure are holes."
+  edge-discovery-sj-ruling "Dispositive motion filed" -> sj-ruling {
+    authority cite ?("Fed. R. Civ. P. 56(a)")
+  }
+  edge-discovery-dismissed-with-prejudice "Discovery sanction dismisses claims" -> dismissed-with-prejudice {
+    authority cite ?("Fed. R. Civ. P. 37(b)(2)(A)(v)")
+  }
+  edge-discovery-settled "Settlement or voluntary dismissal" -> settled {
+    authority cite ?("Fed. R. Civ. P. 41(a)(1)(A)(ii), 41(a)(2), 68")
+  }
+  edge-discovery-pretrial "No dispositive motion" -> pretrial {
+    authority cite ?("Fed. R. Civ. P. 16(d), 16(e)")
+  }
+}
+
+decision sj-ruling: "Summary judgment ruling" by court cite ?("Fed. R. Civ. P. 56(a)")
+{
+  note "OUTLINE. Summary judgment: Celotex Corp. v. Catrett, 477 U.S. 317 (1986), and Anderson v. Liberty Lobby, Inc., 477 U.S. 242 (1986) (verify)."
+  edge-sj-ruling-judgment-applicant "Granted for applicant" -> judgment-applicant {
+    authority cite ?("Fed. R. Civ. P. 54(a)-(b), 58")
+  }
+  edge-sj-ruling-judgment-opponent "Granted for opponent" -> judgment-opponent {
+    authority cite ?("Fed. R. Civ. P. 54(a)-(b), 58")
+  }
+  edge-sj-ruling-pretrial "Denied" -> pretrial {
+    authority cite ?("Fed. R. Civ. P. 56(a)")
+  }
+}
+
+state pretrial: "Pretrial order" cite ?("Fed. R. Civ. P. 16(d), 16(e)")
+{
+  note "OUTLINE. Pretrial conference, order and trial setting."
+  edge-pretrial-trial "Trial set" -> trial {
+    authority cite ?("Fed. R. Civ. P. 16(d), 16(e)")
+  }
+}
+
+state trial: "Trial (jury or bench)" cite ?("Fed. R. Civ. P. 38, 39, 52(a)")
+{
+  note "OUTLINE. Trial and findings or verdict."
+  edge-trial-judgment-applicant "Verdict or findings for applicant" -> judgment-applicant {
+    authority cite ?("Fed. R. Civ. P. 54(a)-(b), 58")
+  }
+  edge-trial-judgment-opponent "Verdict or findings for opponent" -> judgment-opponent {
+    authority cite ?("Fed. R. Civ. P. 54(a)-(b), 58")
+  }
+}
+
+state judgment-applicant: "Judgment for applicant entered" cite ?("Fed. R. Civ. P. 54(a)-(b), 58")
+{
+  note "OUTLINE. Entry of judgment. Renewed and post-judgment motions under Rules 50, 52, 59 and 60 have periods that are holes. Notice period under 28 U.S.C. 2107(a) (verify)."
+  edge-judgment-applicant-post-judgment-ruling "Post-judgment motion" -> post-judgment-ruling {
+    authority cite ?("Fed. R. Civ. P. 50(b), 52(b), 59, 60(b)")
+  }
+  edge-judgment-applicant-appellate-review "Notice of appeal filed" -> appellate-review {
+    authority cite ?("Fed. R. App. P. 3(a)(1), 4(a)(1)(A)")
+  }
+  edge-judgment-applicant-final-win "No appeal within time" -> final-win {
+    authority cite ?("Fed. R. App. P. 4(a)(1)(A), 4(a)(4)(A)")
+  }
+}
+
+state judgment-opponent: "Judgment for opponent entered" cite ?("Fed. R. Civ. P. 54(a)-(b), 58")
+{
+  note "OUTLINE. Entry of judgment. Renewed and post-judgment motions under Rules 50, 52, 59 and 60 have periods that are holes. Notice period under 28 U.S.C. 2107(a) (verify)."
+  edge-judgment-opponent-post-judgment-ruling "Post-judgment motion" -> post-judgment-ruling {
+    authority cite ?("Fed. R. Civ. P. 50(b), 52(b), 59, 60(b)")
+  }
+  edge-judgment-opponent-appellate-review "Notice of appeal filed" -> appellate-review {
+    authority cite ?("Fed. R. App. P. 3(a)(1), 4(a)(1)(A)")
+  }
+  edge-judgment-opponent-final-loss "No appeal within time" -> final-loss {
+    authority cite ?("Fed. R. App. P. 4(a)(1)(A), 4(a)(4)(A)")
+  }
+}
+
+decision post-judgment-ruling: "Post-judgment motion ruling" by court cite ?("Fed. R. Civ. P. 50(b), 52(b), 59, 60(b)")
+{
+  note "OUTLINE. Post-judgment motions toll the appeal clock; verify tolling rule."
+  edge-post-judgment-ruling-pretrial "Granted: new trial" -> pretrial {
+    authority cite ?("Fed. R. Civ. P. 50(b), 52(b), 59, 60(b)")
+  }
+  edge-post-judgment-ruling-appellate-review "Denied: appeal clock runs from order" -> appellate-review {
+    authority cite ?("Fed. R. App. P. 4(a)(1)(A), 4(a)(4)(A)")
+  }
+}
+
+terminal default-entered: "Default entered against opponent" outcome [win] cite ?("Fed. R. Civ. P. 55(a)")
+{
+  note "OUTLINE. Default under the rule; judgment by default is a separate entry. Outcome is from the applicant's side."
+  payoff ?
+}
+
+terminal dismissed-with-prejudice: "Dismissed with prejudice" outcome [loss] cite ?("Fed. R. Civ. P. 41(b)")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite ?("Fed. R. Civ. P. 41(a)(1)(A)(ii), 41(a)(2), 68")
+{
+  note "OUTLINE. Settlement terms are a hole."
+  payoff ?
+}
+
+terminal final-win: "Final judgment for applicant, no appeal" outcome [win] cite ?("Fed. R. App. P. 4(a)(1)(A), 4(a)(4)(A)")
+{
+  note "OUTLINE. Judgment final when the appeal period lapses."
+  payoff ?
+}
+
+terminal final-loss: "Final judgment for opponent, no appeal" outcome [loss] cite ?("Fed. R. App. P. 4(a)(1)(A), 4(a)(4)(A)")
+{
+  note "OUTLINE. Judgment final when the appeal period lapses."
+  payoff ?
+}
+
+terminal appellate-review: "Appeal taken: continue in the appellate package" cite ?("Fed. R. App. P. 3(a)(1), 4(a)(1)(A)")
+{
+  note "OUTLINE. Hand-off to the state-appellate or court-of-appeals package."
+  payoff ?
+}

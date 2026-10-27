@@ -1,0 +1,218 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-ca8
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite ?("Fed. R. App. P. 3(a)(1), 4(a)(1)(A)")
+{
+  note "OUTLINE. Notice within the FRAP 4(a) period (holes). Cross-appeals under FRAP 4(a)(3) (verify). Post-judgment motions toll under FRAP 4(a)(4) (verify)."
+  edge-notice-filed-appealability "Notice filed" -> appealability {
+    authority cite ?("Fed. R. App. P. 3(a)(1), 4(a)(1)(A)")
+  }
+}
+
+decision appealability: "Appellate jurisdiction check" by court cite ?("Fed. R. App. P. 5")
+{
+  note "OUTLINE. Appealability and timeliness: 28 U.S.C. 1291, 1292, 1294, 2107(a) and 158 (verify). Catlin v. United States, 324 U.S. 229 (1945) (verify); Bowles v. Russell, 551 U.S. 205 (2007) (verify). Braden v. Wal-Mart Stores, Inc., 588 F.3d 585 (8th Cir. 2009) is pleading only (verify)."
+  edge-appealability-dismissed-jurisdiction "Not an appealable order, or untimely" -> dismissed-jurisdiction {
+    authority cite ?("Fed. R. App. P. 5")
+  }
+  edge-appealability-record "Appealable order" -> record {
+    authority cite ?("Fed. R. App. P. 5")
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed for lack of appellate jurisdiction" outcome [loss] cite ?("Fed. R. App. P. 5")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}
+
+state record: "Record settled and transmitted" cite ?("Fed. R. App. P. 10, 11, 12")
+{
+  note "OUTLINE. Record and appendix under FRAP 30 (verify)."
+  edge-record-briefing "Record filed" -> briefing {
+    authority cite ?("Fed. R. App. P. 10, 11, 12")
+  }
+}
+
+state briefing: "Briefing: opening, response, reply" cite ?("Fed. R. App. P. 28, 31, 32; 8th Cir. R. 28A (verify)")
+{
+  note "OUTLINE. Briefing schedule is a hole. Brief length and form are holes. 8th Cir. R. 28A addendum (verify)."
+  edge-briefing-argument "Briefs complete" -> argument {
+    authority cite ?("Fed. R. App. P. 28, 31, 32; 8th Cir. R. 28A (verify)")
+  }
+}
+
+state argument: "Oral argument or submission on briefs" cite ?("Fed. R. App. P. 34")
+{
+  note "OUTLINE. Argument may be waived."
+  edge-argument-disposition "Submitted for decision" -> disposition {
+    authority cite ?("Fed. R. App. P. 34")
+  }
+}
+
+decision disposition: "Disposition" by court cite ?("Fed. R. App. P. 36")
+{
+  note "OUTLINE. FRAP 36 entry of judgment (verify)."
+  edge-disposition-affirmed-entered "Affirmed" -> affirmed-entered {
+    authority cite ?("Fed. R. App. P. 36")
+  }
+  edge-disposition-reversed-entered "Reversed or vacated" -> reversed-entered {
+    authority cite ?("Fed. R. App. P. 36")
+  }
+  edge-disposition-remanded-entered "Remanded" -> remanded-entered {
+    authority cite ?("Fed. R. App. P. 36")
+  }
+}
+
+decision affirmed-entered: "Affirmed: rehearing election" by applicant cite ?("Fed. R. App. P. 36")
+{
+  note "OUTLINE. Rehearing and mandate clocks run from entry."
+  edge-affirmed-entered-rehearing-affirmed "Rehearing petition filed" -> rehearing-affirmed {
+    authority cite ?("Fed. R. App. P. 35, 40")
+  }
+  edge-affirmed-entered-mandate-affirmed "No rehearing petition" -> mandate-affirmed {
+    authority cite ?("Fed. R. App. P. 41")
+  }
+}
+
+decision rehearing-affirmed: "Rehearing ruling (affirmed)" by court cite ?("Fed. R. App. P. 35, 40")
+{
+  note "OUTLINE. Panel and en banc rehearing under FRAP 35 and 40 (verify). Torgerson v. City of Rochester, 643 F.3d 1031 (8th Cir. 2011) (en banc) is summary judgment (verify)."
+  edge-rehearing-affirmed-mandate-affirmed "Rehearing denied" -> mandate-affirmed {
+    authority cite ?("Fed. R. App. P. 35, 40")
+  }
+  edge-rehearing-affirmed-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite ?("Fed. R. App. P. 35, 40")
+  }
+}
+
+decision mandate-affirmed: "Mandate issued: further review election" by applicant cite ?("Fed. R. App. P. 41")
+{
+  note "OUTLINE. Mandate and its effect on the trial court."
+  edge-mandate-affirmed-review-affirmed "Further review sought" -> review-affirmed {
+    authority cite ?("Sup. Ct. R. 13")
+  }
+  edge-mandate-affirmed-affirmed-final "No further review" -> affirmed-final {
+    authority cite ?("Fed. R. App. P. 41")
+  }
+}
+
+decision review-affirmed: "Further review ruling (affirmed)" by court cite ?("Sup. Ct. R. 13")
+{
+  note "OUTLINE. Certiorari under 28 U.S.C. 1254(1) and Sup. Ct. R. 13 (verify)."
+  edge-review-affirmed-affirmed-final "Review denied" -> affirmed-final {
+    authority cite ?("Sup. Ct. R. 13")
+  }
+  edge-review-affirmed-affirmed-final-2 "Review granted: merits in high court" -> affirmed-final {
+    authority cite ?("Sup. Ct. R. 13")
+  }
+}
+
+terminal affirmed-final: "Affirmed: final" outcome [loss] cite ?("Fed. R. App. P. 41")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}
+
+decision reversed-entered: "Reversed or vacated: rehearing election" by applicant cite ?("Fed. R. App. P. 36")
+{
+  note "OUTLINE. Rehearing and mandate clocks run from entry."
+  edge-reversed-entered-rehearing-reversed "Rehearing petition filed" -> rehearing-reversed {
+    authority cite ?("Fed. R. App. P. 35, 40")
+  }
+  edge-reversed-entered-mandate-reversed "No rehearing petition" -> mandate-reversed {
+    authority cite ?("Fed. R. App. P. 41")
+  }
+}
+
+decision rehearing-reversed: "Rehearing ruling (reversed or vacated)" by court cite ?("Fed. R. App. P. 35, 40")
+{
+  note "OUTLINE. Panel and en banc rehearing under FRAP 35 and 40 (verify). Torgerson v. City of Rochester, 643 F.3d 1031 (8th Cir. 2011) (en banc) is summary judgment (verify)."
+  edge-rehearing-reversed-mandate-reversed "Rehearing denied" -> mandate-reversed {
+    authority cite ?("Fed. R. App. P. 35, 40")
+  }
+  edge-rehearing-reversed-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite ?("Fed. R. App. P. 35, 40")
+  }
+}
+
+decision mandate-reversed: "Mandate issued: further review election" by applicant cite ?("Fed. R. App. P. 41")
+{
+  note "OUTLINE. Mandate and its effect on the trial court."
+  edge-mandate-reversed-review-reversed "Further review sought" -> review-reversed {
+    authority cite ?("Sup. Ct. R. 13")
+  }
+  edge-mandate-reversed-reversed-final "No further review" -> reversed-final {
+    authority cite ?("Fed. R. App. P. 41")
+  }
+}
+
+decision review-reversed: "Further review ruling (reversed or vacated)" by court cite ?("Sup. Ct. R. 13")
+{
+  note "OUTLINE. Certiorari under 28 U.S.C. 1254(1) and Sup. Ct. R. 13 (verify)."
+  edge-review-reversed-reversed-final "Review denied" -> reversed-final {
+    authority cite ?("Sup. Ct. R. 13")
+  }
+  edge-review-reversed-reversed-final-2 "Review granted: merits in high court" -> reversed-final {
+    authority cite ?("Sup. Ct. R. 13")
+  }
+}
+
+terminal reversed-final: "Reversed or vacated: final" outcome [win] cite ?("Fed. R. App. P. 41")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}
+
+decision remanded-entered: "Remanded: rehearing election" by applicant cite ?("Fed. R. App. P. 36")
+{
+  note "OUTLINE. Rehearing and mandate clocks run from entry."
+  edge-remanded-entered-rehearing-remanded "Rehearing petition filed" -> rehearing-remanded {
+    authority cite ?("Fed. R. App. P. 35, 40")
+  }
+  edge-remanded-entered-mandate-remanded "No rehearing petition" -> mandate-remanded {
+    authority cite ?("Fed. R. App. P. 41")
+  }
+}
+
+decision rehearing-remanded: "Rehearing ruling (remanded)" by court cite ?("Fed. R. App. P. 35, 40")
+{
+  note "OUTLINE. Panel and en banc rehearing under FRAP 35 and 40 (verify). Torgerson v. City of Rochester, 643 F.3d 1031 (8th Cir. 2011) (en banc) is summary judgment (verify)."
+  edge-rehearing-remanded-mandate-remanded "Rehearing denied" -> mandate-remanded {
+    authority cite ?("Fed. R. App. P. 35, 40")
+  }
+  edge-rehearing-remanded-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite ?("Fed. R. App. P. 35, 40")
+  }
+}
+
+decision mandate-remanded: "Mandate issued: further review election" by applicant cite ?("Fed. R. App. P. 41")
+{
+  note "OUTLINE. Mandate and its effect on the trial court."
+  edge-mandate-remanded-review-remanded "Further review sought" -> review-remanded {
+    authority cite ?("Sup. Ct. R. 13")
+  }
+  edge-mandate-remanded-remanded-final "No further review" -> remanded-final {
+    authority cite ?("Fed. R. App. P. 41")
+  }
+}
+
+decision review-remanded: "Further review ruling (remanded)" by court cite ?("Sup. Ct. R. 13")
+{
+  note "OUTLINE. Certiorari under 28 U.S.C. 1254(1) and Sup. Ct. R. 13 (verify)."
+  edge-review-remanded-remanded-final "Review denied" -> remanded-final {
+    authority cite ?("Sup. Ct. R. 13")
+  }
+  edge-review-remanded-remanded-final-2 "Review granted: merits in high court" -> remanded-final {
+    authority cite ?("Sup. Ct. R. 13")
+  }
+}
+
+terminal remanded-final: "Remanded: final" cite ?("Fed. R. App. P. 41")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}

@@ -1,0 +1,158 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored text.
+// Sources: 10 U.S.C. §§ 816, 860, 862, 866, 867, 867a, 869 (LII headings fetched
+// 2026-10-26). The service court's own rules of practice are not fetched, so their
+// cites and periods are holes. Army courts-martial; the Army Court is one of the Courts of Criminal Appeals under 10 U.S.C. § 866. Key decisions are unverified.
+module outline-acca
+
+start trial-result
+
+state trial-result: "Court-martial findings and sentence" by office cite ?("10 U.S.C. § 816")
+{
+  note "OUTLINE. General or special court-martial findings and sentence. Trial procedure is outside this outline."
+  edge-trial-result-post-trial "Record goes to convening authority" -> post-trial-action {
+    authority cite ?("10 U.S.C. § 860")
+  }
+  edge-trial-result-government-appeal "Government appeals an interlocutory ruling" -> government-appeal {
+    authority cite ?("10 U.S.C. § 862")
+  }
+}
+
+decision post-trial-action: "Convening authority action" by office cite ?("10 U.S.C. § 860")
+{
+  note "OUTLINE. Post-trial processing and the convening authority action under Article 60. Key decision (verify): United States v. Sales, 22 M.J. 305 (C.M.A. 1986) (sentence appropriateness, cited for the Courts of Criminal Appeals' review standard)."
+  edge-post-trial-action-disapproved "Findings and sentence disapproved in full" -> acquitted-by-action {
+    authority cite ?("10 U.S.C. § 860")
+  }
+  edge-post-trial-action-remains "Some findings or sentence approved" -> appeal-election {
+    authority cite ?("10 U.S.C. § 860")
+  }
+}
+
+decision appeal-election: "Accused elects appellate review or waives it" by applicant cite ?("10 U.S.C. § 860; 10 U.S.C. § 866")
+{
+  note "OUTLINE. The accused may waive or withdraw appellate review in some cases (verify the waiver rule in 10 U.S.C. § 860). Review by a Court of Criminal Appeals is under 10 U.S.C. § 866. Where review is not by a Court of Criminal Appeals, the Judge Advocate General route under 10 U.S.C. § 869 applies. The periods for notice and election are holes."
+  edge-appeal-election-waive "Waiver or withdrawal" -> waived {
+    authority cite ?("10 U.S.C. § 860")
+  }
+  edge-appeal-election-ccca "Review by Court of Criminal Appeals" -> ccca-docketed {
+    authority cite ?("10 U.S.C. § 866")
+  }
+  edge-appeal-election-tjag "No Court of Criminal Appeals review" -> tjag-review {
+    authority cite ?("10 U.S.C. § 869")
+  }
+}
+
+state ccca-docketed: "Record docketed; assignments of error filed" by applicant cite ?("10 U.S.C. § 866")
+{
+  note "OUTLINE. Appellate defense counsel files assignments of error. The government answers. Filing periods, page limits and extensions are holes. Mandatory review of the sentence and the record applies under Article 66 (verify the thresholds in § 866)."
+  edge-ccca-docketed-briefed "Briefing complete" -> ccca-decision {
+    authority cite ?("10 U.S.C. § 866")
+  }
+}
+
+decision ccca-decision: "Court of Criminal Appeals decision" by court cite ?("10 U.S.C. § 866")
+{
+  note "OUTLINE. The court may affirm findings and sentence, set aside findings, reassess or reduce the sentence, order a fact-finding hearing, or return the case for a rehearing. Key decision (verify): United States v. DuBay, 37 C.M.R. 411 (C.M.A. 1967) (post-trial fact-finding hearings, cited for the remand route)."
+  edge-ccca-decision-affirmed "Findings and sentence affirmed" -> ccca-affirmed {
+    authority cite ?("10 U.S.C. § 866")
+  }
+  edge-ccca-decision-reduced "Sentence reassessed or reduced" -> ccca-relief {
+    authority cite ?("10 U.S.C. § 866")
+  }
+  edge-ccca-decision-remanded "Fact-finding hearing ordered or rehearing returned" -> ccca-remanded {
+    authority cite ?("10 U.S.C. § 866")
+  }
+  edge-ccca-decision-caaf "Petition to the Court of Appeals for the Armed Forces" -> caaf-petition {
+    authority cite ?("10 U.S.C. § 867")
+  }
+}
+
+decision caaf-petition: "Petition for grant of review to CAAF filed" by applicant cite ?("10 U.S.C. § 867")
+{
+  note "OUTLINE. Review by the Court of Appeals for the Armed Forces under 10 U.S.C. § 867. The petition period and the grant rules are holes. The CAAF package covers the review."
+  edge-caaf-petition-granted "Review granted" -> caaf-review {
+    authority cite ?("10 U.S.C. § 867")
+  }
+  edge-caaf-petition-denied "Review denied" -> caaf-denied-final {
+    authority cite ?("10 U.S.C. § 867")
+  }
+}
+
+state caaf-review: "Review by the Court of Appeals for the Armed Forces" by court cite ?("10 U.S.C. § 867")
+{
+  note "OUTLINE. CAAF review; see the outline-caaf package."
+  edge-caaf-review-decided "CAAF decides" -> caaf-decided {
+    authority cite ?("10 U.S.C. § 867")
+  }
+}
+
+state tjag-review: "Review by the Judge Advocate General" by office cite ?("10 U.S.C. § 869")
+{
+  note "OUTLINE. Review by the Judge Advocate General under Article 69. The request and the periods are holes."
+  edge-tjag-review-decided "Judge Advocate General acts" -> tjag-decided {
+    authority cite ?("10 U.S.C. § 869")
+  }
+}
+
+state government-appeal: "Government appeal of an interlocutory ruling" by office cite ?("10 U.S.C. § 862")
+{
+  note "OUTLINE. The United States may appeal certain rulings before findings under Article 62. The appeal goes to the Court of Criminal Appeals. The period and scope are holes."
+  edge-government-appeal-decided "Court of Criminal Appeals decides" -> government-appeal-decided {
+    authority cite ?("10 U.S.C. § 862")
+  }
+}
+
+terminal acquitted-by-action: "Findings and sentence disapproved by convening authority" outcome [win] cite ?("10 U.S.C. § 860")
+{
+  note "OUTLINE. Full disapproval at action."
+  payoff ?
+}
+
+terminal waived: "Appellate review waived or withdrawn" outcome [decided] cite ?("10 U.S.C. § 860")
+{
+  note "OUTLINE. No Court of Criminal Appeals review follows waiver or withdrawal."
+  payoff ?
+}
+
+terminal ccca-affirmed: "Findings and sentence affirmed" outcome [loss] cite ?("10 U.S.C. § 866")
+{
+  note "OUTLINE. Affirmance. A further petition to CAAF may follow."
+  payoff ?
+}
+
+terminal ccca-relief: "Sentence reassessed or reduced" outcome [win] cite ?("10 U.S.C. § 866")
+{
+  note "OUTLINE. Partial relief on sentence. The new sentence is a hole."
+  payoff ?
+}
+
+terminal ccca-remanded: "Remanded for fact-finding hearing or rehearing" outcome [remand] cite ?("10 U.S.C. § 866")
+{
+  note "OUTLINE. The case returns to the trial level. The further process is a hole."
+  payoff ?
+}
+
+terminal caaf-denied-final: "Review denied; case final" outcome [decided] cite ?("10 U.S.C. § 867")
+{
+  note "OUTLINE. CAAF denies review, and the Court of Criminal Appeals decision stands."
+  payoff ?
+}
+
+terminal caaf-decided: "CAAF decision" outcome [decided] cite ?("10 U.S.C. § 867")
+{
+  note "OUTLINE. CAAF outcome; see the outline-caaf package."
+  payoff ?
+}
+
+terminal tjag-decided: "Judge Advocate General decision" outcome [decided] cite ?("10 U.S.C. § 869")
+{
+  note "OUTLINE. The Article 69 outcome is a hole."
+  payoff ?
+}
+
+terminal government-appeal-decided: "Government appeal decided" outcome [decided] cite ?("10 U.S.C. § 862")
+{
+  note "OUTLINE. The Court of Criminal Appeals outcome on a government appeal."
+  payoff ?
+}

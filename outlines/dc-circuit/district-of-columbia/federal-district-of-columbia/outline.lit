@@ -1,0 +1,163 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+// Outcome tags are labels only; payoff is a hole. Rule numbers are from memory: verify each.
+module outline-ddc
+
+start complaint-filed
+
+state complaint-filed: "Complaint Filed" by applicant cite ?("Fed. R. Civ. P. 3")
+{
+  note "OUTLINE. Commencement by complaint. Jurisdiction: 28 U.S.C. 1331 or 1332 (verify). Venue: 28 U.S.C. 1391 (verify). If removed: 28 U.S.C. 1441 and 1446 (verify). Local: LCvR 7(m) conferral and LCvR 16.3 scheduling conference (verify)."
+  edge-complaint-filed-service "Summons issued and served" -> service-check {
+    authority cite ?("Fed. R. Civ. P. 4(m)")
+  }
+}
+
+decision service-check: "Service Within Required Period" by office cite ?("Fed. R. Civ. P. 4(m)")
+{
+  note "OUTLINE. Service period under Rule 4(m) and waiver under Rule 4(d) are holes. Local practice: LCvR 7(m) conferral and LCvR 16.3 scheduling conference (verify)."
+  edge-service-check-served "Served" -> answer-due {
+    authority cite ?("Fed. R. Civ. P. 12(a)(1)(A)")
+  }
+  edge-service-check-unserved "Not served in time" -> dismissed-unserved {
+    authority cite ?("Fed. R. Civ. P. 4(m)")
+  }
+}
+
+decision answer-due: "Answer, Motion or Default" by office cite ?("Fed. R. Civ. P. 12(a)(1)(A)")
+{
+  note "OUTLINE. Response period under Rule 12(a) is a hole. Local: LCvR 7(m) conferral and LCvR 16.3 scheduling conference (verify)."
+  edge-answer-due-default "No response" -> default-entered {
+    authority cite ?("Fed. R. Civ. P. 55(a)")
+  }
+  edge-answer-due-motion "Pleading motion filed" -> pleading-motion {
+    authority cite ?("Fed. R. Civ. P. 12(b)(6)")
+  }
+  edge-answer-due-answer "Answer filed" -> case-management {
+    authority cite ?("Fed. R. Civ. P. 16(b)")
+  }
+}
+
+decision pleading-motion: "Pleading Motion Decided" by court cite ?("Fed. R. Civ. P. 12(b)(6)")
+{
+  note "OUTLINE. Leading decisions (verify): Bell Atlantic Corp. v. Twombly, 550 U.S. 544 (2007); Ashcroft v. Iqbal, 556 U.S. 662 (2009). Circuit case (verify): Atherton v. D.C. Office of the Mayor, 567 F.3d 672 (D.C. Cir. 2009). Leave to amend: Rule 15(a)(2); the re-pleading response loop is not modeled."
+  edge-pleading-motion-dismissed "Granted with prejudice" -> dismissed-pleading {
+    authority cite ?("Fed. R. Civ. P. 41(b)")
+  }
+  edge-pleading-motion-leave "Granted with leave to amend" -> case-management {
+    authority cite ?("Fed. R. Civ. P. 15(a)(2)")
+  }
+  edge-pleading-motion-denied "Denied" -> case-management {
+    authority cite ?("Fed. R. Civ. P. 12(b)(6)")
+  }
+}
+
+terminal default-entered: "Default Entered" outcome [loss] cite ?("Fed. R. Civ. P. 55(a)")
+{
+  note "OUTLINE. Default judgment under Rule 55(b) and setting aside entry under Rule 55(c) and Rule 60(b) are not modeled."
+  payoff ?
+}
+
+terminal dismissed-unserved: "Dismissed for Failure to Serve" outcome [loss, dismissal] cite ?("Fed. R. Civ. P. 4(m)")
+{
+  note "OUTLINE. Dismissal without prejudice for untimely service is the usual course (verify)."
+  payoff ?
+}
+
+terminal dismissed-pleading: "Dismissed on Pleading Motion" outcome [win, dismissal] cite ?("Fed. R. Civ. P. 41(b)")
+{
+  note "OUTLINE. Dismissal for failure to state a claim (verify with prejudice standard). Circuit case: Atherton v. D.C. Office of the Mayor, 567 F.3d 672 (D.C. Cir. 2009)"
+  payoff ?
+}
+
+state case-management: "Case Management and Scheduling" by court cite ?("Fed. R. Civ. P. 16(b)")
+{
+  note "OUTLINE. Rule 26(f) conference and Rule 26(a)(1) disclosures precede the order. Local: LCvR 7(m) conferral and LCvR 16.3 scheduling conference (verify)."
+  edge-case-management-discovery "Scheduling order entered" -> discovery {
+    authority cite ?("Fed. R. Civ. P. 26(b)(1)")
+  }
+}
+
+state discovery: "Discovery" by applicant cite ?("Fed. R. Civ. P. 26(b)(1)")
+{
+  note "OUTLINE. Scope under Rule 26(b)(1). Disputes: Rule 37(a)(1) conferral. Local: LCvR 7(m) conferral and LCvR 16.3 scheduling conference (verify)."
+  edge-discovery-sj "Discovery closed" -> sj-motion {
+    authority cite ?("Fed. R. Civ. P. 56(a)")
+  }
+  edge-discovery-settle "Settled during discovery" -> settled {
+    authority cite ?("Fed. R. Civ. P. 41(a)(1)(A)(ii)")
+  }
+}
+
+decision sj-motion: "Summary Judgment Motion Decided" by court cite ?("Fed. R. Civ. P. 56(a)")
+{
+  note "OUTLINE. Leading decisions (verify): Celotex Corp. v. Catrett, 477 U.S. 317 (1986); Anderson v. Liberty Lobby, Inc., 477 U.S. 242 (1986); Matsushita Elec. Indus. Co. v. Zenith Radio Corp., 475 U.S. 574 (1986). Local statement-of-facts rule: LCvR 7(m) conferral and LCvR 16.3 scheduling conference (verify)."
+  edge-sj-motion-granted "Granted" -> judgment-for-movant {
+    authority cite ?("Fed. R. Civ. P. 56(a)")
+  }
+  edge-sj-motion-denied "Denied or partly denied" -> trial {
+    authority cite ?("Fed. R. Civ. P. 16(e)")
+  }
+}
+
+terminal judgment-for-movant: "Judgment for Movant on Summary Judgment" outcome [win, judgment] cite ?("Fed. R. Civ. P. 56(a)")
+{
+  note "OUTLINE. Partial summary judgment and Rule 54(b) certification are not modeled."
+  payoff ?
+}
+
+state trial: "Trial or Bench Decision" by court cite ?("Fed. R. Civ. P. 38")
+{
+  note "OUTLINE. Jury demand timing under Rule 38(b) is a hole. Motions in limine and pretrial orders follow local practice: LCvR 7(m) conferral and LCvR 16.3 scheduling conference (verify)."
+  edge-trial-post "Verdict or decision" -> post-trial {
+    authority cite ?("Fed. R. Civ. P. 50(b)")
+  }
+}
+
+decision post-trial: "Post-Trial Motions Decided" by court cite ?("Fed. R. Civ. P. 50(b)")
+{
+  note "OUTLINE. Renewed Rule 50(b) motion requires a prior Rule 50(a) motion (verify: Unitherm Food Systems, Inc. v. Swift-Eckrich, Inc., 546 U.S. 394 (2006)). Rule 59 new-trial and Rule 60(b) motions toll the appeal period under Fed. R. App. P. 4(a)(4)(A) (verify). Time limits are holes."
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+    authority cite ?("Fed. R. Civ. P. 58(a)")
+  }
+  edge-post-trial-jmol "Judgment as a matter of law granted" -> judgment-for-movant {
+    authority cite ?("Fed. R. Civ. P. 50(b)")
+  }
+}
+
+state judgment-entered: "Judgment Entered" by office cite ?("Fed. R. Civ. P. 58(a)")
+{
+  note "OUTLINE. Separate-document rule under Rule 58(a) (verify). Appeal clock starts on entry under Fed. R. App. P. 4(a)(1)(A)."
+  edge-judgment-entered-appeal "Next step" -> appeal-decision {
+    authority cite ?("Fed. R. App. P. 4(a)(1)(A)")
+  }
+}
+
+decision appeal-decision: "Notice of Appeal Within Time?" by applicant cite ?("Fed. R. App. P. 4(a)(1)(A)")
+{
+  note "OUTLINE. Leading decisions (verify): Bowles v. Russell, 551 U.S. 205 (2007) (notice deadline); Hamer v. Neighborhood Housing Services, Inc., 583 U.S. 17 (2017) (later treatment of that deadline). Finality by voluntary dismissal: Microsoft Corp. v. Baker, 582 U.S. 23 (2017) (verify)."
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken {
+    authority cite ?("Fed. R. App. P. 4(a)(1)(A)")
+  }
+  edge-appeal-decision-none "No notice filed" -> final-no-appeal {
+    authority cite ?("Fed. R. App. P. 4(a)(1)(A)")
+  }
+}
+
+terminal appeal-taken: "Appeal to Appellate Court" outcome [appeal] cite ?("Fed. R. App. P. 4(a)(1)(A)")
+{
+  note "OUTLINE. Continue in the court-of-appeals package for this circuit."
+  payoff ?
+}
+
+terminal final-no-appeal: "Final: No Appeal" outcome [final] cite ?("Fed. R. App. P. 4(a)(1)(A)")
+{
+  note "OUTLINE. Final judgment with no notice filed in time."
+  payoff ?
+}
+
+terminal settled: "Settled or Stipulated Dismissal" outcome [settlement] cite ?("Fed. R. Civ. P. 41(a)(1)(A)(ii)")
+{
+  note "OUTLINE. Voluntary dismissal by stipulation or notice under Rule 41(a)(1)(A); settlement terms are not modeled."
+  payoff ?
+}

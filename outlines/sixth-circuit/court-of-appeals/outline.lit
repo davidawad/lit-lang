@@ -1,0 +1,180 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-ca6
+
+start district-judgment
+
+state district-judgment: "District court final decision" by applicant cite ?("Fed. R. App. P. 3(a)(1)")
+{
+  note "OUTLINE. Appeal lies from final decisions (28 U.S.C. 1291) and specified interlocutory orders (28 U.S.C. 1292; FRAP 5). Verify: Catlin v. United States, 324 U.S. 229 (1945) (finality); Mohawk Industries, Inc. v. Carpenter, 558 U.S. 100 (2009) (collateral order; verify)."
+  edge-district-judgment-notice "Notice filed within the appeal period" -> notice-filed {
+    authority cite ?("Fed. R. App. P. 4(a)(1)(A)")
+  }
+  edge-district-judgment-late "Notice filed late" -> untimely {
+    authority cite ?("Fed. R. App. P. 4(a)(5)")
+  }
+}
+
+state notice-filed: "Notice of appeal filed" by applicant cite ?("Fed. R. App. P. 3(c), 4(a)(1)(A)")
+{
+  note "OUTLINE. Period is a hole (?) from entry of judgment (FRAP 4(a)(1)(A)). A timely post-judgment motion tolls it (FRAP 4(a)(4)(A)). Verify: Bowles v. Russell, 551 U.S. 205 (2007) (timely notice is jurisdictional; verify current treatment). Fee and docketing amounts are holes (?)."
+  edge-notice-filed-docketed "Appeal docketed" -> docketed {
+    authority cite ?("Fed. R. App. P. 12(a)")
+  }
+  edge-notice-filed-jurisdiction "Jurisdictional defect raised" -> jurisdiction-dismissed {
+    authority cite ?("Fed. R. App. P. 3, 4")
+  }
+}
+
+state docketed: "Appeal docketed; record and transcript ordered" by office cite ?("Fed. R. App. P. 12(a), 10(b)")
+{
+  note "OUTLINE. Transcript ordering period is a hole (?). Sixth Circuit docketing practice is a hole (verify)."
+  edge-docketed-record "Record transmitted" -> record-filed {
+    authority cite ?("Fed. R. App. P. 11")
+  }
+}
+
+state record-filed: "Record filed" by office cite ?("Fed. R. App. P. 10, 11")
+{
+  note "OUTLINE. Record contents and supplementation are holes until verified."
+  edge-record-filed-briefs "Briefing schedule set" -> briefing {
+    authority cite ?("Fed. R. App. P. 28, 32; 6 Cir. R. 26.1, 28(e)")
+  }
+}
+
+state briefing: "Principal and reply briefs" by applicant cite ?("Fed. R. App. P. 28, 32; 6 Cir. R. 26.1, 28(e)")
+{
+  note "OUTLINE. Word limits: principal 13,000 words; reply 6,500 words (FRAP 32(a)(7)(B)). Deadlines are holes (?). Sixth Circuit: disclosure (6 Cir. R. 26.1); word and page limits (6 Cir. R. 28(e)); verify against the July 2026 rules."
+  edge-briefing-argument "Argument calendared" -> argument {
+    authority cite ?("Fed. R. App. P. 34(a)")
+  }
+  edge-briefing-submitted "Submitted on briefs" -> panel-decision {
+    authority cite ?("Fed. R. App. P. 34(a)(2)")
+  }
+  edge-briefing-dismissed "Jurisdictional or other motion granted" -> jurisdiction-dismissed {
+    authority cite ?("Fed. R. App. P. 27(a)")
+  }
+}
+
+state argument: "Oral argument" by office cite ?("Fed. R. App. P. 34")
+{
+  note "OUTLINE. Argument is granted or waived under FRAP 34(a). Calendar and time are holes until verified."
+  edge-argument-decision "Argued" -> panel-decision {
+    authority cite ?("Fed. R. App. P. 34")
+  }
+}
+
+decision panel-decision: "Panel decision" by court cite ?("Fed. R. App. P. 36")
+{
+  note "OUTLINE. Standard of review is a hole until verified. Sixth Circuit leading decisions on standards of review (to add, verify). Verify: Anderson v. Bessemer City, 470 U.S. 564 (1985) (clear error)."
+  edge-panel-decision-affirmed "Affirmed" -> affirmed {
+    authority cite ?("Fed. R. App. P. 36")
+  }
+  edge-panel-decision-reversed "Reversed or vacated" -> reversed {
+    authority cite ?("Fed. R. App. P. 36")
+  }
+  edge-panel-decision-remanded "Remanded" -> remanded {
+    authority cite ?("Fed. R. App. P. 36")
+  }
+  edge-panel-decision-rehearing "Rehearing sought" -> rehearing-petition {
+    authority cite ?("Fed. R. App. P. 40")
+  }
+  edge-panel-decision-en-banc "En banc rehearing ordered" -> en-banc {
+    authority cite ?("Fed. R. App. P. 35")
+  }
+}
+
+state rehearing-petition: "Petition for rehearing" by applicant cite ?("Fed. R. App. P. 40")
+{
+  note "OUTLINE. Period is a hole (?); longer period where a United States party is involved (verify). Verify circuit rehearing practice (to add)."
+  edge-rehearing-denied "Denied" -> mandate-pending {
+    authority cite ?("Fed. R. App. P. 41(b)")
+  }
+  edge-rehearing-en-banc "Granted; en banc" -> en-banc {
+    authority cite ?("Fed. R. App. P. 35")
+  }
+}
+
+state en-banc: "En banc proceeding" by court cite ?("Fed. R. App. P. 35")
+{
+  note "OUTLINE. En banc is disfavored; standards are holes until verified."
+  edge-en-banc-decided "En banc court decides" -> en-banc-decided {
+    authority cite ?("Fed. R. App. P. 35")
+  }
+}
+
+state mandate-pending: "Mandate pending" by office cite ?("Fed. R. App. P. 41(b)")
+{
+  note "OUTLINE. Mandate issues 7 days after the time to file a rehearing petition expires, or after denial (verify). Period is a hole (?)."
+  edge-mandate-pending-issued "Mandate issues" -> mandate-issued {
+    authority cite ?("Fed. R. App. P. 41(b)")
+  }
+  edge-mandate-pending-cert "Stay of mandate sought for certiorari" -> cert-petition {
+    authority cite ?("Fed. R. App. P. 41(d)")
+  }
+}
+
+state cert-petition: "Certiorari petition" by applicant cite ?("Fed. R. App. P. 41(d)")
+{
+  note "OUTLINE. Certiorari filing period and rules are to be added from the Supreme Court Rules (verify; not cited here)."
+  edge-cert-petition-denied "Certiorari denied" -> cert-denied {
+    authority cite ?("Fed. R. App. P. 41(d)")
+  }
+  edge-cert-petition-granted "Certiorari granted" -> cert-granted {
+    authority cite ?("Fed. R. App. P. 41(d)")
+  }
+}
+
+terminal untimely: "Notice of appeal untimely" outcome [loss] cite ?("Fed. R. App. P. 4(a)(5)")
+{
+  note "OUTLINE. Extension under FRAP 4(a)(5) is limited to a stated period after expiry (verify)."
+  payoff ?
+}
+
+terminal jurisdiction-dismissed: "Appeal dismissed for jurisdiction or procedure" outcome [loss] cite ?("Fed. R. App. P. 3, 4, 27")
+{
+  note "OUTLINE. Voluntary dismissal of an appeal is under FRAP 42(b) (verify)."
+  payoff ?
+}
+
+terminal affirmed: "Affirmed" outcome [loss] cite ?("Fed. R. App. P. 36")
+{
+  note "OUTLINE. Affirmance without opinion is governed by the circuit rules (see 6 Cir. R. 36 (verify))."
+  payoff ?
+}
+
+terminal reversed: "Reversed or vacated" outcome [win] cite ?("Fed. R. App. P. 36")
+{
+  note "OUTLINE. Disposition and remand instructions are holes until verified. Costs under FRAP 39 are holes."
+  payoff ?
+}
+
+terminal remanded: "Remanded" outcome [neutral] cite ?("Fed. R. App. P. 36")
+{
+  note "OUTLINE. Outcome depends on the district court's next ruling."
+  payoff ?
+}
+
+terminal en-banc-decided: "En banc decision" outcome [neutral] cite ?("Fed. R. App. P. 35")
+{
+  note "OUTLINE. Outcome is a hole until decided."
+  payoff ?
+}
+
+terminal mandate-issued: "Mandate issued" outcome [neutral] cite ?("Fed. R. App. P. 41(b)")
+{
+  note "OUTLINE. Mandate ends appellate jurisdiction on the issues decided."
+  payoff ?
+}
+
+terminal cert-denied: "Certiorari denied" outcome [loss] cite ?("Fed. R. App. P. 41(d)")
+{
+  note "OUTLINE. Denial ends the appellate path."
+  payoff ?
+}
+
+terminal cert-granted: "Certiorari granted" outcome [neutral] cite ?("Fed. R. App. P. 41(d)")
+{
+  note "OUTLINE. Outcome is a hole until decided."
+  payoff ?
+}

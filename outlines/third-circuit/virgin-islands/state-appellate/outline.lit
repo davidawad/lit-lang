@@ -1,0 +1,89 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-outline-vi-state-appellate
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite ?("V.I. Supreme Court appellate rule ? (not verified)")
+{
+  note "OUTLINE. Notice in the trial court; period, service and cross-appeal are holes. "
+  edge-notice-record "Record prepared" -> record {
+    authority cite ?("V.I. appellate rule ? (not verified)")
+  }
+}
+
+state record: "Record or transcript prepared" by office cite ?("V.I. appellate rule ? (not verified)")
+{
+  note "OUTLINE. Record contents, transcript and stays are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-record-brief "Briefing" -> briefing {
+    authority cite ?("V.I. appellate rule ? (not verified)")
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite ?("V.I. appellate rule ? (not verified)")
+{
+  note "OUTLINE. Brief form, length and reply are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-brief-argument "Argument or submission" -> argument {
+    authority cite ?("V.I. appellate rule ? (not verified)")
+  }
+}
+
+decision argument: "Argument or submission" by court cite ?("V.I. appellate rule ? (not verified)")
+{
+  note "OUTLINE. Argument is discretionary in some courts. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-arg-decision "Decision issued" -> decision {
+    authority cite ?("V.I. appellate rule ? (not verified)")
+  }
+}
+
+chance decision: "Court decides" by court cite ?("V.I. appellate rule ? (not verified)")
+{
+  note "OUTLINE. Probabilities are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-dec-affirmed "Affirmed" -> post-decision p ? {
+  }
+  edge-dec-reversed "Reversed or remanded" -> post-decision p ? {
+  }
+}
+
+decision post-decision: "Rehearing or further review decision" by applicant cite ?("V.I. appellate rule ? (not verified)")
+{
+  note "OUTLINE. Rehearing and further review: V.I. appellate rule ? (not verified). Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-pd-rehearing "Rehearing sought" -> rehearing {
+    authority cite ?("V.I. appellate rule ? (not verified)")
+  }
+  edge-pd-further "Further review sought" -> further-review {
+    authority cite ?("V.I. appellate rule ? (not verified)")
+  }
+  edge-pd-mandate "No further review" -> mandate-issued {
+    authority cite ?("V.I. appellate rule ? (not verified)")
+  }
+}
+
+state rehearing: "Rehearing petition" by applicant cite ?("V.I. appellate rule ? (not verified)")
+{
+  note "OUTLINE. Rehearing period and effect on finality are holes."
+  edge-rh-decision "Rehearing decided" -> post-decision {
+  }
+}
+
+state further-review: "Petition for further review" by applicant cite ?("V.I. appellate rule ? (not verified)")
+{
+  note "OUTLINE. Petition period and grant standard are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-fr-mandate "Review denied" -> mandate-issued {
+  }
+  edge-fr-merits "Review granted" -> supreme-merits {
+  }
+}
+
+terminal mandate-issued: "Mandate or remittitur issued" outcome [final] cite ?("V.I. appellate rule ? (not verified)")
+{
+  note "OUTLINE. Mandate or remittitur returns the case to the trial court. Costs: holes."
+  payoff ?
+}
+
+terminal supreme-merits: "Review granted on the merits" outcome [final] cite ?("V.I. appellate rule ? (not verified)")
+{
+  note "OUTLINE. Merits review in the highest state court. Outcome is outside this outline."
+  payoff ?
+}
+

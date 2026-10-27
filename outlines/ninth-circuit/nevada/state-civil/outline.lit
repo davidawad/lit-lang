@@ -1,0 +1,128 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+
+module outline-nv-state-civil
+
+start commenced
+
+state commenced: "Complaint Filed" by applicant cite ?("NRCP 3")
+{
+  note "Commencement by filing. Filing fee is a hole."
+  edge-commenced-response-due "Summons and complaint served" -> response-due {
+    authority cite ?("NRCP 4")
+  }
+}
+
+decision response-due: "Answer or Motion Due" by office cite ?("NRCP 12(a)")
+{
+  note "Response period is a hole. Verify against the rule and any stipulation practice."
+  edge-response-due-default-entered "No response" -> default-entered {
+    authority cite ?("NRCP 55")
+  }
+  edge-response-due-motion-ruling "Motion filed" -> motion-ruling {
+    authority cite ?("NRCP 12(b)")
+  }
+  edge-response-due-discovery "Answer filed" -> discovery {
+    authority cite ?("NRCP 12(a)")
+  }
+}
+
+terminal default-entered: "Default entered" outcome [loss] cite ?("NRCP 55")
+{
+  note "Default entry and set-aside standard are holes. Verify."
+  payoff ?
+}
+
+decision motion-ruling: "Motion Ruling" by court cite ?("NRCP 12(b)")
+{
+  note "Pleading standard: Buzz Stew, LLC v. City of North Las Vegas, 124 Nev. 224, 181 P.3d 670 (2008). Verify."
+  edge-motion-ruling-dismissed "Dismissed" -> dismissed {
+    authority cite ?("NRCP 12(b)")
+  }
+  edge-motion-ruling-discovery "Denied" -> discovery {
+    authority cite ?("NRCP 12(b)")
+  }
+}
+
+terminal dismissed: "Dismissed on the pleadings" outcome [loss] cite ?("NRCP 12(b)")
+{
+  note "Leave to amend and with or without prejudice are holes. Verify."
+  payoff ?
+}
+
+state discovery: "Discovery" by applicant cite ?("NRCP 26")
+{
+  note "Disclosure, discovery limits and deadlines are holes. Verify."
+  edge-discovery-settled "Settlement or dismissal" -> settled {
+    authority cite ?("NRCP 41")
+  }
+  edge-discovery-summary-judgment "Discovery closed; dispositive motion" -> summary-judgment {
+    authority cite ?("NRCP 56")
+  }
+}
+
+decision summary-judgment: "Summary Judgment" by court cite ?("NRCP 56")
+{
+  note "Summary judgment: Wood v. Safeway, Inc., 121 Nev. 724, 121 P.3d 1026 (2005). Verify."
+  edge-summary-judgment-judgment-merits "Granted" -> judgment-merits {
+    authority cite ?("NRCP 56")
+  }
+  edge-summary-judgment-trial "Denied" -> trial {
+    authority cite ?("NRCP 56")
+  }
+}
+
+terminal judgment-merits: "Summary judgment entered" outcome [win] cite ?("NRCP 56")
+{
+  note "OUTLINE. Written from the applicant side; the winner depends on who moved (verify)."
+  payoff ?
+}
+
+decision trial: "Jury or Bench Trial" by court cite ?("NRCP 38")
+{
+  note "Jury demand timing is a hole. Verify."
+  edge-trial-post-trial "Verdict or decision" -> post-trial {
+    authority cite ?("NRCP 38")
+  }
+  edge-trial-settled "Settled before verdict" -> settled {
+    authority cite ?("NRCP 41")
+  }
+}
+
+decision post-trial: "Post-Trial Motions" by applicant cite ?("NRCP 50")
+{
+  note "Post-trial motion timing and standard are holes. Verify."
+  edge-post-trial-judgment-entered "Motions resolved or none filed" -> judgment-entered {
+    authority cite ?("NRCP 59")
+  }
+}
+
+decision judgment-entered: "Judgment Entered" by court cite ?("NRCP 58")
+{
+  note "Entry of judgment and finality are holes. Verify."
+  edge-judgment-entered-appeal-filed "Notice of appeal" -> appeal-filed {
+    authority cite ?("NRAP 4(a)(1)")
+  }
+  edge-judgment-entered-judgment-final "No appeal" -> judgment-final {
+    authority cite ?("NRCP 58")
+  }
+}
+
+terminal appeal-filed: "Notice of appeal filed; continue in appellate package" outcome [appeal] cite ?("NRAP 4(a)(1)")
+{
+  note "Notice period is a hole. Verify the appellate notice rule and tolling."
+  payoff ?
+}
+
+terminal judgment-final: "Final judgment, no appeal" outcome [judgment] cite ?("NRCP 58")
+{
+  note "OUTLINE. Outcome depends on the judgment entered (verify)."
+  payoff ?
+}
+
+terminal settled: "Settled or dismissed by agreement" outcome [settle] cite ?("NRCP 41")
+{
+  note "OUTLINE. Settlement terms and any dismissal mechanics are holes."
+  payoff ?
+}
+

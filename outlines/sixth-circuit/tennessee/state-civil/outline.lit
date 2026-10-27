@@ -1,0 +1,258 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-tn-state-civil
+
+start complaint-filed
+
+state complaint-filed: "Complaint Filed" by applicant cite ?("Tenn. R. Civ. P. 3")
+{
+  note "OUTLINE. Action commenced by filing complaint (Rule 3; verify). Circuit and chancery courts share general civil jurisdiction (verify)."
+  edge-complaint-filed-service "Served" -> service-made {
+    authority cite ?("Tenn. R. Civ. P. 4")
+  }
+}
+
+state service-made: "Served" by applicant cite ?("Tenn. R. Civ. P. 4")
+{
+  note "OUTLINE. Summons and service (Rule 4; verify). Service period is a hole (?)."
+  edge-service-made-response "Served in time" -> response-due {
+    authority cite ?("Tenn. R. Civ. P. 4")
+  }
+  edge-service-made-lapsed "Not served in time" -> service-dismissal {
+    authority cite ?("Tenn. R. Civ. P. 4")
+  }
+}
+
+decision response-due: "Answer, pleading challenge, or nothing" by office cite ?("Tenn. R. Civ. P. 12.01")
+{
+  note "OUTLINE. Answer period is a hole (?) after service (Rule 12.01; verify)."
+  edge-response-due-answer "Answer filed" -> answered {
+    authority cite ?("Tenn. R. Civ. P. 12.01")
+  }
+  edge-response-due-pleading "Pleading challenge filed" -> pleading-motion {
+    authority cite ?("Tenn. R. Civ. P. 12.02(6), 12.03")
+  }
+  edge-response-due-default "No response" -> default-request {
+    authority cite ?("Tenn. R. Civ. P. 55.01")
+  }
+}
+
+state pleading-motion: "Rule 12.02(6) motion or Rule 12.03 judgment on the pleadings" by office cite ?("Tenn. R. Civ. P. 12.02(6), 12.03")
+{
+  note "OUTLINE. Failure to state a claim (Rule 12.02(6)); judgment on the pleadings (Rule 12.03); verify. Verify: Webb v. Nashville Area Habitat for Humanity, Inc., 346 S.W.3d 422 (Tenn. 2011)."
+  edge-pleading-motion-ruling "Court rules" -> pleading-ruling {
+    authority cite ?("Tenn. R. Civ. P. 12.02(6), 12.03")
+  }
+}
+
+decision pleading-ruling: "Ruling on pleading challenge" by court cite ?("Tenn. R. Civ. P. 12.02(6), 12.03")
+{
+  note "OUTLINE. Leave to amend is governed by the amendment rule (cite below). Verify leading decisions before use."
+  edge-pleading-ruling-dismissed "Dismissed with prejudice" -> dismissed-merits {
+    authority cite ?("Tenn. R. Civ. P. 12.02(6), 12.03")
+  }
+  edge-pleading-ruling-leave "Dismissed with leave to amend" -> amended {
+    authority cite ?("Tenn. R. Civ. P. 15.01")
+  }
+  edge-pleading-ruling-denied "Denied" -> answered {
+    authority cite ?("Tenn. R. Civ. P. 12.01")
+  }
+}
+
+state amended: "Amended pleading filed" by applicant cite ?("Tenn. R. Civ. P. 15.01")
+{
+  note "OUTLINE. Response period to the amended pleading is a hole (?)."
+  edge-amended-response "Amended pleading served" -> response-due {
+    authority cite ?("Tenn. R. Civ. P. 12.01")
+  }
+}
+
+state answered: "Answer filed" by applicant cite ?("Tenn. R. Civ. P. 12.01")
+{
+  note "OUTLINE. Affirmative defenses must be pleaded (cite below); discovery opens after pleadings close."
+  edge-answered-discovery "Pleadings closed" -> discovery {
+    authority cite ?("Tenn. R. Civ. P. 26.02, 33, 34, 36")
+  }
+}
+
+state default-request: "Default sought" by applicant cite ?("Tenn. R. Civ. P. 55.01")
+{
+  note "OUTLINE. Default entry (Rule 55.01; verify). Default judgment (Rule 55.02; verify)."
+  edge-default-request-entered "Default entered" -> default-entered {
+    authority cite ?("Tenn. R. Civ. P. 55.01")
+  }
+  edge-default-request-answered "Answer filed before default" -> answered {
+    authority cite ?("Tenn. R. Civ. P. 12.01")
+  }
+}
+
+state default-entered: "Default entered" by applicant cite ?("Tenn. R. Civ. P. 55.02")
+{
+  note "OUTLINE. Default judgment requires proof of the claim; a hearing may be needed for damages (verify). Setting aside is a hole until verified."
+  edge-default-entered-judgment "Default judgment sought" -> default-judgment {
+    authority cite ?("Tenn. R. Civ. P. 55.02")
+  }
+  edge-default-entered-set-aside "Defendant moves to set aside" -> set-aside-ruling {
+    authority cite ?("Tenn. R. Civ. P. 55.02")
+  }
+}
+
+decision set-aside-ruling: "Set aside the default?" by court cite ?("Tenn. R. Civ. P. 55.02")
+{
+  note "OUTLINE. Standard and any time limit are holes until verified."
+  edge-set-aside-granted "Set aside" -> answered {
+    authority cite ?("Tenn. R. Civ. P. 55.02")
+  }
+  edge-set-aside-refused "Refused" -> default-judgment {
+    authority cite ?("Tenn. R. Civ. P. 55.02")
+  }
+}
+
+state discovery: "Discovery" by applicant cite ?("Tenn. R. Civ. P. 26.02, 33, 34, 36")
+{
+  note "OUTLINE. Scope (Rule 26.02; verify). Discovery schedule is set by order (?)."
+  edge-discovery-dispute "Discovery dispute" -> discovery-ruling {
+    authority cite ?("Tenn. R. Civ. P. 26.02, 33, 34, 36")
+  }
+  edge-discovery-sj "Dispositive motion" -> sj-motion {
+    authority cite ?("Tenn. R. Civ. P. 56.04")
+  }
+  edge-discovery-settled "Settled" -> settled {
+    authority cite ?("Tenn. R. Civ. P. 41.01")
+  }
+  edge-discovery-voluntary "Voluntary dismissal" -> voluntary-dismissal {
+    authority cite ?("Tenn. R. Civ. P. 41.01")
+  }
+  edge-discovery-inactive "No prosecution" -> inactivity-dismissal {
+    authority cite ?("Tenn. R. Civ. P. 41.02")
+  }
+}
+
+decision discovery-ruling: "Discovery ruling" by court cite ?("Tenn. R. Civ. P. 37")
+{
+  note "OUTLINE. Meet-and-confer and sanction prerequisites are holes until verified."
+  edge-discovery-ruling-resolved "Dispute resolved" -> discovery {
+    authority cite ?("Tenn. R. Civ. P. 26.02, 33, 34, 36")
+  }
+  edge-discovery-ruling-sanction "Sanction dismissal" -> sanction-dismissal {
+    authority cite ?("Tenn. R. Civ. P. 37")
+  }
+}
+
+state sj-motion: "Summary judgment motion" by office cite ?("Tenn. R. Civ. P. 56.04")
+{
+  note "OUTLINE. Summary judgment standard (Rule 56.04; verify). Verify: Rye v. Women's Care Center of Memphis, MPLLC, 477 S.W.3d 235 (Tenn. 2015)."
+  edge-sj-motion-ruling "Motion heard" -> sj-ruling {
+    authority cite ?("Tenn. R. Civ. P. 56.04")
+  }
+}
+
+decision sj-ruling: "Summary judgment ruling" by court cite ?("Tenn. R. Civ. P. 56.04")
+{
+  note "OUTLINE. Partial summary judgment availability is a hole until verified."
+  edge-sj-ruling-defense "Granted for defendant" -> sj-defense {
+    authority cite ?("Tenn. R. Civ. P. 56.04")
+  }
+  edge-sj-ruling-applicant "Granted for applicant" -> judgment-for-applicant {
+    authority cite ?("Tenn. R. Civ. P. 58, 54.02")
+  }
+  edge-sj-ruling-denied "Denied" -> trial-setting {
+    authority cite ?("Tenn. R. Civ. P. 38, 39")
+  }
+}
+
+state trial-setting: "Trial setting and jury request" by office cite ?("Tenn. R. Civ. P. 38, 39")
+{
+  note "OUTLINE. Jury demand (Rule 38; period is a hole (?), verify)."
+  edge-trial-setting-result "Tried" -> trial-result {
+    authority cite ?("Tenn. R. Civ. P. 38, 39")
+  }
+}
+
+decision trial-result: "Judgment after trial" by court cite ?("Tenn. R. Civ. P. 58, 54.02")
+{
+  note "OUTLINE. Post-trial motion periods are holes (?) until verified."
+  edge-trial-result-applicant "Judgment for applicant" -> judgment-for-applicant {
+    authority cite ?("Tenn. R. Civ. P. 58, 54.02")
+  }
+  edge-trial-result-defense "Judgment for defendant" -> verdict-for-defendant {
+    authority cite ?("Tenn. R. Civ. P. 58, 54.02")
+  }
+  edge-trial-result-post "Post-trial motion filed" -> post-trial {
+    authority cite ?("Tenn. R. Civ. P. 50.02, 59.04, 60.02")
+  }
+}
+
+decision post-trial: "Post-trial motion ruling" by court cite ?("Tenn. R. Civ. P. 50.02, 59.04, 60.02")
+{
+  note "OUTLINE. Grounds and time limits are holes until verified. Leading decisions: verify."
+  edge-post-trial-new-trial "New trial granted" -> trial-setting {
+    authority cite ?("Tenn. R. Civ. P. 50.02, 59.04, 60.02")
+  }
+  edge-post-trial-applicant "Denied; applicant's judgment stands" -> judgment-for-applicant {
+    authority cite ?("Tenn. R. Civ. P. 58, 54.02")
+  }
+  edge-post-trial-defense "Denied; defendant's judgment stands" -> verdict-for-defendant {
+    authority cite ?("Tenn. R. Civ. P. 58, 54.02")
+  }
+}
+
+terminal service-dismissal: "Dismissed for failure to serve" outcome [loss] cite ?("Tenn. R. Civ. P. 4")
+{
+  note "OUTLINE. Service period and refiling effect are holes (?)."
+  payoff ?
+}
+
+terminal dismissed-merits: "Dismissed on the pleadings" outcome [loss] cite ?("Tenn. R. Civ. P. 12.02(6), 12.03")
+{
+  note "OUTLINE. Appeal route: see the state-appellate package."
+  payoff ?
+}
+
+terminal default-judgment: "Default judgment" outcome [win] cite ?("Tenn. R. Civ. P. 55.02")
+{
+  note "OUTLINE. Damages and costs are holes."
+  payoff ?
+}
+
+terminal sanction-dismissal: "Dismissed as discovery sanction" outcome [loss] cite ?("Tenn. R. Civ. P. 37")
+{
+  note "OUTLINE. Sanction prerequisites are holes until verified."
+  payoff ?
+}
+
+terminal inactivity-dismissal: "Dismissed for inactivity" outcome [loss] cite ?("Tenn. R. Civ. P. 41.02")
+{
+  note "OUTLINE. Period of inactivity and any notice requirement are holes (?)."
+  payoff ?
+}
+
+terminal voluntary-dismissal: "Voluntary dismissal" outcome [neutral] cite ?("Tenn. R. Civ. P. 41.01")
+{
+  note "OUTLINE. Effect of dismissal on refiling is a hole until verified."
+  payoff ?
+}
+
+terminal settled: "Settled" outcome [neutral] cite ?("Tenn. R. Civ. P. 41.01")
+{
+  note "OUTLINE. Terms are holes."
+  payoff ?
+}
+
+terminal sj-defense: "Summary judgment for defendant" outcome [loss] cite ?("Tenn. R. Civ. P. 56.04")
+{
+  note "OUTLINE. Appeal route: see the state-appellate package."
+  payoff ?
+}
+
+terminal judgment-for-applicant: "Judgment for applicant" outcome [win] cite ?("Tenn. R. Civ. P. 58, 54.02")
+{
+  note "OUTLINE. Costs, interest and fee recovery are holes."
+  payoff ?
+}
+
+terminal verdict-for-defendant: "Judgment or verdict for defendant" outcome [loss] cite ?("Tenn. R. Civ. P. 58, 54.02")
+{
+  note "OUTLINE. Costs are holes."
+  payoff ?
+}

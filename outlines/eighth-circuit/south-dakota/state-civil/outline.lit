@@ -1,0 +1,174 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-sd-state-civil
+
+start complaint-filed
+
+state complaint-filed: "Action commenced" by applicant cite ?("SDCL 15-6-3")
+{
+  note "OUTLINE. Rules from memory: verify. No leading decision named."
+  edge-complaint-filed-response-due "Summons served" -> response-due {
+    authority cite ?("SDCL 15-6-4")
+  }
+}
+
+state response-due: "Response due: answer or motion" cite ?("SDCL 15-6-12(a)")
+{
+  note "OUTLINE. Response period is a hole. SDCL 15-6-12(b)(6); response period is a hole."
+  edge-response-due-default-entered "No timely response" -> default-entered {
+    authority cite ?("SDCL 15-6-55")
+  }
+  edge-response-due-motion-ruling "Motion to dismiss filed" -> motion-ruling {
+    authority cite ?("SDCL 15-6-12(b)(6)")
+  }
+  edge-response-due-sched "Answer filed" -> sched {
+    authority cite ?("SDCL 15-6-12(a)")
+  }
+}
+
+decision motion-ruling: "Motion to dismiss ruling" by court cite ?("SDCL 15-6-12(b)(6)")
+{
+  note "OUTLINE. No leading decision named. Verify South Dakota pleading case law."
+  edge-motion-ruling-dismissed-with-prejudice "Dismissed with prejudice" -> dismissed-with-prejudice {
+    authority cite ?("SDCL 15-6-41(b)")
+  }
+  edge-motion-ruling-response-due "Dismissed with leave to amend" -> response-due {
+    authority cite ?("SDCL 15-6-15")
+  }
+  edge-motion-ruling-sched "Denied" -> sched {
+    authority cite ?("SDCL 15-6-12(b)(6)")
+  }
+}
+
+state sched: "Scheduling order and initial disclosures" cite ?("SDCL 15-6-16")
+{
+  note "OUTLINE. SDCL 15-6-16 (verify)."
+  edge-sched-discovery "Order entered" -> discovery {
+    authority cite ?("SDCL 15-6-16")
+  }
+}
+
+state discovery: "Discovery" cite ?("SDCL 15-6-26, 15-6-33, 15-6-34, 15-6-36")
+{
+  note "OUTLINE. Discovery under SDCL 15-6-26 and following (verify)."
+  edge-discovery-sj-ruling "Dispositive motion filed" -> sj-ruling {
+    authority cite ?("SDCL 15-6-56")
+  }
+  edge-discovery-dismissed-with-prejudice "Discovery sanction dismisses claims" -> dismissed-with-prejudice {
+    authority cite ?("SDCL 15-6-37")
+  }
+  edge-discovery-settled "Settlement or voluntary dismissal" -> settled {
+    authority cite ?("SDCL 15-6-41(a)")
+  }
+  edge-discovery-pretrial "No dispositive motion" -> pretrial {
+    authority cite ?("SDCL 15-6-16")
+  }
+}
+
+decision sj-ruling: "Summary judgment ruling" by court cite ?("SDCL 15-6-56")
+{
+  note "OUTLINE. No leading decision named. Verify South Dakota summary judgment case law."
+  edge-sj-ruling-judgment-applicant "Granted for applicant" -> judgment-applicant {
+    authority cite ?("SDCL 15-6-58")
+  }
+  edge-sj-ruling-judgment-opponent "Granted for opponent" -> judgment-opponent {
+    authority cite ?("SDCL 15-6-58")
+  }
+  edge-sj-ruling-pretrial "Denied" -> pretrial {
+    authority cite ?("SDCL 15-6-56")
+  }
+}
+
+state pretrial: "Pretrial order" cite ?("SDCL 15-6-16")
+{
+  note "OUTLINE. Pretrial conference, order and trial setting."
+  edge-pretrial-trial "Trial set" -> trial {
+    authority cite ?("SDCL 15-6-16")
+  }
+}
+
+state trial: "Trial (jury or bench)" cite ?("SDCL 15-6-38")
+{
+  note "OUTLINE. Trial and findings or verdict."
+  edge-trial-judgment-applicant "Verdict or findings for applicant" -> judgment-applicant {
+    authority cite ?("SDCL 15-6-58")
+  }
+  edge-trial-judgment-opponent "Verdict or findings for opponent" -> judgment-opponent {
+    authority cite ?("SDCL 15-6-58")
+  }
+}
+
+state judgment-applicant: "Judgment for applicant entered" cite ?("SDCL 15-6-58")
+{
+  note "OUTLINE. Entry of judgment. Post-trial motions under SDCL 15-6-50(b), 59 and 60(b) (verify)."
+  edge-judgment-applicant-post-judgment-ruling "Post-judgment motion" -> post-judgment-ruling {
+    authority cite ?("SDCL 15-6-50(b), 15-6-59, 15-6-60(b)")
+  }
+  edge-judgment-applicant-appellate-review "Notice of appeal filed" -> appellate-review {
+    authority cite ?("SDCL 15-26A-6")
+  }
+  edge-judgment-applicant-final-win "No appeal within time" -> final-win {
+    authority cite ?("SDCL 15-26A-6")
+  }
+}
+
+state judgment-opponent: "Judgment for opponent entered" cite ?("SDCL 15-6-58")
+{
+  note "OUTLINE. Entry of judgment. Post-trial motions under SDCL 15-6-50(b), 59 and 60(b) (verify)."
+  edge-judgment-opponent-post-judgment-ruling "Post-judgment motion" -> post-judgment-ruling {
+    authority cite ?("SDCL 15-6-50(b), 15-6-59, 15-6-60(b)")
+  }
+  edge-judgment-opponent-appellate-review "Notice of appeal filed" -> appellate-review {
+    authority cite ?("SDCL 15-26A-6")
+  }
+  edge-judgment-opponent-final-loss "No appeal within time" -> final-loss {
+    authority cite ?("SDCL 15-26A-6")
+  }
+}
+
+decision post-judgment-ruling: "Post-judgment motion ruling" by court cite ?("SDCL 15-6-50(b), 15-6-59, 15-6-60(b)")
+{
+  note "OUTLINE. Post-judgment motions toll the appeal clock; verify tolling rule."
+  edge-post-judgment-ruling-pretrial "Granted: new trial" -> pretrial {
+    authority cite ?("SDCL 15-6-50(b), 15-6-59, 15-6-60(b)")
+  }
+  edge-post-judgment-ruling-appellate-review "Denied: appeal clock runs from order" -> appellate-review {
+    authority cite ?("SDCL 15-26A-6")
+  }
+}
+
+terminal default-entered: "Default entered against opponent" outcome [win] cite ?("SDCL 15-6-55")
+{
+  note "OUTLINE. Default under the rule; judgment by default is a separate entry. Outcome is from the applicant's side."
+  payoff ?
+}
+
+terminal dismissed-with-prejudice: "Dismissed with prejudice" outcome [loss] cite ?("SDCL 15-6-41(b)")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite ?("SDCL 15-6-41(a)")
+{
+  note "OUTLINE. Settlement terms are a hole."
+  payoff ?
+}
+
+terminal final-win: "Final judgment for applicant, no appeal" outcome [win] cite ?("SDCL 15-26A-6")
+{
+  note "OUTLINE. Judgment final when the appeal period lapses."
+  payoff ?
+}
+
+terminal final-loss: "Final judgment for opponent, no appeal" outcome [loss] cite ?("SDCL 15-26A-6")
+{
+  note "OUTLINE. Judgment final when the appeal period lapses."
+  payoff ?
+}
+
+terminal appellate-review: "Appeal taken: continue in the appellate package" cite ?("SDCL 15-26A-6")
+{
+  note "OUTLINE. Hand-off to the state-appellate or court-of-appeals package."
+  payoff ?
+}

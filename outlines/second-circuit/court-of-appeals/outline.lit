@@ -1,0 +1,117 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-ca2
+
+start notice-filed
+
+state notice-filed: "Notice of Appeal Filed" by applicant cite ?("Fed. R. App. P. 3(a)(1); 4(a)(1)(A)")
+{
+  note "OUTLINE. The filing deadline is a hole until verified. Leading decision on timeliness (verify): Bowles v. Russell, 551 U.S. 205 (2007) (verify)"
+  edge-notice-filed-timeliness "Notice filed" -> timeliness {
+    authority cite ?("Fed. R. App. P. 3(a)(1); 4(a)(1)(A)")
+  }
+}
+
+decision timeliness: "Timeliness Reviewed" by court cite ?("Fed. R. App. P. 4(a)(5), 26(b)")
+{
+  note "OUTLINE. Late notice is dismissed; timely post-judgment motions and tolling change the clock."
+  edge-timeliness-dismissed "Untimely" -> dismissed-untimely {
+    authority cite ?("Fed. R. App. P. 4(a)(5), 26(b)")
+  }
+  edge-timeliness-record "Timely" -> record-transmitted {
+    authority cite ?("Fed. R. App. P. 10, 11")
+  }
+}
+
+terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss] cite ?("Fed. R. App. P. 4(a)(5), 26(b)")
+{
+  note "OUTLINE. Jurisdictional bar. Leading decision (verify): Bowles v. Russell, 551 U.S. 205 (2007) (verify)"
+  payoff ?
+}
+
+state record-transmitted: "Record Transmitted and Docketed" by office cite ?("Fed. R. App. P. 10, 11")
+{
+  note "OUTLINE. Record contents, appendix and docketing steps are holes until verified."
+  edge-record-briefing "Briefing schedule set" -> briefing {
+    authority cite ?("Fed. R. App. P. 31(a)(1); 2d Cir. R. 31.1")
+  }
+}
+
+state briefing: "Briefs Filed" by applicant cite ?("Fed. R. App. P. 31(a)(1); 2d Cir. R. 31.1")
+{
+  note "OUTLINE. Brief length, format and copy counts are holes. Motions under 2d Cir. R. 27.1 (verify); oral argument statement under 2d Cir. R. 34.1 (verify)."
+  edge-briefing-argument "Briefing complete" -> argument-decision {
+    authority cite ?("Fed. R. App. P. 34; 2d Cir. R. 34.1")
+  }
+}
+
+decision argument-decision: "Argument or Submission on Briefs" by court cite ?("Fed. R. App. P. 34; 2d Cir. R. 34.1")
+{
+  note "OUTLINE. Leading decision on standard of review (verify): Gallo v. Prudential Residential Services, 22 F.3d 1219 (2d Cir. 1994) (summary judgment; verify relevance)"
+  edge-argument-panel "Panel decides" -> panel-decision {
+    authority cite ?("Fed. R. App. P. 36")
+  }
+}
+
+decision panel-decision: "Panel Decision" by court cite ?("Fed. R. App. P. 36")
+{
+  note "OUTLINE. Affirmance and reversal both move to the rehearing step."
+  edge-panel-affirmed "Affirmed" -> rehearing {
+    authority cite ?("Fed. R. App. P. 36")
+  }
+  edge-panel-reversed "Reversed or vacated" -> rehearing {
+    authority cite ?("Fed. R. App. P. 36")
+  }
+}
+
+decision rehearing: "Rehearing or En Banc Petition" by court cite ?("Fed. R. App. P. 40")
+{
+  note "OUTLINE. Petition deadline is a hole until verified. Petitions are usually denied."
+  edge-rehearing-mandate-denied "Denied" -> mandate {
+    authority cite ?("Fed. R. App. P. 40")
+  }
+  edge-rehearing-mandate-none "No petition filed" -> mandate {
+    authority cite ?("Fed. R. App. P. 40")
+  }
+}
+
+state mandate: "Mandate Issues" by office cite ?("Fed. R. App. P. 41(b)")
+{
+  note "OUTLINE. The mandate issues after the rehearing period; the stay of mandate is a hole until verified."
+  edge-mandate-further-review "Further review sought" -> further-review {
+    authority cite ?("Sup. Ct. R. 13")
+  }
+  edge-mandate-final "No further review" -> final-judgment {
+    authority cite ?("Fed. R. App. P. 41(b)")
+  }
+}
+
+decision further-review: "Further Review Petition Decided" by court cite ?("Sup. Ct. R. 13")
+{
+  note "OUTLINE. Leading decision on further review (verify): No leading decision confirmed in this run; verify before use."
+  edge-further-denied "Denied" -> review-denied {
+    authority cite ?("Sup. Ct. R. 13")
+  }
+  edge-further-granted "Granted" -> review-granted {
+    authority cite ?("Sup. Ct. R. 13")
+  }
+}
+
+terminal final-judgment: "Judgment final after mandate" outcome [loss] cite ?("Fed. R. App. P. 41(b)")
+{
+  note "OUTLINE. Outcome follows the panel disposition: affirmance is a loss for the appellant, reversal a win. Re-label before use."
+  payoff ?
+}
+
+terminal review-denied: "Further review denied" outcome [loss] cite ?("Sup. Ct. R. 13")
+{
+  note "OUTLINE. Judgment final."
+  payoff ?
+}
+
+terminal review-granted: "Further review granted" outcome [win] cite ?("Sup. Ct. R. 13")
+{
+  note "OUTLINE. Review granted; merits outcome not modeled here."
+  payoff ?
+}
+

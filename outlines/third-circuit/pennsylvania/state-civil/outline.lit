@@ -1,0 +1,203 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-outline-pa-state-civil
+
+start filed
+
+state filed: "Complaint filed" by applicant cite ?("Pa.R.C.P. 1007")
+{
+  note "OUTLINE. Commencement by filing. Notice to defend: Pa.R.C.P. 1018.1 (verify). Judgment on the pleadings: Pa.R.C.P. 1034 (verify)."
+  edge-filed-served "Defendant served" -> served {
+    authority cite ?("Pa.R.C.P. 400 (verify)")
+  }
+}
+
+decision served: "Response due" by office cite ?("Pa.R.C.P. 1026")
+{
+  note "OUTLINE. Response period is a hole. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-served-answer "Answer filed" -> answered {
+    authority cite ?("Pa.R.C.P. 1026")
+  }
+  edge-served-motion "Preliminary objections under Pa.R.C.P. 1028" -> motion-pending {
+    authority cite ?("Pa.R.C.P. 1028")
+  }
+  edge-served-default "No response by the deadline" -> default-entered {
+    authority cite ?("Pa.R.C.P. 1037(a)")
+  }
+}
+
+state motion-pending: "Pleading motion pending" by applicant cite ?("Pa.R.C.P. 1028")
+{
+  note "OUTLINE. Preliminary objections under Pa.R.C.P. 1028. Pa.R.C.P. 1028(a)(4) (legal insufficiency). Leading decisions not yet identified (verify)."
+  edge-motion-ruling "Court rules" -> motion-ruling {
+  }
+}
+
+chance motion-ruling: "Ruling on pleading motion" by court cite ?("Pa.R.C.P. 1028")
+{
+  note "OUTLINE. Probabilities are holes; no calibration."
+  edge-mr-dismissed "Dismissed" -> dismissed-pleading p ? {
+  }
+  edge-mr-leave "Dismissed with leave to amend" -> amend p ? {
+  }
+  edge-mr-denied "Denied" -> answered p ? {
+  }
+}
+
+state amend: "Amended pleading" by applicant cite ?("Pa.R.C.P. 1033")
+{
+  note "OUTLINE. Amendment period and consent are holes."
+  edge-amend-motion "Amended pleading tested again" -> motion-pending {
+  }
+}
+
+state default-entered: "Default entered" by office cite ?("Pa.R.C.P. 1037(a)")
+{
+  note "OUTLINE. Default entry. Setting it aside: Pa.R.C.P. 3051 (verify)."
+  edge-default-judgment "Default judgment sought" -> default-judgment {
+    authority cite ?("Pa.R.C.P. 1037(b)")
+  }
+  edge-default-vacate "Default vacated" -> answered {
+    authority cite ?("Pa.R.C.P. 3051 (verify)")
+  }
+}
+
+terminal default-judgment: "Default judgment entered" outcome [loss] cite ?("Pa.R.C.P. 1037(b)")
+{
+  note "OUTLINE. Default judgment. Damages hearing and proof are holes."
+  payoff ?
+}
+
+terminal dismissed-pleading: "Dismissed on the pleadings" outcome [loss] cite ?("Pa.R.C.P. 1028")
+{
+  note "OUTLINE. Dismissal on a pleading motion. Appeal period is a hole. Pa.R.C.P. 1028(a)(4) (legal insufficiency). Leading decisions not yet identified (verify)."
+  payoff ?
+}
+
+state answered: "Answer filed" by applicant cite ?("Pa.R.C.P. 1029, 1030")
+{
+  note "OUTLINE. Answer and affirmative defenses."
+  edge-answered-discovery "Case proceeds to discovery" -> discovery {
+    authority cite ?("Pa.R.C.P. 4003.1, 4007.1 (verify)")
+  }
+}
+
+state discovery: "Discovery" by applicant cite ?("Pa.R.C.P. 4003.1, 4007.1 (verify)")
+{
+  note "OUTLINE. Written discovery, depositions, expert disclosure. Scope and limits are holes."
+  edge-disc-dispute "Discovery dispute" -> dispute {
+    authority cite ?("Pa.R.C.P. 4019 (verify)")
+  }
+  edge-disc-sj "Dispositive motion" -> sj-motion {
+    authority cite ?("Pa.R.C.P. 1035.1-1035.5")
+  }
+  edge-disc-settle "Settlement" -> settled {
+  }
+}
+
+decision dispute: "Discovery dispute ruling" by court cite ?("Pa.R.C.P. 4019 (verify)")
+{
+  note "OUTLINE. Sanctions: Pa.R.C.P. 4019(c) (verify). Discovery sanction standard: leading decisions not yet identified (verify)."
+  edge-dispute-resolved "Dispute resolved" -> discovery {
+  }
+  edge-dispute-sanction "Dismissal as a sanction" -> dismissed-sanction {
+    authority cite ?("Pa.R.C.P. 4019(c) (verify)")
+  }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss] cite ?("Pa.R.C.P. 4019(c) (verify)")
+{
+  note "OUTLINE. Dismissal as a sanction. Discovery sanction standard: leading decisions not yet identified (verify)."
+  payoff ?
+}
+
+state sj-motion: "Summary judgment motion" by applicant cite ?("Pa.R.C.P. 1035.1-1035.5")
+{
+  note "OUTLINE. Summary judgment standard and timing are holes. Pa.R.C.P. 1035.2 governs. Leading decisions not yet identified (verify)."
+  edge-sj-ruling "Motion decided" -> sj-ruling {
+  }
+}
+
+chance sj-ruling: "Summary judgment ruling" by court cite ?("Pa.R.C.P. 1035.1-1035.5")
+{
+  note "OUTLINE. Probabilities are holes."
+  edge-sjr-granted "Granted" -> judgment-entered p ? {
+  }
+  edge-sjr-denied "Denied" -> pretrial p ? {
+  }
+}
+
+state pretrial: "Pretrial conference and motions in limine" by court cite ?("Pa.R.C.P. 212.1 (verify)")
+{
+  note "OUTLINE. Pretrial conference and trial setting are holes."
+  edge-pre-settle "Settlement" -> settled {
+  }
+  edge-pre-trial "Trial" -> trial {
+    authority cite ?("Pa.R.C.P. 1038 (verify)")
+  }
+}
+
+state trial: "Trial" by court cite ?("Pa.R.C.P. 1038 (verify)")
+{
+  note "OUTLINE. Trial by jury or the court. Jury demand timing is a hole."
+  edge-trial-verdict "Verdict or decision" -> verdict {
+  }
+}
+
+chance verdict: "Verdict or decision" by court cite ?("Pa.R.C.P. 227.1 (verify)")
+{
+  note "OUTLINE. Probabilities are holes."
+  edge-v-favorable "For applicant" -> judgment-entered p ? {
+  }
+  edge-v-adverse "For opponent" -> judgment-entered p ? {
+  }
+}
+
+decision judgment-entered: "Judgment entered" by office cite ?("Pa.R.C.P. 227.4 (verify)")
+{
+  note "OUTLINE. Entry of judgment. Costs and fees are holes."
+  edge-jud-post "Post-trial motion" -> post-trial {
+    authority cite ?("Pa.R.C.P. 227.1")
+  }
+  edge-jud-appeal "Notice of appeal" -> appeal-noticed {
+    authority cite ?("Pa.R.A.P. 903(a)")
+  }
+  edge-jud-final "No further action" -> judgment-final {
+    authority cite ?("Pa.R.C.P. 227.4 (verify)")
+  }
+}
+
+state post-trial: "Post-trial motion" by applicant cite ?("Pa.R.C.P. 227.1")
+{
+  note "OUTLINE. Post-trial motion periods are holes. Relief from judgment: Pa.R.C.P. 227.1."
+  edge-post-ruling "Motion decided" -> post-ruling {
+  }
+}
+
+chance post-ruling: "Ruling on post-trial motion" by court cite ?("Pa.R.C.P. 227.1")
+{
+  note "OUTLINE. Probabilities are holes."
+  edge-pr-retrial "New trial" -> trial p ? {
+  }
+  edge-pr-denied "Denied" -> judgment-entered p ? {
+  }
+}
+
+terminal settled: "Settled or dismissed" outcome [settle] cite ?("Pa.R.C.P. 4003.1, 4007.1 (verify)")
+{
+  note "OUTLINE. Settlement or voluntary dismissal. Payoff is a hole."
+  payoff ?
+}
+
+terminal judgment-final: "Judgment final in trial court" outcome [final] cite ?("Pa.R.C.P. 227.4 (verify)")
+{
+  note "OUTLINE. Final judgment. Appeal is governed by the state-appellate package."
+  payoff ?
+}
+
+terminal appeal-noticed: "Notice of appeal filed" outcome [appeal] cite ?("Pa.R.A.P. 903(a)")
+{
+  note "OUTLINE. Appeal to the state appellate court; see the state-appellate package."
+  payoff ?
+}
+

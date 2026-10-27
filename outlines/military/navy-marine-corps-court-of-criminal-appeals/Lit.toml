@@ -1,0 +1,27 @@
+[package]
+name = "outline-nmcca"
+version = "0.0.1"
+language = 1
+pack_id = "outline-nmcca"
+forum = "nmcca"
+authority = "FederalRule"
+title = "OUTLINE: Navy-Marine Corps Court of Criminal Appeals"
+description = "Outline only: structure, cites and holes. Every value is a hole until verified against vendored text. U.S.C. headings fetched 2026-10-26 (Cornell LII). Service court rules of practice are not fetched, so their cites are holes. Edition date unknown, so in_force is 2025-01-01."
+in_force = "2025-01-01"
+known_at = "2026-10-26"
+unknown_before = "2025-01-01"
+jurisdiction = "Navy-Marine Corps Court of Criminal Appeals"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+# Statute cites bind to the U.S. Code title by prefix. No vendored text is
+# declared yet, so this binding names the section URL and retrieval date only.
+[sources.usc-10]
+title = "10 U.S.C. (Armed Forces, including the UCMJ), sections cited in this outline; LII headings fetched 2026-10-26"
+url = "https://www.law.cornell.edu/uscode/text/10"
+as_of = "2026-10-26"
+cite_prefixes = ["10 U.S.C."]
+section_heading = "10 U.S.C. § {n}"

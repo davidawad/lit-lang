@@ -49,7 +49,7 @@ decision answer-due: "Commissioner answer or motion" by office cite ?("T.C. R. 3
 
 decision motion-to-dismiss-ruling: "Ruling on motion to dismiss" by court cite ?("T.C. R. 36; 26 U.S.C. § 6213(a)")
 {
-  note "OUTLINE. A motion to dismiss for lack of jurisdiction or for failure to state a claim. The standard is a hole. Key decision (verify): Estate of Mitchell? (verify citation before use) on the Court's jurisdictional dismissal standard."
+  note "OUTLINE. A motion to dismiss for lack of jurisdiction or for failure to state a claim. The standard is a hole. Key decision: none named until the dismissal standard is verified."
   edge-motion-to-dismiss-granted "Granted" -> dismissed-jurisdiction {
     authority cite ?("T.C. R. 36")
   }
@@ -182,12 +182,6 @@ terminal small-case-decision: "Small tax case decision (no appeal)" outcome [dec
 terminal settled: "Settled or stipulated decision" outcome [settle] cite ?("T.C. R. 131")
 {
   note "OUTLINE. Settlement and a stipulated decision. The decision entry and computation are holes."
-  payoff ?
-}
-
-terminal summary-judgment-decision: "Decision on summary judgment" outcome [decided] cite ?("T.C. R. 121")
-{
-  note "OUTLINE. Summary judgment disposes of the case. This terminal is not reached in the main graph; kept for the disposition type."
   payoff ?
 }
 

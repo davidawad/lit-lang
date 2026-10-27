@@ -1,0 +1,218 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-wi-state-appellate
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite ?("Wis. Stat. § 809.10(1)")
+{
+  note "OUTLINE. Notice under section 809.10(1); period is a hole."
+  edge-notice-filed-appealability "Notice filed" -> appealability {
+    authority cite ?("Wis. Stat. § 809.10(1)")
+  }
+}
+
+decision appealability: "Appellate jurisdiction check" by court cite ?("Wis. Stat. §§ 808.03, 808.04")
+{
+  note "OUTLINE. Appealable orders under sections 808.03 and 808.04 (verify). No leading decision named."
+  edge-appealability-dismissed-jurisdiction "Not an appealable order, or untimely" -> dismissed-jurisdiction {
+    authority cite ?("Wis. Stat. §§ 808.03, 808.04")
+  }
+  edge-appealability-record "Appealable order" -> record {
+    authority cite ?("Wis. Stat. §§ 808.03, 808.04")
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed for lack of appellate jurisdiction" outcome [loss] cite ?("Wis. Stat. §§ 808.03, 808.04")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}
+
+state record: "Record settled and transmitted" cite ?("Wis. Stat. § 809.12")
+{
+  note "OUTLINE. Record under section 809.12 (verify)."
+  edge-record-briefing "Record filed" -> briefing {
+    authority cite ?("Wis. Stat. § 809.12")
+  }
+}
+
+state briefing: "Briefing: opening, response, reply" cite ?("Wis. Stat. § 809.19")
+{
+  note "OUTLINE. Briefing schedule is a hole. Brief content under section 809.19 (verify); length is a hole."
+  edge-briefing-argument "Briefs complete" -> argument {
+    authority cite ?("Wis. Stat. § 809.19")
+  }
+}
+
+state argument: "Oral argument or submission on briefs" cite ?("Wis. Stat. § 809.22 (verify)")
+{
+  note "OUTLINE. Argument may be waived."
+  edge-argument-disposition "Submitted for decision" -> disposition {
+    authority cite ?("Wis. Stat. § 809.22 (verify)")
+  }
+}
+
+decision disposition: "Disposition" by court cite ?("Wis. Stat. § 809.23 (verify)")
+{
+  note "OUTLINE. Disposition under section 809.23 (verify)."
+  edge-disposition-affirmed-entered "Affirmed" -> affirmed-entered {
+    authority cite ?("Wis. Stat. § 809.23 (verify)")
+  }
+  edge-disposition-reversed-entered "Reversed or vacated" -> reversed-entered {
+    authority cite ?("Wis. Stat. § 809.23 (verify)")
+  }
+  edge-disposition-remanded-entered "Remanded" -> remanded-entered {
+    authority cite ?("Wis. Stat. § 809.23 (verify)")
+  }
+}
+
+decision affirmed-entered: "Affirmed: rehearing election" by applicant cite ?("Wis. Stat. § 809.23 (verify)")
+{
+  note "OUTLINE. Rehearing and mandate clocks run from entry."
+  edge-affirmed-entered-rehearing-affirmed "Rehearing petition filed" -> rehearing-affirmed {
+    authority cite ?("Wis. Stat. § 809.24 (verify)")
+  }
+  edge-affirmed-entered-mandate-affirmed "No rehearing petition" -> mandate-affirmed {
+    authority cite ?("Wis. Stat. § 809.25 (verify)")
+  }
+}
+
+decision rehearing-affirmed: "Rehearing ruling (affirmed)" by court cite ?("Wis. Stat. § 809.24 (verify)")
+{
+  note "OUTLINE. Reconsideration under section 809.24 (verify)."
+  edge-rehearing-affirmed-mandate-affirmed "Rehearing denied" -> mandate-affirmed {
+    authority cite ?("Wis. Stat. § 809.24 (verify)")
+  }
+  edge-rehearing-affirmed-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite ?("Wis. Stat. § 809.24 (verify)")
+  }
+}
+
+decision mandate-affirmed: "Mandate issued: further review election" by applicant cite ?("Wis. Stat. § 809.25 (verify)")
+{
+  note "OUTLINE. Mandate and its effect on the trial court."
+  edge-mandate-affirmed-review-affirmed "Further review sought" -> review-affirmed {
+    authority cite ?("Wis. Stat. § 809.62")
+  }
+  edge-mandate-affirmed-affirmed-final "No further review" -> affirmed-final {
+    authority cite ?("Wis. Stat. § 809.25 (verify)")
+  }
+}
+
+decision review-affirmed: "Further review ruling (affirmed)" by court cite ?("Wis. Stat. § 809.62")
+{
+  note "OUTLINE. Petition for review under section 809.62."
+  edge-review-affirmed-affirmed-final "Review denied" -> affirmed-final {
+    authority cite ?("Wis. Stat. § 809.62")
+  }
+  edge-review-affirmed-affirmed-final-2 "Review granted: merits in high court" -> affirmed-final {
+    authority cite ?("Wis. Stat. § 809.62")
+  }
+}
+
+terminal affirmed-final: "Affirmed: final" outcome [loss] cite ?("Wis. Stat. § 809.25 (verify)")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}
+
+decision reversed-entered: "Reversed or vacated: rehearing election" by applicant cite ?("Wis. Stat. § 809.23 (verify)")
+{
+  note "OUTLINE. Rehearing and mandate clocks run from entry."
+  edge-reversed-entered-rehearing-reversed "Rehearing petition filed" -> rehearing-reversed {
+    authority cite ?("Wis. Stat. § 809.24 (verify)")
+  }
+  edge-reversed-entered-mandate-reversed "No rehearing petition" -> mandate-reversed {
+    authority cite ?("Wis. Stat. § 809.25 (verify)")
+  }
+}
+
+decision rehearing-reversed: "Rehearing ruling (reversed or vacated)" by court cite ?("Wis. Stat. § 809.24 (verify)")
+{
+  note "OUTLINE. Reconsideration under section 809.24 (verify)."
+  edge-rehearing-reversed-mandate-reversed "Rehearing denied" -> mandate-reversed {
+    authority cite ?("Wis. Stat. § 809.24 (verify)")
+  }
+  edge-rehearing-reversed-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite ?("Wis. Stat. § 809.24 (verify)")
+  }
+}
+
+decision mandate-reversed: "Mandate issued: further review election" by applicant cite ?("Wis. Stat. § 809.25 (verify)")
+{
+  note "OUTLINE. Mandate and its effect on the trial court."
+  edge-mandate-reversed-review-reversed "Further review sought" -> review-reversed {
+    authority cite ?("Wis. Stat. § 809.62")
+  }
+  edge-mandate-reversed-reversed-final "No further review" -> reversed-final {
+    authority cite ?("Wis. Stat. § 809.25 (verify)")
+  }
+}
+
+decision review-reversed: "Further review ruling (reversed or vacated)" by court cite ?("Wis. Stat. § 809.62")
+{
+  note "OUTLINE. Petition for review under section 809.62."
+  edge-review-reversed-reversed-final "Review denied" -> reversed-final {
+    authority cite ?("Wis. Stat. § 809.62")
+  }
+  edge-review-reversed-reversed-final-2 "Review granted: merits in high court" -> reversed-final {
+    authority cite ?("Wis. Stat. § 809.62")
+  }
+}
+
+terminal reversed-final: "Reversed or vacated: final" outcome [win] cite ?("Wis. Stat. § 809.25 (verify)")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}
+
+decision remanded-entered: "Remanded: rehearing election" by applicant cite ?("Wis. Stat. § 809.23 (verify)")
+{
+  note "OUTLINE. Rehearing and mandate clocks run from entry."
+  edge-remanded-entered-rehearing-remanded "Rehearing petition filed" -> rehearing-remanded {
+    authority cite ?("Wis. Stat. § 809.24 (verify)")
+  }
+  edge-remanded-entered-mandate-remanded "No rehearing petition" -> mandate-remanded {
+    authority cite ?("Wis. Stat. § 809.25 (verify)")
+  }
+}
+
+decision rehearing-remanded: "Rehearing ruling (remanded)" by court cite ?("Wis. Stat. § 809.24 (verify)")
+{
+  note "OUTLINE. Reconsideration under section 809.24 (verify)."
+  edge-rehearing-remanded-mandate-remanded "Rehearing denied" -> mandate-remanded {
+    authority cite ?("Wis. Stat. § 809.24 (verify)")
+  }
+  edge-rehearing-remanded-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite ?("Wis. Stat. § 809.24 (verify)")
+  }
+}
+
+decision mandate-remanded: "Mandate issued: further review election" by applicant cite ?("Wis. Stat. § 809.25 (verify)")
+{
+  note "OUTLINE. Mandate and its effect on the trial court."
+  edge-mandate-remanded-review-remanded "Further review sought" -> review-remanded {
+    authority cite ?("Wis. Stat. § 809.62")
+  }
+  edge-mandate-remanded-remanded-final "No further review" -> remanded-final {
+    authority cite ?("Wis. Stat. § 809.25 (verify)")
+  }
+}
+
+decision review-remanded: "Further review ruling (remanded)" by court cite ?("Wis. Stat. § 809.62")
+{
+  note "OUTLINE. Petition for review under section 809.62."
+  edge-review-remanded-remanded-final "Review denied" -> remanded-final {
+    authority cite ?("Wis. Stat. § 809.62")
+  }
+  edge-review-remanded-remanded-final-2 "Review granted: merits in high court" -> remanded-final {
+    authority cite ?("Wis. Stat. § 809.62")
+  }
+}
+
+terminal remanded-final: "Remanded: final" cite ?("Wis. Stat. § 809.25 (verify)")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}

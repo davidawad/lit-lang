@@ -1,0 +1,126 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-bap6
+
+start bankruptcy-order
+
+state bankruptcy-order: "Bankruptcy court final order or judgment" by applicant cite ?("Fed. R. Bankr. P. 8001(a)")
+{
+  note "OUTLINE. Appeal from final orders (28 U.S.C. 158(a); verify). Interlocutory leave is a hole (28 U.S.C. 158(a)(3); verify). Election between this panel and the district court is a hole until verified (28 U.S.C. 158(c); verify). Verify: BAP Local Rules (number ?)."
+  edge-bankruptcy-order-notice "Notice filed within the appeal period" -> notice-filed {
+    authority cite ?("Fed. R. Bankr. P. 8002(a)(1)")
+  }
+  edge-bankruptcy-order-late "Notice filed late" -> untimely {
+    authority cite ?("Fed. R. Bankr. P. 8002(d)")
+  }
+}
+
+state notice-filed: "Notice of appeal filed" by applicant cite ?("Fed. R. Bankr. P. 8002(a)(1), 8003")
+{
+  note "OUTLINE. Period is a hole (?) from entry of the order (verify). Tolling motions and the effect of a timely motion are holes until verified. Election procedure is a hole (verify)."
+  edge-notice-filed-record "Record designated and transmitted" -> record-filed {
+    authority cite ?("Fed. R. Bankr. P. 8006, 8009")
+  }
+  edge-notice-filed-dismissed "Jurisdictional defect or voluntary dismissal" -> dismissed-appeal {
+    authority cite ?("Fed. R. Bankr. P. 8002")
+  }
+}
+
+state record-filed: "Record designated and transmitted" by office cite ?("Fed. R. Bankr. P. 8006, 8009")
+{
+  note "OUTLINE. Designation and transmittal periods are holes (?)."
+  edge-record-filed-briefs "Briefing schedule set" -> briefing {
+    authority cite ?("Fed. R. Bankr. P. 8014, 8015; BAP LBR 8014-1")
+  }
+}
+
+state briefing: "Opening, answering and reply briefs" by applicant cite ?("Fed. R. Bankr. P. 8014, 8015; BAP LBR 8014-1")
+{
+  note "OUTLINE. Principal briefs 13,000 words; reply 6,500 words (FRBP 8015(a)(7)(B)); certificate of compliance (FRBP 8015(h)). Corporate disclosure (FRBP 8012) is a hole until verified. Deadlines are holes (?)."
+  edge-briefing-argument "Argument calendared" -> argument {
+    authority cite ?("Fed. R. Bankr. P. 8019")
+  }
+  edge-briefing-submitted "Submitted on briefs" -> panel-decision {
+    authority cite ?("Fed. R. Bankr. P. 8019")
+  }
+}
+
+state argument: "Oral argument" by office cite ?("Fed. R. Bankr. P. 8019")
+{
+  note "OUTLINE. Statement regarding oral argument is limited (FRBP 8019(a); verify length). Argument practice is a hole until verified."
+  edge-argument-decision "Argued" -> panel-decision {
+    authority cite ?("Fed. R. Bankr. P. 8019")
+  }
+}
+
+decision panel-decision: "Panel decision" by court cite ?("Fed. R. Bankr. P. 8001(a)")
+{
+  note "OUTLINE. Standard of review is a hole until verified. Verify: Anderson v. Bessemer City, 470 U.S. 564 (1985) (clear error for findings of fact). Legal conclusions reviewed de novo (verify)."
+  edge-panel-decision-affirmed "Affirmed" -> affirmed {
+    authority cite ?("Fed. R. Bankr. P. 8001(a)")
+  }
+  edge-panel-decision-reversed "Reversed" -> reversed {
+    authority cite ?("Fed. R. Bankr. P. 8001(a)")
+  }
+  edge-panel-decision-remanded "Remanded" -> remanded {
+    authority cite ?("Fed. R. Bankr. P. 8001(a)")
+  }
+  edge-panel-decision-reconsider "Rehearing or reconsideration sought" -> reconsideration {
+    authority cite ?("Fed. R. Bankr. P. 8022")
+  }
+  edge-panel-decision-certified "Direct appeal certified to court of appeals" -> certified {
+    authority cite ?("Fed. R. Bankr. P. 8006")
+  }
+}
+
+state reconsideration: "Motion for rehearing" by applicant cite ?("Fed. R. Bankr. P. 8022")
+{
+  note "OUTLINE. Period is a hole (?). Verify panel practice (to add)."
+  edge-reconsideration-decision "Decided again" -> panel-decision {
+    authority cite ?("Fed. R. Bankr. P. 8022")
+  }
+}
+
+state certified: "Certification to court of appeals" by applicant cite ?("Fed. R. Bankr. P. 8006")
+{
+  note "OUTLINE. Certification and acceptance are holes until verified (28 U.S.C. 158(d)(2); verify)."
+  edge-certified-referred "Court of appeals takes the appeal" -> court-of-appeals-referral {
+    authority cite ?("Fed. R. Bankr. P. 8006")
+  }
+}
+
+terminal untimely: "Notice of appeal untimely" outcome [loss] cite ?("Fed. R. Bankr. P. 8002(d)")
+{
+  note "OUTLINE. Extension for excusable neglect is limited to a stated period (verify)."
+  payoff ?
+}
+
+terminal dismissed-appeal: "Appeal dismissed" outcome [loss] cite ?("Fed. R. Bankr. P. 8002")
+{
+  note "OUTLINE. Grounds are holes until verified."
+  payoff ?
+}
+
+terminal affirmed: "Affirmed" outcome [loss] cite ?("Fed. R. Bankr. P. 8001(a)")
+{
+  note "OUTLINE. Further appeal to the court of appeals: see outlines/sixth-circuit/court-of-appeals/ (verify 28 U.S.C. 158(d)(1))."
+  payoff ?
+}
+
+terminal reversed: "Reversed" outcome [win] cite ?("Fed. R. Bankr. P. 8001(a)")
+{
+  note "OUTLINE. Costs and remand instructions are holes until verified."
+  payoff ?
+}
+
+terminal remanded: "Remanded" outcome [neutral] cite ?("Fed. R. Bankr. P. 8001(a)")
+{
+  note "OUTLINE. Outcome depends on the bankruptcy court's next ruling."
+  payoff ?
+}
+
+terminal court-of-appeals-referral: "Direct appeal to court of appeals" outcome [neutral] cite ?("Fed. R. Bankr. P. 8006")
+{
+  note "OUTLINE. Further steps are in outlines/sixth-circuit/court-of-appeals/."
+  payoff ?
+}

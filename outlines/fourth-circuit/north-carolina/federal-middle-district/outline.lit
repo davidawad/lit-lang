@@ -1,0 +1,244 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-outline-nc-federal-middle-district
+
+start filed
+
+state filed: "Complaint filed in this district" by applicant cite ?("Fed. R. Civ. P. 3")
+{
+  note "OUTLINE. Civil action commenced by filing a complaint. Filing rules: M.D.N.C. Loc. Civ. R. ? (not retrieved). Fed. R. Civ. P. 7.1 disclosure is a separate filing."
+  edge-filed-served "Defendant served" -> served {
+    authority cite ?("Fed. R. Civ. P. 4(c)")
+  }
+  edge-filed-unserved "Service not made in time" -> dismissed-unserved {
+    authority cite ?("Fed. R. Civ. P. 4(m)")
+  }
+}
+
+decision served: "Response or Rule 12 motion due" by office cite ?("Fed. R. Civ. P. 12(a)(1)")
+{
+  note "OUTLINE. Response period is a hole; it comes from Fed. R. Civ. P. 12(a)(1), any waiver of service, or a stipulated extension."
+  edge-served-answered "Answer filed" -> answered {
+    authority cite ?("Fed. R. Civ. P. 12(a)")
+  }
+  edge-served-motion "Rule 12 motion filed" -> rule12-motion {
+    authority cite ?("Fed. R. Civ. P. 12(b)")
+  }
+  edge-served-default "No response by the deadline" -> default-clerk {
+    authority cite ?("Fed. R. Civ. P. 55(a)")
+  }
+}
+
+state rule12-motion: "Rule 12 motion pending" by applicant cite ?("Fed. R. Civ. P. 12(b)")
+{
+  note "OUTLINE. Defenses: 12(b)(1), 12(b)(2), 12(b)(3), 12(b)(6). Motion practice: M.D.N.C. Loc. Civ. R. ? (not retrieved). Leading decisions (verify): Bell Atlantic Corp. v. Twombly, 550 U.S. 544 (2007); Ashcroft v. Iqbal, 556 U.S. 662 (2009). Third Circuit (verify): Phillips v. County of Allegheny, 515 F.3d 224 (3d Cir. 2008); Fowler v. UPMC Shadyside, 578 F.3d 203 (3d Cir. 2009). Fourth Circuit (verify): Goines v. Valley Community Services Board, 822 F.3d 159 (4th Cir. 2016) (en banc)."
+  edge-rule12-ruled "Court rules on motion" -> rule12-ruling {
+  }
+}
+
+decision rule12-ruling: "Court rules on Rule 12 motion" by court cite ?("Fed. R. Civ. P. 12(b), 12(c), 12(d)")
+{
+  note "OUTLINE. Leave to amend governs a dismissal without prejudice. Foman v. Davis, 371 U.S. 178 (1962) (verify)."
+  edge-ruling-dismissed "Dismissed with prejudice" -> dismissed-merits {
+    authority cite ?("Fed. R. Civ. P. 41(b)")
+  }
+  edge-ruling-leave "Dismissed with leave to amend" -> amend-complaint {
+    authority cite ?("Fed. R. Civ. P. 15(a)(2)")
+  }
+  edge-ruling-denied "Motion denied" -> answered {
+    authority cite ?("Fed. R. Civ. P. 12(a)(4)")
+  }
+}
+
+state amend-complaint: "Amended complaint filed" by applicant cite ?("Fed. R. Civ. P. 15(a)(1)")
+{
+  note "OUTLINE. Amendment as of course has a hole period; later amendment needs consent or leave. An amended pleading supersedes the original."
+  edge-amend-rule12 "Amended pleading tested again" -> rule12-motion {
+    authority cite ?("Fed. R. Civ. P. 15(a)(3)")
+  }
+}
+
+state default-clerk: "Clerk enters default" by office cite ?("Fed. R. Civ. P. 55(a)")
+{
+  note "OUTLINE. Clerk's entry of default. Setting it aside is governed by Fed. R. Civ. P. 55(c)."
+  edge-default-judgment "Default judgment sought" -> default-judgment {
+    authority cite ?("Fed. R. Civ. P. 55(b)")
+  }
+  edge-default-set-aside "Default set aside" -> answered {
+    authority cite ?("Fed. R. Civ. P. 55(c)")
+  }
+}
+
+terminal default-judgment: "Default judgment entered" outcome [loss] cite ?("Fed. R. Civ. P. 55(b)")
+{
+  note "OUTLINE. Default judgment. Relief from judgment: Fed. R. Civ. P. 60(b). Damages without a hearing: verify Frow v. De La Vega, 82 U.S. 552 (1872)."
+  payoff ?
+}
+
+terminal dismissed-merits: "Dismissed for failure to state a claim or on the merits" outcome [loss] cite ?("Fed. R. Civ. P. 41(b)")
+{
+  note "OUTLINE. Appeal by notice under Fed. R. App. P. 3 and 4. Leading decisions: Twombly and Iqbal, above."
+  payoff ?
+}
+
+terminal dismissed-unserved: "Dismissed for untimely service" outcome [loss] cite ?("Fed. R. Civ. P. 4(m)")
+{
+  note "OUTLINE. Dismissal without prejudice after the service period. The service period and any extension are holes."
+  payoff ?
+}
+
+state answered: "Answer or counterclaim filed" by applicant cite ?("Fed. R. Civ. P. 7(a), 8(b)-(c), 13")
+{
+  note "OUTLINE. Answer admits or denies each averment under Fed. R. Civ. P. 8(b); affirmative defenses under Fed. R. Civ. P. 8(c). Defenses under Fed. R. Civ. P. 12(b) preserved by Fed. R. Civ. P. 12(h)."
+  edge-answered-rule26f "Parties confer" -> rule26f {
+    authority cite ?("Fed. R. Civ. P. 26(f)")
+  }
+}
+
+state rule26f: "Rule 26(f) conference and report" by applicant cite ?("Fed. R. Civ. P. 26(f)")
+{
+  note "OUTLINE. Discovery plan and initial disclosures under Fed. R. Civ. P. 26(a)(1); the disclosure period is a hole. Local practice: M.D.N.C. Loc. Civ. R. ? (not retrieved)."
+  edge-rule26f-scheduling "Report filed" -> scheduling {
+    authority cite ?("Fed. R. Civ. P. 16(b)")
+  }
+}
+
+decision scheduling: "Scheduling order entered" by court cite ?("Fed. R. Civ. P. 16(b)")
+{
+  note "OUTLINE. Scheduling order sets discovery, motion and trial dates. Modification needs good cause: Fed. R. Civ. P. 16(b)(4)."
+  edge-scheduling-discovery "Discovery opens" -> discovery {
+    authority cite ?("Fed. R. Civ. P. 26(b)(1)")
+  }
+  edge-scheduling-settle "Settled at the outset" -> settled {
+    authority cite ?("Fed. R. Civ. P. 41(a)(1)(A)(ii)")
+  }
+}
+
+state discovery: "Discovery" by applicant cite ?("Fed. R. Civ. P. 26(a)-(b), 30, 31, 33, 34, 36")
+{
+  note "OUTLINE. Interrogatories, document requests, depositions, requests for admission. Expert disclosure: Fed. R. Civ. P. 26(a)(2). Proportionality: Fed. R. Civ. P. 26(b)(1). Local discovery practice: M.D.N.C. Loc. Civ. R. ? (not retrieved)."
+  edge-discovery-dispute "Discovery dispute" -> discovery-dispute {
+    authority cite ?("Fed. R. Civ. P. 37(a)")
+  }
+  edge-discovery-sj "Dispositive motion" -> sj-motion {
+    authority cite ?("Fed. R. Civ. P. 56(a)")
+  }
+  edge-discovery-settle "Settlement" -> settled {
+    authority cite ?("Fed. R. Civ. P. 41(a)(1)(A)(ii)")
+  }
+}
+
+decision discovery-dispute: "Court rules on discovery dispute" by court cite ?("Fed. R. Civ. P. 37(a)")
+{
+  note "OUTLINE. Meet-and-confer certification before a motion to compel: Fed. R. Civ. P. 37(a)(1). Sanctions: Fed. R. Civ. P. 37(b)(2)(A). Sanction standard (verify): Poulis v. State Farm Fire and Casualty Co., 747 F.2d 863 (3d Cir. 1984); Anderson v. Foundation for Advancement, Education and Employment of American Indians, 155 F.3d 500 (4th Cir. 1998)."
+  edge-dispute-resolved "Dispute resolved, discovery continues" -> discovery {
+    authority cite ?("Fed. R. Civ. P. 37(a)(5)")
+  }
+  edge-dispute-sanction "Dismissal as a discovery sanction" -> dismissed-sanction {
+    authority cite ?("Fed. R. Civ. P. 37(b)(2)(A)(v)")
+  }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss] cite ?("Fed. R. Civ. P. 37(b)(2)(A)(v)")
+{
+  note "OUTLINE. Dismissal as a sanction. Circuit standard: see discovery-dispute note."
+  payoff ?
+}
+
+state sj-motion: "Summary judgment motion filed" by applicant cite ?("Fed. R. Civ. P. 56(a), 56(c)")
+{
+  note "OUTLINE. No genuine dispute of material fact. Local practice: M.D.N.C. Loc. Civ. R. ? (not retrieved). Leading decisions (verify): Celotex Corp. v. Catrett, 477 U.S. 317 (1986); Anderson v. Liberty Lobby, Inc., 477 U.S. 242 (1986)."
+  edge-sj-ruling "Motion decided" -> sj-ruling {
+  }
+  edge-sj-settle "Settlement" -> settled {
+    authority cite ?("Fed. R. Civ. P. 41(a)(1)(A)(ii)")
+  }
+}
+
+chance sj-ruling: "Summary judgment ruling" by court cite ?("Fed. R. Civ. P. 56(a)")
+{
+  note "OUTLINE. Probabilities are holes; no calibration. Partial summary judgment: Fed. R. Civ. P. 56(a)."
+  edge-sjr-granted "Granted in full" -> judgment-entered p ? {
+  }
+  edge-sjr-partial "Granted in part" -> pretrial p ? {
+  }
+  edge-sjr-denied "Denied" -> pretrial p ? {
+  }
+}
+
+state pretrial: "Pretrial order and motions in limine" by court cite ?("Fed. R. Civ. P. 16(d)-(e); Fed. R. Evid. 702")
+{
+  note "OUTLINE. Pretrial order under Fed. R. Civ. P. 16(e). Expert admissibility: Fed. R. Evid. 702. Local practice: M.D.N.C. Loc. Civ. R. ? (not retrieved)."
+  edge-pretrial-settle "Settlement before trial" -> settled {
+    authority cite ?("Fed. R. Civ. P. 41(a)(1)(A)(ii)")
+  }
+  edge-pretrial-trial "Trial set" -> trial {
+    authority cite ?("Fed. R. Civ. P. 38(b)")
+  }
+}
+
+state trial: "Jury or bench trial" by court cite ?("Fed. R. Civ. P. 38, 39, 47-51")
+{
+  note "OUTLINE. Jury demand: Fed. R. Civ. P. 38(b). Judgment as a matter of law during trial: Fed. R. Civ. P. 50(a). Findings in a bench trial: Fed. R. Civ. P. 52(a)."
+  edge-trial-verdict "Verdict or findings" -> verdict {
+    authority cite ?("Fed. R. Civ. P. 49, 52(a)")
+  }
+}
+
+chance verdict: "Verdict or findings" by court cite ?("Fed. R. Civ. P. 49, 52(a)")
+{
+  note "OUTLINE. Probabilities are holes. Judgment follows under Fed. R. Civ. P. 58."
+  edge-verdict-favorable "Verdict for applicant" -> judgment-entered p ? {
+  }
+  edge-verdict-adverse "Verdict for opponent" -> judgment-entered p ? {
+  }
+}
+
+decision judgment-entered: "Judgment entered" by office cite ?("Fed. R. Civ. P. 58, 54(d)")
+{
+  note "OUTLINE. Entry of judgment: Fed. R. Civ. P. 58. Costs and fees: Fed. R. Civ. P. 54(d). Offer of judgment: Fed. R. Civ. P. 68."
+  edge-judgment-post "Post-trial motion" -> post-trial {
+    authority cite ?("Fed. R. Civ. P. 50(b), 59, 60(b)")
+  }
+  edge-judgment-appeal "Notice of appeal" -> appeal-noticed {
+    authority cite ?("Fed. R. App. P. 3(a)(1), 4(a)(1)(A)")
+  }
+  edge-judgment-final "No further action" -> judgment-final {
+    authority cite ?("Fed. R. Civ. P. 58")
+  }
+}
+
+state post-trial: "Post-trial motions" by applicant cite ?("Fed. R. Civ. P. 50(b), 59, 60(b)")
+{
+  note "OUTLINE. Renewed judgment as a matter of law: Fed. R. Civ. P. 50(b), which requires a prior Rule 50(a) motion. New trial: Fed. R. Civ. P. 59. Relief from judgment: Fed. R. Civ. P. 60(b). Timing periods are holes. Tolling of the appeal period: Fed. R. App. P. 4(a)(4)."
+  edge-post-ruling "Motion decided" -> post-ruling {
+  }
+}
+
+chance post-ruling: "Ruling on post-trial motion" by court cite ?("Fed. R. Civ. P. 50(b), 59")
+{
+  note "OUTLINE. Probabilities are holes. A new trial returns the matter to trial."
+  edge-post-newtrial "New trial ordered" -> trial p ? {
+  }
+  edge-post-denied "Motion denied" -> judgment-entered p ? {
+  }
+}
+
+terminal settled: "Settled or dismissed by stipulation" outcome [settle] cite ?("Fed. R. Civ. P. 41(a)(1)(A)(ii)")
+{
+  note "OUTLINE. Voluntary dismissal by stipulation or notice. Offers of judgment under Fed. R. Civ. P. 68 are a separate track."
+  payoff ?
+}
+
+terminal judgment-final: "Judgment final in this court" outcome [final] cite ?("Fed. R. Civ. P. 58")
+{
+  note "OUTLINE. Final judgment ends the district court matter. Appealability: 28 U.S.C. 1291; Catlin v. United States, 324 U.S. 229 (1945) (verify)."
+  payoff ?
+}
+
+terminal appeal-noticed: "Notice of appeal filed" outcome [appeal] cite ?("Fed. R. App. P. 3(a)(1)")
+{
+  note "OUTLINE. Appeal to the court of appeals under Fed. R. App. P. 3 and 4. Notice period is a hole. Jurisdictional character of the notice deadline: Bowles v. Russell, 551 U.S. 205 (2007) (verify)."
+  payoff ?
+}
+

@@ -1,0 +1,218 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-il-state-appellate
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite ?("Ill. S. Ct. R. 303(a)")
+{
+  note "OUTLINE. Notice within the Rule 303 period (hole); a timely post-trial motion affects the period (verify)."
+  edge-notice-filed-appealability "Notice filed" -> appealability {
+    authority cite ?("Ill. S. Ct. R. 303(a)")
+  }
+}
+
+decision appealability: "Appellate jurisdiction check" by court cite ?("Ill. Const. art. VI, § 6; Ill. S. Ct. R. 301, 304(a), 306, 307, 308")
+{
+  note "OUTLINE. Final judgment or Rule 304(a) finding; interlocutory appeals under Rules 306 to 308 (verify). No leading decision named."
+  edge-appealability-dismissed-jurisdiction "Not an appealable order, or untimely" -> dismissed-jurisdiction {
+    authority cite ?("Ill. Const. art. VI, § 6; Ill. S. Ct. R. 301, 304(a), 306, 307, 308")
+  }
+  edge-appealability-record "Appealable order" -> record {
+    authority cite ?("Ill. Const. art. VI, § 6; Ill. S. Ct. R. 301, 304(a), 306, 307, 308")
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed for lack of appellate jurisdiction" outcome [loss] cite ?("Ill. Const. art. VI, § 6; Ill. S. Ct. R. 301, 304(a), 306, 307, 308")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}
+
+state record: "Record settled and transmitted" cite ?("Ill. S. Ct. R. 321, 323")
+{
+  note "OUTLINE. Record: common law record and report of proceedings (verify)."
+  edge-record-briefing "Record filed" -> briefing {
+    authority cite ?("Ill. S. Ct. R. 321, 323")
+  }
+}
+
+state briefing: "Briefing: opening, response, reply" cite ?("Ill. S. Ct. R. 341, 345, 361")
+{
+  note "OUTLINE. Briefing schedule is a hole. Brief content and length are holes (Rules 341 and 345; verify)."
+  edge-briefing-argument "Briefs complete" -> argument {
+    authority cite ?("Ill. S. Ct. R. 341, 345, 361")
+  }
+}
+
+state argument: "Oral argument or submission on briefs" cite ?("Ill. S. Ct. R. 352")
+{
+  note "OUTLINE. Argument may be waived."
+  edge-argument-disposition "Submitted for decision" -> disposition {
+    authority cite ?("Ill. S. Ct. R. 352")
+  }
+}
+
+decision disposition: "Disposition" by court cite ?("Ill. S. Ct. R. 23")
+{
+  note "OUTLINE. Rule 23 nonprecedential orders (verify)."
+  edge-disposition-affirmed-entered "Affirmed" -> affirmed-entered {
+    authority cite ?("Ill. S. Ct. R. 23")
+  }
+  edge-disposition-reversed-entered "Reversed or vacated" -> reversed-entered {
+    authority cite ?("Ill. S. Ct. R. 23")
+  }
+  edge-disposition-remanded-entered "Remanded" -> remanded-entered {
+    authority cite ?("Ill. S. Ct. R. 23")
+  }
+}
+
+decision affirmed-entered: "Affirmed: rehearing election" by applicant cite ?("Ill. S. Ct. R. 23")
+{
+  note "OUTLINE. Rehearing and mandate clocks run from entry."
+  edge-affirmed-entered-rehearing-affirmed "Rehearing petition filed" -> rehearing-affirmed {
+    authority cite ?("Ill. S. Ct. R. 367")
+  }
+  edge-affirmed-entered-mandate-affirmed "No rehearing petition" -> mandate-affirmed {
+    authority cite ?("Ill. S. Ct. R. 368 (verify)")
+  }
+}
+
+decision rehearing-affirmed: "Rehearing ruling (affirmed)" by court cite ?("Ill. S. Ct. R. 367")
+{
+  note "OUTLINE. Rule 367 petition for rehearing (verify)."
+  edge-rehearing-affirmed-mandate-affirmed "Rehearing denied" -> mandate-affirmed {
+    authority cite ?("Ill. S. Ct. R. 367")
+  }
+  edge-rehearing-affirmed-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite ?("Ill. S. Ct. R. 367")
+  }
+}
+
+decision mandate-affirmed: "Mandate issued: further review election" by applicant cite ?("Ill. S. Ct. R. 368 (verify)")
+{
+  note "OUTLINE. Mandate and its effect on the trial court."
+  edge-mandate-affirmed-review-affirmed "Further review sought" -> review-affirmed {
+    authority cite ?("Ill. S. Ct. R. 315")
+  }
+  edge-mandate-affirmed-affirmed-final "No further review" -> affirmed-final {
+    authority cite ?("Ill. S. Ct. R. 368 (verify)")
+  }
+}
+
+decision review-affirmed: "Further review ruling (affirmed)" by court cite ?("Ill. S. Ct. R. 315")
+{
+  note "OUTLINE. Petition for leave to appeal under Rule 315 (verify); federal review under 28 U.S.C. 1257 (verify)."
+  edge-review-affirmed-affirmed-final "Review denied" -> affirmed-final {
+    authority cite ?("Ill. S. Ct. R. 315")
+  }
+  edge-review-affirmed-affirmed-final-2 "Review granted: merits in high court" -> affirmed-final {
+    authority cite ?("Ill. S. Ct. R. 315")
+  }
+}
+
+terminal affirmed-final: "Affirmed: final" outcome [loss] cite ?("Ill. S. Ct. R. 368 (verify)")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}
+
+decision reversed-entered: "Reversed or vacated: rehearing election" by applicant cite ?("Ill. S. Ct. R. 23")
+{
+  note "OUTLINE. Rehearing and mandate clocks run from entry."
+  edge-reversed-entered-rehearing-reversed "Rehearing petition filed" -> rehearing-reversed {
+    authority cite ?("Ill. S. Ct. R. 367")
+  }
+  edge-reversed-entered-mandate-reversed "No rehearing petition" -> mandate-reversed {
+    authority cite ?("Ill. S. Ct. R. 368 (verify)")
+  }
+}
+
+decision rehearing-reversed: "Rehearing ruling (reversed or vacated)" by court cite ?("Ill. S. Ct. R. 367")
+{
+  note "OUTLINE. Rule 367 petition for rehearing (verify)."
+  edge-rehearing-reversed-mandate-reversed "Rehearing denied" -> mandate-reversed {
+    authority cite ?("Ill. S. Ct. R. 367")
+  }
+  edge-rehearing-reversed-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite ?("Ill. S. Ct. R. 367")
+  }
+}
+
+decision mandate-reversed: "Mandate issued: further review election" by applicant cite ?("Ill. S. Ct. R. 368 (verify)")
+{
+  note "OUTLINE. Mandate and its effect on the trial court."
+  edge-mandate-reversed-review-reversed "Further review sought" -> review-reversed {
+    authority cite ?("Ill. S. Ct. R. 315")
+  }
+  edge-mandate-reversed-reversed-final "No further review" -> reversed-final {
+    authority cite ?("Ill. S. Ct. R. 368 (verify)")
+  }
+}
+
+decision review-reversed: "Further review ruling (reversed or vacated)" by court cite ?("Ill. S. Ct. R. 315")
+{
+  note "OUTLINE. Petition for leave to appeal under Rule 315 (verify); federal review under 28 U.S.C. 1257 (verify)."
+  edge-review-reversed-reversed-final "Review denied" -> reversed-final {
+    authority cite ?("Ill. S. Ct. R. 315")
+  }
+  edge-review-reversed-reversed-final-2 "Review granted: merits in high court" -> reversed-final {
+    authority cite ?("Ill. S. Ct. R. 315")
+  }
+}
+
+terminal reversed-final: "Reversed or vacated: final" outcome [win] cite ?("Ill. S. Ct. R. 368 (verify)")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}
+
+decision remanded-entered: "Remanded: rehearing election" by applicant cite ?("Ill. S. Ct. R. 23")
+{
+  note "OUTLINE. Rehearing and mandate clocks run from entry."
+  edge-remanded-entered-rehearing-remanded "Rehearing petition filed" -> rehearing-remanded {
+    authority cite ?("Ill. S. Ct. R. 367")
+  }
+  edge-remanded-entered-mandate-remanded "No rehearing petition" -> mandate-remanded {
+    authority cite ?("Ill. S. Ct. R. 368 (verify)")
+  }
+}
+
+decision rehearing-remanded: "Rehearing ruling (remanded)" by court cite ?("Ill. S. Ct. R. 367")
+{
+  note "OUTLINE. Rule 367 petition for rehearing (verify)."
+  edge-rehearing-remanded-mandate-remanded "Rehearing denied" -> mandate-remanded {
+    authority cite ?("Ill. S. Ct. R. 367")
+  }
+  edge-rehearing-remanded-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite ?("Ill. S. Ct. R. 367")
+  }
+}
+
+decision mandate-remanded: "Mandate issued: further review election" by applicant cite ?("Ill. S. Ct. R. 368 (verify)")
+{
+  note "OUTLINE. Mandate and its effect on the trial court."
+  edge-mandate-remanded-review-remanded "Further review sought" -> review-remanded {
+    authority cite ?("Ill. S. Ct. R. 315")
+  }
+  edge-mandate-remanded-remanded-final "No further review" -> remanded-final {
+    authority cite ?("Ill. S. Ct. R. 368 (verify)")
+  }
+}
+
+decision review-remanded: "Further review ruling (remanded)" by court cite ?("Ill. S. Ct. R. 315")
+{
+  note "OUTLINE. Petition for leave to appeal under Rule 315 (verify); federal review under 28 U.S.C. 1257 (verify)."
+  edge-review-remanded-remanded-final "Review denied" -> remanded-final {
+    authority cite ?("Ill. S. Ct. R. 315")
+  }
+  edge-review-remanded-remanded-final-2 "Review granted: merits in high court" -> remanded-final {
+    authority cite ?("Ill. S. Ct. R. 315")
+  }
+}
+
+terminal remanded-final: "Remanded: final" cite ?("Ill. S. Ct. R. 368 (verify)")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}

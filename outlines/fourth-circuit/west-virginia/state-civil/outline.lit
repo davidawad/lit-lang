@@ -1,0 +1,203 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-outline-wv-state-civil
+
+start filed
+
+state filed: "Complaint filed" by applicant cite ?("W. Va. R. Civ. P. 3")
+{
+  note "OUTLINE. Commencement by filing. Final orders of circuit courts entered after June 30, 2022 go to the Intermediate Court of Appeals: W. Va. Code § 58-5-1."
+  edge-filed-served "Defendant served" -> served {
+    authority cite ?("W. Va. R. Civ. P. 4")
+  }
+}
+
+decision served: "Response due" by office cite ?("W. Va. R. Civ. P. 12(a)")
+{
+  note "OUTLINE. Response period is a hole. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-served-answer "Answer filed" -> answered {
+    authority cite ?("W. Va. R. Civ. P. 12(a)")
+  }
+  edge-served-motion "Rule 12(b) motion" -> motion-pending {
+    authority cite ?("W. Va. R. Civ. P. 12(b)")
+  }
+  edge-served-default "No response by the deadline" -> default-entered {
+    authority cite ?("W. Va. R. Civ. P. 55(a)")
+  }
+}
+
+state motion-pending: "Pleading motion pending" by applicant cite ?("W. Va. R. Civ. P. 12(b)")
+{
+  note "OUTLINE. Rule 12(b) motion. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-motion-ruling "Court rules" -> motion-ruling {
+  }
+}
+
+chance motion-ruling: "Ruling on pleading motion" by court cite ?("W. Va. R. Civ. P. 12(b)")
+{
+  note "OUTLINE. Probabilities are holes; no calibration."
+  edge-mr-dismissed "Dismissed" -> dismissed-pleading p ? {
+  }
+  edge-mr-leave "Dismissed with leave to amend" -> amend p ? {
+  }
+  edge-mr-denied "Denied" -> answered p ? {
+  }
+}
+
+state amend: "Amended pleading" by applicant cite ?("W. Va. R. Civ. P. 15")
+{
+  note "OUTLINE. Amendment period and consent are holes."
+  edge-amend-motion "Amended pleading tested again" -> motion-pending {
+  }
+}
+
+state default-entered: "Default entered" by office cite ?("W. Va. R. Civ. P. 55(a)")
+{
+  note "OUTLINE. Default entry. Setting it aside: W. Va. R. Civ. P. 55(c)."
+  edge-default-judgment "Default judgment sought" -> default-judgment {
+    authority cite ?("W. Va. R. Civ. P. 55(b)")
+  }
+  edge-default-vacate "Default vacated" -> answered {
+    authority cite ?("W. Va. R. Civ. P. 55(c)")
+  }
+}
+
+terminal default-judgment: "Default judgment entered" outcome [loss] cite ?("W. Va. R. Civ. P. 55(b)")
+{
+  note "OUTLINE. Default judgment. Damages hearing and proof are holes."
+  payoff ?
+}
+
+terminal dismissed-pleading: "Dismissed on the pleadings" outcome [loss] cite ?("W. Va. R. Civ. P. 12(b)")
+{
+  note "OUTLINE. Dismissal on a pleading motion. Appeal period is a hole. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  payoff ?
+}
+
+state answered: "Answer filed" by applicant cite ?("W. Va. R. Civ. P. 8(b)")
+{
+  note "OUTLINE. Answer and affirmative defenses."
+  edge-answered-discovery "Case proceeds to discovery" -> discovery {
+    authority cite ?("W. Va. R. Civ. P. 26")
+  }
+}
+
+state discovery: "Discovery" by applicant cite ?("W. Va. R. Civ. P. 26")
+{
+  note "OUTLINE. Written discovery, depositions, expert disclosure. Scope and limits are holes."
+  edge-disc-dispute "Discovery dispute" -> dispute {
+    authority cite ?("W. Va. R. Civ. P. 37(a)")
+  }
+  edge-disc-sj "Dispositive motion" -> sj-motion {
+    authority cite ?("W. Va. R. Civ. P. 56")
+  }
+  edge-disc-settle "Settlement" -> settled {
+  }
+}
+
+decision dispute: "Discovery dispute ruling" by court cite ?("W. Va. R. Civ. P. 37(a)")
+{
+  note "OUTLINE. Sanctions: W. Va. R. Civ. P. 37(b). Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-dispute-resolved "Dispute resolved" -> discovery {
+  }
+  edge-dispute-sanction "Dismissal as a sanction" -> dismissed-sanction {
+    authority cite ?("W. Va. R. Civ. P. 37(b)")
+  }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss] cite ?("W. Va. R. Civ. P. 37(b)")
+{
+  note "OUTLINE. Dismissal as a sanction. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  payoff ?
+}
+
+state sj-motion: "Summary judgment motion" by applicant cite ?("W. Va. R. Civ. P. 56")
+{
+  note "OUTLINE. Summary judgment standard and timing are holes. Williams v. Precision Coil, Inc., 194 W. Va. 52, 459 S.E.2d 329 (1995) (verify: summary judgment syllabus)."
+  edge-sj-ruling "Motion decided" -> sj-ruling {
+  }
+}
+
+chance sj-ruling: "Summary judgment ruling" by court cite ?("W. Va. R. Civ. P. 56")
+{
+  note "OUTLINE. Probabilities are holes."
+  edge-sjr-granted "Granted" -> judgment-entered p ? {
+  }
+  edge-sjr-denied "Denied" -> pretrial p ? {
+  }
+}
+
+state pretrial: "Pretrial conference and motions in limine" by court cite ?("W. Va. R. Civ. P. 16")
+{
+  note "OUTLINE. Pretrial conference and trial setting are holes."
+  edge-pre-settle "Settlement" -> settled {
+  }
+  edge-pre-trial "Trial" -> trial {
+    authority cite ?("W. Va. R. Civ. P. 38, 39")
+  }
+}
+
+state trial: "Trial" by court cite ?("W. Va. R. Civ. P. 38, 39")
+{
+  note "OUTLINE. Trial by jury or the court. Jury demand timing is a hole."
+  edge-trial-verdict "Verdict or decision" -> verdict {
+  }
+}
+
+chance verdict: "Verdict or decision" by court cite ?("W. Va. R. Civ. P. 49")
+{
+  note "OUTLINE. Probabilities are holes."
+  edge-v-favorable "For applicant" -> judgment-entered p ? {
+  }
+  edge-v-adverse "For opponent" -> judgment-entered p ? {
+  }
+}
+
+decision judgment-entered: "Judgment entered" by office cite ?("W. Va. R. Civ. P. 58")
+{
+  note "OUTLINE. Entry of judgment. Costs and fees are holes."
+  edge-jud-post "Post-trial motion" -> post-trial {
+    authority cite ?("W. Va. R. Civ. P. 50(b), 59")
+  }
+  edge-jud-appeal "Notice of appeal" -> appeal-noticed {
+    authority cite ?("W. Va. Code § 58-5-1 (verify)")
+  }
+  edge-jud-final "No further action" -> judgment-final {
+    authority cite ?("W. Va. R. Civ. P. 58")
+  }
+}
+
+state post-trial: "Post-trial motion" by applicant cite ?("W. Va. R. Civ. P. 50(b), 59")
+{
+  note "OUTLINE. Post-trial motion periods are holes. Relief from judgment: W. Va. R. Civ. P. 60(b)."
+  edge-post-ruling "Motion decided" -> post-ruling {
+  }
+}
+
+chance post-ruling: "Ruling on post-trial motion" by court cite ?("W. Va. R. Civ. P. 50(b), 59")
+{
+  note "OUTLINE. Probabilities are holes."
+  edge-pr-retrial "New trial" -> trial p ? {
+  }
+  edge-pr-denied "Denied" -> judgment-entered p ? {
+  }
+}
+
+terminal settled: "Settled or dismissed" outcome [settle] cite ?("W. Va. R. Civ. P. 26")
+{
+  note "OUTLINE. Settlement or voluntary dismissal. Payoff is a hole."
+  payoff ?
+}
+
+terminal judgment-final: "Judgment final in trial court" outcome [final] cite ?("W. Va. R. Civ. P. 58")
+{
+  note "OUTLINE. Final judgment. Appeal is governed by the state-appellate package."
+  payoff ?
+}
+
+terminal appeal-noticed: "Notice of appeal filed" outcome [appeal] cite ?("W. Va. Code § 58-5-1 (verify)")
+{
+  note "OUTLINE. Appeal to the state appellate court; see the state-appellate package."
+  payoff ?
+}
+

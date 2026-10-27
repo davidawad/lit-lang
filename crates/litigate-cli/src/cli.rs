@@ -433,6 +433,35 @@ pub enum Command {
         #[command(flatten)]
         library: Library,
     },
+    /// Derive a `calibration` declaration from replayed, sourced docket histories:
+    /// chance odds and edge durations observed in the matters' docketed
+    /// events, each estimate with its provenance and selection criteria.
+    CalibrateReplay {
+        /// The `.case` files, or directories of them: each a docket history
+        /// citing its docket in a `source "Docket ..."` with a url.
+        #[arg(required = true)]
+        cases: Vec<String>,
+        /// The calibration set's id.
+        #[arg(long)]
+        id: String,
+        /// The calibration set's title.
+        #[arg(long)]
+        title: Option<String>,
+        /// Withhold an estimate resting on fewer observations.
+        #[arg(long, value_name = "N", default_value_t = 1)]
+        min_n: u64,
+        /// Attest that every history's docket matches were reviewed against
+        /// the docket; required to write the set.
+        #[arg(long)]
+        reviewed: bool,
+        /// Write the set's `calibration` declaration to this `.lit` file,
+        /// in the package it calibrates (needs `--reviewed`).
+        #[arg(long, value_name = "FILE")]
+        out: Option<String>,
+        /// Shared options.
+        #[command(flatten)]
+        library: Library,
+    },
     /// Resolve an id at any layer: node, edge, declaration, diagnostic code, or cite.
     Where {
         /// `pack::node`, `node`, `decl@YYYY-MM-DD`, `L0412`, or cite text.
@@ -659,6 +688,7 @@ impl Command {
             Self::LintFiling { .. } => "lint-filing",
             Self::Actions { .. } => "actions",
             Self::MatchDocket { .. } => "match-docket",
+            Self::CalibrateReplay { .. } => "calibrate-replay",
             Self::Where { .. } => "where",
             Self::Explain { .. } => "explain",
             Self::ExplainValue { .. } => "explain-value",

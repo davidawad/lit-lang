@@ -171,3 +171,43 @@ targets for the next pass, and exactly what `litgraph q -` with
   left as-is rather than duplicated into a calibration entry).
 - CoFC bid-protest outcome rate (sustained vs. denied): the fetched
   statistical report gives filing/disposition volume only, not outcomes.
+
+## Deriving a set from docket histories: `litigate calibrate-replay`
+
+`litigate calibrate-replay CASE... --id ID` (DESIGN §10, RECAP replay
+calibration) derives a `calibration` declaration from replayed, sourced docket
+histories: `.case` matters whose events were read from a docket, by hand
+or by `litigate match-docket --out`. A history is sourced when it declares
+a `source` whose title begins `Docket` and which has a `url` (the docket
+it was read from); an unsourced history contributes nothing. Every matter
+must check clean, and only its replay trace counts: an observation is a
+step that took an edge by a docketed event (`docket N`), never a fact,
+an `anytime` act or an undocketed event.
+
+- `edge-probability` is estimated only out of a `chance` stage (a party's
+  own choice is not odds): the share of the histories that left the stage
+  by a docketed event that took this edge. A history still at the stage at
+  its `as_of` is censored, not counted.
+- `edge-duration` is estimated for any edge: the days from the docketed
+  event that entered the stage to the one that took the edge (`min`, the
+  median as `mode`, `max`). A stage entered by a fact or an undocketed
+  event gives none.
+
+The declaration goes in the package it calibrates (the result's
+`declaration.path`, `lit/<dir>/calibration-<id>.lit`, beside that
+package's modules); it is checked there and must lower back to the set
+reported, so what `--out FILE` writes builds to exactly those estimates.
+Each entry keeps its provenance and selection criteria in `method`: every
+observation's matter, docket entries, dates and docket URL, the counts and
+arithmetic, and the rules above. Its `source` is the one docket behind
+the estimate, or, for several, every docket's title with the first's url;
+its `vintage` spans the observations' dates and `retrieved` is the latest
+docket source's `as_of`. Estimates resting on fewer than
+`--min-n` observations (default 1) are withheld, with the reason.
+
+A docket match is not ground truth without review. Every entry says
+whether its matches were reviewed, and `--out` writes the set only with
+`--reviewed`, the attestation that a person checked every history's docket
+matches against the docket. The authoring rules above still apply to a
+derived set before it ships: the docket URL must resolve, and an estimate
+from a handful of matters is a handful of matters.

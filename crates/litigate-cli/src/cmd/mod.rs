@@ -2,6 +2,7 @@
 mod actions;
 mod build;
 mod calendar;
+mod calibrate;
 pub(crate) mod check;
 mod compat;
 mod coverage;
@@ -150,6 +151,23 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
         } => docket::match_docket(&docket::Args {
             case,
             docket,
+            out,
+            lib: library.lib,
+        }),
+        Command::CalibrateReplay {
+            cases,
+            id,
+            title,
+            min_n,
+            reviewed,
+            out,
+            library,
+        } => calibrate::calibrate_replay(&calibrate::Args {
+            cases,
+            id,
+            title,
+            min_n,
+            reviewed,
             out,
             lib: library.lib,
         }),

@@ -7,7 +7,8 @@
 #
 # Usage:
 #   scripts/ci-scoped run [BASE]
-#       Every stage, one line each, then `CI_SCOPED: pass|fail scope=...`.
+#       Every stage, one line each, then `CI_SCOPED: pass|fail scope=...`;
+#       the impact stage also prints `litigate test --impact BASE`.
 #       BASE defaults to the merge-base of HEAD with origin/main.
 #   scripts/ci-scoped scope [BASE]
 #       The scope alone: `full`, `none`, or one package per line.
@@ -295,6 +296,16 @@ run() {
     skip tree-sitter-test "editors/tree-sitter-litigate unchanged"
   fi
   stage check cargo check --workspace --all-targets
+  # The change impact report (lg-8fdj.3): every expect test under
+  # tests/expect run at BASE and here, and each deadline, verdict and
+  # expectation that moved, per forum, in the log for the reviewer. It
+  # fails only when the report cannot be made, never on a change.
+  if grep -qE '^(lit/|cases/|docs/litigate/|tests/expect/|crates/litigate-)' <<<"$files"; then
+    stage impact cargo run -q -p litigate-cli -- --format human test --impact "$base"
+    [[ " ${failed[*]} " == *" impact "* ]] || sed 's/^/  /' "$logdir/impact.log"
+  else
+    skip impact "no litigate source, expect test or crate changed"
+  fi
 
   # Scoped.
   if [ "$label" = none ]; then

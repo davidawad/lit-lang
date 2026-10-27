@@ -24,6 +24,9 @@ pub struct Report {
     pub failed: bool,
     /// Human-only filtering and grouping for `check`; JSON always carries all diagnostics.
     pub check_render: Option<CheckRender>,
+    /// Human-only text shown in place of the result (a table, say); JSON
+    /// always carries the result.
+    pub text: Option<String>,
 }
 
 /// Check-specific human rendering policy.
@@ -159,12 +162,28 @@ pub fn print(op: &str, outcome: Outcome, format: Format, color: bool, elapsed_ms
                 s
             })
             .unwrap_or_default(),
-        Format::Human => render::human_with_check(
-            &envelope,
-            &report.sources,
-            color,
-            report.check_render.as_ref(),
-        ),
+        Format::Human => match &report.text {
+            Some(text) => {
+                let shown = Envelope {
+                    result: None,
+                    ..envelope
+                };
+                let mut out = render::human_with_check(
+                    &shown,
+                    &report.sources,
+                    color,
+                    report.check_render.as_ref(),
+                );
+                out.push_str(text);
+                out
+            }
+            None => render::human_with_check(
+                &envelope,
+                &report.sources,
+                color,
+                report.check_render.as_ref(),
+            ),
+        },
     };
     Printed {
         stdout,

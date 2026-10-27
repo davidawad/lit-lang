@@ -311,14 +311,20 @@ pub enum Command {
         #[command(flatten)]
         library: Library,
     },
-    /// Run inline `test` blocks.
+    /// Run inline `test` blocks, or (`--impact BASE`) the expect tests of
+    /// `tests/expect` at BASE and in the working tree, listing every
+    /// deadline, verdict and expectation that moved.
     Test {
         /// Package directories or files.
-        #[arg(required = true)]
+        #[arg(required_unless_present = "impact", conflicts_with = "impact")]
         paths: Vec<String>,
         /// Only tests whose name contains this text.
-        #[arg(long, value_name = "TEXT")]
+        #[arg(long, value_name = "TEXT", conflicts_with = "impact")]
         filter: Option<String>,
+        /// Compare `tests/expect` at this git revision with the working
+        /// tree (run from the repository root).
+        #[arg(long, value_name = "BASE")]
+        impact: Option<String>,
         /// Shared options.
         #[command(flatten)]
         library: Library,

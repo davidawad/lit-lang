@@ -148,6 +148,7 @@ pub(crate) fn compile(
         sources: session.sources(),
         diagnostics: session.scoped(&scope, c.diagnostics.clone()),
         check_render: None,
+        text: None,
         profile: Some(Profile::Dev),
         failed: false,
     };

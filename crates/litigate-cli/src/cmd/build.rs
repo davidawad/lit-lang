@@ -293,6 +293,7 @@ pub fn build(src: &dyn Source, args: &Args) -> Outcome {
         sources: c.session.sources(),
         diagnostics: c.diagnostics.clone(),
         check_render: None,
+        text: None,
         profile: Some(profile),
         failed: false,
     };

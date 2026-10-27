@@ -11,6 +11,7 @@ mod explain;
 mod filing;
 mod fix;
 mod fmt;
+mod impact;
 mod import;
 mod lock;
 mod query;
@@ -70,9 +71,15 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             },
         ),
         Command::Test {
+            impact: Some(base),
+            library,
+            ..
+        } => impact::impact(src, &base, &library.lib),
+        Command::Test {
             paths,
             filter,
             library,
+            impact: None,
         } => test::test(&paths, filter.as_deref(), &library.lib),
         Command::Coverage { root, check } => coverage::coverage(root.as_deref(), check),
         Command::Fmt { paths, check } => fmt::fmt(&paths, check),

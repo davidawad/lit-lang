@@ -28,6 +28,26 @@ UPDATE_EXPECT=1 cargo test -p litigate-engine --test famous_cases   # rewrite st
 Read the table top-down to learn what the engine does. Read it bottom-up to
 see how hard it has been pushed.
 
+## Expect tests (`expect/`)
+
+`tests/expect/<forum>/<name>.toml` lists what a change to the law should
+be read against: each names a matter and the world it runs in
+
+```toml
+case = "docs/litigate/change/bass-5cir-2000.case"
+world = "docs/litigate/change/worlds/circuit-appellate-ca5.world"
+paths = ["docs/litigate/change"]
+```
+
+or a package (`package = "lit/frcp"`) whose inline `expect` values count.
+`litigate test --impact BASE`, run at the repository root, runs every one
+at git revision BASE and in the working tree and prints, per forum, a
+table of case, world, field (a filing's verdict, a deadline's due date
+and status, an expectation), before and after, for each value that moved.
+`just ci-scoped` posts it in the job log. A change is for the reviewer to
+read, never a failure. The matters are public rulings
+(sources/change-corpus/rulings).
+
 ## Famous cases (`cases/`)
 
 Each case file maps one real procedural history onto pack node and edge

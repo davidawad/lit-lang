@@ -303,6 +303,7 @@ pub fn check(
             package_by_file,
         }),
         profile: Some(profile),
+        text: None,
         failed: false,
     })
 }

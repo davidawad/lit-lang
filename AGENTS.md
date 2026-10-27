@@ -70,6 +70,8 @@ litigate describe                           # the language + CLI contract as JSO
 litigate check lit/frcp                     # typecheck + verify one package (--profile strict for the gate)
 litigate check lit cases                    # everything; diagnostics carry stable codes + fixes
 litigate test lit/frcp                      # inline `test` blocks (deadline arithmetic etc.)
+litigate test --impact origin/main          # what a branch moves: every tests/expect deadline, verdict
+                                            # and expectation that differs from BASE, per forum (lg-8fdj.3)
 litigate fix lit/frcp --dry-run             # machine-applicable fixes
 litigate where frcp-civil-procedure::service-window  # id → declaration span, versions, JSON pointers
 litigate explain L3004                      # what a diagnostic code means

@@ -92,6 +92,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   strict or a synthetic layer in an actual one (L1014). One example
   package per class for the deadline domain, over vendored instrument
   text (`docs/litigate/examples/change/`, `sources/change-*.txt`).
+- **`litigate lint-filing` checks a filing's length and certificates**
+  (lg-962.10.2, SPEC §3.7). `--words`/`--pages`/`--lines`, or
+  `--document FILE` (UTF-8 text, its words counted), and `--certificate
+  KIND` (repeatable) are judged against the `limit` of the filing's paper
+  kind that sema's selection query chooses on the filing date, so a layer
+  overriding the base sets it. `result.paper` lists the bounds, the
+  certificates and the violations, each naming the limit, its cite and the
+  layer (package, pack, authority, version) that set it; a violation exits
+  2 even when replay accepts the filing. The event's `paper` is the source
+  of truth: `--paper KIND` names the kind only of an event that declares
+  none, a flag naming another kind is an error (exit 1), and neither is a
+  hole. A document's count includes the excluded parts, so over a bound
+  of a limit that excludes anything is unknown, not over; a filing before
+  the encoded text has no limit (a hole), never an earlier one.
 - **Filing limits and certificates are part of the language**
   (lg-962.10.1, SPEC §3.7). `limit k { words|pages|lines <= N, requires
   certificate c [for [measures]], excludes [...], ecf "code" }` parses,

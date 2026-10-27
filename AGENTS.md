@@ -82,6 +82,9 @@ litigate lint-filing cases/ptab-ipr-defense.case 'PreliminaryResponseFiled()' --
                                             # L4002 late; else what it discharges and the deadlines it triggers;
                                             # each open deadline lists its `moves` (file / extend / orders),
                                             # e.g. the FRCP 54(d)(2)(B) fee clock's (lit/frcp/fees.lit)
+litigate lint-filing cases/ptab-ipr-defense.case 'IprPetitionFiled()' --date 2026-09-10 --by petitioner \
+  --words 13500 --certificate word-count     # the paper's limit (or --document FILE): violations with
+                                            # their cite and layer; --paper KIND only if the event declares none
 litigate match-docket cases/ptab-ipr-defense.case recap.json --out advanced.case
                                             # PACER/RECAP entries matched to declared event forms; only a supported,
                                             # replay-accepted match advances the matter; the rest stay unresolved

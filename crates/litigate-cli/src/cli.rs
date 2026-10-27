@@ -214,6 +214,31 @@ pub enum Invocation {
     },
 }
 
+/// `lint-filing`'s paper: its counts, the certificates it carries, and
+/// its kind for an event that declares none.
+#[derive(Debug, Clone, Default, Args)]
+pub struct PaperFlags {
+    /// The paper's word count, without the parts its limit excludes.
+    #[arg(long, value_name = "N")]
+    pub words: Option<u64>,
+    /// The paper's page count, without the parts its limit excludes.
+    #[arg(long, value_name = "N")]
+    pub pages: Option<u64>,
+    /// The paper's lines of monospaced type, without the excluded parts.
+    #[arg(long, value_name = "N")]
+    pub lines: Option<u64>,
+    /// The paper as UTF-8 text: its words are counted, excluded parts
+    /// included (instead of --words).
+    #[arg(long, value_name = "FILE")]
+    pub document: Option<String>,
+    /// The paper kind (a `limit`), only for an event that declares none.
+    #[arg(long, value_name = "KIND")]
+    pub paper: Option<String>,
+    /// A certificate the paper carries (repeatable).
+    #[arg(long, value_name = "KIND")]
+    pub certificate: Vec<String>,
+}
+
 /// The subcommands that print one envelope.
 #[derive(Debug, Subcommand)]
 pub enum Command {
@@ -341,6 +366,9 @@ pub enum Command {
         /// The party served (for a service event).
         #[arg(long, value_name = "PARTY")]
         on: Option<String>,
+        /// What the filer says of the paper, checked against its limit.
+        #[command(flatten)]
+        paper: Box<PaperFlags>,
         /// Shared options.
         #[command(flatten)]
         library: Library,

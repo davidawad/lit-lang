@@ -713,6 +713,18 @@ Semantics:
   proves (§7). The source map has one entry per limit. An event's paper
   kind is HIR only (events have no pack form); `litigate lint-filing`
   reads both from HIR (lg-962.10.2).
+- **Checking a filing.** `litigate lint-filing ... --words N --pages N
+  --lines N | --document FILE, --certificate c, --paper k` judges a
+  proposed filing with these rules (`hir::Limit::{bound, length,
+  requires}`) against the version §5.5's selection chooses for its paper
+  kind on the filing date, over the matter's law: the winner's package is
+  the layer that set it. Counts given as flags are net of the excluded
+  parts; a document's word count is gross, so with any exclusion a gross
+  count over a bound is unknown. A required certificate not given with
+  `--certificate` is a violation, and each violation names the limit, its
+  cite and the layer. The paper kind is the event's `paper`; `--paper k`
+  applies only to an event that declares none, a flag naming another kind
+  is an error, and neither is a hole, as is a date no version covers.
 - **Keywords.** `limit` is an item keyword of a `.lit` file only
   (`LitFile`, §3.1); a `rule` body, a `.case` and a links package have no
   such slot. `limit`, `certificate` and `excludes` are keywords there and

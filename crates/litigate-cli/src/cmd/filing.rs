@@ -29,6 +29,11 @@
 //! matter as of the filing date. The filing's own line is written
 //! here, not by the user. Its id is taken from the same L9006 fix that
 //! `litigate fix` would apply, keeping its timeline key stable.
+//!
+//! Given the paper's counts, a document, `--paper` or `--certificate`,
+//! the result's `paper` checks it against its paper kind's `limit` in
+//! force on the filing date ([`paper`], SPEC §3.7): a violation of it
+//! fails the lint (exit 2) without failing the replay.
 use super::check::check_session;
 use crate::filing;
 use crate::hirx;
@@ -58,6 +63,8 @@ pub struct Args {
     pub party: String,
     /// Library directories.
     pub lib: Vec<String>,
+    /// What the filer says of the paper.
+    pub paper: paper::Paper,
 }
 
 /// `(deadline, trigger, trigger date)`: one obligation instance.
@@ -595,8 +602,31 @@ pub fn lint_filing(args: &Args) -> Outcome {
         "triggers": changes.triggers, "pending": changes.pending,
         "open_before": changes.open_before,
     });
+    let known_at = filed.case.as_ref().and_then(|c| c.known_at.as_deref());
+    checked_paper(&mut report, args, (&law, &vocabulary), (&date, known_at))?;
     Ok(report)
 }
+
+/// When the filer said anything of the paper, its check under the
+/// matter's law and vocabulary on `(date, known_at)` as `result.paper`;
+/// a violation fails the lint.
+fn checked_paper(
+    report: &mut Report,
+    args: &Args,
+    (law, vocabulary): (&[&hir::Package], &[&hir::Package]),
+    (date, known_at): (&str, Option<&str>),
+) -> Result<(), Failure> {
+    if args.paper.asked() {
+        let paper = paper::check(law, vocabulary, (&args.event, date, known_at), &args.paper)?;
+        report.failed = paper["violations"]
+            .as_array()
+            .is_some_and(|v| !v.is_empty());
+        report.result["paper"] = paper;
+    }
+    Ok(())
+}
+
+pub mod paper;
 
 #[cfg(test)]
 mod round_trip;

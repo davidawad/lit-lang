@@ -89,6 +89,7 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             date,
             by,
             on,
+            paper,
             library,
         } => {
             let (mode, party) = match (by, on) {
@@ -102,6 +103,14 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
                 mode,
                 party,
                 lib: library.lib,
+                paper: filing::paper::Paper {
+                    words: paper.words,
+                    pages: paper.pages,
+                    lines: paper.lines,
+                    document: paper.document,
+                    kind: paper.paper,
+                    certificates: paper.certificate,
+                },
             })
         }
         Command::MatchDocket {

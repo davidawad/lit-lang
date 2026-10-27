@@ -158,7 +158,9 @@ fn a_transition_is_held_to_the_window_of_the_version_it_amends() {
     let found = holes(&c);
     assert_eq!(found.len(), 1, "{found:?}");
     assert!(
-        found[0].contains(&format!("`FRCP 8(c)` is not proved the text in force from {E}")),
+        found[0].contains(&format!(
+            "`FRCP 8(c)` is not proved the text in force from {E}"
+        )),
         "{found:?}"
     );
 }

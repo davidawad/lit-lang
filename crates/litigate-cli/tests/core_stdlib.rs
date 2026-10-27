@@ -198,7 +198,9 @@ fn each_version_cites_a_text_proved_in_force_when_it_took_effect() {
                     .unwrap_or_else(|| panic!("{binding}"));
                 let cite = version["cite"].as_str().unwrap();
                 assert!(
-                    b.cite_prefixes.iter().any(|p| cite.starts_with(&format!("{p} "))),
+                    b.cite_prefixes
+                        .iter()
+                        .any(|p| cite.starts_with(&format!("{p} "))),
                     "{id}: {cite} through {binding}"
                 );
                 assert!(b.as_of.as_deref().unwrap() <= from, "{id}: {binding}");
@@ -262,7 +264,12 @@ fn later_texts_cited_for_earlier_versions_are_marked_historical() {
 #[test]
 fn fixture_periods_cite_no_rule() {
     let rules = [
-        "frcp6-", "frap26-", "rcfc6-", "itc210-", "frcrimp45-", "sup-ct-30-",
+        "frcp6-",
+        "frap26-",
+        "rcfc6-",
+        "itc210-",
+        "frcrimp45-",
+        "sup-ct-30-",
     ];
     let fixtures: Vec<&hir::Deadline> = core()
         .modules

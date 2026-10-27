@@ -322,11 +322,17 @@ pub enum Command {
     /// Format `.lit` / `.case` files canonically.
     Fmt {
         /// Files or directories.
-        #[arg(required = true)]
+        #[arg(required_unless_present = "stdin", conflicts_with = "stdin")]
         paths: Vec<String>,
         /// Report L9004 instead of writing.
-        #[arg(long)]
+        #[arg(long, conflicts_with = "stdin")]
         check: bool,
+        /// Format standard input (a `.lit` module or a `.case` matter, told
+        /// apart by parsing) to standard output, with no envelope: the
+        /// editor formatter protocol. A parse error prints its diagnostics
+        /// to standard error and exits 2 with nothing on standard output.
+        #[arg(long)]
+        stdin: bool,
     },
     /// Compile a matter or package and run an engine op on it.
     Run {

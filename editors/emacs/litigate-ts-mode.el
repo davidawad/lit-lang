@@ -23,6 +23,8 @@
 ;;   defines,
 ;; - outline (Emacs 30+) over top-level declarations,
 ;; - an `eglot' entry for `litigate lsp --stdio',
+;; - `litigate-format-buffer' (C-c C-f) and opt-in format on save
+;;   (`litigate-format-on-save'), through eglot or `litigate fmt --stdin',
 ;; - a `treesit-language-source-alist' entry and `auto-mode-alist' entries
 ;;   for `.lit' and `.case'.
 ;;
@@ -58,6 +60,18 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
 (defcustom litigate-ts-mode-lsp-command '("litigate" "lsp" "--stdio")
   "Command that starts the litigate language server, for `eglot'."
   :type '(repeat string))
+
+(defcustom litigate-format-command '("litigate" "fmt" "--stdin")
+  "Command that formats litigate text from stdin to stdout (SPEC §10).
+`litigate-format-buffer' runs it when eglot does not manage the buffer."
+  :type '(repeat string))
+
+(defcustom litigate-format-on-save nil
+  "When non-nil, `litigate-ts-mode' formats the buffer before saving.
+Formatting uses `litigate-format-buffer'.  A buffer that does not parse
+is saved as it is, with the parse error in the echo area."
+  :type 'boolean
+  :safe #'booleanp)
 
 ;;;###autoload
 (defconst litigate-ts-mode-grammar-recipe
@@ -307,6 +321,56 @@ PRED, when given, further filters matching nodes."
                    (lambda (node) (litigate-ts-mode--defun-name node)))))
           litigate-ts-mode--imenu-categories))
 
+;;; Formatting.
+
+(declare-function eglot-managed-p "eglot")
+(declare-function eglot-format-buffer "eglot")
+
+;;;###autoload
+(defun litigate-format-buffer ()
+  "Format the buffer canonically (`litigate fmt', SPEC §10).
+Uses `eglot-format-buffer' when eglot manages the buffer, else pipes the
+buffer through `litigate-format-command'.  Point and markers survive; a
+buffer that does not parse is left unchanged and the error is signalled."
+  (interactive)
+  (if (and (fboundp 'eglot-managed-p) (eglot-managed-p))
+      (eglot-format-buffer)
+    (let ((source (current-buffer))
+          (output (generate-new-buffer " *litigate-fmt*"))
+          (errors (make-temp-file "litigate-fmt")))
+      (unwind-protect
+          (let ((exit (save-restriction
+                        (widen)
+                        (let ((coding-system-for-read 'utf-8)
+                              (coding-system-for-write 'utf-8))
+                          (apply #'call-process-region (point-min) (point-max)
+                                 (car litigate-format-command) nil
+                                 (list output errors) nil
+                                 (cdr litigate-format-command))))))
+            (unless (eql exit 0)
+              (user-error "litigate fmt: %s"
+                          (string-trim
+                           (with-temp-buffer
+                             (insert-file-contents errors)
+                             (buffer-string)))))
+            (with-current-buffer source
+              (save-restriction
+                (widen)
+                (unless (and (= (buffer-size) (buffer-size output))
+                             (zerop (compare-buffer-substrings
+                                     source nil nil output nil nil)))
+                  (replace-buffer-contents output)))))
+        (kill-buffer output)
+        (delete-file errors)))))
+
+(defun litigate--format-before-save ()
+  "Run `litigate-format-buffer' when `litigate-format-on-save' is set.
+A parse error is reported, not raised, so the save still happens."
+  (when litigate-format-on-save
+    (condition-case err
+        (litigate-format-buffer)
+      (error (message "%s" (error-message-string err))))))
+
 ;;; Syntax table.
 
 (defvar litigate-ts-mode--syntax-table
@@ -326,6 +390,10 @@ PRED, when given, further filters matching nodes."
 
 ;;; Mode.
 
+(defvar-keymap litigate-ts-mode-map
+  :doc "Keymap for `litigate-ts-mode'."
+  "C-c C-f" #'litigate-format-buffer)
+
 ;;;###autoload
 (define-derived-mode litigate-ts-mode prog-mode "litigate"
   "Major mode for litigate rule modules (.lit) and matters (.case).
@@ -343,6 +411,7 @@ Uses the tree-sitter grammar `litigate'; install it with
   (setq-local indent-tabs-mode nil)
   (setq-local tab-width litigate-ts-mode-indent-offset)
   (setq-local electric-indent-chars (append "{}[]()" electric-indent-chars))
+  (add-hook 'before-save-hook #'litigate--format-before-save nil t)
   (when (treesit-ready-p 'litigate)
     (treesit-parser-create 'litigate)
     (setq-local treesit-font-lock-settings litigate-ts-mode--font-lock-settings)

@@ -3148,7 +3148,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | `compat` | `OLD NEW` (two package directories) | `{package, old:{version, semantic}, new:{version, semantic}, class, required, declared, ok, changes:[{class, kind, what, now?}]}` per §4.4; L1012 when the bump is too small |
 | `check` | `PATHS...` (packages, `.lit`, `.case`, `.world`), `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at` | `{profile, files, obligations:[Finding], packages, cases}`, and `worlds:[{path, world, layers}]` when a `.world` was checked (§5.8) |
 | `build` | `PKG_OR_CASE...`, `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at`, `--out DIR`, `--pack-file ID=STEM` (repeatable) | `{outputs:{packs:[path], links:[path], clock:[path], calibration:[path], scenarios:[path], source_maps:[path], litigatables:[path]}, litigatable_hash, litigatables, obligations}` |
-| `fmt` | `PATHS...`, `--check` | `{files:[{path, changed}]}`; `--check` reports L9004 instead of writing |
+| `fmt` | `PATHS...`, `--check`, `--stdin` | `{files:[{path, changed}]}`; `--check` reports L9004 instead of writing; `--stdin` prints standard input formatted, with no envelope (§10) |
 | `explain` | `CODE`, or `TARGET` with the op flags below | `{code, explanation, severity:{dev, strict}}`; given a path (`.case`, `.lit`, package directory), the engine's `explain` op on it as `run` returns it |
 | `run` | `TARGET` (`.case`, `.lit`, or package directory), `--op NAME\|JSON` (default `chain`), `--arg K=V`, `--set K=V`, `--no-links`, `--lib DIR` | the engine's response verbatim (`{ok, api_version, op, result, warnings, provenance, elapsed_ms}`); exit 2 when it is `ok: false`. A matter runs under its scenario (`--set` composes params onto it through `extends`); a package runs its pack under the default scenario with the `--set` params, and a links package (§8.4) the packs it composes. A target that fails its check is not run |
 | `solve` `chain` `simulate` `path` `pareto` `sweep` `tornado` `calibration` `posterior` `voi` `structure` `deadlines` `settle` `compare` `graph` `metric` `lint` | `TARGET`, `--arg K=V`, `--set K=V`, `--no-links`, `--lib DIR` | `run TARGET --op <command>` |
@@ -3281,6 +3281,11 @@ matters.
   spaced, including `/`; the `p n/d` probability ratio is not.
 - `fmt` is idempotent (proptest over the corpus) and never changes the CST
   modulo trivia.
+- `litigate fmt --stdin` is the editor formatter protocol: it reads one
+  file from standard input, a `.case` matter when its first token past
+  comments is `case` and a `.lit` module otherwise, and prints only the
+  formatted text (exit 0). Text that does not parse prints nothing on
+  standard output, its diagnostics on standard error, and exits 2.
 
 ## 11. Rust contracts
 

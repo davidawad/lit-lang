@@ -47,6 +47,28 @@ tree-sitter 0.25+. Older ones need an ABI 14 parser regenerated from
 and the pinned `tree-sitter-cli`, run through `npx` when it isn't on
 `PATH`. Each section below shows how.
 
+## Formatting
+
+Every editor formats with the canonical layout of `litigate fmt` (SPEC
+§10). Two routes reach it:
+
+- the language server's `textDocument/formatting`, and
+- `litigate fmt --stdin`, which reads a buffer on standard input and prints
+  it formatted on standard output, with no JSON envelope. It tells a
+  `.case` matter from a `.lit` module by its first token (`case`). When the
+  text does not parse it prints nothing, writes the diagnostics to standard
+  error and exits 2, so the editor leaves the buffer alone.
+
+| Editor | Command | On save |
+|---|---|---|
+| Emacs | `M-x litigate-format-buffer` (`C-c C-f`): `eglot-format-buffer` when eglot manages the buffer, else `litigate fmt --stdin` | opt in: `(setq litigate-format-on-save t)` |
+| Helix | `:format` (`litigate fmt --stdin`, the `formatter` in `languages.toml`) | on (`auto-format = true`; set it to `false` to format only on `:format`) |
+| Neovim | `vim.lsp.buf.format()` (language server) | not configured |
+
+`litigate fmt PATHS` formats files in place and `litigate fmt --check
+PATHS` reports L9004 for each one not in canonical form, which is what the
+strict profile rejects.
+
 ## Emacs (29.1+, built with tree-sitter)
 
 1. Build the grammar. From a checkout:
@@ -74,6 +96,18 @@ and the pinned `tree-sitter-cli`, run through `npx` when it isn't on
    `eglot-server-programs`. Run `M-x eglot` in a litigate buffer to start
    the server. `litigate-ts-mode-lsp-command` changes the command and
    `litigate-ts-mode-indent-offset` changes the indent width (default 2).
+
+   `C-c C-f` (`litigate-format-buffer`) formats the buffer canonically:
+   through eglot when it manages the buffer, else through
+   `litigate-format-command` (default `litigate fmt --stdin`). Point is
+   kept, and a buffer that does not parse is left unchanged with the error
+   in the echo area. To format on every save:
+
+   ```elisp
+   (setq litigate-format-on-save t)   ; or per directory in .dir-locals.el
+   ```
+
+   A buffer with a parse error is still saved, unformatted.
 
 3. Check: open `lit/examples/rule12.lit`. `M-x imenu` lists nodes, rules,
    deadlines, types, events and tests, and `C-M-a` and `C-M-e` move between
@@ -115,7 +149,8 @@ integration tests against the debug `litigate` with `LITGRAPH_IT_REQUIRE=1`.
 1. Merge [`helix/languages.toml`](helix/languages.toml) into
    `~/.config/helix/languages.toml`. It defines the `litigate` language for
    `.lit` and `.case`, with `//` comments, two-space indentation and
-   `Lit.toml`/`Lit.lock` as roots. It also defines the `litigate-lsp`
+   `Lit.toml`/`Lit.lock` as roots, and formats on save through
+   `litigate fmt --stdin` (see [Formatting](#formatting)). It also defines the `litigate-lsp`
    language server and the grammar source (this repository at a pinned
    `rev`, `subpath = "editors/tree-sitter-litigate"`). To use a local
    checkout instead, write

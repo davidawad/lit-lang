@@ -1,8 +1,9 @@
-//! `litigate fmt PATHS [--check]` (SPEC §10).
-use crate::out::{Outcome, Report};
+//! `litigate fmt PATHS [--check]` and `litigate fmt --stdin` (SPEC §10).
+use crate::cli::Format;
+use crate::out::{Outcome, Printed, Report};
 use crate::ws;
 use litigate_base::{FileId, Severity};
-use litigate_syntax::FileKind;
+use litigate_syntax::{FileKind, SyntaxKind};
 use serde_json::json;
 
 /// `litigate fmt`.
@@ -46,4 +47,45 @@ pub fn fmt(paths: &[String], check: bool) -> Outcome {
     }
     report.result = json!({ "files": files });
     Ok(report)
+}
+
+/// `litigate fmt --stdin`: `text` formatted, alone on standard output (an
+/// editor's formatter replaces the buffer with it). Text that does not
+/// parse leaves standard output empty and exits 2, its diagnostics on
+/// standard error.
+#[must_use]
+pub fn stdin(text: &str) -> Printed {
+    let kind = sniff(text);
+    if let Ok(formatted) = litigate_syntax::format(text, kind) {
+        return Printed {
+            stdout: formatted,
+            stderr: String::new(),
+            code: 0,
+        };
+    }
+    let shown = "<stdin>".to_owned();
+    let mut report = Report::of(serde_json::Value::Null);
+    report.diagnostics = litigate_syntax::parse(text, kind).diagnostics(&FileId(shown.clone()));
+    report.sources.push((shown, text.to_owned()));
+    let printed = crate::out::print("fmt", Ok(report), Format::Human, false, 0.0);
+    Printed {
+        stdout: String::new(),
+        stderr: printed.stdout + &printed.stderr,
+        code: 2,
+    }
+}
+
+/// A matter when the first token past comments is `case`, else a module.
+fn sniff(text: &str) -> FileKind {
+    let (tokens, _) = litigate_syntax::lexer::lex(text);
+    let first = tokens.iter().find(|token| {
+        !matches!(
+            token.kind,
+            SyntaxKind::Whitespace | SyntaxKind::Comment | SyntaxKind::DocComment
+        )
+    });
+    match first {
+        Some(token) if &text[token.range] == "case" => FileKind::Case,
+        _ => FileKind::Lit,
+    }
 }

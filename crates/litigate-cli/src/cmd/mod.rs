@@ -24,6 +24,7 @@ mod where_;
 mod worlds;
 
 pub use explain::phase;
+pub use fmt::stdin as fmt_stdin;
 
 use crate::cli::Command;
 use crate::out::Outcome;
@@ -83,7 +84,7 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             impact: None,
         } => test::test(&paths, filter.as_deref(), &library.lib),
         Command::Coverage { root, check } => coverage::coverage(root.as_deref(), check),
-        Command::Fmt { paths, check } => fmt::fmt(&paths, check),
+        Command::Fmt { paths, check, .. } => fmt::fmt(&paths, check),
         Command::Run { case, op, flags } => run::run(src, &case, &op, &flags),
         Command::Op(op) => {
             let (name, args) = op.parts();

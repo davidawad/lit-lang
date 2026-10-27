@@ -14,7 +14,8 @@ comment-tokens = ["//", "///"]
 block-comment-tokens = { start = "/*", end = "*/" }
 indent = { tab-width = 2, unit = "  " }
 language-servers = ["litigate-lsp"]
-auto-format = false
+formatter = { command = "litigate", args = ["fmt", "--stdin"] }
+auto-format = true
 
 [language-server.litigate-lsp]
 command = "litigate"

@@ -211,6 +211,19 @@ fn execute_with(
         );
         return out::print(op, Err(Failure::new(message)), format, color, 0.0);
     }
+    if let cli::Command::Fmt { stdin: true, .. } = command {
+        let mut text = String::new();
+        if let Err(error) = std::io::Read::read_to_string(&mut std::io::stdin(), &mut text) {
+            return out::print(
+                op,
+                Err(Failure::new(format!("stdin: {error}"))),
+                format,
+                color,
+                0.0,
+            );
+        }
+        return cmd::fmt_stdin(&text);
+    }
     let started = Stopwatch::start();
     let outcome = cmd::dispatch(command, src);
     out::print(op, outcome, format, color, started.elapsed_ms())

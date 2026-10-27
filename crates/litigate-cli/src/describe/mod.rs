@@ -257,7 +257,7 @@ const BUILTINS: [(&str, &str); 15] = [
 /// What `run`, every engine op subcommand, and `explain` on a path return.
 const ENGINE_RESPONSE: &str = "the engine's response verbatim: {ok, api_version, op, result, warnings, provenance, elapsed_ms}; exit 2 when it is ok:false";
 
-const RESULTS: [(&str, &str); 22] = [
+const RESULTS: [(&str, &str); 23] = [
     ("describe", "this document"),
     (
         "lock",

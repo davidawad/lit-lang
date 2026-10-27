@@ -19,3 +19,5 @@
 - Edition: Internal Operating Procedures, effective January 6, 2023, as linked 'Internal Operating Procedures (PDF)' on https://www.ca3.uscourts.gov/rules-procedures-0 (retrieved 2026-10-27).
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 b11341de5c2397f9fd1152d8c8c6fcd7be09df57267b3501617967d4edf0dd18. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+- CURRENCY UNCONFIRMED (PM ruling 2026-10-27) for `ca3/lar-2011-08-01.txt` : the court page lists only one amending order (July 1, 2023) on a 2011 consolidated base, so other amendments since 2011 may be missing. Treat every value taken from these as a hole until a current edition is confirmed.

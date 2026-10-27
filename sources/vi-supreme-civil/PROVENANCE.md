@@ -12,3 +12,5 @@
 - Edition: Internal Operating Procedures of the Supreme Court of the Virgin Islands, "as amended April 1, 2014" on the document, as linked "Internal Operating Procedures of the Supreme Court" in folder "8. Virgin Islands Rules of Appellate Procedure" on https://www.vicourts.org/rules (retrieved 2026-10-27).
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 84a643ed022a16ef1c19745a9e2fcbda18b31a29cbf473ef82156b2c5597b848. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+- CURRENCY UNCONFIRMED (PM ruling 2026-10-27) for `vi-supreme-civil/iops-2014-04-01.txt` `vi-supreme-civil/virap.txt` : vicourts.org/rules states no edition or amendment date; the PDFs date from 2014 and 2019 and later amendments are not shown. Treat every value taken from these as a hole until a current edition is confirmed.

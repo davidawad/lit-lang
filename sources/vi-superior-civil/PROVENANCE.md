@@ -12,3 +12,5 @@
 - Edition: Rules Governing the Superior Court of the Virgin Islands, "amended June 1, 2019" on the document, as linked "VI Superior Court Rules" in folder "10. Virgin Islands Superior Court Rules" on https://www.vicourts.org/rules (retrieved 2026-10-27). The page states no edition or amendment date; the edition is taken from the PDF itself. Later amendments, if any, are not listed on the page.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 0343a4b4b46e55b7f17e336e8d6d473c9ee5cc0dc5689659852f76596603537d. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+- CURRENCY UNCONFIRMED (PM ruling 2026-10-27) for `vi-superior-civil/superior-court-rules-2019-06-01.txt` `vi-superior-civil/vircp.txt` : vicourts.org/rules states no edition or amendment date; the PDFs date from 2019 and later amendments are not shown. Treat every value taken from these as a hole until a current edition is confirmed.

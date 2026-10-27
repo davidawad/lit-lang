@@ -1,0 +1,57 @@
+[package]
+name = "eleventh-circuit-court-of-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "eleventh-circuit-court-of-appeals"
+forum = "ca11"
+authority = "LocalRule"
+title = "United States Court of Appeals for the Eleventh Circuit"
+description = "A civil appeal in the Eleventh Circuit: its circuit rules and IOPs over the FRAP periods of lit/frap."
+jurisdiction = "United States Court of Appeals for the Eleventh Circuit"
+in_force = "2026-08-01"
+known_at = "2026-10-27"
+unknown_before = "2026-08-01"
+counting = "frap26"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frap-appellate-procedure = { version = "^0.1.0", path = "../frap" }
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[sources.frap]
+title = "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2024"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-appellate-procedure-dec-1-2024_0.pdf"
+path = "sources/frap.txt"
+path_sha256 = "87d71a1f443c5c084cc9f11932a66436ab300f83146ee2c5ce2654a8a4824479"
+sha256 = "d61711eca8e1f65955d12f1b7d29d4cc453d9ee1e30c4fff6c54b23f113454f6"
+as_of = "2024-12-01"
+
+[sources.ca11-rules]
+title = "FRAP, Eleventh Circuit Rules, and Internal Operating Procedures, effective August 1, 2026"
+url = "https://www.ca11.uscourts.gov/sites/default/files/courtdocs/clk/Rules%20Bookmarked.AUG26.pdf"
+path = "sources/ca11/ca11-rules-iops.txt"
+path_sha256 = "7d005f34bb7cd6a9240a6f5002db9cf32c94575094551257dfc6efd568730155"
+sha256 = "50dc7645a8a87a5ddfeb6867dca9620bdfbe0e3509123a6d70661f329ecaefb3"
+as_of = "2026-08-01"
+
+[sources.usc28]
+title = "28 U.S.C. §§ 1254, 1291 (vendored sections)"
+url = "https://www.law.cornell.edu/uscode/text/28/1291"
+path = "sources/usc-additional.txt"
+path_sha256 = "5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+
+[[cite_syntax.rules]]
+prefixes = ["FRAP", "Fed. R. App. P."]
+heading = "FRAP {}"
+source = "frap"
+
+[[cite_syntax.rules]]
+prefixes = ["11th Cir. R."]
+heading = "11th Cir. R. {}"
+source = "ca11-rules"

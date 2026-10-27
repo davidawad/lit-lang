@@ -1,0 +1,252 @@
+module ca11.appeal
+
+import core.frap26.{ frap26 }
+import frap.appeal-periods.{ notice-civil-period, notice-us-party-period }
+import frap.briefing.{ appellant-brief-period, appellee-brief-period, reply-brief-period }
+import frap.events.{ EnteredBelow, EnteredOnAppeal, RecordFiled, RehearingClosed, ServedPaper }
+import frap.filing.{ PrincipalBriefFiled }
+import frap.mandate.{ mandate-period }
+import frap.rehearing.{ rehearing-period, rehearing-us-party-period }
+
+// The FRAP periods are lit/frap's: the notice-of-appeal periods of FRAP
+// 4(a)(1), the briefing periods of FRAP 31(a)(1), which 11th Cir. R.
+// 31-1(a) restates (40, 30 and 21 days, the record "deemed filed" under
+// 11th Cir. R. 12-1), the 45-day United States-party rehearing period and
+// the mandate period. This package is the Eleventh Circuit's layer over
+// them: it declares the circuit's own periods and replaces the 14-day
+// rehearing period of FRAP 40(d)(1), which that rule lets a local rule
+// change, with the 21 days of 11th Cir. R. 40-2. The leading decisions on
+// appellate jurisdiction and the notice deadline are lit/frap's.
+/// The appeal is docketed in the court of appeals (FRAP 12(a)); in an
+/// appeal with no transcript to order the record is then deemed filed
+/// (11th Cir. R. 12-1).
+event AppealDocketed()
+/// The clerk's notice that the court will consolidate appeals sua sponte
+/// (11th Cir. R. 12-2).
+event ConsolidationNoticed()
+/// The clerk's notice that the appeal will be dismissed for failure to
+/// prosecute unless the default is remedied (11th Cir. R. 42-1(b)).
+event DefaultNoticed()
+
+/// A petition for panel rehearing or rehearing en banc is due 21 days
+/// after entry of judgment. FRAP 40(d)(1) sets 14 days "unless the time is
+/// shortened or extended by order or local rule"; this is that local rule.
+deadline circuit-rehearing-period: 21.days after EnteredOnAppeal(Judgment) counted_by frap26 override rehearing-period cite "11th Cir. R. 40-2"
+{
+  forum frap
+}
+
+/// The Civil Appeal Statement is due 14 days after the appeal is docketed.
+deadline civil-appeal-statement-period: 14.days after AppealDocketed() counted_by frap26 cite "11th Cir. R. 33-1(a)(1)"
+{
+  forum frap
+}
+
+/// A party files its appendix within seven days of filing its brief.
+deadline appendix-period: 7.days after PrincipalBriefFiled() counted_by frap26 cite "11th Cir. R. 30-1(c)"
+{
+  forum frap
+}
+
+/// Written objections to a proposed sua sponte consolidation are due
+/// within 14 days of the clerk's notice.
+deadline consolidation-objection-period: 14.days after ConsolidationNoticed() counted_by frap26 cite "11th Cir. R. 12-2"
+{
+  forum frap
+}
+
+/// After the clerk's default notice the appeal is dismissed for failure to
+/// prosecute on the expiration of 14 days unless the default is remedied.
+deadline default-cure-period: 14.days after DefaultNoticed() counted_by frap26 cite "11th Cir. R. 42-1(b)"
+{
+  forum frap
+}
+
+/// An application for attorney's fees is due 14 days after the time to
+/// petition for rehearing expires, or 14 days after entry of an order
+/// disposing of a timely petition, whichever is later.
+deadline fee-application-period: 14.days after RehearingClosed(TimeExpired) counted_by frap26 cite "11th Cir. R. 39-2(a)"
+{
+  forum frap
+}
+
+deadline fee-application-after-order-period: 14.days after RehearingClosed(PetitionDenied) counted_by frap26 cite "11th Cir. R. 39-2(a)"
+{
+  forum frap
+}
+
+test "rehearing petition is due 21 days after judgment" cite "11th Cir. R. 40-2"
+{
+  given EnteredOnAppeal(Judgment) on 2026-08-03
+  expect deadline(circuit-rehearing-period) == 2026-08-24
+}
+
+test "rehearing petition is due 45 days when the United States is a party" cite "11th Cir. R. 40-2"
+{
+  given EnteredOnAppeal(Judgment) on 2026-08-03
+  expect deadline(rehearing-us-party-period) == 2026-09-17
+}
+
+test "civil appeal statement is due 14 days after docketing" cite "11th Cir. R. 33-1(a)(1)"
+{
+  given AppealDocketed() on 2026-08-03
+  expect deadline(civil-appeal-statement-period) == 2026-08-17
+}
+
+test "appendix is due 7 days after the brief" cite "11th Cir. R. 30-1(c)"
+{
+  given PrincipalBriefFiled() on 2026-08-03
+  expect deadline(appendix-period) == 2026-08-10
+}
+
+test "consolidation objections are due 14 days after the notice" cite "11th Cir. R. 12-2"
+{
+  given ConsolidationNoticed() on 2026-08-03
+  expect deadline(consolidation-objection-period) == 2026-08-17
+}
+
+test "a default is cured within 14 days of the clerk's notice" cite "11th Cir. R. 42-1(b)"
+{
+  given DefaultNoticed() on 2026-08-03
+  expect deadline(default-cure-period) == 2026-08-17
+}
+
+test "fee application is due 14 days after rehearing time expires" cite "11th Cir. R. 39-2(a)"
+{
+  given RehearingClosed(TimeExpired) on 2026-08-24
+  expect deadline(fee-application-period) == 2026-09-08
+}
+
+test "fee application is due 14 days after a rehearing denial" cite "11th Cir. R. 39-2(a)"
+{
+  given RehearingClosed(PetitionDenied) on 2026-09-01
+  expect deadline(fee-application-after-order-period) == 2026-09-15
+}
+
+test "appellant brief is due 40 days after the record is deemed filed" cite "11th Cir. R. 31-1(a)"
+{
+  given RecordFiled() on 2026-08-03
+  expect deadline(appellant-brief-period) == 2026-09-14
+}
+
+test "appellee brief is due 30 days after appellant brief service" cite "11th Cir. R. 31-1(a)"
+{
+  given ServedPaper(AppellantBrief, Electronic) on 2026-08-03
+  expect deadline(appellee-brief-period) == 2026-09-02
+}
+
+test "reply brief is due 21 days after appellee brief service" cite "11th Cir. R. 31-1(a)"
+{
+  given ServedPaper(AppelleeBrief, Electronic) on 2026-08-03
+  expect deadline(reply-brief-period) == 2026-08-24
+}
+
+test "civil notice of appeal is due 30 days after judgment" cite "FRAP 4(a)(1)(A)"
+{
+  given EnteredBelow(FinalJudgment) on 2026-08-03
+  expect deadline(notice-civil-period) == 2026-09-02
+}
+
+test "notice of appeal is due 60 days when the United States is a party" cite "FRAP 4(a)(1)(B)"
+{
+  given EnteredBelow(FinalJudgment) on 2026-08-03
+  expect deadline(notice-us-party-period) == 2026-10-02
+}
+
+test "mandate issues 7 days after rehearing time expires" cite "FRAP 41(b)"
+{
+  given RehearingClosed(TimeExpired) on 2026-08-24
+  expect deadline(mandate-period) == 2026-08-31
+}
+
+start threshold
+
+decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+{
+  note "A final decision of a district court is appealable under 28 U.S.C. § 1291; interlocutory routes are lit/frap's."
+  edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "28 U.S.C. § 1291" }
+  edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
+}
+
+decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)(A)"
+{
+  note "The notice is due 30 days after entry of judgment, or 60 days when the United States is a party (FRAP 4(a)(1)); lit/frap encodes both periods."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "FRAP 4(a)(1)(A)" }
+  edge-notice-timely "Timely notice" -> record { authority cite "FRAP 4(a)(1)(A)" }
+}
+
+state record: "Record and Transcript Assembled" by office cite "FRAP 10; 11th Cir. R. 12-1"
+{
+  note "The record is deemed filed when the reporter files the transcript, or on docketing when no transcript is ordered (11th Cir. R. 12-1). The Civil Appeal Statement is due 14 days after docketing (11th Cir. R. 33-1(a)(1))."
+  edge-record-brief "Record filed" -> briefing { authority cite "11th Cir. R. 12-1" }
+}
+
+state briefing: "Briefs Filed" by applicant cite "FRAP 31(a)(1); 11th Cir. R. 31-1"
+{
+  note "Briefs are due 40, 30 and 21 days (11th Cir. R. 31-1(a)); each party's appendix 7 days after its brief (11th Cir. R. 30-1(c)). Length is FRAP 32(a)(7)'s; a motion to exceed it is due at least seven days before the brief (11th Cir. R. 32-4)."
+  edge-briefing-argue "Briefing complete" -> argument {
+    authority cite "FRAP 31(a)(1); 11th Cir. R. 31-1"
+  }
+}
+
+state argument: "Oral Argument or Submission" by court cite "FRAP 34; 11th Cir. R. 34-3"
+{
+  note "An appeal is decided on the non-argument calendar or set for oral argument (11th Cir. R. 34-3, 34-4)."
+  edge-argument-decide "Decision" -> decision { authority cite "FRAP 34" }
+}
+
+state decision: "Decision Issued" by court cite "FRAP 36"
+{
+  note "Judgment is entered on the opinion or order (FRAP 36); an opinion is unpublished unless a majority of the panel decides to publish it (11th Cir. R. 36-2)."
+  edge-decision-issued "Opinion or judgment issued" -> rehearing-decision {
+    authority cite "FRAP 36"
+  }
+}
+
+decision rehearing-decision: "Rehearing Sought?" by applicant cite "11th Cir. R. 40-2"
+{
+  note "A petition for panel rehearing or rehearing en banc is due 21 days after entry of judgment, 45 days in a civil appeal with a United States party (11th Cir. R. 40-2)."
+  edge-rehearing-decision-none "No petition" -> mandate { authority cite "FRAP 41(b)" }
+  edge-rehearing-decision-sought "Petition filed" -> rehearing-order {
+    authority cite "FRAP 40; 11th Cir. R. 40-2"
+  }
+}
+
+state rehearing-order: "Rehearing Order" by court cite "FRAP 40"
+{
+  note "Granting rehearing en banc vacates the panel opinion and judgment unless otherwise expressly provided (11th Cir. R. 40-11)."
+  edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
+}
+
+state mandate: "Mandate Issued" by office cite "FRAP 41(b)"
+{
+  note "The mandate issues 7 days after the time to petition for rehearing expires or 7 days after an order denying a timely petition (FRAP 41(b)); an application for attorney's fees is due 14 days after either (11th Cir. R. 39-2(a))."
+  edge-mandate-further "Mandate issued" -> further-review { authority cite "FRAP 41(b)" }
+}
+
+decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+{
+  note "Certiorari under 28 U.S.C. § 1254; its period is lit/frap's."
+  edge-further-review-none "No further review" -> final-decision {
+    authority cite "28 U.S.C. § 1254"
+  }
+  edge-further-review-petition "Petition for certiorari" -> review-decided {
+    authority cite "28 U.S.C. § 1254"
+  }
+}
+
+state review-decided: "Further Review Decided" by court cite "28 U.S.C. § 1254"
+{
+  edge-review-decided-denied "Denied" -> review-denied { authority cite "28 U.S.C. § 1254" }
+  edge-review-decided-granted "Granted" -> review-granted { authority cite "28 U.S.C. § 1254" }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: No Appellate Jurisdiction" outcome [loss, dismissal, jurisdictional] cite "28 U.S.C. § 1291"
+terminal dismissed-untimely: "Dismissed: Untimely Notice" outcome [loss, dismissal] cite "FRAP 4(a)(1)(A)"
+terminal final-decision: "Final: Decision Stands" outcome [final] cite "FRAP 41(b)"
+terminal review-denied: "Further Review Denied" outcome [final] cite "28 U.S.C. § 1254"
+
+terminal review-granted: "Further Review Granted" outcome [neutral] cite "28 U.S.C. § 1254"
+{
+  note "Certiorari granted; the merits are not modeled."
+}

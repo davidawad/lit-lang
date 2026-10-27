@@ -7,8 +7,10 @@
 
 use litigate_engine::api::{handle, validate, Catalog, Request};
 use litigate_engine::clock::ClockLibrary;
-use litigate_engine::model::{world_digest, Basis, BasisLabel, Hole, LinkFile, Lowered, Pin};
-use litigate_engine::scenario::NamedScenario;
+use litigate_engine::model::{
+    world_digest, Basis, BasisLabel, CompileOptions, Graph, Hole, LinkFile, Lowered, Pin,
+};
+use litigate_engine::scenario::{NamedScenario, Scenario, View};
 use litigate_engine::Pack;
 use serde_json::{json, Value};
 
@@ -262,4 +264,72 @@ fn validating_a_pack_checks_its_header() {
         "{:?}",
         checked.errors
     );
+}
+
+/// A flagged pack whose two terminal payoffs are `?`: `win` and `lose` are
+/// each reached with and without the `served` flag, so each has two
+/// copies (lg-bik7).
+fn flagged_payoff_holes() -> Pack {
+    let doc = json!({
+        "schemaVersion": 4, "id": "demo", "title": "Demo", "startNodeId": "start",
+        "nodes": [
+            {"id": "start", "label": "Start"},
+            {"id": "mid", "label": "Mid"},
+            {"id": "win", "label": "Win", "kind": "terminal"},
+            {"id": "lose", "label": "Lose", "kind": "terminal"}
+        ],
+        "edges": [
+            {"from": "start", "to": "mid", "label": "serve", "sets": ["served"]},
+            {"from": "start", "to": "mid", "label": "wait"},
+            {"from": "mid", "to": "win", "label": "win", "actor": "examiner"},
+            {"from": "mid", "to": "lose", "label": "lose", "actor": "examiner"}
+        ],
+        "lowered": header(&[
+            ("/nodes/2/payoff", Some("stake")),
+            ("/nodes/3/payoff", Some("stake"))
+        ])
+    });
+    Pack::from_json(&doc.to_string()).unwrap()
+}
+
+#[test]
+fn case_stakes_cover_payoff_holes_and_an_uncovered_one_still_warns() {
+    let g = Graph::compile(
+        &[flagged_payoff_holes()],
+        &LinkFile::default(),
+        &CompileOptions::default(),
+    )
+    .unwrap();
+    assert_eq!(g.node_family(g.node("demo::win").unwrap()).len(), 2);
+    let holes = |payoffs: &[(&str, f64)]| {
+        let sc = Scenario {
+            payoffs: payoffs.iter().map(|(r, v)| ((*r).into(), *v)).collect(),
+            ..Scenario::default()
+        };
+        View::new(&g, &sc)
+            .unwrap()
+            .warnings
+            .into_iter()
+            .filter(|w| w.code == "authored-hole")
+            .map(|w| w.message)
+            .collect::<Vec<_>>()
+    };
+    assert_eq!(
+        holes(&[("demo::win", 100.0), ("demo::lose", 0.0)]),
+        [] as [String; 0]
+    );
+    let one = holes(&[("demo::win", 100.0)]);
+    assert_eq!(one.len(), 1, "{one:?}");
+    assert!(
+        one[0]
+            .contains("1 explicit hole(s) left numbers unauthored, first /nodes/3/payoff (stake)")
+            && one[0].contains(
+                "1 more covered by case stakes (scenario payoffs), first /nodes/2/payoff"
+            ),
+        "{}",
+        one[0]
+    );
+    let copy = holes(&[("demo::win{served}", 100.0), ("demo::lose", 0.0)]);
+    assert!(copy[0].contains("first /nodes/2/payoff"), "{copy:?}");
+    assert!(holes(&[])[0].contains("2 explicit hole(s)"));
 }

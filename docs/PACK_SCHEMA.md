@@ -68,7 +68,10 @@ and dates, and every hole and basis label must point into the document
 open (`probability`, `cost`, `hours`, `payoff`, `payoffByFlag`, `duration`,
 `attrs`, or an instance `stake`) adds one `authored-hole` warning per pack
 to every response that compiles it: the number rests on a fill, not on the
-pack. A `strict` build rejects holes, so only `dev` output carries them.
+pack. A `payoff` or `payoffByFlag` hole that the scenario's `payoffs` (a
+`.case` stake) set on every state-flag copy of its terminal is not open:
+the warning leaves it out of the count and names it covered by case
+stakes, and a pack whose every hole is covered does not warn. A `strict` build rejects holes, so only `dev` output carries them.
 
 Generated files are written as RFC 8785 (JCS) canonical JSON, indented by
 two spaces: members sorted by UTF-16 code units and numbers in ECMAScript

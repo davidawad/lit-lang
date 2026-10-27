@@ -227,6 +227,11 @@ impl Graph {
                 .filter(|_| !instance)
                 .map(|l| l.holes.clone())
                 .unwrap_or_default(),
+            node_ids: pack
+                .nodes
+                .iter()
+                .map(|n| qualify(&pack.id, &n.id))
+                .collect(),
         });
         Ok(())
     }

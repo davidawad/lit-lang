@@ -13,7 +13,7 @@ use super::{fee, limits, resolve_spec, NodePlan, Objective, Scenario, Warning};
 use crate::error::{Error, Result};
 use crate::expr::{self, Expr};
 use crate::metrics::{self, EdgeEnv, PathVars, TerminalEnv};
-use crate::model::{Graph, NodeIx, PayoffSource, Role};
+use crate::model::{Graph, Hole, NodeIx, PackMeta, PayoffSource, Role};
 
 /// A scenario resolved into dense arrays. Every algorithm consumes a view.
 #[derive(Clone)]
@@ -114,24 +114,58 @@ pub(super) fn node_overrides<'a, V>(
     Ok(families)
 }
 
+/// Whether `hole` is a terminal payoff (`/nodes/i/payoff` or
+/// `/nodes/i/payoffByFlag/...`) that `covered` (the nodes a scenario payoff,
+/// such as a `.case` stake, sets) fills for every state-flag copy of node
+/// `i`, so nothing the engine computes rests on the hole.
+fn payoff_covered(g: &Graph, pack: &PackMeta, hole: &Hole, covered: &HashSet<NodeIx>) -> bool {
+    let mut parts = hole.pointer.split('/').skip(1);
+    let (Some("nodes"), Some(i), Some("payoff" | "payoffByFlag")) =
+        (parts.next(), parts.next(), parts.next())
+    else {
+        return false;
+    };
+    i.parse::<usize>()
+        .ok()
+        .and_then(|i| pack.node_ids.get(i))
+        .and_then(|id| g.node(id).ok())
+        .is_some_and(|n| g.node_family(n).iter().all(|m| covered.contains(m)))
+}
+
 /// One `authored-hole` warning per pack whose `lowered.holes` leave a
 /// number open: a dev build lowered each such `?` to an absent field, so
 /// whatever the engine computes from it rests on a fill, not on the pack.
-fn hole_warnings(g: &Graph) -> Vec<Warning> {
+/// A payoff hole the scenario's payoffs (a `.case` stake) fill on every
+/// copy of its terminal is not open: it is left out of the count and named
+/// as covered, and a pack whose every hole is covered does not warn.
+fn hole_warnings(g: &Graph, covered: &HashSet<NodeIx>) -> Vec<Warning> {
     g.packs
         .iter()
         .filter_map(|p| {
-            let open: Vec<&crate::model::Hole> = p.holes.iter().filter(|h| h.numeric()).collect();
+            let (filled, open): (Vec<&Hole>, Vec<&Hole>) = p
+                .holes
+                .iter()
+                .filter(|h| h.numeric())
+                .partition(|h| payoff_covered(g, p, h, covered));
             let first = open.first()?;
             let why = first
                 .reason
                 .as_deref()
                 .map_or_else(String::new, |r| format!(" ({r})"));
+            let also = if filled.is_empty() {
+                String::new()
+            } else {
+                format!(
+                    "; {} more covered by case stakes (scenario payoffs), first {}",
+                    filled.len(),
+                    filled[0].pointer
+                )
+            };
             Some(Warning {
                 code: "authored-hole",
                 at: None,
                 message: format!(
-                    "pack {}: {} explicit hole(s) left numbers unauthored, first {}{why}; author them in the pack's source (a strict build rejects holes)",
+                    "pack {}: {} explicit hole(s) left numbers unauthored, first {}{why}{also}; author them in the pack's source (a strict build rejects holes)",
                     p.id,
                     open.len(),
                     first.pointer
@@ -175,8 +209,10 @@ impl<'g> View<'g> {
             })
             .collect();
         let mut payoff: Vec<f64> = g.nodes.iter().map(|n| n.payoff).collect();
+        let mut staked = HashSet::new();
         for (_, n, v) in node_overrides(g, &sc.payoffs)? {
             payoff[n] = *v;
+            staked.insert(n);
         }
         let active = active_edges(g, sc, &role, &params, &payoff)?;
         let parts = ViewParts {
@@ -207,7 +243,7 @@ impl<'g> View<'g> {
         let belief = Belief::build(g, sc, &plans.plan)?;
         let observed = belief::apply_observed(g, &belief, &mut plans.plan, &mut plans.prob);
         plans.warnings.extend(observed);
-        plans.warnings.extend(hole_warnings(g));
+        plans.warnings.extend(hole_warnings(g, &staked));
         let start = sc.start.as_deref().map_or(Ok(g.start), |s| g.node(s))?;
         let fee = fee::fractions(g, sc, &payoff, &params)?;
         let mut view = View {

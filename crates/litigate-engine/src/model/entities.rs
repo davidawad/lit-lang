@@ -194,6 +194,10 @@ pub struct PackMeta {
     /// The pack's explicit holes (`lowered.holes`, v4).
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub holes: Vec<super::Hole>,
+    /// Qualified id of each authored node, in the pack's own order: what a
+    /// hole's `/nodes/i` names once canonical order has sorted the graph.
+    #[serde(skip)]
+    pub node_ids: Vec<String>,
 }
 
 /// Hard cap on compiled `(node, flag-set)` product states. Chosen generously

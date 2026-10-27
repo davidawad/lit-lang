@@ -26,3 +26,10 @@
 - Edition: Updated 2023-24 Wis. Stats., published and certified under s. 35.18, October 1, 2026 (the chapter page states "2023-24 Wisconsin Statutes updated through 2025 Wis. Act 247 and through all Supreme Court Orders ... filed before and in effect on October 1, 2026"); fetched by curl.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 b09d80d05f060749b95113a88371e45ab00b69964bf25aa45860dd4586f13ca6. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+### `wi-circuit/wis-stat-ch806.txt` — Wis. Stat. ch. 806 Civil Procedure: Judgments
+
+- Source: https://docs.legis.wisconsin.gov/statutes/statutes/806.pdf (official site; 14 pages, sha256 301647fc1b3cb7d5918fa00c2b118fa7a839c4c704732b7bd32e79abca0e2be0).
+- Edition: Updated 2023-24 Wis. Stats., published and certified under s. 35.18, October 1, 2026 (the chapter page states "2023-24 Wisconsin Statutes updated through 2025 Wis. Act 247 and through all Supreme Court Orders ... filed before and in effect on October 1, 2026"); fetched by curl.
+- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 063f5f964f7a7553999ed8dfa04a89d8a94c3c457ce5323aeecb24093a9cd53f. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

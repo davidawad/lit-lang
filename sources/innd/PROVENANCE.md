@@ -5,3 +5,5 @@
 - Edition: Local Rules effective February 25, 2022 (the "Current Local Rules" link on https://www.innd.uscourts.gov/court-info/local-rules-and-orders; page lists no later adopted amendments); fetched by curl.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 bed2beeced8a3fd2c10b8759752b1b160d4be978f9243e9fbf6e304f5f27783a. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+- Fetch method: first fetched with curl and a desktop browser User-Agent before the no-browser-identity rule (PM 2026-10-27); re-fetched on 2026-10-27 with plain curl (its default User-Agent, no browser headers): byte-identical (same sha256).

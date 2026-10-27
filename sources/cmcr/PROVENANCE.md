@@ -5,3 +5,4 @@
 - Edition: Rules of Practice for the United States Court of Military Commission Review, Feb 3, 2016, email addresses updated Dec 13, 2022 (as the file name states).
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 9c8651cae945756b677ffed9ef5512f37a8edb587afdd3808290b4c16cddfb72. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+- Fetch method: BrowserOS neo; site served a bot challenge to plain automated requests (CoS ruling 2026-10-27). mc.mil serves no robots.txt (404); the DoD Privacy & Security page (defense.gov) bars no automated access. mc.mil is a DoD site; no bot challenge text was shown beyond the CoS ruling's general scope.

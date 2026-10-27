@@ -1,0 +1,62 @@
+[package]
+name = "ca8-court-of-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "ca8-court-of-appeals"
+forum = "frap"
+authority = "FederalRule"
+title = "Eighth Circuit Court of Appeals"
+description = "Federal appellate procedure with Eighth Circuit local rules and internal operating procedures."
+in_force = "2024-12-01"
+known_at = "2025-12-01"
+unknown_before = "2024-12-01"
+jurisdiction = "United States Court of Appeals for the Eighth Circuit"
+counting = "frap26"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frap-appellate-procedure = { version = "^0.1.0", path = "../frap" }
+
+[sources.frap]
+title = "Federal Rules of Appellate Procedure, Dec. 1, 2025 (OCR extraction; numeric values cross-checked against the 2024 edition in lit/frap)"
+url = "https://www.uscourts.gov/rules-policies/current-rules-practice-procedure/federal-rules-appellate-procedure"
+path = "sources/frap/frap.txt"
+path_sha256 = "1d5a3ff17813cc8cb47c3cdab65adf8db170a8a71b3aae2b187e151975415017"
+sha256 = "1d5a3ff17813cc8cb47c3cdab65adf8db170a8a71b3aae2b187e151975415017"
+as_of = "2025-12-01"
+
+[sources.ca8-local]
+title = "Eighth Circuit Local Rules, June 17, 2024"
+url = "https://www.ca8.uscourts.gov/sites/ca8/files/Eighth%20Circuit%20Local%20Rules%206.17.24.pdf"
+path = "sources/ca8/ca8-local-rules.txt"
+path_sha256 = "462e6deddebce2f420f7628c80ce8c617971bdecbfebb4be817ca99772d375b8"
+sha256 = "462e6deddebce2f420f7628c80ce8c617971bdecbfebb4be817ca99772d375b8"
+as_of = "2024-06-17"
+
+[sources.ca8-iops]
+title = "Eighth Circuit Internal Operating Procedures, revised February 26, 2024"
+url = "https://ecf.ca8.uscourts.gov/newrules/coa/iops.pdf"
+path = "sources/ca8/ca8-iops.txt"
+path_sha256 = "358fd9ee631e7ec9423c8ff94b2f7f2c6ce82d1a48e2a567afa2c487883b89b8"
+sha256 = "358fd9ee631e7ec9423c8ff94b2f7f2c6ce82d1a48e2a567afa2c487883b89b8"
+as_of = "2024-02-26"
+
+[[cite_syntax.rules]]
+prefixes = ["FRAP", "Fed. R. App. P."]
+heading = "Rule {}"
+source = "frap"
+
+[[cite_syntax.rules]]
+prefixes = ["8th Cir. R."]
+heading = "Local Rule {}"
+source = "ca8-local"
+
+[[cite_syntax.rules]]
+prefixes = ["8th Cir. IOP"]
+heading = "IOP {}"
+source = "ca8-iops"

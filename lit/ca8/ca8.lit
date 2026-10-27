@@ -1,0 +1,80 @@
+module ca8.appeal
+
+import core.frap26.{ frap26 }
+import frap.events.{ RecordFiled, EnteredOnAppeal, RehearingClosed }
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "FRAP 3(a)(1)"
+{
+  edge-notice-filed-briefing "Appeal docketed" -> briefing {
+    authority cite "FRAP 12(c)"
+  }
+}
+
+state briefing: "Briefing" cite "FRAP 31(a)(1)"
+{
+  note "Eighth Circuit local rules supplement the Federal Rules of Appellate Procedure; consult Local Rules 28A, 30A, and 32A for circuit-specific brief and appendix requirements."
+  edge-briefing-argument "Briefs complete" -> argument {
+    authority cite "8th Cir. R. 34A"
+  }
+}
+
+state argument: "Oral argument or submission" cite "FRAP 34"
+{
+  edge-argument-decision "Submitted" -> decision {
+    authority cite "FRAP 36(a)"
+  }
+}
+
+decision decision: "Court decision" by court cite "FRAP 36(a)"
+{
+  edge-decision-judgment "Judgment entered" -> rehearing {
+    authority cite "FRAP 40(d)(1)"
+  }
+}
+
+decision rehearing: "Rehearing election" by applicant cite "FRAP 40(d)(1)"
+{
+  edge-rehearing-mandate "No petition or rehearing denied" -> mandate {
+    authority cite "FRAP 41(b)"
+  }
+}
+
+state mandate: "Mandate issued" by office cite "FRAP 41(a)"
+{
+  note "The Internal Operating Procedures describe the court's internal assignment, panel, and decisional practices; they do not create filing deadlines."
+}
+
+rule duty file-briefs effective [2024-12-01, ..) known_at 2025-12-01 cite "FRAP 31(a)(1)"
+{
+  deadline appellant-brief-period: 40.days after RecordFiled() counted_by frap26 cite "FRAP 31(a)(1)"
+}
+
+test "opening brief due date" cite "FRAP 31(a)(1)"
+{
+  given RecordFiled() on 2025-02-05
+  expect deadline(appellant-brief-period) == 2025-03-17
+}
+
+rule duty petition-for-rehearing effective [2024-12-01, ..) known_at 2025-12-01 cite "FRAP 40(d)(1)"
+{
+  deadline rehearing-period: 14.days after EnteredOnAppeal(Judgment) counted_by frap26 cite "FRAP 40(d)(1)"
+}
+
+test "rehearing due date" cite "FRAP 40(d)(1)"
+{
+  given EnteredOnAppeal(Judgment) on 2025-03-03
+  expect deadline(rehearing-period) == 2025-03-17
+}
+
+rule duty issue-mandate effective [2024-12-01, ..) known_at 2025-12-01 cite "FRAP 41(b)"
+{
+  deadline mandate-period: 7.days after RehearingClosed() counted_by frap26 cite "FRAP 41(b)"
+}
+
+test "mandate issuance due date" cite "FRAP 41(b)"
+{
+  given RehearingClosed(TimeExpired) on 2025-03-03
+  expect deadline(mandate-period) == 2025-03-10
+}

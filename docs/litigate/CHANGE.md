@@ -268,7 +268,7 @@ for an emergency declaration its `window_days`. A class with no cell does
 not exist in the family: a package of that class there is L2011. Rank is
 the rung of `lit/core/authority.lit` (1 = highest in that family's chain).
 
-| Class | district-civil (frcp) | district-criminal (frcrimp) | circuit-appellate (frap) | federal-circuit (cafc) | cofc | ptab | ttab | itc |
+| Class | district-civil (frcp and the 94 district forums) | district-criminal (frcrimp) | circuit-appellate (frap) | federal-circuit (cafc) | cofc | ptab | ttab | itc |
 |---|---|---|---|---|---|---|---|---|
 | base | rank 1-2: statutes, FRCP (28 U.S.C. §§ 2072, 2074) | 1-2: FRCrimP, 18 U.S.C. § 3161 | 1-2: FRAP, 28 U.S.C. § 2107 | 1-2: FRAP, 28 U.S.C. § 1295 | 1-2: RCFC (§ 2503(b)), § 2501 | 1-2: 35 U.S.C. § 316(a); 37 C.F.R. pts. 1, 42 | 1-2: 15 U.S.C. § 1123; 37 C.F.R. pt. 2 | 1-2: 19 U.S.C. § 1337; 19 C.F.R. pts. 201, 210 |
 | amendment | base rung; § 2074(a) | § 2074(a) | § 2074(a); FRAP 47(a)(1) | Fed. Cir. R. 47(a)(2)-(3) | RCFC 83(a) | notice and comment (83 FR 51340) | 81 FR 69950 | 90 FR 225 |

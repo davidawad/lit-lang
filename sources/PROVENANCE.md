@@ -681,3 +681,10 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 - Edition: cover: "Effective as of September 2015, Updated: September 2026"; listed as the current edition on https://www.dcd.uscourts.gov/court-info/local-rules-and-orders/local-rules (newest listed change: Local Rule 6.2, 9/14/2026).
 - Retrieved 2026-10-27 on carbon (the court site refuses agent pods: lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 e6084a6dc48c050f96035345573a3de47f57eadd0ff4e3d04039f0fb8e537928. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+### `dc-state-appellate/dcca-rules.txt` — Rules of the District of Columbia Court of Appeals
+
+- Source: https://www.dccourts.gov/sites/default/files/coa-rules/DCCA-Rules.pdf (official court site; 135 pages, sha256 5b71b874d774c74dc7f98b2873d3393363d259dd7edbaf315a18b7962d0197bf).
+- Edition: title page: "Reflecting amendments in effect as of May 11, 2026"; linked from https://www.dccourts.gov/court-of-appeals/court-of-appeals-resources/rules-of-the-dc-court-of-appeals (page last updated 02/04/2026).
+- Retrieved 2026-10-27 on carbon (the court site refuses agent pods: lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 6ebf6a2ad4b75f15c0acd71ef1a3ce7adf02913d5e41183086c04449f5caeea4. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

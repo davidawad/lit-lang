@@ -1,0 +1,31 @@
+
+### `illappct/ill-sct-rules-cited.txt` — Illinois Supreme Court Rules (cited rules only: 23, 181, 201, 213, 214, 216, 218, 219, 301, 303, 304, 306, 307, 308, 315, 321, 323, 341, 345, 352, 361, 367, 368; shared with il-circuit, whose outline cites the same text)
+
+- Source: per-rule PDFs linked from https://www.illinoiscourts.gov/rules-law/supreme-court-rules (the court publishes per-rule PDFs only; robots.txt allows all; the site has no terms page; text via pdftotext -layout). 23 sections, each page fetched once on 2026-10-27 by curl (not BrowserOS) at most one request per second with the identifying User-Agent litgraph-rules-vendor/1.0 (public court rules); 24 GETs for this forum (limit 300). Only the rules the outlines cite were fetched (PM per-page standing rule).
+- Edition: each rule as linked from the court Supreme Court Rules page on 2026-10-27, which carries the rule history note (index status line under each heading); Rule 23 amended June 3, 2025 and the others per their notes. Amending orders not fetched separately; each rule PDF carries its own amendment history.
+- One `## <rule>` section per page, in outline-cite order; extract sha256 3a70c5b53b40b924fa22edaf53095a4d8f92574093db11af7c463e176a287fb9. Not sectioned further; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+- Page URLs:
+  - https://www.illinoiscourts.gov/rules-law/supreme-court-rules
+  - https://www.illinoiscourts.gov/resources/650f76b5-3cce-40b9-acc3-d93b1aced5f4/file
+  - https://www.illinoiscourts.gov/resources/f3e14c02-f103-410a-b192-a7b74607e49d/file
+  - https://www.illinoiscourts.gov/resources/04def41f-b72c-4fdc-bdd8-eda350a95151/file
+  - https://www.illinoiscourts.gov/resources/9326b6d2-e0ee-463d-a599-36020e9089f7/file
+  - https://www.illinoiscourts.gov/resources/534a469e-8a1e-454d-833d-160e60faf8b2/file
+  - https://www.illinoiscourts.gov/resources/e690373a-a210-44b5-84bb-e1f6e28fedfb/file
+  - https://www.illinoiscourts.gov/resources/38af8040-b15b-420b-bbdc-2000314d1302/file
+  - https://www.illinoiscourts.gov/resources/52ba3dce-2992-46e5-91fb-42f5f49a7acd/file
+  - https://www.illinoiscourts.gov/resources/96cc09b4-102c-4d56-8be1-433e088f79d8/file
+  - https://www.illinoiscourts.gov/resources/d7ab6199-0e6f-49bc-8a11-017ec66815b6/file
+  - https://www.illinoiscourts.gov/resources/b59e1ce5-0131-4968-b0b8-843a75e9d207/file
+  - https://www.illinoiscourts.gov/resources/d05b18a9-8706-4df5-95c5-8b778450fe3d/file
+  - https://www.illinoiscourts.gov/resources/70b0a959-cf35-439c-a830-9d788b2a5706/file
+  - https://www.illinoiscourts.gov/resources/f02eed9c-baf5-4900-aaea-ff634288f11e/file
+  - https://www.illinoiscourts.gov/resources/ce707476-e53a-48e3-9119-6496ef58aa41/file
+  - https://www.illinoiscourts.gov/resources/3d833dc3-ca59-4c5e-a89b-7ec910670b86/file
+  - https://www.illinoiscourts.gov/resources/591ac2c5-f0b1-4182-84ae-6327b4ba39d3/file
+  - https://www.illinoiscourts.gov/resources/472b82fb-b6bb-4da0-a8e4-a10c5f65afd6/file
+  - https://www.illinoiscourts.gov/resources/f58644c7-5404-4873-a28a-cd73f499b498/file
+  - https://www.illinoiscourts.gov/resources/962a75d7-7fc5-4de3-b47f-2817d896c95a/file
+  - https://www.illinoiscourts.gov/resources/27563812-7bb1-4e31-9cb4-6afd7f7c213e/file
+  - https://www.illinoiscourts.gov/resources/2ec940a4-a8bd-4812-a83b-e2a77b317378/file
+  - https://www.illinoiscourts.gov/resources/1c7b489e-d37c-4153-8f04-8b96e2885199/file

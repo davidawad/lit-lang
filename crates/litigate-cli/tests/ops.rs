@@ -190,6 +190,7 @@ fn named_directories_replace_the_compiled_halves() {
 fn variables_name_directories_too() {
     let out = assert_cmd::Command::cargo_bin("litigate")
         .unwrap()
+        .env("LITIGATE_TODAY", "2000-01-01")
         .current_dir(repo())
         .env("LITGRAPH_PACKS", litgraph_packs::PACKS_DIR)
         .env("LITGRAPH_SCENARIOS", litgraph_packs::SCENARIOS_DIR)
@@ -206,6 +207,7 @@ fn variables_name_directories_too() {
 fn standard_input_that_is_not_text_is_an_error() {
     let out = assert_cmd::Command::cargo_bin("litigate")
         .unwrap()
+        .env("LITIGATE_TODAY", "2000-01-01")
         .current_dir(repo())
         .args(["engine", "q", "-", "--packs-dir", litgraph_packs::PACKS_DIR])
         .args(["--scenarios-dir", litgraph_packs::SCENARIOS_DIR])

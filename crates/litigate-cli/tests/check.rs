@@ -66,6 +66,7 @@ fn strict_check_fails_on_every_hole() {
 fn human_output_renders_diagnostics_with_source() {
     let out = assert_cmd::Command::cargo_bin("litigate")
         .unwrap()
+        .env("LITIGATE_TODAY", "2000-01-01")
         .current_dir(support::repo())
         .args([
             "--format",
@@ -87,6 +88,7 @@ fn ttab_check_human_output_groups_library_noise_and_verbose_restores_it() {
     let run = |args: &[&str]| {
         assert_cmd::Command::cargo_bin("litigate")
             .unwrap()
+            .env("LITIGATE_TODAY", "2000-01-01")
             .current_dir(support::repo())
             .args(args)
             .output()

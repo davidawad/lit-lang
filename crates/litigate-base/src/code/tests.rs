@@ -62,6 +62,7 @@ fn every_registered_code_exercises_its_stable_views() {
                     | DiagnosticCode::FormerName
                     | DiagnosticCode::LateClaimProcessing
                     | DiagnosticCode::ConcurrentTracks
+                    | DiagnosticCode::StaleAsOf
             ) || (profile == Profile::Dev
                 && matches!(
                     code,

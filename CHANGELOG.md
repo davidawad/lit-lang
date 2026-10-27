@@ -573,6 +573,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **A stale `as_of` no longer hides a passed deadline** (lg-rpmf).
+  `litigate check` and `litigate timeline` judge deadlines at today
+  (`--today DATE`, else `LITIGATE_TODAY`, else the system date in UTC;
+  an explicit `--as-of` turns the default off): when a matter's `as_of`
+  is older, an open deadline due before today with no act lapses (a
+  duty is breached), its `judged_at` says when, and an L4016 warning at
+  the `as_of` names each one. Replay and law selection still run at the
+  matter's own `as_of`; `--today` with that date reproduces it.
 - **59 cite holes are string cites; the 28 U.S.C. App. edition bindings
   carry their edition dates** (lg-flu.30). Holes kept only because the
   retired cite mode stopped at a comma (`cite ?("FRAP 3(a), (c)(1),

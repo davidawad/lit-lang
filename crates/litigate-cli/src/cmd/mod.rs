@@ -41,8 +41,16 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             profile,
             verbose,
             dates,
+            today,
             library,
-        } => check::check(src, &paths, profile.into(), &dates, &library.lib, verbose),
+        } => check::check(
+            src,
+            &paths,
+            profile.into(),
+            (&dates, today.today.as_deref()),
+            &library.lib,
+            verbose,
+        ),
         Command::Build {
             paths,
             out,
@@ -198,12 +206,14 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
         Command::Timeline {
             file,
             dates,
+            today,
             layers,
             world,
             library,
         } => timeline::timeline(&timeline::Args {
             file,
             dates,
+            today: today.today,
             layers,
             world,
             lib: library.lib,

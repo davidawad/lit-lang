@@ -76,6 +76,17 @@ impl Dates {
     }
 }
 
+/// The date deadlines are judged at (lg-rpmf).
+#[derive(Debug, Clone, Default, Args)]
+pub struct Today {
+    /// Judge deadlines at this date: when a matter's `as_of` is older,
+    /// one past due by then with no act lapses, with an L4016 warning
+    /// (default: `LITIGATE_TODAY`, else the system date, unless `--as-of`
+    /// is given; `--today` with the matter's `as_of` reproduces it).
+    #[arg(long, value_name = "DATE")]
+    pub today: Option<String>,
+}
+
 /// How an engine op runs on a compiled matter or package.
 #[derive(Debug, Clone, Default, Args)]
 pub struct OpFlags {
@@ -271,6 +282,9 @@ pub enum Command {
         /// Shared options.
         #[command(flatten)]
         dates: Dates,
+        /// Shared options.
+        #[command(flatten)]
+        today: Today,
         /// Shared options.
         #[command(flatten)]
         library: Library,
@@ -523,6 +537,9 @@ pub enum Command {
         /// and select the versions recorded by `--known-at`.
         #[command(flatten)]
         dates: Dates,
+        /// Judge deadlines at `--today`.
+        #[command(flatten)]
+        today: Today,
         /// Layers to enable (`ID`, `+ID`: only those named) or disable
         /// (`-ID`), comma-separated or repeated.
         #[arg(
@@ -603,6 +620,22 @@ pub enum Command {
 }
 
 impl Command {
+    /// Gives `check` and `timeline` `today` as their `--today` when they
+    /// have neither `--today` nor `--as-of` (which reproduces history).
+    pub fn default_today(&mut self, today: &str) {
+        if let Self::Check {
+            dates, today: t, ..
+        }
+        | Self::Timeline {
+            dates, today: t, ..
+        } = self
+        {
+            if t.today.is_none() && dates.as_of.is_none() {
+                t.today = Some(today.to_owned());
+            }
+        }
+    }
+
     /// The envelope `op` name.
     #[must_use]
     pub fn name(&self) -> &'static str {

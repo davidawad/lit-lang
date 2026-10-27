@@ -11,7 +11,7 @@ use crate::clock::{self, Clocks};
 use crate::hirx;
 use crate::report;
 use crate::ws::{lock_path, CaseText, Session};
-use litigate_base::{Diagnostic, FileId, LineIndex, Profile, Severity};
+use litigate_base::{Diagnostic, DiagnosticCode, FileId, LineIndex, Profile, Severity, Span};
 use litigate_lower::{LoweredCase, Lowerer};
 use litigate_sema::case::{Env, Obligation, Pending, Status, Step};
 use litigate_sema::hir;
@@ -61,6 +61,9 @@ pub struct Scheduled {
     /// The party bearing it, when the deadline names a bearer.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub bearer: Option<String>,
+    /// Declared in a `rule duty`: past due with no act, it is breached.
+    #[serde(skip)]
+    pub linear: bool,
     /// The due date it may not end before: the `later_of` instance it
     /// absorbed (FRCP 15(a)(3), FRAP 4(a)(3)); `due` is the counted date.
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -83,6 +86,10 @@ pub struct Scheduled {
     /// `open` or `lapsed`, when the trigger left its designated due date
     /// unknown.
     pub status: Status,
+    /// The date later than `as_of` its `status` was judged at, when it
+    /// lapsed (or was breached) by then ([`judge_at`]).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub judged_at: Option<String>,
     /// Source index of the trigger event in the matter's `events`.
     #[serde(skip)]
     pub trigger_event: usize,
@@ -424,12 +431,14 @@ fn schedule(
                 rolled: false,
                 method: None,
                 bearer: o.bearer.clone(),
+                linear: o.linear,
                 floor: o.floor.clone(),
                 extended_to: o.extended_to.clone(),
                 extended_under: o.extended_under,
                 request_made: o.request_made.clone(),
                 pending: o.pending.clone(),
                 status: o.status,
+                judged_at: None,
                 trigger_event: o.trigger,
                 closed_by: o.closed_by,
             };
@@ -451,6 +460,99 @@ fn schedule(
         }
     }
     out
+}
+
+/// The due date `s` ends on: the one an extension moved it to, else its
+/// counted date raised to its `later_of` floor; `None` when unknown.
+fn effective(s: &Scheduled) -> Option<String> {
+    s.extended_to.clone().or_else(|| {
+        let due = s.due.clone()?;
+        Some(match &s.floor {
+            Some(floor) if *floor > due => floor.clone(),
+            _ => due,
+        })
+    })
+}
+
+/// `s`, open and past due by `today` (later than `as_of`), judged there:
+/// breached if it is a duty its bearer bears, else lapsed; the note
+/// saying so, `None` when it is not past due.
+fn lapse(s: &mut Scheduled, today: &str) -> Option<String> {
+    let due = effective(s).filter(|due| s.status == Status::Open && due.as_str() < today)?;
+    let (status, word) = if s.bearer.is_some() && s.linear {
+        (Status::Breached, "breached")
+    } else {
+        (Status::Lapsed, "lapsed")
+    };
+    s.status = status;
+    s.judged_at = Some(today.to_owned());
+    Some(format!(
+        "`{}` was due {due} with no act: {word} at {today}",
+        s.deadline
+    ))
+}
+
+/// The span of the `as_of` date in matter source `text` at `path`, else
+/// its first column.
+fn as_of_span(path: &str, text: &str) -> Span {
+    let index = LineIndex::new(text);
+    let range = litigate_syntax::parse_case(text)
+        .case_file()
+        .and_then(|f| f.as_of())
+        .map(|token| token.text_range());
+    let ((line, col), (end_line, end_col)) = range.map_or(((1, 1), (1, 1)), |r| {
+        (
+            index.line_col(usize::from(r.start())),
+            index.line_col(usize::from(r.end())),
+        )
+    });
+    Span {
+        file: FileId(path.to_owned()),
+        line,
+        col,
+        end_line,
+        end_col,
+    }
+}
+
+/// Judges `check`'s deadlines at `today` when its matter's `as_of` is
+/// older (lg-rpmf): an open instance past due by `today` lapses (a duty
+/// is breached), so a stale `as_of` cannot show a missed deadline as
+/// open. The L4016 warning saying so, at the `as_of` of `text` (also in
+/// `check`'s diagnostics); `None` when `as_of` is not older.
+pub fn judge_at(check: &mut CaseCheck, text: &str, today: &str) -> Option<Diagnostic> {
+    let as_of = check
+        .case
+        .as_ref()
+        .map(|c| c.as_of.clone())
+        .filter(|as_of| !as_of.is_empty() && as_of.as_str() < today)?;
+    let notes: Vec<String> = check
+        .counted
+        .iter_mut()
+        .filter_map(|s| lapse(s, today))
+        .collect();
+    for s in &mut check.schedule {
+        lapse(s, today);
+    }
+    let past = match notes.len() {
+        0 => String::new(),
+        1 => "; 1 deadline is past due with no act".to_owned(),
+        n => format!("; {n} deadlines are past due with no act"),
+    };
+    let mut d = Diagnostic::error(
+        DiagnosticCode::StaleAsOf,
+        as_of_span(&check.path, text),
+        format!("as_of {as_of} is older than today {today}: deadlines are judged at today{past}"),
+    );
+    d.severity = Severity::Warning;
+    for note in notes {
+        d = d.note(note);
+    }
+    d = d.note(format!(
+        "move `as_of` forward as events are recorded; `--today {as_of}` judges the matter at its own as_of"
+    ));
+    check.diagnostics.push(d.clone());
+    Some(d)
 }
 
 #[cfg(test)]
@@ -614,5 +716,76 @@ mod tests {
                 ("frcp-rule12-example::in-business-days", None, true),
             ]
         );
+    }
+
+    /// The worked example's answer period, open and due `due`, borne by
+    /// `widget` as a duty when `duty`.
+    fn open(due: &str, duty: bool) -> Scheduled {
+        let mut s = checked("", ACME, None).counted.remove(0);
+        s.due = Some(due.to_owned());
+        s.status = Status::Open;
+        s.bearer = duty.then(|| "widget".to_owned());
+        s.linear = duty;
+        s
+    }
+
+    #[test]
+    fn a_stale_as_of_lapses_powers_and_breaches_duties() {
+        let mut c = checked("", ACME, None);
+        let floored = Scheduled {
+            floor: Some("2025-06-03".to_owned()),
+            ..open("2025-06-01", false)
+        };
+        let extended = Scheduled {
+            extended_to: Some("2025-06-09".to_owned()),
+            ..open("2025-06-01", false)
+        };
+        c.counted = vec![open("2025-06-01", true), floored, extended];
+        c.schedule.clone_from(&c.counted);
+        let d = judge_at(&mut c, ACME, "2025-06-05").unwrap();
+        let ended = |list: &[Scheduled]| -> Vec<(Status, Option<String>)> {
+            list.iter()
+                .map(|s| (s.status, s.judged_at.clone()))
+                .collect()
+        };
+        let judged = Some("2025-06-05".to_owned());
+        let want = [
+            (Status::Breached, judged.clone()),
+            (Status::Lapsed, judged),
+            (Status::Open, None),
+        ];
+        assert_eq!(ended(&c.counted), want);
+        assert_eq!(ended(&c.schedule), want);
+        assert_eq!(
+            d.message,
+            "as_of 2025-06-01 is older than today 2025-06-05: deadlines are judged at today; 2 deadlines are past due with no act"
+        );
+        assert_eq!(d.severity, Severity::Warning);
+        assert_eq!((d.span.line, d.span.col, d.span.end_col), (3, 7, 17));
+        assert!(d.notes[1].message.contains("was due 2025-06-03"), "{d:?}");
+        assert_eq!(c.diagnostics.last(), Some(&d));
+    }
+
+    #[test]
+    fn as_of_not_older_than_today_judges_nothing() {
+        let mut c = checked("", ACME, None);
+        c.counted = vec![open("2025-05-01", false)];
+        assert_eq!(judge_at(&mut c, ACME, "2025-06-01"), None);
+        assert_eq!(c.counted[0].status, Status::Open);
+        let d = judge_at(&mut c, "", "2025-06-02").unwrap();
+        assert_eq!(c.counted[0].status, Status::Lapsed);
+        // No `as_of` in the source: the matter's first column.
+        assert_eq!(
+            (d.span.file.0.as_str(), d.span.line, d.span.col),
+            ("cases/examples/acme.case", 1, 1)
+        );
+        assert!(d.message.ends_with("; 1 deadline is past due with no act"));
+        c.case = None;
+        assert_eq!(judge_at(&mut c, ACME, "2025-06-02"), None);
+        // Nothing past due: the warning alone.
+        let mut discharged = checked("", ACME, None);
+        let d = judge_at(&mut discharged, ACME, "2025-06-02").unwrap();
+        assert!(d.message.ends_with("judged at today"), "{}", d.message);
+        assert_eq!(discharged.counted[0].status, Status::Discharged);
     }
 }

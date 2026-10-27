@@ -770,7 +770,13 @@ fn deadlines(
             continue;
         };
         let state = awaiting(
-            obligation_status(s.status, ended, Some(&due), &b.as_of, &name),
+            obligation_status(
+                s.status,
+                ended,
+                Some(&due),
+                s.judged_at.as_deref().unwrap_or(&b.as_of),
+                &name,
+            ),
             s,
         );
         let row = b.deadline_row(0, pkg, decl, Some(due), state, trigger);

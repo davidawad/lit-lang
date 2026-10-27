@@ -42,6 +42,7 @@ pub struct Run {
 pub fn litigate_in(dir: &Path, args: &[&str]) -> Run {
     let out = assert_cmd::Command::cargo_bin("litigate")
         .unwrap()
+        .env("LITIGATE_TODAY", "2000-01-01")
         .current_dir(dir)
         .args(["--format", "json"])
         .args(args)

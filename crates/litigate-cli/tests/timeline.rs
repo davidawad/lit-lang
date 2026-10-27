@@ -941,6 +941,7 @@ fn a_matter_with_errors_reports_them_in_the_timeline() {
 fn human_output_renders_the_envelope() {
     let out = assert_cmd::Command::cargo_bin("litigate")
         .unwrap()
+        .env("LITIGATE_TODAY", "2000-01-01")
         .current_dir(repo())
         .args(["--format", "human", "timeline", "cases/examples/acme.case"])
         .output()

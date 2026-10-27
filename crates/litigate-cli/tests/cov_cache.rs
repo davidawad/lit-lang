@@ -51,6 +51,7 @@ fn litigate_as(bin: &Path, dir: &Path, ci: Option<&str>, args: &[&str]) -> suppo
     let mut cmd = assert_cmd::Command::new(bin);
     cmd.current_dir(dir)
         .env("LITIGATE_CACHE", "cache")
+        .env("LITIGATE_TODAY", "2000-01-01")
         .env_remove("CI");
     if let Some(ci) = ci {
         cmd.env("CI", ci);

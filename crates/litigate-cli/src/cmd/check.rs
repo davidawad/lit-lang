@@ -218,6 +218,21 @@ impl Checked {
             .collect()
     }
 
+    /// Judges every matter's deadlines at `today` ([`crate::matter::judge_at`]),
+    /// reporting the L4016 of each whose `as_of` is older.
+    pub fn judge_at(&mut self, today: &str) {
+        for case in &mut self.cases {
+            let text = self
+                .session
+                .cases
+                .iter()
+                .find(|c| c.path == case.path)
+                .map_or("", |c| c.text.as_str());
+            self.diagnostics
+                .extend(crate::matter::judge_at(case, text, today));
+        }
+    }
+
     /// Envelope provenance.
     #[must_use]
     pub fn provenance(&self, as_of: Option<&str>, known_at: Option<&str>) -> Value {
@@ -230,16 +245,20 @@ fn world_summary(w: &WorldCheck) -> Value {
     json!({"path": w.path, "world": w.world, "layers": w.layers})
 }
 
-/// `litigate check` over `src`.
+/// `litigate check` over `src`, judging deadlines at `today` when given.
 pub fn check(
     src: &dyn Source,
     paths: &[String],
     profile: Profile,
-    dates: &Dates,
+    (dates, today): (&Dates, Option<&str>),
     lib: &[String],
     verbose: bool,
 ) -> Outcome {
-    let c = checked_in(src, paths, profile, &dates.options(), lib)?;
+    let today = today.map(super::timeline::date).transpose()?;
+    let mut c = checked_in(src, paths, profile, &dates.options(), lib)?;
+    if let Some(today) = today {
+        c.judge_at(today);
+    }
     let profile_name = match profile {
         Profile::Dev => "dev",
         Profile::Strict => "strict",

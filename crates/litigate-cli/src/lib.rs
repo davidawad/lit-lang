@@ -38,6 +38,7 @@ pub mod span;
 #[cfg(test)]
 mod testkit;
 pub mod timeline;
+pub mod today;
 pub mod verdict;
 pub mod ws;
 
@@ -73,7 +74,7 @@ where
     I: IntoIterator<Item = T>,
     T: Into<OsString> + Clone,
 {
-    execute_on(args, std::io::stdout().is_terminal())
+    execute_on(args, std::io::stdout().is_terminal(), None)
 }
 
 /// The commands [`execute_in`] runs, besides the op subcommands
@@ -99,7 +100,7 @@ where
     T: Into<OsString> + Clone,
 {
     let args = args.into_iter().map(Into::into).collect();
-    execute_with(args, Format::Json, false, src, true)
+    execute_with(args, Format::Json, false, src, true, None)
 }
 
 /// [`execute_in`] over a [`MemoryTree`] of `(path, text)` files; `args`
@@ -137,26 +138,30 @@ pub fn memory_tree(files: impl IntoIterator<Item = (String, String)>) -> MemoryT
 }
 
 /// [`execute`] for a standard output that is (`tty`) or is not a
-/// terminal: a terminal defaults to colored human output.
-fn execute_on<I, T>(args: I, tty: bool) -> Printed
+/// terminal: a terminal defaults to colored human output. `check` and
+/// `timeline` judge deadlines at `today` unless told a date
+/// ([`cli::Command::default_today`]).
+fn execute_on<I, T>(args: I, tty: bool, today: Option<&str>) -> Printed
 where
     I: IntoIterator<Item = T>,
     T: Into<OsString> + Clone,
 {
     let args = args.into_iter().map(Into::into).collect();
     let format = if tty { Format::Human } else { Format::Json };
-    execute_with(args, format, tty, &Disk, false)
+    execute_with(args, format, tty, &Disk, false, today)
 }
 
 /// Parses and runs `args` over `src`, in `format` unless `--format` says
 /// otherwise and in color when `color`; `in_memory` limits the commands to
-/// those [`execute_in`] runs.
+/// those [`execute_in`] runs; `check` and `timeline` judge deadlines at
+/// `today` unless told a date.
 fn execute_with(
     args: Vec<OsString>,
     format: Format,
     color: bool,
     src: &dyn Source,
     in_memory: bool,
+    today: Option<&str>,
 ) -> Printed {
     let cli = match Cli::try_parse_from(args) {
         Ok(cli) => cli,
@@ -181,7 +186,7 @@ fn execute_with(
             };
         }
     };
-    let command = match cli.command {
+    let mut command = match cli.command {
         cli::Invocation::Engine { args } => {
             return engine::execute_in(
                 src,
@@ -191,6 +196,9 @@ fn execute_with(
         }
         cli::Invocation::Envelope(command) => command,
     };
+    if let Some(today) = today {
+        command.default_today(today);
+    }
     let format = cli.format.unwrap_or(format);
     let op = command.name();
     if in_memory && !runs_in_memory(&command) {
@@ -231,7 +239,8 @@ impl Stopwatch {
     }
 }
 
-/// The binary's `main`: [`execute`], print, exit.
+/// The binary's `main`: [`execute`], print, exit; `check` and `timeline`
+/// judge deadlines at [`today::today`] unless told a date.
 pub fn main<I, T>(args: I) -> ExitCode
 where
     I: IntoIterator<Item = T>,
@@ -243,7 +252,8 @@ where
         Some("mcp") => return mcp::main(&args[2..]),
         _ => {}
     }
-    let printed = execute(args);
+    let tty = std::io::stdout().is_terminal();
+    let printed = execute_on(args, tty, today::today().as_deref());
     // A closed pipe cannot be reported anywhere; the exit code still is.
     let _ = std::io::stdout().write_all(printed.stdout.as_bytes());
     let _ = std::io::stderr().write_all(printed.stderr.as_bytes());
@@ -295,7 +305,7 @@ mod tests {
 
     /// Every call through one instantiation of the generic `execute_on`.
     fn run(args: &[&str], tty: bool) -> Printed {
-        execute_on(args.to_vec(), tty)
+        execute_on(args.to_vec(), tty, None)
     }
 
     #[test]

@@ -55,6 +55,7 @@ fn untimed(stdout: &str) -> String {
 fn both(args: &[&str]) -> (LitigateRun, LitigateRun) {
     let out = assert_cmd::Command::cargo_bin("litigate")
         .unwrap()
+        .env("LITIGATE_TODAY", "2000-01-01")
         .current_dir(repo())
         .args(args)
         .output()

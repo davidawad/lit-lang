@@ -2958,6 +2958,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | | | L4013 | late under a claim-processing rule |
 | | | L4014 | concurrent tracks at as_of |
 | | | L4015 | invalid governing law (Erie composition) |
+| | | L4016 | stale as_of: deadlines judged at today |
 | L2002 | invalid operation | L5001 | verification failed (generic) |
 | L2003 | invalid distribution | L5002 | hole in strict |
 | L2004 | unit mismatch | L5003 | unreachable node |
@@ -2986,9 +2987,9 @@ unchanged, and is graded `error`; anything else is rejected.
 | L9009 | precedent not binding at the world's location | | |
 
 Severity (`DiagnosticCode::severity(profile)`): every non-L9 code except
-L4009, L4010, L4011, L4012, L4013, L4014, L3010 and L2015 is `error`.
+L4009, L4010, L4011, L4012, L4013, L4014, L4016, L3010 and L2015 is `error`.
 L9003, L9006, L9008 and L9009 are `info`. L4009, L4010, L4011, L4012,
-L4013, L4014, L9005 and L9007 are `warning`. L9001, L9002, L9004, L3010
+L4013, L4014, L4016, L9005 and L9007 are `warning`. L9001, L9002, L9004, L3010
 (a hole in the corpus) and L2015 (an undecided refinement, a hole) are
 `warning` in `dev` and `error` in `strict`.
 

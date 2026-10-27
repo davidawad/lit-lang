@@ -183,6 +183,7 @@ fn every_fixture_matter_checks_ok_with_no_error() {
 fn check_with_sources(sources: &Path) -> Run {
     let out = assert_cmd::Command::cargo_bin("litigate")
         .unwrap()
+        .env("LITIGATE_TODAY", "2000-01-01")
         .current_dir(repo())
         .env("LITGRAPH_SOURCES", sources)
         .args([

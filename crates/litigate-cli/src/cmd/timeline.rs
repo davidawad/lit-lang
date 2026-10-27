@@ -19,6 +19,8 @@ pub struct Args {
     pub file: String,
     /// Judge statuses (and select law) at these dates.
     pub dates: Dates,
+    /// Judge deadlines at this date when the matter's `as_of` is older.
+    pub today: Option<String>,
     /// Layers to enable (`ID`, `+ID`) or disable (`-ID`).
     pub layers: Vec<String>,
     /// Only this world and its ancestors.
@@ -37,9 +39,21 @@ fn is_date(text: &str) -> bool {
         })
 }
 
+/// `text` when it is a `YYYY-MM-DD` date.
+///
+/// # Errors
+/// A usage failure naming it when it is not.
+pub(super) fn date(text: &str) -> Result<&str, Failure> {
+    if is_date(text) {
+        Ok(text)
+    } else {
+        Err(Failure::new(format!("`{text}` is not a YYYY-MM-DD date")))
+    }
+}
+
 /// The matter's timeline: checked again at the dates `args` give, if any
-/// (its diagnostics then replace the first check's); `None` when the
-/// matter does not resolve.
+/// (its diagnostics then replace the first check's), its deadlines judged
+/// at `today` when given; `None` when the matter does not resolve.
 fn of_case(
     args: &Args,
     c: &Checked,
@@ -52,7 +66,7 @@ fn of_case(
         as_of: args.dates.as_of.as_deref(),
         known_at: args.dates.known_at.as_deref(),
     };
-    let m = if at.as_of.is_none() && at.known_at.is_none() {
+    let mut m = if at.as_of.is_none() && at.known_at.is_none() {
         c.cases[0].clone()
     } else {
         let redone = matter::check_at(
@@ -66,6 +80,9 @@ fn of_case(
         diagnostics.extend(redone.diagnostics.iter().cloned());
         redone
     };
+    if let Some(today) = &args.today {
+        diagnostics.extend(matter::judge_at(&mut m, &c.session.cases[0].text, today));
+    }
     m.case
         .as_ref()
         .map(|case| timeline::of_case(&m, case, &all, &texts, diagnostics))
@@ -99,13 +116,11 @@ fn of_lit(args: &Args, c: &Checked, file: &str, diagnostics: &[Diagnostic]) -> O
 
 /// `litigate timeline`.
 pub fn timeline(args: &Args) -> Outcome {
-    for date in [&args.dates.as_of, &args.dates.known_at]
+    for text in [&args.dates.as_of, &args.dates.known_at, &args.today]
         .into_iter()
         .flatten()
     {
-        if !is_date(date) {
-            return Err(Failure::new(format!("`{date}` is not a YYYY-MM-DD date")));
-        }
+        date(text)?;
     }
     let path = Path::new(&args.file);
     let kind = path

@@ -1,0 +1,188 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+// Sources: CAVC Rules of Practice and Procedure (uscourts.cavc.gov, fetched 2026-10-26);
+// 38 U.S.C. headings (LII, fetched 2026-10-26). Key decisions are unverified.
+module outline-cavc
+
+start board-decision
+
+state board-decision: "Board of Veterans' Appeals decision issued" by office cite ?("38 U.S.C. § 7252")
+{
+  note "OUTLINE. The Board decision is the reviewable order under 38 U.S.C. § 7252. The Court reviews under 38 U.S.C. § 7261. The notice of appeal is the next step."
+  edge-board-decision-notice "Appellant files notice of appeal" -> notice-timeliness {
+    authority cite ?("38 U.S.C. § 7266(a)")
+  }
+}
+
+decision notice-timeliness: "Notice of appeal timely" by court cite ?("38 U.S.C. § 7266(a); CAVC R. 4(a)(1)")
+{
+  note "OUTLINE. The notice must be received within the period in CAVC R. 4(a)(1) and 38 U.S.C. § 7266(a). The period and the deemed-receipt rule are holes. Key decision (verify): Bove v. Shinseki (Vet. App.; verify reporter citation) on timeliness and equitable tolling, cited in the Court's 2012 timeliness guidance."
+  edge-notice-timeliness-timely "Timely" -> docketing {
+    authority cite ?("CAVC R. 4(a)(1)")
+  }
+  edge-notice-timeliness-late "Late" -> late-notice-ruling {
+    authority cite ?("CAVC R. 4(a)(3)")
+  }
+}
+
+decision late-notice-ruling: "Good cause, excusable neglect or equitable tolling" by court cite ?("CAVC R. 4(a)(3)")
+{
+  note "OUTLINE. Excusable neglect, good cause and equitable tolling are argued under CAVC R. 4(a)(3). The standard and the record required are holes."
+  edge-late-notice-granted "Excused" -> docketing {
+    authority cite ?("CAVC R. 4(a)(3)")
+  }
+  edge-late-notice-denied "Not excused" -> dismissed-untimely {
+    authority cite ?("CAVC R. 4(a)(3)")
+  }
+}
+
+state docketing: "Appeal docketed; copy of Board decision" by office cite ?("CAVC R. 4")
+{
+  note "OUTLINE. The Clerk dockets the appeal and the Secretary files the record. Docketing and copy requirements are holes."
+  edge-docketing-record "Docketed" -> record-filed {
+    authority cite ?("CAVC R. 4")
+  }
+}
+
+state record-filed: "Record before the agency filed" by office cite ?("CAVC R. 10")
+{
+  note "OUTLINE. The record of proceedings before the agency is filed under CAVC R. 10. The filing period is a hole. Confirm the completeness and index requirements."
+  edge-record-filed-briefing "Record filed" -> briefing-path {
+    authority cite ?("CAVC R. 10")
+  }
+}
+
+decision briefing-path: "Briefs filed or joint motion for remand" by applicant cite ?("CAVC R. 27; CAVC R. 28")
+{
+  note "OUTLINE. Appellant brief, Secretary's brief, and reply under CAVC R. 28. Motions, including joint motions for remand, are under CAVC R. 27. Briefing periods, page limits and extensions are holes. Key decision (verify): Gilbert v. Derwinski, 1 Vet. App. 49 (1990) (benefit of the doubt standard, applied on the merits)."
+  edge-briefing-path-jmr "Joint motion for remand" -> joint-remand {
+    authority cite ?("CAVC R. 27")
+  }
+  edge-briefing-path-merits "Briefing complete" -> decision-path {
+    authority cite ?("CAVC R. 28")
+  }
+}
+
+state joint-remand: "Joint motion for remand" by court cite ?("CAVC R. 27")
+{
+  note "OUTLINE. A joint motion for remand usually resolves the appeal without a merits decision. The Court decides whether to grant it. The standard is a hole."
+  edge-joint-remand-remanded "Court grants remand" -> remanded {
+    authority cite ?("CAVC R. 27")
+  }
+}
+
+decision decision-path: "Oral argument, submission and decision" by court cite ?("CAVC R. 34; 38 U.S.C. § 7261")
+{
+  note "OUTLINE. Decision by a single judge, a panel or the full Court. Oral argument under CAVC R. 34 is discretionary. The standard of review under 38 U.S.C. § 7261 is a hole. Key decision: none named until the review standard is verified."
+  edge-decision-path-affirmed "Board decision affirmed (loss for appellant)" -> post-decision-motion {
+    authority cite ?("38 U.S.C. § 7261")
+  }
+  edge-decision-path-reversed "Reversed (win for appellant)" -> post-decision-motion {
+    authority cite ?("38 U.S.C. § 7261")
+  }
+  edge-decision-path-remanded "Vacated and remanded" -> remanded {
+    authority cite ?("38 U.S.C. § 7261")
+  }
+  edge-decision-path-dismissed "Dismissed" -> dismissed-untimely {
+    authority cite ?("CAVC R. 42")
+  }
+}
+
+decision post-decision-motion: "Post-decision motion or none" by applicant cite ?("CAVC R. 35")
+{
+  note "OUTLINE. Motion for reconsideration by the single judge, panel decision, or full Court review under CAVC R. 35. The period and grounds are holes."
+  edge-post-decision-motion-filed "Motion filed" -> reconsideration-ruling {
+    authority cite ?("CAVC R. 35")
+  }
+  edge-post-decision-motion-none "No motion" -> judgment-entered {
+    authority cite ?("CAVC R. 35")
+  }
+}
+
+decision reconsideration-ruling: "Ruling on post-decision motion" by court cite ?("CAVC R. 35")
+{
+  note "OUTLINE. The Court revises or denies the decision. A revised decision returns to the decision stage. Standards are holes."
+  edge-reconsideration-ruling-revised "Motion granted; decision revised" -> decision-path {
+    authority cite ?("CAVC R. 35")
+  }
+  edge-reconsideration-ruling-denied "Motion denied" -> judgment-entered {
+    authority cite ?("CAVC R. 35")
+  }
+}
+
+decision judgment-entered: "Judgment entered" by applicant cite ?("CAVC R. 36")
+{
+  note "OUTLINE. Entry of judgment under CAVC R. 36. Appeal to the Federal Circuit and the mandate run from entry. The mandate rule is CAVC R. 41; the Federal Circuit review period is 38 U.S.C. § 7292."
+  edge-judgment-entered-cafc "Notice of appeal to the Federal Circuit" -> cafc-review {
+    authority cite ?("38 U.S.C. § 7292(a)")
+  }
+  edge-judgment-entered-mandate "No appeal; mandate issues" -> mandate-issued {
+    authority cite ?("CAVC R. 41(a)")
+  }
+  edge-judgment-entered-eaja "Prevailing party seeks fees" -> eaja-application {
+    authority cite ?("28 U.S.C. § 2412(d)")
+  }
+}
+
+state cafc-review: "Federal Circuit review" by applicant cite ?("38 U.S.C. § 7292(a)")
+{
+  note "OUTLINE. Review by the Federal Circuit under 38 U.S.C. § 7292. The time to file is a hole. Federal Circuit packages cover the appeal."
+  edge-cafc-review-decided "Federal Circuit decides" -> cafc-decided {
+    authority cite ?("38 U.S.C. § 7292(a)")
+  }
+}
+
+state eaja-application: "Equal Access to Justice Act fee application" by applicant cite ?("28 U.S.C. § 2412(d); CAVC R. 39")
+{
+  note "OUTLINE. Fee application under CAVC R. 39 and the EAJA. The deadline, the net-worth and the rate caps are holes."
+  edge-eaja-application-ruling "Application filed" -> eaja-ruling {
+    authority cite ?("CAVC R. 39")
+  }
+}
+
+decision eaja-ruling: "EAJA ruling" by court cite ?("28 U.S.C. § 2412(d)")
+{
+  note "OUTLINE. The Court decides whether the government's position was substantially justified. The standard and the cap are holes."
+  edge-eaja-ruling-granted "Fees awarded" -> eaja-granted {
+    authority cite ?("28 U.S.C. § 2412(d)")
+  }
+  edge-eaja-ruling-denied "Fees denied" -> eaja-denied {
+    authority cite ?("28 U.S.C. § 2412(d)")
+  }
+}
+
+terminal remanded: "Vacated and remanded" outcome [remand] cite ?("38 U.S.C. § 7261")
+{
+  note "OUTLINE. Vacatur and remand to the Board. Remand is the most common result on a joint motion. The remand order's terms are holes."
+  payoff ?
+}
+
+terminal dismissed-untimely: "Dismissed as untimely or on another ground" outcome [loss] cite ?("CAVC R. 4(a)(1)")
+{
+  note "OUTLINE. Dismissal for an untimely notice under 38 U.S.C. § 7266(a) and CAVC R. 4(a)(1), or dismissal under CAVC R. 42 on voluntary termination."
+  payoff ?
+}
+
+terminal mandate-issued: "Mandate issued" outcome [decided] cite ?("CAVC R. 41(a)")
+{
+  note "OUTLINE. The judgment becomes final and effective as a matter of law under 38 U.S.C. § 7291 and CAVC R. 41(a)."
+  payoff ?
+}
+
+terminal cafc-decided: "Federal Circuit decision" outcome [decided] cite ?("38 U.S.C. § 7292(a)")
+{
+  note "OUTLINE. Federal Circuit outcome. Federal Circuit packages cover it."
+  payoff ?
+}
+
+terminal eaja-granted: "EAJA fees awarded" outcome [win] cite ?("28 U.S.C. § 2412(d)")
+{
+  note "OUTLINE. Fee award. The amount, rate and cap are holes."
+  payoff ?
+}
+
+terminal eaja-denied: "EAJA fees denied" outcome [loss] cite ?("28 U.S.C. § 2412(d)")
+{
+  note "OUTLINE. Denial of fees, including on a substantial justification finding."
+  payoff ?
+}

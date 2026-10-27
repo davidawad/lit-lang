@@ -1,6 +1,5 @@
 ; Generated from editors/tree-sitter-litigate/queries/indents.scm by
-; `cargo run -p litigate-editors --bin helix-queries`. Do not edit;
-; edit the source and rerun.
+; `just editor-queries`. Do not edit; edit the source and rerun.
 
 ; Indentation (two spaces per level, SPEC §10). Braced, bracketed and
 ; parenthesized bodies indent their contents; the closing delimiter dedents.

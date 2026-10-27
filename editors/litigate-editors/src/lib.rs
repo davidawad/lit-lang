@@ -2,14 +2,17 @@
 //!
 //! - [`grammar`] builds `tree-sitter-litigate` as a shared library for a
 //!   given tree-sitter ABI (the `litigate-grammar` binary).
-//! - [`helix`] renders Helix's queries from the canonical ones (the
-//!   `helix-queries` binary).
+//! - [`keywords`] renders the editor keyword lists from the keyword table
+//!   and [`helix`] Helix's queries from the canonical ones; [`generated`]
+//!   writes or checks them all (the `editor-queries` binary).
 //! - [`corpus`] and [`support`] are shared by the editor tests in `tests/`,
 //!   which drive Emacs, Helix and Neovim when they are installed.
 
 pub mod corpus;
+pub mod generated;
 pub mod grammar;
 pub mod helix;
+pub mod keywords;
 pub mod support;
 
 use std::path::{Path, PathBuf};

@@ -3205,7 +3205,7 @@ matters.
 | Contract | Location |
 |---|---|
 | spans, diagnostics, codes, severities, envelope, profiles | `crates/litigate-base` |
-| token/node kinds, contextual keywords | `crates/litigate-syntax/src/syntax_kind.rs` |
+| token/node kinds, contextual keywords | `crates/litigate-syntax/src/syntax_kind.rs`, keywords from `crates/litigate-syntax/keywords.txt` |
 | typed CST views | `crates/litigate-syntax/src/ast.rs` |
 | HIR (`Package`, `Manifest`, `Module`, `Declaration`, `Node`, `Edge`, `Case`, ...) | `crates/litigate-sema/src/hir.rs` and `hir/` |
 | obligations | `crates/litigate-verify/src/lib.rs` |

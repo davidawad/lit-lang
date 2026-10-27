@@ -4,6 +4,8 @@
 //! Keywords are contextual: the lexer emits [`SyntaxKind::Ident`] for every
 //! word and the parser remaps a token to its keyword kind (see
 //! [`SyntaxKind::from_keyword`]) only where the grammar expects that keyword.
+//! The keyword kinds are generated from `keywords.txt`
+//! ([`crate::keyword_table`]); add a keyword there, never here.
 use rowan::Language;
 
 macro_rules! syntax_kinds {
@@ -64,7 +66,10 @@ macro_rules! syntax_kinds {
     };
 }
 
-syntax_kinds! {
+// The keyword variants come from `keywords.txt` (`build.rs`).
+include!(concat!(env!("OUT_DIR"), "/keywords.rs"));
+
+syntax_kinds_with_keywords! {
     tokens {
         Whitespace => "Whitespace trivia.",
         Comment => "Line or block comment trivia.",
@@ -87,67 +92,6 @@ syntax_kinds! {
         Slash = "/", Percent = "%", Bang = "!", AndAnd = "&&", OrOr = "||",
         Question = "?", At = "@", Caret = "^", Tilde = "~", Underscore = "_",
         Pipe = "|",
-    }
-    keywords {
-        KwModule = "module", KwImport = "import", KwPackage = "package",
-        KwForum = "forum", KwStart = "start", KwGroup = "group",
-        KwType = "type", KwEnum = "enum", KwMatch = "match",
-        KwState = "state", KwDecision = "decision", KwChance = "chance",
-        KwTerminal = "terminal", KwRule = "rule", KwDuty = "duty",
-        KwPower = "power", KwLiability = "liability", KwDeadline = "deadline",
-        KwCounting = "counting", KwCalendar = "calendar", KwTransition = "transition",
-        KwAuthority = "authority", KwDefault = "default", KwException = "exception",
-        KwTest = "test", KwLink = "link", KwInstance = "instance",
-        KwEvent = "event", KwAmends = "amends", KwAllowHours = "allow_hours",
-        KwEndOfMonth = "end_of_month",
-        KwBelow = "below", KwCount = "count",
-        KwCase = "case", KwUses = "uses", KwAsOf = "as_of", KwKnownAt = "known_at",
-        KwSummary = "summary", KwNotes = "notes", KwSource = "source",
-        KwPerspective = "perspective", KwParties = "parties", KwEvents = "events",
-        KwFacts = "facts", KwStakes = "stakes", KwBeliefs = "beliefs",
-        KwObserve = "observe", KwPrior = "prior", KwAnalysis = "analysis", KwUnvalued = "unvalued",
-        KwBy = "by", KwOn = "on", KwDocket = "docket", KwFrom = "from", KwAfter = "after",
-        KwBefore = "before", KwCountedBy = "counted_by", KwCite = "cite",
-        KwHistorical = "historical",
-        KwOutcome = "outcome", KwPayoff = "payoff", KwPayoffByFlag = "payoff_by_flag",
-        KwFeeShift = "fee_shift",
-        KwDiscretion = "discretion", KwInfo = "info", KwP = "p", KwEffort = "effort", KwCost = "cost",
-        KwWithin = "within", KwDuration = "duration", KwMin = "min", KwMode = "mode",
-        KwMax = "max", KwSets = "sets", KwClears = "clears", KwRequires = "requires",
-        KwForbids = "forbids", KwTags = "tags", KwAttrs = "attrs", KwNote = "note",
-        KwValence = "valence", KwBasis = "basis", KwCourtListenerUrl = "court_listener_url",
-        KwActionId = "action_id", KwExtendable = "extendable",
-        KwExtensionAuthority = "extension_authority", KwReplaces = "replaces",
-        KwPack = "pack", KwRemoveEdges = "remove_edges",
-        KwProbabilities = "probabilities", KwRoles = "roles",
-        KwPayoffTransform = "payoff_transform", KwStake = "stake", KwPatch = "patch",
-        KwEffective = "effective", KwExcludeTriggerDay = "exclude_trigger_day",
-        KwIncludeLastDay = "include_last_day", KwRollForwardOn = "roll_forward_on",
-        KwServiceExtension = "service_extension", KwHolidays = "holidays",
-        KwAnchor = "anchor", KwShortPeriod = "short_period", KwObserved = "observed",
-        KwSubjectTo = "subject_to", KwNotwithstanding = "notwithstanding",
-        KwSupersedes = "supersedes", KwRevives = "revives", KwInterprets = "interprets",
-        KwDelegableTo = "delegable_to", KwOverride = "override", KwWhen = "when",
-        KwRebuts = "rebuts", KwUndercuts = "undercuts", KwPriority = "priority",
-        KwUnless = "unless", KwOtherwise = "otherwise", KwGiven = "given",
-        KwExpect = "expect", KwTrue = "true", KwFalse = "false", KwUnit = "unit",
-        KwUrl = "url", KwEdition = "edition", KwBearer = "bearer", KwTrigger = "trigger",
-        KwExtend = "extend", KwWaive = "waive", KwAfterExpiry = "after_expiry", KwNever = "never",
-        KwRemoves = "removes", KwElects = "elects", KwExtends = "extends",
-        KwWaives = "waives", KwTo = "to", KwWhere = "where", KwAnd = "and", KwOr = "or",
-        KwDesignated = "designated", KwInterpretation = "interpretation", KwFormerly = "formerly",
-        KwForums = "forums", KwForwardHolidays = "forward_holidays",
-        KwDeclaredHolidays = "declared_holidays", KwQuote = "quote",
-        KwLimit = "limit", KwWords = "words", KwPages = "pages", KwLines = "lines",
-        KwCertificate = "certificate", KwExcludes = "excludes", KwEcf = "ecf", KwFor = "for",
-        KwPaper = "paper",
-        KwDelegable = "delegable", KwOp = "op", KwGrant = "grant", KwUnlock = "unlock",
-        KwCharacterization = "characterization", KwRetracted = "retracted",
-        KwUnknownBefore = "unknown_before", KwCommenced = "commenced",
-        KwSpawn = "spawn", KwJoins = "joins", KwAnytime = "anytime",
-        KwLock = "lock", KwAgainst = "against", KwRuleIndex = "Rule",
-        KwRecharacterize = "recharacterize", KwInvalidate = "invalidate",
-        KwGoverningLaw = "governing_law",
     }
     nodes {
         SourceFile => "Root of a `.lit` module.",

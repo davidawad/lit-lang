@@ -69,39 +69,11 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
 (with-eval-after-load 'treesit
   (add-to-list 'treesit-language-source-alist litigate-ts-mode-grammar-recipe))
 
-;;; Keywords (kept equal to queries/highlights.scm by the ERT suite).
+;;; Keywords: generated from crates/litigate-syntax/keywords.txt into
+;;; litigate-ts-mode-keywords.el (kept equal to queries/highlights.scm by
+;;; the ERT suite).
 
-(defconst litigate-ts-mode--declaration-keywords
-  '("edition" "module" "import" "package" "start" "group" "type" "enum" "event"
-    "state" "decision" "chance" "terminal" "link" "instance" "rule"
-    "deadline" "counting" "calendar" "transition" "authority" "default"
-    "exception" "test" "limit" "grant" "recharacterize" "invalidate"
-    "case" "governing_law" "uses" "as_of" "known_at" "summary" "notes" "source" "perspective"
-    "parties" "events" "facts" "stakes" "beliefs" "prior" "observe" "analysis")
-  "Keywords that open a declaration.")
-
-(defconst litigate-ts-mode--clause-keywords
-  '("forum" "by" "docket" "outcome" "info" "p" "effort" "cost" "within" "duration" "min" "mode"
-    "max" "sets" "clears" "requires" "forbids" "replaces" "tags" "attrs" "note"
-    "valence" "court_listener_url" "action_id" "formerly" "extendable" "extension_authority"
-    "payoff" "payoff_by_flag" "fee_shift" "pack" "remove_edges" "probabilities" "roles"
-    "payoff_transform" "stake" "patch" "duty" "power" "liability" "from" "after" "before"
-    "counted_by" "exclude_trigger_day" "include_last_day" "roll_forward_on"
-    "service_extension" "holidays" "anchor" "short_period" "below" "count"
-    "basis" "allow_hours" "end_of_month" "effective" "observed" "amends" "subject_to" "notwithstanding" "interprets"
-    "supersedes" "revives" "override" "delegable_to" "rebuts" "undercuts"
-    "priority" "url" "bearer" "designated" "interpretation" "trigger" "extend" "waive" "after_expiry" "never"
-    "removes" "elects" "extends" "waives" "to" "where" "forums"
-    "forward_holidays" "declared_holidays" "quote"
-    "words" "pages" "lines" "certificate" "excludes" "ecf" "for" "paper"
-    "delegable" "op" "unlock" "characterization" "retracted" "unknown_before" "commenced" "spawn" "joins" "anytime"
-    "lock" "against" "Rule"
-    "given" "expect" "on")
-  "Clause, field and test keywords.")
-
-(defconst litigate-ts-mode--conditional-keywords
-  '("when" "unless" "otherwise" "match")
-  "Conditional keywords.")
+(require 'litigate-ts-mode-keywords)
 
 (defconst litigate-ts-mode--operators
   '("->" "=>" "==" "!=" "<=" ">=" "&&" "||" "+" "-" "*" "/" "%" "!" "=")
@@ -161,7 +133,7 @@ The canonical format (`litigate fmt', SPEC §10) uses two."
    :language 'litigate
    :feature 'keyword
    `([,@litigate-ts-mode--conditional-keywords] @font-lock-keyword-face
-     "cite" @font-lock-preprocessor-face
+     [,@litigate-ts-mode--directive-keywords] @font-lock-preprocessor-face
      (discretion) @font-lock-keyword-face
      (guard_op operator: ["and" "or"] @font-lock-keyword-face)
      [,@litigate-ts-mode--declaration-keywords] @font-lock-keyword-face

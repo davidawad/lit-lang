@@ -26,16 +26,18 @@ install:
 merge-drivers: tree-sitter-merge-driver
 
 # Register the `tsgenerate` git merge driver `.gitattributes` names for the
-# generated tree-sitter parser (editors/tree-sitter-litigate/src). When both
-# sides changed it, the merge keeps ours (`true` leaves %A as is), so two
-# branches changing different grammar rules merge and rebase cleanly; then
-# `just tree-sitter-generate` regenerates it from the merged grammar. Needs
-# neither node nor cargo. Idempotent; a no-op outside git.
+# generated tree-sitter parser (editors/tree-sitter-litigate/src) and the
+# generated editor queries and keyword lists. When both sides changed one,
+# the merge keeps ours (`true` leaves %A as is), so two branches changing
+# different grammar rules or adding different keywords merge and rebase
+# cleanly; then `just tree-sitter-generate` regenerates them from the
+# merged grammar and keyword table. Needs neither node nor cargo.
+# Idempotent; a no-op outside git.
 tree-sitter-merge-driver:
     #!/usr/bin/env bash
     set -euo pipefail
     git rev-parse --git-dir > /dev/null 2>&1 || exit 0
-    git config merge.tsgenerate.name "generated tree-sitter parser: keep ours, then just tree-sitter-generate"
+    git config merge.tsgenerate.name "generated file: keep ours, then just tree-sitter-generate"
     git config merge.tsgenerate.driver true
 
 # Run `litigate` (release build) with any extra args, e.g. `just run solve cases/frcp-civil-case.case`.
@@ -339,7 +341,7 @@ lit_build_dir := "target/lit-build"
 # them, as litgraph-packs embeds them). Run it after a merge or rebase in
 # which both sides changed one package: its Lit.lock row conflicts (or is
 # stale, L1007) until it does, like a Cargo.lock.
-lit-sync: merge-drivers
+lit-sync: merge-drivers editor-queries
     #!/usr/bin/env bash
     set -euo pipefail
     out="{{lit_build_dir}}"
@@ -426,15 +428,24 @@ tree-sitter-test:
     script/merge-test "${ts[@]}"
 
 # Regenerate the tree-sitter parser (editors/tree-sitter-litigate/src) from
-# grammar.js and grammar/*.js. Run it after editing the grammar, and after a
-# merge or rebase touching the grammar: the tsgenerate merge driver keeps
-# our parser when both sides changed it.
-tree-sitter-generate:
+# grammar.js and grammar/*.js, and the editor files (`editor-queries`). Run
+# it after editing the grammar or the keyword table, and after a merge or
+# rebase touching either: the tsgenerate merge driver keeps our generated
+# files when both sides changed them.
+tree-sitter-generate: editor-queries
     #!/usr/bin/env bash
     set -euo pipefail
     cd editors/tree-sitter-litigate
     {{ts_cli}}
     "${ts[@]}" generate
+
+# Every generated editor file: the keyword lists in highlights.scm (from
+# queries/highlights.scm.in) and emacs/litigate-ts-mode-keywords.el, from
+# the keyword table crates/litigate-syntax/keywords.txt, and Helix's copies
+# of the canonical queries. `--check` fails instead of writing when one is
+# stale.
+editor-queries *ARGS:
+    cargo run -q -p litigate-editors --bin editor-queries -- {{ARGS}}
 
 # Editor modes (editors/{emacs,helix,nvim}): Emacs ERT batch suite, Helix
 # queries + `hx --health`, headless Neovim (editors/litigate-editors/tests).

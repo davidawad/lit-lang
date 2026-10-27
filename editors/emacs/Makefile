@@ -19,11 +19,11 @@ EMACS ?= emacs
 BATCH  = $(EMACS) -Q --batch -L .
 SRC    = litgraph.el litgraph-view.el litgraph-graph.el litgraph-org.el \
          litgraph-scenario.el litgraph-menu.el litgraph-timeline.el \
-         ob-litgraph.el litigate-ts-mode.el
-# litigate-ts-mode keeps its own `litigate-ts-mode-' prefix (it is
+         ob-litgraph.el litigate-ts-mode-keywords.el litigate-ts-mode.el
+# litigate-ts-mode (and its generated keyword lists) keeps its own `litigate-ts-mode-' prefix (it is
 # usable on its own, and editors/litigate-editors tests it on its own),
 # which package-lint would flag under this package's `litgraph-' prefix.
-LINT_SRC = $(filter-out litigate-ts-mode.el,$(SRC))
+LINT_SRC = $(filter-out litigate-ts-mode.el litigate-ts-mode-keywords.el,$(SRC))
 TESTS  = $(wildcard test/litgraph-*-test.el)
 PACKAGE_LINT_DIR ?=
 REPO   = ../..

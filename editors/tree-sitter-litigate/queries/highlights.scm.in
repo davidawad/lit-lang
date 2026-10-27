@@ -1,0 +1,132 @@
+; Template for highlights.scm: `just editor-queries` (cargo run -p
+; litigate-editors --bin editor-queries) replaces each `{{class}}` line with
+; the keywords of that highlight class in crates/litigate-syntax/keywords.txt
+; and writes highlights.scm. Edit this file, never highlights.scm; add a
+; keyword to keywords.txt.
+
+; Syntax highlighting for litigate (.lit and .case).
+; Capture names follow the common tree-sitter convention shared by Neovim,
+; Helix and Zed. Later patterns win in editors that use "last match wins",
+; so general captures come first and specific ones after.
+
+(identifier) @variable
+
+; Declaration keywords.
+[
+  {{declaration}}
+] @keyword
+
+; Clause and field keywords.
+[
+  {{clause}}
+] @keyword
+
+(discretion) @keyword
+
+; These words are keywords only in typed guard operations, never in expressions.
+(guard_op operator: ["and" "or"] @keyword)
+
+[
+  {{conditional}}
+] @keyword.conditional
+
+[
+  {{test}}
+] @keyword
+
+[
+  {{directive}}
+] @keyword.directive
+
+; Literals.
+(string) @string
+(escape_sequence) @string.escape
+(number) @number
+(money) @number
+(duration) @number
+(date) @number
+(version_req) @string.special
+(boolean) @boolean
+[(unit) (unvalued)] @constant.builtin
+(hole) @constant.builtin
+(open_end) @constant.builtin
+[(anonymous) (wildcard)] @variable.builtin
+
+; Comments.
+(line_comment) @comment
+(block_comment) @comment
+(doc_comment) @comment.documentation
+
+; Operators and punctuation.
+[
+  "->" "=>" "==" "!=" "<=" ">=" "&&" "||" "+" "-" "*" "/" "%" "!" "="
+] @operator
+
+[ "(" ")" "[" "]" "{" "}" ] @punctuation.bracket
+
+[ "," ":" "::" "." "@" "|" ] @punctuation.delimiter
+
+; Declared names.
+(module_decl path: (module_path (identifier) @module))
+(import_decl path: (module_path (identifier) @module))
+(import_list (identifier) @variable)
+(package_decl name: (identifier) @module)
+(package_decl forum: (identifier) @constant)
+(package_decl authority: (identifier) @type)
+(use_item package: (identifier) @module)
+
+(type_decl name: (identifier) @type.definition)
+(enum_decl name: (identifier) @type.definition)
+(variant_list (identifier) @constant)
+(event_decl name: (identifier) @type.definition)
+(type name: (identifier) @type)
+(param name: (identifier) @variable.parameter)
+(authority_decl level: (identifier) @type)
+
+(node_decl name: (identifier) @label)
+(start_decl node: (identifier) @label)
+(edge_decl name: (identifier) @property)
+(link_decl name: (identifier) @property)
+(group_decl name: (identifier) @label)
+(by_clause actor: (ref (identifier) @type))
+(party_decl actor: (identifier) @type)
+(party_decl entity: (identifier) @type)
+(party_decl name: (identifier) @variable)
+(case_event id: (identifier) @label)
+
+(rule_decl name: (identifier) @function)
+(deadline_decl name: (identifier) @function)
+(counting_decl name: (identifier) @function)
+(calendar_decl name: (identifier) @function)
+(holiday_decl name: (identifier) @property)
+(transition_decl name: (identifier) @function)
+(grant_decl name: (identifier) @function)
+(recharacterize_decl name: (identifier) @function)
+(invalidate_decl name: (identifier) @function)
+(default_decl name: (identifier) @function)
+(exception_decl name: (identifier) @function)
+(instance_decl base: (identifier) @module)
+(instance_decl origin: (identifier) @module)
+
+(test_decl name: (string) @string.special)
+
+; Record and map keys.
+[
+  (num_entry key: (identifier) @property)
+  (money_entry key: (identifier) @property)
+  (record_field key: (identifier) @property)
+  (probability_entry key: (identifier) @property)
+  (role_entry key: (identifier) @property)
+  (service_entry method: (identifier) @constant)
+]
+
+(field_expression field: (identifier) @property)
+
+; Calls: event constructors, holiday rules and builtins.
+(call_expression function: (ref (identifier) @function.call .))
+
+((call_expression function: (ref . (identifier) @function.builtin .))
+  (#any-of? @function.builtin
+    "deadline" "has_event" "prob" "given" "in" "intersect" "disjoint" "len" "contains"
+    "credal" "lower" "upper" "mean" "at"
+    "fixed" "nth" "last" "every" "once"))

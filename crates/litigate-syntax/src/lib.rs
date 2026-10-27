@@ -23,6 +23,7 @@ pub mod ast;
 mod error;
 #[allow(clippy::enum_glob_use)]
 pub mod format;
+pub mod keyword_table;
 // Grammar rules read best with the token/node vocabulary in scope.
 #[allow(clippy::enum_glob_use)]
 mod grammar;

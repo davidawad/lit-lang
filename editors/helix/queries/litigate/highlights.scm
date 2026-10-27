@@ -1,6 +1,8 @@
 ; Generated from editors/tree-sitter-litigate/queries/highlights.scm by
-; `cargo run -p litigate-editors --bin helix-queries`. Do not edit;
-; edit the source and rerun.
+; `just editor-queries`. Do not edit; edit the source and rerun.
+
+; Generated from highlights.scm.in and crates/litigate-syntax/keywords.txt by
+; `just editor-queries`. Do not edit; edit those and rerun.
 
 ; Syntax highlighting for litigate (.lit and .case).
 ; Capture names follow the common tree-sitter convention shared by Neovim,
@@ -11,32 +13,32 @@
 
 ; Declaration keywords.
 [
-  "edition" "module" "import" "package" "start" "group" "type" "enum" "event"
-  "state" "decision" "chance" "terminal" "link" "instance" "rule"
-  "deadline" "counting" "calendar" "transition" "authority" "default"
-  "exception" "test" "limit" "grant"
-  "recharacterize" "invalidate"
-  "case" "governing_law" "uses" "as_of" "known_at" "summary" "notes" "source" "perspective"
-  "parties" "events" "facts" "stakes" "beliefs" "prior" "observe" "analysis"
+  "module" "import" "package" "start" "group" "type" "enum" "state" "decision"
+  "chance" "terminal" "rule" "deadline" "counting" "calendar" "transition"
+  "authority" "default" "exception" "test" "link" "instance" "event" "case"
+  "uses" "as_of" "known_at" "summary" "notes" "source" "perspective" "parties"
+  "events" "facts" "stakes" "beliefs" "observe" "prior" "analysis" "edition"
+  "limit" "grant" "recharacterize" "invalidate" "governing_law"
 ] @keyword
 
 ; Clause and field keywords.
 [
-  "forum" "by" "docket" "outcome" "info" "p" "effort" "cost" "within" "duration" "min" "mode"
-  "max" "sets" "clears" "requires" "forbids" "replaces" "tags" "attrs" "note"
-  "valence" "court_listener_url" "action_id" "formerly" "extendable" "extension_authority"
-  "payoff" "payoff_by_flag" "fee_shift" "pack" "remove_edges" "probabilities" "roles"
-  "payoff_transform" "stake" "patch" "duty" "power" "liability" "from" "after" "before"
-  "counted_by" "exclude_trigger_day" "include_last_day" "roll_forward_on"
-  "service_extension" "holidays" "anchor" "short_period" "below" "count"
-  "basis" "allow_hours" "end_of_month" "effective" "observed" "amends" "subject_to" "notwithstanding" "interprets"
-  "supersedes" "revives" "override" "delegable_to" "rebuts" "undercuts"
-  "priority" "url" "bearer" "designated" "interpretation" "trigger" "extend" "waive" "after_expiry" "never"
-  "removes" "elects" "extends" "waives" "to" "where" "forums"
-  "forward_holidays" "declared_holidays" "quote"
-  "words" "pages" "lines" "certificate" "excludes" "ecf" "for" "paper"
-  "delegable" "op" "unlock" "characterization" "retracted" "unknown_before" "commenced" "spawn" "joins" "anytime"
-  "lock" "against" "Rule"
+  "forum" "duty" "power" "liability" "amends" "allow_hours" "end_of_month"
+  "below" "count" "by" "docket" "from" "after" "before" "counted_by" "outcome"
+  "payoff" "payoff_by_flag" "fee_shift" "info" "p" "effort" "cost" "within"
+  "duration" "min" "mode" "max" "sets" "clears" "requires" "forbids" "tags"
+  "attrs" "note" "valence" "basis" "court_listener_url" "action_id" "extendable"
+  "extension_authority" "replaces" "pack" "remove_edges" "probabilities" "roles"
+  "payoff_transform" "stake" "patch" "effective" "exclude_trigger_day"
+  "include_last_day" "roll_forward_on" "service_extension" "holidays" "anchor"
+  "short_period" "observed" "subject_to" "notwithstanding" "supersedes"
+  "revives" "interprets" "delegable_to" "override" "rebuts" "undercuts"
+  "priority" "url" "bearer" "trigger" "extend" "waive" "after_expiry" "never"
+  "removes" "elects" "extends" "waives" "to" "where" "designated"
+  "interpretation" "formerly" "forums" "forward_holidays" "declared_holidays"
+  "quote" "words" "pages" "lines" "certificate" "excludes" "ecf" "for" "paper"
+  "delegable" "op" "unlock" "characterization" "retracted" "unknown_before"
+  "commenced" "spawn" "joins" "anytime" "lock" "against" "Rule"
 ] @keyword
 
 (discretion) @keyword
@@ -44,11 +46,17 @@
 ; These words are keywords only in typed guard operations, never in expressions.
 (guard_op operator: ["and" "or"] @keyword)
 
-[ "when" "unless" "otherwise" "match" ] @keyword.control.conditional
+[
+  "match" "when" "unless" "otherwise"
+] @keyword.control.conditional
 
-[ "given" "expect" "on" ] @keyword
+[
+  "on" "given" "expect"
+] @keyword
 
-"cite" @keyword.directive
+[
+  "cite"
+] @keyword.directive
 
 ; Literals.
 (string) @string

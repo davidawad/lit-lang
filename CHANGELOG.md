@@ -533,6 +533,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **One keyword table, every keyword list generated from it** (lg-nhe0).
+  `crates/litigate-syntax/keywords.txt` is the only hand-edited list of
+  contextual keywords: `build.rs` generates `SyntaxKind`'s keyword
+  variants from it, and `just editor-queries` (run by `just
+  tree-sitter-generate` and `just lit-sync`; it replaces the
+  `helix-queries` binary) writes the keyword lists of the canonical
+  `highlights.scm` (from `highlights.scm.in`), Emacs's new
+  `litigate-ts-mode-keywords.el` and Helix's queries. The table merges by
+  `union` and the generated files keep ours, so two branches adding
+  different keywords no longer conflict at land.
+
 - **The engine crate is `litigate-engine`** (lg-dfv4.1). `crates/litgraph`
   is now `crates/litigate-engine`, an internal library of the `litigate`
   compiler (`publish = false`); Rust callers name it `litigate_engine::`

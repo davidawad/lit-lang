@@ -141,15 +141,13 @@ integration tests against the debug `litigate` with `LITGRAPH_IT_REQUIRE=1`.
 Helix's capture names differ from the common convention (for example
 `@constant.numeric` instead of `@number`, `@namespace` instead of `@module`).
 So `helix/queries/litigate/{highlights,indents,locals,injections}.scm` are
-generated from the canonical queries by
-`cargo run -p litigate-editors --bin helix-queries`
+generated from the canonical queries by `just editor-queries`
 ([`litigate-editors/src/helix.rs`](litigate-editors/src/helix.rs) holds the
 capture renames). After you change a canonical query, rerun it. `textobjects.scm` is hand-written and Helix-only:
 `mf`/`]f` select declarations, `mt` selects tests and `me` selects edges.
 
 **Test.** `editors/litigate-editors/tests/helix.rs` runs these checks:
 
-- the generated queries are current (`helix-queries --check` in test form),
 - every Helix query compiles against the grammar and runs over the corpus
   (the `tree-sitter` crate, so no CLI is needed), and textobjects use
   Helix's object names,
@@ -244,10 +242,22 @@ editor needs ABI 14, so node must be installed.
 
 ## Keeping the editors in sync with the grammar
 
+- Add or reclassify a keyword: edit the keyword table
+  `crates/litigate-syntax/keywords.txt` (a `Variant text highlight` row;
+  `SyntaxKind`'s keyword variants are generated from it at build time),
+  add the keyword to the grammar, and run `just tree-sitter-generate`. Its
+  `editor-queries` step writes the keyword lists of
+  `tree-sitter-litigate/queries/highlights.scm` (from
+  `highlights.scm.in`), `emacs/litigate-ts-mode-keywords.el` and Helix's
+  copy. Never edit those lists by hand. `.gitattributes` merges the table
+  by `union` and keeps ours of each generated file, so two branches
+  adding different keywords rebase cleanly; regenerating then lists both.
+  `litigate-editors/tests/generated.rs` fails while a generated file is
+  stale and checks that rebase.
 - Change a highlight or indent query: edit
-  `tree-sitter-litigate/queries/*.scm`, run
-  `cargo run -p litigate-editors --bin helix-queries`,
-  and mirror any new keyword, operator or indent node type in
+  `tree-sitter-litigate/queries/highlights.scm.in` or another
+  `tree-sitter-litigate/queries/*.scm`, run `just editor-queries`, and
+  mirror any new operator or indent node type in
   `emacs/litigate-ts-mode.el`. The ERT suite fails until the lists match.
   Neovim follows automatically through the symlinks.
 - Change the grammar: once it lands, bump the `rev` in

@@ -1,7 +1,8 @@
-//! Helix configuration: the generated queries are current, every Helix
-//! query compiles against the grammar and runs over the corpus, the pinned
-//! grammar `rev` carries the grammar, and (when `hx` is installed)
-//! `hx --grammar build` plus `hx --health litigate` succeed.
+//! Helix configuration: every Helix query compiles against the grammar and
+//! runs over the corpus, the pinned grammar `rev` carries the grammar, and
+//! (when `hx` is installed) `hx --grammar build` plus `hx --health
+//! litigate` succeed. `tests/generated.rs` checks the generated queries
+//! are current.
 #![allow(clippy::unwrap_used, clippy::expect_used)]
 
 use litigate_editors::support::{find_program, run, scratch_dir, skip};
@@ -12,15 +13,6 @@ use tree_sitter::{Parser, Query, QueryCursor, StreamingIterator as _};
 
 fn language() -> tree_sitter::Language {
     tree_sitter_litigate::LANGUAGE.into()
-}
-
-#[test]
-fn generated_queries_are_current() {
-    let stale = helix::stale().unwrap();
-    assert!(
-        stale.is_empty(),
-        "stale Helix queries {stale:?}; run `cargo run -p litigate-editors --bin helix-queries`"
-    );
 }
 
 #[test]

@@ -10,7 +10,7 @@
 //! captures. `textobjects.scm` is hand-written and Helix-only.
 
 use anyhow::{Context as _, Result};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 /// The generated query files.
 pub const GENERATED: [&str; 4] = [
@@ -58,7 +58,7 @@ const LOCALS: Renames = &[
 /// `editors/helix/queries/litigate`.
 #[must_use]
 pub fn queries_dir() -> PathBuf {
-    crate::editors_dir().join("helix/queries/litigate")
+    crate::repo_root().join(DIR)
 }
 
 /// Render the Helix copy of canonical query `file` from its `source` text.
@@ -72,8 +72,7 @@ pub fn render(file: &str, source: &str) -> String {
     };
     let mut out = format!(
         "; Generated from editors/tree-sitter-litigate/queries/{file} by\n\
-         ; `cargo run -p litigate-editors --bin helix-queries`. Do not edit;\n\
-         ; edit the source and rerun.\n\n"
+         ; `just editor-queries`. Do not edit; edit the source and rerun.\n\n"
     );
     // Helix has no @indent.auto: strings and block comments keep their text.
     for line in source.lines().filter(|line| !line.contains("@indent.auto")) {
@@ -114,37 +113,30 @@ fn rename_line(line: &str, renames: Renames) -> String {
     out
 }
 
-/// Render every generated file from the canonical queries:
-/// `(file name, expected contents)`.
+/// Helix's directory, relative to the repository root.
+pub const DIR: &str = "editors/helix/queries/litigate";
+
+/// Render every generated file under `root` from the canonical queries,
+/// taking `highlights` as the canonical `highlights.scm` (itself generated,
+/// [`crate::keywords`]): `(path relative to root, expected contents)`.
 ///
 /// # Errors
 /// When a canonical query cannot be read.
-pub fn expected() -> Result<Vec<(&'static str, String)>> {
-    let canonical = crate::grammar::grammar_dir().join("queries");
+pub fn expected(root: &Path, highlights: &str) -> Result<Vec<(PathBuf, String)>> {
+    let canonical = root.join("editors/tree-sitter-litigate/queries");
     GENERATED
         .iter()
         .map(|file| {
-            let path = canonical.join(file);
-            let source = std::fs::read_to_string(&path)
-                .with_context(|| format!("reading {}", path.display()))?;
-            Ok((*file, render(file, &source)))
+            let source = if *file == "highlights.scm" {
+                highlights.to_owned()
+            } else {
+                let path = canonical.join(file);
+                std::fs::read_to_string(&path)
+                    .with_context(|| format!("reading {}", path.display()))?
+            };
+            Ok((Path::new(DIR).join(file), render(file, &source)))
         })
         .collect()
-}
-
-/// The generated files whose committed contents differ from [`expected`].
-///
-/// # Errors
-/// When a canonical query cannot be read.
-pub fn stale() -> Result<Vec<&'static str>> {
-    let dir = queries_dir();
-    Ok(expected()?
-        .into_iter()
-        .filter(|(file, text)| {
-            std::fs::read_to_string(dir.join(file)).ok().as_deref() != Some(text)
-        })
-        .map(|(file, _)| file)
-        .collect())
 }
 
 #[cfg(test)]

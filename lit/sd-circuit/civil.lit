@@ -1,0 +1,144 @@
+module sd-circuit-court-civil.civil
+
+start complaint-filed
+
+state complaint-filed: "Action commenced" by applicant cite "SDCL 15-6-3"
+{
+  note "A civil action is commenced as provided in SDCL 15-2-30 and 15-2-31, which are not vendored. The summons requires an answer within thirty days after its service, exclusive of the day of service (SDCL 15-6-4(a)); a complaint need not be served with it (SDCL 15-6-4(b)). Personal service is made as SDCL 15-6-4(d) provides; SDCL 15-6-4 is vendored only by subdivision, so the service edge cites the answer period that service starts."
+  edge-complaint-filed-response-due "Summons served" -> response-due {
+    authority cite "SDCL 15-6-12(a)"
+  }
+}
+
+state response-due: "Response due: answer or motion" cite "SDCL 15-6-12(a)"
+{
+  note "The answer is due within thirty days after service of the complaint; an answer to a cross-claim, and a reply to a counterclaim, within twenty days. After a motion under SDCL 15-6-12 is denied or postponed, the responsive pleading is due within ten days after notice of the court's action. These periods are not encoded as deadlines: the South Dakota time-computation rule (SDCL 15-6-6(a)) is not vendored. The defense of failure to state a claim is SDCL 15-6-12(b)(5). No leading decision is named."
+  edge-response-due-default-entered "No timely response" -> default-entered {
+    authority cite "SDCL 15-6-55(a)"
+  }
+  edge-response-due-motion-ruling "Motion to dismiss filed" -> motion-ruling {
+    authority cite "SDCL 15-6-12(b)"
+  }
+  edge-response-due-sched "Answer filed" -> sched { authority cite "SDCL 15-6-12(a)" }
+}
+
+decision motion-ruling: "Motion to dismiss ruling" by court cite "SDCL 15-6-12(b)"
+{
+  note "No leading decision is named."
+  edge-motion-ruling-dismissed-with-prejudice "Dismissed on the merits" -> dismissed-with-prejudice {
+    authority cite "SDCL 15-6-41(b)"
+  }
+  edge-motion-ruling-response-due "Dismissed with leave to amend" -> response-due {
+    authority cite "SDCL 15-6-15(a)"
+  }
+  edge-motion-ruling-sched "Denied: responsive pleading within ten days after notice" -> sched {
+    authority cite "SDCL 15-6-12(a)"
+  }
+}
+
+state sched: "Scheduling order" cite "SDCL 15-6-16"
+{
+  note "The court enters a scheduling order limiting the time to join parties and amend, to file and hear motions and to complete discovery, and setting the pretrial conference and trial dates; it is modified only by leave for good cause."
+  edge-sched-discovery "Order entered" -> discovery { authority cite "SDCL 15-6-16" }
+}
+
+state discovery: "Discovery" cite "SDCL 15-6-26(a)"
+{
+  note "Discovery methods under SDCL 15-6-26(a); scope, protective orders and supplementation under SDCL 15-6-26(b), (c) and (e); sanctions under SDCL 15-6-37. The interrogatory, production and admission rules (SDCL 15-6-33, 15-6-34 and 15-6-36) are not vendored."
+  edge-discovery-sj-ruling "Summary judgment motion filed" -> sj-ruling {
+    authority cite "SDCL 15-6-56(a)"
+  }
+  edge-discovery-dismissed-with-prejudice "Discovery sanction dismisses claims" -> dismissed-with-prejudice {
+    authority cite "SDCL 15-6-37(b)"
+  }
+  edge-discovery-settled "Settlement or voluntary dismissal" -> settled {
+    authority cite "SDCL 15-6-41(a)"
+  }
+  edge-discovery-pretrial "No dispositive motion" -> pretrial { authority cite "SDCL 15-6-16" }
+}
+
+decision sj-ruling: "Summary judgment ruling" by court cite "SDCL 15-6-56(c)"
+{
+  note "Unless the court fixes other periods, the motion, brief, statement of undisputed material facts and affidavits are served at least twenty-eight calendar days before the hearing, the response at least fourteen calendar days before, and a reply at least seven calendar days before; the exclusion of intermediate Saturdays, Sundays and legal holidays under SDCL 15-6-6(a) does not apply to the seven-day reply period. Facts in the movant's statement not controverted are admitted (SDCL 15-6-56(c)(3)). No leading decision is named."
+  edge-sj-ruling-judgment-applicant "Granted for applicant" -> judgment-applicant {
+    authority cite "SDCL 15-6-58(a)"
+  }
+  edge-sj-ruling-judgment-opponent "Granted for opponent" -> judgment-opponent {
+    authority cite "SDCL 15-6-58(a)"
+  }
+  edge-sj-ruling-pretrial "Denied" -> pretrial { authority cite "SDCL 15-6-56(d)" }
+}
+
+state pretrial: "Pretrial conference and trial setting" cite "SDCL 15-6-16"
+{
+  edge-pretrial-trial "Trial set" -> trial { authority cite "SDCL 15-6-16" }
+}
+
+state trial: "Trial (jury or bench)" cite "SDCL 15-6-38"
+{
+  note "A jury demand is served no later than ten days after service of the last pleading directed to the issue (SDCL 15-6-38(b)); failure to serve one waives jury trial (SDCL 15-6-38(d))."
+  edge-trial-judgment-applicant "Verdict or findings for applicant" -> judgment-applicant {
+    authority cite "SDCL 15-6-58(a)"
+  }
+  edge-trial-judgment-opponent "Verdict or findings for opponent" -> judgment-opponent {
+    authority cite "SDCL 15-6-58(a)"
+  }
+}
+
+state judgment-applicant: "Judgment for applicant entered" cite "SDCL 15-6-58(a)"
+{
+  note "A judgment is complete and effective when reduced to writing, signed, attested by the clerk and filed. A renewed motion for judgment as a matter of law is filed no later than ten days after notice of entry of judgment (SDCL 15-6-50(b)). The new-trial and relief-from-judgment rules (SDCL 15-6-59 and 15-6-60) are not vendored."
+  edge-judgment-applicant-post-judgment-ruling "Post-judgment motion" -> post-judgment-ruling {
+    authority cite "SDCL 15-6-50(b)"
+  }
+  edge-judgment-applicant-appellate-review "Notice of appeal filed" -> appellate-review {
+    authority cite "SDCL 15-26A-6"
+  }
+  edge-judgment-applicant-final-win "No appeal within time" -> final-win {
+    authority cite "SDCL 15-26A-6"
+  }
+}
+
+state judgment-opponent: "Judgment for opponent entered" cite "SDCL 15-6-58(a)"
+{
+  note "A judgment is complete and effective when reduced to writing, signed, attested by the clerk and filed. A renewed motion for judgment as a matter of law is filed no later than ten days after notice of entry of judgment (SDCL 15-6-50(b)). The new-trial and relief-from-judgment rules (SDCL 15-6-59 and 15-6-60) are not vendored."
+  edge-judgment-opponent-post-judgment-ruling "Post-judgment motion" -> post-judgment-ruling {
+    authority cite "SDCL 15-6-50(b)"
+  }
+  edge-judgment-opponent-appellate-review "Notice of appeal filed" -> appellate-review {
+    authority cite "SDCL 15-26A-6"
+  }
+  edge-judgment-opponent-final-loss "No appeal within time" -> final-loss {
+    authority cite "SDCL 15-26A-6"
+  }
+}
+
+decision post-judgment-ruling: "Post-judgment motion ruling" by court cite "SDCL 15-6-50(b)"
+{
+  note "A timely motion under SDCL 15-6-50(b) or 15-6-59 terminates the running of the appeal time for all parties; the full time runs again from written notice of entry of the order on the motion (SDCL 15-26A-6)."
+  edge-post-judgment-ruling-pretrial "Granted: new trial" -> pretrial {
+    authority cite "SDCL 15-6-50(b)"
+  }
+  edge-post-judgment-ruling-appellate-review "Denied: appeal time runs from notice of entry of the order" -> appellate-review {
+    authority cite "SDCL 15-26A-6"
+  }
+}
+
+terminal default-entered: "Default judgment against opponent" outcome [win] cite "SDCL 15-6-55(b)"
+{
+  note "Default is shown by affidavit (SDCL 15-6-55(a)); judgment by default is applied for to the court (SDCL 15-6-55(b)). Outcome from the applicant's side."
+}
+
+terminal dismissed-with-prejudice: "Dismissed on the merits" outcome [loss] cite "SDCL 15-6-41(b)"
+{
+  note "Outcome from the applicant's side."
+}
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "SDCL 15-6-41(a)"
+terminal final-win: "Final judgment for applicant, no appeal" outcome [win] cite "SDCL 15-26A-6"
+terminal final-loss: "Final judgment for opponent, no appeal" outcome [loss] cite "SDCL 15-26A-6"
+
+terminal appellate-review: "Appeal taken: continue in the Supreme Court of South Dakota package" outcome [procedural] cite "SDCL 15-26A-6"
+{
+  note "Hand-off to lit/sd (sd-supreme-court-civil-appeals)."
+}

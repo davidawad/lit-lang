@@ -72,7 +72,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | Pennsylvania | state | outline | 0 | 0 | 0 | 0 | `outlines/third-circuit/pennsylvania/state-appellate`, `outlines/third-circuit/pennsylvania/state-civil` |
 | Rhode Island | state | outline | 0 | 0 | 0 | 0 | `outlines/first-circuit/rhode-island/state-appellate`, `outlines/first-circuit/rhode-island/state-civil` |
 | South Carolina | state | outline | 0 | 0 | 0 | 0 | `outlines/fourth-circuit/south-carolina/state-appellate`, `outlines/fourth-circuit/south-carolina/state-civil` |
-| South Dakota | state | promoted | 0 | 0 | 0 | 0 | `lit/sd` |
+| South Dakota | state | promoted | 0 | 0 | 0 | 0 | `lit/sd`, `lit/sd-circuit` |
 | Tennessee | state | outline | 0 | 0 | 0 | 0 | `outlines/sixth-circuit/tennessee/state-appellate`, `outlines/sixth-circuit/tennessee/state-civil` |
 | Texas | state | outline | 0 | 0 | 0 | 0 | `outlines/fifth-circuit/texas/state-appellate`, `outlines/fifth-circuit/texas/state-civil` |
 | Utah | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/utah/state-appellate`, `outlines/tenth-circuit/utah/state-civil` |

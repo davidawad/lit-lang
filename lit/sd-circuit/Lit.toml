@@ -1,0 +1,45 @@
+[package]
+name = "sd-circuit-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "sd-circuit-court-civil"
+forum = "sd-circuit"
+authority = "StateRule"
+title = "South Dakota circuit court, civil"
+description = "Civil actions in the South Dakota circuit courts under SDCL ch. 15-6, as far as the vendored sections state. An appeal hands off to the Supreme Court of South Dakota package (lit/sd)."
+in_force = "2026-09-03"
+known_at = "2026-10-27"
+unknown_before = "2026-09-03"
+jurisdiction = "South Dakota circuit court (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.sdcl-15-6]
+title = "SDCL ch. 15-6 (Rules of Procedure in Circuit Courts), cited sections, as published by the Legislative Research Council"
+url = "https://sdlegislature.gov/Statutes/15-6"
+path = "sources/sd-circuit/sdcl-15-6-sections.txt"
+path_sha256 = "4f91a5d8fe6576011679bdf57c88d9d22be8d01103f8af2a480a6877e5f3dea3"
+as_of = "2026-09-03"
+
+[sources.sdcl-15-26a]
+title = "SDCL ch. 15-26A (Rules of Civil Appellate Procedure), cited sections, as published by the Legislative Research Council"
+url = "https://sdlegislature.gov/Statutes/15-26A"
+path = "sources/sd/sdcl-15-26A-sections.txt"
+path_sha256 = "def44fd3b4be7d28c9e529082bbcfe98f116cd88cc6331cb641d2fe99f679547"
+as_of = "2026-09-03"
+
+[[cite_syntax.rules]]
+prefixes = ["SDCL 15-26A-"]
+heading = "SDCL 15-26A-{}"
+source = "sdcl-15-26a"
+
+[[cite_syntax.rules]]
+prefixes = ["SDCL 15-6-"]
+heading = "SDCL 15-6-{}"
+source = "sdcl-15-6"

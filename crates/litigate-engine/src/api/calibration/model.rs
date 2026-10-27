@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 //! Calibration file format and the catalog it loads from.
 
-use std::path::{Path, PathBuf};
-
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
 
@@ -195,52 +193,6 @@ impl CalibrationCatalog {
         Ok(CalibrationCatalog { origin, sets })
     }
 
-    /// Every `*.json` in `dir`.
-    ///
-    /// # Errors
-    /// Unreadable directory or a malformed/invalid set.
-    pub fn load(dir: &Path) -> Result<CalibrationCatalog> {
-        let read =
-            std::fs::read_dir(dir).map_err(|e| Error::Io(format!("{}: {e}", dir.display())))?;
-        let mut files = vec![];
-        for entry in read.filter_map(std::result::Result::ok) {
-            let p = entry.path();
-            if p.extension().is_some_and(|x| x == "json") {
-                let text = std::fs::read_to_string(&p)
-                    .map_err(|e| Error::Io(format!("{}: {e}", p.display())))?;
-                let name = p
-                    .file_name()
-                    .map(|n| n.to_string_lossy().to_string())
-                    .unwrap_or_default();
-                files.push((name, text));
-            }
-        }
-        CalibrationCatalog::from_files(dir.display().to_string(), files)
-    }
-
-    /// `$LITGRAPH_CALIBRATION` if set, else `fallback` (a catalog's own
-    /// sets, [`crate::api::Catalog::calibration`]).
-    ///
-    /// # Errors
-    /// As [`CalibrationCatalog::load`].
-    pub fn default_source(fallback: &CalibrationCatalog) -> Result<CalibrationCatalog> {
-        CalibrationCatalog::from_override(std::env::var_os("LITGRAPH_CALIBRATION"), fallback)
-    }
-
-    /// The directory `dir` if given, else `fallback`: the body of
-    /// [`CalibrationCatalog::default_source`] with the env var already read,
-    /// so tests can exercise it without mutating the process environment
-    /// (which races with same-process readers under `cargo test`).
-    fn from_override(
-        dir: Option<std::ffi::OsString>,
-        fallback: &CalibrationCatalog,
-    ) -> Result<CalibrationCatalog> {
-        match dir {
-            Some(d) => CalibrationCatalog::load(&PathBuf::from(d)),
-            None => Ok(fallback.clone()),
-        }
-    }
-
     /// Resolve a calibration set by id.
     ///
     /// # Errors
@@ -372,61 +324,12 @@ mod tests {
         assert_eq!(set.entries[0].value, None);
     }
 
-    #[test]
-    fn load_reads_every_json_file_in_a_directory() {
-        let dir = std::env::temp_dir().join(format!(
-            "litgraph-calibration-test-{}-{}",
-            std::process::id(),
-            "load_reads_every_json_file_in_a_directory"
-        ));
-        std::fs::create_dir_all(&dir).unwrap();
-        std::fs::write(
-            dir.join("a.json"),
-            r#"{"id":"a","title":"a","entries":[{
-                "target":"node-attr","ref":"x::y","attr":"z","value":1.0,
-                "source":{"title":"t","url":"https://example.com","vintageStart":"2024-01-01"},"n":1
-            }]}"#,
-        )
-        .unwrap();
-        std::fs::write(dir.join("not-json.txt"), "ignored").unwrap();
-        let c = CalibrationCatalog::load(&dir).unwrap();
-        assert_eq!(c.origin, dir.display().to_string());
-        assert_eq!(c.sets.len(), 1);
-        assert_eq!(c.sets[0].1.id, "a");
-        std::fs::remove_dir_all(&dir).ok();
-    }
-
-    #[test]
-    fn load_of_missing_directory_is_an_io_error() {
-        let err = CalibrationCatalog::load(Path::new("/no/such/directory/at/all")).unwrap_err();
-        assert_eq!(err.code(), "io");
-    }
-
     /// The repository's calibration sets, as `litgraph-packs` builds them
     /// from `lit/`.
     fn shipped() -> CalibrationCatalog {
         crate::api::Catalog::embedded(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)
             .unwrap()
             .calibration
-    }
-
-    /// `default_source` loads the `$LITGRAPH_CALIBRATION` directory when set,
-    /// else gives back the catalog's own sets (exercised through
-    /// `from_override`, so no process-env mutation).
-    #[test]
-    fn default_source_honors_litgraph_calibration_override() {
-        let shipped = shipped();
-        let fallback = CalibrationCatalog::from_override(None, &shipped).unwrap();
-        assert_eq!(fallback.sets.len(), shipped.sets.len());
-        let dir = std::env::temp_dir().join(format!("litgraph-calibration-{}", std::process::id()));
-        std::fs::create_dir_all(&dir).unwrap();
-        let (_, set, _) = &shipped.sets[0];
-        std::fs::write(dir.join("one.json"), serde_json::to_string(set).unwrap()).unwrap();
-        let c = CalibrationCatalog::from_override(Some(dir.clone().into_os_string()), &shipped)
-            .unwrap();
-        std::fs::remove_dir_all(&dir).unwrap();
-        assert_eq!(c.origin, dir.display().to_string());
-        assert_eq!(c.sets.len(), 1);
     }
 
     #[test]

@@ -4,7 +4,7 @@
 use schemars::schema_for;
 use serde_json::{json, Value};
 
-use super::calibration::{CalibrationCatalog, CalibrationSet};
+use super::calibration::CalibrationSet;
 use super::catalog::Catalog;
 use super::{Request, Response, API_VERSION, ENGINE};
 use crate::clock::ClockLibrary;
@@ -62,18 +62,14 @@ fn named(xs: &[(&str, &str)]) -> Vec<Value> {
 }
 
 fn calibration_sets(catalog: &Catalog) -> (String, Vec<Value>) {
-    match CalibrationCatalog::default_source(&catalog.calibration) {
-        Ok(c) => (
-            c.origin.clone(),
-            c.sets
-                .iter()
-                .map(
-                    |(_, s, _)| json!({ "id": s.id, "title": s.title, "entries": s.entries.len() }),
-                )
-                .collect(),
-        ),
-        Err(e) => (format!("error: {e}"), vec![]),
-    }
+    let c = &catalog.calibration;
+    (
+        c.origin.clone(),
+        c.sets
+            .iter()
+            .map(|(_, s, _)| json!({ "id": s.id, "title": s.title, "entries": s.entries.len() }))
+            .collect(),
+    )
 }
 
 /// The manual: ops, scenario fields, metrics with their source expressions,

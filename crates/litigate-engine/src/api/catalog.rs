@@ -57,8 +57,7 @@ pub struct Catalog {
     pub clock: ClockLibrary,
     /// Calibration sets (`calibration/<set>.json` files, built from `lit/`
     /// `calibration` declarations) a scenario opts into
-    /// by id (`scenario.calibration`); `$LITGRAPH_CALIBRATION` overrides
-    /// them per request.
+    /// by id (`scenario.calibration`).
     pub calibration: CalibrationCatalog,
     /// Pack, `links.json`, `clock/` and `calibration/` files that failed to parse and were
     /// skipped, in the order encountered. Empty in the ordinary case.

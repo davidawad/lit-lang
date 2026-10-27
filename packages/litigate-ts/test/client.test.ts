@@ -11,23 +11,9 @@ import {
   type LitigateRun,
   loadNode,
   nodeBindings,
-  type Pack,
-  packFiles,
   type Response,
   unwrap,
 } from "../src/node.js";
-
-const pack: Pack = {
-  schemaVersion: 2,
-  id: "t",
-  title: "t",
-  startNodeId: "a",
-  nodes: [
-    { id: "a", label: "a" },
-    { id: "b", kind: "terminal", label: "b", payoff: 5 },
-  ],
-  edges: [{ from: "a", to: "b", label: "go", actor: "applicant", hours: 0 }],
-};
 
 /** Bindings that record what they were sent and answer with `reply`. */
 function fake(reply: string): LitgraphWasm & { calls: string[][] } {
@@ -39,7 +25,6 @@ function fake(reply: string): LitgraphWasm & { calls: string[][] } {
   return {
     calls,
     handle: answer("handle"),
-    handle_with_packs: answer("handle_with_packs"),
     validate: answer("validate"),
     schema: answer("schema"),
     describe: answer("describe"),
@@ -72,15 +57,13 @@ describe("bindings", () => {
 });
 
 describe("Litgraph over fake bindings", () => {
-  it("sends requests as JSON and routes inline packs to handle_with_packs", () => {
+  it("sends requests as JSON to handle", () => {
     const wasm = fake(JSON.stringify({ ...failed, ok: true, op: "solve", result: 1 }));
     const lg = new Litgraph(wasm);
     expect(unwrap(lg.solve("m", { links: false }))).toBe(1);
-    lg.withPacks({ packs: { "t.json": pack } }).chain();
     lg.op("path", { from: "a", to: "b" }, { extends: "m", params: { rate: 1 } });
     expect(wasm.calls).toStrictEqual([
       ["handle", '{"links":false,"op":{"op":"solve"},"scenario":"m"}'],
-      ["handle_with_packs", '{"op":{"op":"chain"}}', JSON.stringify({ "t.json": pack })],
       ["handle", '{"op":{"from":"a","to":"b","op":"path"},"scenario":{"extends":"m","params":{"rate":1}}}'],
     ]);
   });
@@ -160,21 +143,8 @@ describe("responses", () => {
   });
 });
 
-describe("packFiles", () => {
-  it("names links.json and clock/ fragments as the catalog expects", () => {
-    const files = packFiles({ packs: { "t.json": pack }, links: { links: [] }, clock: { "a.json": { schemaVersion: 1 } } });
-    expect(Object.keys(files)).toStrictEqual(["t.json", "links.json", "clock/a.json"]);
-  });
-});
-
 describe("Litgraph over the real wasm", () => {
   const lg = loadNode();
-
-  it("solves an inline pack", () => {
-    const r = loadNode({ packs: { "t.json": pack } }).solve();
-    expect(r.ok).toBe(true);
-    expect(unwrap(r)).toMatchObject({ value: 5 });
-  });
 
   it("reports failures in the response, as the CLI does", () => {
     const r = lg.runJson("not json");

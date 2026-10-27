@@ -9,8 +9,7 @@
 //! The repository's `lit/` library and `cases/` matters are embedded;
 //! [`handle`], [`validate`] and [`describe`] answer engine requests over
 //! them compiled (once per instance), as the op subcommands compile a
-//! matter at the repository root. [`handle_with_packs`] runs a request against
-//! caller-supplied pack documents. Errors come back inside the response
+//! matter at the repository root. Errors come back inside the response
 //! (`ok: false`, or a nonzero `code`), never thrown.
 //!
 //! ```js
@@ -84,22 +83,6 @@ fn validate_in(catalog: Result<&Catalog, &Failure>, doc_json: &str, kind: Option
 #[must_use]
 pub fn handle(request_json: &str) -> String {
     handle_in(catalog(), request_json)
-}
-
-/// Run a request against caller-supplied packs: `packs_json` is an object
-/// mapping file names to pack documents, e.g. `{"my.json": {...}, "links.json": {...}}`.
-#[wasm_bindgen]
-#[must_use]
-pub fn handle_with_packs(request_json: &str, packs_json: &str) -> String {
-    let files: serde_json::Map<String, Value> = match serde_json::from_str(packs_json) {
-        Ok(Value::Object(m)) => m,
-        Ok(_) => return error("parse", "packs must be an object of {file name: pack}"),
-        Err(e) => return error("parse", &e.to_string()),
-    };
-    let files = files.into_iter().map(|(k, v)| (k, v.to_string()));
-    // `from_files` records a pack that does not parse rather than failing.
-    let catalog = Catalog::from_files("inline".into(), files).map_err(Failure::from);
-    handle_in(catalog.as_ref(), request_json)
 }
 
 /// Validate a document (pack, links, scenario or request) against the

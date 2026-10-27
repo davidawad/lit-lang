@@ -2979,8 +2979,7 @@ the engine ref (`<pack-id>::<local>` or `<base>@<origin>::<local>`), `n`,
 retrieved?}`: `vintageStart` is the vintage's `from` and `vintageEnd` its
 last day (`to` minus one), absent for an open vintage. Numbers lower as
 §8.5. A catalog serves the sets it was built with
-(`litgraph::api::Catalog::calibration`); `$LITGRAPH_CALIBRATION` names a
-directory of sets that replaces them for a request.
+(`litgraph::api::Catalog::calibration`).
 
 ## 9. Diagnostics, JSON, CLI
 

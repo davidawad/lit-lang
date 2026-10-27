@@ -230,15 +230,3 @@ fn litigate_files_override_the_library_and_failures_exit_1() {
         .starts_with("litigate: files must be"));
     assert_eq!(bad(r#"["explain", "L3004"]"#, "{}").code, 1);
 }
-
-#[test]
-fn inline_packs() {
-    let pack = json!({"schemaVersion": 2, "id": "t", "title": "t", "startNodeId": "a",
-        "nodes": [{"id": "a", "label": "a"}, {"id": "b", "kind": "terminal", "label": "b", "payoff": 5}],
-        "edges": [{"from": "a", "to": "b", "label": "go", "actor": "applicant", "hours": 0}]});
-    let packs = json!({ "t.json": pack }).to_string();
-    let r = parse(&handle_with_packs(r#"{"op":{"op":"solve"}}"#, &packs));
-    assert_eq!(r["result"]["value"], json!(5.0));
-    assert_eq!(parse(&handle_with_packs("{}", "[]"))["ok"], json!(false));
-    assert_eq!(parse(&handle_with_packs("{}", "{"))["ok"], json!(false));
-}

@@ -15,7 +15,6 @@ import { loadNode, unwrap } from "@litgraph/litigate-ts/node"; // or "@litgraph/
 const lg = loadNode();                                   // the packs and scenario library compiled from lit/ and cases/
 const r = lg.solve("cofc-1498-patent-case");             // Response
 const sim = lg.op("simulate", { runs: 500, seed: 1 }, { extends: "frcp-civil-case", params: { rate: 900 } });
-const mine = lg.withPacks({ packs: { "my.json": myPack }, links: myLinks }).chain();
 lg.validate(myPack, "pack");                             // Validation
 unwrap(r);                                               // the result, or throws LitgraphError
 ```

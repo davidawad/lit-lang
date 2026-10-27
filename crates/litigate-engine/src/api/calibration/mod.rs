@@ -5,8 +5,7 @@
 //!
 //! A calibration set is data, not code: a `calibration` declaration in
 //! `lit/`, built and embedded exactly like the packs (a catalog's
-//! `calibration`) and overridable at runtime via `$LITGRAPH_CALIBRATION`
-//! (or the CLI's `--calibration-dir`). Every entry
+//! `calibration`). Every entry
 //! records the value (or, for a duration, a distribution), a source URL and
 //! title, the vintage (reporting period) it covers, and the sample size `n`
 //! behind it ([`model`]). [`apply::apply`] mutates a compiled graph the same

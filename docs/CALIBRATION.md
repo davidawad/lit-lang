@@ -15,9 +15,7 @@ instance. The compiler resolves every target and types every value, so a
 typo is an error with a span, never an entry that silently no-ops at
 request time. `litigate build` lowers each declaration to an engine
 calibration set (`packs/calibration/<id>.json`, internal IR the binaries
-embed, SPEC §8.8); `$LITGRAPH_CALIBRATION` (or `litgraph
---calibration-dir`) still names a directory of such sets that replaces the
-built ones for a request. `litigate import` turns a legacy set into the
+embed, SPEC §8.8). `litigate import` turns a legacy set into the
 declaration.
 
 ```lit

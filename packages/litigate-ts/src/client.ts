@@ -3,22 +3,13 @@
 // engine as WebAssembly): the same JSON request/response contract as
 // `litigate engine q`, with requests and responses typed by the generated
 // schemas.
-import type {
-  ApiError,
-  ClockLibrary,
-  LinkFile,
-  Pack,
-  Request,
-  Response,
-  Validation,
-} from "./generated/schemas.js";
+import type { ApiError, Request, Response, Validation } from "./generated/schemas.js";
 import { Litigate, type LitigateWasm } from "./litigate.js";
 import type { ErrorResponse, OkResponse, OpArgs, OpName, OpOf, SchemaKind, ValidateKind } from "./types.js";
 
 /** The functions crates/litigate-wasm exports (wasm-bindgen output). */
 export interface LitgraphWasm extends LitigateWasm {
   handle(request_json: string): string;
-  handle_with_packs(request_json: string, packs_json: string): string;
   validate(doc_json: string, kind?: string | null): string;
   schema(kind: string): string;
   describe(): string;
@@ -26,7 +17,6 @@ export interface LitgraphWasm extends LitigateWasm {
 
 const exported = [
   "handle",
-  "handle_with_packs",
   "validate",
   "schema",
   "describe",
@@ -39,24 +29,6 @@ const exported = [
 export function isLitgraphWasm(module: unknown): module is LitgraphWasm {
   if (typeof module !== "object" || module === null) return false;
   return exported.every((name) => typeof Reflect.get(module, name) === "function");
-}
-
-/** Packs to run against instead of the compiled embedded ones. */
-export interface PackSet {
-  /** File name (`my-pack.json`) to pack. */
-  readonly packs: Readonly<Record<string, Pack>>;
-  /** The cross-pack links (`links.json`). */
-  readonly links?: LinkFile;
-  /** Clock-library fragments by file name; the embedded library when absent. */
-  readonly clock?: Readonly<Record<string, ClockLibrary>>;
-}
-
-/** The `{file name: document}` object `handle_with_packs` takes. */
-export function packFiles(set: PackSet): Record<string, Pack | LinkFile | ClockLibrary> {
-  const files: Record<string, Pack | LinkFile | ClockLibrary> = { ...set.packs };
-  if (set.links !== undefined) files["links.json"] = set.links;
-  for (const [name, fragment] of Object.entries(set.clock ?? {})) files[`clock/${name}`] = fragment;
-  return files;
 }
 
 /** A failed response, thrown by {@link unwrap} and the client's non-`run` helpers. */
@@ -95,33 +67,23 @@ export function unwrap(response: Response): unknown {
 export type RequestOptions = Omit<Request, "scenario" | "op">;
 
 /**
- * The engine over one set of packs: by default the packs and named
- * scenarios the wasm compiles, in-process, from its embedded `lit/` and
- * `cases/` source (once per instance), as `litigate engine` at the
- * repository root.
+ * The engine over the packs and named scenarios the wasm compiles,
+ * in-process, from its embedded `lit/` and `cases/` source (once per
+ * instance), as `litigate engine` at the repository root.
  */
 export class Litgraph {
   readonly #wasm: LitgraphWasm;
-  readonly #packs: string | undefined;
   /** The `litigate` CLI (check, build, run, op subcommands, engine) over in-memory files, through the same bindings. */
   readonly litigate: Litigate;
 
-  constructor(wasm: LitgraphWasm, packs?: PackSet) {
+  constructor(wasm: LitgraphWasm) {
     this.#wasm = wasm;
     this.litigate = new Litigate(wasm);
-    this.#packs = packs === undefined ? undefined : JSON.stringify(packFiles(packs));
-  }
-
-  /** A client over the same bindings that runs against `packs` instead. */
-  withPacks(packs: PackSet): Litgraph {
-    return new Litgraph(this.#wasm, packs);
   }
 
   /** A raw request JSON string in, the response JSON string out, exactly as `litigate engine q`. */
   runJson(request: string): string {
-    return this.#packs === undefined
-      ? this.#wasm.handle(request)
-      : this.#wasm.handle_with_packs(request, this.#packs);
+    return this.#wasm.handle(request);
   }
 
   /** Runs a request. Failures come back as `ok: false`, never thrown. */
@@ -147,12 +109,12 @@ export class Litgraph {
     return this.op("chain", {}, scenario, options);
   }
 
-  /** The machine-readable manual (`litigate engine describe`), always over the compiled embedded sources. */
+  /** The machine-readable manual (`litigate engine describe`). */
   describe(): Response {
     return parse<Response>(this.#wasm.describe());
   }
 
-  /** Validates a document; `kind` forces its kind, else it is detected. Compiled embedded sources only. */
+  /** Validates a document; `kind` forces its kind, else it is detected. */
   validate(document: unknown, kind?: ValidateKind): Validation {
     const out = parse<Validation | Response>(this.#wasm.validate(JSON.stringify(document), kind ?? null));
     if ("ok" in out) throw new LitgraphError(out);

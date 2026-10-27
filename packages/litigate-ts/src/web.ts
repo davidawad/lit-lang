@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Browser entry: initializes the wasm-bindgen `web` build.
 import init, * as wasm from "../wasm/web/litigate_wasm.js";
-import { Litgraph, type PackSet } from "./client.js";
+import { Litgraph } from "./client.js";
 
 export * from "./index.js";
 
@@ -9,7 +9,7 @@ export * from "./index.js";
 export type WasmSource = Parameters<typeof init>[0];
 
 /** Initializes the wasm module (fetching `litigate_wasm_bg.wasm` next to the JS by default) and returns a client. */
-export async function loadWeb(source?: WasmSource, packs?: PackSet): Promise<Litgraph> {
+export async function loadWeb(source?: WasmSource): Promise<Litgraph> {
   await init(source);
-  return new Litgraph(wasm, packs);
+  return new Litgraph(wasm);
 }

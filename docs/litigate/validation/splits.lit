@@ -1,7 +1,7 @@
 module change-validation.splits
 
-import core.frap26.{ frap26 }
 import change-validation.rulings.{ JudgmentEntered, reopen-motion-outer }
+import core.frap26.{ frap26 }
 
 // The circuit split `frap-4a6-notice` of the lg-fq2.3 corpus
 // (sources/change-corpus/rulings/README.md): which notice of entry opens
@@ -30,7 +30,6 @@ import change-validation.rulings.{ JudgmentEntered, reopen-motion-outer }
 // circuit's precedent: language 1 has no effect by which a binding
 // precedent changes a deadline's trigger (VALIDATION.md §4, D3), so the
 // engine computes each reading but does not select it per circuit.
-
 /// The moving party learns of the entry by any means (reading C).
 event NoticeLearned()
 /// The moving party receives a written notice of entry from any source

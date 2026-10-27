@@ -323,7 +323,8 @@ lit-sync: merge-drivers
     out="{{lit_build_dir}}"
     lit=(cargo run -q -p litigate-cli -- --format human)
     for lockfile in lit/*/Lit.lock docs/litigate/examples/change/*/Lit.lock \
-      docs/litigate/examples/timelines/Lit.lock docs/litigate/examples/timelines/*/Lit.lock; do
+      docs/litigate/examples/timelines/Lit.lock docs/litigate/examples/timelines/*/Lit.lock \
+      docs/litigate/validation/Lit.lock; do
       "${lit[@]}" lock "${lockfile%/Lit.lock}" > /dev/null
     done
     "${lit[@]}" lock cases > /dev/null

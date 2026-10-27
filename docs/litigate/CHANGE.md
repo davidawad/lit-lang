@@ -510,8 +510,9 @@ metadata, kept as metadata about instruments, never as edit scripts
   lowers to a chance node of the `worlds` result with a basis-labelled
   prior (§5.1), not yet to a node of the matter's engine scenario, and
   its prior comes from the world file (the matter's `beliefs` cannot name
-  a choice point). Golden tests against the 2009 Committee
-  Note examples and collected rulings are lg-fq2.5.
+  a choice point). The golden tests against the 2009 Committee Note
+  examples and the collected rulings, their agreement rates and every
+  disagreement are in VALIDATION.md (lg-fq2.5).
 - A modification layer that declares no node has no `start` (lg-fq2.7);
   `lit/core`, a base library, still declares its placeholder.
 - The COFC general-order example records its closed day; wiring a

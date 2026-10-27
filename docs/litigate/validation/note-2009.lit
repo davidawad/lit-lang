@@ -22,7 +22,6 @@ import core.time.{ Served, Scheduled, ServiceMethod }
 // 2012 is a Saturday before Labor Day, as September 1, 2007 was; November 1,
 // 2012 a Thursday, as November 1, 2007 was; April 21, 2014 Patriot's Day,
 // a Monday, as April 21, 2008 was.
-
 /// A fixture period counted forward under FRCP 6.
 deadline civ-30-days-after: 30.days after Served() counted_by frcp6 cite "FRCP (2011 ed.) 6(a)(1)" historical
 {
@@ -94,6 +93,62 @@ test "A3: the 14th day after a Monday is a Monday" cite "FRAP (2011 ed.) 26 (200
   expect deadline(app-14-days-after) == 2012-03-19
 }
 
+test "A2 (former rule): a 10-day and a 14-day period from the same day end on the same day" cite "FRAP (2011 ed.) 26 (2009 Committee Note)"
+{
+  given Served(Personal) on 2008-03-03
+  expect deadline(app-10-days-after) == 2008-03-17
+  expect deadline(app-14-days-after) == 2008-03-17
+}
+
+test "A2 (former rule): the 10-day period ends later than the 14-day one" cite "FRAP (2011 ed.) 26 (2009 Committee Note)"
+{
+  given Served(Personal) on 2008-11-04
+  expect deadline(app-10-days-after) == 2008-11-19
+  expect deadline(app-14-days-after) == 2008-11-18
+}
+
+/// An order setting a date certain to act (FRCP 16(b), FRAP 26(b) and
+/// 2(a)): the date the order states, not a period counted from it.
+event DateSet(by: Date)
+
+deadline civ-date-certain: 0.days after DateSet() counted_by frcp6 cite "FRCP (2011 ed.) 6 (2009 Committee Note)" historical
+{
+  forum frcp
+  designated by
+}
+
+deadline app-date-certain: 0.days after DateSet() counted_by frap26 cite "FRAP (2011 ed.) 26 (2009 Committee Note)" historical
+{
+  forum frap
+  designated by
+}
+
+test "C1: a filing due \"no later than November 1, 2007\" is due that day; subdivision (a) does not govern" cite "FRCP (2011 ed.) 6 (2009 Committee Note)"
+{
+  given DateSet(2007-11-01) on 2007-09-04
+  expect deadline(civ-date-certain).nominal == 2007-11-01
+  expect deadline(civ-date-certain) == 2007-11-01
+}
+
+test "A1: a filing due \"no later than November 1, 2007\" is due that day; subdivision (a) does not govern" cite "FRAP (2011 ed.) 26 (2009 Committee Note)"
+{
+  given DateSet(2007-11-01) on 2007-09-04
+  expect deadline(app-date-certain) == 2007-11-01
+}
+
+// VALIDATION.md §5, D4 (a modelling error): the Notes say the computation
+// rules "do not apply when a fixed time to act is set" (Violette v. P.A.
+// Days, Inc., 427 F.3d 1015 (6th Cir. 2005)), so a date certain on a
+// Saturday stands; SPEC §5.3 rolls a designated date under the counting
+// rule, right for 37 C.F.R. § 2.196 and wrong here. Pinned: the test holds
+// what the model does today and fails when the model is fixed.
+test "DISAGREES D4: a date certain on Saturday, September 1, 2012 is rolled to Tuesday; the Notes keep Saturday" cite "FRCP (2011 ed.) 6 (2009 Committee Note)"
+{
+  given DateSet(2012-09-01) on 2012-07-02
+  expect deadline(civ-date-certain).nominal == 2012-09-01
+  expect deadline(civ-date-certain) == 2012-09-04
+}
+
 test "C6 (the Note's dates, the 2005 rule): a 30th day on Saturday, September 1, 2007 is due Tuesday, September 4" cite "FRCP (2011 ed.) 6 (2009 Committee Note)"
 {
   given Served(Personal) on 2007-08-02
@@ -148,10 +203,7 @@ test "A12: the period ends first, then three days are added: Thursday, December 
 /// state" (the example is April 21, 2008). A fixture calendar: lit/core
 /// declares no state's holidays (SPEC §5.3 step 8), so this package states
 /// the one the Note's example needs.
-calendar patriots-day
-{
-  patriots-day: nth(3, monday, 4) effective [1969-01-01, ..)
-}
+calendar patriots-day { patriots-day: nth(3, monday, 4) effective [1969-01-01, ..) }
 
 /// FRCP 6 as amended in 2009 in a district court of a state whose legal
 /// holidays include Patriot's Day: FRCP 6(a)(6)(C) makes a state holiday a
@@ -228,4 +280,79 @@ test "C10: a 14th day before an event on Patriot's Day is due that Monday" cite 
 {
   given Scheduled() on 2014-05-05
   expect deadline(state-14-days-before) == 2014-04-21
+}
+
+/// FRAP 26 as amended in 2009 in a circuit whose state's legal holidays
+/// include Patriot's Day: FRAP 26(a)(6)(C) makes a state holiday a legal
+/// holiday for a period counted forward only. Otherwise the 2009 text
+/// (lit/core's `frap26@2009-12-01`).
+counting frap26-patriots-day effective [2009-12-01, 2016-12-01) cite "FRAP (2011 ed.) 26(a)(6)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 3.days
+    Mail: 3.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: 3.days
+    PrisonMail: 3.days
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  }
+  holidays us-federal-holidays
+  forward_holidays patriots-day cite "FRAP (2011 ed.) 26(a)(6)(C)"
+  forums [frap, cafc]
+  allow_hours
+}
+
+/// The same rule after the 2016 amendment of 26(c): electronic service
+/// adds nothing (lit/core's `frap26@2016-12-01`).
+counting frap26-patriots-day effective [2016-12-01, ..) supersedes frap26-patriots-day@2009-12-01 cite "FRAP 26(a)(6)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    CommercialCarrier: 3.days
+    PrisonMail: 3.days
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  }
+  holidays us-federal-holidays
+  forward_holidays patriots-day cite "FRAP 26(a)(6)(C)"
+  forums [frap, cafc]
+  allow_hours
+}
+
+deadline app-state-14-days-after: 14.days after Served() counted_by frap26-patriots-day cite "FRAP (2011 ed.) 26(a)(1)" historical
+{
+  forum frap
+}
+
+deadline app-state-14-days-before: 14.days before Scheduled() counted_by frap26-patriots-day cite "FRAP (2011 ed.) 26(a)(5)" historical
+{
+  forum frap
+}
+
+test "A9: a 14th day after an event on Patriot's Day is due Tuesday" cite "FRAP (2011 ed.) 26(a)(6)(C)"
+{
+  given Served(Personal) on 2014-04-07
+  expect deadline(app-state-14-days-after).nominal == 2014-04-21
+  expect deadline(app-state-14-days-after) == 2014-04-22
+}
+
+test "A10: a 14th day before an event on Patriot's Day is due that Monday" cite "FRAP (2011 ed.) 26(a)(6)(C)"
+{
+  given Scheduled() on 2014-05-05
+  expect deadline(app-state-14-days-before) == 2014-04-21
 }

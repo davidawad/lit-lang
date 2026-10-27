@@ -841,3 +841,95 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 - Edition: Local Rules of the U.S. District Court for the District of North Dakota, "Effective October 6, 2025"; linked as "Local Rules" (with the "2025 Summary of Revisions") from https://www.ndd.uscourts.gov/court-info/local-rules-and-orders.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 f98554911b9c98b8e88105416993afb9799887105a7c64eb1b53d94cdd9c39c5. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+### `nd-district/ndrcivp.txt` — North Dakota Rules of Civil Procedure
+
+- Source: the official per-rule pages of the North Dakota Court System, one per rule, linked from the rules index https://www.ndcourts.gov/legal-resources/rules/ndrcivp (the court publishes no complete PDF or single-page version). 85 pages, each fetched once on 2026-10-27 at most one request per second with an identifying user agent, no recursion beyond the index (PM ruling; ndcourts.gov has no robots.txt and its Disclaimer, Privacy Statement and Security Policy place no limit on automated access).
+- Edition: each rule as in force on 2026-10-27, with its own "Effective Date" line as shown on its page (latest 2026-07-01).
+- Extracted from each page's content area (rule text, effective date, explanatory note), the repeated rule-list sidebar dropped; one `## N.D.R.Civ.P. <rule>` section per page, in index order, unedited otherwise. Extract sha256 e07933b29743f02b7ab922e9dc3b5c49404c5625abc52b95c308730c159053b4.
+- Page URLs:
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/1
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/2
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/3
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/4
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/5
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/6
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/7
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/8
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/9
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/10
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/11
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/12
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/13
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/14
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/15
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/16
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/17
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/18
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/19
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/20
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/21
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/22
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/23
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/24
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/25
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/26
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/27
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/28
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/29
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/30
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/30-1
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/31
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/32
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/33
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/34
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/35
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/36
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/37
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/38
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/39
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/39-1
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/40
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/41
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/42
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/43
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/44
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/44-1
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/45
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/46
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/47
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/48
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/49
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/50
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/51
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/52
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/53
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/54
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/55
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/56
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/57
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/58
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/59
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/60
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/61
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/62
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/63
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/64
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/65
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/66
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/67
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/68
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/69
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/70
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/71
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/77
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/80
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/81
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/82
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/83
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/84
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/85
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/86
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/Table-A
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/Table-B
+  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/Appendix

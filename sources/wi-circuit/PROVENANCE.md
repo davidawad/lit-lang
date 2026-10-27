@@ -5,3 +5,10 @@
 - Edition: Updated 2023-24 Wis. Stats., published and certified under s. 35.18, October 1, 2026 (the chapter page states "2023-24 Wisconsin Statutes updated through 2025 Wis. Act 247 and through all Supreme Court Orders ... filed before and in effect on October 1, 2026"); fetched by curl.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 d9af550ae9ca88654da35ebd5d7a7f8eb31f9f37888ca6f04c54ac55cc2167f5. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+### `wi-circuit/wis-stat-ch802.txt` — Wis. Stat. ch. 802 Civil Procedure: Pleadings, Motions and Pretrial Practice
+
+- Source: https://docs.legis.wisconsin.gov/statutes/statutes/802.pdf (official site; 15 pages, sha256 31aef4a68691f116d03d34b36db231d2c819e3bb28506522291914ec4bd0da63).
+- Edition: Updated 2023-24 Wis. Stats., published and certified under s. 35.18, October 1, 2026 (the chapter page states "2023-24 Wisconsin Statutes updated through 2025 Wis. Act 247 and through all Supreme Court Orders ... filed before and in effect on October 1, 2026"); fetched by curl.
+- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 4270ad0101b519b52279245536b695e79d6b7dba51639b1110a5687b431946d4. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

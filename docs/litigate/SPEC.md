@@ -3617,7 +3617,8 @@ examples `crates/litigate-cli/tests/change_examples.rs`.
    the target's delegation (L3004).
 
 Still open: a `.case` that runs under a world, and enumeration across
-worlds (lg-fq2.4); the 2009 Committee Note golden tests (lg-fq2.5).
+worlds (lg-fq2.4). The 2009 Committee Note golden tests, the rulings and
+their agreement rates are docs/litigate/VALIDATION.md (lg-fq2.5).
 §13.12 records lg-fq2.7.
 
 ### 13.12 Status: recharacterize, invalidate, layers without a start (lg-fq2.7)

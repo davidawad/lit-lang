@@ -45,7 +45,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | Colorado | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/colorado/state-appellate`, `outlines/tenth-circuit/colorado/state-civil` |
 | Connecticut | state | outline | 0 | 0 | 0 | 0 | `outlines/second-circuit/connecticut/state-appellate`, `outlines/second-circuit/connecticut/state-civil` |
 | Delaware | state | outline | 0 | 0 | 0 | 0 | `outlines/third-circuit/delaware/state-appellate`, `outlines/third-circuit/delaware/state-civil` |
-| Florida | state | promoted | 0 | 0 | 0 | 0 | `lit/fl-state-civil` |
+| Florida | state | promoted | 0 | 0 | 0 | 0 | `lit/fl-state-appellate`, `lit/fl-state-civil` |
 | Georgia | state | outline | 0 | 0 | 0 | 0 | `outlines/eleventh-circuit/georgia/state-appellate`, `outlines/eleventh-circuit/georgia/state-civil` |
 | Hawaii | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/hawaii/state-appellate`, `outlines/ninth-circuit/hawaii/state-civil` |
 | Idaho | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/idaho/state-appellate`, `outlines/ninth-circuit/idaho/state-civil` |

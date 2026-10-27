@@ -43,9 +43,7 @@ decision final-judgment-entered: "Final Judgment Entered" by applicant cite "FRC
     authority cite "FRCP 54(d)(2)(C)"
     event FeeMotionSupplemented()
     effort 0.hours
-    within fee-supplement-period {
-      note "Due on the date the court's order sets."
-    }
+    within fee-supplement-period { note "Due on the date the court's order sets." }
     note "Hours: 0. The full motion supplements the protective one, whose filing carries the motion's hours: one motion, counted once (lit/frcp/fees.lit)."
     requires [fee-motion-filed]
     sets [fee-motion-supplemented]
@@ -119,9 +117,7 @@ decision post-trial-motion-window: "Post-Trial Motion Window" by applicant cite 
     authority cite "FRCP 54(d)(2)(C)"
     event FeeMotionSupplemented()
     effort 0.hours
-    within fee-supplement-period {
-      note "Due on the date the court's order sets."
-    }
+    within fee-supplement-period { note "Due on the date the court's order sets." }
     note "Hours: 0. The full motion supplements the protective one, whose filing carries the motion's hours: one motion, counted once (lit/frcp/fees.lit)."
     requires [fee-motion-filed]
     sets [fee-motion-supplemented]

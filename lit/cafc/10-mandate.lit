@@ -40,7 +40,10 @@ state costs-bill-filed: "Bill of Costs Filed and Taxed" by office cite "FRAP 39;
 /// lets the court extend it.
 rule duty bill-of-costs cite "FRAP 39(e)(3)(A)"
 {
-  deadline costs-period: 14.days after Entered(PanelJudgment) counted_by frap26 effective [2025-12-01, ..) known_at 2025-04-23 delegable { to CaseOrder, op set } cite "FRAP 39(e)(3)(A); Fed. Cir. R. 39; Fed. Cir. R. 26(b)(1)"
+  deadline costs-period: 14.days after Entered(PanelJudgment) counted_by frap26 effective [2025-12-01, ..) known_at 2025-04-23 delegable {
+    to CaseOrder
+    op set
+  } cite "FRAP 39(e)(3)(A); Fed. Cir. R. 39; Fed. Cir. R. 26(b)(1)"
 }
 
 test "the bill of costs is due 14 days after entry of judgment" cite "FRAP 39(e)(3)(A)"

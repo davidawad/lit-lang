@@ -20,7 +20,10 @@ event MotionDisposed()
 /// case order.
 rule duty government-answer cite "RCFC 12(a)(1)(A)"
 {
-  deadline answer-period: 60.days after ComplaintServed() counted_by rcfc6 effective [2002-05-01, ..) delegable { to CaseOrder, op set } cite "RCFC 12(a)(1)(A)"
+  deadline answer-period: 60.days after ComplaintServed() counted_by rcfc6 effective [2002-05-01, ..) delegable {
+    to CaseOrder
+    op set
+  } cite "RCFC 12(a)(1)(A)"
   {
     extendable true
     extension_authority "RCFC 6(b) stipulation or court order"
@@ -35,11 +38,17 @@ rule duty answer-after-motion cite "RCFC 12(a)(4)(A)"
 {
   /// As revised and reissued May 1, 2002: ten days; the 2010 Amendment note
   /// records the change from 10 to 14.
-  deadline answer-after-ruling: 10.days after MotionDisposed() counted_by rcfc6 effective [2002-05-01, 2010-01-11) delegable { to CaseOrder, op set } cite "RCFC 12 (2010 Amendment note)" historical
+  deadline answer-after-ruling: 10.days after MotionDisposed() counted_by rcfc6 effective [2002-05-01, 2010-01-11) delegable {
+    to CaseOrder
+    op set
+  } cite "RCFC 12 (2010 Amendment note)" historical
 
   /// Amended January 11, 2010 to 14 days, conforming to the FRCP 12
   /// amendments effective December 1, 2009.
-  deadline answer-after-ruling: 14.days after MotionDisposed() counted_by rcfc6 effective [2010-01-11, ..) supersedes answer-after-ruling@2002-05-01 delegable { to CaseOrder, op set } cite "RCFC 12(a)(4)(A)"
+  deadline answer-after-ruling: 14.days after MotionDisposed() counted_by rcfc6 effective [2010-01-11, ..) supersedes answer-after-ruling@2002-05-01 delegable {
+    to CaseOrder
+    op set
+  } cite "RCFC 12(a)(4)(A)"
 }
 
 test "the United States answers 60 days after service" cite "RCFC 12(a)(1)(A)"

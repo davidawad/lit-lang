@@ -259,7 +259,10 @@ rule duty itc-notice-of-appeal cite "19 U.S.C. § 1337(c)"
 /// Court of Federal Claims' own rule, is not applied to it.
 rule duty cofc-notice-of-appeal cite "28 U.S.C. § 2522"
 {
-  deadline cofc-noa-period: 60.days after Entered(CofcJudgment) counted_by frap26 effective [2002-12-01, 2009-12-01) known_at 2002-04-29 delegable { to CaseOrder, op extend } cite "28 U.S.C. § 2522; FRAP (2008 ed.) 4(a)(1)(B); FRAP (2008 ed.) 4(a)(5)(A)"
+  deadline cofc-noa-period: 60.days after Entered(CofcJudgment) counted_by frap26 effective [2002-12-01, 2009-12-01) known_at 2002-04-29 delegable {
+    to CaseOrder
+    op extend
+  } cite "28 U.S.C. § 2522; FRAP (2008 ed.) 4(a)(1)(B); FRAP (2008 ed.) 4(a)(5)(A)"
   {
     forum frap
     extend {
@@ -272,9 +275,13 @@ rule duty cofc-notice-of-appeal cite "28 U.S.C. § 2522"
     }
     extend { never cite "FRAP (2008 ed.) 26(b)(1)" }
   }
-  deadline cofc-noa-period: 60.days after Entered(CofcJudgment) counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes cofc-noa-period@2002-12-01 delegable { to CaseOrder, op extend } cite "28 U.S.C. § 2522; FRAP 4(a)(1)(B); FRAP 4(a)(5)(A)"
+  deadline cofc-noa-period: 60.days after Entered(CofcJudgment) counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes cofc-noa-period@2002-12-01 delegable {
+    to CaseOrder
+    op extend
+  } cite "28 U.S.C. § 2522; FRAP 4(a)(1)(B); FRAP 4(a)(5)(A)"
   {
-    forum frap cite "28 U.S.C. § 2522" quote "within the time and in the manner prescribed for appeals to United States courts of appeals from the United States district courts"
+    forum frap cite "28 U.S.C. § 2522"
+      quote "within the time and in the manner prescribed for appeals to United States courts of appeals from the United States district courts"
     extend {
       by court
       discretion GoodCauseOrExcusableNeglect

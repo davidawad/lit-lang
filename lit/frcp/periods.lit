@@ -150,7 +150,10 @@ event CrossAppealPeriodExtended(until: Date) extends cross-appeal-period to unti
 /// "the 120 days originally set by Rule 4(m)" (2016 package,
 /// sources/change-corpus/rules/congress-packages). FRCP 6(b)(1) read the
 /// same then (FRCP (2008 ed.) 6(b)(1)).
-deadline service-period: 120.days after ComplaintFiled() counted_by frcp6 effective [2007-12-01, 2015-12-01) known_at 2015-04-29 delegable { to CaseOrder, op set } cite ?("Rule 4(m) before the December 1, 2015 amendment: 120 days (text not vendored; the change is recorded in the 2016 Supreme Court package)") {
+deadline service-period: 120.days after ComplaintFiled() counted_by frcp6 effective [2007-12-01, 2015-12-01) known_at 2015-04-29 delegable {
+  to CaseOrder
+  op set
+} cite ?("Rule 4(m) before the December 1, 2015 amendment: 120 days (text not vendored; the change is recorded in the 2016 Supreme Court package)") {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(ServicePeriod) }
   extend { by court, discretion ExcusableNeglect, after_expiry, on ExtensionMoved(ServicePeriod) }
@@ -161,7 +164,10 @@ deadline service-period: 120.days after ComplaintFiled() counted_by frcp6 effect
 /// service be made within a specified time". The 90 days date from the
 /// amendment effective December 1, 2015; the 2016 and 2017 amendments only
 /// clarify which foreign service it excludes.
-deadline service-period: 90.days after ComplaintFiled() counted_by frcp6 effective [2015-12-01, ..) supersedes service-period@2007-12-01 delegable { to CaseOrder, op set } cite "FRCP 4(m)"
+deadline service-period: 90.days after ComplaintFiled() counted_by frcp6 effective [2015-12-01, ..) supersedes service-period@2007-12-01 delegable {
+  to CaseOrder
+  op set
+} cite "FRCP 4(m)"
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(ServicePeriod) }
@@ -190,7 +196,10 @@ deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp
 /// before pleading", so it runs on the same clock. Extendable under FRCP
 /// 6(b)(1). In force from the 2009 text, which replaced 20 days with 21
 /// (U.S. Reports vol. 556); the 2024 amendment left the period unchanged.
-deadline answer-period: 21.days after ProcessServed() counted_by frcp6 effective [2009-12-01, ..) delegable { to CaseOrder, op set } cite "FRCP 12(a)(1)(A)(i)"
+deadline answer-period: 21.days after ProcessServed() counted_by frcp6 effective [2009-12-01, ..) delegable {
+  to CaseOrder
+  op set
+} cite "FRCP 12(a)(1)(A)(i)"
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(AnswerPeriod) }
@@ -212,7 +221,10 @@ deadline remand-motion-period: 30.days after NoticeOfRemovalFiled() counted_by f
 /// answers 21 days after receiving the initial pleading (the longest of
 /// three periods; the pack models this one). Extendable under FRCP 6(b)(1).
 /// Rule 81 last amended eff. December 1, 2009.
-deadline removed-answer-period: 21.days after InitialPleadingReceived() counted_by frcp6 effective [2009-12-01, ..) delegable { to CaseOrder, op set } cite "FRCP 81(c)(2)(A)"
+deadline removed-answer-period: 21.days after InitialPleadingReceived() counted_by frcp6 effective [2009-12-01, ..) delegable {
+  to CaseOrder
+  op set
+} cite "FRCP 81(c)(2)(A)"
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(RemovedAnswerPeriod) }
@@ -228,7 +240,10 @@ deadline removed-answer-period: 21.days after InitialPleadingReceived() counted_
 /// responsive pleading is due 14 days after notice that the court denied
 /// the Rule 12 motion. In force from the 2009 text, which states the same
 /// 14 days (U.S. Reports vol. 556); the 2024 amendment left it unchanged.
-deadline denial-answer-period: 14.days after Rule12MotionDenied() counted_by frcp6 effective [2009-12-01, ..) delegable { to CaseOrder, op set } cite "FRCP 12(a)(4)(A)"
+deadline denial-answer-period: 14.days after Rule12MotionDenied() counted_by frcp6 effective [2009-12-01, ..) delegable {
+  to CaseOrder
+  op set
+} cite "FRCP 12(a)(4)(A)"
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(DenialAnswerPeriod) }
@@ -264,7 +279,10 @@ deadline amendment-as-of-course-period: 21.days after ResponsivePleadingServed()
 /// after service of the amendment, whichever is later; the pack models the
 /// 14 days. In force from the 2009 amendment, the last before 2023's
 /// (vendored history); 2023's amended only Rule 15(a)(1) (2022 package).
-deadline amended-response-period: 14.days after AmendedPleadingServed() counted_by frcp6 effective [2009-12-01, ..) delegable { to CaseOrder, op set } cite "FRCP 15(a)(3)"
+deadline amended-response-period: 14.days after AmendedPleadingServed() counted_by frcp6 effective [2009-12-01, ..) delegable {
+  to CaseOrder
+  op set
+} cite "FRCP 15(a)(3)"
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(AmendedResponsePeriod) }
@@ -279,7 +297,10 @@ deadline amended-response-period: 14.days after AmendedPleadingServed() counted_
 /// Rule 26(a)(1)(C): initial disclosures are due 14 days after the Rule
 /// 26(f) conference "unless a different time is set by stipulation or court
 /// order". Rule 26 last amended eff. December 1, 2015.
-deadline initial-disclosure-period: 14.days after Rule26fConferenceHeld() counted_by frcp6 effective [2015-12-01, ..) delegable { to CaseOrder, op set } cite "FRCP 26(a)(1)(C)"
+deadline initial-disclosure-period: 14.days after Rule26fConferenceHeld() counted_by frcp6 effective [2015-12-01, ..) delegable {
+  to CaseOrder
+  op set
+} cite "FRCP 26(a)(1)(C)"
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(InitialDisclosurePeriod) }
@@ -294,7 +315,10 @@ deadline initial-disclosure-period: 14.days after Rule26fConferenceHeld() counte
 /// Rule 38(b)(1): a jury demand is due 14 days after the last pleading
 /// directed to the issue is served. Extendable under FRCP 6(b)(1). Rule 38
 /// last amended eff. December 1, 2009.
-deadline jury-demand-period: 14.days after LastPleadingServed() counted_by frcp6 effective [2009-12-01, ..) delegable { to CaseOrder, op set } cite "FRCP 38(b)(1)"
+deadline jury-demand-period: 14.days after LastPleadingServed() counted_by frcp6 effective [2009-12-01, ..) delegable {
+  to CaseOrder
+  op set
+} cite "FRCP 38(b)(1)"
 {
   extend { by court, discretion GoodCause }
   extend { by court, discretion GoodCause, on ExtensionMoved(JuryDemandPeriod) }

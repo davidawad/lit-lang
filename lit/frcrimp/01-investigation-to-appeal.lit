@@ -55,7 +55,8 @@ state investigation: "Pre-Charge Investigation" by applicant effective [2024-12-
 }
 
 /// imported
-state grand-jury-convened: "Grand Jury Convened" by office cite "Fed. R. Crim. P. 6(a), (e)" effective [2023-01-05, ..) known_at 2023-01-05 {
+state grand-jury-convened: "Grand Jury Convened" by office cite "Fed. R. Crim. P. 6(a), (e)"
+  effective [2023-01-05, ..) known_at 2023-01-05 {
   group investigation-group
   note "Grand jury proceedings are sealed under Rule 6(e); the target has no right to have counsel present in the jury room. Probable cause is the standard, not proof beyond a reasonable doubt, so hearsay and comparatively weak evidence suffice."
   edge-grand-jury-convened-grand-jury-vote "Grand jury votes" -> grand-jury-vote {
@@ -77,7 +78,10 @@ chance grand-jury-vote: "Grand Jury Votes" by office discretion effective [2023-
 }
 
 /// imported
-state indictment-returned: "Indictment Returned (True Bill)" by office delegable { to CaseOrder, op set } cite ?("Fed. R. Crim. P. 6(f), 7; U.S. Const. amend. V") effective [2023-01-05, ..) known_at 2023-01-05 {
+state indictment-returned: "Indictment Returned (True Bill)" by office delegable {
+  to CaseOrder
+  op set
+} cite ?("Fed. R. Crim. P. 6(f), 7; U.S. Const. amend. V") effective [2023-01-05, ..) known_at 2023-01-05 {
   group investigation-group
   note "The Fifth Amendment requires grand jury indictment for federal felonies unless waived. The indictment must be returned in open court by the foreperson and starts the Speedy Trial Act clock together with arraignment (18 U.S.C. § 3161(c)(1))."
   edge-indictment-returned-arrest "Execute arrest warrant on indictment" -> arrest {
@@ -118,7 +122,10 @@ state complaint-filed: "Criminal Complaint Filed" by office effective [2011-12-0
 }
 
 /// imported
-state arrest: "Arrest / Warrant or Summons Executed" by office delegable { to CaseOrder, op set } cite ?("Fed. R. Crim. P. 4, 5(a); 18 U.S.C. § 3501(c)") effective [2024-12-01, ..) {
+state arrest: "Arrest / Warrant or Summons Executed" by office delegable {
+  to CaseOrder
+  op set
+} cite ?("Fed. R. Crim. P. 4, 5(a); 18 U.S.C. § 3501(c)") effective [2024-12-01, ..) {
   group charging-group
   note "Defendant must be brought before a magistrate 'without unnecessary delay' — the McNabb-Mallory rule, now codified at 18 U.S.C. § 3501(c). Violation is not itself unconstitutional but triggers suppression of statements as the remedy; there is no bright-line federal day count."
   edge-arrest-initial-appearance "Bring defendant before magistrate" -> initial-appearance {
@@ -158,7 +165,10 @@ state initial-appearance: "Initial Appearance" by examiner effective [2020-10-21
 }
 
 /// imported
-chance preliminary-hearing: "Preliminary Hearing" by examiner discretion delegable { to CaseOrder, op set } effective [2009-12-01, ..) known_at 2009-03-26 cite "Fed. R. Crim. P. 5.1"
+chance preliminary-hearing: "Preliminary Hearing" by examiner discretion delegable {
+  to CaseOrder
+  op set
+} effective [2009-12-01, ..) known_at 2009-03-26 cite "Fed. R. Crim. P. 5.1"
 {
   group charging-group
   note "Only available if not yet indicted; the magistrate applies a probable-cause standard and hearsay is permitted. Automatically moot if the grand jury indicts before the hearing concludes (Rule 5.1(f)) — the government can bypass an unfavorable PC ruling by indicting first."
@@ -174,7 +184,10 @@ chance preliminary-hearing: "Preliminary Hearing" by examiner discretion delegab
 }
 
 /// imported
-state bound-over-grand-jury: "Bound Over to Grand Jury" by office delegable { to CaseOrder, op set } effective [2009-12-01, ..) known_at 2009-03-26 cite "Fed. R. Crim. P. 5.1(f)"
+state bound-over-grand-jury: "Bound Over to Grand Jury" by office delegable {
+  to CaseOrder
+  op set
+} effective [2009-12-01, ..) known_at 2009-03-26 cite "Fed. R. Crim. P. 5.1(f)"
 {
   group charging-group
   note "The magistrate's probable-cause finding binds only the magistrate's own determination — the grand jury retains independent power to decline indictment, reduce charges, or indict on different counts entirely."
@@ -212,7 +225,8 @@ chance detention-hearing: "Detention Hearing (Bail Determination)" by examiner d
 }
 
 /// imported
-state released-on-conditions: "Released on Bail/Conditions" by office cite "18 U.S.C. § 3142(b), (c)" effective [2024-12-01, ..) {
+state released-on-conditions: "Released on Bail/Conditions" by office cite "18 U.S.C. § 3142(b), (c)"
+  effective [2024-12-01, ..) {
   group arraignment-group
   note "Conditions can include personal recognizance, bail, travel restrictions, curfew, GPS monitoring, house arrest, or a third-party custodian. Violating conditions triggers revocation proceedings under § 3142(g) and may result in detention."
   edge-released-on-conditions-arraignment "Proceed to arraignment" -> arraignment {
@@ -221,7 +235,8 @@ state released-on-conditions: "Released on Bail/Conditions" by office cite "18 U
 }
 
 /// imported
-state detained-pretrial: "Detained Pending Trial" by office cite "18 U.S.C. § 3142(e), (f); 18 U.S.C. § 3161(c)(1)" effective [2024-12-01, ..) {
+state detained-pretrial: "Detained Pending Trial" by office cite "18 U.S.C. § 3142(e), (f); 18 U.S.C. § 3161(c)(1)"
+  effective [2024-12-01, ..) {
   group arraignment-group
   note "Detained defendants receive priority under the Speedy Trial Act's 70-day trial clock. Defendant may move at any time to reopen detention based on newly discovered evidence; the court must hold a hearing within three days absent waiver."
   edge-detained-pretrial-arraignment "Proceed to arraignment" -> arraignment {
@@ -257,7 +272,8 @@ state arraignment: "Arraignment" by applicant effective [2024-12-01, ..) cite "F
 }
 
 /// imported
-state not-guilty-plea: "Not Guilty Plea Entered" by examiner cite "Fed. R. Crim. P. 11(a), (b)" effective [2013-12-01, ..) known_at 2013-04-16 {
+state not-guilty-plea: "Not Guilty Plea Entered" by examiner cite "Fed. R. Crim. P. 11(a), (b)"
+  effective [2013-12-01, ..) known_at 2013-04-16 {
   group arraignment-group
   note "Default plea when no agreement yet exists. Does not preclude simultaneous or later plea negotiations — the case proceeds into pretrial motions and discovery while plea talks may run in parallel."
   edge-not-guilty-plea-rule12-deadline-set "Set pretrial motions schedule" -> rule12-deadline-set {
@@ -269,7 +285,10 @@ state not-guilty-plea: "Not Guilty Plea Entered" by examiner cite "Fed. R. Crim.
 }
 
 /// imported
-state rule12-deadline-set: "Rule 12(c) Motions Deadline Set" by office delegable { to CaseOrder, op set } effective [2014-12-01, ..) known_at 2014-04-25 cite "Fed. R. Crim. P. 12(c)(1)"
+state rule12-deadline-set: "Rule 12(c) Motions Deadline Set" by office delegable {
+  to CaseOrder
+  op set
+} effective [2014-12-01, ..) known_at 2014-04-25 cite "Fed. R. Crim. P. 12(c)(1)"
 {
   group pretrial-motions-group
   note "Court sets the Rule 12(b)(3) motion deadline at arraignment or as soon thereafter as practicable; if no deadline is set, all pretrial motions are due at trial's start. This deadline triggers the Rule 12(c)(3) waiver trap below."
@@ -491,7 +510,8 @@ chance plea-negotiations: "Plea Negotiations" effective [2013-12-01, ..) known_a
 }
 
 /// imported
-state plea-agreement-reached: "Plea Agreement Reached" by office cite "Fed. R. Crim. P. 11(c)(1), (c)(2)" effective [2013-12-01, ..) known_at 2013-04-16 {
+state plea-agreement-reached: "Plea Agreement Reached" by office cite "Fed. R. Crim. P. 11(c)(1), (c)(2)"
+  effective [2013-12-01, ..) known_at 2013-04-16 {
   group plea-group
   note "Must be disclosed in open court at the plea hearing unless the court allows in-camera disclosure for good cause. A Rule 11(c)(1)(C) binding-sentence agreement gives the defendant a statutory right to withdraw the plea if the court rejects the agreed disposition (Rule 11(c)(5))."
   edge-plea-agreement-reached-change-of-plea-hearing "Schedule change-of-plea hearing" -> change-of-plea-hearing {
@@ -528,7 +548,8 @@ state plea-accepted: "Guilty Plea Accepted" by office effective [2013-12-01, ..)
 }
 
 /// imported
-state plea-rejected-by-court: "Plea Rejected by Court" by applicant cite "Fed. R. Crim. P. 11(c)(3)(A), (c)(5)" effective [2013-12-01, ..) known_at 2013-04-16 {
+state plea-rejected-by-court: "Plea Rejected by Court" by applicant cite "Fed. R. Crim. P. 11(c)(3)(A), (c)(5)"
+  effective [2013-12-01, ..) known_at 2013-04-16 {
   group plea-group
   note "Court may reject a (B)-type non-binding recommendation or a (C)-type binding agreement it deems unwarranted or contrary to law. Rejecting a binding agreement under (c)(5) entitles the defendant to withdraw the plea; rejecting a non-binding recommendation does not."
   edge-plea-rejected-by-court-proceed-to-trial "Withdraw guilty plea" -> proceed-to-trial {
@@ -540,7 +561,10 @@ state plea-rejected-by-court: "Plea Rejected by Court" by applicant cite "Fed. R
 }
 
 /// imported
-state proceed-to-trial: "No Plea Agreement — Proceed to Trial" by office delegable { to CaseOrder, op set } effective [2013-12-01, ..) known_at 2013-04-16 cite "Fed. R. Crim. P. 11"
+state proceed-to-trial: "No Plea Agreement — Proceed to Trial" by office delegable {
+  to CaseOrder
+  op set
+} effective [2013-12-01, ..) known_at 2013-04-16 cite "Fed. R. Crim. P. 11"
 {
   group plea-group
   note "Negotiations failed or the defendant declined to plead; the Speedy Trial Act clock (18 U.S.C. § 3161, typically 70 days from indictment/arraignment) continues to run toward trial preparation, including pretrial motions, discovery, and jury selection."
@@ -566,7 +590,8 @@ state jury-selection: "Jury Selection (Voir Dire)" by examiner effective [2002-1
 }
 
 /// imported
-state trial-in-progress: "Trial in Progress" by applicant cite "Fed. R. Crim. P. 26, 29-30" effective [2009-12-01, ..) known_at 2009-03-26 {
+state trial-in-progress: "Trial in Progress" by applicant cite "Fed. R. Crim. P. 26, 29-30"
+  effective [2009-12-01, ..) known_at 2009-03-26 {
   group trial-group
   note "Government presents its case-in-chief first and must prove every element beyond a reasonable doubt; the defense has no constitutional obligation to present a case at all under the Fifth Amendment."
   edge-trial-in-progress-rule29-motion "Move for judgment of acquittal" -> rule29-motion {
@@ -591,7 +616,8 @@ chance rule29-motion: "Rule 29 Motion for Judgment of Acquittal" by examiner dis
 }
 
 /// imported
-terminal rule29-granted: "Judgment of Acquittal — Rule 29 Granted" outcome [win, acquittal] cite "Fed. R. Crim. P. 29(a), (c)" effective [2009-12-01, ..) known_at 2009-03-26 {
+terminal rule29-granted: "Judgment of Acquittal — Rule 29 Granted" outcome [win, acquittal] cite "Fed. R. Crim. P. 29(a), (c)"
+  effective [2009-12-01, ..) known_at 2009-03-26 {
   group trial-group
   note "Government's evidence was legally insufficient. Double jeopardy bars a government appeal of a pre-verdict Rule 29(a) grant; a post-verdict Rule 29(c) grant CAN be appealed because a guilty verdict already existed before the court set it aside. PLACEHOLDER PAYOFF: $1,000,000, override per matter."
   valence good
@@ -655,7 +681,10 @@ terminal acquittal-verdict: "Acquittal by Jury Verdict" outcome [win, acquittal]
 }
 
 /// imported
-state guilty-verdict: "Guilty Verdict" by applicant delegable { to CaseOrder, op set } effective [2002-12-01, ..) known_at 2002-04-29 cite "Fed. R. Crim. P. 31(a)"
+state guilty-verdict: "Guilty Verdict" by applicant delegable {
+  to CaseOrder
+  op set
+} effective [2002-12-01, ..) known_at 2002-04-29 cite "Fed. R. Crim. P. 31(a)"
 {
   group verdict-sentencing-group
   note "Conviction on the merits; the defendant may renew the Rule 29 acquittal motion or move for a new trial before sentencing — the two motions carry distinct deadlines from one another."
@@ -696,7 +725,10 @@ chance rule33-motion: "Rule 33 Motion for New Trial" by examiner discretion effe
 }
 
 /// imported
-state presentence-report: "Presentence Investigation Report (PSR)" by office delegable { to CaseOrder, op set } effective [2024-12-01, ..) cite "Fed. R. Crim. P. 32; 18 U.S.C. § 3552"
+state presentence-report: "Presentence Investigation Report (PSR)" by office delegable {
+  to CaseOrder
+  op set
+} effective [2024-12-01, ..) cite "Fed. R. Crim. P. 32; 18 U.S.C. § 3552"
 {
   group verdict-sentencing-group
   note "Probation must prepare and disclose the PSR at least 35 days before sentencing (waivable). Both parties may object to factual findings and Guidelines calculations before the hearing."
@@ -740,7 +772,10 @@ chance departure-variance: "Departure/Variance Considered" by examiner discretio
 }
 
 /// imported
-terminal judgment-entered: "Judgment and Commitment Entered" outcome [loss, conviction] delegable { to CaseOrder, op set } effective [2011-12-01, ..) known_at 2011-04-26 cite "Fed. R. Crim. P. 32(k)"
+terminal judgment-entered: "Judgment and Commitment Entered" outcome [loss, conviction] delegable {
+  to CaseOrder
+  op set
+} effective [2011-12-01, ..) known_at 2011-04-26 cite "Fed. R. Crim. P. 32(k)"
 {
   group verdict-sentencing-group
   note "Written judgment is the appealable final disposition; it simultaneously starts the Rule 35(a) 14-day correction clock and the FRAP 4(b) 14-day appeal clock. Modeled as terminal because it is reached identically whether the conviction came by plea or by jury verdict, even though Rule 35/appeal paths still branch from it. PLACEHOLDER PAYOFF: $50,000, override per matter. A conviction (by plea or verdict); modeled as terminal here even though Rule 35/appeal paths still branch from it in the pack's own edges (see this node's note)."
@@ -766,7 +801,8 @@ terminal judgment-entered: "Judgment and Commitment Entered" outcome [loss, conv
 }
 
 /// imported
-chance rule35-motion: "Rule 35 Motion to Correct/Reduce Sentence" by examiner discretion cite "Fed. R. Crim. P. 35(a), (b)" effective [2009-12-01, ..) known_at 2009-03-26 {
+chance rule35-motion: "Rule 35 Motion to Correct/Reduce Sentence" by examiner discretion cite "Fed. R. Crim. P. 35(a), (b)"
+  effective [2009-12-01, ..) known_at 2009-03-26 {
   group appeal-group
   note "Rule 35(a) lets the court correct clear error (arithmetic, technical, procedural) within 14 days of sentencing — not a substantive do-over. Rule 35(b) lets the government move to reduce a sentence for post-sentencing substantial assistance within one year, with no effect on this 14-day window."
   edge-rule35-motion-judgment-entered "Correct or reduce sentence" -> judgment-entered p 0.1 {
@@ -778,7 +814,10 @@ chance rule35-motion: "Rule 35 Motion to Correct/Reduce Sentence" by examiner di
 }
 
 /// imported
-decision notice-of-appeal-window: "Notice of Appeal Window" by applicant delegable { to CaseOrder, op set } cite ?("Fed. R. App. P. 4(b)(1), (b)(4)") effective [2024-12-01, ..) {
+decision notice-of-appeal-window: "Notice of Appeal Window" by applicant delegable {
+  to CaseOrder
+  op set
+} cite ?("Fed. R. App. P. 4(b)(1), (b)(4)") effective [2024-12-01, ..) {
   group appeal-group
   note "Defendant has 14 days from judgment entry to file. The district court may extend up to 30 additional days for excusable neglect or good cause — but only if the extension motion is itself made within the original 14-day window. Post-Bowles, this is jurisdictional with no equitable exceptions."
   edge-notice-of-appeal-window-notice-of-appeal-filed "File notice of appeal" -> notice-of-appeal-filed {
@@ -815,7 +854,8 @@ decision notice-of-appeal-window: "Notice of Appeal Window" by applicant delegab
 }
 
 /// imported
-state notice-of-appeal-filed: "Notice of Appeal Filed" cite "Fed. R. App. P. 3(a), 4(b)" effective [2024-12-01, ..) {
+state notice-of-appeal-filed: "Notice of Appeal Filed" cite "Fed. R. App. P. 3(a), 4(b)"
+  effective [2024-12-01, ..) {
   group appeal-group
   note "A timely notice of appeal meeting FRAP 3's form requirements and FRAP 4(b)'s deadline is the jurisdictional invocation of appellate review. Notice must be filed in the district court; premature or delayed filings do not cure jurisdictional defects."
   edge-notice-of-appeal-filed-appellate-briefing "Complete appellate briefing" -> appellate-briefing {

@@ -28,7 +28,10 @@ import itc.events.{
 /// notice of investigation or by the administrative law judge".
 rule duty respond-to-complaint cite "cfr210.13.a"
 {
-  deadline response-period: 20.days after ServedPaper(ComplaintAndNotice) counted_by itc210 effective [2025-02-03, ..) delegable { to CaseOrder, op set } cite "cfr210.13.a"
+  deadline response-period: 20.days after ServedPaper(ComplaintAndNotice) counted_by itc210 effective [2025-02-03, ..) delegable {
+    to CaseOrder
+    op set
+  } cite "cfr210.13.a"
   {
     extendable true
     extension_authority "ALJ good-cause order (Rule 210.6(a))"
@@ -40,7 +43,10 @@ rule duty respond-to-complaint cite "cfr210.13.a"
 /// specified by the administrative law judge".
 rule duty answer-interrogatories cite "cfr210.29.b.2"
 {
-  deadline interrogatory-answer-period: 10.days after ServedPaper(Interrogatories) counted_by itc210 effective [2013-05-20, ..) delegable { to CaseOrder, op set } cite "cfr210.29.b.2"
+  deadline interrogatory-answer-period: 10.days after ServedPaper(Interrogatories) counted_by itc210 effective [2013-05-20, ..) delegable {
+    to CaseOrder
+    op set
+  } cite "cfr210.29.b.2"
   {
     extendable true
     extension_authority "ALJ-specified period"
@@ -52,7 +58,10 @@ rule duty answer-interrogatories cite "cfr210.29.b.2"
 /// administrative law judge".
 rule duty respond-to-production-requests cite "cfr210.30.b.2"
 {
-  deadline production-response-period: 10.days after ServedPaper(ProductionRequests) counted_by itc210 effective [2025-02-03, ..) delegable { to CaseOrder, op set } cite "cfr210.30.b.2"
+  deadline production-response-period: 10.days after ServedPaper(ProductionRequests) counted_by itc210 effective [2025-02-03, ..) delegable {
+    to CaseOrder
+    op set
+  } cite "cfr210.30.b.2"
   {
     extendable true
     extension_authority "ALJ-specified period"
@@ -64,7 +73,10 @@ rule duty respond-to-production-requests cite "cfr210.30.b.2"
 /// the administrative law judge".
 rule duty answer-admission-requests cite "cfr210.31.b"
 {
-  deadline admission-answer-period: 10.days after ServedPaper(AdmissionRequests) counted_by itc210 effective [2025-02-03, ..) delegable { to CaseOrder, op set } cite "cfr210.31.b"
+  deadline admission-answer-period: 10.days after ServedPaper(AdmissionRequests) counted_by itc210 effective [2025-02-03, ..) delegable {
+    to CaseOrder
+    op set
+  } cite "cfr210.31.b"
   {
     extendable true
     extension_authority "ALJ-specified period"
@@ -76,7 +88,10 @@ rule duty answer-admission-requests cite "cfr210.31.b"
 /// administrative law judge may allow".
 rule duty move-to-quash cite "cfr210.32.d.2"
 {
-  deadline quash-period: 10.days after SubpoenaReceived() counted_by itc210 effective [2025-02-03, ..) delegable { to CaseOrder, op set } cite "cfr210.32.d.2"
+  deadline quash-period: 10.days after SubpoenaReceived() counted_by itc210 effective [2025-02-03, ..) delegable {
+    to CaseOrder
+    op set
+  } cite "cfr210.32.d.2"
   {
     extendable true
     extension_authority "ALJ-extended period"
@@ -88,7 +103,10 @@ rule duty move-to-quash cite "cfr210.32.d.2"
 /// states none).
 rule duty log-privilege cite "cfr210.27.e.1"
 {
-  deadline privilege-log-period: 10.days after PrivilegeClaimed() counted_by itc210 effective [2025-02-03, ..) delegable { to CaseOrder, op set } cite "cfr210.27.e.1"
+  deadline privilege-log-period: 10.days after PrivilegeClaimed() counted_by itc210 effective [2025-02-03, ..) delegable {
+    to CaseOrder
+    op set
+  } cite "cfr210.27.e.1"
   {
     extendable true
     extension_authority "good cause"
@@ -104,7 +122,10 @@ rule duty log-privilege cite "cfr210.27.e.1"
 /// administrative law judge's ground rules (§ 210.5(e)(1)) set in practice.
 rule duty file-public-version cite "cfr210.5.f"
 {
-  deadline public-version-period: 30.days after ConfidentialVersionFiled() counted_by itc210 effective [2013-05-20, ..) delegable { to CaseOrder, op set } cite "cfr210.5.f"
+  deadline public-version-period: 30.days after ConfidentialVersionFiled() counted_by itc210 effective [2013-05-20, ..) delegable {
+    to CaseOrder
+    op set
+  } cite "cfr210.5.f"
   {
     extendable true
     extension_authority "good cause"
@@ -116,7 +137,10 @@ rule duty file-public-version cite "cfr210.5.f"
 /// and § 201.14(b)(2).
 rule duty oppose-summary-determination cite "cfr210.18.b"
 {
-  deadline summary-determination-opposition-period: 10.days after ServedPaper(SummaryDeterminationMotion) counted_by itc210 effective [2025-02-03, ..) delegable { to CaseOrder, op set } cite "cfr210.18.b"
+  deadline summary-determination-opposition-period: 10.days after ServedPaper(SummaryDeterminationMotion) counted_by itc210 effective [2025-02-03, ..) delegable {
+    to CaseOrder
+    op set
+  } cite "cfr210.18.b"
   {
     extendable true
     extension_authority "ALJ discretion"
@@ -129,7 +153,10 @@ rule duty oppose-summary-determination cite "cfr210.18.b"
 /// of other initial determinations are not separate edges in the pack.
 rule duty petition-for-review cite "cfr210.43.a.1"
 {
-  deadline petition-for-review-period: 12.days after ServedPaper(InitialDetermination) counted_by itc210 effective [2025-02-03, ..) delegable { to CaseOrder, op set } cite "cfr210.43.a.1"
+  deadline petition-for-review-period: 12.days after ServedPaper(InitialDetermination) counted_by itc210 effective [2025-02-03, ..) delegable {
+    to CaseOrder
+    op set
+  } cite "cfr210.43.a.1"
   {
     extendable true
     extension_authority "good cause"
@@ -141,7 +168,10 @@ rule duty petition-for-review cite "cfr210.43.a.1"
 /// § 210.42(a)(1). Delegation: § 210.6(a) and § 201.14(b)(2).
 rule duty respond-to-petition cite "cfr210.43.c"
 {
-  deadline petition-response-period: 8.days after ServedPaper(PetitionForReview) counted_by itc210 effective [2025-02-03, ..) delegable { to CaseOrder, op set } cite "cfr210.43.c"
+  deadline petition-response-period: 8.days after ServedPaper(PetitionForReview) counted_by itc210 effective [2025-02-03, ..) delegable {
+    to CaseOrder
+    op set
+  } cite "cfr210.43.c"
   {
     extendable true
     extension_authority "good cause"

@@ -785,3 +785,10 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 - Edition: Joint Local Rules of the U.S. District Courts for the Northern and Southern Districts of Iowa, dated December 7, 2020 (N.D. AO 20-AO-0013-P; S.D. AO 20-AO-0023-P); linked from https://www.iasd.uscourts.gov/local-rules; N.D. Iowa site lists only proposed amendments (comment period to Nov. 13, 2026), none in force.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 751abfbc43e8034da2046e95cc6c47e63649c20c1356a74816454496449d515d. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+### `ia-district/iowa-rules-civil-procedure.txt` — Iowa Rules of Civil Procedure (Ch. 1)
+
+- Source: https://www.legis.iowa.gov/docs/ACO/CR/LINC/09-30-2026.chapter.1.pdf (official site; 130 pages, sha256 ae6ecf5e9a558a4f80cd0e63a5bc3229fb7681ecd5946a4ca8fbe1773f7c56b6).
+- Edition: Iowa Court Rules, Chapter 1 Rules of Civil Procedure (running header July 2023), in the 09-30-2026 compilation linked from https://www.legis.iowa.gov/law/courtRules/courtRulesListings.
+- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 0ac112e11fe546759c5fe480c17f12e079b47f57da08a823aad6f154ebec15fc. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

@@ -120,6 +120,15 @@ impl<'a> Clocks<'a> {
         }
     }
 
+    /// The loaded package whose pack id is `pack`.
+    #[must_use]
+    pub fn package(&self, pack: &str) -> Option<&'a hir::Package> {
+        self.packages
+            .iter()
+            .copied()
+            .find(|p| p.manifest.pack_id == pack)
+    }
+
     /// The law the packages named `roots` see among those loaded: they,
     /// their dependencies and `core` (SPEC §5.5), so a downstream
     /// package's claims never change what an upstream one computes.

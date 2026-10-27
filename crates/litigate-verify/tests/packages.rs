@@ -74,6 +74,34 @@ fn a_dependent_package_counts_with_an_imported_rule() {
     );
 }
 
+#[test]
+fn a_dependent_package_tests_an_imported_deadline() {
+    // `local` declares no period of its own (a circuit package over the
+    // national rules): its test asserts `demo`'s, written in `demo`'s view
+    // and given in `local`'s (`demo::Served`, `demo::Document::complaint`).
+    let local = "module local.main\n\
+        import demo.main.{answer-period, Served}\n\
+        start l\n\
+        state l: \"L\" { _ \"Go\" -> t }\n\
+        terminal t: \"T\" { payoff 0.usd }\n\
+        test \"the imported period by mail\" cite \"FRCP 6(d)\"\n{\n  \
+        given Served(complaint, Mail) on 2025-03-03\n  \
+        expect deadline(answer-period) == 2025-03-27\n}\n";
+    let c = verify(
+        &[
+            pkg("demo", "FederalRule", &[], BASE),
+            pkg("local", "LocalRule", &["demo"], local),
+        ],
+        Profile::Strict,
+    );
+    assert_eq!(
+        status(&c, Obligation::TestsPass),
+        Some(ObligationStatus::Passed),
+        "{:#?}",
+        c.verification
+    );
+}
+
 const URL_ONLY: &str = "[sources.local]\ntitle = \"Local Rules\"\n\
                         url = \"https://example.org/local-rules\"\n\
                         cite_prefixes = [\"LR\"]\nsection_heading = \"Local Rule {n}\"\n";

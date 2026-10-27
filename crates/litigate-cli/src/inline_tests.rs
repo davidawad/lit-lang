@@ -96,12 +96,17 @@ struct Cx<'a> {
 
 impl Cx<'_> {
     fn deadline(&mut self, name: &str, nominal: bool) -> Result<V, String> {
-        let any = hirx::deadlines(self.pkg, name)
+        // A deadline the package imports (`pack::id`) is its declarer's.
+        let owner = name
+            .split_once("::")
+            .and_then(|(pack, _)| self.clocks.package(pack))
+            .unwrap_or(self.pkg);
+        let any = hirx::deadlines(owner, name)
             .next()
             .ok_or_else(|| format!("`{name}` is not a deadline of this package"))?;
         // A chained period starts with the event starting the one it follows.
-        let trigger = clock::root_trigger(self.world, &self.pkg.manifest.pack_id, any)
-            .unwrap_or(&any.trigger);
+        let trigger =
+            clock::root_trigger(self.world, &owner.manifest.pack_id, any).unwrap_or(&any.trigger);
         let matching = self
             .givens
             .iter()
@@ -122,21 +127,25 @@ impl Cx<'_> {
         })?;
         let events = [MatterEvent::on(date, event)];
         let known_at = Some(self.known_at);
-        let governing = clock::deadline(self.world, self.pkg, name, &events, 0, known_at)?;
+        let governing = clock::deadline(self.world, owner, name, &events, 0, known_at)?;
         let due = clock::due_of(self.clocks, self.world, governing, &events, 0, known_at)?;
         self.steps.extend(due.computed.steps.iter().cloned());
         if nominal {
             return Ok(V::Date(due.computed.nominal_date));
         }
-        self.extended(governing.1, name, at, due.computed.due_date)
+        let key = Key {
+            pack: owner.manifest.pack_id.clone(),
+            name: hirx::local(name).to_owned(),
+        };
+        self.extended(governing.1, (&key, name), at, due.computed.due_date)
     }
 
-    /// The due date of `d` (`name`) triggered by `given` `at`, counted
+    /// The due date of `d` (`name`, keyed `key`) triggered by `given` `at`, counted
     /// `counted`, after the later `given`s extending it ([`grant::extensions`]).
     fn extended(
         &mut self,
         d: &hir::Deadline,
-        name: &str,
+        (key, name): (&Key, &str),
         at: usize,
         counted: String,
     ) -> Result<V, String> {
@@ -151,14 +160,10 @@ impl Cx<'_> {
             })
             .collect();
         let trigger = order.iter().position(|&i| i == at).unwrap_or_default();
-        let key = Key {
-            pack: self.pkg.manifest.pack_id.clone(),
-            name: hirx::local(name).to_owned(),
-        };
         let world = self.world;
         let pkg = self.pkg;
         let applied = grant::extensions(d, name, &history, trigger, &counted, |action| {
-            grant::extends(world, pkg, &key, action)
+            grant::extends(world, pkg, key, action)
         })?;
         let Some((_, last)) = applied.last() else {
             return Ok(V::Date(counted));

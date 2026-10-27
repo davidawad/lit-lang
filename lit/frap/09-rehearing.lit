@@ -10,8 +10,7 @@ import frap.{ rehearing-group }
 /// after the judgment (or an amended decision) is entered, "unless the
 /// time is shortened or extended by order or local rule", so the period
 /// delegates to `LocalRule` and `CaseOrder`. The 45-day period for a civil
-/// case with a United States party is not on the pack's edges and is not
-/// modeled.
+/// case with a United States party is `rehearing-us-party-period` below.
 ///
 /// Before December 1, 2024 the period was FRAP 40(a)(1), and FRAP 35(c)
 /// gave a petition for rehearing en banc the same time; the pack's edges
@@ -22,10 +21,26 @@ deadline rehearing-period: 14.days after EnteredOnAppeal(Judgment) counted_by fr
 /// 35 into Rule 40 and moved the period to FRAP 40(d)(1), unchanged.
 deadline rehearing-period: 14.days after EnteredOnAppeal(Judgment) counted_by frap26 effective [2024-12-01, ..) known_at 2024-04-02 supersedes rehearing-period@2009-12-01 delegable { to [LocalRule, CaseOrder], op set } cite "FRAP 40(d)(1)"
 
+/// FRAP 40(d)(1): in a civil case any party may petition within 45 days
+/// after entry of judgment or of an amended decision if a party is the
+/// United States, its agency, or a United States officer or employee in the
+/// capacities the rule lists, "unless an order shortens or extends the
+/// time": the period delegates to `CaseOrder` only, the 14-day period's
+/// "or local rule" being absent. It is not on the pack's edges. Only the
+/// text in force since the December 1, 2024 amendment is vendored, so no
+/// earlier version is declared.
+deadline rehearing-us-party-period: 45.days after EnteredOnAppeal(Judgment) counted_by frap26 effective [2024-12-01, ..) known_at 2024-04-02 delegable { to CaseOrder, op set } cite "FRAP 40(d)(1)"
+
 test "a rehearing petition is due 14 days after entry of judgment" cite "FRAP 40(d)(1)"
 {
   given EnteredOnAppeal(Judgment) on 2025-12-17
   expect deadline(rehearing-period) == 2025-12-31
+}
+
+test "a United States party has 45 days after entry of judgment" cite "FRAP 40(d)(1)"
+{
+  given EnteredOnAppeal(Judgment) on 2026-06-01
+  expect deadline(rehearing-us-party-period) == 2026-07-16
 }
 
 test "a 14th day on Christmas rolls to the 26th" cite "FRAP 26(a)(6)(A)"

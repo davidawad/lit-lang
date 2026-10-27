@@ -4,9 +4,9 @@ version = "0.1.0"
 language = 1
 pack_id = "first-circuit-court-of-appeals"
 forum = "ca1"
-authority = "FederalRule"
+authority = "LocalRule"
 title = "United States Court of Appeals for the First Circuit"
-description = "A sourced outline of a First Circuit civil appeal, using the current circuit rulebook and verified federal appellate deadlines."
+description = "A sourced outline of a First Circuit civil appeal, its circuit rules over the FRAP periods of lit/frap."
 in_force = "2026-06-01"
 known_at = "2026-06-01"
 unknown_before = "2026-06-01"
@@ -14,6 +14,7 @@ counting = "frap26"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+frap-appellate-procedure = { version = "^0.1.0", path = "../frap" }
 
 [package.roles]
 applicant = "self"

@@ -32,10 +32,30 @@ dependencies = []
 name = "first-circuit-court-of-appeals"
 version = "0.1.0"
 language = 1
-source = "sha256:5b2c4153ad755efd3fa72e83d88265fe46f3cd5e18d46fa8a1343a4deee1129a"
-semantic = "sha256:77adfc506366897c15a501f0e8c6f1f4ee1c66364576c11f0f1ffbb54386a0c8"
+source = "sha256:88c878ae4604711fab7bacc3744c19362186ebaa1cba68b3bd47da25427b50e7"
+semantic = "sha256:40d898cda531e3450dfc182081aa36e23b6a759bd94c75fbe80ae0ac6a5d6d8b"
 texts = [
     "ca1-rulebook sources/ca1-first-circuit-rulebook-2026-06-01.txt sha256:9e99b6ae551dc12ddf322afe896c98d7fc4c651c49a209f0cf45f313403b477a",
+]
+dependencies = [
+    "core 1.0.0",
+    "frap-appellate-procedure 0.1.0",
+]
+
+[[package]]
+name = "frap-appellate-procedure"
+version = "0.1.0"
+language = 1
+source = "sha256:f0c9ef96d946806b207049244b0d9c9b89518d95b56d9a89d8c373b569e6359e"
+semantic = "sha256:fa0d597850b830b5ed5c4b45e11f88cdf0f5de88700aa4a44bb3aa344fe546c3"
+texts = [
+    "frap-rules sources/frap.txt sha256:87d71a1f443c5c084cc9f11932a66436ab300f83146ee2c5ce2654a8a4824479",
+    "frap4-2008 sources/usc-28-app-frap4-history.txt sha256:c246fa771851ef008653521977a993531d589881d85354e9c9f949f9c1b1a284",
+    "frcp-rules-cite sources/frcp.txt sha256:cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44",
+    "usc28-1254 sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
+    "usc28-1291 sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
+    "usc28-1292 sources/usc-cfr-prosecution-fragments.txt sha256:5bbba22c27cd4f0957c799a8a1f48b6ba9d0670be03a9fec796a3c8ec394c1b3",
+    "usc28-2107 sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
 ]
 dependencies = [
     "core 1.0.0",

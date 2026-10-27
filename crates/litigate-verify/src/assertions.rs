@@ -187,11 +187,20 @@ fn due(
         .ok_or_else(|| format!("`{target}` is not a deadline"))?;
     let (owner, _) = cx.owner(target);
     let root = root_trigger(cx, clocks, owner, first).unwrap_or(&first.trigger);
+    // A deadline another package declares (one this package imports) is
+    // written in that package's view: each `given` is respelled into it.
+    let (from, to) = (&cx.package.manifest.pack_id, &owner.manifest.pack_id);
+    let givens: Vec<Expr> = test
+        .givens
+        .iter()
+        .map(|(g, _)| respelled(from, to, g))
+        .collect();
     let matching = test
         .givens
         .iter()
+        .zip(&givens)
         .enumerate()
-        .filter_map(|(i, (g, d))| Some((i, g, arguments(root, g)?, d.as_str())));
+        .filter_map(|(i, ((_, d), g))| Some((i, g, arguments(root, g)?, d.as_str())));
     let order = |(i, _, _, a): &Given<'_>, (j, _, _, b): &Given<'_>| a.cmp(b).then(i.cmp(j));
     // The trigger policy picks the event that runs the period (SPEC §5.3).
     let picked = if first.policy.is_first() {
@@ -227,6 +236,48 @@ fn due(
             grant::extends(&clocks.world, cx.package, &key, action)
         })?;
     Ok(applied.pop().map_or(adjusted, |(_, new)| new))
+}
+
+/// Event `e`, written in package `from`'s view, respelled for package
+/// `to`'s: a bare name is `from`'s and gains its package, and `to`'s own
+/// names lose theirs, as `to`'s declarations spell them.
+fn respelled(from: &str, to: &str, e: &Expr) -> Expr {
+    let mut e = e.clone();
+    if from != to {
+        respell_in(from, to, &mut e);
+    }
+    e
+}
+
+fn respell_in(from: &str, to: &str, e: &mut Expr) {
+    // A name is `Name` in its own package and `pack::Name` elsewhere; a
+    // variant is `Enum::variant` and `pack::Enum::variant`.
+    let respell = |name: &mut String, own: usize| {
+        let qualified = if name.matches("::").count() > own {
+            name.clone()
+        } else {
+            format!("{from}::{name}")
+        };
+        *name = match qualified.split_once("::") {
+            Some((pack, local)) if pack == to => local.to_owned(),
+            _ => qualified,
+        };
+    };
+    if let hir::Type::Named(n) = &mut e.ty {
+        respell(n, 0);
+    }
+    match &mut e.kind {
+        ExprKind::Call { callee, args } => {
+            respell(callee, 0);
+            for a in args {
+                respell_in(from, to, a);
+            }
+        }
+        ExprKind::Literal {
+            value: Value::Variant(v),
+        } => respell(v, 1),
+        _ => {}
+    }
 }
 
 /// How many chained periods a chain may follow before it is a cycle.

@@ -17,5 +17,5 @@
 - Source: https://www.la-fcca.org/clerks_office/UniformRulesoCtsofAppeal (redirects to the civiclive CDN file "Uniform Rules of La. Courts of Appeal - with amendments effective on July 1, 2026.pdf") (official site; 32 pages, sha256 2a99c1755c07ab9e380ecb51e0e97207dfb8454b4ab75d17b2c57f1e83601b63).
 - Edition: "As amended, with amendments effective as of July 1, 2026" (as stated on the document; page https://www.la-fcca.org/clerks_office/UniformRulesoCtsofAppeal).
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 8ce01cf1ca72910ca029f8b490ab9521527b4fad0f5e78c2a14b940acabb1b87. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+- Extract sha256 8ce01cf1ca72910ca029f8b490ab9521527b4fad0f5e78c2a14b940acabb1b87. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `la-appellate/original/la-uniform-rules-courts-of-appeal.pdf` as served (sha256 2a99c1755c07ab9e380ecb51e0e97207dfb8454b4ab75d17b2c57f1e83601b63); extraction sha256 8ce01cf1ca72910ca029f8b490ab9521527b4fad0f5e78c2a14b940acabb1b87.

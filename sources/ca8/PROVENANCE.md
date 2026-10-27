@@ -9,7 +9,7 @@
 - Source: https://www.ca8.uscourts.gov/sites/ca8/files/Eighth%20Circuit%20Local%20Rules%206.17.24.pdf (official site; 39 pages, sha256 26cfe150aa5813ffdc7f5c55ef5a2604c02ecc76526d5ee21669806b937a41ac).
 - Edition: dated June 17, 2024 on its first page; listed as "Local Rules of the Eighth Circuit, June 2024" on https://www.ca8.uscourts.gov/rules-procedures.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 462e6deddebce2f420f7628c80ce8c617971bdecbfebb4be817ca99772d375b8. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+- Extract sha256 462e6deddebce2f420f7628c80ce8c617971bdecbfebb4be817ca99772d375b8. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `ca8/original/ca8-local-rules.pdf` as served (sha256 26cfe150aa5813ffdc7f5c55ef5a2604c02ecc76526d5ee21669806b937a41ac); extraction sha256 462e6deddebce2f420f7628c80ce8c617971bdecbfebb4be817ca99772d375b8.
 
 ### `ca8/ca8-iops.txt` — Eighth Circuit Internal Operating Procedures
@@ -17,5 +17,5 @@
 - Source: https://ecf.ca8.uscourts.gov/newrules/coa/iops.pdf (official site; 42 pages, sha256 41097628db55700c9774760cb4a7334e427d086d69c429a1f4ec3edd1c9e0ff4).
 - Edition: title page: "Internal Operating Procedures, Revised February 26, 2024"; the IOPs linked from https://www.ca8.uscourts.gov/rules-procedures.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 358fd9ee631e7ec9423c8ff94b2f7f2c6ce82d1a48e2a567afa2c487883b89b8. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+- Extract sha256 358fd9ee631e7ec9423c8ff94b2f7f2c6ce82d1a48e2a567afa2c487883b89b8. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `ca8/original/ca8-iops.pdf` as served (sha256 41097628db55700c9774760cb4a7334e427d086d69c429a1f4ec3edd1c9e0ff4); extraction sha256 358fd9ee631e7ec9423c8ff94b2f7f2c6ce82d1a48e2a567afa2c487883b89b8.

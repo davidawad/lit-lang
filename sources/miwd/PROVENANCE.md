@@ -5,7 +5,7 @@
 - Edition: W.D. Mich. Local Rules of Practice and Procedure, PDF dated Aug 13, 2026; page https://www.miwd.uscourts.gov/court-info/local-rules-and-orders states amendments adopted by Administrative Order 26-RL-067 (Aug 13, 2026) are effective October 12, 2026.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Fetched via curl (single document, first request succeeded, no block encountered).
-- Extract sha256 e109f9bd7511adf428460db58bd09c120e5a68558bc2fdde4f604169ed3796f5. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+- Extract sha256 e109f9bd7511adf428460db58bd09c120e5a68558bc2fdde4f604169ed3796f5. Raw extract, not yet sectioned into `## <ref>` form.
 
 - Fetch method: first fetched with curl and a desktop browser User-Agent before the no-browser-identity rule (PM 2026-10-27); re-fetched on 2026-10-27 with plain curl (default User-Agent, no browser headers): byte-identical (same sha256).
 

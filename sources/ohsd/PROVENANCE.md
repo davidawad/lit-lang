@@ -5,7 +5,7 @@
 - Edition: S.D. Ohio Local Civil and Criminal Rules, "October 21, 2024" as stated on the document; https://www.ohsd.uscourts.gov/local-rules lists "Local Rules as amended October 21, 2024" as the newest edition.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Fetched via curl (single document, first request succeeded, no block encountered).
-- Extract sha256 c585d5c074b5f98c949dcd687b8df331c46ab62984c6041bf1bc6c936e379118. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+- Extract sha256 c585d5c074b5f98c949dcd687b8df331c46ab62984c6041bf1bc6c936e379118. Raw extract, not yet sectioned into `## <ref>` form.
 
 - Fetch method: first fetched with curl and a desktop browser User-Agent before the no-browser-identity rule (PM 2026-10-27); re-fetched on 2026-10-27 with plain curl (default User-Agent, no browser headers): byte-identical (same sha256).
 - Original: `ohsd/original/ohsd-local-rules.pdf` as served (sha256 9e68d137b17d93a176c7d9d0834ad77affa2faa5621dd775590c23aeb5cc0bbf); extraction sha256 c585d5c074b5f98c949dcd687b8df331c46ab62984c6041bf1bc6c936e379118.

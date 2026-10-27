@@ -1,0 +1,177 @@
+module ca1.appeal
+
+import core.frap26.{ frap26 }
+
+/// Civil notice-of-appeal periods are statutory under 28 U.S.C. § 2107.
+/// Bowles confirms the jurisdictional limit and rejects an equitable extension
+/// beyond the statutory period. The 60-day period applies when the United
+/// States or a covered federal party is a party; non-civil appeals are omitted.
+enum BelowEntry { FinalJudgment }
+event EnteredBelow(entry: BelowEntry)
+
+enum AppellateEntry { Judgment }
+event EnteredOnAppeal(entry: AppellateEntry)
+enum RehearingEnd { TimeExpired, PetitionDenied }
+event RehearingClosed(how: RehearingEnd)
+event RecordFiled()
+event AppellantBriefServed()
+event AppelleeBriefServed()
+
+rule duty appeal-notice-deadlines effective [2026-06-01, ..) known_at 2026-06-01 cite "FRAP 4(a)(1)(A)"
+{
+  deadline notice-civil-period: 30.days after EnteredBelow(FinalJudgment) counted_by frap26 cite "FRAP 4(a)(1)(A)"
+  {
+    forum frap
+  }
+  deadline notice-us-party-period: 60.days after EnteredBelow(FinalJudgment) counted_by frap26 cite "FRAP 4(a)(1)(B)"
+  {
+    forum frap
+  }
+}
+
+rule duty briefing-deadlines effective [2026-06-01, ..) known_at 2026-06-01 cite "FRAP 31(a)(1)"
+{
+  deadline appellant-brief-period: 40.days after RecordFiled() counted_by frap26 cite "FRAP 31(a)(1)"
+  {
+    forum frap
+  }
+  deadline appellee-brief-period: 30.days after AppellantBriefServed() counted_by frap26 cite "FRAP 31(a)(1)"
+  {
+    forum frap
+  }
+  deadline reply-brief-period: 21.days after AppelleeBriefServed() counted_by frap26 cite "FRAP 31(a)(1)"
+  {
+    forum frap
+  }
+}
+
+rule duty rehearing-deadlines effective [2026-06-01, ..) known_at 2026-06-01 cite "FRAP 40(d)(1)"
+{
+  deadline rehearing-period: 14.days after EnteredOnAppeal(Judgment) counted_by frap26 cite "FRAP 40(d)(1)"
+  {
+    forum frap
+  }
+  deadline rehearing-us-party-period: 45.days after EnteredOnAppeal(Judgment) counted_by frap26 cite "FRAP 40(d)(1)"
+  {
+    forum frap
+  }
+}
+
+rule duty mandate-deadline effective [2026-06-01, ..) known_at 2026-06-01 cite "FRAP 41(b)(1)"
+{
+  deadline mandate-period: 7.days after RehearingClosed(TimeExpired) counted_by frap26 cite "FRAP 41(b)(1)"
+  {
+    forum frap
+  }
+  deadline mandate-denial-period: 7.days after RehearingClosed(PetitionDenied) counted_by frap26 cite "FRAP 41(b)(1)"
+  {
+    forum frap
+  }
+}
+
+test "appellant brief is due 40 days after record filing" cite "FRAP 31(a)(1)"
+{
+  given RecordFiled() on 2026-06-01
+  expect deadline(appellant-brief-period) == 2026-07-13
+}
+
+test "appellee brief is due 30 days after appellant brief service" cite "FRAP 31(a)(1)"
+{
+  given AppellantBriefServed() on 2026-06-01
+  expect deadline(appellee-brief-period) == 2026-07-01
+}
+
+test "reply brief is due 21 days after appellee brief service" cite "FRAP 31(a)(1)"
+{
+  given AppelleeBriefServed() on 2026-06-01
+  expect deadline(reply-brief-period) == 2026-06-22
+}
+
+test "mandate issues 7 days after a rehearing petition is denied" cite "FRAP 41(b)(1)"
+{
+  given RehearingClosed(PetitionDenied) on 2026-06-01
+  expect deadline(mandate-denial-period) == 2026-06-08
+}
+
+test "civil notice of appeal is due 30 days after judgment" cite "FRAP 4(a)(1)(A)"
+{
+  given EnteredBelow(FinalJudgment) on 2026-06-01
+  expect deadline(notice-civil-period) == 2026-07-01
+}
+
+test "notice of appeal is due 60 days when the United States is a party" cite "FRAP 4(a)(1)(B)"
+{
+  given EnteredBelow(FinalJudgment) on 2026-06-01
+  expect deadline(notice-us-party-period) == 2026-07-31
+}
+
+test "rehearing petition is due 14 days after judgment" cite "FRAP 40(d)(1)"
+{
+  given EnteredOnAppeal(Judgment) on 2026-06-01
+  expect deadline(rehearing-period) == 2026-06-15
+}
+
+test "rehearing petition is due 45 days when the United States is a party" cite "FRAP 40(d)(1)"
+{
+  given EnteredOnAppeal(Judgment) on 2026-06-01
+  expect deadline(rehearing-us-party-period) == 2026-07-16
+}
+
+test "mandate issues 7 days after rehearing time expires" cite "FRAP 41(b)(1)"
+{
+  given RehearingClosed(TimeExpired) on 2026-06-01
+  expect deadline(mandate-period) == 2026-06-08
+}
+
+start notice-filed
+state notice-filed: "Notice of Appeal Filed" by applicant cite "FRAP 3(a)(1)"
+{
+  note "The filing deadline is governed by FRAP 4(a)(1). The 30-day and 60-day periods are the values expressly stated in that rule. Bowles v. Russell, 551 U.S. 205 (2007), holds that a late civil notice beyond the statutory time limit deprives the court of appeals of jurisdiction."
+  edge-notice-filed-record "Notice filed; record and docketing follow" -> record-transmitted {
+    authority cite "FRAP 10, 11, 12"
+    cost 605.usd
+    note "The court's rulebook fee schedule states a $600 docketing fee plus the $5 statutory notice fee, total $605 (CA1 Fee Schedule 1)."
+  }
+}
+state record-transmitted: "Record Transmitted and Docketed" by office cite "FRAP 10, 11, 12"
+{
+  edge-record-briefing "Briefing schedule set" -> briefing {
+    authority cite "FRAP 31(a)(1); 1st Cir. R. 31.0"
+    note "The briefing schedule and applicable due date are not modeled here."
+  }
+}
+state briefing: "Briefs Filed" by applicant cite "FRAP 31(a)(1); 1st Cir. R. 31.0"
+{
+  edge-briefing-argument "Briefing complete" -> argument-decision {
+    authority cite "FRAP 34; 1st Cir. R. 34.0"
+  }
+}
+decision argument-decision: "Argument or Submission on Briefs" by court cite "FRAP 34; 1st Cir. R. 34.0"
+{
+  edge-argument-panel "Panel decides" -> panel-decision {
+    authority cite "FRAP 36"
+  }
+}
+decision panel-decision: "Panel Decision" by court cite "FRAP 36"
+{
+  edge-panel-rehearing "Judgment entered; rehearing period begins" -> rehearing-stage {
+    authority cite "FRAP 40(d)(1)"
+  }
+}
+decision rehearing-stage: "Rehearing or En Banc Petition" by court cite "FRAP 40(d)(1)"
+{
+  edge-rehearing-mandate "Petition denied or no petition filed" -> mandate-stage {
+    authority cite "FRAP 41(b)(1)"
+  }
+}
+state mandate-stage: "Mandate Issues" by office cite "FRAP 41(b)(1)"
+{
+  edge-mandate-final "Mandate issues" -> final-judgment {
+    authority cite "FRAP 41(b)(1)"
+  }
+}
+terminal final-judgment: "Judgment final after mandate" outcome [loss] cite "FRAP 41(b)(1)"
+{
+  note "The graph does not model the underlying merits outcome."
+  payoff ?("case-specific utility is not supplied by procedural authority")
+}

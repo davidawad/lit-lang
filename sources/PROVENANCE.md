@@ -1031,3 +1031,20 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   modeled here; *Bowles* holds the statutory civil notice period in 28 U.S.C.
   § 2107 jurisdictional, while the modeled bankruptcy notice period is set by
   FRBP 8002. Neither decision supports a proposition needed by this outline.
+
+## First Circuit Rulebook
+
+### `ca1-first-circuit-rulebook-2026-06-01.txt`
+
+- Official First Circuit Rulebook, including the Federal Rules of Appellate
+  Procedure, First Circuit Local Rules, Internal Operating Procedures and
+  administrative materials, amendments through June 1, 2026:
+  <https://www.ca1.uscourts.gov/sites/ca1/files/rulebook.pdf>
+- Retrieved 2026-10-27. Extracted with `pdftotext -layout`; section markers
+  (`## FRAP N`, `## 1st Cir. R. N`, `## 1st Cir. IOP N`, and the fee-schedule
+  item marker) were added for
+  cite resolution. Rule text was not edited.
+- Original PDF sha256:
+  `e126dc83b8a7ab1044273dc3fdc22cbc735cc6c81ce5793b345eb0e7bc7a6133`.
+- Vendored text sha256:
+  `9e99b6ae551dc12ddf322afe896c98d7fc4c651c49a209f0cf45f313403b477a`.

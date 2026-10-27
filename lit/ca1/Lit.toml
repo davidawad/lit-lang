@@ -1,0 +1,57 @@
+[package]
+name = "first-circuit-court-of-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "first-circuit-court-of-appeals"
+forum = "ca1"
+authority = "FederalRule"
+title = "United States Court of Appeals for the First Circuit"
+description = "A sourced outline of a First Circuit civil appeal, using the current circuit rulebook and verified federal appellate deadlines."
+in_force = "2026-06-01"
+known_at = "2026-06-01"
+unknown_before = "2026-06-01"
+counting = "frap26"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[sources.ca1-rulebook]
+title = "First Circuit Rulebook, including FRAP, First Circuit Local Rules and IOPs, amendments through June 1, 2026"
+url = "https://www.ca1.uscourts.gov/sites/ca1/files/rulebook.pdf"
+path = "sources/ca1-first-circuit-rulebook-2026-06-01.txt"
+path_sha256 = "9e99b6ae551dc12ddf322afe896c98d7fc4c651c49a209f0cf45f313403b477a"
+sha256 = "e126dc83b8a7ab1044273dc3fdc22cbc735cc6c81ce5793b345eb0e7bc7a6133"
+as_of = "2026-06-01"
+cite_prefixes = ["FRAP", "1st Cir. R.", "1st Cir. IOP", "CA1 Fee Schedule"]
+section_heading = "FRAP {n}"
+
+[sources.bowles]
+title = "Bowles v. Russell, 551 U.S. 205 (2007), United States Reports"
+url = "https://www.govinfo.gov/app/details/USREPORTS-551/USREPORTS-551-205"
+as_of = "2007-06-14"
+cite_prefixes = ["Bowles v. Russell"]
+
+[[cite_syntax.rules]]
+prefixes = ["FRAP", "Fed. R. App. P.", "Fed R App P", "F.R.A.P."]
+heading = "FRAP {}"
+source = "ca1-rulebook"
+
+[[cite_syntax.rules]]
+prefixes = ["1st Cir. R.", "First Cir. R."]
+heading = "1st Cir. R. {}"
+source = "ca1-rulebook"
+
+[[cite_syntax.rules]]
+prefixes = ["CA1 Fee Schedule"]
+heading = "CA1 Fee Schedule {}"
+source = "ca1-rulebook"
+
+[[cite_syntax.rules]]
+prefixes = ["1st Cir. IOP"]
+heading = "1st Cir. IOP {}"
+source = "ca1-rulebook"

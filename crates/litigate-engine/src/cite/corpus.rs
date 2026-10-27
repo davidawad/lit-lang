@@ -101,7 +101,15 @@ impl SourceCorpus {
     /// # Errors
     /// As [`SourceCorpus::load`].
     pub fn default_source() -> Result<Cow<'static, SourceCorpus>> {
-        match std::env::var_os("LITGRAPH_SOURCES") {
+        SourceCorpus::from_override(std::env::var_os("LITGRAPH_SOURCES"))
+    }
+
+    /// The directory `dir` if given, else the embedded corpus: the body of
+    /// [`SourceCorpus::default_source`] with the env var already read, so
+    /// tests can exercise it without mutating the process environment
+    /// (which races with same-process readers under `cargo test`).
+    fn from_override(dir: Option<std::ffi::OsString>) -> Result<Cow<'static, SourceCorpus>> {
+        match dir {
             Some(d) => SourceCorpus::load(&PathBuf::from(d)).map(Cow::Owned),
             None => Ok(Cow::Borrowed(SourceCorpus::embedded_ref())),
         }
@@ -264,13 +272,14 @@ Rule 13 — Counterclaim and Crossclaim
     }
 
     #[test]
-    fn default_source_honors_litgraph_sources_env_var() {
+    fn default_source_honors_litgraph_sources_override() {
         let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../sources");
         assert!(dir.is_dir(), "expected a sources/ dir at {}", dir.display());
-        std::env::set_var("LITGRAPH_SOURCES", &dir);
-        let corpus = SourceCorpus::default_source().unwrap();
-        std::env::remove_var("LITGRAPH_SOURCES");
+        let corpus = SourceCorpus::from_override(Some(dir.into_os_string())).unwrap();
+        assert!(matches!(corpus, Cow::Owned(_)));
         assert!(corpus.has_file("sources/frcp.txt"));
+        let embedded = SourceCorpus::from_override(None).unwrap();
+        assert!(matches!(embedded, Cow::Borrowed(_)));
     }
 
     #[test]

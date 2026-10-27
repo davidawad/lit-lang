@@ -237,7 +237,15 @@ impl CalibrationCatalog {
     /// # Errors
     /// As [`CalibrationCatalog::load`] / [`CalibrationCatalog::embedded`].
     pub fn default_source() -> Result<CalibrationCatalog> {
-        match std::env::var_os("LITGRAPH_CALIBRATION") {
+        CalibrationCatalog::from_override(std::env::var_os("LITGRAPH_CALIBRATION"))
+    }
+
+    /// The directory `dir` if given, else the embedded sets: the body of
+    /// [`CalibrationCatalog::default_source`] with the env var already read,
+    /// so tests can exercise it without mutating the process environment
+    /// (which races with same-process readers under `cargo test`).
+    fn from_override(dir: Option<std::ffi::OsString>) -> Result<CalibrationCatalog> {
+        match dir {
             Some(d) => CalibrationCatalog::load(&PathBuf::from(d)),
             None => CalibrationCatalog::embedded(),
         }
@@ -404,19 +412,17 @@ mod tests {
         assert_eq!(err.code(), "io");
     }
 
-    /// `default_source` reads `$LITGRAPH_CALIBRATION` when set (nextest gives
-    /// every test its own process, so mutating the env var here is isolated).
+    /// `default_source` loads the `$LITGRAPH_CALIBRATION` directory when set
+    /// (exercised through `from_override`, so no process-env mutation).
     #[test]
-    fn default_source_honors_litgraph_calibration_env_var() {
+    fn default_source_honors_litgraph_calibration_override() {
         let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../calibration");
         assert!(
             dir.is_dir(),
             "expected a calibration/ dir at {}",
             dir.display()
         );
-        std::env::set_var("LITGRAPH_CALIBRATION", &dir);
-        let c = CalibrationCatalog::default_source().unwrap();
-        std::env::remove_var("LITGRAPH_CALIBRATION");
+        let c = CalibrationCatalog::from_override(Some(dir.clone().into_os_string())).unwrap();
         assert_eq!(c.origin, dir.display().to_string());
         assert!(!c.sets.is_empty());
     }

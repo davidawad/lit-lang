@@ -14,7 +14,7 @@ use support::{pkg_with_sources, verify, with, FRCP};
 /// The vendored FRAP text, bound as `sources/frap.txt` is in `lit/frap`.
 const FRAP: &str = "[sources.frap]\ntitle = \"Federal Rules of Appellate Procedure\"\n\
      path = \"sources/frap.txt\"\n\
-     path_sha256 = \"87d71a1f443c5c084cc9f11932a66436ab300f83146ee2c5ce2654a8a4824479\"\n\
+     path_sha256 = \"b370cc0558698ff88b62b6cec212742fde8afbdd2fe653a3b255d69dec893172\"\n\
      cite_prefixes = [\"FRAP\"]\nsection_heading = \"FRAP {n}\"\n";
 
 /// [`support::BASE`] plus `limit`, checked, verified in `dev` and

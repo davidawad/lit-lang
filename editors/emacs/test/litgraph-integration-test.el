@@ -39,7 +39,10 @@
       (should (litgraph-get response 'ok))
       (litgraph-with-describe #'ignore)
       (litgraph-with-schema #'ignore)
-      (let ((deadline (+ (float-time) 10)))
+      ;; Bound the wait by `litgraph-timeout', as `litgraph-request-sync'
+      ;; does: without prebuilt packs a debug build compiles lit/ on every
+      ;; call, which takes longer than any fixed few seconds.
+      (let ((deadline (+ (float-time) litgraph-timeout)))
         (while (and (< (float-time) deadline)
                     (not (and (litgraph--cached-describe)
                               (gethash (litgraph--cache-key 'schema)
@@ -117,7 +120,7 @@
         (insert (car case))
         (let ((reported 'unset) (litgraph-process-function #'litgraph--spawn))
           (litgraph-flymake (lambda (diags &rest _) (setq reported diags)))
-          (let ((deadline (+ (float-time) 10)))
+          (let ((deadline (+ (float-time) litgraph-timeout)))
             (while (and (eq reported 'unset) (< (float-time) deadline))
               (accept-process-output nil 0.05)))
           (should-not (eq reported 'unset))

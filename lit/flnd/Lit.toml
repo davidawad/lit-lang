@@ -1,0 +1,46 @@
+# The Northern District of Florida's Local Rules as a local-rule layer over
+# lit/frcp (28 U.S.C. § 2071; FRCP 83(a)): it declares only the periods
+# the Local Rules themselves state and re-encodes no FRCP deadline. Each
+# period is counted under FRCP 6(a), which governs "any local rule". The
+# rules are the edition effective November 24, 2015, the file the court's
+# local-rules page links (sources/nd-fla).
+[package]
+name = "flnd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "flnd-local-rules"
+forum = "flnd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Northern District of Florida: Local Rules (civil)"
+description = "The Northern District of Florida's Local Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): motion memoranda, removed cases, summary judgment, attorney's fees and taxation of costs."
+in_force = "2015-11-24"
+known_at = "2026-10-27"
+unknown_before = "2015-11-24"
+jurisdiction = "United States District Court, N.D. Florida"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "flnd-lr"
+issuer = "United States District Court for the Northern District of Florida"
+date = "2015-11-24"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.flnd-lr]
+title = "Local Rules, United States District Court, Northern District of Florida (effective November 24, 2015)"
+url = "https://flnd.uscourts.gov/sites/flnd/files/local_rules/local_rules_0.pdf"
+path = "sources/nd-fla/local-rules-sectioned.txt"
+path_sha256 = "bac984b7c46a868b36137e9654224e443fde8b44201c1f31f7bcc7cfed3e52bc"
+sha256 = "735431487ba914dd394d074f8e1c86d56a4842d11fef865e237713043d045831"
+as_of = "2015-11-24"
+cite_prefixes = ["N.D. Fla. Loc. R."]
+section_heading = "Rule {n}"

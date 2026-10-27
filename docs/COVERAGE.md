@@ -20,6 +20,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | core | `lit/core` | 46 | 0 | 137 | 0 |
 | frcp-rule12-example | `lit/examples` | 2 | 0 | 2 | 0 |
 | flmd-local-rules | `lit/flmd` | 14 | 0 | 14 | 0 |
+| flnd-local-rules | `lit/flnd` | 13 | 0 | 13 | 0 |
 | frap-appellate-procedure | `lit/frap` | 33 | 0 | 37 | 7 |
 | frbp-bankruptcy-procedure | `lit/frbp` | 77 | 0 | 59 | 0 |
 | frcp-civil-procedure | `lit/frcp` | 22 | 24 | 49 | 12 |

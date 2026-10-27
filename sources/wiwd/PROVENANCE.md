@@ -7,3 +7,4 @@
 - Extract sha256 65c3e70149adf22108d699b5c0cb0634b6a6f786cbe2521740be40f2716af2dc. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
 
 - Fetch method: first fetched with curl and a desktop browser User-Agent before the no-browser-identity rule (PM 2026-10-27); re-fetched on 2026-10-27 with plain curl (its default User-Agent, no browser headers): byte-identical (same sha256).
+- Original: `wiwd/original/wiwd-local-rules.pdf` as served (sha256 a538634232b7809314ff7baa9c1947dad3931c8dac4782083eddc2de74880ff9); extraction sha256 65c3e70149adf22108d699b5c0cb0634b6a6f786cbe2521740be40f2716af2dc.

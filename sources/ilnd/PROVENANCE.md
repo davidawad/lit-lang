@@ -7,3 +7,4 @@
 - Extract sha256 11c6f33721819a2d069e85d9898e2fc1b56ceb350583f95607bb307ae378069c. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
 
 - Fetch method: first fetched with curl and a desktop browser User-Agent before the no-browser-identity rule (PM 2026-10-27); re-fetched on 2026-10-27 with plain curl (its default User-Agent, no browser headers): byte-identical (same sha256).
+- Original: `ilnd/original/ilnd-local-rules.pdf` as served (sha256 033bacf6dd51b004d9869c1ed25a6dea2c620d8ae0d5c6370c88489b8d9ae96c); extraction sha256 11c6f33721819a2d069e85d9898e2fc1b56ceb350583f95607bb307ae378069c.

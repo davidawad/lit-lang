@@ -5,6 +5,7 @@
 - Edition: Nebraska Civil Rules (NECivR), "Effective December 1, 2025" per cover; listed "In Effect on and after December 1, 2025" at https://www.ned.uscourts.gov/local-rules (a 2026 proposed amendment for comment is not vendored). robots.txt read first (no Disallow of /sites/default/files/); privacy policy link on the court page is an internal host that does not resolve, no terms page reachable. Fetch method: curl with UA litgraph-rules-vendor/1.0, no bot challenge.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 903a924152c81694a3e69e2eb8aa7e4df2669c0b90bea71ecf73359d926c2bef. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+- Original: `d-neb/original/ne-civil-rules.pdf` as served (sha256 b2016037ba41ec3cd6f161d7d395d23c45c5cc6d1047b674d3bafee6b1e0ea4d); extraction sha256 903a924152c81694a3e69e2eb8aa7e4df2669c0b90bea71ecf73359d926c2bef.
 
 ### `d-neb/ne-general-rules.txt` — D. Neb. General Rules (NEGenR)
 
@@ -12,3 +13,4 @@
 - Edition: Nebraska General Rules (NEGenR), "Effective December 1, 2025"; listed at https://www.ned.uscourts.gov/local-rules. robots.txt read first. Fetch method: curl with UA litgraph-rules-vendor/1.0, no bot challenge.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 e545892094f1cc4df67c7e25757cf62e7900c1ddbaefa940c2b876532fe27c04. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+- Original: `d-neb/original/ne-general-rules.pdf` as served (sha256 7aeb14b6339776dd5d1a3b9815495c93f12c608b0b1d5c9629d0c22bc40fb361); extraction sha256 e545892094f1cc4df67c7e25757cf62e7900c1ddbaefa940c2b876532fe27c04.

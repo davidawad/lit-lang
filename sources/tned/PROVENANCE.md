@@ -8,3 +8,4 @@
 - Extract sha256 7e9e572cc14452fa9ae9c89adef989bda22d38efad1915ce4533603ca40b096f. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
 
 - Fetch method: first fetched with curl and a desktop browser User-Agent before the no-browser-identity rule (PM 2026-10-27); re-fetched on 2026-10-27 with plain curl (default User-Agent, no browser headers): byte-identical (same sha256).
+- Original: `tned/original/tned-local-rules.pdf` as served (sha256 c53178a09c2ffb0cbb6cb3eafb2c064564fb89fb44a08f5b05b69f73d70b8ecf); extraction sha256 7e9e572cc14452fa9ae9c89adef989bda22d38efad1915ce4533603ca40b096f.

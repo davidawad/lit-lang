@@ -189,11 +189,39 @@ provenance_entry() {
   ' "$@"
 }
 
+# PROVENANCE.md, name... -> the entry (heading to next heading) holding a
+# "- Original: `<name>`" line for one of the names (lg-f3q8.80: an
+# as-served original sits in <dir>/original/ and is recorded on its
+# extraction's entry, not under a heading of its own).
+original_entry() {
+  awk '
+    BEGIN { for (i = 2; i < ARGC; i++) names["- Original: `" ARGV[i] "`"]; ARGC = 2 }
+    /^#/ { if (found) exit; n = 0 }
+    { block[++n] = $0 }
+    !found { for (k in names) if (index($0, k) == 1) found = 1 }
+    found && !printed { for (i = 1; i <= n; i++) print block[i]; printed = 1; next }
+    found { print }
+  ' "$@"
+}
+
+# A file -> its sha256: the oid of a git-lfs pointer (a pod clones with
+# GIT_LFS_SKIP_SMUDGE=1, so an LFS original is its pointer there), else
+# the bytes' own.
+content_sha256() {
+  local oid
+  oid="$(head -c 200 "$1" | awk 'NR == 1 && $0 != "version https://git-lfs.github.com/spec/v1" { exit }
+    /^oid sha256:/ { sub(/^oid sha256:/, ""); print; exit }')"
+  if [ -n "$oid" ]; then echo "$oid"; else sha256sum "$1" | cut -d' ' -f1; fi
+}
+
 # One file (repo-relative, under sources/) -> 0, or the reasons it fails.
 provenance_of() {
-  local f="$1" rel forum record entry hash why=()
+  local f="$1" rel forum record entry hash why=() original=
   rel="${f#sources/}"
-  if [[ "$rel" == */* ]]; then
+  [[ "$rel" == original/* || "$rel" == */original/* ]] && original=1
+  if [[ "$rel" == original/* ]]; then
+    record="sources/PROVENANCE.md"
+  elif [[ "$rel" == */* ]]; then
     forum="${rel%%/*}"
     record="sources/$forum/PROVENANCE.md"
   else
@@ -203,12 +231,20 @@ provenance_of() {
     echo "$f: no $record"
     return 1
   fi
-  entry="$(provenance_entry "$record" "$rel" "${f#"$(dirname "$record")"/}")"
-  if [ -z "$entry" ]; then
-    echo "$f: no entry in $record (a heading naming the file)"
-    return 1
+  if [ -n "$original" ]; then
+    entry="$(original_entry "$record" "$rel" "${f#"$(dirname "$record")"/}")"
+    if [ -z "$entry" ]; then
+      echo "$f: no entry in $record (an \"- Original: \`$rel\`\" line on its extraction's entry)"
+      return 1
+    fi
+  else
+    entry="$(provenance_entry "$record" "$rel" "${f#"$(dirname "$record")"/}")"
+    if [ -z "$entry" ]; then
+      echo "$f: no entry in $record (a heading naming the file)"
+      return 1
+    fi
   fi
-  hash="$(sha256sum "$f" | cut -d' ' -f1)"
+  hash="$(content_sha256 "$f")"
   grep -Eq 'https?://' <<<"$entry" || why+=("no source URL")
   grep -iq 'retrieved' <<<"$entry" && grep -Eq '[0-9]{4}-[0-9]{2}-[0-9]{2}' <<<"$entry" ||
     why+=("no retrieval date (\"Retrieved YYYY-MM-DD\")")
@@ -611,6 +647,35 @@ provenance_self_test() {
     "printf 'new rule' > sources/fed-x/new.txt
      entry fed-x/new.txt https://example.gov/new.pdf 2026-10-27 '$m' - >> sources/fed-x/PROVENANCE.md
      entry fed-x/other.txt https://example.gov/o.pdf 2026-10-27 '$m' $ok >> sources/fed-x/PROVENANCE.md"
+  # As-served originals (lg-f3q8.80): recorded by an "- Original:" line on
+  # the extraction's entry; an LFS pointer counts by its oid.
+  local pdf ptr
+  pdf="$(sha '%PDF new rule')"
+  ptr="version https://git-lfs.github.com/spec/v1\noid sha256:$pdf\nsize 14\n"
+  pcase pass "an original recorded on its extraction's entry" yes \
+    "printf 'new rule' > sources/fed-x/new.txt && mkdir -p sources/fed-x/original
+     printf '%%PDF new rule' > sources/fed-x/original/new.pdf
+     entry fed-x/new.txt https://example.gov/new.pdf 2026-10-27 '$m' $ok >> sources/fed-x/PROVENANCE.md
+     printf -- '- Original: \`fed-x/original/new.pdf\` as served (sha256 $pdf).\n' >> sources/fed-x/PROVENANCE.md"
+  pcase pass "an original that is an LFS pointer counts by its oid" yes \
+    "printf 'new rule' > sources/fed-x/new.txt && mkdir -p sources/fed-x/original
+     printf '$ptr' > sources/fed-x/original/new.pdf
+     entry fed-x/new.txt https://example.gov/new.pdf 2026-10-27 '$m' $ok >> sources/fed-x/PROVENANCE.md
+     printf -- '- Original: \`fed-x/original/new.pdf\` as served (sha256 $pdf).\n' >> sources/fed-x/PROVENANCE.md"
+  pcase pass "a top-level original is recorded in sources/PROVENANCE.md" yes \
+    "printf 'new rule' > sources/new.txt && mkdir -p sources/original
+     printf '%%PDF new rule' > sources/original/new.pdf
+     entry new.txt https://example.gov/new.pdf 2026-10-27 '$m' $ok >> sources/PROVENANCE.md
+     printf -- '- Original: \`original/new.pdf\` as served (sha256 $pdf).\n' >> sources/PROVENANCE.md"
+  pcase fail "an original with no Original line" yes \
+    "printf 'new rule' > sources/fed-x/new.txt && mkdir -p sources/fed-x/original
+     printf '%%PDF new rule' > sources/fed-x/original/new.pdf
+     entry fed-x/new.txt https://example.gov/new.pdf 2026-10-27 '$m' $ok >> sources/fed-x/PROVENANCE.md"
+  pcase fail "an original whose sha256 is not recorded" yes \
+    "printf 'new rule' > sources/fed-x/new.txt && mkdir -p sources/fed-x/original
+     printf '%%PDF other' > sources/fed-x/original/new.pdf
+     entry fed-x/new.txt https://example.gov/new.pdf 2026-10-27 '$m' $ok >> sources/fed-x/PROVENANCE.md
+     printf -- '- Original: \`fed-x/original/new.pdf\` as served (sha256 $pdf).\n' >> sources/fed-x/PROVENANCE.md"
   return "$failures"
 }
 

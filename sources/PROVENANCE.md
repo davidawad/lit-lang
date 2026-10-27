@@ -14,9 +14,10 @@ of this file's own entries below).
 - **Public domain.** Every document here is a U.S. government work (court
   rules prescribed under 28 U.S.C. § 2072, the U.S. Code, the Code of Federal
   Regulations) — no copyright restriction on redistributing the text.
-- **Small.** The whole corpus is under 4 MB uncompressed (MPEP's 462 sections
-  are most of that) — still a rounding error next to vendoring full PDFs,
-  and small enough to embed in the binary the same way `packs/*.json` is.
+- **Small where it is embedded.** The binary embeds only the `.txt`
+  extractions, the same way `packs/*.json` is. The as-served originals sit
+  beside them in `original/` (see "Originals" below), PDFs in git LFS, and
+  are never embedded.
 - **Deterministic, offline tests.** `cargo nextest run` must not need network
   access (repo quality bar). A `litgraph sources fetch` command hitting
   live .gov/Cornell endpoints in CI would be slow and flaky (rate limits,
@@ -66,6 +67,17 @@ Each `.txt` file is one or more sections, each starting at column 0 with
 `## <canonical ref>` (matching the ref strings `litigate_engine::cite::normalize`
 produces — see `crates/litigate-engine/src/cite/normalize.rs`), optionally followed
 by a heading line, then the verbatim body text up to the next `## ` line.
+
+## Originals
+
+Every vendored extraction keeps the bytes the court or agency served
+(lg-f3q8.80): `<dir>/original/<extraction stem>.<pdf|html|docx>`, with PDF
+and DOCX in git LFS (`.gitattributes`). The extraction's entry records it
+with one line, ``- Original: `<path>` as served (sha256 <original>);
+extraction sha256 <extraction>.`` Paths are relative to `sources/`.
+`scripts/ci-scoped provenance` checks an added original against that line
+(an LFS pointer by its oid). Entries live in the forum's own
+`sources/<forum>/PROVENANCE.md`; this file records top-level files only.
 
 ## Files
 
@@ -388,6 +400,7 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   `rcfc-app-j` binding records no longer resolves. Same extraction; page
   furniture dropped.
 - sha256 (this file): `b49c8c942e95cbee386893d3899e4ac93b6b6bce1fea8eeff05e2ad44fa1800b`
+- Original: `original/rcfc-appendices.pdf` as served (sha256 943733526f5391cad22562adf31411148fecfb03f01ae7bcf8bd6ec051a0c971); extraction sha256 b49c8c942e95cbee386893d3899e4ac93b6b6bce1fea8eeff05e2ad44fa1800b. Served at https://www.uscfc.uscourts.gov/sites/cfc/files/Rules%2010.08.26.pdf; retrieved 2026-10-24 (fetched as recorded above).
 
 ### `uspto-closures.txt` — the days the USPTO designated a "Federal holiday within the District of Columbia" (2009-2026)
 
@@ -688,6 +701,7 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   and 13.5's and 30.2's extension timing read the same from January 1,
   2023.
 - sha256 (this file): `881464325decc0ce5cc63ae4bac10facc84766e266dbff30454186f78dc3d5f2`
+- Original: `original/scotus-rules.pdf` as served (sha256 5200e38d590cc40929cb719987c936dc529717b4037259d1b63a2309cb6b0f32); extraction sha256 881464325decc0ce5cc63ae4bac10facc84766e266dbff30454186f78dc3d5f2. Served at https://www.supremecourt.gov/filingandrules/2026RulesoftheCourt_WEB.pdf; retrieved 2026-10-24 (fetched as recorded above).
 
 ### `scotus-rules-2023.txt` — Rules of the Supreme Court 29.3 and 30.1 (adopted December 5, 2022, effective January 1, 2023)
 
@@ -735,6 +749,7 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   under 37 C.F.R. Part 2. § 509 was cut the same way on 2026-10-24 from
   the same PDF (digest checked again), with form feeds dropped.
 - sha256 (this file): `39df33edc821a318331129cdc6730ac961cd962d7d3f3f1c758309465eb21d86`
+- Original: `original/tbmp.pdf` as served (sha256 015cf2b665d74b25080321f67dad7ffebe412118f6f0460ec3530f4801639b8e); extraction sha256 39df33edc821a318331129cdc6730ac961cd962d7d3f3f1c758309465eb21d86. Served at https://www.uspto.gov/sites/default/files/documents/tbmp-Master-June2026.pdf; retrieved 2026-10-23 (fetched as recorded above).
 
 ### `fr-uspto-90-3-history.txt` — 37 C.F.R. § 90.3 as added in 2012 (77 FR 48612, 48677-48678)
 
@@ -757,7 +772,6 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   (2012-17900, effective 2012-09-16) and 89 FR 22084 (2024-06659,
   effective 2024-03-29), matching the current section's history line.
 - sha256 (this file): `86152eebd93a8b638b25c9263e235194c7400797d2840e73d59da0977e4f4d74`
-
 
 ### `change-frcv-2007-restyled-excerpt.txt` — FRCP as restyled effective December 1, 2007: the order and Rules 6(b), 59(e)
 
@@ -788,6 +802,7 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 
 - Fetched 2026-10-26 from `www.nysd.uscourts.gov/sites/default/files/local_rules/2026-01-02%20-%20EDNY%20and%20SDNY%20Joint%20Local%20Rules%20As%20Amended.pdf` (sha256 `439b9e2c67fd4ca1d1be65a7f28ca53707820bcbabb4b459323ade1a773607af`), `pdftotext -layout`, the text of Local Civil Rule 6.1 and the withdrawn 6.4 with leading spaces and blank lines dropped; no wording changed. The local-rule example's instrument.
 - sha256 (this file): `d7ea4a0e259c8609c98efe869d04776cb7e9ca119c701c3760679a01e3110aae`
+- Original: `original/change-sdny-edny-local-civil-rule-6.pdf` as served (sha256 439b9e2c67fd4ca1d1be65a7f28ca53707820bcbabb4b459323ade1a773607af); extraction sha256 d7ea4a0e259c8609c98efe869d04776cb7e9ca119c701c3760679a01e3110aae. Served at https://www.nysd.uscourts.gov/sites/default/files/local_rules/2026-01-02%20-%20EDNY%20and%20SDNY%20Joint%20Local%20Rules%20As%20Amended.pdf; retrieved 2026-10-26 (fetched as recorded above).
 
 ### `change-cofc-general-order-2025-02.txt` — U.S. Court of Federal Claims General Order No. 2025-02 (Oct. 6, 2025)
 
@@ -803,6 +818,7 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 
 - Fetched 2026-10-26 from `www.govinfo.gov/content/pkg/USCOURTS-cod-1_25-cv-00090/pdf/USCOURTS-cod-1_25-cv-00090-0.pdf` (sha256 `bb04e7bb83ecd5df14b961703ff01dab86f715f45778048bb192391c76b896bc`), `pdftotext -layout`, the caption and opening paragraphs (which recite the scheduling order's June 20, 2025 deadline, ECF No. 42 § 9.a) with blank lines dropped; no wording changed. A public court record; the case-order example's instrument.
 - sha256 (this file): `dbb6f366760d5397318eb4284f3d0cb7ced95e87b16651c1a9d165d442b002c9`
+- Original: `original/change-cancino-perez-d-colo-ecf-45.pdf` as served (sha256 bb04e7bb83ecd5df14b961703ff01dab86f715f45778048bb192391c76b896bc); extraction sha256 dbb6f366760d5397318eb4284f3d0cb7ced95e87b16651c1a9d165d442b002c9. Served at https://www.govinfo.gov/content/pkg/USCOURTS-cod-1_25-cv-00090/pdf/USCOURTS-cod-1_25-cv-00090-0.pdf; retrieved 2026-10-26 (fetched as recorded above).
 
 ### `change-cfr-37-42-5-71-75-2026-10-20.txt` — 37 C.F.R. §§ 42.5, 42.71, 42.75 (eCFR, as of 2026-10-20)
 
@@ -813,6 +829,7 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 
 - Fetched 2026-10-26 from `www.uspto.gov/sites/default/files/documents/ipr2025-01072-dr-paper_30.pdf` (sha256 `5cba76995e71eae32656892dde2c1e92265f9bac30be3254f51e48e4f1407c80`), `pdftotext -layout`, the caption and the waiver paragraph (pages 1 and 3-4), footnote markers omitted; no wording changed. Designated precedential June 22, 2026 (PTAB precedential and informative decisions page, per the research register). The precedent example's instrument.
 - sha256 (this file): `1e32fb02af2ee2caeb5956f0fb21a93eb5c2ffa6dc3289ec4a73c5902df4edc5`
+- Original: `original/change-light-wonder-ipr2025-01072-paper-30.pdf` as served (sha256 5cba76995e71eae32656892dde2c1e92265f9bac30be3254f51e48e4f1407c80); extraction sha256 1e32fb02af2ee2caeb5956f0fb21a93eb5c2ffa6dc3289ec4a73c5902df4edc5. Served at https://www.uspto.gov/sites/default/files/documents/ipr2025-01072-dr-paper_30.pdf; retrieved 2026-10-26 (fetched as recorded above).
 
 ### `change-thompson-v-ins-375-us-384.txt` — Thompson v. INS, 375 U.S. 384 (1964) (per curiam)
 
@@ -829,276 +846,6 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 - Cadkin is the Ninth Circuit's official published opinion, No. 08-55311,
   downloaded from ca9.uscourts.gov and extracted with `pdftotext -layout`;
   sha256 `52a8a2fa29edf0fed607bda629e6e8788a22e7b272d16ffd31f1fff4274e106b`.
-
-### `ddc/ddc-local-rules.txt` — Local Rules of the U.S. District Court for the District of Columbia
-
-- Source: https://www.dcd.uscourts.gov/sites/dcd/files/local_rules/Local%20Rules%20SEP_2026.pdf (official court site; 212 pages, sha256 e836e8706dc824294b73933ece7429cdbfc321104305501629b994631ebf5a86).
-- Edition: cover: "Effective as of September 2015, Updated: September 2026"; listed as the current edition on https://www.dcd.uscourts.gov/court-info/local-rules-and-orders/local-rules (newest listed change: Local Rule 6.2, 9/14/2026).
-- Retrieved 2026-10-27 on carbon (the court site refuses agent pods: lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 e6084a6dc48c050f96035345573a3de47f57eadd0ff4e3d04039f0fb8e537928. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `dc-state-appellate/dcca-rules.txt` — Rules of the District of Columbia Court of Appeals
-
-- Source: https://www.dccourts.gov/sites/default/files/coa-rules/DCCA-Rules.pdf (official court site; 135 pages, sha256 5b71b874d774c74dc7f98b2873d3393363d259dd7edbaf315a18b7962d0197bf).
-- Edition: title page: "Reflecting amendments in effect as of May 11, 2026"; linked from https://www.dccourts.gov/court-of-appeals/court-of-appeals-resources/rules-of-the-dc-court-of-appeals (page last updated 02/04/2026).
-- Retrieved 2026-10-27 on carbon (the court site refuses agent pods: lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 6ebf6a2ad4b75f15c0acd71ef1a3ce7adf02913d5e41183086c04449f5caeea4. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `dc-state-civil/scr-civil-rules.txt` — Superior Court of the District of Columbia Rules of Civil Procedure
-
-- Source: https://www.dccourts.gov/sites/default/files/superior-rules/Superior-Court-Rules-of-Civil-Procedure-Download-All-Rules-Version.pdf (official court site; 296 pages, sha256 b46082a8edee555671302aab2203905abb57f965e98d3e13c6ccbf89976e9c43).
-- Edition: the document states no edition date; it carries comments to 2026 amendments, its PDF is dated 2026-05-13, and it is the all-rules version linked from https://www.dccourts.gov/superior-court/superior-court-resources/rules-of-the-superior-court (page last updated 02/13/2026, before the PDF).
-- Retrieved 2026-10-27 on carbon (the court site refuses agent pods: lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 bbf2960ed59c98a8d7a32ea831919317ad59e41f63e9786fb1f27ebf13736f23. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `ared/ared-arwd-local-rules.txt` — Local Rules of the U.S. District Courts for the Eastern and Western Districts of Arkansas
-
-- Source: https://www.are.uscourts.gov/sites/are/files/local_rules/All_LR.pdf (official court site; 84 pages, sha256 9fc211b94a6b06e77953f28f1b88c5e61f8d567dc68d71a78a91eee7715fa459).
-- Edition: title page: "Local Rules of the United States District Court for the Eastern and Western Districts of Arkansas", last amendment listed September 21, 2017; the "Complete Copy" on https://www.are.uscourts.gov/court-info/local-rules-and-orders/local-rules, last modified 2020-11-17, newer than every individual rule PDF the page lists. One joint text: it also governs forum arwd (the W.D. Ark. site copy is a 2016 file, not vendored).
-- Retrieved 2026-10-27 on carbon (the court site refuses agent pods: lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 0bc073ca4ceb05726d03a65d05a6294c20199591be8b23dc465ff14d724c8950. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `ar-circuit/arcp.txt` — Arkansas Rules of Civil Procedure
-
-- Source: https://opinions.arcourts.gov/ark/cr/en/16712/1/document.do (official court site; 196 pages, sha256 b72f17dcaf0261c1b94a76509f2a35ef4d6eceeb21c613a3aea13d682e19c0d6).
-- Edition: title: "Rules of Civil Procedure (current through October 1, 2026)"; Arkansas Judiciary court rules portal https://opinions.arcourts.gov/ark/cr/en/nav_date.do lists it current to 10/01/2026.
-- Retrieved 2026-10-27 on carbon (the court site refuses agent pods: lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 9e7950b1cca7fc771ef258b4ac2190375118c517646958b83e9c5bb3e2c01430. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `arkctapp/arap-civil.txt` — Arkansas Rules of Appellate Procedure—Civil
-
-- Source: https://opinions.arcourts.gov/ark/cr/en/1885/1/document.do (official court site; 22 pages, sha256 c854fb5600e8cb1595791154a4befca952fd984ae346f1e4aacf45672923d36e).
-- Edition: title: "Rules of Appellate Procedure—Civil (current through October 1, 2026)"; listed current to 10/01/2026 on https://opinions.arcourts.gov/ark/cr/en/nav_date.do.
-- Retrieved 2026-10-27 on carbon (the court site refuses agent pods: lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 baa4d8fdce843d9f59ad162212be7de918cd3ab5566e6ae9c6a2bbdf530dfdda. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `arkctapp/ar-supreme-court-rules.txt` — Rules of the Supreme Court and Court of Appeals of the State of Arkansas
-
-- Source: https://opinions.arcourts.gov/ark/cr/en/1871/1/document.do (official court site; 44 pages, sha256 7f26989c58f09c36964c5add5424f6709db177bfc367ea648aab2905b88c4484).
-- Edition: title: "Rules of the Supreme Court and Court of Appeals of the State of Arkansas (current through December 15, 2025)"; listed current to 12/15/2025 on https://opinions.arcourts.gov/ark/cr/en/nav_date.do.
-- Retrieved 2026-10-27 on carbon (the court site refuses agent pods: lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 039cb6ae5df1eeb38a0be219ebf093b41622768649397394a82652bbaf3c3052. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `ca8/ca8-local-rules.txt` — Local Rules of the United States Court of Appeals for the Eighth Circuit
-
-- Source: https://www.ca8.uscourts.gov/sites/ca8/files/Eighth%20Circuit%20Local%20Rules%206.17.24.pdf (official site; 39 pages, sha256 26cfe150aa5813ffdc7f5c55ef5a2604c02ecc76526d5ee21669806b937a41ac).
-- Edition: dated June 17, 2024 on its first page; listed as "Local Rules of the Eighth Circuit, June 2024" on https://www.ca8.uscourts.gov/rules-procedures.
-- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 462e6deddebce2f420f7628c80ce8c617971bdecbfebb4be817ca99772d375b8. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `ca8/ca8-iops.txt` — Eighth Circuit Internal Operating Procedures
-
-- Source: https://ecf.ca8.uscourts.gov/newrules/coa/iops.pdf (official site; 42 pages, sha256 41097628db55700c9774760cb4a7334e427d086d69c429a1f4ec3edd1c9e0ff4).
-- Edition: title page: "Internal Operating Procedures, Revised February 26, 2024"; the IOPs linked from https://www.ca8.uscourts.gov/rules-procedures.
-- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 358fd9ee631e7ec9423c8ff94b2f7f2c6ce82d1a48e2a567afa2c487883b89b8. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `frap/frap.txt` — Federal Rules of Appellate Procedure
-
-- Source: https://www.uscourts.gov/sites/default/files/document/federal-rules-of-appellate-procedure.pdf (official site; 80 pages, sha256 a6f417607a71c05a3a54df68a43ec67e691dcf276c46a415e78038ae4f9305f4).
-- Edition: title page: "Federal Rules of Appellate Procedure with Forms, December 1, 2025" (House Judiciary Committee Print No. 2, 119th Cong.; foreword: "as amended to December 1, 2025"); the current FRAP PDF linked from https://www.uscourts.gov/rules-policies/current-rules-practice-procedure/federal-rules-appellate-procedure.
-- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with OCR (pdftoppm 300 dpi, tesseract 5.5.3, --psm 6) because the PDF's Type 3 fonts carry no text mapping (pdftotext yields glyph noise); unedited OCR, so verify any quoted value against the PDF.
-- Extract sha256 1d5a3ff17813cc8cb47c3cdab65adf8db170a8a71b3aae2b187e151975415017. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-- OCR guard: never fill a number from this OCR alone. Prefer `sources/frap.txt` (Dec. 1, 2024 edition verified line by line, plus the Apr. 23, 2025 amendments to Rules 6 and 39 effective Dec. 1, 2025), which matches this edition; cross-check any number taken from here against it or the uscourts.gov or Cornell LII HTML text of the same rule, cited in a note. A number with no second source stays a hole.
-
-### `iand/local-rules-joint.txt` — Joint Local Rules, N.D. and S.D. Iowa
-
-- Source: https://www.iand.uscourts.gov/sites/iand/files/Local%20Rules%20-%20Final%20Website%20Version.pdf (official site; 106 pages, sha256 e810de7fd321eea597eeaaf97a38bb0f507061f82e5cc771e0991fa964ca5370).
-- Edition: Joint Local Rules of the U.S. District Courts for the Northern and Southern Districts of Iowa, dated December 7, 2020 (N.D. AO 20-AO-0013-P; S.D. AO 20-AO-0023-P); linked as the current rules from https://www.iand.uscourts.gov/local-rules-federal-rules-administrative-orders (page also lists proposed amendments, comment period closing Nov. 13, 2026, not yet in force).
-- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 f21b8f3f4df6312590be7cc4c801b02391715ebd58017e315347487f3249c4c5. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `iasd/local-rules-joint.txt` — Joint Local Rules, N.D. and S.D. Iowa
-
-- Source: https://www.iasd.uscourts.gov/sites/iasd/files/Local%20Rules%20-%20Final%2012142020.pdf (official site; 106 pages, sha256 d26e937a074d3b6720b485859cfde8493cff55f7ab64cb51fcbbc110e438adf7).
-- Edition: Joint Local Rules of the U.S. District Courts for the Northern and Southern Districts of Iowa, dated December 7, 2020 (N.D. AO 20-AO-0013-P; S.D. AO 20-AO-0023-P); linked from https://www.iasd.uscourts.gov/local-rules; N.D. Iowa site lists only proposed amendments (comment period to Nov. 13, 2026), none in force.
-- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 751abfbc43e8034da2046e95cc6c47e63649c20c1356a74816454496449d515d. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `ia-district/iowa-rules-civil-procedure.txt` — Iowa Rules of Civil Procedure (Ch. 1)
-
-- Source: https://www.legis.iowa.gov/docs/ACO/CR/LINC/09-30-2026.chapter.1.pdf (official site; 130 pages, sha256 ae6ecf5e9a558a4f80cd0e63a5bc3229fb7681ecd5946a4ca8fbe1773f7c56b6).
-- Edition: Iowa Court Rules, Chapter 1 Rules of Civil Procedure (running header July 2023), in the 09-30-2026 compilation linked from https://www.legis.iowa.gov/law/courtRules/courtRulesListings.
-- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 0ac112e11fe546759c5fe480c17f12e079b47f57da08a823aad6f154ebec15fc. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `iowactapp/iowa-rules-appellate-procedure.txt` — Iowa Rules of Appellate Procedure (Ch. 6)
-
-- Source: https://www.legis.iowa.gov/docs/ACO/CR/LINC/09-30-2026.chapter.6.pdf (official site; 84 pages, sha256 8d3078cdc61be6ddb556a18c8dacf85f9126c6663ed4db7be2858419daf0e8b6).
-- Edition: Iowa Court Rules, Chapter 6 Rules of Appellate Procedure (running header December 2025), in the 09-30-2026 compilation linked from https://www.legis.iowa.gov/law/courtRules/courtRulesListings.
-- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 cab303e717c4815ebb7309ffe65ffc8d2a4afc3d35ea0910a358bd3f0f0a05a8. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `mnd/local-rules.txt` — Local Rules, D. Minn.
-
-- Source: https://www.mnd.uscourts.gov/sites/mnd/files/Local-Rules-Master.pdf (official site; 142 pages, sha256 01aa8892b4d346f976b203d66a6739fa8b1bb028d3b005092ddd003da796eda1).
-- Edition: Local Rules of the U.S. District Court for the District of Minnesota, document dated June 10, 2026 (complete set; linked from https://www.mnd.uscourts.gov/local-rules-complete-set, "current Local Rules").
-- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 0ec9d04835b62cfe8eb3311701377d6a42aaeba62d121912039c7dc88e6eb2e6. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `moed/local-rules.txt` — Local Rules and Patent Rules, E.D. Mo.
-
-- Source: https://www.moed.uscourts.gov/sites/moed/files/CMECF_localrule.pdf (official site; 137 pages, sha256 f3039857f47617d8bf625a1f584428eaf59c914e7c14b63aadf129239465aa12).
-- Edition: Local Rules and Patent Rules of the U.S. District Court for the Eastern District of Missouri; the cover states no edition date (PDF metadata modified 2026-10-16; the court Revision History PDF lists revisions through effective 3-1-23); linked as the local rules PDF from https://www.moed.uscourts.gov/local-rules.
-- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 ae524d7184dfe84ecba6dbe1cb3fd9b644837ebfb2a585b83bb768ce565bbbea. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `mowd/local-rules.txt` — Local Rules, W.D. Mo.
-
-- Source: https://www.mow.uscourts.gov/sites/mow/files/DC-Local_Rules.pdf (official site; 64 pages, sha256 fa1808ed362b08ed336b5d82a3da2e328d71a449b8a5cf66a43ec23d2b8c9e5c).
-- Edition: Local Rules of the U.S. District Court for the Western District of Missouri, "Adopted by the Court, Effective July 9, 2026"; linked as "Local Rules Complete Copy" from https://www.mow.uscourts.gov/district/rules.
-- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 f4f96de42a597d8d27eb170b1fd053a6cb127eb38da60519518658a9a42c234d. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `ndd/local-rules.txt` — Local Rules, D.N.D.
-
-- Source: https://www.ndd.uscourts.gov/lci/Local_Rules.pdf (official site; 92 pages, sha256 a5ac31739c05d89026e64d3656f9fc1fc8b1c6ceeecced44b33d9b3f84a5a119).
-- Edition: Local Rules of the U.S. District Court for the District of North Dakota, "Effective October 6, 2025"; linked as "Local Rules" (with the "2025 Summary of Revisions") from https://www.ndd.uscourts.gov/court-info/local-rules-and-orders.
-- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 f98554911b9c98b8e88105416993afb9799887105a7c64eb1b53d94cdd9c39c5. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
-
-### `nd-district/ndrcivp.txt` — North Dakota Rules of Civil Procedure
-
-- Source: the official per-rule pages of the North Dakota Court System, one per rule, linked from the rules index https://www.ndcourts.gov/legal-resources/rules/ndrcivp (the court publishes no complete PDF or single-page version). 85 pages, each fetched once on 2026-10-27 at most one request per second with an identifying user agent, no recursion beyond the index (PM ruling; ndcourts.gov has no robots.txt and its Disclaimer, Privacy Statement and Security Policy place no limit on automated access).
-- Edition: each rule as in force on 2026-10-27, with its own "Effective Date" line as shown on its page (latest 2026-07-01).
-- Extracted from each page's content area (rule text, effective date, explanatory note), the repeated rule-list sidebar dropped; one `## N.D.R.Civ.P. <rule>` section per page, in index order, unedited otherwise. Extract sha256 e07933b29743f02b7ab922e9dc3b5c49404c5625abc52b95c308730c159053b4.
-- Page URLs:
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/1
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/2
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/3
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/4
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/5
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/6
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/7
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/8
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/9
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/10
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/11
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/12
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/13
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/14
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/15
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/16
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/17
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/18
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/19
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/20
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/21
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/22
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/23
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/24
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/25
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/26
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/27
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/28
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/29
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/30
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/30-1
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/31
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/32
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/33
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/34
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/35
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/36
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/37
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/38
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/39
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/39-1
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/40
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/41
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/42
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/43
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/44
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/44-1
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/45
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/46
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/47
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/48
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/49
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/50
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/51
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/52
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/53
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/54
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/55
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/56
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/57
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/58
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/59
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/60
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/61
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/62
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/63
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/64
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/65
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/66
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/67
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/68
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/69
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/70
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/71
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/77
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/80
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/81
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/82
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/83
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/84
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/85
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/86
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/Table-A
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/Table-B
-  - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/Appendix
-
-### `ndctapp/ndrappp.txt` — North Dakota Rules of Appellate Procedure
-
-- Source: the official per-rule pages of the North Dakota Court System, one per rule, linked from the rules index https://www.ndcourts.gov/legal-resources/rules/ndrappp (the court publishes no complete PDF or single-page version). 43 pages, each fetched once on 2026-10-27 at most one request per second with an identifying user agent, no recursion beyond the index (PM ruling; ndcourts.gov has no robots.txt and its Disclaimer, Privacy Statement and Security Policy place no limit on automated access).
-- Edition: each rule as in force on 2026-10-27, with its own "Effective Date" line as shown on its page (latest 2026-09-01).
-- Extracted from each page's content area (rule text, effective date, explanatory note), the repeated rule-list sidebar dropped; one `## N.D.R.App.P. <rule>` section per page, in index order, unedited otherwise. Extract sha256 1248b9444f50322e77dc258bdc3f1b8dbc52b2656bde3b7971ba085fcfeef91c.
-- Page URLs:
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/1
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/2
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/2-1
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/2-2
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/3
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/4
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/5
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/7
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/8
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/9
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/10
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/11
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/12
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/13
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/14
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/21
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/24
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/25
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/26
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/27
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/28
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/29
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/30
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/31
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/32
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/34
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/35
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/35-1
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/36
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/37
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/38
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/39
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/40
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/41
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/42
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/43
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/44
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/45
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/47
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/47-1
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/48
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/49
-  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/tables
-
 
 ### Eighth Circuit Bankruptcy Appellate Panel source set (retrieved 2026-10-27)
 
@@ -1163,3 +910,4 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   `e126dc83b8a7ab1044273dc3fdc22cbc735cc6c81ce5793b345eb0e7bc7a6133`.
 - Vendored text sha256:
   `9e99b6ae551dc12ddf322afe896c98d7fc4c651c49a209f0cf45f313403b477a`.
+- Original: `original/ca1-first-circuit-rulebook-2026-06-01.pdf` as served (sha256 e126dc83b8a7ab1044273dc3fdc22cbc735cc6c81ce5793b345eb0e7bc7a6133); extraction sha256 9e99b6ae551dc12ddf322afe896c98d7fc4c651c49a209f0cf45f313403b477a.

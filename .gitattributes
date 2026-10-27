@@ -31,3 +31,8 @@ editors/tree-sitter-litigate/src/** linguist-generated=true
 
 # Changelog entries are appended independently by parallel beads.
 CHANGELOG.md merge=union
+
+# lg-f3q8.80: as-served originals of vendored sources (PDF/DOCX in LFS; HTML stays plain text).
+sources/**/original/*.pdf filter=lfs diff=lfs merge=lfs -text
+sources/**/original/*.docx filter=lfs diff=lfs merge=lfs -text
+sources/**/original/*.doc filter=lfs diff=lfs merge=lfs -text

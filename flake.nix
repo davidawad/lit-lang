@@ -52,7 +52,9 @@
           # Build from the whole repo minus build outputs and bulky media, not an
           # allow-list: build.rs embeds data directories and tests read
           # examples/ and tests/, and an allow-list silently drifted twice.
-          excluded = [ "target" ".worktrees" "result" "media" "marketing" ];
+          # sources/**/original/ holds the as-served PDFs (records only,
+          # never embedded; lg-f3q8.80).
+          excluded = [ "target" ".worktrees" "result" "media" "marketing" "original" ];
           unfilteredSrc = pkgs.lib.cleanSourceWith {
             src = pkgs.lib.cleanSource ./.;
             filter = path: _type: !(builtins.elem (baseNameOf path) excluded);

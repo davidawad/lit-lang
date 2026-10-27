@@ -6,3 +6,4 @@
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Fetched via curl (single document, first request succeeded, no block encountered).
 - Extract sha256 7d9aa7ea241c99cfed7a285a032dbda4c009d22f1347a5fde703347f203d3d51. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+- Original: `oh-common-pleas/original/ohio-civil-rules.pdf` as served (sha256 49201001c188b1545e68567cdfdcfd011d0840b4811d74b5ab4c4be83c74e040); extraction sha256 7d9aa7ea241c99cfed7a285a032dbda4c009d22f1347a5fde703347f203d3d51.

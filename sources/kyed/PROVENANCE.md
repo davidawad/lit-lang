@@ -8,3 +8,4 @@
 - Extract sha256 8f0a980379167512682342755ac946da441141b4df4cf195406343945ca92a04. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
 
 - Fetch method: first fetched with curl and a desktop browser User-Agent before the no-browser-identity rule (PM 2026-10-27); re-fetched on 2026-10-27 with plain curl (default User-Agent, no browser headers): byte-identical (same sha256).
+- Original: `kyed/original/kyed-joint-local-civil-rules.pdf` as served (sha256 f7942d10800716fe5cc62401a47f6ef71d8db68cbc5516a504df2263597d1086); extraction sha256 8f0a980379167512682342755ac946da441141b4df4cf195406343945ca92a04.

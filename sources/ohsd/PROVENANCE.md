@@ -8,3 +8,4 @@
 - Extract sha256 c585d5c074b5f98c949dcd687b8df331c46ab62984c6041bf1bc6c936e379118. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
 
 - Fetch method: first fetched with curl and a desktop browser User-Agent before the no-browser-identity rule (PM 2026-10-27); re-fetched on 2026-10-27 with plain curl (default User-Agent, no browser headers): byte-identical (same sha256).
+- Original: `ohsd/original/ohsd-local-rules.pdf` as served (sha256 9e68d137b17d93a176c7d9d0834ad77affa2faa5621dd775590c23aeb5cc0bbf); extraction sha256 c585d5c074b5f98c949dcd687b8df331c46ab62984c6041bf1bc6c936e379118.

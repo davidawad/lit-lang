@@ -5,3 +5,4 @@
 - Edition: Rules "Effective March 26, 2026", linked as "Download Rules - Effective March 26, 2026" from https://www.gaappeals.gov/rules-1-8/.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 530587a700a4ed8bc95b7133c8a308547177beda99c498833f4306608eaf57e6. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+- Original: `ga-state-appellate/original/gacoa-rules.pdf` as served (sha256 227e393aa93eda9a871f6bf00bdc834dec01bdfe94a2aaeadf841aac75a06a94); extraction sha256 530587a700a4ed8bc95b7133c8a308547177beda99c498833f4306608eaf57e6.

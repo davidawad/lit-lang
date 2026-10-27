@@ -6,3 +6,4 @@
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 722c1c9a158d535dd681add788049a434d7d7fc4a84aee8ef55a8710eba55521. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
 - Fetch method: BrowserOS neo; site served a bot challenge to plain automated requests (CoS ruling 2026-10-27). uscg.mil robots.txt does not disallow /Portals/; its Disclaimer page bars no automated access.
+- Original: `cgcca/original/cgcca-rules-jrap-2025-03.pdf` as served (sha256 8d4d0ee1e4d1c512a34530cd87e9e877611358088aa9ccd39fc8593d5b3d024e); extraction sha256 722c1c9a158d535dd681add788049a434d7d7fc4a84aee8ef55a8710eba55521.

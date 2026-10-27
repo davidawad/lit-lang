@@ -13,3 +13,4 @@
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 a8131d6baa5adc02b873122dd8f7b03ec9bcd7db87cb84ca7ab8714153d452dd. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
 - Fetch method: BrowserOS neo; site served a bot challenge to plain automated requests (CoS ruling 2026-10-27). nycourts.gov robots.txt does not disallow /courts/ad2/pdf/; its privacy policy bars no automated access.
+- Original: `ny-appellate-division-court-of-appeals/original/nycrr-part-1250.pdf` as served (sha256 f99d1ca82f20ee74b71191b0e3de3ee775828d7f38650f12407555542cd45dac); extraction sha256 a8131d6baa5adc02b873122dd8f7b03ec9bcd7db87cb84ca7ab8714153d452dd.

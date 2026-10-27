@@ -8,3 +8,4 @@
 - Extract sha256 312cece0863e466dff97942a2163040eb2129ba106b0287ff109548f7e92fc47. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
 
 - Fetch method: first fetched with curl and a desktop browser User-Agent before the no-browser-identity rule (PM 2026-10-27); re-fetched on 2026-10-27 with plain curl (default User-Agent, no browser headers): byte-identical (same sha256).
+- Original: `ohnd/original/ohnd-local-civil-rules.pdf` as served (sha256 e2a67873799efcb70df8b6ba43b8d850a786a65321863f2d5ff2cb89250f3335); extraction sha256 312cece0863e466dff97942a2163040eb2129ba106b0287ff109548f7e92fc47.

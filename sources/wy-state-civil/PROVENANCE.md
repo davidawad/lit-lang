@@ -6,3 +6,4 @@
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 fef457faece9d4a479a3d211b3ce4cca258e587bb74b2d796b4fc51301d94d54. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
 - Fetch method: BrowserOS neo; site served a bot challenge to plain automated requests (CoS ruling 2026-10-27). wyocourts.gov robots.txt disallows only /app/uploads/protected/ and search URLs; its privacy page bars no automated access.
+- Original: `wy-state-civil/original/wrcp.pdf` as served (sha256 a22efdb9680278b9c4fb388eefaf65fb7136cf2e8a95347c9811d32d4bd42adb); extraction sha256 fef457faece9d4a479a3d211b3ce4cca258e587bb74b2d796b4fc51301d94d54.

@@ -6,3 +6,4 @@
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Fetched via curl (single document, first request succeeded, no block encountered).
 - Extract sha256 28f7b3760121d16db45005986414520aa94018c45d101d8d011b382d48a153bc. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+- Original: `mi-circuit-court/original/mcr-chapters-1-9.pdf` as served (sha256 31ed59fbef8d2f177f6e8b50ff976a06ebd14aef16706a76987e03469f278a02); extraction sha256 28f7b3760121d16db45005986414520aa94018c45d101d8d011b382d48a153bc.

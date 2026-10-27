@@ -8,3 +8,4 @@
 - Extract sha256 f064c65ee2748e1ed0ed7c937337552231c86cb846f13feadd8a085ea3f7af15. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
 
 - Fetch method: first fetched with curl and a desktop browser User-Agent before the no-browser-identity rule (PM 2026-10-27); re-fetched on 2026-10-27 with plain curl (default User-Agent, no browser headers): byte-identical (same sha256).
+- Original: `tnwd/original/tnwd-local-rules.pdf` as served (sha256 a6dcdc4ae6458d0a3397f4063af24d6cfd7d00273ae8f4beb14906020078a958); extraction sha256 f064c65ee2748e1ed0ed7c937337552231c86cb846f13feadd8a085ea3f7af15.

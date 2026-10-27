@@ -75,7 +75,12 @@ fn unquoted(
     sections: &[L0Section],
     span: &Span,
 ) -> Option<Diagnostic> {
-    let words = |s: &str| s.split_whitespace().collect::<Vec<_>>().join(" ").to_lowercase();
+    let words = |s: &str| {
+        s.split_whitespace()
+            .collect::<Vec<_>>()
+            .join(" ")
+            .to_lowercase()
+    };
     let folded: Vec<String> = quotes.iter().map(|q| words(q)).collect();
     let found = sections.iter().any(|s| {
         corpus.lookup_all(&s.heading).iter().any(|(file, section)| {

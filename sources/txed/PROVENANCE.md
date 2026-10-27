@@ -12,3 +12,10 @@
 - Edition: General Order 26-08, signed September 21, 2026, amending LR CV-3(d) (page limit twenty to thirty pages in civil rights lawsuits), listed at https://www.txed.uscourts.gov/?q=general-orders. Apply on top of txed-local-rules-2026-02-09.txt; the order is adopted subject to notice and comment and Fifth Circuit Judicial Council review. robots.txt (Crawl-delay 10 honored) and privacy/security policy checked: no prohibition of automated access. PM ruling: pods apply the other documents on top in date order. Outline Lit.toml says forum = "frcp"; vendored under txed..
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 482afd3dc8563299e4cfed1ec1543d609e59ec4f17e60e0b113ef6bd2b875a71. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+### `txed/txed-go-26-02.txt` — E.D. Tex. General Order 26-02
+
+- Source: https://www.txed.uscourts.gov/sites/default/files/goFiles/Amending%20Local%20Rules%20%28GO%2026-02%29%20.pdf (official site; 2 pages, sha256 30d2a5320e221501fb85fa9566fc5795708776d32d5ab9a14e29ef4e5fb40280).
+- Edition: General Order 26-02, February 9, 2026, amending CV-4(a), CV-79(a)(4), CR-55(c); already reflected in txed-local-rules-2026-02-09.txt; vendored for reference. Related: txed-go-26-08.txt, txed-go-25-07.txt. robots.txt (Crawl-delay 10 honored) and privacy/security policy checked: no prohibition of automated access. PM ruling: pods apply the other documents on top in date order. Outline Lit.toml says forum = "frcp"; vendored under txed..
+- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 ce9f75c1a17e051b9246119c6a0390fd778de09cfbcf937d2eeab2e5bf2ec1d2. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

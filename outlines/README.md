@@ -12,6 +12,7 @@ The layout mirrors formbook's `courts/<circuit>/<jurisdiction>/`.
 
     outlines/<circuit>/court-of-appeals/                 federal court of appeals (FRAP + circuit rules/IOPs)
     outlines/<circuit>/<state>/federal-<district>/       each U.S. district court in the state (FRCP + local rules)
+    outlines/<circuit>/<state>/bankruptcy-<district>/    each U.S. bankruptcy court (uses lit/frbp; local bankruptcy rules only)
     outlines/<circuit>/<state>/state-civil/              state trial court of general jurisdiction, civil
     outlines/<circuit>/<state>/state-appellate/          state intermediate appellate and supreme court, civil appeals
     outlines/federal-circuit/<court>/, outlines/national/<court>/, outlines/military/<court>/,
@@ -19,6 +20,12 @@ The layout mirrors formbook's `courts/<circuit>/<jurisdiction>/`.
 
 Each directory holds `Lit.toml` plus `outline.lit`. Copy
 `outlines/third-circuit/new-jersey/state-civil/` as the template.
+
+A bankruptcy-court outline differs: it depends on `lit/frbp` (and `lit/core`),
+imports the FRBP periods from it with their cites bound to the vendored FRBP
+text, and declares only the court's local bankruptcy rule layer as `?(...)`
+cites and holes. It carries a `Lit.lock` (`litigate lock DIR`). Copy
+`outlines/third-circuit/new-jersey/bankruptcy-district/` as the template.
 
 ## Rules for every outline
 

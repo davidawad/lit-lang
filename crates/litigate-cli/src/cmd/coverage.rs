@@ -262,7 +262,7 @@ fn split(
 
 /// The jurisdiction of the state-court outline at `dir`
 /// (`outlines/<circuit>/<jurisdiction>/<court>`), `None` for a federal
-/// court's outline.
+/// district or bankruptcy court's outline (`federal-*`, `bankruptcy-*`).
 ///
 /// # Errors
 /// A state-court outline under a directory naming no jurisdiction.
@@ -271,7 +271,7 @@ fn state_court(dir: &str) -> Result<Option<&'static str>, Failure> {
     let [_, _, slug, court] = parts[..] else {
         return Ok(None);
     };
-    if court.starts_with("federal-") {
+    if court.starts_with("federal-") || court.starts_with("bankruptcy-") {
         return Ok(None);
     }
     JURISDICTIONS
@@ -432,8 +432,8 @@ fn render(states: usize, federal: &[Package], rows: &[Row]) -> String {
          `expect`s, **matters** are a `lit/<d>` package's matter expect tests \
          (`tests/expect/<d>/*.toml` naming a `case` and the `world` it runs \
          in). A jurisdiction's packages are its state-court outlines \
-         (`outlines/<circuit>/<jurisdiction>/`, federal district courts \
-         excluded) and the `lit/` packages promoted from them (an outline's \
+         (`outlines/<circuit>/<jurisdiction>/`, federal district and \
+         bankruptcy courts excluded) and the `lit/` packages promoted from them (an outline's \
          `forum`, kept once the outline is deleted). Status: `promoted` (a `lit/` package), `outline` (outlines \
          only, counted as such), `none` (zero until modeled). Public law only.\n\n\
          ## Federal packages (lit/)\n\n\

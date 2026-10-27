@@ -15,7 +15,7 @@ pub struct Cli {
     pub format: Option<Format>,
     /// The operation.
     #[command(subcommand)]
-    pub command: Command,
+    pub command: Invocation,
 }
 
 /// Output format.
@@ -195,7 +195,26 @@ pub enum QueryKind {
     Overrides,
 }
 
-/// Subcommands.
+/// What `litigate` was asked to run: an envelope command, or the
+/// engine's raw interface, which prints its own response.
+#[derive(Debug, Subcommand)]
+pub enum Invocation {
+    /// A subcommand that prints one envelope.
+    #[command(flatten)]
+    Envelope(Command),
+    /// The engine's raw JSON-in/JSON-out interface over packs and named
+    /// scenarios (`litigate engine q '<request>'`, `litigate engine solve
+    /// --packs ID,ID`, `litigate engine --help`), for debugging and tools;
+    /// prints the engine response, not an envelope.
+    #[command(disable_help_flag = true)]
+    Engine {
+        /// The engine command and its arguments.
+        #[arg(trailing_var_arg = true, allow_hyphen_values = true, num_args = 0..)]
+        args: Vec<String>,
+    },
+}
+
+/// The subcommands that print one envelope.
 #[derive(Debug, Subcommand)]
 pub enum Command {
     /// The whole language and CLI contract as JSON.
@@ -288,16 +307,6 @@ pub enum Command {
     /// An engine op on a compiled matter or package.
     #[command(flatten)]
     Op(EngineOp),
-    /// The engine's raw JSON-in/JSON-out interface over packs and named
-    /// scenarios (`litigate engine q '<request>'`, `litigate engine solve
-    /// --packs ID,ID`, `litigate engine --help`), for debugging and tools;
-    /// prints the engine response, not an envelope.
-    #[command(disable_help_flag = true)]
-    Engine {
-        /// The engine command and its arguments.
-        #[arg(trailing_var_arg = true, allow_hyphen_values = true, num_args = 0..)]
-        args: Vec<String>,
-    },
     /// Export a matter's computed deadlines as an iCalendar (`.ics`) file.
     Calendar {
         /// The `.case` file.
@@ -553,7 +562,6 @@ impl Command {
             Self::Fmt { .. } => "fmt",
             Self::Run { .. } => "run",
             Self::Op(op) => op.parts().0,
-            Self::Engine { .. } => "engine",
             Self::Calendar { .. } => "calendar",
             Self::LintFiling { .. } => "lint-filing",
             Self::MatchDocket { .. } => "match-docket",
@@ -580,17 +588,20 @@ mod tests {
         let ops = EngineOp::augment_subcommands(clap::Command::new("ops"));
         let names: Vec<&str> = ops.get_subcommands().map(clap::Command::get_name).collect();
         assert_eq!(names.len(), 17);
+        // The envelope name, engine op and target `argv` parses to, if an op.
+        let op = |argv: &[&str]| match &Cli::try_parse_from(argv).map(|c| c.command) {
+            Ok(Invocation::Envelope(command @ Command::Op(op))) => {
+                Some((command.name(), op.parts().0, op.parts().1.target.clone()))
+            }
+            _ => None,
+        };
         for name in names {
-            let cli = Cli::try_parse_from(["litigate", name, "x.case"]);
-            let command = cli.map(|c| c.command).ok();
-            let Some(Command::Op(op)) = &command else {
-                panic!("{name}: {command:?}");
-            };
             assert_eq!(
-                (op.parts().0, op.parts().1.target.as_str()),
-                (name, "x.case")
+                op(&["litigate", name, "x.case"]),
+                Some((name, name, "x.case".to_owned()))
             );
-            assert_eq!(command.as_ref().map(Command::name), Some(name));
         }
+        // The engine's raw interface takes a request, never a matter.
+        assert_eq!(op(&["litigate", "engine", "solve", "x.case"]), None);
     }
 }

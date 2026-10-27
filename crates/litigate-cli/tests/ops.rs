@@ -7,6 +7,7 @@
 #![allow(clippy::unwrap_used)]
 mod support;
 
+use litigate_cli::engine::Builtin;
 use serde_json::{json, Value};
 use support::{example, litigate, litigate_in, repo, Run};
 
@@ -134,6 +135,23 @@ fn the_engine_reads_matters_from_cases_by_default() {
 }
 
 #[test]
+fn the_litgraph_shim_serves_the_packs_and_scenarios_built_into_it() {
+    let printed = litigate_cli::engine::execute(
+        ["litgraph", "describe", "--compact"],
+        Builtin::Embedded(litgraph_packs::PACKS, litgraph_packs::SCENARIOS),
+    );
+    assert_eq!(printed.code, 0, "{}", printed.stderr);
+    let v: Value = serde_json::from_str(&printed.stdout).unwrap();
+    assert_eq!(v["result"]["packs_source"], "embedded", "{v}");
+    assert_eq!(v["result"]["scenarios_source"], "embedded");
+    let library = &v["result"]["scenario_library"];
+    assert!(
+        library.to_string().contains("cofc-1498-patent-case"),
+        "{library}"
+    );
+}
+
+#[test]
 fn named_directories_replace_the_compiled_halves() {
     let packs = litgraph_packs::PACKS_DIR;
     let scenarios = litgraph_packs::SCENARIOS_DIR;
@@ -231,6 +249,11 @@ fn engine_requests_documents_and_schemas() {
     assert!(missing
         .stderr
         .starts_with("litigate engine: reading no/such/request.json"));
+    let unread = with(&["validate", "no/such/document.json"]);
+    assert_eq!(unread.code, 1);
+    assert!(unread
+        .stderr
+        .starts_with("litigate engine: reading no/such/document.json"));
     let schema = engine(&["schema", "--compact"]);
     assert_eq!(schema.code, 0);
     assert!(schema.json.is_object());

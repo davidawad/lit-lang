@@ -181,24 +181,27 @@ fn execute_with(
             };
         }
     };
+    let command = match cli.command {
+        cli::Invocation::Engine { args } => {
+            return engine::execute_in(
+                src,
+                std::iter::once("litigate engine".to_owned()).chain(args),
+                engine::Builtin::Compiled,
+            )
+        }
+        cli::Invocation::Envelope(command) => command,
+    };
     let format = cli.format.unwrap_or(format);
-    let op = cli.command.name();
-    if in_memory && !runs_in_memory(&cli.command) {
+    let op = command.name();
+    if in_memory && !runs_in_memory(&command) {
         let message = format!(
             "only {} and the op subcommands run over an in-memory source",
             IN_MEMORY_COMMANDS.join(", ")
         );
         return out::print(op, Err(Failure::new(message)), format, color, 0.0);
     }
-    if let cli::Command::Engine { args } = cli.command {
-        return engine::execute_in(
-            src,
-            std::iter::once("litigate engine".to_owned()).chain(args),
-            engine::Builtin::Compiled,
-        );
-    }
     let started = Stopwatch::start();
-    let outcome = cmd::dispatch(cli.command, src);
+    let outcome = cmd::dispatch(command, src);
     out::print(op, outcome, format, color, started.elapsed_ms())
 }
 
@@ -317,9 +320,9 @@ mod tests {
     #[test]
     fn version_names_the_commit_and_whether_the_tree_was_dirty() {
         let commit = env!("LITIGATE_GIT_COMMIT");
+        let hex = commit.bytes().filter(u8::is_ascii_hexdigit).count();
         assert!(
-            commit == "unknown"
-                || (commit.len() == 40 && commit.bytes().all(|b| b.is_ascii_hexdigit())),
+            matches!((commit, commit.len(), hex), ("unknown", ..) | (_, 40, 40)),
             "{commit}"
         );
         assert!(["clean", "dirty", "unknown"].contains(&env!("LITIGATE_GIT_TREE")));
@@ -342,9 +345,7 @@ mod tests {
     }
 
     #[test]
-    fn the_engine_is_never_dispatched_as_an_envelope_command() {
-        let engine = cli::Command::Engine { args: Vec::new() };
-        assert!(cmd::dispatch(engine, &Disk).is_err());
+    fn the_engine_prints_its_own_response_not_an_envelope() {
         let printed = run(&["litigate", "engine", "--version"], false);
         assert_eq!(printed.code, 0);
         assert!(

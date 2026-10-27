@@ -170,6 +170,14 @@ fn every_failure_is_a_usage_error() {
         assert!(r.stderr.contains(message), "{}", r.stderr);
     }
     std::fs::write(dir.join("docket.json"), "[]").unwrap();
+    std::fs::write(dir.join("binary.case"), [0xff, 0xfe, 0x00]).unwrap();
+    let unreadable = litigate_in(&dir, &["match-docket", "binary.case", "docket.json"]);
+    assert_eq!(unreadable.code, 1, "{}", unreadable.stdout);
+    assert!(
+        unreadable.stderr.contains("binary.case: "),
+        "{}",
+        unreadable.stderr
+    );
     let not_case = litigate_in(&dir, &["match-docket", "lit/cov", "docket.json"]);
     assert_eq!(not_case.code, 1, "{}", not_case.stdout);
     assert!(
@@ -215,4 +223,61 @@ fn a_dependency_event_is_matched_in_the_matter_view() {
         fourteen["reason"],
         "argument `until`: a `Date` is not read from docket text"
     );
+}
+
+#[test]
+fn a_supported_entry_that_cannot_be_placed_fails_the_run() {
+    // One event on the `events {` line: the entry would be spliced into it.
+    let one_line = MATTER.replace(
+        "events {\n  served-1: 2025-03-05 docket 3 Served(complaint, Personal) on widget\n}",
+        "events { served-1: 2025-03-05 docket 3 Served(complaint, Personal) on widget }",
+    );
+    let dir = matter("docket-one-line", &one_line);
+    let docket = json!([
+        {"entry_number": 4, "date_filed": "2025-03-07", "description": "ANSWER to Complaint by widget"},
+    ]);
+    let r = run(&dir, &docket, &["--out", "cases/advanced.case"]);
+    assert_eq!(r.code, 1, "{}", r.stdout);
+    assert!(
+        r.stderr.contains("could not locate the proposed filing"),
+        "{}",
+        r.stderr
+    );
+    assert!(!dir.join("cases/advanced.case").exists());
+}
+
+#[test]
+fn an_argument_typed_by_an_event_is_not_read_from_docket_text() {
+    let dir = scratch("docket-event-argument");
+    copy_dir(&fixture(), &dir);
+    let lit = dir.join("lit/cov/cov.lit");
+    let law = std::fs::read_to_string(&lit).unwrap();
+    std::fs::write(&lit, format!("{law}\nevent Struck(paper: Answered)\n")).unwrap();
+    std::fs::write(dir.join("cases/dk.case"), MATTER).unwrap();
+    assert_eq!(litigate_in(&dir, &["lock", "cases"]).code, 0);
+    let docket = json!([
+        {"entry_number": 4, "date_filed": "2025-03-07", "description": "Paper struck on widget"},
+    ]);
+    let r = run(&dir, &docket, &[]);
+    assert_eq!(r.code, 0, "{}", r.stdout);
+    let four = entry(&r.json, 4);
+    assert_eq!(four["status"], "incomplete", "{four}");
+    assert_eq!(
+        four["reason"],
+        "argument `paper`: a `Answered` is not read from docket text"
+    );
+    assert_eq!(r.json["result"]["text"], MATTER);
+}
+
+#[test]
+fn a_party_whose_id_has_no_words_is_never_named() {
+    let dir = matter("docket-wordless-party", &MATTER.replace("acme:", "__:"));
+    let docket = json!([
+        {"entry_number": 4, "date_filed": "2025-03-07", "description": "ANSWER to Complaint by widget"},
+    ]);
+    let r = run(&dir, &docket, &[]);
+    assert_eq!(r.code, 0, "{}", r.stdout);
+    let four = entry(&r.json, 4);
+    assert_eq!(four["status"], "advanced", "{four}");
+    assert_eq!(four["event"]["party"], "widget");
 }

@@ -70,10 +70,6 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             let (name, args) = op.parts();
             run::run(src, &args.target, name, &args.flags)
         }
-        // `execute` runs the engine's own interface before dispatching.
-        Command::Engine { .. } => Err(crate::out::Failure::new(
-            "engine prints its own response; run it through `execute`",
-        )),
         Command::Calendar {
             case,
             out,

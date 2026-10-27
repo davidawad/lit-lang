@@ -15,7 +15,7 @@
 use crate::hirx;
 use crate::out::Failure;
 use litigate_sema::hir::{self, Authored, Counts, Declaration, Limit, Measure, Verdict};
-use litigate_sema::precedence::select::select;
+use litigate_sema::precedence::select::chain;
 use litigate_sema::temporal::world::{Key, World};
 use serde_json::{json, Value};
 
@@ -157,9 +157,7 @@ fn kind(
     filed: &str,
     flag: Option<&str>,
 ) -> Result<Option<(Key, &'static str)>, Failure> {
-    let declared =
-        event(vocabulary, filed).and_then(|(pack, t)| t.paper.as_deref().map(|k| key_in(pack, k)));
-    match (declared, flag) {
+    match (declared(vocabulary, filed), flag) {
         (Some(declared), Some(flag)) => {
             let given = flagged(law, flag)?;
             if given == declared {
@@ -188,13 +186,80 @@ fn cited(cite: Option<String>) -> String {
     cite.map(|c| format!(" ({c})")).unwrap_or_default()
 }
 
-/// The layer that set a limit: its package, pack, authority and version.
-fn layer(world: &World<'_>, i: usize) -> Value {
-    let info = &world.packs[world.decls[i].pack];
-    let meta = world.decls[i].meta;
-    json!({
-        "package": info.name, "pack": info.pack, "authority": meta.authority,
-        "version": format!("{}@{}", meta.id, meta.effective.from),
+/// The paper kind event `filed` (`Name(...)` or `pack::Name(...)`)
+/// declares (`event E() paper k`), among `vocabulary` (primary first).
+#[must_use]
+pub fn declared(vocabulary: &[&hir::Package], filed: &str) -> Option<Key> {
+    event(vocabulary, filed).and_then(|(pack, t)| t.paper.as_deref().map(|k| key_in(pack, k)))
+}
+
+/// The limit governing a paper kind on a date, and the layers that set
+/// it.
+#[derive(Debug, Clone)]
+pub struct Governing<'a> {
+    /// The version selected.
+    pub limit: &'a Limit,
+    /// The package declaring it: the layer that set the limit.
+    pub package: String,
+    /// Its pack id.
+    pub pack: String,
+    /// The packages selection passed through, base first: the base's
+    /// package, then each layer whose claim displaced the one before;
+    /// the last is [`Governing::package`].
+    pub provenance: Vec<String>,
+}
+
+impl Governing<'_> {
+    /// The layer that set the limit: its package, pack, authority and
+    /// version, and the layers it displaced (`provenance`).
+    #[must_use]
+    pub fn layer(&self) -> Value {
+        let meta = &self.limit.meta;
+        json!({
+            "package": self.package, "pack": self.pack, "authority": meta.authority,
+            "version": format!("{}@{}", meta.id, meta.effective.from),
+            "provenance": self.provenance,
+        })
+    }
+}
+
+/// The limit of paper kind `key` that SPEC §5.5's selection chooses over
+/// `law` on `date` at `known_at`, with the layers that set it.
+///
+/// # Errors
+/// Why none governs (no version in force, unordered claimants), or the
+/// winner is not a limit, as a sentence.
+pub fn governing<'a>(
+    law: &[&'a hir::Package],
+    key: &Key,
+    date: &str,
+    known_at: Option<&str>,
+) -> Result<Governing<'a>, String> {
+    let name = format!("`{}::{}`", key.pack, key.name);
+    let world = World::closure(law, law);
+    let chain =
+        chain(&world, key, date, known_at).map_err(|why| why.describe(&world, &name, date))?;
+    let last = chain[chain.len() - 1];
+    let Declaration::Limit(limit) = world.decls[last].decl else {
+        return Err(format!("{name} is not a limit"));
+    };
+    let package_of = |i: usize| world.packs[world.decls[i].pack].name.clone();
+    let base = world
+        .packs
+        .iter()
+        .find(|p| p.pack == key.pack)
+        .map(|p| p.name.clone());
+    let mut provenance: Vec<String> = Vec::new();
+    for p in base.into_iter().chain(chain.iter().map(|&i| package_of(i))) {
+        if provenance.last() != Some(&p) {
+            provenance.push(p);
+        }
+    }
+    Ok(Governing {
+        limit,
+        package: package_of(last),
+        pack: world.pack_of(last).to_owned(),
+        provenance,
     })
 }
 
@@ -348,17 +413,10 @@ pub fn check(
         ));
     };
     let name = format!("{}::{}", key.pack, key.name);
-    let world = World::closure(law, law);
-    let selected = select(&world, &key, date, known_at)
-        .map_err(|why| why.describe(&world, &format!("`{name}`"), date));
-    let selected = selected.and_then(|i| match world.decls[i].decl {
-        Declaration::Limit(l) => Ok((i, l)),
-        _ => Err(format!("`{name}` is not a limit")),
-    });
-    Ok(match selected {
-        Ok((i, limit)) => {
-            let layer = layer(&world, i);
-            let mut out = judge(&name, limit, &layer, counts, &paper.certificates);
+    Ok(match governing(law, &key, date, known_at) {
+        Ok(set) => {
+            let layer = set.layer();
+            let mut out = judge(&name, set.limit, &layer, counts, &paper.certificates);
             out["kind"] = Value::from(key.name);
             out["kind_from"] = Value::from(from);
             out

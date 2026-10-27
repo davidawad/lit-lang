@@ -170,6 +170,27 @@ fn p1_a_displacing_claimant_is_followed_to_its_own_winner() {
     );
     let hir = compile(&[core(), fed(DELEGATED), local, standing]);
     assert_eq!(who(&hir), "standing::standing-answer");
+    // The chain passes through each layer, base to winner.
+    let refs: Vec<&Package> = hir.iter().collect();
+    let world = World::from_packages(&refs);
+    let chain = litigate_sema::precedence::select::chain(
+        &world,
+        &key("fed", "answer-period"),
+        "2012-06-01",
+        None,
+    )
+    .map(|c| {
+        c.iter()
+            .map(|&w| format!("{}::{}", world.pack_of(w), world.decls[w].meta.id))
+            .collect::<Vec<_>>()
+    });
+    assert_eq!(
+        chain,
+        Ok(vec![
+            "local::local-answer".to_owned(),
+            "standing::standing-answer".to_owned()
+        ])
+    );
 }
 
 #[test]

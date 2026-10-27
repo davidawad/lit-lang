@@ -154,3 +154,45 @@ pub fn located(json: &Value) -> Vec<(String, String, String, u64)> {
         })
         .unwrap_or_default()
 }
+
+/// A scratch workspace for filing limits set by layers (lg-962.10.3): the
+/// `cov-cmds` fixture, whose `Answered` now files a `brief` (100 words, a
+/// certificate, delegable to a local rule), `lit/core` and `lit/frap`, and
+/// the `limit-layers` fixture's layer packages, matters and world, locked.
+pub fn limit_layers(name: &str) -> PathBuf {
+    let dir = scratch(name);
+    let fixtures = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures");
+    copy_dir(&fixtures.join("cov-cmds"), &dir);
+    copy_dir(&fixtures.join("limit-layers"), &dir);
+    for pkg in ["core", "frap"] {
+        copy_dir(&repo().join("lit").join(pkg), &dir.join("lit").join(pkg));
+    }
+    // The copied locks pin the vendored L0 texts (SPEC §4.2).
+    #[cfg(unix)]
+    std::os::unix::fs::symlink(repo().join("sources"), dir.join("sources")).unwrap();
+    #[cfg(not(unix))]
+    copy_dir(&repo().join("sources"), &dir.join("sources"));
+    let cov = dir.join("lit/cov/cov.lit");
+    let text = std::fs::read_to_string(&cov).unwrap().replace(
+        "event Answered(document: Document)\n",
+        "event Answered(document: Document) paper brief\n",
+    );
+    let brief = "
+limit brief delegable { to [LocalRule], op set } {
+  words <= 100
+  requires certificate compliance
+}
+";
+    std::fs::write(&cov, format!("{text}{brief}")).unwrap();
+    for target in [
+        "lit/local",
+        "lit/standing",
+        "lit/frap-local",
+        "lit/frap-standing",
+        "cases",
+    ] {
+        let lock = litigate_in(&dir, &["lock", target]);
+        assert_eq!(lock.code, 0, "{target}: {}{}", lock.stdout, lock.stderr);
+    }
+    dir
+}

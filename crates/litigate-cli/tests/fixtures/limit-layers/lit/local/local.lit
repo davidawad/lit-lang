@@ -1,0 +1,9 @@
+module local.briefs
+
+import core.authority.{ StandingOrder }
+import frcp.cov.{ brief }
+
+limit local-brief override brief delegable { to [StandingOrder], op set } {
+  words <= 200
+  requires certificate compliance
+}

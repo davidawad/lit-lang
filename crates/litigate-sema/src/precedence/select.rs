@@ -85,14 +85,36 @@ pub fn select(
     date: &str,
     known_at: Option<&str>,
 ) -> Result<usize, Unselected> {
+    chain(world, key, date, known_at).map(|c| c[c.len() - 1])
+}
+
+/// The declarations [`select`] passes through for `key` on `date`, in
+/// order: the winner of `key`, then the winner of that winner's own key,
+/// and so on, each once; the last governs. A layer overriding a layer
+/// that overrides the base is the second of three (the base's own
+/// version is first only when nothing displaces it). Never empty.
+///
+/// # Errors
+/// [`Unselected`] when nothing is active or the claimants are unordered
+/// at any step.
+pub fn chain(
+    world: &World<'_>,
+    key: &Key,
+    date: &str,
+    known_at: Option<&str>,
+) -> Result<Vec<usize>, Unselected> {
     let mut key = key.clone();
     let mut seen = BTreeSet::from([key.clone()]);
+    let mut out: Vec<usize> = Vec::new();
     loop {
         let w = one(world, &key, date, known_at)?;
+        if out.last() != Some(&w) {
+            out.push(w);
+        }
         let next = world.key(w);
         // A cycle of claims is L3006; selection stops where it closes.
         if next == key || !seen.insert(next.clone()) {
-            return Ok(w);
+            return Ok(out);
         }
         key = next;
     }

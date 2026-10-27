@@ -200,7 +200,7 @@ pub enum RowState {
     Unknown,
     /// Replaced; the reason says by what.
     Superseded,
-    /// An event (no status).
+    /// An event or a filing limit (no status).
     None,
 }
 
@@ -214,9 +214,13 @@ pub enum RowKind {
     Deadline,
     /// A point where worlds diverge.
     Fork,
+    /// The filing limit (SPEC §3.7) governing the paper an event files:
+    /// `provenance` lists the layers selection passed through, so its
+    /// last entry is the layer that set the limit.
+    Limit,
 }
 
-/// One event, deadline or fork point, in exactly one world.
+/// One event, deadline, fork point or filing limit, in exactly one world.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
 pub struct TimelineRow {
@@ -224,8 +228,8 @@ pub struct TimelineRow {
     pub id: String,
     /// Stable identity across worlds and runs, derived from the row's
     /// cause: `<rule id>@<trigger key>`, `event:<Name>@<declaration>`,
-    /// `fork:<node id>@<trigger key>`. A child world's row with its
-    /// parent's key replaces the parent's row.
+    /// `fork:<node id>@<trigger key>`, `<limit id>@<event key>`. A child
+    /// world's row with its parent's key replaces the parent's row.
     pub key: String,
     /// Its world.
     pub world: String,

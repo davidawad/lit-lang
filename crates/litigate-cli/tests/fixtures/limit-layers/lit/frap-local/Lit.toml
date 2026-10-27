@@ -1,0 +1,33 @@
+# Limit-layer fixture (lg-962.10.3): a court of appeals' local rule
+# raising FRAP 32(a)(7)'s principal-brief word bound, as FRAP 32(e)
+# delegates ("By local rule or order in a particular case"). Synthetic:
+# the number is no circuit's, so the limit carries no cite.
+[package]
+name = "frap-local-fixture"
+version = "0.1.0"
+language = 1
+pack_id = "frap-local-fixture"
+forum = "frap"
+authority = "LocalRule"
+title = "Local rule layer (fixture)"
+in_force = "2016-12-01"
+known_at = "2025-01-01"
+kind = "local-rule"
+
+[package.roles]
+court = "nature"
+
+[package.instrument]
+source = "lr"
+issuer = "A court of appeals"
+date = "2016-12-01"
+
+[dependencies]
+frap-appellate-procedure = { version = "^0.1.0", path = "../frap" }
+
+[sources.lr]
+title = "Local rule (fixture)"
+url = "https://www.nysd.uscourts.gov/"
+path = "sources/change-sdny-edny-local-civil-rule-6.txt"
+path_sha256 = "d7ea4a0e259c8609c98efe869d04776cb7e9ca119c701c3760679a01e3110aae"
+as_of = "2026-01-02"

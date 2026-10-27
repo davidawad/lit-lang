@@ -437,6 +437,15 @@ world:
   unresolved conflict). The result lists every world (choices, layers,
   deadlines with due dates, its errors), every filing with the worlds of
   each outcome, and the worlds grouped by identical outcome.
+- **A filing's limit** (lg-962.10.3, SPEC §3.7). A filing whose event
+  files a paper kind (`event E() paper k`) has, in each world's
+  `limits`, the version of `k` selection chooses there on its date and
+  the layer that set it (`package`, `pack`, `authority`, `version`, and
+  `provenance`: each layer selection passed through, base first), or a
+  `hole` saying why none is selected (none in force, unordered claimants,
+  or the world's own law in error). The filing's `limit.set_by` lists the
+  worlds by that layer, so a world without an overriding layer reads as
+  the base's.
 - **Errors.** A late filing is an outcome of its world. The query fails
   (exit 2) only for an invalid world file, a package in scope with an
   error, or a matter error no layer can change (syntax, names, pins,

@@ -715,8 +715,16 @@ Semantics:
   capability (L3004): the base's authority, or a `delegable` capability
   on the base naming the layer's level, as FRAP 32(e) delegates length to
   local rules and case orders. A `limit` prescribes (§5.7, effect
-  `prescribe`). Showing the layer that set each limit on a timeline and
-  in alternate worlds is lg-962.10.3.
+  `prescribe`). A layer may itself delegate the limit onward (a local
+  rule's `delegable { to [StandingOrder], op set }`), and selection
+  follows each displacing claim to its own winner. Where the forum's
+  class matrix narrows a class (FRAP 47(a)(1): in a court of appeals a
+  standing order only declares, L2010), no layer of that class changes
+  a limit. A timeline (TIMELINE.md) follows each event filing a paper
+  with a `limit` row whose `layer` is the one that set the limit and
+  whose `provenance` lists each layer selection passed through, base
+  first; `litigate worlds` names that layer per filing in every world
+  (CHANGE.md §5.1) (lg-962.10.3).
 - **Lowering.** A pack carries the version of each `limit` in force at
   the build dates as `filingLimits` (`docs/PACK_SCHEMA.md`): `{id, cite,
   bounds: [{measure, max, cite}], certificates: [{kind, for, cite}],

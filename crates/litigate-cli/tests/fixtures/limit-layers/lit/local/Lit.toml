@@ -1,0 +1,33 @@
+# Limit-layer fixture (lg-962.10.3): a district court's local rule
+# raising the coverage fixture's `brief` limit and delegating that limit
+# to a standing order. Synthetic: no rule text is encoded, so no cite.
+[package]
+name = "cov-local"
+version = "0.1.0"
+language = 1
+pack_id = "cov-local"
+forum = "frcp"
+authority = "LocalRule"
+title = "Local rule layer (fixture)"
+in_force = "2009-12-01"
+known_at = "2025-01-01"
+kind = "local-rule"
+
+[package.roles]
+court = "nature"
+
+[package.instrument]
+source = "lr"
+issuer = "A district court"
+date = "2009-12-01"
+
+[dependencies]
+cov-example = { version = "^0.1.0", path = "../cov" }
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.lr]
+title = "Local rule (fixture)"
+url = "https://www.nysd.uscourts.gov/"
+path = "sources/change-sdny-edny-local-civil-rule-6.txt"
+path_sha256 = "d7ea4a0e259c8609c98efe869d04776cb7e9ca119c701c3760679a01e3110aae"
+as_of = "2026-01-02"

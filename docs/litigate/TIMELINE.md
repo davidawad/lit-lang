@@ -79,15 +79,15 @@ A UI diffing two worlds pairs rows by `key`.
 
 | Field | Meaning |
 |---|---|
-| `key` | Stable identity across worlds and runs, derived from what caused the row and never from its position, so inserting a row never renumbers others: a deadline or obligation is `<rule node id>@<key of its trigger row>`; a `.case` event is `event:<Name>@<declaration>`, where the declaration is the event's declared id, else its `<date>/<docket>` (date alone when it has no docket number), and an event a world assumes is `event:<Name>@<key of the fork row>`; a fork is `fork:<node id>@<key of its trigger row>` (a node can fork more than once in a matter, once per motion or appeal). An event without a declared id gets an info-level lint whose fix inserts a generated id, because a `<date>/<docket>` key changes when the date is corrected. An election or removal event with neither a declared id nor a docket number is `event:<Name>@<date>/<option edge id>` (the edge it elects or removes, as written); a deadline nothing has triggered is `<rule node id>@event:<Name>` of its trigger pattern; a fork's trigger row is the event that moved the matter to its node, and a fork no event moved the matter to is `fork:<node id>@start`; an event a world assumes is named by its edge's event pattern, else the edge's id, else the node the edge leads to. Two rows of one world that still share a key are an error (L1001) naming both, never told apart by position. Never derived from a label. |
-| `kind` | `event`, `deadline` or `fork`. |
+| `key` | Stable identity across worlds and runs, derived from what caused the row and never from its position, so inserting a row never renumbers others: a deadline or obligation is `<rule node id>@<key of its trigger row>`; a `.case` event is `event:<Name>@<declaration>`, where the declaration is the event's declared id, else its `<date>/<docket>` (date alone when it has no docket number), and an event a world assumes is `event:<Name>@<key of the fork row>`; a fork is `fork:<node id>@<key of its trigger row>` (a node can fork more than once in a matter, once per motion or appeal). A filing limit is `<limit id>@<key of the event row filing the paper>`, the base's limit id. An event without a declared id gets an info-level lint whose fix inserts a generated id, because a `<date>/<docket>` key changes when the date is corrected. An election or removal event with neither a declared id nor a docket number is `event:<Name>@<date>/<option edge id>` (the edge it elects or removes, as written); a deadline nothing has triggered is `<rule node id>@event:<Name>` of its trigger pattern; a fork's trigger row is the event that moved the matter to its node, and a fork no event moved the matter to is `fork:<node id>@start`; an event a world assumes is named by its edge's event pattern, else the edge's id, else the node the edge leads to. Two rows of one world that still share a key are an error (L1001) naming both, never told apart by position. Never derived from a label. |
+| `kind` | `event`, `deadline`, `fork`, or `limit`: the filing limit (SPEC §3.7) of the paper an event files. |
 | `date` | When an event happened; `null` for deadlines and unresolved forks. |
 | `due` | A deadline's due date; `null` when it cannot be computed. |
-| `status.state` | `met`, `open`, `late`, `lapsed`, `breached`, `unknown`, `superseded`, or `none` for events. |
+| `status.state` | `met`, `open`, `late`, `lapsed`, `breached`, `unknown`, `superseded`, or `none` for events and filing limits. |
 | `status.reason` | Why, when the state needs one; always set for `unknown` and `superseded`. |
 | `cite` | The rule text the row rests on. |
 | `source` | The `.lit` or `.case` span that produced the row, or `null`. |
-| `layer` | The class of the layer that decided the row: the last entry of `provenance`. |
+| `layer` | The class of the layer that decided the row: the last entry of `provenance`. For a `limit` row, the layer that set the limit. |
 | `provenance` | Layer ids in the order they applied, base first. Never empty. |
 | `trigger` | The row that started this one, or `null`. |
 | `replaced_by` | Optional: the `key` of the row replacing this one, which must be a key of the same world's view. Present on a `superseded` row whenever a replacing row exists (a child world's row for a deadline the parent left untriggered; the new instance of a restarted period; the `later_of` instance that absorbed one); absent otherwise, never `null`. `status.reason` is for people and carries no machine meaning: never parse it, follow `replaced_by`. |
@@ -152,11 +152,25 @@ What fills the document today:
   the deadlines governing the options it leads to, `unknown` because no
   recorded event dates them. `assumed_order`, `grant` and `denial` wait
   for orders and decisions as layers (lg-fq2).
+- **Filing limits** (lg-962.10.3, SPEC §3.7). An event row whose event
+  files a paper kind (`event E() paper k`), recorded or assumed by a
+  world, is followed in its world by a `limit` row triggered by it, keyed
+  `<module>.<k>@<event key>` (the base's declaration, so the row pairs
+  across worlds whichever layer sets it): the version of `k` precedence
+  selects over the matter's law on the event's date (an assumed event's:
+  `as_of`), labelled with its bounds (`principal-brief: 30 pages or 13000
+  words or 1300 lines`), its cite and source the selected version's,
+  `status` `none` saying the date and the package that set it. Its
+  `provenance` is the base's layer, then each layer whose claim displaced
+  the one before, so `layer` is the class of the layer that set the
+  limit. With no version selected (none in force, unordered claimants)
+  the row is `unknown` with why, decided by the base's layer. `--layers`
+  drops it with any layer of its provenance.
 - **Layers.** Each package the matter uses (or the module's package) is
   one layer, `id` and `package` its name, `class` `base_rule` unless its
   authority is `LocalRule`, `StandingOrder` or `CaseOrder`, `effective`
-  its `in_force` interval; every row's `provenance` is the one layer that
-  declares it.
+  its `in_force` interval; every row's `provenance` but a `limit` row's is
+  the one layer that declares it.
 - **Rows of a module.** Each deadline the `.lit` file declares that is in
   force at `as_of`, `unknown` (a rule module records no events).
 - **Cite proofs** (lg-flu.40, SPEC §5.4). A row's cite whose vendored

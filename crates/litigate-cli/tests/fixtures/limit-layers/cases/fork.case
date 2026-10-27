@@ -1,0 +1,17 @@
+case lf-fork
+uses cov-example ^0.1.0, cov-standing ^0.1.0
+as_of 2025-03-10
+summary "Widget is served; answering is one of the worlds."
+
+perspective widget
+
+parties {
+  acme: Plaintiff Corporation
+  widget: Defendant Corporation
+}
+
+events {
+  2025-03-05 Served(complaint, Personal) on widget
+}
+
+facts { time-barred: not-barred }

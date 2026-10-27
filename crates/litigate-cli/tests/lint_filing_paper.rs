@@ -178,6 +178,7 @@ fn over_the_word_bound_is_a_violation_with_its_cite_and_layer() {
         json!({
             "package": "ptab-patent-trial-appeal-board", "pack": "ptab-patent-trial-appeal-board",
             "authority": "Regulation", "version": "ipr-petition@2016-05-02",
+            "provenance": ["ptab-patent-trial-appeal-board"],
         })
     );
     assert!(
@@ -275,6 +276,7 @@ fn a_layer_sets_the_limit_and_is_named_in_each_violation() {
             json!({
                 "package": "cov-local", "pack": "cov-local", "authority": "LocalRule",
                 "version": "local-brief@2009-12-01",
+                "provenance": ["cov-example", "cov-local"],
             })
         );
     }

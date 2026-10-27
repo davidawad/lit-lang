@@ -1,0 +1,34 @@
+# Limit-layer fixture (lg-962.10.3): a standing order overriding FRAP's
+# principal-brief limit, which the law refuses: FRAP 47(a)(1) puts a
+# generally applicable direction in a local rule, never a standing order
+# (core's circuit-appellate class matrix, L2010), and FRAP 32(e) delegates
+# length only to a local rule or a case order (L3004).
+[package]
+name = "frap-standing-fixture"
+version = "0.1.0"
+language = 1
+pack_id = "frap-standing-fixture"
+forum = "frap"
+authority = "StandingOrder"
+title = "Standing order layer (fixture)"
+in_force = "2016-12-01"
+known_at = "2025-01-01"
+kind = "standing-order"
+
+[package.roles]
+court = "nature"
+
+[package.instrument]
+source = "so"
+issuer = "A judge"
+date = "2016-12-01"
+
+[dependencies]
+frap-appellate-procedure = { version = "^0.1.0", path = "../frap" }
+
+[sources.so]
+title = "Standing order (fixture)"
+url = "https://cand.uscourts.gov/"
+path = "sources/change-breyer-general-standing-order-2025.txt"
+path_sha256 = "a36186c206ae59a2578f63e45ba8af6c998a4dcdbc27da1da0729aab4b315283"
+as_of = "2025-07-16"

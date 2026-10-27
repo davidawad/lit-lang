@@ -110,7 +110,7 @@ A string accepted by `keymap-set'.  It takes effect when
   :group 'litgraph-timeline)
 
 (defcustom litgraph-timeline-glyphs
-  '(("event" . "*") ("deadline" . "o") ("fork" . "+"))
+  '(("event" . "*") ("deadline" . "o") ("fork" . "+") ("limit" . "="))
   "Graph glyph of each row kind.  Other kinds use \"*\"."
   :type '(alist :key-type string :value-type string))
 

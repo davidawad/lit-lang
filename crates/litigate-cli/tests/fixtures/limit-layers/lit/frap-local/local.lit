@@ -1,0 +1,9 @@
+module local.briefs
+
+import core.authority.{ StandingOrder }
+import frap.filing.{ principal-brief }
+
+limit local-brief override principal-brief delegable { to [StandingOrder], op set } {
+  words <= 14_000
+  requires certificate compliance for [words]
+}

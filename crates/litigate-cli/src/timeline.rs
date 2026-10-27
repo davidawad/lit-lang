@@ -13,7 +13,13 @@
 //!
 //! Until the change layers of lg-fq2 land, every package is one layer:
 //! `base_rule` unless its authority is `LocalRule`, `StandingOrder` or
-//! `CaseOrder`, and every row's provenance is that one layer.
+//! `CaseOrder`, and a row's provenance is the one layer declaring it,
+//! except a filing limit's (lg-962.10.3): an event filing a paper kind
+//! (`event E() paper k`) is followed by a `limit` row for the version of
+//! `k` precedence selects over the matter's law, its provenance every
+//! layer selection passed through, base first, so its `layer` is the one
+//! that set the limit.
+use crate::cmd::filing::paper;
 use crate::hirx::{self, local};
 use crate::matter::{CaseCheck, Scheduled};
 use litigate_base::timeline::{
@@ -75,6 +81,9 @@ struct Draft {
     cite: Option<String>,
     source: Option<TimelineSpan>,
     layer: String,
+    /// The layers that applied before `layer`, base first (a limit's
+    /// displaced layers); empty for every other row.
+    via: Vec<String>,
     trigger: Option<usize>,
     /// The row that replaces this one in its world's view.
     replaced_by: Option<usize>,
@@ -166,9 +175,33 @@ fn deadline_label(d: &hir::Deadline) -> String {
     )
 }
 
+/// A limit's bounds as a label (`30 pages or 13000 words or 1300
+/// lines`), a hole as `?`; `no length bound` without one.
+fn limit_label(l: &hir::Limit) -> String {
+    let bounds: Vec<String> = l
+        .bounds
+        .iter()
+        .map(|b| {
+            let max = match &b.max {
+                hir::Authored::Known(n) => n.to_string(),
+                hir::Authored::Hole(_) => "?".to_owned(),
+            };
+            format!("{max} {}", b.measure.as_str())
+        })
+        .collect();
+    if bounds.is_empty() {
+        "no length bound".to_owned()
+    } else {
+        bounds.join(" or ")
+    }
+}
+
 /// Builds one timeline over the loaded packages.
 struct Builder<'a> {
     all: &'a [&'a hir::Package],
+    /// The matter's law: its packages and their dependencies (empty for
+    /// a module), over which a filing limit is selected.
+    law: Vec<&'a hir::Package>,
     texts: BTreeMap<&'a str, &'a str>,
     as_of: String,
     known_at: Option<String>,
@@ -196,6 +229,7 @@ impl<'a> Builder<'a> {
     ) -> Self {
         Self {
             all,
+            law: Vec::new(),
             texts: texts
                 .iter()
                 .map(|(f, t)| (f.as_str(), t.as_str()))
@@ -366,12 +400,86 @@ impl<'a> Builder<'a> {
             cite: cited.and_then(|m| m.cite.clone()),
             source: self.source(decl.meta.span.as_ref()),
             layer,
+            via: Vec::new(),
             trigger,
             replaced_by: None,
         };
         // No cite (no `cited`) has nothing to prove.
         let from = cited.map_or("", |m| m.effective.from.as_str());
         self.push_cited(row, pkg, from)
+    }
+
+    /// The `limit` row of `world` after event row `trigger`, whose event
+    /// (`filed`, as written) files a paper kind: the version of the kind
+    /// precedence selects over the matter's law on `date` (the event's,
+    /// else `as_of` for an event a world assumes), its layer the one that
+    /// set it and its provenance each layer selection passed through,
+    /// base first. With none selected (no version in force, unordered
+    /// claimants) the row is `unknown` with why, the base's layer
+    /// deciding it. Nothing for an event that files no declared kind.
+    fn limit_row(&mut self, world: usize, filed: &str, date: Option<&str>, trigger: usize) {
+        let Some(kind) = paper::declared(self.all, filed) else {
+            return;
+        };
+        let Some(base) = self.package(&kind.pack) else {
+            return;
+        };
+        let on = date.map_or_else(|| self.as_of.clone(), str::to_owned);
+        let law = self.law.clone();
+        let key = format!("{}@{}", decl_key(base, &kind.name), self.rows[trigger].key);
+        let draft = |layer: String| Draft {
+            key: key.clone(),
+            world,
+            kind: RowKind::Limit,
+            date: date.map(str::to_owned),
+            due: None,
+            label: kind.name.clone(),
+            status: status(RowState::Unknown, None),
+            cite: None,
+            source: None,
+            layer,
+            via: Vec::new(),
+            trigger: Some(trigger),
+            replaced_by: None,
+        };
+        let set = match paper::governing(&law, &kind, &on, self.known_at.as_deref()) {
+            Ok(set) => set,
+            Err(why) => {
+                let mut row = draft(self.layer(base));
+                row.status.reason = Some(why);
+                self.push(row);
+                return;
+            }
+        };
+        let mut layers: Vec<String> = Vec::new();
+        for name in &set.provenance {
+            if let Some(pkg) = self.all.iter().copied().find(|p| &p.manifest.name == name) {
+                layers.push(self.layer(pkg));
+            }
+        }
+        let Some(owner) = self
+            .all
+            .iter()
+            .copied()
+            .find(|p| p.manifest.name == set.package)
+        else {
+            return;
+        };
+        let layer = self.layer(owner);
+        layers.retain(|l| *l != layer);
+        let meta = &set.limit.meta;
+        let row = Draft {
+            label: format!("{}: {}", kind.name, limit_label(set.limit)),
+            status: status(
+                RowState::None,
+                Some(format!("in force on {on}, set by {}", set.package)),
+            ),
+            cite: meta.cite.clone(),
+            source: self.source(meta.span.as_ref()),
+            via: layers,
+            ..draft(layer)
+        };
+        self.push_cited(row, owner, &meta.effective.from);
     }
 
     /// Unknown rows in `world` for the deadlines governing `node`'s
@@ -476,7 +584,7 @@ impl<'a> Builder<'a> {
                 cite: r.cite.clone(),
                 source: r.source.clone(),
                 layer: class,
-                provenance: vec![r.layer.clone()],
+                provenance: r.via.iter().chain([&r.layer]).cloned().collect(),
                 trigger: r.trigger.map(|t| ids[t].clone()),
                 replaced_by: r.replaced_by.map(|x| self.rows[x].key.clone()),
             });
@@ -632,6 +740,7 @@ pub fn of_case(
     for pkg in &used {
         b.layer(pkg);
     }
+    b.law = litigate_sema::temporal::world::World::closure_packages(&used, all);
     let primary = used.first().map(|p| p.manifest.name.clone());
     let (event_rows, moved) = events(&mut b, m, case, &primary.unwrap_or_default());
     let mut seen = deadlines(&mut b, m, case, &event_rows);
@@ -709,6 +818,7 @@ fn events(
                 .or_else(|| taken.and_then(|(_, _, x)| x.authority.clone())),
             source: b.source(spans.events.get(i).and_then(|s| s.whole.as_ref())),
             layer,
+            via: Vec::new(),
             trigger: None,
             replaced_by: None,
         };
@@ -718,6 +828,7 @@ fn events(
             b.prove(pkg, edge.authority.as_deref(), from, row.source.as_ref());
         }
         let row = b.push(row);
+        b.limit_row(0, &text, Some(&e.date), row);
         if step.is_some_and(|s| s.effect == Effect::Took) {
             moved = Some(row);
         }
@@ -896,6 +1007,7 @@ fn fork(
         cite: node.meta.cite.clone(),
         source: b.source(node.meta.span.as_ref()),
         layer: layer.clone(),
+        via: Vec::new(),
         trigger,
         replaced_by: None,
     };
@@ -929,11 +1041,13 @@ fn fork(
             cite: edge.authority.clone(),
             source: b.source(edge.span.as_ref()),
             layer: layer.clone(),
+            via: Vec::new(),
             trigger: Some(fork_at),
             replaced_by: None,
         };
         let taken = b.push_cited(taken, pkg, &node.meta.effective.from);
         if let Some(event) = &edge.event {
+            b.limit_row(world, &hirx::event_text(event), None, taken);
             triggered(b, world, taken, event);
         }
         if let Some((next_pkg, next)) = b.node(&target(pkg, &edge.to)) {

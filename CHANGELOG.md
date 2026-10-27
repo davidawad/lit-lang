@@ -142,6 +142,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   strict or a synthetic layer in an actual one (L1014). One example
   package per class for the deadline domain, over vendored instrument
   text (`docs/litigate/examples/change/`, `sources/change-*.txt`).
+- **Timelines and alternate worlds show the layer that set each filing
+  limit** (lg-962.10.3, SPEC §3.7). A timeline row of kind `limit`
+  (new in `litigate.timeline/1`) follows each event filing a paper, in
+  the docket and in each alternate world: the version precedence selects
+  on its date, its `provenance` every layer selection passed through
+  (base, local rule, standing order), so its `layer` is the one that set
+  the limit. `litigate worlds` lists per filing the worlds by the layer
+  that set its limit (`limit.set_by`), and each world's `limits`; a world
+  without the override is the base's. `lint-filing`'s `layer` gains the
+  same `provenance`. sema's `precedence::select::chain` is the selection
+  query's path. A standing order cannot change a FRAP limit: FRAP
+  47(a)(1) leaves a court of appeals' standing orders only `declare`
+  (L2010), and FRAP 32(e) delegates length to a local rule or case order.
 - **`litigate lint-filing` checks a filing's length and certificates**
   (lg-962.10.2, SPEC §3.7). `--words`/`--pages`/`--lines`, or
   `--document FILE` (UTF-8 text, its words counted), and `--certificate

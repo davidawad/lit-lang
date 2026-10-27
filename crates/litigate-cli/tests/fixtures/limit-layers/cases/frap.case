@@ -1,0 +1,14 @@
+case lf-frap
+uses frap-appellate-procedure ^0.1.0, frap-local-fixture ^0.1.0
+as_of 2025-03-10
+summary "An appellant's principal brief under a local rule raising its limit."
+
+perspective appellant
+
+parties {
+  appellant: applicant Corporation
+}
+
+events {
+  2025-03-05 PrincipalBriefFiled() by appellant
+}

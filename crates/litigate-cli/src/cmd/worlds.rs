@@ -8,7 +8,11 @@
 //! precedence selects it. The result lists every world with its outcome,
 //! each filing (an event `by` a party) with the worlds in which it is
 //! timely, late, unjudged, untimed or rejected, and the worlds grouped by
-//! identical outcomes.
+//! identical outcomes. A filing whose event files a paper kind (`event
+//! E() paper k`) names, in each world, the limit precedence selects for
+//! it there on its date and the layer that set it (lg-962.10.3), and
+//! lists the worlds by that layer: a world without an overriding layer
+//! is the base's.
 //!
 //! A contested question (a choice point the file declares
 //! `[contested.ID]`: unsettled law at ι) lowers to a chance node whose
@@ -24,6 +28,7 @@
 //! outcome of its world, not an error of the query: the envelope carries
 //! errors only when the world file or a package fails, or the matter
 //! itself (its syntax, names, pins or types, which no layer changes).
+use super::filing::paper;
 use crate::clock::{self, Clocks};
 use crate::ics;
 use crate::matter::{self, At, CaseCheck, Scheduled};
@@ -228,10 +233,35 @@ fn timeliness(lawful: bool, m: &CaseCheck, filing: &Filing<'_>) -> Timeliness {
     }
 }
 
-/// One world run: its result entry and how each filing fares.
+/// The limit governing `filing`'s paper in a world whose law is `law`,
+/// in error unless `lawful`: `{limit, layer}`, the layer the one that set
+/// it, else `{limit, layer: null, hole}`; `None` when its event files no
+/// paper kind it declares.
+fn limit(
+    law: &[&hir::Package],
+    lawful: bool,
+    f: &Filing<'_>,
+    known_at: Option<&str>,
+) -> Option<Value> {
+    let kind = paper::declared(law, &crate::hirx::event_text(&f.event.action))?;
+    let name = format!("{}::{}", kind.pack, kind.name);
+    let set = if lawful {
+        paper::governing(law, &kind, &f.event.date, known_at)
+    } else {
+        Err("the world's law is in error: no limit is selected in it".to_owned())
+    };
+    Some(match set {
+        Ok(set) => json!({"limit": name, "cite": set.limit.meta.cite, "layer": set.layer()}),
+        Err(why) => json!({"limit": name, "layer": null, "hole": why}),
+    })
+}
+
+/// One world run: its result entry, how each filing fares, and each
+/// filing's [`limit`].
 struct Run {
     entry: Value,
     fates: Vec<Timeliness>,
+    limits: Vec<Option<Value>>,
 }
 
 /// What every world run shares.
@@ -283,6 +313,11 @@ impl Query<'_> {
                 })
             })
             .collect();
+        let limits: Vec<Option<Value>> = self
+            .filings
+            .iter()
+            .map(|f| limit(&all, lawful, f, self.known_at.as_deref()))
+            .collect();
         let diagnostics: Vec<&Diagnostic> = alt
             .check
             .diagnostics
@@ -297,10 +332,17 @@ impl Query<'_> {
             "filings": self.filings.iter().zip(&fates)
                 .map(|(f, t)| (f.key.clone(), json!(t)))
                 .collect::<serde_json::Map<_, _>>(),
+            "limits": self.filings.iter().zip(&limits)
+                .filter_map(|(f, l)| Some((f.key.clone(), l.clone()?)))
+                .collect::<serde_json::Map<_, _>>(),
             "deadlines": m.counted.iter().map(deadline).collect::<Vec<_>>(),
             "diagnostics": diagnostics,
         });
-        Run { entry, fates }
+        Run {
+            entry,
+            fates,
+            limits,
+        }
     }
 }
 
@@ -314,16 +356,29 @@ impl Query<'_> {
             .enumerate()
             .map(|(i, f)| {
                 let mut by: BTreeMap<Timeliness, Vec<&str>> = BTreeMap::new();
+                // The worlds by the layer that set the filing's limit
+                // (`hole` where none is selected).
+                let mut set_by: BTreeMap<String, Vec<&str>> = BTreeMap::new();
+                let mut kind = None;
                 for (run, id) in runs.iter().zip(ids) {
                     by.entry(run.fates[i]).or_default().push(id);
+                    if let Some(l) = &run.limits[i] {
+                        kind = l["limit"].as_str();
+                        let package = l["layer"]["package"].as_str().unwrap_or("hole");
+                        set_by.entry(package.to_owned()).or_default().push(id);
+                    }
                 }
-                json!({
+                let mut out = json!({
                     "key": f.key, "date": f.event.date, "party": f.event.party,
                     "event": crate::hirx::event_text(&f.event.action),
                     "worlds": by.iter()
                         .map(|(t, w)| (json!(t).as_str().unwrap_or_default().to_owned(), json!(w)))
                         .collect::<serde_json::Map<_, _>>(),
-                })
+                });
+                if let Some(kind) = kind {
+                    out["limit"] = json!({"limit": kind, "set_by": set_by});
+                }
+                out
             })
             .collect();
         let mut classes: BTreeMap<&[Timeliness], Vec<&str>> = BTreeMap::new();

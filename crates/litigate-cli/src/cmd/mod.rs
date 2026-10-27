@@ -8,7 +8,7 @@ mod coverage;
 mod diff;
 mod docket;
 mod explain;
-mod filing;
+pub(crate) mod filing;
 mod fix;
 mod fmt;
 mod impact;

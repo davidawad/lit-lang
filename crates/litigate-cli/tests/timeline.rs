@@ -3,14 +3,16 @@
 //! options, and every output validated against the frozen schema
 //! `docs/litigate/timeline.v1.schema.json` together with its example.
 //! `replaced_by` (lg-z2m.4): a world triggering a deadline its parent
-//! left untriggered, and restarted or absorbed periods.
+//! left untriggered, and restarted or absorbed periods. Filing limits
+//! (lg-962.10.3): the `limit` row after an event filing a paper names the
+//! layer that set the limit and each layer before it.
 // Test helpers below may unwrap: a panic is the failed assertion.
 #![allow(clippy::unwrap_used)]
 mod support;
 
 use serde_json::{json, Value};
 use std::path::{Path, PathBuf};
-use support::{copy_dir, litigate, litigate_in, repo, scratch};
+use support::{copy_dir, limit_layers, litigate, litigate_in, repo, scratch};
 
 /// The frozen schema.
 fn schema() -> Value {
@@ -1085,4 +1087,137 @@ fn the_validator_rejects_a_dangling_replaced_by() {
         .join("\n")
         .contains("/rows/6/replaced_by: \"\" is empty"));
     assert!(!schema_errors(&with(&json!(null))).is_empty());
+}
+
+/// The `limit` rows of `t` (lg-962.10.3).
+fn limit_rows(t: &Value) -> Vec<&Value> {
+    t["rows"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|r| r["kind"] == "limit")
+        .collect()
+}
+
+#[test]
+fn a_standing_order_sets_the_limit_and_its_row_names_every_layer() {
+    let dir = limit_layers("timeline-limit-standing");
+    let t = timeline_in(&dir, &["cases/standing.case"]);
+    let answered = row(&t, "w0", "event:Answered@2025-03-07");
+    let limits = limit_rows(&t);
+    assert_eq!(limits.len(), 1, "{t:#}");
+    // The base (100 words) delegates to the local rule (200 words), which
+    // delegates to the standing order (300 words): the standing order
+    // sets the limit, and the row lists each layer selection passed.
+    assert_eq!(
+        limits[0],
+        &json!({
+            "id": limits[0]["id"], "key": "frcp.cov.brief@event:Answered@2025-03-07",
+            "world": "w0", "kind": "limit", "date": "2025-03-07", "due": null,
+            "label": "brief: 300 words",
+            "status": {"state": "none", "reason": "in force on 2025-03-07, set by cov-standing"},
+            "cite": null, "source": limits[0]["source"], "layer": "standing_order",
+            "provenance": ["cov-example", "cov-local", "cov-standing"],
+            "trigger": answered["id"],
+        })
+    );
+    assert_eq!(
+        limits[0]["source"]["file"],
+        json!("lit/standing/standing.lit")
+    );
+    let classes: Vec<(&Value, &Value)> = t["layers"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|l| (&l["id"], &l["class"]))
+        .collect();
+    assert!(classes.contains(&(&json!("cov-standing"), &json!("standing_order"))));
+    assert!(classes.contains(&(&json!("cov-local"), &json!("local_rule"))));
+    // Under the base alone the base sets it.
+    let base = timeline_in(&dir, &["cases/base.case"]);
+    let limits = limit_rows(&base);
+    assert_eq!(limits[0]["label"], json!("brief: 100 words"));
+    assert_eq!(limits[0]["layer"], json!("base_rule"));
+    assert_eq!(limits[0]["provenance"], json!(["cov-example"]));
+}
+
+#[test]
+fn an_alternate_world_filing_a_paper_shows_the_layer_that_set_its_limit() {
+    let dir = limit_layers("timeline-limit-fork");
+    let t = timeline_in(&dir, &["cases/fork.case"]);
+    let limits = limit_rows(&t);
+    assert_eq!(limits.len(), 1, "{t:#}");
+    let world = limits[0]["world"].as_str().unwrap();
+    let assumed = row(&t, world, "event:Answered@fork:frcp.cov.respond@start");
+    assert_eq!(limits[0]["trigger"], assumed["id"]);
+    assert_eq!(
+        limits[0]["key"],
+        json!("frcp.cov.brief@event:Answered@fork:frcp.cov.respond@start")
+    );
+    // No recorded date: the version in force at the matter's as_of.
+    assert_eq!(limits[0]["date"], Value::Null);
+    assert_eq!(
+        limits[0]["status"]["reason"],
+        json!("in force on 2025-03-10, set by cov-standing")
+    );
+    assert_eq!(
+        limits[0]["provenance"],
+        json!(["cov-example", "cov-local", "cov-standing"])
+    );
+}
+
+#[test]
+fn a_local_rule_raising_a_frap_limit_is_the_layer_of_its_row() {
+    let dir = limit_layers("timeline-limit-frap");
+    // FRAP has no edge filing a principal brief from a district court's
+    // disposition: replay rejects the filing (L4001), and the document
+    // still has its rows.
+    let run = litigate_in(&dir, &["timeline", "cases/frap.case"]);
+    let codes: Vec<&Value> = run.json["diagnostics"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|d| d["severity"] == "error")
+        .map(|d| &d["code"])
+        .collect();
+    assert_eq!(codes, [&json!("L4001")], "{}", run.stdout);
+    let t = &run.json["result"];
+    assert_eq!(schema_errors(t), Vec::<String>::new(), "{t:#}");
+    check_references(t);
+    let limits = limit_rows(t);
+    assert_eq!(limits.len(), 1, "{t:#}");
+    assert_eq!(
+        limits[0]["key"],
+        json!("frap.filing.principal-brief@event:PrincipalBriefFiled@2025-03-05")
+    );
+    assert_eq!(limits[0]["label"], json!("principal-brief: 14000 words"));
+    assert_eq!(limits[0]["layer"], json!("local_rule"));
+    assert_eq!(
+        limits[0]["provenance"],
+        json!(["frap-appellate-procedure", "frap-local-fixture"])
+    );
+}
+
+#[test]
+fn a_standing_order_cannot_override_a_frap_limit() {
+    // FRAP 47(a)(1): a generally applicable direction must be in a local
+    // rule, not a standing order (core's circuit-appellate class matrix);
+    // FRAP 32(e) delegates length to a local rule or a case order only.
+    let dir = limit_layers("timeline-limit-frap-standing");
+    let run = litigate_in(&dir, &["check", "lit/frap-standing"]);
+    assert_eq!(run.code, 2, "{}", run.stdout);
+    let errors: Vec<(&str, &str)> = run.json["diagnostics"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|d| d["severity"] == "error")
+        .map(|d| (d["code"].as_str().unwrap(), d["message"].as_str().unwrap()))
+        .collect();
+    assert!(
+        errors.contains(&(
+            "L2010",
+            "a package of class `standing-order` in the `circuit-appellate` forum family cannot displace another package's declaration"
+        )),
+        "{errors:?}"
+    );
 }

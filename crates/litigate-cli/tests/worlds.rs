@@ -3,7 +3,9 @@
 //! (docs/litigate/examples/timelines) is late without the 2009 amendment
 //! and timely with it; at a `known_at` before the amendment's order the
 //! corpus cannot count the period at all. Runs in memory over the
-//! example files and `lit/core`, as the wasm build does.
+//! example files and `lit/core`, as the wasm build does. A filing's limit
+//! (lg-962.10.3) is set by a standing order in the world with it and by
+//! the base in the world without it.
 // Test helpers below may unwrap: a panic is the failed assertion.
 #![allow(clippy::unwrap_used)]
 mod support;
@@ -13,7 +15,7 @@ use serde_json::{json, Value};
 use std::collections::BTreeMap;
 use std::fmt::Write as _;
 use std::path::Path;
-use support::{chmod, litigate_in, repo, scratch};
+use support::{chmod, limit_layers, litigate_in, repo, scratch};
 
 const CASE: &str = "docs/litigate/examples/timelines/rule-59e.case";
 const WORLD: &str = "docs/litigate/examples/timelines/rule-59e.world";
@@ -466,4 +468,62 @@ fn a_malformed_contested_question_fails_the_world_file() {
     let node = &json["result"]["chance"][0];
     assert_eq!(node["source"], "Fed. R. Civ. P. 59(e) (2009)");
     assert_eq!(node["branches"][0]["exact"], "1/2");
+}
+
+#[test]
+fn each_world_names_the_layer_that_set_a_filings_limit() {
+    let dir = limit_layers("worlds-limit");
+    let run = litigate_in(
+        &dir,
+        &[
+            "worlds",
+            "cases/base.case",
+            "--world",
+            "cases/limit.world",
+            "--vary",
+            "cov-standing",
+        ],
+    );
+    assert_eq!(run.code, 0, "{}{}", run.stdout, run.stderr);
+    let result = &run.json["result"];
+    // The answer is timely in both worlds; only its limit differs.
+    assert_eq!(
+        result["filings"][0]["worlds"],
+        json!({"timely": ["w1", "w2"]})
+    );
+    assert_eq!(
+        result["filings"][0]["limit"],
+        json!({
+            "limit": "cov-pack::brief",
+            "set_by": {"cov-example": ["w2"], "cov-standing": ["w1"]},
+        })
+    );
+    let limit = |id: &str| {
+        let world = result["worlds"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .find(|w| w["id"] == id)
+            .unwrap();
+        world["limits"]["#1"].clone()
+    };
+    assert_eq!(
+        limit("w1"),
+        json!({
+            "limit": "cov-pack::brief", "cite": null,
+            "layer": {
+                "package": "cov-standing", "pack": "cov-standing",
+                "authority": "StandingOrder", "version": "standing-brief@2009-12-01",
+                "provenance": ["cov-example", "cov-local", "cov-standing"],
+            },
+        })
+    );
+    // Without the override: the base's own limit.
+    assert_eq!(
+        limit("w2")["layer"],
+        json!({
+            "package": "cov-example", "pack": "cov-pack", "authority": "FederalRule",
+            "version": "brief@2009-12-01", "provenance": ["cov-example"],
+        })
+    );
 }

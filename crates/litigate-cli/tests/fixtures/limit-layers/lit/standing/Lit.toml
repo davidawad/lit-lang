@@ -1,0 +1,33 @@
+# Limit-layer fixture (lg-962.10.3): a district judge's standing order
+# raising the local rule's `brief` limit, as the local rule delegates.
+# The district-civil family lets a standing order override (core's
+# class matrix). Synthetic: no rule text is encoded, so no cite.
+[package]
+name = "cov-standing"
+version = "0.1.0"
+language = 1
+pack_id = "cov-standing"
+forum = "frcp"
+authority = "StandingOrder"
+title = "Standing order layer (fixture)"
+in_force = "2009-12-01"
+known_at = "2025-01-01"
+kind = "standing-order"
+
+[package.roles]
+court = "nature"
+
+[package.instrument]
+source = "so"
+issuer = "A district judge"
+date = "2009-12-01"
+
+[dependencies]
+cov-local = { version = "^0.1.0", path = "../local" }
+
+[sources.so]
+title = "Standing order (fixture)"
+url = "https://cand.uscourts.gov/"
+path = "sources/change-breyer-general-standing-order-2025.txt"
+path_sha256 = "a36186c206ae59a2578f63e45ba8af6c998a4dcdbc27da1da0729aab4b315283"
+as_of = "2025-07-16"

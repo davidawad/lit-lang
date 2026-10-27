@@ -86,8 +86,8 @@ A plist:
              name of the .case or .lit file.
   :as-of     flag followed by the as_of date, when one is set.
   :known-at  flag followed by the known_at date, when one is set.
-  :layers    flag followed by the comma-separated ids of the enabled
-             layers, passed only once a layer has been toggled.
+  :layers    flag followed by the layers switched off, as
+             comma-separated `-ID's; passed only when a layer is off.
   :world     flag followed by the world id, when one world is shown.
 
 A flag set to nil is never passed."
@@ -312,16 +312,32 @@ order."
                 (push from queue)))))))
     found))
 
+(defun litgraph-timeline--match-key (row)
+  "Key matching ROW across worlds: its `key'.
+A document without keys falls back to the row's source span, else its
+kind and label."
+  (or (litgraph-get row 'key)
+      (if-let* ((span (litgraph-get row 'source)))
+          (list (litgraph-get span 'file) (litgraph-get span 'start)
+                (litgraph-get span 'end))
+        (list (litgraph-get row 'kind) (litgraph-get row 'label)))))
+
 (defun litgraph-timeline-world-rows (doc world-id &optional sorted)
   "Rows of world WORLD-ID in DOC: its own, plus its ancestors' up to the fork.
 The inherited rows are those that lead to the fork row through the
 ancestors' edges, the fork row included; when the ancestors have no
-edges, those not after the fork row in date order.  SORTED is DOC's rows
-in date order, when already computed.  Return them in date order."
+edges, those not after the fork row in date order.  A row the world
+re-emits (same `litgraph-timeline--match-key') replaces the inherited
+row.  SORTED is DOC's rows in date order, when already computed.  Return
+them in date order."
   (let* ((sorted (or sorted (litgraph-timeline-sorted-rows doc)))
          (world (litgraph-timeline--world doc world-id))
          (parent (litgraph-get world 'parent))
          (fork (litgraph-get world 'fork_row))
+         (own (seq-filter (lambda (row)
+                            (equal (litgraph-get row 'world) world-id))
+                          sorted))
+         (own-keys (mapcar #'litgraph-timeline--match-key own))
          (inherited
           (when (and parent fork)
             (let* ((parent-rows (litgraph-timeline-world-rows doc parent sorted))
@@ -338,27 +354,21 @@ in date order, when already computed.  Return them in date order."
                       (when (and before (member id parent-ids)) (push id ids))
                       (when (equal id fork) (setq before nil))))))))))
     (seq-filter (lambda (row)
-                  (or (equal (litgraph-get row 'world) world-id)
-                      (member (litgraph-get row 'id) inherited)))
+                  (or (memq row own)
+                      (and (member (litgraph-get row 'id) inherited)
+                           (not (member (litgraph-timeline--match-key row)
+                                        own-keys)))))
                 sorted)))
 
 
 ;;;; Diffing worlds
 
-(defun litgraph-timeline--match-key (row)
-  "Key matching ROW across two worlds: its kind and span, else its label."
-  (let ((span (litgraph-get row 'source)))
-    (list (litgraph-get row 'kind)
-          (if span
-              (list (litgraph-get span 'file) (litgraph-get span 'start)
-                    (litgraph-get span 'end))
-            (litgraph-get row 'label)))))
-
 (defun litgraph-timeline-diff-worlds (doc a b)
   "Compare worlds A and B of DOC.
 Return a plist: :common, the rows both have; :changed, pairs
-\(ROW-A . ROW-B) of rows for the same entry (same kind and source
-span, or same label); :only-a and :only-b, the rest.  Rows are in date order."
+\(ROW-A . ROW-B) of rows for the same entry (same `key', see
+`litgraph-timeline--match-key'); :only-a and :only-b, the rest.  Rows
+are in date order."
   (let* ((sorted (litgraph-timeline-sorted-rows doc))
          (rows-a (litgraph-timeline-world-rows doc a sorted))
          (rows-b (litgraph-timeline-world-rows doc b sorted))
@@ -710,9 +720,9 @@ DISABLED is the ids of the layers switched off."
 
 (defun litgraph-timeline--args (file &optional as-of known-at layers world)
   "Arguments of the timeline op for FILE.
-AS-OF, KNOWN-AT and WORLD are strings or nil.  LAYERS is the list of
-enabled layer ids (or that list already joined with commas), or nil or t
-to leave layers to the op."
+AS-OF, KNOWN-AT and WORLD are strings or nil.  LAYERS is the op's
+layer selection: a list of `ID', `+ID' or `-ID' strings, or that list
+already joined with commas, or nil to leave layers to the op."
   (let ((spec litgraph-timeline-command))
     (cl-flet ((option (key value)
                 (when-let* ((flag (plist-get spec key))
@@ -722,7 +732,9 @@ to leave layers to the op."
                       (plist-get spec :args))
               (option :as-of as-of)
               (option :known-at known-at)
-              (option :layers (if (consp layers) (string-join layers ",") layers))
+              (option :layers (if (listp layers)
+                                  (and layers (string-join layers ","))
+                                layers))
               (option :world world)))))
 
 (defun litgraph-timeline--decode (exit stdout stderr)
@@ -759,15 +771,9 @@ See `litgraph-timeline-command': %s)"
                         "")))))))
 
 (defun litgraph-timeline--layers-arg (doc)
-  "Enabled layer ids for the op, joined with commas, or t.
-t means no layer was toggled.  DOC is the timeline shown, if any."
-  (if (listp litgraph-timeline--disabled-layers)
-      (string-join
-       (seq-remove (lambda (id) (member id litgraph-timeline--disabled-layers))
-                   (mapcar (lambda (layer) (litgraph-get layer 'id))
-                           (litgraph-get doc 'layers)))
-       ",")
-    t))
+  "The layers switched off, as `-ID' strings for the op, or nil for none.
+DOC is the timeline shown, if any."
+  (mapcar (lambda (id) (concat "-" id)) (litgraph-timeline--disabled doc)))
 
 (defun litgraph-timeline--row-id-at-point ()
   "Id of the row at point, or nil."

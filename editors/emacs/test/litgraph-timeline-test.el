@@ -7,7 +7,7 @@
 ;; The timeline JSON contract is frozen in litgraph (docs/litigate/
 ;; timeline.v1.schema.json, TIMELINE.md).  test/fixtures/ holds copies of
 ;; the schema and of its example document, taken from litgraph main
-;; 6efcc35; these tests render the example and check the renderer against
+;; 76005c3; these tests render the example and check the renderer against
 ;; the schema's enums.
 
 ;;; Code:
@@ -94,27 +94,64 @@
 ;;;; Order, worlds, graph
 
 (ert-deftest litgraph-timeline-rows-in-date-order ()
-  ;; r5 (a fork with no date) sorts with r4, which triggered it; on
-  ;; 2026-04-13 the docket's r3 comes before the alternate worlds' rows.
+  ;; r5 (a fork with no date) sorts with r4, which triggered it, and r9
+  ;; (an event with no date) with r5; on 2026-04-13 the docket's r3 comes
+  ;; before the alternate world's r7.
   (should (equal (litgraph-timeline-test-ids
                   (litgraph-timeline-sorted-rows (litgraph-timeline-test-doc)))
-                 '("r1" "r2" "r4" "r5" "r6" "r3" "r7" "r9" "r8"))))
+                 '("r1" "r2" "r4" "r5" "r9" "r6" "r3" "r7" "r8"))))
 
 (ert-deftest litgraph-timeline-world-rows-inherit-up-to-fork ()
   (let ((doc (litgraph-timeline-test-doc)))
     (should (equal (litgraph-timeline-test-ids (litgraph-timeline-world-rows doc "w0"))
                    '("r1" "r2" "r4" "r5" "r3")))
+    ;; r7 re-emits r3 (same key): it replaces r3 in w1's view.
     (should (equal (litgraph-timeline-test-ids (litgraph-timeline-world-rows doc "w1"))
-                   '("r1" "r2" "r4" "r5" "r6" "r3" "r7" "r8")))
+                   '("r1" "r2" "r4" "r5" "r6" "r7" "r8")))
     (should (equal (litgraph-timeline-test-ids (litgraph-timeline-world-rows doc "w2"))
-                   '("r1" "r2" "r4" "r5" "r3" "r9")))))
+                   '("r1" "r2" "r4" "r5" "r9" "r3")))))
+
+(defun litgraph-timeline-test-strip (doc field)
+  "DOC with FIELD removed from every row."
+  (cons (cons 'rows (mapcar (lambda (row) (assq-delete-all field (copy-sequence row)))
+                            (litgraph-get doc 'rows)))
+        (assq-delete-all 'rows (copy-sequence doc))))
+
+(ert-deftest litgraph-timeline-world-rows-replace-by-key-only ()
+  (let* ((doc (litgraph-timeline-test-doc))
+         ;; r7 keeps r3's key but names another span and label: still a
+         ;; re-emission.
+         (doc (cons (cons 'rows
+                          (mapcar (lambda (row)
+                                    (if (equal (litgraph-get row 'id) "r7")
+                                        (append '((source) (label . "x"))
+                                                (assq-delete-all
+                                                 'label
+                                                 (assq-delete-all
+                                                  'source (copy-sequence row))))
+                                      row))
+                                  (litgraph-get doc 'rows)))
+                    (assq-delete-all 'rows (copy-sequence doc)))))
+    (should (equal (litgraph-timeline-test-ids (litgraph-timeline-world-rows doc "w1"))
+                   '("r1" "r2" "r4" "r5" "r6" "r7" "r8")))))
+
+(ert-deftest litgraph-timeline-world-rows-without-keys-match-spans ()
+  ;; A document without keys: r7 has r3's source span, so replaces it.
+  (let ((doc (litgraph-timeline-test-strip (litgraph-timeline-test-doc) 'key)))
+    (should (equal (litgraph-timeline-test-ids (litgraph-timeline-world-rows doc "w1"))
+                   '("r1" "r2" "r4" "r5" "r6" "r7" "r8")))
+    ;; Without spans either, kind and label: r7's label differs from r3's.
+    (should (equal (litgraph-timeline-test-ids
+                    (litgraph-timeline-world-rows
+                     (litgraph-timeline-test-strip doc 'source) "w1"))
+                   '("r1" "r2" "r4" "r5" "r6" "r3" "r7" "r8")))))
 
 (ert-deftest litgraph-timeline-graph-has-one-lane-per-world ()
   (let* ((doc (litgraph-timeline-test-doc))
          (graph (litgraph-timeline-graph doc (litgraph-timeline-sorted-rows doc))))
     (should (equal (mapcar (lambda (g) (substring-no-properties (car g))) graph)
-                   '("*    " "*    " "*    " "+    " "| * |"
-                     "o | |" "  o |" "  | o" "  o  ")))
+                   '("*    " "*    " "*    " "+    " "| | *"
+                     "| *  " "o |  " "  o  " "  o  ")))
     ;; Only the fork row has a connector, branching to both worlds.
     (should (equal (mapcar (lambda (g) (and (cdr g) (substring-no-properties (cdr g))))
                            graph)
@@ -134,22 +171,66 @@
 
 ;;;; Diff
 
-(ert-deftest litgraph-timeline-diff-pairs-rows-by-source ()
+(defun litgraph-timeline-test-pairs (diff)
+  "Ids of the :changed pairs of DIFF."
+  (mapcar (lambda (p) (list (litgraph-get (car p) 'id) (litgraph-get (cdr p) 'id)))
+          (plist-get diff :changed)))
+
+(ert-deftest litgraph-timeline-diff-pairs-rows-by-key ()
   (let ((diff (litgraph-timeline-diff-worlds (litgraph-timeline-test-doc) "w1" "w2")))
     (should (equal (litgraph-timeline-test-ids (plist-get diff :common))
-                   '("r1" "r2" "r4" "r5" "r3")))
-    (should (equal (mapcar (lambda (p) (list (litgraph-get (car p) 'id)
-                                             (litgraph-get (cdr p) 'id)))
-                           (plist-get diff :changed))
-                   '(("r7" "r9"))))
+                   '("r1" "r2" "r4" "r5")))
+    ;; r7 re-emits r3: one entry, changed.
+    (should (equal (litgraph-timeline-test-pairs diff) '(("r7" "r3"))))
     (should (equal (litgraph-timeline-test-ids (plist-get diff :only-a)) '("r6" "r8")))
-    (should-not (plist-get diff :only-b))))
+    (should (equal (litgraph-timeline-test-ids (plist-get diff :only-b)) '("r9")))))
+
+(ert-deftest litgraph-timeline-diff-pairs-by-key-not-span ()
+  ;; Same span, different key: two entries, not one changed.
+  (let* ((doc (litgraph-timeline-test-doc))
+         ;; Use two independent worlds so parent inheritance cannot mask a
+         ;; bad span-based pairing.  r7 and r3 have the same kind and source
+         ;; span, but are distinct causes with distinct stable keys.
+         (worlds (mapcar (lambda (world)
+                           (append '((parent . nil) (fork_row . nil))
+                                   (assq-delete-all 'fork_row
+                                     (assq-delete-all 'parent
+                                       (copy-sequence world)))))
+                         (seq-filter (lambda (world)
+                                       (member (litgraph-get world 'id) '("w1" "w2")))
+                                     (litgraph-get doc 'worlds))))
+         (rows (seq-filter (lambda (row)
+                             (member (litgraph-get row 'id) '("r3" "r7")))
+                           (litgraph-get doc 'rows)))
+         (rows (mapcar (lambda (row)
+                         (cond
+                          ((equal (litgraph-get row 'id) "r3")
+                           (cons '(world . "w2")
+                                 (assq-delete-all 'world (copy-sequence row))))
+                          ((equal (litgraph-get row 'id) "r7")
+                           (cons '(key . "other")
+                                 (assq-delete-all 'key (copy-sequence row))))
+                          (t row)))
+                       rows))
+         (doc (cons (cons 'rows rows)
+                    (cons (cons 'worlds worlds)
+                          (assq-delete-all 'rows
+                            (assq-delete-all 'worlds (copy-sequence doc))))))
+         (diff (litgraph-timeline-diff-worlds doc "w1" "w2")))
+    (should-not (plist-get diff :changed))
+    (should (equal (litgraph-timeline-test-ids (plist-get diff :only-a))
+                   '("r7")))
+    (should (equal (litgraph-timeline-test-ids (plist-get diff :only-b)) '("r3")))))
 
 (ert-deftest litgraph-timeline-diff-with-parent ()
   (let ((diff (litgraph-timeline-diff-worlds (litgraph-timeline-test-doc) "w0" "w2")))
     (should (equal (length (plist-get diff :common)) 5))
     (should-not (plist-get diff :only-a))
-    (should (equal (litgraph-timeline-test-ids (plist-get diff :only-b)) '("r9")))))
+    (should (equal (litgraph-timeline-test-ids (plist-get diff :only-b)) '("r9"))))
+  (let ((diff (litgraph-timeline-diff-worlds (litgraph-timeline-test-doc) "w1" "w0")))
+    (should (equal (litgraph-timeline-test-pairs diff) '(("r7" "r3"))))
+    (should (equal (litgraph-timeline-test-ids (plist-get diff :only-a)) '("r6" "r8")))
+    (should-not (plist-get diff :only-b))))
 
 
 ;;;; Rendering
@@ -174,7 +255,7 @@
                            "Ruling on the motion — no ruling recorded as of 2026-04-08")))
     (should (string-match-p "^|\\\\-\\\\   +w1 reset granted, w2 reset denied$"
                             (litgraph-timeline-test-line "reset granted, w2")))
-    (should (string-match-p "^  o |  2026-04-13  deadline  superseded  base_rule   Answer due (original designation) — reset by order-reset-1"
+    (should (string-match-p "^  o    2026-04-13  deadline  superseded  base_rule   Answer due (original designation) — reset by order-reset-1"
                             (litgraph-timeline-test-line "original designation")))
     (should (string-match-p "^  o    2026-05-13  deadline  open        case_order  Answer due (as reset)"
                             (litgraph-timeline-test-line "as reset")))
@@ -254,10 +335,10 @@
       (litgraph-timeline-render-diff doc "w1" "w2")
       (let ((text (buffer-substring-no-properties (point-min) (point-max))))
         (should (string-match-p "^Diff  w1 reset granted  ⟷  w2 reset denied" text))
-        (should (string-match-p "^Common (5)" text))
+        (should (string-match-p "^Common (4)" text))
         (should (string-match-p "^Changed (1)\n- 2026-04-13  deadline  superseded .*\n\\+ 2026-04-13  deadline  open " text))
         (should (string-match-p "^Only in w1 (2)" text))
-        (should (string-match-p "^Only in w2 (0)" text))))))
+        (should (string-match-p "^Only in w2 (1)\n\\+ —           event     none .*Board denies" text))))))
 
 
 ;;;; Running the op
@@ -269,8 +350,11 @@
                                           '("ttab" "o1") "w1")
                  '("timeline" "--format" "json" "/x/a.case" "--as-of" "2026-04-08"
                    "--known-at" "2026-01-01" "--layers" "ttab,o1" "--world" "w1")))
-  (should (equal (litgraph-timeline--args "/x/a.case" nil nil "" nil)
-                 '("timeline" "--format" "json" "/x/a.case" "--layers" "")))
+  (should (equal (litgraph-timeline--args "/x/a.case" nil nil '("-ttab" "-o1") nil)
+                 '("timeline" "--format" "json" "/x/a.case" "--layers" "-ttab,-o1")))
+  ;; No layer off: no --layers at all (the op rejects an empty one).
+  (should (equal (litgraph-timeline--args "/x/a.case" nil nil nil nil)
+                 '("timeline" "--format" "json" "/x/a.case")))
   (let ((litgraph-timeline-command
          '(:args ("tl" "--format" "json" file) :as-of "--at" :world nil)))
     (should (equal (litgraph-timeline--args "/x/a.case" "2026-04-08" nil t "w1")
@@ -328,19 +412,24 @@
       (with-current-buffer (litgraph-timeline-test-open dir)
         (litgraph-timeline-toggle-layer "order-reset-1")
         (should (equal (last (car (car litgraph-test-calls)) 2)
-                       '("--layers" "ttab")))
+                       '("--layers" "-order-reset-1")))
         ;; The stub ignores --layers; the rows the layer decided are hidden.
         (should-not (string-match-p "as reset" (buffer-string)))
         (should (string-match-p "\\[ \\] order-reset-1" (buffer-string)))
         (litgraph-timeline-toggle-layer "order-reset-1")
-        (should (equal (last (car (car litgraph-test-calls)) 2)
-                       '("--layers" "ttab,order-reset-1")))
+        ;; Every layer on again: no --layers.
+        (should (equal (length (car (car litgraph-test-calls))) 4))
         (should (string-match-p "as reset" (buffer-string)))
         ;; On a layer line, l toggles that layer.
         (goto-char (point-min))
         (search-forward "[x] ttab")
         (call-interactively #'litgraph-timeline-toggle-layer)
-        (should (string-match-p "\\[ \\] ttab" (buffer-string)))))))
+        (should (equal (last (car (car litgraph-test-calls)) 2)
+                       '("--layers" "-ttab")))
+        (should (string-match-p "\\[ \\] ttab" (buffer-string)))
+        (litgraph-timeline-toggle-layer "order-reset-1")
+        (should (member (car (last (car (car litgraph-test-calls))))
+                        '("-ttab,-order-reset-1" "-order-reset-1,-ttab")))))))
 
 (ert-deftest litgraph-timeline-set-dates-and-world ()
   (litgraph-test-with-stub
@@ -363,7 +452,8 @@
         (litgraph-timeline-set-world "w2")
         (should (equal (last (car (car litgraph-test-calls)) 2) '("--world" "w2")))
         (should-not (string-match-p "as reset" (buffer-string)))
-        (should (string-match-p "deadline  open .*  Answer due  \\[" (buffer-string)))
+        (should (string-match-p "deadline  open .*  Answer due (designated" (buffer-string)))
+        (should (string-match-p "Board denies the motion (hypothetical)" (buffer-string)))
         (litgraph-timeline-set-world nil)
         (should (string-match-p "as reset" (buffer-string)))))))
 
@@ -382,7 +472,8 @@
               (should (derived-mode-p 'litgraph-timeline-diff-mode))
               (should (string-match-p "^Diff  w1 reset granted  ⟷  w0 docket"
                                       (buffer-string)))
-              (should (string-match-p "^Only in w1 (3)" (buffer-string)))
+              (should (string-match-p "^Changed (1)" (buffer-string)))
+              (should (string-match-p "^Only in w1 (2)" (buffer-string)))
               ;; RET works in the diff buffer too.
               (goto-char (point-min))
               (search-forward "Notice of opposition")
@@ -440,7 +531,7 @@
     (litgraph-timeline-next-row 1)
     (should (equal (litgraph-timeline--row-id-at-point) "r1"))
     (litgraph-timeline-next-row 4)
-    (should (equal (litgraph-timeline--row-id-at-point) "r6"))
+    (should (equal (litgraph-timeline--row-id-at-point) "r9"))
     (litgraph-timeline-previous-row 1)
     (should (equal (litgraph-timeline--row-id-at-point) "r5"))
     (litgraph-timeline-next-row 99)

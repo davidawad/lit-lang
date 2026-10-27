@@ -234,17 +234,19 @@ that node.
 `.lit` file: one row per event, deadline or fork in date order, with one graph
 lane per world. A fork row is where worlds diverge (an assumed order, a grant
 or denial, a hypothetical decision); the line under it names the worlds that
-leave it.
+leave it. A world shows its parent's rows up to the fork row plus its own;
+a row the world re-emits (the same `key`) replaces the parent's row, so `w`
+on `w1` shows the original answer date only as superseded.
 
 ```
        Date        Kind      Status      Layer       Event or deadline
 *      2026-04-06  event     none        base_rule   Motion to reset the answer date filed  [37 C.F.R. § 2.106(a)]
 +      —           fork      unknown     base_rule   Ruling on the motion — no ruling recorded as of 2026-04-08
 |\-\   w1 reset granted, w2 reset denied
-| * |  2026-04-10  event     none        case_order  Board order resets the answer date to 2026-05-13  [37 C.F.R. § 2.106(a)]
-o | |  2026-04-13  deadline  open        base_rule   Answer due (designated 2026-04-11, a Saturday; rolls to Monday)  [...]
-  o |  2026-04-13  deadline  superseded  base_rule   Answer due (original designation) — reset by order-reset-1  [...]
-  | o  2026-04-13  deadline  open        base_rule   Answer due  [37 C.F.R. §§ 2.105(a), 2.196]
+| | *  —           event     none        base_rule   Board denies the motion (hypothetical)
+| *    2026-04-10  event     none        case_order  Board order resets the answer date to 2026-05-13  [37 C.F.R. § 2.106(a)]
+o |    2026-04-13  deadline  open        base_rule   Answer due (designated 2026-04-11, a Saturday; rolls to Monday)  [...]
+  o    2026-04-13  deadline  superseded  base_rule   Answer due (original designation) — reset by order-reset-1  [...]
   o    2026-05-13  deadline  open        case_order  Answer due (as reset)  [37 C.F.R. § 2.106(a)]
 ```
 
@@ -257,7 +259,7 @@ Status and layer class are printed exactly as the op's JSON spells them
 | key | action |
 |-----|--------|
 | `RET` | jump to the row's `.case`/`.lit` span; without one, to its cite in the file (or `litgraph-timeline-cite-function`) |
-| `=` | diff two worlds: common rows, changed rows (same source span), rows only in one |
+| `=` | diff two worlds: common rows, changed rows (same `key`), rows only in one |
 | `l` | toggle a layer on or off (the layer on the line, else asked) |
 | `t` | set `as_of` and `known_at` (empty for the default) |
 | `w` | show one world only; again for all |
@@ -275,7 +277,7 @@ the `litigate` executable):
       '(:program "litigate"
         :args ("timeline" "--format" "json" file) ; `file' is the .case/.lit file
         :as-of "--as-of" :known-at "--known-at"
-        :layers "--layers"              ; comma-separated enabled layer ids
+        :layers "--layers"              ; layers switched off, as -ID,-ID
         :world "--world"))
 ```
 
@@ -376,7 +378,7 @@ grammar and runs it.
 
 The timeline tests render `test/fixtures/timeline-ttab-opposition.json`, the
 example of the frozen timeline schema; `timeline.v1.schema.json` beside it is
-the schema itself (both copied from `docs/litigate/` at `6efcc35`), and the
+the schema itself (both copied from `docs/litigate/` at `76005c3`), and the
 tests check the renderer's statuses and layer classes against its enums. When
 the schema changes, copy both again. The timeline integration test runs on
 `test/fixtures/timeline-project/cases/examples/acme.case`, a copy of this

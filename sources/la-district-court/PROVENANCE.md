@@ -34,3 +34,10 @@
   - art. 1841: https://legis.la.gov/Legis/Law.aspx?d=111319
   - art. 1972: https://legis.la.gov/Legis/Law.aspx?d=111358
   - art. 1974: https://legis.la.gov/Legis/Law.aspx?d=111360
+
+### `la-district-court/la-district-court-rules-title-ii.txt` — Louisiana District Court Rules, Title II (Rules for Civil Proceedings)
+
+- Source: https://www.lasc.org/rules/dist.ct/Title_II.pdf (official site; 19 pages, sha256 982e831c61e7722d873109f13c1cd89c2ba4330b8c4927168ebcd74f0b8ea742).
+- Edition: "Includes Amendments through March 31, 2022" (as stated on the document; linked as Title II from https://www.lasc.org/DistrictCourtRules, which lists no later edition).
+- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 983800770573ad23b6d0928311be213fb8c441efd64143440a8a4ef05fc6a9dd. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

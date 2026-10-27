@@ -933,3 +933,53 @@ by a heading line, then the verbatim body text up to the next `## ` line.
   - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/Table-A
   - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/Table-B
   - https://www.ndcourts.gov/legal-resources/rules/ndrcivp/Appendix
+
+### `ndctapp/ndrappp.txt` — North Dakota Rules of Appellate Procedure
+
+- Source: the official per-rule pages of the North Dakota Court System, one per rule, linked from the rules index https://www.ndcourts.gov/legal-resources/rules/ndrappp (the court publishes no complete PDF or single-page version). 43 pages, each fetched once on 2026-10-27 at most one request per second with an identifying user agent, no recursion beyond the index (PM ruling; ndcourts.gov has no robots.txt and its Disclaimer, Privacy Statement and Security Policy place no limit on automated access).
+- Edition: each rule as in force on 2026-10-27, with its own "Effective Date" line as shown on its page (latest 2026-09-01).
+- Extracted from each page's content area (rule text, effective date, explanatory note), the repeated rule-list sidebar dropped; one `## N.D.R.App.P. <rule>` section per page, in index order, unedited otherwise. Extract sha256 1248b9444f50322e77dc258bdc3f1b8dbc52b2656bde3b7971ba085fcfeef91c.
+- Page URLs:
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/1
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/2
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/2-1
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/2-2
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/3
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/4
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/5
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/7
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/8
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/9
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/10
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/11
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/12
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/13
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/14
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/21
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/24
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/25
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/26
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/27
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/28
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/29
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/30
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/31
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/32
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/34
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/35
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/35-1
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/36
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/37
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/38
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/39
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/40
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/41
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/42
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/43
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/44
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/45
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/47
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/47-1
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/48
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/49
+  - https://www.ndcourts.gov/legal-resources/rules/ndrappp/tables

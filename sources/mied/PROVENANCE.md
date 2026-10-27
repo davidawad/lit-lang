@@ -6,3 +6,5 @@
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Fetched via curl (single document, first request succeeded, no block encountered).
 - Extract sha256 a6a3df153ac0ec9f1d2b550d8fa3e041c0bf8dc1f990ec53246864862a8e03ae. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+- Fetch method: first fetched with curl and a desktop browser User-Agent before the no-browser-identity rule (PM 2026-10-27); re-fetched on 2026-10-27 with plain curl (default User-Agent, no browser headers): byte-identical (same sha256).

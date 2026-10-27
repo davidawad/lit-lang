@@ -324,7 +324,7 @@ Tests replace this to stub out the binary.")
        litgraph-executable)))
 
 (defun litgraph-project-root ()
-  "The directory the engine runs in, or nil if there is none.
+  "Return the directory to run the engine in, or nil if there is none.
 That is `litgraph-project-directory', else the nearest directory
 holding `lit/' at or above `default-directory'."
   (if litgraph-project-directory

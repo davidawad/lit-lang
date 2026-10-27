@@ -1,0 +1,106 @@
+# Validation of the deadline domain (lg-fq2.5; docs/litigate/VALIDATION.md):
+# golden tests from the worked examples of the 2009 Committee Notes to FRCP 6
+# and FRAP 26, and every collected timeliness ruling of the lg-fq2.3 corpus
+# (sources/change-corpus/rulings/MANIFEST.json) counted under the rules in
+# force on its own dates. The package declares only the periods the rulings
+# and the Notes count; the counting is lit/core's FRCP 6 and FRAP 26
+# history, selected by each trigger's date. Public law and the opinions'
+# own facts only.
+[package]
+name = "change-validation"
+version = "1.0.0"
+language = 1
+pack_id = "change-validation"
+forum = "frcp"
+authority = "FederalRule"
+title = "Validation: the 2009 Committee Note examples and the timeliness rulings"
+in_force = "1968-07-01"
+known_at = "2026-10-27"
+
+[package.roles]
+movant = "self"
+court = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../lit/core" }
+
+[sources.frcp]
+title = "Federal Rules of Civil Procedure, as amended to Dec. 1, 2024"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-civil-procedure-dec-1-2024_0.pdf"
+path = "sources/frcp.txt"
+path_sha256 = "cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44"
+as_of = "2024-12-01"
+cite_prefixes = ["FRCP"]
+section_heading = "Rule {n}"
+
+[sources.frap]
+title = "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2024"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-appellate-procedure-dec-1-2024_0.pdf"
+path = "sources/frap.txt"
+path_sha256 = "87d71a1f443c5c084cc9f11932a66436ab300f83146ee2c5ce2654a8a4824479"
+as_of = "2024-12-01"
+cite_prefixes = ["FRAP"]
+section_heading = "FRAP {n}"
+
+[sources.frcp-2008]
+title = "Federal Rules of Civil Procedure, 28 U.S.C. App. (2008 ed.)"
+url = "https://www.govinfo.gov/content/pkg/USCODE-2008-title28/html/USCODE-2008-title28-app-rulesofci-rule6.htm"
+path = "sources/usc-28-app-time-history.txt"
+path_sha256 = "a55dd4c3b28e99491083474806c9e8bb621e4fd43b2fddf5c4359d1202f03f20"
+as_of = "2007-12-01"
+cite_prefixes = ["FRCP (2008 ed.)"]
+section_heading = "FRCP (2008 ed.) Rule {n}"
+
+[sources.frcp-2011]
+title = "Federal Rules of Civil Procedure, 28 U.S.C. App. (2011 ed.), with the 2009 Committee Note"
+url = "https://www.govinfo.gov/content/pkg/USCODE-2011-title28/html/USCODE-2011-title28-app-federalru-dup1-rule6.htm"
+path = "sources/usc-28-app-time-history.txt"
+path_sha256 = "a55dd4c3b28e99491083474806c9e8bb621e4fd43b2fddf5c4359d1202f03f20"
+as_of = "2009-12-01"
+cite_prefixes = ["FRCP (2011 ed.)"]
+section_heading = "FRCP (2011 ed.) Rule {n}"
+
+[sources.frap-2008]
+title = "Federal Rules of Appellate Procedure, 28 U.S.C. App. (2008 ed.)"
+url = "https://www.govinfo.gov/content/pkg/USCODE-2008-title28/html/USCODE-2008-title28-app-federalru-rule26.htm"
+path = "sources/usc-28-app-time-history.txt"
+path_sha256 = "a55dd4c3b28e99491083474806c9e8bb621e4fd43b2fddf5c4359d1202f03f20"
+as_of = "2005-12-01"
+cite_prefixes = ["FRAP (2008 ed.)"]
+section_heading = "FRAP (2008 ed.) Rule {n}"
+
+[sources.frap-2011]
+title = "Federal Rules of Appellate Procedure, 28 U.S.C. App. (2011 ed.), with the 2009 Committee Note"
+url = "https://www.govinfo.gov/content/pkg/USCODE-2011-title28/html/USCODE-2011-title28-app-federalru-rule26.htm"
+path = "sources/usc-28-app-time-history.txt"
+path_sha256 = "a55dd4c3b28e99491083474806c9e8bb621e4fd43b2fddf5c4359d1202f03f20"
+as_of = "2009-12-01"
+cite_prefixes = ["FRAP (2011 ed.)"]
+section_heading = "FRAP (2011 ed.) Rule {n}"
+
+[sources.frap4-2008]
+title = "Federal Rules of Appellate Procedure, Rule 4, 28 U.S.C. App. (2008 ed.)"
+url = "https://www.govinfo.gov/content/pkg/USCODE-2008-title28/html/USCODE-2008-title28-app-federalru-rule4.htm"
+path = "sources/usc-28-app-frap4-history.txt"
+path_sha256 = "c246fa771851ef008653521977a993531d589881d85354e9c9f949f9c1b1a284"
+as_of = "2005-12-01"
+cite_prefixes = ["FRAP (2008 ed.)"]
+section_heading = "FRAP (2008 ed.) Rule {n}"
+
+[sources.frcp-2007]
+title = "Federal Rules of Civil Procedure as restyled, effective Dec. 1, 2007 (order of Apr. 30, 2007)"
+url = "https://www.supremecourt.gov/orders/courtorders/frcv07p.pdf"
+path = "sources/change-frcv-2007-restyled-excerpt.txt"
+path_sha256 = "a7287e6fd94acc165ac1eb4a5cdd5c9f404acc3abfe01182cbfb490c3d766f6e"
+as_of = "2007-12-01"
+cite_prefixes = ["FRCP (2007)"]
+section_heading = "FRCP (2007) Rule {n}"
+
+[sources.frcp-2009]
+title = "Supreme Court order of March 26, 2009 amending the FRCP, with the amended rule text"
+url = "https://www.supremecourt.gov/orders/courtorders/frcv09.pdf"
+path = "sources/change-frcv-2009-amendments-excerpt.txt"
+path_sha256 = "0eb155fa9a5911540a1b4a5f1784c944c235f6fd5fa9fe8da29ba716cc6b9690"
+as_of = "2009-12-01"
+cite_prefixes = ["FRCP (2009)"]
+section_heading = "FRCP (2009) Rule {n}"

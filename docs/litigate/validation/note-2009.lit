@@ -1,0 +1,231 @@
+module change-validation.note2009
+
+import core.calendar.{ us-federal-holidays }
+import core.frap26.{ frap26 }
+import core.frcp6.{ frcp6 }
+import core.time.{ Served, Scheduled, ServiceMethod }
+
+// The worked examples of the 2009 Committee Notes to FRCP 6 and FRAP 26
+// (sources/change-corpus/rules/committee-notes/note-civ-2009.txt and
+// note-app-2009.txt; the Notes as printed in the 2011 edition of 28 U.S.C.
+// App., sources/usc-28-app-time-history.txt). Each test names its example:
+// `C` the civil Note, `A` the appellate Note, numbered as in
+// docs/litigate/VALIDATION.md §2.
+//
+// The Notes were written in 2007-2008 and illustrate the rules that took
+// effect December 1, 2009, on dates before that day. A test counts under
+// the version in force on its trigger date (SPEC §5.4), so an example is
+// run twice where the dates allow: on the Note's own dates, under the rule
+// then in force (the 2005 text, which gives the same day for these periods),
+// and on the first later dates with the same calendar (the same weekdays
+// and the same holiday), under the 2009 rule the Note explains. September 1,
+// 2012 is a Saturday before Labor Day, as September 1, 2007 was; November 1,
+// 2012 a Thursday, as November 1, 2007 was; April 21, 2014 Patriot's Day,
+// a Monday, as April 21, 2008 was.
+
+/// A fixture period counted forward under FRCP 6.
+deadline civ-30-days-after: 30.days after Served() counted_by frcp6 cite "FRCP (2011 ed.) 6(a)(1)" historical
+{
+  forum frcp
+}
+
+/// A fixture period counted backward under FRCP 6.
+deadline civ-21-days-before: 21.days before Scheduled() counted_by frcp6 cite "FRCP (2011 ed.) 6(a)(5)" historical
+{
+  forum frcp
+}
+
+deadline civ-14-days-after: 14.days after Served() counted_by frcp6 cite "FRCP (2011 ed.) 6(a)(1)" historical
+{
+  forum frcp
+}
+
+deadline civ-10-days-after: 10.days after Served() counted_by frcp6 cite "FRCP (2008 ed.) 6(a)" historical
+{
+  forum frcp
+}
+
+deadline app-10-days-after: 10.days after Served() counted_by frap26 cite "FRAP (2011 ed.) 26(a)(1)" historical
+{
+  forum frap
+}
+
+deadline app-10-days-before: 10.days before Scheduled() counted_by frap26 cite "FRAP (2011 ed.) 26(a)(5)" historical
+{
+  forum frap
+}
+
+deadline app-14-days-after: 14.days after Served() counted_by frap26 cite "FRAP (2011 ed.) 26(a)(1)" historical
+{
+  forum frap
+}
+
+deadline app-30-days-after: 30.days after Served() counted_by frap26 cite "FRAP (2011 ed.) 26(c)" historical
+{
+  forum frap
+}
+
+test "C2 (former rule): a 10-day and a 14-day period from the same day end on the same day" cite "FRCP (2011 ed.) 6 (2009 Committee Note)"
+{
+  given Served(Personal) on 2008-03-03
+  expect deadline(civ-10-days-after) == 2008-03-17
+  expect deadline(civ-14-days-after) == 2008-03-17
+}
+
+// Veterans Day (Tuesday, November 11, 2008) falls inside the ten counted
+// days and outside the fourteen calendar days' last day.
+test "C2 (former rule): the 10-day period ends later than the 14-day one" cite "FRCP (2011 ed.) 6 (2009 Committee Note)"
+{
+  given Served(Personal) on 2008-11-04
+  expect deadline(civ-10-days-after) == 2008-11-19
+  expect deadline(civ-14-days-after) == 2008-11-18
+  expect deadline(civ-10-days-after) > deadline(civ-14-days-after)
+}
+
+test "C3: the 14th day after a Monday is a Monday" cite "FRCP (2011 ed.) 6 (2009 Committee Note)"
+{
+  given Served(Personal) on 2012-03-05
+  expect deadline(civ-14-days-after) == 2012-03-19
+}
+
+test "A3: the 14th day after a Monday is a Monday" cite "FRAP (2011 ed.) 26 (2009 Committee Note)"
+{
+  given Served(Personal) on 2012-03-05
+  expect deadline(app-14-days-after) == 2012-03-19
+}
+
+test "C6 (the Note's dates, the 2005 rule): a 30th day on Saturday, September 1, 2007 is due Tuesday, September 4" cite "FRCP (2011 ed.) 6 (2009 Committee Note)"
+{
+  given Served(Personal) on 2007-08-02
+  expect deadline(civ-30-days-after).nominal == 2007-09-01
+  expect deadline(civ-30-days-after) == 2007-09-04
+}
+
+test "C6: a 30th day on Saturday, September 1 rolls past Labor Day to Tuesday, September 4" cite "FRCP (2011 ed.) 6(a)(5)"
+{
+  given Served(Personal) on 2012-08-02
+  expect deadline(civ-30-days-after).nominal == 2012-09-01
+  expect deadline(civ-30-days-after) == 2012-09-04
+}
+
+test "C7: a 21st day before an event on Saturday, September 1 is due Friday, August 31" cite "FRCP (2011 ed.) 6(a)(5)"
+{
+  given Scheduled() on 2012-09-22
+  expect deadline(civ-21-days-before).nominal == 2012-09-01
+  expect deadline(civ-21-days-before) == 2012-08-31
+}
+
+test "A6: a 10th day on Saturday, September 1 rolls past Labor Day to Tuesday, September 4" cite "FRAP (2011 ed.) 26(a)(5)"
+{
+  given Served(Personal) on 2012-08-22
+  expect deadline(app-10-days-after).nominal == 2012-09-01
+  expect deadline(app-10-days-after) == 2012-09-04
+}
+
+test "A7: a 10th day before an event on Saturday, September 1 is due Friday, August 31" cite "FRAP (2011 ed.) 26(a)(5)"
+{
+  given Scheduled() on 2012-09-11
+  expect deadline(app-10-days-before).nominal == 2012-09-01
+  expect deadline(app-10-days-before) == 2012-08-31
+}
+
+test "A12 (the Note's dates): 30 days after mailing on Thursday, November 1, 2007 end Monday, December 3, plus three days, Thursday, December 6" cite "FRAP (2011 ed.) 26 (2009 Committee Note)"
+{
+  given Served(Mail) on 2007-11-01
+  expect deadline(app-30-days-after).nominal == 2007-12-01
+  expect deadline(app-30-days-after) == 2007-12-06
+}
+
+test "A12: the period ends first, then three days are added: Thursday, December 6" cite "FRAP (2011 ed.) 26(c)"
+{
+  given Served(Mail) on 2012-11-01
+  expect deadline(app-30-days-after).nominal == 2012-12-01
+  expect deadline(app-30-days-after) == 2012-12-06
+}
+
+/// Patriot's Day, the third Monday of April: a legal holiday of the
+/// Commonwealth of Massachusetts, the Note's "legal holiday in the relevant
+/// state" (the example is April 21, 2008). A fixture calendar: lit/core
+/// declares no state's holidays (SPEC §5.3 step 8), so this package states
+/// the one the Note's example needs.
+calendar patriots-day
+{
+  patriots-day: nth(3, monday, 4) effective [1969-01-01, ..)
+}
+
+/// FRCP 6 as amended in 2009 in a district court of a state whose legal
+/// holidays include Patriot's Day: FRCP 6(a)(6)(C) makes a state holiday a
+/// legal holiday for a period counted forward only. Otherwise the 2009 text
+/// (lit/core's `frcp6@2009-12-01`).
+counting frcp6-patriots-day effective [2009-12-01, 2016-12-01) cite "FRCP (2011 ed.) 6(a)(6)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 3.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  }
+  holidays us-federal-holidays
+  forward_holidays patriots-day cite "FRCP (2011 ed.) 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// The same rule after the 2016 amendment of 6(d): electronic service adds
+/// nothing (lit/core's `frcp6@2016-12-01`).
+counting frcp6-patriots-day effective [2016-12-01, ..) supersedes frcp6-patriots-day@2009-12-01 cite "FRCP 6(a)(6)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  }
+  holidays us-federal-holidays
+  forward_holidays patriots-day cite "FRCP 6(a)(6)(C)"
+  forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+deadline state-14-days-after: 14.days after Served() counted_by frcp6-patriots-day cite "FRCP (2011 ed.) 6(a)(1)" historical
+{
+  forum frcp
+}
+
+deadline state-14-days-before: 14.days before Scheduled() counted_by frcp6-patriots-day cite "FRCP (2011 ed.) 6(a)(5)" historical
+{
+  forum frcp
+}
+
+test "C9: a 14th day after an event on Patriot's Day is due Tuesday" cite "FRCP (2011 ed.) 6(a)(6)(C)"
+{
+  given Served(Personal) on 2014-04-07
+  expect deadline(state-14-days-after).nominal == 2014-04-21
+  expect deadline(state-14-days-after) == 2014-04-22
+}
+
+test "C10: a 14th day before an event on Patriot's Day is due that Monday" cite "FRCP (2011 ed.) 6(a)(6)(C)"
+{
+  given Scheduled() on 2014-05-05
+  expect deadline(state-14-days-before) == 2014-04-21
+}

@@ -1,0 +1,119 @@
+module change-validation.splits
+
+import core.frap26.{ frap26 }
+import change-validation.rulings.{ JudgmentEntered, reopen-motion-outer }
+
+// The circuit split `frap-4a6-notice` of the lg-fq2.3 corpus
+// (sources/change-corpus/rulings/README.md): which notice of entry opens
+// the 7-day window of FRAP 4(a)(6)(A) as amended in 1991 and 1998. Each
+// reading is its own period, triggered by the notice that reading counts;
+// a split case's facts give every notice it records, and each test expects
+// the outcome of the reading that binds in one circuit, from that
+// circuit's own decisions:
+//
+// - reading A, written notice from the clerk or a party: D.C. Cir.
+//   (Benavides v. Bureau of Prisons, 79 F.3d 1211 (1996), holding), 1st
+//   Cir. (Scott-Harris, 1997), 2d Cir. (Avolio, 1994);
+// - reading B, any written notice, whoever sends it: 5th Cir. (Bass v.
+//   U.S. Dep't of Agriculture, 211 F.3d 959 (2000), written notice
+//   required, holding; Wilkens v. Johnson, 238 F.3d 328 (2001), any
+//   source), 2d Cir. (Ryan, 1999);
+// - reading C, actual notice: 8th Cir. (Zimmer St. Louis, Inc. v. Zimmer
+//   Co., 32 F.3d 357 (1994), dictum), 9th Cir. (Nunley v. City of Los
+//   Angeles, 52 F.3d 792 (1995), notice by reading the docket). Neither
+//   decides whether oral notice is actual notice (Bass: they "speak in
+//   terms of 'actual notice,' without expressly taking a position on
+//   whether oral notice is enough"): VALIDATION.md §4 records it as a
+//   source ambiguity.
+//
+// Which reading binds in a circuit is chosen here, by the test, from the
+// circuit's precedent: language 1 has no effect by which a binding
+// precedent changes a deadline's trigger (VALIDATION.md §4, D3), so the
+// engine computes each reading but does not select it per circuit.
+
+/// The moving party learns of the entry by any means (reading C).
+event NoticeLearned()
+/// The moving party receives a written notice of entry from any source
+/// (reading B).
+event WrittenNoticeReceived()
+/// The moving party receives a written notice of entry from the clerk or
+/// a party (reading A).
+event ClerkOrPartyNoticeReceived()
+
+/// Reading A of the 1991-2005 FRAP 4(a)(6)(A) window.
+deadline reopen-window-clerk-or-party: 7.days after ClerkOrPartyNoticeReceived() counted_by frap26 effective [1991-12-01, 2005-12-01) cite "FRAP (2008 ed.) 4(a)(6)" historical
+{
+  forum frap
+}
+
+/// Reading B of the 1991-2005 FRAP 4(a)(6)(A) window.
+deadline reopen-window-written: 7.days after WrittenNoticeReceived() counted_by frap26 effective [1991-12-01, 2005-12-01) cite "FRAP (2008 ed.) 4(a)(6)" historical
+{
+  forum frap
+}
+
+/// Reading C of the 1991-2005 FRAP 4(a)(6)(A) window.
+deadline reopen-window-actual: 7.days after NoticeLearned() counted_by frap26 effective [1991-12-01, 2005-12-01) cite "FRAP (2008 ed.) 4(a)(6)" historical
+{
+  forum frap
+}
+
+/// From December 1, 2005, FRAP 4(a)(6)(A) itself settles the split: 14
+/// days "after the moving party receives or observes written notice of the
+/// entry from any source" (reading B, with a longer window). The amendment
+/// ends the other readings.
+deadline reopen-window-written: 14.days after WrittenNoticeReceived() counted_by frap26 effective [2005-12-01, ..) supersedes reopen-window-written@1991-12-01 supersedes reopen-window-clerk-or-party supersedes reopen-window-actual cite "FRAP (2008 ed.) 4(a)(6)"
+{
+  forum frap
+}
+
+// Benavides: the order was entered October 1, 1992; a lawyer in another
+// matter told Benavides of it on February 17, 1993 and mailed him a copy,
+// received March 12; the motion was filed March 19. No notice came from
+// the clerk or a party, so under reading A only the 180 days run.
+test "frap-4a6-notice, Benavides's facts at cadc (reading A): the motion of March 19, 1993 was timely" cite "FRAP 4(a)(6)"
+{
+  given JudgmentEntered() on 1992-10-01
+  given NoticeLearned() on 1993-02-17
+  given WrittenNoticeReceived() on 1993-03-12
+  expect deadline(reopen-motion-outer) == 1993-03-30
+  expect deadline(reopen-motion-outer) >= 1993-03-19
+}
+
+test "frap-4a6-notice, Benavides's facts at ca5 (reading B): the copy of March 12 opened the window; timely" cite "FRAP 4(a)(6)"
+{
+  given WrittenNoticeReceived() on 1993-03-12
+  expect deadline(reopen-window-written) == 1993-03-19
+  expect deadline(reopen-window-written) >= 1993-03-19
+}
+
+test "frap-4a6-notice, Benavides's facts at ca9 (reading C): the conversation of February 17 opened the window; late" cite "FRAP 4(a)(6)"
+{
+  given NoticeLearned() on 1993-02-17
+  expect deadline(reopen-window-actual) == 1993-02-24
+  expect deadline(reopen-window-actual) < 1993-03-19
+}
+
+// Bass: counsel learned of the order by telephone and from the docketing
+// clerk on May 26, 1999 and received the clerk's mailed copy on May 28;
+// the motion was filed June 3.
+test "frap-4a6-notice, Bass's facts at cadc (reading A): the clerk's copy of May 28 opened the window; timely" cite "FRAP 4(a)(6)"
+{
+  given ClerkOrPartyNoticeReceived() on 1999-05-28
+  expect deadline(reopen-window-clerk-or-party) == 1999-06-04
+  expect deadline(reopen-window-clerk-or-party) >= 1999-06-03
+}
+
+test "frap-4a6-notice, Bass's facts at ca5 (reading B): timely, as the Fifth Circuit held" cite "FRAP 4(a)(6)"
+{
+  given WrittenNoticeReceived() on 1999-05-28
+  expect deadline(reopen-window-written) == 1999-06-04
+  expect deadline(reopen-window-written) >= 1999-06-03
+}
+
+test "frap-4a6-notice, Bass's facts at ca8 (reading C): the call of May 26 opened the window; due June 2, late" cite "FRAP 4(a)(6)"
+{
+  given NoticeLearned() on 1999-05-26
+  expect deadline(reopen-window-actual) == 1999-06-02
+  expect deadline(reopen-window-actual) < 1999-06-03
+}

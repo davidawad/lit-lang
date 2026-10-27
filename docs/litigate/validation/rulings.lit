@@ -1,0 +1,396 @@
+module change-validation.rulings
+
+import core.frap26.{ frap26 }
+import core.frcp6.{ frcp6 }
+
+// Every timeliness ruling of the lg-fq2.3 corpus
+// (sources/change-corpus/rulings/MANIFEST.json, `counts_as_validation_ruling`)
+// that a period of this package can count, one test per ruling, named by the
+// ruling's manifest id. A test gives the trigger on the date the court found,
+// counts the period under the versions in force on that date (the period's
+// own and lit/core's FRCP 6 or FRAP 26), and expects the court's computed
+// deadline (or the corpus's DERIVED one, where the opinion states none) and
+// the court's holding: `deadline(d) < FILED` for an untimely filing,
+// `deadline(d) >= FILED` for a timely one. docs/litigate/VALIDATION.md §3
+// lists every ruling with its outcome here, and every disagreement.
+//
+// A period here runs from entry of the judgment or order, never from
+// service: that is the holding of every ruling that rejects three added
+// days under FRCP 6(e) (now 6(d)) or FRAP 26(c), so no trigger carries a
+// service method.
+
+/// The clerk enters the judgment or order a period runs from (FRCP 58,
+/// 79(a)).
+event JudgmentEntered()
+/// The district court enters an order reopening the time to appeal (FRAP
+/// 4(a)(6)).
+event ReopeningOrderEntered()
+/// The moving party receives the notice of entry that opens FRAP
+/// 4(a)(6)'s short window, on the date the court held it did.
+event NoticeOfEntryReceived()
+/// The clerk of the court of appeals dates a letter setting a time to act.
+event ClerkLetterDated()
+/// A one-year limitation period starts: AEDPA's effective date for a
+/// conviction final before it, or the end of statutory tolling.
+event LimitationStarted()
+/// The FDCPA violation occurs.
+event ViolationOccurred()
+/// The agency's final notice is presumed received (20 C.F.R. § 422.210(c)).
+event AgencyNoticeReceived()
+/// The IRS mails a notice of deficiency.
+event DeficiencyNoticeMailed()
+/// The Board of Immigration Appeals enters a final order.
+event FinalOrderEntered()
+
+/// FRAP 4(a)(1)(A): a civil notice of appeal is due 30 days after entry of
+/// the judgment or order appealed from (30 days since FRAP took effect on
+/// July 1, 1968; 28 U.S.C. § 2107(a)).
+deadline notice-of-appeal: 30.days after JudgmentEntered() counted_by frap26 effective [1968-07-01, ..) cite "FRAP 4(a)(1)(A)" historical
+{
+  forum frap
+}
+
+/// FRAP 4(a)(5)(A)(i): a motion to extend the time to appeal is due no
+/// later than 30 days after the time FRAP 4(a) prescribes expires.
+deadline appeal-extension-motion: 30.days after deadline(notice-of-appeal).adjusted counted_by frap26 effective [1968-07-01, ..) cite "FRAP 4(a)(5)(A)(i)" historical
+{
+  forum frap
+}
+
+/// FRCP 59(b) and 59(e): 10 days after entry of the judgment until the
+/// 2009 amendments, and FRCP 6(b) forbids extending it.
+deadline new-trial-motion: 10.days after JudgmentEntered() counted_by frcp6 effective [1968-07-01, 2009-12-01) cite "FRCP (2007) 59(e)" historical
+
+/// FRCP 59(b) as amended December 1, 2009: 28 days.
+deadline new-trial-motion: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) supersedes new-trial-motion@1968-07-01 cite "FRCP 59(b)"
+
+/// FRCP 59(e) before December 1, 2009: 10 days after entry of the judgment
+/// (as restyled in 2007, the same period as before).
+deadline alter-amend-motion: 10.days after JudgmentEntered() counted_by frcp6 effective [1968-07-01, 2009-12-01) cite "FRCP (2007) 59(e)" historical
+
+/// FRCP 59(e) as amended December 1, 2009: 28 days.
+deadline alter-amend-motion: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) supersedes alter-amend-motion@1968-07-01 cite "FRCP (2009) 59(e)"
+
+/// FRCP 50(b) as amended December 1, 2009: a renewed motion for judgment as
+/// a matter of law is due 28 days after entry of the judgment.
+deadline renewed-jmol-motion: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite "FRCP 50(b)"
+
+/// FRCP 23(f) as amended December 1, 2009: a petition for permission to
+/// appeal a class-certification order is due 14 days after the order is
+/// entered.
+deadline class-appeal-petition: 14.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite "FRCP 23(f)"
+
+/// E.D. Cal. Local Rule 293(a) (1992): a motion for attorney's fees is due
+/// 30 days after entry of the final judgment, counted under FRCP 6(a)
+/// (Kyle v. Campbell Soup Co., 28 F.3d 928).
+deadline local-fee-motion: 30.days after JudgmentEntered() counted_by frcp6 effective [1968-07-01, ..) cite ?("not vendored: E.D. Cal. L.R. 293(a) (1992), quoted in Kyle v. Campbell Soup Co., 28 F.3d 928 (9th Cir. 1994)")
+
+/// FRAP 4(a)(6) (as added December 1, 1991): a reopened time to appeal is
+/// 14 days from entry of the order reopening it.
+deadline reopened-appeal: 14.days after ReopeningOrderEntered() counted_by frap26 effective [1991-12-01, ..) cite "FRAP 4(a)(6)" historical
+{
+  forum frap
+}
+
+/// FRAP 4(a)(6)(A) (1991): a motion to reopen is due 180 days after entry
+/// of the judgment or order.
+deadline reopen-motion-outer: 180.days after JudgmentEntered() counted_by frap26 effective [1991-12-01, ..) cite "FRAP 4(a)(6)" historical
+{
+  forum frap
+}
+
+/// FRAP 4(a)(6)(A) from 1991 to the 2005 amendment: a motion to reopen is
+/// due 7 days after the moving party receives notice of entry, whichever
+/// of the two periods ends earlier. Which notice opens the window is the
+/// circuit split `frap-4a6-notice` (splits.lit); each ruling's trigger is
+/// the receipt its court held opened it.
+deadline reopen-motion-window: 7.days after NoticeOfEntryReceived() counted_by frap26 effective [1991-12-01, 2005-12-01) cite "FRAP (2008 ed.) 4(a)(6)" historical
+{
+  forum frap
+}
+
+/// FRAP 4(a)(6)(A) from December 1, 2005: 14 days after the moving party
+/// receives or observes written notice of entry from any source.
+deadline reopen-motion-window: 14.days after NoticeOfEntryReceived() counted_by frap26 effective [2005-12-01, ..) supersedes reopen-motion-window@1991-12-01 cite "FRAP (2008 ed.) 4(a)(6)"
+{
+  forum frap
+}
+
+/// A period the clerk of the court of appeals sets by letter, running from
+/// the letter's date (Fifth Circuit Rule 10.1 practice, Hong v. Smith, 129
+/// F.3d 824 (5th Cir. 1997)): 15 days to order the transcript.
+deadline clerk-letter-period: 15.days after ClerkLetterDated() counted_by frap26 effective [1968-07-01, ..) cite ?("the clerk's letter of July 28, 1997, quoted in Hong v. Smith, 129 F.3d 824 (5th Cir. 1997)")
+{
+  forum frap
+}
+
+/// 28 U.S.C. §§ 2244(d)(1), 2255: a one-year period, which the circuits on
+/// the April 24 side of the `aedpa-grace-end` split count under FRCP 6(a)
+/// (the anniversary method).
+deadline habeas-limitation: 1.years after LimitationStarted() counted_by frcp6 effective [1968-07-01, ..) cite ?("not vendored: 28 U.S.C. § 2244(d)(1), quoted in Flanagan v. Johnson, 154 F.3d 196 (5th Cir. 1998)")
+
+/// 15 U.S.C. § 1692k(d): an FDCPA action within one year from the date of
+/// the violation, counted under FRCP 6(a) (Serna v. Law Office of Joseph
+/// Onwuteaka, 732 F.3d 440 (5th Cir. 2013)).
+deadline fdcpa-limitation: 1.years after ViolationOccurred() counted_by frcp6 effective [1968-07-01, ..) cite ?("not vendored: 15 U.S.C. § 1692k(d), quoted in Serna, 732 F.3d 440")
+
+/// 42 U.S.C. § 405(g): a civil action within 60 days after the mailing of
+/// notice of the Commissioner's decision, received five days after mailing
+/// unless shown otherwise (20 C.F.R. § 422.210(c)).
+deadline social-security-action: 60.days after AgencyNoticeReceived() counted_by frcp6 effective [1968-07-01, ..) cite ?("not vendored: 42 U.S.C. § 405(g) and 20 C.F.R. § 422.210(c), quoted in Fletcher v. Apfel, 210 F.3d 510 (5th Cir. 2000)")
+
+/// I.R.C. § 6213(a): a Tax Court petition within 90 days after the notice
+/// of deficiency is mailed; the Ninth Circuit applied FRCP 6(a) by analogy
+/// (Organic Cannabis Foundation v. Commissioner, 962 F.3d 1082).
+deadline tax-court-petition: 90.days after DeficiencyNoticeMailed() counted_by frcp6 effective [1968-07-01, ..) cite ?("not vendored: 26 U.S.C. § 6213(a), quoted in Organic Cannabis Found. v. Comm'r, 962 F.3d 1082 (9th Cir. 2020)")
+
+/// 8 U.S.C. § 1252(b)(1): a petition for review within 30 days of the date
+/// of the final order of removal, counted under FRAP 26(a).
+deadline petition-for-review: 30.days after FinalOrderEntered() counted_by frap26 effective [1996-09-30, ..) cite ?("not vendored: 8 U.S.C. § 1252(b)(1), quoted in Ramos-Lopez v. Lynch, 823 F.3d 1024 (5th Cir. 2016)")
+{
+  forum frap
+}
+
+// ---- Before the 2009 amendments ----------------------------------------
+
+test "lashley-5cir-1975: the notice of appeal mailed May 28, 1975 was late; due Tuesday May 27" cite "FRAP 4(a)(1)(A)"
+{
+  given JudgmentEntered() on 1975-04-24
+  expect deadline(notice-of-appeal).nominal == 1975-05-24
+  expect deadline(notice-of-appeal) == 1975-05-27
+  expect deadline(notice-of-appeal) < 1975-05-28
+}
+
+test "cavaliere-11cir-1993: a new-trial motion served April 9, 1992 was two days late" cite "FRCP (2008 ed.) 6(a)"
+{
+  given JudgmentEntered() on 1992-03-24
+  expect deadline(new-trial-motion) == 1992-04-07
+  expect deadline(new-trial-motion) < 1992-04-09
+}
+
+test "parker-10cir-1996: a Rule 59(e) motion filed 13 days after entry was late" cite "FRCP (2008 ed.) 6(a)"
+{
+  given JudgmentEntered() on 1994-08-01
+  expect deadline(alter-amend-motion) == 1994-08-15
+  expect deadline(alter-amend-motion) < 1994-08-18
+}
+
+test "derrington-bey-dccir-1994: Monday July 5, 1993 was a legal holiday; due Friday July 16" cite "FRCP (2008 ed.) 6(a)"
+{
+  given JudgmentEntered() on 1993-07-01
+  expect deadline(alter-amend-motion) == 1993-07-16
+  expect deadline(alter-amend-motion) < 1993-07-19
+}
+
+test "hong-5cir-1997: no three days for a period running from the clerk's letter; the transcript order was late" cite "FRAP (2008 ed.) 26(c)"
+{
+  given ClerkLetterDated() on 1997-07-28
+  expect deadline(clerk-letter-period) == 1997-08-12
+  expect deadline(clerk-letter-period) < 1997-08-15
+}
+
+test "halicki-5cir-1998: a Rule 59(e) motion arriving two days late" cite "FRCP (2008 ed.) 6(a)"
+{
+  given JudgmentEntered() on 1997-03-05
+  expect deadline(alter-amend-motion) == 1997-03-19
+  expect deadline(alter-amend-motion) < 1997-03-21
+}
+
+test "midwest-employers-5cir-1998: a new-trial motion filed November 3, 1997 was late" cite "FRCP (2008 ed.) 6(a)"
+{
+  given JudgmentEntered() on 1997-10-15
+  expect deadline(new-trial-motion) == 1997-10-29
+  expect deadline(new-trial-motion) < 1997-11-03
+}
+
+// The dissent's entry date, October 16, gives October 30: late either way.
+test "midwest-employers-5cir-1998 (the dissent's entry date): late either way" cite "FRCP (2008 ed.) 6(a)"
+{
+  given JudgmentEntered() on 1997-10-16
+  expect deadline(new-trial-motion) == 1997-10-30
+  expect deadline(new-trial-motion) < 1997-11-03
+}
+
+test "albright-3cir-2001: ten counted days skip the weekends and Thanksgiving; the motion was late" cite "FRCP (2008 ed.) 6(a)"
+{
+  given JudgmentEntered() on 2000-11-13
+  expect deadline(alter-amend-motion) == 2000-11-28
+  expect deadline(alter-amend-motion) < 2000-11-30
+}
+
+test "jackson-v-crosby-11cir-2004: the Rule 59(e) motion was due December 30, 2003, and the notice of appeal January 14, 2004" cite "FRCP (2008 ed.) 6(a)"
+{
+  given JudgmentEntered() on 2003-12-15
+  expect deadline(alter-amend-motion) == 2003-12-30
+  expect deadline(alter-amend-motion) < 2004-01-05
+  expect deadline(notice-of-appeal) == 2004-01-14
+}
+
+test "kyle-9cir-1994: a 30th day on Saturday rolls to Monday; the fee motion was two days late" cite "FRCP (2008 ed.) 6(a)"
+{
+  given JudgmentEntered() on 1992-05-21
+  expect deadline(local-fee-motion).nominal == 1992-06-20
+  expect deadline(local-fee-motion) == 1992-06-22
+  expect deadline(local-fee-motion) < 1992-06-24
+}
+
+test "bowles-scotus-2007: a reopened appeal period of 14 days ended February 24, 2004" cite "FRAP 4(a)(6)"
+{
+  given ReopeningOrderEntered() on 2004-02-10
+  expect deadline(reopened-appeal) == 2004-02-24
+  expect deadline(reopened-appeal) < 2004-02-26
+}
+
+test "ultimate-appliance-6cir-2010: the notice was due October 30, 2008, the extension motion December 1" cite "FRAP 4(a)(5)(A)(i)"
+{
+  given JudgmentEntered() on 2008-09-30
+  expect deadline(notice-of-appeal) == 2008-10-30
+  expect deadline(appeal-extension-motion).nominal == 2008-11-29
+  expect deadline(appeal-extension-motion) == 2008-12-01
+  expect deadline(appeal-extension-motion) < 2008-12-02
+}
+
+test "benavides-dccir-1996: seven days from the written copy of March 12, 1993; the motion of March 19 was timely" cite "FRAP 4(a)(6)"
+{
+  given NoticeOfEntryReceived() on 1993-03-12
+  expect deadline(reopen-motion-window) == 1993-03-19
+  expect deadline(reopen-motion-window) >= 1993-03-19
+}
+
+test "ryan-2cir-1999: seven days from the clerk's in-hand copy of June 30, 1998; the motion of July 30 was late" cite "FRAP 4(a)(6)"
+{
+  given NoticeOfEntryReceived() on 1998-06-30
+  expect deadline(reopen-motion-window) == 1998-07-07
+  expect deadline(reopen-motion-window) < 1998-07-30
+}
+
+test "bass-5cir-2000: seven days from the written notice of May 28, 1999; the motion of June 3 was timely" cite "FRAP 4(a)(6)"
+{
+  given NoticeOfEntryReceived() on 1999-05-28
+  expect deadline(reopen-motion-window) == 1999-06-04
+  expect deadline(reopen-motion-window) >= 1999-06-03
+}
+
+test "wilkens-5cir-2001: seven days from the faxed copy of September 7, 1999; the motion of October 4 was late" cite "FRAP 4(a)(6)"
+{
+  given NoticeOfEntryReceived() on 1999-09-07
+  expect deadline(reopen-motion-window) == 1999-09-14
+  expect deadline(reopen-motion-window) < 1999-10-04
+}
+
+test "vencor-11cir-2002: 180 days from October 26, 1999 end Sunday April 23, 2000, so Monday; the October 2000 motion was late" cite "FRAP 4(a)(6)"
+{
+  given JudgmentEntered() on 1999-10-26
+  expect deadline(reopen-motion-outer).nominal == 2000-04-23
+  expect deadline(reopen-motion-outer) == 2000-04-24
+  expect deadline(reopen-motion-outer) < 2000-10-17
+}
+
+// The one-year periods of the 1996-1998 AEDPA rulings (flanagan, moore,
+// mickens, burns, patterson, hernandez) count under FRCP 6 as amended in
+// 1985, which lit/core gives no month or year provision: the period is
+// refused, never counted (VALIDATION.md §3, D1). The harness pins it.
+
+test "fletcher-5cir-2000: 60 days from presumed receipt on February 25, 1997; the action filed May 8 was late" cite "FRCP (2008 ed.) 6(a)"
+{
+  given AgencyNoticeReceived() on 1997-02-25
+  expect deadline(social-security-action).nominal == 1997-04-26
+  expect deadline(social-security-action) == 1997-04-28
+  expect deadline(social-security-action) < 1997-05-08
+}
+
+// ---- From the 2009 amendments to the 2016 amendments --------------------
+
+test "eastman-3cir-2013: fourteen calendar days from entry; the Rule 23(f) petition of August 19 was late" cite "FRCP 6(a)(1)(B)"
+{
+  given JudgmentEntered() on 2013-07-31
+  expect deadline(class-appeal-petition) == 2013-08-14
+  expect deadline(class-appeal-petition) < 2013-08-19
+}
+
+test "serna-5cir-2013: a year from Saturday August 14, 2010 ends Sunday, so Monday August 15, 2011; the complaint of August 12 was timely" cite "FRCP 6(a)(1)(C)"
+{
+  given ViolationOccurred() on 2010-08-14
+  expect deadline(fdcpa-limitation).nominal == 2011-08-14
+  expect deadline(fdcpa-limitation) == 2011-08-15
+  expect deadline(fdcpa-limitation) >= 2011-08-12
+}
+
+test "justice-7cir-2012: 28 days from October 25, 2011 ended November 22; a filing at 3 a.m. on November 23 was late" cite "FRCP 6(a)(4)(A)"
+{
+  given JudgmentEntered() on 2011-10-25
+  expect deadline(alter-amend-motion) == 2011-11-22
+  expect deadline(alter-amend-motion) < 2011-11-23
+}
+
+test "lorenzo-4cir-2015: fourteen days from March 24, 2014; the petition filed 17 days after entry was late" cite "FRCP 23(f)"
+{
+  given JudgmentEntered() on 2014-03-24
+  expect deadline(class-appeal-petition) == 2014-04-07
+  expect deadline(class-appeal-petition) < 2014-04-10
+}
+
+test "ramos-lopez-5cir-2016: 30 days from January 30, 2015 end Sunday, so Monday March 2; received March 3, late" cite "FRAP 26(a)(1)(C)"
+{
+  given FinalOrderEntered() on 2015-01-30
+  expect deadline(petition-for-review).nominal == 2015-03-01
+  expect deadline(petition-for-review) == 2015-03-02
+  expect deadline(petition-for-review) < 2015-03-03
+}
+
+test "organic-cannabis-9cir-2020: 90 days from January 22, 2015 ended April 22; delivered April 23, late" cite "FRCP 6(a)(1)"
+{
+  given DeficiencyNoticeMailed() on 2015-01-22
+  expect deadline(tax-court-petition) == 2015-04-22
+  expect deadline(tax-court-petition) < 2015-04-23
+}
+
+// ---- After the 2016 amendments ----------------------------------------
+
+test "pierce-6cir-2021: 30 days from August 12, 2020 ended Friday September 11; the paper notice that day was timely" cite "FRAP 4(a)(1)(A)"
+{
+  given JudgmentEntered() on 2020-08-12
+  expect deadline(notice-of-appeal) == 2020-09-11
+  expect deadline(notice-of-appeal) >= 2020-09-11
+}
+
+test "goncalves-1cir-2025: 30 days from April 17, 2024 ended May 17; received May 20, late" cite "FRAP 26(a)(1)"
+{
+  given FinalOrderEntered() on 2024-04-17
+  expect deadline(petition-for-review) == 2024-05-17
+  expect deadline(petition-for-review) < 2024-05-20
+}
+
+// The 28th day is Independence Day, so the period rolls to Friday, July 5,
+// as the court says; the court's further step, the closed courthouse on
+// July 5 (FRCP 6(a)(3)(A)), is a clerk-inaccessible day, which no `.lit`
+// test or matter can state (VALIDATION.md §3, D2): the harness
+// (crates/litigate-cli/tests/change_validation.rs) counts it.
+test "circuitronix-11cir-2021 (to the holiday roll): the 28th day, July 4, 2019, rolls to Friday July 5" cite "FRCP 6(a)(6)(A)"
+{
+  given JudgmentEntered() on 2019-06-06
+  expect deadline(renewed-jmol-motion).nominal == 2019-07-04
+  expect deadline(renewed-jmol-motion) == 2019-07-05
+}
+
+/// Blackman v. Neven: the year from finality on November 13, 2018, extended
+/// by the 102 days of statutory tolling (28 U.S.C. § 2244(d)(2)) the court
+/// counts, added to the year's last day as the court adds them.
+deadline blackman-tolled-limitation: 102.days after deadline(habeas-limitation).nominal counted_by frcp6 effective [2016-12-01, ..) cite ?("not vendored: 28 U.S.C. § 2244(d)(2); the tolled days as Blackman v. Neven (9th Cir. 2024) counts them")
+
+test "blackman-9cir-2024: a year from November 13, 2018 plus 102 tolled days ends Sunday February 23, 2020, so Monday; the 2021 petition was late" cite "FRCP 6(a)(1)(C)"
+{
+  given LimitationStarted() on 2018-11-13
+  expect deadline(habeas-limitation).nominal == 2019-11-13
+  expect deadline(blackman-tolled-limitation).nominal == 2020-02-23
+  expect deadline(blackman-tolled-limitation) == 2020-02-24
+  expect deadline(blackman-tolled-limitation) < 2021-03-23
+}
+
+test "malek-2cir-2024: 28 days from March 31, 2023 ended April 28; the motion docketed May 5 was late" cite "FRCP 59(e)"
+{
+  given JudgmentEntered() on 2023-03-31
+  expect deadline(alter-amend-motion) == 2023-04-28
+  expect deadline(alter-amend-motion) < 2023-05-05
+  expect deadline(notice-of-appeal).nominal == 2023-04-30
+}

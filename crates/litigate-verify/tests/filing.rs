@@ -119,15 +119,49 @@ fn frap_32s_numbers_and_parts_are_in_its_vendored_text() {
 }
 
 #[test]
+fn a_bound_the_rule_spells_in_words_is_in_its_vendored_text() {
+    // 37 C.F.R. § 1.943(c): "shall not exceed thirty pages or 14,000 words".
+    let cfr = "[sources.cfr]\ntitle = \"37 C.F.R. Part 1\"\npath = \"sources/cfr-37-part1.txt\"\n\
+         path_sha256 = \"e5765fec0e8c5f295d4f230ed9743b7972dbd41340693833abf990fe1918d1ec\"\n\
+         cite_prefixes = [\"37 C.F.R.\"]\nsection_heading = \"37 C.F.R. § {n}\"\n";
+    let resolved = |limit: &str| -> Vec<String> {
+        verify(
+            &[pkg_with_sources(
+                "demo",
+                "FederalRule",
+                &[],
+                &format!("{FRCP}\n{cfr}"),
+                &with(limit),
+            )],
+            Profile::Dev,
+        )
+        .verification
+        .diagnostics
+        .iter()
+        .filter(|d| d.code.as_str() == "L1010")
+        .map(|d| d.message.clone())
+        .collect()
+    };
+    assert_eq!(
+        resolved("limit brief { pages <= 30 words <= 14_000 } cite \"37 C.F.R. § 1.943\""),
+        Vec::<String>::new()
+    );
+    assert_eq!(
+        resolved("limit brief { pages <= 31 } cite \"37 C.F.R. § 1.943\""),
+        ["`37 C.F.R. § 1.943` is cited for \"31 pages\" or \"thirty-one pages\" or \"thirty-one (31) pages\", which its vendored text does not hold"]
+    );
+}
+
+#[test]
 fn a_bound_or_part_the_vendored_text_does_not_hold_is_unresolved() {
     for (limit, message) in [
         (
             "limit b { words <= 14_000 cite \"FRAP 32(a)(7)(B)(i)\" }",
-            "`FRAP 32(a)(7)(B)(i)` is cited for \"14,000 words\", which its vendored text does not hold",
+            "`FRAP 32(a)(7)(B)(i)` is cited for \"14,000 words\" or \"fourteen thousand words\" or \"fourteen thousand (14,000) words\", which its vendored text does not hold",
         ),
         (
             "limit b { pages <= 30 } cite \"FRAP 31\"",
-            "`FRAP 31` is cited for \"30 pages\", which its vendored text does not hold",
+            "`FRAP 31` is cited for \"30 pages\" or \"thirty pages\" or \"thirty (30) pages\", which its vendored text does not hold",
         ),
         (
             "limit b { excludes [cover-page, oral-argument-statement] cite \"FRAP 32(f)\" }",

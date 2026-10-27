@@ -111,8 +111,14 @@ impl<'a> Context<'a> {
                 _ => None,
             };
             let window = amended.or(meta.map(|m| &m.effective));
-            let own =
-                meta.and_then(|m| Some((m.cite.as_deref()?, m.span.as_ref(), m.historical, None)));
+            let own = meta.and_then(|m| {
+                Some((
+                    m.cite.as_deref()?,
+                    m.span.as_ref(),
+                    m.historical,
+                    Vec::new(),
+                ))
+            });
             // A delegation's and a characterization's own authority, at
             // the declaration.
             let span = meta.and_then(|m| m.span.as_ref());
@@ -124,18 +130,19 @@ impl<'a> Context<'a> {
                     Declaration::Grant(g) => g.delegations.as_slice(),
                     _ => &[],
                 })
-                .filter_map(move |g| Some((g.cite.as_deref()?, span, historical, None)));
+                .filter_map(move |g| Some((g.cite.as_deref()?, span, historical, Vec::new())));
             let characterized = match d {
                 Declaration::Deadline(x) => x
                     .characterization
                     .as_ref()
-                    .and_then(|c| Some((c.cite.as_deref()?, span, historical, None))),
+                    .and_then(|c| Some((c.cite.as_deref()?, span, historical, Vec::new()))),
                 _ => None,
             };
             let test = match d {
-                Declaration::Test(t) => {
-                    t.cite.as_deref().map(|c| (c, t.span.as_ref(), false, None))
-                }
+                Declaration::Test(t) => t
+                    .cite
+                    .as_deref()
+                    .map(|c| (c, t.span.as_ref(), false, Vec::new())),
                 _ => None,
             };
             let adoption = match d {
@@ -144,7 +151,7 @@ impl<'a> Context<'a> {
                         a.cite.as_str(),
                         x.meta.span.as_ref(),
                         a.historical,
-                        a.quote.as_deref().map(Cow::Borrowed),
+                        a.quote.as_deref().map(Cow::Borrowed).into_iter().collect(),
                     )
                 }),
                 _ => None,
@@ -161,13 +168,13 @@ impl<'a> Context<'a> {
                 .chain(edges)
                 .chain(delegated)
                 .chain(characterized)
-                .map(move |(text, span, historical, quote)| Cite {
+                .map(move |(text, span, historical, quotes)| Cite {
                     text,
                     span,
                     window,
                     historical,
                     imported,
-                    quote,
+                    quotes,
                 })
         })
     }
@@ -183,21 +190,24 @@ fn edge_cites(d: &Declaration) -> Vec<CiteOf<'_>> {
                 [e.authority.as_deref(), sourced(e.basis.as_ref())]
                     .into_iter()
                     .flatten()
-                    .map(|c| (c, e.span.as_ref(), false, None))
+                    .map(|c| (c, e.span.as_ref(), false, Vec::new()))
             })
-            .chain(sourced(n.basis.as_ref()).map(|c| (c, n.meta.span.as_ref(), false, None)))
+            .chain(sourced(n.basis.as_ref()).map(|c| (c, n.meta.span.as_ref(), false, Vec::new())))
             .collect(),
         _ => Vec::new(),
     }
 }
 
-/// A cite's text, span, `historical` mark, and quoted words.
-type CiteOf<'a> = (&'a str, Option<&'a Span>, bool, Option<Cow<'a, str>>);
+/// A cite's text, span, `historical` mark, and quoted words (any one of
+/// which its vendored text must hold).
+type CiteOf<'a> = (&'a str, Option<&'a Span>, bool, Vec<Cow<'a, str>>);
 
 /// The cites of a filing limit's entries (SPEC §3.7), each its own or
 /// else the declaration's, with the words its vendored text must hold: a
-/// bound's number and measure as the rules write them (`13,000 words`),
-/// and each excluded part named, hyphens read as spaces (`cover page`).
+/// bound's number and measure as the rules write them, in digits
+/// (`13,000 words`), in words (`thirty pages`) or both (`thirty (30)
+/// pages`), and each excluded part named, hyphens read as spaces
+/// (`cover page`).
 /// A hole cites nothing and quotes nothing.
 fn limit_cites(l: &hir::Limit) -> Vec<CiteOf<'_>> {
     let decl = l.meta.cite.as_deref();
@@ -207,28 +217,31 @@ fn limit_cites(l: &hir::Limit) -> Vec<CiteOf<'_>> {
         let Some(text) = b.cite.as_deref().or(decl) else {
             continue;
         };
-        let quote = match &b.max {
-            hir::Authored::Known(n) => Some(Cow::Owned(format!(
-                "{} {}",
-                grouped(*n),
-                b.measure.as_str()
-            ))),
-            hir::Authored::Hole(_) => None,
+        let quotes = match &b.max {
+            hir::Authored::Known(n) => {
+                let (digits, words, measure) = (grouped(*n), spelled(*n), b.measure.as_str());
+                vec![
+                    Cow::Owned(format!("{digits} {measure}")),
+                    Cow::Owned(format!("{words} {measure}")),
+                    Cow::Owned(format!("{words} ({digits}) {measure}")),
+                ]
+            }
+            hir::Authored::Hole(_) => Vec::new(),
         };
-        out.push((text, b.span.as_ref().or(span), false, quote));
+        out.push((text, b.span.as_ref().or(span), false, quotes));
     }
     for c in &l.certificates {
         if let Some(text) = c.cite.as_deref() {
-            out.push((text, c.span.as_ref().or(span), false, None));
+            out.push((text, c.span.as_ref().or(span), false, Vec::new()));
         }
     }
     if let Some(x) = &l.excludes {
         if let Some(text) = x.cite.as_deref().or(decl) {
             let at = x.span.as_ref().or(span);
-            out.push((text, at, false, None));
+            out.push((text, at, false, Vec::new()));
             out.extend(x.items.iter().filter_map(|item| match item {
                 hir::Authored::Known(part) => {
-                    Some((text, at, false, Some(Cow::Owned(part.replace('-', " ")))))
+                    Some((text, at, false, vec![Cow::Owned(part.replace('-', " "))]))
                 }
                 hir::Authored::Hole(_) => None,
             }));
@@ -236,7 +249,7 @@ fn limit_cites(l: &hir::Limit) -> Vec<CiteOf<'_>> {
     }
     for e in &l.ecf {
         if let Some(text) = e.cite.as_deref() {
-            out.push((text, e.span.as_ref().or(span), false, None));
+            out.push((text, e.span.as_ref().or(span), false, Vec::new()));
         }
     }
     out
@@ -253,6 +266,77 @@ fn grouped(n: u64) -> String {
         out.push(c);
     }
     out
+}
+
+/// `n` in words, as the rules spell counts: `thirty`, `twenty-five`,
+/// `one hundred fifty`, `thirteen thousand`.
+fn spelled(n: u64) -> String {
+    const ONES: [&str; 20] = [
+        "zero",
+        "one",
+        "two",
+        "three",
+        "four",
+        "five",
+        "six",
+        "seven",
+        "eight",
+        "nine",
+        "ten",
+        "eleven",
+        "twelve",
+        "thirteen",
+        "fourteen",
+        "fifteen",
+        "sixteen",
+        "seventeen",
+        "eighteen",
+        "nineteen",
+    ];
+    const TENS: [&str; 10] = [
+        "", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety",
+    ];
+    const SCALES: [&str; 7] = [
+        "",
+        "thousand",
+        "million",
+        "billion",
+        "trillion",
+        "quadrillion",
+        "quintillion",
+    ];
+    // Under a thousand, `n` is never zero here.
+    let hundreds = |n: u64| {
+        let mut words = Vec::new();
+        if n >= 100 {
+            words.push(format!("{} hundred", ONES[(n / 100) as usize]));
+        }
+        let rest = (n % 100) as usize;
+        match rest {
+            0 => {}
+            1..20 => words.push(ONES[rest].to_owned()),
+            _ if rest.is_multiple_of(10) => words.push(TENS[rest / 10].to_owned()),
+            _ => words.push(format!("{}-{}", TENS[rest / 10], ONES[rest % 10])),
+        }
+        words.join(" ")
+    };
+    if n == 0 {
+        return ONES[0].to_owned();
+    }
+    let mut groups = Vec::new();
+    let mut rest = n;
+    for scale in SCALES {
+        let group = rest % 1000;
+        if group > 0 {
+            groups.push(match scale {
+                "" => hundreds(group),
+                _ => format!("{} {scale}", hundreds(group)),
+            });
+        }
+        rest /= 1000;
+    }
+    groups.reverse();
+    groups.join(" ")
 }
 
 /// The cite a `basis sourced("...")` rests on.
@@ -276,9 +360,9 @@ pub(crate) struct Cite<'a> {
     pub historical: bool,
     /// Its declaration carries the `/// imported` marker.
     pub imported: bool,
-    /// The words of the cited text it quotes (`quote "..."`), which its
-    /// vendored section must hold.
-    pub quote: Option<Cow<'a, str>>,
+    /// The words of the cited text it quotes (`quote "..."`), any one of
+    /// which its vendored section must hold; none when it quotes nothing.
+    pub quotes: Vec<Cow<'a, str>>,
 }
 
 /// The package declaring `target` (`<pack-id>::<id>` or a local id) among
@@ -387,5 +471,23 @@ mod tests {
         let here = served("Document::complaint", 3);
         assert!(same_expr(&here, &served("Document::complaint", 9)));
         assert!(!same_expr(&here, &served("Document::reply", 3)));
+    }
+
+    #[test]
+    fn counts_are_spelled_as_the_rules_write_them() {
+        for (n, words) in [
+            (0, "zero"),
+            (5, "five"),
+            (15, "fifteen"),
+            (30, "thirty"),
+            (25, "twenty-five"),
+            (100, "one hundred"),
+            (150, "one hundred fifty"),
+            (1_300, "one thousand three hundred"),
+            (13_000, "thirteen thousand"),
+            (2_000_017, "two million seventeen"),
+        ] {
+            assert_eq!(spelled(n), words, "{n}");
+        }
     }
 }

@@ -1,0 +1,251 @@
+module flmd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Middle District's own periods. Page limits are stated with each
+// motion rule: a motion with its memorandum 25 pages, a response 20, a
+// summary judgment reply 7, an objection to a magistrate judge's order or
+// report 10, a motion for leave to exceed a limit or to reply 3 (Local
+// Rule 3.01(b), (c), (e)), a notice of supplemental authority 2 (Local
+// Rule 3.01(j)); each excludes only the caption, the signature block, a
+// certificate of conferral or service, and a verification or attachment
+// (Local Rule 3.01(a)). Before a motion, the movant confers in good faith
+// and certifies it under "Local Rule 3.01(g) Certificate" (Local Rule
+// 3.01(g)). The final pretrial meeting is held at least 14 days, and the
+// final pretrial statement filed at least 7 days, before the final
+// pretrial conference or another deadline the judge sets (Local Rule
+// 3.06(a), (b)).
+/// A summons and complaint are served or a waiver is received (Local Rule
+/// 1.10(a)).
+event ServiceOrWaiverMade()
+/// A party fails to plead or otherwise defend (Local Rule 1.10(b)).
+event FailureToPleadOrDefend()
+/// The clerk enters a default (Local Rule 1.10(c)).
+event DefaultEntered()
+/// A motion is served (Local Rule 3.01(d)).
+event MotionServed()
+/// A motion to dismiss, for judgment on the pleadings, for summary
+/// judgment, to exclude or limit expert testimony, to certify a class, for
+/// a new trial, or to alter or amend the judgment is served (Local Rule
+/// 3.01(d)).
+event DispositiveMotionServed()
+/// A response to a motion for summary judgment is served (Local Rule
+/// 3.01(e)).
+event SummaryJudgmentResponseServed()
+/// A motion is filed while the opposing party is unavailable to confer
+/// (Local Rule 3.01(g)(3)).
+event MotionFiledWithoutConference()
+/// A defendant appears in an action originating in the court (Local Rule
+/// 3.02(b)(1)).
+event DefendantAppeared()
+/// An action removed or transferred to the court is docketed (Local Rule
+/// 3.02(b)(2)).
+event RemovedActionDocketed()
+/// The United States attorney is served in an action against the United
+/// States, its agency, officer or employee (Local Rule 3.02(b)(3)).
+event UnitedStatesAttorneyServed()
+/// A mediation is held under a mediation order (Local Rule 4.03(f)).
+event MediationHeld()
+/// Judgment is entered (Local Rule 7.01(b)).
+event JudgmentEntered()
+/// The court enters an order determining entitlement to a fee (Local Rule
+/// 7.01(c)).
+event FeeEntitlementDetermined()
+/// A lawyer receives the agency's "close-out" letter after a social
+/// security remand (Local Rule 7.01(e)).
+event CloseOutLetterReceived()
+
+/// Local Rule 1.10(a): within 21 days after service of a summons and
+/// complaint or receipt of a waiver, a party must file proof of service or
+/// the waiver. Failure can result in dismissal without notice and without
+/// prejudice (Local Rule 1.10(d)).
+deadline proof-of-service-period: 21.days after ServiceOrWaiverMade() counted_by frcp6 cite "M.D. Fla. Local Rule 1.10(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 1.10(b): within 28 days after a party's failure to plead or
+/// otherwise defend, a party entitled to a default must apply for it.
+deadline default-application-period: 28.days after FailureToPleadOrDefend() counted_by frcp6 cite "M.D. Fla. Local Rule 1.10(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 1.10(c): within 35 days after entry of a default, the party
+/// entitled to a default judgment must apply for it or file a paper
+/// identifying each unresolved issue necessary to its entry.
+deadline default-judgment-application-period: 35.days after DefaultEntered() counted_by frcp6 cite "M.D. Fla. Local Rule 1.10(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 3.01(d): a party may respond to a motion within 14 days
+/// after service; a motion not timely answered is subject to treatment as
+/// unopposed.
+deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "M.D. Fla. Local Rule 3.01(d)"
+{
+  forum frcp
+}
+
+/// Local Rule 3.01(d): 21 days after service to respond to a motion to
+/// dismiss, for judgment on the pleadings, for summary judgment, to exclude
+/// or limit expert testimony, to certify a class, for a new trial, or to
+/// alter or amend the judgment.
+deadline dispositive-response-period: 21.days after DispositiveMotionServed() counted_by frcp6 cite "M.D. Fla. Local Rule 3.01(d)"
+{
+  forum frcp
+}
+
+/// Local Rule 3.01(e): no reply without leave, except that a party may
+/// reply to a response to a motion for summary judgment within 14 days
+/// after service of the response; the reply must not exceed 7 pages.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "M.D. Fla. Local Rule 3.01(e)"
+{
+  forum frcp
+}
+
+/// Local Rule 3.01(g)(3): if the opposing party is unavailable before the
+/// motion's filing, the movant after filing must try diligently for three
+/// days to contact the opposing party, then promptly supplement the motion.
+deadline conferral-attempt-period: 3.days after MotionFiledWithoutConference() counted_by frcp6 cite "M.D. Fla. Local Rule 3.01(g)(3)"
+{
+  forum frcp
+}
+
+/// Local Rule 3.02(b)(1): the case management report is filed within 40
+/// days after any defendant appears in an action originating in the court.
+deadline case-management-report-period: 40.days after DefendantAppeared() counted_by frcp6 cite "M.D. Fla. Local Rule 3.02(b)(1)"
+{
+  forum frcp
+}
+
+/// Local Rule 3.02(b)(2): within 40 days after the docketing of an action
+/// removed or transferred to the court.
+deadline removed-case-management-report-period: 40.days after RemovedActionDocketed() counted_by frcp6 cite "M.D. Fla. Local Rule 3.02(b)(2)"
+{
+  forum frcp
+}
+
+/// Local Rule 3.02(b)(3): within 70 days after service on the United
+/// States attorney in an action against the United States, its agency, or
+/// its officer or employee.
+deadline united-states-case-management-report-period: 70.days after UnitedStatesAttorneyServed() counted_by frcp6 cite "M.D. Fla. Local Rule 3.02(b)(3)"
+{
+  forum frcp
+}
+
+/// Local Rule 4.03(f): the mediation order requires the mediator to report
+/// within seven days after mediation its result and whether all required
+/// persons attended.
+deadline mediation-report-period: 7.days after MediationHeld() counted_by frcp6 cite "M.D. Fla. Local Rule 4.03(f)"
+{
+  forum frcp
+}
+
+/// Local Rule 7.01(b): within 14 days after entry of judgment, the party
+/// claiming a post-judgment attorney's fee and non-taxable expenses must
+/// move for a determination of entitlement (Local Rule 7.01(a): the
+/// procedure is bifurcated, except in a social security action).
+deadline fee-entitlement-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "M.D. Fla. Local Rule 7.01(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 7.01(c): within 45 days after the order determining
+/// entitlement, the claimant must file the supplemental motion on amount.
+deadline fee-amount-motion-period: 45.days after FeeEntitlementDetermined() counted_by frcp6 cite "M.D. Fla. Local Rule 7.01(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 7.01(e): no later than 14 days after receipt of a
+/// "close-out" letter, a lawyer requesting a fee payable from withheld
+/// social security benefits must move for the fee.
+deadline social-security-fee-motion-period: 14.days after CloseOutLetterReceived() counted_by frcp6 cite "M.D. Fla. Local Rule 7.01(e)"
+{
+  forum frcp
+}
+
+test "proof of service is due 21 days after service" cite "M.D. Fla. Local Rule 1.10(a)"
+{
+  given ServiceOrWaiverMade() on 2026-01-05
+  expect deadline(proof-of-service-period) == 2026-01-26
+}
+
+test "a default is applied for within 28 days of the failure to defend" cite "M.D. Fla. Local Rule 1.10(b)"
+{
+  given FailureToPleadOrDefend() on 2026-02-02
+  expect deadline(default-application-period) == 2026-03-02
+}
+
+test "a default judgment is applied for within 35 days of the default" cite "M.D. Fla. Local Rule 1.10(c)"
+{
+  given DefaultEntered() on 2026-03-02
+  expect deadline(default-judgment-application-period) == 2026-04-06
+}
+
+test "a response is due 14 days after service of the motion" cite "M.D. Fla. Local Rule 3.01(d)"
+{
+  given MotionServed() on 2026-03-02
+  expect deadline(response-period) == 2026-03-16
+}
+
+test "a response to a dispositive motion is due 21 days after service" cite "M.D. Fla. Local Rule 3.01(d)"
+{
+  given DispositiveMotionServed() on 2026-03-02
+  expect deadline(dispositive-response-period) == 2026-03-23
+}
+
+test "a summary judgment reply is due 14 days after the response" cite "M.D. Fla. Local Rule 3.01(e)"
+{
+  given SummaryJudgmentResponseServed() on 2026-03-23
+  expect deadline(summary-judgment-reply-period) == 2026-04-06
+}
+
+test "the movant tries to confer for three days after filing" cite "M.D. Fla. Local Rule 3.01(g)(3)"
+{
+  given MotionFiledWithoutConference() on 2026-03-02
+  expect deadline(conferral-attempt-period) == 2026-03-05
+}
+
+test "the case management report is due 40 days after an appearance" cite "M.D. Fla. Local Rule 3.02(b)(1)"
+{
+  given DefendantAppeared() on 2026-03-02
+  expect deadline(case-management-report-period) == 2026-04-13
+}
+
+test "a removed action's report is due 40 days after docketing" cite "M.D. Fla. Local Rule 3.02(b)(2)"
+{
+  given RemovedActionDocketed() on 2026-03-02
+  expect deadline(removed-case-management-report-period) == 2026-04-13
+}
+
+test "a United States case's report is due 70 days after service on the U.S. attorney" cite "M.D. Fla. Local Rule 3.02(b)(3)"
+{
+  given UnitedStatesAttorneyServed() on 2026-03-02
+  expect deadline(united-states-case-management-report-period) == 2026-05-11
+}
+
+test "the mediator reports within 7 days after mediation" cite "M.D. Fla. Local Rule 4.03(f)"
+{
+  given MediationHeld() on 2026-06-01
+  expect deadline(mediation-report-period) == 2026-06-08
+}
+
+test "the fee entitlement motion is due 14 days after judgment" cite "M.D. Fla. Local Rule 7.01(b)"
+{
+  given JudgmentEntered() on 2026-06-01
+  expect deadline(fee-entitlement-motion-period) == 2026-06-15
+}
+
+test "the supplemental motion on amount is due 45 days after entitlement" cite "M.D. Fla. Local Rule 7.01(c)"
+{
+  given FeeEntitlementDetermined() on 2026-07-01
+  expect deadline(fee-amount-motion-period) == 2026-08-17
+}
+
+test "a social security fee motion is due 14 days after the close-out letter" cite "M.D. Fla. Local Rule 7.01(e)"
+{
+  given CloseOutLetterReceived() on 2026-06-01
+  expect deadline(social-security-fee-motion-period) == 2026-06-15
+}

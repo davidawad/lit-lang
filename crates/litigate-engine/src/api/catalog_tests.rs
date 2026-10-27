@@ -5,6 +5,17 @@
 use super::*;
 use crate::clock::ClockLibrary;
 
+/// Serializes the tests that mutate `$LITGRAPH_PACKS`/`$LITGRAPH_SCENARIOS`:
+/// `cargo test` runs them as threads of one process, so without this one
+/// test's `set_var` leaks into the other's `default_source`.
+static ENV_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
+fn env_lock() -> std::sync::MutexGuard<'static, ()> {
+    ENV_LOCK
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner)
+}
+
 /// The repository's packs and scenarios, as `litgraph-packs` builds them.
 fn repo_catalog() -> Result<Catalog> {
     Catalog::embedded(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)
@@ -148,9 +159,10 @@ fn with_scenarios_dir_reads_a_directory_and_reports_unknown_names() -> Result<()
 }
 
 /// `default_source` reads `$LITGRAPH_SCENARIOS` independently of
-/// `$LITGRAPH_PACKS` (nextest gives every test its own process).
+/// `$LITGRAPH_PACKS`.
 #[test]
 fn default_source_honors_litgraph_scenarios_env_var() -> Result<()> {
+    let _env = env_lock();
     let dir = std::path::Path::new(litgraph_packs::SCENARIOS_DIR);
     std::env::set_var("LITGRAPH_SCENARIOS", dir);
     let c = Catalog::default_source(litgraph_packs::PACKS, litgraph_packs::SCENARIOS)?;
@@ -166,10 +178,10 @@ fn fingerprint_is_stable() {
     assert_ne!(fingerprint(b"a"), fingerprint(b"b"));
 }
 
-/// `default_source` reads `$LITGRAPH_PACKS` when set (nextest gives every
-/// test its own process, so mutating the env var here is isolated).
+/// `default_source` reads `$LITGRAPH_PACKS` when set.
 #[test]
 fn default_source_honors_litgraph_packs_env_var() -> Result<()> {
+    let _env = env_lock();
     let dir = std::path::Path::new(litgraph_packs::PACKS_DIR);
     assert!(dir.is_dir(), "expected a packs/ dir at {}", dir.display());
     std::env::set_var("LITGRAPH_PACKS", dir);

@@ -66,10 +66,10 @@ pub(crate) struct Warn {
 pub(super) fn hint(e: &Error) -> &'static str {
     match e {
         Error::NotFound(_) => {
-            r#"list ids with {"op":{"op":"graph"}} or {"op":{"op":"packs"}}; local ids work when unique"#
+            r#"list ids with the graph or packs op (`--op graph`, `--op packs`); local ids work when unique"#
         }
         Error::Expr(_) => {
-            r#"see {"op":{"op":"describe"}} for variables/functions; test with {"op":{"op":"metric","spec":"..."}}"#
+            r#"see the describe op (`--op describe`) for variables/functions; test with `--op '{"op":"metric","spec":"..."}'`"#
         }
         Error::Numeric(_) => {
             "a forced or optimal choice loops forever; add a mask or policy to break the cycle"

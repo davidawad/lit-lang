@@ -186,7 +186,7 @@ provenance_of() {
   fi
   hash="$(sha256sum "$f" | cut -d' ' -f1)"
   grep -Eq 'https?://' <<<"$entry" || why+=("no source URL")
-  grep -iq 'retriev' <<<"$entry" && grep -Eq '[0-9]{4}-[0-9]{2}-[0-9]{2}' <<<"$entry" ||
+  grep -iq 'retrieved' <<<"$entry" && grep -Eq '[0-9]{4}-[0-9]{2}-[0-9]{2}' <<<"$entry" ||
     why+=("no retrieval date (\"Retrieved YYYY-MM-DD\")")
   grep -Eiq 'pdftotext|curl|wget|fetched|downloaded|extracted|transcribed|converted|copied|saved|method' <<<"$entry" ||
     why+=("no method (how it was fetched and extracted)")

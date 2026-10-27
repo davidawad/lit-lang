@@ -1,0 +1,149 @@
+// Structural D.C. Circuit appellate procedure. No deadline or amount is
+// asserted unless stated in the bound primary sources.
+module outline-cadc
+
+import core.frap26.{ frap26 }
+import frap.events.{ BelowEntry, EnteredBelow, RecordFiled }
+
+start threshold
+
+rule duty civil-notice-of-appeal effective [2025-12-04, ..) known_at 2025-12-04 cite "Fed. R. App. P. 4(a)(1)(A)"
+{
+  deadline notice-civil-period: 30.days after EnteredBelow(FinalJudgment) counted_by frap26 cite "Fed. R. App. P. 4(a)(1)(A)"
+  {
+    forum frap
+  }
+}
+
+test "civil notice of appeal is due 30 days after entry" cite "Fed. R. App. P. 4(a)(1)(A)"
+{
+  given EnteredBelow(FinalJudgment) on 2026-01-05
+  expect deadline(notice-civil-period) == 2026-02-04
+}
+
+rule duty appellant-brief effective [2025-12-04, ..) known_at 2025-12-04 cite "Fed. R. App. P. 31(a)(1)"
+{
+  deadline appellant-brief-period: 40.days after RecordFiled() counted_by frap26 cite "Fed. R. App. P. 31(a)(1)"
+  {
+    forum frap
+  }
+}
+
+test "appellant brief is due 40 days after the record is filed" cite "Fed. R. App. P. 31(a)(1)"
+{
+  given RecordFiled() on 2026-01-05
+  expect deadline(appellant-brief-period) == 2026-02-17
+}
+
+decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+{
+  note "The appealability basis is not modeled. The cited statute governs final decisions; this graph does not attempt to state the full interlocutory jurisdiction doctrine."
+  edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "28 U.S.C. § 1291" }
+  edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
+}
+
+decision notice: "Notice of Appeal Within Time?" by applicant cite "Fed. R. App. P. 4(a)(1)(A)"
+{
+  note "Whether a notice is timely depends on the applicable statute, rule, and proceeding. This node asserts no period."
+  edge-notice-late "Untimely notice" -> dismissed-untimely {
+    authority cite "Fed. R. App. P. 4(a)(1)(A)"
+  }
+  edge-notice-timely "Timely notice" -> record { authority cite "Fed. R. App. P. 4(a)(1)(A)" }
+}
+
+state record: "Record and Transcript Assembled" by office cite "Fed. R. App. P. 10"
+{
+  note "The record and transcript process is governed by FRAP 10 and 11 and the corresponding D.C. Circuit rules."
+  edge-record-brief "Record filed" -> briefing { authority cite "Fed. R. App. P. 10" }
+}
+
+state briefing: "Briefs Filed" by applicant cite "Fed. R. App. P. 31"
+{
+  note "Briefing is governed by FRAP 28, 31, and 32 and the corresponding D.C. Circuit rules. No timing or length limit is asserted here."
+  edge-briefing-argue "Briefing complete" -> argument { authority cite "Fed. R. App. P. 31" }
+}
+
+state argument: "Oral Argument or Submission" by court cite "Fed. R. App. P. 34"
+{
+  note "Oral argument and submission are governed by FRAP 34 and the corresponding D.C. Circuit rules."
+  edge-argument-decide "Decision" -> decision { authority cite "Fed. R. App. P. 34" }
+}
+
+state decision: "Decision Issued" by court cite "Fed. R. App. P. 36"
+{
+  note "Disposition is governed by FRAP 36 and the corresponding D.C. Circuit rules."
+  edge-decision-issued "Opinion or judgment issued" -> rehearing-decision {
+    authority cite "Fed. R. App. P. 36"
+  }
+}
+
+decision rehearing-decision: "Rehearing Sought?" by applicant cite "Fed. R. App. P. 40"
+{
+  note "Panel and en banc rehearing are governed by FRAP 35 and 40 and the corresponding D.C. Circuit rules."
+  edge-rehearing-decision-none "No petition" -> mandate { authority cite "Fed. R. App. P. 40" }
+  edge-rehearing-decision-sought "Petition filed" -> rehearing-order {
+    authority cite "Fed. R. App. P. 40"
+  }
+}
+
+state rehearing-order: "Rehearing Order" by court cite "Fed. R. App. P. 40"
+{
+  note "Court order on rehearing or en banc petition."
+  edge-rehearing-order-mandate "Rehearing decided" -> mandate {
+    authority cite "Fed. R. App. P. 40"
+  }
+}
+
+state mandate: "Mandate or Remittitur Issued" by office cite "Fed. R. App. P. 41"
+{
+  note "Mandate is governed by FRAP 41 and the corresponding D.C. Circuit rules."
+  edge-mandate-further "Mandate issued" -> further-review { authority cite "Fed. R. App. P. 41" }
+}
+
+decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+{
+  note "Certiorari from a court of appeals is authorized by 28 U.S.C. § 1254. Supreme Court procedure is outside this package; no period is asserted."
+  edge-further-review-none "No further review" -> final-decision {
+    authority cite "28 U.S.C. § 1254"
+  }
+  edge-further-review-petition "Petition for review or certiorari" -> review-decided {
+    authority cite "28 U.S.C. § 1254"
+  }
+}
+
+state review-decided: "Further Review Decided" by court cite "28 U.S.C. § 1254"
+{
+  note "Court decision on the petition."
+  edge-review-decided-denied "Denied" -> review-denied { authority cite "28 U.S.C. § 1254" }
+  edge-review-decided-granted "Granted" -> review-granted { authority cite "28 U.S.C. § 1254" }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: No Appellate Jurisdiction" outcome [loss, dismissal, jurisdictional] cite "28 U.S.C. § 1291"
+{
+  note "Dismissal for lack of appellate jurisdiction."
+  payoff ?("case-specific utility is not supplied by procedural authority")
+}
+
+terminal dismissed-untimely: "Dismissed: Untimely Notice" outcome [loss, dismissal] cite "Fed. R. App. P. 4(a)(1)(A)"
+{
+  note "Dismissal for untimely notice of appeal."
+  payoff ?("case-specific utility is not supplied by procedural authority")
+}
+
+terminal final-decision: "Final: Decision Stands" outcome [final] cite "Fed. R. App. P. 41"
+{
+  note "Decision stands; mandate issued."
+  payoff ?("case-specific utility is not supplied by procedural authority")
+}
+
+terminal review-denied: "Further Review Denied" outcome [final] cite "28 U.S.C. § 1254"
+{
+  note "Certiorari denied."
+  payoff ?("case-specific utility is not supplied by procedural authority")
+}
+
+terminal review-granted: "Further Review Granted" outcome [neutral] cite "28 U.S.C. § 1254"
+{
+  note "Certiorari granted; merits not modeled."
+  payoff ?("case-specific utility is not supplied by procedural authority")
+}

@@ -34,6 +34,43 @@ re-running the extraction described in its entry below and diffing the
 result — that is the "reproducible" bar, not a live network call at lint
 time.
 
+## D.C. Circuit Rules and Handbook
+
+### `cadc-circuit-rules-2025-12-04.txt`
+
+- Official D.C. Circuit combined Circuit Rules and Federal Rules of Appellate
+  Procedure, Circuit Rules amended through Dec. 4, 2025, and FRAP through
+  Dec. 1, 2025:
+  <https://www.cadc.uscourts.gov/sites/cadc/files/rules-RulesFRAP20251204.pdf>
+- Retrieved 2026-10-27. Extracted with `pdftotext -layout`; form-feed page
+  separators were normalized to newlines and `## Rule N` / `## Circuit Rule
+  N` markers were added for cite resolution. Rule text was not edited.
+- Original PDF sha256:
+  `182a2597fb2d30fcbc69f5ce7c4146ac8f716a72ee4476d844354fbd30c9f4cf`.
+- Vendored text sha256:
+  `9a5eb420c77590c7a918df6b344e427293584cef13af7f7db35bc0200746729e`.
+
+### `cadc-handbook-2026-09-17.txt`
+
+- Official D.C. Circuit Handbook of Practice and Internal Procedures:
+  <https://www.cadc.uscourts.gov/sites/cadc/files/rules-Handbook20260917.pdf>
+- Retrieved 2026-10-27. Extracted with `pdftotext -layout`.
+- Original PDF sha256:
+  `1fd1eebbba92611c2b99ae08d5078b841ae6b9a76eef99ced920fa9bc9bb4d5e`.
+- Vendored text sha256:
+  `e541d181253bd50730add3b957ecb760cbb537ae3eb6020aef842fd896fe60d1`.
+
+### `ddc-local-rules-2026-09.txt`
+
+- Official Local Rules of the U.S. District Court for the District of
+  Columbia, September 2026:
+  <https://www.dcd.uscourts.gov/sites/dcd/files/local_rules/Local%20Rules%20SEP_2026.pdf>
+- Retrieved 2026-10-27. Extracted with `pdftotext -layout`.
+- Original PDF sha256:
+  `e836e8706dc824294b73933ece7429cdbfc321104305501629b994631ebf5a86`.
+- Vendored text sha256:
+  `e6084a6dc48c050f96035345573a3de47f57eadd0ff4e3d04039f0fb8e537928`.
+
 ## Format
 
 Each `.txt` file is one or more sections, each starting at column 0 with

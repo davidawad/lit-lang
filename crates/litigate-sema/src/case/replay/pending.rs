@@ -4,7 +4,6 @@
 //! it, filed and awaiting order, until the order extending it or the
 //! denial the grant names (`unless D()`) arrives; the request is then
 //! history again.
-use super::obligations::Transform;
 use super::Cx;
 use crate::case::graph::{display, pack_of};
 use crate::case::Pending;
@@ -32,7 +31,7 @@ impl Cx<'_, '_> {
         let pack = pack_of(&w);
         let after = o.answered.unwrap_or(o.at);
         let n = self.sorted.len();
-        self.grants(&w, d, &self.case.as_of, Transform::Extend(None))
+        self.extend_grants(&w, d, &self.case.as_of)
             .into_iter()
             .filter_map(|g| g.motion)
             .filter_map(|m| {

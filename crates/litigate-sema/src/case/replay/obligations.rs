@@ -853,6 +853,25 @@ impl<'g> Cx<'_, 'g> {
         date: &str,
         how: Transform<'_>,
     ) -> Vec<Grant<'g>> {
+        match how {
+            Transform::Extend(..) => self.extend_grants(w, d, date),
+            Transform::Waive => {
+                let emergency =
+                    self.graph
+                        .emergency(w, &d.meta.authority, date, self.case.known_at.as_deref());
+                d.waive
+                    .iter()
+                    .chain(emergency.iter().filter_map(|g| g.waive.as_ref()))
+                    .map(Grant::waive)
+                    .collect()
+            }
+        }
+    }
+
+    /// The `extend` grants of deadline `d` (logical `w`) on `date`: its own,
+    /// then the emergency grants in force reaching it (see [`Self::grants`]).
+    /// Needs no extending event, so a pending request can read them.
+    pub(super) fn extend_grants(&self, w: &str, d: &'g Deadline, date: &str) -> Vec<Grant<'g>> {
         let emergency =
             self.graph
                 .emergency(w, &d.meta.authority, date, self.case.known_at.as_deref());
@@ -860,20 +879,11 @@ impl<'g> Cx<'_, 'g> {
         let reaches = |g: &&&crate::hir::Grant| {
             unlocked || !d.extend.iter().any(|x| x.locks(&g.meta.authority))
         };
-        match how {
-            Transform::Extend(..) => d
-                .extend
-                .iter()
-                .chain(emergency.iter().filter(reaches).flat_map(|g| &g.extend))
-                .filter_map(Grant::extend)
-                .collect(),
-            Transform::Waive => d
-                .waive
-                .iter()
-                .chain(emergency.iter().filter_map(|g| g.waive.as_ref()))
-                .map(Grant::waive)
-                .collect(),
-        }
+        d.extend
+            .iter()
+            .chain(emergency.iter().filter(reaches).flat_map(|g| &g.extend))
+            .filter_map(Grant::extend)
+            .collect()
     }
 
     /// Whether event `k` may transform instance `i` (counted `due`) under

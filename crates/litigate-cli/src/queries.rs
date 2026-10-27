@@ -13,7 +13,6 @@ use litigate_lower::{EngineClock, Lowerer, Options};
 use litigate_sema::db::inputs::{CaseFile, PackageInput, Workspace};
 use litigate_sema::db::queries::{check_package, manifest};
 use litigate_sema::hir;
-use litigate_sema::temporal::World;
 use std::collections::BTreeSet;
 
 #[allow(missing_docs)] // salsa-generated constructor and accessors
@@ -83,11 +82,43 @@ pub fn engine_clock(db: &dyn salsa::Database, ws: Workspace) -> EngineClock {
     EngineClock::lowered(&Lowerer::new(&all), &all).unwrap_or_else(|_| EngineClock::new([]))
 }
 
-/// Every loaded counting version's clock fragment, lowered once per
-/// workspace for every [`Clocks`] the checks build.
+/// One package's counting versions, lowered once and invalidated only when
+/// that package changes.
 #[salsa::tracked(returns(ref))]
-pub fn clock_fragments(db: &dyn salsa::Database, ws: Workspace) -> Fragments {
-    clock::fragments(&loaded(db, ws))
+pub fn package_clock_fragments(db: &dyn salsa::Database, pkg: PackageInput) -> Fragments {
+    let Ok(own) = manifest(db, pkg) else {
+        return Fragments::new();
+    };
+    let packages: Vec<&hir::Package> =
+        litigate_sema::precedence::query::closure(db, pkg, &own.manifest)
+            .into_iter()
+            .filter_map(|(input, _)| check_package(db, input).package.as_ref())
+            .collect();
+    clock::fragments(&packages)
+}
+
+/// The clock fragments for exactly `packages`, composed from independently
+/// tracked package fragments so unrelated edits do not invalidate a matter.
+fn clock_fragments_for(
+    db: &dyn salsa::Database,
+    ws: Workspace,
+    packages: &[&hir::Package],
+) -> Fragments {
+    let names: BTreeSet<&str> = packages.iter().map(|p| p.manifest.name.as_str()).collect();
+    ws.packages(db)
+        .iter()
+        .filter(|p| {
+            manifest(db, **p)
+                .as_ref()
+                .is_ok_and(|m| names.contains(m.manifest.name.as_str()))
+        })
+        .flat_map(|p| {
+            package_clock_fragments(db, *p)
+                .iter()
+                .map(|(k, v)| (k.clone(), v.clone()))
+                .collect::<Vec<_>>()
+        })
+        .collect()
 }
 
 /// The packages `pkg` can see: every loaded package for a links package
@@ -140,7 +171,8 @@ pub(crate) fn package_verdict_with_cache<'db>(
             _ => p,
         })
         .collect();
-    let clocks = Clocks::with_fragments(&all, clock_fragments(db, ws));
+    let fragments = clock_fragments_for(db, ws, &all);
+    let clocks = Clocks::with_fragments(&all, &fragments);
     verdict::package_with_cache(
         db,
         ws,
@@ -161,7 +193,6 @@ pub fn case_check<'db>(
     case: CaseFile,
     build: Build<'db>,
 ) -> CaseCheck {
-    let all = loaded(db, ws);
     let text = CaseText {
         path: case.path(db).clone(),
         text: case.text(db).clone(),
@@ -169,17 +200,37 @@ pub fn case_check<'db>(
     };
     // The schedule counts in the world of the packages the matter uses.
     let uses = ws::uses_of(&text.text);
-    let roots: Vec<&hir::Package> = all
+    // Resolve only the packages named by the matter and their declared
+    // dependencies. Checking every workspace package here makes this query
+    // depend on unrelated package edits through `loaded`.
+    let roots: Vec<PackageInput> = ws
+        .packages(db)
         .iter()
         .copied()
-        .filter(|p| uses.contains(&p.manifest.name))
+        .filter(|p| {
+            manifest(db, *p)
+                .as_ref()
+                .is_ok_and(|m| uses.contains(&m.manifest.name))
+        })
         .collect();
-    let clocks = Clocks::with_fragments(
-        &World::closure_packages(&roots, &all),
-        clock_fragments(db, ws),
-    );
+    let mut inputs = Vec::new();
+    for root in roots {
+        if let Ok(own) = manifest(db, root) {
+            for (pkg, _) in litigate_sema::precedence::query::closure(db, root, &own.manifest) {
+                if !inputs.contains(&pkg) {
+                    inputs.push(pkg);
+                }
+            }
+        }
+    }
+    let closure: Vec<&hir::Package> = inputs
+        .iter()
+        .filter_map(|p| check_package(db, *p).package.as_ref())
+        .collect();
+    let fragments = clock_fragments_for(db, ws, &closure);
+    let clocks = Clocks::with_fragments(&closure, &fragments);
     matter::check_packages(
-        &World::closure_packages(&roots, &all),
+        &closure,
         &text,
         &clocks,
         build.profile(db),
@@ -194,6 +245,7 @@ mod tests {
     use crate::ws::Session;
     use litigate_sema::LitDatabase;
     use salsa::plumbing::AsId;
+    use salsa::Setter;
 
     fn ran(log: &[String], query: &str) -> usize {
         log.iter()
@@ -303,6 +355,37 @@ mod tests {
         assert_eq!(ran(&log, "package_verdict"), 1, "{log:?}");
         assert_eq!(ran(&log, "check_package") + ran(&log, "check_module"), 0);
         assert_eq!(other.diagnostics, first.diagnostics);
+    }
+
+    #[test]
+    fn editing_a_package_does_not_recheck_matters_that_do_not_use_it() {
+        let second_manifest = MANIFEST
+            .replace("frcp-rule12-example", "frcp-rule12-other")
+            .replace("FRCP Rule 12 response", "Other Rule 12 response");
+        let package_a = package("lit/a", MANIFEST, &[("rule12.lit", RULE12)]);
+        let package_b = package("lit/b", &second_manifest, &[("rule12.lit", RULE12)]);
+        let unlocked = Session::from_loaded(
+            &[package_a.clone(), package_b.clone()],
+            vec![case(ACME, None)],
+        );
+        let lock = unlocked.matter_lock(&unlocked.cases).render();
+        let (db, _) = LitDatabase::with_event_log();
+        let mut session =
+            Session::from_loaded_in(db, &[package_a, package_b], vec![case(ACME, Some(&lock))]);
+        let cases = session.case_inputs();
+        let package_b_input = session.packages[1].input;
+        let (_, build) = dev(&session.db);
+        let first = case_check(&session.db, session.ws, cases[0], build);
+        assert!(first.lowered.is_some(), "{:?}", first.diagnostics);
+        let _ = session.db.take_log();
+
+        let file = package_b_input.files(&session.db)[0];
+        file.set_text(&mut session.db)
+            .to(RULE12.replace("21.days", "22.days"));
+        let (_, build) = dev(&session.db);
+        let _ = case_check(&session.db, session.ws, cases[0], build);
+        let log = session.db.take_log();
+        assert_eq!(ran(&log, "case_check"), 0, "{log:?}");
     }
 
     #[test]

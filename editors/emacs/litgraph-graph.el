@@ -25,7 +25,7 @@
 ;;; Commentary:
 
 ;; `litgraph-graph' asks litgraph for the procedure graph of the current
-;; scenario (`graph' op), solves it (`solve' op) and draws the result:
+;; target (`graph' op), solves it (`solve' op) and draws the result:
 ;;
 ;;  - nodes coloured by who decides (you, the opponent, chance) and
 ;;    terminals by outcome (win, loss, settlement);
@@ -526,7 +526,7 @@ The result is a list of (LINE . NODE-ID) pairs."
 
 ;;;###autoload
 (defun litgraph-graph (&optional neighborhood)
-  "Draw the procedure graph of the current scenario, best line highlighted.
+  "Draw the procedure graph of the current target, best line highlighted.
 With prefix argument NEIGHBORHOOD, ask for a node and draw only its
 neighborhood.  Asynchronous; the buffer appears when the data arrives."
   (interactive "P")
@@ -545,7 +545,7 @@ neighborhood.  Asynchronous; the buffer appears when the data arrives."
          (litgraph-graph--solve-and-show full nil))))))
 
 (defun litgraph-graph--solve-and-show (graph node)
-  "Solve the current scenario, then show GRAPH (around NODE) with the best line."
+  "Solve the current target, then show GRAPH (around NODE) with the best line."
   (litgraph-request
    (litgraph-build-request "solve")
    (lambda (solve-response)

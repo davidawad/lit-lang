@@ -386,7 +386,7 @@
         (should (equal (car (car litgraph-test-calls))
                        (list "timeline" "--format" "json" file)))
         ;; `litigate timeline', not `litigate engine timeline'.
-        (should (equal (car litgraph-test-commands) '("litigate")))
+        (should (equal (car litgraph-test-commands) "litigate"))
         (with-current-buffer buffer
           (should (derived-mode-p 'litgraph-timeline-mode))
           (should (string-match-p "Ruling on the motion" (buffer-string)))

@@ -1,13 +1,15 @@
 # litgraph for Emacs
 
 Emacs front end for [litgraph](https://github.com/davidawad/litgraph), the Rust
-engine that models litigation procedure as a stochastic game on a graph. Its
-raw interface, `litigate engine`, takes one JSON request and returns one JSON
-response; this package makes that comfortable from Emacs:
+engine that models litigation procedure as a stochastic game on a graph. The
+`litigate` command line compiles a matter (a `.case` file) or a package (a
+`.lit` file or package directory) and runs one engine op on it, `litigate run
+TARGET --op OP`; this package makes that comfortable from Emacs:
 
-- run **any** op asynchronously, with completion for ops, packs, scenarios,
-  node ids, edge ids, metrics and parameters, all read from the binary itself
-  (new ops in a newer litgraph appear without a package update);
+- run **any** op asynchronously on a matter or package, with completion for
+  targets, ops, node ids, edge ids, metrics and parameters, all read from the
+  project and the binary itself (new ops in a newer litigate appear without a
+  package update);
 - results as readable buffers (summary, tables, grouped warnings, folded
   provenance, raw JSON one key away);
 - **deadlines to Org**: computed due dates become headings with `DEADLINE`
@@ -15,7 +17,6 @@ response; this package makes that comfortable from Emacs:
 - the procedure graph drawn with Graphviz, solved best line highlighted;
 - a **timeline** of any `.case` or `.lit` file, `magit-log --graph` style:
   worlds (alternate timelines) as branches, layers you can switch off;
-- scenario JSON editing with flymake validation and completion;
 - an Org Babel backend, `#+begin_src litgraph`;
 - `litigate-ts-mode`, the tree-sitter major mode for `.lit` and `.case`
   files (`litigate-ts-mode.el`; see [`../README.md`](../README.md) for its
@@ -34,15 +35,13 @@ Nothing blocks Emacs: every call is a `make-process` with a timeout.
 
 - Emacs 29.1 or newer (uses the built-in `transient`, `flymake`, `json`).
 - The `litigate` binary: `cargo install --path crates/litigate-cli` from a
-  checkout of this repository. Every engine call runs `litigate engine ...`
-  (`litgraph-engine-arguments`); the timeline runs `litigate timeline`.
-- Packs: `litigate engine` compiles its packs from `lit/` and its scenario
-  library from `cases/` in the directory it runs in. Emacs runs it in
-  `litgraph-project-directory`, else in the nearest directory above the
-  current buffer's that holds `lit/` (a litgraph checkout, or your own
-  project). Set `litgraph-packs-dir` and `litgraph-scenarios-dir` to a
-  prebuilt set (`just lit-sync` writes one to `target/lit-build/packs` and
-  `target/lit-build/scenarios`) to skip that compile on every call.
+  checkout of this repository. Every engine call runs `litigate run TARGET
+  --op OP [--set NAME=VALUE ...] --format json`; the timeline runs `litigate
+  timeline`.
+- A project: a directory holding `lit/` (the packages a matter `uses`) and
+  `cases/` (matters). Emacs runs `litigate` in `litgraph-project-directory`,
+  else in the nearest directory above the current buffer's that holds `lit/`
+  (a litgraph checkout, or your own project). Every call compiles its target.
 - Optional: Graphviz (`dot`) for the inline graph image (a text tree is shown
   without it, and always in a terminal frame).
 
@@ -50,8 +49,7 @@ Nothing blocks Emacs: every call is a `make-process` with a timeout.
 
 The package is the `editors/emacs` directory of this repository:
 `litgraph.el` (core, the package's main file), `litgraph-view.el`,
-`litgraph-graph.el`, `litgraph-org.el`, `litgraph-scenario.el`,
-`litgraph-menu.el`, `litgraph-timeline.el`, `ob-litgraph.el` and
+`litgraph-graph.el`, `litgraph-org.el`, `litgraph-menu.el`, `litgraph-timeline.el`, `ob-litgraph.el` and
 `litigate-ts-mode.el`. Entry points are autoloaded.
 
 **use-package with `:vc`** (Emacs 30; `package-vc` in 29):
@@ -62,7 +60,7 @@ The package is the `editors/emacs` directory of this repository:
        :rev :newest)
   :bind-keymap ("C-c L" . litgraph-command-map)
   :custom
-  (litgraph-default-scenario "cofc-1498-patent-case"))
+  (litgraph-default-target "cofc-1498-patent-case")) ; cases/cofc-1498-patent-case.case
 ```
 
 **straight.el**:
@@ -103,27 +101,31 @@ Org Babel (put in your Org config):
 
 ```
 litgraph  cofc-1498-patent-case
-Context          Analyze                          Lines
-C Scenario…      s Solve: value and best line     p Paths to a node/outcome
-P Packs…         c Chain: outcome odds, cost      f Pareto frontier
-V Parameter…     e Explain a decision             u Structure
-Z Clear context  m Simulate (Monte Carlo)         x Compare with a variant
-                 t Tornado: what drives it
-                 w Sweep a parameter
-See                      Scenario files       Engine
-g Graph (Graphviz)       o Open…              r Run any op…
-G Graph around a node    n New…               k Packs
-d Deadlines to Org       R Run this buffer    L Lint
-T Timeline of a file     y Validate buffer    D Describe (the manual)
+Context                Analyze                          Lines
+C Matter or package…   s Solve: value and best line     p Paths to a node/outcome
+V Parameter…           c Chain: outcome odds, cost      f Pareto frontier
+Z Clear context        e Explain a decision             u Structure
+                       m Simulate (Monte Carlo)         x Compare with a variant
+                       t Tornado: what drives it
+                       w Sweep a parameter
+See                      Engine
+g Graph (Graphviz)       r Run any op…
+G Graph around a node    k Packs
+d Deadlines to Org       L Lint
+T Timeline of a file     D Describe (the manual)
 ```
 
-Pick a scenario (`C`, completing from the library or a JSON file), optionally
-override a parameter (`V`, e.g. `rate` = 900), then press `s`. The session
-context is applied to every op, including graph and deadlines.
+Pick a target (`C`: a matter from the project's `cases/`, a package from
+`lit/`, or RET for any `.case`, `.lit` or package directory; a bare name such
+as `cofc-1498-patent-case` means `cases/NAME.case`), optionally override a
+parameter (`V`, e.g. `rate` = 900, passed as `--set rate=900`), then press
+`s`. The session context is applied to every op, including graph and
+deadlines.
 
 `r` (or `M-x litgraph-run-op`) runs any op: complete its name, then answer its
 required arguments; optional ones are chosen from a list (or all asked with a
-prefix argument). Argument types and help come from `litigate engine schema request`.
+prefix argument). Argument names come from the op summaries of the target's
+`describe`.
 
 ## Result buffers
 
@@ -218,7 +220,7 @@ RCFC 6(a)(1)(B): count 60 calendar day(s) after the trigger, ...
 
 ## Graph view
 
-`M-x litgraph-graph` (`g`): draws the scenario's graph. Blue rounded boxes are
+`M-x litgraph-graph` (`g`): draws the target's graph. Blue rounded boxes are
 your decisions, orange boxes the opponent's, grey ellipses chance nodes;
 terminals are green (win), red (loss) or yellow (settlement); chance edges
 carry probabilities; the solved best line is red. With Graphviz and a graphical
@@ -284,28 +286,11 @@ the `litigate` executable):
 The `litigate-mode` key is `litgraph-timeline-litigate-key` (nil for none); it
 is bound when `litigate-mode` (or the older `litigate-ts-mode`) loads.
 
-## Scenario editing
-
-- `M-x litgraph-new-scenario` writes a runnable request skeleton extending a
-  library scenario; `M-x litgraph-open-scenario` visits one.
-- Files named `*.litgraph.json` open in `litgraph-scenario-json-mode`; for
-  other JSON files, `M-x litgraph-scenario-mode` or add
-  `litgraph-scenario-maybe-enable` to `js-json-mode-hook`.
-- Flymake runs `litigate engine validate` on the buffer text (unsaved edits count):
-  JSON syntax errors first, then the engine's errors (unknown fields, missing
-  edges, wrong types), located on the offending token where the message allows.
-  `litgraph-flymake-warnings` also shows engine warnings.
-- `completion-at-point` inside a string completes ids, fields, packs,
-  scenario names, ops and metrics.
-- `C-c C-c` runs the document (a request as is; a scenario with an op you
-  choose), `C-c C-v` validates now, `C-c C-g` draws its graph, `C-c C-u`
-  makes it the session scenario, `C-c C-m` opens the menu.
-
 ## Org Babel
 
 ```org
-#+begin_src litgraph
-{"scenario": "cofc-1498-patent-case", "op": {"op": "chain"}}
+#+begin_src litgraph :target cofc-1498-patent-case
+chain
 #+end_src
 
 #+RESULTS:
@@ -315,11 +300,14 @@ is bound when `litigate-mode` (or the older `litigate-ts-mode`) loads.
 | ...                                          |          |           |                             |
 ```
 
-Header arguments: `:op` (name or JSON, when the body is just a scenario),
-`:scenario`, `:packs a,b`, `:table REGEXP` (which table of the result),
-`:format table|summary|json|org`, and `:var rate=900` (numbers become scenario
-parameters). A block never picks up the menu's session scenario, so it is
-reproducible. Warnings are reported in the echo area.
+The body is the op: its name, or an op object as JSON (`{"op": "deadlines",
+"trigger": "2026-10-01"}`); empty means `solve`. Header arguments: `:target`
+(required: a `.case` matter, `.lit` file or package directory, or a bare
+matter name), `:op` (name or JSON, replacing the body's), `:table REGEXP`
+(which table of the result), `:format table|summary|json|org`, and `:var
+rate=900` (numbers become `--set` scenario parameters). A block never picks up
+the menu's session target, so it is reproducible. Warnings are reported in
+the echo area.
 
 ## Keybindings
 
@@ -334,8 +322,7 @@ reproducible. Warnings are reported in the echo area.
 | `g` | `litgraph-graph` |
 | `d` | `litgraph-deadlines-to-org` |
 | `T` | `litgraph-timeline` |
-| `o` `n` `v` | open / new scenario, validate buffer |
-| `C` `P` `.` | set scenario / packs / parameter |
+| `C` `.` | set target / parameter |
 | `k` | cancel running processes |
 
 ## Customization
@@ -343,20 +330,17 @@ reproducible. Warnings are reported in the echo area.
 | variable | meaning |
 |----------|---------|
 | `litgraph-executable` | `litigate` binary name or path (Homebrew and `~/.cargo/bin` paths are tried when it is not on `exec-path`) |
-| `litgraph-engine-arguments` | arguments before every engine call (`("engine")`) |
-| `litgraph-project-directory` | where the engine runs and compiles `lit/` and `cases/` (nil: the nearest directory holding `lit/`) |
-| `litgraph-packs-dir` | exported as `LITGRAPH_PACKS` |
-| `litgraph-scenarios-dir` | exported as `LITGRAPH_SCENARIOS` |
-| `litgraph-default-scenario` / `litgraph-default-packs` | used until you pick your own |
+| `litgraph-project-directory` | where `litigate` runs: the directory holding `lit/` and `cases/` (nil: the nearest one holding `lit/`) |
+| `litgraph-default-target` | the matter or package used until you pick your own |
 | `litgraph-timeout` | seconds before a call is killed (120) |
 | `litgraph-timeline-command` | how the timeline op is called (see Timeline) |
-| `litgraph-view-*`, `litgraph-graph-*`, `litgraph-org-*`, `litgraph-scenario-*`, `litgraph-timeline-*` | see `M-x customize-group RET litgraph` |
+| `litgraph-view-*`, `litgraph-graph-*`, `litgraph-org-*`, `litgraph-timeline-*` | see `M-x customize-group RET litgraph` |
 
 ## Development
 
 From the repository root, `just emacs-test` (part of `just ci`) byte-compiles
 the package, runs checkdoc and runs the ERT suite with `LITGRAPH_IT_REQUIRE=1`
-against the debug `litigate`, with Emacs and Graphviz from
+against the debug `litigate` (`LITIGATE_BIN`), with Emacs and Graphviz from
 `nix shell nixpkgs#emacs-nox nixpkgs#graphviz`. In this directory:
 
 ```
@@ -364,14 +348,17 @@ make test       # ERT: stubbed process layer + real litigate when installed
 make compile    # byte-compile, warnings are errors
 make lint       # checkdoc + package-lint (PACKAGE_LINT_DIR=... or installed into .deps/)
 make all
+make fixtures   # regenerate test/fixtures/ from the binary (LITIGATE=path)
 ```
 
 Unit tests replace `litgraph-process-function` with a stub that answers from
-recorded real output in `test/fixtures/`; integration tests
-(`test/litgraph-integration-test.el`) skip themselves when no `litigate`
-binary is found, and fail instead under `LITGRAPH_IT_REQUIRE=1`. Without
-`LITGRAPH_PACKS`/`LITGRAPH_SCENARIOS` they compile this repository's `lit/`
-and `cases/` on every call, which a debug build does slowly.
+recorded real `litigate run` output in `test/fixtures/` (`make fixtures`
+regenerates it with `scripts/fixtures.sh`, from this repository's
+`cases/cofc-1498-patent-case.case`); integration tests
+(`test/litgraph-integration-test.el`) run the binary named by `LITIGATE_BIN`,
+else the `litigate` on `PATH`, skip themselves when there is none, and fail
+instead under `LITGRAPH_IT_REQUIRE=1`. Every call compiles its matter, which a
+debug build does slowly.
 `test/litigate-ts-mode-test.el` is litigate-ts-mode's suite; it needs the
 tree-sitter grammar, so `cargo nextest run -p litigate-editors` builds the
 grammar and runs it.

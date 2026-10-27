@@ -9,7 +9,6 @@
 (require 'litgraph-view)
 (require 'litgraph-graph)
 (require 'litgraph-org)
-(require 'litgraph-scenario)
 (require 'litgraph-menu)
 (require 'ob-litgraph)
 
@@ -35,52 +34,79 @@
     (should (equal (litgraph-serialize (litgraph-obj "op" "solve"))
                    "{\"op\":\"solve\"}"))))
 
-(ert-deftest litgraph-build-request-named-scenario ()
+(ert-deftest litgraph-build-request-shape ()
   (litgraph-test-with-stub
     (let ((r (litgraph-build-request "solve" "cofc-1498-patent-case")))
-      (should (equal (gethash "scenario" r) "cofc-1498-patent-case"))
-      (should (equal (litgraph-serialize (gethash "op" r)) "{\"op\":\"solve\"}")))))
-
-(ert-deftest litgraph-build-request-params-extend-name ()
-  (litgraph-test-with-stub
-    (let* ((r (litgraph-build-request "chain" "cofc-1498-patent-case" '("cofc")
-                                      '(("rate" . 900))))
-           (scenario (gethash "scenario" r)))
-      (should (equal (gethash "extends" scenario) "cofc-1498-patent-case"))
-      (should (= (gethash "rate" (gethash "params" scenario)) 900))
-      (should (equal (append (gethash "packs" r) nil) '("cofc"))))))
+      (should (equal (gethash "target" r) "cofc-1498-patent-case"))
+      (should (equal (litgraph-serialize (gethash "op" r)) "{\"op\":\"solve\"}"))
+      (should-not (gethash "params" r)))
+    (let* ((op (litgraph-obj "op" "sweep" "param" "rate"))
+           (r (litgraph-build-request op "m" '(("rate" . 900)))))
+      (should (eq (gethash "op" r) op))
+      (should (= 900 (gethash "rate" (gethash "params" r)))))))
 
 (ert-deftest litgraph-build-request-uses-session ()
   (litgraph-test-with-stub
-    (setq litgraph-scenario "frcp-civil-case"
-          litgraph-packs '("frcp-civil-procedure")
+    (setq litgraph-target "frcp-civil-case"
           litgraph-params '(("rate" . 1)))
     (let ((r (litgraph-build-request "solve")))
-      (should (equal (gethash "extends" (gethash "scenario" r))
-                     "frcp-civil-case"))
-      (should (equal (append (gethash "packs" r) nil)
-                     '("frcp-civil-procedure"))))))
+      (should (equal (gethash "target" r) "frcp-civil-case"))
+      (should (= 1 (gethash "rate" (gethash "params" r)))))
+    (setq litgraph-target nil)
+    (let ((litgraph-default-target "cofc-bid-protest"))
+      (should (equal (gethash "target" (litgraph-build-request "solve"))
+                     "cofc-bid-protest")))))
 
-(ert-deftest litgraph-build-request-from-request-file ()
-  (litgraph-test-with-stub
-    (let ((file (make-temp-file "lg" nil ".json"
-                                "{\"packs\":[\"cofc\"],\"scenario\":{\"params\":{\"rate\":700}},\"op\":{\"op\":\"chain\"}}")))
-      (unwind-protect
-          (let ((r (litgraph-build-request "solve" file)))
-                  (should (equal (litgraph-serialize (gethash "op" r)) "{\"op\":\"solve\"}"))
-            (should (equal (append (gethash "packs" r) nil) '("cofc")))
-            (should (= 700 (gethash "rate"
-                                    (gethash "params"
-                                             (gethash "scenario" r))))))
-        (delete-file file)))))
+(defmacro litgraph-test-with-project (root &rest body)
+  "Run BODY with ROOT bound to a fresh directory holding lit/ and cases/."
+  (declare (indent 1))
+  `(let ((,root (file-name-as-directory (make-temp-file "lg-project" t))))
+     (unwind-protect
+         (progn
+           (make-directory (expand-file-name "lit/pack" ,root) t)
+           (make-directory (expand-file-name "cases/sub" ,root) t)
+           ,@body)
+       (delete-directory ,root t))))
 
-(ert-deftest litgraph-build-request-from-named-scenario-doc ()
-  (litgraph-test-with-stub
-    (let ((doc (litgraph-parse-strict
-                "{\"id\":\"x\",\"packs\":[\"cofc\"],\"scenario\":{\"params\":{\"rate\":1}}}")))
-      (let ((r (litgraph-build-request "solve" doc)))
-        (should (equal (append (gethash "packs" r) nil) '("cofc")))
-        (should (= 1 (gethash "rate" (gethash "params" (gethash "scenario" r)))))))))
+(ert-deftest litgraph-request-args-run-the-target ()
+  (litgraph-test-with-project root
+    (write-region "" nil (expand-file-name "cases/m.case" root))
+    (let ((litgraph-project-directory root))
+      (should (equal (litgraph-request-args
+                      (litgraph-build-request
+                       (litgraph-obj "op" "explain" "node" "a::b") "m"
+                       '(("stakes" . 2) ("rate" . 900.0))))
+                     (list "run" (expand-file-name "cases/m.case" root)
+                           "--op" "{\"op\":\"explain\",\"node\":\"a::b\"}"
+                           "--set" "rate=900" "--set" "stakes=2"
+                           "--format" "json")))
+      (should (equal (litgraph-request-args (litgraph-build-request "solve" "pack"))
+                     (list "run" (expand-file-name "lit/pack" root)
+                           "--op" "{\"op\":\"solve\"}" "--format" "json"))))
+    (should-error (litgraph-request-args (litgraph-obj "op" (litgraph-obj "op" "solve")))
+                  :type 'user-error)))
+
+(ert-deftest litgraph-resolve-target-paths-and-names ()
+  (litgraph-test-with-project root
+    (let ((case-file (expand-file-name "cases/sub/x.case" root)))
+      (write-region "" nil case-file)
+      (let ((litgraph-project-directory root)
+            (default-directory (expand-file-name "lit/" root)))
+        ;; A path relative to `default-directory', then to the project root.
+        (should (equal (litgraph-resolve-target "pack") (expand-file-name "lit/pack" root)))
+        (should (equal (litgraph-resolve-target "cases/sub/x.case") case-file))
+        (should (equal (litgraph-resolve-target case-file) case-file))
+        ;; Unknown names reach the binary as given, for it to report.
+        (should (equal (litgraph-resolve-target "nope") "nope"))
+        (should (equal (litgraph-target-candidates)
+                       '(("cases/sub/x.case" . "matter") ("lit/pack" . "package"))))))))
+
+(ert-deftest litgraph-target-label-names-matters-and-packages ()
+  (should (equal (litgraph-target-label "/r/cases/acme.case") "acme"))
+  (should (equal (litgraph-target-label "/r/lit/cofc/") "cofc"))
+  (should (equal (litgraph-target-label "frcp-civil-case") "frcp-civil-case"))
+  (let ((litgraph-target "/r/cases/acme.case") (litgraph-params '(("rate" . 9))))
+    (should (equal (litgraph-context-label) "acme  rate=9"))))
 
 (ert-deftest litgraph-request-success-and-raw ()
   (litgraph-test-with-stub
@@ -88,10 +114,14 @@
       (litgraph-request (litgraph-build-request "solve" "s")
                         (lambda (response) (setq got response)))
       (should (litgraph-get got 'ok))
+      (should (equal (litgraph-get got 'op) "solve"))
       (should (numberp (litgraph-get got 'result 'value)))
+      ;; The raw text is the engine response, not the envelope around it.
       (should (string-match-p "\"best_line\"" litgraph--last-raw))
-      (should (equal (cdr (car litgraph-test-calls))
-                     (litgraph-serialize (litgraph-build-request "solve" "s")))))))
+      (should (string-prefix-p "{\"ok\":true" litgraph--last-raw))
+      (should-not (string-match-p "\"op\":\"run\"" litgraph--last-raw))
+      (should (equal (car (car litgraph-test-calls))
+                     (litgraph-request-args (litgraph-build-request "solve" "s")))))))
 
 (ert-deftest litgraph-request-engine-error-reaches-errback ()
   (litgraph-test-with-stub
@@ -111,11 +141,11 @@
   (let ((litgraph-process-function
          (lambda (_a _i cb) (funcall cb 1 "" "boom")))
         (litgraph-last-error nil))
-    (litgraph-request "{}" #'ignore)
+    (litgraph-request (litgraph-build-request "solve" "s") #'ignore)
     (should (string-match-p "exit 1: boom" litgraph-last-error)))
   (let ((litgraph-process-function (lambda (_a _i cb) (funcall cb 'timeout "" "")))
         (litgraph-last-error nil))
-    (litgraph-request "{}" #'ignore)
+    (litgraph-request (litgraph-build-request "solve" "s") #'ignore)
     (should (string-match-p "timed out" litgraph-last-error))))
 
 (ert-deftest litgraph-request-sync-returns-and-signals ()
@@ -126,32 +156,23 @@
     (should-error (litgraph-request-sync (litgraph-build-request "nonsense" "s"))
                   :type 'error)))
 
-(ert-deftest litgraph-environment-exports-dirs ()
-  (let ((litgraph-packs-dir "/tmp/packs") (litgraph-scenarios-dir "/tmp/sc"))
-    (let ((env (litgraph--environment)))
-      (should (member "LITGRAPH_PACKS=/tmp/packs" env))
-      (should (member "LITGRAPH_SCENARIOS=/tmp/sc" env))))
-  (let ((litgraph-packs-dir nil) (litgraph-scenarios-dir nil))
-    (should-not (seq-some (lambda (e) (string-prefix-p "LITGRAPH_PACKS=" e))
-                          (seq-take (litgraph--environment) 1)))))
+(ert-deftest litgraph-compile-error-reports-its-diagnostic ()
+  ;; A matter that does not compile never reaches the engine: the
+  ;; envelope is not ok and carries only diagnostics.
+  (let ((decoded (litgraph--decode 2 (litgraph-test-fixture "compile-error") "")))
+    (should-not (car decoded))
+    (should (string-match-p "\\`L0001: case is missing" (cadr decoded)))
+    (should (string-match-p "(broken.case:1)" (cadr decoded)))
+    (should-not (cddr decoded))))
 
-(ert-deftest litgraph-engine-calls-go-through-litigate-engine ()
+(ert-deftest litgraph-engine-calls-go-through-litigate-run ()
   (should (equal (default-value 'litgraph-executable) "litigate"))
-  (should (equal (default-value 'litgraph-engine-arguments) '("engine")))
+  (should-not (boundp 'litgraph-engine-arguments))
   (litgraph-test-with-stub
     (litgraph-request-sync (litgraph-build-request "chain" "s"))
-    (should (equal (car litgraph-test-commands) '("litigate" "engine")))))
-
-(defmacro litgraph-test-with-project (root &rest body)
-  "Run BODY with ROOT bound to a fresh directory holding lit/ and cases/."
-  (declare (indent 1))
-  `(let ((,root (file-name-as-directory (make-temp-file "lg-project" t))))
-     (unwind-protect
-         (progn
-           (make-directory (expand-file-name "lit/pack" ,root) t)
-           (make-directory (expand-file-name "cases/sub" ,root) t)
-           ,@body)
-       (delete-directory ,root t))))
+    (should (equal (car litgraph-test-commands) "litigate"))
+    (should (equal (seq-take (car (car litgraph-test-calls)) 4)
+                   '("run" "s" "--op" "{\"op\":\"chain\"}")))))
 
 (ert-deftest litgraph-project-root-is-nearest-lit-directory ()
   (litgraph-test-with-project root
@@ -168,7 +189,7 @@
       (should (equal (litgraph-project-root)
                      (file-name-as-directory (expand-file-name "cases" root)))))))
 
-(ert-deftest litgraph-spawn-runs-litigate-engine-in-project-root ()
+(ert-deftest litgraph-spawn-runs-litigate-in-project-root ()
   ;; A stand-in executable that echoes its arguments and directory.
   (litgraph-test-with-project root
     (let* ((script (expand-file-name "fake-litigate" root))
@@ -181,14 +202,14 @@
         (insert "#!/bin/sh\n"
                 "printf '{\"ok\":true,\"result\":{\"args\":\"%s\",\"pwd\":\"%s\"}}' \"$*\" \"$(pwd -P)\"\n"))
       (set-file-modes script #o755)
-      (litgraph--spawn '("q" "-") "{}"
+      (litgraph--spawn '("run" "m.case" "--op" "solve") nil
                        (lambda (exit stdout _stderr)
                          (setq result (cons exit (litgraph-parse stdout)))))
       (let ((deadline (+ (float-time) 30)))
         (while (and (not result) (< (float-time) deadline))
           (accept-process-output nil 0.05)))
       (should (equal (car result) 0))
-      (should (equal (litgraph-get (cdr result) 'result 'args) "engine q -"))
+      (should (equal (litgraph-get (cdr result) 'result 'args) "run m.case --op solve"))
       (should (file-equal-p (litgraph-get (cdr result) 'result 'pwd) root)))))
 
 (ert-deftest litgraph-cache-key-names-the-engine ()
@@ -208,24 +229,40 @@
 
 (ert-deftest litgraph-metadata-comes-from-describe ()
   (litgraph-test-with-stub
+    (setq litgraph-target "cofc-1498-patent-case")
     (should (member "solve" (litgraph-op-names)))     ; fallback list
     (litgraph-with-describe #'ignore)
+    (should (equal (litgraph-test-call-op-name (car litgraph-test-calls)) "describe"))
     (should (member "deadlines" (litgraph-op-names)))
+    (should (member "settle" (litgraph-op-names)))
     (should (assoc "cofc" (litgraph-pack-candidates)))
-    (should (assoc "cofc-1498-patent-case" (litgraph-scenario-candidates)))
     (should (assoc "rate" (litgraph-param-candidates)))
     (should (assoc "dollars" (litgraph-metric-candidates)))
     (should (litgraph-op-available-p "solve"))
-    (should-not (litgraph-op-available-p "posterior"))))
+    (should-not (litgraph-op-available-p "frobnicate"))))
 
-(ert-deftest litgraph-describe-is-cached ()
+(ert-deftest litgraph-describe-is-cached-per-target ()
   (litgraph-test-with-stub
+    (setq litgraph-target "a")
     (litgraph-with-describe #'ignore)
     (litgraph-with-describe #'ignore)
-    (should (= 1 (length litgraph-test-calls)))))
+    (should (= 1 (length litgraph-test-calls)))
+    (setq litgraph-target "b")
+    (should-not (litgraph--cached-describe))
+    (litgraph-with-describe #'ignore)
+    (should (= 2 (length litgraph-test-calls)))))
+
+(ert-deftest litgraph-metadata-needs-a-target ()
+  (litgraph-test-with-stub
+    (let (message)
+      (litgraph-with-describe #'ignore (lambda (m &optional _r) (setq message m)))
+      (should (string-match-p "no matter selected" message))
+      (should-not litgraph-test-calls)
+      (should-error (litgraph-run-op "solve") :type 'user-error))))
 
 (ert-deftest litgraph-graph-candidates ()
   (litgraph-test-with-stub
+    (setq litgraph-target "cofc-1498-patent-case")
     (let (graph)
       (litgraph-with-graph (lambda (g) (setq graph g)))
       (should (assoc "cofc::claim-accrues" (litgraph-node-candidates graph)))
@@ -246,31 +283,20 @@
 
 ;;;; Op arguments
 
-(ert-deftest litgraph-op-arg-specs-from-schema ()
-  (let* ((schema (litgraph-test-fixture-response "schema-request"))
-         (deadlines (litgraph-op-arg-specs schema "deadlines"))
-         (sweep (litgraph-op-arg-specs schema "sweep"))
-         (structure (litgraph-op-arg-specs schema "structure")))
-    (should (plist-get (seq-find (lambda (s) (equal (plist-get s :name) "trigger"))
-                                 deadlines)
-                       :required))
-    (should (eq 'boolean (plist-get (seq-find (lambda (s)
-                                                (equal (plist-get s :name)
-                                                       "reachable"))
-                                              deadlines)
-                                    :type)))
-    (should (eq 'number (plist-get (seq-find (lambda (s) (equal (plist-get s :name) "lo"))
-                                             sweep)
-                                   :type)))
-    (let ((what (seq-find (lambda (s) (equal (plist-get s :name) "what")) structure)))
-      (should (or (plist-get what :enum) (plist-get what :oneof))))
-    (should-not (litgraph-op-arg-specs schema "no-such-op"))))
-
-(ert-deftest litgraph-op-arg-specs-fall-back-to-describe ()
+(ert-deftest litgraph-op-arg-specs-from-describe ()
   (let* ((describe (litgraph-get (litgraph-test-fixture-response "describe") 'result))
-         (specs (litgraph-op-arg-specs-from-describe describe "deadlines")))
-    (should (member "trigger" (mapcar (lambda (s) (plist-get s :name)) specs)))
-    (should (plist-get (car specs) :required))))
+         (spec (lambda (op name)
+                 (seq-find (lambda (s) (equal (plist-get s :name) name))
+                           (litgraph-op-arg-specs describe op)))))
+    (should (plist-get (funcall spec "deadlines" "trigger") :required))
+    (should-not (plist-get (funcall spec "deadlines" "reachable") :required))
+    (should-not (plist-get (funcall spec "sweep" "lo") :required))
+    (should (plist-get (funcall spec "sweep" "param") :required))
+    (let ((what (funcall spec "structure" "what")))
+      (should (eq 'enum (plist-get what :type)))
+      (should (member "mincut" (plist-get what :enum))))
+    (should-not (litgraph-op-arg-specs describe "describe"))
+    (should-not (litgraph-op-arg-specs describe "no-such-op"))))
 
 (ert-deftest litgraph-coerce-values ()
   (should (= 12 (litgraph-coerce-value 'integer " 12 ")))
@@ -285,12 +311,12 @@
 
 (ert-deftest litgraph-read-op-arguments-prompts-required ()
   (litgraph-test-with-stub
-    (let ((schema (litgraph-test-fixture-response "schema-request"))
-          (answers '("2026-01-05" "cofc::claim-accrues")))
+    (let ((describe (litgraph-get (litgraph-test-fixture-response "describe") 'result))
+          (answers '("2026-01-05")))
       (cl-letf (((symbol-function 'org-read-date) (lambda (&rest _) (pop answers)))
                 ((symbol-function 'completing-read-multiple) (lambda (&rest _) nil))
                 ((symbol-function 'completing-read) (lambda (&rest _) (pop answers))))
-        (let ((op (litgraph-read-op-arguments "deadlines" schema nil nil)))
+        (let ((op (litgraph-read-op-arguments "deadlines" describe nil)))
           (should (equal (gethash "op" op) "deadlines"))
           (should (equal (gethash "trigger" op) "2026-01-05")))))))
 
@@ -346,7 +372,7 @@
 
 (ert-deftest litgraph-view-chain-has-outcome-odds ()
   (let ((text (litgraph-test--render "chain")))
-    (should (string-match-p "Odds +21\\.7% JUDGMENT FOR PLAINTIFF" text))
+    (should (string-match-p "Odds .*21\\.7% JUDGMENT FOR PLAINTIFF" text))
     (should (string-match-p "^\\* Outcomes" text))
     (should (string-match-p "Expected dollars" text))))
 
@@ -419,9 +445,10 @@
 
 (ert-deftest litgraph-view-show-and-raw-json-and-table-buffer ()
   (litgraph-test-with-stub
-    (let* ((raw (litgraph-test-fixture "chain"))
-           (buffer (litgraph-view-show (litgraph-parse raw)
-                                       (litgraph-build-request "chain" "s") raw)))
+    (let* ((engine (litgraph--engine-response (litgraph-test-fixture "chain")))
+           (buffer (litgraph-view-show (car engine)
+                                       (litgraph-build-request "chain" "s")
+                                       (cdr engine))))
       (unwind-protect
           (with-current-buffer buffer
             (should (derived-mode-p 'litgraph-view-mode))
@@ -447,10 +474,16 @@
 
 (ert-deftest litgraph-view-act-on-parameter-row-runs-sweep ()
   (litgraph-test-with-stub
-    (litgraph-view--act-on-id "param:stakes")
-    (let ((request (litgraph-parse-strict (cdr (car litgraph-test-calls)))))
-      (should (equal "sweep" (gethash "op" (gethash "op" request))))
-      (should (equal "stakes" (gethash "param" (gethash "op" request)))))
+    (setq litgraph-target "session")
+    (with-temp-buffer
+      (litgraph-view-mode)
+      (setq litgraph-view--request (litgraph-build-request "tornado" "shown"))
+      (litgraph-view--act-on-id "param:stakes"))
+    (let ((call (car litgraph-test-calls)))
+      ;; The drill-down runs on the target the result came from.
+      (should (equal "shown" (cadr (car call))))
+      (should (equal "sweep" (litgraph-test-call-op-name call)))
+      (should (equal "stakes" (gethash "param" (litgraph-test-call-op call)))))
     (when (get-buffer "*litgraph: sweep*") (kill-buffer "*litgraph: sweep*"))))
 
 ;;;; Graph
@@ -525,7 +558,7 @@
     (should (string-match-p "\\`\\*\\* TODO United States answers (RCFC 12(a)(1)(A)) +:deadline:\n" entry))
     (should (string-match-p "^DEADLINE: <2026-11-30 Mon>\n:PROPERTIES:" entry))
     (should (string-match-p ":LITGRAPH_ID: M|cofc::e-responsefork-answer" entry))
-    (should (string-match-p ":LITGRAPH_STEPS:\nDue 2026-11-30 (RCFC 6)\\." entry))))
+    (should (string-match-p ":LITGRAPH_STEPS:\nDue 2026-11-30 (RCFC 6(a))\\." entry))))
 
 (defmacro litgraph-test-with-org-buffer (&rest body)
   (declare (indent 0))
@@ -609,160 +642,40 @@
                                      nil "M")
                 :type 'user-error))
 
-;;;; Scenario editing and flymake
-
-(ert-deftest litgraph-scenario-locates-tokens ()
-  (with-temp-buffer
-    (insert "{\n  \"scenario\": {\"bogus\": 1},\n  \"remove_edges\": [\"nope::x\"]\n}")
-    (let ((region (litgraph-scenario--locate
-                   "parse: unknown field `bogus`, expected one of `params`")))
-      (should (equal (buffer-substring (car region) (cdr region)) "\"bogus\"")))
-    (let ((region (litgraph-scenario--locate "not found: edge nope::x")))
-      (should (equal (buffer-substring (car region) (cdr region)) "\"nope::x\"")))
-    (let ((region (litgraph-scenario--locate "something unlocatable")))
-      (should (= (car region) 1)))))
-
-(ert-deftest litgraph-flymake-reports-validate-errors ()
-  (litgraph-test-with-stub
-    (with-temp-buffer
-      (insert "{\"scenario\": {\"bogus\": 1}, \"op\": {\"op\": \"solve\"}}")
-      (let (reported)
-        (litgraph-flymake (lambda (diags &rest _) (setq reported diags)))
-        (should (= 1 (length reported)))
-        (let ((d (car reported)))
-          (should (eq (flymake-diagnostic-type d) :error))
-          (should (string-match-p "unknown field" (flymake-diagnostic-text d)))
-          (should (equal (buffer-substring (flymake-diagnostic-beg d)
-                                           (flymake-diagnostic-end d))
-                         "\"bogus\"")))
-        (should (equal (car (car litgraph-test-calls)) '("validate" "-")))))))
-
-(ert-deftest litgraph-flymake-syntax-error-skips-engine ()
-  (litgraph-test-with-stub
-    (with-temp-buffer
-      (insert "{\n  \"a\": 1,\n  \"b\": [1, 2,,]\n}")
-      (let (reported)
-        (litgraph-flymake (lambda (diags &rest _) (setq reported diags)))
-        (should (= 1 (length reported)))
-        (should (string-match-p "syntax" (flymake-diagnostic-text (car reported))))
-        (should (= (line-number-at-pos (flymake-diagnostic-beg (car reported))) 3))
-        (should-not litgraph-test-calls)))))
-
-(ert-deftest litgraph-flymake-valid-document-reports-nothing ()
-  (litgraph-test-with-stub
-    (let ((litgraph-test-validate-fixture "validate-ok"))
-      (with-temp-buffer
-        (insert "{\"op\": {\"op\": \"solve\"}}")
-        (let ((reported 'unset))
-          (litgraph-flymake (lambda (diags &rest _) (setq reported diags)))
-          (should (null reported)))))))
-
-(ert-deftest litgraph-flymake-warnings-are-opt-in ()
-  (litgraph-test-with-stub
-    (let ((litgraph-test-validate-fixture "validate-ok")
-          (litgraph-flymake-warnings t))
-      (with-temp-buffer
-        (insert "{\"op\": {\"op\": \"solve\"}}")
-        (let (reported)
-          (litgraph-flymake (lambda (diags &rest _) (setq reported diags)))
-          (should reported)
-          (should (eq :note (flymake-diagnostic-type (car reported)))))))))
-
-(ert-deftest litgraph-flymake-discards-stale-results ()
-  (let* ((pending nil)
-        (litgraph-process-function (lambda (_a _i cb) (push cb pending) nil))
-        (reports 0))
-    (with-temp-buffer
-      (insert "{\"op\": {\"op\": \"solve\"}}")
-      (litgraph-flymake (lambda (&rest _) (cl-incf reports)))
-      (litgraph-flymake (lambda (&rest _) (cl-incf reports)))
-      (funcall (cadr pending) 0 (litgraph-test-fixture "validate-ok") "")
-      (funcall (car pending) 0 (litgraph-test-fixture "validate-ok") "")
-      (should (= reports 1)))))
-
-(ert-deftest litgraph-scenario-template-is-a-runnable-request ()
-  (litgraph-test-with-stub
-    (let* ((text (litgraph-scenario--template "cofc-1498-patent-case"))
-           (doc (litgraph-parse-strict text)))
-      (should (equal "cofc-1498-patent-case"
-                     (gethash "extends" (gethash "scenario" doc))))
-      (should (equal "solve" (gethash "op" (gethash "op" doc)))))))
-
-(ert-deftest litgraph-scenario-new-and-open-enable-the-mode ()
-  (litgraph-test-with-stub
-    (let* ((dir (make-temp-file "lgs" t))
-           (file (expand-file-name "m.litgraph.json" dir)))
-      (unwind-protect
-          (progn
-            (litgraph-new-scenario file "cofc-1498-patent-case")
-            (should (file-exists-p file))
-            (should litgraph-scenario-mode)
-            (should (derived-mode-p 'litgraph-scenario-json-mode))
-            (should (memq #'litgraph-flymake flymake-diagnostic-functions))
-            (kill-buffer (current-buffer)))
-        (delete-directory dir t)))))
-
-(ert-deftest litgraph-scenario-run-sends-whole-request ()
-  (litgraph-test-with-stub
-    (with-temp-buffer
-      (insert "{\"scenario\":\"cofc-1498-patent-case\",\"op\":{\"op\":\"chain\"}}")
-      (litgraph-scenario-run)
-      (should (equal (litgraph--request-op-name
-                      (litgraph-parse-strict (cdr (car litgraph-test-calls))))
-                     "chain")))
-    (when (get-buffer "*litgraph: chain*") (kill-buffer "*litgraph: chain*"))))
-
-(ert-deftest litgraph-scenario-capf-completes-ids ()
-  (litgraph-test-with-stub
-    (litgraph-with-describe #'ignore)
-    (litgraph-with-graph #'ignore)
-    (with-temp-buffer
-      (js-json-mode)
-      (insert "{\"remove_edges\": [\"cofc::e-accr")
-      (let ((capf (litgraph-scenario-capf)))
-        (should capf)
-        (should (member "cofc::e-accrual-to-patentfork"
-                        (all-completions "cofc::e-accr" (nth 2 capf)))))
-      (erase-buffer)
-      (insert "{\"scenario\": {\"extends\": \"cofc-")
-      (let ((capf (litgraph-scenario-capf)))
-        (should (equal '("cofc-1498-patent-case" "cofc-bid-protest")
-                       (all-completions "cofc-" (nth 2 capf))))))))
-
 ;;;; Org Babel
 
 (ert-deftest litgraph-ob-request-shapes ()
-  (let ((r (litgraph-ob-request "{\"scenario\":\"s\",\"op\":{\"op\":\"chain\"}}" nil)))
-    (should (equal "chain" (gethash "op" (gethash "op" r)))))
-  (let ((r (litgraph-ob-request "{\"scenario\":\"s\",\"op\":{\"op\":\"chain\"}}"
-                                '((:op . "tornado")))))
+  (let ((r (litgraph-ob-request "{\"op\":\"chain\",\"top\":3}" '((:target . "m")))))
+    (should (equal "m" (gethash "target" r)))
+    (should (equal "chain" (gethash "op" (gethash "op" r))))
+    (should (= 3 (gethash "top" (gethash "op" r))))
+    (should-not (gethash "params" r)))
+  (let ((r (litgraph-ob-request "chain" '((:target . "m") (:op . "tornado")))))
     (should (equal "tornado" (gethash "op" (gethash "op" r)))))
-  (let ((r (litgraph-ob-request "" '((:op . "chain") (:scenario . "s") (:packs . "a,b")))))
-    (should (equal "s" (gethash "scenario" r)))
-    (should (equal '("a" "b") (append (gethash "packs" r) nil))))
-  (let ((r (litgraph-ob-request "{\"params\":{\"rate\":5}}" nil)))
-    (should (equal "solve" (gethash "op" (gethash "op" r))))
-    (should (= 5 (gethash "rate" (gethash "params" (gethash "scenario" r))))))
-  (should-error (litgraph-ob-request "" nil) :type 'user-error)
-  (should-error (litgraph-ob-request "[1]" nil) :type 'user-error))
+  (let ((r (litgraph-ob-request "  " '((:target . "m")))))
+    (should (equal "solve" (gethash "op" (gethash "op" r)))))
+  (should-error (litgraph-ob-request "chain" nil) :type 'user-error)
+  (should-error (litgraph-ob-request "[1]" '((:target . "m"))) :type 'user-error)
+  (should-error (litgraph-ob-request "{\"top\":3}" '((:target . "m"))) :type 'user-error))
 
 (ert-deftest litgraph-ob-does-not-leak-session ()
-  (let ((litgraph-scenario "leaky") (litgraph-params '(("rate" . 1))))
-    (let ((r (litgraph-ob-request "{\"scenario\":\"s\",\"op\":{\"op\":\"chain\"}}" nil)))
-      (should (equal "s" (gethash "scenario" r))))))
+  (let ((litgraph-target "leaky") (litgraph-params '(("rate" . 1))))
+    (let ((r (litgraph-ob-request "chain" '((:target . "m")))))
+      (should (equal "m" (gethash "target" r)))
+      (should-not (gethash "params" r)))))
 
 (ert-deftest litgraph-ob-formats ()
   (litgraph-test-with-stub
-    (let* ((body "{\"scenario\":\"s\",\"op\":{\"op\":\"chain\"}}")
-           (table (org-babel-execute:litgraph body nil))
-           (summary (org-babel-execute:litgraph body '((:format . "summary"))))
-           (json (org-babel-execute:litgraph body '((:format . "json"))))
-           (org (org-babel-execute:litgraph body '((:format . "org")))))
+    (let* ((params '((:target . "m")))
+           (table (org-babel-execute:litgraph "chain" params))
+           (summary (org-babel-execute:litgraph "chain" (cons '(:format . "summary") params)))
+           (json (org-babel-execute:litgraph "chain" (cons '(:format . "json") params)))
+           (org (org-babel-execute:litgraph "chain" (cons '(:format . "org") params))))
       (should (equal (car table) '("Outcome" "p" "Utility" "Tags")))
       (should (eq (cadr table) 'hline))
-      (should (equal (caddr table)
-                     '("JUDGMENT FOR PLAINTIFF (Bench Trial Verdict)" 0.217164
-                       1000000 "win, judgment, fee-eligible")))
+      (should (member '("JUDGMENT FOR PLAINTIFF (Bench Trial Verdict)" 0.217164
+                        1000000 "win, judgment, fee-eligible")
+                      (cddr table)))
       (should (equal (car summary) '("Key" "Value")))
       (should (assoc "Expected net" (cddr summary)))
       (should (string-match-p "\"absorption\"" json))
@@ -770,27 +683,35 @@
 
 (ert-deftest litgraph-ob-table-selection ()
   (litgraph-test-with-stub
-    (let ((body "{\"scenario\":\"s\",\"op\":{\"op\":\"chain\"}}"))
-      (should (equal (caar (org-babel-execute:litgraph body '((:table . "visited"))))
+    (let ((params '((:target . "m"))))
+      (should (equal (caar (org-babel-execute:litgraph
+                            "chain" (cons '(:table . "visited") params)))
                      "Node"))
-      (should-error (org-babel-execute:litgraph body '((:table . "nonexistent")))
+      (should-error (org-babel-execute:litgraph
+                     "chain" (cons '(:table . "nonexistent") params))
                     :type 'user-error))))
 
 (ert-deftest litgraph-ob-vars-become-params ()
   (litgraph-test-with-stub
-    (let ((request (litgraph-ob-request "{\"scenario\":\"s\",\"op\":{\"op\":\"chain\"}}" nil)))
-      (litgraph-ob--apply-vars request '((rate . 900) ("stakes" . "2")))
-      (let ((params (gethash "params" (gethash "scenario" request))))
+    (with-temp-buffer
+      (org-mode)
+      (insert "#+begin_src litgraph :target m :var rate=900 stakes=\"2\"\nchain\n#+end_src\n")
+      (goto-char (point-min))
+      (let* ((info (org-babel-get-src-block-info))
+             (request (litgraph-ob-request (nth 1 info) (nth 2 info)))
+             (params (gethash "params" request)))
         (should (= 900 (gethash "rate" params)))
         (should (= 2 (gethash "stakes" params)))
-        (should (equal "s" (gethash "extends" (gethash "scenario" request))))))))
+        (should (equal (litgraph-request-args request)
+                       '("run" "m" "--op" "{\"op\":\"chain\"}"
+                         "--set" "rate=900" "--set" "stakes=2" "--format" "json")))))))
 
 (ert-deftest litgraph-ob-executes-in-org-buffer ()
   (litgraph-test-with-stub
     (let ((org-confirm-babel-evaluate nil))
       (with-temp-buffer
         (org-mode)
-        (insert "#+begin_src litgraph\n{\"scenario\":\"s\",\"op\":{\"op\":\"chain\"}}\n#+end_src\n")
+        (insert "#+begin_src litgraph :target m\n{\"op\": \"chain\"}\n#+end_src\n")
         (goto-char (point-min))
         (org-babel-execute-src-block)
         (should (string-match-p "^#\\+RESULTS:" (buffer-string)))
@@ -804,20 +725,23 @@
   (should (commandp 'litgraph-solve))
   (should (commandp 'litgraph-run-op))
   (should (keymapp litgraph-command-map))
-  (should (eq (lookup-key litgraph-command-map "d") 'litgraph-deadlines-to-org)))
+  (should (eq (lookup-key litgraph-command-map "d") 'litgraph-deadlines-to-org))
+  (should (eq (lookup-key litgraph-command-map "C") 'litgraph-set-target)))
 
 (ert-deftest litgraph-menu-greys-out-unsupported-ops ()
   (litgraph-test-with-stub
-    (should (litgraph-menu--has-op "posterior"))      ; unknown until fetched
+    (setq litgraph-target "m")
+    (should (litgraph-menu--has-op "frobnicate"))     ; unknown until fetched
     (litgraph-with-describe #'ignore)
-    (should-not (litgraph-menu--has-op "posterior"))
+    (should-not (litgraph-menu--has-op "frobnicate"))
+    (should (litgraph-menu--has-op "posterior"))
     (should (litgraph-menu--has-op "solve"))))
 
 (ert-deftest litgraph-run-op-runs-and-displays ()
   (litgraph-test-with-stub
     (let* ((shown nil)
            (litgraph-display-function (lambda (resp req raw) (setq shown (list resp req raw))))
-           (litgraph-scenario "cofc-1498-patent-case"))
+           (litgraph-target "cofc-1498-patent-case"))
       (cl-letf (((symbol-function 'completing-read-multiple) (lambda (&rest _) nil))
                 ((symbol-function 'completing-read) (lambda (&rest _) "")))
         (litgraph-run-op "chain"))
@@ -828,7 +752,7 @@
 (ert-deftest litgraph-graph-command-fetches-graph-and-solve ()
   (litgraph-test-with-stub
     (let ((litgraph-graph-dot-executable "no-such-dot-binary")
-          (litgraph-scenario "cofc-1498-patent-case"))
+          (litgraph-target "cofc-1498-patent-case"))
       (litgraph-graph)
       (unwind-protect
           (with-current-buffer "*litgraph-graph*"
@@ -837,10 +761,7 @@
             (should (string-match-p "color=\"#d62728\"" litgraph-graph--dot)))
         (kill-buffer "*litgraph-graph*")))
     (should (equal '("graph" "solve")
-                   (mapcar (lambda (call)
-                             (litgraph-test--request-op (cdr call)))
-                           (seq-filter (lambda (call) (equal (car call) '("q" "-")))
-                                       (reverse litgraph-test-calls)))))))
+                   (mapcar #'litgraph-test-call-op-name (litgraph-test-run-calls))))))
 
 (ert-deftest litgraph-graph-text-root-ignores-inactive-parent-filter ()
   (let* ((graph (litgraph-parse
@@ -861,7 +782,7 @@
     (let* ((file (make-temp-file "lg-e2e" nil ".org"))
            (litgraph-org-file file) (litgraph-org-jump nil)
            (litgraph-org-offer-agenda nil)
-           (litgraph-scenario "cofc-1498-patent-case"))
+           (litgraph-target "cofc-1498-patent-case"))
       (unwind-protect
           (progn
             (delete-file file)
@@ -873,13 +794,12 @@
             (let ((text (with-temp-buffer (insert-file-contents file) (buffer-string))))
               (should (string-match-p "^\\* Matter: Acme v. US" text))
               (should (string-match-p "DEADLINE: <2026-11-30 Mon>" text)))
-            (let ((request (litgraph-parse-strict
-                            (cdr (car (seq-filter
-                                       (lambda (c) (string-match-p "deadlines" (or (cdr c) "")))
-                                       litgraph-test-calls))))))
-              (should (equal "2026-10-01" (gethash "trigger" (gethash "op" request))))
-              (should (equal "cofc::government-response-fork"
-                             (gethash "node" (gethash "op" request))))))
+            (let ((op (litgraph-test-call-op
+                       (seq-find (lambda (c)
+                                   (equal (litgraph-test-call-op-name c) "deadlines"))
+                                 litgraph-test-calls))))
+              (should (equal "2026-10-01" (gethash "trigger" op)))
+              (should (equal "cofc::government-response-fork" (gethash "node" op)))))
         (when-let* ((buffer (find-buffer-visiting file))) (kill-buffer buffer))
         (delete-file file)))))
 
@@ -898,8 +818,7 @@
           (let ((text (with-temp-buffer (insert-file-contents file) (buffer-string))))
             (dolist (name '("litgraph-menu" "litgraph-run-op" "litgraph-solve"
                             "litgraph-deadlines-to-org" "litgraph-graph"
-                            "litgraph-open-scenario" "litgraph-new-scenario"
-                            "litgraph-scenario-mode" "litgraph-command-map"
+                            "litgraph-set-target" "litgraph-command-map"
                             "litgraph-timeline"))
               (should (string-match-p (format "\\(?:autoload\\|defun\\).?'?%s\\b" name)
                                       text)))

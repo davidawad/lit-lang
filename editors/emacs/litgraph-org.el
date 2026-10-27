@@ -332,10 +332,9 @@ Return a plist (:added N :updated N :position POS)."
 
 (defun litgraph-org--matter-default (request)
   "A default matter name derived from REQUEST."
-  (let ((scenario (and (hash-table-p request) (gethash "scenario" request))))
-    (cond ((stringp scenario) scenario)
-          ((and (hash-table-p scenario) (gethash "extends" scenario)))
-          (t "litgraph matter"))))
+  (or (and (hash-table-p request)
+           (litgraph-target-label (gethash "target" request)))
+      "litgraph matter"))
 
 (defun litgraph-org--read-matter (request)
   "Ask for the matter name, defaulting from REQUEST."
@@ -385,10 +384,9 @@ downstream deadlines, clerk inaccessibility)."
   (interactive "P")
   (litgraph--with-metadata
    "deadlines"
-   (lambda (schema describe graph)
+   (lambda (describe graph)
      (let* ((op (if all
-                    (litgraph-read-op-arguments "deadlines" schema describe
-                                                graph t)
+                    (litgraph-read-op-arguments "deadlines" describe graph t)
                   (litgraph-obj
                    "op" "deadlines"
                    "trigger" (org-read-date nil nil nil "Trigger date: ")

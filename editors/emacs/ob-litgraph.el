@@ -24,20 +24,22 @@
 
 ;;; Commentary:
 
-;; Evaluate litgraph requests in Org source blocks:
+;; Run litgraph ops on a matter from Org source blocks:
 ;;
-;;   #+begin_src litgraph :results table
-;;   {"scenario": "cofc-1498-patent-case", "op": {"op": "chain"}}
+;;   #+begin_src litgraph :target cofc-1498-patent-case
+;;   {"op": "deadlines", "trigger": "2026-10-01"}
 ;;   #+end_src
 ;;
-;; The block body is a request (or just a scenario, with the op given as
-;; a header argument).  The result is an Org table.
+;; The block body is the op: an op object as JSON, or just its name
+;; (empty means `solve').  It runs as `litigate run TARGET --op OP'.
+;; The result is an Org table.
 ;;
 ;; Header arguments:
 ;;
-;;   :op        op name (or an op as JSON), for bodies that are only a scenario
-;;   :scenario  library scenario name or file, when the body has none
-;;   :packs     comma separated pack ids
+;;   :target    the `.case' matter, `.lit' file or package directory
+;;              (required); a bare name is `cases/NAME.case' (else
+;;              `lit/NAME') in the project
+;;   :op        op name (or an op as JSON), replacing the body's
 ;;   :table     regexp choosing which table of the result (default: the first)
 ;;   :format    table (default), summary, json, or org (all tables as Org text)
 ;;   :var       numbers set scenario parameters: :var rate=900 stakes=2
@@ -65,63 +67,44 @@
 (add-to-list 'org-src-lang-modes '("litgraph" . js-json))
 
 (defun org-babel-expand-body:litgraph (body params &optional _processed-params)
-  "Return BODY, the request JSON; PARAMS are unused."
+  "Return BODY, the op; PARAMS are unused."
   (ignore params)
   body)
 
 (defun litgraph-ob--op (value)
-  "The op object for the :op header argument VALUE (name or JSON)."
-  (cond ((null value) nil)
-        ((string-match-p "\\`[[:space:]]*{" value) (litgraph-parse-strict value))
-        (t (litgraph-obj "op" (string-trim value)))))
+  "The op object for VALUE, an op name or an op object as JSON."
+  (let ((value (and value (string-trim (format "%s" value)))))
+    (cond ((null value) nil)
+          ((string-prefix-p "{" value) (litgraph-parse-strict value))
+          ((string-match-p "\\`[a-z][a-z_-]*\\'" value) (litgraph-obj "op" value))
+          (t (user-error "Not an op name or op object: %s" value)))))
 
-(defun litgraph-ob--apply-vars (request vars)
-  "Set the scenario parameters of REQUEST from VARS ((NAME . VALUE) ...)."
-  (when vars
-    (let ((params (mapcar (lambda (var)
-                            (cons (format "%s" (car var))
-                                  (let ((value (cdr var)))
-                                    (if (stringp value)
-                                        (string-to-number value)
-                                      value))))
-                          vars)))
-      (puthash "scenario"
-               (litgraph--with-params (gethash "scenario" request) params)
-               request)))
-  request)
+(defun litgraph-ob--params (vars)
+  "Scenario parameters ((NAME . NUMBER) ...) from the Babel VARS."
+  (mapcar (lambda (var)
+            (cons (format "%s" (car var))
+                  (let ((value (cdr var)))
+                    (if (stringp value) (string-to-number value) value))))
+          vars))
 
 (defun litgraph-ob-request (body params)
   "Build the request for the source block BODY under header arguments PARAMS.
-A block is self-contained: the session scenario, packs and parameters
-of `litgraph-menu' do not leak into it."
-  (let* ((text (string-trim body))
-         (doc (if (string-empty-p text) (litgraph-obj)
-                (litgraph-parse-strict text)))
+A block is self-contained: the session target and parameters of
+`litgraph-menu' do not leak into it."
+  (let* ((target (cdr (assq :target params)))
          (op (or (litgraph-ob--op (cdr (assq :op params)))
-                 (litgraph-obj "op" "solve")))
-         (scenario (cdr (assq :scenario params)))
-         (packs (cdr (assq :packs params)))
-         (request
-          (cond
-           ((not (hash-table-p doc))
-            (user-error "A litgraph block must hold a JSON object"))
-           ((gethash "op" doc)
-            (let ((copy (litgraph-hash-copy doc)))
-              (when (assq :op params) (puthash "op" op copy))
-              copy))
-           ((gethash "scenario" doc)
-            (let ((copy (litgraph-hash-copy doc)))
-              (puthash "op" op copy)
-              copy))
-           ((> (hash-table-count doc) 0)
-            (litgraph-obj "scenario" doc "op" op))
-           (scenario (litgraph-obj "scenario" scenario "op" op))
-           (t (user-error "Empty litgraph block: give a request or :scenario")))))
-    (when (and scenario (not (gethash "scenario" request)))
-      (puthash "scenario" scenario request))
-    (when packs
-      (puthash "packs" (litgraph-vec (split-string packs "[ ,]+" t)) request))
-    (litgraph-ob--apply-vars request (org-babel--get-vars params))))
+                 (let ((text (string-trim body)))
+                   (if (string-empty-p text)
+                       (litgraph-obj "op" "solve")
+                     (litgraph-ob--op text))))))
+    (unless (and (hash-table-p op) (stringp (gethash "op" op)))
+      (user-error "A litgraph block holds an op: a name or a JSON object with \"op\""))
+    (unless target
+      (user-error "A litgraph block needs :target (a .case matter or package)"))
+    (litgraph-obj "target" (format "%s" target)
+                  "op" op
+                  "params" (litgraph--params-object
+                            (litgraph-ob--params (org-babel--get-vars params))))))
 
 (defun litgraph-ob--pick-table (tables pattern)
   "The table in TABLES whose title matches PATTERN; the first when PATTERN is nil."
@@ -168,7 +151,7 @@ of `litgraph-menu' do not leak into it."
                           ", "))))
 
 (defun org-babel-execute:litgraph (body params)
-  "Evaluate the litgraph request BODY under the header arguments PARAMS."
+  "Run the litgraph op BODY under the header arguments PARAMS."
   (let* ((request (litgraph-ob-request body params))
          (response (litgraph-request-sync request)))
     (litgraph-ob--report-warnings response)

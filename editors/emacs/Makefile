@@ -7,6 +7,8 @@
 #   make compile   byte-compile with warnings as errors
 #   make lint      checkdoc and package-lint
 #   make all       compile, lint, test
+#   make fixtures  regenerate test/fixtures/ from the `litigate' binary
+#                  (LITIGATE=path; scripts/fixtures.sh)
 #
 # litigate-ts-mode's own suite (test/litigate-ts-mode-test.el) needs the
 # tree-sitter grammar; `cargo nextest run -p litigate-editors' builds it
@@ -18,7 +20,7 @@
 EMACS ?= emacs
 BATCH  = $(EMACS) -Q --batch -L .
 SRC    = litgraph.el litgraph-view.el litgraph-graph.el litgraph-org.el \
-         litgraph-scenario.el litgraph-menu.el litgraph-timeline.el \
+         litgraph-menu.el litgraph-timeline.el \
          ob-litgraph.el litigate-ts-mode-keywords.el litigate-ts-mode.el
 # litigate-ts-mode (and its generated keyword lists) keeps its own `litigate-ts-mode-' prefix (it is
 # usable on its own, and editors/litigate-editors tests it on its own),
@@ -28,7 +30,7 @@ TESTS  = $(wildcard test/litgraph-*-test.el)
 PACKAGE_LINT_DIR ?=
 REPO   = ../..
 
-.PHONY: all test compile lint checkdoc package-lint autoloads clean deps fixtures-sync
+.PHONY: all test compile lint checkdoc package-lint autoloads clean deps fixtures fixtures-sync
 
 all: compile lint test
 
@@ -53,6 +55,12 @@ package-lint: deps
 
 deps:
 	@true
+
+LITIGATE ?= litigate
+
+# Regenerate the engine fixtures from the real binary.
+fixtures:
+	LITIGATE="$(LITIGATE)" scripts/fixtures.sh
 
 # Sync the timeline integration project from this repository's examples.
 fixtures-sync:

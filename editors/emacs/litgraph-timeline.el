@@ -823,7 +823,6 @@ DOC is the timeline shown, if any."
   (let* ((buffer (current-buffer))
          (program (plist-get litgraph-timeline-command :program))
          (litgraph-executable (or program litgraph-executable))
-         (litgraph-engine-arguments nil)
          (default-directory (file-name-directory litgraph-timeline--file))
          (args (litgraph-timeline--args
                 litgraph-timeline--file litgraph-timeline--as-of

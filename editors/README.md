@@ -83,9 +83,9 @@ and the pinned `tree-sitter-cli`, run through `npx` when it isn't on
 4. The rest of the package. `editors/emacs` is one Emacs package, `litgraph`:
    besides `litigate-ts-mode` it holds the litgraph front end (the
    `litgraph-menu` transient, result buffers, deadlines to Org, Graphviz
-   graphs, scenario editing, Org Babel, and the `litgraph-timeline`
-   buffer). Every command that runs the engine calls `litigate engine`;
-   the timeline calls `litigate timeline`. With the package autoloads
+   graphs, Org Babel, and the `litgraph-timeline` buffer). Every command
+   that runs the engine calls `litigate run` on the selected matter or
+   package; the timeline calls `litigate timeline`. With the package autoloads
    loaded, `C-c C-t` in a `litigate-ts-mode` buffer opens the file's
    timeline. See
    [`emacs/README.md`](emacs/README.md).

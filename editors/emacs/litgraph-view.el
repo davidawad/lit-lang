@@ -1063,20 +1063,17 @@ FUNCTION takes the parsed `result' and returns a list of sections; see
   "Title of the section being inserted, to avoid repeating it on a table.")
 
 (defun litgraph-view--request-label (request)
-  "One-line description of the scenario and packs of REQUEST."
+  "One-line description of the target and parameters of REQUEST."
   (when (hash-table-p request)
-    (let ((scenario (gethash "scenario" request))
-          (packs (gethash "packs" request)))
+    (let ((params (gethash "params" request))
+          (sets nil))
+      (when (hash-table-p params)
+        (maphash (lambda (name value) (push (format "%s=%s" name value) sets))
+                 params))
       (string-join
        (delq nil
-             (list
-              (cond ((stringp scenario) scenario)
-                    ((hash-table-p scenario)
-                     (let ((base (gethash "extends" scenario)))
-                       (if base (format "%s+overrides" base)
-                         "inline scenario"))))
-              (and packs (format "packs: %s"
-                                 (string-join (append packs nil) ",")))))
+             (list (litgraph-target-label (gethash "target" request))
+                   (and sets (string-join (sort sets #'string<) " "))))
        "  "))))
 
 (defun litgraph-view--insert-blocks (blocks)
@@ -1348,6 +1345,11 @@ Cells carry their raw value in the `litgraph-raw' text property."
                               (litgraph-get graph 'edges))))
     (litgraph-get edge 'from)))
 
+(defun litgraph-view--target ()
+  "The target of this buffer's request, or nil for the session's."
+  (and (hash-table-p litgraph-view--request)
+       (gethash "target" litgraph-view--request)))
+
 (defun litgraph-view--act-on-id (id)
   "Drill into ID: sweep a parameter, or explain a node."
   (cond
@@ -1355,12 +1357,14 @@ Cells carry their raw value in the `litgraph-raw' text property."
    ((string-prefix-p "param:" id)
     (litgraph-run-request
      (litgraph-build-request
-      (litgraph-obj "op" "sweep" "param" (substring id 6)))))
+      (litgraph-obj "op" "sweep" "param" (substring id 6))
+      (litgraph-view--target))))
    ((string-match-p "::" id)
     (litgraph-run-request
      (litgraph-build-request
       (litgraph-obj "op" "explain"
-                    "node" (or (litgraph-view--edge-source id) id)))))
+                    "node" (or (litgraph-view--edge-source id) id))
+      (litgraph-view--target))))
    (t (user-error "Nothing to drill into for %s" id))))
 
 (defun litgraph-view-act ()
@@ -1369,7 +1373,7 @@ Cells carry their raw value in the `litgraph-raw' text property."
   (litgraph-view--act-on-id (get-text-property (point) 'litgraph-id)))
 
 (defun litgraph-view-graph ()
-  "Draw the graph for this result's scenario."
+  "Draw the graph of the current target."
   (interactive)
   (litgraph-view--require)
   (require 'litgraph-graph)

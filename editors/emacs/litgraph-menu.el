@@ -24,9 +24,9 @@
 
 ;;; Commentary:
 
-;; `litgraph-menu' is a transient menu: set the scenario, packs and
-;; parameters at the top, then run an analysis, draw the graph, file
-;; deadlines in Org, or edit scenario files.  Ops that the installed
+;; `litgraph-menu' is a transient menu: set the target (a `.case'
+;; matter or a package) and parameters at the top, then run an
+;; analysis, draw the graph, file deadlines in Org, or show a timeline.  Ops that the installed
 ;; binary does not support (`posterior', `voi' and `settle' arrive with
 ;; newer litgraph builds) are shown greyed out; `r' runs any op the binary
 ;; reports, so ops added later need no change here.
@@ -37,7 +37,6 @@
 (require 'litgraph)
 
 (declare-function litgraph-graph "litgraph-graph")
-(declare-function litgraph-scenario-run "litgraph-scenario")
 (declare-function litgraph-timeline "litgraph-timeline" (file))
 
 ;; Ops that only newer litgraph builds have get their own commands, so the
@@ -61,12 +60,6 @@
   "Non-nil when OP is available (or availability is not known yet)."
   (litgraph-op-available-p op))
 
-(defun litgraph-menu--scenario-file-run ()
-  "Run the document in the current scenario buffer."
-  (interactive)
-  (require 'litgraph-scenario)
-  (call-interactively #'litgraph-scenario-run))
-
 (defun litgraph-menu--description ()
   "Heading of the menu: the current context."
   (format "litgraph  %s" (propertize (litgraph-context-label) 'face 'bold)))
@@ -75,8 +68,7 @@
   "Front door for litgraph."
   [:description litgraph-menu--description
    ["Context"
-    ("C" "Scenario…" litgraph-set-scenario :transient t)
-    ("P" "Packs…" litgraph-set-packs :transient t)
+    ("C" "Matter or package…" litgraph-set-target :transient t)
     ("V" "Parameter…" litgraph-set-param :transient t)
     ("Z" "Clear context" litgraph-clear-context :transient t)]
    ["Analyze"
@@ -105,11 +97,6 @@
     ("G" "Graph around a node" litgraph-menu--graph-neighborhood)
     ("d" "Deadlines to Org agenda" litgraph-deadlines-to-org)
     ("T" "Timeline of a .case/.lit file" litgraph-timeline)]
-   ["Scenario files"
-    ("o" "Open…" litgraph-open-scenario)
-    ("n" "New…" litgraph-new-scenario)
-    ("R" "Run this buffer" litgraph-menu--scenario-file-run)
-    ("y" "Validate this buffer" litgraph-validate-buffer)]
    ["Engine"
     ("r" "Run any op…" litgraph-run-op)
     ("k" "Packs" litgraph-list-packs)

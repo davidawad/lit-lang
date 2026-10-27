@@ -28,16 +28,17 @@
 ;;; Commentary:
 
 ;; litgraph models litigation procedure as a stochastic game on a graph.
-;; Its engine, `litigate engine' (the raw interface of the `litigate'
-;; command line), takes one JSON request and returns one JSON response.
-;; This package brings that into Emacs:
+;; The `litigate' command line compiles a matter (a `.case' file) or a
+;; package (a `.lit' file or package directory) and runs one engine op
+;; on it: `litigate run TARGET --op OP --set NAME=VALUE', printing one
+;; JSON envelope.  This package brings that into Emacs:
 ;;
-;;  - `litgraph-menu' (a transient) is the front door.  Pick a scenario and
-;;    packs, then run any op.  Nothing ever blocks Emacs: every call is an
-;;    asynchronous process.
+;;  - `litgraph-menu' (a transient) is the front door.  Pick a matter or
+;;    package, then run any op.  Nothing ever blocks Emacs: every call is
+;;    an asynchronous process.
 ;;  - `litgraph-run-op' runs any op the installed binary knows about
-;;    (ops, packs, node ids, edge ids and scenarios complete from the
-;;    binary's own `describe' and `graph' output, so new ops appear by
+;;    (ops, node ids and edge ids complete from the binary's own
+;;    `describe' and `graph' output for the target, so new ops appear by
 ;;    themselves).
 ;;  - Results open in readable buffers: summary first, tables, warnings
 ;;    grouped, provenance folded, raw JSON one key away (litgraph-view.el).
@@ -46,9 +47,7 @@
 ;;    (litgraph-org.el).
 ;;  - `litgraph-graph' draws the procedure graph with Graphviz
 ;;    (litgraph-graph.el).
-;;  - `litgraph-scenario-mode' edits scenario JSON with flymake validation
-;;    (litgraph-scenario.el).
-;;  - `ob-litgraph' evaluates request JSON in Org source blocks.
+;;  - `ob-litgraph' runs ops on a matter from Org source blocks.
 ;;  - `litgraph-timeline' shows a .case or .lit file's timeline
 ;;    (`litigate timeline'; litgraph-timeline.el).
 ;;  - `litigate-ts-mode' edits .lit and .case files (litigate-ts-mode.el).
@@ -67,9 +66,6 @@
 (declare-function litgraph-menu "litgraph-menu" ())
 (declare-function litgraph-graph "litgraph-graph")
 (declare-function litgraph-deadlines-to-org "litgraph-org")
-(declare-function litgraph-open-scenario "litgraph-scenario")
-(declare-function litgraph-new-scenario "litgraph-scenario")
-(declare-function litgraph-validate-buffer "litgraph-scenario")
 (declare-function litgraph-timeline "litgraph-timeline" (file))
 (declare-function org-read-date "org")
 
@@ -86,18 +82,11 @@
   "Name or absolute path of the `litigate' binary."
   :type 'string)
 
-(defcustom litgraph-engine-arguments '("engine")
-  "Arguments put before every engine call.
-`litigate engine' is the engine's raw JSON interface; the engine
-calls (`q', `validate', `schema', `describe', ...) follow it."
-  :type '(repeat string))
-
 (defcustom litgraph-project-directory nil
-  "Directory whose `lit/' and `cases/' the engine compiles.
-`litigate engine' builds its packs from `lit/' and its scenario
-library from `cases/' in the directory it runs in, unless
-`litgraph-packs-dir' and `litgraph-scenarios-dir' name prebuilt
-ones.  Nil looks for the nearest directory holding `lit/', starting
+  "Directory the engine runs in: the one holding `lit/' and `cases/'.
+`litigate run' finds the packages a matter `uses' in `lit/' under the
+directory it runs in, and bare matter names resolve to `cases/NAME.case'
+there.  Nil looks for the nearest directory holding `lit/', starting
 from `default-directory'."
   :type '(choice (const :tag "Nearest with lit/" nil) directory))
 
@@ -108,24 +97,11 @@ They are tried after the variable `exec-path'.  GUI Emacs on macOS
 often lacks the Homebrew prefix on its path."
   :type '(repeat directory))
 
-(defcustom litgraph-packs-dir nil
-  "Directory of pack JSON files, exported as LITGRAPH_PACKS.
-Nil compiles them from `lit/' (see `litgraph-project-directory')."
-  :type '(choice (const :tag "Embedded packs" nil) directory))
-
-(defcustom litgraph-scenarios-dir nil
-  "Directory of named scenarios, exported as LITGRAPH_SCENARIOS.
-Nil compiles them from `cases/' (see `litgraph-project-directory')."
-  :type '(choice (const :tag "Embedded library" nil) directory))
-
-(defcustom litgraph-default-scenario nil
-  "Scenario used when none has been selected with `litgraph-set-scenario'.
-Either the name of a library scenario or a path to a JSON file."
+(defcustom litgraph-default-target nil
+  "Target used when none has been selected with `litgraph-set-target'.
+A `.case' matter, a `.lit' file or a package directory, or the bare
+name of a matter in the project's `cases/' (or a package in `lit/')."
   :type '(choice (const :tag "None" nil) string))
-
-(defcustom litgraph-default-packs nil
-  "Pack ids loaded by default, or nil for the scenario's own (else all)."
-  :type '(repeat string))
 
 (defcustom litgraph-timeout 120
   "Seconds before a running litgraph process is killed."
@@ -139,11 +115,8 @@ RAW is the response's JSON text."
 
 ;;;; Session state
 
-(defvar litgraph-scenario nil
-  "Scenario for this session: a library name, a JSON file path, or nil.")
-
-(defvar litgraph-packs nil
-  "Pack ids selected for this session (nil means the scenario decides).")
+(defvar litgraph-target nil
+  "Target for this session: a matter or package path or name, or nil.")
 
 (defvar litgraph-params nil
   "Alist of (NAME . NUMBER) scenario parameter overrides for this session.")
@@ -157,21 +130,22 @@ RAW is the response's JSON text."
 (defvar litgraph--last-raw nil
   "Raw JSON text of the most recent successful response.")
 
-(defun litgraph--scenario ()
-  "The scenario in effect."
-  (or litgraph-scenario litgraph-default-scenario))
+(defun litgraph--target ()
+  "The target in effect, or nil."
+  (or litgraph-target litgraph-default-target))
 
-(defun litgraph--packs ()
-  "The pack ids in effect, or nil."
-  (or litgraph-packs litgraph-default-packs))
+(defun litgraph-target-label (target)
+  "A short name for TARGET: a matter's name, or a package's directory."
+  (cond ((not (stringp target)) nil)
+        ((string-suffix-p ".case" target)
+         (file-name-base target))
+        (t (file-name-nondirectory (directory-file-name target)))))
 
 (defun litgraph-context-label ()
-  "A one-line description of the current scenario, packs and params."
+  "A one-line description of the current target and params."
   (string-join
    (delq nil
-         (list (or (litgraph--scenario) "no scenario")
-               (and (litgraph--packs)
-                    (format "packs:%s" (string-join (litgraph--packs) ",")))
+         (list (or (litgraph-target-label (litgraph--target)) "no target")
                (and litgraph-params
                     (mapconcat (lambda (p) (format "%s=%s" (car p) (cdr p)))
                                litgraph-params " "))))
@@ -224,84 +198,103 @@ Keys are strings."
 
 ;;;; Requests
 
-(defun litgraph--json-file-p (string)
-  "Non-nil when STRING names an existing JSON file."
-  (and (stringp string)
-       (string-suffix-p ".json" string t)
-       (file-regular-p (expand-file-name string))))
+;; A request is a hash table {"target": T, "op": OP, "params": {NAME: N}}:
+;; T a matter or package (see `litgraph-resolve-target'), OP an op object
+;; and the params scenario overrides.  `litgraph-request-args' turns it
+;; into a `litigate run' command line.
 
-(defun litgraph--read-document (file)
-  "Read FILE as strict JSON."
-  (with-temp-buffer
-    (insert-file-contents (expand-file-name file))
-    (litgraph-parse-strict (buffer-string))))
+(defun litgraph-project-root ()
+  "Return the directory to run the engine in, or nil if there is none.
+That is `litgraph-project-directory', else the nearest directory
+holding `lit/' at or above `default-directory'."
+  (if litgraph-project-directory
+      (file-name-as-directory (expand-file-name litgraph-project-directory))
+    (when (and (file-directory-p default-directory)
+               (not (file-remote-p default-directory)))
+      (locate-dominating-file
+       default-directory
+       (lambda (dir) (file-directory-p (expand-file-name "lit" dir)))))))
 
-(defun litgraph--document-kind (doc)
-  "Classify the parsed-strict JSON document DOC as request, named or scenario."
-  (cond ((not (hash-table-p doc)) 'scenario)
-        ((gethash "op" doc) 'request)
-        ((and (gethash "scenario" doc) (gethash "id" doc)) 'named)
-        ((and (gethash "scenario" doc)
-              (not (gethash "params" doc))) 'request)
-        (t 'scenario)))
+(defun litgraph-resolve-target (target)
+  "The absolute path of TARGET, or TARGET itself when nothing matches.
+TARGET is a path (relative to `default-directory' or the project root),
+or a bare name: `cases/NAME.case', then `lit/NAME', in the project."
+  (let ((root (litgraph-project-root)))
+    (or (seq-find #'file-exists-p
+                  (delq nil
+                        (list (expand-file-name target)
+                              (and root (expand-file-name target root))
+                              (and root (expand-file-name
+                                         (format "cases/%s.case" target) root))
+                              (and root (expand-file-name
+                                         (format "lit/%s" target) root)))))
+        target)))
 
-(defun litgraph--with-params (scenario params)
-  "Apply PARAMS (alist of (NAME . NUMBER)) onto SCENARIO.
-SCENARIO is nil, a library name, or an inline scenario hash table."
-  (cond
-   ((null params) scenario)
-   (t
-    (let ((base (cond ((null scenario) (litgraph-obj))
-                      ((stringp scenario) (litgraph-obj "extends" scenario))
-                      (t (litgraph-hash-copy scenario))))
-          (table (make-hash-table :test #'equal)))
-      (let ((existing (gethash "params" base)))
-        (when (hash-table-p existing)
-          (maphash (lambda (k v) (puthash k v table)) existing)))
-      (dolist (p params) (puthash (format "%s" (car p)) (cdr p) table))
-      (puthash "params" table base)
-      base))))
+(defun litgraph-target-candidates ()
+  "The project's matters and packages, as (PATH . KIND) pairs.
+PATH is relative to the project root: every `.case' under `cases/' and
+every package directory in `lit/'."
+  (when-let* ((root (litgraph-project-root)))
+    (append
+     (let ((cases (expand-file-name "cases" root)))
+       (when (file-directory-p cases)
+         (mapcar (lambda (file) (cons (file-relative-name file root) "matter"))
+                 (sort (directory-files-recursively cases "\\.case\\'") #'string<))))
+     (let ((lit (expand-file-name "lit" root)))
+       (when (file-directory-p lit)
+         (mapcar (lambda (dir) (cons (file-relative-name dir root) "package"))
+                 (seq-filter #'file-directory-p
+                             (directory-files lit t "\\`[^.]"))))))))
 
-(defun litgraph-build-request (op &optional scenario packs params)
+(defun litgraph--op-object (op)
+  "OP as an op object: OP itself, or {\"op\": OP} for a name."
+  (if (stringp op) (litgraph-obj "op" op) op))
+
+(defun litgraph--params-object (params)
+  "PARAMS (alist of (NAME . NUMBER)) as a JSON object, or nil when empty."
+  (when params
+    (let ((table (make-hash-table :test #'equal)))
+      (dolist (p (reverse params)) (puthash (format "%s" (car p)) (cdr p) table))
+      table)))
+
+(defun litgraph-build-request (op &optional target params)
   "Build a request hash table for OP.
-OP is an op name string, or a hash table with an \"op\" key.  SCENARIO
-defaults to the session scenario, PACKS to the session packs, PARAMS to
-the session parameters.  SCENARIO is a library name, a JSON file, or a
-parsed document (hash table); a document or file may itself be a whole
-request or named scenario, in which case its packs and flags are kept
-and its op is replaced."
-  (let* ((op (if (stringp op) (litgraph-obj "op" op) op))
-         (scenario (or scenario (litgraph--scenario)))
-         (packs (or packs (litgraph--packs)))
-         (params (or params litgraph-params))
-         (request (litgraph-obj))
-         (scenario-value nil))
-    (if-let* ((doc (cond ((hash-table-p scenario) scenario)
-                         ((litgraph--json-file-p scenario)
-                          (litgraph--read-document scenario)))))
-        (pcase (litgraph--document-kind doc)
-          ('request
-           (maphash (lambda (k v) (unless (equal k "op") (puthash k v request)))
-                    doc)
-           (setq scenario-value (gethash "scenario" doc)))
-          ('named
-           (setq scenario-value (gethash "scenario" doc))
-           (when (gethash "packs" doc)
-             (puthash "packs" (gethash "packs" doc) request)))
-          (_ (setq scenario-value doc)))
-      (setq scenario-value scenario))
-    (setq scenario-value (litgraph--with-params scenario-value params))
-    (when packs (puthash "packs" (litgraph-vec packs) request))
-    (when scenario-value (puthash "scenario" scenario-value request))
-    (puthash "op" op request)
-    request))
+OP is an op name string, or a hash table with an \"op\" key.  TARGET
+defaults to the session target and PARAMS (an alist of (NAME . NUMBER))
+to the session parameters."
+  (litgraph-obj "target" (or target (litgraph--target))
+                "op" (litgraph--op-object op)
+                "params" (litgraph--params-object (or params litgraph-params))))
+
+(defun litgraph--format-param (value)
+  "VALUE (a number) as `--set' writes it."
+  (if (and (floatp value) (= value (ffloor value)) (< (abs value) 1e15))
+      (format "%d" (truncate value))
+    (format "%s" value)))
+
+(defun litgraph-request-args (request)
+  "The `litigate' arguments that run REQUEST (a hash table).
+Signal a `user-error' when REQUEST names no target."
+  (let ((target (gethash "target" request))
+        (params (gethash "params" request))
+        (sets nil))
+    (unless target
+      (user-error "No matter selected: choose a .case file or package with `litgraph-set-target'"))
+    (when (hash-table-p params)
+      (maphash (lambda (name value)
+                 (push (format "%s=%s" name (litgraph--format-param value)) sets))
+               params))
+    (append (list "run" (litgraph-resolve-target target)
+                  "--op" (litgraph-serialize (gethash "op" request)))
+            (mapcan (lambda (set) (list "--set" set)) (sort sets #'string<))
+            (list "--format" "json"))))
 
 
 ;;;; Process layer
 
 (defvar litgraph-process-function #'litgraph--spawn
   "Function (ARGS INPUT CALLBACK) that runs the binary asynchronously.
-ARGS follow `litgraph-engine-arguments'.  INPUT is a string or nil.
+ARGS are the `litigate' arguments.  INPUT is a string or nil.
 CALLBACK is called with (EXIT STDOUT STDERR) when the process ends,
 where EXIT is an exit status, or the symbol `timeout' or `signal'.
 Tests replace this to stub out the binary.")
@@ -323,34 +316,11 @@ Tests replace this to stub out the binary.")
        "Cannot find `%s'; install litigate or set `litgraph-executable'"
        litgraph-executable)))
 
-(defun litgraph-project-root ()
-  "Return the directory to run the engine in, or nil if there is none.
-That is `litgraph-project-directory', else the nearest directory
-holding `lit/' at or above `default-directory'."
-  (if litgraph-project-directory
-      (file-name-as-directory (expand-file-name litgraph-project-directory))
-    (when (and (file-directory-p default-directory)
-               (not (file-remote-p default-directory)))
-      (locate-dominating-file
-       default-directory
-       (lambda (dir) (file-directory-p (expand-file-name "lit" dir)))))))
-
-(defun litgraph--environment ()
-  "The process environment for a litgraph call."
-  (append
-   (when litgraph-packs-dir
-     (list (concat "LITGRAPH_PACKS=" (expand-file-name litgraph-packs-dir))))
-   (when litgraph-scenarios-dir
-     (list (concat "LITGRAPH_SCENARIOS="
-                   (expand-file-name litgraph-scenarios-dir))))
-   process-environment))
-
 (defun litgraph--spawn (args input callback)
   "Run the binary with ARGS asynchronously, feeding INPUT on stdin.
 Call CALLBACK with (EXIT STDOUT STDERR) when done.  Return the process."
   (let* ((out (generate-new-buffer " *litgraph-out*" t))
          (err (generate-new-buffer " *litgraph-err*" t))
-         (process-environment (litgraph--environment))
          (default-directory (or (litgraph-project-root)
                                 (if (and (file-directory-p default-directory)
                                          (not (file-remote-p default-directory)))
@@ -363,8 +333,7 @@ Call CALLBACK with (EXIT STDOUT STDERR) when done.  Return the process."
            :name "litgraph"
            :buffer out
            :stderr err
-           :command (cons (litgraph-executable-path)
-                          (append litgraph-engine-arguments args))
+           :command (cons (litgraph-executable-path) args)
            :coding 'utf-8-unix
            :connection-type 'pipe
            :noquery t
@@ -417,27 +386,57 @@ Call CALLBACK with (EXIT STDOUT STDERR) when done.  Return the process."
                                   stderr))))
          (format "exit %s: %s" exit (truncate-string-to-width text 300))))))
 
+(defun litgraph--diagnostic-message (envelope)
+  "The first error diagnostic of the `litigate' ENVELOPE, as a message."
+  (when-let* ((diagnostic
+               (or (seq-find (lambda (d) (equal (litgraph-get d 'severity) "error"))
+                             (litgraph-get envelope 'diagnostics))
+                   (car (litgraph-get envelope 'diagnostics)))))
+    (let ((span (litgraph-get diagnostic 'span)))
+      (format "%s: %s%s" (or (litgraph-get diagnostic 'code) "error")
+              (or (litgraph-get diagnostic 'message) "")
+              (if span
+                  (format " (%s:%s)" (litgraph-get span 'file)
+                          (litgraph-get span 'line))
+                "")))))
+
+(defun litgraph--engine-response (stdout)
+  "The engine response inside the `litigate run' envelope STDOUT, or nil.
+Return (RESPONSE . RAW), RAW being the response's own JSON text."
+  (when-let* ((strict (ignore-errors (litgraph-parse-strict stdout)))
+              ((hash-table-p strict))
+              (inner (gethash "result" strict))
+              ((hash-table-p inner))
+              ((gethash "ok" inner)))
+    (let ((raw (litgraph-serialize inner)))
+      (cons (litgraph-parse raw) raw))))
+
 (defun litgraph--decode (exit stdout stderr)
   "Turn a finished run (EXIT, STDOUT, STDERR) into (OK . PAYLOAD).
-PAYLOAD is the parsed response when OK, else an error message string.
-An engine error (`ok': false) still carries its parsed response as the
-third element: (nil MESSAGE . RESPONSE)."
-  (let ((parsed (and (not (memq exit '(timeout signal)))
-                     (not (string-empty-p (string-trim stdout)))
-                     (ignore-errors (litgraph-parse stdout)))))
+PAYLOAD is (RESPONSE . RAW) when OK: the engine response `litigate run'
+wraps, parsed and as JSON text.  Else it is (MESSAGE . RESPONSE): an
+error message, with the engine response for an engine error (`ok':
+false), or nil when the run failed before the engine (a compile
+error, a usage error or a dead process)."
+  (let* ((envelope (and (not (memq exit '(timeout signal)))
+                        (not (string-empty-p (string-trim stdout)))
+                        (ignore-errors (litgraph-parse stdout))))
+         (engine (and (consp envelope) (litgraph--engine-response stdout)))
+         (response (car engine)))
     (cond
-     ((and parsed (listp parsed) (assq 'ok parsed))
-      (if (litgraph-get parsed 'ok)
-          (cons t parsed)
-        (let ((error-object (litgraph-get parsed 'error)))
-          (cons nil (cons (format "%s: %s%s"
-                                  (or (litgraph-get error-object 'code) "error")
-                                  (or (litgraph-get error-object 'message) "")
-                                  (if-let* ((hint (litgraph-get error-object
-                                                                'hint)))
-                                      (format " (%s)" hint)
-                                    ""))
-                          parsed)))))
+     ((and response (litgraph-get response 'ok))
+      (cons t engine))
+     (response
+      (let ((error-object (litgraph-get response 'error)))
+        (cons nil (cons (format "%s: %s%s"
+                                (or (litgraph-get error-object 'code) "error")
+                                (or (litgraph-get error-object 'message) "")
+                                (if-let* ((hint (litgraph-get error-object 'hint)))
+                                    (format " (%s)" hint)
+                                  ""))
+                        response))))
+     ((and (consp envelope) (litgraph--diagnostic-message envelope))
+      (cons nil (cons (litgraph--diagnostic-message envelope) nil)))
      (t (cons nil (cons (litgraph--describe-failure exit stdout stderr) nil))))))
 
 (defun litgraph--report-error (message &optional _response)
@@ -445,25 +444,24 @@ third element: (nil MESSAGE . RESPONSE)."
   (setq litgraph-last-error message)
   (message "litgraph: %s" message))
 
-(defun litgraph-call (args input callback &optional errback)
-  "Run the binary with ARGS and INPUT; hand the parsed response to CALLBACK.
+(defun litgraph-call (args callback &optional errback)
+  "Run `litigate run' with ARGS; hand the engine response to CALLBACK.
 ERRBACK receives an error message string (default: report in the echo
-area) and the raw response when there was one."
-  (funcall litgraph-process-function args input
+area) and the engine response when there was one."
+  (funcall litgraph-process-function args nil
            (lambda (exit stdout stderr)
              (let ((decoded (litgraph--decode exit stdout stderr)))
                (if (car decoded)
-                   (progn (setq litgraph-last-response (cdr decoded)
-                                litgraph--last-raw stdout)
-                          (funcall callback (cdr decoded)))
+                   (progn (setq litgraph-last-response (cadr decoded)
+                                litgraph--last-raw (cddr decoded))
+                          (funcall callback (cadr decoded)))
                  (funcall (or errback #'litgraph--report-error)
                           (cadr decoded) (cddr decoded)))))))
 
 (defun litgraph-request (request callback &optional errback)
-  "Send REQUEST (hash table or JSON string); call CALLBACK with the response.
-ERRBACK, if given, receives the error message and the raw response."
-  (let ((json (if (stringp request) request (litgraph-serialize request))))
-    (litgraph-call '("q" "-") json callback errback)))
+  "Run REQUEST (a hash table); call CALLBACK with the engine response.
+ERRBACK, if given, receives the error message and the engine response."
+  (litgraph-call (litgraph-request-args request) callback errback))
 
 (defun litgraph-request-sync (request &optional timeout)
   "Send REQUEST and wait for the response, at most TIMEOUT seconds.
@@ -487,57 +485,49 @@ Emacs stays responsive to timers and process output meanwhile, and
   (not (litgraph-get response 'ok)))
 
 
-;;;; Engine metadata (describe / schema / graph), cached
+;;;; Engine metadata (describe / graph), cached
 
 (defvar litgraph--cache (make-hash-table :test #'equal)
-  "Cache of engine metadata keyed by binary, packs dir and request.")
+  "Cache of engine metadata keyed by binary, project and request.")
 
 (defun litgraph-clear-cache ()
-  "Forget cached describe, schema and graph data."
+  "Forget cached describe and graph data."
   (interactive)
   (clrhash litgraph--cache)
   (message "litgraph: metadata cache cleared"))
 
 (defun litgraph--cache-key (&rest parts)
-  "Return a cache key: PARTS plus what identifies the engine build."
-  (cl-list* litgraph-executable litgraph-engine-arguments litgraph-packs-dir
-            litgraph-scenarios-dir (litgraph-project-root) parts))
+  "Return a cache key: PARTS plus what identifies the engine and target."
+  (cl-list* litgraph-executable (litgraph-project-root)
+            (let ((target (litgraph--target)))
+              (and target (litgraph-resolve-target target)))
+            parts))
 
-(defun litgraph--fetch-cached (key args input callback &optional errback)
-  "Call CALLBACK with the cached response for KEY, fetching via ARGS and INPUT."
+(defun litgraph--fetch-cached (key request callback &optional errback)
+  "Call CALLBACK with the cached response for KEY, fetching it by REQUEST."
   (let ((hit (gethash key litgraph--cache)))
     (if hit
         (funcall callback hit)
-      (litgraph-call args input
-                     (lambda (response)
-                       (puthash key response litgraph--cache)
-                       (funcall callback response))
-                     errback))))
+      (litgraph-request request
+                        (lambda (response)
+                          (puthash key response litgraph--cache)
+                          (funcall callback response))
+                        errback))))
+
+(defun litgraph--no-target (errback)
+  "Tell ERRBACK (or the echo area) that no target is selected."
+  (funcall (or errback #'litgraph--report-error)
+           "no matter selected (`litgraph-set-target')" nil))
 
 (defun litgraph-with-describe (callback &optional errback)
-  "Call CALLBACK with the engine's `describe' result (cached).
-ERRBACK receives the error message if the call fails."
-  (litgraph--fetch-cached (litgraph--cache-key 'describe)
-                          '("describe") nil callback errback))
-
-(defun litgraph-with-schema (callback &optional errback)
-  "Call CALLBACK with the request JSON Schema (cached), or nil on failure.
-Unlike other calls, `litgraph schema' prints the bare schema, not an
-envelope.  ERRBACK, if given, gets a message instead of CALLBACK's nil."
-  (let* ((key (litgraph--cache-key 'schema))
-         (hit (gethash key litgraph--cache)))
-    (if hit
-        (funcall callback hit)
-      (funcall litgraph-process-function '("schema" "request") nil
-               (lambda (exit stdout stderr)
-                 (let ((schema (and (eq exit 0)
-                                    (ignore-errors (litgraph-parse stdout)))))
-                   (cond (schema (puthash key schema litgraph--cache)
-                                 (funcall callback schema))
-                         (errback (funcall errback
-                                           (litgraph--describe-failure
-                                            exit stdout stderr)))
-                         (t (funcall callback nil)))))))))
+  "Call CALLBACK with the engine's `describe' of the current target (cached).
+ERRBACK receives the error message if the call fails or there is no
+target."
+  (if (litgraph--target)
+      (litgraph--fetch-cached (litgraph--cache-key 'describe)
+                              (litgraph-build-request "describe")
+                              callback errback)
+    (litgraph--no-target errback)))
 
 (defun litgraph--cached-describe ()
   "The cached `describe' result, or nil when not fetched yet."
@@ -555,17 +545,18 @@ envelope.  ERRBACK, if given, gets a message instead of CALLBACK's nil."
 (defun litgraph-with-graph (callback &optional errback)
   "Call CALLBACK with the current context's `graph' result (cached).
 ERRBACK receives the error message if the call fails."
-  (let ((request (litgraph--graph-request)))
-    (litgraph--fetch-cached
-     (litgraph--graph-key) '("q" "-") (litgraph-serialize request)
-     (lambda (response) (funcall callback (litgraph-get response 'result)))
-     errback)))
+  (if (litgraph--target)
+      (litgraph--fetch-cached
+       (litgraph--graph-key) (litgraph--graph-request)
+       (lambda (response) (funcall callback (litgraph-get response 'result)))
+       errback)
+    (litgraph--no-target errback)))
 
 (defun litgraph-prefetch ()
   "Warm the metadata cache in the background; never signals."
   (ignore-errors
-    (litgraph-with-describe #'ignore #'ignore)
-    (litgraph-with-schema #'ignore #'ignore)))
+    (when (litgraph--target)
+      (litgraph-with-describe #'ignore #'ignore))))
 
 (defconst litgraph--known-ops
   '("describe" "packs" "lint" "validate" "graph" "metric" "explain" "solve"
@@ -595,13 +586,8 @@ ERRBACK receives the error message if the call fails."
           list))
 
 (defun litgraph-pack-candidates ()
-  "Pack ids with titles, from `describe'."
+  "Ids and titles of the target's packs, from `describe'."
   (litgraph--named (litgraph-get (litgraph--cached-describe) 'packs) 'id 'title))
-
-(defun litgraph-scenario-candidates ()
-  "Named library scenarios with summaries, from `describe'."
-  (litgraph--named (litgraph-get (litgraph--cached-describe) 'scenario_library)
-                   'id 'summary))
 
 (defun litgraph-calibration-candidates ()
   "Return the ids and titles of calibration data, from `describe'."
@@ -681,71 +667,33 @@ ERRBACK receives the error message if the call fails."
 (defconst litgraph--node-args '("node" "from" "to" "edge")
   "Op argument names that hold graph ids.")
 
-(defun litgraph--schema-defs (schema)
-  "The `$defs' of SCHEMA."
-  (litgraph-get schema '$defs))
-
-(defun litgraph--resolve-ref (schema property)
-  "Follow a `$ref' in PROPERTY against SCHEMA."
-  (if-let* ((ref (litgraph-get property '$ref))
-            (name (car (last (split-string ref "/")))))
-      (append (litgraph-get (litgraph--schema-defs schema) (intern name))
-              property)
-    property))
-
-(defun litgraph--property-type (property)
-  "The simple type symbol of schema PROPERTY (string, number, ..., json)."
-  (let* ((type (litgraph-get property 'type))
-         (types (if (listp type) type (list type)))
-         (types (delete "null" types)))
-    (cond ((litgraph-get property 'enum) 'enum)
-          ((equal types '("string")) 'string)
-          ((member "integer" types) 'integer)
-          ((member "number" types) 'number)
-          ((member "boolean" types) 'boolean)
-          ((member "array" types)
-           (if (equal (litgraph-get property 'items 'type) "string")
-               'strings
-             'json))
-          (t 'json))))
-
-(defun litgraph-op-arg-specs (schema op)
-  "Argument specs for OP from SCHEMA: list of plists.
-Each plist has :name, :type, :required, :doc, :default and :enum."
-  (when-let* ((variant
-               (seq-find (lambda (v)
-                           (equal (litgraph-get v 'properties 'op 'const) op))
-                         (litgraph-get schema '$defs 'Op 'oneOf))))
-    (let ((required (litgraph-get variant 'required)))
-      (cl-loop
-       for (key . property) in (litgraph-get variant 'properties)
-       for name = (symbol-name key)
-       unless (equal name "op")
-       collect
-       (let ((resolved (litgraph--resolve-ref schema property)))
-         (list :name name
-               :type (litgraph--property-type resolved)
-               :required (and (member name required) t)
-               :doc (litgraph-get resolved 'description)
-               :default (litgraph-get resolved 'default)
-               :enum (litgraph-get resolved 'enum)
-               :oneof (mapcar (lambda (branch) (litgraph-get branch 'const))
-                              (litgraph-get resolved 'oneOf))))))))
-
-(defun litgraph-op-arg-specs-from-describe (describe op)
-  "Fallback specs for OP parsed from the prose in DESCRIBE's `ops'."
+(defun litgraph-op-arg-specs (describe op)
+  "Argument specs for OP, parsed from its summary in DESCRIBE's `ops'.
+The summary opens with the op's fields, as in \"{param, lo?, what:
+summary|scc}\": a trailing `?' marks an optional one and a `|' list
+its choices.  Return a list of plists with :name, :type, :required,
+:doc and :enum."
   (when-let* ((doc (litgraph-get describe 'ops (intern op)))
               ((string-match "{\\([^}]*\\)}" doc)))
-    (mapcar
-     (lambda (part)
-       (let ((part (string-trim part)))
-         (string-match "\\`\\([a-z_]+\\)\\(\\?\\)?" part)
-         (list :name (match-string 1 part)
-               :type 'guess
-               :required (not (match-string 2 part))
-               :doc (and (string-match ":\\s-*\\(.*\\)\\'" part)
-                         (match-string 1 part)))))
-     (split-string (match-string 1 doc) "," t))))
+    (delq nil
+          (mapcar
+           (lambda (part)
+             (let* ((part (string-trim part))
+                    (name (and (string-match "\\`\\([a-z_]+\\)\\(\\?\\)?" part)
+                               (match-string 1 part)))
+                    (optional (and name (match-string 2 part)))
+                    (doc (and (string-match ":\\s-*\\(.*\\)\\'" part)
+                              (string-trim (match-string 1 part))))
+                    (enum (and doc
+                               (string-match-p "\\`[a-z_-]+\\(?:|[a-z_-]+\\)+\\'" doc)
+                               (split-string doc "|"))))
+               (when name
+                 (list :name name
+                       :type (if enum 'enum 'guess)
+                       :required (not optional)
+                       :doc doc
+                       :enum enum))))
+           (split-string (match-string 1 doc) "," t)))))
 
 (defun litgraph-coerce-value (type text)
   "Convert the string TEXT to a JSON value of TYPE."
@@ -774,8 +722,6 @@ GRAPH and DESCRIBE are the parsed graph and describe results."
   (let ((name (plist-get spec :name)))
     (cond
      ((plist-get spec :enum) (plist-get spec :enum))
-     ((plist-get spec :oneof)
-      (delq nil (plist-get spec :oneof)))
      ((equal name "edge") (litgraph-edge-candidates graph))
      ((equal name "to") (litgraph-terminal-candidates graph))
      ((member name litgraph--node-args) (litgraph-node-candidates graph))
@@ -811,13 +757,12 @@ GRAPH and DESCRIBE supply completion candidates."
     (unless (string-empty-p (string-trim text))
       (litgraph-coerce-value type text))))
 
-(defun litgraph-read-op-arguments (op schema describe graph &optional all)
+(defun litgraph-read-op-arguments (op describe graph &optional all)
   "Prompt for the arguments of OP; return the op object (a hash table).
 Required arguments are always asked; optional ones are chosen from a
-list (or all asked when ALL).  SCHEMA, DESCRIBE and GRAPH are the parsed
-metadata used for types and completion."
-  (let* ((specs (or (litgraph-op-arg-specs schema op)
-                    (litgraph-op-arg-specs-from-describe describe op)))
+list (or all asked when ALL).  DESCRIBE and GRAPH are the parsed
+metadata used for argument names and completion."
+  (let* ((specs (litgraph-op-arg-specs describe op))
          (object (litgraph-obj "op" op))
          (required (seq-filter (lambda (s) (plist-get s :required)) specs))
          (optional (seq-remove (lambda (s) (plist-get s :required)) specs))
@@ -878,29 +823,30 @@ prefix argument ALL, ask for every optional argument as well."
          current-prefix-arg))
   (litgraph--with-metadata
    op
-   (lambda (schema describe graph)
+   (lambda (describe graph)
      (litgraph-run-request
       (litgraph-build-request
-       (litgraph-read-op-arguments op schema describe graph all))))))
+       (litgraph-read-op-arguments op describe graph all))))))
 
 (defun litgraph--op-candidates ()
   "Ops with their one-line docs."
   (mapcar (lambda (op) (cons op (litgraph-op-doc op))) (litgraph-op-names)))
 
 (defun litgraph--with-metadata (op callback)
-  "Fetch schema, describe and (when useful for OP) the graph, then call CALLBACK.
-CALLBACK receives (SCHEMA DESCRIBE GRAPH) as parsed results."
+  "Fetch describe and (when useful for OP) the graph, then call CALLBACK.
+CALLBACK receives (DESCRIBE GRAPH) as parsed results.  Signal a
+`user-error' when no target is selected."
+  (unless (litgraph--target)
+    (user-error "No matter selected: choose a .case file or package with `litgraph-set-target'"))
   (litgraph-with-describe
    (lambda (describe)
-     (litgraph-with-schema
-      (lambda (schema)
-        (let ((describe (litgraph-get describe 'result)))
-          (if (litgraph--needs-graph-p op)
-              (litgraph-with-graph
-               (lambda (graph) (funcall callback schema describe graph))
-               (lambda (_message &optional _response)
-                 (funcall callback schema describe nil)))
-            (funcall callback schema describe nil))))))))
+     (let ((describe (litgraph-get describe 'result)))
+       (if (litgraph--needs-graph-p op)
+           (litgraph-with-graph
+            (lambda (graph) (funcall callback describe graph))
+            (lambda (_message &optional _response)
+              (funcall callback describe nil)))
+         (funcall callback describe nil))))))
 
 (defmacro litgraph--define-op-command (name op doc)
   "Define the interactive command NAME to run OP.  DOC is its docstring."
@@ -912,7 +858,7 @@ CALLBACK receives (SCHEMA DESCRIBE GRAPH) as parsed results."
 
 ;;;###autoload (autoload 'litgraph-solve "litgraph" nil t)
 (litgraph--define-op-command litgraph-solve "solve"
-  "Solve the current scenario: value and best line.")
+  "Solve the current target: value and best line.")
 ;;;###autoload (autoload 'litgraph-chain "litgraph" nil t)
 (litgraph--define-op-command litgraph-chain "chain"
   "Absorption probabilities and expected totals under the optimal policy.")
@@ -939,22 +885,21 @@ CALLBACK receives (SCHEMA DESCRIBE GRAPH) as parsed results."
   "Structural analyses: cycles, dominators, min-cut, reachability.")
 ;;;###autoload (autoload 'litgraph-lint "litgraph" nil t)
 (litgraph--define-op-command litgraph-lint "lint"
-  "Content diagnostics for the selected packs.")
+  "Content diagnostics for the target's packs.")
 ;;;###autoload (autoload 'litgraph-list-packs "litgraph" nil t)
 (litgraph--define-op-command litgraph-list-packs "packs"
-  "List the loaded packs with data quality.")
+  "List the target's packs with data quality.")
 
 ;;;###autoload
 (defun litgraph-compare ()
-  "Compare the current scenario with a variant, over an inner op."
+  "Compare the current target with a variant, over an inner op."
   (interactive)
   (litgraph--with-metadata
    "compare"
-   (lambda (schema describe graph)
+   (lambda (describe graph)
      (let* ((inner (litgraph-read "Inner op" (litgraph--op-candidates)
                                   'litgraph-op "chain" t))
-            (inner-object (litgraph-read-op-arguments inner schema describe
-                                                      graph))
+            (inner-object (litgraph-read-op-arguments inner describe graph))
             (variant (litgraph-parse-strict
                       (read-string "Variant (JSON merge-patch): "
                                    "{\"params\": {}}"))))
@@ -967,33 +912,28 @@ CALLBACK receives (SCHEMA DESCRIBE GRAPH) as parsed results."
 ;;;; Session commands
 
 ;;;###autoload
-(defun litgraph-set-scenario (scenario)
-  "Select SCENARIO (library name or JSON file) for this session.
-An empty answer clears the selection."
-  (interactive
-   (progn
-     (litgraph-prefetch)
-     (list (let ((choice (litgraph-read
-                          "Scenario (name, or RET for a file)"
-                          (litgraph-scenario-candidates) 'litgraph-scenario)))
-             (if (string-empty-p choice)
-                 (read-file-name "Scenario file: " nil nil t nil
-                                 (lambda (f) (or (file-directory-p f)
-                                                 (string-suffix-p ".json" f))))
-               choice)))))
-  (setq litgraph-scenario (and (not (string-empty-p scenario)) scenario))
-  (message "litgraph scenario: %s" (litgraph-context-label)))
-
-;;;###autoload
-(defun litgraph-set-packs (packs)
-  "Select PACKS (list of pack ids) for this session; nil means default."
-  (interactive
-   (progn (litgraph-prefetch)
-          (list (litgraph-read-multiple "Packs (empty for default)"
-                                        (litgraph-pack-candidates)
-                                        'litgraph-pack))))
-  (setq litgraph-packs (seq-remove #'string-empty-p packs))
+(defun litgraph-set-target (target)
+  "Select TARGET for this session: a `.case' matter or a package.
+Interactively, complete from the project's `cases/' and `lit/', or
+name any file or directory.  An empty answer clears the selection."
+  (interactive (list (litgraph-read-target)))
+  (setq litgraph-target (and target (not (string-empty-p target))
+                             (litgraph-resolve-target target)))
+  (litgraph-prefetch)
   (message "litgraph: %s" (litgraph-context-label)))
+
+(defun litgraph-read-target ()
+  "Read a target: a project matter or package, or (on RET) any file."
+  (let* ((root (litgraph-project-root))
+         (choice (litgraph-read "Matter or package (RET for a file)"
+                                (litgraph-target-candidates) 'litgraph-target)))
+    (cond ((not (string-empty-p choice))
+           (if root (expand-file-name choice root) choice))
+          (t (read-file-name "Matter (.case), .lit file or package directory: "
+                             root nil t nil
+                             (lambda (f) (or (file-directory-p f)
+                                             (string-suffix-p ".case" f)
+                                             (string-suffix-p ".lit" f))))))))
 
 ;;;###autoload
 (defun litgraph-set-param (name value)
@@ -1012,16 +952,16 @@ A nil VALUE removes the override."
 
 ;;;###autoload
 (defun litgraph-clear-context ()
-  "Forget the session scenario, packs and parameters."
+  "Forget the session target and parameters."
   (interactive)
-  (setq litgraph-scenario nil litgraph-packs nil litgraph-params nil)
+  (setq litgraph-target nil litgraph-params nil)
   (message "litgraph: context cleared"))
 
 ;;;###autoload
 (defun litgraph-describe ()
-  "Show the engine's `describe' manual."
+  "Show the engine's `describe' manual for the current target."
   (interactive)
-  (litgraph-run-request (litgraph-obj "op" (litgraph-obj "op" "describe"))))
+  (litgraph-run-request (litgraph-build-request "describe")))
 
 ;;;###autoload
 (defun litgraph-refresh ()
@@ -1033,12 +973,15 @@ A nil VALUE removes the override."
 
 ;;;###autoload
 (defun litgraph-version ()
-  "Report the litgraph engine version."
+  "Report the `litigate' version."
   (interactive)
-  (litgraph-with-describe
-   (lambda (response)
-     (message "litgraph: %s (%s)" (litgraph-get response 'result 'engine)
-              (litgraph-executable-path)))))
+  (funcall litgraph-process-function '("--version") nil
+           (lambda (exit stdout stderr)
+             (if (eq exit 0)
+                 (message "litgraph: %s (%s)" (string-trim stdout)
+                          (litgraph-executable-path))
+               (litgraph--report-error
+                (litgraph--describe-failure exit stdout stderr))))))
 
 ;;;###autoload (autoload 'litgraph-command-map "litgraph" nil nil 'keymap)
 (defvar litgraph-command-map
@@ -1055,11 +998,7 @@ A nil VALUE removes the override."
     (define-key map "g" #'litgraph-graph)
     (define-key map "d" #'litgraph-deadlines-to-org)
     (define-key map "T" #'litgraph-timeline)
-    (define-key map "o" #'litgraph-open-scenario)
-    (define-key map "n" #'litgraph-new-scenario)
-    (define-key map "v" #'litgraph-validate-buffer)
-    (define-key map "C" #'litgraph-set-scenario)
-    (define-key map "P" #'litgraph-set-packs)
+    (define-key map "C" #'litgraph-set-target)
     (define-key map "." #'litgraph-set-param)
     (define-key map "k" #'litgraph-cancel)
     map)

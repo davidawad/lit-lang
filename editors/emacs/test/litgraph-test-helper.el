@@ -6,8 +6,9 @@
 
 ;; The unit tests never start the real binary.  They replace
 ;; `litgraph-process-function' with `litgraph-test-stub', which answers from
-;; recorded real engine output in test/fixtures/.  The integration tests
-;; run the `litigate' binary on PATH.
+;; recorded real `litigate run' output in test/fixtures/ (`make
+;; fixtures' regenerates it).  The integration tests run the real
+;; binary: LITIGATE_BIN, else the `litigate' on PATH.
 
 ;;; Code:
 
@@ -27,8 +28,12 @@
     (buffer-string)))
 
 (defun litgraph-test-fixture-response (name)
-  "Fixture NAME parsed like a live response."
-  (litgraph-parse (litgraph-test-fixture name)))
+  "Fixture NAME parsed like a live response.
+An engine fixture is the envelope `litigate run' prints: this is the
+engine response inside it.  Any other fixture is parsed whole."
+  (let ((text (litgraph-test-fixture name)))
+    (or (car (litgraph--engine-response text))
+        (litgraph-parse text))))
 
 (defun litgraph-test-skip-or-fail (reason)
   "Skip with REASON, unless LITGRAPH_IT_REQUIRE requests a hard failure."
@@ -40,8 +45,7 @@
   "The (ARGS . INPUT) of every stubbed process call, newest first.")
 
 (defvar litgraph-test-commands nil
-  "The (EXECUTABLE . PREFIX) of every stubbed process call, newest first.
-PREFIX is `litgraph-engine-arguments' at the time of the call.")
+  "The executable of every stubbed process call, newest first.")
 
 (defvar litgraph-test-op-fixtures
   '(("describe" . "describe") ("solve" . "solve") ("chain" . "chain")
@@ -51,35 +55,59 @@ PREFIX is `litgraph-engine-arguments' at the time of the call.")
     ("structure" . "structure") ("lint" . "lint") ("packs" . "packs")
     ("deadlines" . "deadlines-node") ("calibration" . "calibration")
     ("metric" . "metric"))
-  "Op name to the fixture answering it.")
+  "Op name to the fixture answering it; any other op gets `error'.")
 
-(defun litgraph-test--request-op (input)
-  "The op name in the request JSON INPUT."
-  (let* ((table (litgraph-parse-strict input))
-         (op (gethash "op" table)))
-    (if (hash-table-p op) (gethash "op" op) op)))
+(defun litgraph-test-call-op (call)
+  "The op object (a hash table) of the stubbed `litigate run' CALL."
+  (let ((args (car call)))
+    (when (equal (car args) "run")
+      (litgraph-parse-strict (cadr (member "--op" args))))))
 
-(defvar litgraph-test-validate-fixture "validate-unknown-field"
-  "Fixture returned to `litigate engine validate' calls.")
+(defun litgraph-test-call-op-name (call)
+  "The op name of the stubbed `litigate run' CALL, or nil."
+  (when-let* ((op (litgraph-test-call-op call))) (gethash "op" op)))
+
+(defun litgraph-test-run-calls ()
+  "The stubbed `litigate run' calls, oldest first."
+  (seq-filter (lambda (call) (equal (car (car call)) "run"))
+              (reverse litgraph-test-calls)))
 
 (defvar litgraph-test-timeline-fixture "timeline-ttab-opposition"
   "Fixture returned to `litigate timeline' calls.")
 
+(defun litgraph-test--run-args-valid-p (args)
+  "Non-nil when ARGS (after `run') parse as `litigate run' would.
+That is a target, then `--op JSON', `--set NAME=NUMBER' and `--format
+json' options."
+  (let ((rest args) (valid t) (target nil))
+    (while (and rest valid)
+      (let ((arg (pop rest)))
+        (cond
+         ((equal arg "--op")
+          (setq valid (and rest (ignore-errors (litgraph-parse-strict (pop rest))))))
+         ((equal arg "--set")
+          (setq valid (and rest (string-match-p "\\`[a-z_]+=-?[0-9.e]+\\'" (pop rest)))))
+         ((equal arg "--format")
+          (setq valid (equal (pop rest) "json")))
+         ((string-prefix-p "--" arg) (setq valid nil))
+         ((null target) (setq target arg))
+         (t (setq valid nil)))))
+    (and valid target)))
+
 (defun litgraph-test-stub (args input callback)
   "Stand-in for `litgraph--spawn': answer ARGS/INPUT from fixtures via CALLBACK."
   (push (cons args input) litgraph-test-calls)
-  (push (cons litgraph-executable litgraph-engine-arguments)
-        litgraph-test-commands)
+  (push litgraph-executable litgraph-test-commands)
   (pcase args
-    (`("describe") (funcall callback 0 (litgraph-test-fixture "describe") ""))
-    (`("schema" "request")
-     (funcall callback 0 (litgraph-test-fixture "schema-request") ""))
-    (`("q" "-")
-     (let* ((op (litgraph-test--request-op input))
-            (fixture (cdr (assoc op litgraph-test-op-fixtures))))
-       (if fixture
-           (funcall callback 0 (litgraph-test-fixture fixture) "")
-         (funcall callback 2 (litgraph-test-fixture "error") ""))))
+    (`("run" . ,rest)
+     (if (not (litgraph-test--run-args-valid-p rest))
+         (funcall callback 1 "" "error: invalid `litigate run' arguments")
+       (let* ((op (litgraph-test-call-op (cons args input)))
+              (fixture (cdr (assoc (gethash "op" op) litgraph-test-op-fixtures))))
+         (if fixture
+             (funcall callback 0 (litgraph-test-fixture fixture) "")
+           (funcall callback 2 (litgraph-test-fixture "error") "")))))
+    (`("--version") (funcall callback 0 "litigate 0.6.0 (commit x, clean)\n" ""))
     (`("timeline" . ,args)
      ;; Model clap's timeline parser: --format takes json|human, and only
      ;; the date, layer, and world options are accepted.  In particular,
@@ -102,8 +130,6 @@ PREFIX is `litgraph-engine-arguments' at the time of the call.")
        (if (and valid file)
            (funcall callback 0 (litgraph-test-fixture litgraph-test-timeline-fixture) "")
          (funcall callback 2 "" "error: unexpected argument or invalid timeline arguments"))))
-    ((and `("validate" . ,_) (guard t))
-     (funcall callback 2 (litgraph-test-fixture litgraph-test-validate-fixture) ""))
     (_ (funcall callback 1 "" "unexpected call")))
   nil)
 
@@ -114,16 +140,19 @@ PREFIX is `litgraph-engine-arguments' at the time of the call.")
          (litgraph-test-calls nil)
          (litgraph-test-commands nil)
          (litgraph--cache (make-hash-table :test #'equal))
-         (litgraph-scenario nil) (litgraph-packs nil) (litgraph-params nil)
-         (litgraph-default-scenario nil) (litgraph-default-packs nil)
+         (litgraph-target nil) (litgraph-params nil)
+         (litgraph-default-target nil)
          (litgraph-last-error nil))
      ,@body))
 
 (defun litgraph-test-real-binary ()
   "Path of the real `litigate' binary, or nil.
-Set LITGRAPH_SKIP_INTEGRATION=1 to pretend there is none."
+LITIGATE_BIN names it; else it is the `litigate' on PATH.  Set
+LITGRAPH_SKIP_INTEGRATION=1 to pretend there is none."
   (unless (getenv "LITGRAPH_SKIP_INTEGRATION")
-    (or (executable-find "litigate")
+    (or (let ((bin (getenv "LITIGATE_BIN")))
+          (and bin (not (string-empty-p bin)) (file-executable-p bin) bin))
+        (executable-find "litigate")
         (let ((path "/opt/homebrew/bin/litigate"))
           (and (file-executable-p path) path)))))
 

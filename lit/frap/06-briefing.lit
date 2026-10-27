@@ -4,6 +4,7 @@ import core.authority.{ CaseOrder, LocalRule }
 import core.frap26.{ frap26 }
 import frap.argument.{ oral-argument-fork }
 import frap.events.{ RecordFiled, ServedPaper }
+import frap.filing.{ PrincipalBriefFiled }
 import frap.{ briefing-group }
 
 /// FRAP 31(a)(1): the appellant's brief is due 40 days after the record is
@@ -74,6 +75,7 @@ decision appellant-brief-window: "Appellant's Opening Brief Due" by applicant ci
   edge-appellant-brief-window-appellant-brief-filed "File opening brief" -> appellant-brief-filed {
     authority cite "FRAP 31(a)(1)"
     effort 100.hours
+    event PrincipalBriefFiled()
     within appellant-brief-period {
       extendable true
       extension_authority "FRAP 26(b); court discretion for good cause"
@@ -97,6 +99,7 @@ state appellant-brief-filed: "Opening Brief Filed" by applicant cite "FRAP 28(a)
   edge-appellant-brief-filed-appellee-brief-filed "Appellee files response brief" -> appellee-brief-filed {
     authority cite "FRAP 31(a)(1); FRAP 28(b)"
     effort 90.hours
+    event PrincipalBriefFiled()
     within appellee-brief-period {
       extendable true
       extension_authority "FRAP 26(b); court discretion for good cause"

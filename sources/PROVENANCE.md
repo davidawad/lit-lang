@@ -834,3 +834,10 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 - Edition: Local Rules of the U.S. District Court for the Western District of Missouri, "Adopted by the Court, Effective July 9, 2026"; linked as "Local Rules Complete Copy" from https://www.mow.uscourts.gov/district/rules.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 f4f96de42a597d8d27eb170b1fd053a6cb127eb38da60519518658a9a42c234d. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+### `ndd/local-rules.txt` — Local Rules, D.N.D.
+
+- Source: https://www.ndd.uscourts.gov/lci/Local_Rules.pdf (official site; 92 pages, sha256 a5ac31739c05d89026e64d3656f9fc1fc8b1c6ceeecced44b33d9b3f84a5a119).
+- Edition: Local Rules of the U.S. District Court for the District of North Dakota, "Effective October 6, 2025"; linked as "Local Rules" (with the "2025 Summary of Revisions") from https://www.ndd.uscourts.gov/court-info/local-rules-and-orders.
+- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 f98554911b9c98b8e88105416993afb9799887105a7c64eb1b53d94cdd9c39c5. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

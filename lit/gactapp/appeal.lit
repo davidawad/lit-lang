@@ -1,0 +1,83 @@
+module ga-court-of-appeals-civil-appeals.appeal
+
+start docketed
+
+state docketed: "Appeal docketed" by office cite "Ga. Ct. App. R. 11"
+{
+  note "No appeal is docketed until the notice of appeal, the record and any requested transcripts are filed in the Clerk's office (Rule 11(a)). The Clerk sends notice of the docketing date and briefing schedule (Rule 13). The filing fee is $300 in all civil cases, accruing on docketing (Rule 5(a)). The notice-of-appeal period (O.C.G.A. § 5-6-38) is not vendored; an extension of it may be sought in this Court before the period expires, only once, for no longer than the time otherwise allowed (Rule 16(a)). A filing deadline falling on a Saturday, Sunday, an official state or national holiday, or a day the Clerk's office is closed for an emergency is extended to the next business day (Rule 3)."
+  edge-docketed-transfer "Within another court's jurisdiction: transferred" -> transferred {
+    authority cite "Ga. Ct. App. R. 11"
+  }
+  edge-docketed-briefing "Docketed in this Court" -> briefing {
+    authority cite "Ga. Ct. App. R. 23"
+  }
+}
+
+terminal transferred: "Transferred by order to the court with jurisdiction" outcome [procedural] cite "Ga. Ct. App. R. 11"
+{
+  note "An appeal or application within the jurisdiction of another court is transferred to that court by order (Rule 11(b))."
+}
+
+state briefing: "Briefing: appellant, appellee, reply" by applicant cite "Ga. Ct. App. R. 23"
+{
+  note "Appellant's brief and enumeration of errors are filed within 20 days after the appeal is docketed; failure may result in dismissal (Rule 23(a)). Appellee's brief should be filed within 40 days after docketing or 20 days after appellant's brief, whichever is later (Rule 23(b)). Appellant may reply within 20 days from the filing of appellee's brief (Rule 23(c)). A request for oral argument is filed as a motion within 20 days from docketing (Rule 28(a)(2)). Efiled briefs are limited to 8,400 words in civil cases, the reply to 4,200; paper briefs to 30 pages, the reply to 15 (Rule 24(f)). Extensions of time to file a brief are discretionary and by written order (Rule 16(b)). The periods are not encoded as deadlines: the Georgia rule for counting a period is not vendored."
+  edge-briefing-dismissed "Appellant's brief not filed in time: appeal dismissed" -> dismissed {
+    authority cite "Ga. Ct. App. R. 23"
+  }
+  edge-briefing-submission "Briefs filed" -> submission { authority cite "Ga. Ct. App. R. 24" }
+}
+
+terminal dismissed: "Appeal dismissed" outcome [loss, dismissal] cite "Ga. Ct. App. R. 23"
+{
+  note "Outcome from the appellant's side (Rule 23(a))."
+}
+
+state submission: "Oral argument or submission on the briefs" by court cite "Ga. Ct. App. R. 28"
+{
+  note "Oral argument is never mandatory unless the Court orders it; a case is calendared for argument only if the Court grants a party's request (Rule 28(a)(1)). Cases docketed to a term must be decided before the expiration of the following term (Rule 12)."
+  edge-submission-decision "Submitted for decision" -> decision {
+    authority cite "Ga. Ct. App. R. 28"
+  }
+}
+
+decision decision: "Judgment" by court cite "Ga. Ct. App. R. 33"
+{
+  note "A case may be affirmed without opinion under Rule 36; such cases have no precedential value."
+  edge-decision-affirmed "Affirmed" -> post-judgment { authority cite "Ga. Ct. App. R. 33" }
+  edge-decision-reversed "Reversed or vacated" -> post-judgment {
+    authority cite "Ga. Ct. App. R. 33"
+  }
+}
+
+decision post-judgment: "Reconsideration, certiorari, or neither" by applicant cite "Ga. Ct. App. R. 37"
+{
+  note "A motion for reconsideration is filed within 10 days from the rendition of the judgment and must be received by 4:30 p.m.; it is limited to 4,200 words and no extension is granted except for providential cause (Rule 37(a), (b)). Notice of intention to petition the Supreme Court of Georgia for certiorari is filed with this Court's Clerk within 10 days after the judgment, or after the order on a motion for reconsideration (Rule 38(a)(1)); reconsideration is not a prerequisite."
+  edge-post-judgment-reconsideration "Motion for reconsideration" -> reconsideration {
+    authority cite "Ga. Ct. App. R. 37"
+  }
+  edge-post-judgment-certiorari "Notice of intention to petition for certiorari" -> certiorari {
+    authority cite "Ga. Ct. App. R. 38"
+  }
+  edge-post-judgment-remittitur "Neither" -> remittitur { authority cite "Ga. Ct. App. R. 39" }
+}
+
+decision reconsideration: "Motion for reconsideration decided" by court cite "Ga. Ct. App. R. 37"
+{
+  note "Reconsideration is granted only when the Court overlooked a material fact, a statute or a controlling decision requiring a different judgment, or misconstrued or misapplied the law (Rule 37(e)). No second motion is filed without the Court's permission, and a motion for that permission does not toll the 10 days for a certiorari notice (Rule 37(d)). Oral argument is not permitted (Rule 37(h))."
+  edge-reconsideration-certiorari "Denied: notice of intention to petition for certiorari" -> certiorari {
+    authority cite "Ga. Ct. App. R. 38"
+  }
+  edge-reconsideration-remittitur "Decided: no certiorari" -> remittitur {
+    authority cite "Ga. Ct. App. R. 39"
+  }
+}
+
+terminal certiorari: "Certiorari sought: continue in the Supreme Court of Georgia" outcome [appeal] cite "Ga. Ct. App. R. 38"
+{
+  note "The petition is governed by the Supreme Court of Georgia's rules, which are not vendored; notice of its filing is filed in this Court the same day (Rule 38(a)(2)). Notice of intention to petition the Supreme Court of the United States is filed within 20 days after the Supreme Court of Georgia denies certiorari (Rule 38(b)(1)) and generally does not stay the remittitur (Rule 39(b))."
+}
+
+terminal remittitur: "Remittitur transmitted to the trial court" outcome [final] cite "Ga. Ct. App. R. 39"
+{
+  note "The remittitur is transmitted as soon as practicable after 10 days from the judgment, unless otherwise ordered or a motion for reconsideration or certiorari notice has been filed (Rule 39(a)); the Court may by special order transmit it sooner or shorten the reconsideration period (Rule 37(c))."
+}

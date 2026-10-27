@@ -1,0 +1,40 @@
+# Civil appeals in the Court of Appeals of Georgia, as far as the Court's
+# rules (effective March 26, 2026) state. The periods the rules set are in
+# notes, not deadlines: Rule 3 extends a deadline falling on a weekend or
+# holiday, but how a period is counted (O.C.G.A. § 1-3-1) and the state
+# holidays are not vendored, and lit/core has no Georgia counting rule.
+# The notice-of-appeal period (O.C.G.A. § 5-6-38) and appellate
+# jurisdiction (O.C.G.A. §§ 5-6-34, 5-6-35) are statutes that are not
+# vendored either; the Supreme Court of Georgia's rules are not vendored,
+# so certiorari ends this package.
+[package]
+name = "ga-court-of-appeals-civil-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "ga-court-of-appeals-civil-appeals"
+forum = "gactapp"
+authority = "StateRule"
+title = "Court of Appeals of Georgia, civil appeals"
+description = "Civil appeals in the Court of Appeals of Georgia under the Court's rules effective March 26, 2026: docketing, briefing, oral argument requests, decision, reconsideration, notice of intent to seek certiorari and remittitur."
+in_force = "2026-03-26"
+known_at = "2026-10-27"
+unknown_before = "2026-03-26"
+jurisdiction = "Court of Appeals of Georgia"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.gacoa-rules]
+title = "Rules of the Court of Appeals of Georgia (effective March 26, 2026)"
+url = "https://www.gaappeals.gov/wp-content/uploads/2026/03/COA-Rules-Complete-Eff-26-March-26.pdf"
+path = "sources/ga-state-appellate/gacoa-rules-sectioned.txt"
+path_sha256 = "1ba9ab5e9e3965f192d7beb21c38054173c2a31255ec4229a21213778f4895a8"
+sha256 = "227e393aa93eda9a871f6bf00bdc834dec01bdfe94a2aaeadf841aac75a06a94"
+as_of = "2026-03-26"
+cite_prefixes = ["Ga. Ct. App. R."]
+section_heading = "Rule {n}"

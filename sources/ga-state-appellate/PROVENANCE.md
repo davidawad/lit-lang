@@ -22,3 +22,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 2d75b5702a1f33694dbdb4f19af74de571b8c8e6b3943e0a54729f1c34e57fbf. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `ga-state-appellate/original/gasc-rules-amendment-chart-2026-07-02.pdf` as served (sha256 9397875f047f670024b160e678aeb88db7b04258547ebb0b65b154d4abea1c1e); extraction sha256 2d75b5702a1f33694dbdb4f19af74de571b8c8e6b3943e0a54729f1c34e57fbf.
+
+### `ga-state-appellate/gacoa-rules-sectioned.txt` — Court of Appeals of Georgia Rules, sectioned
+
+- Derived in the pod (lg-f3q8.15) from `ga-state-appellate/gacoa-rules.txt` (extract sha256 530587a700a4ed8bc95b7133c8a308547177beda99c498833f4306608eaf57e6); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (`Rule 1. Clerk's Office Hours and Location.` through `Rule 46. Electronic Filing of Documents.`, 49 headings with Rules 33.1 to 33.3). Every other line is the extract unchanged, so deleting the `## Rule` lines gives back the extract byte for byte.
+- Edition: as the extract, rules "Effective March 26, 2026".
+- Sectioned sha256 1ba9ab5e9e3965f192d7beb21c38054173c2a31255ec4229a21213778f4895a8 (the `path_sha256` pinned by `lit/gactapp/Lit.toml`).

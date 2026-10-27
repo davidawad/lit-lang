@@ -813,3 +813,10 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 - Edition: Minnesota Rules of Civil Procedure, "With amendments effective July 1, 2025"; linked as "Rules of Civil Procedure (effective July 1, 2025)" from https://mncourts.gov/supremecourt/court-rules (Recent Rules Orders list no later civil-procedure amendment as of 2026-10-26).
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 748265a1b436591f3b5a5a9949f90c801cb05e5541e5b71281c7c00cc5ffdd1b. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+### `minnctapp/mn-rules-civil-appellate-procedure.txt` — Minnesota Rules of Civil Appellate Procedure
+
+- Source: https://mncourts.gov/_media/migration/appellate/supreme-court/court-rules/rules-of-civil-app-proc-effective040125.pdf (official site; 109 pages, sha256 35f2dc1e2847e13cba11df37a73290ce7fb5d469024e70b77f349526dddfb068).
+- Edition: Minnesota Rules of Civil Appellate Procedure, "With amendments effective April 1, 2025"; linked as "Rules of Civil Appellate Procedure (effective April 1, 2025)" from https://mncourts.gov/supremecourt/court-rules (Recent Rules Orders list no later appellate-rules amendment as of 2026-10-26).
+- Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 5aca074e9b5e7d80cce977fb5ebca7230b452dc40d01e68699a14ae46dce5708. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

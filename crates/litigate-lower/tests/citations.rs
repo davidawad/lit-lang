@@ -105,7 +105,11 @@ fn a_pinned_binding_gives_the_expression_and_the_span_hash() {
         .map(Some(&"FRCP 12(b)(6)".to_owned()))
         .and_then(|m| m.sections.into_iter().next())
         .unwrap_or_else(|| panic!("no section"));
-    let (_, body) = &corpus.lookup_all("Rule 12")[0];
+    let (_, body) = corpus
+        .lookup_all("Rule 12")
+        .iter()
+        .find(|(path, _)| path == "sources/frcp.txt")
+        .expect("the pinned FRCP source contains Rule 12");
     assert_eq!(section.as_of.as_deref(), Some("2024-12-01"));
     assert_eq!(section.pinpoint, ["b", "6"]);
     assert_eq!(section.sha256, Some(sha256_hex(&body.body)));

@@ -60,17 +60,6 @@ time.
 - Vendored text sha256:
   `e541d181253bd50730add3b957ecb760cbb537ae3eb6020aef842fd896fe60d1`.
 
-### `ddc-local-rules-2026-09.txt`
-
-- Official Local Rules of the U.S. District Court for the District of
-  Columbia, September 2026:
-  <https://www.dcd.uscourts.gov/sites/dcd/files/local_rules/Local%20Rules%20SEP_2026.pdf>
-- Retrieved 2026-10-27. Extracted with `pdftotext -layout`.
-- Original PDF sha256:
-  `e836e8706dc824294b73933ece7429cdbfc321104305501629b994631ebf5a86`.
-- Vendored text sha256:
-  `e6084a6dc48c050f96035345573a3de47f57eadd0ff4e3d04039f0fb8e537928`.
-
 ## Format
 
 Each `.txt` file is one or more sections, each starting at column 0 with

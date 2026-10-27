@@ -735,3 +735,10 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 - Edition: title: "Rules of Civil Procedure (current through October 1, 2026)"; Arkansas Judiciary court rules portal https://opinions.arcourts.gov/ark/cr/en/nav_date.do lists it current to 10/01/2026.
 - Retrieved 2026-10-27 on carbon (the court site refuses agent pods: lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 9e7950b1cca7fc771ef258b4ac2190375118c517646958b83e9c5bb3e2c01430. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+### `arkctapp/arap-civil.txt` — Arkansas Rules of Appellate Procedure—Civil
+
+- Source: https://opinions.arcourts.gov/ark/cr/en/1885/1/document.do (official court site; 22 pages, sha256 c854fb5600e8cb1595791154a4befca952fd984ae346f1e4aacf45672923d36e).
+- Edition: title: "Rules of Appellate Procedure—Civil (current through October 1, 2026)"; listed current to 10/01/2026 on https://opinions.arcourts.gov/ark/cr/en/nav_date.do.
+- Retrieved 2026-10-27 on carbon (the court site refuses agent pods: lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 baa4d8fdce843d9f59ad162212be7de918cd3ab5566e6ae9c6a2bbdf530dfdda. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

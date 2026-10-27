@@ -15,11 +15,18 @@ fn put(root: &Path, relative: &str, text: impl AsRef<[u8]>) {
     std::fs::write(path, text).unwrap();
 }
 
-/// A valid `Lit.toml` for package `name` in forum `forum`, then `extra`.
+/// A valid `Lit.toml` for package `name` in forum `forum`, of `StateRule`
+/// authority, then `extra`.
 fn manifest(name: &str, forum: &str, extra: &str) -> String {
+    authored(name, forum, "StateRule", extra)
+}
+
+/// A valid `Lit.toml` for package `name` in forum `forum`, of `authority`,
+/// then `extra`.
+fn authored(name: &str, forum: &str, authority: &str, extra: &str) -> String {
     format!(
         "[package]\nname = \"{name}\"\nversion = \"0.1.0\"\nlanguage = 1\n\
-         pack_id = \"{name}\"\nforum = \"{forum}\"\nauthority = \"StateRule\"\n\
+         pack_id = \"{name}\"\nforum = \"{forum}\"\nauthority = \"{authority}\"\n\
          title = \"{name}\"\nin_force = \"2025-01-01\"\nknown_at = \"2025-01-01\"\n\n\
          [package.roles]\napplicant = \"self\"\ncourt = \"nature\"\n\n{extra}"
     )
@@ -43,11 +50,16 @@ state served: "Served" {
 "#;
 
 /// A scratch repository: a federal package, a promoted Florida package
-/// (and Florida's outlines, which it supersedes), a Delaware outline, a
-/// federal-district and a national outline.
+/// (and Florida's outlines, which it supersedes), a promoted Iowa package
+/// whose outline is deleted, a Delaware outline, a federal-district and a
+/// national outline.
 fn repository(name: &str) -> std::path::PathBuf {
     let root = scratch(name);
-    put(&root, "lit/fed/Lit.toml", manifest("fed", "frcp", ""));
+    put(
+        &root,
+        "lit/fed/Lit.toml",
+        authored("fed", "frcp", "FederalRule", ""),
+    );
     put(&root, "lit/fed/notes.md", "not a module");
     put(&root, "lit/fed/README", "not a module");
     put(&root, "lit/fed/sub/m.lit", MODULE);
@@ -68,6 +80,12 @@ fn repository(name: &str) -> std::path::PathBuf {
         manifest("fl-state-civil", "fl-state-civil", sources),
     );
     put(&root, "lit/fl-state-civil/m.lit", MODULE);
+    put(
+        &root,
+        "lit/ia-district/Lit.toml",
+        manifest("ia-district", "ia-district", ""),
+    );
+    put(&root, "lit/ia-district/m.lit", MODULE);
     let outline = |dir: &str, forum: &str| {
         put(
             &root,
@@ -117,7 +135,7 @@ fn a_scratch_repository_is_tabled_once_then_left_alone() {
     assert_eq!(first.code, 0, "{}", first.stderr);
     let result = &first.json["result"];
     assert_eq!(result["changed"], true);
-    assert_eq!(result["promoted_states"], 1);
+    assert_eq!(result["promoted_states"], 2);
     insta::assert_json_snapshot!(result["federal"], @r#"
     [
       {
@@ -172,7 +190,7 @@ fn a_scratch_repository_is_tabled_once_then_left_alone() {
     ]
     "#);
     let table = std::fs::read_to_string(root.join("docs/COVERAGE.md")).unwrap();
-    assert!(table.starts_with("# Coverage\n\n**States with a promoted package: 1 of 50.**\n"));
+    assert!(table.starts_with("# Coverage\n\n**States with a promoted package: 2 of 50.**\n"));
     assert!(table.contains("| fed | `lit/fed` | 3 | 1 | 1 | 2 |\n"));
     assert!(
         table.contains("| Florida | state | promoted | 3 | 2 | 1 | 1 | `lit/fl-state-civil` |\n")
@@ -182,6 +200,32 @@ fn a_scratch_repository_is_tabled_once_then_left_alone() {
     assert_eq!(again.json["result"]["changed"], false);
     let check = litigate_in(&root, &["coverage", "--check"]);
     assert_eq!(check.code, 0, "{}", check.stdout);
+}
+
+#[test]
+fn a_promoted_state_keeps_its_row_once_its_outline_is_deleted() {
+    let root = repository("coverage-promoted");
+    let run = litigate_in(&root, &["coverage"]);
+    assert_eq!(run.code, 0, "{}", run.stderr);
+    let result = &run.json["result"];
+    let federal = result["federal"].as_array().unwrap();
+    assert!(federal.iter().all(|p| p["dir"] != "lit/ia-district"));
+    let rows = result["jurisdictions"].as_array().unwrap();
+    let iowa = rows.iter().find(|r| r["name"] == "Iowa").unwrap();
+    insta::assert_json_snapshot!(iowa, @r#"
+    {
+      "name": "Iowa",
+      "kind": "state",
+      "status": "promoted",
+      "packages": [
+        "lit/ia-district"
+      ],
+      "rules": 3,
+      "precedents": 1,
+      "tests": 1,
+      "matters": 0
+    }
+    "#);
 }
 
 #[test]
@@ -231,6 +275,14 @@ fn an_unreadable_repository_is_a_usage_error() {
         manifest("outline-atlantis", "atlantis", ""),
     );
     insta::assert_snapshot!(failure(&unknown_root), @"litigate coverage: outlines/x/atlantis/state-civil: `atlantis` is no US state, DC or territory");
+
+    let stateless = repository("coverage-stateless");
+    put(
+        &stateless,
+        "lit/xx-civil/Lit.toml",
+        manifest("xx-civil", "xx-civil", ""),
+    );
+    insta::assert_snapshot!(failure(&stateless), @"litigate coverage: lit/xx-civil: state-court forum `xx-civil` has no outline and no `PROMOTED` jurisdiction");
 
     let dangling = repository("coverage-dangling");
     put(&dangling, "tests/expect/gone/a.toml", "case = \"m.case\"\n");

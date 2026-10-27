@@ -84,7 +84,7 @@ fn unquoted(
     let folded: Vec<String> = quotes.iter().map(|q| words(q)).collect();
     let found = sections.iter().any(|s| {
         corpus.lookup_all(&s.heading).iter().any(|(file, section)| {
-            let body = words(&section.body);
+            let body = words(&unpaged(&section.body));
             s.path.as_ref() == Some(file) && folded.iter().any(|q| body.contains(q.as_str()))
         })
     });
@@ -107,6 +107,34 @@ fn unquoted(
         None,
         "quote the cited rule's words exactly as the vendored source gives them",
     ))
+}
+
+/// `body` without the page number a `pdftotext -layout` extract sets on
+/// its own line before each page break (form feed): a quote running across
+/// the break (`3,500` / `89` / `words`, LR 72.2(c)(1)(A), D. Minn.) is
+/// the rule's words with the page's folio between them.
+fn unpaged(body: &str) -> Cow<'_, str> {
+    if !body.contains('\u{c}') {
+        return Cow::Borrowed(body);
+    }
+    let lines: Vec<&str> = body.lines().collect();
+    let folio = |l: &str| {
+        let l = l.trim();
+        !l.is_empty()
+            && l.len() <= 8
+            && (l.chars().all(|c| c.is_ascii_digit())
+                || l.chars().all(|c| matches!(c, 'i' | 'v' | 'x' | 'l' | 'c')))
+    };
+    let kept: Vec<&str> = lines
+        .iter()
+        .enumerate()
+        .filter(|&(i, l)| {
+            let breaks = lines.get(i + 1).is_some_and(|n| n.starts_with('\u{c}'));
+            !(breaks && folio(l))
+        })
+        .map(|(_, l)| *l)
+        .collect();
+    Cow::Owned(kept.join("\n"))
 }
 
 /// A hole for every cite whose expression (the binding's `as_of`, D)

@@ -10,7 +10,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 
 | Package | Directory | Rules | Precedents | Tests | Matters |
 |---|---|--:|--:|--:|--:|
-| eighth-circuit-bankruptcy-appellate-panel | `lit/bap8` | 23 | 0 | 16 | 0 |
+| eighth-circuit-bankruptcy-appellate-panel | `lit/bap8` | 5 | 0 | 16 | 0 |
 | first-circuit-court-of-appeals | `lit/ca1` | 0 | 1 | 9 | 0 |
 | ca8-court-of-appeals | `lit/ca8` | 0 | 0 | 3 | 0 |
 | dc-circuit-court-of-appeals | `lit/cadc` | 0 | 0 | 2 | 0 |
@@ -19,6 +19,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | core | `lit/core` | 46 | 0 | 137 | 0 |
 | frcp-rule12-example | `lit/examples` | 2 | 0 | 2 | 0 |
 | frap-appellate-procedure | `lit/frap` | 33 | 0 | 37 | 7 |
+| frbp-bankruptcy-procedure | `lit/frbp` | 77 | 0 | 59 | 0 |
 | frcp-civil-procedure | `lit/frcp` | 22 | 24 | 49 | 12 |
 | frcrimp-criminal-procedure | `lit/frcrimp` | 10 | 0 | 19 | 0 |
 | itc-337 | `lit/itc` | 22 | 3 | 33 | 0 |

@@ -1,0 +1,506 @@
+module frbp.appeals
+
+import core.frcp6.{ frcp6 }
+
+import frbp.events.{
+  AppealExtensionMoved,
+  AppealJudgmentEntered,
+  AppealMotionResponseServed,
+  AppealMotionServed,
+  AppellantBriefServed,
+  AppellantDesignationServed,
+  AppellantTranscriptOrderFiled,
+  AppelleeBriefServed,
+  BankruptcyOrderEntered,
+  BillOfCostsServed,
+  CertificationEffective,
+  CrossAppealReplyBriefServed,
+  CrossAppealResponseBriefServed,
+  CrossAppellantDesignationServed,
+  DirectCertificationRequestServed,
+  ElectionStatementFiled,
+  EvidenceStatementServed,
+  LeaveMotionOrdered,
+  LeaveToAppealGranted,
+  LeaveToAppealMotionServed,
+  NoticeOfAppealEffective,
+  NoticeOfAppealFiled,
+  NoticeOfAppealServed,
+  ProceduralOrderServed,
+  RecordMadeAvailable,
+  SupplementalAuthoritiesServed,
+}
+
+// Part 8: an appeal from the bankruptcy court to the district court or
+// the BAP (28 U.S.C. § 158(a)-(c)), and the steps toward a direct appeal to
+// the court of appeals (§ 158(d)(2)). A district court and a BAP run on the
+// same periods; the panel's or district's local rules layer over them.
+// Periods the rule lets the court reset in one appeal ("unless the district
+// court or BAP orders otherwise") are noted on their declarations; FRBP
+// 8025(a)'s 14-day automatic stay of a judgment on appeal is a stay, not a
+// party's deadline, and is not declared.
+//
+// Counting: FRBP 9006(a) states the FRCP 6(a) method word for word, so
+// each period is counted by core's frcp6 as a period of forum `frcp`.
+/// FRBP 8002(a)(1): a notice of appeal is filed with the bankruptcy clerk
+/// within 14 days after the judgment, order, or decree is entered. 28
+/// U.S.C. § 158(c)(2) takes the appeal "in the time provided by Rule
+/// 8002", so the period is statutory and jurisdictional. It runs from the
+/// latest entry: the order disposing of the last timely FRBP 8002(b)(1)
+/// motion (Rule 7052, 9023, or a Rule 9024 motion filed within 14 days)
+/// restarts it for every party. FRBP 8002(d): on motion filed within the
+/// period, or within 21 days after it expires on a showing of excusable
+/// neglect, the court may extend it to no later than 21 days after the
+/// prescribed time or 14 days after the order granting the motion,
+/// whichever is later. FRBP 8002(d)(2) forbids any extension when the
+/// order appealed grants stay relief, authorizes a sale, lease, cash
+/// collateral, credit, or assumption or assignment, approves a disclosure
+/// statement, or confirms a plan; that turns on the order, a matter fact.
+rule duty appeal-notice-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8002(a)(1)"
+{
+  deadline notice-period: 14.days after BankruptcyOrderEntered() counted_by frcp6 cite "FRBP 8002(a)(1)"
+  {
+    forum frcp
+    characterization jurisdictional cite "28 U.S.C. § 158(c)(2)"
+    trigger latest
+    extend {
+      by court
+      discretion GoodCause
+      to max(prescribed_due + 21.days, grant_order_entered + 14.days)
+      on AppealExtensionMoved()
+      within prescribed_due
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      to max(prescribed_due + 21.days, grant_order_entered + 14.days)
+      after_expiry
+      on AppealExtensionMoved()
+      within prescribed_due + 21.days
+    }
+  }
+}
+
+/// FRBP 8002(a)(3): once one party timely files a notice of appeal, any
+/// other party may file one within 14 days after the first notice was
+/// filed, or within the time otherwise allowed, whichever is later. When
+/// an inmate files the first notice under 8002(c), the 14 days run from
+/// the clerk's docketing of it (8002(c)(2)): record that date as the
+/// filing. The FRBP 8002(d) extension reaches this period as it does the
+/// notice period.
+rule duty cross-notice-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8002(a)(3)"
+{
+  deadline cross-notice-period: 14.days after NoticeOfAppealFiled() counted_by frcp6 cite "FRBP 8002(a)(3)"
+  {
+    forum frcp
+    trigger later_of(notice-period)
+    extend {
+      by court
+      discretion GoodCause
+      to max(prescribed_due + 21.days, grant_order_entered + 14.days)
+      on AppealExtensionMoved()
+      within prescribed_due
+    }
+    extend {
+      by court
+      discretion ExcusableNeglect
+      to max(prescribed_due + 21.days, grant_order_entered + 14.days)
+      after_expiry
+      on AppealExtensionMoved()
+      within prescribed_due + 21.days
+    }
+  }
+}
+
+/// FRBP 8004: an interlocutory appeal under 28 U.S.C. § 158(a)(3) needs
+/// leave. A response in opposition or a cross-motion is due within 14 days
+/// after the motion for leave is served (8004(b)(2)); an appellant ordered
+/// to file a missing motion for leave files it within 14 days after the
+/// order, unless the order provides otherwise (8004(d)(2)).
+rule duty leave-to-appeal-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8004"
+{
+  deadline leave-response-period: 14.days after LeaveToAppealMotionServed() counted_by frcp6 cite "FRBP 8004(b)(2)"
+  {
+    forum frcp
+  }
+  deadline leave-motion-period: 14.days after LeaveMotionOrdered() counted_by frcp6 cite "FRBP 8004(d)(2)"
+  {
+    forum frcp
+  }
+}
+
+/// FRBP 8005 and 28 U.S.C. § 158(c)(1): where a BAP hears appeals, the
+/// appellant elects the district court at the time of filing the appeal
+/// (a zero-day period from the notice), any other party within 30 days
+/// after service of notice of the appeal; a motion to determine an
+/// election's validity is due within 14 days after the statement is filed.
+rule duty election-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8005"
+{
+  deadline appellant-election-period: 0.days after NoticeOfAppealFiled() counted_by frcp6 cite "28 U.S.C. § 158(c)(1)(A)"
+  {
+    forum frcp
+  }
+  deadline other-party-election-period: 30.days after NoticeOfAppealServed() counted_by frcp6 cite "28 U.S.C. § 158(c)(1)(B)"
+  {
+    forum frcp
+  }
+  deadline election-validity-period: 14.days after ElectionStatementFiled() counted_by frcp6 cite "FRBP 8005(c)"
+  {
+    forum frcp
+  }
+}
+
+/// FRBP 8006: a request to certify a direct appeal is due within 60 days
+/// after entry (8006(f)(1), mirroring 28 U.S.C. § 158(d)(2)(E)); a
+/// response within 14 days after the request is served, or such other time
+/// as the court allows (8006(f)(3)(A)); and a petition asking the court of
+/// appeals to authorize the appeal within 30 days after the certification
+/// becomes effective (8006(g)). A cross-request is due 14 days after the
+/// request is served or 60 days after entry, whichever is first
+/// (8006(f)(3)(B)): the earlier of the response and request periods.
+rule duty direct-review-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8006"
+{
+  deadline direct-certification-request-period: 60.days after BankruptcyOrderEntered() counted_by frcp6 cite "FRBP 8006(f)(1)"
+  {
+    forum frcp
+  }
+  deadline direct-certification-response-period: 14.days after DirectCertificationRequestServed() counted_by frcp6 cite "FRBP 8006(f)(3)(A)"
+  {
+    forum frcp
+  }
+  deadline direct-authorization-petition-period: 30.days after CertificationEffective() counted_by frcp6 cite "FRBP 8006(g)"
+  {
+    forum frcp
+  }
+}
+
+/// FRBP 8009: the appellant designates the record, states the issues, and
+/// orders the transcript (or certifies it orders none) within 14 days
+/// after the notice of appeal becomes effective or leave to appeal is
+/// granted (8009(a)(1)(B), (b)(1)); a statement of the evidence where no
+/// transcript is available is due in the same period (8009(c)(1)). The
+/// appellee may designate more within 14 days after being served
+/// (8009(a)(2)(A)), the cross-appellee within 14 days after the
+/// cross-appellant's designation is served (8009(a)(3)); the
+/// cross-appellant orders its transcript, and the appellee or
+/// cross-appellee may order more, within 14 days after the appellant's
+/// transcript order is filed (8009(b)(2)-(3)); and the appellee may object
+/// to a statement of the evidence within 14 days after service (8009(c)(2)).
+rule duty record-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8009"
+{
+  deadline appellant-designation-period: 14.days after NoticeOfAppealEffective() counted_by frcp6 cite "FRBP 8009(a)(1)(B)"
+  {
+    forum frcp
+  }
+  deadline appellant-designation-leave-period: 14.days after LeaveToAppealGranted() counted_by frcp6 cite "FRBP 8009(a)(1)(B)"
+  {
+    forum frcp
+  }
+  deadline transcript-order-period: 14.days after NoticeOfAppealEffective() counted_by frcp6 cite "FRBP 8009(b)(1)"
+  {
+    forum frcp
+  }
+  deadline appellee-designation-period: 14.days after AppellantDesignationServed() counted_by frcp6 cite "FRBP 8009(a)(2)(A)"
+  {
+    forum frcp
+  }
+  deadline cross-appellee-designation-period: 14.days after CrossAppellantDesignationServed() counted_by frcp6 cite "FRBP 8009(a)(3)"
+  {
+    forum frcp
+  }
+  deadline cross-appellant-transcript-period: 14.days after AppellantTranscriptOrderFiled() counted_by frcp6 cite "FRBP 8009(b)(2)"
+  {
+    forum frcp
+  }
+  deadline appellee-transcript-period: 14.days after AppellantTranscriptOrderFiled() counted_by frcp6 cite "FRBP 8009(b)(3)"
+  {
+    forum frcp
+  }
+  deadline evidence-statement-objection-period: 14.days after EvidenceStatementServed() counted_by frcp6 cite "FRBP 8009(c)(2)"
+  {
+    forum frcp
+  }
+}
+
+/// FRBP 8013: unless the district court or BAP orders otherwise, a
+/// response to a motion is due within 7 days after the motion is served
+/// and a reply within 7 days after the response is served (8013(a)(3)); a
+/// party adversely affected by a procedural order may move to reconsider,
+/// vacate, or modify it within 7 days after it is served (8013(b)).
+rule duty appeal-motion-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8013"
+{
+  deadline motion-response-period: 7.days after AppealMotionServed() counted_by frcp6 cite "FRBP 8013(a)(3)(A)"
+  {
+    forum frcp
+  }
+  deadline motion-reply-period: 7.days after AppealMotionResponseServed() counted_by frcp6 cite "FRBP 8013(a)(3)(B)"
+  {
+    forum frcp
+  }
+  deadline procedural-order-reconsideration-period: 7.days after ProceduralOrderServed() counted_by frcp6 cite "FRBP 8013(b)"
+  {
+    forum frcp
+  }
+}
+
+/// FRBP 8018(a): unless the district court or BAP orders otherwise, the
+/// appellant's brief is due within 30 days after the docketing of notice
+/// that the record has been sent or is available electronically, the
+/// appellee's within 30 days after the appellant's is served, and a reply
+/// within 14 days after the appellee's is served (and at least 7 days
+/// before scheduled argument, unless the court allows later filing for
+/// cause). In a cross-appeal FRBP 8016(e) sets the same first two periods,
+/// then 30 days for the appellant's response and reply brief after the
+/// appellee's principal and response brief is served (8016(e)(3)) and 14
+/// for the appellee's reply after that (8016(e)(4)). A response to a
+/// letter of supplemental authorities is due within 7 days after service
+/// unless the court orders otherwise (8014(f)).
+rule duty briefing-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8018(a)"
+{
+  deadline appellant-brief-period: 30.days after RecordMadeAvailable() counted_by frcp6 cite "FRBP 8018(a)(1)"
+  {
+    forum frcp
+  }
+  deadline appellee-brief-period: 30.days after AppellantBriefServed() counted_by frcp6 cite "FRBP 8018(a)(2)"
+  {
+    forum frcp
+  }
+  deadline reply-brief-period: 14.days after AppelleeBriefServed() counted_by frcp6 cite "FRBP 8018(a)(3)"
+  {
+    forum frcp
+  }
+  deadline cross-appeal-reply-brief-period: 30.days after CrossAppealResponseBriefServed() counted_by frcp6 cite "FRBP 8016(e)(3)"
+  {
+    forum frcp
+  }
+  deadline cross-appeal-final-reply-period: 14.days after CrossAppealReplyBriefServed() counted_by frcp6 cite "FRBP 8016(e)(4)"
+  {
+    forum frcp
+  }
+  deadline supplemental-authorities-response-period: 7.days after SupplementalAuthoritiesServed() counted_by frcp6 cite "FRBP 8014(f)"
+  {
+    forum frcp
+  }
+}
+
+/// FRBP 8021(d): a party who wants costs taxed files and serves a bill of
+/// costs within 14 days after the judgment on appeal is entered;
+/// objections are due within 14 days after the bill is served, unless the
+/// bankruptcy court extends the time.
+rule duty costs-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8021(d)"
+{
+  deadline bill-of-costs-period: 14.days after AppealJudgmentEntered() counted_by frcp6 cite "FRBP 8021(d)"
+  {
+    forum frcp
+  }
+  deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "FRBP 8021(d)"
+  {
+    forum frcp
+  }
+}
+
+/// FRBP 8022(a)(1): unless shortened or extended by order or local rule, a
+/// motion for rehearing by the district court or BAP is due within 14 days
+/// after the judgment on appeal is entered.
+rule duty rehearing-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8022(a)(1)"
+{
+  deadline rehearing-period: 14.days after AppealJudgmentEntered() counted_by frcp6 cite "FRBP 8022(a)(1)"
+  {
+    forum frcp
+  }
+}
+
+test "notice period runs 14 days after bankruptcy order entered" cite "FRBP 8002(a)(1)"
+{
+  given BankruptcyOrderEntered() on 2026-03-03
+  expect deadline(notice-period) == 2026-03-17
+}
+
+test "leave response period runs 14 days after leave to appeal motion served" cite "FRBP 8004(b)(2)"
+{
+  given LeaveToAppealMotionServed() on 2026-03-03
+  expect deadline(leave-response-period) == 2026-03-17
+}
+
+test "leave motion period runs 14 days after leave motion ordered" cite "FRBP 8004(d)(2)"
+{
+  given LeaveMotionOrdered() on 2026-03-03
+  expect deadline(leave-motion-period) == 2026-03-17
+}
+
+test "an appellant elects the district court on the day it files its notice" cite "28 U.S.C. § 158(c)(1)(A)"
+{
+  given NoticeOfAppealFiled() on 2026-03-03
+  expect deadline(appellant-election-period) == 2026-03-03
+}
+
+test "other party election period runs 30 days after notice of appeal served" cite "28 U.S.C. § 158(c)(1)(B)"
+{
+  given NoticeOfAppealServed() on 2026-03-03
+  expect deadline(other-party-election-period) == 2026-04-02
+}
+
+test "election validity period runs 14 days after election statement filed" cite "FRBP 8005(c)"
+{
+  given ElectionStatementFiled() on 2026-03-03
+  expect deadline(election-validity-period) == 2026-03-17
+}
+
+test "direct certification request period runs 60 days after bankruptcy order entered" cite "FRBP 8006(f)(1)"
+{
+  given BankruptcyOrderEntered() on 2026-03-03
+  expect deadline(direct-certification-request-period) == 2026-05-04
+}
+
+test "direct certification response period runs 14 days after direct certification request served" cite "FRBP 8006(f)(3)(A)"
+{
+  given DirectCertificationRequestServed() on 2026-03-03
+  expect deadline(direct-certification-response-period) == 2026-03-17
+}
+
+test "direct authorization petition period runs 30 days after certification effective" cite "FRBP 8006(g)"
+{
+  given CertificationEffective() on 2026-03-03
+  expect deadline(direct-authorization-petition-period) == 2026-04-02
+}
+
+test "appellant designation period runs 14 days after notice of appeal effective" cite "FRBP 8009(a)(1)(B)"
+{
+  given NoticeOfAppealEffective() on 2026-03-03
+  expect deadline(appellant-designation-period) == 2026-03-17
+}
+
+test "appellant designation leave period runs 14 days after leave to appeal granted" cite "FRBP 8009(a)(1)(B)"
+{
+  given LeaveToAppealGranted() on 2026-03-03
+  expect deadline(appellant-designation-leave-period) == 2026-03-17
+}
+
+test "transcript order period runs 14 days after notice of appeal effective" cite "FRBP 8009(b)(1)"
+{
+  given NoticeOfAppealEffective() on 2026-03-03
+  expect deadline(transcript-order-period) == 2026-03-17
+}
+
+test "appellee designation period runs 14 days after appellant designation served" cite "FRBP 8009(a)(2)(A)"
+{
+  given AppellantDesignationServed() on 2026-03-03
+  expect deadline(appellee-designation-period) == 2026-03-17
+}
+
+test "cross appellee designation period runs 14 days after cross appellant designation served" cite "FRBP 8009(a)(3)"
+{
+  given CrossAppellantDesignationServed() on 2026-03-03
+  expect deadline(cross-appellee-designation-period) == 2026-03-17
+}
+
+test "cross appellant transcript period runs 14 days after appellant transcript order filed" cite "FRBP 8009(b)(2)"
+{
+  given AppellantTranscriptOrderFiled() on 2026-03-03
+  expect deadline(cross-appellant-transcript-period) == 2026-03-17
+}
+
+test "appellee transcript period runs 14 days after appellant transcript order filed" cite "FRBP 8009(b)(3)"
+{
+  given AppellantTranscriptOrderFiled() on 2026-03-03
+  expect deadline(appellee-transcript-period) == 2026-03-17
+}
+
+test "evidence statement objection period runs 14 days after evidence statement served" cite "FRBP 8009(c)(2)"
+{
+  given EvidenceStatementServed() on 2026-03-03
+  expect deadline(evidence-statement-objection-period) == 2026-03-17
+}
+
+test "motion response period runs 7 days after appeal motion served" cite "FRBP 8013(a)(3)(A)"
+{
+  given AppealMotionServed() on 2026-03-03
+  expect deadline(motion-response-period) == 2026-03-10
+}
+
+test "motion reply period runs 7 days after appeal motion response served" cite "FRBP 8013(a)(3)(B)"
+{
+  given AppealMotionResponseServed() on 2026-03-03
+  expect deadline(motion-reply-period) == 2026-03-10
+}
+
+test "procedural order reconsideration period runs 7 days after procedural order served" cite "FRBP 8013(b)"
+{
+  given ProceduralOrderServed() on 2026-03-03
+  expect deadline(procedural-order-reconsideration-period) == 2026-03-10
+}
+
+test "appellant brief period runs 30 days after record made available" cite "FRBP 8018(a)(1)"
+{
+  given RecordMadeAvailable() on 2026-03-03
+  expect deadline(appellant-brief-period) == 2026-04-02
+}
+
+test "appellee brief period runs 30 days after appellant brief served" cite "FRBP 8018(a)(2)"
+{
+  given AppellantBriefServed() on 2026-03-03
+  expect deadline(appellee-brief-period) == 2026-04-02
+}
+
+test "reply brief period runs 14 days after appellee brief served" cite "FRBP 8018(a)(3)"
+{
+  given AppelleeBriefServed() on 2026-03-03
+  expect deadline(reply-brief-period) == 2026-03-17
+}
+
+test "cross appeal reply brief period runs 30 days after cross appeal response brief served" cite "FRBP 8016(e)(3)"
+{
+  given CrossAppealResponseBriefServed() on 2026-03-03
+  expect deadline(cross-appeal-reply-brief-period) == 2026-04-02
+}
+
+test "cross appeal final reply period runs 14 days after cross appeal reply brief served" cite "FRBP 8016(e)(4)"
+{
+  given CrossAppealReplyBriefServed() on 2026-03-03
+  expect deadline(cross-appeal-final-reply-period) == 2026-03-17
+}
+
+test "supplemental authorities response period runs 7 days after supplemental authorities served" cite "FRBP 8014(f)"
+{
+  given SupplementalAuthoritiesServed() on 2026-03-03
+  expect deadline(supplemental-authorities-response-period) == 2026-03-10
+}
+
+test "bill of costs period runs 14 days after appeal judgment entered" cite "FRBP 8021(d)"
+{
+  given AppealJudgmentEntered() on 2026-03-03
+  expect deadline(bill-of-costs-period) == 2026-03-17
+}
+
+test "costs objection period runs 14 days after bill of costs served" cite "FRBP 8021(d)"
+{
+  given BillOfCostsServed() on 2026-03-03
+  expect deadline(costs-objection-period) == 2026-03-17
+}
+
+test "rehearing period runs 14 days after appeal judgment entered" cite "FRBP 8022(a)(1)"
+{
+  given AppealJudgmentEntered() on 2026-03-03
+  expect deadline(rehearing-period) == 2026-03-17
+}
+
+test "the order disposing of the last tolling motion restarts the notice period" cite "FRBP 8002(b)(1)"
+{
+  given BankruptcyOrderEntered() on 2026-03-03
+  given BankruptcyOrderEntered() on 2026-03-24
+  expect deadline(notice-period) == 2026-04-07
+}
+
+test "a cross-notice runs 14 days after the first notice when that ends later" cite "FRBP 8002(a)(3)"
+{
+  given BankruptcyOrderEntered() on 2026-03-03
+  given NoticeOfAppealFiled() on 2026-03-10
+  expect deadline(cross-notice-period) == 2026-03-24
+}
+
+test "a cross-notice is never due before the notice period ends" cite "FRBP 8002(a)(3)"
+{
+  given BankruptcyOrderEntered() on 2026-03-03
+  given NoticeOfAppealFiled() on 2026-03-03
+  expect deadline(cross-notice-period) == 2026-03-17
+}

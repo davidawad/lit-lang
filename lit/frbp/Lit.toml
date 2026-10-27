@@ -1,0 +1,64 @@
+# The Federal Rules of Bankruptcy Procedure, the base package every
+# bankruptcy-court and bankruptcy-appeal package uses (lit/bap8 is the
+# first), as lit/frap is for the circuit packages. It declares the FRBP
+# periods themselves, Part 8's appeal periods and the core Part 1-7 and 9
+# case and adversary-proceeding periods, from the vendored December 1, 2025
+# edition (sources/frbp.txt, sectioned `## FRBP n`; the as-served PDF and
+# its PROVENANCE are sources/frbp/). A local rule or panel package layers
+# its own periods over these and declares none of the FRBP's again.
+#
+# Lifetime: the periods are in force from the December 1, 2025 edition,
+# a lower bound (the earlier editions are not vendored), so a query
+# before then is a hole in the corpus (L3010), not a day with no rule.
+# The December 1, 2026 amendments (sources/frbp/frbp-amendments-2026-12-01.txt,
+# Supreme Court order of April 8, 2026) delete the Rule 1007(c)(4)
+# financial-management-course deadlines, which therefore end that day.
+#
+# Counting: FRBP 9006(a) states the FRCP 6(a) method word for word
+# (backward-counted periods, the "last day" and "next day" definitions,
+# and the legal holidays), so the periods are counted by core's frcp6.
+[package]
+name = "frbp-bankruptcy-procedure"
+version = "0.1.0"
+language = 1
+pack_id = "frbp-bankruptcy-procedure"
+forum = "frbp"
+authority = "FederalRule"
+title = "Federal Rules of Bankruptcy Procedure"
+description = "The FRBP periods a bankruptcy case and a bankruptcy appeal run on: schedules, claims, exemptions, discharge and dischargeability, adversary-proceeding responses, post-judgment motions and objections to proposed findings, and every Part 8 appeal period (notice, cross-notice and extension, leave, election, direct certification, record and transcript, motions, briefing, costs, rehearing and stay) for the district court and the BAP."
+jurisdiction = "Federal Rules of Bankruptcy Procedure / U.S. Bankruptcy Courts, District Courts and Bankruptcy Appellate Panels"
+in_force = "2025-12-01"
+known_at = "2025-12-01"
+unknown_before = "2025-12-01"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+appellee = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+# Types, the authority lattice, and the FRCP 6 counting rule FRBP 9006(a) restates.
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.frbp]
+title = "Federal Rules of Bankruptcy Procedure, December 1, 2025 edition"
+url = "https://www.uscourts.gov/sites/default/files/document/federal-rules-of-bankruptcy-procedure.pdf"
+path = "sources/frbp.txt"
+path_sha256 = "0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8"
+as_of = "2025-12-01"
+
+[sources.frbp-2026-amendments]
+title = "FRBP amendments effective December 1, 2026 (Supreme Court order of April 8, 2026, congressional rules package)"
+url = "https://www.uscourts.gov/sites/default/files/document/2026_congressional_package_final.pdf"
+as_of = "2026-04-08"
+
+[sources.usc28-158]
+title = "28 U.S.C. § 158, current preliminary edition"
+url = "https://uscode.house.gov/us/usc/119-118/t28/s158/"
+path = "sources/usc-28-158.txt"
+path_sha256 = "a0f615748b6a10805e6eeec6a05e94d7a3fc2dcd5fafbe94efae7af8ebf9987b"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+as_of = "2026-10-07"

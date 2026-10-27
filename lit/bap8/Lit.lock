@@ -36,13 +36,28 @@ dependencies = []
 name = "eighth-circuit-bankruptcy-appellate-panel"
 version = "0.1.0"
 language = 1
-source = "sha256:377c3905eb856eeb62657b4b49cb40be21b8259ff136564175179d53fe59334c"
-semantic = "sha256:90cfe05a6d014cea134c6e89124a3aca29e22b63a24016af460eee7b59d407b0"
+source = "sha256:08dffcb80840837b455ecc33b21bcb97edbe3e44662cbdf2139a9e58318b295d"
+semantic = "sha256:5d88e870bb808f72b356fee16d8ee408c6949a9c9eaf80764bc4ea9584f5bb5b"
 texts = [
     "bap-iop sources/ca8-bap-iop.txt sha256:2fb5815bf87b25d8af30298fa0fa21e148d81ddc6992c305bd94716c68fb0485",
     "bap-local-rules sources/ca8-bap-local-rules.txt sha256:ccc1e2198d478e0b31cd6c4d700bd699eb7e4993f073b3b894cb2f0cf48108ca",
     "ca8-iop sources/ca8-iop.txt sha256:a346115379cdf130c46d5d6c33462f03a0984fcebac95a8617b2d0222e6bc8f8",
     "ca8-rules sources/ca8-local-rules.txt sha256:74b1a57311b9f597caac5a9778ede3e8328b6076d816e5a19eb62c3bfd14f907",
+    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
+    "usc28-158 sources/usc-28-158.txt sha256:a0f615748b6a10805e6eeec6a05e94d7a3fc2dcd5fafbe94efae7af8ebf9987b",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
+name = "frbp-bankruptcy-procedure"
+version = "0.1.0"
+language = 1
+source = "sha256:8514fb7b60bbce1358e9e7e3290ca1ff3faa049be7319df2a7299af84e65c997"
+semantic = "sha256:15a5ed18d80273d7b5491d27667ec853fd85265579bd65d69c76c51ebcb71fd1"
+texts = [
     "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
     "usc28-158 sources/usc-28-158.txt sha256:a0f615748b6a10805e6eeec6a05e94d7a3fc2dcd5fafbe94efae7af8ebf9987b",
 ]

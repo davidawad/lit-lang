@@ -1,0 +1,388 @@
+module frbp.case
+
+import core.frcp6.{ frcp6 }
+
+import frbp.events.{
+  AdversaryRule12MotionDenied,
+  BankruptcyOrderEntered,
+  CaseConverted,
+  ExemptionEventOccurred,
+  FindingsObjectionsServed,
+  FirstMeetingDate,
+  InvoluntarySummonsServed,
+  OrderForReliefEntered,
+  PetitionFiled,
+  ProposedFindingsServed,
+  SummonsIssued,
+}
+
+// The core FRBP case periods, Parts 1-7 and 9: what the debtor files after
+// the petition, when creditors claim and object, the adversary-proceeding
+// response periods, and the post-judgment and proposed-findings periods
+// in the bankruptcy court. Chapter-specific periods name their chapter;
+// which chapter a case is in is a matter fact. Counting: FRBP 9006(a)
+// states the FRCP 6(a) method word for word, so each period is counted by
+// core's frcp6 as a period of forum `frcp`.
+/// FRBP 1007: in a voluntary case the schedules, statement of financial
+/// affairs and the other (b)(1), (b)(4)-(6) documents are due with the
+/// petition or within 14 days after it (1007(c)(1)). In an involuntary
+/// case, the creditor list is due within 7 days after the order for relief
+/// (1007(a)(2)) and the (b)(1) documents within 14 days (1007(c)(2)); a
+/// Chapter 11 debtor's list of equity security holders is due within 14
+/// days after the order for relief unless the court orders otherwise
+/// (1007(a)(3)). The Rule 1007(c)(4) financial-management-course
+/// certificate deadlines are not declared: the December 1, 2026
+/// amendments delete them (sources/frbp/frbp-amendments-2026-12-01.txt),
+/// and a period that ends with no successor needs a sunset relation the
+/// package has no target for.
+rule duty debtor-filings-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 1007"
+{
+  deadline schedules-period: 14.days after PetitionFiled() counted_by frcp6 cite "FRBP 1007(c)(1)"
+  {
+    forum frcp
+  }
+  deadline involuntary-creditor-list-period: 7.days after OrderForReliefEntered() counted_by frcp6 cite "FRBP 1007(a)(2)"
+  {
+    forum frcp
+  }
+  deadline involuntary-schedules-period: 14.days after OrderForReliefEntered() counted_by frcp6 cite "FRBP 1007(c)(2)"
+  {
+    forum frcp
+  }
+  deadline equity-holders-list-period: 14.days after OrderForReliefEntered() counted_by frcp6 cite "FRBP 1007(a)(3)"
+  {
+    forum frcp
+  }
+}
+
+/// FRBP 1011(b): a defense or objection to an involuntary petition is
+/// filed and served within 21 days after the summons is served.
+rule duty involuntary-answer-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 1011(b)"
+{
+  deadline involuntary-answer-period: 21.days after InvoluntarySummonsServed() counted_by frcp6 cite "FRBP 1011(b)"
+  {
+    forum frcp
+  }
+}
+
+/// FRBP 1017(e)(2): except as § 704(b)(2) provides otherwise, a motion to
+/// dismiss for abuse under § 707(b) or (c) is due within 60 days after the
+/// first date set for the § 341(a) meeting; on request made within the
+/// period, the court may extend it for cause.
+rule duty abuse-dismissal-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 1017(e)(2)"
+{
+  deadline abuse-dismissal-period: 60.days after FirstMeetingDate() counted_by frcp6 cite "FRBP 1017(e)(2)"
+  {
+    forum frcp
+  }
+}
+
+/// FRBP 3002(c): in a voluntary Chapter 7 case or a Chapter 12 or 13 case,
+/// a proof of claim is timely within 70 days after the order for relief
+/// or the order converting the case to Chapter 12 or 13; in an
+/// involuntary Chapter 7 case, within 90 days after the order for relief;
+/// a governmental unit's, within 180 days after the order for relief
+/// (3002(c)(1); 11 U.S.C. § 502(b)(9)).
+rule duty proof-of-claim-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 3002(c)"
+{
+  deadline claim-period: 70.days after OrderForReliefEntered() counted_by frcp6 cite "FRBP 3002(c)"
+  {
+    forum frcp
+  }
+  deadline converted-claim-period: 70.days after CaseConverted() counted_by frcp6 cite "FRBP 3002(c)"
+  {
+    forum frcp
+  }
+  deadline involuntary-claim-period: 90.days after OrderForReliefEntered() counted_by frcp6 cite "FRBP 3002(c)"
+  {
+    forum frcp
+  }
+  deadline governmental-claim-period: 180.days after OrderForReliefEntered() counted_by frcp6 cite "FRBP 3002(c)(1)"
+  {
+    forum frcp
+  }
+}
+
+/// FRBP 3015(b): a Chapter 13 plan is due with the petition or within 14
+/// days after it, or within 14 days after conversion to Chapter 13; the
+/// time is not extended except for cause and on notice as the court orders.
+rule duty chapter13-plan-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 3015(b)"
+{
+  deadline chapter13-plan-period: 14.days after PetitionFiled() counted_by frcp6 cite "FRBP 3015(b)(1)"
+  {
+    forum frcp
+  }
+  deadline converted-chapter13-plan-period: 14.days after CaseConverted() counted_by frcp6 cite "FRBP 3015(b)(2)"
+  {
+    forum frcp
+  }
+}
+
+/// FRBP 4003(b)(1): a party in interest may object to a claimed exemption
+/// within 30 days after the latest of the conclusion of the § 341 meeting,
+/// an amendment to the list, or a supplemental schedule; on motion filed
+/// before the time expires, the court may extend it for cause.
+rule duty exemption-objection-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 4003(b)(1)"
+{
+  deadline exemption-objection-period: 30.days after ExemptionEventOccurred() counted_by frcp6 cite "FRBP 4003(b)(1)"
+  {
+    forum frcp
+    trigger latest
+  }
+}
+
+/// FRBP 4004(a), 4007(c), 4008(a): each runs 60 days after the first date
+/// set for the § 341(a) meeting: a Chapter 7 complaint objecting to
+/// discharge (4004(a)(1)), a Chapter 13 motion objecting to discharge under
+/// § 1328(f) (4004(a)(3)), a complaint to determine dischargeability under
+/// § 523(c) (4007(c)), and a reaffirmation agreement (4008(a)).
+rule duty discharge-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 4004(a)"
+{
+  deadline discharge-objection-period: 60.days after FirstMeetingDate() counted_by frcp6 cite "FRBP 4004(a)(1)"
+  {
+    forum frcp
+  }
+  deadline chapter13-discharge-objection-period: 60.days after FirstMeetingDate() counted_by frcp6 cite "FRBP 4004(a)(3)"
+  {
+    forum frcp
+  }
+  deadline dischargeability-complaint-period: 60.days after FirstMeetingDate() counted_by frcp6 cite "FRBP 4007(c)"
+  {
+    forum frcp
+  }
+  deadline reaffirmation-period: 60.days after FirstMeetingDate() counted_by frcp6 cite "FRBP 4008(a)"
+  {
+    forum frcp
+  }
+}
+
+/// FRBP 7004(e), 7012(a): in an adversary proceeding the summons and
+/// complaint are served (or mailed) within 7 days after the summons is
+/// issued; the answer is due within 30 days after the summons was issued
+/// unless the court sets a different time (35 for the United States, its
+/// officer or agency, 7012(a)(5)(A)); after the court denies a Rule 12
+/// motion or postpones it, the responsive pleading is due within 14 days
+/// after notice of that action (7012(a)(6)(A)).
+rule duty adversary-response-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 7012(a)"
+{
+  deadline summons-service-period: 7.days after SummonsIssued() counted_by frcp6 cite "FRBP 7004(e)(1)"
+  {
+    forum frcp
+  }
+  deadline adversary-answer-period: 30.days after SummonsIssued() counted_by frcp6 cite "FRBP 7012(a)(1)"
+  {
+    forum frcp
+  }
+  deadline adversary-us-answer-period: 35.days after SummonsIssued() counted_by frcp6 cite "FRBP 7012(a)(5)(A)"
+  {
+    forum frcp
+  }
+  deadline adversary-post-motion-answer-period: 14.days after AdversaryRule12MotionDenied() counted_by frcp6 cite "FRBP 7012(a)(6)(A)"
+  {
+    forum frcp
+  }
+}
+
+/// The bankruptcy court's post-judgment motions, each within 14 days after
+/// the judgment is entered: to amend or add findings (7052), for a new
+/// trial or to alter or amend (9023(b)), a renewed motion for judgment or a
+/// new-trial request in a jury case (9015(c)), and a Rule 9024 motion that
+/// tolls the time to appeal (8002(b)(1)(D)).
+rule duty post-judgment-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9023(b)"
+{
+  deadline amend-findings-period: 14.days after BankruptcyOrderEntered() counted_by frcp6 cite "FRBP 7052"
+  {
+    forum frcp
+  }
+  deadline new-trial-period: 14.days after BankruptcyOrderEntered() counted_by frcp6 cite "FRBP 9023(b)"
+  {
+    forum frcp
+  }
+  deadline jury-renewed-motion-period: 14.days after BankruptcyOrderEntered() counted_by frcp6 cite "FRBP 9015(c)"
+  {
+    forum frcp
+  }
+  deadline tolling-relief-motion-period: 14.days after BankruptcyOrderEntered() counted_by frcp6 cite "FRBP 8002(b)(1)(D)"
+  {
+    forum frcp
+  }
+}
+
+/// FRBP 9033(b): in a non-core proceeding a party may object to the
+/// proposed findings and conclusions within 14 days after being served,
+/// and respond to another party's objections within 14 days after being
+/// served with them.
+rule duty proposed-findings-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9033(b)"
+{
+  deadline findings-objection-period: 14.days after ProposedFindingsServed() counted_by frcp6 cite "FRBP 9033(b)(1)"
+  {
+    forum frcp
+  }
+  deadline findings-response-period: 14.days after FindingsObjectionsServed() counted_by frcp6 cite "FRBP 9033(b)(1)"
+  {
+    forum frcp
+  }
+}
+
+test "schedules period runs 14 days after petition filed" cite "FRBP 1007(c)(1)"
+{
+  given PetitionFiled() on 2026-03-03
+  expect deadline(schedules-period) == 2026-03-17
+}
+
+test "involuntary creditor list period runs 7 days after order for relief entered" cite "FRBP 1007(a)(2)"
+{
+  given OrderForReliefEntered() on 2026-03-03
+  expect deadline(involuntary-creditor-list-period) == 2026-03-10
+}
+
+test "involuntary schedules period runs 14 days after order for relief entered" cite "FRBP 1007(c)(2)"
+{
+  given OrderForReliefEntered() on 2026-03-03
+  expect deadline(involuntary-schedules-period) == 2026-03-17
+}
+
+test "equity holders list period runs 14 days after order for relief entered" cite "FRBP 1007(a)(3)"
+{
+  given OrderForReliefEntered() on 2026-03-03
+  expect deadline(equity-holders-list-period) == 2026-03-17
+}
+
+test "involuntary answer period runs 21 days after involuntary summons served" cite "FRBP 1011(b)"
+{
+  given InvoluntarySummonsServed() on 2026-03-03
+  expect deadline(involuntary-answer-period) == 2026-03-24
+}
+
+test "abuse dismissal period runs 60 days after first meeting date" cite "FRBP 1017(e)(2)"
+{
+  given FirstMeetingDate() on 2026-03-03
+  expect deadline(abuse-dismissal-period) == 2026-05-04
+}
+
+test "claim period runs 70 days after order for relief entered" cite "FRBP 3002(c)"
+{
+  given OrderForReliefEntered() on 2026-03-03
+  expect deadline(claim-period) == 2026-05-12
+}
+
+test "converted claim period runs 70 days after case converted" cite "FRBP 3002(c)"
+{
+  given CaseConverted() on 2026-03-03
+  expect deadline(converted-claim-period) == 2026-05-12
+}
+
+test "involuntary claim period runs 90 days after order for relief entered" cite "FRBP 3002(c)"
+{
+  given OrderForReliefEntered() on 2026-03-03
+  expect deadline(involuntary-claim-period) == 2026-06-01
+}
+
+test "governmental claim period runs 180 days after order for relief entered" cite "FRBP 3002(c)(1)"
+{
+  given OrderForReliefEntered() on 2026-03-03
+  expect deadline(governmental-claim-period) == 2026-08-31
+}
+
+test "chapter13 plan period runs 14 days after petition filed" cite "FRBP 3015(b)(1)"
+{
+  given PetitionFiled() on 2026-03-03
+  expect deadline(chapter13-plan-period) == 2026-03-17
+}
+
+test "converted chapter13 plan period runs 14 days after case converted" cite "FRBP 3015(b)(2)"
+{
+  given CaseConverted() on 2026-03-03
+  expect deadline(converted-chapter13-plan-period) == 2026-03-17
+}
+
+test "discharge objection period runs 60 days after first meeting date" cite "FRBP 4004(a)(1)"
+{
+  given FirstMeetingDate() on 2026-03-03
+  expect deadline(discharge-objection-period) == 2026-05-04
+}
+
+test "chapter13 discharge objection period runs 60 days after first meeting date" cite "FRBP 4004(a)(3)"
+{
+  given FirstMeetingDate() on 2026-03-03
+  expect deadline(chapter13-discharge-objection-period) == 2026-05-04
+}
+
+test "dischargeability complaint period runs 60 days after first meeting date" cite "FRBP 4007(c)"
+{
+  given FirstMeetingDate() on 2026-03-03
+  expect deadline(dischargeability-complaint-period) == 2026-05-04
+}
+
+test "reaffirmation period runs 60 days after first meeting date" cite "FRBP 4008(a)"
+{
+  given FirstMeetingDate() on 2026-03-03
+  expect deadline(reaffirmation-period) == 2026-05-04
+}
+
+test "summons service period runs 7 days after summons issued" cite "FRBP 7004(e)(1)"
+{
+  given SummonsIssued() on 2026-03-03
+  expect deadline(summons-service-period) == 2026-03-10
+}
+
+test "adversary answer period runs 30 days after summons issued" cite "FRBP 7012(a)(1)"
+{
+  given SummonsIssued() on 2026-03-03
+  expect deadline(adversary-answer-period) == 2026-04-02
+}
+
+test "adversary us answer period runs 35 days after summons issued" cite "FRBP 7012(a)(5)(A)"
+{
+  given SummonsIssued() on 2026-03-03
+  expect deadline(adversary-us-answer-period) == 2026-04-07
+}
+
+test "amend findings period runs 14 days after bankruptcy order entered" cite "FRBP 7052"
+{
+  given BankruptcyOrderEntered() on 2026-03-03
+  expect deadline(amend-findings-period) == 2026-03-17
+}
+
+test "new trial period runs 14 days after bankruptcy order entered" cite "FRBP 9023(b)"
+{
+  given BankruptcyOrderEntered() on 2026-03-03
+  expect deadline(new-trial-period) == 2026-03-17
+}
+
+test "jury renewed motion period runs 14 days after bankruptcy order entered" cite "FRBP 9015(c)"
+{
+  given BankruptcyOrderEntered() on 2026-03-03
+  expect deadline(jury-renewed-motion-period) == 2026-03-17
+}
+
+test "tolling relief motion period runs 14 days after bankruptcy order entered" cite "FRBP 8002(b)(1)(D)"
+{
+  given BankruptcyOrderEntered() on 2026-03-03
+  expect deadline(tolling-relief-motion-period) == 2026-03-17
+}
+
+test "findings objection period runs 14 days after proposed findings served" cite "FRBP 9033(b)(1)"
+{
+  given ProposedFindingsServed() on 2026-03-03
+  expect deadline(findings-objection-period) == 2026-03-17
+}
+
+test "findings response period runs 14 days after findings objections served" cite "FRBP 9033(b)(1)"
+{
+  given FindingsObjectionsServed() on 2026-03-03
+  expect deadline(findings-response-period) == 2026-03-17
+}
+
+test "exemption objections run 30 days after the latest starting event" cite "FRBP 4003(b)(1)"
+{
+  given ExemptionEventOccurred() on 2026-03-03
+  given ExemptionEventOccurred() on 2026-03-10
+  expect deadline(exemption-objection-period) == 2026-04-09
+}
+
+test "an answer after a denied Rule 12 motion runs 14 days after notice" cite "FRBP 7012(a)(6)(A)"
+{
+  given AdversaryRule12MotionDenied() on 2026-03-03
+  expect deadline(adversary-post-motion-answer-period) == 2026-03-17
+}

@@ -1,0 +1,110 @@
+module frbp.events
+
+// What starts an FRBP period. A matter records each on the day it
+// happens; an event named for a scheduled date (`FirstMeetingDate`) is
+// recorded on that date, set or not held.
+/// A voluntary petition is filed (§ 301): the order for relief (FRBP
+/// 1007(c)(1), 3015(b)).
+event PetitionFiled()
+/// The order for relief is entered: on the petition in a voluntary case,
+/// by order in an involuntary one (FRBP 1007(a)(2), 3002(c)).
+event OrderForReliefEntered()
+/// The order converting the case to Chapter 12 or 13 is entered (FRBP
+/// 3002(c), 3015(b)).
+event CaseConverted()
+/// The first date set for the § 341(a) meeting of creditors, whether or
+/// not the meeting is held then (FRBP 1017(e)(2), 4004(a), 4007(c),
+/// 4008(a)).
+event FirstMeetingDate()
+/// One of the events that start the FRBP 4003(b)(1) time to object to an
+/// exemption happens: the conclusion of the § 341 meeting, an amendment to
+/// the list of exempt property, or a supplemental schedule. The time runs
+/// from the latest.
+event ExemptionEventOccurred()
+/// The summons on an involuntary petition is served (FRBP 1011(b)).
+event InvoluntarySummonsServed()
+/// The clerk issues the summons in an adversary proceeding (FRBP 7004(e),
+/// 7012(a)).
+event SummonsIssued()
+/// The court denies a Rule 12 motion in an adversary proceeding or
+/// postpones its disposition until trial (FRBP 7012(a)(6)(A)).
+event AdversaryRule12MotionDenied()
+/// A judgment, order, or decree of the bankruptcy court is entered in the
+/// docket under FRBP 5003(a) (FRBP 8002(a)(5)). The order disposing of the
+/// last remaining FRBP 8002(b)(1) motion is recorded as another entry: the
+/// notice-of-appeal period runs from the latest.
+event BankruptcyOrderEntered()
+/// The clerk serves the bankruptcy court's proposed findings of fact and
+/// conclusions of law in a non-core proceeding (FRBP 9033(a)-(b)).
+event ProposedFindingsServed()
+/// A party is served with another party's objections to proposed findings
+/// (FRBP 9033(b)(1)).
+event FindingsObjectionsServed()
+/// The first notice of appeal is filed with the bankruptcy clerk (FRBP
+/// 8002(a)(3), 8003).
+event NoticeOfAppealFiled()
+/// The notice of appeal is served (28 U.S.C. § 158(c)(1)(B); FRBP
+/// 8003(c)).
+event NoticeOfAppealServed()
+/// A party moves the bankruptcy court to extend the time to file a notice
+/// of appeal (FRBP 8002(d)(1)).
+event AppealExtensionMoved()
+/// A notice of appeal as of right becomes effective under FRBP 8002
+/// (FRBP 8009(a)(1)(B)).
+event NoticeOfAppealEffective()
+/// A motion for leave to appeal an interlocutory order is served (FRBP
+/// 8004(b)(2)).
+event LeaveToAppealMotionServed()
+/// The district court or BAP orders an appellant who filed a notice
+/// without a motion for leave to file one (FRBP 8004(d)(2)).
+event LeaveMotionOrdered()
+/// An order granting leave to appeal is entered (FRBP 8009(a)(1)(B)).
+event LeaveToAppealGranted()
+/// A statement of election to the district court is filed (FRBP 8005(c)).
+event ElectionStatementFiled()
+/// A request to certify a direct appeal to the court of appeals is served
+/// (FRBP 8006(f)(3)).
+event DirectCertificationRequestServed()
+/// A certification of a direct appeal becomes effective under FRBP
+/// 8006(a) (FRBP 8006(g)).
+event CertificationEffective()
+/// The appellant serves its designation of the record and statement of
+/// the issues (FRBP 8009(a)(2)(A)).
+event AppellantDesignationServed()
+/// The cross-appellant serves its designation and statement (FRBP
+/// 8009(a)(3)).
+event CrossAppellantDesignationServed()
+/// The appellant files a copy of its transcript order, or a certificate
+/// that it orders none (FRBP 8009(b)(2)-(3)).
+event AppellantTranscriptOrderFiled()
+/// The appellant's statement of the evidence, where no transcript is
+/// available, is served (FRBP 8009(c)(2)).
+event EvidenceStatementServed()
+/// A motion in the district court or BAP is served (FRBP 8013(a)(3)(A)).
+event AppealMotionServed()
+/// A response to a motion in the district court or BAP is served (FRBP
+/// 8013(a)(3)(B)).
+event AppealMotionResponseServed()
+/// A procedural order entered without awaiting a response is served
+/// (FRBP 8013(b)).
+event ProceduralOrderServed()
+/// The district or BAP clerk dockets notice that the record has been sent
+/// or is available electronically (FRBP 8016(e)(1), 8018(a)(1)).
+event RecordMadeAvailable()
+/// The appellant's principal brief is served (FRBP 8016(e)(2), 8018(a)(2)).
+event AppellantBriefServed()
+/// The appellee's brief is served (FRBP 8018(a)(3)).
+event AppelleeBriefServed()
+/// In a cross-appeal, the appellee's principal and response brief is
+/// served (FRBP 8016(e)(3)).
+event CrossAppealResponseBriefServed()
+/// In a cross-appeal, the appellant's response and reply brief is served
+/// (FRBP 8016(e)(4)).
+event CrossAppealReplyBriefServed()
+/// A letter of supplemental authorities is served (FRBP 8014(f)).
+event SupplementalAuthoritiesServed()
+/// The district court or BAP enters its judgment on appeal (FRBP 8021(d),
+/// 8022(a)(1)).
+event AppealJudgmentEntered()
+/// A bill of costs is served (FRBP 8021(d)).
+event BillOfCostsServed()

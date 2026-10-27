@@ -1,50 +1,42 @@
 module bap8.deadlines
 
-import bap8.events.{
+import bap8.events.{ ClerkNoticeOfDefaultIssued, RehearingDenied, RehearingWindowExpired }
+import core.frcp6.{ frcp6 }
+
+import frbp.appeals.{
+  appellant-brief-period,
+  appellant-designation-period,
+  appellant-election-period,
+  appellee-brief-period,
+  appellee-designation-period,
+  direct-authorization-petition-period,
+  direct-certification-request-period,
+  election-validity-period,
+  notice-period,
+  other-party-election-period,
+  rehearing-period,
+  reply-brief-period,
+  transcript-order-period,
+}
+
+import frbp.events.{
+  AppealJudgmentEntered,
   AppellantBriefServed,
   AppellantDesignationServed,
-  AppellantTranscriptOrderFiled,
   AppelleeBriefServed,
-  BapJudgmentEntered,
   BankruptcyOrderEntered,
   CertificationEffective,
-  ClerkNoticeOfDefaultIssued,
-  DirectCertificationRequestFiled,
   ElectionStatementFiled,
   NoticeOfAppealEffective,
   NoticeOfAppealFiled,
   NoticeOfAppealServed,
   RecordMadeAvailable,
-  RehearingDenied,
-  RehearingWindowExpired,
 }
 
-import core.frcp6.{ frcp6 }
-
-rule duty appeal-notice-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "FRBP 8002(a)(1)"
-{
-  deadline notice-period: 14.days after BankruptcyOrderEntered() counted_by frcp6 cite "FRBP 8002(a)(1)"
-  {
-    forum frcp
-  }
-}
-
-rule duty election-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "28 U.S.C. § 158(c)(1)"
-{
-  deadline appellant-election-period: 0.days after NoticeOfAppealFiled() counted_by frcp6 cite "28 U.S.C. § 158(c)(1)(A)"
-  {
-    forum frcp
-  }
-  deadline other-party-election-period: 30.days after NoticeOfAppealServed() counted_by frcp6 cite "28 U.S.C. § 158(c)(1)(B)"
-  {
-    forum frcp
-  }
-  deadline election-validity-period: 14.days after ElectionStatementFiled() counted_by frcp6 cite "FRBP 8005(c)"
-  {
-    forum frcp
-  }
-}
-
+// The FRBP and 28 U.S.C. § 158(c)(1) periods are lit/frbp's; this package
+// declares only the Eighth Circuit BAP's own local-rule periods over them
+// (default cure, mandate), and its tests check the FRBP periods a BAP
+// appeal runs on.
 rule duty default-cure-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "L.R. BAP 8th Cir. 8005A(c)"
 {
   deadline default-cure-period: 14.days after ClerkNoticeOfDefaultIssued() counted_by frcp6 cite "L.R. BAP 8th Cir. 8005A(c)"
@@ -53,56 +45,8 @@ rule duty default-cure-duty effective [2025-12-01, ..) known_at 2026-10-07 cite 
   }
 }
 
-rule duty record-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "FRBP 8009(a)(1)(B)"
+rule duty mandate-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "L.R. BAP 8th Cir. 8024A"
 {
-  deadline appellant-designation-period: 14.days after NoticeOfAppealEffective() counted_by frcp6 cite "FRBP 8009(a)(1)(B)"
-  {
-    forum frcp
-  }
-  deadline appellee-designation-period: 14.days after AppellantDesignationServed() counted_by frcp6 cite "FRBP 8009(a)(2)(A)"
-  {
-    forum frcp
-  }
-  deadline transcript-order-period: 14.days after NoticeOfAppealEffective() counted_by frcp6 cite "FRBP 8009(b)(1)"
-  {
-    forum frcp
-  }
-}
-
-rule duty briefing-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "FRBP 8018(a)"
-{
-  deadline appellant-brief-period: 30.days after RecordMadeAvailable() counted_by frcp6 cite "FRBP 8018(a)(1)"
-  {
-    forum frcp
-  }
-  deadline appellee-brief-period: 30.days after AppellantBriefServed() counted_by frcp6 cite "FRBP 8018(a)(2)"
-  {
-    forum frcp
-  }
-  deadline reply-brief-period: 14.days after AppelleeBriefServed() counted_by frcp6 cite "FRBP 8018(a)(3)"
-  {
-    forum frcp
-  }
-}
-
-rule duty direct-review-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "FRBP 8006(f)(1)"
-{
-  deadline direct-certification-request-period: 60.days after BankruptcyOrderEntered() counted_by frcp6 cite "FRBP 8006(f)(1)"
-  {
-    forum frcp
-  }
-  deadline direct-authorization-petition-period: 30.days after CertificationEffective() counted_by frcp6 cite "FRBP 8006(g)"
-  {
-    forum frcp
-  }
-}
-
-rule duty rehearing-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "FRBP 8022(a)(1)"
-{
-  deadline rehearing-period: 14.days after BapJudgmentEntered() counted_by frcp6 cite "FRBP 8022(a)(1)"
-  {
-    forum frcp
-  }
   deadline mandate-after-window-period: 7.days after RehearingWindowExpired() counted_by frcp6 cite "L.R. BAP 8th Cir. 8024A(b)"
   {
     forum frcp
@@ -193,7 +137,7 @@ test "petition to authorize direct appeal is due within 30 days after certificat
 
 test "rehearing is due 14 days after BAP judgment" cite "FRBP 8022(a)(1)"
 {
-  given BapJudgmentEntered() on 2026-03-03
+  given AppealJudgmentEntered() on 2026-03-03
   expect deadline(rehearing-period) == 2026-03-17
 }
 

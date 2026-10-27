@@ -41,7 +41,6 @@ fn effects<'d>(item: &Item, decl: &'d Declaration, kind: Option<&Kind>) -> Vec<U
 
 /// The effects `decl`, built from `item`, has by its form alone.
 #[allow(clippy::too_many_lines)] // one arm per declaration form
-#[allow(clippy::too_many_lines)] // one arm per declaration kind
 fn declared<'d>(item: &Item, decl: &'d Declaration) -> Vec<Use<'d>> {
     let name = item_name(item).map_or(item.range, |n| n.range);
     let mut out: Vec<Use<'d>> = Vec::new();

@@ -175,12 +175,8 @@ chance pgr-final-written-decision: "PGR Final Written Decision" by office discre
   }
 }
 
-// `/// imported` keeps this declaration's unresolvable legacy citation a
-// warning: its cite hole carries the original text, and cite-resolves
-// checks hole reasons like cites (see the bead report). MPEP §§ 803,
-// 818 and 2210-2214 are not vendored in sources/mpep.txt.
-/// imported
-chance epr-requested: "Ex Parte Reexam Requested" by office discretion effective [2024-01-31, ..) cite ?("35 U.S.C. 302–303; 37 CFR 1.510; MPEP 2209–2214") {
+chance epr-requested: "Ex Parte Reexam Requested" by office discretion effective [2024-01-31, ..) cite "35 U.S.C. 302–303; 37 CFR 1.510; MPEP 2209–2214"
+{
   group post-grant-group
   note "A reexam request is filed (by anyone, even anonymously or the owner). The Office decides within 3 months whether it raises a substantial new question of patentability (SNQ, 35 U.S.C. 303(a)). Grant rate authored at 0.92 — APPROXIMATE; SNQ grants historically run high (~90%+); flagged."
   court_listener_url "https://www.courtlistener.com/opinion/209660/in-re-swanson/"

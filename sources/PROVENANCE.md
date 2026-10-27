@@ -245,7 +245,7 @@ Entries live in the forum's own
 - sha256 (this file): `cf92787ff6bf24cb4d853cb347925f5f37dba41c1bc1cac26da0ffcfb6cf19ed`
 - Original: `original/frcrimp.pdf` as served (sha256 c89161b8a258b62af4d5298de832c43bd72f2eea1104c7625a5b561658e5875c); extraction sha256 cf92787ff6bf24cb4d853cb347925f5f37dba41c1bc1cac26da0ffcfb6cf19ed. Served at https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-criminal-procedure-dec-1-2024_0.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
 
-### `mpep.txt` — MPEP chapters 200 (partial), 600, 700, 800 (partial), 1200, 1300, 1400 (partial), 2200 (partial) — 466 sections
+### `mpep.txt` — MPEP chapters 200 (partial), 600, 700, 800 (partial), 1200, 1300, 1400 (partial), 2200 (partial) — 473 sections
 
 - Chapters 600/700/1200/1300 (456 sections) ported from
   `civ-pro-the-gathering/content/reference/mpep-sections.json` (sibling
@@ -266,8 +266,7 @@ Entries live in the forum's own
   and extracted as bounded windows around each heading. Lower extraction
   precision than the JSON-ported chapters (the two-column committee-note-
   style sidebar this edition uses bleeds into the window at points, and one
-  section — MPEP § 803 — could not be cleanly isolated this way at all, so
-  it stays unvendored; see "Deliberately not vendored yet" below); the
+  section — MPEP § 803 — could not be cleanly isolated this way at all); the
   imprecision is acceptable for the same reason as `rcfc.txt` above — it
   only affects optional quote-fuzzy-matching, never whether a citation
   resolves at all.
@@ -278,8 +277,21 @@ Entries live in the forum's own
   content those two edges describe (electing without/with traverse of a
   restriction requirement) is exactly § 818.01's own subject matter (which
   does exist, with an `(d) Traverse of Restriction` subsection).
-- sha256 (this file): `110b56e793d244d0f16d1f9f00afe18a1f3d6fe2338daba8e000fc297fe3d524`
-- Original: none as served (assembled from a port of the sibling project's mpep-sections.json plus windows cut with pdftotext -layout from the USPTO MPEP chapter PDFs mpep-0200, mpep-0800, mpep-1400 and mpep-2200); see the sources listed above.
+- §§ 803 and 818 (chapter 800, Rev. 07.2022) and §§ 2210–2214 (chapter
+  2200, Rev. 01.2024) — 7 sections `lit/mpep` cites (`MPEP 803`, `MPEP 818`,
+  the range `MPEP 2209–2214`) — fetched 2026-10-27 with curl (User-Agent
+  lit-lang-provenance/1.0) from
+  https://www.uspto.gov/web/offices/pac/mpep/mpep-0800.pdf and
+  https://www.uspto.gov/web/offices/pac/mpep/mpep-2200.pdf (lg-3djd). Each
+  page was extracted one column at a time (`pdftotext -x 0|288 -y 60 -W 288
+  -H 680`, page running heads and footers cropped out), so these sections
+  read in column order with none of the sidebar bleed above; each runs from
+  its own heading line to the next section's, runs of blank lines collapsed
+  to one. No wording changed.
+- sha256 (this file): `cc1a2ff8b62594b72c5cc085be90e8f67cb6d86ec9ade9ba0d06bd52fa9c2ead`
+- Original: `original/mpep-0800.pdf` as served (sha256 49ae8c8e65040a79d14c0010b6648fe8c61bf143586e9fe08c4677d69195d661), the chapter §§ 803, 818, 818.01 and 821.04 are cut from. Served at https://www.uspto.gov/web/offices/pac/mpep/mpep-0800.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
+- Original: `original/mpep-2200.pdf` as served (sha256 3e6dc8d4d31c9de5c6651bd8cd5ba2a920378d4f4a4f677a9d74661d241fc2d8), the chapter §§ 2209–2214, 2249 and 2254 are cut from. Served at https://www.uspto.gov/web/offices/pac/mpep/mpep-2200.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
+- The rest of the file has no original as served (a port of the sibling project's mpep-sections.json plus windows cut with pdftotext -layout from mpep-0200 and mpep-1400); see the sources listed above.
 
 ### `usc-additional.txt` — 57 more 28/35/18/5 U.S.C. sections
 

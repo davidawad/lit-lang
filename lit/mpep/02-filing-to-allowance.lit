@@ -54,11 +54,6 @@ state missing-parts: "Notice: Missing Parts" by applicant effective [2024-01-31,
   }
 }
 
-// `/// imported` keeps this declaration's unresolvable legacy citation a
-// warning: its cite hole carries the original text, and cite-resolves
-// checks hole reasons like cites (see the bead report). MPEP §§ 803,
-// 818 and 2210-2214 are not vendored in sources/mpep.txt.
-/// imported
 chance pre-examination: "Pre-Examination Processing" by examiner discretion effective [2024-01-31, ..) cite "MPEP 704; 37 CFR 1.104"
 {
   group filing-group
@@ -71,7 +66,7 @@ chance pre-examination: "Pre-Examination Processing" by examiner discretion effe
     note "First Action Allowance (FAOM) — rare but occurs on well-drafted claims with strong prior art searches."
   }
   edge-pre-examination-restriction-requirement "Examiner issues Restriction / Election Requirement" -> restriction-requirement p 0.2 {
-    authority cite ?("37 CFR 1.142; 35 U.S.C. 121; MPEP 803")
+    authority cite "37 CFR 1.142; 35 U.S.C. 121; MPEP 803"
     note "Restriction rate modeled at 0.20 (defensible 0.15–0.25 band; multi-invention applications draw restriction before/at first action). Rebalanced the pre-examination stochastic node: non-final-oa 0.90→0.70, allowance 0.10 held, restriction 0.20 — sum 1.0."
   }
 }
@@ -442,12 +437,8 @@ chance appeal-dismissed: "Appeal Dismissed (No Brief)" by office effective [2024
   }
 }
 
-// `/// imported` keeps this declaration's unresolvable legacy citation a
-// warning: its cite hole carries the original text, and cite-resolves
-// checks hole reasons like cites (see the bead report). MPEP §§ 803,
-// 818 and 2210-2214 are not vendored in sources/mpep.txt.
-/// imported
-decision restriction-requirement: "Restriction / Election Requirement" by applicant effective [2024-01-31, ..) cite ?("37 CFR 1.142; 35 U.S.C. 121; MPEP 803") {
+decision restriction-requirement: "Restriction / Election Requirement" by applicant effective [2024-01-31, ..) cite "37 CFR 1.142; 35 U.S.C. 121; MPEP 803"
+{
   group examination-group
   note "Examiner finds two or more independent and distinct inventions claimed in one application and requires restriction to one (37 CFR 1.142; 35 U.S.C. 121). Applicant must elect one invention for prosecution — with or without traverse (37 CFR 1.143). Non-elected claims are withdrawn from consideration; they may be pursued in a divisional application."
   elect-without-traverse "Elect invention WITHOUT traverse" -> election-made {
@@ -472,12 +463,8 @@ decision restriction-requirement: "Restriction / Election Requirement" by applic
   }
 }
 
-// `/// imported` keeps this declaration's unresolvable legacy citation a
-// warning: its cite hole carries the original text, and cite-resolves
-// checks hole reasons like cites (see the bead report). MPEP §§ 803,
-// 818 and 2210-2214 are not vendored in sources/mpep.txt.
-/// imported
-state election-made: "Election Filed" by examiner effective [2024-01-31, ..) cite ?("37 CFR 1.143; 37 CFR 1.144; MPEP 818") {
+state election-made: "Election Filed" by examiner effective [2024-01-31, ..) cite "37 CFR 1.143; 37 CFR 1.144; MPEP 818"
+{
   group examination-group
   note "Applicant elects one invention. Election WITH traverse (37 CFR 1.143) preserves the right to petition the restriction requirement under 37 CFR 1.144 (petition to the Director, within the reply period); election WITHOUT traverse concedes it. Withdrawn (non-elected) claims may be prosecuted in a divisional under 35 U.S.C. 121."
   edge-election-made-non-final-oa "Examiner examines elected claims — issues Office Action" -> non-final-oa {
@@ -573,7 +560,7 @@ terminal patent-issued: "Patent Issued" by applicant outcome [win, issued] effec
     note "Narrowing reissue may be filed at any time during the enforceable term. Only spec/claims/drawings needed for filing date; oath may follow (37 CFR 1.53(f); MPEP 1403). Original patent surrendered on filing, remains in force during prosecution (§ 252). Reissue filing fees $3,670.00 total, undiscounted/large-entity, effective 1/19/2025: $350.00 basic filing (37 CFR 1.16(e)) + $770.00 search (1.16(n)) + $2,550.00 examination (1.16(r)) -- the reissue examination fee is well above the $880.00 utility examination fee."
   }
   reissue-broadening-filed "File broadening reissue application — MUST be within 2 years of grant (§ 251)" -> reissue-pending {
-    authority cite ?("35 U.S.C. § 251, ¶ 4; MPEP 1412")
+    authority cite "35 U.S.C. § 251(d); MPEP 1412"
     effort 25.hours
     cost 3_670.usd
     within broadening-reissue {
@@ -585,7 +572,7 @@ terminal patent-issued: "Patent Issued" by applicant outcome [win, issued] effec
     note "Reissue filing fees $3,670.00 total, undiscounted/large-entity, effective 1/19/2025: $350.00 basic filing (37 CFR 1.16(e)) + $770.00 search (1.16(n)) + $2,550.00 examination (1.16(r)) -- the reissue examination fee is well above the $880.00 utility examination fee."
   }
   edge-patent-issued-patent-issued "Miss 2-year broadening reissue window — broadening permanently barred" -> patent-issued {
-    authority cite ?("35 U.S.C. § 251, ¶ 4; MPEP 1412")
+    authority cite "35 U.S.C. § 251(d); MPEP 1412"
     effort 0.hours
     valence bad
     note "The 2-year broadening window closes. Flag mpep/broadening-window-closed raised. Narrowing reissue remains available; broadening does not."

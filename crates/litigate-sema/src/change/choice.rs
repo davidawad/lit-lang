@@ -295,34 +295,7 @@ pub(super) fn parse_contested(
             ),
             _ => {}
         }
-        let mut prior: BTreeMap<String, u64> = options.keys().map(|o| (o.clone(), 1)).collect();
-        if let Some(given) = &table.prior {
-            for option in options.keys().filter(|o| !given.get_ref().contains_key(*o)) {
-                bad(
-                    range(given),
-                    format!("the prior of `{id}` gives option `{option}` no pseudo-count"),
-                );
-            }
-            for (option, alpha) in given.get_ref() {
-                if !options.contains_key(option) {
-                    bad(
-                        range(alpha),
-                        format!("choice `{id}` has no option `{option}`"),
-                    );
-                } else if let Ok(a @ 1..) = u64::try_from(*alpha.get_ref()) {
-                    prior.insert(option.clone(), a);
-                } else {
-                    bad(
-                        range(alpha),
-                        format!(
-                            "the pseudo-count of `{id}` option `{option}` is a positive integer, \
-                             found {}",
-                            alpha.get_ref()
-                        ),
-                    );
-                }
-            }
-        }
+        let prior = prior_of(id, options, table.prior.as_ref(), &mut bad);
         out.insert(
             id.clone(),
             Contest {
@@ -337,6 +310,46 @@ pub(super) fn parse_contested(
     } else {
         Err(reports)
     }
+}
+
+/// The prior of contested question `id` over `options`, `given` as
+/// written (1 each when absent), each malformed pseudo-count reported to
+/// `bad`.
+fn prior_of(
+    id: &str,
+    options: &BTreeMap<String, BTreeSet<String>>,
+    given: Option<&Spanned<BTreeMap<String, Spanned<i64>>>>,
+    bad: &mut impl FnMut(TextRange, String),
+) -> BTreeMap<String, u64> {
+    let mut prior: BTreeMap<String, u64> = options.keys().map(|o| (o.clone(), 1)).collect();
+    let Some(given) = given else {
+        return prior;
+    };
+    for option in options.keys().filter(|o| !given.get_ref().contains_key(*o)) {
+        bad(
+            range(given),
+            format!("the prior of `{id}` gives option `{option}` no pseudo-count"),
+        );
+    }
+    for (option, alpha) in given.get_ref() {
+        if !options.contains_key(option) {
+            bad(
+                range(alpha),
+                format!("choice `{id}` has no option `{option}`"),
+            );
+        } else if let Ok(a @ 1..) = u64::try_from(*alpha.get_ref()) {
+            prior.insert(option.clone(), a);
+        } else {
+            bad(
+                range(alpha),
+                format!(
+                    "the pseudo-count of `{id}` option `{option}` is a positive integer, found {}",
+                    alpha.get_ref()
+                ),
+            );
+        }
+    }
+    prior
 }
 
 /// The id of the world at `index` of [`combinations`].
@@ -405,7 +418,10 @@ pub fn chances(world: &World) -> Vec<Chance> {
         .iter()
         .filter_map(|(id, contest)| {
             let options = world.choices.get(id)?;
-            let total = contest.prior.values().fold(0u64, |s, a| s.saturating_add(*a));
+            let total = contest
+                .prior
+                .values()
+                .fold(0u64, |s, a| s.saturating_add(*a));
             let branches = options
                 .keys()
                 .map(|option| {

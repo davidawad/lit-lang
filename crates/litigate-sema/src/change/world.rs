@@ -331,7 +331,9 @@ fn settled<'a>(
             (scope(m, family, circuit) == crate::hir::Scope::Binding).then(|| {
                 Report::new(
                     C::InvalidWorld,
-                    at.get(&format!("@contested.{id}")).copied().unwrap_or_default(),
+                    at.get(&format!("@contested.{id}"))
+                        .copied()
+                        .unwrap_or_default(),
                     format!(
                         "precedent `{name}` binds at the world's location: it settles \
                          contested question `{id}` there"

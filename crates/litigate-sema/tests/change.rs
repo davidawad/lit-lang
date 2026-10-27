@@ -1358,14 +1358,14 @@ fn a_contested_question_lowers_to_a_chance_node_and_a_toggle_stays_worlds() {
         .map(|c| format!("{:?}", c.choices))
         .collect();
     let chances = choice::chances(&w);
-    let lowered: Vec<(String, Vec<(String, String, Vec<String>)>)> = chances
+    let lowered: Vec<_> = chances
         .iter()
         .map(|c| {
             let branches = c
                 .branches
                 .iter()
                 .map(|b| (b.option.clone(), b.exact.clone(), b.worlds.clone()))
-                .collect();
+                .collect::<Vec<_>>();
             (c.node.clone(), branches)
         })
         .collect();

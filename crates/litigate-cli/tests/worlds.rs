@@ -366,7 +366,13 @@ fn a_contested_choice_lowers_to_a_chance_node_whose_branches_are_its_worlds() {
     let timelines = json["result"]["timelines"].as_array().unwrap();
     let shown: Vec<(Value, Value, Value)> = timelines
         .iter()
-        .map(|t| (t["choices"].clone(), t["worlds"].clone(), t["filings"].clone()))
+        .map(|t| {
+            (
+                t["choices"].clone(),
+                t["worlds"].clone(),
+                t["filings"].clone(),
+            )
+        })
         .collect();
     assert_eq!(
         shown,

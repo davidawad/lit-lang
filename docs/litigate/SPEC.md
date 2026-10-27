@@ -2182,6 +2182,11 @@ judge = "..."                # optional
 [choice.rule-59e-2009]       # optional choice points (below)
 without = []                 # option name = set of layers
 with = ["pkg-c"]
+
+[contested.rule-59e-2009]    # optional: the choice is a contested question (below)
+basis = "estimate"           # sourced | calibrated | expert | estimate (default)
+source = "..."               # what a non-estimate basis rests on; none for an estimate
+prior = { with = 3, without = 1 }  # Dirichlet pseudo-counts; default 1 each
 ```
 
 Unknown keys are rejected. `as_of` and `known_at` are query coordinates,
@@ -2244,6 +2249,25 @@ error, L1014 or L3003, so nothing is judged there). Worlds with the same
 outcome for every filing are grouped. The worlds are enumerated
 exhaustively by the checker itself, each the stratified model of §5.4 and
 §5.5; no solver is involved.
+
+**Contested questions** (lg-fq2.8; design review §3.4, §6 item 23). A
+`[contested.ID]` table makes choice point `ID` a contested question:
+unsettled law at the world's ι, drawn by the tribunal, not chosen. Its
+`prior` gives every option a positive integer pseudo-count (1 each when
+absent), its `basis` labels the prior (§13.8), and a basis other than
+`estimate` names its `source`. A table naming no choice point, an
+unknown basis, a missing or superfluous `source`, or a prior missing an
+option, naming another, or not a positive integer is L1013; so is (in
+`check`) a contested option holding a precedent that binds at ι, which
+settles the question there. `worlds` still replays every combination,
+and lowers each contested question to a chance node `{node: "choice.ID",
+choice, basis, source?, branches: [{option, alpha, exact, p, worlds}]}`:
+each branch's probability is its prior's mean `α/Σα` (`exact` as a
+reduced `n/d`), its `worlds` the ids of the worlds taking the option. An
+uncontested choice point lowers to no node and stays worlds: `timelines`
+lists each combination of the uncontested options with its worlds (each
+with `p`, the product of its contested branches' probabilities; 1 with no
+contested question) and each filing's probability of each outcome there.
 
 ## 6. Types and permitted operations
 
@@ -2974,7 +2998,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | `timeline` | `FILE` (`.case` or `.lit`), `--as-of`, `--known-at`, `--layers ID,+ID,-ID`, `--world ID` | a `litigate.timeline/1` document ([TIMELINE.md](TIMELINE.md), schema `timeline.v1.schema.json`) |
 | `calendar` | `CASE`, `--out FILE`, `--all`, `--remind DAYS` (repeatable) | `{case, as_of, written, events:[{uid, deadline, due, status, trigger, trigger_date, authority, counting, counting_cite}], unscheduled:[{deadline, trigger, trigger_date, status, reason}], ics}`: one all-day RFC 5545 `VEVENT` per deadline with a computed due date (open ones unless `--all`), `UID` a hash of case, deadline, trigger and trigger date, `DTSTAMP` the matter's `as_of`; an unknown due date is never given one. A matter with errors has no calendar |
 | `lint-filing` | `CASE EVENT`, `--date DATE`, `--by PARTY` \| `--on PARTY` | `{case, filing:{date, event, mode, party, line}, as_of, accepted, replay, discharges, triggers, pending, open_before}`: the matter replayed with `DATE EVENT by\|on PARTY` spliced into `events` in docket order and `as_of` moved to `DATE` when later. Diagnostics are every error of the matter with the filing (L4001 not a legal move, L4002 late, ...) and the warnings it adds, less the L9006 of the spliced line (which cannot declare an id); the matter must check clean without it. Each `open_before` obligation carries `moves {file, extend, orders}`, what protects it on `DATE`: `file`, the `{edge, event}` of each edge out of the replayed posture `within` its deadline, one per complete event the edge's pattern stands for (a parameter the pattern leaves open takes each variant of its enum, each boolean, or `?` for a date); `extend`, each non-lock grant of the version counting it as `{by, standard, window, request, until}` (`window` `before_expiry`, `after_expiry` or `any`; `request` the `on M()` pattern; `until` a bounded grant's bound); `orders`, the events declaring `extends` it. An obligation awaiting an order on a request one of its grants reads (`on M()`, filed after its trigger and its last extending order, with no `unless` denial since) carries `pending {request, date, state: "filed, awaiting order"}`; `pending` lists the obligations the filing itself makes so. Every event name is printed as the matter names it (§5.6): bare when that is unambiguous, else `pack::Name`, so each move proposed back resolves. Text that is not one event is a usage failure |
-| `worlds` | `CASE`, `--world FILE`, `--path PATH` (repeatable), `--layer NAME` (repeatable), `--vary NAME` (repeatable), `--as-of`, `--known-at` | `{case, world, modality, location, choices, as_of, known_at, worlds:[{id, choices, layers:[{name, version, class, in_force, overruled_by}], lawful, filings:{key: timeliness}, deadlines:[{deadline, trigger, trigger_date, due, status}], diagnostics}], filings:[{key, date, party, event, worlds:{timeliness:[id]}}], outcomes:[{worlds, filings}]}` (§5.8): the matter in every world the file spans. A late filing is an outcome, never an envelope error; the envelope fails only for the world file, a package in scope, or the matter's own L0xxx-L2xxx errors. Runs over an in-memory source too (wasm) |
+| `worlds` | `CASE`, `--world FILE`, `--path PATH` (repeatable), `--layer NAME` (repeatable), `--vary NAME` (repeatable), `--as-of`, `--known-at` | `{case, world, modality, location, choices, as_of, known_at, worlds:[{id, choices, layers:[{name, version, class, in_force, overruled_by}], lawful, filings:{key: timeliness}, deadlines:[{deadline, trigger, trigger_date, due, status}], diagnostics}], filings:[{key, date, party, event, worlds:{timeliness:[id]}}], outcomes:[{worlds, filings}], chance:[{node, choice, basis, source?, branches:[{option, alpha, exact, p, worlds}]}], timelines:[{choices, worlds:[{id, p}], filings:{key: {timeliness: p}}}]}` (§5.8): the matter in every world the file spans. A late filing is an outcome, never an envelope error; the envelope fails only for the world file, a package in scope, or the matter's own L0xxx-L2xxx errors. Runs over an in-memory source too (wasm) |
 | `match-docket` | `CASE DOCKET`, `--out FILE` | `{case, docket, as_of, advanced, unresolved, written, entries, text}`: PACER/RECAP docket entries (a JSON array of `{entry_number, date_filed, description, ...}`, or an object holding one under `docket_entries` or `results`) matched to the event forms of the packages the matter uses, in docket order. An entry is supported only when one form has every word of its name in the description (the most specific, when every other such form's words are among its own), the text settles every argument (an enum by one variant, chosen the same way; no other type is read from text) and one party follows `by`, `on` or `upon`; it then replays like a `lint-filing` filing with `docket N` from its entry number, on the matter as advanced so far. Each entry keeps its source verbatim, its candidates with `confidence` (the share of the name's words found) and a status: `advanced`, `rejected` (replay's diagnostics), `ambiguous`, `incomplete`, `unmatched`, or `recorded` (the matter has that docket number); only `advanced` changes the matter. `--out` writes the advanced matter; the matter must check clean first |
 | `diff` | `A B` (generated or expected JSON files or package dirs), `--as-of` | `{equal, changes:[{pointer, before, after}]}` per §8.6 |
 | `query` | `KIND` (`nodes\|edges\|deadlines\|holes\|cites\|versions`), `--match TEXT`, `--limit N`, `--cursor C` | `{matches:[{id, kind, span, cite, in_force}], next_cursor}` |

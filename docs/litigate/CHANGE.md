@@ -440,6 +440,28 @@ At `--known-at 2009-01-01`, before the order of March 26, 2009, the corpus
 holds neither the amendment nor a FRCP 6 version in force in 2010 (the
 2005 version ends December 1, 2009): the motion is `unjudged` in both.
 
+**Contested questions** (lg-fq2.8; design review §3.4, §6 item 23). A
+choice point whose options are readings of unsettled law at ι is drawn
+by the tribunal, not chosen by anyone, so the world file declares it
+contested, with a basis-labelled prior (Dirichlet pseudo-counts, 1 each
+by default; a `source` for any basis but `estimate`):
+
+```toml
+[contested.rule-59e-2009]
+basis = "estimate"
+prior = { with = 3, without = 1 }
+```
+
+`worlds` lowers it to a chance node (`chance`): one branch per option,
+with its probability `α/Σα` and the worlds taking it. Uncontested choice
+points (a change toggled, `--vary`) stay worlds: each `timelines` entry is
+one combination of their options, with its worlds weighted by the
+contested draws and each filing's probability of each outcome. With the
+prior above and `--vary change-frcp87-what-if`, the motion is timely with
+probability 1 in the timeline with the what-if and 3/4 (late 1/4) in the
+one without. A contested option holding a precedent that binds at ι is
+L1013: controlling precedent settles the question there.
+
 **Why no solver.** The worlds are a finite product of declared options,
 enumerated exhaustively, and each world's outcome is the stratified model
 the checker already computes (design review §3.3). An answer-set solver
@@ -484,10 +506,11 @@ metadata, kept as metadata about instruments, never as edit scripts
   claims' own `effective` window.
 - A matter runs under a world through `litigate worlds` (§5.1), not by
   naming a world in the `.case` (no `.case` syntax changed). A contested
-  question is a choice point the world declares; lowering it to a
-  `chance` node of the matter's scenario with a basis-labelled prior
-  (design review §3.4, §6 item 23) is not done yet: the query lists the
-  readings' worlds side by side. Golden tests against the 2009 Committee
+  question is a choice point the world declares `[contested.ID]`; it
+  lowers to a chance node of the `worlds` result with a basis-labelled
+  prior (§5.1), not yet to a node of the matter's engine scenario, and
+  its prior comes from the world file (the matter's `beliefs` cannot name
+  a choice point). Golden tests against the 2009 Committee
   Note examples and collected rulings are lg-fq2.5.
 - A modification layer that declares no node has no `start` (lg-fq2.7);
   `lit/core`, a base library, still declares its placeholder.

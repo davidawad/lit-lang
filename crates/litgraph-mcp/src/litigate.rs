@@ -211,7 +211,7 @@ const TOOLS: &[Spec] = &[
     Spec {
         name: "litigate_worlds",
         command: "worlds",
-        doc: "Alternate timelines (docs/litigate/CHANGE.md §5.1): replay a `.case` matter in every world a `.world` file spans (its layers plus one option at each `[choice.ID]` choice point, and each `vary` layer with and without) at `as_of`/`known_at`. Returns each world's layers, outcome and deadlines, each filing (an event `by` a party) with the worlds in which it is timely, late, unjudged, untimed, rejected or undetermined, and the worlds grouped by outcome. A late filing is an outcome, not an error: `ok` is false only when the world file, a package or the matter fails.",
+        doc: "Alternate timelines (docs/litigate/CHANGE.md §5.1): replay a `.case` matter in every world a `.world` file spans (its layers plus one option at each `[choice.ID]` choice point, and each `vary` layer with and without) at `as_of`/`known_at`. Returns each world's layers, outcome and deadlines, each filing (an event `by` a party) with the worlds in which it is timely, late, unjudged, untimed, rejected or undetermined, and the worlds grouped by outcome. A choice point the file declares `[contested.ID]` (unsettled law, with a basis-labelled prior) is lowered to a chance node whose branches give each option's probability and worlds; `timelines` weighs each filing's outcome over those draws per combination of the uncontested choices. A late filing is an outcome, not an error: `ok` is false only when the world file, a package or the matter fails.",
         args: &[
             arg(
                 "case",

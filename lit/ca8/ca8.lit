@@ -1,7 +1,9 @@
 module ca8.appeal
 
-import core.frap26.{ frap26 }
+import frap.briefing.{ appellant-brief-period }
 import frap.events.{ RecordFiled, EnteredOnAppeal, RehearingClosed }
+import frap.mandate.{ mandate-period }
+import frap.rehearing.{ rehearing-period }
 
 start notice-filed
 
@@ -38,31 +40,18 @@ terminal mandate: "Mandate issued" outcome [final] by office cite "FRAP 41(a)"
   note "The Internal Operating Procedures describe the court's internal assignment, panel, and decisional practices; they do not create filing deadlines."
 }
 
-rule duty file-briefs effective [2024-12-01, ..) known_at 2025-12-01 cite "FRAP 31(a)(1)"
-{
-  deadline appellant-brief-period: 40.days after RecordFiled() counted_by frap26 cite "FRAP 31(a)(1)"
-}
-
+// These FRAP periods are authored by lit/frap; this package is the Eighth
+// Circuit's layer over them and declares no national-rule deadlines.
 test "opening brief due date" cite "FRAP 31(a)(1)"
 {
   given RecordFiled() on 2025-02-05
   expect deadline(appellant-brief-period) == 2025-03-17
 }
 
-rule duty petition-for-rehearing effective [2024-12-01, ..) known_at 2025-12-01 cite "FRAP 40(d)(1)"
-{
-  deadline rehearing-period: 14.days after EnteredOnAppeal(Judgment) counted_by frap26 cite "FRAP 40(d)(1)"
-}
-
 test "rehearing due date" cite "FRAP 40(d)(1)"
 {
   given EnteredOnAppeal(Judgment) on 2025-03-03
   expect deadline(rehearing-period) == 2025-03-17
-}
-
-rule duty issue-mandate effective [2024-12-01, ..) known_at 2025-12-01 cite "FRAP 41(b)"
-{
-  deadline mandate-period: 7.days after RehearingClosed() counted_by frap26 cite "FRAP 41(b)"
 }
 
 test "mandate issuance due date" cite "FRAP 41(b)"

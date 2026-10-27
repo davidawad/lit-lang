@@ -1,6 +1,5 @@
 module change-deadline-frcp-2009-amendment.periods
 
-import core.frcp6.{ frcp6 }
 import change-deadline-frcp-base.periods.{
   JudgmentEntered,
   ClassOrderEntered,
@@ -10,12 +9,13 @@ import change-deadline-frcp-base.periods.{
   class-appeal-petition,
 }
 
+import core.frcp6.{ frcp6 }
+
 // An amendment versions base text (docs/litigate/CHANGE.md §2.2): each
 // declaration supersedes the base's from the effective date the order
 // fixes. The order's pending-case clause ("insofar as just and
 // practicable") is not modelled here: a matter's period is the one in
 // force on its trigger's date (docs/litigate/CHANGE-REPORT.md).
-
 /// FRCP 59(b) as amended effective December 1, 2009: 28 days.
 deadline new-trial-motion-2009: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) known_at 2009-03-26 supersedes new-trial-motion cite "FRCP (2009) 59(b)"
 {

@@ -36,6 +36,15 @@ fn second_keyword(node: &SyntaxNode) -> Option<Name> {
         .map(|t| name(&t))
 }
 
+/// `type Name = T [where p]`; the `where` clause names the value `it`.
+fn type_alias(node: &SyntaxNode) -> Option<ItemKind> {
+    let it = Name {
+        text: "it".into(),
+        range: node_of(node, K::WhereClause).map_or(range(node.text_range()), |c| head(&c).range),
+    };
+    Some(ItemKind::TypeAlias(ident(node)?, declared_type(node, it)?))
+}
+
 impl Lower {
     pub(crate) fn file(&mut self, root: &SyntaxNode) -> ItemTree {
         let mut tree = ItemTree::default();
@@ -93,15 +102,7 @@ impl Lower {
         let kind = match node.kind() {
             K::StartDecl => ItemKind::Start(path_of(&node_of(node, K::Ref)?)),
             K::GroupDecl => ItemKind::Group(ident(node)?, label(node)?),
-            K::TypeDecl => {
-                // A declaration's `where` clause names the value `it`.
-                let it = Name {
-                    text: "it".into(),
-                    range: node_of(node, K::WhereClause)
-                        .map_or(range(node.text_range()), |c| head(&c).range),
-                };
-                ItemKind::TypeAlias(ident(node)?, declared_type(node, it)?)
-            }
+            K::TypeDecl => type_alias(node)?,
             K::EnumDecl => {
                 let mut names = idents(node).into_iter();
                 ItemKind::Enum(names.next()?, names.collect())

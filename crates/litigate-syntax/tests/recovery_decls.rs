@@ -22,7 +22,7 @@ macro_rules! items {
 macro_rules! node_clauses {
     () => {
         "one of `by`, `discretion`, `info`, `outcome`, `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, \
-         `notwithstanding`, `supersedes`, `revives`, `override`, `delegable`, `cite`, or `{`"
+         `notwithstanding`, `supersedes`, `revives`, `override`, `interprets`, `delegable`, `cite`, or `{`"
     };
 }
 
@@ -36,7 +36,7 @@ const FILE_HEADERS_AND_SIMPLE_ITEMS: Cases = &[
         "module m\nlimit b\n",
         &["L0001 3:1-3:1 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, \
            `commenced`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, \
-           `delegable`, `cite`, or `{`, found end of file"],
+           `interprets`, `delegable`, `cite`, or `{`, found end of file"],
     ),
     (
         "module m\nlimit b { requires certificate c for words }\n",
@@ -344,7 +344,7 @@ const DEADLINES_COUNTING_AND_CALENDARS: Cases = &[
         (
             "module m\ncounting c x\n",
             &[
-                "L0001 2:12-2:13 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `delegable`, `cite`, or `{`, found `x`",
+                "L0001 2:12-2:13 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `interprets`, `delegable`, `cite`, or `{`, found `x`",
             ],
         ),
         (
@@ -418,7 +418,7 @@ const TRANSITIONS_DEFAULTS_EXCEPTIONS_AND_TESTS: Cases = &[
         (
             "module m\ndefault d x\n",
             &[
-                "L0001 2:11-2:12 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `delegable`, `cite`, or `when`, found `x`",
+                "L0001 2:11-2:12 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `interprets`, `delegable`, `cite`, or `when`, found `x`",
             ],
         ),
         (
@@ -476,7 +476,7 @@ fn grants_and_delegations() {
             ),
             (
                 "module m\ndeadline d: 1.days from E() counted_by c delegable x\n",
-                &["L0001 2:42-2:51 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `delegable`, `cite`, or `{`, found `delegable`"],
+                &["L0001 2:42-2:51 expected one of `effective`, `known_at`, `retracted`, `unknown_before`, `commenced`, `subject_to`, `notwithstanding`, `supersedes`, `revives`, `override`, `interprets`, `delegable`, `cite`, or `{`, found `delegable`"],
             ),
             (
                 "module m\ndeadline d: 1.days from E() counted_by c retracted x\n",

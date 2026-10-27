@@ -126,7 +126,7 @@ syntax_kinds! {
         KwServiceExtension = "service_extension", KwHolidays = "holidays",
         KwAnchor = "anchor", KwShortPeriod = "short_period", KwObserved = "observed",
         KwSubjectTo = "subject_to", KwNotwithstanding = "notwithstanding",
-        KwSupersedes = "supersedes", KwRevives = "revives",
+        KwSupersedes = "supersedes", KwRevives = "revives", KwInterprets = "interprets",
         KwDelegableTo = "delegable_to", KwOverride = "override", KwWhen = "when",
         KwRebuts = "rebuts", KwUndercuts = "undercuts", KwPriority = "priority",
         KwUnless = "unless", KwOtherwise = "otherwise", KwGiven = "given",

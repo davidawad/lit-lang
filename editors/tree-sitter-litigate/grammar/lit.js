@@ -610,7 +610,7 @@ module.exports = {
   relation: $ => choice(
     seq(
       field('kind', choice(
-        'subject_to', 'notwithstanding', 'supersedes', 'revives', 'override',
+        'subject_to', 'notwithstanding', 'supersedes', 'revives', 'override', 'interprets',
       )),
       field('target', $.ref),
     ),

@@ -1,0 +1,14 @@
+module change-validation-bass.reading
+
+import change-validation.splits.{ NoticeReceived, reopen-window }
+import core.frap26.{ frap26 }
+
+/// Reading B: "the better perception is that the rule requires written
+/// notice" (211 F.3d at 963), from any source (Wilkens v. Johnson, 238
+/// F.3d 328 (5th Cir. 2001)). The reading is of the 1991 text, so it runs
+/// over that text's window. (The vendored opinion has no section heading
+/// to bind, so the cite is a hole.)
+deadline bass-reading: 7.days after NoticeReceived(Written) counted_by frap26 effective [1991-12-01, 2005-12-01) interprets reopen-window cite ?("Bass v. U.S. Dep't of Agriculture, 211 F.3d 959, 963 (5th Cir. 2000)")
+{
+  forum frap
+}

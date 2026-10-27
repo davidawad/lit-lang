@@ -36,7 +36,10 @@ pub(crate) fn hir(b: &mut Builder, cx: &Context<'_>) {
         .filter(|r| {
             matches!(
                 r,
-                Relation::Override(_) | Relation::Notwithstanding(_) | Relation::SubjectTo(_)
+                Relation::Override(_)
+                    | Relation::Notwithstanding(_)
+                    | Relation::SubjectTo(_)
+                    | Relation::Interprets(_)
             )
         })
         .count();

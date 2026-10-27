@@ -1,0 +1,19 @@
+case benavides-v-bureau-of-prisons
+uses change-validation-reopen ^1.0.0, change-validation ^1.0.0
+as_of 1993-03-19
+summary "Benavides v. Bureau of Prisons, 79 F.3d 1211 (D.C. Cir. 1996): told of the order on February 17, 1993, a copy from a lawyer in another matter on March 12, the motion to reopen on March 19."
+notes "Public-record facts of benavides-dccir-1996 (sources/change-corpus/rulings). Run under split-cadc.world, split-ca5.world or split-ca9.world (`litigate worlds`): the precedent binding at the circuit selects which notice opens FRAP 4(a)(6)(A)'s window (docs/litigate/VALIDATION.md §4)."
+
+perspective benavides
+
+parties {
+  benavides: movant Person
+}
+
+events {
+  told: 1993-02-17 change-validation::NoticeReceived(Oral, Other) on benavides
+  copy: 1993-03-12 change-validation::NoticeReceived(Written, Other) on benavides
+  motion: 1993-03-19 ReopenMotionFiled() by benavides
+}
+
+stakes { reopen-moved: 0.usd, judgment-stands: 0.usd }

@@ -25,7 +25,7 @@
   "payoff_transform" "stake" "patch" "duty" "power" "liability" "from" "after" "before"
   "counted_by" "exclude_trigger_day" "include_last_day" "roll_forward_on"
   "service_extension" "holidays" "anchor" "short_period" "below" "count"
-  "basis" "allow_hours" "end_of_month" "effective" "observed" "amends" "subject_to" "notwithstanding"
+  "basis" "allow_hours" "end_of_month" "effective" "observed" "amends" "subject_to" "notwithstanding" "interprets"
   "supersedes" "revives" "override" "delegable_to" "rebuts" "undercuts"
   "priority" "url" "bearer" "designated" "interpretation" "trigger" "extend" "waive" "after_expiry" "never"
   "removes" "elects" "extends" "waives" "to" "where" "forums"

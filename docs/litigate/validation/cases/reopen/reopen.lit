@@ -1,0 +1,35 @@
+module change-validation-reopen.motion
+
+import change-validation.splits.{ reopen-window, reopen-window-rule-77d }
+
+/// A party that did not receive notice of the entry of a judgment or
+/// order may move to reopen the time to appeal (FRAP 4(a)(6)).
+start unnoticed
+
+/// The party moves to reopen the time to appeal (FRAP 4(a)(6)).
+event ReopenMotionFiled()
+
+/// To December 1, 2005, the motion is due within the 1991 text's window,
+/// as the precedent binding at the circuit reads it.
+decision unnoticed: "No notice of entry received: move to reopen the time to appeal?" by movant effective [1991-12-01, 2005-12-01) known_at 1991-04-30 cite "FRAP (2008 ed.) 4(a)(6)"
+{
+  move "Move to reopen" -> reopen-moved {
+    event ReopenMotionFiled()
+    within reopen-window
+  }
+  forgo "Let the judgment stand" -> judgment-stands
+}
+
+/// From December 1, 2005, within the window formal notice under FRCP 77(d)
+/// opens, in every circuit.
+decision unnoticed: "No notice of entry received: move to reopen the time to appeal?" by movant effective [2005-12-01, ..) known_at 2005-04-25 supersedes unnoticed@1991-12-01 cite "FRAP (2008 ed.) 4(a)(6)"
+{
+  move "Move to reopen" -> reopen-moved {
+    event ReopenMotionFiled()
+    within reopen-window-rule-77d
+  }
+  forgo "Let the judgment stand" -> judgment-stands
+}
+
+terminal reopen-moved: "Motion to reopen filed" effective [1991-12-01, ..) known_at 1991-04-30
+terminal judgment-stands: "The judgment stands" effective [1991-12-01, ..) known_at 1991-04-30

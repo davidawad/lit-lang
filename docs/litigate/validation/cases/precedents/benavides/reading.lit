@@ -1,0 +1,16 @@
+module change-validation-benavides.reading
+
+import change-validation.splits.{ NoticeReceived, reopen-window }
+import core.frap26.{ frap26 }
+
+/// Reading A: "We hold that the seven-day filing period of Rule 4(a)(6)
+/// was not triggered when an attorney not involved in this case told
+/// Benavides in February 1993 of the order"; it opens on written notice
+/// received "from the clerk or any party" (79 F.3d at 1215). The
+/// reading is of the 1991 text, so it runs over that text's window.
+/// (The vendored opinion has no section heading to bind, so the cite is a
+/// hole.)
+deadline benavides-reading: 7.days after NoticeReceived(Written, ClerkOrParty) counted_by frap26 effective [1991-12-01, 2005-12-01) interprets reopen-window cite ?("Benavides v. Bureau of Prisons, 79 F.3d 1211, 1215 (D.C. Cir. 1996)")
+{
+  forum frap
+}

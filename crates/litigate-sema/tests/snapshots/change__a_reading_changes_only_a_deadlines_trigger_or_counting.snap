@@ -1,0 +1,48 @@
+---
+source: crates/litigate-sema/tests/change.rs
+expression: rows
+---
+[
+    (
+        "another counting rule, the same trigger",
+        [],
+    ),
+    (
+        "another period",
+        [
+            "pkgs/p/rules.lit:6:79 L2007 `read` interprets `fed::answer-period@2009-12-01`, but states another period\n    note: an interpretation changes a deadline's trigger or counting rule; its period is the text's",
+        ],
+    ),
+    (
+        "a reading of a default",
+        [
+            "pkgs/p/rules.lit:6:79 L2001 `read` interprets `fed::open@2009-12-01`, which is not a deadline",
+        ],
+    ),
+    (
+        "a default that reads",
+        [
+            "pkgs/p/rules.lit:6:14 L2001 `mine` interprets `fed::answer-period`, but only a deadline can\n    note: an `interprets` reading is a deadline restating another package's deadline with the trigger or counting rule a binding precedent holds",
+        ],
+    ),
+    (
+        "its own package's deadline",
+        [
+            "pkgs/b/rules.lit:7:51 L2007 `read` interprets `own`, a declaration of its own package\n    note: a package changes its own declarations by versioning them (`effective`, `supersedes`)",
+        ],
+    ),
+    (
+        "a deadline not in force in its window",
+        [
+            "pkgs/p/rules.lit:6:52 L3002 `read` has no version in force on [2009-12-01, ..)\n    note: a gap is legal only when declared: a declaration that `supersedes read` over the gap",
+            "pkgs/p/rules.lit:6:87 L3007 `read` interprets `fed::answer-period`, which is not in force during [2001-01-01, 2002-01-01)",
+        ],
+    ),
+    (
+        "an unresolved target",
+        [
+            "pkgs/p/rules.lit:6:10 L2010 a package of class `binding precedent` cannot prescribe a time limit or how time is counted\n    note: its class permits declare, interpret, recharacterize, invalidate, waive, set-prior\n    note: `prescribe` is permitted to: base, amendment, local-rule, general-order, standing-order, case-order",
+            "pkgs/p/rules.lit:6:63 L1002 cannot find name `nowhere`",
+        ],
+    ),
+]

@@ -481,6 +481,7 @@ impl Cx<'_, '_> {
                 "supersedes" => Some(Relation::Supersedes),
                 "revives" => Some(Relation::Revives),
                 "override" => Some(Relation::Override),
+                "interprets" => Some(Relation::Interprets),
                 "delegable_to" => {
                     self.legacy_delegation(f);
                     None

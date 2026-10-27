@@ -153,7 +153,8 @@ pub fn relation_target(r: &Relation) -> &String {
         | Relation::Notwithstanding(t)
         | Relation::Supersedes(t)
         | Relation::Revives(t)
-        | Relation::Override(t) => t,
+        | Relation::Override(t)
+        | Relation::Interprets(t) => t,
     }
 }
 

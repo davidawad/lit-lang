@@ -484,8 +484,9 @@ impl<'c, 'g> Cx<'c, 'g> {
                 self.record(k, Effect::Triggered, &primary, &primary, None);
                 Some(marked)
             }
-            ([], [], [], None) if !ended && self.history(k) => {
-                self.record(k, Effect::History, &primary, &primary, None);
+            ([], [], [], None) if !ended && self.passive(k).is_some() => {
+                let effect = self.passive(k).unwrap_or(Effect::History);
+                self.record(k, effect, &primary, &primary, None);
                 Some(marked)
             }
             ([], [], [], None) => {
@@ -736,6 +737,17 @@ impl<'c, 'g> Cx<'c, 'g> {
             .into_iter()
             .chain(self.graph.motion_patterns())
             .any(|(pack, p)| matches(p, self.view(pack, k)))
+    }
+
+    /// How event `k`, taking no edge and firing no trigger, is still
+    /// legal: history a transition reads, or a notice the binding reading
+    /// of a deadline's text reads out.
+    fn passive(&self, k: usize) -> Option<Effect> {
+        if self.history(k) {
+            Some(Effect::History)
+        } else {
+            self.read_out(k).then_some(Effect::ReadOut)
+        }
     }
 
     /// Typestate: the event is not legal at any track's stage (L4001).

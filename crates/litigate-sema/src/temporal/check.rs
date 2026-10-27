@@ -175,5 +175,6 @@ pub fn relation_key(r: &Relation) -> &'static str {
         Relation::Supersedes(_) => "supersedes",
         Relation::Revives(_) => "revives",
         Relation::Override(_) => "override",
+        Relation::Interprets(_) => "interprets",
     }
 }

@@ -201,6 +201,10 @@ pub enum Effect {
     Triggered,
     /// The event took no edge and is matter history a transition reads.
     History,
+    /// The event took no edge and matches the trigger of a deadline's own
+    /// text, but not of the binding reading (`interprets`, SPEC §5.7) that
+    /// governs it in the world: it opens nothing.
+    ReadOut,
     /// A `removes` event took an option away.
     Removed,
     /// An `elects` event removed the alternatives to the option chosen.

@@ -66,12 +66,13 @@ impl Clauses {
     }
 }
 
-const RELATIONS: [SyntaxKind; 5] = [
+const RELATIONS: [SyntaxKind; 6] = [
     KwSubjectTo,
     KwNotwithstanding,
     KwSupersedes,
     KwRevives,
     KwOverride,
+    KwInterprets,
 ];
 
 /// Parses clauses in any order until none applies. Returns the clause

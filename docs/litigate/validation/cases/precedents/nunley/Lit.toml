@@ -1,0 +1,37 @@
+# The circuit split `frap-4a6-notice` (lg-i1qw; docs/litigate/VALIDATION.md
+# §4): Nunley v. City of Los Angeles counts the window from actual notice, however received (reading C).
+# It binds only in its own circuit (docs/litigate/CHANGE.md §2.8), so a
+# world selects its reading by location.
+[package]
+name = "change-validation-nunley"
+version = "1.0.0"
+language = 1
+pack_id = "change-validation-nunley"
+forum = "frap"
+authority = "FederalRule"
+title = "Validation: Nunley v. City of Los Angeles reads FRAP 4(a)(6)(A)'s notice"
+in_force = "1995-04-06"
+known_at = "2026-10-27"
+kind = "precedent"
+
+[package.roles]
+court = "nature"
+
+[package.instrument]
+source = "nunley"
+issuer = "United States Court of Appeals, Ninth Circuit"
+date = "1995-04-06"
+designation = "52 F.3d 792"
+court = "ca9"
+designated = "1995-04-06"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../../lit/core" }
+change-validation = { version = "^1.0.0", path = "../../.." }
+
+[sources.nunley]
+title = "Nunley v. City of Los Angeles, 52 F.3d 792 (9th Cir. 1995)"
+url = "https://static.case.law/f3d/52/html/0792-01.html"
+path = "sources/change-corpus/rulings/nunley-9cir-1995.txt"
+path_sha256 = "d9c766ee0d968b07143bd631832b86eb42a90732a606c743901451da54c3f420"
+as_of = "1995-04-06"

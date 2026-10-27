@@ -169,6 +169,33 @@ impl<'g> Cx<'_, 'g> {
         fired | self.unencoded_triggers(k, &found)
     }
 
+    /// Whether event `k` matches the trigger of an in-force deadline's own
+    /// text where another package's binding reading (`interprets`, SPEC
+    /// §5.7) governs it and does not count the event: a notice the
+    /// reading at the world's location reads out, which opens nothing.
+    pub(super) fn read_out(&self, k: usize) -> bool {
+        let date = self.sorted[k].1.date.as_str();
+        self.graph.deadlines().into_iter().any(|q| {
+            let Some((w, d)) = self.governing(&q, k, false) else {
+                return false;
+            };
+            let reads = d
+                .meta
+                .relations
+                .iter()
+                .any(|r| matches!(r, crate::hir::Relation::Interprets(_)));
+            reads
+                && pack_of(&w) != pack_of(&q)
+                && self.graph.world.versions(&Graph::key(&q)).versions.iter().any(|v| {
+                    v.in_force.contains(date)
+                        && matches!(
+                            self.graph.world.decls[v.decl].decl,
+                            Declaration::Deadline(text) if matches(&text.trigger, self.view(pack_of(&q), k))
+                        )
+                })
+        })
+    }
+
     /// Opens an instance, due date unknown, of every deadline whose
     /// trigger event `k` matches but whose law is not encoded on its date
     /// (`unknown_before`, SPEC §5.4), with a warning; whether any did.

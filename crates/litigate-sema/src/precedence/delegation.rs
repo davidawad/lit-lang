@@ -310,7 +310,7 @@ pub fn unmoved_claims(world: &World<'_>) -> Vec<(usize, usize, Expr)> {
                         suspend,
                     )
                 }
-                Relation::SubjectTo(_) => continue,
+                Relation::SubjectTo(_) | Relation::Interprets(_) => continue,
             };
             out.extend(
                 versions
@@ -427,6 +427,10 @@ pub fn check(
                 }
                 // `subject_to` yields: it displaces nothing.
                 Relation::SubjectTo(_) => {}
+                // A binding reading needs no delegation: only its shape.
+                Relation::Interprets(text) => {
+                    out.extend(interpreting(world, loc, a, text, &window));
+                }
             }
         }
         for d in &da.meta.delegations {
@@ -719,6 +723,93 @@ fn overriding(
         )];
     }
     unlicensed(world, loc, a, &target.key, "override", &affected)
+}
+
+/// The shape of `a`'s `interprets text` (SPEC §5.7): `a` a deadline, its
+/// target another package's deadline in force during `a`'s window, and
+/// `a`'s period the target's in every version it reads (L2001, L2007,
+/// L3007): an interpretation changes a trigger or a counting rule, never
+/// the period the text states.
+fn interpreting(
+    world: &World<'_>,
+    loc: &dyn Locate,
+    a: usize,
+    text: &str,
+    window: &Window,
+) -> Vec<Diagnostic> {
+    let da = &world.decls[a];
+    let at = || span_of(loc, da, "interprets");
+    let Declaration::Deadline(mine) = da.decl else {
+        return vec![error(
+            C::TypeMismatch,
+            at(),
+            format!("`{}` interprets `{text}`, but only a deadline can", da.meta.id),
+        )
+        .with_note(None, "an `interprets` reading is a deadline restating another package's deadline with the trigger or counting rule a binding precedent holds")];
+    };
+    let target = world.target(world.pack_of(a), text);
+    if target.key.pack == world.pack_of(a) {
+        return vec![error(
+            C::InvalidField,
+            at(),
+            format!(
+                "`{}` interprets `{text}`, a declaration of its own package",
+                da.meta.id
+            ),
+        )
+        .with_note(
+            None,
+            "a package changes its own declarations by versioning them (`effective`, `supersedes`)",
+        )];
+    }
+    let set = world.versions(&target.key);
+    if set.versions.is_empty() {
+        return Vec::new();
+    }
+    let affected = overlapping(world, &target, window);
+    if affected.is_empty() {
+        return vec![error(
+            C::NoVersionInForce,
+            at(),
+            format!(
+                "`{}` interprets `{text}`, which is not in force during {}",
+                da.meta.id,
+                window.display()
+            ),
+        )];
+    }
+    let mut out = Vec::new();
+    for v in affected {
+        let theirs = &world.decls[v];
+        match theirs.decl {
+            Declaration::Deadline(d) => {
+                if (d.amount, d.unit, d.direction) != (mine.amount, mine.unit, mine.direction) {
+                    out.push(
+                        error(
+                            C::InvalidField,
+                            at(),
+                            format!(
+                                "`{}` interprets `{}`, but states another period",
+                                da.meta.id,
+                                world.versioned(v, a)
+                            ),
+                        )
+                        .with_note(None, "an interpretation changes a deadline's trigger or counting rule; its period is the text's"),
+                    );
+                }
+            }
+            _ => out.push(error(
+                C::TypeMismatch,
+                at(),
+                format!(
+                    "`{}` interprets `{}`, which is not a deadline",
+                    da.meta.id,
+                    world.versioned(v, a)
+                ),
+            )),
+        }
+    }
+    out
 }
 
 /// The operations as source text: `extend` or `[extend, set]`.

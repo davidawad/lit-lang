@@ -370,6 +370,91 @@ fn d1_the_1985_rule_counts_the_aedpa_year_to_its_anniversary() {
     assert_eq!(year("1979-04-24", &rule(&rule1963, "frcp6")), "1980-04-24");
 }
 
+/// The circuit split `frap-4a6-notice` (VALIDATION.md §4): each split
+/// case's facts, the circuit of the world it replays in, the outcome of
+/// its motion to reopen, and the window's due date (`None`: no notice the
+/// reading counts opened it). The world holds all three precedents; the
+/// engine selects the reading binding at the circuit. At `ca3` none binds
+/// and the text's own trigger, any notice, governs.
+const SPLIT: [(&str, &str, &str, Option<&str>); 8] = [
+    // Benavides: "the seven-day window for filing the motion was never
+    // opened" (79 F.3d at 1215).
+    ("benavides", "cadc", "untimed", None),
+    ("benavides", "ca5", "timely", Some("1993-03-19")),
+    ("benavides", "ca9", "late", Some("1993-02-24")),
+    ("benavides", "ca3", "late", Some("1993-02-24")),
+    ("bass", "cadc", "timely", Some("1999-06-04")),
+    // Bass, as held: timely from the written copy of May 28.
+    ("bass", "ca5", "timely", Some("1999-06-04")),
+    // "If the seven-day filing period was triggered on May 26, then ...
+    // the motion was due to be filed June 2" (211 F.3d at 962).
+    ("bass", "ca9", "late", Some("1999-06-02")),
+    ("bass", "ca3", "late", Some("1999-06-02")),
+];
+
+/// `litigate worlds` on split case `case` (`cases/CASE.case`) in the world
+/// at `circuit` (`cases/split-CIRCUIT.world`): the precedents in force,
+/// the motion's outcome and the window's due date.
+fn split_at(case: &str, circuit: &str) -> (Vec<String>, String, Option<String>) {
+    let run = litigate(&[
+        "worlds",
+        &format!("docs/litigate/validation/cases/{case}.case"),
+        "--world",
+        &format!("docs/litigate/validation/cases/split-{circuit}.world"),
+        "--path",
+        PACKAGE,
+    ]);
+    assert_eq!(run.code, 0, "{}", run.stdout);
+    let [world] = run.json["result"]["worlds"].as_array().unwrap().as_slice() else {
+        panic!("one world: {}", run.stdout);
+    };
+    let binding = world["layers"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .filter(|l| l["in_force"] == true)
+        .map(|l| l["name"].as_str().unwrap().to_owned())
+        .collect();
+    let due = world["deadlines"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .find(|d| d["deadline"] == "change-validation::reopen-window")
+        .map(|d| d["due"].as_str().unwrap().to_owned());
+    (
+        binding,
+        world["filings"]["motion"].as_str().unwrap().to_owned(),
+        due,
+    )
+}
+
+/// The circuit split `frap-4a6-notice` with the engine selecting the
+/// reading (lg-i1qw; VALIDATION.md §4): on each split case's facts, the
+/// world at a circuit holds Benavides, Bass and Nunley, only that
+/// circuit's own precedent binds there, and its `interprets` reading of
+/// FRAP 4(a)(6)(A)'s notice decides the motion. A precedent that no longer
+/// binds at its circuit changes the outcome there.
+#[test]
+fn the_split_cases_replay_under_the_reading_binding_at_each_circuit() {
+    for (case, circuit, outcome, due) in SPLIT {
+        let bound = match circuit {
+            "cadc" => vec!["change-validation-benavides"],
+            "ca5" => vec!["change-validation-bass"],
+            "ca9" => vec!["change-validation-nunley"],
+            _ => vec![],
+        };
+        assert_eq!(
+            split_at(case, circuit),
+            (
+                bound.into_iter().map(str::to_owned).collect(),
+                outcome.to_owned(),
+                due.map(str::to_owned)
+            ),
+            "{case}'s facts at {circuit}"
+        );
+    }
+}
+
 /// VALIDATION.md states the rates these tests give.
 #[test]
 fn the_report_states_the_agreement_rates() {
@@ -400,7 +485,9 @@ fn the_report_states_the_agreement_rates() {
             all.len()
         ),
         format!(
-            "- Circuit split `frap-4a6-notice`: {split_tests} golden tests, the outcome differing by circuit on both split cases' facts."
+            "- Circuit split `frap-4a6-notice`: {} of {} world replays give the outcome of the reading the engine selects at the circuit, differing by circuit on both split cases' facts; {split_tests} golden tests.",
+            SPLIT.len(),
+            SPLIT.len()
         ),
         // bowles_replayed_before_the_overruling_is_late_as_the_sixth_circuit_held
         "- Replay before an overruling (Bowles of Thompson): 1 of 1 reproduces the outcome decided at the time.".to_owned(),

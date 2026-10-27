@@ -4,8 +4,8 @@ version = 2
 name = "change-validation"
 version = "1.0.0"
 language = 1
-source = "sha256:6d6a90c915e9fb2c11ad8d13245cbe867411cbddc4e9d3ea1e66cada7dd01f60"
-semantic = "sha256:244c50790b5377bf8566f2f3071e84e098fedd7e46a8492e6618304194f4ebc4"
+source = "sha256:c95a115f7eaa16518f862cf0274569c7edaab09b497d4af1219fc744ed0dff59"
+semantic = "sha256:ac9c3758dba9cd5ae48d56576d60ab1f8e37eedabb70e47fb8e1bfac800c783e"
 texts = [
     "frap sources/frap.txt sha256:87d71a1f443c5c084cc9f11932a66436ab300f83146ee2c5ce2654a8a4824479",
     "frap-2008 sources/usc-28-app-time-history.txt sha256:a55dd4c3b28e99491083474806c9e8bb621e4fd43b2fddf5c4359d1202f03f20",
@@ -19,6 +19,20 @@ texts = [
     "frcp-2011 sources/usc-28-app-time-history.txt sha256:a55dd4c3b28e99491083474806c9e8bb621e4fd43b2fddf5c4359d1202f03f20",
 ]
 dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "change-validation-reopen"
+version = "1.0.0"
+language = 1
+source = "sha256:ad18ad8d9fc340fc6e4c0d54b6191efc3cf4f0c8da1a7a8876674500edc96dd2"
+semantic = "sha256:be1a3ea07746fdd96b22dbaf5b249971df31e1d948122a2250595071846c16fa"
+texts = [
+    "frap sources/frap.txt sha256:87d71a1f443c5c084cc9f11932a66436ab300f83146ee2c5ce2654a8a4824479",
+]
+dependencies = [
+    "change-validation 1.0.0",
     "core 1.0.0",
 ]
 

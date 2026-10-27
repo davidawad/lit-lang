@@ -29,7 +29,7 @@ fn graphs(world: &World<'_>) -> [(Graph, &'static str); 3] {
         for r in &d.meta.relations {
             let clause = relation_key(r);
             let (graph, from, to) = match r {
-                Relation::Notwithstanding(t) | Relation::Override(t) => {
+                Relation::Notwithstanding(t) | Relation::Override(t) | Relation::Interprets(t) => {
                     (&mut wins, me.clone(), world.target(&pack, t))
                 }
                 Relation::SubjectTo(t) => {

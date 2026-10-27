@@ -1,0 +1,32 @@
+# The step the circuit split `frap-4a6-notice` turns on (lg-i1qw;
+# docs/litigate/VALIDATION.md §4): moving to reopen the time to appeal
+# within FRAP 4(a)(6)(A)'s 7-day window, so a matter replays the motion
+# against the window as the precedent binding at a world's circuit reads
+# it. It declares no period of its own.
+[package]
+name = "change-validation-reopen"
+version = "1.0.0"
+language = 1
+pack_id = "change-validation-reopen"
+forum = "frap"
+authority = "FederalRule"
+title = "Validation: a motion to reopen the time to appeal"
+in_force = "1991-12-01"
+known_at = "2026-10-27"
+
+[package.roles]
+movant = "self"
+court = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../lit/core" }
+change-validation = { version = "^1.0.0", path = "../.." }
+
+[sources.frap]
+title = "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2024"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-appellate-procedure-dec-1-2024_0.pdf"
+path = "sources/frap.txt"
+path_sha256 = "87d71a1f443c5c084cc9f11932a66436ab300f83146ee2c5ce2654a8a4824479"
+as_of = "2024-12-01"
+cite_prefixes = ["FRAP"]
+section_heading = "FRAP {n}"

@@ -1,0 +1,28 @@
+---
+source: crates/litigate-sema/tests/change.rs
+expression: rows
+---
+[
+    (
+        "a binding precedent reads another package's deadline",
+        [],
+    ),
+    (
+        "a persuasive precedent reads",
+        [
+            "pkgs/p/rules.lit:7:79 L2010 a package of class `persuasive precedent` cannot defeat another package's default or read its deadline\n    note: its class permits declare, set-prior\n    note: `interpret` is permitted to: base, amendment, local-rule, standing-order, case-order, binding precedent",
+        ],
+    ),
+    (
+        "an undesignated precedent reads",
+        [
+            "pkgs/p/rules.lit:7:79 L2010 a package of class `persuasive precedent` cannot defeat another package's default or read its deadline\n    note: its class permits declare, set-prior\n    note: `interpret` is permitted to: base, amendment, local-rule, standing-order, case-order, binding precedent",
+        ],
+    ),
+    (
+        "guidance reads",
+        [
+            "pkgs/g/rules.lit:7:79 L2010 a package of class `guidance` cannot defeat another package's default or read its deadline\n    note: its class permits declare, set-prior\n    note: `interpret` is permitted to: base, amendment, local-rule, standing-order, case-order, binding precedent",
+        ],
+    ),
+]

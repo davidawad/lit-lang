@@ -362,7 +362,9 @@ impl<'a> Graph<'a> {
                     .relations
                     .iter()
                     .filter_map(move |r| match r {
-                        Relation::Override(x) | Relation::Notwithstanding(x) => {
+                        Relation::Override(x)
+                        | Relation::Notwithstanding(x)
+                        | Relation::Interprets(x) => {
                             let k = self.world.target(pack, x).key;
                             Some(format!("{}::{}", k.pack, k.name))
                         }

@@ -1402,3 +1402,75 @@ fn a_contested_question_lowers_to_a_chance_node_and_a_toggle_stays_worlds() {
         "{settled:?}"
     );
 }
+
+/// A binding precedent's reading of `fed`'s answer period (lg-i1qw): the
+/// period the text states, run from a narrower trigger.
+const READS: &str = "event Mailed()\ndeadline read: 21.days from Mailed() counted_by c6 effective [2009-12-01, ..) interprets answer-period cite \"Demo\"";
+
+#[test]
+fn a_reading_is_typed_against_the_class_rows() {
+    let rows: Vec<(&str, Vec<String>)> = vec![
+        (
+            "a binding precedent reads another package's deadline",
+            diagnostics(&[precedent("p", "scotus", true, READS)]),
+        ),
+        // Camreta v. Greene: a district decision binds no one.
+        (
+            "a persuasive precedent reads",
+            diagnostics(&[precedent("p", "d-mass", true, READS)]),
+        ),
+        (
+            "an undesignated precedent reads",
+            diagnostics(&[precedent("p", "scotus", false, READS)]),
+        ),
+        (
+            "guidance reads",
+            diagnostics(&[layer(
+                "g",
+                "guidance",
+                "civil",
+                "CaseOrder",
+                "binds = [\"Court\"]\n",
+                READS,
+            )]),
+        ),
+    ];
+    insta::assert_debug_snapshot!(rows);
+}
+
+#[test]
+fn a_reading_changes_only_a_deadlines_trigger_or_counting() {
+    let p = |body: &str| diagnostics(&[precedent("p", "scotus", true, body)]);
+    let rows: Vec<(&str, Vec<String>)> = vec![
+        // A base package may declare the counting rule it reads with.
+        (
+            "another counting rule, the same trigger",
+            diagnostics(&[base("counting c7 { holidays cal }\ndeadline read: 21.days from Served() counted_by c7 effective [2009-12-01, ..) interprets answer-period")]),
+        ),
+        (
+            "another period",
+            p("deadline read: 14.days from Served() counted_by c6 effective [2009-12-01, ..) interprets answer-period"),
+        ),
+        (
+            "a reading of a default",
+            p("deadline read: 21.days from Served() counted_by c6 effective [2009-12-01, ..) interprets open"),
+        ),
+        (
+            "a default that reads",
+            p("default mine interprets answer-period when true => true"),
+        ),
+        (
+            "its own package's deadline",
+            diagnostics(&[base("deadline own: 3.days from Served() counted_by c6\ndeadline read: 3.days from Served() counted_by c6 interprets own")]),
+        ),
+        (
+            "a deadline not in force in its window",
+            p("deadline read: 21.days from Served() counted_by c6 effective [2001-01-01, 2002-01-01) interprets answer-period"),
+        ),
+        (
+            "an unresolved target",
+            p("deadline read: 21.days from Served() counted_by c6 interprets nowhere"),
+        ),
+    ];
+    insta::assert_debug_snapshot!(rows);
+}

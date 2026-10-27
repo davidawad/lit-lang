@@ -48,6 +48,11 @@ pub enum Relation {
     Revives(String),
     /// Current declaration overrides the target (needs its delegation).
     Override(String),
+    /// Current deadline is a binding reading of the target deadline: the
+    /// target's period, with the trigger and counting rule it states
+    /// (SPEC §5.7). Displaces the target where it binds; needs no
+    /// delegation.
+    Interprets(String),
 }
 
 /// One typed delegation capability (SPEC §5.5, design review §2.4): the

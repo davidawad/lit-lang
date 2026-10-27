@@ -134,23 +134,34 @@ carries no service method and 6(d) / 26(c) add nothing.
 ## 4. Circuit splits and overrulings
 
 **`frap-4a6-notice`.** Which notice of entry opens FRAP 4(a)(6)(A)'s 7-day
-window (1991-2005 text). `splits.lit` states each reading as its own period
-on the notice it counts (A: written, from the clerk or a party; B: any
-written notice; C: actual notice), gives each split case's facts every
-notice it records, and expects, per circuit, the outcome under the reading
-that circuit's precedent adopts:
+window (1991-2005 text). `splits.lit` states the text once,
+`reopen-window`, opened by any notice of entry (`NoticeReceived(form,
+source)`), and each circuit's precedent is a layer that `interprets` it
+(SPEC §5.7; `cases/precedents`): Benavides (cadc) from a written notice
+from the clerk or a party (reading A), Bass (ca5) from any written notice
+(reading B), Nunley (ca9) from any notice, as the text reads (reading C).
+`cases/benavides.case` and `cases/bass.case` give each split case's facts
+every notice it records and the motion to reopen (`cases/reopen`), and
+`litigate worlds` replays each in a world per circuit
+(`cases/split-CIRCUIT.world`) holding all three precedents: only the one
+of that circuit binds there (the others are persuasive, L9009), so the
+engine selects the reading:
 
-| Facts | cadc (A: Benavides) | ca5 (B: Bass, Wilkens) | ca8 / ca9 (C: Zimmer, Nunley) |
-|---|---|---|---|
-| Benavides: told February 17, 1993; copy March 12; motion March 19 | timely (180 days to March 30) | timely (due March 19) | late (due February 24) |
-| Bass: telephone May 26, 1999; clerk's copy May 28; motion June 3 | timely (due June 4) | timely (due June 4), as held | late (due June 2, the date Bass computes for this reading) |
+| Facts | cadc (A: Benavides) | ca5 (B: Bass) | ca9 (C: Nunley) | ca3 (none binds: the text) |
+|---|---|---|---|---|
+| Benavides: told February 17, 1993; copy from another matter's lawyer March 12; motion March 19 | untimed: the window never opened, as held (the 180 days ran to March 30) | timely (due March 19) | late (due February 24) | late (due February 24) |
+| Bass: telephone May 26, 1999; clerk's copy May 28; motion June 3 | timely (due June 4) | timely (due June 4), as held | late (due June 2, the date Bass computes for this reading) | late (due June 2) |
 
-The outcome differs by circuit on both cases' facts. The selection of the
-reading per circuit is the test's, not the engine's (D3). From December 1,
-2005 the rule's own text settles the split: only formal notice of entry
-under Civil Rule 77(d) opens the window, still 7 days (14 from December 1,
-2009), in every circuit; the readings end there (two more golden tests;
-D10).
+The outcome differs by circuit on both cases' facts, and the selection is
+the engine's: a notice the binding reading does not count opens nothing
+(`read-out`). A precedent that no longer binds at its circuit loses its
+reading there, and the replay fails
+(`the_split_cases_replay_under_the_reading_binding_at_each_circuit`). Zimmer
+(8th Cir.) is a dictum, not a layer. From December 1, 2005 the rule's own
+text settles the split: only formal notice of entry under Civil Rule 77(d)
+opens the window, still 7 days (14 from December 1, 2009), in every
+circuit; the readings, each of the 1991 text, end there (two more golden
+tests; D10).
 
 **`aedpa-grace-end`.** One side counted. The April 24 side counts the year
 under FRCP 6(a) as in force in 1996-1998, to its anniversary, and each of
@@ -203,16 +214,14 @@ the same reason, and the corpus has no ruling that Thompson saved.
   engine's clock applies 6(a)(3) on request; the harness counts Note
   examples C8, C11, A8, A11 and Circuitronix's closed courthouse there, and
   they agree.
-- **D3, language gap.** No declaration form lets a binding precedent change
-  a deadline's trigger or its counting (CHANGE.md §7: `recharacterize` and
-  `interpret` of a deadline have rows but no form; a precedent's only
-  deadline effect is a waiver under a delegation, which neither FRAP
-  4(a)(6) nor AEDPA's period grants; lg-fq2.7's `recharacterize` changes
-  a deadline's character, not its trigger, and neither it nor `invalidate`
-  is applied when a world's layers merge yet). So a world cannot compute
-  which reading binds at a circuit, and Thompson's "unique circumstances"
-  excuse, a default no deadline consults, cannot make a late notice
-  timely in the world before Bowles. Also: no counting rule
+- **D3, language gap, partly closed by lg-i1qw.** A binding precedent's
+  reading of a deadline's trigger or counting is now a form (`interprets`,
+  SPEC §5.7), applied when a world's layers merge, so a world computes
+  which reading of `frap-4a6-notice` binds at a circuit (§4). Still open:
+  `recharacterize` and `invalidate` are not applied when a world's layers
+  merge, so Thompson's "unique circumstances" excuse, a default no
+  deadline consults, cannot make a late notice timely in the world before
+  Bowles. Also: no counting rule
   includes the trigger day (SPEC §5.3 step 2; L6001), so the April 23
   reading of the AEDPA split cannot be counted; and lit/core declares no
   state's holidays (FRCP 6(a)(6)(C)), so C9-C11 and A9-A11 use fixture
@@ -265,7 +274,7 @@ the same reason, and the corpus has no ruling that Thompson saved.
 
 - 2009 Committee Note examples: 23 of 25 agree, 0 disagree, 2 cannot be stated.
 - Timeliness rulings: 35 of 35 agree with the court, 0 disagree, 0 are refused.
-- Circuit split `frap-4a6-notice`: 8 golden tests, the outcome differing by circuit on both split cases' facts.
+- Circuit split `frap-4a6-notice`: 8 of 8 world replays give the outcome of the reading the engine selects at the circuit, differing by circuit on both split cases' facts; 3 golden tests.
 - Replay before an overruling (Bowles of Thompson): 1 of 1 reproduces the outcome decided at the time.
 - Circuit split `aedpa-grace-end`: the April 24 side counted, every ruling agreeing; the April 23 side not countable (D3).
 

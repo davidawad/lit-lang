@@ -1,0 +1,15 @@
+module change-validation-nunley.reading
+
+import change-validation.splits.{ NoticeReceived, reopen-window }
+import core.frap26.{ frap26 }
+
+/// Reading C: the motion was due "within 7 days of actual notice", so
+/// the application filed six days after Nunley "received actual notice"
+/// was timely and the later motion was not (52 F.3d at 794): any notice,
+/// as the text reads, binding at the Ninth Circuit. The reading is of the
+/// 1991 text, so it runs over that text's window. (The vendored
+/// opinion has no section heading to bind, so the cite is a hole.)
+deadline nunley-reading: 7.days after NoticeReceived() counted_by frap26 effective [1991-12-01, 2005-12-01) interprets reopen-window cite ?("Nunley v. City of Los Angeles, 52 F.3d 792, 794 (9th Cir. 1995)")
+{
+  forum frap
+}

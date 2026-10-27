@@ -53,6 +53,7 @@ fn claim(world: &World<'_>, a: usize, t: &Key, of: Option<usize>) -> Option<&'st
         let (key, text) = match r {
             Relation::Override(x) => ("override", x),
             Relation::Notwithstanding(x) => ("notwithstanding", x),
+            Relation::Interprets(x) => ("interprets", x),
             Relation::SubjectTo(x) => ("subject_to", x),
             _ => return None,
         };
@@ -76,6 +77,7 @@ fn clause_on(world: &World<'_>, a: usize, t: &Key) -> &'static str {
             let (key, text) = match r {
                 Relation::Override(x) => ("override", x),
                 Relation::Notwithstanding(x) => ("notwithstanding", x),
+                Relation::Interprets(x) => ("interprets", x),
                 Relation::SubjectTo(x) => ("subject_to", x),
                 _ => return None,
             };
@@ -188,7 +190,10 @@ pub fn claimants(world: &World<'_>, t: &Key) -> Vec<usize> {
 fn is_claim(r: &Relation) -> bool {
     matches!(
         r,
-        Relation::Override(_) | Relation::Notwithstanding(_) | Relation::SubjectTo(_)
+        Relation::Override(_)
+            | Relation::Notwithstanding(_)
+            | Relation::SubjectTo(_)
+            | Relation::Interprets(_)
     )
 }
 
@@ -201,7 +206,8 @@ pub fn active_claimants(world: &World<'_>, t: &Key, date: &str) -> Vec<usize> {
 /// Claimants of `t` active on `date` among declarations recorded by
 /// `known_at`: `t`'s own active version, and the active version of every
 /// other claimant whose claim applies to it and is licensed (a displacing
-/// claim needs [`licensed`]; `subject_to` displaces nothing).
+/// claim needs [`licensed`]; `subject_to` displaces nothing, and an
+/// `interprets` reading binds by the precedent's own scope, SPEC §5.7).
 #[must_use]
 pub fn claimants_at(world: &World<'_>, t: &Key, date: &str, known_at: Option<&str>) -> Vec<usize> {
     let mut keys: Vec<Key> = claimants(world, t)
@@ -217,7 +223,8 @@ pub fn claimants_at(world: &World<'_>, t: &Key, date: &str, known_at: Option<&st
         .filter(|&c| {
             world.key(c) == *t
                 || claim(world, c, t, base).is_some_and(|k| {
-                    k == "subject_to" || base.is_none_or(|b| licensed(world, c, b))
+                    matches!(k, "subject_to" | "interprets")
+                        || base.is_none_or(|b| licensed(world, c, b))
                 })
         })
         .collect()

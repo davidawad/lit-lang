@@ -316,7 +316,7 @@ impl Effect {
             Self::Rank => "order authority levels",
             Self::Version => "replace another package's declaration in time",
             Self::Override => "displace another package's declaration",
-            Self::Interpret => "defeat another package's default",
+            Self::Interpret => "defeat another package's default or read its deadline",
             Self::Recharacterize => "recharacterize another package's deadline",
             Self::Invalidate => "invalidate another instrument's claims",
             Self::Waive => "waive another package's requirement",

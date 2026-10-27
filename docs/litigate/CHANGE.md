@@ -190,7 +190,14 @@ cases; what it does; its effect row (the forum-independent ceiling,
   binds from its designation date (SOP 2), which may follow the decision.
 - **Effects of a binding precedent:**
   - `interpret`: a priority between reasons, Horty-style: an `exception`
-    to another package's default. The text stands.
+    to another package's default. The text stands. Or a reading of a
+    deadline's trigger or counting (lg-i1qw): a deadline that `interprets`
+    another package's deadline, its period the text's (Benavides v.
+    Bureau of Prisons, 79 F.3d 1211 (D.C. Cir. 1996): FRAP 4(a)(6)(A)'s
+    window opens on written notice from the clerk or a party), written
+    `deadline r: 7.days after E() counted_by c effective [from, to)
+    interprets d cite "..."` (SPEC §5.7). Where it binds, the matter's
+    instances of `d` run from `E` under `c`.
   - `recharacterize`: a deadline's `characterization` (Harrow v.
     Department of Defense, 601 U.S. 480 (2024): § 7703(b)(1) "is not
     jurisdictional"), written `recharacterize r: d characterization
@@ -504,8 +511,12 @@ metadata, kept as metadata about instruments, never as edit scripts
   court scope, the rung rank. A distinct `GeneralOrder` rung would change
   the lattice every package shares.
 - A precedent's waiver is written `override` (language 1 has no `waive`
-  relation). `recharacterize` and `invalidate` are declarations naming
-  another package's deadline or claim (lg-fq2.7); each is checked against
+  relation); its reading of a deadline's trigger or counting is written
+  `interprets` (lg-i1qw) and, unlike the forms below, is applied when a
+  world's layers merge: the circuit split `frap-4a6-notice` replays per
+  circuit (VALIDATION.md §4). `recharacterize` and `invalidate` are
+  declarations naming another package's deadline or claim (lg-fq2.7);
+  each is checked against
   the class rows and family cells, and is not yet applied when a world's
   layers merge (lg-fq2.4). No vendored decision recharacterizes a corpus
   deadline, so no example does.

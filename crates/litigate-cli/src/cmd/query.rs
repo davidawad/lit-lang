@@ -76,6 +76,7 @@ fn overriding(r: &Relation) -> bool {
             | Relation::Supersedes(_)
             | Relation::SubjectTo(_)
             | Relation::Revives(_)
+            | Relation::Interprets(_)
     )
 }
 

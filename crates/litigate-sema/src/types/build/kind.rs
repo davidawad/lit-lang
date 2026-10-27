@@ -20,7 +20,7 @@ fn foreign(target: &str) -> bool {
 }
 
 /// The effects `decl`, built from `item`, has in a package of class
-/// `kind`: a precedent's displacing relation is its waiver (a prospective
+/// `kind`: a precedent's `override` or `notwithstanding` is its waiver (a prospective
 /// override under the waiving power's delegation, docs/litigate/CHANGE.md
 /// §2.8), and the period that relation states is the waiver's, not a
 /// prescription of its own.
@@ -61,7 +61,16 @@ fn declared<'d>(item: &Item, decl: &'d Declaration) -> Vec<Use<'d>> {
             Some(&n.meta)
         }
         Declaration::Deadline(d) => {
-            out.push((Effect::Prescribe, name, None));
+            // A binding reading restates the text's period: it prescribes
+            // nothing of its own (SPEC §5.7).
+            if !d
+                .meta
+                .relations
+                .iter()
+                .any(|r| matches!(r, Relation::Interprets(_)))
+            {
+                out.push((Effect::Prescribe, name, None));
+            }
             if !d.extend.is_empty() || d.waive.is_some() {
                 out.push((Effect::GrantCap, name, None));
             }
@@ -146,6 +155,7 @@ fn relational<'d>(item: &Item, m: &Metadata, name: TextRange) -> Vec<Use<'d>> {
                 Relation::Notwithstanding(t) => (Effect::Override, "notwithstanding", t),
                 Relation::Supersedes(t) => (Effect::Version, "supersedes", t),
                 Relation::Revives(t) => (Effect::Version, "revives", t),
+                Relation::Interprets(t) => (Effect::Interpret, "interprets", t),
                 // Yielding displaces nothing.
                 Relation::SubjectTo(_) => return None,
             };

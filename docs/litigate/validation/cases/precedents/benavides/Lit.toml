@@ -1,0 +1,37 @@
+# The circuit split `frap-4a6-notice` (lg-i1qw; docs/litigate/VALIDATION.md
+# §4): Benavides v. Bureau of Prisons holds that only a written notice from the clerk or a party opens the 7-day window (reading A).
+# It binds only in its own circuit (docs/litigate/CHANGE.md §2.8), so a
+# world selects its reading by location.
+[package]
+name = "change-validation-benavides"
+version = "1.0.0"
+language = 1
+pack_id = "change-validation-benavides"
+forum = "frap"
+authority = "FederalRule"
+title = "Validation: Benavides v. Bureau of Prisons reads FRAP 4(a)(6)(A)'s notice"
+in_force = "1996-04-02"
+known_at = "2026-10-27"
+kind = "precedent"
+
+[package.roles]
+court = "nature"
+
+[package.instrument]
+source = "benavides"
+issuer = "United States Court of Appeals, District of Columbia Circuit"
+date = "1996-04-02"
+designation = "79 F.3d 1211"
+court = "cadc"
+designated = "1996-04-02"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../../lit/core" }
+change-validation = { version = "^1.0.0", path = "../../.." }
+
+[sources.benavides]
+title = "Benavides v. Bureau of Prisons, 79 F.3d 1211 (D.C. Cir. 1996)"
+url = "https://static.case.law/f3d/79/html/1211-01.html"
+path = "sources/change-corpus/rulings/benavides-dccir-1996.txt"
+path_sha256 = "2851b99909bdd1a9778b13ca188d09a7eae2ba4afdb5b0b1ab72e7b91bfcabf9"
+as_of = "1996-04-02"

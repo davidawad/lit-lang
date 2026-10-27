@@ -1,0 +1,37 @@
+# The circuit split `frap-4a6-notice` (lg-i1qw; docs/litigate/VALIDATION.md
+# §4): Bass v. U.S. Dep't of Agriculture holds that the window opens only on a written notice, whoever sends it (reading B).
+# It binds only in its own circuit (docs/litigate/CHANGE.md §2.8), so a
+# world selects its reading by location.
+[package]
+name = "change-validation-bass"
+version = "1.0.0"
+language = 1
+pack_id = "change-validation-bass"
+forum = "frap"
+authority = "FederalRule"
+title = "Validation: Bass v. U.S. Dep't of Agriculture reads FRAP 4(a)(6)(A)'s notice"
+in_force = "2000-05-23"
+known_at = "2026-10-27"
+kind = "precedent"
+
+[package.roles]
+court = "nature"
+
+[package.instrument]
+source = "bass"
+issuer = "United States Court of Appeals, Fifth Circuit"
+date = "2000-05-23"
+designation = "211 F.3d 959"
+court = "ca5"
+designated = "2000-05-23"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../../../lit/core" }
+change-validation = { version = "^1.0.0", path = "../../.." }
+
+[sources.bass]
+title = "Bass v. U.S. Dep't of Agriculture, 211 F.3d 959 (5th Cir. 2000)"
+url = "https://static.case.law/f3d/211/html/0959-01.html"
+path = "sources/change-corpus/rulings/bass-5cir-2000.txt"
+path_sha256 = "9c30747ec5c073a1e4f0c69afe1ce510356445b5fac0d05f7466de6c61916d5f"
+as_of = "2000-05-23"

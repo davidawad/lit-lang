@@ -314,7 +314,7 @@ VersionClause= ("effective" | "commenced"), Interval
              | ("known_at" | "retracted" | "unknown_before"), Date ;
 Interval     = "[", Date, ",", (Date | ".."), ")" ;
 Relation     = ("subject_to" | "notwithstanding" | "supersedes" | "revives"
-             | "override"), Ref | "delegable", Delegation
+             | "override" | "interprets"), Ref | "delegable", Delegation
              | "delegable_to", IdList ;            (* legacy: L2007, §5.5 *)
 Delegation   = "{", { ( ("to" | "op"), (Ref | IdList) | "max", Duration
                | "discretion", Ident | "on", Call | Cite ), Sep }, "}" ;
@@ -1696,7 +1696,8 @@ winner is chosen as follows:
 
 1. Explicit relations: `A subject_to B` (B wins), `A notwithstanding B` (A
    wins), `A supersedes B` (B is inactive during A's interval), and
-   `A revives B` (B is active again after A's superseding interval ends).
+   `A revives B` (B is active again after A's superseding interval ends),
+   and deadline `A interprets B` (A wins: a binding reading of B, §5.7).
    Repeal alone does not revive.
 2. If still unresolved, and only between comparable authorities: higher
    authority, then the declaration with the narrower subject matter (its
@@ -1709,7 +1710,8 @@ winner is chosen as follows:
    outranks B's, or a typed `delegable` capability of B (or an emergency
    `grant` reaching B) names A's authority and grants the operations the
    relation performs, within its bound (L3004; below). An unlicensed
-   relation has no effect on selection.
+   relation has no effect on selection. `interprets` needs none: a
+   reading binds by its instrument's class and scope (§5.7, §5.8).
 
 `default d when C => V` concludes V when C holds. `exception e rebuts d when C
 => V'` concludes V' instead. `exception e undercuts d when C` disables d
@@ -1743,9 +1745,10 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   court level: such a conflict is fixed in the package's data. No
   diagnostic enforces this in language 1.
 - **Claimants.** The declarations that "apply to the same target" T are T
-  itself and every declaration with `override T`, `notwithstanding T`, or
-  `subject_to T`. On each day, the active claimant that beats every other
-  active claimant wins. Stage 1: `notwithstanding` and `override` win,
+  itself and every declaration with `override T`, `notwithstanding T`,
+  `interprets T` or `subject_to T`. On each day, the active claimant that
+  beats every other active claimant wins. Stage 1: `notwithstanding`,
+  `override` and `interprets` win,
   `subject_to` yields; a `@D` target applies only while version D is
   active, and a displacing claim counts only when licensed (step 3).
   Stage 2, for pairs stage 1 leaves open and whose authorities are
@@ -2151,7 +2154,7 @@ and needs no solver. The effects a declaration has:
 | `rank` | an `authority` chain |
 | `version` | `supersedes` or `revives` naming another package's declaration |
 | `override` | `override` or `notwithstanding` naming another package's declaration |
-| `interpret` | an exception to another package's default or exception |
+| `interpret` | an exception to another package's default or exception; a deadline that `interprets` another package's deadline (its period then prescribes nothing of its own) |
 | `grant-cap` | a `delegable` clause, a deadline's `extend` or `waive` grant, a `grant` |
 | `set-prior` | `p` on an edge of a chance node |
 | `add-fact` | a `fact`-tagged node |
@@ -2208,6 +2211,25 @@ and the family's cell like any other (L2010), and in a world it is a
 binding effect, so a precedent that does not bind at the location is
 L9009 (§5.8). Neither lowers (§8.1): which character or claim a matter's
 deadline has under a world's layers is lg-fq2.4's world run.
+
+**Readings** (lg-i1qw). `deadline r: P after E counted_by c effective
+[from, to) interprets d` is a reading of deadline `d` that a binding
+precedent holds: over `r`'s window, `d` runs from trigger `E` and is
+counted by `c`, and its period stays `P`, the text's (Benavides v. Bureau
+of Prisons, 79 F.3d 1211 (D.C. Cir. 1996): FRAP 4(a)(6)(A)'s "receives
+notice" is written notice from the clerk or a party). Its effect is
+`interpret`, so the class rows type-check it like any other (L2010: a
+persuasive precedent, guidance); `r` must be a deadline and `d` another
+package's deadline (L2001), in force during `r`'s window (L3007), whose
+period every version `r` reads states (L2007), not one of `r`'s own
+package (L2007). It needs no delegation (§5.5 step 3), and where both
+apply `r` beats `d` (stage 1): replay and the schedule count `d`'s
+instances from `E` under `c`, an event matching `d`'s own trigger but
+not `E` opens nothing (`read-out` in the trace), and the instance keeps
+`d`'s name. In a world it is a binding effect, so a precedent that does
+not bind at the location has no reading there (L9009) and `d`'s text
+governs; two binding readings of one deadline in one world are ordered
+as any two claimants are (§5.5 step 2), else L3003.
 
 **The forum-family matrix.** `lit/core`'s `[family.*]` tables (§4.1;
 docs/litigate/CHANGE.md §3) are data, not compiler code (design review
@@ -3716,3 +3738,26 @@ Not done here: applying either form when a world's layers are merged
 (which character or claim a matter's deadline has in a world) is
 lg-fq2.4's world run; two layers of one world recharacterizing one
 deadline differently are not yet a set-merge conflict.
+
+### 13.13 Status: readings of a deadline's trigger and counting (lg-i1qw)
+
+Negative tests: `litigate-sema/tests/change.rs` (`a_reading_*`); the
+engine's selection: `litigate-cli/tests/change_validation.rs`
+(`the_split_cases_replay_under_the_reading_binding_at_each_circuit`).
+
+1. **`interprets d`** is a relation of a deadline (§3.1, §5.5, §5.7): the
+   reading a binding precedent holds of another package's deadline, with
+   its own trigger and counting rule and the text's period. It lowers as a
+   claimant of `d`, so replay, the schedule and the clock select it like
+   any winning claimant, and only in a world where its precedent binds.
+2. **The circuit split `frap-4a6-notice`** is engine-chosen: Benavides
+   (D.C. Cir.), Bass (5th Cir.) and Nunley (9th Cir.) each interpret the
+   1991 FRAP 4(a)(6)(A) window (docs/litigate/validation/cases), and one
+   world per circuit holding all three replays the split cases' facts
+   (docs/litigate/VALIDATION.md §4).
+
+Not done here: a reading counting the trigger day itself (the April 23
+side of the AEDPA split needs a counting rule SPEC §5.3 step 2 forbids,
+L6001), and a reading's `effective` window is the text's, not gated by
+the decision's date: the world run applies a binding decision to every
+matter it replays (Harper).

@@ -1,0 +1,207 @@
+module flsd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Southern District's own periods, computed under the federal rules
+// (Local Rule 7.1(c)(1): "Fed. R. Civ. P. 6(a)"). Absent permission, a
+// motion with its memorandum and an opposing memorandum are limited to 20
+// pages and a reply to 10 (Local Rule 7.1(c)(2)); a statement of material
+// facts to 10 pages, with up to 5 more for an opponent's additional facts
+// (Local Rule 56.1(b)); a notice of supplemental authority and its
+// response to 200 words each (Local Rule 7.8); a bill of costs memorandum
+// to 10 pages (Local Rule 7.3(c)). A draft fee motion is served at least
+// 30 days before the fee motion deadline (Local Rule 7.3(b)); the parties
+// meet at least 21 days before a scheduling conference is held or a
+// scheduling order is due (Local Rule 16.1(b)(1)); a notice of settlement
+// is filed within two Court days of the agreement (Local Rule 16.4).
+/// A motion is served (Local Rule 7.1(c)(1)).
+event MotionServed()
+/// An opposing memorandum of law is served (Local Rule 7.1(c)(1)).
+event OppositionServed()
+/// A notice of removal is filed or an order of transfer entered (Local
+/// Rule 7.2).
+event RemovedOrTransferred()
+/// A notice of supplemental authority is filed (Local Rule 7.8).
+event SupplementalAuthorityNoticeFiled()
+/// The parties hold their FRCP 26(f) conference (Local Rule 16.1(b)(2)).
+event PartiesConferred()
+/// A mediation conference is held (Local Rule 16.2(f)(1)).
+event MediationConferenceHeld()
+/// A written response or objection to a discovery request or a privilege
+/// log is served (Local Rule 26.1(g)(2)).
+event DiscoveryResponseServed()
+/// A final judgment or order giving rise to a fee claim, or an appealable
+/// order giving rise to a right to tax costs, is entered (Local Rule 7.3).
+event FinalJudgmentEntered()
+/// A motion for attorneys' fees or non-taxable expenses is served (Local
+/// Rule 7.3(a)).
+event FeeMotionServed()
+/// A draft fee motion is served but not filed (Local Rule 7.3(b)).
+event DraftFeeMotionServed()
+
+/// Local Rule 7.1(c)(1): each party opposing a motion files and serves an
+/// opposing memorandum no later than 14 days after service of the motion;
+/// failing to may be cause to grant the motion by default. For a motion
+/// served with the summons and complaint, the memorandum is due when the
+/// response to the complaint is.
+deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "S.D. Fla. L.R. 7.1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 7.1(c)(1): the movant may file and serve a reply within 7
+/// days after service of the opposing memorandum, strictly limited to
+/// rebuttal.
+deadline reply-period: 7.days after OppositionServed() counted_by frcp6 cite "S.D. Fla. L.R. 7.1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 7.2: a copy of any motion pending on removal or transfer, its
+/// supporting papers and any opposition, is filed and served by the moving
+/// party within 7 days of the order of transfer or the notice of removal.
+deadline pending-motion-papers-period: 7.days after RemovedOrTransferred() counted_by frcp6 cite "S.D. Fla. L.R. 7.2"
+{
+  forum frcp
+}
+
+/// Local Rule 7.2: a supporting memorandum not yet submitted, or an
+/// opposing memorandum not yet filed, is due within 14 days after the
+/// notice of removal or the order of transfer.
+deadline pending-motion-memorandum-period: 14.days after RemovedOrTransferred() counted_by frcp6 cite "S.D. Fla. L.R. 7.2"
+{
+  forum frcp
+}
+
+/// Local Rule 7.8: an opposing party may respond to a notice of
+/// supplemental authority within 7 days of its filing; no replies.
+deadline supplemental-authority-response-period: 7.days after SupplementalAuthorityNoticeFiled() counted_by frcp6 cite "S.D. Fla. L.R. 7.8"
+{
+  forum frcp
+}
+
+/// Local Rule 16.1(b)(2): the joint conference report is submitted within
+/// 14 days of the conference.
+deadline conference-report-period: 14.days after PartiesConferred() counted_by frcp6 cite "S.D. Fla. L.R. 16.1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 16.2(f)(1): within 7 days following the mediation
+/// conference, the mediator provides the parties a Mediation Report.
+deadline mediation-report-period: 7.days after MediationConferenceHeld() counted_by frcp6 cite "S.D. Fla. L.R. 16.2(f)"
+{
+  forum frcp
+}
+
+/// Local Rule 26.1(g)(2)(A)(i): a dispute about a written discovery
+/// response, objection or privilege log is submitted within 28 days of its
+/// service; the parties may extend it once by up to 7 days by unfiled
+/// written stipulation (Local Rule 26.1(g)(2)(C)).
+deadline discovery-dispute-period: 28.days after DiscoveryResponseServed() counted_by frcp6 cite "S.D. Fla. L.R. 26.1(g)"
+{
+  forum frcp
+}
+
+/// Local Rule 7.3(a)(1): a motion for attorneys' fees or non-taxable
+/// expenses is filed and served within 60 days of entry of the final
+/// judgment or order, whatever the prospect or pendency of review.
+deadline fee-motion-period: 60.days after FinalJudgmentEntered() counted_by frcp6 cite "S.D. Fla. L.R. 7.3(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 7.3(a): within 14 days after service of the fee motion, the
+/// respondent describes each objected time entry or expense with
+/// reasonable particularity.
+deadline fee-objection-period: 14.days after FeeMotionServed() counted_by frcp6 cite "S.D. Fla. L.R. 7.3(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 7.3(b): within 21 days of service of the draft fee motion,
+/// the parties confer in good faith on entitlement and amount.
+deadline draft-fee-conference-period: 21.days after DraftFeeMotionServed() counted_by frcp6 cite "S.D. Fla. L.R. 7.3(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 7.3(c): a bill of costs under 28 U.S.C. § 1920 is filed and
+/// served within 30 days of entry of final judgment or other appealable
+/// order; review or appeal does not toll it.
+deadline bill-of-costs-period: 30.days after FinalJudgmentEntered() counted_by frcp6 cite "S.D. Fla. L.R. 7.3(c)"
+{
+  forum frcp
+}
+
+test "an opposing memorandum is due 14 days after service" cite "S.D. Fla. L.R. 7.1(c)"
+{
+  given MotionServed() on 2026-03-02
+  expect deadline(opposition-period) == 2026-03-16
+}
+
+test "a reply is due 7 days after the opposition" cite "S.D. Fla. L.R. 7.1(c)"
+{
+  given OppositionServed() on 2026-03-16
+  expect deadline(reply-period) == 2026-03-23
+}
+
+test "pending motion papers are filed 7 days after removal" cite "S.D. Fla. L.R. 7.2"
+{
+  given RemovedOrTransferred() on 2026-03-02
+  expect deadline(pending-motion-papers-period) == 2026-03-09
+}
+
+test "a pending motion's memorandum is due 14 days after removal" cite "S.D. Fla. L.R. 7.2"
+{
+  given RemovedOrTransferred() on 2026-03-02
+  expect deadline(pending-motion-memorandum-period) == 2026-03-16
+}
+
+test "a response to supplemental authority is due within 7 days" cite "S.D. Fla. L.R. 7.8"
+{
+  given SupplementalAuthorityNoticeFiled() on 2026-03-02
+  expect deadline(supplemental-authority-response-period) == 2026-03-09
+}
+
+test "the conference report is due 14 days after the conference" cite "S.D. Fla. L.R. 16.1(b)"
+{
+  given PartiesConferred() on 2026-03-02
+  expect deadline(conference-report-period) == 2026-03-16
+}
+
+test "the mediation report is due 7 days after mediation" cite "S.D. Fla. L.R. 16.2(f)"
+{
+  given MediationConferenceHeld() on 2026-06-01
+  expect deadline(mediation-report-period) == 2026-06-08
+}
+
+test "a written discovery dispute is submitted within 28 days" cite "S.D. Fla. L.R. 26.1(g)"
+{
+  given DiscoveryResponseServed() on 2026-03-02
+  expect deadline(discovery-dispute-period) == 2026-03-30
+}
+
+test "a fee motion is due 60 days after final judgment" cite "S.D. Fla. L.R. 7.3(a)"
+{
+  given FinalJudgmentEntered() on 2026-06-01
+  expect deadline(fee-motion-period) == 2026-07-31
+}
+
+test "fee objections are due 14 days after service of the motion" cite "S.D. Fla. L.R. 7.3(a)"
+{
+  given FeeMotionServed() on 2026-07-31
+  expect deadline(fee-objection-period) == 2026-08-14
+}
+
+test "the parties confer within 21 days of the draft fee motion" cite "S.D. Fla. L.R. 7.3(b)"
+{
+  given DraftFeeMotionServed() on 2026-06-01
+  expect deadline(draft-fee-conference-period) == 2026-06-22
+}
+
+test "a bill of costs is due 30 days after final judgment" cite "S.D. Fla. L.R. 7.3(c)"
+{
+  given FinalJudgmentEntered() on 2026-06-01
+  expect deadline(bill-of-costs-period) == 2026-07-01
+}

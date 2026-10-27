@@ -6,3 +6,9 @@
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 a76f60b49290a20c38377decc1cf48f972cad228d95f67f9a754db26aa02a791. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `sd-fla/original/local-rules.pdf` as served (sha256 bac0fe34c01be93a05af039c967c903f0bd738503483a7aef56c55a93ac8f5df); extraction sha256 a76f60b49290a20c38377decc1cf48f972cad228d95f67f9a754db26aa02a791.
+
+### `sd-fla/local-rules-sectioned.txt` — S.D. Fla. Local Rules, sectioned
+
+- Derived in the pod (lg-f3q8.14) from `sd-fla/local-rules.txt` (extract sha256 a76f60b49290a20c38377decc1cf48f972cad228d95f67f9a754db26aa02a791); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (`RULE 1.1 SCOPE OF THE LOCAL RULES` through `RULE 88.11 AFTER HOURS CRIMINAL DUTY PROCEDURES`, 41 rules); the table of contents and the table of repealed and relocated rules are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, 2025 Local Rules effective December 1, 2025.
+- Sectioned sha256 afdad87f96c91b544073c847c470cd5e09bf4842c44f5ec5ff1f8681cb3dd12f (the `path_sha256` pinned by `lit/flsd/Lit.toml`).

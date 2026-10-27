@@ -1,0 +1,46 @@
+# The Southern District of Florida's Local Rules as a local-rule layer over
+# lit/frcp (28 U.S.C. § 2071; FRCP 83(a)): it declares only the periods
+# the Local Rules themselves state and re-encodes no FRCP deadline. Each
+# period is counted under FRCP 6(a), which governs "any local rule". The
+# rules are the 2025 Local Rules effective December 1, 2025
+# (sources/sd-fla).
+[package]
+name = "flsd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "flsd-local-rules"
+forum = "flsd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Southern District of Florida: Local Rules (civil)"
+description = "The Southern District of Florida's Local Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): motion briefing, removed and transferred cases, notices of supplemental authority, the scheduling conference report, mediation reports, discovery disputes, attorney's fees and bills of costs."
+in_force = "2025-12-01"
+known_at = "2026-10-27"
+unknown_before = "2025-12-01"
+jurisdiction = "United States District Court, S.D. Florida"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "flsd-lr"
+issuer = "United States District Court for the Southern District of Florida"
+date = "2025-12-01"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.flsd-lr]
+title = "Local Rules of the United States District Court for the Southern District of Florida (2025 Local Rules effective December 1, 2025)"
+url = "https://www.flsd.uscourts.gov/sites/flsd/files/25-09-22%202025%20Local%20Rules%20effective%20120125%20-%20FINAL.pdf"
+path = "sources/sd-fla/local-rules-sectioned.txt"
+path_sha256 = "afdad87f96c91b544073c847c470cd5e09bf4842c44f5ec5ff1f8681cb3dd12f"
+sha256 = "bac0fe34c01be93a05af039c967c903f0bd738503483a7aef56c55a93ac8f5df"
+as_of = "2025-12-01"
+cite_prefixes = ["S.D. Fla. L.R."]
+section_heading = "Rule {n}"

@@ -15,9 +15,11 @@
 use crate::hirx;
 use crate::out::Failure;
 use litigate_sema::hir::{self, Authored, Counts, Declaration, Limit, Measure, Verdict};
+use litigate_sema::pkg::source::Source;
 use litigate_sema::precedence::select::chain;
 use litigate_sema::temporal::world::{Key, World};
 use serde_json::{json, Value};
+use std::path::Path;
 
 /// What the filer says of the paper.
 #[derive(Debug, Clone, Default)]
@@ -54,8 +56,9 @@ impl Paper {
 /// excluded parts included).
 ///
 /// # Errors
-/// `--words` with a document, or a document that cannot be read as text.
-fn counts(paper: &Paper) -> Result<(Counts, bool), Failure> {
+/// `--words` with a document, or a document that cannot be read as text
+/// from `src`.
+fn counts(src: &dyn Source, paper: &Paper) -> Result<(Counts, bool), Failure> {
     let given = Counts {
         words: paper.words,
         pages: paper.pages,
@@ -69,7 +72,9 @@ fn counts(paper: &Paper) -> Result<(Counts, bool), Failure> {
             "--words and the document {path} both give the word count: give one"
         )));
     }
-    let bytes = std::fs::read(path).map_err(|e| Failure::new(format!("{path}: {e}")))?;
+    let bytes = src
+        .read(Path::new(path))
+        .map_err(|e| Failure::new(format!("{path}: {e}")))?;
     let text = String::from_utf8(bytes).map_err(|_| {
         Failure::new(format!(
             "{path}: not UTF-8 text; give its counts with --words/--pages/--lines"
@@ -390,12 +395,13 @@ fn holes(name: &str, limit: &Limit) -> Vec<Value> {
 /// A usage error: `--paper` conflicts with the declared kind or names
 /// none, or the counts cannot be read.
 pub fn check(
+    src: &dyn Source,
     law: &[&hir::Package],
     vocabulary: &[&hir::Package],
     (filed, date, known_at): (&str, &str, Option<&str>),
     paper: &Paper,
 ) -> Result<Value, Failure> {
-    let counts = counts(paper)?;
+    let counts = counts(src, paper)?;
     let empty = |kind: Value, from: Value, hole: String| {
         json!({
             "kind": kind, "kind_from": from, "limit": null, "violations": [],
@@ -429,6 +435,7 @@ pub fn check(
 mod tests {
     use super::*;
     use litigate_sema::hir::{CertificateReq, Exclusions, LengthBound};
+    use litigate_sema::pkg::source::Disk;
 
     fn limit(excludes: Vec<Authored<String>>) -> Limit {
         let bound = |measure, max| LengthBound {
@@ -589,22 +596,22 @@ mod tests {
             ..Paper::default()
         };
         assert_eq!(
-            counts(&paper(None)).map(|(c, g)| (c.words, c.pages, g)),
+            counts(&Disk, &paper(None)).map(|(c, g)| (c.words, c.pages, g)),
             Ok((Some(4), Some(3), true))
         );
-        assert!(counts(&paper(Some(4))).is_err());
+        assert!(counts(&Disk, &paper(Some(4))).is_err());
         let binary = dir.join("brief.pdf");
         std::fs::write(&binary, [0xff, 0xfe, 0x00]).expect("write");
         let pdf = Paper {
             document: Some(binary.to_string_lossy().into_owned()),
             ..Paper::default()
         };
-        assert!(counts(&pdf).is_err_and(|e| e.0.contains("not UTF-8")));
+        assert!(counts(&Disk, &pdf).is_err_and(|e| e.0.contains("not UTF-8")));
         let missing = Paper {
             document: Some(dir.join("none.txt").to_string_lossy().into_owned()),
             ..Paper::default()
         };
-        assert!(counts(&missing).is_err());
+        assert!(counts(&Disk, &missing).is_err());
         assert!(!Paper::default().asked());
         assert!(pdf.asked());
     }

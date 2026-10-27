@@ -134,10 +134,11 @@ pub fn describe() -> String {
 /// `LitigateRun` (`{code, stdout, stderr, files}`) as JSON. `args_json` is
 /// the argument array without the program name (`["solve",
 /// "cases/x.case"]`); `check`, `build`, `worlds` (alternate timelines),
-/// `run` and the op subcommands run. `files_json` maps repository-relative paths to texts;
+/// `run`, the op subcommands and the case boundary (`timeline`,
+/// `calendar`, `actions`, `lint-filing`) run. `files_json` maps repository-relative paths to texts;
 /// with `with_library`, the embedded `lit/` library fills in every `lit/`
 /// path the caller does not give. `build --out DIR` writes into `files`,
-/// never to a disk. Output is JSON unless `--format human`.
+/// never to a disk, as does `calendar --out FILE`. Output is JSON unless `--format human`.
 /// `check` judges deadlines at `today` (a `YYYY-MM-DD` date) unless told a
 /// date, the path the native binary runs at its own today (lg-rpmf);
 /// absent, at each matter's `as_of` (this target has no clock).

@@ -29,9 +29,9 @@ use crate::cli::Command;
 use crate::out::Outcome;
 use litigate_sema::pkg::source::Source;
 
-/// Runs `command`; `check`, `build`, `worlds`, `run` and the op
-/// subcommands read (and `build` writes) `src`, every other command the
-/// disk.
+/// Runs `command`; [`crate::IN_MEMORY_COMMANDS`] and the op subcommands
+/// read (and `build` and `calendar --out` write) `src`, every other
+/// command the disk.
 // One arm per subcommand, each only unpacking its arguments.
 #[allow(clippy::too_many_lines)]
 pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
@@ -95,13 +95,16 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             all,
             remind,
             library,
-        } => calendar::calendar(&calendar::Args {
-            case,
-            out,
-            all,
-            remind,
-            lib: library.lib,
-        }),
+        } => calendar::calendar(
+            src,
+            &calendar::Args {
+                case,
+                out,
+                all,
+                remind,
+                lib: library.lib,
+            },
+        ),
         Command::LintFiling {
             case,
             event,
@@ -115,34 +118,40 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
                 (Some(party), _) => ("by", party),
                 (None, party) => ("on", party.unwrap_or_default()),
             };
-            filing::lint_filing(&filing::Args {
-                case,
-                event,
-                date,
-                mode,
-                party,
-                lib: library.lib,
-                paper: filing::paper::Paper {
-                    words: paper.words,
-                    pages: paper.pages,
-                    lines: paper.lines,
-                    document: paper.document,
-                    kind: paper.paper,
-                    certificates: paper.certificate,
+            filing::lint_filing(
+                src,
+                &filing::Args {
+                    case,
+                    event,
+                    date,
+                    mode,
+                    party,
+                    lib: library.lib,
+                    paper: filing::paper::Paper {
+                        words: paper.words,
+                        pages: paper.pages,
+                        lines: paper.lines,
+                        document: paper.document,
+                        kind: paper.paper,
+                        certificates: paper.certificate,
+                    },
                 },
-            })
+            )
         }
         Command::Actions {
             case,
             party,
             date,
             library,
-        } => actions::actions(&actions::Args {
-            case,
-            party,
-            date,
-            lib: library.lib,
-        }),
+        } => actions::actions(
+            src,
+            &actions::Args {
+                case,
+                party,
+                date,
+                lib: library.lib,
+            },
+        ),
         Command::MatchDocket {
             case,
             docket,
@@ -235,14 +244,17 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             layers,
             world,
             library,
-        } => timeline::timeline(&timeline::Args {
-            file,
-            dates,
-            today: today.today,
-            layers,
-            world,
-            lib: library.lib,
-        }),
+        } => timeline::timeline(
+            src,
+            &timeline::Args {
+                file,
+                dates,
+                today: today.today,
+                layers,
+                world,
+                lib: library.lib,
+            },
+        ),
         Command::Worlds {
             case,
             world,

@@ -1,7 +1,7 @@
 //! `litigate timeline FILE` (lg-z2m.1): the timeline of a `.case` or
 //! `.lit` file as a `litigate.timeline/1` document (docs/litigate/TIMELINE.md),
 //! the envelope's `result`.
-use super::check::{checked, Checked};
+use super::check::{checked_in, Checked};
 use crate::cli::Dates;
 use crate::clock::Clocks;
 use crate::matter::{self, At};
@@ -10,6 +10,7 @@ use crate::timeline;
 use crate::ws;
 use litigate_base::timeline::Timeline;
 use litigate_base::{Diagnostic, Profile};
+use litigate_sema::pkg::source::Source;
 use std::path::Path;
 
 /// `timeline`'s arguments.
@@ -114,8 +115,8 @@ fn of_lit(args: &Args, c: &Checked, file: &str, diagnostics: &[Diagnostic]) -> O
     ))
 }
 
-/// `litigate timeline`.
-pub fn timeline(args: &Args) -> Outcome {
+/// `litigate timeline`, reading `src`.
+pub fn timeline(src: &dyn Source, args: &Args) -> Outcome {
     for text in [&args.dates.as_of, &args.dates.known_at, &args.today]
         .into_iter()
         .flatten()
@@ -140,13 +141,14 @@ pub fn timeline(args: &Args) -> Outcome {
     } else {
         args.dates.options()
     };
-    let c = checked(
+    let c = checked_in(
+        src,
         std::slice::from_ref(&args.file),
         Profile::Dev,
         &options,
         &args.lib,
     )?;
-    let file = ws::shown(path);
+    let file = ws::shown_in(src, path);
     let mut diagnostics = c.diagnostics.clone();
     let built = if kind == "case" {
         of_case(args, &c, &file, &mut diagnostics)

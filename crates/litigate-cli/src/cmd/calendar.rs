@@ -2,7 +2,7 @@
 //! as an iCalendar file. Only a matter that checks clean has a calendar;
 //! a deadline whose due date is unknown is listed under `unscheduled`
 //! with the reason, never given a date.
-use super::check::checked;
+use super::check::checked_in;
 use crate::hirx;
 use crate::hirx::rule_of;
 use crate::ics::{self, Calendar, Row};
@@ -12,7 +12,7 @@ use litigate_base::Profile;
 use litigate_lower::Options;
 use litigate_sema::case::Status;
 use litigate_sema::hir;
-use litigate_sema::pkg::source::{Disk, Source};
+use litigate_sema::pkg::source::Source;
 use serde_json::json;
 use std::path::Path;
 
@@ -53,9 +53,10 @@ fn authority<'p>(all: &[&'p hir::Package], s: &Scheduled) -> Option<&'p str> {
         })
 }
 
-/// `litigate calendar`.
-pub fn calendar(args: &Args) -> Outcome {
-    let c = checked(
+/// `litigate calendar`, reading (and writing `--out` into) `src`.
+pub fn calendar(src: &dyn Source, args: &Args) -> Outcome {
+    let c = checked_in(
+        src,
         std::slice::from_ref(&args.case),
         Profile::Dev,
         &Options::default(),
@@ -114,7 +115,7 @@ pub fn calendar(args: &Args) -> Outcome {
         &rows,
     );
     if let Some(out) = &args.out {
-        Disk.write_atomic(Path::new(out), &text)?;
+        src.write_atomic(Path::new(out), &text)?;
     }
     report.result = json!({
         "case": hcase.id, "as_of": hcase.as_of, "written": args.out,

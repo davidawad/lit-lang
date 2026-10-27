@@ -531,8 +531,8 @@ rules to the engine.
    selected rule versions and compare their outcomes, deadlines and paths.
    Report the selected version/world and changed results so the analysis is
    reproducible.
-7. **`litgraph-ts`.** Provide typed TypeScript bindings over
-   `litgraph-wasm`, generated from the public request/response contract.
+7. **`litigate-ts`.** Provide typed TypeScript bindings over
+   `litigate-wasm`, generated from the public request/response contract.
    This is a language/tooling task and needs the repository's explicit
    TypeScript language-preference exception before implementation begins.
 

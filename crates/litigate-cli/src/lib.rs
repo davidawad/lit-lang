@@ -77,8 +77,19 @@ where
 
 /// The commands [`execute_in`] runs, besides the op subcommands
 /// (`solve`, `chain`, ...): the ones that only read their inputs and write
-/// build outputs, both through the source.
-pub const IN_MEMORY_COMMANDS: [&str; 4] = ["check", "build", "worlds", "run"];
+/// build outputs, both through the source. `timeline`, `calendar`,
+/// `actions` and `lint-filing` are the verified case boundary (DESIGN
+/// §10): the replayed history, derived deadlines, posture and markings.
+pub const IN_MEMORY_COMMANDS: [&str; 8] = [
+    "check",
+    "build",
+    "worlds",
+    "run",
+    "timeline",
+    "calendar",
+    "actions",
+    "lint-filing",
+];
 
 /// Whether [`execute_in`] runs `command`: one of [`IN_MEMORY_COMMANDS`] or
 /// an op subcommand.

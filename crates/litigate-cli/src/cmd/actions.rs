@@ -25,6 +25,7 @@ use litigate_base::{Profile, Severity};
 use litigate_engine::clock::Date;
 use litigate_lower::Options;
 use litigate_sema::hir;
+use litigate_sema::pkg::source::Source;
 use serde_json::{json, Value};
 
 /// What `actions` was asked for.
@@ -170,8 +171,8 @@ fn party<'c>(case: &'c hir::Case, id: &str) -> Result<&'c hir::Party, Failure> {
     })
 }
 
-/// `litigate actions`.
-pub fn actions(args: &Args) -> Outcome {
+/// `litigate actions`, reading `src`.
+pub fn actions(src: &dyn Source, args: &Args) -> Outcome {
     let date = args
         .date
         .as_deref()
@@ -181,8 +182,8 @@ pub fn actions(args: &Args) -> Outcome {
                 .map_err(|e| Failure::new(format!("--date {d}: {e}")))
         })
         .transpose()?;
-    let mut session = ws::discover(std::slice::from_ref(&args.case))
-        .and_then(|targets| Session::load(&targets, &args.lib))?;
+    let mut session = ws::discover_in(src, std::slice::from_ref(&args.case))
+        .and_then(|targets| Session::load_in(src, &targets, &args.lib))?;
     let original = session
         .cases
         .first()

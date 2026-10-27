@@ -44,6 +44,7 @@ use litigate_engine::clock::Date;
 use litigate_lower::Options;
 use litigate_sema::case::{names, Pending, Status, Step};
 use litigate_sema::hir::{self, DeadlineWindow, Declaration, EventEffect, Extension, Type};
+use litigate_sema::pkg::source::Source;
 use serde_json::{json, Value};
 
 /// What `lint-filing` was asked for.
@@ -516,13 +517,13 @@ pub(super) fn changes<'a>(
     }
 }
 
-/// `litigate lint-filing`.
-pub fn lint_filing(args: &Args) -> Outcome {
+/// `litigate lint-filing`, reading `src`.
+pub fn lint_filing(src: &dyn Source, args: &Args) -> Outcome {
     let date = Date::parse_iso(&args.date)
         .map_err(|e| Failure::new(format!("--date {}: {e}", args.date)))?
         .to_iso();
-    let session = ws::discover(std::slice::from_ref(&args.case))
-        .and_then(|targets| Session::load(&targets, &args.lib))?;
+    let session = ws::discover_in(src, std::slice::from_ref(&args.case))
+        .and_then(|targets| Session::load_in(src, &targets, &args.lib))?;
     let original = session
         .cases
         .first()
@@ -592,7 +593,13 @@ pub fn lint_filing(args: &Args) -> Outcome {
         "open_before": changes.open_before,
     });
     let known_at = filed.case.as_ref().and_then(|c| c.known_at.as_deref());
-    checked_paper(&mut report, args, (&law, &vocabulary), (&date, known_at))?;
+    checked_paper(
+        src,
+        &mut report,
+        args,
+        (&law, &vocabulary),
+        (&date, known_at),
+    )?;
     Ok(report)
 }
 
@@ -600,13 +607,20 @@ pub fn lint_filing(args: &Args) -> Outcome {
 /// matter's law and vocabulary on `(date, known_at)` as `result.paper`;
 /// a violation fails the lint.
 fn checked_paper(
+    src: &dyn Source,
     report: &mut Report,
     args: &Args,
     (law, vocabulary): (&[&hir::Package], &[&hir::Package]),
     (date, known_at): (&str, Option<&str>),
 ) -> Result<(), Failure> {
     if args.paper.asked() {
-        let paper = paper::check(law, vocabulary, (&args.event, date, known_at), &args.paper)?;
+        let paper = paper::check(
+            src,
+            law,
+            vocabulary,
+            (&args.event, date, known_at),
+            &args.paper,
+        )?;
         report.failed = paper["violations"]
             .as_array()
             .is_some_and(|v| !v.is_empty());

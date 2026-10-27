@@ -71,7 +71,8 @@ version `crates/litigate-wasm` pins). Dev dependencies are pinned in
 ## The litigate CLI in wasm
 
 `lg.litigate` runs `litigate check`, `build`, `run`, the op subcommands
-(`solve`, `chain`, ...) and `engine` over an in-memory file tree: the same
+(`solve`, `chain`, ...), `engine` and the case boundary (`timeline`,
+`calendar`, `actions`, `lint-filing`) over an in-memory file tree: the same
 arguments, envelope (`LitigateEnvelope`) and exit code as the native CLI
 over a disk holding those files, with `build`'s outputs handed back
 instead of written. An op compiles the matter or package it names, and
@@ -91,6 +92,24 @@ lit.run(["solve", "cases/my.case"], files);  // compile the matter, solve it: ra
 lit.run(["engine", "q", JSON.stringify(request)], files);  // a raw engine request over files' compiled lit/ and cases/
 ```
 
+### The verified case boundary
+
+DESIGN §10's shared boundary, the verified matter, runs in wasm as well,
+through the same commands as the native CLI. Nothing here adds a rule:
+each method only passes the CLI's flags and parses its envelope.
+
+```ts
+const t = lit.timeline("cases/my.case", { files, today: "2026-10-27" });
+t.timeline;                                  // Timeline: replayed history, deadlines and statuses (generated type)
+lit.calendar("cases/my.case", { files, remind: [7], out: "my.ics" });  // open deadlines as .ics (envelope result; `out` comes back in files)
+lit.actions("cases/my.case", "defendant", { files });                  // the marking and the moves replay accepts for the party
+lit.lintFiling("cases/my.case", { event: "Answered(complaint)", date: "2026-11-02", party: { by: "defendant" } }, { files });
+```
+
+`timeline` carries the generated `Timeline`; `calendar`, `actions` and
+`lintFiling` results are `envelope.result: unknown` until their Rust
+result types derive `JsonSchema`.
+
 - The repository's `lit/` library and `cases/` matters are embedded in
   the wasm (by `crates/litigate-wasm/build.rs`); the library fills in
   every `lit/` path `files` does not give, so a matter's `uses` resolve.
@@ -101,7 +120,8 @@ lit.run(["engine", "q", JSON.stringify(request)], files);  // a raw engine reque
   then lapse, with an L4016 warning. Pass `today` (the fourth argument of
   `run`) to pin it; an explicit `asOf` turns it off.
 - Only `check`, `build`, `worlds` (alternate timelines,
-  docs/litigate/CHANGE.md §5.1), `run`, the op subcommands and `engine`
+  docs/litigate/CHANGE.md §5.1), `run`, the op subcommands, `engine` and
+  the case boundary (`timeline`, `calendar`, `actions`, `lint-filing`)
   run; any other command exits 1. `engine` serves the packs and matters compiled
   from `files` (`--lib`, `--cases`); a directory flag (`--packs-dir`,
   ...) exits 1, as there is no disk.

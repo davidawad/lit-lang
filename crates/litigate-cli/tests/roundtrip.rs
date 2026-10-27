@@ -22,7 +22,12 @@
 //! post-dismissal remedies (714d7ba), whose four new terminals the FRCP
 //! requests stake at 0.usd as `cases/frcp-civil-case.case` does; and
 //! `calibration-gaps` once more after those stakes reach every flagged
-//! terminal copy (7972eff), which drops its `payoff-not-authored` warning.
+//! terminal copy (7972eff), which drops its `payoff-not-authored` warning;
+//! both again after the fee motion's `fee-motion-supplemented` flag
+//! (8030f2f), which doubles FRCP's flag copies (68 to 136) and their
+//! residual fills, at the same value and best line. An engine change is
+//! re-recorded the same way: `ptab-calibrated-institution` after explain at
+//! a base node reports its replayed flag context and the others (4f4fad3).
 // Test helpers below may unwrap: a panic is the failed assertion.
 #![allow(clippy::unwrap_used)]
 mod support;

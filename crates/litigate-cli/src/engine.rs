@@ -260,6 +260,7 @@ fn load_catalog(src: &dyn Source, cli: &Cli, builtin: Builtin) -> Result<Catalog
             catalog.packs = compiled.packs;
             catalog.links = compiled.links;
             catalog.clock = compiled.clock;
+            catalog.calibration = compiled.calibration;
             catalog.load_errors = compiled.load_errors;
         }
         if own_scenarios {

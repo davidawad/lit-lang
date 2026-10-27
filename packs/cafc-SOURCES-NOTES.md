@@ -14,7 +14,7 @@
   `pdftotext -layout`:
   - `federal-circuit-rules-of-practice-2025-12-01.pdf` — the court's single combined compilation of
     FRAP text + Federal Circuit Rules + Practice Notes (sha256
-    `b6346ed56a0ef66e8a681765873caf69239cda273f8946f1625571e013712c05`). This is where nearly every
+    `b6346ed56a0ef66e8a681765873caf69239cda273f8946f1625571e013712c05`; the court has since replaced the file at the same URL with the October 6, 2026 edition, sha256 `8355ba375177b344e90da55a4fe720b2b90279c248e8a089b30a8b564a4e5b9b`, re-vendored 2026-10-27 with the rule text unchanged, see sources/PROVENANCE.md). This is where nearly every
     rule cite in the pack comes from; line numbers below refer to the `pdftotext -layout` output.
   - `federal-circuit-internal-operating-procedures-2026-06-09.pdf` (sha256
     `0529dbba781897e83ed617af7a603f7fdaf7ac4af1278d035a378c5699172397`) — IOP #7 (oral argument time

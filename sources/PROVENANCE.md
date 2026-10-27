@@ -721,3 +721,10 @@ by a heading line, then the verbatim body text up to the next `## ` line.
 - Edition: the document states no edition date; it carries comments to 2026 amendments, its PDF is dated 2026-05-13, and it is the all-rules version linked from https://www.dccourts.gov/superior-court/superior-court-resources/rules-of-the-superior-court (page last updated 02/13/2026, before the PDF).
 - Retrieved 2026-10-27 on carbon (the court site refuses agent pods: lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 bbf2960ed59c98a8d7a32ea831919317ad59e41f63e9786fb1f27ebf13736f23. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.
+
+### `ared/ared-arwd-local-rules.txt` — Local Rules of the U.S. District Courts for the Eastern and Western Districts of Arkansas
+
+- Source: https://www.are.uscourts.gov/sites/are/files/local_rules/All_LR.pdf (official court site; 84 pages, sha256 9fc211b94a6b06e77953f28f1b88c5e61f8d567dc68d71a78a91eee7715fa459).
+- Edition: title page: "Local Rules of the United States District Court for the Eastern and Western Districts of Arkansas", last amendment listed September 21, 2017; the "Complete Copy" on https://www.are.uscourts.gov/court-info/local-rules-and-orders/local-rules, last modified 2020-11-17, newer than every individual rule PDF the page lists. One joint text: it also governs forum arwd (the W.D. Ark. site copy is a 2016 file, not vendored).
+- Retrieved 2026-10-27 on carbon (the court site refuses agent pods: lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 0bc073ca4ceb05726d03a65d05a6294c20199591be8b23dc465ff14d724c8950. Raw extract, not yet sectioned into `## <ref>` form; it sits in a subdirectory, so the binary does not embed it until a pack wires a sectioned file.

@@ -64,8 +64,9 @@ pub(crate) fn unresolved(
 
 /// L1010 when no vendored section `text` resolves to holds any of
 /// `quotes`, the words it is cited for, compared with whitespace runs
-/// collapsed: a quote the corpus cannot show is not the rule's text. No
-/// quotes, no check.
+/// collapsed and case folded (the rules capitalize a part or count that
+/// opens a sentence or list item: `A Table of Contents`): a quote the
+/// corpus cannot show is not the rule's text. No quotes, no check.
 fn unquoted(
     cx: &Context<'_>,
     corpus: &SourceCorpus,
@@ -74,12 +75,12 @@ fn unquoted(
     sections: &[L0Section],
     span: &Span,
 ) -> Option<Diagnostic> {
-    let words = |s: &str| s.split_whitespace().collect::<Vec<_>>().join(" ");
-    let quotes: Vec<String> = quotes.iter().map(|q| words(q)).collect();
+    let words = |s: &str| s.split_whitespace().collect::<Vec<_>>().join(" ").to_lowercase();
+    let folded: Vec<String> = quotes.iter().map(|q| words(q)).collect();
     let found = sections.iter().any(|s| {
         corpus.lookup_all(&s.heading).iter().any(|(file, section)| {
             let body = words(&section.body);
-            s.path.as_ref() == Some(file) && quotes.iter().any(|q| body.contains(q.as_str()))
+            s.path.as_ref() == Some(file) && folded.iter().any(|q| body.contains(q.as_str()))
         })
     });
     if found || quotes.is_empty() {
@@ -87,7 +88,7 @@ fn unquoted(
     }
     let quote = quotes
         .iter()
-        .map(|q| format!("\"{q}\""))
+        .map(|q| format!("\"{}\"", q.split_whitespace().collect::<Vec<_>>().join(" ")))
         .collect::<Vec<_>>()
         .join(" or ");
     let d = emit(

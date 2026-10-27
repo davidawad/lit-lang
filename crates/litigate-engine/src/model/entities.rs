@@ -77,6 +77,10 @@ pub struct Node {
     /// once every track has ended). Lets output project a product-graph node
     /// back to the base pack node an author wrote.
     pub base_id: String,
+    /// At a marking of several concurrent tracks, the qualified node of
+    /// each track's token, in canonical order; empty at a pack node.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub marking: Vec<String>,
 }
 
 impl Node {

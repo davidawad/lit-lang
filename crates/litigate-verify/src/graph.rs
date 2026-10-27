@@ -90,7 +90,8 @@ fn compiled_reach(pack: &Pack, roots: &[&str]) -> Option<BTreeSet<String>> {
     let graph = Graph::compile(std::slice::from_ref(pack), &LinkFile::default(), &options).ok()?;
     // A pack that compiled has every one of its nodes (the start included)
     // in the graph, qualified by the pack id.
-    let index = |id: &str| graph.node(&format!("{}::{id}", pack.id)).ok();
+    let qualified = |id: &str| format!("{}::{id}", pack.id);
+    let index = |id: &str| graph.node(&qualified(id)).ok();
     View::new(&graph, &Scenario::default()).ok().map(|view| {
         let seen = roots.iter().filter_map(|root| index(root)).fold(
             vec![false; graph.nodes.len()],
@@ -101,9 +102,18 @@ fn compiled_reach(pack: &Pack, roots: &[&str]) -> Option<BTreeSet<String>> {
                     .collect()
             },
         );
+        // A marking of several concurrent tracks reaches the node of each.
+        let reached: BTreeSet<&str> = graph
+            .nodes
+            .iter()
+            .zip(&seen)
+            .filter(|(_, s)| **s)
+            .flat_map(|(n, _)| std::iter::once(&n.id).chain(&n.marking))
+            .map(String::as_str)
+            .collect();
         pack.nodes
             .iter()
-            .filter(|n| index(&n.id).and_then(|ix| seen.get(ix).copied()) == Some(true))
+            .filter(|n| reached.contains(qualified(&n.id).as_str()))
             .map(|n| n.id.clone())
             .collect()
     })
@@ -112,7 +122,9 @@ fn compiled_reach(pack: &Pack, roots: &[&str]) -> Option<BTreeSet<String>> {
 fn raw_reach(pack: &Pack, roots: &[&str]) -> BTreeSet<String> {
     let mut out: BTreeMap<&str, Vec<&str>> = BTreeMap::new();
     for e in &pack.edges {
-        out.entry(e.from.as_str()).or_default().push(e.to.as_str());
+        // A spawned track starts where the edge names.
+        let to = std::iter::once(&e.to).chain(&e.spawn).map(String::as_str);
+        out.entry(e.from.as_str()).or_default().extend(to);
     }
     let known: BTreeSet<&str> = pack.nodes.iter().map(|n| n.id.as_str()).collect();
     let mut seen: BTreeSet<&str> = roots

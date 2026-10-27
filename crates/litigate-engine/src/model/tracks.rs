@@ -127,8 +127,8 @@ impl Graph {
     /// each to the marking it fires into, materialized and queued the first
     /// time it is reached. A copied edge is `edge@a+b`, its `base_id` the
     /// edge an author wrote, and a marking's node has the moving track's
-    /// node as its `base_id`, so facts, calibration and probabilities
-    /// authored on a pack node or edge reach every copy.
+    /// node as its `base_id`, so facts and calibration authored on a pack
+    /// node or edge reach every copy.
     ///
     /// # Errors
     /// `Invalid` if a track names an unknown node, if the compiled nodes
@@ -231,15 +231,20 @@ impl Graph {
             )));
         }
         let label = join(m.iter().map(|&n| self.nodes[n].label.as_str()), " | ");
+        let marking = m.iter().map(|&n| self.nodes[n].id.clone()).collect();
         let node = match base.schedule(&self.nodes, &m) {
             Some((n, _)) => Node {
                 id: id.clone(),
                 local_id,
                 label,
                 base_id: self.nodes[n].id.clone(),
+                marking,
                 ..self.nodes[n].clone()
             },
-            None => self.ended(&m, id.clone(), local_id, label)?,
+            None => Node {
+                marking,
+                ..self.ended(&m, id.clone(), local_id, label)?
+            },
         };
         let ix = self.nodes.len();
         self.node_ix.insert(id, ix);
@@ -314,6 +319,7 @@ impl Graph {
             synthetic: false,
             flags: vec![],
             base_id: id,
+            marking: vec![],
         })
     }
 }

@@ -112,6 +112,7 @@ the exact JCS text that digests and litigatable hashes are taken over.
 | `replaces` | string[] | **v2, `links.json` only** — qualified (`pack::edge-id`) local edge ids this link edge supersedes when it's active. The compiled graph drops every listed edge once the link is loaded; error if any id doesn't resolve. Invalid on a pack's own edges (packs describe one forum; superseding is a composition concern, so it belongs in `links.json`) |
 | `sets`, `clears` | string[] | **v2** state flags this edge sets/clears when taken. See [State flags](#state-flags) |
 | `requires`, `forbids` | string[] | **v2** flags that must all be set / all be absent for this edge to exist in the compiled graph. See [State flags](#state-flags) |
+| `spawn`, `joins` | string[] | pack node ids: taking this edge also starts a concurrent track at each `spawn` node; the edge exists only where each `joins` node holds another track, and taking it consumes them. Not on links. See [Concurrent tracks](#concurrent-tracks) |
 
 ## Roles (v2)
 
@@ -481,6 +482,56 @@ an instance's `remove_edges`/`probabilities`/`roles`/`payoff_transform`/
 `patch_edges` rewrite a whole pack's data before compilation even starts,
 which flags (a runtime product over an already-compiled edge set) have no
 mechanism for.
+
+## Concurrent tracks
+
+A matter can run several tracks at once: a motion and discovery, an
+opposition beside a fee clock. Its posture is then a **marking**, one token
+per track (`docs/litigate/SPEC.md` §5.6). `spawn` on an edge starts a track
+at each node it names; `joins` makes the edge exist only in markings where
+each node it names holds another track's token, and taking it consumes
+them (the tracks merge into the edge's).
+
+```json
+{ "id": "file", "from": "filing", "to": "motion", "label": "File",
+  "spawn": ["discovery"] },
+{ "id": "rule", "from": "motion", "to": "ruled", "label": "Rule",
+  "joins": ["discovery-closed"] }
+```
+
+**Compilation.** Before state flags, a worklist walks the reachable
+markings into a product graph, as flags do. A marking of one token is its
+pack node, same id and index, so a pack that declares no track compiles to
+an identical graph, and every node stays addressable as `scenario.start`;
+at a pack node alone an edge that `joins` is never enabled. A marking of
+several tokens is a new node `pack::a+b` (the tokens' local ids in canonical
+node order; ids qualified when the tracks span packs), its `marking` the
+tokens' qualified ids.
+
+The product is an **interleaving**: at each marking one track moves, chosen
+by a fixed scheduler, the first track in canonical node order among the
+readiest: one whose every out-edge is enabled, then one with only some
+enabled (a join still waiting), then one whose enabled edges only loop back
+to its own node (a waiting self-loop). A track at a terminal has ended and
+never moves. The marking's node is a copy of the moving track's node (its
+kind, so its chooser or its draw) with that node's enabled edges, each
+copied as `edge@a+b`; the copies' `base_id` is the authored edge and the
+node's the moving track's node, so facts and calibration written on the
+pack reach every copy. Once every
+track has ended the marking is a terminal paying the **sum** of the tracks'
+payoffs, with the union of their outcomes and tags. Costs add along the
+walk, so tracks that do not interact solve to the value of running them
+one after the other; durations add too, so a discounted solve reads the
+tracks as sequential in time.
+
+Errors, never a silent approximation: more reachable markings than
+`max_product_nodes` (the cap shared with flags, default 20,000), naming the
+marking it choked on; a **deadlock**, a reachable marking where some track
+has not ended and none can move (a join waiting on a track that ended
+elsewhere); a marking whose tracks end on a terminal with `payoffByFlag` or
+`feeShift`, which have no sum over tracks; a `spawn`/`joins` naming an
+unknown node; and either field on a link. A link out of a terminal applies
+only where that terminal is the matter's one track.
 
 ## Instances (`links.json`, `"instances"`)
 

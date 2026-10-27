@@ -355,7 +355,9 @@ fn lint_mixed_fact_node(outs: &[&RawEdge], at: &str, push: &mut Push<'_>) {
 /// ever reached with a flag set (e.g. downstream of an IPR estoppel or a
 /// waived defense) has no *real* predecessor into its unflagged copy. That's
 /// expected, not a content defect — so a base node only warns when *none* of
-/// its compiled copies (flagged or not) are reachable.
+/// its compiled copies (flagged or not) are reachable. Likewise a node that
+/// a concurrent track only ever holds beside others is reached through the
+/// markings that hold it (`Node::marking`).
 fn lint_reachability(g: &Graph, d: &mut Vec<Diagnostic>) {
     for p in g.packs.iter().filter(|p| !p.id.contains('@')) {
         let s = match g.node(&p.start) {
@@ -382,14 +384,19 @@ fn lint_reachability(g: &Graph, d: &mut Vec<Diagnostic>) {
                 }
             }
         }
+        // A marking of several tracks reaches the node of each.
         let reachable_base: HashSet<&str> = (0..g.nodes.len())
             .filter(|&i| seen[i])
-            .map(|i| g.nodes[i].base_id.as_str())
+            .flat_map(|i| {
+                let n = &g.nodes[i];
+                std::iter::once(n.base_id.as_str()).chain(n.marking.iter().map(String::as_str))
+            })
             .collect();
         let mut warned: HashSet<&str> = HashSet::new();
         for n in &g.nodes {
             if n.pack == p.id
                 && !n.synthetic
+                && n.marking.is_empty()
                 && !reachable_base.contains(n.base_id.as_str())
                 && warned.insert(n.base_id.as_str())
             {

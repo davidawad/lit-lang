@@ -1953,10 +1953,10 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   as above while some track has not ended, and the matter has ended when
   every track has. `CheckedCase.marking` reports the marking at `as_of`,
   the first track (the scenario `start`) first; more than one track there
-  is L4014, a warning: the engine walks one track, so the lowered scenario
-  starts at the first. A package declaring `spawn` or `joins` checks and
-  replays but does not build: concurrent tracks have no lowering in the
-  litgraph schema yet (L6001, §8.1).
+  is L4014, a warning: a scenario starts at one node, so the lowered
+  scenario starts at the first. A package declaring `spawn` or `joins`
+  lowers them to its edges (§8.1), and the engine solves over the product
+  of the reachable markings (`docs/PACK_SCHEMA.md#concurrent-tracks`).
 - Anytime edges. An edge marked `anytime` is legal from any posture while
   an instance of its own `within` deadline is open: an opposition the
   rules allow while a consent decision is pending, in a package that
@@ -2497,7 +2497,7 @@ Anything without a lowering is L6001.
 | `extend { ... }` of d | `Deadline.extensions[]`, one per grant in source order, tagged by `bound`: `{bound: "bounded", by, until, afterExpiry, standard, motion, interpretation}`, `{bound: "discretionary", by, standard, window: "beforeExpiry" \| "afterExpiryOnMotion", motion, interpretation}`, `{bound: "nonExtendable", authority}`; a date bound is `{offset: {from, days}}` (`r + N.days`), `{before: {from, days}}` (`r - N.days`), `{max: [...]}` or `{min: [...]}`, `from` one of `prescribedDue`, `grantOrderEntered`, `currentDue`; a motion is `{event, within, unless}`, `event` and `unless` patterns in source spelling (`ExtensionMoved(AnswerPeriod)`). No grant is no `extensions`: undeclared, never not-extendable |
 | `deadline N.unit {…}` | same, from the literal; `unit` omitted for calendar days, `"court"` for court days; business days are L6001 |
 | `duration` | `RawEdge.duration {min, mode, max}` (a single duration is `{mode}`) |
-| `valence`, `court_listener_url`, `action_id`, `note`, `tags`, `attrs`, `sets`, `clears`, `requires`, `forbids` | same-named `RawEdge` fields |
+| `valence`, `court_listener_url`, `action_id`, `note`, `tags`, `attrs`, `sets`, `clears`, `requires`, `forbids`, `spawn`, `joins` | same-named `RawEdge` fields (`spawn` and `joins` as local node ids; the engine expands the markings they reach, §5.6) |
 | node or edge `basis` | `lowered.basis[]` `{pointer: "/nodes/i" \| "/edges/i", basis, source}`: `sourced` with the cite, `calibrated` with `dataset@date`, `expert` with the name, `estimate`; a link's at `/links/i` |
 | `counting` / `calendar` | `Pack.counting` (the rule id) plus a clock-library fragment (§8.2) |
 | `event`, authority lattice, relations, defaults, exceptions, transitions, tests, types, recharacterizations, invalidations | not emitted (verification only) |
@@ -3580,11 +3580,13 @@ as follows (each moved obligation has negative tests:
    pre-encoding miss into the hole L3010 (§5.4). `lit/frcp` and `lit/frap`
    declare theirs (review L5).
 4. **Markings.** `spawn`/`joins` give concurrent tracks; replay is a typed
-   firing sequence over the marking (§5.6). The litgraph engine walks one
-   track, so a package declaring tracks does not lower (L6001) and a
-   matter on several tracks lowers its first (L4014); the engine
-   extension (product construction) is future work, and no corpus package
-   declares a track yet.
+   firing sequence over the marking (§5.6). A package declaring tracks
+   lowers them to `RawEdge.spawn`/`joins`, and the engine compiles the
+   reachable markings into a product graph (lg-ww93): an interleaving in
+   which one track moves at a time under a fixed scheduler, bounded by
+   `max_product_nodes` with an error past it, a deadlocked marking an
+   error. A matter on several tracks still lowers its first (L4014), and
+   no corpus package declares a track yet.
 
 Not done here: workflow-soundness checks on the net (item 27).
 

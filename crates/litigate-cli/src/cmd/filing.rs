@@ -22,11 +22,9 @@
 //! pending move of, filed and awaiting order; every entry says so in its
 //! own `pending` until the order extending it or the denial arrives.
 //!
-//! The matter itself must check clean first, but for the missing
-//! lowering (L6001) of a package with concurrent tracks: replay, not the
-//! build, judges a filing. Diagnostics are then every error of the
-//! matter with the filing, and the warnings the filing adds to the
-//! matter as of the filing date. The filing's own line is written
+//! The matter itself must check clean first. Diagnostics are then every
+//! error of the matter with the filing, and the warnings the filing adds
+//! to the matter as of the filing date. The filing's own line is written
 //! here, not by the user. Its id is taken from the same L9006 fix that
 //! `litigate fix` would apply, keeping its timeline key stable.
 //!
@@ -361,14 +359,6 @@ fn moves(law: Law<'_, '_>, edges: &[(&str, &hir::Edge)], deadline: &str, version
     json!({"file": file, "extend": extend, "orders": orders(law.law, law.vocabulary, deadline)})
 }
 
-/// Whether `d` bears on the filing. A package with concurrent tracks has
-/// no lowering (L6001) but checks and replays, and replay is what judges
-/// a filing, so that error does not block the lint (the matter itself
-/// lowers: its scenario starts at the first track, L4014).
-fn judged(d: &Diagnostic) -> bool {
-    d.code != DiagnosticCode::LoweringUnsupported
-}
-
 /// Whether `known` already has a diagnostic like `d` (spans move with
 /// the inserted line, so they are not compared).
 fn known(known: &[Diagnostic], d: &Diagnostic) -> bool {
@@ -568,7 +558,6 @@ pub fn lint_filing(args: &Args) -> Outcome {
             .iter()
             .flat_map(|(_, v)| v.diagnostics.iter().cloned())
             .chain(before.diagnostics.iter().cloned())
-            .filter(judged)
             .collect(),
         ..Report::default()
     };

@@ -203,6 +203,7 @@ impl Graph {
                 synthetic: false,
                 flags: vec![],
                 base_id: qid,
+                marking: vec![],
             });
         }
         for (e, local) in pack.edges.iter().zip(local_edge_ids(&pack.edges)) {

@@ -120,7 +120,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | New York | state | outline | 0 | 0 | 0 | 0 | `outlines/second-circuit/new-york/state-appellate`, `outlines/second-circuit/new-york/state-civil` |
 | North Carolina | state | outline | 0 | 0 | 0 | 0 | `outlines/fourth-circuit/north-carolina/state-appellate`, `outlines/fourth-circuit/north-carolina/state-civil` |
 | North Dakota | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/north-dakota/state-appellate`, `outlines/eighth-circuit/north-dakota/state-civil` |
-| Ohio | state | promoted | 0 | 0 | 0 | 0 | `lit/oh-common-pleas` |
+| Ohio | state | promoted | 0 | 0 | 0 | 0 | `lit/oh-appellate`, `lit/oh-common-pleas` |
 | Oklahoma | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/oklahoma/state-appellate`, `outlines/tenth-circuit/oklahoma/state-civil` |
 | Oregon | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/oregon/state-appellate`, `outlines/ninth-circuit/oregon/state-civil` |
 | Pennsylvania | state | outline | 0 | 0 | 0 | 0 | `outlines/third-circuit/pennsylvania/state-appellate`, `outlines/third-circuit/pennsylvania/state-civil` |

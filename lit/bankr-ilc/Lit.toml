@@ -1,0 +1,46 @@
+# The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the Central
+# District of Illinois over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
+# declares only the periods the Local Rules themselves state and re-encodes
+# no FRBP period. It is a base package, not a `kind = "local-rule"` layer:
+# lit/core has no bankruptcy forum family (L2011 for `bankr-ilc`), as for
+# lit/bankr-ct. Each period is counted under FRBP 9006(a), the FRCP 6(a)
+# method (core's frcp6). The rules are those effective October 1, 2024
+# (sources/bankr-ilc/PROVENANCE.md); the amending-order check found no
+# order after them, so the consolidation is the only layer. No earlier
+# edition is vendored, so a query before October 1, 2024 is a hole in the
+# corpus.
+[package]
+name = "bankr-ilc-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-ilc-local-rules"
+forum = "bankr-ilc"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Central District of Illinois: Local Bankruptcy Rules"
+description = "The Bankr. C.D. Ill. Local Bankruptcy Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): payment advices for the trustee and the notice period on a motion to dismiss a proceeding to deny or revoke a discharge (LBR 7041-1)."
+in_force = "2024-10-01"
+known_at = "2026-10-28"
+unknown_before = "2024-10-01"
+jurisdiction = "U.S. Bankruptcy Court for the Central District of Illinois"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.ilcb-lbr]
+title = "Local Rules of the United States Bankruptcy Court for the Central District of Illinois (effective October 1, 2024)"
+url = "https://www.ilcb.uscourts.gov/sites/ilcb/files/ILCB%20Local%20Rules%2010.1.2024.pdf"
+path = "sources/bankr-ilc/ilcb-lbr-2024-10-01-sectioned.txt"
+path_sha256 = "fa33b1600cadd6078aa4ac2821af44970db1821eb8f20b2e1dbdf996e2ecdb51"
+sha256 = "a40a9b3665a420279db4543a9af278a1eb4daf9853cb2465b0eff7f8f9612be7"
+as_of = "2024-10-01"
+cite_prefixes = ["Bankr. C.D. Ill. LBR"]
+section_heading = "LBR {n}"

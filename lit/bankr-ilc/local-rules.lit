@@ -1,0 +1,84 @@
+module bankr-ilc-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate }
+
+// The Bankr. C.D. Ill. court's own periods, counted under FRBP 9006(a). The
+// FRBP periods (schedules, claims, discharge, dischargeability, the
+// adversary answer and summons, appeals) are lit/frbp's and are not
+// declared again.
+//
+// Stated in the rules but not declared: the credit counseling certificate
+// within 14 days of the petition (LBR 1002-1(C)(1)), which is FRBP
+// 1007(c)(3)'s; the attorney's compensation disclosure with the petition or
+// within 14 days and its amendment within 14 days of a changed agreement
+// (LBR 2016-1(A), (B)), FRBP 2016(b)'s; the 30 days to object to an amended
+// Schedule C, which LBR 1009-1(C)(5) starts on the docketing of the
+// certificate of service but whose length is FRBP 4003(b)(1)'s; the motion
+// to impose the stay within 30 days of the case filing and the hearing on a
+// motion to extend it within 30 days of the petition (LBR 4001-1(C)), the
+// periods of 11 U.S.C. § 362(c)(3)(B) and (c)(4)(B); payment for a CM/ECF
+// transaction within a 24-hour period (LBR 1006-1(B)), a clock-time period.
+// Summary judgment follows the District Court's Civil LR 7.1(D) (LBR
+// 7056-1), which is not encoded here. The rules state no page limit.
+/// A motion to dismiss an adversary proceeding objecting to or seeking
+/// revocation of a discharge is filed and served (LBR 7041-1(A), (B)).
+event DischargeDismissalMotionServed()
+
+/// LBR 1007-1(C)(2): the debtor provides the trustee the payment advices or
+/// other evidence of payment received within 60 days before the petition
+/// at least seven days before the first date set for the § 341 meeting; they
+/// are not filed unless ordered (LBR 1007-1(C)(1)).
+deadline payment-advices-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. C.D. Ill. LBR 1007-1(C)"
+{
+  forum frcp
+}
+
+/// LBR 7041-1(B): the court may dismiss a proceeding to deny or revoke a
+/// discharge without further notice or a hearing if the United States
+/// Trustee, the trustee or another party in interest does not object to
+/// dismissal or move to intervene or be substituted for the plaintiff within
+/// 21 days following the filing and service of the motion to dismiss.
+deadline discharge-dismissal-objection-period: 21.days after DischargeDismissalMotionServed() counted_by frcp6 cite "Bankr. C.D. Ill. LBR 7041-1(B)"
+{
+  forum frcp
+}
+
+start dismissal-moved
+
+state dismissal-moved: "Motion to dismiss a discharge proceeding filed and served" by applicant cite "Bankr. C.D. Ill. LBR 7041-1(A)"
+{
+  note "No adversary proceeding objecting to or seeking revocation of a discharge under §§ 727, 1141, 1228 or 1328 is dismissed except on motion served on the debtor, the United States Trustee, the trustee and all creditors and parties of record, stating that no consideration was promised, given or received for the dismissal or describing it (LBR 7041-1(A))."
+  edge-dismissal-moved-objection "Objection, or motion to intervene or be substituted, within 21 days" -> objected {
+    authority cite "Bankr. C.D. Ill. LBR 7041-1(B)"
+  }
+  edge-dismissal-moved-unopposed "No timely objection; proceeding dismissed without further notice or hearing" -> dismissed {
+    authority cite "Bankr. C.D. Ill. LBR 7041-1(B)"
+  }
+}
+
+state objected: "Objection or motion to intervene filed" by opponent cite "Bankr. C.D. Ill. LBR 7041-1(B)"
+{
+  note "A party in interest who objects or moves to intervene or be substituted for the plaintiff within the 21 days keeps the proceeding from dismissal without a hearing (LBR 7041-1(B)); motions are heard under LBR 9013-1."
+  edge-objected-hearing "Motion heard" -> ruling { authority cite "Bankr. C.D. Ill. LBR 9013-1(A)" }
+}
+
+decision ruling: "Court rules on the motion to dismiss" by court cite "Bankr. C.D. Ill. LBR 7041-1(B)"
+{
+  edge-ruling-dismissed "Proceeding dismissed" -> dismissed {
+    authority cite "Bankr. C.D. Ill. LBR 7041-1(A)"
+  }
+  edge-ruling-continues "Dismissal denied; the proceeding continues" -> continues {
+    authority cite "Bankr. C.D. Ill. LBR 7041-1(B)"
+  }
+}
+
+terminal dismissed: "Discharge proceeding dismissed" outcome [procedural] cite "Bankr. C.D. Ill. LBR 7041-1(B)"
+{
+  note "The case continues under lit/frbp."
+}
+
+terminal continues: "Discharge proceeding continues under lit/frbp" outcome [procedural] cite "Bankr. C.D. Ill. LBR 1001-2(A)"
+{
+  note "The Local Rules supplement the Bankruptcy Rules and the incorporated Federal Rules of Civil Procedure and are subordinate to them (LBR 1001-2(A))."
+}

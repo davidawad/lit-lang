@@ -448,7 +448,12 @@ fn bindings(
                 source: Some(s.id.clone()),
             });
         }
-        bound.push((Family::Rules(heading), s.id.clone(), s.path.clone(), prefixes));
+        bound.push((
+            Family::Rules(heading),
+            s.id.clone(),
+            s.path.clone(),
+            prefixes,
+        ));
     }
     let shorthands = syntax.shorthands.iter().filter_map(|s| {
         let family = match s.code {

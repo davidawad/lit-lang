@@ -1,0 +1,53 @@
+module mt-tax-appeal-board.board
+
+import mt-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeOfAppealFiled }
+
+// An appeal before the Montana State Tax Appeal Board, from the
+// taxpayer's side. Mont. Code Ann. title 15, chapter 2 and the board's
+// rules are not vendored, so every cite is a hole naming the section the
+// outline pointed to, and no period, form, fee or standard of review is
+// stated. The outline named no decision.
+start filed
+
+state filed: "Appeal filed with the board" by applicant cite ?("Mont. Code Ann. § 15-2-301: not vendored") {
+  note "The board hears appeals from county tax appeal boards and from the Department of Revenue. The filing period, form and fees are not stated: Mont. Code Ann. § 15-2-301 is not vendored."
+  edge-filed-hearing "Set for hearing" -> hearing {
+    event ActionCommenced()
+    authority cite ?("Mont. Code Ann. § 15-2-301: not vendored")
+  }
+}
+
+state hearing: "Hearing before the board" by court cite ?("Mont. Code Ann. § 15-2-301: not vendored") {
+  note "Hearing procedure, evidence and the record are not stated: Mont. Code Ann. § 15-2-301 and the board's rules are not vendored."
+  edge-hearing-decision "Decision issued" -> decision {
+    authority cite ?("Mont. Code Ann. § 15-2-301: not vendored")
+  }
+}
+
+chance decision: "Board decides" by court cite ?("Mont. Code Ann. § 15-2-301: not vendored") {
+  note "Outcome probabilities are holes; the decision and its effect are not stated in vendored text."
+  edge-decision-granted "Relief granted" -> review p ? { event DecisionFiled() }
+  edge-decision-denied "Relief denied" -> review p ? { event DecisionFiled() }
+}
+
+decision review: "Judicial review sought?" by applicant cite ?("Mont. Code Ann. § 15-2-303: not vendored") {
+  note "The review period and the reviewing court are not stated: Mont. Code Ann. § 15-2-303 is not vendored."
+  edge-review-none "No review" -> final-decision {
+    event JudgmentEntered()
+    authority cite ?("Mont. Code Ann. § 15-2-301: not vendored")
+  }
+  edge-review-sought "Judicial review sought" -> review-sought {
+    event NoticeOfAppealFiled()
+    authority cite ?("Mont. Code Ann. § 15-2-303: not vendored")
+  }
+}
+
+terminal final-decision: "Decision final" outcome [final] cite ?("Mont. Code Ann. § 15-2-301: not vendored") {
+  note "Enforcement, refund and payment are outside this package."
+  payoff ?
+}
+
+terminal review-sought: "Judicial review sought" outcome [final] cite ?("Mont. Code Ann. § 15-2-303: not vendored") {
+  note "The reviewing court is fixed by statute (Mont. Code Ann. § 15-2-303, not vendored); no hand-off package is named."
+  payoff ?
+}

@@ -7,6 +7,13 @@
 - Extract sha256 2d1958b26a2c47f03e1b5b49f9edb8c4262e68bb9e8355edb15a31aca73f32c7. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `ca1-bap/original/ca1-bap-local-rules-2014-12-01.pdf` as served (sha256 7c9e294bce383967c8805c363018b7ccc9fcb5f4169f777e2d4749ac9c13fda7); extraction sha256 2d1958b26a2c47f03e1b5b49f9edb8c4262e68bb9e8355edb15a31aca73f32c7.
 
+### `ca1-bap/ca1-bap-local-rules-sectioned.txt` — 1st Cir. BAP Local Rules (December 1, 2014), sectioned
+
+- Derived in the pod (lg-f3q8.137) from `ca1-bap/ca1-bap-local-rules-2014-12-01.txt` (extract sha256 2d1958b26a2c47f03e1b5b49f9edb8c4262e68bb9e8355edb15a31aca73f32c7); nothing fetched. One `## 1st Cir. BAP L.R. <n>` line is inserted before each of the 21 rule heading lines of the rules body (`1st Cir. BAP L.R. 8001-1.` ... `1st Cir. BAP L.R. 9010-2.`; the table of contents is not marked). The heading the extract prints as `Rule 8010-1.` is marked `## 1st Cir. BAP L.R. 8010-1`, the form L.R. 8001-1(a) prescribes for citing the rules. Rule text was not edited: deleting the marker lines (`sed '/^## 1st Cir. BAP L.R. /d'`) restores the extract byte for byte.
+- Source: as the extract, https://www.bap1.uscourts.gov/sites/bap1/files/BAP%20Local%20Rules.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
+- Edition: as the extract, effective December 1, 2014.
+- Sectioned sha256 854669c864bcb7a38f92394977a2882766bd82ec2ba1b6932b120aa1c528a2e5 (the `path_sha256` pinned by `lit/bap1/Lit.toml`).
+
 ### `ca1-bap/ca1-bap-amended-go-2-2024-12-16.txt` — 1st Cir. BAP Amended General Order No. 2 (December 16, 2024)
 
 - Source: https://www.bap1.uscourts.gov/sites/bap1/files/GeneralOrder2_0.pdf (official site; 9 pages, sha256 244f3356db72b737a334981540e1eb4264329693b86e13deffaf0a71846e9562).

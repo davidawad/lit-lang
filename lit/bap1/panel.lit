@@ -1,0 +1,329 @@
+module bap1.panel
+
+import core.frbp9006.{ frbp9006 }
+
+import frbp.appeals.{
+  appellant-brief-period,
+  appellant-designation-period,
+  appellant-election-period,
+  appellee-brief-period,
+  direct-certification-request-period,
+  election-validity-period,
+  motion-response-period,
+  notice-period,
+  other-party-election-period,
+  rehearing-period,
+  reply-brief-period,
+}
+
+import frbp.events.{ LeaveToAppealGranted, NoticeOfAppealFiled }
+
+// The First Circuit BAP's own periods, counted under FRBP 9006(a). The
+// FRBP and 28 U.S.C. § 158(c)(1) periods (notice, election, record,
+// briefing, motions, rehearing, direct certification) are lit/frbp's and
+// are not declared again: the appellee's 30-day election (1st Cir. BAP
+// L.R. 8005-1(b)(2)) is lit/frbp's other-party-election-period.
+//
+// Stated in the rules but not declared: a document filed by facsimile is
+// served within 24 hours after its transmission (8001-1(c)(2)), a service
+// step with no event the engine carries; a translation of an excerpt of
+// Puerto Rico authority is submitted not less than 30 days before oral
+// argument (8011-1(b)), a period counted back from an argument date the
+// rules do not fix; a paper filing other than a brief or appendix is timely
+// if received by 5:00 p.m. (8011-1(a)) and an electronic filing by midnight
+// in Boston (Amended General Order No. 2, December 16, 2024), filing rules
+// the period grammar does not carry; argument is limited to 15 minutes per
+// side unless the panel announces otherwise (8019-1(e)). The outline named
+// Bullard v. Blue Hills Bank, 575 U.S. 496 (2015), Ritzen Group, Inc. v.
+// Jackson Masonry, LLC, 589 U.S. 35 (2020), and Anderson v. City of
+// Bessemer City, 470 U.S. 564 (1985); no opinion is vendored and neither
+// the FRBP nor the panel's rules state them, so they are not cited.
+
+/// The bankruptcy court enters an order denying a motion to waive the
+/// filing fee (1st Cir. BAP L.R. 8003-1(c)(2)).
+event FeeWaiverDenied()
+
+/// The bankruptcy court issues an indicative ruling under FRBP 8008(a) on
+/// a motion it lacks authority to grant because of a pending appeal (1st
+/// Cir. BAP L.R. 8008-1(a)).
+event IndicativeRulingIssued()
+
+/// After the BAP remands and retains jurisdiction, the bankruptcy court
+/// issues its order on the underlying motion for relief (1st Cir. BAP L.R.
+/// 8008-1(b)).
+event RemandedMotionDecided()
+
+/// Notice of the entry of a BAP clerk's order on a motion listed in 1st
+/// Cir. BAP L.R. 8013-1(a)(1) is served (8013-1(a)(2)).
+event ClerkOrderEntryServed()
+
+/// The BAP clerk's order dismissing the appeal for failure to prosecute is
+/// served (1st Cir. BAP L.R. 8020-1(b)(1)).
+event ProsecutionDismissalServed()
+
+/// A motion for sanctions or an order to show cause under 1st Cir. BAP
+/// L.R. 8020-1(c) is served.
+event SanctionsMotionServed()
+
+/// A motion for rehearing is served (1st Cir. BAP L.R. 8022-1(a)).
+event RehearingMotionServed()
+
+/// 1st Cir. BAP L.R. 8003-1(c)(1): the BAP may dismiss the appeal unless,
+/// within 14 days after filing the notice of appeal, the appellant pays the
+/// filing fee or moves to waive it.
+deadline fee-payment-period: 14.days after NoticeOfAppealFiled() counted_by frbp9006 cite "1st Cir. BAP L.R. 8003-1(c)(1)"
+
+/// 1st Cir. BAP L.R. 8003-1(c)(1): on an appeal by leave, within 14 days
+/// after the order granting the motion for leave to appeal.
+deadline fee-payment-leave-period: 14.days after LeaveToAppealGranted() counted_by frbp9006 cite "1st Cir. BAP L.R. 8003-1(c)(1)"
+
+/// 1st Cir. BAP L.R. 8003-1(c)(2): the fee is paid within 14 days after
+/// entry of the order denying the waiver motion unless the bankruptcy court
+/// orders otherwise.
+deadline fee-after-waiver-denial-period: 14.days after FeeWaiverDenied() counted_by frbp9006 cite "1st Cir. BAP L.R. 8003-1(c)(2)"
+
+/// 1st Cir. BAP L.R. 8008-1(a): within 7 days the movant moves in the BAP,
+/// notifying it of the indicative ruling and stating whether it seeks a
+/// remand with retained jurisdiction or dismissal of the appeal.
+deadline indicative-ruling-notice-period: 7.days after IndicativeRulingIssued() counted_by frbp9006 cite "1st Cir. BAP L.R. 8008-1(a)"
+
+/// 1st Cir. BAP L.R. 8008-1(b): within 7 days after the bankruptcy court's
+/// order on the underlying motion, the movant reports its disposition and
+/// whether the appeal is moot or will proceed.
+deadline remand-report-period: 7.days after RemandedMotionDecided() counted_by frbp9006 cite "1st Cir. BAP L.R. 8008-1(b)"
+
+/// 1st Cir. BAP L.R. 8013-1(a)(2): a motion to reconsider a clerk's order
+/// is filed within 14 days of service of notice of its entry.
+deadline clerk-order-reconsideration-period: 14.days after ClerkOrderEntryServed() counted_by frbp9006 cite "1st Cir. BAP L.R. 8013-1(a)(2)"
+
+/// 1st Cir. BAP L.R. 8020-1(b)(1): the defaulting party moves to reinstate
+/// within 14 days of service of the dismissal order.
+deadline reinstatement-period: 14.days after ProsecutionDismissalServed() counted_by frbp9006 cite "1st Cir. BAP L.R. 8020-1(b)(1)"
+
+/// 1st Cir. BAP L.R. 8020-1(c): a party or attorney facing sanctions may
+/// respond within fourteen days of service of the motion or order to show
+/// cause.
+deadline sanctions-response-period: 14.days after SanctionsMotionServed() counted_by frbp9006 cite "1st Cir. BAP L.R. 8020-1(c)"
+
+/// 1st Cir. BAP L.R. 8022-1(a): a response to a motion for rehearing may
+/// be filed within 7 days after its service.
+deadline rehearing-response-period: 7.days after RehearingMotionServed() counted_by frbp9006 cite "1st Cir. BAP L.R. 8022-1(a)"
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "FRBP 8002(a)(1)"
+{
+  note "The notice of appeal, substantially in the form of Official Form 17A and naming all parties to the order and their attorneys, is filed with the bankruptcy court with the filing fee (1st Cir. BAP L.R. 8003-1(a)) within 14 days after entry of the judgment, order or decree (FRBP 8002(a)(1), lit/frbp). A separate notice and fee is filed for each order appealed except as FRBP 8002(b)(3) provides (8003-1(b))."
+  edge-notice-filed-appealability "Notice filed within 14 days" -> fee {
+    authority cite "FRBP 8002(a)(1)"
+    within notice-period
+  }
+  edge-notice-filed-untimely "Notice filed outside the period" -> untimely {
+    authority cite "FRBP 8002(d)"
+  }
+}
+
+terminal untimely: "Notice of appeal untimely" outcome [loss] cite "FRBP 8002(a)(1)"
+
+state fee: "Filing fee" by applicant cite "1st Cir. BAP L.R. 8003-1(c)"
+{
+  note "The BAP may dismiss the appeal if the appellant does not pay the fee or move to waive it within 14 days after filing the notice of appeal or the order granting leave to appeal, or does not pay within 14 days after entry of an order denying waiver unless the bankruptcy court orders otherwise (1st Cir. BAP L.R. 8003-1(c))."
+  edge-fee-paid "Fee paid or waiver sought" -> appealability {
+    authority cite "1st Cir. BAP L.R. 8003-1(c)(1)"
+    within fee-payment-period
+  }
+  edge-fee-paid-after-denial "Fee paid after waiver denied" -> appealability {
+    authority cite "1st Cir. BAP L.R. 8003-1(c)(2)"
+    within fee-after-waiver-denial-period
+  }
+  edge-fee-unpaid "Fee not paid" -> dismissed-fee {
+    authority cite "1st Cir. BAP L.R. 8003-1(c)"
+  }
+}
+
+terminal dismissed-fee: "Dismissed for nonpayment of the fee" outcome [loss] cite "1st Cir. BAP L.R. 8003-1(c)"
+
+decision appealability: "Appealable order and appeal route" by court cite "28 U.S.C. § 158(a)"
+{
+  note "Appeals lie from final judgments, orders and decrees, from interlocutory orders under 11 U.S.C. § 1121(d), and with leave from other interlocutory orders (28 U.S.C. § 158(a)). All appeals are to the BAP unless a party elects the district court (1st Cir. BAP L.R. 8005-1(a)): the appellant in the notice of appeal, or waives the election (8005-1(b)(1)); an appellee by a statement substantially in the form of Official Form 17B filed with the BAP within 30 days from service of the notice, or waives it, and any filing other than a notice of appearance before the election waives the time remaining (8005-1(b)(2)). The BAP may transfer an appeal to the district court in the interests of justice (8005-1(c)). A request to certify a direct appeal is due within 60 days after entry (FRBP 8006(f)(1))."
+  edge-appealability-dismissed-jurisdiction "Not appealable" -> dismissed-jurisdiction {
+    authority cite "1st Cir. BAP L.R. 8013-1(c)(1)"
+  }
+  edge-appealability-record "BAP appeal proceeds" -> record {
+    authority cite "1st Cir. BAP L.R. 8005-1(a)"
+  }
+  edge-appealability-appellant-election "Appellant elects district court in the notice" -> district-handoff {
+    authority cite "1st Cir. BAP L.R. 8005-1(b)(1)"
+    within appellant-election-period
+  }
+  edge-appealability-other-election "Appellee elects district court" -> district-handoff {
+    authority cite "1st Cir. BAP L.R. 8005-1(b)(2)"
+    within other-party-election-period
+  }
+  edge-appealability-transfer "BAP transfers the appeal" -> district-handoff {
+    authority cite "1st Cir. BAP L.R. 8005-1(c)"
+  }
+  edge-appealability-election-challenge "Election validity challenged" -> record {
+    authority cite "FRBP 8005(c)"
+    within election-validity-period
+  }
+  edge-appealability-direct-request "Direct-review certification requested" -> circuit-direct {
+    authority cite "FRBP 8006(f)(1)"
+    within direct-certification-request-period
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed for lack of jurisdiction" outcome [loss] cite "1st Cir. BAP L.R. 8013-1(c)(1)"
+
+terminal district-handoff: "Appeal heard by the district court" outcome [procedural] cite "FRBP 8005(b)"
+{
+  note "The district court's local rules govern from here; they are outside this panel package."
+}
+
+terminal circuit-direct: "Direct appeal to the court of appeals" outcome [appeal] cite "FRBP 8006(g)"
+{
+  note "Within 30 days after the certification becomes effective, a party files a petition asking the court of appeals to authorize the direct appeal (FRBP 8006(g), lit/frbp; 28 U.S.C. § 158(d)(2)(A)). The First Circuit's own procedure is outside this panel package."
+}
+
+state record: "Record designated and transmitted" by applicant cite "FRBP 8009"
+{
+  note "The appellant designates the record and states the issues within 14 days after the notice of appeal becomes effective (FRBP 8009(a)(1)(B), lit/frbp). The BAP need not remedy a party's failure to designate an adequate record (1st Cir. BAP L.R. 8009-1(a)). If the record is incomplete after the FRBP 8009(a) deadlines, the bankruptcy clerk may transmit a Certificate of Readiness saying so and later a supplemental one (8010-1(a)). If the bankruptcy court issues an indicative ruling, the movant notifies the BAP within 7 days, and after a remand reports the disposition within 7 days of the bankruptcy court's order (8008-1)."
+  edge-record-briefing "Record docketed" -> briefing {
+    authority cite "FRBP 8009(a)(1)(B)"
+    within appellant-designation-period
+  }
+  edge-record-indicative "Indicative ruling issued" -> indicative-ruling {
+    authority cite "1st Cir. BAP L.R. 8008-1(a)"
+    within indicative-ruling-notice-period
+  }
+  edge-record-motion "Motion to dismiss or summary disposition" -> summary-disposition {
+    authority cite "1st Cir. BAP L.R. 8013-1(c)"
+    within motion-response-period
+  }
+}
+
+decision indicative-ruling: "Remand or dismissal after an indicative ruling" by court cite "1st Cir. BAP L.R. 8008-1"
+{
+  edge-indicative-ruling-remand "Remanded with jurisdiction retained; report filed" -> briefing {
+    authority cite "1st Cir. BAP L.R. 8008-1(b)"
+    within remand-report-period
+  }
+  edge-indicative-ruling-dismissed "Appeal dismissed" -> dismissed-voluntary {
+    authority cite "1st Cir. BAP L.R. 8008-1(a)"
+  }
+}
+
+terminal dismissed-voluntary: "Appeal dismissed at the movant's request" outcome [procedural] cite "1st Cir. BAP L.R. 8008-1(a)"
+
+decision summary-disposition: "Summary disposition" by court cite "1st Cir. BAP L.R. 8013-1(c)"
+{
+  note "At any time, on motion or sua sponte, the BAP may dismiss for lack of jurisdiction; dismiss, grant relief, or affirm if no substantial question is presented; or reverse for obvious error (1st Cir. BAP L.R. 8013-1(c)). Substantive motions go to a judge; the BAP clerk may act on the procedural motions 8013-1(a)(1) lists, and a motion to reconsider a clerk's order is filed within 14 days of service of notice of its entry (8013-1(a)(2), (b)). Responses to a motion are due within the FRBP 8013(a)(3)(A) period (lit/frbp)."
+  edge-summary-disposition-jurisdiction "Dismissed for lack of jurisdiction" -> dismissed-jurisdiction {
+    authority cite "1st Cir. BAP L.R. 8013-1(c)(1)"
+  }
+  edge-summary-disposition-affirmed "No substantial question; affirmed" -> final-appellate {
+    authority cite "1st Cir. BAP L.R. 8013-1(c)(2)"
+  }
+  edge-summary-disposition-reversed "Reversed for obvious error" -> rehearing-window {
+    authority cite "1st Cir. BAP L.R. 8013-1(c)(3)"
+  }
+  edge-summary-disposition-denied "Motion denied; appeal proceeds" -> briefing {
+    authority cite "1st Cir. BAP L.R. 8013-1(c)"
+  }
+}
+
+state briefing: "Briefing" by applicant cite "1st Cir. BAP L.R. 8018-1(a)"
+{
+  note "After the BAP dockets the record it issues a briefing order setting the deadlines for all briefs and appendices (1st Cir. BAP L.R. 8018-1(a)); the FRBP 8018(a) periods are lit/frbp's. A brief cites background facts to the appendix and attaches statements regarding related cases and interested parties (Official Forms 1 and 2), the latter satisfying FRBP 8012 (8012-1(a), 8014-1(a)). The appendix is a separate, sequentially paginated document (8018-1(b)). An extension is sought by motion within the time the briefing order sets (8018-1(c)(1)). An appellant's late brief may result in dismissal; an appellee's in the loss of oral argument (8018-1(c)(2)). Paper briefs may not be filed by facsimile (8018-1(a))."
+  edge-briefing-appellee "Appellant's brief filed" -> appellee-briefing {
+    authority cite "FRBP 8018(a)(1)"
+    within appellant-brief-period
+  }
+  edge-briefing-default "Appellant does not prosecute the appeal" -> dismissed-prosecution {
+    authority cite "1st Cir. BAP L.R. 8020-1(b)"
+  }
+}
+
+state appellee-briefing: "Appellee's brief and reply" by appellee cite "FRBP 8018(a)(2)"
+{
+  edge-appellee-briefing-appellee "Appellee's brief filed" -> argument {
+    authority cite "FRBP 8018(a)(2)"
+    within appellee-brief-period
+  }
+  edge-appellee-briefing-reply "Reply brief filed" -> argument {
+    authority cite "FRBP 8018(a)(3)"
+    within reply-brief-period
+  }
+}
+
+decision dismissed-prosecution: "Dismissed for failure to prosecute" by applicant cite "1st Cir. BAP L.R. 8020-1(b)"
+{
+  note "If no party has elected the district court and no appellant prosecutes the appeal under the FRBP and the panel's rules, the BAP clerk may dismiss it for failure to prosecute. The BAP may reinstate on the defaulting party's motion within 14 days of service of the order, supported by a verified statement showing special circumstances (1st Cir. BAP L.R. 8020-1(b)(1))."
+  edge-dismissed-prosecution-reinstated "Reinstatement motion filed" -> briefing {
+    authority cite "1st Cir. BAP L.R. 8020-1(b)(1)"
+    within reinstatement-period
+  }
+  edge-dismissed-prosecution-final "No reinstatement" -> dismissed-final {
+    authority cite "1st Cir. BAP L.R. 8020-1(b)"
+  }
+}
+
+terminal dismissed-final: "Dismissed for failure to prosecute" outcome [loss] cite "1st Cir. BAP L.R. 8020-1(b)"
+
+decision argument: "Argument or submission" by court cite "FRBP 8019"
+{
+  note "Each party includes in its opening or answering brief a statement of up to one-half page on why oral argument should or need not be heard (1st Cir. BAP L.R. 8019-1(a)). Argument may be waived by written stipulation unless the BAP orders otherwise (8019-1(b)), held by telephone or videoconference (8019-1(c)), or found unnecessary under FRBP 8019(b) (8019-1(d)). Argument is generally held monthly in Boston, and may be held in Puerto Rico, Maine, New Hampshire and Rhode Island for cases from there (8019-1(f)); a scheduled date, method or place changes only for good cause (8019-1(g))."
+  edge-argument-argued "Argued" -> decision-issued { authority cite "1st Cir. BAP L.R. 8019-1(e)" }
+  edge-argument-submitted "Submitted on the briefs" -> decision-issued {
+    authority cite "1st Cir. BAP L.R. 8019-1(d)"
+  }
+}
+
+decision decision-issued: "Disposition" by court cite "FRBP 8024(a)"
+{
+  note "The rule text supplies no merits outcome probabilities or payoffs."
+  edge-decision-issued-rehearing-window "Judgment entered" -> rehearing-window {
+    authority cite "FRBP 8024(a)"
+  }
+}
+
+decision rehearing-window: "Rehearing" by applicant cite "FRBP 8022(a)(1)"
+{
+  note "A motion for rehearing is due within 14 days after entry of the judgment on appeal (FRBP 8022(a)(1), lit/frbp); a response may be filed within 7 days after its service (1st Cir. BAP L.R. 8022-1(a))."
+  edge-rehearing-window-further-review "No motion" -> further-review {
+    authority cite "FRBP 8022(a)(1)"
+  }
+  edge-rehearing-window-rehearing-ruling "Motion filed" -> rehearing-ruling {
+    authority cite "FRBP 8022(a)(1)"
+    within rehearing-period
+  }
+}
+
+decision rehearing-ruling: "Rehearing decided" by court cite "FRBP 8022(a)(5)"
+{
+  edge-rehearing-ruling-response "Response filed" -> rehearing-ruling {
+    authority cite "1st Cir. BAP L.R. 8022-1(a)"
+    within rehearing-response-period
+  }
+  edge-rehearing-ruling-further-review "Denied" -> further-review {
+    authority cite "FRAP 6(b)(2)(A)(i)"
+  }
+  edge-rehearing-ruling-rehearing-granted "Granted" -> rehearing-granted {
+    authority cite "FRBP 8022(a)(5)"
+  }
+}
+
+terminal rehearing-granted: "Rehearing granted" outcome [appeal] cite "FRBP 8022(a)(5)"
+{
+  note "The BAP may dispose of the appeal without reargument, restore it to the calendar, or issue another order (FRBP 8022(a)(5)). Modeled as an exit."
+}
+
+decision further-review: "Appeal to the First Circuit" by applicant cite "28 U.S.C. § 158(d)(1)"
+{
+  note "The court of appeals has jurisdiction of appeals from all final decisions of the BAP (28 U.S.C. § 158(d)(1)); the FRAP apply as FRAP 6(b) provides, and after a timely rehearing motion the time to appeal runs from the order disposing of it (FRAP 6(b)(2)(A)(i)). The appeal periods are lit/frap's."
+  edge-further-review-circuit "Appeal taken" -> circuit-appeal { authority cite "FRAP 6(b)(1)" }
+  edge-further-review-final "No appeal" -> final-appellate { authority cite "FRBP 8024(b)" }
+}
+
+terminal circuit-appeal: "Appeal to the court of appeals" outcome [appeal] cite "28 U.S.C. § 158(d)(1)"
+terminal final-appellate: "BAP judgment final" outcome [judgment] cite "FRBP 8024"

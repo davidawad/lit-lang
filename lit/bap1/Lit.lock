@@ -1,0 +1,30 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "first-circuit-bankruptcy-appellate-panel"
+version = "0.1.0"
+language = 1
+source = "sha256:f0e8b5042c0123693f55e8737060cda4e4f7bdb7dfea105adde624dc00c2575d"
+semantic = "sha256:be2f370a84c0a463184d4f2f65b920bf2bb943a0d03896e74cde2068b4352a1d"
+texts = [
+    "bap1-rules sources/ca1-bap/ca1-bap-local-rules-sectioned.txt sha256:854669c864bcb7a38f92394977a2882766bd82ec2ba1b6932b120aa1c528a2e5",
+    "frap sources/frap.txt sha256:b370cc0558698ff88b62b6cec212742fde8afbdd2fe653a3b255d69dec893172",
+    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
+    "usc28-158 sources/usc-28-158.txt sha256:a0f615748b6a10805e6eeec6a05e94d7a3fc2dcd5fafbe94efae7af8ebf9987b",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
+name = "frbp-bankruptcy-procedure"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]

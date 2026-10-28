@@ -3336,8 +3336,8 @@ the run's (a links package that does not check fails the run), while its
 dependencies outside the matter's scope are loaded for it but not
 reported.
 
-`justfile` recipes: `lit-check` runs `litigate check lit cases` (the default
-`dev` profile: real errors fail it, holes do not; `strict` is the release bar).
+`justfile` recipes: `lit-check` runs `litigate check --profile strict lit cases`
+(the strict profile: holes and unresolved cites fail the repository gate).
 `lit-sync` regenerates every `Lit.lock` and builds the generated files (§9.4)
 into `target/lit-build/`; `lit-sync-check` runs it and fails when a `Lit.lock`
 changed or a generated file is tracked by git, and is part of `just ci`.

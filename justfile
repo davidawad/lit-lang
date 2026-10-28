@@ -323,11 +323,10 @@ coverage:
     cargo run -q -p litigate-cli -- --format human coverage > /dev/null
 
 # --- litigate authoring language -------------------------------------------
-# Check of the stdlib and matters under the default `dev` profile (SPEC §9.3):
-# fails on real errors only; holes stay L9002 warnings until release, when
-# `--profile strict` is the bar. `just lit-check lit/examples` for one package.
+# Strict check of the stdlib and matters. `just lit-check lit/examples` checks
+# one package.
 lit-check *ARGS='lit cases':
-    cargo run -q -p litigate-cli -- --format human check {{ARGS}}
+    cargo run -q -p litigate-cli -- --format human check --profile strict {{ARGS}}
 
 # The generated files (DESIGN §11.4, SPEC §9.4): every pack, links.json,
 # generated clock fragment and named scenario is built from lit/ and cases/

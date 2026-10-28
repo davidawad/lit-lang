@@ -1,0 +1,241 @@
+module bankr-me-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, PetitionFiled }
+
+// The District of Maine Bankruptcy Court's own periods, computed under
+// FRBP 9006(a), which states the FRCP 6(a) method. Every FRBP period
+// (schedules, claims, discharge, adversary answers, appeals) is
+// lit/frbp's. Not encoded as periods: a hearing on a motion is set no
+// less than 21 days after the motion is filed, with a response date no
+// less than 14 days after filing and no less than 7 days before the
+// hearing (Local Rule 9013-1(b)(2)), which bound the date the movant sets
+// rather than run a period; a reply is due by noon Eastern Time two
+// business days before the hearing (Local Rule 9013-1(d)(2)) and a
+// response to a request for expedited determination by the business day
+// before it (Local Rule 9013-4(d)(2)), business-day and hour periods the
+// package does not count; a Chapter 11 professional's employment
+// application is due by the later of 30 days after the petition and 30
+// days after the professional first renders services (Local Rule
+// 2014-1(b)(2)), and an objection to an amended Chapter 13 claim by the
+// later of 30 days after it is filed and the original deadline (Local
+// Rule 3007-1(b)), later-of periods; agreed continuances are limited to
+// 45 days (Local Rule 9013-2(a)(2)) and a stay-relief hearing set more
+// than 30 days after the motion is consent to continuing the stay (Local
+// Rule 4001-1(c)), limits on a setting, not filing periods. Payment
+// advices are given to the trustee within FRBP 1007(c)'s 14 days (Local
+// Rule 1007-1(c)(1)), the national period.
+/// Memoranda in a discovery dispute (Local Rule 7026-1(b)(2)).
+limit discovery-memorandum { pages <= 5 cite "D. Me. LBR 7026-1(b)" } cite "D. Me. LBR 7026-1(b)"
+/// A reply to a response to a motion (Local Rule 9013-1(d)(1)).
+limit motion-reply { pages <= 5 cite "D. Me. LBR 9013-1(d)" } cite "D. Me. LBR 9013-1(d)"
+
+/// An order converting an individual debtor's case from another chapter
+/// to Chapter 11 or Chapter 13 is entered (Local Rule 1007-1(c)(2)).
+event ConversionOrderEntered()
+/// A Chapter 11 or Chapter 12 case in which the debtor operated a
+/// business is converted to Chapter 7 (Local Rule 1019-1(b)).
+event ConvertedToChapter7()
+/// An order for a Rule 2004 examination is served (Local Rule 2004-1(b)).
+event ExaminationOrderServed()
+/// The debtor serves a creditor added by amended schedules with notice of
+/// the amendment (Local Rules 3002-1, 3003-1).
+event AmendmentNoticeServed()
+/// The debtor serves a creditor with notice that its scheduled claim is
+/// disputed, contingent or unliquidated, or that the schedules were
+/// amended so that the creditor now objects to the claim's amount or
+/// characterization (Local Rule 3003-1).
+event DisputedClaimNoticeServed()
+/// The deadline for filing a claim in a Chapter 13 case passes (Local Rule
+/// 3007-1(a)).
+event ClaimDeadlinePassed()
+/// A claim under § 1305 of the Code is filed (Local Rule 3007-1(a)).
+event PostpetitionClaimFiled()
+/// A Chapter 11 trustee is appointed (Local Rule 3016-2).
+event TrusteeAppointed()
+/// The plan and approved disclosure statement are mailed (Local Rule
+/// 3017-1(f)).
+event PlanPackageMailed()
+/// A hearing on a motion is scheduled to be held (Local Rule 9013-2(b)).
+event HearingScheduled()
+/// An order on a motion filed for relief without a hearing is entered
+/// (Local Rule 9013-3).
+event WithoutHearingOrderEntered()
+/// The parties compromise or settle an adversary proceeding (Local Rule
+/// 9019-1(b)).
+event AdversarySettled()
+/// A notice of removal is filed under FRBP 9027 (Local Rule 9027-1).
+event RemovalNoticeFiled()
+/// A memorandum in a discovery dispute is filed (Local Rule 7026-1(b)(2)).
+event DiscoveryMemorandumFiled() paper discovery-memorandum
+/// A reply to a response to a motion is filed (Local Rule 9013-1(d)).
+event MotionReplyFiled() paper motion-reply
+
+/// Local Rule 1002-1(b): a debtor that is not an individual or a
+/// governmental unit files a statement identifying each affiliate and
+/// insider with the petition or within 14 days thereafter.
+deadline affiliates-statement-period: 14.days after PetitionFiled() counted_by frcp6 cite "D. Me. LBR 1002-1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 1007-1(c)(2): an individual debtor whose case is converted
+/// to Chapter 11 files Official Form 122B, or to Chapter 13 Official Form
+/// 122C-1 (and 122C-2 if applicable), within 14 days of the order
+/// converting the case.
+deadline converted-means-test-period: 14.days after ConversionOrderEntered() counted_by frcp6 cite "D. Me. LBR 1007-1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 1019-1(b): on conversion to Chapter 7 of a case in which the
+/// debtor operated a business, the debtor in possession files the
+/// schedule of business assets not later than 14 days after conversion.
+deadline dip-business-assets-period: 14.days after ConvertedToChapter7() counted_by frcp6 cite "D. Me. LBR 1019-1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 1019-1(b): a trustee serving at the time of conversion files
+/// the schedule not later than 30 days after conversion.
+deadline trustee-business-assets-period: 30.days after ConvertedToChapter7() counted_by frcp6 cite "D. Me. LBR 1019-1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 2004-1(b): absent exigent circumstances, a motion for a
+/// protective order against a Rule 2004 examination is filed within 14
+/// days of service of the examination order or before the examination is
+/// convened, whichever is earlier.
+deadline examination-protective-order-period: 14.days after ExaminationOrderServed() counted_by frcp6 cite "D. Me. LBR 2004-1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 3002-1: when a Chapter 7, 12 or 13 debtor amends a schedule
+/// to add a creditor, the added creditor may file a proof of claim within
+/// 90 days after the debtor served it with notice of the amendment.
+deadline added-creditor-claim-period: 90.days after AmendmentNoticeServed() counted_by frcp6 cite "D. Me. LBR 3002-1"
+{
+  forum frcp
+}
+
+/// Local Rule 3003-1: in a Chapter 9 or Chapter 11 case, the time for
+/// filing a proof of claim or interest is 90 days from the first date set
+/// for the meeting of creditors.
+deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frcp6 cite "D. Me. LBR 3003-1"
+{
+  forum frcp
+}
+
+/// Local Rule 3003-1: a creditor served with notice that its claim is
+/// disputed, contingent or unliquidated, or that the schedules were
+/// amended so that it now objects to the claim, files a proof of claim no
+/// later than 90 days from that service.
+deadline disputed-claim-period: 90.days after DisputedClaimNoticeServed() counted_by frcp6 cite "D. Me. LBR 3003-1"
+{
+  forum frcp
+}
+
+/// Local Rule 3007-1(a): in a Chapter 13 case, an objection to a claim
+/// under § 502(b) of the Code is filed within 30 days after the deadline
+/// for filing the claim.
+deadline chapter13-claim-objection-period: 30.days after ClaimDeadlinePassed() counted_by frcp6 cite "D. Me. LBR 3007-1(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 3007-1(a): an objection to a claim under § 1305 of the Code
+/// is filed within 30 days after the claim is filed.
+deadline postpetition-claim-objection-period: 30.days after PostpetitionClaimFiled() counted_by frcp6 cite "D. Me. LBR 3007-1(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 3016-2: the action § 1106(a)(5) of the Code requires of a
+/// Chapter 11 trustee is completed within 30 days of the trustee's
+/// appointment.
+deadline trustee-plan-action-period: 30.days after TrusteeAppointed() counted_by frcp6 cite "D. Me. LBR 3016-2"
+{
+  forum frcp
+}
+
+/// Local Rule 3017-1(f): within 7 days after mailing the plan and
+/// disclosure statement, the debtor files a certificate of service with
+/// copies of each document mailed.
+deadline plan-mailing-certificate-period: 7.days after PlanPackageMailed() counted_by frcp6 cite "D. Me. LBR 3017-1(f)"
+{
+  forum frcp
+}
+
+/// Local Rule 9013-2(b)(1): a motion to continue a scheduled hearing
+/// without the consent of all interested parties is filed no fewer than
+/// three days before the hearing, unless good cause is shown.
+deadline continuance-motion-period: 3.days before HearingScheduled() counted_by frcp6 cite "D. Me. LBR 9013-2(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 9013-3: an order on a motion filed for relief without a
+/// hearing becomes final in 14 days unless an interested party sooner
+/// objects.
+deadline without-hearing-objection-period: 14.days after WithoutHearingOrderEntered() counted_by frcp6 cite "D. Me. LBR 9013-3"
+{
+  forum frcp
+}
+
+/// Local Rule 9019-1(b): the parties notify the court in writing within
+/// 21 days of the compromise or settlement of an adversary proceeding.
+deadline adversary-settlement-notice-period: 21.days after AdversarySettled() counted_by frcp6 cite "D. Me. LBR 9019-1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 9027-1: within 7 days after filing a notice of removal, the
+/// removing party serves it on all parties to the removed claim and files
+/// a certified copy of the removed action's docket sheet.
+deadline removal-service-period: 7.days after RemovalNoticeFiled() counted_by frcp6 cite "D. Me. LBR 9027-1"
+{
+  forum frcp
+}
+
+/// Local Rule 9027-1: within 14 days of filing the notice of removal, the
+/// removing party files copies of all filings from the removed action with
+/// a written representation that they are true and accurate.
+deadline removal-filings-period: 14.days after RemovalNoticeFiled() counted_by frcp6 cite "D. Me. LBR 9027-1"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed with notice of hearing" by applicant cite "D. Me. LBR 9013-1(b)"
+{
+  note "Each written motion carries a proposed order (Local Rule 9013-1(a)). The movant self-calendars a non-evidentiary hearing no less than 21 days after filing, with a response date no less than 14 days after filing and no less than 7 days before the hearing, and gives notice to all interested parties (Local Rule 9013-1(b)), unless the motion is one Local Rule 9013-3 lets be filed without a hearing or seeks emergency, expedited or ex parte relief (Local Rules 9013-4, 9013-5). In a contested matter Local Rule 9013-1 governs and the motion is served under FRBP 7004 without a summons (Local Rule 9014-1(a)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-response "Written response filed by the response date" -> response {
+    authority cite "D. Me. LBR 9013-1(c)"
+  }
+  edge-motion-filed-unopposed "No response; matter heard" -> ruling {
+    authority cite "D. Me. LBR 9013-1(b)"
+  }
+}
+
+state response: "Written response filed" by opponent cite "D. Me. LBR 9013-1(c)"
+{
+  note "A response asserts the responding party's defenses and position and, where the motion states separately identified facts, admits or denies each under FRCP 8(b) (Local Rule 9013-1(c)). A reply of no more than five pages is permitted, due by noon Eastern Time two business days before the hearing (Local Rule 9013-1(d))."
+  edge-response-ruling "Reply filed or time to reply expired; hearing held" -> ruling {
+    authority cite "D. Me. LBR 9013-1(d)"
+  }
+}
+
+decision ruling: "Motion decided" by court cite "D. Me. LBR 9013-1(b)"
+{
+  note "An agreed continuance is docketed without a motion for no more than 45 days; a continuance without agreement is moved for no fewer than three days before the hearing (Local Rule 9013-2)."
+  edge-ruling-granted "Granted" -> decided { authority cite "D. Me. LBR 9013-1(a)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "D. Me. LBR 9013-1(b)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "D. Me. LBR 1001-1"
+{
+  note "The Local Rules apply to all cases and proceedings arising in, under or related to cases pending under the Code in the court (Local Rule 1001-1)."
+}

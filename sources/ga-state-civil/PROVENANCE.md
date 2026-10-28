@@ -6,6 +6,7 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 84ba00bf9765d69c960f5c9e1f63fadcf4174371ad141e8b66e5fe43e5bf3818. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `ga-state-civil/original/gauscr-uniform-superior-court-rules-2026-04-09.pdf` as served (sha256 b9a6e2d7f13dc5315d7572419c938f6fafaefdc9497f67e0d41a200b238579bf); extraction sha256 84ba00bf9765d69c960f5c9e1f63fadcf4174371ad141e8b66e5fe43e5bf3818.
+- Also the criminal rules of the Uniform Superior Court Rules (lg-gddt): Rules 7.4, 10.2, 19.2 and the criminal practice rules 30 (arraignment), 31 (motions), 32 (criminal trial calendar) through 36.13 (filing requirements, criminal) and related. The substantive criminal procedure code, O.C.G.A. Title 17 (including the speedy-trial sections 17-7-170 and 17-7-171), is LexisNexis public access only (reCAPTCHA on document pages) and is not vendored.
 
 ### `ga-state-civil/gauscr-order-2026-10-05.txt` — Georgia Supreme Court order amending Uniform Superior Court Rules (October 5, 2026)
 

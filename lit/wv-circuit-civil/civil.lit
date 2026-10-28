@@ -1,0 +1,194 @@
+module wv-circuit-civil.civil
+
+// Civil actions in the West Virginia circuit courts, from the applicant's
+// (plaintiff's) side. Every period below is stated in a note, not counted:
+// time is computed under W. Va. R. Civ. P. 6(a), and lit/core has no
+// counting rule for it or for West Virginia's legal holidays (Rule
+// 6(a)(6)). The parties may by written stipulation filed with the court
+// agree to a different period, and the court may extend one for good
+// cause, but not the times under Rules 50(b) and (d), 52(b), 59(b), (d)
+// and (e), and 60(c) (Rule 6(b)). The earlier outline cited W. Va. Code §
+// 58-5-1 for the appeal to the Intermediate Court of Appeals; the Code is
+// not vendored, so the appeal is bound to Rule 72 alone. It named one
+// decision, Williams v. Precision Coil, Inc., 194 W. Va. 52, 459 S.E.2d
+// 329 (1995), on summary judgment; no reporter text is vendored, so it is
+// removed.
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "W. Va. R. Civ. P. 3(a)"
+{
+  note "A civil action is commenced by filing a complaint with the court; a complaint naming more than one individual plaintiff not related by marriage or a derivative or fiduciary relationship is docketed as a separate civil action, with a separate fee, for each plaintiff (Rule 3(a)). Every complaint is accompanied by a completed civil case information statement in the form the Supreme Court of Appeals prescribes (Rule 3(b)). If a defendant is not served within 120 days after the complaint is filed, the court on motion or on its own, after notice to the plaintiff, dismisses the action without prejudice against that defendant or orders service within a specified time; on good cause shown it extends the time (Rule 4(i))."
+  edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    authority cite "W. Va. R. Civ. P. 4(d)"
+  }
+  edge-complaint-filed-unserved "Not served within 120 days" -> dismissed-unserved {
+    authority cite "W. Va. R. Civ. P. 4(i)"
+  }
+}
+
+terminal dismissed-unserved: "Dismissed without prejudice for untimely service" outcome [loss, dismissal] cite "W. Va. R. Civ. P. 4(i)"
+{
+  note "Outcome from the applicant's side: dismissal without prejudice against the unserved defendant under Rule 4(i)."
+}
+
+decision answer-due: "Answer, Rule 12 motion, or no response" by office cite "W. Va. R. Civ. P. 12(a)"
+{
+  note "A defendant serves an answer within 30 days after being served with the summons and complaint, accompanied by a completed civil case information statement (Rule 12(a)(1)(A)); an answer to a counterclaim or crossclaim is served within 30 days after service of the pleading stating it (Rule 12(a)(1)(B)). Every defense is asserted in the responsive pleading, but lack of subject-matter or personal jurisdiction, improper venue, insufficient process or service of process, failure to state a claim and failure to join a party under Rule 19 may be made by motion, before pleading if a responsive pleading is allowed (Rule 12(b)). Response and reply memoranda on a motion are filed and served within 21 days of service of the motion and within 7 days of service of the response; surreply only by leave (Rule 6(d)(3))."
+  edge-answer-due-answer "Answer served" -> answered { authority cite "W. Va. R. Civ. P. 12(a)" }
+  edge-answer-due-motion "Rule 12(b) motion" -> dismissal-motion {
+    authority cite "W. Va. R. Civ. P. 12(b)"
+  }
+  edge-answer-due-default "No pleading or defense: default" -> default-entered {
+    authority cite "W. Va. R. Civ. P. 55(a)"
+  }
+}
+
+decision dismissal-motion: "Rule 12(b) motion decided" by court cite "W. Va. R. Civ. P. 12(b)"
+{
+  note "If matters outside the pleadings are presented on a Rule 12(b)(6) or 12(c) motion and not excluded, the motion is treated as one for summary judgment under Rule 56, with a reasonable opportunity to present pertinent material (Rule 12(d)). Unless the court sets a different time, if the court denies the motion or postpones its disposition until trial, the responsive pleading is served within 14 days after notice of the court's action (Rule 12(a)(2)(A))."
+  edge-dismissal-motion-granted "Granted: complaint dismissed" -> dismissed-pleading {
+    authority cite "W. Va. R. Civ. P. 12(b)"
+  }
+  edge-dismissal-motion-amend "Plaintiff amends the complaint" -> amended {
+    authority cite "W. Va. R. Civ. P. 15(a)"
+  }
+  edge-dismissal-motion-denied "Denied: answer due 14 days after notice" -> answered {
+    authority cite "W. Va. R. Civ. P. 12(a)"
+  }
+}
+
+state amended: "Amended pleading" by applicant cite "W. Va. R. Civ. P. 15(a)"
+{
+  note "A party may amend its pleading once as a matter of course within 21 days after serving it or, if a responsive pleading is required, 21 days after service of a responsive pleading or of a motion under Rule 12(b), (e) or (f), whichever is earlier (Rule 15(a)(1)); otherwise only with the opposing party's written consent or the court's leave, which the court should freely give when justice so requires (Rule 15(a)(2)). Unless the court orders otherwise, a required response to an amended pleading is made within the time remaining to respond to the original or within 14 days after service of the amendment, whichever is later (Rule 15(a)(3))."
+  edge-amended-tested "Amended pleading met with a new Rule 12(b) motion" -> dismissal-motion {
+    authority cite "W. Va. R. Civ. P. 12(b)"
+  }
+  edge-amended-answered "Amended pleading answered" -> answered {
+    authority cite "W. Va. R. Civ. P. 15(a)"
+  }
+}
+
+terminal dismissed-pleading: "Dismissed on a Rule 12(b) motion" outcome [loss, dismissal] cite "W. Va. R. Civ. P. 12(b)"
+{
+  note "Outcome from the applicant's side. Appeals are governed by the West Virginia Rules of Appellate Procedure (Rule 72), which are not vendored."
+}
+
+state default-entered: "Default entered by the clerk" by office cite "W. Va. R. Civ. P. 55(a)"
+{
+  note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend, and that is shown by affidavit or otherwise, the clerk enters its default (Rule 55(a)). For a sum certain or one that computation can make certain, the clerk enters judgment for that amount and costs on the plaintiff's request with an affidavit of the amount due; in all other cases the party applies to the court, and a party that has appeared is served with written notice of the application at least 7 days before the hearing (Rule 55(b)). The court may set aside an entry of default for good cause (Rule 55(c))."
+  edge-default-entered-judgment "Default judgment entered" -> default-judgment {
+    authority cite "W. Va. R. Civ. P. 55(b)"
+  }
+  edge-default-entered-set-aside "Default set aside for good cause" -> answered {
+    authority cite "W. Va. R. Civ. P. 55(c)"
+  }
+}
+
+decision default-judgment: "Default judgment entered" by court cite "W. Va. R. Civ. P. 55(b)"
+{
+  note "Rule 58 applies to default judgments (Rule 55(d)). The court may set aside a final default judgment under Rule 60(b) (Rule 55(c)); a Rule 60(b) motion is made within a reasonable time, and for mistake, inadvertence, surprise, unavoidable cause or excusable neglect, newly discovered evidence, or fraud, misrepresentation or misconduct no more than a year after entry of the judgment (Rule 60(c)(1))."
+  edge-default-judgment-stands "No relief sought: judgment stands" -> default-won {
+    authority cite "W. Va. R. Civ. P. 55(b)"
+  }
+  edge-default-judgment-relieved "Default judgment set aside: defendant answers" -> answered {
+    authority cite "W. Va. R. Civ. P. 60(b)"
+  }
+}
+
+terminal default-won: "Default judgment for applicant" outcome [win] cite "W. Va. R. Civ. P. 55(b)"
+{
+  note "Outcome from the applicant's side: a default judgment under Rule 55(b), entered under Rule 58 (Rule 55(d))."
+}
+
+state answered: "Answer served" by applicant cite "W. Va. R. Civ. P. 8(b)"
+{
+  note "The answer states in short and plain terms the defenses to each claim and admits or denies the allegations (Rule 8(b)). Except in proceedings exempt from initial disclosure or when the court orders otherwise, the parties confer as soon as practicable, and in any event at least 30 days after filing of a responsive pleading or Rule 12 motion, and submit a written report outlining the proposed discovery plan within 14 days after the conference (Rule 26(f)(1)-(2)). The judge issues the scheduling order within the earlier of 120 days after any defendant has been served or 90 days after any defendant has appeared, absent good cause for delay (Rule 16(b)(2)). A jury is demanded by serving a written demand no later than 14 days after the last pleading directed to the issue is served, and filing it (Rule 38(b))."
+  edge-answered-discovery "Case proceeds to discovery" -> discovery {
+    authority cite "W. Va. R. Civ. P. 26(f)"
+  }
+}
+
+state discovery: "Discovery" by applicant cite "W. Va. R. Civ. P. 26(a)"
+{
+  note "Initial disclosures are made at or within 30 days after the filing of the Rule 26(f)(2) written report, unless a stipulation or order sets a different time or a party objects in the proposed discovery plan; a party served or joined later discloses within 30 days after being served or joined (Rule 26(a)(1)(C)-(D)). Absent a stipulation or order, expert disclosures are made at least 90 days before the date set for trial, and rebuttal disclosures within 30 days after the other party's disclosure (Rule 26(a)(2)(D)). A motion to compel includes a certification of a good-faith attempt to confer (Rule 37(a)(1)). A party may move for summary judgment at any time until 30 days after the close of all discovery, unless a court order sets a different time (Rule 56(b))."
+  edge-discovery-order-disobeyed "Discovery order disobeyed" -> discovery-sanction {
+    authority cite "W. Va. R. Civ. P. 37(b)"
+  }
+  edge-discovery-sj "Motion for summary judgment" -> summary-judgment {
+    authority cite "W. Va. R. Civ. P. 56(a)"
+  }
+  edge-discovery-trial "Case reaches trial" -> trial { authority cite "W. Va. R. Civ. P. 16(b)" }
+  edge-discovery-settled "Settlement: stipulation of dismissal" -> settled {
+    authority cite "W. Va. R. Civ. P. 41(a)"
+  }
+}
+
+decision discovery-sanction: "Sanction for failure to obey a discovery order" by court cite "W. Va. R. Civ. P. 37(b)"
+{
+  note "If a party fails to obey an order to provide or permit discovery, the court where the action is pending may issue further just orders, including taking facts as established, prohibiting claims, defenses or evidence, striking pleadings, staying proceedings, dismissing the action in whole or in part, rendering a default judgment, or treating the failure as contempt (Rule 37(b)(2)(A))."
+  edge-discovery-sanction-continues "Sanction short of dismissal: discovery continues" -> discovery {
+    authority cite "W. Va. R. Civ. P. 37(b)"
+  }
+  edge-discovery-sanction-dismissed "Action dismissed as a sanction" -> dismissed-sanction {
+    authority cite "W. Va. R. Civ. P. 37(b)"
+  }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "W. Va. R. Civ. P. 37(b)"
+{
+  note "Outcome from the applicant's side: dismissal under Rule 37(b)(2)(A)(v)."
+}
+
+decision summary-judgment: "Summary judgment decided" by court cite "W. Va. R. Civ. P. 56(a)"
+{
+  note "The court grants summary judgment if the movant shows that there is no genuine issue as to any material fact and that it is entitled to judgment as a matter of law (Rule 56(a)). If judgment is not rendered on the whole case, the court specifies the facts that appear without substantial controversy, which are deemed established at trial (Rule 56(c))."
+  edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-entered {
+    authority cite "W. Va. R. Civ. P. 56(a)"
+  }
+  edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-entered {
+    authority cite "W. Va. R. Civ. P. 56(a)"
+  }
+  edge-summary-judgment-denied "Denied or granted in part: trial" -> trial {
+    authority cite "W. Va. R. Civ. P. 56(c)"
+  }
+}
+
+state trial: "Trial by jury or by the court" by court cite "W. Va. R. Civ. P. 39(a)"
+{
+  note "When a jury trial has been demanded under Rule 38, the trial on the issues demanded is by jury unless the parties stipulate to a nonjury trial or the court finds no right of jury trial exists (Rule 39(a)). The court may require a special verdict (Rule 49(a))."
+  edge-trial-verdict "Verdict or decision" -> judgment-entered {
+    authority cite "W. Va. R. Civ. P. 49(a)"
+  }
+  edge-trial-settled "Settlement during trial" -> settled {
+    authority cite "W. Va. R. Civ. P. 41(a)"
+  }
+}
+
+decision judgment-entered: "Judgment entered" by court cite "W. Va. R. Civ. P. 58"
+{
+  note "The court promptly settles or approves the form of the judgment and signs it; the clerk's notation in the civil docket under Rule 79(a) is the entry of judgment, which is not effective before entry and is not delayed for taxing costs or post-trial motions (Rule 58). A renewed motion for judgment as a matter of law is filed no later than 28 days after entry of judgment (Rule 50(b)); a motion for a new trial no later than 28 days after entry of judgment, with opposing affidavits 14 days after service (Rule 59(b)-(c)); a motion to alter or amend no later than 28 days after entry (Rule 59(e)). The court cannot extend these times (Rule 6(b)(2))."
+  edge-judgment-entered-new-trial "New trial granted" -> trial {
+    authority cite "W. Va. R. Civ. P. 59(a)"
+  }
+  edge-judgment-entered-appeal "Appeal taken" -> appeal-taken {
+    authority cite "W. Va. R. Civ. P. 72"
+  }
+  edge-judgment-entered-final "No post-trial motion or appeal" -> final-no-appeal {
+    authority cite "W. Va. R. Civ. P. 58"
+  }
+}
+
+terminal settled: "Settled: dismissal by stipulation or notice" outcome [settlement] cite "W. Va. R. Civ. P. 41(a)"
+{
+  note "The plaintiff may dismiss without a court order by notice before the opposing party serves an answer or a motion for summary judgment, or by a stipulation signed by all parties who have appeared; unless it states otherwise the dismissal is without prejudice (Rule 41(a)(1))."
+}
+
+terminal appeal-taken: "Appeal taken under the Rules of Appellate Procedure" outcome [appeal] cite "W. Va. R. Civ. P. 72"
+{
+  note "Appeals are governed by the West Virginia Rules of Appellate Procedure (Rule 72), which are not vendored; the time to appeal is set there."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "W. Va. R. Civ. P. 58"
+{
+  note "Judgment entered under Rule 58 and not appealed."
+}

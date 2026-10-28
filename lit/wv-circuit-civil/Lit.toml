@@ -1,0 +1,43 @@
+# Civil actions in the West Virginia circuit courts under the West Virginia
+# Rules of Civil Procedure, as far as the vendored text states: the rules
+# as posted on the Supreme Court of Appeals' rules page, printed
+# 2026-10-27 (sources/wv-circuit-civil). The page states no edition date,
+# so in_force is the date the text was taken, not an effective date. Time
+# is computed under W. Va. R. Civ. P. 6(a), whose legal holidays (West
+# Virginia Day, Lincoln's Birthday, election days) differ from the federal
+# ones; lit/core has no counting rule for it, so the periods are stated in
+# notes, not encoded as counted deadlines. Appeals are governed by the
+# West Virginia Rules of Appellate Procedure (Rule 72), which are not
+# vendored; no West Virginia appellate package exists yet.
+[package]
+name = "wv-circuit-civil"
+version = "0.1.0"
+language = 1
+pack_id = "wv-circuit-civil"
+forum = "wv-circuit-civil"
+authority = "StateRule"
+jurisdiction_id = "west-virginia"
+title = "West Virginia Circuit Court, civil"
+description = "Civil actions in the West Virginia circuit courts under the West Virginia Rules of Civil Procedure, as far as the vendored text states: commencement and the civil case information statement, the summons, service and its 120-day limit, the time to answer and Rule 12 motions, amendment, default and default judgment, the Rule 26(f) conference and disclosures, discovery sanctions, summary judgment, the jury demand and trial, judgment, the renewed motion for judgment as a matter of law, new trial and alteration of judgment, relief from judgment, and the appeal under the Rules of Appellate Procedure."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "West Virginia Circuit Court (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.wv-rcp]
+title = "West Virginia Rules of Civil Procedure, as posted by the Supreme Court of Appeals of West Virginia (printed 2026-10-27)"
+url = "https://www.courtswv.gov/legal-community/court-rules/rules-civil-procedure-contents"
+path = "sources/wv-circuit-civil/wv-rules-of-civil-procedure-sectioned.txt"
+path_sha256 = "796b579132bd760ffb977ae427fdb1b34bbfa34d85804a186f6750e9fd6d15f1"
+sha256 = "39d8884c3cd2ae464b5a304a459f49582550e99260d3a2841b8537046ce7e78b"
+as_of = "2026-10-27"
+cite_prefixes = ["W. Va. R. Civ. P."]
+section_heading = "Rule {n}"

@@ -1,0 +1,53 @@
+# Civil actions in the Minnesota district courts under the Minnesota Rules
+# of Civil Procedure, with amendments effective July 1, 2025
+# (sources/mn-district). Computation of time is Minn. R. Civ. P. 6.01,
+# which counts like FRCP 6(a) but takes its legal holidays from Minn.
+# Stat. § 645.44, subd. 5, and any day the United States Mail does not
+# operate, and adds 3 days after service by mail and 1 day after service
+# completed after 5:00 p.m. (Rule 6.01(d), (e)); lit/core has no counting
+# rule for it, so the periods are stated in notes, not encoded as counted
+# deadlines. Motion deadlines are governed by the General Rules of Practice
+# (Rule 6.04), which are not vendored. An appeal hands off to the
+# Minnesota Court of Appeals package (lit/minnctapp).
+[package]
+name = "mn-district-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "mn-district-court-civil"
+forum = "mn-district"
+authority = "StateRule"
+jurisdiction_id = "minnesota"
+title = "Minnesota district court, civil"
+description = "Civil actions in the Minnesota district courts under the Minnesota Rules of Civil Procedure (amendments effective July 1, 2025), from commencement through judgment, post-trial motions and the notice of appeal. An appeal hands off to the Minnesota Court of Appeals package (lit/minnctapp)."
+in_force = "2025-07-01"
+known_at = "2026-10-28"
+unknown_before = "2025-07-01"
+jurisdiction = "Minnesota district court (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.mnrcp]
+title = "Minnesota Rules of Civil Procedure, with amendments effective July 1, 2025"
+url = "https://mncourts.gov/_media/migration/appellate/supreme-court/court-rules/MN-Rules-of-Civil-Procedure.pdf"
+path = "sources/mn-district/mnrcp-2025-07-01-sectioned.txt"
+path_sha256 = "983acc5f8dc41340bca690419e279fbcda4e58aef6110f4797cf7e21d890fbd2"
+sha256 = "2044ecee1b41aab5d58ee14427e8b6404f091ff2eecc14459ee4447900f0b276"
+as_of = "2025-07-01"
+cite_prefixes = ["Minn. R. Civ. P."]
+section_heading = "Rule {n}"
+
+[sources.mnrcap]
+title = "Minnesota Rules of Civil Appellate Procedure, with amendments effective April 1, 2025"
+url = "https://mncourts.gov/_media/migration/appellate/supreme-court/court-rules/rules-of-civil-app-proc-effective040125.pdf"
+path = "sources/minnctapp/mnrcap-2025-04-01-sectioned.txt"
+path_sha256 = "9351c7e8731c2e496ba1ddd3c038b61c25e310f361a27c178889aff43fc6dbfa"
+sha256 = "35f2dc1e2847e13cba11df37a73290ce7fb5d469024e70b77f349526dddfb068"
+as_of = "2025-04-01"
+cite_prefixes = ["Minn. R. Civ. App. P."]
+section_heading = "Rule {n}"

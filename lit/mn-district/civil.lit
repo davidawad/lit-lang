@@ -1,0 +1,160 @@
+module mn-district-court-civil.civil
+
+// Civil actions in the Minnesota district courts, from the applicant's
+// (plaintiff's) side. Every period below is stated in a note, not counted:
+// Minn. R. Civ. P. 6.01 takes its legal holidays from Minn. Stat. § 645.44,
+// subd. 5, and the days the United States Mail does not operate, and lit/core
+// has no counting rule for it. The earlier outline's Minnesota Supreme Court
+// decisions (Walsh v. U.S. Bank, N.A., 851 N.W.2d 598 (Minn. 2014), on
+// pleading; DLH, Inc. v. Russ, 566 N.W.2d 60 (Minn. 1997), on summary
+// judgment) are removed: no reporter text is vendored. The General Rules of
+// Practice for the District Courts, which govern motion deadlines (Rule
+// 6.04), and the filing fee statute are not vendored.
+start complaint-filed
+
+state complaint-filed: "Action commenced" by applicant cite "Minn. R. Civ. P. 3.01"
+{
+  note "A civil action is commenced against each defendant when the summons is served on that defendant, at the date of signing of a waiver of service under Rule 4.05, or when the summons is delivered for service to the sheriff in the county where the defendant resides, but such delivery is ineffectual unless the summons is actually served, or first published, within 60 days thereafter (Minn. R. Civ. P. 3.01). A copy of the complaint is served with the summons, except on service by publication (Rule 3.02). An action not filed with the court within one year of commencement against any party is deemed dismissed with prejudice against all parties unless the parties sign a stipulation within that year to extend the filing period (Rule 5.04(a)). Periods are computed under Rule 6.01: the trigger day is excluded, every day is counted, and a last day falling on a Saturday, Sunday or legal holiday runs to the next day that is not one; 3 days are added after service by United States Mail, and 1 day after other service accomplished after 5:00 p.m. (Rule 6.01(e)). The filing fee is not stated in the vendored rules."
+  edge-complaint-filed-response-due "Summons served" -> response-due {
+    authority cite "Minn. R. Civ. P. 4.03"
+  }
+  edge-complaint-filed-unfiled "Not filed within one year of commencement" -> dismissed-with-prejudice {
+    authority cite "Minn. R. Civ. P. 5.04(a)"
+  }
+}
+
+state response-due: "Response due: answer or motion" cite "Minn. R. Civ. P. 12.01"
+{
+  note "The defendant serves an answer within 21 days after service of the summons; an answer to a cross-claim, and a reply to a counterclaim, within 21 days after service. If the court denies a Rule 12 motion or postpones it to trial, the responsive pleading is served within 14 days after service of notice of the court's action; after a more definite statement, within 14 days after its service (Minn. R. Civ. P. 12.01). Failure to state a claim upon which relief can be granted may be raised by motion before pleading (Rule 12.02(e))."
+  edge-response-due-default-entered "No timely response" -> default-entered {
+    authority cite "Minn. R. Civ. P. 55.01"
+  }
+  edge-response-due-motion-ruling "Motion to dismiss filed" -> motion-ruling {
+    authority cite "Minn. R. Civ. P. 12.02(e)"
+  }
+  edge-response-due-sched "Answer served" -> sched { authority cite "Minn. R. Civ. P. 12.01" }
+}
+
+decision motion-ruling: "Motion to dismiss ruling" by court cite "Minn. R. Civ. P. 12.02(e)"
+{
+  note "If matters outside the pleading are presented on a motion asserting failure to state a claim and not excluded, the motion is treated as one for summary judgment under Rule 56 (Minn. R. Civ. P. 12.02). A party amends once as of course before a responsive pleading is served; otherwise only by leave of court, freely given when justice so requires, or by written consent; a response to an amended pleading is due within the time remaining for the original or within 14 days after service of the amendment, whichever is longer (Rule 15.01). No leading decision is named."
+  edge-motion-ruling-dismissed-with-prejudice "Dismissed on the merits" -> dismissed-with-prejudice {
+    authority cite "Minn. R. Civ. P. 41.02(c)"
+  }
+  edge-motion-ruling-response-due "Dismissed with leave to amend" -> response-due {
+    authority cite "Minn. R. Civ. P. 15.01"
+  }
+  edge-motion-ruling-sched "Denied: responsive pleading within 14 days after notice" -> sched {
+    authority cite "Minn. R. Civ. P. 12.01"
+  }
+}
+
+state sched: "Scheduling order and initial disclosures" cite "Minn. R. Civ. P. 16.02"
+{
+  note "The court may, and on written request of any party shall, enter a scheduling order limiting the time to join parties and amend, to file and hear motions and to complete discovery; it is modified only by leave of court on good cause (Minn. R. Civ. P. 16.02). Initial disclosures are made at or within 60 days after the original due date of the answer, unless a stipulation or order sets another time (Rule 26.01(a)(3)); a party served or joined later discloses within 30 days after being served or joined (Rule 26.01(a)(4))."
+  edge-sched-discovery "Order entered" -> discovery { authority cite "Minn. R. Civ. P. 16.02" }
+}
+
+state discovery: "Discovery" cite "Minn. R. Civ. P. 26.02"
+{
+  note "Discovery extends to any nonprivileged matter relevant to a party's claim or defense and proportional to the needs of the case (Minn. R. Civ. P. 26.02(b)). Absent a stipulation or order, expert disclosures are made at least 90 days before the date set for trial, and rebuttal disclosures within 30 days after the other party's disclosure (Rule 26.01(b)(4)). Pretrial disclosures are made at least 30 days before trial, and objections to them within 14 days after they are made (Rule 26.01(c)(2)). Sanctions for failure to obey a discovery order include dismissal and default (Rule 37.02(b))."
+  edge-discovery-sj-ruling "Summary judgment motion filed" -> sj-ruling {
+    authority cite "Minn. R. Civ. P. 56.01"
+  }
+  edge-discovery-dismissed-with-prejudice "Discovery sanction dismisses claims" -> dismissed-with-prejudice {
+    authority cite "Minn. R. Civ. P. 37.02(b)"
+  }
+  edge-discovery-settled "Settlement or voluntary dismissal" -> settled {
+    authority cite "Minn. R. Civ. P. 41.01"
+  }
+  edge-discovery-pretrial "No dispositive motion" -> pretrial {
+    authority cite "Minn. R. Civ. P. 16.05"
+  }
+}
+
+decision sj-ruling: "Summary judgment ruling" by court cite "Minn. R. Civ. P. 56.01"
+{
+  note "The court grants summary judgment if the movant shows that there is no genuine issue as to any material fact and that it is entitled to judgment as a matter of law, and states its reasons on the record or in a written decision (Minn. R. Civ. P. 56.01); factual positions are supported as Rule 56.03 provides. The motion's service and filing deadlines are set by the General Rules of Practice (Rule 6.04), which are not vendored. No leading decision is named."
+  edge-sj-ruling-judgment-applicant "Granted for applicant" -> judgment-applicant {
+    authority cite "Minn. R. Civ. P. 58.01"
+  }
+  edge-sj-ruling-judgment-opponent "Granted for opponent" -> judgment-opponent {
+    authority cite "Minn. R. Civ. P. 58.01"
+  }
+  edge-sj-ruling-pretrial "Denied" -> pretrial { authority cite "Minn. R. Civ. P. 56.01" }
+}
+
+state pretrial: "Pretrial conference and order" cite "Minn. R. Civ. P. 16.05"
+{
+  note "After a pretrial conference an order recites the action taken; it controls the subsequent course of the action and is modified only to prevent manifest injustice (Minn. R. Civ. P. 16.05)."
+  edge-pretrial-trial "Trial set" -> trial { authority cite "Minn. R. Civ. P. 16.05" }
+}
+
+state trial: "Trial (jury or bench)" cite "Minn. R. Civ. P. 38.01"
+{
+  note "In actions for the recovery of money only, or of specific real or personal property, issues of fact are tried by a jury unless jury trial is waived or a reference ordered (Minn. R. Civ. P. 38.01). Waiver is by failing to appear at trial or by written or oral consent; failing to file a jury request or pay a jury fee is not a waiver (Rule 38.02)."
+  edge-trial-judgment-applicant "Verdict or findings for applicant" -> judgment-applicant {
+    authority cite "Minn. R. Civ. P. 58.01"
+  }
+  edge-trial-judgment-opponent "Verdict or findings for opponent" -> judgment-opponent {
+    authority cite "Minn. R. Civ. P. 58.01"
+  }
+}
+
+state judgment-applicant: "Judgment for applicant entered" cite "Minn. R. Civ. P. 58.01"
+{
+  note "Judgment is entered and signed by the court administrator in the judgment roll and is not effective before that entry; entry is not delayed for the taxation of costs (Minn. R. Civ. P. 58.01). A sworn application for costs and disbursements is served and filed not later than 45 days after entry of final judgment, and objections not later than 7 days after its service (Rule 54.04(b), (c)). A notice of motion for a new trial is served within 30 days after a general verdict or service of notice of filing of the decision or order, and heard within 60 days (Rule 59.03); a motion for judgment as a matter of law, and a motion to amend findings, run on the same time (Rules 50.02, 52.02). An appeal from a judgment is taken within 60 days after its entry (Minn. R. Civ. App. P. 104.01)."
+  edge-judgment-applicant-post-judgment-ruling "Post-trial motion" -> post-judgment-ruling {
+    authority cite "Minn. R. Civ. P. 59.03"
+  }
+  edge-judgment-applicant-appellate-review "Notice of appeal filed" -> appellate-review {
+    authority cite "Minn. R. Civ. App. P. 103.01"
+  }
+  edge-judgment-applicant-final-win "No appeal within time" -> final-win {
+    authority cite "Minn. R. Civ. App. P. 104.01"
+  }
+}
+
+state judgment-opponent: "Judgment for opponent entered" cite "Minn. R. Civ. P. 58.01"
+{
+  note "Judgment is entered and signed by the court administrator in the judgment roll and is not effective before that entry (Minn. R. Civ. P. 58.01). A notice of motion for a new trial is served within 30 days after a general verdict or service of notice of filing of the decision or order, and heard within 60 days (Rule 59.03); a motion for judgment as a matter of law, and a motion to amend findings, run on the same time (Rules 50.02, 52.02). Relief from judgment for mistake, newly discovered evidence or fraud is sought within a reasonable time and not more than one year after entry (Rule 60.02). An appeal from a judgment is taken within 60 days after its entry (Minn. R. Civ. App. P. 104.01)."
+  edge-judgment-opponent-post-judgment-ruling "Post-trial motion" -> post-judgment-ruling {
+    authority cite "Minn. R. Civ. P. 59.03"
+  }
+  edge-judgment-opponent-appellate-review "Notice of appeal filed" -> appellate-review {
+    authority cite "Minn. R. Civ. App. P. 103.01"
+  }
+  edge-judgment-opponent-final-loss "No appeal within time" -> final-loss {
+    authority cite "Minn. R. Civ. App. P. 104.01"
+  }
+}
+
+decision post-judgment-ruling: "Post-trial motion ruling" by court cite "Minn. R. Civ. P. 59.03"
+{
+  note "A proper and timely motion under Minn. R. Civ. P. 50.02, 52.02 or 59, or under Rule 60 if filed within the time for a new-trial motion, makes the appeal time run for all parties from service by any party of notice of filing of the order disposing of the last such motion; a notice of appeal filed before that disposition is premature and of no effect (Minn. R. Civ. App. P. 104.01)."
+  edge-post-judgment-ruling-pretrial "Granted: new trial" -> pretrial {
+    authority cite "Minn. R. Civ. P. 59.01"
+  }
+  edge-post-judgment-ruling-appellate-review "Denied: appeal time runs from notice of filing of the order" -> appellate-review {
+    authority cite "Minn. R. Civ. App. P. 104.01"
+  }
+}
+
+terminal default-entered: "Default judgment against opponent" outcome [win] cite "Minn. R. Civ. P. 55.01"
+{
+  note "Default is shown by affidavit; on a claim for money only on a contract the court administrator enters judgment, and otherwise the court does, with 14 days' written notice of the application to a party who has appeared (Minn. R. Civ. P. 55.01(a), (b)). Outcome from the applicant's side."
+}
+
+terminal dismissed-with-prejudice: "Dismissed on the merits" outcome [loss] cite "Minn. R. Civ. P. 41.02(c)"
+{
+  note "Outcome from the applicant's side."
+}
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "Minn. R. Civ. P. 41.01"
+terminal final-win: "Final judgment for applicant, no appeal" outcome [win] cite "Minn. R. Civ. App. P. 104.01"
+terminal final-loss: "Final judgment for opponent, no appeal" outcome [loss] cite "Minn. R. Civ. App. P. 104.01"
+
+terminal appellate-review: "Appeal taken: continue in the Minnesota Court of Appeals package" outcome [procedural] cite "Minn. R. Civ. App. P. 103.01"
+{
+  note "The notice of appeal is filed with the clerk of the appellate courts and served within the appeal period, with the judgment or order, the statement of the case and a filing fee of $550 (Minn. R. Civ. App. P. 103.01, subd. 1). Hand-off to lit/minnctapp."
+}

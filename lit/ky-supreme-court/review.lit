@@ -1,0 +1,112 @@
+module ky-supreme-court-civil.review
+
+import ky-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
+
+// Discretionary review by the Supreme Court of Kentucky of a Court of
+// Appeals decision, from the applicant's (movant's) side. Every period
+// below is stated in a note, not counted (RAP 6(A)); no enlargement of time
+// is granted after the due date for a motion for discretionary review (RAP
+// 6(D)). The earlier outline cited CR 76.12 through 76.32; those rules are
+// deleted and the Rules of Appellate Procedure govern. It named no leading
+// decisions on the grant standard; RAP 44(A) states it. Federal certiorari
+// (28 U.S.C. § 1257) is outside this package.
+/// An appellant's initial brief or an appellee's response brief in the
+/// Supreme Court (RAP 31(G)(3)(a)).
+event MeritsBriefFiled() paper ky-state-rules.sct-brief
+/// A petition for rehearing, modification or extension of the Supreme
+/// Court's opinion (RAP 43(B)).
+event RehearingPetitionFiled() paper ky-state-rules.rehearing-petition
+
+start petition
+
+decision petition: "Motion for discretionary review?" by applicant cite "RAP 44(B)"
+{
+  note "A motion for discretionary review of a Court of Appeals decision is filed within 30 days after the date of the order or opinion sought to be reviewed or, after a timely RAP 43 petition or motion in the Court of Appeals, within 30 days after the order denying it or the opinion finally disposing of the case there; a late motion is dismissed (RAP 44(B)(2), (3)). The motion states the material facts, the questions of law and the specific reasons why the judgment should be reviewed, is limited to 5,250 words or 13 pages if computer-generated, or 15 pages if handwritten or typewritten, and is filed with copies of the decisions below (RAP 44(C), (D), (F)). The filing fee of RAP 13 is required with it (RAP 44(K))."
+  edge-petition-none "No motion: the Court of Appeals opinion becomes final" -> review-not-sought {
+    authority cite "RAP 40(G)"
+  }
+  edge-petition-filed "Motion filed" -> review-decision {
+    event ReviewPetitionFiled()
+    authority cite "RAP 44(B)"
+  }
+}
+
+chance review-decision: "Court grants or denies review" by court cite "RAP 44(A)"
+{
+  note "Each respondent may file a response within 30 days after the motion is filed, under the same limits; no reply is filed. The motion is submitted when the response is filed or the time for it has expired, whichever is sooner, and is not ruled on while a petition for rehearing or motion for reconsideration is pending in the Court of Appeals (RAP 44(E), (I), (J)(3)). Review is a matter of judicial discretion, granted only when there are special reasons for it (RAP 44(A)); a ruling granting or denying it is not reconsidered (RAP 44(J)(4)). The grant probability is a hole."
+  edge-review-decision-denied "Review denied" -> review-denied p ? { authority cite "RAP 44(J)" }
+  edge-review-decision-granted "Review granted" -> cross-motion p ? { authority cite "RAP 44(J)" }
+}
+
+state cross-motion: "Cross motion for discretionary review" by office cite "RAP 46(A)"
+{
+  note "If the motion is granted the respondent may, within 10 days, file a cross motion designating issues raised in the original appeal that the motion omits, and each cross respondent may respond within 10 days after it is filed; the cross motion suspends the running of time for briefing, which is computed in full from the order granting or denying it (RAP 46(A), (B), (D))."
+  edge-cross-motion-briefing "Briefing begins" -> briefing { authority cite "RAP 44(J)" }
+}
+
+state briefing: "Merits briefs filed" by applicant cite "RAP 30(C)"
+{
+  note "When the Supreme Court has granted a motion for discretionary review, the movant becomes the appellant and files its brief no later than 60 days from the date of entry of the order granting review; the appellee's response brief is due no later than 60 days after the appellant's brief is filed, and the appellant may reply no later than 15 days after the last response brief is filed (RAP 30(C)(1), 44(J)(1)). In the Supreme Court an initial or response brief may not exceed 17,500 words or 40 pages if computer-generated, or 50 pages if handwritten or typewritten, and a reply brief 3,500 words or 7 pages, or 10 pages (RAP 31(G)(3)). A cross-movant whose cross motion is granted briefs its issues in its response brief, and the movant replies in its reply brief (RAP 46(E))."
+  edge-briefing-submission "All briefs filed or the time expired: submitted" -> submission {
+    event MeritsBriefFiled()
+    authority cite "RAP 37"
+  }
+}
+
+state submission: "Submitted; oral argument if designated" by court cite "RAP 37"
+{
+  note "The case is submitted on the merits when all briefs have been filed or the time for filing them has expired, whichever is sooner (RAP 37). Oral argument is heard in cases the court designates; unless otherwise directed each side has 15 minutes (RAP 38(A), (B)). Supreme Court opinions are released on Thursdays unless the Court determines otherwise (RAP 40(B))."
+  edge-submission-decision "Opinion rendered" -> decision {
+    event DecisionFiled()
+    authority cite "RAP 40(A)"
+  }
+}
+
+chance decision: "Supreme Court decides" by court cite "RAP 40(A)"
+{
+  note "The opinion of the court finally disposing of the matter supersedes all lower court opinions arising from the appeal (RAP 40(G)(2)). Outcome probabilities are holes."
+  edge-decision-affirmed "Affirmed" -> rehearing p ? { authority cite "RAP 40(A)" }
+  edge-decision-reversed "Reversed, vacated or remanded" -> rehearing p ? {
+    authority cite "RAP 40(A)"
+  }
+}
+
+decision rehearing: "Petition for rehearing?" by applicant cite "RAP 43(B)"
+{
+  note "A petition for rehearing, modification or extension is filed not later than 20 days from the date the opinion was issued, and any response no later than 20 days from the petition's filing; petitions and responses are limited to 3,500 words or 8 pages if computer-generated, or 10 pages if handwritten or typewritten (RAP 43(B)(3), (5)). A Supreme Court opinion becomes final on the 21st day after its rendition unless a RAP 43 petition has been timely filed or an extension granted (RAP 40(G)(1))."
+  edge-rehearing-none "No petition: the opinion becomes final" -> opinion-final {
+    event MandateIssued()
+    authority cite "RAP 40(G)"
+  }
+  edge-rehearing-sought "Petition filed" -> rehearing-decision {
+    event RehearingPetitionFiled()
+    authority cite "RAP 43(B)"
+  }
+}
+
+chance rehearing-decision: "Rehearing decided" by court cite "RAP 43(B)"
+{
+  note "Except in extraordinary cases, rehearing is limited to the issues argued and granted only when the court has overlooked a material fact or a controlling statute or decision, or misconceived the issues or the law (RAP 43(B)(1)(a)). If the petition is denied, the opinion becomes final immediately upon the denial; if it is granted and a new or revised opinion rendered, that opinion becomes final on the 21st day after its rendition unless a further petition is timely filed (RAP 40(G)(3)(a), (b)). The grant probability is a hole."
+  edge-rehearing-decision-denied "Rehearing denied: the opinion is final" -> opinion-final p ? {
+    event MandateIssued()
+    authority cite "RAP 40(G)"
+  }
+  edge-rehearing-decision-granted "Rehearing granted: new or revised opinion" -> decision p ? {
+    authority cite "RAP 43(B)"
+  }
+}
+
+terminal review-not-sought: "Review not sought: Court of Appeals opinion final" outcome [final] cite "RAP 40(G)"
+{
+  note "Outcome from the applicant's side. A Court of Appeals opinion becomes final on the 31st day after its rendition when no RAP 43 petition or RAP 44 motion has been timely filed (RAP 40(G)(1))."
+}
+
+terminal review-denied: "Review denied" outcome [final, loss] cite "RAP 40(G)"
+{
+  note "Outcome from the applicant's side. An order denying the motion reinstates the opinion of the lower court (RAP 40(G)(2)); the denial does not indicate approval of the opinion sought to be reviewed and is not cited as connoting it (RAP 44(J))."
+}
+
+terminal opinion-final: "Opinion final and certified to the courts below" outcome [final] cite "RAP 40(G)"
+{
+  note "When the opinion becomes final the clerk sends it, endorsed with the date it became final, to the clerk of the trial court and of the Court of Appeals; no mandate is required (RAP 40(G)(5), (6))."
+}

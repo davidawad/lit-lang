@@ -1,0 +1,105 @@
+module kywd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Western District of Kentucky's own civil periods and limits, counted
+// under FRCP 6(a), which governs a period stated in a local rule. Stated in
+// the rules but not declared: the marshal's thirty working days for service
+// of a summons and for a writ of habeas corpus ad testificandum (LR 4.2,
+// 83.8) and the seven working days to submit process (LR 4.3), counted in
+// working days, for which lit/core has no rule; the 14-day or later
+// deadline for a document whose redaction is ordered (LR 5.2), keyed to the
+// greater of two periods; the thirty days to refile a pro se or in forma
+// pauperis petition on the court's form (LR 5.3), which runs from a
+// deficiency order this layer does not model; the nine months without
+// action after which the court may order the plaintiff to show cause (LR
+// 41.1), which permits a court order and sets no party's deadline; and the
+// attorney discipline periods (LR 83.3), which no event of the civil case
+// models. No response to an objection to a magistrate judge's order may be
+// filed unless the court directs (LR 72.2), so none is declared. The
+// earlier W.D. Ky. outline's FRCP flow and its Supreme Court decisions
+// (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby, Matsushita, Frow v.
+// De La Vega) are FRCP authority and belong to lit/frcp and lit/frap; no
+// reporter text is vendored, so they are removed here.
+/// A motion or response: at most 25 pages without leave of court (LR
+/// 7.1(d)).
+limit motion-paper { pages <= 25 cite "W.D. Ky. LR 7.1(d)" } cite "W.D. Ky. LR 7.1(d)"
+/// A reply: at most 15 pages without leave of court (LR 7.1(d)).
+limit reply-paper { pages <= 15 cite "W.D. Ky. LR 7.1(d)" } cite "W.D. Ky. LR 7.1(d)"
+
+/// A motion for an extension of time, setting forth its reasons and
+/// whether the other parties consent, is served (LR 7.1(b)).
+event ExtensionMotionServed()
+/// A motion is served (LR 7.1(c)).
+event MotionServed() paper motion-paper
+/// A response opposing a motion is served (LR 7.1(c)).
+event ResponseServed() paper motion-paper
+/// A reply is filed (LR 7.1(c), (d)).
+event ReplyFiled() paper reply-paper
+/// A notice of removal is filed (LR 81.1(a)).
+event NoticeOfRemovalFiled()
+/// The action is removed from state court (LR 81.1(b)).
+event ActionRemoved()
+/// The compliance date a subpoena served by the United States Marshal
+/// specifies (LR 45.1).
+event SubpoenaComplianceDate()
+/// Judgment is entered (LR 54.3, 54.4).
+event JudgmentEntered()
+/// A magistrate judge's non-dispositive order is served (LR 72.2).
+event MagistrateOrderServed()
+/// The Social Security Administration issues its most recent notice of
+/// award (LR 83.11(a)).
+event NoticeOfAward()
+/// A petition for attorney's fees under 42 U.S.C. § 406(b) or
+/// § 1383(d)(2)(A) is filed (LR 83.11(a)(2)).
+event SocialSecurityFeePetitionFiled()
+/// A trial, or a hearing on a motion for judgment or dismissal, is
+/// scheduled to begin (LR 83.6).
+event TrialOrDispositiveHearingScheduled()
+
+/// LR 7.1(b): absent an agreed order, a response opposing a motion for an
+/// extension of time is filed within 7 days of service of the motion.
+deadline extension-response-period: 7.days after ExtensionMotionServed() counted_by frcp6 cite "W.D. Ky. LR 7.1(b)"
+/// LR 7.1(c): unless the court orders otherwise, a party opposing a motion
+/// files a response within 21 days of service of the motion; failure to
+/// respond timely may be grounds for granting it.
+deadline motion-response-period: 21.days after MotionServed() counted_by frcp6 cite "W.D. Ky. LR 7.1(c)"
+/// LR 7.1(c): a party may file a reply within 14 days of service of the
+/// response.
+deadline motion-reply-period: 14.days after ResponseServed() counted_by frcp6 cite "W.D. Ky. LR 7.1(c)"
+/// LR 81.1(a): within 30 days following the filing of a notice of removal,
+/// the removing party files any portion of the state court record it
+/// considers relevant that it did not file on removal, with the state court
+/// docket sheet.
+deadline state-record-period: 30.days after NoticeOfRemovalFiled() counted_by frcp6 cite "W.D. Ky. LR 81.1(a)"
+/// LR 81.1(b): a movant who wants the district court to rule on a motion
+/// pending in state court at removal refiles it within 14 days after
+/// removal; responses and replies then follow LR 7.1.
+deadline refiled-motion-period: 14.days after ActionRemoved() counted_by frcp6 cite "W.D. Ky. LR 81.1(b)"
+/// LR 45.1: where service of a subpoena by the United States Marshal is
+/// permitted, the party presents the subpoena, Form 285 and the fees to the
+/// Marshal Service at least fourteen days before the compliance date.
+deadline marshal-subpoena-period: 14.days before SubpoenaComplianceDate() counted_by frcp6 cite "W.D. Ky. LR 45.1"
+/// LR 54.3: the prevailing party files a bill of costs with the clerk and
+/// serves it on each adverse party within thirty days of entry of
+/// judgment; costs other than the clerk's are otherwise waived.
+deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "W.D. Ky. LR 54.3"
+/// LR 54.4: unless a statute provides otherwise, a motion for attorney's
+/// fees and related nontaxable expenses under FRCP 54(d)(2) is filed no
+/// later than 30 days after entry of judgment, or they are waived.
+deadline fee-motion-period: 30.days after JudgmentEntered() counted_by frcp6 cite "W.D. Ky. LR 54.4"
+/// LR 72.2: subject to any deadline the court sets, a party objecting to a
+/// magistrate judge's non-dispositive order files a written objection
+/// within fourteen days of service of the order.
+deadline magistrate-objection-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "W.D. Ky. LR 72.2"
+/// LR 83.11(a): claimant's counsel may petition for attorney's fees under
+/// 42 U.S.C. § 406(b) or § 1383(d)(2)(A) within 30 days of the date shown on
+/// the most recent notice of award (EAJA fees are outside the rule).
+deadline social-security-fee-petition-period: 30.days after NoticeOfAward() counted_by frcp6 cite "W.D. Ky. LR 83.11(a)"
+/// LR 83.11(a)(2): the United States Attorney or the claimant may respond
+/// to the fee petition within 30 days of its filing.
+deadline social-security-fee-response-period: 30.days after SocialSecurityFeePetitionFiled() counted_by frcp6 cite "W.D. Ky. LR 83.11(a)"
+/// LR 83.6: absent leave on a motion showing compelling circumstances, an
+/// attorney of record may not withdraw within twenty-one days of trial or
+/// a hearing on any motion for judgment or dismissal.
+deadline withdrawal-cutoff: 21.days before TrialOrDispositiveHearingScheduled() counted_by frcp6 cite "W.D. Ky. LR 83.6"

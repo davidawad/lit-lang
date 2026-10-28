@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcp-civil-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "kywd-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:e98046b3f5ce1dc7434aac5fff7d962bc534e34425f69ee70bdd825c7cbd0a98"
+semantic = "sha256:aaee7e84d3af44e483b51c76f44d0629d4d75ecf3e75d269ec3c8e2a76a0ebe8"
+texts = [
+    "kywd-lr sources/kywd/kywd-joint-local-civil-rules-2026-08-sectioned.txt sha256:57d7a49d9a6bc2a6538632417ed1d42b36ccd97bca95654c1752bc5bf967b91a",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcp-civil-procedure 2024.12.0",
+]

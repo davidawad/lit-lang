@@ -1,0 +1,55 @@
+module ky-state-rules
+
+/// `lit/ky-rules` is a base library: it declares what Kentucky's court
+/// packages share and no procedure of its own. Its pack holds only this
+/// placeholder terminal, which no link or case may route through.
+start library
+
+terminal library: "Kentucky state court rules library (no procedure)"
+
+// The word limits of the Rules of Appellate Procedure. Each rule also
+// states a page limit for a computer-generated paper (the word limit
+// governs one that exceeds it, with a RAP 15 word-count certificate) and a
+// longer page limit for a handwritten or typewritten one; those are stated
+// in the court packages' notes. The cover, introduction, statement
+// concerning oral argument, statement of points and authorities, signature
+// block, exhibits and appendices are excluded (RAP 31(G)(5)).
+/// An appellant's initial brief or an appellee's response brief in the
+/// Court of Appeals: at most 8,750 words (RAP 31(G)(2)(a)).
+limit coa-brief { words <= 8_750 cite "RAP 31(G)" } cite "RAP 31(G)"
+/// An appellant's reply brief in the Court of Appeals: at most 1,750 words,
+/// with 1,750 more for each additional appellee brief it answers (RAP
+/// 31(G)(2)(b)).
+limit coa-reply-brief { words <= 1_750 cite "RAP 31(G)" } cite "RAP 31(G)"
+/// An appellant's initial brief or an appellee's response brief in the
+/// Supreme Court: at most 17,500 words (RAP 31(G)(3)(a)).
+limit sct-brief { words <= 17_500 cite "RAP 31(G)" } cite "RAP 31(G)"
+/// An appellant's reply brief in the Supreme Court: at most 3,500 words,
+/// with 1,750 more for each additional appellee brief it answers (RAP
+/// 31(G)(3)(b)).
+limit sct-reply-brief { words <= 3_500 cite "RAP 31(G)" } cite "RAP 31(G)"
+/// A petition for rehearing, modification, extension or publication, a
+/// motion to reconsider an order, and any response: at most 3,500 words
+/// (RAP 43(B)(5), (D)(3)).
+limit rehearing-petition { words <= 3_500 cite "RAP 43(B)" } cite "RAP 43(B)"
+/// A motion for discretionary review and the response: at most 5,250
+/// words, exclusive of the caption, certificate of service and the items of
+/// RAP 44(C)(1) through (4) (RAP 44(D), (E)).
+limit discretionary-review-motion { words <= 5_250 cite "RAP 44(D)" } cite "RAP 44(D)"
+
+// The trigger events the court packages' graphs route on.
+/// An action, claim, petition or charge is filed and the proceeding begins.
+event ActionCommenced()
+/// A final judgment, decision or appealable order is entered.
+event JudgmentEntered()
+/// A notice of appeal, or a petition or appeal for review of a lower court's or tribunal's decision, is filed.
+event NoticeOfAppealFiled()
+/// The record on appeal or review is filed or transmitted.
+event RecordFiled()
+/// The reviewing court's or tribunal's decision or opinion is filed.
+event DecisionFiled()
+/// A petition for discretionary review in a higher court (certiorari, transfer, leave or review) is filed.
+event ReviewPetitionFiled() paper discretionary-review-motion
+/// The appellate decision becomes final and is sent to the court below with
+/// its finality endorsed; Kentucky requires no mandate (RAP 40(G)(5), (6)).
+event MandateIssued()

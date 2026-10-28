@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcp-civil-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "kyed-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:7a9a0449484d88fb8827ded7b32b57195dbc1d53431037921fddceb7e335f298"
+semantic = "sha256:f361defa3783bceb5931dc160d4147d5594edf94d8b0447e1c7570b6cfa3ee61"
+texts = [
+    "kyed-lr sources/kyed/kyed-joint-local-civil-rules-sectioned.txt sha256:57d7a49d9a6bc2a6538632417ed1d42b36ccd97bca95654c1752bc5bf967b91a",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcp-civil-procedure 2024.12.0",
+]

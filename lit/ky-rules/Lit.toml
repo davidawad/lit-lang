@@ -1,0 +1,41 @@
+# The Kentucky base library (lg-u561.5): what the Kentucky court packages
+# share: the brief, rehearing-petition and discretionary-review limits of the
+# Kentucky Rules of Appellate Procedure (sources/ky-appellate), and the
+# trigger events the court packages (lit/ky-circuit-court,
+# lit/ky-court-of-appeals, lit/ky-supreme-court) route their graphs on. No
+# procedure of its own. The RAP text is the Westlaw public-access edition,
+# current with amendments received through June 1, 2026, including Order
+# 2026-01 (effective April 1, 2026); the earlier text is not vendored, so the
+# layer starts on that date.
+[package]
+name = "ky-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ky-state-rules"
+forum = "ky-state-rules"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "kentucky"
+title = "Kentucky state court rules (base library)"
+description = "The rule layer Kentucky's court packages share: the brief limits of RAP 31(G), the rehearing-petition limit of RAP 43(B)(5) and the motion-for-discretionary-review limit of RAP 44(D), and the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-04-01"
+known_at = "2026-10-28"
+unknown_before = "2026-04-01"
+jurisdiction = "Kentucky state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ky-rap]
+title = "Kentucky Rules of Appellate Procedure (current with amendments received through June 1, 2026; Westlaw public-access site)"
+url = "https://govt.westlaw.com/kyrules/Index"
+path = "sources/ky-appellate/ky-appellate-rules-westlaw-sectioned.txt"
+path_sha256 = "6319e474853fdca1e971d6615f83eb48fa14eb69744b4db945539b39c343ec90"
+as_of = "2026-06-01"
+cite_prefixes = ["RAP"]
+section_heading = "RAP {n}"

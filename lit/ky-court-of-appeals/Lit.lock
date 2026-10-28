@@ -1,0 +1,28 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "ky-court-of-appeals-civil"
+version = "0.1.0"
+language = 1
+source = "sha256:0ae286d8015b4404194f8aa037ecb1b6b4ddb951048f02386068186147878908"
+semantic = "sha256:d8799edec9e7bdd749feb2ee39bb4d762de9d1e0263367fc7d6a922de1943d48"
+texts = [
+    "ky-cr sources/ky-circuit-court/ky-circuit-court-rules-westlaw-sectioned.txt sha256:27862fd3d406188b3bbf34eb801f336d575a0e4be7697e7bb204a099241a2d3a",
+    "ky-rap sources/ky-appellate/ky-appellate-rules-westlaw-sectioned.txt sha256:6319e474853fdca1e971d6615f83eb48fa14eb69744b4db945539b39c343ec90",
+]
+dependencies = [
+    "core 1.0.0",
+    "ky-state-rules 0.1.0",
+]
+
+[[package]]
+name = "ky-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]

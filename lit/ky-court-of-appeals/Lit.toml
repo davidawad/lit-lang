@@ -1,0 +1,54 @@
+# Civil appeals to the Court of Appeals of Kentucky under the Kentucky Rules
+# of Appellate Procedure (RAP), current with amendments received through
+# June 1, 2026, including Order 2026-01 (effective April 1, 2026), as
+# published on the Westlaw public-access site the Kentucky courts point to
+# (sources/ky-appellate). The motion for discretionary review in the Supreme
+# Court is lit/ky-supreme-court; the brief limits are lit/ky-rules'
+# (lg-u561.5). Computation of time is RAP 6(A), which excludes intermediate
+# Saturdays, Sundays and legal holidays from a period of less than seven
+# days; lit/core has no counting rule or holiday calendar for Kentucky, so
+# the periods are stated in notes, not encoded as counted deadlines. The
+# appeal comes from the circuit court package (lit/ky-circuit-court).
+[package]
+name = "ky-court-of-appeals-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ky-court-of-appeals-civil"
+forum = "ky-appellate"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "kentucky"
+title = "Court of Appeals of Kentucky, civil appeals"
+description = "Civil appeals to the Court of Appeals of Kentucky under the Kentucky Rules of Appellate Procedure (as amended effective April 1, 2026): the notice of appeal and its time, transfer to the Supreme Court, the prehearing procedure, certification of the record, briefing, submission and oral argument, the opinion and its finality, the petition for rehearing, and the motion for discretionary review in the Supreme Court (decided in lit/ky-supreme-court). The brief limits are lit/ky-rules'."
+in_force = "2026-04-01"
+known_at = "2026-10-28"
+unknown_before = "2026-04-01"
+jurisdiction = "Court of Appeals of Kentucky (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the RAP brief, rehearing and discretionary-review limits and trigger events.
+ky-state-rules = { version = "^0.1.0", path = "../ky-rules" }
+
+[sources.ky-rap]
+title = "Kentucky Rules of Appellate Procedure (current with amendments received through June 1, 2026; Westlaw public-access site)"
+url = "https://govt.westlaw.com/kyrules/Index"
+path = "sources/ky-appellate/ky-appellate-rules-westlaw-sectioned.txt"
+path_sha256 = "6319e474853fdca1e971d6615f83eb48fa14eb69744b4db945539b39c343ec90"
+as_of = "2026-06-01"
+cite_prefixes = ["RAP"]
+section_heading = "RAP {n}"
+
+[sources.ky-cr]
+title = "Kentucky Rules of Civil Procedure (current with amendments received through October 1, 2026; Westlaw public-access site)"
+url = "https://govt.westlaw.com/kyrules/Index"
+path = "sources/ky-circuit-court/ky-circuit-court-rules-westlaw-sectioned.txt"
+path_sha256 = "27862fd3d406188b3bbf34eb801f336d575a0e4be7697e7bb204a099241a2d3a"
+as_of = "2026-10-01"
+cite_prefixes = ["CR"]
+section_heading = "CR {n}"

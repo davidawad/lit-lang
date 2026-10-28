@@ -69,3 +69,9 @@
 - Original: `ky-appellate/original/westlaw-pages/0062-Rap-62-Stays-and-Bail-in-Criminal-Cases.html` as served (sha256 d669983f881c3f003205309dee788433d13f8eed9f2c632ee44bbb35895d0ef9). Served at https://govt.westlaw.com/kyrules/Document/NC21AE27085B511EDAE2287AA0B18F0FC?viewType=FullText&originationContext=documenttoc&transitionType=CategoryPageItem&contextData=(sc.Default).
 - Original: `ky-appellate/original/westlaw-pages/0063-Rap-63-Bonds-in-Civil-Appeals.html` as served (sha256 aa85940808e33aa071f2fd67f29ae3221375bc3c2680c462c2578814a4338b59). Served at https://govt.westlaw.com/kyrules/Document/NBF72F363ECDB11F08802D3B2E283D5F3?viewType=FullText&originationContext=documenttoc&transitionType=CategoryPageItem&contextData=(sc.Default).
 - Extraction sha256 d8e08c323b65550e2826fd6ef732b19114456d6c88045ecbdd398de24282d7e9.
+
+### `ky-appellate/ky-appellate-rules-westlaw-sectioned.txt` — Kentucky Rules of Appellate Procedure, sectioned
+- Derived in the pod (lg-f3q8.91) from `ky-appellate/ky-appellate-rules-westlaw.txt` (extract sha256 d8e08c323b65550e2826fd6ef732b19114456d6c88045ecbdd398de24282d7e9); nothing fetched. One `## RAP <n>` line is inserted right after each rule page's own `## Rap <n> <title>` heading: 63 markers, RAP 1 through RAP 63. Rule text was not edited: deleting the marker lines (`sed '/^## RAP /d'`) restores the extract byte for byte.
+- Edition: as the extract; every page states "Current with amendments received through June 1, 2026", and the amended rules carry Order 2026-01, effective April 1, 2026, in their credits.
+- Upstream: https://govt.westlaw.com/kyrules/Index, retrieved 2026-10-28, as recorded on `ky-appellate/ky-appellate-rules-westlaw.txt` above; sectioning was done from the vendored extract.
+- Sectioned sha256 6319e474853fdca1e971d6615f83eb48fa14eb69744b4db945539b39c343ec90 (the `path_sha256` pinned by `lit/ky-rules`, `lit/ky-circuit-court`, `lit/ky-court-of-appeals` and `lit/ky-supreme-court`).

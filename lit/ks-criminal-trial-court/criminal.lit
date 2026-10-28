@@ -1,0 +1,162 @@
+module ks-criminal-trial-court.criminal
+
+// Felony cases in the Kansas district courts under K.S.A. chapter 22. The
+// vendored statute pages are CURRENCY UNCONFIRMED
+// (sources/ks-criminal-trial-court/PROVENANCE.md), so they are cited for
+// the structure of each step and no period, limit or amount is taken from
+// them: where a step has one, the note names the section that sets it and
+// says that it is not stated. Outcomes are from the defendant's side. The
+// earlier outline's leading decisions (County of Riverside v. McLaughlin,
+// Gerstein v. Pugh, Gideon v. Wainwright, Brady v. Maryland, Mapp v. Ohio,
+// Barker v. Wingo, Boykin v. Alabama, Missouri v. Frye, Jackson v.
+// Virginia, Ramos v. Louisiana, Apprendi v. New Jersey, Roe v.
+// Flores-Ortega, Garza v. Idaho) are removed: no reporter text is
+// vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "K.S.A. 22-2901"
+{
+  note "A person arrested in the county where the crime is alleged to have been committed is taken without unnecessary delay before a magistrate of the court that issued the warrant, or, after a warrantless arrest on probable cause, before the nearest available magistrate (K.S.A. 22-2901(1)); the complaint and warrant are governed by K.S.A. 22-2301 to 22-2305."
+  edge-arrested-appearance "First appearance" -> initial-appearance {
+    authority cite "K.S.A. 22-2901"
+  }
+}
+
+decision initial-appearance: "Release or detention" by court cite "K.S.A. 22-2802"
+{
+  note "At the first appearance before a magistrate, a person charged with a crime is ordered released pending preliminary examination or trial on an appearance bond in an amount sufficient to assure appearance and public safety, with conditions the magistrate may impose (K.S.A. 22-2802(a)); the amounts and periods the section sets are not stated here (currency unconfirmed)."
+  edge-initial-appearance-detained "Held pending bond" -> probable-cause {
+    authority cite "K.S.A. 22-2802"
+  }
+  edge-initial-appearance-released "Released on bond" -> probable-cause {
+    authority cite "K.S.A. 22-2802"
+  }
+}
+
+decision probable-cause: "Preliminary examination or indictment" by court cite "K.S.A. 22-2902"
+{
+  note "The state and every person charged with a felony have a right to a preliminary examination before a magistrate unless the charge results from a grand jury indictment (K.S.A. 22-2902(a)); the period within which it is held is not stated here (currency unconfirmed). If it appears that a felony has been committed and there is probable cause to believe the defendant committed it, the magistrate binds the defendant over to the district judge; otherwise the magistrate discharges the defendant (K.S.A. 22-2902(c)); a waived examination also results in bind-over (K.S.A. 22-2902(e))."
+  edge-probable-cause-charged "Bound over; information or indictment" -> charged {
+    authority cite "K.S.A. 22-2902"
+  }
+  edge-probable-cause-none "No probable cause; discharged" -> dismissed {
+    authority cite "K.S.A. 22-2902"
+  }
+}
+
+state charged: "Complaint, information or indictment" by office cite "K.S.A. 22-3201"
+{
+  note "Prosecutions in the district court are upon complaint, indictment or information (K.S.A. 22-3201(a))."
+  edge-charged-arraignment "Arraignment" -> arraignment {
+    authority cite "K.S.A. 22-3205"
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "K.S.A. 22-3205"
+{
+  note "Arraignment is conducted in open court by reading the charge or stating its substance and calling on the defendant to plead, after the defendant is given a copy of the indictment or information; it may be held by two-way electronic audio-video communication in the court's discretion (K.S.A. 22-3205(a), (b)). The pleas are not guilty, guilty, or with the court's consent nolo contendere (K.S.A. 22-3208(1)). The K.S.A. 22-3402 speedy-trial periods run from arraignment."
+  edge-arraignment-discovery "Discovery" -> discovery {
+    authority cite "K.S.A. 22-3212"
+  }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "K.S.A. 22-3208"
+{
+  note "Discovery and inspection are governed by K.S.A. 22-3212. Any defense or objection capable of determination without trial of the general issue may be raised before trial by motion (K.S.A. 22-3208(2)); the time for such motions is set by K.S.A. 22-3208 and is not stated here (currency unconfirmed). A person charged with a crime and not brought to trial within the periods K.S.A. 22-3402 sets after arraignment, for a defendant held in jail solely on the charge and for one on an appearance bond, is entitled to be discharged from further liability to be tried for the crime, unless the delay results from the defendant's application or fault or a continuance the section allows; the periods are not stated here (currency unconfirmed)."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "K.S.A. 22-3208"
+  }
+  edge-discovery-speedy "Motion for discharge for want of a speedy trial" -> motions-ruling {
+    authority cite "K.S.A. 22-3402"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite "K.S.A. 22-3210"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "K.S.A. 22-3208"
+{
+  note "A defendant entitled to discharge under K.S.A. 22-3402 is discharged from further liability to be tried for the crime charged (K.S.A. 22-3402(a), (b))."
+  edge-motions-ruling-speedy "Discharged for want of a speedy trial" -> dismissed {
+    authority cite "K.S.A. 22-3402"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "K.S.A. 22-3208"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "K.S.A. 22-3208"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "K.S.A. 22-3210"
+{
+  note "Before or during trial a plea of guilty or nolo contendere may be accepted when it is entered in open court and the court finds the conditions K.S.A. 22-3210(a) lists, including that the plea is made voluntarily with understanding of the charge and the consequences and that there is a factual basis; withdrawal of a plea is governed by K.S.A. 22-3210(d), whose periods are not stated here (currency unconfirmed)."
+  edge-plea-decision-plea "Plea accepted" -> sentencing {
+    authority cite "K.S.A. 22-3210"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "K.S.A. 22-3403"
+  }
+}
+
+decision trial: "Verdict" by court cite "K.S.A. 22-3421"
+{
+  note "A felony is tried by jury unless the defendant and the prosecuting attorney, with the court's consent, submit it to the court; the jury size and the parties' power to agree to a smaller jury are set by K.S.A. 22-3403(2) and not stated here (currency unconfirmed). The court enters a judgment of acquittal of any crime for which the evidence is insufficient (K.S.A. 22-3419(1)). The verdict is written, signed by the presiding juror and read by the clerk, and the jury may be polled (K.S.A. 22-3421)."
+  edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
+    authority cite "K.S.A. 22-3419"
+  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
+    authority cite "K.S.A. 22-3501"
+  }
+}
+
+decision post-trial: "Post-trial motions" by court cite "K.S.A. 22-3501"
+{
+  note "The court may grant a new trial if required in the interest of justice (K.S.A. 22-3501(1)) and must arrest judgment if the charge does not charge a crime or the court lacked jurisdiction (K.S.A. 22-3502); a motion for judgment of acquittal after verdict is governed by K.S.A. 22-3419. The periods for these motions and for deciding a new-trial motion, set by K.S.A. 22-3419, 22-3501 and 22-3502, are not stated here (currency unconfirmed)."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite "K.S.A. 22-3419"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "K.S.A. 22-3501"
+  }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "K.S.A. 22-3424"
+  }
+}
+
+state sentencing: "Judgment and sentence" by court cite "K.S.A. 22-3424"
+{
+  note "The judgment is rendered and sentence imposed in open court (K.S.A. 22-3424(a)); if the verdict or finding is not guilty, judgment is rendered immediately and the defendant is discharged (K.S.A. 22-3424(b)). On a guilty verdict or finding, judgment is rendered and sentence pronounced without unreasonable delay, allowing adequate time for post-trial motions (K.S.A. 22-3424(c)). The sentencing guidelines (K.S.A. chapter 21) are not vendored."
+  edge-sentencing-judgment "Sentence imposed" -> judgment {
+    authority cite "K.S.A. 22-3424"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "K.S.A. 22-3608"
+{
+  note "An appeal from a district court's final judgment in a criminal case is taken to the Court of Appeals, or directly to the Supreme Court in the cases K.S.A. 22-3601(b) lists (K.S.A. 22-3601(a)). The time for the defendant's appeal runs from the expiration of the district court's power to modify the sentence, as K.S.A. 22-3608 provides; the period is not stated here (currency unconfirmed). Appellate procedure is the Kansas Supreme Court Rules (lit/ks-court-of-appeals; sources/ks-state-appellate)."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "K.S.A. 22-3608"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "K.S.A. 22-3608" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "K.S.A. 22-3419"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty or a judgment of acquittal (K.S.A. 22-3419, 22-3424(b))."
+}
+
+terminal dismissed: "Charges dismissed or defendant discharged" outcome [win, dismissal] cite "K.S.A. 22-3402"
+{
+  note "Outcome from the defendant's side. A K.S.A. 22-3402 discharge relieves the defendant of further liability to be tried for the crime charged; a discharge at the preliminary examination is governed by K.S.A. 22-2902."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "K.S.A. 22-3601"
+{
+  note "The appeal continues before the Kansas Court of Appeals or Supreme Court under K.S.A. 22-3601 and the Kansas Supreme Court Rules."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "K.S.A. 22-3608"
+{
+  note "Outcome from the defendant's side. Collateral attack under K.S.A. 60-1507 is in chapter 60 and is not encoded here; federal habeas belongs to lit/habeas."
+}

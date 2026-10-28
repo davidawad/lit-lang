@@ -428,3 +428,9 @@
 - Extraction sha256 d583f8cfeaaf7e6c45c2bd490c1e120f1eb5fbab52ca68eeb5f9a0a314764188.
 
 - Note (lg-gddt): Kansas has no separate court rules of criminal procedure: criminal procedure is statutory (this chapter). Criminal appeals: K.S.A. chapter 22 article 32 and the Kansas Supreme Court Rules, covered by sources/ks-state-appellate/.
+
+### `ks-criminal-trial-court/ks-ksa-chapter-22-criminal-procedure-sectioned.txt` — K.S.A. chapter 22, section-numbered
+
+- Derived in the pod (lg-gddt.24) from `ks-criminal-trial-court/ks-ksa-chapter-22-criminal-procedure.txt` (extract sha256 d583f8cfeaaf7e6c45c2bd490c1e120f1eb5fbab52ca68eeb5f9a0a314764188); nothing fetched. One `## K.S.A. <n>` line is inserted before each line that is a section number alone (`<n>.`, e.g. `22-3402.`), 413 markers (`22-2513.` stands alone on three lines of the extract, so that number has three markers); the extract's per-page `## <caption>` blocks are kept. Text was not edited: deleting the marker lines (each `## K.S.A. ` line with its newline) restores the extract byte for byte.
+- Edition: as the extract; CURRENCY UNCONFIRMED.
+- Sectioned sha256 2c9b09461f49e36b22932582a23f19c2b96a584e9870f3926c9c1f9463fbf8fb (the `path_sha256` pinned by `lit/ks-criminal-trial-court/Lit.toml`).

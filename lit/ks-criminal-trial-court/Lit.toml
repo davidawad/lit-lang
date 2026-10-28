@@ -1,0 +1,45 @@
+# Criminal cases in the Kansas district courts under the Kansas Code of
+# Criminal Procedure (K.S.A. chapter 22), as far as the vendored text
+# states. Kansas has no separate court rules of criminal procedure:
+# criminal procedure is statutory. The text is the Revisor of Statutes'
+# chapter 22 section pages as served on October 28, 2026
+# (sources/ks-criminal-trial-court), which state no edition date; its
+# PROVENANCE entry records CURRENCY UNCONFIRMED, so in_force is the
+# retrieval date and an earlier query is a hole in the corpus. By the PM's
+# standing ruling of 2026-10-27 such a source yields holes, not values:
+# this package cites the statutes only for the structure of the case
+# (which section governs which step) and states no period, limit or amount
+# from them, including the K.S.A. 22-3402 speedy-trial deadlines and the
+# K.S.A. 22-3608 time to appeal. An appeal goes to the Court of Appeals or
+# the Supreme Court under K.S.A. 22-3601.
+[package]
+name = "ks-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "ks-criminal-trial-court"
+forum = "ks-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "kansas"
+title = "Kansas district courts, criminal"
+description = "Felony cases in the Kansas district courts under K.S.A. chapter 22, as far as the vendored text states: the structure of the case from arrest and first appearance through release, preliminary examination, charge, arraignment, pretrial motions, the K.S.A. 22-3402 speedy-trial discharge, plea or trial, post-trial motions, judgment and sentence; no period from the currency-unconfirmed statutes is stated. An appeal goes up under K.S.A. 22-3601 and 22-3608."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Kansas trial courts of general criminal jurisdiction (district courts)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ksa-22]
+title = "Kansas Statutes Annotated, chapter 22 (Code of Criminal Procedure), section pages as served by the Kansas Revisor of Statutes on 2026-10-28; CURRENCY UNCONFIRMED"
+url = "https://www.ksrevisor.gov/statutes/ksa_ch22.html"
+path = "sources/ks-criminal-trial-court/ks-ksa-chapter-22-criminal-procedure-sectioned.txt"
+path_sha256 = "2c9b09461f49e36b22932582a23f19c2b96a584e9870f3926c9c1f9463fbf8fb"
+as_of = "2026-10-28"
+cite_prefixes = ["K.S.A."]
+section_heading = "K.S.A. {n}"

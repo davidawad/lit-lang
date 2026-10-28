@@ -1,0 +1,346 @@
+module nced-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Eastern District of North Carolina's own civil periods and limits,
+// computed under FRCP 6(a), which governs a period stated in a local rule.
+// Rules that state no period this layer can count stay out: requests for
+// jury instructions, due seven business days before the first day of the
+// trial session (Local Civil Rule 51.1), and proposed findings of fact and
+// conclusions of law in a non-jury case, due five business days before the
+// session (Local Civil Rule 52.1), are counted in business days, which
+// FRCP 6(a) does not count; the clerk's notice of the final pretrial
+// conference, at least 45 days in most actions (Local Civil Rule 16.1(a)),
+// and the clerk's disposal of exhibits and sealed documents (Local Civil
+// Rules 79.1, 79.2) are court actions, not filing periods; the habeas
+// petitioner's reply, within 21 days after service of the answer (Local
+// Civil Rule 81.2), belongs to a habeas package; attorney admission and
+// discipline (Local Civil Rules 83.1-83.7k) and bankruptcy appeals (Local
+// Civil Rule 83.8) are out of scope, as are the Local Criminal Rules. The
+// earlier E.D.N.C. outline's FRCP flow belongs to lit/frcp and lit/frap;
+// its decisions (Twombly, Iqbal, Foman v. Davis, Frow v. De La Vega,
+// Celotex, Anderson v. Liberty Lobby, Catlin, Bowles v. Russell, and in
+// the Third and Fourth Circuits Phillips v. County of Allegheny, Fowler v.
+// UPMC Shadyside, Poulis v. State Farm, Goines v. Valley Community
+// Services Board and Anderson v. Foundation for Advancement) are FRCP
+// authority, and no reporter text is vendored, so they are removed here.
+
+/// A memorandum supporting or opposing a motion other than a discovery
+/// motion: at most 30 pages or 8400 words, with a word-count certificate
+/// when the word limit is used (Local Civil Rule 7.2(f)(2)(A), (f)(3)(A)).
+limit motion-memorandum {
+  pages <= 30 cite "E.D.N.C. Loc. Civ. R. 7.2(f)"
+  words <= 8_400 cite "E.D.N.C. Loc. Civ. R. 7.2(f)"
+  requires certificate compliance for [words] cite "E.D.N.C. Loc. Civ. R. 7.2(f)"
+} cite "E.D.N.C. Loc. Civ. R. 7.2(f)"
+
+/// A memorandum supporting or opposing a discovery motion, a statement of
+/// appeal from or objections to a magistrate judge's ruling and any
+/// response: at most 10 pages or 2800 words (Local Civil Rules
+/// 7.2(f)(2)(B), (f)(3)(B), 26.1(d)(1), 72.4(a)(2), (b)(2)).
+limit discovery-memorandum {
+  pages <= 10 cite "E.D.N.C. Loc. Civ. R. 7.2(f)"
+  words <= 2_800 cite "E.D.N.C. Loc. Civ. R. 7.2(f)"
+  requires certificate compliance for [words] cite "E.D.N.C. Loc. Civ. R. 7.2(f)"
+} cite "E.D.N.C. Loc. Civ. R. 7.2(f)"
+
+/// A reply or surreply memorandum, where allowed: at most 10 pages or 2800
+/// words (Local Civil Rule 7.2(f)(2)(C), (f)(3)(C)).
+limit reply-memorandum {
+  pages <= 10 cite "E.D.N.C. Loc. Civ. R. 7.2(f)"
+  words <= 2_800 cite "E.D.N.C. Loc. Civ. R. 7.2(f)"
+  requires certificate compliance for [words] cite "E.D.N.C. Loc. Civ. R. 7.2(f)"
+} cite "E.D.N.C. Loc. Civ. R. 7.2(f)"
+
+/// The court denies the plaintiff's motion to proceed in forma pauperis
+/// (Local Civil Rule 3.2).
+event InFormaPauperisDenied()
+/// An order allowing an attorney to withdraw, leaving a person without
+/// representation, is entered (Local Civil Rule 5.2).
+event WithdrawalOrderEntered()
+/// A notice of removal is filed (Local Civil Rule 5.3(a), (b), (c), (d)).
+event NoticeOfRemovalFiled()
+/// The movant on a motion pending in state court without a supporting
+/// memorandum files one in this court (Local Civil Rule 5.3(c)(2)).
+event RemovedMotionMemorandumFiled()
+/// The period of discovery concludes (Local Civil Rule 7.1(a)).
+event DiscoveryClosed()
+/// The last notice of award needed to calculate the retroactive benefits
+/// is dated (Local Civil Rule 7.1(d)).
+event LastNoticeOfAward()
+/// A motion other than a discovery motion is served (Local Civil Rule
+/// 7.1(f)(1)).
+event MotionServed() paper motion-memorandum
+/// A discovery motion is served (Local Civil Rules 7.1(f)(2), 26.1(d)(2)).
+event DiscoveryMotionServed() paper discovery-memorandum
+/// A response to a motion other than a discovery motion is served (Local
+/// Civil Rule 7.1(g)(1)).
+event ResponseServed() paper motion-memorandum
+/// A reply is filed (Local Civil Rule 7.1(g)(1)).
+event ReplyFiled() paper reply-memorandum
+/// A translated document is filed (Local Civil Rule 10.1(k)).
+event TranslationFiled()
+/// The final pretrial conference (Local Civil Rule 16.1(b)(1)).
+event PretrialConference()
+/// The first day of the session during which the action is set for trial
+/// (Local Civil Rules 39.1(a), 47.1(b)).
+event TrialSessionOpens()
+/// The time allowed for appeal of a final judgment expires, or the clerk
+/// receives the mandate or other order terminating the action on appeal
+/// (Local Civil Rule 54.1(a)(1)).
+event CostsPeriodTriggered()
+/// A bill of costs is filed (Local Civil Rule 54.1(b)).
+event BillOfCostsFiled()
+/// A response opposing the bill of costs is filed (Local Civil Rule
+/// 54.1(b)).
+event CostsOppositionFiled()
+/// The clerk acts on the bill of costs (Local Civil Rule 54.1(c)).
+event CostsTaxed()
+/// A magistrate judge's order on a non-dispositive matter is served (Local
+/// Civil Rule 72.4(a)(1)).
+event MagistrateOrderServed()
+/// A statement of appeal from a magistrate judge's order is served (Local
+/// Civil Rule 72.4(a)(1)).
+event MagistrateAppealServed() paper discovery-memorandum
+/// A magistrate judge's proposed findings, recommendations or report under
+/// 28 U.S.C. § 636(b)(1)(B) is served (Local Civil Rule 72.4(b)(1)).
+event MagistrateReportServed()
+/// Objections to a magistrate judge's recommendation are served (Local
+/// Civil Rule 72.4(b)(1)).
+event MagistrateObjectionsServed() paper discovery-memorandum
+/// An attorney's or unrepresented person's address changes (Local Civil
+/// Rule 83.3).
+event AddressChanged()
+
+/// Local Civil Rule 3.2: when the court denies the plaintiff's motion to
+/// proceed in forma pauperis, the plaintiff is allowed 30 days to pay the
+/// filing fee; otherwise the clerk closes the matter as a miscellaneous
+/// case without further order.
+deadline filing-fee-period: 30.days after InFormaPauperisDenied() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 3.2"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 5.2: the order allowing withdrawal states that the
+/// unrepresented person files a notice of self-representation, or causes a
+/// new attorney to appear, within 21 days after its entry or within the
+/// time the court otherwise requires; an entity that is not a natural
+/// person must appear through an attorney.
+deadline new-appearance-period: 21.days after WithdrawalOrderEntered() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 5.2"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 5.3(a)(2): no later than 7 days after filing the notice
+/// of removal, the removing party files the notice it filed in state court
+/// under 28 U.S.C. § 1446(d) (not for removals under 28 U.S.C.
+/// § 1442(d)(1)).
+deadline state-notice-filing-period: 7.days after NoticeOfRemovalFiled() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 5.3(a)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 5.3(b)(2): within 14 days after removal, attorneys for
+/// all parties in the state-court action file a notice of appearance, a
+/// notice of substitution or a motion to withdraw, and an unrepresented
+/// person files a notice of self-representation.
+deadline removal-appearance-period: 14.days after NoticeOfRemovalFiled() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 5.3(b)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 5.3(c)(2): the movant on a motion pending at removal
+/// with no supporting memorandum in state court files one within 14 days of
+/// the date of removal, unless the motion is one the clerk may grant under
+/// Local Civil Rule 77.2 or the court orders otherwise; the response period
+/// of Local Civil Rule 7.1(f) runs from that filing.
+deadline removed-motion-memorandum-period: 14.days after NoticeOfRemovalFiled() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 5.3(c)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 5.3(c)(2), 7.1(f)(1): the response to a removed motion
+/// runs from the movant's filing of its supporting memorandum here.
+deadline removed-motion-response-period: 21.days after RemovedMotionMemorandumFiled() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 5.3(c)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 5.3(c)(3): a response to a motion that was supported by
+/// a memorandum of law when the case was removed is filed 21 days after the
+/// removal, unless the court orders otherwise.
+deadline removed-supported-motion-response-period: 21.days after NoticeOfRemovalFiled() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 5.3(c)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 5.3(d): within 14 days after the notice of removal is
+/// filed, all parties make the Local Civil Rule 7.3 disclosures of
+/// affiliations and financial interest.
+deadline removal-disclosure-period: 14.days after NoticeOfRemovalFiled() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 5.3(d)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 7.1(a): all motions except those on the admissibility
+/// of evidence at trial are filed on or before 30 days following the
+/// conclusion of discovery; an approved extension of discovery extends the
+/// time to 30 days after the new date unless the court orders otherwise.
+deadline motions-period: 30.days after DiscoveryClosed() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 7.1(a)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 7.1(d): a motion for attorney's fees under 42 U.S.C.
+/// §§ 406(b) or 1383(d)(2) is filed within 65 days after the date of the
+/// last notice of award needed to calculate the retroactive benefits,
+/// unless extended by consent or order.
+deadline social-security-fee-period: 65.days after LastNoticeOfAward() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 7.1(d)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 7.1(f)(1): responses to a motion other than a discovery
+/// motion are filed within 21 days after service of the motion, unless the
+/// court orders or the Federal Rules of Civil Procedure prescribe
+/// otherwise. A motion for entry of default goes to the judge or the clerk
+/// after this response time (Local Civil Rule 55.1(a)).
+deadline response-period: 21.days after MotionServed() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 7.1(f)"
+{
+  forum frcp
+}
+
+/// Local Civil Rules 7.1(f)(2), 26.1(d)(2): responses to a discovery motion
+/// are filed within 14 days after service of the motion, unless the court
+/// orders otherwise. Replies are not permitted in discovery disputes (Local
+/// Civil Rules 7.1(g)(2), 26.1(d)(3)).
+deadline discovery-response-period: 14.days after DiscoveryMotionServed() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 7.1(f)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 7.1(g)(1): replies are discouraged, but a party replying
+/// to matters first raised in a response files the reply within 14 days
+/// after service of the response, unless the court orders otherwise.
+deadline reply-period: 14.days after ResponseServed() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 7.1(g)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 10.1(k): within 14 days of the filing of a translated
+/// document, any opposing party or nonparty may file objections to the
+/// translation or to its partial nature.
+deadline translation-objection-period: 14.days after TranslationFiled() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 10.1"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 16.1(b)(1): at least 28 days before the pretrial
+/// conference all parties provide the FRCP 26(a)(3) pretrial disclosures.
+deadline pretrial-disclosure-period: 28.days before PretrialConference() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 16.1(b)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 16.1(b)(1): twenty-one days before the pretrial
+/// conference a party may designate and serve its FRCP 26(a)(3) objections.
+deadline pretrial-objection-period: 21.days before PretrialConference() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 16.1(b)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 16.1(b)(1): the pretrial order is submitted to the
+/// court 7 days before the pretrial conference.
+deadline pretrial-order-period: 7.days before PretrialConference() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 16.1(b)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 39.1(a): seven days before the first day of the trial
+/// session all parties file a memorandum of authorities on anticipated
+/// evidentiary questions and contested issues of law, and the other papers
+/// the rule lists.
+deadline trial-memorandum-period: 7.days before TrialSessionOpens() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 39.1(a)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 47.1(b): seven days before the first day of the trial
+/// session each party files any non-routine voir dire questions it asks the
+/// court to put to the jury.
+deadline voir-dire-period: 7.days before TrialSessionOpens() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 47.1(b)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 54.1(a)(1), (3): a prevailing party files its bill of
+/// costs on AO Form 133 within 30 days after the time for appeal of the
+/// final judgment expires or the clerk receives the mandate or other order
+/// terminating the action on appeal; failure to file in time waives costs.
+deadline bill-of-costs-period: 30.days after CostsPeriodTriggered() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 54.1(b)(1): an opposing party objecting to the bill of
+/// costs files its response within 14 days after the bill is filed.
+deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 54.1(b)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 54.1(b)(1): within 7 days after the response, the
+/// prevailing party may file a reply.
+deadline costs-reply-period: 7.days after CostsOppositionFiled() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 54.1(b)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 54.1(c): a party may request review of the clerk's
+/// ruling by motion within 7 days after the clerk's action; review is on
+/// the existing record unless ordered otherwise.
+deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 54.1(c)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 72.4(a)(1): an aggrieved party or nonparty appeals a
+/// magistrate judge's order on a non-dispositive matter within 14 days
+/// after service of the order, unless the magistrate judge or a judge
+/// prescribes a different time.
+deadline magistrate-appeal-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 72.4(a)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 72.4(a)(1), (3): a response to a statement of appeal is
+/// due within 14 days after service of it, unless the court orders
+/// otherwise; replies need leave of court.
+deadline magistrate-appeal-response-period: 14.days after MagistrateAppealServed() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 72.4(a)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 72.4(b)(1): a party objects to a magistrate judge's
+/// proposed findings, recommendations or report within 14 days after
+/// being served with a copy.
+deadline magistrate-objection-period: 14.days after MagistrateReportServed() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 72.4(b)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 72.4(b)(1), (3): a party may respond to objections
+/// within 14 days after being served with them, unless the court orders
+/// otherwise; replies need leave of court.
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionsServed() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 72.4(b)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 83.3: attorneys and unrepresented persons notify the
+/// court in writing within 14 days of any change of address; failure may
+/// result in dismissal or other just relief.
+deadline address-change-period: 14.days after AddressChanged() counted_by frcp6 cite "E.D.N.C. Loc. Civ. R. 83.3"
+{
+  forum frcp
+}

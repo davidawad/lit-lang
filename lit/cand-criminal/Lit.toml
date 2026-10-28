@@ -1,0 +1,52 @@
+# The U.S. District Court for the Northern District of California's
+# Criminal Local Rules (Crim. L.R.) as a local-rule layer over lit/frcrimp
+# (28 U.S.C. § 2071; FRCrimP 57(a)): it declares only the periods and
+# limits the local criminal rules themselves state and re-encodes no
+# FRCrimP, Speedy Trial Act or FRAP 4(b) period (one source of truth:
+# lit/frcrimp). Each period is counted under FRCrimP 45(a), which governs
+# "any local rule", so each deadline names `forum frcrimp`. The rules are
+# the edition revised July 29, 2026 (the rule pages' footer;
+# sources/fed-ndcal); earlier editions are not vendored, so a query before
+# that date is a hole in the corpus. The Civil Local Rules apply where not
+# inconsistent (Crim. L.R. 2-1) and live in lit/cand. An appeal goes to
+# the Ninth Circuit under lit/frcrimp's FRAP 4(b) period.
+[package]
+name = "cand-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "cand-criminal-local-rules"
+forum = "cand-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Northern District of California: Criminal Local Rules"
+description = "The Northern District of California's Criminal Local Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the related-case response, the Rule 16 meeting of counsel, the pretrial conference statement, the presentence investigation and report schedule, sentencing memoranda, the revocation dispositional report, noticed and ex parte motions, refiling after a sealing ruling, and the briefs and page limits on an appeal from a magistrate judge's conviction."
+in_force = "2026-07-29"
+known_at = "2026-10-28"
+unknown_before = "2026-07-29"
+jurisdiction = "U.S. District Court for the Northern District of California (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ndcal-crimlr"
+issuer = "U.S. District Court for the Northern District of California"
+date = "2026-07-29"
+designation = "Criminal Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.ndcal-crimlr]
+title = "Criminal Local Rules of the U.S. District Court for the Northern District of California, revised July 29, 2026"
+url = "https://www.cand.uscourts.gov/sites/default/files/local-rules/Local_Rules_Criminal_rev_7-29-2026.pdf"
+path = "sources/fed-ndcal/ndcal-criminal-local-rules-rev-2026-07-29-sectioned.txt"
+path_sha256 = "f65f4e7dd19f59d6f97573448706525593cc2f33157d24024eed7383a7835338"
+sha256 = "32aa44b72876fa1c23493e5c6e22c81957411a6e3fabc809ab8dfdcacf78053d"
+as_of = "2026-07-29"
+cite_prefixes = ["N.D. Cal. Crim. L.R."]
+section_heading = "Crim. L.R. {n}"

@@ -22,3 +22,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 3aca8c4503552bbc014ccb2cacc8688c853498f8a4e44b4e1de0622ddf771880. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `fed-ndcal/original/ndcal-criminal-local-rules-rev-2026-07-29.pdf` as served (sha256 32aa44b72876fa1c23493e5c6e22c81957411a6e3fabc809ab8dfdcacf78053d); extraction sha256 3aca8c4503552bbc014ccb2cacc8688c853498f8a4e44b4e1de0622ddf771880.
+
+### `fed-ndcal/ndcal-criminal-local-rules-rev-2026-07-29-sectioned.txt` — N.D. Cal. Criminal Local Rules (rev. 7-29-2026), sectioned
+
+- Derived in the pod (lg-gddt.22) from `fed-ndcal/ndcal-criminal-local-rules-rev-2026-07-29.txt` (extract sha256 3aca8c4503552bbc014ccb2cacc8688c853498f8a4e44b4e1de0622ddf771880); nothing fetched. One marker line `## Crim. L.R. <n>` is inserted before each rule's own body heading line `<n>. <Title>` (indented four spaces, some led by a form feed; Crim. L.R. 1-1 through 59-1, 48 rules, matching the table of contents). Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Edition: as the extract, the rule pages footed "Revised July 29, 2026" (the table-of-contents pages still carry the August 21, 2024 footer).
+- Sectioned sha256 f65f4e7dd19f59d6f97573448706525593cc2f33157d24024eed7383a7835338 (the `path_sha256` pinned by `lit/cand-criminal/Lit.toml`).

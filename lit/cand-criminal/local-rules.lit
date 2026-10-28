@@ -1,0 +1,235 @@
+module cand-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The Northern District of California's own criminal periods, counted
+// under the criminal rules (FRCrimP 45(a) governs "any local rule"). No
+// trigger carries a service method: FRCrimP 45(c)'s three added days
+// follow the manner of service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: the proposed presentence report is furnished at least 35 days
+// before sentencing (Crim. L.R. 32-4(a)), FRCrimP 32(e)(2)'s period
+// (psr-disclosure), and the parties respond to it within 14 days after it
+// is furnished (Crim. L.R. 32-4(b)), FRCrimP 32(f)(1)'s period. If the
+// sentencing date changes, the Crim. L.R. 32-3 to 32-5 deadlines adjust to
+// the new date unless otherwise ordered (Crim. L.R. 32-2(d)).
+//
+// Conditions that are not deadlines from an event stay in notes: unless
+// the Court determines otherwise, sentencing is set no earlier than 75
+// days after referral for an in-custody defendant and 95 days for one out
+// of custody (Crim. L.R. 32-1(a)), a floor on the setting rather than a
+// deadline; the Rule 16 conference may be extended by stipulation to a
+// day within 21 days after the plea (Crim. L.R. 16-1(a)); no Rule 17(c)
+// subpoena may require production in fewer than 14 days from service,
+// absent good cause (Crim. L.R. 17-2(d)), a floor on the return date; the
+// record on a misdemeanor appeal is deemed complete 14 days after the
+// notice of appeal if no transcript is ordered, and the hearing is set not
+// more than 90 days after the Clerk's notice (Crim. L.R. 58-2(b), (c));
+// the government states the days remaining on the Speedy Trial Act clock
+// in any motion to which an exclusion may apply (Crim. L.R. 47-2(c)),
+// whose period stays in lit/frcrimp; and the 10-day transition provision
+// of the 2009 rules (Crim. L.R. 59-1) is spent.
+//
+// The earlier N.D. Cal. criminal outline's FRCrimP flow and its decisions
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+/// An ex parte motion: the motion and memorandum of points and
+/// authorities in one filed document not exceeding 5 pages in length
+/// (N.D. Cal. Crim. L.R. 47-3(a)(1)).
+limit ex-parte-motion {
+  pages <= 5 cite "N.D. Cal. Crim. L.R. 47-3(a)"
+} cite "N.D. Cal. Crim. L.R. 47-3(a)"
+
+/// The opening or responsive brief on an appeal from a magistrate judge's
+/// conviction: not more than 25 pages unless the Court orders otherwise
+/// (N.D. Cal. Crim. L.R. 58-2(e)).
+limit misdemeanor-appeal-brief {
+  pages <= 25 cite "N.D. Cal. Crim. L.R. 58-2(e)"
+} cite "N.D. Cal. Crim. L.R. 58-2(e)"
+
+/// The reply brief on an appeal from a magistrate judge's conviction: not
+/// more than 10 pages (N.D. Cal. Crim. L.R. 58-2(e)).
+limit misdemeanor-appeal-reply {
+  pages <= 10 cite "N.D. Cal. Crim. L.R. 58-2(e)"
+} cite "N.D. Cal. Crim. L.R. 58-2(e)"
+
+/// A Notice of Related Case in a Criminal Action is served (N.D. Cal.
+/// Crim. L.R. 8-1(d)).
+event RelatedCaseNoticeServed()
+/// The defendant pleads not guilty (N.D. Cal. Crim. L.R. 16-1(a)).
+event NotGuiltyPlea()
+/// A pretrial conference is scheduled (N.D. Cal. Crim. L.R. 17.1-1(b)).
+event PretrialConferenceScheduled()
+/// The government receives the Probation Officer's written request for
+/// sentencing information (N.D. Cal. Crim. L.R. 32-3(b)).
+event ProbationRequestReceived()
+/// The final presentence report is to be submitted to the Bureau of
+/// Prisons (N.D. Cal. Crim. L.R. 32-6(c)(2)).
+event PsrToBureauScheduled()
+/// Sentencing is set after the Court revokes probation or supervised
+/// release (N.D. Cal. Crim. L.R. 32.1-1(e)).
+event RevocationSentencingScheduled()
+/// The hearing on a noticed motion is set (N.D. Cal. Crim. L.R. 47-2(a)).
+event MotionHearingScheduled()
+/// A noticed motion is filed (N.D. Cal. Crim. L.R. 47-2(d)).
+event MotionFiled()
+/// The day an opposition to a noticed motion is due (N.D. Cal. Crim. L.R.
+/// 47-2(d)).
+event OppositionDue()
+/// An ex parte motion is filed (N.D. Cal. Crim. L.R. 47-3(a)).
+event ExParteMotionFiled() paper ex-parte-motion
+/// An Administrative Motion to File Under Seal is denied in whole or in
+/// part (N.D. Cal. Crim. L.R. 56-1(d)).
+event SealingDenied()
+/// The hearing on an appeal from a magistrate judge's conviction is set
+/// (N.D. Cal. Crim. L.R. 58-2(c), (d)).
+event MisdemeanorAppealHearingScheduled()
+/// The appellant's opening or the appellee's responsive brief is filed
+/// (N.D. Cal. Crim. L.R. 58-2(d), (e)).
+event MisdemeanorAppealBriefFiled() paper misdemeanor-appeal-brief
+/// The appellant's reply brief is filed (N.D. Cal. Crim. L.R. 58-2(d),
+/// (e)).
+event MisdemeanorAppealReplyFiled() paper misdemeanor-appeal-reply
+
+/// N.D. Cal. Crim. L.R. 8-1(d): no later than 7 days after service of a
+/// Notice of Related Case in a Criminal Action, any party may serve and
+/// file a statement supporting or opposing it.
+deadline related-case-response: 7.days after RelatedCaseNoticeServed() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 8-1(d)"
+{
+  forum frcrimp
+}
+
+/// N.D. Cal. Crim. L.R. 16-1(a): within 14 days after a plea of not
+/// guilty, the attorneys confer on a schedule for disclosure under FRCrimP
+/// 16; the parties may stipulate to a day within 21 days after the plea.
+deadline disclosure-conference: 14.days after NotGuiltyPlea() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 16-1(a)"
+{
+  forum frcrimp
+}
+
+/// N.D. Cal. Crim. L.R. 17.1-1(b): unless otherwise ordered, not less than
+/// 7 days before the pretrial conference the parties file a pretrial
+/// conference statement.
+deadline pretrial-conference-statement: 7.days before PretrialConferenceScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D. Cal. Crim. L.R. 17.1-1(b)"
+{
+  forum frcrimp
+}
+
+/// N.D. Cal. Crim. L.R. 32-3(b): within 7 days after receiving the
+/// Probation Officer's written request for information, the attorney for
+/// the government responds and serves a copy on defense counsel.
+deadline sentencing-information-response: 7.days after ProbationRequestReceived() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 32-3(b)"
+{
+  forum frcrimp
+}
+
+/// N.D. Cal. Crim. L.R. 32-3(c): material a party wishes the Probation
+/// Officer to consider for the proposed presentence report is submitted at
+/// least 45 days before the date set for sentencing.
+deadline sentencing-material-submission: 45.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 32-3(c)"
+{
+  forum frcrimp
+}
+
+/// N.D. Cal. Crim. L.R. 32-5(a): at least 14 days before the date set for
+/// sentencing, the Probation Officer discloses the final presentence report
+/// and recommendations and lodges a copy with the sentencing Judge.
+deadline final-psr-disclosure: 14.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 32-5(a)"
+{
+  forum frcrimp
+}
+
+/// N.D. Cal. Crim. L.R. 32-5(b): any sentencing memorandum, which is
+/// required if a departure or evidentiary hearing is requested, is filed no
+/// later than 7 days before the date set for sentencing.
+deadline sentencing-memorandum: 7.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 32-5(b)"
+{
+  forum frcrimp
+}
+
+/// N.D. Cal. Crim. L.R. 32-5(c): a response to the opposing party's
+/// sentencing memorandum may be filed no later than 3 days before the date
+/// set for sentencing.
+deadline sentencing-memorandum-response: 3.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 32-5(c)"
+{
+  forum frcrimp
+}
+
+/// N.D. Cal. Crim. L.R. 32-6(c)(2): an addendum recording the Judge's
+/// finding on the report's accuracy is provided to the Court and the
+/// parties at least 5 days before the final presentence report is
+/// submitted to the Bureau of Prisons.
+deadline accuracy-addendum: 5.days before PsrToBureauScheduled() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 32-6(c)"
+{
+  forum frcrimp
+}
+
+/// N.D. Cal. Crim. L.R. 32.1-1(e): at least 7 days before sentencing after
+/// revocation, the Probation Officer discloses the dispositional report and
+/// recommendation and lodges a copy with the sentencing Judge.
+deadline revocation-dispositional-report: 7.days before RevocationSentencingScheduled() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 32.1-1(e)"
+{
+  forum frcrimp
+}
+
+/// N.D. Cal. Crim. L.R. 47-2(a): except as the assigned Judge directs, a
+/// motion is filed, served and noticed for hearing not less than 14 days
+/// after service or, if the Judge specially sets a date, not less than 14
+/// days before that date.
+deadline motion-notice: 14.days before MotionHearingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D. Cal. Crim. L.R. 47-2(a)"
+{
+  forum frcrimp
+}
+
+/// N.D. Cal. Crim. L.R. 47-2(d): any opposition to a noticed motion is
+/// served and filed not more than 7 days after the motion is filed.
+deadline motion-opposition: 7.days after MotionFiled() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 47-2(d)"
+{
+  forum frcrimp
+}
+
+/// N.D. Cal. Crim. L.R. 47-2(d): any reply is served and filed not more
+/// than 4 days after the opposition is due.
+deadline motion-reply: 4.days after OppositionDue() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 47-2(d)"
+{
+  forum frcrimp
+}
+
+/// N.D. Cal. Crim. L.R. 56-1(d): if the Administrative Motion to File
+/// Under Seal is denied in whole or in part, the material is not considered
+/// unless the filing party files an unredacted, or a conforming redacted,
+/// version within 7 days after the motion is denied.
+deadline sealing-refiling: 7.days after SealingDenied() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 56-1(d)"
+{
+  forum frcrimp
+}
+
+/// N.D. Cal. Crim. L.R. 58-2(d): the appellant serves and files an opening
+/// brief not later than 35 days before the date set for the hearing.
+deadline misdemeanor-appeal-opening-brief: 35.days before MisdemeanorAppealHearingScheduled() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 58-2(d)"
+{
+  forum frcrimp
+}
+
+/// N.D. Cal. Crim. L.R. 58-2(d): the appellee serves and files a
+/// responsive brief not later than 21 days before the hearing date.
+deadline misdemeanor-appeal-responsive-brief: 21.days before MisdemeanorAppealHearingScheduled() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 58-2(d)"
+{
+  forum frcrimp
+}
+
+/// N.D. Cal. Crim. L.R. 58-2(d): the appellant may serve and file a reply
+/// not later than 14 days before the hearing date.
+deadline misdemeanor-appeal-reply-brief: 14.days before MisdemeanorAppealHearingScheduled() counted_by frcrimp45 cite "N.D. Cal. Crim. L.R. 58-2(d)"
+{
+  forum frcrimp
+}

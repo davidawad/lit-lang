@@ -1,0 +1,150 @@
+module ndd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The District of North Dakota's own criminal periods. Its time rule
+// (Crim. L.R. 45.1) was repealed on October 6, 2025, and FRCrimP 45(a)
+// computes a period "in any local rule" of a criminal case, so these count
+// under frcrimp45; a pro se party without electronic filing is often
+// allowed FRCrimP 45(c)'s three days (Crim. L.R. 47.1(B)(1)), frcrimp45's
+// service extension. A time to respond or reply begins only after both
+// service and filing of the paper it answers, whichever is later (Crim.
+// L.R. 47.1(B)(2)), so each trigger below is the later of the two. Stated
+// in the rules but not declared: the release of a witness's grand jury
+// transcript to the defense at least three days before the witness
+// testifies (Crim. L.R. 6.1(B)), which the United States may, not must,
+// do; the misdemeanor defendant's notice of appeal from a magistrate
+// judge's judgment within 14 days (Crim. L.R. 59.1(D)(1)), FRCrimP
+// 58(g)(2)'s; and the fourteen days to object to a magistrate judge's
+// order or report and recommendations (Crim. L.R. 59.1(D)(2), (3)), which
+// the rule itself attributes to FRCrimP 59(a) and 59(b)(2). The appendix
+// deadline and page-limit tables restate the rules and are not separately
+// cited. The earlier D.N.D. criminal outline's FRCrimP flow and its
+// decisions (Salerno, Brady, Barker v. Wingo, Zedner, Boykin, Missouri v.
+// Frye, Jackson v. Virginia, Booker, Roe v. Flores-Ortega, Garza v.
+// Idaho) are FRCrimP and constitutional authority and belong to
+// lit/frcrimp; no reporter text is vendored, so they are removed here, and
+// the court's Speedy Trial Act plan (18 U.S.C. § 3165) is not vendored.
+
+/// A memorandum in support of a motion: at most 20 pages, a table of
+/// contents and table of authorities excluded (Crim. L.R. 47.1(A)(1)); a
+/// motion to reduce sentence is briefed to the same limits (47.1(A)(2)).
+limit motion-memorandum { pages <= 20 cite "D.N.D. Crim. L.R. 47.1(A)" } cite "D.N.D. Crim. L.R. 47.1(A)"
+/// A response to a motion: at most 20 pages (Crim. L.R. 47.1(A)(1)).
+limit motion-response { pages <= 20 cite "D.N.D. Crim. L.R. 47.1(A)" } cite "D.N.D. Crim. L.R. 47.1(A)"
+/// A reply: at most 7 pages (Crim. L.R. 47.1(A)(1)).
+limit motion-reply { pages <= 7 cite "D.N.D. Crim. L.R. 47.1(A)" } cite "D.N.D. Crim. L.R. 47.1(A)"
+/// A memorandum in support of a motion for leave to file an additional
+/// filing or to exceed the page limits, or for oral argument: at most 2
+/// pages (Crim. L.R. 47.1(A)(3), (5)).
+limit leave-memorandum { pages <= 2 cite "D.N.D. Crim. L.R. 47.1(A)" } cite "D.N.D. Crim. L.R. 47.1(A)"
+/// An objection to a magistrate judge's order or report and
+/// recommendations, or a response to one: at most 20 pages; no reply is
+/// permitted (Crim. L.R. 59.1(D)(2), (3)).
+limit magistrate-objection { pages <= 20 cite "D.N.D. Crim. L.R. 59.1(D)" } cite "D.N.D. Crim. L.R. 59.1(D)"
+
+/// The date a grand jury witness is subpoenaed to appear or produce
+/// documents (Crim. L.R. 6.1(C)).
+event GrandJuryReturnDate()
+/// The first day of trial (Crim. L.R. 30.1(A)).
+event TrialBegins()
+/// The sentencing hearing (Crim. L.R. 32.1(B)).
+event SentencingHearing()
+/// A motion's memorandum in support is served and filed, the later of the
+/// two (Crim. L.R. 47.1(A)(1), (B)(2)).
+event MotionMemorandumServedAndFiled()
+/// A response to a motion is served and filed, the later of the two
+/// (Crim. L.R. 47.1(A)(1), (B)(2)).
+event ResponseServedAndFiled()
+/// A motion to reduce sentence is served and filed (Crim. L.R.
+/// 47.1(A)(2)).
+event SentenceReductionMotionServedAndFiled()
+/// The response to a motion to reduce sentence is served and filed (Crim.
+/// L.R. 47.1(A)(2)).
+event SentenceReductionResponseServedAndFiled()
+/// The return of a search or seizure warrant is filed (Crim. L.R.
+/// 49.1(C)(3)).
+event WarrantReturnFiled()
+/// An objection to a magistrate judge's non-dispositive order is served
+/// and filed (Crim. L.R. 59.1(D)(2)).
+event ObjectionServedAndFiled()
+
+/// D.N.D. Crim. L.R. 6.1(C): absent good cause shown, a motion to quash or
+/// limit a grand jury subpoena is filed and served seven days before the
+/// date the witness is subpoenaed to appear or produce documents.
+deadline grand-jury-subpoena-motion-period: 7.days before GrandJuryReturnDate() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 6.1(C)"
+{
+  forum frcrimp
+}
+
+/// D.N.D. Crim. L.R. 30.1(A): unless ordered otherwise, each party serves
+/// and files requested jury instructions and a proposed verdict form at
+/// least seven days before the first day of trial.
+deadline jury-instructions-period: 7.days before TrialBegins() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 30.1(A)"
+{
+  forum frcrimp
+}
+
+/// D.N.D. Crim. L.R. 32.1(B): a party filing a sentencing memorandum
+/// serves and files it, with its sentencing memorandum supplement, no
+/// later than seven days before the sentencing hearing unless the court
+/// orders otherwise.
+deadline sentencing-memorandum-period: 7.days before SentencingHearing() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 32.1(B)"
+{
+  forum frcrimp
+}
+
+/// D.N.D. Crim. L.R. 32.1(B): a response to a sentencing memorandum is
+/// served and filed no later than two days before the sentencing hearing.
+deadline sentencing-response-period: 2.days before SentencingHearing() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 32.1(B)"
+{
+  forum frcrimp
+}
+
+/// D.N.D. Crim. L.R. 47.1(A)(1): the adverse party has fourteen days after
+/// service and filing of a memorandum in support to serve and file a
+/// response. Failure to respond may be deemed an admission that the
+/// motion is well taken (47.1(B)(5)).
+deadline motion-response-period: 14.days after MotionMemorandumServedAndFiled() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 47.1(A)"
+{
+  forum frcrimp
+}
+
+/// D.N.D. Crim. L.R. 47.1(A)(1): the moving party has seven days after
+/// service and filing of the response to serve and file a reply.
+deadline motion-reply-period: 7.days after ResponseServedAndFiled() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 47.1(A)"
+{
+  forum frcrimp
+}
+
+/// D.N.D. Crim. L.R. 47.1(A)(2): the United States has twenty-eight days
+/// after service and filing of a motion to reduce sentence to respond.
+deadline sentence-reduction-response-period: 28.days after SentenceReductionMotionServedAndFiled() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 47.1(A)"
+{
+  forum frcrimp
+}
+
+/// D.N.D. Crim. L.R. 47.1(A)(2): the moving party has fourteen days after
+/// service and filing of the response to reply.
+deadline sentence-reduction-reply-period: 14.days after SentenceReductionResponseServedAndFiled() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 47.1(A)"
+{
+  forum frcrimp
+}
+
+/// D.N.D. Crim. L.R. 49.1(C)(3): search and seizure warrant documents stay
+/// sealed until ninety days after the warrant's return is filed, then are
+/// unsealed without further order; the United States moves, with a
+/// supporting memorandum and a proposed unsealing date, to keep them
+/// sealed longer.
+deadline warrant-sealing-period: 90.days after WarrantReturnFiled() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 49.1(C)"
+{
+  forum frcrimp
+}
+
+/// D.N.D. Crim. L.R. 59.1(D)(2): the adverse party has seven days after
+/// service and filing of an objection to a magistrate judge's
+/// non-dispositive order to serve and file a response.
+deadline objection-response-period: 7.days after ObjectionServedAndFiled() counted_by frcrimp45 cite "D.N.D. Crim. L.R. 59.1(D)"
+{
+  forum frcrimp
+}

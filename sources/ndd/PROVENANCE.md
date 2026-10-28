@@ -16,3 +16,10 @@
 - Source: as the extract `ndd/local-rules.txt`, https://www.ndd.uscourts.gov/lci/Local_Rules.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, "Effective October 6, 2025".
 - Sectioned sha256 2611310f064b74eb36bc64db419c121daeae343be9d36e8e0b910ba607fa693d (the `path_sha256` pinned by `lit/ndd/Lit.toml`).
+
+### `ndd/local-rules-criminal-sectioned.txt` — D.N.D. Local Rules, criminal rules sectioned
+
+- Derived in the pod (lg-gddt.20) from `ndd/local-rules.txt` (extract sha256 f98554911b9c98b8e88105416993afb9799887105a7c64eb1b53d94cdd9c39c5); nothing fetched. One `## Crim. L.R. <n>` line is inserted before each criminal rule's own `CRIMINAL RULE <n>` heading line (`Crim. L.R. 6.1` through `Crim. L.R. 59.1`, 11 rules, the repealed Crim. L.R. 45.1 included; Crim. L.R. 59.1's section runs through the index and appendix to the end of the file). The table of contents, the general rules and the civil rules are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Crim\. L\.R\. /d'`) restores the extract byte for byte.
+- Source: as the extract `ndd/local-rules.txt`, https://www.ndd.uscourts.gov/lci/Local_Rules.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
+- Edition: as the extract, "Effective October 6, 2025".
+- Sectioned sha256 bd466dccade6554f1a1b4c0b9bed8d99a5894ac8bb91074bd00ee30130c2dc8f (the `path_sha256` pinned by `lit/ndd-criminal/Lit.toml`).

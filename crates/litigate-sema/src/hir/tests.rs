@@ -230,6 +230,7 @@ fn a_designation_reads_the_trigger_argument_or_nothing() {
         waive: None,
         designated: None,
         characterization: None,
+        derived: Vec::new(),
     };
     let on = noticed(vec![date("2025-02-03")]);
     assert_eq!(d.designation("2025-01-02", &on), None);

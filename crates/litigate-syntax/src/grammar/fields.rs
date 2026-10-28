@@ -66,8 +66,9 @@ pub(crate) const DEADLINE_OPTS: &[Spec] = &[
 /// Options of a `deadline` declaration: the [`DEADLINE_OPTS`] of a
 /// `within` edge, plus the obligation it creates (SPEC §5.3): who bears
 /// it, how a repeated trigger is treated, the capabilities that extend
-/// or waive it, the trigger parameter that designates its due date, and
-/// the interpretation its least time rests on.
+/// or waive it, the trigger parameter that designates its due date, the
+/// interpretation its least time rests on, and the cited terms its period
+/// is derived from.
 pub(crate) const DEADLINE_DECL_OPTS: &[Spec] = &[
     (KwExtendable, Some(boolean)),
     (KwExtensionAuthority, Some(string_or_hole)),
@@ -81,6 +82,7 @@ pub(crate) const DEADLINE_DECL_OPTS: &[Spec] = &[
     (KwInterpretation, Some(string)),
     (KwCharacterization, Some(characterization)),
     (KwLock, Some(lock_against)),
+    (KwDerived, Some(derived_term)),
 ];
 
 /// Fields of a `delegable` capability (besides `cite`): its principal,
@@ -466,7 +468,18 @@ fn adopted_forum(p: &mut Parser<'_>) -> bool {
     }
 }
 
-/// `[quote "..."]` after an adopting cite.
+/// `Duration cite "X" [quote "..."]`: one term of a deadline's period
+/// derived from several rules, and the rule stating it.
+fn derived_term(p: &mut Parser<'_>) -> bool {
+    duration(p) && {
+        if require(p, cite, &[KwCite]) {
+            quote(p);
+        }
+        true
+    }
+}
+
+/// `[quote "..."]` after an adopting or a derived term's cite.
 fn quote(p: &mut Parser<'_>) {
     if p.at_kw(KwQuote) {
         p.bump_as(KwQuote);

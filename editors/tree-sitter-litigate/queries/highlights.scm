@@ -37,7 +37,7 @@
   "quote" "words" "pages" "lines" "certificate" "excludes" "ecf" "for" "paper"
   "delegable" "op" "unlock" "characterization" "retracted" "unknown_before"
   "commenced" "spawn" "joins" "anytime" "lock" "against" "Rule" "vintage"
-  "retrieved" "n" "method" "attr"
+  "retrieved" "n" "method" "attr" "derived"
 ] @keyword
 
 (discretion) @keyword

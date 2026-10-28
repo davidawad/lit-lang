@@ -5,9 +5,9 @@ use super::cx::{first_expr, first_ref, flag, Cx};
 use crate::db::parse::tree::{ArmItem, Atom, Expr, ExprKind, Field, Item, Name, RefPath};
 use crate::db::span::Report;
 use crate::hir::{
-    Adoption, Anchor, Chain, CharacterKind, Counting, DayUnit, Deadline, Designated, Direction,
-    DueEnd, EndOfMonth, RollOn, ServiceTime, ShortPeriod, Transition, TransitionArm, Type, Value,
-    SERVICE_METHODS,
+    Adoption, Anchor, Chain, CharacterKind, Counting, DayUnit, Deadline, Derivation, Designated,
+    Direction, DueEnd, EndOfMonth, RollOn, ServiceTime, ShortPeriod, Transition, TransitionArm,
+    Type, Value, SERVICE_METHODS,
 };
 use crate::resolve::sig::{clauses_of, TypeSig, ValueKind};
 use crate::resolve::suggest;
@@ -131,7 +131,7 @@ impl Cx<'_, '_> {
             "before" => Direction::Backward,
             _ => Direction::Forward,
         };
-        let o = self.once_except(opts, "extend");
+        let o = self.once_except(opts, &["extend", "derived"]);
         let mut designated = first_ref(o.get("designated"))
             .and_then(|r| self.designated(name, trigger, r, (direction, period.map(|p| p.1))));
         self.interpretation(name, &o, designated.as_mut());
@@ -140,6 +140,7 @@ impl Cx<'_, '_> {
         let adoption = o.get("forum").and_then(|f| self.adoption(f));
         let obligation = self.obligation(name, opts, &o, rule);
         let characterization = self.characterized(item, opts, &o);
+        let derived = self.derivation(name, opts, period);
         let (amount, unit) = period?;
         Some(Deadline {
             meta,
@@ -161,7 +162,105 @@ impl Cx<'_, '_> {
             waive: obligation.waive,
             designated,
             characterization,
+            derived,
         })
+    }
+
+    /// The terms of deadline `name`'s period (`derived N.unit cite "X"
+    /// [quote "..."]`, once per term, SPEC §5.3). They sum to `period`, in
+    /// its unit or one that converts to it exactly (weeks to calendar
+    /// days, years to months): L2007 otherwise, and a quote beside a cite
+    /// hole, which has no text to quote, is L2007 too.
+    fn derivation(
+        &mut self,
+        name: &Name,
+        opts: &[Field],
+        period: Option<(u64, DayUnit)>,
+    ) -> Vec<Derivation> {
+        let fields: Vec<&Field> = opts.iter().filter(|f| f.key.text == "derived").collect();
+        let mut terms = Vec::new();
+        for f in &fields {
+            let Some(e) = first_expr(f) else { continue };
+            let Some(Value::Days { amount, unit }) = self.ck.infer(e).value else {
+                self.report(Report::new(
+                    C::TypeMismatch,
+                    e.range,
+                    "a derived term is a duration such as `1.months`",
+                ));
+                continue;
+            };
+            let Ok(amount) = u64::try_from(amount) else {
+                continue;
+            };
+            let rest = Field {
+                key: f.key.clone(),
+                values: f.values.iter().skip(1).cloned().collect(),
+                range: f.range,
+            };
+            let Some(cite) = first_expr(&rest) else {
+                continue;
+            };
+            let hole = matches!(cite.kind, ExprKind::Hole(_));
+            let historical = matches!(cite.kind, ExprKind::Cite(_, true));
+            let quote = match rest.values.get(1) {
+                Some((
+                    Atom::Expr(Expr {
+                        kind: ExprKind::Str(q),
+                        range,
+                    }),
+                    _,
+                )) => Some((q.clone(), *range)),
+                _ => None,
+            };
+            if let (true, Some((_, range))) = (hole, &quote) {
+                self.report(Report::new(
+                    C::InvalidField,
+                    *range,
+                    "a `quote` quotes the text of its cite, and a cite hole has none",
+                ));
+                continue;
+            }
+            let Some(cite) = self.cite_text(Some(&&rest)) else {
+                continue;
+            };
+            terms.push(Derivation {
+                amount,
+                unit,
+                cite,
+                historical,
+                quote: quote.map(|(q, _)| q),
+            });
+        }
+        let Some((amount, unit)) = period.filter(|_| terms.len() == fields.len()) else {
+            return terms;
+        };
+        let base = |n: u64, u: DayUnit| match u {
+            DayUnit::Week => (n * 7, DayUnit::Calendar),
+            DayUnit::Year => (n * 12, DayUnit::Month),
+            u => (n, u),
+        };
+        let (want, measure) = base(amount, unit);
+        let sum = terms.iter().try_fold(0, |sum, t| {
+            let (n, u) = base(t.amount, t.unit);
+            (u == measure).then_some(sum + n)
+        });
+        if !terms.is_empty() && sum != Some(want) {
+            let shown = terms
+                .iter()
+                .map(|t| t.unit.prose(t.amount))
+                .collect::<Vec<_>>()
+                .join(" + ");
+            self.report(Report::new(
+                C::InvalidField,
+                fields[0].range,
+                format!(
+                    "the derived terms of `{}` ({shown}) do not sum to its period of {}",
+                    name.text,
+                    unit.prose(amount)
+                ),
+            ));
+        }
+        terms
     }
 
     /// Deadline `name`'s forum, its `forum F` option's or its package's;

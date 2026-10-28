@@ -105,6 +105,13 @@ pub struct Deadline {
     /// `None`: not declared.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub characterization: Option<Characterization>,
+    /// The cited terms the period is the sum of (`derived N.unit cite
+    /// "X"`, once per term), when no one rule states it: a reply period
+    /// extended by a month, or `the prior Monday` before a Monday hearing.
+    /// Each term's cite is held to its count in place of the deadline's
+    /// own cite; empty: one rule states the period.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub derived: Vec<Derivation>,
 }
 
 /// Why a designated deadline has no due date (SPEC §5.3).
@@ -215,6 +222,27 @@ pub struct Adoption {
     pub historical: bool,
     /// The words of the cited rule that adopt the period, which must
     /// appear in its vendored text.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub quote: Option<String>,
+}
+
+/// One term of a period derived from several rules (SPEC §5.3): `derived
+/// 3.months cite "MPEP 710.02(b)"` beside `derived 1.months cite "MPEP
+/// 710.01(a)"` for a four-month extended reply period.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Derivation {
+    /// The term's length.
+    pub amount: u64,
+    /// Its unit.
+    pub unit: DayUnit,
+    /// The rule stating it (a cite hole's reason).
+    pub cite: String,
+    /// The cite is marked `historical`.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub historical: bool,
+    /// The words of the cited rule that state the term where it states no
+    /// count (`on the prior Monday`), which its vendored text must hold in
+    /// place of the count.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub quote: Option<String>,
 }

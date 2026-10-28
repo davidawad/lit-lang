@@ -40,8 +40,8 @@ pub use logic::{
 };
 pub use temporal::{
     Adoption, Anchor, Bound, BoundDates, Calendar, Capability, CauseStandard, Chain, CharacterKind,
-    Characterization, Commenced, Counting, DateRef, Deadline, Designated, Direction, DueEnd,
-    EndOfMonth, Extension, ExtensionWindow, Grant, Holiday, HolidayDate, Interval, Motion,
+    Characterization, Commenced, Counting, DateRef, Deadline, Derivation, Designated, Direction,
+    DueEnd, EndOfMonth, Extension, ExtensionWindow, Grant, Holiday, HolidayDate, Interval, Motion,
     Observance, RollOn, ServiceTime, ShortPeriod, Transition, TransitionArm, TriggerPolicy,
     Undesignated, SERVICE_METHODS,
 };

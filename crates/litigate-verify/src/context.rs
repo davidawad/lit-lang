@@ -94,7 +94,8 @@ impl<'a> Context<'a> {
     /// with their node, in its window), a transition's cites (in the window
     /// of the version it amends), test `cite`s (no window), and the entries
     /// of a filing limit with the words each must find ([`limit_cites`]).
-    /// A deadline's own cite carries its [`period`].
+    /// A deadline's own cite carries its [`period`], and the cite of each
+    /// term of a derived period that term's count (or its quote).
     pub fn cites(&self) -> impl Iterator<Item = Cite<'a>> {
         let (package, packages) = (self.package, self.packages);
         self.declarations().flat_map(move |d| {
@@ -158,6 +159,21 @@ impl<'a> Context<'a> {
                 _ => None,
             };
             let own = own.map(|c| (c, period(d)));
+            // Each term of a derived period, held to its own count, or to
+            // its quote where it quotes the words stating it.
+            let derived = match d {
+                Declaration::Deadline(x) => x
+                    .derived
+                    .iter()
+                    .map(|t| {
+                        let quotes: Vec<Cow<'_, str>> =
+                            t.quote.as_deref().map(Cow::Borrowed).into_iter().collect();
+                        let period = t.quote.is_none().then_some((t.amount, t.unit));
+                        ((t.cite.as_str(), span, t.historical, quotes), period)
+                    })
+                    .collect(),
+                _ => Vec::new(),
+            };
             let others = test
                 .into_iter()
                 .chain(limit_cites(d))
@@ -166,9 +182,8 @@ impl<'a> Context<'a> {
                 .chain(delegated)
                 .chain(characterized)
                 .map(|c| (c, None));
-            own.into_iter()
-                .chain(others)
-                .map(move |((text, span, historical, quotes), period)| Cite {
+            own.into_iter().chain(derived).chain(others).map(
+                move |((text, span, historical, quotes), period)| Cite {
                     text,
                     span,
                     window,
@@ -176,16 +191,20 @@ impl<'a> Context<'a> {
                     imported,
                     quotes,
                     period,
-                })
+                },
+            )
         })
     }
 }
 
 /// A deadline's period, which its own cite's vendored text must state,
-/// unless an order the period is delegated to sets it.
+/// unless an order the period is delegated to sets it or it is derived
+/// from several rules, whose terms' cites state their counts instead.
 fn period(d: &Declaration) -> Option<(u64, hir::DayUnit)> {
     match d {
-        Declaration::Deadline(x) if x.meta.delegations.is_empty() => Some((x.amount, x.unit)),
+        Declaration::Deadline(x) if x.meta.delegations.is_empty() && x.derived.is_empty() => {
+            Some((x.amount, x.unit))
+        }
         _ => None,
     }
 }
@@ -418,8 +437,10 @@ pub(crate) struct Cite<'a> {
     /// which its vendored section must hold; none when it quotes nothing.
     pub quotes: Vec<Cow<'a, str>>,
     /// The period of the deadline it is the own cite of (`14.days ...
-    /// cite "X"`), whose count its vendored section must state when it
-    /// states counts of that measure at all; none for every other cite.
+    /// cite "X"`), or the term of a derived period it is the cite of
+    /// (`derived 1.months cite "X"`), whose count its vendored section
+    /// must state when it states counts of that measure at all; none for
+    /// every other cite.
     pub period: Option<(u64, hir::DayUnit)>,
 }
 

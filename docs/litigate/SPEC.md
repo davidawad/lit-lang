@@ -278,7 +278,8 @@ DeclOpts     = "{", { ( "extendable", Bool | "extension_authority", (String | Ho
              | "designated", Ref | "interpretation", String
              | ("extend" | "waive"), Capability | "forum", Ref
              | "characterization", Ident, [ Cite ]
-             | "lock", "against", IdList, [ Cite ] ), Sep }, "}" ;
+             | "lock", "against", IdList, [ Cite ]
+             | "derived", Duration, Cite, [ "quote", String ] ), Sep }, "}" ;
 Capability   = "{", { ( "by", Ref | "max", Duration | "to", Expr
              | "discretion", Ident | "after_expiry" | "on", CallExpr
              | "within", Expr | "never", Cite | "interpretation", String ), Sep }, "}" ;
@@ -1455,6 +1456,18 @@ creates (design review 2026-10-23 §2.4, §2.7):
   "as may later be reset by the Board") is a lower-authority package
   (`CaseOrder`) whose own designated deadline, `trigger latest`,
   overrides the delegating one, triggered by the order's event (§5.5).
+- `derived N.unit cite "X" [quote "Q"]`, once per term: the period is the
+  sum of counts no one rule states, each term stated by the rule it
+  cites (a three-month shortened statutory period, MPEP 710.02(b), and
+  a one-month extension, 37 C.F.R. § 1.136(a), for a four-month
+  extended reply). The terms sum to the period in its unit, weeks
+  counted as seven calendar days and years as twelve months (L2007
+  otherwise). Each term's cite is held to its count as a deadline's own
+  cite is (`cite-resolves`, §7), and the deadline's own cite is then
+  not held to the period. A term whose rule states it in words with no
+  count (`11:59 p.m. on the prior Monday`, seven days before a Monday
+  hearing) quotes them: its vendored text must hold `Q`, in place of
+  the count. A quote beside a cite hole is L2007.
 - `waive { by A [, after_expiry] }`: actor `A` may release an instance,
   after its due date only with `after_expiry`. `max`, `to`, `discretion`,
   `on`, `within` and `never` are not allowed (L2007).

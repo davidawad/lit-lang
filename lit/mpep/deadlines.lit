@@ -223,17 +223,18 @@ test "extension-month: the last day, 2025-06-19, is a holiday; due Friday" cite 
 /// extension of time" (MPEP 710.01(a)). So an extended period is not a
 /// chain on the period it extends, from either end: it is the action's
 /// own period, 3 + k months from the mail date, its last day rolled under
-/// § 1.7(a). Each is cited to what sets its two parts: the `3-month
-/// shortened statutory period` (MPEP 710.01(a)) and the k months of
-/// extension the fee paid buys, "For reply within first [second, third]
-/// month" (37 C.F.R. § 1.17(a)(1)-(3)): "The expiration of the time period
-/// is determined by the amount of the fee paid" (§ 1.136(a)(2)). Neither §
-/// 1.136(a)'s "five months after the time period set for reply" nor the
-/// six-month ceiling of 35 U.S.C. § 133, which three months of extension
-/// reach, sets any of these periods.
-deadline ssp-reply-extended-1: 4.months from OfficeActionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 1.136(a); 37 CFR 1.17(a)(1); MPEP 710.01(a)"
-deadline ssp-reply-extended-2: 5.months from OfficeActionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 1.136(a); 37 CFR 1.17(a)(2); MPEP 710.01(a)"
-deadline ssp-reply-extended-3: 6.months from OfficeActionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 1.136(a); 37 CFR 1.17(a)(3); MPEP 710.01(a)"
+/// § 1.7(a). Three months of extension reach the six-month ceiling of 35
+/// U.S.C. § 133. The once-extended period is derived: the three-month
+/// shortened statutory period (MPEP 710.02(b)) and the one-month extension
+/// (37 C.F.R. § 1.136(a); MPEP 710.01(a)).
+deadline ssp-reply-extended-1: 4.months from OfficeActionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 1.136(a); MPEP 710.01(a)"
+{
+  derived 3.months cite "MPEP 710.02(b)"
+  derived 1.months cite "37 CFR 1.136(a); MPEP 710.01(a)"
+}
+
+deadline ssp-reply-extended-2: 5.months from OfficeActionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 1.136(a); MPEP 710.01(a)"
+deadline ssp-reply-extended-3: 6.months from OfficeActionMailed() counted_by uspto-1-7 effective [2024-01-31, ..) cite "37 CFR 1.136(a); 35 U.S.C. 133"
 
 test "a reply due April 30 on a January 31 action is extended a month to May 31 (MPEP 710.01(a))" cite "MPEP 710.01(a)"
 {

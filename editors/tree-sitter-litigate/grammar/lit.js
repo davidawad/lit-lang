@@ -246,8 +246,8 @@ module.exports = {
 
   // A deadline declaration's options add the obligation it creates
   // (SPEC §5.3): bearer, trigger policy, capabilities, the trigger
-  // parameter designating its due date, and the interpretation its least
-  // time rests on.
+  // parameter designating its due date, the interpretation its least
+  // time rests on, and the cited terms of a derived period.
   deadline_decl_opts: $ => braced(choice(
     $.deadline_opt,
     seq(field('key', 'interpretation'), field('value', $.string)),
@@ -269,6 +269,13 @@ module.exports = {
       'against',
       field('value', $.id_list),
       optional(field('cite', $.cite)),
+    ),
+    // One cited term of a period derived from several rules (SPEC §5.3).
+    seq(
+      field('key', 'derived'),
+      field('value', $.duration),
+      $.cite,
+      optional(seq('quote', field('quote', $.string))),
     ),
   )),
 

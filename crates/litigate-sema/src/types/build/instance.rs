@@ -61,7 +61,7 @@ impl Cx<'_, '_> {
 
     /// `instance base@origin { ... }`.
     pub fn instance(&mut self, base: &Name, origin: &Name, fields: &[Field]) -> Option<Instance> {
-        let f = self.once_except(fields, "patch");
+        let f = self.once_except(fields, &["patch"]);
         let pack = first_ref(f.get("pack")).and_then(|r| {
             let id = r.display();
             if self.ck.scope.packs.iter().any(|s| s.pack_id == id) {

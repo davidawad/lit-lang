@@ -43,7 +43,7 @@
     "lines" "certificate" "excludes" "ecf" "for" "paper" "delegable" "op"
     "unlock" "characterization" "retracted" "unknown_before" "commenced" "spawn"
     "joins" "anytime" "lock" "against" "Rule" "vintage" "retrieved" "n" "method"
-    "attr" "on" "given" "expect")
+    "attr" "derived" "on" "given" "expect")
   "Clause, field and test keywords.")
 
 (defconst litigate-ts-mode--conditional-keywords

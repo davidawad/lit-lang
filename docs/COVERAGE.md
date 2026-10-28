@@ -15,6 +15,11 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | bankr-ct-local-rules | `lit/bankr-ct` | 27 | 0 | 0 | 0 |
 | bankr-dc-local-rules | `lit/bankr-dc` | 54 | 0 | 0 | 0 |
 | bankr-gu-local-rules | `lit/bankr-gu` | 34 | 0 | 0 | 0 |
+| bankr-ilc-local-rules | `lit/bankr-ilc` | 2 | 0 | 0 | 0 |
+| bankr-iln-local-rules | `lit/bankr-iln` | 21 | 0 | 0 | 0 |
+| bankr-ils-local-rules | `lit/bankr-ils` | 33 | 0 | 0 | 0 |
+| bankr-inn-local-rules | `lit/bankr-inn` | 38 | 0 | 0 | 0 |
+| bankr-ins-local-rules | `lit/bankr-ins` | 70 | 0 | 0 | 0 |
 | bankr-lae-local-rules | `lit/bankr-lae` | 35 | 0 | 0 | 0 |
 | bankr-lam-local-rules | `lit/bankr-lam` | 20 | 0 | 0 | 0 |
 | bankr-law-local-rules | `lit/bankr-law` | 23 | 0 | 0 | 0 |
@@ -36,6 +41,8 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | bankr-txs-local-rules | `lit/bankr-txs` | 36 | 0 | 0 | 0 |
 | bankr-txw-local-rules | `lit/bankr-txw` | 52 | 0 | 0 | 0 |
 | bankr-vt-local-rules | `lit/bankr-vt` | 57 | 0 | 0 | 0 |
+| bankr-wie-local-rules | `lit/bankr-wie` | 38 | 0 | 0 | 0 |
+| bankr-wiw-local-rules | `lit/bankr-wiw` | 0 | 0 | 0 | 0 |
 | tenth-circuit-bankruptcy-appellate-panel | `lit/bap10` | 10 | 0 | 10 | 0 |
 | sixth-circuit-bankruptcy-appellate-panel | `lit/bap6` | 1 | 0 | 6 | 0 |
 | eighth-circuit-bankruptcy-appellate-panel | `lit/bap8` | 5 | 0 | 16 | 0 |

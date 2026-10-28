@@ -22,3 +22,9 @@
 - Upstream: https://www.vid.uscourts.gov/sites/vid/files/local_rules/260130_Local%20Rules%20Civil%20Procedure_effective%202.1.26[ECF%2010-1].pdf, retrieved 2026-10-27, as recorded on the `vid/local-rules-civ-2026-02-01.txt` entry this file is derived from.
 - Edition: as the extract, "Effective February 1, 2026".
 - Sectioned sha256 f681ae577068a35019bb2203e10d01e771feaa11789e66b8ad2f6019e7eb4843 (the `path_sha256` pinned by `lit/vid/Lit.toml`).
+
+### `vid/vid-local-criminal-rules-2026-02-01-sectioned.txt` — D.V.I. Local Rules of Criminal Procedure, sectioned
+
+- Derived in the pod (lg-gddt.10) from `vid/vid-local-criminal-rules-2026-02-01.txt` (extract sha256 cf0c5337ddf0d91d89b1c1618e3b3aa3f14930f709fb109eabc1d986ce434200); nothing fetched. In the body (after the table of contents), one marker line `## LRCr <n>` is inserted before each rule's own heading line `Rule <n>. <title>` (LRCr 1.1 through LRCr 59.1, 18 rules; Rule 1.4's heading has no period after the number). Every other line is the extract unchanged, so deleting the `## LRCr` lines (`sed '/^## LRCr /d'`) gives back the extract byte for byte.
+- Edition: as the extract, "Effective February 1, 2026".
+- Sectioned sha256 f1dcf6ab0c89821e7ebaf12dda2b1f46e5b6b1b1165936037f628e1c91339b60 (the `path_sha256` pinned by `lit/vid-criminal/Lit.toml`).

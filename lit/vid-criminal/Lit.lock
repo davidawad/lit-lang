@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "vid-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:4c459389d691d954cef8b6b232c31ba87ec0c8501bb84166e240ca28637dfd28"
+semantic = "sha256:a5472e7b0ab7dafa719cec3a6e5b923901349b71b25cdb98ebc6ee59677c0445"
+texts = [
+    "vid-lrcr sources/vid/vid-local-criminal-rules-2026-02-01-sectioned.txt sha256:f1dcf6ab0c89821e7ebaf12dda2b1f46e5b6b1b1165936037f628e1c91339b60",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

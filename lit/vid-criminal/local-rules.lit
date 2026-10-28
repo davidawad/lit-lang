@@ -1,0 +1,222 @@
+module vid-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The District Court of the Virgin Islands' own criminal periods, counted
+// under the criminal rules (FRCrimP 45(a) governs "any local rule"). No
+// trigger carries a service method.
+//
+// Conditions that are not deadlines from a party's event stay in notes: by
+// arraignment on a superseding charge, defense counsel states whether the
+// defendant agrees that it starts a new trial clock (D.V.I. LRCr 7.1(b));
+// the parties may extend by agreement the deadline for a complex-case
+// motion (LRCr 12.6(c)); leave to exceed the 5-page or 1,500-word limit on
+// a motion to modify discovery, its response or reply is sought at least
+// two days before filing (LRCr 16.1(f)(1)); and a Rule 17(c) subpoena may
+// not require production in fewer than 14 days after service absent good
+// cause (LRCr 17.2(d)), a minimum rather than a deadline. Pro se
+// defendants are outside the LRCr 16.1(a) conference and the joint
+// discovery statement; the Court sets their discovery deadlines (LRCr
+// 16.1(a)(4), (h)). The Speedy Trial Act Plan (LRCr 55.2) is not vendored.
+//
+// The earlier D.V.I. criminal outline's FRCrimP flow and its decisions are
+// FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// What starts the government's default Rule 16(a) production period (LRCr
+/// 16.1(b)): arraignment, for a written request made at or before it, or
+/// a written request made after arraignment.
+enum GovernmentDiscoveryStart { Arraignment, LaterRequest }
+
+/// The arraignment on the first information or indictment, or a written
+/// Rule 16 request made after it (D.V.I. LRCr 16.1(b): the period runs
+/// from the later, the most recent of these events).
+event GovernmentDiscoveryClock(start: GovernmentDiscoveryStart)
+
+/// What starts a defendant's default Rule 16(b) production period (LRCr
+/// 16.1(c)): the government's written request, or the government's own
+/// deadline under the corresponding subsection of Rule 16(a).
+enum DefendantDiscoveryStart { GovernmentRequest, GovernmentDeadline }
+
+/// The government's Rule 16 request, or the government's corresponding
+/// Rule 16(a) deadline (D.V.I. LRCr 16.1(c): the later, the most recent of
+/// these events).
+event DefendantDiscoveryClock(start: DefendantDiscoveryStart)
+
+/// The defendant is arraigned on the first information or indictment
+/// filed as to the defendant (D.V.I. LRCr 16.1(a)(1)).
+event ArraignedOnFirstCharge()
+/// The initial discovery conference is completed (D.V.I. LRCr 12.6(a),
+/// 16.1(a)(2)).
+event DiscoveryConferenceCompleted()
+/// The government's deadline to provide Rule 16 discovery arrives (D.V.I.
+/// LRCr 12.6(b), 16.1(d)(2)).
+event GovernmentDiscoveryDue()
+/// The defendant is arraigned on a new information or indictment in the
+/// same case (D.V.I. LRCr 16.1(d)).
+event ArraignedOnSupersedingCharge()
+/// A motion for a continuance of trial is served (D.V.I. LRCr 12.5(c)).
+event ContinuanceMotionServed()
+/// A motion to modify the time, place or manner of discovery is served
+/// (D.V.I. LRCr 16.1(f)(2)).
+event DiscoveryModificationMotionServed()
+/// A response to a motion to modify discovery is served (D.V.I. LRCr
+/// 16.1(f)(2)).
+event DiscoveryModificationResponseServed()
+/// Trial is set to commence (D.V.I. LRCr 16.1(h)).
+event TrialCommencement()
+/// A court appearance for which an interpreter's services are required,
+/// other than a preliminary proceeding (D.V.I. LRCr 28.1).
+event InterpretedAppearance()
+
+/// D.V.I. LRCr 12.5(c)(2): a party opposing a motion for a continuance of
+/// trial files a memorandum in opposition within seven days after service
+/// of the motion, unless the Court sets a shorter period; a party that
+/// files none is deemed not to oppose it (LRCr 12.5(c)(3)).
+deadline continuance-opposition: 7.days after ContinuanceMotionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.V.I. LRCr 12.5(c)"
+{
+  forum frcrimp
+}
+
+/// D.V.I. LRCr 12.6(a): the government moves for complex-case designation
+/// before the initial discovery conference begins, and a defendant files
+/// a written response, agreeing or opposing with reasons, no later than
+/// seven days after the conference. The Court may extend it for good
+/// cause (LRCr 12.6(c)).
+deadline complex-designation-response: 7.days after DiscoveryConferenceCompleted() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.V.I. LRCr 12.6(a); D.V.I. LRCr 12.6(c)"
+{
+  forum frcrimp
+}
+
+/// D.V.I. LRCr 12.6(b): a defendant seeking complex-case designation files
+/// a written motion no later than five days after the government's
+/// deadline to provide Rule 16 discovery. The Court may extend it for good
+/// cause, and the parties by agreement (LRCr 12.6(c)).
+deadline defendant-complex-designation: 5.days after GovernmentDiscoveryDue() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.V.I. LRCr 12.6(b); D.V.I. LRCr 12.6(c)"
+{
+  forum frcrimp
+}
+
+/// D.V.I. LRCr 16.1(a)(1): unless otherwise ordered, no later than 14 days
+/// after the arraignment on the first information or indictment, counsel
+/// for the government and the defendant confer and try to agree on a
+/// timetable and procedures for Rule 16 disclosure.
+deadline initial-discovery-conference: 14.days after ArraignedOnFirstCharge() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.V.I. LRCr 16.1(a)"
+{
+  forum frcrimp
+}
+
+/// D.V.I. LRCr 16.1(a)(2): within five days of the completion of the
+/// conference, the parties file a notice of proposed pretrial discovery
+/// timetable stating every agreed deadline; its deadlines bind the parties
+/// unless the Court modifies them (LRCr 16.1(a)(3)).
+deadline discovery-timetable-notice: 5.days after DiscoveryConferenceCompleted() counted_by frcrimp45 cite "D.V.I. LRCr 16.1(a)"
+{
+  forum frcrimp
+}
+
+/// D.V.I. LRCr 16.1(b): unless the Court sets a different deadline, a
+/// party moves for complex-case designation, or the parties' timetable
+/// notice says otherwise, the government satisfies its Rule 16(a)
+/// obligation on a written request within 28 days of a request made after
+/// arraignment, or 28 days after arraignment for a request made at or
+/// before it.
+deadline government-rule16: 28.days after GovernmentDiscoveryClock() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.V.I. LRCr 16.1(b)"
+{
+  forum frcrimp
+}
+
+/// D.V.I. LRCr 16.1(c): on the same conditions, a defendant satisfies a
+/// Rule 16(b) obligation on the government's written request within the
+/// later of 14 days after the request or 14 days after the government's
+/// deadline under the corresponding subsection of Rule 16(a).
+deadline defendant-rule16: 14.days after DefendantDiscoveryClock() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.V.I. LRCr 16.1(c)"
+{
+  forum frcrimp
+}
+
+/// D.V.I. LRCr 16.1(d)(1): a defendant's earlier discovery request applies
+/// to a new information or indictment in the same case unless the
+/// defendant files a notice limiting it within one day of the arraignment
+/// on the new charge.
+deadline superseding-request-limit: 1.days after ArraignedOnSupersedingCharge() counted_by frcrimp45 cite "D.V.I. LRCr 16.1(d)"
+{
+  forum frcrimp
+}
+
+/// D.V.I. LRCr 16.1(d)(2): unless the Court sets a different deadline or a
+/// party moves for complex-case designation, the government satisfies its
+/// Rule 16(a) obligation under a prior request no later than 14 days after
+/// arraignment on the new information or indictment.
+deadline superseding-government-rule16: 14.days after ArraignedOnSupersedingCharge() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.V.I. LRCr 16.1(d)"
+{
+  forum frcrimp
+}
+
+/// D.V.I. LRCr 16.1(d)(2): the defendant satisfies a Rule 16(b) obligation
+/// under a prior request no later than 7 days after the government's
+/// deadline under the corresponding subsection of Rule 16(a).
+deadline superseding-defendant-rule16: 7.days after GovernmentDiscoveryDue() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.V.I. LRCr 16.1(d)"
+{
+  forum frcrimp
+}
+
+/// D.V.I. LRCr 16.1(f)(2): a response to a motion to modify the time,
+/// place or manner of discovery is filed within three business days after
+/// service of the motion.
+deadline discovery-modification-response: 3.business_days after DiscoveryModificationMotionServed() counted_by frcrimp45 cite "D.V.I. LRCr 16.1(f)"
+{
+  forum frcrimp
+}
+
+/// D.V.I. LRCr 16.1(f)(2): a reply is filed within three business days
+/// after service of the response.
+deadline discovery-modification-reply: 3.business_days after DiscoveryModificationResponseServed() counted_by frcrimp45 cite "D.V.I. LRCr 16.1(f)"
+{
+  forum frcrimp
+}
+
+/// D.V.I. LRCr 16.1(h): counsel for the government and the defendant file
+/// a signed Joint Discovery Statement, describing the discovery exchanged
+/// and setting out all stipulations, no later than seven days before the
+/// commencement of every trial, or when the Court directs.
+deadline joint-discovery-statement: 7.days before TrialCommencement() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.V.I. LRCr 16.1(h)"
+{
+  forum frcrimp
+}
+
+/// D.V.I. LRCr 28.1: except in preliminary proceedings, every request for
+/// interpreting services is made to the Court at least seven days before
+/// the interpreter's services are required.
+deadline interpreter-request: 7.days before InterpretedAppearance() counted_by frcrimp45 cite "D.V.I. LRCr 28.1"
+{
+  forum frcrimp
+}

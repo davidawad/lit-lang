@@ -1,0 +1,55 @@
+# The District Court of the Virgin Islands' Local Rules of Criminal
+# Procedure (LRCr) as a local-rule layer over lit/frcrimp (28 U.S.C. §
+# 2071; FRCrimP 57(a)): it declares only the periods the local criminal
+# rules themselves state and re-encodes no FRCrimP, Speedy Trial Act or
+# FRAP 4(b) period (one source of truth: lit/frcrimp). Each period is
+# counted under FRCrimP 45(a), which governs "any local rule", so each
+# deadline names `forum frcrimp`. The rules are the edition effective
+# February 1, 2026, adopted by the order of January 30, 2026 (Misc. No.
+# 3:25-mc-0003; sources/vid), which supersedes all earlier criminal rules
+# (LRCr 1.1(d)); earlier editions are not vendored, so a query before it
+# is a hole in the corpus. The Local Rules of Civil Procedure apply in
+# criminal cases unless inconsistent (LRCr 1.2); their periods are encoded
+# once, in lit/vid. The court's Speedy Trial Act Plan (LRCr 55.2) is not
+# vendored. An appeal goes to the Third Circuit under lit/frcrimp's FRAP
+# 4(b) period.
+[package]
+name = "vid-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "vid-criminal-local-rules"
+forum = "vid-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "District Court of the Virgin Islands: Local Rules of Criminal Procedure"
+description = "The District Court of the Virgin Islands' Local Rules of Criminal Procedure as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the memorandum opposing a continuance, complex-case designation motions and responses, the initial discovery conference and its timetable notice, the default Rule 16 production deadlines (including after a superseding charge), responses and replies on motions to modify discovery, the joint discovery statement before trial, and interpreter requests."
+in_force = "2026-02-01"
+known_at = "2026-10-28"
+unknown_before = "2026-02-01"
+jurisdiction = "District Court of the Virgin Islands (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "vid-lrcr"
+issuer = "District Court of the Virgin Islands"
+date = "2026-02-01"
+designation = "Local Rules of Criminal Procedure (effective February 1, 2026)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.vid-lrcr]
+title = "Local Rules of Criminal Procedure of the District Court of the Virgin Islands, effective February 1, 2026 (with the adopting order of January 30, 2026, Misc. No. 3:25-mc-0003)"
+url = "https://www.vid.uscourts.gov/sites/vid/files/local_rules/260130_Local%20Rules%20Criminal%20Procedure_effective%202.1.26%5BECF%2010-2%5D.pdf"
+path = "sources/vid/vid-local-criminal-rules-2026-02-01-sectioned.txt"
+path_sha256 = "f1dcf6ab0c89821e7ebaf12dda2b1f46e5b6b1b1165936037f628e1c91339b60"
+sha256 = "06db72fa21bfc64d469e4cc423ff8f27842bf56a083f39e694fef96622637b53"
+as_of = "2026-02-01"
+cite_prefixes = ["D.V.I. LRCr"]
+section_heading = "LRCr {n}"

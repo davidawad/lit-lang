@@ -1,0 +1,422 @@
+module bankr-gu-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, PetitionFiled }
+
+// The Guam Bankruptcy Division's own periods, counted under FRBP 9006(a).
+// The FRBP periods (schedules, the chapter 13 plan, claims in chapter 7,
+// 12 and 13 cases, discharge, dischargeability, the adversary answer and
+// summons, new trial, appeals) are lit/frbp's and are not declared again;
+// a period these rules only restate is not repeated (the 14 days to cure
+// missing schedules, BKLR 1007-1(a)(2), FRBP 1007(c); the 14 days to file
+// a chapter 13 plan, BKLR 3015-1(b), FRBP 3015(b)).
+//
+// Stated in the rules but not declared: notice periods a movant gives or
+// floors on a hearing or examination date (at least 28 days' notice of a
+// disclosure statement hearing, BKLR 3017-1(a); 21 days' notice of a
+// chapter 11 stay-relief stipulation, 4001-1(e); 7 days' notice of a sale
+// on leased premises, 6004-1(f); a claim objection hearing no earlier than
+// 44 days after notice, 3007-1(d); a Rule 2004 examination no earlier than
+// 14 days after the motion and 30 days after the order or subpoena,
+// 2004-1(b), (c)); the clerk's 60-day wait before closing a dismissed case
+// and the 180-day bar of a dismissal with prejudice (1017-2(b), (c)); the
+// "later of" periods for administrative expense requests and the chapter
+// 13 trustee's notice of intent to distribute (3001-2(c), 3070-2(e)); the
+// governmental unit's chapter 11 claim, due "before 180 days" after the
+// order for relief (3003-1(a)); the monthly operating report, due by the
+// 20th day of the following month (2015-6(b)); the 60-month cap on a plan
+// extension (3015-2(b)(2)); the response to a motion for an evidentiary
+// hearing within seven days of service, which FRBP 9006 does not compute
+// (9014-1(b)(3)); and the minimum dividends of $5 and $15 (3010-1). The
+// District of Guam's General and Civil Local Rules are incorporated "as
+// appropriate" (BKLR 1001-1(d)); their periods are lit/gud's. The earlier
+// outline's Supreme Court decisions (City of Chicago v. Fulton, Taylor v.
+// Freeland & Kronz, Ritzen Group, Bullard, Grogan v. Garner, Twombly,
+// Iqbal, Stern v. Marshall, Celotex, Anderson v. Liberty Lobby, and the
+// others it named) construe the Code and the FRBP, not these rules, and
+// are removed here: no reporter text is vendored. The territorial court's
+// bankruptcy jurisdiction statute (48 U.S.C. § 1424(b)) is not vendored.
+/// A motion with its supporting memorandum: at most 15 pages, exclusive of
+/// attachments, unless the court permits (BKLR 9013-1(b)).
+limit motion-memorandum { pages <= 15 cite "D. Guam BKLR 9013-1(b)" } cite "D. Guam BKLR 9013-1(b)"
+
+/// An opposition to a motion: at most 15 pages, exclusive of attachments
+/// (BKLR 9013-1(c)(2)).
+limit opposition-memorandum {
+  pages <= 15 cite "D. Guam BKLR 9013-1(c)"
+} cite "D. Guam BKLR 9013-1(c)"
+
+/// A reply on a motion: at most 10 pages, exclusive of attachments (BKLR
+/// 9013-1(c)(2)).
+limit reply-memorandum { pages <= 10 cite "D. Guam BKLR 9013-1(c)" } cite "D. Guam BKLR 9013-1(c)"
+
+/// A chapter 7 debtor's motion to convert under § 706(a) is filed (BKLR
+/// 1017-1(a)).
+event ConversionMotionFiled()
+/// A motion to dismiss under § 521(i)(2) requesting dismissal within seven
+/// days is served with its notice (BKLR 1017-2(d)(2)).
+event IncompleteFilingDismissalMotionServed()
+/// The chapter 13 debtor or a third party pays, or agrees to pay, the
+/// debtor's attorney's post-confirmation fees directly (BKLR
+/// 2016-1(d)(1)(A)).
+event PostConfirmationFeePaid()
+/// The trustee's motion to dismiss a confirmed chapter 13 plan for lack of
+/// feasibility is filed (BKLR 2083-1(e)(1)).
+event FeasibilityDismissalMotionFiled()
+/// The hearing on the trustee's motion to dismiss a chapter 13 case for
+/// failure to make a plan payment or other cause (BKLR 2083-1(e)(2)).
+event TrusteeDismissalHearing()
+/// The notice of a proof of claim filed on a creditor's behalf under FRBP
+/// 3004 or 3005 is served (BKLR 3004-1(b)).
+event ClaimFiledOnBehalfNoticeServed()
+/// An objection to a proof of claim is served (BKLR 3007-1(a)).
+event ClaimObjectionServed()
+/// The hearing on a motion to modify a confirmed chapter 13 plan (BKLR
+/// 3015-2(b)).
+event PlanModificationHearing()
+/// The chapter 13 confirmation hearing or continued confirmation hearing
+/// (BKLR 3015-3(a)).
+event Chapter13ConfirmationHearing()
+/// The order denying confirmation of a chapter 13 plan is entered (BKLR
+/// 3015-3(d)(1)).
+event ConfirmationDenied()
+/// The hearing on a motion to approve a chapter 11 disclosure statement
+/// (BKLR 3017-1(c)).
+event DisclosureStatementHearing()
+/// The chapter 11 confirmation hearing (BKLR 3018-1(c), 3020-1(b)).
+event Chapter11ConfirmationHearing()
+/// An application for a chapter 11 final decree is filed (BKLR 3022-1).
+event FinalDecreeApplicationFiled()
+/// The chapter 13 trustee's notice of filed claims and intent to make
+/// distributions is filed (BKLR 3070-2(h)).
+event DistributionNoticeFiled()
+/// A motion for relief from the automatic stay is filed (BKLR 4001-1(d)).
+event StayReliefMotionFiled() paper motion-memorandum
+/// An opposition to a stay relief motion is filed (BKLR 4001-1(d)).
+event StayReliefOppositionFiled() paper opposition-memorandum
+/// The hearing on a motion to extend the stay under § 362(c)(3)(B) (BKLR
+/// 4001-5(a)(3)(A)).
+event ExtendStayHearing()
+/// An individual chapter 11 debtor's certification and notice of
+/// completion of plan payments is filed (BKLR 4004-3(a)(1)).
+event Chapter11DischargeCertificationFiled()
+/// The clerk's notice of a deadline to object to a chapter 12 or 13
+/// debtor's certification of eligibility for discharge (BKLR
+/// 4004-3(b)(1)).
+event DischargeObjectionNoticeDated()
+/// The clerk's notice rejecting a document for filing (BKLR 5005-1(c)(4)).
+event FilingRejectionNotice()
+/// The trustee's general notice of intent to sell estate property worth
+/// less than $2,500 is filed (BKLR 6004-1(e)).
+event SmallEstateSaleNoticeFiled()
+/// The hearing on a motion that must be set for hearing (BKLR 9013-1(c),
+/// (e)).
+event MotionHearing()
+/// A response to a motion set for hearing is filed (BKLR 9013-1(c)(2)).
+event MotionResponseFiled() paper opposition-memorandum
+/// A reply on a motion set for hearing is filed (BKLR 9013-1(c)(2)).
+event MotionReplyFiled() paper reply-memorandum
+
+/// BKLR 1007-1(b)(2): the debtor submits payment advices to the trustee
+/// (or, in chapter 11, the United States Trustee) not later than 7 days
+/// before the date first set for the § 341 meeting, or 45 days after the
+/// petition, whichever is earlier.
+deadline payment-advices-meeting-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "D. Guam BKLR 1007-1(b)"
+{
+  forum frcp
+}
+
+/// BKLR 1007-1(b)(2): the other leg of the earlier-of rule: 45 days after
+/// the date of the filing of the petition.
+deadline payment-advices-petition-period: 45.days after PetitionFiled() counted_by frcp6 cite "D. Guam BKLR 1007-1(b)"
+{
+  forum frcp
+}
+
+/// BKLR 1017-1(a): the court may grant a chapter 7 debtor's motion to
+/// convert without further notice or hearing if no objection is filed
+/// within 14 days after the motion was filed.
+deadline conversion-objection-period: 14.days after ConversionMotionFiled() counted_by frcp6 cite "D. Guam BKLR 1017-1(a)"
+{
+  forum frcp
+}
+
+/// BKLR 1017-2(d)(2): a § 521(i)(2) motion is served with a notice
+/// requiring a response within fourteen days of service; absent a timely
+/// response the court may dismiss without further notice or hearing.
+deadline incomplete-filing-response-period: 14.days after IncompleteFilingDismissalMotionServed() counted_by frcp6 cite "D. Guam BKLR 1017-2(d)"
+{
+  forum frcp
+}
+
+/// BKLR 1074-1(b): an entity debtor files the designation of its
+/// responsible individual within 14 days after the petition is filed.
+deadline responsible-individual-period: 14.days after PetitionFiled() counted_by frcp6 cite "D. Guam BKLR 1074-1(b)"
+{
+  forum frcp
+}
+
+/// BKLR 2016-1(d)(1)(A): a chapter 13 debtor's attorney whose
+/// post-confirmation fees do not exceed the guidelines files a
+/// supplemental disclosure no later than 14 days after payment or an
+/// agreement to pay the fees directly.
+deadline supplemental-fee-disclosure-period: 14.days after PostConfirmationFeePaid() counted_by frcp6 cite "D. Guam BKLR 2016-1(d)"
+{
+  forum frcp
+}
+
+/// BKLR 2083-1(e)(1): failure of the debtor to file, within 28 days after
+/// the trustee's feasibility motion is filed, a claim objection that would
+/// ensure feasibility or a motion to modify the plan may result in
+/// dismissal without further notice or hearing.
+deadline feasibility-cure-period: 28.days after FeasibilityDismissalMotionFiled() counted_by frcp6 cite "D. Guam BKLR 2083-1(e)"
+{
+  forum frcp
+}
+
+/// BKLR 2083-1(e)(2): the trustee's motion to dismiss for failure to make
+/// a plan payment or other cause is filed and served no later than 21 days
+/// before the hearing date.
+deadline trustee-dismissal-motion-period: 21.days before TrusteeDismissalHearing() counted_by frcp6 cite "D. Guam BKLR 2083-1(e)"
+{
+  forum frcp
+}
+
+/// BKLR 2083-1(f)(1): a chapter 13 debtor operating a business submits
+/// business reports to the trustee not later than 7 days before the
+/// meeting of creditors, if the trustee requests or two of the rule's
+/// conditions exist.
+deadline business-reports-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "D. Guam BKLR 2083-1(f)"
+{
+  forum frcp
+}
+
+/// BKLR 3003-1(a): unless otherwise ordered, a chapter 11 proof of claim
+/// or interest, other than a governmental unit's, is filed within 90 days
+/// after the first date set for the § 341(a) meeting.
+deadline chapter11-claims-bar-period: 90.days after FirstMeetingDate() counted_by frcp6 cite "D. Guam BKLR 3003-1(a)"
+{
+  forum frcp
+}
+
+/// BKLR 3004-1(b): a creditor may file an amended proof of claim within 30
+/// days after service of the notice of a claim filed on its behalf.
+deadline amended-claim-period: 30.days after ClaimFiledOnBehalfNoticeServed() counted_by frcp6 cite "D. Guam BKLR 3004-1(b)"
+{
+  forum frcp
+}
+
+/// BKLR 3007-1(a): the claimant has 14 days from service of a claim
+/// objection to file and serve a response; otherwise the objection may be
+/// sustained without further notice or hearing.
+deadline claim-objection-response-period: 14.days after ClaimObjectionServed() counted_by frcp6 cite "D. Guam BKLR 3007-1(a)"
+{
+  forum frcp
+}
+
+/// BKLR 3015-2(b)(1)(C), (b)(2): an objection or response to a motion to
+/// modify a confirmed chapter 13 plan is filed not later than 14 days
+/// before the hearing date.
+deadline plan-modification-objection-period: 14.days before PlanModificationHearing() counted_by frcp6 cite "D. Guam BKLR 3015-2(b)"
+{
+  forum frcp
+}
+
+/// BKLR 3015-3(a): an objection to confirmation of a chapter 13 plan or a
+/// plan motion is filed 14 days before the confirmation hearing or
+/// continued confirmation hearing.
+deadline chapter13-confirmation-objection-period: 14.days before Chapter13ConfirmationHearing() counted_by frcp6 cite "D. Guam BKLR 3015-3(a)"
+{
+  forum frcp
+}
+
+/// BKLR 3015-3(d)(1): an order denying confirmation may provide that the
+/// case may be dismissed unless, within 14 days after its entry, the
+/// debtor files an amended plan and any plan motions or converts the case.
+deadline denied-confirmation-cure-period: 14.days after ConfirmationDenied() counted_by frcp6 cite "D. Guam BKLR 3015-3(d)"
+{
+  forum frcp
+}
+
+/// BKLR 3017-1(c): unless otherwise ordered, an objection to approval of a
+/// disclosure statement is filed not later than 14 days before the
+/// hearing date.
+deadline disclosure-statement-objection-period: 14.days before DisclosureStatementHearing() counted_by frcp6 cite "D. Guam BKLR 3017-1(c)"
+{
+  forum frcp
+}
+
+/// BKLR 3018-1(c): the plan proponent files the ballot tabulation report
+/// not later than 14 days before the confirmation hearing.
+deadline ballot-report-period: 14.days before Chapter11ConfirmationHearing() counted_by frcp6 cite "D. Guam BKLR 3018-1(c)"
+{
+  forum frcp
+}
+
+/// BKLR 3020-1(b): unless the court otherwise orders, objections to
+/// confirmation of a chapter 11 plan are filed not later than 14 days
+/// prior to the confirmation hearing.
+deadline chapter11-confirmation-objection-period: 14.days before Chapter11ConfirmationHearing() counted_by frcp6 cite "D. Guam BKLR 3020-1(b)"
+{
+  forum frcp
+}
+
+/// BKLR 3022-1: if no objection is filed within 30 days after the
+/// application for a chapter 11 final decree is filed, the clerk may enter
+/// the final decree without further notice or hearing.
+deadline final-decree-objection-period: 30.days after FinalDecreeApplicationFiled() counted_by frcp6 cite "D. Guam BKLR 3022-1"
+{
+  forum frcp
+}
+
+/// BKLR 3070-2(h): to suspend distribution on a disputed claim, the debtor
+/// files and serves a claim objection not later than 28 days after the
+/// trustee's notice of filed claims and intent to make distributions is
+/// filed.
+deadline disputed-claim-objection-period: 28.days after DistributionNoticeFiled() counted_by frcp6 cite "D. Guam BKLR 3070-2(h)"
+{
+  forum frcp
+}
+
+/// BKLR 4001-1(d)(1): an opposition or other responsive statement to a
+/// stay relief motion is filed and served 14 days after filing of the
+/// motion.
+deadline stay-relief-opposition-period: 14.days after StayReliefMotionFiled() counted_by frcp6 cite "D. Guam BKLR 4001-1(d)"
+{
+  forum frcp
+}
+
+/// BKLR 4001-1(d)(2): the moving party's reply is filed and served 7 days
+/// after filing of the opposition.
+deadline stay-relief-reply-period: 7.days after StayReliefOppositionFiled() counted_by frcp6 cite "D. Guam BKLR 4001-1(d)"
+{
+  forum frcp
+}
+
+/// BKLR 4001-5(a)(3)(A): a party seeking to extend the stay under §
+/// 362(c)(3)(B) obtains a hearing date not later than 30 days after the
+/// petition is filed.
+deadline extend-stay-hearing-period: 30.days after PetitionFiled() counted_by frcp6 cite "D. Guam BKLR 4001-5(a)"
+{
+  forum frcp
+}
+
+/// BKLR 4001-5(a)(3)(A): a response to a motion to extend the stay is
+/// filed and served not less than 7 days before the hearing date.
+deadline extend-stay-response-period: 7.days before ExtendStayHearing() counted_by frcp6 cite "D. Guam BKLR 4001-5(a)"
+{
+  forum frcp
+}
+
+/// BKLR 4001-5(a)(3)(A): the moving party may reply not less than 3 days
+/// before the hearing date.
+deadline extend-stay-reply-period: 3.days before ExtendStayHearing() counted_by frcp6 cite "D. Guam BKLR 4001-5(a)"
+{
+  forum frcp
+}
+
+/// BKLR 4001-5(a)(3)(A): a request to shorten time is not required if the
+/// motion to extend the stay is filed and served not less than 14 days
+/// before the hearing date.
+deadline extend-stay-motion-period: 14.days before ExtendStayHearing() counted_by frcp6 cite "D. Guam BKLR 4001-5(a)"
+{
+  forum frcp
+}
+
+/// BKLR 4004-3(a)(1): an objection to an individual chapter 11 debtor's
+/// certification and the granting of a discharge is filed within 30 days
+/// after the certification and notice are filed.
+deadline chapter11-discharge-objection-period: 30.days after Chapter11DischargeCertificationFiled() counted_by frcp6 cite "D. Guam BKLR 4004-3(a)"
+{
+  forum frcp
+}
+
+/// BKLR 4004-3(b)(1): an objection to a chapter 12 or 13 debtor's
+/// certification and the granting of a discharge is filed within 30 days
+/// after the date of the clerk's notice.
+deadline chapter13-discharge-objection-period: 30.days after DischargeObjectionNoticeDated() counted_by frcp6 cite "D. Guam BKLR 4004-3(b)"
+{
+  forum frcp
+}
+
+/// BKLR 5005-1(c)(4): a party affected by the clerk's rejection of a
+/// document may move for judicial review within 7 days after the date of
+/// the rejection notice.
+deadline rejection-review-period: 7.days after FilingRejectionNotice() counted_by frcp6 cite "D. Guam BKLR 5005-1(c)"
+{
+  forum frcp
+}
+
+/// BKLR 6004-1(e): an objection to the trustee's general notice of intent
+/// to sell estate property worth less than $2,500 is filed not later than
+/// 21 days after the notice is filed.
+deadline small-estate-sale-objection-period: 21.days after SmallEstateSaleNoticeFiled() counted_by frcp6 cite "D. Guam BKLR 6004-1(e)"
+{
+  forum frcp
+}
+
+/// BKLR 9013-1(c)(1): unless the court directs otherwise, a party filing a
+/// motion that must be set for hearing gives notice to all parties
+/// entitled to it not later than 28 days before the hearing.
+deadline motion-hearing-notice-period: 28.days before MotionHearing() counted_by frcp6 cite "D. Guam BKLR 9013-1(c)"
+{
+  forum frcp
+}
+
+/// BKLR 9013-1(c)(2): all responses are filed and served on the moving
+/// party not less than 14 days before the hearing date.
+deadline motion-response-period: 14.days before MotionHearing() counted_by frcp6 cite "D. Guam BKLR 9013-1(c)"
+{
+  forum frcp
+}
+
+/// BKLR 9013-1(c)(2): the moving party may reply not less than 7 days
+/// before the hearing date.
+deadline motion-reply-period: 7.days before MotionHearing() counted_by frcp6 cite "D. Guam BKLR 9013-1(c)"
+{
+  forum frcp
+}
+
+/// BKLR 9013-1(e)(4): for a motion requiring a hearing, the moving party
+/// serves notice on all parties entitled to it not later than 21 days
+/// before the hearing and files a certificate or affidavit of service.
+deadline hearing-notice-service-period: 21.days before MotionHearing() counted_by frcp6 cite "D. Guam BKLR 9013-1(e)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed and set for hearing" by applicant cite "D. Guam BKLR 9013-1(c)"
+{
+  note "A motion includes a memorandum of points and authorities and, with it, may not exceed 15 pages exclusive of attachments (D. Guam BKLR 9013-1(b)). Unless the court directs otherwise, the movant obtains a hearing date from the courtroom deputy and gives notice not later than 28 days before the hearing (D. Guam BKLR 9013-1(c)(1)); for a motion requiring a hearing, notice is served not later than 21 days before it with a certificate or affidavit of service (D. Guam BKLR 9013-1(e)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-opposed "Response filed" -> opposed { authority cite "D. Guam BKLR 9013-1(c)" }
+  edge-motion-filed-unopposed "No timely response" -> unopposed {
+    authority cite "D. Guam BKLR 9013-1(c)"
+  }
+}
+
+state opposed: "Response filed" by opponent cite "D. Guam BKLR 9013-1(c)"
+{
+  note "Responses are filed and served not less than 14 days before the hearing date and may not exceed 15 pages; the movant may reply, in at most 10 pages, not less than 7 days before it; no surreply is permitted without leave (D. Guam BKLR 9013-1(c)(2))."
+  edge-opposed-reply "Reply filed or time to reply expired" -> ruling {
+    authority cite "D. Guam BKLR 9013-1(c)"
+  }
+}
+
+state unopposed: "No response: declaration and request for entry of order" by applicant cite "D. Guam BKLR 9013-1(c)"
+{
+  note "If no one files a timely response, the movant may file a declaration and request for entry of order and submit a proposed order; the court may cancel the hearing and enter the order or direct that the hearing be held. The court generally will not cancel the hearing on dispositive motions in adversary proceedings, FRBP 4001(b) or (c) motions, most motions to convert or dismiss, and chapter 11 motions other than procedural ones and stipulations (D. Guam BKLR 9013-1(c)(3), (4))."
+  edge-unopposed-ruling "Order entered or hearing held" -> ruling {
+    authority cite "D. Guam BKLR 9013-1(c)"
+  }
+}
+
+decision ruling: "Motion decided" by court cite "D. Guam BKLR 9013-1(c)"
+{
+  note "The court may disregard an untimely or impermissible memorandum or impose other sanctions (D. Guam BKLR 9013-1(c)(2)). Contested-matter hearings are held without live testimony unless the court orders otherwise (D. Guam BKLR 9014-1(a))."
+  edge-ruling-granted "Granted" -> decided { authority cite "D. Guam BKLR 9013-1(c)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "D. Guam BKLR 9013-1(c)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "D. Guam BKLR 1001-1"

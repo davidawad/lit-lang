@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-gu-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:bf93a749fbcf0041ad070fd17f2ec0fede150d149d384bfd6fc85f7f02413a8d"
+semantic = "sha256:c6fb5f65565945a1bd273911ceec1b57d96fa62dd18abd5955d41ff340383deb"
+texts = [
+    "gub-bklr sources/bankr-gu/gud-bklr-2023-11-20-sectioned.txt sha256:62558f05843d8a6b705ef9aa1c1619a55ee8ff22e0c672f249308c39e9b56f59",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-gu"
-version = "0.0.1"
-language = 1
-source = "sha256:29302936ddceba29a6953a6b3525e5109b533861cae6e37ed4188cd79836d09e"
-semantic = "sha256:c77d560813e7a97c283aaaab603265caa29b2ee6889daf05455e3bbb58a82f78"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

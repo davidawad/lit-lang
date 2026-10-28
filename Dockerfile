@@ -2,8 +2,8 @@
 
 # litgraph — litigation procedure graphs as stochastic games.
 # Multi-stage build: cargo-chef caches dependency compilation separately
-# from source changes, then a minimal non-root runtime image ships just
-# the binary + packs.
+# from source changes, then a minimal non-root runtime image ships the
+# one `litigate` binary beside the lit/ and cases/ library it compiles.
 
 ARG RUST_VERSION=1.97.1
 
@@ -29,13 +29,11 @@ COPY editors editors
 COPY packs packs
 COPY lit lit
 COPY cases cases
-# litigate-cli (a litgraph-mcp dependency) embeds the language reference.
+# litigate-cli embeds the language reference.
 COPY docs/litigate/SPEC.md docs/litigate/SPEC.md
 COPY sources sources
-RUN cargo build --release -p litgraph-cli -p litgraph-mcp && \
-    strip target/release/litgraph target/release/litgraph-mcp && \
-    built="$(find target/release/build -path '*/litgraph-packs-*/out/packs' -type d | head -n 1)" && \
-    test -n "$built" && cp -r "$built" /build/built-packs
+RUN cargo build --release -p litigate-cli && \
+    strip target/release/litigate
 
 # --- runtime: minimal non-root image ---------------------------------------
 FROM debian:bookworm-slim AS runtime
@@ -55,14 +53,18 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     useradd --system --no-create-home --uid 10001 litgraph
 
-COPY --from=builder /build/target/release/litgraph /usr/local/bin/litgraph
-COPY --from=builder /build/target/release/litgraph-mcp /usr/local/bin/litgraph-mcp
+COPY --from=builder /build/target/release/litigate /usr/local/bin/litigate
+# `litigate` compiles its library from lit/ and cases/ under the working
+# directory (e.g. `litigate solve lit/cofc`, and `litigate mcp` resources).
+WORKDIR /srv/litgraph
+COPY lit lit
+COPY cases cases
+# The library is read-only to the runtime user: verify into /tmp.
+ENV LITIGATE_CACHE=/tmp/litigate
 
 USER litgraph
-WORKDIR /home/litgraph
 
-ENTRYPOINT ["litgraph"]
+ENTRYPOINT ["litigate"]
 CMD ["describe"]
 
-# `litgraph-mcp` is also on PATH for `docker run --rm -i <image> litgraph-mcp`
-# (stdio MCP server) or an `entrypoint: litgraph-mcp` override.
+# `docker run --rm -i <image> mcp` serves the stdio MCP server.

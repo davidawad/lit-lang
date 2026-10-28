@@ -186,7 +186,7 @@ jobs:
       - name: smoke test
         run: |
           docker run --rm litgraph:ci describe | head -20
-          echo '{"packs":["cofc","cafc"],"op":{"op":"solve"}}' | docker run --rm -i litgraph:ci q -
+          docker run --rm litgraph:ci solve lit/cofc | head -20
 
   nix:
     runs-on: ubuntu-latest

@@ -209,7 +209,7 @@ docker-build:
 
 docker-smoke: docker-build
     docker run --rm litgraph:dev describe | head -20
-    echo '{"packs":["cofc","cafc"],"op":{"op":"solve"}}' | docker run --rm -i litgraph:dev q -
+    docker run --rm litgraph:dev solve lit/cofc | head -20
 
 # --- wasm --------------------------------------------------------------
 

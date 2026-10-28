@@ -5,9 +5,10 @@
 use super::*;
 use crate::clock::ClockLibrary;
 
-/// Serializes the tests that mutate `$LITGRAPH_PACKS`/`$LITGRAPH_SCENARIOS`:
-/// `cargo test` runs them as threads of one process, so without this one
-/// test's `set_var` leaks into the other's `default_source`.
+/// Serializes the tests that mutate or read `$LITGRAPH_PACKS`/
+/// `$LITGRAPH_SCENARIOS` (every `default_source` call and every `resolve`
+/// call leaving a flag `None`): `cargo test` runs them as threads of one
+/// process, so without this one test's `set_var` leaks into another's.
 static ENV_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
 
 fn env_lock() -> std::sync::MutexGuard<'static, ()> {
@@ -262,6 +263,7 @@ fn clock_files_replace_the_embedded_library_and_bad_ones_are_recorded() -> Resul
 /// names a directory that does not exist).
 #[test]
 fn resolve_prefers_the_flag_to_the_variable() -> Result<()> {
+    let _env = env_lock();
     let packs = std::path::Path::new(litgraph_packs::PACKS_DIR);
     let scenarios = std::path::Path::new(litgraph_packs::SCENARIOS_DIR);
     std::env::set_var("LITGRAPH_PACKS", "/no/such/litgraph-packs-dir");
@@ -284,6 +286,7 @@ fn resolve_prefers_the_flag_to_the_variable() -> Result<()> {
 /// error naming the variable, not a silent fall back to the embedded set.
 #[test]
 fn resolve_names_the_variable_whose_directory_is_missing() {
+    let _env = env_lock();
     std::env::set_var("LITGRAPH_PACKS", "/no/such/litgraph-packs-dir");
     let e = Catalog::default_source(litgraph_packs::PACKS, litgraph_packs::SCENARIOS).unwrap_err();
     std::env::remove_var("LITGRAPH_PACKS");
@@ -304,6 +307,7 @@ fn resolve_names_the_variable_whose_directory_is_missing() {
 /// naming the flag.
 #[test]
 fn resolve_names_the_flag_whose_directory_is_missing() {
+    let _env = env_lock();
     let missing = std::path::Path::new("/no/such/litgraph-dir");
     let e = Catalog::resolve(Some(missing), None, &[], &[]).unwrap_err();
     assert!(
@@ -321,6 +325,7 @@ fn resolve_names_the_flag_whose_directory_is_missing() {
 /// `resolve`: a variable set to the empty string counts as unset.
 #[test]
 fn resolve_treats_an_empty_variable_as_unset() -> Result<()> {
+    let _env = env_lock();
     std::env::set_var("LITGRAPH_PACKS", "");
     let c = Catalog::default_source(litgraph_packs::PACKS, litgraph_packs::SCENARIOS);
     std::env::remove_var("LITGRAPH_PACKS");
@@ -333,6 +338,7 @@ fn resolve_treats_an_empty_variable_as_unset() -> Result<()> {
 /// hand-authored clock library) is an error, not an empty catalog.
 #[test]
 fn resolve_rejects_a_packs_directory_with_no_pack_file() {
+    let _env = env_lock();
     let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../packs");
     let e = Catalog::resolve(Some(&dir), None, &[], &[]).unwrap_err();
     assert_eq!(e.code(), "invalid");

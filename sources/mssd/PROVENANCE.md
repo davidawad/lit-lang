@@ -20,3 +20,10 @@
 ### `mssd/mssd-uniform-local-civil-rules-2024-12-01.txt` — bound through the sectioned N.D. copy
 
 - lit/mssd (lg-f3q8.19) binds its cites to `msnd/local-uniform-civil-rules-sectioned.txt` (sectioned sha256 12c17e9935fa4522baf28e69db7c9878420bd5fa902cd4ba7a526b889a88f330; see sources/msnd/PROVENANCE.md): the Local Uniform Civil Rules are one joint document of both districts, and this extract and the N.D. extract are byte-identical (both sha256 953f3a272cbcab3917a2e99beb95f13b8df0eb49dd281f265cd22c6a1a8b6087), so one sectioned copy serves both packages. Nothing fetched.
+
+### `mssd/mssd-uniform-local-criminal-rules-2019-12-01-sectioned.txt` — N.D. and S.D. Miss. Local Uniform Criminal Rules, sectioned
+
+- Derived in the pod (lg-gddt.14) from `mssd/mssd-uniform-local-criminal-rules-2019-12-01.txt` (extract sha256 18f5818ab4a7353146e64a1f20bfb12c48aedb7de73a877b26d16196eab4b8d7); nothing fetched. In the body (after the table of contents), one marker line `## U.L.Cr.R. <n>` (the citation form U.L.Cr.R. 60 gives) is inserted before each rule's own heading line (`Rule 1. SCOPE.` through `Rule 60. TITLE.`, 9 rules). Every other line is the extract unchanged, so deleting the `## U.L.Cr.R.` lines gives back the extract byte for byte.
+- Edition: as the extract, "EFFECTIVE December 1, 2019".
+- Criminal forum (lg-gddt): mssd-criminal.
+- Sectioned sha256 38ad73d73a2af11f55f48ca1036ebe00d2a89b768909f7ba0adf1b9c1fd35ece (the `path_sha256` pinned by `lit/mssd-criminal/Lit.toml`).

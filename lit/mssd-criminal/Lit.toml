@@ -1,0 +1,56 @@
+# The U.S. District Court for the Southern District of Mississippi's Uniform Local Criminal
+# Rules (U.L.Cr.R., one text with the Northern District) as a local-rule
+# layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it declares
+# only the periods and limits the local criminal rules themselves state
+# and re-encodes no FRCrimP, Speedy Trial Act or FRAP 4(b) period (one
+# source of truth: lit/frcrimp). Each period is counted under FRCrimP
+# 45(a), which governs "any local rule", so each deadline names
+# `forum frcrimp`; U.L.Cr.R. 47(A) likewise moves a deadline that falls on
+# a Saturday, Sunday or legal holiday to the next business day. The rules
+# are the edition the court serves as current ("EFFECTIVE December 1,
+# 2019"; sources/mssd), so in_force is that date; earlier editions are not
+# vendored, so a query before it is a hole in the corpus. The Uniform
+# Local Civil Rules apply "where applicable" (U.L.Cr.R. 1) and are bound
+# by lit/mssd, not restated here. The court's Speedy Trial Act plan (18
+# U.S.C. § 3165) is not vendored. An appeal goes to the Fifth Circuit
+# under lit/frcrimp's FRAP 4(b) period and lit/ca5.
+[package]
+name = "mssd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "mssd-criminal-local-rules"
+forum = "mssd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Southern District of Mississippi: Uniform Local Criminal Rules"
+description = "The U.S. District Court for the Southern District of Mississippi's Uniform Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the response to a motion or notice of intent not to respond, the rebuttal, and the memorandum page limit."
+in_force = "2019-12-01"
+known_at = "2026-10-28"
+unknown_before = "2019-12-01"
+jurisdiction = "U.S. District Court for the Southern District of Mississippi (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "mssd-ulcrr"
+issuer = "U.S. District Court for the Southern District of Mississippi"
+date = "2019-12-01"
+designation = "Uniform Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.mssd-ulcrr]
+title = "Local Uniform Criminal Rules of the United States District Courts for the Northern District and the Southern District of Mississippi (effective December 1, 2019)"
+url = "https://www.mssd.uscourts.gov/sites/mssd/files/2019MASTERCOPYCRIMINAL.pdf"
+path = "sources/mssd/mssd-uniform-local-criminal-rules-2019-12-01-sectioned.txt"
+path_sha256 = "38ad73d73a2af11f55f48ca1036ebe00d2a89b768909f7ba0adf1b9c1fd35ece"
+sha256 = "b443877e02eb86b5d0fcf3450c5cb9b09ffacbbdefe62a65124382ca93ebd109"
+as_of = "2019-12-01"
+cite_prefixes = ["U.L.Cr.R."]
+section_heading = "U.L.Cr.R. {n}"

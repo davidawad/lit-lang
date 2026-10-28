@@ -1,0 +1,428 @@
+module bankr-sd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, PetitionFiled }
+
+// The Bankr. D.S.D. court's own periods, counted under FRBP 9006(a): the
+// Local Bankruptcy Rules as amended July 13, 2026. Each notice's last date
+// is extended three days under FRBP 9006(f) when service is by mail or Fed.
+// R. Civ. P. 5(b)(2)(D) or (F), and runs to the next business day if it
+// falls on a weekend or holiday (Rule 2002-1(f)), which the frcp6 method
+// already counts. The FRBP periods (schedules, claims in chapter 7, 12 and
+// 13 cases, discharge, dischargeability, exemptions, the adversary answer
+// and summons, appeals) are lit/frbp's and are not declared again. Restated
+// national periods are not declared: the 30-day response to a claim
+// objection (Rule 2002-1(b); FRBP 3007(a)); the 21-day objection to a sale,
+// to a fee application over $1,000, to an administrative expense
+// application and to a compromise (Rules 2002-1(d)-(e), 2016-2(a), 2016-4,
+// 6004-1, 9019-1; FRBP 2002(a)(2), (3), (6)); the 14 days on a notice of
+// intent to sell under FRBP 6004(d) and on an abandonment (Rules 6004-1,
+// 6007-1; FRBP 6004(d), 6007(a)); the 14-day cash collateral, credit and
+// stay-agreement objections (Rules 4001-1(e), 4001-2, 4001-3; FRBP
+// 4001(b)(2), (c)(2), (d)(2)); the conversion reports and statement of
+// intention (Rule 1019-1; FRBP 1019(a)(2), 1019(5)); the 21-day post-
+// confirmation chapter 12 and 13 modification notice (Rule 3015-5; FRBP
+// 3015(h)); and the 30-day deferral of a discharge (Rule 4004-1(c); FRBP
+// 4004(c)(2)).
+//
+// Stated in the rules but not declared: the court's, Clerk's, presiding
+// officer's, trustee's and transcriber's own acts (notice of a rescheduled
+// § 341 meeting at least seven days before it, Rule 2003-1(b); the chapter
+// 13 trustee's final report after conversion by the later of 30 days after
+// conversion and 45 days after its checks clear, Rule 1019-2; the Clerk's
+// notice of a discharge request with an objection date at least 24 days
+// out, Rules 3022-1(b), 3072-1A, 3072-1B; the transcript's 90-day access
+// restriction and 35-day redaction date, and the transcriber's redacted
+// version within 14 days of a request, Rule 5077-1; retention of recordings
+// 10 years after the hearing or five after closing, Rule 5076-1); the
+// floors on a notice's last date (not fewer than three days before a
+// hearing, and seven days' notice presumed reasonable where none is
+// prescribed, Rule 2002-1(f); an extension motion not seeking a date fewer
+// than three days before the § 341 meeting, Rule 1007-1); the automatic
+// limitation of notice in chapter 7 asset cases once 90 days have passed
+// since the Clerk's claims notice (Rule 2002-1B(a)), a condition rather
+// than a deadline; the automatic extension of the §§ 1224 and 1324 45-day
+// hearing deadlines (Rules 3015-1A, 3015-1B), the statute's; the eight-year
+// list of prior names (Rule 9004-2); and the $1,000 fee notice threshold
+// (Rules 2002-1(e), 2016-2). The rules state no page limit; the appendices
+// are sample forms and are not encoded.
+/// A motion to extend the time to file a list, schedule, statement or
+/// payment advices is filed and served (Rule 1007-1).
+event ExtensionMotionFiled()
+/// A motion to transfer a case or adversary proceeding to another district
+/// is served with its notice (Rule 1014-1).
+event TransferMotionServed()
+/// A motion to change venue to another division is served with its notice
+/// (Rule 1014-2).
+event VenueMotionServed()
+/// A motion to substantively consolidate or deconsolidate estates is served
+/// with its notice (Rule 1015-1(b)).
+event ConsolidationMotionServed()
+/// A motion to jointly administer cases, or to discontinue joint
+/// administration, is served with its notice (Rule 1015-1(c)).
+event JointAdministrationMotionServed()
+/// A motion to waive credit counseling or the financial management course
+/// is served with its notice (Rule 1016-2).
+event CounselingWaiverMotionServed()
+/// A meeting of creditors under § 341(a) is concluded (Rule 2003-1(d)).
+event MeetingConcluded()
+/// An application to employ an estate professional is filed (Rule
+/// 2014-1(c)).
+event EmploymentApplicationFiled()
+/// A chapter 12 or 13 plan is served with the Clerk's notice of the
+/// confirmation hearing (Rule 2002-1(c)).
+event PlanServed()
+/// A chapter 12 or 13 plan is confirmed (Rule 2016-2(b), 2016-3(f)).
+event Chapter12Or13PlanConfirmed()
+/// A motion to extend the time to file a chapter 12 or 13 plan, or for a
+/// chapter 12 confirmation hearing, is filed (Rule 3015-1A(c), 3015-1B(b)).
+event PlanExtensionMotionFiled()
+/// A motion to reduce or extend the chapter 11 exclusivity period is served
+/// with its notice (Rule 3016-3).
+event ExclusivityMotionServed()
+/// The scheduled hearing on confirmation of a chapter 11 plan (Rule
+/// 3018-1(c)).
+event ConfirmationHearing()
+/// A motion to modify a confirmed chapter 11 plan is served with its notice
+/// (Rule 3019-2(c)).
+event PostConfirmationModificationServed()
+/// A chapter 11 plan is substantially consummated (Rule 3022-1(a)).
+event SubstantialConsummation()
+/// All plan payments are completed (Rule 3022-1(b), 3072-1A(a),
+/// 3072-1B(a)).
+event PlanPaymentsCompleted()
+/// The trustee files a Notice of Completion of Plan Payments (Rule
+/// 3072-1A(a), 3072-1B(a)).
+event CompletionNoticeFiled()
+/// A notice of a motion for a hardship discharge is served (Rule 3022-1,
+/// 3072-1A, 3072-1B).
+event HardshipDischargeNoticeServed()
+/// The court's order on an application for payment of unclaimed funds is
+/// served (Rule 3011-2(e)).
+event UnclaimedFundsOrderServed()
+/// A motion for relief from the automatic stay, to prohibit or condition
+/// the use, sale or lease of property, or to confirm the termination or
+/// absence of the stay is served with its notice (Rule 4001-1).
+event StayMotionServed()
+/// A motion for relief from the codebtor stay is served with its notice
+/// (Rule 4001-4).
+event CodebtorStayMotionServed()
+/// An objection to claimed exemptions is served with its notice (Rule
+/// 4003-1(a)).
+event ExemptionObjectionServed()
+/// A § 522(f) lien avoidance motion is served with its notice (Rule
+/// 4003-2(a)).
+event LienAvoidanceMotionServed()
+/// A motion to extend the time to object to discharge is served with its
+/// notice (Rule 4004-1).
+event DischargeExtensionMotionServed()
+/// A motion objecting to discharge under § 727(a)(8), (a)(9) or § 1328(f)
+/// is served with its notice (Rule 4004-2).
+event DischargeObjectionMotionServed()
+/// A motion to extend the time to file a dischargeability complaint is
+/// served with its notice (Rule 4007-1).
+event DischargeabilityExtensionMotionServed()
+/// A transcript of a hearing, trial, meeting of creditors, Rule 2004
+/// examination or deposition is filed (Rule 5077-1).
+event TranscriptFiled()
+/// An order dismissing the case is entered with fees still owed to the
+/// Clerk (Rule 5080-1(b)).
+event CaseDismissed()
+/// A proposed order, proposed Plan as Confirmed or other proposed document
+/// is served as the court directs (Rule 9072-1).
+event ProposedDocumentServed()
+
+/// Bankr. D.S.D. R. 1007-1: an objection to a motion to extend the time to
+/// file a list, schedule, statement or payment advices is filed within
+/// seven days after the motion is filed and served.
+deadline extension-objection-period: 7.days after ExtensionMotionFiled() counted_by frcp6 cite "Bankr. D.S.D. R. 1007-1"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 1014-1: the notice of a motion to transfer to another
+/// district sets a last date for objections 14 days after service.
+deadline transfer-objection-period: 14.days after TransferMotionServed() counted_by frcp6 cite "Bankr. D.S.D. R. 1014-1"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 1014-2: the notice of a motion to change venue to
+/// another division sets a last date for objections 14 days after service.
+deadline venue-objection-period: 14.days after VenueMotionServed() counted_by frcp6 cite "Bankr. D.S.D. R. 1014-2"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 1015-1(b): the notice of a motion to substantively
+/// consolidate or deconsolidate sets a last date for objections 21 days
+/// after service.
+deadline consolidation-objection-period: 21.days after ConsolidationMotionServed() counted_by frcp6 cite "Bankr. D.S.D. R. 1015-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 1015-1(c): the notice of a motion regarding joint
+/// administration sets a last date for objections 21 days after service.
+deadline joint-administration-objection-period: 21.days after JointAdministrationMotionServed() counted_by frcp6 cite "Bankr. D.S.D. R. 1015-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 1016-2: the notice of a motion to waive credit
+/// counseling or the financial management course sets a last date for
+/// objections seven days after service.
+deadline counseling-waiver-objection-period: 7.days after CounselingWaiverMotionServed() counted_by frcp6 cite "Bankr. D.S.D. R. 1016-2"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 2072-1: the debtor serves the Clerk's notice of the
+/// case on each South Dakota court whose proceeding may be stayed before
+/// any scheduled hearing there and no later than seven days after the
+/// petition.
+deadline court-notice-period: 7.days after PetitionFiled() counted_by frcp6 cite "Bankr. D.S.D. R. 2072-1"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 2002-1(c): the Clerk's notice of a chapter 12 or 13
+/// confirmation hearing sets a last date for objections 21 days after
+/// service of the plan, but not fewer than seven days after the first date
+/// set for the meeting of creditors nor fewer than seven days before the
+/// hearing.
+deadline plan-objection-period: 21.days after PlanServed() counted_by frcp6 cite "Bankr. D.S.D. R. 2002-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 2003-1(d): within seven days after a § 341(a) meeting
+/// concludes, the presiding officer files a statement of its conclusion.
+deadline meeting-conclusion-statement-period: 7.days after MeetingConcluded() counted_by frcp6 cite "Bankr. D.S.D. R. 2003-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 2014-1(c): within seven days after an application to
+/// employ an estate professional is filed, the United States Trustee files
+/// any comments; the court may act on it once the seven days run.
+deadline employment-comment-period: 7.days after EmploymentApplicationFiled() counted_by frcp6 cite "Bankr. D.S.D. R. 2014-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 2016-2(b): in a chapter 12 or 13 case the debtor's
+/// attorney and other estate professionals file their applications for fees
+/// through confirmation within 30 days after the plan is confirmed
+/// (likewise Rule 2016-3(f) for chapter 13 debtors' attorneys).
+deadline post-confirmation-fee-application-period: 30.days after Chapter12Or13PlanConfirmed() counted_by frcp6 cite "Bankr. D.S.D. R. 2016-2(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 3003-1: unless otherwise ordered, the last day to file
+/// a proof of claim or interest in a chapter 11 case is 30 days after the
+/// first date set for the meeting of creditors (the bar date FRBP
+/// 3003(c)(3) leaves to the court).
+deadline chapter11-claim-period: 30.days after FirstMeetingDate() counted_by frcp6 cite "Bankr. D.S.D. R. 3003-1"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 3011-2(e): the court's order on an application for
+/// unclaimed funds sets a last date for objections 24 days after its
+/// service.
+deadline unclaimed-funds-objection-period: 24.days after UnclaimedFundsOrderServed() counted_by frcp6 cite "Bankr. D.S.D. R. 3011-2(e)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 3015-1A(c): an objection to a motion to extend the time
+/// to file a chapter 12 plan or for its confirmation hearing is filed
+/// within seven days after the motion is filed (likewise Rule 3015-1B(b)
+/// for a chapter 13 plan).
+deadline chapter12-plan-extension-objection-period: 7.days after PlanExtensionMotionFiled() counted_by frcp6 cite "Bankr. D.S.D. R. 3015-1A(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 3016-3: the notice of a motion to reduce or extend the
+/// chapter 11 exclusivity period sets a last date for objections seven days
+/// after service.
+deadline exclusivity-objection-period: 7.days after ExclusivityMotionServed() counted_by frcp6 cite "Bankr. D.S.D. R. 3016-3"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 3018-1(c): the plan proponent files the completed
+/// ballot tabulation not less than two days before the confirmation
+/// hearing.
+deadline ballot-tabulation-period: 2.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. D.S.D. R. 3018-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 3019-2(c): the notice of a motion to modify a confirmed
+/// chapter 11 plan sets a last date for objections 21 days after service.
+deadline post-confirmation-modification-objection-period: 21.days after PostConfirmationModificationServed() counted_by frcp6 cite "Bankr. D.S.D. R. 3019-2(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 3022-1(a): unless the plan provides otherwise, not
+/// later than 30 days after substantial consummation of a nonindividual's §
+/// 1129 plan, or any § 1191(a) plan, the motion for a final decree is
+/// filed.
+deadline final-decree-motion-period: 30.days after SubstantialConsummation() counted_by frcp6 cite "Bankr. D.S.D. R. 3022-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 3022-1(b): not later than 45 days after completing all
+/// plan payments, an individual chapter 11 debtor (or a § 1191(b) debtor)
+/// files the certification and request for discharge.
+deadline chapter11-discharge-request-period: 45.days after PlanPaymentsCompleted() counted_by frcp6 cite "Bankr. D.S.D. R. 3022-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 3072-1A(a): within 30 days after all chapter 12 plan
+/// payments are completed, the trustee files a Notice of Completion of Plan
+/// Payments (likewise Rule 3072-1B(a) in chapter 13).
+deadline completion-notice-period: 30.days after PlanPaymentsCompleted() counted_by frcp6 cite "Bankr. D.S.D. R. 3072-1A(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 3072-1A(a): within 30 days after the trustee's Notice
+/// of Completion of Plan Payments, the debtor files the Certification and
+/// Request for Discharge, or the Clerk may close the case without a
+/// discharge (likewise Rule 3072-1B(a)).
+deadline discharge-certification-period: 30.days after CompletionNoticeFiled() counted_by frcp6 cite "Bankr. D.S.D. R. 3072-1A(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 3072-1A(b): the notice of a motion for a hardship
+/// discharge sets a last date for objections 14 days after service
+/// (likewise Rule 3022-1 and 3072-1B).
+deadline hardship-discharge-objection-period: 14.days after HardshipDischargeNoticeServed() counted_by frcp6 cite "Bankr. D.S.D. R. 3072-1A(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 4001-1: the notice of a motion for stay relief, to
+/// prohibit or condition the use, sale or lease of property, or to confirm
+/// the termination or absence of the stay sets a last date for objections
+/// 14 days after service.
+deadline stay-motion-objection-period: 14.days after StayMotionServed() counted_by frcp6 cite "Bankr. D.S.D. R. 4001-1"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 4001-4: the notice of a motion for relief from the
+/// codebtor stay sets a last date for objections 14 days after service.
+deadline codebtor-stay-objection-period: 14.days after CodebtorStayMotionServed() counted_by frcp6 cite "Bankr. D.S.D. R. 4001-4"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 4003-1(a): the notice of an objection to claimed
+/// exemptions sets a last date for a response 14 days after service.
+deadline exemption-objection-response-period: 14.days after ExemptionObjectionServed() counted_by frcp6 cite "Bankr. D.S.D. R. 4003-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 4003-2(a): the notice of a § 522(f) lien avoidance
+/// motion sets a last date for objections 14 days after service.
+deadline lien-avoidance-objection-period: 14.days after LienAvoidanceMotionServed() counted_by frcp6 cite "Bankr. D.S.D. R. 4003-2(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 4004-1: the notice of a motion to extend the time to
+/// object to discharge sets a last date for objections seven days after
+/// service.
+deadline discharge-extension-objection-period: 7.days after DischargeExtensionMotionServed() counted_by frcp6 cite "Bankr. D.S.D. R. 4004-1"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 4004-2: the notice of a motion objecting to discharge
+/// under § 727(a)(8), (a)(9) or § 1328(f) sets a last date for objections
+/// 21 days after service.
+deadline discharge-objection-motion-response-period: 21.days after DischargeObjectionMotionServed() counted_by frcp6 cite "Bankr. D.S.D. R. 4004-2"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 4007-1: the notice of a motion to extend the time for a
+/// dischargeability complaint sets a last date for objections seven days
+/// after service.
+deadline dischargeability-extension-objection-period: 7.days after DischargeabilityExtensionMotionServed() counted_by frcp6 cite "Bankr. D.S.D. R. 4007-1"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 5077-1: a Notice of Intent to Request Redaction is
+/// filed and served on the transcriber within seven days after the
+/// transcript is filed.
+deadline redaction-intent-period: 7.days after TranscriptFiled() counted_by frcp6 cite "Bankr. D.S.D. R. 5077-1"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 5077-1: a Transcript Redaction Request is filed and
+/// served on the transcriber within 21 days after the transcript is filed.
+deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frcp6 cite "Bankr. D.S.D. R. 5077-1"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 5080-1(b): unless otherwise ordered, fees still owed to
+/// the Clerk when a case is dismissed are paid within 14 days after the
+/// dismissal order.
+deadline dismissal-fees-period: 14.days after CaseDismissed() counted_by frcp6 cite "Bankr. D.S.D. R. 5080-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D.S.D. R. 9072-1: an objection to a proposed order, proposed Plan
+/// as Confirmed or other proposed document, with an alternate proposed
+/// document, is filed within seven days after its service.
+deadline proposed-document-objection-period: 7.days after ProposedDocumentServed() counted_by frcp6 cite "Bankr. D.S.D. R. 9072-1"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion served with a notice of the last date to object" by applicant cite "Bankr. D.S.D. R. 2002-1(a)"
+{
+  note "Each notice of motion conforms to Rule 2002-1(a) and sets a last date (month, day, year) for an objection or other response, 14 or 21 days after service for most motions and seven for extension motions; the date is extended three days for service by mail (Rule 2002-1(f)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-objection "Objection or other response filed" -> objected {
+    authority cite "Bankr. D.S.D. R. 2002-1(a)"
+  }
+  edge-motion-filed-unopposed "No timely objection" -> ruling {
+    authority cite "Bankr. D.S.D. R. 2002-1(a)"
+  }
+}
+
+state objected: "Objection filed; hearing set by separate order" by opponent cite "Bankr. D.S.D. R. 2002-1(a)"
+{
+  note "The notice states that a hearing will be set by separate order if an objection is timely filed (Rule 2002-1(a))."
+  edge-objected-hearing "Hearing held" -> ruling { authority cite "Bankr. D.S.D. R. 2002-1(a)" }
+}
+
+decision ruling: "Motion decided" by court cite "Bankr. D.S.D. R. 2002-1(a)"
+{
+  note "Without a timely objection the court may act on the motion; a proposed order served for objection may be objected to within seven days (Rule 9072-1)."
+  edge-ruling-granted "Granted" -> decided { authority cite "Bankr. D.S.D. R. 9072-1" }
+  edge-ruling-denied "Denied" -> decided { authority cite "Bankr. D.S.D. R. 2002-1(a)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. D.S.D. R. 1001-1"
+{
+  note "The Local Bankruptcy Rules govern practice in the court (Rule 1001-1)."
+}

@@ -1,0 +1,50 @@
+# The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the District
+# of South Dakota over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
+# declares only the periods the rules state and re-encodes no FRBP period.
+# It is a base package, not a `kind = "local-rule"` layer: lit/core has no
+# bankruptcy forum family (L2011 for `bankr-sd`), as for lit/bankr-dc.
+# Each period is counted under FRBP 9006(a), the FRCP 6(a) method (core's
+# frcp6).
+#
+# Layers: the Local Rules and Appendices as amended July 13, 2026 (the
+# consolidation). The court's General Order of July 20, 2026 makes the
+# amendments effective July 13, 2026 and directs the clerk to post the
+# rules as amended, so the posted file already carries them
+# (sources/bankr-sd/PROVENANCE.md); no separate amending order is
+# vendored. No earlier edition is vendored, so a query before July 13,
+# 2026 is a hole in the corpus.
+[package]
+name = "bankr-sd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-sd-local-rules"
+forum = "bankr-sd"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the District of South Dakota: Local Bankruptcy Rules"
+description = "The Bankr. D.S.D. Local Bankruptcy Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): objections to extension, transfer, venue, consolidation, joint administration and counseling waiver motions, notice to other courts, chapter 12 and 13 plan objections, statements concluding the meeting of creditors, the United States Trustee's employment comments, post-confirmation fee applications, the chapter 11 claims deadline, unclaimed funds, plan and exclusivity extensions, ballot tabulation, post-confirmation chapter 11 modification, final decrees, discharge requests and hardship discharge, stay and codebtor stay motions, exemption objections, lien avoidance, discharge and dischargeability extensions, motions objecting to discharge, transcript redaction, fees after dismissal and objections to proposed orders (Rule 9072-1)."
+in_force = "2026-07-13"
+known_at = "2026-10-28"
+unknown_before = "2026-07-13"
+jurisdiction = "U.S. Bankruptcy Court for the District of South Dakota"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.sdb-lbr]
+title = "Local Bankruptcy Rules and Appendices for the District of South Dakota (as amended July 13, 2026)"
+url = "https://www.sdb.uscourts.gov/sites/sdb/files/local_rules/Local%20Rules%20and%20Appendices%20as%20Amended%20July%2013%2C%202026%20with%20bookmarks%20and%20links_4.pdf"
+path = "sources/bankr-sd/sdb-lbr-2026-07-13-sectioned.txt"
+path_sha256 = "0156115addc6e6c8c3516ddd351bdd8614b83ad1b69afa1f6beaca5a1cbf7f03"
+sha256 = "7c2ab704c20a24855761e59344450b21ec0cd7ec6c49aef5bd4ebc6cb2361035"
+as_of = "2026-07-13"
+cite_prefixes = ["Bankr. D.S.D. R."]
+section_heading = "Rule {n}"

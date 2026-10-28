@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-sd-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:a4b3d550e685253ff44dd17818dddc6a22f39951a77d33b5311260aef07165a9"
+semantic = "sha256:11d67184d299312beae537ad5e06fa74d20ac5ee171034975902e1e8d8c78b22"
+texts = [
+    "sdb-lbr sources/bankr-sd/sdb-lbr-2026-07-13-sectioned.txt sha256:0156115addc6e6c8c3516ddd351bdd8614b83ad1b69afa1f6beaca5a1cbf7f03",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-sd"
-version = "0.0.1"
-language = 1
-source = "sha256:07b08f79b8cf14fa11ef09a0d25716fb614a64975fba1a209826ddf3667ec9a7"
-semantic = "sha256:a9a16110039a7ed544ad276c28f4c91586128dbc64bb0f4e567f3299b43dbee3"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

@@ -1,0 +1,50 @@
+# Civil actions in the Superior Court of Guam under the Guam Rules of
+# Civil Procedure as amended pursuant to PRM 06-006-24, effective October
+# 19, 2023 (sources/gu-superior). Computation of time is GRCP 6(a), which
+# counts every day but extends a period ending on a Guam legal holiday (1
+# GCA § 1000(a), (b), and holidays appointed by the President, Congress,
+# the laws of Guam or the Governor) and has no counting rule in lit/core,
+# so the rules' periods are stated in notes, not encoded as counted
+# deadlines; GRCP 6(d) adds 3 days after service under Rule 5(b)(2)(B),
+# (C) or (D). An appeal hands off to lit/gu-supreme.
+[package]
+name = "gu-superior-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "gu-superior-court-civil"
+forum = "gu-superior"
+authority = "StateRule"
+title = "Superior Court of Guam, civil"
+description = "Civil actions in the Superior Court of Guam under the Guam Rules of Civil Procedure, as far as the vendored text states. An appeal hands off to the Supreme Court of Guam appellate package (lit/gu-supreme)."
+in_force = "2023-10-19"
+known_at = "2026-10-28"
+unknown_before = "2023-10-19"
+jurisdiction = "Superior Court of Guam (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.gu-grcp]
+title = "Guam Rules of Civil Procedure (amended pursuant to PRM 06-006-24, effective October 19, 2023)"
+url = "https://www.guamcourts.gov/sites/default/files/GRCP%2020240401_Control.pdf"
+path = "sources/gu-superior/guam-rules-of-civil-procedure-sectioned.txt"
+path_sha256 = "aef8c8a414a1fa4a376339159811f8f2fd0694b150e34d8a9c3d4df71ec50541"
+sha256 = "aa44d5eab6f59a8f2effbab6bd9171d843f10ee4d784280ab0da9e82ada67b98"
+as_of = "2023-10-19"
+cite_prefixes = ["Guam R. Civ. P."]
+section_heading = "Rule {n}"
+
+[sources.gu-grap]
+title = "Guam Rules of Appellate Procedure (as of February 24, 2014)"
+url = "https://www.guamcourts.gov/sites/default/files/GRAP_20140224.pdf"
+path = "sources/gu-supreme/guam-rules-of-appellate-procedure-sectioned.txt"
+path_sha256 = "7151ec99e54e97315b88de099186256181f8350998da456f400f4140175b321c"
+sha256 = "7021c87f1aa8db5bb4a00f8c3e71a148bc3c1e10b68a4ac6a0801fda71564295"
+as_of = "2014-02-24"
+cite_prefixes = ["Guam R. App. P."]
+section_heading = "Rule {n}"

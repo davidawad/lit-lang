@@ -112,6 +112,8 @@ const PROMOTED: [(&str, &str); 16] = [
     ("ak-supreme", "alaska"),
     ("fl-state-appellate", "florida"),
     ("fl-state-civil", "florida"),
+    ("gu-superior", "guam"),
+    ("gu-supreme", "guam"),
     ("ia-district", "iowa"),
     ("iowactapp", "iowa"),
     ("ma-appeals-sjc", "massachusetts"),

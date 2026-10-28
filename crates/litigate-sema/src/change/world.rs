@@ -423,7 +423,9 @@ pub fn check_parsed(
             found
         })
         .collect();
-    let families: &[Family] = layers.first().map_or(&[], |(p, _)| families(db, *p).as_slice());
+    let families: &[Family] = layers
+        .first()
+        .map_or(&[], |(p, _)| families(db, *p).as_slice());
     let family = location(world, at, families, &mut reports);
     if world.modality == Modality::Counterfactual && profile == Profile::Strict {
         reports.push(Report::new(

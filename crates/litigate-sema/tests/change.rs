@@ -269,9 +269,11 @@ cite = "c"
 #[test]
 fn a_package_declaring_a_family_is_in_it_without_editing_core() {
     let mut lr = layer("lr", "local-rule", "newcourt", "LocalRule", "", "");
-    lr.manifest = lr
-        .manifest
-        .replacen("forum = \"newcourt\"", "forum = \"newcourt\"\nfamily = \"civil\"", 1);
+    lr.manifest = lr.manifest.replacen(
+        "forum = \"newcourt\"",
+        "forum = \"newcourt\"\nfamily = \"civil\"",
+        1,
+    );
     let all = [core(), fed(), lr];
     let core_manifest = parse_manifest(&all[0].manifest).expect("valid").manifest;
     assert!(core_manifest.families.iter().all(|f| f.forums.is_empty()));
@@ -280,7 +282,10 @@ fn a_package_declaring_a_family_is_in_it_without_editing_core() {
     let ix = class_index(&db, p).as_ref().expect("valid");
     assert_eq!(ix.family.as_ref().map(|f| f.0.as_str()), Some("civil"));
     assert!(ix.missing.is_none(), "{:?}", ix.missing);
-    let civil = families(&db, p).iter().find(|f| f.id == "civil").expect("civil");
+    let civil = families(&db, p)
+        .iter()
+        .find(|f| f.id == "civil")
+        .expect("civil");
     assert_eq!(civil.forums, ["civil", "newcourt"]);
     assert_eq!(
         family_of(families(&db, p), "newcourt").map(|f| f.id.as_str()),

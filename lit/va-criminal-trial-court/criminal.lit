@@ -1,0 +1,121 @@
+module va-criminal-trial-court.criminal
+
+// Criminal cases in the Virginia circuit courts, from the accused's view of
+// outcomes. The Rules of Supreme Court of Virginia cites bind; Code
+// § 19.2-243 is vendored only as a CURRENCY UNCONFIRMED page, so its cites
+// are holes and its periods, stated in months, are the vendored text,
+// unverified. Every period is stated in a note: lit/core has no Virginia
+// counting rule. Not vendored, and so holes: the arrest, bail and
+// preliminary-hearing statutes of Title 19.2 (only § 19.2-243 is
+// vendored), Code § 19.2-266.2 and Code § 8.01-654; the reporter text of
+// the decisions the outline named, which are removed.
+start arrested
+
+state arrested: "Arrest and preliminary hearing" by applicant cite ?("Va. Code Title 19.2, arrest, bail and preliminary hearing (not vendored)")
+{
+  note "Arrest, bail and the preliminary hearing in the district court are statutory (Title 19.2), and only Code § 19.2-243 is vendored, so this step's periods are holes."
+  edge-arrested-probable-cause "Probable cause found in the district court" -> charged {
+    authority cite ?("Va. Code § 19.2-243, CURRENCY UNCONFIRMED")
+  }
+  edge-arrested-direct "No preliminary hearing, or hearing waived; indictment" -> charged {
+    authority cite ?("Va. Code § 19.2-243, CURRENCY UNCONFIRMED")
+  }
+}
+
+state charged: "Speedy-trial clock running" by office cite ?("Va. Code § 19.2-243, CURRENCY UNCONFIRMED")
+{
+  note "Where the district court has found probable cause that an adult committed a felony, the accused held continuously in custody is forever discharged if no trial is commenced in the circuit court within five months from that finding, and an accused recognized for appearance within nine months; without a preliminary hearing, or on its waiver, the periods run from the indictment or presentment, and for an accused not yet arrested on it, from the arrest; a trial de novo on appeal of a misdemeanor runs five or nine months from the conviction or certification. Delay caused by the seven exceptions the section lists (competency evaluations, absent Commonwealth witnesses, a severance the codefendant sought, a continuance on or without objection to a motion of the accused, statutory laboratory continuances, a hung jury, natural disaster) is excluded (Va. Code § 19.2-243). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
+  edge-charged-motions "Pretrial motions" -> motions-ruling {
+    authority cite "Va. Sup. Ct. R. 3A:9(c)"
+  }
+  edge-charged-plea "Plea negotiations" -> plea-decision {
+    authority cite "Va. Sup. Ct. R. 3A:8"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "Va. Sup. Ct. R. 3A:9(b)"
+{
+  note "Defenses and objections based on defects in the institution of the prosecution or in the written charge are raised by motion, and failure to raise them in time is a waiver (Va. Sup. Ct. R. 3A:9(b)(1)), unless the court grants relief for good cause (Va. Sup. Ct. R. 3A:9(d)). The motion is filed before a plea is entered and, in a circuit court, at least 7 days before the day fixed for trial, or, if it raises speedy-trial or double-jeopardy grounds under Code § 19.2-266.2 A (ii) (not vendored), when the grounds arise, whichever occurs last (Va. Sup. Ct. R. 3A:9(c)). A discovery motion by the accused is made at least 10 calendar days before the day fixed for trial (Va. Sup. Ct. R. 3A:11(e))."
+  edge-motions-ruling-speedy "Discharged under the speedy-trial statute" -> dismissed {
+    authority cite ?("Va. Code § 19.2-243, CURRENCY UNCONFIRMED")
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "Va. Sup. Ct. R. 3A:9(b)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "Va. Sup. Ct. R. 3A:9(b)"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Va. Sup. Ct. R. 3A:8"
+{
+  note "Pleas and plea agreements are governed by Va. Sup. Ct. R. 3A:8."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite "Va. Sup. Ct. R. 3A:8"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "Va. Sup. Ct. R. 3A:15"
+  }
+}
+
+decision trial: "Verdict" by court cite "Va. Sup. Ct. R. 3A:15"
+{
+  note "The court on motion may strike the Commonwealth's evidence as insufficient as a matter of law after it rests or at the close of all the evidence (Va. Sup. Ct. R. 3A:15(a))."
+  edge-trial-acquittal "Not guilty, or evidence struck" -> acquitted {
+    authority cite "Va. Sup. Ct. R. 3A:15(a)"
+  }
+  edge-trial-guilty "Guilty; sentencing" -> sentencing {
+    authority cite "Va. Sup. Ct. R. 3A:15(b)"
+  }
+}
+
+state sentencing: "Sentence and final order" by court cite "Va. Sup. Ct. R. 1:1"
+{
+  note "Final judgments remain under the trial court's control, and may be modified, vacated or suspended, for twenty-one days after the date of entry, and no longer (Va. Sup. Ct. R. 1:1(a)). On a guilty verdict the court may, on the accused's motion made not later than 21 days after entry of a final order, set aside the verdict for trial error or insufficient evidence (Va. Sup. Ct. R. 3A:15(b))."
+  edge-sentencing-set-aside "Motion to set aside the verdict" -> post-trial {
+    authority cite "Va. Sup. Ct. R. 3A:15(b)"
+  }
+  edge-sentencing-judgment "Final order entered" -> judgment {
+    authority cite "Va. Sup. Ct. R. 1:1(a)"
+  }
+}
+
+decision post-trial: "Motion to set aside the verdict" by court cite "Va. Sup. Ct. R. 3A:15(b)"
+{
+  note "The court enters a judgment of acquittal or grants a new trial as Va. Sup. Ct. R. 3A:15(c) directs. A motion for a new trial does not extend the time for a notice of appeal unless the final judgment is modified, vacated or suspended under Rule 1:1 (Va. Sup. Ct. R. 5A:3(a))."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite "Va. Sup. Ct. R. 3A:15(c)"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "Va. Sup. Ct. R. 3A:15(c)"
+  }
+  edge-post-trial-denied "Motion denied" -> judgment {
+    authority cite "Va. Sup. Ct. R. 5A:3(a)"
+  }
+}
+
+decision judgment: "Final judgment of conviction" by applicant cite "Va. Sup. Ct. R. 5A:6(a)"
+{
+  note "Except as a statute provides otherwise, no appeal is allowed unless within 30 days after entry of final judgment, or a Rule 5A:3(a) extension, counsel files a notice of appeal with the clerk of the trial court and sends a copy to opposing counsel (Va. Sup. Ct. R. 5A:6(a)); the time is mandatory, though the Court of Appeals may extend it on motion for good cause (Va. Sup. Ct. R. 5A:3(a))."
+  edge-judgment-appeal "Notice of appeal within 30 days" -> appeal-taken {
+    authority cite "Va. Sup. Ct. R. 5A:6(a)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Va. Sup. Ct. R. 5A:6(a)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Va. Sup. Ct. R. 3A:15(c)"
+
+terminal dismissed: "Discharged or charges dismissed" outcome [win, dismissal] cite ?("Va. Code § 19.2-243, CURRENCY UNCONFIRMED")
+{
+  note "A discharge under Code § 19.2-243 is forever (CURRENCY UNCONFIRMED); whether another dismissal bars refiling is a hole."
+}
+
+terminal appeal-taken: "Appeal taken to the Court of Appeals" outcome [appeal] cite "Va. Sup. Ct. R. 5A:6(a)"
+{
+  note "The appeal continues under Part Five A; no criminal appellate package is promoted."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "Va. Sup. Ct. R. 1:1(a)"
+{
+  note "State habeas under Code § 8.01-654 is not vendored (a hole); federal habeas under 28 U.S.C. § 2254 is lit/habeas's."
+}

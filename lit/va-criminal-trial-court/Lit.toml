@@ -1,0 +1,48 @@
+# Criminal cases in the Virginia circuit courts under Part Three A of the
+# Rules of Supreme Court of Virginia, Rule 1:1, and the criminal notice of
+# appeal of Rule 5A:6 (sources/va-circuit-civil, all Parts as currently
+# effective, the latest amendment effective September 15, 2026), with the
+# speedy-trial statute, Code of Virginia § 19.2-243
+# (sources/va-criminal-trial-court). The statute's page states no edition
+# date and its PROVENANCE records CURRENCY UNCONFIRMED, so its cites are
+# holes, `?("..., CURRENCY UNCONFIRMED")`, and its periods are stated in
+# notes as the vendored text states them, unverified; the Rules cites
+# bind. lit/core has no Virginia counting rule, so no period is a counted
+# deadline. Federal habeas is lit/habeas's.
+[package]
+name = "va-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "va-criminal-trial-court"
+forum = "va-criminal-trial-court"
+authority = "StateRule"
+title = "Virginia circuit courts, criminal"
+description = "Criminal cases in the Virginia circuit courts under Part Three A of the Rules of Supreme Court of Virginia, as far as the vendored text states: pretrial motions 7 days before trial, discovery motions 10 days before trial, the speedy-trial limits of Code § 19.2-243, the motion to set aside the verdict within 21 days after the final order, the 21 days of trial-court control under Rule 1:1, and the 30-day notice of appeal of Rule 5A:6. The statute is CURRENCY UNCONFIRMED, so its cites are holes."
+in_force = "2026-09-15"
+known_at = "2026-10-28"
+unknown_before = "2026-09-15"
+jurisdiction = "Virginia trial courts of general criminal jurisdiction"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.va-code-19-2-243]
+title = "Code of Virginia § 19.2-243 (Limitation on prosecution; speedy trial), as served by the Virginia Legislative Information System, no edition date (CURRENCY UNCONFIRMED)"
+url = "https://law.lis.virginia.gov/vacode/title19.2/chapter15/section19.2-243/"
+path = "sources/va-criminal-trial-court/va-code-19-2-243-speedy-trial.txt"
+path_sha256 = "6e4c1f2d32d8bb648331dcecd1c8a140a86b912c95f379368af0284b36d2d2f3"
+
+[sources.va-r]
+title = "Rules of the Supreme Court of Virginia, all Parts, as currently effective (latest stated amendment effective September 15, 2026)"
+url = "https://www.vacourts.gov/static/courts/scv/rulesofcourt.pdf"
+path = "sources/va-circuit-civil/va-rules-of-supreme-court-sectioned.txt"
+path_sha256 = "d7909399a2a10c69c9877dc83abfbeb85d9932b1ba1091139295dea303a47f95"
+sha256 = "15a5095aba5043b863d2c7fb26f24c2556cad4908054874c0dff4f770af53a0f"
+as_of = "2026-09-15"
+cite_prefixes = ["Va. Sup. Ct. R."]
+section_heading = "Rule {n}"

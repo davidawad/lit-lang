@@ -1,0 +1,50 @@
+# The Middle District of Alabama's Local Rules (Part 1, civil rules and
+# general provisions) as a local-rule layer over lit/frcp (28 U.S.C. §
+# 2071; FRCP 83; LR 1.1(c)): it declares only the periods the Local Rules
+# themselves state and re-encodes no FRCP deadline. Each period is counted
+# under FRCP 6(a), which governs "any local rule". The rules are the
+# edition effective December 1, 2010, as amended October 1, 2011 (LR
+# 83.4(g)) (sources/md-ala); only that amended text is vendored, so a
+# query before October 1, 2011 is a hole in the corpus. The criminal rules (Part 2,
+# M.D. Ala. LCrR) are not encoded. An appeal goes to the Eleventh Circuit
+# under lit/frap.
+[package]
+name = "almd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "almd-local-rules"
+forum = "almd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Middle District of Alabama: Local Rules (civil)"
+description = "The Middle District of Alabama's civil Local Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): proof of service and filed waivers, the conflict disclosure statement, subpoena and writ requests before trial, the bill of costs and the claim for extraordinary expenses of appointed counsel."
+in_force = "2011-10-01"
+known_at = "2026-10-28"
+unknown_before = "2011-10-01"
+jurisdiction = "United States District Court, M.D. Alabama"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "almd-lr"
+issuer = "United States District Court for the Middle District of Alabama"
+date = "2011-10-01"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.almd-lr]
+title = "Local Rules of the United States District Court for the Middle District of Alabama (effective December 1, 2010; amended October 1, 2011)"
+url = "https://www.almd.uscourts.gov/sites/default/files/forms/ALMD%20Local%20Rules.pdf"
+path = "sources/md-ala/local-rules-civil-sectioned.txt"
+path_sha256 = "80f4cb4eead6ae8fd5fe07406ec03322601fc9a14bfe3b0f33c566dc366100dd"
+sha256 = "39ccde043f3fccdb65241d8ac8eb53deec77a13fc7a6d2a17f5f7e7a94423377"
+as_of = "2011-10-01"
+cite_prefixes = ["M.D. Ala. LR"]
+section_heading = "LR {n}"

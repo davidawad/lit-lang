@@ -1,0 +1,103 @@
+module almd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Middle District of Alabama's own periods, computed under the federal
+// rules (FRCP 6(a) governs "any local rule"); any judge may suspend a
+// local rule in an individual action (LR 1.1(e)). Rules that state no
+// period or limit stay out: sanctions (LR 1.2), the civil cover sheet (LR
+// 3.1), notice of a claim of unconstitutionality (LR 5.1), redaction (LR
+// 5.2), filing and service (LR 5.3, 5.4), emergency filing (LR 5.5),
+// paper size, letter briefs and page substitutions (LR 5.6-5.8), files
+// and exhibits (LR 5.9), pro se and capital habeas filings (LR 9.1, 9.2),
+// three-judge courts (LR 9.3), identification of counsel (LR 11.1),
+// amended pleadings (LR 15.1), mediation (LR 16.1), class actions (LR
+// 23.1), discovery forms and non-filing (LR 26.1-26.3, 37.1), the jury
+// demand notation (LR 38.1), exhibits (LR 39.1), case assignment (LR
+// 40.1), hospital records (LR 45.2), jurors (LR 47.1), payment of
+// judgments (LR 58.1), magistrate judges (LR 72.1, 72.2, 73.1) and
+// removal (LR 81.1). The notice of settlement "at least one full business
+// day prior to" jury selection or trial (LR 54.2) is in a unit lit/core
+// does not count and stays in this note. The admission, discipline and
+// reinstatement periods of LR 83.1 and the law student rules (LR 83.2)
+// govern attorneys, not a civil action, and are not encoded. The
+// indigent criminal defendant's Rule 17(b) motion (LR 45.1(b)(2)) is a
+// criminal rule and is not encoded. The earlier M.D. Ala. outline's FRCP
+// and FRAP flow and its decisions (Twombly, Iqbal, Celotex, Anderson v.
+// Liberty Lobby, Matsushita, Unitherm, Bowles v. Russell, Hamer,
+// Microsoft v. Baker, and Khalik v. United Air Lines, a Tenth Circuit
+// decision it misattributed to this circuit) are FRCP and FRAP authority
+// and belong to lit/frcp and lit/frap; they are removed here: no reporter
+// text is vendored.
+/// Service is effected by summons (LR 4.1(a)).
+event ServiceEffected()
+/// The plaintiff receives a waiver of service (LR 4.1(b)).
+event WaiverReceived()
+/// A party's initial pleading or other court paper is filed without its
+/// Conflict Disclosure Statement, filing it being impossible or
+/// impracticable (LR 7.1(a)).
+event InitialPaperFiled()
+/// The trial or hearing begins on the date set (LR 45.1).
+event TrialBegins()
+/// The final judgment from which an appeal may be taken is entered (LR
+/// 54.1(a), 83.5(c)).
+event FinalJudgmentEntered()
+
+/// LR 4.1(a): if service is effected by summons, the person effecting
+/// service makes proof of it to the court within seven days of the date
+/// service is effected.
+deadline proof-of-service-period: 7.days after ServiceEffected() counted_by frcp6 cite "M.D. Ala. LR 4.1(a)"
+{
+  forum frcp
+}
+
+/// LR 4.1(b): if service is waived, the plaintiff files the waiver within
+/// seven days after the plaintiff receives it.
+deadline waiver-filing-period: 7.days after WaiverReceived() counted_by frcp6 cite "M.D. Ala. LR 4.1(b)"
+{
+  forum frcp
+}
+
+/// LR 7.1(a): where filing the Conflict Disclosure Statement with the
+/// initial pleading or other court paper is impossible or impracticable,
+/// it is filed within seven days of the date of the original filing, or
+/// such other time as the court directs.
+deadline disclosure-statement-period: 7.days after InitialPaperFiled() counted_by frcp6 cite "M.D. Ala. LR 7.1(a)"
+{
+  forum frcp
+}
+
+/// LR 45.1(a)(1)(A): in a case other than an in forma pauperis case,
+/// subpoenas or writs ad testificandum to be served by the U.S. Marshal
+/// Service should be filed not less than fourteen calendar days before the
+/// trial date or hearing.
+deadline marshal-subpoena-period: 14.days before TrialBegins() counted_by frcp6 cite "M.D. Ala. LR 45.1(a)(1)(A)"
+{
+  forum frcp
+}
+
+/// LR 45.1(b)(1): in an in forma pauperis § 2255 or habeas corpus
+/// proceeding, an indigent party desiring a witness by subpoena or writ ad
+/// testificandum files a motion not later than twenty-one calendar days
+/// before the trial or hearing.
+deadline indigent-witness-motion-period: 21.days before TrialBegins() counted_by frcp6 cite "M.D. Ala. LR 45.1(b)(1)"
+{
+  forum frcp
+}
+
+/// LR 54.1(a): requests for taxation of costs other than attorneys' fees
+/// under FRCP 54(d) are filed with the clerk within 35 days after entry of
+/// the final judgment from which an appeal may be taken; failure to file
+/// within this time is deemed a waiver.
+deadline costs-period: 35.days after FinalJudgmentEntered() counted_by frcp6 cite "M.D. Ala. LR 54.1(a)"
+{
+  forum frcp
+}
+
+/// LR 83.5(c): appointed counsel granted extraordinary expenses for an
+/// indigent civil plaintiff files the Claim Form for Reimbursement within
+/// 21 days from the date of final judgment.
+deadline expense-claim-period: 21.days after FinalJudgmentEntered() counted_by frcp6 cite "M.D. Ala. LR 83.5(c)"
+{
+  forum frcp
+}

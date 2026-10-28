@@ -197,7 +197,7 @@ jobs:
           extra_nix_config: |
             experimental-features = nix-command flakes
       - run: nix build .#default -L
-      - run: ./result/bin/litgraph describe | head -5
+      - run: ./result/bin/litigate describe | head -5
       - run: nix flake check -L
 
   secret-scan:

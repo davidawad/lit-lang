@@ -53,7 +53,7 @@ allow = [
 crate = "webpki-roots"
 allow = ["CDLA-Permissive-2.0"]
 
-# The workspace crates (litigate-engine, litgraph-cli) declare `publish = false`
+# The workspace crates (litigate-engine, litigate-cli) declare `publish = false`
 # unconditionally (see Cargo.toml `[workspace.package]`); `private.ignore`
 # excludes unpublished crates from license checks entirely, so this file
 # does not need to track whether their `license` field currently reads
@@ -67,7 +67,7 @@ registries = []
 [bans]
 multiple-versions = "warn"
 wildcards = "deny"
-# Intra-workspace path dependencies (litgraph-cli -> litigate-engine) have no
+# Intra-workspace path dependencies (litigate-cli -> litigate-engine) have no
 # registry version and are otherwise flagged as "wildcard" deps; they are
 # not the unpinned-external-dependency problem this lint exists to catch.
 allow-wildcard-paths = true

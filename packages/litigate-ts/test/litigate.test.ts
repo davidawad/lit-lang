@@ -1,4 +1,4 @@
-// `litigate check`/`build`/ops/`engine` through the wasm over the
+// `litigate check`/`build`/`run`/ops through the wasm over the
 // repository's lit/ and cases/ trees, in memory, must give the native
 // `litigate` CLI's output over the disk (elapsed_ms aside), and `build` the
 // files the CLI writes. Both judge deadlines at one pinned TODAY, never
@@ -104,23 +104,22 @@ describe("build matches the CLI", () => {
     );
   });
 
-  it("runs only check, build, worlds, run, the op subcommands and engine", () => {
+  it("runs only check, build, worlds, run, timeline, calendar, actions, lint-filing and the op subcommands", () => {
     const run = lit.run(["explain", "L3004"]);
     expect(run).toStrictEqual({
       code: 1,
       stdout: "",
-      stderr: "litigate explain: only check, build, worlds, run, engine and the op subcommands run over an in-memory source\n",
+      stderr: "litigate explain: only check, build, worlds, run, timeline, calendar, actions, lint-filing and the op subcommands run over an in-memory source\n",
       files: {},
     });
   });
 });
 
-describe("ops and engine match the CLI", () => {
+describe("ops match the CLI", () => {
   it.each([
     ["an op on a matter", ["--format", "json", "solve", "cases/frcp-civil-case.case"]],
     ["run on a matter", ["--format", "json", "run", "cases/cofc-1498-patent-case.case", "--op", "chain", "--set", "rate=900"]],
     ["an op on a package", ["--format", "json", "chain", "lit/cofc"]],
-    ["an engine request", ["engine", "q", JSON.stringify({ scenario: "acme-v-widget", op: { op: "solve" } }), "--lib", "lit/examples", "--cases", "cases/examples", "--compact"]],
   ] as const)("%s", (_, args) => {
     const expected = nativeRun(args);
     expect(expected.code).toBe(0);

@@ -102,44 +102,19 @@
 
           cargoArtifacts = craneLib.buildDepsOnly commonArgs;
 
-          litgraph = craneLib.buildPackage (
+          litigate = craneLib.buildPackage (
             commonArgs
             // {
               inherit cargoArtifacts;
-              pname = "litgraph";
-              cargoExtraArgs = "-p litgraph-cli";
-              doCheck = false; # `nix flake check` runs the real test suite separately.
-
-              postInstall = ''
-                mkdir -p $out/share/litgraph
-                # The packs are build outputs of crates/litgraph-packs.
-                built="$(find target -path '*/litgraph-packs-*/out/packs' -type d | head -n 1)"
-                test -n "$built"
-                cp -r "$built" $out/share/litgraph/packs
-              '';
-
-              meta = with pkgs.lib; {
-                description = "Litigation procedure graphs as stochastic games: load, compose, weight, solve, simulate.";
-                homepage = "https://github.com/davidawad/litgraph";
-                license = licenses.gpl3Plus;
-                mainProgram = "litgraph";
-              };
-            }
-          );
-
-          litgraphMcp = craneLib.buildPackage (
-            commonArgs
-            // {
-              inherit cargoArtifacts;
-              pname = "litgraph-mcp";
-              cargoExtraArgs = "-p litgraph-mcp";
+              pname = "litigate";
+              cargoExtraArgs = "-p litigate-cli";
               doCheck = false; # `nix flake check` runs the real test suite separately.
 
               meta = with pkgs.lib; {
-                description = "MCP (Model Context Protocol) stdio server for litgraph: every engine op as a tool, packs/links.json/the manual as resources.";
+                description = "Check, compile, and query litigate rule modules (.lit) and matters (.case); `litigate mcp` serves them over MCP.";
                 homepage = "https://github.com/davidawad/litgraph";
                 license = licenses.gpl3Plus;
-                mainProgram = "litgraph-mcp";
+                mainProgram = "litigate";
               };
             }
           );
@@ -195,21 +170,18 @@
           ];
         in
         {
-          packages.default = litgraph;
-          packages.litgraph = litgraph;
-          packages.litgraph-mcp = litgraphMcp;
+          packages.default = litigate;
+          packages.litigate = litigate;
           packages.wasm = litgraphWasm;
 
-          apps.default = flake-utils.lib.mkApp { drv = litgraph; };
-          apps.litgraph-mcp = flake-utils.lib.mkApp { drv = litgraphMcp; };
+          apps.default = flake-utils.lib.mkApp { drv = litigate; };
 
           devShells.default = pkgs.mkShell {
             packages = devTools;
           };
 
           checks = {
-            build = litgraph;
-            build-mcp = litgraphMcp;
+            build = litigate;
 
             clippy = craneLib.cargoClippy (
               commonArgs

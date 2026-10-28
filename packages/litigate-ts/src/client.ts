@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // A thin typed layer over the litigate-wasm bindings (the compiler and
-// engine as WebAssembly): the same JSON request/response contract as
-// `litigate engine q`, with requests and responses typed by the generated
-// schemas.
+// engine as WebAssembly): the engine's JSON request/response contract,
+// with requests and responses typed by the generated schemas.
 import type { ApiError, Request, Response, Validation } from "./generated/schemas.js";
 import { Litigate, type LitigateWasm } from "./litigate.js";
 import type { ErrorResponse, OkResponse, OpArgs, OpName, OpOf, SchemaKind, ValidateKind } from "./types.js";
@@ -69,11 +68,11 @@ export type RequestOptions = Omit<Request, "scenario" | "op">;
 /**
  * The engine over the packs and named scenarios the wasm compiles,
  * in-process, from its embedded `lit/` and `cases/` source (once per
- * instance), as `litigate engine` at the repository root.
+ * instance).
  */
 export class Litgraph {
   readonly #wasm: LitgraphWasm;
-  /** The `litigate` CLI (check, build, run, op subcommands, engine) over in-memory files, through the same bindings. */
+  /** The `litigate` CLI (check, build, run, op subcommands) over in-memory files, through the same bindings. */
   readonly litigate: Litigate;
 
   constructor(wasm: LitgraphWasm) {
@@ -81,7 +80,7 @@ export class Litgraph {
     this.litigate = new Litigate(wasm);
   }
 
-  /** A raw request JSON string in, the response JSON string out, exactly as `litigate engine q`. */
+  /** A raw request JSON string in, the response JSON string out, the engine's raw request interface. */
   runJson(request: string): string {
     return this.#wasm.handle(request);
   }
@@ -109,7 +108,7 @@ export class Litgraph {
     return this.op("chain", {}, scenario, options);
   }
 
-  /** The machine-readable manual (`litigate engine describe`). */
+  /** The machine-readable manual (`litigate describe`). */
   describe(): Response {
     return parse<Response>(this.#wasm.describe());
   }

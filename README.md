@@ -57,21 +57,17 @@ you can read exactly what "cost" means and write your own.
 Every response is `{ok, api_version, op, result, warnings, provenance,
 elapsed_ms}` or `{ok:false, api_version, op, error:{code, message, hint},
 elapsed_ms}`. `warnings` is grouped by code (`{code, count, example, at}`)
-rather than one entry per occurrence. `litgraph describe` is the full
-machine-readable manual: every op, every scenario field, every built-in
-metric with its source expression, every variable and function. Every
-document kind (`request`, `response`, `scenario`, `named-scenario`, `pack`,
-`links`) has a
-JSON Schema via `litgraph schema <kind>`, and `litgraph validate <file|->`
-checks any of them — including a pack you're authoring — without running
-an analysis.
+rather than one entry per occurrence. `litigate run lit/cofc --op
+describe` is the engine's full machine-readable manual: every op, every
+scenario field, every built-in metric with its source expression, every
+variable and function; `--op validate` resolves the packs and scenario
+without running an analysis.
 
-A **scenario library** (`scenarios/*.json`) ships with named matter profiles
-(rates, stakes, perspective, payoffs, probabilities, policy, which packs to
-load); `litgraph describe`'s `scenario_library` lists them. A request can
-reference one by name (`{"scenario": "cofc-1498-patent-case", "op": {...}}`)
-or compose it with inline overrides (`{"extends": "<id>", ...overrides}`,
-deep-merged); the CLI's `--scenario <name|file|json>` and `--set` do the same.
+A **scenario library** of named matter profiles (rates, stakes,
+perspective, payoffs, probabilities, policy, which packs to load) is
+compiled from the `.case` matters in [`cases/`](cases/); the manual's
+`scenario_library` lists them. A matter is run by its file (`litigate
+solve cases/<id>.case`), and `--set` overrides its params.
 
 ## Quickstart
 
@@ -86,24 +82,14 @@ litigate explain cases/frcp-civil-case.case --arg node=frcp-civil-procedure::pre
 litigate sweep cases/frcp-civil-case.case --arg param=rate --arg lo=100 --arg hi=1500
 litigate deadlines lit/frcp --arg trigger=2025-01-06 --arg reachable=true  # a package: its pack
 litigate solve lit/links                          # a links package: the graph it composes
-litigate engine describe                          # the engine's raw interface: the manual
-litigate engine q '{
-  "packs": ["cofc", "cafc"],
-  "scenario": {
-    "params": { "rate": 850 },
-    "payoffs": { "cofc::judgment-for-plaintiff": 4000000 },
-    "objective": { "type": "cara", "a": 2e-7 },
-    "fee_shift": { "fraction": 0.4 }
-  },
-  "op": { "op": "simulate", "runs": 50000 }
-}'
+litigate run cases/cofc-1498-patent-case.case --op '{"op":"simulate","runs":50000}'
 ```
 
 Every op is a subcommand (`solve chain simulate path pareto sweep tornado
 calibration posterior voi structure deadlines settle compare graph metric
 lint`, plus `explain` given a path), and `litigate run TARGET --op '{...}'`
-takes an op object. The `litgraph` binary is deprecated: it forwards to
-`litigate engine` and will be removed.
+takes an op object. A matter's params, payoffs, objective and fee shift
+are written in its `analysis` block, never sent as a raw JSON request.
 
 Runnable requests live in [`cases/requests/`](cases/requests/), each a `.case`
 matter whose first line is the `litigate run` that reproduces it — a 28
@@ -131,8 +117,7 @@ litigate run cases/requests/cofc-1498-chain.case --op '{"op":"chain","metrics":[
 brew install davidawad/tap/litgraph
 
 # from source
-cargo install --git https://github.com/davidawad/litgraph litgraph-cli
-cargo install --git https://github.com/davidawad/litgraph litgraph-mcp  # MCP server
+cargo install --git https://github.com/davidawad/litgraph litigate-cli  # litigate (and `litigate mcp`)
 
 # nix, no clone
 nix run github:davidawad/litgraph -- describe
@@ -145,8 +130,8 @@ docker run --rm ghcr.io/davidawad/litgraph describe
 Prebuilt binaries (Linux x86_64 glibc/musl, macOS arm64/x86_64) and the
 WebAssembly bundles are attached to each
 [GitHub Release](https://github.com/davidawad/litgraph/releases) -- each
-release tarball, the container image, and the nix flake all carry both
-`litgraph` and `litgraph-mcp`. See [CONTRIBUTING.md](CONTRIBUTING.md) for
+release tarball, the container image, and the nix flake carry the one
+`litigate` binary (`litigate mcp` is its MCP server). See [CONTRIBUTING.md](CONTRIBUTING.md) for
 building from source with nix/devenv.
 
 ## Usage
@@ -160,48 +145,37 @@ matter's own via `extends`), `--no-links` leaves the links packages out.
 The result is the engine's response inside `litigate`'s envelope; a target
 that fails its check is not run.
 
-`litigate engine` is the engine's raw JSON interface over packs and named
-scenarios, for debugging and tools: `litigate engine q '<json>'` or
-`litigate engine q - < request.json` (equivalently `litigate engine run
-request.json`) sends one request envelope and prints one response
-envelope. Shorthand subcommands (`describe`, `packs`, `lint`, `explain
---packs ... --arg node=...`) build the envelope for you. Its packs and
-scenario library are compiled from `lit/` and `cases/` (`--lib`,
-`--cases`). `litigate
-engine schema <kind>` prints a document's JSON Schema; `litigate engine
-validate <file|->` checks a pack, `links.json`, scenario, or request file
-(kind auto-detected, or forced with `--kind`) and exits `2` if it's
-invalid. Exit codes throughout: `0` ok, `2` the request failed or the
-document is invalid, `1` usage/I/O error. The deprecated `litgraph`
-binary is `litigate engine` with the packs built in.
+`litigate run TARGET --op <name|json>` runs any op, its arguments in
+the op object; `litigate run lit/cofc --op describe` prints the engine's
+manual and `--op packs` its compiled packs. There is no raw JSON request
+interface: packs and named scenarios are compiled from `lit/` and `cases/`
+(`--lib`). Exit codes throughout: `0` ok, `2` the request failed or the
+document is invalid, `1` usage/I/O error.
 
 ### Library
 
 The engine is a Rust library crate (`litigate-engine`, in
 [`crates/litigate-engine`](crates/litigate-engine)), internal to the
-`litigate` compiler and not published; `litigate engine` (and the
-deprecated `litgraph` shim over it) is a thin layer over
-`litigate_engine::api::handle`. Add it as a path or git dependency to embed
+`litigate` compiler and not published; `litigate`'s ops are a thin layer
+over `litigate_engine::api::handle`. Add it as a path or git dependency to embed
 the solver, the expression language, or the pack loader directly — nothing
 about the CLI is required.
 
 ### MCP server
 
-`litgraph-mcp` ([`crates/litgraph-mcp`](crates/litgraph-mcp)) is a stdio
-[MCP](https://modelcontextprotocol.io) server: a thin wrapper over
-`litigate_engine::api::handle`, same as the CLI. Every op is its own tool
-(`solve`, `chain`, `explain`, ...), each with an input schema sliced
-straight out of the engine's own JSON Schema for `Op` — plus one generic
-`litgraph` tool that takes a raw request `{packs, links, no_continuations,
-scenario, op}` verbatim. Packs, `links.json`, the named scenario library,
-and the manual are MCP resources: `litgraph://packs/<id>`,
-`litgraph://links`, `litgraph://scenarios` (an index of every named
-scenario), `litgraph://scenarios/<id>` (one full matter profile), and
-`litgraph://describe`. Every tool call returns the same JSON envelope as
-the CLI; an engine error (`ok: false`) comes back as a tool error carrying
-that envelope.
+`litigate mcp` ([`crates/litigate-cli/src/mcp`](crates/litigate-cli/src/mcp))
+is a stdio [MCP](https://modelcontextprotocol.io) server. Every engine op
+is its own tool (`solve`, `chain`, `explain`, ...) run on a compiled
+matter or package, as `litigate run TARGET --op ...` runs it. The
+library's compiled packs, links, named scenarios and the engine manual
+are MCP resources: `litigate://packs/<id>`, `litigate://links`,
+`litigate://scenarios` (an index of every named scenario),
+`litigate://scenarios/<id>` (one full matter profile), and
+`litigate://describe`. Every tool call returns the same JSON envelope as
+the CLI; a failed call (an error diagnostic, an engine `ok: false`) comes
+back as a tool error carrying that envelope.
 The `litigate_describe`, `litigate_check`, `litigate_build`,
-`litigate_where`, `litigate_timeline`, `litigate_worlds` and `litigate_explain` tools drive the authoring language
+`litigate_where`, `litigate_timeline`, `litigate_actions` and `litigate_explain` tools drive the authoring language
 the packs are generated from (see [Packs](#packs)): they run the `litigate`
 toolchain as a library and return its envelope `{ok, op, result,
 diagnostics, provenance, elapsed_ms}`, with paths relative to the server's
@@ -211,7 +185,7 @@ working directory (start it in a litgraph checkout to work on `lit/` and
 **Claude Code:**
 
 ```bash
-claude mcp add litgraph -- litgraph-mcp
+claude mcp add litigate -- litigate mcp
 ```
 
 **Claude Desktop** — add to `claude_desktop_config.json`
@@ -222,8 +196,9 @@ macOS; `%APPDATA%\Claude\claude_desktop_config.json` on Windows;
 ```json
 {
   "mcpServers": {
-    "litgraph": {
-      "command": "litgraph-mcp"
+    "litigate": {
+      "command": "litigate",
+      "args": ["mcp"]
     }
   }
 }
@@ -256,14 +231,13 @@ writing a rule, testing it, writing a case and solving it;
 [`docs/litigate/SPEC.md`](docs/litigate/SPEC.md) is the language reference.
 
 `links.json` (from `lit/links`) joins them into one composed graph (e.g. a CoFC judgment linking to a
-Federal Circuit appeal). They're compiled into the `litgraph` binary at
-build time, so `litgraph packs` works right after install with no
-`packs/` directory needed; they come only from compiled `.lit` source
-(`just lit-sync` writes the repo's built packs to
-`target/lit-build/packs`). Run `litgraph packs` for
+Federal Circuit appeal). `litigate` compiles them from the `.lit` library
+(`--lib`, default `lit`) on each run; they come only from compiled `.lit`
+source (`just lit-sync` writes the repo's built packs to
+`target/lit-build/packs`). Run `litigate run lit/cofc --op packs` for
 live counts; schema is documented in
 [`docs/PACK_SCHEMA.md`](docs/PACK_SCHEMA.md). A pack (or `links.json`) that
-fails to parse is skipped, not fatal to the rest — `litgraph describe`'s
+fails to parse is skipped, not fatal to the rest — the manual's
 `pack_load_errors` names the file and the reason, and a request naming that
 pack gets an ordinary "not found" rather than every op going down. The vendored L0 source text
 `sources[].path` points into (see [`sources/PROVENANCE.md`](sources/PROVENANCE.md))
@@ -274,9 +248,7 @@ is embedded the same way, overridable with `LITGRAPH_SOURCES=<dir>`.
 Named matter profiles are JSON built from the `.case` matters in
 [`cases/`](cases/) (`just lit-sync` writes them to
 `target/lit-build/scenarios/`) (a matter's posture is derived by replaying its event
-history against the rules), and compiled into the binary at build time. Shape and request
-composition (`{"scenario": "<id>"}` / `{"extends": "<id>", ...overrides}`)
-are documented in [`docs/PACK_SCHEMA.md`](docs/PACK_SCHEMA.md)'s "Scenario
+history against the rules). Their shape is documented in [`docs/PACK_SCHEMA.md`](docs/PACK_SCHEMA.md)'s "Scenario
 library" section.
 
 | pack | forum | schema | sourced (`sources` entries) | authored payoffs |

@@ -4,7 +4,7 @@ A typed TypeScript client for the litigate compiler and engine, compiled
 to WebAssembly (`crates/litigate-wasm`). The wasm embeds the repository's
 `lit/` and `cases/` as source and compiles them in-process (once per
 instance) into the packs and named scenarios it serves. The JSON contract
-is the one `litigate engine q` uses: the request goes in, `{ok,
+is the engine's: the request goes in, `{ok,
 api_version, op, result, warnings, provenance, elapsed_ms}` comes out, and
 errors arrive as `ok: false` in the response rather than as exceptions.
 See `AGENTS.md`.
@@ -52,13 +52,8 @@ structs in Rust and the types will follow.
 | `just ts-test` | `ts-build`, build the native `litigate`, then `tsc` + `vitest --typecheck` |
 
 Tests: `test/client.test.ts` (unit, over fake and real bindings, plus a
-check that `src/` has no `any`), `test/golden.test.ts` (every
-named scenario, as `just lit-sync` builds it into `target/lit-build/`,
-through wasm, by name and inline, for `solve`, `chain`
-and a seeded `simulate`, plus `validate`, compared exactly with the native
-`litigate engine` output over that build apart from `elapsed_ms`),
-`test/litigate.test.ts` (`litigate check`/`build`/ops/`engine` in memory
-against the native `litigate` CLI),
+check that `src/` has no `any`), `test/litigate.test.ts` (`litigate
+check`/`build`/`run`/ops in memory against the native `litigate` CLI),
 `test/web.test.ts` (the web build),
 and `test/types.test-d.ts` (type-level, `expect-type` via vitest).
 

@@ -258,11 +258,9 @@ ts-build: wasm ts-gen
     echo '{"type": "commonjs"}' > {{ts_pkg}}/wasm/node/package.json
     cd {{ts_pkg}} && npm run --silent build
 
-# Unit, type-level, and golden tests (every built scenarios/*.json, from
-# `lit-sync`'s target/lit-build/, through the wasm's own compile of lit/
-# and cases/ against the native `litigate engine` over that build, and
-# `litigate check`/`build`/ops/`engine` over lit/ and cases/ in memory
-# against the native `litigate` CLI, built here).
+# Unit, type-level, and golden tests (`litigate check`/`build`/`run`/ops
+# over lit/ and cases/ in memory against the native `litigate` CLI, built
+# here, and target/lit-build/ from `lit-sync`).
 ts-test: ts-build lit-sync
     cargo build -q -p litigate-cli
     cd {{ts_pkg}} && LITIGATE_BIN="$(cd ../.. && pwd)/target/debug/litigate" npm test
@@ -271,7 +269,7 @@ ts-test: ts-build lit-sync
 
 nix-build:
     nix build .#default
-    ./result/bin/litgraph describe | head -5
+    ./result/bin/litigate describe | head -5
 
 nix-check:
     nix flake check

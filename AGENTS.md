@@ -6,62 +6,45 @@ this file is the operating manual.
 ## Commands
 
 `litigate` is the one command line (lg-9lrj). Every engine op is a
-subcommand on a compiled matter or package, and `litigate engine` is the
-engine's raw JSON interface, the commands below (`litigate engine q ...`,
-`litigate engine describe`, ...); its packs and named scenarios are
-compiled from `lit/` and `cases/`. The
-`litgraph` binary is a deprecated shim for `litigate engine` with the
-packs built in; write new callers against `litigate`.
+subcommand on a compiled matter or package (`litigate <op> TARGET`), and
+`litigate run TARGET --op JSON` runs any op, its arguments included; a
+`.case` matter supplies the scenario (its `analysis`, `beliefs` and
+`calibration`), a package its pack under the default scenario. There is no
+raw JSON request interface: packs and named scenarios are compiled from
+`lit/` and `cases/`.
 
 ```bash
+cargo build --release                      # binary: target/release/litigate
+cargo test                                 # unit + feature tests
 litigate solve cases/cofc-1498-patent-case.case          # any op on a compiled matter
 litigate sweep cases/frcp-civil-case.case --arg param=rate --set opp_rate=500
 litigate explain cases/frcp-civil-case.case --arg node=frcp-civil-procedure::pre-filing
 litigate chain lit/cofc                                  # a package: its pack, default scenario
 litigate solve lit/links                                 # a links package: the graph it composes
-litigate engine q '{"packs":["cofc"],"op":{"op":"solve"}}'   # a raw request
-```
-
-The raw interface (`litigate engine ARGS`; the deprecated `litgraph ARGS`
-is the same with the packs built in):
-
-```bash
-cargo build --release                      # binaries: target/release/litigate (and the litgraph shim)
-cargo test                                 # unit + parity (vs the TS engine) + feature tests
-litgraph describe                          # the full manual as JSON — start here (lists scenario_library)
-litgraph schema request                    # JSON Schema (draft 2020-12) of request|response|scenario|named-scenario|pack|links
-litgraph validate my-pack.json             # check a pack/links/scenario/named-scenario/request file; auto-detects kind
-litgraph validate - < request.json         # exit 2 if invalid; --kind to force
-litgraph packs                             # packs + data quality
-litgraph lint [--packs cofc]               # content diagnostics
-litgraph q '{"packs":["ptab-patent-trial-appeal-board"],"scenario":{"calibration":["ptab-fy2024"]},"op":{"op":"chain"}}'
-                                            # apply real docket-derived rates (docs/CALIBRATION.md)
-litgraph q '{"packs":["frcp-civil-procedure"],"op":{"op":"calibration"}}'
-                                            # uncalibrated probabilities/durations, ranked by sensitivity
-litgraph q '{"scenario":{"extends":"cofc-1498-patent-case","observe":{"cofc::sj-ruling":{"cofc::e-sj-govt":3}}},"op":{"op":"solve"}}'
-                                            # Bayesian update on observed outcomes (docs/UNCERTAINTY.md)
-litgraph q '{"scenario":{"extends":"cofc-1498-patent-case","objective":{"type":"robust"}},"op":{"op":"solve"}}'
-                                            # robust to the credible range of probabilities; nominal vs robust + policy changes
-litgraph q '{"scenario":"cofc-1498-patent-case","op":{"op":"posterior"}}'   # credible intervals, P(option optimal)
-litgraph q '{"scenario":"cofc-1498-patent-case","op":{"op":"voi","studies":[{"node":"cofc::sj-ruling","k":5,"cost":25000}]}}'
+litigate chain cases/cofc-1498-patent-case.case --set rate=900   # --set overrides analysis { params }
+litigate calibration lit/frcp              # uncalibrated probabilities/durations, ranked by sensitivity
+litigate lint lit/cofc                     # the engine's content diagnostics
+litigate posterior cases/cofc-1498-patent-case.case      # credible intervals, P(option optimal)
+litigate run cases/cofc-1498-patent-case.case --op '{"op":"voi","studies":[{"node":"cofc::sj-ruling","k":5,"cost":25000}]}'
                                             # what is worth paying to learn (EVPI / EVSI vs cost)
-litgraph explain --packs frcp-civil-procedure --arg node=answer-due --set rate=900
-litgraph run request.json                  # same as `q`, reads a file
-litgraph q '{"packs":["cofc","cafc"],"scenario":{...},"op":{"op":"chain"}}'
-litgraph q '{"scenario":"cofc-1498-patent-case","op":{"op":"chain"}}'   # named scenario; its own `packs` apply
-litgraph chain --scenario cofc-1498-patent-case --set rate=900          # CLI: name/file/inline JSON, --set composes via `extends`
-litgraph q - < request.json
+litigate run lit/cofc --op describe         # the engine's manual (ops, arguments, scenario library)
+litigate run lit/cofc --op packs            # the compiled packs + data quality
 litigate run cases/requests/cofc-1498-settle.case --op settle   # settle: ZOPA, Nash/Rubinstein price, when to settle, Rule 68
                                             # (needs scenario.opponent_objective; docs/SETTLEMENT.md;
                                             # the case's first line is its full `litigate run`)
 ```
+
+Observations (a Bayesian update, docs/UNCERTAINTY.md), a robust objective
+and real docket-derived rates (docs/CALIBRATION.md) are written in the
+matter: `beliefs { observe ... }`, `analysis { objective ... }` and
+`analysis { calibration: [...] }` (docs/litigate/SPEC.md §5.6).
 
 Packs and named scenarios are **build outputs, never committed**:
 `lit/<forum>/*.lit` and `cases/*.case` are the authoring surface (the
 litigate language). `crates/litgraph-packs` compiles them (the `litigate
 build` arguments in `crates/litgraph-packs/build.args`) at `cargo build`
 time and embeds the result; `just lit-sync` writes the same build to
-`target/lit-build/{packs,scenarios}` to read or pass as `--packs-dir`.
+`target/lit-build/{packs,scenarios}` to read.
 `packs/` holds only source notes: the shared clock library is `lit/core`
 (lowered into `crates/litigate-engine/clock/` by `just lit-sync`), calibration
 sets are `calibration` declarations in `lit/`, and runnable requests are
@@ -125,7 +108,7 @@ stale.
 test it, write a case, run solve); `docs/litigate/SPEC.md` is normative.
 Over MCP the same toolchain is the `litigate_describe`, `litigate_check`,
 `litigate_build`, `litigate_where`, `litigate_timeline`,
-`litigate_worlds` and `litigate_explain` tools. `litigate timeline FILE`
+`litigate_actions` and `litigate_explain` tools. `litigate timeline FILE`
 prints a `.case` or `.lit` file's timeline (rows, worlds, layers) as the
 frozen `litigate.timeline/1` JSON (docs/litigate/TIMELINE.md). `litigate
 worlds CASE --world FILE` replays a matter in every world a `.world` file
@@ -133,25 +116,22 @@ spans (its layers, one option per `[choice.ID]`, `--vary NAME` with and
 without a layer) at `--as-of`/`--known-at`, and lists per filing the
 worlds in which it is timely or late (docs/litigate/CHANGE.md §5.1).
 
-Packs are embedded in the binary at build time — no `packs/` directory is
-needed after install. The named scenario library is embedded the same
-way. See docs/PACK_SCHEMA.md's "Scenario library" section
-for the file shape and how a request composes a named scenario with
-overrides (`{"extends": "<id>", ...}`). The vendored L0 source corpus
-(`sources/*.txt`, see `sources/PROVENANCE.md`) is embedded the same way;
+Engine ops compile their packs from the `.lit` library on the disk (`--lib
+DIR`, default `lit`) each run, so the library ships beside the binary,
+never as JSON. The vendored L0 source corpus (`sources/*.txt`, see
+`sources/PROVENANCE.md`) is embedded in the binary at build time;
 override it with `LITGRAPH_SOURCES=<dir>`.
 
 Driving this from an MCP-capable agent instead of the CLI: `litigate mcp`
 is the same contract over stdio (this repository's `.mcp.json` registers
 it). Every engine op is its own MCP tool run on a compiled matter
 (`{target, set?, lib?, no_links?, ...op fields}`, as `litigate run`),
-`litigate_engine` takes a raw request over the compiled library, the
-`litigate_*` tools above drive the authoring language, and the compiled
+the `litigate_*` tools above drive the authoring language, and the compiled
 packs, links, named scenarios and engine manual are MCP resources
 (`litigate://packs/<id>`, `litigate://links`, `litigate://scenarios`,
 `litigate://scenarios/<id>`, `litigate://describe`). `claude mcp add
 litigate -- litigate mcp` wires it into Claude Code; see the README's "MCP
-server" section for other clients. `litgraph-mcp` is deprecated.
+server" section for other clients.
 
 Every response: `{ok, api_version, op, result, warnings, provenance,
 elapsed_ms}` or `{ok:false, api_version, op, error:{code, message, hint},
@@ -253,10 +233,9 @@ crates/litigate-engine/src/
   api/        JSON request/response, describe, op dispatch
   lint.rs     content QA
   cite/       cite verification against L0 sources (normalize, corpus, fuzzy match)
-crates/litgraph-cli/   the `litgraph` binary
-crates/litgraph-mcp/   the `litgraph-mcp` binary: stdio MCP server, one tool per op + litigate_* tools
 crates/litigate-*/     the authoring language: base (diagnostics), syntax, sema, verify, lower,
-                       import, cli (`litigate`), lsp; editors/ holds tree-sitter + editor modes
+                       import, cli (`litigate`, its `litigate mcp` stdio MCP server), lsp, wasm;
+                       editors/ holds tree-sitter + editor modes
 lit/                   .lit rule packages, one per forum (+ core stdlib, links, examples);
                        calibration-*.lit: calibration sets (real, sourced probabilities/durations)
 cases/                 .case matters (top level → scenarios/; requests/: runnable requests, each

@@ -41,15 +41,13 @@ class Litgraph < Formula
   end
 
   def install
-    bin.install "litgraph"
-    bin.install "litgraph-mcp"
     bin.install "litigate"
     bin.install "litigate-lsp"
     pkgshare.install "packs"
   end
 
   test do
-    assert_match "\"ok\":true", shell_output("#{bin}/litgraph describe --compact")
+    assert_match "\"ok\":true", shell_output("#{bin}/litigate describe")
     assert_match "litigate", shell_output("#{bin}/litigate --version")
   end
 end

@@ -256,10 +256,12 @@ fn find_range_separator(s: &str) -> Option<(usize, usize)> {
 /// Inclusive member list from `lo` to `hi`, capped at 100 members. Handles a
 /// plain integer range (`"28".."31"`) and a dotted range sharing a prefix
 /// (`"42.120".."42.121"`, or `"42.120".."121"` — legal writing often drops
-/// the repeated prefix on the high side).
+/// the repeated prefix on the high side). The high end must exceed the low
+/// one: `3002.1-1` is the undivided local rule 3002.1-1, not a one-member
+/// range collapsing to `3002.1`.
 fn range_members(lo: &str, hi: &str) -> Option<Vec<String>> {
     if let (Ok(a), Ok(b)) = (lo.parse::<u32>(), hi.parse::<u32>()) {
-        return (b >= a && b - a < 100).then(|| (a..=b).map(|n| n.to_string()).collect());
+        return (b > a && b - a < 100).then(|| (a..=b).map(|n| n.to_string()).collect());
     }
     let (prefix, lo_last) = lo.rsplit_once('.')?;
     let a: u32 = lo_last.parse().ok()?;
@@ -275,7 +277,7 @@ fn range_members(lo: &str, hi: &str) -> Option<Vec<String>> {
         return None;
     }
     let b: u32 = hi_last.parse().ok()?;
-    (b >= a && b - a < 100).then(|| (a..=b).map(|n| format!("{prefix}.{n}")).collect())
+    (b > a && b - a < 100).then(|| (a..=b).map(|n| format!("{prefix}.{n}")).collect())
 }
 
 /// Split `s` on `sep`, never inside one of `grammar`'s rule prefixes

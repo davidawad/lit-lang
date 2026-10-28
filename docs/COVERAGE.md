@@ -56,7 +56,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | Jurisdiction | Kind | Status | Rules | Precedents | Tests | Matters | Packages |
 |---|---|---|--:|--:|--:|--:|---|
 | Alabama | state | outline | 0 | 0 | 0 | 0 | `outlines/eleventh-circuit/alabama/state-appellate`, `outlines/eleventh-circuit/alabama/state-civil` |
-| Alaska | state | promoted | 0 | 0 | 0 | 0 | `lit/ak-superior` |
+| Alaska | state | promoted | 0 | 0 | 0 | 0 | `lit/ak-superior`, `lit/ak-supreme` |
 | Arizona | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/arizona/state-appellate`, `outlines/ninth-circuit/arizona/state-civil` |
 | Arkansas | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/arkansas/state-appellate`, `outlines/eighth-circuit/arkansas/state-civil` |
 | California | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/california/state-appellate`, `outlines/ninth-circuit/california/state-civil` |

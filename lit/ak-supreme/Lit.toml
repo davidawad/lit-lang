@@ -1,0 +1,41 @@
+# A civil appeal of right from the Alaska Superior Court to the Alaska
+# Supreme Court under Parts Two and Five of the Alaska Rules of Appellate
+# Procedure as the court system served them on 2026-10-27 (latest stated
+# amendment SCO 2035, effective April 15, 2025; sources/ak-supreme).
+# Computation of time is Appellate Rule 502(a), which, like Civil Rule
+# 6(a), excludes intermediate Saturdays, Sundays and legal holidays from
+# periods under seven days and has no counting rule in lit/core, so the
+# rules' periods are stated in notes, not encoded as counted deadlines.
+# The appellate jurisdiction statute (AS 22.05.010) is not vendored and is
+# not cited. A superior court appeal arrives from lit/ak-superior.
+[package]
+name = "ak-appellate-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ak-appellate-civil"
+forum = "ak-supreme"
+authority = "StateRule"
+title = "Alaska Supreme Court, civil appeals"
+description = "A civil appeal of right from the Alaska Superior Court to the Alaska Supreme Court, through record, briefing, oral argument, decision, rehearing and the return of jurisdiction, as far as the vendored Alaska Rules of Appellate Procedure state."
+in_force = "2025-04-15"
+known_at = "2026-10-27"
+unknown_before = "2025-04-15"
+jurisdiction = "Alaska Supreme Court (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ak-app]
+title = "Alaska Rules of Court, Rules of Appellate Procedure (amended through SCO 2035 effective April 15, 2025, as served on October 27, 2026)"
+url = "https://courts.alaska.gov/rules/docs/app.pdf"
+path = "sources/ak-supreme/alaska-appellate-procedure-sectioned.txt"
+path_sha256 = "98b14637ade4bd8b2ce42679338cf16575ff1be63cd074e2cfcfe7019bd31775"
+sha256 = "b5f480666b750db7d9409a3db7d3dc91e796738ee105ea63802d40a737ad5f0c"
+as_of = "2025-04-15"
+cite_prefixes = ["Alaska R. App. P."]
+section_heading = "Rule {n}"

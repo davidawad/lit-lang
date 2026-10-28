@@ -15,3 +15,9 @@
 - Source: as the extract `d-kan/d-kan-local-rules-2026.txt`, https://www.ksd.uscourts.gov/sites/ksd/files/MASTER%20COPY%20updated%204%2027%2026.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, Rules of Practice effective April 1, 2026.
 - Sectioned sha256 aa997f61649e526629529161843e01d98c8691d08fce5efbb564616e30266c19 (the `path_sha256` pinned by `lit/ksd/Lit.toml`).
+
+### `d-kan/d-kan-local-rules-2026-criminal-sectioned.txt` — D. Kan. Rules of Practice, criminal rules (Part XV) sectioned
+
+- Derived in the pod (lg-gddt.24) from `d-kan/d-kan-local-rules-2026.txt` (extract sha256 fad3f1414bc1e8663cc176e3c1be624325c6cea7164717a2c312a83bf4e68160); nothing fetched. In Part XV, Rules Applicable to Criminal Cases, one marker line `## D. Kan. Rule CR<n>` is inserted right after each rule's own body heading line `RULE CR<n>` (13 markers, D. Kan. Rule CR1.1 through CR58.1). The table of rules, the civil rules and the standing orders are unmarked (CR58.1's section runs to the end of the file); the civil rules are cited from `d-kan/d-kan-local-rules-2026-sectioned.txt`. Rule text was not edited: deleting the marker lines (each `## D. Kan. Rule CR` line with its newline) restores the extract byte for byte.
+- Edition: as the extract, Rules of Practice effective April 1, 2026.
+- Sectioned sha256 ad37189826fba458eb85b5bf9d6b84f00150aef91ed5865c83c4e3452305e66d (the `path_sha256` pinned by `lit/ksd-criminal/Lit.toml`).

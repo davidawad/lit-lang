@@ -1,0 +1,28 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "ksd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:82ad587bc86b6127365cd8d336ab053aee73ba6c4373fed33457f23e59dd3b38"
+semantic = "sha256:b852da5de5b35fa62ef54954fc5059454155e2d56c3cf771348b067ab971ca36"
+texts = [
+    "ksd-rules sources/d-kan/d-kan-local-rules-2026-sectioned.txt sha256:aa997f61649e526629529161843e01d98c8691d08fce5efbb564616e30266c19",
+    "ksd-rules-cr sources/d-kan/d-kan-local-rules-2026-criminal-sectioned.txt sha256:ad37189826fba458eb85b5bf9d6b84f00150aef91ed5865c83c4e3452305e66d",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

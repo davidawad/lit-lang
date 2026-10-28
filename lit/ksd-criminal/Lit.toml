@@ -1,0 +1,63 @@
+# The U.S. District Court for the District of Kansas's local rules for
+# criminal cases (Part XV, D. Kan. Rules CR1.1 to CR58.1, with the civil
+# rules D. Kan. Rule CR1.1 makes applicable in criminal proceedings) as a
+# local-rule layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it
+# declares only the periods and limits those rules themselves state and
+# re-encodes no FRCrimP, Speedy Trial Act or FRAP 4(b) period (one source
+# of truth: lit/frcrimp). Each period is counted under FRCrimP 45(a), which
+# governs "any local rule", so each deadline names `forum frcrimp`. The
+# rules are the Rules of Practice effective April 1, 2026 (sources/d-kan),
+# the edition the court serves as current, so in_force is that date;
+# earlier editions are not vendored, so a query before it is a hole in the
+# corpus. An appeal goes to the Tenth Circuit under lit/frcrimp's FRAP 4(b)
+# period and lit/ca10.
+[package]
+name = "ksd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ksd-criminal-local-rules"
+forum = "ksd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of Kansas: Local Rules in Criminal Cases"
+description = "The U.S. District Court for the District of Kansas's local rules for criminal cases as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the motion response and reply periods, the response to a notice of supplemental authority and its word limit, the parties' sentencing statements, motions to reconsider, and review of a magistrate judge's order."
+in_force = "2026-04-01"
+known_at = "2026-10-28"
+unknown_before = "2026-04-01"
+jurisdiction = "U.S. District Court for the District of Kansas (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ksd-rules-cr"
+issuer = "U.S. District Court for the District of Kansas"
+date = "2026-04-01"
+designation = "Rules of Practice, Part XV (Rules Applicable to Criminal Cases)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.ksd-rules-cr]
+title = "Rules of Practice of the United States District Court for the District of Kansas (effective April 1, 2026), Part XV, Rules Applicable to Criminal Cases"
+url = "https://www.ksd.uscourts.gov/sites/ksd/files/MASTER%20COPY%20updated%204%2027%2026.pdf"
+path = "sources/d-kan/d-kan-local-rules-2026-criminal-sectioned.txt"
+path_sha256 = "ad37189826fba458eb85b5bf9d6b84f00150aef91ed5865c83c4e3452305e66d"
+sha256 = "887b23a5a4f9a432dd85a828884b0d48482f0ee061d3fc3a5898467a9043aeab"
+as_of = "2026-04-01"
+cite_prefixes = ["D. Kan. Rule CR"]
+section_heading = "D. Kan. Rule CR{n}"
+
+[sources.ksd-rules]
+title = "Rules of Practice of the United States District Court for the District of Kansas (effective April 1, 2026), the civil rules D. Kan. Rule CR1.1 applies in criminal proceedings"
+url = "https://www.ksd.uscourts.gov/sites/ksd/files/MASTER%20COPY%20updated%204%2027%2026.pdf"
+path = "sources/d-kan/d-kan-local-rules-2026-sectioned.txt"
+path_sha256 = "aa997f61649e526629529161843e01d98c8691d08fce5efbb564616e30266c19"
+sha256 = "887b23a5a4f9a432dd85a828884b0d48482f0ee061d3fc3a5898467a9043aeab"
+as_of = "2026-04-01"
+cite_prefixes = ["D. Kan. Rule"]
+section_heading = "D. Kan. Rule {n}"

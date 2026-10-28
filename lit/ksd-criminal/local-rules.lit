@@ -1,0 +1,117 @@
+module ksd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The District of Kansas's own criminal periods, counted under the
+// criminal rules (FRCrimP 45(a) governs "any local rule"). The rules in
+// Part XV and the civil rules D. Kan. Rule CR1.1 lists govern every
+// criminal proceeding; of the listed civil rules, those that state a
+// period for a criminal case are encoded here (D. Kan. Rule 7.3, 72.1.4(e)).
+// No trigger carries a service method: FRCrimP 45(c)'s three added days
+// follow the manner of service, which is not modeled here.
+//
+// Conditions that are not deadlines from an event stay in notes: when a
+// presentence investigation and report are made, the sentencing hearing is
+// scheduled no earlier than 70 days after entry of a guilty plea or a
+// guilty verdict, unless a party requests otherwise and the court so
+// orders (D. Kan. Rule CR32.1(a)), a floor on the setting rather than a
+// deadline for a party; the presentence report itself is FRCrimP 32's and
+// stays in lit/frcrimp, and delivering it to defense counsel satisfies
+// FRCrimP 32(e)(2) (D. Kan. Rule CR32.1(b)). A petition under the
+// Interstate Agreement on Detainers is entertained only if the prisoner
+// gave the written notice and request at least 180 days before lodging it
+// and has not been brought to trial (D. Kan. Rule CR47.1), a precondition
+// rather than a deadline. Exhibits, sealed documents and filed depositions
+// in the clerk's custody more than 30 days after the time for appeal has
+// expired or the mandate is received may be returned or destroyed if
+// unclaimed after reasonable notice (D. Kan. Rule 79.3(c)), a permission to
+// the clerk with no party deadline. Retained counsel files an entry of
+// appearance "promptly" (D. Kan. Rule CR44.2), no day count.
+//
+// The earlier D. Kan. criminal outline's FRCrimP flow and its decisions
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// A notice of supplemental authorities: its body may not exceed 350
+/// words, and any response is similarly limited (D. Kan. Rule CR1.3(c)).
+limit supplemental-authority-notice {
+  words <= 350 cite "D. Kan. Rule CR1.3(c)"
+} cite "D. Kan. Rule CR1.3(c)"
+
+/// A motion is served (D. Kan. Rule CR1.2).
+event MotionServed()
+/// A response to a motion is served (D. Kan. Rule CR1.2).
+event ResponseServed()
+/// A party files a notice of supplemental authorities (D. Kan. Rule
+/// CR1.3(c)).
+event SupplementalAuthorityNoticed() paper supplemental-authority-notice
+/// A court order is served (D. Kan. Rule 7.3).
+event OrderServed()
+/// A magistrate judge enters an order in a criminal case (D. Kan. Rule
+/// 72.1.4(e)).
+event MagistrateOrderEntered()
+
+/// D. Kan. Rule CR1.2: unless otherwise ordered by the court, any
+/// response to a motion is filed within 14 days after the motion is
+/// served.
+deadline response-period: 14.days after MotionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Kan. Rule CR1.2"
+{
+  forum frcrimp
+}
+
+/// D. Kan. Rule CR1.2: any reply is filed within 7 days after the response
+/// is served, unless otherwise ordered.
+deadline reply-period: 7.days after ResponseServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Kan. Rule CR1.2"
+{
+  forum frcrimp
+}
+
+/// D. Kan. Rule CR1.3(c): any response to a notice of supplemental
+/// authorities is made within 5 days, linked to it in CM/ECF and limited
+/// to 350 words.
+deadline supplemental-authority-response: 5.days after SupplementalAuthorityNoticed() counted_by frcrimp45 cite "D. Kan. Rule CR1.3(c)"
+{
+  forum frcrimp
+}
+
+/// D. Kan. Rule CR32.1(c): after the final presentence report has been
+/// provided to the parties, but no later than five days before the
+/// sentencing date, the government and the defendant may file written
+/// statements of their positions on the sentencing factors and unresolved
+/// facts.
+deadline sentencing-factors-statement: 5.days before SentencingScheduled() counted_by frcrimp45 cite "D. Kan. Rule CR32.1(c)"
+{
+  forum frcrimp
+}
+
+/// D. Kan. Rule 7.3 (applicable in criminal cases, D. Kan. Rule CR1.1): a
+/// party seeking reconsideration of a court order files a motion within 14
+/// days after the order is served unless the court extends the time.
+deadline reconsideration-motion: 14.days after OrderServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op extend
+} cite "D. Kan. Rule 7.3"
+{
+  forum frcrimp
+}
+
+/// D. Kan. Rule 72.1.4(e) (applicable in criminal cases, D. Kan. Rule
+/// CR1.1): in criminal cases, a motion to appeal or otherwise seek review
+/// by a district judge of a magistrate judge's order is filed within 14
+/// days of the order; the district judge may extend the deadline on a
+/// showing of good cause.
+deadline magistrate-order-review: 14.days after MagistrateOrderEntered() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op extend
+} cite "D. Kan. Rule 72.1.4(e)"
+{
+  forum frcrimp
+}

@@ -1,0 +1,57 @@
+module ar-workers-compensation-commission.claim
+
+import ar-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeOfAppealFiled }
+
+// A claim before the Arkansas Workers' Compensation Commission, from the
+// claimant's side. Ark. Code Ann. title 11, chapter 9 and the Commission's
+// rules are not vendored, so every cite is a hole naming the section the
+// outline pointed to, and no period, form, fee or standard of review is
+// stated. The outline named no decision.
+start filed
+
+state filed: "Claim filed" by applicant cite ?("Ark. Code Ann. § 11-9-702: not vendored") {
+  note "A claim for compensation is filed with the Commission. The filing period, form and fees are not stated: Ark. Code Ann. § 11-9-702 is not vendored."
+  edge-filed-hearing "Set for hearing" -> hearing {
+    event ActionCommenced()
+    authority cite ?("Ark. Code Ann. § 11-9-705: not vendored")
+  }
+}
+
+state hearing: "Hearing before an administrative law judge" by court cite ?("Ark. Code Ann. § 11-9-705: not vendored") {
+  note "The claim is heard by an administrative law judge. Hearing procedure, evidence and the record are not stated: Ark. Code Ann. § 11-9-705 is not vendored."
+  edge-hearing-decision "Decision issued" -> decision {
+    authority cite ?("Ark. Code Ann. § 11-9-704: not vendored")
+  }
+}
+
+decision decision: "Administrative law judge decides" by court cite ?("Ark. Code Ann. § 11-9-704: not vendored") {
+  note "The decision and its effect are not stated: Ark. Code Ann. § 11-9-704 is not vendored."
+  edge-decision-granted "Compensation awarded" -> review {
+    event DecisionFiled()
+    authority cite ?("Ark. Code Ann. § 11-9-704: not vendored")
+  }
+  edge-decision-denied "Compensation denied" -> review {
+    event DecisionFiled()
+    authority cite ?("Ark. Code Ann. § 11-9-704: not vendored")
+  }
+}
+
+decision review: "Review by the Full Commission or the Court of Appeals sought?" by applicant cite ?("Ark. Code Ann. § 11-9-711: not vendored") {
+  note "The outline routes a decision to review by the Full Commission and the Commission's decision to the Arkansas Court of Appeals (lit/arkctapp). The review periods and the reviewing body's standard are not stated: Ark. Code Ann. § 11-9-711 is not vendored."
+  edge-review-none "No review: the decision is final" -> final-decision {
+    event JudgmentEntered()
+    authority cite ?("Ark. Code Ann. § 11-9-711: not vendored")
+  }
+  edge-review-sought "Review sought" -> review-sought {
+    event NoticeOfAppealFiled()
+    authority cite ?("Ark. Code Ann. § 11-9-711: not vendored")
+  }
+}
+
+terminal final-decision: "Decision final" outcome [final] cite ?("Ark. Code Ann. § 11-9-711: not vendored") {
+  note "Enforcement and payment are not modeled."
+}
+
+terminal review-sought: "Review sought" outcome [final] cite ?("Ark. Code Ann. § 11-9-711: not vendored") {
+  note "Review in the Arkansas Court of Appeals is lit/arkctapp's."
+}

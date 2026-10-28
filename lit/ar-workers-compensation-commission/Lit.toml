@@ -1,0 +1,36 @@
+# Claims before the Arkansas Workers' Compensation Commission under the
+# Workers' Compensation Law, Ark. Code Ann. title 11, chapter 9. No text of
+# the chapter, of the Commission's rules or of its procedure is vendored
+# under sources/, so every cite is a hole naming its pinpoint and no
+# period, form or fee is stated. The structure is the outline's: a claim
+# heard by an administrative law judge, review by the Full Commission, and
+# review of the Commission in the Arkansas Court of Appeals (lit/arkctapp).
+[package]
+name = "ar-workers-compensation-commission"
+version = "0.1.0"
+language = 1
+pack_id = "ar-workers-compensation-commission"
+forum = "ar-workers-compensation-commission"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "arkansas"
+title = "Arkansas Workers' Compensation Commission"
+description = "A claim before the Arkansas Workers' Compensation Commission: filing, the hearing before an administrative law judge, the decision, and review. Every cite is a hole: Ark. Code Ann. title 11, chapter 9 and the Commission's rules are not vendored, so no period, form or fee is stated."
+in_force = "2025-12-15"
+known_at = "2026-10-28"
+unknown_before = "2025-12-15"
+jurisdiction = "Arkansas Workers' Compensation Commission"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+ar-state-rules = { version = "^0.1.0", path = "../ar-rules" }
+
+[sources.ark-code-11-9]
+title = "Arkansas Code Annotated, title 11, chapter 9 (Workers' Compensation), not vendored"
+url = "https://www.lexisnexis.com/hottopics/arcode/Default.asp"

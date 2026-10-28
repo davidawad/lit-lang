@@ -1,0 +1,47 @@
+# The Arkansas Supreme Court's review of a Court of Appeals civil decision
+# (lg-u561.5): the petition for review under Ark. Sup. Ct. R. 2-4, the
+# grant or denial of review, supplemental briefing, decision, rehearing
+# under Rule 2-3 and the mandate under Rule 5-3, under the Rules of the
+# Supreme Court and Court of Appeals, current through December 15, 2025
+# (sources/arkctapp), from lit/arkctapp. The rules state their periods in
+# calendar days and the circuit court's Ark. R. Civ. P. 6(a) computation
+# has no core method, so periods are stated in notes, not encoded as
+# counted deadlines; the petition, supplemental brief and rehearing page
+# limits are encoded as filing limits. Appeals filed directly in the
+# Supreme Court under Rule 1-2(a) follow lit/arkctapp's graph; original
+# proceedings are not modeled.
+[package]
+name = "ar-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ar-supreme-court-civil"
+forum = "ar-supreme-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "arkansas"
+title = "Arkansas Supreme Court, review of Court of Appeals decisions (civil)"
+description = "Supreme Court review of an Arkansas Court of Appeals civil decision under Ark. Sup. Ct. R. 2-4: the petition for review and its response, the grant or denial of review, supplemental briefing, decision, rehearing under Rule 2-3, and the mandate under Rule 5-3. The page limits are encoded as filing limits."
+in_force = "2025-12-15"
+known_at = "2026-10-28"
+unknown_before = "2025-12-15"
+jurisdiction = "Arkansas Supreme Court (review of Court of Appeals decisions, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+ar-state-rules = { version = "^0.1.0", path = "../ar-rules" }
+
+[sources.ark-sup-ct-r]
+title = "Rules of the Supreme Court and Court of Appeals of the State of Arkansas (current through December 15, 2025)"
+url = "https://opinions.arcourts.gov/ark/cr/en/1871/1/document.do"
+path = "sources/arkctapp/ar-supreme-court-rules-sectioned.txt"
+path_sha256 = "12010c2bee197d0f5ecef0c430a1c8559819a85152d0396c83551562bfe639ca"
+sha256 = "7f26989c58f09c36964c5add5424f6709db177bfc367ea648aab2905b88c4484"
+as_of = "2025-12-15"
+cite_prefixes = ["Ark. Sup. Ct. R."]
+section_heading = "Ark. Sup. Ct. R. {n}"

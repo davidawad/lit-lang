@@ -1,0 +1,127 @@
+module ar-supreme-court-civil.review
+
+import ar-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
+
+// Supreme Court review of a Court of Appeals civil decision, from the
+// petitioner's side. Every period is stated in a note, not counted: the
+// rules count calendar days and lit/core has no Arkansas method. No leading
+// decision is named.
+/// A petition for review of a Court of Appeals decision, and a response
+/// to it: at most three 8 1/2 x 11 double-spaced pages (Ark. Sup. Ct. R.
+/// 2-4(b), (e)).
+limit review-petition { pages <= 3 cite "Ark. Sup. Ct. R. 2-4(b)" } cite "Ark. Sup. Ct. R. 2-4(b)"
+
+/// A supplemental brief on review: at most 10 pages (Ark. Sup. Ct. R.
+/// 2-4(g)).
+limit supplemental-review-brief {
+  pages <= 10 cite "Ark. Sup. Ct. R. 2-4(g)"
+} cite "Ark. Sup. Ct. R. 2-4(g)"
+
+/// A petition for rehearing with its supporting brief, including the
+/// style of the case and the certificate of counsel: at most ten
+/// double-spaced pages (Ark. Sup. Ct. R. 2-3(e)).
+limit rehearing-petition {
+  pages <= 10 cite "Ark. Sup. Ct. R. 2-3(e)"
+} cite "Ark. Sup. Ct. R. 2-3(e)"
+
+/// A response to a petition for review is filed (Ark. Sup. Ct. R. 2-4(e)).
+event ReviewResponseFiled() paper review-petition
+/// A supplemental brief on review is filed (Ark. Sup. Ct. R. 2-4(g)).
+event SupplementalReviewBriefFiled() paper supplemental-review-brief
+/// A petition for rehearing of the Supreme Court's decision is filed (Ark.
+/// Sup. Ct. R. 2-3(a)).
+event RehearingPetitionFiled() paper rehearing-petition
+
+start petition
+
+decision petition: "Petition for review?" by applicant cite "Ark. Sup. Ct. R. 2-4(a)"
+{
+  note "The decision under review arrives from lit/arkctapp. A petition for review is electronically filed within 10 calendar days after the end of the Court of Appeals rehearing period, which ends when the time for a rehearing petition under Rule 2-3(a) (18 calendar days from the date of decision) expires or the last pending rehearing petition is disposed of, whichever is later; a petition received earlier is marked tendered and deemed filed the day after the rehearing period ends (Ark. Sup. Ct. R. 2-4(a), 2-3(a)). Only a party to the appeal may petition; the petition briefly and distinctly states the basis for review, and briefs and oral argument in support are not accepted, though the petition for rehearing may be attached (Ark. Sup. Ct. R. 2-4(b), (c)). The petition must allege a tie vote in the Court of Appeals, a conflict with a prior published holding of either court, or error on a ground Rule 1-2(b) lists (Ark. Sup. Ct. R. 2-4(d))."
+  edge-petition-none "No petition: the Court of Appeals decision stands" -> no-petition {
+    authority cite "Ark. Sup. Ct. R. 5-3(a)"
+  }
+  edge-petition-filed "Petition for review filed" -> review-decided {
+    event ReviewPetitionFiled()
+    authority cite "Ark. Sup. Ct. R. 2-4(a)"
+  }
+}
+
+terminal no-petition: "No petition: the Court of Appeals decision stands" outcome [final] cite "Ark. Sup. Ct. R. 5-3(a)"
+{
+  note "The decision becomes final when the time for a petition for review expires, and the clerk issues the mandate to the circuit clerk; absent special leave or stipulation, no mandate issues within 18 calendar days after the judgment is rendered (Ark. Sup. Ct. R. 5-3(a), (b))."
+}
+
+decision review-decided: "Petition for review decided" by court cite "Ark. Sup. Ct. R. 2-4(d)"
+{
+  note "A response is filed within 10 calendar days of the date the petition was filed or deemed filed, under the petition's limits, and may attach the response to the rehearing petition (Ark. Sup. Ct. R. 2-4(e)). No appeal as of right lies from the Court of Appeals; review is discretionary, and the character of reasons considered is a tie vote, an arguable conflict with a prior published holding of either court, or arguable error related to a Rule 1-2(b) ground (Ark. Sup. Ct. R. 1-2(d)): issues of first impression, perceived inconsistency in the decisions of the two courts, federal constitutional interpretation, substantial public interest, significant issues needing clarification or development of the law or overruling of precedent, and appeals involving substantial questions of law about the validity, construction or interpretation of an act of the General Assembly, ordinance, rule or regulation (Ark. Sup. Ct. R. 1-2(b))."
+  edge-review-decided-response "Response filed" -> review-decided {
+    event ReviewResponseFiled()
+    authority cite "Ark. Sup. Ct. R. 2-4(e)"
+  }
+  edge-review-decided-denied "Review denied" -> review-denied {
+    authority cite "Ark. Sup. Ct. R. 5-3(a)"
+  }
+  edge-review-decided-granted "Review granted" -> supplemental-briefing {
+    authority cite "Ark. Sup. Ct. R. 2-4(f)"
+  }
+}
+
+terminal review-denied: "Review denied: the Court of Appeals decision stands" outcome [final] cite "Ark. Sup. Ct. R. 5-3(a)"
+{
+  note "On the final disposition of the petition the decision becomes final and the clerk issues the mandate (Ark. Sup. Ct. R. 5-3(a)). A party seeking certiorari in the Supreme Court of the United States may move to stay or recall the mandate, the stay not exceeding 90 days unless extended or a petition is timely filed (Ark. Sup. Ct. R. 5-3(c))."
+}
+
+state supplemental-briefing: "Review granted: Court of Appeals briefs and supplemental briefing" by applicant cite "Ark. Sup. Ct. R. 2-4(f)"
+{
+  note "On a grant the clerk notifies counsel; within 10 calendar days the parties provide six paper copies of their Court of Appeals briefs, and any party may request oral argument by letter in that period, governed by Rule 5-1 (Ark. Sup. Ct. R. 2-4(f)). Without leave, any party may within 10 calendar days after the grant request a supplemental briefing schedule by letter: the requesting party's supplemental brief is due 20 calendar days from the letter, responsive supplemental briefs within 10 calendar days of it, and a supplemental reply within 5 calendar days of a responsive brief, each at most 10 pages and otherwise under Rule 4-1 (Ark. Sup. Ct. R. 2-4(g))."
+  edge-supplemental-briefing-brief "Supplemental brief filed" -> supplemental-briefing {
+    event SupplementalReviewBriefFiled()
+    authority cite "Ark. Sup. Ct. R. 2-4(g)"
+  }
+  edge-supplemental-briefing-submitted "Submitted for decision" -> disposition {
+    authority cite "Ark. Sup. Ct. R. 5-1"
+  }
+}
+
+decision disposition: "Decision on review" by court cite "Ark. Sup. Ct. R. 5-2"
+{
+  note "The court's opinion is announced and reported under Ark. Sup. Ct. R. 5-2. The decision is not final until the time for a petition for rehearing has expired or any petition is finally disposed of (Ark. Sup. Ct. R. 5-3(a))."
+  edge-disposition-affirmed "Court of Appeals decision affirmed" -> rehearing {
+    event DecisionFiled()
+    authority cite "Ark. Sup. Ct. R. 5-2"
+  }
+  edge-disposition-reversed "Reversed, vacated or remanded" -> rehearing {
+    event DecisionFiled()
+    authority cite "Ark. Sup. Ct. R. 5-2"
+  }
+}
+
+decision rehearing: "Rehearing sought?" by applicant cite "Ark. Sup. Ct. R. 2-3(a)"
+{
+  note "A petition for rehearing, its supporting brief, evidence of service and a certificate of merit are filed within 18 calendar days from the date of decision; the respondent may file a brief on the following Monday or within seven calendar days of the petition, whichever is later, or obtain a one-week extension on written motion; no further time is granted absent illness of counsel or other unavoidable casualty; the petition states its grounds specifically, no oral argument is heard, and a party may file only one petition (Ark. Sup. Ct. R. 2-3(a)-(c), (f), (i), (j))."
+  edge-rehearing-none "No rehearing: mandate issues" -> mandate-issued {
+    event MandateIssued()
+    authority cite "Ark. Sup. Ct. R. 5-3(a)"
+  }
+  edge-rehearing-sought "Rehearing petition filed" -> rehearing-decided {
+    event RehearingPetitionFiled()
+    authority cite "Ark. Sup. Ct. R. 2-3(a)"
+  }
+}
+
+decision rehearing-decided: "Rehearing decided" by court cite "Ark. Sup. Ct. R. 2-3(g)"
+{
+  note "The petition calls attention to specific errors of law or fact in the opinion, not a repetition of the argument, and no rehearing is granted on a fact thought overlooked unless the statement of the case and the facts under Rule 4-2 clearly referred to it (Ark. Sup. Ct. R. 2-3(g), (h))."
+  edge-rehearing-decided-denied "Rehearing denied: mandate issues" -> mandate-issued {
+    event MandateIssued()
+    authority cite "Ark. Sup. Ct. R. 5-3(a)"
+  }
+  edge-rehearing-decided-granted "Rehearing granted: re-decide" -> disposition {
+    authority cite "Ark. Sup. Ct. R. 2-3(g)"
+  }
+}
+
+terminal mandate-issued: "Mandate issued" outcome [final] cite "Ark. Sup. Ct. R. 5-3(a)"
+{
+  note "The clerk issues the mandate when the decision becomes final and mails it to the clerk of the circuit court for filing and recording; absent special leave or stipulation, no mandate issues within 18 calendar days after the judgment is rendered; the mandate may be stayed or recalled for a certiorari petition to the Supreme Court of the United States on the showing Rule 5-3(c) requires (Ark. Sup. Ct. R. 5-3(a)-(c)). Proceedings resume in the circuit court (lit/ar-circuit) on the mandate."
+}

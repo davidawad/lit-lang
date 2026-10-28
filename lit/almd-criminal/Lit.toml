@@ -1,0 +1,49 @@
+# The Middle District of Alabama's Local Criminal Rules (Part 2 of its
+# Local Rules) as a local-rule layer over lit/frcrimp (28 U.S.C. § 2071;
+# FRCrimP 57(a)): it declares only the periods those rules themselves
+# state and re-encodes no FRCrimP, Speedy Trial Act or FRAP period. Each
+# period is counted under FRCrimP 45, which M.D. Ala. LCrR 57.1(2) names
+# and which governs "any local rule". The rules are effective December 1,
+# 2010 (sources/md-ala; the cover records an October 1, 2011 amendment to
+# LR 83.4(g)). Part 1's general provisions also reach criminal proceedings
+# (LCrR 1.1(c)); they are not restated here.
+[package]
+name = "almd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "almd-criminal-local-rules"
+forum = "almd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Middle District of Alabama: Local Criminal Rules"
+description = "The Middle District of Alabama's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the entrapment notice, the standard criminal discovery exchange, presentence records, counsel, the drug-test challenge procedure in revocation proceedings and collateral forfeiture."
+in_force = "2010-12-01"
+known_at = "2026-10-28"
+unknown_before = "2010-12-01"
+jurisdiction = "United States District Court, M.D. Alabama (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+office = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "almd-lcrr"
+issuer = "United States District Court for the Middle District of Alabama"
+date = "2010-12-01"
+designation = "Local Rules, Part 2: Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.almd-lcrr]
+title = "Local Rules of the United States District Court for the Middle District of Alabama (effective December 1, 2010), Part 2: Local Criminal Rules"
+url = "https://www.almd.uscourts.gov/sites/default/files/forms/ALMD%20Local%20Rules.pdf"
+path = "sources/md-ala/local-rules-sectioned.txt"
+path_sha256 = "f3cbd555562a18710065f814741dead65eb99a6b958f5b50914d172d8e785ca4"
+sha256 = "39ccde043f3fccdb65241d8ac8eb53deec77a13fc7a6d2a17f5f7e7a94423377"
+as_of = "2010-12-01"
+cite_prefixes = ["M.D. Ala. LCrR"]
+section_heading = "LCrR {n}"

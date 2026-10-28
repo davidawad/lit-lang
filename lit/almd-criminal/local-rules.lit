@@ -1,0 +1,46 @@
+module almd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Middle District's own criminal periods. A defendant claiming
+// entrapment serves and files written notice within the time for pretrial
+// motions, or later as the Court directs; without it entrapment may not be
+// raised (LCrR 12(b).1): the period is the court's FRCrimP 12(c) deadline,
+// set in each case, so no period is declared. The standard discovery
+// procedure is the sole means of criminal discovery except in
+// extraordinary circumstances (LCrR 16.1): at arraignment, or on a date
+// the court sets for good cause, the government tenders its FRCrimP 16(a),
+// Brady and Giglio material, informants' convictions, identification
+// procedures, vehicle inspection, latent prints, Rule 404(b) notice and
+// surveillance information, and its sentencing information to U.S.
+// Probation (16.1(a)(1), (3)); the defendant's reciprocal disclosure is due
+// on a date the court sets (16.1(a)(4)); a discovery motion needs a
+// certified conference (16.1(c)). Presentence and probation records are
+// disclosed only under FRCrimP 32 and this rule, and the officer's
+// recommendation not before sentencing (LCrR 32.1). Retained counsel files
+// a notice of appearance immediately on being retained (LCrR 44.2).
+// Collateral may be forfeited in lieu of appearance under the district's
+// schedule (LCrR 58.1). The earlier outline's FRCrimP flow and its
+// decisions belong to lit/frcrimp and are removed here: no reporter text
+// is vendored.
+/// The date set for a revocation hearing at which the defendant will
+/// challenge a drug test or its report (M.D. Ala. LCrR 57.1).
+event RevocationHearingScheduled()
+
+/// M.D. Ala. LCrR 57.1(1): a defendant challenging a drug test or report
+/// in a revocation proceeding notifies the court in writing, with service
+/// on the government, fourteen days before the hearing; a late notice
+/// needs a motion for leave (57.1(3)).
+deadline drug-test-challenge-notice-period: 14.days before RevocationHearingScheduled() counted_by frcrimp45 cite "M.D. Ala. LCrR 57.1"
+{
+  forum frcrimp
+}
+
+/// M.D. Ala. LCrR 57.1(2): after such a notice, the government files and
+/// serves, at least seven days before the hearing "computed in accordance
+/// with Fed. R. Crim. P. 45", each laboratory report, the chain-of-custody
+/// report and a laboratory employee's affidavit.
+deadline drug-test-materials-period: 7.days before RevocationHearingScheduled() counted_by frcrimp45 cite "M.D. Ala. LCrR 57.1"
+{
+  forum frcrimp
+}

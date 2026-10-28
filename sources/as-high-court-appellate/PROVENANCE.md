@@ -7,3 +7,9 @@
 - Extract sha256 fc656f82762dfb52718aec3beb77b99174a7d617eceab7cdeec196a311f0a947. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `as-high-court-appellate/original/as-appellate-rules-asbar/0001-asbar-appellate.html` as served (sha256 6fbacfbae1312339c39fc76b35f2223cf6cca2f10b5d311f745ac1d52535a412). Served at https://asbar.org/?p=16557.
 - Extraction sha256 fc656f82762dfb52718aec3beb77b99174a7d617eceab7cdeec196a311f0a947.
+
+### `as-high-court-appellate/as-appellate-rules-asbar-sectioned.txt` — American Samoa Appellate Court Rules (ACR), sectioned
+
+- Derived in the pod (lg-f3q8.36) from `as-high-court-appellate/as-appellate-rules-asbar.txt` (extract sha256 fc656f82762dfb52718aec3beb77b99174a7d617eceab7cdeec196a311f0a947); nothing fetched. One `## Rule <n>` line is inserted before each body heading line `RULE <n>.` (after the table of contents), 45 rules from `Rule 1` through `Rule 45`, each number once. Rule text was not edited: deleting the marker lines (`sed '/^## Rule [0-9]/d'`) restores the extract byte for byte.
+- Edition: as the extract, UNOFFICIAL and CURRENCY UNCONFIRMED (page modified 2020-10-05). The latest effective date the text states is July 15, 1987 (Rules 26, 27); `lit/as-high-court` and `lit/as-high-court-appellate` date the expression `as_of = 1987-07-15` and bind values with that caveat (David's ruling 2026-10-28, lg-f3q8.77).
+- Sectioned sha256 5ccb5f63c1073d2458993072050c3ec0a0cd3749b246851df72f52e796f94567 (the `path_sha256` pinned by `lit/as-high-court/Lit.toml` and `lit/as-high-court-appellate/Lit.toml`).

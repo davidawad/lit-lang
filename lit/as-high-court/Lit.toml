@@ -1,0 +1,50 @@
+# Civil actions in the Trial Division of the High Court of American Samoa
+# under the Trial Court Rules of Civil Procedure (TCRCP), as the American
+# Samoa Bar Association's posting served them on 2026-10-28
+# (sources/as-high-court). That posting is UNOFFICIAL (the court publishes
+# no rules) and CURRENCY UNCONFIRMED: it states no edition, and the latest
+# effective date it states is March 1, 1996 (Rule 11). Values are bound to
+# it with that caveat (David's ruling 2026-10-28, lg-f3q8.77). TCRCP 6(a)
+# excludes intermediate weekends and holidays from periods under 7 days and
+# has no lit/core counting rule, so the rules' periods are stated in notes,
+# not counted deadlines. An appeal hands off to lit/as-high-court-appellate.
+[package]
+name = "as-high-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "as-high-court-civil"
+forum = "as-high-court"
+authority = "StateRule"
+jurisdiction_id = "american-samoa"
+title = "High Court of American Samoa, Trial Division, civil"
+description = "Civil actions in the Trial Division of the High Court of American Samoa under the Trial Court Rules of Civil Procedure, as far as the vendored (unofficial, currency unconfirmed) text states. An appeal hands off to the Appellate Division package (lit/as-high-court-appellate)."
+in_force = "1996-03-01"
+known_at = "2026-10-28"
+unknown_before = "1996-03-01"
+jurisdiction = "High Court of American Samoa, Trial Division (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.as-tcrcp]
+title = "American Samoa Trial Court Rules of Civil Procedure (TCRCP), American Samoa Bar Association posting as served 2026-10-28; UNOFFICIAL, CURRENCY UNCONFIRMED (latest stated effective date March 1, 1996)"
+url = "https://asbar.org/?p=16558"
+path = "sources/as-high-court/as-civil-rules-asbar-sectioned.txt"
+path_sha256 = "7a4a6079bd076411bb5a3865f4d552872717546061d535c0f1e067f7f2a7f04f"
+as_of = "1996-03-01"
+cite_prefixes = ["T.C.R.C.P."]
+section_heading = "Rule {n}"
+
+[sources.as-acr]
+title = "American Samoa Appellate Court Rules (ACR), American Samoa Bar Association posting as served 2026-10-28 (page modified 2020-10-05); UNOFFICIAL, CURRENCY UNCONFIRMED (latest stated effective date July 15, 1987)"
+url = "https://asbar.org/?p=16557"
+path = "sources/as-high-court-appellate/as-appellate-rules-asbar-sectioned.txt"
+path_sha256 = "5ccb5f63c1073d2458993072050c3ec0a0cd3749b246851df72f52e796f94567"
+as_of = "1987-07-15"
+cite_prefixes = ["A.C.R."]
+section_heading = "Rule {n}"

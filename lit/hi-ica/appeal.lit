@@ -1,5 +1,7 @@
 module hi-appellate-civil.appeal
 
+import hi-state-rules.{ DecisionFiled, MandateIssued, RecordFiled, ReviewPetitionFiled }
+
 /// An opening or answering brief: at most 35 pages, exclusive of indexes,
 /// appendices and statements of related cases, except after leave granted
 /// (Haw. R. App. P. 28(a)).
@@ -60,6 +62,7 @@ state record: "Record and transcripts" by applicant cite "Haw. R. App. P. 10"
 {
   note "The appellant requests the reporter's transcripts it deems necessary within 10 days after filing the notice of appeal; the reporter completes them within 45 days after the notice of appeal is filed, or notifies the parties of a new date, but within 60 days unless the appellate court extends the time (Haw. R. App. P. 10(b)). Unless otherwise provided, the clerk of the court appealed from assembles, certifies and electronically files the record on appeal within 60 days after the notice of appeal is filed (Haw. R. App. P. 11(b))."
   edge-record-briefing "Record on appeal filed" -> briefing {
+    event RecordFiled()
     authority cite "Haw. R. App. P. 11(b)"
   }
 }
@@ -74,6 +77,7 @@ decision argument: "Oral argument or submission on the briefs" by court cite "Ha
 {
   note "Oral argument is had in all cases except those in which the appellate court orders consideration without it (Haw. R. App. P. 34(a)). A motion to postpone argument or for additional time is filed within 10 days of the clerk's notice of argument, and a motion to retain oral argument within 10 days after the mailing of an order submitting the case on the briefs (Haw. R. App. P. 34(b), (c))."
   edge-argument-decided "Argued or submitted" -> decision-issued {
+    event DecisionFiled()
     authority cite "Haw. R. App. P. 34(a)"
   }
 }
@@ -85,6 +89,7 @@ decision decision-issued: "Opinion or dispositional order" by court cite "Haw. R
     authority cite "Haw. R. App. P. 40(a)"
   }
   edge-decision-issued-judgment "No motion: judgment on appeal entered" -> judgment-entered {
+    event MandateIssued()
     authority cite "Haw. R. App. P. 36(b)"
   }
 }
@@ -93,6 +98,7 @@ decision reconsideration: "Reconsideration decided" by court cite "Haw. R. App. 
 {
   note "A motion for reconsideration may be filed only within 10 days after the filing of the opinion, dispositional order or ruling, unless special leave for more time is granted within that period; it states with particularity the points of law or fact the court overlooked or misapprehended (Haw. R. App. P. 40(a), (b)). The appellate court grants or denies it within 10 days of filing; failure to act within the 10 days is a rejection (Haw. R. App. P. 40(d))."
   edge-reconsideration-denied "Denied or not acted on" -> judgment-entered {
+    event MandateIssued()
     authority cite "Haw. R. App. P. 40(d)"
   }
   edge-reconsideration-granted "Granted" -> reconsideration-granted {
@@ -109,6 +115,7 @@ state judgment-entered: "Judgment on appeal entered" by court cite "Haw. R. App.
 {
   note "The Intermediate Court of Appeals' judgment is effective, if no application for a writ of certiorari is filed, on the thirty-first day after entry, or on expiration of an extension under Rule 40.1(a); if an application is filed, on entry of the supreme court's order dismissing or rejecting it, or of its judgment affirming in whole (Haw. R. App. P. 36(c)). A timely application stays finality of that judgment unless the supreme court orders otherwise (Haw. R. App. P. 41)."
   edge-judgment-entered-certiorari "Application for a writ of certiorari" -> certiorari {
+    event ReviewPetitionFiled()
     authority cite "Haw. R. App. P. 40.1(a)"
   }
   edge-judgment-entered-final "No application" -> judgment-effective {
@@ -129,7 +136,7 @@ decision certiorari: "Certiorari accepted or rejected" by court cite "Haw. R. Ap
 
 terminal certiorari-accepted: "Certiorari accepted: review in the supreme court" outcome [appeal] cite "Haw. R. App. P. 40.1(b)"
 {
-  note "On acceptance the Intermediate Court of Appeals' judgment is stayed pending final disposition (Haw. R. App. P. 41); a new judgment on appeal is entered by the supreme court and is effective on entry (Haw. R. App. P. 36(d)). Merits review is not modeled."
+  note "On acceptance the Intermediate Court of Appeals' judgment is stayed pending final disposition (Haw. R. App. P. 41); a new judgment on appeal is entered by the supreme court and is effective on entry (Haw. R. App. P. 36(d)). Hand-off to lit/hi-supreme-court (hi-supreme-court-civil), which models the application through the supreme court's judgment."
 }
 
 terminal judgment-effective: "Judgment on appeal effective" outcome [final] cite "Haw. R. App. P. 36(c)"

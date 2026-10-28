@@ -9,12 +9,20 @@ dependencies = []
 name = "hi-circuit-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:2eac6ef2ab16e7028ee7576afc54821407ab1b03768d900fbc4167714677f423"
-semantic = "sha256:9b57106e7c7e5800fb1f5a25f549ba4d0cd1c6b3d7db0eba1803bfd760a7c7bf"
+source = "sha256:441c2ab2a05b1a998c5d41612c33c1390f32eb1735a3d18ca6b9d2a4f5bf7aa5"
+semantic = "sha256:df084f22f860d6bdc9a33c432081de416c09cd8161ba3e45f9391a7ddd19a573"
 texts = [
     "hrap sources/hi-ica/hrap-2025-07-sectioned.txt sha256:7000b991d6425545d3f4580cff275fba242cf74152250e1e1ef2ae3bcd7ddb1b",
     "hrcp sources/hi-circuit/hrcp-2026-07-01-sectioned.txt sha256:91db04f7d853939529aa59a9077ad8da4d6dd3a605f2f68c5693502fbdabd4d9",
 ]
+dependencies = [
+    "core 1.0.0",
+    "hi-state-rules 0.1.0",
+]
+
+[[package]]
+name = "hi-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

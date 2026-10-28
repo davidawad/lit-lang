@@ -1,0 +1,49 @@
+# Appeals in the Tax Appeal Court of the State of Hawai'i. Neither the
+# Rules of the Tax Appeal Court nor HRS chapter 232 is vendored under
+# sources/, so commencement, pleading, discovery, trial and judgment stay
+# holes with notes; no tracking issue names that gap yet. What the
+# vendored Hawai'i Rules of Appellate Procedure state is bound to them: a
+# proceeding in the tax appeal court is a "civil case" (HRAP 2.1(b)), its
+# appeal is noticed within 30 days under HRAP 4(a)(1), and it may reserve
+# a question of law for the supreme court (HRAP 15(a)). The court that
+# hears the appeal is fixed by statute (HRS § 232-19, not vendored), so
+# no hand-off package is named.
+#
+# Layers: the HRAP edition effective July 1, 2026; the order effective
+# January 1, 2027 rewrites Rule 4(a)(3) and restates Rule 4(a)(1)'s 30
+# days, and no declaration here rests on Rule 4(a)(3).
+[package]
+name = "hi-tax-appeal-court"
+version = "0.1.0"
+language = 1
+pack_id = "hi-tax-appeal-court"
+forum = "hi-state-tax-appeal-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "hawaii"
+title = "Tax Appeal Court of the State of Hawai'i"
+description = "Appeals in the Hawai'i Tax Appeal Court: the steps from commencement to judgment, held as holes until the court's rules and HRS chapter 232 are vendored, and the appeal or reserved question under the vendored Hawai'i Rules of Appellate Procedure."
+in_force = "2026-07-01"
+known_at = "2026-10-28"
+unknown_before = "2026-07-01"
+jurisdiction = "Hawaii State Tax Appeal Court"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+hi-state-rules = { version = "^0.1.0", path = "../hi-rules" }
+
+[sources.hrap]
+title = "Hawai'i Rules of Appellate Procedure (SCRU-10-0000012), with further amendments as noted through May 21, 2026, effective July 1, 2026"
+url = "https://www.courts.state.hi.us/wp-content/uploads/2025/07/hrap_ada.pdf"
+path = "sources/hi-ica/hrap-2025-07-sectioned.txt"
+path_sha256 = "7000b991d6425545d3f4580cff275fba242cf74152250e1e1ef2ae3bcd7ddb1b"
+sha256 = "7da63b464186132b6ad29e0509268b102e4954d8a37c7ea36dd421232b7d1871"
+as_of = "2026-07-01"
+cite_prefixes = ["Haw. R. App. P."]
+section_heading = "Rule {n}"

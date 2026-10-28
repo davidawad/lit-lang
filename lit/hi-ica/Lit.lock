@@ -9,11 +9,19 @@ dependencies = []
 name = "hi-appellate-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:12aae14a41232d2fe2d761fa4af82ca4d948487dc7d6de381d7e7693f3a686d5"
-semantic = "sha256:32308d61c84296c2b5f1fa668999b94a53e0fd857ab1adb9884ff960bdbd428c"
+source = "sha256:1274809fdcde93112ff662927f05540f154889b8622b01fe9ea6efb888726bb6"
+semantic = "sha256:7b77604011fbd16fcaa8ffd144bbd080dc52f110d361b4adb12c7838980bd41d"
 texts = [
     "hrap sources/hi-ica/hrap-2025-07-sectioned.txt sha256:7000b991d6425545d3f4580cff275fba242cf74152250e1e1ef2ae3bcd7ddb1b",
 ]
+dependencies = [
+    "core 1.0.0",
+    "hi-state-rules 0.1.0",
+]
+
+[[package]]
+name = "hi-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

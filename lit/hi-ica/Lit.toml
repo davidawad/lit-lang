@@ -16,13 +16,15 @@
 # 1, 2027 and restates Rule 4(a)(1)'s 30 days unchanged; no declaration
 # here rests on Rule 4(a)(3). The appellate jurisdiction statutes (HRS §§
 # 641-1, 602-59) are not vendored and are not cited. A circuit court
-# appeal arrives from lit/hi-circuit.
+# appeal arrives from lit/hi-circuit; an accepted application continues
+# in lit/hi-supreme-court.
 [package]
 name = "hi-appellate-civil"
 version = "0.1.0"
 language = 1
 pack_id = "hi-appellate-civil"
 forum = "hi-ica"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "hawaii"
 title = "Hawai'i Intermediate Court of Appeals and Supreme Court, civil appeals"
@@ -39,6 +41,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+hi-state-rules = { version = "^0.1.0", path = "../hi-rules" }
 
 [sources.hrap]
 title = "Hawai'i Rules of Appellate Procedure (SCRU-10-0000012), with further amendments as noted through May 21, 2026, effective July 1, 2026"

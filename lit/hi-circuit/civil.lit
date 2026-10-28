@@ -1,11 +1,14 @@
 module hi-circuit-court-civil.civil
 
+import hi-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
 start complaint-filed
 
 state complaint-filed: "Complaint filed" by applicant cite "Haw. R. Civ. P. 3"
 {
   note "A civil action is commenced by filing a complaint with the court (Haw. R. Civ. P. 3); the complaint is accompanied by a civil information sheet filed with it (Haw. R. Civ. P. 3.1(a)). Upon filing the clerk issues a summons, which is served together with the complaint (Haw. R. Civ. P. 4(a), (d)). Periods in this package are stated, not counted: Rule 6(a) excludes the trigger day, includes the last day unless it is a Saturday, Sunday or holiday, and excludes intermediate Saturdays, Sundays and holidays from a period of less than 7 days; 'holiday' is a day so designated under HRS § 8-1; 2 days are added after service by mail (Haw. R. Civ. P. 6(a), (e)). The filing fee is not stated in the vendored rules. The earlier outline named no leading decision for this step."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    event ActionCommenced()
     authority cite "Haw. R. Civ. P. 4"
   }
 }
@@ -93,6 +96,7 @@ decision post-trial: "Post-trial motions" by applicant cite "Haw. R. Civ. P. 59"
 {
   note "A motion for a new trial, and a motion to alter or amend a judgment, are filed no later than 10 days after entry of the judgment; opposing affidavits follow within 10 days after service (Haw. R. Civ. P. 59(b), (c), (e)). A motion to amend findings is made not later than 10 days after entry of judgment (Haw. R. Civ. P. 52(b)). The court may not extend the time for action under Rules 50(b), 52(b), 59(b), (d) and (e) and 60(b) except as those rules state (Haw. R. Civ. P. 6(b)). A timely post-judgment motion of these kinds, or for attorney's fees or costs, extends the time to appeal as Haw. R. App. P. 4(a)(3) provides; the order of July 15, 2026 rewrites that subdivision effective January 1, 2027 (sources/hi-ica), so its periods are not stated here."
   edge-post-trial-resolved "Motions resolved or none filed" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "Haw. R. Civ. P. 58"
   }
 }
@@ -101,6 +105,7 @@ decision judgment-entered: "Final judgment entered" by office cite "Haw. R. Civ.
 {
   note "Unless the court directs otherwise, the prevailing party prepares and submits a proposed judgment; filing in the clerk's office is entry, entry is not delayed for taxing costs, and every judgment is set forth on a separate document (Haw. R. Civ. P. 58). Costs may be taxed by the clerk on 48 hours' notice and reviewed on motion served within 5 days thereafter; a motion for attorneys' fees is filed and served no later than 14 days after entry of an appealable order or judgment unless a statute or order provides otherwise (Haw. R. Civ. P. 54(d)(1), (2)(B))."
   edge-judgment-entered-appeal "Notice of appeal within 30 days" -> appeal-taken {
+    event NoticeOfAppealFiled()
     authority cite "Haw. R. App. P. 4(a)"
   }
   edge-judgment-entered-final "No appeal" -> final-no-appeal { authority cite "Haw. R. Civ. P. 58" }

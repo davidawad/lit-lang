@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "hi-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "hi-tax-appeal-court"
+version = "0.1.0"
+language = 1
+source = "sha256:efc905851698c03abc800c38e637c7192eea7110f957e82d1c64bcf528ca79da"
+semantic = "sha256:742040ad7e84a294ad505629b4e47f3476d9fc6a1216e5935a074fec300a94c9"
+texts = [
+    "hrap sources/hi-ica/hrap-2025-07-sectioned.txt sha256:7000b991d6425545d3f4580cff275fba242cf74152250e1e1ef2ae3bcd7ddb1b",
+]
+dependencies = [
+    "core 1.0.0",
+    "hi-state-rules 0.1.0",
+]

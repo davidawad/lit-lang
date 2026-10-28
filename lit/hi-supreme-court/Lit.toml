@@ -1,0 +1,52 @@
+# Certiorari in the Supreme Court of Hawai'i from a civil judgment of the
+# Intermediate Court of Appeals, under the Hawai'i Rules of Appellate
+# Procedure as amended through May 21, 2026, effective July 1, 2026
+# (sources/hi-ica). The application, acceptance or rejection, review on
+# the record and briefs, decision, reconsideration and the supreme
+# court's judgment on appeal; an application arrives from lit/hi-ica.
+# Computation of time is HRAP 26(a), which has no counting rule in
+# lit/core, so the rules' periods are stated in notes, not encoded as
+# counted deadlines.
+#
+# Layers: as lit/hi-ica, the package opens on July 21, 2026, after the
+# vendored orders rewriting Rule 50 (July 14, 2026) and Rule 35 (July 21,
+# 2026); no declaration here rests on either rule, nor on Rule 4(a)(3) as
+# rewritten effective January 1, 2027. The certiorari statute the outline
+# cited (HRS § 602-59) is not vendored and is not cited. Transfer from the
+# Intermediate Court of Appeals (HRAP 40.2), direct appeals and original
+# proceedings are not modeled.
+[package]
+name = "hi-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "hi-supreme-court-civil"
+forum = "hi-supreme-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "hawaii"
+title = "Supreme Court of Hawai'i, certiorari in civil appeals"
+description = "An application for a writ of certiorari to review a civil judgment on appeal or dismissal order of the Hawai'i Intermediate Court of Appeals: the application and response, acceptance or rejection, review on the record and briefs, decision, reconsideration and the supreme court's judgment on appeal, as far as the vendored Hawai'i Rules of Appellate Procedure state."
+in_force = "2026-07-21"
+known_at = "2026-10-28"
+unknown_before = "2026-07-21"
+jurisdiction = "Supreme Court of Hawaii"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+hi-state-rules = { version = "^0.1.0", path = "../hi-rules" }
+
+[sources.hrap]
+title = "Hawai'i Rules of Appellate Procedure (SCRU-10-0000012), with further amendments as noted through May 21, 2026, effective July 1, 2026"
+url = "https://www.courts.state.hi.us/wp-content/uploads/2025/07/hrap_ada.pdf"
+path = "sources/hi-ica/hrap-2025-07-sectioned.txt"
+path_sha256 = "7000b991d6425545d3f4580cff275fba242cf74152250e1e1ef2ae3bcd7ddb1b"
+sha256 = "7da63b464186132b6ad29e0509268b102e4954d8a37c7ea36dd421232b7d1871"
+as_of = "2026-07-01"
+cite_prefixes = ["Haw. R. App. P."]
+section_heading = "Rule {n}"

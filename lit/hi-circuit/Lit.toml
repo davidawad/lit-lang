@@ -14,6 +14,7 @@ version = "0.1.0"
 language = 1
 pack_id = "hi-circuit-court-civil"
 forum = "hi-circuit"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "hawaii"
 title = "Hawai'i Circuit Court, civil"
@@ -30,6 +31,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+hi-state-rules = { version = "^0.1.0", path = "../hi-rules" }
 
 [sources.hrcp]
 title = "Hawai'i Rules of Civil Procedure (SCRU-11-0000051), with amendments as noted through May 21, 2026, effective July 1, 2026"

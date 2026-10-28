@@ -1,0 +1,38 @@
+# The Hawai'i base library (lg-u561.5 pattern): the trigger events the
+# Hawai'i court packages route their graphs on: lit/hi-circuit,
+# lit/hi-ica, lit/hi-supreme-court and lit/hi-tax-appeal-court.
+# It declares no period: the rules' periods are stated in the court
+# packages' notes. No procedure of its own.
+[package]
+name = "hi-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "hi-state-rules"
+forum = "hi-state-rules"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "hawaii"
+title = "Hawai'i state court rules (base library)"
+description = "The rule layer Hawai'i's court packages share (Haw. R. Civ. P., Haw. R. App. P.): the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-07-01"
+known_at = "2026-10-28"
+unknown_before = "2026-07-01"
+jurisdiction = "Hawaii state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.hrap]
+title = "Hawai'i Rules of Appellate Procedure (SCRU-10-0000012), with further amendments as noted through May 21, 2026, effective July 1, 2026"
+url = "https://www.courts.state.hi.us/wp-content/uploads/2025/07/hrap_ada.pdf"
+path = "sources/hi-ica/hrap-2025-07-sectioned.txt"
+path_sha256 = "7000b991d6425545d3f4580cff275fba242cf74152250e1e1ef2ae3bcd7ddb1b"
+sha256 = "7da63b464186132b6ad29e0509268b102e4954d8a37c7ea36dd421232b7d1871"
+as_of = "2026-07-01"
+cite_prefixes = ["Haw. R. App. P."]
+section_heading = "Rule {n}"

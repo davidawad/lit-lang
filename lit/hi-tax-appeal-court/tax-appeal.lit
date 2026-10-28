@@ -1,0 +1,83 @@
+module hi-tax-appeal-court.tax-appeal
+
+import hi-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
+start commenced
+
+state commenced: "Tax appeal filed" by applicant cite ?("HRS § 232-17 and the Rules of the Tax Appeal Court are not vendored") {
+  note "What the tax appeal court hears, the filing period, fees and form of the appeal are not stated in vendored text: HRS chapter 232 and the Rules of the Tax Appeal Court are not vendored. The HRAP adopt the Rules of the Tax Appeal Court as part of the HRAP whenever applicable (Haw. R. App. P. 2.1(a)). The outline named no leading decision and none is cited."
+  edge-commenced-served "Appeal served" -> pleadings {
+    event ActionCommenced()
+    authority cite ?("the Rules of the Tax Appeal Court are not vendored")
+  }
+}
+
+decision pleadings: "Answer or motion to dismiss" by court cite ?("the Rules of the Tax Appeal Court are not vendored") {
+  note "The response period and the grounds for dismissal are not stated in vendored text."
+  edge-pleadings-dismissed "Dismissed on the pleadings" -> dismissed {
+    authority cite ?("the Rules of the Tax Appeal Court are not vendored")
+  }
+  edge-pleadings-answered "Answered; the appeal proceeds" -> discovery {
+    authority cite ?("the Rules of the Tax Appeal Court are not vendored")
+  }
+  edge-pleadings-settled "Settled or withdrawn" -> settled {
+    authority cite ?("the Rules of the Tax Appeal Court are not vendored")
+  }
+}
+
+state discovery: "Discovery and pretrial" by applicant cite ?("the Rules of the Tax Appeal Court are not vendored") {
+  note "Discovery scope, limits and scheduling are not stated in vendored text."
+  edge-discovery-dispositive "Dispositive motion or trial setting" -> dispositive {
+    authority cite ?("the Rules of the Tax Appeal Court are not vendored")
+  }
+}
+
+decision dispositive: "Summary disposition?" by court cite ?("the Rules of the Tax Appeal Court are not vendored") {
+  note "The summary-judgment standard and timing are not stated in vendored text."
+  edge-dispositive-granted "Decided without trial" -> judgment {
+    authority cite ?("the Rules of the Tax Appeal Court are not vendored")
+  }
+  edge-dispositive-trial "Tried" -> trial { authority cite ?("HRS § 232-13 is not vendored") }
+}
+
+state trial: "Trial or hearing" by court cite ?("HRS § 232-13 is not vendored") {
+  note "The standard of decision and the trial procedure are not stated in vendored text (HRS § 232-13 is not vendored)."
+  edge-trial-judgment "Decision rendered" -> judgment {
+    authority cite ?("HRS § 232-13 is not vendored")
+  }
+}
+
+state judgment: "Judgment or decision entered" by court cite ?("HRS § 232-13 is not vendored") {
+  note "Entry and notice of entry of the decision are not stated in vendored text. A proceeding in the tax appeal court is a civil case for the HRAP (Haw. R. App. P. 2.1(b)), so a timely post-judgment motion for judgment as a matter of law, to amend findings, for a new trial, to reconsider, alter or amend, or for fees or costs affects the time to appeal as Haw. R. App. P. 4(a)(3) provides; the order of July 15, 2026 rewrites that subdivision effective January 1, 2027, so its periods are not stated here. The tax appeal court may instead reserve a question of law arising before it for the supreme court, on a party's motion or its own (Haw. R. App. P. 15(a)); that route is not modeled."
+  edge-judgment-entered "Judgment entered" -> post-judgment {
+    event JudgmentEntered()
+    authority cite ?("HRS § 232-13 is not vendored")
+  }
+}
+
+decision post-judgment: "Appeal?" by applicant cite "Haw. R. App. P. 4(a)"
+{
+  note "When a civil appeal is permitted by law, the notice of appeal is filed within 30 days after entry of the judgment or appealable order; a mailed notice is timely if postmarked within that time and received no later than 5 days after the postmark (Haw. R. App. P. 4(a)(1)). The appellate courts do not include the tax appeal court (Haw. R. App. P. 2.1(b)). The statute permitting the appeal and naming the court that hears it (HRS § 232-19) is not vendored. Periods are stated, not counted: Rule 26(a) computes them and has no counting rule in lit/core."
+  edge-post-appeal "Notice of appeal filed" -> appeal-taken {
+    event NoticeOfAppealFiled()
+    authority cite "Haw. R. App. P. 4(a)"
+  }
+  edge-post-final "No appeal" -> final-no-appeal { authority cite "Haw. R. App. P. 4(a)" }
+}
+
+terminal dismissed: "Dismissed" outcome [loss, dismissal] cite ?("the Rules of the Tax Appeal Court are not vendored") {
+  note "Whether a dismissal is with or without prejudice is not stated in vendored text."
+}
+
+terminal settled: "Settled or withdrawn" outcome [settlement] cite ?("HRS § 232-17 is not vendored") {
+  note "Settlement terms are outside this package."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "Haw. R. App. P. 4(a)"
+{
+  note "The reviewing court is fixed by statute (HRS § 232-19, not vendored); no hand-off package is named."
+}
+
+terminal final-no-appeal: "Judgment final without appeal" outcome [final] cite ?("HRS § 232-13 is not vendored") {
+  note "Enforcement and collection are outside this package."
+}

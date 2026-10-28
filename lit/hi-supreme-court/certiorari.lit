@@ -1,0 +1,87 @@
+module hi-supreme-court-civil.certiorari
+
+import hi-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
+
+start application
+
+decision application: "Application for a writ of certiorari?" by applicant cite "Haw. R. App. P. 40.1(a)"
+{
+  note "A party seeks review of the Intermediate Court of Appeals' decision by filing an application for a writ of certiorari within 30 days after the filing of that court's judgment on appeal or dismissal order; a mailed application is timely if postmarked within that time and received no later than 5 days after the postmark. A written request for an extension filed within the same 30 days gets an automatic 30-day extension from the appellate clerk; an untimely request extends nothing (Haw. R. App. P. 40.1(a)). The applicant is denominated the petitioner (Haw. R. App. P. 40.1(c)). The application may not exceed 20 pages and states the questions presented, the prior proceedings, the material facts and a brief argument, with the challenged opinion, dispositional order or ruling attached (Haw. R. App. P. 40.1(d)). The outline named no leading decision on the grant standard and none is cited."
+  edge-application-none "No application: the intermediate court's judgment takes effect" -> review-not-sought {
+    authority cite "Haw. R. App. P. 36(c)"
+  }
+  edge-application-filed "Application filed" -> acceptance {
+    event ReviewPetitionFiled()
+    authority cite "Haw. R. App. P. 40.1(a)"
+  }
+}
+
+decision acceptance: "Application accepted or rejected" by court cite "Haw. R. App. P. 40.1(g)"
+{
+  note "Acceptance or rejection is within the supreme court's discretion (Haw. R. App. P. 40.1(b)). Within 15 days after the application is filed any other party may file a response of at most 20 pages, extended 15 days on a timely written request, and within 7 days after a response any party may file a reply of at most 5 pages (Haw. R. App. P. 40.1(e)). There is no oral argument on the application unless the court requests it (Haw. R. App. P. 40.1(f)). The court acts within 60 days after the application is filed; failure to accept it within the 60 days is a rejection, and a disposition deadline on a weekend or state holiday runs to the end of the next business day under Rule 26(a) (Haw. R. App. P. 40.1(g)). Neither acceptance nor rejection is subject to a motion for reconsideration, and a rejection is final (Haw. R. App. P. 40.1(h)). A timely application stays finality of the intermediate court's judgment unless the supreme court orders otherwise (Haw. R. App. P. 41)."
+  edge-acceptance-rejected "Rejected, dismissed or not accepted within 60 days" -> review-rejected {
+    authority cite "Haw. R. App. P. 40.1(g)"
+  }
+  edge-acceptance-accepted "Accepted" -> merits { authority cite "Haw. R. App. P. 40.1(b)" }
+}
+
+decision merits: "Review on the record and the briefs" by court cite "Haw. R. App. P. 40.1(i)"
+{
+  note "An accepted case is decided on the record and the briefs previously filed; the court may limit the question on review, request supplemental briefs and set the case for oral argument, and within 10 days after acceptance a party may move for permission to file a supplemental brief (Haw. R. App. P. 40.1(i)). On acceptance the intermediate court's judgment is stayed pending final disposition (Haw. R. App. P. 41). At any time before final disposition the court may find on its own that certiorari was improvidently granted and dismiss the proceeding (Haw. R. App. P. 40.1(h))."
+  edge-merits-decided "Argued or submitted" -> decision-issued {
+    event DecisionFiled()
+    authority cite "Haw. R. App. P. 40.1(i)"
+  }
+  edge-merits-improvident "Dismissed as improvidently granted" -> dismissed-improvident {
+    authority cite "Haw. R. App. P. 40.1(h)"
+  }
+}
+
+decision decision-issued: "Opinion or dispositional order" by court cite "Haw. R. App. P. 36(d)"
+{
+  note "Where the intermediate court entered a judgment, the supreme court enters a new judgment on appeal, effective on entry; where it entered an order of dismissal, the supreme court enters no judgment on appeal (Haw. R. App. P. 36(d)(2)). The judgment on appeal is prepared by the court after its final decision and served by the appellate clerk on each party and on the court or agency appealed from (Haw. R. App. P. 36(b)). Dispositions, their publication and citation are governed by Rule 35 as amended by the order of July 21, 2026, which states no period."
+  edge-decision-issued-reconsideration "Motion for reconsideration" -> reconsideration {
+    authority cite "Haw. R. App. P. 40(a)"
+  }
+  edge-decision-issued-judgment "No motion: judgment on appeal entered" -> judgment-entered {
+    event MandateIssued()
+    authority cite "Haw. R. App. P. 36(d)"
+  }
+}
+
+decision reconsideration: "Reconsideration decided" by court cite "Haw. R. App. P. 40(d)"
+{
+  note "A motion for reconsideration may be filed only within 10 days after the filing of the opinion, dispositional order or ruling, unless special leave for more time is granted within that period; it states with particularity the points of law or fact overlooked or misapprehended, with a declaration of good faith, and only one motion is permitted unless the decision is modified in substance (Haw. R. App. P. 40(a), (b), (e)). The court grants or denies it within 10 days of filing; failure to act within the 10 days is a rejection (Haw. R. App. P. 40(d))."
+  edge-reconsideration-denied "Denied or not acted on" -> judgment-entered {
+    event MandateIssued()
+    authority cite "Haw. R. App. P. 40(d)"
+  }
+  edge-reconsideration-granted "Granted" -> reconsideration-granted {
+    authority cite "Haw. R. App. P. 40(d)"
+  }
+}
+
+terminal reconsideration-granted: "Reconsideration granted: decision modified" outcome [appeal] cite "Haw. R. App. P. 40(d)"
+{
+  note "If reconsideration is granted the court may, with or without new argument, modify the decision or take other appropriate action (Haw. R. App. P. 40(d)). Modeled as an exit; in practice it returns to decision."
+}
+
+terminal judgment-entered: "Supreme court judgment on appeal entered" outcome [final] cite "Haw. R. App. P. 36(d)"
+{
+  note "The supreme court's new judgment on appeal is effective on entry (Haw. R. App. P. 36(d)(2)); the commentary to Rule 41 states it is not subject to further state review. Review in the Supreme Court of the United States is outside this package."
+}
+
+terminal review-not-sought: "No application: intermediate court judgment effective" outcome [final] cite "Haw. R. App. P. 36(c)"
+{
+  note "With no application, the Intermediate Court of Appeals' judgment is effective on the thirty-first day after entry, or on expiration of an extension under Rule 40.1(a) (Haw. R. App. P. 36(c)(1))."
+}
+
+terminal review-rejected: "Application rejected: intermediate court judgment stands" outcome [final, loss] cite "Haw. R. App. P. 41"
+{
+  note "If the application is rejected the intermediate court's judgment or order of dismissal stands (Haw. R. App. P. 36(d)(2)), effective on entry of the order dismissing or rejecting the application (Haw. R. App. P. 41)."
+}
+
+terminal dismissed-improvident: "Certiorari dismissed as improvidently granted" outcome [final] cite "Haw. R. App. P. 40.1(h)"
+{
+  note "The court may dismiss the certiorari proceeding at any time before final disposition on finding that certiorari was improvidently granted (Haw. R. App. P. 40.1(h)). The effect on the intermediate court's judgment is not stated in the vendored rules."
+}

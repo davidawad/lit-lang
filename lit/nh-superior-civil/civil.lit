@@ -1,5 +1,7 @@
 module nh-superior-court-civil.civil
 
+import nh-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
 /// A motion for reconsideration or other post-decision relief: at most 10
 /// pages (N.H. Super. Ct. R. 12(e)).
 limit reconsideration-motion {
@@ -12,6 +14,7 @@ state commenced: "Complaint filed" by applicant cite "N.H. Super. Ct. R. 4(b)"
 {
   note "A civil action is initiated by filing the Complaint, an Appearance and either the filing fee or a motion to waive it, and is deemed commenced for the statute of limitations on the date the Complaint is filed (N.H. Super. Ct. R. 4(b)). The fee for the original entry of an action at law or equity is $285.00 (N.H. Super. Ct. R. 201). The court issues a Summons stating the court-ordered deadline for service; proof of service is filed within 21 days of that deadline, and a defendant not served by it is dismissed with or without prejudice (N.H. Super. Ct. R. 4(c)). Periods in this package are stated, not counted: computation is N.H. Super. Ct. R. 2, which excludes the day of the triggering act and carries a last day that falls on a Saturday, Sunday or legal holiday under RSA ch. 288 to the next day that is none of them."
   edge-commenced-served "Defendant served" -> answer-due {
+    event ActionCommenced()
     authority cite "N.H. Super. Ct. R. 9(a)"
   }
   edge-commenced-unserved "Not served by the court-ordered deadline" -> dismissed-unserved {
@@ -78,6 +81,7 @@ decision sj-motion: "Summary judgment decided" by court cite "N.H. Super. Ct. R.
 {
   note "Summary judgment motions are filed, defended and disposed of under RSA 491:8-a; without advance permission the motion and memorandum together, and the objection and memorandum together, may not exceed 25 double-spaced pages (N.H. Super. Ct. R. 12(g)(1)). The motion carries a separate statement of material facts; the nonmoving party has 30 days after the motion is filed to object, and facts not controverted are deemed admitted; the moving party replies to additional facts within 20 days (N.H. Super. Ct. R. 12(g)(2)-(3)). No leading decision is named."
   edge-sj-motion-granted "Granted" -> judgment-for-movant {
+    event JudgmentEntered()
     authority cite "N.H. Super. Ct. R. 12(g)"
   }
   edge-sj-motion-denied "Denied or partly denied" -> trial {
@@ -100,6 +104,7 @@ decision post-trial: "Post-trial motions decided" by court cite "N.H. Super. Ct.
 {
   note "A motion to set aside a jury verdict is filed within 10 days after its rendition, and a motion to set aside any other verdict or decree within 10 days from the date on the court's written notice (N.H. Super. Ct. R. 43). A motion for reconsideration or other post-decision relief is filed within 10 days of the date on the written Notice of the order or decision and may not exceed 10 pages; no objection is required unless ordered (N.H. Super. Ct. R. 12(e))."
   edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "N.H. Super. Ct. R. 46(d)"
   }
 }
@@ -115,7 +120,10 @@ state judgment-entered: "Final judgment" by office cite "N.H. Super. Ct. R. 46(d
 decision appeal-decision: "Notice of appeal within 30 days of the clerk's notice?" by applicant cite "N.H. Sup. Ct. R. 7"
 {
   note "A mandatory appeal, and any other appeal from a decision on the merits, is filed within 30 days from the date on the clerk's written notice of the decision on the merits; a timely post-decision motion stays the appeal period (N.H. Sup. Ct. R. 7(1)). The superior court grants no extension of time to file an appeal document in the supreme court (N.H. Super. Ct. R. 46(e))."
-  edge-appeal-decision-taken "Notice filed" -> appeal-taken { authority cite "N.H. Sup. Ct. R. 7" }
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken {
+    event NoticeOfAppealFiled()
+    authority cite "N.H. Sup. Ct. R. 7"
+  }
   edge-appeal-decision-none "No notice filed" -> final-no-appeal {
     authority cite "N.H. Super. Ct. R. 46(d)"
   }

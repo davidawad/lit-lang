@@ -1,5 +1,7 @@
 module nh-supreme-court-civil-appeals.appeal
 
+import nh-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled }
+
 /// A brief other than a reply brief, in a case without a cross-appeal, and
 /// the moving party's opening and answering briefs in a case with one: at
 /// most 9,500 words, exclusive of the tables and the addendum of pertinent
@@ -35,7 +37,10 @@ start notice
 decision notice: "Notice of appeal within 30 days of the clerk's notice?" by applicant cite "N.H. Sup. Ct. R. 7"
 {
   note "A mandatory appeal, and any other appeal from a trial court decision on the merits, is filed by the approved notice of appeal form within 30 days from the date on the clerk's written notice of the decision on the merits; a timely post-decision motion stays the appeal period for all parties, an untimely one does not unless the trial court waives the untimeliness within the appeal period (N.H. Sup. Ct. R. 7(1)). The appeal is filed when the notice in proper form and the filing fee are received by the clerk within the 30 days (N.H. Sup. Ct. R. 7(2)); another party may cross-appeal within 10 days from the filing of the first notice (N.H. Sup. Ct. R. 7(5)). The entry fee is prescribed by the supreme court and is not stated in the vendored rules (N.H. Sup. Ct. R. 5(1)). Periods in this package are stated, not counted: computation is N.H. Sup. Ct. R. 27(1). No leading decision is named."
-  edge-notice-timely "Notice filed in time" -> acceptance { authority cite "N.H. Sup. Ct. R. 7" }
+  edge-notice-timely "Notice filed in time" -> acceptance {
+    event NoticeOfAppealFiled()
+    authority cite "N.H. Sup. Ct. R. 7"
+  }
   edge-notice-late "Notice late" -> dismissed-untimely { authority cite "N.H. Sup. Ct. R. 21" }
 }
 
@@ -62,6 +67,7 @@ state scheduling: "Scheduling order; record and transcript" by office cite "N.H.
 {
   note "The clerk issues a scheduling order setting the dates for the record, the briefs and the appendices, and whether a transcript is prepared (N.H. Sup. Ct. R. 12-B(1)). The record reaches the court through the parties' appendices or a motion for transmittal filed by the brief date (N.H. Sup. Ct. R. 13(2)-(4)). The moving party pays the transcript deposit within 15 days from the date on the scheduling order's written notice (N.H. Sup. Ct. R. 15(2)). A case not timely docketed, whose record is not transmitted or whose entry fee is not paid is dismissed (N.H. Sup. Ct. R. 5(4))."
   edge-scheduling-briefing "Scheduling order issued" -> briefing {
+    event RecordFiled()
     authority cite "N.H. Sup. Ct. R. 16"
   }
   edge-scheduling-dismissed "Not docketed or record not provided" -> dismissed-prosecution {
@@ -92,8 +98,12 @@ state argument: "Oral argument or submission on briefs" by court cite "N.H. Sup.
 decision decision: "Supreme Court decision" by court cite "N.H. Sup. Ct. R. 20"
 {
   note "At least three justices must concur in any judgment; the opinion or final order, when mandated under Rule 24, is the judgment of the court (N.H. Sup. Ct. R. 20(1)-(2)). A motion for rehearing or reconsideration is filed within 10 days from the date of the opinion, dismissal or summary decision and may not exceed 3,000 words; an answer, if any, is due within 10 days from the filing of the motion (N.H. Sup. Ct. R. 22(2)-(3)). Review by the Supreme Court of the United States is lit/scotus and is not modeled here."
-  edge-decision-affirmed "Affirmed" -> mandate-affirmed { authority cite "N.H. Sup. Ct. R. 24" }
+  edge-decision-affirmed "Affirmed" -> mandate-affirmed {
+    event DecisionFiled()
+    authority cite "N.H. Sup. Ct. R. 24"
+  }
   edge-decision-reversed "Reversed or vacated" -> mandate-reversed {
+    event DecisionFiled()
     authority cite "N.H. Sup. Ct. R. 24"
   }
 }
@@ -101,13 +111,19 @@ decision decision: "Supreme Court decision" by court cite "N.H. Sup. Ct. R. 20"
 state mandate-affirmed: "Mandate issues: affirmed" by office cite "N.H. Sup. Ct. R. 24"
 {
   note "The clerk forwards the mandate to the trial court within 7 days after the time to move for rehearing or reconsideration has expired, or within 7 days after an order denying a timely motion, whichever is later, unless the court shortens or extends the time; the mandate is effective when issued (N.H. Sup. Ct. R. 24(1), (3))."
-  edge-mandate-affirmed-final "Mandate issued" -> affirmed { authority cite "N.H. Sup. Ct. R. 24" }
+  edge-mandate-affirmed-final "Mandate issued" -> affirmed {
+    event MandateIssued()
+    authority cite "N.H. Sup. Ct. R. 24"
+  }
 }
 
 state mandate-reversed: "Mandate issues: reversed or vacated" by office cite "N.H. Sup. Ct. R. 24"
 {
   note "The mandate issues as Rule 24(1) provides. Costs are waived unless a request for taxation with itemization is filed within 30 days after the date on the order in the case (N.H. Sup. Ct. R. 23). Further proceedings in the trial court are not modeled."
-  edge-mandate-reversed-final "Mandate issued" -> reversed { authority cite "N.H. Sup. Ct. R. 24" }
+  edge-mandate-reversed-final "Mandate issued" -> reversed {
+    event MandateIssued()
+    authority cite "N.H. Sup. Ct. R. 24"
+  }
 }
 
 terminal affirmed: "Judgment affirmed" outcome [loss, judgment] cite "N.H. Sup. Ct. R. 24"

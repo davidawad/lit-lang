@@ -5,13 +5,15 @@
 # office is closed runs to the end of the next day that is none of them,
 # and core has no New Hampshire holiday or closure calendar, so the rules'
 # periods are stated in notes, not encoded as counted deadlines. A civil
-# action in the Superior Court is lit/nh-superior-civil.
+# action in the Superior Court is lit/nh-superior-civil. The
+# trigger events are lit/nh-rules' (lg-u561.5).
 [package]
 name = "nh-supreme-court-civil-appeals"
 version = "0.1.0"
 language = 1
 pack_id = "nh-supreme-court-civil-appeals"
 forum = "nh-supreme"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "new-hampshire"
 title = "New Hampshire Supreme Court, civil appeals"
@@ -28,6 +30,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the trigger events.
+nh-state-rules = { version = "^0.1.0", path = "../nh-rules" }
 
 [sources.nh-sup-r]
 title = "Rules of the Supreme Court of the State of New Hampshire (as published on 2026-10-27)"

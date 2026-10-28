@@ -11,6 +11,7 @@
 
 - Source: https://www.txnd.uscourts.gov/sites/default/files/documents/CRIMRULES.pdf (official site; 22 pages, sha256 033d693354587ef18e9a6eeeb0642db915425c5fd6ec7dba11244b8b0cf9e8d0).
 - Edition: Local Criminal Rules 'Effective September 1, 2026' (title page), the 'Criminal Rules (PDF)' linked at https://www.txnd.uscourts.gov/rules-and-orders. robots.txt of www.txnd.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): txnd-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 800d8cb671875dff48e9ebcf252d2fb2e88a32c32d17298d10e441cce93472fd. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `txnd/original/txnd-local-criminal-rules-2026-09-01.pdf` as served (sha256 033d693354587ef18e9a6eeeb0642db915425c5fd6ec7dba11244b8b0cf9e8d0); extraction sha256 800d8cb671875dff48e9ebcf252d2fb2e88a32c32d17298d10e441cce93472fd.

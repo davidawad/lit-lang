@@ -1,0 +1,52 @@
+# How a Nebraska civil case comes before the Nebraska Supreme Court rather
+# than the Court of Appeals: the petition to bypass and the removal under
+# Neb. Rev. Stat. § 24-1106(2), (3) (sources/ne-district), and an original
+# action under Neb. Ct. R. App. P. § 2-115(A) (sources/nebctapp). The
+# rules on the bypass petition's procedure and time (§ 24-1106(2) leaves
+# them to the court's rules), on further review of a Court of Appeals
+# decision and on rehearing are not vendored: further review is held as a
+# hole. The merits stages (briefing, submission, decision) are the same
+# Neb. Ct. R. App. P. sections for both courts and are lit/nebctapp's.
+[package]
+name = "ne-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ne-supreme-court-civil"
+forum = "ne-supreme-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "nebraska"
+title = "Nebraska Supreme Court, civil"
+description = "How a civil case comes before the Nebraska Supreme Court, as far as the vendored statute and rules state: direct review on a petition to bypass the Court of Appeals or removal (Neb. Rev. Stat. § 24-1106(2), (3)), an original action by leave of court (Neb. Ct. R. App. P. § 2-115(A)), and further review of a Court of Appeals decision, held as a hole (its rule is not vendored)."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "Nebraska Supreme Court (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+ne-state-rules = { version = "^0.1.0", path = "../ne-rules" }
+
+[sources.ne-app-p]
+title = "Nebraska Court Rules of Appellate Practice (Neb. Ct. R. App. P., chapter 2, article 1), cited sections, as published by the Nebraska Supreme Court"
+url = "https://supremecourt.nebraska.gov/supreme-court-rules/chapter-2-appeals/article-1-nebraska-court-rules-appellate-practice"
+path = "sources/nebctapp/ne-app-p-cited.txt"
+path_sha256 = "c514b9b9b8ced5c87029eb56aeab76bc2f32c82b19c18f0d54113220c0876237"
+as_of = "2026-10-27"
+cite_prefixes = ["Neb. Ct. R. App. P. §"]
+section_heading = "Neb. Ct. R. App. P. § {n}"
+
+[sources.neb-rev-stat]
+title = "Nebraska Revised Statutes, cited sections of chapters 24 and 25, as published by the Nebraska Legislature"
+url = "https://nebraskalegislature.gov/laws/statutes.php"
+path = "sources/ne-district/ne-statutes-cited.txt"
+path_sha256 = "ee8d4406776670b03de53049e86aba7991362cd6d20f6add41378ac1974c4e86"
+as_of = "2026-10-27"
+cite_prefixes = ["Neb. Rev. Stat. §"]
+section_heading = "Neb. Rev. Stat. § {n}"

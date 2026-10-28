@@ -1,0 +1,28 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "ne-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "ne-supreme-court-civil"
+version = "0.1.0"
+language = 1
+source = "sha256:f39efa62fc91112ec914b0d5f8aec06e005f4f68dac95b451bd45e456ec5603d"
+semantic = "sha256:aad5be914a2bdb591fb0f191aec830ee1ab54ffc093de873c1c11ad961dfb518"
+texts = [
+    "ne-app-p sources/nebctapp/ne-app-p-cited.txt sha256:c514b9b9b8ced5c87029eb56aeab76bc2f32c82b19c18f0d54113220c0876237",
+    "neb-rev-stat sources/ne-district/ne-statutes-cited.txt sha256:ee8d4406776670b03de53049e86aba7991362cd6d20f6add41378ac1974c4e86",
+]
+dependencies = [
+    "core 1.0.0",
+    "ne-state-rules 0.1.0",
+]

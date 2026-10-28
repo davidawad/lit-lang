@@ -1,0 +1,88 @@
+module ne-supreme-court-civil.supreme
+
+import ne-state-rules.{ ReviewPetitionFiled }
+
+// How a civil case comes before the Nebraska Supreme Court, from the
+// applicant's side. The vendored text is Neb. Rev. Stat. § 24-1106 and
+// Neb. Ct. R. App. P. §§ 2-103, 2-107, 2-109, 2-111, 2-115 and 2-116. The
+// bypass petition's procedure and time are left to the court's rules
+// (§ 24-1106(2)), which are not vendored, so no period is stated. The
+// petition for further review of a Court of Appeals decision, rehearing
+// (§ 2-113) and the mandate (§ 2-114) are not vendored: further review is
+// held as a hole. The outline cited § 2-115 for rehearing and § 2-116 for
+// the mandate, but those sections govern original actions and appellate
+// records; those cites are replaced. The outline named no leading
+// decisions.
+start route
+
+decision route: "How the case comes before the Supreme Court" by applicant cite "Neb. Rev. Stat. § 24-1106"
+{
+  note "A civil appeal goes to the Court of Appeals except in cases involving the constitutionality of a statute, which go to the Supreme Court (Neb. Rev. Stat. § 24-1106(1)); for the question to be involved it must be real and substantial, not merely colorable (State v. Nelson, 274 Neb. 304, 739 N.W.2d 199 (2007), annotated to § 24-1106). Any party to a case appealed to the Court of Appeals may petition the Supreme Court to bypass the Court of Appeals for direct review (§ 24-1106(2)). The Supreme Court may also remove a case from the Court of Appeals before final decision, on the Court of Appeals' recommendation or its own motion, for a § 24-1106(2) reason or to regulate the courts' caseloads (§ 24-1106(3)). An original action may be commenced only by leave of court (Neb. Ct. R. App. P. § 2-115(A)(1))."
+  edge-route-court-of-appeals "No petition: the appeal stays in the Court of Appeals" -> court-of-appeals {
+    authority cite "Neb. Rev. Stat. § 24-1106(1)"
+  }
+  edge-route-bypass "Petition to bypass the Court of Appeals" -> bypass-decision {
+    event ReviewPetitionFiled()
+    authority cite "Neb. Rev. Stat. § 24-1106(2)"
+  }
+  edge-route-further-review "Petition for further review of a Court of Appeals decision" -> further-review-decision {
+    event ReviewPetitionFiled()
+    authority cite ?("the further-review rule (Neb. Ct. R. App. P. 2-102(F)) is not vendored")
+  }
+  edge-route-original "Application for leave to commence an original action" -> original-leave {
+    authority cite "Neb. Ct. R. App. P. § 2-115(A)(2)"
+  }
+}
+
+chance bypass-decision: "Supreme Court grants or denies the bypass petition" by court cite "Neb. Rev. Stat. § 24-1106(2)"
+{
+  note "In deciding the petition the court may consider whether the case involves a question of first impression or a novel legal question; state or federal constitutional interpretation; the validity of a statute; an inconsistency in the decisions of the Court of Appeals or the Supreme Court; significant public interest; or qualified immunity in a civil action under 42 U.S.C. 1983 (Neb. Rev. Stat. § 24-1106(2)(a)-(f)). When the petition is granted the case is docketed for hearing before the Supreme Court (§ 24-1106(2)). The grant probability is a hole."
+  edge-bypass-granted "Bypass granted" -> docketed p ?("no Nebraska grant rate is sourced") {
+    authority cite "Neb. Rev. Stat. § 24-1106(2)"
+  }
+  edge-bypass-denied "Bypass denied" -> court-of-appeals p ?("no Nebraska grant rate is sourced") {
+    authority cite "Neb. Rev. Stat. § 24-1106(1)"
+  }
+}
+
+chance further-review-decision: "Supreme Court grants or denies further review" by court cite ?("the further-review rule (Neb. Ct. R. App. P. 2-102(F)) is not vendored") {
+  note "Further review of a Court of Appeals decision is discretionary; its petition period, form, length and grounds are in rules that are not vendored, and the grant probability is a hole."
+  edge-further-review-granted "Further review granted" -> docketed p ?("no Nebraska grant rate is sourced") {
+    authority cite ?("the further-review rule (Neb. Ct. R. App. P. 2-102(F)) is not vendored")
+  }
+  edge-further-review-denied "Further review denied" -> review-denied p ?("no Nebraska grant rate is sourced") {
+    authority cite ?("the further-review rule (Neb. Ct. R. App. P. 2-102(F)) is not vendored")
+  }
+}
+
+chance original-leave: "Leave to commence the original action" by court cite "Neb. Ct. R. App. P. § 2-115(A)(1)"
+{
+  note "The applicant files with the Supreme Court Clerk a verified petition setting forth the action and a statement of the basis of the court's jurisdiction and the reasons it is necessary to commence the action there; no oral argument is permitted unless the court orders it (Neb. Ct. R. App. P. § 2-115(A)(2)). The application is recorded with an application status, and the docket fee provisions of Neb. Rev. Stat. § 33-103 and § 2-101(G) apply (§ 2-115(B)(1), (2)). The grant probability is a hole."
+  edge-original-accepted "Application accepted" -> original-accepted p ?("no Nebraska grant rate is sourced") {
+    authority cite "Neb. Ct. R. App. P. § 2-115(B)(3)"
+  }
+  edge-original-denied "Leave denied" -> original-denied p ?("no Nebraska grant rate is sourced") {
+    authority cite "Neb. Ct. R. App. P. § 2-115(A)(1)"
+  }
+}
+
+terminal court-of-appeals: "Appeal proceeds in the Court of Appeals" outcome [final] cite "Neb. Rev. Stat. § 24-1106(1)"
+{
+  note "The appeal proceeds in the Court of Appeals (lit/nebctapp)."
+}
+
+terminal docketed: "Docketed for hearing before the Supreme Court" outcome [final] cite "Neb. Rev. Stat. § 24-1106(2)"
+{
+  note "Briefing, submission and decision follow the Neb. Ct. R. App. P. sections both courts share (§§ 2-109, 2-111, 2-107), modeled in lit/nebctapp. Federal certiorari (28 U.S.C. § 1257) is outside this package."
+}
+
+terminal review-denied: "Further review denied" outcome [final, loss] cite ?("the further-review rule (Neb. Ct. R. App. P. 2-102(F)) is not vendored") {
+  note "Denial leaves the Court of Appeals decision in place; the mandate rule (§ 2-114) is not vendored."
+}
+
+terminal original-accepted: "Original action accepted" outcome [final] cite "Neb. Ct. R. App. P. § 2-115(B)(3)"
+{
+  note "The case status changes to reflect the grant and no second filing fee is required; unless the action was filed electronically, the applicant provides copies of the verified petition and attachments for service with the summons (Neb. Ct. R. App. P. § 2-115(B)(3), (4)). Proceedings in the original action are outside this package."
+}
+
+terminal original-denied: "Leave to commence the original action denied" outcome [final, loss] cite "Neb. Ct. R. App. P. § 2-115(A)(1)"

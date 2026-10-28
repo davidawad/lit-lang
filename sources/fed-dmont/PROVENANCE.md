@@ -15,3 +15,9 @@
 - Source: as the extract `fed-dmont/dmont-local-rules.txt`, https://www.mtd.uscourts.gov/sites/mtd/files/LocalRules_12012025.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, Local Rules of Procedure effective December 1, 2025.
 - Sectioned sha256 c5300e79defb31f7d1cf003176730640378ca2ae83050cc3455718b888b7dc58 (the `path_sha256` pinned by `lit/mtd/Lit.toml`).
+
+### `fed-dmont/dmont-local-rules-crim-sectioned.txt` — D. Montana Local Rules of Procedure, criminal rules sectioned
+
+- Derived in the pod (lg-gddt.22) from `fed-dmont/dmont-local-rules.txt` (extract sha256 fe0d69067e3e7e2c54465189c76a6b144a51eb0c1b57b86dff62256a469c2948); nothing fetched. One marker line `## L.R. CR <n>` is inserted before each criminal rule's own body heading line `CR <n> <Title>` in Chapter II (from extract line 3377; CR 1.1 through CR 59.2, 37 rules, including 17.1.1 and 17.1.2); the civil chapter, the table of contents, the running footers (`D.Mont L.R. CR ...`) and Appendix A carry no markers (the civil copy `dmont-local-rules-sectioned.txt` marks only the civil rules). Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Edition: as the extract, Local Rules of Procedure effective December 1, 2025.
+- Sectioned sha256 da2b2af6001750899c920779bcf320af98ff6381ead68491d89e6679e1cebb3b (the `path_sha256` pinned by `lit/mtd-criminal/Lit.toml`).

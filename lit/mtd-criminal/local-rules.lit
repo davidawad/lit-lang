@@ -1,0 +1,229 @@
+module mtd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The District of Montana's own criminal periods, counted under the
+// criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay with the Federal Rules and are
+// only named here: objections to a magistrate judge's order or findings
+// and recommendation are filed within 14 days of service (L.R. CR
+// 59.2(b)), FRCrimP 59(a)'s and 59(b)(2)'s period; the juror-interview
+// period below yields to a different time under FRCrimP 33(b)(1) (L.R. CR
+// 24.2(b)(1)).
+//
+// Conditions that are not deadlines from an event stay in notes: the
+// government discloses Brady information "as soon as reasonably possible"
+// from arraignment on (L.R. CR 16.1(a)); no extension or continuance is
+// granted except on a judge's order, consistent with the Speedy Trial Act
+// (L.R. CR 17.1.2); a motion is ripe once the response is filed and late
+// briefs may be deemed an admission (L.R. CR 47.2(a), (b)); an appellant's
+// untimely brief subjects the appeal to summary dismissal (L.R. CR
+// 58.2(b)); the imminent-execution pre-filing requirements (Appendix A)
+// concern challenges to state death sentences, which belong to
+// lit/habeas.
+//
+// The earlier D. Mont. criminal outline's FRCrimP flow and its decisions
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+/// A motion's supporting brief, or the response brief: at most 6500 words
+/// (D. Mont. L.R. CR 47.2(a)).
+limit motion-brief {
+  words <= 6_500 cite "D. Mont. L.R. CR 47.2(a)"
+} cite "D. Mont. L.R. CR 47.2(a)"
+
+/// A reply brief: at most 3250 words (D. Mont. L.R. CR 47.2(a)).
+limit reply-brief { words <= 3_250 cite "D. Mont. L.R. CR 47.2(a)" } cite "D. Mont. L.R. CR 47.2(a)"
+
+/// A notice of supplemental authority: not more than two pages (D. Mont.
+/// L.R. CR 47.4).
+limit supplemental-authority-notice {
+  pages <= 2 cite "D. Mont. L.R. CR 47.4"
+} cite "D. Mont. L.R. CR 47.4"
+
+/// Objections to a magistrate judge's order or findings and
+/// recommendation: at most 6500 words (D. Mont. L.R. CR 59.2(b)).
+limit magistrate-objection {
+  words <= 6_500 cite "D. Mont. L.R. CR 59.2(b)"
+} cite "D. Mont. L.R. CR 59.2(b)"
+
+/// Trial is set to commence (D. Mont. L.R. CR 16.1, 16.3, 24.1).
+event TrialScheduled()
+/// The defendant is arraigned (D. Mont. L.R. CR 16.1(f)).
+event Arraigned()
+/// The government requests the discovery FRCrimP 16(b) requires (D.
+/// Mont. L.R. CR 16.2).
+event DefenseDiscoveryRequested()
+/// The date of a proceeding at which a prisoner's production is sought
+/// (D. Mont. L.R. CR 17.1).
+event ProceedingScheduled()
+/// The desired date of service of a criminal summons or subpoena by the
+/// Marshals Service (D. Mont. L.R. CR 17.2(a)).
+event DesiredServiceDate()
+/// The jury returns its verdict (D. Mont. L.R. CR 24.2(b)).
+event VerdictReturned()
+/// A motion is filed with its supporting brief (D. Mont. L.R. CR 47.2(a)).
+event MotionFiled() paper motion-brief
+/// A response brief is filed (D. Mont. L.R. CR 47.2(a)).
+event ResponseFiled() paper motion-brief
+/// A reply brief is filed (D. Mont. L.R. CR 47.2(a)).
+event ReplyFiled() paper reply-brief
+/// A notice of supplemental authority is filed (D. Mont. L.R. CR 47.4).
+event SupplementalAuthorityNoticed() paper supplemental-authority-notice
+/// Objections to a magistrate judge's ruling are filed (D. Mont. L.R. CR
+/// 59.2(b)).
+event MagistrateObjectionFiled() paper magistrate-objection
+/// A notice of appeal from a magistrate judge's judgment is filed (D.
+/// Mont. L.R. CR 58.2(a)).
+event MisdemeanorAppealNoticed()
+/// The official transcript is filed on the appeal (D. Mont. L.R. CR
+/// 58.2(a)(3)).
+event AppealTranscriptFiled()
+/// The appellant's brief is filed (D. Mont. L.R. CR 58.2(a)(4)).
+event AppellantBriefFiled()
+/// The appellee's brief is filed (D. Mont. L.R. CR 58.2(a)(5)).
+event AppelleeBriefFiled()
+
+/// D. Mont. L.R. CR 16.1(c): unless otherwise ordered, the government need
+/// not disclose impeachment and witness-credibility information until 7
+/// days before trial.
+deadline impeachment-disclosure: 7.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Mont. L.R. CR 16.1(c)"
+{
+  forum frcrimp
+}
+
+/// D. Mont. L.R. CR 16.1(f)(1): on the defendant's request the government
+/// provides the discovery FRCrimP 16(a)(1)(A)-(E) and (G) requires no later
+/// than 14 days after arraignment, unless the presiding judge orders
+/// earlier disclosure.
+deadline government-discovery: 14.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Mont. L.R. CR 16.1(f)"
+{
+  forum frcrimp
+}
+
+/// D. Mont. L.R. CR 16.1(f)(2): FRCrimP 16(a)(1)(F) examination and test
+/// reports are provided as soon as reasonably possible and no later than
+/// seven days before trial.
+deadline examination-report-disclosure: 7.days before TrialScheduled() counted_by frcrimp45 cite "D. Mont. L.R. CR 16.1(f)"
+{
+  forum frcrimp
+}
+
+/// D. Mont. L.R. CR 16.2: on the government's request, and unless
+/// otherwise ordered, the defendant provides the FRCrimP 16(b) discovery
+/// within 21 days from the date of the request.
+deadline defense-discovery: 21.days after DefenseDiscoveryRequested() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Mont. L.R. CR 16.2"
+{
+  forum frcrimp
+}
+
+/// D. Mont. L.R. CR 16.3: unless the presiding judge sets a specific
+/// deadline, the parties disclose the additional expert information no
+/// later than 21 days before trial.
+deadline expert-disclosure: 21.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Mont. L.R. CR 16.3"
+{
+  forum frcrimp
+}
+
+/// D. Mont. L.R. CR 17.1: a party requesting production of a prisoner by
+/// the Marshals Service obtains the court's order no later than 21 days
+/// before the proceeding; a lesser time only on motion and good cause.
+deadline prisoner-production-order: 21.days before ProceedingScheduled() counted_by frcrimp45 cite "D. Mont. L.R. CR 17.1"
+{
+  forum frcrimp
+}
+
+/// D. Mont. L.R. CR 17.2(a): a party requesting Marshal service of a
+/// criminal summons or subpoena notifies the Marshal, with the necessary
+/// documentation, no later than 21 days before the desired date of service.
+deadline marshal-service-request: 21.days before DesiredServiceDate() counted_by frcrimp45 cite "D. Mont. L.R. CR 17.2(a)"
+{
+  forum frcrimp
+}
+
+/// D. Mont. L.R. CR 24.1(a)(3)(B): unless the court orders otherwise,
+/// questions the parties want the court to ask the jurors are submitted at
+/// least one court day before trial commences.
+deadline voir-dire-questions: 1.court_days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Mont. L.R. CR 24.1(a)"
+{
+  forum frcrimp
+}
+
+/// D. Mont. L.R. CR 24.2(b)(1): neither parties nor counsel may interview
+/// jurors unless, within 14 days after the verdict, a party files proposed
+/// questions and an affidavit showing good cause.
+deadline juror-interview-request: 14.days after VerdictReturned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Mont. L.R. CR 24.2(b)"
+{
+  forum frcrimp
+}
+
+/// D. Mont. L.R. CR 47.2(a): the response brief is filed 14 days after the
+/// motion and supporting brief.
+deadline motion-response: 14.days after MotionFiled() counted_by frcrimp45 cite "D. Mont. L.R. CR 47.2(a)"
+{
+  forum frcrimp
+}
+
+/// D. Mont. L.R. CR 47.2(a): the reply is filed 7 days after the response
+/// brief.
+deadline motion-reply: 7.days after ResponseFiled() counted_by frcrimp45 cite "D. Mont. L.R. CR 47.2(a)"
+{
+  forum frcrimp
+}
+
+/// D. Mont. L.R. CR 58.2(a)(1): the official transcript is ordered seven
+/// days after the notice of appeal is filed, on the clerk's scheduling
+/// order.
+deadline misdemeanor-transcript-order: 7.days after MisdemeanorAppealNoticed() counted_by frcrimp45 cite "D. Mont. L.R. CR 58.2(a)"
+{
+  forum frcrimp
+}
+
+/// D. Mont. L.R. CR 58.2(a)(2): the official transcript is filed 21 days
+/// after the notice of appeal is filed.
+deadline misdemeanor-transcript-filing: 21.days after MisdemeanorAppealNoticed() counted_by frcrimp45 cite "D. Mont. L.R. CR 58.2(a)"
+{
+  forum frcrimp
+}
+
+/// D. Mont. L.R. CR 58.2(a)(3): the appellant's brief is filed within 14
+/// days after the official transcript is filed.
+deadline misdemeanor-appellant-brief: 14.days after AppealTranscriptFiled() counted_by frcrimp45 cite "D. Mont. L.R. CR 58.2(a)"
+{
+  forum frcrimp
+}
+
+/// D. Mont. L.R. CR 58.2(a)(4): the appellee's brief is filed within 14
+/// days after the appellant's brief is filed.
+deadline misdemeanor-appellee-brief: 14.days after AppellantBriefFiled() counted_by frcrimp45 cite "D. Mont. L.R. CR 58.2(a)"
+{
+  forum frcrimp
+}
+
+/// D. Mont. L.R. CR 58.2(a)(5): the reply brief is filed seven days after
+/// the appellee's brief is filed.
+deadline misdemeanor-reply-brief: 7.days after AppelleeBriefFiled() counted_by frcrimp45 cite "D. Mont. L.R. CR 58.2(a)"
+{
+  forum frcrimp
+}

@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "kyed-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:aa647c84b18459550eb5245332f4c116875450cd6396bf3d99f6fae5e1b1da16"
+semantic = "sha256:b2b914dda7e0192cf1d30f0b06bc436ccfd90c84675d96be3442f4b853df2486"
+texts = [
+    "kyed-lcrr sources/kyed/kyed-joint-local-criminal-rules-2026-08-sectioned.txt sha256:765455429286794288bfecd3aa26fa70a71c8b932350abb4e4b40499e94bc2e4",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

@@ -1,0 +1,45 @@
+module kyed-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Eastern District of Kentucky's own criminal periods and limits,
+// counted under FRCrimP 45(a), which governs a period stated in a local
+// rule. Stated in the rules but not declared: motions themselves, filed
+// within the time the court orders unless a statute or the FRCrimP fixes it
+// (LCrR 47.1(c)); the clerk's two weeks before destroying unclaimed exhibits
+// or delivering unclaimed contraband (LCrR 55.2(c), (e)), which bind the
+// clerk; and the attorney discipline periods (LCrR 57.3), which no event of
+// the criminal case models. Extensions by agreement of the parties are not
+// valid in criminal cases (LCrR 47.1(b)).
+/// The text of a motion or response: at most 25 pages without leave of
+/// court (LCrR 47.1(e)).
+limit motion-paper { pages <= 25 cite "E.D. Ky. LCrR 47.1(e)" } cite "E.D. Ky. LCrR 47.1(e)"
+/// A reply: at most 10 pages without leave of court (LCrR 47.1(e)).
+limit reply-paper { pages <= 10 cite "E.D. Ky. LCrR 47.1(e)" } cite "E.D. Ky. LCrR 47.1(e)"
+
+/// A motion for an extension of time, demonstrating good cause, is served
+/// (LCrR 47.1(b)).
+event ExtensionMotionServed()
+/// A motion is served (LCrR 47.1(d)).
+event MotionServed() paper motion-paper
+/// A response opposing a motion is served (LCrR 47.1(d)).
+event ResponseServed() paper motion-paper
+/// A reply is filed (LCrR 47.1(d), (e)).
+event ReplyFiled() paper reply-paper
+/// A trial or evidentiary hearing is scheduled to begin (LCrR 57.6).
+event TrialOrHearingScheduled()
+
+/// LCrR 47.1(b): a response opposing a motion for an extension of time is
+/// filed within 7 days of service of the motion.
+deadline extension-response-period: 7.days after ExtensionMotionServed() counted_by frcrimp45 cite "E.D. Ky. LCrR 47.1(b)"
+/// LCrR 47.1(d): unless the court orders otherwise, a party opposing a
+/// motion files a response within 14 days of service of the motion;
+/// failure to respond timely may be grounds for granting it.
+deadline motion-response-period: 14.days after MotionServed() counted_by frcrimp45 cite "E.D. Ky. LCrR 47.1(d)"
+/// LCrR 47.1(d): a party may file a reply within 14 days of service of the
+/// response.
+deadline motion-reply-period: 14.days after ResponseServed() counted_by frcrimp45 cite "E.D. Ky. LCrR 47.1(d)"
+/// LCrR 57.6: absent leave on a motion showing compelling circumstances,
+/// an attorney of record may not withdraw within twenty-one days of trial
+/// or an evidentiary hearing.
+deadline withdrawal-cutoff: 21.days before TrialOrHearingScheduled() counted_by frcrimp45 cite "E.D. Ky. LCrR 57.6"

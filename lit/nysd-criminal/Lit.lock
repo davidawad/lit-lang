@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "nysd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:0633d216e120e82ff26cd66d8822080dbb15e23232a1f299d11cad6e0d98d8d4"
+semantic = "sha256:496a62cd8e3688c72c736e3f82b78dd1f90f2990b8ec520db3ee7e9fbfd3e7ac"
+texts = [
+    "sdny-edny-lcrr sources/sdny/local-rules-joint-sdny-edny-criminal-sectioned.txt sha256:6f1a7ac5c06034a7e203c3dfbd8898cfeaab5cc55bc5e06e61f0bb5d9a779628",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcp-civil-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "mied-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:6ee16ba2d0bac1925efa8ca12d1c6af3294595531dd2169372698fe7da2ca3ec"
+semantic = "sha256:270d69276355e5b06fb8c474fc032d07e3f841cde6e812f66258598612c3c35c"
+texts = [
+    "mied-lr sources/mied/mied-local-rules-civil-sectioned.txt sha256:be63479120e603ab8db781adcb3548256f799a4d984e4109eeaa3c36dbe0d4d9",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcp-civil-procedure 2024.12.0",
+]

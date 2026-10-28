@@ -33,3 +33,15 @@
 - Retrieved 2026-10-28 in the pod (lg-w6fv) with curl; extracted with `pdftotext -layout` (poppler 25.03), unedited; scanned PDF; the extract is the OCR text layer as served (iLovePDF) and carries OCR errors (e.g. "Hearmg", "Rule 3|"); read the original for exact wording.
 - Extract sha256 5419c33e350e1f7fef315b0764c76eba3b377d49951a8e5a4081e4d19f4f91f5. Raw extract, not yet sectioned into `## <ref>` form. An amendment layer over `vi-supreme-civil/virap.txt`; apply by its effective date.
 - Original: `vi-supreme-civil/original/virap-amendments-2024-12-01.pdf` as served (sha256 a8ffa2c9ae44d53180359cc00e04935d220247674c9569c9d7f1a862bef6efc3); extraction sha256 5419c33e350e1f7fef315b0764c76eba3b377d49951a8e5a4081e4d19f4f91f5.
+
+### `vi-supreme-civil/virap-sectioned.txt` — Virgin Islands Rules of Appellate Procedure, sectioned
+
+- Derived in the pod (lg-f3q8.76) from `vi-supreme-civil/virap.txt` (extract sha256 b4db34693be906b97b4bba59973730397502a091c4d006a9781731b95bb7675f); nothing fetched. After the table of contents, one marker line `## Rule <n>` is inserted before each rule's own heading line `Rule <n>. <title>` (Rule 1 through Rule 41). Every other line is the extract unchanged, so deleting the `## Rule` lines (`sed '/^## Rule /d'`) gives back the extract byte for byte.
+- Edition: as the extract (no edition line; latest amendment line "Restated and Amended March 1, 2017").
+- Sectioned sha256 7a209192ec9a54520dbf0a65f54a5662b58598c4a9bdfca9395cd28d63d18712 (the `path_sha256` pinned by `lit/vi-supreme-civil/Lit.toml`).
+
+### `vi-supreme-civil/virap-amendments-2024-12-01-sectioned.txt` — SCT-Prom-2024-0001, sectioned
+
+- Derived in the pod (lg-f3q8.76) from `vi-supreme-civil/virap-amendments-2024-12-01.txt` (extract sha256 5419c33e350e1f7fef315b0764c76eba3b377d49951a8e5a4081e4d19f4f91f5; OCR text layer); nothing fetched. Three marker lines are inserted: `## Rule 40` before the paragraph designating Rule 40, `## Rule 31` before the paragraph replacing Rule 31 (OCR "Rule 3|"), and `## Order` before the closing comment-and-effective-date paragraphs. Every other line is the extract unchanged, so deleting the `## ` marker lines (`sed '/^## /d'`) gives back the extract byte for byte.
+- Edition: as the extract (entered October 3, 2024; effective December 1, 2024). OCR: no number is taken from it (no second public source of the same edition is vendored).
+- Sectioned sha256 f7ce7a100ab48e5be65abaef661d37a768191124d7df11a611db69597179ab5d (the `path_sha256` pinned by `lit/vi-supreme-civil/Lit.toml`).

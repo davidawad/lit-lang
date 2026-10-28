@@ -1,0 +1,48 @@
+module gamd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Middle District's own criminal periods. Criminal cases are tried to
+// a jury of twelve unless waived under FRCrimP 23 (Local Criminal Rule
+// 23.1); juror questionnaires are destroyed immediately after trial
+// (23.2); no juror is contacted without the Court's permission (31.1).
+// Sentencing ordinarily occurs within seventy days after the plea or
+// verdict (32.1(a)): a practice, not a period. The presentence report goes
+// to the parties at least thirty-five days before sentencing, objections
+// follow within fourteen days, and the report and its addendum reach the
+// judge at least seven days before the hearing (32.1(b), (d)): those are
+// FRCrimP 32(e)(2), (f)(1) and (g)'s own periods and stay with
+// lit/frcrimp. A report is deemed disclosed on delivery, one day after its
+// availability is orally communicated, or three days after a copy or
+// notice is mailed (32.1(g)). Every motion carries a memorandum of law
+// unless the judge prescribes otherwise (47.1); briefs supporting or
+// opposing a motion are limited to twenty pages and a reply to ten, absent
+// leave (47.4), stated in pages, so they stay in this note; motions are
+// decided without a hearing unless ordered (47.5). Filing, privacy and
+// hybrid representation follow the civil rules (49.1-49.3). Retained
+// counsel's fees cover representation through the direct appeal (57(D)(1)),
+// and except in extraordinary circumstances counsel may not withdraw for
+// nonpayment "after fourteen (14) business days from arraignment"
+// (57(D)(2)); business days have no engine lowering, so that period is a
+// hole kept in this note.
+// The earlier outline's FRCrimP flow and its decisions belong to
+// lit/frcrimp and are removed here: no reporter text is vendored.
+/// A motion and its brief are served (M.D. Ga. Local Criminal Rule 47.2).
+event MotionServed()
+/// The respondent's response, brief or affidavits are served (M.D. Ga.
+/// Local Criminal Rule 47.3).
+event MotionResponseServed()
+
+/// M.D. Ga. Local Criminal Rule 47.2: a response, brief or affidavits are
+/// served within twenty-one days after service of the motion and brief.
+deadline motion-response-period: 21.days after MotionServed() counted_by frcrimp45 cite "M.D. Ga. Local Criminal Rule 47.2"
+{
+  forum frcrimp
+}
+
+/// M.D. Ga. Local Criminal Rule 47.3: any reply is served within fourteen
+/// days after service of the response.
+deadline motion-reply-period: 14.days after MotionResponseServed() counted_by frcrimp45 cite "M.D. Ga. Local Criminal Rule 47.3"
+{
+  forum frcrimp
+}

@@ -15,3 +15,10 @@
 - Upstream: https://www.gamd.uscourts.gov/sites/gamd/files/Local_Rules-12_1_2022.pdf, retrieved 2026-10-27, as recorded on the `md-ga/mdga-local-rules.txt` entry this file is derived from.
 - Edition: as the extract, Local Rules "As Amended March 7, 2022".
 - Sectioned sha256 bf31258f6359b4b9827bd9408addcb97f3c24e6de452a80322a5ba9d18db6976 (the `path_sha256` pinned by `lit/gamd/Lit.toml`).
+
+### `md-ga/mdga-local-rules-criminal-sectioned.txt` — M.D. Ga. Local Rules, criminal part sectioned
+
+- Derived in the pod (lg-gddt.26) from `md-ga/mdga-local-rules.txt` (extract sha256 e1b087a01c5f9afb41918ac8728a25ebfefde6b2c1783875c0a60e5fa5dd93a6); nothing fetched. In the Local Criminal Rules part only (from the `LOCAL CRIMINAL RULES` heading in the body), one `## Local Criminal Rule <n>` line is inserted before each rule's heading (`LOCAL CRIMINAL RULE 23`, `31`, `32`, `47`, `49`, `57`) and each numbered subrule's (`23.1` through `49.3`), 19 markers; the civil and general rules, the table of contents and the appendix are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Local Criminal Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `md-ga/mdga-local-rules.txt`, https://www.gamd.uscourts.gov/sites/gamd/files/Local_Rules-12_1_2022.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
+- Edition: as the extract, Local Rules as amended March 7, 2022.
+- Sectioned sha256 0e5c6fb3fad9cafe43b8e4a3e80f8193fb33df2912a21dc4d368625b23774c7e (the `path_sha256` pinned by `lit/gamd-criminal/Lit.toml`).

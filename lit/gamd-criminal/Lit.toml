@@ -1,0 +1,48 @@
+# The Middle District of Georgia's Local Criminal Rules as a local-rule
+# layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it declares
+# only the periods those rules themselves state and re-encodes no FRCrimP,
+# Speedy Trial Act or FRAP period. Each period is counted under FRCrimP
+# 45(a), which governs "any local rule". The rules are the Local Rules as
+# amended March 7, 2022 (sources/md-ga). The Local Criminal Rules are
+# supplemental and construed with the generally applicable Local Rules
+# (Introduction); those are not restated here.
+[package]
+name = "gamd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "gamd-criminal-local-rules"
+forum = "gamd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Middle District of Georgia: Local Criminal Rules"
+description = "The Middle District of Georgia's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): motion responses and replies; retained counsel's withdrawal window, presentence procedure, page limits and jury rules in notes."
+in_force = "2022-03-07"
+known_at = "2026-10-28"
+unknown_before = "2022-03-07"
+jurisdiction = "United States District Court, M.D. Georgia (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+office = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "gamd-lcrr"
+issuer = "United States District Court for the Middle District of Georgia"
+date = "2022-03-07"
+designation = "Local Rules, Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.gamd-lcrr]
+title = "Local Rules of the United States District Court for the Middle District of Georgia (as amended March 7, 2022), Local Criminal Rules"
+url = "https://www.gamd.uscourts.gov/sites/gamd/files/Local_Rules-12_1_2022.pdf"
+path = "sources/md-ga/mdga-local-rules-criminal-sectioned.txt"
+path_sha256 = "0e5c6fb3fad9cafe43b8e4a3e80f8193fb33df2912a21dc4d368625b23774c7e"
+sha256 = "6a38fa2a50e3cc6a9daea03964a09d50926a8bfd1dd2b186203c2bacbc6401f9"
+as_of = "2022-03-07"
+cite_prefixes = ["M.D. Ga. Local Criminal Rule"]
+section_heading = "Local Criminal Rule {n}"

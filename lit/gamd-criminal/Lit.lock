@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "gamd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:df77f985b3adadce12a0c0fc56563aead25133c6af3be44b76d791786e180540"
+semantic = "sha256:119fe292e8402d17c573bdc8a96553319ee92821c3c10eb837ea3aedcfd7b55c"
+texts = [
+    "gamd-lcrr sources/md-ga/mdga-local-rules-criminal-sectioned.txt sha256:0e5c6fb3fad9cafe43b8e4a3e80f8193fb33df2912a21dc4d368625b23774c7e",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

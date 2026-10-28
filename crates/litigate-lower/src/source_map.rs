@@ -391,7 +391,8 @@ impl<'c> Citations<'c> {
                 if let Some(prefix) = grammar.rule_prefix(&c.raw) {
                     written = Some(prefix);
                 }
-                let of_family = || self.bound.iter().filter(|(f, ..)| *f == c.family);
+                let body = c.family.body();
+                let of_family = || self.bound.iter().filter(|(f, ..)| *f == body);
                 let by_prefix = |(_, _, _, ps): &&Binding| {
                     written.is_some_and(|w| ps.iter().any(|p| p.eq_ignore_ascii_case(w)))
                 };
@@ -407,9 +408,14 @@ impl<'c> Citations<'c> {
                             .any(|(file, _)| Some(file) == p.as_ref())
                     })
                 };
-                let source = candidates
-                    .iter()
-                    .find(|(_, _, p, _)| holds(p))
+                let held = candidates.iter().find(|(_, _, p, _)| holds(p));
+                // A division no bound file heads (`RCFC Appendix C` beside
+                // the rules alone) names text that is not vendored there,
+                // and stays out of scope.
+                if held.is_none() && matches!(c.family, Family::Division(_)) {
+                    return None;
+                }
+                let source = held
                     .or_else(|| candidates.first())
                     .map(|(_, s, ..)| s.clone());
                 Some(self.locate(heading, c.subsections.clone(), source))

@@ -28,6 +28,11 @@ pub enum Family {
     /// A rule/manual body declared in a pack's `citeSyntax.rules`,
     /// identified by its heading template (`"Rule {}"`).
     Rules(String),
+    /// A division of the rule body with heading template `.0` that the
+    /// vendored text heads by its own name rather than by the body's
+    /// template (`Neb. R. Bankr. P. Appendix B`, headed `## Appendix B`
+    /// beside `## Rule 2016-1`); the section is that whole heading.
+    Division(String),
     /// United States Code, title `.0`.
     Usc(u16),
     /// Code of Federal Regulations, title `.0`.
@@ -67,6 +72,7 @@ impl CiteRef {
     pub fn heading(&self) -> Option<String> {
         match &self.family {
             Family::Rules(heading) => Some(heading.replacen("{}", &self.section, 1)),
+            Family::Division(_) => Some(self.section.clone()),
             Family::Usc(t) if *t > 0 => Some(format!("{t} U.S.C. § {}", self.section)),
             Family::Cfr(t) if *t > 0 => Some(format!("{t} C.F.R. § {}", self.section)),
             Family::Usc(_) | Family::Cfr(_) | Family::Case | Family::Other => None,
@@ -373,7 +379,7 @@ fn parse_one(piece: &str, last_family: Option<&Family>, grammar: &CiteGrammar<'_
     if let Some(family) = last_family.filter(|f| !f.is_carry_forward_blocked()) {
         if let Some((section, subsections)) = bare_number(piece) {
             return CiteRef {
-                family: family.clone(),
+                family: family.body(),
                 section,
                 subsections,
                 raw: piece.to_string(),
@@ -389,6 +395,17 @@ fn parse_one(piece: &str, last_family: Option<&Family>, grammar: &CiteGrammar<'_
 }
 
 impl Family {
+    /// The body this family's citations belong to: a [`Family::Division`]
+    /// is of its rule body, so it binds through that body's sources and a
+    /// bare number after it continues the body (`Appendix B, 3015-1`).
+    #[must_use]
+    pub fn body(&self) -> Family {
+        match self {
+            Family::Division(heading) => Family::Rules(heading.clone()),
+            other => other.clone(),
+        }
+    }
+
     /// `Case`/`Other` never seed a "bare trailing number" carry-forward —
     /// a stray "10" after a case name isn't a page pointing back at the
     /// last real rule/statute family.
@@ -398,21 +415,72 @@ impl Family {
 }
 
 /// A citation written with one of `grammar`'s rule prefixes, then an
-/// optional `§` and a section number. A matching prefix with no number
-/// after it is not a rule citation at all (`None`), whatever else follows.
+/// optional `§` and a section number, a lettered section (`B` under an
+/// `Appendix {n}` heading) or a division the corpus heads by its own name
+/// (`Appendix B`). A matching prefix with none of those after it is not a
+/// rule citation at all (`None`), whatever else follows.
 fn try_rule_family(piece: &str, grammar: &CiteGrammar<'_>) -> Option<CiteRef> {
     let (rest, heading) = grammar
         .rules
         .iter()
         .find_map(|&(prefix, heading)| strip_prefix_ci(piece, &[prefix]).map(|r| (r, heading)))?;
     let rest = rest.trim_start_matches('§').trim();
-    let (section, subsections) = bare_number(rest)?;
+    let (family, (section, subsections)) = match bare_number(rest) {
+        Some(number) => (Family::Rules(heading.to_string()), number),
+        None if lettered(rest) => (Family::Rules(heading.to_string()), split_number(rest)?),
+        None => (
+            Family::Division(heading.to_string()),
+            division(rest, grammar.corpus?)?,
+        ),
+    };
     Some(CiteRef {
-        family: Family::Rules(heading.to_string()),
+        family,
         section,
         subsections,
         raw: piece.to_string(),
     })
+}
+
+/// `s` opens with a lettered section: one upper-case letter that ends the
+/// text or is followed by a subsection or a dotted or dashed part (`B`,
+/// `G(3)`, `C.3`), never a word (`Appendix`).
+fn lettered(s: &str) -> bool {
+    let mut chars = s.chars();
+    let first = chars.next().is_some_and(|c| c.is_ascii_uppercase());
+    let rest = chars.as_str();
+    first
+        && (rest.is_empty()
+            || rest.starts_with('(')
+            || (rest.starts_with(['.', '-'])
+                && rest[1..].starts_with(|c: char| c.is_ascii_alphanumeric())))
+}
+
+/// `s` (`Appendix B`, `Appendix B(3)`, `Appendix B C.3`) split into a
+/// division `corpus` heads (`## Appendix B`) and its pinpoint: the
+/// division's name, a word, and its designator, then a subsection chain
+/// or the rest of the text as one pinpoint.
+fn division(s: &str, corpus: &SourceCorpus) -> Option<(String, Vec<String>)> {
+    let (word, after) = s.split_once(' ')?;
+    if !word.chars().all(|c| c.is_ascii_alphabetic()) {
+        return None;
+    }
+    let after = after.trim_start();
+    let end = after
+        .find(|c: char| c.is_whitespace() || c == '(')
+        .unwrap_or(after.len());
+    let heading = format!("{word} {}", &after[..end]);
+    if end == 0 || corpus.lookup_all(&heading).is_empty() {
+        return None;
+    }
+    let pin = after[end..].trim();
+    let pinpoint = if pin.starts_with('(') {
+        split_number(&format!("{heading}{pin}"))?.1
+    } else if pin.is_empty() {
+        vec![]
+    } else {
+        vec![pin.to_owned()]
+    };
+    Some((heading, pinpoint))
 }
 
 /// `"28 U.S.C. § 1291"`, `"35 USC 315(e)"`, `"37 C.F.R. § 42.108"`, `"37 CFR
@@ -542,6 +610,13 @@ fn bare_number(s: &str) -> Option<(String, Vec<String>)> {
     if !(first.is_ascii_digit() || s.starts_with('(') || leading_roman(s)) {
         return None;
     }
+    split_number(s)
+}
+
+/// The rule number `s` opens with and its subsection chain, whatever the
+/// number is written with (`"12(b)(6)"`, `"G(3)"`).
+fn split_number(s: &str) -> Option<(String, Vec<String>)> {
+    let s = s.trim();
     if let Some(idx) = subsection_start(s) {
         let section = s[..idx].trim().to_string();
         if section.is_empty() {

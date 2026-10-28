@@ -1,0 +1,334 @@
+module bankr-law-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Bankr. W.D. La. court's own periods, counted under FRBP 9006(a). The
+// FRBP periods (schedules, claims, exemption objections, discharge,
+// dischargeability, the Rule 2016(b) statement, the adversary answer and
+// summons, new trial, appeals) are lit/frbp's and are not declared again;
+// the fourteen-day appeal period an order for unclaimed funds waits out
+// (LBR 3011-1(d)(3)) is FRBP 8002's. Stated in the rules but not declared:
+// the "later of" objection window to an amended schedule of exemptions (30
+// days after service or after the § 341(a) meeting concludes, whichever is
+// later, LBR 1009-1(c)), which runs from whichever event is later; the
+// fifteen days within which missing FRBP 1007 or 3015 papers trigger the
+// Clerk's show-cause order, a condition of the Clerk's act (LBR
+// 1017-1(b)(2)); notices the Clerk gives (the chapter 13 confirmation
+// notice at least 35 days before the hearing, LBR 2002-1(c); the show-
+// cause order served 21 days before the hearing, LBR 1017-1(b)(2)); the
+// notice periods a movant gives for a hearing it sets (21 days for a
+// motion, LBR 9013-1(g), 9007-1(b); 30 days for a claim objection, LBR
+// 3007-1(b)(2); 35 days for a chapter 12 or 13 plan modification, LBR
+// 3015-1(e)(1); 21 days for a § 1121(e) extension, LBR 3016-1; the hearing
+// set at least seven calendar days after a stay-relief response deadline,
+// LBR 4001-1(h)); the hour and one-day periods (expedited responses 24
+// hours before the hearing, LBR 9014-1(f)(2); exhibit and witness lists
+// one day before a hearing, LBR 9014-1(c); the ballot and § 1129
+// certifications one day before confirmation, LBR 3020-1(b)); the Code's
+// 30-day § 362(l) window (LBR 4001-3); the 30- and 20-day hearing settings
+// that waive § 362(e) and § 1301(d) (LBR 4001-1(m)); the ninety days in
+// default after which the judge may require a default motion and the
+// ninety days after which chapter 7 notices narrow (LBR 7055-1(a),
+// 2002-1(g)); the bar on summary judgment motions within 45 days of trial,
+// a limit measured back from a setting the court fixes (LBR 7056-1(b)(1));
+// and the sixty days after which paper sealed documents are deemed
+// unsealed (LBR 9072-1). The earlier outline's Supreme Court decisions
+// construe the Code and the FRBP, not these rules, and are removed here:
+// no reporter text is vendored.
+/// A principal brief (a party's first): not more than thirty pages or
+/// 13,000 words of non-excluded text, excluding the cover page, tables,
+/// addendum, certificates, signature block and certificate of service
+/// (Bankr. W.D. La. LBR 7007-2(c)).
+limit principal-brief {
+  words <= 13_000 cite "Bankr. W.D. La. LBR 7007-2(c)"
+  pages <= 30 cite "Bankr. W.D. La. LBR 7007-2(c)"
+} cite "Bankr. W.D. La. LBR 7007-2(c)"
+
+/// A response brief: not more than fifteen pages or 6,500 words of non-
+/// excluded text (Bankr. W.D. La. LBR 7007-2(c)).
+limit response-brief {
+  words <= 6_500 cite "Bankr. W.D. La. LBR 7007-2(c)"
+  pages <= 15 cite "Bankr. W.D. La. LBR 7007-2(c)"
+} cite "Bankr. W.D. La. LBR 7007-2(c)"
+
+/// Amended or late-filed schedules, statements or lists are filed (Bankr.
+/// W.D. La. LBR 1009-1(b)).
+event AmendedScheduleFiled()
+/// The debtor's schedule of exemptions is amended (Bankr. W.D. La. LBR
+/// 1009-1(c)).
+event ExemptionScheduleAmended()
+/// A debtor dies while the case is open (Bankr. W.D. La. LBR 1016-1(a)).
+event DebtorDied()
+/// The hearing set by the Clerk's order to show cause why a chapter 7 or 13
+/// case should not be dismissed (Bankr. W.D. La. LBR 1017-1(b)(2)).
+event ShowCauseHearing()
+/// The date of a § 341 meeting of creditors the debtor failed to attend
+/// (Bankr. W.D. La. LBR 1017-1(b)(3)).
+event MissedCreditorsMeeting()
+/// The date set for an examination under FRBP 2004 initiated by notice
+/// (Bankr. W.D. La. LBR 2004-1(b)).
+event ExaminationDate()
+/// A professional (other than special counsel) commences work for the
+/// estate (Bankr. W.D. La. LBR 2014-1(b)).
+event ProfessionalCommencedWork()
+/// A calendar month ends (Bankr. W.D. La. LBR 2015-1).
+event CalendarMonthEnded()
+/// The hearing on an objection to a claim noticed under the "if and only
+/// if" procedure (Bankr. W.D. La. LBR 3007-1(b)(1)).
+event ClaimObjectionHearing()
+/// An Application for Payment of Unclaimed Funds is served (Bankr. W.D. La.
+/// LBR 3011-1(d)(1)).
+event UnclaimedFundsApplicationServed()
+/// The scheduled hearing on confirmation of a chapter 11, 12 or 13 plan
+/// (Bankr. W.D. La. LBR 3015-1(c), 3020-1(a)).
+event ConfirmationHearing()
+/// The hearing on a proposed modification of a confirmed chapter 12 or 13
+/// plan (Bankr. W.D. La. LBR 3015-1(e)(1)).
+event PlanModificationHearing()
+/// The mailing date shown on the movant's certificate of mailing of a
+/// motion to lift the stay (Bankr. W.D. La. LBR 4001-1(h)).
+event StayReliefMotionMailed()
+/// The chapter 13 trustee's Notice of Plan Completion is dated (Bankr. W.D.
+/// La. LBR 5009-1(a), (b)).
+event PlanCompletionNoticed()
+/// The proposed hearing date on a motion in an adversary proceeding (Bankr.
+/// W.D. La. LBR 7007-1(c), (e)).
+event ProposedHearingDate()
+/// A party's principal brief is filed (Bankr. W.D. La. LBR 7007-2(c)).
+event PrincipalBriefFiled() paper principal-brief
+/// A response brief is filed (Bankr. W.D. La. LBR 7007-2(c)).
+event ResponseBriefFiled() paper response-brief
+/// The trial of an adversary proceeding (Bankr. W.D. La. LBR 7016-1(a),
+/// (b)).
+event TrialDate()
+/// The scheduled hearing on a motion for summary judgment (Bankr. W.D. La.
+/// LBR 7056-1(d)).
+event SummaryJudgmentHearing()
+/// The hearing date set to consider a motion (Bankr. W.D. La. LBR
+/// 9013-1(g), (i)).
+event MotionHearing()
+/// The final disposition of a case (Bankr. W.D. La. LBR 9070-1(b)).
+event FinalDisposition()
+
+/// Bankr. W.D. La. LBR 1009-1(b): within three days of filing, the debtor
+/// serves amended or late-filed schedules, statements or lists on the U.S.
+/// Trustee, the trustee and all affected creditors, with the case notices
+/// and orders, and files a certificate of service.
+deadline amended-schedule-service-period: 3.days after AmendedScheduleFiled() counted_by frcp6 cite "Bankr. W.D. La. LBR 1009-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 1009-1(c): within three days of amending the
+/// schedule of exemptions, the debtor serves notice of the amendment on all
+/// creditors and any trustee and files a certificate of service.
+deadline exemption-amendment-notice-period: 3.days after ExemptionScheduleAmended() counted_by frcp6 cite "Bankr. W.D. La. LBR 1009-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 1016-1(a): in an open case, a Notice of Death of the
+/// debtor is filed within sixty days of the death by the deceased debtor's
+/// counsel or the person who intends to be appointed representative or
+/// successor.
+deadline notice-of-death-period: 60.days after DebtorDied() counted_by frcp6 cite "Bankr. W.D. La. LBR 1016-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 1017-1(b)(2): objections to the Clerk's order to
+/// show cause why a chapter 7 or 13 case should not be dismissed should be
+/// filed at least seven days before the hearing date; without a timely
+/// response the court may dismiss without a hearing.
+deadline show-cause-objection-period: 7.days before ShowCauseHearing() counted_by frcp6 cite "Bankr. W.D. La. LBR 1017-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 1017-1(b)(3): the United States Trustee may seek ex
+/// parte dismissal if the debtor failed to attend the § 341 meeting and did
+/// not request that it be rescheduled within twenty-one days of the missed
+/// meeting.
+deadline missed-meeting-reschedule-period: 21.days after MissedCreditorsMeeting() counted_by frcp6 cite "Bankr. W.D. La. LBR 1017-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 2004-1(b): a consensual FRBP 2004 examination
+/// initiated by notice is filed and served no later than fourteen days
+/// before the date set for the examination.
+deadline examination-notice-period: 14.days before ExaminationDate() counted_by frcp6 cite "Bankr. W.D. La. LBR 2004-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 2014-1(b)(1): a motion to approve a professional's
+/// employment made within thirty days of the professional (other than
+/// special counsel) commencing work is deemed contemporaneous; a later
+/// motion seeking retroactive authority must explain the delay (b)(2).
+deadline contemporaneous-employment-period: 30.days after ProfessionalCommencedWork() counted_by frcp6 cite "Bankr. W.D. La. LBR 2014-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 2015-1: in a chapter 11 case and an operating
+/// chapter 7 case, the Monthly Operating Report is filed on or before the
+/// 20th day of each month following the month reported, until a plan is
+/// confirmed or the case is converted or dismissed.
+deadline monthly-operating-report-period: 20.days after CalendarMonthEnded() counted_by frcp6 cite "Bankr. W.D. La. LBR 2015-1"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 3007-1(b)(1): a claimant opposing an objection to
+/// its claim noticed "if and only if" files a response at least seven days
+/// before the hearing date, or the claim may be disallowed without a
+/// hearing.
+deadline claim-objection-response-period: 7.days before ClaimObjectionHearing() counted_by frcp6 cite "Bankr. W.D. La. LBR 3007-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 3011-1(d)(1): parties served with an Application for
+/// Payment of Unclaimed Funds have twenty-one days thereafter to object;
+/// without an objection the court may consider it without a hearing.
+deadline unclaimed-funds-objection-period: 21.days after UnclaimedFundsApplicationServed() counted_by frcp6 cite "Bankr. W.D. La. LBR 3011-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 3015-1(c)(1): written objections to chapter 12 or 13
+/// plan confirmation by parties other than the trustees are filed and
+/// served at least fourteen days before the scheduled confirmation hearing.
+deadline chapter-12-13-confirmation-objection-period: 14.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. W.D. La. LBR 3015-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 3015-1(e)(1): an objection to a proposed
+/// modification of a confirmed chapter 12 or 13 plan is filed at least
+/// fourteen days before the hearing date, which is held if, and only if, an
+/// objection is filed (also (f) for a trustee's or creditor's
+/// modification).
+deadline plan-modification-objection-period: 14.days before PlanModificationHearing() counted_by frcp6 cite "Bankr. W.D. La. LBR 3015-1(e)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 3020-1(a): unless the court orders otherwise, an
+/// objection to confirmation of a chapter 11 plan is filed and served no
+/// later than seven days before the confirmation hearing.
+deadline chapter-11-confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. W.D. La. LBR 3020-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 4001-1(h): a hearing on a motion to lift the stay is
+/// held if and only if a response is filed and mailed to movant's counsel
+/// at least seventeen days from the mailing date on the certificate of
+/// mailing (the RESPONSE DEADLINE, stated in bold on the notice).
+deadline stay-relief-response-period: 17.days after StayReliefMotionMailed() counted_by frcp6 cite "Bankr. W.D. La. LBR 4001-1(h)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 5009-1(b): no later than thirty days after the date
+/// of the trustee's Notice of Plan Completion, a debtor eligible for a §
+/// 1328 discharge files the Statement Regarding Domestic Support
+/// Obligations and § 522(q) Exemptions (Form B2830).
+deadline discharge-certification-period: 30.days after PlanCompletionNoticed() counted_by frcp6 cite "Bankr. W.D. La. LBR 5009-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 7007-1(c): when no objection has been timely filed,
+/// movant's counsel uploads a proposed order granting the motion within
+/// seven days before the proposed hearing date.
+deadline unopposed-order-upload-period: 7.days before ProposedHearingDate() counted_by frcp6 cite "Bankr. W.D. La. LBR 7007-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 7007-1(e): absent a deadline set by the court or the
+/// notice of hearing, a response and brief to an opposed motion are filed
+/// not later than seven days before the proposed hearing date.
+deadline adversary-motion-response-period: 7.days before ProposedHearingDate() counted_by frcp6 cite "Bankr. W.D. La. LBR 7007-1(e)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 7016-1(a): unless the presiding judge directs
+/// otherwise, the joint pretrial order is uploaded at least seven days
+/// before trial.
+deadline joint-pretrial-order-period: 7.days before TrialDate() counted_by frcp6 cite "Bankr. W.D. La. LBR 7016-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 7016-1(b): proposed findings of fact and conclusions
+/// of law are filed at least seven days before trial.
+deadline proposed-findings-period: 7.days before TrialDate() counted_by frcp6 cite "Bankr. W.D. La. LBR 7016-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 7056-1(d): responses to a motion for summary
+/// judgment noticed with twenty-one-day "if and only if" language are filed
+/// not later than seven days before the scheduled hearing.
+deadline summary-judgment-response-period: 7.days before SummaryJudgmentHearing() counted_by frcp6 cite "Bankr. W.D. La. LBR 7056-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 9013-1(g): unless the FRBP, these rules, the
+/// Administrative Procedures or the court provide otherwise, a motion is
+/// filed and served at least twenty-one days before the hearing date set to
+/// consider it.
+deadline motion-filing-period: 21.days before MotionHearing() counted_by frcp6 cite "Bankr. W.D. La. LBR 9013-1(g)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 9013-1(i): unless otherwise provided (LBR 3015-1(c),
+/// 9014-1(f)(2)), responsive pleadings and objections are served and filed
+/// so as to be received not later than seven days before the hearing date.
+deadline motion-response-period: 7.days before MotionHearing() counted_by frcp6 cite "Bankr. W.D. La. LBR 9013-1(i)"
+{
+  forum frcp
+}
+
+/// Bankr. W.D. La. LBR 9070-1(b): exhibits in the Clerk's custody are
+/// removed within sixty days after final disposition of the case, by the
+/// attorney who introduced them, or may be destroyed.
+deadline exhibit-removal-period: 60.days after FinalDisposition() counted_by frcp6 cite "Bankr. W.D. La. LBR 9070-1(b)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed and served with notice of hearing" by applicant cite "Bankr. W.D. La. LBR 9013-1(g)"
+{
+  note "A motion is filed and served at least 21 days before the hearing set to consider it; the notice of hearing conforms to Official Form 420A and may use the \"if and only if\" procedure, under which the hearing is held only if a response is timely filed (LBR 9013-1(g), 9007-1). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-opposed "Response or objection filed" -> opposed {
+    authority cite "Bankr. W.D. La. LBR 9013-1(i)"
+  }
+  edge-motion-filed-unopposed "No timely response" -> ruling {
+    authority cite "Bankr. W.D. La. LBR 9007-1(a)"
+  }
+}
+
+state opposed: "Response filed; contested matter heard" by opponent cite "Bankr. W.D. La. LBR 9013-1(i)"
+{
+  note "Responsive pleadings and objections are received not later than seven days before the hearing; exhibit and witness lists are filed at least one day before it (LBR 9013-1(i), 9014-1(c))."
+  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. W.D. La. LBR 9014-1(d)" }
+}
+
+decision ruling: "Motion decided" by court cite "Bankr. W.D. La. LBR 9007-1(a)"
+{
+  note "Without a timely response under the \"if and only if\" procedure the court may grant the relief without a hearing (LBR 9007-1)."
+  edge-ruling-granted "Granted" -> decided { authority cite "Bankr. W.D. La. LBR 9007-1(a)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "Bankr. W.D. La. LBR 9007-1(a)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. W.D. La. LBR 1001-1"

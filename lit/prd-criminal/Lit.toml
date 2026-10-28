@@ -1,0 +1,52 @@
+# The U.S. District Court for the District of Puerto Rico's Local
+# Criminal Rules (L.Crim.R. 101 to 162) as a local-rule layer over
+# lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it declares only the
+# periods and limits the local criminal rules themselves state and
+# re-encodes no FRCrimP, Speedy Trial Act or FRAP 4(b) period (one source
+# of truth: lit/frcrimp). Motion, opposition and reply periods are
+# governed by FRCrimP 45 (L.Crim.R. 147(d)), and FRCrimP 45(a) governs
+# "any local rule", so each deadline names `forum frcrimp`. The rules are
+# the Local Rules with amendments through October 16, 2024 (sources/dpr),
+# the edition lit/prd also binds; earlier editions are not vendored, so a
+# query before it is a hole in the corpus. An appeal goes to the First
+# Circuit under lit/frcrimp's FRAP 4(b) period.
+[package]
+name = "prd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "prd-criminal-local-rules"
+forum = "prd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of Puerto Rico: Local Criminal Rules"
+description = "The District of Puerto Rico's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): discovery motions and responses, the gathering of law enforcement notes, special voir dire and jury instruction requests, exhibit removal, the government's version of the facts, the presentence interview and departure motions, revocation disclosures, CJA vouchers, the capital-case mitigation and notice timetable, and motion oppositions, replies and page limits."
+in_force = "2024-10-16"
+known_at = "2026-10-28"
+unknown_before = "2024-10-16"
+jurisdiction = "U.S. District Court for the District of Puerto Rico (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "dpr-lcrimr"
+issuer = "United States District Court for the District of Puerto Rico"
+date = "2024-10-16"
+designation = "Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.dpr-lcrimr]
+title = "Local Rules of the United States District Court for the District of Puerto Rico (amended through October 16, 2024), Criminal Rules"
+url = "https://www.prd.uscourts.gov/sites/default/files/local_rules/Local%20Rules%2010-16-2024-amended-rule-83A.pdf"
+path = "sources/dpr/dpr-local-criminal-rules-2024-10-16-sectioned.txt"
+path_sha256 = "f6acb7ed2ce1fa4da7abaae1e6ac84a0337e245faae58690499bb419c8cf1b9f"
+sha256 = "60feba0066bf4a790c5539cbb5f4b3900cc25733e3b842fc4069049052f7a7fb"
+as_of = "2024-10-16"
+cite_prefixes = ["D.P.R. L.Crim.R.", "L.Crim.R."]
+section_heading = "Rule {n}"

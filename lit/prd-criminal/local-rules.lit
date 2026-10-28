@@ -1,0 +1,285 @@
+module prd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The District of Puerto Rico's own criminal periods, counted under the
+// criminal rules: the periods for motions, oppositions and replies, and
+// requests to extend them, are governed by FRCrimP 45 (D.P.R. L.Crim.R.
+// 147(d)). No trigger carries a service method: FRCrimP 45(c)'s three
+// added days follow the manner of service, which is not modeled here. The
+// court may modify or suspend these rules in a particular case by written
+// order (L.Crim.R. 101(a), (e)). Unless the FRCrimP, a local rule or an
+// order says otherwise, criminal motion practice is subject to L.Civ.R.
+// 5, 6, 7, 10 and 11 (L.Crim.R. 112), whose periods are lit/prd's.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: the presentence report is provided at least 35 days before the
+// sentencing date, which the defendant may waive (L.Crim.R. 132(b)(2);
+// FRCrimP 32(e)(2)); written objections are filed within 14 days from its
+// disclosure, and an objection not made in time is waived unless its basis
+// was not reasonably available (L.Crim.R. 132(b)(3); FRCrimP 32(f)(1));
+// the revised report and addendum are submitted at least 7 days before
+// sentencing (L.Crim.R. 132(b)(5); FRCrimP 32(g)). The court may modify
+// the Rule 132 times for good cause (L.Crim.R. 132(e)).
+//
+// A hole in the text: L.Crim.R. 132(b) says defense counsel contacts the
+// probation officer "within fourteen (14) days from notice of the court's
+// order for the preparation of the PSR within two (2) days from notice of
+// the court's order", stating two periods for one act; neither is encoded.
+//
+// Conditions that are not deadlines from an event stay in notes: the
+// government may voluntarily disclose Rule 16 material within 30 days
+// after the arraignment (L.Crim.R. 116(a)), a permission, not a duty;
+// counsel are expected to give notice of a change of plea not less than 2
+// business days before trial, except for extraordinary circumstances
+// (L.Crim.R. 111(a)); in multi-defendant cases of more than five
+// defendants no discovery motion is filed without demonstrable urgent need
+// or an order (L.Crim.R. 116(b)(5)); opening statements may not exceed 30
+// minutes except by leave (L.Crim.R. 123(a)); supplemental jury
+// instruction requests may be filed at the close of the evidence
+// (L.Crim.R. 130); a reply requires prior leave of court (L.Crim.R.
+// 147(c)); bond documents in the clerk's custody for more than six months
+// after the defendant's discharge may be disposed of after notice
+// (L.Crim.R. 146(j)); a CJA voucher submitted more than one year after the
+// completion of services is not paid (L.Crim.R. 144(b)(1)); a certified
+// check posted as bond must be issued within 7 days of the application,
+// and the tax certificates for real property within 15 days (L.Crim.R.
+// 146(c), (i)).
+//
+// The earlier D.P.R. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Brady v. Maryland, Barker v. Wingo, Zedner
+// v. United States, Boykin v. Alabama, Missouri v. Frye, Jackson v.
+// Virginia, United States v. Booker, Roe v. Flores-Ortega, Garza v.
+// Idaho) are FRCrimP, Speedy Trial Act or constitutional authority and
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+
+/// A dispositive or suppression motion or its opposition: 25 pages or
+/// 10,000 words except by prior leave of court (D.P.R. L.Crim.R. 147(e)).
+limit dispositive-motion {
+  pages <= 25 cite "D.P.R. L.Crim.R. 147(e)"
+  words <= 10_000 cite "D.P.R. L.Crim.R. 147(e)"
+} cite "D.P.R. L.Crim.R. 147(e)"
+
+/// Any other motion or opposition, and every reply: 15 pages or 6,000
+/// words except by prior leave of court (D.P.R. L.Crim.R. 147(c), (e)).
+limit motion {
+  pages <= 15 cite "D.P.R. L.Crim.R. 147(e)"
+  words <= 6_000 cite "D.P.R. L.Crim.R. 147(e)"
+} cite "D.P.R. L.Crim.R. 147(c); D.P.R. L.Crim.R. 147(e)"
+
+/// A motion is filed (D.P.R. L.Crim.R. 147(b)).
+event MotionFiled() paper motion
+/// A dispositive or suppression motion is filed (D.P.R. L.Crim.R. 147(b),
+/// (e)).
+event DispositiveMotionFiled() paper dispositive-motion
+/// An opposition to a motion is served (D.P.R. L.Crim.R. 147(c)).
+event OppositionServed() paper motion
+/// A reply is filed with prior leave of court (D.P.R. L.Crim.R. 147(c)).
+event ReplyFiled() paper motion
+/// A party receives the opposing party's reply to a discovery request
+/// (D.P.R. L.Crim.R. 116(b)(2)).
+event DiscoveryReplyReceived()
+/// A party receives a discovery motion (D.P.R. L.Crim.R. 116(b)(3)).
+event DiscoveryMotionReceived()
+/// The indictment is filed (D.P.R. L.Crim.R. 116B).
+event IndictmentFiled()
+/// The date set for trial (D.P.R. L.Crim.R. 124(a)).
+event TrialScheduled()
+/// Jury impanelment is scheduled (D.P.R. L.Crim.R. 130).
+event ImpanelmentScheduled()
+/// The clerk notifies the filing party in writing to remove exhibits not
+/// removed as the rule requires (D.P.R. L.Crim.R. 123(e)(4)).
+event ExhibitRemovalNoticed()
+/// A plea or verdict of guilty (D.P.R. L.Crim.R. 132(b)(1)).
+event GuiltEstablished()
+/// The change of plea hearing (D.P.R. L.Crim.R. 132(b)).
+event ChangeOfPleaHearing()
+/// The scheduled sentencing hearing (D.P.R. L.Crim.R. 132(b)(4)).
+event SentencingHearingScheduled()
+/// The initial appearance in a revocation proceeding where no preliminary
+/// hearing is scheduled (D.P.R. L.Crim.R. 132.1(a)).
+event RevocationInitialAppearance()
+/// The final disposition of a case in which counsel was appointed under
+/// the Criminal Justice Act (D.P.R. L.Crim.R. 144(b)(1)).
+event CjaDisposition()
+/// The court approves a CJA voucher in a substantially reduced amount
+/// (D.P.R. L.Crim.R. 144(c)).
+event CjaVoucherReduced()
+/// The return or unsealing of an indictment in a capital case (D.P.R.
+/// L.Crim.R. 144A(k)(2)).
+event CapitalIndictment()
+/// The first 90 days after a capital indictment have elapsed (D.P.R.
+/// L.Crim.R. 144A(k)(2)(ii)).
+event CapitalMitigationPeriodElapsed()
+/// The government submits its Death Penalty Evaluation form and
+/// prosecution memorandum to the Attorney General (D.P.R. L.Crim.R.
+/// 144A(k)(2)(iii)).
+event DeathPenaltyEvaluationSubmitted()
+
+/// D.P.R. L.Crim.R. 116(b)(2): a discovery motion is filed within 14 days
+/// of receipt of the opposing party's reply to a discovery request.
+deadline discovery-motion: 14.days after DiscoveryReplyReceived() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 116(b)"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 116(b)(3): the opposing party files its response to a
+/// discovery motion within 14 days of receipt.
+deadline discovery-motion-response: 14.days after DiscoveryMotionReceived() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 116(b)"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 116B: unless the court orders otherwise, the attorney
+/// for the government obtains the contemporaneous notes and records of
+/// participating law enforcement officers no later than 30 days after the
+/// filing of the indictment, and preserves them until judgment.
+deadline law-enforcement-notes: 30.days after IndictmentFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.P.R. L.Crim.R. 116B"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 123(e)(4): exhibits not removed as the rule requires
+/// are removed within 30 days of the clerk's written notice, after which
+/// the court authorizes the clerk to destroy or dispose of them.
+deadline exhibit-removal: 30.days after ExhibitRemovalNoticed() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 123(e)"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 124(a): unless the court orders otherwise, requests for
+/// special voir dire questions are filed no later than 7 days before trial.
+deadline special-voir-dire: 7.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.P.R. L.Crim.R. 124(a)"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 130: unless the court orders otherwise, written
+/// requests for case-specific jury instructions under FRCrimP 30 are filed
+/// at least 7 days before jury impanelment.
+deadline jury-instruction-requests: 7.days before ImpanelmentScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.P.R. L.Crim.R. 130"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 132(b)(1): no later than 21 days after a plea or
+/// verdict of guilty, the government provides the probation office a
+/// detailed written version of the facts, the evidence supporting them, and
+/// restitution information. The court may modify the time for good cause
+/// (L.Crim.R. 132(e)).
+deadline government-version-of-facts: 21.days after GuiltEstablished() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.P.R. L.Crim.R. 132(b); D.P.R. L.Crim.R. 132(e)"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 132(b): the presentence interview is conducted no
+/// later than 14 days after the change of plea hearing.
+deadline presentence-interview: 14.days after ChangeOfPleaHearing() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.P.R. L.Crim.R. 132(b); D.P.R. L.Crim.R. 132(e)"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 132(b)(4): a motion for a departure, variance or
+/// adjustment is filed at least 14 days before the scheduled sentencing
+/// hearing, served on opposing counsel and the probation office.
+deadline departure-motion: 14.days before SentencingHearingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.P.R. L.Crim.R. 132(b); D.P.R. L.Crim.R. 132(e)"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 132.1(a): if no preliminary revocation hearing is
+/// scheduled, the evidence of the alleged violations is disclosed within 14
+/// days of the initial appearance; otherwise before the preliminary
+/// hearing.
+deadline revocation-disclosure: 14.days after RevocationInitialAppearance() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 132.1(a)"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 144(b)(1): counsel appointed under the Criminal Justice
+/// Act submit the completed voucher no later than 45 days from the final
+/// disposition of the case; a request to extend is made within the 45 days
+/// and shows good cause.
+deadline cja-voucher: 45.days after CjaDisposition() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.P.R. L.Crim.R. 144(b)"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 144(c): when a CJA voucher is substantially reduced,
+/// the court allows counsel no more than 10 days to explain or support the
+/// reduced amounts.
+deadline cja-reduction-response: 10.days after CjaVoucherReduced() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 144(c)"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 144A(k)(2)(i): upon the return or unsealing of a
+/// capital indictment, defense counsel may present mitigating factors and
+/// reasons why the death penalty should not be sought to the United States
+/// Attorney and the Attorney General within 90 days.
+deadline capital-mitigation-submission: 90.days after CapitalIndictment() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 144A(k)"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 144A(k)(2)(ii): after the first 90 days, the
+/// government concludes its Death Penalty Evaluation form and prosecution
+/// memorandum to the Attorney General within the next 60 days.
+deadline death-penalty-evaluation: 60.days after CapitalMitigationPeriodElapsed() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 144A(k)"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 144A(k)(2)(iii): if the government intends to seek the
+/// death penalty, the United States Attorney files the final notice of
+/// intent within 30 days after submitting the evaluation and memorandum to
+/// the Attorney General.
+deadline death-penalty-notice: 30.days after DeathPenaltyEvaluationSubmitted() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 144A(k)"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 147(b): an opposing party that does not file a written
+/// opposition within 14 days after a motion's filing is deemed to have
+/// waived objection.
+deadline opposition-period: 14.days after MotionFiled() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 147(b)"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 147(b): the same 14 days for a dispositive or
+/// suppression motion.
+deadline dispositive-opposition-period: 14.days after DispositiveMotionFiled() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 147(b)"
+{
+  forum frcrimp
+}
+
+/// D.P.R. L.Crim.R. 147(c): with prior leave of court, the moving party may
+/// file a reply within 7 days of the service of an opposition.
+deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45 cite "D.P.R. L.Crim.R. 147(c)"
+{
+  forum frcrimp
+}

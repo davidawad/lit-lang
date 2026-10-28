@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "prd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:1d27edd5c449b55cf80445984d6190c5e9598d71cf8dc3d6e84b6ff460b97e94"
+semantic = "sha256:18f538980c0d610ded536e8fbe37fed1c07c1f453748984b6fef935b37a88432"
+texts = [
+    "dpr-lcrimr sources/dpr/dpr-local-criminal-rules-2024-10-16-sectioned.txt sha256:f6acb7ed2ce1fa4da7abaae1e6ac84a0337e245faae58690499bb419c8cf1b9f",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

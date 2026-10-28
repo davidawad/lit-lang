@@ -1,0 +1,45 @@
+# An appeal of right to the Alaska Court of Appeals from a final judgment
+# of the superior court or the district court (Alaska R. App. P. 202(b))
+# under Parts Two, Three and Five of the Alaska Rules of Appellate
+# Procedure as the court system served them on 2026-10-27 (latest stated
+# amendment SCO 2035, effective April 15, 2025; sources/ak-supreme, the
+# text lit/ak-supreme binds). Computation of time is Appellate Rule
+# 502(a), which has no counting rule in lit/core, so the rules' periods
+# are stated in notes, not encoded as counted deadlines. The court's
+# jurisdiction statutes (AS 22.07.020, 22.07.030) are not vendored and are
+# not cited. A criminal appeal arrives from lit/ak-criminal-trial-court.
+[package]
+name = "ak-court-of-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "ak-court-of-appeals"
+forum = "ak-court-of-appeals"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "alaska"
+title = "Alaska Court of Appeals, appeals"
+description = "An appeal of right to the Alaska Court of Appeals from a final judgment of the superior or district court, through the notice of appeal, record and transcript, briefing, oral argument, decision, rehearing and the petition for hearing in the supreme court, as far as the vendored Alaska Rules of Appellate Procedure state."
+in_force = "2025-04-15"
+known_at = "2026-10-28"
+unknown_before = "2025-04-15"
+jurisdiction = "Alaska Court of Appeals"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+ak-state-rules = { version = "^0.1.0", path = "../ak-rules" }
+
+[sources.ak-app]
+title = "Alaska Rules of Court, Rules of Appellate Procedure (amended through SCO 2035 effective April 15, 2025, as served on October 27, 2026)"
+url = "https://courts.alaska.gov/rules/docs/app.pdf"
+path = "sources/ak-supreme/alaska-appellate-procedure-sectioned.txt"
+path_sha256 = "98b14637ade4bd8b2ce42679338cf16575ff1be63cd074e2cfcfe7019bd31775"
+sha256 = "b5f480666b750db7d9409a3db7d3dc91e796738ee105ea63802d40a737ad5f0c"
+as_of = "2025-04-15"
+cite_prefixes = ["Alaska R. App. P."]
+section_heading = "Rule {n}"

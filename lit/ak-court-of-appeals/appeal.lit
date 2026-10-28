@@ -1,0 +1,127 @@
+module ak-court-of-appeals.appeal
+
+import ak-state-rules.{ DecisionFiled, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+// A principal brief may not exceed 50 numbered pages exclusive of
+// appendices (Alaska R. App. P. 212(c)(4)); it stays a note, not a `limit`,
+// as in lit/ak-supreme.
+/// The appellant's reply brief: at most 20 pages (Alaska R. App. P.
+/// 212(c)(4)).
+limit reply-brief { pages <= 20 cite "Alaska R. App. P. 212(c)" } cite "Alaska R. App. P. 212(c)"
+
+/// The appellant's reply brief is served and filed (Alaska R. App. P.
+/// 212(a)).
+event ReplyBriefServed() paper reply-brief
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "Alaska R. App. P. 204(a)"
+{
+  note "The notice of appeal is filed within 30 days from the date shown in the clerk's certificate of distribution on the judgment, unless Rules 216-219 set a shorter time; another party may appeal within 14 days of a timely notice or within the 30 days, whichever expires last (Alaska R. App. P. 204(a)(1), (2)). In a criminal case a timely motion for a new trial, in arrest of judgment or for reconsideration, or a Criminal Rule 35 motion made within the 30 days, lets the appeal be filed within 30 days after the date of notice of the order deciding it (Alaska R. App. P. 204(a)(4)). No cost bond is required in a criminal case (Alaska R. App. P. 204(c)(2)). A defendant may appeal a sentence as excessive only within the limits of Alaska R. App. P. 215(a)(1). Periods are stated, not counted: Appellate Rule 502(a) computes them. Leading decisions: none named; the outline identified none."
+  edge-notice-filed-appealable "Timely notice from a final judgment" -> appealability {
+    event NoticeOfAppealFiled()
+    authority cite "Alaska R. App. P. 204(a)"
+  }
+  edge-notice-filed-late "Notice not filed in time" -> dismissed-untimely {
+    authority cite "Alaska R. App. P. 204(a)"
+  }
+}
+
+terminal dismissed-untimely: "Appeal fails: notice untimely and not validated" outcome [loss, dismissal] cite "Alaska R. App. P. 502(b)"
+{
+  note "The appellate court may, on motion showing good cause or on its own, extend a time period or validate an act done after it expired (Alaska R. App. P. 502(b)); a late notice of appeal not so validated does not bring the appeal. Whether the time limit is jurisdictional is not stated by the vendored text."
+}
+
+decision appealability: "Appealable final judgment?" by court cite "Alaska R. App. P. 202(b)"
+{
+  note "An appeal may be taken to the court of appeals from a final judgment entered by the superior court or the district court in the circumstances AS 22.07.020 specifies (Alaska R. App. P. 202(b)); the statute is not vendored, so which cases the court hears is a hole. A non-appealable order is reviewed, if at all, by petition for review (Alaska R. App. P. 402)."
+  edge-appealability-final "Final judgment" -> record { authority cite "Alaska R. App. P. 202(b)" }
+  edge-appealability-not-final "Not a final judgment" -> dismissed-jurisdiction {
+    authority cite "Alaska R. App. P. 202(b)"
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: no appealable judgment" outcome [loss, dismissal] cite "Alaska R. App. P. 202(b)"
+{
+  note "Review of a non-appealable order lies only by petition for review (Alaska R. App. P. 402), not modeled here."
+}
+
+state record: "Record and transcript" by applicant cite "Alaska R. App. P. 210"
+{
+  note "The record is the entire trial court file, the electronic record and designated transcripts (Alaska R. App. P. 210(a)). The appellant designates the parts to be transcribed with the notice of appeal; any other party may designate more within 10 days after service of that designation (Alaska R. App. P. 210(b)(1)(A)). The clerk of the appellate courts arranges a transcript prepared at public expense (Alaska R. App. P. 210(b)(2)); preparation is completed within 40 days after issuance of the opening notice (Alaska R. App. P. 210(b)(4)). The court then gives notice of the due date for the appellant's brief (Alaska R. App. P. 210(f))."
+  edge-record-briefing "Notice of the brief due date" -> briefing {
+    event RecordFiled()
+    authority cite "Alaska R. App. P. 210(f)"
+  }
+}
+
+state briefing: "Briefing" by applicant cite "Alaska R. App. P. 212(a)"
+{
+  note "The appellant serves and files its brief within 30 days after the court's notice of the due date; the appellee within 30 days after service of the appellant's brief; within 20 days after service of the appellee's brief the appellant files a reply or a notice that none will be filed (Alaska R. App. P. 212(a)(1)(A)). Within ten days after the clerk returns a brief, seven bound copies are filed in an appeal before the court of appeals (Alaska R. App. P. 212(a)(2)(A)). Principal briefs may not exceed 50 numbered pages and a reply 20 pages (Alaska R. App. P. 212(c)(4))."
+  edge-briefing-argument "Briefing complete" -> argument {
+    authority cite "Alaska R. App. P. 212(a)"
+  }
+}
+
+decision argument: "Oral argument or submission on the briefs" by court cite "Alaska R. App. P. 505(a)"
+{
+  note "In an appeal under Part Two, oral argument is held if it is timely requested: not later than 10 days after the due date of the reply brief or, if no reply is allowed, of the appellee's brief (Alaska R. App. P. 505(a)(2)); a timely request by any party gives all parties the right to argue, except appellees who fail to file a brief (Alaska R. App. P. 505(a)(4)). An appeal may instead be disposed of summarily (Alaska R. App. P. 214)."
+  edge-argument-decided "Argued or submitted" -> decision-issued {
+    authority cite "Alaska R. App. P. 505(a)"
+  }
+}
+
+decision decision-issued: "Opinion or order decides the appeal" by court cite "Alaska R. App. P. 507(a)"
+{
+  note "The opinion, a summary disposition order under Rule 214, or an order dismissing the appeal is the appellate court's judgment; no mandate issues (Alaska R. App. P. 507(a)). Outcome probabilities are not stated by the rules."
+  edge-decision-issued-rehearing "Petition for rehearing" -> rehearing {
+    event DecisionFiled()
+    authority cite "Alaska R. App. P. 506(b)"
+  }
+  edge-decision-issued-hearing "Petition for hearing in the supreme court" -> petition-for-hearing {
+    event DecisionFiled()
+    authority cite "Alaska R. App. P. 302(a)"
+  }
+  edge-decision-issued-final "No petition" -> jurisdiction-returned {
+    event DecisionFiled()
+    authority cite "Alaska R. App. P. 507(d)"
+  }
+}
+
+decision rehearing: "Rehearing decided" by court cite "Alaska R. App. P. 506(a)"
+{
+  note "An original petition for rehearing is filed within 10 days after the date of notice of the opinion or other decision, with three copies before the court of appeals, and may not exceed five pages (Alaska R. App. P. 506(b)). Rehearing may be ordered if the court overlooked, misapplied or failed to consider a directly controlling statute, decision or principle, or overlooked or misconceived a material fact, proposition of law or question; it is not granted merely to reargue matters fully considered (Alaska R. App. P. 506(a)). After a timely petition for rehearing, the 30-day period for a petition for hearing runs from the date of notice of the final order on rehearing (Alaska R. App. P. 303(a)(2))."
+  edge-rehearing-denied "Denied or disposed of" -> petition-for-hearing {
+    authority cite "Alaska R. App. P. 303(a)"
+  }
+  edge-rehearing-granted "Rehearing granted" -> rehearing-granted {
+    authority cite "Alaska R. App. P. 506(a)"
+  }
+}
+
+terminal rehearing-granted: "Rehearing granted: the matter is reheard" outcome [appeal] cite "Alaska R. App. P. 506(a)"
+{
+  note "Modeled as an exit; in practice it returns to decision."
+}
+
+decision petition-for-hearing: "Petition for hearing in the supreme court?" by applicant cite "Alaska R. App. P. 303(a)"
+{
+  note "A petition for hearing may be filed in the supreme court from any final decision of the court of appeals (Alaska R. App. P. 302(a)(1)), within 30 days after the date of notice of the decision; a cross-petition within 30 days after service of the petition (Alaska R. App. P. 303(a)(1), (3)). The petition may not exceed fifteen pages (Alaska R. App. P. 303(b))."
+  edge-hearing-filed "Petition for hearing filed" -> further-review {
+    event ReviewPetitionFiled()
+    authority cite "Alaska R. App. P. 303(a)"
+  }
+  edge-hearing-none "No petition for hearing" -> jurisdiction-returned {
+    authority cite "Alaska R. App. P. 507(d)"
+  }
+}
+
+terminal further-review: "Petition for hearing in the Alaska Supreme Court" outcome [appeal] cite "Alaska R. App. P. 302(a)"
+{
+  note "For Part Three the supreme court is the court of discretionary review and the court of appeals the intermediate appellate court (Alaska R. App. P. 302(a)(2)); if a timely petition for hearing is filed, return of jurisdiction is governed by Rule 507(c) (Alaska R. App. P. 507(d)(2)). Review in the supreme court is its own package."
+}
+
+terminal jurisdiction-returned: "Judgment effective: jurisdiction returns to the trial court" outcome [final] cite "Alaska R. App. P. 507(d)"
+{
+  note "In a case decided by the court of appeals, if no petition for hearing is filed, the judgment takes effect and full jurisdiction returns to the trial court on the day after the deadline for filing a petition for hearing expires (Alaska R. App. P. 507(b), (d)(1)); subsection (d) does not apply to an appeal under Rule 206 or 207."
+}

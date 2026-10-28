@@ -1,0 +1,53 @@
+# The Northern District of Iowa's Local Criminal Rules (LCrR) as a
+# local-rule layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it
+# declares only the periods the criminal rules themselves state and
+# re-encodes no FRCrimP, Speedy Trial Act or FRAP 4(b) period. The rules
+# are the criminal part of the Joint Local Rules of the Northern and
+# Southern Districts of Iowa, effective December 7, 2020 (N.D. Iowa
+# Administrative Order 20-AO-0013-P), as served by this court
+# (sources/iand); the amendments the court has proposed are not in force
+# and are not encoded. Earlier editions are not vendored, so a query
+# before that date is a hole in the corpus. lit/iasd-criminal declares
+# the same rules for the Southern District and lit/iand the civil layer.
+# Habeas (28 U.S.C. §§ 2254, 2255) is lit/habeas's; an appeal goes to the
+# Eighth Circuit under FRAP 4(b) (lit/frcrimp) and lit/ca8.
+[package]
+name = "iand-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "iand-criminal-local-rules"
+forum = "iand-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Northern District of Iowa: Local Criminal Rules"
+description = "The Northern District of Iowa's Local Criminal Rules (the joint N.D. and S.D. Iowa rules of December 7, 2020) as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the motion to revoke or amend a release or detention order, the written waiver of appearance at arraignment, the non-trial and trial-related motion deadlines, delivery of subpoenas and writs to the Marshal, additional peremptory challenges, resistances to motions, and responses to objections to a magistrate judge's ruling."
+in_force = "2020-12-07"
+known_at = "2026-10-28"
+unknown_before = "2020-12-07"
+jurisdiction = "United States District Court, N.D. Iowa (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "iand-lcrr"
+issuer = "United States District Court for the Northern District of Iowa"
+date = "2020-12-07"
+designation = "Local Rules (N.D. Administrative Order 20-AO-0013-P)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.iand-lcrr]
+title = "Local Rules of the United States District Courts for the Northern and Southern Districts of Iowa (December 7, 2020), criminal rules, as served by the Northern District"
+url = "https://www.iand.uscourts.gov/sites/iand/files/Local%20Rules%20-%20Final%20Website%20Version.pdf"
+path = "sources/iand/local-rules-criminal-sectioned.txt"
+path_sha256 = "dc1d27b95e3c09521df5323b016443d5847920c30e40e0d5d53cbbcdc97dd8b3"
+sha256 = "e810de7fd321eea597eeaaf97a38bb0f507061f82e5cc771e0991fa964ca5370"
+as_of = "2020-12-07"
+cite_prefixes = ["N.D. Iowa LCrR"]
+section_heading = "LCrR {n}"

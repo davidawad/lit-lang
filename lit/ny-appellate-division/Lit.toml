@@ -9,7 +9,8 @@
 # notes, not encoded as counted deadlines: their computation (General
 # Construction Law §§ 20, 25-a; CPLR 2103) is not vendored and core has no
 # New York holiday calendar. The Court of Appeals' own rules (22 NYCRR
-# Part 500) are not vendored; further review ends at the leave decision.
+# Part 500) are not vendored; further review ends at the leave decision
+# (leave sought in the Court of Appeals itself: lit/ny-court-of-appeals).
 # The trial-level procedure is lit/ny-supreme-civil.
 [package]
 name = "ny-appellate-division-civil-appeals"
@@ -18,6 +19,7 @@ language = 1
 pack_id = "ny-appellate-division-civil-appeals"
 forum = "ny-appellate-division"
 authority = "StateRule"
+jurisdiction_id = "new-york"
 title = "New York Supreme Court, Appellate Division: civil appeals"
 description = "A civil appeal to the Appellate Division under the CPLR and 22 NYCRR Part 1250, as far as the vendored text states: the time to appeal, the informational statement, the transcript, perfection and its six-month deadline, briefing and brief word limits, argument, decision and restitution, reargument, and leave to appeal to the Court of Appeals."
 in_force = "2026-10-27"
@@ -32,6 +34,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+ny-state-rules = { version = "^0.1.0", path = "../ny-rules" }
 
 [sources.ny-cplr-appeals]
 title = "New York Civil Practice Law and Rules, cited appellate sections (NY Senate Open Legislation, most recent revision as shown 2026-10-27)"

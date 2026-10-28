@@ -1,5 +1,7 @@
 module ny-appellate-division-civil-appeals.appeal
 
+import ny-state-rules.{ DecisionFiled, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
 /// A computer-generated appellant's or respondent's brief: at most 14,000
 /// words, inclusive of point headings and footnotes and exclusive of
 /// signature blocks, tables, proof of service, the certificate of
@@ -26,7 +28,7 @@ decision notice: "Notice of appeal within 30 days of service with notice of entr
 {
   note "An appeal as of right is taken within 30 days after service by a party upon the appellant of a copy of the judgment or order and written notice of its entry, or, when the appellant served them, within 30 days of that service (CPLR 5513(a)). A motion for permission to appeal is made within 30 days, computed the same way (CPLR 5513(b)). A party served with the adverse party's notice of appeal or motion for permission may appeal or move within 10 days after that service or within the time of subdivision (a) or (b), whichever is longer (CPLR 5513(c)). Service by mail or overnight delivery adds the days CPLR 2103(b)(2) and (6) provide (CPLR 5513(d)); CPLR 2103 is not vendored and the days are not stated. With the notice of appeal the appellant files with the clerk of the court of original instance, and serves, an initial informational statement on the court's form (22 NYCRR 1250.3(a)). The outline named no leading decision on timeliness that it had confirmed (its Leon v. Martinez reference concerned pleading); none is kept."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "CPLR 5513(a)" }
-  edge-notice-timely "Timely notice" -> record { authority cite "CPLR 5525(a)" }
+  edge-notice-timely "Timely notice" -> record { event NoticeOfAppealFiled() authority cite "CPLR 5525(a)" }
 }
 
 terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismissal] cite "CPLR 5513(a)"
@@ -37,7 +39,7 @@ terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismi
 state record: "Transcript settled; record prepared" by office cite "CPLR 5525(c)"
 {
   note "Where a stenographic record was made, the appellant, within the time for taking the appeal, requests the transcript from the reporter and deposits the fee (CPLR 5525(a)). Within 15 days after receiving the transcript the appellant serves proposed amendments and a copy on the respondent, who has 15 days after that service to propose amendments or objections; on at least four days' notice the transcript is submitted for settlement if the parties cannot agree (CPLR 5525(c)(1)). Where no stenographic record was made, the appellant serves a statement of the proceedings within 10 days after taking the appeal, and the respondent may object within 10 days after service (CPLR 5525(d)). The appellant perfects by the full record, appendix or agreed statement method or, where authorized, on the original record (22 NYCRR 1250.5(a)). On filing a record on a civil appeal the clerk's fee is $315, and $45 on each motion or cross motion other than one for leave to appeal as a poor person (22 NYCRR 1250.17(a))."
-  edge-record-briefing "Record and appellant's brief filed" -> briefing {
+  edge-record-briefing "Record and appellant's brief filed" -> briefing { event RecordFiled()
     authority cite "22 NYCRR 1250.9(a)"
   }
   edge-record-unperfected "Not perfected within six months" -> dismissed-unperfected {
@@ -65,19 +67,19 @@ state argument: "Oral argument or submission" by court cite "22 NYCRR 1250.15(c)
 decision decision: "Appellate Division decision" by court cite "CPLR 5522(a)"
 {
   note "The court may reverse, affirm or modify, wholly or in part, any judgment or order before it, and renders a final determination or remits for further proceedings; a reversal or modification without opinion briefly states its grounds (CPLR 5522(a)). A decision, order or judgment is deemed entered on the date it is issued (22 NYCRR 1250.16(a)), and the order determining the appeal is remitted with the record to the clerk of the court of original instance (22 NYCRR 1250.16(c)). Costs on appeal are allowed only as the court directs (22 NYCRR 1250.16(b)). An appeal is not affected by a later grant of reargument making substantially the same determination, by resettlement, or by denial of renewal on new facts (CPLR 5517(a))."
-  edge-decision-affirmed "Affirmed" -> post-decision-affirmed { authority cite "CPLR 5522(a)" }
-  edge-decision-reversed "Reversed or modified" -> post-decision-reversed {
+  edge-decision-affirmed "Affirmed" -> post-decision-affirmed { event DecisionFiled() authority cite "CPLR 5522(a)" }
+  edge-decision-reversed "Reversed or modified" -> post-decision-reversed { event DecisionFiled()
     authority cite "CPLR 5523"
   }
 }
 
 decision post-decision-affirmed: "Reargument or leave to appeal to the Court of Appeals" by court cite "22 NYCRR 1250.16(d)"
 {
-  note "A motion for reargument or for leave to appeal to the Court of Appeals is made within 30 days after service of the order with notice of entry; a reargument affidavit sets out the points overlooked or misapprehended, and a leave affidavit the questions of law and why they merit review; in a civil matter the leave motion is determined, where practicable, by the panel that decided the appeal (22 NYCRR 1250.16(d)). An appeal lies to the Court of Appeals by permission of the Appellate Division, or of the Court of Appeals on the approval of two of its judges, from an order of the Appellate Division that finally determines an action originating in the supreme court and is not appealable as of right (CPLR 5602(a)(1)(i)). The Court of Appeals' own procedure (22 NYCRR Part 500) is not vendored. The outline named no leading decision on further review; none is kept."
+  note "A motion for reargument or for leave to appeal to the Court of Appeals is made within 30 days after service of the order with notice of entry; a reargument affidavit sets out the points overlooked or misapprehended, and a leave affidavit the questions of law and why they merit review; in a civil matter the leave motion is determined, where practicable, by the panel that decided the appeal (22 NYCRR 1250.16(d)). An appeal lies to the Court of Appeals by permission of the Appellate Division, or of the Court of Appeals on the approval of two of its judges, from an order of the Appellate Division that finally determines an action originating in the supreme court and is not appealable as of right (CPLR 5602(a)(1)(i)). On refusal, leave may be sought from the Court of Appeals itself (lit/ny-court-of-appeals); its own procedure (22 NYCRR Part 500) is not vendored. The outline named no leading decision on further review; none is kept."
   edge-post-decision-affirmed-denied "Not sought or denied" -> affirmed {
     authority cite "22 NYCRR 1250.16(d)"
   }
-  edge-post-decision-affirmed-granted "Leave to appeal granted" -> review-granted {
+  edge-post-decision-affirmed-granted "Leave to appeal granted" -> review-granted { event ReviewPetitionFiled()
     authority cite "CPLR 5602(a)"
   }
 }
@@ -88,7 +90,7 @@ decision post-decision-reversed: "Restitution; reargument or leave sought by the
   edge-post-decision-reversed-final "Not sought or denied" -> reversed {
     authority cite "22 NYCRR 1250.16(d)"
   }
-  edge-post-decision-reversed-review "Leave to appeal granted" -> review-granted {
+  edge-post-decision-reversed-review "Leave to appeal granted" -> review-granted { event ReviewPetitionFiled()
     authority cite "CPLR 5602(a)"
   }
 }
@@ -105,5 +107,5 @@ terminal reversed: "Judgment reversed or modified" outcome [win, judgment] cite 
 
 terminal review-granted: "Leave granted: appeal to the Court of Appeals" outcome [appeal] cite "CPLR 5602(a)"
 {
-  note "The merits in the Court of Appeals are not modeled: its rules are not vendored."
+  note "The Appellate Division granted leave (22 NYCRR 1250.16(d)); the appeal proceeds in the Court of Appeals, whose own rules (22 NYCRR Part 500) are not vendored, so its merits are not modeled. Leave refused here may be sought from the Court of Appeals itself within thirty days after service of the order of refusal with notice of entry (CPLR 5513(b)): lit/ny-court-of-appeals."
 }

@@ -1,17 +1,24 @@
 version = 2
 
 [[package]]
-name = "outline-ny-saratoga-chancery-court"
-version = "0.0.1"
-language = 1
-source = "sha256:4301ec41d0781d8b48d8fdb8a095e519f5f5f58c90e90a9264d7aceb075c4d78"
-semantic = "sha256:c87e18cc21824b4f4733f39a2b8d02ecb286340fb63a66983fcb00681db38673"
-texts = []
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "ny-state-rules"
+version = "0.1.0"
 dependencies = [
-    "outline-ny-state-rules 0.0.1",
+    "core 1.0.0",
 ]
 
 [[package]]
-name = "outline-ny-state-rules"
+name = "outline-ny-saratoga-chancery-court"
 version = "0.0.1"
-dependencies = []
+language = 1
+source = "sha256:1a53b59d0737f669e6dbef806d2853bbaacf9207ec1a7e4d025891f7cf66fd67"
+semantic = "sha256:5737b9fe13309abcfaa500d0ba523cfe73c79ad2567acccf01e58111f0982916"
+texts = []
+dependencies = [
+    "ny-state-rules 0.1.0",
+]

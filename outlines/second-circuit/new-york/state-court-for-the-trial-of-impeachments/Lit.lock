@@ -1,17 +1,24 @@
 version = 2
 
 [[package]]
-name = "outline-ny-court-for-the-trial-of-impeachments"
-version = "0.0.1"
-language = 1
-source = "sha256:476e42efed283d257deb1bd75614c00f912a32dbda824cf6e9c2cb2d787c5bd3"
-semantic = "sha256:0ba02c243bc033e73017d265d0d044f1437f0a54fc323218e3778fc1d9c383ce"
-texts = []
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "ny-state-rules"
+version = "0.1.0"
 dependencies = [
-    "outline-ny-state-rules 0.0.1",
+    "core 1.0.0",
 ]
 
 [[package]]
-name = "outline-ny-state-rules"
+name = "outline-ny-court-for-the-trial-of-impeachments"
 version = "0.0.1"
-dependencies = []
+language = 1
+source = "sha256:6aa996c36c162305de6d77c74171ac945f59d69ff35b606b23281369c2f37eef"
+semantic = "sha256:668c342ac11148b767b566b4e2af5c695134fc6cefa32e72f80cf23761d5194d"
+texts = []
+dependencies = [
+    "ny-state-rules 0.1.0",
+]

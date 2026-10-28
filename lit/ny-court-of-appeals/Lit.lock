@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "ny-court-of-appeals-civil"
+version = "0.1.0"
+language = 1
+source = "sha256:16f671fb5f23d282168695c433bb077328f98ad9964cf4b73a9638e44f9dd0fd"
+semantic = "sha256:c5715d2bf7b208e28d48ad5af273b6fb0c306296d0bf9f7b4861d16479ff52c5"
+texts = [
+    "ny-cplr-appeals sources/ny-appellate-division-court-of-appeals/cplr-cited.txt sha256:cb29e2ce7130b0fa976664171631f52fd1a44b49008a9ac17c0ab9146039446d",
+]
+dependencies = [
+    "core 1.0.0",
+    "ny-state-rules 0.1.0",
+]
+
+[[package]]
+name = "ny-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]

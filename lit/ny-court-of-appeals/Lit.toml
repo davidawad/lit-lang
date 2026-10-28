@@ -1,0 +1,44 @@
+# Leave to appeal to the New York Court of Appeals from a civil order of
+# the Appellate Division, sought from the Court of Appeals itself on
+# refusal by the Appellate Division or by direct application, under the
+# CPLR sections vendored in sources/ny-appellate-division-court-of-appeals
+# (CPLR 5513 and 5602, the most recent revision the NY Senate Open
+# Legislation site showed on 2026-10-27). Periods are stated in notes, not
+# counted (General Construction Law §§ 20, 25-a and CPLR 2103 are not
+# vendored). The Court of Appeals' own rules (22 NYCRR Part 500) and
+# appeals as of right (CPLR 5601) are not vendored: the leave papers, the
+# merits briefing and argument are not modeled. Leave sought from the
+# Appellate Division is lit/ny-appellate-division's.
+[package]
+name = "ny-court-of-appeals-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ny-court-of-appeals-civil"
+forum = "ny-court-of-appeals"
+authority = "StateRule"
+jurisdiction_id = "new-york"
+title = "New York Court of Appeals, leave to appeal in civil cases"
+description = "A motion in the Court of Appeals for permission to appeal from a civil order of the Appellate Division under CPLR 5602 and the time for it under CPLR 5513(b) and (c), as far as the vendored text states. The merits of the appeal are not modeled: 22 NYCRR Part 500 is not vendored."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "New York Court of Appeals (leave to appeal, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+ny-state-rules = { version = "^0.1.0", path = "../ny-rules" }
+
+[sources.ny-cplr-appeals]
+title = "New York Civil Practice Law and Rules, cited appellate sections (NY Senate Open Legislation, most recent revision as shown 2026-10-27)"
+url = "https://www.nysenate.gov/legislation/laws/CVP"
+path = "sources/ny-appellate-division-court-of-appeals/cplr-cited.txt"
+path_sha256 = "cb29e2ce7130b0fa976664171631f52fd1a44b49008a9ac17c0ab9146039446d"
+as_of = "2026-10-27"
+cite_prefixes = ["CPLR"]
+section_heading = "CPLR {n}"

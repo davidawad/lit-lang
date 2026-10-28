@@ -16,6 +16,7 @@ language = 1
 pack_id = "ny-supreme-court-civil"
 forum = "ny-supreme-civil"
 authority = "StateRule"
+jurisdiction_id = "new-york"
 title = "Supreme Court of the State of New York, civil actions"
 description = "Civil actions in the New York Supreme Court under the CPLR, as far as the vendored sections state: commencement by filing and service, the time to answer and the demand for a complaint, the CPLR 3211 motion to dismiss, default judgment, disclosure, summary judgment, trial, post-trial motions, entry of judgment, and the appeal (lit/ny-appellate-division)."
 in_force = "2026-10-27"
@@ -30,6 +31,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+ny-state-rules = { version = "^0.1.0", path = "../ny-rules" }
 
 [sources.ny-cplr]
 title = "New York Civil Practice Law and Rules, cited sections (NY Senate Open Legislation, most recent revision as shown 2026-10-27)"

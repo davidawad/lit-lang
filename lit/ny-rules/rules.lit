@@ -1,16 +1,13 @@
-// OUTLINE (unverified). The state's shared rule layer: the events every
-// court package of the state routes its graph on. Its cites are holes until a
-// fetch-first pass vendors the rule text and a later pass verifies it.
-module outline-ny-state-rules
+module ny-state-rules
 
-/// The New York base library: the rules the state's court packages share
-/// (CPLR, CPLR, unverified). It declares their trigger events and no
-/// procedure of its own; its pack holds only this placeholder terminal,
-/// which no link or case may route through.
+/// `lit/ny-rules` is a base library: it declares what New York's court
+/// packages share and no procedure of its own. Its pack holds only this
+/// placeholder terminal, which no link or case may route through.
 start library
 
 terminal library: "New York state court rules library (no procedure)"
 
+// The trigger events the court packages' graphs route on.
 /// An action, claim, petition or charge is filed and the proceeding begins.
 event ActionCommenced()
 

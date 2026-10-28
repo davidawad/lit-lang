@@ -1,17 +1,24 @@
 version = 2
 
 [[package]]
-name = "outline-ny-appellate-terms-of-the-supreme-court"
-version = "0.0.1"
-language = 1
-source = "sha256:ef13cd063930e08cbf2bf255b602b6eb2205a41d4b8da64cf9f485a5f7caf9e6"
-semantic = "sha256:cec545a2b89b4b1f4477302b0d0d86306a4420fbee8573859fbb608da9470965"
-texts = []
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "ny-state-rules"
+version = "0.1.0"
 dependencies = [
-    "outline-ny-state-rules 0.0.1",
+    "core 1.0.0",
 ]
 
 [[package]]
-name = "outline-ny-state-rules"
+name = "outline-ny-appellate-terms-of-the-supreme-court"
 version = "0.0.1"
-dependencies = []
+language = 1
+source = "sha256:233964496f0e19f57bb9d8c85b74de34f04725570cc6eac3eee44301996a2e80"
+semantic = "sha256:ad2b9bd9d14a6f7c1f20c7ca747f2449fa5e975d5a6c93691af3481d32749ed3"
+texts = []
+dependencies = [
+    "ny-state-rules 0.1.0",
+]

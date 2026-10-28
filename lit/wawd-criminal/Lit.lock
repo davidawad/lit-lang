@@ -1,0 +1,28 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "wawd-criminal"
+version = "0.1.0"
+language = 1
+source = "sha256:bca7c95034c6f7ba465e3be609384a7508308060474f857ce25d16a60514fb75"
+semantic = "sha256:13fa30011cbe0d1ac36a265b843ff055541ba802b29517790a7b4f1685b99aea"
+texts = [
+    "frcrimp sources/frcrimp.txt sha256:cf92787ff6bf24cb4d853cb347925f5f37dba41c1bc1cac26da0ffcfb6cf19ed",
+    "usc18-3161 sources/usc-additional.txt sha256:5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

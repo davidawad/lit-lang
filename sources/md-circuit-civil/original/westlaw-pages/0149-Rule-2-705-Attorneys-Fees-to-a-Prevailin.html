@@ -1,0 +1,96 @@
+<HTML><HEAD>
+<!-- These scripts are provided under the terms of the BrowserHawk license
+agreement and may not be copied or used otherwise. [17.0.1.201 Enterprise; BDD ver 17.06; bhaxiD0-124318]
+See cyscape.com for details.
+Copyright (C) 1999-2018 cyScape, Inc. All rights reserved.
+-->
+<noscript><meta http-equiv="refresh" content="0; url='/mdc/Document/N2011B490780B11F0B25FEA2E94F53678?viewType=FullText&originationContext=documenttoc&transitionType=CategoryPageItem&contextData=(sc.Default)&bhjs=0'"><a href="/mdc/Document/N2011B490780B11F0B25FEA2E94F53678?viewType=FullText&originationContext=documenttoc&transitionType=CategoryPageItem&contextData=(sc.Default)&bhjs=-1">Please click here to continue</a></noscript>
+<script language="JavaScript">
+<!--
+function bhawkTest() {
+  var bhab = isHere('application/pdf', 'Acrobat', 'pdf');
+  if (!bhab) bhab = isHere('application/pdf', 'PDFViewer', 'pdf');
+  if (!bhab) bhab = isHere('application/pdf', 'nppdf.so', 'pdf');
+  var bhav = plugV('Acrobat', 1);
+  var hashIndex = self.location.href.indexOf("#");
+  if (hashIndex == -1) {
+    hash = "";
+  } else {
+    hash = self.location.href.substring(hashIndex);
+    hash = "&bhhash=1" + hash;
+  }
+  var rs = "bhab="+bhab+"&bhav="+bhav;
+  if (document.cookie.indexOf("bhCookieSess=1") != -1) {
+    var sec = (document.location.protocol === 'https:') ? '; Secure' : '';
+    document.cookie = "bhResults="+rs+"; domain=govt.westlaw.com; path=/"+sec;
+    if (document.cookie.indexOf("bhResults") != -1)
+      self.location.replace("/mdc/Document/N2011B490780B11F0B25FEA2E94F53678?viewType=FullText&originationContext=documenttoc&transitionType=CategoryPageItem&contextData=(sc.Default)&bhcp=1"+hash);
+    else self.location.replace("/mdc/Document/N2011B490780B11F0B25FEA2E94F53678?viewType=FullText&originationContext=documenttoc&transitionType=CategoryPageItem&contextData=(sc.Default)&"+rs+"&bhqs=1"+hash);
+  }
+  else self.location.replace("/mdc/Document/N2011B490780B11F0B25FEA2E94F53678?viewType=FullText&originationContext=documenttoc&transitionType=CategoryPageItem&contextData=(sc.Default)&"+rs+"&bhqs=1"+hash);
+}
+// -->
+</script>
+<script language="JavaScript">
+<!--
+function isHere(mname, desc, ext) {
+  var ndx=0;
+  if (navigator.mimeTypes && mname != '' ? (navigator.mimeTypes[mname] && navigator.mimeTypes[mname].enabledPlugin != false) : true) {
+    if (navigator.plugins) {
+      cnt = navigator.plugins.length;
+      if (mname != "" && navigator.mimeTypes[mname] == null)
+        {return 0;}
+      if (cnt > 0) {
+        for (ndx = 0; ndx < cnt; ndx++) {
+          if ((navigator.plugins[ndx].description.indexOf(desc) != -1) || (navigator.plugins[ndx].name.indexOf(desc) != -1))
+            {return 1;}
+        }
+      }
+    }
+  }
+  return 0;
+}
+// -->
+</script>
+<script language="JavaScript">
+<!--
+function plugVLoop(desc, t, key) {
+ var cnt = navigator.plugins.length;
+ if (cnt > 0) {
+   for (var ndx = 0; ndx < cnt; ndx++) {
+     if (navigator.plugins[ndx][key].indexOf(desc) != -1) {
+       if (desc == 'Acrobat') {try {z = navigator.plugins[ndx].version; if (typeof z != 'undefined' && z!='') return z;} catch(e) {}}
+       var rg;
+       var x = '';
+       if (t == 1)
+         rg = /(Win32[^0-9]*)?(1-)?([0-9][^\s"]*)/i;
+       else if (t == 2)
+         rg = /(Win32[^0-9]*)?(1-)?([0-9].*)/i;
+       else if (t == 3)
+         rg = /(Win32[^0-9]*)?(1-)?[0-9\.]+[^0-9]+([0-9].*)/i;
+       var a = rg.exec(navigator.plugins[ndx].description);
+       if (a) x = a[3]; else {a = rg.exec(navigator.plugins[ndx].name); if (a) x = a[3];}
+       if (x != '') {
+         var cut = x.indexOf('  ');
+         if (cut >= 0) x = x.substring(0, cut);
+       }
+       return x;
+     }
+   }
+ }
+}
+function plugV(desc, t) {
+ var s = '';
+ if (navigator.plugins) {
+   s = plugVLoop(desc, t, 'name');
+   if (s) return escape(s);
+   s = plugVLoop(desc, t, 'description');
+   if (s) return escape(s);
+ }
+ return '';
+}
+// -->
+</script>
+<title></title></head><noscript><body   onLoad="bhawkTest();"></noscript>
+<script>document.write('<body   onLoad="bhawkTest();">');</script>
+</body></html>

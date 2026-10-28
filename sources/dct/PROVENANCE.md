@@ -15,3 +15,9 @@
 - Upstream: https://www.ctd.uscourts.gov/sites/default/files/Current-Revised-Local-Rules-10.13.26.pdf, retrieved 2026-10-27, as recorded on the `dct/local-rules.txt` entry this file is derived from.
 - Edition: as the extract; the latest per-rule amendment date it states is September 25, 2026.
 - Sectioned sha256 4279c6f3f7e4ec4ae76e34a016745c3caa0fb0d7794367afcde6345fed708a7f (the `path_sha256` pinned by `lit/ctd/Lit.toml`).
+
+### `dct/local-rules-criminal-sectioned.txt` — D. Conn. Local Rules of Criminal Procedure and Criminal Appendix, sectioned
+
+- Derived in the pod (lg-gddt.8) from `dct/local-rules.txt` (extract sha256 7cc22774663a1d8b1523b4f7668dc621c205d902f0d84e475ef0607ef28d0368); nothing fetched. In the Local Rules of Criminal Procedure (extract line 4500 on), one `## D. Conn. L. Cr. R. <n>` line is inserted right before each numbered rule's own body heading line `RULE <n>` (14 markers: 1, 16, 17, 32, 47, 50, 55, 56, 57, 57.1, 57.2, 57.3, 58, 58.1; the reserved ranges such as `RULE 2 - RULE 15` are unmarked), and one `## D. Conn. Crim. App. 1` line before the `CRIMINAL APPENDIX` heading, whose one instrument is the Standing Order on Discovery (amended December 13, 2024) that D. Conn. L. Cr. R. 16(a) publishes as an appendix; the appendix is unnumbered in the document, so `1` is the marker's own ordinal. The civil and magistrate judge rules and the table of contents are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## D\. Conn\. \(L\. Cr\. R\.\|Crim\. App\.\) /d'`) restores the extract byte for byte.
+- Edition: as the extract; the latest criminal-rule amendment date it states is January 12, 2026 (L. Cr. R. 32), the compilation's latest September 25, 2026.
+- Sectioned sha256 b4e39f8c81a27c7f90aef6b32f57ab10c968913eceec3e4a995b2bb4e5621ffb (the `path_sha256` pinned by `lit/ctd-criminal/Lit.toml`).

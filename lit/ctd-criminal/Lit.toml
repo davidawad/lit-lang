@@ -1,0 +1,76 @@
+# The U.S. District Court for the District of Connecticut's Local Criminal
+# Rules (D. Conn. L. Cr. R.), the Local Civil Rules they apply in criminal
+# proceedings (L. Cr. R. 1(c)) and the Criminal Appendix's Standing Order
+# on Discovery (L. Cr. R. 16(a)), as a local-rule layer over lit/frcrimp
+# (28 U.S.C. § 2071; FRCrimP 57(a)): it declares only the periods and
+# limits those rules themselves state and re-encodes no FRCrimP, Speedy
+# Trial Act or FRAP 4(b) period (one source of truth: lit/frcrimp). Each
+# period is counted under FRCrimP 45(a), which governs "any local rule",
+# so each deadline names `forum frcrimp`. The rules are the court's
+# current compilation (cover "Amended December 1, 2009", each rule
+# carrying its own amendment date; the latest criminal amendment is L. Cr.
+# R. 32, January 12, 2026, and the compilation's latest is September 25,
+# 2026; sources/dct), so in_force is that date; earlier editions are not
+# vendored, so a query before it is a hole in the corpus. An appeal goes
+# to the Second Circuit under lit/frcrimp's FRAP 4(b) period and lit/ca2.
+[package]
+name = "ctd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ctd-criminal-local-rules"
+forum = "ctd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of Connecticut: Local Criminal Rules"
+description = "The District of Connecticut's Local Criminal Rules, the Local Civil Rules they apply and the Standing Order on Discovery as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the discovery conference and the parties' disclosures, expert disclosures before the final pretrial conference, motion opposition and reply periods and page limits, reconsideration, the presentence report and sentencing-memorandum schedule counted from the guilty plea or verdict, and the sentencing-memorandum page limit."
+in_force = "2026-09-25"
+known_at = "2026-10-28"
+unknown_before = "2026-09-25"
+jurisdiction = "U.S. District Court for the District of Connecticut (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ctd-lcrr"
+issuer = "United States District Court for the District of Connecticut"
+date = "2026-09-25"
+designation = "Local Rules of Criminal Procedure (compilation current through the September 25, 2026 amendment)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.ctd-lcrr]
+title = "Local Rules of Criminal Procedure and Criminal Appendix of the United States District Court for the District of Connecticut (Amended December 1, 2009, with per-rule amendments through September 25, 2026)"
+url = "https://www.ctd.uscourts.gov/sites/default/files/Current-Revised-Local-Rules-10.13.26.pdf"
+path = "sources/dct/local-rules-criminal-sectioned.txt"
+path_sha256 = "b4e39f8c81a27c7f90aef6b32f57ab10c968913eceec3e4a995b2bb4e5621ffb"
+sha256 = "7276a8de62373432011f35807dca01ce7ef5a7879d87a7e7a6f3d8f90d7d6264"
+as_of = "2026-09-25"
+
+[sources.ctd-lcvr]
+title = "Local Rules of Civil Procedure of the United States District Court for the District of Connecticut, applied in criminal proceedings by D. Conn. L. Cr. R. 1(c) (Amended December 1, 2009, with per-rule amendments through September 25, 2026)"
+url = "https://www.ctd.uscourts.gov/sites/default/files/Current-Revised-Local-Rules-10.13.26.pdf"
+path = "sources/dct/local-rules-sectioned.txt"
+path_sha256 = "4279c6f3f7e4ec4ae76e34a016745c3caa0fb0d7794367afcde6345fed708a7f"
+sha256 = "7276a8de62373432011f35807dca01ce7ef5a7879d87a7e7a6f3d8f90d7d6264"
+as_of = "2026-09-25"
+
+[[cite_syntax.rules]]
+prefixes = ["D. Conn. L. Cr. R."]
+heading = "D. Conn. L. Cr. R. {}"
+source = "ctd-lcrr"
+
+[[cite_syntax.rules]]
+prefixes = ["D. Conn. Crim. App."]
+heading = "D. Conn. Crim. App. {}"
+source = "ctd-lcrr"
+
+[[cite_syntax.rules]]
+prefixes = ["D. Conn. L. Civ. R."]
+heading = "D. Conn. L. Civ. R. {}"
+source = "ctd-lcvr"

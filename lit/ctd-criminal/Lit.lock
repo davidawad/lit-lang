@@ -1,0 +1,28 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "ctd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:e1577a76b9ad4b3828d150d04d5a99730e9510a75840dbbbca2c9ac8c33db2ba"
+semantic = "sha256:36e5dc5f497d7dcf3c7bc09c28afb16dd37e2e914770837bc6e7a51683e83a1c"
+texts = [
+    "ctd-lcrr sources/dct/local-rules-criminal-sectioned.txt sha256:b4e39f8c81a27c7f90aef6b32f57ab10c968913eceec3e4a995b2bb4e5621ffb",
+    "ctd-lcvr sources/dct/local-rules-sectioned.txt sha256:4279c6f3f7e4ec4ae76e34a016745c3caa0fb0d7794367afcde6345fed708a7f",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]

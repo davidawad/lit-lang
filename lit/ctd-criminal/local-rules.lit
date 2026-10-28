@@ -1,0 +1,258 @@
+module ctd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The District of Connecticut's own criminal periods, counted under the
+// criminal rules (FRCrimP 45(a) governs "any local rule"). The Local
+// Criminal Rules apply the Local Civil Rules on motion procedure (L. Civ.
+// R. 7(a)1 and 2), extensions of time (7(b)), reconsideration (7(c)) and
+// reply memoranda (7(d)) in criminal proceedings (D. Conn. L. Cr. R.
+// 1(c)); L. Civ. R. 7(d) says its reply period is computed under FRCP 6,
+// which counts a period of days as FRCrimP 45(a) does. No trigger carries a
+// service method: FRCrimP 45(c)'s three added days follow the manner of
+// service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: counsel's written objections to the presentence report within 14
+// days after its disclosure (D. Conn. L. Cr. R. 32(a); FRCrimP 32(f)(1)),
+// which the scheduling order sets at Day 56 (L. Cr. R. 32(e)). The
+// Standing Order on Discovery's government disclosures track FRCrimP
+// 16(a)(1) and are timed by the Standing Order itself.
+//
+// Conditions that are not deadlines from an event stay in notes: the
+// court sets a motion schedule at arraignment (L. Cr. R. 16(a)); a motion
+// for an extension of time is filed at least three business days before
+// the deadline it would extend unless compelling circumstances arise in
+// those three days, and any party may move within seven days of an order
+// granting an extension to set it aside (L. Civ. R. 7(b)); a motion to
+// exceed a memorandum's page limit is filed at least seven days before the
+// memorandum's deadline (L. Civ. R. 7(a)5; L. Cr. R. 32(n)), a period
+// counted back from another deadline, not from an event; the revised
+// presentence report is disclosed no later than ten days after the
+// deadline for counsel's objections (L. Cr. R. 32(c)), which the
+// scheduling order fixes at Day 66, encoded below from the plea or
+// verdict; a party proposing sentencing beyond Day 84 files a proposed
+// scheduling order (L. Cr. R. 32(f)); a non-movant may move within ten days
+// to keep Protected Discovery Material sealed, the rule not stating the
+// event the ten days run from (Standing Order on Discovery (H)(3)); and
+// counsel orders the transcript "forthwith" on appeal (L. Cr. R. 58(c)).
+// The court's Speedy Trial Act plan (18 U.S.C. § 3165) is not vendored.
+//
+// The earlier D. Conn. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Barker v. Wingo, Zedner v. United States,
+// Brady v. Maryland and the others it named) are FRCrimP, Speedy Trial
+// Act or constitutional authority and belong to lit/frcrimp; they are
+// removed here: no reporter text is vendored.
+
+/// A memorandum of law on a motion or in opposition: at most 40 pages,
+/// double-spaced, exclusive of tables, except by order of the Court (D.
+/// Conn. L. Civ. R. 7(a)5, applied by D. Conn. L. Cr. R. 1(c)).
+limit motion-memorandum {
+  pages <= 40 cite "D. Conn. L. Civ. R. 7(a)"
+} cite "D. Conn. L. Civ. R. 7(a); D. Conn. L. Cr. R. 1(c)"
+
+/// A reply memorandum: at most 10 pages (D. Conn. L. Civ. R. 7(d), applied
+/// by D. Conn. L. Cr. R. 1(c)).
+limit reply-memorandum {
+  pages <= 10 cite "D. Conn. L. Civ. R. 7(d)"
+} cite "D. Conn. L. Civ. R. 7(d); D. Conn. L. Cr. R. 1(c)"
+
+/// A sentencing memorandum: at most 40 pages, double-spaced, exclusive of
+/// tables, except by order of the Court (D. Conn. L. Cr. R. 32(n)).
+limit sentencing-memorandum {
+  pages <= 40 cite "D. Conn. L. Cr. R. 32(n)"
+} cite "D. Conn. L. Cr. R. 32(n)"
+
+/// The defendant is arraigned (Standing Order on Discovery (A); D. Conn.
+/// L. Cr. R. 16(a)).
+event Arraigned()
+/// The attorneys for the government and the defendant reach an agreement
+/// on the timetable and procedures for pretrial disclosure (Standing Order
+/// on Discovery (A)).
+event DiscoveryAgreementReached()
+/// The attorney for the government provides the discovery Paragraph A of
+/// the Standing Order on Discovery requires (Standing Order on Discovery
+/// (B)(1)).
+event GovernmentDiscoveryProvided()
+/// The date set for the final pretrial conference (Standing Order on
+/// Discovery (C)(1)(a)(ii), (C)(2)(a)(ii)).
+event FinalPretrialConferenceScheduled()
+/// A motion is filed (D. Conn. L. Civ. R. 7(a)).
+event MotionFiled() paper motion-memorandum
+/// The responsive memorandum is filed (D. Conn. L. Civ. R. 7(d)).
+event ResponsiveMemorandumFiled() paper motion-memorandum
+/// A reply memorandum is filed (D. Conn. L. Civ. R. 7(d)).
+event ReplyFiled() paper reply-memorandum
+/// The decision or order from which reconsideration is sought is filed
+/// (D. Conn. L. Civ. R. 7(c)).
+event DecisionFiled()
+/// The guilty plea or guilty verdict; the sentencing schedule is counted
+/// from it, or, where the Court postpones the scheduling order on an
+/// agreed extended schedule, from the order for the presentence report
+/// (D. Conn. L. Cr. R. 32(e)).
+event GuiltyPleaOrVerdict()
+/// A sentencing memorandum is filed (D. Conn. L. Cr. R. 32(n)).
+event SentencingMemorandumFiled() paper sentencing-memorandum
+
+/// Standing Order on Discovery (A): no later than 14 days after the
+/// arraignment, the attorneys for the government and the defendant confer
+/// and try to agree on a timetable and procedures for pretrial disclosure
+/// under FRCrimP 16.
+deadline discovery-conference: 14.days after Arraigned() counted_by frcrimp45 cite "D. Conn. Crim. App. 1(A)"
+{
+  forum frcrimp
+}
+
+/// Standing Order on Discovery (A): an agreement reached at the discovery
+/// conference is reduced to writing and filed by the government within 3
+/// days of reaching it.
+deadline discovery-agreement-filing: 3.days after DiscoveryAgreementReached() counted_by frcrimp45 cite "D. Conn. Crim. App. 1(A)"
+{
+  forum frcrimp
+}
+
+/// Standing Order on Discovery (A)(1): within 14 days after the
+/// arraignment, or the period set at the discovery conference or by the
+/// court, the government furnishes the listed items, among them Brady and
+/// Giglio information and notice of Federal Rule of Evidence 404(b)
+/// evidence. The Court may deny, restrict or defer it for good cause
+/// (Standing Order on Discovery (F)).
+deadline government-disclosure: 14.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Conn. Crim. App. 1(A)"
+{
+  forum frcrimp
+}
+
+/// Standing Order on Discovery (B)(1): within 14 days after the government
+/// provides the Paragraph A discovery, defense counsel informs it in
+/// writing whether the defense is alibi, mental condition or public
+/// authority, and furnishes the items the defendant intends to use in its
+/// case-in-chief.
+deadline defense-disclosure: 14.days after GovernmentDiscoveryProvided() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Conn. Crim. App. 1(B)"
+{
+  forum frcrimp
+}
+
+/// Standing Order on Discovery (C)(1)(a)(ii): unless otherwise ordered,
+/// the government's expert-witness disclosure is made no later than 60
+/// days before the final pretrial conference.
+deadline government-expert-disclosure: 60.days before FinalPretrialConferenceScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Conn. Crim. App. 1(C)"
+{
+  forum frcrimp
+}
+
+/// Standing Order on Discovery (C)(2)(a)(ii): unless otherwise ordered,
+/// the defendant's expert-witness disclosure is made no later than 30 days
+/// before the final pretrial conference.
+deadline defense-expert-disclosure: 30.days before FinalPretrialConferenceScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Conn. Crim. App. 1(C)"
+{
+  forum frcrimp
+}
+
+/// D. Conn. L. Civ. R. 7(a)2: unless the Court orders otherwise, an
+/// opposition memorandum is filed within 21 days of the filing of the
+/// motion; failure to oppose may be deemed sufficient cause to grant it.
+/// The Court may rule earlier to expedite a decision or for other good
+/// cause (L. Civ. R. 7(a)4).
+deadline opposition-period: 21.days after MotionFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Conn. L. Civ. R. 7(a); D. Conn. L. Cr. R. 1(c)"
+{
+  forum frcrimp
+}
+
+/// D. Conn. L. Civ. R. 7(d): a reply memorandum, permitted but not
+/// required, is filed within 14 days of the filing of the responsive
+/// memorandum; no sur-reply without permission.
+deadline reply-period: 14.days after ResponsiveMemorandumFiled() counted_by frcrimp45 cite "D. Conn. L. Civ. R. 7(d); D. Conn. L. Cr. R. 1(c)"
+{
+  forum frcrimp
+}
+
+/// D. Conn. L. Civ. R. 7(c)1: a motion for reconsideration, where
+/// appropriate, is filed and served within 7 days of the filing of the
+/// decision or order; no response is needed unless the Court requests one.
+deadline reconsideration-period: 7.days after DecisionFiled() counted_by frcrimp45 cite "D. Conn. L. Civ. R. 7(c); D. Conn. L. Cr. R. 1(c)"
+{
+  forum frcrimp
+}
+
+/// D. Conn. L. Cr. R. 32(a), (e): unless otherwise ordered, the probation
+/// officer discloses the presentence report, with its guideline
+/// worksheets, not more than 6 weeks after the verdict or finding of
+/// guilt: Day 42 of the scheduling order. The 6-week period may be
+/// enlarged only with the defendant's consent (L. Cr. R. 32(f)); FRCrimP
+/// 32(e)(2)'s own period (lit/frcrimp psr-disclosure) is not restated.
+deadline initial-psr-disclosure: 42.days after GuiltyPleaOrVerdict() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Conn. L. Cr. R. 32(a); D. Conn. L. Cr. R. 32(e); D. Conn. L. Cr. R. 32(f)"
+{
+  forum frcrimp
+}
+
+/// D. Conn. L. Cr. R. 32(c), (e): the probation officer dockets and
+/// discloses the revised presentence report with its addendum on Day 66.
+deadline revised-psr-disclosure: 66.days after GuiltyPleaOrVerdict() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Conn. L. Cr. R. 32(c); D. Conn. L. Cr. R. 32(e); D. Conn. L. Cr. R. 32(f)"
+{
+  forum frcrimp
+}
+
+/// D. Conn. L. Cr. R. 32(e), (n): the defendant's sentencing memorandum
+/// is filed on Day 70 unless the Court sets other deadlines; the assigned
+/// judge may change the times and sequence of sentencing memoranda (L.
+/// Cr. R. 32(f)).
+deadline defense-sentencing-memorandum: 70.days after GuiltyPleaOrVerdict() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Conn. L. Cr. R. 32(e); D. Conn. L. Cr. R. 32(n); D. Conn. L. Cr. R. 32(f)"
+{
+  forum frcrimp
+}
+
+/// D. Conn. L. Cr. R. 32(e), (n): the government's sentencing memorandum
+/// is filed on Day 77.
+deadline government-sentencing-memorandum: 77.days after GuiltyPleaOrVerdict() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Conn. L. Cr. R. 32(e); D. Conn. L. Cr. R. 32(n); D. Conn. L. Cr. R. 32(f)"
+{
+  forum frcrimp
+}
+
+/// D. Conn. L. Cr. R. 32(e): any reply sentencing memorandum, optional, is
+/// filed on Day 80.
+deadline reply-sentencing-memorandum: 80.days after GuiltyPleaOrVerdict() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Conn. L. Cr. R. 32(e); D. Conn. L. Cr. R. 32(f)"
+{
+  forum frcrimp
+}
+
+/// D. Conn. L. Cr. R. 32(e): sentencing on Day 84. The Court may postpone
+/// the scheduling order for good cause or modify its times for good cause
+/// shown (L. Cr. R. 32(e), (f)).
+deadline sentencing-date: 84.days after GuiltyPleaOrVerdict() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Conn. L. Cr. R. 32(e); D. Conn. L. Cr. R. 32(f)"
+{
+  forum frcrimp
+}

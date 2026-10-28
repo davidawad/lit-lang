@@ -26,8 +26,9 @@ event TranscriptOrderReceived()
 /// starts the appellant's brief period (FRAP 31(a)(1)).
 event RecordFiled()
 
-/// Papers served on appeal whose service starts a response period.
-enum Paper { Motion, AppellantBrief, AppelleeBrief }
+/// Papers served on appeal whose service starts a response period; a bill
+/// of costs starts the objection period (FRAP 39(e)(3)(B)).
+enum Paper { Motion, AppellantBrief, AppelleeBrief, BillOfCosts }
 
 /// A paper served under FRAP 25(c) by `method`; FRAP 26(c) adds 3 days for
 /// the methods `frap26` lists (mail, commercial carrier, prison mail).

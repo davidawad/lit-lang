@@ -3,7 +3,7 @@ module frap.mandate
 import core.authority.{ CaseOrder }
 import core.frap26.{ frap26 }
 import frap.cert.{ cert-period, cert-petition-window }
-import frap.events.{ RehearingClosed }
+import frap.events.{ EnteredOnAppeal, RehearingClosed, ServedPaper }
 import frap.{ mandate-group }
 
 /// FRAP 41(b): the mandate issues 7 days after the time to petition for
@@ -30,6 +30,44 @@ test "a 7th day on Independence Day rolls to Monday" cite "FRAP 26(a)(6)(A)"
 {
   given RehearingClosed(PetitionDenied) on 2025-06-27
   expect deadline(mandate-period) == 2025-07-07
+}
+
+/// A party who wants costs taxed in the court of appeals must file with the
+/// circuit clerk and serve an itemized, verified bill within 14 days after
+/// judgment is entered, and objections are due 14 days after the bill is
+/// served, "unless the court extends the time". The bill's period says
+/// nothing of extension, but FRAP 26(b) lets the court extend any period
+/// for good cause, so both delegate to `CaseOrder`. Neither delays the
+/// mandate (FRAP 39(e)(3)(C)). A served bill gains FRAP 26(c)'s 3 days
+/// after mail, carrier or prison-mail service.
+///
+/// Before December 1, 2025 the periods were FRAP 39(d)(1) and (d)(2),
+/// unchanged in length since the 2009 time-computation amendments. That
+/// text is not vendored, so that version's cite is a hole carrying it.
+rule duty tax-appellate-costs effective [2009-12-01, 2025-12-01) known_at 2009-03-26 cite ?("FRAP 39(d) before the December 2025 amendment (text not vendored)")
+{
+  deadline bill-of-costs-period: 14.days after EnteredOnAppeal(Judgment) counted_by frap26 delegable {
+    to CaseOrder
+    op set
+  } cite ?("FRAP 39(d)(1) before the December 2025 amendment (text not vendored)")
+  deadline cost-objection-period: 14.days after ServedPaper(BillOfCosts) counted_by frap26 delegable {
+    to CaseOrder
+    op set
+  } cite ?("FRAP 39(d)(2) before the December 2025 amendment (text not vendored)")
+}
+
+/// The December 1, 2025 amendment (Supreme Court order of April 23, 2025)
+/// moved both periods to FRAP 39(e)(3), unchanged.
+rule duty tax-appellate-costs effective [2025-12-01, ..) known_at 2025-04-23 supersedes tax-appellate-costs@2009-12-01 cite "FRAP 39(e)(3)"
+{
+  deadline bill-of-costs-period: 14.days after EnteredOnAppeal(Judgment) counted_by frap26 delegable {
+    to CaseOrder
+    op set
+  } cite "FRAP 39(e)(3)(A)"
+  deadline cost-objection-period: 14.days after ServedPaper(BillOfCosts) counted_by frap26 delegable {
+    to CaseOrder
+    op set
+  } cite "FRAP 39(e)(3)(B)"
 }
 
 state mandate-issued: "Mandate Issues" by office cite "Fed. R. App. P. 41(a)–(b)"

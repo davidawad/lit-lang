@@ -6,3 +6,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 d2ff8876adb02705087839f28dda8d455223ba6a6dea6d379e028e6851b6c571. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-id/original/idb-lbr-rule-packet-2026-10-27.pdf` as served (sha256 57a0038aed8c7ab48106a184278ef233210126617273ee8494443a30912bcf97); extraction sha256 d2ff8876adb02705087839f28dda8d455223ba6a6dea6d379e028e6851b6c571.
+
+### `bankr-id/idb-lbr-rule-packet-2026-10-27-sectioned.txt` — Bankr. D. Idaho Local Bankruptcy Rules Packet, sectioned
+
+- Derived in the pod (lg-u561.25) from `bankr-id/idb-lbr-rule-packet-2026-10-27.txt` (extract sha256 d2ff8876adb02705087839f28dda8d455223ba6a6dea6d379e028e6851b6c571); nothing fetched. One `## LBR <n>` line is inserted before each rule's own heading line in the body (a line opening, after an optional form feed, with `Bankruptcy Local Rule <nnnn>-<n>`; the appendices bound after the rules fall in the last section; the set is every such heading after the table of contents, from `1001-1` through `9037-1`, 64 rules); rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Edition: as the extract.
+- Sectioned sha256 bce9224a618b5496506adbe790640f00755689c7e76e167d57f56e50999cffe1 (the `path_sha256` pinned by `lit/bankr-id/Lit.toml`).

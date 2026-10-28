@@ -1,0 +1,417 @@
+module bankr-id-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ CaseConverted, FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
+
+// The Bankr. D. Idaho court's own periods, counted under FRBP 9006(a).
+// The FRBP periods (schedules and their extension, the chapter 13 plan,
+// claims in chapter 7, 12 and 13 cases, exemptions, discharge,
+// dischargeability, the adversary answer and summons, new trial, appeals)
+// are lit/frbp's and are not declared again. Not repeated either, as only
+// restating a national or statutory period: the schedule of unpaid debts
+// and the chapter 13 plan within 14 days after conversion (LBR 1019-1(a),
+// (c); FRBP 1019(5), 3015(b)); 28 days' notice of a chapter 13
+// confirmation hearing (LBR 2002-3(a), (b); FRBP 2002(b)); the 20- to
+// 45-day confirmation hearing window (LBR 2002-3(b); 11 U.S.C. § 1324(b));
+// a chapter 12 plan within 90 days of the petition (LBR 2002-4(c); 11
+// U.S.C. § 1221); the 21 days' notice of a § 706(a) conversion (LBR
+// 1017-1(a); FRBP 2002(a)(4)); the chapter 13 plan within 14 days of the
+// petition (LBR 2002-5(b)); and the rent deposit for the 30 days after the
+// petition (LBR 4001-4(a); 11 U.S.C. § 362(l)).
+//
+// Stated in the rules but not declared: the "later of" chapter 11 final
+// report deadlines (LBR 3022-1(c)); the 5-day certificate of mailing and
+// preconfirmation memoranda and ballots (LBR 2002-2(b), 3018-1, 3020-1);
+// the 3-day request for a hearing change (LBR 2002-2(f)); 7 days' notice of
+// a hearing on an objection to a voluntary chapter 13 dismissal and the
+// 7-day setting of a negative-notice hearing (LBR 1017-1(b), 2002-2(e));
+// the clerk's 21-day cost taxation and the 21-day case closing (LBR
+// 7054-1(a), 5009-1); the 60-day inactivity dismissal and the clerk's
+// 21-day notice (LBR 7041-1); the § 1326 adequate protection disbursements
+// within 30 days of a claim (LBR 4001-3(b)); the clerk's one-day notice of
+// a rent deposit (LBR 4001-4(b)); the 21-day stay of proceedings after an
+// attorney's withdrawal (LBR 9010-1(f)); the 30-day disposal of unclaimed
+// exhibits (LBR 5007-1(d)); and the model retention agreement and
+// appendices bound after LBR 9037-1. The earlier outline's Supreme Court
+// decisions construe the Code and the FRBP, not these rules, and are
+// removed here: no reporter text is vendored.
+
+/// Notice of a motion or application on negative notice is served (Bankr.
+/// D. Idaho LBR 2002-2(d)).
+event NegativeNoticeServed()
+/// The hearing on a motion set at least 28 days after its filing (Bankr. D.
+/// Idaho LBR 2002-2(e)).
+event MotionHearing()
+/// A chapter 13 debtor's motion to dismiss is served (Bankr. D. Idaho LBR
+/// 1017-1(b)).
+event VoluntaryDismissalMotionServed()
+/// A hearing on confirmation of a chapter 12 plan (Bankr. D. Idaho LBR
+/// 2002-4).
+event ChapterTwelveConfirmationHearing()
+/// The date set for hearing on confirmation of a plan (Bankr. D. Idaho LBR
+/// 2002-5(a), 3014-1).
+event ConfirmationHearing()
+/// The notice to file proofs of claim describing the trustee's
+/// administrative expense procedure (Bankr. D. Idaho LBR 2002-6).
+event ClaimsNoticeDated()
+/// The scheduled § 341(a) meeting, or a continued one (Bankr. D. Idaho LBR
+/// 2003-1).
+event ScheduledMeeting()
+/// A motion for an FRBP 2004 examination is served (Bankr. D. Idaho LBR
+/// 2004-1(b)).
+event ExaminationMotionServed()
+/// An application to approve employment of a professional is served (Bankr.
+/// D. Idaho LBR 2014-1(c)).
+event EmploymentApplicationServed()
+/// A chapter 13 case is dismissed (Bankr. D. Idaho LBR 2016-2(b)).
+event CaseDismissed()
+/// An objection to a proof of claim is served (Bankr. D. Idaho LBR
+/// 3007-1(b)).
+event ClaimObjectionServed()
+/// A claimant's response to a claim objection is served (Bankr. D. Idaho
+/// LBR 3007-1(c)).
+event ClaimResponseServed()
+/// A scheduled hearing on a claim objection (Bankr. D. Idaho LBR
+/// 3007-1(d)).
+event ClaimObjectionHearing()
+/// An application for unclaimed funds is served on the U.S. Attorney
+/// (Bankr. D. Idaho LBR 3011-1(c)).
+event UnclaimedFundsApplicationServed()
+/// A motion for relief from the automatic stay is served (Bankr. D. Idaho
+/// LBR 4001-2(c)).
+event StayReliefMotionServed()
+/// The final hearing on a motion for relief from stay (Bankr. D. Idaho LBR
+/// 4001-2(e)).
+event StayReliefFinalHearing()
+/// The clerk's notice to a landlord of a debtor's rent deposit (Bankr. D.
+/// Idaho LBR 4001-4(b)).
+event RentDepositNoticeDated()
+/// The hearing on an individual chapter 11 debtor's discharge motion
+/// (Bankr. D. Idaho LBR 4004-1(a)).
+event DischargeMotionHearing()
+/// An individual chapter 11 debtor completes all payments under the
+/// confirmed plan (Bankr. D. Idaho LBR 4004-1(b)).
+event PlanPaymentsCompleted()
+/// An individual chapter 11 debtor files the § 522(q) certified statement
+/// (Bankr. D. Idaho LBR 4004-1(b)).
+event DischargeStatementFiled()
+/// Judgment under which costs may be claimed is entered (Bankr. D. Idaho
+/// LBR 7054-1(a)).
+event JudgmentEntered()
+/// A cost bill is served (Bankr. D. Idaho LBR 7054-1(a)).
+event CostBillServed()
+/// The hearing on a motion for summary judgment (Bankr. D. Idaho LBR
+/// 7056-1(b)).
+event SummaryJudgmentHearing()
+/// The hearing on a contested matter (Bankr. D. Idaho LBR 9014-1).
+event ContestedMatterHearing()
+/// A jury demand is served (Bankr. D. Idaho LBR 9015-1(b)).
+event JuryDemandServed()
+
+/// Bankr. D. Idaho LBR 1002-1(d): a certificate of service of the petition
+/// and notice on a non-signing joint debtor is filed no later than 14 days
+/// after the case has commenced.
+deadline non-signing-debtor-service-period: 14.days after PetitionFiled() counted_by frcp6 cite "Bankr. D. Idaho LBR 1002-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 1017-1(b)(1): any objection to a chapter 13 debtor's
+/// motion to dismiss is filed within seven days of service of the motion.
+deadline voluntary-dismissal-objection-period: 7.days after VoluntaryDismissalMotionServed() counted_by frcp6 cite "Bankr. D. Idaho LBR 1017-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 1019-1(f): applications for administrative expenses
+/// of the superseded chapter 11, 12 or 13 case, other than a governmental
+/// unit's, are filed within 90 days of entry of the order of conversion.
+deadline conversion-administrative-expense-period: 90.days after CaseConverted() counted_by frcp6 cite "Bankr. D. Idaho LBR 1019-1(f)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 2002-2(d)(2): the minimum negative notice period is
+/// 14 days unless the FRBP or the Local Rules provide another.
+deadline negative-notice-period: 14.days after NegativeNoticeServed() counted_by frcp6 cite "Bankr. D. Idaho LBR 2002-2(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 2002-2(e)(4): where a hearing is set at least 28
+/// days from the filing of the motion, the court may grant the motion at
+/// the hearing unless an objection is filed and served at least 14 days
+/// before it.
+deadline hearing-objection-period: 14.days before MotionHearing() counted_by frcp6 cite "Bankr. D. Idaho LBR 2002-2(e)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 2002-4(a): objections to confirmation of a chapter
+/// 12 plan are filed and served not less than seven days before any
+/// scheduled hearing.
+deadline chapter-12-objection-period: 7.days before ChapterTwelveConfirmationHearing() counted_by frcp6 cite "Bankr. D. Idaho LBR 2002-4(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 2002-4(b): unless a judge fixes a shorter period,
+/// notice of a chapter 12 confirmation hearing is given not less than 28
+/// days before it.
+deadline chapter-12-notice-period: 28.days before ChapterTwelveConfirmationHearing() counted_by frcp6 cite "Bankr. D. Idaho LBR 2002-4(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 2002-5(a): a chapter 13 plan amended to affect
+/// another party is mailed to each affected party at least 28 days before
+/// the confirmation hearing.
+deadline amended-plan-notice-period: 28.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. D. Idaho LBR 2002-5(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 2002-5(a): if no objection to the amendment is filed
+/// and served at least seven days before the hearing, a judge may confirm
+/// the amended plan without a hearing.
+deadline amended-plan-objection-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. D. Idaho LBR 2002-5(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 2002-6: parties may object to the chapter 7
+/// trustee's administrative expense procedure within 14 days from the date
+/// of the notice.
+deadline expense-procedure-objection-period: 14.days after ClaimsNoticeDated() counted_by frcp6 cite "Bankr. D. Idaho LBR 2002-6"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 2003-1(a)(1): absent unforeseeable circumstances, a
+/// request to continue the § 341(a) meeting is submitted to the trustee not
+/// later than 14 days before the scheduled meeting.
+deadline meeting-continuance-request-period: 14.days before ScheduledMeeting() counted_by frcp6 cite "Bankr. D. Idaho LBR 2003-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 2003-1(a)(3): a request to appear at a continued
+/// meeting after a missed § 341(a) meeting is submitted to the U.S. Trustee
+/// not later than 7 days after the scheduled meeting.
+deadline missed-meeting-request-period: 7.days after ScheduledMeeting() counted_by frcp6 cite "Bankr. D. Idaho LBR 2003-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 2003-1(b): notice of a granted continuance is served
+/// on all creditors not later than 7 days before the originally scheduled
+/// or continued § 341(a) meeting.
+deadline continuance-notice-period: 7.days before ScheduledMeeting() counted_by frcp6 cite "Bankr. D. Idaho LBR 2003-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 2004-1(b)(1): in the absence of a response or
+/// objection within 14 days, an order for an FRBP 2004 examination may be
+/// submitted for entry.
+deadline examination-objection-period: 14.days after ExaminationMotionServed() counted_by frcp6 cite "Bankr. D. Idaho LBR 2004-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 2014-1(c): absent an objection within 21 days of
+/// service of the application, the court may approve employment of the
+/// professional.
+deadline employment-objection-period: 21.days after EmploymentApplicationServed() counted_by frcp6 cite "Bankr. D. Idaho LBR 2014-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 2016-2(b): debtor's counsel seeking fees from funds
+/// held by the chapter 13 trustee after dismissal files a fee application
+/// within 14 days of the date the case was dismissed.
+deadline dismissal-fee-application-period: 14.days after CaseDismissed() counted_by frcp6 cite "Bankr. D. Idaho LBR 2016-2(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 3003-1: under FRBP 3003(c)(3), proofs of claim in a
+/// chapter 11 case are filed not later than 70 days after the order for
+/// relief.
+deadline chapter-11-claim-period: 70.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. D. Idaho LBR 3003-1"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 3007-1(b): a response to a claim objection is filed
+/// and served not later than 30 days after service of the objection.
+deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frcp6 cite "Bankr. D. Idaho LBR 3007-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 3007-1(c): within 21 days after service of the
+/// claimant's response, the objecting party withdraws the objection or sets
+/// it for hearing.
+deadline claim-objection-hearing-period: 21.days after ClaimResponseServed() counted_by frcp6 cite "Bankr. D. Idaho LBR 3007-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 3007-1(d): parties offering evidence file witness
+/// and exhibit lists not later than seven days before any scheduled
+/// hearing.
+deadline claim-objection-exhibits-period: 7.days before ClaimObjectionHearing() counted_by frcp6 cite "Bankr. D. Idaho LBR 3007-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 3011-1(c): the U.S. Attorney may object to an
+/// application for unclaimed funds within 28 days of its service.
+deadline unclaimed-funds-objection-period: 28.days after UnclaimedFundsApplicationServed() counted_by frcp6 cite "Bankr. D. Idaho LBR 3011-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 3014-1: where the court has ordered § 1125 to apply
+/// in a Subchapter V case, the § 1111(b) election is made no later than 14
+/// days before the first scheduled confirmation hearing.
+deadline subchapter-v-election-period: 14.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. D. Idaho LBR 3014-1"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 4001-2(c): a party opposing a motion for relief from
+/// the automatic stay files and serves an objection not later than 17 days
+/// after service of the motion.
+deadline stay-relief-objection-period: 17.days after StayReliefMotionServed() counted_by frcp6 cite "Bankr. D. Idaho LBR 4001-2(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 4001-2(e)(3): unless otherwise ordered, the parties
+/// file their witness and exhibit materials not later than seven days
+/// before any scheduled final hearing.
+deadline stay-relief-final-hearing-period: 7.days before StayReliefFinalHearing() counted_by frcp6 cite "Bankr. D. Idaho LBR 4001-2(e)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 4001-4(b): the landlord or lessor may consent to
+/// receive a rent deposit, or object to the debtor's certification, no
+/// later than 14 days after the date of the clerk's notice.
+deadline rent-deposit-consent-period: 14.days after RentDepositNoticeDated() counted_by frcp6 cite "Bankr. D. Idaho LBR 4001-4(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 4004-1(a)(1): notice of the hearing on an individual
+/// chapter 11 debtor's discharge motion is served at least 21 days before
+/// the hearing.
+deadline chapter-11-discharge-notice-period: 21.days before DischargeMotionHearing() counted_by frcp6 cite "Bankr. D. Idaho LBR 4004-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 4004-1(a)(1): objections to the discharge motion are
+/// filed not later than seven days before the hearing.
+deadline chapter-11-discharge-objection-period: 7.days before DischargeMotionHearing() counted_by frcp6 cite "Bankr. D. Idaho LBR 4004-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 4004-1(b): except in a Subchapter V case, the
+/// individual chapter 11 debtor files the § 522(q) certified statement no
+/// later than 60 days after completing all plan payments.
+deadline discharge-statement-period: 60.days after PlanPaymentsCompleted() counted_by frcp6 cite "Bankr. D. Idaho LBR 4004-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 4004-1(b): within 14 days of the filing of the
+/// certified statement, any interested party may object to it.
+deadline discharge-statement-objection-period: 14.days after DischargeStatementFiled() counted_by frcp6 cite "Bankr. D. Idaho LBR 4004-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 7054-1(a): within 14 days after entry of judgment
+/// the prevailing party may serve and file a cost bill.
+deadline cost-bill-period: 14.days after JudgmentEntered() counted_by frcp6 cite "Bankr. D. Idaho LBR 7054-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 7054-1(a): within 14 days after service of a cost
+/// bill, any party may file and serve specific objections.
+deadline cost-bill-objection-period: 14.days after CostBillServed() counted_by frcp6 cite "Bankr. D. Idaho LBR 7054-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 7056-1(b)(1): a summary judgment motion with its
+/// supporting papers is filed at least 28 days before the hearing.
+deadline summary-judgment-motion-period: 28.days before SummaryJudgmentHearing() counted_by frcp6 cite "Bankr. D. Idaho LBR 7056-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 7056-1(b)(2): the opposing party files its
+/// materials, responsive brief and statement of facts at least 14 days
+/// before the hearing.
+deadline summary-judgment-opposition-period: 14.days before SummaryJudgmentHearing() counted_by frcp6 cite "Bankr. D. Idaho LBR 7056-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 7056-1(b)(3): the moving party may file a reply
+/// brief not less than seven days before the hearing.
+deadline summary-judgment-reply-period: 7.days before SummaryJudgmentHearing() counted_by frcp6 cite "Bankr. D. Idaho LBR 7056-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 9014-1: a party intending to present witnesses at a
+/// contested matter hearing so indicates in its pleadings or in a notice
+/// filed not later than seven days before the hearing.
+deadline witness-notice-period: 7.days before ContestedMatterHearing() counted_by frcp6 cite "Bankr. D. Idaho LBR 9014-1"
+{
+  forum frcp
+}
+
+/// Bankr. D. Idaho LBR 9015-1(b): the parties may consent to a jury trial
+/// before a bankruptcy judge by filing a statement of consent no later than
+/// 14 days after service of the demand.
+deadline jury-consent-period: 14.days after JuryDemandServed() counted_by frcp6 cite "Bankr. D. Idaho LBR 9015-1(b)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed and served on negative notice" by applicant cite "Bankr. D. Idaho LBR 2002-2(d)"
+{
+  note "Negative notice gives at least 14 days unless the FRBP or another Local Rule sets another period (LBR 2002-2(d)(2)); a motion may instead be set for hearing (LBR 2002-2(e)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-opposed "Objection filed and served" -> opposed {
+    authority cite "Bankr. D. Idaho LBR 2002-2(d)"
+    within negative-notice-period
+  }
+  edge-motion-filed-unopposed "No timely objection" -> ruling {
+    authority cite "Bankr. D. Idaho LBR 2002-2(d)"
+  }
+}
+
+state opposed: "Objection filed; hearing set" by opponent cite "Bankr. D. Idaho LBR 2002-2(d)"
+{
+  note "The objecting party schedules a hearing with the calendar clerk and files a separate notice of hearing."
+  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. D. Idaho LBR 2002-2(e)" }
+}
+
+decision ruling: "Motion decided" by court cite "Bankr. D. Idaho LBR 2002-2(d)"
+{
+  note "Without a timely objection the movant files a Statement of No Objection and a proposed order, and the court may grant the relief without further notice or hearing."
+  edge-ruling-granted "Granted" -> decided { authority cite "Bankr. D. Idaho LBR 2002-2(d)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "Bankr. D. Idaho LBR 2002-2(e)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. D. Idaho LBR 1001-1"

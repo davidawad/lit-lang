@@ -1,0 +1,368 @@
+module bankr-gam-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
+
+// The Bankr. M.D. Ga. court's own periods and page limits, counted under
+// FRBP 9006(a): the Local Rules as of October 1, 2026. The FRBP periods
+// (schedules, claims in chapter 7, 12 and 13 cases, the chapter 13 plan,
+// discharge, dischargeability, exemptions, the adversary answer and summons,
+// appeals) are lit/frbp's and are not declared again, nor is the involuntary
+// debtor's creditor list within 7 days after the order for relief (LBR
+// 1007-2(a)(1)(A), FRBP 1007(a)(2)); the 90-day chapter 11 and 70-day
+// subchapter V bar dates fix the time FRBP 3003(c)(3) leaves to the court.
+//
+// Stated in the rules but not declared: the business-day and working-day
+// periods (filing fees an attorney receives paid over within 14 business
+// days, LBR 5080-1; the trustee's pre-confirmation payments within 30 days
+// of a proof of claim unless funds arrive seven working days before, LBR
+// 3015-1(e)(2)); the clock-time periods (a chapter 13 plan not filed within
+// 24 hours of the petition served on all parties, LBR 3015-1(a); an ex
+// parte order's 72 hours to surrender uninsured collateral, LBR
+// 4001-1(d)(3)(B)); deadlines that are an event itself (fees in installments
+// paid by the first date set for the meeting, LBR 1006-1; proof of
+// insurance at the meeting, LBR 4070-1); the deadline that is the later of
+// two dates (a dischargeability complaint by an added creditor, LBR
+// 4007-1(a)); the 45th day after the petition for a motion on the
+// sufficiency of § 521 information, which is § 521(i)'s (LBR 1017-2(g)); the
+// court's and the trustee's own acts (discharge delayed 30 days under FRBP
+// 4004(c)(2), LBR 4004-3; the trustee discharged 30 days after its reports
+// on conversion, LBR 1019-1(b)); and the conditions and caps that are not
+// deadlines (venue over the greater portion of 180 days, LBR 1071-1; an
+// expedited hearing within 10 or fewer days, LBR 2002-1(g); a plan of at
+// least 36 months, LBR 3015-1(d); a trustee moratorium of at most 60 days,
+// LBR 3070-1(b); the one-year and six-month retention of originals, LBR
+// 5005-4(a)(3)-(4)). LBR 3002.1-1's 60 days from the filing of a
+// supplemental FRBP 3002.1(c)-(d) claim to object before it is paid as
+// prepetition is stated but not declared: a cite to the undivided rule
+// `3002.1-1` normalizes as the range `3002.1`..`3002.1` and does not
+// resolve against its `## Rule 3002.1-1` heading.
+/// The court extends the time to file the schedules and statements under LBR
+/// 1007-1(a)(1).
+event SchedulesExtended()
+/// A chapter 13 debtor acquires an asset worth more than $10,000, or becomes
+/// eligible to receive income of more than $10,000 a year, before the final
+/// plan payment (LBR 1009-1(b)).
+event NewAssetAcquired()
+/// A chapter 13 debtor files the LBR 1009-1(b) amendment disclosing a newly
+/// acquired asset or income.
+event NewAssetAmendmentFiled()
+/// The court orders separate administration of a joint case (LBR
+/// 1015-1(b)(3)).
+event SeparationOrdered()
+/// The clerk notifies the debtor and counsel that information and documents
+/// required by § 521 and FRBP 1007 are missing (LBR 1017-2(f)).
+event MissingDocumentsNoticed()
+/// The order dismissing a bankruptcy case is entered (LBR 1017-2(h)).
+event DismissalOrderEntered()
+/// The conversion of a case becomes effective (LBR 1019-1(d)).
+event ConversionEffective()
+/// A professional person commences services for the estate (LBR 2014-1(c)).
+event ServicesCommenced()
+/// An amendment adding a creditor later than 60 days before the original
+/// claims bar date is filed (LBR 3001-1(c)).
+event LateCreditorAmendmentFiled()
+/// The hearing or trial at which property is valued by an expert witness (LBR
+/// 3012-1(b)).
+event ValuationHearing()
+/// The order confirming a chapter 11 plan of a non-individual or subchapter V
+/// debtor is entered (LBR 3022-1(a), 3022-2(a)(1)).
+event ConfirmationOrderEntered()
+/// The trustee requests the debtor's books and records (LBR 4002-1(b)).
+event RecordsRequested()
+/// The § 341 meeting of creditors at which a chapter 7 trustee announces an
+/// abandonment or signs a notice of intent to abandon (LBR 6007-1(a)).
+event TrusteeAbandonmentMeeting()
+/// A debtor's motion to terminate a pending garnishment is served (LBR
+/// 4071-1(b)).
+event GarnishmentMotionServed()
+/// The clerk gives the parties notice of intended destruction of exhibits
+/// after a matter ends and appeal times expire (LBR 5003-1).
+event ExhibitDestructionNoticed()
+/// An entity files a request for the clerk to redact a document (LBR
+/// 5075-1(a)).
+event RedactionRequested()
+/// A plaintiff's motion to dismiss a complaint objecting to discharge under §
+/// 727 is served (LBR 7041-1).
+event DischargeDismissalMotionServed()
+/// The judgment awarding costs is entered (LBR 7054-1(b)).
+event CostsJudgmentEntered()
+/// The prevailing party's Bill of Costs is served (LBR 7054-1(b)).
+event BillOfCostsServed()
+/// The movant's summary judgment brief and Statement of Uncontested Material
+/// Facts are served (LBR 7056-1(b)).
+event SummaryJudgmentBriefServed()
+/// The respondent's summary judgment response, brief or affidavit is served
+/// (LBR 7056-1(c)).
+event SummaryJudgmentResponseServed()
+/// The deadline for a motion, response or brief subject to the LBR 9013-1(d)
+/// page limits (LBR 9013-1(d)(2)).
+event PageLimitedFilingDue()
+/// The clerk notifies a filing party that a required certificate of service
+/// was not filed (LBR 9013-3(b)).
+event ServiceCertificateNoticed()
+/// The initial pretrial conference concludes (LBR 9015-1(b)).
+event InitialPretrialConferenceConcluded()
+
+/// M.D. Ga. LBR 9013-1(d)(1): except on good cause and leave, all motions,
+/// responses and briefs are limited to 20 pages, exhibits excluded (amended
+/// October 1, 2026).
+limit motion {
+  pages <= 20 cite "M.D. Ga. LBR 9013-1(d)"
+} cite "M.D. Ga. LBR 9013-1(d)"
+
+/// M.D. Ga. LBR 9013-1(d)(1): a movant's reply brief may not exceed 10 pages,
+/// exhibits excluded (amended October 1, 2026).
+limit reply-brief {
+  pages <= 10 cite "M.D. Ga. LBR 9013-1(d)"
+} cite "M.D. Ga. LBR 9013-1(d)"
+
+/// M.D. Ga. LBR 1007-1(a)(1): the time to file the schedules and statements
+/// may be extended only to a date not less than five days before the first
+/// date set for the meeting of creditors, and the debtor then serves the
+/// schedules and statement of financial affairs on the trustee not later than
+/// five days before that date.
+deadline extended-schedules-service-period: 5.days before FirstMeetingDate() counted_by frcp6 cite "M.D. Ga. LBR 1007-1(a)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 1009-1(b): a chapter 13 debtor amends the schedules to
+/// disclose an asset or income over $10,000 acquired before the final plan
+/// payment within 60 days after the asset becomes the debtor's property or
+/// the debtor becomes eligible to receive the income.
+deadline new-asset-amendment-period: 60.days after NewAssetAcquired() counted_by frcp6 cite "M.D. Ga. LBR 1009-1(b)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 1009-1(b): the chapter 13 trustee has 90 days after the
+/// amendment is filed to file a plan modification or take other action.
+deadline new-asset-modification-period: 90.days after NewAssetAmendmentFiled() counted_by frcp6 cite "M.D. Ga. LBR 1009-1(b)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 1015-1(b)(3): upon separate administration of a joint case,
+/// the debtors file amended schedules for the separate estates, and in
+/// chapter 11, 12 or 13 separate modified plans, within 14 days following
+/// entry of the order.
+deadline separation-filings-period: 14.days after SeparationOrdered() counted_by frcp6 cite "M.D. Ga. LBR 1015-1(b)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 1017-2(f): missing § 521 and FRBP 1007 information is filed
+/// within 14 days from the date of the clerk's notice; absent filing or a
+/// request for hearing in that time, the case may be dismissed without
+/// further notice or hearing.
+deadline missing-documents-period: 14.days after MissingDocumentsNoticed() counted_by frcp6 cite "M.D. Ga. LBR 1017-2(f)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 1017-2(h): after dismissal, pending contested matters are
+/// deemed moot unless within 14 days after entry of the order of dismissal
+/// the movant requests that the motion remain active.
+deadline pending-motion-retention-period: 14.days after DismissalOrderEntered() counted_by frcp6 cite "M.D. Ga. LBR 1017-2(h)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 1019-1(d): upon conversion, the debtor files or amends the
+/// inventories, schedules and statements of financial affairs, or a
+/// certificate that none is needed, within 14 days of the effective date of
+/// conversion.
+deadline conversion-amendment-period: 14.days after ConversionEffective() counted_by frcp6 cite "M.D. Ga. LBR 1019-1(d)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 2014-1(c)(1): an application to employ a professional made
+/// within 14 days after the filing of the case is deemed contemporaneous; one
+/// made later and asking approval nunc pro tunc must explain the delay and is
+/// approved only on notice and opportunity for hearing.
+deadline contemporaneous-employment-period: 14.days after PetitionFiled() counted_by frcp6 cite "M.D. Ga. LBR 2014-1(c)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 2014-1(c)(1): an application to employ a professional made
+/// within 14 days of the commencement of the professional's services is
+/// deemed contemporaneous.
+deadline services-employment-period: 14.days after ServicesCommenced() counted_by frcp6 cite "M.D. Ga. LBR 2014-1(c)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 3001-1(c): a creditor added by amendment later than 60 days
+/// before the original bar date has 60 days from the filing of the amendment
+/// to file a proof of claim.
+deadline late-creditor-claim-period: 60.days after LateCreditorAmendmentFiled() counted_by frcp6 cite "M.D. Ga. LBR 3001-1(c)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 3001-1(d): in a chapter 11 case other than under subchapter
+/// V, the bar date for proofs of claim or interest is 90 days from the first
+/// scheduled § 341(a) meeting of creditors.
+deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frcp6 cite "M.D. Ga. LBR 3001-1(d)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 3001-1(e): in a subchapter V case, the bar date for proofs of
+/// claim or interest is 70 days after docketing of the order for relief.
+deadline subchapter-v-claim-period: 70.days after OrderForReliefEntered() counted_by frcp6 cite "M.D. Ga. LBR 3001-1(e)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 3012-1(b): a party introducing expert valuation testimony
+/// serves the expert disclosure and any required reports so that they are
+/// received no later than seven days prior to the hearing or trial.
+deadline valuation-expert-disclosure-period: 7.days before ValuationHearing() counted_by frcp6 cite "M.D. Ga. LBR 3012-1(b)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 3022-1(a), 3022-2(a)(1): a non-individual chapter 11 debtor,
+/// or a subchapter V debtor under a consensual plan, files within 14 days of
+/// the entry of the confirmation order a report of the projected date for
+/// substantial consummation.
+deadline consummation-report-period: 14.days after ConfirmationOrderEntered() counted_by frcp6 cite "M.D. Ga. LBR 3022-1(a)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 4002-1(b): upon request and without order, the debtor
+/// produces the listed books and records to the trustee within 14 days of the
+/// request.
+deadline records-production-period: 14.days after RecordsRequested() counted_by frcp6 cite "M.D. Ga. LBR 4002-1(b)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 4071-1(b): the notice of a motion to terminate a garnishment
+/// provides 14 days for a response; absent objection the court may order the
+/// garnished funds released.
+deadline garnishment-response-period: 14.days after GarnishmentMotionServed() counted_by frcp6 cite "M.D. Ga. LBR 4071-1(b)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 5003-1: parties wanting exhibits or documentary evidence
+/// returned contact the court within the 14 days' notice the clerk gives of
+/// their intended destruction.
+deadline exhibit-return-period: 14.days after ExhibitDestructionNoticed() counted_by frcp6 cite "M.D. Ga. LBR 5003-1"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 5075-1(a): the party requesting redaction files a properly
+/// redacted replacement document within 14 days from the date of the request,
+/// or the original returns to the public docket.
+deadline redaction-replacement-period: 14.days after RedactionRequested() counted_by frcp6 cite "M.D. Ga. LBR 5075-1(a)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 6007-1(a)(2): an objection to an abandonment announced or
+/// noticed at the § 341 meeting is filed and served within 14 days after the
+/// meeting, or the property is deemed abandoned.
+deadline trustee-abandonment-objection-period: 14.days after TrusteeAbandonmentMeeting() counted_by frcp6 cite "M.D. Ga. LBR 6007-1(a)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 7041-1(c): a plaintiff's motion to dismiss a § 727 complaint
+/// provides a 21-day opportunity to object from its service.
+deadline discharge-dismissal-objection-period: 21.days after DischargeDismissalMotionServed() counted_by frcp6 cite "M.D. Ga. LBR 7041-1"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 7054-1(b): the prevailing party files a Bill of Costs within
+/// 30 days from the entry of the judgment that awarded the costs.
+deadline bill-of-costs-period: 30.days after CostsJudgmentEntered() counted_by frcp6 cite "M.D. Ga. LBR 7054-1(b)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 7054-1(b): opposing counsel has 21 days from service of the
+/// Bill of Costs to file a response.
+deadline bill-of-costs-response-period: 21.days after BillOfCostsServed() counted_by frcp6 cite "M.D. Ga. LBR 7054-1(b)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 7056-1(b): the response to a summary judgment motion, with
+/// its brief and statement of material facts in dispute, is filed and served
+/// within 21 days of service of the movant's brief and Statement of
+/// Uncontested Material Facts.
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentBriefServed() counted_by frcp6 cite "M.D. Ga. LBR 7056-1(b)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 7056-1(c): the movant files and serves any reply within 14
+/// days after service of the response.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "M.D. Ga. LBR 7056-1(c)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 9013-1(d)(2): a party seeking to exceed the page limits files
+/// a written motion, specifying the pages requested, no later than five days
+/// in advance of the applicable deadline.
+deadline page-extension-motion-period: 5.days before PageLimitedFilingDue() counted_by frcp6 cite "M.D. Ga. LBR 9013-1(d)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 9013-3(b): a missing certificate of service is filed within
+/// 14 days from the clerk's notice, or relief requested, or the motion, brief
+/// or document is dismissed or stricken without further notice or hearing.
+deadline service-certificate-cure-period: 14.days after ServiceCertificateNoticed() counted_by frcp6 cite "M.D. Ga. LBR 9013-3(b)"
+{
+  forum frcp
+}
+
+/// M.D. Ga. LBR 9015-1(b): the parties consent to a jury trial before a
+/// bankruptcy judge by filing statements of consent no later than 30 days
+/// after the conclusion of the initial pretrial conference.
+deadline jury-consent-period: 30.days after InitialPretrialConferenceConcluded() counted_by frcp6 cite "M.D. Ga. LBR 9015-1(b)"
+{
+  forum frcp
+}
+
+start motion-served
+
+state motion-served: "Motion served with notice and opportunity for hearing" by applicant cite "M.D. Ga. LBR 9007-1(a)"
+{
+  note "Unless the Rules name the entities to be served, the movant serves all parties in interest with the motion and a notice complying with LBR 9004-1(c)(5) (LBR 9007-1(a)-(b)); motions, responses and briefs are limited to 20 pages (LBR 9013-1(d))."
+  edge-motion-served-response "Response requesting a hearing filed" -> responded {
+    authority cite "M.D. Ga. LBR 9007-1(c)"
+  }
+  edge-motion-served-unopposed "No objection filed" -> ruling {
+    authority cite "M.D. Ga. LBR 9007-1(d)"
+  }
+}
+
+state responded: "Response filed; hearing on the noticed date" by opponent cite "M.D. Ga. LBR 9007-1(c)"
+{
+  note "The response requests a hearing and states briefly why the respondent opposes the relief; issues not raised are not waived. The hearing is held at the date, time and place the notice provides (LBR 9007-1(c)), as an evidentiary hearing at the first appearance (LBR 9014-1)."
+  edge-responded-hearing "Hearing held" -> ruling { authority cite "M.D. Ga. LBR 9014-1" }
+}
+
+decision ruling: "Motion decided" by court cite "M.D. Ga. LBR 9007-1(d)"
+{
+  note "Absent objection the court may grant the relief without further notice or hearing (LBR 9007-1(d)), on the E-Order the movant submits (LBR 9013-1(a))."
+  edge-ruling-granted "Granted" -> decided { authority cite "M.D. Ga. LBR 9013-1(a)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "M.D. Ga. LBR 9007-1(c)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "M.D. Ga. LBR 9029-1"
+{
+  note "The Rules supplement or, as permitted, modify the FRBP and are construed consistently with them (LBR 9029-1)."
+}

@@ -21,25 +21,18 @@ import core.frcp6.{ frcp6 }
 // Hamer) are FRCP and FRAP authority and belong to lit/frcp and lit/frap;
 // its Ninth Circuit decisions (Eitel v. McCool; Lopez v. Smith) are
 // removed: no reporter text is vendored.
-
 /// A brief or memorandum supporting or opposing a motion: at most 25
 /// pages; one over 10 pages has a table of contents and a table of
 /// authorities, and a party wishing to exceed the limit first moves to do
 /// so (LR 7.1(d)(1)).
-limit motion-memorandum {
-  pages <= 25 cite "D.N.M.I. LR 7.1(d)"
-} cite "D.N.M.I. LR 7.1(d)"
-
+limit motion-memorandum { pages <= 25 cite "D.N.M.I. LR 7.1(d)" } cite "D.N.M.I. LR 7.1(d)"
 /// A reply memorandum: at most 10 pages (LR 7.1(d)(1)).
-limit reply-memorandum {
-  pages <= 10 cite "D.N.M.I. LR 7.1(d)"
-} cite "D.N.M.I. LR 7.1(d)"
+limit reply-memorandum { pages <= 10 cite "D.N.M.I. LR 7.1(d)" } cite "D.N.M.I. LR 7.1(d)"
 
 // A memorandum on a written discovery motion may not exceed "two
 // typewritten, double-spaced pages" (LR 26.2(a)(4)(A)); it stays a note,
 // not a `limit`: the rule states typewritten pages, a form the limit check
 // does not read.
-
 /// A motion that is not a non-hearing motion is filed and noticed for
 /// hearing (LR 7.1(b)(1), (c)(1)).
 event MotionFiled() paper motion-memorandum

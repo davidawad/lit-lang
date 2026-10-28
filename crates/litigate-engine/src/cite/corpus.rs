@@ -145,10 +145,20 @@ impl SourceCorpus {
 /// e.g. the Eighth Circuit's) is split on its `RULE N:` lines instead, each
 /// becoming a `Local Rule N` section. A file that has `## ` headings is
 /// split on those alone: its `RULE N:` lines are body text.
+///
+/// An unsectioned extract titled `INTERNAL OPERATING PROCEDURES` (the
+/// Eighth Circuit's) is split on its outline instead: each indented
+/// `IV. DECIDING THE APPEAL` part line becomes `IOP IV`, each flush
+/// `D. PETITIONS FOR REHEARING` line under it `IOP IV.D`, and each
+/// `APPENDIX A` line `IOP Appendix A`.
 fn parse_sections(text: &str) -> Vec<Section> {
     let mut sections = vec![];
     let mut current: Option<(String, usize, String)> = None;
     let rule_lines_are_headings = !text.lines().any(|line| line.starts_with("## "));
+    let iop_outline = rule_lines_are_headings
+        && text.lines().map(str::trim).find(|line| !line.is_empty())
+            == Some("INTERNAL OPERATING PROCEDURES");
+    let mut iop_part: Option<String> = None;
     for (i, line) in text.lines().enumerate() {
         let rule_heading = line
             .trim()
@@ -158,10 +168,16 @@ fn parse_sections(text: &str) -> Vec<Section> {
                 line.split_once(':')
                     .map(|(number, _)| format!("Local Rule {}", number.trim()))
             });
+        let iop_heading = if iop_outline {
+            iop_outline_heading(line, &mut iop_part)
+        } else {
+            None
+        };
         if let Some(heading) = line
             .strip_prefix("## ")
             .map(str::to_string)
             .or(rule_heading)
+            .or(iop_heading)
         {
             if let Some((h, at, body)) = current.take() {
                 sections.push(Section {
@@ -184,6 +200,41 @@ fn parse_sections(text: &str) -> Vec<Section> {
         });
     }
     sections
+}
+
+/// The `IOP <part>[.<letter>]` or `IOP Appendix <letter>` heading an
+/// internal-operating-procedures outline `line` opens, tracking the
+/// current roman `part` (a flush `I. MOTION PRACTICE` is a lettered
+/// section; an indented `I. ORGANIZATION OF THE COURT` is a part). Titles
+/// are upper case, so a body line like `R. Civ. R. 58 requires.` is not one.
+fn iop_outline_heading(line: &str, part: &mut Option<String>) -> Option<String> {
+    let raw = line.trim_start_matches('\u{c}');
+    let indented = raw.starts_with(char::is_whitespace);
+    let line = raw.trim();
+    if let Some(letter) = line.strip_prefix("APPENDIX ") {
+        if letter.len() == 1 && letter.chars().all(|c| c.is_ascii_uppercase()) {
+            *part = None;
+            return Some(format!("IOP Appendix {letter}"));
+        }
+        return None;
+    }
+    let (designator, title) = line.split_once(". ")?;
+    let title = title.trim();
+    if !title.chars().any(char::is_alphabetic) || title.chars().any(char::is_lowercase) {
+        return None;
+    }
+    let roman = designator
+        .chars()
+        .all(|c| matches!(c, 'I' | 'V' | 'X' | 'L' | 'C' | 'D' | 'M'));
+    if indented && !designator.is_empty() && roman {
+        *part = Some(designator.to_string());
+        return Some(format!("IOP {designator}"));
+    }
+    let letter = designator.len() == 1 && designator.chars().all(|c| c.is_ascii_uppercase());
+    match part {
+        Some(part) if !indented && letter => Some(format!("IOP {part}.{designator}")),
+        _ => None,
+    }
 }
 
 fn load_dir(root: &Path, dir: &Path, files: &mut Vec<(String, String)>) -> Result<()> {
@@ -283,6 +334,23 @@ Rule 13 — Counterclaim and Crossclaim
         assert!(!corpus.lookup_all("Local Rule 34A").is_empty());
         assert!(!corpus.lookup_all("37 C.F.R. § 42.108").is_empty());
         assert!(!corpus.lookup_all("19 U.S.C. § 1337").is_empty());
+    }
+
+    #[test]
+    fn unsectioned_eighth_circuit_iops_resolve_outline_cites() {
+        let text = include_str!("../../../../sources/ca8/ca8-iops.txt");
+        let corpus = SourceCorpus::from_files([(
+            "sources/ca8/ca8-iops.txt".to_string(),
+            text.to_string(),
+        )]);
+
+        for heading in ["IOP IV", "IOP IV.D", "IOP IV.F", "IOP Appendix A"] {
+            let hits = corpus.lookup_all(heading);
+            assert_eq!(hits.len(), 1, "expected one section for {heading}");
+        }
+        let mandate = &corpus.lookup_all("IOP IV.F")[0];
+        assert!(mandate.1.line > 0);
+        assert!(mandate.1.body.to_lowercase().contains("mandate"));
     }
 
     #[test]

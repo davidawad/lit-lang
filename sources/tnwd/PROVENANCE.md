@@ -4,6 +4,7 @@
 - Source: https://www.tnwd.uscourts.gov/sites/tnwd/files/Local%20Rules%20%E2%80%93%20Revised%2011.17.%202025%20%28Addition%20of%20LR%2043.1%28h%29%29.pdf (official site; 174 pages, sha256 a6dcdc4ae6458d0a3397f4063af24d6cfd7d00273ae8f4beb14906020078a958).
 - Edition: W.D. Tenn. Local Rules, "Revised November 17, 2025" as stated on the document; linked from https://www.tnwd.uscourts.gov/local-rules (the only local-rules PDF on the page besides the separate Local Patent Rules, not vendored).
 - Also the criminal local rules (lg-gddt): LCRR 12.1 and following (Local Criminal Rules), first listed at extract line 124.
+- Criminal forum (lg-gddt): tnwd-criminal.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Fetched via curl (single document, first request succeeded, no block encountered).
 - Extract sha256 f064c65ee2748e1ed0ed7c937337552231c86cb846f13feadd8a085ea3f7af15. Raw extract, not yet sectioned into `## <ref>` form.

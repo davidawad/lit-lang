@@ -1,0 +1,128 @@
+module nm-district-court-civil.civil
+
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "NMRA 1-003"
+{
+  note "A civil action is commenced by filing a complaint with the court (NMRA 1-003). The summons directs the defendant to serve a responsive pleading or motion within thirty (30) days after service of the summons (NMRA 1-004(B)(2)). Service of process shall be made with reasonable diligence, and the original summons with proof of service is filed with the court (NMRA 1-004(C)(2)); unlike FRCP 4(m) the rule states no fixed service period. Periods in this package are stated, not counted: computation is NMRA 1-006(A). No leading decision is named."
+  edge-complaint-filed-answer-due "Summons and complaint served" -> answer-due {
+    authority cite "NMRA 1-004(C)"
+  }
+  edge-complaint-filed-dismissed-inactivity "No significant action taken" -> dismissed-inactivity {
+    authority cite "NMRA 1-041(E)"
+  }
+}
+
+decision answer-due: "Answer, motion or default" by office cite "NMRA 1-012(A)"
+{
+  note "A defendant serves an answer within thirty (30) days after service of the summons and complaint; an answer to a cross-claim is due within thirty (30) days after its service, and a reply to a counterclaim within thirty (30) days after service of the answer (NMRA 1-012(A)). Failure to state a claim upon which relief can be granted may be raised by motion made before pleading (NMRA 1-012(B)(6))."
+  edge-answer-due-default "No response" -> default-entered { authority cite "NMRA 1-055(A)" }
+  edge-answer-due-motion "Pleading motion filed" -> pleading-motion {
+    authority cite "NMRA 1-012(B)"
+  }
+  edge-answer-due-answer "Answer filed" -> case-management { authority cite "NMRA 1-012(A)" }
+}
+
+decision pleading-motion: "Pleading motion decided" by court cite "NMRA 1-012(B)"
+{
+  note "If the court denies the motion or postpones its disposition until trial, the responsive pleading is served within ten (10) days after the court's action, unless the court fixes a different time (NMRA 1-012(A)(1)). If matters outside the pleading are presented on a 1-012(B)(6) motion and not excluded, it is treated as a summary judgment motion under NMRA 1-056 (NMRA 1-012(B)). After amendment, a party pleads in response within the time remaining to respond to the original pleading or within ten (10) days after service of the amended pleading, whichever is longer (NMRA 1-015(A)). The outline named no leading decisions."
+  edge-pleading-motion-dismissed "Granted with prejudice" -> dismissed-pleading {
+    authority cite "NMRA 1-012(B)"
+  }
+  edge-pleading-motion-leave "Granted with leave to amend" -> case-management {
+    authority cite "NMRA 1-015(A)"
+  }
+  edge-pleading-motion-denied "Denied: responsive pleading within ten (10) days" -> case-management {
+    authority cite "NMRA 1-012(A)"
+  }
+}
+
+terminal default-entered: "Default entered" outcome [loss] cite "NMRA 1-055(A)"
+{
+  note "The clerk enters the default of a party who has failed to plead or otherwise defend (NMRA 1-055(A)). Judgment by default is on application to the court; a party who has appeared is served with written notice of the application at least three (3) days before the hearing (NMRA 1-055(B)). For good cause shown the court may set aside an entry of default, and a default judgment under NMRA 1-060 (NMRA 1-055(C)). Setting aside is not modeled."
+}
+
+terminal dismissed-inactivity: "Dismissed for inactivity" outcome [loss, dismissal] cite "NMRA 1-041(E)"
+{
+  note "Any party may move to dismiss a claim with prejudice if the party asserting it has taken no significant action to bring it to trial or final disposition within two (2) years from its filing, unless that party is in compliance with a NMRA 1-016 order or an approved stipulation (NMRA 1-041(E)(1)). Unless a pretrial scheduling order has been entered, the court may dismiss without prejudice a claim with no significant action within the previous one hundred and eighty (180) days; within thirty (30) days after service of the order any party may move for reinstatement, which the court grants on good cause shown (NMRA 1-041(E)(2))."
+}
+
+terminal dismissed-pleading: "Dismissed on pleading motion" outcome [win, dismissal] cite "NMRA 1-012(B)"
+{
+  note "Dismissal for failure to state a claim upon which relief can be granted (NMRA 1-012(B)(6))."
+}
+
+state case-management: "Scheduling order" by court cite "NMRA 1-016(B)"
+{
+  note "The pretrial scheduling order is filed as soon as practicable but in no event more than one hundred twenty (120) days after filing of the complaint, and is modified only by order on good cause; if no scheduling order is entered, the court sets the case for trial no later than eighteen (18) months after the filing of the complaint (NMRA 1-016(B))."
+  edge-case-management-discovery "Scheduling order entered" -> discovery {
+    authority cite "NMRA 1-026(A)"
+  }
+}
+
+state discovery: "Discovery" by applicant cite "NMRA 1-026(A)"
+{
+  note "Discovery methods are NMRA 1-026(A) and scope 1-026(B); an order compelling discovery is NMRA 1-037(A) and sanctions for failure to comply with an order NMRA 1-037(B)."
+  edge-discovery-sj "Summary judgment motion filed" -> sj-motion { authority cite "NMRA 1-056(D)" }
+  edge-discovery-settle "Settled or voluntarily dismissed" -> settled {
+    authority cite "NMRA 1-041(A)"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial { authority cite "NMRA 1-016(D)" }
+}
+
+decision sj-motion: "Summary judgment motion decided" by court cite "NMRA 1-056(C)"
+{
+  note "A motion is considered only if filed a reasonable time before trial (NMRA 1-056(D)(1)). A party opposing the motion submits a memorandum within fifteen (15) days after service of the motion, and the movant may reply within fifteen (15) days after service of that memorandum (NMRA 1-056(D)(2)). Judgment is rendered if there is no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law (NMRA 1-056(C)). The outline named no leading decisions."
+  edge-sj-motion-granted "Granted" -> judgment-for-movant { authority cite "NMRA 1-056(C)" }
+  edge-sj-motion-denied "Denied or partly denied" -> trial { authority cite "NMRA 1-016(D)" }
+}
+
+terminal judgment-for-movant: "Judgment for movant" outcome [win, judgment] cite "NMRA 1-056(C)"
+{
+  note "Judgment for the movant on summary judgment or as a matter of law (NMRA 1-056(C), 1-050(B)). Partial summary judgment is not modeled."
+}
+
+state trial: "Trial (jury or bench)" by court cite "NMRA 1-038(A)"
+{
+  note "A party demands a jury by serving a written demand no later than ten (10) days after service of the last pleading directed to the issue (NMRA 1-038(A)); a party demanding a six-person jury deposits a non-refundable jury fee of one hundred fifty dollars ($150.00) at filing, and a party demanding a twelve-person jury three hundred dollars ($300.00), with the same sum again for each later trial day the jury attends (NMRA 1-038(C)). After a bench trial, a party may request findings of fact and conclusions of law no later than ten (10) days after the court announces its decision (NMRA 1-052(B))."
+  edge-trial-post "Verdict or decision" -> post-trial { authority cite "NMRA 1-050(B)" }
+}
+
+decision post-trial: "Post-trial motions decided" by court cite "NMRA 1-050(B)"
+{
+  note "A renewed motion for judgment as a matter of law is filed no later than thirty (30) days after entry of judgment, or thirty (30) days after the jury was discharged if it addresses an issue not decided by a verdict (NMRA 1-050(B)). A motion for a new trial is filed not later than thirty (30) days after entry of the judgment (NMRA 1-059(B)), as is a motion to alter, amend or reconsider a final judgment (NMRA 1-059(E)) and a motion to amend findings (NMRA 1-052(D)). A motion for relief from judgment for reasons (1), (2) and (3) is made not more than one (1) year after the judgment (NMRA 1-060(B))."
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+    authority cite "NMRA 1-058(D)"
+  }
+  edge-post-trial-jmol "Judgment as a matter of law granted" -> judgment-for-movant {
+    authority cite "NMRA 1-050(B)"
+  }
+}
+
+state judgment-entered: "Judgment entered" by office cite "NMRA 1-058(D)"
+{
+  note "On signing, an order or judgment is filed promptly in the clerk's office and that filing constitutes its entry (NMRA 1-058(D)). The party recovering costs files an itemized cost bill within fifteen (15) days after filing of the final judgment or waives costs; objections are due within ten (10) days after service of the cost bill (NMRA 1-054(D)(4)). A motion for attorney fees is filed and served no later than fifteen (15) days after entry of judgment unless a statute or order provides otherwise (NMRA 1-054(E)(2)). Execution may issue on entry unless the court orders otherwise (NMRA 1-062(A))."
+  edge-judgment-entered-appeal "Next step" -> appeal-decision { authority cite "NMRA 12-201(A)" }
+}
+
+decision appeal-decision: "Notice of appeal within time?" by applicant cite "NMRA 12-201(A)"
+{
+  note "A notice of appeal is filed within thirty (30) days after the judgment or order appealed from is filed in the district court clerk's office (NMRA 12-201(A)(1)(b)); the three (3)-day mailing period of NMRA 12-308(B) does not apply (NMRA 12-201(A)(2)). A timely motion under NMRA 1-050(B), 1-052(D) or 1-059, or a 1-060(B) motion filed not later than thirty (30) days after the judgment, restarts the full time from the order disposing of the last such motion (NMRA 12-201(D)(1))."
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken { authority cite "NMRA 12-201(A)" }
+  edge-appeal-decision-none "No notice filed" -> final-no-appeal { authority cite "NMRA 12-201(A)" }
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "NMRA 12-201(A)"
+{
+  note "Continues in lit/nm-state-appellate: appeals not reserved to the Supreme Court go to the Court of Appeals (NMRA 12-102(B))."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "NMRA 12-201(A)"
+{
+  note "Final judgment with no notice of appeal filed in time."
+}
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "NMRA 1-041(A)"
+{
+  note "A plaintiff may dismiss by notice before service of an answer or other responsive pleading, or by stipulation of all parties who have appeared, without prejudice unless stated otherwise (NMRA 1-041(A)(1)). Settlement terms are not modeled."
+}

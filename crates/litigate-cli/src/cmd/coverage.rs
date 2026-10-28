@@ -107,7 +107,7 @@ const JURISDICTIONS: [(&str, &str, &str); 56] = [
 /// jurisdiction (a [`JURISDICTIONS`] directory), so the package keeps its
 /// row once its outline is deleted. List a package here when it is
 /// promoted.
-const PROMOTED: [(&str, &str); 40] = [
+const PROMOTED: &[(&str, &str)] = &[
     ("ak-superior", "alaska"),
     ("ak-supreme", "alaska"),
     ("ca-court-of-appeal", "california"),
@@ -132,6 +132,7 @@ const PROMOTED: [(&str, &str); 40] = [
     ("ndctapp", "north-dakota"),
     ("nj-appellate-civil", "new-jersey"),
     ("nj-superior-law", "new-jersey"),
+    ("nm-state-civil", "new-mexico"),
     ("oh-appellate", "ohio"),
     ("oh-common-pleas", "ohio"),
     ("pa-appellate-civil", "pennsylvania"),
@@ -272,7 +273,8 @@ fn split(
     by_slug: &ByJurisdiction,
 ) -> Result<(ByJurisdiction, Vec<Package>), Failure> {
     let forums: BTreeMap<&str, &'static str> = PROMOTED
-        .into_iter()
+        .iter()
+        .copied()
         .chain(
             by_slug
                 .iter()
@@ -537,7 +539,7 @@ mod tests {
 
     #[test]
     fn every_promoted_forum_names_a_jurisdiction() {
-        for (forum, slug) in PROMOTED {
+        for &(forum, slug) in PROMOTED {
             assert!(
                 JURISDICTIONS.iter().any(|(s, _, _)| *s == slug),
                 "{forum}: `{slug}`"

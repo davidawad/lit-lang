@@ -81,6 +81,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | first-circuit-court-of-appeals | `lit/ca1` | 0 | 1 | 9 | 0 |
 | tenth-circuit-court-of-appeals | `lit/ca10` | 15 | 0 | 15 | 0 |
 | eleventh-circuit-court-of-appeals | `lit/ca11` | 7 | 0 | 14 | 0 |
+| second-circuit-court-of-appeals | `lit/ca2` | 20 | 0 | 20 | 0 |
 | fourth-circuit-court-of-appeals | `lit/ca4` | 19 | 0 | 19 | 0 |
 | fifth-circuit-court-of-appeals | `lit/ca5` | 9 | 0 | 9 | 0 |
 | sixth-circuit-court-of-appeals | `lit/ca6` | 10 | 0 | 10 | 0 |

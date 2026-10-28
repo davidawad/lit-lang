@@ -1,0 +1,54 @@
+# The U.S. District Court for the Western District of Wisconsin's local
+# rules in criminal cases as a local-rule layer over lit/frcrimp (28
+# U.S.C. § 2071; FRCrimP 57(a)). The court serves five Local Rules (dated
+# 5/2018; sources/wiwd) and no local criminal rules: its current
+# local-rules PDF, re-read on 2026-10-28, and its local-rules page list
+# nothing else. None of the five states a period for a criminal case, so
+# this layer declares no deadline: every FRCrimP, Speedy Trial Act and
+# FRAP 4(b) period is lit/frcrimp's (one source of truth), and the
+# package records which of the court's rules reach a criminal case. The
+# court's Speedy Trial Act plan (18 U.S.C. § 3165), its Administrative
+# Procedures for Electronic Filing and Service and any standing criminal
+# orders are not vendored. in_force is the edition's date (5/2018, read as
+# May 1, 2018); earlier editions are not vendored. An appeal goes to the
+# Seventh Circuit under lit/frcrimp's FRAP 4(b) period and lit/ca7.
+[package]
+name = "wiwd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "wiwd-criminal-local-rules"
+forum = "wiwd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Western District of Wisconsin: Local Rules in Criminal Cases"
+description = "The U.S. District Court for the Western District of Wisconsin's local rules in criminal cases as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp). The court has no local criminal rules, and its five Local Rules state no period for a criminal case, so the layer declares no deadline."
+in_force = "2018-05-01"
+known_at = "2026-10-28"
+unknown_before = "2018-05-01"
+jurisdiction = "U.S. District Court for the Western District of Wisconsin (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "wiwd-lr"
+issuer = "U.S. District Court for the Western District of Wisconsin"
+date = "2018-05-01"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.wiwd-lr]
+title = "Local Rules of the United States District Court for the Western District of Wisconsin (dated 5/2018)"
+url = "https://www.wiwd.uscourts.gov/sites/default/files/Local_Rules.pdf"
+path = "sources/wiwd/wiwd-local-rules-sectioned.txt"
+path_sha256 = "24fe18cfdc475ed00773efcc9543061a6fe318741140fe3839903184212f49f4"
+sha256 = "a538634232b7809314ff7baa9c1947dad3931c8dac4782083eddc2de74880ff9"
+as_of = "2018-05-01"
+cite_prefixes = ["W.D. Wis. L.R."]
+section_heading = "Rule {n}"

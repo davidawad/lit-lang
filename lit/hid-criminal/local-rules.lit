@@ -1,0 +1,358 @@
+module hid-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The District of Hawaii's own criminal periods, counted under the
+// criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here; for a self-represented
+// defendant three days are added to a response time except after e-mail,
+// CM/ECF, personal or hand delivery (CrimLR 81.1(d)).
+//
+// Periods that are FRCrimP periods stay with the Federal Rules and are
+// only named here: the Rule 16.1 discovery conference no later than 14
+// days after arraignment (CrimLR 16(c)(1)), FRCrimP 16.1(a)'s period; the
+// draft presentence report no less than thirty-five (35) days before
+// sentencing and the Sentencing Statement within fourteen (14) days after
+// receiving it (CrimLR 32.2(b)(2), (3)), FRCrimP 32(e)(2)'s and 32(f)(1)'s
+// periods; appeals from a magistrate judge's nondispositive order and
+// objections to findings and recommendations within fourteen (14) days
+// after service (CrimLR 57.3(b), 57.4(b)), FRCrimP 59(a)'s and 59(b)(2)'s
+// periods; and the notice of appeal from a magistrate judge's misdemeanor
+// conviction within fourteen (14) days after entry of judgment (CrimLR
+// 58.3(a)), FRCrimP 58(g)(2)(B)'s period.
+//
+// Conditions that are not deadlines from an event stay in notes: the
+// Criminal Scheduling Order sets the discovery conference "on or about"
+// 14 days after arraignment, motions "approximately six weeks" before
+// trial and responses "approximately one week" after the motions (CrimLR
+// 2.1(d)), targets the order fixes; a position on a multi-defendant
+// continuance is due by 12:00 p.m. on the working day before a scheduled
+// hearing if that is earlier than the three business days below (CrimLR
+// 2.2), and the government's memorandum for a plea without an agreement
+// is due by 12:00 p.m. on the working day before the hearing (CrimLR
+// 32.1(b)), clock times the counting rule does not count; chambers copies
+// may be mailed no later than the business day after filing (CrimLR
+// 10.3(c)(2)); sentencing is set not less than fourteen (14) weeks after
+// an adjudication of guilt (CrimLR 32.2(b)(1)), a floor on the setting; a
+// continuance to retain counsel does not exceed seven (7) days at any one
+// time (CrimLR 44.2(c)); an appeal of a detention or release order is
+// heard "typically within two business days" (CrimLR 57.7(d)); a sealed
+// warrant or order is unsealed one (1) year after its file or expiration
+// date (CrimLR 79.2), a period in years the counting rule does not count;
+// on a misdemeanor appeal, if no transcript is ordered within fourteen
+// (14) days after the notice, the record is deemed complete fourteen (14)
+// days after the notice (CrimLR 58.3(b)).
+//
+// The earlier D. Haw. criminal outline's FRCrimP flow and its decisions
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+/// A brief on an appeal from a magistrate judge's misdemeanor conviction:
+/// not more than twenty (20) pages unless otherwise ordered (D. Haw.
+/// CrimLR 58.3(e)).
+limit misdemeanor-appeal-brief {
+  pages <= 20 cite "D. Haw. CrimLR 58.3(e)"
+} cite "D. Haw. CrimLR 58.3(e)"
+
+/// A motion to continue trial is filed in a multi-defendant case in which
+/// the parties cannot agree (D. Haw. CrimLR 2.2).
+event MultiDefendantContinuanceMotionFiled()
+/// The trial conference before the district judge is scheduled (D. Haw.
+/// CrimLR 2.3(b)).
+event TrialConferenceScheduled()
+/// A motion to file a document under seal is filed (D. Haw. CrimLR
+/// 5.2(b)(2)).
+event SealingMotionFiled()
+/// The court denies a motion to file a document under seal (D. Haw.
+/// CrimLR 5.2(b)(2)).
+event SealingMotionDenied()
+/// A motion to file publicly a matter another party designated
+/// confidential is filed (D. Haw. CrimLR 5.2(b)(3)).
+event PublicFilingMotionFiled()
+/// A hearing is scheduled that a party may move to seal (D. Haw. CrimLR
+/// 5.3(b)).
+event HearingScheduled()
+/// A motion to seal a hearing is filed (D. Haw. CrimLR 5.3(b)).
+event HearingSealingMotionFiled()
+/// A motion or response deadline set by the Criminal Scheduling Order
+/// falls due (D. Haw. CrimLR 12.2(a)(1)).
+event MotionDeadline()
+/// A response to a motion is filed (D. Haw. CrimLR 12.2(a)(1)).
+event ResponseFiled()
+/// A motion or opposition is filed that another party may join (D. Haw.
+/// CrimLR 12.4).
+event JoinableFilingMade()
+/// The defendant is arraigned (D. Haw. CrimLR 16(b)).
+event Arraigned()
+/// The parties agree at the plea that expedited sentencing is warranted
+/// and the guilty plea is entered (D. Haw. CrimLR 32.2(h)).
+event ExpeditedPleaEntered()
+/// The presiding judge grants expedited sentencing on a change of plea
+/// (D. Haw. CrimLR 32.2(h)).
+event ExpeditedSentencingGranted()
+/// The parties receive the draft presentence report in an expedited
+/// sentencing (D. Haw. CrimLR 32.2(h)).
+event ExpeditedDraftPsrReceived()
+/// The sentencing date in an expedited sentencing (D. Haw. CrimLR
+/// 32.2(h)).
+event ExpeditedSentencingScheduled()
+/// A transcript is ordered on an appeal from a magistrate judge's
+/// misdemeanor conviction (D. Haw. CrimLR 58.3(b)).
+event AppealTranscriptOrdered()
+/// The record on a misdemeanor appeal is complete (D. Haw. CrimLR
+/// 58.3(e)).
+event AppealRecordComplete()
+/// The appellant's brief is served (D. Haw. CrimLR 58.3(e)).
+event AppellantBriefServed() paper misdemeanor-appeal-brief
+/// The appellee's brief is served (D. Haw. CrimLR 58.3(e)).
+event AppelleeBriefServed() paper misdemeanor-appeal-brief
+/// A party receives the prevailing party's draft of a proposed order
+/// requiring stipulation or approval (D. Haw. CrimLR 59.1).
+event ProposedOrderDraftReceived()
+/// The court enters an order (D. Haw. CrimLR 60.1).
+event OrderEntered()
+/// A sealing order on a search warrant, pen register, trap and trace or
+/// tracking order expires (D. Haw. CrimLR 79.2).
+event SealingOrderExpires()
+/// The clerk notifies a self-represented defendant that a document or item
+/// presented for filing cannot be scanned (D. Haw. CrimLR 81.1(c)(3)).
+event UnscannableFilingNoticed()
+
+/// D. Haw. CrimLR 2.2: where the parties in a multi-defendant case cannot
+/// agree to a continuance, each party indicates its position in writing no
+/// later than three (3) business days after the filing of the motion to
+/// continue (or by noon of the working day before a scheduled hearing, if
+/// earlier).
+deadline continuance-position: 3.business_days after MultiDefendantContinuanceMotionFiled() counted_by frcrimp45 cite "D. Haw. CrimLR 2.2"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 2.3(b): no less than one week before the trial
+/// conference, the parties meet and confer and file a Joint Trial
+/// Presentation Statement.
+deadline joint-trial-presentation-statement: 7.days before TrialConferenceScheduled() counted_by frcrimp45 cite "D. Haw. CrimLR 2.3(b)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 5.2(b)(2): any opposition to a motion to file under seal
+/// is due no later than seven (7) days after the filing of the motion.
+deadline sealing-opposition: 7.days after SealingMotionFiled() counted_by frcrimp45 cite "D. Haw. CrimLR 5.2(b)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 5.2(b)(2): if the court denies the motion, the movant
+/// informs the court within four (4) days whether it withdraws the
+/// document or has it filed publicly; otherwise the document is returned.
+deadline sealing-denial-election: 4.days after SealingMotionDenied() counted_by frcrimp45 cite "D. Haw. CrimLR 5.2(b)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 5.2(b)(3): within seven (7) days after a motion to file
+/// a matter publicly is filed, any party may oppose it and seek to have the
+/// matter sealed.
+deadline public-filing-opposition: 7.days after PublicFilingMotionFiled() counted_by frcrimp45 cite "D. Haw. CrimLR 5.2(b)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 5.3(b): a motion to seal a hearing is filed no later
+/// than five (5) days before the scheduled hearing.
+deadline hearing-sealing-motion: 5.days before HearingScheduled() counted_by frcrimp45 cite "D. Haw. CrimLR 5.3(b)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 5.3(b): no later than three (3) days after the filing of
+/// a motion to seal a hearing, any person may file an opposition.
+deadline hearing-sealing-opposition: 3.days after HearingSealingMotionFiled() counted_by frcrimp45 cite "D. Haw. CrimLR 5.3(b)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 12.2(a)(1): a motion for leave to continue a motion or
+/// response deadline is filed at least one (1) day before the deadline.
+deadline deadline-continuance-motion: 1.days before MotionDeadline() counted_by frcrimp45 cite "D. Haw. CrimLR 12.2(a)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 12.2(a)(1): unless authorized or directed by the court,
+/// no reply is filed; a motion for leave to file a reply is filed within
+/// two (2) days after the filing of the response.
+deadline reply-leave-motion: 2.days after ResponseFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Haw. CrimLR 12.2(a)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 12.4: except with leave of court for good cause, a
+/// substantive joinder in a motion or opposition is filed and served within
+/// three (3) days of the filing of the motion or opposition joined.
+deadline joinder: 3.days after JoinableFilingMade() counted_by frcrimp45 cite "D. Haw. CrimLR 12.4"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 16(b): a defendant who does not request the discovery
+/// CrimLR 16(a) describes files a notice to the government within five (5)
+/// days after arraignment, which relieves the government of those
+/// obligations.
+deadline discovery-declination: 5.days after Arraigned() counted_by frcrimp45 cite "D. Haw. CrimLR 16(b)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 32.2(b)(4): not less than fourteen (14) days before the
+/// sentencing date, the final presentence report addressing any unresolved
+/// objections is submitted to the court and the parties under seal.
+deadline final-psr: 14.days before SentencingScheduled() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(b)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 32.2(c): not less than fourteen (14) days before the
+/// sentencing date, the government may file a motion under USSG § 5K1.1 or
+/// 18 U.S.C. § 3553(e).
+deadline substantial-assistance-motion: 14.days before SentencingScheduled() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(c)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 32.2(d): not less than ten (10) days before the
+/// sentencing date, a party seeking an evidentiary hearing files a request
+/// with its witnesses, exhibits and expected duration.
+deadline evidentiary-hearing-request: 10.days before SentencingScheduled() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(d)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 32.2(d): the opposing party responds, and files its own
+/// witness and exhibit lists if it would call witnesses, seven (7) days
+/// before the sentencing date.
+deadline evidentiary-hearing-response: 7.days before SentencingScheduled() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(d)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 32.2(e): not less than five (5) days before the
+/// sentencing date, sentencing memoranda are filed by defense counsel
+/// responding to a government motion, any party seeking a variance, and any
+/// party responding to objections in the Sentencing Statements.
+deadline sentencing-memoranda: 5.days before SentencingScheduled() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(e)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 32.2(h): where the parties agree at the plea that
+/// expedited sentencing is warranted, they file a Joint Request for
+/// Expedited Sentencing within one (1) business day of the entry of the
+/// guilty plea.
+deadline expedited-sentencing-request: 1.business_days after ExpeditedPleaEntered() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(h)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 32.2(h): where expedited sentencing is granted, the draft
+/// presentence report is issued no later than thirty (30) days after the
+/// change of plea.
+deadline expedited-draft-psr: 30.days after ExpeditedSentencingGranted() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(h)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 32.2(h): the parties file Sentencing Statements within
+/// three (3) days of receiving the expedited draft presentence report.
+deadline expedited-sentencing-statements: 3.days after ExpeditedDraftPsrReceived() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(h)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 32.2(h): in an expedited sentencing the final
+/// presentence report is submitted no less than three (3) days before
+/// sentencing.
+deadline expedited-final-psr: 3.days before ExpeditedSentencingScheduled() counted_by frcrimp45 cite "D. Haw. CrimLR 32.2(h)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 58.3(b): within thirty-five (35) days after a transcript
+/// has been ordered, the original and one copy are filed with the clerk.
+deadline misdemeanor-appeal-transcript: 35.days after AppealTranscriptOrdered() counted_by frcrimp45 cite "D. Haw. CrimLR 58.3(b)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 58.3(e): unless the appellant elected an abbreviated
+/// appeal, the appellant serves and files a brief within twenty-one (21)
+/// days after the record on appeal is complete; the district judge may
+/// alter the periods.
+deadline misdemeanor-appellant-brief: 21.days after AppealRecordComplete() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Haw. CrimLR 58.3(e)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 58.3(e): the appellee serves and files a responsive
+/// brief within twenty-one (21) days after service of the appellant's
+/// brief.
+deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Haw. CrimLR 58.3(e)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 58.3(e): the appellant may serve and file a reply brief
+/// within seven (7) days after service of the appellee's brief.
+deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Haw. CrimLR 58.3(e)"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 59.1: objections to a proposed order requiring
+/// stipulation or approval as to form are e-mailed to chambers within one
+/// (1) day of receiving the prevailing party's draft.
+deadline proposed-order-objection: 1.days after ProposedOrderDraftReceived() counted_by frcrimp45 cite "D. Haw. CrimLR 59.1"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 60.1: a motion for reconsideration asserting manifest
+/// error of law or fact is filed within fourteen (14) days of the court's
+/// order; reconsideration of a case-dispositive order follows FRCP 59 or
+/// 60.
+deadline reconsideration-manifest-error: 14.days after OrderEntered() counted_by frcrimp45 cite "D. Haw. CrimLR 60.1"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 79.2: at least sixty (60) days before a sealing order
+/// expires, the clerk notifies the Criminal Chief of the United States
+/// Attorney's Office of the unsealing date; the government may move to
+/// extend the sealing order.
+deadline unsealing-notice: 60.days before SealingOrderExpires() counted_by frcrimp45 cite "D. Haw. CrimLR 79.2"
+{
+  forum frcrimp
+}
+
+/// D. Haw. CrimLR 81.1(c)(3)(B): if a self-represented defendant's
+/// document cannot be scanned, the clerk notifies the litigant to serve it
+/// by other means within three (3) business days.
+deadline unscannable-filing-service: 3.business_days after UnscannableFilingNoticed() counted_by frcrimp45 cite "D. Haw. CrimLR 81.1(c)"
+{
+  forum frcrimp
+}

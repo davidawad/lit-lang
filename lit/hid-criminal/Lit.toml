@@ -1,0 +1,54 @@
+# The U.S. District Court for the District of Hawaii's Criminal Local
+# Rules (CrimLR) as a local-rule layer over lit/frcrimp (28 U.S.C. § 2071;
+# FRCrimP 57(a)): it declares only the periods and limits the local
+# criminal rules themselves state and re-encodes no FRCrimP, Speedy Trial
+# Act or FRAP 4(b) period (one source of truth: lit/frcrimp). Each period
+# is counted under FRCrimP 45(a), which governs "any local rule", so each
+# deadline names `forum frcrimp`. The rules are the edition effective
+# January 1, 2023 (filed December 16, 2022; sources/fed-dhaw); no later
+# amendment order was found on the court's page, and earlier editions are
+# not vendored, so a query before January 1, 2023 is a hole in the
+# corpus. Attorney admission and discipline (CrimLR 83.1 to 84.1) are not
+# part of the criminal case and are not encoded; habeas proceedings
+# (CrimLR 85.1) belong to lit/habeas. An appeal goes to the Ninth Circuit
+# under lit/frcrimp's FRAP 4(b) period.
+[package]
+name = "hid-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "hid-criminal-local-rules"
+forum = "hid-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of Hawaii: Criminal Local Rules"
+description = "The District of Hawaii's Criminal Local Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): positions on a multi-defendant continuance, the joint trial presentation statement, sealing motions and their oppositions, motion continuances, replies and joinders, declining discovery, the final presentence report and sentencing motion, hearing and memorandum schedule, expedited sentencing, the transcript, briefs and page limit on an appeal from a magistrate judge's conviction, proposed-order objections, reconsideration, sealed-warrant notice and filing by self-represented defendants."
+in_force = "2023-01-01"
+known_at = "2026-10-28"
+unknown_before = "2023-01-01"
+jurisdiction = "U.S. District Court for the District of Hawaii (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "dhaw-crimlr"
+issuer = "U.S. District Court for the District of Hawaii"
+date = "2023-01-01"
+designation = "Criminal Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.dhaw-crimlr]
+title = "Criminal Local Rules of the U.S. District Court for the District of Hawaii (effective January 1, 2023)"
+url = "https://www.hid.uscourts.gov/docs/localrules/USDC%20HID%20Criminal%20Local%20Rules%20Final%2012.16.2022.pdf"
+path = "sources/fed-dhaw/dhaw-criminal-local-rules-2023-01-01-sectioned.txt"
+path_sha256 = "3edc553a908be81301db8f8ce3cd479423cbf3d75916345ffc8644af85caf031"
+sha256 = "12d2ec99eec2289197a10b0f89bf79ee66c1401e96f0cb1ed7eaebbaea579af6"
+as_of = "2023-01-01"
+cite_prefixes = ["D. Haw. CrimLR"]
+section_heading = "CrimLR {n}"

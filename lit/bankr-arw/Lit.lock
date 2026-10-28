@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-arw-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:51848b4614b42277e9ba2156af97a7ec15be368aeb728abcf740b888f405c1ea"
+semantic = "sha256:22c0c7a94831eddf0f5cfa4e172777b27e699775890e27102cad86782bd5c3dc"
+texts = [
+    "arwb-lbr sources/bankr-arw/arwb-lbr-complete.txt sha256:888c2c8e99549699326e3544388e4aff41d8b9f42f5f26b30be7a5fb10a4083f",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-arw"
-version = "0.0.1"
-language = 1
-source = "sha256:5db0bc8b61ab8bee9f2ef8ab03c81a1976d3e4a0de5b9e1b0aec643eea62a7a0"
-semantic = "sha256:5b2ca1f1d00881818ddbace9cf3fad1b2cba6d17631a8cc4eca8da95b9a7b0b7"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

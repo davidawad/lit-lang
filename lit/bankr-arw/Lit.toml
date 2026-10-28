@@ -1,0 +1,50 @@
+# The Local Rules of the U.S. Bankruptcy Court for the Eastern and
+# Western Districts of Arkansas, as applied in the Western District, over
+# lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares only the periods
+# the rules themselves state and re-encodes no FRBP period. It is a base
+# package, not a `kind = "local-rule"` layer: lit/core has no bankruptcy
+# forum family (L2011 for `bankr-arw`), as for lit/bankr-dc. Each period
+# is counted under FRBP 9006(a), the FRCP 6(a) method (core's frcp6).
+#
+# The only vendored text is the court's "Local Rules - Complete Set", one
+# file serving both Arkansas districts (vendored identically under
+# sources/bankr-are), which carries no edition or effective date:
+# CURRENCY UNCONFIRMED (sources/bankr-arw/PROVENANCE.md). Every period
+# therefore has a hole cite naming its pinpoint, the value the vendored
+# text's, unverified, as for lit/bankr-nyw. The newest revision note in the
+# set is LR 3015-1's (adopted August 2, 2018), so the package runs from that
+# date; a query before August 2, 2018 is a hole in the corpus. No amending
+# order is vendored, so the set is the only layer.
+[package]
+name = "bankr-arw-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-arw-local-rules"
+forum = "bankr-arw"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Western District of Arkansas: Local Rules"
+description = "The Bankr. W.D. Ark. Local Rules (shared by the Eastern and Western Districts of Arkansas) as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp), every period a hole pending a dated text (the vendored complete set is CURRENCY UNCONFIRMED): the chapter 13 motor vehicle insurance program (LR 2015-1) and objections to proposed consent orders (LR 9019-1)."
+in_force = "2018-08-02"
+known_at = "2026-10-28"
+unknown_before = "2018-08-02"
+jurisdiction = "U.S. Bankruptcy Court for the Western District of Arkansas"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.arwb-lbr]
+title = "Local Rules of the United States Bankruptcy Court, Eastern and Western Districts of Arkansas (complete set; no edition date; CURRENCY UNCONFIRMED)"
+url = "https://www.arb.uscourts.gov/sites/arb/files/LocalRules.pdf"
+path = "sources/bankr-arw/arwb-lbr-complete.txt"
+path_sha256 = "888c2c8e99549699326e3544388e4aff41d8b9f42f5f26b30be7a5fb10a4083f"
+sha256 = "910361fdee0ad7d9d8f12e2674101c7133b35f8ea7be68fbb9df1665cf2977e9"
+as_of = "2018-08-02"

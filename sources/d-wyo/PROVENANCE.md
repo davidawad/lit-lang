@@ -11,6 +11,7 @@
 
 - Source: https://www.wyd.uscourts.gov/sites/wyd/files/localrules-cr.pdf (official site; 38 pages, sha256 622a6585c60e644213c9013460c571669794b4c097325764177c23d0b121533b).
 - Edition: Local Criminal Rules 'Current Revision: August 1, 2026' (title page), the 'CRIMINAL LOCAL RULES' file linked at https://www.wyd.uscourts.gov/court-info/local-rules-and-orders/local-rules (the page also links a 2026 redline, not vendored). robots.txt of www.wyd.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): wyd-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 b29eaa75f2618c3ca1aab8268a27ff961593ed58353432ab1f5ba56b969b2b8b. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `d-wyo/original/dwyo-local-criminal-rules-2026-08-01.pdf` as served (sha256 622a6585c60e644213c9013460c571669794b4c097325764177c23d0b121533b); extraction sha256 b29eaa75f2618c3ca1aab8268a27ff961593ed58353432ab1f5ba56b969b2b8b.

@@ -1,33 +1,24 @@
-// OUTLINE (unverified). The state's shared rule layer: the events every
-// court package of the state routes its graph on. Its cites are holes until a
-// fetch-first pass vendors the rule text and a later pass verifies it.
-module outline-de-state-rules
+module de-state-rules
 
-/// The Delaware base library: the rules the state's court packages share
-/// (Del. Super. Ct. Civ. R., unverified). It declares their trigger events and no
-/// procedure of its own; its pack holds only this placeholder terminal,
-/// which no link or case may route through.
+/// `lit/de-rules` is a base library: it declares what Delaware's court
+/// packages share and no procedure of its own. Its pack holds only this
+/// placeholder terminal, which no link or case may route through.
 start library
 
 terminal library: "Delaware state court rules library (no procedure)"
 
+// The trigger events the court packages' graphs route on.
 /// An action, claim, petition or charge is filed and the proceeding begins.
 event ActionCommenced()
-
 /// A final judgment, decision or appealable order is entered.
 event JudgmentEntered()
-
 /// A notice of appeal, or a petition or appeal for review of a lower court's or tribunal's decision, is filed.
 event NoticeOfAppealFiled()
-
 /// The record on appeal or review is filed or transmitted.
 event RecordFiled()
-
 /// The reviewing court's or tribunal's decision or opinion is filed.
 event DecisionFiled()
-
 /// A petition for discretionary review in a higher court (certiorari, transfer, leave or review) is filed.
 event ReviewPetitionFiled()
-
 /// The mandate, remittitur or certificate of judgment issues.
 event MandateIssued()

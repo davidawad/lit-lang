@@ -1,5 +1,7 @@
 module de-supreme-civil.appeal
 
+import de-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled }
+
 // Civil appeals to the Supreme Court of the State of Delaware, from the
 // appellant's side. Every period below is stated in a note, not counted:
 // time is computed under Supr. Ct. R. 11(a), which excludes intermediate
@@ -18,6 +20,7 @@ state judgment-entered: "Judgment entered in the trial court" by applicant cite 
 {
   note "A notice of appeal in a civil case is filed in the office of the Clerk of the Supreme Court within 30 days after entry upon the docket of the judgment, order or decree appealed from, except appeals controlled by 10 Del. C. § 146; a challenge to a final award under the Delaware Rapid Arbitration Act is filed within 15 days after issuance of the final award (Del. Supr. Ct. R. 6(a)). The time for taking an appeal or cross-appeal may not be enlarged (Del. Supr. Ct. R. 11(b)). An appeal from an interlocutory order lies only on certification by the trial court, applied for within 10 days of the order's entry, and acceptance by the Supreme Court, with a notice of appeal served and filed within 30 days after the order's entry (Del. Supr. Ct. R. 42(c), (d))."
   edge-judgment-entered-notice "Notice of appeal filed in time" -> notice-filed {
+    event NoticeOfAppealFiled()
     authority cite "Del. Supr. Ct. R. 7(a)"
   }
   edge-judgment-entered-late "Appeal time missed" -> time-barred {
@@ -34,6 +37,7 @@ state notice-filed: "Notice of appeal filed" by applicant cite "Del. Supr. Ct. R
 {
   note "The notice of appeal is served in duplicate on an attorney of record for each party below and then filed with the Clerk of the Supreme Court in duplicate with proof of service; the Clerk forwards the duplicate to the clerk of the trial court (Del. Supr. Ct. R. 7(a)). The notice names the court and judge below, the parties and their attorneys, and the judgment reviewed, contains the transcript designation, and attaches a copy of the order appealed from (Del. Supr. Ct. R. 7(c)). In a civil action any other party may file a notice of cross-appeal within 15 days after the first notice of appeal was filed or within 30 days after entry of the judgment, whichever is later (Del. Supr. Ct. R. 6(b)). A party filing a notice of appeal pays the Clerk a nonrefundable fee of $500 and a $10 Court Security Assessment (Del. Supr. Ct. R. 20(a)); the appellant also pays the trial court's record preparation and transmittal fee within the time the trial court sets, or the appeal may be dismissed (Del. Supr. Ct. R. 9(aa))."
   edge-notice-filed-record "Transcript ordered and record transmitted" -> briefing {
+    event RecordFiled()
     authority cite "Del. Supr. Ct. R. 9(b)"
   }
 }
@@ -56,6 +60,7 @@ state argument: "Argument or submission on the briefs" by court cite "Del. Supr.
 {
   note "There is oral argument only in appeals the Court designates; otherwise cases are submitted for decision on the briefs (Del. Supr. Ct. R. 16(a)). On the filing of the reply brief, or the expiration of its due date, the case is at issue and ready for argument at the call of the Court (Del. Supr. Ct. R. 16(c)). Unless the Court orders otherwise each side has 20 minutes before a panel and 25 minutes before the Court en Banc, and an application for more time is presented not later than 30 days after the filing of the appellee's brief (Del. Supr. Ct. R. 16(f))."
   edge-argument-decision "Court files its opinion or order" -> decision {
+    event DecisionFiled()
     authority cite "Del. Supr. Ct. R. 17(a)"
   }
 }
@@ -80,6 +85,7 @@ decision after-decision: "Reargument, rehearing en Banc, or neither" by applican
     authority cite "Del. Supr. Ct. R. 4(f)"
   }
   edge-after-decision-none "No motion: mandate issues" -> affirmed {
+    event MandateIssued()
     authority cite "Del. Supr. Ct. R. 19(a)"
   }
 }
@@ -91,6 +97,7 @@ decision reargument: "Reargument or rehearing decided" by court cite "Del. Supr.
     authority cite "Del. Supr. Ct. R. 4(f)"
   }
   edge-reargument-denied "Denied: mandate issues" -> affirmed {
+    event MandateIssued()
     authority cite "Del. Supr. Ct. R. 19(a)"
   }
 }

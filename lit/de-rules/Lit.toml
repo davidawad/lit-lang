@@ -1,0 +1,28 @@
+# The Delaware base library (lg-u561.5 pattern): the trigger events the
+# Delaware court packages route their graphs on: lit/de-superior-civil,
+# lit/de-supreme-civil, lit/de-court-of-chancery, lit/de-family-court and
+# lit/de-court-on-the-judiciary. It declares no period: the rules' periods
+# are stated in the court packages' notes. No procedure of its own.
+[package]
+family = "state-civil"
+name = "de-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "de-state-rules"
+forum = "de-state-rules"
+authority = "StateRule"
+jurisdiction_id = "delaware"
+title = "Delaware state court rules (base library)"
+description = "The rule layer Delaware's court packages share: the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-02-03"
+known_at = "2026-10-28"
+unknown_before = "2026-02-03"
+jurisdiction = "Delaware state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

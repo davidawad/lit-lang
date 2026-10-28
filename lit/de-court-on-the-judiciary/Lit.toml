@@ -1,0 +1,43 @@
+# Judicial discipline proceedings in the Court on the Judiciary of
+# Delaware, from the respondent judge's side. Del. Const. art. IV, § 37
+# and the Rules of the Court on the Judiciary are not vendored: every step
+# keeps the outline's structure with its cite a hole and states no period
+# or standard. The vendored Supreme Court Rules (PDF of Feb. 3, 2026;
+# sources/de-supreme-civil) state only that a complaint filed in the Court
+# on the Judiciary is referred by the Chief Justice to a Panel for review
+# and investigation (Supr. Ct. R. 68(a)).
+[package]
+family = "state-civil"
+name = "de-court-on-the-judiciary"
+version = "0.1.0"
+language = 1
+pack_id = "de-court-on-the-judiciary"
+forum = "de-court-on-the-judiciary"
+authority = "StateRule"
+jurisdiction_id = "delaware"
+title = "Court on the Judiciary of Delaware"
+description = "Judicial discipline proceedings in the Court on the Judiciary of Delaware: the structure from complaint and referral to a Panel (Del. Supr. Ct. R. 68(a)) through formal charges, answer, hearing and decision, with every value a hole (Del. Const. art. IV, section 37 and the Court on the Judiciary Rules are not vendored)."
+in_force = "2026-02-03"
+known_at = "2026-10-28"
+unknown_before = "2026-02-03"
+jurisdiction = "Court on the Judiciary of Delaware"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+de-state-rules = { version = "^0.1.0", path = "../de-rules" }
+
+[sources.de-supr]
+title = "Rules of the Supreme Court of the State of Delaware (PDF of Feb. 3, 2026)"
+url = "https://courts.delaware.gov/forms/download.aspx?id=174928"
+path = "sources/de-supreme-civil/rules-2026-02-sectioned.txt"
+path_sha256 = "9f090e9a2450f3a591a66547027c2b3d4ce07e0041e2c5568d486346ed21518d"
+sha256 = "a183b8fed3a5a906dfed1aa1de41c3c20887163da6a60b7a335f39e4acad6073"
+as_of = "2026-02-03"
+cite_prefixes = ["Del. Supr. Ct. R."]
+section_heading = "Del. Supr. Ct. R. {n}"

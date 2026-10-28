@@ -1,0 +1,59 @@
+module de-court-on-the-judiciary.judiciary
+
+import de-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered }
+
+// Judicial discipline proceedings in the Court on the Judiciary of
+// Delaware, from the respondent judge's side (the applicant is the
+// respondent). Del. Const. art. IV, § 37 and the Rules of the Court on the
+// Judiciary are not vendored: each cite but the referral is a hole, and no
+// period, burden or standard is stated. Whether a sanction is reviewable,
+// and by whom, is not stated in the vendored text, so the outline's review
+// branch is not kept. The outline named no leading decisions; none is
+// kept. Probabilities are not authored: no calibration is vendored.
+start complaint
+
+state complaint: "Complaint filed and referred to a Panel" by office cite "Del. Supr. Ct. R. 68(a)"
+{
+  note "A complaint filed in the Court on the Judiciary is referred by the Chief Justice to a Panel for review and investigation; until then it is not a civil or criminal action brought in a court of the State for the appointment of counsel to a State officer (Del. Supr. Ct. R. 68(a)). Who may file, notice and the respondent's rights are not stated: the Court on the Judiciary Rules are not vendored."
+  edge-complaint-charges "Formal charges filed and served" -> answer {
+    event ActionCommenced()
+    authority cite ?("Del. Const. art. IV, § 37: not vendored")
+  }
+  edge-complaint-dismissed "Complaint dismissed after review" -> charges-dismissed {
+    authority cite ?("Ct. on Jud. R.: not vendored")
+  }
+}
+
+state answer: "Answer and pretrial" by applicant cite ?("Ct. on Jud. R.: not vendored") {
+  note "The answer period, discovery and interim suspension are not stated: the Court on the Judiciary Rules are not vendored."
+  edge-answer-hearing "Set for hearing" -> hearing {
+    authority cite ?("Ct. on Jud. R.: not vendored")
+  }
+}
+
+state hearing: "Hearing" by court cite ?("Ct. on Jud. R.: not vendored") {
+  note "The burden and standard of proof are not stated: the Court on the Judiciary Rules are not vendored."
+  edge-hearing-decision "Decision issued" -> decision {
+    authority cite ?("Del. Const. art. IV, § 37: not vendored")
+  }
+}
+
+decision decision: "Court on the Judiciary decides" by court cite ?("Del. Const. art. IV, § 37: not vendored") {
+  note "The sanctions available (censure, removal or retirement under Del. Const. art. IV, § 37) are not stated in vendored text."
+  edge-decision-dismissed "Charges dismissed" -> charges-dismissed {
+    event DecisionFiled()
+    authority cite ?("Del. Const. art. IV, § 37: not vendored")
+  }
+  edge-decision-sanction "Sanction imposed" -> sanction-final {
+    event JudgmentEntered()
+    authority cite ?("Del. Const. art. IV, § 37: not vendored")
+  }
+}
+
+terminal charges-dismissed: "Complaint or charges dismissed" outcome [win] cite ?("Del. Const. art. IV, § 37: not vendored") {
+  note "Outcome from the respondent's side. Costs and confidentiality are not stated: the Court on the Judiciary Rules are not vendored."
+}
+
+terminal sanction-final: "Sanction imposed" outcome [loss] cite ?("Del. Const. art. IV, § 37: not vendored") {
+  note "Outcome from the respondent's side. The sanction's effect and any review are not stated: Del. Const. art. IV, § 37 is not vendored."
+}

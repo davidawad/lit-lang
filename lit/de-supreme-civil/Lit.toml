@@ -7,6 +7,7 @@
 # are stated in notes, not encoded as counted deadlines. The appeal comes
 # from the Superior Court package (lit/de-superior-civil).
 [package]
+family = "state-civil"
 name = "de-supreme-civil"
 version = "0.1.0"
 language = 1
@@ -28,6 +29,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+de-state-rules = { version = "^0.1.0", path = "../de-rules" }
 
 [sources.de-supr]
 title = "Rules of the Supreme Court of the State of Delaware (PDF of Feb. 3, 2026)"

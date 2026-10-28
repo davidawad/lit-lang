@@ -1,5 +1,7 @@
 module de-superior-civil.civil
 
+import de-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
 // Civil actions in the Superior Court of the State of Delaware, from the
 // applicant's (plaintiff's) side. Every period below is stated in a note,
 // not counted: time is computed under Super. Ct. Civ. R. 6(a), which
@@ -21,6 +23,7 @@ state complaint-filed: "Action commenced" by applicant cite "Del. Super. Ct. Civ
 {
   note "Except amicable actions, an action is commenced by filing with the Prothonotary a complaint and a praecipe directing the Prothonotary to issue the writ, with a Case Information Statement; an objection to the Related Cases listed in a CIS is filed no later than ten days after the last responsive pleading, and any response within five days (Del. Super. Ct. Civ. R. 3(a)). Before any civil action is instituted the Prothonotary demands a deposit of $200 for fees and costs, and a nonrefundable deposit of not less than $750 where a special jury is requested (Del. Super. Ct. Civ. R. 3(e)). In a personal injury action the plaintiff files with the complaint answers to the Form 30 interrogatories and the special-damages documents (Del. Super. Ct. Civ. R. 3(h)). Process issued is served together with the complaint by the sheriff or a person specially appointed (Del. Super. Ct. Civ. R. 4(e)) and is returnable 20 days after issuance (Del. Super. Ct. Civ. R. 4(g)); after service on a nonresident under 10 Del. C. § 3104, § 3112 or § 3113, the return receipt and affidavit are filed as an amendment to the complaint within 10 days of the plaintiff's receipt of the return receipt (Del. Super. Ct. Civ. R. 4(h))."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    event ActionCommenced()
     authority cite "Del. Super. Ct. Civ. R. 4(e)"
   }
   edge-complaint-filed-unserved "Not served within 120 days without good cause" -> dismissed-unserved {
@@ -149,6 +152,7 @@ decision sj-ruling: "Summary judgment decided" by court cite "Del. Super. Ct. Ci
 {
   note "If judgment is not rendered on the whole case, the Court ascertains what material facts exist without substantial controversy and enters an order specifying them, and the trial proceeds on that basis (Del. Super. Ct. Civ. R. 56(d)). Probabilities are not authored: no calibration is vendored."
   edge-sj-ruling-granted "Granted" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "Del. Super. Ct. Civ. R. 56(c)"
   }
   edge-sj-ruling-denied "Denied or granted in part: case proceeds to trial" -> trial {
@@ -160,6 +164,7 @@ state trial: "Trial by jury or by the Court" by court cite "Del. Super. Ct. Civ.
 {
   note "When trial by a jury of 12 has been demanded under Rule 38, the issues demanded are tried by a jury of 12 unless the parties by stipulation consent to trial by the Court or the Court finds that no right of jury trial exists (Del. Super. Ct. Civ. R. 39(a)). A motion for judgment as a matter of law made at the close of all the evidence that is not granted is deemed to submit the action to the jury subject to later determination (Del. Super. Ct. Civ. R. 50(b))."
   edge-trial-verdict "Verdict or decision: judgment entered" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "Del. Super. Ct. Civ. R. 58"
   }
 }
@@ -171,6 +176,7 @@ decision judgment-entered: "Judgment entered" by applicant cite "Del. Super. Ct.
     authority cite "Del. Super. Ct. Civ. R. 59(b)"
   }
   edge-judgment-entered-appeal "Notice of appeal filed" -> appeal-taken {
+    event NoticeOfAppealFiled()
     authority cite "Del. Supr. Ct. R. 6(a)"
   }
   edge-judgment-entered-final "No appeal within time" -> final-no-appeal {

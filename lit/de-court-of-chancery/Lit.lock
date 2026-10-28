@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "de-court-of-chancery"
+version = "0.1.0"
+language = 1
+source = "sha256:91800973ce4fe625e50c7cff1db922e295c912fc45b21adde0891ff06ee13fdb"
+semantic = "sha256:4a5fa6da23f72fcabfa97cf51f8176dd426a614b9254cfa1fef8d0a1f5df9f38"
+texts = [
+    "de-supr sources/de-supreme-civil/rules-2026-02-sectioned.txt sha256:9f090e9a2450f3a591a66547027c2b3d4ce07e0041e2c5568d486346ed21518d",
+]
+dependencies = [
+    "core 1.0.0",
+    "de-state-rules 0.1.0",
+]
+
+[[package]]
+name = "de-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]

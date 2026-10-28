@@ -26,7 +26,7 @@ The layout mirrors formbook's `courts/<circuit>/<jurisdiction>/`.
     outlines/supreme-court-of-the-united-states/          one package per court
 
 Each directory holds `Lit.toml` plus `outline.lit`. Copy
-`outlines/third-circuit/delaware/state-trial-court/` as the template.
+`outlines/eighth-circuit/minnesota/state-trial-court/` as the template.
 
 A state court package (`state-<court>`) depends on its state's base library
 (`state-rules`, or `lit/<st>-rules` once the state has promoted packages),

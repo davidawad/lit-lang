@@ -1,0 +1,46 @@
+# Civil proceedings in the Family Court of the State of Delaware. The
+# Family Court Civil Rules and Title 10 of the Delaware Code (including §
+# 1051) are not vendored: every trial-court step keeps the outline's
+# structure with its cite a hole and states no period, limit or amount.
+# The appeal to the Supreme Court is bound to the vendored Supreme Court
+# Rules (PDF of Feb. 3, 2026; sources/de-supreme-civil), which state the
+# Family Court specifics they carry (confidential record, Rule 9(bb);
+# indigent fee waiver on a termination of parental rights appeal, Rule
+# 26(e)); their periods are stated in notes, not counted: lit/core has no
+# counting rule for Supr. Ct. R. 11(a). The appeal itself is
+# lit/de-supreme-civil's.
+[package]
+family = "state-civil"
+name = "de-family-court"
+version = "0.1.0"
+language = 1
+pack_id = "de-family-court"
+forum = "de-family-court"
+authority = "StateRule"
+jurisdiction_id = "delaware"
+title = "Delaware Family Court"
+description = "Civil proceedings in the Delaware Family Court: the structure of the case from complaint or petition through pleadings, discovery, summary disposition or hearing and judgment, with every trial-court value a hole (the Family Court Civil Rules are not vendored), and the appeal to the Delaware Supreme Court as far as the vendored Supreme Court Rules state."
+in_force = "2026-02-03"
+known_at = "2026-10-28"
+unknown_before = "2026-02-03"
+jurisdiction = "Family Court of the State of Delaware"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+de-state-rules = { version = "^0.1.0", path = "../de-rules" }
+
+[sources.de-supr]
+title = "Rules of the Supreme Court of the State of Delaware (PDF of Feb. 3, 2026)"
+url = "https://courts.delaware.gov/forms/download.aspx?id=174928"
+path = "sources/de-supreme-civil/rules-2026-02-sectioned.txt"
+path_sha256 = "9f090e9a2450f3a591a66547027c2b3d4ce07e0041e2c5568d486346ed21518d"
+sha256 = "a183b8fed3a5a906dfed1aa1de41c3c20887163da6a60b7a335f39e4acad6073"
+as_of = "2026-02-03"
+cite_prefixes = ["Del. Supr. Ct. R."]
+section_heading = "Del. Supr. Ct. R. {n}"

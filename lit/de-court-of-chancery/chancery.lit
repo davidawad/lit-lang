@@ -1,0 +1,94 @@
+module de-court-of-chancery.chancery
+
+import de-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
+// Actions in the Court of Chancery of the State of Delaware, from the
+// applicant's (plaintiff's or petitioner's) side.
+// The Court of Chancery Rules are not vendored: each trial-court cite is a hole and no
+// period, limit or amount is stated for it. The appeal is bound to the
+// vendored Supreme Court Rules; its periods are stated in notes, not
+// counted (lit/core has no counting rule for Supr. Ct. R. 11(a)). The
+// outline named no leading decisions; none is kept. Probabilities are not
+// authored: no calibration is vendored.
+start commenced
+
+state commenced: "Complaint or petition filed" by applicant cite ?("Ct. Ch. R. 3: not vendored") {
+  note "Commencement in the Delaware Court of Chancery, whose jurisdiction covers equity, corporate and fiduciary litigation tried without a jury; the jurisdictional statutes (10 Del. C. ch. 3) are not vendored. The filing period, fees and pleading form are not stated: the Court of Chancery Rules are not vendored."
+  edge-commenced-served "Process served" -> pleadings {
+    event ActionCommenced()
+    authority cite ?("Ct. Ch. R. 4: not vendored")
+  }
+}
+
+decision pleadings: "Answer or motion to dismiss" by court cite ?("Ct. Ch. R. 12: not vendored") {
+  note "The response period and dismissal grounds are not stated: the Court of Chancery Rules are not vendored."
+  edge-pleadings-dismissed "Dismissed on the pleadings" -> dismissed {
+    authority cite ?("Ct. Ch. R. 12: not vendored")
+  }
+  edge-pleadings-answered "Answered: case proceeds" -> discovery {
+    authority cite ?("Ct. Ch. R. 12: not vendored")
+  }
+  edge-pleadings-settled "Settled or withdrawn" -> settled {
+    authority cite ?("Ct. Ch. R. 41: not vendored")
+  }
+}
+
+state discovery: "Discovery and pretrial" by applicant cite ?("Ct. Ch. R. 26: not vendored") {
+  note "Discovery scope, limits and scheduling are not stated: the Court of Chancery Rules are not vendored."
+  edge-discovery-dispositive "Dispositive motion or trial setting" -> dispositive {
+    authority cite ?("Ct. Ch. R. 56: not vendored")
+  }
+}
+
+decision dispositive: "Summary disposition or trial" by court cite ?("Ct. Ch. R. 56: not vendored") {
+  note "The summary judgment standard and its timing are not stated: the Court of Chancery Rules are not vendored."
+  edge-dispositive-granted "Decided without trial" -> judgment {
+    authority cite ?("Ct. Ch. R. 56: not vendored")
+  }
+  edge-dispositive-trial "Tried" -> trial { authority cite ?("Ct. Ch. R. 16: not vendored") }
+}
+
+state trial: "Trial or hearing" by court cite ?("Ct. Ch. R. 16: not vendored") {
+  note "Trial procedure is not stated: the Court of Chancery Rules are not vendored."
+  edge-trial-judgment "Decision rendered" -> judgment {
+    authority cite ?("Ct. Ch. R. 58: not vendored")
+  }
+}
+
+state judgment: "Judgment or decision entered" by court cite ?("Ct. Ch. R. 58: not vendored") {
+  note "Entry, notice of entry and the post-judgment motion periods are not stated: the Court of Chancery Rules are not vendored."
+  edge-judgment-entered "Judgment entered" -> post-judgment {
+    event JudgmentEntered()
+    authority cite ?("Ct. Ch. R. 58: not vendored")
+  }
+}
+
+decision post-judgment: "Appeal or no appeal" by applicant cite "Del. Supr. Ct. R. 6(a)"
+{
+  note "A notice of appeal in a civil case is filed in the office of the Clerk of the Supreme Court within 30 days after entry upon the docket of the judgment, order or decree appealed from, except appeals controlled by 10 Del. C. § 146 (Del. Supr. Ct. R. 6(a)(i)); any other party may cross-appeal within 15 days after the first notice of appeal was filed or within 30 days after entry of the judgment, whichever is later (Del. Supr. Ct. R. 6(b)(i)). The time for taking an appeal or cross-appeal may not be enlarged (Del. Supr. Ct. R. 11(b)). An appeal from an interlocutory order lies only on certification by the trial court and acceptance by the Supreme Court (Del. Supr. Ct. R. 42). The appeal continues in lit/de-supreme-civil."
+  edge-post-appeal "Notice of appeal filed in time" -> appeal-taken {
+    event NoticeOfAppealFiled()
+    authority cite "Del. Supr. Ct. R. 7(a)"
+  }
+  edge-post-final "No appeal within time" -> final-no-appeal {
+    authority cite "Del. Supr. Ct. R. 11(b)"
+  }
+}
+
+terminal dismissed: "Dismissed" outcome [loss, dismissal] cite ?("Ct. Ch. R. 12: not vendored") {
+  note "Outcome from the applicant's side. Whether the dismissal is with or without prejudice is not stated: the Court of Chancery Rules are not vendored."
+}
+
+terminal settled: "Settled or withdrawn" outcome [settlement] cite ?("Ct. Ch. R. 41: not vendored") {
+  note "Settlement terms are outside this package."
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Delaware Supreme Court package" outcome [appeal] cite "Del. Supr. Ct. R. 6(a)"
+{
+  note "The appeal proceeds in the Supreme Court under its Rules (lit/de-supreme-civil)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Del. Supr. Ct. R. 11(b)"
+{
+  note "The time for taking an appeal may not be enlarged (Del. Supr. Ct. R. 11(b)). Enforcement is outside this package."
+}

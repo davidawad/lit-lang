@@ -1,0 +1,59 @@
+# Prosecutions of indictable offenses in the Iowa district court under the
+# Iowa Rules of Criminal Procedure (Iowa Court Rules, chapter 2, "Rules of
+# Criminal Procedure: Indictable Offenses", running header May 2025, as
+# posted by the Iowa Legislature; sources/ia-criminal-trial-court), with
+# its speedy-trial rule (Iowa R. Crim. P. 2.33(2)) and the notice of
+# appeal under the Iowa Rules of Appellate Procedure (chapter 6, running
+# header December 2025, in the Legislature's compilation of September 30,
+# 2026; sources/iowactapp). The newest amendment note in chapter 2 is
+# effective May 26, 2025; later amendments, if any, are not checked
+# (PROVENANCE). Time is computed under Iowa Code section 4.1(34), which is
+# not vendored, and lit/core has no Iowa holiday calendar, so the periods
+# are stated in notes, not encoded as counted deadlines. The package runs
+# from the appellate compilation's date, the later of its two texts.
+# Simple misdemeanors (rules 2.51-2.76) and expungement (2.80-2.86) are
+# not modelled. An appeal continues before the Iowa Supreme Court
+# (lit/iowactapp); postconviction relief (Iowa Code ch. 822) and federal
+# habeas (lit/habeas) are not vendored here.
+[package]
+name = "ia-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "ia-criminal-trial-court"
+forum = "ia-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "iowa"
+title = "Iowa District Court, criminal (indictable offenses)"
+description = "Prosecutions of indictable offenses in the Iowa district court under the Iowa Rules of Criminal Procedure, as far as the vendored text states: the initial appearance and preliminary hearing, indictment or trial information, arraignment and pleas, trial assignment, pretrial motions and their deadlines, the speedy-trial rule (indictment within 45 days, trial within 90 days and one year), plea bargaining, trial and verdict, motions in arrest of judgment and for new trial, judgment, and the notice of appeal (lit/iowactapp)."
+in_force = "2026-09-30"
+known_at = "2026-10-28"
+unknown_before = "2026-09-30"
+jurisdiction = "Iowa District Court (criminal, indictable offenses)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ia-r-crim-p]
+title = "Iowa Court Rules, chapter 2, Rules of Criminal Procedure: Indictable Offenses (running header May 2025), Iowa Legislature posting"
+url = "https://www.legis.iowa.gov/docs/ACO/CourtRulesChapter/2.pdf"
+path = "sources/ia-criminal-trial-court/ia-rules-criminal-procedure-sectioned.txt"
+path_sha256 = "22f3efa6757d7dfcf0050bf958a668cb90d39c9dfcd8f5f6317b3a104ef1af77"
+sha256 = "4a64068b4d059421929afaf7ee8ef25f00f8e962d852f4cf7184d91c852e0eda"
+as_of = "2025-05-26"
+cite_prefixes = ["Iowa R. Crim. P."]
+section_heading = "Rule {n}"
+
+[sources.ia-r-app-p]
+title = "Iowa Court Rules, Chapter 6, Rules of Appellate Procedure (Iowa Legislature compilation of September 30, 2026)"
+url = "https://www.legis.iowa.gov/docs/ACO/CR/LINC/09-30-2026.chapter.6.pdf"
+path = "sources/iowactapp/iowa-rules-appellate-procedure-sectioned.txt"
+path_sha256 = "a6cb0e7fcb06ccd217389445992200360cfe96182b201bea2d150cc13109326d"
+sha256 = "8d3078cdc61be6ddb556a18c8dacf85f9126c6663ed4db7be2858419daf0e8b6"
+as_of = "2026-09-30"
+cite_prefixes = ["Iowa R. App. P."]
+section_heading = "Rule {n}"

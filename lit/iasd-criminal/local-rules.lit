@@ -1,0 +1,180 @@
+module iasd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Southern District of Iowa's own criminal periods. FRCrimP 45(a)
+// computes a period "in any local rule" of a criminal case, so these
+// count under frcrimp45. The presiding judge may modify the Local Rules
+// in any case (LCrR 1(c)), and the civil rules govern a criminal
+// proceeding unless a criminal rule provides otherwise (LCrR 1(b)); the
+// civil periods are lit/iasd's. Stated in the rules but not declared:
+// the fourteen days to object to a magistrate judge's pretrial order or
+// report and recommendation after service (LCrR 59), which are FRCrimP
+// 59(a) and 59(b)(2)'s fourteen days, lit/frcrimp's to state; the
+// delivery of the plea agreement and the Rule 11 letter by noon of the
+// last business day before the plea hearing (LCrR 11(a), (b)), counted in
+// business days and hours, which frcrimp45 does not count; the request
+// to a magistrate judge for approval of a subpoena or writ at least four
+// days before the delivery deadline (LCrR 17(d)), a period counted from
+// another period's end; the five years the government keeps a grand-jury
+// interpreter recording (LCrR 28(c)) and the United States Attorney's
+// five years for original complaints (LCrR 55), which bind no party to
+// the case; and the offering party's custody of an exhibit until 30 days
+// after any appeal and § 2255 application are resolved, or two years
+// after the conviction becomes final, then 30 days' written notice before
+// disposal (LCrR 57B(c)), a retention condition stated in years. Each
+// district judge decides the procedures and deadlines for sentencing
+// hearings (LCrR 32(a)); the courts' Speedy Trial Act plans (LCrR 1(d);
+// 18 U.S.C. § 3165) are not vendored. The earlier S.D. Iowa criminal
+// outline's FRCrimP flow and its decisions (Salerno, Brady, Barker v.
+// Wingo, Zedner, Boykin, Missouri v. Frye, Jackson v. Virginia, Booker,
+// Roe v. Flores-Ortega, Garza v. Idaho) are FRCrimP and constitutional
+// authority and belong to lit/frcrimp; no reporter text is vendored, so
+// they are removed here.
+
+/// Where the Marshal is to serve a subpoena or writ (LCrR 17(a), (c)).
+enum ServiceArea { WithinDistrict, OutsideDistrict }
+
+/// A magistrate judge's release or detention order is filed, or, for an
+/// order of another district, the defendant's initial appearance on the
+/// charge in this district (LCrR 5(a), (b)).
+event ReleaseOrDetentionOrderFiled()
+/// The time scheduled for the arraignment (LCrR 10).
+event ArraignmentScheduled()
+/// The defendant's first arraignment (LCrR 12(a)).
+event FirstArraignment()
+/// A notice or request under the rules LCrR 12(a) names is served (LCrR
+/// 12(a)).
+event NoticeOrRequestServed()
+/// An order continuing the trial date is entered (LCrR 12(b)).
+event ContinuanceOrderEntered()
+/// The trial (LCrR 12(c), 59).
+event TrialScheduled()
+/// The hearing or trial at which a subpoenaed or writ witness is to
+/// testify (LCrR 17(a), (c)).
+event WitnessHearing(area: ServiceArea)
+/// Jury selection in a multi-defendant case (LCrR 24).
+event JurySelection()
+/// A motion is served (LCrR 47).
+event MotionServed()
+/// The court proceeding at which a motion will be heard (LCrR 47).
+event MotionHearing()
+/// Objections to a magistrate judge's order or report and recommendation
+/// are served (LCrR 59).
+event ObjectionsServed()
+
+/// S.D. Iowa LCrR 5(a): subject to excuse for good cause shown, a motion
+/// under 18 U.S.C. § 3145(a) or (b) to revoke or amend a magistrate
+/// judge's release or detention order is filed within 14 days after the
+/// order has been filed; for an order entered in another district, the
+/// period begins on the defendant's initial appearance on the charge in
+/// this district (LCrR 5(b)).
+deadline release-detention-review-period: 14.days after ReleaseOrDetentionOrderFiled() counted_by frcrimp45 cite "S.D. Iowa LCrR 5(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Iowa LCrR 10: a defendant waiving personal appearance at the
+/// arraignment under FRCrimP 10(b) files the written waiver at least 4
+/// days before the time scheduled for the arraignment.
+deadline arraignment-waiver-period: 4.days before ArraignmentScheduled() counted_by frcrimp45 cite "S.D. Iowa LCrR 10"
+{
+  forum frcrimp
+}
+
+/// S.D. Iowa LCrR 12(a): unless the court orders another deadline,
+/// motions, notices and requests under FRCrimP 12(b), 12.1(a)(1), 12.2(a)
+/// and (b), 12.3(a) and 21, notices and requests under the Federal Rules
+/// of Evidence, and all other non-trial-related motions are filed, given
+/// or made within 28 days after the defendant's first arraignment (a
+/// 12(b)(4)(B) request: at the arraignment or as soon as practicable).
+/// The court may refuse an untimely motion absent good cause (LCrR
+/// 12(e)).
+deadline non-trial-motion-period: 28.days after FirstArraignment() counted_by frcrimp45 cite "S.D. Iowa LCrR 12(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Iowa LCrR 12(a): a motion relating to a notice or request is
+/// timely if filed within 7 days after service of the notice or request.
+deadline notice-motion-period: 7.days after NoticeOrRequestServed() counted_by frcrimp45 cite "S.D. Iowa LCrR 12(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Iowa LCrR 12(b): after a trial continuance the original deadlines
+/// stand unless, within 7 days after the continuance order is entered, a
+/// party requests new deadlines and the court so orders (after a
+/// superseding indictment, the request is made at its arraignment).
+deadline new-deadlines-request-period: 7.days after ContinuanceOrderEntered() counted_by frcrimp45 cite "S.D. Iowa LCrR 12(b)"
+{
+  forum frcrimp
+}
+
+/// S.D. Iowa LCrR 12(c): motions in limine, FRE 104(a) motions and all
+/// other trial-related motions are filed as soon as practicable, and at
+/// least 7 days before trial.
+deadline trial-motion-period: 7.days before TrialScheduled() counted_by frcrimp45 cite "S.D. Iowa LCrR 12(c)"
+{
+  forum frcrimp
+}
+
+/// S.D. Iowa LCrR 17(a), (c): a subpoena or writ of habeas corpus ad
+/// testificandum the Marshal is to serve within the district is delivered
+/// to the Marshal's office at least 14 days before the hearing or trial;
+/// later service is not guaranteed.
+deadline marshal-delivery-in-district-period: 14.days before WitnessHearing(WithinDistrict) counted_by frcrimp45 cite "S.D. Iowa LCrR 17(a); S.D. Iowa LCrR 17(c)"
+{
+  forum frcrimp
+}
+
+/// S.D. Iowa LCrR 17(a), (c): one to be served outside the district is
+/// delivered at least 21 days before the hearing or trial.
+deadline marshal-delivery-out-of-district-period: 21.days before WitnessHearing(OutsideDistrict) counted_by frcrimp45 cite "S.D. Iowa LCrR 17(a); S.D. Iowa LCrR 17(c)"
+{
+  forum frcrimp
+}
+
+/// S.D. Iowa LCrR 24: in a multi-defendant case a defendant's request for
+/// additional peremptory challenges is made in writing at least 14 days
+/// before jury selection.
+deadline peremptory-request-period: 14.days before JurySelection() counted_by frcrimp45 cite "S.D. Iowa LCrR 24"
+{
+  forum frcrimp
+}
+
+/// S.D. Iowa LCrR 47: a resistance to a motion in a criminal case is
+/// filed within 7 days after the motion is served.
+deadline resistance-period: 7.days after MotionServed() counted_by frcrimp45 cite "S.D. Iowa LCrR 47"
+{
+  forum frcrimp
+}
+
+/// S.D. Iowa LCrR 47: in any event, the resistance is filed at least 4
+/// days before the proceeding at which the motion will be heard.
+deadline resistance-before-hearing-period: 4.days before MotionHearing() counted_by frcrimp45 cite "S.D. Iowa LCrR 47"
+{
+  forum frcrimp
+}
+
+/// S.D. Iowa LCrR 59: any response to objections to a magistrate judge's
+/// order or report and recommendation is filed within 7 days after
+/// service of the objections.
+deadline objection-response-period: 7.days after ObjectionsServed() counted_by frcrimp45 cite "S.D. Iowa LCrR 59"
+{
+  forum frcrimp
+}
+
+/// S.D. Iowa LCrR 59: in any event, the objections are filed at least 14
+/// days before trial.
+deadline objection-before-trial-period: 14.days before TrialScheduled() counted_by frcrimp45 cite "S.D. Iowa LCrR 59"
+{
+  forum frcrimp
+}
+
+/// S.D. Iowa LCrR 59: and any response to them at least 7 days before
+/// trial.
+deadline objection-response-before-trial-period: 7.days before TrialScheduled() counted_by frcrimp45 cite "S.D. Iowa LCrR 59"
+{
+  forum frcrimp
+}

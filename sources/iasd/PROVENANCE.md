@@ -16,3 +16,10 @@
 - Source: as the extract `iasd/local-rules-joint.txt`, https://www.iasd.uscourts.gov/sites/iasd/files/Local%20Rules%20-%20Final%2012142020.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, December 7, 2020.
 - Sectioned sha256 968222b1ce7c0217f9d1f1a05eee19c8a61a3cfad0c6aa5abd90846de730afbb (the `path_sha256` pinned by `lit/iasd/Lit.toml`).
+
+### `iasd/local-rules-criminal-sectioned.txt` — Joint Local Rules, N.D. and S.D. Iowa, criminal rules sectioned
+
+- Derived in the pod (lg-gddt.20) from `iasd/local-rules-joint.txt` (extract sha256 751abfbc43e8034da2046e95cc6c47e63649c20c1356a74816454496449d515d); nothing fetched. One `## LCrR <n>` line is inserted before each criminal rule's own heading line in the body (`LCrR 1` through `LCrR 59`, 22 rules, numbers such as `LCrR 6A`, `LCrR 16.1` and `LCrR 57B` kept as printed; a heading after a page's form feed keeps its form feed on the heading line, after the marker). The table of contents and the civil rules (LR) are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LCrR /d'`) restores the extract byte for byte.
+- Source: as the extract `iasd/local-rules-joint.txt`, https://www.iasd.uscourts.gov/sites/iasd/files/Local%20Rules%20-%20Final%2012142020.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
+- Edition: as the extract, December 7, 2020.
+- Sectioned sha256 c9eaf6c4e7df1bf0cd24faed9c6a000ede32a8896232152f4a6ed807749a51bb (the `path_sha256` pinned by `lit/iasd-criminal/Lit.toml`).

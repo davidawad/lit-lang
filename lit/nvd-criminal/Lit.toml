@@ -1,0 +1,55 @@
+# The U.S. District Court for the District of Nevada's Local Rules of
+# Criminal Practice (Part IV of its Local Rules of Practice, LCR) as a
+# local-rule layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it
+# declares only the periods and limits the local criminal rules
+# themselves state and re-encodes no FRCrimP, Speedy Trial Act or FRAP
+# 4(b) period (one source of truth: lit/frcrimp). Each period is counted
+# under FRCrimP 45(a), which governs "any local rule" and which LCR
+# 12-1(d) names, so each deadline names `forum frcrimp`. The rules are
+# the Local Rules of Practice as amended April 17, 2020, the edition the
+# court still presents as current (sources/fed-dnev); earlier editions are
+# not vendored, so a query before that date is a hole in the corpus. Part
+# IV is bound through its own sectioned copy of the extract (the copy
+# lit/nvd binds marks Parts IA to II only). The general and magistrate
+# judge rules (Parts IA, IB, IC) live in lit/nvd. An appeal goes to the
+# Ninth Circuit under lit/frcrimp's FRAP 4(b) period.
+[package]
+name = "nvd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "nvd-criminal-local-rules"
+forum = "nvd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of Nevada: Local Rules of Criminal Practice"
+description = "The District of Nevada's Local Rules of Criminal Practice as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the written waiver of appearance at arraignment, pretrial motions, responses and replies, review of a release or detention order, the complex-case and non-complex discovery schedules, the presentence submission, sentencing memoranda and forfeiture motions, applications for probation records, responses to Rule 35 motions, registry investments, brief page limits, and the withdrawal of exhibits."
+in_force = "2020-04-17"
+known_at = "2026-10-28"
+unknown_before = "2020-04-17"
+jurisdiction = "U.S. District Court for the District of Nevada (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "dnev-lcr"
+issuer = "U.S. District Court for the District of Nevada"
+date = "2020-04-17"
+designation = "Local Rules of Criminal Practice (Part IV)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.dnev-lcr]
+title = "Local Rules of Practice for the U.S. District Court for the District of Nevada (April 17, 2020), Part IV: Criminal Practice"
+url = "https://www.nvd.uscourts.gov/wp-content/uploads/2020/04/Local-Rules-of-Practice-Amended-2020.pdf"
+path = "sources/fed-dnev/dnev-local-rules-2020-04-17-crim-sectioned.txt"
+path_sha256 = "7fb89a3eea78c26ed063a3df98d0ccfa730ba0ae32c6f6315eda5def1c46cb72"
+sha256 = "f90ed909fa5aa88cf17fc97853803b834aa791003d2894707b3fd93c5ae64346"
+as_of = "2020-04-17"
+cite_prefixes = ["D. Nev. LCR"]
+section_heading = "LCR {n}"

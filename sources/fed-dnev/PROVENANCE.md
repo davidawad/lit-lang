@@ -15,3 +15,9 @@
 - Upstream: https://www.nvd.uscourts.gov/wp-content/uploads/2020/04/Local-Rules-of-Practice-Amended-2020.pdf, retrieved 2026-10-28, as recorded on the `fed-dnev/dnev-local-rules-2020-04-17.txt` entry this file is derived from.
 - Edition: as the extract; "These rules, as amended, take effect on April 17, 2020" (LR IA 1-5).
 - Sectioned sha256 1f0f9aab6084f6c537612da46e869a18e018b047ff5136dbef92fbd712b78058 (the `path_sha256` pinned by `lit/nvd/Lit.toml`).
+
+### `fed-dnev/dnev-local-rules-2020-04-17-crim-sectioned.txt` — D. Nev. Local Rules of Practice (April 17, 2020), Part IV criminal rules sectioned
+
+- Derived in the pod (lg-gddt.22) from `fed-dnev/dnev-local-rules-2020-04-17.txt` (extract sha256 6537ebf98ea289b3393e895132b80bc71d5633e2fdcc6f5c03b7ce618844cc1b); nothing fetched. One marker line `## LCR <n>` is inserted before each Part IV criminal rule's own body heading line `LCR <n>. <TITLE>` (extract lines 4278 to 5090; LCR 1-1 through LCR 55-1, 33 rules, including the one numbered `LCR 46.5.` in the text); the other Parts, the table of contents and Part IV's cross-references carry no markers (the copy `dnev-local-rules-2020-04-17-sectioned.txt` marks Parts IA to II only). Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Edition: as the extract; "These rules, as amended, take effect on April 17, 2020" (LR IA 1-5). OLD EDITION presented by the court as current.
+- Sectioned sha256 7fb89a3eea78c26ed063a3df98d0ccfa730ba0ae32c6f6315eda5def1c46cb72 (the `path_sha256` pinned by `lit/nvd-criminal/Lit.toml`).

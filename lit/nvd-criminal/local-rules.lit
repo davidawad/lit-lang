@@ -1,0 +1,310 @@
+module nvd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The District of Nevada's own criminal periods, counted under the
+// criminal rules (FRCrimP 45(a) governs "any local rule"; LCR 12-1(d)).
+// No trigger carries a service method: FRCrimP 45(c)'s three added days
+// follow the manner of service, which is not modeled here. LCR 32-1(e)
+// defines a "business day" as any day that is not a Saturday, Sunday,
+// legal holiday or day the Chief Judge closed the courthouse; the
+// business-day periods below count under the counting rule's own holiday
+// calendar.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: the presentence investigation report is furnished at least 35
+// days before the sentencing hearing (LCR 32-1(a)), FRCrimP 32(e)(2)'s
+// period, and objections are communicated within 14 days after receiving
+// it (LCR 32-1(b)), FRCrimP 32(f)(1)'s period.
+//
+// Conditions that are not deadlines from an event stay in notes: a
+// request to extend the motions deadline to a date within 75 days of the
+// current trial date must also ask to continue the trial or explain why
+// not (LCR 45-2(b)); a motion for review of a release or detention order
+// is filed "without undue delay" (LCR 12-3); after final judgment a party
+// may withdraw an exhibit on 21 days' prior written notice to all parties
+// (LCR 55-1(d)), and the clerk keeps exhibits in no event less than 2
+// years after the mandate (LCR 55-1(c)), periods measured to a withdrawal
+// the party chooses or in years.
+//
+// The earlier D. Nev. criminal outline's FRCrimP flow and its decisions
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+/// A pretrial or post-trial brief, motion or response: at most 30 pages,
+/// excluding exhibits, unless the court orders otherwise (D. Nev. LCR
+/// 47-2).
+limit brief { pages <= 30 cite "D. Nev. LCR 47-2" } cite "D. Nev. LCR 47-2"
+/// A reply in support of a motion: at most 20 pages, excluding exhibits
+/// (D. Nev. LCR 47-2).
+limit reply { pages <= 20 cite "D. Nev. LCR 47-2" } cite "D. Nev. LCR 47-2"
+
+/// The date set for arraignment (D. Nev. LCR 10-1(a)).
+event ArraignmentScheduled()
+/// The defendant is arraigned (D. Nev. LCR 12-1(a), 16-1(b)).
+event Arraigned()
+/// A pretrial motion or notice is served (D. Nev. LCR 12-1(a)(2)).
+event PretrialMotionServed() paper brief
+/// A response to a pretrial motion is served (D. Nev. LCR 12-1(a)(3)).
+event PretrialResponseServed() paper brief
+/// A reply is filed (D. Nev. LCR 12-1(a)(3), 47-2).
+event ReplyFiled() paper reply
+/// A motion for district judge review of a magistrate judge's release or
+/// detention order is filed (D. Nev. LCR 12-3).
+event DetentionReviewMotionFiled()
+/// The court designates the case as complex (D. Nev. LCR 16-1(a)).
+event ComplexCaseDesignated()
+/// The parties meet and confer on a proposed complex-case schedule (D.
+/// Nev. LCR 16-1(a)(3)).
+event ComplexCaseConferenceHeld()
+/// The joint discovery agreement is filed (D. Nev. LCR 16-1(b)(1)(C)).
+event JointDiscoveryAgreementFiled()
+/// Trial is set (D. Nev. LCR 16-1(b)(1)(C)(v)).
+event TrialScheduled()
+/// The parties meet and confer on the government disclosure statement (D.
+/// Nev. LCR 16-1(b)(2)(B)).
+event DisclosureConferenceHeld()
+/// A forfeiture motion is served (D. Nev. LCR 32-1(f)).
+event ForfeitureMotionServed()
+/// The response to a forfeiture motion is served (D. Nev. LCR 32-1(f)).
+event ForfeitureResponseServed()
+/// The date production of probation records is required for a purpose
+/// other than sentencing (D. Nev. LCR 32-2(c)(2)).
+event RecordsProductionRequired()
+/// A motion under FRCrimP 35 is served on the government (D. Nev. LCR
+/// 35-1).
+event Rule35MotionServed()
+/// An order directing investment of registry funds is served on the clerk
+/// (D. Nev. LCR 46-9(d), (e)).
+event InvestmentOrderServed()
+/// A timed instrument holding registry funds matures (D. Nev. LCR
+/// 46-9(h)).
+event TimedInstrumentMatures()
+/// The clerk notifies the parties to claim their exhibits (D. Nev. LCR
+/// 55-1(e)).
+event ExhibitClaimNoticed()
+
+/// D. Nev. LCR 10-1(a): a defendant charged by indictment or misdemeanor
+/// information may waive presence at arraignment if, at least seven days
+/// before the date set, the defendant and counsel sign and submit a
+/// written waiver and the court accepts it.
+deadline arraignment-waiver: 7.days before ArraignmentScheduled() counted_by frcrimp45 cite "D. Nev. LCR 10-1"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 12-1(a)(1): unless the court orders otherwise, each party
+/// has 30 days from the arraignment to file and serve the pretrial motions
+/// and notices LCR 12-1(b) lists.
+deadline pretrial-motions: 30.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Nev. LCR 12-1(a)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 12-1(a)(2): responses to pretrial motions and notices are
+/// filed and served within 14 days from the date of service of the
+/// motion.
+deadline pretrial-response: 14.days after PretrialMotionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Nev. LCR 12-1(a)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 12-1(a)(3): a reply brief may be filed and served within
+/// seven days from the date of service of the response.
+deadline pretrial-reply: 7.days after PretrialResponseServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Nev. LCR 12-1(a)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 12-3: any response to a motion for district judge review of
+/// a release or detention order is filed within 14 days of the filing of
+/// the motion; replies only with leave.
+deadline detention-review-response: 14.days after DetentionReviewMotionFiled() counted_by frcrimp45 cite "D. Nev. LCR 12-3"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 16-1(a)(2): in a case designated complex, the parties meet
+/// and confer within seven days after the designation to develop a
+/// proposed complex-case schedule.
+deadline complex-case-conference: 7.days after ComplexCaseDesignated() counted_by frcrimp45 cite "D. Nev. LCR 16-1(a)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 16-1(a)(3): the parties file the proposed complex-case
+/// schedule within seven days after meeting and conferring.
+deadline complex-case-schedule: 7.days after ComplexCaseConferenceHeld() counted_by frcrimp45 cite "D. Nev. LCR 16-1(a)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 16-1(b)(1)(A): unless the court orders otherwise, the
+/// parties file a joint discovery agreement within seven days after
+/// arraignment.
+deadline joint-discovery-agreement: 7.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Nev. LCR 16-1(b)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 16-1(b)(1)(C)(iii): the government makes the disclosures
+/// required by statute, rule or the Constitution available within seven
+/// days after filing the joint discovery statement.
+deadline joint-agreement-government-disclosure: 7.days after JointDiscoveryAgreementFiled() counted_by frcrimp45 cite "D. Nev. LCR 16-1(b)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 16-1(b)(1)(C)(v): the defense makes its reciprocal
+/// disclosures available no later than 14 days before trial.
+deadline joint-agreement-reciprocal-disclosure: 14.days before TrialScheduled() counted_by frcrimp45 cite "D. Nev. LCR 16-1(b)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 16-1(b)(2)(A): without a joint discovery agreement, the
+/// parties meet and confer on the disclosures within seven days after
+/// arraignment.
+deadline disclosure-conference: 7.days after Arraigned() counted_by frcrimp45 cite "D. Nev. LCR 16-1(b)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 16-1(b)(2)(B): the government files its disclosure
+/// statement within seven days after the conference.
+deadline disclosure-statement-after-conference: 7.days after DisclosureConferenceHeld() counted_by frcrimp45 cite "D. Nev. LCR 16-1(b)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 16-1(b)(2)(B): and in no event more than 14 days after the
+/// date of arraignment.
+deadline disclosure-statement: 14.days after Arraigned() counted_by frcrimp45 cite "D. Nev. LCR 16-1(b)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 32-1(c): unless the court orders otherwise, the presentence
+/// investigation report and any addendum or revision are submitted to the
+/// court at least seven business days before the sentencing hearing.
+deadline psr-submission: 7.business_days before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Nev. LCR 32-1(c)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 32-1(d): any sentencing memorandum is filed and served at
+/// least five business days before the sentencing hearing.
+deadline sentencing-memorandum: 5.business_days before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Nev. LCR 32-1(d)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 32-1(d): any response to a sentencing memorandum is filed
+/// and served at least three business days before the sentencing hearing.
+deadline sentencing-memorandum-response: 3.business_days before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Nev. LCR 32-1(d)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 32-1(f): a motion for a forfeiture order is filed and
+/// served no later than 28 days before the sentencing hearing.
+deadline forfeiture-motion: 28.days before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Nev. LCR 32-1(f)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 32-1(f): any response is filed and served within 14 days
+/// from the date of service of the forfeiture motion.
+deadline forfeiture-response: 14.days after ForfeitureMotionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Nev. LCR 32-1(f)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 32-1(f): any reply brief may be filed and served within
+/// seven days from the date of service of the response.
+deadline forfeiture-reply: 7.days after ForfeitureResponseServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Nev. LCR 32-1(f)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 32-2(c)(2): a written application for presentence or
+/// supervision records for a purpose other than sentencing reaches the
+/// determining official at least 14 days before production is required;
+/// the official may waive the requirement for a good-faith attempt (LCR
+/// 32-2(c)(3)).
+deadline records-application: 14.days before RecordsProductionRequired() counted_by frcrimp45 cite "D. Nev. LCR 32-2(c)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 35-1: the government has 21 days from the date of service
+/// of a motion for modification of sentence under FRCrimP 35 to file and
+/// serve a response.
+deadline rule35-response: 21.days after Rule35MotionServed() counted_by frcrimp45 cite "D. Nev. LCR 35-1"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 46-9(d): the clerk takes all reasonable steps to deposit
+/// funds into interest-bearing accounts within 14 days after service of
+/// the investment order.
+deadline registry-investment: 14.days after InvestmentOrderServed() counted_by frcrimp45 cite "D. Nev. LCR 46-9(d)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 46-9(e): the attorney or pro se party who obtained the
+/// order verifies, within 14 days after its service on the clerk, that the
+/// funds were invested as ordered.
+deadline registry-investment-verification: 14.days after InvestmentOrderServed() counted_by frcrimp45 cite "D. Nev. LCR 46-9(e)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 46-9(h): notice to the clerk on the disposition of funds in
+/// a timed instrument is served at least 14 days before the instrument
+/// matures; absent notice a renewable instrument is reinvested (LCR
+/// 46-9(g)).
+deadline timed-instrument-notice: 14.days before TimedInstrumentMatures() counted_by frcrimp45 cite "D. Nev. LCR 46-9(h)"
+{
+  forum frcrimp
+}
+
+/// D. Nev. LCR 55-1(e): exhibits not withdrawn within 21 days after the
+/// clerk notifies the parties to claim them are destroyed or disposed of
+/// as the court orders.
+deadline exhibit-claim: 21.days after ExhibitClaimNoticed() counted_by frcrimp45 cite "D. Nev. LCR 55-1(e)"
+{
+  forum frcrimp
+}

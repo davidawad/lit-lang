@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "nvd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:6839b342fc8d7bb1106cda023a4a55b01ce61a53497dafdf9b129a75d2499df5"
+semantic = "sha256:8f8d42fd1d71868dc38e94db98e546ab65027d883c26212718ea00049fbbe5ed"
+texts = [
+    "dnev-lcr sources/fed-dnev/dnev-local-rules-2020-04-17-crim-sectioned.txt sha256:7fb89a3eea78c26ed063a3df98d0ccfa730ba0ae32c6f6315eda5def1c46cb72",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

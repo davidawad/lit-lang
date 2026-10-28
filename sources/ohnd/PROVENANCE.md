@@ -15,3 +15,11 @@
 - Derived in the pod (lg-f3q8.61) from `ohnd/ohnd-local-civil-rules.txt` (extract sha256 312cece0863e466dff97942a2163040eb2129ba106b0287ff109548f7e92fc47); nothing fetched. One `## LR <n>` line is inserted right after each rule's own body heading line `Rule <n> <title>` (79 markers, LR 1.1 through LR 83.10; the table of contents and historical notes before the first rule are unmarked). Rule text was not edited: deleting the marker lines (`sed '/^## LR /d'`) restores the extract byte for byte.
 - Edition: as the extract, the full-text Local Civil Rules file "Civil Rules 4-10-2026" (newest revision LR 3.16, effective 4/10/26).
 - Sectioned sha256 2c85daad3e8f82924b5084fa72e52d32b0be0e4cad63b2b128f14df0c35a6713 (the `path_sha256` pinned by `lit/ohnd/Lit.toml`).
+
+### `ohnd/ohnd-local-criminal-rules-2024-10-01.txt` — N.D. Ohio Local Criminal Rules (full set, file dated 10-1-2024)
+
+- Source: https://www.ohnd.uscourts.gov/sites/ohnd/files/Full_Criminal_Rules_10-1-2024.pdf (official site; 89 pages, sha256 cb7a73f4f7963e4935b64a6346acbb11c5229042e75f1ee2eac3f7421d77ff85).
+- Edition: Full Criminal Rules, the PDF 'Full_Criminal_Rules_10-1-2024' linked at https://www.ohnd.uscourts.gov/local-criminal-rules; later single-rule redlines on https://www.ohnd.uscourts.gov/court-info/local-rules-and-orders (for example Local Criminal Rule 17.1.1) are not vendored. robots.txt of www.ohnd.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 8c27b13ef28a0e2e96cc6c051406ac6acb47e94b5d40b2ffca263c10515fb9d8. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `ohnd/original/ohnd-local-criminal-rules-2024-10-01.pdf` as served (sha256 cb7a73f4f7963e4935b64a6346acbb11c5229042e75f1ee2eac3f7421d77ff85); extraction sha256 8c27b13ef28a0e2e96cc6c051406ac6acb47e94b5d40b2ffca263c10515fb9d8.

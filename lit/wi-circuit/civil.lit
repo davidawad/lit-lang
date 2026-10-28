@@ -1,0 +1,178 @@
+module wi-circuit-court-civil.civil
+
+// Civil actions in the Wisconsin circuit courts, from the applicant's
+// (plaintiff's) side. Every period below is stated in a note, not counted:
+// Wis. Stat. § 801.15(1)(b) excludes the day of the triggering act,
+// includes the last day unless the clerk of courts office is closed that
+// day, and excludes Saturdays, Sundays and holidays from a period of less
+// than 11 days, and lit/core has no counting rule for it. The earlier
+// outline's Wisconsin Supreme Court decisions (Data Key Partners v. Permira
+// Advisers LLC, 2014 WI 86, on pleading; Lambrecht v. Estate of
+// Kaczmarczyk, 2001 WI 25, on summary judgment) are removed: no reporter
+// text is vendored, only the statutes' own annotations. Circuit court
+// local rules and judges' standing orders are not vendored.
+start complaint-filed
+
+state complaint-filed: "Summons and complaint filed" by applicant cite "Wis. Stat. § 801.02(1)"
+{
+  note "A civil action in which a personal judgment is sought is commenced as to a defendant when a summons and a complaint naming the person as defendant are filed with the court, provided an authenticated copy of each is served on the defendant within 90 days after filing (Wis. Stat. § 801.02(1)); the original summons and complaint are filed together and the copies served together, and fees payable on commencement are paid to the clerk at filing (§ 801.02(3), (6)). The 90-day period may not be enlarged (Wis. Stat. § 801.15(2)(a)). Periods are computed under § 801.15(1)(b): the day of the act is excluded and the last day included unless the clerk of courts office is closed; Saturdays, Sundays and holidays are excluded from a period of less than 11 days. A written motion that cannot be heard ex parte, with its notice of hearing, is served not later than 5 days before the hearing unless a statute or order fixes another period, and opposing affidavits not later than one day before it (§ 801.15(4)); 3 days are added to a prescribed period after service by mail, and one day after service by facsimile, electronic mail or the electronic filing system completed between 5 p.m. and midnight (§ 801.15(5)). The filing fee is not stated in the vendored chapters."
+  edge-complaint-filed-served "Summons and complaint served within 90 days" -> answer-due {
+    authority cite "Wis. Stat. § 801.11"
+  }
+  edge-complaint-filed-unserved "Not served within 90 days after filing" -> not-commenced {
+    authority cite "Wis. Stat. § 801.02(1)"
+  }
+}
+
+terminal not-commenced: "Action not commenced: no timely service" outcome [loss, dismissal] cite "Wis. Stat. § 801.02(1)"
+{
+  note "Without service within 90 days after filing, the action is not commenced as to that defendant (Wis. Stat. § 801.02(1)); the court may not enlarge the 90-day period (Wis. Stat. § 801.15(2)(a))."
+}
+
+decision answer-due: "Answer, motion or default" by office cite "Wis. Stat. § 802.06(1)"
+{
+  note "A defendant serves an answer within 20 days after service of the complaint; the state, its agencies, officers, employees and agents within 45 days; and, if a defendant is an insurance company or any cause of action in the original pleading, cross claim or counterclaim is founded in tort, the period is 45 days. A cross claim is answered and a counterclaim replied to within 20 days after service. A motion under § 802.06(2) alters these periods unless the court fixes another time: if the court denies it or postpones it to trial, the responsive pleading is served within 10 days after notice of the court's action; if it grants a motion for a more definite statement, within 10 days after service of the statement (Wis. Stat. § 802.06(1)). On motion for cause shown the court may enlarge a period; a motion made after it expires requires excusable neglect (Wis. Stat. § 801.15(2)(a))."
+  edge-answer-due-default "No answer: time for joining issue expired" -> default-motion {
+    authority cite "Wis. Stat. § 806.02(1)"
+  }
+  edge-answer-due-motion "Motion under § 802.06(2)" -> pleading-motion {
+    authority cite "Wis. Stat. § 802.06(2)"
+  }
+  edge-answer-due-answer "Answer served" -> scheduling { authority cite "Wis. Stat. § 802.06(1)" }
+}
+
+decision pleading-motion: "Motion to dismiss decided" by court cite "Wis. Stat. § 802.06(2)"
+{
+  note "The defenses listed in § 802.06(2), including failure to state a claim upon which relief can be granted, may be made by motion before pleading; if matters outside the pleadings are presented and not excluded on a motion to dismiss for failure to state a claim or for judgment on the pleadings, the motion is treated as one for summary judgment under § 802.08 (Wis. Stat. § 802.06(2), (3)). The § 802.06(2) defenses, the motion for judgment on the pleadings and the motion to strike are heard and determined before trial on motion of any party unless the assigned judge defers them (Wis. Stat. § 802.06(4)). If the motion is denied, the answer is due within 10 days after notice of the court's action (Wis. Stat. § 802.06(1))."
+  edge-pleading-motion-granted "Granted: claims dismissed" -> dismissed {
+    authority cite "Wis. Stat. § 802.06(2)"
+  }
+  edge-pleading-motion-amend "Pleading amended" -> amend { authority cite "Wis. Stat. § 802.09(1)" }
+  edge-pleading-motion-denied "Denied: answer within 10 days after notice" -> scheduling {
+    authority cite "Wis. Stat. § 802.06(1)"
+  }
+}
+
+state amend: "Amended pleading" by applicant cite "Wis. Stat. § 802.09(1)"
+{
+  note "A party may amend its pleading once as a matter of course at any time within 6 months after the summons and complaint are filed or within the time set in a scheduling order under § 802.10; otherwise only by leave of court, freely given when justice so requires, or by the adverse party's written consent. A response to an amended pleading is due within 20 days after its service unless the court orders otherwise or none is required, and within 45 days if a defendant is an insurance company, a cause of action is founded in tort, or the responding party is the state or its officer, agent, employee or agency (Wis. Stat. § 802.09(1))."
+  edge-amend-tested "Amended pleading tested again" -> pleading-motion {
+    authority cite "Wis. Stat. § 802.06(2)"
+  }
+}
+
+terminal dismissed: "Dismissed on the pleadings" outcome [loss, dismissal] cite "Wis. Stat. § 802.06(2)"
+{
+  note "Outcome from the applicant's side. An appeal runs from the entry of the final judgment or order (Wis. Stat. § 808.04(1))."
+}
+
+decision default-motion: "Motion for default judgment" by court cite "Wis. Stat. § 806.02(1)"
+{
+  note "A default judgment may be rendered if no issue of law or fact has been joined on a claim and the time for joining issue has expired; a defendant that has appeared is entitled to notice of the motion for judgment. After filing the complaint and proof of service and an affidavit that the party is in default for failure to join issue, the party may move for judgment according to the demand of the complaint; if proof of a fact is necessary the court receives it (Wis. Stat. § 806.02(1), (2)). A default judgment may be relieved on motion for mistake, inadvertence, surprise or excusable neglect, made within a reasonable time and not more than one year after entry (Wis. Stat. § 806.07(1), (2))."
+  edge-default-motion-granted "Default judgment rendered" -> default-judgment {
+    authority cite "Wis. Stat. § 806.02(2)"
+  }
+  edge-default-motion-relieved "Default excused: issue joined" -> scheduling {
+    authority cite "Wis. Stat. § 806.07(1)"
+  }
+}
+
+terminal default-judgment: "Default judgment for applicant" outcome [win] cite "Wis. Stat. § 806.02(2)"
+{
+  note "Outcome from the applicant's side."
+}
+
+state scheduling: "Scheduling order" by court cite "Wis. Stat. § 802.10(3)"
+{
+  note "Except in the categories exempted by § 802.10(1), the circuit court may enter a scheduling order on its own motion or a party's, after consulting the attorneys and any unrepresented party. It may address the time to join parties, amend pleadings, file motions and complete discovery; the time, not more than 30 days after entry of the order, to determine the mode of trial, including a jury demand and payment of the jury fee under § 814.61(4); expert witnesses; conference and trial dates; the timing of summary judgment; and settlement under § 802.12 (Wis. Stat. § 802.10(1), (3))."
+  edge-scheduling-discovery "Discovery opens" -> discovery { authority cite "Wis. Stat. § 804.01" }
+}
+
+state discovery: "Discovery" by applicant cite "Wis. Stat. § 804.01"
+{
+  note "Written interrogatories are answered within 30 days after service, but a defendant may answer within 45 days after service of the summons and complaint on it (Wis. Stat. § 804.08(1)); a request to produce is answered in writing within 30 days after service, with the same 45-day allowance for a defendant (Wis. Stat. § 804.09(2)); a matter in a request for admission is admitted unless answered or objected to within 30 days after service, and a defendant need not answer before 45 days after service of the summons and complaint (Wis. Stat. § 804.11(1)). The court may allow a shorter or longer time. Failure to obey a discovery order may be sanctioned, including by dismissing the action (Wis. Stat. § 804.12(2))."
+  edge-discovery-sj "Summary judgment motion" -> summary-judgment {
+    authority cite "Wis. Stat. § 802.08(1)"
+  }
+  edge-discovery-sanction "Discovery sanction dismisses the action" -> dismissed-sanction {
+    authority cite "Wis. Stat. § 804.12(2)"
+  }
+  edge-discovery-settled "Voluntary dismissal or stipulation" -> settled {
+    authority cite "Wis. Stat. § 805.04(1)"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Wis. Stat. § 802.10(3)" }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "Wis. Stat. § 804.12(2)"
+{
+  note "Outcome from the applicant's side."
+}
+
+decision summary-judgment: "Summary judgment decided" by court cite "Wis. Stat. § 802.08(2)"
+{
+  note "A party may move for summary judgment within 8 months of the filing of the summons and complaint or within the time set in a scheduling order (Wis. Stat. § 802.08(1)). Unless the scheduling order specifies earlier times, the motion is served at least 20 days before the time fixed for the hearing and the adverse party serves any opposing affidavits at least 5 days before it. Judgment is rendered if the pleadings, discovery and affidavits show no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law (Wis. Stat. § 802.08(2))."
+  edge-summary-judgment-granted "Granted" -> judgment-entered {
+    authority cite "Wis. Stat. § 802.08(2)"
+  }
+  edge-summary-judgment-denied "Denied" -> trial { authority cite "Wis. Stat. § 802.08(2)" }
+}
+
+state trial: "Trial by jury or by the court" by court cite "Wis. Stat. § 805.01"
+{
+  note "In a trial to the court, the findings and conclusions or memorandum of decision are made as soon as practicable and in no event more than 60 days after the cause is submitted in final form; on the court's own motion or a party's made not later than 20 days after entry of judgment, the court may amend its findings or conclusions and the judgment (Wis. Stat. § 805.17(2), (3))."
+  edge-trial-verdict "Jury verdict rendered" -> motions-after-verdict {
+    authority cite "Wis. Stat. § 805.16(1)"
+  }
+  edge-trial-court "Decision after trial to the court" -> judgment-entered {
+    authority cite "Wis. Stat. § 805.17(3)"
+  }
+  edge-trial-settled "Settled before verdict" -> settled { authority cite "Wis. Stat. § 805.04(1)" }
+}
+
+decision motions-after-verdict: "Motions after verdict" by court cite "Wis. Stat. § 805.16"
+{
+  note "Motions after verdict are filed and served within 20 days after the verdict is rendered, unless the court within those 20 days sets a longer time by order; arguments are heard not less than 10 nor more than 60 days after the verdict unless enlarged under § 801.15(2)(a); if the court does not decide a motion within 90 days after the verdict, it is considered denied and judgment is entered on the verdict. A motion for a new trial on newly discovered evidence may be made within one year after verdict and is deemed denied unless decided within 90 days after it is made (Wis. Stat. § 805.16(1)-(4)). The time for deciding motions after verdict under § 805.16(3), for reconsideration motions under § 805.17(3), for relief under § 806.07 and for initiating an appeal under § 808.04 may not be enlarged (Wis. Stat. § 801.15(2)(c))."
+  edge-motions-after-verdict-resolved "Decided, considered denied, or none filed" -> judgment-entered {
+    authority cite "Wis. Stat. § 805.16(3)"
+  }
+  edge-motions-after-verdict-new-trial "New trial ordered" -> trial {
+    authority cite "Wis. Stat. § 805.16"
+  }
+}
+
+decision judgment-entered: "Judgment entered" by office cite "Wis. Stat. § 806.06"
+{
+  note "A judgment is rendered when signed by the judge, or by the clerk at the judge's written direction, and entered when filed in the clerk's office; after entry either party may serve a written notice of entry containing the date of entry. The party in whose favor judgment is rendered and who has it entered perfects it within 30 days of entry, or within 30 days of service of notice of entry if the other party has it entered, or forfeits the right to recover costs (Wis. Stat. § 806.06(1), (3), (4)). The appeal is initiated within 45 days of entry if written notice of entry is given within 21 days of the judgment, otherwise within 90 days of entry (Wis. Stat. § 808.04(1))."
+  edge-judgment-entered-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "Wis. Stat. § 809.10(1)"
+  }
+  edge-judgment-entered-relief "Motion for relief from judgment" -> relief-motion {
+    authority cite "Wis. Stat. § 806.07(1)"
+  }
+  edge-judgment-entered-final "No appeal within time" -> final-no-appeal {
+    authority cite "Wis. Stat. § 808.04(1)"
+  }
+}
+
+decision relief-motion: "Relief from judgment decided" by court cite "Wis. Stat. § 806.07(2)"
+{
+  note "The motion is made within a reasonable time and, if based on mistake, inadvertence, surprise or excusable neglect, or on fraud, misrepresentation or other misconduct of an adverse party, not more than one year after the judgment was entered; one based on newly discovered evidence is made within the time provided in § 805.16. The motion does not affect the finality of the judgment or suspend its operation (Wis. Stat. § 806.07(1), (2))."
+  edge-relief-motion-granted "Relief granted: proceedings reopened" -> scheduling {
+    authority cite "Wis. Stat. § 806.07(1)"
+  }
+  edge-relief-motion-denied "Relief denied" -> final-no-appeal {
+    authority cite "Wis. Stat. § 806.07(2)"
+  }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Court of Appeals package" outcome [appeal] cite "Wis. Stat. § 809.10(1)"
+{
+  note "An appeal is initiated by filing a notice of appeal with the clerk of the circuit court in which the judgment or order was entered (Wis. Stat. § 809.10(1)(a)) within the time set by Wis. Stat. § 808.04(1). Hand-off to lit/wisctapp (wi-court-of-appeals-civil)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Wis. Stat. § 808.04(1)"
+
+terminal settled: "Settled: voluntary dismissal" outcome [settlement] cite "Wis. Stat. § 805.04(1)"
+{
+  note "The plaintiff may dismiss without order of court by serving and filing a notice of dismissal before the adverse party serves a responsive pleading or motion, or by filing a stipulation of dismissal signed by all parties who have appeared; unless stated otherwise the dismissal is not on the merits, but a notice of dismissal by a plaintiff who has once dismissed an action on the same claim operates as an adjudication on the merits (Wis. Stat. § 805.04(1))."
+}

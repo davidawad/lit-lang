@@ -804,6 +804,12 @@ binds = ["court"]               # guidance only, and required there: actors it b
 court = "ca9"                   # precedent and overruling only, required there
 designated = "2024-02-01"       # precedent only: designated precedential (absent: binds nowhere)
 overrules = ["pkg"]             # overruling only, required there: the precedents it withdraws
+reach = ["circuit-appellate"]   # precedent only, required there: families where it binds (L2017)
+
+[[package.instrument.holdings]] # precedent only, at least one: what alone may edit (L2016)
+holding = "..."                 # what the court held, in the opinion's words
+pin = "79 F.3d at 1215"         # required: the opinion page, `<reporter> at <page>`
+edits = "pack::id"              # required: the one rule element the holding edits
 authoritative = false           # optional, default true; false: a synthetic what-if layer
 
 [package.roles]                 # actor -> "self" | "opponent" | "nature"; Pack.roles
@@ -868,7 +874,13 @@ or `case-order` package has the `authority` of that rung of the
 `[package.roles]` keys), and only guidance does. A `precedent` or
 `overruling` names its `court` (a kebab-case id the forum families use);
 only a precedent is `designated`, on or after its `date`; only an
-overruling `overrules`, at least one package. `authoritative = false`
+overruling `overrules`, at least one package. A precedent names its
+binding `reach` (the `[family.*]` ids where it binds, `[]` for none) and
+at least one holding, each with its `holding`, the `pin` cite to the
+opinion page it is held at (`<reporter> at <page>`, the page starting
+with a digit) and the one rule element it `edits` (`pack::id`); only a
+precedent has either, and a holding without a pin cite or an edited
+element is L1004. `authoritative = false`
 marks a synthetic layer, admitted only to a counterfactual world (§5.8).
 `hypothetical` is not a kind: it is the modality of a world, in which a
 layer of any kind may appear (§2.5 item 2). A links manifest has neither
@@ -2235,6 +2247,14 @@ family's `circuits`), else persuasive; a world narrows it at its location
 (§5.8). The L2010 diagnostic is at the clause performing the effect
 (else the declaration's name), once per effect per declaration, and its
 notes give the class's row and the classes that permit the effect.
+The declared `reach` must be the computed one: the families whose
+`precedent` courts include its `court` at some location, empty when it
+is not `designated` (L2017 at the `reach` key; checked only against a
+`core` with a matrix). Only a holding edits: a precedent's declaration
+editing a rule element (a foreign exception's target, an `interprets`,
+`override` or `notwithstanding` target, a recharacterized or invalidated
+declaration) that no holding's `edits` names is dicta, L2016 at the
+clause (docs/litigate/CHANGE.md §2.8).
 
 **Recharacterizations and invalidations.** `recharacterize r: d
 characterization c` gives deadline `d` the character `c`
@@ -3075,6 +3095,8 @@ unchanged, and is graded `error`; anything else is rejected.
 | L2013 | refinement violated (counterexample) | | |
 | L2014 | vacuous refinement (unsat core) | | |
 | L2015 | refinement undecided (a hole) | | |
+| L2016 | dictum edit (no holding names the element) | | |
+| L2017 | precedent reach mismatch | | |
 | L9001 | rule without test | L6002 | semantic diff |
 | L9002 | hole present | L6003 | invalid engine expression |
 | L9003 | anonymous edge | L6004 | non-finite number |
@@ -3560,6 +3582,7 @@ gets one row per condition when the conditions classify differently.
 | C97 | L2013 an argument (`.lit` pattern or test, `.case` event, a bound date at replay) falsifies its parameter's refinement; an extension refinement admits a date past its deadline's bound (§3.5) | sema, verify | b | Ground arguments by exact evaluation (tier 1); the delegation bound by QF_LIA over the bound dates, a model the counterexample (tier 3). Done (lg-962.8). |
 | C98 | L2014 no value satisfies an alias's or an event's refinements (§3.5) | sema | b | QF_LIA/QF_LRA with finite enums (tier 3): unsat, with a minimal core. Done (lg-962.8). |
 | C99 | L2015 the SMT tier does not decide a refinement question (§3.5) | sema, verify | b | The hole of tier 3: the solver's deterministic budget, `i64` overflow building the query, or no solver (wasm); never a pass. Done (lg-962.8). |
+| C100 | L1004 a precedent without `reach` or a holding, a holding without a `pin` to the opinion page or an `edits` element; L2016 a precedent's edit of an element no holding names (dicta); L2017 a declared reach other than the computed one (§4.1, §5.7) | sema | a | `Instrument<Precedent>` carries `reach` and `holdings: NonEmpty<{pin, edits}>`; `edits(d) ⊆ {h.edits}` and `reach = {f : designated ∧ court ∈ precedent(f)[@circuit := any]}`, finite set equality. Done (lg-fg2h.1). |
 
 ### 13.4 SPEC rules with no code of their own
 

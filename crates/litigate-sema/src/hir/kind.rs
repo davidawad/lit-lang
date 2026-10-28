@@ -416,10 +416,35 @@ pub struct Instrument {
     /// The precedent packages an overruling withdraws.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub overrules: Vec<String>,
+    /// A precedent's binding reach: the forum families (`[family.*]` ids
+    /// of `core`) where its court's precedent binds, as the court
+    /// hierarchy computes it from `court` and `designated`; empty, it is
+    /// persuasive everywhere.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reach: Option<Vec<String>>,
+    /// A precedent's holdings: only a holding edits a rule element, so a
+    /// declaration editing an element no holding names is dicta (L2016).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub holdings: Vec<Holding>,
     /// False for a synthetic what-if layer: it may appear only in a
     /// counterfactual world (design review §2.5 item 2).
     #[serde(default = "yes", skip_serializing_if = "is_yes")]
     pub authoritative: bool,
+}
+
+/// One holding of a precedent (`[[package.instrument.holdings]]`): what
+/// the court held, the opinion page it is held at, and the one rule
+/// element it edits.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct Holding {
+    /// The holding, in the opinion's words.
+    pub holding: String,
+    /// The pin cite to the opinion page (`79 F.3d at 1215`).
+    pub pin: String,
+    /// The rule element it edits, as `pack::id` (a declaration of another
+    /// package, or the precedent's own declaration of the doctrine it
+    /// announces).
+    pub edits: String,
 }
 
 fn yes() -> bool {

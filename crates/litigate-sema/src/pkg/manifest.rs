@@ -3,7 +3,7 @@
 use super::semver::{Requirement, Version};
 use crate::db::span::{Report, TextRange};
 use crate::hir::{
-    ActorRole, CiteSyntax, Instrument, Interval, Kind, Law, Manifest, Scope, SourceBinding,
+    ActorRole, CiteSyntax, Holding, Instrument, Interval, Kind, Law, Manifest, Scope, SourceBinding,
 };
 use crate::types::date;
 use litigate_base::DiagnosticCode as C;
@@ -96,7 +96,17 @@ struct RawInstrument {
     court: Option<Spanned<String>>,
     designated: Option<Spanned<String>>,
     overrules: Option<Spanned<Vec<String>>>,
+    reach: Option<Spanned<Vec<String>>>,
+    holdings: Option<Spanned<Vec<Spanned<RawHolding>>>>,
     authoritative: Option<bool>,
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct RawHolding {
+    holding: Spanned<String>,
+    pin: Option<Spanned<String>>,
+    edits: Option<Spanned<String>>,
 }
 
 #[derive(Deserialize)]
@@ -624,8 +634,109 @@ fn instrument(
             .as_ref()
             .map(|o| o.get_ref().clone())
             .unwrap_or_default(),
+        reach: raw.reach.as_ref().map(|r| r.get_ref().clone()),
+        holdings: holdings(c, kind, raw),
         authoritative: raw.authoritative.unwrap_or(true),
     })
+}
+
+/// A precedent's holdings and binding reach (docs/litigate/CHANGE.md
+/// §2.8): it names its `reach` and at least one holding, each with the
+/// pin cite to the opinion page it is held at (`79 F.3d at 1215`) and the
+/// one rule element (`pack::id`) it edits. Only a precedent has either.
+fn holdings(c: &mut Checker, kind: &Kind, raw: &RawInstrument) -> Vec<Holding> {
+    let precedent = matches!(kind, Kind::Precedent { .. });
+    let at = range(&raw.source);
+    match &raw.reach {
+        Some(r) => {
+            c.check(precedent, range(r), || {
+                "`reach` names the binding reach of a `precedent` only".to_owned()
+            });
+            for family in r.get_ref() {
+                c.check(is_kebab(family), range(r), || {
+                    format!(
+                        "reach `{family}` must be a forum-family id such as `circuit-appellate`"
+                    )
+                });
+            }
+        }
+        None => c.check(!precedent, at, || {
+            "a precedent names its binding reach: add `reach = [...]` (the forum families where \
+             its court's precedent binds; `[]` where it binds nowhere) to `[package.instrument]`"
+                .to_owned()
+        }),
+    }
+    let Some(list) = &raw.holdings else {
+        c.check(!precedent, at, || {
+            "a precedent names its holdings: add `[[package.instrument.holdings]]` with \
+             `holding`, `pin` (the opinion page) and `edits` (the rule element)"
+                .to_owned()
+        });
+        return Vec::new();
+    };
+    c.check(precedent, range(list), || {
+        "`holdings` are a `precedent`'s only".to_owned()
+    });
+    c.check(!list.get_ref().is_empty(), range(list), || {
+        "a precedent has at least one holding".to_owned()
+    });
+    let mut out = Vec::new();
+    for h in list.get_ref() {
+        let h_at = range(h);
+        let h = h.get_ref();
+        c.check(
+            !h.holding.get_ref().trim().is_empty(),
+            range(&h.holding),
+            || "`holding` states what the court held".to_owned(),
+        );
+        match &h.pin {
+            Some(pin) => c.check(is_pin(pin.get_ref()), range(pin), || {
+                format!(
+                    "pin `{}` must cite the opinion page the holding is at, as `<reporter> at \
+                     <page>` (`79 F.3d at 1215`)",
+                    pin.get_ref()
+                )
+            }),
+            None => c.check(false, h_at, || {
+                "a holding without a pin cite is not a holding: add `pin` (the opinion page, \
+                 `79 F.3d at 1215`)"
+                    .to_owned()
+            }),
+        }
+        match &h.edits {
+            Some(e) => c.check(is_element(e.get_ref()), range(e), || {
+                format!(
+                    "edits `{}` must name one rule element as `pack::id`",
+                    e.get_ref()
+                )
+            }),
+            None => c.check(false, h_at, || {
+                "a holding names the rule element it edits: add `edits = \"pack::id\"`".to_owned()
+            }),
+        }
+        if let (Some(pin), Some(edits)) = (&h.pin, &h.edits) {
+            out.push(Holding {
+                holding: h.holding.get_ref().clone(),
+                pin: pin.get_ref().clone(),
+                edits: edits.get_ref().clone(),
+            });
+        }
+    }
+    out
+}
+
+/// True for a pin cite to an opinion page: `<reporter cite> at <page>`,
+/// the page starting with a digit (`375 U.S. at 387`, `Paper 30 at 3`).
+fn is_pin(text: &str) -> bool {
+    text.rsplit_once(" at ").is_some_and(|(cite, page)| {
+        !cite.trim().is_empty() && page.trim_start().starts_with(|c: char| c.is_ascii_digit())
+    })
+}
+
+/// True for a rule element named `pack::id`.
+fn is_element(text: &str) -> bool {
+    text.split_once("::")
+        .is_some_and(|(pack, id)| is_kebab(pack) && is_ident(id))
 }
 
 /// A judicial decision's keys (docs/litigate/CHANGE.md §2.8-§2.9): a

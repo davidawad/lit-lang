@@ -120,8 +120,9 @@ pub fn class_reports(db: &dyn salsa::Database, pkg: PackageInput, text: &str) ->
     let Some(ix) = class_index(db, pkg) else {
         return Vec::new();
     };
+    let mut out = reach_reports(db, pkg, text);
     let Some(why) = &ix.missing else {
-        return Vec::new();
+        return out;
     };
     let families = families(db, pkg);
     let mut report = Report::new(C::ClassOutsideFamily, key_range(text, "kind"), why.clone());
@@ -139,7 +140,78 @@ pub fn class_reports(db: &dyn salsa::Database, pkg: PackageInput, text: &str) ->
                 .join(", ")
         ));
     }
-    vec![report]
+    out.push(report);
+    out
+}
+
+/// The forum families where a precedent of `court`, designated
+/// precedential or not, binds at some location: its binding reach as the
+/// court hierarchy computes it.
+#[must_use]
+pub fn reach<'f>(families: &'f [Family], court: &str, designated: bool) -> Vec<&'f str> {
+    families
+        .iter()
+        .filter(|f| designated && f.binds(court, None))
+        .map(|f| f.id.as_str())
+        .collect()
+}
+
+/// L2017 for `pkg`'s manifest `text`: a precedent whose declared `reach`
+/// is not the computed one (docs/litigate/CHANGE.md §2.8). Without a
+/// matrix in `core` (a test library) nothing is computed, so nothing is
+/// checked.
+fn reach_reports(db: &dyn salsa::Database, pkg: PackageInput, text: &str) -> Vec<Report> {
+    let Some(m) = manifest(db, pkg).as_ref().ok().map(|m| &m.manifest) else {
+        return Vec::new();
+    };
+    let families = families(db, pkg);
+    let (Kind::Precedent { .. }, Some(i), false) = (&m.kind, &m.instrument, families.is_empty())
+    else {
+        return Vec::new();
+    };
+    let (Some(court), Some(declared)) = (i.court.as_deref(), i.reach.as_ref()) else {
+        return Vec::new();
+    };
+    let computed = reach(families, court, i.designated.is_some());
+    let mut sorted: Vec<&str> = declared.iter().map(String::as_str).collect();
+    sorted.sort_unstable();
+    sorted.dedup();
+    let mut want = computed.clone();
+    want.sort_unstable();
+    if sorted == want {
+        return Vec::new();
+    }
+    let list = |v: &[&str]| {
+        if v.is_empty() {
+            "none".to_owned()
+        } else {
+            v.iter()
+                .map(|f| format!("`{f}`"))
+                .collect::<Vec<_>>()
+                .join(", ")
+        }
+    };
+    let why = if i.designated.is_some() {
+        format!("`{court}` precedent binds in {}", list(&computed))
+    } else {
+        "it was not `designated` precedential, so it binds nowhere".to_owned()
+    };
+    vec![Report::new(
+        C::ReachMismatch,
+        key_range(text, "reach"),
+        format!(
+            "this precedent declares its binding reach as {}, but {why}",
+            list(&sorted)
+        ),
+    )
+    .note(format!(
+        "write `reach = [{}]`",
+        computed
+            .iter()
+            .map(|f| format!("\"{f}\""))
+            .collect::<Vec<_>>()
+            .join(", ")
+    ))]
 }
 
 /// The range of the line of `text` setting `key` (`key = ...`), else the

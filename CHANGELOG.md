@@ -9,6 +9,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **A precedent layer names its holdings and binding reach; dicta cannot
+  edit** (lg-fg2h.1; SPEC §4.1, §5.7; docs/litigate/CHANGE.md §2.8). A
+  `precedent`'s `[package.instrument]` requires `reach` (the forum
+  families where it binds) and at least one
+  `[[package.instrument.holdings]]` with `holding`, `pin` (the opinion
+  page, `79 F.3d at 1215`) and `edits` (the rule element, `pack::id`); a
+  holding without a pin cite or an edited element is L1004. New L2016: a
+  precedent's declaration editing an element no holding names. New
+  L2017: a declared reach other than the one its court and designation
+  compute. The five precedent packages under docs/litigate state theirs.
+
 - **A promoted state-court package declares its own coverage row, and
   docs/COVERAGE.md is no longer committed** (lg-4eum). `[package]
   jurisdiction_id = "alaska"` in a `lit/` package's `Lit.toml` names its

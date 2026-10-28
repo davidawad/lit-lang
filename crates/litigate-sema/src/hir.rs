@@ -32,7 +32,7 @@ pub use graph::{
     Basis, DeadlineWindow, Edge, EdgeDeadline, EdgePatch, GuardOp, GuardOpKind, Instance, Link,
     Node, NodeKind, TriangularDuration, Valence,
 };
-pub use kind::{Cell, Effect, Family, Instrument, Kind, Row, Scope};
+pub use kind::{Cell, Effect, Family, Holding, Instrument, Kind, Row, Scope};
 pub use logic::{
     Authority, DefaultRule, DelegatedOp, Delegation, EnumDecl, EventEffect, EventType, Exception,
     ExceptionKind, Expectation, Invalidation, Metadata, Recharacterization, Refinement, Relation,

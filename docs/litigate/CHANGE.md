@@ -214,6 +214,14 @@ cases; what it does; its effect row (the forum-independent ceiling,
     (L3004) needs the target's delegation to the precedent's rung. A
     one-proceeding waiver without precedential effect is a case order.
   - `set-prior`: evidence, moving a chance node's belief.
+- **Holdings and reach:** the instrument names its `court`, its decision
+  `date`, its binding `reach` (the families where it binds, as computed
+  above; another set is L2017) and its holdings
+  (`[[package.instrument.holdings]]`): each the `holding`, its `pin` cite
+  to the opinion page (`79 F.3d at 1215`) and the one rule element it
+  `edits` (`pack::id`). A holding without a pin cite or an edited element
+  is L1004. Only a holding edits: a declaration editing an element no
+  holding names is dicta, L2016.
 - **Persuasive precedent** may only declare and move a prior (L2010
   otherwise).
 - **Pending cases:** judicial decisions apply to every case still open on

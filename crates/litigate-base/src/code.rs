@@ -100,6 +100,8 @@ registry! {
     RefinementViolated = "L2013" => "A value does not satisfy the refinement of the parameter it is given for, or an extension's refinement admits a date past its deadline's extension bound (with a counterexample)",
     VacuousRefinement = "L2014" => "No value satisfies a refinement: its predicates contradict each other (an unsat core)",
     RefinementUndecided = "L2015" => "The SMT tier could not decide a refinement obligation (its resource limit, or no solver in this build): a hole, never a pass",
+    DictumEdit = "L2016" => "A precedent layer edits a rule element that no holding of its instrument (`[[package.instrument.holdings]]`, with the opinion's pin cite) names: dicta cannot edit",
+    ReachMismatch = "L2017" => "A precedent's declared binding reach (`reach` in `[package.instrument]`) is not the set of forum families its court and designation make it binding in",
     EffectiveOverlap = "L3001" => "Two versions of the same declaration overlap in in-force time",
     EffectiveGap = "L3002" => "A declaration version gap is not explicitly declared",
     UnresolvedPrecedence = "L3003" => "Conflicting rules remain unordered after relations and canons are applied",

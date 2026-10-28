@@ -252,6 +252,92 @@ pub fn check(cx: &mut Cx<'_, '_>, item: &Item, decl: &Declaration) {
         cx.report(report);
     }
     window(cx, item, decl);
+    dicta(cx, item, decl);
+}
+
+/// The rule elements `decl`, built from `item`, edits: the targets of its
+/// foreign exception, `interprets`, `override` and `notwithstanding`, and
+/// of a recharacterization or invalidation, each where it is written.
+fn edits<'d>(item: &Item, decl: &'d Declaration) -> Vec<(&'d str, TextRange)> {
+    let name = item_name(item).map_or(item.range, |n| n.range);
+    let at = |key: &str| clause(clauses_of(item), key).map_or(name, |f| f.key.range);
+    let (own, meta): (Option<&str>, Option<&Metadata>) = match decl {
+        Declaration::Exception(e) => (
+            foreign(&e.target).then_some(e.target.as_str()),
+            Some(&e.meta),
+        ),
+        Declaration::Recharacterize(r) => (Some(r.target.as_str()), Some(&r.meta)),
+        Declaration::Invalidate(i) => (Some(i.target.as_str()), Some(&i.meta)),
+        Declaration::Node(n) => (None, Some(&n.meta)),
+        Declaration::Deadline(d) => (None, Some(&d.meta)),
+        Declaration::Counting(c) => (None, Some(&c.meta)),
+        Declaration::Calendar(c) => (None, Some(&c.meta)),
+        Declaration::Limit(l) => (None, Some(&l.meta)),
+        Declaration::Grant(g) => (None, Some(&g.meta)),
+        Declaration::Rule(r) => (None, Some(&r.meta)),
+        Declaration::Default(d) => (None, Some(&d.meta)),
+        Declaration::Transition(t) => (None, Some(&t.meta)),
+        Declaration::Calibration(c) => (None, Some(&c.meta)),
+        _ => (None, None),
+    };
+    let mut out: Vec<(&'d str, TextRange)> = own.map(|t| (t, name)).into_iter().collect();
+    for r in meta.map_or(&[][..], |m| m.relations.as_slice()) {
+        let (key, target) = match r {
+            Relation::Override(t) => ("override", t),
+            Relation::Notwithstanding(t) => ("notwithstanding", t),
+            Relation::Interprets(t) => ("interprets", t),
+            _ => continue,
+        };
+        if foreign(target) {
+            out.push((target.as_str(), at(key)));
+        }
+    }
+    out
+}
+
+/// L2016 for each rule element a precedent's `decl` edits that no holding
+/// of its instrument names (docs/litigate/CHANGE.md §2.8): only a holding,
+/// pinned to the opinion page, edits; what no holding reaches is dicta.
+fn dicta(cx: &mut Cx<'_, '_>, item: &Item, decl: &Declaration) {
+    if !matches!(cx.class.map(|ix| &ix.kind), Some(Kind::Precedent { .. })) {
+        return;
+    }
+    let holdings = cx
+        .manifest
+        .and_then(|m| m.instrument.as_ref())
+        .map_or(&[][..], |i| i.holdings.as_slice());
+    let mut reports = Vec::new();
+    for (target, at) in edits(item, decl) {
+        if holdings.iter().any(|h| h.edits == target) {
+            continue;
+        }
+        let mut report = Report::new(
+            C::DictumEdit,
+            at,
+            format!(
+                "this precedent edits `{target}`, but no holding of its instrument names it: \
+                 dicta cannot edit"
+            ),
+        )
+        .note(format!(
+            "add `[[package.instrument.holdings]]` with `holding`, `pin` (the opinion page) and \
+             `edits = \"{target}\"` to Lit.toml"
+        ));
+        if !holdings.is_empty() {
+            report = report.note(format!(
+                "its holdings edit {}",
+                holdings
+                    .iter()
+                    .map(|h| format!("`{}` ({})", h.edits, h.pin))
+                    .collect::<Vec<_>>()
+                    .join(", ")
+            ));
+        }
+        reports.push(report);
+    }
+    for r in reports {
+        cx.report(r);
+    }
 }
 
 /// The effects of `row` by name.

@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://cdn.userway.org/widget.js" data-account="x3mWS39MTD"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-33818875-7"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-33818875-7');
+    </script>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>210 Pa. Code Chapter 16. Specialized Review </title>
+    <link href="/Content/bootstrap.css" rel="stylesheet"/>
+<link href="/Content/site.css" rel="stylesheet"/>
+
+    <script src="/Scripts/modernizr-2.6.2.js"></script>
+
+    <meta name="keywords" content="Pennsylvania Code & Bulletin Online, Pennsylvania Code, Pennsylvania Bulletin, Commonwealth of Pennsylvania, Pennsylvania Regulations, Pennsylvania Rulemaking">
+    <meta name="description" content="Information included at this site has been derived directly from the Pennsylvania Code, the Commonwealth's official publication of rules and regulations and from the Pennsylvania Bulletin, the Commonwealth's official gazette for information and rulemaking">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800,900">
+    <link href="https://fonts.googleapis.com/css?family=Cinzel:100,200,300,400,500,600,700,800,900">
+    
+</head>
+<body>
+
+
+    <a class="skip-link" href="#maincontent">Skip to main content</a>
+
+    <header>
+        <nav class="navbar navbar-inverse navbar-fixed-top navbar-color-pacode" aria-label="Primary">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button"
+                            class="navbar-toggle"
+                            data-toggle="collapse"
+                            data-target="#primary-navigation"
+                            aria-label="Open primary navigation"
+                            aria-controls="primary-navigation"
+                            aria-expanded="false">                        
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                        
+                <div class="navbar-brand visible-xs">
+                    
+                        <img src="/Content/Images/Marble_Code_MOBILE-72.jpg" style="width: 250px;" title="Pennsylvania Code" alt="Pennsylvania Code" />
+
+                </div>
+                </div>
+                <div id="primary-navigation" class="navbar-collapse collapse">
+                    <div id="fullscreen-id" class="hidden-xs hidden-sm hidden-md fullscreen-identification" style="color: white;"></div>
+                    <div id="fullscreen-id-sm" class="visible-sm visible-md fullscreen-identification" style="color: white;"></div>
+                    <ul class="nav navbar-nav">
+                        <li><a href="/">HOME</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="Search site">
+                                SEARCH <span class="caret" aria-hidden="true"></span>
+                            </a>
+                            <div class="dropdown-menu pacode-header-dropdown" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item pacode-header-dropdown" href="/Home/Pabull">Pennsylvania&nbsp;Bulletin</a><br />
+                                <a class="dropdown-item" href="/Home/Pacode">Pennsylvania Code</a>
+                                <div class="dropdown-divider pabull-dropdown-divider"></div>
+                                <a class="dropdown-item pacode-header-dropdown" href="/Home/Tips">Search Tips</a><br />
+                            </div>
+                        </li>
+                        <li><a href="/Home/About">ABOUT</a></li>
+                        <li><a href="/Home/Contact">CONTACT</a></li>
+                        <li><a href="/Home/FAQ">FAQ</a></li>
+
+                        <li><a href="/Account/PARegister">ALERTS</a></li>
+
+                    </ul>
+                    
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <div class="container-fluid body-content">
+        
+
+
+
+
+
+
+
+
+
+
+
+<script type="text/javascript">
+    function toggleScreenSize(currentMode) {
+        // alert('here');
+        var x = document.getElementById("home-leftpanel-column-pacode");
+        var screensize = document.getElementById("screen-size-text");
+        var screensizetarget = screensize.innerHTML;
+        var sizesave = "";
+        if (currentMode === "full" || screensizetarget.indexOf("Reduce") > -1) {
+            x.style.display = "block";
+            document.getElementById("maincontent").style.width = "75%";
+            document.getElementById('screen-size-text').innerHTML = "<span class='glyphicon glyphicon-fullscreen'></span><div class='navbar-text-desc'>Enter Full Screen</div>";
+            document.getElementById("ViewModeLink").onclick = function () { toggleScreenSize('reduce'); };
+            sizesave = "reduce";
+            // disable the full screen identification
+            document.getElementById('fullscreen-id').style.display = "none";
+            document.getElementById('fullscreen-id').innerHTML = "";
+            document.getElementById('fullscreen-id-sm').style.display = "none";
+            document.getElementById('fullscreen-id-sm').innerHTML = "";
+        } else {
+            x.style.display = "none";
+            document.getElementById("maincontent").style.width = "100%";
+            document.getElementById('screen-size-text').innerHTML = "<span class='glyphicon glyphicon-resize-small'></span><div class='navbar-text-desc'>Exit Full Screen</div>";
+            document.getElementById("ViewModeLink").onclick = function () { toggleScreenSize('full'); };
+            sizesave = "full";
+            // enable the full screen identification
+            document.getElementById('fullscreen-id').innerHTML = "<img class='fullscreen-id-image' alt='' src='/Content/Images/Marble_Code_MOBILE-72.jpg'/>";
+            document.getElementById('fullscreen-id').style.display = "inline";
+            document.getElementById('fullscreen-id-sm').innerHTML = "<div class='fullscreen-id-text'>Pennsylvania</br>Code</div>";
+        }
+        // update the Previous doc link
+        var prevlink = document.getElementById("PrevLink");
+        if (prevlink != null && prevlink.value != '') {
+            var prevlinkhref = prevlink.getAttribute("href");
+            prevlinkhref = prevlinkhref.replace(/\&d=(.*?)$/, "&d=" + sizesave)
+            prevlink.setAttribute("href", prevlinkhref);
+        }
+        var prevlink = document.getElementById("PrevLinkxs");
+        if (prevlink != null && prevlink.value != '') {
+            var prevlinkhref = prevlink.getAttribute("href");
+            prevlinkhref = prevlinkhref.replace(/\&d=(.*?)$/, "&d=" + sizesave)
+            prevlink.setAttribute("href", prevlinkhref);
+        }
+        // update the Next doc link
+        var nextlink = document.getElementById("NextLink");
+        if (nextlink != null && nextlink.value != '') {
+            var nextlinkhref = nextlink.getAttribute("href");
+            nextlinkhref = nextlinkhref.replace(/\&d=(.*?)$/, "&d=" + sizesave)
+            nextlink.setAttribute("href", nextlinkhref);
+        }
+        var nextlink = document.getElementById("NextLinkxs");
+        if (nextlink != null && nextlink.value != '') {
+            var nextlinkhref = nextlink.getAttribute("href");
+            nextlinkhref = nextlinkhref.replace(/\&d=(.*?)$/, "&d=" + sizesave)
+            nextlink.setAttribute("href", nextlinkhref);
+        }
+        // update the toc link
+        var toclink = document.getElementById("TOCLink");
+        if (toclink != null && toclink.value != '') {
+            var toclinkhref = toclink.getAttribute("href");
+            toclinkhref = toclinkhref.replace(/\&d=(.*?)$/, "&d=" + sizesave)
+            toclink.setAttribute("href", toclinkhref);
+        }
+        var toclink = document.getElementById("TOCLinkxs");
+        if (toclink != null && toclink.value != '') {
+            var toclinkhref = toclink.getAttribute("href");
+            toclinkhref = toclinkhref.replace(/\&d=(.*?)$/, "&d=" + sizesave)
+            toclink.setAttribute("href", toclinkhref);
+        }
+        // update the links in the breadcrumb
+        var breadcrumblink = document.getElementById("BreadCrumbLinkTitle");
+        if (breadcrumblink != null && breadcrumblink.value != '') {
+            var breadcrumblinkhref = breadcrumblink.getAttribute("href");
+            breadcrumblinkhref = breadcrumblinkhref.replace(/\&d=(.*?)$/, "&d=" + sizesave)
+            breadcrumblink.setAttribute("href", breadcrumblinkhref);
+        }
+        var breadcrumblink = document.getElementById("BreadCrumbLinkChapter");
+        if (breadcrumblink != null && breadcrumblink.value != '') {
+            var breadcrumblinkhref = breadcrumblink.getAttribute("href");
+            breadcrumblinkhref = breadcrumblinkhref.replace(/\&d=(.*?)$/, "&d=" + sizesave)
+            breadcrumblink.setAttribute("href", breadcrumblinkhref);
+        }
+
+        // update the links in the body
+        var matches = document.getElementsByClassName('TOCLinkBody');
+
+        for (var i = 0; i < matches.length; i++) {
+            var toclinkbodyhref = matches.item(i).getAttribute("href");
+            toclinkbodyhref = toclinkbodyhref.replace(/\&d=(.*?)$/, "&d=" + sizesave)
+            matches.item(i).setAttribute("href", toclinkbodyhref);
+        }
+
+    }
+</script>
+
+<script src="https://code.jquery.com/jquery-latest.js" type="text/javascript">
+</script>
+
+<script type="text/javascript">
+    // Here we are going to get the Searchvalue and try to highlight terms that the Search engine could not
+    // ie. examiner's  - the search engine doesn't handle the apostrophe
+    $(document).ready(function () {
+
+        $.urlParam = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            return results[1] || 0;
+        }
+        searchString = $.urlParam('searchunitkeywords')      // the search value
+        if (searchString.includes('%27')) {             // encoded apostrophe
+            searchString = searchString.replace("%27", "\’");  // undo the encoding for apostrophe
+            searchString = searchString.replace("%2C", " ");  // undo the encoding for space
+            // now attempt to hightlight words in the document
+            var inputText = document.getElementById("pacode-text-window");
+                var innerHTML = inputText.innerHTML;
+                var index = innerHTML.indexOf(searchString);
+               // alert("search string is: " + searchString + " and index is: " + index);
+                    innerHTML = innerHTML.replace(new RegExp(searchString, 'g'), "<span class='keyoti_highlight'>" + searchString + "</span>");
+                    inputText.innerHTML = innerHTML;
+        }
+    })
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // this function helps us read the URL params so we can look for the the condition d=full indicating full screen mode
+        $.urlParam = function (name) {
+            var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+            return results[1] || 0;
+        }
+        searchParams = $.urlParam('d')      // the "d" url parameter vaule
+        if (searchParams.includes('full')) {
+            // if we are in full screen mode do the below - we need this here for the case where the user is using Next and Prev buttons
+            // enable the full screen identification
+            document.getElementById('fullscreen-id').innerHTML = "<img class='fullscreen-id-image' alt='' src='/Content/Images/Marble_Code_MOBILE-72.jpg'/>";
+            document.getElementById('fullscreen-id').style.display = "inline";
+            document.getElementById('fullscreen-id-sm').innerHTML = "<div class='fullscreen-id-text'>Pennsylvania</br>Code</div>";
+        }
+
+    })
+</script>
+
+<script>
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.getElementById('textpanel').scrollTop > 20) {
+        document.getElementById("myBtn").style.display = "block";
+        document.getElementById("myBtnBottom").style.display = "none";
+    } else {
+        document.getElementById("myBtn").style.display = "none";
+        document.getElementById("myBtnBottom").style.display = "block";
+    }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+    // go to the top of the main page
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+    // set the text view panel to the top as well
+    var myDiv = document.getElementById('textpanel');
+    myDiv.scrollTop = 0;
+}
+function bottomFunction() {
+    // go to the bottom of the main page
+    document.body.scrollTop = document.body.scrollHeight;
+    document.documentElement.scrollTop = document.documentElement.scrollHeight;
+    // set the text view panel to the top as well
+    var myDiv = document.getElementById('textpanel');
+    myDiv.scrollTop = myDiv.scrollHeight;
+}
+</script>
+<script>
+    function printContent(el) {
+    // get the HTML content from the div and open it in a new window so it stands alone
+        var printReport = document.getElementById("textpanel").innerHTML;
+        printReport = "<a class='printwindow-close' style='margin-left: 40px;' href='javascript:window.close();'>Close Window</a>" + printReport;
+        var w = window.open();
+        $(w.document.body).html(printReport);
+        w.print();
+    }
+</script>
+
+<div class="row">
+
+    <aside id="home-leftpanel-column-pacode"
+           class="col-md-3 hidden-print"
+           style="display:block;"
+           aria-label="Pennsylvania Code information">
+
+
+        
+
+
+
+<div class="hidden-xs hidden-sm">
+
+
+        <!--<h1>Pennsylvania<br />Code</h1>-->
+
+
+    <div class="hidden-xs banner-leftnav">
+            <a href="/"><img src="/Content/Images/PA_Code_Image-72.jpg" title="Pennsylvania Code" alt="Pennsylvania Code" /></a>
+    </div>
+</div>
+
+<div class="leftnavcontainer">
+    <!-- desktop or larger only -->
+    <div class="commonwealth-heading" aria-label="Commonwealth of Pennsylvania">
+        <span class="commonwealth-heading-line" aria-hidden="true">
+            <span class="commonwealth-heading-initial">C</span>OMMONWEALTH OF
+        </span>
+        <span class="commonwealth-heading-line" aria-hidden="true">
+            <span class="commonwealth-heading-initial">P</span>ENNSYLVANIA
+        </span>
+    </div>
+
+    <!-- small screen ipad like only -->
+    <div class="commonwealth-heading-smallscreen visible-sm">
+            <img src="/Content/Images/Marble_Code_MOBILE-72.jpg" style="" title="Pennsylvania Code" alt="Pennsylvania Code" />
+
+
+    </div>
+
+    <!-- small screen and xtra small only -->
+    <div class="commonwealth-heading-black visible-xs visible-sm"
+         aria-label="Commonwealth of Pennsylvania">
+        <span aria-hidden="true">
+            <span class="commonwealth-heading-initial-mobile">C</span>OMMONWEALTH OF
+        </span>
+        <span aria-hidden="true">
+            <span class="commonwealth-heading-initial">P</span>ENNSYLVANIA
+        </span>
+    </div>
+
+    <div class="hidden-xs hidden-sm">
+        <p class="leftpaneltext-bold">No statutes or acts will be found at this website.</p>
+
+        <div>
+                <p class="leftpaneltext">
+                    The <em><strong>Pennsylvania Code</strong></em> website reflects the <em>Pennsylvania Code</em>
+                    changes effective through 56 Pa.B. 5370 (August 8, 2026).
+                </p>
+                    </div>
+    </div>
+
+
+    <div class="visible-xs visible-sm">
+
+        <div class="introformobile-container">
+
+
+            <button type="button"
+                    class="accordion-toggle homelink collapsed button-reset"
+                    data-toggle="collapse"
+                    data-target="#introformobile-pacode"
+                    aria-expanded="false"
+                    aria-controls="introformobile-pacode">
+                About the Pennsylvania Code & Bulletin
+            </button>
+
+
+
+            <div id="introformobile-pacode" class="collapse">
+
+                <p class="leftpaneltextmobile">&bull; No statutes or acts will be found at this website.</p>
+
+                    <p class="leftpaneltextmobile">The <em><strong>Pennsylvania Code</strong></em> website reflects the <em>Pennsylvania Code</em> changes effective through 56 Pa.B. 5370 (August 8, 2026).</p>
+                            </div>
+        </div>
+    </div>
+
+    <div class="hidden-xs hidden-sm alert-leftnav">
+        <a href="/Account/PARegister"><img src="/Content/Images/Email_Alert_Icon-72.png" alt="Email Alerts" title="Email Alerts" border="0" /></a>
+    </div>
+</div>
+
+    </aside>
+
+    <!--- Middle Column -->
+    <main id="maincontent" style="width: 75%;" class="col-md-9">
+        <div id="pacode-text" class="parent" style="height: 890px;">
+            <!-- header-->
+
+
+            <nav class="visible-xs" aria-label="Document actions">
+                <div style="background-color: #eeeeee; text-align: center;">
+                    <ul class="nav navbar-nav">
+
+                                <li class="subnav-sm-override">
+                                    <a id="TOCLinkxs" href="/Display/pacode?file=/secure/pacode/data/210/210toc.html&amp;d=reduce" title="Title Table of Contents">
+                                        <span class="glyphicon glyphicon-list"></span> <div class="navbar-text-label-xs">Title 210 Contents</div>
+                                        <div class="navbar-text-desc-xs">Title 210 Contents</div>
+                                    </a>
+                                </li>
+                                <li style="display: none;"><a id="PrevLink" href=""></a></li>
+                                <!-- needs to be here so javascript doesn't break -->
+                                <li style="display: none;"><a id="NextLink" href=""></a></li>
+                                <!-- needs to be here so javascript doesn't break -->
+
+
+                        <!-- if a search was performed, include link back to the results else just link to search -->
+                                <li class="subnav-sm-override">
+                                    <a href="/Home/Pacode" title="Search">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                        <div class="navbar-text-desc-xs">Search</div>
+                                    </a>
+                                </li>
+
+
+                        <li class="subnav-sm-override">
+                            <a id="ViewModeLink-xs" href="#" onclick="toggleScreenSize('reduce');">
+                                <span id="screen-size-text-xs">
+                                            <span class="glyphicon glyphicon-fullscreen"></span>
+                                            <div class="navbar-text-desc-xs">Enter Full Screen</div>
+
+                                </span>
+                            </a>
+                        </li>
+
+                    </ul>
+                </div>
+            </nav>
+            <nav class="child hidden-xs d-print-none"
+                 style="background-color: #eeeeee; text-align: center;"
+                 aria-label="Document actions">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav docview-subnav-pacode navbar-nav">
+
+                                    <li>
+                                        <a id="TOCLink" href="/Display/pacode?file=/secure/pacode/data/210/210toc.html&amp;d=reduce" title="Title Table of Contents">
+                                            <span class="glyphicon glyphicon-list"></span>
+                                            <div class="navbar-text-desc">Title 210 Contents</div>
+                                        </a>
+                                    </li>
+                                    <li style="display: none;"><a id="PrevLink" href=""></a></li>
+                                    <!-- needs to be here so javascript doesn't break -->
+                                    <li style="display: none;"><a id="NextLink" href=""></a></li>
+                                    <!-- needs to be here so javascript doesn't break -->
+
+
+                            <!-- if a search was performed, include link back to the results else just link to search -->
+                                    <li>
+                                        <a href="/Home/Pacode" title="Search">
+                                            <span class="glyphicon glyphicon-search"></span>
+                                            <div class="navbar-text-desc">Search</div>
+                                        </a>
+                                    </li>
+
+                            <li>
+                                <a id="printwindow" href="#" onclick="printContent('textpanel');" title="Print Document">
+                                    <span class="glyphicon glyphicon-print"></span>
+                                    <div class="navbar-text-desc">Print</div>
+                                </a>
+                            </li>
+
+                            <li>
+                                <a id="ViewModeLink" href="#" onclick="toggleScreenSize('reduce');">
+                                    <span id="screen-size-text">
+                                                <span class="glyphicon glyphicon-fullscreen"></span>
+                                                <div class="navbar-text-desc">Enter Full Screen</div>
+
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Display Breadcrumb -->
+                    <nav id="BreadCrumbBlock"
+                         class="breadcrumb-container breadcrumb-pacode"
+                         aria-label="Breadcrumb">
+                        <div class="breadcrumb-item"><a id="BreadCrumbLinkTitle" class="breadcrumb-link" href="/Display/pacode?file=/secure/pacode/data/210/210toc.html&d=reduce">Title 210</a></div><div class="breadcrumb-item breadcrumb-separator">&nbsp;<a id="BreadCrumbLinkChapter" class="breadcrumb-link" href="/Display/pacode?file=/secure/pacode/data/210/chapter16/chap16toc.html&d=reduce">Chapter 16</a><a class="breadcrumb-link" href="/secure/pacode/data/210/chapter16/210_0016.pdf" target="_blank" title="View PDF for this chapter"><img class="pdf-download breadcrumb-pdficon" src="/Content/images/pdficon.png"/></a></div>
+                    </nav>
+
+
+            <div onscroll="scrollFunction()" id="textpanel" style="overflow: auto; width: 100%; height: 800px;">
+                <article>
+                    <div>
+                        <!-- this div had height 1200 that was removed-->
+                        <div id="pacode-text-window">
+                            <html>
+<head>
+<title>Pennsylvania Code</title>
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="-1">
+<meta name="Keyoti_ROBOTS" CONTENT="NOINDEX, NOFOLLOW"/>
+<meta name="title" content="210">
+<meta name="title2" content="210">
+<meta name="chapter" content="0016">
+<meta name="chapter2" content="16">
+<meta name="section" content="">
+<meta name="section2" content="">
+<meta name="section3" content="">
+</head>
+<body bgcolor="#FFFFFF"><blockquote>
+<map name="link2">
+
+
+
+
+</map>
+
+<br><br>
+<br/><H1><CENTER>CHAPTER 16.&nbsp;SPECIALIZED REVIEW<br/></CENTER></H1>
+<!-- Table of Contents -->
+<H3><CENTER>IN GENERAL</CENTER></H3>
+<P align="LEFT">Rule</P>
+<br/>1601.&nbsp;&nbsp;&nbsp;&nbsp;<a class="TOCLinkBody" href="pacode?file=/secure/pacode/data/210/chapter16/s1601.html&d=reduce">Scope of Chapter.</a>
+<br/>1602.&nbsp;&nbsp;&nbsp;&nbsp;<a class="TOCLinkBody" href="pacode?file=/secure/pacode/data/210/chapter16/s1602.html&d=reduce">Filing.</a>
+<br/>1603.&nbsp;&nbsp;&nbsp;&nbsp;<a class="TOCLinkBody" href="pacode?file=/secure/pacode/data/210/chapter16/s1603.html&d=reduce">Form and Content.</a>
+<br/>1604.&nbsp;&nbsp;&nbsp;&nbsp;<a class="TOCLinkBody" href="pacode?file=/secure/pacode/data/210/chapter16/s1604.html&d=reduce">Service.</a>
+<br/>1605.&nbsp;&nbsp;&nbsp;&nbsp;<a class="TOCLinkBody" href="pacode?file=/secure/pacode/data/210/chapter16/s1605.html&d=reduce">Response to Petition.</a>
+<br/>1606.&nbsp;&nbsp;&nbsp;&nbsp;<a class="TOCLinkBody" href="pacode?file=/secure/pacode/data/210/chapter16/s1606.html&d=reduce">Further Review.</a>
+<H3><CENTER>SPECIFIC PETITIONS FOR SPECIALIZED REVIEW</CENTER></H3>
+<br/>1610.&nbsp;&nbsp;&nbsp;&nbsp;<a class="TOCLinkBody" href="pacode?file=/secure/pacode/data/210/chapter16/s1610.html&d=reduce">Review of Bail Orders.</a>
+<br/>1611.&nbsp;&nbsp;&nbsp;&nbsp;<a class="TOCLinkBody" href="pacode?file=/secure/pacode/data/210/chapter16/s1611.html&d=reduce">Review of Special Prosecution Orders.</a>
+<br/>1612.&nbsp;&nbsp;&nbsp;&nbsp;<a class="TOCLinkBody" href="pacode?file=/secure/pacode/data/210/chapter16/s1612.html&d=reduce">Review of Out-of-Home Placement in Juvenile Delinquency.</a>
+<br/>1613.&nbsp;&nbsp;&nbsp;&nbsp;<a class="TOCLinkBody" href="pacode?file=/secure/pacode/data/210/chapter16/s1613.html&d=reduce">Review of Orders Affecting the Duration of an Indicting Grand Jury.</a>
+<br/>1614.&nbsp;&nbsp;&nbsp;&nbsp;<a class="TOCLinkBody" href="pacode?file=/secure/pacode/data/210/chapter16/s1614.html&d=reduce">Review of Orders Denying Waiver of Fees and Costs.</a>
+<p><CENTER><B>Source</B></CENTER></P>
+</FONT>
+<p>&nbsp;&nbsp;&nbsp;The provisions of this Chapter 16 issued January 7, 2020, effective August 1, 2020, 50 Pa.B. 505, unless otherwise noted.
+<!--sectbreak;t210;c0016;s1601-->
+
+<br/><H3><CENTER>IN GENERAL</CENTER></H3><br/>
+
+
+
+<a name="1601."></a><h4 class="pacode-section-title"><FONT SIZE=+1>Rule 1601.&nbsp;</FONT>Scope of Chapter.</H4>
+
+<p>&nbsp;This chapter provides a petition procedure for appellate review of certain discrete issues. Generally, these matters are ancillary and/or preliminary to appellate review under Chapters 9, 11, 13, or 15, but the chapter also is intended to provide the method for initiating any otherwise-authorized form of appellate review that does not fall within those chapters.
+
+<p>&nbsp;The procedure applicable under this chapter is provided in Pa.R.A.P. 1602&#151;1605, unless otherwise prescribed by statute or rule relating to a particular category of petition for specialized review.<br/>
+
+<p>&nbsp;&nbsp;&nbsp;Official Note
+
+
+
+<p>&nbsp;&nbsp;&nbsp;Judicial review of government unit actions or inactions not otherwise permitted under Chapters 9, 11, 13 or 15, including those enumerated in Pa.R.A.P. 1601, is available under Chapter 16 to the extent delineated in its provisions. The document that initiates the case under Chapter 16 is called a petition for specialized review. The &#145;&#145;residuary&#146;&#146; initiating document function previously assigned to Chapter 15 is now assigned to Chapter 16.
+
+<!--sectbreak;t210;c0016;s1602-->
+
+<a name="1602."></a><h4 class="pacode-section-title"><FONT SIZE=+1>Rule 1602.&nbsp;</FONT>Filing.</H4>
+
+<p>&nbsp;(a)&nbsp;&nbsp;<I>Time for filing</I>.&#151;Unless a statute, rule, or order of a court provides for a different time of filing a petition for specialized review, the petition for specialized review shall be filed with the prothonotary of the appellate court within 30 days after the entry of the order sought to be reviewed. The petition shall be deemed filed on the date mailed if the petitioner complies with the requirements set forth in paragraph (b).
+
+<p>&nbsp;(b)&nbsp;&nbsp;<I>Deemed </I><I>Received on Date of Mailing.</I>
+
+<p>&nbsp;</B>(1)&nbsp;If the petition for specialized review is transmitted to the prothonotary of the appellate court by means of first class, express, or priority United States Postal Service mail, the petition shall be deemed received by the prothonotary for the purposes of Pa.R.A.P. 121(a) on the date deposited in the United States mail, as shown on a United States Postal Service Form 3817 Certificate of Mailing, Form 3800 Receipt for Certified Mail, Form 3806 Receipt for Registered Mail, or other similar United States Postal Service form from which the date of deposit can be verified.
+
+<p>&nbsp;(2)&nbsp;The certificate of mailing or other similar Postal Service form from which the date of deposit can be verified shall be cancelled by the Postal Service, shall show the docket number of the matter in the trial court or other government unit and shall be either enclosed with the petition or separately mailed to the prothonotary. Upon actual receipt of the petition for specialized review the prothonotary of the appellate court shall immediately stamp it with the date of actual receipt. That date, or the date of earlier deposit in the United States mail as prescribed in this subdivision, shall constitute the date of filing, which date shall be shown on the docket.
+
+<p>&nbsp;(3)&nbsp;The prothonotary of the appellate court shall immediately note the appellate docket number assignment upon the petition and give written notice of the docket number assignment in person or by first class mail to the government unit or clerk of the trial court, to the petitioner and to the other persons named in the proof of service accompanying the petition.
+
+<p>&nbsp;(c)&nbsp;&nbsp;<I>Fee</I>.&#151;The petitioner, upon filing the petition for specialized review, shall pay any fee therefor prescribed by Chapter 27.
+
+<p>&nbsp;(d)&nbsp;&nbsp;<I>Entry of appearance</I>.&#151;Upon the filing of the petition for specialized review, the prothonotary of the appellate court shall note on the record as counsel for the petitioner the name of counsel, if any, set forth in or endorsed upon the petition for specialized review, and, as counsel for other parties, counsel, if any, named in the proof of service. The prothonotary shall upon <I>praecipe</I> of any such counsel for other parties, filed at any time within 30 days after filing of the petition, strike off or correct the record of appearance. Thereafter a counsel&#146;s appearance for a party may not be withdrawn without leave of court, unless another lawyer has entered or simultaneously enters an appearance for the party.<br/>
+
+<p><CENTER><B>Source</B></CENTER></P>
+
+
+
+<p>&nbsp;&nbsp;&nbsp;The provisions of this Rule 1602 amended September 11, 2023, effective January 1, 2024, 53 Pa.B. 5877. Immediately preceding text appears at serial pages (401647) to (401648).
+
+<!--sectbreak;t210;c0016;s1603-->
+
+<a name="1603."></a><h4 class="pacode-section-title"><FONT SIZE=+1>Rule 1603.&nbsp;</FONT>Form and Content.</H4>
+
+<p>&nbsp;(a)&nbsp;&nbsp;<I>Caption and parties</I>.&#151;All parties to the proceeding in the trial court or other government unit other than the petitioner shall be named as respondents.
+
+<p>&nbsp;(b)&nbsp;&nbsp;<I>Title</I>.&#151;If the petition for specialized review is filed pursuant to Pa.R.A.P. 1610&#151;1613, the title of the petition shall include a reference to the specific rule invoked.
+
+<p>&nbsp;(c)&nbsp;&nbsp;<I>Content</I>.&#151;The petition for specialized review need not be set forth in numbered paragraphs in the manner of a pleading, and shall contain the following (which shall, insofar as practicable, be set forth in the order stated):
+
+
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(1)&nbsp;&nbsp;a statement of the basis for the jurisdiction of the appellate court.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(2)&nbsp;&nbsp;the name of the party or person seeking review.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(3)&nbsp;&nbsp;the text of the order in question, and the date of its entry. If the order is voluminous, it may, if more convenient, be appended to the petition. If the petition seeks review of a deemed denial, it should so state.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(4)&nbsp;&nbsp;a concise statement of the case containing the facts necessary to an understanding of the issue(s) presented.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(5)&nbsp;&nbsp;the question(s) presented, expressed in the terms and circumstances of the case but without unnecessary detail.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(6)&nbsp;&nbsp;a concise statement of the reasons why the trial court or other government unit erred.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(7)&nbsp;&nbsp;a copy of any opinions relating to the order sought to be reviewed, including findings of fact and conclusions of law, as well as a copy of any other record documents necessary to the appellate court&#146;s review.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(8)&nbsp;&nbsp;the certificate of compliance required by Pa.R.A.P. 127.
+
+<p>&nbsp;(d)&nbsp;&nbsp;<I>Supporting brief</I>.&#151;No supporting brief is permitted or required; the petition for specialized review shall present all contentions and arguments relied on with accuracy, brevity, and clarity.
+
+<p>&nbsp;(e)&nbsp;&nbsp;<I>Length</I>.&#151;A petition for specialized review shall not exceed 9,000 words. A petition for specialized review that does not exceed 20 pages when produced by a word processor or typewriter shall be deemed to meet the 9,000 word limit. In all other cases, the attorney or the unrepresented filing party shall include a certification that the petition complies with the word count limit. The certificate may be based on the word count of the word processing system used to prepare the brief.
+
+<!--sectbreak;t210;c0016;s1604-->
+
+<a name="1604."></a><h4 class="pacode-section-title"><FONT SIZE=+1>Rule 1604.&nbsp;</FONT>Service.</H4>
+
+<p>&nbsp;A copy of the petition for specialized review shall be served by the petitioner on the trial court or other government unit that made the determination sought to be reviewed. In matters involving the Commonwealth, the petitioner shall similarly serve a copy upon the Attorney General of Pennsylvania. All parties before the trial court or other government unit shall be served in accordance with Pa.R.A.P. 121.
+
+<!--sectbreak;t210;c0016;s1605-->
+
+<a name="1605."></a><h4 class="pacode-section-title"><FONT SIZE=+1>Rule 1605.&nbsp;</FONT>Response to Petition.</H4>
+
+<p>&nbsp;(a)&nbsp;&nbsp;<I>Time for filing</I>.&#151;A party may file and serve a response to a petition for specialized review within 30 days of service of the petition. The response shall be deemed filed on the date of mailing if first class, express, or priority United States Postal Service mail is utilized.
+
+<p>&nbsp;(b)&nbsp;&nbsp;<I>Content</I>.&#151;The response, which need not be set forth in numbered paragraphs in the manner of a pleading, shall set forth any procedural, substantive, or other argument or ground why the relief requested should be denied and shall comply with the length limitation and the other provisions of Pa.R.A.P. 1603 to the extent applicable, including the certificate of compliance required by Pa.R.A.P. 127. No separate motion to dismiss a petition for specialized review will be received. A party entitled to file a response under this rule who does not intend to do so shall, within the time fixed by these rules for filing a response, file a letter stating that a response to the petition for specialized review will not be filed. The failure to file a response will not be construed as concurrence in the petition for specialized review.
+
+<!--sectbreak;t210;c0016;s1606-->
+
+<a name="1606."></a><h4 class="pacode-section-title"><FONT SIZE=+1>Rule 1606.&nbsp;</FONT>Further Review.</H4>
+
+<p>&nbsp;A party wishing to seek review in the Supreme Court of a final order of an intermediate appellate court on a petition for specialized review must file a timely petition for allowance of appeal.
+
+<!--sectbreak;t210;c0016;s1610-->
+
+<br/><H3><CENTER>SPECIFIC PETITIONS FOR SPECIALIZED REVIEW</CENTER></H3><br/>
+
+
+
+<a name="1610."></a><h4 class="pacode-section-title"><FONT SIZE=+1>Rule 1610.&nbsp;</FONT>Review of Bail Orders.</H4>
+
+<p>&nbsp;Where the trial court enters an order under Pa.R.A.P. 1762(b) granting or denying release or modifying the conditions of release before sentence, a party may seek review of that order by filing a petition for specialized review in the appellate court that would have jurisdiction over the appeal from the judgment of sentence. A party shall file the certificate of compliance required by Pa.R.A.P. 127 with the petition for specialized review.<br/>
+
+<p>&nbsp;&nbsp;&nbsp;Official Note
+
+
+
+<p>&nbsp;&nbsp;&nbsp;<I>See</I> Pa.R.A.P. 1762(a) and Pa.R.A.P. 1762(e).
+
+<!--sectbreak;t210;c0016;s1611-->
+
+<a name="1611."></a><h4 class="pacode-section-title"><FONT SIZE=+1>Rule 1611.&nbsp;</FONT>Review of Special Prosecution Orders.</H4>
+
+<p>&nbsp;(a)&nbsp;&nbsp;<I>General rule</I>.&#151;Within ten days after the entry of the order sought to be reviewed, a petition for specialized review may be filed in the Supreme Court of Pennsylvania seeking review of the following orders:
+
+
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(1)&nbsp;&nbsp;An order relating to the supersession of a district attorney by an Attorney General or by a court, or to the appointment, supervision, administration or operation of a special prosecutor.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(2)&nbsp;&nbsp;An order relating to the convening or discharge of an investigating grand jury or otherwise affecting its existence.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(3)&nbsp;&nbsp;An order entered in connection with the supervision, administration, or operation of an investigating grand jury or otherwise directly affecting an investigating grand jury or any investigation conducted by it.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(4)&nbsp;&nbsp;An order enforcing or refusing to enforce a subpoena issued by or otherwise affecting the existence or operation of any investigating committee of the General Assembly.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(5)&nbsp;&nbsp;An order of the type specified in subparagraphs (1) through (4) of this paragraph which contains a statement by the trial court pursuant to 42 Pa.C.S. &#167;&nbsp;&nbsp;702(b) (interlocutory appeals by permission). Chapter 13 shall not be applicable to such an order.
+
+<p>&nbsp;A party shall file the certificate of compliance required by Pa.R.A.P. 127 with the petition for specialized review. Seven copies of any filings under this rule shall be filed with the original. Pa.R.A.P. 3309 (applications for extraordinary relief) shall not be applicable to an order reviewable under this rule.
+
+<p>&nbsp;(b)&nbsp;&nbsp;<I>Opinion and record</I>.&#151;The Supreme Court on its own initiative may direct that the trial court comply with Pa.R.A.P. 1925 or that the record be otherwise corrected or supplemented.
+
+<p>&nbsp;(c)&nbsp;&nbsp;<I>Distribution and disposition</I>.&#151;Upon receipt of the last filing that a party is entitled to make under this rule, the filings shall be distributed by the Prothonotary to the Supreme Court for its consideration. The Supreme Court may thereafter dispose of the petition or set it down for argument.
+
+<p>&nbsp;(d)&nbsp;&nbsp;<I>Interlocutory matters</I>.&#151;The interlocutory or final nature of an order shall not be affected by this rule and, unless independent grounds appear for the review of an interlocutory order, the interlocutory nature of the order will be a sufficient reason for denying the petition. The denial of a petition shall be deemed a disposition on the merits unless otherwise ordered or unless the petition expressly seeks permission to appeal from an interlocutory order and asserts no other basis of jurisdiction on appeal.
+
+<p>&nbsp;(e)&nbsp;&nbsp;<I>Remand of record</I>.&#151;Unless otherwise ordered:
+
+
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(1)&nbsp;&nbsp;A certified copy of the judgment of the Supreme Court and the opinion of the court, if one has been filed, shall be transmitted to the trial court forthwith upon entry, notwithstanding the pendency of any application for reargument or other proceeding affecting the judgment. This transmission shall be in lieu of the remand of the record.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(2)&nbsp;&nbsp;Such transmission shall operate to vacate any order theretofore entered pursuant to Chapter 17.<br/>
+
+<p>&nbsp;&nbsp;&nbsp;Official Note
+
+
+
+<p>&nbsp;&nbsp;&nbsp;This rule is intended to provide a simple and expeditious method for Supreme Court supervision of special prosecutions and investigations, for example, orders of the supervising judge of an investigating grand jury, findings of contempt (whether civil or criminal) by witnesses called before such a grand jury, etc. Pa.R.A.P. 702(c) and 42 Pa.C.S. &#167;&nbsp;&nbsp;722(5) vest jurisdiction over such matters in the Supreme Court. However, this rule is not applicable to review of investigating grand jury issues that collaterally arise in a plenary criminal prosecution initiated by complaint, information, or indictment. This rule requires that review be sought within ten days. There is no delay for certification of the record, oral argument is ordinarily not available, and the matter is ready for final disposition by the Supreme Court immediately upon completion of the briefing schedule.
+
+<p>&nbsp;&nbsp;&nbsp;The term &#145;&#145;investigating grand jury&#146;&#146; in paragraph (a) includes a &#145;&#145;multicounty investigating grand jury&#146;&#146; convened under 42 Pa.C.S. &#167;&nbsp;&nbsp;4544. The &#145;&#145;independent grounds&#146;&#146; referred to in paragraph (d) include grounds for relief in the nature of mandamus, prohibition, etc. and cases where the order is reviewable under the standards of 42 Pa.C.S. &#167;&nbsp;&nbsp;702(b).
+
+
+
+<p>&nbsp;&nbsp;&nbsp;Failure to petition for specialized review under this rule from an interlocutory order will ordinarily not constitute a waiver of objections to the order because, except as prescribed by Pa.R.A.P. 311(g)(1)(ii), there is no requirement under these rules that a party seek available interlocutory relief.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;Under Pa.R.A.P. 1702(a), the Supreme Court or a justice thereof will not entertain an application for relief under Pa.R.A.P. 1781 (stay pending action on petitions) in connection with a special prosecution or investigation order until a petition for specialized review has been filed under this rule.
+
+<!--sectbreak;t210;c0016;s1612-->
+
+<a name="1612."></a><h4 class="pacode-section-title"><FONT SIZE=+1>Rule 1612.&nbsp;</FONT>Review of Out-of-Home Placement in Juvenile Delinquency.</H4>
+
+<p>&nbsp;(a)&nbsp;&nbsp;<I>General Rule. </I>If a court under the Juvenile Act, 42 Pa.C.S. &#167;&nbsp;&#167;&nbsp;&nbsp;6301 et seq., enters an order after an adjudication of delinquency of a juvenile pursuant to Pa.R.J.C.P. 409(A)(2) and 515, which places the juvenile in an out-of-home overnight placement in any agency or institution that shall provide care, treatment, supervision, or rehabilitation of the juvenile, the juvenile may file a petition for specialized review. The petition shall be filed within ten days of the order.
+
+<p>&nbsp;(b)&nbsp;&nbsp;<I>Content.</I>
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(1)&nbsp;&nbsp;A petition for specialized review under subdivision (a) shall contain:
+
+
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(i)&nbsp;&nbsp;&nbsp;a specific description of any determinations made by the juvenile court;
+
+
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(ii)&nbsp;&nbsp;&nbsp;the matters complained of;
+
+
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(iii)&nbsp;&nbsp;&nbsp;a concise statement of the reasons why the juvenile court abused its discretion in ordering the out-of-home placement;
+
+
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(iv)&nbsp;&nbsp;&nbsp;the proposed terms and conditions of an alternative disposition for the juvenile;
+
+
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(v)&nbsp;&nbsp;&nbsp;a request that the official court reporter for the juvenile court transcribe the notes of testimony as required by subdivision (g); and
+
+
+
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(vi)&nbsp;&nbsp;&nbsp;the certificate of compliance required by Pa.R.A.P. 127.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(2)&nbsp;&nbsp;Any order(s) and opinion(s) relating to the out-of-home placement and the transcript of the juvenile court&#146;s findings shall be attached as appendices.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(3)&nbsp;&nbsp;The petition shall be supported by a certificate of counsel to the effect that it is presented in good faith and not for delay.
+
+<p>&nbsp;(c)&nbsp;&nbsp;<I>Scope of </I><I>Review</I>.
+
+
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(1)&nbsp;&nbsp;The reviewing court shall not consider any challenge to the juvenile court&#146;s selection of a specific agency or specific institution as the site of the out-of-home placement and instead may consider only a challenge to the fact that the placement is out-of-home.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(2)&nbsp;&nbsp;The reviewing court shall not consider any challenge to the underlying adjudication of delinquency.
+
+<p>&nbsp;(d)&nbsp;&nbsp;<I>Response.</I> Any response shall be filed within ten days of service of the petition, and no other pleading is authorized.
+
+<p>&nbsp;(e)&nbsp;&nbsp;<I>Service.</I> A copy of the petition for specialized review and any answer thereto shall be served on the judge of the juvenile court and the official court reporter for the juvenile court. All parties in the juvenile court shall be served in accordance with Pa.R.A.P. 121.
+
+<p>&nbsp;(f)&nbsp;&nbsp;<I>Opinion of </I><I>Juvenile Court. </I>Upon receipt of a copy of a petition for specialized review under subdivision (a), if the judge who made the disposition of the out-of-home placement did not state the reasons for such placement on the record at the time of disposition pursuant to Pa.R.J.C.P. 512(D), the judge shall file of record a brief statement of the reasons for the determination or where in the record such reasons may be found, within five days of service of the petition for specialized review.
+
+<p>&nbsp;(g)&nbsp;&nbsp;<I>Transcription of Notes of Testimony. </I>Upon receipt of a copy of a petition for specialized review under subdivision (a), the court reporter shall transcribe the notes of testimony and deliver the transcript to the juvenile court within five business days. If the transcript is not prepared and delivered in a timely fashion, the juvenile court shall order the court reporter to transcribe the notes and deliver the notes to the juvenile court, and may impose sanctions for violation of such an order. If a waiver of fees and costs has been granted, the juvenile shall not be charged for the cost of the transcript.
+
+<p>&nbsp;(h)&nbsp;&nbsp;<I>Non-Waiver of Objection to Placement. </I>A failure to seek review under this rule of the out-of-home placement shall not constitute a waiver of the juvenile&#146;s right to seek review of the placement in a notice of appeal filed by the juvenile from a disposition after an adjudication of delinquency.<br/>
+
+<p><CENTER><B>Comment:</B></CENTER></P>
+
+
+
+<p>&nbsp;&nbsp;&nbsp;This rule provides a mechanism for the expedited review of an order of out-of-home placement entered pursuant to Pa.R.J.C.P. 515. Pa.R.J.C.P. 512(D) requires the judge who made the disposition of an out-of-home placement to place the reasons for the out-of-home placement on the record at the time of the disposition, and subdivision (f) of this rule is applicable only in the exceptional circumstance where the judge who made the disposition of an out-of-home placement fails to comply with Pa.R.J.C.P. 512(D). The Juvenile Act, 42 Pa.C.S. &#167;&nbsp;&nbsp;6352, sets forth the considerations for a dispositional order following an adjudication of delinquency and the alternatives for disposition. The standard for review of a dispositional order is an abuse of discretion. <I>See In the Interest of A.D.</I>, 771 A.2d 45 (Pa. Super. 2001) (<I>en banc</I>).<br/>
+
+<p><CENTER><B>Source</B></CENTER></P>
+
+
+
+<p>&nbsp;&nbsp;&nbsp;The provisions of this Rule 1612 amended April 21, 2026, effective November 1, 2026, 56 Pa.B. 2515. Immediately preceding text appears at serial pages (401652) and (408511).
+
+<!--sectbreak;t210;c0016;s1613-->
+
+<a name="1613."></a><h4 class="pacode-section-title"><FONT SIZE=+1>Rule 1613.&nbsp;</FONT>Review of Order Affecting the Duration of an Indicting Grand Jury.</H4>
+
+<p>&nbsp;(a)&nbsp;&nbsp;<I>General rule</I>.&#151;Within 10 days after the entry of the order sought to be reviewed, the attorney for the Commonwealth may file a petition for specialized review in the Supreme Court of Pennsylvania seeking review of the following orders affecting the duration of an indicting grand jury: 
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(1)&nbsp;&nbsp;An order failing to grant an extension of term under Pa.R.Crim.P. 556.5(B); or
+
+
+
+<p>&nbsp;&nbsp;&nbsp;(2)&nbsp;&nbsp;An order of discharge under Pa.R.Crim.P. 556.5(C).
+
+<p>&nbsp;A party shall file the certificate of compliance required by Pa.R.A.P. 127 with the petition for specialized review. Pa.R.A.P. 3309 (applications for extraordinary relief) shall not be applicable to an order reviewable under this rule.
+
+<p>&nbsp;(b)&nbsp;&nbsp;<I>Opinion and record</I>.&#151;The Supreme Court on its own initiative may direct that the trial court comply with Pa.R.A.P. 1925 (opinion in support of order) or that the trial court supplement the record.
+
+<p>&nbsp;(c)&nbsp;&nbsp;The Supreme Court may dispose of the petition as filed or may set it down for argument.
+
+<p>&nbsp;(d)&nbsp;&nbsp;<I>Remand of record</I>.&#151;Unless otherwise ordered, a certified copy of the judgment of the Supreme Court and the opinion of the court, if one has been filed, shall be transmitted to the trial court forthwith upon entry, notwithstanding the pendency of any application for reargument or other proceeding affecting the judgment. This transmission shall be in lieu of the remand of the record.<br/>
+
+<p>&nbsp;&nbsp;&nbsp;Official Note
+
+
+
+<p>&nbsp;&nbsp;&nbsp;This rule is intended to provide a simple and expeditious method for Supreme Court supervision of orders failing to extend or discharging indicting grand juries under Pennsylvania Rule of Criminal Procedure 556.5.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;To determine the number of copies to be filed, see Pa.R.A.P. 124(c) and its Official Note.<br/>
+
+<p><CENTER><B>Source</B></CENTER></P>
+
+
+
+<p>&nbsp;&nbsp;&nbsp;The provisions of this Rule 1613 amended October 28, 2021, effective April 1, 2022, 51 Pa.B. 7050. Immediately preceding text appears at serial pages (401653) to (401654).
+
+<!--sectbreak;t210;c0016;s1614-->
+
+<a name="1614."></a><h4 class="pacode-section-title"><FONT SIZE=+1>Rule 1614.&nbsp;</FONT>Review of Orders Denying Waiver of Fees and Costs.</H4>
+
+<p>&nbsp;Appellate review of an order denying an application for a waiver of fees and costs by a court of record pursuant to Pa.R.J.A. 1990 shall be initiated by petition for specialized review pursuant to Pa.R.A.P. 1601&#151;1606 subject to the following:
+
+<p>&nbsp;(a)&nbsp;&nbsp;<I>Time for Filing. </I>A petition for specialized review shall be filed within 30 days after the entry of the order denying an application for the waiver of fees and costs by a court of record. The filing office shall docket the legal action and the application or <I>praecipe</I> without the party paying the filing fee.
+
+<p>&nbsp;(b)&nbsp;&nbsp;<I>Ex Parte Review. </I>Appellate review shall be conducted in an <I>ex parte</I> manner. As such, no other party shall be named as respondent, only the court of record denying the application shall be served the petition, and no response to the petition by any other party shall be permitted.
+
+<p>&nbsp;(c)&nbsp;&nbsp;<I>Contents. </I>In addition to the content requirements of Pa.R.A.P. 1603(c)(1)&#151;(c)(5) and (c)(7)-(c)(8), the requirement of Pa.R.A.P. 1603(c)(6) shall be satisfied with a concise statement of the reasons why the court of record that denied the application erred.<br/>
+
+<p><CENTER><B>Comment:</B></CENTER></P>
+
+
+
+<p>&nbsp;&nbsp;&nbsp;<I>See</I> Pa.R.A.P. 701 (petitions for specialized review shall be filed in the appellate court having jurisdiction of final orders in such matters).
+
+
+
+<p>&nbsp;&nbsp;&nbsp;Subdivision (b) continues the <I>ex parte</I> procedure of Pa.R.J.A. 1990(e)(4) to appellate review. The proscriptions of subdivision (b) are intended to limit the application of Pa.R.A.P. 1603(a) (captions and parties), Pa.R.A.P. 1604 (service), and Pa.R.A.P. 1605 (response to petition).
+
+
+
+<p>&nbsp;&nbsp;&nbsp;See Pa.R.A.P. 1701(e) for the ability to seek a stay or supersedeas of a trial court order under Chapter 17 upon the filing of a petition for specialized review.
+
+
+
+<p>&nbsp;&nbsp;&nbsp;To determine the number of copies to be filed, see Pa.R.A.P. 124(c) and its Official Note.<br/>
+
+<p><CENTER><B>Source</B></CENTER></P>
+
+
+
+<p>&nbsp;&nbsp;&nbsp;The provisions of this Rule 1614 added April 21, 2026, effective November 1, 2026, 56 Pa.B. 2515.
+
+<br><br><hr>
+<font class="pacode-disclaimer">
+<br>
+<div class="disclaimer-hide">No part of the information on this site may be reproduced for profit or sold for profit.</div><br>
+<br/>
+This material has been drawn directly from the official Pennsylvania Code full text database. Due to the limitations of HTML or differences in display capabilities of different browsers, this version may differ slightly from the official printed version.
+</blockquote>
+</body>
+</html>
+
+                            <button onclick="topFunction()" id="myBtn" title="Go to top">Top</button>
+                            <button onclick="bottomFunction()" id="myBtnBottom" title="Go to bottom">Bottom</button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div style="margin-left: 0px; padding-top: 20px;" class="row">
+            <div class="row footer-section">
+                <div class="col-md-12">
+                    
+
+<footer class="hidden-xs hidden-sm">
+
+        <div class="footer-disclaimer">
+            No part of the information on this site may be reproduced forprofit or sold for profit. Please direct comments or questions to <a href="mailto:webmaster@PaBulletin.com">webmaster@PaBulletin.com</a>
+        </div>
+
+    <nav class="navbar navbar hidden-print" aria-label="Footer navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                
+            </div>
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav sitefooter-pacode">
+                    <li><a href="/Home/Accessibility">Accessibility</a></li>
+                    <li><a href="/Home/Privacy">Privacy</a></li>
+                    <li><a href="/Home/Disclaimer">Disclaimer</a></li>
+                    <li><a href="/downloads/StyleManual_6thEdition.pdf" rel="noopener noreferrer" aria-label="Style Manual, opens in a new tab" target="_blank">Style Manual</a></li>
+                    <li><a href="/downloads/CodeSchedule.pdf" rel="noopener noreferrer" aria-label="Code Schedule, opens in a new tab" target="_blank">Code Publication Schedule</a></li>
+                    <li><a href="/downloads/BulletinSchedule.pdf" rel="noopener noreferrer" aria-label="Bulletin Schedule, opens in a new tab" target="_blank">Bulletin Publication Schedule</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</footer>
+
+<footer class="visible-xs visible-sm">
+    <div class="footer-mobile">
+        <span class="footer-link"><a href="/Home/Accessibility">Accessibility</a></span> &nbsp;|&nbsp;
+        <span class="footer-link"><a href="/Home/Privacy">Privacy</a></span> &nbsp;|&nbsp;
+        <span class="footer-link"><a href="/Home/Disclaimer">Disclaimer</a></span> &nbsp;|&nbsp;
+        <span class="footer-link"><a href="/downloads/StyleManual_6thEdition.pdf" rel="noopener noreferrer" aria-label="Style Manual, opens in a new tab" target="_blank">Style Manual</a></span> &nbsp;|&nbsp;
+        <span class="footer-link"><a href="/downloads/CodeSchedule.pdf" rel="noopener noreferrer" aria-label="Code Schedule, opens in a new tab" target="_blank">Code Publication Schedule</a></span> &nbsp;|&nbsp;
+        <span class="footer-link"><a href="/downloads/BulletinSchedule.pdf" rel="noopener noreferrer" aria-label="Bulletin Schedule, opens in a new tab" target="_blank">Bulletin Publication Schedule</a></span>
+
+    </div>
+</footer>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+</div>
+        <br />
+        
+    </div>
+
+
+    <script src="/Scripts/jquery-1.10.2.js"></script>
+
+    <script src="/Scripts/bootstrap.js"></script>
+<script src="/Scripts/respond.js"></script>
+
+    
+</body>
+</html>

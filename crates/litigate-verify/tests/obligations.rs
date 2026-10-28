@@ -78,7 +78,7 @@ fn capability_cites(cite: &str) -> String {
     with(&format!(
         "deadline reply-period: 14.days from Answered(complaint) counted_by frcp6 delegable {{ to LocalRule, op set, cite \"{cite}\" }} cite \"FRCP 12(a)\"\n\
          {{\n  characterization claim_processing cite \"{cite}\"\n}}\n\
-         deadline appeal-period: 30.days from Answered(complaint) counted_by frcp6 cite \"FRCP 12(a)\"\n\
+         deadline appeal-period: 21.days from Answered(complaint) counted_by frcp6 cite \"FRCP 12(a)\"\n\
          {{\n  characterization jurisdictional\n}}\n\
          grant emergency on [reply-period] effective [2024-03-15, 2024-06-13) cite \"FRCP 87(c)(2)\" {{ delegable {{ to LocalRule, op extend, cite \"{cite}\" }}, delegable {{ to LocalRule, op shorten }} }}"
     ))

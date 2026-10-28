@@ -148,7 +148,7 @@ fn a_bound_the_rule_spells_in_words_is_in_its_vendored_text() {
     );
     assert_eq!(
         resolved("limit brief { pages <= 31 } cite \"37 C.F.R. § 1.943\""),
-        ["`37 C.F.R. § 1.943` is cited for \"31 pages\" or \"thirty-one pages\" or \"thirty-one (31) pages\", which its vendored text does not hold"]
+        ["`37 C.F.R. § 1.943` is cited for \"31 pages\" or \"thirty-one pages\" or \"thirty-one (31) pages\" or \"pages (31)\", which its vendored text does not hold"]
     );
 }
 
@@ -157,11 +157,11 @@ fn a_bound_or_part_the_vendored_text_does_not_hold_is_unresolved() {
     for (limit, message) in [
         (
             "limit b { words <= 14_000 cite \"FRAP 32(a)(7)(B)(i)\" }",
-            "`FRAP 32(a)(7)(B)(i)` is cited for \"14,000 words\" or \"fourteen thousand words\" or \"fourteen thousand (14,000) words\", which its vendored text does not hold",
+            "`FRAP 32(a)(7)(B)(i)` is cited for \"14,000 words\" or \"14000 words\" or \"fourteen thousand words\" or \"fourteen thousand (14,000) words\" or \"fourteen thousand (14000) words\" or \"words (14,000)\" or \"words (14000)\", which its vendored text does not hold",
         ),
         (
             "limit b { pages <= 30 } cite \"FRAP 31\"",
-            "`FRAP 31` is cited for \"30 pages\" or \"thirty pages\" or \"thirty (30) pages\", which its vendored text does not hold",
+            "`FRAP 31` is cited for \"30 pages\" or \"thirty pages\" or \"thirty (30) pages\" or \"pages (30)\", which its vendored text does not hold",
         ),
         (
             "limit b { excludes [cover-page, oral-argument-statement] cite \"FRAP 32(f)\" }",

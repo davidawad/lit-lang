@@ -204,3 +204,23 @@ fn a_quote_is_held_to_the_bound_file_not_another_with_the_heading() {
         ["`37 C.F.R. § 1.136` is cited for \"37 C.F.R. § 1.136 — Extensions of time\", which its vendored text does not hold"]
     );
 }
+
+#[test]
+fn a_deadline_period_is_held_to_its_cited_vendored_text() {
+    let lit = BASE.replacen(
+        "deadline answer-period: 21.days from Served(complaint) counted_by frcp6",
+        "deadline answer-period: 20.days from Served(complaint) counted_by frcp6 cite \"FRCP 12(a)\"",
+        1,
+    );
+    let c = verify(
+        &[pkg_with_sources("demo", "FederalRule", &[], FRCP, &lit)],
+        Profile::Strict,
+    );
+    let messages = unresolved(&c);
+    assert!(
+        messages.iter().any(|message| {
+            message.contains("period of 20 days") && message.contains("21 days")
+        }),
+        "{messages:?}"
+    );
+}

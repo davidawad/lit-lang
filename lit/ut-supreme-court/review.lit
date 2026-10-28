@@ -1,0 +1,40 @@
+module ut-supreme-court-civil.review
+
+import ut-state-rules.{ ReviewPetitionFiled }
+
+// Certiorari review of a Court of Appeals civil decision, from the
+// petitioner's side. Every period is stated in a note, not counted (URAP
+// 22(a)). The merits of review are not modeled.
+start petition
+
+decision petition: "Petition for certiorari?" by applicant cite "URAP 48(a)"
+{
+  note "Unless otherwise provided by law, review of a Court of Appeals decision is initiated by filing in the Utah Supreme Court a petition for a writ of certiorari (URAP 45(a)). The petition is filed with the Supreme Court clerk within 30 days after the Court of Appeals' final decision issues, not from the remittitur, and the clerk rejects an untimely petition (URAP 48(a), (b)); a timely Rule 35(a) petition for rehearing runs the time for all parties from its denial or the decision on rehearing (URAP 48(c)). Before the time expires the Supreme Court grants a request to extend it by no more than 30 days; within 30 days after it expires it grants a motion only on good cause or excusable neglect, by no more than 30 days past the prescribed time or 14 days from the order, whichever is later, and only once (URAP 48(e)). The petition may not exceed 20 pages, excluding the index, table of authorities, required verbatim quotations and appendix, and no separate brief is filed (URAP 49(c), (d)). No leading decision is named."
+  edge-petition-none "No petition" -> no-petition { authority cite "URAP 36(a)" }
+  edge-petition-filed "Petition for certiorari filed" -> review-decided {
+    event ReviewPetitionFiled()
+    authority cite "URAP 48(a)"
+  }
+}
+
+decision review-decided: "Petition for certiorari decided" by court cite "URAP 51(a)"
+{
+  note "A cross-petition is filed within the petition's own time or within 30 days of the filing of the petition; one timely only by the second measure is not granted unless another party's timely petition is (URAP 48(d)(1), (2)). Review is not a matter of right but of judicial discretion, granted only for special and important reasons, chiefly whether a decision on the question is likely to have significant precedential value (URAP 46(a)). No petition is granted absent a request by the court for a response; a response is due within 30 days after the order requesting it and may not exceed 20 pages, and the petitioner may reply within 7 days after the response is served, in at most five pages (URAP 50(a), (b), (d)). The court enters an order denying the petition or granting it in whole or in part, summarily and without oral argument; the order is not a decision on the merits (URAP 51(a))."
+  edge-review-decided-denied "Denied" -> review-denied { authority cite "URAP 51(c)" }
+  edge-review-decided-granted "Granted" -> review-granted { authority cite "URAP 51(b)" }
+}
+
+terminal review-denied: "Certiorari denied" outcome [final] cite "URAP 51(c)"
+{
+  note "An order denying the petition is entered and the Clerk of the Supreme Court notifies the Court of Appeals and counsel of record (URAP 51(c)); the Court of Appeals issues its remittitur five days after the order denying the petition (URAP 36(a)(2))."
+}
+
+terminal review-granted: "Certiorari granted" outcome [neutral] cite "URAP 51(b)"
+{
+  note "The clerk notifies the Court of Appeals and counsel, has the record certified and transmitted if not already filed, and gives notice of the date the record was filed and the date the petitioner's brief is due; Rules 24 through 31 govern briefs, argument and disposition, the petitioner in the place of the appellant (URAP 47(c), 51(b)). The merits of review are not modeled."
+}
+
+terminal no-petition: "No petition: the Court of Appeals decision stands" outcome [final] cite "URAP 36(a)"
+{
+  note "The Court of Appeals issues its remittitur immediately after the time for filing a petition for a writ of certiorari expires (URAP 36(a)(2))."
+}

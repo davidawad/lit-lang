@@ -1,5 +1,7 @@
 module ut-district-court-civil.civil
 
+import ut-state-rules.{ JudgmentEntered, NoticeOfAppealFiled }
+
 start complaint-filed
 
 state complaint-filed: "Action commenced" by applicant cite "URCP 3"
@@ -60,9 +62,11 @@ decision sj-ruling: "Summary judgment ruling" by court cite "URCP 56(a)"
 {
   note "A claimant may move after 21 days from commencement or after the adverse party serves a summary judgment motion; a defending party may move at any time; unless the court orders otherwise, a motion is filed no later than 28 days after the close of all discovery (URCP 56(b)). Summary judgment is granted if there is no genuine dispute as to any material fact and the movant is entitled to judgment as a matter of law (URCP 56(a)). The court must grant a requested hearing on a Rule 56 motion unless the motion or opposition is frivolous or the issue has been authoritatively decided (URCP 7(h)). Briefing periods and length limits are those of URCP 7(d), (e) and (q). No leading decision is named."
   edge-sj-ruling-judgment-applicant "Granted for applicant" -> judgment-applicant {
+    event JudgmentEntered()
     authority cite "URCP 58A(a)"
   }
   edge-sj-ruling-judgment-opponent "Granted for opponent" -> judgment-opponent {
+    event JudgmentEntered()
     authority cite "URCP 58A(a)"
   }
   edge-sj-ruling-trial "Denied" -> trial { authority cite "URCP 56(g)" }
@@ -72,9 +76,11 @@ state trial: "Trial (jury or bench)" cite "URCP 38"
 {
   note "Unless an order sets the trial date, at the close of all discovery the plaintiff certifies that discovery is complete and the case is ready for trial, and the court schedules the trial (URCP 16(b)). A party demands a jury by paying the statutory jury fee and serving a written demand not later than 14 days after service of the last pleading directed to the issue (URCP 38(b)); another party may demand a jury on other issues within 14 days after service of the demand (URCP 38(c)); failure to pay the fee or serve and file the demand waives a jury (URCP 38(d))."
   edge-trial-judgment-applicant "Verdict or findings for applicant" -> judgment-applicant {
+    event JudgmentEntered()
     authority cite "URCP 58A(a)"
   }
   edge-trial-judgment-opponent "Verdict or findings for opponent" -> judgment-opponent {
+    event JudgmentEntered()
     authority cite "URCP 58A(a)"
   }
 }
@@ -86,6 +92,7 @@ state judgment-applicant: "Judgment for applicant entered" cite "URCP 58A(a)"
     authority cite "URCP 59(b)"
   }
   edge-judgment-applicant-appellate-review "Notice of appeal filed" -> appellate-review {
+    event NoticeOfAppealFiled()
     authority cite "URAP 4(a)"
   }
   edge-judgment-applicant-final-win "No appeal within time" -> final-win {
@@ -100,6 +107,7 @@ state judgment-opponent: "Judgment for opponent entered" cite "URCP 58A(a)"
     authority cite "URCP 59(b)"
   }
   edge-judgment-opponent-appellate-review "Notice of appeal filed" -> appellate-review {
+    event NoticeOfAppealFiled()
     authority cite "URAP 4(a)"
   }
   edge-judgment-opponent-final-loss "No appeal within time" -> final-loss {
@@ -112,6 +120,7 @@ decision post-judgment-ruling: "Post-judgment motion ruling" by court cite "URCP
   note "A renewed motion for judgment as a matter of law is filed no later than 28 days after entry of judgment (URCP 50(b)); a motion to amend or make additional findings, no later than 28 days after entry (URCP 52(b)); a motion for a new trial, no later than 28 days after entry (URCP 59(b)); a motion to alter or amend, no later than 28 days after entry (URCP 59(e)). A Rule 60(b)(1)-(3) motion is filed within a reasonable time and not more than 90 days after entry (URCP 60(c)). A timely motion under Rule 50(b), 52(b) or 59, a Rule 60(b) motion filed no later than 28 days after entry, or a motion or claim for attorney fees under Rule 73 starts the time for all parties to appeal from the entry of the dispositive order (URAP 4(b)(1))."
   edge-post-judgment-ruling-trial "Granted: new trial" -> trial { authority cite "URCP 59(a)" }
   edge-post-judgment-ruling-appellate-review "Denied: appeal time runs from the dispositive order" -> appellate-review {
+    event NoticeOfAppealFiled()
     authority cite "URAP 4(b)"
   }
 }

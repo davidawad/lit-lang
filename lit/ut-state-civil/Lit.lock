@@ -9,12 +9,20 @@ dependencies = []
 name = "ut-district-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:ac468f76d5da34cd0282e605c19b7c916802a583bf869aa2ab7dbace37b16a78"
-semantic = "sha256:457ec84777346b0e08861346d15ef22b396b4052a981950bd5a21e7a964a8948"
+source = "sha256:dd2206db415f7dfdd07ee05a3bf49c6133512e2285ffefdd386ac359585cedb1"
+semantic = "sha256:df3878e6c2cc2bb84f741e8911db45f2fcbc74bfc1413235db54fa27356fb8f0"
 texts = [
     "urap sources/ut-state-appellate/utah-urap-all-rules-sectioned.txt sha256:d69fcfe874d6a0518319e08d04f4ec6e069f5727d56c3df994e57301ab2a5888",
     "urcp sources/ut-state-civil/utah-urcp-all-rules-sectioned.txt sha256:7672ae2cf0b3f9f360c4d6df1c80bcf8a5566437102fea4d4700352b75144dc9",
 ]
+dependencies = [
+    "core 1.0.0",
+    "ut-state-rules 0.1.0",
+]
+
+[[package]]
+name = "ut-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

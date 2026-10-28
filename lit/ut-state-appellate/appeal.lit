@@ -1,5 +1,7 @@
 module ut-appellate-civil.appeal
 
+import ut-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, ReviewPetitionFiled }
+
 start threshold
 
 decision threshold: "Appealable order or judgment?" by applicant cite "URAP 3(a)"
@@ -13,7 +15,10 @@ decision notice: "Notice of appeal within time?" by applicant cite "URAP 4(a)"
 {
   note "The notice of appeal is filed with the clerk of the trial court within 30 days after the date of entry of the judgment or order appealed from (URAP 4(a)). A timely motion under URCP 50(b), 52(b) or 59, a URCP 60(b) motion filed no later than 28 days after entry, or a motion or claim for attorney fees under URCP 73 starts the time from entry of the dispositive order (URAP 4(b)(1)). Another party may cross-appeal within 14 days after the first notice is filed or within the time otherwise prescribed, whichever expires last (URAP 4(d)). The trial court may extend the time on a motion filed before it expires, or for good cause or excusable neglect on a motion filed no later than 30 days after it expires, by no more than 30 days beyond the prescribed time or 14 days beyond entry of the order granting it, whichever is later (URAP 4(e)). The appellant pays the filing fee to the trial court clerk (URAP 3(f))."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "URAP 4(a)" }
-  edge-notice-timely "Timely notice" -> record { authority cite "URAP 4(a)" }
+  edge-notice-timely "Timely notice" -> record {
+    event NoticeOfAppealFiled()
+    authority cite "URAP 4(a)"
+  }
 }
 
 state record: "Docketing statement, record and transcript" by office cite "URAP 11(a)"
@@ -38,6 +43,7 @@ state decision: "Decision issued" by court cite "URAP 30(a)"
 {
   note "The court may reverse, affirm, modify or otherwise dispose of the order or judgment appealed (URAP 30(a)); the reasons are stated in writing (URAP 30(d)), and the entry of the decision in the court's records constitutes entry of its judgment (URAP 30(f)). The outline named no leading decisions."
   edge-decision-rehearing-decision "Decision entered" -> rehearing-decision {
+    event DecisionFiled()
     authority cite "URAP 30(f)"
   }
 }
@@ -60,17 +66,14 @@ state rehearing-order: "Rehearing order" by court cite "URAP 35(a)"
 decision further-review: "Certiorari sought?" by applicant cite "URAP 48(a)"
 {
   note "Review of a Court of Appeals decision is by petition for a writ of certiorari to the Utah Supreme Court (URAP 45(a)), filed with the Supreme Court clerk within 30 days after the Court of Appeals' final decision issues, or after a timely rehearing petition is denied or decided (URAP 48(a), (c)); the Supreme Court grants an extension of up to 30 days if requested before the time expires, and on good cause or excusable neglect within 30 days after (URAP 48(e)). The petition may not exceed 20 pages (URAP 49(d)). A Supreme Court decision issues its remittitur 15 days after judgment, or five days after the order disposing of a timely rehearing petition (URAP 36(a)(1)); the Court of Appeals issues its remittitur when the time for certiorari expires (URAP 36(a)(2))."
-  edge-further-review-none "No further review" -> final-decision { authority cite "URAP 36(a)" }
-  edge-further-review-petition "Petition for certiorari" -> review-decided {
+  edge-further-review-none "No further review" -> final-decision {
+    event MandateIssued()
+    authority cite "URAP 36(a)"
+  }
+  edge-further-review-petition "Petition for certiorari" -> certiorari-petitioned {
+    event ReviewPetitionFiled()
     authority cite "URAP 48(a)"
   }
-}
-
-decision review-decided: "Certiorari decided" by court cite "URAP 51(a)"
-{
-  note "Certiorari is a matter of judicial discretion, granted only for special and important reasons (URAP 46(a)). No petition is granted absent a request for a response; a response is due within 30 days after the request and may not exceed 20 pages, and a reply within 7 days after service of the response, at most five pages (URAP 50(a), (b), (d)). The Supreme Court enters an order denying or granting the petition, summarily and without oral argument (URAP 51(a))."
-  edge-review-decided-denied "Denied" -> review-denied { authority cite "URAP 51(c)" }
-  edge-review-decided-granted "Granted" -> review-granted { authority cite "URAP 51(b)" }
 }
 
 terminal dismissed-jurisdiction: "Dismissed: no appellate jurisdiction" outcome [loss, dismissal, jurisdictional] cite "URAP 10(a)"
@@ -88,12 +91,7 @@ terminal final-decision: "Final: decision stands" outcome [final] cite "URAP 36(
   note "The remittitur issues and the decision stands (URAP 36(a))."
 }
 
-terminal review-denied: "Certiorari denied" outcome [final] cite "URAP 51(c)"
+terminal certiorari-petitioned: "Petition for certiorari filed in the Supreme Court" outcome [appeal] cite "URAP 48(a)"
 {
-  note "The clerk of the Supreme Court notifies the Court of Appeals and counsel of the denial (URAP 51(c)); the Court of Appeals issues its remittitur five days after the order denying the petition (URAP 36(a)(2))."
-}
-
-terminal review-granted: "Certiorari granted" outcome [neutral] cite "URAP 51(b)"
-{
-  note "Certiorari granted in whole or in part (URAP 51(a), (b)); the merits of the review are not modeled."
+  note "A party seeking review of a Court of Appeals decision petitions the Utah Supreme Court for a writ of certiorari within 30 days after the final decision issues (URAP 45(a), 48(a)); the Court of Appeals stays its remittitur until the Supreme Court disposes of a timely petition (URAP 36(a)(2)). The petition and its disposition are the Supreme Court's: lit/ut-supreme-court."
 }

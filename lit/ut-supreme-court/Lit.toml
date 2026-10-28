@@ -1,0 +1,44 @@
+# The Utah Supreme Court's certiorari review of a Court of Appeals civil
+# decision (lg-u561.5): the petition for a writ of certiorari under URAP
+# 45-51, each rule as in force on October 26, 2026 with its own effective
+# date (sources/ut-state-appellate), from lit/ut-state-appellate. Periods
+# are stated in notes, as there (URAP 22(a) counts Utah legal holidays and
+# core has no Utah calendar). Direct appeals to the Supreme Court and its
+# transfer of cases to the Court of Appeals (URAP 42) are
+# lit/ut-state-appellate's; the merits of review are not modeled. The
+# trigger events are lit/ut-rules'.
+[package]
+name = "ut-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ut-supreme-court-civil"
+forum = "ut-supreme-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "utah"
+title = "Utah Supreme Court, certiorari review of Court of Appeals decisions (civil)"
+description = "Supreme Court review of a Utah Court of Appeals civil decision by petition for a writ of certiorari under URAP 45-51: the petition, its time and extension, cross-petitions, the response on the court's request and the reply, and the grant or denial of the writ. The merits of review are not modeled."
+in_force = "2026-10-26"
+known_at = "2026-10-28"
+unknown_before = "2026-10-26"
+jurisdiction = "Utah Supreme Court (certiorari to the Court of Appeals, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the trigger events.
+ut-state-rules = { version = "^0.1.0", path = "../ut-rules" }
+
+[sources.urap]
+title = "Utah Rules of Appellate Procedure, each rule as in force on October 26, 2026"
+url = "https://legacy.utcourts.gov/rules/viewall.php?type=urap"
+path = "sources/ut-state-appellate/utah-urap-all-rules-sectioned.txt"
+path_sha256 = "d69fcfe874d6a0518319e08d04f4ec6e069f5727d56c3df994e57301ab2a5888"
+sha256 = "0d36f22202ea09e7f5bd334b7af79c96a4a37473ecce883c6a004115d5c037a5"
+as_of = "2026-10-26"
+cite_prefixes = ["URAP"]
+section_heading = "URAP {n}"

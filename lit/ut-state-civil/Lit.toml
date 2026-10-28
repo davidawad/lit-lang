@@ -7,13 +7,15 @@
 # legal holiday includes Pioneer Day and any day the Governor or
 # Legislature designates (URCP 6(a)(6)), and core has no Utah holiday
 # calendar, so the rules' periods are stated in notes, not encoded as
-# counted deadlines. An appeal hands off to lit/ut-state-appellate.
+# counted deadlines. An appeal hands off to lit/ut-state-appellate. The
+# trigger events are lit/ut-rules' (lg-u561.5).
 [package]
 name = "ut-district-court-civil"
 version = "0.1.0"
 language = 1
 pack_id = "ut-district-court-civil"
 forum = "ut-state-civil"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "utah"
 title = "Utah district court, civil"
@@ -30,6 +32,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the trigger events.
+ut-state-rules = { version = "^0.1.0", path = "../ut-rules" }
 
 [sources.urcp]
 title = "Utah Rules of Civil Procedure, each rule as in force on October 26, 2026"

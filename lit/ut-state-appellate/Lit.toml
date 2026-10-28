@@ -6,17 +6,20 @@
 # legal holiday is any holiday Utah recognizes and observes, as listed on
 # a court web page that is not vendored, and core has no Utah calendar, so
 # periods are stated in notes, not counted. Review of a Court of Appeals
-# decision is by certiorari to the Utah Supreme Court (URAP 45-51).
+# decision is by certiorari to the Utah Supreme Court (URAP 45-51): the
+# petition and its disposition are lit/ut-supreme-court's; the trigger
+# events are lit/ut-rules' (lg-u561.5).
 [package]
 name = "ut-appellate-civil"
 version = "0.1.0"
 language = 1
 pack_id = "ut-appellate-civil"
 forum = "ut-state-appellate"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "utah"
 title = "Utah Supreme Court and Court of Appeals, civil appeals"
-description = "Civil appeals from the Utah district courts under the Utah Rules of Appellate Procedure, as far as the vendored text states: appealability and interlocutory petitions, the notice of appeal and its time, the docketing statement, the record and transcript, briefing and its length limits, oral argument, decision, rehearing, remittitur, and certiorari to the Utah Supreme Court."
+description = "Civil appeals from the Utah district courts under the Utah Rules of Appellate Procedure, as far as the vendored text states: appealability and interlocutory petitions, the notice of appeal and its time, the docketing statement, the record and transcript, briefing and its length limits, oral argument, decision, rehearing, remittitur, and the petition for certiorari to the Utah Supreme Court (decided in lit/ut-supreme-court)."
 in_force = "2026-10-26"
 known_at = "2026-10-28"
 unknown_before = "2026-10-26"
@@ -29,6 +32,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the trigger events.
+ut-state-rules = { version = "^0.1.0", path = "../ut-rules" }
 
 [sources.urap]
 title = "Utah Rules of Appellate Procedure, each rule as in force on October 26, 2026"

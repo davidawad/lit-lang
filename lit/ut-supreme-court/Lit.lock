@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "ut-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "ut-supreme-court-civil"
+version = "0.1.0"
+language = 1
+source = "sha256:bf9597e31458a535bbc5372537e9a4a54b0c293badc88e71b708405b0b584cd2"
+semantic = "sha256:66742b85a1e3ccd65006a735eeb6d109a06c99a98664214f64be8138749717b1"
+texts = [
+    "urap sources/ut-state-appellate/utah-urap-all-rules-sectioned.txt sha256:d69fcfe874d6a0518319e08d04f4ec6e069f5727d56c3df994e57301ab2a5888",
+]
+dependencies = [
+    "core 1.0.0",
+    "ut-state-rules 0.1.0",
+]

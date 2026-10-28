@@ -1,0 +1,155 @@
+module ma-criminal-trial-court.criminal
+
+// Criminal cases in the Massachusetts Superior and District Courts under
+// the Massachusetts Rules of Criminal Procedure (November 1, 2025
+// edition). Every period the rules state is given in the note of the step
+// it governs; none is encoded as a counted deadline because lit/core has
+// no Massachusetts counting rule (Mass. R. Crim. P. 46(a) excludes
+// intermediate weekends and legal holidays from periods under 7 days).
+// The speedy-trial rule is Rule 36: a defendant is tried within twelve
+// months after the return day in the court in which the case awaits trial,
+// as extended by the excluded periods of Rule 36(b)(2), and is otherwise
+// entitled on motion to dismissal (Rule 36(b)(1)). Outcomes are from the
+// defendant's side. The General Laws the rules cite (bail and pretrial
+// detention, G.L. c. 276, §§ 57, 58 and 58A) are not vendored and stay
+// holes. The earlier outline's leading decisions (County of Riverside v.
+// McLaughlin, Gerstein v. Pugh, Gideon v. Wainwright, Brady v. Maryland,
+// Mapp v. Ohio, Barker v. Wingo, Boykin v. Alabama, Missouri v. Frye,
+// Jackson v. Virginia, Ramos v. Louisiana, Apprendi v. New Jersey, Roe v.
+// Flores-Ortega, Garza v. Idaho) are removed: no reporter text is
+// vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "Mass. R. Crim. P. 3.1"
+{
+  note "A criminal proceeding begins by complaint or indictment (Mass. R. Crim. P. 3(a)); a complaint issues on probable cause (Mass. R. Crim. P. 3(g)), and a summons or arrest warrant on it (Mass. R. Crim. P. 6). No person is held in custody for more than twenty-four hours after an arrest, absent exigent circumstances, unless a warrant or other judicial process authorizes the detention, a complaint has been authorized, or a judicial officer has determined that there is probable cause; the police present the information for that determination as soon as reasonably possible and no later than twenty-four hours after arrest, and a person for whom probable cause is not found is released (Mass. R. Crim. P. 3.1(a), (c), (f))."
+  edge-arrested-appearance "Arraignment" -> initial-appearance {
+    authority cite "Mass. R. Crim. P. 7(a)"
+  }
+  edge-arrested-no-probable-cause "No probable cause for detention; released" -> dismissed {
+    authority cite "Mass. R. Crim. P. 3.1"
+  }
+}
+
+decision initial-appearance: "Arraignment, bail or detention" by court cite "Mass. R. Crim. P. 7(b)"
+{
+  note "A defendant arrested and not released is brought for arraignment before the court if in session and otherwise at its next session; a defendant summonsed or released is ordered to appear on a date certain (Mass. R. Crim. P. 7(a)(1)). The probation department interviews the defendant on the day of the arraignment (Mass. R. Crim. P. 7(a)(3)). At arraignment the defendant is given notice of the charge, pleads, and bail is set; counsel is appointed for an indigent defendant (Mass. R. Crim. P. 7(b)(1), (2); Rule 8); the court orders the pretrial proceedings scheduled (Mass. R. Crim. P. 7(b)(4)). An attorney who appeared on or before the arraignment may withdraw within fourteen days of it if trial counsel appears at the same time (Mass. R. Crim. P. 7(c)(2)). Bail and pretrial detention are governed by G.L. c. 276, §§ 57, 58 and 58A, which are not vendored."
+  edge-initial-appearance-detained "Held on bail not posted, or detained" -> charged {
+    authority cite ?("G.L. c. 276, § 58A (pretrial detention; not vendored)")
+  }
+  edge-initial-appearance-released "Released on bail or personal recognizance" -> charged {
+    authority cite "Mass. R. Crim. P. 7(b)"
+  }
+}
+
+state charged: "Indictment or complaint" by office cite "Mass. R. Crim. P. 3(b)"
+{
+  note "A defendant charged with an offense punishable by imprisonment in state prison has the right to be proceeded against by indictment, except where the offense is within the concurrent jurisdiction of the District and Superior Courts and the District Court retains jurisdiction (Mass. R. Crim. P. 3(b)); indictment may be waived (Mass. R. Crim. P. 3(c)). A probable cause hearing is governed by Rule 3(f) and the grand jury by Rule 5. The Rule 36 trial clock runs from the return day in the court in which the case awaits trial (Mass. R. Crim. P. 36(b)(1))."
+  edge-charged-pretrial "Pretrial conference" -> discovery {
+    authority cite "Mass. R. Crim. P. 11(a)"
+  }
+}
+
+state discovery: "Pretrial conference, discovery and pretrial motions" by applicant cite "Mass. R. Crim. P. 11(a)"
+{
+  note "At arraignment the court orders the prosecutor and defense counsel to a pretrial conference on a date certain, and a pretrial hearing follows (Mass. R. Crim. P. 11(a), (b)); a compliance hearing is held as Rule 11(c) provides. The prosecutor provides the automatic discovery of Rule 14(b) at arraignment to the extent it is in the prosecutor's possession, and what is then available to the prosecution team by the first pretrial conference, unless the court orders otherwise; later material is disclosed promptly (Mass. R. Crim. P. 14(c), (d)); reciprocal discovery and notices of defenses are governed by Rules 14.1 to 14.4. Discovery motions are filed before the conclusion of the pretrial hearing, or later for good cause (Mass. R. Crim. P. 13(d)(1)); a pretrial motion that does not seek discovery is filed before the trial date is assigned under Rule 11(b) or (c) or within 21 days after, unless the court permits later filing for good cause (Mass. R. Crim. P. 13(d)(2)); within seven days after a motion is filed the clerk or judge assigns a hearing date (Mass. R. Crim. P. 13(d)(3)). A written motion and notice of hearing are served at least seven days before the hearing in the Superior Court, and opposing affidavits at least one day before (Mass. R. Crim. P. 46(c)). Continuances are governed by Rule 10."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "Mass. R. Crim. P. 13(d)"
+  }
+  edge-discovery-speedy "Motion to dismiss under Rule 36" -> motions-ruling {
+    authority cite "Mass. R. Crim. P. 36(b)"
+  }
+  edge-discovery-plea "Plea discussions" -> plea-decision {
+    authority cite "Mass. R. Crim. P. 12(b)"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "Mass. R. Crim. P. 13(e)"
+{
+  note "Pending discovery motions are heard and decided before the defendant elects a jury or jury-waived trial (Mass. R. Crim. P. 13(e)(1)); hearings on other pretrial motions follow Rule 13(e)(2). A defendant not brought to trial within the Rule 36(b)(1) limit (twelve months after the return day), as extended by the excluded periods of Rule 36(b)(2), is entitled on motion to dismissal of the charges (Mass. R. Crim. P. 36(b)(1)); even within the limit, a defendant is entitled on motion to dismissal where the prosecutor's conduct in bringing the defendant to trial has been unreasonably lacking in diligence and has prejudiced the defendant (Mass. R. Crim. P. 36(c)). A Rule 36 dismissal applies to all related offenses (Mass. R. Crim. P. 36(e)). A motion to dismiss is governed by Rule 13(c)."
+  edge-motions-ruling-speedy "Dismissed under Rule 36" -> dismissed {
+    authority cite "Mass. R. Crim. P. 36(b); Mass. R. Crim. P. 36(c)"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "Mass. R. Crim. P. 13(c)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "Mass. R. Crim. P. 13(e)"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Mass. R. Crim. P. 12(a)"
+{
+  note "A defendant may plead not guilty, guilty or, with the judge's consent, nolo contendere, and in a District Court a defendant may, after a plea of not guilty, admit to sufficient facts (Mass. R. Crim. P. 12(a)); plea discussions and the judge's colloquy are governed by Rule 12(b) to (d), and a plea agreement the judge rejects may be withdrawn (Mass. R. Crim. P. 12(c), (d)). With the prosecutor's written agreement the defendant may tender a plea of guilty or an admission to sufficient facts reserving the right to appeal specified rulings that would, if reversed, make the Commonwealth's case not viable; the notice of appeal is filed within thirty days of the acceptance of the plea (Mass. R. Crim. P. 12(b)(6)). The prosecutor may enter a nolle prosequi, during trial only with the defendant's consent (Mass. R. Crim. P. 16(a), (b))."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite "Mass. R. Crim. P. 12(c)"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "Mass. R. Crim. P. 19(a)"
+  }
+  edge-plea-decision-nolle "Prosecutor enters a nolle prosequi" -> dismissed {
+    authority cite "Mass. R. Crim. P. 16(a)"
+  }
+}
+
+decision trial: "Verdict" by court cite "Mass. R. Crim. P. 27(a)"
+{
+  note "A defendant with the right to a jury may waive it if the judge finds after a colloquy that the waiver is knowing and voluntary and the defendant signs a written waiver (Mass. R. Crim. P. 19(a)); a trial may continue with less than a full jury only on a like waiver (Mass. R. Crim. P. 19(b)). The judge on motion or on the judge's own motion enters a finding of not guilty if the evidence is insufficient as a matter of law (Mass. R. Crim. P. 25(a)). The verdict is unanimous and is returned in open court (Mass. R. Crim. P. 27(a))."
+  edge-trial-acquittal "Not guilty, or required finding of not guilty" -> acquitted {
+    authority cite "Mass. R. Crim. P. 25(a)"
+  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
+    authority cite "Mass. R. Crim. P. 25(b)"
+  }
+}
+
+decision post-trial: "Post-trial motions" by court cite "Mass. R. Crim. P. 25(b)"
+{
+  note "If a motion for a required finding of not guilty is denied and the case goes to the jury, it may be renewed within five days after the jury is discharged, and may include in the alternative a motion for a new trial (Mass. R. Crim. P. 25(b)(2)). The trial judge on written motion may grant a new trial at any time if it appears that justice may not have been done (Mass. R. Crim. P. 30(b)). A motion for a new trial under Rule 25(b)(2) or 30 filed within 30 days of the verdict, finding, judgment or sentence extends the time to appeal to 30 days from entry of the order disposing of it (Mass. R. A. P. 4(b)(2))."
+  edge-post-trial-acquittal "Required finding of not guilty" -> acquitted {
+    authority cite "Mass. R. Crim. P. 25(b)"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "Mass. R. Crim. P. 30(b)"
+  }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "Mass. R. Crim. P. 28(b)"
+  }
+}
+
+state sentencing: "Presentence report and sentencing" by court cite "Mass. R. Crim. P. 28(b)"
+{
+  note "After a verdict, finding or plea of guilty, a plea of nolo contendere or an admission to sufficient facts, the defendant has the right to be sentenced without unreasonable delay, and before sentence the court gives the defendant or counsel an opportunity to speak (Mass. R. Crim. P. 28(b)). The presentence report is made available to the prosecutor and defense counsel before the disposition, subject to the judge's exceptions in extraordinary cases (Mass. R. Crim. P. 28(d)). After a judgment of guilty the court advises the defendant of the right to appeal, and in the District Court the clerk files a notice of appeal on the defendant's request (Mass. R. Crim. P. 28(c))."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "Mass. R. Crim. P. 28(a)"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "Mass. R. Crim. P. 28(a)"
+{
+  note "In a criminal case, unless a statute or court rule provides otherwise, the notice of appeal is filed with the clerk of the lower court within 30 days after entry of the judgment, appealable order or adjudication, entry of a notice of appeal by the Commonwealth, or the imposition of sentence, whichever comes last (Mass. R. A. P. 4(b)(1)); a timely new-trial motion extends the period (Mass. R. A. P. 4(b)(2)). The trial judge may revise or revoke an illegal disposition on the prosecutor's written motion filed within sixty days of the disposition, and an unjust disposition on the defendant's written motion filed within sixty days of the disposition, of the rescript on direct review, or of the disposition of a codefendant's charges (Mass. R. Crim. P. 29(a)). A stay of execution pending appeal is governed by Rule 31. lit/core has no counting rule for the Massachusetts appellate rules, so the 30-day period is not encoded as a counted deadline."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "Mass. R. A. P. 4(b)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Mass. R. A. P. 4(b)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Mass. R. Crim. P. 25"
+{
+  note "Outcome from the defendant's side: a unanimous verdict of not guilty or a required finding of not guilty (Mass. R. Crim. P. 25, 27)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "Mass. R. Crim. P. 36"
+{
+  note "Outcome from the defendant's side: a dismissal under Rule 36 (which applies to all related offenses, Mass. R. Crim. P. 36(e)), on another pretrial motion (Mass. R. Crim. P. 13(c)), a nolle prosequi (Mass. R. Crim. P. 16), or release for want of probable cause for detention (Mass. R. Crim. P. 3.1(f))."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "Mass. R. A. P. 4(b)"
+{
+  note "The appeal continues before the Appeals Court (or the Supreme Judicial Court) under the Massachusetts Rules of Appellate Procedure (sources/ma-appeals-sjc/)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "Mass. R. Crim. P. 30(a)"
+{
+  note "Outcome from the defendant's side. A person imprisoned or restrained in violation of the Constitution or laws may move to be released at any time (Mass. R. Crim. P. 30(a)), and a new trial may be sought at any time (Mass. R. Crim. P. 30(b)); federal habeas belongs to lit/habeas."
+}

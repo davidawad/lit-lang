@@ -1,0 +1,57 @@
+# Criminal cases in the Massachusetts trial courts of general criminal
+# jurisdiction (the Superior Court and the District Court) under the
+# Massachusetts Rules of Criminal Procedure (Mass. R. Crim. P.),
+# including amendments effective November 1, 2025
+# (sources/ma-criminal-trial-court/). Computation of time is Mass. R.
+# Crim. P. 46(a): intermediate Saturdays, Sundays and legal holidays are
+# excluded from periods under 7 days, and core has no Massachusetts
+# counting rule or holiday calendar, so the rules' periods (Rule 36's
+# speedy-trial limit included) are stated in notes, not encoded as
+# counted deadlines. The criminal appeal goes to the Appeals Court under
+# Mass. R. A. P. 4(b), whose text includes amendments effective September
+# 1, 2026 (sources/ma-appeals-sjc/); in_force is that later date, since
+# the earlier appellate text is not vendored. The General Laws (c. 276
+# bail and detention, c. 278 and c. 263) are not vendored; those cites
+# stay holes.
+[package]
+name = "ma-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "ma-criminal-trial-court"
+forum = "ma-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "massachusetts"
+title = "Massachusetts Superior and District Courts, criminal"
+description = "Criminal cases in the Massachusetts Superior and District Courts under the Massachusetts Rules of Criminal Procedure, as far as the vendored text states: the 24-hour probable-cause determination, arraignment and counsel, indictment or complaint, the pretrial conference and hearing, automatic discovery, pretrial motions, the Rule 36 speedy-trial limits and dismissal, plea or trial, required finding of not guilty, new trial, sentencing and judgment. An appeal goes to the Appeals Court within 30 days under Mass. R. A. P. 4(b)."
+in_force = "2026-09-01"
+known_at = "2026-10-28"
+unknown_before = "2026-09-01"
+jurisdiction = "Massachusetts Superior and District Courts (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ma-r-crim-p]
+title = "Massachusetts Rules of Criminal Procedure, Trial Court Law Libraries compilation including amendments effective November 1, 2025"
+url = "https://www.mass.gov/doc/massachusetts-rules-of-criminal-procedure/download"
+path = "sources/ma-criminal-trial-court/ma-rules-of-criminal-procedure-2025-11-01-sectioned.txt"
+path_sha256 = "e8e01b5566775a4eab96a9d3cebab847d63ac97b8c0760aec343b4c56c7d5f4e"
+sha256 = "1269f9b86ec5094638d7348d445966a884731804983dd3f0ee03ca92e22f3847"
+as_of = "2025-11-01"
+cite_prefixes = ["Mass. R. Crim. P."]
+section_heading = "Rule {n}"
+
+[sources.ma-r-a-p]
+title = "Massachusetts Rules of Appellate Procedure, Trial Court Law Libraries compilation including amendments effective September 1, 2026"
+url = "https://www.mass.gov/doc/massachusetts-rules-of-appellate-procedure/download"
+path = "sources/ma-appeals-sjc/ma-rules-appellate-procedure-sectioned.txt"
+path_sha256 = "1e933a8ddaecfe30dac949319d8f1f78f3a2ecc2a03e6815b10545072338eb5b"
+sha256 = "0811b8698254509d2830120cc2b1596e76d7d24d913603842617efd6ac391b34"
+as_of = "2026-09-01"
+cite_prefixes = ["Mass. R. A. P."]
+section_heading = "Rule {n}"

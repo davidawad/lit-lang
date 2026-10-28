@@ -8,3 +8,9 @@
 - Original: `ma-criminal-trial-court/original/ma-rules-of-criminal-procedure-2025-11-01.pdf` as served (sha256 1269f9b86ec5094638d7348d445966a884731804983dd3f0ee03ca92e22f3847); extraction sha256 b4651ba12ce09aadd95d6df67b1463c881fc94376935fef3029e6527d39b5479.
 
 - Note (lg-gddt): Criminal appeals: Massachusetts Rules of Appellate Procedure, covered by sources/ma-appeals-sjc/ if it carries them.
+
+### `ma-criminal-trial-court/ma-rules-of-criminal-procedure-2025-11-01-sectioned.txt` — Massachusetts Rules of Criminal Procedure, sectioned
+
+- Derived in the pod (lg-gddt.6) from `ma-criminal-trial-court/ma-rules-of-criminal-procedure-2025-11-01.txt` (extract sha256 b4651ba12ce09aadd95d6df67b1463c881fc94376935fef3029e6527d39b5479); nothing fetched. One `## Rule <n>` line is inserted right after each rule's own heading line `Rule <n>: <Title>` (54 rules, Rule 1 through Rule 49 with 3.1 and 14.1 to 14.4; each section runs through that rule's history and Reporter's Notes); after, not before, because the cite corpus also opens a section at a `Rule <n>:` line, as in `ma-appeals-sjc/ma-rules-appellate-procedure-sectioned.txt`. Cross-references that begin a line without a colon (`Rule 14.4.`, `Rule 14. This amendment ...`) are not headings and are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, including amendments effective November 1, 2025.
+- Sectioned sha256 e8e01b5566775a4eab96a9d3cebab847d63ac97b8c0760aec343b4c56c7d5f4e (the `path_sha256` pinned by `lit/ma-criminal-trial-court/Lit.toml`).

@@ -1,0 +1,302 @@
+module mdd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Maryland's own periods. Stated in the rules but not
+// declared: the withdrawing lawyer's written notice to the client at least
+// seven days before the certificate (Local Rule 101.2(a), (b)); the
+// automatic termination of an appearance at the end of the appeal period,
+// or 90 days after the Fourth Circuit's mandate (Local Rule 101.2(c)); the
+// courtesy paper copy of a filing of 15 pages or more, received within 48
+// hours excluding weekends, legal holidays and days the Court is closed
+// (Local Rule 105.1(a)); the 4:00 p.m. cut-off on the afternoon before the
+// last business day preceding a proceeding (Local Rule 105.2(b)); the
+// clerk's notice that a defendant in default may move to vacate the entry
+// of default within 30 days (Local Rule 108.2(a)), whose start the rule
+// does not fix; the supersedeas bond of 120% of a money judgment plus $500
+// for costs on appeal (Local Rule 110.1(a)); and a proposed settlement
+// order the Court may require within 60 days (Local Rule 111). Surreply
+// memoranda are not permitted unless the Court orders otherwise (Local
+// Rule 105.2(a)). The FRCP periods (service under Rule 4(m), the answer,
+// Rule 50, 52, 59 and 60 motions) are lit/frcp's, and the notice of
+// appeal is FRAP's (lit/frcp, lit/ca4); none is declared again.
+
+/// A pleading (Local Rule 103.1(d)): no longer than necessary and, except in
+/// a removal of a state action, no more than 40 pages; leave of Court may
+/// allow more in extraordinary circumstances.
+limit pleading {
+  pages <= 40 cite "D. Md. Local Rule 103.1(d)"
+} cite "D. Md. Local Rule 103.1(d)"
+
+/// A memorandum in support of or in opposition to a motion, or a trial
+/// brief (Local Rule 105.3): 30 pages inclusive of footnotes, exclusive of
+/// affidavits and exhibits, tables of contents and citations, and addenda of
+/// statutes, rules and regulations. A memorandum over 15 pages has a table
+/// of contents (Local Rule 105.4).
+limit memorandum {
+  pages <= 30 cite "D. Md. Local Rule 105.3"
+} cite "D. Md. Local Rule 105.3"
+
+/// A reply memorandum (Local Rule 105.3): 15 pages.
+limit reply-memorandum {
+  pages <= 15 cite "D. Md. Local Rule 105.3"
+} cite "D. Md. Local Rule 105.3"
+
+/// An amicus brief (Local Rule 105.12(c)): no more than 15 pages.
+limit amicus-brief {
+  pages <= 15 cite "D. Md. Local Rule 105.12(c)"
+} cite "D. Md. Local Rule 105.12(c)"
+
+/// A complaint or other pleading demanding affirmative relief is filed
+/// (Local Rule 103.8(a)).
+event AffirmativePleadingFiled() paper pleading
+/// A motion of a party other than an individual to withdraw its counsel's
+/// appearance is filed (Local Rule 101.2(b)).
+event EntityCounselWithdrawalMoved()
+/// A notice of removal is filed (Local Rule 103.5(a), (c)).
+event NoticeOfRemovalFiled()
+/// An action is removed while a motion is pending without a supporting
+/// memorandum (Local Rule 103.5(b)).
+event RemovedWithMotionPending()
+/// The Court enters an order to show cause why a claim or case should not
+/// be dismissed for want of prosecution (Local Rule 103.8(a), (b)).
+event ProsecutionShowCauseOrdered()
+/// A party receives a response to its interrogatories or requests for
+/// production (Local Rule 104.8(a)).
+event DiscoveryResponseReceived()
+/// A motion to compel under Local Rule 104.8 is served (Local Rule
+/// 104.8(a)).
+event MotionToCompelServed() paper memorandum
+/// A memorandum in opposition to a motion to compel is served (Local Rule
+/// 104.8(a)).
+event CompelOppositionServed() paper memorandum
+/// A motion is served (Local Rule 105.2(a)).
+event MotionServed() paper memorandum
+/// A memorandum in opposition to a motion is served (Local Rule 105.2(a)).
+event OppositionServed() paper memorandum
+/// The Court enters an order (Local Rule 105.10).
+event OrderEntered()
+/// A motion to seal is entered on the public docket (Local Rule 105.11).
+event SealingMotionDocketed()
+/// The principal brief of the party an amicus supports, or the opening
+/// brief, is filed (Local Rule 105.12(e)).
+event PrincipalBriefFiled() paper memorandum
+/// The pretrial order falls due under the scheduling order (Local Rule
+/// 106.3).
+event PretrialOrderDue()
+/// The pretrial conference is to be held (Local Rule 106.4(a)).
+event PretrialConferenceScheduled()
+/// The time allowed for appeal of a final judgment expires without a
+/// notice of appeal (Local Rule 109.1(a)).
+event AppealTimeExpired()
+/// The Court of Appeals issues its mandate (Local Rule 109.1(a), 109.2(a)).
+event MandateIssued()
+/// The Supreme Court enters its judgment (Local Rule 109.1(a)).
+event SupremeCourtJudgmentEntered()
+/// Judgment is entered (Local Rule 109.2(a)).
+event JudgmentEntered()
+/// A motion requesting attorneys' fees is filed (Local Rule 109.2(a)).
+event FeeMotionFiled()
+/// The memorandum supporting a fee motion is served (Local Rule 109.2(a)).
+event FeeMemorandumServed() paper memorandum
+/// The Social Security Administration's Notice of Award letter is sent to
+/// the claimant and the attorney (Local Rule 109.2(c)).
+event NoticeOfAwardSent()
+
+/// Local Rule 101.2(b): when a party other than an individual has not had
+/// new counsel enter an appearance within 30 days of the filing of the
+/// motion to withdraw, the Court may grant the motion, dismiss the party's
+/// affirmative claims, or direct it to show cause why a default should not
+/// be entered.
+deadline entity-new-counsel-period: 30.days after EntityCounselWithdrawalMoved() counted_by frcp6 cite "D. Md. Local Rule 101.2(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 103.5(a): within 30 days after filing the notice of removal
+/// (with the process, pleadings and orders served on it and the state
+/// docket sheet), the removing party files every other document then on
+/// file in the state court, with counsel's certification.
+deadline removal-record-period: 30.days after NoticeOfRemovalFiled() counted_by frcp6 cite "D. Md. Local Rule 103.5(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 103.5(b): a motion pending at removal without a legal
+/// memorandum is supported by one within 14 days of the date of removal; an
+/// opposition already due is filed on its state-court due date or within 14
+/// days of removal, whichever is earlier.
+deadline removed-motion-memorandum-period: 14.days after RemovedWithMotionPending() counted_by frcp6 cite "D. Md. Local Rule 103.5(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 103.5(c): within seven days after the filing of a notice of
+/// removal, all parties make the disclosures of affiliations and financial
+/// interest that Local Rule 103.3 requires.
+deadline removal-disclosure-period: 7.days after NoticeOfRemovalFiled() counted_by frcp6 cite "D. Md. Local Rule 103.5(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 103.8(a): if a party demanding affirmative relief has not
+/// effected service within 90 days of filing the pleading, the Court may
+/// order it to show cause why the claim should not be dismissed. Rule 4(m)'s
+/// own period is lit/frcp's.
+deadline service-show-cause-period: 90.days after AffirmativePleadingFiled() counted_by frcp6 cite "D. Md. Local Rule 103.8(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 103.8(a), (b): good cause is shown within 14 days of the
+/// entry of the show cause order, or another time the Court sets, or the
+/// claim or case is dismissed without prejudice. The order under 103.8(b)
+/// follows nine months without any filing in the action.
+deadline prosecution-show-cause-period: 14.days after ProsecutionShowCauseOrdered() counted_by frcp6 cite "D. Md. Local Rule 103.8(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 104.8(a): a party dissatisfied with a response to its
+/// interrogatories or requests for production serves a motion to compel
+/// within 30 days of receiving the response.
+deadline motion-to-compel-period: 30.days after DiscoveryResponseReceived() counted_by frcp6 cite "D. Md. Local Rule 104.8(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 104.8(a): the opposing party serves its memorandum in
+/// opposition within 14 days after the motion to compel.
+deadline compel-opposition-period: 14.days after MotionToCompelServed() counted_by frcp6 cite "D. Md. Local Rule 104.8(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 104.8(a): the moving party serves any reply within 14 days
+/// after the opposition.
+deadline compel-reply-period: 14.days after CompelOppositionServed() counted_by frcp6 cite "D. Md. Local Rule 104.8(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 105.2(a): unless the Court orders otherwise, a memorandum in
+/// opposition to a motion is filed within 14 days of service of the motion.
+deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "D. Md. Local Rule 105.2(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 105.2(a): a reply memorandum is filed within 14 days after
+/// service of the opposition.
+deadline reply-period: 14.days after OppositionServed() counted_by frcp6 cite "D. Md. Local Rule 105.2(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 105.10: except as Fed. R. Civ. P. 50, 52, 59 or 60 provides, a
+/// motion to reconsider an order is filed no later than 14 days after its
+/// entry.
+deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6 cite "D. Md. Local Rule 105.10"
+{
+  forum frcp
+}
+
+/// Local Rule 105.11: the Court will not rule on a motion to seal until at
+/// least 14 days after it is entered on the public docket, so that
+/// interested parties may object.
+deadline sealing-objection-period: 14.days after SealingMotionDocketed() counted_by frcp6 cite "D. Md. Local Rule 105.11"
+{
+  forum frcp
+}
+
+/// Local Rule 105.12(e): an amicus's motion and proposed brief are filed no
+/// later than seven days after the principal brief of the party supported,
+/// or within seven days of the opening brief.
+deadline amicus-brief-period: 7.days after PrincipalBriefFiled() counted_by frcp6 cite "D. Md. Local Rule 105.12(e)"
+{
+  forum frcp
+}
+
+/// Local Rule 106.3: unless ordered or agreed otherwise, the plaintiff
+/// serves its draft pretrial order on opposing counsel 14 days before the
+/// pretrial order is due.
+deadline pretrial-draft-period: 14.days before PretrialOrderDue() counted_by frcp6 cite "D. Md. Local Rule 106.3"
+{
+  forum frcp
+}
+
+/// Local Rule 106.3: opposing counsel serves proposed revisions and
+/// additions at least seven days before the order is due.
+deadline pretrial-revisions-period: 7.days before PretrialOrderDue() counted_by frcp6 cite "D. Md. Local Rule 106.3"
+{
+  forum frcp
+}
+
+/// Local Rule 106.4(a): unless the Court orders otherwise, the pretrial
+/// order is submitted seven days before the pretrial conference.
+deadline pretrial-order-period: 7.days before PretrialConferenceScheduled() counted_by frcp6 cite "D. Md. Local Rule 106.4(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 109.1(a): a bill of costs is filed within 14 days of the
+/// expiration of the time for appeal of a final judgment; non-compliance is
+/// a waiver of costs. An objection is due within Local Rule 105.2's time
+/// (Local Rule 109.1(c)).
+deadline bill-of-costs-period: 14.days after AppealTimeExpired() counted_by frcp6 cite "D. Md. Local Rule 109.1(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 109.1(a): if a notice of appeal is filed, within 14 days of
+/// the issuance of the mandate by the Court of Appeals.
+deadline appeal-bill-of-costs-period: 14.days after MandateIssued() counted_by frcp6 cite "D. Md. Local Rule 109.1(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 109.1(a): a bill for additional costs on review by the
+/// Supreme Court taxable in this Court is filed within 14 days of the entry
+/// of the Supreme Court's judgment.
+deadline supreme-court-costs-period: 14.days after SupremeCourtJudgmentEntered() counted_by frcp6 cite "D. Md. Local Rule 109.1(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 109.2(a): unless a statute, Local Rule 109.2(c) or an order
+/// provides otherwise, a motion for attorneys' fees is filed within 14 days
+/// of the entry of judgment; non-compliance waives the claim.
+deadline fee-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "D. Md. Local Rule 109.2(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 109.2(a): the supporting memorandum Local Rule 109.2(b)
+/// requires is filed within 35 days from the date the motion is filed.
+deadline fee-memorandum-period: 35.days after FeeMotionFiled() counted_by frcp6 cite "D. Md. Local Rule 109.2(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 109.2(a): if an appeal is taken from the underlying judgment,
+/// unless the Court orders otherwise, the memorandum is filed within 14
+/// days of the issuance of the mandate.
+deadline appeal-fee-memorandum-period: 14.days after MandateIssued() counted_by frcp6 cite "D. Md. Local Rule 109.2(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 109.2(a): an opposition to a fee motion is filed within 14
+/// days of service of the memorandum.
+deadline fee-opposition-period: 14.days after FeeMemorandumServed() counted_by frcp6 cite "D. Md. Local Rule 109.2(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 109.2(c): in a social security case the fee motion is filed
+/// within 30 days of the date of the Notice of Award letter, and may not
+/// seek fees for the administrative proceedings.
+deadline social-security-fee-motion-period: 30.days after NoticeOfAwardSent() counted_by frcp6 cite "D. Md. Local Rule 109.2(c)"
+{
+  forum frcp
+}

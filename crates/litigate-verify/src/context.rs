@@ -220,7 +220,9 @@ type CiteOf<'a> = (&'a str, Option<&'a Span>, bool, Vec<Cow<'a, str>>);
 /// pages`), the measure singular for a count of one (`one page`), each also with a few words between the count and the measure
 /// (D.S.C. Local Civ. Rule 7.05(B): `Thirty-five (35) double-spaced
 /// pages`; D. Conn. L. Civ. R. 7(a)5: `forty (40) 8 1/2" by 11" printed
-/// pages`, [`GAP`]), and each excluded part named, hyphens read as spaces
+/// pages`, [`GAP`]), or the digits in parentheses after the measure
+/// (C.A.A.F. R. 24(b)(2): `half of the words (6,500)`), and each
+/// excluded part named, hyphens read as spaces
 /// (`cover page`).
 /// A hole cites nothing and quotes nothing.
 fn limit_cites(d: &Declaration) -> Vec<CiteOf<'_>> {
@@ -251,6 +253,10 @@ fn limit_cites(d: &Declaration) -> Vec<CiteOf<'_>> {
                     .iter()
                     .map(|d| format!("{words} ({d})"))
                     .collect::<Vec<_>>();
+                let after = digits
+                    .iter()
+                    .map(|d| format!("{measure} ({d})"))
+                    .collect::<Vec<_>>();
                 digits
                     .into_iter()
                     .chain([words])
@@ -261,6 +267,7 @@ fn limit_cites(d: &Declaration) -> Vec<CiteOf<'_>> {
                             format!("{count} {GAP} {measure}"),
                         ]
                     })
+                    .chain(after)
                     .map(Cow::Owned)
                     .collect()
             }

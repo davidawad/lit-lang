@@ -87,3 +87,13 @@ source = "usc-1337"
 # The authority lattice, the 19 C.F.R. § 201.14 (`itc210`) and FRAP 26
 # counting rules, and the service methods.
 core = { version = "^1.0.0", path = "../core" }
+
+# The eCFR versioner's version list of each 19 C.F.R. part 210 section
+# cited: the amendment history `cite-resolves` reads to prove a text dated
+# after a version took effect was that version's text (SPEC §4.3).
+[sources.ecfr-versions-19]
+title = "eCFR versioner: versions of the 19 C.F.R. part 210 sections cited"
+url = "https://www.ecfr.gov/api/versioner/v1/versions/title-19.json"
+path = "sources/ecfr-versions-title-19.txt"
+path_sha256 = "f5772fc7e9852994796aa81a644ffa7be4c3f664a3543d5c6297c186c79e7b32"
+as_of = "2026-10-28"

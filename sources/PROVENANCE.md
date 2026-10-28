@@ -1230,3 +1230,5 @@ FRBP 8002. Neither decision supports a proposition needed by this outline.
 - Vendored text sha256:
   `9e99b6ae551dc12ddf322afe896c98d7fc4c651c49a209f0cf45f313403b477a`.
 - Original: `original/ca1-first-circuit-rulebook-2026-06-01.pdf` as served (sha256 e126dc83b8a7ab1044273dc3fdc22cbc735cc6c81ce5793b345eb0e7bc7a6133); extraction sha256 9e99b6ae551dc12ddf322afe896c98d7fc4c651c49a209f0cf45f313403b477a.
+
+

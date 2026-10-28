@@ -193,8 +193,13 @@ Entries live in the forum's own
   0). Committee-notes prose sometimes bleeds into the tail of the preceding
   rule's body (a known, accepted imprecision — it only affects optional
   quoted-phrase fuzzy matching, never whether a citation resolves at all).
-- sha256 (this file): `2cd0ad815721d3234273142db6f8b32e5235d395c98273f94a51a2e8d2e81be9`
-- Original: `original/rcfc.pdf` as served (sha256 943733526f5391cad22562adf31411148fecfb03f01ae7bcf8bd6ec051a0c971); extraction sha256 2cd0ad815721d3234273142db6f8b32e5235d395c98273f94a51a2e8d2e81be9. Served at https://www.uscfc.uscourts.gov/sites/cfc/files/Rules%2010.08.26.pdf; same bytes as original/rcfc-appendices.pdf (fetched 2026-10-24), copied not refetched; retrieved 2026-10-27.
+  Hand re-ordered 2026-10-28 (lg-nys9): on printed pp. 80-82 the content-stream
+  order scattered RCFC 56.1-59 across the wrong `##` headings (RCFC 58(a)
+  tail-(e) under RCFC 56.1, RCFC 59(b)(2)-(f) under RCFC 58.1, the RCFC 59
+  2002 note under RCFC 60); those lines were moved back under their own rule
+  and the page numbers/running heads dropped, no wording changed.
+- sha256 (this file): `d0cad129cb4e7f441b8dff5fa36331cee2abea2c0946e274694781247b606704`
+- Original: `original/rcfc.pdf` as served (sha256 943733526f5391cad22562adf31411148fecfb03f01ae7bcf8bd6ec051a0c971); extraction sha256 2cd0ad815721d3234273142db6f8b32e5235d395c98273f94a51a2e8d2e81be9 (before the lg-nys9 re-ordering). Served at https://www.uscfc.uscourts.gov/sites/cfc/files/Rules%2010.08.26.pdf; same bytes as original/rcfc-appendices.pdf (fetched 2026-10-24), copied not refetched; retrieved 2026-10-27.
 
 ### `fedcir-rules.txt` — Federal Circuit Rules of Practice (55 numbered local rules)
 

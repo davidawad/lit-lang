@@ -1,0 +1,10 @@
+module or-dor-local-rules.civil
+
+// Civil local rules are not present in sources/fed-dor. This layer makes no
+// local procedural claim. Federal deadlines and procedure are authored in
+// lit/frcp and must not be copied here.
+start local-rules-unavailable
+
+terminal local-rules-unavailable: "District of Oregon civil local rules unavailable" outcome [unknown] {
+  note "No civil Local Rules of the United States District Court for the District of Oregon are vendored. Their periods and limits remain holes pending a sourced local-rule text. Federal procedure is in lit/frcp. The only Oregon local-rule source currently vendored is criminal and is out of scope."
+}

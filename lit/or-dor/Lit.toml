@@ -1,0 +1,25 @@
+# The District of Oregon's civil local rules are not vendored in this
+# repository. This package therefore contributes no local-rule periods or
+# limits; federal procedure is supplied by lit/frcp.
+[package]
+name = "or-dor-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "or-dor-local-rules"
+forum = "fed-dor"
+authority = "LocalRule"
+title = "United States District Court, District of Oregon: civil local rules"
+description = "Local-rule layer for the District of Oregon. Civil local-rule text is not vendored, so this package states no local deadlines or limits; federal civil procedure is supplied by lit/frcp."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "United States District Court, District of Oregon"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }

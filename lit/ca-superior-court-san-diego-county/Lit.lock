@@ -1,0 +1,28 @@
+version = 2
+
+[[package]]
+name = "ca-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "ca-superior-court-san-diego-county"
+version = "0.1.0"
+language = 1
+source = "sha256:78ce7776c55480164e257fa10273b5a8d8a8efd31e3cd07944840ad1301c4f6e"
+semantic = "sha256:984a3f54f44af3b2a8174dffe9eedd3398167ae3d2cab80b2bbc534bb34f1dfc"
+texts = [
+    "ccp sources/ca-superior/ccp-cited-chapters-sectioned.txt sha256:494bdb61129d96d2eee0776501204acb3bd5f1fd32641098efacd3558124e336",
+    "crc-title8 sources/ca-court-of-appeal/cal-rules-of-court-title8-cited.txt sha256:616d23ce45fc69c4d0c6c6b2e5684681c36f8bfe5954e99ce40a766d0ed5e010",
+]
+dependencies = [
+    "ca-state-rules 0.1.0",
+    "core 1.0.0",
+]
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []

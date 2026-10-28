@@ -1,0 +1,93 @@
+module ca-superior-court-appellate-division.appeal
+
+import ca-state-rules.{
+  DecisionFiled,
+  MandateIssued,
+  NoticeOfAppealFiled,
+  RecordFiled,
+  ReviewPetitionFiled,
+}
+
+// An appeal in a limited civil case to the appellate division of the
+// superior court, from the appellant's side. Appealability, the scope of
+// review, transfer, the remittitur and dismissal are the Code of Civil
+// Procedure's and are cited. The appellate division rules (Cal. Rules of
+// Court, rules 8.800-8.891) and the transfer rules (rules 8.1000-8.1018)
+// are not vendored: their cites are holes and the periods they set are
+// holes, noted as such. The outline named no leading decisions.
+start notice
+
+decision notice: "Notice of appeal within time?" by applicant cite "Cal. Code Civ. Proc. § 904.2"
+{
+  note "An appeal of a ruling by a superior court judge or other judicial officer in a limited civil case is to the appellate division of the superior court, and lies from a judgment (except an interlocutory judgment or a contempt judgment made final by § 1222), an order after an appealable judgment, and the orders listed in Cal. Code Civ. Proc. § 904.2(b)-(h) (change of venue, quashing service or staying for inconvenient forum, granting a new trial or denying JNOV, attachment, injunction, receiver). Any party aggrieved may appeal (Cal. Code Civ. Proc. § 902). The time to file the notice of appeal, its form and service are set by the appellate division rules (Cal. Rules of Court, Title 8, Division 2, from rule 8.822), which are not vendored: they are holes."
+  edge-notice-late "No timely notice" -> dismissed-untimely {
+    authority cite ?("Cal. Rules of Court, rule 8.822, not vendored")
+  }
+  edge-notice-filed "Timely notice" -> record {
+    event NoticeOfAppealFiled()
+    authority cite "Cal. Code Civ. Proc. § 904.2"
+  }
+}
+
+state record: "Record on appeal prepared" by office cite ?("Cal. Rules of Court, rule 8.830, not vendored") {
+  note "The record on appeal (the clerk's transcript or its substitutes, and the reporter's transcript or a statement on appeal), its preparation, its time and its fees are set by the appellate division rules, which are not vendored: they are holes."
+  edge-record-briefing "Record filed" -> briefing {
+    event RecordFiled()
+    authority cite ?("Cal. Rules of Court, rule 8.830, not vendored")
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite ?("Cal. Rules of Court, rule 8.882, not vendored") {
+  note "The briefing periods, form and length are set by the appellate division rules (Cal. Rules of Court, from rule 8.882), which are not vendored: they are holes."
+  edge-briefing-argument "Argument or submission" -> argument {
+    authority cite ?("Cal. Rules of Court, rule 8.885, not vendored")
+  }
+}
+
+state argument: "Argument or submission" by court cite ?("Cal. Rules of Court, rule 8.885, not vendored") {
+  note "Oral argument and submission of the cause are set by the appellate division rules (Cal. Rules of Court, from rule 8.885), which are not vendored: they are holes."
+  edge-argument-decision "Cause submitted" -> decision {
+    authority cite ?("Cal. Rules of Court, rule 8.887, not vendored")
+  }
+}
+
+chance decision: "Appellate division decides" by court cite "Cal. Code Civ. Proc. § 906"
+{
+  note "On an appeal under § 904.2 the reviewing court may review the verdict or decision and any intermediate ruling that involves the merits or necessarily affects the judgment or order appealed from or substantially affects a party's rights, including an order on a new-trial motion on an appeal from the judgment, and may affirm, reverse or modify the judgment or order, direct the proper judgment or order, or direct a new trial or further proceedings; it does not review a decision or order from which an appeal might have been taken (Cal. Code Civ. Proc. § 906). Where a jury is not a matter of right or was waived it may make factual determinations and take additional evidence (Cal. Code Civ. Proc. § 909). A frivolous appeal or one taken solely for delay may draw damages added to the costs (Cal. Code Civ. Proc. § 907). The form of the decision and when it becomes final (the appellate division rules, from Cal. Rules of Court, rule 8.887) are not vendored. Outcome probabilities are holes."
+  edge-decision-affirmed "Affirmed" -> post-decision p ?("no calibration yet") {
+    event DecisionFiled()
+    authority cite "Cal. Code Civ. Proc. § 906"
+  }
+  edge-decision-reversed "Reversed, modified or remanded" -> post-decision p ?("no calibration yet") {
+    event DecisionFiled()
+    authority cite "Cal. Code Civ. Proc. § 906"
+  }
+}
+
+decision post-decision: "Seek transfer to the Court of Appeal?" by applicant cite "Cal. Code Civ. Proc. § 911"
+{
+  note "A court of appeal may order a case on appeal to a superior court in its district transferred to it for hearing and decision, as the Judicial Council's rules provide, when the superior court certifies, or the court of appeal determines, that transfer appears necessary to secure uniformity of decision or to settle important questions of law; the transferee court has the appellate division's power to review the case (Cal. Code Civ. Proc. § 911). Rehearing in the appellate division and the certification, application and transfer procedure and periods (Cal. Rules of Court, rules 8.1000-8.1018) are not vendored: they are holes. No appeal lies from an appellate division judgment granting or denying a writ of mandate or prohibition directed to the superior court in a limited civil case; the appellate court may review it on a petition for extraordinary writ (Cal. Code Civ. Proc. § 904.3)."
+  edge-post-decision-remittitur "No transfer sought" -> remittitur-issued {
+    event MandateIssued()
+    authority cite "Cal. Code Civ. Proc. § 912"
+  }
+  edge-post-decision-transfer "Transfer sought" -> transfer-sought {
+    event ReviewPetitionFiled()
+    authority cite "Cal. Code Civ. Proc. § 911"
+  }
+}
+
+terminal dismissed-untimely: "Dismissed: no timely notice" outcome [loss, dismissal] cite "Cal. Code Civ. Proc. § 913"
+{
+  note "Outcome from the appellant's side. The dismissal of an appeal is with prejudice to the right to file another appeal within the time permitted unless it is expressly made without prejudice (Cal. Code Civ. Proc. § 913). Whether a late notice may be saved is set by Cal. Rules of Court, rule 8.822, which is not vendored: a hole."
+}
+
+terminal remittitur-issued: "Remittitur issued" outcome [final] cite "Cal. Code Civ. Proc. § 912"
+{
+  note "Upon final determination of the appeal the clerk remits to the trial court a certified copy of the judgment or order and the opinion; the trial court clerk files it, attaches it to the judgment roll and notes in the margin of the original entry and in the register of actions whether the judgment or order was affirmed, reversed or modified (Cal. Code Civ. Proc. § 912). The case returns to lit/ca-superior or its county package."
+}
+
+terminal transfer-sought: "Transfer to the Court of Appeal sought" outcome [appeal] cite "Cal. Code Civ. Proc. § 911"
+{
+  note "A transferred case is heard and decided in the Court of Appeal for the district (lit/ca-court-of-appeal and its district packages), which then has the appellate division's power to review it (Cal. Code Civ. Proc. § 911)."
+}

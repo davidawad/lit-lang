@@ -1,0 +1,50 @@
+# An appeal in a limited civil case from a California superior court to
+# the appellate division of the superior court (lg-u561.5), from the
+# appellant's side. Appealability, the scope of review, transfer to the
+# Court of Appeal and the remittitur are the Code of Civil Procedure's
+# (§§ 904.2, 906, 911, 912 and 913, sources/ca-superior). The appellate
+# division's own procedure, the California Rules of Court, Title 8,
+# Division 2 (the notice and its time, the record, the
+# briefs, argument, the decision and its finality) and the transfer rules
+# (rules 8.1000-8.1018), is not vendored: those values stay holes, noted as
+# such. Misdemeanor and infraction appeals to the appellate division are
+# not modeled. The trial-court side is lit/ca-superior (and its county
+# packages, e.g. lit/ca-superior-court-san-diego-county); the trigger
+# events are lit/ca-rules'.
+[package]
+name = "ca-superior-court-appellate-division"
+version = "0.1.0"
+language = 1
+pack_id = "ca-superior-court-appellate-division"
+forum = "ca-superior-court-appellate-division"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "california"
+title = "California Superior Court, Appellate Division, limited civil appeals"
+description = "An appeal in a limited civil case to the appellate division of the superior court: appealability under CCP § 904.2, the scope of review and disposition under § 906, transfer to the Court of Appeal under § 911, the remittitur under § 912 and dismissal under § 913. The appellate division rules (Cal. Rules of Court, Title 8, Division 2) and the transfer rules (rules 8.1000-8.1018) are not vendored: their periods and requirements are holes."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "California Superior Court, Appellate Division (limited civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+ca-state-rules = { version = "^0.1.0", path = "../ca-rules" }
+
+[sources.ccp]
+title = "California Code of Civil Procedure, cited chapters, as published on leginfo.legislature.ca.gov (in effect 2026-10-27)"
+url = "https://leginfo.legislature.ca.gov/faces/codesTOCSelected.xhtml?tocCode=CCP"
+path = "sources/ca-superior/ccp-cited-chapters-sectioned.txt"
+path_sha256 = "494bdb61129d96d2eee0776501204acb3bd5f1fd32641098efacd3558124e336"
+as_of = "2026-10-27"
+
+[[cite_syntax.rules]]
+prefixes = ["Cal. Code Civ. Proc. §"]
+heading = "Cal. Code Civ. Proc. § {}"
+source = "ccp"

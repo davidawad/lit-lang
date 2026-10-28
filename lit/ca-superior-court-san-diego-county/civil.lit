@@ -1,0 +1,136 @@
+module ca-superior-court-san-diego-county.civil
+
+import ca-state-rules.{ JudgmentEntered, NoticeOfAppealFiled }
+
+// Civil actions in the Superior Court of California, County of San Diego
+// (lg-u561.5): the statewide graph of lit/ca-superior for this county. The
+// court's local rules (divisions I and II, civil) layer over the Code of
+// Civil Procedure and the Rules of Court; they are not vendored, so nothing
+// here departs from the statewide graph yet. From the applicant's
+// (plaintiff's) side. Every period below is stated in a note, not counted:
+// computation of time is CCP §§ 12-12a, which are not vendored, and lit/core
+// has no California counting rule. The chapters vendored are those
+// lit/ca-superior cites; the rest of the Code (amendment under § 472,
+// service deadlines under § 583.210, motion notice under § 1005, the Civil
+// Discovery Act beyond § 2016.010), the California Rules of Court for trial
+// courts and the county's local rules are not, so they are named in notes
+// but not cited. The outline named no leading decisions.
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "Cal. Code Civ. Proc. § 350"
+{
+  note "Superior Court of California, County of San Diego: the court's local rules (divisions I and II, civil) supplement the Code of Civil Procedure and the Rules of Court; they are not vendored and not modeled. An action is commenced, within the meaning of the limitations title, when the complaint is filed (Cal. Code Civ. Proc. § 350). The summons directs the defendant to file a written pleading in response to the complaint within 30 days after the summons is served, and warns that default may be entered otherwise (Cal. Code Civ. Proc. § 412.20(a)(3), (4)). A summons may be served by personal delivery of a copy of the summons and complaint, complete at delivery (Cal. Code Civ. Proc. § 415.10); the other methods of service are in the same chapter."
+  edge-complaint-filed-served "Summons and complaint served" -> response-due {
+    authority cite "Cal. Code Civ. Proc. § 415.10"
+  }
+}
+
+decision response-due: "Answer, demurrer, or default" by office cite "Cal. Code Civ. Proc. § 412.20(a)"
+{
+  note "The defendant responds within 30 days after the summons is served (Cal. Code Civ. Proc. § 412.20(a)(3)). A party against whom a complaint has been filed may object to it by demurrer or answer on the grounds of Cal. Code Civ. Proc. § 430.10: no subject-matter jurisdiction, lack of capacity, another action pending, defect or misjoinder of parties, failure to state facts sufficient to constitute a cause of action, uncertainty, an undeterminable contract form, or a missing § 411.35 certificate. A ground on the face of the pleading is taken by demurrer, one that is not by answer, and a party may demur and answer at the same time (Cal. Code Civ. Proc. § 430.30). A demurrer is filed within 30 days after service of the complaint (Cal. Code Civ. Proc. § 430.40(a)). Before demurring the parties meet and confer at least 5 days before the responsive pleading is due; if they cannot, the demurring party gets an automatic 30-day extension by filing a declaration on or before the date the demurrer would be due (Cal. Code Civ. Proc. § 430.41(a)(2))."
+  edge-response-due-default "No answer, demurrer or listed motion filed in time" -> default-entered {
+    authority cite "Cal. Code Civ. Proc. § 585(a)"
+  }
+  edge-response-due-demurrer "Demurrer filed" -> demurrer-ruling {
+    authority cite "Cal. Code Civ. Proc. § 430.10"
+  }
+  edge-response-due-answer "Answer filed" -> discovery {
+    authority cite "Cal. Code Civ. Proc. § 430.30(b)"
+  }
+}
+
+terminal default-entered: "Default and default judgment" outcome [win, judgment] cite "Cal. Code Civ. Proc. § 585(a)"
+{
+  note "Outcome from the applicant's side. If a defendant served other than by publication files no answer, demurrer or listed motion within the time specified in the summons, the clerk, on the plaintiff's written application, enters the default; in an action on a contract or judgment for money or damages only, the clerk then enters judgment for the principal amount demanded, interest and costs; in other actions the plaintiff applies to the court, which hears the evidence and renders judgment not exceeding the amount stated in the complaint (Cal. Code Civ. Proc. § 585(a), (b)). The version operative January 1, 2027 adds proof of service of the summons to the application in other actions (§ 585(b) as added by Stats. 2025, Ch. 563, Sec. 18). Relief from default is outside the vendored text."
+}
+
+decision demurrer-ruling: "Demurrer decided" by court cite "Cal. Code Civ. Proc. § 430.10"
+{
+  note "The court sustains or overrules the demurrer on the § 430.10 grounds. If it sustains a demurrer with leave to amend it may order a conference before an amended pleading or a further demurrer is filed. In response to a demurrer and before the case is at issue a complaint may not be amended more than three times absent an offer of additional facts showing a reasonable possibility of cure; a further demurrer may not raise grounds that could have been raised against the earlier version; and a demurring party whose demurrer is overruled preserves its right to appeal after final judgment without demurring again (Cal. Code Civ. Proc. § 430.41(b), (c), (e), (g))."
+  edge-demurrer-ruling-dismissed "Sustained without leave to amend: dismissal" -> dismissed {
+    authority cite "Cal. Code Civ. Proc. § 581(f)"
+  }
+  edge-demurrer-ruling-overruled "Overruled, or amended complaint answered" -> discovery {
+    authority cite "Cal. Code Civ. Proc. § 430.41(g)"
+  }
+}
+
+terminal dismissed: "Dismissed on demurrer" outcome [loss, dismissal] cite "Cal. Code Civ. Proc. § 581(f)"
+{
+  note "Outcome from the applicant's side. Except where § 597 applies, the court may dismiss the complaint as to the defendant after a demurrer is sustained without leave to amend and either party moves for dismissal, or after a demurrer is sustained with leave to amend, the plaintiff fails to amend within the time the court allows, and either party moves for dismissal (Cal. Code Civ. Proc. § 581(f)(1), (2)). An appeal lies from the judgment (Cal. Code Civ. Proc. § 904.1(a)(1))."
+}
+
+state discovery: "Discovery" by applicant cite "Cal. Code Civ. Proc. § 2016.010"
+{
+  note "Discovery is governed by the Civil Discovery Act (Cal. Code Civ. Proc. § 2016.010 and following); only its general provisions are vendored, so its methods, limits and cutoffs are not stated here."
+  edge-discovery-settled "Dismissal on request or consent" -> settled {
+    authority cite "Cal. Code Civ. Proc. § 581(b)"
+  }
+  edge-discovery-summary-judgment "Summary judgment motion" -> summary-judgment {
+    authority cite "Cal. Code Civ. Proc. § 437c(a)"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial {
+    authority cite "Cal. Code Civ. Proc. § 631(a)"
+  }
+}
+
+decision summary-judgment: "Summary judgment decided" by court cite "Cal. Code Civ. Proc. § 437c(a)"
+{
+  note "A party may move for summary judgment after 60 days have elapsed since the general appearance of each party against whom the motion is directed, or earlier as the court directs on good cause. Notice and supporting papers are served at least 81 days before the hearing, lengthened when served by mail, and the motion is heard no later than 30 days before trial unless the court orders otherwise for good cause (Cal. Code Civ. Proc. § 437c(a)(1)-(3)). A party may bring only one summary judgment motion against an adverse party unless the court grants leave (Cal. Code Civ. Proc. § 437c(a)(4), (5)). The opposition is served and filed not less than 20 days before the hearing and the reply not less than 11 days before it, unless the court orders otherwise; §§ 1005 and 1013 do not extend these times (Cal. Code Civ. Proc. § 437c(b)(2), (4), (6))."
+  edge-summary-judgment-granted "Granted" -> judgment-for-movant {
+    authority cite "Cal. Code Civ. Proc. § 437c(c)"
+  }
+  edge-summary-judgment-denied "Denied" -> trial { authority cite "Cal. Code Civ. Proc. § 437c(c)" }
+}
+
+terminal judgment-for-movant: "Summary judgment for movant" outcome [judgment] cite "Cal. Code Civ. Proc. § 437c(c)"
+{
+  note "Summary judgment is granted if all the papers show that there is no triable issue as to any material fact and that the moving party is entitled to a judgment as a matter of law (Cal. Code Civ. Proc. § 437c(c)). Who the movant is decides whether it is a win or a loss for the applicant. An appeal lies from the judgment (Cal. Code Civ. Proc. § 904.1(a)(1))."
+}
+
+decision trial: "Jury or bench trial" by court cite "Cal. Code Civ. Proc. § 631(a)"
+{
+  note "The right to a jury trial under article I, section 16 of the California Constitution is preserved; in civil cases a jury may be waived only as subdivision (f) provides (Cal. Code Civ. Proc. § 631(a)). At least one party demanding a jury on each side pays a nonrefundable fee of one hundred fifty dollars ($150), due on or before the date of the initial case management conference, with the exceptions of § 631(c) (Cal. Code Civ. Proc. § 631(b), (c)). A party waives a jury by failing to appear, by written or oral consent, by failing to announce that a jury is required when the cause is first set for trial (or within five days after notice of a setting made without notice or stipulation), by failing to pay the fee in time unless another party on its side has, or by failing to deposit the daily jury fees; the court may in its discretion allow a jury despite a waiver (Cal. Code Civ. Proc. § 631(e)-(g))."
+  edge-trial-post-trial "Verdict or decision" -> post-trial {
+    authority cite "Cal. Code Civ. Proc. § 659(a)"
+  }
+  edge-trial-settled "Dismissed before trial commences" -> settled {
+    authority cite "Cal. Code Civ. Proc. § 581(b)"
+  }
+}
+
+decision post-trial: "New trial or JNOV motion" by applicant cite "Cal. Code Civ. Proc. § 659(a)"
+{
+  note "A party intending to move for a new trial files and serves a notice of intention after the decision and before entry of judgment, or within 15 days of service of notice of entry of judgment by the clerk under § 664.5 or by a party, or within 180 days after entry of judgment, whichever is earliest; these times cannot be extended by order, stipulation or § 1013 (Cal. Code Civ. Proc. § 659(a), (b)). Briefs follow within 10 days of the notice, opposition within 10 days after service, and a reply within five days (Cal. Code Civ. Proc. § 659a). The grounds for a new trial are those of Cal. Code Civ. Proc. § 657. The court's power to rule expires 75 days after the clerk mails, or a party serves, notice of entry of judgment, whichever is earlier, or 75 days after the first notice of intention if no notice of entry was given (Cal. Code Civ. Proc. § 660(c)). A motion for judgment notwithstanding the verdict is made within the § 659 period, briefed under § 659a (Cal. Code Civ. Proc. § 629(b))."
+  edge-post-trial-judgment-entered "Motions resolved or none filed" -> judgment-entered {
+    event JudgmentEntered()
+    authority cite "Cal. Code Civ. Proc. § 664(a)"
+  }
+}
+
+decision judgment-entered: "Judgment entered" by office cite "Cal. Code Civ. Proc. § 664(a)"
+{
+  note "After a jury trial the clerk enters judgment in conformity to the verdict within 24 hours after its rendition; after a court trial the clerk enters judgment immediately upon the filing of the decision; no judgment is effectual for any purpose until entered (Cal. Code Civ. Proc. § 664(a)). The version operative January 1, 2027 (Stats. 2025, Ch. 559, Sec. 4) instead has the clerk enter a court-trial judgment within 30 days after the filing of the decision, or within 30 days after a requested statement of decision becomes final. A notice of appeal is filed on or before the earliest of 60 days after the clerk serves notice of entry or a filed-endorsed copy of the judgment, 60 days after a party serves or is served with one, or 180 days after entry of judgment; no court may extend that time, and a late notice is dismissed (Cal. Rules of Court, rule 8.104(a), (b))."
+  edge-judgment-entered-appeal-filed "Notice of appeal" -> appeal-filed {
+    event NoticeOfAppealFiled()
+    authority cite "Cal. Rules of Court, rule 8.104(a)"
+  }
+  edge-judgment-entered-judgment-final "No appeal in time" -> judgment-final {
+    authority cite "Cal. Rules of Court, rule 8.104(b)"
+  }
+}
+
+terminal appeal-filed: "Notice of appeal filed: continue in the Court of Appeal package" outcome [appeal] cite "Cal. Rules of Court, rule 8.104(a)"
+{
+  note "An appeal, other than in a limited civil case, is to the court of appeal and lies from the judgments and orders listed in Cal. Code Civ. Proc. § 904.1(a). The appeal continues in lit/ca-court-of-appeal (lit/ca-court-of-appeal-fourth-district for San Diego County); an appeal in a limited civil case is to the appellate division of the superior court (Cal. Code Civ. Proc. § 904.2), lit/ca-superior-court-appellate-division."
+}
+
+terminal judgment-final: "Final judgment, no appeal" outcome [final] cite "Cal. Rules of Court, rule 8.104(b)"
+{
+  note "No notice of appeal was filed within the time of Cal. Rules of Court, rule 8.104(a), which no court may extend (rule 8.104(b))."
+}
+
+terminal settled: "Dismissed by request or consent" outcome [settlement] cite "Cal. Code Civ. Proc. § 581(b)"
+{
+  note "An action may be dismissed with or without prejudice on the plaintiff's written request to the clerk, or oral or written request to the court, at any time before the actual commencement of trial, on payment of costs, or by any party on the written consent of all other parties (Cal. Code Civ. Proc. § 581(b)(1), (2))."
+}

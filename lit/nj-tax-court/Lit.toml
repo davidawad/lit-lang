@@ -1,0 +1,43 @@
+# The New Jersey Tax Court. Its own rules (Part VIII of the New Jersey
+# Rules of Court) and its jurisdictional statute are not vendored, so
+# commencement, pleadings, discovery, trial and judgment stay holes. The
+# vendored text states only that appeals lie to the Appellate Division as
+# of right from the Tax Court (R. 2:2-3(a)), and how the transcript for
+# that appeal is requested and delivered (R. 2:5-3), from the copy
+# lit/nj-appellate-civil cites (sources/nj-appellate-civil, amendments
+# effective on or before September 1, 2026). The appeal itself is
+# lit/nj-appellate-civil.
+[package]
+name = "nj-tax-court"
+version = "0.1.0"
+language = 1
+pack_id = "nj-tax-court"
+forum = "nj-tax-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "new-jersey"
+title = "New Jersey Tax Court"
+description = "Tax appeals in the New Jersey Tax Court, whose own rules (Part VIII) and statute are not vendored and stay holes, and the appeal as of right to the Appellate Division (R. 2:2-3(a)) with its transcript request (R. 2:5-3)."
+in_force = "2026-09-01"
+known_at = "2026-10-28"
+unknown_before = "2026-09-01"
+jurisdiction = "New Jersey Tax Court"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+nj-state-rules = { version = "^0.1.0", path = "../nj-rules" }
+
+[sources.nj-rules]
+title = "New Jersey Rules of Court (cited appellate rules), amendments effective on or before Sept. 1, 2026"
+url = "https://www.njcourts.gov/attorneys/rules-of-court"
+path = "sources/nj-appellate-civil/rules-of-court-cited-2026-09-01.txt"
+path_sha256 = "46f0f8e357d3d84e1625181279e8ae7e5dbf8d564b0bf1726f39cf778530af1f"
+as_of = "2026-09-01"
+cite_prefixes = ["N.J. Ct. R."]
+section_heading = "N.J. Ct. R. {n}"

@@ -1,0 +1,116 @@
+module nj-supreme-court.certification
+
+import nj-state-rules.{ DecisionFiled, ReviewPetitionFiled }
+
+// Certification in the Supreme Court of New Jersey of a final judgment of
+// the Appellate Division, from the petitioner's side. Every period below is
+// stated in a note, not counted: time is computed under R. 1:3-1, which is
+// not vendored, and lit/core has no counting rule for it. Only the rules
+// the earlier outline cited are vendored; the briefing after a grant, the
+// Supreme Court's own remittitur, direct appeals (R. 2:2-1) and original
+// proceedings are not, so what they say stays out. The outline cited R.
+// 2:9-5 for the mandate; that rule governs stays, so it is cited here for
+// the stay pending certification, and the proceeding ends at the judgment
+// the opinion enters (R. 2:11-3(b)). The earlier outline named no leading
+// decisions; none is cited.
+/// A petition for certification: in the form of a brief, at most 20 pages
+/// exclusive of tables of contents and citations and the appendix (R.
+/// 2:12-7(a)).
+limit certification-petition {
+  pages <= 20 cite "N.J. Ct. R. 2:12-7(a)"
+} cite "N.J. Ct. R. 2:12-7(a)"
+
+/// A motion for reconsideration: at most 15 pages (R. 2:11-6(a)).
+limit reconsideration-motion {
+  pages <= 15 cite "N.J. Ct. R. 2:11-6(a)"
+} cite "N.J. Ct. R. 2:11-6(a)"
+
+start notice-of-petition
+
+decision notice-of-petition: "Notice of petition for certification within 20 days?" by applicant cite "N.J. Ct. R. 2:12-3(a)"
+{
+  note "To seek certification of a final judgment of the Appellate Division, the petitioner, within 20 days after its entry, serves a notice of petition for certification on all parties who may be affected and files the original with the Clerk of the Supreme Court, with the fee under N.J.S.A. 22A:2, and a copy with the Clerk of the Appellate Division (R. 2:12-3(a)). A notice of cross petition is served and filed within 10 days after the service and filing of the notice of petition, and is otherwise governed by the rules for a petition (R. 2:12-3(b)). The date the Appellate Division opinion is filed is the date its judgment is entered (R. 2:11-3(b)). Neither a proceeding for certification nor any other proceeding stays a civil action; a stay may be ordered on motion, and pending proceedings in the Supreme Court a stay is sought first from the Appellate Division (R. 2:9-5(a), (b))."
+  edge-notice-of-petition-none "No petition: the Appellate Division judgment stands" -> review-not-sought {
+    authority cite "N.J. Ct. R. 2:11-3(b)"
+  }
+  edge-notice-of-petition-filed "Notice of petition filed" -> petition {
+    event ReviewPetitionFiled()
+    authority cite "N.J. Ct. R. 2:12-3(a)"
+  }
+}
+
+state petition: "Petition for certification served and filed" by applicant cite "N.J. Ct. R. 2:12-7(b)"
+{
+  note "Within 10 days after filing the notice of petition or 30 days after entry of the final judgment, whichever is later, the petitioner serves two copies of the petition on each opposing party and files four copies, with four copies of the Appellate Division brief and appendix, with the Clerk of the Supreme Court (R. 2:12-7(b)). The petition is in the form of a brief conforming to R. 2:6, at most 20 pages exclusive of tables and appendix; it states the matter involved, the question presented, the errors complained of, the reasons certification should be allowed and comments on the Appellate Division opinion; it annexes the notice of petition, the written opinions below and any relevant oral opinions or findings; and it is signed and certified as presenting a substantial question, filed in good faith and not for delay (R. 2:12-7(a))."
+  edge-petition-certification "Petition submitted for decision" -> certification {
+    authority cite "N.J. Ct. R. 2:12-4"
+  }
+}
+
+decision certification: "Certification granted or denied" by court cite "N.J. Ct. R. 2:12-4"
+{
+  note "Certification is granted only if the appeal presents a question of general public importance which has not been but should be settled by the Supreme Court, or is similar to a question presented on another appeal to the Supreme Court; if the decision under review conflicts with any other decision of the same or a higher court or calls for an exercise of the Supreme Court's supervision; or in other matters if the interest of justice requires. Certification is not allowed on final judgments of the Appellate Division except for special reasons (R. 2:12-4). If certification is granted the petitioner files five additional copies of the petition and of the Appellate Division brief and appendix within 10 days following receipt of the order (R. 2:12-7(b)). Briefing after the grant is in rules not vendored."
+  edge-certification-denied "Certification denied" -> review-denied {
+    authority cite "N.J. Ct. R. 2:12-4"
+  }
+  edge-certification-granted "Certification granted" -> argument {
+    authority cite "N.J. Ct. R. 2:12-7(b)"
+  }
+}
+
+state argument: "Oral argument" by court cite "N.J. Ct. R. 2:11-1(b)"
+{
+  note "In the Supreme Court appeals are argued orally unless the Court dispenses with argument (R. 2:11-1(b)). A party that has neither filed nor joined a brief may not argue; unless the Court determines more time is necessary, each party has 30 minutes in the Supreme Court, and the Court may end argument at any time (R. 2:11-1(c))."
+  edge-argument-decision "Opinion filed" -> decision {
+    event DecisionFiled()
+    authority cite "N.J. Ct. R. 2:11-3(a)"
+  }
+}
+
+decision decision: "Supreme Court decides" by court cite "N.J. Ct. R. 2:11-3(b)"
+{
+  note "The Court files a written opinion on the final determination of every appeal; the opinion includes the judgment and states whether the judgment below is affirmed, reversed or modified, or it may provide for final judgment dispositive of the action; the date the opinion is filed is the date of entry of the judgment, and the clerk forthwith mails copies to the clerk below and the parties (R. 2:11-3(a)-(c)). A motion to stay the judgment is served and filed within 20 days of its entry unless enlarged by order (R. 2:11-3(d)). Within ten days after entry, unless enlarged by order, a party may move for reconsideration by serving two copies on each opposing party's counsel and filing nine copies with the Supreme Court (R. 2:11-6(a))."
+  edge-decision-affirmed "Affirmed" -> affirmed { authority cite "N.J. Ct. R. 2:11-3(b)" }
+  edge-decision-reversed "Reversed or modified" -> reversed {
+    authority cite "N.J. Ct. R. 2:11-3(b)"
+  }
+  edge-decision-reconsideration "Motion for reconsideration" -> reconsideration {
+    authority cite "N.J. Ct. R. 2:11-6(a)"
+  }
+}
+
+decision reconsideration: "Reconsideration decided" by court cite "N.J. Ct. R. 2:11-6(b)"
+{
+  note "The motion, of at most 15 pages, states the ground relied on with a certificate that it is submitted in good faith and not for delay, and annexes the opinion or order; no answer is filed unless the Court requests one, then within ten days or the time fixed; it is not argued unless the Court directs (R. 2:11-6(a)). It is granted only if moved by a justice who concurred in the judgment and a majority of the Court so determines; unless ordered otherwise the movant, as appellant, files a brief within 30 days of the order granting it, and the Court may summarily re-determine the appeal or amend its opinion (R. 2:11-6(b), (c))."
+  edge-reconsideration-denied "Denied: the judgment stands" -> judgment-stands {
+    authority cite "N.J. Ct. R. 2:11-6(b)"
+  }
+  edge-reconsideration-granted "Granted: appeal re-determined" -> decision {
+    authority cite "N.J. Ct. R. 2:11-6(c)"
+  }
+}
+
+terminal review-not-sought: "Certification not sought: Appellate Division judgment final" outcome [final] cite "N.J. Ct. R. 2:11-3(b)"
+{
+  note "The Appellate Division opinion is its judgment, entered on the date it is filed (R. 2:11-3(b))."
+}
+
+terminal review-denied: "Certification denied" outcome [final, loss] cite "N.J. Ct. R. 2:12-4"
+{
+  note "Outcome from the petitioner's side: denial leaves the Appellate Division judgment in place. Review in the Supreme Court of the United States (28 U.S.C. § 1257) is outside this package."
+}
+
+terminal affirmed: "Affirmed" outcome [loss] cite "N.J. Ct. R. 2:11-3(b)"
+{
+  note "Outcome from the petitioner's side (the appellant in the Supreme Court). The opinion is the judgment, entered on the date it is filed (R. 2:11-3(b))."
+}
+
+terminal reversed: "Reversed or modified" outcome [win] cite "N.J. Ct. R. 2:11-3(b)"
+{
+  note "Outcome from the petitioner's side. The opinion may provide for final judgment dispositive of the action (R. 2:11-3(b)); proceedings on remand are outside this package."
+}
+
+terminal judgment-stands: "Reconsideration denied: the Supreme Court judgment stands" outcome [final] cite "N.J. Ct. R. 2:11-6(b)"
+{
+  note "The judgment entered on the filing of the opinion stands (R. 2:11-3(b), 2:11-6(b))."
+}

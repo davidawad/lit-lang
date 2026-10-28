@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "nj-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "nj-supreme-court"
+version = "0.1.0"
+language = 1
+source = "sha256:0c27a7910aa7db2c935e0dcd3ed93b1e13ded39151894e87f8cc6f3f1b8013b2"
+semantic = "sha256:b0f50ca878b0c4f6395f315b0576b3d95004fde1037824f1349f4a655f1be3b2"
+texts = [
+    "nj-rules sources/nj-appellate-civil/rules-of-court-cited-2026-09-01.txt sha256:46f0f8e357d3d84e1625181279e8ae7e5dbf8d564b0bf1726f39cf778530af1f",
+]
+dependencies = [
+    "core 1.0.0",
+    "nj-state-rules 0.1.0",
+]

@@ -1,0 +1,94 @@
+module nj-tax-court.tax
+
+import nj-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
+// A tax appeal in the New Jersey Tax Court, from the applicant's (the
+// taxpayer's or appellant's) side. The Tax Court's own rules (Part VIII of
+// the New Jersey Rules of Court) and its jurisdictional statute are not
+// vendored: every cite before the judgment is a hole, and the filing
+// periods, fees, pleadings, discovery, the summary-judgment standard and
+// trial procedure are not stated. The vendored text states only the appeal
+// as of right to the Appellate Division and the transcript request for it
+// (R. 2:2-3(a), 2:5-1(g), 2:5-3(e)); the time to appeal (R. 2:4-1) is not
+// vendored. The earlier outline named no leading decisions; none is cited.
+start commenced
+
+state commenced: "Complaint or petition of appeal filed" by applicant cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:3-1") {
+  note "How a tax appeal is commenced in the Tax Court, its filing period, fees and pleading form are in Part VIII of the Rules of Court and the Tax Court's statute, not vendored: holes. Review of state agency tax matters is excepted from the Appellate Division's review of agency action and prescribed by R. 8:2 (R. 2:2-3(a)); R. 8:2 itself is not vendored."
+  edge-commenced-served "Complaint served" -> pleadings {
+    event ActionCommenced()
+    authority cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:5-4")
+  }
+}
+
+chance pleadings: "Answer or motion to dismiss" by court cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:6-1") {
+  note "The response period and dismissal grounds are in Part VIII, not vendored: holes."
+  edge-pleadings-dismissed "Dismissed on the pleadings" -> dismissed p ? {
+    authority cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:6-1")
+  }
+  edge-pleadings-answered "Answered; case proceeds" -> discovery p ? {
+    authority cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:6-1")
+  }
+  edge-pleadings-settled "Settled or withdrawn" -> settled p ? {}
+}
+
+state discovery: "Discovery and pretrial" by applicant cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:6-1") {
+  note "Discovery scope, limits and scheduling in the Tax Court are in Part VIII, not vendored: holes."
+  edge-discovery-dispositive "Dispositive motion or trial setting" -> dispositive {
+    authority cite ?("Application of R. 4:46 in the Tax Court (Part VIII), not vendored")
+  }
+}
+
+chance dispositive: "Summary disposition?" by court cite ?("Application of R. 4:46 in the Tax Court (Part VIII), not vendored") {
+  note "Whether and how the Part IV summary-judgment rule applies in the Tax Court is set by Part VIII, not vendored: the standard, timing and probabilities are holes."
+  edge-dispositive-granted "Decided without trial" -> judgment p ? {
+    authority cite ?("Application of R. 4:46 in the Tax Court (Part VIII), not vendored")
+  }
+  edge-dispositive-trial "Tried" -> trial p ? {
+    authority cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:8-1")
+  }
+}
+
+state trial: "Trial" by court cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:8-1") {
+  note "Trial procedure in the Tax Court is in Part VIII, not vendored: a hole."
+  edge-trial-judgment "Decision rendered" -> judgment {
+    authority cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:9-1")
+  }
+}
+
+state judgment: "Judgment entered" by court cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:9-1") {
+  note "Entry of judgment, notice of entry and post-judgment motion periods in the Tax Court are in Part VIII, not vendored: holes."
+  edge-judgment-entered "Judgment entered" -> post-judgment {
+    event JudgmentEntered()
+    authority cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:9-1")
+  }
+}
+
+decision post-judgment: "Appeal to the Appellate Division?" by applicant cite "N.J. Ct. R. 2:2-3(a)"
+{
+  note "Appeals may be taken to the Appellate Division as of right from final judgments of the Tax Court; final judgments are those that finally resolve all issues as to all parties, with the orders R. 2:2-3(b) lists also appealable as of right (R. 2:2-3(a), (b)). Where a verbatim record was made, the appellant serves the transcript request no later than the filing and service of the notice of appeal, on the Appellate Division transcript unit and on the clerk of the Tax Court (R. 2:5-1(g)), and the original transcript is delivered to the Appellate Division transcript unit (R. 2:5-3(e)). The time to appeal is in R. 2:4-1, which is not vendored. The appeal itself is lit/nj-appellate-civil."
+  edge-post-appeal "Notice of appeal filed" -> appeal-taken {
+    event NoticeOfAppealFiled()
+    authority cite "N.J. Ct. R. 2:2-3(a)"
+  }
+  edge-post-final "No appeal" -> final-no-appeal {
+    authority cite ?("Time to appeal (R. 2:4-1), not vendored")
+  }
+}
+
+terminal dismissed: "Dismissed" outcome [loss, dismissal] cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:6-1") {
+  note "With or without prejudice is a hole (Part VIII, not vendored)."
+}
+
+terminal settled: "Settled or withdrawn" outcome [settlement] cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:3-1") {
+  note "Settlement terms are outside this package."
+}
+
+terminal appeal-taken: "Appeal taken to the Appellate Division" outcome [appeal] cite "N.J. Ct. R. 2:2-3(a)"
+{
+  note "The appeal as of right from the Tax Court (R. 2:2-3(a)) proceeds in lit/nj-appellate-civil."
+}
+
+terminal final-no-appeal: "Judgment final without appeal" outcome [final] cite ?("Tax Court rules (Part VIII), not vendored; the outline cited R. 8:9-1") {
+  note "Enforcement is outside this package."
+}

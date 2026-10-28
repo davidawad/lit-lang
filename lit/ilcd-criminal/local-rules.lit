@@ -1,0 +1,127 @@
+module ilcd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The Central District of Illinois's own criminal periods, counted under
+// the criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here.
+//
+// Conditions that are not deadlines from an event stay in notes: the
+// sentencing hearing is scheduled no earlier than 70 days after the entry
+// of a guilty plea or a verdict of guilty (C.D. Ill. Crim. L.R. 32.1(A)),
+// a floor rather than a deadline; a complaining party seeks to resolve
+// disputed sentencing factors through opposing counsel and the probation
+// officer before the hearing, and the presentence report, statement of
+// reasons and recommendation are sealed (Crim. L.R. 32.1(B)-(D)); a
+// transcript may not be copied by the Clerk for 90 days and becomes
+// publicly available electronically 90 days after filing if no redaction
+// is requested (Crim. L.R. 49.12(C)); an unredacted document or reference
+// list not filed is kept for one year after the case ends (Crim. L.R.
+// 49.12(B)); a filer keeps an original bearing a non-filer's signature
+// until one year after the judgment becomes final (Crim. L.R.
+// 49.10(B)(3)); filings due on a day CM/ECF cannot accept them for more
+// than one hour after noon are due the next business day (Crim. L.R.
+// 49.6(B)(3)). Format (Crim. L.R. 49.2), electronic filing (Crim. L.R.
+// 49.3 to 49.11), probation records (Crim. L.R. 57.2), appearances
+// (Crim. L.R. 57.3) and forfeiture of collateral (Crim. L.R. 58.2) set no
+// other period. Former Crim. L.R. 16.2 was abrogated effective September
+// 13, 2021 and stays effective only for discovery produced on or before
+// September 12, 2021, under an edition that is not vendored.
+//
+// The earlier C.D. Ill. criminal outline's FRCrimP flow and its decisions
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// The defendant is arraigned (C.D. Ill. Crim. L.R. 12.1, 16.1).
+event Arraigned()
+/// An attorney's or a pro se party's email address, mailing address,
+/// telephone or fax number changes after registering for electronic
+/// filing (C.D. Ill. Crim. L.R. 49.3).
+event ContactInformationChanged()
+/// A party or non-filing signatory receives notice that a document has
+/// been electronically filed (C.D. Ill. Crim. L.R. 49.10(C)).
+event FilingNoticeReceived()
+/// The court reporter files an official transcript (C.D. Ill. Crim. L.R.
+/// 49.12(C)).
+event TranscriptFiled()
+
+/// C.D. Ill. Crim. L.R. 12.1: a pretrial motion under FRCrimP 12(b)(3) is
+/// filed within 21 days of arraignment or such other time as the presiding
+/// judge sets. Other motions may be filed without regard to this deadline
+/// (Crim. L.R. 47.1, Committee Comments 2024).
+deadline pretrial-motions: 21.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "C.D. Ill. Crim. L.R. 12.1"
+{
+  forum frcrimp
+}
+
+/// C.D. Ill. Crim. L.R. 16.1(A): within 7 days after the arraignment the
+/// United States Attorney and the defendant's attorney confer and comply
+/// with FRCrimP 16; a declination of a requested disclosure is in writing
+/// (Crim. L.R. 16.1(B)).
+deadline discovery-conference: 7.days after Arraigned() counted_by frcrimp45 cite "C.D. Ill. Crim. L.R. 16.1(A)"
+{
+  forum frcrimp
+}
+
+/// C.D. Ill. Crim. L.R. 16.1(C): if additional discovery or inspection is
+/// sought, defense counsel confers with the Assistant United States
+/// Attorney within 14 days of the arraignment, or such later time as the
+/// presiding judge sets for pretrial motions; the request is in writing.
+deadline additional-discovery-conference: 14.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "C.D. Ill. Crim. L.R. 16.1(C)"
+{
+  forum frcrimp
+}
+
+/// C.D. Ill. Crim. L.R. 16.1(D): a motion to compel additional discovery or
+/// inspection, with a brief, is filed within 14 days of the arraignment, or
+/// such later time as the presiding judge sets for pretrial motions; it
+/// states that the conference was held, its date, the Assistant United
+/// States Attorney's name and that agreement could not be reached.
+deadline motion-to-compel-discovery: 14.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "C.D. Ill. Crim. L.R. 16.1(D)"
+{
+  forum frcrimp
+}
+
+/// C.D. Ill. Crim. L.R. 49.3: an attorney or pro se party registered for
+/// electronic filing files notice of a change of email address, mailing
+/// address, telephone or fax number within 14 days and serves it on all
+/// other parties.
+deadline contact-change-notice: 14.days after ContactInformationChanged() counted_by frcrimp45 cite "C.D. Ill. Crim. L.R. 49.3"
+{
+  forum frcrimp
+}
+
+/// C.D. Ill. Crim. L.R. 49.10(C): a party or non-filing signatory who
+/// disputes the authenticity of an electronically filed document or its
+/// signatures files an objection within 14 days of receiving notice of the
+/// filing.
+deadline authenticity-objection: 14.days after FilingNoticeReceived() counted_by frcrimp45 cite "C.D. Ill. Crim. L.R. 49.10(C)"
+{
+  forum frcrimp
+}
+
+/// C.D. Ill. Crim. L.R. 49.12(C): a party files a Notice of Intent to
+/// Request Redaction within 7 days of the filing of the transcript.
+deadline redaction-notice: 7.days after TranscriptFiled() counted_by frcrimp45 cite "C.D. Ill. Crim. L.R. 49.12(C)"
+{
+  forum frcrimp
+}
+
+/// C.D. Ill. Crim. L.R. 49.12(C): within 21 days from the filing of the
+/// transcript the parties file under seal a Motion of Requested Redactions
+/// locating the material by page and line.
+deadline redaction-motion: 21.days after TranscriptFiled() counted_by frcrimp45 cite "C.D. Ill. Crim. L.R. 49.12(C)"
+{
+  forum frcrimp
+}

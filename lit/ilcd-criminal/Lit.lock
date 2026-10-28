@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "ilcd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:12041eff68120d12724033a723358ff29df1573acc09f05bc67088f144089fb7"
+semantic = "sha256:9390fda3493acac7f780a7a3dbd5455d0038e4003bcf57f524724fd18f5d9fd6"
+texts = [
+    "ilcd-crlr sources/ilcd/ilcd-criminal-rules-sectioned.txt sha256:9e638b2497c76ed5072a306463c9d8cdcbf68bd55b95eaafe964b4e3311fa6d8",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

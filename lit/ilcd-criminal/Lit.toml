@@ -1,0 +1,52 @@
+# The U.S. District Court for the Central District of Illinois's criminal
+# local rules as a local-rule layer over lit/frcrimp (28 U.S.C. § 2071;
+# FRCrimP 57(a)): it declares only the periods the criminal local rules
+# themselves state and re-encodes no FRCrimP, Speedy Trial Act or FRAP
+# 4(b) period (one source of truth: lit/frcrimp). Each period is counted
+# under FRCrimP 45(a), which governs "any local rule", so each deadline
+# names `forum frcrimp`. The rules are the edition the court serves as
+# current (effective September 3, 2026; sources/ilcd), so in_force is that
+# date; earlier editions are not vendored, so a query before it is a hole
+# in the corpus. The court's Speedy Trial Act plan (18 U.S.C. § 3165) is
+# not vendored. An appeal goes to the Seventh Circuit under lit/frcrimp's
+# FRAP 4(b) period and lit/ca7.
+[package]
+name = "ilcd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ilcd-criminal-local-rules"
+forum = "ilcd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Central District of Illinois: Criminal Local Rules"
+description = "The U.S. District Court for the Central District of Illinois's criminal local rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the Rule 12(b)(3) pretrial-motion period, the discovery conferences and the motion to compel discovery, notice of a change of address, objections to the authenticity of an electronically filed document, and the transcript redaction notice and motion."
+in_force = "2026-09-03"
+known_at = "2026-10-28"
+unknown_before = "2026-09-03"
+jurisdiction = "U.S. District Court for the Central District of Illinois (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ilcd-crlr"
+issuer = "U.S. District Court for the Central District of Illinois"
+date = "2026-09-03"
+designation = "Criminal Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.ilcd-crlr]
+title = "Local Rules, United States District Court, Central District of Illinois, criminal rules (effective September 3, 2026)"
+url = "https://www.ilcd.uscourts.gov/sites/ilcd/files/September%202026%20Version%20.pdf"
+path = "sources/ilcd/ilcd-criminal-rules-sectioned.txt"
+path_sha256 = "9e638b2497c76ed5072a306463c9d8cdcbf68bd55b95eaafe964b4e3311fa6d8"
+sha256 = "d7135a3d60e8a2cbfa16f5fe513007602626de34340b0a07815cb3a70d2a8c30"
+as_of = "2026-09-03"
+cite_prefixes = ["C.D. Ill. Crim. L.R."]
+section_heading = "Criminal Local Rule {n}"

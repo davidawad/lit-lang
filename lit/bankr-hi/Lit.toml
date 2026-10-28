@@ -4,7 +4,9 @@
 # and re-encodes no FRBP period. It is a base package, not a `kind =
 # "local-rule"` layer: lit/core has no bankruptcy forum family (L2011, as
 # for lit/bankr-ak). Each period is counted under FRBP 9006(a), the FRCP
-# 6(a) method (core's frcp6). The rules are those of December 1, 2025
+# 6(a) method (core's frcp6) with the Hawaii state holidays of LBR
+# 9006-1(a) closing a forward-counted period (FRBP 9006(a)(6)(C);
+# `bankr-hi-9006`). The rules are those of December 1, 2025
 # (sources/bankr-hi); no amending order is vendored, so there are no dated
 # layers and a query before December 1, 2025 is a hole in the corpus.
 [package]
@@ -20,7 +22,7 @@ in_force = "2025-12-01"
 known_at = "2026-10-28"
 unknown_before = "2025-12-01"
 jurisdiction = "U.S. Bankruptcy Court for the District of Hawaii"
-counting = "frcp6"
+counting = "bankr-hi-9006"
 
 [package.roles]
 applicant = "self"

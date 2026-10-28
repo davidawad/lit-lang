@@ -30,3 +30,10 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 d61a1f518e43eaf8e8ee38d99108027d4ca273d027ad456dfb6a09b15a71bee9. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `hi-ica/original/hrap-order-rule-35-2026-07-21.pdf` as served (sha256 bb4e3a310d3b098adc8b8f259bc4e0aa30613241db048a773607a1dfcbfb4631); extraction sha256 d61a1f518e43eaf8e8ee38d99108027d4ca273d027ad456dfb6a09b15a71bee9.
+
+### `hi-ica/hrap-2025-07-sectioned.txt` — Hawai'i Rules of Appellate Procedure, single-column and sectioned
+
+- Derived in the pod (lg-f3q8.42) from `hi-ica/hrap-2025-07.txt` (extract sha256 603cda844ccae26916310fda0db27cf5cd6cc4ffa067c174b41588dcec2f440c); nothing fetched. The column split is the one used for `hi-circuit/hrcp-2026-07-01-sectioned.txt` (gutter 40-90). Then one `## Rule <n>` line is inserted before each rule's own heading line in the body (from line 500 of the single-column text, Rule 1. through Rule 54., 63 markers): a line beginning `Rule <n>.` followed by spaces and an upper-case title. The superseded Rule 40.1 the edition still prints is marked `## Rule 40.1 (version in effect prior to April 28, 2026)`, so `Rule 40.1` resolves to the version effective April 28, 2026. The table of contents is unmarked. Deleting the marker lines restores the single-column text; the column split is not byte-reversible to the extract. The amending orders (Rule 50, July 14, 2026; Rule 4, effective January 1, 2027; Rule 35, July 21, 2026) are not merged into it.
+- Source: as the extract `hi-ica/hrap-2025-07.txt`, https://www.courts.state.hi.us/wp-content/uploads/2025/07/hrap_ada.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
+- Edition: as the extract; the latest amendment note it carries is of May 21, 2026, effective July 1, 2026.
+- Sectioned sha256 7000b991d6425545d3f4580cff275fba242cf74152250e1e1ef2ae3bcd7ddb1b (the `path_sha256` pinned by `lit/hi-circuit/Lit.toml` and `lit/hi-ica/Lit.toml`).

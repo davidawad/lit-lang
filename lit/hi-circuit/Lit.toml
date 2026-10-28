@@ -1,0 +1,52 @@
+# Civil actions in the circuit courts of Hawai'i under the Hawai'i Rules of
+# Civil Procedure as amended through May 21, 2026, effective July 1, 2026
+# (sources/hi-circuit). Computation of time is HRCP 6(a), which excludes
+# intermediate Saturdays, Sundays and holidays (HRS § 8-1 days) from a
+# period of less than 7 days and has no counting rule in lit/core, so the
+# rules' periods are stated in notes, not encoded as counted deadlines;
+# HRCP 6(e) adds 2 days after service by mail. An appeal hands off to
+# lit/hi-ica. No amending order after the consolidated edition is vendored,
+# so the edition is the only layer; no earlier edition is vendored, so a
+# query before July 1, 2026 is a hole in the corpus.
+[package]
+name = "hi-circuit-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "hi-circuit-court-civil"
+forum = "hi-circuit"
+authority = "StateRule"
+jurisdiction_id = "hawaii"
+title = "Hawai'i Circuit Court, civil"
+description = "Civil actions in the circuit courts of Hawai'i under the Hawai'i Rules of Civil Procedure, as far as the vendored text states. An appeal hands off to the Hawai'i appellate package (lit/hi-ica)."
+in_force = "2026-07-01"
+known_at = "2026-10-28"
+unknown_before = "2026-07-01"
+jurisdiction = "Hawaii Circuit Court"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.hrcp]
+title = "Hawai'i Rules of Civil Procedure (SCRU-11-0000051), with amendments as noted through May 21, 2026, effective July 1, 2026"
+url = "https://www.courts.state.hi.us/wp-content/uploads/2024/09/hrcp_ada.pdf"
+path = "sources/hi-circuit/hrcp-2026-07-01-sectioned.txt"
+path_sha256 = "91db04f7d853939529aa59a9077ad8da4d6dd3a605f2f68c5693502fbdabd4d9"
+sha256 = "e74747393544ab0c36f0f3db12bf460db86c2995dd7e3ac3dfef00a9643a384a"
+as_of = "2026-07-01"
+cite_prefixes = ["Haw. R. Civ. P."]
+section_heading = "Rule {n}"
+
+[sources.hrap]
+title = "Hawai'i Rules of Appellate Procedure (SCRU-10-0000012), with further amendments as noted through May 21, 2026, effective July 1, 2026"
+url = "https://www.courts.state.hi.us/wp-content/uploads/2025/07/hrap_ada.pdf"
+path = "sources/hi-ica/hrap-2025-07-sectioned.txt"
+path_sha256 = "7000b991d6425545d3f4580cff275fba242cf74152250e1e1ef2ae3bcd7ddb1b"
+sha256 = "7da63b464186132b6ad29e0509268b102e4954d8a37c7ea36dd421232b7d1871"
+as_of = "2026-07-01"
+cite_prefixes = ["Haw. R. App. P."]
+section_heading = "Rule {n}"

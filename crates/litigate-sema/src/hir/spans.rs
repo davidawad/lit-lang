@@ -371,6 +371,7 @@ impl Spans for Limit {
             certificates,
             excludes,
             ecf,
+            holes: _,
         } = self;
         meta.spans_mut(f);
         for b in bounds {

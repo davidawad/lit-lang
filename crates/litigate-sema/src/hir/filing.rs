@@ -4,6 +4,7 @@
 use super::{Authored, Metadata};
 use litigate_base::Span;
 use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 
 /// `limit k { ... }`: one version of paper kind `k`'s filing requirements.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -25,6 +26,12 @@ pub struct Limit {
     /// ECF event codes the paper is filed under (data, never keywords).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub ecf: Vec<Ecf>,
+    /// Cite holes (`cite ?("...")`, a source whose currency is
+    /// unconfirmed) by field path (`cite`, `bounds/0/cite`,
+    /// `excludes/cite`), with their reasons; each such cite holds its
+    /// hole's reason.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub holes: BTreeMap<String, Option<String>>,
 }
 
 /// A length measure. `lines` counts lines of monospaced type (FRAP

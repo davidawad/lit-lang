@@ -36,11 +36,20 @@ impl Cx<'_, '_> {
             certificates: Vec::new(),
             excludes: None,
             ecf: Vec::new(),
+            holes: BTreeMap::new(),
         };
+        let decl = l.clauses.iter().find(|f| f.key.text == "cite");
+        if let Some(Expr {
+            kind: ExprKind::Hole(reason),
+            ..
+        }) = decl.and_then(super::cx::first_expr)
+        {
+            limit.holes.insert("cite".to_owned(), reason.clone());
+        }
         let mut seen: BTreeMap<String, TextRange> = BTreeMap::new();
         let mut certified: Vec<&(Measure, TextRange)> = Vec::new();
         for entry in &l.entries {
-            let cite = self.entry_cite(&entry.cites);
+            let (cite, hole) = self.entry_cite(&entry.cites);
             let span = self.ck.span(entry.range);
             match &entry.kind {
                 LimitEntryKind::Bound(m, max) => {
@@ -48,6 +57,7 @@ impl Cx<'_, '_> {
                         continue;
                     }
                     if let Some(max) = self.bound_max(*m, max) {
+                        cite_hole(&mut limit.holes, "bounds", limit.bounds.len(), hole);
                         limit.bounds.push(LengthBound {
                             measure: *m,
                             max,
@@ -59,12 +69,17 @@ impl Cx<'_, '_> {
                 LimitEntryKind::Certificate(kind, measures) => {
                     if let Some(c) = self.certificate(&mut seen, entry, kind, measures) {
                         certified.extend(measures);
+                        let at = limit.certificates.len();
+                        cite_hole(&mut limit.holes, "certificates", at, hole);
                         limit.certificates.push(CertificateReq { cite, span, ..c });
                     }
                 }
                 LimitEntryKind::Excludes(items) => {
                     if !self.first(&mut seen, "excludes", entry, "a second") {
                         continue;
+                    }
+                    if let Some(reason) = hole {
+                        limit.holes.insert("excludes/cite".to_owned(), reason);
                     }
                     limit.excludes = Some(Exclusions {
                         items: self.excluded(items),
@@ -74,6 +89,7 @@ impl Cx<'_, '_> {
                 }
                 LimitEntryKind::Ecf(code) => {
                     if let Some(code) = self.ecf_code(code, &limit.ecf) {
+                        cite_hole(&mut limit.holes, "ecf", limit.ecf.len(), hole);
                         limit.ecf.push(Ecf { code, cite, span });
                     }
                 }
@@ -168,9 +184,11 @@ impl Cx<'_, '_> {
         true
     }
 
-    /// The entry's cite: its first `cite`, at most one, and a citation:
-    /// a cite hole adds nothing to the declaration's own (L2007).
-    fn entry_cite(&mut self, cites: &[Field]) -> Option<String> {
+    /// The entry's cite: its first `cite`, at most one. A cite hole
+    /// (`cite ?("...")`, a source whose currency is unconfirmed) is
+    /// recorded as a hole and its reason stands as the cite, as on the
+    /// declaration; the second value is that hole's reason.
+    fn entry_cite(&mut self, cites: &[Field]) -> (Option<String>, Option<Option<String>>) {
         for extra in cites.iter().skip(1) {
             self.report(Report::new(
                 C::InvalidField,
@@ -178,19 +196,17 @@ impl Cx<'_, '_> {
                 "a limit entry has at most one `cite`",
             ));
         }
-        let first = cites.first()?;
-        if let Some(text) = literal_text(super::cx::first_expr(first)) {
-            return Some(text);
-        }
-        self.report(
-            Report::new(
-                C::InvalidField,
-                first.range,
-                "a limit entry's cite is a citation, not a hole",
-            )
-            .note("leave the entry uncited (the declaration's cite covers it), or write the value the sources do not settle as a hole"),
-        );
-        None
+        let Some(first) = cites.first() else {
+            return (None, None);
+        };
+        let hole = match super::cx::first_expr(first) {
+            Some(Expr {
+                kind: ExprKind::Hole(reason),
+                ..
+            }) => Some(reason.clone()),
+            _ => None,
+        };
+        (self.cite_text(Some(&first)), hole)
     }
 
     /// A bound's most: a whole number above zero, or a hole.
@@ -270,6 +286,19 @@ impl Cx<'_, '_> {
             return None;
         }
         code
+    }
+}
+
+/// Records `hole`, the cite hole of the `at`th entry of `list`, under its
+/// field path (`bounds/0/cite`).
+fn cite_hole(
+    holes: &mut BTreeMap<String, Option<String>>,
+    list: &str,
+    at: usize,
+    hole: Option<Option<String>>,
+) {
+    if let Some(reason) = hole {
+        holes.insert(format!("{list}/{at}/cite"), reason);
     }
 }
 

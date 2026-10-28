@@ -53,6 +53,7 @@ fn brief(meta: hir::Metadata) -> Limit {
                 span: None,
             },
         ],
+        holes: std::collections::BTreeMap::new(),
     }
 }
 

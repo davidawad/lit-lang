@@ -468,6 +468,7 @@ mod tests {
                 span: None,
             }),
             ecf: Vec::new(),
+            holes: std::collections::BTreeMap::new(),
         };
         l.meta.cite = Some("FRAP 32(a)(7)".into());
         l

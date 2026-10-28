@@ -691,6 +691,9 @@ Semantics:
   CM/ECF has its own list. Each code at most once (L2007).
 - **Cites, fail-closed.** Each entry may carry one `cite` (L2007 for a
   second); the declaration's cite covers the entries that have none.
+  Either may be a hole, `cite ?("<cite>, CURRENCY UNCONFIRMED")`, for a
+  source whose currency is unconfirmed: the reason stands as the cite and
+  is resolved and held to the bound like one, and the hole is listed.
   `cite-resolves` (§7) holds every bound and every named exclusion to its
   cited vendored text, as it holds a `quote` (§5.3): the cited section
   must contain the bound's number and measure as the rules write them
@@ -735,7 +738,9 @@ Semantics:
   excludes: {items, cite}, ecf: [{code, cite}]}`, in module then source
   order. A hole is absent there and listed in `lowered.holes`
   (`/filingLimits/i/bounds/j/max`, `/filingLimits/i/excludes/open/n`,
-  `/filingLimits/i/ecf/j/code`), with each cite no amendment history
+  `/filingLimits/i/ecf/j/code`), a cite hole at its cite
+  (`/filingLimits/i/cite`, `/filingLimits/i/bounds/j/cite`) holding its
+  reason, with each other cite no amendment history
   proves (§7). The source map has one entry per limit. An event's paper
   kind is HIR only (events have no pack form); `litigate lint-filing`
   reads both from HIR (lg-962.10.2).

@@ -380,32 +380,51 @@ fn limit_holes(
     for (i, l) in limits.iter().enumerate() {
         let base = format!("/filingLimits/{i}");
         let from = &l.meta.effective.from;
-        let cite = l.meta.cite.as_deref().filter(|_| !l.meta.historical);
-        out.extend(unproven(&citations, &base, "cite", cite, &none, from));
-        let entries = l
-            .bounds
-            .iter()
-            .enumerate()
-            .map(|(j, b)| (format!("{base}/bounds/{j}"), b.cite.as_deref()))
+        out.extend(l.holes.iter().map(|(path, reason)| Hole {
+            pointer: format!("{base}/{path}"),
+            reason: reason.clone(),
+        }));
+        // Each cite's path under `base`: the declaration's, then the
+        // entries' (`/bounds/0`).
+        let cites = std::iter::once((String::new(), l.meta.cite.as_deref()))
+            .filter(|_| !l.meta.historical)
+            .chain(
+                l.bounds
+                    .iter()
+                    .enumerate()
+                    .map(|(j, b)| (format!("/bounds/{j}"), b.cite.as_deref())),
+            )
             .chain(
                 l.certificates
                     .iter()
                     .enumerate()
-                    .map(|(j, c)| (format!("{base}/certificates/{j}"), c.cite.as_deref())),
+                    .map(|(j, c)| (format!("/certificates/{j}"), c.cite.as_deref())),
             )
             .chain(
                 l.excludes
                     .iter()
-                    .map(|x| (format!("{base}/excludes"), x.cite.as_deref())),
+                    .map(|x| ("/excludes".to_owned(), x.cite.as_deref())),
             )
             .chain(
                 l.ecf
                     .iter()
                     .enumerate()
-                    .map(|(j, e)| (format!("{base}/ecf/{j}"), e.cite.as_deref())),
+                    .map(|(j, e)| (format!("/ecf/{j}"), e.cite.as_deref())),
             );
-        for (at, cite) in entries {
-            out.extend(unproven(&citations, &at, "cite", cite, &none, from));
+        for (at, cite) in cites {
+            // A cite written as a hole is listed as one, not as unproven.
+            let path = format!("{at}/cite");
+            if l.holes.contains_key(path.trim_start_matches('/')) {
+                continue;
+            }
+            out.extend(unproven(
+                &citations,
+                &format!("{base}{at}"),
+                "cite",
+                cite,
+                &none,
+                from,
+            ));
         }
     }
     out

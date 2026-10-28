@@ -1,0 +1,65 @@
+# The U.S. District Court for the Middle District of Louisiana's local
+# criminal rules (LCrR) as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods and limits the
+# local criminal rules themselves state, or adopt from the local civil
+# rules (LCrR 12 applies Local Civil Rules 7, 10 and 11 to all criminal
+# motions), and re-encodes no FRCrimP, Speedy Trial Act or FRAP 4(b)
+# period (one source of truth: lit/frcrimp). Each period is counted under
+# FRCrimP 45(a), which governs "any local rule", so each deadline names
+# `forum frcrimp`. The rules are the edition the court serves as current
+# ("EFFECTIVE AUGUST 18, 2022"; sources/lamd), so in_force is that date;
+# earlier editions are not vendored, so a query before it is a hole in the
+# corpus. Proposed amendments published for comment are not in force and
+# not vendored. The court's Speedy Trial Act plan (18 U.S.C. § 3165) is
+# not vendored. An appeal goes to the Fifth Circuit under lit/frcrimp's
+# FRAP 4(b) period and lit/ca5.
+[package]
+name = "lamd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "lamd-criminal-local-rules"
+forum = "lamd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Middle District of Louisiana: Local Criminal Rules"
+description = "The U.S. District Court for the Middle District of Louisiana's local criminal rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the response to a criminal motion and the memorandum page limits the criminal rules adopt from the civil rules, the sentencing memorandum and USSG § 5K1.1 motion periods, and the removal of exhibits."
+in_force = "2022-08-18"
+known_at = "2026-10-28"
+unknown_before = "2022-08-18"
+jurisdiction = "U.S. District Court for the Middle District of Louisiana (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "lamd-lcrr"
+issuer = "U.S. District Court for the Middle District of Louisiana"
+date = "2022-08-18"
+designation = "Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.lamd-lcrr]
+title = "Local Rules of the United States District Court for the Middle District of Louisiana, local criminal rules (effective August 18, 2022)"
+url = "https://www.lamd.uscourts.gov/sites/default/files/pdf/2022%20Local%20Rules%20Revisions%208-18-2022.pdf"
+path = "sources/lamd/lamd-local-rules-sectioned.txt"
+path_sha256 = "f61e7174a7c38e7e7e54bc2c4e1d247325437212482383b45249c217d7297954"
+sha256 = "cdcfeeed1072e6fb368c5203995f4d247f8735b342a4155ee1762c9087a4e11e"
+as_of = "2022-08-18"
+cite_prefixes = ["M.D. La. LCrR", "LCrR"]
+section_heading = "LCrR {n}"
+
+[sources.lamd-lr]
+title = "Local Rules of the United States District Court for the Middle District of Louisiana, local civil rules adopted for criminal motions by LCrR 12 (effective August 18, 2022)"
+url = "https://www.lamd.uscourts.gov/sites/default/files/pdf/2022%20Local%20Rules%20Revisions%208-18-2022.pdf"
+path = "sources/lamd/lamd-local-rules-sectioned.txt"
+path_sha256 = "f61e7174a7c38e7e7e54bc2c4e1d247325437212482383b45249c217d7297954"
+sha256 = "cdcfeeed1072e6fb368c5203995f4d247f8735b342a4155ee1762c9087a4e11e"
+as_of = "2022-08-18"
+cite_prefixes = ["M.D. La. LR"]
+section_heading = "LR {n}"

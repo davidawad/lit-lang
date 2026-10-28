@@ -1,0 +1,28 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "lamd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:d3ae5e5363ec6f65912be802338632e94cc4d2cc0f19c86674835c6f3c91fa27"
+semantic = "sha256:aede5e1039fb39a7afe424116d6d571a9c90c323ede971dfa61c540315cc9f8a"
+texts = [
+    "lamd-lcrr sources/lamd/lamd-local-rules-sectioned.txt sha256:f61e7174a7c38e7e7e54bc2c4e1d247325437212482383b45249c217d7297954",
+    "lamd-lr sources/lamd/lamd-local-rules-sectioned.txt sha256:f61e7174a7c38e7e7e54bc2c4e1d247325437212482383b45249c217d7297954",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

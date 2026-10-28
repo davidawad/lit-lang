@@ -1,0 +1,99 @@
+module lamd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The Middle District of Louisiana's own criminal periods, counted under
+// the criminal rules (FRCrimP 45(a) governs "any local rule"). All
+// criminal motions comply with Local Civil Rules 7, 10 and 11 (LCrR 12),
+// so the civil rules' response period and memorandum page limits apply to
+// them. No trigger carries a service method: FRCrimP 45(c)'s three added
+// days follow the manner of service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: the presentence report's disclosure not less than thirty-five
+// days before sentencing (LCrR 32(a)(2); FRCrimP 32(e)(2)), the written
+// objections within fourteen days thereafter (LCrR 32(a)(2); FRCrimP
+// 32(f)(1)), and the revised report and addendum not later than seven
+// days before the sentencing hearing (LCrR 32(a)(4); FRCrimP 32(g)). The
+// court may modify any LCrR 32 period for good cause, but the thirty-five
+// day period may be diminished only with the defendant's consent (LCrR
+// 32(a)(6)). A presentence report is deemed disclosed one day after a
+// copy is filed electronically (LCrR 32(a)(8)); the corpus models no such
+// deemed-disclosure trigger, so it stays in this note.
+//
+// A reply memorandum may be filed without leave only on a Rule 12 or Rule
+// 56 motion of the civil rules, within fourteen days after service of the
+// response (LR 7(f)); whether that reaches a criminal motion is not
+// stated, so no criminal reply period is encoded. Conditions that are not
+// deadlines from an event stay in notes: the pretrial services report is
+// filed under seal before or immediately after the initial appearance
+// (LCrR 5(b)); counsel and parties attend every stage of trial unless
+// excused (LCrR 23); jurors are interviewed after trial only on leave of
+// court for good cause (LCrR 24(b)); a motion to withdraw certifies that
+// the client was notified of all deadlines (LCrR 44); the offering party
+// keeps physical exhibits until any appeal is resolved or the time for
+// appeal has expired (LCrR 55(e)(2)). Electronic filing and service (LCrR
+// 49), extrajudicial statements (LCrR 53) and petty offenses (LCrR 58)
+// state no period.
+//
+// The earlier M.D. La. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Brady v. Maryland, Barker v. Wingo, Zedner v.
+// United States, Boykin v. Alabama, Missouri v. Frye, Jackson v. Virginia,
+// United States v. Booker, Roe v. Flores-Ortega, Garza v. Idaho) are
+// FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// A memorandum supporting or opposing a criminal motion: at most
+/// twenty-five pages excluding attachments, tables and the certificate of
+/// service, unless leave is obtained (M.D. La. LCrR 12; LR 7(g)).
+limit memorandum {
+  pages <= 25 cite "M.D. La. LR 7(g)"
+} cite "M.D. La. LCrR 12; M.D. La. LR 7(g)"
+
+/// A reply or surreply memorandum, if permitted: at most ten pages (M.D.
+/// La. LCrR 12; LR 7(g)).
+limit reply-memorandum {
+  pages <= 10 cite "M.D. La. LR 7(g)"
+} cite "M.D. La. LCrR 12; M.D. La. LR 7(g)"
+
+/// A criminal motion is served (M.D. La. LCrR 12; LR 7(f)).
+event MotionServed() paper memorandum
+/// The case is finally disposed of (M.D. La. LCrR 55(f)).
+event FinalDisposition()
+
+/// M.D. La. LCrR 12; LR 7(f): each respondent opposing a motion files a
+/// response, with opposing affidavits and supporting documents then
+/// available, within twenty-one days after service of the motion; for
+/// good cause the Court may order a shorter or longer period.
+deadline response-period: 21.days after MotionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "M.D. La. LCrR 12; M.D. La. LR 7(f)"
+{
+  forum frcrimp
+}
+
+/// M.D. La. LCrR 32(b): a sentencing memorandum is filed under seal at
+/// least fourteen days before the date of sentencing.
+deadline sentencing-memorandum: 14.days before SentencingScheduled() counted_by frcrimp45 cite "M.D. La. LCrR 32(b)"
+{
+  forum frcrimp
+}
+
+/// M.D. La. LCrR 32(c): a government motion under USSG § 5K1.1, with its
+/// memorandum and a proposed order, is filed under seal at least fourteen
+/// days before the date of sentencing.
+deadline substantial-assistance-motion: 14.days before SentencingScheduled() counted_by frcrimp45 cite "M.D. La. LCrR 32(c)"
+{
+  forum frcrimp
+}
+
+/// M.D. La. LCrR 55(f): exhibits in the Clerk's custody are removed by
+/// the offering party within thirty days of the final disposition of the
+/// case, failing which the Clerk may destroy or otherwise dispose of them.
+deadline exhibit-removal: 30.days after FinalDisposition() counted_by frcrimp45 cite "M.D. La. LCrR 55(f)"
+{
+  forum frcrimp
+}

@@ -1,0 +1,94 @@
+module mp-supreme-court-civil.appeal
+
+/// A principal brief: at most 35 pages total, inclusive of the caption,
+/// headings and table of contents (NMI Sup. Ct. R. 32(a)(7)).
+limit principal-brief { pages <= 35 cite "NMI Sup. Ct. R. 32(a)" } cite "NMI Sup. Ct. R. 32(a)"
+/// A reply brief: at most 20 pages total (NMI Sup. Ct. R. 32(a)(7)).
+limit reply-brief { pages <= 20 cite "NMI Sup. Ct. R. 32(a)" } cite "NMI Sup. Ct. R. 32(a)"
+/// A petition for rehearing: at most 15 pages unless the court permits
+/// otherwise (NMI Sup. Ct. R. 40(b)).
+limit rehearing-petition { pages <= 15 cite "NMI Sup. Ct. R. 40(b)" } cite "NMI Sup. Ct. R. 40(b)"
+
+/// A letter citing supplemental authorities, and any response: the body
+/// may not exceed 350 words (NMI Sup. Ct. R. 28(j)).
+limit supplemental-authorities-letter {
+  words <= 350 cite "NMI Sup. Ct. R. 28(j)"
+} cite "NMI Sup. Ct. R. 28(j)"
+
+/// The appellant's opening brief, or the appellee's brief, is served and
+/// filed (NMI Sup. Ct. R. 31(a)(1)).
+event PrincipalBriefServed() paper principal-brief
+/// The appellant's reply brief is served and filed (NMI Sup. Ct. R.
+/// 31(a)(1)).
+event ReplyBriefServed() paper reply-brief
+/// A petition for rehearing is filed (NMI Sup. Ct. R. 40(a)(1)).
+event RehearingPetitionFiled() paper rehearing-petition
+/// A party advises the Clerk of pertinent and significant supplemental
+/// authorities by letter (NMI Sup. Ct. R. 28(j)).
+event SupplementalAuthoritiesLetterFiled() paper supplemental-authorities-letter
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "NMI Sup. Ct. R. 3(a)"
+{
+  note "An appeal from the Superior Court is taken only by filing a notice of appeal with the Superior Court clerk within the time Rule 4 allows; failure to take any other step does not affect the appeal's validity but is ground for such action as the Court considers appropriate, including dismissal (NMI Sup. Ct. R. 3(a)). On filing the notice the appellant pays all required fees, which the rules do not state (NMI Sup. Ct. R. 3). In a civil case the notice is filed within 30 days after entry of the judgment or order appealed from; another party may appeal within 14 days after the first notice or within the time otherwise prescribed, whichever ends later (NMI Sup. Ct. R. 4(a)(1), (3)). A timely motion under NMI R. Civ. P. 50(b), 52(b), 54(d)(2), 59(e) or 59, or under Rule 60 filed within 28 days after judgment, runs the time from the order disposing of the last of them (NMI Sup. Ct. R. 4(a)(4)). Periods are stated, not counted: Rule 26(a) computes them. The Superior Court may require a bond for costs in a civil appeal in any amount necessary (NMI Sup. Ct. R. 7). The earlier outline cited the rules as NMI R. App. P.; they are the NMI Supreme Court Rules."
+  edge-notice-filed-timely "Timely notice" -> record { authority cite "NMI Sup. Ct. R. 4(a)" }
+  edge-notice-filed-late "Notice not filed in time" -> dismissed-untimely {
+    authority cite "NMI Sup. Ct. R. 4(a)"
+  }
+}
+
+terminal dismissed-untimely: "Appeal fails: notice untimely and time not extended or reopened" outcome [loss, dismissal] cite "NMI Sup. Ct. R. 4(a)"
+{
+  note "The Superior Court may extend the time on a motion filed no later than 30 days after the prescribed time expires and a showing of excusable neglect or good cause, by no more than 30 days after the prescribed time or 14 days after the order granting the motion, whichever is later; it may reopen the time for 14 days for a party that did not receive notice of entry within 21 days, on a motion filed within 180 days after entry or 14 days after notice, whichever is earlier, if no party would be prejudiced (NMI Sup. Ct. R. 4(a)(5), (6)). The Supreme Court may not otherwise extend the time to file a notice of appeal (NMI Sup. Ct. R. 26(b)). The earlier outline named no timeliness decision, and its appealability cite (1 CMC § 3102) is removed: the statute is not vendored."
+}
+
+state record: "Docketing, transcripts and record" by applicant cite "NMI Sup. Ct. R. 11"
+{
+  note "A party required to file a docketing statement does so within 15 days after the Clerk gives notice that the appeal has been docketed (NMI Sup. Ct. R. 3-1), and the attorney who filed the notice files a representation statement within 15 days after filing it (NMI Sup. Ct. R. 12(b)). Within 15 days after the notice of appeal, or after the order disposing of the last timely Rule 4(a)(4)(A) motion, whichever is later, the appellant files and serves Form 3 ordering a transcript or certifying that none will be ordered; the appellee may request other parts within 10 days after service of Form 3, and the appellant may add portions within 5 days after that (NMI Sup. Ct. R. 11-1(b)). The Superior Court clerk files the certificate of record within 20 days after the appellant certifies no transcript will be ordered, or within 10 days after the certified transcript is filed (NMI Sup. Ct. R. 11(c)). The Clerk may dismiss an appeal for failure to prosecute if the appellant does not remedy noncompliance within 14 days after notice (NMI Sup. Ct. R. 42-1(a))."
+  edge-record-briefing "Record filed" -> briefing { authority cite "NMI Sup. Ct. R. 31(a)" }
+}
+
+state briefing: "Briefing" by applicant cite "NMI Sup. Ct. R. 31(a)"
+{
+  note "The appellant serves and files a brief within 40 days after the record is filed; the appellee within 30 days after the appellant's brief is served; the appellant may reply within 14 days after service of the appellee's brief, but at least 3 days before argument unless the Court allows a later filing (NMI Sup. Ct. R. 31(a)(1)). A party may obtain a single automatic extension of a brief's time not exceeding 30 days (NMI Sup. Ct. R. 31-1). If the appellant fails to file a brief in time, the appellee may move to dismiss; an appellee who files none is not heard at argument without permission (NMI Sup. Ct. R. 31(c)). A principal brief may not exceed 35 pages and a reply 20 pages (NMI Sup. Ct. R. 32(a)(7))."
+  edge-briefing-argument "Briefing complete" -> argument { authority cite "NMI Sup. Ct. R. 31(a)" }
+}
+
+decision argument: "Oral argument or submission on the briefs" by court cite "NMI Sup. Ct. R. 34(a)"
+{
+  note "Oral argument must be allowed in every case unless the three-justice panel, after examining the briefs and record, unanimously agrees it is unnecessary because the appeal is frivolous, the dispositive issues have been authoritatively decided, or the briefs and record adequately present the facts and arguments; any party may file a statement explaining why argument should or need not be permitted (NMI Sup. Ct. R. 34(a)). Each side has 25 minutes unless the Court shortens or enlarges it (NMI Sup. Ct. R. 34(b))."
+  edge-argument-decided "Argued or submitted" -> decision-issued {
+    authority cite "NMI Sup. Ct. R. 34(a)"
+  }
+}
+
+decision decision-issued: "Judgment entered" by court cite "NMI Sup. Ct. R. 36(a)"
+{
+  note "A judgment is entered when it is noted on the docket; the Clerk serves the opinion and judgment on all parties on the date of entry (NMI Sup. Ct. R. 36). A party who wants costs taxed serves and files an itemized, verified bill within 14 days after entry of judgment, and objections are filed within 10 days after service of the bill (NMI Sup. Ct. R. 39). A request for attorney fees is filed no later than 5 calendar days after the period for a rehearing petition expires or, if a timely petition is filed, no later than 5 days after its disposition (NMI Sup. Ct. R. 39-1(a)). The earlier outline named no standard-of-review decision."
+  edge-decision-issued-rehearing "Petition for rehearing" -> rehearing {
+    authority cite "NMI Sup. Ct. R. 40(a)"
+  }
+  edge-decision-issued-final "No petition" -> mandate-issued {
+    authority cite "NMI Sup. Ct. R. 41(b)"
+  }
+}
+
+decision rehearing: "Rehearing decided" by court cite "NMI Sup. Ct. R. 40(a)"
+{
+  note "Unless the Court shortens or extends the time, a petition for rehearing may be filed within 14 days after entry of judgment; it states with particularity each point of law or fact the Court overlooked or misapprehended, oral argument is not permitted, and no answer is permitted unless the Court requests one, without which rehearing ordinarily is not granted (NMI Sup. Ct. R. 40(a)). It may not exceed 15 pages unless the Court permits (NMI Sup. Ct. R. 40(b))."
+  edge-rehearing-denied "Denied" -> mandate-issued { authority cite "NMI Sup. Ct. R. 41(b)" }
+  edge-rehearing-granted "Rehearing granted" -> rehearing-granted {
+    authority cite "NMI Sup. Ct. R. 40(a)"
+  }
+}
+
+terminal rehearing-granted: "Rehearing granted: decided again, reargued or otherwise ordered" outcome [appeal] cite "NMI Sup. Ct. R. 40(a)"
+{
+  note "On granting rehearing the Court may decide the case without reargument, restore it to the calendar for reargument or resubmission, or issue any other appropriate order (NMI Sup. Ct. R. 40(a)(4)). Modeled as an exit; in practice it returns to decision."
+}
+
+terminal mandate-issued: "Mandate issued" outcome [final] cite "NMI Sup. Ct. R. 41(b)"
+{
+  note "The mandate issues 7 calendar days after the time to petition for rehearing expires, or 7 calendar days after entry of an order denying a timely petition for rehearing, motion for stay of mandate or petition for attorney fees, whichever is later, and is effective when issued (NMI Sup. Ct. R. 41(b), (c)). A stay pending a petition for certiorari in the Supreme Court of the United States may not exceed 90 days unless extended for good cause or the petition is filed and the Clerk notified within the stay (NMI Sup. Ct. R. 41(d)). Further review in the Supreme Court of the United States is not modeled: the outline's 28 U.S.C. § 1259 governs review of the Court of Appeals for the Armed Forces, not this Court, and the statute that does govern is not vendored."
+}

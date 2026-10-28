@@ -1,0 +1,42 @@
+# A civil appeal from the Commonwealth Superior Court to the Supreme Court
+# of the Commonwealth of the Northern Mariana Islands under the NMI Supreme
+# Court Rules as served with Administrative Order 2024-ADM-0006-RUL of
+# March 15, 2024 (sources/mp-supreme). Computation of time is NMI Sup. Ct.
+# R. 26(a), which excludes intermediate Saturdays, Sundays and legal
+# holidays from a period of 10 days or less and adds 5 calendar days after
+# service not delivered on the date of service (Rule 26(c)); lit/core has
+# no counting rule for it, so the rules' periods are stated in notes, not
+# encoded as counted deadlines. The appellate jurisdiction statute is not
+# vendored and is not cited. A Superior Court appeal arrives from
+# lit/mp-trial.
+[package]
+name = "mp-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "mp-supreme-court-civil"
+forum = "mp-supreme"
+authority = "StateRule"
+title = "Supreme Court of the Commonwealth of the Northern Mariana Islands, civil appeals"
+description = "A civil appeal from the Commonwealth Superior Court to the NMI Supreme Court, through the notice of appeal, record and transcripts, briefing and its page limits, oral argument, judgment, rehearing and mandate, as far as the vendored NMI Supreme Court Rules state."
+in_force = "2024-03-15"
+known_at = "2026-10-28"
+unknown_before = "2024-03-15"
+jurisdiction = "Supreme Court of the Commonwealth of the Northern Mariana Islands (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.mp-sup]
+title = "Northern Mariana Islands Supreme Court Rules (Administrative Order 2024-ADM-0006-RUL of March 15, 2024), as listed by the CNMI Law Revision Commission"
+url = "https://cnmilaw.gov/docs/courtrules/R01.pdf"
+path = "sources/mp-supreme/nmi-supreme-court-rules-sectioned.txt"
+path_sha256 = "a10aa4e3bf1020d81cdaa148172700a92cb2df9a6a00d380ceed6b3e5e2d2f46"
+sha256 = "4bfe1a18ac71d532927cbb29111535353c40423d41ae107df519a0abb2aa5880"
+as_of = "2024-03-15"
+cite_prefixes = ["NMI Sup. Ct. R."]
+section_heading = "Rule {n}"

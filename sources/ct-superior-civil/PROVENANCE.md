@@ -6,6 +6,7 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 821170aa7b3d9a80966739cb80c952f923ea6d6c8587fdf1931792b96c61b2d2. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `ct-superior-civil/original/ct-practice-book-2026.pdf` as served (sha256 bb406ab49314de7f6b49f5de43e1b2e354465bb70ce52ecc37412ec058db69d6); extraction sha256 821170aa7b3d9a80966739cb80c952f923ea6d6c8587fdf1931792b96c61b2d2.
+- Also the Superior Court criminal rules (lg-gddt): Practice Book Chapters 36 to 44 (Superior Court criminal procedure, including the speedy-trial rules Sec. 43-39 to 43-43) and the Rules of Appellate Procedure parts that govern criminal appeals; no separate criminal source vendored for Connecticut.
 
 ### `ct-superior-civil/ct-pb-superior-amendments-2026-06-11.txt` — Connecticut Practice Book, Superior Court Rules amendments adopted June 11, 2026
 

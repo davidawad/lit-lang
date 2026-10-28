@@ -1,0 +1,43 @@
+# Civil appeals to the Michigan Court of Appeals and applications for leave
+# to appeal to the Michigan Supreme Court under Chapter 7 of the Michigan
+# Court Rules of 1985, as updated September 2, 2026 (sources/mi-circuit-court,
+# the one vendored edition of Chapters 1-9, shared with the circuit court
+# package). Computation of time is MCR 1.108, which MCR 7.204(A) and
+# 7.205(A) apply to the appeal periods: a last day falling on a Saturday,
+# Sunday, legal holiday or day on which the court is closed by court order
+# runs to the end of the next day that is none of those. lit/core has no
+# counting rule or holiday calendar for Michigan, so the periods are stated
+# in notes, not encoded as counted deadlines. The appeal comes from the
+# circuit court package (lit/mi-circuit-court).
+[package]
+name = "mi-appellate-civil"
+version = "0.1.0"
+language = 1
+pack_id = "mi-appellate-civil"
+forum = "mi-appellate"
+authority = "StateRule"
+jurisdiction_id = "michigan"
+title = "Michigan Court of Appeals and Michigan Supreme Court, civil appeals"
+description = "Civil appeals under Chapter 7 of the Michigan Court Rules, as far as the vendored text states: the appeal of right and its 21-day claim of appeal, delayed applications for leave, the record and transcript, briefing and its word limits, oral argument, decision and reconsideration, and the application for leave to appeal to the Michigan Supreme Court."
+in_force = "2026-09-02"
+known_at = "2026-10-28"
+unknown_before = "2026-09-02"
+jurisdiction = "Michigan Court of Appeals; Michigan Supreme Court"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.mcr]
+title = "Michigan Court Rules of 1985, Chapters 1-9 (updated September 2, 2026)"
+url = "https://www.courts.michigan.gov/siteassets/rules-instructions-administrative-orders/michigan-court-rules/michigan-court-rules.pdf"
+path = "sources/mi-circuit-court/mcr-chapters-1-9-sectioned.txt"
+path_sha256 = "34a24b105ffcab26ce2fe4d4f6a0b8d3fb11024e7716e7546d9a8d4d123242a3"
+sha256 = "31ed59fbef8d2f177f6e8b50ff976a06ebd14aef16706a76987e03469f278a02"
+as_of = "2026-09-02"
+cite_prefixes = ["MCR"]
+section_heading = "MCR {n}"

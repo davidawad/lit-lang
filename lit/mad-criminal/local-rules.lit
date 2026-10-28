@@ -1,0 +1,198 @@
+module mad-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The District of Massachusetts's own criminal periods, counted under the
+// criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here. Unless the local rules or
+// an order say otherwise, criminal motion practice follows L.R. 7.1 (D.
+// Mass. L.R. 112.1), whose periods and page limits are lit/mad's and are
+// not restated here.
+//
+// Speedy Trial Act exclusions are the Act's, and stay in lit/frcrimp: the
+// court has found that the period from arraignment to the initial status
+// conference, up to 14 days from the filing of a discovery letter, and up
+// to 14 days from a discovery reply's due date to a discovery motion may
+// be excluded under 18 U.S.C. § 3161(h), but only by an order of the
+// judicial officer (D. Mass. L.R. 112.2(a), (b)); after a discovery waiver
+// they are computed under the Act alone (L.R. 112.2(d)).
+//
+// Conditions that are not deadlines from an event stay in notes: the
+// judicial officer sets the date for completing automatic discovery at
+// arraignment, and it may be extended (D. Mass. L.R. 116.1(e)); complex
+// cases may have an alternative schedule (L.R. 116.1(f)); exculpatory
+// rebuttal information is disclosed by the close of the defendant's case,
+// and sentencing-mitigation information before any plea or the
+// defendant's objections to the presentence report, whichever is first
+// (L.R. 116.2(b)(3), (4)); disclosure may be declined in writing at or
+// before the time it is due (L.R. 116.6(a)); the duty to supplement is
+// continuing (L.R. 116.7); law enforcement notes are preserved until the
+// entry of judgment (L.R. 116.9(a)); discovery over 1,000 pages carries a
+// table of contents (L.R. 116.10); the initial status conference is held
+// on or about the 14th day after the date set for completing automatic
+// discovery (L.R. 116.5(a)); a trial date should not be less than 30 days
+// after an evidentiary hearing on a Rule 12(b) motion except on the
+// defendant's motion, and the final pretrial conference is held not more
+// than 7 days before trial (L.R. 117.1(a)(3), (12)). The district judge
+// may modify any L.R. 117.1(a) requirement in the interests of justice
+// (L.R. 117.1(b)). The grand jury foreperson's report of a failure to
+// concur is made promptly (L.R. 106.1(c); FRCrimP 6(f)).
+//
+// The earlier D. Mass. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Brady v. Maryland, Barker v. Wingo, Zedner
+// v. United States, Boykin v. Alabama, Missouri v. Frye, Jackson v.
+// Virginia, United States v. Booker, Roe v. Flores-Ortega, Garza v.
+// Idaho) are FRCrimP, Speedy Trial Act or constitutional authority and
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+
+/// The defendant is arraigned (other than a Rule 11 arraignment on an
+/// information), without filing a Waiver of Request for Disclosure (D.
+/// Mass. L.R. 116.1(b)-(d)).
+event Arraigned()
+/// The date set for the completion of automatic discovery (D. Mass. L.R.
+/// 116.1(e), 116.3(a)).
+event AutomaticDiscoveryCompleted()
+/// A party receives a letter or motion requesting discovery after a
+/// discovery waiver (D. Mass. L.R. 116.1(g)), or a letter requesting
+/// additional discovery (L.R. 116.3(a)).
+event DiscoveryRequestReceived()
+/// A party receives the opposing party's written reply to its discovery
+/// letter, or the period to reply passes (D. Mass. L.R. 116.3(g)).
+event DiscoveryReplyReceived()
+/// A party receives a discovery motion (D. Mass. L.R. 116.3(i)).
+event DiscoveryMotionReceived()
+/// A status conference (initial, interim or final) is scheduled (D. Mass.
+/// L.R. 116.5(a)-(c)).
+event StatusConferenceScheduled()
+/// The district judge receives the magistrate judge's final status report
+/// (D. Mass. L.R. 117.1(a)).
+event FinalStatusReportReceived()
+/// The trial date established by the judicial officer who will preside at
+/// trial (D. Mass. L.R. 116.2(b)(2), 117.1(a)).
+event TrialDateSet()
+
+/// D. Mass. L.R. 116.1(c)(1): unless the defendant filed the Waiver,
+/// within 28 days of arraignment, absent a contrary schedule set by the
+/// court, the government produces its automatic discovery (and, by L.R.
+/// 116.2(b)(1), the first tier of exculpatory information).
+deadline government-automatic-discovery: 28.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Mass. L.R. 116.1(c); D. Mass. L.R. 116.2(b)"
+{
+  forum frcrimp
+}
+
+/// D. Mass. L.R. 116.1(d): within 28 days after arraignment, absent a
+/// contrary schedule, the defendant produces the material described in
+/// FRCrimP 16(b)(1)(A) and (B).
+deadline defendant-automatic-discovery: 28.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Mass. L.R. 116.1(d)"
+{
+  forum frcrimp
+}
+
+/// D. Mass. L.R. 116.1(g): after a discovery waiver, within 28 days of
+/// receiving a letter or motion requesting discovery, a party produces
+/// what it does not object to and files a written response to what it
+/// does, unless the court sets a greater or lesser time for good cause.
+deadline waiver-discovery-response: 28.days after DiscoveryRequestReceived() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Mass. L.R. 116.1(g)"
+{
+  forum frcrimp
+}
+
+/// D. Mass. L.R. 116.3(a): within 14 days of the completion of automatic
+/// discovery, any party may request additional discovery by letter.
+deadline discovery-letter: 14.days after AutomaticDiscoveryCompleted() counted_by frcrimp45 cite "D. Mass. L.R. 116.3(a)"
+{
+  forum frcrimp
+}
+
+/// D. Mass. L.R. 116.3(a): the opposing party replies in writing to a
+/// discovery letter no later than 14 days after its receipt.
+deadline discovery-letter-reply: 14.days after DiscoveryRequestReceived() counted_by frcrimp45 cite "D. Mass. L.R. 116.3(a)"
+{
+  forum frcrimp
+}
+
+/// D. Mass. L.R. 116.3(g): a discovery motion is filed within 14 days of
+/// receipt of the written reply to the discovery letter, or of the passing
+/// of the period to reply.
+deadline discovery-motion: 14.days after DiscoveryReplyReceived() counted_by frcrimp45 cite "D. Mass. L.R. 116.3(g)"
+{
+  forum frcrimp
+}
+
+/// D. Mass. L.R. 116.3(i): the opposing party files its response to a
+/// discovery motion within 14 days of receipt.
+deadline discovery-motion-response: 14.days after DiscoveryMotionReceived() counted_by frcrimp45 cite "D. Mass. L.R. 116.3(i)"
+{
+  forum frcrimp
+}
+
+/// D. Mass. L.R. 116.5(a)-(c): unless the court orders otherwise, counsel
+/// confer and file a joint memorandum no later than 7 days before each
+/// initial, interim or final status conference.
+deadline status-joint-memorandum: 7.days before StatusConferenceScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Mass. L.R. 116.5(a); D. Mass. L.R. 116.5(b); D. Mass. L.R. 116.5(c)"
+{
+  forum frcrimp
+}
+
+/// D. Mass. L.R. 117.1(a): within 14 days of receiving the magistrate
+/// judge's final status report, or at the earliest practicable time before
+/// trial consistent with the Speedy Trial Act, the district judge conducts
+/// a Rule 11 hearing if requested or else an initial pretrial conference.
+deadline initial-pretrial-conference: 14.days after FinalStatusReportReceived() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Mass. L.R. 117.1(a)"
+{
+  forum frcrimp
+}
+
+/// D. Mass. L.R. 116.2(b)(2); 117.1(a)(4): unless the government invokes
+/// the declination procedure of L.R. 116.6, not later than 21 days before
+/// the trial date it discloses the impeachment-tier exculpatory
+/// information of L.R. 116.2(b)(2) and a general description of any Fed.
+/// R. Evid. 404(b) evidence.
+deadline exculpatory-trial-disclosure: 21.days before TrialDateSet() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Mass. L.R. 116.2(b); D. Mass. L.R. 117.1(a)"
+{
+  forum frcrimp
+}
+
+/// D. Mass. L.R. 117.1(a)(8): unless a party objected under L.R.
+/// 117.1(a)(6), at least 7 days before the trial date the government
+/// provides the names and addresses of its case-in-chief and alibi-rebuttal
+/// witnesses and copies and a premarked list of its case-in-chief exhibits.
+deadline government-witness-exhibit-disclosure: 7.days before TrialDateSet() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Mass. L.R. 117.1(a)"
+{
+  forum frcrimp
+}
+
+/// D. Mass. L.R. 117.1(a)(10): unless a party objected under L.R.
+/// 117.1(a)(6), at least 7 days before trial the defendant provides
+/// witness and exhibit identification and materials to the same extent.
+deadline defendant-witness-exhibit-disclosure: 7.days before TrialDateSet() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Mass. L.R. 117.1(a)"
+{
+  forum frcrimp
+}

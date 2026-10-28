@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "mad-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:251e7d1f259f98b251303f4e3ae150534529eac765f4974fe11638cfacb43420"
+semantic = "sha256:f62206b5ecf382034349e9c44ff138f6ecd3a312b70367bdcd7bab8cb84fd617"
+texts = [
+    "dmass-lr sources/dmass/dmass-local-rules-sectioned.txt sha256:e0862acc529800fda4629e3067b1321f7edfec4585c778cb238e781bef47a8ba",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

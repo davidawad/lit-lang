@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "laed-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:f213505b87f0d666504a6a4ee7eff9424ef01c83ce4e6f5955a752c63da6d83c"
+semantic = "sha256:5170b223239a29c81af30f777bd6066a2377fed49232b90032cd4a0ff37f2e54"
+texts = [
+    "laed-lcrr sources/laed/laed-local-criminal-rules-sectioned.txt sha256:c67c545aaed59922fefbcac215bbe9c8dbdb382842995c00ea1f58dd49c035c2",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

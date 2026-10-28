@@ -1,0 +1,81 @@
+module laed-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The Eastern District of Louisiana's own criminal periods, counted under
+// the criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here. A "working day" is
+// counted as a court day.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: the presentence report's disclosure not less than 35 days before
+// sentencing (LCrR 32.1(B); FRCrimP 32(e)(2)), the parties' written
+// objections within 14 days thereafter (LCrR 32.1(B); FRCrimP 32(f)(1)),
+// and the report with its addendum to the sentencing judge not later than
+// seven days before the sentencing hearing (LCrR 32.1(D); FRCrimP 32(g)).
+// The court may modify any LCrR 32.1 period for good cause, but the 14-day
+// objection period may be diminished only with the defendant's consent
+// (LCrR 32.1(F)). A presentence report is deemed disclosed when
+// physically delivered, one day after its availability for inspection is
+// orally communicated, or three days after a copy or notice of
+// availability is mailed (LCrR 32.1(H)); the corpus models no such
+// deemed-disclosure trigger, so it stays in this note.
+//
+// Conditions that are not deadlines from a modeled event stay in notes:
+// discovery motions are filed within the time the magistrate judge sets
+// and are noticed for hearing on the motion day following the expiration
+// of 15 days, with a certificate that counsel conferred (LCrR 12); a
+// continuance for an absent material witness needs an affidavit of the
+// efforts made and the facts expected to be proved (LCrR 17); jurors may
+// be interviewed only with leave of court (LCrR 23.2); a property bond
+// needs equity not less than the principal amount of the bail set (LCrR
+// 46.1(A)). The allotment of criminal matters to magistrate judges (LCrR
+// 5.1, 5.2), the grand jury premises (LCrR 6.1, 6.2), building security
+// (LCrR 43), law-student appearances (LCrR 44), extrajudicial statements
+// (LCrR 53.1 to 53.10) and petty offenses (LCrR 58.1 to 58.3) state no
+// period.
+//
+// The earlier E.D. La. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Brady v. Maryland, Barker v. Wingo, Zedner v.
+// United States, Boykin v. Alabama, Missouri v. Frye, Jackson v. Virginia,
+// United States v. Booker, Roe v. Flores-Ortega, Garza v. Idaho) are
+// FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// The hearing date on which a pretrial discovery motion is noticed (E.D.
+/// La. LCrR 12).
+event DiscoveryMotionHearing()
+
+/// E.D. La. LCrR 12: the government files its response to a pretrial
+/// discovery motion no later than eight calendar days before the
+/// scheduled hearing date.
+deadline discovery-response: 8.days before DiscoveryMotionHearing() counted_by frcrimp45 cite "E.D. La. LCrR 12"
+{
+  forum frcrimp
+}
+
+/// E.D. La. LCrR 32.1.1: a motion or letter requesting a departure from
+/// the Sentencing Guidelines is delivered to the sentencing judge's
+/// chambers no later than 4:30 p.m. on the third working day before the
+/// sentencing hearing; a request not timely submitted is deemed waived
+/// unless good cause is shown. The 4:30 p.m. hour is not modeled.
+deadline departure-request: 3.court_days before SentencingScheduled() counted_by frcrimp45 cite "E.D. La. LCrR 32.1.1"
+{
+  forum frcrimp
+}
+
+/// E.D. La. LCrR 32.1.2: every other submission connected with sentencing
+/// is filed no later than five working days before sentencing.
+deadline sentencing-submission: 5.court_days before SentencingScheduled() counted_by frcrimp45 cite "E.D. La. LCrR 32.1.2"
+{
+  forum frcrimp
+}
+
+/// E.D. La. LCrR 32.1.2: every response to a sentencing submission is
+/// filed no later than three working days before sentencing.
+deadline sentencing-response: 3.court_days before SentencingScheduled() counted_by frcrimp45 cite "E.D. La. LCrR 32.1.2"
+{
+  forum frcrimp
+}

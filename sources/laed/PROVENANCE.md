@@ -23,3 +23,9 @@
 - Upstream: https://www.laed.uscourts.gov/sites/default/files/local_rules/2022%20CIVIL%20RULES%20LAED%20w%20Amendment%202%204%2025.pdf, retrieved 2026-10-27, as recorded on the `laed/laed-local-civil-rules.txt` entry this file is derived from.
 - Edition: as the extract, "EFFECTIVE March 1, 2022 (Revised February 4, 2025)".
 - Sectioned sha256 c2bf4474907de81650a8beebc324cf8ff031d80abdbf1243fc2580e09c34019a (the `path_sha256` pinned by `lit/laed/Lit.toml`).
+
+### `laed/laed-local-criminal-rules-sectioned.txt` — E.D. La. Local Criminal Rules, sectioned
+
+- Derived in the pod (lg-gddt.14) from `laed/laed-local-criminal-rules.txt` (extract sha256 1041b19c19a1bd73076bd6a8ef24a5647832bf4872d2a9524985969f52dae22c); nothing fetched. In the body (after the table of contents), one marker line `## LCrR <n>` is inserted before each rule's own heading line (`LCrR5.1 Allotment of Cases and Additional Duties` through `LCrR58.3 Central Violations Bureau`, 26 rules; the heading line of each rule's last occurrence, after the rule group's list of its rules). Every other line is the extract unchanged, so deleting the `## LCrR` lines gives back the extract byte for byte.
+- Edition: as the extract, "EFFECTIVE March 1, 2022".
+- Sectioned sha256 c67c545aaed59922fefbcac215bbe9c8dbdb382842995c00ea1f58dd49c035c2 (the `path_sha256` pinned by `lit/laed-criminal/Lit.toml`).

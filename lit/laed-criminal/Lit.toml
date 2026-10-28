@@ -1,0 +1,52 @@
+# The U.S. District Court for the Eastern District of Louisiana's local
+# criminal rules (LCrR) as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods the local criminal
+# rules themselves state and re-encodes no FRCrimP, Speedy Trial Act or
+# FRAP 4(b) period (one source of truth: lit/frcrimp). Each period is
+# counted under FRCrimP 45(a), which governs "any local rule", so each
+# deadline names `forum frcrimp`. The rules are the edition the court
+# serves as current ("EFFECTIVE March 1, 2022"; sources/laed), so in_force
+# is that date; earlier editions are not vendored, so a query before it is
+# a hole in the corpus. The court's Speedy Trial Act plan (18 U.S.C.
+# § 3165) is not vendored. An appeal goes to the Fifth Circuit under
+# lit/frcrimp's FRAP 4(b) period and lit/ca5.
+[package]
+name = "laed-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "laed-criminal-local-rules"
+forum = "laed-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Eastern District of Louisiana: Local Criminal Rules"
+description = "The U.S. District Court for the Eastern District of Louisiana's local criminal rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the government's response to a discovery motion, and the sentencing-day deadlines for departure requests, other sentencing submissions and responses."
+in_force = "2022-03-01"
+known_at = "2026-10-28"
+unknown_before = "2022-03-01"
+jurisdiction = "U.S. District Court for the Eastern District of Louisiana (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "laed-lcrr"
+issuer = "U.S. District Court for the Eastern District of Louisiana"
+date = "2022-03-01"
+designation = "Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.laed-lcrr]
+title = "Local Criminal Rules of the United States District Court for the Eastern District of Louisiana (effective March 1, 2022)"
+url = "https://www.laed.uscourts.gov/sites/default/files/local_rules/2022%20CRIMINAL%20RULES%20LAED%20w%20Amendments%203.1.22.pdf"
+path = "sources/laed/laed-local-criminal-rules-sectioned.txt"
+path_sha256 = "c67c545aaed59922fefbcac215bbe9c8dbdb382842995c00ea1f58dd49c035c2"
+sha256 = "70dc701024aae4682a84b6e5ed7525c21066634cc46681035404def2bca3e422"
+as_of = "2022-03-01"
+cite_prefixes = ["E.D. La. LCrR", "LCrR"]
+section_heading = "LCrR {n}"

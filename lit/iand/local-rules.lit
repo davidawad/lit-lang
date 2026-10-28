@@ -2,13 +2,13 @@ module iand-local-rules.local-rules
 
 import core.frcp6.{ frcp6 }
 
-// The Northern District of Iowa's own periods under the joint N.D. and S.D. Iowa Local
-// Rules, computed under FRCP 6(a) (LR 1(j)). Every local rule is subject
-// to modification by the presiding judge (LR 1(e)). Rules that state no
-// period or limit stay out: commencing cases (LR 3), service and sealed
-// and in camera documents (LR 5), the form of motions and oral argument
-// (LR 7(b)-(d), (i)-(k)), document form (LR 10), signing (LR 11), third
-// parties and amended pleadings (LR 14, 15), the form of discovery
+// The Northern District of Iowa's own periods under the joint N.D. and
+// S.D. Iowa Local Rules, computed under FRCP 6(a) (LR 1(j)). Every local
+// rule is subject to modification by the presiding judge (LR 1(e)). Rules
+// that state no period or limit stay out: commencing cases (LR 3), service
+// and sealed and in camera documents (LR 5), the form of motions and oral
+// argument (LR 7(b)-(d), (i)-(k)), document form (LR 10), signing (LR 11),
+// third parties and amended pleadings (LR 14, 15), the form of discovery
 // requests (LR 33), interpreters (LR 43), juror contact and civil juries
 // (LR 47, 48), jury instructions (LR 51), injunctions (LR 65), registry
 // deposits (LR 67), magistrate judges (LR 72, 73), ADR (LR 72B), the
@@ -17,32 +17,31 @@ import core.frcp6.{ frcp6 }
 // electronic recordings (LR 83F). Periods measured from a deadline rather
 // than an event stay in notes: the parties confer on the proposed
 // scheduling order and discovery plan at least 14 days before it is due
-// (LR 16(a)) and hold the FRCP 26(f) conference at least 21 days before
-// it is due (LR 26(d)); the proposed dispositive motion deadline is at
-// least 150 days before the proposed ready-for-trial date (LR 16(g)); and
-// the clerk dismisses as to a served defendant when neither an answer nor
-// a request for other action is filed within 30 days after the answer was
+// (LR 16(a)) and hold the FRCP 26(f) conference at least 21 days before it
+// is due (LR 26(d)); the proposed dispositive motion deadline is at least
+// 150 days before the proposed ready-for-trial date (LR 16(g)); and the
+// clerk dismisses as to a served defendant when neither an answer nor a
+// request for other action is filed within 30 days after the answer was
 // due, or when a deadline is exceeded by more than 30 days without an
 // extension (LR 41(a)(2), (4)). Periods that bind only the court or the
-// clerk stay in notes: service not made within 90 days after the
-// complaint is filed (LR 41(a)(1), with the plaintiff's 97-day statement
-// declared below), the clerk's notice at least 14 days before a LR 41
-// dismissal (LR 41(c)), and taxation by the clerk on or after 21 days
-// after service of the AO 133 form (LR 54(a)(1)(E)). The pro hac vice
-// ECF registration (14 days, LR 83(d)(3)), the attorney discipline periods
-// (LR 83(g), (h)) and the 30-day retention of exhibits (LR 83E) are not
-// encoded. LR 26(c) restates the 21-day pretrial disclosure period of LR
-// 16A(c), which is declared once, under LR 16A(c). The earlier outline's
-// FRCP flow belongs to lit/frcp, and its decisions (Bell Atlantic Corp. v.
-// Twombly, Ashcroft v. Iqbal, Celotex Corp. v. Catrett, Anderson v.
-// Liberty Lobby, Inc., Johnson v. Dayton Elec. Mfg. Co., Braden v.
-// Wal-Mart Stores, Inc. and Torgerson v. City of Rochester) are FRCP
-// authority not stated in the Local Rules; they are removed here: no
-// reporter text is vendored.
-/// A brief: at most 20 pages, the table of contents, table of
-/// authorities and signature block not counted, unless the Local Rules
-/// prescribe another limit; trial briefs, Social Security merits briefs and
-/// habeas briefs are excepted (LR 7(h)).
+// clerk stay in notes: service not made within 90 days after the complaint
+// is filed (LR 41(a)(1), with the plaintiff's 97-day statement declared
+// below), the clerk's notice at least 14 days before a LR 41 dismissal (LR
+// 41(c)), and taxation by the clerk on or after 21 days after service of
+// the AO 133 form (LR 54(a)(1)(E)). The pro hac vice ECF registration (14
+// days, LR 83(d)(3)), the attorney discipline periods (LR 83(g), (h)) and
+// the 30-day retention of exhibits (LR 83E) are not encoded. LR 26(c)
+// restates the 21-day pretrial disclosure period of LR 16A(c), which is
+// declared once, under LR 16A(c). The earlier outline's FRCP flow belongs
+// to lit/frcp, and its decisions (Bell Atlantic Corp. v. Twombly, Ashcroft
+// v. Iqbal, Celotex Corp. v. Catrett, Anderson v. Liberty Lobby, Inc.,
+// Johnson v. Dayton Elec. Mfg. Co., Braden v. Wal-Mart Stores, Inc. and
+// Torgerson v. City of Rochester) are FRCP authority not stated in the
+// Local Rules; they are removed here: no reporter text is vendored.  A
+// brief: at most 20 pages, the table of contents, table of  authorities
+// and signature block not counted, unless the Local Rules  prescribe
+// another limit; trial briefs, Social Security merits briefs and  habeas
+// briefs are excepted (LR 7(h)).
 limit motion-brief { pages <= 20 cite "N.D. Iowa LR 7(h)" } cite "N.D. Iowa LR 7(h)"
 /// A reply brief: at most 5 pages (LR 7(g)).
 limit reply-brief { pages <= 5 cite "N.D. Iowa LR 7(g)" } cite "N.D. Iowa LR 7(g)"

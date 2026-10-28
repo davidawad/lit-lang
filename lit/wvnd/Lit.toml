@@ -1,0 +1,50 @@
+# The United States District Court for the Northern District of West
+# Virginia's Local Rules of Civil Procedure as a local-rule layer over
+# lit/frcp (28 U.S.C. § 2071; FRCP 83(a)): it declares only the periods and
+# limits the Local Rules of Civil Procedure themselves state and re-encodes
+# no FRCP deadline. LR Gen P 5.09 computes every period under FRCP 6. The
+# rules are the single master Local Rules file, "EFFECTIVE: MARCH, 2018"
+# (title page; no day stated, so in_force is the first of the month), which
+# the court's home page links as its Local Rules (sources/wvnd). The
+# General, Criminal and Prisoner Litigation rules are out of scope. An
+# appeal goes to the Fourth Circuit under lit/frap and lit/ca4.
+[package]
+name = "wvnd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "wvnd-local-rules"
+forum = "wvnd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Northern District of West Virginia: Local Rules of Civil Procedure"
+description = "The Northern District of West Virginia's Local Rules of Civil Procedure as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): the waiver-of-service request, response and reply memoranda and their page limits, Social Security review, the Rule 26(f) meeting and report, initial and expert disclosures, case management and final pretrial conference filings, discovery answers after objections, the motion-to-compel waiver, juror questionnaires and the bill of costs."
+in_force = "2018-03-01"
+known_at = "2026-10-28"
+unknown_before = "2018-03-01"
+jurisdiction = "United States District Court, N.D. W. Va."
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "wvnd-lr"
+issuer = "United States District Court for the Northern District of West Virginia"
+date = "2018-03-01"
+designation = "Local Rules (effective March 2018): Local Rules of Civil Procedure"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.wvnd-lr]
+title = "Local Rules of the United States District Court for the Northern District of West Virginia (effective March 2018): Local Rules of Civil Procedure"
+url = "http://www.wvnd.uscourts.gov/sites/wvnd/files/NDWV%20Local%20Rules%202018%20MASTER.pdf"
+path = "sources/wvnd/wvnd-local-rules-2018-03-sectioned.txt"
+path_sha256 = "2ac98eb1735026721b26eb16aecdeef4cccd43ef801943ebb4b697180329fff5"
+sha256 = "7b5520cb858b057cd98a1b54a6954b7e4a9ccf590a8f96934dfbc647abe249e9"
+as_of = "2018-03-01"
+cite_prefixes = ["N.D. W. Va. LR Civ P"]
+section_heading = "LR Civ P {n}"

@@ -58,12 +58,30 @@ impl EngineClock {
     /// one a request names.
     ///
     /// # Errors
-    /// The diagnostics of a counting version that does not lower.
+    /// The diagnostics of every counting version that does not lower.
     pub fn lowered(
         lowerer: &Lowerer<'_>,
         packages: &[&hir::Package],
     ) -> Result<Self, Vec<Diagnostic>> {
+        let (clock, errors) = Self::lowered_partial(lowerer, packages);
+        if errors.is_empty() {
+            Ok(clock)
+        } else {
+            Err(errors)
+        }
+    }
+
+    /// [`Self::lowered`] without the versions that do not lower, and their
+    /// diagnostics: one version that fails (say, one effective before its
+    /// calendar) drops only itself, so replay still counts under every
+    /// other package's rules.
+    #[must_use]
+    pub fn lowered_partial(
+        lowerer: &Lowerer<'_>,
+        packages: &[&hir::Package],
+    ) -> (Self, Vec<Diagnostic>) {
         let mut clock = Self::new([]);
+        let mut errors = Vec::new();
         for pkg in packages.iter().filter(|p| !p.manifest.links) {
             let versions =
                 pkg.modules
@@ -74,16 +92,20 @@ impl EngineClock {
                         _ => None,
                     });
             for c in versions {
-                if let Some(fragment) = lowerer.clock_version(pkg, c)? {
-                    let key = (c.meta.id.clone(), c.meta.effective.from.clone());
-                    if let Some(why) = endless_roll(&fragment) {
-                        clock.endless.insert(key.clone(), why);
+                match lowerer.clock_version(pkg, c) {
+                    Ok(Some(fragment)) => {
+                        let key = (c.meta.id.clone(), c.meta.effective.from.clone());
+                        if let Some(why) = endless_roll(&fragment) {
+                            clock.endless.insert(key.clone(), why);
+                        }
+                        clock.versions.insert(key, fragment);
                     }
-                    clock.versions.insert(key, fragment);
+                    Ok(None) => {}
+                    Err(d) => errors.extend(d),
                 }
             }
         }
-        Ok(clock)
+        (clock, errors)
     }
 
     /// The clock of lowered `packages` (their own counting fragments).

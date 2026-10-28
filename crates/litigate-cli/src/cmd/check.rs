@@ -86,12 +86,11 @@ pub fn checked_targets(
 }
 
 /// The engine clock matters replay under: every counting rule of `all`
-/// lowered. A counting rule that does not lower is reported by its
-/// package's verification; replay then counts with the shared library
-/// alone.
+/// that lowers. A counting version that does not lower is left out, and
+/// reported by its package's verification; every other rule still counts.
 #[must_use]
 pub fn engine(all: &[&litigate_sema::hir::Package]) -> EngineClock {
-    EngineClock::lowered(&Lowerer::new(all), all).unwrap_or_else(|_| EngineClock::new([]))
+    EngineClock::lowered_partial(&Lowerer::new(all), all).0
 }
 
 /// Checks everything loaded in `session` at the build dates `options`

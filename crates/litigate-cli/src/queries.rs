@@ -73,13 +73,12 @@ fn loaded(db: &dyn salsa::Database, ws: Workspace) -> Vec<&hir::Package> {
         .collect()
 }
 
-/// The engine clock over every loaded counting rule, else the shared
-/// library alone (a counting rule that does not lower is reported by its
-/// package's verification).
+/// The engine clock over every loaded counting rule that lowers (one that
+/// does not is left out, and reported by its package's verification).
 #[salsa::tracked(returns(ref), no_eq)]
 pub fn engine_clock(db: &dyn salsa::Database, ws: Workspace) -> EngineClock {
     let all = loaded(db, ws);
-    EngineClock::lowered(&Lowerer::new(&all), &all).unwrap_or_else(|_| EngineClock::new([]))
+    EngineClock::lowered_partial(&Lowerer::new(&all), &all).0
 }
 
 /// One package's counting versions, lowered once and invalidated only when

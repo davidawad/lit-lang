@@ -1,0 +1,167 @@
+module nh-criminal-trial-court.criminal
+
+// Criminal cases in the New Hampshire Superior Court, with the initial
+// proceedings in the Circuit Court-District Division. The New Hampshire
+// Rules of Criminal Procedure are CURRENCY UNCONFIRMED
+// (sources/nh-criminal-trial-court/PROVENANCE.md), so they are cited for
+// the structure of each step and no period, limit or amount is taken from
+// them: where a step has one, the note names the rule that sets it and
+// says that it is not stated. New Hampshire has no fixed-day speedy-trial
+// rule in these rules; a speedy-trial claim is raised by pretrial motion
+// (N.H. R. Crim. P. 15) and rests on case law not vendored here. The
+// Revised Statutes Annotated the rules cite (RSA 597 bail, RSA 651
+// sentencing, RSA 606 appeals) are not vendored and stay holes. Outcomes
+// are from the defendant's side. The earlier outline's leading decisions
+// (County of Riverside v. McLaughlin, Gerstein v. Pugh, Gideon v.
+// Wainwright, Brady v. Maryland, Mapp v. Ohio, Barker v. Wingo, Boykin v.
+// Alabama, Missouri v. Frye, Jackson v. Virginia, Ramos v. Louisiana,
+// Apprendi v. New Jersey, Roe v. Flores-Ortega, Garza v. Idaho) are
+// removed: no reporter text is vendored.
+start arrested
+
+state arrested: "Complaint, arrest or summons" by applicant cite "N.H. R. Crim. P. 3"
+{
+  note "The complaint is a signed written statement of the essential facts constituting the offense charged (N.H. R. Crim. P. 3(a)); an arrest warrant issues on a sworn application showing probable cause (N.H. R. Crim. P. 3(b)); a summons may not issue on a felony complaint (N.H. R. Crim. P. 3(d)). The time for filing the complaint before arraignment is set by Rule 4(a) and is not stated here (currency unconfirmed)."
+  edge-arrested-appearance "Arraignment in the circuit court" -> initial-appearance {
+    authority cite "N.H. R. Crim. P. 4(b)"
+  }
+}
+
+decision initial-appearance: "Initial appearance, bail or detention" by court cite "N.H. R. Crim. P. 4(b)"
+{
+  note "The arraignment of a released and of a detained defendant is scheduled within the times Rule 4(b) sets, which are not stated here (currency unconfirmed). If the defendant was arrested without a warrant, or on a warrant not issued by a judge, and is held in custody, the court requires the State to demonstrate probable cause in a non-adversarial proceeding and makes a written finding (N.H. R. Crim. P. 4(e)). The defendant receives a copy of the complaint no later than the first appearance (N.H. R. Crim. P. 4(f)); on a felony charge the court enters no plea and schedules a probable cause hearing (N.H. R. Crim. P. 4(g)). Counsel is appointed under Rule 5. Bail is governed by RSA 597, which is not vendored."
+  edge-initial-appearance-detained "Detained" -> probable-cause {
+    authority cite ?("RSA 597:2 (bail and detention; not vendored)")
+  }
+  edge-initial-appearance-released "Released on bail" -> probable-cause {
+    authority cite "N.H. R. Crim. P. 4(b)"
+  }
+}
+
+decision probable-cause: "Probable cause hearing or indictment" by court cite "N.H. R. Crim. P. 6(a)"
+{
+  note "A probable cause hearing is scheduled in any case beyond the circuit court's trial jurisdiction in which the defendant has not been indicted, within the times Rule 6(a)(2) sets for a defendant in and out of custody, which are not stated here (currency unconfirmed) (N.H. R. Crim. P. 6(a)(1), (2)). The rules of evidence do not apply and the defendant may cross-examine, testify and introduce evidence (N.H. R. Crim. P. 6(a)(4)). On a finding of probable cause, or a written waiver, the court binds the charges over to the superior court; on a finding of no probable cause the charges are not bound over (N.H. R. Crim. P. 6(a)(5) to (8))."
+  edge-probable-cause-bound-over "Probable cause found or waived; bound over" -> charged {
+    authority cite "N.H. R. Crim. P. 6(a)"
+  }
+  edge-probable-cause-none "No probable cause found" -> dismissed {
+    authority cite "N.H. R. Crim. P. 6(a)"
+  }
+}
+
+decision charged: "Indictment or information" by office cite "N.H. R. Crim. P. 8(d)"
+{
+  note "The superior court summons the grand jury, which indicts or returns a no true bill (N.H. R. Crim. P. 8(a), (d)); if it returns a no true bill on a charge against a defendant who is incarcerated or on bail, the defendant is notified (N.H. R. Crim. P. 8(c)). An offense punishable by imprisonment for more than one year may be prosecuted by an information with a waiver of indictment, except an offense punishable by death (N.H. R. Crim. P. 9)."
+  edge-charged-indicted "Indictment returned, or information on a waiver" -> arraignment {
+    authority cite "N.H. R. Crim. P. 8(d); N.H. R. Crim. P. 9"
+  }
+  edge-charged-no-true-bill "No true bill" -> dismissed {
+    authority cite "N.H. R. Crim. P. 8(c)"
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "N.H. R. Crim. P. 10(b)"
+{
+  note "Arraignment is conducted in open court by reading the indictment or information, or stating its substance, and calling on the defendant to plead (N.H. R. Crim. P. 10(b)); a represented defendant may plead not guilty and waive formal arraignment in writing (N.H. R. Crim. P. 10(c)). A person arrested on a direct indictment is brought before the superior court as Rule 10(a) provides."
+  edge-arraignment-discovery "Discovery" -> discovery {
+    authority cite "N.H. R. Crim. P. 12(b)"
+  }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "N.H. R. Crim. P. 12(b)"
+{
+  note "The superior court's discovery and scheduling provisions apply unless the presiding justice orders otherwise; their periods (the State's and the defendant's disclosures, and the notice of other-acts evidence before jury selection) are set by Rule 12(b) and are not stated here (currency unconfirmed) (N.H. R. Crim. P. 12(b)). Discovery depositions are governed by Rule 13 and notices of defenses and of extended terms by Rule 14. Pretrial motions in the superior court are filed within the times Rule 15(b) sets, which are not stated here (currency unconfirmed) (N.H. R. Crim. P. 15(b))."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "N.H. R. Crim. P. 15(b)"
+  }
+  edge-discovery-speedy "Speedy-trial motion" -> motions-ruling {
+    authority cite "N.H. R. Crim. P. 15(b)"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite "N.H. R. Crim. P. 11(c)"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "N.H. R. Crim. P. 15(b)"
+{
+  note "The superior court rules on pretrial motions under Rule 15(b). Dismissal for denial of a speedy trial rests on case law that is not vendored, and whether it bars refiling is a hole."
+  edge-motions-ruling-speedy "Dismissed for denial of a speedy trial" -> dismissed {
+    authority cite ?("New Hampshire speedy-trial case law (not vendored)")
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "N.H. R. Crim. P. 15(b)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "N.H. R. Crim. P. 15(b)"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "N.H. R. Crim. P. 11(b)"
+{
+  note "Pleas in the superior court are governed by Rule 11(b), which sets out what the court determines before accepting a plea of guilty, including that it is not the result of unlawful force, threats or promises; negotiated pleas by Rule 11(c). Trial by the court or by jury in the superior court is governed by Rule 21(b), and jury selection by Rule 22."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite "N.H. R. Crim. P. 11(b)"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "N.H. R. Crim. P. 21(b)"
+  }
+}
+
+decision trial: "Verdict" by court cite "N.H. R. Crim. P. 25(b)"
+{
+  note "Trial procedure in the superior court is governed by Rule 24(b). A jury verdict is unanimous and returned in open court (N.H. R. Crim. P. 25(b)); a non-jury verdict is returned within a reasonable time after trial (N.H. R. Crim. P. 25(a)); the jury may be polled (N.H. R. Crim. P. 25(c))."
+  edge-trial-acquittal "Not guilty" -> acquitted {
+    authority cite "N.H. R. Crim. P. 25(b)"
+  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
+    authority cite "N.H. R. Crim. P. 25(e)"
+  }
+}
+
+decision post-trial: "Motion to set aside the verdict" by court cite "N.H. R. Crim. P. 25(e)"
+{
+  note "A motion to set aside a jury or non-jury verdict is filed within the time Rule 25(e) sets, which is not stated here (currency unconfirmed). After a verdict either party may request a change in bail as provided by law (N.H. R. Crim. P. 25(d)). Motions for reconsideration are governed by Rule 43."
+  edge-post-trial-set-aside "Verdict set aside; new trial" -> trial {
+    authority cite "N.H. R. Crim. P. 25(e)"
+  }
+  edge-post-trial-denied "Motion denied; sentencing" -> sentencing {
+    authority cite "N.H. R. Crim. P. 29(a)"
+  }
+}
+
+state sentencing: "Pre-sentence report and sentencing" by court cite "N.H. R. Crim. P. 29(c)"
+{
+  note "Sentencing procedure, the pre-sentence report and the sentencing hearing are governed by Rule 29(a) to (c); an extended term requires a hearing on the necessary findings (N.H. R. Crim. P. 29(d)). The court may correct an illegal or illegally imposed sentence as provided by law (N.H. R. Crim. P. 29(i)), and a party may seek reduction, suspension or amendment as provided by law (N.H. R. Crim. P. 29(j)). Sentence review is governed by Rule 29(k); its periods are not stated here (currency unconfirmed)."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "N.H. R. Crim. P. 29(c)"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "N.H. R. Crim. P. 34(a)"
+{
+  note "The time for a defense notice of appeal is as set forth in Supreme Court Rule 7 (N.H. R. Crim. P. 34(a)): a mandatory appeal is filed by the approved notice of appeal form within 30 days from the date on the clerk's written notice of the decision on the merits, and a timely post-decision motion stays the appeal period (N.H. Sup. Ct. R. 7(1)). Bail pending appeal is governed by Rule 32 and transcripts by Rule 33. lit/core has no counting rule for the New Hampshire Supreme Court rules (N.H. Sup. Ct. R. 27(1)), so the 30-day period is not encoded as a counted deadline."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "N.H. Sup. Ct. R. 7"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "N.H. Sup. Ct. R. 7" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "N.H. R. Crim. P. 25"
+{
+  note "Outcome from the defendant's side: a unanimous verdict of not guilty (N.H. R. Crim. P. 25(b))."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "N.H. R. Crim. P. 15"
+{
+  note "Outcome from the defendant's side: no probable cause found (N.H. R. Crim. P. 6(a)), a no true bill (N.H. R. Crim. P. 8(c)), or dismissal on a pretrial motion (N.H. R. Crim. P. 15). Whether the dismissal bars a later prosecution is a hole."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "N.H. Sup. Ct. R. 7"
+{
+  note "The appeal continues before the New Hampshire Supreme Court under its rules (sources/nh-supreme/)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("RSA 534 (habeas corpus; not vendored)")
+{
+  note "Outcome from the defendant's side. State collateral review is not vendored; federal habeas belongs to lit/habeas."
+}

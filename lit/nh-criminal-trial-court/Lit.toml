@@ -1,0 +1,59 @@
+# Criminal cases in the New Hampshire Superior Court (with the initial
+# proceedings in the Circuit Court-District Division) under the New
+# Hampshire Rules of Criminal Procedure, as far as the vendored text
+# states. The base text is the rules page the judicial branch serves
+# (sources/nh-criminal-trial-court/), which states no consolidated
+# edition date; its PROVENANCE entry records CURRENCY UNCONFIRMED, so
+# in_force is the retrieval date and an earlier query is a hole in the
+# corpus. By the PM's standing ruling of 2026-10-27 such a source yields
+# holes, not values: this package cites the rules only for the structure
+# of the case and states no period, limit or amount from them. New
+# Hampshire has no fixed-day speedy-trial rule in these rules (speedy
+# trial rests on case law and the Superior Court's rules); the Revised
+# Statutes Annotated the rules cite (RSA 597 bail, RSA 651 sentencing,
+# RSA 606 appeals) are not vendored and stay holes. The appeal hand-off
+# cites N.H. Sup. Ct. R. 7 (sources/nh-supreme/, as published on
+# 2026-10-27, the text lit/nh-supreme binds); core has no New Hampshire
+# counting rule, so its 30-day period is stated in a note.
+[package]
+name = "nh-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "nh-criminal-trial-court"
+forum = "nh-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "new-hampshire"
+title = "New Hampshire Superior Court, criminal"
+description = "Criminal cases in the New Hampshire Superior Court (with initial proceedings in the Circuit Court-District Division) under the New Hampshire Rules of Criminal Procedure, as far as the vendored text states: the structure of the case from complaint and arrest through initial appearance, probable cause hearing, indictment or waiver, arraignment, discovery, pretrial motions, plea or trial, verdict, sentencing and judgment; no period from the currency-unconfirmed rules is stated. An appeal goes to the New Hampshire Supreme Court under N.H. Sup. Ct. R. 7."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "New Hampshire Superior Court (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.nh-r-crim-p]
+title = "New Hampshire Rules of Criminal Procedure, rules page as served (no consolidated edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://www.courts.nh.gov/new-hampshire-rules-criminal-procedure"
+path = "sources/nh-criminal-trial-court/nh-rules-of-criminal-procedure-sectioned.txt"
+path_sha256 = "5ff8ed111d5dfa27b5003ef4d96ba0ea2fc2e616da1d3878a19d5ca2d4554bae"
+sha256 = "ad0ca35af0216220f50bfd9e7322239479c6afb37477c93f31d1abd51839599a"
+as_of = "2026-10-28"
+cite_prefixes = ["N.H. R. Crim. P."]
+section_heading = "Rule {n}"
+
+[sources.nh-sup-r]
+title = "Rules of the Supreme Court of the State of New Hampshire (as published on 2026-10-27)"
+url = "https://www.courts.nh.gov/rules-supreme-court-state-new-hampshire"
+path = "sources/nh-supreme/supreme-court-rules-sectioned.txt"
+path_sha256 = "e948076e1ebf4faea0ae9b3ac30a2fffad45f759c3617388c49a9890699c54a7"
+sha256 = "5407d14b908cd19b3bec97795f9bd9ec9437536d47ec7755df5ce4d372ccf2e9"
+as_of = "2026-10-27"
+cite_prefixes = ["N.H. Sup. Ct. R."]
+section_heading = "Rule {n}"

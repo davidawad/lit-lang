@@ -1,0 +1,48 @@
+# The Eastern District of North Carolina's Local Criminal Rules of Practice
+# and Procedure as a local-rule layer over lit/frcrimp (28 U.S.C. § 2071;
+# FRCrimP 57(a)): it declares only the periods the Local Criminal Rules
+# themselves state and re-encodes no FRCrimP, Speedy Trial Act or FRAP
+# 4(b) period (those are lit/frcrimp's). Each period is counted under
+# FRCrimP 45(a), which governs "any local rule". The rules are the May
+# 2023 edition (sources/nced). Federal habeas is lit/habeas's; an appeal
+# to the Fourth Circuit is lit/frcrimp's and lit/ca4's.
+[package]
+name = "nced-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "nced-criminal-local-rules"
+forum = "nced-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Eastern District of North Carolina: Local Criminal Rules"
+description = "The Eastern District of North Carolina's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the pretrial-motion and response periods, the government's discovery conference, trial subpoenas, voir dire and jury instruction requests, the presentence interview, notice of retained counsel, motion responses, translations, related-case notices, sealed documents, change of address, courtroom technology, and the memoranda on an appeal from a magistrate judge."
+in_force = "2023-05-31"
+known_at = "2026-10-28"
+unknown_before = "2023-05-31"
+jurisdiction = "United States District Court, E.D.N.C. (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "nced-lcrr"
+issuer = "United States District Court for the Eastern District of North Carolina"
+date = "2023-05-31"
+designation = "Local Criminal Rules of Practice and Procedure (May 2023)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.nced-lcrr]
+title = "Local Criminal Rules of Practice and Procedure of the United States District Court for the Eastern District of North Carolina (May 2023)"
+url = "https://www.nced.uscourts.gov/pdfs/Local%20Criminal%20Rules%202023.pdf"
+path = "sources/nced/nced-local-criminal-rules-2023-05-sectioned.txt"
+path_sha256 = "d42904459ea530131e7bf92536261d78ef08c358b586bbbc2fbcf7c087159c14"
+sha256 = "3f825feeafc92cb1f71b3c9761d99971d50ff9ae5336d235fe137bd2bd485464"
+as_of = "2023-05-31"
+cite_prefixes = ["E.D.N.C. Local Criminal Rule"]
+section_heading = "Local Criminal Rule {n}"

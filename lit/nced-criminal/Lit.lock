@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "nced-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:415ea9f30b655d264b8272e98aaa99144f5f537723fbbfeb6f9914a0ad38a446"
+semantic = "sha256:9d2bb2f1a60f4a9801463036d518b75b2e2f936582e8b43b290a0b6bcef7a8a7"
+texts = [
+    "nced-lcrr sources/nced/nced-local-criminal-rules-2023-05-sectioned.txt sha256:d42904459ea530131e7bf92536261d78ef08c358b586bbbc2fbcf7c087159c14",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

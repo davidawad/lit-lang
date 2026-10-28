@@ -1,0 +1,231 @@
+module nced-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Eastern District of North Carolina's own criminal periods. Stated in
+// the rules but not declared: sentencing set no earlier than 60 days after
+// the adjudication of guilt (Local Criminal Rule 32.2(a)), a floor on the
+// court's setting rather than a party's period; the presentence report's
+// disclosure 35 days before sentencing, the 14 days for objections and the
+// revised report 7 days before sentencing (Local Criminal Rule 32.2(b),
+// (c), (e)), which restate FRCrimP 32(e)(2), (f)(1) and (g) and stay
+// lit/frcrimp's; the 14 days to appeal a magistrate judge's misdemeanor
+// judgment (Local Criminal Rule 58.1(b)), which restates FRCrimP
+// 58(g)(2)(B); the court's resolution of a case assignment within 14 days
+// "whenever practicable" (Local Criminal Rule 50.2(c)); the clerk's notice
+// of disposal of sealed documents no earlier than 30 days after the
+// conviction is final and the § 2255 year has run (Local Criminal Rule
+// 55.2(c)(1)), which binds the clerk; and the memorandum page and word
+// limits (Local Criminal Rule 47.2(f)), which run in the alternative. Local
+// Criminal Rule 47.1(i) sends § 2255 motion practice to the Local Civil
+// Rules (lit/nced). The outline's flow (arrest to judgment) is
+// lit/frcrimp's; its decisions have no vendored reporter text and are
+// removed.
+/// The later of the indictment and the defendant's initial appearance
+/// (Local Criminal Rules 12.1, 16.1(b)).
+event IndictmentOrAppearance()
+/// A pretrial motion is served (Local Criminal Rule 12.1).
+event PretrialMotionServed()
+/// A motion is served (Local Criminal Rule 47.1(c)).
+event MotionServed()
+/// The conditions of an appearance bond secured by a deed of trust are
+/// satisfied (Local Criminal Rule 10.2).
+event BondConditionsSatisfied()
+/// The Monday of the week in which the case is set for trial (Local
+/// Criminal Rule 17.1).
+event TrialWeekMonday()
+/// The first day of the session during which the case is set for trial
+/// (Local Criminal Rules 24.1(a), 24.2(b)).
+event TrialSessionOpens()
+/// Guilt is adjudicated (Local Criminal Rule 32.2(k)).
+event GuiltAdjudicated()
+/// The defendant's first appearance before a judicial officer in the
+/// district (Local Criminal Rule 44.1(a)).
+event FirstAppearance()
+/// A translated document is filed (Local Criminal Rule 47.3(k)).
+event TranslationFiled()
+/// A Notice of Related Cases is served, or a case is reassigned sua sponte
+/// (Local Criminal Rule 50.2(c)).
+event RelatedCaseNoticeServed()
+/// An order denying a motion to seal is entered (Local Criminal Rule
+/// 55.2(b)(3)).
+event SealDenied()
+/// The clerk gives notice of intent to dispose of sealed documents (Local
+/// Criminal Rule 55.2(c)).
+event SealedDisposalNoticed()
+/// An attorney's or unrepresented person's address changes (Local Criminal
+/// Rule 57.3).
+event AddressChanged()
+/// A hearing or trial at which courtroom technology will be used (Local
+/// Criminal Rule 57.6).
+event TechnologyProceeding()
+/// The transcript of the proceedings before the magistrate judge is filed
+/// on an appeal of a misdemeanor judgment (Local Criminal Rule 58.1(b)(4)).
+event AppealTranscriptFiled()
+/// A notice of appeal from a magistrate judge's misdemeanor judgment is
+/// filed, where there is to be no transcript (Local Criminal Rule
+/// 58.1(b)(4)).
+event NoTranscriptAppealNoticed()
+/// The appellant's memorandum on an appeal from a magistrate judge is
+/// served (Local Criminal Rule 58.1(b)(4)).
+event AppellantMemorandumServed()
+/// The appellee's memorandum on an appeal from a magistrate judge is served
+/// (Local Criminal Rule 58.1(b)(4)).
+event AppelleeMemorandumServed()
+
+/// Local Criminal Rule 10.2: the grantor of a deed of trust securing an
+/// appearance bond supplies the clerk with the documents to cancel it within
+/// 21 days of the date the bond's conditions are satisfied.
+deadline deed-cancellation-period: 21.days after BondConditionsSatisfied() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 10.2"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 12.1: all pretrial motions, those under FRCrimP 12,
+/// 14, 16 and 41 included, are filed no later than 30 days after indictment
+/// or initial appearance, whichever is later, or within another time the
+/// court orders; an untimely motion may be considered on good cause. A
+/// motion to compel discovery runs on the same clock (Local Criminal Rule
+/// 12.2).
+deadline pretrial-motion-period: 30.days after IndictmentOrAppearance() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 12.1"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 12.1: responses to pretrial motions are filed within
+/// 14 days after their service unless the court orders otherwise.
+deadline pretrial-response-period: 14.days after PretrialMotionServed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 12.1"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 16.1(b): the attorney for the government arranges
+/// and conducts a pretrial discovery conference with the defendant's
+/// attorney within 21 days after indictment or initial appearance,
+/// whichever is later, or another time the court orders.
+deadline discovery-conference-period: 21.days after IndictmentOrAppearance() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 16.1(b)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 17.1: witness subpoenas are delivered to the Marshal
+/// or another qualified server at least 7 days before the Monday of the
+/// trial week; a subpoena delivered later and not served is no ground for a
+/// continuance.
+deadline subpoena-delivery-period: 7.days before TrialWeekMonday() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 17.1"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rules 24.1(a), 24.2(b): unless a written plea agreement is
+/// executed, each party files its voir dire questions and requests for jury
+/// instructions 7 days before the first day of the trial session.
+deadline trial-submissions-period: 7.days before TrialSessionOpens() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 24.1(a)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 32.2(k): the defendant and an attending attorney make
+/// themselves available for the presentence interview within 14 calendar
+/// days of the adjudication of guilt.
+deadline presentence-interview-period: 14.days after GuiltAdjudicated() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 32.2(k)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 44.1(a): a defendant who does not apply for, or is
+/// ineligible for, representation at government expense informs the court
+/// of a retained attorney within 14 days of the first appearance before a
+/// judicial officer in the district; later retention is no ground for a
+/// continuance absent due diligence.
+deadline retained-counsel-period: 14.days after FirstAppearance() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 44.1(a)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 47.1(c): a response to a motion is filed within 14
+/// days after its service unless the court orders, or the Federal Rules
+/// prescribe, otherwise.
+deadline response-period: 14.days after MotionServed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 47.1(c)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 47.3(k): within 14 days of the filing of a
+/// translated document, an opposing party or nonparty may object to the
+/// translation or file its own.
+deadline translation-objection-period: 14.days after TranslationFiled() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 47.3(k)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 50.2(c): a response to a Notice of Related Cases or
+/// to a sua sponte reassignment is filed within 7 days after the notice is
+/// served or the reassignment made, or within the time the court sets.
+deadline related-case-response-period: 7.days after RelatedCaseNoticeServed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 50.2(c)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 55.2(b)(3): a person whose motion to seal is denied
+/// and who wants the court to consider the document files it as a public
+/// document within 3 days after the order, or another period the court
+/// directs.
+deadline public-refiling-period: 3.days after SealDenied() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 55.2(b)(3)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 55.2(c): the clerk may dispose of sealed documents
+/// not scanned into CM/ECF on 14 days' notice; an objection filed in that
+/// period goes to the presiding judge.
+deadline sealed-disposal-objection-period: 14.days after SealedDisposalNoticed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 55.2(c)(1)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 57.3: attorneys and unrepresented persons notify the
+/// court in writing within 14 days of a change of address.
+deadline address-change-period: 14.days after AddressChanged() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 57.3"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 57.6: unless the clerk excepts it, a party using
+/// courtroom technology files the technology staff's training certification
+/// no later than 7 days before the proceeding.
+deadline technology-certification-period: 7.days before TechnologyProceeding() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 57.6"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 58.1(b)(4): on an appeal from a magistrate judge's
+/// misdemeanor judgment, the appellant serves and files its memorandum of
+/// claimed errors within 21 days of the filing of the transcript.
+deadline appellant-memorandum-period: 21.days after AppealTranscriptFiled() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 58.1(b)(4): if there is to be no transcript, the
+/// appellant's memorandum is due within 21 days of the filing of the notice
+/// of appeal.
+deadline appellant-memorandum-no-transcript-period: 21.days after NoTranscriptAppealNoticed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 58.1(b)(4): the appellee serves and files its
+/// memorandum within 21 days of service of the appellant's.
+deadline appellee-memorandum-period: 21.days after AppellantMemorandumServed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 58.1(b)(4): the appellant may serve and file a reply
+/// brief, limited to 10 pages, within 7 days of service of the appellee's
+/// brief.
+deadline appeal-reply-period: 7.days after AppelleeMemorandumServed() counted_by frcrimp45 cite "E.D.N.C. Local Criminal Rule 58.1(b)(4)"
+{
+  forum frcrimp
+}

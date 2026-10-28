@@ -21,3 +21,9 @@
 - Derived in the pod (lg-f3q8.29) from `nced/nced-local-civil-rules.txt` (extract sha256 4cdb81a6a3898e676ee357fd5a28ada685c23fb50a13a668f7f8b4071a1d33e0); nothing fetched. One `## Rule <n>` line is inserted right before each Local Civil Rule's own body heading line `Rule <n>  <title>` (from extract line 515 on): 128 markers, Rule 1.1 through Rule 100.4. The table of contents and the in-body cross-references are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
 - Edition: as the extract, the Local Civil Rules of Practice and Procedure, May 2023 (amendments effective May 31, 2023).
 - Sectioned sha256 7ea7072dbbf52629c8a7f15c0692de2e9d002d8eb6530d783acdb0b20506ef98 (the `path_sha256` pinned by `lit/nced/Lit.toml`).
+
+### `nced/nced-local-criminal-rules-2023-05-sectioned.txt` — E.D.N.C. Local Criminal Rules (May 2023), sectioned
+
+- Derived in the pod (lg-gddt.12) from `nced/nced-local-criminal-rules-2023-05.txt` (extract sha256 0f1a3f457d9faaeda6bc02fbe3878da6a9008404c6d46dcea166755fb099b0b7); nothing fetched. One `## Local Criminal Rule <n>` line is inserted right before each rule's own body heading line `Rule <n>  <title>` (from extract line 330 on): 88 markers, Rule 1.1 through Rule 100.2. The table of contents and the in-body cross-references are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Local Criminal Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, the Local Criminal Rules of Practice and Procedure, May 2023.
+- Sectioned sha256 d42904459ea530131e7bf92536261d78ef08c358b586bbbc2fbcf7c087159c14 (the `path_sha256` pinned by `lit/nced-criminal/Lit.toml`).

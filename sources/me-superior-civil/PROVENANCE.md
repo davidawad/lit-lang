@@ -6,3 +6,9 @@
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 9f815c01f1bc7bfacfdab53a5946093842d4f7af0ddf57785584f4e8d18290c7. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `me-superior-civil/original/rules-of-civil-procedure.pdf` as served (sha256 263f9b45c296db9ad9f3dbafabefcd6106373baedddce38e326ecde5387584d0); extraction sha256 9f815c01f1bc7bfacfdab53a5946093842d4f7af0ddf57785584f4e8d18290c7.
+
+### `me-superior-civil/rules-of-civil-procedure-sectioned.txt` — Maine Rules of Civil Procedure, sectioned
+
+- Derived in the pod (lg-f3q8.22) from `me-superior-civil/rules-of-civil-procedure.txt` (extract sha256 9f815c01f1bc7bfacfdab53a5946093842d4f7af0ddf57785584f4e8d18290c7); nothing fetched. One `## Rule <n>` line is inserted at each rule's own heading in the body (`RULE 1. SCOPE OF RULES` through `RULE 140. ELECTRONIC SERVICE`, 163 rules; the table of contents is unmarked): before the heading line, or right after it when the heading holds a colon (Rules 7, 37 and 59), since the corpus reader opens a section at a `RULE ...:` line. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, the rules-only edition including amendments effective June 1, 2026.
+- Sectioned sha256 47ab6b9de401d759363fa2a911db3bb6d1f733089296e56b181e852e7e1e2950 (the `path_sha256` pinned by `lit/me-superior-civil/Lit.toml`).

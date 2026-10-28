@@ -1,0 +1,48 @@
+# Civil actions in the Maine Superior Court under the Maine Rules of Civil
+# Procedure (rules only, including amendments effective June 1, 2026,
+# sources/me-superior-civil). Computation of time is M.R. Civ. P. 6(a):
+# intermediate weekends and Maine legal holidays are excluded from periods
+# under 7 days, and core has no Maine counting rule or holiday calendar,
+# so the rules' periods are stated in notes, not encoded as counted
+# deadlines. An appeal hands off to lit/me-law-court.
+[package]
+name = "me-superior-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "me-superior-court-civil"
+forum = "me-superior-civil"
+authority = "StateRule"
+title = "Maine Superior Court, civil"
+description = "Civil actions in the Maine Superior Court under the Maine Rules of Civil Procedure, as far as the vendored text states. An appeal to the Law Court hands off to the Maine appellate package (lit/me-law-court)."
+in_force = "2026-06-01"
+known_at = "2026-10-27"
+unknown_before = "2026-06-01"
+jurisdiction = "Maine Superior Court (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.me-r-civ-p]
+title = "Maine Rules of Civil Procedure, rules only, including amendments effective June 1, 2026"
+url = "https://www.courts.maine.gov/rules/text/mr_civ_p_only_2026-06-01.pdf"
+path = "sources/me-superior-civil/rules-of-civil-procedure-sectioned.txt"
+path_sha256 = "47ab6b9de401d759363fa2a911db3bb6d1f733089296e56b181e852e7e1e2950"
+sha256 = "263f9b45c296db9ad9f3dbafabefcd6106373baedddce38e326ecde5387584d0"
+as_of = "2026-06-01"
+cite_prefixes = ["M.R. Civ. P."]
+section_heading = "Rule {n}"
+
+[sources.me-r-app-p]
+title = "Maine Rules of Appellate Procedure with advisory notes, including amendments effective November 1, 2024"
+url = "https://www.courts.maine.gov/rules/text/mr_app_p_plus_2024-11-01.pdf"
+path = "sources/me-law-court/rules-of-appellate-procedure-sectioned.txt"
+path_sha256 = "c0893d371ac23ed296d1a7b7c26b34e0fed0f5b82db4239c2f0aef64d93082b9"
+sha256 = "2f56aa30698a5b5978097fdd607f1a03f95c075728a5507bd507a2e3042fffb4"
+as_of = "2024-11-01"
+cite_prefixes = ["M.R. App. P."]
+section_heading = "Rule {n}"

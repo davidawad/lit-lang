@@ -1,0 +1,130 @@
+module me-superior-court-civil.civil
+
+/// A memorandum of law on a nondispositive motion, in support or in
+/// opposition: at most 10 pages without prior leave (M.R. Civ. P. 7(f)).
+limit nondispositive-memorandum { pages <= 10 cite "M.R. Civ. P. 7(f)" } cite "M.R. Civ. P. 7(f)"
+/// A memorandum of law on a motion to dismiss, for judgment on the
+/// pleadings, for summary judgment or for injunctive relief: at most 20
+/// pages without prior leave (M.R. Civ. P. 7(f)).
+limit dispositive-memorandum { pages <= 20 cite "M.R. Civ. P. 7(f)" } cite "M.R. Civ. P. 7(f)"
+/// A reply memorandum: at most 7 pages (M.R. Civ. P. 7(f)).
+limit reply-memorandum { pages <= 7 cite "M.R. Civ. P. 7(f)" } cite "M.R. Civ. P. 7(f)"
+
+start commenced
+
+state commenced: "Action commenced" by applicant cite "M.R. Civ. P. 3"
+{
+  note "A civil action is commenced by service of the summons, complaint and notice regarding Electronic Service, with the complaint filed within 20 days after service is completed, or by filing the complaint, with the return of service filed within 90 days after filing; if the complaint or the return is not timely filed the action may be dismissed on motion and notice (M.R. Civ. P. 3). Periods in this package are stated, not counted: computation is M.R. Civ. P. 6(a), which excludes intermediate Saturdays, Sundays and legal holidays from periods under 7 days. The filing fee is not stated in the vendored rules."
+  edge-commenced-served "Defendant served" -> answer-due { authority cite "M.R. Civ. P. 12(a)" }
+  edge-commenced-unserved "Complaint or return of service not timely filed" -> dismissed-unserved {
+    authority cite "M.R. Civ. P. 3"
+  }
+}
+
+terminal dismissed-unserved: "Dismissed for untimely filing" outcome [loss, dismissal] cite "M.R. Civ. P. 3"
+{
+  note "Dismissal on motion and notice; the court may tax a reasonable attorney fee as costs if the action was vexatiously commenced (M.R. Civ. P. 3)."
+}
+
+decision answer-due: "Answer, motion or default" by office cite "M.R. Civ. P. 12(a)"
+{
+  note "A defendant serves the answer within 20 days after service of the summons, complaint and notice regarding Electronic Service, or within 50 days if served under Rule 4(e), 4(f) or 4(j) outside the Continental United States or Canada; an answer to a cross-claim and a reply to a counterclaim are due within 20 days (M.R. Civ. P. 12(a)). No leading decision is named."
+  edge-answer-due-default "No response" -> default-entered { authority cite "M.R. Civ. P. 55(a)" }
+  edge-answer-due-motion "Rule 12(b) motion filed" -> pleading-motion {
+    authority cite "M.R. Civ. P. 12(b)"
+  }
+  edge-answer-due-answer "Answer served" -> scheduling { authority cite "M.R. Civ. P. 16(a)" }
+}
+
+decision pleading-motion: "Motion to dismiss decided" by court cite "M.R. Civ. P. 12(b)"
+{
+  note "The defenses that may be made by motion include failure to state a claim upon which relief can be granted (M.R. Civ. P. 12(b)). Opposition is filed not later than 21 days after the motion is filed, or one opposing a motion filed with or before the complaint by the time for answer; a party failing to file timely opposition waives all objections; a reply memorandum is filed within 14 days after the opposition or not less than 2 days before a scheduled hearing, whichever is earlier (M.R. Civ. P. 7(c), 7(e)). Memoranda on a motion to dismiss are limited to 20 pages and a reply to 7 (M.R. Civ. P. 7(f)). If the court denies the motion or postpones it to trial, the responsive pleading is served within 10 days after notice of the court's action (M.R. Civ. P. 12(a))."
+  edge-pleading-motion-dismissed "Granted" -> dismissed-pleading {
+    authority cite "M.R. Civ. P. 12(b)"
+  }
+  edge-pleading-motion-denied "Denied: responsive pleading within 10 days after notice" -> scheduling {
+    authority cite "M.R. Civ. P. 12(a)"
+  }
+}
+
+terminal default-entered: "Default entered" outcome [loss] cite "M.R. Civ. P. 55(a)"
+{
+  note "When a party against whom judgment for affirmative relief is sought has failed to plead or otherwise defend, the clerk enters the default, except in the foreclosure and debt collection actions rule 55(a)(1) lists, where the court may (M.R. Civ. P. 55(a)). Judgment by default (M.R. Civ. P. 55(b)) and setting a default aside are not modeled. Outcome from the defending side."
+}
+
+terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] cite "M.R. Civ. P. 12(b)"
+
+state scheduling: "Scheduling order" by court cite "M.R. Civ. P. 16(a)"
+{
+  note "After the answer is filed in a Superior Court civil action (other than under Rule 80, 80B or 80C) the court enters a standard scheduling order setting deadlines for the conference of counsel, joinder, expert designations, the ADR conference Rule 16B requires, the close of discovery, motions and placement on the trial list; a party may move for a modified scheduling order within 30 days of its entry (M.R. Civ. P. 16(a)). A jury demand is filed and the jury fee paid as the scheduling order requires (M.R. Civ. P. 38(b))."
+  edge-scheduling-discovery "Order entered" -> discovery { authority cite "M.R. Civ. P. 26" }
+}
+
+state discovery: "Discovery" by applicant cite "M.R. Civ. P. 26"
+{
+  note "Discovery is governed by M.R. Civ. P. 26 through 37 within the deadlines of the scheduling order (M.R. Civ. P. 16(a)); sanctions for failure to make discovery are rule 37's."
+  edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
+    authority cite "M.R. Civ. P. 56(h)"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial { authority cite "M.R. Civ. P. 16(b)" }
+  edge-discovery-settle "Settled or voluntarily dismissed" -> settled {
+    authority cite "M.R. Civ. P. 41(a)"
+  }
+}
+
+decision sj-motion: "Summary judgment decided" by court cite "M.R. Civ. P. 56(c)"
+{
+  note "A claimant may not move for summary judgment until 20 days after commencement (M.R. Civ. P. 56(a)). The motion and opposition are supported by statements of material facts with record citations (M.R. Civ. P. 56(h)); opposition follows rule 7(c), within 21 days after the motion is filed. Judgment is rendered if the record referred to in those statements shows no genuine issue as to any material fact and that any party is entitled to judgment as a matter of law (M.R. Civ. P. 56(c)). No leading decision is named."
+  edge-sj-motion-granted "Granted" -> judgment-for-movant { authority cite "M.R. Civ. P. 56(c)" }
+  edge-sj-motion-denied "Denied or partly denied" -> trial { authority cite "M.R. Civ. P. 56(d)" }
+}
+
+terminal judgment-for-movant: "Judgment for the movant" outcome [win, judgment] cite "M.R. Civ. P. 56(c)"
+{
+  note "Summary judgment on liability alone and partial adjudication (M.R. Civ. P. 56(c), (d)) are not modeled."
+}
+
+state trial: "Trial" by court cite "M.R. Civ. P. 16(b)"
+{
+  note "Unless the court orders otherwise, a pretrial order setting deadlines for final pretrial filings and settlement discussions issues not later than 30 days before the trial session (M.R. Civ. P. 16(b)). A plaintiff's jury demand that specifies only some issues leaves the defendant 10 days to demand a jury on the others (M.R. Civ. P. 38(c)); failure to demand and pay the fee waives a jury (M.R. Civ. P. 38(d))."
+  edge-trial-post "Verdict or decision; judgment entered" -> post-trial {
+    authority cite "M.R. Civ. P. 58"
+  }
+}
+
+decision post-trial: "Post-trial motions decided" by court cite "M.R. Civ. P. 59(b)"
+{
+  note "Entry of the judgment in the civil docket governs time calculations (M.R. Civ. P. 58). A motion for judgment as a matter of law may be renewed not later than 14 days after entry of judgment (M.R. Civ. P. 50(b)); a motion to amend findings, not later than 14 days after entry (M.R. Civ. P. 52(b)); a motion for a new trial, not later than 14 days after entry (M.R. Civ. P. 59(b)); a motion to alter or amend the judgment, not later than 14 days after entry (M.R. Civ. P. 59(e)). The court may not extend these times except as those rules state (M.R. Civ. P. 6(b)). A motion under rule 60(b)(1)-(3) is made not more than one year after the judgment (M.R. Civ. P. 60(b))."
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+    authority cite "M.R. Civ. P. 58"
+  }
+}
+
+state judgment-entered: "Final judgment entered" by office cite "M.R. Civ. P. 58"
+{
+  note "No execution issues and no enforcement proceeding is taken until 21 days after entry of the judgment or until the time for appeal has expired (M.R. Civ. P. 62(a))."
+  edge-judgment-entered-appeal "Next step" -> appeal-decision {
+    authority cite "M.R. App. P. 2B(c)"
+  }
+}
+
+decision appeal-decision: "Notice of appeal within 21 days of entry?" by applicant cite "M.R. App. P. 2B(c)"
+{
+  note "An appeal in a civil case may be taken within 21 days after entry into the docket of the judgment appealed from, unless a shorter time is provided by law; after a timely motion under M.R. Civ. P. 50(b), 52(a) or (b), or 59, the notice may be filed up to 21 days after entry of the order on the motion (M.R. App. P. 2B(c)). The trial court may extend the time by up to 21 days for good cause (M.R. App. P. 2B(d))."
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken { authority cite "M.R. App. P. 2A(b)" }
+  edge-appeal-decision-none "No notice filed" -> final-no-appeal {
+    authority cite "M.R. App. P. 2B(c)"
+  }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Maine appellate package" outcome [appeal] cite "M.R. App. P. 2A(b)"
+{
+  note "Hand-off to lit/me-law-court (me-law-court-civil-appeals)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "M.R. App. P. 2B(c)"
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "M.R. Civ. P. 41(a)"
+{
+  note "A plaintiff may dismiss without order by notice before the adverse party serves an answer or a summary judgment motion, or by a stipulation signed by all parties that have appeared; unless stated otherwise the dismissal is without prejudice (M.R. Civ. P. 41(a)(1))."
+}

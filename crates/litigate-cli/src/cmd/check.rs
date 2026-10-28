@@ -151,12 +151,13 @@ pub fn check_session_with(
     let complete = verdicts.len() == session.packages.len()
         && cases.len() == inputs.len()
         && worlds.len() == session.worlds.len();
-    let diagnostics: Vec<Diagnostic> = verdicts
+    let mut diagnostics: Vec<Diagnostic> = verdicts
         .iter()
         .flat_map(|(_, v)| v.diagnostics.iter().cloned())
         .chain(cases.iter().flat_map(|c| c.diagnostics.iter().cloned()))
         .chain(worlds.iter().flat_map(|w| w.diagnostics.iter().cloned()))
         .collect();
+    super::vendor::retarget(&session.packages, &mut diagnostics);
     let parts: Vec<&[Finding]> = verdicts
         .iter()
         .map(|(_, v)| v.findings.as_slice())

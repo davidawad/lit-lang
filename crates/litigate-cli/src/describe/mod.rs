@@ -257,11 +257,15 @@ const BUILTINS: [(&str, &str); 15] = [
 /// What `run`, every engine op subcommand, and `explain` on a path return.
 const ENGINE_RESPONSE: &str = "the engine's response verbatim: {ok, api_version, op, result, warnings, provenance, elapsed_ms}; exit 2 when it is ok:false";
 
-const RESULTS: [(&str, &str); 23] = [
+const RESULTS: [(&str, &str); 24] = [
     ("describe", "this document"),
     (
         "lock",
         "{lockfile, changed, packages:[{name, version, digest}]} (matters: {lockfiles:[{lockfile, changed, cases, packages}]}); --root adds root, the Merkle root computed from the verified lock (null when stale)",
+    ),
+    (
+        "vendor",
+        "{dir, commit, packages:[{name, version, root, from, files}], texts, missing_texts?}; DIR/core and DIR/frcp rewritten to the stdlib this binary embeds and stamped with .litigate-vendor (its commit; `from` is the replaced copy's), texts the L0 files written because missing or different; then `litigate lock` relocks the matter",
     ),
     ("check", "{profile, files, obligations:[{obligation, passed, detail}], packages, cases:[{path, id, start, replay, deadlines}]}"),
     ("build", "{outputs:{packs, links, clock, scenarios, source_maps, litigatables}, litigatable_hash, litigatables:[{package, path, content_hash}], obligations}"),

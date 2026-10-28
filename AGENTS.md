@@ -98,6 +98,12 @@ different packages merge as plain text. When both sides changed one
 package, its row conflicts: run `just lit-sync` and commit the result; a
 lock that does not match its sources is an error (L1007), never relocked
 silently. `litigate lock --root DIR` prints the lock's Merkle root.
+A matter that vendors the stdlib (`lit/core`, `lit/frcp` copied beside
+it) breaks when an install changes the `Lit.toml` schema: `check` and
+`test` report L1015 (the copy's commit, from its `.litigate-vendor` stamp,
+and the binary's). `litigate vendor lit` rewrites both packages and the
+L0 texts they bind to the ones the binary embeds; `litigate lock` then
+relocks the matter.
 
 The generated tree-sitter parser (`editors/tree-sitter-litigate/src`) is
 committed and merges through the `tsgenerate` driver, which keeps ours

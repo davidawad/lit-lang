@@ -103,5 +103,6 @@ pub(crate) fn run(session: &Session, filter: Option<&str>) -> (Vec<TestResult>, 
             None => diagnostics.extend(pkg.check.diagnostics.iter().cloned()),
         }
     }
+    super::vendor::retarget(&session.packages, &mut diagnostics);
     (results, diagnostics)
 }

@@ -21,6 +21,7 @@ pub(crate) mod run;
 mod test;
 mod timeline;
 mod value;
+pub(crate) mod vendor;
 mod where_;
 mod worlds;
 
@@ -40,6 +41,7 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
     match command {
         Command::Describe => Ok(crate::out::Report::of(crate::describe::describe())),
         Command::Lock { dir, locked, root } => lock::lock(dir.as_deref(), locked, root),
+        Command::Vendor { dir } => vendor::vendor(dir.as_deref()),
         Command::Check {
             paths,
             profile,

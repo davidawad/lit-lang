@@ -3184,6 +3184,7 @@ unchanged, and is graded `error`; anything else is rejected.
 | L1012 | incompatible release | | |
 | L1013 | invalid world | | |
 | L1014 | not actual law (counterfactual world, synthetic layer) | | |
+| L1015 | stale vendored stdlib (`litigate vendor`) | | |
 | L2001 | type mismatch | L4008 | start conflict |
 | | | L4009 | obligation breached |
 | | | L4010 | timeliness unknown |
@@ -3308,6 +3309,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 |---|---|---|
 | `describe` | | `{language_version, grammar, types, builtins, diagnostic_codes:[{code, explain}], commands}` |
 | `lock` | `[PKG_DIR]`, `--locked`, `--root` | `{lockfile, changed, packages:[{name,version,digest}]}` (a directory of matters: `{lockfiles:[{lockfile, changed, cases, packages}]}`); `--locked` fails (L1007) instead of writing; `--root` verifies as `--locked` does and adds `root`, the lock's Merkle root computed on read (§4.2; `null` when stale) |
+| `vendor` | `[DIR]` (default `lit`) | `{dir, commit, packages:[{name, version, root, from, files}], texts}`: rewrites `DIR/core` and `DIR/frcp` to the stdlib the binary embeds (removing their stale `.lit` files), stamps each with `.litigate-vendor` (the binary's commit), and writes the L0 texts they bind that are missing or differ; `litigate lock` then relocks the matter. A vendored stdlib copy that differs and fails to check is L1015 in `check` and `test` |
 | `compat` | `OLD NEW` (two package directories) | `{package, old:{version, semantic}, new:{version, semantic}, class, required, declared, ok, changes:[{class, kind, what, now?}]}` per §4.4; L1012 when the bump is too small |
 | `check` | `PATHS...` (packages, `.lit`, `.case`, `.world`), `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at` | `{profile, files, obligations:[Finding], packages, cases}`, and `worlds:[{path, world, layers}]` when a `.world` was checked (§5.8) |
 | `build` | `PKG_OR_CASE...`, `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at`, `--out DIR`, `--pack-file ID=STEM` (repeatable) | `{outputs:{packs:[path], links:[path], clock:[path], calibration:[path], scenarios:[path], source_maps:[path], litigatables:[path]}, litigatable_hash, litigatables, obligations}` |
@@ -3698,6 +3700,7 @@ gets one row per condition when the conditions classify differently.
 | C98 | L2014 no value satisfies an alias's or an event's refinements (§3.5) | sema | b | QF_LIA/QF_LRA with finite enums (tier 3): unsat, with a minimal core. Done (lg-962.8). |
 | C99 | L2015 the SMT tier does not decide a refinement question (§3.5) | sema, verify | b | The hole of tier 3: the solver's deterministic budget, `i64` overflow building the query, or no solver (wasm); never a pass. Done (lg-962.8). |
 | C100 | L1004 a precedent without `reach` or a holding, a holding without a `pin` to the opinion page or an `edits` element; L2016 a precedent's edit of an element no holding names (dicta); L2017 a declared reach other than the computed one (§4.1, §5.7) | sema | a | `Instrument<Precedent>` carries `reach` and `holdings: NonEmpty<{pin, edits}>`; `edits(d) ⊆ {h.edits}` and `reach = {f : designated ∧ court ∈ precedent(f)[@circuit := any]}`, finite set equality. Done (lg-fg2h.1). |
+| C101 | L1015 a vendored stdlib package (`core`, `frcp`) differs from the one the binary ships and fails to check (§4.2) | cli | c | Compares the vendored package's source digest with the binary's embedded stdlib; `litigate vendor DIR` rewrites it. |
 
 ### 13.4 SPEC rules with no code of their own
 

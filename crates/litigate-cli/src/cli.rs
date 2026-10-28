@@ -249,6 +249,13 @@ pub enum Command {
         #[arg(long)]
         root: bool,
     },
+    /// Rewrite the stdlib packages vendored under DIR (`DIR/core`,
+    /// `DIR/frcp`) and the L0 texts they bind to the ones this binary was
+    /// built with; then `litigate lock` relocks the matter.
+    Vendor {
+        /// The directory holding the vendored packages (default `lit`).
+        dir: Option<String>,
+    },
     /// Check packages and matters, discharging the verification obligations.
     Check {
         /// Package directories, `.lit` / `.case` files, or directories to search.
@@ -671,6 +678,7 @@ impl Command {
         match self {
             Self::Describe => "describe",
             Self::Lock { .. } => "lock",
+            Self::Vendor { .. } => "vendor",
             Self::Check { .. } => "check",
             Self::Build { .. } => "build",
             Self::Test { .. } => "test",

@@ -107,11 +107,12 @@ const JURISDICTIONS: [(&str, &str, &str); 56] = [
 /// jurisdiction (a [`JURISDICTIONS`] directory), so the package keeps its
 /// row once its outline is deleted. List a package here when it is
 /// promoted.
-const PROMOTED: [(&str, &str); 9] = [
+const PROMOTED: [(&str, &str); 10] = [
     ("fl-state-appellate", "florida"),
     ("fl-state-civil", "florida"),
     ("ia-district", "iowa"),
     ("iowactapp", "iowa"),
+    ("ma-appeals-sjc", "massachusetts"),
     ("ma-superior-civil", "massachusetts"),
     ("me-law-court", "maine"),
     ("me-superior-civil", "maine"),

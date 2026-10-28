@@ -1,0 +1,268 @@
+module miwd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Western District of Michigan's own civil periods and limits, computed
+// under FRCP 6(a), which governs a period stated in a local rule. Rules that
+// state no period or limit, or one this layer cannot count, stay out: the
+// paper copy a judge must receive three business days before a hearing (LCivR
+// 5.4) and juror information released three business days before trial
+// (LCivR 47.1), counted in business days, for which lit/core has no rule; the
+// courtesy copy of dispositive motion papers within twenty-four hours of
+// filing (LCivR 7.2(b)(iii)); the clerk's seven-day notice of a Social
+// Security complaint (LCivR 8.1(a), (b)), which binds the clerk; the
+// plaintiff's Social Security brief, due 30 days after the answer or after
+// the order disposing of the last FRCP 12 motion, "whichever is later"
+// (LCivR 8.4(a)), keyed to the later of two events; the 200- or 500-page
+// cap on exhibits and attachments to a motion (LCivR 7.1(b)), which counts
+// a party's or the parties' joint filings, not one paper; and the general
+// and criminal rules. Reply briefs on a nondispositive motion need leave
+// (LCivR 7.3(c)), so no reply period is declared for them. The earlier
+// W.D. Mich. outline's FRCP flow and its Supreme Court decisions
+// (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby, Matsushita, Frow v.
+// De La Vega) are FRCP authority and belong to lit/frcp and lit/frap; no
+// reporter text is vendored, so they are removed here.
+/// A brief in support of or opposition to a dispositive motion produced on
+/// a computer: at most 10,800 words, excluding the caption, cover sheets,
+/// tables, signature block, attachments, exhibits, affidavits and other
+/// addenda (LCivR 7.2(b)(i)). Objections to a magistrate judge's report
+/// and responses conform to the same limit (LCivR 72.3(b)).
+limit dispositive-brief {
+  words <= 10_800 cite "W.D. Mich. LCivR 7.2(b)"
+} cite "W.D. Mich. LCivR 7.2(b)"
+
+/// The same brief hand-written or produced on a typewriter: at most 25
+/// pages, including and excluding the same items (LCivR 7.2(b)(i)).
+limit dispositive-brief-handwritten {
+  pages <= 25 cite "W.D. Mich. LCivR 7.2(b)"
+} cite "W.D. Mich. LCivR 7.2(b)"
+
+/// A reply brief on a dispositive motion produced on a computer: at most
+/// 4,300 words (LCivR 7.2(c)).
+limit dispositive-reply {
+  words <= 4_300 cite "W.D. Mich. LCivR 7.2(c)"
+} cite "W.D. Mich. LCivR 7.2(c)"
+
+/// The same reply hand-written or produced on a typewriter: at most 10
+/// pages (LCivR 7.2(c)).
+limit dispositive-reply-handwritten {
+  pages <= 10 cite "W.D. Mich. LCivR 7.2(c)"
+} cite "W.D. Mich. LCivR 7.2(c)"
+
+/// A brief in support of or opposition to a nondispositive motion produced
+/// on a computer: at most 4,300 words (LCivR 7.3(b)(i)). Appeals of a
+/// magistrate judge's nondispositive orders and responses conform to the
+/// same limit (LCivR 72.3(a)).
+limit nondispositive-brief {
+  words <= 4_300 cite "W.D. Mich. LCivR 7.3(b)"
+} cite "W.D. Mich. LCivR 7.3(b)"
+
+/// The same brief hand-written or produced on a typewriter: at most 10
+/// pages (LCivR 7.3(b)(i)).
+limit nondispositive-brief-handwritten {
+  pages <= 10 cite "W.D. Mich. LCivR 7.3(b)"
+} cite "W.D. Mich. LCivR 7.3(b)"
+
+/// A dispositive motion is served: for injunctive relief, judgment on the
+/// pleadings, summary judgment, to dismiss or to permit maintenance of a
+/// class action, to dismiss for failure to state a claim, or to dismiss
+/// involuntarily (LCivR 7.2(a)).
+event DispositiveMotionServed() paper dispositive-brief
+/// A response to a dispositive motion is served (LCivR 7.2(c)).
+event DispositiveResponseServed() paper dispositive-brief
+/// A reply brief on a dispositive motion is filed (LCivR 7.2(c)).
+event DispositiveReplyFiled() paper dispositive-reply
+/// A nondispositive motion is served (LCivR 7.3(a)).
+event NondispositiveMotionServed() paper nondispositive-brief
+/// An electronically filed document bearing a signature is served (LCivR
+/// 5.7(e)(viii)).
+event SignedDocumentServed()
+/// The Commissioner is notified of the commencement of a Social Security
+/// action (LCivR 8.3).
+event SocialSecurityCommencementNoticed()
+/// The plaintiff's brief in a Social Security action is served (LCivR
+/// 8.4(b)).
+event SocialSecurityPlaintiffBriefServed()
+/// The Commissioner's brief in a Social Security action is served (LCivR
+/// 8.4(c)).
+event SocialSecurityCommissionerBriefServed()
+/// The appearance a subpoena served by the United States Marshals Service
+/// requires (LCivR 45.1).
+event SubpoenaAppearance()
+/// Judgment is entered (LCivR 54.1).
+event JudgmentEntered()
+/// A bill of costs is served on a party (LCivR 54.1).
+event BillOfCostsServed()
+/// The Social Security Administration issues a notice of award (LCivR
+/// 54.2(b)(i)).
+event NoticeOfAward()
+/// A motion for attorney's fees under 42 U.S.C. § 406(b)(1)(A) or
+/// § 1383(d)(2)(A) is served (LCivR 54.2(b)(iv)).
+event SocialSecurityFeeMotionServed()
+/// A magistrate judge's order determining a motion or matter is served
+/// (LCivR 72.3(a)).
+event MagistrateOrderServed()
+/// A magistrate judge's proposed findings, recommendations or report is
+/// served (LCivR 72.3(b)).
+event MagistrateReportServed()
+/// A party's objections in an appeal of a magistrate judge's order are
+/// served (LCivR 72.3(a)).
+event MagistrateOrderObjectionsServed() paper nondispositive-brief
+/// A party's objections to a magistrate judge's report are served (LCivR
+/// 72.3(b)).
+event MagistrateReportObjectionsServed() paper dispositive-brief
+
+/// LCivR 7.2(c): unless otherwise ordered, a party opposing a dispositive
+/// motion files its responsive brief within 28 days after service of the
+/// motion.
+deadline dispositive-response-period: 28.days after DispositiveMotionServed() counted_by frcp6 cite "W.D. Mich. LCivR 7.2(c)"
+/// LCivR 7.2(c): the moving party may file a reply brief within 14 days
+/// after service of the response.
+deadline dispositive-reply-period: 14.days after DispositiveResponseServed() counted_by frcp6 cite "W.D. Mich. LCivR 7.2(c)"
+/// LCivR 7.3(c): unless otherwise ordered, a party opposing a
+/// nondispositive motion files its responsive brief within 14 days of
+/// service of the motion; reply briefs need leave of court.
+deadline nondispositive-response-period: 14.days after NondispositiveMotionServed() counted_by frcp6 cite "W.D. Mich. LCivR 7.3(c)"
+/// LCivR 5.7(e)(viii): a non-filing signatory or party who disputes the
+/// authenticity of a signature on an electronically filed document files
+/// an objection within 14 days after service of the document.
+deadline signature-objection-period: 14.days after SignedDocumentServed() counted_by frcp6 cite "W.D. Mich. LCivR 5.7(e)"
+/// LCivR 8.3: in a Social Security case the defendant has 60 days after
+/// notification of the commencement of the action to file and serve the
+/// certified administrative record, which is its answer, or to move
+/// against the complaint.
+deadline social-security-answer-period: 60.days after SocialSecurityCommencementNoticed() counted_by frcp6 cite "W.D. Mich. LCivR 8.3"
+/// LCivR 8.4(b): the Commissioner files and serves its brief within 30
+/// days after service of the plaintiff's brief.
+deadline social-security-commissioner-brief-period: 30.days after SocialSecurityPlaintiffBriefServed() counted_by frcp6 cite "W.D. Mich. LCivR 8.4(b)"
+/// LCivR 8.4(c): the plaintiff may file and serve a reply brief within 14
+/// days after service of the Commissioner's brief.
+deadline social-security-reply-period: 14.days after SocialSecurityCommissionerBriefServed() counted_by frcp6 cite "W.D. Mich. LCivR 8.4(c)"
+/// LCivR 45.1: unless otherwise ordered, a subpoena to be served by the
+/// United States Marshals Service allows a minimum of 14 days before the
+/// required appearance.
+deadline marshal-subpoena-period: 14.days before SubpoenaAppearance() counted_by frcp6 cite "W.D. Mich. LCivR 45.1"
+/// LCivR 54.1: if the parties cannot agree on costs, a bill of costs is
+/// filed with the clerk within 28 days from the entry of judgment.
+deadline bill-of-costs-period: 28.days after JudgmentEntered() counted_by frcp6 cite "W.D. Mich. LCivR 54.1"
+/// LCivR 54.1: a party objecting to the taxation of costs files a motion
+/// to disallow within 14 days of service of the bill of costs on it.
+deadline costs-disallowance-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "W.D. Mich. LCivR 54.1"
+/// LCivR 54.2(b)(i): the attorney files a motion for approval of fees
+/// under 42 U.S.C. § 406(b)(1)(A) or § 1383(d)(2)(A) no later than 35 days
+/// after the date shown on the face of the notice of award.
+deadline social-security-fee-motion-period: 35.days after NoticeOfAward() counted_by frcp6 cite "W.D. Mich. LCivR 54.2(b)"
+/// LCivR 54.2(b)(iv): any response by the client or defendant is filed
+/// within 21 days after the fee motion is served; replies need leave.
+deadline social-security-fee-response-period: 21.days after SocialSecurityFeeMotionServed() counted_by frcp6 cite "W.D. Mich. LCivR 54.2(b)"
+/// LCivR 72.3(a): a party may appeal a magistrate judge's order
+/// determining a motion or matter within 14 days after service of the
+/// order, unless the magistrate judge or district judge prescribes a
+/// different time.
+deadline magistrate-order-appeal-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "W.D. Mich. LCivR 72.3(a)"
+/// LCivR 72.3(a): any party may respond to another party's objections
+/// within 14 days of service.
+deadline magistrate-order-response-period: 14.days after MagistrateOrderObjectionsServed() counted_by frcp6 cite "W.D. Mich. LCivR 72.3(a)"
+/// LCivR 72.3(b): a party may object to a magistrate judge's proposed
+/// findings, recommendations or report within 14 days after being served
+/// with it, unless a different time is prescribed.
+deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6 cite "W.D. Mich. LCivR 72.3(b)"
+/// LCivR 72.3(b): any party may respond to another party's objections
+/// within 14 days after being served with them.
+deadline magistrate-report-response-period: 14.days after MagistrateReportObjectionsServed() counted_by frcp6 cite "W.D. Mich. LCivR 72.3(b)"
+
+test "dispositive response: 28 days after service of the motion" cite "W.D. Mich. LCivR 7.2(c)"
+{
+  given DispositiveMotionServed() on 2026-11-02
+  expect deadline(dispositive-response-period) == 2026-11-30
+}
+
+test "dispositive reply: 14 days after service of the response" cite "W.D. Mich. LCivR 7.2(c)"
+{
+  given DispositiveResponseServed() on 2026-11-02
+  expect deadline(dispositive-reply-period) == 2026-11-16
+}
+
+test "nondispositive response: 14 days after service of the motion" cite "W.D. Mich. LCivR 7.3(c)"
+{
+  given NondispositiveMotionServed() on 2026-11-02
+  expect deadline(nondispositive-response-period) == 2026-11-16
+}
+
+test "signature objection: 14 days after service of the document" cite "W.D. Mich. LCivR 5.7(e)"
+{
+  given SignedDocumentServed() on 2026-11-02
+  expect deadline(signature-objection-period) == 2026-11-16
+}
+
+test "social security answer: 60 days, New Year's Day rolls to Monday" cite "W.D. Mich. LCivR 8.3"
+{
+  given SocialSecurityCommencementNoticed() on 2026-11-02
+  expect deadline(social-security-answer-period) == 2027-01-04
+}
+
+test "commissioner's brief: 30 days after the plaintiff's brief" cite "W.D. Mich. LCivR 8.4(b)"
+{
+  given SocialSecurityPlaintiffBriefServed() on 2026-11-02
+  expect deadline(social-security-commissioner-brief-period) == 2026-12-02
+}
+
+test "social security reply: 14 days after the commissioner's brief" cite "W.D. Mich. LCivR 8.4(c)"
+{
+  given SocialSecurityCommissionerBriefServed() on 2026-11-02
+  expect deadline(social-security-reply-period) == 2026-11-16
+}
+
+test "marshal subpoena: at least 14 days before the appearance" cite "W.D. Mich. LCivR 45.1"
+{
+  given SubpoenaAppearance() on 2026-11-20
+  expect deadline(marshal-subpoena-period) == 2026-11-06
+}
+
+test "bill of costs: 28 days from entry of judgment" cite "W.D. Mich. LCivR 54.1"
+{
+  given JudgmentEntered() on 2026-11-02
+  expect deadline(bill-of-costs-period) == 2026-11-30
+}
+
+test "motion to disallow costs: 14 days after service of the bill" cite "W.D. Mich. LCivR 54.1"
+{
+  given BillOfCostsServed() on 2026-11-02
+  expect deadline(costs-disallowance-period) == 2026-11-16
+}
+
+test "social security fee motion: 35 days after the notice of award" cite "W.D. Mich. LCivR 54.2(b)"
+{
+  given NoticeOfAward() on 2026-11-02
+  expect deadline(social-security-fee-motion-period) == 2026-12-07
+}
+
+test "social security fee response: 21 days after service of the motion" cite "W.D. Mich. LCivR 54.2(b)"
+{
+  given SocialSecurityFeeMotionServed() on 2026-11-02
+  expect deadline(social-security-fee-response-period) == 2026-11-23
+}
+
+test "magistrate order appeal: 14 days after service" cite "W.D. Mich. LCivR 72.3(a)"
+{
+  given MagistrateOrderServed() on 2026-11-02
+  expect deadline(magistrate-order-appeal-period) == 2026-11-16
+}
+
+test "magistrate order response: 14 days after the objections" cite "W.D. Mich. LCivR 72.3(a)"
+{
+  given MagistrateOrderObjectionsServed() on 2026-11-02
+  expect deadline(magistrate-order-response-period) == 2026-11-16
+}
+
+test "magistrate report objections: 14 days after service" cite "W.D. Mich. LCivR 72.3(b)"
+{
+  given MagistrateReportServed() on 2026-11-02
+  expect deadline(magistrate-report-objection-period) == 2026-11-16
+}
+
+test "magistrate report response: 14 days after the objections" cite "W.D. Mich. LCivR 72.3(b)"
+{
+  given MagistrateReportObjectionsServed() on 2026-11-02
+  expect deadline(magistrate-report-response-period) == 2026-11-16
+}

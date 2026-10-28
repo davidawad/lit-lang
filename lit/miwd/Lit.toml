@@ -1,0 +1,50 @@
+# The United States District Court for the Western District of Michigan's
+# Local Civil Rules as a local-rule layer over lit/frcp (28 U.S.C. § 2071;
+# FRCP 83(a)): it declares only the periods and limits the Local Civil
+# Rules themselves state and re-encodes no FRCP deadline. FRCP 6(a)
+# computes a period stated in a local rule. The rules are the Local Rules
+# of Practice and Procedure as amended by Administrative Order 26-RL-067
+# (August 13, 2026), in force from October 12, 2026 (sources/miwd); the
+# earlier edition is not vendored, so the layer starts on that date. The
+# general and criminal rules are out of scope. An appeal goes to the Sixth
+# Circuit under lit/frap and lit/ca6.
+[package]
+name = "miwd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "miwd-local-rules"
+forum = "miwd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Western District of Michigan: Local Civil Rules"
+description = "The Western District of Michigan's Local Civil Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): dispositive and nondispositive motion responses and replies and their word and page limits, objections to the authenticity of an electronic signature, Social Security review answers and briefing, marshal-served subpoenas, the bill of costs and motions to disallow costs, Social Security fee motions and responses, and appeals of and objections to a magistrate judge's orders and reports with their responses."
+in_force = "2026-10-12"
+known_at = "2026-10-28"
+unknown_before = "2026-10-12"
+jurisdiction = "United States District Court, W.D. Mich."
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "miwd-lcivr"
+issuer = "United States District Court for the Western District of Michigan"
+date = "2026-10-12"
+designation = "Local Civil Rules (as amended by Administrative Order 26-RL-067, effective October 12, 2026)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.miwd-lcivr]
+title = "Local Rules of Practice and Procedure of the United States District Court for the Western District of Michigan (amendments through August 13, 2026, effective October 12, 2026)"
+url = "https://www.miwd.uscourts.gov/sites/miwd/files/MIWD_Local_Rules.pdf"
+path = "sources/miwd/miwd-local-civil-rules-sectioned.txt"
+path_sha256 = "b009aa700a37360e9ed6e024bc3e273546ea34423dd5c7cbe3fd6ea745f5ff2a"
+sha256 = "61027d97dc83d2d8ea6c198f285912fa8e47d6dc5ad18b3f1a8d07d252468040"
+as_of = "2026-10-12"
+cite_prefixes = ["W.D. Mich. LCivR"]
+section_heading = "LCivR {n}"

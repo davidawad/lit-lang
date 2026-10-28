@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcp-civil-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "miwd-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:2e58a5342018a06bc95e3facc817fdfeaa99acf6fdafd70e6bdf62c9bc61c556"
+semantic = "sha256:1a8a423d2b6cc3424949d46db2efe78e01bff1e21f6af584a8204e6566d91146"
+texts = [
+    "miwd-lcivr sources/miwd/miwd-local-civil-rules-sectioned.txt sha256:b009aa700a37360e9ed6e024bc3e273546ea34423dd5c7cbe3fd6ea745f5ff2a",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcp-civil-procedure 2024.12.0",
+]

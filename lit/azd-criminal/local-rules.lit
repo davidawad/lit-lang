@@ -1,0 +1,133 @@
+module azd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The District of Arizona's own criminal periods, counted under the
+// criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here.
+//
+// Rules that only point to a Local Rule of Civil Procedure state no
+// criminal period of their own and are not restated: forms of papers,
+// motions and memoranda (LRCrim 12.1(a), 47.1: LRCiv 7.1, 7.2),
+// extensions of time (LRCrim 12.1(b), 45.1: LRCiv 7.3), objections to a
+// magistrate judge's report and recommendation (LRCrim 12.1(c): LRCiv
+// 7.2(e)(3)), and jury instructions (LRCrim 30.1: LRCiv 51.1, except that
+// objections follow FRCrimP 30); those periods are civil-rule periods in
+// lit/azd.
+//
+// Periods that are FRCrimP periods stay with the Federal Rules: a
+// defendant appeals a magistrate judge's misdemeanor judgment of
+// conviction by a notice filed within 14 days after entry of the judgment
+// (LRCrim 58.2(a)), the period FRCrimP 58(g)(2)(B) states, so it is named
+// here and not encoded.
+//
+// Conditions that are not deadlines from an event stay in notes: every
+// motion in a non-petty case states the Speedy Trial Act excludable delay
+// it will cause (LRCrim 12.2(a)), whose period stays in lit/frcrimp; a
+// motion or stipulation to extend the trial date for a defendant not in
+// custody is captioned "Defendant Not In Custody" (LRCrim 12.3); the
+// government gives written notice of the defendant's statements it intends
+// to use, unless otherwise ordered, and the defense raises objections by
+// motion (LRCrim 16.1); a case with no proceedings for six or more months
+// may be dismissed for want of prosecution after notice and a status
+// hearing (LRCrim 48.1), a condition rather than a deadline; peremptory
+// challenges are exercised simultaneously unless otherwise directed
+// (LRCrim 24.1).
+//
+// The earlier D. Ariz. criminal outline's FRCrimP flow and its decisions
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+/// The court determines that the case is unusual or complex within the
+/// meaning of 18 U.S.C. § 3161(h)(7)(B)(ii) (D. Ariz. LRCrim 16.2(a)).
+event ComplexCaseDeclared()
+/// The final pretrial conference is scheduled (D. Ariz. LRCrim 16.3(a)).
+event FinalPretrialConferenceScheduled()
+/// An order denying in full a request to file a document under seal is
+/// entered (D. Ariz. LRCrim 49.4(d)).
+event SealingDenied()
+/// A notice of appeal from a magistrate judge's judgment of conviction in
+/// a misdemeanor case is filed (D. Ariz. LRCrim 58.2(a), (c)).
+event MisdemeanorAppealNoticed()
+/// The appellant's memorandum is filed and served (D. Ariz. LRCrim
+/// 58.2(d)).
+event AppellantMemorandumServed()
+/// The appellee's answering memorandum is served (D. Ariz. LRCrim
+/// 58.2(e)).
+event AppelleeMemorandumServed()
+
+/// D. Ariz. LRCrim 16.2(a): if the Court determines the case to be
+/// complex, a status conference is held within twenty-one days to set a
+/// schedule for discovery, motions and other pretrial case management
+/// issues; counsel confer before it (LRCrim 16.2(b)).
+deadline complex-case-status-conference: 21.days after ComplexCaseDeclared() counted_by frcrimp45 cite "D. Ariz. LRCrim 16.2(a)"
+{
+  forum frcrimp
+}
+
+/// D. Ariz. LRCrim 16.3(a)(1): unless otherwise ordered, a party discloses
+/// the FRCrimP 16(a)(1)(G) or 16(b)(1)(C) information for a case-in-chief
+/// expert no later than 45 days before the final pretrial conference; the
+/// Court may set its own deadlines (LRCrim 16.3(b)).
+deadline case-in-chief-expert-disclosure: 45.days before FinalPretrialConferenceScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Ariz. LRCrim 16.3(a)"
+{
+  forum frcrimp
+}
+
+/// D. Ariz. LRCrim 16.3(a)(2): unless otherwise ordered, a party discloses
+/// a rebuttal expert no later than 14 days before the final pretrial
+/// conference.
+deadline rebuttal-expert-disclosure: 14.days before FinalPretrialConferenceScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Ariz. LRCrim 16.3(a)"
+{
+  forum frcrimp
+}
+
+/// D. Ariz. LRCrim 49.4(d): if a request to file under seal is denied in
+/// full, the submitting party may, within five (5) days of the entry of
+/// the order denying it, resubmit the document for filing in the public
+/// record; the lodged document is not filed.
+deadline sealing-resubmission: 5.days after SealingDenied() counted_by frcrimp45 cite "D. Ariz. LRCrim 49.4(d)"
+{
+  forum frcrimp
+}
+
+/// D. Ariz. LRCrim 58.2(c): the appellant files its memorandum within
+/// thirty (30) days of the filing of the notice of appeal; the Court may
+/// extend the time for good cause and may dismiss the appeal if no
+/// memorandum is filed in time (LRCrim 58.2(g)).
+deadline misdemeanor-appeal-opening-memorandum: 30.days after MisdemeanorAppealNoticed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Ariz. LRCrim 58.2(c)"
+{
+  forum frcrimp
+}
+
+/// D. Ariz. LRCrim 58.2(d): the appellee files an answering memorandum
+/// within twenty-one (21) days of the filing and service of the
+/// appellant's memorandum.
+deadline misdemeanor-appeal-answering-memorandum: 21.days after AppellantMemorandumServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Ariz. LRCrim 58.2(d)"
+{
+  forum frcrimp
+}
+
+/// D. Ariz. LRCrim 58.2(e): the appellant may file a reply memorandum
+/// within fourteen (14) days of the date of service of the appellee's
+/// memorandum.
+deadline misdemeanor-appeal-reply-memorandum: 14.days after AppelleeMemorandumServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Ariz. LRCrim 58.2(e)"
+{
+  forum frcrimp
+}

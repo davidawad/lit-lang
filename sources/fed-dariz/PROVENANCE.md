@@ -22,3 +22,9 @@
 - Upstream: https://www.azd.uscourts.gov/sites/azd/files/local-rules/LRCiv%202025.pdf, retrieved 2026-10-27, as recorded on the `fed-dariz/arizona-lrciv.txt` entry this file is derived from.
 - Edition: as the extract, 2025-2026 edition, effective 12/01/2025.
 - Sectioned sha256 0da384ed858ac43637c3ab1cc134d4294aa2575d7a72cd14cc53157198e5c365 (the `path_sha256` pinned by `lit/azd/Lit.toml`).
+
+### `fed-dariz/azd-lrcrim-2025-2026-sectioned.txt` — D. Ariz. Local Rules of Criminal Procedure (2025-2026), sectioned
+
+- Derived in the pod (lg-gddt.22) from `fed-dariz/azd-lrcrim-2025-2026.txt` (extract sha256 613d9fe4cae662fefbd81bc61a29bfea4c746c76b1ac8488bcfe03c20833c782); nothing fetched. One marker line `## LRCrim <n>` is inserted before each rule's own centered heading line `LRCrim <n>` (LRCrim 1.1 through LRCrim 58.2, 56 rules; the lines that say "(NO LOCAL RULE)" under a Federal Rule heading carry no marker). Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Edition: as the extract, the 2025-2026 edition the court lists as current (the PDF states no effective date).
+- Sectioned sha256 8b8fad8625fbc0f80e84ae2eacae67819b64304b6a88c0bde65ac727bd78e334 (the `path_sha256` pinned by `lit/azd-criminal/Lit.toml`).

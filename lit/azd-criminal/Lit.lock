@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "azd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:d36c7b2babbebee0d7c95e19e32b95932362f2f67cfc275972a19f49fbc40829"
+semantic = "sha256:dc0c5a683cc4159a3ca4779688d41f0798b8d6c807bda928c3121d77eaafeec4"
+texts = [
+    "azd-lrcrim sources/fed-dariz/azd-lrcrim-2025-2026-sectioned.txt sha256:8b8fad8625fbc0f80e84ae2eacae67819b64304b6a88c0bde65ac727bd78e334",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]

@@ -1,0 +1,54 @@
+# The U.S. District Court for the District of Arizona's Local Rules of
+# Criminal Procedure (LRCrim) as a local-rule layer over lit/frcrimp (28
+# U.S.C. § 2071; FRCrimP 57(a)): it declares only the periods the local
+# criminal rules themselves state and re-encodes no FRCrimP, Speedy Trial
+# Act or FRAP 4(b) period (one source of truth: lit/frcrimp). Each period
+# is counted under FRCrimP 45(a), which governs "any local rule", so each
+# deadline names `forum frcrimp`. The rules are the 2025-2026 edition the
+# court lists as current (sources/fed-dariz); the PDF states no effective
+# date, so in_force is the retrieval date and an earlier query is a hole
+# in the corpus. Many LRCrim rules incorporate a Local Rule of Civil
+# Procedure by reference (motions and memoranda, extensions of time,
+# objections to a report and recommendation, jury instructions); those
+# periods are civil-rule periods in lit/azd and are not restated. An
+# appeal goes to the Ninth Circuit under lit/frcrimp's FRAP 4(b) period.
+[package]
+name = "azd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "azd-criminal-local-rules"
+forum = "azd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of Arizona: Local Rules of Criminal Procedure"
+description = "The District of Arizona's Local Rules of Criminal Procedure as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the complex-case status conference, the presumptive expert disclosure deadlines, resubmission after a denied sealing request, and the memoranda on an appeal from a magistrate judge's misdemeanor judgment."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "U.S. District Court for the District of Arizona (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "azd-lrcrim"
+issuer = "U.S. District Court for the District of Arizona"
+date = "2026-10-28"
+designation = "Local Rules of Criminal Procedure"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.azd-lrcrim]
+title = "Local Rules of Criminal Procedure of the U.S. District Court for the District of Arizona, 2025-2026 edition (no effective date stated; retrieved 2026-10-28)"
+url = "https://www.azd.uscourts.gov/sites/azd/files/local-rules/LRCRIM%202025.pdf"
+path = "sources/fed-dariz/azd-lrcrim-2025-2026-sectioned.txt"
+path_sha256 = "8b8fad8625fbc0f80e84ae2eacae67819b64304b6a88c0bde65ac727bd78e334"
+sha256 = "2114eac2c26cd8b5ec8db71ae0ca79589fccff58e450df98806a5de61d8b1964"
+as_of = "2026-10-28"
+cite_prefixes = ["D. Ariz. LRCrim"]
+section_heading = "LRCrim {n}"

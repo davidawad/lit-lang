@@ -1,0 +1,218 @@
+module med-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ VerdictOrDischarge }
+
+// The District of Maine's own criminal periods. The criminal local rules
+// start with Local Rule 101 and each corresponds to the Federal Rule of
+// Criminal Procedure of the same number less 100; rules that apply to
+// both civil and criminal matters are Local Rules 1 to 83 (D. Me. Local
+// R. 1(b)), whose periods are lit/med's. FRCrimP 45 computes every period
+// the Local Rules state (D. Me. Local R. 145). No trigger carries a
+// service method: FRCrimP 45(c)'s three added days follow the manner of
+// service, which is not modeled here. The Court may modify the rules when
+// justice so requires (D. Me. Local R. 1(c)).
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: objections to the initial presentence report are filed within 14
+// days after its disclosure (D. Me. Local R. 132(a); FRCrimP 32(f)(1)),
+// and the report is deemed disclosed when filed on ECF (D. Me. Local R.
+// 132(f)(2)). The 14-day objection period may be shortened only with the
+// defendant's consent; the Court may modify the other Rule 132 times for
+// good cause (D. Me. Local R. 132(e)).
+//
+// Conditions that are not deadlines from an event stay in notes: a trial
+// date is ordinarily set at the arraignment (Local Rule 110, whose
+// heading the vendored sectioning leaves unmarked); a final pretrial
+// conference may be held under FRCrimP 17.1 (D. Me. Local R. 117);
+// opening statements may not exceed 30 minutes except by leave of Court
+// (D. Me. Local R. 123(a)); a criminal jury is 12 members (D. Me. Local
+// R. 124.2(a)), and the order of the government's 6 and the defendants'
+// 10 peremptory challenges is set out in D. Me. Local R. 124.2(d)(2);
+// further jury instruction requests may be made at the close of the
+// evidence when their need could not reasonably have been foreseen (D.
+// Me. Local R. 130); objections to the revocation report are heard orally
+// at the revocation hearing (D. Me. Local R. 132.1(b)); motions are
+// decided without oral argument unless the Court orders otherwise (D. Me.
+// Local R. 147(e)); the deemed waiver of an unopposed motion does not
+// apply to motions filed during trial (D. Me. Local R. 147(b)(2)); a
+// defense attorney continues until relieved by this Court or the Court
+// of Appeals, and after a notice of appeal a motion to withdraw goes to
+// the Court of Appeals (D. Me. Local R. 157.5(b)). Petty offenses follow
+// D. Me. Local R. 158, and sealing D. Me. Local R. 157.6.
+//
+// The earlier D. Me. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Brady v. Maryland, Barker v. Wingo, Zedner
+// v. United States, Boykin v. Alabama, Missouri v. Frye, Jackson v.
+// Virginia, United States v. Booker, Roe v. Flores-Ortega, Garza v.
+// Idaho) are FRCrimP, Speedy Trial Act or constitutional authority and
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+
+/// A memorandum of law in support of or in opposition to a dispositive
+/// motion or a motion to suppress evidence: at most 20 pages except by
+/// prior leave of Court (D. Me. Local R. 147(d)).
+limit dispositive-memorandum {
+  pages <= 20 cite "D. Me. Local R. 147(d)"
+} cite "D. Me. Local R. 147(d)"
+
+/// A memorandum in support of or in opposition to any other motion: at
+/// most 10 pages (D. Me. Local R. 147(d)).
+limit motion-memorandum {
+  pages <= 10 cite "D. Me. Local R. 147(d)"
+} cite "D. Me. Local R. 147(d)"
+
+/// A reply memorandum: at most 7 pages, strictly confined to new matter
+/// raised in the objection (D. Me. Local R. 147(c)).
+limit reply-memorandum {
+  pages <= 7 cite "D. Me. Local R. 147(c)"
+} cite "D. Me. Local R. 147(c)"
+
+/// A trial brief: at most 20 pages except by prior leave of Court (D. Me.
+/// Local R. 157.2).
+limit trial-brief {
+  pages <= 20 cite "D. Me. Local R. 157.2"
+} cite "D. Me. Local R. 157.2"
+
+/// A motion, incorporating its memorandum of law, is filed (D. Me. Local
+/// R. 147(a)).
+event MotionFiled() paper motion-memorandum
+/// A dispositive motion or a motion to suppress evidence is filed (D. Me.
+/// Local R. 147(a), (d)).
+event DispositiveMotionFiled() paper dispositive-memorandum
+/// A written objection to a motion is filed (D. Me. Local R. 147(b)).
+event ObjectionFiled() paper motion-memorandum
+/// A reply memorandum is filed (D. Me. Local R. 147(c)).
+event ReplyFiled() paper reply-memorandum
+/// A change of plea is scheduled (D. Me. Local R. 111).
+event ChangeOfPleaScheduled()
+/// Jury empanelment is scheduled (D. Me. Local R. 124.1, 130).
+event EmpanelmentScheduled()
+/// The date set for trial (D. Me. Local R. 157.2).
+event TrialScheduled()
+/// A trial brief is served and filed (D. Me. Local R. 157.2).
+event TrialBriefFiled() paper trial-brief
+/// The sentencing hearing is scheduled (D. Me. Local R. 132(g)); the
+/// FRCrimP date the presentence report counts back from is lit/frcrimp's
+/// SentencingScheduled.
+event SentencingHearingScheduled()
+/// A finding or waiver of probable cause that a violation of supervised
+/// release or probation was committed, for an arrested defendant, or the
+/// initial appearance of a summonsed defendant (D. Me. Local R. 132.1(a)).
+event RevocationTrigger()
+/// The final determination of the action by this or any appellate court
+/// (D. Me. Local R. 123(f)(2)).
+event FinalDetermination()
+
+/// D. Me. Local R. 111: counsel files any plea agreement with the Clerk at
+/// least 2 business days before a scheduled change of plea.
+deadline plea-agreement-filing: 2.business_days before ChangeOfPleaScheduled() counted_by frcrimp45 cite "D. Me. Local R. 111"
+{
+  forum frcrimp
+}
+
+/// D. Me. Local R. 124.1: proposed questions for jury voir dire are served
+/// and submitted at least 3 days before jury empanelment.
+deadline voir-dire-questions: 3.days before EmpanelmentScheduled() counted_by frcrimp45 cite "D. Me. Local R. 124.1"
+{
+  forum frcrimp
+}
+
+/// D. Me. Local R. 130: written requests for jury instructions under
+/// FRCrimP 30 are served and submitted at least 3 days before jury
+/// empanelment.
+deadline jury-instruction-requests: 3.days before EmpanelmentScheduled() counted_by frcrimp45 cite "D. Me. Local R. 130"
+{
+  forum frcrimp
+}
+
+/// D. Me. Local R. 157.2: unless the Court orders otherwise, each party
+/// serves and files a trial brief at least 3 days before the date set for
+/// trial.
+deadline trial-brief-filing: 3.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Me. Local R. 157.2"
+{
+  forum frcrimp
+}
+
+/// D. Me. Local R. 132(b): the probation officer files the revised
+/// presentence report, with its addendum of objections and the officer's
+/// comments, no more than 77 days after the verdict or finding of guilt.
+/// The Court may modify the time for good cause (Local R. 132(e)).
+deadline revised-psr-filing: 77.days after VerdictOrDischarge(Verdict) counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Me. Local R. 132(b); D. Me. Local R. 132(e)"
+{
+  forum frcrimp
+}
+
+/// D. Me. Local R. 132(g)(1): unless the assigned judge orders otherwise,
+/// a motion for a cooperation departure or variance is filed sealed 5
+/// business days before the sentencing hearing; supporting documents go
+/// to the Probation Office for the judge on the same day (Local R.
+/// 132(g)(2)).
+deadline cooperation-motion: 5.business_days before SentencingHearingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Me. Local R. 132(g)"
+{
+  forum frcrimp
+}
+
+/// D. Me. Local R. 132(g)(3): unless the assigned judge orders otherwise,
+/// courtesy copies of sentencing exhibits are submitted 5 business days
+/// before the sentencing hearing.
+deadline sentencing-exhibits: 5.business_days before SentencingHearingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Me. Local R. 132(g)"
+{
+  forum frcrimp
+}
+
+/// D. Me. Local R. 132.1(a): unless the Court orders otherwise, the
+/// probation officer files the revocation report not more than 10
+/// calendar days after the finding or waiver of probable cause, or the
+/// summonsed defendant's initial appearance.
+deadline revocation-report: 10.days after RevocationTrigger() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Me. Local R. 132.1(a)"
+{
+  forum frcrimp
+}
+
+/// D. Me. Local R. 147(b)(1): unless the opposing party files a written
+/// objection, with a memorandum of law, within 21 days after the filing of
+/// a motion, it is deemed to have waived objection.
+deadline objection-period: 21.days after MotionFiled() counted_by frcrimp45 cite "D. Me. Local R. 147(b)"
+{
+  forum frcrimp
+}
+
+/// D. Me. Local R. 147(b)(1): the same 21 days for a dispositive motion or
+/// a motion to suppress evidence.
+deadline dispositive-objection-period: 21.days after DispositiveMotionFiled() counted_by frcrimp45 cite "D. Me. Local R. 147(b)"
+{
+  forum frcrimp
+}
+
+/// D. Me. Local R. 147(c): within 14 days of the filing of an objection,
+/// the moving party may file a reply memorandum.
+deadline reply-period: 14.days after ObjectionFiled() counted_by frcrimp45 cite "D. Me. Local R. 147(c)"
+{
+  forum frcrimp
+}
+
+/// D. Me. Local R. 123(f)(2): documentary exhibits are withdrawn by the
+/// counsel who offered them within 30 days after the final determination
+/// of the action by this or any appellate court; after notice the Clerk
+/// may dispose of them.
+deadline exhibit-withdrawal: 30.days after FinalDetermination() counted_by frcrimp45 cite "D. Me. Local R. 123(f)"
+{
+  forum frcrimp
+}

@@ -1,0 +1,51 @@
+# The U.S. District Court for the District of Maine's criminal local rules
+# (Local Rules 110 to 158) as a local-rule layer over lit/frcrimp (28
+# U.S.C. § 2071; FRCrimP 57(a)): it declares only the periods and limits
+# the local criminal rules themselves state and re-encodes no FRCrimP,
+# Speedy Trial Act or FRAP 4(b) period (one source of truth:
+# lit/frcrimp). FRCrimP 45 computes every period the Local Rules state
+# (D. Me. Local R. 145), so each deadline names `forum frcrimp`. The rules
+# are the Local Rules current as of April 1, 2025 (sources/dme), the
+# edition lit/med also binds; earlier editions are not vendored, so a
+# query before it is a hole in the corpus. An appeal goes to the First
+# Circuit under lit/frcrimp's FRAP 4(b) period.
+[package]
+name = "med-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "med-criminal-local-rules"
+forum = "med-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of Maine: Local Rules (criminal)"
+description = "The District of Maine's criminal local rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): plea agreement filing, voir dire questions and jury instruction requests, trial briefs, the revised presentence report, sentencing exhibits and cooperation motions, the revocation report, motion objections and replies with their page limits, and the retaking of documentary exhibits."
+in_force = "2025-04-01"
+known_at = "2026-10-28"
+unknown_before = "2025-04-01"
+jurisdiction = "U.S. District Court for the District of Maine (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "dme-lr"
+issuer = "United States District Court for the District of Maine"
+date = "2025-04-01"
+designation = "Local Rules (criminal)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.dme-lr]
+title = "Local Rules of the United States District Court for the District of Maine (current as of April 1, 2025), criminal rules"
+url = "https://www.med.uscourts.gov/sites/med/files/LocalRules.pdf"
+path = "sources/dme/local-rules-sectioned.txt"
+path_sha256 = "82b0cb10a256f615971c8e76af39de5957a7be11dc2a302448ffede7efa5617b"
+sha256 = "131911bfe696ae77d1d4828385d2f8c83cbc533c2317a5128483d5049f152232"
+as_of = "2025-04-01"
+cite_prefixes = ["D. Me. Local R."]
+section_heading = "Rule {n}"

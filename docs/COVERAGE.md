@@ -103,7 +103,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | Illinois | state | outline | 0 | 0 | 0 | 0 | `outlines/seventh-circuit/illinois/state-appellate`, `outlines/seventh-circuit/illinois/state-civil` |
 | Indiana | state | outline | 0 | 0 | 0 | 0 | `outlines/seventh-circuit/indiana/state-appellate`, `outlines/seventh-circuit/indiana/state-civil` |
 | Iowa | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/iowa/state-appellate`, `outlines/eighth-circuit/iowa/state-civil` |
-| Kansas | state | promoted | 0 | 0 | 0 | 0 | `lit/ks-district` |
+| Kansas | state | promoted | 0 | 0 | 0 | 0 | `lit/ks-appellate`, `lit/ks-district` |
 | Kentucky | state | outline | 0 | 0 | 0 | 0 | `outlines/sixth-circuit/kentucky/state-appellate`, `outlines/sixth-circuit/kentucky/state-civil` |
 | Louisiana | state | outline | 0 | 0 | 0 | 0 | `outlines/fifth-circuit/louisiana/state-appellate`, `outlines/fifth-circuit/louisiana/state-civil` |
 | Maine | state | promoted | 0 | 0 | 0 | 0 | `lit/me-law-court`, `lit/me-superior-civil` |

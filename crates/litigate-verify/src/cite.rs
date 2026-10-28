@@ -17,7 +17,7 @@
 //! A cite of a declaration `litigate import` marked `/// imported` is
 //! exempt in `dev`: its failures are warnings, so a freshly imported pack
 //! checks while its citations are ported. `strict` exempts nothing.
-use crate::context::{Cite, GAP};
+use crate::context::{Cite, GAP, GAP_WORDS};
 use crate::diag::{emit, note};
 use crate::Context;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity, Span};
@@ -67,7 +67,7 @@ pub(crate) fn unresolved(
 /// collapsed and case folded (the rules capitalize a part or count that
 /// opens a sentence or list item: `A Table of Contents`) and digit
 /// grouping dropped (D. Mont. L.R. 7.1(d)(2) writes `6500 words`), a
-/// [`GAP`] standing for any one word: a quote the corpus cannot show is
+/// [`GAP`] standing for a few words: a quote the corpus cannot show is
 /// not the rule's text. No quotes, no check.
 fn unquoted(
     cx: &Context<'_>,
@@ -124,18 +124,22 @@ fn unquoted(
     ))
 }
 
-/// Whether `body` holds `quote`, a [`GAP`] in it matching any one
-/// whitespace-free word.
+/// Whether `body` holds `quote`, a [`GAP`] in it matching one to
+/// [`GAP_WORDS`] whitespace-free words.
 fn holds(body: &str, quote: &str) -> bool {
     let Some((before, after)) = quote.split_once(&format!(" {GAP} ")) else {
         return body.contains(quote);
     };
     body.match_indices(before).any(|(i, _)| {
-        let rest = &body[i + before.len()..];
-        rest.strip_prefix(' ').is_some_and(|rest| {
-            let word = rest.find(' ').unwrap_or(rest.len());
+        let mut rest = &body[i + before.len()..];
+        (0..GAP_WORDS).any(|_| {
+            let Some(r) = rest.strip_prefix(' ') else {
+                return false;
+            };
+            let word = r.find(' ').unwrap_or(r.len());
+            rest = &r[word..];
             word > 0
-                && rest[word..]
+                && rest
                     .strip_prefix(' ')
                     .is_some_and(|r| r.starts_with(after))
         })

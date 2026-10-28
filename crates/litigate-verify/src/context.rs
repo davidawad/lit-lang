@@ -206,8 +206,9 @@ type CiteOf<'a> = (&'a str, Option<&'a Span>, bool, Vec<Cow<'a, str>>);
 /// else the declaration's, with the words its vendored text must hold: a
 /// bound's number and measure as the rules write them, in digits
 /// (`13,000 words`), in words (`thirty pages`) or both (`thirty (30)
-/// pages`), each also with one word between the count and the measure
+/// pages`), each also with a few words between the count and the measure
 /// (D.S.C. Local Civ. Rule 7.05(B): `Thirty-five (35) double-spaced
+/// pages`; D. Conn. L. Civ. R. 7(a)5: `forty (40) 8 1/2" by 11" printed
 /// pages`, [`GAP`]), and each excluded part named, hyphens read as spaces
 /// (`cover page`).
 /// A hole cites nothing and quotes nothing.
@@ -262,9 +263,14 @@ fn limit_cites(l: &hir::Limit) -> Vec<CiteOf<'_>> {
     out
 }
 
-/// In a quote, any one word of the cited text: a limit's count and
-/// measure with a word between them (`35 double-spaced pages`).
+/// In a quote, one to [`GAP_WORDS`] words of the cited text: a limit's
+/// count and measure with words between them (`35 double-spaced pages`,
+/// `40 8 1/2" by 11" printed pages`).
 pub(crate) const GAP: char = '\u{2026}';
+
+/// The most words a [`GAP`] stands for: the paper size and kind of page
+/// a rule sets between its count and `pages` (D. Conn.'s five).
+pub(crate) const GAP_WORDS: usize = 6;
 
 /// `n` with its thousands grouped by commas, as the rules write counts.
 fn grouped(n: u64) -> String {

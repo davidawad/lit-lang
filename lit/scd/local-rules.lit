@@ -1,0 +1,523 @@
+module scd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of South Carolina's own periods, computed under the federal
+// rules (FRCP 6(a) governs "any local rule"). The rules are cited as
+// "Local Civ. Rule __ (D.S.C.)" (Local Civ. Rule 1.01). Absent an exception
+// granted by the court, an initial memorandum is limited to 35 and a reply
+// to 15 double-spaced pages (Local Civ. Rule 7.05(B)); they are not
+// declared as `limit`s, whose cite check reads "thirty-five (35) pages"
+// with no word between the count and the measure. A party may grant in
+// writing one extension of the time to respond to a pleading, of at most
+// the lesser of 21 days or the original response period (Local Civ. Rule
+// 12.01). A stipulated extension of a written discovery response may not
+// place its due date less than 30 days before the end of the discovery
+// period (Local Civ. Rules 29.01, 37.01(A)). Witnesses identified within
+// the last 28 days of the discovery period are presumed untimely absent
+// good cause (Local Civ. Rule 16.02(D)(2)). A mediation memorandum the
+// mediator requires should be no more than 5 pages unless the mediator
+// permits (Local Civ. Rule 16.08(B)). A bond staying execution of a
+// money-only judgment is 150% of a judgment of $10,000 or less and 125% of
+// a larger one (Local Civ. Rule 62.01(A)). The scheduling order itself
+// issues within the FRCP 16(b)(2) period, which is lit/frcp's. The earlier
+// District of South Carolina outline's FRCP flow and its decisions
+// (Twombly, Iqbal, Foman, Frow, Celotex, Anderson v. Liberty Lobby,
+// Catlin, Bowles) are FRCP or FRAP authority and belong to lit/frcp; its
+// Third Circuit decisions (Phillips, Fowler, Poulis) do not bind this
+// district, and its Fourth Circuit decisions (Goines; Anderson v.
+// Foundation for Advancement) are vendored nowhere, so they are removed.
+/// A pleading asserting a claim is filed (Local Civ. Rule 4.01).
+event ComplaintFiled()
+/// A motion is served (Local Civ. Rules 7.04, 7.06).
+event MotionServed()
+/// A response to a motion is served (Local Civ. Rules 7.06, 7.07).
+event ResponseServed()
+/// Counsel receive a proposed order submitted to the court (Local Civ.
+/// Rule 7.10(B)(4)-(5)).
+event ProposedOrderReceived()
+/// A defendant appears (Local Civ. Rules 16.01(A), 16.02(C)(1)).
+event DefendantAppeared()
+/// The parties hold the FRCP 26(f) conference (Local Civ. Rule 16.02(C)).
+event PartiesConferred()
+/// The discovery period set by the scheduling order closes (Local Civ.
+/// Rules 16.02(D)(3), 26.04).
+event DiscoveryClosed()
+/// An affidavit of a records custodian is served (Local Civ. Rule
+/// 16.02(D)(3)).
+event CustodianAffidavitServed()
+/// The deadline for mediation arrives (Local Civ. Rule 16.06(C)).
+event MediationDeadlineReached()
+/// The parties agree on a mediator or the court appoints one (Local Civ.
+/// Rule 16.07(A)).
+event MediatorAppointed()
+/// A mediation conference is held (Local Civ. Rules 16.07(A), 16.08(D)).
+event MediationConferenceHeld()
+/// The mediation concludes (Local Civ. Rule 16.10(H)).
+event MediationConcluded()
+/// A notice of removal is served (Local Civ. Rule 26.01).
+event RemovalNoticeServed()
+/// The clerk draws a party's failure to file the Local Civ. Rule 26.01
+/// answers to its attention (Local Civ. Rule 26.01).
+event InterrogatoryAnswersNoticeGiven()
+/// Issues are joined in an action exempt under FRCP 26(a)(1)(B) (Local
+/// Civ. Rule 26.04).
+event IssueJoined()
+/// The date set for jury selection, the trial date for scheduling (Local
+/// Civ. Rules 16.02(B), 26.05).
+event JurySelected()
+/// The date set for submitting pretrial briefs (Local Civ. Rule 26.07(A)).
+event PretrialBriefsDue()
+/// Trial begins (Local Civ. Rule 26.09).
+event TrialCommenced()
+/// The date on which the action is scheduled for trial (Local Civ. Rule
+/// 54.01).
+event TrialDateScheduled()
+/// A deposition is taken (Local Civ. Rule 30.02).
+event DepositionTaken()
+/// A deposition is suspended or terminated over an instruction not to
+/// answer (Local Civ. Rule 30.04(C)).
+event DepositionSuspended()
+/// A discovery response is received (Local Civ. Rule 37.01(A)).
+event DiscoveryResponseReceived()
+/// A discovery response comes due and none is received (Local Civ. Rule
+/// 37.01(A)).
+event DiscoveryResponseOverdue()
+/// A petition for attorney's fees is served (Local Civ. Rule 54.02(A)).
+event FeePetitionServed()
+/// A motion to withdraw that would leave the party unrepresented is filed
+/// (Local Civ. Rule 83.I.07(B)).
+event WithdrawalMotionFiled()
+/// The clerk posts notice of intent to dispose of exhibits (Local Civ. Rule
+/// 83.II.01).
+event ExhibitDisposalNoticePosted()
+/// The Social Security Administration has issued all notices of award of
+/// benefits (Local Civ. Rule 83.VII.10(A)).
+event AwardNoticesIssued()
+
+/// Local Civ. Rule 4.01: if a pleading asserting a claim is not served on
+/// each party against whom a claim is asserted within 90 days after it is
+/// filed, the filer files a status report within the same period.
+deadline service-status-report-period: 90.days after ComplaintFiled() counted_by frcp6 cite "D.S.C. Local Civ. Rule 4.01"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 7.06: a memorandum or response of an opposing party is
+/// filed within 14 days of the service of the motion unless the court
+/// imposes a different deadline.
+deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "D.S.C. Local Civ. Rule 7.06"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 7.07: replies are discouraged; a reply to matters raised
+/// initially in a response is filed within 7 days after service of the
+/// response, unless otherwise ordered.
+deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "D.S.C. Local Civ. Rule 7.07"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 7.10(B)(5): unless otherwise ordered, opposing counsel
+/// have 14 days from receipt to comment on a proposed order.
+deadline proposed-order-comment-period: 14.days after ProposedOrderReceived() counted_by frcp6 cite "D.S.C. Local Civ. Rule 7.10(B)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 16.02(C)(1): the FRCP 26(f) conference is held no later
+/// than 45 days after the appearance of a defendant.
+deadline rule26f-conference-period: 45.days after DefendantAppeared() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.02(C)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 16.02(C)(2): the FRCP 26(a)(1) initial disclosures are
+/// exchanged no later than 14 days after the FRCP 26(f) conference.
+deadline initial-disclosure-period: 14.days after PartiesConferred() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.02(C)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 16.02(C)(3): the FRCP 26(f) report is filed no later
+/// than 14 days after the FRCP 26(f) conference.
+deadline rule26f-report-period: 14.days after PartiesConferred() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.02(C)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 16.02(D)(3): affidavits of records custodians offered
+/// for authentication in lieu of live testimony are served no fewer than
+/// 30 days before the close of discovery unless otherwise ordered.
+deadline custodian-affidavit-period: 30.days before DiscoveryClosed() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.02(D)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 16.02(D)(3): objections to a records custodian's
+/// affidavit are made within 14 days after service of the disclosure
+/// unless otherwise ordered.
+deadline custodian-objection-period: 14.days after CustodianAffidavitServed() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.02(D)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 16.06(C): unless otherwise ordered, the parties select a
+/// mediator at least 21 days before the deadline for mediation.
+deadline mediator-selection-period: 21.days before MediationDeadlineReached() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.06(C)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 16.07(A): unless otherwise ordered, the initial
+/// mediation conference is held within 28 days of the agreement upon or
+/// order appointing a mediator.
+deadline initial-mediation-period: 28.days after MediatorAppointed() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.07(A)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 16.07(A): unless otherwise ordered, mediation is
+/// completed within 28 days after the initial mediation conference.
+deadline mediation-completion-period: 28.days after MediationConferenceHeld() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.07(A)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 16.08(D): a more formal agreement the mediated
+/// settlement envisions is executed by the parties within 14 days of the
+/// date of the mediation conference.
+deadline settlement-documents-period: 14.days after MediationConferenceHeld() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.08(D)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 16.10(H): the mediator forwards the completed ADR
+/// tracking form within 28 days of the conclusion of the mediation.
+deadline mediator-report-period: 28.days after MediationConcluded() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.10(H)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 26.01: in a removed case the removing defendant files
+/// the Local Civ. Rule 26.01 answers with the removal papers; every other
+/// party files them no later than 14 days after service of the notice of
+/// removal.
+deadline removal-interrogatory-answers-period: 14.days after RemovalNoticeServed() counted_by frcp6 cite "D.S.C. Local Civ. Rule 26.01"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 26.01: a party that fails to file the answers on time is
+/// allowed 14 days to file them after the clerk draws the requirement to
+/// its attention; the clerk may extend the time.
+deadline late-interrogatory-answers-period: 14.days after InterrogatoryAnswersNoticeGiven() counted_by frcp6 cite "D.S.C. Local Civ. Rule 26.01"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 26.04: pretrial discovery in an action exempt under
+/// FRCP 26(a)(1)(B) is completed within 90 days following the joinder of
+/// issues unless otherwise ordered.
+deadline exempt-discovery-period: 90.days after IssueJoined() counted_by frcp6 cite "D.S.C. Local Civ. Rule 26.04"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 26.04: in an exempt action, FRCP 26(a)(2) expert
+/// disclosures are made at least 28 days before the close of discovery.
+deadline exempt-expert-disclosure-period: 28.days before DiscoveryClosed() counted_by frcp6 cite "D.S.C. Local Civ. Rule 26.04"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 26.05: a pretrial brief is furnished at least 7 days
+/// before the date set for jury selection, unless the court orders another
+/// date.
+deadline pretrial-brief-period: 7.days before JurySelected() counted_by frcp6 cite "D.S.C. Local Civ. Rule 26.05"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 26.05(O): requests for voir dire questions not submitted
+/// 7 days before jury selection are waived unless events at trial make them
+/// necessary.
+deadline voir-dire-request-period: 7.days before JurySelected() counted_by frcp6 cite "D.S.C. Local Civ. Rule 26.05(O)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 26.07(A): unless otherwise ordered, counsel meet to mark
+/// and exchange trial exhibits at least 7 days before the date set for
+/// submitting pretrial briefs.
+deadline exhibit-exchange-period: 7.days before PretrialBriefsDue() counted_by frcp6 cite "D.S.C. Local Civ. Rule 26.07(A)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 26.09: requests for jury instructions are submitted 7
+/// days before the beginning of trial, or are waived unless events at
+/// trial make them necessary.
+deadline jury-instruction-period: 7.days before TrialCommenced() counted_by frcp6 cite "D.S.C. Local Civ. Rule 26.09"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 30.02: a party objecting to a telephonic deposition
+/// makes the objection known at least 14 days before the deposition.
+deadline telephone-deposition-objection-period: 14.days before DepositionTaken() counted_by frcp6 cite "D.S.C. Local Civ. Rule 30.02"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 30.04(C): counsel who directs a witness not to answer,
+/// other than on privilege or to enforce a court-ordered limitation, moves
+/// for a protective order within 7 days of the suspension or termination
+/// of the deposition, or waives the objection.
+deadline deposition-protective-order-period: 7.days after DepositionSuspended() counted_by frcp6 cite "D.S.C. Local Civ. Rule 30.04(C)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 37.01(A): a motion to compel is filed within 21 days
+/// after receipt of the discovery response it is directed to.
+deadline motion-to-compel-period: 21.days after DiscoveryResponseReceived() counted_by frcp6 cite "D.S.C. Local Civ. Rule 37.01(A)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 37.01(A): where no response has been received, a motion
+/// to compel is filed within 21 days after the response was due.
+deadline motion-to-compel-no-response-period: 21.days after DiscoveryResponseOverdue() counted_by frcp6 cite "D.S.C. Local Civ. Rule 37.01(A)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 54.01: juror costs may be assessed when a case set for
+/// jury trial is settled or disposed of before trial unless the court is
+/// notified at least one day before the date the action is scheduled for
+/// trial.
+deadline jury-cost-notice-period: 1.days before TrialDateScheduled() counted_by frcp6 cite "D.S.C. Local Civ. Rule 54.01"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 54.02(A): a memorandum opposing a petition for
+/// attorney's fees is filed within 14 days of the service of the petition.
+deadline fee-opposition-period: 14.days after FeePetitionServed() counted_by frcp6 cite "D.S.C. Local Civ. Rule 54.02(A)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 83.I.07(B)(3): a party to be left unrepresented by
+/// counsel's withdrawal is told that any response must be received within
+/// 17 days of the filing date of the motion.
+deadline withdrawal-response-period: 17.days after WithdrawalMotionFiled() counted_by frcp6 cite "D.S.C. Local Civ. Rule 83.I.07(B)"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 83.II.01: unless an attorney of record or party in
+/// interest takes custody of or objects within 14 days of the posting of
+/// the clerk's notice, the clerk may dispose of the exhibits as stated.
+deadline exhibit-disposal-objection-period: 14.days after ExhibitDisposalNoticePosted() counted_by frcp6 cite "D.S.C. Local Civ. Rule 83.II.01"
+{
+  forum frcp
+}
+
+/// Local Civ. Rule 83.VII.10(A): a petition for attorney's fees out of
+/// past-due Social Security benefits is filed no later than 60 days after
+/// the issuance of all notices of award of benefits; the United States
+/// Attorney is allowed 30 days to object (83.VII.10(C)), a period the rule
+/// gives no start for, so it is not declared.
+deadline ssa-fee-petition-period: 60.days after AwardNoticesIssued() counted_by frcp6 cite "D.S.C. Local Civ. Rule 83.VII.10(A)"
+{
+  forum frcp
+}
+
+test "service status report period: 90 days after the trigger" cite "D.S.C. Local Civ. Rule 4.01"
+{
+  given ComplaintFiled() on 2026-11-02
+  expect deadline(service-status-report-period) == 2027-02-01
+}
+
+test "response period: 14 days after the trigger" cite "D.S.C. Local Civ. Rule 7.06"
+{
+  given MotionServed() on 2026-11-02
+  expect deadline(response-period) == 2026-11-16
+}
+
+test "reply period: 7 days after the trigger" cite "D.S.C. Local Civ. Rule 7.07"
+{
+  given ResponseServed() on 2026-11-02
+  expect deadline(reply-period) == 2026-11-09
+}
+
+test "proposed order comment period: 14 days after the trigger" cite "D.S.C. Local Civ. Rule 7.10(B)"
+{
+  given ProposedOrderReceived() on 2026-11-02
+  expect deadline(proposed-order-comment-period) == 2026-11-16
+}
+
+test "rule26f conference period: 45 days after the trigger" cite "D.S.C. Local Civ. Rule 16.02(C)"
+{
+  given DefendantAppeared() on 2026-11-02
+  expect deadline(rule26f-conference-period) == 2026-12-17
+}
+
+test "initial disclosure period: 14 days after the trigger" cite "D.S.C. Local Civ. Rule 16.02(C)"
+{
+  given PartiesConferred() on 2026-11-02
+  expect deadline(initial-disclosure-period) == 2026-11-16
+}
+
+test "rule26f report period: 14 days after the trigger" cite "D.S.C. Local Civ. Rule 16.02(C)"
+{
+  given PartiesConferred() on 2026-11-02
+  expect deadline(rule26f-report-period) == 2026-11-16
+}
+
+test "custodian affidavit period: 30 days before the trigger" cite "D.S.C. Local Civ. Rule 16.02(D)"
+{
+  given DiscoveryClosed() on 2027-02-02
+  expect deadline(custodian-affidavit-period) == 2026-12-31
+}
+
+test "custodian objection period: 14 days after the trigger" cite "D.S.C. Local Civ. Rule 16.02(D)"
+{
+  given CustodianAffidavitServed() on 2026-11-02
+  expect deadline(custodian-objection-period) == 2026-11-16
+}
+
+test "mediator selection period: 21 days before the trigger" cite "D.S.C. Local Civ. Rule 16.06(C)"
+{
+  given MediationDeadlineReached() on 2027-02-02
+  expect deadline(mediator-selection-period) == 2027-01-12
+}
+
+test "initial mediation period: 28 days after the trigger" cite "D.S.C. Local Civ. Rule 16.07(A)"
+{
+  given MediatorAppointed() on 2026-11-02
+  expect deadline(initial-mediation-period) == 2026-11-30
+}
+
+test "mediation completion period: 28 days after the trigger" cite "D.S.C. Local Civ. Rule 16.07(A)"
+{
+  given MediationConferenceHeld() on 2026-11-02
+  expect deadline(mediation-completion-period) == 2026-11-30
+}
+
+test "settlement documents period: 14 days after the trigger" cite "D.S.C. Local Civ. Rule 16.08(D)"
+{
+  given MediationConferenceHeld() on 2026-11-02
+  expect deadline(settlement-documents-period) == 2026-11-16
+}
+
+test "mediator report period: 28 days after the trigger" cite "D.S.C. Local Civ. Rule 16.10(H)"
+{
+  given MediationConcluded() on 2026-11-02
+  expect deadline(mediator-report-period) == 2026-11-30
+}
+
+test "removal interrogatory answers period: 14 days after the trigger" cite "D.S.C. Local Civ. Rule 26.01"
+{
+  given RemovalNoticeServed() on 2026-11-02
+  expect deadline(removal-interrogatory-answers-period) == 2026-11-16
+}
+
+test "late interrogatory answers period: 14 days after the trigger" cite "D.S.C. Local Civ. Rule 26.01"
+{
+  given InterrogatoryAnswersNoticeGiven() on 2026-11-02
+  expect deadline(late-interrogatory-answers-period) == 2026-11-16
+}
+
+test "exempt discovery period: 90 days after the trigger" cite "D.S.C. Local Civ. Rule 26.04"
+{
+  given IssueJoined() on 2026-11-02
+  expect deadline(exempt-discovery-period) == 2027-02-01
+}
+
+test "exempt expert disclosure period: 28 days before the trigger" cite "D.S.C. Local Civ. Rule 26.04"
+{
+  given DiscoveryClosed() on 2027-02-02
+  expect deadline(exempt-expert-disclosure-period) == 2027-01-05
+}
+
+test "pretrial brief period: 7 days before the trigger" cite "D.S.C. Local Civ. Rule 26.05"
+{
+  given JurySelected() on 2027-02-02
+  expect deadline(pretrial-brief-period) == 2027-01-26
+}
+
+test "voir dire request period: 7 days before the trigger" cite "D.S.C. Local Civ. Rule 26.05(O)"
+{
+  given JurySelected() on 2027-02-02
+  expect deadline(voir-dire-request-period) == 2027-01-26
+}
+
+test "exhibit exchange period: 7 days before the trigger" cite "D.S.C. Local Civ. Rule 26.07(A)"
+{
+  given PretrialBriefsDue() on 2027-02-02
+  expect deadline(exhibit-exchange-period) == 2027-01-26
+}
+
+test "jury instruction period: 7 days before the trigger" cite "D.S.C. Local Civ. Rule 26.09"
+{
+  given TrialCommenced() on 2027-02-02
+  expect deadline(jury-instruction-period) == 2027-01-26
+}
+
+test "telephone deposition objection period: 14 days before the trigger" cite "D.S.C. Local Civ. Rule 30.02"
+{
+  given DepositionTaken() on 2027-02-02
+  expect deadline(telephone-deposition-objection-period) == 2027-01-19
+}
+
+test "deposition protective order period: 7 days after the trigger" cite "D.S.C. Local Civ. Rule 30.04(C)"
+{
+  given DepositionSuspended() on 2026-11-02
+  expect deadline(deposition-protective-order-period) == 2026-11-09
+}
+
+test "motion to compel period: 21 days after the trigger" cite "D.S.C. Local Civ. Rule 37.01(A)"
+{
+  given DiscoveryResponseReceived() on 2026-11-02
+  expect deadline(motion-to-compel-period) == 2026-11-23
+}
+
+test "motion to compel no response period: 21 days after the trigger" cite "D.S.C. Local Civ. Rule 37.01(A)"
+{
+  given DiscoveryResponseOverdue() on 2026-11-02
+  expect deadline(motion-to-compel-no-response-period) == 2026-11-23
+}
+
+test "jury cost notice period: 1 days before the trigger" cite "D.S.C. Local Civ. Rule 54.01"
+{
+  given TrialDateScheduled() on 2027-02-02
+  expect deadline(jury-cost-notice-period) == 2027-02-01
+}
+
+test "fee opposition period: 14 days after the trigger" cite "D.S.C. Local Civ. Rule 54.02(A)"
+{
+  given FeePetitionServed() on 2026-11-02
+  expect deadline(fee-opposition-period) == 2026-11-16
+}
+
+test "withdrawal response period: 17 days after the trigger" cite "D.S.C. Local Civ. Rule 83.I.07(B)"
+{
+  given WithdrawalMotionFiled() on 2026-11-02
+  expect deadline(withdrawal-response-period) == 2026-11-19
+}
+
+test "exhibit disposal objection period: 14 days after the trigger" cite "D.S.C. Local Civ. Rule 83.II.01"
+{
+  given ExhibitDisposalNoticePosted() on 2026-11-02
+  expect deadline(exhibit-disposal-objection-period) == 2026-11-16
+}
+
+test "ssa fee petition period: 60 days after the trigger" cite "D.S.C. Local Civ. Rule 83.VII.10(A)"
+{
+  given AwardNoticesIssued() on 2026-11-02
+  expect deadline(ssa-fee-petition-period) == 2027-01-04
+}

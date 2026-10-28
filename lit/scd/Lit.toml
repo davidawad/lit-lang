@@ -1,0 +1,46 @@
+# The District of South Carolina's Local Civil Rules as a local-rule layer
+# over lit/frcp (28 U.S.C. § 2071; FRCP 83(a)): it declares only the
+# periods the Local Civil Rules themselves state and re-encodes no FRCP
+# deadline. Each period is counted under FRCP 6(a), which governs "any
+# local rule". The rules are the Local Civil Rules of February 22, 2023
+# (sources/scd), listed by the court as current.
+[package]
+name = "scd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "scd-local-rules"
+forum = "scd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, District of South Carolina: Local Civil Rules"
+description = "The District of South Carolina's Local Civil Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): service status report, motion briefing and page limits, proposed orders, the Rule 26(f) conference, disclosures and report, records-custodian affidavits, mediation, removal interrogatory answers, discovery in exempt actions, pretrial briefs, exhibits and jury instructions, depositions, motions to compel, jury costs, attorneys' fees, withdrawal of counsel, exhibit disposal and Social Security fee petitions."
+in_force = "2023-02-22"
+known_at = "2026-10-27"
+unknown_before = "2023-02-22"
+jurisdiction = "United States District Court, D. South Carolina"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "scd-lr"
+issuer = "United States District Court for the District of South Carolina"
+date = "2023-02-22"
+designation = "Local Civil Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.scd-lr]
+title = "Local Civil Rules for the United States District Court, District of South Carolina (February 22, 2023)"
+url = "https://www.scd.uscourts.gov/Rules/Civil%20Rules%20-%20Current.pdf"
+path = "sources/scd/scd-local-civil-rules-sectioned.txt"
+path_sha256 = "45fb4f5e82c9e6ef606e4b3beca7cabd537692a4317885f396014a2ae0852957"
+sha256 = "b605c3567e665b034281969d9bbcf630820a300c064c981fee6f3af19457a588"
+as_of = "2023-02-22"
+cite_prefixes = ["D.S.C. Local Civ. Rule"]
+section_heading = "Rule {n}"

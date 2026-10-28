@@ -1,0 +1,52 @@
+# A civil appeal from an Arkansas circuit court to the Arkansas Court of
+# Appeals (or, for the cases Ark. Sup. Ct. R. 1-2(a) lists, the Supreme
+# Court) under the Arkansas Rules of Appellate Procedure--Civil, current
+# through October 1, 2026, and the Rules of the Supreme Court and Court of
+# Appeals, current through December 15, 2025 (sources/arkctapp). The
+# appellate rules state their periods in calendar days and the circuit
+# court's Ark. R. Civ. P. 6(a) computation has no core method, so periods
+# are stated in notes, not encoded as counted deadlines; the brief
+# word-count and petition page limits are encoded as filing limits. The
+# appeal arrives from lit/ar-circuit.
+[package]
+name = "ar-appellate-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ar-appellate-civil"
+forum = "arkctapp"
+authority = "StateRule"
+jurisdiction_id = "arkansas"
+title = "Arkansas Court of Appeals and Supreme Court, civil appeals"
+description = "A civil appeal from an Arkansas circuit court under the Arkansas Rules of Appellate Procedure--Civil and the Rules of the Supreme Court and Court of Appeals, as far as the vendored text states: notice and appealable orders, lodging the record, briefing and its word limits, oral argument or submission, decision, rehearing, petition for review, and mandate."
+in_force = "2026-10-01"
+known_at = "2026-10-28"
+unknown_before = "2026-10-01"
+jurisdiction = "Arkansas Court of Appeals and Supreme Court (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ark-r-app-p-civ]
+title = "Arkansas Rules of Appellate Procedure--Civil (current through October 1, 2026)"
+url = "https://opinions.arcourts.gov/ark/cr/en/1885/1/document.do"
+path = "sources/arkctapp/arap-civil-sectioned.txt"
+path_sha256 = "a8bd615e4e462ea7c51569640464bf46d545c4a31b8b0479cb341d6225cb0ef8"
+sha256 = "c854fb5600e8cb1595791154a4befca952fd984ae346f1e4aacf45672923d36e"
+as_of = "2026-10-01"
+cite_prefixes = ["Ark. R. App. P.–Civ."]
+section_heading = "Ark. R. App. P.-Civ. Rule {n}"
+
+[sources.ark-sup-ct-r]
+title = "Rules of the Supreme Court and Court of Appeals of the State of Arkansas (current through December 15, 2025)"
+url = "https://opinions.arcourts.gov/ark/cr/en/1871/1/document.do"
+path = "sources/arkctapp/ar-supreme-court-rules-sectioned.txt"
+path_sha256 = "12010c2bee197d0f5ecef0c430a1c8559819a85152d0396c83551562bfe639ca"
+sha256 = "7f26989c58f09c36964c5add5424f6709db177bfc367ea648aab2905b88c4484"
+as_of = "2025-12-15"
+cite_prefixes = ["Ark. Sup. Ct. R."]
+section_heading = "Ark. Sup. Ct. R. {n}"

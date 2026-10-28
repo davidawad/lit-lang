@@ -1,0 +1,51 @@
+# A civil appeal from the Arizona Superior Court to the Arizona Court of
+# Appeals, and a petition for review to the Arizona Supreme Court, under
+# the Arizona Rules of Civil Appellate Procedure (ARCAP) as the Westlaw
+# public-access site served them on 2026-10-28, current with amendments
+# effective through October 1, 2026 (sources/az-court-of-appeals).
+# Computation of time is Civil Rule 6(a) (ARCAP 5(a)), which excludes
+# intermediate Saturdays, Sundays and legal holidays from periods under 11
+# days and has no counting rule in lit/core, so the rules' periods are
+# stated in notes, not encoded as counted deadlines. The appellate
+# jurisdiction statute (A.R.S. § 12-2101) is not vendored and is not
+# cited. A superior court appeal arrives from lit/az-superior.
+[package]
+name = "az-appellate-civil"
+version = "0.1.0"
+language = 1
+pack_id = "az-appellate-civil"
+forum = "az-court-of-appeals"
+authority = "StateRule"
+jurisdiction_id = "arizona"
+title = "Arizona Court of Appeals and Arizona Supreme Court, civil appeals"
+description = "A civil appeal from the Arizona Superior Court to the Arizona Court of Appeals, through record, briefing, oral argument, decision, reconsideration, petition for review to the Arizona Supreme Court and the mandate, as far as the vendored ARCAP state, with the ARCAP word limits."
+in_force = "2026-10-01"
+known_at = "2026-10-28"
+unknown_before = "2026-10-01"
+jurisdiction = "Arizona Court of Appeals and Arizona Supreme Court (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.arcap]
+title = "Arizona Rules of Civil Appellate Procedure (Westlaw public-access site, current with amendments effective through October 1, 2026, as served on October 28, 2026)"
+url = "https://govt.westlaw.com/azrules/Index"
+path = "sources/az-court-of-appeals/arcap-sectioned.txt"
+path_sha256 = "5dac95c5f28b17a36a65f55662200a3404dcf6722c7afe36c1749af17dc02886"
+as_of = "2026-10-01"
+cite_prefixes = ["ARCAP", "Ariz. R. Civ. App. P."]
+section_heading = "ARCAP {n}"
+
+[sources.az-civ]
+title = "Rules of Civil Procedure for the Superior Courts of Arizona (Westlaw public-access site, current with amendments effective through October 1, 2026, as served on October 28, 2026)"
+url = "https://govt.westlaw.com/azrules/Index"
+path = "sources/az-superior/az-superior-rules-sectioned.txt"
+path_sha256 = "ed23ddba2d8d71524c635ead3b0c74d46248b2fc903fc116579f51bff9b15de7"
+as_of = "2026-10-01"
+cite_prefixes = ["Ariz. R. Civ. P."]
+section_heading = "Rule {n}"

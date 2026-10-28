@@ -1,0 +1,45 @@
+module ord-criminal-local-rules.local-rules
+
+// The District of Oregon's local criminal rules. The vendored text is
+// CURRENCY UNCONFIRMED (sources/fed-dor/PROVENANCE.md), so no period,
+// limit or amount is taken from it: each period below is named with the
+// rule that sets it and is not stated. The events are the triggers those
+// periods run from, so a later pass over a dated edition can encode them.
+//
+// Holes (not stated; currency unconfirmed): the earliest sentencing date
+// after a guilty plea or verdict (Crim. LR 32-1); the filing of the
+// presentence report with its addendum before sentencing (Crim. LR 32-1);
+// a defendant's notice to the Clerk's Office and the Marshal that the
+// defendant wishes to appear by video teleconference, and another party's
+// request for the defendant's consent to a VTC appearance, before the
+// hearing (Crim. LR 43-2(a), (b)), both waivable for exigent matters (Crim.
+// LR 43-2(c)); and the delivery of a judge's paper copy after electronic
+// filing (Crim. LR 49-7).
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp: the probation
+// officer's disclosure of the presentence report "consistent with Fed. R.
+// Crim. P. 32(e)(2)" and the objection period of FRCrimP 32(f), which the
+// parties may waive with the Court's approval (Crim. LR 32-1).
+//
+// The rules without a period stay unencoded: disclosure of a sealed
+// charging document to defense counsel (Crim. LR 5), sentencing
+// stipulations (Crim. LR 11-1), CJA subpoenas and witness nondisclosure
+// (Crim. LR 17-1, 17-2), presentence-report confidentiality (Crim. LR
+// 32-2), VTC authorization and consent (Crim. LR 43-1, 43-3), electronic
+// filing and service (Crim. LR 49), redaction (Crim. LR 49.1) and
+// collateral forfeiture (Crim. LR 58-1).
+//
+// The earlier D. Or. criminal outline's FRCrimP flow and its decisions
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+/// A guilty plea is entered or a guilty verdict returned (D. Or. Crim. LR
+/// 32-1).
+event GuiltyPleaOrVerdict()
+/// The sentencing date is set (D. Or. Crim. LR 32-1).
+event SentencingDateSet()
+/// A hearing is set at which a defendant may appear by video
+/// teleconference (D. Or. Crim. LR 43-2).
+event VtcHearingScheduled()
+/// A document for which a judge's paper copy is required is filed
+/// electronically (D. Or. Crim. LR 49-7).
+event JudgesCopyDocumentFiled()

@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "kywd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:fde9c59d3934d65162557bc3117c4a10e59f69f4747fa47a28f44c9dd458527f"
+semantic = "sha256:58aaeac8181f0dfc4972166a8503c1664ab30b24e9d335ff37e1044e43a867c6"
+texts = [
+    "kywd-lcrr sources/kywd/kywd-joint-local-criminal-rules-2026-08-sectioned.txt sha256:765455429286794288bfecd3aa26fa70a71c8b932350abb4e4b40499e94bc2e4",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

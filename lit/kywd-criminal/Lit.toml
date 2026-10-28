@@ -1,0 +1,53 @@
+# The United States District Court for the Western District of Kentucky's
+# Joint Local Rules of Criminal Practice (shared with the Eastern District)
+# as a local-rule layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP
+# 57(a)): it declares only the periods and limits the Joint Local Criminal
+# Rules themselves state and re-encodes no FRCrimP, Speedy Trial Act or
+# FRAP 4(b) period. FRCrimP 45(a) computes a period stated in a local rule
+# (LCrR 45.1, 45.2 fix only the last day's end and a date certain). The
+# rules are the edition the court serves as "KY_Amended_Criminal_Rules_
+# August_2026" (sources/kywd); the document states no effective date and the
+# Joint General Order adopting it (LCrR 59.1) is not vendored, so this layer
+# speaks from the date the court's page served it as current, October 28,
+# 2026. An appeal goes to the Sixth Circuit under lit/frap and lit/ca6;
+# federal habeas is lit/habeas.
+[package]
+name = "kywd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "kywd-criminal-local-rules"
+forum = "kywd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Western District of Kentucky: Joint Local Rules of Criminal Practice"
+description = "The Western District of Kentucky's Joint Local Rules of Criminal Practice as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the response to a motion for an extension of time, motion responses and replies and their page limits, and the cutoff for an attorney's withdrawal before trial or an evidentiary hearing."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "United States District Court, W.D. Ky. (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "kywd-lcrr"
+issuer = "United States District Court for the Western District of Kentucky"
+date = "2026-10-28"
+designation = "Joint Local Rules of Criminal Practice (KY_Amended_Criminal_Rules_August_2026)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRCrimP periods; this package layers only the court's local criminal rules over them.
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.kywd-lcrr]
+title = "Joint Local Rules of Criminal Practice, United States District Courts for the Eastern and Western Districts of Kentucky (KY_Amended_Criminal_Rules_August_2026)"
+url = "https://www.kywd.uscourts.gov/sites/kywd/files/local_rules/KY_Amended_Criminal_Rules_August_2026-1.pdf"
+path = "sources/kywd/kywd-joint-local-criminal-rules-2026-08-sectioned.txt"
+path_sha256 = "765455429286794288bfecd3aa26fa70a71c8b932350abb4e4b40499e94bc2e4"
+sha256 = "3f85a2405d19e9cbb63294b208397f8481d8ecf5cfab0a4d4bf48d9dcf88e61f"
+cite_prefixes = ["W.D. Ky. LCrR"]
+section_heading = "LCrR {n}"

@@ -1,6 +1,6 @@
 module frcp.periods
 
-import core.authority.{ CaseOrder }
+import core.authority.{ CaseOrder, LocalRule, StandingOrder }
 import core.frap26.{ frap26 }
 import core.frcp6.{ frcp6 }
 import core.time.{ ServiceMethod }
@@ -335,7 +335,7 @@ deadline jury-demand-period: 14.days after LastPleadingServed() counted_by frcp6
 /// last amended eff. December 1, 2009.
 deadline jmol-renewal-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite "FRCP 50(b)"
 {
-  extend { never cite "FRCP 6(b)(2)" }
+  lock against [LocalRule, StandingOrder, CaseOrder] cite "FRCP 6(b)(2)"
 }
 
 /// Rule 59(b): a new-trial motion is due 28 days after entry of judgment;
@@ -343,7 +343,7 @@ deadline jmol-renewal-period: 28.days after JudgmentEntered() counted_by frcp6 e
 /// 2009.
 deadline new-trial-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite "FRCP 59(b)"
 {
-  extend { never cite "FRCP 6(b)(2)" }
+  lock against [LocalRule, StandingOrder, CaseOrder] cite "FRCP 6(b)(2)"
 }
 
 /// Rule 59(e): a motion to alter or amend the judgment is due 28 days after
@@ -351,7 +351,7 @@ deadline new-trial-period: 28.days after JudgmentEntered() counted_by frcp6 effe
 /// December 1, 2009.
 deadline alter-amend-period: 28.days after JudgmentEntered() counted_by frcp6 effective [2009-12-01, ..) cite "FRCP 59(e)"
 {
-  extend { never cite "FRCP 6(b)(2)" }
+  lock against [LocalRule, StandingOrder, CaseOrder] cite "FRCP 6(b)(2)"
 }
 
 /// Rule 60(c)(1): a Rule 60(b)(1)-(3) motion is due "no more than a year
@@ -360,7 +360,7 @@ deadline alter-amend-period: 28.days after JudgmentEntered() counted_by frcp6 ef
 /// 6(b)(2) forbids extending it. Rule 60 last amended eff. December 1, 2007.
 deadline relief-from-judgment-period: 1.years after JudgmentEntered() counted_by frcp6 effective [2007-12-01, ..) cite "FRCP 60(c)(1)"
 {
-  extend { never cite "FRCP 6(b)(2)" }
+  lock against [LocalRule, StandingOrder, CaseOrder] cite "FRCP 6(b)(2)"
 }
 
 /// FRAP 4(a)(1)(A) before the 2009 amendments, as the 2008 edition of 28
@@ -389,7 +389,7 @@ deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by fra
     on ExtensionMoved(NoticeOfAppealPeriod)
     within prescribed_due + 30.days
   }
-  extend { never cite "FRAP (2008 ed.) 26(b)(1)" }
+  lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP (2008 ed.) 26(b)(1)"
 }
 
 /// 28 U.S.C. § 2107(a): "no appeal shall bring any judgment ... before a
@@ -415,7 +415,7 @@ deadline notice-of-appeal-period: 30.days after JudgmentEntered() counted_by fra
     on ExtensionMoved(NoticeOfAppealPeriod)
     within prescribed_due + 30.days
   }
-  extend { never cite "FRAP 26(b)(1)" }
+  lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP 26(b)(1)"
 }
 
 /// FRAP 4(a)(3) before the 2009 amendments: the same 14 days, "or within
@@ -435,7 +435,7 @@ deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by fra
     on ExtensionMoved(CrossAppealPeriod)
     within prescribed_due + 30.days
   }
-  extend { never cite "FRAP (2008 ed.) 26(b)(1)" }
+  lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP (2008 ed.) 26(b)(1)"
 }
 
 /// FRAP 4(a)(3): a cross-appeal is due "within 14 days after the date when
@@ -459,5 +459,5 @@ deadline cross-appeal-period: 14.days after NoticeOfAppealFiled() counted_by fra
     on ExtensionMoved(CrossAppealPeriod)
     within prescribed_due + 30.days
   }
-  extend { never cite "FRAP 26(b)(1)" }
+  lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP 26(b)(1)"
 }

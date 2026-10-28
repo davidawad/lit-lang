@@ -9,7 +9,7 @@
 // and none of these periods runs from service.
 module frcrimp.deadlines
 
-import core.authority.{ CaseOrder }
+import core.authority.{ CaseOrder, LocalRule, StandingOrder }
 import core.frap26.{ frap26 }
 import core.frcrimp45.{ frcrimp45 }
 
@@ -134,7 +134,7 @@ deadline criminal-appeal: 14.days after AppealClockEvent() counted_by frap26 eff
   forum frap
   trigger latest
   extend { by court, discretion GoodCauseOrExcusableNeglect, max 30.days, after_expiry }
-  extend { never cite "FRAP 26(b)(1)" }
+  lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP 26(b)(1)"
 }
 
 test "Rule 5 appearance window from arrest" cite "FRCrimP 5(a)(1)(A)"

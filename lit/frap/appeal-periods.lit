@@ -1,5 +1,6 @@
 module frap.appeal-periods
 
+import core.authority.{ CaseOrder, LocalRule, StandingOrder }
 import core.frap26.{ frap26 }
 import frap.events.{ AppealExtensionMoved, EnteredBelow, NoticeOfAppealFiled }
 
@@ -35,7 +36,7 @@ rule duty civil-notice-of-appeal effective [2002-12-01, 2009-12-01) known_at 200
       on AppealExtensionMoved()
       within prescribed_due + 30.days
     }
-    extend { never cite "FRAP (2008 ed.) 26(b)(1)" }
+    lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP (2008 ed.) 26(b)(1)"
   }
   deadline notice-us-party-period: 60.days after EnteredBelow() counted_by frap26 cite "FRAP (2008 ed.) 4(a)(1)(B)"
   {
@@ -47,7 +48,7 @@ rule duty civil-notice-of-appeal effective [2002-12-01, 2009-12-01) known_at 200
       on AppealExtensionMoved()
       within prescribed_due + 30.days
     }
-    extend { never cite "FRAP (2008 ed.) 26(b)(1)" }
+    lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP (2008 ed.) 26(b)(1)"
   }
 }
 
@@ -66,7 +67,7 @@ rule duty cross-appeal effective [2002-12-01, 2009-12-01) known_at 2002-04-29 ci
       on AppealExtensionMoved()
       within prescribed_due + 30.days
     }
-    extend { never cite "FRAP (2008 ed.) 26(b)(1)" }
+    lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP (2008 ed.) 26(b)(1)"
   }
 }
 
@@ -105,7 +106,7 @@ rule duty civil-notice-of-appeal effective [2009-12-01, ..) known_at 2009-03-26 
       on AppealExtensionMoved()
       within prescribed_due + 30.days
     }
-    extend { never cite "FRAP 26(b)(1)" }
+    lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP 26(b)(1)"
   }
   deadline notice-us-party-period: 60.days after EnteredBelow() counted_by frap26 cite "28 U.S.C. § 2107(b)"
   {
@@ -118,7 +119,7 @@ rule duty civil-notice-of-appeal effective [2009-12-01, ..) known_at 2009-03-26 
       on AppealExtensionMoved()
       within prescribed_due + 30.days
     }
-    extend { never cite "FRAP 26(b)(1)" }
+    lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP 26(b)(1)"
   }
 }
 
@@ -147,7 +148,7 @@ rule duty cross-appeal effective [2009-12-01, ..) known_at 2009-03-26 supersedes
       on AppealExtensionMoved()
       within prescribed_due + 30.days
     }
-    extend { never cite "FRAP 26(b)(1)" }
+    lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP 26(b)(1)"
   }
 }
 

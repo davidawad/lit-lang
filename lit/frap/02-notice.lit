@@ -1,6 +1,6 @@
 module frap.notice
 
-import core.authority.{ CaseOrder }
+import core.authority.{ CaseOrder, LocalRule, StandingOrder }
 import core.frap26.{ frap26 }
 import core.frcp6.{ frcp6 }
 import frap.appeal-periods.{ notice-civil-period, notice-us-party-period }
@@ -24,7 +24,7 @@ rule duty criminal-notice-of-appeal effective [2009-12-01, ..) known_at 2009-03-
   } cite "FRAP 4(b)(1)(A)"
   {
     extend { by court, discretion GoodCauseOrExcusableNeglect, max 30.days, after_expiry }
-    extend { never cite "FRAP 26(b)(1)" }
+    lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP 26(b)(1)"
   }
 }
 

@@ -1,5 +1,6 @@
 module frap.threshold
 
+import core.authority.{ CaseOrder, LocalRule, StandingOrder }
 import core.frap26.{ frap26 }
 import frap.appeal-periods.{ notice-civil-period }
 import frap.events.{ EnteredBelow }
@@ -123,7 +124,7 @@ rule duty permission-to-appeal effective [2009-12-01, ..) known_at 2009-03-26 ci
 {
   deadline permission-petition-period: 10.days after EnteredBelow(CertifiedOrder) counted_by frap26 cite "FRAP 5(a)(2)"
   {
-    extend { never cite "FRAP 26(b)(1)" }
+    lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP 26(b)(1)"
   }
 }
 

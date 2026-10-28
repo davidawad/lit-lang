@@ -5,7 +5,7 @@
 module cafc.appeal-periods
 
 import cafc.{ AppealExtensionMoved, Entered, Filed, Order, Paper }
-import core.authority.{ CaseOrder }
+import core.authority.{ CaseOrder, LocalRule, StandingOrder }
 import core.frap26.{ frap26 }
 
 /// FRAP 4(a)(1)(A): 30 days after entry of the judgment; the district
@@ -38,7 +38,7 @@ rule duty district-court-notice-of-appeal cite "FRAP 4(a)(1)(A)"
       on AppealExtensionMoved()
       within prescribed_due + 30.days
     }
-    extend { never cite "FRAP (2008 ed.) 26(b)(1)" }
+    lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP (2008 ed.) 26(b)(1)"
   }
   deadline district-court-noa-period: 30.days after Entered(Judgment) counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes district-court-noa-period@2002-12-01 delegable {
     to CaseOrder
@@ -53,7 +53,7 @@ rule duty district-court-notice-of-appeal cite "FRAP 4(a)(1)(A)"
       on AppealExtensionMoved()
       within prescribed_due + 30.days
     }
-    extend { never cite "FRAP 26(b)(1)" }
+    lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP 26(b)(1)"
   }
 }
 
@@ -86,7 +86,7 @@ rule duty cross-appeal-notice cite "FRAP 4(a)(3)"
       on AppealExtensionMoved()
       within prescribed_due + 30.days
     }
-    extend { never cite "FRAP (2008 ed.) 26(b)(1)" }
+    lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP (2008 ed.) 26(b)(1)"
   }
   deadline cross-appeal-period: 14.days after Filed(NoticeOfAppeal) counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes cross-appeal-period@2002-12-01 cite "FRAP 4(a)(3)"
   {
@@ -99,7 +99,7 @@ rule duty cross-appeal-notice cite "FRAP 4(a)(3)"
       on AppealExtensionMoved()
       within prescribed_due + 30.days
     }
-    extend { never cite "FRAP 26(b)(1)" }
+    lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP 26(b)(1)"
   }
 }
 

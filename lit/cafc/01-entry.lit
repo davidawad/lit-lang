@@ -6,7 +6,7 @@ module cafc.entry
 import cafc.appeal-periods.{ district-court-noa-period }
 import cafc.docketing.{ notice-of-appeal-filed }
 import cafc.{ AppealExtensionMoved, BecameFinal, Entered, Filed, Order, Paper, entry-group }
-import core.authority.{ CaseOrder }
+import core.authority.{ CaseOrder, LocalRule, StandingOrder }
 import core.frap26.{ frap26 }
 import mpep.deadlines.{ uspto-1-7 }
 import ttab.{ ttab-2-196 }
@@ -273,7 +273,7 @@ rule duty cofc-notice-of-appeal cite "28 U.S.C. § 2522"
       on AppealExtensionMoved()
       within prescribed_due + 30.days
     }
-    extend { never cite "FRAP (2008 ed.) 26(b)(1)" }
+    lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP (2008 ed.) 26(b)(1)"
   }
   deadline cofc-noa-period: 60.days after Entered(CofcJudgment) counted_by frap26 effective [2009-12-01, ..) known_at 2009-03-26 supersedes cofc-noa-period@2002-12-01 delegable {
     to CaseOrder
@@ -290,7 +290,7 @@ rule duty cofc-notice-of-appeal cite "28 U.S.C. § 2522"
       on AppealExtensionMoved()
       within prescribed_due + 30.days
     }
-    extend { never cite "FRAP 26(b)(1)" }
+    lock against [LocalRule, StandingOrder, CaseOrder] cite "FRAP 26(b)(1)"
   }
 }
 

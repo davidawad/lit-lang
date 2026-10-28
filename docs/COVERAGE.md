@@ -31,6 +31,10 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | bankr-nyw-local-rules | `lit/bankr-nyw` | 12 | 0 | 0 | 0 |
 | bankr-pr-local-rules | `lit/bankr-pr` | 66 | 0 | 0 | 0 |
 | bankr-ri-local-rules | `lit/bankr-ri` | 88 | 0 | 0 | 0 |
+| bankr-txe-local-rules | `lit/bankr-txe` | 50 | 0 | 0 | 0 |
+| bankr-txn-local-rules | `lit/bankr-txn` | 34 | 0 | 0 | 0 |
+| bankr-txs-local-rules | `lit/bankr-txs` | 36 | 0 | 0 | 0 |
+| bankr-txw-local-rules | `lit/bankr-txw` | 52 | 0 | 0 | 0 |
 | bankr-vt-local-rules | `lit/bankr-vt` | 57 | 0 | 0 | 0 |
 | sixth-circuit-bankruptcy-appellate-panel | `lit/bap6` | 1 | 0 | 6 | 0 |
 | eighth-circuit-bankruptcy-appellate-panel | `lit/bap8` | 5 | 0 | 16 | 0 |

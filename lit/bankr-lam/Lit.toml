@@ -1,0 +1,59 @@
+# The Local Rules of the U.S. Bankruptcy Court for the Middle District of
+# Louisiana over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
+# only the periods and limits the Local Rules and the court's standing
+# orders themselves state and re-encodes no FRBP period. It is a base
+# package, not a `kind = "local-rule"` layer: lit/core has no bankruptcy
+# forum family (L2011, as for lit/bankr-mt). Each period is counted under
+# FRBP 9006(a), the FRCP 6(a) method (core's frcp6).
+#
+# Layers, in date order: the Local Rules as amended January 1, 2022;
+# Standing Order 2024-2 (December 3, 2024; LR 4001-1(f), no period, so
+# not bound); Standing Order 2025-1 (November 25, 2025; the objection
+# deadline for Monday 2:00 p.m. hearings, text vendored and bound).
+# Standing Orders 2026-1 to 2026-3 state practice requirements without
+# amending a rule's text and are not vendored (sources/bankr-lam).
+[package]
+name = "bankr-lam-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-lam-local-rules"
+forum = "bankr-lam"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Middle District of Louisiana: Local Rules"
+description = "The Bankr. M.D. La. Local Rules, with Standing Order 2025-1 as a dated layer, over the Federal Rules of Bankruptcy Procedure (lit/frbp): the electronic filing declaration, consolidated mailing lists, chapter 13 dismissal defenses, meeting rescheduling review, Rule 2004 protective orders, the counsel procedures statement, chapter 13 confirmation objections, amendments, modifications and discharge, chapter 11 monthly reports, adversary proof of service, motion practice (LR 9013-1 to 9014-1) with its objection deadlines and page limits, and removal records."
+in_force = "2022-01-01"
+known_at = "2026-10-28"
+unknown_before = "2022-01-01"
+jurisdiction = "U.S. Bankruptcy Court for the Middle District of Louisiana"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.lamb-lr]
+title = "Local Rules of the United States Bankruptcy Court for the Middle District of Louisiana (amended January 1, 2022)"
+url = "https://www.lamb.uscourts.gov/sites/lamb/files/2022_Local_Rules.pdf"
+path = "sources/bankr-lam/lam-local-rules-2022-01-01-sectioned.txt"
+path_sha256 = "07159974c25de67ec99d854575c712d2ef911b17bed2edd5c7249a697aed536e"
+sha256 = "688e97e8869b1d335353cced1f94a2c6e98f26ed831ba25114558954125b2945"
+as_of = "2022-01-01"
+cite_prefixes = ["Bankr. M.D. La. LR"]
+section_heading = "LR {n}"
+
+[sources.lamb-so-2025-1]
+title = "Standing Order 2025-1, Objection Deadline for Motions Set for Hearing on Mondays at 2:00 p.m. (November 25, 2025)"
+url = "https://www.lamb.uscourts.gov/sites/lamb/files/Standing%20Order%202025-1.pdf"
+path = "sources/bankr-lam/lam-so-2025-1-sectioned.txt"
+path_sha256 = "948a1d8b521f2eb08bcd54c8ce895322a5c1eb58c3d2514e68eab42635268975"
+sha256 = "1ca55ff4c166733ae4fc5e3f4b0d8af98dff28b18b42c509ec71aaad470738de"
+as_of = "2025-11-25"
+cite_prefixes = ["Bankr. M.D. La. LR (SO 2025-1)"]
+section_heading = "SO 2025-1 Rule {n}"

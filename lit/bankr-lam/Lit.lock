@@ -1,6 +1,21 @@
 version = 2
 
 [[package]]
+name = "bankr-lam-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:7a5295d1a2f3b5aa223bd57e0bc0ef74d977a293c1ddbc334b2659653d331b4d"
+semantic = "sha256:ed642d602adfee2bd7f7721f357146e7d9e6e7dae87e94515455975f359696f3"
+texts = [
+    "lamb-lr sources/bankr-lam/lam-local-rules-2022-01-01-sectioned.txt sha256:07159974c25de67ec99d854575c712d2ef911b17bed2edd5c7249a697aed536e",
+    "lamb-so-2025-1 sources/bankr-lam/lam-so-2025-1-sectioned.txt sha256:948a1d8b521f2eb08bcd54c8ce895322a5c1eb58c3d2514e68eab42635268975",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +59,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-lam"
-version = "0.0.1"
-language = 1
-source = "sha256:4026421b1cd5beca9b002b26e3b7873bcca179c0b199a12d48c9321ba144a825"
-semantic = "sha256:24fb16c60f0a12e4a074e942c512838072a781aa34e8fa82e305139f73589057"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

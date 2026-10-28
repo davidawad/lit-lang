@@ -191,7 +191,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | Utah | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/utah/state-appellate`, `outlines/tenth-circuit/utah/state-civil`, `outlines/tenth-circuit/utah/state-criminal` |
 | Vermont | state | promoted | 0 | 0 | 0 | 0 | `lit/vt-superior-civil`, `lit/vt-supreme` |
 | Virginia | state | promoted | 0 | 0 | 0 | 0 | `lit/va-appellate-civil`, `lit/va-circuit-civil` |
-| Washington | state | promoted | 0 | 0 | 0 | 0 | `lit/wa-superior` |
+| Washington | state | promoted | 0 | 0 | 0 | 0 | `lit/wa-court-of-appeals`, `lit/wa-superior` |
 | West Virginia | state | outline | 0 | 0 | 0 | 0 | `outlines/fourth-circuit/west-virginia/state-appellate`, `outlines/fourth-circuit/west-virginia/state-civil`, `outlines/fourth-circuit/west-virginia/state-criminal` |
 | Wisconsin | state | promoted | 0 | 0 | 0 | 0 | `lit/wi-circuit`, `lit/wisctapp` |
 | Wyoming | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/wyoming/state-appellate`, `outlines/tenth-circuit/wyoming/state-civil`, `outlines/tenth-circuit/wyoming/state-criminal` |

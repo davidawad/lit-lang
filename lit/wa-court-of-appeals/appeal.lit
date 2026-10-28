@@ -1,0 +1,80 @@
+module wa-court-of-appeals.appeal
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "RAP 5.2(a)"
+{
+  note "Except as RAP 3.2(e) and 5.2(d) and (f) provide, a notice of appeal is filed in the trial court within the longer of 30 days after entry of the decision the party wants reviewed or the time RAP 5.2(e) provides: 30 days after entry of an order deciding a timely motion for judgment as a matter of law (CR 50(b)), to amend findings (CR 52(b)), or for reconsideration, new trial or amendment of judgment (CR 59) (RAP 5.2(a), (e)). A notice for discretionary review runs the same 30 days from the act reviewed or from an order deciding a timely CR 59 motion (RAP 5.2(b)). A statute fixing another period governs (RAP 5.2(d)). Entry is determined by CR 5(e) and 58 (RAP 5.2(c)); a notice filed after announcement but before entry is treated as filed the day after entry (RAP 5.2(g)). Any other party seeking relief files its own notice within the later of 14 days after service of the first notice or its own time under RAP 5.2(a), (b), (d) or (e) (RAP 5.2(f)). Periods are stated, not counted: RAP 18.6 is not vendored."
+  edge-notice-filed-appealability "Notice filed" -> appealability { authority cite "RAP 5.2(a)" }
+}
+
+decision appealability: "Appealable decision" by court cite "RAP 2.2(a)"
+{
+  note "Unless a statute or court rule provides otherwise, and subject to RAP 2.2(b) and (c), a party may appeal only the superior court decisions RAP 2.2(a) lists, among them the final judgment, whether or not it reserves an award of attorney fees or costs (RAP 2.2(a)(1)), and a written decision affecting a substantial right in a civil case that in effect determines the action and prevents a final judgment or discontinues it (RAP 2.2(a)(3))."
+  edge-appealability-not-appealable "Not an appealable decision" -> dismissed-not-appealable {
+    authority cite "RAP 2.2(a)"
+  }
+  edge-appealability-record "Appealable" -> record { authority cite "RAP 9.2(a)" }
+}
+
+terminal dismissed-not-appealable: "Review as of right unavailable" outcome [loss, dismissal] cite "RAP 2.2(a)"
+{
+  note "Discretionary review of a decision not appealable as of right is sought by a notice for discretionary review (RAP 5.2(b)); its grounds are in rules not vendored."
+}
+
+state record: "Verbatim report of proceedings arranged" by applicant cite "RAP 9.2(a)"
+{
+  note "A party seeking review who intends to provide a verbatim report of proceedings arranges for its transcription and payment, and files and serves a statement of arrangements, within 30 days after the notice of appeal was filed or discretionary review was granted; a party providing none files a statement to that effect within the same 30 days (RAP 9.2(a)). If less than the whole report is arranged, the statement states the issues to be presented, and any other party wanting more files and serves a supplemental statement of arrangements within 10 days after service of the statement (RAP 9.2(c))."
+  edge-record-briefing "Record perfected" -> briefing { authority cite "RAP 10.3(a)" }
+}
+
+state briefing: "Briefing" by applicant cite "RAP 10.3(a)"
+{
+  note "The appellant's or petitioner's brief contains, under headings in the order RAP 10.3(a) gives, a title page, tables, an introduction, assignments of error, a statement of the case, argument, a conclusion and an appendix (RAP 10.3(a)). The times for filing briefs (RAP 10.2) and their length (RAP 18.17) are in rules not vendored and are not stated here."
+  edge-briefing-argument "Briefing complete" -> argument { authority cite "RAP 11.2(a)" }
+}
+
+decision argument: "Oral argument or submission" by court cite "RAP 11.2(a)"
+{
+  note "A party may present oral argument only if it has filed a brief; amicus curiae argues only in time a party yields or the court grants (RAP 11.2)."
+  edge-argument-decision "Argued or submitted" -> decision-filed { authority cite "RAP 12.2" }
+}
+
+decision decision-filed: "Decision terminating review" by court cite "RAP 12.2"
+{
+  note "The appellate court may reverse, affirm or modify the decision reviewed and take any other action the merits and the interest of justice require; on issuance of the mandate the decision binds the parties and governs all later proceedings, unless the mandate is recalled (RAP 12.2)."
+  edge-decision-filed-reconsideration "Motion for reconsideration" -> reconsideration {
+    authority cite "RAP 12.4(b)"
+  }
+  edge-decision-filed-petition "Petition for review" -> petition-for-review {
+    authority cite "RAP 13.4(a)"
+  }
+  edge-decision-filed-mandate "Neither filed" -> mandate { authority cite "RAP 12.5(b)" }
+}
+
+decision reconsideration: "Reconsideration decided" by court cite "RAP 12.4(b)"
+{
+  note "A motion for reconsideration of a decision terminating review is filed within 20 days after the decision is filed in the appellate court, states with particularity the points overlooked or misapprehended, and is decided without oral argument; no answer or reply is filed unless the court requests one, and each party may file only one (RAP 12.4(a)-(d), (f), (h)). An amicus memorandum should be received not later than 5 days after the motion is filed (RAP 12.4(i))."
+  edge-reconsideration-granted "Granted" -> decision-filed { authority cite "RAP 12.4(g)" }
+  edge-reconsideration-denied "Denied" -> petition-for-review { authority cite "RAP 13.4(a)" }
+  edge-reconsideration-denied-no-petition "Denied; no petition for review" -> mandate {
+    authority cite "RAP 12.5(b)"
+  }
+}
+
+decision petition-for-review: "Petition for review in the Supreme Court" by applicant cite "RAP 13.4(a)"
+{
+  note "A petition for review of a Court of Appeals decision terminating review is filed in the Court of Appeals within 30 days after the decision is filed or, after a timely motion to reconsider or to publish, within 30 days after the order deciding it; the first petitioner pays the statutory filing fee (RAP 13.4(a)). Review is accepted only on the four RAP 13.4(b) grounds: conflict with a Supreme Court decision, conflict with a published Court of Appeals decision, a significant constitutional question, or an issue of substantial public interest. An answer should be filed within 30 days after service of the petition, and a reply to new issues within 15 days after service of the answer (RAP 13.4(d)); an amicus memorandum is received not later than 60 days after the petition is filed (RAP 13.4(h))."
+  edge-petition-denied "Review denied" -> mandate { authority cite "RAP 12.5(b)" }
+  edge-petition-granted "Review accepted" -> review-granted { authority cite "RAP 13.4(b)" }
+}
+
+terminal review-granted: "Review accepted by the Supreme Court" outcome [appeal] cite "RAP 13.4(b)"
+{
+  note "Supreme Court review then proceeds on the issues accepted; the mandate for a Supreme Court decision issues 20 days after it is filed absent a stipulation or an earlier motion for reconsideration (RAP 12.5(c))."
+}
+
+terminal mandate: "Mandate issued; decision final" outcome [judgment] cite "RAP 12.5(b)"
+{
+  note "Absent a stipulation that no reconsideration or review will be sought, the Court of Appeals clerk issues the mandate 30 days after the decision is filed unless a motion for reconsideration or to publish, a petition for review or a motion to modify was earlier filed; after a timely motion for reconsideration or to publish, 30 days after the time to petition for review expires; and on denial of a timely petition for review (RAP 12.5(b)). When review is not accepted, a Certificate of Finality issues 30 days after the decision is filed (RAP 12.5(e))."
+}

@@ -1,0 +1,39 @@
+# A civil appeal from a Washington Superior Court to the Washington Court
+# of Appeals, and discretionary review in the Supreme Court of Washington,
+# under the Rules of Appellate Procedure (RAP) as the Washington Courts
+# site served them on 2026-10-27 (sources/wa-court-of-appeals: RAP 2.2,
+# 5.2, 9.2, 10.3, 11.2, 12.2, 12.4, 12.5 and 13.4, the latest amendment
+# effective September 1, 2026). RAP 18.6 (computation of time) is not
+# vendored, so the rules' periods are stated in notes, not encoded as
+# counted deadlines. The appeal arrives from lit/wa-superior.
+[package]
+name = "wa-court-of-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "wa-court-of-appeals"
+forum = "wa-court-of-appeals"
+authority = "StateRule"
+title = "Washington Court of Appeals and Supreme Court of Washington, civil appeal"
+description = "A civil appeal under the Washington Rules of Appellate Procedure, as far as the vendored rules state: notice of appeal and cross-appeal, appealable decisions, the verbatim report of proceedings, briefs, oral argument, disposition, reconsideration, mandate and certificate of finality, and the petition for review in the Supreme Court of Washington."
+in_force = "2026-09-01"
+known_at = "2026-10-28"
+unknown_before = "2026-09-01"
+jurisdiction = "Washington Court of Appeals and Supreme Court of Washington"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.wa-rap]
+title = "Washington Rules of Appellate Procedure, cited subset (RAP 2.2, 5.2, 9.2, 10.3, 11.2, 12.2, 12.4, 12.5, 13.4), current per-rule text as served 2026-10-27 (latest amendment effective September 1, 2026)"
+url = "https://www.courts.wa.gov/court_rules/?fa=court_rules.list&group=app&set=RAP"
+path = "sources/wa-court-of-appeals/wa-rap-cited-sectioned.txt"
+path_sha256 = "37da82ba6f7d769642ccfd23037601cbf2b1b43fa2139c7d4d396e6affbc578a"
+sha256 = "75cb31f3e763abbc7d643cdc993299a4604ef20a6a770c867e3e2faca0f1e77f"
+as_of = "2026-09-01"
+cite_prefixes = ["RAP"]
+section_heading = "RAP {n}"

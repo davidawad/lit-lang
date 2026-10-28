@@ -1,0 +1,63 @@
+# The United States Coast Guard Court of Criminal Appeals, under the Joint
+# Rules of Appellate Procedure for Courts of Criminal Appeals (JRAP,
+# effective 27 May 2024) and the court's own CCA rules (JRAP 3), published
+# together as the CGCCA Rules of Appellate Procedure, Rev. 03/25 (the copy
+# sectioned in sources/cgcca): its jurisdiction (JRAP 5), waiver and
+# withdrawal (JRAP 16), briefs and their word limits (CGCCA R. 17.3), the
+# accused's appeal and its briefing periods (JRAP 18), extraordinary
+# relief (JRAP 19), appeals by the United States (JRAP 20), Article 66(f)
+# remands (JRAP 29) and reconsideration (JRAP 31). The UCMJ (10 U.S.C.
+# ch. 47) is not vendored, so its cites stay holes. Time is computed under
+# JRAP 15, for which lit/core has no counting rule, so every period is
+# stated in a note, not encoded as a counted deadline.
+[package]
+name = "cgcca"
+version = "0.1.0"
+language = 1
+pack_id = "cgcca"
+forum = "cgcca"
+family = "military-cca"
+authority = "FederalRule"
+title = "Coast Guard Court of Criminal Appeals"
+description = "Review of Coast Guard courts-martial in the Court of Criminal Appeals under the JRAP and the CGCCA rules (Rev. 03/25): automatic review, the accused's notice of appeal, waiver and withdrawal, the Article 69 route through the Judge Advocate General, briefs and their word limits, extraordinary writs, appeals by the United States under Articles 62 and 56(d), Article 66(f) remands, reconsideration, and the petition to the Court of Appeals for the Armed Forces. UCMJ cites stay holes: 10 U.S.C. ch. 47 is not vendored."
+in_force = "2025-03-26"
+known_at = "2026-10-28"
+unknown_before = "2025-03-26"
+jurisdiction = "Coast Guard Court of Criminal Appeals"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.jrap]
+title = "Joint Rules of Appellate Procedure for Courts of Criminal Appeals (effective 27 May 2024), as published with the CGCCA Rules of Appellate Procedure, Rev. 03/25"
+url = "https://www.uscg.mil/Portals/0/Headquarters/Legal/cca/CGCCA%20Rules%20of%20Appellate%20Procedure%20with%20JRAP%20(March%202025).pdf"
+path = "sources/cgcca/cgcca-rules-jrap-2025-03-sectioned.txt"
+path_sha256 = "8f268f8fd8b83c513b99608e7e960366739e7f9cd138f90957e8aaf9bce82a92"
+sha256 = "8d4d0ee1e4d1c512a34530cd87e9e877611358088aa9ccd39fc8593d5b3d024e"
+as_of = "2024-05-27"
+cite_prefixes = ["JRAP"]
+section_heading = "JRAP {n}"
+
+[sources.cgcca-rules]
+title = "CGCCA Rules of Appellate Procedure, Rev. 03/25 (approved 26 March 2025)"
+url = "https://www.uscg.mil/Portals/0/Headquarters/Legal/cca/CGCCA%20Rules%20of%20Appellate%20Procedure%20with%20JRAP%20(March%202025).pdf"
+path = "sources/cgcca/cgcca-rules-jrap-2025-03-sectioned.txt"
+path_sha256 = "8f268f8fd8b83c513b99608e7e960366739e7f9cd138f90957e8aaf9bce82a92"
+sha256 = "8d4d0ee1e4d1c512a34530cd87e9e877611358088aa9ccd39fc8593d5b3d024e"
+as_of = "2025-03-26"
+cite_prefixes = ["CGCCA R."]
+section_heading = "CGCCA R. {n}"
+
+# The UCMJ binds by prefix. No vendored text is declared, so its cites are
+# holes; this binding names the title URL only.
+[sources.usc-10]
+title = "10 U.S.C. ch. 47 (Uniform Code of Military Justice), not vendored"
+url = "https://www.law.cornell.edu/uscode/text/10"
+as_of = "2026-10-26"
+cite_prefixes = ["10 U.S.C."]
+section_heading = "10 U.S.C. § {n}"

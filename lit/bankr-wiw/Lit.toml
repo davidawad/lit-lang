@@ -1,0 +1,47 @@
+# The Local Rules of the U.S. Bankruptcy Court for the Western District of
+# Wisconsin over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares only
+# what the Local Rules themselves state and re-encodes no FRBP period. It
+# is a base package, not a `kind = "local-rule"` layer: lit/core has no
+# bankruptcy forum family (L2011 for `bankr-wiw`), as for lit/bankr-ct.
+# Each period would be counted under FRBP 9006(a), the FRCP 6(a) method
+# (core's frcp6). The rules are those the court's page publishes as
+# "Effective July 2024" (sources/bankr-wiw/PROVENANCE.md); the page states
+# no day, so `in_force` is the first of the month, and the December 4, 2024
+# revision it notes is to Local Form 3015-1.2, not a rule, so the
+# consolidation is the only layer. No earlier edition is vendored, so a
+# query before July 2024 is a hole in the corpus.
+[package]
+name = "bankr-wiw-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-wiw-local-rules"
+forum = "bankr-wiw"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Western District of Wisconsin: Local Rules"
+description = "The Bankr. W.D. Wis. Local Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): petition and creditor-list content, the mailing matrix, the chapter 13 local plan form and its amendment and modification, discharge hearings, reaffirmation hearings and electronic service. The rules state no deadline or page limit of their own."
+in_force = "2024-07-01"
+known_at = "2026-10-28"
+unknown_before = "2024-07-01"
+jurisdiction = "U.S. Bankruptcy Court for the Western District of Wisconsin"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.wiwb-lr]
+title = "Local Rules of the United States Bankruptcy Court for the Western District of Wisconsin (effective July 2024)"
+url = "https://www.wiwb.uscourts.gov/court-info/local-rules-and-orders"
+path = "sources/bankr-wiw/wiwb-local-rules-2024-07-sectioned.txt"
+path_sha256 = "d09b0100c022945334505e519f77e590cd0f756170d6277c9b80feb37e356799"
+sha256 = "4d513d6d087be9903534b4f5722c48a484431faebfd3c42d876399b37db4a527"
+as_of = "2024-07-01"
+cite_prefixes = ["Bankr. W.D. Wis. LBR"]
+section_heading = "LBR {n}"

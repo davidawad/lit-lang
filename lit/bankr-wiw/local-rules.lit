@@ -1,0 +1,36 @@
+module bankr-wiw-local-rules.local-rules
+
+// The Bankr. W.D. Wis. Local Rules state no period of their own: the FRBP
+// periods (schedules, the chapter 13 plan, claims, discharge,
+// dischargeability, reaffirmation, the adversary answer and summons,
+// appeals) are lit/frbp's and are not declared again. A reaffirmation
+// hearing, when requested with the agreement, "shall be held within sixty
+// (60) days" (LBR 4008-1); the rule names no start and the act is the
+// court's, so it is a note, not a deadline. The rules state no page limit;
+// the mailing matrix's form (LBR 1007-2) and the plan form (LBR 3015-1) are
+// form requirements, not encoded.
+start agreement-filed
+
+state agreement-filed: "Reaffirmation agreement filed" by applicant cite "Bankr. W.D. Wis. LBR 4008-1"
+{
+  note "The § 524(d) hearing is deemed waived unless a party to the agreement specifically requests one when the agreement is filed, or the debtor filed pro se, in which case a hearing is scheduled under § 524(c)(6)(A); a requested hearing is held within sixty days (LBR 4008-1). No discharge hearing is scheduled unless the debtor has entered into a § 524(c) reaffirmation agreement and requests a hearing under § 524(d) (LBR 4004-1). The FRBP 4008 filing period is lit/frbp's."
+  edge-agreement-filed-hearing "Hearing requested with the agreement, or the debtor is pro se" -> reaffirmation-hearing {
+    authority cite "Bankr. W.D. Wis. LBR 4008-1"
+  }
+  edge-agreement-filed-waived "No hearing requested; the § 524(d) hearing is deemed waived" -> concluded {
+    authority cite "Bankr. W.D. Wis. LBR 4008-1"
+  }
+}
+
+decision reaffirmation-hearing: "Reaffirmation hearing" by court cite "Bankr. W.D. Wis. LBR 4008-1"
+{
+  note "Held within sixty days (LBR 4008-1), in accordance with § 524(c)(6)(A) for a pro se debtor."
+  edge-reaffirmation-hearing-concluded "Hearing held" -> concluded {
+    authority cite "Bankr. W.D. Wis. LBR 4008-1"
+  }
+}
+
+terminal concluded: "Reaffirmation resolved: the case continues under lit/frbp" outcome [procedural] cite "Bankr. W.D. Wis. LBR 4004-1"
+{
+  note "The FRBP periods for the discharge and its objections are lit/frbp's."
+}

@@ -19,15 +19,18 @@
 //! A cite of a declaration `litigate import` marked `/// imported` is
 //! exempt in `dev`: its failures are warnings, so a freshly imported pack
 //! checks while its citations are ported. `strict` exempts nothing.
-use crate::context::{Cite, GAP, GAP_WORDS};
+use crate::context::{spelled, Cite, GAP, GAP_WORDS};
 use crate::diag::{emit, note};
 use crate::Context;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity, Span};
 use litigate_engine::cite::{parse_cite_string, CiteGrammar, Family, SourceCorpus};
 use litigate_engine::model::Pack;
 use litigate_lower::source_map::{Citations, L0Section, Pin};
+use litigate_sema::hir::DayUnit;
 use litigate_sema::Hole;
 use std::borrow::Cow;
+use std::collections::HashMap;
+use std::sync::LazyLock;
 
 /// L1010 for every citation that does not resolve. `holes` are the
 /// package's: a cite hole's reason is resolved like a cite, but a hole
@@ -58,6 +61,14 @@ pub(crate) fn unresolved(
                 })
                 .chain(unkeyed)
                 .chain(unquoted(cx, corpus, text, &cite.quotes, &sections, &span))
+                .chain(miscounted(
+                    cx,
+                    corpus,
+                    text,
+                    cite.period.filter(|_| !cite.historical && !hole),
+                    &sections,
+                    &span,
+                ))
                 .map(|d| exempt(d, cite.imported, cx.profile))
                 .collect::<Vec<_>>()
         })
@@ -124,6 +135,294 @@ fn unquoted(
         None,
         "quote the cited rule's words exactly as the vendored source gives them",
     ))
+}
+
+/// L1010 when a deadline's period (`2.days ... cite "X"`) is not a count
+/// its vendored sections state while they state counts of that measure:
+/// `X` sets a period of so many days (or hours, weeks), months or years,
+/// and none of them is this one. A count is digits or words (`fourteen
+/// (14) days`, `14-day`), up to [`COUNT_WORDS`] words before its measure;
+/// a day count also matches its hours (`48 hours`) and whole weeks, a
+/// month count its whole years, and a period matches the sum of two
+/// different counts of one measure (37 C.F.R. § 2.102(c)(3): extensions
+/// `totaling ninety days` and then `an additional sixty days`, counted
+/// from the thirty-day period's end). A pinpoint the corpus sections apart
+/// (`MPEP § 710.01(a)` under `MPEP § 710.01`) is read with its section.
+/// A `historical` cite or a hole states no period. Sections that state no count of the
+/// measure (a period written `the next day`, or set in another section)
+/// are not checked.
+fn miscounted(
+    cx: &Context<'_>,
+    corpus: &SourceCorpus,
+    text: &str,
+    period: Option<(u64, DayUnit)>,
+    sections: &[L0Section],
+    span: &Span,
+) -> Option<Diagnostic> {
+    let (amount, unit) = period.filter(|&(n, _)| n > 0)?;
+    let family = Measure::of(unit);
+    let counts: Vec<(u64, Measure)> = sections
+        .iter()
+        .flat_map(|s| {
+            let pinned = (1..=s.pinpoint.len()).map(|n| {
+                s.pinpoint[..n]
+                    .iter()
+                    .fold(s.heading.clone(), |h, p| format!("{h}({p})"))
+            });
+            std::iter::once(s.heading.clone())
+                .chain(pinned)
+                .flat_map(|heading| {
+                    corpus
+                        .lookup_all(&heading)
+                        .iter()
+                        .filter(|(file, _)| s.path.as_ref() == Some(file))
+                        .flat_map(|(_, section)| counts(&unpaged(&section.body)))
+                        .collect::<Vec<_>>()
+                })
+                .collect::<Vec<_>>()
+        })
+        .filter(|(_, m)| m.monthly() == family.monthly())
+        .collect();
+    let wanted = family.equivalents(amount);
+    let summed = counts.iter().any(|&(a, m)| {
+        counts
+            .iter()
+            .any(|&(b, n)| m == n && a < b && wanted.contains(&(a + b, m)))
+    });
+    if counts.is_empty() || summed || counts.iter().any(|c| wanted.contains(c)) {
+        return None;
+    }
+    let mut stated: Vec<String> = counts.iter().map(|&(n, m)| m.prose(n)).collect();
+    stated.sort();
+    stated.dedup();
+    let d = emit(
+        C::UnboundCite,
+        cx.profile,
+        span.clone(),
+        format!(
+            "`{text}` is cited for a period of {}, but its vendored text states {}",
+            family.prose(amount),
+            stated.join(", "),
+        ),
+    );
+    Some(note(
+        d,
+        None,
+        "set the period the cited rule states, or cite the rule that sets this one",
+    ))
+}
+
+/// The most words between a count and its measure: `fourteen (14)
+/// calendar days`.
+const COUNT_WORDS: usize = 3;
+
+/// What a rule counts a period in.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+enum Measure {
+    Hour,
+    Day,
+    Week,
+    Month,
+    Year,
+}
+
+impl Measure {
+    fn of(unit: DayUnit) -> Self {
+        match unit {
+            DayUnit::Calendar | DayUnit::Court | DayUnit::Business => Self::Day,
+            DayUnit::Week => Self::Week,
+            DayUnit::Month => Self::Month,
+            DayUnit::Year => Self::Year,
+        }
+    }
+
+    /// The measure a word names (`days`, `day,`, `hours`), if any.
+    fn named(word: &str) -> Option<Self> {
+        let word = word.trim_end_matches(|c: char| !c.is_ascii_alphabetic());
+        Some(match word.strip_suffix('s').unwrap_or(word) {
+            "hour" => Self::Hour,
+            "day" => Self::Day,
+            "week" => Self::Week,
+            "month" => Self::Month,
+            "year" => Self::Year,
+            _ => return None,
+        })
+    }
+
+    const fn monthly(self) -> bool {
+        matches!(self, Self::Month | Self::Year)
+    }
+
+    /// `n` of this measure and the same period in the others it converts
+    /// to exactly.
+    fn equivalents(self, n: u64) -> Vec<(u64, Self)> {
+        let mut out = vec![(n, self)];
+        match self {
+            Self::Day => {
+                out.push((n * 24, Self::Hour));
+                if n.is_multiple_of(7) {
+                    out.push((n / 7, Self::Week));
+                }
+            }
+            Self::Week => out.extend([(n * 7, Self::Day), (n * 168, Self::Hour)]),
+            Self::Month if n.is_multiple_of(12) => out.push((n / 12, Self::Year)),
+            Self::Year => out.push((n * 12, Self::Month)),
+            Self::Hour | Self::Month => {}
+        }
+        out
+    }
+
+    fn prose(self, n: u64) -> String {
+        let noun = match self {
+            Self::Hour => "hour",
+            Self::Day => "day",
+            Self::Week => "week",
+            Self::Month => "month",
+            Self::Year => "year",
+        };
+        format!("{n} {noun}{}", if n == 1 { "" } else { "s" })
+    }
+}
+
+/// Every count `body` states with its measure: a count in digits or words
+/// up to [`COUNT_WORDS`] words before a measure (`14 days`, `fourteen (14)
+/// calendar days`, `one hundred eighty days`, `35days`), hyphened to it
+/// (`14-day`, `seven-day`), or an ordinal day (`the 21st day`, `the next
+/// day`); `the prior Monday` is a week. A page opening on a measure takes
+/// a count ending one of the previous page's last lines (`within 3`): the
+/// footer and running head a `pdftotext -layout` extract sets between
+/// them (`within 3` / `Page 38` / `days`, Bankr. S.D. Tex. BLR
+/// 9017-1(c)) are not the rule's words.
+fn counts(body: &str) -> Vec<(u64, Measure)> {
+    let text: String = body
+        .chars()
+        .map(|c| {
+            if c.is_ascii_alphanumeric() || matches!(c, '-' | ',') {
+                c
+            } else {
+                ' '
+            }
+        })
+        .collect();
+    let mut words: Vec<String> = Vec::new();
+    for w in text.split_whitespace() {
+        let w = w
+            .trim_matches(|c: char| matches!(c, '-' | ','))
+            .to_lowercase();
+        let at = w.find(|c: char| !c.is_ascii_digit() && c != ',');
+        match at.map(|i| w.split_at(i)) {
+            Some((n, m)) if !n.is_empty() && Measure::named(m).is_some() => {
+                words.extend([n.to_owned(), m.to_owned()]);
+            }
+            _ => words.push(w),
+        }
+    }
+    let mut out = Vec::new();
+    for (i, word) in words.iter().enumerate() {
+        if let Some(m) = Measure::named(word) {
+            let from = i.saturating_sub(COUNT_WORDS + 3);
+            for j in from..i {
+                for k in (j + 1)..=i {
+                    if k - j > 3 || i - k > COUNT_WORDS {
+                        continue;
+                    }
+                    if let Some(n) = number(&words[j..k].join(" ")) {
+                        out.push((n, m));
+                    }
+                }
+            }
+        } else if let Some((count, measure)) = word.rsplit_once('-') {
+            if let (Some(n), Some(m)) = (number(count), Measure::named(measure)) {
+                out.push((n, m));
+            }
+        } else if WEEKDAYS.contains(&word.as_str())
+            && i > 0
+            && matches!(
+                words[i - 1].as_str(),
+                "prior" | "preceding" | "following" | "next"
+            )
+        {
+            out.push((1, Measure::Week));
+        }
+    }
+    let lines: Vec<&str> = body.lines().collect();
+    for (i, line) in lines.iter().enumerate() {
+        let Some(page) = line.strip_prefix('\u{c}') else {
+            continue;
+        };
+        let first = page.split_whitespace().next().unwrap_or_default();
+        let Some(m) = Measure::named(&first.to_lowercase()) else {
+            continue;
+        };
+        out.extend(
+            lines[i.saturating_sub(PAGE_FOOT)..i]
+                .iter()
+                .filter_map(|l| {
+                    let mut w = l.split_whitespace().rev();
+                    let (count, before) = (w.next()?, w.next()?);
+                    INTRODUCING
+                        .contains(&before.to_lowercase().as_str())
+                        .then(|| number(count))?
+                })
+                .map(|n| (n, m)),
+        );
+    }
+    out
+}
+
+/// The words that introduce a period's count (`within 3`, `at least 7`).
+const INTRODUCING: [&str; 5] = ["within", "least", "than", "additional", "of"];
+
+/// The most lines a page's footer and running head take below its text.
+const PAGE_FOOT: usize = 12;
+
+const WEEKDAYS: [&str; 7] = [
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday",
+    "saturday",
+    "sunday",
+];
+
+/// The count `phrase` writes, in digits (`14`, `1,000`), words
+/// (`fourteen`, `twenty-one`, `one hundred eighty`) up to a thousand, or
+/// as an ordinal (`21st`, `twenty-first`, `next`).
+fn number(phrase: &str) -> Option<u64> {
+    static SPELLED: LazyLock<HashMap<String, u64>> = LazyLock::new(|| {
+        (1..=1000)
+            .flat_map(|n| [(spelled(n), n), (ordinal_of(&spelled(n)), n)])
+            .chain([("next".to_owned(), 1), ("following".to_owned(), 1)])
+            .collect()
+    });
+    let digits = phrase.replace(',', "");
+    let ordinal = ["st", "nd", "rd", "th"]
+        .iter()
+        .find_map(|x| digits.strip_suffix(x))
+        .unwrap_or(&digits);
+    if !ordinal.is_empty() && ordinal.len() <= 6 && ordinal.chars().all(|c| c.is_ascii_digit()) {
+        return ordinal.parse().ok();
+    }
+    SPELLED.get(&phrase.replace(" and ", " ")).copied()
+}
+
+/// The ordinal of a spelled count: `twenty-one` → `twenty-first`.
+fn ordinal_of(spelled: &str) -> String {
+    let at = spelled.rfind([' ', '-']).map_or(0, |i| i + 1);
+    let (head, last) = spelled.split_at(at);
+    let last = match last {
+        "one" => "first".to_owned(),
+        "two" => "second".to_owned(),
+        "three" => "third".to_owned(),
+        "five" => "fifth".to_owned(),
+        "eight" => "eighth".to_owned(),
+        "nine" => "ninth".to_owned(),
+        "twelve" => "twelfth".to_owned(),
+        l if l.ends_with('y') => format!("{}ieth", &l[..l.len() - 1]),
+        l => format!("{l}th"),
+    };
+    format!("{head}{last}")
 }
 
 /// Whether `body` holds `quote`, a [`GAP`] in it matching one to

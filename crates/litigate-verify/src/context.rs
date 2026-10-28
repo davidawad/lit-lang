@@ -94,6 +94,7 @@ impl<'a> Context<'a> {
     /// with their node, in its window), a transition's cites (in the window
     /// of the version it amends), test `cite`s (no window), and the entries
     /// of a filing limit with the words each must find ([`limit_cites`]).
+    /// A deadline's own cite carries its [`period`].
     pub fn cites(&self) -> impl Iterator<Item = Cite<'a>> {
         let (package, packages) = (self.package, self.packages);
         self.declarations().flat_map(move |d| {
@@ -156,27 +157,36 @@ impl<'a> Context<'a> {
                 }),
                 _ => None,
             };
-            let edges = edge_cites(d);
-            let limited = match d {
-                Declaration::Limit(l) => limit_cites(l),
-                _ => Vec::new(),
-            };
-            own.into_iter()
-                .chain(test)
-                .chain(limited)
+            let own = own.map(|c| (c, period(d)));
+            let others = test
+                .into_iter()
+                .chain(limit_cites(d))
                 .chain(adoption)
-                .chain(edges)
+                .chain(edge_cites(d))
                 .chain(delegated)
                 .chain(characterized)
-                .map(move |(text, span, historical, quotes)| Cite {
+                .map(|c| (c, None));
+            own.into_iter()
+                .chain(others)
+                .map(move |((text, span, historical, quotes), period)| Cite {
                     text,
                     span,
                     window,
                     historical,
                     imported,
                     quotes,
+                    period,
                 })
         })
+    }
+}
+
+/// A deadline's period, which its own cite's vendored text must state,
+/// unless an order the period is delegated to sets it.
+fn period(d: &Declaration) -> Option<(u64, hir::DayUnit)> {
+    match d {
+        Declaration::Deadline(x) if x.meta.delegations.is_empty() => Some((x.amount, x.unit)),
+        _ => None,
     }
 }
 
@@ -202,8 +212,8 @@ fn edge_cites(d: &Declaration) -> Vec<CiteOf<'_>> {
 /// which its vendored text must hold).
 type CiteOf<'a> = (&'a str, Option<&'a Span>, bool, Vec<Cow<'a, str>>);
 
-/// The cites of a filing limit's entries (SPEC §3.7), each its own or
-/// else the declaration's, with the words its vendored text must hold: a
+/// The cites of a filing limit's entries (SPEC §3.7; none for any other
+/// declaration), each its own or else the declaration's, with the words its vendored text must hold: a
 /// bound's number and measure as the rules write them, in digits
 /// (`13,000 words`), in words (`thirty pages`) or both (`thirty (30)
 /// pages`), the measure singular for a count of one (`one page`), each also with a few words between the count and the measure
@@ -212,7 +222,10 @@ type CiteOf<'a> = (&'a str, Option<&'a Span>, bool, Vec<Cow<'a, str>>);
 /// pages`, [`GAP`]), and each excluded part named, hyphens read as spaces
 /// (`cover page`).
 /// A hole cites nothing and quotes nothing.
-fn limit_cites(l: &hir::Limit) -> Vec<CiteOf<'_>> {
+fn limit_cites(d: &Declaration) -> Vec<CiteOf<'_>> {
+    let Declaration::Limit(l) = d else {
+        return Vec::new();
+    };
     let decl = l.meta.cite.as_deref();
     let span = l.meta.span.as_ref();
     let mut out = Vec::new();
@@ -293,7 +306,7 @@ fn grouped(n: u64) -> String {
 
 /// `n` in words, as the rules spell counts: `thirty`, `twenty-five`,
 /// `one hundred fifty`, `thirteen thousand`.
-fn spelled(n: u64) -> String {
+pub(crate) fn spelled(n: u64) -> String {
     const ONES: [&str; 20] = [
         "zero",
         "one",
@@ -386,6 +399,10 @@ pub(crate) struct Cite<'a> {
     /// The words of the cited text it quotes (`quote "..."`), any one of
     /// which its vendored section must hold; none when it quotes nothing.
     pub quotes: Vec<Cow<'a, str>>,
+    /// The period of the deadline it is the own cite of (`14.days ...
+    /// cite "X"`), whose count its vendored section must state when it
+    /// states counts of that measure at all; none for every other cite.
+    pub period: Option<(u64, hir::DayUnit)>,
 }
 
 /// The package declaring `target` (`<pack-id>::<id>` or a local id) among

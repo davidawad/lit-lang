@@ -1,0 +1,54 @@
+# Appeals to the Oklahoma Court of Criminal Appeals, Oklahoma's court of
+# last resort in criminal cases, under the Rules of the Court of Criminal
+# Appeals (Okla. Stat. tit. 22, ch. 18, app.), as far as the vendored text
+# states. The text is the rule pages the court serves at okcca.net,
+# retrieved October 28, 2026 (sources/ok-court-of-criminal-appeals): no
+# consolidated edition date is published, the pages carry their own
+# amendment notes, and in_force is the retrieval date; an earlier query is
+# a hole in the corpus. The rules' own computation (Rule 1.4: first day
+# excluded, last included) has no counting rule in lit/core, so the
+# periods are stated in notes, not encoded as counted deadlines. Title 22
+# (Sections 1051 to 1089), which the rules cite, is not vendored. A
+# petition for certiorari to the Supreme Court of the United States is a
+# federal hand-off under Sup. Ct. R. 13.
+[package]
+name = "ok-court-of-criminal-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "ok-court-of-criminal-appeals"
+forum = "ok-court-of-criminal-appeals"
+authority = "StateRule"
+jurisdiction_id = "oklahoma"
+title = "Oklahoma Court of Criminal Appeals"
+description = "Regular appeals to the Oklahoma Court of Criminal Appeals under its Rules, as far as the vendored text states: the direct appeal begun by a notice of intent to appeal and perfected within 90 days, the certiorari appeal from a guilty or nolo contendere plea, the record, briefing and page limits, submission or oral argument, decision, rehearing and mandate. Certiorari to the Supreme Court of the United States is a federal hand-off under Sup. Ct. R. 13."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Oklahoma Court of Criminal Appeals"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.occa-rules]
+title = "Rules of the Oklahoma Court of Criminal Appeals (Okla. Stat. tit. 22, ch. 18, app.), rule pages as served by okcca.net, retrieved 2026-10-28"
+url = "https://www.okcca.net/rules/"
+path = "sources/ok-court-of-criminal-appeals/occa-rules-2026-10-28.txt"
+path_sha256 = "1a31662e46ee236a0bb1b295ab12bf6322090e1229002aab2bcacfddba08577d"
+as_of = "2026-10-28"
+cite_prefixes = ["Okla. Ct. Crim. App. R."]
+section_heading = "Rule {n}"
+
+[sources.scotus]
+title = "Rules of the Supreme Court of the United States (adopted Feb. 17, 2026, effective Mar. 16, 2026)"
+url = "https://www.supremecourt.gov/filingandrules/2026RulesoftheCourt_WEB.pdf"
+path = "sources/scotus-rules.txt"
+path_sha256 = "881464325decc0ce5cc63ae4bac10facc84766e266dbff30454186f78dc3d5f2"
+sha256 = "5200e38d590cc40929cb719987c936dc529717b4037259d1b63a2309cb6b0f32"
+as_of = "2026-03-16"
+cite_prefixes = ["Sup. Ct. R."]
+section_heading = "Sup. Ct. R. {n}"

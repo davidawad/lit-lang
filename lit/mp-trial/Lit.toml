@@ -1,0 +1,50 @@
+# Civil actions in the Commonwealth Superior Court of the Northern Mariana
+# Islands under the NMI Rules of Civil Procedure as adopted January 9,
+# 2019 with the general errata order of February 25, 2019
+# (sources/mp-trial). Computation of time is NMI R. Civ. P. 6(a), which,
+# unlike FRCP 6(a), excludes intermediate Saturdays, Sundays and legal
+# holidays from a period of 10 days or less and counts Commonwealth legal
+# holidays (1 CMC § 311); lit/core has no counting rule for it, so the
+# rules' periods are stated in notes, not encoded as counted deadlines. An
+# appeal hands off to the NMI Supreme Court package (lit/mp-supreme).
+[package]
+name = "mp-superior-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "mp-superior-court-civil"
+forum = "mp-trial"
+authority = "StateRule"
+title = "Commonwealth Superior Court of the Northern Mariana Islands, civil"
+description = "Civil actions in the Commonwealth Superior Court under the NMI Rules of Civil Procedure, as far as the vendored text states: commencement and service, the response, pleading motions and amendment, default, discovery, summary judgment, trial, post-trial motions, entry of judgment and the notice of appeal to the NMI Supreme Court (lit/mp-supreme)."
+in_force = "2019-02-25"
+known_at = "2026-10-28"
+unknown_before = "2019-02-25"
+jurisdiction = "Commonwealth Superior Court of the Northern Mariana Islands (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.mp-civ]
+title = "Northern Mariana Islands Rules of Civil Procedure (adopted January 9, 2019; general errata order 2019-ADM-0003-RUL of February 25, 2019), as listed by the CNMI Law Revision Commission"
+url = "https://cnmilaw.gov/docs/courtrules/R05.pdf"
+path = "sources/mp-trial/nmi-rcp-sectioned.txt"
+path_sha256 = "61165fb072592880ebd21303aa0fb06a48bde993ec235ca01ed4c2fd1adab424"
+sha256 = "ed102171ff0add3df38fd83137785ec8ef0de40da754d2cb083f2a20105b71c3"
+as_of = "2019-02-25"
+cite_prefixes = ["NMI R. Civ. P."]
+section_heading = "Rule {n}"
+
+[sources.mp-sup]
+title = "Northern Mariana Islands Supreme Court Rules (Administrative Order 2024-ADM-0006-RUL of March 15, 2024), as listed by the CNMI Law Revision Commission"
+url = "https://cnmilaw.gov/docs/courtrules/R01.pdf"
+path = "sources/mp-supreme/nmi-supreme-court-rules-sectioned.txt"
+path_sha256 = "a10aa4e3bf1020d81cdaa148172700a92cb2df9a6a00d380ceed6b3e5e2d2f46"
+sha256 = "4bfe1a18ac71d532927cbb29111535353c40423d41ae107df519a0abb2aa5880"
+as_of = "2024-03-15"
+cite_prefixes = ["NMI Sup. Ct. R."]
+section_heading = "Rule {n}"

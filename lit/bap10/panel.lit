@@ -1,0 +1,335 @@
+module bap10.panel
+
+import core.frcp6.{ frcp6 }
+
+import frbp.appeals.{
+  appellant-brief-period,
+  appellant-designation-period,
+  appellant-election-period,
+  notice-period,
+  other-party-election-period,
+  rehearing-period,
+}
+
+import frbp.events.{ LeaveToAppealGranted, NoticeOfAppealFiled }
+
+// The Tenth Circuit BAP's own periods, counted under FRBP 9006(a) (10th
+// Cir. BAP L.R. 8026-8(a)). The FRBP and 28 U.S.C. § 158(c)(1) periods
+// (notice, election, record, transcript, briefing, motions, costs,
+// rehearing, direct certification) are lit/frbp's and are not declared
+// again. Where Part VIII of the FRBP and these rules are silent, the FRAP
+// or the Tenth Circuit Rules apply (10th Cir. BAP L.R. 8001-3(e)); that
+// fallback is not encoded.
+//
+// Counting: a "legal holiday" under FRBP 9006(a) here also includes a day
+// appointed as a holiday by the state where the clerk's office sits or the
+// state of the originating district (10th Cir. BAP L.R. 8026-8(b)). core's
+// frcp6 counts the federal holidays only; a state holiday on a last day is
+// not modeled.
+//
+// Stated in the rules but not declared: the combined statements are also
+// due before a party files a motion or response, if that comes first
+// (8003-2); a motion to postpone argument is made more than 20 days before
+// the argument date except in an emergency (8019-1(b)), a bound against an
+// argument date the notice of argument sets; each side has 15 minutes of
+// argument unless the Court orders otherwise (8019-1(d)); a motion to
+// exceed the word count filed within 14 days of the brief's due date must
+// show why earlier filing was not possible (8015-1(f)); the appeal fees
+// are those of the Miscellaneous Fee Schedule under 28 U.S.C. § 1930
+// (8003-3(a)), which is not vendored, so no amount is stated. The outline
+// named Mohawk Industries v. Carpenter, Coopers & Lybrand v. Livesay,
+// Microsoft Corp. v. Baker, Bowles v. Russell and Hamer v. Neighborhood
+// Housing Services; no reporter text is vendored, so they are removed.
+/// The BAP clerk's notice that the appeal has been docketed with the Court
+/// (10th Cir. BAP L.R. 8003-2).
+event AppealDocketingNoticed()
+/// An order denying the appellant's motion to waive the appeal fee is
+/// entered (10th Cir. BAP L.R. 8003-3(b)(3)).
+event FeeWaiverDenied()
+/// A response to a motion for leave to appeal is served (10th Cir. BAP
+/// L.R. 8004-2).
+event LeaveResponseServed()
+/// A motion to intervene is served (10th Cir. BAP L.R. 8013-2).
+event InterventionMotionServed()
+/// A response to a motion to intervene is served (10th Cir. BAP L.R.
+/// 8013-2).
+event InterventionResponseServed()
+/// The notice of oral argument is docketed (10th Cir. BAP L.R. 8019-1(c)).
+event ArgumentNoticeDocketed()
+/// The BAP clerk serves its certification of a constitutional question
+/// to the attorney general (10th Cir. BAP L.R. 8026-7(b)-(c)).
+event ConstitutionalCertificationServed()
+
+/// 10th Cir. BAP L.R. 8003-2: within 14 days of the date of the notice that
+/// the appeal has been docketed, a party files the Statement of Admission
+/// to Practice or Pro Se Status, the Statement of Interested Parties and
+/// the Statement Regarding Oral Argument.
+deadline combined-statements-period: 14.days after AppealDocketingNoticed() counted_by frcp6 cite "10th Cir. BAP L.R. 8003-2"
+{
+  forum frcp
+}
+
+/// 10th Cir. BAP L.R. 8003-3(b): the appeal may be dismissed without
+/// further notice if, within 14 days after filing the notice of appeal, a
+/// party fails to pay the required fee or file a timely motion to waive it.
+deadline fee-payment-period: 14.days after NoticeOfAppealFiled() counted_by frcp6 cite "10th Cir. BAP L.R. 8003-3(b)"
+{
+  forum frcp
+}
+
+/// 10th Cir. BAP L.R. 8003-3(b): on an interlocutory appeal, the same 14
+/// days run from entry of the order granting leave to appeal.
+deadline fee-payment-leave-period: 14.days after LeaveToAppealGranted() counted_by frcp6 cite "10th Cir. BAP L.R. 8003-3(b)"
+{
+  forum frcp
+}
+
+/// 10th Cir. BAP L.R. 8003-3(b)(3): the required fee is paid within 14 days
+/// after entry of an order denying the appellant's motion to waive it.
+deadline fee-after-waiver-denial-period: 14.days after FeeWaiverDenied() counted_by frcp6 cite "10th Cir. BAP L.R. 8003-3(b)(3)"
+{
+  forum frcp
+}
+
+/// 10th Cir. BAP L.R. 8004-2: the movant may file a reply to a response to
+/// a motion for leave to appeal within 7 days after service of the
+/// response, addressing only matters raised in the response.
+deadline leave-reply-period: 7.days after LeaveResponseServed() counted_by frcp6 cite "10th Cir. BAP L.R. 8004-2"
+{
+  forum frcp
+}
+
+/// 10th Cir. BAP L.R. 8013-2: notwithstanding FRBP 8013(a)(3), a response
+/// to a motion to intervene is filed within 14 days after the motion is
+/// served.
+deadline intervention-response-period: 14.days after InterventionMotionServed() counted_by frcp6 cite "10th Cir. BAP L.R. 8013-2"
+{
+  forum frcp
+}
+
+/// 10th Cir. BAP L.R. 8013-2: a reply on a motion to intervene is filed
+/// within 7 days after the response is served.
+deadline intervention-reply-period: 7.days after InterventionResponseServed() counted_by frcp6 cite "10th Cir. BAP L.R. 8013-2"
+{
+  forum frcp
+}
+
+/// 10th Cir. BAP L.R. 8019-1(c): within 14 days after the notice of oral
+/// argument is docketed, each party who has filed a brief files a statement
+/// of who will appear at argument for it.
+deadline argument-appearance-period: 14.days after ArgumentNoticeDocketed() counted_by frcp6 cite "10th Cir. BAP L.R. 8019-1(c)"
+{
+  forum frcp
+}
+
+/// 10th Cir. BAP L.R. 8026-7(a): within 14 days after the date of the
+/// notice that the appeal has been docketed, a party questioning the
+/// constitutionality of an Act of Congress or a state statute, where the
+/// government is not a party, files a written notice.
+deadline constitutional-notice-period: 14.days after AppealDocketingNoticed() counted_by frcp6 cite "10th Cir. BAP L.R. 8026-7(a)"
+{
+  forum frcp
+}
+
+/// 10th Cir. BAP L.R. 8026-7(c): an attorney general may appear in the
+/// appeal within 30 days after the date the BAP clerk serves its
+/// certification.
+deadline attorney-general-appearance-period: 30.days after ConstitutionalCertificationServed() counted_by frcp6 cite "10th Cir. BAP L.R. 8026-7(c)"
+{
+  forum frcp
+}
+
+test "the combined statements are due 14 days after the docketing notice" cite "10th Cir. BAP L.R. 8003-2"
+{
+  given AppealDocketingNoticed() on 2026-03-03
+  expect deadline(combined-statements-period) == 2026-03-17
+}
+
+test "the appeal fee is paid within 14 days after the notice of appeal" cite "10th Cir. BAP L.R. 8003-3(b)"
+{
+  given NoticeOfAppealFiled() on 2026-03-03
+  expect deadline(fee-payment-period) == 2026-03-17
+}
+
+test "the appeal fee is paid within 14 days after leave to appeal is granted" cite "10th Cir. BAP L.R. 8003-3(b)"
+{
+  given LeaveToAppealGranted() on 2026-03-03
+  expect deadline(fee-payment-leave-period) == 2026-03-17
+}
+
+test "the fee is paid within 14 days after a waiver is denied" cite "10th Cir. BAP L.R. 8003-3(b)(3)"
+{
+  given FeeWaiverDenied() on 2026-03-03
+  expect deadline(fee-after-waiver-denial-period) == 2026-03-17
+}
+
+test "a reply on a motion for leave is due 7 days after service of the response" cite "10th Cir. BAP L.R. 8004-2"
+{
+  given LeaveResponseServed() on 2026-03-03
+  expect deadline(leave-reply-period) == 2026-03-10
+}
+
+test "a response to a motion to intervene is due 14 days after service" cite "10th Cir. BAP L.R. 8013-2"
+{
+  given InterventionMotionServed() on 2026-03-03
+  expect deadline(intervention-response-period) == 2026-03-17
+}
+
+test "a reply on a motion to intervene is due 7 days after the response" cite "10th Cir. BAP L.R. 8013-2"
+{
+  given InterventionResponseServed() on 2026-03-03
+  expect deadline(intervention-reply-period) == 2026-03-10
+}
+
+test "the argument appearance statement is due 14 days after the notice" cite "10th Cir. BAP L.R. 8019-1(c)"
+{
+  given ArgumentNoticeDocketed() on 2026-03-03
+  expect deadline(argument-appearance-period) == 2026-03-17
+}
+
+test "a constitutional-question notice is due 14 days after docketing" cite "10th Cir. BAP L.R. 8026-7(a)"
+{
+  given AppealDocketingNoticed() on 2026-03-03
+  expect deadline(constitutional-notice-period) == 2026-03-17
+}
+
+test "an attorney general may appear within 30 days of the certification" cite "10th Cir. BAP L.R. 8026-7(c)"
+{
+  given ConstitutionalCertificationServed() on 2026-03-03
+  expect deadline(attorney-general-appearance-period) == 2026-04-02
+}
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "FRBP 8002(a)(1)"
+{
+  note "The notice of appeal is filed with the bankruptcy clerk within 14 days after entry of the judgment, order or decree (FRBP 8002(a)(1), lit/frbp). A separate notice and fee is required for each judgment, order or decree appealed, except as FRBP 8003(a)(4) provides (10th Cir. BAP L.R. 8003-1). A motion for leave to appeal filed without a notice is treated as both (10th Cir. BAP L.R. 8004-1). The fee is paid to the bankruptcy court within 14 days after the notice, or the appeal may be dismissed without further notice (10th Cir. BAP L.R. 8003-3(b), fee-payment-period)."
+  edge-notice-filed-appealability "Notice filed within 14 days" -> appealability {
+    authority cite "FRBP 8002(a)(1)"
+    within notice-period
+  }
+  edge-notice-filed-dismissed-untimely "Notice filed outside the period" -> dismissed-untimely {
+    authority cite "FRBP 8002(a)(1)"
+  }
+}
+
+terminal dismissed-untimely: "Dismissed as untimely" outcome [loss] cite "FRBP 8002(a)(1)"
+
+decision appealability: "Appealable order and appeal route" by court cite "28 U.S.C. § 158(a)"
+{
+  note "Appeals lie from final judgments, orders and decrees, from interlocutory orders under 11 U.S.C. § 1121(d), and with leave from other interlocutory orders (28 U.S.C. § 158(a)). The BAP hears the appeal unless the appellant elects the district court when filing or another party elects within 30 days after service of the notice (28 U.S.C. § 158(c)(1), lit/frbp). The appellant's election is included in its notice of appeal; another party's election is filed with the BAP (10th Cir. BAP L.R. 8005-1). The BAP clerk may deny an election that does not comply with 28 U.S.C. § 158(c)(1) and FRBP 8005 (10th Cir. BAP L.R. 8024-1(b)(1))."
+  edge-appealability-dismissed-jurisdiction "Not appealable" -> dismissed-jurisdiction {
+    authority cite "28 U.S.C. § 158(a)"
+  }
+  edge-appealability-docketed "BAP appeal docketed" -> docketed {
+    authority cite "28 U.S.C. § 158(c)(1)"
+  }
+  edge-appealability-appellant-election "Appellant elects district court in the notice" -> district-handoff {
+    authority cite "10th Cir. BAP L.R. 8005-1(a)"
+    within appellant-election-period
+  }
+  edge-appealability-other-election "Another party elects district court" -> district-handoff {
+    authority cite "10th Cir. BAP L.R. 8005-1(b)"
+    within other-party-election-period
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed for lack of an appealable order" outcome [loss] cite "28 U.S.C. § 158(a)"
+
+terminal district-handoff: "Appeal heard by the district court" outcome [procedural] cite "FRBP 8005(b)"
+{
+  note "The district court's local rules govern from here; they are outside this panel package."
+}
+
+state docketed: "Appeal docketed with the BAP" by applicant cite "10th Cir. BAP L.R. 8003-2"
+{
+  note "Within 14 days of the docketing notice, or before a party's first motion or response if earlier, each party files the combined statements: admission to practice or pro se status, interested parties (which satisfies FRBP 8012, 10th Cir. BAP L.R. 8012-1) and oral argument (10th Cir. BAP L.R. 8003-2, combined-statements-period). An appellant's failure to comply may result in dismissal without further notice; a nonparticipating appellee suffers no default (8003-2(a)(3)-(4)). A party questioning the constitutionality of a statute where the government is not a party files a written notice within the same 14 days (10th Cir. BAP L.R. 8026-7(a), constitutional-notice-period)."
+  edge-docketed-record-assembled "Statements filed" -> record-assembled {
+    authority cite "10th Cir. BAP L.R. 8003-2"
+    within combined-statements-period
+  }
+  edge-docketed-dismissed-prosecution "Appellant fails to comply" -> dismissed-prosecution {
+    authority cite "10th Cir. BAP L.R. 8003-2"
+  }
+}
+
+state record-assembled: "Record assembled" by applicant cite "FRBP 8009"
+{
+  note "The appellant designates the record, states the issues and orders any transcript within 14 days after the notice of appeal becomes effective (FRBP 8009(a)(1)(B), (b)(1), lit/frbp). The FRBP 8009(a)(4) items are the record on appeal, presented to the BAP by the parties as an appendix under FRBP 8018(b) and 10th Cir. BAP L.R. 8018-1, not by copies to the bankruptcy court (10th Cir. BAP L.R. 8009-1). The bankruptcy clerk's notices under FRBP 8003(d)(1) and 10th Cir. BAP L.R. 8005-1(c) constitute transmission of the record (10th Cir. BAP L.R. 8010-1(b))."
+  edge-record-assembled-briefing "Record designated" -> briefing {
+    authority cite "10th Cir. BAP L.R. 8010-1"
+    within appellant-designation-period
+  }
+}
+
+state briefing: "Briefing" by applicant cite "FRBP 8018(a)"
+{
+  note "The FRBP 8018(a) brief periods are lit/frbp's; FRBP 8015 governs form and length, and the Statement of Related Cases is excluded from the length limits (10th Cir. BAP L.R. 8014-1, 8015-1(d)). The appendix is filed separately and must contain all transcripts needed for review (10th Cir. BAP L.R. 8018-1); the Court need not remedy an inadequate record and may decline to consider an issue (8009-3). A notice of deficiency suspends the briefing schedule unless the court orders otherwise (8015-1(e))."
+  edge-briefing-argument "Briefing complete" -> argument {
+    authority cite "FRBP 8018(a)(1)"
+    within appellant-brief-period
+  }
+  edge-briefing-dismissed-prosecution "Appellant fails to comply" -> dismissed-prosecution {
+    authority cite "10th Cir. BAP L.R. 8026-3(c)"
+  }
+}
+
+terminal dismissed-prosecution: "Dismissed for failure to prosecute" outcome [loss] cite "10th Cir. BAP L.R. 8026-3(c)"
+{
+  note "After the clerk's notice of a designated time to cure, the court may dismiss without further notice; the appellant may cure within the 14-day FRBP 8022 rehearing period, and the clerk then reinstates the appeal (10th Cir. BAP L.R. 8022-2; the clerk may dismiss and reinstate, 8024-1(b)(4)-(5))."
+}
+
+decision argument: "Argument or submission" by court cite "FRBP 8019"
+{
+  note "Argument may be held by telephone or videoconference (10th Cir. BAP L.R. 8019-1(a)). Within 14 days after the notice of argument is docketed, each party who has filed a brief files a statement of who will appear (8019-1(c), argument-appearance-period). All appellants and all appellees are each allocated 15 minutes unless the Court orders otherwise (8019-1(d))."
+  edge-argument-decision-issued "Argued or submitted" -> decision-issued {
+    authority cite "FRBP 8019"
+  }
+}
+
+decision decision-issued: "Disposition" by court cite "FRBP 8024(a)"
+{
+  note "The clerk prepares, signs and enters the judgment (FRBP 8024(a)). An order is entered on the date it is docketed; when a case is disposed of by an order, not an opinion, the order serves as the judgment (10th Cir. BAP L.R. 8024-2). Unpublished decisions may be cited for persuasive value but are not precedential (8026-5)."
+  edge-decision-issued-rehearing-window "Judgment entered" -> rehearing-window {
+    authority cite "10th Cir. BAP L.R. 8024-2"
+  }
+}
+
+decision rehearing-window: "Rehearing" by applicant cite "FRBP 8022(a)(1)"
+{
+  note "A motion for rehearing is due within 14 days after entry of the judgment on appeal (FRBP 8022(a)(1), lit/frbp). Rehearing is granted only if a significant issue was overlooked or misconstrued, and the Court considers one motion from each party (10th Cir. BAP L.R. 8022-1). The mandate issues promptly after the rehearing time expires, and a timely motion stays it (10th Cir. BAP L.R. 8024-3)."
+  edge-rehearing-window-further-review "No motion" -> further-review {
+    authority cite "10th Cir. BAP L.R. 8024-3(a)"
+  }
+  edge-rehearing-window-rehearing-ruling "Motion filed" -> rehearing-ruling {
+    authority cite "FRBP 8022(a)(1)"
+    within rehearing-period
+  }
+}
+
+decision rehearing-ruling: "Rehearing decided" by court cite "FRBP 8022(a)(5)"
+{
+  edge-rehearing-ruling-further-review "Denied" -> further-review {
+    authority cite "FRAP 6(b)(2)(A)(i)"
+  }
+  edge-rehearing-ruling-rehearing-granted "Granted" -> rehearing-granted {
+    authority cite "FRBP 8022(a)(5)"
+  }
+}
+
+terminal rehearing-granted: "Rehearing granted" outcome [appeal] cite "FRBP 8022(a)(5)"
+{
+  note "The BAP may dispose of the appeal without reargument, restore it to the calendar, or issue another order (FRBP 8022(a)(5)). Modeled as an exit."
+}
+
+decision further-review: "Appeal to the Tenth Circuit" by applicant cite "28 U.S.C. § 158(d)(1)"
+{
+  note "The court of appeals has jurisdiction of appeals from all final decisions of the BAP (28 U.S.C. § 158(d)(1)); the FRAP apply as FRAP 6(b) provides, and after a timely rehearing motion the time to appeal runs from the order disposing of it (FRAP 6(b)(2)(A)(i)). The appeal periods are lit/frap's. If the mandate is stayed pending that appeal, it issues promptly after the BAP receives the court of appeals' mandate (10th Cir. BAP L.R. 8024-3(c))."
+  edge-further-review-circuit "Appeal taken" -> circuit-appeal { authority cite "FRAP 6(b)(1)" }
+  edge-further-review-final "No appeal" -> final-appellate {
+    authority cite "10th Cir. BAP L.R. 8024-3(a)"
+  }
+}
+
+terminal circuit-appeal: "Appeal to the court of appeals" outcome [appeal] cite "28 U.S.C. § 158(d)(1)"
+terminal final-appellate: "Mandate issued" outcome [judgment] cite "10th Cir. BAP L.R. 8024-3"

@@ -1,0 +1,77 @@
+# The Tenth Circuit Bankruptcy Appellate Panel Local Rules over lit/frbp
+# (FRBP 8026; 10th Cir. BAP L.R. 8001-3(a)): it declares only the periods
+# the panel's own rules state and re-encodes no FRBP period (notice,
+# election, record, briefing, motions and rehearing are lit/frbp's; the
+# 28 U.S.C. § 158(c)(1) election is lit/frbp's too). The rules are those
+# effective January 1, 2026 (sources/ca10-bap/PROVENANCE.md), the edition
+# the panel's site lists; no later order amends them, so the edition is
+# the only layer. The FRBP Part VIII text printed with them is the
+# December 1, 2024 edition; the FRBP cites here bind to the December 1,
+# 2025 edition lit/frbp vendors instead. The package is in force from the
+# rules' effective date, a lower bound: a query before then is a hole in
+# the corpus. Each period is counted under FRBP 9006(a) (10th Cir. BAP
+# L.R. 8026-8(a)), the FRCP 6(a) method (core's frcp6). Like lit/bap8 and
+# lit/bap9 it is a base package, not a `kind = "local-rule"` layer:
+# lit/core has no bankruptcy forum family.
+[package]
+name = "tenth-circuit-bankruptcy-appellate-panel"
+version = "0.1.0"
+language = 1
+pack_id = "tenth-circuit-bankruptcy-appellate-panel"
+forum = "bap10"
+authority = "FederalRule"
+title = "Tenth Circuit Bankruptcy Appellate Panel Procedure"
+description = "Appeals before the Bankruptcy Appellate Panel of the Tenth Circuit under the current Federal Rules of Bankruptcy Procedure (lit/frbp) and the panel's local rules: the combined statements, fees, the motion for leave and its reply, district court election, the appendix as the record, intervention, oral argument, constitutional-question notice, dismissal for failure to prosecute and reinstatement, disposition and mandate, rehearing and further review in the Tenth Circuit."
+in_force = "2026-01-01"
+known_at = "2026-10-28"
+unknown_before = "2026-01-01"
+jurisdiction = "Bankruptcy Appellate Panel of the Tenth Circuit"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+appellee = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods themselves (Part 8 appeal periods); this package layers the panel's local rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.bap10-rules]
+title = "Tenth Circuit Bankruptcy Appellate Panel Local Rules, effective January 1, 2026"
+url = "https://www.bap10.uscourts.gov/sites/bap10/files/clerk/Bankruptcy%20Rules%20and%20BAP%20Local%20Rules%20%5BPrint%5D.pdf"
+path = "sources/ca10-bap/bap-local-rules-sectioned.txt"
+path_sha256 = "e691d77aa7ed5d4820a3f077cdd2bd371993f79baafb2dc56ed61f2d94d2de4f"
+sha256 = "87b15eee973d27cbc6682c0d06f88c305f10d27b3d87f3ccfc84e24b5c71951e"
+as_of = "2026-01-01"
+cite_prefixes = ["10th Cir. BAP L.R."]
+section_heading = "10th Cir. BAP L.R. {n}"
+
+[sources.frbp]
+title = "Federal Rules of Bankruptcy Procedure, December 1, 2025 edition"
+url = "https://www.uscourts.gov/sites/default/files/document/federal-rules-of-bankruptcy-procedure.pdf"
+path = "sources/frbp.txt"
+path_sha256 = "0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8"
+as_of = "2025-12-01"
+cite_prefixes = ["FRBP"]
+section_heading = "FRBP {n}"
+
+[sources.frap]
+title = "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2024"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-appellate-procedure-dec-1-2024_0.pdf"
+path = "sources/frap.txt"
+path_sha256 = "b370cc0558698ff88b62b6cec212742fde8afbdd2fe653a3b255d69dec893172"
+as_of = "2024-12-01"
+cite_prefixes = ["FRAP"]
+section_heading = "FRAP {n}"
+
+[sources.usc28-158]
+title = "28 U.S.C. § 158, current preliminary edition"
+url = "https://uscode.house.gov/us/usc/119-118/t28/s158/"
+path = "sources/usc-28-158.txt"
+path_sha256 = "a0f615748b6a10805e6eeec6a05e94d7a3fc2dcd5fafbe94efae7af8ebf9987b"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+as_of = "2026-10-07"

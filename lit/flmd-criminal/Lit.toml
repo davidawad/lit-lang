@@ -1,0 +1,47 @@
+# The Middle District of Florida's criminal-case Local Rules as a
+# local-rule layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)). The
+# Local Rules dated November 1, 2025 (sources/md-fla) have no criminal
+# part; their criminal-case provisions, the division for a criminal action
+# (Local Rule 1.04(c)) and extrajudicial disclosure in a criminal action
+# (Local Rule 3.11), state no period or limit, so the layer declares
+# none and re-encodes no FRCrimP, Speedy Trial Act or FRAP period.
+[package]
+name = "flmd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "flmd-criminal-local-rules"
+forum = "flmd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Middle District of Florida: Local Rules (criminal)"
+description = "The Middle District of Florida's criminal-case Local Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the division in which a criminal action begins and the limits on extrajudicial disclosure before judgment or dismissal. They state no period of their own."
+in_force = "2025-11-01"
+known_at = "2026-10-28"
+unknown_before = "2025-11-01"
+jurisdiction = "United States District Court, M.D. Florida (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+office = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "flmd-lr"
+issuer = "United States District Court for the Middle District of Florida"
+date = "2025-11-01"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.flmd-lr]
+title = "Local Rules of the United States District Court for the Middle District of Florida (November 1, 2025)"
+url = "https://www.flmd.uscourts.gov/sites/flmd/files/flmd-amended-local-rules-effective-november-01-2025.pdf"
+path = "sources/md-fla/local-rules-sectioned.txt"
+path_sha256 = "ffd9c96a2e3ffded589f9a3034557cc7f9f916762b8c043e92a2b3cbdae4c583"
+sha256 = "effa65b4e132c1321e34361626788a232ce8c725cc238d6a7731e344495961ed"
+as_of = "2025-11-01"
+cite_prefixes = ["M.D. Fla. Local Rule"]
+section_heading = "Rule {n}"

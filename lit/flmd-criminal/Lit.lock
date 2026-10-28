@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "flmd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:7df00b33a6d23397155b1597e7f81be806f88780fe5c03a69df46efb369bd6ae"
+semantic = "sha256:315ca47816e6e6a01655a49dc82c994c3cabda2c25cda6260512cf76242a64f5"
+texts = [
+    "flmd-lr sources/md-fla/local-rules-sectioned.txt sha256:ffd9c96a2e3ffded589f9a3034557cc7f9f916762b8c043e92a2b3cbdae4c583",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]

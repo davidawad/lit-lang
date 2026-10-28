@@ -1,0 +1,155 @@
+module ok-criminal-trial-court.criminal
+
+// Felony cases in the Oklahoma district courts. Title 22 of the Oklahoma
+// Statutes (criminal procedure) is not vendored, so every trial-court
+// step's authority is a hole (`?(...)`) naming the provision the step
+// rests on, and no period from it is stated: arrest and appearance,
+// release and bail, the preliminary hearing, charging, arraignment,
+// pretrial motions, the statutory speedy-trial provision (Okla. Stat. tit.
+// 22, § 812.1), pleas, trial and verdict, new trial (§§ 952-953),
+// sentencing, and post-conviction relief (§§ 1080-1089). The Rules of the
+// Oklahoma Court of Criminal Appeals, which are vendored, govern the
+// trial-court steps that begin an appeal, and are cited with their
+// periods. Outcomes are from the defendant's side. The earlier outline's
+// leading decisions (County of Riverside v. McLaughlin, Gerstein v. Pugh,
+// Gideon v. Wainwright, Brady v. Maryland, Mapp v. Ohio, Barker v. Wingo,
+// Boykin v. Alabama, Missouri v. Frye, Jackson v. Virginia, Ramos v.
+// Louisiana, Apprendi v. New Jersey, Roe v. Flores-Ortega, Garza v. Idaho)
+// are removed: no reporter text is vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite ?("Okla. Stat. tit. 22, arrest, summons and complaint (not vendored)")
+{
+  note "Arrest, presentment before a magistrate and the complaint are governed by Title 22, which is not vendored; any period for presentment is a hole."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance {
+    authority cite ?("Okla. Stat. tit. 22, initial appearance (not vendored)")
+  }
+}
+
+decision initial-appearance: "Counsel, bail, release or detention" by court cite ?("Okla. Stat. tit. 22, bail and pretrial release (not vendored)")
+{
+  note "Release, bail and detention are governed by Title 22 (not vendored). Indigency for court-appointed counsel and a transcript at state expense is determined on the qualifications OCCA Rule 1.14(A) sets, on the sworn application form it prescribes (Okla. Ct. Crim. App. R. 1.14(A))."
+  edge-initial-appearance-detained "Detained" -> probable-cause {
+    authority cite ?("Okla. Stat. tit. 22, pretrial detention (not vendored)")
+  }
+  edge-initial-appearance-released "Released on bail or conditions" -> probable-cause {
+    authority cite ?("Okla. Stat. tit. 22, bail and pretrial release (not vendored)")
+  }
+}
+
+decision probable-cause: "Preliminary hearing or grand jury" by court cite ?("Okla. Stat. tit. 22, preliminary hearing (not vendored)")
+{
+  note "Whether a felony proceeds by information after a preliminary hearing or by indictment, and the periods to the hearing, are governed by Title 22 and are holes."
+  edge-probable-cause-charged "Bound over; information or indictment filed" -> charged {
+    authority cite ?("Okla. Stat. tit. 22, indictment and information (not vendored)")
+  }
+  edge-probable-cause-none "No probable cause; discharged" -> dismissed {
+    authority cite ?("Okla. Stat. tit. 22, preliminary hearing (not vendored)")
+  }
+}
+
+state charged: "Indictment or information" by office cite ?("Okla. Stat. tit. 22, indictment and information (not vendored)")
+{
+  note "The statutory speedy-trial provision (Okla. Stat. tit. 22, § 812.1) is not vendored; its periods and exclusions are holes."
+  edge-charged-arraignment "Arraignment" -> arraignment {
+    authority cite ?("Okla. Stat. tit. 22, arraignment (not vendored)")
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite ?("Okla. Stat. tit. 22, arraignment (not vendored)")
+{
+  note "Arraignment, pleas and discovery are governed by Title 22 (not vendored); their periods are holes."
+  edge-arraignment-discovery "Discovery" -> discovery {
+    authority cite ?("Okla. Stat. tit. 22, discovery (not vendored)")
+  }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite ?("Okla. Stat. tit. 22, pretrial motions (not vendored)")
+{
+  note "The pretrial-motion period and the statutory speedy-trial demand and dismissal (Okla. Stat. tit. 22, § 812.1) are holes."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite ?("Okla. Stat. tit. 22, pretrial motions (not vendored)")
+  }
+  edge-discovery-speedy "Speedy-trial motion" -> motions-ruling {
+    authority cite ?("Okla. Stat. tit. 22, § 812.1 (not vendored)")
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite ?("Okla. Stat. tit. 22, pleas (not vendored)")
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite ?("Okla. Stat. tit. 22, pretrial motions (not vendored)")
+{
+  note "Dismissal for a speedy-trial violation and its effect on refiling are holes (Okla. Stat. tit. 22, § 812.1, not vendored)."
+  edge-motions-ruling-speedy "Dismissed for a speedy-trial violation" -> dismissed {
+    authority cite ?("Okla. Stat. tit. 22, § 812.1 (not vendored)")
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite ?("Okla. Stat. tit. 22, dismissal (not vendored)")
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite ?("Okla. Stat. tit. 22, pretrial motions (not vendored)")
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Okla. Ct. Crim. App. R. 4.1"
+{
+  note "Every plea in the district courts, except traffic, fish and game and non-predicate misdemeanor pleas, uses the plea of guilty summary of facts form (OCCA Form 13.10) (Okla. Ct. Crim. App. R. 4.1). The plea colloquy and its standards are otherwise governed by Title 22 (not vendored)."
+  edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
+    authority cite "Okla. Ct. Crim. App. R. 4.1"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite ?("Okla. Stat. tit. 22, trial (not vendored)")
+  }
+}
+
+decision trial: "Verdict" by court cite ?("Okla. Stat. tit. 22, trial and verdict (not vendored)")
+{
+  note "The jury-trial right, jury size and verdict are governed by the Oklahoma Constitution and Title 22 (not vendored)."
+  edge-trial-acquittal "Not guilty" -> acquitted {
+    authority cite ?("Okla. Stat. tit. 22, trial and verdict (not vendored)")
+  }
+  edge-trial-guilty "Guilty; sentencing" -> sentencing {
+    authority cite ?("Okla. Stat. tit. 22, judgment and sentence (not vendored)")
+  }
+}
+
+state sentencing: "Judgment and Sentence pronounced" by court cite "Okla. Ct. Crim. App. R. 2.1(B)"
+{
+  note "Sentencing is governed by Title 22 (not vendored). The Judgment and Sentence is in the form of OCCA Form 13.8 (Okla. Ct. Crim. App. R. 2.1(B)(4)), and the time to appeal runs from its pronouncement in open court (Okla. Ct. Crim. App. R. 1.4). A motion for new trial is not required to appeal (Okla. Ct. Crim. App. R. 2.1(B)(1)); a motion for new trial on newly discovered evidence is governed by Okla. Stat. tit. 22, §§ 952-953 (not vendored). If such a motion is filed within ten days of the Judgment and Sentence, the notice of intent to appeal is stayed, the trial court hears and rules on it within 30 days, and if it is denied the notice is due within ten days of the order (Okla. Ct. Crim. App. R. 2.1(A)(2))."
+  edge-sentencing-judgment "Judgment and Sentence imposed" -> judgment {
+    authority cite "Okla. Ct. Crim. App. R. 2.1(B)"
+  }
+}
+
+decision judgment: "Notice of intent to appeal" by applicant cite "Okla. Ct. Crim. App. R. 2.1(B)"
+{
+  note "After a trial, trial counsel commences the appeal by filing in the trial court a notice of intent to appeal and designation of record within ten days from the date the Judgment and Sentence is imposed in open court; the filing is jurisdictional and its absence waives the appeal (Okla. Ct. Crim. App. R. 2.1(B)). After a plea, the defendant must first apply to withdraw the plea within ten days from the pronouncement of the Judgment and Sentence (Okla. Ct. Crim. App. R. 4.2(A)). The appeal is perfected in the Court of Criminal Appeals within 90 days from the Judgment and Sentence (Okla. Ct. Crim. App. R. 1.4(A)); lit/core has no counting rule for OCCA Rule 1.4, so these periods are not encoded as counted deadlines."
+  edge-judgment-appeal "Notice of intent to appeal filed" -> appeal-taken {
+    authority cite "Okla. Ct. Crim. App. R. 2.1(B)"
+  }
+  edge-judgment-plea "Application to withdraw the plea filed" -> appeal-taken {
+    authority cite "Okla. Ct. Crim. App. R. 4.2(A)"
+  }
+  edge-judgment-no-appeal "No timely notice" -> conviction-final { authority cite "Okla. Ct. Crim. App. R. 2.1(B)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite ?("Okla. Stat. tit. 22, trial and verdict (not vendored)")
+{
+  note "Outcome from the defendant's side."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite ?("Okla. Stat. tit. 22, dismissal (not vendored)")
+{
+  note "Outcome from the defendant's side. Whether a dismissal bars refiling is a hole."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "Okla. Ct. Crim. App. R. 2.1(B)"
+{
+  note "The appeal, or the certiorari appeal from a plea, continues before the Oklahoma Court of Criminal Appeals (lit/ok-court-of-criminal-appeals)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "Okla. Ct. Crim. App. R. 2.1(B)"
+{
+  note "Outcome from the defendant's side: failure to file the notice of intent to appeal in time waives the right to appeal (Okla. Ct. Crim. App. R. 2.1(B)). An appeal out of time is sought by an application for post-conviction relief (Okla. Ct. Crim. App. R. 2.1(E)); the Post-Conviction Procedure Act (Okla. Stat. tit. 22, §§ 1080-1089) is not vendored, and federal habeas belongs to lit/habeas."
+}

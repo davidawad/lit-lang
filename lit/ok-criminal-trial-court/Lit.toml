@@ -1,0 +1,45 @@
+# Criminal cases in the Oklahoma district courts, as far as the vendored
+# text states. Oklahoma's criminal procedure is statutory (Okla. Stat. tit.
+# 22), and no Title 22 text is vendored (sources/ has no
+# ok-criminal-trial-court entry; the Oklahoma district court rules under
+# sources/ok-state-civil are PARTIAL), so every trial-court step's
+# authority is a hole and no trial-court period is stated. The Rules of
+# the Oklahoma Court of Criminal Appeals (sources/ok-court-of-criminal-
+# appeals, retrieved October 28, 2026) govern what the trial court and
+# trial counsel must do to begin an appeal: the plea form, the indigency
+# and notice forms, a post-judgment motion for new trial, the application
+# to withdraw a plea, and the notice of intent to appeal. Those are cited
+# with their periods, stated in notes because lit/core has no counting rule
+# for OCCA Rule 1.4. The appeal hands off to lit/ok-court-of-criminal-
+# appeals. in_force is the OCCA rules' retrieval date.
+[package]
+name = "ok-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "ok-criminal-trial-court"
+forum = "ok-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "oklahoma"
+title = "Oklahoma district courts, criminal"
+description = "Felony cases in the Oklahoma district courts, as far as the vendored text states: the structure of the case from arrest through charge, arraignment, pretrial motions, plea or trial, sentencing and judgment, with Title 22's provisions as holes; the steps the Rules of the Oklahoma Court of Criminal Appeals impose in the trial court (the plea form, a motion for new trial on newly discovered evidence, the application to withdraw a plea, and the ten-day notice of intent to appeal) hand off to the Court of Criminal Appeals."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Oklahoma trial courts of general criminal jurisdiction (district courts)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.occa-rules]
+title = "Rules of the Oklahoma Court of Criminal Appeals (Okla. Stat. tit. 22, ch. 18, app.), rule pages as served by okcca.net, retrieved 2026-10-28"
+url = "https://www.okcca.net/rules/"
+path = "sources/ok-court-of-criminal-appeals/occa-rules-2026-10-28.txt"
+path_sha256 = "1a31662e46ee236a0bb1b295ab12bf6322090e1229002aab2bcacfddba08577d"
+as_of = "2026-10-28"
+cite_prefixes = ["Okla. Ct. Crim. App. R."]
+section_heading = "Rule {n}"

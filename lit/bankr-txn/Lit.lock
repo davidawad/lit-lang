@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-txn-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:1f158b9e38c607236f5d5179a237c6f922ed8893379d170fd89c816b129a7693"
+semantic = "sha256:96e5a065eed32c22d83b685a17c634dffb4a471c574b7e98fdec2c14530a1b70"
+texts = [
+    "txnb-lbr sources/bankr-txn/txn-local-rules-2025-12-01-sectioned.txt sha256:05b34334185423692470c671997c8881ac0704cd00d2424d351a3175d00207fa",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-txn"
-version = "0.0.1"
-language = 1
-source = "sha256:5dece97fab2bc36e1074c233dcae5393a5da7b7758577fb03525e18c9d81624c"
-semantic = "sha256:697efb71fbbcfe226e1a9315f7ae1c60abdcd280c8c9bc1649508ea52ec5c6a7"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

@@ -1,0 +1,149 @@
+module va-circuit-court-civil.civil
+
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "Va. Sup. Ct. R. 3:2"
+{
+  note "A civil action is commenced by filing a complaint in the clerk's office; the statutory writ tax and clerk's fees are paid before the summons issues (Va. Sup. Ct. R. 3:2(a)). A complaint requesting money damages states the amount sought in an ad damnum clause (Va. Sup. Ct. R. 3:2(c)(ii)). Periods in this package are stated, not counted: Code § 1-210 computes them and is not vendored, and no lit/core counting rule encodes it. When a period runs from service of a paper on counsel, Rule 1:7 adds one day for next-day commercial delivery or after-5:00 p.m. delivery, three days for mail, and none for delivery by 5:00 p.m. (Va. Sup. Ct. R. 1:7). The earlier outline named no leading decision."
+  edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    authority cite "Va. Sup. Ct. R. 3:5"
+  }
+  edge-complaint-filed-late-service "Served more than one year after filing" -> service-diligence {
+    authority cite "Va. Sup. Ct. R. 3:5(e)"
+  }
+}
+
+decision service-diligence: "Due diligence in serving shown?" by court cite "Va. Sup. Ct. R. 3:5(e)"
+{
+  note "No order, judgment or decree is entered against a defendant served more than one year after the action was instituted against it unless the court finds as a fact that the plaintiff exercised due diligence to have timely service (Va. Sup. Ct. R. 3:5(e)). Service of process itself is governed by Code §§ 8.01-285 to 8.01-320, which are not vendored."
+  edge-service-diligence-shown "Due diligence found" -> answer-due {
+    authority cite "Va. Sup. Ct. R. 3:5(e)"
+  }
+  edge-service-diligence-none "No due diligence" -> no-judgment-late-service {
+    authority cite "Va. Sup. Ct. R. 3:5(e)"
+  }
+}
+
+terminal no-judgment-late-service: "No judgment: service after one year without due diligence" outcome [loss, dismissal] cite "Va. Sup. Ct. R. 3:5(e)"
+
+decision answer-due: "Answer, demurrer or default" by office cite "Va. Sup. Ct. R. 3:8(a)"
+{
+  note "A defendant files pleadings in response within 21 days after service of the summons and complaint, or, if service was timely waived on request under Code § 8.01-286.1, within 60 days after the waiver request was sent (90 days if the defendant was addressed outside the Commonwealth) (Va. Sup. Ct. R. 3:8(a)); the summons gives the same 21-day notice (Va. Sup. Ct. R. 3:5(a)). A responsive pleading other than an answer is limited to a demurrer, plea, motion to dismiss, motion for a bill of particulars, motion craving oyer, or a written motion asserting a preliminary defense under Code § 8.01-276, and is responsive only to the counts it addresses; after an initial response, a further demurrer, plea or motion needs leave of court for good cause (Va. Sup. Ct. R. 3:8(a), (a1)). A general denial of the entire complaint is not permitted."
+  edge-answer-due-default "No timely responsive pleading" -> default-entered {
+    authority cite "Va. Sup. Ct. R. 3:19(a)"
+  }
+  edge-answer-due-demurrer "Demurrer, plea or motion filed" -> pleading-motion {
+    authority cite "Va. Sup. Ct. R. 3:8(a)"
+  }
+  edge-answer-due-answer "Answer filed" -> discovery { authority cite "Va. Sup. Ct. R. 3:8(a)" }
+}
+
+decision pleading-motion: "Demurrer, plea or motion decided" by court cite "Va. Sup. Ct. R. 3:8(b)"
+{
+  note "When the court enters its order overruling all of a defendant's demurrers, pleas and motions, the defendant files an answer within 21 days after entry of the order unless it has already done so or the court prescribes another time (Va. Sup. Ct. R. 3:8(b)). An order sustaining a demurrer with prejudice or without leave to amend disposes of the claims subject to it, and an order sustaining a demurrer with leave to amend by a specific time disposes of them if the amended pleading is not filed in that time (Va. Sup. Ct. R. 1:1(c)). Where leave to amend is granted other than on a written motion, the amended pleading is filed within 21 days after leave is granted or in such time as the court prescribes (Va. Sup. Ct. R. 1:8). The demurrer statute (Code § 8.01-273) is not vendored. Motions are noticed in writing at least seven days before the hearing absent leave; a supporting brief of five or fewer pages is filed and served at least 14 days, and an opposition at least seven days, before the hearing; a brief may not exceed 20 double-spaced pages absent leave (Va. Sup. Ct. R. 4:15(b), (c))."
+  edge-pleading-motion-sustained "Sustained with prejudice" -> dismissed-pleading {
+    authority cite "Va. Sup. Ct. R. 1:1(c)"
+  }
+  edge-pleading-motion-leave "Sustained with leave to amend" -> amend {
+    authority cite "Va. Sup. Ct. R. 1:8"
+  }
+  edge-pleading-motion-overruled "Overruled: answer within 21 days of the order" -> discovery {
+    authority cite "Va. Sup. Ct. R. 3:8(b)"
+  }
+}
+
+state amend: "Amended pleading" by applicant cite "Va. Sup. Ct. R. 1:8"
+{
+  note "No pleading may be amended after filing save by leave of court, which should be liberally granted in furtherance of the ends of justice; a written motion for leave is accompanied by the proposed amended pleading, deemed filed as of the order granting leave (Va. Sup. Ct. R. 1:8). If the amended pleading is not filed within the time the order sets, the order sustaining the demurrer disposes of the claims (Va. Sup. Ct. R. 1:1(c))."
+  edge-amend-tested "Amended pleading tested again" -> pleading-motion {
+    authority cite "Va. Sup. Ct. R. 3:8(a)"
+  }
+  edge-amend-not-filed "Not filed in the time allowed" -> dismissed-pleading {
+    authority cite "Va. Sup. Ct. R. 1:1(c)"
+  }
+}
+
+terminal dismissed-pleading: "Dismissed on the pleadings" outcome [win, dismissal] cite "Va. Sup. Ct. R. 1:1(c)"
+{
+  note "Outcome from the defending side. The order becomes final 21 days after entry (Va. Sup. Ct. R. 1:1(a)); an appeal lies under Rule 5A:6."
+}
+
+decision default-entered: "Defendant in default" by court cite "Va. Sup. Ct. R. 3:19(a)"
+{
+  note "A defendant who fails to timely file a responsive pleading under Rule 3:8 is in default, is not entitled to notice of further proceedings except as subsection (c) provides, and is deemed to have waived trial by jury (Va. Sup. Ct. R. 3:19(a)). Before judgment, for good cause the court may grant leave to file a late responsive pleading, conditioned on reimbursing the plaintiff's extra costs and fees (Va. Sup. Ct. R. 3:19(b))."
+  edge-default-entered-judgment "Default judgment on the plaintiff's motion" -> default-judgment {
+    authority cite "Va. Sup. Ct. R. 3:19(c)"
+  }
+  edge-default-entered-relief "Leave to file a late responsive pleading" -> discovery {
+    authority cite "Va. Sup. Ct. R. 3:19(b)"
+  }
+}
+
+terminal default-judgment: "Default judgment entered" outcome [loss] cite "Va. Sup. Ct. R. 3:19(c)"
+{
+  note "On the plaintiff's motion, with written notice mailed to the defendant's last known address or a certification of good-faith efforts, the court enters judgment for the relief appearing due; unliquidated damages are fixed after hearing evidence, or by a jury if the plaintiff demands one (Va. Sup. Ct. R. 3:19(c)). Within the 21 days of Rule 1:1 the court may relieve the defendant of the default judgment by written order; after that, only as Code §§ 8.01-428 and 8.01-623 provide (Va. Sup. Ct. R. 3:19(d)). Outcome from the defending side."
+}
+
+state discovery: "Discovery and pretrial" by applicant cite "Va. Sup. Ct. R. 4:1(a)"
+{
+  note "Discovery is by depositions, interrogatories, production and inspection, physical and mental examinations, and requests for admission (Va. Sup. Ct. R. 4:1(a)), of any non-privileged matter relevant to the subject matter of the action, limited by the court for cumulative, duplicative or unduly burdensome discovery (Va. Sup. Ct. R. 4:1(b)(1)). A jury is demanded in the complaint or by serving and filing a written demand not later than 10 days after service of the last pleading directed to the issue; failure to do so waives a jury absent leave for good cause (Va. Sup. Ct. R. 3:21(b), (d))."
+  edge-discovery-dispute "Motion to compel or for sanctions" -> discovery-dispute {
+    authority cite "Va. Sup. Ct. R. 4:12(a)"
+  }
+  edge-discovery-sj "Summary judgment motion" -> sj-motion { authority cite "Va. Sup. Ct. R. 3:20" }
+  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Va. Sup. Ct. R. 3:22" }
+  edge-discovery-settle "Settled: agreed order of dismissal" -> settled {
+    authority cite "Va. Sup. Ct. R. 1:13"
+  }
+}
+
+decision discovery-dispute: "Discovery dispute decided" by court cite "Va. Sup. Ct. R. 4:12(a)"
+{
+  note "A motion to compel is accompanied by a certification of a good-faith effort to confer; the court awards the expenses of the motion, including attorney fees, against the losing side unless its position was substantially justified (Va. Sup. Ct. R. 4:12(a)(2), (4)). If a party fails to obey an order to provide discovery, the court may, among other orders, strike pleadings, dismiss the action or render a default judgment (Va. Sup. Ct. R. 4:12(b)(2)(C)); a party's failure to attend its own deposition or to answer interrogatories or production requests may draw those sanctions without a prior order to compel (Va. Sup. Ct. R. 4:12(d)). The earlier outline named no leading decision."
+  edge-discovery-dispute-resolved "Resolved: discovery continues" -> discovery {
+    authority cite "Va. Sup. Ct. R. 4:12(a)"
+  }
+  edge-discovery-dispute-sanction "Dismissal as a sanction" -> dismissed-sanction {
+    authority cite "Va. Sup. Ct. R. 4:12(b)"
+  }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "Va. Sup. Ct. R. 4:12(b)"
+
+decision sj-motion: "Summary judgment decided" by court cite "Va. Sup. Ct. R. 3:20"
+{
+  note "Any party may move for summary judgment at any time after the parties are at issue, except in divorce or annulment; the court grants it if the pleadings, pretrial orders and admissions show the movant entitled to judgment, and may not enter it if any material fact is genuinely in dispute. Discovery depositions may not support it unless all parties agree or Code § 8.01-420(B) allows; in an action only between business entities with $50,000 or more at issue, depositions and affidavits may be used (Va. Sup. Ct. R. 3:20). An order granting summary judgment disposes of the claims it addresses (Va. Sup. Ct. R. 1:1(d))."
+  edge-sj-motion-granted "Granted" -> judgment-entered { authority cite "Va. Sup. Ct. R. 1:1(d)" }
+  edge-sj-motion-denied "Denied" -> trial { authority cite "Va. Sup. Ct. R. 3:22" }
+}
+
+state trial: "Trial by jury or by the court" by court cite "Va. Sup. Ct. R. 3:22"
+{
+  note "Issues for which a jury was demanded under Rule 3:21 are tried by jury unless the parties stipulate to a bench trial or the court finds no jury right exists; other issues are tried by the court (Va. Sup. Ct. R. 3:22(a), (b)). A claim for attorney fees must have been demanded in a pleading, identifying its basis, or it is waived (Va. Sup. Ct. R. 3:25(b), (c))."
+  edge-trial-judgment "Verdict or decision" -> judgment-entered {
+    authority cite "Va. Sup. Ct. R. 1:1(a)"
+  }
+}
+
+decision judgment-entered: "Final judgment entered" by office cite "Va. Sup. Ct. R. 1:1(a)"
+{
+  note "A final judgment remains under the trial court's control and may be modified, vacated or suspended for twenty-one days after the date of entry, and no longer; the date of entry is the date the judge signs it (Va. Sup. Ct. R. 1:1(a)). A judgment is final if it disposes of the entire matter, gives all the relief contemplated, and leaves only ministerial execution (Va. Sup. Ct. R. 1:1(b)). Post-trial motions are heard within that 21-day window; the motion-to-set-aside statute (Code § 8.01-430) is not vendored."
+  edge-judgment-entered-appeal "Notice of appeal within 30 days" -> appeal-taken {
+    authority cite "Va. Sup. Ct. R. 5A:6(a)"
+  }
+  edge-judgment-entered-final "No appeal" -> final-no-appeal {
+    authority cite "Va. Sup. Ct. R. 1:1(a)"
+  }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Virginia appellate package" outcome [appeal] cite "Va. Sup. Ct. R. 5A:6(a)"
+{
+  note "Except as a statute provides otherwise, the notice of appeal is filed with the clerk of the trial court within 30 days after entry of final judgment, with a copy to all opposing counsel (Va. Sup. Ct. R. 5A:6(a)). Hand-off to lit/va-appellate-civil (va-court-of-appeals-civil)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Va. Sup. Ct. R. 1:1(a)"
+
+terminal settled: "Settled: dismissed by agreed order" outcome [settlement] cite "Va. Sup. Ct. R. 1:13"
+{
+  note "A draft order is endorsed by counsel of record, or served with reasonable notice of its presentation on counsel who have not endorsed it (Va. Sup. Ct. R. 1:13). Voluntary nonsuit (Code § 8.01-380) is not vendored and not modeled."
+}

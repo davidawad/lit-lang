@@ -142,7 +142,7 @@ impl<'a> CiteGrammar<'a> {
 pub fn parse_cite_string(raw: &str, grammar: &CiteGrammar<'_>) -> Vec<CiteRef> {
     let mut out = vec![];
     let mut last_family: Option<Family> = None;
-    for segment in raw.split(';') {
+    for segment in split_outside_prefixes(raw, ';', false, grammar) {
         let segment = segment.trim();
         if segment.is_empty() {
             continue;
@@ -156,7 +156,7 @@ pub fn parse_cite_string(raw: &str, grammar: &CiteGrammar<'_>) -> Vec<CiteRef> {
             ));
             continue;
         }
-        for piece in split_top_level_commas(segment) {
+        for piece in split_outside_prefixes(segment, ',', true, grammar) {
             let piece = piece.trim();
             if piece.is_empty() {
                 continue;
@@ -278,19 +278,45 @@ fn range_members(lo: &str, hi: &str) -> Option<Vec<String>> {
     (b >= a && b - a < 100).then(|| (a..=b).map(|n| format!("{prefix}.{n}")).collect())
 }
 
-/// Split on commas that are not inside `(...)` (so `"§ 3142(b), (c)"` splits
-/// into `["§ 3142(b)", "(c)"]`, not something that severs the parenthetical).
-fn split_top_level_commas(s: &str) -> Vec<&str> {
+/// Split `s` on `sep`, never inside one of `grammar`'s rule prefixes
+/// (`MLBR App. 1, Rule 13-1` is one citation, not `MLBR App. 1` and
+/// `Rule 13-1`) and, when `parens`, never inside `(...)` (so `"§ 3142(b),
+/// (c)"` splits into `["§ 3142(b)", "(c)"]`, not something that severs the
+/// parenthetical).
+fn split_outside_prefixes<'s>(
+    s: &'s str,
+    sep: char,
+    parens: bool,
+    grammar: &CiteGrammar<'_>,
+) -> Vec<&'s str> {
     let mut out = vec![];
     let mut depth = 0i32;
     let mut start = 0usize;
+    let mut skip_to = 0usize;
+    let mut prev: Option<char> = None;
     for (i, c) in s.char_indices() {
+        let at_word = !prev.is_some_and(char::is_alphanumeric);
+        prev = Some(c);
+        if i < skip_to {
+            continue;
+        }
+        if at_word {
+            let held = grammar
+                .rules
+                .iter()
+                .filter(|(p, _)| p.contains(sep))
+                .find_map(|&(p, _)| prefix_byte_len(&s[i..], p));
+            if let Some(n) = held {
+                skip_to = i + n;
+                continue;
+            }
+        }
         match c {
-            '(' => depth += 1,
-            ')' => depth -= 1,
-            ',' if depth <= 0 => {
+            '(' if parens => depth += 1,
+            ')' if parens => depth -= 1,
+            c if c == sep && depth <= 0 => {
                 out.push(&s[start..i]);
-                start = i + 1;
+                start = i + c.len_utf8();
             }
             _ => {}
         }

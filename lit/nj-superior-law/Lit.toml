@@ -1,0 +1,39 @@
+# Civil actions in the Law Division of the New Jersey Superior Court under
+# the New Jersey Rules of Court, as far as the vendored text states: the
+# rules the earlier outline cited, as published with amendments effective
+# on or before September 1, 2026 (sources/nj-superior-law). Computation of
+# time is governed by R. 1:3-1, which is not vendored, and New Jersey's
+# legal holidays differ from the federal ones; lit/core has no counting
+# rule for it, so the periods are stated in notes, not encoded as counted
+# deadlines. An appeal hands off to the New Jersey appellate package
+# (lit/nj-appellate-civil).
+[package]
+name = "nj-superior-law-civil"
+version = "0.1.0"
+language = 1
+pack_id = "nj-superior-law-civil"
+forum = "nj-superior-law"
+authority = "StateRule"
+title = "New Jersey Superior Court, Law Division, civil"
+description = "Civil actions in the Law Division of the New Jersey Superior Court under the New Jersey Rules of Court, as far as the vendored text states: the summons and service, the time to answer and its extension, motions to dismiss and amendment, entry of default and judgment by default, discovery, its end dates and dismissal for failure to make discovery, summary judgment, trial and the motion for judgment, settlement of the form of judgment, the new trial motion, relief from judgment, and the appeal (lit/nj-appellate-civil)."
+in_force = "2026-09-01"
+known_at = "2026-10-28"
+unknown_before = "2026-09-01"
+jurisdiction = "New Jersey Superior Court, Law Division (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.nj-rules]
+title = "New Jersey Rules of Court (cited civil rules), amendments effective on or before Sept. 1, 2026"
+url = "https://www.njcourts.gov/attorneys/rules-of-court"
+path = "sources/nj-superior-law/rules-of-court-cited-2026-09-01.txt"
+path_sha256 = "5421bdb6bac199cfd0872d7591a33dfdd3b8bec216156e3ea7aaeb5ebf3f9088"
+as_of = "2026-09-01"
+cite_prefixes = ["N.J. Ct. R."]
+section_heading = "N.J. Ct. R. {n}"

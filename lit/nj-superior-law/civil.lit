@@ -1,0 +1,195 @@
+module nj-superior-law-civil.civil
+
+// Civil actions in the Law Division of the New Jersey Superior Court, from
+// the applicant's (plaintiff's) side. Every period below is stated in a
+// note, not counted: time is computed under R. 1:3-1, which is not
+// vendored, and lit/core has no counting rule for it or for New Jersey's
+// legal holidays. Only the rules the earlier outline cited are vendored;
+// rules they refer to (the summons form and service by mail, R. 4:4-2 to
+// 4:4-3 and 4:4-5; the discovery devices, R. 4:14 to 4:22; R. 4:46-2, the
+// summary judgment standard and statements of material facts; R. 4:50-2,
+// the time for a motion for relief from judgment; R. 1:8-1, the jury
+// demand; and R. 2:4-1, the time to appeal) are not, so what they say stays
+// out. The earlier outline named two decisions, Printing Mart-Morristown v.
+// Sharp Electronics Corp., 116 N.J. 739 (1989), on the motion to dismiss,
+// and Brill v. Guardian Life Insurance Co. of America, 142 N.J. 520 (1995),
+// on summary judgment; no reporter text is vendored, so they are removed.
+start complaint-filed
+
+state complaint-filed: "Complaint filed: one form of action" by applicant cite "N.J. Ct. R. 4:2-1"
+{
+  note "There is one form of action in civil practice, the civil action (R. 4:2-1). The plaintiff, the plaintiff's attorney or the clerk may issue the summons; if it is not issued within 15 days from the date of the Track Assignment Notice, the action may be dismissed under R. 4:37-2(a) (R. 4:4-1). The primary method of obtaining in personam jurisdiction over a defendant in New Jersey is personal service of the summons and complaint within the State on the persons R. 4:4-4(a) lists; if, by affidavit, personal service cannot be made despite diligent effort and inquiry, jurisdiction may be obtained by personal service outside the State or by registered or certified and ordinary mail (R. 4:4-4(b)(1)). Mailed service in lieu of personal service is effective only if the defendant answers or appears, no default may be entered on it, and if the defendant does not answer or appear within 60 days following mailed service, service is made as otherwise prescribed and the time under R. 4:4-1 for issuing the summons begins anew (R. 4:4-4(c))."
+  edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    authority cite "N.J. Ct. R. 4:4-4(a)"
+  }
+}
+
+decision answer-due: "Answer, motion to dismiss, or no response" by office cite "N.J. Ct. R. 4:6-1(a)"
+{
+  note "The defendant serves an answer, including any counterclaim, within 35 days after service of the summons and complaint on it; an answer to a counterclaim or crossclaim is served within 35 days after its service, and a reply to an answer, where permitted, within 20 days after service of the answer (R. 4:6-1(a)). The time may be enlarged once by written consent of the parties for not more than 60 days, the consent filed with the responsive pleading within that period; further enlargements only by court order on notice for good cause (R. 4:6-1(c)). Every defense is asserted in the answer, except that lack of subject-matter or personal jurisdiction, insufficiency of process or of service, failure to state a claim and failure to join a party without whom the action cannot proceed may be made by motion, with briefs, before pleading (R. 4:6-2)."
+  edge-answer-due-answer "Answer filed" -> answered { authority cite "N.J. Ct. R. 4:6-1(a)" }
+  edge-answer-due-motion "Motion to dismiss under R. 4:6-2" -> dismissal-motion {
+    authority cite "N.J. Ct. R. 4:6-2"
+  }
+  edge-answer-due-default "No answer or defense: default requested" -> default-entered {
+    authority cite "N.J. Ct. R. 4:43-1"
+  }
+}
+
+decision dismissal-motion: "Motion to dismiss decided" by court cite "N.J. Ct. R. 4:6-2"
+{
+  note "A motion to dismiss for failure to state a claim, and any opposition, is filed and served on the time frames of R. 4:46-1; if matters outside the pleading are presented and not excluded, the motion is treated as one for summary judgment under R. 4:46, on reasonable notice and opportunity to present pertinent material (R. 4:6-2). Unless the court fixes a different time, if the motion is denied in whole or part or its disposition postponed until trial, the responsive pleading is served within 10 days after notice of the court's action; if a more definite statement is ordered, within 10 days after its service (R. 4:6-1(b))."
+  edge-dismissal-motion-granted "Granted: complaint dismissed" -> dismissed-pleading {
+    authority cite "N.J. Ct. R. 4:6-2"
+  }
+  edge-dismissal-motion-amend "Plaintiff amends the complaint" -> amended {
+    authority cite "N.J. Ct. R. 4:9-1"
+  }
+  edge-dismissal-motion-denied "Denied: answer due 10 days after notice" -> answered {
+    authority cite "N.J. Ct. R. 4:6-1(b)"
+  }
+}
+
+state amended: "Amended pleading" by applicant cite "N.J. Ct. R. 4:9-1"
+{
+  note "A party may amend any pleading as of course before a responsive pleading is served or, if no responsive pleading is to be served and the action is not on the trial calendar, within 90 days after it is served; thereafter only by written consent of the adverse party or by leave of court, freely given in the interest of justice, on a motion annexing the proposed amended pleading. The response to an amended pleading is due within the time remaining for response to the original pleading or within 20 days after service of the amended pleading, whichever is longer, unless the court orders otherwise (R. 4:9-1)."
+  edge-amended-tested "Amended pleading met with a new motion to dismiss" -> dismissal-motion {
+    authority cite "N.J. Ct. R. 4:6-2"
+  }
+  edge-amended-answered "Amended pleading answered" -> answered {
+    authority cite "N.J. Ct. R. 4:9-1"
+  }
+}
+
+terminal dismissed-pleading: "Dismissed on a motion under R. 4:6-2" outcome [loss, dismissal] cite "N.J. Ct. R. 4:6-2"
+{
+  note "Outcome from the applicant's side. A final judgment, one that finally resolves all issues as to all parties, is appealable to the Appellate Division as of right (R. 2:2-3(a), (b)); the time to appeal is set by R. 2:4-1, which is not vendored."
+}
+
+state default-entered: "Default entered by the clerk" by office cite "N.J. Ct. R. 4:43-1"
+{
+  note "If a party against whom affirmative relief is sought fails to plead or otherwise defend, or its answer is stricken with prejudice, the clerk enters a default on a formal written request supported by the attorney's affidavit reciting service and that the time to answer has expired and not been extended; the request and affidavit are filed together within 6 months of the actual default, and later only on notice of motion; the attorney mails a copy of the default to a defendant served personally or by mail (R. 4:43-1). No default is entered on optional mailed service (R. 4:4-4(c)). A final judgment by default may be entered after, but not simultaneously with, the default: by the clerk for a sum certain on an affidavit of the items, and by the court on notice of motion in all other cases, with proof hearings as needed; notice of an application made more than six months after the default is mailed to the defendant (R. 4:43-2(a), (b)). If the party entitled to a default judgment does not apply within four months after the default, the court issues a written notice under R. 1:13-7(a) (R. 4:43-2(d)). Setting aside an entry of default is governed by R. 4:43-3, which is not vendored."
+  edge-default-entered-judgment "Final judgment by default" -> default-judgment {
+    authority cite "N.J. Ct. R. 4:43-2"
+  }
+}
+
+decision default-judgment: "Final judgment by default entered" by court cite "N.J. Ct. R. 4:43-2"
+{
+  note "The judgment may not differ in kind from nor exceed the amount demanded in the pleading, and within seven days after receipt of the executed judgment the proponent serves a copy on the defaulting defendant, by ordinary mail alone if it chooses (R. 4:43-2(c)). On motion, with briefs, the court may relieve a party from a final judgment for mistake, inadvertence, surprise or excusable neglect, newly discovered evidence, fraud or misconduct of an adverse party, a void or satisfied judgment, or any other reason justifying relief (R. 4:50-1); the time for that motion is in R. 4:50-2, which is not vendored."
+  edge-default-judgment-stands "No relief sought: judgment stands" -> default-won {
+    authority cite "N.J. Ct. R. 4:43-2"
+  }
+  edge-default-judgment-relieved "Defendant relieved from the judgment: answers" -> answered {
+    authority cite "N.J. Ct. R. 4:50-1"
+  }
+}
+
+terminal default-won: "Default judgment for applicant" outcome [win] cite "N.J. Ct. R. 4:43-2"
+{
+  note "Outcome from the applicant's side: a final judgment by default under R. 4:43-2."
+}
+
+state answered: "Answer filed" by applicant cite "N.J. Ct. R. 4:6-1(a)"
+{
+  note "The party filing the responsive pleading certifies that it was served within the time allowed by R. 4:6 or the other rule it names (R. 4:6-1(d)). The answer includes any counterclaim (R. 4:6-1(a))."
+  edge-answered-discovery "Case proceeds to discovery" -> discovery {
+    authority cite "N.J. Ct. R. 4:10-2(a)"
+  }
+}
+
+state discovery: "Discovery" by applicant cite "N.J. Ct. R. 4:10-2(a)"
+{
+  note "Parties may obtain discovery of any matter, not privileged, relevant to the subject matter of the action, including electronically stored information (R. 4:10-2(a)); trial preparation materials and expert discovery are limited (R. 4:10-2(c), (d)). Discovery is completed within the time for the case's Track, counted from the first answer or 90 days after the first defendant is served, whichever is first: Track I 150 days, Track II 300 days, Tracks III and IV 450 days; joining a new party extends the discovery end date by 60 days, and the party joining it shares discovery within 20 days after service of the new party's initial pleading (R. 4:24-1(a), (b)). The parties may consent to extend discovery once by 60 days before it expires; otherwise a motion is made returnable before the period ends, and no extension is permitted after an arbitration or trial date is fixed absent exceptional circumstances (R. 4:24-1(c)). On remand from a federal court, the time from the notice of removal to the filing of the remand order is excluded, and a case management conference is held within thirty days of the filing of the remand order (R. 4:24-1(d))."
+  edge-discovery-delinquent "Demand for discovery not complied with" -> discovery-dismissal {
+    authority cite "N.J. Ct. R. 4:23-5(a)"
+  }
+  edge-discovery-order-disobeyed "Order to provide discovery disobeyed" -> discovery-sanction {
+    authority cite "N.J. Ct. R. 4:23-2(b)"
+  }
+  edge-discovery-sj "Motion for summary judgment" -> summary-judgment {
+    authority cite "N.J. Ct. R. 4:46-1"
+  }
+  edge-discovery-trial "Case reaches trial" -> trial { authority cite "N.J. Ct. R. 4:24-1(c)" }
+  edge-discovery-settled "Settlement" -> settled { authority cite "N.J. Ct. R. 4:42-1(d)" }
+}
+
+decision discovery-dismissal: "Dismissal or suppression for failure to make discovery" by court cite "N.J. Ct. R. 4:23-5(a)"
+{
+  note "If a demand for discovery under R. 4:17, 4:18 or 4:19 is not complied with and no timely motion for an extension or protective order is made, the party entitled to discovery may move on notice, with an affidavit, for an order dismissing or suppressing the delinquent party's pleading, which the court enters without prejudice unless good cause for other relief is shown; counsel for the delinquent party serves it on the client with the Appendix II-A notice (R. 4:23-5(a)(1)). After 60 days from the date of that order, if it is not vacated, the party entitled to discovery may move for dismissal or suppression with prejudice; the delinquent party's attorney files and serves, not later than 7 days before the return date, an affidavit that the client was served and notified, and appears on the return date (R. 4:23-5(a)(2)). Before moving to dismiss, a party may move to compel; the order compelling discovery fixes the compliance date (R. 4:23-5(c))."
+  edge-discovery-dismissal-cured "Discovery provided or order vacated: discovery continues" -> discovery {
+    authority cite "N.J. Ct. R. 4:23-5(a)"
+  }
+  edge-discovery-dismissal-prejudice "Dismissed with prejudice" -> dismissed-sanction {
+    authority cite "N.J. Ct. R. 4:23-5(a)"
+  }
+}
+
+decision discovery-sanction: "Sanction for failure to obey a discovery order" by court cite "N.J. Ct. R. 4:23-2(b)"
+{
+  note "If a party fails to obey an order to provide or permit discovery, the court may order designated facts taken as established, refuse the disobedient party support or opposition of designated claims or defenses, strike pleadings, stay proceedings, dismiss the action in whole or part with or without prejudice, render a judgment by default, or treat the failure as contempt, and requires payment of the reasonable expenses, including attorney's fees, caused by the failure unless it was substantially justified (R. 4:23-2(b))."
+  edge-discovery-sanction-continues "Sanction short of dismissal: discovery continues" -> discovery {
+    authority cite "N.J. Ct. R. 4:23-2(b)"
+  }
+  edge-discovery-sanction-dismissed "Action dismissed as a sanction" -> dismissed-sanction {
+    authority cite "N.J. Ct. R. 4:23-2(b)"
+  }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "N.J. Ct. R. 4:23-2(b)"
+{
+  note "Outcome from the applicant's side. An order of dismissal or suppression under R. 4:23-5 is entered only in favor of the moving party (R. 4:23-5(a)(3))."
+}
+
+decision summary-judgment: "Summary judgment decided" by court cite "N.J. Ct. R. 4:46-1"
+{
+  note "A party seeking affirmative relief may move for summary judgment at any time after 35 days from service of the pleading claiming it; a party against whom a claim is asserted may move at any time. Motions are returnable no later than 30 days before the scheduled trial date unless the court orders otherwise for good cause, and an adjournment is liberally granted if the decision is not communicated at least 10 days before trial. Unless R. 6:3-3 or the court provides otherwise, the motion is served and filed not later than 28 days before the return date; opposing papers and cross-motions not later than 10 days before it; and answers or responses to them not later than four days before it; no other papers without leave (R. 4:46-1). The summary judgment standard, R. 4:46-2, is not vendored."
+  edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-entered {
+    authority cite "N.J. Ct. R. 4:46-1"
+  }
+  edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-entered {
+    authority cite "N.J. Ct. R. 4:46-1"
+  }
+  edge-summary-judgment-denied "Denied" -> trial { authority cite "N.J. Ct. R. 4:46-1" }
+}
+
+state trial: "Trial by jury or by the court" by court cite "N.J. Ct. R. 1:8-2(b)"
+{
+  note "A deliberating civil jury is six persons unless the court for good cause orders 12 on a demand under R. 1:8-1(b), or the parties agree on the record to fewer or more (R. 1:8-2(b)). Unless the parties agree otherwise before deliberations, the verdict is by five jurors when six deliberate and by 10 when 12 deliberate (R. 1:8-2(c)). A party may move for judgment, stating the grounds, at the close of all the evidence or of the opponent's evidence; a denied motion is not a waiver of trial by jury (R. 4:40-1)."
+  edge-trial-judgment "Motion for judgment at trial granted" -> judgment-entered {
+    authority cite "N.J. Ct. R. 4:40-1"
+  }
+  edge-trial-verdict "Verdict or decision" -> judgment-entered {
+    authority cite "N.J. Ct. R. 1:8-2(c)"
+  }
+  edge-trial-settled "Settlement during trial" -> settled { authority cite "N.J. Ct. R. 4:42-1(d)" }
+}
+
+decision judgment-entered: "Judgment entered" by court cite "N.J. Ct. R. 4:42-1"
+{
+  note "A judgment or order states its subject, hearing dates, appearances, numbered substantive provisions and effective date (R. 4:42-1(a)). Unless the rules provide otherwise, its form is settled on motion on notice or by endorsed consent, and formal written judgments are presented for execution within 10 days after the decision is made known unless enlarged for good cause (R. 4:42-1(b)); alternatively the proponent forwards it to the judge and serves the other parties with notice that it may be signed unless specific written objections are made within 5 days after service (R. 4:42-1(c)). A motion for a new trial is served not later than 20 days after the court's conclusions are announced in a nonjury action or after the return of the jury's verdict; a cross-motion within 10 days after service of the motion; and the court on its own motion may order a new trial not later than 20 days after entry of judgment (R. 4:49-1(b), (c)). A new trial motion does not bar an appeal (R. 4:49-1(d)). The court may relieve a party from a final judgment or order for the reasons R. 4:50-1 lists."
+  edge-judgment-entered-new-trial "New trial granted" -> trial {
+    authority cite "N.J. Ct. R. 4:49-1(a)"
+  }
+  edge-judgment-entered-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "N.J. Ct. R. 2:2-3(a)"
+  }
+  edge-judgment-entered-final "No appeal" -> final-no-appeal {
+    authority cite "N.J. Ct. R. 2:2-3(b)"
+  }
+}
+
+terminal settled: "Settled: consent judgment or dismissal" outcome [settlement] cite "N.J. Ct. R. 4:42-1(d)"
+{
+  note "The court may enter a consent judgment or order without all signatures if it recites that all parties consented; a party that has not pleaded or appeared signs it; consent judgments may be entered at any time after service of the complaint (R. 4:42-1(d))."
+}
+
+terminal appeal-taken: "Appeal taken: continue in the New Jersey appellate package" outcome [appeal] cite "N.J. Ct. R. 2:2-3(a)"
+{
+  note "Appeals lie to the Appellate Division as of right from final judgments of the Superior Court trial divisions, final judgments being those that finally resolve all issues as to all parties, and from the interlocutory orders R. 2:2-3(b) lists (R. 2:2-3(a), (b)). Hand-off to lit/nj-appellate-civil (nj-appellate-civil); the time to appeal (R. 2:4-1) is not vendored."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "N.J. Ct. R. 2:2-3(b)"
+{
+  note "Outcome when no appeal is taken from a final judgment (R. 2:2-3(b))."
+}

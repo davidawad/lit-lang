@@ -171,7 +171,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | Nebraska | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/nebraska/state-appellate`, `outlines/eighth-circuit/nebraska/state-civil`, `outlines/eighth-circuit/nebraska/state-criminal` |
 | Nevada | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/nevada/state-appellate`, `outlines/ninth-circuit/nevada/state-civil`, `outlines/ninth-circuit/nevada/state-criminal` |
 | New Hampshire | state | outline | 0 | 0 | 0 | 0 | `outlines/first-circuit/new-hampshire/state-appellate`, `outlines/first-circuit/new-hampshire/state-civil`, `outlines/first-circuit/new-hampshire/state-criminal` |
-| New Jersey | state | outline | 0 | 0 | 0 | 0 | `outlines/third-circuit/new-jersey/state-appellate`, `outlines/third-circuit/new-jersey/state-civil`, `outlines/third-circuit/new-jersey/state-criminal` |
+| New Jersey | state | promoted | 0 | 0 | 0 | 0 | `lit/nj-superior-law` |
 | New Mexico | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/new-mexico/state-appellate`, `outlines/tenth-circuit/new-mexico/state-civil`, `outlines/tenth-circuit/new-mexico/state-criminal` |
 | New York | state | outline | 0 | 0 | 0 | 0 | `outlines/second-circuit/new-york/state-appellate`, `outlines/second-circuit/new-york/state-civil`, `outlines/second-circuit/new-york/state-criminal` |
 | North Carolina | state | outline | 0 | 0 | 0 | 0 | `outlines/fourth-circuit/north-carolina/state-appellate`, `outlines/fourth-circuit/north-carolina/state-civil`, `outlines/fourth-circuit/north-carolina/state-criminal` |

@@ -17,5 +17,5 @@
 - Source: https://ecf.ca8.uscourts.gov/newrules/coa/iops.pdf (official site; 42 pages, sha256 41097628db55700c9774760cb4a7334e427d086d69c429a1f4ec3edd1c9e0ff4).
 - Edition: title page: "Internal Operating Procedures, Revised February 26, 2024"; the IOPs linked from https://www.ca8.uscourts.gov/rules-procedures.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 358fd9ee631e7ec9423c8ff94b2f7f2c6ce82d1a48e2a567afa2c487883b89b8. Raw extract with no `## <ref>` headings; the cite corpus splits it on its own outline (`IOP IV`, `IOP IV.D`, `IOP IV.F`, `IOP Appendix A`), so `8th Cir. IOP IV.F` resolves.
+- Extract sha256 358fd9ee631e7ec9423c8ff94b2f7f2c6ce82d1a48e2a567afa2c487883b89b8. Raw extract with no `## <ref>` headings; the cite corpus splits it on its own outline (`IOP IV`, `IOP IV.D`, `IOP IV.F`, `IOP Appendix A`), so `8th Cir. IOP IV`, `8th Cir. IOP IV.D`, `8th Cir. IOP IV.F`, and `8th Cir. IOP Appendix A` resolve.
 - Original: `ca8/original/ca8-iops.pdf` as served (sha256 41097628db55700c9774760cb4a7334e427d086d69c429a1f4ec3edd1c9e0ff4); extraction sha256 358fd9ee631e7ec9423c8ff94b2f7f2c6ce82d1a48e2a567afa2c487883b89b8.

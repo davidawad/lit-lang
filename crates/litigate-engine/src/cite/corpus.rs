@@ -346,6 +346,12 @@ Rule 13 — Counterclaim and Crossclaim
             let hits = corpus.lookup_all(heading);
             assert_eq!(hits.len(), 1, "expected one section for {heading}");
         }
+        for heading in ["IOP IV.D", "IOP IV.F", "IOP Appendix A"] {
+            assert!(
+                !corpus.lookup_all(heading)[0].1.body.is_empty(),
+                "expected text for {heading}"
+            );
+        }
         let mandate = &corpus.lookup_all("IOP IV.F")[0];
         assert!(mandate.1.line > 0);
         assert!(mandate.1.body.to_lowercase().contains("mandate"));

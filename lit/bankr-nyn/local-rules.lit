@@ -1,0 +1,525 @@
+module bankr-nyn-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ CaseConverted, OrderForReliefEntered, PetitionFiled }
+
+// The Bankr. N.D.N.Y. court's own periods, counted under FRBP 9006(a). The
+// FRBP periods (schedules, claims, discharge, dischargeability, exemption
+// objections, the adversary answer and summons, appeals) are lit/frbp's and
+// are not declared again.
+//
+// Stated in the rules but not declared: the service of a chapter 13 plan or
+// an amended plan at least 28 days before the confirmation hearing (LBR
+// 3015-1(b)(2), 3015-4(a)(2)), which is the FRBP 2002(b) notice and
+// lit/frbp's; the service of a claim objection at least 30 days before the
+// hearing (LBR 3007-1(a)), the FRBP 3007(a)(1) period; the commencement of
+// plan payments within 30 days after the order for relief (LBR
+// 3015-1(f)(1)), the 11 U.S.C. § 1326(a)(1) period; the auctioneer's 21
+// days' notice of its application for commissions (LBR 6005-1(e)), the
+// FRBP 2002(a)(6) notice; the limited notice after 70 or 90 days following
+// the order for relief (LBR 2002-1(b)), the reach of a notice rather than
+// a deadline; the clock-time periods (an adjournment, withdrawal or
+// settlement notification by 2:00 p.m. the day before the hearing, LBR
+// 9013-1(j), (l), (n); a claims agent's transmittal within 24 hours, LBR
+// 3002-1); the monthly post-confirmation affidavit filed on the 20th of the
+// following month (LBR 3021-1(b)), a calendar date rather than a period;
+// the 14 days' notice before the trustee returns or disposes of the
+// debtor's records (LBR 6007-1), the minimum notice a paper must give; and
+// the Clerk's and the court's own acts (the transfer of a case file after
+// 14 days, LBR 1014-1; the reissue of an unserved summons after 7 days,
+// LBR 7004-1(b); the investment of registry funds within 14 days, LBR
+// 7067-1(b); the destruction of sealed documents 60 days after the case
+// closes, LBR 9018-1(e)). The rules state no page limit.
+/// An order of joint administration or consolidation is entered (LBR
+/// 1015-1(c)).
+event JointAdministrationOrdered()
+/// Notice under LBR 2002-1 is served (LBR 2002-1(d), (g)).
+event NoticeServed()
+/// The return date of a motion or the hearing on a matter (LBR 2002-1(d),
+/// 6004-1(a), 9013-1).
+event ReturnDate()
+/// An application to employ a professional is filed (LBR 2014-1(b)).
+event EmploymentApplicationFiled()
+/// A debtor in possession makes a federal or state tax deposit (LBR
+/// 2015-1(c)(8)).
+event TaxDepositMade()
+/// An order confirming a chapter 11 plan is entered (LBR 3007-1(b),
+/// 3022-1(b)(1)).
+event PlanConfirmed()
+/// The chapter 12 or 13 trustee serves the "Notice of Claims Filed and of
+/// Trustee's Intent to Pay Claims as Listed" (LBR 3007-1(c)).
+event ClaimsNoticeServed()
+/// The trustee serves the Notice of Additional or Amended Claim (LBR
+/// 3007-1(d)).
+event AmendedClaimNoticeServed()
+/// A party in interest requests in writing that the debtor make personalty
+/// available for appraisal (LBR 3012-1).
+event AppraisalRequested()
+/// The date of the hearing on confirmation of a chapter 12 or 13 plan (LBR
+/// 3015-1, 3015-2, 3015-4(a)).
+event Chapter13ConfirmationHearingScheduled()
+/// A chapter 13 debtor files a federal or state tax return (LBR
+/// 3015-1(e)(1)).
+event TaxReturnFiled()
+/// A secured creditor files a proof of claim in a chapter 13 case (LBR
+/// 3015-1(f)(3), (4)).
+event SecuredProofOfClaimFiled()
+/// The final hearing on confirmation of a chapter 12 or 13 plan is held
+/// (LBR 3015-3(a)).
+event FinalConfirmationHearingHeld()
+/// The first date set for the hearing on confirmation of a chapter 11 plan
+/// (LBR 3018-1(b), 3020-1).
+event Chapter11ConfirmationHearingScheduled()
+/// An individual chapter 11 debtor completes all payments under the
+/// confirmed plan (LBR 3022-1(b)(2)).
+event PlanPaymentsCompleted()
+/// The return date of a motion for a final decree in an individual chapter
+/// 11 case (LBR 3022-1(c)).
+event FinalDecreeReturnDate()
+/// The Clerk sends the lessor a Notice of Compliance (LBR 4001-4(b)).
+event CureComplianceNoticed()
+/// The Statement About Payment of an Eviction Judgment Against You (Official
+/// Form 101B) is served on the lessor (LBR 4001-4(d)).
+event EvictionPaymentStatementServed()
+/// The trustee files its Final Report in a chapter 12 or 13 case (LBR
+/// 4004-1(b)(1)).
+event TrusteeFinalReportFiled()
+/// The date the Clerk sets for the hearing on a Request for Discharge (LBR
+/// 4004-1(d), 4004-2(c)).
+event DischargeHearingScheduled()
+/// A motion to withdraw the reference is served (LBR 5011-1(c)).
+event WithdrawalMotionServed()
+/// A sale of real property closes (LBR 6004-3(c)).
+event SaleClosed()
+/// An auction sale concludes (LBR 6005-1(c), (d)).
+event AuctionConcluded()
+/// The time for taking an appeal expires, or an appeal is decided (LBR
+/// 7040-1(b)).
+event AppealTimeExpired()
+/// A plaintiff becomes entitled to entry of default (LBR 7055-1(a)).
+event DefaultEntitled()
+/// The court permits oral opposition to a motion and adjourns the hearing
+/// (LBR 9013-1(g)(2)).
+event OralOppositionAdjourned()
+/// The court rules orally (LBR 9013-4(a)).
+event OralRuling()
+/// The hearing after which an order or judgment is to be settled (LBR
+/// 9013-4(c)(1)).
+event SettlementHearingHeld()
+/// A proposed order or judgment is served for settlement (LBR 9013-4(c)(1)).
+event ProposedOrderServed()
+/// The last date to file a pleading in an adversary proceeding (LBR 9015-1).
+event LastPleadingDate()
+/// A transcript is filed (LBR 9037-2).
+event TranscriptFiled()
+
+/// LBR 1015-1(c): within 7 days of the entry of the order of consolidation
+/// or joint administration, the movant files a supplemental certified
+/// matrix of the parties not already on the main case's matrix.
+deadline supplemental-matrix-period: 7.days after JointAdministrationOrdered() counted_by frcp6 cite "N.D.N.Y. LBR 1015-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 1019-1(d): within 7 days of the conversion of a chapter 7, 12 or 13
+/// case to chapter 11, the trustee or debtor in possession in a small
+/// business case files the § 1116(1)(A) items or the § 1116(1)(B)
+/// statement.
+deadline conversion-small-business-filing-period: 7.days after CaseConverted() counted_by frcp6 cite "N.D.N.Y. LBR 1019-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 2002-1(d), (g): a certificate of service is filed within 7 days of
+/// effecting service (this period and the next; the earlier controls).
+deadline notice-certificate-period: 7.days after NoticeServed() counted_by frcp6 cite "N.D.N.Y. LBR 2002-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 2002-1(d), (g): and not later than 7 days before the return date of
+/// the hearing.
+deadline notice-certificate-return-date-period: 7.days before ReturnDate() counted_by frcp6 cite "N.D.N.Y. LBR 2002-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 2014-1(b): the United States trustee files any response to an
+/// application to employ a professional within 21 days from the filing;
+/// the application is then ripe.
+deadline employment-response-period: 21.days after EmploymentApplicationFiled() counted_by frcp6 cite "N.D.N.Y. LBR 2014-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 2015-1(c)(8): the debtor in possession verifies to the taxing
+/// authority that a tax deposit was made within 3 days from the deposit.
+deadline tax-deposit-verification-period: 3.days after TaxDepositMade() counted_by frcp6 cite "N.D.N.Y. LBR 2015-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 2015-2(d): in a voluntary chapter 11 case, the debtor in
+/// possession's affidavit is filed within 7 days of the filing of the
+/// petition.
+deadline chapter11-affidavit-period: 7.days after PetitionFiled() counted_by frcp6 cite "N.D.N.Y. LBR 2015-2(d)"
+{
+  forum frcp
+}
+
+/// LBR 2015-2(d): in an involuntary chapter 11 case, within 7 days after
+/// the order for relief or the debtor's consent, whichever is earlier.
+deadline involuntary-chapter11-affidavit-period: 7.days after OrderForReliefEntered() counted_by frcp6 cite "N.D.N.Y. LBR 2015-2(d)"
+{
+  forum frcp
+}
+
+/// LBR 3007-1(b): unless the court orders otherwise, objections to claims in
+/// a chapter 11 case are filed and served not later than 14 days after the
+/// order of confirmation.
+deadline chapter11-claim-objection-period: 14.days after PlanConfirmed() counted_by frcp6 cite "N.D.N.Y. LBR 3007-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3007-1(c): in a chapter 12 or 13 case, objections to claims are filed
+/// and served within 45 days of the trustee's service of the Notice of
+/// Claims Filed.
+deadline chapter13-claim-objection-period: 45.days after ClaimsNoticeServed() counted_by frcp6 cite "N.D.N.Y. LBR 3007-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 3007-1(d): objections to an amended or additional claim are filed
+/// and served within 45 days of the trustee's Notice of Additional or
+/// Amended Claim.
+deadline amended-claim-objection-period: 45.days after AmendedClaimNoticeServed() counted_by frcp6 cite "N.D.N.Y. LBR 3007-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 3012-1: unless the court orders otherwise, the debtor makes an item
+/// of personalty available for appraisal within 14 days of a written
+/// request.
+deadline appraisal-access-period: 14.days after AppraisalRequested() counted_by frcp6 cite "N.D.N.Y. LBR 3012-1"
+{
+  forum frcp
+}
+
+/// LBR 3015-1(b)(2), (c): the debtor files the certificate of service of a
+/// plan filed after the petition, or of a plan seeking FRBP 7001 relief, not
+/// later than 7 days before the confirmation hearing.
+deadline plan-certificate-period: 7.days before Chapter13ConfirmationHearingScheduled() counted_by frcp6 cite "N.D.N.Y. LBR 3015-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3015-1(d): the debtor files the Certification Pursuant to Local
+/// Bankruptcy Rule 3015-1 not later than 14 days before the confirmation
+/// hearing.
+deadline plan-compliance-certification-period: 14.days before Chapter13ConfirmationHearingScheduled() counted_by frcp6 cite "N.D.N.Y. LBR 3015-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 3015-1(e)(1)(B): the chapter 13 debtor provides copies of filed tax
+/// returns to the trustee within 14 days of filing.
+deadline tax-return-copy-period: 14.days after TaxReturnFiled() counted_by frcp6 cite "N.D.N.Y. LBR 3015-1(e)"
+{
+  forum frcp
+}
+
+/// LBR 3015-1(f)(3), (4): the trustee's pre-confirmation adequate protection
+/// and monthly payments to a secured creditor commence within 30 days after
+/// its proof of claim is filed, if the trustee has sufficient funds.
+deadline preconfirmation-payment-period: 30.days after SecuredProofOfClaimFiled() counted_by frcp6 cite "N.D.N.Y. LBR 3015-1(f)"
+{
+  forum frcp
+}
+
+/// LBR 3015-2(a): an objection to confirmation of a chapter 12 or 13 plan is
+/// filed and served not later than 7 days before the hearing.
+deadline chapter13-confirmation-objection-period: 7.days before Chapter13ConfirmationHearingScheduled() counted_by frcp6 cite "N.D.N.Y. LBR 3015-2(a)"
+{
+  forum frcp
+}
+
+/// LBR 3015-3(a): unless the court orders otherwise, the trustee prepares
+/// and submits the Order of Confirmation within 60 days of the final
+/// hearing on confirmation.
+deadline confirmation-order-period: 60.days after FinalConfirmationHearingHeld() counted_by frcp6 cite "N.D.N.Y. LBR 3015-3(a)"
+{
+  forum frcp
+}
+
+/// LBR 3015-4(a)(2): the debtor files the certificate of service of an
+/// Amended Plan not later than 7 days before the hearing.
+deadline amended-plan-certificate-period: 7.days before Chapter13ConfirmationHearingScheduled() counted_by frcp6 cite "N.D.N.Y. LBR 3015-4(a)"
+{
+  forum frcp
+}
+
+/// LBR 3015-4(a)(3): an objection to confirmation of an Amended Plan is
+/// filed and served not later than 7 days before the confirmation hearing.
+deadline amended-plan-objection-period: 7.days before Chapter13ConfirmationHearingScheduled() counted_by frcp6 cite "N.D.N.Y. LBR 3015-4(a)"
+{
+  forum frcp
+}
+
+/// LBR 3015-4(b)(2)(C): a movant to modify a confirmed plan files a
+/// certificate of service not later than 7 days before the return date.
+deadline modification-certificate-period: 7.days before ReturnDate() counted_by frcp6 cite "N.D.N.Y. LBR 3015-4(b)"
+{
+  forum frcp
+}
+
+/// LBR 3018-1(b): at least 7 days before the confirmation hearing, the
+/// chapter 11 plan proponent files the certification of acceptances and
+/// rejections.
+deadline ballot-certification-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frcp6 cite "N.D.N.Y. LBR 3018-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3020-1(a): unless the court orders otherwise, an objection to
+/// confirmation of a chapter 11 plan is served and filed not later than 7
+/// days before the first date set for the hearing.
+deadline chapter11-confirmation-objection-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frcp6 cite "N.D.N.Y. LBR 3020-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 3020-1(c): a proponent seeking confirmation under § 1129(b) files and
+/// serves notice of that intent on the affected classes not less than 7
+/// days before the confirmation hearing.
+deadline cramdown-notice-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frcp6 cite "N.D.N.Y. LBR 3020-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 3022-1(b)(1): in a non-individual chapter 11 case, the report of
+/// substantial consummation is filed no later than 180 days after the final
+/// order confirming the plan, unless extended on a motion made within that
+/// period.
+deadline substantial-consummation-period: 180.days after PlanConfirmed() counted_by frcp6 cite "N.D.N.Y. LBR 3022-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3022-1(b)(2): in an individual chapter 11 case, the report is filed
+/// not later than 30 days after completion of all plan payments.
+deadline individual-consummation-period: 30.days after PlanPaymentsCompleted() counted_by frcp6 cite "N.D.N.Y. LBR 3022-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3022-1(c): in an individual chapter 11 case, an objection to the
+/// entry of a discharge is filed not later than 7 days before the return
+/// date of the motion for a final decree.
+deadline final-decree-discharge-objection-period: 7.days before FinalDecreeReturnDate() counted_by frcp6 cite "N.D.N.Y. LBR 3022-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 4001-4(b): the lessor may, no later than 14 days after the Clerk's
+/// Notice of Compliance, consent to receive the rent payment and object to
+/// the debtor's certification; silence is consent.
+deadline lessor-election-period: 14.days after CureComplianceNoticed() counted_by frcp6 cite "N.D.N.Y. LBR 4001-4(b)"
+{
+  forum frcp
+}
+
+/// LBR 4001-4(d): the lessor may object to the debtor's § 362(l)(2)
+/// certification no later than 14 days after service of Official Form 101B.
+deadline lessor-objection-period: 14.days after EvictionPaymentStatementServed() counted_by frcp6 cite "N.D.N.Y. LBR 4001-4(d)"
+{
+  forum frcp
+}
+
+/// LBR 4004-1(b)(1): within 30 days of the filing of the Trustee's Final
+/// Report, the chapter 12 or 13 debtor files the domestic support and
+/// § 522(q) certifications.
+deadline discharge-certification-period: 30.days after TrusteeFinalReportFiled() counted_by frcp6 cite "N.D.N.Y. LBR 4004-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 4004-1(d), 4004-2(c): an objection to the entry of a discharge is
+/// filed not later than 7 days before the date the Clerk sets for the
+/// hearing on the Request for Discharge.
+deadline discharge-hearing-objection-period: 7.days before DischargeHearingScheduled() counted_by frcp6 cite "N.D.N.Y. LBR 4004-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 4004-2(a): a motion for a discharge under § 1328(b) is filed and
+/// served at least 21 days before the hearing.
+deadline hardship-discharge-motion-period: 21.days before DischargeHearingScheduled() counted_by frcp6 cite "N.D.N.Y. LBR 4004-2(a)"
+{
+  forum frcp
+}
+
+/// LBR 5011-1(c): a response to a motion for withdrawal of the reference is
+/// filed and served within 14 days of service of the motion.
+deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "N.D.N.Y. LBR 5011-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 6004-1(a): unless the court orders otherwise, a court-appointed
+/// appraiser's appraisal is filed not later than 7 days before the return
+/// date of the motion to approve the sale.
+deadline appraisal-filing-period: 7.days before ReturnDate() counted_by frcp6 cite "N.D.N.Y. LBR 6004-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 6004-3(c): the debtor provides the trustee the statement of sale not
+/// later than 7 days after the closing.
+deadline statement-of-sale-period: 7.days after SaleClosed() counted_by frcp6 cite "N.D.N.Y. LBR 6004-3(c)"
+{
+  forum frcp
+}
+
+/// LBR 6005-1(c): the auctioneer files and serves its report of sale within
+/// 30 days after the conclusion of the sale.
+deadline auction-report-period: 30.days after AuctionConcluded() counted_by frcp6 cite "N.D.N.Y. LBR 6005-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 6005-1(d): unless the court orders otherwise, the net proceeds are
+/// turned over to the trustee not later than 14 days from the date of sale.
+deadline auction-proceeds-period: 14.days after AuctionConcluded() counted_by frcp6 cite "N.D.N.Y. LBR 6005-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 7040-1(b): a party retrieves an exhibit held by the Clerk no later
+/// than 30 days after the time for appeal expires or the appeal is decided.
+deadline exhibit-retrieval-period: 30.days after AppealTimeExpired() counted_by frcp6 cite "N.D.N.Y. LBR 7040-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 7055-1(a): a plaintiff entitled to a default judgment applies for it
+/// within 45 days after the first day it is entitled to entry of default.
+deadline default-judgment-period: 45.days after DefaultEntitled() counted_by frcp6 cite "N.D.N.Y. LBR 7055-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(c): the moving party files a certificate of service not later
+/// than 7 days before the return date of the motion.
+deadline motion-certificate-period: 7.days before ReturnDate() counted_by frcp6 cite "N.D.N.Y. LBR 9013-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(e): unless a rule or order provides otherwise, a motion is
+/// filed and served at least 21 days before its return date.
+deadline motion-service-period: 21.days before ReturnDate() counted_by frcp6 cite "N.D.N.Y. LBR 9013-1(e)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(g)(1): answering papers are served and filed so as to be
+/// received not later than 7 days before the return date.
+deadline answering-papers-period: 7.days before ReturnDate() counted_by frcp6 cite "N.D.N.Y. LBR 9013-1(g)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(g)(2): where the court permits oral opposition and adjourns
+/// the hearing, the written answer is filed and served within 7 days of the
+/// original hearing date.
+deadline oral-opposition-papers-period: 7.days after OralOppositionAdjourned() counted_by frcp6 cite "N.D.N.Y. LBR 9013-1(g)"
+{
+  forum frcp
+}
+
+/// LBR 9013-3(a): written opposition to a motion pursued on default is filed
+/// and served at least 7 days before the return date, or no hearing is
+/// held.
+deadline default-motion-opposition-period: 7.days before ReturnDate() counted_by frcp6 cite "N.D.N.Y. LBR 9013-3(a)"
+{
+  forum frcp
+}
+
+/// LBR 9013-4(a): unless the court orders otherwise, the prevailing party
+/// submits an oral order as an e-order not later than 30 days from the
+/// ruling.
+deadline oral-order-submission-period: 30.days after OralRuling() counted_by frcp6 cite "N.D.N.Y. LBR 9013-4(a)"
+{
+  forum frcp
+}
+
+/// LBR 9013-4(c)(1): a proposed order or judgment to be settled is served
+/// within 14 days of the hearing.
+deadline settled-order-service-period: 14.days after SettlementHearingHeld() counted_by frcp6 cite "N.D.N.Y. LBR 9013-4(c)"
+{
+  forum frcp
+}
+
+/// LBR 9013-4(c)(1): a counter-proposal is served not later than 7 days
+/// from the service of the proposed order.
+deadline counter-proposal-period: 7.days after ProposedOrderServed() counted_by frcp6 cite "N.D.N.Y. LBR 9013-4(c)"
+{
+  forum frcp
+}
+
+/// LBR 9015-1: the parties consent to a jury trial before a bankruptcy judge
+/// by a statement filed within 21 days after the last date to file a
+/// pleading.
+deadline jury-consent-period: 21.days after LastPleadingDate() counted_by frcp6 cite "N.D.N.Y. LBR 9015-1"
+{
+  forum frcp
+}
+
+/// LBR 9037-2(a): a person who wishes to redact a personal identifier from a
+/// transcript files a Notice of Intent to Request Redaction within 7 days
+/// of the filing of the transcript.
+deadline transcript-redaction-notice-period: 7.days after TranscriptFiled() counted_by frcp6 cite "N.D.N.Y. LBR 9037-2(a)"
+{
+  forum frcp
+}
+
+/// LBR 9037-2(b): the Request for Redaction is filed within 21 days of the
+/// filing of the transcript.
+deadline transcript-redaction-request-period: 21.days after TranscriptFiled() counted_by frcp6 cite "N.D.N.Y. LBR 9037-2(b)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed and served" by applicant cite "N.D.N.Y. LBR 9013-1(e)"
+{
+  note "Unless a rule or order provides otherwise, a motion is filed and served at least 21 days before its return date, and the certificate of service is filed not later than 7 days before it (LBR 9013-1(c), (e)); a motion listed in LBR 9013-3(c) may be pursued on default. The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-answer "Answering papers served and filed" -> answered {
+    authority cite "N.D.N.Y. LBR 9013-1(g)"
+  }
+  edge-motion-filed-default "No timely opposition to a default motion; considered without appearance" -> ruling {
+    authority cite "N.D.N.Y. LBR 9013-3(b)"
+  }
+}
+
+state answered: "Answering papers served and filed" by opponent cite "N.D.N.Y. LBR 9013-1(g)"
+{
+  note "Answering papers are received not later than 7 days before the return date (LBR 9013-1(g)(1)); on a default motion, timely opposition puts the motion on the calendar and the parties must appear (LBR 9013-3(b)(1))."
+  edge-answered-hearing "Hearing held on the return date" -> ruling {
+    authority cite "N.D.N.Y. LBR 9013-1(g)"
+  }
+}
+
+decision ruling: "Motion decided" by court cite "N.D.N.Y. LBR 9013-4"
+{
+  note "An oral order is submitted as an e-order within 30 days of the ruling; an order to be settled is served within 14 days of the hearing, and a counter-proposal within 7 days of its service (LBR 9013-4(a), (c))."
+  edge-ruling-granted "Granted" -> decided { authority cite "N.D.N.Y. LBR 9013-4(a)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "N.D.N.Y. LBR 9013-4(c)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "N.D.N.Y. LBR 1001-1"
+{
+  note "The Local Bankruptcy Rules supplement the Federal Rules of Bankruptcy Procedure and govern all proceedings in bankruptcy cases filed in the district (LBR 1001-1(b))."
+}

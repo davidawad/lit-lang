@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-nyn-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:9a798f45ca347cbeca0f895d9d377fbe33d1ada92f99f2324af883441ed75f61"
+semantic = "sha256:3e4e3ed18f11085e84ae936247fc40910f345aeba23f635a03c0c17aabadc47b"
+texts = [
+    "nynb-lbr sources/bankr-nyn/nyn-local-rules-2024-12-01-sectioned.txt sha256:25212ec01be96753b15348ccfcd3bae15a0e09d419b1e434bebbc4d5577d06d3",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-nyn"
-version = "0.0.1"
-language = 1
-source = "sha256:6fe93a5f71f9162f40984f6d19622259cba30e6decb005578af7cbfbf708e824"
-semantic = "sha256:ba05ad13a5e75e70afa27d40ca08bf15bdf108775aa1ddafd3c851a8da0fa22f"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

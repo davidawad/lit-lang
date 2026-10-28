@@ -1,0 +1,183 @@
+module id-district-civil.civil
+
+// Civil actions in the Idaho district courts, from the applicant's
+// (plaintiff's) side. Every period below is stated in a note, not counted:
+// time is computed under I.R.C.P. 2.2(a), which excludes the trigger day,
+// counts every day and rolls a last day falling on a Saturday, Sunday or
+// legal holiday to the next day that is none of these; lit/core has no
+// counting rule for Idaho's legal holidays. When a party may or must act
+// within a time after service and service is made by mail, 3 days are
+// added (Rule 2.2(c)). The court may extend a time for good cause, and the
+// parties by written stipulation, but no court may extend the time to act
+// under Rules 50(b), 52(b), 59(b), (d) and (e), and 60(b) (Rule 2.2(b)). No
+// filing fee is stated in the rules. The earlier outline asked for the
+// leading Idaho decisions on the pleading standard and on summary
+// judgment; none is named and no reporter text is vendored, so none is
+// cited.
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "I.R.C.P. 3(b)"
+{
+  note "A civil action is commenced by filing a complaint, petition or application with the court (Rule 3(b)). Except for governmental entities and the case types listed in Rule 3(d)(2), every party files a completed Supreme Court approved case information sheet with its first appearance (Rule 3(d)(1)). If a defendant is not served within 182 days after the complaint is filed, the court, on motion or on its own after 14 days' notice to the plaintiff, must dismiss the action without prejudice against that defendant, unless the plaintiff shows good cause for the failure, in which case the court must extend the time for service (Rule 4(b)(2))."
+  edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    authority cite "I.R.C.P. 4"
+  }
+  edge-complaint-filed-unserved "Not served within 182 days" -> dismissed-unserved {
+    authority cite "I.R.C.P. 4(b)"
+  }
+}
+
+terminal dismissed-unserved: "Dismissed without prejudice for untimely service" outcome [loss, dismissal] cite "I.R.C.P. 4(b)"
+{
+  note "Outcome from the applicant's side: dismissal without prejudice against the unserved defendant under Rule 4(b)(2)."
+}
+
+decision answer-due: "Answer, Rule 12 motion, or no response" by office cite "I.R.C.P. 12(a)"
+{
+  note "Unless another time is specified by rule or statute, a defendant serves an answer within 21 days after being served with the summons and complaint; an answer to a counterclaim or crossclaim is served within 21 days after service of the pleading that states it (Rule 12(a)(1)). Every defense is asserted in the responsive pleading if one is required, but lack of subject-matter or personal jurisdiction, insufficient process or service of process, failure to state a claim and failure to join a party under Rule 19 among others may be made by motion (Rule 12(b)). A motion, its supporting affidavits and briefs, and any notice of hearing are filed and served so as to be received at least 14 days before the hearing; opposing affidavits and briefs at least 7 days before; any reply brief at least 2 days before (Rule 7(b)(3))."
+  edge-answer-due-answer "Answer served" -> answered { authority cite "I.R.C.P. 12(a)" }
+  edge-answer-due-motion "Rule 12(b) motion" -> dismissal-motion { authority cite "I.R.C.P. 12(b)" }
+  edge-answer-due-default "No pleading or defense: default" -> default-entered {
+    authority cite "I.R.C.P. 55(a)"
+  }
+}
+
+decision dismissal-motion: "Rule 12(b) motion decided" by court cite "I.R.C.P. 12(b)"
+{
+  note "Unless the court sets a different time, if the court denies the motion or postpones its disposition until trial, the responsive pleading is served within 14 days after notice of the court's action (Rule 12(a)(2)(A))."
+  edge-dismissal-motion-granted "Granted: complaint dismissed" -> dismissed-pleading {
+    authority cite "I.R.C.P. 12(b)"
+  }
+  edge-dismissal-motion-amend "Plaintiff amends the complaint" -> amended {
+    authority cite "I.R.C.P. 15(a)"
+  }
+  edge-dismissal-motion-denied "Denied: answer due 14 days after notice" -> answered {
+    authority cite "I.R.C.P. 12(a)"
+  }
+}
+
+state amended: "Amended pleading" by applicant cite "I.R.C.P. 15(a)"
+{
+  note "A party may amend its pleading once as a matter of right within 21 days after serving it or, if a responsive pleading is required, 21 days after service of a responsive pleading or of a motion under Rule 12(b), (e) or (f), whichever is earlier; otherwise only with the opposing party's written consent or the court's leave (Rule 15(a)). Unless the court orders otherwise, any required response to an amended pleading is made within the time remaining to respond to the original pleading or within 14 days after service of the amended pleading, whichever is later (Rule 15(a)(3))."
+  edge-amended-tested "Amended pleading met with a new Rule 12(b) motion" -> dismissal-motion {
+    authority cite "I.R.C.P. 12(b)"
+  }
+  edge-amended-answered "Amended pleading answered" -> answered { authority cite "I.R.C.P. 15(a)" }
+}
+
+terminal dismissed-pleading: "Dismissed on a Rule 12(b) motion" outcome [loss, dismissal] cite "I.R.C.P. 12(b)"
+{
+  note "Outcome from the applicant's side. A judgment is a separate document entitled \"Judgment\" (Rule 54(a)); the appeal is lit/id-supreme."
+}
+
+state default-entered: "Default entered by the court" by court cite "I.R.C.P. 55(a)"
+{
+  note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend, and that is shown by affidavit or otherwise, the court must order entry of its default; a party who has appeared must first be served with 3 days' written notice of the application (Rule 55(a)(1)). Default may not be entered before the time allowed for appearance or defense expires (Rule 55(a)(2)(A)). For a sum certain or one computation can make certain, the court on the claimant's request and affidavit orders judgment against a party defaulted for not appearing who is neither a minor nor an incompetent person (Rule 55(b)(1)); in other cases the party applies to the court, with 3 days' written notice to a party who has appeared (Rule 55(b)(2)). The court may set aside an entry of default for good cause (Rule 55(c))."
+  edge-default-entered-judgment "Default judgment entered" -> default-judgment {
+    authority cite "I.R.C.P. 55(b)"
+  }
+  edge-default-entered-set-aside "Default set aside for good cause" -> answered {
+    authority cite "I.R.C.P. 55(c)"
+  }
+}
+
+decision default-judgment: "Default judgment entered" by court cite "I.R.C.P. 55(b)"
+{
+  note "The court may set aside a default judgment under Rule 60(b) (Rule 55(c)). A Rule 60(b) motion is made within a reasonable time, and for mistake, inadvertence, surprise or excusable neglect, newly discovered evidence, or fraud no more than 6 months after entry of the judgment (Rule 60(c)(1))."
+  edge-default-judgment-stands "No relief sought: judgment stands" -> default-won {
+    authority cite "I.R.C.P. 55(b)"
+  }
+  edge-default-judgment-relieved "Default judgment set aside: defendant answers" -> answered {
+    authority cite "I.R.C.P. 60(b)"
+  }
+}
+
+terminal default-won: "Default judgment for applicant" outcome [win] cite "I.R.C.P. 55(b)"
+{
+  note "Outcome from the applicant's side: a default judgment under Rule 55(b)."
+}
+
+state answered: "Answer served" by applicant cite "I.R.C.P. 12(a)"
+{
+  note "On any issue triable of right by a jury, a party demands a jury trial by serving a written demand no later than 14 days after the last pleading directed to the issue is served, and filing it; a party waives a jury trial unless its demand is properly served and filed (Rule 38(b), (d))."
+  edge-answered-discovery "Case proceeds to discovery" -> discovery { authority cite "I.R.C.P. 26" }
+}
+
+state discovery: "Discovery" by applicant cite "I.R.C.P. 26"
+{
+  note "Discovery may be had by depositions, written interrogatories, production requests, physical and mental examinations and requests for admission (Rule 26(a)). The plaintiff may dismiss without a court order by notice before the opposing party serves an answer or a motion for summary judgment, or by a stipulation signed by all parties who have appeared; unless it states otherwise the dismissal is without prejudice (Rule 41(a)(1))."
+  edge-discovery-order-disobeyed "Discovery order disobeyed" -> discovery-sanction {
+    authority cite "I.R.C.P. 37(b)"
+  }
+  edge-discovery-sj "Motion for summary judgment" -> summary-judgment {
+    authority cite "I.R.C.P. 56(a)"
+  }
+  edge-discovery-trial "Case reaches trial" -> trial { authority cite "I.R.C.P. 16" }
+  edge-discovery-settled "Settlement: stipulation of dismissal" -> settled {
+    authority cite "I.R.C.P. 41(a)"
+  }
+}
+
+decision discovery-sanction: "Sanction for failure to obey a discovery order" by court cite "I.R.C.P. 37(b)"
+{
+  note "If a party fails to obey an order to provide or permit discovery, the court may issue further just orders, among them dismissing the action or proceeding in whole or in part (Rule 37(b))."
+  edge-discovery-sanction-continues "Sanction short of dismissal: discovery continues" -> discovery {
+    authority cite "I.R.C.P. 37(b)"
+  }
+  edge-discovery-sanction-dismissed "Action dismissed as a sanction" -> dismissed-sanction {
+    authority cite "I.R.C.P. 37(b)"
+  }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "I.R.C.P. 37(b)"
+{
+  note "Outcome from the applicant's side: dismissal of the action as a sanction under Rule 37(b)."
+}
+
+decision summary-judgment: "Summary judgment decided" by court cite "I.R.C.P. 56(a)"
+{
+  note "The court must grant summary judgment if the movant shows that there is no genuine dispute as to any material fact and that it is entitled to judgment as a matter of law (Rule 56(a)). The motion may be filed after 21 days from service of process on, or the appearance of, the adverse party, but at least 90 days before the trial date or within 7 days from the order setting the case for trial, whichever is later, unless otherwise ordered (Rule 56(b)(1)). The motion, supporting documents and brief are served at least 28 days before the hearing; the answering brief and opposing documents at least 14 days before; any reply brief at least 7 days before (Rule 56(b)(2)); the court may alter or shorten these for good cause (Rule 56(b)(3))."
+  edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-entered {
+    authority cite "I.R.C.P. 56(a)"
+  }
+  edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-entered {
+    authority cite "I.R.C.P. 56(a)"
+  }
+  edge-summary-judgment-denied "Denied or granted in part: trial" -> trial {
+    authority cite "I.R.C.P. 56(a)"
+  }
+}
+
+state trial: "Trial by jury or by the court" by court cite "I.R.C.P. 39"
+{
+  note "No later than 7 days before a jury trial begins, any party may file written requests for jury instructions, served on and received by all parties at least 7 days before trial (Rule 51(a)). A motion for judgment notwithstanding the verdict is served not later than 14 days after entry of the judgment, or, if no verdict was returned, after discharge of the jury (Rule 50(b)(1))."
+  edge-trial-verdict "Verdict or decision" -> judgment-entered { authority cite "I.R.C.P. 58" }
+  edge-trial-settled "Settlement during trial" -> settled { authority cite "I.R.C.P. 41(a)" }
+}
+
+decision judgment-entered: "Judgment entered" by court cite "I.R.C.P. 58"
+{
+  note "Every judgment is set forth on a separate document; the court's filing of it or the clerk's filing stamp is its entry, and entry is not delayed for taxing costs (Rule 58). A judgment adjudicating fewer than all claims or parties is final only if certified under Rule 54(b)(1). A motion for a new trial is filed and served within 14 days after entry of the judgment (Rule 59(b)), as is a motion to alter or amend it (Rule 59(e)) and a motion to amend findings (Rule 52(b)). A memorandum of costs is filed and served not later than 14 days after entry of judgment, or costs are waived; objections are made within 14 days of its service (Rule 54(d)(4), (5)). A timely motion that could affect the findings, conclusions or judgment, other than a Rule 60 motion or one regarding costs or attorney fees, terminates the time for appeal, which runs again from the clerk's filing stamp on the order deciding it (I.A.R. 14(a))."
+  edge-judgment-entered-new-trial "New trial granted" -> trial { authority cite "I.R.C.P. 59(a)" }
+  edge-judgment-entered-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "I.A.R. 14(a)"
+  }
+  edge-judgment-entered-final "No post-trial motion or appeal" -> final-no-appeal {
+    authority cite "I.R.C.P. 58"
+  }
+}
+
+terminal settled: "Settled: dismissal by stipulation or notice" outcome [settlement] cite "I.R.C.P. 41(a)"
+{
+  note "The plaintiff dismisses without a court order by notice before the opposing party serves an answer or a motion for summary judgment, or by a stipulation signed by all parties who have appeared; unless it states otherwise the dismissal is without prejudice, but a notice of dismissal after an earlier dismissal of an action including the same claim operates as an adjudication on the merits (Rule 41(a)(1))."
+}
+
+terminal appeal-taken: "Notice of appeal filed under the Idaho Appellate Rules" outcome [appeal] cite "I.A.R. 14(a)"
+{
+  note "An appeal as of right from the district court is taken only by physically filing a notice of appeal with the clerk of the district court within 42 days from the date of the clerk's filing stamp on the appealable judgment or order (I.A.R. 14(a)); a late notice is jurisdictional and causes automatic dismissal (I.A.R. 21). The appeal is lit/id-supreme."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "I.R.C.P. 58"
+{
+  note "Judgment entered under Rule 58 and not appealed."
+}

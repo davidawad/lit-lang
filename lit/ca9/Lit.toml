@@ -1,0 +1,57 @@
+[package]
+name = "ninth-circuit-court-of-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "ninth-circuit-court-of-appeals"
+forum = "ca9"
+authority = "LocalRule"
+title = "United States Court of Appeals for the Ninth Circuit"
+description = "A civil appeal in the Ninth Circuit: its circuit rules over the FRAP periods of lit/frap."
+jurisdiction = "United States Court of Appeals for the Ninth Circuit"
+in_force = "2026-06-01"
+known_at = "2026-10-27"
+unknown_before = "2026-06-01"
+counting = "frap26"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frap-appellate-procedure = { version = "^0.1.0", path = "../frap" }
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[sources.frap]
+title = "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2024"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-appellate-procedure-dec-1-2024_0.pdf"
+path = "sources/frap.txt"
+path_sha256 = "b370cc0558698ff88b62b6cec212742fde8afbdd2fe653a3b255d69dec893172"
+sha256 = "d61711eca8e1f65955d12f1b7d29d4cc453d9ee1e30c4fff6c54b23f113454f6"
+as_of = "2024-12-01"
+
+[sources.ca9-rules]
+title = "Federal Rules of Appellate Procedure, Ninth Circuit Rules and Circuit Advisory Committee Notes, June 1, 2026"
+url = "https://cdn.ca9.uscourts.gov/datastore/uploads/frap-June%201%202026.pdf"
+path = "sources/fed-ca9/ninth-circuit-rules-handbook.txt"
+path_sha256 = "e47fce4d98e88dda1e46d2261128d449b92d90291308c4280bf8f40149bac805"
+sha256 = "35cdf85df1ee701744bb4263a6708a1ee56b174bab9ea955a8cf133f8752536c"
+as_of = "2026-06-01"
+
+[sources.usc28]
+title = "28 U.S.C. §§ 1254, 1291 (vendored sections)"
+url = "https://www.law.cornell.edu/uscode/text/28/1291"
+path = "sources/usc-additional.txt"
+path_sha256 = "5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+
+[[cite_syntax.rules]]
+prefixes = ["FRAP", "Fed. R. App. P."]
+heading = "FRAP {}"
+source = "frap"
+
+[[cite_syntax.rules]]
+prefixes = ["9th Cir. R."]
+heading = "9th Cir. R. {}"
+source = "ca9-rules"

@@ -1,0 +1,367 @@
+module ca9.appeal
+
+import core.frap26.{ frap26 }
+import frap.events.{ NoticeOfAppealFiled, RehearingClosed }
+import frap.filing
+
+// The FRAP periods are lit/frap's: the notice-of-appeal periods of FRAP
+// 4(a)(1), the transcript-order period of FRAP 10(b)(1), which 9th Cir. R.
+// 10-3.1(d) restates (14 days), the appellant's and appellee's brief
+// periods of FRAP 31(a)(1), which apply when the court sets no due dates
+// (9th Cir. R. 31-2.1(a)), the rehearing periods of FRAP 40(d)(1), which
+// 9th Cir. R. 27-10(a)(1) adopts for orders that end the case, and the
+// mandate period. This package is the Ninth Circuit's layer over them: it
+// declares the circuit's own periods and replaces the principal brief's
+// type-volume limit, as FRAP 32(e) lets a local rule do. The leading
+// decisions on appellate jurisdiction and the notice deadline are
+// lit/frap's.
+/// The appeal is docketed in the court of appeals (9th Cir. R. 3-4(a)).
+event AppealDocketed()
+/// A notice of appeal from an order granting, continuing, modifying,
+/// refusing or dissolving a preliminary injunction, or refusing to dissolve
+/// or modify one, is filed (9th Cir. R. 3-3(a), (b)).
+event PreliminaryInjunctionNoticeFiled()
+/// That notice is docketed in the district court (9th Cir. R. 3-3(b)).
+event PreliminaryInjunctionNoticeDocketed()
+/// The appellant's opening brief in a preliminary injunction appeal is
+/// served (9th Cir. R. 3-3(b)).
+event PreliminaryInjunctionOpeningBriefServed()
+/// The appellee's brief in a preliminary injunction appeal is served (9th
+/// Cir. R. 3-3(b)).
+event PreliminaryInjunctionAnsweringBriefServed()
+/// The appellant serves the initial notice of the transcript portions it
+/// will order and the issues it will present (9th Cir. R. 10-3.1(a)).
+event TranscriptNoticeServed()
+/// The last timely answering brief is served (9th Cir. R. 31-2.1(a)).
+event LastAnsweringBriefServed()
+/// The date a brief is due, the anchor of the motion to extend it (9th
+/// Cir. R. 31-2.2(b)).
+event BriefDue()
+/// The court enters an order that does not dispose of the entire case on
+/// the merits, terminate it or otherwise conclude the proceedings (9th
+/// Cir. R. 27-10(a)(2)).
+event NonDispositiveOrderEntered()
+/// In a case disposed of by a motions panel order, the time to move for
+/// reconsideration expires or an order denies a timely motion for it (9th
+/// Cir. R. 41-2).
+event ReconsiderationClosed()
+/// The court disposes of a timely petition for rehearing (9th Cir. R.
+/// 39-1.6(a)).
+event RehearingPetitionDisposed()
+/// The clerk enters an order disposing of a cost bill (9th Cir. R. 39-1.5).
+event CostOrderEntered()
+
+/// The opening and answering briefs may not exceed 14,000 words, in place
+/// of FRAP 32(a)(7)'s limits; the portions FRAP 32(f) lists stay excluded
+/// (9th Cir. R. 32-1(c)), and a word-count brief carries Form 8 (9th Cir.
+/// R. 32-1(e)). The reply brief's limit is "half of the length set forth
+/// in (a)" (9th Cir. R. 32-1(b)), a number the rule does not write out, so
+/// it is not encoded.
+limit principal-brief override frap.filing.principal-brief {
+  words <= 14_000 cite "9th Cir. R. 32-1"
+  requires certificate compliance for [words] cite "9th Cir. R. 32-1"
+} cite "9th Cir. R. 32-1"
+
+/// A petition for panel rehearing or rehearing en banc, and any response
+/// the court orders: 15 pages, or the alternative 4,200 words.
+limit rehearing-petition {
+  pages <= 15 cite "9th Cir. R. 40-1"
+  words <= 4_200 cite "9th Cir. R. 40-1"
+} cite "9th Cir. R. 40-1"
+
+/// A petition for panel rehearing, rehearing en banc or both (9th Cir. R.
+/// 40-1(a)).
+event RehearingPetitionFiled() paper rehearing-petition
+
+/// The appellant completes and submits the Mediation Questionnaire (Form
+/// 7) within 5 days of the docketing of a civil appeal; counseled civil
+/// appeals only (9th Cir. R. 3-4(b)).
+deadline mediation-questionnaire-period: 5.days after AppealDocketed() counted_by frap26 cite "9th Cir. R. 3-4(a)"
+{
+  forum frap
+}
+
+/// Within 7 days of filing a notice of appeal from a preliminary
+/// injunction order, the parties arrange for expedited preparation of the
+/// transcript.
+deadline injunction-transcript-period: 7.days after PreliminaryInjunctionNoticeFiled() counted_by frap26 cite "9th Cir. R. 3-3(b)"
+{
+  forum frap
+}
+
+/// Unless a court order sets another schedule, the appellant files the
+/// opening brief and excerpts of record within 28 days of the docketing of
+/// the preliminary injunction notice of appeal in the district court.
+deadline injunction-opening-brief-period: 28.days after PreliminaryInjunctionNoticeDocketed() counted_by frap26 cite "9th Cir. R. 3-3(b)"
+{
+  forum frap
+}
+
+/// The appellee's brief and any supplemental excerpts are due within 28
+/// days of service of the opening brief.
+deadline injunction-answering-brief-period: 28.days after PreliminaryInjunctionOpeningBriefServed() counted_by frap26 cite "9th Cir. R. 3-3(b)"
+{
+  forum frap
+}
+
+/// The appellant may reply within 21 days of service of the appellee's
+/// brief.
+deadline injunction-reply-brief-period: 21.days after PreliminaryInjunctionAnsweringBriefServed() counted_by frap26 cite "9th Cir. R. 3-3(b)"
+{
+  forum frap
+}
+
+/// The appellant serves the initial transcript notice and statement of
+/// issues within 7 days of the filing of the notice of appeal (or of the
+/// order disposing of the last timely FRAP 4(a)(4) motion, not modeled).
+deadline transcript-notice-period: 7.days after NoticeOfAppealFiled() counted_by frap26 cite "9th Cir. R. 10-3"
+{
+  forum frap
+}
+
+/// The appellee may serve its list of additional transcript portions
+/// within 7 days of the service date of the appellant's initial notice.
+deadline transcript-response-period: 7.days after TranscriptNoticeServed() counted_by frap26 cite "9th Cir. R. 10-3"
+{
+  forum frap
+}
+
+/// Unless a court order sets another date, the reply brief is due 21 days
+/// from the service of the last timely filed answering brief, a trigger
+/// FRAP 31(a)(1) does not have.
+deadline circuit-reply-brief-period: 21.days after LastAnsweringBriefServed() counted_by frap26 cite "9th Cir. R. 31-2"
+{
+  forum frap
+}
+
+/// A written motion to extend the time for a brief is filed at least 7
+/// days before the time prescribed for filing the brief expires. (A
+/// single streamlined extension of up to 30 days is requested on or
+/// before the due date.)
+deadline brief-extension-motion-period: 7.days before BriefDue() counted_by frap26 cite "9th Cir. R. 31-2"
+{
+  forum frap
+}
+
+/// A motion for clarification, modification or reconsideration of an
+/// order that does not end the case is filed within 14 days after entry of
+/// the order, unless the court shortens or expands the time.
+deadline reconsideration-period: 14.days after NonDispositiveOrderEntered() counted_by frap26 cite "9th Cir. R. 27-10"
+{
+  forum frap
+}
+
+/// In a case disposed of by a motions panel order, the mandate issues 7
+/// days after the reconsideration time expires or after an order denying a
+/// timely motion, whichever is later.
+deadline motions-panel-mandate-period: 7.days after ReconsiderationClosed() counted_by frap26 cite "9th Cir. R. 41-2"
+{
+  forum frap
+}
+
+/// Absent a statute to the contrary, a request for attorneys fees is filed
+/// no later than 14 days after the period to petition for rehearing
+/// expires, unless a timely petition is filed.
+deadline fee-request-period: 14.days after RehearingClosed(TimeExpired) counted_by frap26 cite "9th Cir. R. 39-1"
+{
+  forum frap
+}
+
+/// If a timely petition for rehearing is filed, the fee request is due no
+/// later than 14 days after the court's disposition of the petition.
+deadline fee-request-after-rehearing-period: 14.days after RehearingPetitionDisposed() counted_by frap26 cite "9th Cir. R. 39-1"
+{
+  forum frap
+}
+
+/// An order of the clerk disposing of a cost bill is subject to
+/// reconsideration by the court if exception is filed within 14 days after
+/// its entry.
+deadline cost-order-exception-period: 14.days after CostOrderEntered() counted_by frap26 cite "9th Cir. R. 39-1"
+{
+  forum frap
+}
+
+test "mediation questionnaire is due 5 days after docketing, rolled past a Saturday" cite "9th Cir. R. 3-4(a)"
+{
+  given AppealDocketed() on 2026-08-03
+  expect deadline(mediation-questionnaire-period) == 2026-08-10
+}
+
+test "expedited transcript is arranged within 7 days of a preliminary injunction notice" cite "9th Cir. R. 3-3(b)"
+{
+  given PreliminaryInjunctionNoticeFiled() on 2026-08-03
+  expect deadline(injunction-transcript-period) == 2026-08-10
+}
+
+test "preliminary injunction opening brief is due 28 days after the notice is docketed" cite "9th Cir. R. 3-3(b)"
+{
+  given PreliminaryInjunctionNoticeDocketed() on 2026-08-03
+  expect deadline(injunction-opening-brief-period) == 2026-08-31
+}
+
+test "preliminary injunction answering brief is due 28 days after the opening brief is served" cite "9th Cir. R. 3-3(b)"
+{
+  given PreliminaryInjunctionOpeningBriefServed() on 2026-08-03
+  expect deadline(injunction-answering-brief-period) == 2026-08-31
+}
+
+test "preliminary injunction reply is due 21 days after the answering brief is served" cite "9th Cir. R. 3-3(b)"
+{
+  given PreliminaryInjunctionAnsweringBriefServed() on 2026-08-03
+  expect deadline(injunction-reply-brief-period) == 2026-08-24
+}
+
+test "transcript notice is served within 7 days of the notice of appeal" cite "9th Cir. R. 10-3"
+{
+  given NoticeOfAppealFiled() on 2026-08-03
+  expect deadline(transcript-notice-period) == 2026-08-10
+}
+
+test "appellee's transcript response is due 7 days after the notice is served" cite "9th Cir. R. 10-3"
+{
+  given TranscriptNoticeServed() on 2026-08-03
+  expect deadline(transcript-response-period) == 2026-08-10
+}
+
+test "reply brief is due 21 days after the last answering brief is served" cite "9th Cir. R. 31-2"
+{
+  given LastAnsweringBriefServed() on 2026-08-03
+  expect deadline(circuit-reply-brief-period) == 2026-08-24
+}
+
+test "a written extension motion is due 7 days before the brief, back past Labor Day" cite "9th Cir. R. 31-2"
+{
+  given BriefDue() on 2026-09-14
+  expect deadline(brief-extension-motion-period) == 2026-09-04
+}
+
+test "reconsideration of a non-dispositive order is due 14 days after entry" cite "9th Cir. R. 27-10"
+{
+  given NonDispositiveOrderEntered() on 2026-08-03
+  expect deadline(reconsideration-period) == 2026-08-17
+}
+
+test "a motions panel mandate issues 7 days after reconsideration closes" cite "9th Cir. R. 41-2"
+{
+  given ReconsiderationClosed() on 2026-08-03
+  expect deadline(motions-panel-mandate-period) == 2026-08-10
+}
+
+test "fee request is due 14 days after the rehearing time expires" cite "9th Cir. R. 39-1"
+{
+  given RehearingClosed(TimeExpired) on 2026-08-03
+  expect deadline(fee-request-period) == 2026-08-17
+}
+
+test "fee request is due 14 days after a rehearing petition is disposed of" cite "9th Cir. R. 39-1"
+{
+  given RehearingPetitionDisposed() on 2026-08-03
+  expect deadline(fee-request-after-rehearing-period) == 2026-08-17
+}
+
+test "exception to the clerk's cost order is due 14 days after entry" cite "9th Cir. R. 39-1"
+{
+  given CostOrderEntered() on 2026-08-03
+  expect deadline(cost-order-exception-period) == 2026-08-17
+}
+
+start threshold
+
+decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+{
+  note "A final decision of a district court is appealable under 28 U.S.C. § 1291; interlocutory routes are lit/frap's."
+  edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "28 U.S.C. § 1291" }
+  edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
+}
+
+decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)(A)"
+{
+  note "The notice is due 30 days after entry of judgment, or 60 days when the United States is a party (FRAP 4(a)(1)); lit/frap encodes both periods."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "FRAP 4(a)(1)(A)" }
+  edge-notice-timely "Timely notice" -> record {
+    authority cite "FRAP 3(a)(1); 9th Cir. R. 3-1"
+    note "Counsel submits the notice of appeal, the filing fee and the appellate docket fee to the district court clerk together, with a Representation Statement attached (9th Cir. R. 3-1, 3-2). The fee amounts are set outside the circuit rules and are not vendored here, so no cost is encoded."
+  }
+}
+
+state record: "Record and Transcript Assembled" by applicant cite "FRAP 10; 9th Cir. R. 10-3"
+{
+  note "The appellant serves its transcript notice within 7 days of the notice of appeal and the appellee may respond within 7 days of service (9th Cir. R. 10-3.1(a), (b)); the transcript order is due within 14 days of the notice of appeal (9th Cir. R. 10-3.1(d)). In a counseled civil appeal the Mediation Questionnaire is due within 5 days of docketing (9th Cir. R. 3-4). A preliminary injunction appeal runs on the expedited schedule of 9th Cir. R. 3-3(b)."
+  edge-record-brief "Briefing begins" -> briefing { authority cite "9th Cir. R. 31-2" }
+  edge-record-default "Appellant fails to file a timely record or pay the docket fee" -> dismissed-prosecution {
+    authority cite "9th Cir. R. 42-1"
+  }
+}
+
+state briefing: "Briefs Filed" by applicant cite "FRAP 31(a)(1); 9th Cir. R. 31-2"
+{
+  note "The parties follow the briefing schedule the court sets; absent specific due dates FRAP 31(a)'s apply, and the reply is due 21 days from service of the last answering brief (9th Cir. R. 31-2.1(a)). Excerpts of record replace the FRAP 30 appendix (9th Cir. R. 30-1). One streamlined extension of up to 30 days is available on request on or before the due date; otherwise a written motion is due at least 7 days before it (9th Cir. R. 31-2.2). Principal briefs may not exceed 14,000 words (9th Cir. R. 32-1(a))."
+  edge-briefing-argue "Briefing complete" -> argument {
+    authority cite "FRAP 31(a)(1); 9th Cir. R. 31-2"
+  }
+  edge-briefing-default "Appellant fails to file a brief" -> dismissed-prosecution {
+    authority cite "9th Cir. R. 31-2; 9th Cir. R. 42-1"
+  }
+}
+
+state argument: "Oral Argument or Submission" by court cite "FRAP 34"
+{
+  note "The court hears argument or submits the case on the briefs under FRAP 34(a)(2)."
+  edge-argument-decide "Decision" -> decision { authority cite "FRAP 34" }
+}
+
+state decision: "Decision Issued" by court cite "FRAP 36"
+{
+  note "Judgment is entered on the disposition (FRAP 36). Every written disposition is an OPINION, a MEMORANDUM or an ORDER; all opinions are published and no memoranda are (9th Cir. R. 36-1), on the criteria of 9th Cir. R. 36-2."
+  edge-decision-issued "Disposition entered" -> rehearing-decision { authority cite "FRAP 36" }
+}
+
+decision rehearing-decision: "Rehearing Sought?" by applicant cite "FRAP 40(d)(1)"
+{
+  note "A party seeking further consideration of an order that ends the case complies with the time limits of FRAP 40(d)(1) (9th Cir. R. 27-10(a)(1)): 14 days after entry of judgment, or 45 days in a civil case with a United States party; lit/frap encodes both periods. The petition may not exceed 15 pages or 4,200 words (9th Cir. R. 40-1(b))."
+  edge-rehearing-decision-none "No petition" -> mandate { authority cite "FRAP 41(b)" }
+  edge-rehearing-decision-sought "Petition filed" -> rehearing-order {
+    authority cite "FRAP 40(d)(1); 9th Cir. R. 27-10"
+  }
+}
+
+state rehearing-order: "Rehearing Order" by court cite "FRAP 40"
+{
+  note "The court will not ordinarily order en banc review without giving the parties an opportunity to state their views (9th Cir. R. 40-2); an en banc court is the Chief Judge and 10 additional judges drawn by lot (9th Cir. R. 40-3)."
+  edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
+}
+
+state mandate: "Mandate Issued" by office cite "FRAP 41(b)"
+{
+  note "The mandate issues 7 days after the time to petition for rehearing expires or 7 days after an order denying a timely petition (FRAP 41(b)); lit/frap encodes the period. A motion to stay the mandate pending certiorari is denied if the petition would be frivolous or filed merely for delay (9th Cir. R. 41-1)."
+  edge-mandate-further "Mandate issued" -> further-review { authority cite "FRAP 41(b)" }
+}
+
+decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+{
+  note "Certiorari under 28 U.S.C. § 1254; its period is lit/frap's."
+  edge-further-review-none "No further review" -> final-decision {
+    authority cite "28 U.S.C. § 1254"
+  }
+  edge-further-review-petition "Petition for certiorari" -> review-decided {
+    authority cite "28 U.S.C. § 1254"
+  }
+}
+
+state review-decided: "Further Review Decided" by court cite "28 U.S.C. § 1254"
+{
+  edge-review-decided-denied "Denied" -> review-denied { authority cite "28 U.S.C. § 1254" }
+  edge-review-decided-granted "Granted" -> review-granted { authority cite "28 U.S.C. § 1254" }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: No Appellate Jurisdiction" outcome [loss, dismissal, jurisdictional] cite "28 U.S.C. § 1291"
+terminal dismissed-untimely: "Dismissed: Untimely Notice" outcome [loss, dismissal] cite "FRAP 4(a)(1)(A)"
+terminal dismissed-prosecution: "Dismissed: Failure to Prosecute" outcome [loss, dismissal] cite "9th Cir. R. 42-1"
+terminal final-decision: "Final: Decision Stands" outcome [final] cite "FRAP 41(b)"
+terminal review-denied: "Further Review Denied" outcome [final] cite "28 U.S.C. § 1254"
+
+terminal review-granted: "Further Review Granted" outcome [neutral] cite "28 U.S.C. § 1254"
+{
+  note "Certiorari granted; the merits are not modeled."
+}

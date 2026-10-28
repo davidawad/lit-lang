@@ -1,0 +1,252 @@
+module tnmd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Middle District of Tennessee's own civil periods, computed under the
+// federal rules (FRCP 6(a) governs "any local rule"). Page limitations
+// exclude the case caption, signature lines and certificate of service
+// (LR 7.03(a)). LR 7.01 does not govern summary judgment motions, which
+// LR 56.01 does (LR 7.01(d)). Periods that restate a federal period are
+// lit/frcp's and stay in notes: objections to a magistrate judge's report
+// and recommendation are due within 14 days after service, and a response
+// within 14 days after service of the objections (LR 72.02(a), (b); FRCP
+// 72(b)(2)); the 14-day notice period before the Clerk taxes costs is
+// FRCP 54(d)(1)'s (LR 54.01(a)). Absent court order, no dispositive
+// motion deadline, including response and reply, may be later than 90
+// days before the target trial date (LR 16.01(h)(1)); that bounds a case
+// management order rather than running from an event. Fee applications
+// in Social Security appeals (LR 54.01(b)(3)) are not encoded. Rules that
+// state no period or limit stay out: commencement, fees and service (LR
+// 3.01-4.01), electronic filing and sealing (LR 5.02, 5.03), extension
+// requests (LR 6.01), disclosure statements (LR 7.02), amendment (LR
+// 15.01), ADR (LR 16.02-16.05), discovery motions (LR 37.01), inactive
+// cases (LR 41.01), default (LR 55.01) and temporary restraining orders
+// (LR 65.01). The earlier M.D. Tenn. outline's FRCP flow and its
+// decisions (Twombly, Iqbal, Frow v. De La Vega, Celotex, Anderson v.
+// Liberty Lobby and Matsushita) are FRCP authority and belong to
+// lit/frcp; they are removed here: no reporter text is vendored.
+/// A memorandum of law supporting a motion, or a combined motion and
+/// memorandum of law: at most 25 pages without leave of court (LR
+/// 7.01(a)(2)).
+limit memorandum { pages <= 25 cite "M.D. Tenn. L.R. 7.01(a)(2)" } cite "M.D. Tenn. L.R. 7.01(a)(2)"
+/// A response in opposition to a motion: at most 25 pages without leave
+/// of court (LR 7.01(a)(3)).
+limit response { pages <= 25 cite "M.D. Tenn. L.R. 7.01(a)(3)" } cite "M.D. Tenn. L.R. 7.01(a)(3)"
+/// An optional reply memorandum: at most 5 pages without leave of court
+/// (LR 7.01(a)(4)).
+limit reply { pages <= 5 cite "M.D. Tenn. L.R. 7.01(a)(4)" } cite "M.D. Tenn. L.R. 7.01(a)(4)"
+
+/// The memorandum of law supporting a summary judgment motion: at most 25
+/// pages without leave of court (LR 56.01(b)).
+limit summary-judgment-memorandum {
+  pages <= 25 cite "M.D. Tenn. L.R. 56.01(b)"
+} cite "M.D. Tenn. L.R. 56.01(b)"
+
+/// The respondent's memorandum of law on a summary judgment motion: at
+/// most 25 pages without leave of court (LR 56.01(d)).
+limit summary-judgment-response {
+  pages <= 25 cite "M.D. Tenn. L.R. 56.01(d)"
+} cite "M.D. Tenn. L.R. 56.01(d)"
+
+/// The movant's optional summary judgment reply: at most 5 pages without
+/// leave of court (LR 56.01(f)).
+limit summary-judgment-reply {
+  pages <= 5 cite "M.D. Tenn. L.R. 56.01(f)"
+} cite "M.D. Tenn. L.R. 56.01(f)"
+
+/// The memorandum of law accompanying a motion for review of a magistrate
+/// judge's nondispositive order, and the response: at most 25 pages (LR
+/// 72.01(a), (b)).
+limit review-memorandum {
+  pages <= 25 cite "M.D. Tenn. L.R. 72.01(a)"
+} cite "M.D. Tenn. L.R. 72.01(a)"
+
+/// The memorandum of law supporting objections to a magistrate judge's
+/// report and recommendation, and the response: at most 25 pages (LR
+/// 72.02(a), (b)).
+limit objection-memorandum {
+  pages <= 25 cite "M.D. Tenn. L.R. 72.02(a)"
+} cite "M.D. Tenn. L.R. 72.02(a)"
+
+/// A motion and its memorandum of law are served (LR 7.01(a)(2)).
+event MotionServed() paper memorandum
+/// A memorandum of law in response is served (LR 7.01(a)(3)).
+event ResponseServed() paper response
+/// An optional reply memorandum is filed (LR 7.01(a)(4)).
+event ReplyFiled() paper reply
+/// The court acts on a motion before the time allowed for response and
+/// serves its order (LR 7.01(b)).
+event EarlyRulingServed()
+/// A summary judgment motion and its memorandum of law are served (LR
+/// 56.01(b)).
+event SummaryJudgmentMotionServed() paper summary-judgment-memorandum
+/// The respondent's memorandum of law on summary judgment is served (LR
+/// 56.01(d)).
+event SummaryJudgmentResponseServed() paper summary-judgment-response
+/// The movant's optional summary judgment reply is filed (LR 56.01(f)).
+event SummaryJudgmentReplyFiled() paper summary-judgment-reply
+/// Trial begins on the date set (LR 39.01).
+event TrialBegins()
+/// Judgment is entered (LR 54.01(a), (b)(1)).
+event JudgmentEntered()
+/// The Clerk files its Notice of Taxation (LR 54.01(a)).
+event NoticeOfTaxationFiled()
+/// The Clerk files its Taxation of Costs (LR 54.01(a)).
+event TaxationOfCostsFiled()
+/// The Sixth Circuit's mandate is entered (LR 54.01(b)(2)).
+event MandateEntered()
+/// A motion for an award of attorney's fees is filed (LR 54.01(c)).
+event FeeMotionFiled()
+/// A motion for review of a magistrate judge's nondispositive order is
+/// served (LR 72.01(a)).
+event ReviewMotionServed() paper review-memorandum
+/// An additional party appears in a civil action referred to a magistrate
+/// judge on consent (LR 73.01(c)(1)).
+event AdditionalPartyAppears()
+
+/// LR 7.01(a)(3): any party opposing a motion serves and files a
+/// memorandum of law in response not later than 14 days after service of
+/// the motion, unless otherwise ordered; if no timely response is filed
+/// the motion is deemed unopposed.
+deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "M.D. Tenn. L.R. 7.01(a)(3)"
+{
+  forum frcp
+}
+
+/// LR 7.01(a)(4): an optional reply memorandum may be filed within 7 days
+/// after service of the response.
+deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "M.D. Tenn. L.R. 7.01(a)(4)"
+{
+  forum frcp
+}
+
+/// LR 7.01(b): if the court acts on a motion before the time allowed for
+/// response, the affected party may move for relief from the ruling
+/// within 14 days after service of the order.
+deadline early-ruling-relief-period: 14.days after EarlyRulingServed() counted_by frcp6 cite "M.D. Tenn. L.R. 7.01(b)"
+{
+  forum frcp
+}
+
+/// LR 56.01(d): unless otherwise ordered, the respondent responds to a
+/// summary judgment motion within 21 days of service of the motion, and
+/// responds to the statement of undisputed material facts in a separate
+/// filing (LR 56.01(e)); facts not timely responded to are deemed
+/// undisputed (LR 56.01(g)).
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "M.D. Tenn. L.R. 56.01(d)"
+{
+  forum frcp
+}
+
+/// LR 56.01(f): unless otherwise ordered, the movant may file an optional
+/// reply within 14 days of service of the response.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "M.D. Tenn. L.R. 56.01(f)"
+{
+  forum frcp
+}
+
+/// LR 39.01(c)(4): in jury cases, counsel offering a deposition as a
+/// witness's basic testimony advise opposing counsel of the portions to
+/// be read or played at least 14 days prior to the trial date, unless the
+/// court directs otherwise.
+deadline deposition-designation-period: 14.days before TrialBegins() counted_by frcp6 cite "M.D. Tenn. L.R. 39.01(c)"
+{
+  forum frcp
+}
+
+/// LR 39.01(c)(4): objections to the designated deposition portions are
+/// filed, with any videos, no later than 7 days before trial or as the
+/// court orders.
+deadline deposition-objection-period: 7.days before TrialBegins() counted_by frcp6 cite "M.D. Tenn. L.R. 39.01(c)"
+{
+  forum frcp
+}
+
+/// LR 39.01(e): unless a pretrial or other order provides otherwise,
+/// discovery responses are supplemented no later than 30 days before
+/// trial; evidence not timely disclosed is precluded absent court
+/// approval.
+deadline supplementation-period: 30.days before TrialBegins() counted_by frcp6 cite "M.D. Tenn. L.R. 39.01(e)"
+{
+  forum frcp
+}
+
+/// LR 39.01(f): subpoenas for trial witnesses delivered to another for
+/// service are delivered, with any required funds, at least 14 days prior
+/// to the trial date; otherwise a continuance for a witness's absence is
+/// granted only on extenuating circumstances.
+deadline trial-subpoena-period: 14.days before TrialBegins() counted_by frcp6 cite "M.D. Tenn. L.R. 39.01(f)"
+{
+  forum frcp
+}
+
+/// LR 54.01(a): if counsel cannot agree on costs, the prevailing party
+/// files a bill of costs with supporting documentation within 30 days
+/// from the entry of the judgment.
+deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "M.D. Tenn. L.R. 54.01(a)"
+{
+  forum frcp
+}
+
+/// LR 54.01(a): exceptions to the Clerk's proposed taxation are filed
+/// within 14 days from the filing of the Notice of Taxation.
+deadline taxation-exceptions-period: 14.days after NoticeOfTaxationFiled() counted_by frcp6 cite "M.D. Tenn. L.R. 54.01(a)"
+{
+  forum frcp
+}
+
+/// LR 54.01(a): a motion for court review of the Clerk's taxation is
+/// filed within 7 days from the filing of the Taxation of Costs.
+deadline taxation-review-period: 7.days after TaxationOfCostsFiled() counted_by frcp6 cite "M.D. Tenn. L.R. 54.01(a)"
+{
+  forum frcp
+}
+
+/// LR 54.01(b)(1): unless a statute or order provides otherwise, a motion
+/// for attorney's fees and related nontaxable expenses is filed within 30
+/// days from the entry of final judgment.
+deadline fee-motion-period: 30.days after JudgmentEntered() counted_by frcp6 cite "M.D. Tenn. L.R. 54.01(b)(1)"
+{
+  forum frcp
+}
+
+/// LR 54.01(b)(2): unless a statute or order provides otherwise, a motion
+/// for fees and expenses for appellate litigation is made within 30 days
+/// of the entry of the Sixth Circuit mandate (and, for Supreme Court
+/// litigation, within 30 days from its final decision).
+deadline appellate-fee-motion-period: 30.days after MandateEntered() counted_by frcp6 cite "M.D. Tenn. L.R. 54.01(b)(2)"
+{
+  forum frcp
+}
+
+/// LR 54.01(c): the party against whom fees are requested files any
+/// objections, with a memorandum, within 14 days of the filing of the
+/// motion; failure may be deemed no opposition.
+deadline fee-objections-period: 14.days after FeeMotionFiled() counted_by frcp6 cite "M.D. Tenn. L.R. 54.01(c)"
+{
+  forum frcp
+}
+
+/// LR 72.01(b): any response to a motion for review of a magistrate
+/// judge's nondispositive order is filed within 14 days after service of
+/// the motion for review.
+deadline review-response-period: 14.days after ReviewMotionServed() counted_by frcp6 cite "M.D. Tenn. L.R. 72.01(b)"
+{
+  forum frcp
+}
+
+/// LR 72.04: if transcripts are needed for review, the moving party
+/// arranges transcription within 14 days from service of the motion for
+/// review on opposing counsel.
+deadline review-transcript-period: 14.days after ReviewMotionServed() counted_by frcp6 cite "M.D. Tenn. L.R. 72.04"
+{
+  forum frcp
+}
+
+/// LR 73.01(c)(1): after an additional party joins a case referred to a
+/// magistrate judge on consent, a new consent form, if all parties agree,
+/// is filed within 30 days after the additional party's appearance.
+deadline added-party-consent-period: 30.days after AdditionalPartyAppears() counted_by frcp6 cite "M.D. Tenn. L.R. 73.01(c)(1)"
+{
+  forum frcp
+}

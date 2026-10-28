@@ -1,0 +1,156 @@
+module wy-district-court-civil.civil
+
+start complaint-filed
+
+state complaint-filed: "Action commenced" by applicant cite "W.R.C.P. 3"
+{
+  note "A civil action is commenced by filing a complaint with the court; after a dismissal under Rule 4(w), a new action is commenced by filing a complaint if service is obtained within 90 days of the applicable statute of limitations (W.R.C.P. 3). If a defendant is not served within 90 days after the complaint is filed, the court must dismiss the action without prejudice against that defendant or order service within a specified time, and must extend the time on good cause; this does not apply to service in a foreign country (W.R.C.P. 4(w)). Periods in this package are stated, not counted: computation is W.R.C.P. 6(a). No leading decision is named."
+  edge-complaint-filed-response-due "Summons and complaint served" -> response-due {
+    authority cite "W.R.C.P. 4(w)"
+  }
+  edge-complaint-filed-dismissed-unserved "Not served within 90 days" -> dismissed-unserved {
+    authority cite "W.R.C.P. 4(w)"
+  }
+}
+
+state response-due: "Response due: answer or motion" cite "W.R.C.P. 12(a)"
+{
+  note "A defendant serves an answer within 20 days after being served with the summons and complaint; within 30 days if service is made outside the State of Wyoming; within 30 days after the last day of publication; or, if it timely waived service under Rule 4(d), within 60 days after the request for a waiver was sent (90 days if sent outside any judicial district of the United States) (W.R.C.P. 12(a)(1)(A)). An answer to a counterclaim or crossclaim is due within 20 days after service of the pleading stating it (W.R.C.P. 12(a)(1)(B)). Failure to state a claim upon which relief can be granted may be asserted by motion made before pleading (W.R.C.P. 12(b)). The clerk may once grant, ex parte, an extension of not more than 15 days to answer or move to dismiss on a timely motion stating the matters Rule 6(b)(3) lists (W.R.C.P. 6(b)(3))."
+  edge-response-due-default-entered "No timely response" -> default-entered {
+    authority cite "W.R.C.P. 55(a)"
+  }
+  edge-response-due-motion-ruling "Motion to dismiss filed" -> motion-ruling {
+    authority cite "W.R.C.P. 12(b)"
+  }
+  edge-response-due-sched "Answer filed" -> sched { authority cite "W.R.C.P. 12(a)" }
+}
+
+decision motion-ruling: "Motion to dismiss ruling" by court cite "W.R.C.P. 12(b)"
+{
+  note "Unless the rules or an order set other times, a motion is served at least 14 days before its hearing (W.R.C.P. 6(c)(1)); a response is served at least three days before the hearing or within 20 days after service of the motion, whichever is earlier (W.R.C.P. 6(c)(2)); a reply at least one day before the hearing or within 15 days after service of the response, whichever is earlier (W.R.C.P. 6(c)(3)); and a request for hearing within 20 days after service of the motion (W.R.C.P. 6(c)(4)). If the court denies the motion or postpones it until trial, the responsive pleading is served within 14 days after notice of the court's action (W.R.C.P. 12(a)(2)(A)). If matters outside the pleadings are presented on a Rule 12(b)(6) motion and not excluded, it is treated as one for summary judgment (W.R.C.P. 12(d)). A response to an amended pleading is due within the time remaining to respond to the original pleading or within 14 days after service of the amended pleading, whichever is later (W.R.C.P. 15(a)(3)). No leading decision is named."
+  edge-motion-ruling-dismissed-with-prejudice "Dismissed on the merits" -> dismissed-with-prejudice {
+    authority cite "W.R.C.P. 41(b)"
+  }
+  edge-motion-ruling-response-due "Dismissed with leave to amend" -> response-due {
+    authority cite "W.R.C.P. 15(a)"
+  }
+  edge-motion-ruling-sched "Denied: responsive pleading within 14 days after notice" -> sched {
+    authority cite "W.R.C.P. 12(a)"
+  }
+}
+
+state sched: "Scheduling order" cite "W.R.C.P. 16(b)"
+{
+  note "The judge, or an authorized court commissioner, may enter a scheduling order after consulting the parties, and must issue it as soon as practicable; it must limit the time to join other parties, amend the pleadings, complete discovery and file motions (W.R.C.P. 16(b))."
+  edge-sched-discovery "Order entered" -> discovery { authority cite "W.R.C.P. 16(b)" }
+}
+
+state discovery: "Disclosures and discovery" cite "W.R.C.P. 26(a)"
+{
+  note "Unless a different time is set by written stipulation or court order, the initial disclosures are made within 30 days after a party's answer is required to be served under Rule 12(a); a party later served or joined makes them within 30 days after being served or joined (W.R.C.P. 26(a)(1.3)). Absent a stipulation or order, expert disclosures are made at least 90 days before the date set for trial or for the case to be ready for trial, and rebuttal disclosures within 30 days after the other party's disclosure (W.R.C.P. 26(a)(2)(D)); pretrial disclosures at least 30 days before trial, with objections within 14 days after they are made (W.R.C.P. 26(a)(3)(B)). Sanctions for failure to make disclosures or discovery are W.R.C.P. 37."
+  edge-discovery-sj-ruling "Summary judgment motion filed" -> sj-ruling {
+    authority cite "W.R.C.P. 56(b)"
+  }
+  edge-discovery-dismissed-with-prejudice "Discovery sanction dismisses claims" -> dismissed-with-prejudice {
+    authority cite "W.R.C.P. 37(b)"
+  }
+  edge-discovery-settled "Settlement or voluntary dismissal" -> settled {
+    authority cite "W.R.C.P. 41(a)"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial { authority cite "W.R.C.P. 16(a)" }
+}
+
+decision sj-ruling: "Summary judgment ruling" by court cite "W.R.C.P. 56(a)"
+{
+  note "Unless a court order sets a different time, a party may file a motion for summary judgment at any time (W.R.C.P. 56(b)). The court shall grant summary judgment if the movant shows that there is no genuine dispute as to any material fact and the movant is entitled to judgment as a matter of law, and should state on the record its reasons (W.R.C.P. 56(a)). A required statement of material facts is W.R.C.P. 56.1. The response and reply times are those of W.R.C.P. 6(c). No leading decision is named."
+  edge-sj-ruling-judgment-applicant "Granted for applicant" -> judgment-applicant {
+    authority cite "W.R.C.P. 58(b)"
+  }
+  edge-sj-ruling-judgment-opponent "Granted for opponent" -> judgment-opponent {
+    authority cite "W.R.C.P. 58(b)"
+  }
+  edge-sj-ruling-trial "Denied" -> trial { authority cite "W.R.C.P. 56(d)" }
+}
+
+state trial: "Trial (jury or bench)" cite "W.R.C.P. 38"
+{
+  note "A party demands a jury by serving a written demand at any time after commencement and not later than 14 days after service of the last pleading directed to the issue, and files it (W.R.C.P. 38(b)(1)); a demand in district court is accompanied by a deposit of $50.00 for a six-person jury or $150.00 for a twelve-person jury (W.R.C.P. 38(b)(2)(A)); if a party demands a jury for only some issues, any other party may demand one for other or all issues within 14 days after service of the demand or such lesser time as the court may order (W.R.C.P. 38(c)). In a nonjury trial the court finds the facts and states its conclusions under W.R.C.P. 52(a)."
+  edge-trial-judgment-applicant "Verdict or findings for applicant" -> judgment-applicant {
+    authority cite "W.R.C.P. 58(b)"
+  }
+  edge-trial-judgment-opponent "Verdict or findings for opponent" -> judgment-opponent {
+    authority cite "W.R.C.P. 58(b)"
+  }
+}
+
+state judgment-applicant: "Judgment for applicant entered" cite "W.R.C.P. 58(b)"
+{
+  note "If the parties cannot agree on its form, a proposed judgment is presented and served within 14 days after the court's decision is made known, and objections with an alternate form within 5 days after its service (W.R.C.P. 58(a)). Every judgment is set forth on a separate document (W.R.C.P. 58(b)) and is entered when the form of judgment is filed in the clerk's office (W.R.C.P. 58(c)). A motion for costs is filed no later than 21 days after the entry of judgment (W.R.C.P. 54(d)(1)), and a motion for attorney's fees, unless a statute or order provides otherwise, no later than 21 days after the entry of judgment (W.R.C.P. 54(d)(2)). Execution may not issue, nor proceedings be taken to enforce the judgment, until 14 days have passed after its entry (W.R.C.P. 62(a))."
+  edge-judgment-applicant-post-judgment-ruling "Post-judgment motion" -> post-judgment-ruling {
+    authority cite "W.R.C.P. 59(b)"
+  }
+  edge-judgment-applicant-appellate-review "Notice of appeal filed" -> appellate-review {
+    authority cite "W.R.A.P. 2.01"
+  }
+  edge-judgment-applicant-final-win "No appeal within time" -> final-win {
+    authority cite "W.R.A.P. 2.01"
+  }
+}
+
+state judgment-opponent: "Judgment for opponent entered" cite "W.R.C.P. 58(b)"
+{
+  note "Presentation, entry, costs, fees and the 14-day stay of execution are as for a judgment for the applicant (W.R.C.P. 54(d), 58, 62(a)). The notice of appeal is filed with the clerk of the trial court within 30 days from entry of the appealable order, and a copy is served on the clerk of the appellate court (W.R.A.P. 2.01(a)). On a showing of excusable neglect, the trial court may extend the time if the application is filed before 45 days from entry of the appealable order; an application not granted within 14 days of its filing is deemed denied (W.R.A.P. 2.01(a)(1))."
+  edge-judgment-opponent-post-judgment-ruling "Post-judgment motion" -> post-judgment-ruling {
+    authority cite "W.R.C.P. 59(b)"
+  }
+  edge-judgment-opponent-appellate-review "Notice of appeal filed" -> appellate-review {
+    authority cite "W.R.A.P. 2.01"
+  }
+  edge-judgment-opponent-final-loss "No appeal within time" -> final-loss {
+    authority cite "W.R.A.P. 2.01"
+  }
+}
+
+decision post-judgment-ruling: "Post-judgment motion ruling" by court cite "W.R.C.P. 59(b)"
+{
+  note "A renewed motion for judgment as a matter of law is filed no later than 28 days after the entry of judgment (W.R.C.P. 50(b)); a motion to amend or make additional findings, no later than 28 days after entry of judgment (W.R.C.P. 52(b)); a motion for a new trial, no later than 28 days after the entry of judgment (W.R.C.P. 59(b)), with opposing affidavits within 14 days after service (W.R.C.P. 59(c)); a motion to alter or amend, no later than 28 days after entry (W.R.C.P. 59(e)). The court may not extend those times (W.R.C.P. 6(b)(2)). A motion under Rules 50(b), 52(b), 59 or 60(b) not determined within 90 days after filing is deemed denied unless the court continues it by order, for no more than 60 days (W.R.C.P. 6(c)(4)). A Rule 60(b)(1)-(3) motion is made no more than a year after the entry of the judgment (W.R.C.P. 60(c)(1)). A timely motion under W.R.C.P. 50(b), 52(b) or 59 stops the appeal time for all parties, and the full time runs from entry of the order disposing of it or from its deemed denial (W.R.A.P. 2.02(a), (b))."
+  edge-post-judgment-ruling-trial "Granted: new trial" -> trial { authority cite "W.R.C.P. 59(a)" }
+  edge-post-judgment-ruling-appellate-review "Denied: appeal time runs from the order" -> appellate-review {
+    authority cite "W.R.A.P. 2.02(b)"
+  }
+}
+
+terminal default-entered: "Default judgment against opponent" outcome [win] cite "W.R.C.P. 55(a)"
+{
+  note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend, the clerk must enter its default (W.R.C.P. 55(a)); the clerk enters judgment for a sum certain on the plaintiff's request and affidavit, and in other cases the party applies to the court, serving a party who has appeared with written notice at least 7 days before the hearing (W.R.C.P. 55(b)). Outcome from the applicant's side."
+}
+
+terminal dismissed-unserved: "Dismissed without prejudice for failure to serve" outcome [loss, dismissal] cite "W.R.C.P. 4(w)"
+{
+  note "Dismissal without prejudice under W.R.C.P. 4(w); a new action filed after it is commenced by filing if service is obtained within 90 days of the applicable statute of limitations (W.R.C.P. 3). Outcome from the applicant's side."
+}
+
+terminal dismissed-with-prejudice: "Dismissed on the merits" outcome [loss] cite "W.R.C.P. 41(b)"
+{
+  note "Unless the dismissal order states otherwise, a dismissal under Rule 41(b), and any dismissal not under the rule except one for lack of jurisdiction, improper venue or failure to join a party under Rule 19, operates as an adjudication on the merits; the court on its own motion may dismiss without prejudice an action not prosecuted with due diligence (W.R.C.P. 41(b)). Outcome from the applicant's side."
+}
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "W.R.C.P. 41(a)"
+{
+  note "The plaintiff may dismiss without a court order by notice before the opposing party serves an answer or a summary judgment motion, or by a stipulation signed by all parties who have appeared; unless stated otherwise the dismissal is without prejudice (W.R.C.P. 41(a)(1)). Settlement terms are matter facts."
+}
+
+terminal final-win: "Final judgment for applicant, no appeal" outcome [win] cite "W.R.A.P. 2.01"
+{
+  note "Judgment final when the 30-day appeal time and any extension for excusable neglect have run (W.R.A.P. 2.01(a))."
+}
+
+terminal final-loss: "Final judgment for opponent, no appeal" outcome [loss] cite "W.R.A.P. 2.01"
+{
+  note "Judgment final when the appeal time has run (W.R.A.P. 2.01(a))."
+}
+
+terminal appellate-review: "Appeal taken: continue in the Wyoming Supreme Court package" cite "W.R.A.P. 2.01"
+{
+  note "Hand-off to lit/wy-supreme (wy-supreme-court-civil-appeals)."
+}

@@ -1,0 +1,65 @@
+# The U.S. District Court for the Western District of Louisiana's local
+# criminal rules (LCrR) as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only what the local criminal rules
+# themselves state, or adopt from the local civil rules (LCrR 47.1(a)
+# applies the form requirements of LR 7.1, 7.4, 7.5, 7.9, 10.1 and 11.1 to
+# criminal motions), and re-encodes no FRCrimP, Speedy Trial Act or FRAP
+# 4(b) period (one source of truth: lit/frcrimp). The local criminal rules
+# leave every filing period to the court (LCrR 32.2, 47.1(a), (b)), so this
+# layer states no counted period. The rules are the edition the court
+# serves as current ("Effective: May 7, 2024"; sources/lawd), so in_force
+# is that date; earlier editions are not vendored, so a query before it is
+# a hole in the corpus. The vendored text is sectioned by rule group
+# (`## LCrR 47` holds LCrR 47.1), so cites name the group. The court's
+# Speedy Trial Act plan (18 U.S.C. § 3165) is not vendored. An appeal goes
+# to the Fifth Circuit under lit/frcrimp's FRAP 4(b) period and lit/ca5.
+[package]
+name = "lawd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "lawd-criminal-local-rules"
+forum = "lawd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Western District of Louisiana: Local Criminal Rules"
+description = "The U.S. District Court for the Western District of Louisiana's local criminal rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the memorandum page limits the criminal rules adopt from the civil rules; every criminal filing period is left to the court."
+in_force = "2024-05-07"
+known_at = "2026-10-28"
+unknown_before = "2024-05-07"
+jurisdiction = "U.S. District Court for the Western District of Louisiana (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "lawd-lcrr"
+issuer = "U.S. District Court for the Western District of Louisiana"
+date = "2024-05-07"
+designation = "Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.lawd-lcrr]
+title = "Civil and Criminal Local Rules of the United States District Court for the Western District of Louisiana, local criminal rules (effective May 7, 2024)"
+url = "https://www.lawd.uscourts.gov/sites/lawd/files/UPLOADS/CivilCrimLRs.Barbara.updated.Ver3.030526.ppm.pdf"
+path = "sources/lawd/lawd-local-rules-sectioned.txt"
+path_sha256 = "98d5dc04a3b3f2956976bc5d7f877837c858c95afb11b2e4f733b611e47efa1a"
+sha256 = "80e6ba6dcea5200b390b51e7ffaff8cf3549f36e5de3786d3b72639bab89fbb5"
+as_of = "2024-05-07"
+cite_prefixes = ["W.D. La. LCrR", "LCrR"]
+section_heading = "LCrR {n}"
+
+[sources.lawd-lr]
+title = "Civil and Criminal Local Rules of the United States District Court for the Western District of Louisiana, local civil rules adopted for criminal motions by LCrR 47.1(a) (effective May 7, 2024)"
+url = "https://www.lawd.uscourts.gov/sites/lawd/files/UPLOADS/CivilCrimLRs.Barbara.updated.Ver3.030526.ppm.pdf"
+path = "sources/lawd/lawd-local-rules-sectioned.txt"
+path_sha256 = "98d5dc04a3b3f2956976bc5d7f877837c858c95afb11b2e4f733b611e47efa1a"
+sha256 = "80e6ba6dcea5200b390b51e7ffaff8cf3549f36e5de3786d3b72639bab89fbb5"
+as_of = "2024-05-07"
+cite_prefixes = ["W.D. La. LR"]
+section_heading = "LR {n}"

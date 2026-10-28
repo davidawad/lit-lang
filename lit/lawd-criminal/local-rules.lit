@@ -1,0 +1,61 @@
+module lawd-criminal-local-rules.local-rules
+
+// The Western District of Louisiana's local criminal rules. Unless the
+// court directs otherwise, criminal motions comply with the form
+// requirements of Local Civil Rules 7.1, 7.4, 7.5, 7.9, 10.1 and 11.1
+// (LCrR 47.1(a)), so LR 7.1's memorandum page limits apply to them.
+//
+// The local criminal rules set no period of their own: a response to a
+// motion is filed "within the delay set by the court" (LCrR 47.1(a)), a
+// motion to suppress likewise (LCrR 47.1(b)), and presentencing memoranda
+// within the time frame the sentencing judge designates (LCrR 32.2); the
+// magistrate judges set the deadlines for motions and responses at
+// arraignment (LCrR 59.1(b)(4)). LR 7.4's default civil briefing periods
+// (an opposition within 14 days after the motion is filed, a reply within
+// seven days after the opposition) govern only where no Notice of Motion
+// Setting issues and the judge orders none, while LCrR 47.1(a) leaves the
+// criminal response to the court; no criminal default period is encoded.
+// The presentence report periods are FRCrimP 32's and stay in lit/frcrimp;
+// the probation officer's sentencing recommendation is not disclosed
+// (LCrR 32.1(A)), and a presentencing memorandum does not relieve the
+// parties of the written objections FRCrimP 32(f)(1) requires (LCrR 32.2).
+//
+// Conditions that are not deadlines stay in notes: defense counsel review
+// the plea package and the Rule 11 colloquy and are prepared at the change
+// of plea hearing (LCrR 11.1); a sealed filing needs a motion to seal with
+// a proposed order (LCrR 12.1); a Rule 17(c) subpoena motion is filed only
+// after conferring and states the documents sought, their relevance and
+// admissibility (LCrR 17.1); exhibits are kept until any sentence imposed
+// has been fully satisfied (LCrR 55.1). The grand jury premises (LCrR
+// 6.1, 6.2), extrajudicial statements (LCrR 53.1 to 53.10), petty offenses
+// (LCrR 58.2) and the magistrate judges' duties (LCrR 59.1) state no
+// period.
+//
+// The earlier W.D. La. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Brady v. Maryland, Barker v. Wingo, Zedner v.
+// United States, Boykin v. Alabama, Missouri v. Frye, Jackson v. Virginia,
+// United States v. Booker, Roe v. Flores-Ortega, Garza v. Idaho) are
+// FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// A memorandum in support of or in opposition to a criminal motion: at
+/// most 25 pages, exclusive of a table of contents or table of
+/// authorities; a judge may grant leave to exceed the limit in an
+/// extraordinary case (W.D. La. LCrR 47.1(a); LR 7.1).
+limit memorandum {
+  pages <= 25 cite "W.D. La. LR 7.1"
+} cite "W.D. La. LCrR 47; W.D. La. LR 7.1"
+
+/// A reply memorandum: at most 10 pages (W.D. La. LCrR 47.1(a); LR 7.1).
+limit reply-memorandum {
+  pages <= 10 cite "W.D. La. LR 7.1"
+} cite "W.D. La. LCrR 47; W.D. La. LR 7.1"
+
+/// A criminal motion with its supporting memorandum is filed (W.D. La.
+/// LCrR 47.1(a)).
+event MotionFiled() paper memorandum
+/// A memorandum in opposition to a criminal motion is filed (W.D. La.
+/// LCrR 47.1(a)).
+event OppositionFiled() paper memorandum
+/// A reply memorandum is filed (W.D. La. LCrR 47.1(a); LR 7.1).
+event ReplyFiled() paper reply-memorandum

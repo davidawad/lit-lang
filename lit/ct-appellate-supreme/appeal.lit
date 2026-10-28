@@ -12,26 +12,35 @@ module ct-appellate-supreme.appeal
 // further review; the statute is not vendored, so transfer is bound to
 // Section 65-1, which invokes it, and further review to the certification
 // rules (Sections 84-1, 84-4). It named no decision and none is cited.
-
 /// An appellant's or appellee's brief filed electronically: at most 13,500
 /// words, exclusive of party appendices, the cover page, the tables, the
 /// statement of issues, the signature block and certifications; the clerk
 /// grants 2000 more words on request for a state constitutional claim
 /// (Practice Book § 67-3A).
 limit principal-brief { words <= 13_500 cite "Practice Book § 67-3A" } cite "Practice Book § 67-3A"
+
 /// The combined appellee and cross appellant brief: at most 18,000 words
 /// (Practice Book § 67-3A).
-limit cross-appellant-brief { words <= 18_000 cite "Practice Book § 67-3A" } cite "Practice Book § 67-3A"
+limit cross-appellant-brief {
+  words <= 18_000 cite "Practice Book § 67-3A"
+} cite "Practice Book § 67-3A"
+
 /// The combined cross appellee and appellant reply brief: at most 16,000
 /// words (Practice Book § 67-3A).
-limit cross-appellee-brief { words <= 16_000 cite "Practice Book § 67-3A" } cite "Practice Book § 67-3A"
+limit cross-appellee-brief {
+  words <= 16_000 cite "Practice Book § 67-3A"
+} cite "Practice Book § 67-3A"
+
 /// A reply brief filed electronically: at most 6500 words (Practice Book §
 /// 67-5A).
 limit reply-brief { words <= 6500 cite "Practice Book § 67-5A" } cite "Practice Book § 67-5A"
+
 /// A petition for certification, and an opposition to one: at most 4000
 /// words, exclusive of the caption, signature block, certifications and
 /// appendix (Practice Book §§ 84-5(b), 84-6(a)).
-limit certification-petition { words <= 4000 cite "Practice Book § 84-5" } cite "Practice Book § 84-5"
+limit certification-petition {
+  words <= 4000 cite "Practice Book § 84-5"
+} cite "Practice Book § 84-5"
 
 start appeal-filed
 
@@ -54,9 +63,7 @@ terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismi
 state papers-filed: "Preliminary papers and transcript order filed" by applicant cite "Practice Book § 63-4"
 {
   note "Within ten days of filing an appeal, the appellant files with the appellate clerk a preliminary statement of the issues, a designation of the proposed contents of the clerk appendix, a certificate that no transcript is needed or a transcript order confirmation, and a docketing statement; an appellee presenting alternative grounds or adverse rulings files its own preliminary statement of issues within twenty days from the filing of the appellant's, and another party may designate clerk appendix contents within seven days from the appellant's designation (Practice Book § 63-4(a))."
-  edge-papers-filed-briefing "Briefing" -> briefing {
-    authority cite "Practice Book § 67-3A"
-  }
+  edge-papers-filed-briefing "Briefing" -> briefing { authority cite "Practice Book § 67-3A" }
   edge-papers-filed-transfer "Transferred to the Supreme Court" -> briefing {
     authority cite "Practice Book § 65-1"
   }
@@ -76,9 +83,7 @@ state briefing: "Briefs filed" by applicant cite "Practice Book § 67-3A"
 decision decision: "Appeal decided" by court cite "Practice Book § 71-4"
 {
   note "Oral argument is allowed as of right except in civil cases where the dispositive issue was recently authoritatively decided or the briefs adequately present the facts and arguments; then notice issues that the case will be decided on the briefs and record, and any party may request argument within ten days of the notice (Practice Book § 70-1(a), (b)). Notice of the decision is deemed given, for all purposes, on the official release date in the court's opinion or memorandum decision (Practice Book § 71-4(a))."
-  edge-decision-affirmed "Affirmed" -> reconsideration {
-    authority cite "Practice Book § 71-4"
-  }
+  edge-decision-affirmed "Affirmed" -> reconsideration { authority cite "Practice Book § 71-4" }
   edge-decision-reversed "Reversed or remanded" -> reconsideration {
     authority cite "Practice Book § 71-4"
   }
@@ -98,12 +103,8 @@ decision reconsideration: "Reconsideration" by court cite "Practice Book § 71-5
 decision certification: "Petition for certification decided" by court cite "Practice Book § 84-4"
 {
   note "No appeal may be taken from a final decision of the Appellate Court to the Supreme Court unless the Supreme Court grants certification (Practice Book § 84-1). The petition is filed within twenty days of the official release of the opinion or of notice of the order finally determining the cause, whichever is earlier; a timely motion for reconsideration or application for fee waiver restarts the twenty days from notice of its decision; a cross petition is filed within ten days of the filing of the petition (Practice Book § 84-4(a), (c)). An opposition is filed within ten days of the filing of the petition (Practice Book § 84-6(a)). Petitions and oppositions are limited to 4000 words (Practice Book §§ 84-5(b), 84-6(a))."
-  edge-certification-denied "Denied" -> review-denied {
-    authority cite "Practice Book § 84-1"
-  }
-  edge-certification-granted "Granted" -> review-granted {
-    authority cite "Practice Book § 84-1"
-  }
+  edge-certification-denied "Denied" -> review-denied { authority cite "Practice Book § 84-1" }
+  edge-certification-granted "Granted" -> review-granted { authority cite "Practice Book § 84-1" }
 }
 
 terminal final-judgment: "Appellate judgment final" outcome [final] cite "Practice Book § 71-4"

@@ -30,13 +30,10 @@ import core.frcp6.{ frcp6 }
 // Court decisions (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby) are
 // FRCP authority and belong to lit/frcp; the notice of appeal belongs to
 // lit/frap and lit/ca2.
-
 /// A memorandum of law: double-spaced and at most 40 pages, exclusive of
 /// pages containing a table of contents, table of statutes, rules or the
 /// like, except by order of the Court (D. Conn. L. Civ. R. 7(a)5).
-limit memorandum {
-  pages <= 40 cite "D. Conn. L. Civ. R. 7(a)"
-} cite "D. Conn. L. Civ. R. 7(a)"
+limit memorandum { pages <= 40 cite "D. Conn. L. Civ. R. 7(a)" } cite "D. Conn. L. Civ. R. 7(a)"
 
 /// A reply memorandum: at most 10 pages, strictly confined to the matters
 /// raised by the memorandum it answers (D. Conn. L. Civ. R. 7(d)).

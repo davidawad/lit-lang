@@ -35,9 +35,7 @@ decision pleading-due: "Motion to dismiss, motion to strike, answer, or no plead
   edge-pleading-due-strike "Motion to strike" -> strike-motion {
     authority cite "Practice Book § 10-39"
   }
-  edge-pleading-due-answer "Answer filed" -> discovery {
-    authority cite "Practice Book § 10-8"
-  }
+  edge-pleading-due-answer "Answer filed" -> discovery { authority cite "Practice Book § 10-8" }
   edge-pleading-due-default "Failure to plead" -> default-entered {
     authority cite "Practice Book § 17-32"
   }
@@ -122,9 +120,7 @@ state discovery: "Discovery" by applicant cite "Practice Book § 13-2"
   edge-discovery-sj "Motion for summary judgment" -> summary-judgment {
     authority cite "Practice Book § 17-44"
   }
-  edge-discovery-trial "Case claimed for trial" -> trial {
-    authority cite "Practice Book § 14-10"
-  }
+  edge-discovery-trial "Case claimed for trial" -> trial { authority cite "Practice Book § 14-10" }
 }
 
 decision discovery-sanction: "Order on failure to comply with discovery" by court cite "Practice Book § 13-14"
@@ -152,9 +148,7 @@ decision summary-judgment: "Summary judgment decided" by court cite "Practice Bo
   edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-rendered {
     authority cite "Practice Book § 17-49"
   }
-  edge-summary-judgment-denied "Denied: trial" -> trial {
-    authority cite "Practice Book § 17-44"
-  }
+  edge-summary-judgment-denied "Denied: trial" -> trial { authority cite "Practice Book § 17-44" }
 }
 
 state trial: "Trial by jury or by the court" by court cite "Practice Book § 14-10"

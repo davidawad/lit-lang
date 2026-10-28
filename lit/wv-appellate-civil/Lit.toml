@@ -1,6 +1,5 @@
-# Civil appeals to the West Virginia Intermediate Court of Appeals and the
-# Supreme Court of Appeals under the West Virginia Rules of Appellate
-# Procedure, as far as the vendored text states: the rules as posted on the
+# Civil appeals to the West Virginia Intermediate Court of Appeals under
+# the West Virginia Rules of Appellate Procedure, as far as the vendored text states: the rules as posted on the
 # Supreme Court of Appeals' rules page, retrieved 2026-10-28
 # (sources/wv-appellate-civil). The page states no edition date; by the PM
 # ruling of 2026-10-28 it is taken as the current base text, dated by Rule
@@ -14,7 +13,9 @@
 # Lincoln's Day, days the Governor or Legislature appoints) differ from
 # the federal ones; lit/core has no counting rule for it, so the periods
 # are stated in notes, not encoded as counted deadlines. The trial-court
-# side is lit/wv-circuit-civil.
+# side is lit/wv-circuit-civil; the appeal from the Intermediate Court to
+# the Supreme Court of Appeals is lit/wv-supreme-court (lg-u561.5, one
+# package per court), and all three route on lit/wv-rules' trigger events.
 [package]
 name = "wv-appellate-civil"
 version = "0.1.0"
@@ -24,12 +25,12 @@ forum = "wv-appellate-civil"
 family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "west-virginia"
-title = "West Virginia Intermediate Court of Appeals and Supreme Court of Appeals, civil appeals"
-description = "Civil appeals under the West Virginia Rules of Appellate Procedure, as far as the vendored text states: the notice of appeal and its fee, the scheduling order, the appendix record and transcripts, perfecting the appeal and its extension, the briefs and their page limits, the argument calendar and Rule 19 and Rule 20 argument, memorandum decisions and opinions, rehearing, the mandate and costs, and the appeal from the Intermediate Court to the Supreme Court."
+title = "Intermediate Court of Appeals of West Virginia, civil appeals"
+description = "Civil appeals under the West Virginia Rules of Appellate Procedure, as far as the vendored text states: the notice of appeal and its fee, the scheduling order, the appendix record and transcripts, perfecting the appeal and its extension, the briefs and their page limits, the argument calendar and Rule 19 and Rule 20 argument, memorandum decisions and opinions, rehearing, the mandate and costs, and the hand-off of an appeal from the Intermediate Court to the Supreme Court of Appeals (lit/wv-supreme-court)."
 in_force = "2022-07-01"
 known_at = "2026-10-28"
 unknown_before = "2022-07-01"
-jurisdiction = "West Virginia Intermediate Court of Appeals; Supreme Court of Appeals of West Virginia"
+jurisdiction = "Intermediate Court of Appeals of West Virginia"
 
 [package.roles]
 applicant = "self"
@@ -38,6 +39,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the trigger events of the West Virginia court packages.
+wv-state-rules = { version = "^0.1.0", path = "../wv-rules" }
 
 [sources.wv-rap]
 title = "West Virginia Rules of Appellate Procedure, as posted by the Supreme Court of Appeals of West Virginia (retrieved 2026-10-28; before the Rule 5 amendment of 2026-08-21)"

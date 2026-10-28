@@ -1,8 +1,11 @@
 module wv-appellate-civil.appeal
 
+import wv-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled }
+
 // Civil appeals from the West Virginia circuit courts to the Intermediate
-// Court of Appeals, and from the Intermediate Court to the Supreme Court of
-// Appeals, from the applicant's (petitioner's) side. Every period below is
+// Court of Appeals, from the applicant's (petitioner's) side; the appeal
+// from the Intermediate Court to the Supreme Court of Appeals hands off to
+// lit/wv-supreme-court (lg-u561.5). Every period below is
 // stated in a note, not counted: time is computed under W. Va. R. App. P.
 // 39(a), and lit/core has no counting rule for it or for West Virginia's
 // legal holidays. The court may for good cause enlarge any time the rules
@@ -42,6 +45,7 @@ state notice-filed: "Notice of appeal filed" by applicant effective [2026-08-21,
 {
   note "The order of August 21, 2026 (No. 25-57) amends Rule 5(a) and (b), marking additions by underscoring and deletions by strike-through; the vendored text extract does not show that marking, so the amended rule is quoted here as the order prints it and the original order is the authority for which words were added or struck. Rule 5(a) as printed reaches appeals from \"a mandate or other final decision order of the Intermediate Court\", with the same exceptions as the base text. Rule 5(b) as printed reads \"Within thirty days of entry of the judgment final order or mandate being appealed, the party appealing shall file the notice of appeal, including attachments required in the notice of appeal form contained in Appendix A of these Rules. To appeal an opinion or memorandum decision of the Intermediate Court to the Supreme Court, the party appealing shall attach the Intermediate Court's mandate.\" The thirty-day period reads the same in the base text and the order; filing in the Office of the Clerk under Rule 38 and service on all parties, the circuit clerk and each court reporter are printed unchanged."
   edge-notice-filed-record "Appendix record and transcripts prepared" -> record {
+    event NoticeOfAppealFiled()
     authority cite "W. Va. R. App. P. 7(d)"
   }
 }
@@ -50,6 +54,7 @@ state notice-filed: "Notice of appeal filed" by applicant effective [2022-07-01,
 {
   note "The Intermediate Court has appellate jurisdiction of final judgments or orders of a circuit court in all civil cases entered after June 30, 2022; the Supreme Court may obtain jurisdiction over any civil case filed there, on its own motion or a party's (Rule 1(b)). Rule 5 governs appeals from an appealable circuit court order and from a mandate or other final order of the Intermediate Court, except abuse and neglect, workers' compensation, family court, Public Service Commission appeals and certified questions (Rule 5(a)). Within thirty days of entry of the final order or mandate being appealed, the party appealing files the notice of appeal with the attachments the Appendix A form requires, in the Office of the Clerk, and serves it on all parties, on the circuit clerk and on each court reporter from whom a transcript is requested (Rule 5(b)). The Clerk charges $200 for docketing a civil appeal in either court, except as provided by law for indigent parties (Rule 24(a)). A party designated in the notice as having no interest may remain a party by notifying the Clerk within twenty days of the filing of the notice (Rule 5(c)). The court may extend the time to file a notice of appeal for good cause shown (Rule 5(i)(1)). As soon as practicable after the notice is properly filed, the court issues a scheduling order setting the dates for the briefs, the appendix or designated record, the transcript and motions (Rule 5(d)); failure to comply may bring sanctions or dismissal (Rule 5(e))."
   edge-notice-filed-record "Appendix record and transcripts prepared" -> record {
+    event NoticeOfAppealFiled()
     authority cite "W. Va. R. App. P. 7(d)"
   }
 }
@@ -58,6 +63,7 @@ state record: "Appendix record and transcripts prepared" by applicant cite "W. V
 {
   note "The record on appeal is not transmitted automatically; the petitioner prepares and files the appendix (Rule 6(c), 7(d)) unless the court permits a designated record by order on a motion filed by the date the scheduling order sets (Rule 6(d), 8(a)). Without agreement on its contents, the petitioner serves a list of the parts of the record it intends to include within the time the scheduling order sets, and the respondent may serve a list of additional parts within ten days after receiving it (Rule 7(e)). The petitioner requests transcripts in the notice of appeal (Rule 9(c)); a respondent who finds them inadequate requests more within fourteen days after service of the notice of appeal (Rule 9(d)). Unless an order provides otherwise, a completed transcript is due forty-five days from the court reporter's receipt of the request, and the Clerk may extend that time (Rule 9(f), (g))."
   edge-record-briefing "Petitioner's brief and appendix filed" -> briefing {
+    event RecordFiled()
     authority cite "W. Va. R. App. P. 5(g)"
   }
   edge-record-unperfected "Appeal not perfected" -> dismissed-unperfected {
@@ -96,9 +102,11 @@ decision merits-decision: "Memorandum decision or opinion released" by court cit
 {
   note "At any time after the case is mature the court may issue a memorandum decision addressing the merits (Rule 21(a)); after Rule 20 argument it decides by opinion or other order and not by memorandum decision absent exceptional or compelling circumstances (Rule 20(g)). A memorandum decision affirms where there is no substantial question of law, no prejudicial error or other just cause (Rule 21(c)); one reversing states its reasons and is issued in limited circumstances (Rule 21(d)). Opinions and memorandum decisions take effect only when the mandate issues under Rule 26 (Rule 21(f), 22(a))."
   edge-merits-decision-affirmed "Affirmed" -> after-decision {
+    event DecisionFiled()
     authority cite "W. Va. R. App. P. 21(c)"
   }
   edge-merits-decision-reversed "Reversed, vacated or remanded" -> after-decision {
+    event DecisionFiled()
     authority cite "W. Va. R. App. P. 21(d)"
   }
 }
@@ -109,10 +117,11 @@ decision after-decision: "Rehearing, appeal to the Supreme Court, or neither" by
   edge-after-decision-rehearing "Petition for rehearing filed" -> rehearing {
     authority cite "W. Va. R. App. P. 25(a)"
   }
-  edge-after-decision-appeal "Appeal from the Intermediate Court to the Supreme Court" -> notice-filed {
+  edge-after-decision-appeal "Appeal from the Intermediate Court to the Supreme Court" -> supreme-court-appeal {
     authority cite "W. Va. R. App. P. 5(a)"
   }
   edge-after-decision-mandate "No rehearing or further appeal" -> mandate-issued {
+    event MandateIssued()
     authority cite "W. Va. R. App. P. 26(b)"
   }
 }
@@ -121,6 +130,7 @@ decision rehearing: "Rehearing petition decided" by court cite "W. Va. R. App. P
 {
   note "Rehearing is granted only in exceptional cases; the petition states with particularity the points of law or fact the court overlooked or misapprehended, and repeating earlier argument is not a proper basis (Rule 25(b)). A response is not required; an opposing party may file one within fourteen days of the filing of the petition, after which the petition is mature (Rule 25(c), (d)). A timely petition stays issuance of the mandate (Rule 26(b))."
   edge-rehearing-refused "Rehearing refused" -> mandate-issued {
+    event MandateIssued()
     authority cite "W. Va. R. App. P. 26(b)"
   }
   edge-rehearing-granted "Rehearing granted: further proceedings ordered" -> merits-decision {
@@ -131,4 +141,9 @@ decision rehearing: "Rehearing petition decided" by court cite "W. Va. R. App. P
 terminal mandate-issued: "Mandate issued" outcome [final] cite "W. Va. R. App. P. 26(b)"
 {
   note "If no petition for rehearing is timely filed, the Clerk issues the mandate as soon as practicable after thirty days from release of the opinion or memorandum decision; if rehearing is refused, within seven days of the order refusing it, unless an order shortens or enlarges the time (Rule 26(b)). The mandate terminates the court's jurisdiction (Rule 26(a)). Costs are taxed against the petitioner if the judgment is affirmed and against the respondent if it is reversed, unless otherwise ordered (Rule 24(b)), and the Clerk inserts the statement of costs in the mandate (Rule 24(f)). A stay of the Supreme Court's mandate pending a petition for certiorari to the Supreme Court of the United States may be granted on motion, for no more than ninety days unless the order provides otherwise (Rule 26(c))."
+}
+
+terminal supreme-court-appeal: "Appeal to the Supreme Court of Appeals" outcome [appeal] cite "W. Va. R. App. P. 5(a)"
+{
+  note "Rule 5 governs the appeal from a mandate or other final order of the Intermediate Court; the notice of appeal is filed within thirty days of entry of the mandate, with the mandate attached (Rule 5(a), (b)). The appeal in the Supreme Court of Appeals is lit/wv-supreme-court."
 }

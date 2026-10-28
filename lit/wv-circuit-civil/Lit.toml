@@ -8,7 +8,8 @@
 # ones; lit/core has no counting rule for it, so the periods are stated in
 # notes, not encoded as counted deadlines. Appeals are governed by the
 # West Virginia Rules of Appellate Procedure (Rule 72), encoded in
-# lit/wv-appellate-civil.
+# lit/wv-appellate-civil. Both route on lit/wv-rules' trigger events
+# (lg-u561.5).
 [package]
 name = "wv-circuit-civil"
 version = "0.1.0"
@@ -32,6 +33,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the trigger events of the West Virginia court packages.
+wv-state-rules = { version = "^0.1.0", path = "../wv-rules" }
 
 [sources.wv-rcp]
 title = "West Virginia Rules of Civil Procedure, as posted by the Supreme Court of Appeals of West Virginia (printed 2026-10-27)"

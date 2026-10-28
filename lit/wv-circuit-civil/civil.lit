@@ -1,5 +1,7 @@
 module wv-circuit-civil.civil
 
+import wv-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
 // Civil actions in the West Virginia circuit courts, from the applicant's
 // (plaintiff's) side. Every period below is stated in a note, not counted:
 // time is computed under W. Va. R. Civ. P. 6(a), and lit/core has no
@@ -19,9 +21,11 @@ state complaint-filed: "Complaint filed" by applicant cite "W. Va. R. Civ. P. 3(
 {
   note "A civil action is commenced by filing a complaint with the court; a complaint naming more than one individual plaintiff not related by marriage or a derivative or fiduciary relationship is docketed as a separate civil action, with a separate fee, for each plaintiff (Rule 3(a)). Every complaint is accompanied by a completed civil case information statement in the form the Supreme Court of Appeals prescribes (Rule 3(b)). If a defendant is not served within 120 days after the complaint is filed, the court on motion or on its own, after notice to the plaintiff, dismisses the action without prejudice against that defendant or orders service within a specified time; on good cause shown it extends the time (Rule 4(i))."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    event ActionCommenced()
     authority cite "W. Va. R. Civ. P. 4(d)"
   }
   edge-complaint-filed-unserved "Not served within 120 days" -> dismissed-unserved {
+    event ActionCommenced()
     authority cite "W. Va. R. Civ. P. 4(i)"
   }
 }
@@ -143,9 +147,11 @@ decision summary-judgment: "Summary judgment decided" by court cite "W. Va. R. C
 {
   note "The court grants summary judgment if the movant shows that there is no genuine issue as to any material fact and that it is entitled to judgment as a matter of law (Rule 56(a)). If judgment is not rendered on the whole case, the court specifies the facts that appear without substantial controversy, which are deemed established at trial (Rule 56(c))."
   edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "W. Va. R. Civ. P. 56(a)"
   }
   edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "W. Va. R. Civ. P. 56(a)"
   }
   edge-summary-judgment-denied "Denied or granted in part: trial" -> trial {
@@ -157,6 +163,7 @@ state trial: "Trial by jury or by the court" by court cite "W. Va. R. Civ. P. 39
 {
   note "When a jury trial has been demanded under Rule 38, the trial on the issues demanded is by jury unless the parties stipulate to a nonjury trial or the court finds no right of jury trial exists (Rule 39(a)). The court may require a special verdict (Rule 49(a))."
   edge-trial-verdict "Verdict or decision" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "W. Va. R. Civ. P. 49(a)"
   }
   edge-trial-settled "Settlement during trial" -> settled {
@@ -171,6 +178,7 @@ decision judgment-entered: "Judgment entered" by court cite "W. Va. R. Civ. P. 5
     authority cite "W. Va. R. Civ. P. 59(a)"
   }
   edge-judgment-entered-appeal "Appeal taken" -> appeal-taken {
+    event NoticeOfAppealFiled()
     authority cite "W. Va. R. Civ. P. 72"
   }
   edge-judgment-entered-final "No post-trial motion or appeal" -> final-no-appeal {

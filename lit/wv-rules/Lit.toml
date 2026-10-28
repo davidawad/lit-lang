@@ -1,0 +1,53 @@
+# The West Virginia base library (lg-u561.5): what the West Virginia court
+# packages share. The West Virginia Rules of Civil Procedure
+# (sources/wv-circuit-civil) govern the circuit courts (lit/wv-circuit-civil);
+# the West Virginia Rules of Appellate Procedure (sources/wv-appellate-civil)
+# govern the Intermediate Court of Appeals (lit/wv-appellate-civil) and the
+# Supreme Court of Appeals (lit/wv-supreme-court). The court packages route
+# their graphs on this library's trigger events. It declares no period and
+# cites no rule: the rules' periods are stated in the court packages' notes.
+# The outline cited the West Virginia Code, which is not vendored; it is not
+# cited. No procedure of its own.
+[package]
+name = "wv-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "wv-state-rules"
+forum = "wv-state-rules"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "west-virginia"
+title = "West Virginia state court rules (base library)"
+description = "The rule layer West Virginia's court packages share: the trigger events of the West Virginia Rules of Civil Procedure and Rules of Appellate Procedure their graphs route on. No procedure of its own."
+in_force = "2022-07-01"
+known_at = "2026-10-28"
+unknown_before = "2022-07-01"
+jurisdiction = "West Virginia state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.wv-rcp]
+title = "West Virginia Rules of Civil Procedure, as posted by the Supreme Court of Appeals of West Virginia (printed 2026-10-27)"
+url = "https://www.courtswv.gov/legal-community/court-rules/rules-civil-procedure-contents"
+path = "sources/wv-circuit-civil/wv-rules-of-civil-procedure-sectioned.txt"
+path_sha256 = "796b579132bd760ffb977ae427fdb1b34bbfa34d85804a186f6750e9fd6d15f1"
+sha256 = "39d8884c3cd2ae464b5a304a459f49582550e99260d3a2841b8537046ce7e78b"
+as_of = "2026-10-27"
+cite_prefixes = ["W. Va. R. Civ. P."]
+section_heading = "Rule {n}"
+
+[sources.wv-rap]
+title = "West Virginia Rules of Appellate Procedure, as posted by the Supreme Court of Appeals of West Virginia (retrieved 2026-10-28; before the Rule 5 amendment of 2026-08-21)"
+url = "https://www.courtswv.gov/legal-community/court-rules/rules-appellate-procedure"
+path = "sources/wv-appellate-civil/wv-rules-of-appellate-procedure-sectioned.txt"
+path_sha256 = "f84e006703f6dd8d74ec52c3684c0c4d845f6e2a452ab86a3251cbd1a0d44df9"
+sha256 = "62e6aece2a9ee00573cc2cd05083de719d76b05a80200779ebe6fb0e93e721ae"
+as_of = "2022-07-01"
+cite_prefixes = ["W. Va. R. App. P."]
+section_heading = "Rule {n}"

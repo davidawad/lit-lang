@@ -9,11 +9,19 @@ dependencies = []
 name = "wv-circuit-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:9b61f90cdb50ec4b84e29d3f873bf66e7ceb5f731fcfd2fa34ec3d6ae74b3ef7"
-semantic = "sha256:cb64f847917c2cfb2f115a948618e97eea061320897e816af61af83d375b47ca"
+source = "sha256:b9d7d41fb49a23d727c340ffea85b97fea44a128ac3d1029614e14dd13874269"
+semantic = "sha256:a99081968595ca3b7563fa4c46c9689a8208252453c35503c0a50d873c9a05e4"
 texts = [
     "wv-rcp sources/wv-circuit-civil/wv-rules-of-civil-procedure-sectioned.txt sha256:796b579132bd760ffb977ae427fdb1b34bbfa34d85804a186f6750e9fd6d15f1",
 ]
+dependencies = [
+    "core 1.0.0",
+    "wv-state-rules 0.1.0",
+]
+
+[[package]]
+name = "wv-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

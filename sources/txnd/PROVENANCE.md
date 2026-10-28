@@ -15,3 +15,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 800d8cb671875dff48e9ebcf252d2fb2e88a32c32d17298d10e441cce93472fd. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `txnd/original/txnd-local-criminal-rules-2026-09-01.pdf` as served (sha256 033d693354587ef18e9a6eeeb0642db915425c5fd6ec7dba11244b8b0cf9e8d0); extraction sha256 800d8cb671875dff48e9ebcf252d2fb2e88a32c32d17298d10e441cce93472fd.
+
+### `txnd/txnd-local-criminal-rules-2026-09-01-sectioned.txt` — N.D. Tex. Local Criminal Rules, sectioned
+
+- Derived in the pod (lg-gddt.14) from `txnd/txnd-local-criminal-rules-2026-09-01.txt` (extract sha256 800d8cb671875dff48e9ebcf252d2fb2e88a32c32d17298d10e441cce93472fd); nothing fetched. In the body (after the table of contents), one marker line `## LCrR <n>` is inserted before each rule's own heading line (`LCrR 1.1 Definitions.` through `LCrR 59.2 Briefing Practice ...`, 42 rules, repealed rules included). Every other line is the extract unchanged, so deleting the `## LCrR` lines gives back the extract byte for byte.
+- Edition: as the extract, "Effective September 1, 2026".
+- Sectioned sha256 71c01d4ff9d104fc207dad508d798109df0e0a947033212ab1aed039dbfd789c (the `path_sha256` pinned by `lit/txnd-criminal/Lit.toml`).

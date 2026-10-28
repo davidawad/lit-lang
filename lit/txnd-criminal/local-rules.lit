@@ -1,0 +1,157 @@
+module txnd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The Northern District of Texas's own criminal periods, counted under the
+// criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here. A paper filed by
+// electronic means before midnight central time is deemed filed that day,
+// and one filed on paper before the clerk's office is scheduled to close
+// (LCrR 45.1).
+//
+// The objections to a magistrate judge's order or recommendation are
+// FRCrimP 59(a) and 59(b)(2)'s periods and stay in lit/frcrimp; this layer
+// adds only the response brief (LCrR 59.1(b), 59.2(b)). A reply brief to a
+// motion or to objections needs leave and is due when the presiding judge
+// sets (LCrR 47.1(f), 59.1(c), 59.2(c)), so no reply period is encoded.
+// Motion practice in a § 2241, § 2254 or § 2255 proceeding follows the
+// local civil rules (LCrR 47.4); federal habeas belongs to lit/habeas.
+//
+// Conditions that are not deadlines from an event stay in notes: the
+// probation officer does not disclose a sentencing recommendation (LCrR
+// 32.1); jurors are not contacted before or after trial unless the judge
+// permits (LCrR 24.1); a motion carries a certificate of conference unless
+// LCrR 47.1(a) or (h) excuses it; an informally granted extension is
+// confirmed by a filed document (LCrR 47.3); the signer of a paper with
+// another person's electronic signature keeps the signed paper copy for
+// one year after final disposition of the case (LCrR 49.5(d)); a change
+// of contact information is made promptly (LCrR 57.13). Courtroom
+// conduct, case files, attorney admission and discipline (LCrR 53.1 to
+// 57.14) state no period of the criminal case.
+//
+// The earlier N.D. Tex. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Brady v. Maryland, Barker v. Wingo, Zedner v.
+// United States, Boykin v. Alabama, Missouri v. Frye, Jackson v. Virginia,
+// United States v. Booker, Roe v. Flores-Ortega, Garza v. Idaho) are
+// FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// A brief, including a brief supporting objections to a magistrate
+/// judge's ruling: at most 25 pages, excluding the tables of contents and
+/// authorities; the presiding judge permits more only for extraordinary
+/// and compelling reasons (N.D. Tex. LCrR 47.2(c); LCrR 59.1, 59.2).
+limit brief {
+  pages <= 25 cite "N.D. Tex. LCrR 47.2(c)"
+} cite "N.D. Tex. LCrR 47.2(c)"
+
+/// A reply brief: at most 10 pages (N.D. Tex. LCrR 47.2(c)).
+limit reply-brief {
+  pages <= 10 cite "N.D. Tex. LCrR 47.2(c)"
+} cite "N.D. Tex. LCrR 47.2(c)"
+
+/// The scheduled date for trial (N.D. Tex. LCrR 16.1, 23.1, 30.1).
+event TrialScheduled()
+/// An opposed motion with its brief is filed (N.D. Tex. LCrR 47.1(d),
+/// (e)).
+event OpposedMotionFiled() paper brief
+/// An attorney appears in a case (N.D. Tex. LCrR 49.2(g)).
+event AttorneyAppeared()
+/// A charging document, or a document signed by a criminal defendant, is
+/// submitted by electronic means (N.D. Tex. LCrR 49.6).
+event SignedDocumentSubmitted()
+/// The case is finally disposed of (N.D. Tex. LCrR 55.2(b), 55.4).
+event FinalDisposition()
+/// Objections to a magistrate judge's order on a nondispositive matter,
+/// or to a recommendation on a dispositive motion, are filed with their
+/// brief (N.D. Tex. LCrR 59.1(a), 59.2(a)).
+event MagistrateObjectionsFiled() paper brief
+
+/// N.D. Tex. LCrR 16.1(a), (b): at least 14 days before the scheduled
+/// date for trial, the parties exchange the marked exhibits they intend to
+/// offer, other than impeachment exhibits, and file and deliver to the
+/// opposing parties and the court reporter separate lists of exhibits and
+/// witnesses.
+deadline exhibit-exchange: 14.days before TrialScheduled() counted_by frcrimp45 cite "N.D. Tex. LCrR 16.1"
+{
+  forum frcrimp
+}
+
+/// N.D. Tex. LCrR 23.1: unless the presiding judge directs otherwise, at
+/// least 14 days before trial in a nonjury case the parties file and serve
+/// proposed findings of fact and conclusions of law.
+deadline proposed-findings: 14.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D. Tex. LCrR 23.1"
+{
+  forum frcrimp
+}
+
+/// N.D. Tex. LCrR 30.1: unless the presiding judge directs otherwise, at
+/// least 14 days before trial each party files and serves its requested
+/// jury charge, including instructions.
+deadline requested-jury-charge: 14.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D. Tex. LCrR 30.1"
+{
+  forum frcrimp
+}
+
+/// N.D. Tex. LCrR 47.1(e): a response and brief to an opposed motion are
+/// filed within 14 days from the date the motion is filed, unless the
+/// presiding judge directs otherwise (LCrR 47.1).
+deadline response-period: 14.days after OpposedMotionFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D. Tex. LCrR 47.1(e)"
+{
+  forum frcrimp
+}
+
+/// N.D. Tex. LCrR 49.2(g): unless excused for cause, an attorney other
+/// than a prisoner pro se party registers as an ECF user within 14 days of
+/// the date the attorney appears in a case.
+deadline ecf-registration: 14.days after AttorneyAppeared() counted_by frcrimp45 cite "N.D. Tex. LCrR 49.2(g)"
+{
+  forum frcrimp
+}
+
+/// N.D. Tex. LCrR 49.6: the attorney who submits a charging document or a
+/// document signed by a criminal defendant by electronic means delivers an
+/// original, signed paper document to the clerk within 7 days.
+deadline paper-original: 7.days after SignedDocumentSubmitted() counted_by frcrimp45 cite "N.D. Tex. LCrR 49.6"
+{
+  forum frcrimp
+}
+
+/// N.D. Tex. LCrR 55.2(b): every exhibit in the court's custody is
+/// removed from the clerk's office, by the attorney who introduced it,
+/// within 60 days after final disposition of the case; one not removed may
+/// be destroyed or otherwise disposed of by the clerk.
+deadline exhibit-removal: 60.days after FinalDisposition() counted_by frcrimp45 cite "N.D. Tex. LCrR 55.2(b)"
+{
+  forum frcrimp
+}
+
+/// N.D. Tex. LCrR 55.4: unless the presiding judge directs otherwise, a
+/// sealed document kept on paper is deemed unsealed 60 days after final
+/// disposition of the case; a party that wants it kept sealed moves for
+/// that relief before the 60-day period expires.
+deadline keep-sealed-motion: 60.days after FinalDisposition() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D. Tex. LCrR 55.4"
+{
+  forum frcrimp
+}
+
+/// N.D. Tex. LCrR 59.1(b), 59.2(b): a response brief to objections filed
+/// under FRCrimP 59(a) or 59(b)(2) complies with LCrR 47.2 and is filed
+/// within 14 days from the date the objections are filed.
+deadline magistrate-objection-response: 14.days after MagistrateObjectionsFiled() counted_by frcrimp45 cite "N.D. Tex. LCrR 59.1(b); N.D. Tex. LCrR 59.2(b)"
+{
+  forum frcrimp
+}

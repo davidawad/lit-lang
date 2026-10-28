@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "txnd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:d60c6e21e6eef05a385801958302e9dac101608d2048fa1041340660416684ad"
+semantic = "sha256:8709201dd9955f8a39a2937ac40037c9df1708bc8d2b758735f67b547452b099"
+texts = [
+    "txnd-lcrr sources/txnd/txnd-local-criminal-rules-2026-09-01-sectioned.txt sha256:71c01d4ff9d104fc207dad508d798109df0e0a947033212ab1aed039dbfd789c",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

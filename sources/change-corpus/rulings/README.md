@@ -7,6 +7,7 @@ Primary-source opinions deciding whether a federal filing was timely under FRCP 
 - 35 validation rulings: 24 with events before the Dec. 1, 2009 amendments, 5 with events between 2009 and the Dec. 1, 2016 amendments, 6 with events after Dec. 1, 2016 (decided 2020-2025, plus Organic Cannabis whose 2015 events were decided in 2020).
 - 7 further entries are kept only as the opposing or supporting opinions of a circuit split (`counts_as_validation_ruling: false`).
 - 2 circuit splits, confirmed from the opinions themselves (below).
+- 10 Supreme Court criminal decisions lit/frcrimp and lit/frcp cite (lg-wvlf.6, `counts_as_validation_ruling: false`): stored and their positions confirmed, below; none is a timeliness ruling.
 
 ## Sources and provenance
 
@@ -83,6 +84,25 @@ Acknowledged in: flanagan-5cir-1998, hernandez-4cir-2000, patterson-9cir-2001.
 Flanagan (5th Cir. 1998) surveys circuits that "simply announced that the reasonable time period will expire on April 23 or April 24" and notes the Second Circuit alone had addressed Rule 6(a). Hernandez (4th Cir. 2000) overrides the Fourth Circuit's own April 23 dicta (Brown v. Angelone and later cases) because the date was outcome-determinative. Patterson (9th Cir. 2001), footnote: "The only Circuits espousing the April 23, 1997 deadline are those that have not specifically addressed the applicability of Fed. R. Civ. P. 6(a)" (naming Calderon (Beeler), Burns, Goodman, Simmonds).
 
 Caveat: The April 23 statements are dicta in cases where the date did not decide the result; the split is a split in announced rules, resolved by about 2001 in favour of April 24. The rulings on the April 24 side (Patterson, Hernandez, Flanagan) are outcome-determinative.
+
+## Criminal leading cases (lg-wvlf.6)
+
+The ten Supreme Court decisions of expect batch 3, each cited in `lit/`. Stored as the other CAP entries are (`.html` as served, `.json` CAP metadata, `.txt` with `[*N]` pages); Booker also keeps its Supreme Court docket (`booker-scotus-2005.docket.html`, No. 04-104). Each manifest entry adds `lit_cites`: where `lit/` cites the decision, the position it is cited for, and whether the opinion holds it, with the pin cite.
+
+| id | decided | holding (pin) | cited in lit/ for | confirmed |
+| --- | --- | --- | --- | --- |
+| arizona-v-washington-scotus-1978 | 1978-02-21 | retrial after a manifest-necessity mistrial is not barred; a deadlocked jury is the classic case (434 U.S. at 509) | frcrimp `mistrial-hung-jury` | yes |
+| blockburger-scotus-1932 | 1932-01-04 | same-elements test for two offenses (284 U.S. at 304) | frcrimp `no-bill` (FRCrimP 6(f)) | no: nothing on grand juries |
+| brady-scotus-1963 | 1963-05-13 | suppression of material favorable evidence upon request violates due process (373 U.S. at 87) | frcrimp `brady-giglio-disclosure` | yes; the Rule 16 note's "regardless of request" is not Brady's holding |
+| burks-scotus-1978 | 1978-06-14 | reversal for insufficient evidence bars retrial (437 U.S. at 18) | frcrimp `conviction-reversed-remanded` | yes |
+| davis-scotus-1973 | 1973-04-17 | a Rule 12(b)(2) waiver binds a later 2255 motion absent cause (411 U.S. at 242) | frcrimp `rule12c-waiver-trap` | yes |
+| giglio-scotus-1972 | 1972-02-24 | an undisclosed promise to a key witness falls within Brady (405 U.S. at 154) | frcrimp `brady-giglio-disclosure` | yes |
+| jackson-v-virginia-scotus-1979 | 1979-06-28 | any rational trier of fact standard (443 U.S. at 319) | frcrimp `rule29-motion` | yes |
+| luce-scotus-1984 | 1984-12-10 | a defendant must testify to preserve a Rule 609 impeachment claim (469 U.S. at 43) | frcp motion-in-limine note (renewal under FRE 103(b)) | no: that is the 2000 FRE 103 amendment |
+| mapp-scotus-1961 | 1961-06-19 | the exclusionary rule binds the states (367 U.S. at 655) | frcrimp `suppression-granted` | yes (a state case) |
+| booker-scotus-2005 | 2005-01-12 | the Guidelines are advisory (543 U.S. at 245) | frcrimp `departure-variance` | yes |
+
+No expect test is written for them yet. None decides whether a filing was timely, and none states the date of a trigger or filing that a `lit/frcrimp` period counts (verdict, sentence, judgment, notice of appeal): the opinions give argument and decision dates only. The trial and circuit dockets predate PACER, except Booker's (W.D. Wis. 2003, 7th Cir. No. 03-4225), which needs the authenticated CourtListener API. And `lit/frcrimp`'s periods and its FRCrimP 45 counting take effect in 2009-2024, so a trigger from these years has no period in force; a dated historical base layer (FRCrimP 45 and FRAP 4(b) before 2009) would be needed first.
 
 ## Gaps and cautions
 

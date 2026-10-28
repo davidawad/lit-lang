@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "ctd-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:c33d7710720d25b6cc93f9b4bbf1054ea99c9d418ca58bc1c81005d0e3706c58"
+semantic = "sha256:4691a8bbb70c2c5012cd5d200566154cede5e9730758d1ac550b2cfa7a23ba8d"
+texts = [
+    "ctd-lr sources/dct/local-rules-sectioned.txt sha256:4279c6f3f7e4ec4ae76e34a016745c3caa0fb0d7794367afcde6345fed708a7f",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcp-civil-procedure 2024.12.0",
+]
+
+[[package]]
+name = "frcp-civil-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]

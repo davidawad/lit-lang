@@ -1,0 +1,59 @@
+# The United States District Court for the District of Connecticut's Local
+# Civil Rules and Local Rules for Magistrate Judges as a local-rule layer
+# over lit/frcp (28 U.S.C. § 2071; FRCP 83(a)): it declares only the
+# periods and limits those rules themselves state and re-encodes no FRCP
+# deadline. Each period is counted under FRCP 6, which D. Conn. L. Civ. R.
+# 6 adopts for the Local Rules (a weekday the Clerk's office is closed all
+# day counts as a legal holiday). The rules are the court's current
+# compilation (cover "Amended December 1, 2009", each rule carrying its own
+# later amendment date, the latest September 25, 2026; sources/dct). The
+# Local Rules of Criminal Procedure (forum ctd-criminal) are out of scope.
+# An appeal goes to the Second Circuit under lit/frap and lit/ca2.
+[package]
+name = "ctd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ctd-local-rules"
+forum = "ctd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, District of Connecticut: Local Civil Rules"
+description = "The District of Connecticut's Local Civil Rules and Local Rules for Magistrate Judges as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): proof of service and the 90-day service statement, motion and reply briefing and their page limits, extensions of time, reconsideration, attorney fee and sanctions motions, the Rule 26(f) conference and report, compliance with discovery orders, dismissal for failure to prosecute and reopening after settlement, costs and their review, the summary judgment statements' page limits, magistrate judge objections, security for costs, address changes, and the return of exhibits and sealed documents."
+in_force = "2026-09-25"
+known_at = "2026-10-28"
+unknown_before = "2026-09-25"
+jurisdiction = "United States District Court, D. Conn."
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ctd-lr"
+issuer = "United States District Court for the District of Connecticut"
+date = "2026-09-25"
+designation = "Local Rules of Civil Procedure and Local Rules for Magistrate Judges (compilation current through the September 25, 2026 amendment)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.ctd-lr]
+title = "Local Rules of Civil Procedure, Local Rules for Magistrate Judges and Local Rules of Criminal Procedure of the United States District Court for the District of Connecticut (Amended December 1, 2009, with per-rule amendments through September 25, 2026)"
+url = "https://www.ctd.uscourts.gov/sites/default/files/Current-Revised-Local-Rules-10.13.26.pdf"
+path = "sources/dct/local-rules-sectioned.txt"
+path_sha256 = "4279c6f3f7e4ec4ae76e34a016745c3caa0fb0d7794367afcde6345fed708a7f"
+sha256 = "7276a8de62373432011f35807dca01ce7ef5a7879d87a7e7a6f3d8f90d7d6264"
+as_of = "2026-09-25"
+
+[[cite_syntax.rules]]
+prefixes = ["D. Conn. L. Civ. R."]
+heading = "D. Conn. L. Civ. R. {}"
+source = "ctd-lr"
+
+[[cite_syntax.rules]]
+prefixes = ["D. Conn. L. Mag. R."]
+heading = "D. Conn. L. Mag. R. {}"
+source = "ctd-lr"

@@ -1,0 +1,315 @@
+module ctd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Connecticut's own periods, computed under the federal
+// rules (D. Conn. L. Civ. R. 6 adopts FRCP 6 for "the Local Rules of this
+// Court"). Most apply "unless otherwise ordered" where the rule says so.
+// Rules that state no period or limit stay out, as do these: the opposing
+// party's Local Rule 56(a)2 response, limited to twice the length of the
+// movant's statement (D. Conn. L. Civ. R. 56(a)2(i)), a limit relative to
+// another paper; the 21 days a self-represented party has to oppose a
+// motion to dismiss or for summary judgment, stated in the notices of D.
+// Conn. L. Civ. R. 12(a) and 56(b), which restate Rule 7(a)2's period;
+// the scheduling order "within the time provided by Fed.R.Civ.P. 16" (D.
+// Conn. L. Civ. R. 16(b)), FRCP 16(b)(2)'s period, binding the court; the
+// six months of inactivity after which the Clerk gives notice of proposed
+// dismissal (D. Conn. L. Civ. R. 41(a)), a duty of the Clerk; the Grievance
+// Committee's periods and the attorney discipline and reinstatement
+// periods of D. Conn. L. Civ. R. 83.2, an attorney's proceeding apart from
+// the civil action; the certificate of good standing within 60 days after
+// admission (D. Conn. L. Civ. R. 83.1); the pro bono panel's periods (D.
+// Conn. L. Civ. R. 83.10); the appeal to the referring judge from a
+// magistrate judge's judgment on consent and its briefing periods (D.
+// Conn. L. Mag. R. 73(B)(3)), which an appeal to the Court of Appeals under
+// FRAP 4 (D. Conn. L. Mag. R. 72.2(c), 73(B)(1)) displaces; and the
+// standing orders and forms in the appendix, which are orders and not
+// rules. The five additional days a party served by mail has to object to
+// a magistrate judge's ruling (D. Conn. L. Mag. R. 72.2(a)) are a note on
+// that deadline. The earlier D. Conn. outline's FRCP flow and its Supreme
+// Court decisions (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby) are
+// FRCP authority and belong to lit/frcp; the notice of appeal belongs to
+// lit/frap and lit/ca2.
+
+/// A memorandum of law: double-spaced and at most 40 pages, exclusive of
+/// pages containing a table of contents, table of statutes, rules or the
+/// like, except by order of the Court (D. Conn. L. Civ. R. 7(a)5).
+limit memorandum {
+  pages <= 40 cite "D. Conn. L. Civ. R. 7(a)"
+} cite "D. Conn. L. Civ. R. 7(a)"
+
+/// A reply memorandum: at most 10 pages, strictly confined to the matters
+/// raised by the memorandum it answers (D. Conn. L. Civ. R. 7(d)).
+limit reply-memorandum {
+  pages <= 10 cite "D. Conn. L. Civ. R. 7(d)"
+} cite "D. Conn. L. Civ. R. 7(d)"
+
+/// The movant's Local Rule 56(a)1 Statement of Undisputed Material Facts:
+/// at most 12 double-spaced pages, absent leave of the Court for good cause
+/// (D. Conn. L. Civ. R. 56(a)1).
+limit rule-56a1-statement {
+  pages <= 12 cite "D. Conn. L. Civ. R. 56(a)"
+} cite "D. Conn. L. Civ. R. 56(a)"
+
+/// The "Additional Material Facts" section of the opposing party's Local
+/// Rule 56(a)2 Statement: at most 9 double-spaced pages, absent leave of the
+/// Court for good cause (D. Conn. L. Civ. R. 56(a)2(ii)).
+limit additional-material-facts {
+  pages <= 9 cite "D. Conn. L. Civ. R. 56(a)"
+} cite "D. Conn. L. Civ. R. 56(a)"
+
+/// The complaint is filed (D. Conn. L. Civ. R. 4(d)).
+event ComplaintFiled()
+/// The plaintiff receives proof of service complying with FRCP 4(l), or
+/// proof of waiver of service (D. Conn. L. Civ. R. 4(d)).
+event ServiceProofReceived()
+/// A motion is filed (D. Conn. L. Civ. R. 7(a)2).
+event MotionFiled() paper memorandum
+/// The responsive memorandum to which a reply is made is filed (D. Conn.
+/// L. Civ. R. 7(d)).
+event ResponsiveMemorandumFiled() paper memorandum
+/// The deadline for filing a memorandum falls (D. Conn. L. Civ. R. 7(a)5).
+event MemorandumDeadline()
+/// The order granting a motion for extension of time is entered (D. Conn.
+/// L. Civ. R. 7(b)2).
+event ExtensionGranted()
+/// A deadline sought to be extended falls (D. Conn. L. Civ. R. 7(b)3).
+event DeadlineToBeExtended()
+/// The decision or order from which reconsideration is sought is filed (D.
+/// Conn. L. Civ. R. 7(c)1).
+event DecisionFiled()
+/// Judgment is entered (D. Conn. L. Civ. R. 11).
+event JudgmentEntered()
+/// A defendant first appears (D. Conn. L. Civ. R. 26(f)(1)).
+event DefendantFirstAppears()
+/// The parties' planning conference under FRCP 26(f) is held (D. Conn. L.
+/// Civ. R. 26(f)(1)).
+event PlanningConferenceHeld()
+/// The Court's order compelling discovery is filed (D. Conn. L. Civ. R.
+/// 37(d)).
+event DiscoveryOrderFiled()
+/// The Clerk gives notice of proposed dismissal for failure to prosecute
+/// (D. Conn. L. Civ. R. 41(a)).
+event ProposedDismissalNoticed()
+/// The Clerk enters an order closing a case reported settled (D. Conn. L.
+/// Civ. R. 41(b)).
+event SettledCaseClosed()
+/// The judgment becomes final on the expiration of the appeal period under
+/// FRAP 4 or the issuance of a federal appellate court's mandate (D. Conn.
+/// L. Civ. R. 54(a)1).
+event JudgmentFinal()
+/// A bill of costs is filed (D. Conn. L. Civ. R. 54(b)).
+event CostBillFiled()
+/// The Clerk's ruling on the bill of costs is entered (D. Conn. L. Civ. R.
+/// 54(d)).
+event CostRulingEntered()
+/// An application for review of the Clerk's ruling on costs is filed (D.
+/// Conn. L. Civ. R. 54(d)).
+event CostReviewApplicationFiled()
+/// A magistrate judge's order or recommended ruling is filed (D. Conn. L.
+/// Mag. R. 72.2(a)).
+event MagistrateRulingFiled()
+/// The Clerk enters an order for security for costs (D. Conn. L. Civ. R.
+/// 83.3(a)).
+event SecurityOrderEntered()
+/// A member of the bar of the Court changes office address (D. Conn. L.
+/// Civ. R. 83.1(d)(2)).
+event OfficeAddressChanged()
+/// The action is finally determined, including the filing of the final
+/// reviewing court's mandate or the expiration of the time for appeal (D.
+/// Conn. L. Civ. R. 83.6(c), (d); 5(e)7).
+event ActionFinallyDetermined()
+
+/// D. Conn. L. Civ. R. 4(d): the plaintiff files proof of service complying
+/// with FRCP 4(l), or proof of waiver of service, within 7 days after
+/// receiving it.
+deadline service-proof-period: 7.days after ServiceProofReceived() counted_by frcp6 cite "D. Conn. L. Civ. R. 4(d)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 4(d): if the complaint will not be served within 90
+/// days after it is filed, the plaintiff files within that time a motion
+/// for additional time on good cause shown or, if no extension is
+/// required, a statement of explanation. The 90 days are FRCP 4(m)'s; the
+/// filing is the local rule's.
+deadline service-extension-motion-period: 90.days after ComplaintFiled() counted_by frcp6 cite "D. Conn. L. Civ. R. 4(d)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 7(a)2: unless otherwise ordered, opposition
+/// memoranda are filed within 21 days of the filing of the motion. Failure
+/// to oppose may be deemed sufficient cause to grant the motion, except
+/// where the pleadings provide sufficient grounds to deny it.
+deadline opposition-period: 21.days after MotionFiled() counted_by frcp6 cite "D. Conn. L. Civ. R. 7(a)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 7(a)5: a motion for permission to depart from the
+/// memorandum length and format limits is filed at least 7 days before the
+/// deadline for filing the memorandum at issue.
+deadline length-departure-motion-period: 7.days before MemorandumDeadline() counted_by frcp6 cite "D. Conn. L. Civ. R. 7(a)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 7(b)2: any party may move within 7 days of an order
+/// granting a motion for extension of time to have the Court set it aside
+/// for good cause.
+deadline extension-set-aside-period: 7.days after ExtensionGranted() counted_by frcp6 cite "D. Conn. L. Civ. R. 7(b)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 7(b)3: a motion for extension of time is filed at
+/// least three business days before the deadline sought to be extended,
+/// unless compelling circumstances arise during those three days; a later
+/// motion states why it was not filed in time.
+deadline extension-motion-period: 3.court_days before DeadlineToBeExtended() counted_by frcp6 cite "D. Conn. L. Civ. R. 7(b)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 7(c)1: where a motion for reconsideration is
+/// appropriate, it is filed and served within 7 days of the filing of the
+/// decision or order from which relief is sought. No response is needed
+/// unless the Court requests one (7(c)2).
+deadline reconsideration-period: 7.days after DecisionFiled() counted_by frcp6 cite "D. Conn. L. Civ. R. 7(c)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 7(d): a reply memorandum, permitted but not
+/// required, is filed within 14 days of the filing of the responsive
+/// memorandum, computed under FRCP 6. No sur-reply without permission.
+deadline reply-period: 14.days after ResponsiveMemorandumFiled() counted_by frcp6 cite "D. Conn. L. Civ. R. 7(d)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 11: except as a statute otherwise requires, motions
+/// for attorneys' fees or sanctions are filed not later than 30 days after
+/// the entry of judgment.
+deadline fee-sanctions-motion-period: 30.days after JudgmentEntered() counted_by frcp6 cite "D. Conn. L. Civ. R. 11"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 26(f)(1): within thirty days after the first
+/// appearance of a defendant, the attorneys of record and appearing
+/// self-represented parties confer for the purposes of FRCP 26(f),
+/// ordinarily at the plaintiff's initiative. The rule does not apply to the
+/// categories of cases listed in 26(f)(3).
+deadline planning-conference-period: 30.days after DefendantFirstAppears() counted_by frcp6 cite "D. Conn. L. Civ. R. 26(f)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 26(f)(1): within 14 days after the conference, the
+/// participants jointly complete and file a report on Form 26(f).
+deadline planning-report-period: 14.days after PlanningConferenceHeld() counted_by frcp6 cite "D. Conn. L. Civ. R. 26(f)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 37(d): unless the Court sets a different time,
+/// discovery the Court orders is completed within 14 days of the filing of
+/// the order.
+deadline discovery-compliance-period: 14.days after DiscoveryOrderFiled() counted_by frcp6 cite "D. Conn. L. Civ. R. 37(d)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 41(a): after the Clerk's notice of proposed
+/// dismissal, the Clerk enters an order of dismissal unless action is taken
+/// or a satisfactory explanation is submitted within 21 days.
+deadline dismissal-explanation-period: 21.days after ProposedDismissalNoticed() counted_by frcp6 cite "D. Conn. L. Civ. R. 41(a)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 41(b): a case reported settled is closed subject to
+/// the parties' right to move to reopen within 30 days, unless the Court
+/// specifies a longer period.
+deadline reopen-motion-period: 30.days after SettledCaseClosed() counted_by frcp6 cite "D. Conn. L. Civ. R. 41(b)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 54(a)1: a party seeking costs files and serves a
+/// verified bill of costs within 14 days after the judgment becomes final
+/// on the expiration of the FRAP 4 appeal period or the issuance of a
+/// federal appellate court's mandate.
+deadline cost-bill-period: 14.days after JudgmentFinal() counted_by frcp6 cite "D. Conn. L. Civ. R. 54(a)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 54(b): objections to the bill of costs are filed
+/// with the Clerk within 14 days of its filing; absent a timely objection,
+/// the Clerk awards costs under the rule.
+deadline cost-objection-period: 14.days after CostBillFiled() counted_by frcp6 cite "D. Conn. L. Civ. R. 54(b)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 54(d): any party may apply to the assigned judge for
+/// review of the Clerk's ruling on the bill of costs not later than 14 days
+/// after the ruling's entry.
+deadline cost-review-period: 14.days after CostRulingEntered() counted_by frcp6 cite "D. Conn. L. Civ. R. 54(d)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 54(d): any other party may respond to the
+/// application not later than 14 days after it is filed.
+deadline cost-review-response-period: 14.days after CostReviewApplicationFiled() counted_by frcp6 cite "D. Conn. L. Civ. R. 54(d)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Mag. R. 72.2(a): a party objecting to a magistrate judge's
+/// order or recommended ruling files a written objection within 14 days
+/// after its filing; an untimely objection forfeits assigning the defect as
+/// error. A party receiving notice of the ruling from the Clerk by mail has
+/// five additional days.
+deadline magistrate-objection-period: 14.days after MagistrateRulingFiled() counted_by frcp6 cite "D. Conn. L. Mag. R. 72.2(a)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 83.1(d)(2): a member of the bar of the Court who
+/// changes office address notifies the Clerk within 30 days of the change.
+deadline address-change-period: 30.days after OfficeAddressChanged() counted_by frcp6 cite "D. Conn. L. Civ. R. 83.1(d)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 83.3(a): a cash deposit or corporate surety bond of
+/// $500.00 as security for costs, ordered by the Clerk as of course on a
+/// defendant's (or counterclaim defendant's) request, is given within
+/// thirty days from the entry of the order; noncompliance may ground
+/// summary dismissal or default.
+deadline security-for-costs-period: 30.days after SecurityOrderEntered() counted_by frcp6 cite "D. Conn. L. Civ. R. 83.3(a)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 83.6(d): the offering party arranges for the return
+/// of its exhibits remaining with the Clerk within ninety days after final
+/// determination of the action; unclaimed exhibits may be destroyed
+/// without notice.
+deadline exhibit-return-period: 90.days after ActionFinallyDetermined() counted_by frcp6 cite "D. Conn. L. Civ. R. 83.6(d)"
+{
+  forum frcp
+}
+
+/// D. Conn. L. Civ. R. 5(e)7: upon final determination of the action as
+/// defined in Rule 83.6(c), counsel have 90 days to move under Rule 83.6(a)
+/// for the withdrawal and return of sealed documents.
+deadline sealed-document-withdrawal-period: 90.days after ActionFinallyDetermined() counted_by frcp6 cite "D. Conn. L. Civ. R. 5(e)"
+{
+  forum frcp
+}

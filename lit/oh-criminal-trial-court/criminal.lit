@@ -1,0 +1,141 @@
+module oh-criminal-trial-court.criminal
+
+// Criminal cases in the Ohio trial courts, from the defendant's view of
+// outcomes. Every period below is stated in a note, not counted:
+// computation is Crim.R. 45(A), with Ohio's legal holidays and its rule
+// excluding weekends and holidays from periods under seven days, for which
+// lit/core has no counting rule. The speedy-trial periods of R.C. 2945.71
+// to 2945.73 are not vendored and stay holes. The outline named County of
+// Riverside v. McLaughlin, Gerstein v. Pugh, Gideon v. Wainwright, Brady v.
+// Maryland, Mapp v. Ohio, Barker v. Wingo, Boykin v. Alabama, Missouri v.
+// Frye, Jackson v. Virginia, Ramos v. Louisiana, Apprendi v. New Jersey,
+// Roe v. Flores-Ortega and Garza v. Idaho; no reporter text is vendored,
+// so they are removed and the rules alone state the procedure.
+start arrested
+
+state arrested: "Arrest or summons on a complaint" by applicant cite "Crim.R. 4"
+{
+  note "A warrant or summons issues on a complaint (Crim.R. 4(A)). When the defendant first appears before a judge or magistrate, the defendant is told of the charge, the right to counsel and to assigned counsel without cost under Crim.R. 44, the right to remain silent, the right to a preliminary hearing in a felony case not begun by indictment, and, where appropriate, the right to a jury trial and the need to demand one in petty offense cases (Crim.R. 5(A))."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance {
+    authority cite "Crim.R. 5(A)"
+  }
+}
+
+decision initial-appearance: "Bail, release or detention" by court cite "Crim.R. 5(A)"
+{
+  note "If the defendant has not been admitted to bail for a bailable offense, the judge or magistrate admits the defendant to bail as provided by law (Crim.R. 5(A)). In felony cases the defendant is not called on to plead at the initial appearance or at a preliminary hearing; in misdemeanor cases the defendant may plead at the initial appearance (Crim.R. 5(A)). The bail standards are statutory and not vendored."
+  edge-initial-appearance-detained "Held in custody" -> probable-cause {
+    authority cite "Crim.R. 5(B)"
+  }
+  edge-initial-appearance-released "Released on bail" -> probable-cause {
+    authority cite "Crim.R. 5(B)"
+  }
+}
+
+decision probable-cause: "Preliminary hearing or indictment" by court cite "Crim.R. 5(B)"
+{
+  note "In felony cases a defendant is entitled to a preliminary hearing unless waived in writing. If not waived, it is scheduled within a reasonable time, but no later than ten consecutive days following arrest or service of summons if the defendant is in custody and fifteen consecutive days if not; no hearing is held once the defendant is indicted. The limits may be extended with the defendant's consent on good cause, and otherwise only as required by law or on extraordinary circumstances (Crim.R. 5(B)(1))."
+  edge-probable-cause-charged "Bound over; indictment or information filed" -> charged {
+    authority cite "Crim.R. 7(A)"
+  }
+  edge-probable-cause-none "No probable cause; discharged" -> dismissed {
+    authority cite "Crim.R. 5(B)"
+  }
+}
+
+state charged: "Indictment or information" by office cite "Crim.R. 7(A)"
+{
+  note "A felony punishable by death or life imprisonment is prosecuted by indictment; any other felony by indictment unless the defendant, advised of the right, waives it in writing and in open court, and the offense may then be prosecuted by information (Crim.R. 7(A)). The speedy-trial periods run under R.C. 2945.71 to 2945.73, which are not vendored."
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Crim.R. 10(A)" }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "Crim.R. 10(A)"
+{
+  note "Arraignment is conducted in open court by reading the indictment, information or complaint, or stating its substance, and calling on the defendant to plead (Crim.R. 10(A)). A defendant demands discovery within twenty-one days after arraignment or seven days before trial, whichever is earlier, or at a reasonable later time the court permits; a motion to compel is made no later than seven days before trial, or three days after the opposing party provides discovery, whichever is later (Crim.R. 16(M)). A defendant who will offer alibi testimony, or evidence or argument of self-defense, defense of another or defense of a residence, gives written notice not less than thirty days before trial in a felony case and fourteen days in a misdemeanor case, or the court may exclude the evidence (Crim.R. 12.1, 12.2)."
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "Crim.R. 16(M)" }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "Crim.R. 12(D)"
+{
+  note "All pretrial motions, except as Crim.R. 7(E) and 16(M) provide, are made within thirty-five days after arraignment or seven days before trial, whichever is earlier; the court in the interest of justice may extend the time (Crim.R. 12(D)). A written motion and notice of its hearing are served not later than seven days before the hearing unless a rule or order fixes another period (Crim.R. 45(D)). Speedy-trial discharge is statutory (R.C. 2945.73), not vendored."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "Crim.R. 12(D)"
+  }
+  edge-discovery-speedy "Speedy-trial motion" -> motions-ruling {
+    authority cite ?("R.C. 2945.71 to 2945.73, the speedy-trial periods and discharge, are not vendored")
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "Crim.R. 11(F)" }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "Crim.R. 12(F)"
+{
+  note "The state may appeal an order granting a motion to suppress or exclude evidence only if the notice of appeal and the prosecuting attorney's certification are filed with the clerk of the trial court within seven days after entry of the judgment or order (Crim.R. 12(K); App.R. 4(B)(4)). The state may, by leave of court and in open court, dismiss the indictment, information or complaint; a court dismissing over the state's objection states its findings and reasons on the record (Crim.R. 48)."
+  edge-motions-ruling-speedy "Discharged for a speedy-trial violation" -> dismissed {
+    authority cite ?("R.C. 2945.73, discharge for delay in trial, is not vendored")
+  }
+  edge-motions-ruling-dismissed "Charges dismissed" -> dismissed { authority cite "Crim.R. 48(B)" }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "Crim.R. 12(F)"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Crim.R. 11(C)"
+{
+  note "In a felony case the court does not accept a plea of guilty or no contest without addressing the defendant personally and determining that the plea is voluntary, with an understanding of the charges and the maximum penalty and of the rights waived (Crim.R. 11(C)). A negotiated plea's underlying agreement is stated on the record (Crim.R. 11(F)). In petty offense cases with a right to a jury, trial is to the court unless the defendant files a written jury demand not less than ten days before the date set for trial, or on or before the third day after receiving notice of the trial date, whichever is later (Crim.R. 23(A))."
+  edge-plea-decision-plea "Guilty or no contest plea accepted" -> sentencing {
+    authority cite "Crim.R. 11(C)"
+  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "Crim.R. 23(A)" }
+}
+
+decision trial: "Verdict" by court cite "Crim.R. 31"
+{
+  note "After the evidence on either side is closed, the court orders a judgment of acquittal on any offense the evidence is insufficient to sustain, and may not reserve ruling on a motion made at the close of the state's case (Crim.R. 29(A))."
+  edge-trial-acquittal "Not guilty" -> acquitted { authority cite "Crim.R. 29(A)" }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial { authority cite "Crim.R. 29(C)" }
+}
+
+decision post-trial: "Post-trial motions" by court cite "Crim.R. 33(B)"
+{
+  note "A motion for judgment of acquittal may be made or renewed within fourteen days after the jury is discharged, or within further time the court fixes during that period (Crim.R. 29(C)). A motion for a new trial, except for newly discovered evidence, is filed within fourteen days after the verdict or the decision of the court, or within seven days of an order finding by clear and convincing proof that the defendant was unavoidably prevented from filing; on newly discovered evidence, within one hundred twenty days after the verdict or decision, or within seven days of an order finding the defendant unavoidably prevented from discovering it (Crim.R. 33(B)). A motion in arrest of judgment is made within fourteen days after the verdict, finding of guilty or plea of guilty or no contest (Crim.R. 34). The court may not extend these times except as Crim.R. 29, 33 and 34 state (Crim.R. 45(B))."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted { authority cite "Crim.R. 29(C)" }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Crim.R. 33(A)" }
+  edge-post-trial-arrest "Judgment arrested; defendant discharged" -> dismissed {
+    authority cite "Crim.R. 34"
+  }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "Crim.R. 32(A)"
+  }
+}
+
+state sentencing: "Presentence investigation and sentence" by court cite "Crim.R. 32(A)"
+{
+  note "Sentence is imposed without unnecessary delay, after counsel and the defendant are heard in mitigation and the prosecuting attorney and the victim are heard (Crim.R. 32(A)). In felony cases, unless the defendant and the prosecutor agree to waive it, the court orders a presentence investigation and report before imposing community control sanctions or granting probation (Crim.R. 32.2). After sentence in a serious offense that went to trial, the court advises the defendant of the right to appeal (Crim.R. 32(B))."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "Crim.R. 32(C)"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "Crim.R. 32(C)"
+{
+  note "The judgment of conviction sets forth the conviction and the sentence, is signed by the judge and entered on the journal by the clerk within 30 days of the announcement of the sentence, and is effective only when journalized (Crim.R. 32(C)); entry is the event App.R. 4 runs from (App.R. 4(D)). The notice of appeal is filed within 30 days of entry of the final order (App.R. 4(A)(1)). A timely motion in arrest of judgment, a new-trial motion on grounds other than newly discovered evidence, or objections to a magistrate's decision start the time anew from the order resolving the last of them (App.R. 4(B)(3)). After the 30 days a defendant may appeal only with the court of appeals' leave on a motion for delayed appeal (App.R. 5(A))."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "App.R. 4(A)" }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "App.R. 4(A)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Crim.R. 29(A)"
+
+terminal dismissed: "Charges dismissed or defendant discharged" outcome [win] cite "Crim.R. 48"
+{
+  note "When judgment is arrested, the defendant is discharged and stands as if the charge had not been returned or filed (Crim.R. 34). Whether a dismissal bars refiling is a hole."
+}
+
+terminal appeal-taken: "Appeal taken to the court of appeals" outcome [appeal] cite "App.R. 4(A)"
+{
+  note "The appeal continues in the court of appeals (lit/oh-appellate's forum)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "App.R. 4(A)"
+{
+  note "Postconviction relief is governed by Crim.R. 35 and the statute it implements (R.C. 2953.21, not vendored); federal habeas is lit/habeas."
+}

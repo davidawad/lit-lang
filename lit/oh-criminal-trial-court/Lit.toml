@@ -1,0 +1,55 @@
+# Criminal cases in the Ohio trial courts under the Ohio Rules of Criminal
+# Procedure, as amended effective July 1, 2026 (sources/oh-criminal-trial-
+# court), with the criminal appeal under the Ohio Rules of Appellate
+# Procedure (sources/oh-appellate, the text lit/oh-appellate binds).
+# Computation of time is Crim.R. 45(A): the day of the event is excluded, a
+# last day falling on a Saturday, Sunday or legal holiday runs to the next
+# day that is none of those, and a period of less than seven days excludes
+# intermediate Saturdays, Sundays and legal holidays; lit/core has no
+# counting rule or holiday calendar for Ohio, so the periods are stated in
+# notes, not encoded as counted deadlines. The speedy-trial periods are
+# statutory (R.C. 2945.71 to 2945.73) and are not vendored: they stay holes.
+# An appeal goes to the court of appeals (lit/oh-appellate's forum); federal
+# habeas is lit/habeas.
+[package]
+name = "oh-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "oh-criminal-trial-court"
+forum = "oh-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "ohio"
+title = "Ohio trial courts, criminal"
+description = "Criminal cases in the Ohio trial courts under the Ohio Rules of Criminal Procedure, as far as the vendored text states: the initial appearance and the preliminary hearing's time limits, indictment or information and the waiver of indictment, arraignment and pleas, discovery demands, pretrial motions and the state's appeal from a suppression order, notices of alibi and self-defense, the jury demand in petty offense cases, acquittal, new trial and arrest of judgment motions, presentence investigation, the judgment entry, and the 30-day appeal as of right to the court of appeals with its post-judgment tolling and the delayed appeal."
+in_force = "2026-07-01"
+known_at = "2026-10-28"
+unknown_before = "2026-07-01"
+jurisdiction = "Ohio trial courts of general criminal jurisdiction"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.oh-crim-r]
+title = "Ohio Rules of Criminal Procedure (as amended effective July 1, 2026)"
+url = "https://www.supremecourt.ohio.gov/docs/LegalResources/Rules/criminal/CriminalProcedure.pdf"
+path = "sources/oh-criminal-trial-court/oh-rules-of-criminal-procedure-sectioned.txt"
+path_sha256 = "c45c66fef631f302b1cd64337115e2e0599f357e8f94d20b383e21a1b11c38f9"
+sha256 = "eb872c8559b55b6dcddd526ac3001026fb459d98706b78c45783c0a1cdfa95cf"
+as_of = "2026-07-01"
+cite_prefixes = ["Crim.R."]
+section_heading = "Crim.R. {n}"
+
+[sources.oh-app-r]
+title = "Ohio Rules of Appellate Procedure (as amended effective July 1, 2026)"
+url = "https://www.supremecourt.ohio.gov/docs/LegalResources/Rules/appellate/AppellateProcedure.pdf"
+path = "sources/oh-appellate/ohio-appellate-rules-sectioned.txt"
+path_sha256 = "140f97309db187996c93d42dada5defa09fe1bfd4ef12c3fa521c08027f66034"
+sha256 = "ac120dddbcaaad3c4423e40f03f1d312dc03ce6bf743a95bdbfa91ebacc94df6"
+as_of = "2026-07-01"
+cite_prefixes = ["App.R."]
+section_heading = "App.R. {n}"

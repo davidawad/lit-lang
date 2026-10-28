@@ -1,0 +1,56 @@
+# The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the Middle
+# District of Pennsylvania over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075):
+# it declares only the periods and page and word limits the Local
+# Bankruptcy Rules themselves state and re-encodes no FRBP period. Each
+# period is counted under FRBP 9006(a), the FRCP 6(a) method (core's
+# frcp6).
+#
+# Layers: the Local Bankruptcy Rules effective January 1, 2005, as modified
+# October 1, 2025, the court's 'Local Rules Effective Oct 1, 2025', are the
+# only vendored text (sources/bankr-pam/PROVENANCE.md), a consolidation
+# whose comments date each earlier amendment. The general orders page was
+# not read beyond that listing, so no amending order is vendored and the
+# consolidation is the only layer. No earlier edition is vendored, so a
+# query before October 1, 2025 is a hole in the corpus.
+[package]
+name = "bankr-pam-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-pam-local-rules"
+forum = "bankr-pam"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. Bankruptcy Court for the Middle District of Pennsylvania: Local Bankruptcy Rules"
+description = "The Bankr. M.D. Pa. Local Bankruptcy Rules (modified October 1, 2025) as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): unsigned petitions and fee deficiencies, extensions to file schedules, joint administration, consolidation and severance, the converted chapter 13 final report, certificates of service, Rule 2004 examinations, employment objections, chapter 13 fee requests, claim objection hearings, pro se amended plans, ballot reports, the individual chapter 11 support certification, § 362(c)(3) motions, withdrawal of the reference, adversary motion responses, the 15-page or 5,000-word brief limit (L.B.R. 9013-2), mediation, the mortgage modification mediation program, post-trial motions, exhibits and remote testimony."
+in_force = "2025-10-01"
+known_at = "2026-10-28"
+unknown_before = "2025-10-01"
+jurisdiction = "U.S. Bankruptcy Court for the Middle District of Pennsylvania"
+counting = "frcp6"
+
+[package.instrument]
+source = "bankr-pam-lbr"
+issuer = "United States Bankruptcy Court for the Middle District of Pennsylvania"
+date = "2025-10-01"
+designation = "Local Bankruptcy Rules"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.bankr-pam-lbr]
+title = "Local Bankruptcy Rules of the United States Bankruptcy Court for the Middle District of Pennsylvania (effective January 1, 2005, modified October 1, 2025)"
+url = "https://www.pamb.uscourts.gov/sites/default/files/local-rules/usbc_pamb_local_rules.pdf"
+path = "sources/bankr-pam/pam-local-rules-2025-10-01-sectioned.txt"
+path_sha256 = "fd4523eab1f579b53434f6679ffda4b2e28e3e427e1e7aeaf80ec93ac34a2bc0"
+sha256 = "1c6323593218fcf52670cbcd3d987728b579d6f1b53db1882dc5508c43f839e4"
+as_of = "2025-10-01"
+cite_prefixes = ["Bankr. M.D. Pa. L.B.R."]
+section_heading = "Rule {n}"

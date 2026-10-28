@@ -1,0 +1,216 @@
+module mn-court-of-appeals-civil.appeal
+
+// Civil appeals to the Minnesota Court of Appeals and further review in the
+// Minnesota Supreme Court, from the appellant's side. Every period is
+// stated in a note, not counted: Minn. R. Civ. App. P. 126.01 applies Minn.
+// R. Civ. P. 6.01, and lit/core has no counting rule for it. No petition for
+// rehearing is allowed in the Court of Appeals (Rule 140.01), so the earlier
+// outline's Court of Appeals rehearing nodes are removed; rehearing lies
+// only in the Supreme Court. The outline's Minn. Stat. § 606.08 cite gives
+// way to Rule 103.03, which lists the appealable judgments and orders; the
+// statute is not vendored. The outline named no leading decision.
+/// A principal brief: at most 45 pages, exclusive of the tables and any
+/// addendum, or 14,000 words, or 1,300 lines of monospaced text, except for
+/// good cause and with the court's permission; a word or line count is
+/// certified (Minn. R. Civ. App. P. 132.01, subd. 3(a)). A motion to file
+/// an enlarged brief is filed at least 14 days before the brief is due.
+limit principal-brief {
+  words <= 14_000 cite "Minn. R. Civ. App. P. 132.01"
+  lines <= 1_300 cite "Minn. R. Civ. App. P. 132.01"
+  pages <= 45 cite "Minn. R. Civ. App. P. 132.01"
+} cite "Minn. R. Civ. App. P. 132.01"
+
+/// A reply brief: at most 20 pages, or 7,000 words, or 650 lines of
+/// monospaced text (Minn. R. Civ. App. P. 132.01, subd. 3(b)).
+limit reply-brief {
+  words <= 7_000 cite "Minn. R. Civ. App. P. 132.01"
+  lines <= 650 cite "Minn. R. Civ. App. P. 132.01"
+  pages <= 20 cite "Minn. R. Civ. App. P. 132.01"
+} cite "Minn. R. Civ. App. P. 132.01"
+
+/// A petition for review, and a response to it: at most 2,000 words,
+/// exclusive of the caption, signature block and addendum, with a
+/// Certificate of Document Length (Minn. R. Civ. App. P. 117, subds. 3, 4).
+limit review-petition {
+  words <= 2_000 cite "Minn. R. Civ. App. P. 117"
+} cite "Minn. R. Civ. App. P. 117"
+
+/// The appellant serves and files its brief and addendum (Minn. R. Civ.
+/// App. P. 131.01, subd. 1).
+event AppellantBriefFiled() paper principal-brief
+/// The respondent serves and files its brief (Minn. R. Civ. App. P. 131.01,
+/// subd. 2).
+event RespondentBriefFiled() paper principal-brief
+/// The appellant serves and files a reply brief (Minn. R. Civ. App. P.
+/// 131.01, subd. 3).
+event ReplyBriefFiled() paper reply-brief
+/// A petition for review of a Court of Appeals decision is filed (Minn. R.
+/// Civ. App. P. 117, subd. 1).
+event ReviewPetitionFiled() paper review-petition
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed and served" by applicant cite "Minn. R. Civ. App. P. 103.01"
+{
+  note "An appeal is made by filing a notice of appeal with the clerk of the appellate courts and serving it on the adverse parties within the appeal period, with proof of service and of filing with the trial court administrator, a copy of the judgment or order, the statement of the case and a filing fee of $550 (Minn. R. Civ. App. P. 103.01, subd. 1). Unless a statute provides otherwise, an appeal from a judgment is taken within 60 days after its entry, and from an appealable order within 60 days after service by any party of written notice of its filing; a timely motion under Minn. R. Civ. P. 50.02, 52.02 or 59, or under Rule 60 within the new-trial time, restarts the time from service of notice of filing of the order disposing of the last such motion, and a notice filed before then is premature and of no effect (Rule 104.01). Another party may file a notice of related appeal within 14 days after service of the first notice, or within the time otherwise prescribed, whichever ends later (Rule 104.01, subd. 4). The court may not extend the time to file the notice of appeal (Rule 126.02)."
+  edge-notice-filed-appealability "Notice filed" -> appealability {
+    authority cite "Minn. R. Civ. App. P. 103.01"
+  }
+}
+
+decision appealability: "Appellate jurisdiction check" by court cite "Minn. R. Civ. App. P. 103.03"
+{
+  note "An appeal lies to the Court of Appeals from a final judgment or a partial judgment under Minn. R. Civ. P. 54.02; from orders granting, refusing or dissolving an injunction, vacating or sustaining an attachment, or denying a new trial; from an order that in effect determines the action and prevents a judgment; from a certified order denying a motion to dismiss for failure to state a claim or for summary judgment; and from other orders appealable by statute or decision (Minn. R. Civ. App. P. 103.03). A partial judgment under Rule 54.02 is appealable within 60 days only on an express determination that there is no just reason for delay (Rule 104.01, subd. 1). Discretionary review of other orders is by petition under Rule 105."
+  edge-appealability-dismissed-jurisdiction "Not appealable, or untimely" -> dismissed-jurisdiction {
+    authority cite "Minn. R. Civ. App. P. 104.01"
+  }
+  edge-appealability-record "Appealable and timely" -> record {
+    authority cite "Minn. R. Civ. App. P. 103.03"
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed for lack of appellate jurisdiction" outcome [loss, dismissal] cite "Minn. R. Civ. App. P. 104.01"
+{
+  note "Outcome from the applicant's side."
+}
+
+state record: "Transcript ordered and record prepared" cite "Minn. R. Civ. App. P. 110.02"
+{
+  note "Within 14 days after filing the notice of appeal, the appellant orders the transcript, files a notice of intent to proceed on a statement under Rule 110.03 or 110.04, or notifies the respondent that no transcript will be ordered; with a partial transcript, it files a description of the parts and a statement of the issues within the same 14 days, and the respondent orders other parts within 14 days of service of the description (Minn. R. Civ. App. P. 110.02, subd. 1). The transcript certificate is filed within 14 days of the order, with an estimated completion date not to exceed 60 days (Rule 110.02, subd. 2). The trial court administrator transmits the record within 7 days after the due date of the appellant's brief (Rule 111.01)."
+  edge-record-briefing "Transcript delivered" -> briefing {
+    authority cite "Minn. R. Civ. App. P. 131.01"
+  }
+}
+
+state briefing: "Briefing: appellant, respondent, reply" cite "Minn. R. Civ. App. P. 131.01"
+{
+  note "The appellant serves and files its brief and addendum within 30 days after delivery of the transcript, or, with no transcript or one obtained before the appeal, within 30 days after filing the notice of appeal; the respondent within 30 days after service of the appellant's brief; the appellant may reply within 14 days after service of the respondent's brief (Minn. R. Civ. App. P. 131.01, subds. 1-3). Principal briefs are limited to 45 pages, 14,000 words or 1,300 lines; reply briefs to 20 pages, 7,000 words or 650 lines (Rule 132.01, subd. 3). If the appellant fails to serve and file its brief, the respondent may move for affirmance or dismissal, and an appellant in default for 30 days without such a motion has its appeal dismissed without notice, subject to reinstatement (Rule 142.02); a respondent's default leaves the case to be decided on the merits (Rule 142.03)."
+  edge-briefing-argument "Briefs complete" -> argument {
+    authority cite "Minn. R. Civ. App. P. 131.01"
+  }
+  edge-briefing-dismissed-default "Appellant's brief not filed" -> dismissed-default {
+    authority cite "Minn. R. Civ. App. P. 142.02"
+  }
+}
+
+terminal dismissed-default: "Dismissed for the appellant's default" outcome [loss, dismissal] cite "Minn. R. Civ. App. P. 142.02"
+{
+  note "Reinstatement requires good cause for the default, a meritorious appeal and no substantial prejudice to the respondent (Minn. R. Civ. App. P. 142.02). Outcome from the applicant's side."
+}
+
+state argument: "Oral argument or submission on the briefs" cite "Minn. R. Civ. App. P. 134.01"
+{
+  note "Oral argument is allowed unless neither party requested it in the statement of the case, a party failed to file a timely brief, the parties waived it, a party is self-represented, or the court finds it unnecessary; a party may ask the court to reconsider a denial within 7 days after receiving notice of it (Minn. R. Civ. App. P. 134.01). Otherwise the appeal is deemed submitted on the briefs on a nonoral calendar (Rule 134.06)."
+  edge-argument-disposition "Submitted for decision" -> disposition {
+    authority cite "Minn. R. Civ. App. P. 134.06"
+  }
+}
+
+decision disposition: "Court of Appeals decision" by court cite "Minn. R. Civ. App. P. 136.01"
+{
+  note "The panel decides the form of the written opinion: precedential, nonprecedential or order opinion (Minn. R. Civ. App. P. 136.01, subd. 1). The clerk's transmittal of the opinion is notice of filing (Rule 136.01, subd. 2). No petition for rehearing is allowed in the Court of Appeals (Rule 140.01). Unless the parties stipulate to immediate entry, judgment is entered not less than 30 days after the decision is filed; a petition for review stays its entry (Rule 136.02)."
+  edge-disposition-affirmed-entered "Affirmed" -> affirmed-entered {
+    authority cite "Minn. R. Civ. App. P. 136.01"
+  }
+  edge-disposition-reversed-entered "Reversed or vacated" -> reversed-entered {
+    authority cite "Minn. R. Civ. App. P. 136.01"
+  }
+  edge-disposition-remanded-entered "Remanded" -> remanded-entered {
+    authority cite "Minn. R. Civ. App. P. 136.01"
+  }
+}
+
+decision affirmed-entered: "Affirmed: further review election" by applicant cite "Minn. R. Civ. App. P. 117"
+{
+  note "A party seeking review files a petition with proof of service and a $550 filing fee with the clerk of the appellate courts within 30 days of the filing of the Court of Appeals' decision (Minn. R. Civ. App. P. 117, subd. 1); a response is due within 21 days of service (subd. 4)."
+  edge-affirmed-entered-review-affirmed "Petition for review filed" -> review-affirmed {
+    authority cite "Minn. R. Civ. App. P. 117"
+  }
+  edge-affirmed-entered-affirmed-final "No petition for review" -> affirmed-final {
+    authority cite "Minn. R. Civ. App. P. 136.02"
+  }
+}
+
+decision review-affirmed: "Petition for review ruling (affirmed)" by court cite "Minn. R. Civ. App. P. 117"
+{
+  note "Review is discretionary with the Supreme Court (Minn. R. Civ. App. P. 117, subd. 2). Judgment is entered on denial of the petition (Rule 136.02); no petition for reconsideration of a denial of review is allowed (Rule 140.01)."
+  edge-review-affirmed-affirmed-final "Review denied" -> affirmed-final {
+    authority cite "Minn. R. Civ. App. P. 136.02"
+  }
+  edge-review-affirmed-supreme-court "Review granted" -> supreme-court {
+    authority cite "Minn. R. Civ. App. P. 117"
+  }
+}
+
+decision reversed-entered: "Reversed or vacated: further review election" by applicant cite "Minn. R. Civ. App. P. 117"
+{
+  note "Any party seeking review petitions within 30 days of the filing of the decision (Minn. R. Civ. App. P. 117, subd. 1). An appellant who prevailed ordinarily files no petition; the opposing party may, and the appellant may then seek conditional cross-review in its response (subd. 4)."
+  edge-reversed-entered-review-reversed "Petition for review filed" -> review-reversed {
+    authority cite "Minn. R. Civ. App. P. 117"
+  }
+  edge-reversed-entered-reversed-final "No petition for review" -> reversed-final {
+    authority cite "Minn. R. Civ. App. P. 136.02"
+  }
+}
+
+decision review-reversed: "Petition for review ruling (reversed or vacated)" by court cite "Minn. R. Civ. App. P. 117"
+{
+  note "Review is discretionary with the Supreme Court (Minn. R. Civ. App. P. 117, subd. 2). Judgment is entered on denial of the petition (Rule 136.02)."
+  edge-review-reversed-reversed-final "Review denied" -> reversed-final {
+    authority cite "Minn. R. Civ. App. P. 136.02"
+  }
+  edge-review-reversed-supreme-court "Review granted" -> supreme-court {
+    authority cite "Minn. R. Civ. App. P. 117"
+  }
+}
+
+decision remanded-entered: "Remanded: further review election" by applicant cite "Minn. R. Civ. App. P. 117"
+{
+  note "Any party seeking review petitions within 30 days of the filing of the decision (Minn. R. Civ. App. P. 117, subd. 1)."
+  edge-remanded-entered-review-remanded "Petition for review filed" -> review-remanded {
+    authority cite "Minn. R. Civ. App. P. 117"
+  }
+  edge-remanded-entered-remanded-final "No petition for review" -> remanded-final {
+    authority cite "Minn. R. Civ. App. P. 136.02"
+  }
+}
+
+decision review-remanded: "Petition for review ruling (remanded)" by court cite "Minn. R. Civ. App. P. 117"
+{
+  note "Review is discretionary with the Supreme Court (Minn. R. Civ. App. P. 117, subd. 2). Judgment is entered on denial of the petition (Rule 136.02)."
+  edge-review-remanded-remanded-final "Review denied" -> remanded-final {
+    authority cite "Minn. R. Civ. App. P. 136.02"
+  }
+  edge-review-remanded-supreme-court "Review granted" -> supreme-court {
+    authority cite "Minn. R. Civ. App. P. 117"
+  }
+}
+
+decision supreme-court: "Supreme Court decision on review" by court cite "Minn. R. Civ. App. P. 135"
+{
+  note "On a grant of review the clerk transmits the record, briefs and Court of Appeals decision to the Supreme Court (Minn. R. Civ. App. P. 136.03, subd. 1). Cases argued orally are decided en banc; cases submitted on briefs may go to a nonoral panel (Rule 135). A petition for rehearing in the Supreme Court may be filed within 14 days after the filing of the decision unless the court enlarges the time within that period (Rule 140.01). On entry of judgment the clerk transmits it to the trial court administrator or notifies the Court of Appeals of a remand to it (Rule 136.03, subd. 2)."
+  edge-supreme-court-affirmed-final "Lower-court decision affirmed" -> affirmed-final {
+    authority cite "Minn. R. Civ. App. P. 136.03"
+  }
+  edge-supreme-court-reversed-final "Lower-court decision reversed" -> reversed-final {
+    authority cite "Minn. R. Civ. App. P. 136.03"
+  }
+  edge-supreme-court-remanded-final "Remanded" -> remanded-final {
+    authority cite "Minn. R. Civ. App. P. 136.03"
+  }
+}
+
+terminal affirmed-final: "Affirmed: final" outcome [loss] cite "Minn. R. Civ. App. P. 136.03"
+{
+  note "The clerk transmits the judgment to the trial court administrator (Minn. R. Civ. App. P. 136.03). Outcome from the applicant's side."
+}
+
+terminal reversed-final: "Reversed or vacated: final" outcome [win] cite "Minn. R. Civ. App. P. 136.03"
+{
+  note "Outcome from the applicant's side."
+}
+
+terminal remanded-final: "Remanded: final" outcome [procedural] cite "Minn. R. Civ. App. P. 136.03"
+{
+  note "Proceedings continue in the trial court (lit/mn-district) or, on a Supreme Court remand with special instructions, in the Court of Appeals (Minn. R. Civ. App. P. 136.03, subd. 2)."
+}

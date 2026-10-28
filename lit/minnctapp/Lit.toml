@@ -1,0 +1,40 @@
+# Civil appeals to the Minnesota Court of Appeals and petitions for review
+# in the Minnesota Supreme Court under the Minnesota Rules of Civil
+# Appellate Procedure, with amendments effective April 1, 2025
+# (sources/minnctapp). Computation of time is Minn. R. Civ. P. 6.01, which
+# Rule 126.01 applies and which takes its legal holidays from Minn. Stat.
+# § 645.44, subd. 5; lit/core has no counting rule for it, so the periods
+# are stated in notes, not encoded as counted deadlines. The brief and
+# petition length limits are declared as paper limits.
+[package]
+name = "mn-court-of-appeals-civil"
+version = "0.1.0"
+language = 1
+pack_id = "mn-court-of-appeals-civil"
+forum = "minnctapp"
+authority = "StateRule"
+jurisdiction_id = "minnesota"
+title = "Minnesota Court of Appeals and Minnesota Supreme Court, civil appeals"
+description = "Civil appeals from the Minnesota district courts to the Minnesota Court of Appeals, and petitions for further review in the Minnesota Supreme Court, under the Minnesota Rules of Civil Appellate Procedure (amendments effective April 1, 2025): appealability, the record, briefing and its length limits, argument, decision, review and judgment."
+in_force = "2025-04-01"
+known_at = "2026-10-28"
+unknown_before = "2025-04-01"
+jurisdiction = "Minnesota Court of Appeals; Minnesota Supreme Court"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.mnrcap]
+title = "Minnesota Rules of Civil Appellate Procedure, with amendments effective April 1, 2025"
+url = "https://mncourts.gov/_media/migration/appellate/supreme-court/court-rules/rules-of-civil-app-proc-effective040125.pdf"
+path = "sources/minnctapp/mnrcap-2025-04-01-sectioned.txt"
+path_sha256 = "9351c7e8731c2e496ba1ddd3c038b61c25e310f361a27c178889aff43fc6dbfa"
+sha256 = "35f2dc1e2847e13cba11df37a73290ce7fb5d469024e70b77f349526dddfb068"
+as_of = "2025-04-01"
+cite_prefixes = ["Minn. R. Civ. App. P."]
+section_heading = "Rule {n}"

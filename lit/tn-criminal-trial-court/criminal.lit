@@ -1,0 +1,142 @@
+module tn-criminal-trial-court.criminal
+
+// Criminal cases in the Tennessee trial courts, from the defendant's view
+// of outcomes. The criminal rules' text is CURRENCY UNCONFIRMED (no
+// consolidated edition date; the 2026 rules package is not vendored), so
+// every period those rules state is a hole, named in a note without its
+// value; computation would be Tenn. R. Crim. P. 45(a), and lit/core has no
+// Tennessee counting rule or holiday calendar in any case. The appeal's
+// 30 days come from Tenn. R. App. P. 4, whose rule page is vendored with
+// its amendment history. The outline's decisions have no vendored
+// reporter text and are removed.
+start arrested
+
+state arrested: "Arrest on a warrant or summons" by applicant cite "Tenn. R. Crim. P. 4"
+{
+  note "An arrest warrant or summons issues on an affidavit of complaint (Tenn. R. Crim. P. 3, 4). The arrested person is taken before a magistrate for the initial appearance (Tenn. R. Crim. P. 5(a))."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance {
+    authority cite "Tenn. R. Crim. P. 5"
+  }
+}
+
+decision initial-appearance: "Release or custody; preliminary hearing set" by court cite "Tenn. R. Crim. P. 5"
+{
+  note "Unless the defendant waives it, the magistrate schedules a preliminary hearing, sooner if the defendant remains in custody than if released (Tenn. R. Crim. P. 5). Hole: the two periods are not stated here because the vendored criminal rules are CURRENCY UNCONFIRMED."
+  edge-initial-appearance-detained "Held in custody" -> probable-cause {
+    authority cite "Tenn. R. Crim. P. 5.1"
+  }
+  edge-initial-appearance-released "Released" -> probable-cause {
+    authority cite "Tenn. R. Crim. P. 5.1"
+  }
+}
+
+decision probable-cause: "Preliminary hearing" by court cite "Tenn. R. Crim. P. 5.1"
+{
+  note "If the magistrate finds that an offense has been committed and probable cause to believe the defendant committed it, the defendant is bound over to the grand jury; if not, the defendant is discharged (Tenn. R. Crim. P. 5.1(b), (c))."
+  edge-probable-cause-charged "Bound over; indictment, presentment or information" -> charged {
+    authority cite "Tenn. R. Crim. P. 7"
+  }
+  edge-probable-cause-none "No probable cause; discharged" -> dismissed {
+    authority cite "Tenn. R. Crim. P. 5.1(c)"
+  }
+}
+
+state charged: "Indictment, presentment or information" by office cite "Tenn. R. Crim. P. 7"
+{
+  note "The speedy-trial statute (Tenn. Code Ann. § 40-14-101) is not vendored; the court may dismiss for unnecessary delay in presenting the charge to a grand jury against a defendant held to answer, or in bringing the defendant to trial (Tenn. R. Crim. P. 48(b))."
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Tenn. R. Crim. P. 10" }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "Tenn. R. Crim. P. 10"
+{
+  note "Before trial the defendant is called into open court and arraigned, on the record (Tenn. R. Crim. P. 10(a), (c)). Discovery is under Rule 16."
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "Tenn. R. Crim. P. 16" }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "Tenn. R. Crim. P. 12(b)"
+{
+  note "Defects in the institution of the prosecution or in the charge, suppression, Rule 16 discovery requests and Rule 14 severance must be raised before trial (Tenn. R. Crim. P. 12(b)). Unless a local rule provides otherwise, the court may set a pretrial motion deadline at or soon after arraignment, and a party who fails to comply waives the defense, objection or request unless the court grants relief for good cause (Tenn. R. Crim. P. 12(c), (f)). Hole: the notice period of Rule 45(c) for written motions is not stated (CURRENCY UNCONFIRMED)."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "Tenn. R. Crim. P. 12(c)"
+  }
+  edge-discovery-speedy "Motion to dismiss for unnecessary delay" -> motions-ruling {
+    authority cite "Tenn. R. Crim. P. 48(b)"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "Tenn. R. Crim. P. 11" }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "Tenn. R. Crim. P. 12(e)"
+{
+  note "The court decides each pretrial motion before trial unless it finds good cause to defer, and may not defer if that would adversely affect a party's right to appeal (Tenn. R. Crim. P. 12(e)). With the court's permission the state may dismiss the charge, but not during trial without the defendant's consent (Tenn. R. Crim. P. 48(a))."
+  edge-motions-ruling-delay "Dismissed for unnecessary delay" -> dismissed {
+    authority cite "Tenn. R. Crim. P. 48(b)"
+  }
+  edge-motions-ruling-dismissed "State dismisses with the court's permission" -> dismissed {
+    authority cite "Tenn. R. Crim. P. 48(a)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "Tenn. R. Crim. P. 12(e)"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Tenn. R. Crim. P. 11"
+{
+  note "In all prosecutions except small offenses the defendant is entitled to a jury trial unless it is waived in writing, with the district attorney general's consent and the court's approval (Tenn. R. Crim. P. 23)."
+  edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
+    authority cite "Tenn. R. Crim. P. 11"
+  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "Tenn. R. Crim. P. 23" }
+}
+
+decision trial: "Verdict" by court cite "Tenn. R. Crim. P. 31"
+{
+  note "Directed verdicts are abolished; on the defendant's motion or its own initiative the court enters a judgment of acquittal of any offense after the evidence on either side is closed if the evidence is insufficient (Tenn. R. Crim. P. 29(a), (b))."
+  edge-trial-acquittal "Not guilty" -> acquitted { authority cite "Tenn. R. Crim. P. 29(b)" }
+  edge-trial-guilty "Guilty; sentence" -> sentencing { authority cite "Tenn. R. Crim. P. 32(b)" }
+}
+
+state sentencing: "Sentence and judgment" by court cite "Tenn. R. Crim. P. 32(b)"
+{
+  note "After a verdict or plea of guilty the court sets the sentence (Tenn. R. Crim. P. 32(b)). The post-trial motions run from entry of the order of sentence: a motion for judgment of acquittal after a guilty verdict (Tenn. R. Crim. P. 29(e)), a written motion for a new trial (Tenn. R. Crim. P. 33(b)) and a motion in arrest of judgment (Tenn. R. Crim. P. 34(b)). Hole: their periods are not stated here because the vendored criminal rules are CURRENCY UNCONFIRMED."
+  edge-sentencing-motions "Sentence entered; post-trial motions" -> post-trial {
+    authority cite "Tenn. R. Crim. P. 33(b)"
+  }
+  edge-sentencing-judgment "Sentence entered; no post-trial motion" -> judgment {
+    authority cite "Tenn. R. Crim. P. 32(b)"
+  }
+}
+
+decision post-trial: "Post-trial motions" by court cite "Tenn. R. Crim. P. 33(a)"
+{
+  note "The court on its own initiative or the defendant's motion may grant a new trial as required by law, and may grant one where it disagrees with the jury about the weight of the evidence (Tenn. R. Crim. P. 33(a), (d)). A motion for a new trial does not waive a motion in arrest of judgment (Tenn. R. Crim. P. 33(e))."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite "Tenn. R. Crim. P. 29(e)"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "Tenn. R. Crim. P. 33(a)"
+  }
+  edge-post-trial-arrest "Judgment arrested" -> dismissed { authority cite "Tenn. R. Crim. P. 34" }
+  edge-post-trial-denied "Motions denied" -> judgment { authority cite "Tenn. R. Crim. P. 37(c)" }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "Tenn. R. Crim. P. 37"
+{
+  note "The notice of appeal is filed with the clerk of the appellate court within 30 days after entry of the judgment; in criminal cases it is not jurisdictional and its timely filing may be waived in the interest of justice (Tenn. R. App. P. 4(a)). A timely motion for judgment of acquittal, suspended sentence, withdrawal of a guilty plea, new trial or arrest of judgment starts the time from the order denying a new trial or granting or denying the other motion (Tenn. R. App. P. 4(c)). After overruling the last of those motions the trial judge advises the defendant of the right to appeal, and a waiver of appeal is in writing signed by the defendant and counsel (Tenn. R. Crim. P. 37(c), (d))."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "Tenn. R. App. P. 4(a)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Tenn. R. App. P. 4(a)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Tenn. R. Crim. P. 29(b)"
+terminal dismissed: "Charges dismissed or defendant discharged" outcome [win] cite "Tenn. R. Crim. P. 48"
+
+terminal appeal-taken: "Appeal taken to the Court of Criminal Appeals" outcome [appeal] cite "Tenn. R. App. P. 4(a)"
+{
+  note "The appeal continues in the Court of Criminal Appeals (lit/tn-court-of-criminal-appeals)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "Tenn. R. App. P. 4(a)"
+{
+  note "Correction of an illegal sentence is under Tenn. R. Crim. P. 36.1; post-conviction relief is statutory and not vendored. Federal habeas is lit/habeas."
+}

@@ -81,7 +81,7 @@ decision caaf-petition: "Petition for grant of review to CAAF filed" by applican
 
 state caaf-review: "Review by the Court of Appeals for the Armed Forces" by court cite ?("10 U.S.C. § 867")
 {
-  note "OUTLINE. CAAF review; see the outline-caaf package."
+  note "OUTLINE. CAAF review; see lit/caaf."
   edge-caaf-review-decided "CAAF decides" -> caaf-decided {
     authority cite ?("10 U.S.C. § 867")
   }
@@ -141,7 +141,7 @@ terminal caaf-denied-final: "Review denied; case final" outcome [decided] cite ?
 
 terminal caaf-decided: "CAAF decision" outcome [decided] cite ?("10 U.S.C. § 867")
 {
-  note "OUTLINE. CAAF outcome; see the outline-caaf package."
+  note "OUTLINE. CAAF outcome; see lit/caaf."
   payoff ?
 }
 

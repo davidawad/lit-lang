@@ -1,0 +1,50 @@
+# The United States Court of Appeals for the Armed Forces, promoted from
+# outlines/military/court-of-appeals-for-the-armed-forces (lg-f3q8.132).
+#
+# authority: the CAAF Rules of Practice and Procedure are the court's rules
+# of practice, the FederalRule level of lit/core's lattice (as the CAVC
+# Rules are for lit/cavc).
+# in_force: the vendored edition, effective October 1, 2026
+# (sources/caaf/PROVENANCE.md). Earlier editions are not vendored, so a
+# query before it is a hole (unknown_before), never a day with no rule.
+# family: lit/core's class matrix has no family for the Court of Appeals
+# for the Armed Forces, so the package declares none (as lit/cavc and
+# lit/cit do).
+# 10 U.S.C. (Articles 62, 66, 67, 67a and 69, UCMJ) is not vendored: the
+# graph cites the CAAF Rules that restate the routes and periods those
+# articles set.
+[package]
+name = "caaf"
+version = "0.1.0"
+language = 1
+pack_id = "caaf"
+forum = "caaf"
+authority = "FederalRule"
+title = "United States Court of Appeals for the Armed Forces"
+description = "Review of a Court of Criminal Appeals decision by the U.S. Court of Appeals for the Armed Forces under its Rules of Practice and Procedure effective October 1, 2026: the three routes of Rule 4(a) and 18 (mandatory review of a death sentence, a Judge Advocate General's certificate for review, the accused's petition for grant of review), the 60-day petition period (Rule 19(a)(1)), the supplement showing good cause, the answer and reply and their 9,000/4,500-word limits (Rules 19(a)(5), 21), the grant or denial of review, briefing on granted, certified and mandatory issues and the 13,000/6,500-word limits (Rules 19, 22, 24, 25), the hearing and its 21-day notice (Rule 40), motions (Rule 30), reconsideration within 14 days (Rule 31), entry of judgment (Rule 43) and mandate 7 days after the reconsideration period (Rule 43A). Extraordinary writs and writ-appeals (Rules 19(d)-(e), 27, 28) and petitions for new trial (Rules 19(f), 29) carry their periods but no graph."
+jurisdiction = "United States Court of Appeals for the Armed Forces"
+in_force = "2026-10-01"
+known_at = "2026-10-28"
+unknown_before = "2026-10-01"
+counting = "caaf26"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.caaf-rules]
+title = "Rules of Practice and Procedure of the U.S. Court of Appeals for the Armed Forces, effective October 1, 2026"
+url = "https://www.armfor.uscourts.gov/newcaaf/library/Rules/Rules2026Oct.pdf"
+path = "sources/caaf/caaf-rules.txt"
+path_sha256 = "7b58729fb2d782a6b592acfb6aa69a15a06eef6c40de44f886306ce76e330f20"
+sha256 = "842ad17234343902c16d7e302eaf2d3b8418ef44efc0dbaeea5e837dc3c84426"
+as_of = "2026-10-01"
+
+[[cite_syntax.rules]]
+prefixes = ["CAAF R."]
+heading = "CAAF R. {}"
+source = "caaf-rules"

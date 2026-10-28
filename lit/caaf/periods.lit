@@ -1,0 +1,221 @@
+module caaf.periods
+
+import core.calendar.{ us-federal-holidays }
+import core.time.{ ServiceMethod }
+
+// The periods the CAAF Rules of Practice and Procedure state, each counted
+// by CAAF R. 34 and each in force from the vendored edition (effective
+// October 1, 2026): earlier editions are not vendored, so the package's
+// `unknown_before` makes an earlier query a hole. CAAF R. 19(h) lets a
+// party move to extend time within the time for filing, unless a statute
+// or these Rules forbid it; CAAF R. 33 lets the Court suspend any Rule.
+//
+// A period computed from the date of a Court of Criminal Appeals decision
+// runs instead from the final action on a timely petition for
+// reconsideration there, or on its sua sponte reconsideration (CAAF R.
+// 34(a)): the trigger events below are that final action when there was
+// one.
+/// CAAF R. 34 as it stands in the vendored edition of October 1, 2026; no
+/// earlier edition is vendored to prove the text before it.
+/// Exclude the day of the event, include the last day unless it is a
+/// Saturday, Sunday or federal holiday (34(a)); the federal holidays are
+/// core's `us-federal-holidays`. A period of less than seven days excludes
+/// intervening Saturdays, Sundays and federal holidays (34(a)). Service by
+/// mail adds 7 days within the contiguous 48 states or the District of
+/// Columbia and 15 days outside them; delivery to a commercial carrier adds
+/// 3 days wherever made (34(b)). Mail to Alaska or Hawaii, which also adds
+/// 15 days, is not distinguished from domestic mail, so such a period
+/// yields the earlier date, never a later one.
+counting caaf26 effective [2026-10-01, ..) known_at 2026-10-01 cite "CAAF R. 34(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday]
+  short_period { below: 7.days, count: business_days }
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 7.days
+    MailForeign: 15.days
+    CommercialCarrier: 3.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    PrisonMail: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "CAAF R. 34(b)"
+  holidays us-federal-holidays
+  forums [caaf]
+  allow_hours
+  end_of_month clamp
+}
+
+/// Unless the Court authorizes more, the supplement to a petition for grant
+/// of review and any answer to it may not exceed 9,000 words, and a reply
+/// 4,500 words; headings, footnotes and quotations count, the index,
+/// tables, appendix and certificates do not (CAAF R. 21(b), (b)(6)).
+limit supplement { words <= 9_000 cite "CAAF R. 21(b)" } cite "CAAF R. 21(b)"
+limit supplement-reply { words <= 4_500 cite "CAAF R. 21(b)" } cite "CAAF R. 21(b)"
+/// A brief of an appellant or petitioner and an answer may not exceed
+/// 13,000 words, and a reply 6,500 words, not counting appendices (CAAF R.
+/// 24(b)).
+limit brief { words <= 13_000 cite "CAAF R. 24(b)(1)" } cite "CAAF R. 24(b)(1)"
+limit reply-brief { words <= 6_500 cite "CAAF R. 24(b)(2)" } cite "CAAF R. 24(b)(2)"
+
+/// The appellant is notified of the Court of Criminal Appeals' decision, or
+/// a copy of it, after service on appellate counsel, is deposited in the
+/// mail by first-class certified mail to the appellant, whichever is
+/// earlier (CAAF R. 19(a)(1)).
+event CcaDecisionNoticed()
+/// The Court of Criminal Appeals decides (CAAF R. 19(b), 22(b)).
+event CcaDecisionIssued()
+/// The time to petition the Court of Criminal Appeals for reconsideration
+/// expires or, if a petition was filed, it is finally disposed of (CAAF R.
+/// 19(c)).
+event CcaReconsiderationClosed()
+/// The Court of Criminal Appeals' decision on a petition for extraordinary
+/// relief is served on the appellant (CAAF R. 19(e)).
+event CcaWritDecisionServed()
+/// The petitioner learns of the action that is the basis of a petition for
+/// extraordinary relief (CAAF R. 19(d)).
+event WritActionLearned()
+
+/// The Clerk issues notice that an appellant's own petition for grant of
+/// review was docketed (CAAF R. 19(a)(5)(B)).
+event PetitionDocketed()
+/// The Court grants counsel's motion for leave to file the supplement
+/// after the petition (CAAF R. 19(a)(5)(A)).
+event SupplementLeaveGranted()
+/// The supplement to the petition is filed (CAAF R. 19(a)(5)(C), 21(c)).
+event SupplementFiled() paper supplement
+/// The Court grants a petition for grant of review (CAAF R. 19(b)(3)).
+event PetitionGranted()
+/// The Clerk issues notice that a certificate for review raising only
+/// certified issues was docketed (CAAF R. 19(b)(3)).
+event CertificateDocketed()
+/// The Clerk issues notice that a mandatory review case was docketed (CAAF
+/// R. 19(c)).
+event MandatoryCaseDocketed()
+/// The Clerk issues notice that a petition for new trial was filed in a
+/// case pending before the Court (CAAF R. 19(f)).
+event NewTrialPetitionNoticed()
+/// A brief is filed (CAAF R. 24(b)(1)).
+event BriefFiled() paper brief
+/// A reply brief is filed (CAAF R. 24(b)(2)).
+event ReplyBriefFiled() paper reply-brief
+
+/// The paper whose filing starts an answer or reply period.
+enum Paper {
+  Art62Supplement,
+  Supplement,
+  SupplementAnswer,
+  Art62Certificate,
+  Art62Answer,
+  CertifiedIssuesBrief,
+  CertifiedIssuesAnswer,
+  MandatoryBrief,
+  MandatoryAnswer,
+  WritAppealPetition,
+  WritAppealAnswer,
+  NewTrialBrief,
+  NewTrialAnswer,
+  Motion,
+  MotionAnswer,
+  ReconsiderationPetition,
+  ReconsiderationAnswer,
+}
+
+/// A paper filed and served by `method`; CAAF R. 34(b) adds time for mail
+/// and commercial-carrier service.
+event PaperFiled(paper: Paper, method: ServiceMethod)
+/// Counsel presents an oral motion by leave of the Court at a hearing (CAAF
+/// R. 30(f)).
+event OralMotionPresented()
+/// The Court issues an order, decision or opinion (CAAF R. 31(a)).
+event CourtActionIssued()
+/// The 14-day time for a petition for reconsideration expires with none
+/// filed (CAAF R. 43A(a)).
+event ReconsiderationPeriodExpired()
+/// The Court enters an order denying a petition for reconsideration (CAAF
+/// R. 43A(a)).
+event ReconsiderationDenied()
+
+/// The appellant files a petition for grant of review no later than 60
+/// days from the earlier of notice of the Court of Criminal Appeals'
+/// decision or its mailing to the appellant; the petition is filed when
+/// mailed or delivered to the Court (CAAF R. 19(a)(1), (3)).
+deadline petition-period: 60.days after CcaDecisionNoticed() counted_by caaf26 cite "CAAF R. 19(a)(1)"
+/// On an appellant's own petition, the supplement is due no later than 21
+/// days after the Clerk's notice of docketing; on counsel's petition filed
+/// without it, within 21 days of the order granting leave.
+deadline supplement-period: 21.days after PetitionDocketed() counted_by caaf26 cite "CAAF R. 19(a)(5)(B)"
+deadline supplement-leave-period: 21.days after SupplementLeaveGranted() counted_by caaf26 cite "CAAF R. 19(a)(5)(A)"
+/// Grostefon issues not raised earlier may be presented by motion no later
+/// than 28 days after the supplement is filed.
+deadline grostefon-period: 28.days after SupplementFiled() counted_by caaf26 cite "CAAF R. 19(a)(5)(C)"
+/// The answer to the supplement is due 14 days after it in an Article 62
+/// appeal and 21 days after it in other appeals; an answer letter waiving a
+/// formal answer, 14 days. A reply, 7 days after the answer.
+deadline art62-supplement-answer-period: 14.days after PaperFiled(Art62Supplement) counted_by caaf26 cite "CAAF R. 21(c)(1)"
+deadline supplement-answer-period: 21.days after PaperFiled(Supplement) counted_by caaf26 cite "CAAF R. 21(c)(2)"
+deadline answer-letter-period: 14.days after PaperFiled(Supplement) counted_by caaf26 cite "CAAF R. 21(c)(2)"
+deadline supplement-reply-period: 7.days after PaperFiled(SupplementAnswer) counted_by caaf26 cite "CAAF R. 21(c)"
+/// A Judge Advocate General's certificate for review is filed no later
+/// than 60 days after the date of the Court of Criminal Appeals' decision
+/// (in an Article 62 or extraordinary relief case, with the supporting
+/// brief). In other cases it may instead follow the grant of a petition:
+/// CAAF R. 19(b)(3) says no later than thirty days after the grant, CAAF
+/// R. 22(b)(3) twenty-eight days, so that period is left a hole.
+deadline certificate-period: 60.days after CcaDecisionIssued() counted_by caaf26 cite "CAAF R. 19(b)"
+/// In an Article 62 or extraordinary relief certificate, the answer is due
+/// 14 days after the certificate and brief, and a reply 7 days after the
+/// answer.
+deadline art62-answer-period: 14.days after PaperFiled(Art62Certificate) counted_by caaf26 cite "CAAF R. 19(b)(1)"
+deadline art62-reply-period: 7.days after PaperFiled(Art62Answer) counted_by caaf26 cite "CAAF R. 19(b)(1)"
+/// With only certified issues, the appellant's brief is due 28 days after
+/// the Clerk's notice of docketing, the answer 28 days after the brief, and
+/// a reply 14 days after the answer.
+deadline certified-brief-period: 28.days after CertificateDocketed() counted_by caaf26 cite "CAAF R. 19(b)(3)"
+deadline certified-answer-period: 28.days after PaperFiled(CertifiedIssuesBrief) counted_by caaf26 cite "CAAF R. 19(b)(3)"
+deadline certified-reply-period: 14.days after PaperFiled(CertifiedIssuesAnswer) counted_by caaf26 cite "CAAF R. 19(b)(3)"
+/// The Judge Advocate General files the record in a mandatory review case
+/// within 35 days of the close of reconsideration below; the appellant's
+/// brief is due 60 days after the Clerk's notice of docketing, the answer
+/// 60 days after the brief and a reply 21 days after the answer.
+deadline mandatory-record-period: 35.days after CcaReconsiderationClosed() counted_by caaf26 cite "CAAF R. 19(c)"
+deadline mandatory-brief-period: 60.days after MandatoryCaseDocketed() counted_by caaf26 cite "CAAF R. 19(c)"
+deadline mandatory-answer-period: 60.days after PaperFiled(MandatoryBrief) counted_by caaf26 cite "CAAF R. 19(c)"
+deadline mandatory-reply-period: 21.days after PaperFiled(MandatoryAnswer) counted_by caaf26 cite "CAAF R. 19(c)"
+/// A petition for extraordinary relief is filed as soon as possible and no
+/// later than 21 days after the petitioner learns of the action; a petition
+/// for habeas corpus or coram nobis may be filed at any time.
+deadline writ-petition-period: 21.days after WritActionLearned() counted_by caaf26 cite "CAAF R. 19(d)"
+/// A writ-appeal petition is filed no later than 21 days after the Court of
+/// Criminal Appeals' decision is served on the appellant; the answer 14
+/// days after the petition, a reply 7 days after the answer.
+deadline writ-appeal-period: 21.days after CcaWritDecisionServed() counted_by caaf26 cite "CAAF R. 19(e)"
+deadline writ-appeal-answer-period: 14.days after PaperFiled(WritAppealPetition) counted_by caaf26 cite "CAAF R. 19(e)"
+deadline writ-appeal-reply-period: 7.days after PaperFiled(WritAppealAnswer) counted_by caaf26 cite "CAAF R. 19(e)"
+/// A brief supporting a petition for new trial is due 28 days after the
+/// Clerk's notice that the petition was filed, the answer 28 days after the
+/// brief, a reply 14 days after the answer.
+deadline new-trial-brief-period: 28.days after NewTrialPetitionNoticed() counted_by caaf26 cite "CAAF R. 19(f)"
+deadline new-trial-answer-period: 28.days after PaperFiled(NewTrialBrief) counted_by caaf26 cite "CAAF R. 19(f)"
+deadline new-trial-reply-period: 14.days after PaperFiled(NewTrialAnswer) counted_by caaf26 cite "CAAF R. 19(f)"
+/// An answer to a motion is due 7 days after the motion, a reply 3 days
+/// after the answer; an oral motion granted leave at a hearing is filed
+/// within 3 days after it.
+deadline motion-answer-period: 7.days after PaperFiled(Motion) counted_by caaf26 cite "CAAF R. 30(b)"
+deadline motion-reply-period: 3.days after PaperFiled(MotionAnswer) counted_by caaf26 cite "CAAF R. 30(c)"
+deadline oral-motion-period: 3.days after OralMotionPresented() counted_by caaf26 cite "CAAF R. 30(f)"
+/// A petition for reconsideration is due 14 days after any order, decision
+/// or opinion; an answer 7 days after the petition, a reply 3 days after
+/// the answer.
+deadline reconsideration-period: 14.days after CourtActionIssued() counted_by caaf26 cite "CAAF R. 31(a)"
+deadline reconsideration-answer-period: 7.days after PaperFiled(ReconsiderationPetition) counted_by caaf26 cite "CAAF R. 31(b)"
+deadline reconsideration-reply-period: 3.days after PaperFiled(ReconsiderationAnswer) counted_by caaf26 cite "CAAF R. 31(c)"
+/// The mandate issues 7 days after the time for a petition for
+/// reconsideration expires or, if one is denied, 7 days after the order
+/// denying it, unless the Court orders otherwise.
+deadline mandate-period: 7.days after ReconsiderationPeriodExpired() counted_by caaf26 cite "CAAF R. 43A(a)"
+deadline mandate-after-denial-period: 7.days after ReconsiderationDenied() counted_by caaf26 cite "CAAF R. 43A(a)"

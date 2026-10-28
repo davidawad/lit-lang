@@ -1,0 +1,155 @@
+module caaf.procedure
+
+import caaf.periods.{
+  certificate-period,
+  certified-brief-period,
+  mandate-period,
+  mandatory-brief-period,
+  petition-period,
+  reconsideration-period,
+  supplement-answer-period,
+  supplement-period,
+}
+
+// The outline's leading decisions (Ortiz v. United States on the Supreme
+// Court's review of CAAF; Loving v. United States, 517 U.S. 748 (1996)) are
+// not carried: no reporter is vendored to check them against. 10 U.S.C.
+// §§ 862, 866, 867, 867a and 869 are not vendored either; the graph cites
+// the CAAF Rules that restate the routes they set. Supreme Court review
+// under Article 67a and its certiorari period are holes here; the Supreme
+// Court's procedure is lit/scotus's.
+start cca-decision
+
+decision cca-decision: "Court of Criminal Appeals decision; route to the Court" by office cite "CAAF R. 4(a)"
+{
+  note "The Court's jurisdiction covers cases in which the sentence as affirmed by a Court of Criminal Appeals extends to death; cases a Judge Advocate General forwards by certificate for review; and cases in which, on petition of the accused and good cause shown, the Court grants review (CAAF R. 4(a)(1)-(3)), including decisions on appeal by the United States under Article 62, UCMJ (CAAF R. 18(b), (c)). The Court may review the findings and sentence as affirmed or set aside as incorrect in law, and findings as incorrect in fact under Article 66(d)(1)(B) (CAAF R. 5). A period computed from the date of the Court of Criminal Appeals' decision runs from the final action on a timely petition for reconsideration there (CAAF R. 34(a)); an appeal filed while such a petition is pending may be dismissed without prejudice and remanded (CAAF R. 19(g))."
+  edge-cca-decision-petition "Accused petitions for grant of review" -> petition-filed {
+    authority cite "CAAF R. 18(c)"
+    within petition-period {
+      note "60 days from the earlier of notice of the decision or its mailing to the appellant."
+    }
+  }
+  edge-cca-decision-certified "Judge Advocate General certifies the case" -> certified-briefing {
+    authority cite "CAAF R. 18(b)"
+    within certificate-period {
+      note "60 days after the date of the Court of Criminal Appeals' decision."
+    }
+  }
+  edge-cca-decision-mandatory "Sentence extends to death: mandatory review" -> mandatory-briefing {
+    authority cite "CAAF R. 18(a)"
+  }
+}
+
+state petition-filed: "Petition for grant of review docketed" by applicant cite "CAAF R. 19(a)"
+{
+  note "The petition is filed on the date it is mailed or delivered to the Court (CAAF R. 19(a)(3)) and is substantially in the form of CAAF R. 20(a) (appellant) or 20(b) (counsel). The Clerk dockets it and sends copies to the Judge Advocate General, who designates counsel (CAAF R. 19(a)(4), 20(d)); the United States may move to dismiss a petition not in accord with Article 67 or the Rules (CAAF R. 19(a)(4)). Counsel files the supplement with the petition; on the appellant's own petition it is due 21 days after the notice of docketing (CAAF R. 19(a)(5)). The supplement states with particularity the errors claimed to be materially prejudicial to the appellant's substantial rights, includes the Court of Criminal Appeals decision, and may not exceed 9,000 words (CAAF R. 21(a), (b))."
+  edge-petition-filed-supplement "Supplement filed" -> supplement-answer {
+    authority cite "CAAF R. 21(b)"
+    within supplement-period {
+      note "21 days after the notice of docketing of the appellant's own petition."
+    }
+  }
+}
+
+state supplement-answer: "Answer and reply to the supplement" by applicant cite "CAAF R. 21(c)"
+{
+  note "The answer is due 14 days after the supplement in an Article 62 appeal and 21 days after it in other appeals; the United States may instead file, within 14 days, a short letter relying on its brief below or not opposing the grant; a reply is due 7 days after the answer (CAAF R. 21(c)). A reply may not exceed 4,500 words (CAAF R. 21(b)). With no assigned errors the Court reviews the petition without awaiting an answer (CAAF R. 21(e)). Grostefon issues not raised earlier may be presented by motion within 28 days after the supplement (CAAF R. 19(a)(5)(C)). The appellant may move to withdraw the petition at any time, irrevocably (CAAF R. 21(f))."
+  edge-supplement-answer-decision "Petition submitted" -> grant-decision {
+    authority cite "CAAF R. 21(c)(2)"
+    within supplement-answer-period {
+      note "The answer, 21 days after the supplement in other than Article 62 appeals."
+    }
+  }
+}
+
+decision grant-decision: "Petition for grant of review granted or denied" by court cite "CAAF R. 21(a)"
+{
+  note "Review on petition requires a showing of good cause (CAAF R. 21(a)); the supplement indicates the grounds of CAAF R. 21(b)(5)(A)-(G). The Court may examine the record for plain error not assigned and specify and grant review of it (CAAF R. 21(d)). Hearings on petitions are not ordinarily held (CAAF R. 40(c))."
+  edge-grant-decision-granted "Review granted" -> granted-briefing {
+    authority cite "CAAF R. 19(a)(6)"
+  }
+  edge-grant-decision-denied "Review denied" -> denied-final {
+    authority cite "CAAF R. 21(a)"
+  }
+}
+
+state granted-briefing: "Briefing on the granted issues" by applicant cite "CAAF R. 19(a)(6)"
+{
+  note "In an Article 62 appeal no further pleadings may be filed after the grant and the Court gives the case priority (CAAF R. 19(a)(6)(A)). In other granted cases the Clerk issues a briefing order setting the timing and sequence of filings (CAAF R. 19(a)(6)(B)), so those periods are holes until the order. A Judge Advocate General may certify issues after the grant (CAAF R. 19(b)(3), 22(b)(3), which state thirty and twenty-eight days respectively), and the Clerk may set a consolidated schedule. Briefs follow CAAF R. 24: 13,000 words for a brief or answer, 6,500 for a reply (CAAF R. 24(b)), with a certificate of compliance and a joint appendix (CAAF R. 24(c), (e)); briefs are required in support of granted petitions (CAAF R. 25)."
+  edge-granted-briefing-complete "Briefing complete" -> hearing {
+    authority cite "CAAF R. 40(a)"
+  }
+}
+
+state certified-briefing: "Briefing on the certified issues" by applicant cite "CAAF R. 19(b)"
+{
+  note "The certificate for review is substantially in the form of CAAF R. 22(a). In an Article 62 or extraordinary relief case the supporting brief is filed with it, the answer is due 14 days after, and a reply 7 days after the answer (CAAF R. 19(b)(1)-(2), 22(b)(1)-(2)). In other cases with only certified issues, the appellant's brief is due 28 days after the Clerk's notice of docketing of the certificate, the answer 28 days after the brief, and a reply 14 days after the answer (CAAF R. 19(b)(3))."
+  edge-certified-briefing-complete "Briefing complete" -> hearing {
+    authority cite "CAAF R. 40(a)"
+    within certified-brief-period {
+      note "The appellant's brief, 28 days after the notice of docketing of the certificate."
+    }
+  }
+}
+
+state mandatory-briefing: "Mandatory review: record and briefs" by office cite "CAAF R. 19(c)"
+{
+  note "The Judge Advocate General files the record, using the form of CAAF R. 23(a), within 35 days of the close of reconsideration in the Court of Criminal Appeals; the appellant's brief setting forth assigned errors is due 60 days after the Clerk's notice of docketing, the answer 60 days after the brief, and a reply 21 days after the answer (CAAF R. 19(c)). The word limits of CAAF R. 24(b) yield to CAAF R. 23(b)."
+  edge-mandatory-briefing-complete "Briefing complete" -> hearing {
+    authority cite "CAAF R. 40(a)"
+    within mandatory-brief-period {
+      note "The appellant's brief, 60 days after the notice of docketing."
+    }
+  }
+}
+
+state hearing: "Hearing on the merits" by court cite "CAAF R. 40(a)"
+{
+  note "After all filings are received the Court may order a hearing on the merits; the Clerk gives at least 21 days' notice, and only one counsel per party argues (CAAF R. 40(a), (b)). Once a hearing date is set, no motion may be filed within 7 days of it without prior leave (CAAF R. 30(e)). Whether and when the Court orders a hearing is a hole."
+  edge-hearing-decision "Case submitted" -> decision-on-merits {
+    authority cite "CAAF R. 40(a)"
+  }
+}
+
+decision decision-on-merits: "Decision on the merits" by court cite "CAAF R. 43(a)"
+{
+  note "On filing the Court's opinion the Clerk enters judgment and distributes the opinion and judgment to the parties and the Judge Advocate General (CAAF R. 43(a)); a judgment without opinion is entered by order (CAAF R. 43(b)). The standards of review and the form of relief are holes. A petition for reconsideration is due 14 days after any order, decision or opinion (CAAF R. 31(a)); the mandate issues 7 days after that time expires or after an order denying the petition (CAAF R. 43A(a))."
+  edge-decision-affirmed "Affirmed" -> affirmed {
+    authority cite "CAAF R. 43A(a)"
+    within mandate-period { note "7 days after the reconsideration period expires." }
+  }
+  edge-decision-reversed "Reversed or set aside" -> reversed {
+    authority cite "CAAF R. 43A(a)"
+    within mandate-period { note "7 days after the reconsideration period expires." }
+  }
+  edge-decision-reconsideration "Petition for reconsideration" -> reconsideration {
+    authority cite "CAAF R. 31(a)"
+    within reconsideration-period { note "14 days after the Court's order, decision or opinion." }
+  }
+}
+
+state reconsideration: "Petition for reconsideration" by court cite "CAAF R. 31"
+{
+  note "An answer is due 7 days after the petition and a reply 3 days after the answer (CAAF R. 31(b), (c)); the form is CAAF R. 32's. A timely petition stays the mandate, which issues 7 days after an order denying it (CAAF R. 43A(a)). The Clerk accepts a consecutive or out-of-time petition only with a motion for leave (CAAF R. 31(d))."
+  edge-reconsideration-denied "Reconsideration denied" -> affirmed {
+    authority cite "CAAF R. 43A(a)"
+  }
+  edge-reconsideration-granted "Reconsideration granted" -> decision-on-merits {
+    authority cite "CAAF R. 31(a)"
+  }
+}
+
+terminal denied-final: "Review denied" outcome [loss] cite "CAAF R. 21(a)"
+{
+  note "The petition is denied; the effective date of an order is its date, and no mandate issues (CAAF R. 43A(b)). Supreme Court review is a hole (10 U.S.C. § 867a not vendored)."
+}
+
+terminal affirmed: "Affirmed; mandate issues" outcome [loss] cite "CAAF R. 43A(a)"
+{
+  note "A certified copy of the judgment and any opinion constitute the mandate (CAAF R. 43A(a)). Supreme Court review is a hole (10 U.S.C. § 867a not vendored); see lit/scotus."
+}
+
+terminal reversed: "Reversed or set aside; mandate issues" outcome [win] cite "CAAF R. 43A(a)"
+{
+  note "The scope of relief and any further proceedings below are holes."
+}

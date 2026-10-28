@@ -1,0 +1,148 @@
+module cacd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The Central District of California's own criminal periods, counted
+// under the criminal rules (FRCrimP 45(a) governs "any local rule"). No
+// trigger carries a service method: FRCrimP 45(c)'s three added days
+// follow the manner of service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp: counsel must
+// observe FRCrimP 32(f) on objections to the presentence report (L.Cr.R.
+// 32-3.2), whose period is not restated.
+//
+// Periods measured in hours stay in notes: a defendant unable to meet
+// bail conditions may apply for review and modification twenty-four hours
+// after bail is set (L.Cr.R. 46-2), the earliest time to apply rather
+// than a deadline; the United States Attorney reports approval or
+// disapproval of a surety's documentation within six (6) office working
+// hours (L.Cr.R. 46-3.4), and the court holds a hearing on two (2) hours
+// notice (L.Cr.R. 46-3.4.1).
+//
+// Conditions that are not deadlines from an event stay in notes: a case
+// with eight or more defendants, or whose case-in-chief will exceed twelve
+// trial days, is "complex" and the government files a Notice of Complex
+// Case with the indictment (L.Cr.R. 7-3); notices of related criminal and
+// supervised-release cases are filed promptly (L.Cr.R. 7-4, 7-5); a
+// minimum custody case (probable range unlikely to exceed 4-10 months,
+// defendant detained) gets an expedited presentence report (L.Cr.R.
+// 32-3.1); a motion to withdraw is made on written notice "reasonably in
+// advance" (L.Cr.R. 44-1); a bond judgment may be rendered summarily on
+// ten (10) days notice (L.Cr.R. 46-6), a notice the court gives rather
+// than a party's deadline; an exemption from electronic filing must not
+// exceed one calendar year (L.Cr.R. 49-1.2(a)(2)). The Local Civil Rules
+// govern criminal proceedings where applicable (L.Cr.R. 57-1); their
+// periods live in lit/cacd.
+//
+// The earlier C.D. Cal. criminal outline's FRCrimP flow and its decisions
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+/// A motion to suppress is served (C.D. Cal. L.Cr.R. 12-1.2).
+event SuppressionMotionServed()
+/// The hearing on a motion to suppress is scheduled (C.D. Cal. L.Cr.R.
+/// 12-1.3).
+event SuppressionHearingScheduled()
+/// The trial is scheduled to commence (C.D. Cal. L.Cr.R. 16-1, 57-3.3.1).
+event TrialScheduled()
+/// An assignment of monies deposited with the Court is made (C.D. Cal.
+/// L.Cr.R. 46-7).
+event DepositAssignmentMade()
+/// A settlement conference in a complex case is scheduled (C.D. Cal.
+/// L.Cr.R. 57-3.5.2).
+event SettlementConferenceScheduled()
+/// Counsel requests the defendant's criminal history summary from the
+/// Probation Officer (C.D. Cal. L.Cr.R. 57-3.5.2).
+event CriminalHistoryRequested()
+/// The settlement conference is held and a settlement is agreed (C.D.
+/// Cal. L.Cr.R. 57-3.5.4).
+event SettlementConferenceHeld()
+
+/// C.D. Cal. L.Cr.R. 12-1.2: unless otherwise ordered, the government
+/// files a response and any opposing declarations not later than seven
+/// (7) days after service of the motion to suppress.
+deadline suppression-response: 7.days after SuppressionMotionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "C.D. Cal. L.Cr.R. 12-1.2"
+{
+  forum frcrimp
+}
+
+/// C.D. Cal. L.Cr.R. 12-1.3: a party that does not desire to
+/// cross-examine a declarant files and serves a notice to that effect no
+/// later than one week before the hearing; otherwise the declarant is made
+/// available for cross-examination.
+deadline declarant-cross-examination-notice: 7.days before SuppressionHearingScheduled() counted_by frcrimp45 cite "C.D. Cal. L.Cr.R. 12-1.3"
+{
+  forum frcrimp
+}
+
+/// C.D. Cal. L.Cr.R. 16-1(1): unless the parties agree or the Court orders
+/// otherwise, on a timely FRCrimP 16(a)(1)(G)(i) request the government
+/// discloses its case-in-chief expert testimony no later than 30 days
+/// before trial.
+deadline government-expert-disclosure: 30.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "C.D. Cal. L.Cr.R. 16-1"
+{
+  forum frcrimp
+}
+
+/// C.D. Cal. L.Cr.R. 16-1(2): unless the parties agree or the Court orders
+/// otherwise, on a timely FRCrimP 16(b)(1)(C)(i) request the defendant
+/// discloses its case-in-chief expert testimony no later than 14 days
+/// before trial.
+deadline defense-expert-disclosure: 14.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "C.D. Cal. L.Cr.R. 16-1"
+{
+  forum frcrimp
+}
+
+/// C.D. Cal. L.Cr.R. 46-7: no assignment of monies deposited with the
+/// Court is recognized unless filed with the Clerk within ten (10) days of
+/// its making.
+deadline deposit-assignment-filing: 10.days after DepositAssignmentMade() counted_by frcrimp45 cite "C.D. Cal. L.Cr.R. 46-7"
+{
+  forum frcrimp
+}
+
+/// C.D. Cal. L.Cr.R. 57-3.3.1: if the trial judge sets no settlement
+/// conference cut-off date, a joint request for a settlement conference
+/// may be made up to twenty-one (21) days before the date scheduled for
+/// trial, unless the trial judge permits a later request.
+deadline settlement-conference-request: 21.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "C.D. Cal. L.Cr.R. 57-3.3.1"
+{
+  forum frcrimp
+}
+
+/// C.D. Cal. L.Cr.R. 57-3.5.2: either counsel may request the defendant's
+/// criminal history summary from the Probation Officer at least 10 days
+/// before the settlement conference.
+deadline criminal-history-request: 10.days before SettlementConferenceScheduled() counted_by frcrimp45 cite "C.D. Cal. L.Cr.R. 57-3.5.2"
+{
+  forum frcrimp
+}
+
+/// C.D. Cal. L.Cr.R. 57-3.5.2: on a timely request the Probation Officer,
+/// without order of the Court, provides the summary to both counsel
+/// within 7 days of the request.
+deadline criminal-history-summary: 7.days after CriminalHistoryRequested() counted_by frcrimp45 cite "C.D. Cal. L.Cr.R. 57-3.5.2"
+{
+  forum frcrimp
+}
+
+/// C.D. Cal. L.Cr.R. 57-3.5.4: if a settlement is agreed by both counsel
+/// and approved by the defendant, the plea agreement is reduced to
+/// writing and executed within three (3) court days from the settlement
+/// conference.
+deadline settlement-plea-agreement: 3.court_days after SettlementConferenceHeld() counted_by frcrimp45 cite "C.D. Cal. L.Cr.R. 57-3.5.4"
+{
+  forum frcrimp
+}

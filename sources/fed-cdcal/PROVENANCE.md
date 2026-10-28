@@ -22,3 +22,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 a358ca020b9c70833a117cff36581aa28ff7af5efe87f9f8ca43e02b0bfadabf. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `fed-cdcal/original/cdcal-local-criminal-rules-chap-iii-2025-12.pdf` as served (sha256 7dfff103913ab1a60867ba248e07028bcec86640c8a596625a2196903493421e); extraction sha256 a358ca020b9c70833a117cff36581aa28ff7af5efe87f9f8ca43e02b0bfadabf.
+
+### `fed-cdcal/cdcal-local-criminal-rules-chap-iii-2025-12-sectioned.txt` — C.D. Cal. Local Criminal Rules (Chapter III, December 2025), sectioned
+
+- Derived in the pod (lg-gddt.22) from `fed-cdcal/cdcal-local-criminal-rules-chap-iii-2025-12.txt` (extract sha256 a358ca020b9c70833a117cff36581aa28ff7af5efe87f9f8ca43e02b0bfadabf); nothing fetched. One marker line `## L.Cr.R. <n>` is inserted before each rule's own body line that opens with `L.Cr.R. <n> <Title>` (89 rules and subrules, L.Cr.R. 5-1 through 61-1, matching the table of contents); the table of contents and in-text references carry no markers. Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Edition: as the extract, Chapter III with every page dated 12/1/2025.
+- Sectioned sha256 6785b590c664e4e3f29b634ab4228efea8e6038b0864c711cbdeb18fc18dc471 (the `path_sha256` pinned by `lit/cacd-criminal/Lit.toml`).

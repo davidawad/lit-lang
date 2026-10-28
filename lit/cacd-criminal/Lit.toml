@@ -1,0 +1,53 @@
+# The U.S. District Court for the Central District of California's Local
+# Criminal Rules (Chapter III of its Local Rules, L.Cr.R.) as a
+# local-rule layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it
+# declares only the periods the local criminal rules themselves state and
+# re-encodes no FRCrimP, Speedy Trial Act or FRAP 4(b) period (one source
+# of truth: lit/frcrimp). Each period is counted under FRCrimP 45(a),
+# which governs "any local rule", so each deadline names `forum frcrimp`.
+# The rules are the Chapter III file each page of which is dated
+# 12/1/2025 (sources/fed-cdcal); earlier editions are not vendored, so a
+# query before that date is a hole in the corpus. The Local Civil Rules
+# govern criminal proceedings where applicable directly or by analogy
+# (L.Cr.R. 57-1) and live in lit/cacd. An appeal goes to the Ninth Circuit
+# under lit/frcrimp's FRAP 4(b) period.
+[package]
+name = "cacd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "cacd-criminal-local-rules"
+forum = "cacd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Central District of California: Local Criminal Rules"
+description = "The Central District of California's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the government's response to a motion to suppress and the notice waiving cross-examination of a declarant, the expert disclosure times before trial, the filing of an assignment of deposited bail monies, and the settlement conference request, criminal-history summary and written plea agreement in a complex case."
+in_force = "2025-12-01"
+known_at = "2026-10-28"
+unknown_before = "2025-12-01"
+jurisdiction = "U.S. District Court for the Central District of California (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "cdcal-lcrr"
+issuer = "U.S. District Court for the Central District of California"
+date = "2025-12-01"
+designation = "Local Criminal Rules (Chapter III)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.cdcal-lcrr]
+title = "Local Rules of the U.S. District Court for the Central District of California, Chapter III, Local Criminal Rules (pages dated 12/1/2025)"
+url = "https://www.cacd.uscourts.gov/sites/default/files/documents/2025%20December%20LRs%20Chap%203.pdf"
+path = "sources/fed-cdcal/cdcal-local-criminal-rules-chap-iii-2025-12-sectioned.txt"
+path_sha256 = "6785b590c664e4e3f29b634ab4228efea8e6038b0864c711cbdeb18fc18dc471"
+sha256 = "7dfff103913ab1a60867ba248e07028bcec86640c8a596625a2196903493421e"
+as_of = "2025-12-01"
+cite_prefixes = ["C.D. Cal. L.Cr.R."]
+section_heading = "L.Cr.R. {n}"

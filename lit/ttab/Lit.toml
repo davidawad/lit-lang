@@ -50,7 +50,7 @@ as_of = "2026-10-19"
 title = "eCFR versioner: versions of the 37 C.F.R. sections cited"
 url = "https://www.ecfr.gov/api/versioner/v1/versions/title-37.json"
 path = "sources/ecfr-versions-title-37.txt"
-path_sha256 = "872cb813412c3fb12663257d8cd9f02369624e5145ea0ae4e2059d57fa2aaeea"
+path_sha256 = "b8228facdc76d2494eb95b7008538a73f1c6b521ce64e09e7178ff6c0cb1820b"
 as_of = "2026-10-24"
 
 [sources.lanham]
@@ -89,6 +89,17 @@ path_sha256 = "322faf8011de80f6cfde7139ba5366d9c24d5fed71fe1867a0c6d249b8263ec2"
 cite_prefixes = ["TBMP §", "TBMP"]
 section_heading = "TBMP § {n}"
 sha256 = "015cf2b665d74b25080321f67dad7ffebe412118f6f0460ec3530f4801639b8e"
+as_of = "2026-06-30"
+
+# The TBMP editions (June 2024, 2025, 2026) in which each vendored TBMP
+# section's text changed: the amendment history `cite-resolves` reads to
+# prove the June 2026 text was a version's text (SPEC §4.3), as
+# sources/PROVENANCE.md records its making. No cite resolves through it.
+[sources.tbmp-versions]
+title = "TBMP sections: the editions in which each changed, June 2024 to June 2026"
+url = "https://www.uspto.gov/sites/default/files/documents/tbmp-Master-June2024.pdf"
+path = "sources/tbmp-versions.txt"
+path_sha256 = "ed91a2fc8e1bc24b8ef5f6feec2f0f132de28c3929aaaf8ff2fea2b9d9d577a6"
 as_of = "2026-06-30"
 
 [[cite_syntax.rules]]

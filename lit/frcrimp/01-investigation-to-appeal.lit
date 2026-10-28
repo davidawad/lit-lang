@@ -794,7 +794,7 @@ terminal judgment-entered: "Judgment and Commitment Entered" outcome [loss, conv
     within criminal-appeal {
       extendable true
       extension_authority "Fed. R. App. P. 4(b)(1)(B) — up to 30 additional days for good cause shown, before or after the deadline expires"
-      note "Appeal deadline is 14 days from judgment entry; if it passes without a notice of appeal or a timely extension request, appellate jurisdiction is lost and the sentence becomes final."
+      note "Appeal deadline is 14 days from judgment entry; if it passes without a notice of appeal or a timely extension request and the government objects, the appeal is dismissed and the sentence becomes final."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
   }
@@ -819,7 +819,7 @@ decision notice-of-appeal-window: "Notice of Appeal Window" by applicant delegab
   op set
 } cite ?("Fed. R. App. P. 4(b)(1), (b)(4)") effective [2024-12-01, ..) {
   group appeal-group
-  note "Defendant has 14 days from judgment entry to file. The district court may extend up to 30 additional days for excusable neglect or good cause, and may do so before or after the 14 days expire, with or without motion and notice (FRAP 4(b)(4)) — but never past 30 days from the original expiry. Post-Bowles, this is jurisdictional with no equitable exceptions."
+  note "Defendant has 14 days from judgment entry to file. The district court may extend up to 30 additional days for excusable neglect or good cause, and may do so before or after the 14 days expire, with or without motion and notice (FRAP 4(b)(4)) — but never past 30 days from the original expiry. No statute fixes the criminal appeal time, so Bowles v. Russell (resting on the civil-appeal statute, 28 U.S.C. § 2107) does not make it jurisdictional; after Eberhart v. United States, 546 U.S. 12 (2005), the circuits treat FRAP 4(b) as a mandatory claim-processing rule: enforced without equitable exceptions when the government objects, but forfeited if the government fails to raise untimeliness."
   edge-notice-of-appeal-window-notice-of-appeal-filed "File notice of appeal" -> notice-of-appeal-filed {
     authority cite "Fed. R. App. P. 4(b)(1)"
     effort 3.hours
@@ -834,12 +834,12 @@ decision notice-of-appeal-window: "Notice of Appeal Window" by applicant delegab
     note "Hours: BigLaw-honest estimate for the effort of this move; basis: estimate. Same $605.00 fee as a civil appeal applies in principle ($600.00 docketing fee, Court of Appeals Miscellaneous Fee Schedule item 1, effective 12/1/2023, plus 28 U.S.C. § 1917's $5.00 notice fee), but most criminal appellants proceed in forma pauperis with appointed CJA counsel (FRAP 24(a); 28 U.S.C. § 1915), waiving prepayment."
   }
   edge-notice-of-appeal-window-appeal-window-missed "Miss appeal deadline" -> appeal-window-missed {
-    authority cite ?("Fed. R. App. P. 4(b); Bowles v. Russell, 551 U.S. 205 (2007)")
+    authority cite ?("Fed. R. App. P. 4(b); Eberhart v. United States, 546 U.S. 12 (2005)")
     effort 0.hours
     deadline 14.days {
       extendable true
       extension_authority "Fed. R. App. P. 4(b)(4)"
-      note "Bowles bars equitable exceptions — the conviction becomes unreviewable on direct appeal; only § 2255 collateral relief survives."
+      note "A mandatory claim-processing rule: once the government objects to untimeliness, the court must dismiss and admits no equitable exception — the conviction becomes unreviewable on direct appeal; only § 2255 collateral relief survives. The government forfeits the objection if it does not raise it."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
     valence bad
@@ -857,16 +857,16 @@ decision notice-of-appeal-window: "Notice of Appeal Window" by applicant delegab
 state notice-of-appeal-filed: "Notice of Appeal Filed" cite "Fed. R. App. P. 3(a), 4(b)"
   effective [2024-12-01, ..) {
   group appeal-group
-  note "A timely notice of appeal meeting FRAP 3's form requirements and FRAP 4(b)'s deadline is the jurisdictional invocation of appellate review. Notice must be filed in the district court; premature or delayed filings do not cure jurisdictional defects."
+  note "A timely notice of appeal meeting FRAP 3's form requirements and FRAP 4(b)'s deadline invokes appellate review. Notice must be filed in the district court. FRAP 3's notice is jurisdictional; FRAP 4(b)'s timing is a mandatory claim-processing rule the government may enforce or forfeit."
   edge-notice-of-appeal-filed-appellate-briefing "Complete appellate briefing" -> appellate-briefing {
     authority cite "Fed. R. App. P. 28-31"
   }
 }
 
 /// imported
-terminal appeal-window-missed: "Appeal Forfeited — FRAP 4(b) Deadline Missed" outcome [loss, conviction, procedural-default, waiver-trap] cite ?("Fed. R. App. P. 4(b); Bowles v. Russell, 551 U.S. 205 (2007)") effective [2024-12-01, ..) {
+terminal appeal-window-missed: "Appeal Forfeited — FRAP 4(b) Deadline Missed" outcome [loss, conviction, procedural-default, waiver-trap] cite ?("Fed. R. App. P. 4(b); Eberhart v. United States, 546 U.S. 12 (2005)") effective [2024-12-01, ..) {
   group appeal-group
-  note "TRAP. The deadline is absolute and jurisdictional. Bowles held that even a district court's own miscalculation and invitation to file late does not excuse a missed window. Only 28 U.S.C. § 2255 collateral review — a far harder standard — remains. PLACEHOLDER PAYOFF: $0, override per matter. Conviction stands and appellate review is forfeited by a missed deadline, not by choice -- worse than a deliberate waiver."
+  note "TRAP. The deadline is a mandatory claim-processing rule, not jurisdictional: Bowles v. Russell rested on 28 U.S.C. § 2107, which covers only civil appeals, and no statute stands behind FRAP 4(b). But once the government objects to untimeliness, the court must dismiss and no equitable exception applies; only the government's failure to raise the objection saves a late appeal. Only 28 U.S.C. § 2255 collateral review — a far harder standard — remains. PLACEHOLDER PAYOFF: $0, override per matter. Conviction stands and appellate review is forfeited by a missed deadline, not by choice -- worse than a deliberate waiver."
   valence bad
   payoff 0.usd
 }

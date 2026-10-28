@@ -11,5 +11,6 @@
 ### `bankr-ilc/ilcb-lbr-2024-10-01-sectioned.txt` — C.D. Ill. Local Bankruptcy Rules, sectioned
 
 - Derived in the pod (lg-u561.21) from `bankr-ilc/ilcb-lbr-2024-10-01.txt` (extract sha256 e9acb44577a6456b9122e6db1765e335c8f8ffaa349694e0ce9cf7381d342304); nothing fetched. One `## LBR <n>` line is inserted before each rule's body heading (`RULE <n> <TITLE>`, after the table of contents; `LBR 1001-1` through `LBR 9037-1`; 28 sections), the rule number's U+2010 hyphen written as `-`; the cover, the District Court's General Order No. 24-GO-04 and the table of contents are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Source: as the extract, https://www.ilcb.uscourts.gov/sites/ilcb/files/ILCB%20Local%20Rules%2010.1.2024.pdf (official site), retrieved 2026-10-28 on carbon; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, effective October 1, 2024.
 - Sectioned sha256 fa33b1600cadd6078aa4ac2821af44970db1821eb8f20b2e1dbdf996e2ecdb51 (the `path_sha256` pinned by `lit/bankr-ilc/Lit.toml` for source `ilcb-lbr`).

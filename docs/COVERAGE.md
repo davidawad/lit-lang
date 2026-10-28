@@ -176,7 +176,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | New Mexico | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/new-mexico/state-appellate`, `outlines/tenth-circuit/new-mexico/state-civil`, `outlines/tenth-circuit/new-mexico/state-criminal` |
 | New York | state | outline | 0 | 0 | 0 | 0 | `outlines/second-circuit/new-york/state-appellate`, `outlines/second-circuit/new-york/state-civil`, `outlines/second-circuit/new-york/state-criminal` |
 | North Carolina | state | outline | 0 | 0 | 0 | 0 | `outlines/fourth-circuit/north-carolina/state-appellate`, `outlines/fourth-circuit/north-carolina/state-civil`, `outlines/fourth-circuit/north-carolina/state-criminal` |
-| North Dakota | state | promoted | 0 | 0 | 0 | 0 | `lit/nd-district` |
+| North Dakota | state | promoted | 0 | 0 | 0 | 0 | `lit/nd-district`, `lit/ndctapp` |
 | Ohio | state | promoted | 0 | 0 | 0 | 0 | `lit/oh-appellate`, `lit/oh-common-pleas` |
 | Oklahoma | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/oklahoma/court-of-criminal-appeals`, `outlines/tenth-circuit/oklahoma/state-appellate`, `outlines/tenth-circuit/oklahoma/state-civil`, `outlines/tenth-circuit/oklahoma/state-criminal` |
 | Oregon | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/oregon/state-appellate`, `outlines/ninth-circuit/oregon/state-civil`, `outlines/ninth-circuit/oregon/state-criminal` |

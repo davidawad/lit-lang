@@ -1,0 +1,212 @@
+module nd-appellate-civil.appeal
+
+/// A principal brief: at most 38 pages, excluding any addendum, footnotes
+/// and endnotes counted (N.D.R.App.P. 32(a)(8)(A)). An argument on the
+/// appropriateness of N.D.R.Civ.P. 54(b) certification may add at most 5
+/// pages (N.D.R.App.P. 32(a)(8)(B)); that allowance is not encoded.
+limit principal-brief {
+  pages <= 38 cite "N.D.R.App.P. 32(a)(8)(A)"
+} cite "N.D.R.App.P. 32(a)(8)(A)"
+
+/// A reply brief: at most 12 pages, excluding any addendum (N.D.R.App.P.
+/// 32(a)(8)(A)).
+limit reply-brief { pages <= 12 cite "N.D.R.App.P. 32(a)(8)(A)" } cite "N.D.R.App.P. 32(a)(8)(A)"
+/// A petition for rehearing or an answer: at most 10 pages, excluding any
+/// addendum (N.D.R.App.P. 40(b)).
+limit rehearing-petition { pages <= 10 cite "N.D.R.App.P. 40(b)" } cite "N.D.R.App.P. 40(b)"
+
+/// The appellant's brief is served and filed (N.D.R.App.P. 31(a)).
+event AppellantBriefFiled() paper principal-brief
+/// The appellee's brief is served and filed (N.D.R.App.P. 31(a)).
+event AppelleeBriefFiled() paper principal-brief
+/// The appellant's reply brief is served and filed (N.D.R.App.P. 31(a)).
+event ReplyBriefFiled() paper reply-brief
+/// A petition for rehearing is filed (N.D.R.App.P. 40(a)).
+event RehearingPetitionFiled() paper rehearing-petition
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "N.D.R.App.P. 4(a)"
+{
+  note "An appeal permitted by law as of right is taken by filing a notice of appeal with the clerk of the supreme court within the time allowed by Rule 4, served on each other party with proof of service filed with it (N.D.R.App.P. 3(a)(1), 3(d)(1)). In a civil case the notice is filed within 60 days from service of notice of entry of the judgment or order appealed; any other party may file within 14 days after the first notice or within its own time, whichever ends later; a timely motion under N.D.R.Civ.P. 50(b), 52(b), 54 (fees), 59, or 60 if served and filed no later than 28 days after notice of entry, restarts the full time from service of notice of entry of the order disposing of the last such motion; and the supreme court may extend the time on a motion made no later than 30 days after it expires, for excusable neglect or good cause, by no more than 30 days (N.D.R.App.P. 4(a)). Notice of the appeal is not made until any required docket fee is paid or waived (N.D.R.App.P. 12). Periods in this package are stated, not counted: computation is N.D.R.App.P. 26(a), and 3 days are added after service by mail or commercial carrier unless the document is delivered on the date of service stated (N.D.R.App.P. 26(c))."
+  edge-notice-filed-appealability "Notice filed" -> appealability {
+    authority cite "N.D.R.App.P. 3(a)"
+  }
+}
+
+decision appealability: "Appellate jurisdiction check" by court cite "N.D.R.App.P. 3(a)"
+{
+  note "An appeal lies only where permitted by law (N.D.R.App.P. 3(a)(1)); the statutory list of appealable orders, N.D.C.C. § 28-27-02, is not vendored. Failure to take any step other than timely filing the notice and paying any required docket fee does not affect the appeal's validity but is ground for the supreme court to act as it considers appropriate, including dismissal (N.D.R.App.P. 3(a)(2)). No leading decision is named."
+  edge-appealability-dismissed-jurisdiction "Not appealable, or untimely" -> dismissed-jurisdiction {
+    authority cite "N.D.R.App.P. 3(a)"
+  }
+  edge-appealability-record "Appealable order, timely notice" -> record {
+    authority cite "N.D.R.App.P. 10"
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: no appeal lies, or the notice was untimely" outcome [loss] cite "N.D.R.App.P. 3(a)"
+{
+  note "Outcome from the applicant's side."
+}
+
+state record: "Record and transcript" cite "N.D.R.App.P. 10"
+{
+  note "Within seven days after an order for transcript is filed and any docket fee paid, the supreme court clerk transmits it to the district court clerk; the transcript is filed within 60 days after the order is transmitted to the district court staff, extendable by the district court for good cause to no more than 90 days, and beyond that only by the supreme court; the party obligated to pay advances the estimated cost within 14 days of being sent the estimate (N.D.R.App.P. 10). Except in expedited appeals, the district court clerk forwards the record, excluding the transcript, not less than 25 nor more than 30 days after the notice of appeal is filed (N.D.R.App.P. 11)."
+  edge-record-briefing "Transcript filed, or none ordered" -> briefing {
+    authority cite "N.D.R.App.P. 31(a)"
+  }
+}
+
+state briefing: "Briefing: opening, response, reply" cite "N.D.R.App.P. 31(a)"
+{
+  note "The appellant serves and files a brief within 40 days after the transcript is filed or, if none is ordered, within 40 days after the notice of appeal is filed; the appellee within 30 days after the appellant's brief is served; the appellant may reply within 14 days after service of the appellee's brief, but at least 5 days before argument if fewer than 14 days remain (N.D.R.App.P. 31(a)). A principal brief may not exceed 38 pages and a reply brief 12 pages, footnotes and endnotes counted, with a certificate of compliance stating the page count (N.D.R.App.P. 32(a)(8)(A), 32(d)). A party wanting oral argument places ORAL ARGUMENT REQUESTED on the cover of its brief (N.D.R.App.P. 28(h)). If the appellant fails to file a brief in time, the court may dismiss on its own motion or on the appellee's; an appellee who fails to file a brief is not heard at argument (N.D.R.App.P. 31(c))."
+  edge-briefing-argument "Briefs complete" -> argument { authority cite "N.D.R.App.P. 34(a)" }
+  edge-briefing-dismissed-brief "Appellant's brief not filed in time" -> dismissed-default {
+    authority cite "N.D.R.App.P. 31(c)"
+  }
+}
+
+terminal dismissed-default: "Dismissed for failure to prosecute" outcome [loss] cite "N.D.R.App.P. 31(c)"
+{
+  note "When an appellant violates any appellate rule and the appellee has not moved to dismiss, the clerk notifies the appellant that the case will be dismissed unless it gives reason within ten days why it should not be (N.D.R.App.P. 42(b)). Outcome from the applicant's side."
+}
+
+state argument: "Oral argument or submission on briefs" cite "N.D.R.App.P. 34(a)"
+{
+  note "Oral argument generally is scheduled unless a party failed to file a timely brief, no party requested it under Rule 28(h), the parties waived it, or the court finds it unnecessary; a party that did not request argument in its principal brief serves and files notice of intent to participate within five days of service of the notice of oral argument (N.D.R.App.P. 34(a)). The appellant has 30 minutes and the appellee 20 (N.D.R.App.P. 34(b))."
+  edge-argument-disposition "Submitted for decision" -> disposition {
+    authority cite "N.D.R.App.P. 35(a)"
+  }
+}
+
+decision disposition: "Disposition" by court cite "N.D.R.App.P. 35(a)"
+{
+  note "The court may reverse, affirm, or modify the judgment or order, order a new trial, or remand for determination of untried issues, with or without retaining jurisdiction; unless otherwise ordered the district court decides within 30 days after remand (N.D.R.App.P. 35(a)). The court may affirm by summary opinion (N.D.R.App.P. 35.1). A judgment is entered when noted on the docket, and the clerk sends the parties the opinion and notice of the entry date (N.D.R.App.P. 36)."
+  edge-disposition-affirmed-entered "Affirmed" -> affirmed-entered {
+    authority cite "N.D.R.App.P. 35(a)"
+  }
+  edge-disposition-reversed-entered "Reversed or modified" -> reversed-entered {
+    authority cite "N.D.R.App.P. 35(a)"
+  }
+  edge-disposition-remanded-entered "Remanded" -> remanded-entered {
+    authority cite "N.D.R.App.P. 35(a)"
+  }
+}
+
+decision affirmed-entered: "Affirmed: rehearing election" by applicant cite "N.D.R.App.P. 40(a)"
+{
+  note "A petition for rehearing may be filed within 14 days after entry of judgment unless the time is shortened or enlarged by order; no answer is permitted unless the court requests one (N.D.R.App.P. 40(a)); the petition or answer may not exceed 10 pages (N.D.R.App.P. 40(b)). If the judgment is affirmed, costs are taxed against the appellant unless the law provides or the court orders otherwise (N.D.R.App.P. 39(a))."
+  edge-affirmed-entered-rehearing-affirmed "Rehearing petition filed" -> rehearing-affirmed {
+    authority cite "N.D.R.App.P. 40(a)"
+  }
+  edge-affirmed-entered-mandate-affirmed "No rehearing petition" -> mandate-affirmed {
+    authority cite "N.D.R.App.P. 41(b)"
+  }
+}
+
+decision rehearing-affirmed: "Rehearing ruling (affirmed)" by court cite "N.D.R.App.P. 40(a)"
+{
+  note "If rehearing is granted the court may make a final disposition without reargument, restore the case for reargument or resubmission, or issue another order (N.D.R.App.P. 40(a)(4))."
+  edge-rehearing-affirmed-mandate-affirmed "Rehearing denied" -> mandate-affirmed {
+    authority cite "N.D.R.App.P. 41(b)"
+  }
+  edge-rehearing-affirmed-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite "N.D.R.App.P. 40(a)"
+  }
+}
+
+decision mandate-affirmed: "Mandate issued: certiorari election" by applicant cite "N.D.R.App.P. 41(b)"
+{
+  note "The mandate issues 21 days after entry of judgment or 7 days after entry of an order denying a timely petition for rehearing, unless the court shortens or extends the time, and is effective when issued (N.D.R.App.P. 41(b), (c)). A stay of the mandate pending a petition for certiorari may be granted on motion for up to 30 days unless extended for cause (N.D.R.App.P. 41(d)(2)). A petition for certiorari to a state court of last resort is timely within 90 days after entry of the judgment (Sup. Ct. R. 13.1), running from entry and not from the mandate, or from the denial of a timely rehearing petition (Sup. Ct. R. 13.3)."
+  edge-mandate-affirmed-federal-review "Petition for certiorari" -> federal-review {
+    authority cite "Sup. Ct. R. 13.1"
+  }
+  edge-mandate-affirmed-affirmed-final "No petition" -> affirmed-final {
+    authority cite "N.D.R.App.P. 41(c)"
+  }
+}
+
+terminal affirmed-final: "Affirmed: final" outcome [loss] cite "N.D.R.App.P. 41(c)"
+{
+  note "Outcome from the applicant's side."
+}
+
+decision reversed-entered: "Reversed or modified: rehearing election" by applicant cite "N.D.R.App.P. 40(a)"
+{
+  note "A petition for rehearing may be filed within 14 days after entry of judgment (N.D.R.App.P. 40(a)(1)). If the judgment is reversed, costs are taxed against the appellee unless the law provides or the court orders otherwise (N.D.R.App.P. 39(a))."
+  edge-reversed-entered-rehearing-reversed "Rehearing petition filed" -> rehearing-reversed {
+    authority cite "N.D.R.App.P. 40(a)"
+  }
+  edge-reversed-entered-mandate-reversed "No rehearing petition" -> mandate-reversed {
+    authority cite "N.D.R.App.P. 41(b)"
+  }
+}
+
+decision rehearing-reversed: "Rehearing ruling (reversed or modified)" by court cite "N.D.R.App.P. 40(a)"
+{
+  edge-rehearing-reversed-mandate-reversed "Rehearing denied" -> mandate-reversed {
+    authority cite "N.D.R.App.P. 41(b)"
+  }
+  edge-rehearing-reversed-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite "N.D.R.App.P. 40(a)"
+  }
+}
+
+decision mandate-reversed: "Mandate issued: certiorari election" by applicant cite "N.D.R.App.P. 41(b)"
+{
+  note "The mandate issues as N.D.R.App.P. 41(b) provides; certiorari timing is Sup. Ct. R. 13.1 and 13.3. The district court enters final judgment in accordance with the court's judgment unless the court orders otherwise (N.D.R.App.P. 35(a)(4))."
+  edge-mandate-reversed-federal-review "Petition for certiorari" -> federal-review {
+    authority cite "Sup. Ct. R. 13.1"
+  }
+  edge-mandate-reversed-reversed-final "No petition" -> reversed-final {
+    authority cite "N.D.R.App.P. 41(c)"
+  }
+}
+
+terminal reversed-final: "Reversed or modified: final" outcome [win] cite "N.D.R.App.P. 41(c)"
+{
+  note "Outcome from the applicant's side."
+}
+
+decision remanded-entered: "Remanded: rehearing election" by applicant cite "N.D.R.App.P. 40(a)"
+{
+  note "A petition for rehearing may be filed within 14 days after entry of judgment (N.D.R.App.P. 40(a)(1)). When the court remands and retains jurisdiction, a party may request supplemental briefing or argument in writing within 14 days of the district court's certification (N.D.R.App.P. 35(a)(3)(B))."
+  edge-remanded-entered-rehearing-remanded "Rehearing petition filed" -> rehearing-remanded {
+    authority cite "N.D.R.App.P. 40(a)"
+  }
+  edge-remanded-entered-mandate-remanded "No rehearing petition" -> mandate-remanded {
+    authority cite "N.D.R.App.P. 41(b)"
+  }
+}
+
+decision rehearing-remanded: "Rehearing ruling (remanded)" by court cite "N.D.R.App.P. 40(a)"
+{
+  edge-rehearing-remanded-mandate-remanded "Rehearing denied" -> mandate-remanded {
+    authority cite "N.D.R.App.P. 41(b)"
+  }
+  edge-rehearing-remanded-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite "N.D.R.App.P. 40(a)"
+  }
+}
+
+decision mandate-remanded: "Mandate issued: certiorari election" by applicant cite "N.D.R.App.P. 41(b)"
+{
+  note "The mandate issues as N.D.R.App.P. 41(b) provides; certiorari timing is Sup. Ct. R. 13.1 and 13.3."
+  edge-mandate-remanded-federal-review "Petition for certiorari" -> federal-review {
+    authority cite "Sup. Ct. R. 13.1"
+  }
+  edge-mandate-remanded-remanded-final "No petition" -> remanded-final {
+    authority cite "N.D.R.App.P. 41(c)"
+  }
+}
+
+terminal remanded-final: "Remanded: final" outcome [procedural] cite "N.D.R.App.P. 35(a)"
+{
+  note "Further proceedings in the district court under the mandate."
+}
+
+terminal federal-review: "Certiorari sought: continue in the Supreme Court of the United States" outcome [procedural] cite "Sup. Ct. R. 13.1"
+{
+  note "Federal review of a state court of last resort under 28 U.S.C. § 1257 (not vendored); the outline's further-review rulings belong to the federal hand-off."
+}

@@ -1,0 +1,53 @@
+# A civil appeal from a North Dakota district court to the North Dakota
+# Supreme Court under the North Dakota Rules of Appellate Procedure, each
+# rule as in force on October 27, 2026 with its own effective date
+# (sources/ndctapp; the latest, N.D.R.App.P. 4 and 28, effective
+# September 1, 2026). The vendored rules address the supreme court; the
+# assignment of appeals to the North Dakota Court of Appeals (N.D.C.C.
+# ch. 27-02.1) and the appealable-order statute (N.D.C.C. § 28-27-02) are
+# not vendored, so the forum's Court of Appeals path and the statutory
+# list of appealable orders are not modeled. Computation of time is
+# N.D.R.App.P. 26(a), which counts North Dakota legal holidays (N.D.C.C.
+# §§ 1-03-01, 1-03-02, 1-03-02.1, not vendored); core has no North
+# Dakota calendar, so periods are stated in notes, not counted.
+# Certiorari is a federal hand-off under Sup. Ct. R. 13.
+[package]
+name = "nd-appellate-civil"
+version = "0.1.0"
+language = 1
+pack_id = "nd-appellate-civil"
+forum = "ndctapp"
+authority = "StateRule"
+title = "North Dakota Supreme Court, civil appeals"
+description = "Civil appeals from the North Dakota district courts to the North Dakota Supreme Court under the North Dakota Rules of Appellate Procedure, as far as the vendored text states: notice and its time, docketing, the record and transcript, briefing and page limits, oral argument, disposition, rehearing, mandate and dismissal. Certiorari is a federal hand-off under Sup. Ct. R. 13."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "North Dakota Supreme Court; North Dakota Court of Appeals"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.nd-r-app-p]
+title = "North Dakota Rules of Appellate Procedure, each rule as in force on October 27, 2026"
+url = "https://www.ndcourts.gov/legal-resources/rules/ndrappp"
+path = "sources/ndctapp/ndrappp.txt"
+path_sha256 = "1248b9444f50322e77dc258bdc3f1b8dbc52b2656bde3b7971ba085fcfeef91c"
+as_of = "2026-10-27"
+cite_prefixes = ["N.D.R.App.P."]
+section_heading = "N.D.R.App.P. {n}"
+
+[sources.scotus]
+title = "Rules of the Supreme Court of the United States (adopted Feb. 17, 2026, effective Mar. 16, 2026)"
+url = "https://www.supremecourt.gov/filingandrules/2026RulesoftheCourt_WEB.pdf"
+path = "sources/scotus-rules.txt"
+path_sha256 = "881464325decc0ce5cc63ae4bac10facc84766e266dbff30454186f78dc3d5f2"
+sha256 = "5200e38d590cc40929cb719987c936dc529717b4037259d1b63a2309cb6b0f32"
+as_of = "2026-03-16"
+cite_prefixes = ["Sup. Ct. R."]
+section_heading = "Sup. Ct. R. {n}"

@@ -1,0 +1,43 @@
+# Criminal prosecutions in the South Dakota circuit courts. South Dakota
+# criminal procedure is statutory: SDCL Title 23A, vendored as the South
+# Dakota Legislature's statutes API serves it with no edition date
+# (sources/sd-criminal-trial-court): CURRENCY UNCONFIRMED. Every cite is
+# therefore a hole naming its section, each value in a note the vendored
+# text's, unverified, as for lit/bankr-arw. Many chapters in the vendored
+# file carry only their table of contents, without section text (among
+# them 23A-4, 23A-8, 23A-29 and 23A-30, and in chapters 23A-6, 23A-32 and
+# 23A-43 the sections after their first few, including the time to appeal,
+# § 23A-32-15); those stages are holes with no value. The package runs
+# from the newest effective date the vendored 23A-44-5.1 history states,
+# September 1, 2021. Periods are stated in notes: lit/core has no South
+# Dakota counting rule. An appeal goes to the Supreme Court (lit/sd);
+# federal habeas is lit/habeas's.
+[package]
+name = "sd-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "sd-criminal-trial-court"
+forum = "sd-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "south-dakota"
+title = "South Dakota Circuit Courts, criminal"
+description = "Criminal prosecutions in the South Dakota circuit courts under SDCL Title 23A, every cite a hole pending a dated, complete text (the vendored title is CURRENCY UNCONFIRMED and lacks many sections' text): warrantless arrest, arraignment and pleas, the 180-day rule and its exclusions and dismissal with prejudice (§ 23A-44-5.1), sentencing not within 48 hours of the determination of guilt (§ 23A-27-1), the defendant's appeal from a final judgment (§ 23A-32-2), and the prosecution's ten-day appeal (§ 23A-32-6). The time for the defendant's notice of appeal (§ 23A-32-15) is not in the vendored text and stays a hole."
+in_force = "2021-09-01"
+known_at = "2026-10-28"
+unknown_before = "2021-09-01"
+jurisdiction = "South Dakota circuit courts (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.sdcl-23a]
+title = "South Dakota Codified Laws Title 23A, Criminal Procedure, South Dakota Legislature statutes API (no edition date; CURRENCY UNCONFIRMED; many sections' text absent)"
+url = "https://sdlegislature.gov/Statutes/23A"
+path = "sources/sd-criminal-trial-court/sd-sdcl-title-23a-criminal-procedure.txt"
+path_sha256 = "8ce3a9739f944eea370664c63e325dc04c82c68f4223f5c3013df825f67a761b"
+as_of = "2026-10-28"

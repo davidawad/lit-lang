@@ -9,11 +9,19 @@ dependencies = []
 name = "ct-appellate-supreme"
 version = "0.1.0"
 language = 1
-source = "sha256:f69157d1baaf1d29e623d108c97e5a5a99566f2d968e9f6473be226dcf57bbdf"
-semantic = "sha256:55b9e256a328792599524fb74eecbd5633f3054e6191aee51256b8180e7f677a"
+source = "sha256:862a41ec0da9cc9c44a389fb30a7047f570b80a6255efece8330bb6620d54566"
+semantic = "sha256:cb88432f185aa83961d4974ea21c3802c52c9cafc8ec7b2d0d1dca4d28fce1cb"
 texts = [
     "ct-pb sources/ct-superior-civil/ct-practice-book-2026-sectioned.txt sha256:7a33d1bb397e575e0a7b5f010aab0cfc4d9afd70228a83544d187e51d0c1efac",
 ]
+dependencies = [
+    "core 1.0.0",
+    "ct-state-rules 0.1.0",
+]
+
+[[package]]
+name = "ct-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

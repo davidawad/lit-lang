@@ -1,0 +1,85 @@
+module ct-compensation-review-board.board
+
+import ct-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeOfAppealFiled }
+
+// Review by the Compensation Review Board of an administrative law judge's
+// workers' compensation decision, and the appeal from the board to the
+// Appellate Court, from the applicant's (petitioner's) side. Every period
+// below is stated in a note, not counted: lit/core has no counting rule for
+// Connecticut's court holidays. The board's petition for review, its
+// period and its hearing are the Workers' Compensation Act's (General
+// Statutes §§ 31-301, 31-301b), which is not vendored, so those cites stay
+// holes. The earlier outline cited §§ 31-301(a), 31-301 and 31-301b
+// throughout; the appeal and the reservation are bound here to Practice
+// Book Chapter 76. It named no decision and none is cited.
+start petition-filed
+
+state petition-filed: "Petition for review filed with the board" by applicant cite ?("Conn. Gen. Stat. § 31-301(a): the Workers' Compensation Act is not vendored") {
+  note "The board reviews an administrative law judge's decision on the record. The petition for review, its period, form and fee are the Workers' Compensation Act's (General Statutes § 31-301), which is not vendored: they are holes."
+  edge-petition-filed-hearing "Set for hearing before the board" -> hearing {
+    event ActionCommenced()
+    authority cite ?("Conn. Gen. Stat. § 31-301: the Workers' Compensation Act is not vendored")
+  }
+}
+
+decision hearing: "Board hears the petition" by court cite ?("Conn. Gen. Stat. § 31-301: the Workers' Compensation Act is not vendored") {
+  note "The board's hearing procedure is the Act's (General Statutes § 31-301, not vendored). When the board is of the opinion that the decision involves principles of law which are not free from reasonable doubt and which public interest requires the Appellate Court to determine, it may, on its own motion and without any act of the parties, prepare a reservation request in the manner of Section 73-1 and deliver it to the appellate clerk and all parties of record (Practice Book § 76-5)."
+  edge-hearing-decision "Board decides" -> decision {
+    authority cite ?("Conn. Gen. Stat. § 31-301: the Workers' Compensation Act is not vendored")
+  }
+  edge-hearing-reserved "Question of law reserved to the Appellate Court" -> reservation {
+    authority cite "Practice Book § 76-5"
+  }
+}
+
+chance reservation: "Appellate Court accepts or declines the reservation" by court cite "Practice Book § 76-5"
+{
+  note "The Appellate Court preliminarily accepts or declines the reservation request, and the appellate clerk notifies the board and the parties; the court may later reject a reservation improvidently granted and may ask the board for additional facts. The plaintiff in the underlying workers' compensation matter is deemed the appellant and the defendant the appellee, unless the court orders otherwise (Practice Book § 76-5). Within twenty days of issuance of the notice of an order of preliminary acceptance, the appellant files an appeal under Sections 63-3 and 76-4; the reservation may be transferred to the Supreme Court on its own motion or on a party's motion under Section 65-2 (Practice Book § 76-5A). Probabilities are holes."
+  edge-reservation-accepted "Preliminarily accepted: appeal filed within twenty days" -> appeal-filed p ?("no calibration yet") {
+    event NoticeOfAppealFiled()
+    authority cite "Practice Book § 76-5A"
+  }
+  edge-reservation-declined "Declined: the board decides" -> decision p ?("no calibration yet") {
+    authority cite "Practice Book § 76-5"
+  }
+}
+
+chance decision: "Board decides" by court cite ?("Conn. Gen. Stat. § 31-301: the Workers' Compensation Act is not vendored") {
+  note "Outcome probabilities are holes."
+  edge-decision-granted "Relief granted" -> review p ?("no calibration yet") {
+    event DecisionFiled()
+  }
+  edge-decision-denied "Relief denied" -> review p ?("no calibration yet") { event DecisionFiled() }
+}
+
+decision review: "Appeal to the Appellate Court?" by applicant cite "Practice Book § 76-1"
+{
+  note "Appeals to the Appellate Court from a decision of the board conform to the rules governing other appeals, except as Sections 76-2 to 76-6 provide (Practice Book § 76-1). An appeal is filed within twenty days of notice of the decision unless a statute provides a different period (Practice Book § 63-1(a)); the statutory period for an appeal from the board (General Statutes § 31-301b) is not vendored, so the period is a hole."
+  edge-review-none "No appeal" -> final-decision {
+    event JudgmentEntered()
+    authority cite ?("Conn. Gen. Stat. § 31-301b: the Workers' Compensation Act is not vendored")
+  }
+  edge-review-sought "Appeal filed with the appellate clerk" -> appeal-filed {
+    event NoticeOfAppealFiled()
+    authority cite "Practice Book § 76-2"
+  }
+}
+
+state appeal-filed: "Appeal filed; case file delivered" by office cite "Practice Book § 76-3"
+{
+  note "The appeal is filed with the appellate clerk under Section 63-3; the appellant delivers a copy of the appeal form to each party of record under Section 62-7 and to the board, and the appellate clerk delivers a copy to the board and each appearing party (Practice Book § 76-2). Within ten days of the issuance of notice of the filing of the appeal, the board delivers to the appellate clerk an electronic copy of the numbered case file with a table of contents; all exhibits before the board are exhibits on appeal; the parties still comply with the appendix requirements of Section 67-8 (Practice Book § 76-3). No entry fee is paid and no costs are taxed, unless the court finds the appeal frivolous or filed for vexation or delay (Practice Book § 76-4). References to the trial court or trial judge mean the board members who rendered the decision (Practice Book § 76-6)."
+  edge-appeal-filed-appellate "Appeal proceeds in the Appellate Court" -> appeal-taken {
+    authority cite "Practice Book § 76-1"
+  }
+}
+
+terminal final-decision: "Board decision final" outcome [final] cite ?("Conn. Gen. Stat. § 31-301b: the Workers' Compensation Act is not vendored") {
+  note "No appeal taken. Enforcement and payment are outside this package."
+  payoff ?("case-specific utility is not supplied by procedural authority")
+}
+
+terminal appeal-taken: "Appeal to the Appellate Court" outcome [appeal] cite "Practice Book § 76-1"
+{
+  note "The appeal proceeds under the rules governing other appeals (Practice Book § 76-1): lit/ct-appellate-supreme."
+  payoff ?("case-specific utility is not supplied by procedural authority")
+}

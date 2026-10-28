@@ -1,5 +1,7 @@
 module ct-superior-court-civil.civil
 
+import ct-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
 // Civil actions in the Connecticut Superior Court, from the applicant's
 // (plaintiff's) side. Every period below is stated in a note, not counted:
 // lit/core has no counting rule for Connecticut's court holidays. Summary
@@ -19,6 +21,7 @@ state process-served: "Writ, summons and complaint served and returned" by appli
 {
   note "Process in civil actions is a writ of summons or attachment, describing the parties, the court to which it is returnable and the time and place of appearance, accompanied by the plaintiff's complaint, signed by a Commissioner of the Superior Court or a judge or clerk of the court; in civil actions other than family and summary process it is on Form JD-CV-1 (Practice Book § 8-1(a)). Pleadings, including motions and requests addressed to them, advance within thirty days from the return day, and each later pleading at least one step within each successive thirty days (Practice Book § 10-8)."
   edge-process-served-pleads "Defendant appears and pleads" -> pleading-due {
+    event ActionCommenced()
     authority cite "Practice Book § 10-8"
   }
   edge-process-served-no-appearance "No appearance by the second day after the return day" -> default-entered {
@@ -143,9 +146,11 @@ decision summary-judgment: "Summary judgment decided" by court cite "Practice Bo
 {
   note "Any party may move for summary judgment as a matter of right at any time if no scheduling order exists and the case has not been assigned for trial, or by the time a scheduling order specifies; if no scheduling order exists but the case is assigned for trial, the party needs permission (Practice Book § 17-44). Unless otherwise ordered, an adverse party files and serves its response within forty-five days of the filing of the motion, and the movant may not claim the motion to the short calendar less than forty-five days after filing it (Practice Book § 17-45(b), (c)). Judgment is rendered forthwith if the pleadings, affidavits and other proof show that there is no genuine issue as to any material fact and that the moving party is entitled to judgment as a matter of law (Practice Book § 17-49)."
   edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-rendered {
+    event JudgmentEntered()
     authority cite "Practice Book § 17-49"
   }
   edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-rendered {
+    event JudgmentEntered()
     authority cite "Practice Book § 17-49"
   }
   edge-summary-judgment-denied "Denied: trial" -> trial { authority cite "Practice Book § 17-44" }
@@ -166,6 +171,7 @@ decision post-verdict: "Motions after verdict" by court cite "Practice Book § 1
     authority cite "Practice Book § 16-35"
   }
   edge-post-verdict-judgment "Judgment on the verdict" -> judgment-rendered {
+    event JudgmentEntered()
     authority cite "Practice Book § 16-35"
   }
 }
@@ -174,6 +180,7 @@ decision judgment-rendered: "Judgment rendered" by court cite "Practice Book § 
 {
   note "Unless a statute provides otherwise, an appeal is filed within twenty days of the date notice of the judgment is given; notice in open court starts the period that day, notice only by mail or electronic delivery on the day the trial court clerk sends it, and in civil jury cases the period begins when the verdict is accepted (Practice Book § 63-1(a), (b)). A motion filed within the appeal period that, if granted, would render the judgment ineffective starts a new twenty-day period on notice of the ruling on the last such motion (Practice Book § 63-1(c)(1)). A civil judgment may be opened on a motion filed within four months succeeding the date on which notice was sent (Practice Book § 17-4(a))."
   edge-judgment-rendered-appeal "Appeal filed" -> appeal-taken {
+    event NoticeOfAppealFiled()
     authority cite "Practice Book § 63-1"
   }
   edge-judgment-rendered-final "No appeal" -> final-no-appeal {

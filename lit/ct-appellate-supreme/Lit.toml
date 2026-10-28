@@ -16,6 +16,7 @@ version = "0.1.0"
 language = 1
 pack_id = "ct-appellate-supreme"
 forum = "ct-appellate-supreme"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "connecticut"
 title = "Connecticut Appellate Court and Supreme Court, civil appeals"
@@ -32,6 +33,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+ct-state-rules = { version = "^0.1.0", path = "../ct-rules" }
 
 [sources.ct-pb]
 title = "Official 2026 Connecticut Practice Book (Revision of 1998): Rules for the Superior Court and Rules of Appellate Procedure"

@@ -1,0 +1,46 @@
+# Proceedings before the Connecticut Compensation Review Board, and the
+# appeal from its decision to the Appellate Court, under Chapter 76 of the
+# Rules of Appellate Procedure (Appeals in Workers' Compensation Cases) in
+# the official 2026 Connecticut Practice Book (Revision of 1998)
+# (sources/ct-superior-civil, the text lit/ct-appellate-supreme cites).
+# The board's own procedure, the petition for review of an administrative
+# law judge's decision and its period, is the Workers' Compensation Act's
+# (General Statutes §§ 31-301, 31-301b), which is not vendored: those cites
+# stay holes. The dated appellate amendments approved June 30, 2026
+# (effective January 1, 2027) amend no section of Chapter 76. The appeal
+# itself is lit/ct-appellate-supreme.
+[package]
+name = "ct-compensation-review-board"
+version = "0.1.0"
+language = 1
+pack_id = "ct-compensation-review-board"
+forum = "ct-compensation-review-board"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "connecticut"
+title = "Connecticut Compensation Review Board"
+description = "Review by the Connecticut Compensation Review Board of an administrative law judge's workers' compensation decision, and the appeal from the board to the Appellate Court under Practice Book Chapter 76, as far as the vendored text states: the reservation of a question of law to the Appellate Court and the twenty-day appeal on its preliminary acceptance, filing the appeal with the appellate clerk, the case file due within ten days, and no entry fee or costs. The board's own petition period and procedure (General Statutes §§ 31-301, 31-301b) are not vendored and stay holes."
+in_force = "2026-01-01"
+known_at = "2026-10-28"
+unknown_before = "2026-01-01"
+jurisdiction = "Connecticut Compensation Review Board"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+ct-state-rules = { version = "^0.1.0", path = "../ct-rules" }
+
+[sources.ct-pb]
+title = "Official 2026 Connecticut Practice Book (Revision of 1998): Rules of Appellate Procedure, Chapter 76 (Appeals in Workers' Compensation Cases)"
+url = "https://www.jud.ct.gov/Publications/PracticeBook/PB.pdf"
+path = "sources/ct-superior-civil/ct-practice-book-2026-sectioned.txt"
+path_sha256 = "7a33d1bb397e575e0a7b5f010aab0cfc4d9afd70228a83544d187e51d0c1efac"
+sha256 = "bb406ab49314de7f6b49f5de43e1b2e354465bb70ce52ecc37412ec058db69d6"
+as_of = "2026-01-01"
+cite_prefixes = ["Practice Book §"]
+section_heading = "Practice Book § {n}"

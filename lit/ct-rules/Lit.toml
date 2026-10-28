@@ -1,0 +1,27 @@
+# The Connecticut base library (lg-u561.5 pattern): the trigger events the
+# Connecticut court packages route their graphs on: lit/ct-superior-civil,
+# lit/ct-appellate-supreme and lit/ct-compensation-review-board.
+# It declares no period: the Practice Book's periods are stated in the
+# court packages' notes. No procedure of its own.
+[package]
+name = "ct-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ct-state-rules"
+forum = "ct-state-rules"
+authority = "StateRule"
+jurisdiction_id = "connecticut"
+title = "Connecticut state court rules (base library)"
+description = "The rule layer Connecticut's court packages share: the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-01-01"
+known_at = "2026-10-28"
+unknown_before = "2026-01-01"
+jurisdiction = "Connecticut state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

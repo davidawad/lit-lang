@@ -1,5 +1,7 @@
 module ct-appellate-supreme.appeal
 
+import ct-state-rules.{ DecisionFiled, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
 // Civil appeals from the Connecticut Superior Court to the Appellate Court,
 // and from the Appellate Court to the Supreme Court on certification, from
 // the applicant's (appellant's) side. Every period below is stated in a
@@ -48,6 +50,7 @@ state appeal-filed: "Appeal filed" by applicant cite "Practice Book § 63-1"
 {
   note "An aggrieved party may appeal from a final judgment, except as otherwise provided by law (Practice Book § 61-1). Unless a statute provides a different period, an appeal is filed within twenty days of the date notice of the judgment or decision is given; in civil jury cases the period begins when the verdict is accepted (Practice Book § 63-1(a), (b)). A motion filed within the appeal period that, if granted, would render the judgment ineffective starts a new twenty-day period (Practice Book § 63-1(c)(1)). The trial judge may extend the time to appeal by no more than twenty days from the expiration of the appeal period, except where a statute sets a jurisdictional limit (Practice Book § 66-1(a)). An appellee aggrieved by the judgment may file a cross appeal within ten days from the filing of the appeal; no entry fee is required (Practice Book § 61-8). All appeals are filed and all fees paid under Section 60-7 or 60-8 (Practice Book § 63-3)."
   edge-appeal-filed-papers "Appeal docketed" -> papers-filed {
+    event NoticeOfAppealFiled()
     authority cite "Practice Book § 63-3"
   }
   edge-appeal-filed-untimely "Filed out of time" -> dismissed-untimely {
@@ -63,7 +66,10 @@ terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismi
 state papers-filed: "Preliminary papers and transcript order filed" by applicant cite "Practice Book § 63-4"
 {
   note "Within ten days of filing an appeal, the appellant files with the appellate clerk a preliminary statement of the issues, a designation of the proposed contents of the clerk appendix, a certificate that no transcript is needed or a transcript order confirmation, and a docketing statement; an appellee presenting alternative grounds or adverse rulings files its own preliminary statement of issues within twenty days from the filing of the appellant's, and another party may designate clerk appendix contents within seven days from the appellant's designation (Practice Book § 63-4(a))."
-  edge-papers-filed-briefing "Briefing" -> briefing { authority cite "Practice Book § 67-3A" }
+  edge-papers-filed-briefing "Briefing" -> briefing {
+    event RecordFiled()
+    authority cite "Practice Book § 67-3A"
+  }
   edge-papers-filed-transfer "Transferred to the Supreme Court" -> briefing {
     authority cite "Practice Book § 65-1"
   }
@@ -83,8 +89,12 @@ state briefing: "Briefs filed" by applicant cite "Practice Book § 67-3A"
 decision decision: "Appeal decided" by court cite "Practice Book § 71-4"
 {
   note "Oral argument is allowed as of right except in civil cases where the dispositive issue was recently authoritatively decided or the briefs adequately present the facts and arguments; then notice issues that the case will be decided on the briefs and record, and any party may request argument within ten days of the notice (Practice Book § 70-1(a), (b)). Notice of the decision is deemed given, for all purposes, on the official release date in the court's opinion or memorandum decision (Practice Book § 71-4(a))."
-  edge-decision-affirmed "Affirmed" -> reconsideration { authority cite "Practice Book § 71-4" }
+  edge-decision-affirmed "Affirmed" -> reconsideration {
+    event DecisionFiled()
+    authority cite "Practice Book § 71-4"
+  }
   edge-decision-reversed "Reversed or remanded" -> reconsideration {
+    event DecisionFiled()
     authority cite "Practice Book § 71-4"
   }
 }
@@ -93,6 +103,7 @@ decision reconsideration: "Reconsideration" by court cite "Practice Book § 71-5
 {
   note "A motion for reconsideration, or for reconsideration en banc, is not entertained unless filed with the appellate clerk within ten days from the date the decision or order is officially released (Practice Book § 71-5). Unless the chief justice or chief judge directs otherwise, a stay in effect during the appeal continues until the time for reconsideration has expired and, in the Appellate Court, until the time to petition for certification has expired (Practice Book § 71-6(a))."
   edge-reconsideration-certification "Certification to the Supreme Court sought" -> certification {
+    event ReviewPetitionFiled()
     authority cite "Practice Book § 84-1"
   }
   edge-reconsideration-final "No further review" -> final-judgment {

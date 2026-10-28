@@ -1,0 +1,151 @@
+module nd-criminal-trial-court.criminal
+
+// A criminal prosecution in the North Dakota district court, from the
+// defendant's view of outcomes. Every N.D.R.Crim.P. cite is a hole (the
+// vendored rules are CURRENCY UNCONFIRMED) and every value from them is the
+// vendored text's, unverified; the notice of appeal binds to N.D.R.App.P.
+// 4(b). Every period is stated in a note, not counted: N.D.R.Crim.P. 45
+// computes them with state holidays, for which lit/core has no counting
+// rule. The speedy-trial statute (N.D.C.C. § 29-19-02) is not vendored. The
+// Explanatory Notes are the rules' commentary, and the outline's decisions
+// (Gerstein, McLaughlin, Gideon, Brady, Barker v. Wingo, Boykin, Missouri v.
+// Frye, Jackson v. Virginia, Roe v. Flores-Ortega, Garza v. Idaho) are
+// federal constitutional authority with no reporter text vendored, so they
+// are removed here.
+start arrested
+
+state arrested: "Arrest" by applicant cite ?("N.D.R.Crim.P. 5(a), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+{
+  note "An officer making an arrest takes the arrested person without unnecessary delay before the nearest available magistrate; after a warrantless arrest the magistrate promptly determines probable cause, and if it exists a complaint or information is filed (N.D.R.Crim.P. 5(a)). Unverified: CURRENCY UNCONFIRMED."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance {
+    authority cite ?("N.D.R.Crim.P. 5(a), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+}
+
+decision initial-appearance: "Initial appearance and release" by court cite ?("N.D.R.Crim.P. 5, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+{
+  note "The magistrate advises the defendant, including of the right to be admitted to bail under N.D.R.Crim.P. 46, and admits the defendant to bail under that rule (5). Unverified: CURRENCY UNCONFIRMED."
+  edge-initial-appearance-detained "Held in custody" -> preliminary {
+    authority cite ?("N.D.R.Crim.P. 46, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+  edge-initial-appearance-released "Released on conditions" -> preliminary {
+    authority cite ?("N.D.R.Crim.P. 46, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+}
+
+decision preliminary: "Preliminary hearing" by court cite ?("N.D.R.Crim.P. 5.1, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+{
+  note "On a finding of probable cause, which may rest on hearsay, an arraignment is scheduled; if the magistrate finds no public offense committed or insufficient cause, the magistrate discharges the defendant and dismisses the charge (N.D.R.Crim.P. 5.1(a), (b)). The court may dismiss, or release an arrested person, for unnecessary delay in filing an information or complaint (48(b)(2)). Unverified: CURRENCY UNCONFIRMED."
+  edge-preliminary-held "Probable cause; arraignment scheduled" -> arraignment {
+    authority cite ?("N.D.R.Crim.P. 5.1(a), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+  edge-preliminary-discharged "No probable cause; charge dismissed" -> dismissed {
+    authority cite ?("N.D.R.Crim.P. 5.1(b), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+}
+
+state arraignment: "Arraignment and plea" by applicant cite ?("N.D.R.Crim.P. 10, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+{
+  note "Arraignment follows N.D.R.Crim.P. 10; the pleas are guilty and not guilty (12(a), 11). Unverified: CURRENCY UNCONFIRMED."
+  edge-arraignment-pretrial "Plea of not guilty; pretrial proceedings" -> pretrial {
+    authority cite ?("N.D.R.Crim.P. 12(c), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+}
+
+state pretrial: "Discovery, omnibus hearing and pretrial motions" by applicant cite ?("N.D.R.Crim.P. 12(c), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+{
+  note "The court may, at or soon after arraignment, set a deadline for pretrial motions; if it sets none, the deadline is the start of trial; it may extend or reset the deadline before trial; a Rule 12(b)(3) motion (including a speedy-trial violation and suppression) made late is untimely unless the party shows good cause (N.D.R.Crim.P. 12(b)(3), (c)). If the court holds an omnibus hearing, a pretrial motion, request or issue not raised there is waived unless the party lacked the information (17.1(b)(3)). Unverified: CURRENCY UNCONFIRMED."
+  edge-pretrial-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite ?("N.D.R.Crim.P. 12(b), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+  edge-pretrial-delay "Unnecessary delay in bringing to trial; motion to dismiss" -> motions-ruling {
+    authority cite ?("N.D.R.Crim.P. 48(b), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+  edge-pretrial-plea "Plea negotiations" -> plea-decision {
+    authority cite ?("N.D.R.Crim.P. 11, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite ?("N.D.R.Crim.P. 12(d), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+{
+  note "The court decides every pretrial motion before trial unless it finds good cause to defer, and may not defer if that would adversely affect a party's right to appeal (N.D.R.Crim.P. 12(d)). The court may dismiss an indictment, information or complaint for unnecessary delay in bringing the defendant to trial (48(b)(4)); the prosecuting attorney dismisses only on motion with the court's approval and a written statement of reasons (48(a)). Unverified: CURRENCY UNCONFIRMED."
+  edge-motions-ruling-delay "Dismissed for unnecessary delay" -> dismissed {
+    authority cite ?("N.D.R.Crim.P. 48(b), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+  edge-motions-ruling-dismissed "Dismissed on another ground" -> dismissed {
+    authority cite ?("N.D.R.Crim.P. 12(b), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite ?("N.D.R.Crim.P. 12(d), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite ?("N.D.R.Crim.P. 11, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+{
+  note "Pleas and plea agreements are N.D.R.Crim.P. 11. Unverified: CURRENCY UNCONFIRMED."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite ?("N.D.R.Crim.P. 11, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite ?("N.D.R.Crim.P. 23, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+}
+
+decision trial: "Verdict" by court cite ?("N.D.R.Crim.P. 31, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+{
+  note "A defendant may move for a judgment of acquittal, or renew the motion, within 14 days after a guilty verdict or after the court discharges the jury, whichever is later (N.D.R.Crim.P. 29(c)(1)). Unverified: CURRENCY UNCONFIRMED."
+  edge-trial-acquittal "Not guilty" -> acquitted {
+    authority cite ?("N.D.R.Crim.P. 31, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+  edge-trial-guilty "Guilty; post-verdict motions" -> post-verdict {
+    authority cite ?("N.D.R.Crim.P. 29(c), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+}
+
+decision post-verdict: "Post-verdict motions" by court cite ?("N.D.R.Crim.P. 33, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+{
+  note "A motion for new trial on grounds other than newly discovered evidence is filed within 14 days after the verdict or finding of guilty, one on newly discovered evidence within three years and supported by a declaration (N.D.R.Crim.P. 33(b)); opposing declarations are served within 14 days after service of the motion (33(c)(1)); a motion to arrest judgment within 14 days after the verdict, finding or guilty plea (34(b)). Unverified: CURRENCY UNCONFIRMED."
+  edge-post-verdict-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite ?("N.D.R.Crim.P. 29(c), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+  edge-post-verdict-arrested "Judgment arrested" -> dismissed {
+    authority cite ?("N.D.R.Crim.P. 34, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+  edge-post-verdict-new-trial "New trial granted" -> trial {
+    authority cite ?("N.D.R.Crim.P. 33, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+  edge-post-verdict-denied "Motions denied; sentencing" -> sentencing {
+    authority cite ?("N.D.R.Crim.P. 32(a), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+}
+
+state sentencing: "Sentence and judgment" by court cite ?("N.D.R.Crim.P. 32(a), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+{
+  note "The court imposes sentence without unnecessary delay; any part of the presentence report the court lets the defendant examine is disclosed at least 14 days before sentence unless the defendant waives it (N.D.R.Crim.P. 32(a)(1), (c)(4)(B)). The court may reduce a sentence within 120 days after it imposes sentence or revokes probation, after it receives the mandate on affirmance or dismissal of the appeal, or after a United States Supreme Court order denying review (35(b)(1)). Unverified: CURRENCY UNCONFIRMED."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite ?("N.D.R.Crim.P. 32, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "N.D.R.App.P. 4(b)"
+{
+  note "A defendant's notice of appeal is filed with the clerk of the supreme court within 30 days after the entry of the judgment, order or verdict being appealed, whichever occurs last (N.D.R.App.P. 4(b)(1)(A)); after a timely motion under the criminal rules listed in 4(b)(3)(A), within 30 days after the entry of the order disposing of the last such motion (4(b)(3)(A)); a judgment, order or verdict is entered when it is entered on the criminal docket (4(b)(6))."
+  edge-judgment-appeal "Notice of appeal filed within 30 days" -> appeal-taken {
+    authority cite "N.D.R.App.P. 4(b)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final {
+    authority cite "N.D.R.App.P. 4(b)"
+  }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite ?("N.D.R.Crim.P. 31, CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+
+terminal dismissed: "Charge dismissed or judgment arrested" outcome [win, dismissal] cite ?("N.D.R.Crim.P. 48(b), CURRENCY UNCONFIRMED (no consolidated edition date on the published rules); the value is the vendored text, unverified")
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "N.D.R.App.P. 4(b)"
+{
+  note "The appeal continues before the North Dakota Supreme Court (lit/ndctapp)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "N.D.R.App.P. 4(b)"
+

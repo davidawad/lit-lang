@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+# Regenerates every committed Lit.lock and the shared clock library
+# (crates/litigate-engine/clock/litigate-core.json) from the checked-in
+# lit/ sources (lg-wuzi). These are the files .gitattributes marks
+# linguist-generated: a land resolves a rebase conflict on one by taking
+# the target's copy and running this once after the rebase.
+#
+# Usage:
+#   scripts/lit-regen
+#       The land-time regenerate. Compiles nothing: it runs a prebuilt
+#       `litigate` ($LITIGATE_BIN, else `litigate` on PATH, e.g. one
+#       installed in the agent image by `cargo install --locked --path
+#       crates/litigate-cli` at a main commit). The lock's semantic digest
+#       and the clock library are compiler output, so the binary must be
+#       current: its `--version` must name a clean build of a commit in
+#       this repository whose crates/ and Cargo files equal HEAD's (the
+#       clock library itself aside). Otherwise it prints
+#       `LIT_REGEN_SKIPPED reason=...`, changes nothing and exits 3, so the
+#       land leaves the conflict instead of committing a stale lock.
+#   scripts/lit-regen --cargo
+#       The same regenerate through `cargo run -p litigate-cli` (what
+#       `just lit-sync` runs).
+#
+# Prints `LIT_REGEN: regenerated N Lit.lock files and the clock library
+# with <how>` and exits 0 on success; a failing `litigate` exits 1.
+set -euo pipefail
+cd "$(git rev-parse --show-toplevel)"
+
+skip() {
+  echo "LIT_REGEN_SKIPPED reason=$1${2:+ $2}" >&2
+  exit 3
+}
+
+if [ "${1:-}" = "--cargo" ]; then
+  lit=(cargo run -q -p litigate-cli -- --format human)
+  how="cargo run"
+else
+  bin="${LITIGATE_BIN:-$(command -v litigate || true)}"
+  [ -n "$bin" ] && [ -x "$bin" ] || skip no-prebuilt "(set LITIGATE_BIN or put litigate on PATH)"
+  version="$("$bin" --version 2>/dev/null)" || skip prebuilt-fails "bin=$bin"
+  # `litigate 0.6.0 (commit <sha>, clean)`
+  commit="$(sed -n 's/.*(commit \([0-9a-f]\{40\}\), clean)$/\1/p' <<<"$version")"
+  [ -n "$commit" ] || skip prebuilt-unversioned "bin=$bin version=\"$version\""
+  git cat-file -e "$commit^{commit}" 2>/dev/null || skip prebuilt-unknown-commit "commit=$commit"
+  if ! git diff --quiet "$commit" HEAD -- crates Cargo.toml Cargo.lock \
+    ':(exclude)crates/litigate-engine/clock'; then
+    skip prebuilt-stale "commit=$commit (crates/ changed since; run \`just lit-sync\`)"
+  fi
+  lit=("$bin" --format human)
+  how="$bin (commit ${commit:0:12})"
+fi
+
+# Every Lit.lock in the tree, tracked or new (lg-310r), except the
+# lock-format-1 fixture, which pins the superseded lock format.
+mapfile -t lockfiles < <(git ls-files --cached --others --exclude-standard -- '*Lit.lock' \
+  | grep -v -x 'crates/litigate-cli/tests/fixtures/lock-format-1/Lit.lock')
+n=0
+for lockfile in "${lockfiles[@]}"; do
+  [ -e "$lockfile" ] || continue
+  "${lit[@]}" lock "$(dirname "$lockfile")" > /dev/null
+  n=$((n + 1))
+done
+core="$(mktemp -d)"
+trap 'rm -rf "$core"' EXIT
+"${lit[@]}" build lit/core --out "$core" > /dev/null
+cp "$core/packs/clock/litigate-core.json" crates/litigate-engine/clock/litigate-core.json
+echo "LIT_REGEN: regenerated $n Lit.lock files and the clock library with $how"

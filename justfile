@@ -353,18 +353,9 @@ lit-sync: merge-drivers editor-queries
     set -euo pipefail
     out="{{lit_build_dir}}"
     lit=(cargo run -q -p litigate-cli -- --format human)
-    # Every Lit.lock in the tree, tracked or new (lg-310r), except the
-    # lock-format-1 fixture, which pins the superseded lock format.
-    mapfile -t lockfiles < <(git ls-files --cached --others --exclude-standard -- '*Lit.lock' \
-      | grep -v -x 'crates/litigate-cli/tests/fixtures/lock-format-1/Lit.lock')
-    for lockfile in "${lockfiles[@]}"; do
-      [ -e "$lockfile" ] || continue
-      "${lit[@]}" lock "$(dirname "$lockfile")" > /dev/null
-    done
-    core="$(mktemp -d)"
-    trap 'rm -rf "$core"' EXIT
-    "${lit[@]}" build lit/core --out "$core" > /dev/null
-    cp "$core/packs/clock/litigate-core.json" crates/litigate-engine/clock/litigate-core.json
+    # The Lit.lock files and the shared clock library; a land runs the
+    # same script against a prebuilt litigate, without compiling (lg-wuzi).
+    scripts/lit-regen --cargo > /dev/null
     mapfile -t args < <(grep -v -e '^#' -e '^[[:space:]]*$' {{lit_build_args}})
     rm -rf "$out"
     "${lit[@]}" build "${args[@]}" --out "$out" > /dev/null \

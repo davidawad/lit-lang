@@ -46,9 +46,7 @@ state pretrial: "Plea of not guilty, discovery and pretrial motions" by applican
   edge-pretrial-speedy "Motion for speedy trial" -> motions-ruling {
     authority cite "Practice Book § 43-41"
   }
-  edge-pretrial-plea "Plea discussions" -> plea-decision {
-    authority cite "Practice Book § 39-1"
-  }
+  edge-pretrial-plea "Plea discussions" -> plea-decision { authority cite "Practice Book § 39-1" }
 }
 
 decision motions-ruling: "Ruling on pretrial motions" by court cite "Practice Book § 41-8"
@@ -71,9 +69,7 @@ decision plea-decision: "Plea or trial" by applicant cite "Practice Book § 39-1
   edge-plea-decision-plea "Plea of guilty or nolo contendere accepted" -> sentencing {
     authority cite "Practice Book § 39-19"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "Practice Book § 42-1"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "Practice Book § 42-1" }
   edge-plea-decision-nolle "Nolle prosequi entered" -> dismissed {
     authority cite "Practice Book § 39-31"
   }
@@ -96,12 +92,8 @@ decision post-trial: "Motions after verdict" by court cite "Practice Book § 42-
   edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
     authority cite "Practice Book § 42-51"
   }
-  edge-post-trial-new-trial "New trial granted" -> trial {
-    authority cite "Practice Book § 42-53"
-  }
-  edge-post-trial-arrest "Judgment arrested" -> dismissed {
-    authority cite "Practice Book § 42-56"
-  }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Practice Book § 42-53" }
+  edge-post-trial-arrest "Judgment arrested" -> dismissed { authority cite "Practice Book § 42-56" }
   edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
     authority cite "Practice Book § 42-54"
   }
@@ -118,9 +110,7 @@ state sentencing: "Presentence investigation and sentencing" by court cite "Prac
 decision judgment: "Judgment of conviction" by applicant cite "Practice Book § 63-1"
 {
   note "After a conviction at trial the clerk advises the defendant in writing, immediately after sentence is pronounced, of the right to appeal, its time limits and the right of an indigent person to a fee waiver and appointed counsel (Practice Book § 43-30). Unless a statute provides a different period, an appeal is filed within twenty days of the date notice of the judgment is given; in a criminal case appealing a judgment of conviction, the appeal period begins when sentence is pronounced in open court, and a motion that would render the judgment ineffective, filed within the appeal period, may start a new twenty-day period (Practice Book § 63-1(a)-(c)); extensions are governed by Practice Book § 66-1(a). Where sentence review is available under General Statutes § 51-195, the defendant may apply for review by the review division within thirty days from the date sentence is imposed or a suspended sentence is revoked (Practice Book § 43-24). The judicial authority may correct an illegal sentence at any time (Practice Book § 43-22)."
-  edge-judgment-appeal "Appeal filed" -> appeal-taken {
-    authority cite "Practice Book § 63-1"
-  }
+  edge-judgment-appeal "Appeal filed" -> appeal-taken { authority cite "Practice Book § 63-1" }
   edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Practice Book § 63-1" }
 }
 
@@ -139,7 +129,6 @@ terminal appeal-taken: "Appeal taken" outcome [appeal] cite "Practice Book § 63
   note "The appeal continues before the Appellate Court under the Rules of Appellate Procedure (lit/ct-appellate-supreme covers the civil appeal)."
 }
 
-terminal conviction-final: "Conviction final" outcome [loss] cite ?("Conn. Gen. Stat. § 52-466 (habeas corpus; not vendored)")
-{
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("Conn. Gen. Stat. § 52-466 (habeas corpus; not vendored)") {
   note "Outcome from the defendant's side. State habeas corpus under General Statutes § 52-466 is not vendored; federal habeas belongs to lit/habeas."
 }

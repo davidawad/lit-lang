@@ -14,16 +14,14 @@ module ny-criminal-trial-court.criminal
 // the others it named) are removed: no reporter text is vendored.
 start arrested
 
-state arrested: "Arrest or appearance ticket" by applicant cite ?("CPL arrest and appearance-ticket articles (not vendored; verify numbering)")
-{
+state arrested: "Arrest or appearance ticket" by applicant cite ?("CPL arrest and appearance-ticket articles (not vendored; verify numbering)") {
   note "Arrest, the appearance ticket and the time to bring an arrested person to arraignment are set by CPL articles that are not vendored; the period is a hole. A criminal action commences with the filing of an accusatory instrument, the date from which the CPL 30.30 periods run (CPL 30.30(1)); the periods are not stated here (currency unconfirmed)."
   edge-arrested-arraignment "Arraignment" -> arraignment {
     authority cite ?("CPL arraignment provisions (not vendored; verify numbering)")
   }
 }
 
-decision arraignment: "Arraignment and securing order" by court cite ?("CPL arraignment and securing-order provisions (not vendored; verify numbering)")
-{
+decision arraignment: "Arraignment and securing order" by court cite ?("CPL arraignment and securing-order provisions (not vendored; verify numbering)") {
   note "Arraignment, the assignment of counsel and the securing order (release, bail or commitment) are governed by CPL articles that are not vendored; the bail reform provisions and any preliminary-hearing period are holes."
   edge-arraignment-released "Released on recognizance or non-monetary conditions" -> charged {
     authority cite ?("CPL securing-order provisions (not vendored; verify numbering)")
@@ -33,23 +31,19 @@ decision arraignment: "Arraignment and securing order" by court cite ?("CPL arra
   }
 }
 
-state charged: "Indictment or information" by office cite ?("CPL grand jury, indictment and information articles (not vendored; verify numbering)")
-{
+state charged: "Indictment or information" by office cite ?("CPL grand jury, indictment and information articles (not vendored; verify numbering)") {
   note "The grand jury and accusatory-instrument articles are not vendored; their periods are holes. The CPL 30.30 readiness clock runs from the commencement of the criminal action (CPL 30.30(1)), its periods by the grade of the top count; they are not stated here (currency unconfirmed)."
   edge-charged-pretrial "Arraignment on the indictment; discovery and motions" -> pretrial {
     authority cite ?("CPL arraignment on indictment and discovery articles (not vendored; verify numbering)")
   }
 }
 
-state pretrial: "Discovery and pretrial motions" by applicant cite ?("CPL discovery and omnibus-motion articles (not vendored; verify numbering)")
-{
+state pretrial: "Discovery and pretrial motions" by applicant cite ?("CPL discovery and omnibus-motion articles (not vendored; verify numbering)") {
   note "Discovery and the time for pretrial motions are set by CPL articles that are not vendored; the periods are holes. A motion to dismiss under CPL 30.30 is granted where the people are not ready for trial within the period CPL 30.30(1) sets for the top charge, computed with the exclusions of CPL 30.30(4); the periods are not stated here (currency unconfirmed). The constitutional right to a speedy trial is CPL 30.20."
   edge-pretrial-motions "Pretrial motion filed" -> motions-ruling {
     authority cite ?("CPL omnibus-motion provisions (not vendored; verify numbering)")
   }
-  edge-pretrial-speedy "Speedy-trial motion" -> motions-ruling {
-    authority cite "CPL 30.30(1)"
-  }
+  edge-pretrial-speedy "Speedy-trial motion" -> motions-ruling { authority cite "CPL 30.30(1)" }
   edge-pretrial-plea "Plea negotiations" -> plea-decision {
     authority cite ?("CPL plea provisions (not vendored; verify numbering)")
   }
@@ -69,8 +63,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite "CPL 30.30"
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite ?("CPL plea provisions (not vendored; verify numbering)")
-{
+decision plea-decision: "Plea or trial" by applicant cite ?("CPL plea provisions (not vendored; verify numbering)") {
   note "Pleas and their withdrawal are governed by a CPL article that is not vendored; a hole."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite ?("CPL plea provisions (not vendored; verify numbering)")
@@ -80,8 +73,7 @@ decision plea-decision: "Plea or trial" by applicant cite ?("CPL plea provisions
   }
 }
 
-decision trial: "Verdict" by court cite ?("CPL verdict provisions (not vendored; verify numbering)")
-{
+decision trial: "Verdict" by court cite ?("CPL verdict provisions (not vendored; verify numbering)") {
   note "Jury trial, the trial order of dismissal and the verdict are governed by CPL articles that are not vendored; the jury size and the time for a motion to set aside the verdict are holes."
   edge-trial-acquittal "Not guilty, or trial order of dismissal" -> acquitted {
     authority cite ?("CPL trial and verdict provisions (not vendored; verify numbering)")
@@ -91,25 +83,19 @@ decision trial: "Verdict" by court cite ?("CPL verdict provisions (not vendored;
   }
 }
 
-state sentencing: "Presentence report and sentencing" by court cite ?("CPL sentencing articles (not vendored; verify numbering)")
-{
+state sentencing: "Presentence report and sentencing" by court cite ?("CPL sentencing articles (not vendored; verify numbering)") {
   note "The presentence report and its disclosure and the sentencing proceeding are governed by CPL articles that are not vendored; their periods are holes."
-  edge-sentencing-judgment "Sentence imposed; judgment" -> judgment {
-    authority cite "CPL 450.10"
-  }
+  edge-sentencing-judgment "Sentence imposed; judgment" -> judgment { authority cite "CPL 450.10" }
 }
 
 decision judgment: "Judgment of conviction" by applicant cite "CPL 450.10"
 {
   note "The defendant may appeal as of right from a judgment of a criminal court to an intermediate appellate court (CPL 450.10); an appeal as of right is taken by filing a notice of appeal within the period CPL 460.10(1) sets after the imposition of sentence, and the appellate court may extend the time on a motion under CPL 460.30; those periods are not stated here (currency unconfirmed). Leave to appeal from an order is by certificate (CPL 460.15), and a further appeal to the Court of Appeals by certificate granting leave (CPL 460.20). A stay of the judgment pending appeal is governed by CPL 460.50. Post-judgment motions to vacate the judgment or set aside the sentence are not vendored."
-  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
-    authority cite "CPL 460.10"
-  }
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "CPL 460.10" }
   edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "CPL 460.10" }
 }
 
-terminal acquitted: "Acquitted" outcome [win] cite ?("CPL verdict provisions (not vendored; verify numbering)")
-{
+terminal acquitted: "Acquitted" outcome [win] cite ?("CPL verdict provisions (not vendored; verify numbering)") {
   note "Outcome from the defendant's side: a verdict of not guilty or a trial order of dismissal."
 }
 
@@ -123,7 +109,6 @@ terminal appeal-taken: "Appeal taken" outcome [appeal] cite "CPL 460.10"
   note "The appeal continues before the Appellate Division or the Appellate Term (sources/ny-appellate-division-court-of-appeals holds 22 NYCRR Part 1250)."
 }
 
-terminal conviction-final: "Conviction final" outcome [loss] cite ?("CPL motion to vacate judgment (not vendored; verify numbering)")
-{
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("CPL motion to vacate judgment (not vendored; verify numbering)") {
   note "Outcome from the defendant's side. State post-judgment motions are not vendored; federal habeas belongs to lit/habeas."
 }

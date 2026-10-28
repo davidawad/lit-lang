@@ -1,0 +1,156 @@
+module hi-circuit-court-criminal.criminal
+
+// Felony criminal cases in the Hawai'i circuit courts under the Hawai'i
+// Rules of Penal Procedure, listed effective July 1, 2026
+// (sources/hi-criminal-trial-court). The rules' periods are computed under
+// HRPP 45 and stated in the notes; lit/core has no counting rule for them,
+// so none is encoded as a counted deadline. Bail is "as provided by law"
+// (HRPP 46(a): HRS chapter 804, not vendored). Outcomes are from the
+// defendant's side. The earlier outline's leading decisions (County of
+// Riverside v. McLaughlin, Gerstein v. Pugh, Gideon v. Wainwright, Brady v.
+// Maryland, Mapp v. Ohio, Barker v. Wingo, Boykin v. Alabama, Missouri v.
+// Frye, Jackson v. Virginia, Apprendi v. New Jersey, Roe v. Flores-Ortega,
+// Garza v. Idaho) are removed: no reporter text is vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "Haw. R. Penal P. 5(a)"
+{
+  note "An officer making an arrest under a warrant takes the arrested person without unnecessary delay before the court (Haw. R. Penal P. 5(a)(1)). After a warrantless arrest of a person held in custody, a district judge must determine probable cause as soon as practicable and, HRPP 45 notwithstanding, not later than 48 hours after the arrest, on at least an affidavit or declaration of the arresting officer; if probable cause is not found or not determined within that time, the person is released (Haw. R. Penal P. 5(a)(2))."
+  edge-arrested-appearance "Initial appearance in district court" -> initial-appearance {
+    authority cite "Haw. R. Penal P. 5(c)"
+  }
+}
+
+decision initial-appearance: "Bail or release" by court cite "Haw. R. Penal P. 46"
+{
+  note "At the initial appearance on a felony the district court furnishes the complaint and any probable-cause order and informs the defendant of the right to a preliminary hearing; a felony defendant is not called upon to plead in district court (Haw. R. Penal P. 5(c)(1)). The right to bail, its form and amount, and forfeiture and exoneration are as provided by law (Haw. R. Penal P. 46(a); HRS chapter 804, not vendored)."
+  edge-initial-appearance-detained "Held in custody" -> probable-cause {
+    authority cite "Haw. R. Penal P. 5(c)"
+  }
+  edge-initial-appearance-released "Released on bail or recognizance" -> probable-cause {
+    authority cite "Haw. R. Penal P. 46(a)"
+  }
+}
+
+decision probable-cause: "Preliminary hearing, indictment or information" by court cite "Haw. R. Penal P. 5(c)"
+{
+  note "Unless waived in writing, the court schedules a preliminary hearing, which is not held if the defendant is indicted or charged by information before its date (Haw. R. Penal P. 5(c)(1), (2)). The hearing must be held within 30 days of the initial appearance if the defendant is not in custody; a defendant held in custody more than 2 days after the initial appearance without commencement of the hearing is released on recognizance on motion, unless the delay is the defendant's doing (Haw. R. Penal P. 5(c)(3)). The State may instead establish probable cause before a grand jury (Haw. R. Penal P. 6) or by information with supporting exhibits (Haw. R. Penal P. 7)."
+  edge-probable-cause-charged "Held to answer, indicted or charged by information" -> charged {
+    authority cite "Haw. R. Penal P. 7(a)"
+  }
+  edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
+    authority cite "Haw. R. Penal P. 5(c)"
+  }
+}
+
+state charged: "Indictment, information or complaint" by office cite "Haw. R. Penal P. 7(a)"
+{
+  note "The charge is an indictment, a superseding indictment, an information or a complaint filed in court (Haw. R. Penal P. 7(a)). A motion for a bill of particulars may be made before arraignment or within 10 days after it (Haw. R. Penal P. 7(g)). A defendant held to answer is arraigned in circuit court within 14 days after the district court's oral order of commitment, and a defendant arrested on a grand jury or information warrant not later than 7 days after arrest or return (Haw. R. Penal P. 10(a)-(c))."
+  edge-charged-arraignment "Arraignment in circuit court" -> arraignment {
+    authority cite "Haw. R. Penal P. 10"
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "Haw. R. Penal P. 10"
+{
+  note "A defendant may plead not guilty, guilty or, with the court's consent, no contest, and a refusal to plead is entered as not guilty (Haw. R. Penal P. 11(a), (b)). The HRPP 48 clock: on the defendant's motion the court must dismiss the charge, with or without prejudice in its discretion, if trial is not commenced within 6 months from arrest (if bail is set) or the filing of the charge, whichever is sooner, from re-arrest or re-filing after a dismissal on the defendant's motion, or from a mistrial, new-trial order or remand (Haw. R. Penal P. 48(b)); the periods HRPP 48(c) and (d) list are excluded."
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "Haw. R. Penal P. 16" }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "Haw. R. Penal P. 12"
+{
+  note "Except for matters defense counsel must designate in writing, the prosecution discloses the HRPP 16(b)(1) materials within ten (10) calendar days following arraignment and plea (Haw. R. Penal P. 16(e)(1)). Pretrial motions and requests must be made within 21 days after arraignment unless the court otherwise directs (Haw. R. Penal P. 12(c)). A written motion and notice of hearing are served not later than 48 hours before the hearing, opposing memoranda not less than 72 hours before a hearing on a motion filed 14 or more days ahead, and replies not later than 24 hours before the hearing, unless the court orders otherwise (Haw. R. Penal P. 45)."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "Haw. R. Penal P. 12"
+  }
+  edge-discovery-speedy "HRPP 48 motion to dismiss" -> motions-ruling {
+    authority cite "Haw. R. Penal P. 48(b)"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "Haw. R. Penal P. 11" }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "Haw. R. Penal P. 12"
+{
+  note "If trial is not commenced within the HRPP 48(b) period after the excluded periods, the court on the defendant's motion must dismiss the charge, with or without prejudice in its discretion (Haw. R. Penal P. 48(b)). The prosecutor may by leave of court dismiss a charge, but not during trial without the defendant's consent (Haw. R. Penal P. 48(a))."
+  edge-motions-ruling-speedy "Dismissed under HRPP 48" -> dismissed {
+    authority cite "Haw. R. Penal P. 48(b)"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "Haw. R. Penal P. 12"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "Haw. R. Penal P. 12"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Haw. R. Penal P. 11"
+{
+  note "With the court's approval and the State's consent a defendant may enter a conditional plea reserving review of a specified pretrial motion (Haw. R. Penal P. 11(a)(2)). Cases required to be tried by jury are so tried unless the defendant waives with the court's approval, in writing or orally on the record; juries are of 12 unless the parties stipulate in writing to fewer (Haw. R. Penal P. 23(a), (b))."
+  edge-plea-decision-plea "Guilty or no-contest plea accepted" -> sentencing {
+    authority cite "Haw. R. Penal P. 11"
+  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "Haw. R. Penal P. 23" }
+  edge-plea-decision-dismissed "Prosecutor dismisses by leave of court" -> dismissed {
+    authority cite "Haw. R. Penal P. 48(a)"
+  }
+}
+
+decision trial: "Verdict" by court cite "Haw. R. Penal P. 31"
+{
+  note "The verdict is unanimous unless the parties stipulate otherwise, and is returned in open court (Haw. R. Penal P. 31(a)). After a guilty verdict or the jury's discharge, a motion for judgment of acquittal may be made or renewed within 10 days after the jury is discharged or such further time as the court fixes within that period (Haw. R. Penal P. 29)."
+  edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
+    authority cite "Haw. R. Penal P. 29"
+  }
+  edge-trial-guilty "Guilty; post-verdict motions" -> post-trial {
+    authority cite "Haw. R. Penal P. 33"
+  }
+}
+
+decision post-trial: "Post-verdict motions" by court cite "Haw. R. Penal P. 33"
+{
+  note "A motion for a new trial, and a motion in arrest of judgment, must be made within 10 days after the verdict or finding of guilty (or, for arrest of judgment, after a plea of guilty or no contest), or within such further time as the court fixes during that period (Haw. R. Penal P. 33; 34). A timely HRPP 33 or 34 motion postpones the time to appeal until 30 days after entry of the order denying it (Haw. R. App. P. 4(b)(2))."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite "Haw. R. Penal P. 29"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Haw. R. Penal P. 33" }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "Haw. R. Penal P. 32(a)"
+  }
+}
+
+state sentencing: "Sentencing" by court cite "Haw. R. Penal P. 32(a)"
+{
+  note "After adjudication of guilt, sentence is imposed without unreasonable delay, after the defendant and counsel are given a fair opportunity to speak and present mitigation (Haw. R. Penal P. 32(a)). After sentence the court advises an unrepresented defendant of the right and time to appeal, and the clerk files a notice of appeal on request (Haw. R. Penal P. 32(b)). A motion to withdraw a plea to correct manifest injustice is submitted no later than ten (10) days after imposition of sentence (Haw. R. Penal P. 32(d))."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "Haw. R. Penal P. 32(c)"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "Haw. R. Penal P. 32(c)"
+{
+  note "The circuit court judgment sets forth the plea, the verdict or findings, and the adjudication and sentence, and its filing with the clerk is its entry (Haw. R. Penal P. 32(c)(1)). In a criminal case the notice of appeal is filed within 30 days after entry of the judgment or order appealed from; a mailed notice is timely if postmarked in time and received within 5 days after the postmark (Haw. R. App. P. 4(b)(1)). The court may reduce a sentence within 90 days after it is imposed or after the mandate or a final denial of review (Haw. R. Penal P. 35(b)); a motion to correct an illegal sentence more than 90 days after imposition proceeds under HRPP 40 (Haw. R. Penal P. 35(a))."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "Haw. R. App. P. 4(b)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Haw. R. App. P. 4(b)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Haw. R. Penal P. 29"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty or a judgment of acquittal (Haw. R. Penal P. 29, 31)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "Haw. R. Penal P. 48"
+{
+  note "Outcome from the defendant's side. An HRPP 48(b) dismissal may be with or without prejudice in the court's discretion (Haw. R. Penal P. 48(b)); a prosecutor's dismissal by leave of court terminates the prosecution (Haw. R. Penal P. 48(a))."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "Haw. R. App. P. 4(b)"
+{
+  note "The appeal continues before the Intermediate Court of Appeals under the Hawai'i Rules of Appellate Procedure (lit/hi-ica)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "Haw. R. Penal P. 40"
+{
+  note "Outcome from the defendant's side. The HRPP 40 post-conviction proceeding, available at any time after final judgment, encompasses habeas corpus and coram nobis (Haw. R. Penal P. 40(a)); federal habeas belongs to lit/habeas."
+}

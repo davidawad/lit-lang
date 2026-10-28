@@ -1,0 +1,56 @@
+# Felony criminal cases in the Hawai'i circuit courts (and their district
+# court preliminary stages) under the Hawai'i Rules of Penal Procedure
+# (HRPP), the edition the Judiciary's rules page lists as effective July
+# 1, 2026 (sources/hi-criminal-trial-court); in_force is that date and an
+# earlier query is a hole in the corpus. HRPP 48 is the speedy-trial rule.
+# Criminal appeals go under Hawai'i Rules of Appellate Procedure (HRAP)
+# 4(b), bound to the HRAP text lit/hi-ica binds (sources/hi-ica, effective
+# July 1, 2026; the Rule 4 order effective January 1, 2027 amends only
+# civil Rule 4(a)). Time is computed under HRPP 45, which excludes
+# intermediate Saturdays, Sundays and holidays from periods under 10 days
+# and adds 2 days after mail service; lit/core has no counting rule for
+# it, so the periods are stated in notes, not encoded as counted
+# deadlines. The Hawai'i Revised Statutes the rules cite (bail, HRS
+# § 803-6 citations) are not vendored.
+[package]
+name = "hi-circuit-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "hi-circuit-court-criminal"
+forum = "hi-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "hawaii"
+title = "Hawai'i circuit courts, criminal"
+description = "Felony criminal cases in the Hawai'i circuit courts under the Hawai'i Rules of Penal Procedure: arrest and the 48-hour probable cause determination, the preliminary hearing, indictment, information or complaint, arraignment, discovery, pretrial motions and the HRPP 48 six-month trial rule, plea or trial, post-verdict motions, sentencing, and the HRAP 4(b) notice of appeal, with every period stated in notes from the vendored rules."
+in_force = "2026-07-01"
+known_at = "2026-10-28"
+unknown_before = "2026-07-01"
+jurisdiction = "Hawai'i circuit courts (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.hrpp]
+title = "Hawai'i Rules of Penal Procedure (effective January 1, 1977, with amendments as noted; listed effective July 1, 2026)"
+url = "https://www.courts.state.hi.us/wp-content/uploads/2024/12/hrpp_ada.pdf"
+path = "sources/hi-criminal-trial-court/hi-rules-of-penal-procedure-sectioned.txt"
+path_sha256 = "76f2070718af4002062c4becb85a3b7b67b90c10385e515ac329857ca380fb59"
+sha256 = "e1522722db69f47383413375ecac3e16da216ac88f5c2b72cc2bf176587c0d7c"
+as_of = "2026-07-01"
+cite_prefixes = ["Haw. R. Penal P.", "HRPP"]
+section_heading = "Rule {n}"
+
+[sources.hrap]
+title = "Hawai'i Rules of Appellate Procedure (SCRU-10-0000012), with further amendments as noted through May 21, 2026, effective July 1, 2026"
+url = "https://www.courts.state.hi.us/wp-content/uploads/2025/07/hrap_ada.pdf"
+path = "sources/hi-ica/hrap-2025-07-sectioned.txt"
+path_sha256 = "7000b991d6425545d3f4580cff275fba242cf74152250e1e1ef2ae3bcd7ddb1b"
+sha256 = "7da63b464186132b6ad29e0509268b102e4954d8a37c7ea36dd421232b7d1871"
+as_of = "2026-07-01"
+cite_prefixes = ["Haw. R. App. P."]
+section_heading = "Rule {n}"

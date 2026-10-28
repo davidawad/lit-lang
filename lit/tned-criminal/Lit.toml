@@ -1,0 +1,52 @@
+# The United States District Court for the Eastern District of Tennessee's
+# Local Rules, as far as they govern criminal cases, as a local-rule layer
+# over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it declares only the
+# periods the Local Rules themselves state for criminal cases and re-encodes
+# no FRCrimP, Speedy Trial Act or FRAP 4(b) period. FRCrimP 45(a) computes
+# a period stated in a local rule. The district has no separate criminal
+# rules; its criminal provisions (LR 16.2, 72.4, 83.9, 83.11 among them) are
+# in the Local Rules "Effective: December 1, 2009; Revised: April 8, 2026"
+# (sources/tned), the edition lit/tned binds for civil cases. An appeal goes
+# to the Sixth Circuit under lit/frap and lit/ca6; federal habeas is
+# lit/habeas.
+[package]
+name = "tned-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "tned-criminal-local-rules"
+forum = "tned-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Eastern District of Tennessee: Local Rules (criminal)"
+description = "The Eastern District of Tennessee's Local Rules for criminal cases as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): an incarcerated defendant's request to attend a pretrial conference, the appellant's assignment of errors and brief on an appeal from a magistrate judge's conviction or sentence, the earliest sentencing date after a plea or verdict, and the government's departure motions and the defendant's departure or variance notice and other sentencing motions and memoranda before the sentencing hearing."
+in_force = "2026-04-08"
+known_at = "2026-10-28"
+unknown_before = "2026-04-08"
+jurisdiction = "United States District Court, E.D. Tenn. (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "tned-lr"
+issuer = "United States District Court for the Eastern District of Tennessee"
+date = "2026-04-08"
+designation = "Local Rules (Effective December 1, 2009; Revised April 8, 2026)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRCrimP periods; this package layers only the court's local rules for criminal cases over them.
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.tned-lr]
+title = "Local Rules of the United States District Court for the Eastern District of Tennessee (Effective December 1, 2009; Revised April 8, 2026)"
+url = "https://www.tned.uscourts.gov/sites/tned/files/Local%20Rules_Active_2026.04.08%20to%20Present.pdf"
+path = "sources/tned/tned-local-rules-sectioned.txt"
+path_sha256 = "9b84efd66ff91cba7627f6a6e5644aaf8fccfd57c864d9b3ec296e4df3480ca9"
+sha256 = "c53178a09c2ffb0cbb6cb3eafb2c064564fb89fb44a08f5b05b69f73d70b8ecf"
+as_of = "2026-04-08"
+cite_prefixes = ["E.D. Tenn. L.R."]
+section_heading = "LR {n}"

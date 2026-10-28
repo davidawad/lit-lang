@@ -1,0 +1,55 @@
+module tned-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The Eastern District of Tennessee's own periods for criminal cases,
+// counted under FRCrimP 45(a), which governs a period stated in a local
+// rule. The court may modify the sentencing periods for good cause (LR
+// 83.9(g)). The FRCrimP and FRAP periods the rules repeat are lit/frcrimp's
+// and are not declared again: the presentence report filed not less than 35
+// days before sentencing (LR 83.9(b); FRCrimP 32(e)(2)), objections within
+// 14 days after it is filed (LR 83.9(c); FRCrimP 32(f)(1)), the addendum
+// at least 7 days before the hearing (LR 83.9(e); FRCrimP 32(g)), the 14
+// days to appeal a magistrate judge's interlocutory order, nondispositive
+// order or judgment (LR 72.4(b), (c); FRCrimP 58(g)(2), 59(a)) and the
+// notice of appeal to the Sixth Circuit within 14 days (LR 72.4(d); FRAP
+// 4(b)(1)(A)). Stated in the rules but not declared: the opposing party's
+// 14 days to reply on an appeal from a magistrate judge (LR 72.4(b), (c)),
+// for which the rule names no trigger; and the United States Attorney's
+// endeavor to deliver witness subpoenas to the Marshal 10 days before trial
+// (LR 4.1(b)), which is no deadline.
+/// An incarcerated defendant's pretrial conference at which no evidence is
+/// to be taken is scheduled (LR 16.2).
+event PretrialConferenceScheduled()
+/// A notice of appeal from a magistrate judge's judgment of conviction or
+/// sentence is filed (LR 72.4(c)).
+event MisdemeanorAppealNoticeFiled()
+/// A plea of guilty or a verdict of guilty is entered (LR 83.9(a)).
+event GuiltyPleaOrVerdict()
+
+/// LR 16.2: if no evidence is to be taken, an incarcerated defendant must
+/// request to attend the pretrial conference 7 days before the scheduled
+/// conference.
+deadline pretrial-attendance-request-period: 7.days before PretrialConferenceScheduled() counted_by frcrimp45 cite "E.D. Tenn. L.R. 16.2"
+/// LR 72.4(c): on an appeal from a magistrate judge's judgment of
+/// conviction or sentence, the appealing party files an assignment of
+/// errors and a brief and argument within 14 days of the filing of the
+/// notice of appeal.
+deadline misdemeanor-appeal-brief-period: 14.days after MisdemeanorAppealNoticeFiled() counted_by frcrimp45 cite "E.D. Tenn. L.R. 72.4(c)"
+/// LR 83.9(a): sentencing proceedings are scheduled no earlier than 65
+/// days following entry of a guilty plea or verdict; this is the earliest
+/// such date.
+deadline earliest-sentencing-date: 65.days after GuiltyPleaOrVerdict() counted_by frcrimp45 cite "E.D. Tenn. L.R. 83.9(a)"
+/// LR 83.9(j): the government files every motion for a departure under 18
+/// U.S.C. § 3553(e) or USSG § 5K1.1, or for a sentence below a statutory
+/// mandatory minimum, at least 7 days before the sentencing hearing.
+deadline government-departure-motion-period: 7.days before SentencingScheduled() counted_by frcrimp45 cite "E.D. Tenn. L.R. 83.9(j)"
+/// LR 83.9(j): a defendant seeking a downward departure or variance
+/// notifies the court and the government in writing, with the grounds, at
+/// least 14 days before the sentencing hearing.
+deadline defendant-departure-notice-period: 14.days before SentencingScheduled() counted_by frcrimp45 cite "E.D. Tenn. L.R. 83.9(j)"
+/// LR 83.9(j): all other sentencing motions and sentencing memoranda are
+/// filed at least 14 days before the sentencing hearing; failure to comply
+/// may result in denial of a departure or variance.
+deadline sentencing-memoranda-period: 14.days before SentencingScheduled() counted_by frcrimp45 cite "E.D. Tenn. L.R. 83.9(j)"

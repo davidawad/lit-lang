@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "tned-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:18a6c2c45feb4d459cccec86ffccb30905c7c15879f8b47987c04b9f8f91c876"
+semantic = "sha256:70c4f26013583bda588b514a189156b480c632399d5ee3b8bbc7f6007937d2c5"
+texts = [
+    "tned-lr sources/tned/tned-local-rules-sectioned.txt sha256:9b84efd66ff91cba7627f6a6e5644aaf8fccfd57c864d9b3ec296e4df3480ca9",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

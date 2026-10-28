@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-cas-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:0885b4522a3189dd46d3db65327d91568e0a99826e23dcccb6460b4ed46cf7ac"
+semantic = "sha256:92f1e0a0b85e52d719666ee70b7a2119511795b33cde0f5416651235ec8de65f"
+texts = [
+    "casb-lbr sources/bankr-cas/casb-lbr-2025-12-01-sectioned.txt sha256:b6ae868f4f58bb688466e8bb07b79ca5d2afe0436c81570d60de2039a01178e6",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-cas"
-version = "0.0.1"
-language = 1
-source = "sha256:3d4d9985b2d740baa5133623ef097e9156a427d25b4eeb0284378125c028cebc"
-semantic = "sha256:c02e9411766ed9c9d4c4beb47c160293a71eb25e6271d628bbf449ef184815d5"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

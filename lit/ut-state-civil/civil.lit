@@ -1,0 +1,152 @@
+module ut-district-court-civil.civil
+
+start complaint-filed
+
+state complaint-filed: "Action commenced" by applicant cite "URCP 3"
+{
+  note "A civil action is commenced by filing a complaint, or by serving a summons with a copy of the complaint under Rule 4; in the second case the complaint, summons and proof of service are filed within ten days of service or the action is deemed dismissed (URCP 3(a)). In an action commenced by filing, the summons and complaint are served no later than 120 days after the complaint is filed unless the court orders a different period under Rule 6; if not timely served, the action against the unserved defendant may be dismissed without prejudice (URCP 4(b)). Periods in this package are stated, not counted: computation is URCP 6(a). The outline's leading decision (Orvis v. Johnson, 2008 UT 2) is removed: no reporter text is vendored."
+  edge-complaint-filed-response-due "Summons and complaint served" -> response-due {
+    authority cite "URCP 4(d)"
+  }
+  edge-complaint-filed-dismissed-unserved "Not served within 120 days" -> dismissed-unserved {
+    authority cite "URCP 4(b)"
+  }
+}
+
+state response-due: "Response due: answer or motion" cite "URCP 12(a)"
+{
+  note "Unless a statute or order provides otherwise, a defendant files and serves an answer within 21 days after service of the summons and complaint within the state and within 30 days after service outside the state; an answer to a crossclaim or counterclaim is due within 21 days after its service (URCP 12(a)(1)). A defense of failure to state a claim upon which relief can be granted may be made by motion (URCP 12(b)). Service by mail alone adds 7 days to a period running from service (URCP 6(c))."
+  edge-response-due-default-entered "No timely response" -> default-entered {
+    authority cite "URCP 55(a)"
+  }
+  edge-response-due-motion-ruling "Motion to dismiss filed" -> motion-ruling {
+    authority cite "URCP 12(b)"
+  }
+  edge-response-due-discovery "Answer filed" -> discovery { authority cite "URCP 12(a)" }
+}
+
+decision motion-ruling: "Motion to dismiss ruling" by court cite "URCP 12(b)"
+{
+  note "A memorandum opposing a motion may be filed within 14 days after the motion is filed, and a reply within seven days after the opposing memorandum is filed (URCP 7(d)(1), (e)(1)). A motion under Rule 12(b), 12(c), 56 or 65A and the memorandum opposing it are limited to 25 pages or 9,000 words, and the reply to 15 pages or 5,400 words; other motions and opposing memoranda to 15 pages or 5,400 words, their replies to 10 pages or 3,600 words; a filer relying on the word limit certifies the word count (URCP 7(q)). Either party files a Request to Submit for Decision when briefing is complete, or the motion is not submitted (URCP 7(g)). If the court denies the motion or postpones it until trial, the responsive pleading is served within 14 days after notice of the court's action (URCP 12(a)(1)(A)). A required response to an amended pleading is due within the time remaining to respond to the original or within 14 days after its service, whichever is later (URCP 15(a)(3)). No leading decision is named."
+  edge-motion-ruling-dismissed-with-prejudice "Dismissed on the merits" -> dismissed-with-prejudice {
+    authority cite "URCP 41(b)"
+  }
+  edge-motion-ruling-response-due "Dismissed with leave to amend" -> response-due {
+    authority cite "URCP 15(a)"
+  }
+  edge-motion-ruling-discovery "Denied: responsive pleading within 14 days after notice" -> discovery {
+    authority cite "URCP 12(a)"
+  }
+}
+
+state discovery: "Disclosures and standard discovery" cite "URCP 26(a)"
+{
+  note "Initial disclosures are served by a plaintiff within 14 days after the filing of the first answer to its complaint, and by a defendant within 42 days after the filing of its first answer (URCP 26(a)(2)). Standard discovery is tiered by the damages claimed: Tier 1 for $50,000 or less, Tier 2 for more than $50,000 and less than $300,000, Tier 3 for $300,000 or more (URCP 26(c)(3)). A discovery dispute is raised by a statement of discovery issues of no more than four pages, and any objection is filed no more than seven days after the statement (URCP 37(a)(2), (3)); the statement does not toll the time to complete standard discovery (URCP 37(a)(9)). A pretrial conference is in the court's discretion or on motion (URCP 16(a))."
+  edge-discovery-sj-ruling "Summary judgment motion filed" -> sj-ruling {
+    authority cite "URCP 56(b)"
+  }
+  edge-discovery-dismissed-with-prejudice "Discovery sanction dismisses claims" -> dismissed-with-prejudice {
+    authority cite "URCP 37(b)"
+  }
+  edge-discovery-settled "Settlement or voluntary dismissal" -> settled {
+    authority cite "URCP 41(a)"
+  }
+  edge-discovery-trial "Discovery complete: case certified ready for trial" -> trial {
+    authority cite "URCP 16(b)"
+  }
+}
+
+decision sj-ruling: "Summary judgment ruling" by court cite "URCP 56(a)"
+{
+  note "A claimant may move after 21 days from commencement or after the adverse party serves a summary judgment motion; a defending party may move at any time; unless the court orders otherwise, a motion is filed no later than 28 days after the close of all discovery (URCP 56(b)). Summary judgment is granted if there is no genuine dispute as to any material fact and the movant is entitled to judgment as a matter of law (URCP 56(a)). The court must grant a requested hearing on a Rule 56 motion unless the motion or opposition is frivolous or the issue has been authoritatively decided (URCP 7(h)). Briefing periods and length limits are those of URCP 7(d), (e) and (q). No leading decision is named."
+  edge-sj-ruling-judgment-applicant "Granted for applicant" -> judgment-applicant {
+    authority cite "URCP 58A(a)"
+  }
+  edge-sj-ruling-judgment-opponent "Granted for opponent" -> judgment-opponent {
+    authority cite "URCP 58A(a)"
+  }
+  edge-sj-ruling-trial "Denied" -> trial { authority cite "URCP 56(g)" }
+}
+
+state trial: "Trial (jury or bench)" cite "URCP 38"
+{
+  note "Unless an order sets the trial date, at the close of all discovery the plaintiff certifies that discovery is complete and the case is ready for trial, and the court schedules the trial (URCP 16(b)). A party demands a jury by paying the statutory jury fee and serving a written demand not later than 14 days after service of the last pleading directed to the issue (URCP 38(b)); another party may demand a jury on other issues within 14 days after service of the demand (URCP 38(c)); failure to pay the fee or serve and file the demand waives a jury (URCP 38(d))."
+  edge-trial-judgment-applicant "Verdict or findings for applicant" -> judgment-applicant {
+    authority cite "URCP 58A(a)"
+  }
+  edge-trial-judgment-opponent "Verdict or findings for opponent" -> judgment-opponent {
+    authority cite "URCP 58A(a)"
+  }
+}
+
+state judgment-applicant: "Judgment for applicant entered" cite "URCP 58A(a)"
+{
+  note "Every judgment is set out in a separate document (URCP 58A(a)). The prevailing party serves a proposed judgment within 14 days after the verdict or decision, and an objection to its form is filed within 7 days after it is served (URCP 58A(c)(1), (3)). If a required separate document is not prepared, judgment is entered when 150 days have run from the clerk recording the decision (URCP 58A(e)). The party claiming costs files and serves a verified memorandum of costs no later than 14 days after entry of judgment, and objections are due within 7 days after its service (URCP 54(d)(2)). No execution issues until 28 days after entry of judgment unless the court directs otherwise (URCP 62(a))."
+  edge-judgment-applicant-post-judgment-ruling "Post-judgment motion" -> post-judgment-ruling {
+    authority cite "URCP 59(b)"
+  }
+  edge-judgment-applicant-appellate-review "Notice of appeal filed" -> appellate-review {
+    authority cite "URAP 4(a)"
+  }
+  edge-judgment-applicant-final-win "No appeal within time" -> final-win {
+    authority cite "URAP 4(a)"
+  }
+}
+
+state judgment-opponent: "Judgment for opponent entered" cite "URCP 58A(a)"
+{
+  note "Entry, costs and the delay of execution are as for a judgment for the applicant (URCP 54(d), 58A, 62(a)). The notice of appeal is filed with the clerk of the trial court within 30 days after the date of entry of the judgment; a judgment entered on a Saturday, Sunday or legal holiday is deemed entered on the next day that is not one (URAP 4(a)). Serving the signed judgment does not affect the time to appeal except as URAP 4(g) provides (URCP 58A(g))."
+  edge-judgment-opponent-post-judgment-ruling "Post-judgment motion" -> post-judgment-ruling {
+    authority cite "URCP 59(b)"
+  }
+  edge-judgment-opponent-appellate-review "Notice of appeal filed" -> appellate-review {
+    authority cite "URAP 4(a)"
+  }
+  edge-judgment-opponent-final-loss "No appeal within time" -> final-loss {
+    authority cite "URAP 4(a)"
+  }
+}
+
+decision post-judgment-ruling: "Post-judgment motion ruling" by court cite "URCP 59(b)"
+{
+  note "A renewed motion for judgment as a matter of law is filed no later than 28 days after entry of judgment (URCP 50(b)); a motion to amend or make additional findings, no later than 28 days after entry (URCP 52(b)); a motion for a new trial, no later than 28 days after entry (URCP 59(b)); a motion to alter or amend, no later than 28 days after entry (URCP 59(e)). A Rule 60(b)(1)-(3) motion is filed within a reasonable time and not more than 90 days after entry (URCP 60(c)). A timely motion under Rule 50(b), 52(b) or 59, a Rule 60(b) motion filed no later than 28 days after entry, or a motion or claim for attorney fees under Rule 73 starts the time for all parties to appeal from the entry of the dispositive order (URAP 4(b)(1))."
+  edge-post-judgment-ruling-trial "Granted: new trial" -> trial { authority cite "URCP 59(a)" }
+  edge-post-judgment-ruling-appellate-review "Denied: appeal time runs from the dispositive order" -> appellate-review {
+    authority cite "URAP 4(b)"
+  }
+}
+
+terminal default-entered: "Default entered against opponent" outcome [win] cite "URCP 55(a)"
+{
+  note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend, the clerk enters its default (URCP 55(a)); judgment by default follows under URCP 55(b), and the court may set aside an entry of default for good cause and a default judgment under Rule 60(b) (URCP 55(c)). Outcome from the applicant's side."
+}
+
+terminal dismissed-unserved: "Dismissed for failure to serve" outcome [loss, dismissal] cite "URCP 4(b)"
+{
+  note "The action against a defendant not served within 120 days after the complaint is filed may be dismissed without prejudice on motion or on the court's own initiative (URCP 4(b)). Outcome from the applicant's side."
+}
+
+terminal dismissed-with-prejudice: "Dismissed on the merits" outcome [loss] cite "URCP 41(b)"
+{
+  note "Unless the order states otherwise, an involuntary dismissal operates as an adjudication on the merits, except one for lack of jurisdiction, improper venue or failure to join a party under Rule 19 (URCP 41(b)). Outcome from the applicant's side."
+}
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "URCP 41(a)"
+{
+  note "The plaintiff may dismiss without a court order by a notice filed before any opposing party serves an answer or a summary judgment motion, or by a stipulation signed by all parties who have appeared; unless stated otherwise the dismissal is without prejudice (URCP 41(a)(1)). Settlement terms are matter facts."
+}
+
+terminal final-win: "Final judgment for applicant, no appeal" outcome [win] cite "URAP 4(a)"
+{
+  note "Judgment final when the 30-day appeal time and any extension have run; the trial court may extend the time on a motion filed before it expires, or for good cause or excusable neglect on a motion filed no later than 30 days after it expires, by no more than 30 days beyond the prescribed time or 14 days beyond entry of the order granting the motion, whichever is later (URAP 4(a), (e))."
+}
+
+terminal final-loss: "Final judgment for opponent, no appeal" outcome [loss] cite "URAP 4(a)"
+{
+  note "Judgment final when the appeal time has run (URAP 4(a), (e))."
+}
+
+terminal appellate-review: "Appeal taken: continue in the Utah appellate package" cite "URAP 4(a)"
+{
+  note "Hand-off to lit/ut-state-appellate."
+}

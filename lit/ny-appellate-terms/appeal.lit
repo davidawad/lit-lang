@@ -1,0 +1,69 @@
+module ny-appellate-terms-civil-appeals.appeal
+
+import ny-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+// A civil appeal to an Appellate Term, from the appellant's side. Only
+// CPLR 5513 is vendored; whether and how it applies to an appeal from a
+// lower court is a matter of the court acts (UCCA, UDCA, UCtCA, UJCA
+// art. 17), which are not vendored. The Appellate Terms' rules (22 NYCRR
+// Parts 640, 731, 732) and CPLR 5703 are not vendored: their cites and
+// values stay holes. The outline named no leading decision; none is kept.
+
+start notice
+
+decision notice: "Notice of appeal within 30 days of service with notice of entry?" by applicant cite "CPLR 5513(a)"
+{
+  note "An appeal as of right is taken within 30 days after service by a party upon the appellant of a copy of the judgment or order and written notice of its entry, or, when the appellant served them, within 30 days of that service (CPLR 5513(a)); a party served with the adverse party's notice of appeal may appeal within 10 days after that service or within the subdivision (a) time, whichever is longer (CPLR 5513(c)). Service by mail or overnight delivery adds the days CPLR 2103(b)(2) and (6) provide (CPLR 5513(d)); CPLR 2103 is not vendored and the days are not stated. Appealability to the Appellate Term, and how the lower-court acts (UCCA, UDCA, UCtCA, UJCA art. 17) take up CPLR 5513, are holes: those acts are not vendored."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "CPLR 5513(a)" }
+  edge-notice-filed "Timely notice" -> record { event NoticeOfAppealFiled() authority cite "CPLR 5513(a)" }
+}
+
+state record: "Record or transcript prepared" by office cite ?("22 NYCRR Parts 640, 731, 732: not vendored")
+{
+  note "Record contents, the transcript and fees are holes: the Appellate Terms' rules (22 NYCRR Parts 640, 731, 732) are not vendored."
+  edge-record-briefing "Record filed" -> briefing { event RecordFiled() authority cite ?("22 NYCRR Parts 640, 731, 732: not vendored") }
+}
+
+state briefing: "Briefs filed" by applicant cite ?("22 NYCRR Parts 640, 731, 732: not vendored")
+{
+  note "Briefing periods, form and length are holes: the Appellate Terms' rules are not vendored."
+  edge-briefing-argument "Argument or submission" -> argument { authority cite ?("22 NYCRR Parts 640, 731, 732: not vendored") }
+}
+
+state argument: "Argument or submission" by court cite ?("22 NYCRR Parts 640, 731, 732: not vendored")
+{
+  note "Whether argument is of right or discretionary is a hole: the Appellate Terms' rules are not vendored."
+  edge-argument-decision "Decision issued" -> decision { authority cite ?("22 NYCRR Parts 640, 731, 732: not vendored") }
+}
+
+chance decision: "Court decides" by court cite ?("22 NYCRR Parts 640, 731, 732: not vendored")
+{
+  note "Outcome probabilities are holes."
+  edge-decision-affirmed "Affirmed" -> post-decision p ? { event DecisionFiled() }
+  edge-decision-reversed "Reversed, vacated or remanded" -> post-decision p ? { event DecisionFiled() }
+}
+
+decision post-decision: "Reargument or further review?" by applicant cite ?("appeal by permission from the Appellate Term (CPLR 5703(a)): not vendored")
+{
+  note "Further review of an Appellate Term order is in the Appellate Division by permission (CPLR 5703(a), not vendored); the time to move for permission is computed under CPLR 5513(b): within 30 days after service of the order with written notice of its entry, or, where permission has already been denied by the court whose determination is sought to be reviewed, of that order with notice of entry (CPLR 5513(b)). Reargument and the remittitur are holes: the Appellate Terms' rules are not vendored."
+  edge-post-mandate "No further review" -> mandate-issued { event MandateIssued() authority cite ?("22 NYCRR Parts 640, 731, 732: not vendored") }
+  edge-post-further "Permission to appeal sought" -> further-review { event ReviewPetitionFiled() authority cite "CPLR 5513(b)" }
+}
+
+terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismissal] cite "CPLR 5513(a)"
+{
+  note "Whether the time limit may be extended is a hole: CPLR 5520 is not vendored. Outcome from the appellant's side."
+  payoff ?
+}
+
+terminal mandate-issued: "Remittitur to the court below" outcome [final] cite ?("22 NYCRR Parts 640, 731, 732: not vendored")
+{
+  note "The case returns to the court below; costs are holes."
+  payoff ?
+}
+
+terminal further-review: "Permission to appeal to the Appellate Division sought" outcome [final] cite "CPLR 5513(b)"
+{
+  note "Review in the Appellate Division is lit/ny-appellate-division."
+  payoff ?
+}

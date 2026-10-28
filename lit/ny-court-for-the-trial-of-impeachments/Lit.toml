@@ -1,0 +1,29 @@
+# The New York Court for the Trial of Impeachments (N.Y. Const. art. VI,
+# § 24), from the respondent's side. Neither the Constitution nor the
+# Judiciary Law provisions on impeachment trials is vendored: every cite
+# and value is a hole. There is no source binding to declare.
+[package]
+name = "ny-court-for-the-trial-of-impeachments"
+version = "0.1.0"
+language = 1
+pack_id = "ny-court-for-the-trial-of-impeachments"
+forum = "ny-court-for-the-trial-of-impeachments"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "new-york"
+title = "New York Court for the Trial of Impeachments"
+description = "The structure of a trial in the New York Court for the Trial of Impeachments, from the respondent's side. The constitutional and statutory text is not vendored, so every cite and value is a hole."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Court for the Trial of Impeachments"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+ny-state-rules = { version = "^0.1.0", path = "../ny-rules" }

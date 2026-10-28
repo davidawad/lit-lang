@@ -1,0 +1,32 @@
+# The New York Court of Chancery as it sat at Saratoga Springs, a
+# historical court abolished under the Constitution of 1846. Neither the
+# Revised Statutes (pt. III, ch. 1), the rules of the Court of Chancery
+# nor the practice of the Court for the Correction of Errors that heard its
+# appeals is vendored: every cite and value is a hole, and the court's
+# dates are not encoded (in_force is the date of promotion, not of the
+# court). There is no source binding to declare.
+[package]
+name = "ny-saratoga-chancery-court"
+version = "0.1.0"
+language = 1
+pack_id = "ny-saratoga-chancery-court"
+forum = "ny-saratoga-chancery-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "new-york"
+title = "New York Court of Chancery (Saratoga)"
+description = "The structure of a suit in the New York Court of Chancery as it sat at Saratoga Springs, a historical court. No statute or chancery rule is vendored, so every cite and value is a hole."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Saratoga Chancery Court"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+ny-state-rules = { version = "^0.1.0", path = "../ny-rules" }

@@ -119,6 +119,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | med-local-rules | `lit/med` | 18 | 0 | 18 | 0 |
 | mpep-prosecution | `lit/mpep` | 19 | 6 | 42 | 0 |
 | mtd-local-rules | `lit/mtd` | 29 | 0 | 29 | 0 |
+| njd-local-rules | `lit/njd` | 23 | 0 | 0 | 0 |
 | nmid-local-rules | `lit/nmid` | 23 | 0 | 23 | 0 |
 | ohnd-local-rules | `lit/ohnd` | 14 | 0 | 14 | 0 |
 | ohsd-local-rules | `lit/ohsd` | 8 | 0 | 8 | 0 |

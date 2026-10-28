@@ -6,3 +6,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 15a4fc38f57592a7ec67418d78b4c4f7340a45ef6190d0a91c9ab11edee66ed9. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-msn/original/msn-uniform-local-rules-2026-03-01.pdf` as served (sha256 e6d69f1b3370b0371ff67eefaaf0a2c8cb3681b049b8cf74b14888ccedbae186); extraction sha256 15a4fc38f57592a7ec67418d78b4c4f7340a45ef6190d0a91c9ab11edee66ed9.
+
+### `bankr-msn/msn-uniform-local-rules-2026-03-01-sectioned.txt` — Uniform Local Rules (N.D. and S.D. Miss.), sectioned
+
+- Derived in the pod (lg-u561.17) from `bankr-msn/msn-uniform-local-rules-2026-03-01.txt` (extract sha256 15a4fc38f57592a7ec67418d78b4c4f7340a45ef6190d0a91c9ab11edee66ed9); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (a line opening, after an optional form feed, with `Rule <nnnn>-<n>` or `Rule <nnnn>.<n>-<n>` at the margin; indented cross-references and the appended forms are unmarked, from `Rule 1001-1.` through `Rule 9037-1.`, 58 rules, the same set as the table of contents); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract.
+- Sectioned sha256 a545c639410afef70780a2b42c6e86a191cbaa012518f504c50c90a432d55cdd (the `path_sha256` pinned by `lit/bankr-msn/Lit.toml`).

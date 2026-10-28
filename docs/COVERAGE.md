@@ -21,6 +21,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | bankr-ma-local-rules | `lit/bankr-ma` | 80 | 0 | 0 | 0 |
 | bankr-me-local-rules | `lit/bankr-me` | 17 | 0 | 0 | 0 |
 | bankr-mp-local-rules | `lit/bankr-mp` | 64 | 0 | 64 | 0 |
+| bankr-msn-local-rules | `lit/bankr-msn` | 36 | 0 | 0 | 0 |
 | bankr-mt-local-rules | `lit/bankr-mt` | 45 | 0 | 45 | 0 |
 | bankr-nh-local-rules | `lit/bankr-nh` | 20 | 0 | 0 | 0 |
 | bankr-nye-local-rules | `lit/bankr-nye` | 39 | 0 | 0 | 0 |

@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-msn-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:4608c0b0740f28b17b7643d7b3edccdecf5f7f40369e04302c3f27958ad0f807"
+semantic = "sha256:f4c2dab68b1477439f713f71986ad205bfc4ef9c22e225469a9eacede2a8afc6"
+texts = [
+    "msnb-ulr sources/bankr-msn/msn-uniform-local-rules-2026-03-01-sectioned.txt sha256:a545c639410afef70780a2b42c6e86a191cbaa012518f504c50c90a432d55cdd",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-msn"
-version = "0.0.1"
-language = 1
-source = "sha256:a98ffdecd0ce83be140e79c7896837b5e77c85fac147746c75a81df63269a5f8"
-semantic = "sha256:da844e3b0386dc09a2e4e4b84c430621754b35392e5380b109be82557301d89c"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

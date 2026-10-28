@@ -92,7 +92,9 @@ pub(crate) fn canonical(value: &Value, skip: &[&str], out: &mut String) {
 /// `version`, `language`, `content` (the semantic digest, or the source
 /// digest of a package that does not check), the number of `texts` and
 /// each entry, then the number of `dependencies` and each entry (which
-/// carries the dependency's own Merkle digest). Returns `sha256:<hex>`.
+/// carries the dependency's own Merkle digest). A path dependency's row
+/// has no language or content, so its digest covers its name, version and
+/// dependencies only. Returns `sha256:<hex>`.
 /// It is never stored: [`LockFile::merkle`] computes it on read.
 #[must_use]
 pub fn merkle(
@@ -126,7 +128,12 @@ pub fn merkle(
 /// so its Merkle digest covers its source digest instead.
 pub const UNCHECKED: &str = "unchecked";
 
-/// One resolved package in `Lit.lock`.
+/// One resolved package in `Lit.lock`. A path dependency (a package
+/// resolved from inside the same repository, as Cargo treats one) is
+/// pinned by name, version and dependencies only: its `language`,
+/// `source`, `semantic` and `texts` are empty, since it is checked from
+/// source on every build, so an edit to it never rewrites a dependent's
+/// lock.
 #[derive(Debug, Clone, Default, PartialEq, Eq, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct LockedPackage {
@@ -134,12 +141,16 @@ pub struct LockedPackage {
     pub name: String,
     /// Exact version.
     pub version: String,
-    /// Language version.
+    /// Language version (0 for a path dependency).
+    #[serde(default)]
     pub language: u32,
-    /// Source digest ([`digest`]), `sha256:<hex>`.
+    /// Source digest ([`digest`]), `sha256:<hex>` (empty for a path
+    /// dependency).
+    #[serde(default)]
     pub source: String,
     /// Semantic digest ([`semantic_digest`]), `sha256:<hex>`, or
-    /// [`UNCHECKED`].
+    /// [`UNCHECKED`] (empty for a path dependency).
+    #[serde(default)]
     pub semantic: String,
     /// Sorted `"<source id> <path> sha256:<hex>"` entries, one per
     /// `[sources.*]` binding with a `path`: the vendored L0 text's bytes
@@ -152,6 +163,40 @@ pub struct LockedPackage {
 }
 
 impl LockedPackage {
+    /// The row of a path dependency: `name`, `version` and
+    /// `dependencies`, without digests.
+    #[must_use]
+    pub fn path(name: String, version: String, dependencies: Vec<String>) -> Self {
+        Self {
+            name,
+            version,
+            dependencies,
+            ..Self::default()
+        }
+    }
+
+    /// This row without its digests: the row of a path dependency.
+    #[must_use]
+    pub fn into_path(self) -> Self {
+        Self::path(self.name, self.version, self.dependencies)
+    }
+
+    /// Whether the row pins a path dependency (it records no digests).
+    #[must_use]
+    pub fn is_path(&self) -> bool {
+        self.source.is_empty()
+    }
+
+    /// `version`, then the content digest unless a path dependency.
+    #[must_use]
+    pub fn shown(&self) -> String {
+        if self.is_path() {
+            self.version.clone()
+        } else {
+            format!("{} {}", self.version, self.content())
+        }
+    }
+
     /// What the row's Merkle digest covers of the package itself: the
     /// semantic digest, or the source digest of a package that does not
     /// check.
@@ -205,6 +250,16 @@ impl LockFile {
         };
         let mut out = format!("version = {FORMAT}\n");
         for p in &self.packages {
+            if p.is_path() {
+                let _ = write!(
+                    out,
+                    "\n[[package]]\nname = {}\nversion = {}\ndependencies = [{}]\n",
+                    quote(&p.name),
+                    quote(&p.version),
+                    list(&p.dependencies),
+                );
+                continue;
+            }
             let _ = write!(
                 out,
                 "\n[[package]]\nname = {}\nversion = {}\nlanguage = {}\nsource = {}\nsemantic = {}\ntexts = [{}]\ndependencies = [{}]\n",
@@ -255,7 +310,8 @@ impl LockFile {
         rows.next().is_none().then_some(row).flatten()
     }
 
-    /// Every row is the only one of its name and version, and every
+    /// Every row is the only one of its name and version, records either
+    /// all of its digests or (a path dependency) none, and every
     /// dependency names exactly one row.
     ///
     /// # Errors
@@ -269,6 +325,18 @@ impl LockFile {
             if self.find(&p.name, &p.version).is_none() {
                 return fail(format!(
                     "Lit.lock locks `{}` {} more than once",
+                    p.name, p.version
+                ));
+            }
+            let digests = [!p.semantic.is_empty(), p.language != 0];
+            let partial = if p.is_path() {
+                digests.contains(&true) || !p.texts.is_empty()
+            } else {
+                digests.contains(&false)
+            };
+            if partial {
+                return fail(format!(
+                    "Lit.lock: `{}` {} records only some of `language`, `source` and `semantic`",
                     p.name, p.version
                 ));
             }
@@ -449,12 +517,10 @@ pub fn verify(existing: Option<&str>, expected: &LockFile) -> Result<(), Report>
             None => report = report.note(format!("`{}` is not locked", p.name)),
             Some(f) if f != p => {
                 report = report.note(format!(
-                    "`{}` changed (locked {} {}, now {} {})",
+                    "`{}` changed (locked {}, now {})",
                     p.name,
-                    f.version,
-                    f.content(),
-                    p.version,
-                    p.content()
+                    f.shown(),
+                    p.shown()
                 ));
             }
             Some(_) => {}

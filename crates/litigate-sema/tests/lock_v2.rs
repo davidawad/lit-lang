@@ -190,3 +190,25 @@ fn an_undeclared_core_is_the_highest_loaded_version() {
     ]);
     assert_eq!(render(&db, ws), Vec::<String>::new());
 }
+
+/// lg-vw17: a path dependency is pinned by name, version and dependencies
+/// only, so editing its source leaves a dependent's lock unchanged.
+#[test]
+fn editing_a_path_dependency_leaves_a_dependents_lock_unchanged() {
+    let lock_of = |core: &str| {
+        let (db, ws) = workspace(&[
+            package("app", &["core"], &[("app.lit", PACK)]),
+            package("core", &[], &[("core.lit", core)]),
+        ]);
+        litigate_sema::render_lock(&db, ws, ws.packages(&db)[0])
+    };
+    let before = lock_of("module core\nstart c\nterminal c: \"C\"\n");
+    let after = lock_of("module core\nstart c\nterminal c: \"Core\"\n");
+    assert_eq!(before, after);
+    let lock = LockFile::parse(&before).unwrap();
+    assert_eq!(
+        row(&lock, "core"),
+        &LockedPackage::path("core".into(), "1.0.0".into(), Vec::new())
+    );
+    assert!(!row(&lock, "app").is_path());
+}

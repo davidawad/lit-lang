@@ -9,7 +9,7 @@ use crate::hir;
 use crate::pkg::lock::{digest, semantic_digest, LockFile, LockedPackage, UNCHECKED};
 use crate::resolve::sig::flatten;
 use litigate_base::{Diagnostic, DiagnosticCode as C, FileId, LineIndex};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
 /// Result of checking a package.
 #[derive(Debug, Clone, PartialEq, Default)]
@@ -354,28 +354,51 @@ pub fn package_digest(db: &dyn salsa::Database, pkg: PackageInput) -> String {
 }
 
 /// The `Lit.lock` that `root` and its transitive dependencies resolve to:
-/// one row per package of `root`'s resolution.
+/// one row per package of `root`'s resolution. `root`'s own row carries
+/// its digests; a path dependency's (a package some package of the
+/// resolution declares with `path`, so from inside the same repository)
+/// pins only its name, version and dependencies, as Cargo does, so an
+/// edit to it leaves this lock unchanged.
 #[must_use]
 pub fn expected_lock(db: &dyn salsa::Database, ws: Workspace, root: PackageInput) -> LockFile {
     let solution = &resolution(db, ws, root).selected;
+    let paths: BTreeSet<&String> = solution
+        .values()
+        .filter_map(|s| manifest(db, s.input).as_ref().ok())
+        .flat_map(|p| p.dependency_paths.keys())
+        .collect();
     LockFile::new(
         solution
-            .values()
-            .map(|s| locked(db, solution, s.input))
+            .iter()
+            .map(|(name, s)| {
+                let path = s.input != root && paths.contains(name);
+                locked(db, solution, s.input, path)
+            })
             .collect(),
     )
 }
 
-/// `pkg`'s lock row under `solution`: its own digests, and each direct
-/// dependency pinned as `name version` (SPEC §4.2).
+/// `pkg`'s lock row under `solution`: its own digests (none for a `path`
+/// dependency), and each direct dependency pinned as `name version`
+/// (SPEC §4.2).
 fn locked(
     db: &dyn salsa::Database,
     solution: &BTreeMap<String, Selected>,
     pkg: PackageInput,
+    path: bool,
 ) -> LockedPackage {
     let m = manifest(db, pkg).as_ref().ok().map(|p| &p.manifest);
     let name = m.map(|m| m.name.clone()).unwrap_or_default();
     let version = m.map(|m| m.version.clone()).unwrap_or_default();
+    let mut dependencies: Vec<String> = m
+        .into_iter()
+        .flat_map(|m| m.dependencies.keys())
+        .filter_map(|dep| solution.get(dep).map(|d| format!("{dep} {}", d.version)))
+        .collect();
+    dependencies.sort();
+    if path {
+        return LockedPackage::path(name, version, dependencies);
+    }
     let language = m.map_or(1, |m| m.language);
     let source = format!("sha256:{}", package_digest(db, pkg));
     let semantic = crate::db::queries::check_package(db, pkg)
@@ -385,7 +408,7 @@ fn locked(
             || UNCHECKED.to_owned(),
             |p| format!("sha256:{}", semantic_digest(p)),
         );
-    let texts: Vec<String> = m
+    let mut texts: Vec<String> = m
         .into_iter()
         .flat_map(|m| &m.sources)
         .filter_map(|s| {
@@ -398,21 +421,14 @@ fn locked(
             ))
         })
         .collect();
-    let dependencies: Vec<String> = m
-        .into_iter()
-        .flat_map(|m| m.dependencies.keys())
-        .filter_map(|dep| solution.get(dep).map(|d| format!("{dep} {}", d.version)))
-        .collect();
-    let mut sorted = (texts, dependencies);
-    sorted.0.sort();
-    sorted.1.sort();
+    texts.sort();
     LockedPackage {
         name,
         version,
         language,
         source,
         semantic,
-        texts: sorted.0,
-        dependencies: sorted.1,
+        texts,
+        dependencies,
     }
 }

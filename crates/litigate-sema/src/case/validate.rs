@@ -83,12 +83,9 @@ pub(super) fn pins<'a>(
             None => Some(format!("Lit.lock has no entry for `{}`", pin.name)),
             Some(l)
                 if l.version != pin.version
-                    || l.source != format!("sha256:{}", pin.content_hash) =>
+                    || (!l.is_path() && l.source != format!("sha256:{}", pin.content_hash)) =>
             {
-                Some(format!(
-                    "Lit.lock pins {} {} {}",
-                    l.name, l.version, l.source
-                ))
+                Some(format!("Lit.lock pins {} {}", l.name, l.shown()))
             }
             Some(_) if pkg.manifest.version != pin.version || pkg.digest != pin.content_hash => {
                 Some(format!(

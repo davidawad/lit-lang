@@ -466,7 +466,13 @@ impl<'g> R<'_, 'g> {
                         name: name.to_owned(),
                         pack_id: pkg.manifest.pack_id.clone(),
                         version: l.version.clone(),
-                        content_hash: l.source.trim_start_matches("sha256:").to_owned(),
+                        // A path dependency's row records no digest: the
+                        // loaded package's source is the pin.
+                        content_hash: if l.is_path() {
+                            pkg.digest.clone()
+                        } else {
+                            l.source.trim_start_matches("sha256:").to_owned()
+                        },
                     },
                     pkg,
                 ));

@@ -7,7 +7,7 @@ use litigate_base::Diagnostic;
 use litigate_sema::db::inputs::{CaseFile, PackageInput, Workspace};
 use litigate_sema::hir;
 use litigate_sema::pkg::load::{relative_to, LoadedPackage};
-use litigate_sema::pkg::lock::LockFile;
+use litigate_sema::pkg::lock::{LockFile, LockedPackage};
 use litigate_sema::pkg::manifest::parse_manifest;
 use litigate_sema::pkg::source::{Disk, Source};
 use litigate_sema::types::build::expected_lock;
@@ -604,15 +604,28 @@ impl Session {
     }
 
     /// The `Lit.lock` a directory of `matters` needs: every loaded package
-    /// they `use`, with its resolved dependencies (SPEC §4.2, §5.6).
+    /// they `use`, with its resolved dependencies (SPEC §4.2, §5.6). A
+    /// package they `use` is loaded from the library beside them, so it is
+    /// pinned, like each path dependency of one, by name, version and
+    /// dependencies only.
     #[must_use]
     pub fn matter_lock<'a>(&self, matters: impl IntoIterator<Item = &'a CaseText>) -> LockFile {
         let wanted: BTreeSet<String> = matters.into_iter().flat_map(|c| uses_of(&c.text)).collect();
+        let rows: Vec<LockedPackage> = self
+            .packages
+            .iter()
+            .filter(|p| wanted.contains(&p.name))
+            .flat_map(|p| expected_lock(&self.db, self.ws, p.input).packages)
+            .collect();
+        let paths: BTreeSet<String> = rows
+            .iter()
+            .filter(|r| r.is_path())
+            .map(|r| r.name.clone())
+            .chain(wanted)
+            .collect();
         let mut lock = LockFile::new(
-            self.packages
-                .iter()
-                .filter(|p| wanted.contains(&p.name))
-                .flat_map(|p| expected_lock(&self.db, self.ws, p.input).packages)
+            rows.into_iter()
+                .map(|r| if paths.contains(&r.name) { r.into_path() } else { r })
                 .collect(),
         );
         lock.packages.dedup();

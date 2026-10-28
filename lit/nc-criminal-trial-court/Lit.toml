@@ -1,0 +1,50 @@
+# Criminal cases in the North Carolina superior court under the Criminal
+# Procedure Act, Chapter 15A of the General Statutes (sources/
+# nc-criminal-trial-court), with the criminal notice of appeal of N.C. R.
+# App. P. 4 (sources/nc-appellate-civil, Codified 2 September 2025). The
+# Chapter 15A extract states no edition date and its PROVENANCE records
+# CURRENCY UNCONFIRMED, so every Chapter 15A cite is a hole, `?("...,
+# CURRENCY UNCONFIRMED")`, and its periods are stated in notes as the
+# vendored text states them, unverified; the NCRAP cites bind. lit/core
+# has no North Carolina counting rule, so no period is a counted deadline.
+# North Carolina has no speedy-trial statute in force: G.S. 15A-701
+# through 15A-710 (Article 35) were repealed by S.L. 1989, c. 688.
+# Federal habeas is lit/habeas's.
+[package]
+name = "nc-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "nc-criminal-trial-court"
+forum = "nc-criminal-trial-court"
+authority = "StateRule"
+title = "North Carolina superior court, criminal"
+description = "Criminal cases in the North Carolina superior court under Chapter 15A of the General Statutes, as far as the vendored text states: first appearance, the probable-cause hearing, the time for pretrial motions and suppression motions, the motion for appropriate relief within 10 days after judgment, and the 14-day criminal notice of appeal of N.C. R. App. P. 4(a). Chapter 15A is CURRENCY UNCONFIRMED, so its cites are holes."
+in_force = "2025-09-02"
+known_at = "2026-10-28"
+unknown_before = "2025-09-02"
+jurisdiction = "North Carolina trial courts of general criminal jurisdiction"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.nc-gs-15a]
+title = "North Carolina General Statutes, Chapter 15A, Criminal Procedure Act (by-chapter PDF, no edition date; CURRENCY UNCONFIRMED)"
+url = "https://www.ncleg.gov/EnactedLegislation/Statutes/PDF/ByChapter/Chapter_15A.pdf"
+path = "sources/nc-criminal-trial-court/nc-gs-chapter-15a-criminal-procedure-act.txt"
+path_sha256 = "41735dd1bcfa8e634e8811358a5d65df608e1ef647be4238b7d53ff324d1e88b"
+sha256 = "1bb94020381073455e99ca12a566cbfe0b764d998390548a50ea508e4aca8981"
+
+[sources.ncrap]
+title = "North Carolina Rules of Appellate Procedure, Codified 2 September 2025"
+url = "https://www.nccourts.gov/assets/inline-files/North%20Carolina%20Rules%20of%20Appellate%20Procedure%20-%20Codified%202%20September%202025_2.pdf"
+path = "sources/nc-appellate-civil/nc-rules-of-appellate-procedure-sectioned.txt"
+path_sha256 = "faa02aa4899f95553e42bccb296ed5dc8d4a6ec35b5509f4e0eb535648614d69"
+sha256 = "7d224e434190ffb4faccd84e7008351bf70c6ff7048f6bcc7f2fab3149b85145"
+as_of = "2025-09-02"
+cite_prefixes = ["N.C. R. App. P."]
+section_heading = "Rule {n}"

@@ -1,0 +1,124 @@
+module nc-criminal-trial-court.criminal
+
+// Criminal cases in the North Carolina superior court, from the
+// defendant's view of outcomes. Chapter 15A is vendored only as a CURRENCY
+// UNCONFIRMED extract, so every Chapter 15A cite is a hole naming the
+// section and every period it states is the vendored text, unverified,
+// stated in a note; the N.C. R. App. P. cites bind to the September 2,
+// 2025 codification. Not vendored, and so holes: a speedy-trial statute
+// (G.S. 15A-701 to 15A-710 were repealed by S.L. 1989, c. 688; the
+// constitutional right is raised by a motion to dismiss under G.S.
+// 15A-954(a)(3)); the reporter text of the decisions the outline named,
+// which are removed.
+start arrested
+
+state arrested: "Arrest and initial appearance" by applicant cite ?("G.S. 15A-511, CURRENCY UNCONFIRMED")
+{
+  note "A defendant arrested is brought before a magistrate for an initial appearance (G.S. 15A-511). A defendant charged with a crime in the original jurisdiction of the superior court is brought before a district court judge for a first appearance within 96 hours after being taken into custody or at the first regular session of district court in the county, whichever is first; a defendant not in custody, at the next session (G.S. 15A-601(a), (c)). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
+  edge-arrested-appearance "First appearance before a district court judge" -> probable-cause {
+    authority cite ?("G.S. 15A-601, CURRENCY UNCONFIRMED")
+  }
+}
+
+decision probable-cause: "Probable-cause hearing or waiver" by court cite ?("G.S. 15A-606, CURRENCY UNCONFIRMED")
+{
+  note "Unless the defendant waives it in writing, the judge schedules a probable-cause hearing not later than 15 working days after the initial appearance before the district court judge, and not sooner than five working days without the consent of both sides (G.S. 15A-606(a), (d)); a waiver binds the defendant over to superior court (G.S. 15A-606(c)). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
+  edge-probable-cause-bound-over "Probable cause found or hearing waived; bound over" -> charged {
+    authority cite ?("G.S. 15A-606(c), CURRENCY UNCONFIRMED")
+  }
+  edge-probable-cause-none "No probable cause; discharged" -> dismissed {
+    authority cite ?("G.S. 15A-612, CURRENCY UNCONFIRMED")
+  }
+}
+
+state charged: "Indictment returned" by office cite ?("G.S. 15A-952, CURRENCY UNCONFIRMED")
+{
+  note "Motions to continue, for change of venue or a special venire, to dismiss under G.S. 15A-955 or for improper venue, and motions addressed to the pleadings are made at or before arraignment when a written request for arraignment is filed and arraignment precedes the trial session; when arraignment is at the trial session, by 5:00 p.m. on the Wednesday before it; without a written request for arraignment, not later than 21 days from the return of the bill of indictment as a true bill (G.S. 15A-952(b), (c)). Failure to file in time is a waiver (G.S. 15A-952(e)). Motions on jurisdiction or the failure to charge an offense may be made at any time (G.S. 15A-952(d)). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
+  edge-charged-motions "Pretrial motions" -> motions-ruling {
+    authority cite ?("G.S. 15A-952(c), CURRENCY UNCONFIRMED")
+  }
+  edge-charged-plea "Plea negotiations" -> plea-decision {
+    authority cite ?("G.S. 15A-1021, CURRENCY UNCONFIRMED")
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite ?("G.S. 15A-954, CURRENCY UNCONFIRMED")
+{
+  note "A motion to suppress may be made at any time before trial, but if the State gives notice not later than 20 working days before trial of its intention to use a statement of the defendant or evidence from a warrantless search, the defendant may move to suppress it only within 10 working days after receiving the notice (G.S. 15A-976(a), (b)). The court on motion dismisses the charges on the grounds G.S. 15A-954(a) lists, among them a flagrant constitutional violation and the denial of a speedy trial required by the Constitutions. CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
+  edge-motions-ruling-dismissed "Charges dismissed" -> dismissed {
+    authority cite ?("G.S. 15A-954(a), CURRENCY UNCONFIRMED")
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite ?("G.S. 15A-954, CURRENCY UNCONFIRMED")
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite ?("G.S. 15A-1021, CURRENCY UNCONFIRMED")
+{
+  note "Plea arrangements are governed by G.S. 15A-1021 to 15A-1027. A defendant confined in an institution in the State may request trial of a pending charge, and if the prosecutor does not proceed within six months from the date the request is filed the charge is dismissed (G.S. 15A-711). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite ?("G.S. 15A-1022, CURRENCY UNCONFIRMED")
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite ?("G.S. 15A-1201, CURRENCY UNCONFIRMED")
+  }
+}
+
+decision trial: "Verdict" by court cite ?("G.S. 15A-1237, CURRENCY UNCONFIRMED")
+{
+  note "Trial by jury in superior court (G.S. 15A-1201); the verdict is unanimous and returned in open court (G.S. 15A-1237). CURRENCY UNCONFIRMED."
+  edge-trial-acquittal "Not guilty" -> acquitted {
+    authority cite ?("G.S. 15A-1237, CURRENCY UNCONFIRMED")
+  }
+  edge-trial-guilty "Guilty; sentencing" -> sentencing {
+    authority cite ?("G.S. 15A-1331, CURRENCY UNCONFIRMED")
+  }
+}
+
+state sentencing: "Sentencing and judgment" by court cite ?("G.S. 15A-1331, CURRENCY UNCONFIRMED")
+{
+  note "After the verdict but not more than 10 days after entry of judgment, the defendant may move for appropriate relief for any error committed during or before trial, and every error not listed in G.S. 15A-1415 must be asserted within those 10 days (G.S. 15A-1414(a), (b)); the motion may be made whether or not notice of appeal has been given (G.S. 15A-1414(c)). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
+  edge-sentencing-mar "Motion for appropriate relief within 10 days" -> post-trial {
+    authority cite ?("G.S. 15A-1414, CURRENCY UNCONFIRMED")
+  }
+  edge-sentencing-judgment "Judgment entered" -> judgment {
+    authority cite ?("G.S. 15A-1331, CURRENCY UNCONFIRMED")
+  }
+}
+
+decision post-trial: "Motion for appropriate relief" by court cite ?("G.S. 15A-1414, CURRENCY UNCONFIRMED")
+{
+  note "While a motion under G.S. 15A-1414 is pending the case remains open for an appeal, whose time begins to run on the order ruling on the motion (G.S. 15A-1448(a)(2)). CURRENCY UNCONFIRMED."
+  edge-post-trial-granted "Relief granted; new trial" -> trial {
+    authority cite ?("G.S. 15A-1417, CURRENCY UNCONFIRMED")
+  }
+  edge-post-trial-denied "Motion denied" -> judgment {
+    authority cite "N.C. R. App. P. 4(a)"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "N.C. R. App. P. 4(a)"
+{
+  note "Notice of appeal is given within the time, in the manner and with the effect the rules of appellate procedure provide (G.S. 15A-1448(b), CURRENCY UNCONFIRMED). An appeal is taken by oral notice at trial, or by filing notice with the clerk of superior court and serving it within fourteen days after entry of the judgment or order, or within fourteen days after a ruling on a motion for appropriate relief made during the fourteen days after entry of the judgment (N.C. R. App. P. 4(a))."
+  edge-judgment-appeal "Notice of appeal within fourteen days" -> appeal-taken {
+    authority cite "N.C. R. App. P. 4(a)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "N.C. R. App. P. 4(a)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite ?("G.S. 15A-1237, CURRENCY UNCONFIRMED")
+
+terminal dismissed: "Charges dismissed or defendant discharged" outcome [win, dismissal] cite ?("G.S. 15A-954, CURRENCY UNCONFIRMED")
+{
+  note "Whether a dismissal bars refiling is not reduced to a period here (a hole)."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "N.C. R. App. P. 4(a)"
+{
+  note "The appeal continues in the appellate division under the N.C. Rules of Appellate Procedure; no criminal appellate package is promoted."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "N.C. R. App. P. 4(a)"
+{
+  note "A later motion for appropriate relief under G.S. 15A-1415 (CURRENCY UNCONFIRMED) is not modeled; federal habeas under 28 U.S.C. § 2254 is lit/habeas's."
+}

@@ -45,18 +45,32 @@ import frbp.events.{ CaseConverted, FirstMeetingDate }
 // are not encoded.
 /// A brief in an adversary proceeding, excluding the table of contents and
 /// table of authorities (LBR 7007-2(a)).
-limit brief { pages <= 25 cite "Bankr. D. Conn. LBR 7007-2(a)" } cite "Bankr. D. Conn. LBR 7007-2(a)"
+limit brief {
+  pages <= 25 cite "Bankr. D. Conn. LBR 7007-2(a)"
+} cite "Bankr. D. Conn. LBR 7007-2(a)"
+
 /// A reply brief in an adversary proceeding (LBR 7007-2(a)).
-limit reply-brief { pages <= 10 cite "Bankr. D. Conn. LBR 7007-2(a)" } cite "Bankr. D. Conn. LBR 7007-2(a)"
+limit reply-brief {
+  pages <= 10 cite "Bankr. D. Conn. LBR 7007-2(a)"
+} cite "Bankr. D. Conn. LBR 7007-2(a)"
+
 /// A response or objection to a motion under the Contested Matter
 /// Procedure (LBR 9014-1(e)).
-limit contested-matter-response { pages <= 10 cite "Bankr. D. Conn. LBR 9014-1(e)" } cite "Bankr. D. Conn. LBR 9014-1(e)"
+limit contested-matter-response {
+  pages <= 10 cite "Bankr. D. Conn. LBR 9014-1(e)"
+} cite "Bankr. D. Conn. LBR 9014-1(e)"
+
 /// A reply to a response or objection in a Contested Matter (LBR
 /// 9014-1(g)(1)).
-limit contested-matter-reply { pages <= 5 cite "Bankr. D. Conn. LBR 9014-1(g)" } cite "Bankr. D. Conn. LBR 9014-1(g)"
+limit contested-matter-reply {
+  pages <= 5 cite "Bankr. D. Conn. LBR 9014-1(g)"
+} cite "Bankr. D. Conn. LBR 9014-1(g)"
+
 /// An objection to a 2004 Agreement or to a Rule 2004 motion (LBR
 /// 2004-1(b)(2)(C), (c)(2)).
-limit rule-2004-objection { pages <= 5 cite "Bankr. D. Conn. LBR 2004-1(b)" } cite "Bankr. D. Conn. LBR 2004-1(b)"
+limit rule-2004-objection {
+  pages <= 5 cite "Bankr. D. Conn. LBR 2004-1(b)"
+} cite "Bankr. D. Conn. LBR 2004-1(b)"
 
 /// A creditor list, schedule or statement is amended to add parties or
 /// correct addresses (LBR 1009-1(a)).
@@ -350,20 +364,28 @@ state motion-filed: "Motion filed with a Notice of Contested Matter Procedure" b
 state response: "Response filed; Notice of Initial Hearing issued" by opponent cite "Bankr. D. Conn. LBR 9014-1(f)"
 {
   note "A response is no more than ten pages and states its specific legal and factual bases (LBR 9014-1(e)). On a timely response the Clerk issues a Notice of Initial Hearing, which the movant serves (LBR 9014-1(f)(1)). A reply of no more than five pages is filed by the last business day at least three days before the Initial Hearing; sur-replies need leave (LBR 9014-1(g)). A continuance of the Initial Hearing is requested at least 7 days before it (LBR 9014-1(j))."
-  edge-response-initial-hearing "Initial Hearing held" -> initial-hearing { authority cite "Bankr. D. Conn. LBR 9014-1(h)" }
+  edge-response-initial-hearing "Initial Hearing held" -> initial-hearing {
+    authority cite "Bankr. D. Conn. LBR 9014-1(h)"
+  }
 }
 
 decision initial-hearing: "Initial Hearing" by court cite "Bankr. D. Conn. LBR 9014-1(h)"
 {
   note "The Initial Hearing is not evidentiary unless the court so notices or emergency relief is sought (LBR 9014-1(h)(1)); the court may grant any relief it deems appropriate there (LBR 9014-1(h)(2))."
-  edge-initial-hearing-decided "Relief granted or denied at the Initial Hearing" -> decided { authority cite "Bankr. D. Conn. LBR 9014-1(h)" }
-  edge-initial-hearing-final "Final Hearing scheduled" -> final-hearing { authority cite "Bankr. D. Conn. LBR 9014-1(i)" }
+  edge-initial-hearing-decided "Relief granted or denied at the Initial Hearing" -> decided {
+    authority cite "Bankr. D. Conn. LBR 9014-1(h)"
+  }
+  edge-initial-hearing-final "Final Hearing scheduled" -> final-hearing {
+    authority cite "Bankr. D. Conn. LBR 9014-1(i)"
+  }
 }
 
 decision final-hearing: "Final Hearing" by court cite "Bankr. D. Conn. LBR 9014-1(i)"
 {
   note "The Clerk sends a Notice of Final Hearing, which the movant serves; the Final Hearing may be evidentiary (LBR 9014-1(i)). A continuance is sought by motion at least three business days before it (LBR 9014-1(k))."
-  edge-final-hearing-decided "Matter decided" -> decided { authority cite "Bankr. D. Conn. LBR 9014-1(i)" }
+  edge-final-hearing-decided "Matter decided" -> decided {
+    authority cite "Bankr. D. Conn. LBR 9014-1(i)"
+  }
 }
 
 terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. D. Conn. LBR 1001-1"

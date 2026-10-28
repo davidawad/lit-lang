@@ -1,0 +1,164 @@
+module wy-criminal-trial-court.criminal
+
+// Felony cases in the Wyoming district courts. The W.R.Cr.P. text is
+// CURRENCY UNCONFIRMED (sources/wy-criminal-trial-court/PROVENANCE.md), so
+// the rules are cited for the structure of each step and no period, limit
+// or amount is taken from them: where a step has one, the note names the
+// rule that sets it and says that it is not stated. Outcomes are from the
+// defendant's side. The earlier outline's leading decisions (County of
+// Riverside v. McLaughlin, Gerstein v. Pugh, Gideon v. Wainwright, Brady
+// v. Maryland, Mapp v. Ohio, Barker v. Wingo, Boykin v. Alabama, Missouri
+// v. Frye, Jackson v. Virginia, Ramos v. Louisiana, Apprendi v. New
+// Jersey, Roe v. Flores-Ortega, Garza v. Idaho) are removed: no reporter
+// text is vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "W.R.Cr.P. 4"
+{
+  note "A prosecution proceeds by indictment, information or citation (W.R.Cr.P. 3), with a warrant or summons on an information (W.R.Cr.P. 4). A person arrested and in custody is taken without unnecessary delay before a judicial officer of the court from which the warrant issued or, if none issued, of the court where the charging document will be filed (W.R.Cr.P. 5(a))."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance {
+    authority cite "W.R.Cr.P. 5(a)"
+  }
+}
+
+decision initial-appearance: "Bail, release or detention" by court cite "W.R.Cr.P. 46.1"
+{
+  note "All persons are bailable by sufficient sureties, except in capital cases when the proof is evident or the presumption great, and excessive bail is not required (W.R.Cr.P. 46.1(a)); release conditions follow W.R.Cr.P. 46.1 and the bond schedule appended to the rules, whose amounts are not stated here (currency unconfirmed). Counsel is assigned under W.R.Cr.P. 44."
+  edge-initial-appearance-detained "Held pending bail" -> probable-cause {
+    authority cite "W.R.Cr.P. 46.1"
+  }
+  edge-initial-appearance-released "Released on bail or conditions" -> probable-cause {
+    authority cite "W.R.Cr.P. 46.1"
+  }
+}
+
+decision probable-cause: "Preliminary examination or indictment" by court cite "W.R.Cr.P. 5.1"
+{
+  note "In all cases to be tried in the district court, except on indictment, the defendant is entitled to a preliminary examination in the circuit court (W.R.Cr.P. 5.1(a)); the period within which it is held and the bind-over and discharge procedure are set by W.R.Cr.P. 5.1, and the periods are not stated here (currency unconfirmed). Grand juries are governed by W.R.Cr.P. 6."
+  edge-probable-cause-charged "Bound over; information or indictment in the district court" -> charged {
+    authority cite "W.R.Cr.P. 5.1"
+  }
+  edge-probable-cause-none "No probable cause; discharged" -> dismissed {
+    authority cite "W.R.Cr.P. 5.1"
+  }
+}
+
+state charged: "Indictment or information" by office cite "W.R.Cr.P. 3"
+{
+  note "The charging documents are the indictment, the information or the citation (W.R.Cr.P. 3; 12(a)). The Rule 48(b) speedy-trial period is not stated here (currency unconfirmed)."
+  edge-charged-arraignment "Arraignment" -> arraignment {
+    authority cite "W.R.Cr.P. 10"
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "W.R.Cr.P. 10"
+{
+  note "Arraignment is conducted in open court by reading the charge or stating its substance and calling on the defendant to plead, after the defendant is given a copy of the charging document (W.R.Cr.P. 10). A defendant may plead not guilty, not guilty by reason of mental illness or deficiency, guilty, or nolo contendere; a refusal to plead is entered as not guilty (W.R.Cr.P. 11(a)(1))."
+  edge-arraignment-discovery "Discovery" -> discovery {
+    authority cite "W.R.Cr.P. 16"
+  }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "W.R.Cr.P. 12"
+{
+  note "Discovery and inspection are governed by W.R.Cr.P. 16. The pleadings are the charging document and the W.R.Cr.P. 11 pleas; other pleas, demurrers and motions to quash are abolished, and defenses and objections are raised by motion under W.R.Cr.P. 12, whose time limits are not stated here (currency unconfirmed). Notices of alibi, mental illness and unconsciousness defenses are W.R.Cr.P. 12.1 to 12.3. Dismissal for want of a speedy trial is governed by W.R.Cr.P. 48(b), whose period and exclusions are not stated here (currency unconfirmed)."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "W.R.Cr.P. 12"
+  }
+  edge-discovery-speedy "Motion to dismiss for want of a speedy trial" -> motions-ruling {
+    authority cite "W.R.Cr.P. 48(b)"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite "W.R.Cr.P. 11"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "W.R.Cr.P. 12"
+{
+  note "A W.R.Cr.P. 48(b) dismissal and whether it bars a new prosecution are governed by W.R.Cr.P. 48(b) (currency unconfirmed)."
+  edge-motions-ruling-speedy "Dismissed for want of a speedy trial" -> dismissed {
+    authority cite "W.R.Cr.P. 48(b)"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "W.R.Cr.P. 12"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "W.R.Cr.P. 12"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "W.R.Cr.P. 11"
+{
+  note "The court's advice to the defendant and its acceptance of a guilty or nolo contendere plea, and plea agreements, are governed by W.R.Cr.P. 11. The attorney for the state may, by leave of court, dismiss an indictment, information or citation, and the prosecution thereupon terminates, but not during trial without the defendant's consent (W.R.Cr.P. 48(a)(1))."
+  edge-plea-decision-plea "Plea accepted" -> sentencing {
+    authority cite "W.R.Cr.P. 11"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "W.R.Cr.P. 23(a)"
+  }
+  edge-plea-decision-nolle "State dismisses by leave of court" -> dismissed {
+    authority cite "W.R.Cr.P. 48(a)"
+  }
+}
+
+decision trial: "Verdict" by court cite "W.R.Cr.P. 31(a)"
+{
+  note "Cases required to be tried by jury are so tried unless the defendant waives a jury, in writing or on the record, with the court's approval and the state's consent (W.R.Cr.P. 23(a)); the jury's size is set by W.R.Cr.P. 23 and not stated here (currency unconfirmed). Motions for directed verdict are abolished; the court enters a judgment of acquittal of any offense for which the evidence is insufficient (W.R.Cr.P. 29(a)). The verdict is unanimous and returned in open court (W.R.Cr.P. 31(a))."
+  edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
+    authority cite "W.R.Cr.P. 29(a)"
+  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
+    authority cite "W.R.Cr.P. 29(c)"
+  }
+}
+
+decision post-trial: "Post-trial motions" by court cite "W.R.Cr.P. 33(a)"
+{
+  note "The court may grant a new trial in the interest of justice (W.R.Cr.P. 33(a)), must arrest judgment if the charge does not charge an offense or the court lacked jurisdiction (W.R.Cr.P. 34), and may enter a judgment of acquittal on a renewed motion (W.R.Cr.P. 29(c)); the periods for these motions are not stated here (currency unconfirmed). The timely filing of a W.R.Cr.P. 29(c), 33 or 34 motion terminates the time for appeal, which then runs from the latest of the entry of an order denying the motion, the time it is deemed denied, or entry of judgment (W.R.A.P. 2.03)."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite "W.R.Cr.P. 29(c)"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "W.R.Cr.P. 33(a)"
+  }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "W.R.Cr.P. 32"
+  }
+}
+
+state sentencing: "Presentence investigation and sentencing" by court cite "W.R.Cr.P. 32"
+{
+  note "In every felony case the Department of Probation and Parole conducts a presentence investigation and reports to the court (W.R.Cr.P. 32(a)(1)); the report's disclosure periods and the sentencing procedure in W.R.Cr.P. 32 are not stated here (currency unconfirmed). Correction or reduction of sentence is W.R.Cr.P. 35."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "W.R.Cr.P. 32"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "W.R.A.P. 2.01(a)"
+{
+  note "An appeal is taken by filing the notice of appeal with the clerk of the trial court within 30 days from entry of the appealable order and serving it (as W.R.Cr.P. 32(c)(4) provides in criminal cases), with a copy served on the clerk of the appellate court; in criminal cases appealed to the Supreme Court the notice is served on the public defender and the attorney general (W.R.A.P. 2.01(a)). A timely W.R.Cr.P. 29(c), 33 or 34 motion restarts the time (W.R.A.P. 2.03). lit/core has no counting rule for the W.R.A.P., so the period is not encoded as a counted deadline."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "W.R.A.P. 2.01(a)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "W.R.A.P. 2.01(a)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "W.R.Cr.P. 29(a)"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty or a judgment of acquittal (W.R.Cr.P. 29, 31)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "W.R.Cr.P. 48"
+{
+  note "Outcome from the defendant's side: a dismissal by the state with leave of court ends the prosecution (W.R.Cr.P. 48(a)(1)); the effect of a W.R.Cr.P. 48(b) dismissal is governed by that rule."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "W.R.A.P. 2.01(a)"
+{
+  note "The appeal continues before the Wyoming Supreme Court under the Wyoming Rules of Appellate Procedure (sources/wy-state-appellate; lit/wy-supreme models the civil appeal)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "W.R.A.P. 2.01(a)"
+{
+  note "Outcome from the defendant's side. Post-conviction relief under the Wyoming statutes is not vendored; federal habeas belongs to lit/habeas."
+}

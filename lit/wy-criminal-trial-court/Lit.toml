@@ -1,0 +1,56 @@
+# Criminal cases in the Wyoming district courts under the Wyoming Rules of
+# Criminal Procedure (W.R.Cr.P.), as far as the vendored text states. The
+# text is the "Download Rule" PDF with the bond schedule the court serves
+# (uploaded 2026/06; sources/wy-criminal-trial-court), which states no
+# edition date; its PROVENANCE entry records CURRENCY UNCONFIRMED, so
+# in_force is the retrieval date and an earlier query is a hole in the
+# corpus. By the PM's standing ruling of 2026-10-27 such a source yields
+# holes, not values: this package cites the rules only for the structure of
+# the case and states no period, limit or amount from them, including the
+# Rule 48(b) speedy-trial period. The appeal hand-off cites W.R.A.P. 2.01
+# and 2.03, whose vendored text (consolidated, including the amendments
+# effective January 19, 2026; sources/wy-state-appellate) is not flagged;
+# lit/core has no counting rule for W.R.A.P. 14.01, so the period is stated
+# in a note.
+[package]
+name = "wy-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "wy-criminal-trial-court"
+forum = "wy-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "wyoming"
+title = "Wyoming district courts, criminal"
+description = "Felony cases in the Wyoming district courts under the Wyoming Rules of Criminal Procedure, as far as the vendored text states: the structure of the case from arrest and initial appearance through release, preliminary examination, charge, arraignment, pretrial motions, the Rule 48(b) speedy-trial dismissal, plea or trial, post-trial motions, judgment and sentence; no period from the currency-unconfirmed rules is stated. An appeal goes to the Wyoming Supreme Court under W.R.A.P. 2.01."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Wyoming trial courts of general criminal jurisdiction (district courts)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.wrcrp]
+title = "Wyoming Rules of Criminal Procedure with the bond schedule, 'Download Rule' PDF as served (uploaded 2026/06; no edition date stated); CURRENCY UNCONFIRMED"
+url = "https://www.wyocourts.gov/app/uploads/2026/06/WRCrP-with-bond-schedule.pdf"
+path = "sources/wy-criminal-trial-court/wy-rules-of-criminal-procedure-sectioned.txt"
+path_sha256 = "903752441cc027c945523d8789e1f8152d92196264aaa0d24961f084ea3976af"
+sha256 = "e8c4e71032a1fc14c8e8f12f4a52c8798433651f0efbf18918d52e421b393489"
+as_of = "2026-10-28"
+cite_prefixes = ["W.R.Cr.P."]
+section_heading = "W.R.Cr.P. {n}"
+
+[sources.wy-r-app-p]
+title = "Wyoming Rules of Appellate Procedure, consolidated edition including the amendments effective January 19, 2026"
+url = "https://www.wyocourts.gov/app/uploads/2025/01/WRAP-eff-Dec-1.pdf"
+path = "sources/wy-state-appellate/wrap-sectioned.txt"
+path_sha256 = "515a3474a1e5c02778cdc2a99fb7c78fee285cf2fd627532f1d25ce131f62a9a"
+sha256 = "ad75efc446f5956b7b94edda881b67fa6a5b0b1a55195fcc5c8e264c6e156874"
+as_of = "2026-01-19"
+cite_prefixes = ["W.R.A.P."]
+section_heading = "W.R.A.P. {n}"

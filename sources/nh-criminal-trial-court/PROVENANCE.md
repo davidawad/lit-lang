@@ -14,4 +14,5 @@
 
 - Derived in the pod (lg-gddt.6) from `nh-criminal-trial-court/nh-rules-of-criminal-procedure.txt` (extract sha256 725f2b6ee07e34049e5c80b7724b8d527275968aed1a1af4a8663083bcda1fa0); nothing fetched. One `## Rule <n>` line is inserted before the first body heading line `Rule <n>. <Title>` of each rule after the page's table of contents (53 rules, Rule 1 through Rule 53; each section runs through that rule's comments). The table of contents and comment lines that begin with a cross-reference (`Rule 4(e) provides ...`) are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
 - Edition: as the extract; CURRENCY UNCONFIRMED stands. `lit/nh-criminal-trial-court` cites it for structure only and takes no value from it.
+- Upstream: https://www.courts.nh.gov/new-hampshire-rules-criminal-procedure, retrieved 2026-10-28, as recorded on `nh-criminal-trial-court/nh-rules-of-criminal-procedure.txt` above; sectioning was done from the vendored extract.
 - Sectioned sha256 5ff8ed111d5dfa27b5003ef4d96ba0ea2fc2e616da1d3878a19d5ca2d4554bae (the `path_sha256` pinned by `lit/nh-criminal-trial-court/Lit.toml`).

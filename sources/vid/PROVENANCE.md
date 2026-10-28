@@ -27,4 +27,5 @@
 
 - Derived in the pod (lg-gddt.10) from `vid/vid-local-criminal-rules-2026-02-01.txt` (extract sha256 cf0c5337ddf0d91d89b1c1618e3b3aa3f14930f709fb109eabc1d986ce434200); nothing fetched. In the body (after the table of contents), one marker line `## LRCr <n>` is inserted before each rule's own heading line `Rule <n>. <title>` (LRCr 1.1 through LRCr 59.1, 18 rules; Rule 1.4's heading has no period after the number). Every other line is the extract unchanged, so deleting the `## LRCr` lines (`sed '/^## LRCr /d'`) gives back the extract byte for byte.
 - Edition: as the extract, "Effective February 1, 2026".
+- Upstream: https://www.vid.uscourts.gov/sites/vid/files/local_rules/260130_Local%20Rules%20Criminal%20Procedure_effective%202.1.26%5BECF%2010-2%5D.pdf, retrieved 2026-10-28, as recorded on `vid/vid-local-criminal-rules-2026-02-01.txt` above; sectioning was done from the vendored extract.
 - Sectioned sha256 f1dcf6ab0c89821e7ebaf12dda2b1f46e5b6b1b1165936037f628e1c91339b60 (the `path_sha256` pinned by `lit/vid-criminal/Lit.toml`).

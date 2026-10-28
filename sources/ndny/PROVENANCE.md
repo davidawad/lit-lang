@@ -13,4 +13,5 @@
 
 - Derived in the pod (lg-gddt.8) from `ndny/local-rules.txt` (extract sha256 30c9407031855fe3d43b79e137ce81312c4ef9b301c76f0c2f39b5da92712850); nothing fetched. In the body of Section XI (from its first rule heading `1.1    Scope of the Rules`, extract line 4394, to the `SECTION XII.` heading), one `## L.R. Cr. P. <n>` line is inserted before each rule's own heading line `<n>   <title>` (30 rules, 1.1 through 59.1, matching the section's contents list; the reserved `THROUGH` ranges are unmarked). The rules cite themselves "L. R. Cr. P." (L.R. Cr. P. 1.1). The civil and other sections and the tables of contents are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## L\.R\. Cr\. P\. /d'`) restores the extract byte for byte.
 - Edition: as the extract, effective January 1, 2026.
+- Upstream: https://www.nynd.uscourts.gov/sites/nynd/files/local_rules/Local%20Rules%202026_Final.pdf, retrieved 2026-10-27, as recorded on `ndny/local-rules.txt` above; sectioning was done from the vendored extract.
 - Sectioned sha256 2091bc964cb5ef05e8342415bf088cb800b402c30c1dfeeaf9460832c56d1a02 (the `path_sha256` pinned by `lit/nynd-criminal/Lit.toml`).

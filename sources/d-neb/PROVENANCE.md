@@ -35,4 +35,5 @@
 
 - Derived in the pod (lg-gddt.20) from `d-neb/dneb-necrimr-2025-12-01.txt` (extract sha256 5d4fb10fee85aaa9b8d248c0a679eeeed6a482658d855a5da289197d9c9f7556); nothing fetched. One `## NECrimR <n>` line is inserted before each rule's own heading line in the body after the table of contents (`NECrimR 1.1` through `NECrimR 61.1`, 72 rules, three-part numbers such as `NECrimR 26.2.1` and `NECrimR 49.1.1` included). Rule text was not edited: deleting the marker lines (`sed '/^## NECrimR /d'`) restores the extract byte for byte.
 - Edition: as the extract, effective December 1, 2025.
+- Source: as the extract, https://www.ned.uscourts.gov/sites/default/files/documents/NECrimR.2025.pdf, retrieved 2026-10-28; the sectioning was done from the vendored extract.
 - Sectioned sha256 0794fedb70dd6d707628320d0a3c2f51be63c3871a29b315d8ad206a11726ae3 (the `path_sha256` pinned by `lit/ned-criminal/Lit.toml`).

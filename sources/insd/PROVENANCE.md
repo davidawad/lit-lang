@@ -22,4 +22,5 @@
 
 - Derived in the pod (lg-gddt.18) from `insd/insd-local-rules.txt` (extract sha256 c95c5122118a534dd8b512bd081414ba01aeb77629cf9d2279788afde6ed18d8); nothing fetched. In the body of the criminal rules (after the `CRIMINAL RULES` heading at extract line 2592, before `S.D. Indiana – Appendix A`), one `## S.D. Ind. L. Cr. R. <n>` line is inserted before each rule's own heading line `Local Criminal Rule <n> - ...` (15 rules, L. Cr. R. 6-1 through 58-2; an en dash in the number is marked with a hyphen). The civil rules, the table of contents and the appendices carry no such markers. Rule text was not edited: deleting the marker lines (`sed -E '/^## S\.D\. Ind\. L\. Cr\. R\. /d'`) restores the extract byte for byte.
 - Edition: as the extract, Local Rules with amendments through July 1, 2026.
+- Upstream: https://www.insd.uscourts.gov/sites/insd/files/Local%20Rules%207-1-26.pdf, retrieved 2026-10-27, as recorded on `insd/insd-local-rules.txt` above; sectioning was done from the vendored extract.
 - Sectioned sha256 c2fe06cd87967e0921bea134a6671d53fa45ab18e3d1401dae893b377d2dc665 (the `path_sha256` pinned by `lit/insd-criminal/Lit.toml`).

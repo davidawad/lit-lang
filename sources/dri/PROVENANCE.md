@@ -20,4 +20,5 @@
 
 - Derived in the pod (lg-gddt.6) from `dri/dri-local-rules.txt` (extract sha256 f76a78f126cd994184efad9f82002456c6f464acb2e53885909ad861065dfa54); nothing fetched. One `## LR Cr <n>` line is inserted before each criminal rule's own body heading line (`LR Cr <n>   <TITLE>`): 16 markers, LR Cr 6 through LR Cr 58, matching the table of contents. The table of contents and the general, civil and admiralty rules are unmarked (LR Cr 58's section runs to the end of the file, through the Alternative Dispute Resolution Plan). Rule text was not edited: deleting the marker lines (`sed '/^## LR Cr /d'`) restores the extract byte for byte.
 - Edition: as the extract, "Effective January 1, 2006, As Amended through April 1, 2024", the edition the court's local-rules page lists (LR Cr 12(c) amended effective April 1, 2024).
+- Source: as the extract, https://www.rid.uscourts.gov/sites/rid/files/documents/Approved%20Dec%202024%20Rules.pdf, retrieved 2026-10-27; the sectioning was done from the vendored extract.
 - Sectioned sha256 a0a615d278f9442bcf6deac6eeb503cbfa8b82a7850ad6c450ab7a1c550d3114 (the `path_sha256` pinned by `lit/rid-criminal/Lit.toml`).

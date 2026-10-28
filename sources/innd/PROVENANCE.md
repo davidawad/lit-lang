@@ -22,4 +22,5 @@
 
 - Derived in the pod (lg-gddt.18) from `innd/innd-local-rules.txt` (extract sha256 bed2beeced8a3fd2c10b8759752b1b160d4be978f9243e9fbf6e304f5f27783a); nothing fetched. One `## N.D. Ind. L. Cr. R. <n>` line is inserted before each local criminal rule's own heading line `N.D. Ind. L. Cr. R. <n> ...` in the body (13 rules, L. Cr. R. 1-1 through 58-1; the en dash of `1–1` is marked with a hyphen). The civil and patent rules, the table of contents and the appendices carry no such markers. Rule text was not edited: deleting the marker lines (`sed -E '/^## N\.D\. Ind\. L\. Cr\. R\. /d'`) restores the extract byte for byte.
 - Edition: as the extract, Local Rules effective February 25, 2022.
+- Upstream: https://www.innd.uscourts.gov/sites/innd/files/CurrentLocalRules.pdf, retrieved 2026-10-27, as recorded on `innd/innd-local-rules.txt` above; sectioning was done from the vendored extract.
 - Sectioned sha256 894b3c2b4570e93f4a2ff644af4a67225ffa56bd953ca88433b52f13218616cd (the `path_sha256` pinned by `lit/innd-criminal/Lit.toml`).

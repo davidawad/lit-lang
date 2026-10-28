@@ -61,4 +61,5 @@
 
 - Derived in the pod (lg-gddt.20) from `mn-criminal-trial-court/mn-rules-of-criminal-procedure.txt` (extract sha256 8b39f196661c031eb6dbca2a584b69df4284dd5cab683c36d1bd803e55732c4c); nothing fetched. The extract's own `## Rule <n>` page markers are kept; one `## Rule <n>.<m>` line is inserted before each subrule's own heading line (`1.01Scope and Application`, `Rule 28.02Appeal by Defendant` and the like, the subrule number run into its title as served): 176 subrules, `Rule 1.01` through `Rule 37.02`. Rule text was not edited: deleting the inserted marker lines (`sed -E '/^## Rule [0-9]+\.[0-9]+$/d'`) restores the extract byte for byte.
 - Edition: as the extract, amendments effective through July 1, 2026.
+- Upstream: https://www.revisor.mn.gov/court_rules/cr/, retrieved 2026-10-28, as recorded on `mn-criminal-trial-court/mn-rules-of-criminal-procedure.txt` above; sectioning was done from the vendored extract.
 - Sectioned sha256 d61a503d477412ffd5060110d5013b2bbcada62215ac1af47f14a01e7b5d4166 (the `path_sha256` pinned by `lit/mn-criminal-trial-court/Lit.toml`).

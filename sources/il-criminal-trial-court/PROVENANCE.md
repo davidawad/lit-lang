@@ -105,10 +105,12 @@
 
 - Derived in the pod (lg-gddt.18) from `il-criminal-trial-court/il-725-ilcs-5-code-of-criminal-procedure-1963.txt` (extract sha256 546e9e417cdd2646d00d3162c908ec6244fdffb2f457b2f265c3d4fadd4bdb90); nothing fetched. One marker line `## 725 ILCS 5/<art>-<n>` is inserted before each section's own citation line `(725 ILCS 5/<art>-<n>) ...` (424 sections; the article heading lines `(725 ILCS 5/Art. <n> heading)` are unmarked; the extract's `## Article <n> - ...` page headings are kept). Every other line is the extract unchanged, so deleting the marker lines (`sed '/^## 725 ILCS 5\//d'`) gives back the extract byte for byte.
 - Edition: as the extract, CURRENCY UNCONFIRMED.
+- Upstream: https://www.ilga.gov/Legislation/ILCS/Articles?ActID=1966&ChapterID=54, retrieved 2026-10-28, as recorded on `il-criminal-trial-court/il-725-ilcs-5-code-of-criminal-procedure-1963.txt` above; sectioning was done from the vendored extract.
 - Sectioned sha256 31d06fdac595a3f6ff277277f25e5d8ea7183259058cd11e587a4c8c9eaaf900 (the `path_sha256` pinned by `lit/il-criminal-trial-court/Lit.toml`).
 
 ### `il-criminal-trial-court/il-supreme-court-rules-articles-iv-and-vi-sectioned.txt` — Illinois Supreme Court Rules, Articles IV and VI, sectioned
 
 - Derived in the pod (lg-gddt.18) from `il-criminal-trial-court/il-supreme-court-rules-articles-iv-and-vi.txt` (extract sha256 44df2c3ca02138cfa8ae795d58251aaca8d79253105a1dfbd8c217dac190aa2f); nothing fetched. One marker line `## Ill. S. Ct. R. <n>` is inserted right after each per-file heading line `## Rule <n>: <title>` (43 rules, Rule 401 through Rule 663; the heading `## Rule Rules 452: ...` is marked `452`), so each rule's text sits under its marker and the file heading's own section is empty. Every other line is the extract unchanged, so deleting the marker lines (`sed '/^## Ill. S. Ct. R. /d'`) gives back the extract byte for byte.
 - Edition: as the extract, CURRENCY UNCONFIRMED.
+- Upstream: https://www.illinoiscourts.gov/rules-law/supreme-court-rules, retrieved 2026-10-28, as recorded on `il-criminal-trial-court/il-supreme-court-rules-articles-iv-and-vi.txt` above; sectioning was done from the vendored extract.
 - Sectioned sha256 3faeedf052830a5307ac1c93c6a04484db50264b4ffd6dd5ee9b3a79f8d30527 (the `path_sha256` pinned by `lit/il-criminal-trial-court/Lit.toml`).

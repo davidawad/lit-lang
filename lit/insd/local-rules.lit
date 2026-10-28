@@ -1,0 +1,458 @@
+module insd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Southern District of Indiana's own periods, computed under the
+// federal rules (FRCP 6(a) governs "any local rule"). The court may extend
+// response and reply deadlines, but only for good cause (S.D. Ind. L.R.
+// 7-1(c)(4)), and may rule summarily on a motion with no timely response
+// (L.R. 7-1(c)(5)); deadlines set under L.R. 16-1 change only by agreement
+// of the parties and the court or for good cause (L.R. 16-1(f)). Rules
+// that state no period or limit stay out, as do these: the 1 business day
+// to present a manually filed document (L.R. 5-2), the 5 business days to
+// update ECF contact information (L.R. 5-3(b)(1), 83-5) and the 4:00 p.m.
+// next-business-day filing after a technical failure (L.R. 5-4), business
+// days the counting library does not count; the 21 days after which the
+// clerk unseals a case or document after a denied sealing motion (L.R.
+// 5-11(a), (g)), a clerk's act; the automatic initial extension of 28 or
+// fewer days by notice (L.R. 6-1(a)), an extension of FRCP periods; the
+// limit of 25 requests for admission on any other party, authenticity
+// requests excepted, without leave (L.R. 36-1), a count no `limit` field
+// states; voir dire requests "at least 24 hours before the trial starts"
+// (L.R. 47-1(b)), a period in hours; the 1 day after notice for an
+// emergency nonparty subpoena (L.R. 45-1), an exception to the 7-day
+// notice; the three-month receiver reports after the first (L.R.
+// 66-1(b)(2)), a recurring duty; the 90-day restriction on access to an
+// official transcript and the reporter's 31 days to file a redacted one
+// (L.R. 80-1(b), 80-2(c)), court duties; the order of recruitment that
+// serves as an appearance 7 days after issuance (L.R. 87(b)), an effective
+// date and not a filing; recruitment intervals of a calendar year or
+// twelve months (L.R. 87), panel administration; and the motion for relief
+// from recruitment "promptly" (L.R. 87(d)), which states no period.
+// Expense reimbursement of up to $2,000 without prior approval (L.R. 87)
+// is a cap on reimbursement, not a fee; the pro hac vice fee (L.R. 83-6(c))
+// is not stated. The earlier S.D. Ind. outline's FRCP flow and its Supreme
+// Court decisions (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby) are
+// FRCP authority and belong to lit/frcp and lit/frap; its Seventh Circuit
+// decisions (Cracco v. Vitran Express, Inc.; Swanson v. Citibank, N.A.) are
+// removed: no reporter text is vendored.
+/// A supporting or response brief, excluding tables of contents, tables of
+/// authorities, appendices and certificates of service: at most 30 pages;
+/// the court may allow more for extraordinary and compelling reasons, and
+/// a brief over 30 pages then needs a table of contents, a statement of
+/// issues and a table of authorities (S.D. Ind. L.R. 7-1(e)). The limits
+/// govern summary-judgment briefs as well (L.R. 56-1, 2024 comment).
+limit brief { pages <= 30 cite "S.D. Ind. L.R. 7-1(e)" } cite "S.D. Ind. L.R. 7-1(e)"
+/// A reply brief: at most 15 pages (S.D. Ind. L.R. 7-1(e)(1)).
+limit reply-brief { pages <= 15 cite "S.D. Ind. L.R. 7-1(e)" } cite "S.D. Ind. L.R. 7-1(e)"
+/// A Brief in Support of maintaining a document under seal, without prior
+/// leave of court, and a Brief in Opposition: at most 10 pages (S.D. Ind.
+/// L.R. 5-11(e), (f)).
+limit seal-brief { pages <= 10 cite "S.D. Ind. L.R. 5-11(e)" } cite "S.D. Ind. L.R. 5-11(e)"
+
+/// A document is faxed to the clerk for filing on the court's
+/// authorization (S.D. Ind. L.R. 5-10(e)).
+event DocumentFaxed()
+/// A Motion to Maintain Document(s) Under Seal identifying another party as
+/// the designating party is served (S.D. Ind. L.R. 5-11(d)(5)).
+event SealMotionServed()
+/// A Brief in Support of maintaining a document under seal is served (S.D.
+/// Ind. L.R. 5-11(f)).
+event SealBriefServed() paper seal-brief
+/// The court enters its scheduling order in a Social Security appeal (S.D.
+/// Ind. L.R. 5-12(b)).
+event SocialSecuritySchedulingOrderEntered()
+/// The plaintiff's brief in support of the complaint in a Social Security
+/// appeal is served (S.D. Ind. L.R. 5-12(b)).
+event SocialSecurityOpeningBriefServed() paper brief
+/// The defendant's response brief in a Social Security appeal is served
+/// (S.D. Ind. L.R. 5-12(b)).
+event SocialSecurityResponseServed() paper brief
+/// A filing drawing into question the constitutionality of a federal or
+/// state statute is made (S.D. Ind. L.R. 5.1-1(a)).
+event ConstitutionalChallengeFiled()
+/// A motion under FRCP 12(b), (e) or (f) is served (S.D. Ind. L.R.
+/// 7-1(c)(2)).
+event Rule12MotionServed() paper brief
+/// A response to a motion to dismiss is served (S.D. Ind. L.R. 7-1(c)(2)).
+event Rule12ResponseServed() paper brief
+/// A motion other than a summary-judgment or FRCP 12(b), (e) or (f) motion
+/// is served (S.D. Ind. L.R. 7-1(c)(3)).
+event MotionServed() paper brief
+/// A response to such a motion is served (S.D. Ind. L.R. 7-1(c)(3)).
+event ResponseServed() paper brief
+/// An opposing party appears in a case whose litigant seeks to proceed
+/// under a pseudonym (S.D. Ind. L.R. 10-1(c), (d)).
+event OpposingPartyAppeared()
+/// The motion to proceed under a pseudonym is denied (S.D. Ind. L.R.
+/// 10-1(e)).
+event PseudonymMotionDenied()
+/// The case is filed in, or removed to, the court (S.D. Ind. L.R. 16-1(c)).
+event CaseFiledOrRemoved()
+/// The court receives a case remanded by the court of appeals for further
+/// proceedings or transferred from another district (S.D. Ind. L.R. 16-2).
+event RemandOrTransferReceived()
+/// A deposition is scheduled to be taken (S.D. Ind. L.R. 30-1).
+event DepositionScheduled()
+/// The mandate for a new trial on remand is docketed (S.D. Ind. L.R.
+/// 40-1(g)(2)).
+event NewTrialMandateDocketed()
+/// A subpoena to produce or permit is served on a nonparty (S.D. Ind. L.R.
+/// 45-1).
+event NonpartySubpoenaServed()
+/// Trial is set to begin (S.D. Ind. L.R. 47-3(a)).
+event TrialBegins()
+/// Final judgment is entered (S.D. Ind. L.R. 54-1(a)).
+event FinalJudgmentEntered()
+/// The movant serves its motion for summary judgment (S.D. Ind. L.R.
+/// 56-1(b)).
+event SummaryJudgmentMotionServed() paper brief
+/// The non-movant's summary judgment response is served (S.D. Ind. L.R.
+/// 56-1(c)).
+event SummaryJudgmentResponseServed() paper brief
+/// The movant serves a summary judgment reply citing new evidence or
+/// objecting to the admissibility of evidence cited in the response (S.D.
+/// Ind. L.R. 56-1(d)).
+event SummaryJudgmentReplyServed() paper reply-brief
+/// A court-appointed officer such as a receiver takes possession of an
+/// estate (S.D. Ind. L.R. 66-1(b)(1)).
+event EstatePossessionTaken()
+/// The court-appointed officer files the estate's inventory (S.D. Ind.
+/// L.R. 66-1(b)(2)).
+event EstateInventoryFiled()
+/// A case that was not appealed is disposed of as to all issues (S.D. Ind.
+/// L.R. 79-1(b)(1)).
+event CaseDisposedWithoutAppeal()
+/// The reviewing court's mandate is filed in the clerk's office and the
+/// case is disposed of as to all issues (S.D. Ind. L.R. 79-1(b)(2)).
+event MandateFiled()
+/// The court reporter or transcriber files an official transcript (S.D.
+/// Ind. L.R. 80-2(a), (b)).
+event TranscriptFiled()
+/// A notice of removal is filed (S.D. Ind. L.R. 81-1(b)).
+event RemovalNoticeFiled()
+/// The removing party serves its notice of removal with the State Court
+/// Record (S.D. Ind. L.R. 81-2(a), (b)).
+event StateCourtRecordServed()
+/// A party whose motion was pending in state court at removal appears in
+/// the District Court case (S.D. Ind. L.R. 81-2(e)(2)).
+event MovantAppeared()
+/// The case is removed from state court or transferred from another
+/// district court (S.D. Ind. L.R. 83-7(a)(2)).
+event CaseRemovedOrTransferred()
+/// The withdrawal date that a motion to withdraw an appearance fixes (S.D.
+/// Ind. L.R. 83-7(b)(2)).
+event WithdrawalDate()
+/// Recruited counsel and the litigant execute a fee agreement (S.D. Ind.
+/// L.R. 87).
+event RecruitedFeeAgreementExecuted()
+
+/// S.D. Ind. L.R. 5-10(e): a party submits a copy of a faxed document that
+/// otherwise complies with the rule to replace the faxed copy within seven
+/// days after faxing it.
+deadline fax-replacement-period: 7.days after DocumentFaxed() counted_by frcp6 cite "S.D. Ind. L.R. 5-10(e)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 5-11(d)(5): the designating party, within 14 days of
+/// service of the Motion to Maintain Document(s) under Seal, files a
+/// Statement Authorizing Unsealing, or a Brief in Support with a redacted
+/// public version; the court may rule summarily if it does not.
+deadline seal-designation-period: 14.days after SealMotionServed() counted_by frcp6 cite "S.D. Ind. L.R. 5-11(d)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 5-11(f): any opposition to a Motion to Maintain
+/// Document(s) Under Seal is filed within 14 days of service of the Brief
+/// in Support; a member of the public may challenge a sealing at any time.
+deadline seal-opposition-period: 14.days after SealBriefServed() counted_by frcp6 cite "S.D. Ind. L.R. 5-11(f)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 5-12(b): finding good cause to revise the briefing times
+/// of the Supplemental Rules for Social Security Actions, the plaintiff has
+/// 56 days from the date of the court's scheduling order to file a brief in
+/// support of the complaint. Motions for extension are disfavored absent
+/// compelling circumstances.
+deadline social-security-opening-brief-period: 56.days after SocialSecuritySchedulingOrderEntered() counted_by frcp6 cite "S.D. Ind. L.R. 5-12(b)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 5-12(b): the defendant has 56 days after service of the
+/// plaintiff's brief to file a response.
+deadline social-security-response-period: 56.days after SocialSecurityOpeningBriefServed() counted_by frcp6 cite "S.D. Ind. L.R. 5-12(b)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 5-12(b): the plaintiff has 28 days after service of the
+/// response brief to file a reply.
+deadline social-security-reply-period: 28.days after SocialSecurityResponseServed() counted_by frcp6 cite "S.D. Ind. L.R. 5-12(b)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 5.1-1(a): a notice of constitutional challenge under FRCP
+/// 5.1 is filed when the parties tender their proposed case management
+/// plan, if one is required, or within 21 days of the filing drawing the
+/// statute into question, whichever occurs later. The period below is the
+/// 21-day branch; a later case management plan tender moves the deadline
+/// to that day.
+deadline constitutional-challenge-notice-period: 21.days after ConstitutionalChallengeFiled() counted_by frcp6 cite "S.D. Ind. L.R. 5.1-1(a)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 7-1(c)(2): a party files any response brief to a motion
+/// under FRCP 12(b), (e) or (f) within 21 days after the motion is served,
+/// unless it is entitled to and first files an amended pleading as a
+/// matter of course under FRCP 15(a)(1).
+deadline rule12-response-period: 21.days after Rule12MotionServed() counted_by frcp6 cite "S.D. Ind. L.R. 7-1(c)(2)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 7-1(c)(2): if a response to a motion to dismiss is filed,
+/// any reply is due within 7 days after service of the response.
+deadline rule12-reply-period: 7.days after Rule12ResponseServed() counted_by frcp6 cite "S.D. Ind. L.R. 7-1(c)(2)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 7-1(c)(3)(A): any response to another motion is due
+/// within 14 days after service of the motion; summary judgment motions
+/// follow L.R. 56-1 (L.R. 7-1(c)(1)).
+deadline motion-response-period: 14.days after MotionServed() counted_by frcp6 cite "S.D. Ind. L.R. 7-1(c)(3)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 7-1(c)(3)(B): any reply is due within 7 days after
+/// service of the response.
+deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6 cite "S.D. Ind. L.R. 7-1(c)(3)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 10-1(c): the sealed Notice of intention to proceed under
+/// a pseudonym and the motion are served on each opposing party within 7
+/// days of that party's appearance.
+deadline pseudonym-service-period: 7.days after OpposingPartyAppeared() counted_by frcp6 cite "S.D. Ind. L.R. 10-1(c)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 10-1(d): any objection to the pseudonym motion is filed
+/// by the opposing party within 21 days of its appearance.
+deadline pseudonym-objection-period: 21.days after OpposingPartyAppeared() counted_by frcp6 cite "S.D. Ind. L.R. 10-1(d)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 10-1(e): if the pseudonym motion is denied, the litigant
+/// has 14 days to file the complaint in his or her true name.
+deadline true-name-complaint-period: 14.days after PseudonymMotionDenied() counted_by frcp6 cite "S.D. Ind. L.R. 10-1(e)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 16-1(c): unless otherwise ordered or exempted under L.R.
+/// 16-1(g), the parties confer, prepare and file a joint case management
+/// plan within 90 days after the case was filed in or removed to the
+/// court; the plaintiff initiates and coordinates (L.R. 16-1(d)).
+deadline case-management-plan-period: 90.days after CaseFiledOrRemoved() counted_by frcp6 cite "S.D. Ind. L.R. 16-1(c)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 16-2: within 21 days after the court receives a case
+/// remanded by the court of appeals for further proceedings, or
+/// transferred from another district, each party files a statement of
+/// position on what action the court should take.
+deadline remand-position-statement-period: 21.days after RemandOrTransferReceived() counted_by frcp6 cite "S.D. Ind. L.R. 16-2"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 30-1: unless agreed by counsel or otherwise ordered, no
+/// deposition is scheduled on less than 14 days notice.
+deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frcp6 cite "S.D. Ind. L.R. 30-1"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 40-1(g)(2): a case remanded for a new trial under Seventh
+/// Circuit Rule 36 is reassigned by random lot unless the remand order
+/// directs otherwise or, within 15 days after the mandate for a new trial
+/// is docketed, all parties request that the previously assigned judge
+/// retry it.
+deadline retrial-judge-request-period: 15.days after NewTrialMandateDocketed() counted_by frcp6 cite "S.D. Ind. L.R. 40-1(g)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 45-1: a copy of a proposed subpoena to produce or permit
+/// is served on all other parties at least 7 days before it is served on a
+/// nonparty, unless the parties agree otherwise or the case management
+/// plan provides otherwise.
+deadline nonparty-subpoena-notice-period: 7.days before NonpartySubpoenaServed() counted_by frcp6 cite "S.D. Ind. L.R. 45-1"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 47-3(a): the court may order the parties to pay juror
+/// costs if they settle or otherwise dispose of the case before trial and
+/// the clerk's office is not notified at least 1 full business day before
+/// the trial is set to begin.
+deadline jury-cost-notice-period: 1.court_days before TrialBegins() counted_by frcp6 cite "S.D. Ind. L.R. 47-3(a)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 54-1(a): a party cannot recover attorney's fees and costs
+/// unless it files and serves a bill of costs and a motion for fees within
+/// 14 days after final judgment is entered; the court may extend the
+/// deadline for good cause on a motion filed before it.
+deadline costs-and-fees-period: 14.days after FinalJudgmentEntered() counted_by frcp6 cite "S.D. Ind. L.R. 54-1(a)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 56-1(b): a party opposing summary judgment, within 28
+/// days after the movant serves the motion, files and serves a response
+/// brief and any evidence it relies on not already in the record.
+deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "S.D. Ind. L.R. 56-1(b)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 56-1(c): the movant may file a reply brief within 14
+/// days after a response is served.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "S.D. Ind. L.R. 56-1(c)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 56-1(d): a party opposing summary judgment may file a
+/// surreply only if the movant cites new evidence in the reply or objects
+/// to the admissibility of evidence cited in the response; it is filed
+/// within 7 days after the movant serves the reply.
+deadline summary-judgment-surreply-period: 7.days after SummaryJudgmentReplyServed() counted_by frcp6 cite "S.D. Ind. L.R. 56-1(d)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 66-1(b)(1): within 28 days after taking possession of an
+/// estate, the court-appointed officer files an inventory and appraisal of
+/// the estate's property and assets and, on a separate schedule, an
+/// inventory of those held by others.
+deadline receiver-inventory-period: 28.days after EstatePossessionTaken() counted_by frcp6 cite "S.D. Ind. L.R. 66-1(b)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 66-1(b)(2): within 28 days after the inventory is filed,
+/// and every three months after that, the officer files a report of its
+/// acts and an accounting. The period below is the first report.
+deadline receiver-first-report-period: 28.days after EstateInventoryFiled() counted_by frcp6 cite "S.D. Ind. L.R. 66-1(b)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 79-1(b)(1): if the case is not appealed, the party that
+/// offered items into evidence claims them from the clerk within 90 days
+/// after the case is disposed of as to all issues.
+deadline exhibit-claim-period: 90.days after CaseDisposedWithoutAppeal() counted_by frcp6 cite "S.D. Ind. L.R. 79-1(b)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 79-1(b)(2): if the case is appealed, the offering party
+/// claims its items within 28 days after the mandate of the reviewing
+/// court is filed in the clerk's office and the case is disposed of as to
+/// all issues, unless otherwise ordered.
+deadline exhibit-claim-after-appeal-period: 28.days after MandateFiled() counted_by frcp6 cite "S.D. Ind. L.R. 79-1(b)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 80-2(a)(2): if any portion of an official transcript is
+/// subject to FRCP 5.2, the attorneys of record file a Notice of Intent to
+/// Request Redaction within 7 days from the date the transcript was filed;
+/// without one the court assumes no redaction is necessary.
+deadline redaction-intent-notice-period: 7.days after TranscriptFiled() counted_by frcp6 cite "S.D. Ind. L.R. 80-2(a)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 80-2(a)(3): if redaction of personal data identifiers is
+/// required, the attorneys of record file a Redaction Statement within 21
+/// days from the date the transcript was filed.
+deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by frcp6 cite "S.D. Ind. L.R. 80-2(a)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 80-2(b): a party seeking redaction of information beyond
+/// the personal data identifiers files a Motion to Redact Transcript within
+/// 21 days from the date the transcript was filed.
+deadline redaction-motion-period: 21.days after TranscriptFiled() counted_by frcp6 cite "S.D. Ind. L.R. 80-2(b)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 81-1(b): within 30 days after the filing of a notice of
+/// removal based in whole or part on diversity, every plaintiff who has not
+/// moved to remand files a statement responding to the notice's
+/// allegations of citizenship and amount in controversy.
+deadline removal-response-period: 30.days after RemovalNoticeFiled() counted_by frcp6 cite "S.D. Ind. L.R. 81-1(b)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 81-2(b): a non-removing party files any objection to the
+/// completeness of the State Court Record, and supplements it, within 7
+/// days of service of the notice of removal and record.
+deadline state-court-record-objection-period: 7.days after StateCourtRecordServed() counted_by frcp6 cite "S.D. Ind. L.R. 81-2(b)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 81-2(e)(2): a party whose motion remains pending in state
+/// court at removal and who wants the District Court to rule on it refiles
+/// the motion, with any responses, within seven (7) days of its
+/// appearance.
+deadline pending-motion-refiling-period: 7.days after MovantAppeared() counted_by frcp6 cite "S.D. Ind. L.R. 81-2(e)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 83-7(a)(2): an attorney of record not admitted to
+/// practice before the court either complies with its admission policy
+/// (L.R. 83-5, 83-6) or withdraws the appearance within 21 days after the
+/// case is removed or transferred to the court.
+deadline removal-admission-period: 21.days after CaseRemovedOrTransferred() counted_by frcp6 cite "S.D. Ind. L.R. 83-7(a)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 83-7(b)(2): a motion to withdraw an appearance fixes a
+/// withdrawal date and contains evidence that the attorney gave the client
+/// written notice of the intent to withdraw at least 7 days before that
+/// date.
+deadline withdrawal-notice-period: 7.days before WithdrawalDate() counted_by frcp6 cite "S.D. Ind. L.R. 83-7(b)"
+{
+  forum frcp
+}
+
+/// S.D. Ind. L.R. 87: if recruited counsel and the litigant enter into a
+/// fee agreement providing for fees, counsel files a Notice of Fee
+/// Agreement, which may be ex parte, within 28 days after it is executed.
+deadline recruited-fee-agreement-notice-period: 28.days after RecruitedFeeAgreementExecuted() counted_by frcp6 cite "S.D. Ind. L.R. 87"
+{
+  forum frcp
+}

@@ -1,0 +1,50 @@
+# The United States District Court for the Southern District of Indiana's
+# Local Civil Rules as a local-rule layer over lit/frcp (28 U.S.C. § 2071;
+# FRCP 83(a)): it declares only the periods and limits the Local Rules
+# themselves state and re-encodes no FRCP deadline. FRCP 6(a) computes a
+# period stated in a local rule. The rules are those with amendments
+# through July 1, 2026, the court's current edition (sources/insd); the
+# amendments the court noticed on October 16, 2026 to take effect December
+# 1, 2026 (e.g. L.R. 83-6) are not vendored and not yet in force. The Local
+# Criminal Rules (forum insd-criminal) are out of scope. An appeal goes to
+# the Seventh Circuit under lit/frap and lit/ca7.
+[package]
+name = "insd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "insd-local-rules"
+forum = "insd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Southern District of Indiana: Local Civil Rules"
+description = "The Southern District of Indiana's Local Civil Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): fax replacement copies, sealed-document statements, briefs and oppositions and their page limits, Social Security briefing, notices of constitutional challenge, motion response and reply periods and brief page limits, pseudonym notices and objections, the case management plan, statements of position after remand or transfer, deposition and nonparty subpoena notice, retrial-judge requests, jury-cost notice, bills of costs and fee motions, summary judgment response, reply and surreply, receivers' inventories and reports, claiming exhibits, transcript redaction, removal responses and state court record objections, appearances after removal, notice before withdrawal, and recruited counsel's fee-agreement notices."
+in_force = "2026-07-01"
+known_at = "2026-10-28"
+unknown_before = "2026-07-01"
+jurisdiction = "United States District Court, S.D. Indiana"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "insd-lr"
+issuer = "United States District Court for the Southern District of Indiana"
+date = "2026-07-01"
+designation = "Local Rules (with amendments through July 1, 2026): Local Civil Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.insd-lr]
+title = "Local Rules of the United States District Court for the Southern District of Indiana (with amendments through July 1, 2026): Local Civil Rules"
+url = "https://www.insd.uscourts.gov/sites/insd/files/Local%20Rules%207-1-26.pdf"
+path = "sources/insd/insd-local-rules-sectioned.txt"
+path_sha256 = "5b55f4232b25b5dc46297a538630dff9293de8512ca2950fba002b3460763287"
+sha256 = "1e832484f765290b64b70b7ceb32c90980b3b071b1ca4690f680778bec1b0149"
+as_of = "2026-07-01"
+cite_prefixes = ["S.D. Ind. L.R."]
+section_heading = "S.D. Ind. L.R. {n}"

@@ -6,3 +6,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 e3f7289aa97f49e53f0e2a0fcb36640626417d86fa420abc23fb898301a0d46d. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-vaw/original/vaw-local-rules-2025-03-14.pdf` as served (sha256 5cdaff5d0d28d196090167b3f0cb419f2372cfd0e148a966dfdccaa89d890988); extraction sha256 e3f7289aa97f49e53f0e2a0fcb36640626417d86fa420abc23fb898301a0d46d.
+
+### `bankr-vaw/vaw-local-rules-2025-03-14-sectioned.txt` — W.D. Va. Local Rules, sectioned
+
+- Derived in the pod (lg-u561.15) from `bankr-vaw/vaw-local-rules-2025-03-14.txt` (extract sha256 e3f7289aa97f49e53f0e2a0fcb36640626417d86fa420abc23fb898301a0d46d); nothing fetched. One `## Rule <n>` line is inserted before each rule's own centered `LOCAL RULE <n>` heading line in the body of the rules (`LOCAL RULE 1001-1` through `LOCAL RULE 9072-1`, 62 rules; a heading printed with a Unicode hyphen or a space, `1009‐1`, `1017- 3`, `3015‐2`, is keyed with an ASCII hyphen); the table of contents is unmarked and the local forms after LOCAL RULE 9072-1 fall in its section. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, effective March 14, 2025.
+- Sectioned sha256 6362cfab8acb3cd76ac5b8759be2adf4ba4f4e7bde1deb64d3b5d838bb4b9ffd (the `path_sha256` pinned by `lit/bankr-vaw/Lit.toml`).

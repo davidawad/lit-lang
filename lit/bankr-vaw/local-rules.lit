@@ -1,0 +1,286 @@
+module bankr-vaw-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, NoticeOfAppealFiled }
+
+// The Bankr. W.D. Va. court's own periods, computed under FRBP 9006(a),
+// which states the FRCP 6(a) method. Every FRBP period (schedules, chapter
+// 7, 12 and 13 claims, discharge, dischargeability, adversary answers,
+// appeals) is lit/frbp's; a period the rules restate from the FRBP is not
+// declared again: schedules within 14 days of the petition (LBR 1007-1(A),
+// FRBP 1007(c)), the chapter 13 plan within 14 days (LBR 3015-1(A)(1), FRBP
+// 3015(b)) and chapter 13 confirmation objections at least 7 days before
+// the hearing (LBR 3015-2(A)(1), 3015-4(A)-(B), FRBP 3015(f)). Stated in
+// the rules but not declared: the 35-day threshold deciding whether an
+// amended chapter 13 plan needs a new confirmation hearing (LBR 3015-2(A));
+// publication at least 7 days before action (LBR 2002-1); 21 days' notice
+// of a sale, refinance or loan modification by a chapter 13 debtor (LBR
+// 6004-3); the 60-day attorney certification of having read the rules (LBR
+// 2090-1); and the three-year retention of signed originals (LBR 5005-4).
+/// The order granting procedural consolidation of cases is entered (LBR
+/// 1015-1(A)).
+event ConsolidationOrderEntered()
+/// An application to employ a professional is filed (LBR 2014-1(C)).
+event EmploymentApplicationFiled()
+/// The order approving the chapter 7 trustee's final distribution is
+/// entered (LBR 2016-1).
+event FinalDistributionOrderEntered()
+/// A small business or subchapter V debtor files the proposed plan and
+/// disclosure statement with the court (LBR 3017-2(A)).
+event PlanDisclosureFiled()
+/// The debtor submits the proposed plan and disclosure statement to the
+/// U.S. Trustee (LBR 3017-2(A)).
+event PlanDisclosureSubmitted()
+/// The debtor files the plan, disclosure statement and motion for
+/// conditional approval (LBR 3017-2(C)).
+event ConditionalApprovalMotionFiled()
+/// The hearing on an application for a chapter 11 final decree is held (LBR
+/// 3022-1(B)-(C)).
+event FinalDecreeHearingDate()
+/// The meeting of creditors under 11 U.S.C. § 341 is held (LBR
+/// 4002-1(A)(2)).
+event MeetingOfCreditorsDate()
+/// The clerk sends the lessor notice of a rent deposit under 11 U.S.C. §
+/// 362(l) (LBR 4002-3(C)).
+event LessorNoticeSent()
+/// The chapter 13 trustee files the notice of completion of plan payments
+/// (LBR 4004-1(A)).
+event PlanCompletionNoticeFiled()
+/// The court sends notice of the debtor's certification of compliance with
+/// § 1328 (LBR 4004-1(B)).
+event DischargeDisputeNoticeSent()
+/// The case trustee or the U.S. Trustee requests the signed paper originals
+/// of an electronically filed document (LBR 5005-4).
+event OriginalsRequested()
+/// The hearing on a proposed voluntary dismissal of a complaint objecting
+/// to discharge is held (LBR 7041-1).
+event DischargeDismissalHearingDate()
+/// A designation of the record on appeal is filed (LBR 8006-1).
+event RecordDesignationFiled()
+/// The court gives a hearing date on a motion, response or other pleading
+/// (LBR 9013-1(H)).
+event HearingDateGiven()
+/// The noticed hearing on a motion is held (LBR 9013-1(M)).
+event NoticedHearingDate()
+/// A demand for a jury trial is made (LBR 9015-1(B)).
+event JuryDemandMade()
+/// The 21-day period to file the parties' consent to a jury trial in the
+/// bankruptcy court passes without it (LBR 9015-1(B)).
+event JuryConsentDeadlinePassed()
+/// The time for appeal or a motion for rehearing after the judgment passes
+/// (LBR 9070-1(B)).
+event AppealTimeExpired()
+/// A trial, hearing or other disposition of a matter concludes and the
+/// court instructs a party to prepare a proposed order (LBR 9072-1(A)).
+event MatterDisposed()
+
+/// LBR 1015-1(A): the party seeking procedural consolidation files a
+/// consolidated mailing matrix for each case within 14 days from the order
+/// granting consolidation.
+deadline consolidated-matrix-period: 14.days after ConsolidationOrderEntered() counted_by frcp6 cite "W.D. Va. LBR 1015-1(A)"
+{
+  forum frcp
+}
+
+/// LBR 2014-1(C): absent objection within 14 days of filing, the court may
+/// approve an application to employ a professional without further notice
+/// or hearing.
+deadline employment-objection-period: 14.days after EmploymentApplicationFiled() counted_by frcp6 cite "W.D. Va. LBR 2014-1(C)"
+{
+  forum frcp
+}
+
+/// LBR 2016-1: a FRBP 2016 application for professional fees in a chapter 7
+/// case is filed no later than 7 days before entry of the order approving
+/// the trustee's final distribution, or it is untimely.
+deadline chapter7-fee-application-period: 7.days before FinalDistributionOrderEntered() counted_by frcp6 cite "W.D. Va. LBR 2016-1"
+{
+  forum frcp
+}
+
+/// LBR 3017-2(A): a small business or subchapter V debtor seeking
+/// conditional approval submits the proposed plan and disclosure statement
+/// to the U.S. Trustee no fewer than 7 days before filing them.
+deadline trustee-preliminary-review-period: 7.days before PlanDisclosureFiled() counted_by frcp6 cite "W.D. Va. LBR 3017-2(A)"
+{
+  forum frcp
+}
+
+/// LBR 3017-2(A): the U.S. Trustee comments to the debtor within 7 days
+/// after the submission.
+deadline trustee-comment-period: 7.days after PlanDisclosureSubmitted() counted_by frcp6 cite "W.D. Va. LBR 3017-2(A)"
+{
+  forum frcp
+}
+
+/// LBR 3017-2(C): within 7 days after the filing of the plan, disclosure
+/// statement and motion for conditional approval, the U.S. Trustee files a
+/// statement on the disclosure statement; any party in interest may file
+/// one within that period.
+deadline trustee-statement-period: 7.days after ConditionalApprovalMotionFiled() counted_by frcp6 cite "W.D. Va. LBR 3017-2(C)"
+{
+  forum frcp
+}
+
+/// LBR 3022-1(B): debtor's counsel gives 28 days' notice to all creditors
+/// and the U.S. Trustee of the hearing on an application for a final
+/// decree.
+deadline final-decree-notice-period: 28.days before FinalDecreeHearingDate() counted_by frcp6 cite "W.D. Va. LBR 3022-1(B)"
+{
+  forum frcp
+}
+
+/// LBR 3022-1(C): written objections to a final decree are filed not later
+/// than 7 days before the hearing.
+deadline final-decree-objection-period: 7.days before FinalDecreeHearingDate() counted_by frcp6 cite "W.D. Va. LBR 3022-1(C)"
+{
+  forum frcp
+}
+
+/// LBR 4002-1(A)(2): the debtor provides payment advices to a creditor who
+/// timely requests them at least 7 days before the meeting of creditors.
+deadline payment-advices-period: 7.days before MeetingOfCreditorsDate() counted_by frcp6 cite "W.D. Va. LBR 4002-1(A)(2)"
+{
+  forum frcp
+}
+
+/// LBR 4002-1(A)(2): to be timely the request must be received at least 14
+/// days before the first date set for the meeting of creditors, or any
+/// adjourned or continued meeting.
+deadline payment-advices-request-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "W.D. Va. LBR 4002-1(A)(2)"
+{
+  forum frcp
+}
+
+/// LBR 4002-3(C): within 14 days of the clerk's notice the lessor consents
+/// to receive the tendered rent payment or objects to the debtor's
+/// certification; silence is acceptance.
+deadline lessor-response-period: 14.days after LessorNoticeSent() counted_by frcp6 cite "W.D. Va. LBR 4002-3(C)"
+{
+  forum frcp
+}
+
+/// LBR 4004-1(A): the chapter 13 debtor files the Certification of
+/// Compliance with § 1328 within 60 days of the trustee's notice of
+/// completion of plan payments, or the case may close without a discharge.
+deadline discharge-certification-period: 60.days after PlanCompletionNoticeFiled() counted_by frcp6 cite "W.D. Va. LBR 4004-1(A)"
+{
+  forum frcp
+}
+
+/// LBR 4004-1(B): creditors and parties in interest have 30 days from the
+/// court's notice to dispute the completion report or the certification and
+/// request a hearing.
+deadline discharge-dispute-period: 30.days after DischargeDisputeNoticeSent() counted_by frcp6 cite "W.D. Va. LBR 4004-1(B)"
+{
+  forum frcp
+}
+
+/// LBR 5005-4: an electronic filer produces the signed paper originals
+/// within 14 days after a written request by the case trustee or the U.S.
+/// Trustee.
+deadline signed-originals-period: 14.days after OriginalsRequested() counted_by frcp6 cite "W.D. Va. LBR 5005-4"
+{
+  forum frcp
+}
+
+/// LBR 7041-1: a plaintiff proposing to dismiss a complaint objecting to
+/// discharge gives at least 21 days' written notice of the hearing to the
+/// U.S. Trustee, the trustee and all creditors.
+deadline discharge-dismissal-notice-period: 21.days before DischargeDismissalHearingDate() counted_by frcp6 cite "W.D. Va. LBR 7041-1"
+{
+  forum frcp
+}
+
+/// LBR 8006-1: a party designating items not filed electronically provides
+/// copies to the clerk within 14 days after filing the designation, or the
+/// clerk copies them at its expense.
+deadline record-copies-period: 14.days after RecordDesignationFiled() counted_by frcp6 cite "W.D. Va. LBR 8006-1"
+{
+  forum frcp
+}
+
+/// LBR 8007-1(B): if the record is not complete and ready for transmittal
+/// 45 days after the notice of appeal, the clerk certifies the deficiencies
+/// to the District Court.
+deadline record-transmittal-period: 45.days after NoticeOfAppealFiled() counted_by frcp6 cite "W.D. Va. LBR 8007-1(B)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(H): the motion, notice of hearing and certification of notice
+/// are filed within 7 days after the court gives the hearing date, or the
+/// date may be reassigned.
+deadline hearing-notice-period: 7.days after HearingDateGiven() counted_by frcp6 cite "W.D. Va. LBR 9013-1(H)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(M): an opposing party's written response is filed and served
+/// at least 7 days before the noticed hearing, unless another time is
+/// prescribed or notice is short.
+deadline motion-response-period: 7.days before NoticedHearingDate() counted_by frcp6 cite "W.D. Va. LBR 9013-1(M)"
+{
+  forum frcp
+}
+
+/// LBR 9015-1(B): not later than 21 days after a jury demand, the demanding
+/// party files all parties' consent to a jury trial in the bankruptcy
+/// court.
+deadline jury-consent-period: 21.days after JuryDemandMade() counted_by frcp6 cite "W.D. Va. LBR 9015-1(B)"
+{
+  forum frcp
+}
+
+/// LBR 9015-1(B): without the consent, the demanding party has an
+/// additional 14 days to move the District Court to withdraw the reference.
+deadline jury-withdrawal-motion-period: 14.days after JuryConsentDeadlinePassed() counted_by frcp6 cite "W.D. Va. LBR 9015-1(B)"
+{
+  forum frcp
+}
+
+/// LBR 9070-1(B): exhibits and trial materials are withdrawn within 30 days
+/// after the judgment and the time for appeal or rehearing pass.
+deadline exhibit-withdrawal-period: 30.days after AppealTimeExpired() counted_by frcp6 cite "W.D. Va. LBR 9070-1(B)"
+{
+  forum frcp
+}
+
+/// LBR 9072-1(A): when the court instructs a party to prepare a proposed
+/// order, it is filed within 10 days after the conclusion of the trial,
+/// hearing or other disposition.
+deadline proposed-order-period: 10.days after MatterDisposed() counted_by frcp6 cite "W.D. Va. LBR 9072-1(A)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed and hearing noticed" by applicant cite "W.D. Va. LBR 9013-1(H)"
+{
+  note "A motion states its grounds and relief with particularity (LBR 9013-1(B)); the movant obtains a hearing date and files the motion, notice of hearing and certification of notice within 7 days after the court gives the date (LBR 9013-1(H)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-response "Written response filed" -> response {
+    authority cite "W.D. Va. LBR 9013-1(M)"
+  }
+  edge-motion-filed-unopposed "No response; motion treated as uncontested" -> ruling {
+    authority cite "W.D. Va. LBR 9013-1(M)"
+  }
+}
+
+state response: "Response filed" by opponent cite "W.D. Va. LBR 9013-1(M)"
+{
+  note "An opposing party files and serves a written response at least 7 days before the noticed hearing, giving notice of factual disputes and defenses (LBR 9013-1(M))."
+  edge-response-ruling "Matter heard" -> ruling { authority cite "W.D. Va. LBR 9013-1(H)" }
+}
+
+decision ruling: "Motion decided" by court cite "W.D. Va. LBR 9013-1(G)"
+{
+  note "The court may decide motions without oral hearing (LBR 9013-1(G)); a party it instructs prepares a proposed order within 10 days (LBR 9072-1(A))."
+  edge-ruling-granted "Granted" -> decided { authority cite "W.D. Va. LBR 9072-1(A)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "W.D. Va. LBR 9072-1(A)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "W.D. Va. LBR 1001-1"
+{
+  note "These local rules govern practice and procedure in the court and clarify the FRBP's practice there (LBR 1001-1)."
+}

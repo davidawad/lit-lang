@@ -1,0 +1,53 @@
+# The District Court of Guam's Criminal Local Rules (CRLR) as a local-rule
+# layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it declares
+# only the periods and limits the local criminal rules themselves state
+# and re-encodes no FRCrimP, Speedy Trial Act or FRAP 4(b) period (one
+# source of truth: lit/frcrimp). Each period is counted under FRCrimP
+# 45(a), which governs "any local rule", so each deadline names `forum
+# frcrimp`. The rules are the edition effective June 24, 2020, which the
+# court lists as current (sources/fed-dguam); earlier editions are not
+# vendored, so a query before that date is a hole in the corpus. The
+# court's General Local Rules (effective April 19, 2022; vendored beside
+# them) govern civil and criminal practice alike and are not restated.
+# An appeal goes to the Ninth Circuit under lit/frcrimp's FRAP 4(b)
+# period.
+[package]
+name = "gud-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "gud-criminal-local-rules"
+forum = "gud-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "District Court of Guam: Criminal Local Rules"
+description = "The District Court of Guam's Criminal Local Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the proposed summons, responses to objections to a magistrate judge's plea findings and rulings, the report and recommendation on a referred dispositive motion, the standard discovery schedule, the voir dire, jury instruction and verdict form filings, the presentence report and sentencing memorandum schedule, and the transcript, briefs and page limit on an appeal from a magistrate judge's conviction."
+in_force = "2020-06-24"
+known_at = "2026-10-28"
+unknown_before = "2020-06-24"
+jurisdiction = "District Court of Guam (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "gud-crlr"
+issuer = "District Court of Guam"
+date = "2020-06-24"
+designation = "Criminal Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.gud-crlr]
+title = "Criminal Local Rules of the District Court of Guam (effective June 24, 2020)"
+url = "https://www.gud.uscourts.gov/sites/gud/files/crim_rules_final_2020624%20%281%29.pdf"
+path = "sources/fed-dguam/guam-criminal-local-rules-2020-06-24-sectioned.txt"
+path_sha256 = "a0d77161409962ca732bb89b0a5278e20b723fd8ca71c3d409a62282c92166e9"
+sha256 = "dc3865f487a195add04c1a85c01be4f4713ce08ce31439ac69591beca54409f3"
+as_of = "2020-06-24"
+cite_prefixes = ["D. Guam CRLR"]
+section_heading = "CRLR {n}"

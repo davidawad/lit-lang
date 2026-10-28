@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "gud-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:baf6746d5ad93a70779354cd53844f607a07d4f77919732b62bf8942f4a2126b"
+semantic = "sha256:306cb27d1b10292778b3e877b2e8bd9d32204b360a2d85be17c735844b53370e"
+texts = [
+    "gud-crlr sources/fed-dguam/guam-criminal-local-rules-2020-06-24-sectioned.txt sha256:a0d77161409962ca732bb89b0a5278e20b723fd8ca71c3d409a62282c92166e9",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

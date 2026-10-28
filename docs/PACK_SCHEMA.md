@@ -23,8 +23,8 @@ They are never committed: `crates/litgraph-packs` builds and embeds them
 at `cargo build` time, and `just lit-sync` writes the same build to
 `target/lit-build/{packs,scenarios}/` to read. Edit the source, never the
 JSON. This document stays the
-reference for the JSON the compiler emits and the engine reads (and for
-packs you load from elsewhere with `--packs-dir`): SPEC §8 says which `.lit`
+reference for the JSON the compiler emits and the engine reads: SPEC §8
+says which `.lit`
 construct lowers to each field below.
 
 ## Top level

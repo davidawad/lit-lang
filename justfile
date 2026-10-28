@@ -215,7 +215,7 @@ docker-smoke: docker-build
 
 # Build litigate-wasm, the compiler and engine as WebAssembly, for the
 # browser and Node targets into dist/wasm/. lit/ and cases/ are embedded
-# as source and compiled in-process, so no packs-dir setup is needed at
+# as source and compiled in-process, so nothing is loaded from disk at
 # runtime.
 wasm:
     cargo build --release -p litigate-wasm --target wasm32-unknown-unknown
@@ -337,8 +337,7 @@ lit-check *ARGS='lit cases':
 # Lit.lock files are committed (each row holds only its own package's
 # digests, so edits to different packages merge as plain text).
 lit_build_args := "crates/litgraph-packs/build.args"
-# Where `lit-sync` writes the build for inspection (`--packs-dir`,
-# `--scenarios-dir`, `litigate diff`).
+# Where `lit-sync` writes the build for inspection (and `litigate diff`).
 lit_build_dir := "target/lit-build"
 
 # Regenerate every committed Lit.lock and the engine's shared clock library

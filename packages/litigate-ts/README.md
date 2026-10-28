@@ -114,11 +114,9 @@ result types derive `JsonSchema`.
   then lapse, with an L4016 warning. Pass `today` (the fourth argument of
   `run`) to pin it; an explicit `asOf` turns it off.
 - Only `check`, `build`, `worlds` (alternate timelines,
-  docs/litigate/CHANGE.md §5.1), `run`, the op subcommands, `engine` and
-  the case boundary (`timeline`, `calendar`, `actions`, `lint-filing`)
-  run; any other command exits 1. `engine` serves the packs and matters compiled
-  from `files` (`--lib`, `--cases`); a directory flag (`--packs-dir`,
-  ...) exits 1, as there is no disk.
+  docs/litigate/CHANGE.md §5.1), `run`, the op subcommands and the case
+  boundary (`timeline`, `calendar`, `actions`, `lint-filing`) run; any
+  other command exits 1.
 - On the Rust side the loaders read a `litigate_sema::pkg::source::Source`:
   `Disk` for the CLI, `MemoryTree` here (`litigate_cli::execute_in_memory`).
 - `test/litigate.test.ts` checks, builds and runs ops on the repository's

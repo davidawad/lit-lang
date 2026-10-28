@@ -385,7 +385,7 @@
              (buffer (litgraph-timeline-test-open dir)))
         (should (equal (car (car litgraph-test-calls))
                        (list "timeline" "--format" "json" file)))
-        ;; `litigate timeline', not `litigate engine timeline'.
+        ;; `litigate timeline' is a top-level command.
         (should (equal (car litgraph-test-commands) "litigate"))
         (with-current-buffer buffer
           (should (derived-mode-p 'litgraph-timeline-mode))

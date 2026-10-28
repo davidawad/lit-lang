@@ -152,7 +152,8 @@ export class Litigate {
    * Runs `litigate ARGS` (no program name) over `files`, exactly as the
    * CLI over a disk holding them. `check`, `build`, `worlds` (alternate
    * timelines), `run`, the op subcommands (`solve`, `chain`, ...) and
-   * `engine` run; any other command exits 1. `check` judges deadlines
+   * the case boundary (`timeline`, `calendar`, `actions`, `lint-filing`)
+   * run; any other command exits 1. `check` judges deadlines
    * at `today` unless told a date, as the native binary does at its own
    * today (default: today's UTC date).
    */

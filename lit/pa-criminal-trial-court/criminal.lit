@@ -1,0 +1,163 @@
+module pa-common-pleas-criminal.criminal
+
+// Criminal court cases in the Pennsylvania courts of common pleas. Every
+// period is stated in a note with the rule that sets it: lit/core has no
+// counting rule for the Pennsylvania rules (1 Pa.C.S. § 1908 and Pa.R.J.A.
+// 107 are not vendored). Outcomes are from the defendant's side. The
+// earlier outline's leading decisions (County of Riverside v. McLaughlin,
+// Gerstein v. Pugh, Gideon v. Wainwright, Brady v. Maryland, Mapp v. Ohio,
+// Barker v. Wingo, Boykin v. Alabama, Missouri v. Frye, Jackson v.
+// Virginia, Ramos v. Louisiana, Apprendi v. New Jersey, Roe v.
+// Flores-Ortega, Garza v. Idaho) are removed: no reporter text is
+// vendored.
+start arrested
+
+state arrested: "Arrest and complaint" by applicant cite "Pa.R.Crim.P. 519"
+{
+  note "A defendant arrested without a warrant in a court case is charged by a complaint and afforded a preliminary arraignment by the proper issuing authority without unnecessary delay (Pa.R.Crim.P. 519(A)(1)); for certain misdemeanors the arresting officer instead releases the defendant, and the complaint is then filed within 5 days of the release and the case proceeds by summons (Pa.R.Crim.P. 519(B))."
+  edge-arrested-appearance "Preliminary arraignment" -> initial-appearance {
+    authority cite "Pa.R.Crim.P. 540"
+  }
+}
+
+decision initial-appearance: "Preliminary arraignment and bail" by court cite "Pa.R.Crim.P. 540"
+{
+  note "At the preliminary arraignment the defendant receives the complaint and is told of the right to counsel of choice and to assigned counsel, the right to a preliminary hearing (unless the case goes to an indicting grand jury), and the type and conditions of release on bail (Pa.R.Crim.P. 540(C), (F)); a defendant arrested without a warrant is not detained unless the issuing authority finds probable cause (Pa.R.Crim.P. 540(E)). Counsel is appointed for an indigent defendant in a court case before the preliminary hearing (Pa.R.Crim.P. 122(A)(2)). Bail before verdict is set in all cases as permitted by law, and a refusal is explained in writing or on the record (Pa.R.Crim.P. 520(A)); the types of release are in Pa.R.Crim.P. 524. The preliminary hearing is fixed not later than 14 days after the preliminary arraignment for a defendant in custody on the current case only, and not later than 21 days otherwise, unless extended for cause (Pa.R.Crim.P. 540(G)(1))."
+  edge-initial-appearance-detained "Bail refused; detained" -> probable-cause {
+    authority cite ?("Pa. Const. art. I, § 14 (bail; not vendored)")
+  }
+  edge-initial-appearance-released "Released on bail" -> probable-cause {
+    authority cite "Pa.R.Crim.P. 524"
+  }
+}
+
+decision probable-cause: "Preliminary hearing or indicting grand jury" by court cite "Pa.R.Crim.P. 543"
+{
+  note "At the preliminary hearing the defendant may be represented, cross-examine, call witnesses and testify (Pa.R.Crim.P. 542(C)). If the Commonwealth establishes a prima facie case the issuing authority holds the defendant for court, otherwise it discharges the defendant (Pa.R.Crim.P. 543(B)). On a showing of witness intimidation, the attorney for the Commonwealth may instead present the matter to an indicting grand jury without a preliminary hearing (Pa.R.Crim.P. 556.2)."
+  edge-probable-cause-charged "Held for court" -> charged {
+    authority cite "Pa.R.Crim.P. 543(B)"
+  }
+  edge-probable-cause-none "No prima facie case; discharged" -> dismissed {
+    authority cite "Pa.R.Crim.P. 543(B)"
+  }
+}
+
+state charged: "Information" by office cite "Pa.R.Crim.P. 560"
+{
+  note "After the defendant is held for court or indicted, the attorney for the Commonwealth prepares an information and files it with the court of common pleas (Pa.R.Crim.P. 560(A)). Trial in a court case commences within 365 days from the filing of the written complaint, counting only delay caused by the Commonwealth's want of due diligence; a defendant entitled to bail is not held in pretrial incarceration more than 180 days from the complaint, counting all delay not caused by the defendant (Pa.R.Crim.P. 600(A)(2)(a), (B)(1), (C))."
+  edge-charged-arraignment "Arraignment" -> arraignment {
+    authority cite "Pa.R.Crim.P. 571(A)"
+  }
+}
+
+state arraignment: "Arraignment" by applicant cite "Pa.R.Crim.P. 571"
+{
+  note "Unless local rule provides otherwise or the court postpones it for cause, arraignment takes place no later than 10 days after the information is filed (Pa.R.Crim.P. 571(A)). The defendant is advised of the right to counsel, the charges, the right to file motions and their time limits, and the effect of failing to appear; appearance may be waived on the conditions of Pa.R.Crim.P. 571(D)."
+  edge-arraignment-discovery "Discovery" -> discovery {
+    authority cite "Pa.R.Crim.P. 573"
+  }
+}
+
+state discovery: "Discovery and the omnibus pretrial motion" by applicant cite "Pa.R.Crim.P. 578"
+{
+  note "Counsel first try in good faith to resolve discovery informally; a motion for refused items is made within 14 days after arraignment unless the court extends the time (Pa.R.Crim.P. 573(A)); mandatory and discretionary disclosure by the Commonwealth is in Pa.R.Crim.P. 573(B). All pretrial requests for relief are ordinarily joined in one omnibus pretrial motion (Pa.R.Crim.P. 578), filed and served within 30 days after arraignment unless the opportunity or the grounds were unknown or the court extends the time for cause (Pa.R.Crim.P. 579(A)). A defendant not tried within the Rule 600(A) period may move at any time before trial to dismiss the charges with prejudice, and one held beyond the Rule 600(B) period may move for release on nominal bail (Pa.R.Crim.P. 600(D))."
+  edge-discovery-motions "Omnibus pretrial motion filed" -> motions-ruling {
+    authority cite "Pa.R.Crim.P. 579(A)"
+  }
+  edge-discovery-speedy "Rule 600 motion" -> motions-ruling {
+    authority cite "Pa.R.Crim.P. 600(D)"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite "Pa.R.Crim.P. 590(B)"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "Pa.R.Crim.P. 600(D)"
+{
+  note "On a Rule 600(D)(1) motion the judge holds a hearing and, if the rule has been violated, dismisses the charges with prejudice (Pa.R.Crim.P. 600(D)(1)); periods of delay are attributed and recorded under Pa.R.Crim.P. 600(C)(3). Rule 600 does not modify any statute of limitations (Pa.R.Crim.P. 600(E)). The court may dismiss a non-violent charge on satisfaction or agreement with the Commonwealth's consent (Pa.R.Crim.P. 586)."
+  edge-motions-ruling-speedy "Dismissed with prejudice under Rule 600" -> dismissed {
+    authority cite "Pa.R.Crim.P. 600(D)"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "Pa.R.Crim.P. 586"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "Pa.R.Crim.P. 578"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Pa.R.Crim.P. 590"
+{
+  note "Pleas are taken in open court; the defendant may plead not guilty, guilty or, with the judge's consent, nolo contendere, and the judge accepts a plea of guilty or nolo contendere only after an on-the-record inquiry that it is voluntarily and understandingly tendered (Pa.R.Crim.P. 590(A)). The terms of a plea agreement are stated on the record and the defendant is separately questioned on them; a local rule setting deadlines for accepting negotiated pleas is prohibited (Pa.R.Crim.P. 590(B)). On the Commonwealth's motion the court may order a nolle prosequi in open court (Pa.R.Crim.P. 585(A))."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite "Pa.R.Crim.P. 590(A)"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "Pa.R.Crim.P. 600(A)"
+  }
+  edge-plea-decision-nolle "Nolle prosequi" -> dismissed {
+    authority cite "Pa.R.Crim.P. 585(A)"
+  }
+}
+
+decision trial: "Verdict" by court cite "Pa.R.Crim.P. 648"
+{
+  note "The defendant and the Commonwealth may waive a jury with the judge's approval after an on-the-record colloquy, in a writing all sign (Pa.R.Crim.P. 620). After a jury of 12 is sworn, the parties may agree with the judge's approval to a jury of not fewer than 6 (Pa.R.Crim.P. 641). The verdict is unanimous and announced in open court (Pa.R.Crim.P. 648(B)). Sufficiency is challenged by a motion for judgment of acquittal at the close of the Commonwealth's case or of all the evidence, within 10 days after a jury's discharge without a verdict, orally after verdict, or after sentence (Pa.R.Crim.P. 606(A))."
+  edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
+    authority cite "Pa.R.Crim.P. 606(A)"
+  }
+  edge-trial-guilty "Guilty; sentencing" -> sentencing {
+    authority cite "Pa.R.Crim.P. 704(A)"
+  }
+}
+
+state sentencing: "Sentencing" by court cite "Pa.R.Crim.P. 704"
+{
+  note "Sentence in a court case is ordinarily imposed within 90 days of conviction or the plea, and a delay for good cause is recorded with its specific period (Pa.R.Crim.P. 704(A)); the judge may order a pre-sentence investigation report and must state reasons for dispensing with one in the cases Pa.R.Crim.P. 702(A)(2) lists. Before sentence the judge may hear an oral motion for extraordinary relief and decides a weight-of-the-evidence claim raised before sentencing without delaying sentence (Pa.R.Crim.P. 704(B); 607). At sentencing the defendant may speak, counsel present information and argument, and the judge states reasons on the record (Pa.R.Crim.P. 704(C))."
+  edge-sentencing-judgment "Sentence imposed" -> post-sentence {
+    authority cite "Pa.R.Crim.P. 720(A)"
+  }
+}
+
+decision post-sentence: "Post-sentence motion" by court cite "Pa.R.Crim.P. 720(B)"
+{
+  note "A written post-sentence motion, consolidating every request for relief (plea challenge, judgment of acquittal, arrest of judgment, new trial, modification of sentence), is optional and is filed no later than 10 days after imposition of sentence; issues raised before or during trial are preserved without it (Pa.R.Crim.P. 720(A)(1), (B)(1)). The judge decides the motion within 120 days of its filing, extendable once by 30 days on the defendant's motion, or it is deemed denied by operation of law and the clerk enters an order saying so (Pa.R.Crim.P. 720(B)(3))."
+  edge-post-sentence-acquittal "Judgment of acquittal or arrest of judgment" -> acquitted {
+    authority cite "Pa.R.Crim.P. 720(B)"
+  }
+  edge-post-sentence-new-trial "New trial granted" -> trial {
+    authority cite "Pa.R.Crim.P. 720(B)"
+  }
+  edge-post-sentence-denied "Motion denied, withdrawn, or not filed" -> judgment {
+    authority cite "Pa.R.Crim.P. 720(A)"
+  }
+}
+
+decision judgment: "Judgment of sentence" by applicant cite "Pa.R.Crim.P. 720(A)"
+{
+  note "After a timely post-sentence motion, the notice of appeal is filed within 30 days of the entry of the order deciding it, denying it by operation of law, or memorializing its withdrawal; without one, within 30 days of imposition of sentence; after a timely Commonwealth motion to modify sentence, within 30 days of the order disposing of it (Pa.R.Crim.P. 720(A)(2)-(4); Pa.R.A.P. 903(a), (c)(3)). A cross-appeal may be filed within 14 days of service of the first notice of appeal (Pa.R.A.P. 903(b)). lit/core has no counting rule for the Pennsylvania rules, so the periods are not encoded as counted deadlines."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "Pa.R.A.P. 903"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Pa.R.A.P. 903" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Pa.R.Crim.P. 606"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty or a judgment of acquittal (Pa.R.Crim.P. 606, 648, 720(B))."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "Pa.R.Crim.P. 600(D)"
+{
+  note "Outcome from the defendant's side. A Rule 600 dismissal is with prejudice (Pa.R.Crim.P. 600(D)(1)); a discharge at the preliminary hearing, a nolle prosequi or a Rule 586 dismissal is governed by its own rule (Pa.R.Crim.P. 543(B), 585, 586)."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "Pa.R.A.P. 903"
+{
+  note "The appeal continues before the Superior Court of Pennsylvania under the Rules of Appellate Procedure (lit/pa-superior-court; sources/pa-appellate-civil/)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "Pa.R.Crim.P. 901"
+{
+  note "Outcome from the defendant's side. A petition for post-conviction collateral relief is filed within one year of the date the judgment becomes final, except as otherwise provided by statute (Pa.R.Crim.P. 901(A)); the Post Conviction Relief Act (42 Pa.C.S. § 9541 et seq.) is not vendored. Federal habeas belongs to lit/habeas."
+}

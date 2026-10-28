@@ -75,6 +75,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | fourth-circuit-court-of-appeals | `lit/ca4` | 19 | 0 | 19 | 0 |
 | fifth-circuit-court-of-appeals | `lit/ca5` | 9 | 0 | 9 | 0 |
 | sixth-circuit-court-of-appeals | `lit/ca6` | 10 | 0 | 10 | 0 |
+| seventh-circuit-court-of-appeals | `lit/ca7` | 25 | 0 | 25 | 0 |
 | ca8-court-of-appeals | `lit/ca8` | 0 | 0 | 3 | 0 |
 | ninth-circuit-court-of-appeals | `lit/ca9` | 14 | 0 | 14 | 0 |
 | cacd-local-rules | `lit/cacd` | 19 | 0 | 0 | 0 |

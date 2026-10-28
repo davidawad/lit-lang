@@ -1,6 +1,21 @@
 version = 2
 
 [[package]]
+name = "bankr-nh-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:dc858cafc2159aa4e02f28db9114692ea50778efea0d84a706c6e29b069e2b5f"
+semantic = "sha256:c85db5c9902e6faddf192291f4b2894d7a6ced36faabb296325e7264f4ac5877"
+texts = [
+    "nhb-ao sources/bankr-nh/nh-local-rules-2026-05-01-sectioned.txt sha256:b870a9750f71869ece7b0c434f089fe2649c9de40437c7a3cdd7c0309a87af13",
+    "nhb-lbr sources/bankr-nh/nh-local-rules-2026-05-01-sectioned.txt sha256:b870a9750f71869ece7b0c434f089fe2649c9de40437c7a3cdd7c0309a87af13",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +59,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-nh"
-version = "0.0.1"
-language = 1
-source = "sha256:5dffcba24b4ca3e1355598b696997ef2d890710a8cf14d345f792e21fef5ff9c"
-semantic = "sha256:b1ed81d78430ee97b7c22beb41dcd51d2319bf6b4475205c5aab7e0fcbc4a2bf"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

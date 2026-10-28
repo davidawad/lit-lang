@@ -1,26 +1,29 @@
-# Civil appeals to the Supreme Court of Idaho, and cases it assigns to the
-# Idaho Court of Appeals, under the Idaho Appellate Rules, as far as the
-# vendored text states: the rules as published on the Idaho Supreme
+# Civil appeals to the Supreme Court of Idaho under the Idaho Appellate
+# Rules, as far as the vendored text states: the rules as published on the Idaho Supreme
 # Court's rules page (page dated 2026-07-01, amendments incorporated on
 # their effective dates; sources/id-supreme). Time is computed under I.A.R.
 # 22, whose non-judicial days are those of Idaho Code § 1-1607 (not
 # vendored); lit/core has no counting rule for it, so the periods are
 # stated in notes, not encoded as counted deadlines. The trial-court side
-# is lit/id-district.
+# is lit/id-district; a case the Supreme Court assigns to the Court of
+# Appeals (I.A.R. 108) continues in lit/id-court-of-appeals, where the
+# petition for review (I.A.R. 118) is decided. The packages route on
+# lit/id-rules' trigger events (lg-u561.5).
 [package]
 name = "id-supreme-appellate"
 version = "0.1.0"
 language = 1
 pack_id = "id-supreme-appellate"
 forum = "id-supreme"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "idaho"
-title = "Supreme Court of Idaho and Idaho Court of Appeals, civil appeals"
-description = "Civil appeals under the Idaho Appellate Rules, as far as the vendored text states: appealable judgments and orders, the 42-day notice of appeal and its jurisdictional effect, the cross-appeal, the filing fee, the clerk's record and reporter's transcript, the briefs and their word limits, assignment to the Court of Appeals, submission on the briefs and oral argument, opinions and rehearing, petitions for review by the Supreme Court, costs, and finality and the remittitur."
+title = "Supreme Court of Idaho, civil appeals"
+description = "Civil appeals under the Idaho Appellate Rules, as far as the vendored text states: appealable judgments and orders, the 42-day notice of appeal and its jurisdictional effect, the cross-appeal, the filing fee, the clerk's record and reporter's transcript, the briefs and their word limits, assignment to the Court of Appeals (continued in lit/id-court-of-appeals), submission on the briefs and oral argument, opinions and rehearing, costs, and finality and the remittitur."
 in_force = "2026-07-01"
 known_at = "2026-10-28"
 unknown_before = "2026-07-01"
-jurisdiction = "Supreme Court of Idaho; Idaho Court of Appeals"
+jurisdiction = "Supreme Court of Idaho"
 
 [package.roles]
 applicant = "self"
@@ -29,6 +32,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+id-state-rules = { version = "^0.1.0", path = "../id-rules" }
 
 [sources.id-iar]
 title = "Idaho Appellate Rules, as published on the Idaho Supreme Court rules page (page dated 2026-07-01)"

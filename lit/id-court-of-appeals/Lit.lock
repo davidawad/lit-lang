@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "id-court-of-appeals-civil"
+version = "0.1.0"
+language = 1
+source = "sha256:ff7a576a91e2e21438a592a08a48ab5b71f02c59a965fbd35da89b4c4dab942e"
+semantic = "sha256:e1eb38cd793432c058b4b3906a2256fc8fd9233341d2a631df8f2344f1612dfe"
+texts = [
+    "id-iar sources/id-supreme/iar-sectioned.txt sha256:b98cd1e96172263e1b994535e8b5a3250c13af10b95a0e2f5e6c52f55969f18e",
+]
+dependencies = [
+    "core 1.0.0",
+    "id-state-rules 0.1.0",
+]
+
+[[package]]
+name = "id-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]

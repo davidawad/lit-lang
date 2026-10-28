@@ -9,12 +9,20 @@ dependencies = []
 name = "id-district-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:e61e9aab5903cdd25b53d73768a3464ba768150b02f40354c08d14792eca12d7"
-semantic = "sha256:eca51545ac36c4e89dabd2a191a246bd00c225a94bd874942f8820f7534f2ef9"
+source = "sha256:68f4a77ac43cd60106bd689902b950523ae812432fa2d60dd09f07da8111dba4"
+semantic = "sha256:b664051cce15487ebc9dd54c438ae097d598cce72aa49668dc0023384315cf60"
 texts = [
     "id-iar sources/id-supreme/iar-sectioned.txt sha256:b98cd1e96172263e1b994535e8b5a3250c13af10b95a0e2f5e6c52f55969f18e",
     "id-ircp sources/id-district/ircp-sectioned.txt sha256:7a82de244c1ee2726e46e9276dc0c82dd080f5c934f79b25f016ee8d170eb762",
 ]
+dependencies = [
+    "core 1.0.0",
+    "id-state-rules 0.1.0",
+]
+
+[[package]]
+name = "id-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

@@ -6,13 +6,15 @@
 # federal ones; lit/core has no counting rule for it, so the periods are
 # stated in notes, not encoded as counted deadlines. Appeals are governed
 # by the Idaho Appellate Rules (sources/id-supreme), encoded in
-# lit/id-supreme.
+# lit/id-supreme. The packages route on lit/id-rules' trigger events
+# (lg-u561.5).
 [package]
 name = "id-district-civil"
 version = "0.1.0"
 language = 1
 pack_id = "id-district-civil"
 forum = "id-district"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "idaho"
 title = "Idaho District Court, civil"
@@ -29,6 +31,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+id-state-rules = { version = "^0.1.0", path = "../id-rules" }
 
 [sources.id-ircp]
 title = "Idaho Rules of Civil Procedure, as published on the Idaho Supreme Court rules page (page dated 2026-07-01)"

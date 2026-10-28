@@ -1,0 +1,47 @@
+# Civil appeals the Supreme Court of Idaho assigns to the Idaho Court of
+# Appeals, under the Idaho Appellate Rules, as far as the vendored text
+# states: the rules as published on the Idaho Supreme Court's rules page
+# (page dated 2026-07-01, amendments incorporated on their effective
+# dates; sources/id-supreme). Every appeal is filed in the Supreme Court
+# (lit/id-supreme), which assigns it after briefing (I.A.R. 108); this
+# package begins at the assignment and ends at the remittitur or at the
+# Supreme Court's decision on a petition for review (I.A.R. 118, 122).
+# Time is computed under I.A.R. 22, whose non-judicial days are those of
+# Idaho Code § 1-1607 (not vendored); lit/core has no counting rule for
+# it, so the periods are stated in notes, not encoded as counted
+# deadlines. The packages route on lit/id-rules' trigger events.
+[package]
+name = "id-court-of-appeals-civil"
+version = "0.1.0"
+language = 1
+pack_id = "id-court-of-appeals-civil"
+forum = "id-court-of-appeals"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "idaho"
+title = "Idaho Court of Appeals, civil appeals on assignment"
+description = "Civil appeals assigned by the Supreme Court of Idaho to the Court of Appeals under the Idaho Appellate Rules, as far as the vendored text states: assignment and its revocation or transfer, submission on the briefs and oral argument, determination of the appeal, rehearing in the Court of Appeals, the petition for review by the Supreme Court, and the opinion's finality and remittitur."
+in_force = "2026-07-01"
+known_at = "2026-10-28"
+unknown_before = "2026-07-01"
+jurisdiction = "Idaho Court of Appeals"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+id-state-rules = { version = "^0.1.0", path = "../id-rules" }
+
+[sources.id-iar]
+title = "Idaho Appellate Rules, as published on the Idaho Supreme Court rules page (page dated 2026-07-01)"
+url = "https://isc.idaho.gov/rules-procedure/iar"
+path = "sources/id-supreme/iar-sectioned.txt"
+path_sha256 = "b98cd1e96172263e1b994535e8b5a3250c13af10b95a0e2f5e6c52f55969f18e"
+sha256 = "2f02140390fc0a619208872c1128fc132c8f8908f17235d601bc0c224dcfb3c0"
+as_of = "2026-07-01"
+cite_prefixes = ["I.A.R."]
+section_heading = "I.A.R. {n}"

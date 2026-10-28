@@ -1,0 +1,111 @@
+module id-court-of-appeals-civil.appeal
+
+import id-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
+
+// A civil appeal on assignment to the Idaho Court of Appeals, from the
+// applicant's (appellant's) side. The appeal is filed, the record settled
+// and the briefs filed in the Supreme Court (lit/id-supreme); every paper
+// is still filed with the Clerk of the Supreme Court under its caption
+// (I.A.R. 110). Every period below is stated in a note, not counted (I.A.R.
+// 22; Idaho Code § 1-1607 is not vendored). The petition for review is
+// decided here, by the Supreme Court, because on a grant the assignment
+// terminates and no remittitur issues on the Court of Appeals opinion
+// (I.A.R. 122). The earlier outline bound briefing to I.A.R. 35, argument
+// to I.A.R. 36 and the remittitur to I.A.R. 46; briefing precedes the
+// assignment and is lit/id-supreme's, and argument and the remittitur are
+// bound here to I.A.R. 109 and 38. It asked for a leading appealability
+// decision; appealability is decided before assignment (lit/id-supreme)
+// and no decision is named or vendored, so none is cited.
+start assigned
+
+state assigned: "Assigned to the Court of Appeals" by court cite "I.A.R. 108(b)"
+{
+  note "The Court of Appeals hears and decides every case the Supreme Court assigns to it; the Supreme Court does not assign original proceedings, capital sentences, Industrial Commission and Public Utilities Commission appeals, or review of Idaho State Bar and Judicial Council recommendatory orders (I.A.R. 108(a)). Cases involving existing legal principles are generally assigned; the Supreme Court ordinarily retains cases of substantial public interest, first impression, substantial constitutional interpretation, the validity of a statute or ordinance, or inconsistent decisions (I.A.R. 108(b)). In assigning a case the Supreme Court may order submission on the briefs, to which any party may file a written objection within 21 days of the order (I.A.R. 108(b))."
+  edge-assigned-argument "Case calendared in the Court of Appeals" -> argument {
+    authority cite "I.A.R. 108(b)"
+  }
+  edge-assigned-revoked "Assignment revoked or case transferred to the Supreme Court" -> assignment-revoked {
+    authority cite "I.A.R. 114"
+  }
+}
+
+terminal assignment-revoked: "Assignment revoked: the Supreme Court decides" outcome [appeal] cite "I.A.R. 114"
+{
+  note "The Supreme Court may at any time revoke the assignment, after which the Court of Appeals takes no further action (I.A.R. 114), or transfer a case that concerns an issue of imperative or fundamental public importance (I.A.R. 108(c)). The appeal continues in the Supreme Court: lit/id-supreme."
+}
+
+decision argument: "Argument or submission on the briefs" by court cite "I.A.R. 109"
+{
+  note "The Court of Appeals may in its discretion order an appeal submitted on the briefs; any party may file a written objection within 21 days of the date of the order, decided without oral argument (I.A.R. 109). Oral argument may be held by telephone conference call by stipulation of all parties and approval by the court, or on the court's order after argument was held or waived, following the format of I.A.R. 37 as far as practicable (I.A.R. 111)."
+  edge-argument-opinion "Argued or submitted" -> opinion { authority cite "I.A.R. 109" }
+}
+
+decision opinion: "Court of Appeals opinion filed" by court cite "I.A.R. 112"
+{
+  note "The Court of Appeals may reverse, affirm or modify the order or judgment, direct the proper judgment or order to be entered, or direct a new trial or further proceedings in the trial court; if it grants a new trial it determines every question of law necessary to the final determination of the case (I.A.R. 112). The filing of an opinion is its announcement (I.A.R. 38(a)). Within 14 days of the filing and announcement of the opinion, whether or not rehearing or review is sought, a party claiming costs files and serves a memorandum of costs, or costs are waived (I.A.R. 40(c))."
+  edge-opinion-filed "Opinion announced" -> rehearing-window {
+    event DecisionFiled()
+    authority cite "I.A.R. 38(a)"
+  }
+}
+
+decision rehearing-window: "Rehearing or review sought" by applicant cite "I.A.R. 116"
+{
+  note "A party aggrieved by an opinion or order of the Court of Appeals may petition that court for rehearing in the same manner, within the same time, on the same grounds and with the same effect as a petition for rehearing in the Supreme Court; the Court of Appeals decides whether to grant it and the rehearing (I.A.R. 116). The petition is physically filed with the Clerk of the Supreme Court, with the filing fee, within 21 days after the filing date of the opinion, and its supporting brief within 14 days of the petition (I.A.R. 42(a), (b)). A petition for review may be filed within 21 days after the announcement of the opinion, of an order denying rehearing or of an opinion on rehearing; rehearing need not be sought first, and the Supreme Court takes no action on a petition for review until the Court of Appeals has finally determined every petition for rehearing (I.A.R. 118(a)). Within the same 21 days the Supreme Court may order review on its own motion, with the effect of an order granting a petition for review (I.A.R. 120)."
+  edge-rehearing-window-petition "Petition for rehearing filed" -> rehearing-ruling {
+    authority cite "I.A.R. 116"
+  }
+  edge-rehearing-window-review "Petition for review filed" -> further-review {
+    event ReviewPetitionFiled()
+    authority cite "I.A.R. 118(a)"
+  }
+  edge-rehearing-window-none "No petition: opinion becomes final" -> mandate-issued {
+    authority cite "I.A.R. 122"
+  }
+}
+
+decision rehearing-ruling: "Rehearing decided by the Court of Appeals" by court cite "I.A.R. 116"
+{
+  note "The Court of Appeals determines whether to grant rehearing and, if it does, decides on rehearing (I.A.R. 116); the order granting or denying it is served on all parties (I.A.R. 42(d))."
+  edge-rehearing-ruling-granted "Rehearing granted" -> rehearing-granted {
+    authority cite "I.A.R. 116"
+  }
+  edge-rehearing-ruling-review "Rehearing denied: petition for review filed" -> further-review {
+    event ReviewPetitionFiled()
+    authority cite "I.A.R. 118(a)"
+  }
+  edge-rehearing-ruling-denied "Rehearing denied: no petition for review" -> mandate-issued {
+    authority cite "I.A.R. 122"
+  }
+}
+
+terminal rehearing-granted: "Rehearing granted; opinion on rehearing" outcome [appeal] cite "I.A.R. 116"
+{
+  note "Modeled as an exit; in practice the appeal returns to argument and a new opinion, from whose announcement a petition for review may be filed within 21 days (I.A.R. 118(a))."
+}
+
+decision further-review: "Petition for review decided by the Supreme Court" by court cite "I.A.R. 118(b)"
+{
+  note "The petition for review is physically filed with the Clerk of the Supreme Court, its supporting brief with it or within 14 days after (with it, on an appeal expedited under I.A.R. 12.2), and it is processed as a petition for rehearing under I.A.R. 42 (I.A.R. 118(a)). The brief addresses the criteria for review; there is no response unless the Supreme Court requests one (I.A.R. 118(c)(1)). Review is discretionary and granted only for special and important reasons, on the direction of a majority of the Justices; the Court considers among other things a question of substance not yet decided by it, a decision probably not in accord with its own or the United States Supreme Court's decisions, a conflict within the Court of Appeals, a departure from the usual course of proceedings, and a certificate of a majority of the Court of Appeals judges (I.A.R. 118(b))."
+  edge-further-review-denied "Review denied" -> mandate-issued { authority cite "I.A.R. 118(b)" }
+  edge-further-review-granted "Review granted" -> review-granted { authority cite "I.A.R. 118(b)" }
+}
+
+terminal review-granted: "Review granted: the Supreme Court decides" outcome [appeal] cite "I.A.R. 122"
+{
+  note "The assignment to the Court of Appeals terminates and no remittitur issues on its opinion (I.A.R. 122). The Supreme Court relies on the original briefs, with no more briefing unless it orders it (I.A.R. 118(c)(2)), and on final determination enters its own opinion and remittitur under I.A.R. 38 (I.A.R. 122)."
+}
+
+state mandate-issued: "Opinion final: remittitur issued" by court cite "I.A.R. 122"
+{
+  note "Opinions and remittiturs issue from the Court of Appeals under I.A.R. 38 unless the Supreme Court grants review (I.A.R. 122). An opinion becomes final 21 days after the last of its announcement, the announcement of an opinion on rehearing, or the announcement of a modified opinion without rehearing (I.A.R. 38(b)); the Clerk then issues and files the remittitur with the district court, which complies forthwith with the opinion's directive (I.A.R. 38(c))."
+  edge-mandate-issued-final "Remittitur filed in the district court" -> final-appellate {
+    event MandateIssued()
+    authority cite "I.A.R. 38(c)"
+  }
+}
+
+terminal final-appellate: "Appellate judgment final" outcome [final] cite "I.A.R. 38(c)"
+{
+  note "The district court complies with the directive of the final opinion (I.A.R. 38(c))."
+}

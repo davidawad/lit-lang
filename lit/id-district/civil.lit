@@ -1,5 +1,7 @@
 module id-district-civil.civil
 
+import id-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
 // Civil actions in the Idaho district courts, from the applicant's
 // (plaintiff's) side. Every period below is stated in a note, not counted:
 // time is computed under I.R.C.P. 2.2(a), which excludes the trigger day,
@@ -20,6 +22,7 @@ state complaint-filed: "Complaint filed" by applicant cite "I.R.C.P. 3(b)"
 {
   note "A civil action is commenced by filing a complaint, petition or application with the court (Rule 3(b)). Except for governmental entities and the case types listed in Rule 3(d)(2), every party files a completed Supreme Court approved case information sheet with its first appearance (Rule 3(d)(1)). If a defendant is not served within 182 days after the complaint is filed, the court, on motion or on its own after 14 days' notice to the plaintiff, must dismiss the action without prejudice against that defendant, unless the plaintiff shows good cause for the failure, in which case the court must extend the time for service (Rule 4(b)(2))."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    event ActionCommenced()
     authority cite "I.R.C.P. 4"
   }
   edge-complaint-filed-unserved "Not served within 182 days" -> dismissed-unserved {
@@ -138,9 +141,11 @@ decision summary-judgment: "Summary judgment decided" by court cite "I.R.C.P. 56
 {
   note "The court must grant summary judgment if the movant shows that there is no genuine dispute as to any material fact and that it is entitled to judgment as a matter of law (Rule 56(a)). The motion may be filed after 21 days from service of process on, or the appearance of, the adverse party, but at least 90 days before the trial date or within 7 days from the order setting the case for trial, whichever is later, unless otherwise ordered (Rule 56(b)(1)). The motion, supporting documents and brief are served at least 28 days before the hearing; the answering brief and opposing documents at least 14 days before; any reply brief at least 7 days before (Rule 56(b)(2)); the court may alter or shorten these for good cause (Rule 56(b)(3))."
   edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "I.R.C.P. 56(a)"
   }
   edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "I.R.C.P. 56(a)"
   }
   edge-summary-judgment-denied "Denied or granted in part: trial" -> trial {
@@ -151,7 +156,10 @@ decision summary-judgment: "Summary judgment decided" by court cite "I.R.C.P. 56
 state trial: "Trial by jury or by the court" by court cite "I.R.C.P. 39"
 {
   note "No later than 7 days before a jury trial begins, any party may file written requests for jury instructions, served on and received by all parties at least 7 days before trial (Rule 51(a)). A motion for judgment notwithstanding the verdict is served not later than 14 days after entry of the judgment, or, if no verdict was returned, after discharge of the jury (Rule 50(b)(1))."
-  edge-trial-verdict "Verdict or decision" -> judgment-entered { authority cite "I.R.C.P. 58" }
+  edge-trial-verdict "Verdict or decision" -> judgment-entered {
+    event JudgmentEntered()
+    authority cite "I.R.C.P. 58"
+  }
   edge-trial-settled "Settlement during trial" -> settled { authority cite "I.R.C.P. 41(a)" }
 }
 
@@ -160,6 +168,7 @@ decision judgment-entered: "Judgment entered" by court cite "I.R.C.P. 58"
   note "Every judgment is set forth on a separate document; the court's filing of it or the clerk's filing stamp is its entry, and entry is not delayed for taxing costs (Rule 58). A judgment adjudicating fewer than all claims or parties is final only if certified under Rule 54(b)(1). A motion for a new trial is filed and served within 14 days after entry of the judgment (Rule 59(b)), as is a motion to alter or amend it (Rule 59(e)) and a motion to amend findings (Rule 52(b)). A memorandum of costs is filed and served not later than 14 days after entry of judgment, or costs are waived; objections are made within 14 days of its service (Rule 54(d)(4), (5)). A timely motion that could affect the findings, conclusions or judgment, other than a Rule 60 motion or one regarding costs or attorney fees, terminates the time for appeal, which runs again from the clerk's filing stamp on the order deciding it (I.A.R. 14(a))."
   edge-judgment-entered-new-trial "New trial granted" -> trial { authority cite "I.R.C.P. 59(a)" }
   edge-judgment-entered-appeal "Notice of appeal filed" -> appeal-taken {
+    event NoticeOfAppealFiled()
     authority cite "I.A.R. 14(a)"
   }
   edge-judgment-entered-final "No post-trial motion or appeal" -> final-no-appeal {

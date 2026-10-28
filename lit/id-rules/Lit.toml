@@ -1,0 +1,26 @@
+# The Idaho base library (lg-u561.5 pattern): the trigger events the Idaho
+# court packages route their graphs on: lit/id-district, lit/id-supreme
+# and lit/id-court-of-appeals. It declares no period: the rules' periods
+# are stated in the court packages' notes. No procedure of its own.
+[package]
+name = "id-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "id-state-rules"
+forum = "id-state-rules"
+authority = "StateRule"
+jurisdiction_id = "idaho"
+title = "Idaho state court rules (base library)"
+description = "The rule layer Idaho's court packages share: the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-07-01"
+known_at = "2026-10-28"
+unknown_before = "2026-07-01"
+jurisdiction = "Idaho state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

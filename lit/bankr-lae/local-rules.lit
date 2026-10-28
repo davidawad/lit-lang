@@ -1,6 +1,6 @@
 module bankr-lae-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 import frbp.events.{ FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
 
 // The Bankr. E.D. La. court's own periods, counted under FRBP 9006(a). The
@@ -89,298 +89,193 @@ event FinalDisposition()
 /// Bankr. E.D. La. LR 1007-2(A): in an involuntary case, the debtor files a
 /// complete mailing matrix of all known creditors and parties in interest
 /// within fourteen days of entry of the order for relief.
-deadline involuntary-mailing-matrix-period: 14.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. E.D. La. LR 1007-2(A)"
-{
-  forum frcp
-}
+deadline involuntary-mailing-matrix-period: 14.days after OrderForReliefEntered() counted_by frbp9006 cite "Bankr. E.D. La. LR 1007-2(A)"
 
 /// Bankr. E.D. La. LR 1007-2(D)(1): when an amendment adds a creditor
 /// before the § 341(a) meeting, the debtor notices the added party at least
 /// twenty-one days before the meeting; later, or with less notice, the
 /// debtor moves ex parte to amend (D)(2).
-deadline added-creditor-notice-period: 21.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. E.D. La. LR 1007-2(D)"
-{
-  forum frcp
-}
+deadline added-creditor-notice-period: 21.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. E.D. La. LR 1007-2(D)"
 
 /// Bankr. E.D. La. LR 1007-2(E): when an amendment adding a creditor after
 /// the bar date or the discharge and dischargeability deadlines is granted,
 /// those deadlines are automatically extended as to the added party twenty-
 /// eight days from notice of entry of the order.
-deadline added-creditor-extended-deadline-period: 28.days after AddedCreditorOrderNoticed() counted_by frcp6 cite "Bankr. E.D. La. LR 1007-2(E)"
-{
-  forum frcp
-}
+deadline added-creditor-extended-deadline-period: 28.days after AddedCreditorOrderNoticed() counted_by frbp9006 cite "Bankr. E.D. La. LR 1007-2(E)"
 
 /// Bankr. E.D. La. LR 1008-1(A): within seven days after filing the
 /// petition, the debtor delivers to the Clerk an original Declaration
 /// Regarding Electronic Filing.
-deadline electronic-filing-declaration-period: 7.days after PetitionFiled() counted_by frcp6 cite "Bankr. E.D. La. LR 1008-1(A)"
-{
-  forum frcp
-}
+deadline electronic-filing-declaration-period: 7.days after PetitionFiled() counted_by frbp9006 cite "Bankr. E.D. La. LR 1008-1(A)"
 
 /// Bankr. E.D. La. LR 2003-1(B)(2): a motion under FRBP 2020 for review of
 /// the United States Trustee's denial of a request to reschedule a meeting
 /// of creditors, or to appear through a representative, is filed no later
 /// than seven days after the movant receives notice of the denial.
-deadline meeting-denial-review-motion-period: 7.days after RescheduleDenialReceived() counted_by frcp6 cite "Bankr. E.D. La. LR 2003-1(B)"
-{
-  forum frcp
-}
+deadline meeting-denial-review-motion-period: 7.days after RescheduleDenialReceived() counted_by frbp9006 cite "Bankr. E.D. La. LR 2003-1(B)"
 
 /// Bankr. E.D. La. LR 2003-1(B)(4)(a): when a chapter 13 debtor's request
 /// to reschedule the § 341(a) meeting is granted, the debtor is deemed to
 /// consent to a claims bar date ninety days after the conclusion of the
 /// rescheduled meeting.
-deadline rescheduled-meeting-chapter-13-bar-period: 90.days after RescheduledMeetingConcluded() counted_by frcp6 cite "Bankr. E.D. La. LR 2003-1(B)"
-{
-  forum frcp
-}
+deadline rescheduled-meeting-chapter-13-bar-period: 90.days after RescheduledMeetingConcluded() counted_by frbp9006 cite "Bankr. E.D. La. LR 2003-1(B)"
 
 /// Bankr. E.D. La. LR 2003-1(B)(4)(b): in chapter 7, 12 and 13 cases,
 /// granting the debtor's request to reschedule the § 341(a) meeting
 /// extends, by the debtor's deemed consent, the deadline to object to
 /// discharge or dischargeability to sixty days after the conclusion of the
 /// rescheduled meeting.
-deadline rescheduled-meeting-discharge-objection-period: 60.days after RescheduledMeetingConcluded() counted_by frcp6 cite "Bankr. E.D. La. LR 2003-1(B)"
-{
-  forum frcp
-}
+deadline rescheduled-meeting-discharge-objection-period: 60.days after RescheduledMeetingConcluded() counted_by frbp9006 cite "Bankr. E.D. La. LR 2003-1(B)"
 
 /// Bankr. E.D. La. LR 2003-1(B)(4)(c): by the same deemed consent, motions
 /// to dismiss under 11 U.S.C. § 707(a) or (b) may be filed until sixty days
 /// after the conclusion of the § 341(a) meeting.
-deadline rescheduled-meeting-dismissal-motion-period: 60.days after RescheduledMeetingConcluded() counted_by frcp6 cite "Bankr. E.D. La. LR 2003-1(B)"
-{
-  forum frcp
-}
+deadline rescheduled-meeting-dismissal-motion-period: 60.days after RescheduledMeetingConcluded() counted_by frbp9006 cite "Bankr. E.D. La. LR 2003-1(B)"
 
 /// Bankr. E.D. La. LR 2003-1(B)(4)(d): by the same deemed consent,
 /// objections to claims of exemptions may be filed until thirty days after
 /// the conclusion of the § 341(a) meeting.
-deadline rescheduled-meeting-exemption-objection-period: 30.days after RescheduledMeetingConcluded() counted_by frcp6 cite "Bankr. E.D. La. LR 2003-1(B)"
-{
-  forum frcp
-}
+deadline rescheduled-meeting-exemption-objection-period: 30.days after RescheduledMeetingConcluded() counted_by frbp9006 cite "Bankr. E.D. La. LR 2003-1(B)"
 
 /// Bankr. E.D. La. LR 2004-1(B)(1): a person objecting to a Rule 2004
 /// examination sought by ex parte motion files the objection at least seven
 /// days before the proposed examination, unless the motion was filed fewer
 /// than seven days before it, and notices the objection for hearing before
 /// the examination date (B)(2).
-deadline examination-objection-period: 7.days before ProposedExaminationDate() counted_by frcp6 cite "Bankr. E.D. La. LR 2004-1(B)"
-{
-  forum frcp
-}
+deadline examination-objection-period: 7.days before ProposedExaminationDate() counted_by frbp9006 cite "Bankr. E.D. La. LR 2004-1(B)"
 
 /// Bankr. E.D. La. LR 3015-1(B): a chapter 13 plan not filed with the
 /// petition is served in full on the mailing matrix at least twenty-eight
 /// days before the first confirmation hearing (also LR 4002-1(A)(5)).
-deadline chapter-13-plan-service-period: 28.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. La. LR 3015-1(B)"
-{
-  forum frcp
-}
+deadline chapter-13-plan-service-period: 28.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. E.D. La. LR 3015-1(B)"
 
 /// Bankr. E.D. La. LR 3015-1(B): the proposed chapter 13 plan is filed and
 /// served on the chapter 13 trustee at least fourteen days before the §
 /// 341(a) meeting (also LR 4002-1(A)(5)).
-deadline chapter-13-plan-trustee-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. E.D. La. LR 3015-1(B)"
-{
-  forum frcp
-}
+deadline chapter-13-plan-trustee-period: 14.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. E.D. La. LR 3015-1(B)"
 
 /// Bankr. E.D. La. LR 3015-1(D): in chapter 11 cases, written objections to
 /// a disclosure statement or to plan confirmation are filed and served no
 /// later than seven days before the hearing, unless the court orders
 /// otherwise.
-deadline chapter-11-objection-period: 7.days before DisclosureOrConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. La. LR 3015-1(D)"
-{
-  forum frcp
-}
+deadline chapter-11-objection-period: 7.days before DisclosureOrConfirmationHearing() counted_by frbp9006 cite "Bankr. E.D. La. LR 3015-1(D)"
 
 /// Bankr. E.D. La. LR 3015-2(A)(2): in chapter 11, 12 and 13 cases, an
 /// amended plan is filed no later than seven days before the confirmation
 /// hearing, with a redline copy to chambers; a later amendment may not be
 /// considered.
-deadline amended-plan-filing-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. La. LR 3015-2(A)"
-{
-  forum frcp
-}
+deadline amended-plan-filing-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. E.D. La. LR 3015-2(A)"
 
 /// Bankr. E.D. La. LR 3015-2(A)(2): the movant files the notice of hearing
 /// and certificate of service of the amended plan at least seven days
 /// before the confirmation hearing.
-deadline amended-plan-certificate-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. La. LR 3015-2(A)"
-{
-  forum frcp
-}
+deadline amended-plan-certificate-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. E.D. La. LR 3015-2(A)"
 
 /// Bankr. E.D. La. LR 3015-2(A)(2), (4): material amendments without
 /// consent are noticed, and in chapter 13 cases served on the affected
 /// parties and the trustee, at least twenty-eight days before the hearing
 /// on confirmation.
-deadline material-amendment-notice-period: 28.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. La. LR 3015-2(A)"
-{
-  forum frcp
-}
+deadline material-amendment-notice-period: 28.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. E.D. La. LR 3015-2(A)"
 
 /// Bankr. E.D. La. LR 3015-4(B): in a chapter 13 case, if debtor's counsel
 /// files a confirmation affidavit no later than five days before the
 /// confirmation hearing and no objection is made, the court may confirm the
 /// plan without a hearing.
-deadline confirmation-affidavit-period: 5.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. La. LR 3015-4(B)"
-{
-  forum frcp
-}
+deadline confirmation-affidavit-period: 5.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. E.D. La. LR 3015-4(B)"
 
 /// Bankr. E.D. La. LR 3018-1(A): at least three days before the hearing on
 /// confirmation, the chapter 11 plan proponent certifies the amount and
 /// number of allowed claims and interests of each class accepting or
 /// rejecting the plan.
-deadline ballot-certification-period: 3.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. La. LR 3018-1(A)"
-{
-  forum frcp
-}
+deadline ballot-certification-period: 3.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. E.D. La. LR 3018-1(A)"
 
 /// Bankr. E.D. La. LR 3018-1(B): unless otherwise ordered, all ballots are
 /// delivered to chambers no later than three days before confirmation.
-deadline ballot-delivery-period: 3.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. La. LR 3018-1(B)"
-{
-  forum frcp
-}
+deadline ballot-delivery-period: 3.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. E.D. La. LR 3018-1(B)"
 
 /// Bankr. E.D. La. LR 3022-1(A): the proponent of a confirmed plan files a
 /// motion for final decree within thirty days after completion of all
 /// obligations under the plan; the court may extend the date for good
 /// cause.
-deadline final-decree-motion-period: 30.days after PlanObligationsCompleted() counted_by frcp6 cite "Bankr. E.D. La. LR 3022-1(A)"
-{
-  forum frcp
-}
+deadline final-decree-motion-period: 30.days after PlanObligationsCompleted() counted_by frbp9006 cite "Bankr. E.D. La. LR 3022-1(A)"
 
 /// Bankr. E.D. La. LR 4001-2(A): to obtain an extension of the automatic
 /// stay, the debtor files a motion to extend or impose it within seven days
 /// of the filing of the petition.
-deadline stay-extension-motion-period: 7.days after PetitionFiled() counted_by frcp6 cite "Bankr. E.D. La. LR 4001-2(A)"
-{
-  forum frcp
-}
+deadline stay-extension-motion-period: 7.days after PetitionFiled() counted_by frbp9006 cite "Bankr. E.D. La. LR 4001-2(A)"
 
 /// Bankr. E.D. La. LR 4002-1(A)(1): a chapter 13 debtor provides all tax
 /// refunds to the trustee within seven days of receipt.
-deadline tax-refund-turnover-period: 7.days after TaxRefundReceived() counted_by frcp6 cite "Bankr. E.D. La. LR 4002-1(A)"
-{
-  forum frcp
-}
+deadline tax-refund-turnover-period: 7.days after TaxRefundReceived() counted_by frbp9006 cite "Bankr. E.D. La. LR 4002-1(A)"
 
 /// Bankr. E.D. La. LR 4002-1(A)(1): a chapter 13 debtor who wishes to
 /// receive any portion of a tax refund moves for use of the funds within
 /// twenty-one days of the trustee's receipt of them.
-deadline tax-refund-use-motion-period: 21.days after TaxRefundReceivedByTrustee() counted_by frcp6 cite "Bankr. E.D. La. LR 4002-1(A)"
-{
-  forum frcp
-}
+deadline tax-refund-use-motion-period: 21.days after TaxRefundReceivedByTrustee() counted_by frbp9006 cite "Bankr. E.D. La. LR 4002-1(A)"
 
 /// Bankr. E.D. La. LR 4002-1(C)(1)(a): within seven days of the filing of
 /// the petition, an individual chapter 11 debtor provides the United States
 /// Trustee a proposed budget of monthly income and expenses.
-deadline chapter-11-budget-period: 7.days after PetitionFiled() counted_by frcp6 cite "Bankr. E.D. La. LR 4002-1(C)"
-{
-  forum frcp
-}
+deadline chapter-11-budget-period: 7.days after PetitionFiled() counted_by frbp9006 cite "Bankr. E.D. La. LR 4002-1(C)"
 
 /// Bankr. E.D. La. LR 4002-1(C)(1)(a): the United States Trustee files a
 /// notice of approval attaching the individual chapter 11 debtor's budget
 /// within thirty days of the petition date.
-deadline chapter-11-budget-approval-period: 30.days after PetitionFiled() counted_by frcp6 cite "Bankr. E.D. La. LR 4002-1(C)"
-{
-  forum frcp
-}
+deadline chapter-11-budget-approval-period: 30.days after PetitionFiled() counted_by frbp9006 cite "Bankr. E.D. La. LR 4002-1(C)"
 
 /// Bankr. E.D. La. LR 4002-1(C)(1)(a): if no agreement is reached, the
 /// individual chapter 11 debtor moves for approval of a budget within
 /// thirty-seven days of the petition.
-deadline chapter-11-budget-motion-period: 37.days after PetitionFiled() counted_by frcp6 cite "Bankr. E.D. La. LR 4002-1(C)"
-{
-  forum frcp
-}
+deadline chapter-11-budget-motion-period: 37.days after PetitionFiled() counted_by frbp9006 cite "Bankr. E.D. La. LR 4002-1(C)"
 
 /// Bankr. E.D. La. LR 7007-1: on certification of no previous extension and
 /// no objection, the court allows by ex parte motion one extension of
 /// twenty-one days from the time the pleading would otherwise be due.
-deadline pleading-extension-period: 21.days after PleadingOtherwiseDue() counted_by frcp6 cite "Bankr. E.D. La. LR 7007-1"
-{
-  forum frcp
-}
+deadline pleading-extension-period: 21.days after PleadingOtherwiseDue() counted_by frbp9006 cite "Bankr. E.D. La. LR 7007-1"
 
 /// Bankr. E.D. La. LR 7040-1(D), 9017-1(B): unless the presiding judge
 /// orders otherwise, within seven days after the conclusion of an
 /// evidentiary trial or hearing counsel jointly submit, electronically, all
 /// documentary exhibits admitted.
-deadline trial-exhibits-submission-period: 7.days after EvidentiaryHearingConcluded() counted_by frcp6 cite "Bankr. E.D. La. LR 7040-1(D)"
-{
-  forum frcp
-}
+deadline trial-exhibits-submission-period: 7.days after EvidentiaryHearingConcluded() counted_by frbp9006 cite "Bankr. E.D. La. LR 7040-1(D)"
 
 /// Bankr. E.D. La. LR 7054-1: within thirty days after receiving notice of
 /// entry of judgment, the prevailing party claiming costs serves and files
 /// a notice of application to have the costs taxed, with a supporting
 /// memorandum.
-deadline costs-application-period: 30.days after JudgmentEntryNoticed() counted_by frcp6 cite "Bankr. E.D. La. LR 7054-1"
-{
-  forum frcp
-}
+deadline costs-application-period: 30.days after JudgmentEntryNoticed() counted_by frbp9006 cite "Bankr. E.D. La. LR 7054-1"
 
 /// Bankr. E.D. La. LR 7055-1(A): when the defendant has not timely
 /// answered, the plaintiff requests the Clerk's entry of default within
 /// fourteen days after the answer deadline, or the court may dismiss the
 /// adversary proceeding.
-deadline default-request-period: 14.days after AnswerDeadlinePassed() counted_by frcp6 cite "Bankr. E.D. La. LR 7055-1(A)"
-{
-  forum frcp
-}
+deadline default-request-period: 14.days after AnswerDeadlinePassed() counted_by frbp9006 cite "Bankr. E.D. La. LR 7055-1(A)"
 
 /// Bankr. E.D. La. LR 7055-1(B): the plaintiff files a motion for default
 /// judgment within fourteen days after the Clerk's entry of default, or the
 /// court may dismiss the adversary proceeding.
-deadline default-judgment-motion-period: 14.days after DefaultEntered() counted_by frcp6 cite "Bankr. E.D. La. LR 7055-1(B)"
-{
-  forum frcp
-}
+deadline default-judgment-motion-period: 14.days after DefaultEntered() counted_by frbp9006 cite "Bankr. E.D. La. LR 7055-1(B)"
 
 /// Bankr. E.D. La. LR 9013-1(E): objections and responses to a motion
 /// noticed for hearing are filed no later than seven days before the
 /// hearing unless the court orders otherwise; a later filing needs leave
 /// and may be stricken.
-deadline motion-objection-period: 7.days before MotionHearing() counted_by frcp6 cite "Bankr. E.D. La. LR 9013-1(E)"
-{
-  forum frcp
-}
+deadline motion-objection-period: 7.days before MotionHearing() counted_by frbp9006 cite "Bankr. E.D. La. LR 9013-1(E)"
 
 /// Bankr. E.D. La. LR 9013-1(G): evidence on a non-routine matter may be
 /// presented by affidavit submitted into the record at least seven days
 /// before the hearing.
-deadline affidavit-evidence-period: 7.days before MotionHearing() counted_by frcp6 cite "Bankr. E.D. La. LR 9013-1(G)"
-{
-  forum frcp
-}
+deadline affidavit-evidence-period: 7.days before MotionHearing() counted_by frbp9006 cite "Bankr. E.D. La. LR 9013-1(G)"
 
 /// Bankr. E.D. La. LR 9014-1(A)(1): motions to continue may be filed ex
 /// parte no later than seven days before the hearing date and are served on
 /// all interested parties.
-deadline continuance-motion-period: 7.days before MotionHearing() counted_by frcp6 cite "Bankr. E.D. La. LR 9014-1(A)"
-{
-  forum frcp
-}
+deadline continuance-motion-period: 7.days before MotionHearing() counted_by frbp9006 cite "Bankr. E.D. La. LR 9014-1(A)"
 
 /// Bankr. E.D. La. LR 9017-1(C): exhibits admitted into evidence are
 /// retrieved within thirty days of the final disposition of the case or
 /// adversary proceeding, after which the Clerk may destroy them.
-deadline exhibit-retrieval-period: 30.days after FinalDisposition() counted_by frcp6 cite "Bankr. E.D. La. LR 9017-1(C)"
-{
-  forum frcp
-}
+deadline exhibit-retrieval-period: 30.days after FinalDisposition() counted_by frbp9006 cite "Bankr. E.D. La. LR 9017-1(C)"
 
 start motion-filed
 

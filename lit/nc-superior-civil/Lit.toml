@@ -1,0 +1,51 @@
+# Civil actions in the North Carolina Superior Court under the North
+# Carolina Rules of Civil Procedure (N.C. Gen. Stat. Chapter 1A), as the
+# General Assembly's Chapter 1A PDF stated them with changes through S.L.
+# 2026-30 (sources/nc-superior-civil); the same rules govern civil
+# practice in the district court. Rule 6(a) computes time and excludes
+# intermediate Saturdays, Sundays and holidays from a period of less than
+# seven days; no lit/core counting rule encodes it, so the rules' periods
+# are stated in notes, not counted deadlines. An appeal hands off to
+# lit/nc-appellate-civil.
+[package]
+name = "nc-superior-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "nc-superior-court-civil"
+forum = "nc-superior-civil"
+authority = "StateRule"
+title = "North Carolina Superior Court, civil"
+description = "Civil actions in the North Carolina Superior Court under the North Carolina Rules of Civil Procedure, as far as the vendored text states: the summons and its service, the answer and Rule 12 motions, amendment, default, discovery and sanctions, summary judgment, the jury demand and trial, entry and service of judgment, post-trial motions, relief from judgment, and the appeal (lit/nc-appellate-civil)."
+in_force = "2026-04-16"
+known_at = "2026-10-28"
+jurisdiction_id = "north-carolina"
+unknown_before = "2026-04-16"
+jurisdiction = "North Carolina Superior Court (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ncrcp]
+title = "North Carolina Rules of Civil Procedure, N.C. Gen. Stat. Chapter 1A (changes through S.L. 2026-30)"
+url = "https://www.ncleg.gov/EnactedLegislation/Statutes/PDF/ByChapter/Chapter_1A.pdf"
+path = "sources/nc-superior-civil/nc-rules-of-civil-procedure-ch1a-sectioned.txt"
+path_sha256 = "aef8620622f572b94dc6c132558bab3468f2f5fbd7012e958db8fc9349414452"
+sha256 = "4913f21d961caabb294db9b1640f89fadf69851f3e10eec5dac93f5c069dc420"
+as_of = "2026-04-16"
+cite_prefixes = ["N.C. R. Civ. P."]
+section_heading = "Rule {n}"
+
+[sources.ncrap]
+title = "North Carolina Rules of Appellate Procedure, Codified 2 September 2025"
+url = "https://www.nccourts.gov/assets/inline-files/North%20Carolina%20Rules%20of%20Appellate%20Procedure%20-%20Codified%202%20September%202025_2.pdf"
+path = "sources/nc-appellate-civil/nc-rules-of-appellate-procedure-sectioned.txt"
+path_sha256 = "faa02aa4899f95553e42bccb296ed5dc8d4a6ec35b5509f4e0eb535648614d69"
+sha256 = "7d224e434190ffb4faccd84e7008351bf70c6ff7048f6bcc7f2fab3149b85145"
+as_of = "2025-09-02"
+cite_prefixes = ["N.C. R. App. P."]
+section_heading = "Rule {n}"

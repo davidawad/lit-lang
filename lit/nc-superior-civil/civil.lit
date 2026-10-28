@@ -1,0 +1,162 @@
+module nc-superior-court-civil.civil
+
+start complaint-filed
+
+state complaint-filed: "Complaint filed and summons issued" by applicant cite "N.C. R. Civ. P. 3(a)"
+{
+  note "A civil action is commenced by filing a complaint, or by issuance of a summons on an order permitting the complaint to be filed within 20 days; if the complaint is not filed within the period the clerk's order specifies, the action abates (N.C. R. Civ. P. 3(a)). On filing of the complaint, summons is issued forthwith and in any event within five days (N.C. R. Civ. P. 4(a)); it notifies each defendant to appear and answer within 30 days after its service (N.C. R. Civ. P. 4(b)). Periods in this package are stated, not counted: Rule 6(a) excludes the day of the act, includes the last day unless it is a Saturday, Sunday or legal holiday when the courthouse is closed, and excludes intermediate Saturdays, Sundays and holidays from a period of less than seven days; no lit/core counting rule encodes it. Three days are added to a period that runs from service of a paper by mail (N.C. R. Civ. P. 6(e)), and the parties may stipulate without court approval to enlarge a time by not more than 30 days in the aggregate, but not the times under Rules 50(b), 52, 59(b), (d), (e) and 60(b) (N.C. R. Civ. P. 6(b)). The earlier outline named no leading decision for this stage."
+  edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    authority cite "N.C. R. Civ. P. 4(c)"
+  }
+  edge-complaint-filed-unserved "Summons not served or extended" -> dismissed-unserved {
+    authority cite "N.C. R. Civ. P. 4(d)"
+  }
+}
+
+terminal dismissed-unserved: "Action discontinued for want of service" outcome [loss, dismissal] cite "N.C. R. Civ. P. 4(d)"
+{
+  note "Personal or substituted personal service under Rules 4(j) and (j1) is made within 60 days after issuance of the summons; failure to serve in that time does not invalidate the summons (N.C. R. Civ. P. 4(c)). When a defendant is not served in time, the action may be continued in existence as to that defendant by an endorsement on the original summons secured within 90 days after its issuance or the last prior endorsement, or by an alias or pluries summons sued out within 90 days after the last preceding summons or endorsement (N.C. R. Civ. P. 4(d)); otherwise the action is discontinued as to that defendant (N.C. R. Civ. P. 4(e))."
+}
+
+decision answer-due: "Answer, Rule 12(b) motion or default" by office cite "N.C. R. Civ. P. 12(a)"
+{
+  note "A defendant serves an answer within 30 days after service of the summons and complaint; a crossclaim is answered within 30 days after its service, and a reply to a counterclaim within 30 days after service of the answer (N.C. R. Civ. P. 12(a)(1)). After a case removed to federal court is remanded, a party has 30 days after the certified remand order is filed in the State court to move, answer or otherwise plead (N.C. R. Civ. P. 12(a)(2)). The defenses Rule 12(b) lists, among them lack of jurisdiction, insufficiency of process or service, and failure to state a claim, may at the pleader's option be made by motion, before pleading if a further pleading is permitted (N.C. R. Civ. P. 12(b))."
+  edge-answer-due-answer "Answer served" -> answered { authority cite "N.C. R. Civ. P. 12(a)" }
+  edge-answer-due-motion "Rule 12(b) motion" -> pleading-motion {
+    authority cite "N.C. R. Civ. P. 12(b)"
+  }
+  edge-answer-due-default "No answer or defense in time" -> default-entered {
+    authority cite "N.C. R. Civ. P. 55(a)"
+  }
+}
+
+decision pleading-motion: "Rule 12(b) motion decided" by court cite "N.C. R. Civ. P. 12(b)"
+{
+  note "Unless the court fixes a different time, the responsive pleading is served within 20 days after notice of the court's action in ruling on the motion or postponing it to trial, or within 20 days after service of a more definite statement (N.C. R. Civ. P. 12(a)(1)). The earlier outline named no leading decision for this stage."
+  edge-pleading-motion-granted "Granted: action dismissed" -> dismissed-pleading {
+    authority cite "N.C. R. Civ. P. 12(b)"
+  }
+  edge-pleading-motion-leave "Plaintiff amends" -> amend { authority cite "N.C. R. Civ. P. 15(a)" }
+  edge-pleading-motion-denied "Denied: answer within 20 days of notice" -> answered {
+    authority cite "N.C. R. Civ. P. 12(a)"
+  }
+}
+
+state amend: "Amended pleading" by applicant cite "N.C. R. Civ. P. 15(a)"
+{
+  note "A party may amend once as a matter of course before a responsive pleading is served or, if none is permitted and the action is not on the trial calendar, within 30 days after the pleading is served; otherwise only by leave of court or written consent of the adverse party, and leave is freely given when justice so requires. A party pleads in response to an amended pleading within 30 days after its service unless the court orders otherwise (N.C. R. Civ. P. 15(a))."
+  edge-amend-tested "Amended pleading tested again" -> pleading-motion {
+    authority cite "N.C. R. Civ. P. 12(b)"
+  }
+  edge-amend-answered "Amended pleading answered" -> answered {
+    authority cite "N.C. R. Civ. P. 15(a)"
+  }
+}
+
+terminal dismissed-pleading: "Dismissed on a Rule 12(b) motion" outcome [loss, dismissal] cite "N.C. R. Civ. P. 12(b)"
+{
+  note "Outcome from the applicant's side. A notice of appeal is filed and served within thirty days after entry of judgment if the party was served with it within the three days Rule 58 prescribes, or otherwise within thirty days after service of the judgment (N.C. R. App. P. 3(c))."
+}
+
+state default-entered: "Default entered by the clerk" by office cite "N.C. R. Civ. P. 55(a)"
+{
+  note "When a party against whom affirmative relief is sought has failed to plead, and that fact is made to appear by affidavit, motion or otherwise, the clerk enters the default (N.C. R. Civ. P. 55(a)). For good cause shown the court may set aside an entry of default, and a judgment by default may be set aside under Rule 60(b) (N.C. R. Civ. P. 55(d))."
+  edge-default-entered-judgment "Judgment by default sought" -> default-judgment {
+    authority cite "N.C. R. Civ. P. 55(b)"
+  }
+  edge-default-entered-vacated "Default set aside for good cause" -> answered {
+    authority cite "N.C. R. Civ. P. 55(d)"
+  }
+}
+
+terminal default-judgment: "Judgment by default entered" outcome [win] cite "N.C. R. Civ. P. 55(b)"
+{
+  note "Outcome from the applicant's side. For a sum certain the clerk enters judgment on request and affidavit of the amount due against a defendant defaulted for failure to appear who is not an infant or incompetent person; in all other cases the party applies to the judge (N.C. R. Civ. P. 55(b)(1), (2)). The judge may decide a motion for judgment by default without a hearing if the motion says so and the party against whom judgment is sought serves no written response within 30 days of service of the motion (N.C. R. Civ. P. 55(b)(2))."
+}
+
+state answered: "Answer served: pleadings closed" by applicant cite "N.C. R. Civ. P. 8(b)"
+{
+  note "A party states in short and plain terms its defenses to each claim and admits or denies the averments on which the adverse party relies (N.C. R. Civ. P. 8(b)). A party may demand a jury by serving a written demand after commencement and not later than 10 days after service of the last pleading directed to the issue (N.C. R. Civ. P. 38(b))."
+  edge-answered-discovery "Case proceeds to discovery" -> discovery {
+    authority cite "N.C. R. Civ. P. 26"
+  }
+}
+
+state discovery: "Discovery and pretrial" by applicant cite "N.C. R. Civ. P. 26"
+{
+  note "Answers and objections to interrogatories, and written responses to requests for production, are served within 30 days after service, but a defendant may serve them within 45 days after service of the summons and complaint (N.C. R. Civ. P. 33(a), 34(b)); a matter is admitted unless the party answers or objects within 30 days after service of the request for admission, or the longer or shorter time the rule allows (N.C. R. Civ. P. 36(a)). The court may direct the attorneys to a pretrial conference on the issues, amendments, admissions and limits on expert witnesses (N.C. R. Civ. P. 16(a))."
+  edge-discovery-dispute "Motion to compel or for sanctions" -> discovery-dispute {
+    authority cite "N.C. R. Civ. P. 37(a)"
+  }
+  edge-discovery-sj "Summary judgment motion" -> sj-motion { authority cite "N.C. R. Civ. P. 56" }
+  edge-discovery-trial "No dispositive motion: trial" -> trial {
+    authority cite "N.C. R. Civ. P. 39"
+  }
+  edge-discovery-settle "Settled: voluntary dismissal or stipulation" -> settled {
+    authority cite "N.C. R. Civ. P. 41(a)"
+  }
+}
+
+decision discovery-dispute: "Discovery dispute decided" by court cite "N.C. R. Civ. P. 37(a)"
+{
+  note "A party, on reasonable notice, may move to compel a designation, answer or inspection; the motion certifies a good-faith effort to confer (N.C. R. Civ. P. 37(a)). If a party fails to obey a discovery order, the court may make just orders, among them dismissing the action or rendering a judgment by default, and requires the disobedient party to pay the reasonable expenses caused unless the failure was substantially justified (N.C. R. Civ. P. 37(b)). The earlier outline named no leading decision for this stage."
+  edge-discovery-dispute-resolved "Resolved: discovery continues" -> discovery {
+    authority cite "N.C. R. Civ. P. 37(a)"
+  }
+  edge-discovery-dispute-sanction "Dismissal as a sanction" -> dismissed-sanction {
+    authority cite "N.C. R. Civ. P. 37(b)"
+  }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "N.C. R. Civ. P. 37(b)"
+{
+  note "Outcome from the applicant's side."
+}
+
+decision sj-motion: "Summary judgment decided" by court cite "N.C. R. Civ. P. 56(c)"
+{
+  note "A claimant may move at any time after 30 days from commencement or after the adverse party serves a summary judgment motion; a defending party may move at any time (N.C. R. Civ. P. 56(a), (b)). The motion is served at least 10 days before the hearing, and opposing affidavits at least two days before it; judgment is rendered forthwith if there is no genuine issue as to any material fact and a party is entitled to judgment as a matter of law (N.C. R. Civ. P. 56(c)). The earlier outline cited Forbis v. Neal, 361 N.C. 519 (2007), on summary judgment; no reporter text is vendored, so it is removed."
+  edge-sj-motion-granted "Granted" -> judgment-entered { authority cite "N.C. R. Civ. P. 56(c)" }
+  edge-sj-motion-denied "Denied: trial" -> trial { authority cite "N.C. R. Civ. P. 39" }
+}
+
+state trial: "Trial by jury or by the court" by court cite "N.C. R. Civ. P. 39"
+{
+  note "Issues for which a jury was demanded under Rule 38 are tried by jury unless the parties consent to trial by the court or the court finds no right to a jury; other issues are tried by the court (N.C. R. Civ. P. 39(a), (b)). The judge may require a special verdict or written findings on issues of fact (N.C. R. Civ. P. 49)."
+  edge-trial-judgment "Verdict or decision" -> judgment-entered {
+    authority cite "N.C. R. Civ. P. 58"
+  }
+}
+
+decision judgment-entered: "Judgment entered" by office cite "N.C. R. Civ. P. 58"
+{
+  note "A judgment is entered when it is reduced to writing, signed by the judge and filed with the clerk; the designated party serves a copy on all other parties within three days after entry, and the times under Rules 50(b), 52(b) and 59 are tolled while that service is not made, but not longer than 90 days from entry (N.C. R. Civ. P. 58). A motion for judgment notwithstanding the verdict is made not later than 10 days after entry of judgment (N.C. R. Civ. P. 50(b)); a motion to amend findings not later than 10 days after entry (N.C. R. Civ. P. 52(b)); a motion for a new trial is served not later than 10 days after entry (N.C. R. Civ. P. 59(b))."
+  edge-judgment-entered-post "Post-trial motion" -> post-trial {
+    authority cite "N.C. R. Civ. P. 59(b)"
+  }
+  edge-judgment-entered-appeal "Notice of appeal" -> appeal-noticed {
+    authority cite "N.C. R. App. P. 3(c)"
+  }
+  edge-judgment-entered-final "No further action" -> judgment-final {
+    authority cite "N.C. R. Civ. P. 58"
+  }
+}
+
+decision post-trial: "Post-trial motion decided" by court cite "N.C. R. Civ. P. 59(a)"
+{
+  note "A timely motion under Rule 50(b), 52(b) or 59 tolls the thirty-day period for appeal for all parties until entry of the order disposing of it (N.C. R. App. P. 3(c)). Relief from a final judgment for mistake, inadvertence, excusable neglect, newly discovered evidence or fraud is sought within a reasonable time and not more than one year after entry (N.C. R. Civ. P. 60(b))."
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "N.C. R. Civ. P. 59(a)" }
+  edge-post-trial-denied "Denied" -> judgment-entered { authority cite "N.C. R. App. P. 3(c)" }
+}
+
+terminal settled: "Settled: dismissed by notice or stipulation" outcome [settlement] cite "N.C. R. Civ. P. 41(a)"
+{
+  note "The plaintiff may dismiss without order by filing a notice of dismissal at any time before resting its case, or a stipulation of dismissal signed by all parties who have appeared; a dismissal without prejudice of an action timely commenced allows a new action on the same claim within one year (N.C. R. Civ. P. 41(a)(1))."
+}
+
+terminal judgment-final: "Judgment final in the trial court" outcome [final] cite "N.C. R. Civ. P. 58"
+
+terminal appeal-noticed: "Appeal taken: continue in the North Carolina appellate package" outcome [appeal] cite "N.C. R. App. P. 3(c)"
+{
+  note "A party files a notice of appeal with the clerk of superior court and serves it on all other parties (N.C. R. App. P. 3(a)) within thirty days after entry of judgment if served with it within the three-day period of Rule 58, or within thirty days after service of the judgment if not; the mail-service additions of N.C. R. App. P. 27(b) and N.C. R. Civ. P. 6(e) do not apply, and any other party may appeal within ten days after the first notice was served on it (N.C. R. App. P. 3(c)). Hand-off to lit/nc-appellate-civil (nc-appellate-court-civil)."
+}

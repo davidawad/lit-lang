@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-ils-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:08f8423696d9de7a4eea27ae3d0cca3e0dc54a43dda1a33c445ed7d3ee1957c0"
+semantic = "sha256:8788d79921344d6c44c49b22319194c782ba55c3f101c1038ffe6caa530d3590"
+texts = [
+    "ilsb-lbr sources/bankr-ils/ilsb-lbr-2015-12-01-sectioned.txt sha256:6543bdc901c48b26cbcb4f3a1a988d142aaef7fd3aacd3fe8e0fd633d8e12046",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-ils"
-version = "0.0.1"
-language = 1
-source = "sha256:ae421eeac44099998cb7ac67d0b82ae8f0702af1f638480cce927c6867b142f2"
-semantic = "sha256:fc0e423cf127891d1eeecd8f2f8cc0787de5b08fca6fc472853a08904684d6df"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

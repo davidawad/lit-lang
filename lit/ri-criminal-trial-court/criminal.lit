@@ -1,0 +1,164 @@
+module ri-criminal-trial-court.criminal
+
+// Criminal cases in the Rhode Island Superior Court under its Rules of
+// Criminal Procedure. The rules are CURRENCY UNCONFIRMED
+// (sources/ri-criminal-trial-court/PROVENANCE.md), so they are cited for
+// the structure of each step and no period, limit or amount is taken from
+// them: where a step has one, the note names the rule that sets it and
+// says that it is not stated. A speedy-trial motion and a motion to
+// dismiss for failure to obtain a speedy trial are made under Rule 12(d)
+// and (e); the speedy-trial statute (R.I. Gen. Laws § 12-13-7) is not
+// vendored. The bail statutes (R.I. Gen. Laws ch. 12-13) and
+// post-conviction relief (ch. 10-9.1) are not vendored and stay holes.
+// Outcomes are from the defendant's side. The earlier outline's leading
+// decisions (County of Riverside v. McLaughlin, Gerstein v. Pugh, Gideon
+// v. Wainwright, Brady v. Maryland, Mapp v. Ohio, Barker v. Wingo, Boykin
+// v. Alabama, Missouri v. Frye, Jackson v. Virginia, Ramos v. Louisiana,
+// Apprendi v. New Jersey, Roe v. Flores-Ortega, Garza v. Idaho) are
+// removed: no reporter text is vendored.
+start arrested
+
+state arrested: "Complaint, arrest or summons" by applicant cite "R.I. Super. R. Crim. P. 4"
+{
+  note "The complaint is a written statement of the essential facts constituting the offense charged (R.I. Super. R. Crim. P. 3); an arrest warrant or summons issues on it (R.I. Super. R. Crim. P. 4). An officer arresting on a warrant takes the arrested person without unnecessary delay before a judicial officer of the District Court, unless a statute provides otherwise (R.I. Super. R. Crim. P. 5(a))."
+  edge-arrested-appearance "Appearance before the District Court" -> initial-appearance {
+    authority cite "R.I. Super. R. Crim. P. 5(a)"
+  }
+}
+
+decision initial-appearance: "Bail or detention" by court cite "R.I. Super. R. Crim. P. 46(a)"
+{
+  note "The judicial officer informs the defendant of the complaint and of the defendant's rights (R.I. Super. R. Crim. P. 5(b)); the defendant is not called upon to plead, and unless the defendant waives a preliminary examination the District Court hears the evidence within a reasonable time; on a waiver the defendant is held to answer in the Superior Court (R.I. Super. R. Crim. P. 5(c)). Release on bail, its terms, conditions and revocation are governed by Rule 46(a) to (g); counsel is assigned under Rule 44. The bail statutes (R.I. Gen. Laws ch. 12-13) are not vendored."
+  edge-initial-appearance-detained "Held without bail, or bail not posted" -> charged {
+    authority cite ?("R.I. Gen. Laws § 12-13-1.1 (bail; not vendored)")
+  }
+  edge-initial-appearance-released "Released on bail or recognizance" -> charged {
+    authority cite "R.I. Super. R. Crim. P. 46(c)"
+  }
+}
+
+decision charged: "Indictment or information" by office cite "R.I. Super. R. Crim. P. 7(a)"
+{
+  note "An offense punishable by life imprisonment is prosecuted by indictment; offenses above the thresholds Rule 7(a) sets may be prosecuted by indictment or by an information signed by the Attorney General; any other offense by complaint (R.I. Super. R. Crim. P. 7(a)); indictment or information may be waived as Rule 7(b) provides. The grand jury is governed by Rule 6, and notification that no information or indictment will be filed by Rule 6.1. A defendant charged by information may move to dismiss it under Rule 9.1, within a time not stated here (currency unconfirmed)."
+  edge-charged-arraignment "Arraignment" -> arraignment {
+    authority cite "R.I. Super. R. Crim. P. 10"
+  }
+  edge-charged-not-filed "No information or indictment will be filed" -> dismissed {
+    authority cite "R.I. Super. R. Crim. P. 6.1"
+  }
+  edge-charged-information-dismissed "Information dismissed on motion" -> dismissed {
+    authority cite "R.I. Super. R. Crim. P. 9.1"
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "R.I. Super. R. Crim. P. 10"
+{
+  note "Arraignment is conducted in open court, or in the court's discretion by two-way audio-video communication, by reading the indictment, information or complaint or stating its substance and calling on the defendant to plead (R.I. Super. R. Crim. P. 10). A defendant may plead not guilty, guilty or, with the court's consent, nolo contendere (R.I. Super. R. Crim. P. 11)."
+  edge-arraignment-discovery "Discovery" -> discovery {
+    authority cite "R.I. Super. R. Crim. P. 16(a)"
+  }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "R.I. Super. R. Crim. P. 12(b)"
+{
+  note "On written request the State permits the defendant to inspect and copy the items Rule 16(a) lists, and reciprocal discovery and its timing are governed by Rule 16, whose periods are not stated here (currency unconfirmed). Defenses and objections are raised by pretrial motion under Rule 12(b), within the time it sets (not stated here, currency unconfirmed). A motion for a speedy trial, and a motion to dismiss for failure to obtain a speedy trial, are copied to the Attorney General and assigned for hearing (R.I. Super. R. Crim. P. 12(d), (e)). Motions generally are governed by Rule 47."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "R.I. Super. R. Crim. P. 12(b)"
+  }
+  edge-discovery-speedy "Motion to dismiss for failure to obtain a speedy trial" -> motions-ruling {
+    authority cite "R.I. Super. R. Crim. P. 12(e)"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite "R.I. Super. R. Crim. P. 11"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "R.I. Super. R. Crim. P. 12(b)"
+{
+  note "The court rules on pretrial motions under Rule 12(b). Dismissal for failure to obtain a speedy trial is heard under Rule 12(e); the standard rests on R.I. Gen. Laws § 12-13-7 and case law not vendored here, and whether it bars refiling is a hole."
+  edge-motions-ruling-speedy "Dismissed for failure to obtain a speedy trial" -> dismissed {
+    authority cite "R.I. Super. R. Crim. P. 12(e)"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "R.I. Super. R. Crim. P. 12(b)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "R.I. Super. R. Crim. P. 12(b)"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "R.I. Super. R. Crim. P. 11"
+{
+  note "The court does not accept a guilty or nolo contendere plea without addressing the defendant personally and determining that it is made voluntarily with understanding of the nature of the charge and the consequences (R.I. Super. R. Crim. P. 11). The attorney for the State may file a dismissal, but not during trial without the defendant's consent (R.I. Super. R. Crim. P. 48(a)); the court may dismiss pending charges on a finding that the defendant completed the diversion program (R.I. Super. R. Crim. P. 48(b))."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite "R.I. Super. R. Crim. P. 11"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "R.I. Super. R. Crim. P. 23(a)"
+  }
+  edge-plea-decision-dismissed "State files a dismissal, or diversion completed" -> dismissed {
+    authority cite "R.I. Super. R. Crim. P. 48"
+  }
+}
+
+decision trial: "Verdict" by court cite "R.I. Super. R. Crim. P. 31(a)"
+{
+  note "Cases required to be tried by jury are so tried unless the defendant waives a jury in writing in open court with the court's approval (R.I. Super. R. Crim. P. 23(a)); the jury's size and when fewer jurors may return a verdict are set by Rule 23(b) and are not stated here (currency unconfirmed). The court enters a judgment of acquittal if the evidence is insufficient (R.I. Super. R. Crim. P. 29(a)); in a bench trial a motion to dismiss serves that purpose (R.I. Super. R. Crim. P. 29(b)). The verdict is unanimous and returned in open court (R.I. Super. R. Crim. P. 31(a))."
+  edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
+    authority cite "R.I. Super. R. Crim. P. 29(a)"
+  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
+    authority cite "R.I. Super. R. Crim. P. 33"
+  }
+}
+
+decision post-trial: "Post-trial motions" by court cite "R.I. Super. R. Crim. P. 33"
+{
+  note "The court may grant a new trial if required in the interest of justice (R.I. Super. R. Crim. P. 33), and arrests judgment if the charge states no offense or the court lacked jurisdiction (R.I. Super. R. Crim. P. 34); the periods for these motions are not stated here (currency unconfirmed). A timely motion in arrest of judgment or for a new trial on a ground other than newly discovered evidence extends the time to appeal to 20 days after entry of the order denying it (R.I. Sup. Ct. R. App. P. 4(b))."
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "R.I. Super. R. Crim. P. 33"
+  }
+  edge-post-trial-arrest "Judgment arrested" -> dismissed {
+    authority cite "R.I. Super. R. Crim. P. 34"
+  }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "R.I. Super. R. Crim. P. 32(a)"
+  }
+}
+
+state sentencing: "Presentence investigation and sentence" by court cite "R.I. Super. R. Crim. P. 32(a)"
+{
+  note "Sentence is imposed without unreasonable delay; a delay is not unreasonable if the defendant has not moved for imposition of sentence (R.I. Super. R. Crim. P. 32(a)(1)). The presentence investigation and its disclosure are governed by Rule 32(c); a motion to withdraw a guilty or nolo contendere plea by Rule 32(d); probation and its revocation by Rule 32(e), (f)."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "R.I. Super. R. Crim. P. 32(b)"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "R.I. Super. R. Crim. P. 32(b)"
+{
+  note "The judgment of conviction sets forth the offense charged, the plea, the verdict or findings, and the adjudication and sentence (R.I. Super. R. Crim. P. 32(b)). A defendant's notice of appeal is filed with the clerk of the Superior Court within twenty days after entry of the judgment or order appealed from; a notice filed after the announcement but before entry is treated as filed on the day of entry; a new-trial motion on newly discovered evidence made before or within ten days after entry of judgment also extends the time; and on excusable neglect the Superior Court may extend the time by up to thirty days from its expiration (R.I. Sup. Ct. R. App. P. 4(b)). The court may correct an illegal sentence at any time, and correct or reduce a sentence on a motion filed within the period Rule 35(a) sets, which is not stated here (currency unconfirmed). A stay of execution pending review is governed by Rule 38. lit/core has no counting rule for the Rhode Island Supreme Court rules, so the 20-day period is not encoded as a counted deadline."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "R.I. Sup. Ct. R. App. P. 4(b)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "R.I. Sup. Ct. R. App. P. 4(b)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "R.I. Super. R. Crim. P. 29"
+{
+  note "Outcome from the defendant's side: a unanimous verdict of not guilty or a judgment of acquittal (R.I. Super. R. Crim. P. 29, 31)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "R.I. Super. R. Crim. P. 48"
+{
+  note "Outcome from the defendant's side: a dismissal by the State or on completion of diversion (R.I. Super. R. Crim. P. 48), on a pretrial motion (R.I. Super. R. Crim. P. 12), on a motion to dismiss an information (R.I. Super. R. Crim. P. 9.1), notice that no charge will be filed (R.I. Super. R. Crim. P. 6.1), or an arrest of judgment (R.I. Super. R. Crim. P. 34). Whether the dismissal bars a later prosecution is a hole."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "R.I. Sup. Ct. R. App. P. 4(b)"
+{
+  note "The appeal continues before the Rhode Island Supreme Court under Article I of its rules (sources/ri-supreme/)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("R.I. Gen. Laws § 10-9.1-1 (post-conviction relief; not vendored)")
+{
+  note "Outcome from the defendant's side. Post-conviction relief under R.I. Gen. Laws ch. 10-9.1 is not vendored; federal habeas belongs to lit/habeas."
+}

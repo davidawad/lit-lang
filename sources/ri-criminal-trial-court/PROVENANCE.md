@@ -8,3 +8,9 @@
 - Original: `ri-criminal-trial-court/original/ri-superior-court-rules-of-criminal-procedure.pdf` as served (sha256 8db09dbd04061108d3adbcbb5cb8c7fce7ed1ebc34be05059a1ea4a1e6124454); extraction sha256 85393ee45ae1b46c1822d9045b0e847a6251c840455f28d9465ad7d0f2b7ac8c.
 
 - Note (lg-gddt): Criminal appeals: Rhode Island Supreme Court Rules of Appellate Procedure, covered by sources/ri-supreme/.
+
+### `ri-criminal-trial-court/ri-superior-court-rules-of-criminal-procedure-sectioned.txt` — Rhode Island Superior Court Rules of Criminal Procedure, sectioned
+
+- Derived in the pod (lg-gddt.6) from `ri-criminal-trial-court/ri-superior-court-rules-of-criminal-procedure.txt` (extract sha256 85393ee45ae1b46c1822d9045b0e847a6251c840455f28d9465ad7d0f2b7ac8c); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line (`<n>. <Title>. — ...`, `Rule 26.1. ...`, or `<n>. [Reserved.]`), in ascending order: 66 markers, Rule 1 through Rule 60 with 6.1, 9.1, 26.1 to 26.3 and 30.1 (Rule 60's section runs through the Appendix of Forms). A cross-reference that begins a line (`Rule 9.1 to dismiss ...`) is not a heading and is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract (Rule 59 states that the amended rules took effect September 5, 2017; the document states no edition date); CURRENCY UNCONFIRMED stands. `lit/ri-criminal-trial-court` cites it for structure only and takes no value from it.
+- Sectioned sha256 f8bcfb15f679b9b394949b71003e5e05d67a5558e403bde6d3cc2d1548076819 (the `path_sha256` pinned by `lit/ri-criminal-trial-court/Lit.toml`).

@@ -67,3 +67,9 @@
 - Original: `md-appellate-civil/original/westlaw-pages/0060-Rule-8-608-Computation-of-Costs.html` as served (sha256 5efeb059675942f10c931d4e3638218eaaf7cc9767d26dc63ed6a25cf16e852c). Served at https://govt.westlaw.com/mdc/Document/N588F3A10EDD211EDA6E4CD20180F7EA9?viewType=FullText&originationContext=documenttoc&transitionType=CategoryPageItem&contextData=(sc.Default).
 - Original: `md-appellate-civil/original/westlaw-pages/0061-Rule-8-611-Enforcement.html` as served (sha256 762289234d3c3de00d82090747b7f0f4c3d05b79c955e3dd76f47c965bdf467e). Served at https://govt.westlaw.com/mdc/Document/NB40B2DE0EDD211EDBBD0BA03B09C134F?viewType=FullText&originationContext=documenttoc&transitionType=CategoryPageItem&contextData=(sc.Default).
 - Extraction sha256 c2e1bb6eccafaed333ec769c18e0dd4566566224eaadc0cdcf81ba009d697a82.
+
+### `md-appellate-civil/md-appellate-civil-rules-sectioned.txt` — Maryland Rules Title 8, sectioned
+
+- Derived in the pod (lg-f3q8.28) from `md-appellate-civil/md-appellate-civil-rules-westlaw.txt` (extract sha256 c2e1bb6eccafaed333ec769c18e0dd4566566224eaadc0cdcf81ba009d697a82); nothing fetched. After each page heading of a rule (`## Rule 8–202. Notice of Appeal — ...`) one `## Rule <n>` line with an ASCII hyphen (`## Rule 8-202`) is inserted, so the rule's text sits under the marker; 60 markers (Form 22 is unmarked). Rule text was not edited: deleting the marker lines (`sed '/^## Rule [0-9]-[0-9.]*$/d'`) restores the extract byte for byte.
+- Edition: as the extract; each page's own currentness line reads "Current with amendments received through September 1, 2026". CURRENCY UNCONFIRMED stands (no official edition date).
+- Sectioned sha256 0694de4a0728cf6eda3351cc4fe4b299d1993e5c462add44ef16969ccf35664f (the `path_sha256` pinned by `lit/md-circuit-civil/Lit.toml` and `lit/md-appellate-civil/Lit.toml`).

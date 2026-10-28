@@ -1,0 +1,47 @@
+# Civil actions in the Maryland circuit courts under Title 2 of the
+# Maryland Rules (the Westlaw public-access text, sources/md-circuit-civil,
+# whose pages state "Current with amendments received through September 1,
+# 2026"; the PROVENANCE entry records CURRENCY UNCONFIRMED, as no official
+# edition date is on the pages; bound on the PM's release of 2026-10-28).
+# Computation of time is governed by Md. Rule 1-203 (Title 1), which is not
+# vendored, so the rules' periods are stated in notes, not encoded as
+# counted deadlines. An appeal hands off to lit/md-appellate-civil.
+[package]
+name = "md-circuit-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "md-circuit-court-civil"
+forum = "md-circuit-civil"
+authority = "StateRule"
+title = "Maryland circuit courts, civil"
+description = "Civil actions in the Maryland circuit courts under Title 2 of the Maryland Rules, as far as the vendored text states. An appeal of a final judgment hands off to the Maryland appellate package (lit/md-appellate-civil)."
+in_force = "2026-09-01"
+known_at = "2026-10-28"
+unknown_before = "2026-09-01"
+jurisdiction = "Maryland circuit courts (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.md-rules-title-2]
+title = "Maryland Rules, Title 2 (Civil Procedure--Circuit Court), Westlaw public-access text current with amendments received through September 1, 2026 (CURRENCY UNCONFIRMED)"
+url = "https://govt.westlaw.com/mdc/Index"
+path = "sources/md-circuit-civil/md-circuit-civil-rules-sectioned.txt"
+path_sha256 = "caa936fa292858f1d83f4ac1f1f7e2a0f2a8ff25383d01cf8d416aa3cd51df03"
+as_of = "2026-09-01"
+cite_prefixes = ["Md. Rule"]
+section_heading = "Rule {n}"
+
+[sources.md-rules-title-8]
+title = "Maryland Rules, Title 8 (Appellate Review in the Supreme Court and the Appellate Court), Westlaw public-access text current with amendments received through September 1, 2026 (CURRENCY UNCONFIRMED)"
+url = "https://govt.westlaw.com/mdc/Index"
+path = "sources/md-appellate-civil/md-appellate-civil-rules-sectioned.txt"
+path_sha256 = "0694de4a0728cf6eda3351cc4fe4b299d1993e5c462add44ef16969ccf35664f"
+as_of = "2026-09-01"
+cite_prefixes = ["Md. Rule"]
+section_heading = "Rule {n}"

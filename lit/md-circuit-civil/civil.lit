@@ -1,0 +1,151 @@
+module md-circuit-court-civil.civil
+
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "Md. Rule 2-101(a)"
+{
+  note "A civil action is commenced by filing a complaint with a court (Md. Rule 2-101(a)). An action dismissed by a United States District Court or a court of another state for lack of jurisdiction, because that court declines jurisdiction, or as time-barred under the law it applies, and refiled in a circuit court within 30 days after the order of dismissal, is treated as timely filed (Md. Rule 2-101(b)). Periods in this package are stated, not counted: their computation is governed by Md. Rule 1-203, which is not vendored."
+  edge-complaint-filed-service "Summons issued and served" -> service-check {
+    authority cite "Md. Rule 2-121(a)"
+  }
+}
+
+decision service-check: "Served within 120 days of original process?" by office cite "Md. Rule 2-507(b)"
+{
+  note "A summons is effective for service only if served within 60 days after it is issued; an unserved summons is dormant, renewable only on the plaintiff's written request (Md. Rule 2-113). An action against a defendant who has not been served is subject to dismissal as to that defendant at the expiration of 120 days from the issuance of original process directed to that defendant (Md. Rule 2-507(b)); the clerk serves notice that the dismissal will be entered after 30 days unless a motion to defer is filed (Md. Rule 2-507(d), (e))."
+  edge-service-check-served "Served" -> answer-due { authority cite "Md. Rule 2-321(a)" }
+  edge-service-check-unserved "Not served: dismissal entered" -> dismissed-unserved {
+    authority cite "Md. Rule 2-507(f)"
+  }
+}
+
+decision answer-due: "Answer or preliminary motion" by office cite "Md. Rule 2-321(a)"
+{
+  note "An answer is due within 30 days after service; within 60 days for a defendant served outside the State but within the United States, for a person served through a State agency as statutory resident agent, and for the United States or its officer or agency; within 90 days for a defendant served outside the United States (Md. Rule 2-321(a), (b)). Lack of personal jurisdiction, improper venue, insufficiency of process and of service are waived unless made by motion before the answer (Md. Rule 2-322(a)). Default judgment (Md. Rule 2-613) is not modeled: its page is empty in the vendored extract."
+  edge-answer-due-motion "Motion to dismiss under Rule 2-322" -> pleading-motion {
+    authority cite "Md. Rule 2-322(b)"
+  }
+  edge-answer-due-answer "Answer filed" -> scheduling { authority cite "Md. Rule 2-323(a)" }
+}
+
+decision pleading-motion: "Motion to dismiss decided" by court cite "Md. Rule 2-322(c)"
+{
+  note "A motion under Rule 2-322(a) or (b) is determined before trial, though the court may defer the defense of failure to state a claim until trial; on a matter outside the pleading the motion is treated as one for summary judgment (Md. Rule 2-322(c)). A response to a motion is due within 15 days after service, or within the time for the original pleading, whichever is later (Md. Rule 2-311(b)). When a Rule 2-322 motion is filed, the time to answer is extended to 15 days after entry of the order on it (Md. Rule 2-321(c)). An order denying a motion to dismiss for failure to state a claim is reviewable only on appeal from the judgment (Md. Rule 8-131(e)). No leading decision is named."
+  edge-pleading-motion-dismissed "Dismissed without leave to amend" -> dismissed-pleading {
+    authority cite "Md. Rule 2-322(c)"
+  }
+  edge-pleading-motion-leave "Dismissed with leave: amended complaint within 30 days" -> amend {
+    authority cite "Md. Rule 2-322(c)"
+  }
+  edge-pleading-motion-denied "Denied: answer within 15 days after the order" -> scheduling {
+    authority cite "Md. Rule 2-321(c)"
+  }
+}
+
+state amend: "Amended complaint" by applicant cite "Md. Rule 2-322(c)"
+{
+  note "After a dismissal, an amended complaint may be filed only if the court expressly grants leave, within 30 days after entry of the order or another time the court fixes; on a failure to amend in time, the court on motion may dismiss the action (Md. Rule 2-322(c)). Later amendments are of right by the scheduling order's date, or without one no later than 30 days before a scheduled trial date, with a motion to strike within 15 days after service; afterwards only with leave (Md. Rule 2-341(a), (b))."
+  edge-amend-tested "Amended complaint tested again" -> pleading-motion {
+    authority cite "Md. Rule 2-322(c)"
+  }
+}
+
+terminal dismissed-unserved: "Dismissed for lack of jurisdiction" outcome [loss, dismissal] cite "Md. Rule 2-507(f)"
+{
+  note "The clerk enters \"Dismissed for lack of jurisdiction or prosecution without prejudice\" 30 days after service of the notice if no motion to defer is filed (Md. Rule 2-507(f))."
+}
+
+terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] cite "Md. Rule 2-322(c)"
+{
+  note "Outcome from the moving side. The notice of appeal is due within 30 days after entry of the judgment (Md. Rule 8-202(a))."
+}
+
+state scheduling: "Scheduling order" by court cite "Md. Rule 2-504(a)"
+{
+  note "Unless the court orders a scheduling conference, the scheduling order is entered as soon as practicable, no later than 30 days after an answer is filed by any defendant (Md. Rule 2-504(a)(3)). It sets the expert-witness dates, a discovery completion date, a written-discovery cut-off not less than 35 days before it, a dispositive-motion date no earlier than 15 days after it, and the dates for joinder and amendment as of right (Md. Rule 2-504(b)(1)). A jury demand is filed within 15 days after service of the last pleading directed to the issue, or trial by jury is waived (Md. Rule 2-325(b))."
+  edge-scheduling-discovery "Order entered" -> discovery { authority cite "Md. Rule 2-402" }
+}
+
+state discovery: "Discovery" by applicant cite "Md. Rule 2-402"
+{
+  note "Discovery reaches any matter not privileged that is relevant to the subject matter of the action (Md. Rule 2-402(a)). A motion to compel or for sanctions is filed with reasonable promptness (Md. Rule 2-432(d)); on a failure to obey an order compelling discovery, the court may dismiss the action or enter a judgment by default (Md. Rule 2-433(a)(3), (c))."
+  edge-discovery-dispute "Discovery dispute" -> dispute { authority cite "Md. Rule 2-432(b)" }
+  edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
+    authority cite "Md. Rule 2-501(a)"
+  }
+  edge-discovery-settle "Settled or voluntarily dismissed" -> settled {
+    authority cite "Md. Rule 2-506(a)"
+  }
+}
+
+decision dispute: "Discovery motion decided" by court cite "Md. Rule 2-433(c)"
+{
+  note "An award of costs and expenses follows a granted or denied motion unless the losing side was substantially justified (Md. Rule 2-433(d)). No leading decision is named."
+  edge-dispute-resolved "Resolved: discovery continues" -> discovery {
+    authority cite "Md. Rule 2-432(b)"
+  }
+  edge-dispute-sanction "Action dismissed as a sanction" -> dismissed-sanction {
+    authority cite "Md. Rule 2-433(c)"
+  }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "Md. Rule 2-433(a)"
+
+decision sj-motion: "Summary judgment decided" by court cite "Md. Rule 2-501(f)"
+{
+  note "Judgment is entered for or against the movant if the motion and response show no genuine dispute as to any material fact and the party is entitled to judgment as a matter of law (Md. Rule 2-501(f)). No motion may be filed after evidence is received at trial or, without permission, after the scheduling order's dispositive-motion deadline (Md. Rule 2-501(a)). No leading decision is named."
+  edge-sj-motion-granted "Granted" -> judgment-for-movant { authority cite "Md. Rule 2-501(f)" }
+  edge-sj-motion-denied "Denied or partly denied" -> trial { authority cite "Md. Rule 2-501(g)" }
+}
+
+terminal judgment-for-movant: "Judgment for the movant" outcome [win, judgment] cite "Md. Rule 2-501(f)"
+{
+  note "Partial summary judgment under Rule 2-602(b) is not modeled."
+}
+
+state trial: "Trial" by court cite "Md. Rule 2-511"
+{
+  note "A party may move for judgment at the close of the evidence offered by an opposing party, and in a jury trial at the close of all the evidence (Md. Rule 2-519(a))."
+  edge-trial-post "Verdict or decision; judgment entered" -> post-trial {
+    authority cite "Md. Rule 2-601(a)"
+  }
+}
+
+decision post-trial: "Post-judgment motions" by applicant cite "Md. Rule 2-533(a)"
+{
+  note "A motion for judgment notwithstanding the verdict is filed within ten days after entry of judgment on the verdict, or of the discharge of the jury if no verdict is returned, and only by a party who moved for judgment at the close of all the evidence (Md. Rule 2-532(a), (b)). A motion for new trial is filed within ten days after entry of judgment (Md. Rule 2-533(a)), as is a motion to alter or amend a judgment in an action decided by the court (Md. Rule 2-534). Revisory power is exercised on motion filed within 30 days after entry of judgment, or at any time for fraud, mistake or irregularity (Md. Rule 2-535(a), (b)). A request that the clerk assess other costs is filed within 15 days after the later of the judgment or an order denying a Rule 2-532, 2-533 or 2-534 motion (Md. Rule 2-603(b))."
+  edge-post-trial-none "No timely motion" -> judgment-entered { authority cite "Md. Rule 2-601(a)" }
+  edge-post-trial-motion "Timely motion filed" -> post-trial-ruling {
+    authority cite "Md. Rule 8-202(c)"
+  }
+}
+
+decision post-trial-ruling: "Post-judgment motion decided" by court cite "Md. Rule 2-533(c)"
+{
+  note "The court may set aside all or part of a judgment and grant a new trial (Md. Rule 2-533(c)). A timely Rule 2-532, 2-533 or 2-534 motion resets the appeal period to 30 days after entry of the order disposing of it or a notice withdrawing it (Md. Rule 8-202(c))."
+  edge-post-trial-ruling-new "New trial granted" -> trial { authority cite "Md. Rule 2-533(c)" }
+  edge-post-trial-ruling-denied "Denied or disposed of" -> judgment-entered {
+    authority cite "Md. Rule 8-202(c)"
+  }
+}
+
+decision judgment-entered: "Notice of appeal within 30 days of entry?" by applicant cite "Md. Rule 8-202(a)"
+{
+  note "A judgment is effective only when set forth on a separate document and entered on the docket of the electronic case management system; its date is the date of that entry (Md. Rule 2-601(a)(4), (b), (d)). The notice of appeal is filed with the clerk of the lower court within 30 days after entry of the judgment (Md. Rule 8-201(a), 8-202(a))."
+  edge-judgment-entered-appeal "Notice filed" -> appeal-taken { authority cite "Md. Rule 8-202(a)" }
+  edge-judgment-entered-none "No notice filed" -> final-no-appeal {
+    authority cite "Md. Rule 8-202(a)"
+  }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Maryland appellate package" outcome [appeal] cite "Md. Rule 8-201(a)"
+{
+  note "Hand-off to lit/md-appellate-civil (md-appellate-court-civil)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Md. Rule 8-202(a)"
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "Md. Rule 2-506(a)"
+{
+  note "A claimant may dismiss without leave by notice before the adverse party answers, or by a stipulation signed by all parties to the claim; unless stated otherwise the dismissal is without prejudice (Md. Rule 2-506(a), (d)). An action settled on written stipulated terms may be reopened to enforce them (Md. Rule 2-506(b))."
+}

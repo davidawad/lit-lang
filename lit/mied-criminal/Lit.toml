@@ -1,0 +1,51 @@
+# The United States District Court for the Eastern District of Michigan's
+# Local Criminal Rules (LCrR) as a local-rule layer over lit/frcrimp (28
+# U.S.C. § 2071; FRCrimP 57(a)): it declares only the periods the Local
+# Criminal Rules themselves state and re-encodes no FRCrimP, Speedy Trial
+# Act or FRAP 4(b) period. FRCrimP 45(a) computes a period stated in a
+# local rule. The rules are the criminal part of the Local Rules "Current as
+# of January 1, 2026" (sources/mied); the amendments the court lists as
+# effective November 1, 2026 are not vendored, so this layer speaks for the
+# January 1, 2026 text only. An appeal goes to the Sixth Circuit under
+# lit/frap and lit/ca6; federal habeas is lit/habeas.
+[package]
+name = "mied-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "mied-criminal-local-rules"
+forum = "mied-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Eastern District of Michigan: Local Criminal Rules"
+description = "The Eastern District of Michigan's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the government's motion for a preliminary order of forfeiture three weeks before the initial sentencing date."
+in_force = "2026-01-01"
+known_at = "2026-10-28"
+unknown_before = "2026-01-01"
+jurisdiction = "United States District Court, E.D. Mich. (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "mied-lcrr"
+issuer = "United States District Court for the Eastern District of Michigan"
+date = "2026-01-01"
+designation = "Local Criminal Rules (Local Rules current as of January 1, 2026)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRCrimP periods; this package layers only the court's local criminal rules over them.
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.mied-lcrr]
+title = "Local Rules of the United States District Court for the Eastern District of Michigan, Criminal Rules (current as of January 1, 2026)"
+url = "https://www.mied.uscourts.gov/pdffiles/localRulesPackage.pdf"
+path = "sources/mied/mied-local-criminal-rules-sectioned.txt"
+path_sha256 = "c9f26b4f1e6157e89502a52da6a891de9299c855f3817bd8e0a727670f7aee55"
+sha256 = "a9083ec973436049c1158aa1046c6d842b83db70f7ee25089b5855ba59b13013"
+as_of = "2026-01-01"
+cite_prefixes = ["E.D. Mich. LCrR"]
+section_heading = "LCrR {n}"

@@ -1,0 +1,24 @@
+module mied-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The Eastern District of Michigan's own criminal periods, counted under
+// FRCrimP 45(a), which governs a period stated in a local rule. The FRCrimP
+// periods the local rules repeat are lit/frcrimp's and are not declared
+// again: presentence report disclosure not less than 35 days before
+// sentencing (LCrR 32.1(a); FRCrimP 32(e)(2)) and the parties' objections
+// within 14 days after disclosure (LCrR 32.1(b); FRCrimP 32(f)(1)). Stated
+// in the rules but not declared: the report disclosed "three days after it
+// is mailed" (LCrR 32.1(a)(2)), a deemed date; motions, filed under the
+// civil LR 7.1 procedure (LCrR 12.1(a)), whose periods are lit/mied's, and
+// pretrial motions, due when the court's standing discovery order fixes
+// (LCrR 12.1(b)); and the district's Speedy Trial Act plan (LCrR 50.1),
+// which is not vendored. The standard conditions of supervision (LCrR
+// 32.2) bind the supervised person, not a party to the case.
+/// LCrR 32.3: when the government intends to ask for forfeiture of
+/// property, or a money judgment in lieu of forfeiture, as part of the
+/// judgment, it files and serves its motion for a preliminary order of
+/// forfeiture no later than three weeks before the initial date scheduled
+/// for the sentencing hearing, unless it shows that is impracticable.
+deadline preliminary-forfeiture-motion-period: 3.weeks before SentencingScheduled() counted_by frcrimp45 cite "E.D. Mich. LCrR 32.3"

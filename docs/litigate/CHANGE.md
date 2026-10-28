@@ -286,6 +286,13 @@ could not verify carry no `example` (circuit standing orders and case
 orders, COFC judge standing orders, CAFC overruling) and are listed in
 the register's §8.
 
+The `bankruptcy` family (`frbp` and the 94 `bankr-*` forums, 28 U.S.C.
+§§ 151-152) has the district-civil column's classes over the FRBP: base
+and amendment under 28 U.S.C. § 2075, local-rule under FRBP 9029(a),
+general and standing orders under FRBP 9029(c), case orders under FRBP
+9006(b), an emergency declaration of at most 90 days under FRBP
+9038(b)(1)(C), and the precedent of the Supreme Court and the circuit.
+
 Counting is per forum, never one FRCP 6 function: FRCP 6, FRCrimP 45,
 FRAP 26, RCFC 6, 37 C.F.R. § 1.7 (PTAB, via § 42.1(a)), § 2.196 (TTAB)
 and 19 C.F.R. § 201.14 (ITC) are distinct counting rules of `lit/core`,

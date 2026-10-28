@@ -343,6 +343,68 @@ example = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep479/usrep
 cite = "Rodriguez de Quijas v. Shearson/American Express, Inc., 490 U.S. 477, 484 (1989)"
 example = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep521/usrep521203/usrep521203.pdf"
 
+[family.bankruptcy]
+# `frbp` and the bankruptcy court of each of the 94 districts (28 U.S.C.
+# §§ 151-152), its forum `bankr-` and the district's PACER id without the
+# trailing `d` (`bankr-mp`: the Northern Mariana Islands): a district's
+# local bankruptcy rules (FRBP 9029(a); 28 U.S.C. § 2075) and the
+# bankruptcy court's orders are packages at its forum.
+title = "Federal bankruptcy court (FRBP)"
+forums = ["frbp", "bankr-alm", "bankr-aln", "bankr-als", "bankr-ak",
+  "bankr-az", "bankr-are", "bankr-arw", "bankr-cac", "bankr-cae",
+  "bankr-can", "bankr-cas", "bankr-co", "bankr-ct", "bankr-de",
+  "bankr-dc", "bankr-flm", "bankr-fln", "bankr-fls", "bankr-gam",
+  "bankr-gan", "bankr-gas", "bankr-gu", "bankr-hi", "bankr-id",
+  "bankr-ilc", "bankr-iln", "bankr-ils", "bankr-inn", "bankr-ins",
+  "bankr-ian", "bankr-ias", "bankr-ks", "bankr-kye", "bankr-kyw",
+  "bankr-lae", "bankr-lam", "bankr-law", "bankr-me", "bankr-md",
+  "bankr-ma", "bankr-mie", "bankr-miw", "bankr-mn", "bankr-msn",
+  "bankr-mss", "bankr-moe", "bankr-mow", "bankr-mt", "bankr-ne",
+  "bankr-nv", "bankr-nh", "bankr-nj", "bankr-nm", "bankr-nye",
+  "bankr-nyn", "bankr-nys", "bankr-nyw", "bankr-nce", "bankr-ncm",
+  "bankr-ncw", "bankr-nd", "bankr-mp", "bankr-ohn", "bankr-ohs",
+  "bankr-oke", "bankr-okn", "bankr-okw", "bankr-or", "bankr-pae",
+  "bankr-pam", "bankr-paw", "bankr-pr", "bankr-ri", "bankr-sc",
+  "bankr-sd", "bankr-tne", "bankr-tnm", "bankr-tnw", "bankr-txe",
+  "bankr-txn", "bankr-txs", "bankr-txw", "bankr-ut", "bankr-vt",
+  "bankr-vi", "bankr-vae", "bankr-vaw", "bankr-wae", "bankr-waw",
+  "bankr-wvn", "bankr-wvs", "bankr-wie", "bankr-wiw", "bankr-wy"]
+precedent = ["scotus", "@circuit"]
+circuits = ["ca1", "ca2", "ca3", "ca4", "ca5", "ca6", "ca7", "ca8", "ca9", "ca10", "ca11", "cadc"]
+
+[family.bankruptcy.class.base]
+cite = "28 U.S.C. § 2075; 11 U.S.C.; FRBP"
+example = "https://www.law.cornell.edu/rules/frbp/rule_9006"
+
+[family.bankruptcy.class.amendment]
+cite = "28 U.S.C. § 2075; FRBP 9029(a)(1) for a local rule's amendment"
+
+[family.bankruptcy.class.local-rule]
+cite = "FRBP 9029(a); 28 U.S.C. § 2071; FRCP 83"
+example = "https://www.meb.uscourts.gov/sites/meb/files/20251208_USBC_Local_Rules.pdf"
+
+[family.bankruptcy.class.general-order]
+cite = "FRBP 9029(c); FRCP 83(b)"
+
+[family.bankruptcy.class.standing-order]
+cite = "FRBP 9029(c)"
+
+[family.bankruptcy.class.case-order]
+cite = "FRBP 9006(b), (c)"
+
+[family.bankruptcy.class.emergency-declaration]
+cite = "FRBP 9038(b)(1)(C): a declaration is limited to a stated period of no more than 90 days"
+window_days = 90
+
+[family.bankruptcy.class.guidance]
+cite = "Committee Notes, published with the rules but not prescribed under 28 U.S.C. § 2075"
+
+[family.bankruptcy.class.precedent]
+cite = "Hutto v. Davis, 454 U.S. 370 (1982); Camreta v. Greene, 563 U.S. 692 n.7 (2011)"
+
+[family.bankruptcy.class.overruling]
+cite = "Rodriguez de Quijas v. Shearson/American Express, Inc., 490 U.S. 477, 484 (1989)"
+
 [family.circuit-appellate]
 # `frap` and each of the 12 regional courts of appeals by its court id (28
 # U.S.C. § 41): a circuit's own rules (FRAP 47(a); 28 U.S.C. § 2071) and

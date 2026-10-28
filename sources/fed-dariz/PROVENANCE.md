@@ -11,6 +11,7 @@
 
 - Source: https://www.azd.uscourts.gov/sites/azd/files/local-rules/LRCRIM%202025.pdf (official site; 88 pages, sha256 2114eac2c26cd8b5ec8db71ae0ca79589fccff58e450df98806a5de61d8b1964).
 - Edition: Local Rules of Criminal Procedure (2025-2026) as listed at https://www.azd.uscourts.gov/local-rules (the PDF states no separate effective date). robots.txt of www.azd.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): azd-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 613d9fe4cae662fefbd81bc61a29bfea4c746c76b1ac8488bcfe03c20833c782. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `fed-dariz/original/azd-lrcrim-2025-2026.pdf` as served (sha256 2114eac2c26cd8b5ec8db71ae0ca79589fccff58e450df98806a5de61d8b1964); extraction sha256 613d9fe4cae662fefbd81bc61a29bfea4c746c76b1ac8488bcfe03c20833c782.

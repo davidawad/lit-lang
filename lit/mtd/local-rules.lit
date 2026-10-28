@@ -1,0 +1,569 @@
+module mtd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Montana's own civil periods, computed under the federal
+// rules (FRCP 6(a) governs "any local rule"). Each period applies "unless
+// otherwise ordered" where the rule says so. Rules that state no period or
+// limit stay out, as do duties the rules lay on the court or the clerk: the
+// "not less than 14 days" the court gives a denied in forma pauperis
+// movant to pay the filing fee (L.R. 3.1(e)(3)), the schedule the court
+// sets within 45 days after an exempt case is at issue (L.R. 16.3(a)(2)),
+// jury costs on a settlement less than seven days before trial (L.R.
+// 16.3(c)), the clerk's notice of assignment within seven days after the
+// last appearance (L.R. 73.1(c)), the clerk's taxation of costs within 14
+// days after the time to object expires (L.R. 54.1(c)(1)), and the 21-day
+// show-cause period in reciprocal discipline (L.R. 83.2). Filing fees are
+// not stated in the rules. The earlier D. Montana outline's FRCP flow and
+// its Supreme Court decisions (Twombly, Iqbal, Celotex, Anderson v.
+// Liberty Lobby, Reeves, Catlin, Bowles, Hamer) are FRCP and FRAP
+// authority and belong to lit/frcp and lit/frap; its Ninth Circuit
+// decisions (Eitel v. McCool; Lopez v. Smith) are removed: no reporter
+// text is vendored.
+/// A brief in support of a motion, and a response brief: at most 6,500 words,
+/// excluding the caption, certificate of compliance, tables, exhibit index
+/// and certificate of service; a brief of 4,000 words or more includes a
+/// table of contents, table of authorities and exhibit index (L.R.
+/// 7.1(d)(2)(A), (C), (E)).
+limit motion-brief { words <= 6_500 cite "D. Mont. L.R. 7.1(d)" } cite "D. Mont. L.R. 7.1(d)"
+/// A reply brief: at most 3,250 words (L.R. 7.1(d)(2)(B)).
+limit reply-brief { words <= 3_250 cite "D. Mont. L.R. 7.1(d)" } cite "D. Mont. L.R. 7.1(d)"
+
+/// A motion for leave to file a motion for reconsideration of an
+/// interlocutory order: at most 2,275 words (L.R. 7.3(b)); a pro se
+/// litigant's is limited to seven pages instead.
+limit reconsideration-leave-motion {
+  words <= 2_275 cite "D. Mont. L.R. 7.3"
+} cite "D. Mont. L.R. 7.3"
+
+/// A notice of supplemental authority: at most two pages (L.R. 7.4).
+limit supplemental-authority-notice { pages <= 2 cite "D. Mont. L.R. 7.4" } cite "D. Mont. L.R. 7.4"
+/// A motion for leave to file an amicus brief, and a party's response to
+/// it: at most 3,250 words (L.R. 7.5(b)(2)(A), (3)).
+limit amicus-paper { words <= 3_250 cite "D. Mont. L.R. 7.5(b)" } cite "D. Mont. L.R. 7.5(b)"
+
+/// An objection to a magistrate judge's order or findings and
+/// recommendation, and the response: at most 6,500 words; no reply is
+/// permitted (L.R. 72.3(b)).
+limit magistrate-objection {
+  words <= 6_500 cite "D. Mont. L.R. 72.3(b)"
+} cite "D. Mont. L.R. 72.3(b)"
+
+/// A principal brief in a Social Security case: no more than 6,250 words
+/// (L.R. 78.2(b)(5)).
+limit social-security-principal-brief {
+  words <= 6_250 cite "D. Mont. L.R. 78.2(b)"
+} cite "D. Mont. L.R. 78.2(b)"
+
+/// The plaintiff's reply brief in a Social Security case: no more than
+/// 3,250 words (L.R. 78.2(a)(3)).
+limit social-security-reply-brief {
+  words <= 3_250 cite "D. Mont. L.R. 78.2(a)"
+} cite "D. Mont. L.R. 78.2(a)"
+
+/// An objection to a bankruptcy judge's ruling under 28 U.S.C. § 157,
+/// and the response: at most 6,500 words; no reply is permitted (L.R.
+/// 78.3(a)(1)).
+limit bankruptcy-objection {
+  words <= 6_500 cite "D. Mont. L.R. 78.3(a)"
+} cite "D. Mont. L.R. 78.3(a)"
+
+/// The first appearance of a party whose appearance makes existing
+/// divisional venue improper (L.R. 3.2(c)(2)).
+event FirstVenueDefeatingAppearance()
+/// A notice of removal of a state-court action is filed (L.R. 3.3(a)(1)).
+event RemovalNoticeFiled()
+/// Counsel who is not a member of the Bar of this court appears for a
+/// non-removing party for the limited purpose of an extension (L.R.
+/// 3.3(a)(4)).
+event NonMemberCounselAppeared()
+/// The date on which a party wants the U.S. Marshals Service to serve a
+/// subpoena (L.R. 4.4).
+event SubpoenaServiceDesired()
+/// In a case where the plaintiff applied to proceed in forma pauperis
+/// and was not denied, the order requiring service of the complaint is
+/// entered (L.R. 4.5(a)).
+event ServiceOrderEntered()
+/// A hearing or trial concludes (L.R. 5.1(b)(3), (8)).
+event HearingOrTrialConcluded()
+/// A document the court directed to an attorney or self-represented
+/// party is returned to the court as not deliverable (L.R. 5.3(b)).
+event CourtMailReturned()
+/// A motion to dismiss, for judgment on the pleadings or for summary
+/// judgment is entered in the docket (L.R. 7.1(d)(1)(B)(i)).
+event DispositiveMotionDocketed() paper motion-brief
+/// Any other motion is entered in the docket (L.R. 7.1(d)(1)(B)(ii)).
+event MotionDocketed() paper motion-brief
+/// A response to a motion is entered in the docket (L.R. 7.1(d)(1)(C)).
+event ResponseDocketed() paper motion-brief
+/// A reply brief is filed (L.R. 7.1(d)(1)(C)).
+event ReplyFiled() paper reply-brief
+/// A motion for leave to file a motion for reconsideration is filed
+/// (L.R. 7.3(b)).
+event ReconsiderationLeaveMotionFiled() paper reconsideration-leave-motion
+/// A notice of supplemental authority is filed (L.R. 7.4).
+event SupplementalAuthorityNoticeFiled() paper supplemental-authority-notice
+/// A motion for leave to file an amicus brief is entered by the clerk
+/// (L.R. 7.5(b)(3)).
+event AmicusMotionDocketed() paper amicus-paper
+/// A party's response to a motion for leave to file an amicus brief is
+/// filed (L.R. 7.5(b)(3)).
+event AmicusResponseFiled() paper amicus-paper
+/// The preliminary pretrial conference is held (L.R. 16.2(b), 26.1(a)).
+event PreliminaryPretrialConferenceHeld()
+/// The proposed final pretrial order is due (L.R. 16.4(a)).
+event FinalPretrialOrderDue()
+/// The Rule 26(f) conference is held (L.R. 26.1(b)).
+event Rule26fConferenceHeld()
+/// Judgment is entered (L.R. 48.1(b)(1)).
+event JudgmentEntered()
+/// A judgment allowing costs is entered (L.R. 54.1(a)).
+event CostsJudgmentEntered()
+/// An application for the taxation of costs is filed (L.R. 54.1(b)).
+event BillOfCostsFiled()
+/// A proposed judgment the court ordered is filed (L.R. 58.1(c)).
+event ProposedJudgmentFiled()
+/// A magistrate judge's order or findings and recommendation is served
+/// (L.R. 72.3(b)).
+event MagistrateRulingServed()
+/// An objection to a magistrate judge's order or findings and
+/// recommendation is served (L.R. 72.3(b)).
+event MagistrateObjectionServed() paper magistrate-objection
+/// A response to that objection is filed (L.R. 72.3(b)).
+event MagistrateResponseFiled() paper magistrate-objection
+/// The clerk's notice of assignment to a magistrate judge is served
+/// (L.R. 73.1(d)).
+event ConsentNoticeServed()
+/// In a Social Security case, the administrative record is filed (L.R.
+/// 78.2(a)(1)).
+event AdministrativeRecordFiled()
+/// The plaintiff's opening brief in a Social Security case is filed
+/// (L.R. 78.2(a)(2)).
+event SocialSecurityOpeningBriefFiled() paper social-security-principal-brief
+/// The defendant's response brief in a Social Security case is filed
+/// (L.R. 78.2(a)(3)).
+event SocialSecurityResponseBriefFiled() paper social-security-principal-brief
+/// The plaintiff's reply brief in a Social Security case is filed (L.R.
+/// 78.2(a)(3)).
+event SocialSecurityReplyBriefFiled() paper social-security-reply-brief
+/// A bankruptcy judge's proposed findings and conclusions, or other
+/// ruling subject to de novo review under 28 U.S.C. § 157, is made (L.R.
+/// 78.3(a)(1)).
+event BankruptcyRulingEntered()
+/// An objection to that ruling is filed (L.R. 78.3(a)(1)).
+event BankruptcyObjectionFiled() paper bankruptcy-objection
+/// A response to that objection is filed (L.R. 78.3(a)(1)).
+event BankruptcyResponseFiled() paper bankruptcy-objection
+/// A motion for leave to withdraw is filed without the client's written
+/// consent (L.R. 83.3(b)(2)(B)).
+event WithdrawalMotionFiled()
+
+/// L.R. 3.2(c)(2): a plaintiff files any motion for change of divisional venue
+/// within 14 days of the first appearance of any party whose appearance
+/// makes existing venue improper; failure to file a timely motion is
+/// consent to the existing venue (L.R. 3.2(c)(3)). A defendant moves with
+/// its first appearance (L.R. 3.2(c)(1)).
+deadline venue-change-motion-period: 14.days after FirstVenueDefeatingAppearance() counted_by frcp6 cite "D. Mont. L.R. 3.2(c)"
+{
+  forum frcp
+}
+
+/// L.R. 3.3(a)(1): within seven days after filing a notice of removal, the
+/// removing party delivers a copy of it to the state court.
+deadline removal-notice-delivery-period: 7.days after RemovalNoticeFiled() counted_by frcp6 cite "D. Mont. L.R. 3.3(a)"
+{
+  forum frcp
+}
+
+/// L.R. 3.3(a)(4): non-member counsel who appeared to seek an extension
+/// must become a member, or new counsel must appear, within seven days of
+/// that appearance.
+deadline non-member-counsel-period: 7.days after NonMemberCounselAppeared() counted_by frcp6 cite "D. Mont. L.R. 3.3(a)"
+{
+  forum frcp
+}
+
+/// L.R. 4.4: a party requesting service of a subpoena by the U.S. Marshals
+/// Service gives the Marshal notice, with all documentation needed to
+/// effect service, no later than 30 days before the desired date of
+/// service; a lesser period only on motion and good cause.
+deadline marshal-subpoena-notice-period: 30.days before SubpoenaServiceDesired() counted_by frcp6 cite "D. Mont. L.R. 4.4"
+{
+  forum frcp
+}
+
+/// L.R. 4.5(a): for FRCP 4(m), where a plaintiff applied to proceed in forma
+/// pauperis and was not denied, the time for service begins the day after
+/// entry of the order requiring service and, unless the court orders
+/// otherwise, service is accomplished within 90 days. In all other cases
+/// FRCP 4(m) governs (L.R. 4.5(b)).
+deadline ifp-service-period: 90.days after ServiceOrderEntered() counted_by frcp6 cite "D. Mont. L.R. 4.5(a)"
+{
+  forum frcp
+}
+
+/// L.R. 5.1(b)(3): unless otherwise ordered, within ten days of the
+/// conclusion of a hearing or trial a party files in CM/ECF an electronic
+/// version of each documentary exhibit admitted into evidence.
+deadline exhibit-filing-period: 10.days after HearingOrTrialConcluded() counted_by frcp6 cite "D. Mont. L.R. 5.1(b)"
+{
+  forum frcp
+}
+
+/// L.R. 5.1(b)(8): courtesy copies of exhibits are destroyed unless the
+/// filing party requests their return within ten days of the conclusion of
+/// the trial or hearing.
+deadline courtesy-copy-return-period: 10.days after HearingOrTrialConcluded() counted_by frcp6 cite "D. Mont. L.R. 5.1(b)"
+{
+  forum frcp
+}
+
+/// L.R. 5.3(b): the court may dismiss a complaint without prejudice or
+/// strike an answer when a document it directed to an attorney or
+/// self-represented party is returned as not deliverable and the court
+/// does not receive, within 60 days of the return, a written communication
+/// giving a current address for service.
+deadline address-after-returned-mail-period: 60.days after CourtMailReturned() counted_by frcp6 cite "D. Mont. L.R. 5.3(b)"
+{
+  forum frcp
+}
+
+/// L.R. 7.1(d)(1)(B)(i): responses to motions to dismiss, for judgment on
+/// the pleadings or for summary judgment are filed within 21 days after
+/// the motion was entered in the docket.
+deadline dispositive-response-period: 21.days after DispositiveMotionDocketed() counted_by frcp6 cite "D. Mont. L.R. 7.1(d)"
+{
+  forum frcp
+}
+
+/// L.R. 7.1(d)(1)(B)(ii): responses to all other motions are filed within
+/// 14 days after the motion was entered in the docket; except on a pro se
+/// motion for appointment of counsel, failure to respond may be deemed an
+/// admission that the motion is well-taken.
+deadline response-period: 14.days after MotionDocketed() counted_by frcp6 cite "D. Mont. L.R. 7.1(d)"
+{
+  forum frcp
+}
+
+/// L.R. 7.1(d)(1)(C): the moving party may file a reply within 14 days
+/// after the response was entered in the docket; no further briefing
+/// without leave (L.R. 7.1(d)(1)(D)).
+deadline reply-period: 14.days after ResponseDocketed() counted_by frcp6 cite "D. Mont. L.R. 7.1(d)"
+{
+  forum frcp
+}
+
+/// L.R. 7.5(b)(3): parties may respond to a motion for leave to file an
+/// amicus brief within 14 days of its entry by the clerk; there is no
+/// further briefing.
+deadline amicus-response-period: 14.days after AmicusMotionDocketed() counted_by frcp6 cite "D. Mont. L.R. 7.5(b)"
+{
+  forum frcp
+}
+
+/// L.R. 16.2(b): each party's preliminary pretrial statement, the
+/// discovery plan and the statement of stipulated facts are filed no later
+/// than seven days before the preliminary pretrial conference.
+deadline preliminary-pretrial-filings-period: 7.days before PreliminaryPretrialConferenceHeld() counted_by frcp6 cite "D. Mont. L.R. 16.2(b)"
+{
+  forum frcp
+}
+
+/// L.R. 26.1(a): except in cases exempt under FRCP 26(a)(1)(B), or unless
+/// otherwise directed, the parties confer at least 21 days before the
+/// preliminary pretrial conference.
+deadline rule-26f-conference-period: 21.days before PreliminaryPretrialConferenceHeld() counted_by frcp6 cite "D. Mont. L.R. 26.1(a)"
+{
+  forum frcp
+}
+
+/// L.R. 16.4(a): at least 14 days before the proposed final pretrial order
+/// is due, the plaintiff convenes a conference of all counsel and
+/// self-represented parties to prepare it.
+deadline final-pretrial-planning-period: 14.days before FinalPretrialOrderDue() counted_by frcp6 cite "D. Mont. L.R. 16.4(a)"
+{
+  forum frcp
+}
+
+/// L.R. 26.1(b): each party serves initial disclosures under FRCP
+/// 26(a)(1)(A) no more than 14 days after the Rule 26(f) conference;
+/// serving them at least seven days before the conference is encouraged,
+/// not required.
+deadline initial-disclosure-period: 14.days after Rule26fConferenceHeld() counted_by frcp6 cite "D. Mont. L.R. 26.1(b)"
+{
+  forum frcp
+}
+
+/// L.R. 48.1(b)(1): neither parties nor counsel may interview jurors unless,
+/// within 28 days after entry of judgment, a party files proposed written
+/// questions and an affidavit showing good cause.
+deadline juror-interview-filing-period: 28.days after JudgmentEntered() counted_by frcp6 cite "D. Mont. L.R. 48.1(b)"
+{
+  forum frcp
+}
+
+/// L.R. 54.1(a): within 14 days after entry of a judgment allowing costs,
+/// the prevailing party may serve and file an application for taxation of
+/// costs on Form AO-133, limited to costs under 28 U.S.C. § 1920.
+deadline bill-of-costs-period: 14.days after CostsJudgmentEntered() counted_by frcp6 cite "D. Mont. L.R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// L.R. 54.1(b): the opposing party may object within 14 days after the
+/// application was filed; failure to object waives review of the clerk's
+/// action.
+deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "D. Mont. L.R. 54.1(b)"
+{
+  forum frcp
+}
+
+/// L.R. 58.1(c): objections to a proposed judgment the court ordered may be
+/// filed within seven days of its filing.
+deadline proposed-judgment-objection-period: 7.days after ProposedJudgmentFiled() counted_by frcp6 cite "D. Mont. L.R. 58.1(c)"
+{
+  forum frcp
+}
+
+/// L.R. 72.3(b): an objection is filed within 14 days of service of the
+/// magistrate judge's order or findings and recommendation.
+deadline magistrate-objection-period: 14.days after MagistrateRulingServed() counted_by frcp6 cite "D. Mont. L.R. 72.3(b)"
+{
+  forum frcp
+}
+
+/// L.R. 72.3(b): a response is filed within 14 days of service of the
+/// objection. A reply is not permitted.
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionServed() counted_by frcp6 cite "D. Mont. L.R. 72.3(b)"
+{
+  forum frcp
+}
+
+/// L.R. 73.1(d): parties have 14 days from service of the clerk's notice of
+/// assignment to file a notice of withholding of consent; a party whose
+/// form is not timely filed is deemed to consent to magistrate judge
+/// jurisdiction.
+deadline consent-withholding-period: 14.days after ConsentNoticeServed() counted_by frcp6 cite "D. Mont. L.R. 73.1(d)"
+{
+  forum frcp
+}
+
+/// L.R. 78.2(a)(1): unless the defendant moves to dismiss, the plaintiff's
+/// opening brief is filed within 60 days after the administrative record
+/// is filed; failure may result in summary dismissal.
+deadline social-security-opening-brief-period: 60.days after AdministrativeRecordFiled() counted_by frcp6 cite "D. Mont. L.R. 78.2(a)"
+{
+  forum frcp
+}
+
+/// L.R. 78.2(a)(2): the defendant's response brief is filed within 30 days
+/// after the plaintiff's brief is filed.
+deadline social-security-response-brief-period: 30.days after SocialSecurityOpeningBriefFiled() counted_by frcp6 cite "D. Mont. L.R. 78.2(a)"
+{
+  forum frcp
+}
+
+/// L.R. 78.2(a)(3): the plaintiff's reply brief, if any, is filed within 14
+/// days after the defendant's brief is filed.
+deadline social-security-reply-brief-period: 14.days after SocialSecurityResponseBriefFiled() counted_by frcp6 cite "D. Mont. L.R. 78.2(a)"
+{
+  forum frcp
+}
+
+/// L.R. 78.3(a)(1): objections to a bankruptcy judge's ruling subject to de
+/// novo review under 28 U.S.C. § 157 are filed within 14 days of the
+/// ruling.
+deadline bankruptcy-objection-period: 14.days after BankruptcyRulingEntered() counted_by frcp6 cite "D. Mont. L.R. 78.3(a)"
+{
+  forum frcp
+}
+
+/// L.R. 78.3(a)(1): a response may be filed within 14 days of the
+/// objection's filing. A reply is not permitted.
+deadline bankruptcy-objection-response-period: 14.days after BankruptcyObjectionFiled() counted_by frcp6 cite "D. Mont. L.R. 78.3(a)"
+{
+  forum frcp
+}
+
+/// L.R. 83.3(b)(2)(B)(i): without the client's written consent, a motion to
+/// withdraw is supported by an affidavit that a notice of intent to file it
+/// was personally served on the client at least 14 days before the motion
+/// is filed.
+deadline withdrawal-intent-notice-period: 14.days before WithdrawalMotionFiled() counted_by frcp6 cite "D. Mont. L.R. 83.3(b)"
+{
+  forum frcp
+}
+
+test "venue change motion period: 14 days after the trigger" cite "D. Mont. L.R. 3.2(c)"
+{
+  given FirstVenueDefeatingAppearance() on 2026-11-02
+  expect deadline(venue-change-motion-period) == 2026-11-16
+}
+
+test "removal notice delivery period: 7 days after the trigger" cite "D. Mont. L.R. 3.3(a)"
+{
+  given RemovalNoticeFiled() on 2026-11-02
+  expect deadline(removal-notice-delivery-period) == 2026-11-09
+}
+
+test "non member counsel period: 7 days after the trigger" cite "D. Mont. L.R. 3.3(a)"
+{
+  given NonMemberCounselAppeared() on 2026-11-02
+  expect deadline(non-member-counsel-period) == 2026-11-09
+}
+
+test "marshal subpoena notice period: 30 days before the trigger" cite "D. Mont. L.R. 4.4"
+{
+  given SubpoenaServiceDesired() on 2027-03-02
+  expect deadline(marshal-subpoena-notice-period) == 2027-01-29
+}
+
+test "ifp service period: 90 days after the trigger" cite "D. Mont. L.R. 4.5(a)"
+{
+  given ServiceOrderEntered() on 2026-11-02
+  expect deadline(ifp-service-period) == 2027-02-01
+}
+
+test "exhibit filing period: 10 days after the trigger" cite "D. Mont. L.R. 5.1(b)"
+{
+  given HearingOrTrialConcluded() on 2026-11-02
+  expect deadline(exhibit-filing-period) == 2026-11-12
+}
+
+test "courtesy copy return period: 10 days after the trigger" cite "D. Mont. L.R. 5.1(b)"
+{
+  given HearingOrTrialConcluded() on 2026-11-02
+  expect deadline(courtesy-copy-return-period) == 2026-11-12
+}
+
+test "address after returned mail period: 60 days after the trigger" cite "D. Mont. L.R. 5.3(b)"
+{
+  given CourtMailReturned() on 2026-11-02
+  expect deadline(address-after-returned-mail-period) == 2027-01-04
+}
+
+test "dispositive response period: 21 days after the trigger" cite "D. Mont. L.R. 7.1(d)"
+{
+  given DispositiveMotionDocketed() on 2026-11-02
+  expect deadline(dispositive-response-period) == 2026-11-23
+}
+
+test "response period: 14 days after the trigger" cite "D. Mont. L.R. 7.1(d)"
+{
+  given MotionDocketed() on 2026-11-02
+  expect deadline(response-period) == 2026-11-16
+}
+
+test "reply period: 14 days after the trigger" cite "D. Mont. L.R. 7.1(d)"
+{
+  given ResponseDocketed() on 2026-11-02
+  expect deadline(reply-period) == 2026-11-16
+}
+
+test "amicus response period: 14 days after the trigger" cite "D. Mont. L.R. 7.5(b)"
+{
+  given AmicusMotionDocketed() on 2026-11-02
+  expect deadline(amicus-response-period) == 2026-11-16
+}
+
+test "preliminary pretrial filings period: 7 days before the trigger" cite "D. Mont. L.R. 16.2(b)"
+{
+  given PreliminaryPretrialConferenceHeld() on 2027-03-02
+  expect deadline(preliminary-pretrial-filings-period) == 2027-02-23
+}
+
+test "rule 26f conference period: 21 days before the trigger" cite "D. Mont. L.R. 26.1(a)"
+{
+  given PreliminaryPretrialConferenceHeld() on 2027-03-02
+  expect deadline(rule-26f-conference-period) == 2027-02-09
+}
+
+test "final pretrial planning period: 14 days before the trigger" cite "D. Mont. L.R. 16.4(a)"
+{
+  given FinalPretrialOrderDue() on 2027-03-02
+  expect deadline(final-pretrial-planning-period) == 2027-02-16
+}
+
+test "initial disclosure period: 14 days after the trigger" cite "D. Mont. L.R. 26.1(b)"
+{
+  given Rule26fConferenceHeld() on 2026-11-02
+  expect deadline(initial-disclosure-period) == 2026-11-16
+}
+
+test "juror interview filing period: 28 days after the trigger" cite "D. Mont. L.R. 48.1(b)"
+{
+  given JudgmentEntered() on 2026-11-02
+  expect deadline(juror-interview-filing-period) == 2026-11-30
+}
+
+test "bill of costs period: 14 days after the trigger" cite "D. Mont. L.R. 54.1(a)"
+{
+  given CostsJudgmentEntered() on 2026-11-02
+  expect deadline(bill-of-costs-period) == 2026-11-16
+}
+
+test "costs objection period: 14 days after the trigger" cite "D. Mont. L.R. 54.1(b)"
+{
+  given BillOfCostsFiled() on 2026-11-02
+  expect deadline(costs-objection-period) == 2026-11-16
+}
+
+test "proposed judgment objection period: 7 days after the trigger" cite "D. Mont. L.R. 58.1(c)"
+{
+  given ProposedJudgmentFiled() on 2026-11-02
+  expect deadline(proposed-judgment-objection-period) == 2026-11-09
+}
+
+test "magistrate objection period: 14 days after the trigger" cite "D. Mont. L.R. 72.3(b)"
+{
+  given MagistrateRulingServed() on 2026-11-02
+  expect deadline(magistrate-objection-period) == 2026-11-16
+}
+
+test "magistrate objection response period: 14 days after the trigger" cite "D. Mont. L.R. 72.3(b)"
+{
+  given MagistrateObjectionServed() on 2026-11-02
+  expect deadline(magistrate-objection-response-period) == 2026-11-16
+}
+
+test "consent withholding period: 14 days after the trigger" cite "D. Mont. L.R. 73.1(d)"
+{
+  given ConsentNoticeServed() on 2026-11-02
+  expect deadline(consent-withholding-period) == 2026-11-16
+}
+
+test "social security opening brief period: 60 days after the trigger" cite "D. Mont. L.R. 78.2(a)"
+{
+  given AdministrativeRecordFiled() on 2026-11-02
+  expect deadline(social-security-opening-brief-period) == 2027-01-04
+}
+
+test "social security response brief period: 30 days after the trigger" cite "D. Mont. L.R. 78.2(a)"
+{
+  given SocialSecurityOpeningBriefFiled() on 2026-11-02
+  expect deadline(social-security-response-brief-period) == 2026-12-02
+}
+
+test "social security reply brief period: 14 days after the trigger" cite "D. Mont. L.R. 78.2(a)"
+{
+  given SocialSecurityResponseBriefFiled() on 2026-11-02
+  expect deadline(social-security-reply-brief-period) == 2026-11-16
+}
+
+test "bankruptcy objection period: 14 days after the trigger" cite "D. Mont. L.R. 78.3(a)"
+{
+  given BankruptcyRulingEntered() on 2026-11-02
+  expect deadline(bankruptcy-objection-period) == 2026-11-16
+}
+
+test "bankruptcy objection response period: 14 days after the trigger" cite "D. Mont. L.R. 78.3(a)"
+{
+  given BankruptcyObjectionFiled() on 2026-11-02
+  expect deadline(bankruptcy-objection-response-period) == 2026-11-16
+}
+
+test "withdrawal intent notice period: 14 days before the trigger" cite "D. Mont. L.R. 83.3(b)"
+{
+  given WithdrawalMotionFiled() on 2027-03-02
+  expect deadline(withdrawal-intent-notice-period) == 2027-02-16
+}

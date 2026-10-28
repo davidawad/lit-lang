@@ -1,0 +1,47 @@
+# The District of Montana's Local Rules of Procedure (civil chapter) as a
+# local-rule layer over lit/frcp (28 U.S.C. § 2071; FRCP 83(a)): it
+# declares only the periods and limits the Local Rules themselves state
+# and re-encodes no FRCP deadline. Each period is counted under FRCP 6(a),
+# which governs "any local rule". The rules are those effective December
+# 1, 2025 (sources/fed-dmont); the 2026 proposed amendments are not in
+# force. An appeal goes to the Ninth Circuit under lit/frap.
+[package]
+name = "mtd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "mtd-local-rules"
+forum = "mtd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, District of Montana: Local Rules of Procedure (civil)"
+description = "The District of Montana's civil Local Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): divisional venue, removal, service, exhibits, addresses for service, motion briefing and its word limits, reconsideration, supplemental authority, amicus briefs, pretrial filings and the final pretrial order, the Rule 26(f) conference and initial disclosures, juror interviews, costs, proposed judgments, magistrate judge objections and consent, Social Security briefing, bankruptcy objections, and withdrawal of counsel."
+in_force = "2025-12-01"
+known_at = "2026-10-28"
+unknown_before = "2025-12-01"
+jurisdiction = "United States District Court, D. Montana"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "mtd-lr"
+issuer = "United States District Court for the District of Montana"
+date = "2025-12-01"
+designation = "Local Rules of Procedure"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.mtd-lr]
+title = "Local Rules of Procedure of the United States District Court for the District of Montana (effective December 1, 2025)"
+url = "https://www.mtd.uscourts.gov/sites/mtd/files/LocalRules_12012025.pdf"
+path = "sources/fed-dmont/dmont-local-rules-sectioned.txt"
+path_sha256 = "c5300e79defb31f7d1cf003176730640378ca2ae83050cc3455718b888b7dc58"
+sha256 = "dcd4f92263c596639ca3676c35707ebd54ac37c6763d0778bdc26df25b83a8d3"
+as_of = "2025-12-01"
+cite_prefixes = ["D. Mont. L.R."]
+section_heading = "L.R. {n}"

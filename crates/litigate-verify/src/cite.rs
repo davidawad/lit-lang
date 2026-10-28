@@ -65,8 +65,9 @@ pub(crate) fn unresolved(
 /// L1010 when no vendored section `text` resolves to holds any of
 /// `quotes`, the words it is cited for, compared with whitespace runs
 /// collapsed and case folded (the rules capitalize a part or count that
-/// opens a sentence or list item: `A Table of Contents`): a quote the
-/// corpus cannot show is not the rule's text. No quotes, no check.
+/// opens a sentence or list item: `A Table of Contents`) and digit
+/// grouping dropped (D. Mont. L.R. 7.1(d)(2) writes `6500 words`): a quote
+/// the corpus cannot show is not the rule's text. No quotes, no check.
 fn unquoted(
     cx: &Context<'_>,
     corpus: &SourceCorpus,
@@ -76,10 +77,22 @@ fn unquoted(
     span: &Span,
 ) -> Option<Diagnostic> {
     let words = |s: &str| {
-        s.split_whitespace()
+        let s = s
+            .split_whitespace()
             .collect::<Vec<_>>()
             .join(" ")
-            .to_lowercase()
+            .to_lowercase();
+        let c: Vec<char> = s.chars().collect();
+        c.iter()
+            .enumerate()
+            .filter(|&(i, &ch)| {
+                !(ch == ','
+                    && i > 0
+                    && c[i - 1].is_ascii_digit()
+                    && c.get(i + 1).is_some_and(char::is_ascii_digit))
+            })
+            .map(|(_, &ch)| ch)
+            .collect::<String>()
     };
     let folded: Vec<String> = quotes.iter().map(|q| words(q)).collect();
     let found = sections.iter().any(|s| {

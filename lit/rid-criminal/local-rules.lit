@@ -1,0 +1,174 @@
+module rid-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The District of Rhode Island's own criminal periods, counted under the
+// criminal rules (FRCrimP 45(a) governs "any local rule"; LR Cr 47
+// cross-refers to it). No trigger carries a service method: FRCrimP
+// 45(c)'s three added days follow the manner of service, which is not
+// modeled here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: an objection to a magistrate judge's order in a nondispositive
+// matter, or to a report and recommendation, is filed and served within
+// 14 days after it is served (D.R.I. LR Cr 57.2(c)(1), (d)(1); FRCrimP
+// 59(a), (b)(2)); the objecting party orders the transcript of any
+// evidentiary hearing within the same 14 days.
+//
+// Conditions that are not deadlines from an event stay in notes: the
+// government notifies the Court of a plea agreement as soon as possible,
+// and the timeliness of the filing bears on the acceptance-of-
+// responsibility reduction (D.R.I. LR Cr 11(a)); an arraignment is
+// scheduled promptly after an indictment is filed (LR Cr 6(b)); every
+// motion addresses the days remaining under the Speedy Trial Act and
+// whether its delay is excludable (LR Cr 12(c)); opening statements may
+// not exceed 30 minutes unless the Court permits (LR Cr 23(a)); disputes
+// over editing or transcript accuracy are raised promptly (LR Cr
+// 23(b)(5)); the order of the government's 6 and the defendants' 10
+// peremptory challenges is set out in LR Cr 24(e)(1); sur-replies need
+// prior leave (LR Cr 47(a)(5)); a response to a motion to review a
+// magistrate judge's release or detention order may be filed within 14
+// days after service and a reply 14 days thereafter (LR Cr 57.2, Comment).
+//
+// The earlier D.R.I. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Brady v. Maryland, Barker v. Wingo, Zedner
+// v. United States, Boykin v. Alabama, Missouri v. Frye, Jackson v.
+// Virginia, United States v. Booker, Roe v. Flores-Ortega, Garza v.
+// Idaho) are FRCrimP, Speedy Trial Act or constitutional authority and
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+
+/// Jury empanelment is scheduled (D.R.I. LR Cr 11(a), 23(b)(1), 24(b),
+/// (c)).
+event EmpanelmentScheduled()
+/// The arraignment (D.R.I. LR Cr 16).
+event Arraigned()
+/// Documents or objects are produced to the Court under a pretrial
+/// subpoena duces tecum (D.R.I. LR Cr 17(a)(1)(C)).
+event SubpoenaProduction()
+/// Transcripts of recorded conversations are furnished to the Court and
+/// counsel (D.R.I. LR Cr 23(b)(3)).
+event RecordingTranscriptsFurnished()
+/// The sentencing hearing is scheduled (D.R.I. LR Cr 32(a)).
+event SentencingHearingScheduled()
+/// A motion is served (D.R.I. LR Cr 47(a)(3)).
+event MotionServed()
+/// A response to a motion is served (D.R.I. LR Cr 47(a)(4)).
+event ResponseServed()
+/// An objection to a magistrate judge's order, ruling, or report and
+/// recommendation is served (D.R.I. LR Cr 57.2(c)(3), (d)(3)).
+event MagistrateObjectionServed()
+/// A response to such an objection is served (D.R.I. LR Cr 57.2(c)(3),
+/// (d)(3)).
+event MagistrateObjectionResponseServed()
+
+/// D.R.I. LR Cr 11(a): where a plea agreement is reached, the government
+/// files the written plea agreement at least 7 days before jury
+/// empanelment.
+deadline plea-agreement-filing: 7.days before EmpanelmentScheduled() counted_by frcrimp45 cite "D.R.I. LR Cr 11(a)"
+{
+  forum frcrimp
+}
+
+/// D.R.I. LR Cr 16: within 7 days after arraignment, the attorneys for the
+/// government and the defendant exchange written requests for FRCrimP
+/// 16(a) and (b) disclosure, unless the party entitled to disclosure
+/// waives it in writing within that period.
+deadline discovery-request-exchange: 7.days after Arraigned() counted_by frcrimp45 cite "D.R.I. LR Cr 16"
+{
+  forum frcrimp
+}
+
+/// D.R.I. LR Cr 17(a)(1)(C): unless the Court orders otherwise, all other
+/// parties may inspect items produced under a pretrial subpoena duces
+/// tecum for 7 days after production, while the Clerk holds them; the
+/// requesting party then retrieves them.
+deadline subpoena-inspection: 7.days after SubpoenaProduction() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.R.I. LR Cr 17(a)"
+{
+  forum frcrimp
+}
+
+/// D.R.I. LR Cr 23(b)(1): at least 14 days before empanelment, a party
+/// proposing to offer a recorded conversation furnishes the Court and
+/// counsel a chronological list of the recordings and a transcript of
+/// each.
+deadline recording-transcripts: 14.days before EmpanelmentScheduled() counted_by frcrimp45 cite "D.R.I. LR Cr 23(b)"
+{
+  forum frcrimp
+}
+
+/// D.R.I. LR Cr 23(b)(3): within 7 days after the transcripts are
+/// furnished, or such other period as the Court allows, a party disputing
+/// the audibility, completeness or admissibility of a recording or the
+/// accuracy of a transcript files its objection.
+deadline recording-objection: 7.days after RecordingTranscriptsFurnished() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.R.I. LR Cr 23(b)"
+{
+  forum frcrimp
+}
+
+/// D.R.I. LR Cr 24(b): a defendant who objects to jury empanelment by a
+/// magistrate judge communicates the objection to the Court at least 7
+/// days before empanelment.
+deadline magistrate-empanelment-objection: 7.days before EmpanelmentScheduled() counted_by frcrimp45 cite "D.R.I. LR Cr 24(b)"
+{
+  forum frcrimp
+}
+
+/// D.R.I. LR Cr 24(c): if and when the Court directs, proposed voir dire
+/// questions are served and submitted at least 5 days before empanelment.
+deadline voir-dire-questions: 5.days before EmpanelmentScheduled() counted_by frcrimp45 cite "D.R.I. LR Cr 24(c)"
+{
+  forum frcrimp
+}
+
+/// D.R.I. LR Cr 32(a): unless otherwise ordered, defense counsel who
+/// intends to present a witness or an expert report at sentencing informs
+/// the Court and the government, and provides the government a copy of
+/// any report, at least 7 days before the sentencing hearing.
+deadline sentencing-witness-notice: 7.days before SentencingHearingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.R.I. LR Cr 32(a)"
+{
+  forum frcrimp
+}
+
+/// D.R.I. LR Cr 47(a)(3): a response to a motion is filed within 14 days
+/// after service of the motion unless the Court shortens or extends the
+/// time.
+deadline response-period: 14.days after MotionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.R.I. LR Cr 47(a)"
+{
+  forum frcrimp
+}
+
+/// D.R.I. LR Cr 47(a)(4): a reply, which is not required, is filed within 7
+/// days after service of the response.
+deadline reply-period: 7.days after ResponseServed() counted_by frcrimp45 cite "D.R.I. LR Cr 47(a)"
+{
+  forum frcrimp
+}
+
+/// D.R.I. LR Cr 57.2(c)(3), (d)(3): a response to an objection to a
+/// magistrate judge's order, ruling, or report and recommendation is
+/// served and filed within 14 days after the objection is served.
+deadline magistrate-objection-response: 14.days after MagistrateObjectionServed() counted_by frcrimp45 cite "D.R.I. LR Cr 57.2(c); D.R.I. LR Cr 57.2(d)"
+{
+  forum frcrimp
+}
+
+/// D.R.I. LR Cr 57.2(c)(3), (d)(3): the objecting party may serve and file
+/// a reply within 7 days after the response.
+deadline magistrate-objection-reply: 7.days after MagistrateObjectionResponseServed() counted_by frcrimp45 cite "D.R.I. LR Cr 57.2(c); D.R.I. LR Cr 57.2(d)"
+{
+  forum frcrimp
+}

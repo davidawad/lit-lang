@@ -1,0 +1,52 @@
+# The U.S. District Court for the District of Rhode Island's Local Rules
+# applicable to criminal proceedings (LR Cr 6 to 58) as a local-rule layer
+# over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it declares only the
+# periods the LR Cr rules themselves state and re-encodes no FRCrimP,
+# Speedy Trial Act or FRAP 4(b) period (one source of truth:
+# lit/frcrimp). Each period is counted under FRCrimP 45(a), which governs
+# "any local rule" (LR Cr 47 cross-refers to it), so each deadline names
+# `forum frcrimp`. The rules are the Local Rules "Effective January 1,
+# 2006, As Amended through April 1, 2024" (sources/dri), the edition the
+# court's local-rules page lists and lit/rid also binds; earlier editions
+# are not vendored, so a query before it is a hole in the corpus. An
+# appeal goes to the First Circuit under lit/frcrimp's FRAP 4(b) period.
+[package]
+name = "rid-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "rid-criminal-local-rules"
+forum = "rid-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of Rhode Island: Local Rules (criminal)"
+description = "The District of Rhode Island's Local Rules applicable to criminal proceedings as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the plea agreement filing, the exchange of discovery requests, inspection of subpoenaed materials, recorded-conversation transcripts and objections, objection to magistrate judge empanelment and voir dire questions, sentencing witnesses and expert reports, motion responses and replies, and objections to magistrate judge rulings and recommendations."
+in_force = "2024-04-01"
+known_at = "2026-10-28"
+unknown_before = "2024-04-01"
+jurisdiction = "U.S. District Court for the District of Rhode Island (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "dri-lrcr"
+issuer = "United States District Court for the District of Rhode Island"
+date = "2024-04-01"
+designation = "Local Rules applicable to criminal proceedings"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.dri-lrcr]
+title = "Local Rules of the United States District Court for the District of Rhode Island (effective January 1, 2006, as amended through April 1, 2024), rules applicable to criminal proceedings"
+url = "https://www.rid.uscourts.gov/sites/rid/files/documents/Approved%20Dec%202024%20Rules.pdf"
+path = "sources/dri/dri-local-criminal-rules-sectioned.txt"
+path_sha256 = "a0a615d278f9442bcf6deac6eeb503cbfa8b82a7850ad6c450ab7a1c550d3114"
+sha256 = "7f03a8fca5401c942b3bbb962180aa9d352237aa3a18be9a89f381d3d98c038e"
+as_of = "2024-04-01"
+cite_prefixes = ["D.R.I. LR Cr"]
+section_heading = "LR Cr {n}"

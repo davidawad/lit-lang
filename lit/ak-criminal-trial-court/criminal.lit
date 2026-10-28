@@ -1,0 +1,161 @@
+module ak-superior-court-criminal.criminal
+
+// Criminal cases in the Alaska Superior Court. The Alaska Rules of
+// Criminal Procedure are CURRENCY UNCONFIRMED
+// (sources/ak-criminal-trial-court/PROVENANCE.md), so they are cited for
+// the structure of each step and no period, limit or amount is taken from
+// them: where a step has one, the note names the rule that sets it and
+// says that it is not stated. The Alaska Statutes the rules invoke (bail
+// under AS 12.30, post-conviction relief under AS 12.72) are not vendored.
+// The appeal periods are stated from Alaska R. App. P. 204, which has a
+// stated edition. Outcomes are from the defendant's side. The earlier
+// outline's leading decisions (County of Riverside v. McLaughlin, Gerstein
+// v. Pugh, Gideon v. Wainwright, Brady v. Maryland, Mapp v. Ohio, Barker v.
+// Wingo, Boykin v. Alabama, Missouri v. Frye, Jackson v. Virginia,
+// Apprendi v. New Jersey, Roe v. Flores-Ortega, Garza v. Idaho) are
+// removed: no reporter text is vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "Alaska R. Crim. P. 4"
+{
+  note "On a complaint showing probable cause a warrant or summons issues (Alaska R. Crim. P. 3; 4). An arrested person not cited and released appears before a judicial officer without unnecessary delay and within the outer limit Alaska R. Crim. P. 5(a)(1) sets, which is not stated here (currency unconfirmed)."
+  edge-arrested-appearance "Appearance before the judicial officer" -> initial-appearance {
+    authority cite "Alaska R. Crim. P. 5(a)"
+  }
+}
+
+decision initial-appearance: "Bail or release" by court cite "Alaska R. Crim. P. 41"
+{
+  note "At the first appearance the judicial officer proceeds under Rule 5, including counsel and bail. The defendant is entitled to be admitted to bail under the Alaska Statutes (AS 12.30, not vendored), and the court may require an unsecured or secured appearance bond or other release conditions (Alaska R. Crim. P. 41(a), (b)); the percentages and periods Rule 41 sets are not stated here (currency unconfirmed)."
+  edge-initial-appearance-detained "Held on bail not posted or remanded" -> probable-cause {
+    authority cite "Alaska R. Crim. P. 41"
+  }
+  edge-initial-appearance-released "Released on bail or conditions" -> probable-cause {
+    authority cite "Alaska R. Crim. P. 41(b)"
+  }
+}
+
+decision probable-cause: "Preliminary examination or grand jury" by court cite "Alaska R. Crim. P. 5.1"
+{
+  note "In a felony case the defendant is entitled to a preliminary examination with counsel, at which the State presents its evidence first (Alaska R. Crim. P. 5.1(a), (b)); the time limits Rule 5 sets for holding it are not stated here (currency unconfirmed). A grand jury is governed by Rule 6."
+  edge-probable-cause-charged "Held to answer or indicted" -> charged {
+    authority cite "Alaska R. Crim. P. 7(a)"
+  }
+  edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
+    authority cite "Alaska R. Crim. P. 5.1"
+  }
+}
+
+state charged: "Indictment or information" by office cite "Alaska R. Crim. P. 7(a)"
+{
+  note "An offense punishable by imprisonment for a term exceeding one year is prosecuted by indictment unless indictment is waived, and any other offense by indictment or information (Alaska R. Crim. P. 7(a), (b))."
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Alaska R. Crim. P. 10" }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "Alaska R. Crim. P. 10"
+{
+  note "A defendant may plead not guilty, guilty or nolo contendere, and a refusal to plead is entered as not guilty (Alaska R. Crim. P. 11(a)). Trial dates in the superior court are set under Rule 45, and a defendant must be tried within the speedy-trial limit Alaska R. Crim. P. 45(b) sets, measured from the event Rule 45(c) names and excluding the periods Rule 45(d) lists; the period is not stated here (currency unconfirmed)."
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "Alaska R. Crim. P. 16" }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "Alaska R. Crim. P. 12"
+{
+  note "Discovery before trial should be as full and free as possible consistent with protection of persons, effective law enforcement and the adversary system (Alaska R. Crim. P. 16(a)). Pleas other than not guilty, guilty and nolo contendere, demurrers and motions to quash are abolished in favor of motions, and defenses capable of determination before trial are raised by pretrial motion (Alaska R. Crim. P. 12(a), (b)); the motion periods Rule 12 sets are not stated here (currency unconfirmed)."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "Alaska R. Crim. P. 12(b)"
+  }
+  edge-discovery-speedy "Rule 45 motion to dismiss" -> motions-ruling {
+    authority cite "Alaska R. Crim. P. 45"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite "Alaska R. Crim. P. 11"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "Alaska R. Crim. P. 12"
+{
+  note "If a defendant is not brought to trial within the Rule 45 limit, the charge is dismissed as Rule 45(g) provides; whether the dismissal is with prejudice is set by that rule and not stated here (currency unconfirmed). The prosecuting attorney may file a dismissal of an indictment, information or complaint, but not during trial without the defendant's consent (Alaska R. Crim. P. 43(a)(1))."
+  edge-motions-ruling-speedy "Dismissed under Rule 45" -> dismissed {
+    authority cite "Alaska R. Crim. P. 45"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "Alaska R. Crim. P. 12(b)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "Alaska R. Crim. P. 12"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Alaska R. Crim. P. 11"
+{
+  note "The court does not accept a plea of guilty or nolo contendere without first determining that it is voluntary (Alaska R. Crim. P. 11(d)). A jury may be waived with the government's consent and the court's approval, in writing in a felony case; the number of jurors is set by Rule 23(b) and not stated here (currency unconfirmed) (Alaska R. Crim. P. 23)."
+  edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
+    authority cite "Alaska R. Crim. P. 11(d)"
+  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "Alaska R. Crim. P. 23" }
+  edge-plea-decision-dismissed "Prosecutor files a dismissal" -> dismissed {
+    authority cite "Alaska R. Crim. P. 43(a)"
+  }
+}
+
+decision trial: "Verdict" by court cite "Alaska R. Crim. P. 31"
+{
+  note "The verdict is unanimous and returned to the judge in open court (Alaska R. Crim. P. 31(a)). The court enters a judgment of acquittal if the evidence is insufficient (Alaska R. Crim. P. 29(a)); the period for a motion after the verdict is set by Rule 29 and not stated here (currency unconfirmed)."
+  edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
+    authority cite "Alaska R. Crim. P. 29"
+  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
+    authority cite "Alaska R. Crim. P. 33"
+  }
+}
+
+decision post-trial: "Post-trial motions" by court cite "Alaska R. Crim. P. 33"
+{
+  note "The court may grant a new trial if required in the interest of justice (Alaska R. Crim. P. 33(a)), and a motion in arrest of judgment lies only on the grounds Rule 34(a) lists; the periods Rules 33(c) and 34 set are not stated here (currency unconfirmed). A timely motion for a new trial, in arrest of judgment or for reconsideration, or a Rule 35 motion made within the 30-day appeal period, postpones the notice of appeal to 30 days after the date of notice of the order deciding the motion (Alaska R. App. P. 204(a)(4))."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite "Alaska R. Crim. P. 29"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Alaska R. Crim. P. 33" }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "Alaska R. Crim. P. 32"
+  }
+}
+
+state sentencing: "Presentence report and sentencing" by court cite "Alaska R. Crim. P. 32"
+{
+  note "Sentence is imposed without unreasonable delay, under Rules 32.1 to 32.6 in felony cases, and the judge explains on the record the reasons for the sentence (Alaska R. Crim. P. 32(a)); the presentence report periods of Rule 32.1 are not stated here (currency unconfirmed). The court may correct an illegal sentence at any time, and may modify or reduce a sentence within the period Rule 35(b) sets, not stated here (currency unconfirmed) (Alaska R. Crim. P. 35(a), (b))."
+  edge-sentencing-judgment "Sentence imposed; judgment distributed" -> judgment {
+    authority cite "Alaska R. Crim. P. 32.3"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "Alaska R. Crim. P. 32.3"
+{
+  note "The notice of appeal is filed within 30 days from the date shown in the clerk's certificate of distribution on the judgment appealed from, unless a shorter time applies under Rules 216 to 219 (Alaska R. App. P. 204(a)(1)); appeals from sentences and conviction are governed by Alaska R. Crim. P. 32.5."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "Alaska R. App. P. 204(a)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final {
+    authority cite "Alaska R. App. P. 204(a)"
+  }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Alaska R. Crim. P. 29"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty or a judgment of acquittal (Alaska R. Crim. P. 29, 31)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "Alaska R. Crim. P. 43"
+{
+  note "Outcome from the defendant's side: a prosecutor's dismissal (Alaska R. Crim. P. 43(a)), a Rule 45 dismissal, or a dismissal on a pretrial motion."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "Alaska R. App. P. 204"
+{
+  note "The appeal continues before the Alaska Court of Appeals under the Alaska Rules of Appellate Procedure (lit/ak-supreme)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "Alaska R. Crim. P. 35.1"
+{
+  note "Outcome from the defendant's side. Post-conviction relief proceeds under Rule 35.1 and AS 12.72.010-12.72.040 (not vendored); federal habeas belongs to lit/habeas."
+}

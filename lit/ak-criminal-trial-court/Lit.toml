@@ -1,0 +1,57 @@
+# Criminal cases in the Alaska Superior Court under the Alaska Rules of
+# Criminal Procedure (Alaska R. Crim. P.), as far as the vendored text
+# states. The base text is the "Criminal Procedure" PDF the court system
+# serves (sources/ak-criminal-trial-court), which carries no edition
+# date; its PROVENANCE entry records CURRENCY UNCONFIRMED, so in_force is
+# the retrieval date and an earlier query is a hole in the corpus. By the
+# PM's standing ruling of 2026-10-27 such a source yields holes, not
+# values: this package cites the rules only for the structure of the case
+# (which rule governs which step) and states no period, limit or amount
+# from them, including the Rule 45 speedy-trial period. The Alaska
+# Statutes the rules invoke (bail under AS 12.30) are not vendored. The
+# appeal hand-off cites Alaska Rule of Appellate Procedure 204, bound to
+# the text lit/ak-supreme binds (amended through SCO 2035, effective April
+# 15, 2025; sources/ak-supreme), whose periods are stated; lit/core has no
+# counting rule for them, so they are stated in notes, not encoded.
+[package]
+name = "ak-superior-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "ak-superior-court-criminal"
+forum = "ak-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "alaska"
+title = "Alaska Superior Court, criminal"
+description = "Criminal cases in the Alaska Superior Court under the Alaska Rules of Criminal Procedure, as far as the vendored text states: the structure of the case from arrest and first appearance through preliminary examination, indictment, arraignment, discovery, pretrial motions, the Rule 45 speedy-trial dismissal, plea or trial, post-trial motions, sentencing and post-conviction relief; no period from the currency-unconfirmed rules is stated. An appeal goes to the Alaska Court of Appeals under Alaska R. App. P. 204."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Alaska Superior Court (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ak-crim]
+title = "Alaska Rules of Court, Rules of Criminal Procedure ('Criminal Procedure' PDF as served, no edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://courts.alaska.gov/rules/docs/crpro.pdf"
+path = "sources/ak-criminal-trial-court/ak-rules-of-criminal-procedure-sectioned.txt"
+path_sha256 = "618490e856ceac010c49aeab7733c6ba8aca98fae7786848e2b9747d0f93ef43"
+sha256 = "a1473c8e4e827d5f9007124a814bada560defaf75d5db434f9f2e5e711f282e3"
+as_of = "2026-10-28"
+cite_prefixes = ["Alaska R. Crim. P."]
+section_heading = "Rule {n}"
+
+[sources.ak-app]
+title = "Alaska Rules of Court, Rules of Appellate Procedure (amended through SCO 2035 effective April 15, 2025, as served on October 27, 2026)"
+url = "https://courts.alaska.gov/rules/docs/app.pdf"
+path = "sources/ak-supreme/alaska-appellate-procedure-sectioned.txt"
+path_sha256 = "98b14637ade4bd8b2ce42679338cf16575ff1be63cd074e2cfcfe7019bd31775"
+sha256 = "b5f480666b750db7d9409a3db7d3dc91e796738ee105ea63802d40a737ad5f0c"
+as_of = "2025-04-15"
+cite_prefixes = ["Alaska R. App. P."]
+section_heading = "Rule {n}"

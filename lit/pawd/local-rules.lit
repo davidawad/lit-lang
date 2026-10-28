@@ -1,0 +1,158 @@
+module pawd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Western District of Pennsylvania's own civil periods, computed under
+// FRCP 6(a), which governs a period stated in a local rule. Rules that
+// state no period, or one this layer cannot count, stay out: the one-time
+// stipulated extension of up to 45 days to answer or move under FRCP 12
+// (LCvR 7.E), a cap on an extension rather than a period; the pro se
+// prisoner appeal period (LCvR 10.D), which restates FRAP 4 and belongs to
+// lit/frap; the scheduling order and conference timing (LCvR 16.1.A, B),
+// which binds the court; the plaintiff's pretrial statement, due on the
+// date the scheduling order sets (LCvR 16.1.C.1); the 30-day period to
+// resolve an inadvertent privilege disclosure (LCvR 16.1.D), which is
+// language for the scheduling order, not a rule; the status conference
+// after 12 months untried (LCvR 16.1.C.8); the bill of costs, for which the
+// rule states there is no strict deadline (LCvR 54.B.2); the jury cost
+// notice (LCvR 54.A), which the court gives; attorney discipline (LCvR
+// 83.3); and the habeas rules (LCvR 2241, 2254, 2255). The earlier W.D. Pa.
+// outline's FRCP flow belongs to lit/frcp and lit/frap; its decisions
+// (Twombly, Iqbal, Foman v. Davis, Celotex, Anderson v. Liberty Lobby, Frow
+// v. De La Vega, Catlin, Bowles v. Russell, and in the Third and Fourth
+// Circuits Phillips v. County of Allegheny, Fowler v. UPMC Shadyside,
+// Poulis v. State Farm, Goines and Anderson v. Foundation for Advancement)
+// are FRCP authority, and no reporter text is vendored, so they are removed
+// here.
+/// An entity party's initial pleading or other first paper is filed where
+/// filing the Disclosure Statement with it is impossible or impracticable
+/// (LCvR 7.1.A.1).
+event DisclosureDeferredFilingMade()
+/// A civil action under 18 U.S.C. §§ 1961-1968 is filed (LCvR 7.1.B).
+event RicoComplaintFiled()
+/// A pro se prisoner civil rights proceeding is commenced (LCvR 10.E).
+event PrisonerCivilRightsCommenced()
+/// The respondent appears in a pro se prisoner civil rights proceeding
+/// (LCvR 10.E).
+event PrisonerCivilRightsRespondentAppeared()
+/// The plaintiff's pretrial statement is filed (LCvR 16.1.C.2).
+event PlaintiffPretrialStatementFiled()
+/// The defendant's pretrial statement is filed (LCvR 16.1.C.3).
+event DefendantPretrialStatementFiled()
+/// The final pretrial conference is held (LCvR 16.1.C.6).
+event FinalPretrialConferenceHeld()
+/// The pretrial conference in a class action is held (LCvR 23.E).
+event ClassPretrialConferenceHeld()
+/// A motion for summary judgment is served (LCvR 56.C).
+event SummaryJudgmentMotionServed()
+/// The opposing party's submission in opposition to summary judgment is
+/// served (LCvR 56.D).
+event SummaryJudgmentOppositionServed()
+/// A magistrate judge's order on a non-dispositive pretrial matter is
+/// served (LCvR 72.C.2).
+event MagistrateOrderServed()
+/// A magistrate judge's proposed findings, recommendations or report is
+/// served (LCvR 72.D.2).
+event MagistrateReportServed()
+/// Objections to a magistrate judge's order or report are served (LCvR
+/// 72.C.2, 72.D.2).
+event MagistrateObjectionsServed()
+
+/// LCvR 7.1.A.1: where it is impossible or impracticable to file the
+/// Disclosure Statement with the initial pleading or other paper, it is
+/// filed within seven days of the date of the original filing.
+deadline disclosure-statement-period: 7.days after DisclosureDeferredFilingMade() counted_by frcp6 cite "W.D. Pa. LCvR 7.1"
+{
+  forum frcp
+}
+
+/// LCvR 7.1.B: a party filing a civil RICO action files a RICO case
+/// statement with the complaint or within fourteen days thereafter.
+deadline rico-case-statement-period: 14.days after RicoComplaintFiled() counted_by frcp6 cite "W.D. Pa. LCvR 7.1"
+{
+  forum frcp
+}
+
+/// LCvR 10.E: within 21 days of commencement of a pro se prisoner civil
+/// rights proceeding, the plaintiff files the form consenting to or
+/// declining the jurisdiction of the magistrate judge.
+deadline plaintiff-consent-form-period: 21.days after PrisonerCivilRightsCommenced() counted_by frcp6 cite "W.D. Pa. LCvR 10"
+{
+  forum frcp
+}
+
+/// LCvR 10.E: the respondent files the same form within 21 days of its
+/// appearance.
+deadline respondent-consent-form-period: 21.days after PrisonerCivilRightsRespondentAppeared() counted_by frcp6 cite "W.D. Pa. LCvR 10"
+{
+  forum frcp
+}
+
+/// LCvR 16.1.C.2: within 30 days of the filing of the plaintiff's pretrial
+/// statement, the defendant files its pretrial statement.
+deadline defendant-pretrial-statement-period: 30.days after PlaintiffPretrialStatementFiled() counted_by frcp6 cite "W.D. Pa. LCvR 16.1"
+{
+  forum frcp
+}
+
+/// LCvR 16.1.C.3: within 30 days of the filing of the defendant's pretrial
+/// statement, any third-party defendant files its pretrial statement.
+deadline third-party-pretrial-statement-period: 30.days after DefendantPretrialStatementFiled() counted_by frcp6 cite "W.D. Pa. LCvR 16.1"
+{
+  forum frcp
+}
+
+/// LCvR 16.1.C.6.f: a motion to supplement a pretrial statement is filed
+/// and served not less than seven days before the final pretrial
+/// conference.
+deadline supplement-pretrial-statement-motion: 7.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "W.D. Pa. LCvR 16.1"
+{
+  forum frcp
+}
+
+/// LCvR 23.E: at least seven days before the Pretrial Conference in a class
+/// action, the parties submit the Joint Report of the Parties and Proposed
+/// Scheduling and Discovery Order.
+deadline class-joint-report: 7.days before ClassPretrialConferenceHeld() counted_by frcp6 cite "W.D. Pa. LCvR 23"
+{
+  forum frcp
+}
+
+/// LCvR 56.C: within 30 days of service of a motion for summary judgment,
+/// the opposing party files its responsive concise statement, memorandum
+/// in opposition and appendix.
+deadline summary-judgment-opposition-period: 30.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "W.D. Pa. LCvR 56"
+{
+  forum frcp
+}
+
+/// LCvR 56.D: within 14 days of service of the opposing party's
+/// submission, the moving party may reply.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frcp6 cite "W.D. Pa. LCvR 56"
+{
+  forum frcp
+}
+
+/// LCvR 72.C.2: a party may object to a magistrate judge's non-dispositive
+/// determination within fourteen days after the date of service of the
+/// order, unless the magistrate judge or district judge prescribes a
+/// different time.
+deadline magistrate-order-objection-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "W.D. Pa. LCvR 72"
+{
+  forum frcp
+}
+
+/// LCvR 72.D.2: a party may object to a magistrate judge's proposed
+/// findings, recommendations or report within fourteen days after the date
+/// of service.
+deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6 cite "W.D. Pa. LCvR 72"
+{
+  forum frcp
+}
+
+/// LCvR 72.C.2, 72.D.2: the opposing party may respond to the objections
+/// within fourteen days after the date of service.
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionsServed() counted_by frcp6 cite "W.D. Pa. LCvR 72"
+{
+  forum frcp
+}

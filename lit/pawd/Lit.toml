@@ -1,0 +1,48 @@
+# The United States District Court for the Western District of
+# Pennsylvania's Local Rules of Court as a local-rule layer over lit/frcp
+# (28 U.S.C. § 2071; FRCP 83(a)): it declares only the periods the Local
+# Civil Rules themselves state and re-encodes no FRCP deadline. FRCP 6(a)
+# computes a period stated in a local rule. The rules are the edition
+# effective November 1, 2016 (sources/pawd); the amendments the court
+# proposed in Administrative Order 2026-17 are not in force. An appeal goes
+# to the Third Circuit under lit/frap.
+[package]
+name = "pawd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "pawd-local-rules"
+forum = "pawd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Western District of Pennsylvania: Local Civil Rules"
+description = "The Western District of Pennsylvania's Local Civil Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): the late disclosure statement and the RICO case statement, consent to a magistrate judge in prisoner civil rights cases, pretrial statements and their supplementation, the class action joint report, summary judgment opposition and reply, and objections to a magistrate judge's orders and reports."
+in_force = "2016-11-01"
+known_at = "2026-10-28"
+unknown_before = "2016-11-01"
+jurisdiction = "United States District Court, W.D. Pa."
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "pawd-lr"
+issuer = "United States District Court for the Western District of Pennsylvania"
+date = "2016-11-01"
+designation = "Local Rules of Court (effective November 1, 2016)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.pawd-lr]
+title = "Local Rules of Court of the United States District Court for the Western District of Pennsylvania (effective November 1, 2016)"
+url = "https://www.pawd.uscourts.gov/sites/pawd/files/lrmanual20181101.pdf"
+path = "sources/pawd/local-rules-2016-11-01-sectioned.txt"
+path_sha256 = "23bcd5fc802d152052872156a53622c92185010294a4b0187855e37168f5f175"
+sha256 = "2c19f7f9d8862a403a87f210a9f0dd8631ca2a9f24e6eec83b8dc750daeaa6fd"
+as_of = "2016-11-01"
+cite_prefixes = ["W.D. Pa. LCvR"]
+section_heading = "LCvR {n}"

@@ -1,0 +1,52 @@
+# The U.S. District Court for the Eastern District of Oklahoma's Local
+# Criminal Rules (LCrR) as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods the local criminal
+# rules themselves state and re-encodes no FRCrimP, Speedy Trial Act or
+# FRAP 4(b) period (one source of truth: lit/frcrimp). Each period is
+# counted under FRCrimP 45(a), which governs "any local rule", so each
+# deadline names `forum frcrimp`. The rules are the edition effective July
+# 5, 2016, which the court still serves as current (sources/ed-okla), so
+# in_force is that date. The vendored extract stops partway through LCrR
+# 57.2(C) (its page 19 of the 23-page PDF): the rest of LCrR 57.2 and LCrR
+# 58.1 are not in the corpus and stay holes. An appeal goes to the Tenth
+# Circuit under lit/frcrimp's FRAP 4(b) period and lit/ca10.
+[package]
+name = "oked-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "oked-criminal-local-rules"
+forum = "oked-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Eastern District of Oklahoma: Local Criminal Rules"
+description = "The U.S. District Court for the Eastern District of Oklahoma's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the motion and response periods, the response to objections to the presentence report, the statement of unresolved sentencing factors, and the submission of Criminal Justice Act vouchers."
+in_force = "2016-07-05"
+known_at = "2026-10-28"
+unknown_before = "2016-07-05"
+jurisdiction = "U.S. District Court for the Eastern District of Oklahoma (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "oked-lcrr"
+issuer = "U.S. District Court for the Eastern District of Oklahoma"
+date = "2016-07-05"
+designation = "Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.oked-lcrr]
+title = "Local Criminal Rules of the United States District Court for the Eastern District of Oklahoma (effective July 5, 2016); the extract ends in LCrR 57.2(C)"
+url = "https://www.oked.uscourts.gov/sites/oked/files/Local_Criminal_Rules.pdf"
+path = "sources/ed-okla/edokla-local-criminal-rules-2016-07-05-sectioned.txt"
+path_sha256 = "06d896fc5319f2c22e0445acdadf7fd5c215ad4d86a86b2d2d072b484f82060e"
+sha256 = "c3cf512156c6efcf47f135fe5582eb42a96b85406823577b922c854dab982093"
+as_of = "2016-07-05"
+cite_prefixes = ["E.D. Okla. LCrR"]
+section_heading = "LCrR {n}"

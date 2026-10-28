@@ -1,0 +1,96 @@
+module oked-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The Eastern District of Oklahoma's own criminal periods, counted under
+// the criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here. The Local Civil Rules
+// apply in a criminal case when appropriate (E.D. Okla. LCrR 1.2); they
+// are not encoded here, and a judge may waive any requirement of these
+// rules (E.D. Okla. LCrR 1.1(E)).
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: the presentence report is deemed disclosed when filed in CM/ECF
+// (E.D. Okla. LCrR 32.1(A)), and the parties' objections or notice of no
+// objections are due within 14 days after disclosure (E.D. Okla. LCrR
+// 32.1(B); FRCrimP 32(f)(1)).
+//
+// Periods that are not counted in days from an event of the case stay in
+// notes: after a bond hearing at which a magistrate judge sets a releasing
+// bond, the prosecutor's announcement in open court that the government
+// will appeal stays the bond until 5:00 p.m. that day (or 9:30 a.m. the
+// next business day if the bond was set after 5:00 p.m.), and the stay
+// becomes permanent until lifted if the "Appeal of Magistrate Judge's
+// Order" is filed by the close of the business day after the bond was set
+// (E.D. Okla. LCrR 12.1(J)). A Criminal Justice Act voucher submitted more
+// than 45 days but less than one year after dismissal or sentencing needs
+// a letter showing good cause, and one submitted more than one year after
+// is summarily denied (E.D. Okla. LCrR 57.2(B)). The rest of LCrR 57.2 and
+// LCrR 58.1 (forfeiture of collateral) are missing from the vendored
+// extract and are holes.
+//
+// The earlier E.D. Okla. criminal outline's FRCrimP flow and its decisions
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// The defendant is arraigned (E.D. Okla. LCrR 12.1(E)).
+event Arraigned()
+/// A motion is filed (E.D. Okla. LCrR 12.1(E)).
+event MotionFiled()
+/// A party submits its objections to the presentence report (E.D. Okla.
+/// LCrR 32.1(B)).
+event PsrObjectionsSubmitted()
+/// The case is dismissed or the defendant is sentenced (E.D. Okla. LCrR
+/// 57.2(B)).
+event CaseDismissedOrSentenced()
+
+/// E.D. Okla. LCrR 12.1(E): absent a special order, all motions, including
+/// motions in limine, are filed within 14 days after arraignment; the
+/// Court may order another time.
+deadline motions-period: 14.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Okla. LCrR 12.1(E)"
+{
+  forum frcrimp
+}
+
+/// E.D. Okla. LCrR 12.1(E): responses are filed within seven days of the
+/// filing of the motions, unless a statute or the Federal Rules of
+/// Criminal Procedure fix a different time or the Court orders otherwise.
+deadline response-period: 7.days after MotionFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Okla. LCrR 12.1(E)"
+{
+  forum frcrimp
+}
+
+/// E.D. Okla. LCrR 32.1(B): opposing counsel submits a written response to
+/// any objections to the presentence report within seven days; the
+/// objections and responses become a permanent attachment to the report.
+deadline psr-objection-response: 7.days after PsrObjectionsSubmitted() counted_by frcrimp45 cite "E.D. Okla. LCrR 32.1(B)"
+{
+  forum frcrimp
+}
+
+/// E.D. Okla. LCrR 32.1(D): after the final presentence report has been
+/// provided, but no later than seven days before the sentencing date, the
+/// parties may file statements of their positions on unresolved
+/// sentencing factors and facts, including motions for variance and
+/// departure.
+deadline unresolved-sentencing-factors: 7.days before SentencingScheduled() counted_by frcrimp45 cite "E.D. Okla. LCrR 32.1(D)"
+{
+  forum frcrimp
+}
+
+/// E.D. Okla. LCrR 57.2(B): all Criminal Justice Act vouchers are
+/// submitted within 45 days after the case is dismissed or the defendant
+/// is sentenced.
+deadline cja-voucher: 45.days after CaseDismissedOrSentenced() counted_by frcrimp45 cite "E.D. Okla. LCrR 57.2(B)"
+{
+  forum frcrimp
+}

@@ -276,17 +276,33 @@ impl<'c> Citations<'c> {
                 .section_heading
                 .as_deref()
                 .map_or_else(|| "{}".to_owned(), |h| h.replace("{n}", "{}"));
+            // A prefix a rule of another heading declares stays that
+            // rule's (`1st Cir. R.` heads `1st Cir. R. {}`, not the
+            // source's `FRAP {n}`).
+            let prefixes: Vec<String> = s
+                .cite_prefixes
+                .iter()
+                .filter(|p| {
+                    !syntax.rules.iter().any(|r| {
+                        r.heading != heading && r.prefixes.iter().any(|q| q.eq_ignore_ascii_case(p))
+                    })
+                })
+                .cloned()
+                .collect();
+            if prefixes.is_empty() {
+                continue;
+            }
             // A heading another rule already reads also takes this
             // source's prefixes, so its citations parse and are checked.
             if let Some(rule) = syntax.rules.iter_mut().find(|r| r.heading == heading) {
-                for p in &s.cite_prefixes {
+                for p in &prefixes {
                     if !rule.prefixes.iter().any(|q| q.eq_ignore_ascii_case(p)) {
                         rule.prefixes.push(p.clone());
                     }
                 }
             } else {
                 syntax.rules.push(CiteRuleForm {
-                    prefixes: s.cite_prefixes.clone(),
+                    prefixes: prefixes.clone(),
                     heading: heading.clone(),
                     source: Some(s.id.clone()),
                 });
@@ -295,7 +311,7 @@ impl<'c> Citations<'c> {
                 Family::Rules(heading),
                 s.id.clone(),
                 s.path.clone(),
-                s.cite_prefixes.clone(),
+                prefixes,
             ));
         }
         let shorthands = syntax.shorthands.iter().filter_map(|s| {

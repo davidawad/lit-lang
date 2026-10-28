@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcp-civil-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "nhd-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:0a5855e989ab6b26513a45b0b14b4cc69cff011c72d15751b5cee4e376812178"
+semantic = "sha256:c50e752758dac8fe7f96d40010cc81cec6e8b0a8e7472db15e4b4f456d759560"
+texts = [
+    "dnh-lr sources/dnh/dnh-local-rules-sectioned.txt sha256:ca001157d492636c92d6d8ff4c7112664bef52554253ba1125c167a6ef1d6382",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcp-civil-procedure 2024.12.0",
+]

@@ -1,0 +1,375 @@
+module nhd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of New Hampshire's own civil periods and limits, computed
+// under FRCP 6(a) as LR 6.1 directs; FRCP 6(d) adds no days to a period
+// that runs from filing (LR 6.1). Rules that state no period this layer
+// can count stay out: the 30 days' notice for public comment on an
+// amendment (LR 1.2(b)), a court duty; the in forma pauperis periods of LR
+// 4.2; the habeas corpus, Social Security, IDEA and ERISA briefing
+// schedules (LR 7.4, 7.5, 9.1, 9.3, 9.4), each a special proceeding;
+// supplemental jury instructions at the close of the evidence (LR
+// 16.2(b)(1)); the final pretrial conference held about 10 days before
+// trial (LR 16.3(a)), a court action; the 30-day bound on a stipulated
+// discovery extension (LR 16.4(b)), a condition, not a filing period;
+// class action settlement papers and the juror questionnaire periods (LR
+// 23.1, 47.1), which run from dates the court sets; the clerk's 21 days
+// and 3 days' notice of hearing on costs (LR 54.1(c)-(d)); registry
+// disbursals and writs of execution (LR 67.3, 69.1); the bankruptcy
+// periods of LR 77.4; the 30-day delay in transmitting a remand order (LR
+// 81.1(d)), a clerk's duty; and attorney admission and discipline (LR
+// 83.1-83.5). The earlier D.N.H. outline's FRCP flow belongs to lit/frcp
+// and lit/frap; its decisions (Twombly, Iqbal, Celotex, Anderson v.
+// Liberty Lobby) are FRCP authority, and no reporter text is vendored, so
+// they are removed here.
+/// A memorandum in support of or in opposition to a nondispositive
+/// motion: at most 15 pages without prior leave (LR 7.1(a)(3)).
+limit nondispositive-memorandum { pages <= 15 cite "D.N.H. LR 7.1(a)" } cite "D.N.H. LR 7.1(a)"
+/// A memorandum in support of or in opposition to a dispositive motion,
+/// as LR 7.1(g) defines it: at most 25 pages without prior leave (LR
+/// 7.1(a)(3)).
+limit dispositive-memorandum { pages <= 25 cite "D.N.H. LR 7.1(a)" } cite "D.N.H. LR 7.1(a)"
+/// A reply memorandum on a dispositive motion: at most 10 pages (LR
+/// 7.1(e)(1)).
+limit dispositive-reply { pages <= 10 cite "D.N.H. LR 7.1(e)" } cite "D.N.H. LR 7.1(e)"
+/// A proposed reply on a nondispositive motion, attached to the motion for
+/// leave to file it: at most 5 pages (LR 7.1(e)(2)).
+limit nondispositive-reply { pages <= 5 cite "D.N.H. LR 7.1(e)" } cite "D.N.H. LR 7.1(e)"
+/// A surreply: at most 5 pages (LR 7.1(e)(3)).
+limit surreply { pages <= 5 cite "D.N.H. LR 7.1(e)" } cite "D.N.H. LR 7.1(e)"
+
+/// A motion other than one for summary judgment is filed (LR 7.1(b)).
+event MotionFiled()
+/// A motion for summary judgment is filed (LR 7.1(b)).
+event SummaryJudgmentMotionFiled()
+/// A dispositive motion is filed (LR 7.1(a)(3), (g)).
+event DispositiveMotionFiled() paper dispositive-memorandum
+/// A nondispositive motion is filed (LR 7.1(a)(3)).
+event NondispositiveMotionFiled() paper nondispositive-memorandum
+/// An objection or opposition to a dispositive motion is filed (LR
+/// 7.1(e)(1)).
+event DispositiveObjectionFiled()
+/// An objection or opposition to a nondispositive motion is filed (LR
+/// 7.1(e)(2)).
+event NondispositiveObjectionFiled()
+/// A reply is filed, as of right on a dispositive motion (LR 7.1(e)(1)).
+event DispositiveReplyFiled() paper dispositive-reply
+/// A motion for leave to reply on a nondispositive motion is filed with
+/// the proposed reply (LR 7.1(e)(2)).
+event NondispositiveReplyLeaveSought() paper nondispositive-reply
+/// A reply is filed, as of right or by court order (LR 7.1(e)(3)).
+event ReplyFiled()
+/// A surreply is filed (LR 7.1(e)(3)).
+event SurreplyFiled() paper surreply
+/// A notice of removal is filed (LR 7.1.1(d), 10.1(f), 81.1(c)).
+event NoticeOfRemovalFiled()
+/// Counsel learns, or reasonably should have learned, of a scheduling
+/// conflict (LR 7.2(a)).
+event SchedulingConflictLearned()
+/// A motion or objection to which the objected-to material is attached is
+/// filed (LR 7.2(b)).
+event SupportingMaterialFiled()
+/// The court enters an interlocutory order (LR 7.2(d)).
+event InterlocutoryOrderEntered()
+/// A party is served with the magistrate judge's ruling on a motion to
+/// reconsider directed to the magistrate judge (LR 7.2(d)).
+event MagistrateReconsiderationRulingServed()
+/// The motion to proceed under a pseudonym is denied (LR 10.1(e)).
+event PseudonymMotionDenied()
+/// In a removal case, the motion to proceed under a pseudonym is filed (LR
+/// 10.1(f)).
+event RemovedPseudonymMotionFiled()
+/// The parties file their final pretrial statements (LR 16.2(d)).
+event FinalPretrialStatementsFiled()
+/// The date set for a continued case's new final pretrial conference (LR
+/// 16.2(c)).
+event NewFinalPretrialConference()
+/// The date set for trial (LR 16.2(a)(4)).
+event TrialCommences()
+/// The court rules on a discovery motion (LR 37.1(b)).
+event DiscoveryOrderEntered()
+/// The parties inform the clerk that the case has settled (LR 41.1).
+event SettlementReported()
+/// The trial, hearing or deposition at which a witness for a party
+/// proceeding in forma pauperis is to testify or produce evidence (LR
+/// 45.2(a)).
+event WitnessAppearanceDate()
+/// The time for appeal expires (LR 54.1(a)).
+event AppealTimeExpired()
+/// The appellate court issues its mandate (LR 54.1(a)).
+event MandateIssued()
+/// A bill of costs is filed (LR 54.1(c)).
+event BillOfCostsFiled()
+/// The clerk taxes costs (LR 54.1(f)).
+event CostsTaxed()
+/// An objection to a magistrate judge's order on a nondispositive matter
+/// is filed (LR 72.2).
+event MagistrateOrderObjectionFiled()
+
+/// LR 7.1(b): except as otherwise required by law or order, an objection
+/// to a motion is filed within 14 days from the date the motion is filed;
+/// the court deems waived an objection not so filed.
+deadline objection-period: 14.days after MotionFiled() counted_by frcp6 cite "D.N.H. LR 7.1(b)"
+/// LR 7.1(b): an objection to a summary judgment motion is filed within 30
+/// days from the date the motion is filed.
+deadline summary-judgment-objection-period: 30.days after SummaryJudgmentMotionFiled() counted_by frcp6 cite "D.N.H. LR 7.1(b)"
+/// LR 7.1(e)(1): within 7 days of the filing of an objection to a
+/// dispositive motion, the movant may file a reply restricted to rebuttal
+/// of the objection's arguments. LR 7.1(e)(4): unless modified by order.
+deadline dispositive-reply-period: 7.days after DispositiveObjectionFiled() counted_by frcp6 cite "D.N.H. LR 7.1(e)"
+/// LR 7.1(e)(2): no reply on a nondispositive motion without prior leave;
+/// the motion for leave is filed within 7 days of the filing of the
+/// objection and attaches the proposed reply.
+deadline nondispositive-reply-leave-period: 7.days after NondispositiveObjectionFiled() counted_by frcp6 cite "D.N.H. LR 7.1(e)"
+/// LR 7.1(e)(3): if a reply has been filed, a surreply may be filed within
+/// 5 days of the date the reply was filed.
+deadline surreply-period: 5.days after ReplyFiled() counted_by frcp6 cite "D.N.H. LR 7.1(e)"
+/// LR 7.1.1(d): in a removal action, a party required to file a
+/// disclosure statement files it within 21 days from the date the notice
+/// of removal is filed, or with its first appearance, pleading, motion or
+/// other request if that is filed sooner.
+deadline removal-disclosure-statement-period: 21.days after NoticeOfRemovalFiled() counted_by frcp6 cite "D.N.H. LR 7.1.1(d)"
+/// LR 7.2(a): a motion to extend time based on a scheduling conflict is
+/// filed within 7 days of the date counsel learned, or reasonably should
+/// have learned, of the conflict.
+deadline scheduling-conflict-extension-period: 7.days after SchedulingConflictLearned() counted_by frcp6 cite "D.N.H. LR 7.2(a)"
+/// LR 7.2(b): a motion to strike material offered in support of or in
+/// opposition to a motion is filed within 14 days of the filing of the
+/// motion or objection to which the material is attached.
+deadline motion-to-strike-period: 14.days after SupportingMaterialFiled() counted_by frcp6 cite "D.N.H. LR 7.2(b)"
+/// LR 7.2(d): a motion to reconsider an interlocutory order is filed
+/// within 14 days from the date of the order unless the movant shows cause,
+/// such as newly available material evidence or an intervening change in
+/// the governing legal standard.
+deadline reconsideration-period: 14.days after InterlocutoryOrderEntered() counted_by frcp6 cite "D.N.H. LR 7.2(d)"
+/// LR 7.2(d): when a motion to reconsider a magistrate judge's ruling is
+/// directed to the magistrate judge, an objection under FRCP 72 or 28
+/// U.S.C. § 636(b)(1) is filed within 14 days after being served with the
+/// ruling on the motion to reconsider.
+deadline magistrate-reconsideration-objection-period: 14.days after MagistrateReconsiderationRulingServed() counted_by frcp6 cite "D.N.H. LR 7.2(d)"
+/// LR 10.1(e): if the motion to proceed under a pseudonym is denied, the
+/// party has 14 days to file an amended complaint naming the party.
+deadline pseudonym-amended-complaint-period: 14.days after PseudonymMotionDenied() counted_by frcp6 cite "D.N.H. LR 10.1(e)"
+/// LR 10.1(f): in a removal case where the plaintiff proceeded by
+/// pseudonym in state court, the Notice of Intention to Proceed by
+/// Pseudonym and the motion are due 21 days after the filing of the notice
+/// of removal.
+deadline removed-pseudonym-motion-period: 21.days after NoticeOfRemovalFiled() counted_by frcp6 cite "D.N.H. LR 10.1(f)"
+/// LR 10.1(f): an objection to that motion is filed 14 days after the
+/// filing of the motion.
+deadline removed-pseudonym-objection-period: 14.days after RemovedPseudonymMotionFiled() counted_by frcp6 cite "D.N.H. LR 10.1(f)"
+/// LR 16.2(a)(4): page/line designations of depositions to be read into
+/// evidence are filed 10 days prior to trial.
+deadline deposition-designation-period: 10.days before TrialCommences() counted_by frcp6 cite "D.N.H. LR 16.2(a)"
+/// LR 16.2(a)(4): counter-designations are filed 5 days prior to trial.
+deadline deposition-counter-designation-period: 5.days before TrialCommences() counted_by frcp6 cite "D.N.H. LR 16.2(a)"
+/// LR 16.2(a)(4): objections to deposition designations are filed 2 days
+/// prior to trial.
+deadline deposition-designation-objection-period: 2.days before TrialCommences() counted_by frcp6 cite "D.N.H. LR 16.2(a)"
+/// LR 16.2(c): if a case is continued after final pretrial statements are
+/// filed, the parties update them, or stipulate that no change is
+/// necessary, no later than 10 days prior to the new final pretrial
+/// conference.
+deadline pretrial-statement-update-period: 10.days before NewFinalPretrialConference() counted_by frcp6 cite "D.N.H. LR 16.2(c)"
+/// LR 16.2(d): beyond the FRCP 26(a)(3) objections, objections to
+/// exhibits, motions in limine, proposed jury instructions and proposed
+/// findings and rulings are filed no later than 14 days after the filing of
+/// the final pretrial statements.
+deadline pretrial-objection-period: 14.days after FinalPretrialStatementsFiled() counted_by frcp6 cite "D.N.H. LR 16.2(d)"
+/// LR 37.1(b): when the court rules on a discovery motion, the discovery
+/// or relief is provided within 14 days of the order unless the order
+/// specifies a different time.
+deadline discovery-order-compliance-period: 14.days after DiscoveryOrderEntered() counted_by frcp6 cite "D.N.H. LR 37.1(b)"
+/// LR 41.1: within 30 days after informing the clerk that the case has
+/// settled, the parties file a signed agreement for entry of judgment or a
+/// stipulation for dismissal; otherwise the court dismisses with prejudice.
+deadline settlement-papers-period: 30.days after SettlementReported() counted_by frcp6 cite "D.N.H. LR 41.1"
+/// LR 45.2(a): a party proceeding in forma pauperis files its motion for
+/// a witness's attendance or production not later than 21 days before the
+/// trial, hearing or deposition.
+deadline ifp-witness-motion-period: 21.days before WitnessAppearanceDate() counted_by frcp6 cite "D.N.H. LR 45.2(a)"
+/// LR 54.1(a): a party claiming costs serves and files its bill of costs
+/// within 21 days after the time for appeal has expired; failure waives
+/// costs unless the court orders otherwise or counsel agree.
+deadline bill-of-costs-period: 21.days after AppealTimeExpired() counted_by frcp6 cite "D.N.H. LR 54.1(a)"
+/// LR 54.1(a): or within 21 days after the issuance of the mandate of the
+/// appellate court.
+deadline bill-of-costs-after-mandate-period: 21.days after MandateIssued() counted_by frcp6 cite "D.N.H. LR 54.1(a)"
+/// LR 54.1(c): within 14 days after the filing of a bill of costs, any
+/// other party may serve and file specific written objections.
+deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "D.N.H. LR 54.1(c)"
+/// LR 54.1(f): the clerk's taxation of costs is final unless modified on
+/// review by the court on motion filed within 7 days thereafter under FRCP
+/// 54(d)(1).
+deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "D.N.H. LR 54.1(f)"
+/// LR 72.2: a party may respond to another party's objection to a
+/// magistrate judge's order on a nondispositive matter within 14 days
+/// after the filing of the objection.
+deadline magistrate-objection-response-period: 14.days after MagistrateOrderObjectionFiled() counted_by frcp6 cite "D.N.H. LR 72.2"
+/// LR 81.1(c): the removing party files a certified or attested copy of
+/// the state court record within 14 days of the filing of the notice of
+/// removal.
+deadline state-court-record-period: 14.days after NoticeOfRemovalFiled() counted_by frcp6 cite "D.N.H. LR 81.1(c)"
+
+test "objection period runs 14 days" cite "D.N.H. LR 7.1(b)"
+{
+  given MotionFiled() on 2026-03-02
+  expect deadline(objection-period) == 2026-03-16
+}
+
+test "summary judgment objection period runs 30 days" cite "D.N.H. LR 7.1(b)"
+{
+  given SummaryJudgmentMotionFiled() on 2026-03-02
+  expect deadline(summary-judgment-objection-period) == 2026-04-01
+}
+
+test "dispositive reply period runs 7 days" cite "D.N.H. LR 7.1(e)"
+{
+  given DispositiveObjectionFiled() on 2026-03-02
+  expect deadline(dispositive-reply-period) == 2026-03-09
+}
+
+test "nondispositive reply leave period runs 7 days" cite "D.N.H. LR 7.1(e)"
+{
+  given NondispositiveObjectionFiled() on 2026-03-02
+  expect deadline(nondispositive-reply-leave-period) == 2026-03-09
+}
+
+test "surreply period runs 5 days" cite "D.N.H. LR 7.1(e)"
+{
+  given ReplyFiled() on 2026-03-02
+  expect deadline(surreply-period) == 2026-03-09
+}
+
+test "removal disclosure statement period runs 21 days" cite "D.N.H. LR 7.1.1(d)"
+{
+  given NoticeOfRemovalFiled() on 2026-03-02
+  expect deadline(removal-disclosure-statement-period) == 2026-03-23
+}
+
+test "scheduling conflict extension period runs 7 days" cite "D.N.H. LR 7.2(a)"
+{
+  given SchedulingConflictLearned() on 2026-03-02
+  expect deadline(scheduling-conflict-extension-period) == 2026-03-09
+}
+
+test "motion to strike period runs 14 days" cite "D.N.H. LR 7.2(b)"
+{
+  given SupportingMaterialFiled() on 2026-03-02
+  expect deadline(motion-to-strike-period) == 2026-03-16
+}
+
+test "reconsideration period runs 14 days" cite "D.N.H. LR 7.2(d)"
+{
+  given InterlocutoryOrderEntered() on 2026-03-02
+  expect deadline(reconsideration-period) == 2026-03-16
+}
+
+test "magistrate reconsideration objection period runs 14 days" cite "D.N.H. LR 7.2(d)"
+{
+  given MagistrateReconsiderationRulingServed() on 2026-03-02
+  expect deadline(magistrate-reconsideration-objection-period) == 2026-03-16
+}
+
+test "pseudonym amended complaint period runs 14 days" cite "D.N.H. LR 10.1(e)"
+{
+  given PseudonymMotionDenied() on 2026-03-02
+  expect deadline(pseudonym-amended-complaint-period) == 2026-03-16
+}
+
+test "removed pseudonym motion period runs 21 days" cite "D.N.H. LR 10.1(f)"
+{
+  given NoticeOfRemovalFiled() on 2026-03-02
+  expect deadline(removed-pseudonym-motion-period) == 2026-03-23
+}
+
+test "removed pseudonym objection period runs 14 days" cite "D.N.H. LR 10.1(f)"
+{
+  given RemovedPseudonymMotionFiled() on 2026-03-02
+  expect deadline(removed-pseudonym-objection-period) == 2026-03-16
+}
+
+test "deposition designation period runs 10 days before" cite "D.N.H. LR 16.2(a)"
+{
+  given TrialCommences() on 2026-06-15
+  expect deadline(deposition-designation-period) == 2026-06-05
+}
+
+test "deposition counter designation period runs 5 days before" cite "D.N.H. LR 16.2(a)"
+{
+  given TrialCommences() on 2026-06-15
+  expect deadline(deposition-counter-designation-period) == 2026-06-10
+}
+
+test "deposition designation objection period runs 2 days before" cite "D.N.H. LR 16.2(a)"
+{
+  given TrialCommences() on 2026-06-15
+  expect deadline(deposition-designation-objection-period) == 2026-06-12
+}
+
+test "pretrial statement update period runs 10 days before" cite "D.N.H. LR 16.2(c)"
+{
+  given NewFinalPretrialConference() on 2026-06-15
+  expect deadline(pretrial-statement-update-period) == 2026-06-05
+}
+
+test "pretrial objection period runs 14 days" cite "D.N.H. LR 16.2(d)"
+{
+  given FinalPretrialStatementsFiled() on 2026-03-02
+  expect deadline(pretrial-objection-period) == 2026-03-16
+}
+
+test "discovery order compliance period runs 14 days" cite "D.N.H. LR 37.1(b)"
+{
+  given DiscoveryOrderEntered() on 2026-03-02
+  expect deadline(discovery-order-compliance-period) == 2026-03-16
+}
+
+test "settlement papers period runs 30 days" cite "D.N.H. LR 41.1"
+{
+  given SettlementReported() on 2026-03-02
+  expect deadline(settlement-papers-period) == 2026-04-01
+}
+
+test "ifp witness motion period runs 21 days before" cite "D.N.H. LR 45.2(a)"
+{
+  given WitnessAppearanceDate() on 2026-06-15
+  expect deadline(ifp-witness-motion-period) == 2026-05-22
+}
+
+test "bill of costs period runs 21 days" cite "D.N.H. LR 54.1(a)"
+{
+  given AppealTimeExpired() on 2026-03-02
+  expect deadline(bill-of-costs-period) == 2026-03-23
+}
+
+test "bill of costs after mandate period runs 21 days" cite "D.N.H. LR 54.1(a)"
+{
+  given MandateIssued() on 2026-03-02
+  expect deadline(bill-of-costs-after-mandate-period) == 2026-03-23
+}
+
+test "costs objection period runs 14 days" cite "D.N.H. LR 54.1(c)"
+{
+  given BillOfCostsFiled() on 2026-03-02
+  expect deadline(costs-objection-period) == 2026-03-16
+}
+
+test "costs review period runs 7 days" cite "D.N.H. LR 54.1(f)"
+{
+  given CostsTaxed() on 2026-03-02
+  expect deadline(costs-review-period) == 2026-03-09
+}
+
+test "magistrate objection response period runs 14 days" cite "D.N.H. LR 72.2"
+{
+  given MagistrateOrderObjectionFiled() on 2026-03-02
+  expect deadline(magistrate-objection-response-period) == 2026-03-16
+}
+
+test "state court record period runs 14 days" cite "D.N.H. LR 81.1(c)"
+{
+  given NoticeOfRemovalFiled() on 2026-03-02
+  expect deadline(state-court-record-period) == 2026-03-16
+}

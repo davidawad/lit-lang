@@ -1,0 +1,48 @@
+# The United States District Court for the District of New Hampshire's
+# Local Rules as a local-rule layer over lit/frcp (28 U.S.C. § 2071; FRCP
+# 83(a)): it declares only the periods and limits the Local Rules
+# themselves state and re-encodes no FRCP deadline. LR 6.1 computes every
+# period under FRCP 6(a), and FRCP 6(d) only for a period that runs from
+# service. The rules are the Local Rules as amended through December 1,
+# 2025 (sources/dnh). The Local Criminal Rules are out of scope. An appeal
+# goes to the First Circuit under lit/frap.
+[package]
+name = "nhd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "nhd-local-rules"
+forum = "nhd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the District of New Hampshire: Local Rules (civil)"
+description = "The District of New Hampshire's Local Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): objection, reply and surreply periods with the memorandum page limits, disclosure statements in removed actions, scheduling-conflict extensions, motions to strike and for reconsideration, pseudonym litigants, final pretrial statements and deposition designations, compliance with discovery orders, settlement papers, in forma pauperis witness motions, bills of costs, responses to objections to a magistrate judge's order, and the state court record in removed actions."
+in_force = "2025-12-01"
+known_at = "2026-10-28"
+unknown_before = "2025-12-01"
+jurisdiction = "United States District Court, D.N.H."
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "dnh-lr"
+issuer = "United States District Court for the District of New Hampshire"
+date = "2025-12-01"
+designation = "Local Rules, as amended through December 1, 2025"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.dnh-lr]
+title = "Local Rules of the United States District Court for the District of New Hampshire (as amended through December 1, 2025)"
+url = "https://www.nhd.uscourts.gov/pdf/2025%20Local%20Rules%20-%20District%20of%20New%20Hampshire.pdf"
+path = "sources/dnh/dnh-local-rules-sectioned.txt"
+path_sha256 = "ca001157d492636c92d6d8ff4c7112664bef52554253ba1125c167a6ef1d6382"
+sha256 = "0c8a71f758a67912be5801f49cfdd23f9071dd7799b80c1c4e86a8f3feb94390"
+as_of = "2025-12-01"
+cite_prefixes = ["D.N.H. LR"]
+section_heading = "LR {n}"

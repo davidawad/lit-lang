@@ -104,3 +104,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 cae4972e610bd039233189e5e8600b3fa4b9f78598ce3db96372d885fb3d3b24. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `sc-circuit-civil/original/scsc-order-2026-04-30-01.pdf` as served (sha256 cdd4ec2b069fa4be30ea7cd4ac5f2828f594984d59f466477380a67e49c926d2); extraction sha256 cae4972e610bd039233189e5e8600b3fa4b9f78598ce3db96372d885fb3d3b24.
+
+### `sc-circuit-civil/scrcp-rule-pages-2026-10-28-sectioned.txt` — South Carolina Rules of Civil Procedure, sectioned
+
+- Derived in the pod (lg-f3q8.30) from `sc-circuit-civil/scrcp-rule-pages-2026-10-28.txt` (extract sha256 1a64ab69f13105a7e581d376e63885838b4257f31f169665e168ae1204df3bee); nothing fetched. One `## Rule <n>` line is inserted before each page's own `RULE <n>` heading line (the line after the page's `## <page>` block line, its URL and a blank line), 89 rules from `Rule 1` through `Rule 86` (with 4.1, 41.1, 41.2 and 71.1), each number once; the Appendix of Forms is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule [0-9]/d'`) restores the extract byte for byte.
+- Edition: as the extract, the rule pages as served on 2026-10-28. The latest amendment the pages state is the order of April 30, 2026 (Rules 50, 52, 53, 54, 59), which `scsc-order-2026-04-30-01.txt` declares effective that day; `lit/sc-circuit-civil` dates the expression `as_of = 2026-04-30`.
+- Sectioned sha256 574cec1048ea5d046691dcf4c714ad4ccf7a9572db4dd1787556567caf82b0c5 (the `path_sha256` pinned by `lit/sc-circuit-civil/Lit.toml`).

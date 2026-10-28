@@ -1,0 +1,143 @@
+module sc-circuit-court-civil.civil
+
+start complaint-filed
+
+state complaint-filed: "Summons and complaint filed" by applicant cite "S.C. R. Civ. P. 3(a)"
+{
+  note "A civil action is commenced when the summons and complaint are filed with the clerk of court if they are served within the statute of limitations or, if not, actual service is accomplished not later than one hundred twenty days after filing (S.C. R. Civ. P. 3(a)). Periods in this package are stated, not counted: Rule 6(a) excludes the day of the triggering act, includes the last day unless it is a Saturday, Sunday or State or Federal holiday, and excludes intermediate Saturdays, Sundays and holidays from a period of less than seven days; no lit/core counting rule encodes it. Five days are added to a period that runs from service of a paper by mail or on a statutory agent (S.C. R. Civ. P. 6(e)), and counsel may extend a period once by written agreement for no more than the original time, but not the times under Rules 50(b), 52(b), 59 and 60(b) (S.C. R. Civ. P. 6(b)). The earlier outline named no leading decision."
+  edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    authority cite "S.C. R. Civ. P. 4(d)"
+  }
+}
+
+decision answer-due: "Answer, Rule 12(b) motion or default" by office cite "S.C. R. Civ. P. 12(a)"
+{
+  note "A defendant serves an answer within 30 days after service of the complaint, unless the court directs otherwise when service is made under Rule 4(e) (S.C. R. Civ. P. 12(a)); the summons states that time and warns that judgment by default will follow a failure to appear and defend (S.C. R. Civ. P. 4(b)). The answer states the facts of each defense and admits or denies the averments, and averments not denied are admitted (S.C. R. Civ. P. 8(b), (d)). The defenses Rule 12(b) lists may instead be made by motion before pleading."
+  edge-answer-due-default "No answer or defense in time" -> default-entered {
+    authority cite "S.C. R. Civ. P. 55(a)"
+  }
+  edge-answer-due-motion "Rule 12(b) motion" -> pleading-motion {
+    authority cite "S.C. R. Civ. P. 12(b)"
+  }
+  edge-answer-due-answer "Answer served" -> discovery { authority cite "S.C. R. Civ. P. 12(a)" }
+}
+
+decision pleading-motion: "Rule 12(b) motion decided" by court cite "S.C. R. Civ. P. 12(b)"
+{
+  note "The motion is made before pleading if a further pleading is permitted; on a 12(b)(6) motion, matters outside the pleading that the court does not exclude convert it to a summary judgment motion under Rule 56 (S.C. R. Civ. P. 12(b)). If the court denies the motion or postpones it to trial, the responsive pleading is served within 15 days after notice of the court's action (S.C. R. Civ. P. 12(a)). A written motion and notice of its hearing are served not later than ten days before the hearing (S.C. R. Civ. P. 6(d)). Personal jurisdiction, venue, process, service and another-action-pending defenses are waived if omitted from the motion or the answer (S.C. R. Civ. P. 12(h)(1))."
+  edge-pleading-motion-granted "Granted: action dismissed" -> dismissed-pleading {
+    authority cite "S.C. R. Civ. P. 12(b)"
+  }
+  edge-pleading-motion-leave "Granted with leave to amend" -> amend {
+    authority cite "S.C. R. Civ. P. 15(a)"
+  }
+  edge-pleading-motion-denied "Denied: answer within 15 days of notice" -> discovery {
+    authority cite "S.C. R. Civ. P. 12(a)"
+  }
+}
+
+state amend: "Amended pleading" by applicant cite "S.C. R. Civ. P. 15(a)"
+{
+  note "A party may amend once as a matter of course before or within 30 days after a responsive pleading is served; otherwise only by leave of court or written consent of the adverse party, and leave is freely given when justice requires and it does not prejudice another party. A response to an amended pleading is due within the time remaining for the original or fifteen days after service of the amended pleading, whichever is longer (S.C. R. Civ. P. 15(a)). An amendment arising out of the original conduct, transaction or occurrence relates back (S.C. R. Civ. P. 15(c))."
+  edge-amend-tested "Amended pleading tested again" -> pleading-motion {
+    authority cite "S.C. R. Civ. P. 12(b)"
+  }
+}
+
+terminal dismissed-pleading: "Dismissed on the pleadings" outcome [win, dismissal] cite "S.C. R. Civ. P. 12(b)"
+{
+  note "Outcome from the defending side. A notice of appeal is served within thirty days after receipt of written notice of entry of the order (S.C. App. Ct. R. 203(b)(1))."
+}
+
+decision default-entered: "Default entered" by court cite "S.C. R. Civ. P. 55(a)"
+{
+  note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend and that is shown by affidavit or otherwise, the clerk enters the default on the calendar (S.C. R. Civ. P. 55(a)). For good cause shown the court may set aside the entry of default (S.C. R. Civ. P. 55(c))."
+  edge-default-entered-judgment "Default judgment sought" -> default-judgment {
+    authority cite "S.C. R. Civ. P. 55(b)"
+  }
+  edge-default-entered-vacated "Default set aside for good cause" -> discovery {
+    authority cite "S.C. R. Civ. P. 55(c)"
+  }
+}
+
+terminal default-judgment: "Default judgment entered" outcome [loss] cite "S.C. R. Civ. P. 55(b)"
+{
+  note "Outcome from the defending side. For a liquidated sum or sum certain the judge enters judgment on motion and affidavit of the amount due; in other cases the party applies to the court, and a defaulted party who has appeared is served with written notice at least 3 days before the hearing (S.C. R. Civ. P. 55(b)(1), (2)). Attorneys fees on a default judgment need a hearing unless the motion requests them with an affidavit, notice is mailed, and no objection is filed within 10 days of service (S.C. R. Civ. P. 55(b)(3)). No default judgment is entered against the State, minors, incompetents and the other parties Rule 55(e) lists unless the claim is established by evidence (S.C. R. Civ. P. 55(e)). A default judgment may be set aside under Rule 60(b) (S.C. R. Civ. P. 55(c)), on grounds (1) to (3) not more than one year after entry (S.C. R. Civ. P. 60(b))."
+}
+
+state discovery: "Discovery and pretrial" by applicant cite "S.C. R. Civ. P. 26"
+{
+  note "Discovery proceeds under Rules 26 to 37. After the pleadings are filed and served the court may direct a pretrial hearing on simplifying the issues, amendments, admissions, limits on experts and on discovery time, and pending motions (S.C. R. Civ. P. 16(a)). A jury is demanded by serving a written demand after commencement and not later than 10 days after service of the last pleading directed to the issue; failure to serve and file the demand waives a jury (S.C. R. Civ. P. 38(b), (d))."
+  edge-discovery-dispute "Motion to compel or for sanctions" -> discovery-dispute {
+    authority cite "S.C. R. Civ. P. 37(a)"
+  }
+  edge-discovery-sj "Summary judgment motion" -> sj-motion { authority cite "S.C. R. Civ. P. 56" }
+  edge-discovery-trial "No dispositive motion" -> trial { authority cite "S.C. R. Civ. P. 39" }
+  edge-discovery-settle "Settled: stipulation of dismissal" -> settled {
+    authority cite "S.C. R. Civ. P. 41(a)"
+  }
+}
+
+decision discovery-dispute: "Discovery dispute decided" by court cite "S.C. R. Civ. P. 37(a)"
+{
+  note "On reasonable notice a party may move to compel; an evasive or incomplete answer is a failure to answer, and if the motion is granted the court requires the party whose conduct necessitated it to pay the reasonable expenses, including attorney's fees, unless the opposition was substantially justified (S.C. R. Civ. P. 37(a)). A party who fails to obey a discovery order may be met with orders that are just, including dismissal of the action or judgment by default (S.C. R. Civ. P. 37(b)(2)(C)). The earlier outline named no leading decision."
+  edge-discovery-dispute-resolved "Resolved: discovery continues" -> discovery {
+    authority cite "S.C. R. Civ. P. 37(a)"
+  }
+  edge-discovery-dispute-sanction "Dismissal as a sanction" -> dismissed-sanction {
+    authority cite "S.C. R. Civ. P. 37(b)"
+  }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [win, dismissal] cite "S.C. R. Civ. P. 37(b)"
+{
+  note "Outcome from the defending side."
+}
+
+decision sj-motion: "Summary judgment decided" by court cite "S.C. R. Civ. P. 56(c)"
+{
+  note "A claimant may move after 30 days from commencement or after service of the adverse party's motion; a defending party may move at any time (S.C. R. Civ. P. 56(a), (b)). The motion is served at least 10 days before the hearing and opposing affidavits not later than two days before it; judgment is rendered if there is no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law (S.C. R. Civ. P. 56(c)). The adverse party may not rest on the pleadings but must set forth specific facts showing a genuine issue for trial (S.C. R. Civ. P. 56(e))."
+  edge-sj-motion-granted "Granted" -> judgment-entered { authority cite "S.C. R. Civ. P. 56(c)" }
+  edge-sj-motion-denied "Denied" -> trial { authority cite "S.C. R. Civ. P. 39" }
+}
+
+state trial: "Trial by jury or by the court" by court cite "S.C. R. Civ. P. 39"
+{
+  note "Issues for which a jury was demanded under Rule 38 are tried by jury unless the parties stipulate to trial by the court or the court finds no right to a jury; other issues are tried by the court or referred to a master (S.C. R. Civ. P. 39(a), (b)). A party who moved for a directed verdict at the close of all the evidence may move for judgment n.o.v. (S.C. R. Civ. P. 50(b))."
+  edge-trial-judgment "Verdict or decision" -> judgment-entered {
+    authority cite "S.C. R. Civ. P. 58(a)"
+  }
+}
+
+decision judgment-entered: "Judgment entered" by office cite "S.C. R. Civ. P. 58(a)"
+{
+  note "Every judgment is set forth on a separate document and is effective only when so set forth and entered (S.C. R. Civ. P. 58(a)). A motion for judgment n.o.v. or for a new trial is made promptly after the jury is discharged or, in the court's discretion, not later than 20 days after; in a non-jury action a new-trial motion is made not later than 20 days after receipt of written notice of entry of judgment, and a motion to alter or amend is served not later than 20 days after receipt of written notice of entry of the order (S.C. R. Civ. P. 50(e), 59(b), (e)), each as amended by the order of April 30, 2026. A copy of the written motion goes to the judge within ten days after filing (S.C. R. Civ. P. 59(g))."
+  edge-judgment-entered-post "Post-trial motion" -> post-trial {
+    authority cite "S.C. R. Civ. P. 59(b)"
+  }
+  edge-judgment-entered-appeal "Notice of appeal" -> appeal-noticed {
+    authority cite "S.C. App. Ct. R. 203(b)(1)"
+  }
+  edge-judgment-entered-final "No further action" -> judgment-final {
+    authority cite "S.C. R. Civ. P. 58(a)"
+  }
+}
+
+decision post-trial: "Post-trial motion decided" by court cite "S.C. R. Civ. P. 59(a)"
+{
+  note "A timely motion under Rule 50 or 59 stays the time for appeal for all parties, which then runs from receipt of written notice of entry of the order granting or denying it (S.C. R. Civ. P. 50(e), 59(f); S.C. App. Ct. R. 203(b)(1)). Relief from a final judgment for mistake, newly discovered evidence or fraud is sought within a reasonable time and not more than one year after entry (S.C. R. Civ. P. 60(b))."
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "S.C. R. Civ. P. 59(a)" }
+  edge-post-trial-denied "Denied" -> judgment-entered { authority cite "S.C. R. Civ. P. 59(f)" }
+}
+
+terminal settled: "Settled: dismissed by stipulation" outcome [settlement] cite "S.C. R. Civ. P. 41(a)"
+{
+  note "The plaintiff may dismiss without order by notice before the adverse party serves an answer or summary judgment motion, or by a stipulation of dismissal signed by all parties who have appeared (S.C. R. Civ. P. 41(a)(1))."
+}
+
+terminal judgment-final: "Judgment final in the circuit court" outcome [final] cite "S.C. R. Civ. P. 58(a)"
+
+terminal appeal-noticed: "Appeal taken: continue in the South Carolina appellate package" outcome [appeal] cite "S.C. App. Ct. R. 203(b)(1)"
+{
+  note "A notice of appeal from the court of common pleas is served on all respondents within thirty days after receipt of written notice of entry of the order or judgment (S.C. App. Ct. R. 203(b)(1)), and filed with the lower court and the appellate court within ten days after service (S.C. App. Ct. R. 203(d)(1)). Hand-off to lit/sc-appellate-civil (sc-appellate-court-civil)."
+}

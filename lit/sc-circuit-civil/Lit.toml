@@ -1,0 +1,49 @@
+# Civil actions in a South Carolina circuit court (the court of common
+# pleas) under the South Carolina Rules of Civil Procedure, as the rule
+# pages on sccourts.org served them on 2026-10-28 (sources/sc-circuit-civil);
+# the latest amendment they state is the Supreme Court's order of April 30,
+# 2026, effective that day (Rules 50, 52, 53, 54, 59; the order is vendored
+# beside the pages and its text is already on them). Rule 6(a) computes
+# time and excludes intermediate weekends and holidays from periods under
+# seven days; no lit/core counting rule encodes it, so the rules' periods
+# are stated in notes, not counted deadlines. An appeal hands off to
+# lit/sc-appellate-civil.
+[package]
+name = "sc-circuit-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "sc-circuit-court-civil"
+forum = "sc-circuit-civil"
+authority = "StateRule"
+title = "South Carolina Circuit Court, civil"
+description = "Civil actions in a South Carolina circuit court under the South Carolina Rules of Civil Procedure, as far as the vendored text states. An appeal hands off to the South Carolina appellate package (lit/sc-appellate-civil)."
+in_force = "2026-04-30"
+known_at = "2026-10-28"
+unknown_before = "2026-04-30"
+jurisdiction = "South Carolina Circuit Court (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.scrcp]
+title = "South Carolina Rules of Civil Procedure, rule pages as served on sccourts.org 2026-10-28 (latest stated amendment: order of April 30, 2026)"
+url = "https://www.sccourts.org/resources/judicial-community/court-rules/civil/"
+path = "sources/sc-circuit-civil/scrcp-rule-pages-2026-10-28-sectioned.txt"
+path_sha256 = "574cec1048ea5d046691dcf4c714ad4ccf7a9572db4dd1787556567caf82b0c5"
+as_of = "2026-04-30"
+cite_prefixes = ["S.C. R. Civ. P."]
+section_heading = "Rule {n}"
+
+[sources.scacr]
+title = "South Carolina Appellate Court Rules, rule pages as served on sccourts.org 2026-10-28"
+url = "https://www.sccourts.org/resources/judicial-community/court-rules/appellate/"
+path = "sources/sc-appellate-civil/scacr-rule-pages-2026-10-28-sectioned.txt"
+path_sha256 = "7fd65d2c63a0f4333104a609033b534746a5161393dacd693a437ca4eafbb7da"
+as_of = "2026-04-30"
+cite_prefixes = ["S.C. App. Ct. R."]
+section_heading = "Rule {n}"

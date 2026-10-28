@@ -339,3 +339,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 319f83ddbcad218c6f6ae3d50da02cb07530ef16d829222e594c5df99353994b. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `sc-appellate-civil/original/scsc-order-2026-09-23-02.pdf` as served (sha256 41e53c55a0894e5665bb4cb1f9490b038b6d111a22a3b43bbc0c3a260239032d); extraction sha256 319f83ddbcad218c6f6ae3d50da02cb07530ef16d829222e594c5df99353994b.
+
+### `sc-appellate-civil/scacr-rule-pages-2026-10-28-sectioned.txt` — South Carolina Appellate Court Rules, Parts I and II sectioned
+
+- Derived in the pod (lg-f3q8.30) from `sc-appellate-civil/scacr-rule-pages-2026-10-28.txt` (extract sha256 a941e3b0ca562919fe5fca279ab49c8e008b921d3c9897a9426c62c53bebb302); nothing fetched. One `## Rule <n>` line is inserted before each page's own `RULE <n>` heading line (the line after the page's `## <page>` block line, its URL and a blank line) for the 44 rules of Part I (Rules 101-102) and Part II, Appellate Practice (Rules 201-270); the later Parts are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule [0-9]/d'`) restores the extract byte for byte.
+- Edition: as the extract, the rule pages as served on 2026-10-28. The latest amendment Parts I and II state is the order of April 30, 2024; none of the 2026 orders vendored beside the pages amends Parts I or II. `lit/sc-circuit-civil` and `lit/sc-appellate-civil` date the expression `as_of = 2026-04-30`, the date the SCRCP's latest amendment took effect, so the two packages share one in-force date.
+- Sectioned sha256 7fd65d2c63a0f4333104a609033b534746a5161393dacd693a437ca4eafbb7da (the `path_sha256` pinned by `lit/sc-circuit-civil/Lit.toml` and `lit/sc-appellate-civil/Lit.toml`).

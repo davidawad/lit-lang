@@ -1,0 +1,51 @@
+# The District of North Dakota's civil Local Rules as a local-rule layer
+# over lit/frcp (28 U.S.C. § 2071; FRCP 83(a); the Preface: the rules are
+# "adopted by the court as local rules under Fed. R. Civ. P. 83"): it
+# declares only the periods and limits the civil rules themselves state
+# and re-encodes no FRCP deadline. Each period is counted under FRCP 6(a),
+# which governs "any local rule"; D.N.D. Civ. L.R. 6.1 (Time) is repealed
+# as of October 6, 2025. The rules are the edition "Effective October 6,
+# 2025" (sources/ndd); earlier editions are not vendored, so a query
+# before that date is a hole in the corpus. The general rules (Gen. L.R.)
+# and the criminal rules (forum ndd-criminal) are not encoded. An appeal
+# goes to the Eighth Circuit under lit/frap (Civ. L.R. 72.1(D)(1)).
+[package]
+name = "ndd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ndd-local-rules"
+forum = "ndd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, District of North Dakota: Local Rules (civil)"
+description = "The District of North Dakota's civil Local Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): division objections in removed cases, motion briefing and its page limits, amicus briefs, disclosure statements, the default discovery cutoff, dismissal of settled cases, jury instructions, costs and fees, and objections to magistrate judges' orders."
+in_force = "2025-10-06"
+known_at = "2026-10-28"
+unknown_before = "2025-10-06"
+jurisdiction = "United States District Court, D. North Dakota"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ndd-lr"
+issuer = "United States District Court for the District of North Dakota"
+date = "2025-10-06"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.ndd-lr]
+title = "Local Rules of the United States District Court for the District of North Dakota (Effective October 6, 2025)"
+url = "https://www.ndd.uscourts.gov/lci/Local_Rules.pdf"
+path = "sources/ndd/local-rules-civil-sectioned.txt"
+path_sha256 = "2611310f064b74eb36bc64db419c121daeae343be9d36e8e0b910ba607fa693d"
+sha256 = "a5ac31739c05d89026e64d3656f9fc1fc8b1c6ceeecced44b33d9b3f84a5a119"
+as_of = "2025-10-06"
+cite_prefixes = ["D.N.D. Civ. L.R."]
+section_heading = "Civ. L.R. {n}"

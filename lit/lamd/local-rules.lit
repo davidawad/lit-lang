@@ -28,20 +28,14 @@ import core.frcp6.{ frcp6 }
 // decisions (Twombly, Iqbal, Celotex, Anderson, Matsushita, Frow v. De La
 // Vega) are FRCP authority and belong to lit/frcp; they are removed here:
 // no reporter text is vendored.
-
 /// A memorandum, including a brief, a memorandum supporting or opposing a
 /// motion and an appeal to a District Judge: at most twenty-five pages
 /// excluding attachments, tables and the certificate of service, unless
 /// leave is obtained (M.D. La. LR 7(g)).
-limit memorandum {
-  pages <= 25 cite "M.D. La. LR 7(g)"
-} cite "M.D. La. LR 7(g)"
-
+limit memorandum { pages <= 25 cite "M.D. La. LR 7(g)" } cite "M.D. La. LR 7(g)"
 /// A reply or surreply memorandum, if permitted: at most ten pages
 /// (M.D. La. LR 7(g)).
-limit reply-memorandum {
-  pages <= 10 cite "M.D. La. LR 7(g)"
-} cite "M.D. La. LR 7(g)"
+limit reply-memorandum { pages <= 10 cite "M.D. La. LR 7(g)" } cite "M.D. La. LR 7(g)"
 
 /// A motion is served (M.D. La. LR 7(f)).
 event MotionServed() paper memorandum

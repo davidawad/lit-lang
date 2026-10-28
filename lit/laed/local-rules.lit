@@ -27,19 +27,13 @@ import core.frcp6.{ frcp6 }
 // outline's FRCP flow and its decisions (Twombly, Iqbal, Celotex,
 // Anderson, Matsushita, Frow v. De La Vega) are FRCP authority and belong
 // to lit/frcp; they are removed here: no reporter text is vendored.
-
 /// A trial brief or memorandum supporting or opposing a motion: at most
 /// 25 pages, excluding exhibits, except with prior leave of court
 /// (E.D. La. LR 7.7).
-limit memorandum {
-  pages <= 25 cite "E.D. La. LR 7.7"
-} cite "E.D. La. LR 7.7"
-
+limit memorandum { pages <= 25 cite "E.D. La. LR 7.7" } cite "E.D. La. LR 7.7"
 /// A reply brief or memorandum: at most 10 pages, excluding exhibits,
 /// except with prior leave of court (E.D. La. LR 7.7).
-limit reply-memorandum {
-  pages <= 10 cite "E.D. La. LR 7.7"
-} cite "E.D. La. LR 7.7"
+limit reply-memorandum { pages <= 10 cite "E.D. La. LR 7.7" } cite "E.D. La. LR 7.7"
 
 /// A notice of removal is filed (E.D. La. LR 3.2).
 event NoticeOfRemovalFiled()

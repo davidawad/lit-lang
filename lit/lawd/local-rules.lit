@@ -23,18 +23,12 @@ import core.frcp6.{ frcp6 }
 // Iqbal, Celotex, Anderson, Matsushita, Frow v. De La Vega) are FRCP
 // authority and belong to lit/frcp; they are removed here: no reporter
 // text is vendored.
-
 /// A memorandum in support of or in opposition to a motion: at most 25
 /// pages, exclusive of a table of contents or table of authorities
 /// (W.D. La. LR 7.1).
-limit memorandum {
-  pages <= 25 cite "W.D. La. LR 7.1"
-} cite "W.D. La. LR 7.1"
-
+limit memorandum { pages <= 25 cite "W.D. La. LR 7.1" } cite "W.D. La. LR 7.1"
 /// A reply memorandum: at most 10 pages (W.D. La. LR 7.1).
-limit reply-memorandum {
-  pages <= 10 cite "W.D. La. LR 7.1"
-} cite "W.D. La. LR 7.1"
+limit reply-memorandum { pages <= 10 cite "W.D. La. LR 7.1" } cite "W.D. La. LR 7.1"
 
 /// A document bearing several signatures is served electronically
 /// (W.D. La. LR 5.7.08).

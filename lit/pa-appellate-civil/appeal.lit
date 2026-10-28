@@ -1,0 +1,133 @@
+module pa-appellate-civil.appeal
+
+// Civil appeals from a Pennsylvania court of common pleas and the petition
+// for allowance of appeal to the Supreme Court of Pennsylvania, from the
+// applicant's (appellant's) side. Every period below is stated in a note,
+// not counted: time is computed under Pa.R.A.P. 107 and Pa.R.J.A. 107
+// (Pa.R.A.P. 903, comment), and Pa.R.J.A. 107 is not vendored. Which
+// intermediate court hears the appeal (Superior or Commonwealth Court) is
+// set by statute (42 Pa.C.S.), which is not vendored, so it is not cited;
+// neither are the appellate courts' internal operating procedures. The
+// earlier outline named no leading decisions. Children's fast track
+// appeals, which have shorter periods throughout, are outside this package.
+/// A principal brief: at most 14,000 words unless an appellate court orders
+/// otherwise; a certificate of compliance is filed if it is longer than 30
+/// pages, and supplementary matters do not count (Pa.R.A.P. 2135(a)(1),
+/// (b), (d)).
+limit principal-brief { words <= 14000 cite "Pa.R.A.P. 2135(a)" } cite "Pa.R.A.P. 2135(a)"
+/// A reply brief: at most 7,000 words; a certificate of compliance is
+/// filed if it is longer than 15 pages (Pa.R.A.P. 2135(a)(1)).
+limit reply-brief { words <= 7000 cite "Pa.R.A.P. 2135(a)" } cite "Pa.R.A.P. 2135(a)"
+
+start order-entered
+
+state order-entered: "Final order entered in the trial court" by applicant cite "Pa.R.A.P. 903(a)"
+{
+  note "An appeal may be taken as of right from any final order of a trial court, one that disposes of all claims and of all parties or is entered as final on an express determination that an immediate appeal would facilitate resolution of the entire case; an application for that determination is filed within 30 days of entry of the order and is deemed denied unless acted on within 30 days after filing (Pa.R.A.P. 341(a)-(c)). The notice of appeal is filed within 30 days after the entry of the order appealed from (Pa.R.A.P. 903(a)). If a party files a timely notice of appeal, any other party may file one within 14 days of the date the first was served, or within the time otherwise prescribed, whichever period last expires (Pa.R.A.P. 903(b))."
+  edge-order-entered-notice "Notice of appeal filed in time" -> notice-filed {
+    authority cite "Pa.R.A.P. 902(a)"
+  }
+  edge-order-entered-late "Appeal time missed" -> time-barred { authority cite "Pa.R.A.P. 902(b)" }
+}
+
+terminal time-barred: "Appeal time missed" outcome [loss, dismissal] cite "Pa.R.A.P. 902(b)"
+{
+  note "Outcome from the applicant's side. The failure to file a notice of appeal within the time allowed by Pa.R.A.P. 903 renders an appeal invalid; other defects in taking the appeal do not affect its validity (Pa.R.A.P. 902(b)(1), (2))."
+}
+
+state notice-filed: "Notice of appeal filed" by applicant cite "Pa.R.A.P. 902(a)"
+{
+  note "The notice of appeal is filed with the clerk of the trial court in each docket in which the order has been entered (Pa.R.A.P. 902(a)). The appellant requests any transcript required and pays for it as the Pennsylvania Rules of Judicial Administration prescribe; failing that, the appellate court may dismiss the appeal (Pa.R.A.P. 1911(a), (d)). If the trial judge orders a concise statement of the errors complained of on appeal, the judge allows at least 21 days from the order's entry on the docket to file and serve it, and issues not included in a timely statement are waived (Pa.R.A.P. 1925(b), (b)(2)(i), (b)(4)(vii)). The judge files at least a brief opinion of the reasons for the order if they do not already appear of record (Pa.R.A.P. 1925(a)(1)). The record, with the transcript and exhibits, is transmitted to the appellate court within 60 days after the filing of the notice of appeal (Pa.R.A.P. 1931(a)(1))."
+  edge-notice-filed-record "Record transmitted" -> briefing { authority cite "Pa.R.A.P. 1931(a)" }
+}
+
+state briefing: "Briefs filed" by applicant cite "Pa.R.A.P. 2185(a)"
+{
+  note "The appellant serves and files its brief within 40 days after the date on which the record is filed, unless the prothonotary fixes a later date under a deferred briefing schedule; the appellee within 30 days after service of the appellant's brief and reproduced record; a reply brief within 14 days after service of the preceding brief, received at least three days before argument except for good cause (Pa.R.A.P. 2185(a)(1), (b)). The appellant designates the parts of the record to reproduce not later than 30 days before its brief is due, and the appellee may counter-designate within ten days after receipt (Pa.R.A.P. 2154(a)). The brief contains the parts Pa.R.A.P. 2111(a) lists, in the Superior Court with the Pa.R.A.P. 1925(b) statement appended (Pa.R.A.P. 2111(a), (d)); no question is considered unless stated in, or fairly suggested by, the statement of questions involved (Pa.R.A.P. 2116(a)). A reply brief answers only matters raised by the appellee and not previously addressed, and no further briefs are filed without leave (Pa.R.A.P. 2113(a), (c))."
+  edge-briefing-argument "Briefs filed: case listed for argument or submitted" -> argument {
+    authority cite "Pa.R.A.P. 2315(a)"
+  }
+  edge-briefing-no-brief "Appellant's brief not filed in time: appellee moves to dismiss" -> appeal-dismissed {
+    authority cite "Pa.R.A.P. 2188"
+  }
+}
+
+state argument: "Argument or submission on the briefs" by court cite "Pa.R.A.P. 2315(a)"
+{
+  note "Oral argument is not a matter of right and is permitted only to the extent necessary for the court to understand the issues (Pa.R.A.P. 2315(a)). By agreement of the parties a case may be submitted on the briefs, but the court may direct argument (Pa.R.A.P. 2311(a)). Argument on the short list is limited to 15 minutes for each side, and on the regular list to 30 minutes (Pa.R.A.P. 2315(c), (d)). After argument or submission no brief, memorandum or letter is presented except on application, but counsel transmits notice of a change in the status of an authority relied upon (Pa.R.A.P. 2501(a), (b))."
+  edge-argument-decision "Appellate court enters its order" -> appellate-decision {
+    authority cite "Pa.R.A.P. 1112(b)"
+  }
+}
+
+decision appellate-decision: "Intermediate appellate court decides" by court cite "Pa.R.A.P. 1112(b)"
+{
+  note "A final order of the Superior Court or the Commonwealth Court is any order that concludes an appeal, including one that remands in whole or in part, unless the court remands and retains jurisdiction (Pa.R.A.P. 1112(b)). No appeal lies as of right from a final order of the Superior Court (Pa.R.A.P. 341(d))."
+  edge-appellate-decision-affirmed "Affirmed" -> after-affirmance {
+    authority cite "Pa.R.A.P. 2542(a)"
+  }
+  edge-appellate-decision-reversed "Reversed" -> reversed { authority cite "Pa.R.A.P. 2572(a)" }
+  edge-appellate-decision-remanded "Vacated and remanded" -> remanded {
+    authority cite "Pa.R.A.P. 2572(a)"
+  }
+}
+
+decision after-affirmance: "Reargument, allowance of appeal, or neither" by applicant cite "Pa.R.A.P. 2542(a)"
+{
+  note "An application for reargument is filed within 14 days after entry of the judgment or order (Pa.R.A.P. 2542(a)(1)); an adverse party may answer within 14 days after service (Pa.R.A.P. 2545(a)). A petition for allowance of appeal is filed with the Prothonotary of the Supreme Court within 30 days after entry of the order sought to be reviewed; if a timely application for reargument is filed, the time for all parties runs from the order denying reargument or the decision on reargument (Pa.R.A.P. 1113(a), (a)(1)). Any other party may cross-petition within 14 days of service of the first petition or within the time otherwise prescribed, whichever last expires (Pa.R.A.P. 1113(b))."
+  edge-after-affirmance-reargument "Application for reargument" -> reargument {
+    authority cite "Pa.R.A.P. 2542(a)"
+  }
+  edge-after-affirmance-allowance "Petition for allowance of appeal" -> allowance {
+    authority cite "Pa.R.A.P. 1113(a)"
+  }
+  edge-after-affirmance-none "No further review sought" -> affirmed {
+    authority cite "Pa.R.A.P. 2572(a)"
+  }
+}
+
+decision reargument: "Reargument decided" by court cite "Pa.R.A.P. 2543"
+{
+  note "Reargument is not a matter of right but of sound judicial discretion, allowed only for compelling reasons (Pa.R.A.P. 2543). The Superior Court or the Commonwealth Court may act on the application within 60 days after it is filed; if it does not, the application is deemed denied and the prothonotary enters an order denying it (Pa.R.A.P. 1113(a)(2), (a)(4)). Second or subsequent and untimely applications are not received (Pa.R.A.P. 2547)."
+  edge-reargument-granted "Reargument granted" -> argument { authority cite "Pa.R.A.P. 2543" }
+  edge-reargument-denied "Reargument denied: petition for allowance of appeal" -> allowance {
+    authority cite "Pa.R.A.P. 1113(a)"
+  }
+  edge-reargument-denied-final "Reargument denied: no further review" -> affirmed {
+    authority cite "Pa.R.A.P. 2572(b)"
+  }
+}
+
+decision allowance: "Supreme Court of Pennsylvania: allowance of appeal granted or denied" by court cite "Pa.R.A.P. 1114(a)"
+{
+  note "Review of a final order of the Superior Court or the Commonwealth Court is not a matter of right but of sound judicial discretion, and an appeal is allowed only for special and important reasons, such as a conflict among intermediate appellate decisions or with the Pennsylvania or United States Supreme Court, a question of first impression or of substantial public importance, the constitutionality of a Commonwealth statute, a departure from accepted judicial practice, or an erroneous order quashing or dismissing an appeal (Pa.R.A.P. 1114(a), (b)). The petition is filed with proof of service on all other parties and the fee Chapter 27 prescribes (Pa.R.A.P. 1112(c)(1), (e))."
+  edge-allowance-denied "Allowance denied" -> affirmed { authority cite "Pa.R.A.P. 1114(a)" }
+  edge-allowance-granted "Allowance granted" -> review-granted {
+    authority cite "Pa.R.A.P. 1114(b)"
+  }
+}
+
+terminal affirmed: "Affirmed" outcome [loss] cite "Pa.R.A.P. 2572(a)"
+{
+  note "Outcome from the applicant's side. The intermediate appellate court remands the record 30 days after entry of its judgment or final order; remand is stayed until disposition of an application for reargument, any other application affecting the order, or a petition for allowance of appeal, and then follows 30 days after the later of the final order or the disposition of all post-decision applications (Pa.R.A.P. 2572(a)(2), (b))."
+}
+
+terminal reversed: "Reversed" outcome [win] cite "Pa.R.A.P. 2572(a)"
+{
+  note "Outcome from the applicant's side. The appellee may seek reargument or allowance of appeal within the same periods (Pa.R.A.P. 2542(a)(1); Pa.R.A.P. 1113(a)); the record is remanded as Pa.R.A.P. 2572(a)(2) and (b) provide."
+}
+
+terminal remanded: "Vacated and remanded" outcome [remand] cite "Pa.R.A.P. 2572(a)"
+{
+  note "The record returns to the trial court as Pa.R.A.P. 2572(a)(2) and (b) provide. A motion for post-trial relief on later rulings is required only if the remand is for a complete or partial new trial or the trial court's order on remand says so (Pa.R.C.P. 227.1(i))."
+}
+
+terminal appeal-dismissed: "Appeal dismissed" outcome [loss, dismissal] cite "Pa.R.A.P. 2188"
+{
+  note "Outcome from the applicant's side. If an appellant fails to file its designation of reproduced record, brief or required reproduced record within the time prescribed or as extended, an appellee may move for dismissal (Pa.R.A.P. 2188); substantial defects in an appellant's brief or reproduced record may also lead to quashal or dismissal (Pa.R.A.P. 2101)."
+}
+
+terminal review-granted: "Allowance of appeal granted: merits review in the Supreme Court" outcome [appeal] cite "Pa.R.A.P. 1114(b)"
+{
+  note "Merits review in the Supreme Court of Pennsylvania is outside this package."
+}

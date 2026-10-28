@@ -174,7 +174,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | Ohio | state | promoted | 0 | 0 | 0 | 0 | `lit/oh-appellate`, `lit/oh-common-pleas` |
 | Oklahoma | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/oklahoma/state-appellate`, `outlines/tenth-circuit/oklahoma/state-civil` |
 | Oregon | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/oregon/state-appellate`, `outlines/ninth-circuit/oregon/state-civil` |
-| Pennsylvania | state | promoted | 0 | 0 | 0 | 0 | `lit/pa-cp-civil` |
+| Pennsylvania | state | promoted | 0 | 0 | 0 | 0 | `lit/pa-appellate-civil`, `lit/pa-cp-civil` |
 | Rhode Island | state | outline | 0 | 0 | 0 | 0 | `outlines/first-circuit/rhode-island/state-appellate`, `outlines/first-circuit/rhode-island/state-civil` |
 | South Carolina | state | promoted | 0 | 0 | 0 | 0 | `lit/sc-appellate-civil`, `lit/sc-circuit-civil` |
 | South Dakota | state | promoted | 0 | 0 | 0 | 0 | `lit/sd`, `lit/sd-circuit` |

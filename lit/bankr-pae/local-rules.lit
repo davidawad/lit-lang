@@ -1,0 +1,667 @@
+module bankr-pae-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ NoticeOfAppealFiled, OrderForReliefEntered, PetitionFiled }
+
+// The Bankr. E.D. Pa. court's own periods and page limit, counted under FRBP
+// 9006(a): the Local Bankruptcy Rules effective December 1, 2025. The FRBP
+// periods (schedules, claims, the chapter 13 plan, discharge,
+// dischargeability, exemptions, the adversary answer and summons, appeals)
+// are lit/frbp's and are not declared again.
+//
+// Stated in the rules but not declared: the FRBP's own periods the rules run
+// on (the schedule of post-petition debts within 14 days after conversion to
+// chapter 7, L.B.R. 1019-1(a), FRBP 1019(e); the chapter 13 plan after
+// conversion, L.B.R. 1019-1(b)(2), FRBP 3015(b); claim objections served at
+// least 30 days before the hearing, L.B.R. 3007-1(e), FRBP 3007(a); chapter
+// 12 and 13 confirmation objections no later than 7 days before the hearing,
+// L.B.R. 3015-4(a), FRBP 3015(f); 21 days to object to a post-confirmation
+// amendment, L.B.R. 3015-5(c)(3), FRBP 3015(h); the 28 days' disclosure
+// statement notice, L.B.R. 3017-1(d), FRBP 3017(a); 14 days to object to a
+// notice of abandonment, L.B.R. 6007-1(a), FRBP 6007(a); a response to a
+// motion to expedite an appeal within 7 days after service, L.B.R.
+// 8013-2(c)(1), FRBP 8013(a)(3)); the later-of and earlier-of windows (the
+// debtor's initial SLM package by the later of 7 days after the commencement
+// order and the servicer's portal registration, L.B.R. 9019-3(i)(1); the
+// eligibility determination by the later of 60 days and the documents
+// requested, L.B.R. 9019-3(j)(3)); the same-day, hour and business-day
+// periods (expedited complex case hearings within 3 business days, service
+// on the day of notice and 48 and 24 hours' notice to the United States
+// Trustee, L.B.R. 1002-2; service on the day a paper is filed, L.B.R.
+// 2014-1, 2016-1, 3015-3, 3015-5, 4002-1, 4003-1, 9013-3, 9014-3; electronic
+// filing before midnight, L.B.R. 5005-2, 5005-4); the court's, clerk's,
+// judge's and mediator's own acts (the clerk lifting a denied seal after 14
+// days, L.B.R. 5003-1(c)(2); the clerk's notices, L.B.R. 4004-2(b),
+// 4004-3(c), 5003-2(b)(2); the judge's opinion in support of an appealed
+// order within 30 days, L.B.R. 8003-1; the mediator's acceptance within 7
+// days, notice of the initial conference 14 days before it, that conference
+// within 30 (or continued to 60) days after appointment and report within 14
+// days of the conclusion, L.B.R. 9019-2(j), (m), (n)(6)); the bounds on a
+// date a party sets (a consented Rule 2004 examination not sooner than 7
+// days after the consent order or hearing, L.B.R. 2004-1(c)(2); the motion
+// filing deadline the judge's hearing calendar lists, L.B.R. 9014-3(d)); and
+// the conditions and durations that are not deadlines (pay stubs for the 60
+// days before the petition, L.B.R. 1007-4; insider compensation at the rate
+// of the 90th day before the petition, L.B.R. 4002-1(a); the 180-day SLM
+// Period, L.B.R. 9019-3(h)(2); paper filing permitted for 14 days, L.B.R.
+// 5005-2; a first brief extension of 14 days or less ordinarily granted,
+// L.B.R. 8018-1(b); the 6-month and 30-day chapter 13 fee application
+// periods' 28-day orders to show cause, L.B.R. 2016-3; arrangements for a
+// video hearing 7 days in advance when practicable, L.B.R. 9076-1(b)). The
+// Local Bankruptcy Forms are not vendored.
+/// A mediation memorandum provided to the mediator but not to the other
+/// parties (L.B.R. 9019-2(n)(2)(A)).
+limit mediation-memorandum {
+  pages <= 2 cite "Bankr. E.D. Pa. L.B.R. 9019-2(n)"
+} cite "Bankr. E.D. Pa. L.B.R. 9019-2(n)"
+
+/// An order is entered on a matter heard at an Expedited Hearing in a complex
+/// chapter 11 case, other than a cash collateral or financing order under §§
+/// 363 and 364 (L.B.R. 1002-4).
+event ExpeditedOrderEntered()
+/// An order dismissing the case is entered (L.B.R. 1017-2(c), 2002-3(a)).
+event DismissalOrderEntered()
+/// An order converting a case under another chapter to chapter 13 is entered
+/// (L.B.R. 1019-1(b)).
+event ConversionToChapter13Entered()
+/// A chapter 13 case is converted to chapter 7 (L.B.R. 1019-2).
+event ConversionFromChapter13()
+/// The claims agent serves a document it is charged to serve (L.B.R.
+/// 2002-3(a)(10)-(11)).
+event ClaimsAgentNoticeServed()
+/// A final decree is entered in the case (L.B.R. 2002-3(a)(18), (c)(2)).
+event FinalDecreeEntered()
+/// The earlier of an order converting the case and an order terminating the
+/// claims agent's services is entered (L.B.R. 2002-3(a)(19)).
+event ClaimsAgentEndOrderEntered()
+/// An order dismissing or converting the bankruptcy case is entered (L.B.R.
+/// 2002-3(a)(8)).
+event DismissOrConvertEntered()
+/// An order converting the case is entered (L.B.R. 2002-3(a)(8), (c)(2)).
+event ConversionOrderEntered()
+/// A scheduled Rule 2004 examination or production of documents (L.B.R.
+/// 2004-1(b)).
+event Examination()
+/// An application to employ a professional is served (L.B.R. 2014-1).
+event EmploymentApplicationServed()
+/// An application for compensation or reimbursement of expenses is served
+/// (L.B.R. 2016-1).
+event FeeApplicationServed()
+/// The order confirming a chapter 13 plan is entered (L.B.R. 2016-3(a)(4)).
+event Chapter13ConfirmationEntered()
+/// An order approving a modified chapter 13 plan is entered (L.B.R.
+/// 2016-3(b)(2)).
+event ModifiedPlanApproved()
+/// Notice of a professional's request for Payment on Account is served
+/// (L.B.R. 2016-5(d)-(e)).
+event PaymentRequestNoticeServed()
+/// The order allowing a professional's final compensation is entered (L.B.R.
+/// 2016-5(k)).
+event FinalCompensationAllowed()
+/// The hearing date on an objection to a claim (L.B.R. 3007-1).
+event ClaimObjectionHearing()
+/// The hearing on a motion to approve a disclosure statement or plan voting
+/// procedures (L.B.R. 3017-2).
+event DisclosureStatementHearing()
+/// A calendar quarter after confirmation of a chapter 11 plan ends (L.B.R.
+/// 3021-1(c)).
+event QuarterEnded()
+/// The hearing on an objection to compensation disclosed in a compensation
+/// disclosure notice (L.B.R. 4002-2).
+event InsiderCompensationObjectionHearing()
+/// Notice of a chapter 12 or 13 trustee's final report is served (L.B.R.
+/// 4004-2(b)).
+event FinalReportNoticeServed()
+/// The clerk issues the notice to creditors that objections to a chapter 12
+/// or 13 discharge are due (L.B.R. 4004-3(c)).
+event DischargeNoticeIssued()
+/// The clerk serves notice, on the second anniversary of the case's closing,
+/// that a sealed document will be unsealed (L.B.R. 5003-2(b)(2)).
+event UnsealingNoticeServed()
+/// A motion to withdraw the reference is served (L.B.R. 5011-1(f)).
+event WithdrawalMotionServed()
+/// The resolution of a contested matter is reported to the courtroom deputy
+/// (L.B.R. 5070-2).
+event ContestedMatterResolutionReported()
+/// A motion to sell assets under § 363(b) or (f) is served (L.B.R.
+/// 6004-1(a)).
+event SaleMotionServed()
+/// A motion to dismiss under FRCP 12(b)(6), for judgment on the pleadings or
+/// for summary judgment is served in an adversary proceeding (L.B.R.
+/// 7005-1(b)).
+event DispositiveMotionServed()
+/// The settlement of an adversary proceeding is reported to the courtroom
+/// deputy (L.B.R. 7041-1).
+event AdversaryResolutionReported()
+/// An appeal is docketed in the district court (L.B.R. 8003-2, 8012-1,
+/// 8013-2).
+event AppealDocketed()
+/// The bankruptcy court denies an application for a transcript at government
+/// expense (L.B.R. 8009-2(a)(3)).
+event TranscriptApplicationDenied()
+/// The occurrence or event that is the basis of a motion to expedite an
+/// appeal, after the 14-day period (L.B.R. 8013-2(a)).
+event ExpeditionGroundArose()
+/// A response to a motion to expedite an appeal is served (L.B.R. 8013-2(c)).
+event ExpediteResponseServed()
+/// The due date for filing a brief on appeal (L.B.R. 8018-1(b)).
+event BriefDue()
+/// An application governed by L.B.R. 9013-3 is served (L.B.R. 9013-3).
+event ApplicationServed()
+/// A motion in a case governed by L.B.R. 9014-3 is served (L.B.R. 9014-3(h)).
+event MotionServed()
+/// An application, motion, objection, notice or other document required to be
+/// served is filed (L.B.R. 9014-4(a)).
+event ServedDocumentFiled()
+/// The party demanding a jury trial timely files its statement of consent to
+/// a jury trial conducted by a bankruptcy judge (L.B.R. 9015-1).
+event JuryConsentFiled()
+/// The initial mediation conference (L.B.R. 9019-2(n)).
+event MediationConference()
+/// A party provides its mediation memorandum to the mediator (L.B.R.
+/// 9019-2(n)(2)).
+event MediationMemorandumProvided() paper mediation-memorandum
+/// The mediation concludes (L.B.R. 9019-2(n)(6)).
+event MediationConcluded()
+/// The creditor or servicer and the debtor conclude the Student Loan
+/// Management Program (L.B.R. 9019-3(i)(3)).
+event SlmProgramConcluded()
+/// The SLM Commencement Order is entered (L.B.R. 9019-3).
+event SlmCommencementOrderEntered()
+/// The debtor submits a completed Initial SLM Package on the portal (L.B.R.
+/// 9019-3(j)(2)-(3)).
+event SlmPackageSubmitted()
+/// The debtor files a Notice of Resolution of the SLM Program (L.B.R.
+/// 9019-3(k)).
+event SlmResolutionNoticeFiled()
+
+/// L.B.R. 1002-4(a): the court reconsiders an order entered on a matter heard
+/// at an Expedited Hearing (other than a §§ 363 or 364 cash collateral or
+/// financing order) if a motion for reconsideration is filed within 14 days
+/// of its entry.
+deadline expedited-reconsideration-period: 14.days after ExpeditedOrderEntered() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 1002-4(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 1007-1(a): the debtor notifies each creditor known to claim an
+/// interest in cash collateral of the filing of a voluntary petition within
+/// one day of its filing.
+deadline cash-collateral-notice-period: 1.days after PetitionFiled() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 1007-1(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 1007-1(a): in an involuntary case the debtor notifies each creditor
+/// known to claim an interest in cash collateral of the order for relief
+/// within one day of its entry.
+deadline involuntary-cash-collateral-notice-period: 1.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 1007-1(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 1007-2(e): in an involuntary case the debtor files a Matrix List of
+/// Creditors within 14 days of the entry of the order for relief.
+deadline involuntary-matrix-period: 14.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 1007-2(e)"
+{
+  forum frcp
+}
+
+/// L.B.R. 1017-2(c): if the case is dismissed and the debtor's address
+/// differs from the docket's, the debtor advises the trustee within 14 days
+/// of the dismissal order of the address for any refund.
+deadline dismissal-address-period: 14.days after DismissalOrderEntered() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 1017-2(c)"
+{
+  forum frcp
+}
+
+/// L.B.R. 1019-1(b)(1): within 14 days after entry of an order converting a
+/// case to chapter 13, the debtor files a schedule of post-petition debts
+/// that arose after the petition but before the conversion.
+deadline chapter13-conversion-debts-period: 14.days after ConversionToChapter13Entered() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 1019-1(b)"
+{
+  forum frcp
+}
+
+/// L.B.R. 1019-2: under FRBP 1019(e)(2) (whose 30 days run unless the court
+/// orders otherwise), the chapter 13 trustee files a final report and account
+/// within sixty days after conversion of the case.
+deadline converted-chapter13-final-report-period: 60.days after ConversionFromChapter13() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 1019-2"
+{
+  forum frcp
+}
+
+/// L.B.R. 2002-3(a): a chapter 11 debtor with more than 200 parties on its
+/// L.B.R. 1007-2(a) matrix files the application to retain a claims agent
+/// with its petition or within 7 days after it, unless the court orders
+/// otherwise.
+deadline claims-agent-application-period: 7.days after PetitionFiled() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 2002-3(a)(8): the debtor's counsel notifies the claims agent of an
+/// order dismissing or converting the case within seven days after its entry.
+deadline claims-agent-order-notice-period: 7.days after DismissOrConvertEntered() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 2002-3(a)(11): within 7 days after serving a document, the claims
+/// agent files a certificate of service referencing it and its docket number
+/// and each party served and the method of service.
+deadline claims-agent-service-certificate-period: 7.days after ClaimsAgentNoticeServed() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 2002-3(a)(18): within 14 days after an order dismissing a case, the
+/// claims agent forwards the clerk an electronic version of all proofs of
+/// claim, uploads the creditor matrix and dockets a final claims register.
+deadline claims-agent-dismissal-register-period: 14.days after DismissalOrderEntered() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 2002-3(a)(18): within 28 days after entry of a final decree, the
+/// claims agent forwards the proofs of claim, uploads the creditor matrix and
+/// dockets a final claims register.
+deadline claims-agent-decree-register-period: 28.days after FinalDecreeEntered() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 2002-3(a)(19): within 14 days after the earlier of an order
+/// converting the case or terminating the claims agent's services, the claims
+/// agent forwards the proofs of claim, uploads the public creditor matrix,
+/// forwards its sealed portions and dockets a final claims register.
+deadline claims-agent-conversion-register-period: 14.days after ClaimsAgentEndOrderEntered() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 2002-3(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 2002-3(c)(2): in a case with no claims agent, the debtor provides
+/// an updated creditor matrix within 14 days after entry of an order
+/// converting the case.
+deadline conversion-matrix-period: 14.days after ConversionOrderEntered() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 2002-3(c)"
+{
+  forum frcp
+}
+
+/// L.B.R. 2002-3(c)(2): in a case with no claims agent, the debtor provides
+/// an updated creditor matrix within 28 days after entry of a final decree.
+deadline decree-matrix-period: 28.days after FinalDecreeEntered() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 2002-3(c)"
+{
+  forum frcp
+}
+
+/// L.B.R. 2004-1(b)(1): if the examinee agrees to the date, time, place and
+/// scope, the party seeking the examination files a notice of examination at
+/// least 7 days before it; no motion, subpoena or order is required.
+deadline agreed-examination-notice-period: 7.days before Examination() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 2004-1(b)"
+{
+  forum frcp
+}
+
+/// L.B.R. 2004-1(b)(2): the party seeking an examination and the examinee may
+/// file an executed consent order for approval at least 7 days before the
+/// scheduled examination.
+deadline examination-consent-order-period: 7.days before Examination() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 2004-1(b)"
+{
+  forum frcp
+}
+
+/// L.B.R. 2014-1(c): an objection to an application to employ a professional
+/// is filed within 7 days of service of the application.
+deadline employment-objection-period: 7.days after EmploymentApplicationServed() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 2014-1(c)"
+{
+  forum frcp
+}
+
+/// L.B.R. 2016-1(b): an objection to an application for compensation or
+/// reimbursement of expenses is filed within 14 days of service of the
+/// application.
+deadline fee-application-objection-period: 14.days after FeeApplicationServed() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 2016-1(b)"
+{
+  forum frcp
+}
+
+/// L.B.R. 2016-3(a)(4): an application for attorney fees to be paid through a
+/// chapter 13 plan is filed within six months of the plan confirmation date;
+/// otherwise the trustee may certify non-compliance and the court issues a
+/// 28-day order to show cause.
+deadline chapter13-initial-fee-application-period: 6.months after Chapter13ConfirmationEntered() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 2016-3(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 2016-3(b)(2): a supplemental application for counsel fees to be
+/// paid through the chapter 13 plan is filed within 30 days after entry of an
+/// order approving a modified plan.
+deadline chapter13-supplemental-fee-period: 30.days after ModifiedPlanApproved() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 2016-3(b)"
+{
+  forum frcp
+}
+
+/// L.B.R. 2016-5(e): an objection to a request for Payment on Account is
+/// filed within 14 days of service of notice of the request.
+deadline payment-on-account-objection-period: 14.days after PaymentRequestNoticeServed() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 2016-5(e)"
+{
+  forum frcp
+}
+
+/// L.B.R. 2016-5(k): a professional paid on account more than the final
+/// compensation awarded repays the excess to the debtor within 14 days of the
+/// order allowing final compensation, unless the court fixes another date.
+deadline payment-on-account-repayment-period: 14.days after FinalCompensationAllowed() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 2016-5(k)"
+{
+  forum frcp
+}
+
+/// L.B.R. 3007-1(d): unless the court orders otherwise, if the claimant does
+/// not notify the objector in writing at least 7 days before the hearing date
+/// of its intent to contest the objection, the objector is entitled on
+/// request to a continuance at the first listing.
+deadline claimant-contest-notice-period: 7.days before ClaimObjectionHearing() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 3007-1(d)"
+{
+  forum frcp
+}
+
+/// L.B.R. 3017-2: an objection to a motion to approve the disclosure
+/// statement or plan voting procedures is filed and served no later than 7
+/// days before the hearing on the disclosure statement.
+deadline disclosure-objection-period: 7.days before DisclosureStatementHearing() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 3017-2"
+{
+  forum frcp
+}
+
+/// L.B.R. 3021-1(c): a post-confirmation distribution report is filed on or
+/// before the 20th day after the end of each calendar quarter.
+deadline distribution-report-period: 20.days after QuarterEnded() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 3021-1(c)"
+{
+  forum frcp
+}
+
+/// L.B.R. 4002-1(b): the debtor's interim authority to pay insiders'
+/// compensation terminates 21 days after the petition (or the order for
+/// relief in an involuntary case) unless the debtor files a compensation
+/// disclosure notice within the 21-day period.
+deadline insider-compensation-notice-period: 21.days after PetitionFiled() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 4002-1(b)"
+{
+  forum frcp
+}
+
+/// L.B.R. 4002-2(d): an objection to disclosed insider compensation, with a
+/// proposed order and notice of the hearing date, is served at least 21 days
+/// before the hearing.
+deadline insider-compensation-objection-service-period: 21.days before InsiderCompensationObjectionHearing() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 4002-2(d)"
+{
+  forum frcp
+}
+
+/// L.B.R. 4004-2(b)(2): an objection to a chapter 12 or 13 trustee's final
+/// report is filed within 30 days from the date of service of the clerk's
+/// notice.
+deadline trustee-final-report-objection-period: 30.days after FinalReportNoticeServed() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 4004-2(b)"
+{
+  forum frcp
+}
+
+/// L.B.R. 4004-3(c): after the debtor's certification regarding domestic
+/// support obligations and § 522(q), the clerk's notice requires any
+/// objection to a chapter 12 or 13 discharge to be filed within 14 days of
+/// its date; with none, the court enters the discharge (L.B.R. 4004-3(d)).
+deadline chapter13-discharge-objection-period: 14.days after DischargeNoticeIssued() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 4004-3(c)"
+{
+  forum frcp
+}
+
+/// L.B.R. 5003-2(b)(2): a sealed document is unsealed unless a party in
+/// interest objects within 60 days of service of the clerk's notice.
+deadline unsealing-objection-period: 60.days after UnsealingNoticeServed() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 5003-2(b)"
+{
+  forum frcp
+}
+
+/// L.B.R. 5011-1(f): unless the district court directs otherwise, within 14
+/// days after service of a motion to withdraw the reference, an opposing
+/// party files with the district court and serves a brief in opposition.
+deadline withdrawal-opposition-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 5011-1(f)"
+{
+  forum frcp
+}
+
+/// L.B.R. 5070-2(b): if FRBP 9019 requires or a party requests judicial
+/// approval of a contested matter's resolution, the parties file a
+/// stipulation, motion or other document implementing it within 30 days of
+/// reporting it to the court.
+deadline contested-resolution-document-period: 30.days after ContestedMatterResolutionReported() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 5070-2(b)"
+{
+  forum frcp
+}
+
+/// L.B.R. 6004-1(a): a response or objection to a motion to sell assets under
+/// § 363(b) or (f) (other than one under FRBP 6004(d)) is filed and served no
+/// later than 21 days after the motion is served.
+deadline sale-objection-period: 21.days after SaleMotionServed() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 6004-1(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 7005-1(b)(2): for a motion to dismiss under FRCP 12(b)(6), for
+/// judgment on the pleadings or for summary judgment in an adversary
+/// proceeding, the L.B.R. 9014-3(h) response period is 21 days.
+deadline dispositive-motion-response-period: 21.days after DispositiveMotionServed() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 7005-1(b)"
+{
+  forum frcp
+}
+
+/// L.B.R. 7041-1(b): if judicial approval of an adversary proceeding's
+/// resolution is required or requested, the parties file a stipulation,
+/// motion or other document implementing it within 30 days of reporting it to
+/// the court.
+deadline adversary-resolution-document-period: 30.days after AdversaryResolutionReported() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 7041-1(b)"
+{
+  forum frcp
+}
+
+/// L.B.R. 8003-2: if a notice of appeal is docketed in the district court
+/// without prepayment of the fee, the appellant pays the fee to the
+/// bankruptcy clerk within 14 days after docketing; failing that, the
+/// district court may dismiss the appeal.
+deadline appeal-fee-period: 14.days after AppealDocketed() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 8003-2"
+{
+  forum frcp
+}
+
+/// L.B.R. 8009-2(a)(1): the appellant deposits with the court reporter the
+/// estimated cost of the transcript within 14 days after filing the notice of
+/// appeal.
+deadline transcript-deposit-period: 14.days after NoticeOfAppealFiled() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 8009-2(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 8009-2(a)(2): an appellant who cannot afford the transcript applies
+/// to the bankruptcy court within 14 days of filing the notice of appeal for
+/// a transcript at government expense under 28 U.S.C. § 753(f).
+deadline transcript-expense-application-period: 14.days after NoticeOfAppealFiled() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 8009-2(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 8009-2(a)(3): if the bankruptcy court denies the application, the
+/// appellant within 14 days of the order either deposits the transcript fees
+/// or applies to the district court.
+deadline transcript-after-denial-period: 14.days after TranscriptApplicationDenied() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 8009-2(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 8012-1(a): the corporate and other disclosure statements and list
+/// are filed not later than 30 days after the appeal is docketed in the
+/// district court.
+deadline appeal-disclosure-period: 30.days after AppealDocketed() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 8012-1(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 8013-2(a): a motion to expedite an appeal under FRBP 8013(a) is
+/// filed within 14 days of the docketing of the appeal in the district court.
+deadline expedite-motion-period: 14.days after AppealDocketed() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 8013-2(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 8013-2(a): if the basis to expedite arises after the 14-day period
+/// expires, a party may move to expedite within 7 days of the occurrence or
+/// event that is its basis.
+deadline late-expedite-motion-period: 7.days after ExpeditionGroundArose() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 8013-2(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 8013-2(c)(1): unless the district court directs otherwise, any
+/// reply in support of a motion to expedite an appeal is filed within 3 days
+/// after service of the response.
+deadline expedite-reply-period: 3.days after ExpediteResponseServed() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 8013-2(c)"
+{
+  forum frcp
+}
+
+/// L.B.R. 8018-1(b): a motion to extend the time to file a brief on appeal
+/// should be made at least 3 days in advance of the brief's due date.
+deadline brief-extension-motion-period: 3.days before BriefDue() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 8018-1(b)"
+{
+  forum frcp
+}
+
+/// L.B.R. 9013-3(c): an objection to an application governed by L.B.R. 9013-3
+/// is filed and served no later than 7 days after the applicant serves it.
+deadline application-objection-period: 7.days after ApplicationServed() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 9013-3(c)"
+{
+  forum frcp
+}
+
+/// L.B.R. 9014-3(h): except as L.B.R. 9014-2 and 9014-3(i) provide, a
+/// response or objection to a motion is filed and served no later than 14
+/// days after the movant serves the motion.
+deadline motion-response-period: 14.days after MotionServed() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 9014-3(h)"
+{
+  forum frcp
+}
+
+/// L.B.R. 9014-4(a): a person serving a document files a certificate of
+/// service promptly, and no later than the earlier of 3 days after filing the
+/// document or, if a hearing is scheduled, before the hearing.
+deadline service-certificate-period: 3.days after ServedDocumentFiled() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 9014-4(a)"
+{
+  forum frcp
+}
+
+/// L.B.R. 9015-1: every other party files and serves its statement of consent
+/// to a jury trial by a bankruptcy judge within 14 days of the demanding
+/// party's timely statement.
+deadline jury-consent-period: 14.days after JuryConsentFiled() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 9015-1"
+{
+  forum frcp
+}
+
+/// L.B.R. 9019-2(n)(2)(A): unless the mediator directs otherwise, not later
+/// than 3 days before the initial mediation conference each party provides
+/// the mediator a mediation memorandum of no more than 2 pages.
+deadline mediation-memorandum-period: 3.days before MediationConference() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 9019-2(n)"
+{
+  forum frcp
+}
+
+/// L.B.R. 9019-2(n)(6): if the mediation results in an agreement, a motion
+/// for court approval is filed no later than 30 days after the conclusion of
+/// the mediation, or within such additional time as the court directs.
+deadline mediation-approval-motion-period: 30.days after MediationConcluded() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 9019-2(n)"
+{
+  forum frcp
+}
+
+/// L.B.R. 9019-3(i)(3): within 14 days of the conclusion of the SLM Program,
+/// the debtor files and serves a Notice of Resolution or a Notice of No
+/// Resolution.
+deadline slm-resolution-notice-period: 14.days after SlmProgramConcluded() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 9019-3(i)"
+{
+  forum frcp
+}
+
+/// L.B.R. 9019-3(j)(1): no later than 21 days after entry of the SLM
+/// Commencement Order, the creditor or servicer registers on the portal.
+deadline slm-portal-registration-period: 21.days after SlmCommencementOrderEntered() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 9019-3(j)"
+{
+  forum frcp
+}
+
+/// L.B.R. 9019-3(j)(2): no later than 30 days after the debtor submits a
+/// completed Initial SLM Package, the creditor or servicer acknowledges its
+/// receipt on the portal.
+deadline slm-acknowledgement-period: 30.days after SlmPackageSubmitted() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 9019-3(j)"
+{
+  forum frcp
+}
+
+/// L.B.R. 9019-3(j)(3): within 30 days of receiving the Initial SLM Package,
+/// the creditor or servicer notifies the debtor if additional or corrected
+/// documentation is needed.
+deadline slm-documentation-request-period: 30.days after SlmPackageSubmitted() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 9019-3(j)"
+{
+  forum frcp
+}
+
+/// L.B.R. 9019-3(k)(1): if the chapter 13 plan is not confirmed, within 30
+/// days of the Notice of Resolution the debtor files an amended plan
+/// providing for direct SLM Program payments, unless the plan already so
+/// provides.
+deadline slm-amended-plan-period: 30.days after SlmResolutionNoticeFiled() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 9019-3(k)"
+{
+  forum frcp
+}
+
+/// L.B.R. 9019-3(k)(2): if the confirmed plan pays the creditor's claim pro
+/// rata with other unsecured claims, the debtor moves within 30 days of the
+/// Notice of Resolution to modify it to classify the eligible loans
+/// separately.
+deadline slm-plan-modification-period: 30.days after SlmResolutionNoticeFiled() counted_by frcp6 cite "Bankr. E.D. Pa. L.B.R. 9019-3(k)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed with notice of hearing and served" by applicant cite "Bankr. E.D. Pa. L.B.R. 9014-3(e)"
+{
+  note "Before filing, the movant obtains a hearing date under L.B.R. 5070-1(a) and files by the deadline the judge's hearing calendar lists (L.B.R. 9014-3(c)-(d)); on the day it files, it serves the motion, the L.B.F. 9014-3 notice and a proposed order on the Clerk's Service List and any person directly affected (L.B.R. 9014-3(e)-(g)) and certifies service (L.B.R. 9014-4)."
+  edge-motion-filed-response "Response or objection filed" -> opposed {
+    authority cite "Bankr. E.D. Pa. L.B.R. 9014-3(h)"
+    within motion-response-period
+  }
+  edge-motion-filed-unopposed "No timely response; certification of no response" -> ruling {
+    authority cite "Bankr. E.D. Pa. L.B.R. 9014-3(k)"
+  }
+}
+
+state opposed: "Response or objection filed" by opponent cite "Bankr. E.D. Pa. L.B.R. 9014-3(j)"
+{
+  note "The response states whether the party consents to the court's entry of final orders or judgments if Article III would otherwise bar it (L.B.R. 9014-3(j)); special response periods apply to plan amendments, disclosure statements, sales and dispositive adversary motions (L.B.R. 9014-3(i))."
+  edge-opposed-hearing "Hearing held" -> ruling {
+    authority cite "Bankr. E.D. Pa. L.B.R. 9014-3(c)"
+  }
+}
+
+decision ruling: "Motion decided" by court cite "Bankr. E.D. Pa. L.B.R. 9014-3(k)"
+{
+  note "With no timely response, the court may grant the relief without a hearing unless the FRBP require one; a certification of no response does not cancel the hearing (L.B.R. 9014-3(k)). A resolved contested matter is reported and documented within 30 days (L.B.R. 5070-2)."
+  edge-ruling-granted "Granted" -> decided { authority cite "Bankr. E.D. Pa. L.B.R. 9014-3(k)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "Bankr. E.D. Pa. L.B.R. 9014-3(c)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. E.D. Pa. L.B.R. 1001-1(a)"
+{
+  note "The Local Bankruptcy Rules and Forms govern practice and procedure before the court (L.B.R. 1001-1(a)) and are construed consistently with the FRBP and the Official Bankruptcy Forms (L.B.R. 1001-1(c)(1))."
+}

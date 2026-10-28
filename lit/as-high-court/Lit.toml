@@ -8,12 +8,14 @@
 # excludes intermediate weekends and holidays from periods under 7 days and
 # has no lit/core counting rule, so the rules' periods are stated in notes,
 # not counted deadlines. An appeal hands off to lit/as-high-court-appellate.
+# The packages route on lit/as-rules' trigger events (lg-u561.5).
 [package]
 name = "as-high-court-civil"
 version = "0.1.0"
 language = 1
 pack_id = "as-high-court-civil"
 forum = "as-high-court"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "american-samoa"
 title = "High Court of American Samoa, Trial Division, civil"
@@ -30,6 +32,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+as-state-rules = { version = "^0.1.0", path = "../as-rules" }
 
 [sources.as-tcrcp]
 title = "American Samoa Trial Court Rules of Civil Procedure (TCRCP), American Samoa Bar Association posting as served 2026-10-28; UNOFFICIAL, CURRENCY UNCONFIRMED (latest stated effective date March 1, 1996)"

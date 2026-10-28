@@ -13,12 +13,14 @@
 # judgment; the outline's 28 U.S.C. § 1259 cite (Supreme Court review of
 # the Court of Appeals for the Armed Forces) does not reach the High Court
 # and is removed. A Trial Division appeal arrives from lit/as-high-court.
+# The packages route on lit/as-rules' trigger events (lg-u561.5).
 [package]
 name = "as-high-court-appellate"
 version = "0.1.0"
 language = 1
 pack_id = "as-high-court-appellate"
 forum = "as-high-court-appellate"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "american-samoa"
 title = "High Court of American Samoa, Appellate Division"
@@ -35,6 +37,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+as-state-rules = { version = "^0.1.0", path = "../as-rules" }
 
 [sources.as-acr]
 title = "American Samoa Appellate Court Rules (ACR), American Samoa Bar Association posting as served 2026-10-28 (page modified 2020-10-05); UNOFFICIAL, CURRENCY UNCONFIRMED (latest stated effective date July 15, 1987)"

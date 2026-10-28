@@ -1,11 +1,16 @@
 module as-high-court-appellate.appeal
 
+import as-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled }
+
 start notice-filed
 
 state notice-filed: "Notice of appeal filed" by applicant cite "A.C.R. 3(a)"
 {
   note "An appeal permitted by law as of right from the trial division, the land and titles division or the district court is taken by filing a notice of appeal with the clerk of court within the time allowed by Rule 4 (A.C.R. 3(a)). In a civil case a motion for a new trial, required by 43.0802 A.S.C.A. (not vendored), is filed within 10 days after entry of the judgment or order appealed from, and the notice of appeal within 10 days after the motion is denied; a timely Rule 52(b) motion to amend findings runs the time from the order disposing of it (A.C.R. 4(a)). The rule text is the American Samoa Bar Association's posting, UNOFFICIAL and CURRENCY UNCONFIRMED (sources/as-high-court-appellate/PROVENANCE.md). Periods are stated, not counted: Rule 26(a) excludes the trigger day, includes the last day unless it is a Saturday, Sunday or legal holiday, and excludes intermediate Saturdays, Sundays and legal holidays from a period of less than 7 days; 6 days are added after service by mail (A.C.R. 26(a), (c)). The filing fee is set by 26 HCR, which is not vendored (A.C.R. 3(e))."
-  edge-notice-filed-timely "Timely notice" -> appealability { authority cite "A.C.R. 4(a)" }
+  edge-notice-filed-timely "Timely notice" -> appealability {
+    event NoticeOfAppealFiled()
+    authority cite "A.C.R. 4(a)"
+  }
   edge-notice-filed-untimely "Late notice: motion to dismiss" -> dismissed-untimely {
     authority cite "A.C.R. 4(a)"
   }
@@ -28,7 +33,10 @@ terminal dismissed-jurisdiction: "Dismissed: no appeal of right" outcome [loss, 
 state record: "Record and transcript" by applicant cite "A.C.R. 10(b)"
 {
   note "The notice of appeal requests an estimate of the transcript; the appellant has 5 days from filing the notice to request the estimate from the court reporters, and if no request is made or no transcript will be ordered, the appellant's brief is due 35 days from the filing of the notice of appeal (A.C.R. 3(c)). Within 10 days after receiving the estimate the appellant orders the needed transcript in writing, or certifies that none is ordered, and unless the entire transcript is ordered files a statement of the issues; the appellee may designate additional parts within 10 days after service (A.C.R. 10(b)). If the transcript cannot be completed within 30 days of the order the reporter requests an extension from the clerk (A.C.R. 11(b)). On assembly the clerk files the record and notifies the parties of the filing date (A.C.R. 12(b))."
-  edge-record-filed "Record filed" -> briefing { authority cite "A.C.R. 12(b)" }
+  edge-record-filed "Record filed" -> briefing {
+    event RecordFiled()
+    authority cite "A.C.R. 12(b)"
+  }
 }
 
 state briefing: "Briefing" by applicant cite "A.C.R. 31(a)"
@@ -46,7 +54,10 @@ decision argument: "Oral argument or submission on the briefs" by court cite "A.
 decision decision-issued: "Decision and entry of judgment" by court cite "A.C.R. 36"
 {
   note "The notation of a judgment in the docket is its entry; the clerk enters it on receipt of the opinion and on that date mails or places in the attorney's court box a copy of the opinion or judgment and notice of the date of entry (A.C.R. 36). A frivolous appeal may draw just damages and single or double costs (A.C.R. 38); a bill of costs is filed within 14 days after entry of judgment, objections within 10 days of its service (A.C.R. 39(d))."
-  edge-decision-issued-entered "Judgment entered" -> rehearing-window { authority cite "A.C.R. 36" }
+  edge-decision-issued-entered "Judgment entered" -> rehearing-window {
+    event DecisionFiled()
+    authority cite "A.C.R. 36"
+  }
 }
 
 decision rehearing-window: "Petition for rehearing?" by applicant cite "A.C.R. 40(a)"
@@ -70,7 +81,10 @@ terminal rehearing-granted: "Rehearing granted: the case is redecided or reargue
 state mandate-issued: "Mandate issued" by court cite "A.C.R. 41(a)"
 {
   note "The mandate issues 21 days after entry of judgment unless the time is shortened or enlarged by order; a timely petition for rehearing does not stay it unless the appellate division orders otherwise (A.C.R. 41(a))."
-  edge-mandate-issued-final "Mandate issued" -> final-appellate { authority cite "A.C.R. 41(a)" }
+  edge-mandate-issued-final "Mandate issued" -> final-appellate {
+    event MandateIssued()
+    authority cite "A.C.R. 41(a)"
+  }
 }
 
 terminal final-appellate: "Mandate issued: appeal concluded" outcome [final] cite "A.C.R. 41(a)"

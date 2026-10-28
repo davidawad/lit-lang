@@ -1,11 +1,14 @@
 module as-high-court-civil.civil
 
+import as-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
 start complaint-filed
 
 state complaint-filed: "Complaint filed" by applicant cite "T.C.R.C.P. 3"
 {
   note "A civil action is commenced by filing a complaint with the court (T.C.R.C.P. 3). The rule text is the American Samoa Bar Association's posting, UNOFFICIAL and CURRENCY UNCONFIRMED (sources/as-high-court/PROVENANCE.md). Periods in this package are stated, not counted: Rule 6(a) excludes the trigger day, includes the last day unless it is a Saturday, Sunday or legal holiday (New Year's Day, Washington's Birthday, Flag Day, Memorial Day, Independence Day, Columbus Day, Veterans Day, Thanksgiving Day, Christmas Day and any day appointed by the Governor or the Fono), and excludes intermediate Saturdays, Sundays and legal holidays from a period of less than 7 days; 6 days are added after service by mail (T.C.R.C.P. 6(a), (e)). The vendored rules state no filing fee and no time limit for service. The earlier outline named no leading decision for this step."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    event ActionCommenced()
     authority cite "T.C.R.C.P. 4(d)"
   }
 }
@@ -72,14 +75,20 @@ state discovery: "Discovery and pretrial" by applicant cite "T.C.R.C.P. 26(a)"
 decision summary-judgment: "Summary judgment decided" by court cite "T.C.R.C.P. 56(c)"
 {
   note "A claimant may move at any time after 20 days from commencement of the action or after service of the adverse party's motion; a defending party at any time (T.C.R.C.P. 56(a), (b)). The motion is served at least 10 days before the hearing, and judgment is rendered if there is no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law (T.C.R.C.P. 56(c)). The earlier outline named no American Samoa summary judgment decision."
-  edge-summary-judgment-granted "Granted" -> judgment-entered { authority cite "T.C.R.C.P. 56(c)" }
+  edge-summary-judgment-granted "Granted" -> judgment-entered {
+    event JudgmentEntered()
+    authority cite "T.C.R.C.P. 56(c)"
+  }
   edge-summary-judgment-denied "Denied" -> trial { authority cite "T.C.R.C.P. 56(d)" }
 }
 
 state trial: "Trial by the court" by court cite "T.C.R.C.P. 52(a)"
 {
   note "The jury rules (Rules 38, 39 and 47 to 51) are omitted from the vendored TCRCP; the court finds the facts specially and states its conclusions of law separately, and judgment is entered under Rule 58 (T.C.R.C.P. 52(a)). The court may place actions on the trial calendar on its own or on a party's request and notice (T.C.R.C.P. 40). A motion to amend the findings is made not later than 10 days after entry of judgment (T.C.R.C.P. 52(b))."
-  edge-trial-judgment "Decision" -> judgment-entered { authority cite "T.C.R.C.P. 58" }
+  edge-trial-judgment "Decision" -> judgment-entered {
+    event JudgmentEntered()
+    authority cite "T.C.R.C.P. 58"
+  }
   edge-trial-settled "Settled before decision" -> settled { authority cite "T.C.R.C.P. 41(a)" }
 }
 
@@ -105,6 +114,7 @@ decision appeal-window: "Appeal or not" by applicant cite "A.C.R. 4(a)"
 {
   note "The notice of appeal is filed with the clerk of court within 10 days after the denial of the motion for a new trial (A.C.R. 4(a)); failure to take any other step does not affect the validity of the appeal but is ground for such action as the appellate division deems appropriate, which may include dismissal (A.C.R. 3(a))."
   edge-appeal-window-appeal "Notice of appeal filed" -> appeal-taken {
+    event NoticeOfAppealFiled()
     authority cite "A.C.R. 3(a)"
   }
   edge-appeal-window-none "No appeal" -> final-no-appeal { authority cite "A.C.R. 4(a)" }

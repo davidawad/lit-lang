@@ -1,0 +1,29 @@
+# The American Samoa base library (lg-u561.5 pattern): the trigger events
+# the High Court packages route their graphs on: lit/as-high-court (Trial
+# Division, civil) and lit/as-high-court-appellate (Appellate Division).
+# It declares no period: the rules' periods are stated in the court
+# packages' notes, bound to the American Samoa Bar Association's posting
+# of the TCRCP and ACR (UNOFFICIAL, CURRENCY UNCONFIRMED). No procedure of
+# its own.
+[package]
+name = "as-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "as-state-rules"
+forum = "as-state-rules"
+authority = "StateRule"
+jurisdiction_id = "american-samoa"
+title = "American Samoa court rules (base library)"
+description = "The rule layer the High Court of American Samoa's packages share: the trigger events their graphs route on. No procedure of its own."
+in_force = "1996-03-01"
+known_at = "2026-10-28"
+unknown_before = "1996-03-01"
+jurisdiction = "American Samoa courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

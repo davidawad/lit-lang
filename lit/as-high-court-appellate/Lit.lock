@@ -4,11 +4,19 @@ version = 2
 name = "as-high-court-appellate"
 version = "0.1.0"
 language = 1
-source = "sha256:de0c8e75436be62369ca25078fb6317c228084828c16b6fc9552dad4e9b00812"
-semantic = "sha256:6696c60f79b19dee91f78302d6839d16a6645c5a1550b1ca4477ffd68bfc5d45"
+source = "sha256:108c362d5b3dfcca6272d29051a5df1ef1af5eac9fe0e4f124d9e61e08fa9704"
+semantic = "sha256:5a95b01b809bed7e36ba84b54ac192268e575b68864d49bc1b8821340220f22c"
 texts = [
     "as-acr sources/as-high-court-appellate/as-appellate-rules-asbar-sectioned.txt sha256:5ccb5f63c1073d2458993072050c3ec0a0cd3749b246851df72f52e796f94567",
 ]
+dependencies = [
+    "as-state-rules 0.1.0",
+    "core 1.0.0",
+]
+
+[[package]]
+name = "as-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

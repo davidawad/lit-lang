@@ -1,15 +1,12 @@
-// OUTLINE (unverified). The state's shared rule layer: the events every
-// court package of the state routes its graph on. Its cites are holes until a
-// fetch-first pass vendors the rule text and a later pass verifies it.
-module outline-as-state-rules
+module as-state-rules
 
-/// The American Samoa base library: the rules the state's court packages share
-/// (A.S. R. Civ. P., A.S. R. App. P., unverified). It declares their trigger events and no
-/// procedure of its own; its pack holds only this placeholder terminal,
-/// which no link or case may route through.
+/// `lit/as-rules` is a base library: it declares the trigger events the
+/// High Court of American Samoa's packages share and no procedure of its
+/// own. Its pack holds only this placeholder terminal, which no link or
+/// case may route through.
 start library
 
-terminal library: "American Samoa state court rules library (no procedure)"
+terminal library: "American Samoa court rules library (no procedure)"
 
 /// An action, claim, petition or charge is filed and the proceeding begins.
 event ActionCommenced()

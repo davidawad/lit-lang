@@ -1,0 +1,10 @@
+
+### `ma-criminal-trial-court/ma-rules-of-criminal-procedure-2025-11-01.txt` — Massachusetts Rules of Criminal Procedure (429 pp; Rule 36 is case management / speedy trial)
+
+- Source: https://www.mass.gov/doc/massachusetts-rules-of-criminal-procedure/download (official site; 429 pages, sha256 1269f9b86ec5094638d7348d445966a884731804983dd3f0ee03ca92e22f3847).
+- Edition: Massachusetts Rules of Criminal Procedure, 'Including amendments effective November 1, 2025', published by the Massachusetts Trial Court Law Libraries (served as jud-lib-rules-of-criminal-procedure-nov-2025.pdf), linked from https://www.mass.gov/law-library/massachusetts-rules-of-criminal-procedure. www.mass.gov serves no robots.txt (no robots file returned); home page not retrievable (403); terms not read; fetched on David's explicit ruling 2026-10-28 despite robots/terms (barrier: a bot challenge, not a robots or terms refusal: plain curl answered with a WAF filter that returned HTTP 403 to curl on the first request (mass.gov) (HTTP 403); the pages were fetched in BrowserOS neo with an in-page fetch from the loaded origin at about 1 request per 1.1 s); tool: BrowserOS neo with the identifying User-Agent lit-lang-provenance/1.0 (angrybohr@proton.me).
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 b4651ba12ce09aadd95d6df67b1463c881fc94376935fef3029e6527d39b5479. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `ma-criminal-trial-court/original/ma-rules-of-criminal-procedure-2025-11-01.pdf` as served (sha256 1269f9b86ec5094638d7348d445966a884731804983dd3f0ee03ca92e22f3847); extraction sha256 b4651ba12ce09aadd95d6df67b1463c881fc94376935fef3029e6527d39b5479.
+
+- Note (lg-gddt): Criminal appeals: Massachusetts Rules of Appellate Procedure, covered by sources/ma-appeals-sjc/ if it carries them.

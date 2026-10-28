@@ -1,0 +1,138 @@
+module hi-appellate-civil.appeal
+
+/// An opening or answering brief: at most 35 pages, exclusive of indexes,
+/// appendices and statements of related cases, except after leave granted
+/// (Haw. R. App. P. 28(a)).
+limit principal-brief { pages <= 35 cite "Haw. R. App. P. 28(a)" } cite "Haw. R. App. P. 28(a)"
+/// A reply brief: at most 10 pages on the same terms (Haw. R. App. P.
+/// 28(a)).
+limit reply-brief { pages <= 10 cite "Haw. R. App. P. 28(a)" } cite "Haw. R. App. P. 28(a)"
+
+/// An application for a writ of certiorari: at most 20 pages (Haw. R. App.
+/// P. 40.1(d)).
+limit certiorari-application {
+  pages <= 20 cite "Haw. R. App. P. 40.1(d)"
+} cite "Haw. R. App. P. 40.1(d)"
+
+/// The appellant's opening brief is filed (Haw. R. App. P. 28(b)).
+event OpeningBriefFiled() paper principal-brief
+/// The appellee's answering brief is filed (Haw. R. App. P. 28(c)).
+event AnsweringBriefFiled() paper principal-brief
+/// The appellant's reply brief is filed (Haw. R. App. P. 28(d)).
+event ReplyBriefFiled() paper reply-brief
+/// An application for a writ of certiorari is filed (Haw. R. App. P.
+/// 40.1(a)).
+event CertiorariApplicationFiled() paper certiorari-application
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "Haw. R. App. P. 4(a)"
+{
+  note "An appeal permitted by law is taken by filing a notice of appeal, with the fees established by statute or rule, within the time Rule 4 allows (Haw. R. App. P. 3(a)). In a civil case the notice is filed within 30 days after entry of the judgment or appealable order; a mailed notice is timely if postmarked within that time and received no later than 5 days after the postmark (Haw. R. App. P. 4(a)(1)). The court or agency appealed from may extend the time for good cause on a motion filed within it, or for excusable neglect on a motion filed not later than 30 days after it expires, by no more than 30 days past the prescribed time (Haw. R. App. P. 4(a)(4)). A notice of cross-appeal is filed within 14 days after the notice of appeal is served on the cross-appellant, or within the time for the notice of appeal, whichever is later (Haw. R. App. P. 4.1(b)). Periods are stated, not counted: Rule 26(a) computes them, and the appellate courts may not change the jurisdictional requirements by extension (Haw. R. App. P. 26)."
+  edge-notice-filed-timely "Timely notice" -> appealability {
+    authority cite "Haw. R. App. P. 4(a)"
+  }
+  edge-notice-filed-late "Notice not filed in time" -> dismissed-untimely {
+    authority cite "Haw. R. App. P. 4(a)"
+  }
+}
+
+terminal dismissed-untimely: "Appeal fails: notice untimely" outcome [loss, dismissal] cite "Haw. R. App. P. 26(b)"
+{
+  note "The appellate courts may extend a time the rules prescribe for good cause, but no court, judge or justice may change the jurisdictional requirements of Rule 4 (Haw. R. App. P. 26(b)); a notice filed outside Rule 4's time, as extended under Rule 4(a)(4), does not bring the appeal."
+}
+
+decision appealability: "Appealable judgment or order?" by court cite "Haw. R. App. P. 12.1"
+{
+  note "Within 10 days after the record on appeal is filed, each appellant and cross-appellant files a statement of jurisdiction of at most 10 pages showing the statutory or other grounds of appellate jurisdiction and the filing dates establishing the timeliness of the appeal; an appellee contesting jurisdiction may file a statement within the same period; in a multi-claim or multi-party civil case it shows how each claim against each party was resolved or whether the order or judgment was certified for appeal (Haw. R. App. P. 12.1(a)-(c)). The jurisdiction statute the outline cited (HRS § 641-1) is not vendored and is not cited. The earlier outline named no appealability decision."
+  edge-appealability-yes "Appealable" -> record { authority cite "Haw. R. App. P. 12.1" }
+  edge-appealability-no "Not appealable" -> dismissed-jurisdiction {
+    authority cite "Haw. R. App. P. 12.1"
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: no appealable judgment or order" outcome [loss, dismissal] cite "Haw. R. App. P. 12.1"
+{
+  note "Interlocutory review is sought by a motion for leave to file an interlocutory appeal filed within 30 days of the circuit court's entry of the order; if granted, the notice of appeal follows within 30 days after entry of the order granting leave (Haw. R. App. P. 4(a)(1)). Not modeled here."
+}
+
+state record: "Record and transcripts" by applicant cite "Haw. R. App. P. 10"
+{
+  note "The appellant requests the reporter's transcripts it deems necessary within 10 days after filing the notice of appeal; the reporter completes them within 45 days after the notice of appeal is filed, or notifies the parties of a new date, but within 60 days unless the appellate court extends the time (Haw. R. App. P. 10(b)). Unless otherwise provided, the clerk of the court appealed from assembles, certifies and electronically files the record on appeal within 60 days after the notice of appeal is filed (Haw. R. App. P. 11(b))."
+  edge-record-briefing "Record on appeal filed" -> briefing {
+    authority cite "Haw. R. App. P. 11(b)"
+  }
+}
+
+state briefing: "Briefing" by applicant cite "Haw. R. App. P. 28"
+{
+  note "The appellant files the opening brief within 40 days after the record on appeal is filed; the appellee files the answering brief within 40 days after service of the opening brief or docketing of the appeal, whichever is later; the appellant may file a reply within 14 days after service of the answering brief, or else files a notification that no reply will be filed before that time expires (Haw. R. App. P. 28(b)-(d)). An opening or answering brief may not exceed 35 pages and a reply 10 pages, except after leave granted (Haw. R. App. P. 28(a))."
+  edge-briefing-argument "Briefing complete" -> argument { authority cite "Haw. R. App. P. 28" }
+}
+
+decision argument: "Oral argument or submission on the briefs" by court cite "Haw. R. App. P. 34(a)"
+{
+  note "Oral argument is had in all cases except those in which the appellate court orders consideration without it (Haw. R. App. P. 34(a)). A motion to postpone argument or for additional time is filed within 10 days of the clerk's notice of argument, and a motion to retain oral argument within 10 days after the mailing of an order submitting the case on the briefs (Haw. R. App. P. 34(b), (c))."
+  edge-argument-decided "Argued or submitted" -> decision-issued {
+    authority cite "Haw. R. App. P. 34(a)"
+  }
+}
+
+decision decision-issued: "Opinion or dispositional order" by court cite "Haw. R. App. P. 36"
+{
+  note "After a final decision other than an order of dismissal, the court prepares the judgment on appeal; its filing is entry, and the appellate clerk serves it on each party and on the court appealed from (Haw. R. App. P. 36(a), (b)). A request for fees and costs is filed no later than 14 days after the time for a motion for reconsideration has expired or the motion has been decided; objections follow within 10 days after service and a reply within 7 days (Haw. R. App. P. 39(d)). Dispositions, their publication and citation are governed by Rule 35 as amended by the order of July 21, 2026, which states no period. The earlier outline named no decision on the standard of review."
+  edge-decision-issued-reconsideration "Motion for reconsideration" -> reconsideration {
+    authority cite "Haw. R. App. P. 40(a)"
+  }
+  edge-decision-issued-judgment "No motion: judgment on appeal entered" -> judgment-entered {
+    authority cite "Haw. R. App. P. 36(b)"
+  }
+}
+
+decision reconsideration: "Reconsideration decided" by court cite "Haw. R. App. P. 40(d)"
+{
+  note "A motion for reconsideration may be filed only within 10 days after the filing of the opinion, dispositional order or ruling, unless special leave for more time is granted within that period; it states with particularity the points of law or fact the court overlooked or misapprehended (Haw. R. App. P. 40(a), (b)). The appellate court grants or denies it within 10 days of filing; failure to act within the 10 days is a rejection (Haw. R. App. P. 40(d))."
+  edge-reconsideration-denied "Denied or not acted on" -> judgment-entered {
+    authority cite "Haw. R. App. P. 40(d)"
+  }
+  edge-reconsideration-granted "Granted" -> reconsideration-granted {
+    authority cite "Haw. R. App. P. 40(d)"
+  }
+}
+
+terminal reconsideration-granted: "Reconsideration granted: decision modified" outcome [appeal] cite "Haw. R. App. P. 40(d)"
+{
+  note "If reconsideration is granted the court may, with or without new argument, modify the decision or take other appropriate action (Haw. R. App. P. 40(d)). Modeled as an exit; in practice it returns to decision."
+}
+
+state judgment-entered: "Judgment on appeal entered" by court cite "Haw. R. App. P. 36(c)"
+{
+  note "The Intermediate Court of Appeals' judgment is effective, if no application for a writ of certiorari is filed, on the thirty-first day after entry, or on expiration of an extension under Rule 40.1(a); if an application is filed, on entry of the supreme court's order dismissing or rejecting it, or of its judgment affirming in whole (Haw. R. App. P. 36(c)). A timely application stays finality of that judgment unless the supreme court orders otherwise (Haw. R. App. P. 41)."
+  edge-judgment-entered-certiorari "Application for a writ of certiorari" -> certiorari {
+    authority cite "Haw. R. App. P. 40.1(a)"
+  }
+  edge-judgment-entered-final "No application" -> judgment-effective {
+    authority cite "Haw. R. App. P. 36(c)"
+  }
+}
+
+decision certiorari: "Certiorari accepted or rejected" by court cite "Haw. R. App. P. 40.1(g)"
+{
+  note "The application is filed within 30 days after the filing of the Intermediate Court of Appeals' judgment on appeal or dismissal order; a written request filed within those 30 days gets an automatic 30-day extension from the clerk, and an untimely request extends nothing (Haw. R. App. P. 40.1(a)). Acceptance or rejection is discretionary (Haw. R. App. P. 40.1(b)). The application may not exceed 20 pages; a response of at most 20 pages may be filed within 15 days after the application, and a reply of at most 5 pages within 7 days after a response (Haw. R. App. P. 40.1(d), (e)). The supreme court acts within 60 days after the application is filed; failure to accept it within the 60 days is a rejection (Haw. R. App. P. 40.1(g)). The certiorari statute the outline cited (HRS § 602-59) is not vendored and is not cited."
+  edge-certiorari-rejected "Rejected or dismissed" -> judgment-effective {
+    authority cite "Haw. R. App. P. 41"
+  }
+  edge-certiorari-accepted "Accepted" -> certiorari-accepted {
+    authority cite "Haw. R. App. P. 40.1(b)"
+  }
+}
+
+terminal certiorari-accepted: "Certiorari accepted: review in the supreme court" outcome [appeal] cite "Haw. R. App. P. 40.1(b)"
+{
+  note "On acceptance the Intermediate Court of Appeals' judgment is stayed pending final disposition (Haw. R. App. P. 41); a new judgment on appeal is entered by the supreme court and is effective on entry (Haw. R. App. P. 36(d)). Merits review is not modeled."
+}
+
+terminal judgment-effective: "Judgment on appeal effective" outcome [final] cite "Haw. R. App. P. 36(c)"
+{
+  note "Effective under Rule 36(c); if an application was rejected or dismissed, on entry of the order rejecting or dismissing it (Haw. R. App. P. 41)."
+}

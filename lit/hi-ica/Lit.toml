@@ -1,0 +1,51 @@
+# A civil appeal from a Hawai'i circuit court to the Intermediate Court of
+# Appeals, and certiorari in the Hawai'i Supreme Court, under the Hawai'i
+# Rules of Appellate Procedure as amended through May 21, 2026, effective
+# July 1, 2026 (sources/hi-ica). Computation of time is HRAP 26(a), which,
+# like HRCP 6(a), excludes intervening Saturdays, Sundays and holidays from
+# periods of less than 7 days and has no counting rule in lit/core, so the
+# rules' periods are stated in notes, not encoded as counted deadlines.
+#
+# Layers: the consolidated edition, then the vendored amending orders in
+# date order. The order of July 14, 2026 rewrites Rule 50 (withdrawal and
+# substitution of counsel) and the order of July 21, 2026 rewrites Rule 35
+# (dispositions, publication and citation); neither states a period or
+# limit, so the package opens on July 21, 2026 and no declaration rests on
+# the superseded Rule 35 or Rule 50 text. The order of July 15, 2026
+# rewrites Rule 4(a)(3) (post-judgment tolling motions) effective January
+# 1, 2027 and restates Rule 4(a)(1)'s 30 days unchanged; no declaration
+# here rests on Rule 4(a)(3). The appellate jurisdiction statutes (HRS §§
+# 641-1, 602-59) are not vendored and are not cited. A circuit court
+# appeal arrives from lit/hi-circuit.
+[package]
+name = "hi-appellate-civil"
+version = "0.1.0"
+language = 1
+pack_id = "hi-appellate-civil"
+forum = "hi-ica"
+authority = "StateRule"
+jurisdiction_id = "hawaii"
+title = "Hawai'i Intermediate Court of Appeals and Supreme Court, civil appeals"
+description = "A civil appeal from a Hawai'i circuit court to the Intermediate Court of Appeals, through record, statement of jurisdiction, briefing, oral argument, decision, reconsideration, the judgment on appeal and certiorari in the Hawai'i Supreme Court, as far as the vendored Hawai'i Rules of Appellate Procedure state."
+in_force = "2026-07-21"
+known_at = "2026-10-28"
+unknown_before = "2026-07-21"
+jurisdiction = "Hawaii Intermediate Court of Appeals and Supreme Court (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.hrap]
+title = "Hawai'i Rules of Appellate Procedure (SCRU-10-0000012), with further amendments as noted through May 21, 2026, effective July 1, 2026"
+url = "https://www.courts.state.hi.us/wp-content/uploads/2025/07/hrap_ada.pdf"
+path = "sources/hi-ica/hrap-2025-07-sectioned.txt"
+path_sha256 = "7000b991d6425545d3f4580cff275fba242cf74152250e1e1ef2ae3bcd7ddb1b"
+sha256 = "7da63b464186132b6ad29e0509268b102e4954d8a37c7ea36dd421232b7d1871"
+as_of = "2026-07-01"
+cite_prefixes = ["Haw. R. App. P."]
+section_heading = "Rule {n}"

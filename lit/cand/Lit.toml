@@ -1,0 +1,49 @@
+# The United States District Court for the Northern District of
+# California's Civil Local Rules as a local-rule layer over lit/frcp (28
+# U.S.C. § 2071; FRCP 83(a)): it declares only the periods and limits the
+# Civil Local Rules themselves state and re-encodes no FRCP deadline. FRCP
+# 6(a) computes a period stated in a local rule. The rules are the Civil
+# Local Rules effective October 2, 2026 (sources/fed-ndcal), linked from
+# the court's local-rules page; the criminal, admiralty, patent and ADR
+# local rules are not vendored and are out of scope. An appeal goes to the
+# Ninth Circuit under lit/frap and lit/ca9.
+[package]
+name = "cand-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "cand-local-rules"
+forum = "cand"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Northern District of California: Civil Local Rules"
+description = "The Northern District of California's Civil Local Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): changes of time, motion notice, opposition and reply and their page limits, objections to reply evidence, sanctions motions, administrative motions, discovery motions after the cut-off, costs, attorney's fees, magistrate judge orders and consent, and sealing another party's material."
+in_force = "2026-10-02"
+known_at = "2026-10-28"
+unknown_before = "2026-10-02"
+jurisdiction = "United States District Court, N.D. Cal."
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "cand-rules"
+issuer = "United States District Court for the Northern District of California"
+date = "2026-10-02"
+designation = "Civil Local Rules (effective October 2, 2026)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.cand-rules]
+title = "Civil Local Rules of the United States District Court for the Northern District of California (effective October 2, 2026)"
+url = "https://cand.uscourts.gov/sites/default/files/local-rules/CAND_Civil_Local_Rules_10_26.pdf"
+path = "sources/fed-ndcal/ndcal-civil-local-rules-sectioned.txt"
+path_sha256 = "93aab4d1dd994bc5f7fbec907e8c9d5cf4c0712c1ca67cf2640c058e146009ad"
+sha256 = "1407f4d60e542d9b0233495f4df55510ec682f6432ee672b0569350555b182ec"
+as_of = "2026-10-02"
+cite_prefixes = ["N.D. Cal. Civil L.R."]
+section_heading = "N.D. Cal. Civil L.R. {n}"

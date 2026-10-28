@@ -1,0 +1,238 @@
+module cand-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Northern District of California's own civil periods and limits,
+// computed under FRCP 6(a), which governs a period stated in a local rule.
+// Each period the Civil Local Rules tie to filing runs from filing, and
+// FRCP 6(d) does not extend it (N.D. Cal. Civil L.R. 7-2(a), 7-3(a), (c),
+// (d)(1)). Rules that state no period this layer can count stay out: the
+// noticed hearing date, which is a minimum (not less than 35 days after
+// the motion is filed, N.D. Cal. Civil L.R. 7-2(a)), not a deadline; the
+// joint case management statement, due by the date FRCP 26(f) sets (N.D.
+// Cal. Civil L.R. 16-9(a); lit/frcp); the notice that a matter has been
+// under submission for more than 120 days, which a party may file but need
+// not (N.D. Cal. Civil L.R. 7-13); consent in a case initially assigned to
+// a magistrate judge, by a deadline the clerk or the judge sets (N.D. Cal.
+// Civil L.R. 73-1(a)(1)); and the criminal, admiralty, patent and ADR
+// local rules, which are not vendored. The earlier N.D. Cal. outline's
+// FRCP flow and its decisions (Eitel v. McCool, Twombly, Iqbal, Lopez v.
+// Smith, Celotex, Anderson v. Liberty Lobby, Reeves, Catlin, Bowles v.
+// Russell, Hamer) are FRCP and FRAP authority and belong to lit/frcp and
+// lit/frap; no reporter text is vendored, so they are removed here.
+/// A motion, in one filed document: at most 25 pages (N.D. Cal. Civil L.R.
+/// 7-2(b)).
+limit motion { pages <= 25 cite "N.D. Cal. Civil L.R. 7-2(b)" } cite "N.D. Cal. Civil L.R. 7-2(b)"
+
+/// The brief or memorandum filed with an opposition: at most 25 pages of
+/// text unless the court expressly orders otherwise on a request made
+/// before the due date (N.D. Cal. Civil L.R. 7-3(a), 7-4(b)).
+limit opposition-brief {
+  pages <= 25 cite "N.D. Cal. Civil L.R. 7-4(b)"
+} cite "N.D. Cal. Civil L.R. 7-4(b)"
+
+/// The reply brief or memorandum: at most 15 pages of text (N.D. Cal.
+/// Civil L.R. 7-3(c), 7-4(b)).
+limit reply-brief {
+  pages <= 15 cite "N.D. Cal. Civil L.R. 7-4(b)"
+} cite "N.D. Cal. Civil L.R. 7-4(b)"
+
+/// An Objection to Reply Evidence: at most 5 pages of text, with no further
+/// argument on the motion (N.D. Cal. Civil L.R. 7-3(d)(1)).
+limit reply-evidence-objection {
+  pages <= 5 cite "N.D. Cal. Civil L.R. 7-3(d)"
+} cite "N.D. Cal. Civil L.R. 7-3(d)"
+
+/// A motion to enlarge or shorten time, and an opposition to it: at most 5
+/// pages each (N.D. Cal. Civil L.R. 6-3(a), (b)).
+limit change-time-paper {
+  pages <= 5 cite "N.D. Cal. Civil L.R. 6-3(a)"
+} cite "N.D. Cal. Civil L.R. 6-3(a)"
+
+/// A motion for administrative relief, and an opposition to or support for
+/// it: at most 5 pages, not counting declarations and exhibits (N.D. Cal.
+/// Civil L.R. 7-11(a), (b)).
+limit administrative-paper {
+  pages <= 5 cite "N.D. Cal. Civil L.R. 7-11(a)"
+} cite "N.D. Cal. Civil L.R. 7-11(a)"
+
+/// A Motion for Relief from Nondispositive Pretrial Order of Magistrate
+/// Judge: at most 5 pages, not including declarations and exhibits (N.D.
+/// Cal. Civil L.R. 72-2(b)).
+limit magistrate-relief-motion {
+  pages <= 5 cite "N.D. Cal. Civil L.R. 72-2(b)"
+} cite "N.D. Cal. Civil L.R. 72-2(b)"
+
+/// A response to the Designating Party's sealing statement: at most 5
+/// pages absent leave of court (N.D. Cal. Civil L.R. 79-5(f)(4)).
+limit sealing-response {
+  pages <= 5 cite "N.D. Cal. Civil L.R. 79-5(f)"
+} cite "N.D. Cal. Civil L.R. 79-5(f)"
+
+/// A hearing or proceeding is scheduled on the court's calendar (N.D. Cal.
+/// Civil L.R. 6-1(b)).
+event HearingScheduled()
+/// A motion to enlarge or shorten time is filed (N.D. Cal. Civil L.R.
+/// 6-3(a)).
+event ChangeTimeMotionFiled() paper change-time-paper
+/// A noticed motion is filed (N.D. Cal. Civil L.R. 7-2(a)).
+event MotionFiled() paper motion
+/// The opposition to a motion is filed (N.D. Cal. Civil L.R. 7-3(a)).
+event OppositionFiled() paper opposition-brief
+/// The time for filing the opposition expires (N.D. Cal. Civil L.R.
+/// 7-3(c)).
+event OppositionDue()
+/// The reply is filed (N.D. Cal. Civil L.R. 7-3(c)).
+event ReplyFiled() paper reply-brief
+/// An Objection to Reply Evidence is filed (N.D. Cal. Civil L.R.
+/// 7-3(d)(1)).
+event ReplyEvidenceObjectionFiled() paper reply-evidence-objection
+/// The district court enters judgment (N.D. Cal. Civil L.R. 7-8(d),
+/// 54-1(a), 54-5(a)).
+event JudgmentEntered()
+/// A motion for administrative relief is filed (N.D. Cal. Civil L.R.
+/// 7-11(a)).
+event AdministrativeMotionFiled() paper administrative-paper
+/// The discovery cut-off (fact, expert, or the single cut-off) falls (N.D.
+/// Cal. Civil L.R. 37-3).
+event DiscoveryCutOff()
+/// A bill of costs is served (N.D. Cal. Civil L.R. 54-2(a)).
+event BillOfCostsServed()
+/// A Motion for Relief from Nondispositive Pretrial Order of Magistrate
+/// Judge is filed (N.D. Cal. Civil L.R. 72-2).
+event MagistrateReliefMotionFiled() paper magistrate-relief-motion
+/// A motion that a magistrate judge cannot hear without the parties'
+/// consent is filed in a case initially assigned to a magistrate judge
+/// (N.D. Cal. Civil L.R. 73-1(a)(2)).
+event ConsentMotionFiled()
+/// An Administrative Motion to Consider Whether Another Party's Material
+/// Should Be Sealed is filed (N.D. Cal. Civil L.R. 79-5(f)).
+event OtherPartySealingMotionFiled()
+/// The Designating Party files its sealing statement or declaration (N.D.
+/// Cal. Civil L.R. 79-5(f)(3)).
+event DesignatingStatementFiled()
+
+/// N.D. Cal. Civil L.R. 6-1(b): a stipulated request or motion to change
+/// time that affects a hearing or proceeding on the court's calendar is
+/// filed no later than 14 days before the scheduled event.
+deadline change-time-request-period: 14.days before HearingScheduled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 6-1(b)"
+{
+  forum frcp
+}
+
+/// N.D. Cal. Civil L.R. 6-3(b): unless otherwise ordered, an opposition to
+/// a motion to enlarge or shorten time is filed no later than 4 days after
+/// receiving the motion.
+deadline change-time-opposition-period: 4.days after ChangeTimeMotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 6-3(b)"
+{
+  forum frcp
+}
+
+/// N.D. Cal. Civil L.R. 7-3(a): the opposition to a motion is filed and
+/// served not more than 14 days after the motion was filed. A party that
+/// does not oppose files a Statement of Nonopposition within the same time
+/// (N.D. Cal. Civil L.R. 7-3(b)).
+deadline opposition-period: 14.days after MotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-3(a)"
+{
+  forum frcp
+}
+
+/// N.D. Cal. Civil L.R. 7-3(c): the reply is filed and served not more
+/// than 7 days after the opposition was due. Within that time the moving
+/// party may instead withdraw the motion (N.D. Cal. Civil L.R. 7-7(e)).
+deadline reply-period: 7.days after OppositionDue() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-3(c)"
+{
+  forum frcp
+}
+
+/// N.D. Cal. Civil L.R. 7-3(d)(1): if the reply submits new evidence, an
+/// Objection to Reply Evidence is filed and served not more than 7 days
+/// after the reply was filed.
+deadline reply-evidence-objection-period: 7.days after ReplyFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-3(d)"
+{
+  forum frcp
+}
+
+/// N.D. Cal. Civil L.R. 7-8(d): unless the court orders otherwise, no
+/// motion for sanctions may be served and filed more than 14 days after the
+/// district court enters judgment.
+deadline sanctions-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-8(d)"
+{
+  forum frcp
+}
+
+/// N.D. Cal. Civil L.R. 7-11(b): an opposition to or support for a motion
+/// for administrative relief is filed no later than 4 days after the motion
+/// was filed; the motion is then deemed submitted the next day (N.D. Cal.
+/// Civil L.R. 7-11(c)).
+deadline administrative-opposition-period: 4.days after AdministrativeMotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-11(b)"
+{
+  forum frcp
+}
+
+/// N.D. Cal. Civil L.R. 37-3: no discovery-related motion may be filed more
+/// than 7 days after the applicable discovery cut-off.
+deadline discovery-motion-period: 7.days after DiscoveryCutOff() counted_by frcp6 cite "N.D. Cal. Civil L.R. 37-3"
+{
+  forum frcp
+}
+
+/// N.D. Cal. Civil L.R. 54-1(a): a prevailing party claiming taxable costs
+/// serves and files a bill of costs no later than 14 days after entry of the
+/// judgment or order under which costs may be claimed; a party that does not
+/// is deemed to have waived costs (N.D. Cal. Civil L.R. 54-1(c)).
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "N.D. Cal. Civil L.R. 54-1(a)"
+{
+  forum frcp
+}
+
+/// N.D. Cal. Civil L.R. 54-2(a): specific objections to the bill of costs
+/// are served and filed within 14 days after service of the bill.
+deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "N.D. Cal. Civil L.R. 54-2(a)"
+{
+  forum frcp
+}
+
+/// N.D. Cal. Civil L.R. 54-5(a): a motion for attorney's fees is served and
+/// filed within 14 days of entry of judgment by the district court unless
+/// the court orders otherwise on a stipulation or motion; an appeal does not
+/// extend the time.
+deadline fee-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "N.D. Cal. Civil L.R. 54-5(a)"
+{
+  forum frcp
+}
+
+/// N.D. Cal. Civil L.R. 72-2(d): if the district judge makes no order
+/// denying the motion or setting a briefing schedule within 14 days of its
+/// filing, the motion for relief from a magistrate judge's nondispositive
+/// order is deemed denied.
+deadline magistrate-relief-deemed-denied: 14.days after MagistrateReliefMotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 72-2(d)"
+{
+  forum frcp
+}
+
+/// N.D. Cal. Civil L.R. 73-1(a)(2): in a case initially assigned to a
+/// magistrate judge, when a motion the magistrate judge cannot hear without
+/// consent is filed, the parties file written consent or request
+/// reassignment to a district judge no later than 7 days after the motion
+/// is filed, unless otherwise directed.
+deadline consent-period: 7.days after ConsentMotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 73-1(a)"
+{
+  forum frcp
+}
+
+/// N.D. Cal. Civil L.R. 79-5(f)(3): the Designating Party files its
+/// statement or declaration within 7 days of the filing of the motion to
+/// consider whether its material should be sealed; failing that, the
+/// document may be unsealed without further notice.
+deadline designating-statement-period: 7.days after OtherPartySealingMotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 79-5(f)"
+{
+  forum frcp
+}
+
+/// N.D. Cal. Civil L.R. 79-5(f)(4): any response is filed no later than 4
+/// days after the Designating Party files its statement or declaration.
+deadline sealing-response-period: 4.days after DesignatingStatementFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 79-5(f)"
+{
+  forum frcp
+}

@@ -241,8 +241,7 @@ state popr-filed: "POPR Filed" by office cite "37 CFR 42.107(a)"
   edge-popr-filed-institution-decision "POPR complete — Board decides institution" -> institution-decision {
     authority cite "35 U.S.C. 314(b), 37 CFR 42.108"
     within institution-period {
-      extendable true
-      extension_authority "37 CFR 42.108(a)(1) (extendable by 1 month with parties' consent)"
+      extendable false
       note "If the Board does not issue an institution decision within 3 months of the POPR period closing, the patent owner loses any procedural right to complain of delay and trial proceeds. Failure to decide within the deadline does not invalidate the decision itself."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }
@@ -254,10 +253,9 @@ state popr-waived: "POPR Waived" by office cite "37 CFR 42.107(b)"
   group popr-group
   note "Waiver (express or implied by inaction) accelerates institution to within 3 months of the petition filing date rather than the full POPR period — speed versus tipping your hand pre-institution."
   edge-popr-waived-institution-decision "POPR waived — Board decides institution" -> institution-decision {
-    authority cite ?("35 U.S.C. 314(b), 37 CFR 42.108(a)(1)")
+    authority cite "35 U.S.C. 314(b)(2), 37 CFR 42.107(b)"
     within institution-period-on-waiver {
-      extendable true
-      extension_authority "37 CFR 42.108(a)(1) (extendable by 1 month with parties' consent)"
+      extendable false
       note "When the POPR is waived, the 3-month institution clock runs from the petition filing date, not later. Failure to decide within the 3 months does not toll the deadline or create estoppel; the Board retains authority to issue the decision post-deadline."
     }
     duration { min 13.5.days, mode 45.days, max 90.days }

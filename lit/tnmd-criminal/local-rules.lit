@@ -1,0 +1,99 @@
+module tnmd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The Middle District of Tennessee's own criminal periods and limits,
+// counted under FRCrimP 45(a), which governs a period stated in a local
+// rule. The FRCrimP periods the rules repeat are lit/frcrimp's and are not
+// declared again: objections within 14 days after receiving the presentence
+// report (LCrR 32.01(c)(1); FRCrimP 32(f)(1)), the report and addendum
+// transmitted at least 7 days before sentencing (32.01(d); FRCrimP 32(g))
+// and the 14-day appeal from a magistrate judge's judgment in a misdemeanor
+// or petty offense case (58.03(a); FRCrimP 58(g)(2)). Stated in the rules
+// but not declared: pretrial motions, due on the court's filing deadline
+// (LCrR 12.01(b)); disclosures due "reasonably promptly", "within a
+// reasonable time before trial" or "sufficiently in advance of trial"
+// (16.01(a)(3), (5), (10)), which state no period; and the clerk's
+// destruction of manually filed documents 30 days after final
+// determination (57.07), which binds the clerk.
+/// A memorandum of law, or a combined motion and memorandum of law, on a
+/// pretrial motion requiring a determination of law, or the response: at
+/// most 25 pages without leave of court (LCrR 12.01(c)(1), (2)).
+limit law-memorandum { pages <= 25 cite "M.D. Tenn. LCrR 12.01(c)" } cite "M.D. Tenn. LCrR 12.01(c)"
+
+/// An optional reply memorandum: at most 5 pages without leave of court
+/// (LCrR 12.01(c)(3)).
+limit reply-memorandum {
+  pages <= 5 cite "M.D. Tenn. LCrR 12.01(c)"
+} cite "M.D. Tenn. LCrR 12.01(c)"
+
+/// A pretrial motion requiring a determination of law is served (LCrR
+/// 12.01(c)).
+event LawMotionServed() paper law-memorandum
+/// A memorandum of law in response is served (LCrR 12.01(c)(2), (3)).
+event LawResponseServed() paper law-memorandum
+/// The optional reply memorandum is filed (LCrR 12.01(c)(3)).
+event LawReplyFiled() paper reply-memorandum
+/// The defendant is arraigned, on the date or effective date of
+/// arraignment (LCrR 16.01(a)(1)).
+event Arraigned()
+/// A discovery request is denied, or the discovery is otherwise due (LCrR
+/// 16.01(b)).
+event DiscoveryDeniedOrDue()
+/// A motion regarding discovery is filed and served (LCrR 16.01(b)).
+event DiscoveryMotionFiled()
+/// A finding of guilt, or the conclusion of the hearing on the petition to
+/// enter a plea (LCrR 32.01(a)).
+event GuiltFoundOrPleaHearing()
+/// The probation officer receives the parties' objections to the
+/// presentence report (LCrR 32.01(c)(3)).
+event ReportObjectionsReceived()
+/// A hearing at which a prisoner or detainee is to be produced is
+/// scheduled (LCrR 57.05).
+event ProductionHearingScheduled()
+
+/// LCrR 12.01(c)(2): unless the court orders otherwise, a party opposing a
+/// motion requiring a determination of law files a memorandum of law in
+/// response not later than fourteen days after service of the motion.
+deadline law-motion-response-period: 14.days after LawMotionServed() counted_by frcrimp45 cite "M.D. Tenn. LCrR 12.01(c)"
+/// LCrR 12.01(c)(3): an optional reply memorandum may be filed within seven
+/// days after service of the response.
+deadline law-motion-reply-period: 7.days after LawResponseServed() counted_by frcrimp45 cite "M.D. Tenn. LCrR 12.01(c)"
+/// LCrR 16.01(a)(1): unless an extension of time is agreed to, no later
+/// than fourteen days after the date (or effective date) of arraignment
+/// the government provides the automatic discovery of FRCrimP
+/// 16(a)(1)(A)-(F), states whether the defendant was an aggrieved person of
+/// electronic surveillance, and provides the identification documents.
+deadline automatic-discovery-period: 14.days after Arraigned() counted_by frcrimp45 cite "M.D. Tenn. LCrR 16.01(a)"
+/// LCrR 16.01(b): a motion regarding discovery is filed within fourteen
+/// days after a discovery request is denied or the discovery is otherwise
+/// due, unless the court orders otherwise.
+deadline discovery-motion-period: 14.days after DiscoveryDeniedOrDue() counted_by frcrimp45 cite "M.D. Tenn. LCrR 16.01(b)"
+/// LCrR 16.01(b): a response is filed within seven days after the motion is
+/// filed and served, unless the court orders otherwise.
+deadline discovery-motion-response-period: 7.days after DiscoveryMotionFiled() counted_by frcrimp45 cite "M.D. Tenn. LCrR 16.01(b)"
+/// LCrR 32.01(a): the sentencing hearing is set at least eighty days from
+/// the finding of guilt or the hearing on the petition to enter a plea;
+/// this is the earliest such date.
+deadline earliest-sentencing-date: 80.days after GuiltFoundOrPleaHearing() counted_by frcrimp45 cite "M.D. Tenn. LCrR 32.01(a)"
+/// LCrR 32.01(c)(3): within seven days of receiving the objections, the
+/// probation officer discloses to all parties any changes or unresolved
+/// factual disputes or objections to the report.
+deadline objection-disclosure-period: 7.days after ReportObjectionsReceived() counted_by frcrimp45 cite "M.D. Tenn. LCrR 32.01(c)"
+/// LCrR 32.01(c)(4): at least seven days before sentencing each side files
+/// its "Position ... Regarding Presentence Report", limited to unresolved
+/// matters previously raised with all parties in writing.
+deadline position-paper-period: 7.days before SentencingScheduled() counted_by frcrimp45 cite "M.D. Tenn. LCrR 32.01(c)"
+/// LCrR 32.01(e): by no later than three days before the sentencing
+/// hearing, unless ordered otherwise, counsel for all parties file a
+/// statement of the relevant 18 U.S.C. § 3553(a) factors.
+deadline section-3553a-statement-period: 3.days before SentencingScheduled() counted_by frcrimp45 cite "M.D. Tenn. LCrR 32.01(e)"
+/// LCrR 32.01(f): all other sentencing related filings are filed no later
+/// than three days before the sentencing hearing, unless the court orders
+/// or permits otherwise.
+deadline other-sentencing-filings-period: 3.days before SentencingScheduled() counted_by frcrimp45 cite "M.D. Tenn. LCrR 32.01(f)"
+/// LCrR 57.05: every motion and order to produce a prisoner or detainee is
+/// filed at least fourteen days before the date of the hearing; relief
+/// requires an order of the court.
+deadline production-motion-period: 14.days before ProductionHearingScheduled() counted_by frcrimp45 cite "M.D. Tenn. LCrR 57.05"

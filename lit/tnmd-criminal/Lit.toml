@@ -1,0 +1,51 @@
+# The United States District Court for the Middle District of Tennessee's
+# Local Criminal Rules (LCrR) as a local-rule layer over lit/frcrimp (28
+# U.S.C. § 2071; FRCrimP 57(a)): it declares only the periods and limits the
+# Local Criminal Rules themselves state and re-encodes no FRCrimP, Speedy
+# Trial Act or FRAP 4(b) period. FRCrimP 45(a) computes a period stated in
+# a local rule. The rules are the criminal part of the Local Rules of Court
+# dated May 15, 2025 (sources/tnmd), the only local-rules edition the court
+# publishes. The court may deviate from any local rule when the case needs
+# it (LCrR 1.01(a)). An appeal goes to the Sixth Circuit under lit/frap and
+# lit/ca6; federal habeas is lit/habeas.
+[package]
+name = "tnmd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "tnmd-criminal-local-rules"
+forum = "tnmd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Middle District of Tennessee: Local Criminal Rules"
+description = "The Middle District of Tennessee's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): responses and replies to pretrial motions requiring a determination of law and their page limits, automatic discovery after arraignment, discovery motions and responses, the earliest sentencing hearing, the probation officer's disclosure after objections, position papers, the § 3553(a) statement and other sentencing filings before the hearing, and motions to produce prisoners."
+in_force = "2025-05-15"
+known_at = "2026-10-28"
+unknown_before = "2025-05-15"
+jurisdiction = "United States District Court, M.D. Tenn. (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "tnmd-lcrr"
+issuer = "United States District Court for the Middle District of Tennessee"
+date = "2025-05-15"
+designation = "Local Criminal Rules (Local Rules of Court, May 15, 2025)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRCrimP periods; this package layers only the court's local criminal rules over them.
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.tnmd-lcrr]
+title = "Local Rules of Court of the United States District Court for the Middle District of Tennessee, Local Criminal Rules (May 15, 2025)"
+url = "https://www.tnmd.uscourts.gov/sites/tnmd/files/2025.05.15%20TNMD%20Local%20Rules%20of%20Court%20-%202025%20amendments%20_0.pdf"
+path = "sources/tnmd/tnmd-local-criminal-rules-sectioned.txt"
+path_sha256 = "a864f9c267fe7de976129b676c0fb0ea7cb4356175e12dedefd8e0c3062b85fc"
+sha256 = "9ea5870a79cced04483aaac496ccd8bc30ebee5ecd8ce46dec00fb62dad51946"
+as_of = "2025-05-15"
+cite_prefixes = ["M.D. Tenn. LCrR"]
+section_heading = "LCrR {n}"

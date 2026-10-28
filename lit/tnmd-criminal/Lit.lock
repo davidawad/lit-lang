@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "tnmd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:c4d45c1ad7b5d451e2048807e6a931632e26cb902019731ac1645727a7d1cc0f"
+semantic = "sha256:3bd266d228b583ff6e0d556f19b4b04091e46eb4780142cef7da4b757cc1c6fa"
+texts = [
+    "tnmd-lcrr sources/tnmd/tnmd-local-criminal-rules-sectioned.txt sha256:a864f9c267fe7de976129b676c0fb0ea7cb4356175e12dedefd8e0c3062b85fc",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

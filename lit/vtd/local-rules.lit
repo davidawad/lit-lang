@@ -121,118 +121,93 @@ event TrialBegins()
 /// opposing a dispositive motion is filed no more than 30 days after the
 /// motion is served.
 deadline dispositive-opposition-period: 30.days after DispositiveMotionServed() counted_by frcp6 cite "D. Vt. L.R. 7(a)(3)(A)"
-
 /// L.R. 7(a)(3)(B): unless the judge extends the deadline, a memorandum in
 /// opposition to any other motion is filed no more than 14 days after the
 /// motion is served.
 deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "D. Vt. L.R. 7(a)(3)(B)"
-
 /// L.R. 7(a)(5)(A): a reply memorandum is filed no more than 14 days after
 /// an opposing memorandum.
 deadline reply-period: 14.days after OppositionFiled() counted_by frcp6 cite "D. Vt. L.R. 7(a)(5)(A)"
-
 /// L.R. 7(c): a motion to reconsider a court order, other than one
 /// governed by FRCP 59 or 60, is filed within 14 days from the date of the
 /// order.
 deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6 cite "D. Vt. L.R. 7(c)"
-
 /// L.R. 9(a)(1): within 60 days after notice of a Social Security action
 /// is given under Rule 3, the Commissioner serves and files an answer.
 deadline commissioner-answer-period: 60.days after SocialSecurityNoticeGiven() counted_by frcp6 cite "D. Vt. L.R. 9(a)(1)"
-
 /// L.R. 9(a)(2): within 30 days after the Commissioner files an answer,
 /// the plaintiff serves and files a Motion for Order Reversing the
 /// Commissioner's Decision and a supporting memorandum.
 deadline reversal-motion-period: 30.days after CommissionerAnswerFiled() counted_by frcp6 cite "D. Vt. L.R. 9(a)(2)"
-
 /// L.R. 9(a)(3): within 30 days after the plaintiff's motion, the
 /// Commissioner serves and files a Motion for Order Affirming the Decision
 /// of the Commissioner and a supporting memorandum.
 deadline affirmance-motion-period: 30.days after ReversalMotionFiled() counted_by frcp6 cite "D. Vt. L.R. 9(a)(3)"
-
 /// L.R. 9(a)(4): within 14 days after the Commissioner's motion, the
 /// plaintiff may serve and file a reply.
 deadline social-security-reply-period: 14.days after AffirmanceMotionFiled() counted_by frcp6 cite "D. Vt. L.R. 9(a)(4)"
-
 /// L.R. 9(a)(5): if the reply raises new issues or arguments, the
 /// Commissioner may serve and file a sur-reply within 14 days after
 /// service of the reply.
 deadline social-security-sur-reply-period: 14.days after SocialSecurityReplyServed() counted_by frcp6 cite "D. Vt. L.R. 9(a)(5)"
-
 /// L.R. 9(b)(2): the designating party complies with the bankruptcy court
 /// clerk's requests to assemble and transmit the record to the district
 /// court within 30 calendar days after filing the designation.
 deadline record-transmission-period: 30.days after DesignationFiled() counted_by frcp6 cite "D. Vt. L.R. 9(b)(2)"
-
 /// L.R. 9(d)(2): an opposition to withdrawal of reference is filed within
 /// 14 calendar days after service of the motion.
 deadline withdrawal-opposition-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "D. Vt. L.R. 9(d)(2)"
-
 /// L.R. 9(d)(2): the moving party has 14 calendar days after service of
 /// the opposition to file a reply.
 deadline withdrawal-reply-period: 14.days after WithdrawalOppositionServed() counted_by frcp6 cite "D. Vt. L.R. 9(d)(2)"
-
 /// L.R. 16.1(e)(1)(B), (C): each party reports its evaluator selection, or
 /// each side its strike, to the ENE Administrator in writing within 14
 /// days from when the list is mailed.
 deadline evaluator-selection-period: 14.days after EvaluatorListMailed() counted_by frcp6 cite "D. Vt. L.R. 16.1(e)(1)(B)"
-
 /// L.R. 16.1(e)(2): a party who believes an evaluator has a conflict of
 /// interest notifies the ENE Administrator within 7 days of learning of
 /// it; otherwise the objection is waived.
 deadline evaluator-conflict-period: 7.days after ConflictLearned() counted_by frcp6 cite "D. Vt. L.R. 16.1(e)(2)"
-
 /// L.R. 16.1(g)(3)(B): a written request to be excused from attending the
 /// ENE session is filed at least 21 calendar days before the session date.
 deadline ene-excusal-period: 21.days before EneSessionHeld() counted_by frcp6 cite "D. Vt. L.R. 16.1(g)(3)(B)"
-
 /// L.R. 16.1(h)(1): at least 14 days before the ENE session, each party
 /// submits to the evaluator and serves its written evaluation statement.
 deadline evaluation-statement-period: 14.days before EneSessionHeld() counted_by frcp6 cite "D. Vt. L.R. 16.1(h)(1)"
-
 /// L.R. 16.1(j)(1): within 21 calendar days after the ENE session, the
 /// evaluator files and sends the evaluator's report.
 deadline evaluator-report-period: 21.days after EneSessionHeld() counted_by frcp6 cite "D. Vt. L.R. 16.1(j)(1)"
-
 /// L.R. 16.1(k)(1)(D): a supplemental evaluator's report is filed within
 /// 60 days from the date of the session.
 deadline supplemental-report-period: 60.days after EneSessionHeld() counted_by frcp6 cite "D. Vt. L.R. 16.1(k)(1)(D)"
-
 /// L.R. 26(a)(1): the parties' Discovery Schedule provides for completion
 /// of discovery no later than 8 months after the last answer was filed.
 deadline discovery-completion-period: 8.months after LastAnswerFiled() counted_by frcp6 cite "D. Vt. L.R. 26(a)(1)"
-
 /// L.R. 26(a)(2): the Discovery Schedule is filed within the earlier of 75
 /// days after any defendant has been served with the complaint or 45 days
 /// after any defendant has appeared (with `discovery-schedule-appearance-period`;
 /// the earlier date controls). Otherwise the case is set for a scheduling
 /// conference.
 deadline discovery-schedule-service-period: 75.days after DefendantServed() counted_by frcp6 cite "D. Vt. L.R. 26(a)(2)"
-
 /// L.R. 26(a)(2): the Discovery Schedule is filed within the earlier of 75
 /// days after service or 45 days after any defendant has appeared.
 deadline discovery-schedule-appearance-period: 45.days after DefendantAppeared() counted_by frcp6 cite "D. Vt. L.R. 26(a)(2)"
-
 /// L.R. 26(b)(1): a third-party discovery schedule is filed no more than
 /// 45 days after the third-party answer is filed or the third party has
 /// otherwise appeared.
 deadline third-party-schedule-period: 45.days after ThirdPartyAppeared() counted_by frcp6 cite "D. Vt. L.R. 26(b)(1)"
-
 /// L.R. 26(d): unless the court orders otherwise, at least 30 days before
 /// trial counsel provide opposing counsel the designated portions of
 /// videotaped depositions they intend to offer under FRCP 32(a)(6).
 deadline video-designation-period: 30.days before TrialBegins() counted_by frcp6 cite "D. Vt. L.R. 26(d)"
-
 /// L.R. 45(a): at least 30 days before the trial or hearing, a party
 /// proceeding in forma pauperis or pro se who requires a witness by
 /// subpoena or writ files a witness list and a statement of each
 /// witness's expected testimony.
 deadline subpoena-witness-list-period: 30.days before TrialBegins() counted_by frcp6 cite "D. Vt. L.R. 45(a)"
-
 /// L.R. 51(a): requests for jury instructions are filed at least 14 days
 /// before the scheduled trial date.
 deadline jury-instructions-period: 14.days before TrialBegins() counted_by frcp6 cite "D. Vt. L.R. 51(a)"
-
 /// L.R. 52: absent leave, when trial is by the court, the parties submit
 /// proposed findings of fact and conclusions of law at least 14 days
 /// before the scheduled trial date.

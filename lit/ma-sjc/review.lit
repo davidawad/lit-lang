@@ -5,14 +5,19 @@ import ma-state-rules.{ ReviewPetitionFiled }
 // Direct and further appellate review in the Supreme Judicial Court, from
 // the applicant's side. Every period is stated in a note, not counted. The
 // merits in the Supreme Judicial Court are not modeled.
-
 start route
 
 decision route: "Apply to the Supreme Judicial Court?" by applicant cite "Mass. R. A. P. 27.1(a)"
 {
   note "Within 21 days after an appeal is docketed in the Appeals Court any party may apply for direct appellate review (Mass. R. A. P. 11(a)); within 21 days after an Appeals Court decision any party may apply for further appellate review (Mass. R. A. P. 27.1(a))."
-  edge-route-direct "Application for direct appellate review" -> direct-review { event ReviewPetitionFiled() authority cite "Mass. R. A. P. 11(a)" }
-  edge-route-further "Application for further appellate review" -> further-review { event ReviewPetitionFiled() authority cite "Mass. R. A. P. 27.1(a)" }
+  edge-route-direct "Application for direct appellate review" -> direct-review {
+    event ReviewPetitionFiled()
+    authority cite "Mass. R. A. P. 11(a)"
+  }
+  edge-route-further "Application for further appellate review" -> further-review {
+    event ReviewPetitionFiled()
+    authority cite "Mass. R. A. P. 27.1(a)"
+  }
 }
 
 decision direct-review: "Direct appellate review decided" by court cite "Mass. R. A. P. 11(a)"

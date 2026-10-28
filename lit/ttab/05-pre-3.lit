@@ -4,7 +4,8 @@ module ttab.pre-3
 import ttab.abandon.{ abandon-aftermath }
 import ttab.{ pre }
 
-state abandon-chance: "Application abandoned before any opposition (37 CFR 2.68; no 2.135 judgment)" by board cite "37 CFR 2.68; 37 CFR 2.135; TBMP 602.01" {
+state abandon-chance: "Application abandoned before any opposition (37 CFR 2.68; no 2.135 judgment)" by board cite "37 CFR 2.68; 37 CFR 2.135; TBMP 602.01"
+{
   group pre
   note "Before commencement of an opposition the Board has no jurisdiction; express abandonment (37 CFR 2.68) carries no 2.135 judgment. Any use-based dispute outside the Board remains."
   edge-05-pre-3-abandon-aftermath-1 "Application expressly abandoned" -> abandon-aftermath {

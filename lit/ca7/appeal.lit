@@ -59,106 +59,82 @@ event CapitalAppelleeBriefServed()
 /// appellant pays it within 14 days after docketing, or the clerk may
 /// dismiss the appeal.
 deadline docketing-fee-period: 14.days after AppealDocketed() counted_by frap26 cite "7th Cir. R. 3(b)"
-
 /// The appellant files its docketing statement with the district clerk
 /// with the notice of appeal or with the clerk of this court within seven
 /// days of filing the notice.
 deadline docketing-statement-period: 7.days after NoticeOfAppealFiled() counted_by frap26 cite "7th Cir. R. 3(c)(1)"
-
 /// Failure to file the docketing statement within 14 days of the filing of
 /// the notice of appeal leads to a $100 fine on counsel.
 deadline docketing-statement-fine-period: 14.days after NoticeOfAppealFiled() counted_by frap26 cite "7th Cir. R. 3(c)(2)"
-
 /// Failure to file the docketing statement within 28 days of the filing of
 /// the notice of appeal is treated as abandonment and the appeal is
 /// dismissed.
 deadline docketing-statement-abandonment-period: 28.days after NoticeOfAppealFiled() counted_by frap26 cite "7th Cir. R. 3(c)(2)"
-
 /// If the appellant's docketing statement is not complete and correct, the
 /// appellee provides a complete one within 14 days after its filing.
 deadline appellee-docketing-statement-period: 14.days after DocketingStatementFiled() counted_by frap26 cite "7th Cir. R. 3(c)(1)"
-
 /// Within 14 days of the notice of appeal the district court makes its
 /// docket complete and available electronically to the court of appeals.
 deadline district-docket-period: 14.days after NoticeOfAppealFiled() counted_by frap26 cite "7th Cir. R. 10(a)(1)"
-
 /// Counsel ensures, within 21 days of filing the notice of appeal, that all
 /// documents necessary for review are on the district court docket.
 deadline record-documents-period: 21.days after NoticeOfAppealFiled() counted_by frap26 cite "7th Cir. R. 10(a)(3)"
-
 /// In a criminal case outside the Criminal Justice Act, the appellant
 /// deposits the estimated transcript cost with the reporter within 14 days
 /// after filing the notice of appeal.
 deadline criminal-transcript-deposit-period: 14.days after NoticeOfAppealFiled() counted_by frap26 cite "7th Cir. R. 10(d)(2)"
-
 /// A motion for exemption from electronic filing is filed at least seven
 /// days before the document is due.
 deadline electronic-filing-exemption-period: 7.days before DocumentDue() counted_by frap26 cite "7th Cir. R. 25(b)"
-
 /// A motion to extend the time to file a brief is filed at least seven days
 /// before the brief is due, unless its basis did not exist or could not be
 /// known earlier.
 deadline brief-extension-motion-period: 7.days before DocumentDue() counted_by frap26 cite "7th Cir. R. 26"
-
 /// The disclosure statements are filed no later than 21 days after
 /// docketing, or earlier with a party's first motion or response or when
 /// the court directs.
 deadline disclosure-statement-period: 21.days after AppealDocketed() counted_by frap26 cite "7th Cir. R. 26.1(c)"
-
 /// Counsel files an updated disclosure statement within 14 days of any
 /// change in the information it must disclose.
 deadline disclosure-update-period: 14.days after DisclosureChanged() counted_by frap26 cite "7th Cir. R. 26.1(d)"
-
 /// The time for briefs runs from docketing: the appellant's FRAP 31(a)(1)
 /// 40 days count from the date the appeal is docketed, whatever the state
 /// of the record.
 deadline appellant-brief-period: 40.days after AppealDocketed() counted_by frap26 cite "FRAP 31(a)(1); 7th Cir. R. 31(a)"
-
 /// Counsel answers the clerk's order to show cause for a brief not filed
 /// when due within 14 days.
 deadline brief-show-cause-period: 14.days after BriefShowCauseEntered() counted_by frap26 cite "7th Cir. R. 31(c)(1); 7th Cir. R. 31(d)"
-
 /// Requests about scheduling argument should be made by letter no later
 /// than seven days after the filing of the appellee's brief.
 deadline argument-scheduling-request-period: 7.days after AppelleeBriefFiled() counted_by frap26 cite "7th Cir. R. 34(b)(4)"
-
 /// Unless good cause is shown, a motion to waive, postpone or present
 /// argument remotely is filed no later than 14 days before the argument.
 deadline argument-motion-period: 14.days before ArgumentHeard() counted_by frap26 cite "7th Cir. R. 34(e)"
-
 /// A supervising attorney's motion for argument by a law student is filed
 /// at least 14 days before the argument.
 deadline law-student-argument-motion-period: 14.days before ArgumentHeard() counted_by frap26 cite "7th Cir. R. 34(h)"
-
 /// Trial counsel in a criminal case, unless retained for the appeal, files
 /// a motion to withdraw or for appointment within 14 days of the notice of
 /// appeal.
 deadline trial-counsel-motion-period: 14.days after NoticeOfAppealFiled() counted_by frap26 cite "7th Cir. R. 46.1(c)"
-
 /// If no response to a Rule 51 notice is received within 30 days after the
 /// mailing, the appeal may be dismissed.
 deadline rule51-response-period: 30.days after Rule51NoticeMailed() counted_by frap26 cite "7th Cir. R. 51(c)"
-
 /// On a remand from the Supreme Court, counsel file statements of position
 /// within 21 days after the certified copy of its judgment issues.
 deadline remand-statement-period: 21.days after SupremeCourtRemandIssued() counted_by frap26 cite "7th Cir. R. 54"
-
 /// The clerk dismisses for want of prosecution if the party does not
 /// respond within 21 days of the clerk's notice.
 deadline prosecution-notice-response-period: 21.days after ProsecutionNoticeSent() counted_by frap26 cite "7th Cir. I.O.P. 7(a)(2)"
-
 /// The prevailing party files an answer to a petition for rehearing en banc
 /// within 14 days from the court's request.
 deadline en-banc-answer-period: 14.days after EnBancAnswerRequested() counted_by frap26 cite "7th Cir. I.O.P. 5(a)"
-
 /// In a capital case on direct criminal appeal the appellant serves and
 /// files its brief within 63 days after docketing.
 deadline capital-appellant-brief-period: 63.days after CapitalAppealDocketed() counted_by frap26 cite "7th Cir. R. 22(c)(1)(A)"
-
 /// The capital appellee's brief is due within 49 days after service of the
 /// appellant's brief.
 deadline capital-appellee-brief-period: 49.days after CapitalAppellantBriefServed() counted_by frap26 cite "7th Cir. R. 22(c)(1)(A)"
-
 /// The capital appellant may serve and file a reply brief within 21 days
 /// after service of the appellee's brief.
 deadline capital-reply-brief-period: 21.days after CapitalAppelleeBriefServed() counted_by frap26 cite "7th Cir. R. 22(c)(1)(A)"

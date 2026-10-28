@@ -100,7 +100,8 @@ decision trial: "Jury or bench trial" by court cite "Cal. Code Civ. Proc. § 631
 decision post-trial: "New trial or JNOV motion" by applicant cite "Cal. Code Civ. Proc. § 659(a)"
 {
   note "A party intending to move for a new trial files and serves a notice of intention after the decision and before entry of judgment, or within 15 days of service of notice of entry of judgment by the clerk under § 664.5 or by a party, or within 180 days after entry of judgment, whichever is earliest; these times cannot be extended by order, stipulation or § 1013 (Cal. Code Civ. Proc. § 659(a), (b)). Briefs follow within 10 days of the notice, opposition within 10 days after service, and a reply within five days (Cal. Code Civ. Proc. § 659a). The grounds for a new trial are those of Cal. Code Civ. Proc. § 657. The court's power to rule expires 75 days after the clerk mails, or a party serves, notice of entry of judgment, whichever is earlier, or 75 days after the first notice of intention if no notice of entry was given (Cal. Code Civ. Proc. § 660(c)). A motion for judgment notwithstanding the verdict is made within the § 659 period, briefed under § 659a (Cal. Code Civ. Proc. § 629(b))."
-  edge-post-trial-judgment-entered "Motions resolved or none filed" -> judgment-entered { event JudgmentEntered()
+  edge-post-trial-judgment-entered "Motions resolved or none filed" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "Cal. Code Civ. Proc. § 664(a)"
   }
 }
@@ -108,7 +109,8 @@ decision post-trial: "New trial or JNOV motion" by applicant cite "Cal. Code Civ
 decision judgment-entered: "Judgment entered" by office cite "Cal. Code Civ. Proc. § 664(a)"
 {
   note "After a jury trial the clerk enters judgment in conformity to the verdict within 24 hours after its rendition; after a court trial the clerk enters judgment immediately upon the filing of the decision; no judgment is effectual for any purpose until entered (Cal. Code Civ. Proc. § 664(a)). The version operative January 1, 2027 (Stats. 2025, Ch. 559, Sec. 4) instead has the clerk enter a court-trial judgment within 30 days after the filing of the decision, or within 30 days after a requested statement of decision becomes final. A notice of appeal is filed on or before the earliest of 60 days after the clerk serves notice of entry or a filed-endorsed copy of the judgment, 60 days after a party serves or is served with one, or 180 days after entry of judgment; no court may extend that time, and a late notice is dismissed (Cal. Rules of Court, rule 8.104(a), (b))."
-  edge-judgment-entered-appeal-filed "Notice of appeal" -> appeal-filed { event NoticeOfAppealFiled()
+  edge-judgment-entered-appeal-filed "Notice of appeal" -> appeal-filed {
+    event NoticeOfAppealFiled()
     authority cite "Cal. Rules of Court, rule 8.104(a)"
   }
   edge-judgment-entered-judgment-final "No appeal in time" -> judgment-final {

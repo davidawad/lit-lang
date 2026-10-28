@@ -49,10 +49,16 @@ import frbp.events.{ FirstMeetingDate, PetitionFiled }
 /// A brief in support of or opposition to a motion LBR 9014-1(f) lists,
 /// including footnotes and signatures (LBR 9014-1(f)).
 limit motion-brief { pages <= 25 cite "E.D. Mich. LBR 9014-1(f)" } cite "E.D. Mich. LBR 9014-1(f)"
+
 /// A reply brief, including footnotes and signatures (LBR 9014-1(f)).
-limit motion-reply-brief { pages <= 7 cite "E.D. Mich. LBR 9014-1(f)" } cite "E.D. Mich. LBR 9014-1(f)"
+limit motion-reply-brief {
+  pages <= 7 cite "E.D. Mich. LBR 9014-1(f)"
+} cite "E.D. Mich. LBR 9014-1(f)"
+
 /// The brief in support of a motion for reconsideration (LBR 9024-1(a)(4)).
-limit reconsideration-brief { pages <= 25 cite "E.D. Mich. LBR 9024-1(a)" } cite "E.D. Mich. LBR 9024-1(a)"
+limit reconsideration-brief {
+  pages <= 25 cite "E.D. Mich. LBR 9024-1(a)"
+} cite "E.D. Mich. LBR 9024-1(a)"
 
 /// A chapter 13 petition is filed or a case is converted to chapter 13 (LBR
 /// 1007-1(c)).

@@ -49,7 +49,8 @@ start notice-filed
 state notice-filed: "Notice of appeal filed" by applicant cite "M. R. App. P. 4(5)"
 {
   note "An appeal is taken by filing a notice of appeal with the clerk of the supreme court, with the statutory filing fee or an affidavit to proceed without it, and serving a copy on the district court clerk and all parties (M. R. App. P. 4(2)(a)). In civil cases the notice is filed within 30 days from entry of the judgment or order, or 60 days where the United States, the State or a subdivision, officer or agency is a party, running from service of notice of entry where M. R. Civ. P. 77(d) requires it; a cross-appeal follows within 15 days after the first notice or the time otherwise prescribed, whichever expires last; and a timely motion under M. R. Civ. P. 50(b), 52(b), 59 or 60(b) restarts the time from its disposition or deemed denial (M. R. App. P. 4(5)(a)). A timely notice is required to invoke the court's jurisdiction, save an out-of-time appeal (M. R. App. P. 4(2)(c)). Periods are stated, not counted: the trigger day is excluded, weekends and holidays are included, no time is added for mailing, and a period ending on a weekend or holiday runs to the next business day (M. R. App. P. 3). The filing fee is set by statute, not stated in the rules."
-  edge-notice-filed-appealability "Timely notice" -> appealability { event NoticeOfAppealFiled()
+  edge-notice-filed-appealability "Timely notice" -> appealability {
+    event NoticeOfAppealFiled()
     authority cite "M. R. App. P. 4(5)"
   }
   edge-notice-filed-untimely "Late notice; no out-of-time appeal" -> dismissed-untimely {

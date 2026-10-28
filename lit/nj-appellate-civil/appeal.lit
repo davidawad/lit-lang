@@ -38,7 +38,8 @@ start notice-filed
 state notice-filed: "Notice of appeal, transcript request and case information statement filed" by applicant cite "N.J. Ct. R. 2:5-1(a)"
 {
   note "Appeals lie to the Appellate Division as of right from final judgments of the Superior Court trial divisions, final judgments being those that finally resolve all issues as to all parties, and from the orders R. 2:2-3(b) lists (R. 2:2-3(a), (b)). An appeal from a final judgment is taken by filing with the court below and the appellate court, and serving on all other parties who appeared, a notice of appeal, a transcript request form (or a certification under R. 2:5-3(c)) and a case information statement (R. 2:5-1(a), (b)); a copy goes to the trial judge, whose failure to receive it does not defeat jurisdiction (R. 2:5-1(c)). In a civil action the notice designates the judgment or part appealed from, the judge below and the courts from and to which the appeal is taken (R. 2:5-1(f)). Within 30 days of receipt of the notice the trial judge may file an amplification of a prior statement or opinion, and if there is none files a written opinion within 15 days (R. 2:5-1(d)). The respondent files a case information statement within 15 days after service of the notice of appeal (R. 2:5-1(e)). The time to appeal is in R. 2:4-1, which is not vendored."
-  edge-notice-filed-record "Transcript or statement of proceedings prepared" -> record { event RecordFiled()
+  edge-notice-filed-record "Transcript or statement of proceedings prepared" -> record {
+    event RecordFiled()
     authority cite "N.J. Ct. R. 2:5-3(e)"
   }
 }

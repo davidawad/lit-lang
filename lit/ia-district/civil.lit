@@ -96,7 +96,8 @@ decision post-trial: "Post-trial motions decided" by court cite "Iowa R. Civ. P.
 {
   note "Motions for judgment notwithstanding the verdict and for a new trial are filed within fifteen days after the verdict, report or decision is filed with the clerk, or after discharge of a jury that failed to return a verdict, unless the court for good cause, not ex parte, grants additional time not exceeding 30 days (Iowa R. Civ. P. 1.1003, 1.1004, 1.1007). A motion to reconsider, enlarge or amend findings and conclusions is joined with or filed within the time allowed for a motion for new trial, and one directed to another order, ruling, judgment or decree is timely if filed within 15 days after its filing; successive rule 1.904(2) motions are barred unless directed only at a modification (Iowa R. Civ. P. 1.904(2)-(4)). A petition to vacate or modify a judgment under rule 1.1012 is filed and served in the original action within one year after entry of the judgment (Iowa R. Civ. P. 1.1013(1))."
   edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Iowa R. Civ. P. 1.1004" }
-  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered { event JudgmentEntered()
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "Iowa R. Civ. P. 1.959"
   }
 }

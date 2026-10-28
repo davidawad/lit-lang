@@ -66,89 +66,71 @@ event MagistrateRulingServed()
 /// not later than thirty-one (31) days before. The court may order a
 /// shorter time.
 deadline notice-of-motion-period: 28.days before HearingDate() counted_by frcp6 cite "C.D. Cal. L.R. 6-1"
-
 /// C.D. Cal. L.R. 6-1: a notice of motion served by mail is served not later
 /// than thirty-one (31) days before the Motion Day designated in the notice.
 deadline mailed-notice-of-motion-period: 31.days before HearingDate() counted_by frcp6 cite "C.D. Cal. L.R. 6-1"
-
 /// C.D. Cal. L.R. 7-3: unless the case is exempt or the motion is a
 /// discovery motion, a Rule 65 application or a motion to retax costs,
 /// counsel confer about the contemplated motion at least 7 days before it
 /// is filed.
 deadline pre-filing-conference-period: 7.days before MotionFiled() counted_by frcp6 cite "C.D. Cal. L.R. 7-3"
-
 /// C.D. Cal. L.R. 7-9: each opposing party serves and files its opposition,
 /// or a statement of non-opposition, not later than twenty-one (21) days
 /// before the hearing date. A continuance resets the period to 21 days
 /// before the new hearing date unless the order says otherwise (C.D. Cal.
 /// L.R. 7-11).
 deadline opposition-period: 21.days before HearingDate() counted_by frcp6 cite "C.D. Cal. L.R. 7-9"
-
 /// C.D. Cal. L.R. 7-9: on a motion for a new trial, the opposition is due
 /// not later than ten (10) days after service of the motion.
 deadline new-trial-opposition-period: 10.days after NewTrialMotionServed() counted_by frcp6 cite "C.D. Cal. L.R. 7-9"
-
 /// C.D. Cal. L.R. 7-10: the moving party may serve and file a reply not
 /// later than fourteen (14) days before the hearing date; the opposing
 /// party files no response to it absent a prior written order.
 deadline reply-period: 14.days before HearingDate() counted_by frcp6 cite "C.D. Cal. L.R. 7-10"
-
 /// C.D. Cal. L.R. 7-18: absent good cause, a motion for reconsideration is
 /// filed no later than 14 days after entry of the order it concerns.
 deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6 cite "C.D. Cal. L.R. 7-18"
-
 /// C.D. Cal. L.R. 16-2: lead trial counsel meet in person at least forty
 /// (40) days before the Final Pretrial Conference.
 deadline pretrial-meeting-period: 40.days before FinalPretrialConference() counted_by frcp6 cite "C.D. Cal. L.R. 16-2"
-
 /// C.D. Cal. L.R. 16-4: each party serves and files its Memorandum of
 /// Contentions of Fact and Law not later than twenty-one (21) days before
 /// the Final Pretrial Conference.
 deadline contentions-memorandum-period: 21.days before FinalPretrialConference() counted_by frcp6 cite "C.D. Cal. L.R. 16-4"
-
 /// C.D. Cal. L.R. 16-6.1: the parties file a joint exhibit list not later
 /// than twenty-one (21) days before the Final Pretrial Conference.
 deadline joint-exhibit-list-period: 21.days before FinalPretrialConference() counted_by frcp6 cite "C.D. Cal. L.R. 16-6.1"
-
 /// C.D. Cal. L.R. 37-2.2: unless the parties agree otherwise, opposing
 /// counsel delivers the opposing party's portion of a discovery joint
 /// stipulation within seven days of receiving the moving party's material.
 deadline joint-stipulation-portion-period: 7.days after JointStipulationPortionReceived() counted_by frcp6 cite "C.D. Cal. L.R. 37-2.2"
-
 /// C.D. Cal. L.R. 37-2.3: after the joint stipulation is filed, each party
 /// may file a supplemental memorandum not later than fourteen days before
 /// the hearing date.
 deadline discovery-supplemental-memorandum-period: 14.days before HearingDate() counted_by frcp6 cite "C.D. Cal. L.R. 37-2.3"
-
 /// C.D. Cal. L.R. 54-2.1: a prevailing party claiming taxable costs files
 /// and serves its Application to the Clerk to Tax Costs within 14 days
 /// after entry of the judgment or order under which costs may be claimed;
 /// a late application is grounds for denial.
 deadline costs-application-period: 14.days after JudgmentEntered() counted_by frcp6 cite "C.D. Cal. L.R. 54-2.1"
-
 /// C.D. Cal. L.R. 54-2.2: written objections to the application are filed
 /// and served within 14 days after its service.
 deadline costs-objection-period: 14.days after CostsApplicationServed() counted_by frcp6 cite "C.D. Cal. L.R. 54-2.2"
-
 /// C.D. Cal. L.R. 54-2.3: the applicant may file and serve a response
 /// within 3 days after service of an objection.
 deadline costs-response-period: 3.days after CostsObjectionServed() counted_by frcp6 cite "C.D. Cal. L.R. 54-2.3"
-
 /// C.D. Cal. L.R. 54-2.5: a motion to retax costs is filed and served within
 /// seven (7) days of the clerk's decision.
 deadline retax-motion-period: 7.days after CostsTaxed() counted_by frcp6 cite "C.D. Cal. L.R. 54-2.5"
-
 /// C.D. Cal. L.R. 54-7: a motion or application for attorneys' fees is
 /// served and filed within fourteen (14) days after entry of judgment or
 /// other final order, unless the court orders otherwise.
 deadline fee-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "C.D. Cal. L.R. 54-7"
-
 /// C.D. Cal. L.R. 54-8: a motion for an award of costs not governed by FRCP
 /// 54(d), such as discretionary costs under 28 U.S.C. § 1919, is served
 /// and filed within fourteen (14) days after entry of judgment or other
 /// final order, unless the court orders otherwise.
 deadline other-costs-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "C.D. Cal. L.R. 54-8"
-
 /// C.D. Cal. L.R. 72-2.1: a motion for review of a magistrate judge's
 /// nondispositive ruling is filed within fourteen (14) days of service of
 /// a written ruling, or of an oral ruling the magistrate judge indicates

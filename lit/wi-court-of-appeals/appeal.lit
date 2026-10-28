@@ -10,13 +10,13 @@ import wi-state-rules.{ NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
 // service by mail; lit/core has no counting rule for it. The earlier
 // outline cited § 809.12 for the record; § 809.12 governs relief pending
 // appeal, and the record is § 809.15. It named no leading decision.
-
 start notice-filed
 
 state notice-filed: "Notice of appeal filed" by applicant cite "Wis. Stat. § 809.10(1)"
 {
   note "An appeal is initiated by filing a notice of appeal with the clerk of the circuit court in which the judgment or order was entered (Wis. Stat. § 809.10(1)(a)), within 45 days of entry of the final judgment or order if written notice of entry is given within 21 days of it under § 806.06(5), otherwise within 90 days of entry (Wis. Stat. § 808.04(1)); the court may not enlarge the time to appeal a final judgment or order (Wis. Stat. § 809.82(2)(b)). The appellant pays the filing fee to the clerk of the court of appeals when the notice is filed, and the circuit court clerk transmits the notice, docketing statement and circuit court record within 3 days (Wis. Stat. § 809.11(1), (2)). Within 14 days after filing the notice, the appellant requests the transcript and arranges payment, and files a statement on transcript (Wis. Stat. § 809.11(4)). The fee amount is not stated in the vendored chapters."
-  edge-notice-filed-appealability "Appeal docketed" -> appealability { event NoticeOfAppealFiled()
+  edge-notice-filed-appealability "Appeal docketed" -> appealability {
+    event NoticeOfAppealFiled()
     authority cite "Wis. Stat. § 809.11(3)"
   }
 }
@@ -40,7 +40,8 @@ terminal dismissed-jurisdiction: "Appeal dismissed for want of appellate jurisdi
 state record: "Record transmitted" by office cite "Wis. Stat. § 809.15"
 {
   note "The clerk of the circuit court transmits the record to the court of appeals within 20 days after the transcript designated in the statement on transcript is filed, or after a statement that no transcript is necessary, unless the court extends the time; if the reporter files late, within 90 days after the notice of appeal unless the court of appeals extends the transcript time (Wis. Stat. § 809.15(4))."
-  edge-record-briefing "Record filed in the court of appeals" -> briefing { event RecordFiled()
+  edge-record-briefing "Record filed in the court of appeals" -> briefing {
+    event RecordFiled()
     authority cite "Wis. Stat. § 809.19(1)"
   }
 }
@@ -78,7 +79,8 @@ decision affirmed-entered: "Affirmed: reconsideration or review election" by app
   edge-affirmed-entered-reconsider "Motion for reconsideration" -> affirmed-reconsideration {
     authority cite "Wis. Stat. § 809.24(1)"
   }
-  edge-affirmed-entered-review "Petition for review" -> affirmed-review-petitioned { event ReviewPetitionFiled()
+  edge-affirmed-entered-review "Petition for review" -> affirmed-review-petitioned {
+    event ReviewPetitionFiled()
     authority cite "Wis. Stat. § 808.10(1)"
   }
   edge-affirmed-entered-final "Neither: remittitur" -> affirmed-final {
@@ -100,7 +102,8 @@ decision affirmed-reconsideration: "Reconsideration decided (affirmed)" by court
 decision affirmed-after-reconsideration: "Review election after reconsideration (affirmed)" by applicant cite "Wis. Stat. § 808.10(2)"
 {
   note "A motion for reconsideration filed within 20 days after the decision tolls the 30-day period for a petition for review (Wis. Stat. § 808.10(2))."
-  edge-affirmed-after-reconsideration-review "Petition for review" -> affirmed-review-petitioned { event ReviewPetitionFiled()
+  edge-affirmed-after-reconsideration-review "Petition for review" -> affirmed-review-petitioned {
+    event ReviewPetitionFiled()
     authority cite "Wis. Stat. § 808.10(1)"
   }
   edge-affirmed-after-reconsideration-final "No petition: remittitur" -> affirmed-final {
@@ -124,7 +127,8 @@ decision reversed-entered: "Reversed or modified: reconsideration or review elec
   edge-reversed-entered-reconsider "Motion for reconsideration" -> reversed-reconsideration {
     authority cite "Wis. Stat. § 809.24(1)"
   }
-  edge-reversed-entered-review "Petition for review" -> reversed-review-petitioned { event ReviewPetitionFiled()
+  edge-reversed-entered-review "Petition for review" -> reversed-review-petitioned {
+    event ReviewPetitionFiled()
     authority cite "Wis. Stat. § 808.10(1)"
   }
   edge-reversed-entered-final "Neither: remittitur" -> reversed-final {
@@ -146,7 +150,8 @@ decision reversed-reconsideration: "Reconsideration decided (reversed or modifie
 decision reversed-after-reconsideration: "Review election after reconsideration (reversed or modified)" by applicant cite "Wis. Stat. § 808.10(2)"
 {
   note "A motion for reconsideration filed within 20 days after the decision tolls the 30-day period for a petition for review (Wis. Stat. § 808.10(2))."
-  edge-reversed-after-reconsideration-review "Petition for review" -> reversed-review-petitioned { event ReviewPetitionFiled()
+  edge-reversed-after-reconsideration-review "Petition for review" -> reversed-review-petitioned {
+    event ReviewPetitionFiled()
     authority cite "Wis. Stat. § 808.10(1)"
   }
   edge-reversed-after-reconsideration-final "No petition: remittitur" -> reversed-final {
@@ -170,7 +175,8 @@ decision remanded-entered: "Remanded: reconsideration or review election" by app
   edge-remanded-entered-reconsider "Motion for reconsideration" -> remanded-reconsideration {
     authority cite "Wis. Stat. § 809.24(1)"
   }
-  edge-remanded-entered-review "Petition for review" -> remanded-review-petitioned { event ReviewPetitionFiled()
+  edge-remanded-entered-review "Petition for review" -> remanded-review-petitioned {
+    event ReviewPetitionFiled()
     authority cite "Wis. Stat. § 808.10(1)"
   }
   edge-remanded-entered-final "Neither: remittitur" -> remanded-final {
@@ -192,7 +198,8 @@ decision remanded-reconsideration: "Reconsideration decided (remanded)" by court
 decision remanded-after-reconsideration: "Review election after reconsideration (remanded)" by applicant cite "Wis. Stat. § 808.10(2)"
 {
   note "A motion for reconsideration filed within 20 days after the decision tolls the 30-day period for a petition for review (Wis. Stat. § 808.10(2))."
-  edge-remanded-after-reconsideration-review "Petition for review" -> remanded-review-petitioned { event ReviewPetitionFiled()
+  edge-remanded-after-reconsideration-review "Petition for review" -> remanded-review-petitioned {
+    event ReviewPetitionFiled()
     authority cite "Wis. Stat. § 808.10(1)"
   }
   edge-remanded-after-reconsideration-final "No petition: remittitur" -> remanded-final {

@@ -15,13 +15,13 @@ import oh-state-rules.{ NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
 // 7.03(B)) is stated in a note: a page limit here counts pages, and the
 // rule counts numbered pages, exclusive of the table of contents,
 // signature block and certificate of service.
-
 start judgment-entered
 
 state judgment-entered: "Trial court judgment entered" by applicant cite "App.R. 4(A)"
 {
   note "A party who wishes to appeal from an order that is final upon its entry files the notice of appeal required by App.R. 3 within 30 days of that entry; from an order that becomes final later, within 30 days of the date on which it becomes final. In a civil case, if the clerk has not completed service of notice of the judgment within the three-day period of Civ.R. 58(B), the 30 days run from the date the clerk actually completes service (App.R. 4(A)). If one party timely files a notice of appeal, another may file within the appeal time or within ten days of the filing of the first notice. A timely Civ.R. 50(B) motion, Civ.R. 59 motion for a new trial, objection to a magistrate's decision under Civ.R. 53(D)(3)(b), request for findings of fact and conclusions of law, motion for attorney fees or motion for prejudgment interest starts the appeal time when the trial court resolves the last of them (App.R. 4(B)(1), (2))."
-  edge-judgment-entered-notice "Notice of appeal filed in time" -> notice-filed { event NoticeOfAppealFiled()
+  edge-judgment-entered-notice "Notice of appeal filed in time" -> notice-filed {
+    event NoticeOfAppealFiled()
     authority cite "App.R. 3(A)"
   }
   edge-judgment-entered-late "Appeal time missed" -> time-barred { authority cite "App.R. 4(A)" }
@@ -35,7 +35,8 @@ terminal time-barred: "Appeal time missed" outcome [loss, dismissal] cite "App.R
 state notice-filed: "Notice of appeal filed" by applicant cite "App.R. 3(A)"
 {
   note "An appeal of right is taken only by filing a notice of appeal with the clerk of the trial court within the time allowed by App.R. 4, with a time-stamped copy of the judgment or order appealed attached; a court of appeals may by local rule require a docketing statement. Failure to take any other step does not affect the validity of the appeal, but the court may take any action it considers appropriate, including dismissal (App.R. 3(A)). The appellant ensures that the proceedings it considers necessary are transcribed (App.R. 9(B)(1)). The record is transmitted when complete for the purposes of appeal, or when forty days (twenty for an accelerated calendar case) have elapsed after the filing of the notice of appeal and no extension has been granted (App.R. 10(A))."
-  edge-notice-filed-record "Record transmitted and filed" -> record-filed { event RecordFiled()
+  edge-notice-filed-record "Record transmitted and filed" -> record-filed {
+    event RecordFiled()
     authority cite "App.R. 10(A)"
   }
   edge-notice-filed-no-record "Record not timely transmitted: appellee moves to dismiss" -> appeal-dismissed {
@@ -82,7 +83,8 @@ decision appellate-decision: "Court of appeals determination" by court cite "App
   edge-appellate-decision-reconsideration "Application for reconsideration or en banc consideration" -> reconsideration {
     authority cite "App.R. 26(A)"
   }
-  edge-appellate-decision-supreme "Jurisdictional appeal to the Supreme Court of Ohio" -> supreme-appeal-filed { event ReviewPetitionFiled()
+  edge-appellate-decision-supreme "Jurisdictional appeal to the Supreme Court of Ohio" -> supreme-appeal-filed {
+    event ReviewPetitionFiled()
     authority cite "S.Ct.Prac.R. 7.01"
   }
 }
@@ -93,7 +95,8 @@ decision reconsideration: "Reconsideration or en banc consideration decided" by 
   edge-reconsideration-granted "Granted: the appeal is reconsidered" -> appellate-decision {
     authority cite "App.R. 26(A)"
   }
-  edge-reconsideration-denied "Denied: jurisdictional appeal to the Supreme Court" -> supreme-appeal-filed { event ReviewPetitionFiled()
+  edge-reconsideration-denied "Denied: jurisdictional appeal to the Supreme Court" -> supreme-appeal-filed {
+    event ReviewPetitionFiled()
     authority cite "S.Ct.Prac.R. 7.01"
   }
 }

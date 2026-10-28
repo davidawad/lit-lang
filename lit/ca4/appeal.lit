@@ -55,78 +55,60 @@ event DefaultNoticeServed()
 /// for enforcement files a docketing statement within 14 days of docketing
 /// of the appeal.
 deadline docketing-statement-period: 14.days after AppealDocketed() counted_by frap26 cite "4th Cir. R. 3(b)"
-
 /// An opposing party informs the clerk in writing of errors in the
 /// docketing statement within 10 days of its service.
 deadline docketing-statement-correction-period: 10.days after DocketingStatementServed() counted_by frap26 cite "4th Cir. R. 3(b)"
-
 /// A party's disclosure statement is filed within 14 days of docketing of
 /// the appeal, unless earlier pleadings are submitted, in which case it is
 /// filed with them.
 deadline disclosure-statement-period: 14.days after AppealDocketed() counted_by frap26 cite "4th Cir. R. 26.1(d)"
-
 /// Each attorney of record files a written appearance within 14 days after
 /// the appeal is docketed.
 deadline appearance-period: 14.days after AppealDocketed() counted_by frap26 cite "4th Cir. R. 46(c)"
-
 /// A reporter who sees a problem with the transcript order returns the
 /// acknowledgment form within 7 days of receiving it, or within such
 /// further time as the court allows.
 deadline transcript-problem-period: 7.days after TranscriptAcknowledgmentReceived() counted_by frap26 cite "4th Cir. R. 11(a)"
-
 /// The parties identify lead counsel for each side to the clerk in writing
 /// within 14 days of the consolidation order.
 deadline lead-counsel-period: 14.days after ConsolidationOrdered() counted_by frap26 cite "4th Cir. R. 12(b); 4th Cir. R. 28(a)"
-
 /// A party adversely affected by a clerk's order may request
 /// reconsideration by the court within 14 days after entry of the order.
 deadline clerk-order-reconsideration-period: 14.days after ClerkOrderEntered() counted_by frap26 cite "4th Cir. R. 27(b)"
-
 /// A party objects in writing to an unnecessary appendix designation within
 /// 14 days of the designation, a condition of a later sanctions motion.
 deadline appendix-objection-period: 14.days after AppendixDesignated() counted_by frap26 cite "4th Cir. R. 30(a)"
-
 /// A motion for sanctions for unnecessary appendix designations is
 /// entertained only if filed within 14 days after entry of judgment.
 deadline appendix-sanctions-motion-period: 14.days after EnteredOnAppeal(Judgment) counted_by frap26 cite "4th Cir. R. 30(a)"
-
 /// In a criminal appeal the appellant serves and files its brief and
 /// appendix within thirty-five days after the briefing order is filed.
 deadline criminal-appellant-brief-period: 35.days after CriminalBriefingOrderFiled() counted_by frap26 cite "4th Cir. R. 31(a)"
-
 /// The criminal appellee's brief is due within twenty-one days after
 /// service of the appellant's brief.
 deadline criminal-appellee-brief-period: 21.days after CriminalAppellantBriefServed() counted_by frap26 cite "4th Cir. R. 31(a)"
-
 /// The criminal appellant may serve and file a reply brief within ten days
 /// after service of the appellee's brief.
 deadline criminal-reply-brief-period: 10.days after CriminalAppelleeBriefServed() counted_by frap26 cite "4th Cir. R. 31(a)"
-
 /// A motion to file a brief longer than FRAP 32(a)(7) or 28.1(e)(2) allows
 /// is made at least 10 days prior to the brief's due date.
 deadline longer-brief-motion-period: 10.days before BriefDue() counted_by frap26 cite "4th Cir. R. 32(b)"
-
 /// The appellant files an informal brief within 21 days after service of
 /// the clerk's notice.
 deadline informal-brief-period: 21.days after InformalBriefNoticeServed() counted_by frap26 cite "4th Cir. R. 34(b)"
-
 /// The appellee may file an informal response brief within 14 days after
 /// service of the appellant's informal brief.
 deadline informal-response-period: 14.days after InformalBriefServed() counted_by frap26 cite "4th Cir. R. 34(b)"
-
 /// The appellant may file an informal reply brief within 10 days after
 /// service of the appellee's informal response brief.
 deadline informal-reply-period: 10.days after InformalResponseServed() counted_by frap26 cite "4th Cir. R. 34(b)"
-
 /// A motion to submit the case on the briefs is filed upon completion of
 /// briefing or within 10 days of tentative notification of oral argument,
 /// whichever is earlier.
 deadline submit-on-briefs-motion-period: 10.days after ArgumentTentativelyNoticed() counted_by frap26 cite "4th Cir. R. 34(e)"
-
 /// A motion to seal argument is filed on the public docket at least five
 /// days before oral argument.
 deadline seal-argument-motion-period: 5.days before ArgumentHeard() counted_by frap26 cite "4th Cir. I.O.P. 34.3"
-
 /// The clerk may dismiss the appeal if the appellant fails to remedy a
 /// default within 15 days of notice that it will subject the appeal to
 /// dismissal.

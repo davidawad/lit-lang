@@ -56,66 +56,53 @@ event CostsNoticeReceived()
 /// no later than twenty-eight (28) days before the date for which the
 /// matter is noticed.
 deadline motion-filing-period: 28.days before HearingDate() counted_by frcp6 cite "S.D. Cal. CivLR 7.1(e)"
-
 /// S.D. Cal. CivLR 7.1(e)(2): each opposing party files and serves its
 /// opposition, or a statement of non-opposition, not later than fourteen
 /// (14) calendar days before the noticed hearing; a failure to do so may be
 /// taken as consent to granting the motion (S.D. Cal. CivLR 7.1(f)(3)).
 deadline opposition-period: 14.days before HearingDate() counted_by frcp6 cite "S.D. Cal. CivLR 7.1(e)"
-
 /// S.D. Cal. CivLR 7.1(e)(3): any reply memorandum is filed and served not
 /// later than seven (7) days before the date for which the matter is
 /// noticed.
 deadline reply-period: 7.days before HearingDate() counted_by frcp6 cite "S.D. Cal. CivLR 7.1(e)"
-
 /// S.D. Cal. CivLR 7.1(e)(6)(e)(1): unless the court orders otherwise, the
 /// plaintiff's merits brief in a Social Security case is due within 30 days
 /// of the filing of the administrative record.
 deadline social-security-plaintiff-brief-period: 30.days after AdministrativeRecordFiled() counted_by frcp6 cite "S.D. Cal. CivLR 7.1(e)"
-
 /// S.D. Cal. CivLR 7.1(e)(6)(e)(2): the Social Security Administration's
 /// opposition is due 30 days after service of the plaintiff's brief.
 deadline social-security-opposition-period: 30.days after SocialSecurityPlaintiffBriefServed() counted_by frcp6 cite "S.D. Cal. CivLR 7.1(e)"
-
 /// S.D. Cal. CivLR 7.1(e)(6)(e)(3): the plaintiff's reply brief, if any, is
 /// due 14 days after service of the defendant's brief.
 deadline social-security-reply-period: 14.days after SocialSecurityOppositionServed() counted_by frcp6 cite "S.D. Cal. CivLR 7.1(e)"
-
 /// S.D. Cal. CivLR 7.1(i)(2): except as FRCP 59 and 60 allow, a motion or
 /// application for reconsideration is filed within twenty-eight (28) days
 /// after entry of the ruling, order or judgment it concerns.
 deadline reconsideration-period: 28.days after RulingEntered() counted_by frcp6 cite "S.D. Cal. CivLR 7.1(i)"
-
 /// S.D. Cal. CivLR 16.1(c)(1): within forty-five (45) days of the filing of
 /// an answer, counsel and the parties appear before the assigned judge for
 /// an early neutral evaluation conference, with full settlement authority.
 deadline ene-conference-period: 45.days after AnswerFiled() counted_by frcp6 cite "S.D. Cal. CivLR 16.1(c)"
-
 /// S.D. Cal. CivLR 16.1(f)(2)(a): unless the court specifies otherwise, each
 /// party serves and files its Memorandum of Contentions of Fact and Law no
 /// later than 5:00 p.m. twenty-eight (28) days before the pretrial hearing.
 deadline contentions-memorandum-period: 28.days before PretrialHearing() counted_by frcp6 cite "S.D. Cal. CivLR 16.1(f)"
-
 /// S.D. Cal. CivLR 16.1(f)(4)(a): the attorneys meet at least twenty-one
 /// (21) days before the pretrial hearing, after the memoranda are filed.
 deadline counsel-meeting-period: 21.days before PretrialHearing() counted_by frcp6 cite "S.D. Cal. CivLR 16.1(f)"
-
 /// S.D. Cal. CivLR 16.1(f)(6)(a): plaintiff's counsel provides opposing
 /// counsel the proposed pretrial order not less than fourteen (14) days
 /// before the pretrial hearing.
 deadline proposed-pretrial-order-period: 14.days before PretrialHearing() counted_by frcp6 cite "S.D. Cal. CivLR 16.1(f)"
-
 /// S.D. Cal. CivLR 16.1(f)(6)(b): the plaintiff lodges the Pretrial Order
 /// with the judge's chambers no later than seven (7) days before the
 /// pretrial hearing.
 deadline pretrial-order-lodging-period: 7.days before PretrialHearing() counted_by frcp6 cite "S.D. Cal. CivLR 16.1(f)"
-
 /// S.D. Cal. CivLR 54.1(a): within fourteen (14) days after entry of
 /// judgment, the party claiming costs files its bill of costs with a notice
 /// of the clerk's hearing; a motion under FRCP 59 or 60 does not extend the
 /// time unless the court orders otherwise.
 deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "S.D. Cal. CivLR 54.1(a)"
-
 /// S.D. Cal. CivLR 54.1(h)(1): a motion to retax is served and filed within
 /// seven (7) days after receipt of the clerk's notice of the taxation.
 deadline retax-motion-period: 7.days after CostsNoticeReceived() counted_by frcp6 cite "S.D. Cal. CivLR 54.1(h)"

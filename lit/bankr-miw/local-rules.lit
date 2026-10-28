@@ -27,9 +27,14 @@ import frbp.events.{ FirstMeetingDate, PetitionFiled }
 // 4004-1(a)).
 /// A Mediation Summary, excluding exhibits and attachments (LBR
 /// 9019-13(c)).
-limit mediation-summary { pages <= 15 cite "W.D. Mich. LBR 9019-13(c)" } cite "W.D. Mich. LBR 9019-13(c)"
+limit mediation-summary {
+  pages <= 15 cite "W.D. Mich. LBR 9019-13(c)"
+} cite "W.D. Mich. LBR 9019-13(c)"
+
 /// A Standard Case Evaluation summary (LBR 9019-22(b)).
-limit case-evaluation-summary { pages <= 20 cite "W.D. Mich. LBR 9019-22(b)" } cite "W.D. Mich. LBR 9019-22(b)"
+limit case-evaluation-summary {
+  pages <= 20 cite "W.D. Mich. LBR 9019-22(b)"
+} cite "W.D. Mich. LBR 9019-22(b)"
 
 /// An order converting a chapter 11, 12 or 13 case to chapter 7 is entered
 /// other than on the debtor's motion (LBR 1007-2(d)(2)).

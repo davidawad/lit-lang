@@ -4,15 +4,23 @@ import wi-state-rules.{ ReviewPetitionFiled }
 
 // A petition for review of a Court of Appeals decision, from the
 // petitioner's side. Every period is stated in a note, not counted.
-
 start petition
 
 decision petition: "Petition for review?" by applicant cite "Wis. Stat. § 808.10(1)"
 {
   note "A decision of the court of appeals is reviewable only on a petition for review granted by the Supreme Court (Wis. Stat. § 808.10(1)). The decision the petition seeks to review is the Court of Appeals' affirmance, reversal or modification, or remand."
-  edge-petition-affirmed "Petition for review of an affirmance" -> affirmed-review { event ReviewPetitionFiled() authority cite "Wis. Stat. § 809.62" }
-  edge-petition-reversed "Petition for review of a reversal or modification" -> reversed-review { event ReviewPetitionFiled() authority cite "Wis. Stat. § 809.62" }
-  edge-petition-remanded "Petition for review of a remand" -> remanded-review { event ReviewPetitionFiled() authority cite "Wis. Stat. § 809.62" }
+  edge-petition-affirmed "Petition for review of an affirmance" -> affirmed-review {
+    event ReviewPetitionFiled()
+    authority cite "Wis. Stat. § 809.62"
+  }
+  edge-petition-reversed "Petition for review of a reversal or modification" -> reversed-review {
+    event ReviewPetitionFiled()
+    authority cite "Wis. Stat. § 809.62"
+  }
+  edge-petition-remanded "Petition for review of a remand" -> remanded-review {
+    event ReviewPetitionFiled()
+    authority cite "Wis. Stat. § 809.62"
+  }
 }
 
 decision affirmed-review: "Petition for review decided (affirmed)" by court cite "Wis. Stat. § 809.62"

@@ -96,9 +96,7 @@ decision plea-decision: "Plea or trial" by applicant cite "D.C. Super. Ct. R. Cr
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "D.C. Super. Ct. R. Crim. P. 11(b)"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "D.C. Super. Ct. R. Crim. P. 23(a)"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "D.C. Super. Ct. R. Crim. P. 23(a)" }
   edge-plea-decision-nolle "Government dismisses or enters a nolle prosequi" -> dismissed {
     authority cite "D.C. Super. Ct. R. Crim. P. 48(a)"
   }
@@ -161,7 +159,6 @@ terminal appeal-taken: "Appeal taken" outcome [appeal] cite "D.C. App. R. 4(b)"
   note "The appeal continues before the District of Columbia Court of Appeals under its rules (sources/dc-state-appellate/)."
 }
 
-terminal conviction-final: "Conviction final" outcome [loss] cite ?("D.C. Code § 23-110 (collateral attack on sentence; not vendored)")
-{
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("D.C. Code § 23-110 (collateral attack on sentence; not vendored)") {
   note "Outcome from the defendant's side. Collateral attack on a sentence under D.C. Code § 23-110 and federal habeas review are not vendored here; federal habeas belongs to lit/habeas."
 }

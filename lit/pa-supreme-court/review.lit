@@ -4,14 +4,16 @@ import pa-state-rules.{ ReviewPetitionFiled }
 
 // Allowance of appeal from a final order of the Superior Court or the
 // Commonwealth Court, from the petitioner's side.
-
 start petition
 
 decision petition: "Petition for allowance of appeal?" by applicant cite "Pa.R.A.P. 1114(a)"
 {
   note "Review of a final order of the Superior Court or the Commonwealth Court is not a matter of right but of sound judicial discretion (Pa.R.A.P. 1114(a)); the petition is filed with the Prothonotary of the Supreme Court within 30 days after entry of the order sought to be reviewed."
   edge-petition-none "No petition" -> affirmed { authority cite "Pa.R.A.P. 2572(a)" }
-  edge-petition-filed "Petition for allowance of appeal" -> allowance { event ReviewPetitionFiled() authority cite "Pa.R.A.P. 1114(a)" }
+  edge-petition-filed "Petition for allowance of appeal" -> allowance {
+    event ReviewPetitionFiled()
+    authority cite "Pa.R.A.P. 1114(a)"
+  }
 }
 
 decision allowance: "Supreme Court of Pennsylvania: allowance of appeal granted or denied" by court cite "Pa.R.A.P. 1114(a)"

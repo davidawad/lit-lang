@@ -86,7 +86,8 @@ decision trial: "Jury or bench trial" by court cite "CR 38(b)"
 decision post-trial: "Post-trial motions" by applicant cite "CR 59(b)"
 {
   note "A renewed motion for judgment as a matter of law is filed no later than 10 days after entry of judgment and may join a motion for a new trial (CR 50(b)). A motion for a new trial or for reconsideration is filed not later than 10 days after entry of the judgment, order or other decision, noted to be heard within 30 days after entry unless the court directs otherwise (CR 59(b)); opposing affidavits are due 10 days after service, extendable up to 20 days (CR 59(c)). The court may order a new-trial hearing on its own initiative not later than 10 days after entry of judgment (CR 59(d))."
-  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered { event JudgmentEntered()
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "CR 58(a)"
   }
 }

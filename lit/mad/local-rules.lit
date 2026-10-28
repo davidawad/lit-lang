@@ -84,159 +84,127 @@ event CaseSettled()
 /// 90 days of the filing of the complaint is deemed unserved for FRCP
 /// 4(m).
 deadline summons-return-period: 90.days after ComplaintFiled() counted_by frcp6 cite "D. Mass. L.R. 4.1(a)"
-
 /// Local Rule 4.1(b): good cause for failing to serve is shown by a motion
 /// to enlarge time under FRCP 6(b) with an affidavit; if it is not shown
 /// by the 14th day after the 90-day period expires, the clerk enters an
 /// order of dismissal without further order.
 deadline service-good-cause-period: 14.days after ServicePeriodExpired() counted_by frcp6 cite "D. Mass. L.R. 4.1(b)"
-
 /// Local Rule 5.1(b): except as FRCP 33-36 provide, a document required to
 /// be served under FRCP 5(d) is filed electronically within 7 days after
 /// service, unless otherwise submitted to the court.
 deadline served-paper-filing-period: 7.days after PaperServed() counted_by frcp6 cite "D. Mass. L.R. 5.1(b)"
-
 /// Local Rule 7.1(b)(2): an opposition to a motion is filed within 14 days
 /// after the motion is served, unless another period is fixed by rule,
 /// statute or order; the 14 days include the civil rules' mailing time.
 deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "D. Mass. L.R. 7.1(b)"
-
 /// Local Rules 7.1(b)(2) and 56.1: an opposition to a summary judgment
 /// motion is filed within 21 days after the motion is served, unless the
 /// court orders otherwise.
 deadline sj-opposition-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "D. Mass. L.R. 56.1"
-
 /// Local Rule 56.1: unless the court orders otherwise, the moving party
 /// may file a reply within 14 days after the response is served.
 deadline sj-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frcp6 cite "D. Mass. L.R. 56.1"
-
 /// Local Rule 15.1(b): a motion to amend adding a new party is served on
 /// the proposed new party at least 14 days before it is filed, with a
 /// statement of the filing date.
 deadline add-party-notice-period: 14.days before AddPartyMotionFiled() counted_by frcp6 cite "D. Mass. L.R. 15.1(b)"
-
 /// Local Rule 16.1(b): unless otherwise ordered, counsel confer under FRCP
 /// 26(f) at least 21 days before the scheduling conference.
 deadline scheduling-conference-confer-period: 21.days before SchedulingConferenceHeld() counted_by frcp6 cite "D. Mass. L.R. 16.1(b)"
-
 /// Local Rule 16.1(c): unless otherwise ordered, the plaintiff presents
 /// written settlement proposals to all defendants no later than 14 days
 /// before the scheduling conference.
 deadline settlement-proposal-period: 14.days before SchedulingConferenceHeld() counted_by frcp6 cite "D. Mass. L.R. 16.1(c)"
-
 /// Local Rule 16.1(d): unless otherwise ordered, the joint statement with
 /// the proposed pretrial schedule is filed no later than 7 days before the
 /// scheduling conference.
 deadline joint-statement-period: 7.days before SchedulingConferenceHeld() counted_by frcp6 cite "D. Mass. L.R. 16.1(d)"
-
 /// Local Rule 16.3(b): a joint statement the judicial officer requires
 /// before a case management conference is filed no later than 7 days
 /// before it.
 deadline case-management-statement-period: 7.days before CaseManagementConferenceHeld() counted_by frcp6 cite "D. Mass. L.R. 16.3(b)"
-
 /// Local Rules 16.5(c) and 26.4(a): unless otherwise directed, the FRCP
 /// 26(a)(2) expert disclosure is made at least 90 days before the final
 /// pretrial conference.
 deadline expert-disclosure-period: 90.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "D. Mass. L.R. 26.4(a)"
-
 /// Local Rule 16.5(c): the FRCP 26(a)(3) pretrial disclosures are made no
 /// later than 28 days before the pretrial conference.
 deadline pretrial-disclosure-period: 28.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "D. Mass. L.R. 16.5(c)"
-
 /// Local Rule 16.5(d): unless otherwise ordered, counsel confer to prepare
 /// the pretrial memorandum no later than 14 days before the final pretrial
 /// conference.
 deadline pretrial-confer-period: 14.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "D. Mass. L.R. 16.5(d)"
-
 /// Local Rule 16.5(d): unless otherwise ordered, the joint pretrial
 /// memorandum is filed no later than 7 days before the pretrial
 /// conference.
 deadline pretrial-memorandum-period: 7.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "D. Mass. L.R. 16.5(d)"
-
 /// Local Rule 16.5(f): each party files a trial brief, with requests for
 /// rulings or instructions, 7 days before the commencement of trial.
 deadline trial-brief-period: 7.days before TrialCommenced() counted_by frcp6 cite "D. Mass. L.R. 16.5(f)"
-
 /// Local Rule 43.1(b)(2): not later than 7 days before it seeks to use a
 /// witness's testimony, or on shorter notice for good cause, a party
 /// advises the judicial officer and the parties of the day.
 deadline witness-notice-period: 7.days before WitnessTestified() counted_by frcp6 cite "D. Mass. L.R. 43.1(b)"
-
 /// Local Rule 26.2(a): unless otherwise ordered, the FRCP 26(a)(1)
 /// disclosure is made at or within 14 days after the FRCP 26(f) meeting.
 deadline initial-disclosure-period: 14.days after PartiesConferred() counted_by frcp6 cite "D. Mass. L.R. 26.2(a)"
-
 /// Local Rule 26.2(d): in a removed or transferred action in which
 /// discovery began before removal or transfer, the disclosure is made
 /// within 21 days of the date of removal or transfer.
 deadline removed-disclosure-period: 21.days after RemovedOrTransferred() counted_by frcp6 cite "D. Mass. L.R. 26.2(d)"
-
 /// Local Rule 33.1(b)(4): records referred to in interrogatory answers are
 /// made available for inspection and copying within 14 days after service
 /// of the answers, or at a date the parties agree.
 deadline interrogatory-records-period: 14.days after InterrogatoryAnswersServed() counted_by frcp6 cite "D. Mass. L.R. 33.1(b)"
-
 /// Local Rules 33.1(d) and 34.1(d): interrogatories and document requests
 /// that were objected to and must be answered are answered within 14 days
 /// after that is determined, unless the court directs otherwise.
 deadline answer-after-objection-period: 14.days after ObjectionOverruled() counted_by frcp6 cite "D. Mass. L.R. 33.1(d)"
-
 /// Local Rule 36.1(b): when an objection to a request for admission is
 /// overruled, the matter is deemed admitted unless the party serves a
 /// denial or a statement of why it cannot admit or deny within 14 days
 /// after the determination.
 deadline admission-after-objection-period: 14.days after ObjectionOverruled() counted_by frcp6 cite "D. Mass. L.R. 36.1(b)"
-
 /// Local Rule 35.1(a): within 14 days after issue is joined by a
 /// responsive pleading, a personal injury claimant serves the itemization
 /// of medical expenses and the medical-records statement.
 deadline medical-disclosure-period: 14.days after IssueJoined() counted_by frcp6 cite "D. Mass. L.R. 35.1(a)"
-
 /// Local Rule 35.1(c): in a removed or transferred action, the personal
 /// injury claimant provides that information within 21 days after removal
 /// or transfer.
 deadline removed-medical-disclosure-period: 21.days after RemovedOrTransferred() counted_by frcp6 cite "D. Mass. L.R. 35.1(c)"
-
 /// Local Rule 37.1(a): opposing counsel's failure to respond to a request
 /// for a discovery conference within 7 days of the request is grounds for
 /// sanctions, which may include automatic allowance of the motion.
 deadline discovery-conference-response-period: 7.days after DiscoveryConferenceRequested() counted_by frcp6 cite "D. Mass. L.R. 37.1(a)"
-
 /// Local Rule 37.1(b): a dissatisfied party may move if opposing counsel
 /// fails to attend a discovery conference within 14 calendar days of the
 /// request.
 deadline discovery-conference-period: 14.days after DiscoveryConferenceRequested() counted_by frcp6 cite "D. Mass. L.R. 37.1(b)"
-
 /// Local Rule 37.1(c): the opposing party may respond to the discovery
 /// memorandum within 14 calendar days after service.
 deadline discovery-motion-response-period: 14.days after DiscoveryMotionServed() counted_by frcp6 cite "D. Mass. L.R. 37.1(c)"
-
 /// Local Rule 41.1(a): a case with no docketed proceeding for one year is
 /// dismissed 28 days after the clerk's notice unless within that period an
 /// explanation is filed and the judicial officer orders that it not be
 /// dismissed.
 deadline prosecution-explanation-period: 28.days after ProsecutionNoticeServed() counted_by frcp6 cite "D. Mass. L.R. 41.1(a)"
-
 /// Local Rule 41.1(b)(1): unless otherwise ordered, each party serves and
 /// files a status certificate not less than 14 days before the noticed
 /// dismissal-calendar hearing.
 deadline dismissal-calendar-certificate-period: 14.days before DismissalHearingHeld() counted_by frcp6 cite "D. Mass. L.R. 41.1(b)"
-
 /// Local Rule 68.2: when a case settles, the parties file a signed
 /// agreement for judgment or stipulation for dismissal within 28 days,
 /// unless the court otherwise orders.
 deadline settlement-filing-period: 28.days after CaseSettled() counted_by frcp6 cite "D. Mass. L.R. 68.2"
-
 /// Local Rules 81.1(a) and 5.4(f): within 28 days after filing a notice of
 /// removal, the removing party files certified or attested copies of the
 /// state court records, proceedings and docket entries.
 deadline state-record-period: 28.days after RemovalNoticeFiled() counted_by frcp6 cite "D. Mass. L.R. 81.1(a)"
-
 /// Local Rule 81.1(b): if the clerk has not received the state court
 /// papers within 42 days of the notice of removal, the case is remanded
 /// unless the court directs otherwise.
 deadline state-record-remand-period: 42.days after RemovalNoticeFiled() counted_by frcp6 cite "D. Mass. L.R. 81.1(b)"
-
 /// Local Rule 81.1(d): absent a contrary order, the clerk remands the case
 /// to the state court no sooner than 30 days after an order of remand
 /// under 28 U.S.C. § 1447(c).

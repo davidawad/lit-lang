@@ -9,7 +9,6 @@ import ks-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, Revie
 // limits are lit/ks-rules' limit declarations. Direct appeals to the Supreme Court and
 // transfers under K.S.A. 20-3016 and 20-3017 are not modeled; those
 // sections are not vendored. The outline named no leading decisions.
-
 start threshold
 
 decision threshold: "Appealable judgment or order?" by applicant cite "K.S.A. 60-2101(a)"
@@ -25,7 +24,10 @@ decision notice: "Notice of appeal within time?" by applicant cite "K.S.A. 60-21
 {
   note "The time to appeal is 30 days from the entry of judgment as provided by K.S.A. 60-258; on a showing of excusable neglect based on a party's failure to learn of the entry, the district court may extend it by not more than 30 days from the expiration of the original time. A timely motion under K.S.A. 60-250(b), 60-252(b) or 60-259 terminates the running of the time, which runs in full from the order on the motion (K.S.A. 60-2103(a)); a party challenging the order on the last such motion, or on a motion under K.S.A. 60-260 filed within 28 days after judgment, files its notice no later than 30 days after that order (Kan. S. Ct. R. 2.03(b)). The notice is filed with the clerk of the district court, specifies the parties taking the appeal, designates the judgment appealed from and names the appellate court, and is served on all other parties (K.S.A. 60-2103(a), (b)); it is under the district court caption in substantial compliance with the judicial council form (Kan. S. Ct. R. 2.02). A notice filed after the judge announces a judgment but before its entry is effective if it identifies the judgment with sufficient certainty (Kan. S. Ct. R. 2.03(a)). An appellee files notice of cross-appeal within 21 days after the notice of appeal has been served on it and filed (K.S.A. 60-2103(h))."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "K.S.A. 60-2103(a)" }
-  edge-notice-timely "Timely notice" -> docketing { event NoticeOfAppealFiled() authority cite "Kan. S. Ct. R. 2.04(a)" }
+  edge-notice-timely "Timely notice" -> docketing {
+    event NoticeOfAppealFiled()
+    authority cite "Kan. S. Ct. R. 2.04(a)"
+  }
 }
 
 decision docketing: "Appeal docketed and transcript ordered" by applicant cite "Kan. S. Ct. R. 2.04(a)"
@@ -56,7 +58,10 @@ state hearing: "Hearing or summary calendar" by court cite "Kan. S. Ct. R. 7.02(
 state decision: "Decision filed" by court cite "Kan. S. Ct. R. 7.03(a)"
 {
   note "A decision of an appellate court is announced by electronically filing the opinion with the clerk of the appellate courts, who sends a copy to an unrepresented party that has appeared and notifies the district judge (Kan. S. Ct. R. 7.03(a)). Disposition may affirm, reverse or remand; the Court of Appeals may correct, modify, vacate or reverse any act, order or judgment of a district court (K.S.A. 60-2101(a))."
-  edge-decision-filed "Opinion filed" -> post-decision { event DecisionFiled() authority cite "Kan. S. Ct. R. 7.05(a)" }
+  edge-decision-filed "Opinion filed" -> post-decision {
+    event DecisionFiled()
+    authority cite "Kan. S. Ct. R. 7.05(a)"
+  }
 }
 
 decision post-decision: "Rehearing or review sought?" by applicant cite "Kan. S. Ct. R. 7.05(a)"
@@ -68,7 +73,8 @@ decision post-decision: "Rehearing or review sought?" by applicant cite "Kan. S.
   edge-post-decision-rehearing "Motion for rehearing or modification" -> rehearing-order {
     authority cite "Kan. S. Ct. R. 7.05(a)"
   }
-  edge-post-decision-review "Petition for review" -> review-petitioned { event ReviewPetitionFiled()
+  edge-post-decision-review "Petition for review" -> review-petitioned {
+    event ReviewPetitionFiled()
     authority cite "Kan. S. Ct. R. 8.03(b)"
   }
 }
@@ -79,7 +85,8 @@ decision rehearing-order: "Rehearing or modification decided" by court cite "Kan
   edge-rehearing-order-mandate "Decided: no further review" -> mandate {
     authority cite "Kan. S. Ct. R. 7.03(b)"
   }
-  edge-rehearing-order-review "Petition for review" -> review-petitioned { event ReviewPetitionFiled()
+  edge-rehearing-order-review "Petition for review" -> review-petitioned {
+    event ReviewPetitionFiled()
     authority cite "Kan. S. Ct. R. 8.03(b)"
   }
 }
@@ -92,7 +99,10 @@ terminal review-petitioned: "Petition for review filed in the Supreme Court" out
 state mandate: "Mandate issued" by office cite "Kan. S. Ct. R. 7.03(b)"
 {
   note "The mandate issues 7 days after the time to file a petition for review or motion for rehearing or modification expires, after entry of an order denying a timely petition or motion, or after any other event that finally disposes of the appeal; the court may shorten or extend the time, and the mandate is effective when issued. A timely petition for review or motion for rehearing or modification stays the mandate until its disposition unless the court orders otherwise (Kan. S. Ct. R. 7.03(b))."
-  edge-mandate-final "Mandate issued" -> final-decision { event MandateIssued() authority cite "Kan. S. Ct. R. 7.03(b)" }
+  edge-mandate-final "Mandate issued" -> final-decision {
+    event MandateIssued()
+    authority cite "Kan. S. Ct. R. 7.03(b)"
+  }
 }
 
 terminal dismissed-jurisdiction: "Dismissed: no appellate jurisdiction" outcome [loss, dismissal, jurisdictional] cite "K.S.A. 60-2101(a)"

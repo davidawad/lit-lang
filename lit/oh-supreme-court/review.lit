@@ -4,14 +4,16 @@ import oh-state-rules.{ ReviewPetitionFiled }
 
 // A jurisdictional appeal from a court of appeals judgment, from the
 // appellant's side. Every period is stated in a note, not counted.
-
 start petition
 
 decision petition: "Jurisdictional appeal to the Supreme Court of Ohio?" by applicant cite "S.Ct.Prac.R. 7.01"
 {
   note "To perfect a jurisdictional appeal the appellant files a notice of appeal in the Supreme Court within forty-five days from the entry of the court of appeals' judgment, together with a memorandum in support of jurisdiction; the period is mandatory and the Clerk refuses a late filing (S.Ct.Prac.R. 7.01(A)(1))."
   edge-petition-none "No appeal" -> no-appeal { authority cite "S.Ct.Prac.R. 7.01" }
-  edge-petition-filed "Notice of appeal and memorandum in support of jurisdiction" -> supreme-review { event ReviewPetitionFiled() authority cite "S.Ct.Prac.R. 7.01" }
+  edge-petition-filed "Notice of appeal and memorandum in support of jurisdiction" -> supreme-review {
+    event ReviewPetitionFiled()
+    authority cite "S.Ct.Prac.R. 7.01"
+  }
 }
 
 decision supreme-review: "Supreme Court of Ohio: jurisdiction accepted or declined" by court cite "S.Ct.Prac.R. 7.08"

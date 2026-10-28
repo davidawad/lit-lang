@@ -116,78 +116,64 @@ event DesignatingStatementFiled()
 /// time that affects a hearing or proceeding on the court's calendar is
 /// filed no later than 14 days before the scheduled event.
 deadline change-time-request-period: 14.days before HearingScheduled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 6-1(b)"
-
 /// N.D. Cal. Civil L.R. 6-3(b): unless otherwise ordered, an opposition to
 /// a motion to enlarge or shorten time is filed no later than 4 days after
 /// receiving the motion.
 deadline change-time-opposition-period: 4.days after ChangeTimeMotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 6-3(b)"
-
 /// N.D. Cal. Civil L.R. 7-3(a): the opposition to a motion is filed and
 /// served not more than 14 days after the motion was filed. A party that
 /// does not oppose files a Statement of Nonopposition within the same time
 /// (N.D. Cal. Civil L.R. 7-3(b)).
 deadline opposition-period: 14.days after MotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-3(a)"
-
 /// N.D. Cal. Civil L.R. 7-3(c): the reply is filed and served not more
 /// than 7 days after the opposition was due. Within that time the moving
 /// party may instead withdraw the motion (N.D. Cal. Civil L.R. 7-7(e)).
 deadline reply-period: 7.days after OppositionDue() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-3(c)"
-
 /// N.D. Cal. Civil L.R. 7-3(d)(1): if the reply submits new evidence, an
 /// Objection to Reply Evidence is filed and served not more than 7 days
 /// after the reply was filed.
 deadline reply-evidence-objection-period: 7.days after ReplyFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-3(d)"
-
 /// N.D. Cal. Civil L.R. 7-8(d): unless the court orders otherwise, no
 /// motion for sanctions may be served and filed more than 14 days after the
 /// district court enters judgment.
 deadline sanctions-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-8(d)"
-
 /// N.D. Cal. Civil L.R. 7-11(b): an opposition to or support for a motion
 /// for administrative relief is filed no later than 4 days after the motion
 /// was filed; the motion is then deemed submitted the next day (N.D. Cal.
 /// Civil L.R. 7-11(c)).
 deadline administrative-opposition-period: 4.days after AdministrativeMotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 7-11(b)"
-
 /// N.D. Cal. Civil L.R. 37-3: no discovery-related motion may be filed more
 /// than 7 days after the applicable discovery cut-off.
 deadline discovery-motion-period: 7.days after DiscoveryCutOff() counted_by frcp6 cite "N.D. Cal. Civil L.R. 37-3"
-
 /// N.D. Cal. Civil L.R. 54-1(a): a prevailing party claiming taxable costs
 /// serves and files a bill of costs no later than 14 days after entry of the
 /// judgment or order under which costs may be claimed; a party that does not
 /// is deemed to have waived costs (N.D. Cal. Civil L.R. 54-1(c)).
 deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "N.D. Cal. Civil L.R. 54-1(a)"
-
 /// N.D. Cal. Civil L.R. 54-2(a): specific objections to the bill of costs
 /// are served and filed within 14 days after service of the bill.
 deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "N.D. Cal. Civil L.R. 54-2(a)"
-
 /// N.D. Cal. Civil L.R. 54-5(a): a motion for attorney's fees is served and
 /// filed within 14 days of entry of judgment by the district court unless
 /// the court orders otherwise on a stipulation or motion; an appeal does not
 /// extend the time.
 deadline fee-motion-period: 14.days after JudgmentEntered() counted_by frcp6 cite "N.D. Cal. Civil L.R. 54-5(a)"
-
 /// N.D. Cal. Civil L.R. 72-2(d): if the district judge makes no order
 /// denying the motion or setting a briefing schedule within 14 days of its
 /// filing, the motion for relief from a magistrate judge's nondispositive
 /// order is deemed denied.
 deadline magistrate-relief-deemed-denied: 14.days after MagistrateReliefMotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 72-2(d)"
-
 /// N.D. Cal. Civil L.R. 73-1(a)(2): in a case initially assigned to a
 /// magistrate judge, when a motion the magistrate judge cannot hear without
 /// consent is filed, the parties file written consent or request
 /// reassignment to a district judge no later than 7 days after the motion
 /// is filed, unless otherwise directed.
 deadline consent-period: 7.days after ConsentMotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 73-1(a)"
-
 /// N.D. Cal. Civil L.R. 79-5(f)(3): the Designating Party files its
 /// statement or declaration within 7 days of the filing of the motion to
 /// consider whether its material should be sealed; failing that, the
 /// document may be unsealed without further notice.
 deadline designating-statement-period: 7.days after OtherPartySealingMotionFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 79-5(f)"
-
 /// N.D. Cal. Civil L.R. 79-5(f)(4): any response is filed no later than 4
 /// days after the Designating Party files its statement or declaration.
 deadline sealing-response-period: 4.days after DesignatingStatementFiled() counted_by frcp6 cite "N.D. Cal. Civil L.R. 79-5(f)"

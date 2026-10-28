@@ -110,119 +110,97 @@ event ArbitrationAwardServed()
 /// brief and proof of service are filed at least 24 days before the noticed
 /// motion day.
 deadline motion-papers-period: 24.days before MotionDay() counted_by frcp6 cite "D.N.J. L. Civ. R. 7.1(d)"
-
 /// L.Civ.R. 7.1(d)(2): the opposition brief and papers are filed at least
 /// 14 days before the original motion day, unless the court orders
 /// otherwise or the opponent of a dispositive motion takes the one
 /// automatic adjournment under L.Civ.R. 7.1(d)(5), which moves the period to
 /// 14 days before the new motion day.
 deadline opposition-period: 14.days before MotionDay() counted_by frcp6 cite "D.N.J. L. Civ. R. 7.1(d)"
-
 /// L.Civ.R. 7.1(d)(3): a reply, if any, is filed at least seven days before
 /// the motion day. No reply is filed without leave on a cross-motion,
 /// reconsideration, case management or discovery motion.
 deadline reply-period: 7.days before MotionDay() counted_by frcp6 cite "D.N.J. L. Civ. R. 7.1(d)"
-
 /// L.Civ.R. 7.1(e): if the proposed order annexed to the motion does not
 /// reflect the ruling, the prevailing party, if directed, submits an order
 /// within seven days of the ruling on notice to all parties.
 deadline proposed-order-period: 7.days after MotionRuled() counted_by frcp6 cite "D.N.J. L. Civ. R. 7.1(e)"
-
 /// L.Civ.R. 7.1(i): unless a statute or rule such as Fed. R. Civ. P. 50, 52
 /// or 59 provides otherwise, a motion for reconsideration is served and
 /// filed within 14 days after entry of the order or judgment on the
 /// original motion.
 deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6 cite "D.N.J. L. Civ. R. 7.1(i)"
-
 /// L.Civ.R. 7.1.1(a): within 30 days of filing an initial pleading or of
 /// transfer or removal of the matter to this district, each party files a
 /// statement disclosing any non-party providing non-recourse litigation
 /// funding.
 deadline litigation-funding-disclosure-period: 30.days after InitialPleadingFiled() counted_by frcp6 cite "D.N.J. L. Civ. R. 7.1.1(a)"
-
 /// L.Civ.R. 8.1: within 14 days after service of a written request, the
 /// party pleading unliquidated damages furnishes a statement of the amount
 /// claimed.
 deadline damages-statement-period: 14.days after DamagesRequestServed() counted_by frcp6 cite "D.N.J. L. Civ. R. 8.1"
-
 /// L.Civ.R. 10.1(a): counsel and unrepresented parties file notice of a
 /// change of their or their client's address within seven days of being
 /// apprised of it.
 deadline address-change-period: 7.days after AddressChangeLearned() counted_by frcp6 cite "D.N.J. L. Civ. R. 10.1(a)"
-
 /// L.Civ.R. 12.2: when a Fed. R. Civ. P. 12(b) motion addresses fewer than
 /// all claims, the pleading in response to the claims not dismissed is
 /// filed 14 days after entry of the order resolving the motion.
 deadline remaining-claims-response-period: 14.days after PartialDismissalOrderEntered() counted_by frcp6 cite "D.N.J. L. Civ. R. 12.2"
-
 /// L.Civ.R. 26.1(b)(2): the initial Fed. R. Civ. P. 26(f) meeting is
 /// convened at least 21 days before the initial scheduling conference.
 deadline parties-meeting-period: 21.days before InitialSchedulingConference() counted_by frcp6 cite "D.N.J. L. Civ. R. 26.1(b)"
-
 /// L.Civ.R. 26.1(b)(2): the proposed discovery plan generated at the
 /// meeting is delivered to the Magistrate Judge within 14 days after it.
 deadline discovery-plan-period: 14.days after PartiesMeeting() counted_by frcp6 cite "D.N.J. L. Civ. R. 26.1(b)"
-
 /// L.Civ.R. 26.1(b)(2): unless stipulated or directed otherwise, initial
 /// disclosures under Fed. R. Civ. P. 26(a)(1) are made within 14 days after
 /// the initial meeting of the parties.
 deadline initial-disclosures-period: 14.days after PartiesMeeting() counted_by frcp6 cite "D.N.J. L. Civ. R. 26.1(b)"
-
 /// L.Civ.R. 41.1(b): within 60 days after entry of the order
 /// administratively terminating a settled case, counsel file the papers to
 /// dismiss it under Fed. R. Civ. P. 41(a)(1)(A)(ii); otherwise the court
 /// dismisses it with prejudice. The court may extend the period for good
 /// cause.
 deadline settlement-dismissal-period: 60.days after AdministrativeTerminationEntered() counted_by frcp6 cite "D.N.J. L. Civ. R. 41.1(b)"
-
 /// L.Civ.R. 54.1(a), (e): within 30 days after entry of a judgment allowing
 /// costs, or of the order disposing of the last timely post-trial motion,
 /// the prevailing party serves and files a Bill of Costs and Disbursements;
 /// failure waives all costs. The period from a post-trial order runs from
 /// an event this layer does not model.
 deadline bill-of-costs-period: 30.days after CostsJudgmentEntered() counted_by frcp6 cite "D.N.J. L. Civ. R. 54.1(a)"
-
 /// L.Civ.R. 54.1(h): a dissatisfied party appeals the Clerk's taxation to
 /// the court by notice of motion served within seven days of the Clerk's
 /// action, as Fed. R. Civ. P. 54(d) provides.
 deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "D.N.J. L. Civ. R. 54.1(h)"
-
 /// L.Civ.R. 54.2(a): where a counsel fee is allowed by the court or
 /// permitted by statute, the motion for fees and expenses is filed within
 /// 30 days of entry of the judgment or order, unless the court extends it.
 deadline fee-motion-period: 30.days after FeeJudgmentEntered() counted_by frcp6 cite "D.N.J. L. Civ. R. 54.2(a)"
-
 /// L.Civ.R. 58.1(b): in cases under Fed. R. Civ. P. 58(b)(2), the
 /// prevailing party submits a judgment or order on notice within seven days
 /// after the determination.
 deadline proposed-judgment-period: 7.days after JudgmentDetermined() counted_by frcp6 cite "D.N.J. L. Civ. R. 58.1(b)"
-
 /// L.Civ.R. 58.1(b): unless the court directs otherwise, the judgment may be
 /// signed if no specific objection is received from the adversary within
 /// seven days of receipt of the prevailing party's judgment or order.
 deadline proposed-judgment-objection-period: 7.days after ProposedJudgmentReceived() counted_by frcp6 cite "D.N.J. L. Civ. R. 58.1(b)"
-
 /// L.Civ.R. 72.1(c)(1)(A): a party appeals a magistrate judge's
 /// determination of a non-dispositive matter within 14 days after being
 /// served with the order; a timely motion for reargument under L.Civ.R.
 /// 7.1(i) restarts the period from service of the order deciding it.
 deadline magistrate-order-appeal-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "D.N.J. L. Civ. R. 72.1(c)"
-
 /// L.Civ.R. 72.1(c)(2): a party objects to a magistrate judge's proposed
 /// findings, recommendations or report within 14 days after being served
 /// with a copy.
 deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6 cite "D.N.J. L. Civ. R. 72.1(c)"
-
 /// L.Civ.R. 73.1(d): the form consenting to trial before a magistrate judge
 /// is filed not later than 21 days after the final pretrial conference.
 deadline magistrate-consent-period: 21.days after FinalPretrialConference() counted_by frcp6 cite "D.N.J. L. Civ. R. 73.1(d)"
-
 /// L.Civ.R. 201.1(h)(1): a demand for trial de novo is filed and served
 /// within 30 days after the arbitration award is filed and served; the
 /// period is 60 days in an action to which the United States or its
 /// employee or agency is a party (below).
 deadline trial-de-novo-demand-period: 30.days after ArbitrationAwardServed() counted_by frcp6 cite "D.N.J. L. Civ. R. 201.1(h)"
-
 /// L.Civ.R. 201.1(h)(1): in an action to which the United States or any of
 /// its employees or agencies is a party, the demand for trial de novo is
 /// filed and served within 60 days.

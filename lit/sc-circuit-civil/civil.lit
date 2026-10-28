@@ -99,14 +99,18 @@ terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [win, d
 decision sj-motion: "Summary judgment decided" by court cite "S.C. R. Civ. P. 56(c)"
 {
   note "A claimant may move after 30 days from commencement or after service of the adverse party's motion; a defending party may move at any time (S.C. R. Civ. P. 56(a), (b)). The motion is served at least 10 days before the hearing and opposing affidavits not later than two days before it; judgment is rendered if there is no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law (S.C. R. Civ. P. 56(c)). The adverse party may not rest on the pleadings but must set forth specific facts showing a genuine issue for trial (S.C. R. Civ. P. 56(e))."
-  edge-sj-motion-granted "Granted" -> judgment-entered { event JudgmentEntered() authority cite "S.C. R. Civ. P. 56(c)" }
+  edge-sj-motion-granted "Granted" -> judgment-entered {
+    event JudgmentEntered()
+    authority cite "S.C. R. Civ. P. 56(c)"
+  }
   edge-sj-motion-denied "Denied" -> trial { authority cite "S.C. R. Civ. P. 39" }
 }
 
 state trial: "Trial by jury or by the court" by court cite "S.C. R. Civ. P. 39"
 {
   note "Issues for which a jury was demanded under Rule 38 are tried by jury unless the parties stipulate to trial by the court or the court finds no right to a jury; other issues are tried by the court or referred to a master (S.C. R. Civ. P. 39(a), (b)). A party who moved for a directed verdict at the close of all the evidence may move for judgment n.o.v. (S.C. R. Civ. P. 50(b))."
-  edge-trial-judgment "Verdict or decision" -> judgment-entered { event JudgmentEntered()
+  edge-trial-judgment "Verdict or decision" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "S.C. R. Civ. P. 58(a)"
   }
 }
@@ -117,7 +121,8 @@ decision judgment-entered: "Judgment entered" by office cite "S.C. R. Civ. P. 58
   edge-judgment-entered-post "Post-trial motion" -> post-trial {
     authority cite "S.C. R. Civ. P. 59(b)"
   }
-  edge-judgment-entered-appeal "Notice of appeal" -> appeal-noticed { event NoticeOfAppealFiled()
+  edge-judgment-entered-appeal "Notice of appeal" -> appeal-noticed {
+    event NoticeOfAppealFiled()
     authority cite "S.C. App. Ct. R. 203(b)(1)"
   }
   edge-judgment-entered-final "No further action" -> judgment-final {
@@ -129,7 +134,10 @@ decision post-trial: "Post-trial motion decided" by court cite "S.C. R. Civ. P. 
 {
   note "A timely motion under Rule 50 or 59 stays the time for appeal for all parties, which then runs from receipt of written notice of entry of the order granting or denying it (S.C. R. Civ. P. 50(e), 59(f); S.C. App. Ct. R. 203(b)(1)). Relief from a final judgment for mistake, newly discovered evidence or fraud is sought within a reasonable time and not more than one year after entry (S.C. R. Civ. P. 60(b))."
   edge-post-trial-new-trial "New trial granted" -> trial { authority cite "S.C. R. Civ. P. 59(a)" }
-  edge-post-trial-denied "Denied" -> judgment-entered { event JudgmentEntered() authority cite "S.C. R. Civ. P. 59(f)" }
+  edge-post-trial-denied "Denied" -> judgment-entered {
+    event JudgmentEntered()
+    authority cite "S.C. R. Civ. P. 59(f)"
+  }
 }
 
 terminal settled: "Settled: dismissed by stipulation" outcome [settlement] cite "S.C. R. Civ. P. 41(a)"

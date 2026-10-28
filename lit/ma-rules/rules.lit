@@ -30,35 +30,25 @@ limit reconsideration-motion {
 
 /// The appellant's brief and appendix are served (Mass. R. A. P. 19(a)).
 event AppellantBriefServed() paper principal-brief
-
 /// The appellee's brief is served (Mass. R. A. P. 19(a)).
 event AppelleeBriefServed() paper principal-brief
-
 /// A reply brief is served (Mass. R. A. P. 19(a)).
 event ReplyBriefServed() paper reply-brief
-
 /// A motion for reconsideration or modification is filed (Mass. R. A. P.
 /// 27).
 event ReconsiderationMoved() paper reconsideration-motion
-
 // The trigger events the court packages' graphs route on.
 /// An action, claim, petition or charge is filed and the proceeding begins.
 event ActionCommenced()
-
 /// A final judgment, decision or appealable order is entered.
 event JudgmentEntered()
-
 /// A notice of appeal, or a petition or appeal for review of a lower court's or tribunal's decision, is filed.
 event NoticeOfAppealFiled()
-
 /// The record on appeal or review is filed or transmitted.
 event RecordFiled()
-
 /// The reviewing court's or tribunal's decision or opinion is filed.
 event DecisionFiled()
-
 /// A petition for discretionary review in a higher court (certiorari, transfer, leave or review) is filed.
 event ReviewPetitionFiled()
-
 /// The mandate, remittitur or certificate of judgment issues.
 event MandateIssued()

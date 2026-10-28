@@ -4,20 +4,23 @@ import sc-state-rules.{ MandateIssued, ReviewPetitionFiled }
 
 // Certiorari to the Court of Appeals, from the petitioner's side. Every
 // period is stated in a note, not counted.
-
 start petition
 
 decision petition: "Petition for certiorari?" by applicant cite "S.C. App. Ct. R. 242(c)"
 {
   note "A petition for a writ of certiorari is served and filed with the Clerks of the Court of Appeals and the Supreme Court within thirty days after the petition for rehearing in the Court of Appeals is finally decided; it may present only questions raised in the Court of Appeals and in the petition for rehearing, and may not exceed twenty-five pages (S.C. App. Ct. R. 242(c), (d))."
   edge-petition-none "No petition" -> remittitur { authority cite "S.C. App. Ct. R. 221(b)" }
-  edge-petition-filed "Petition for certiorari" -> certiorari { event ReviewPetitionFiled() authority cite "S.C. App. Ct. R. 242(c)" }
+  edge-petition-filed "Petition for certiorari" -> certiorari {
+    event ReviewPetitionFiled()
+    authority cite "S.C. App. Ct. R. 242(c)"
+  }
 }
 
 decision certiorari: "Certiorari decided" by court cite "S.C. App. Ct. R. 242(i)"
 {
   note "Certiorari is not a matter of right but of sound judicial discretion, granted only for special and important reasons such as a novel question, a dissent below, or a conflict with a decision of the Supreme Court (S.C. App. Ct. R. 242(a), (b)). The return is served within thirty days after service of the petition and the reply within ten days after service of the return (S.C. App. Ct. R. 242(f), (g)). The petition is considered without oral argument; if it is granted, the petitioner serves and files its brief within thirty days (S.C. App. Ct. R. 242(i)). No rehearing lies from an order denying certiorari (S.C. App. Ct. R. 221(a))."
-  edge-certiorari-denied "Certiorari denied" -> remittitur { event MandateIssued()
+  edge-certiorari-denied "Certiorari denied" -> remittitur {
+    event MandateIssued()
     authority cite "S.C. App. Ct. R. 221(b)"
   }
   edge-certiorari-granted "Certiorari granted" -> supreme-merits {

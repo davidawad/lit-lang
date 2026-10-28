@@ -18,7 +18,8 @@ start notice-filed
 state notice-filed: "Notice of appeal filed" by applicant cite "Alaska R. App. P. 204(a)"
 {
   note "The notice of appeal is filed within 30 days from the date shown in the clerk's certificate of distribution on the judgment, unless Rules 216-219 or AS 23.30.128(g) set another time; another party may appeal within 14 days of a timely notice or within the 30 days, whichever expires last (Alaska R. App. P. 204(a)(1), (2)). A timely motion under Civil Rules 50(b), 52(b), 59 or 77(k) terminates the running of the time, which runs again in full from notice of the order deciding it (Alaska R. App. P. 204(a)(3)). Unless exempt, a $750.00 cost bond is filed with the notice in a civil case, unless the court fixes another amount or a supersedeas bond is filed (Alaska R. App. P. 204(c)(1)). Periods are stated, not counted: Appellate Rule 502(a) computes them. The earlier outline cited Appellate Rule 602, which governs appeals to the superior court, not this appeal."
-  edge-notice-filed-appealable "Timely notice from a final judgment" -> appealability { event NoticeOfAppealFiled()
+  edge-notice-filed-appealable "Timely notice from a final judgment" -> appealability {
+    event NoticeOfAppealFiled()
     authority cite "Alaska R. App. P. 204(a)"
   }
   edge-notice-filed-late "Notice not filed in time" -> dismissed-untimely {

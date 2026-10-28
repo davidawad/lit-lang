@@ -113,142 +113,112 @@ event ExhibitWithdrawalNoticeGiven()
 /// opposition is served and filed within 21 days of the filing of the
 /// motion.
 deadline opposition-period: 21.days after MotionFiled() counted_by frcp6 cite "D. Guam CVLR 7(f)"
-
 /// CVLR 7(f): a reply, if any, is served and filed within 14 days of the
 /// filing of the opposition; with multiple oppositions, no later than 14
 /// days after the last one is filed.
 deadline reply-period: 14.days after OppositionFiled() counted_by frcp6 cite "D. Guam CVLR 7(f)"
-
 /// CVLR 7(i): a party desiring oral argument files a request no later than
 /// 7 days following the last day a reply brief would be due.
 deadline oral-argument-request-period: 7.days after ReplyDueDatePassed() counted_by frcp6 cite "D. Guam CVLR 7(i)"
-
 /// CVLR 7(k)(3): unless otherwise ordered, not less than 7 days before the
 /// evidentiary hearing, each party who intends to present testimony files
 /// and serves a witness list with summaries and time estimates.
 deadline hearing-witness-list-period: 7.days before EvidentiaryHearingHeld() counted_by frcp6 cite "D. Guam CVLR 7(k)"
-
 /// CVLR 7(k)(4): a party intending to use evidence not already of record
 /// files an exhibit list not less than 7 days before the evidentiary
 /// hearing; copies follow no later than three business days before it.
 deadline hearing-exhibit-list-period: 7.days before EvidentiaryHearingHeld() counted_by frcp6 cite "D. Guam CVLR 7(k)"
-
 /// CVLR 7(p)(2): a motion for reconsideration is filed no later than 14
 /// days after the filing of the ruling or order sought to be reconsidered.
 deadline reconsideration-period: 14.days after RulingFiled() counted_by frcp6 cite "D. Guam CVLR 7(p)"
-
 /// CVLR 12: when a motion to dismiss or for judgment on the pleadings
 /// against a pro se party is treated as one for summary judgment and the
 /// movant has not served the notice, the movant serves and files the
 /// amended form notice within fourteen days of the court's ruling.
 deadline pro-se-notice-period: 14.days after ConvertedToSummaryJudgment() counted_by frcp6 cite "D. Guam CVLR 12"
-
 /// CVLR 16-1(b)(1): the Clerk issues the Scheduling Notice no later than 40
 /// days after the complaint has been filed.
 deadline scheduling-notice-period: 40.days after ComplaintFiled() counted_by frcp6 cite "D. Guam CVLR 16-1(b)"
-
 /// CVLR 26(f)(1): the parties confer under FRCP 26(f) and file the
 /// Scheduling and Planning Conference Report within 75 days of the filing
 /// of the complaint.
 deadline planning-report-period: 75.days after ComplaintFiled() counted_by frcp6 cite "D. Guam CVLR 26(f)"
-
 /// CVLR 26(f)(1): unless otherwise ordered, the FRCP 26(f) conference is
 /// held no later than 21 days before any scheduling conference the court
 /// sets.
 deadline planning-conference-period: 21.days before SchedulingConferenceHeld() counted_by frcp6 cite "D. Guam CVLR 26(f)"
-
 /// CVLR 16-1(c): the parties have a final pretrial conference with the
 /// assigned judge 7 days prior to trial.
 deadline final-pretrial-conference-period: 7.days before TrialBegins() counted_by frcp6 cite "D. Guam CVLR 16-1(c)"
-
 /// CVLR 16-1(d): responses to objections to FRCP 26(a)(3) pretrial
 /// disclosures are filed and served within 7 days of the filing of the
 /// objection, unless leave shortens the time.
 deadline disclosure-objection-response-period: 7.days after PretrialDisclosureObjectionFiled() counted_by frcp6 cite "D. Guam CVLR 16-1(d)"
-
 /// CVLR 16-1(e): each party serves and files a trial brief, of at most 25
 /// pages without leave, 30 days prior to the trial date.
 deadline trial-brief-period: 30.days before TrialBegins() counted_by frcp6 cite "D. Guam CVLR 16-1(e)"
-
 /// CVLR 16-1(f)(1): fourteen days prior to trial, each party serves and
 /// files its witness list.
 deadline witness-list-period: 14.days before TrialBegins() counted_by frcp6 cite "D. Guam CVLR 16-1(f)"
-
 /// CVLR 16-1(f)(2): fourteen days prior to trial, each party serves and
 /// files its deposition, interrogatory and admission designations.
 deadline discovery-designation-period: 14.days before TrialBegins() counted_by frcp6 cite "D. Guam CVLR 16-1(f)"
-
 /// CVLR 16-1(f)(3): fourteen days prior to trial, each party serves and
 /// files its exhibit list.
 deadline exhibit-list-period: 14.days before TrialBegins() counted_by frcp6 cite "D. Guam CVLR 16-1(f)"
-
 /// CVLR 16-1(g): fourteen days prior to trial, the plaintiff serves and
 /// lodges a proposed Pretrial Order signed by each party.
 deadline pretrial-order-period: 14.days before TrialBegins() counted_by frcp6 cite "D. Guam CVLR 16-1(g)"
-
 /// CVLR 16-1(h), 51: in jury cases, unless otherwise ordered, proposed jury
 /// instructions and verdict forms are served and filed not less than 14
 /// days prior to the date trial is scheduled to commence.
 deadline jury-instructions-period: 14.days before TrialBegins() counted_by frcp6 cite "D. Guam CVLR 16-1(h)"
-
 /// CVLR 16-1(i)(2): in a case approved for waiver of pretrial preparation,
 /// the attorneys meet 30 days before the date set for trial.
 deadline waiver-meeting-period: 30.days before TrialBegins() counted_by frcp6 cite "D. Guam CVLR 16-1(i)"
-
 /// CVLR 16-1(i)(2): in a case approved for waiver of pretrial preparation,
 /// each party files its statement of issues, witness and exhibit lists,
 /// deposition designations and trial brief not less than 14 days before
 /// the date set for trial.
 deadline waiver-filings-period: 14.days before TrialBegins() counted_by frcp6 cite "D. Guam CVLR 16-1(i)"
-
 /// CVLR 16-2(b)(2)(F): within five days of the conclusion of a mediation,
 /// the mediator files a report with the ADR Coordinator.
 deadline mediator-report-period: 5.days after MediationConcluded() counted_by frcp6 cite "D. Guam CVLR 16-2(b)"
-
 /// CVLR 54(b)(2): unless otherwise ordered, a bill of costs is filed and
 /// served within 30 days of the entry of judgment, of an order denying a
 /// motion under FRCP 50(b), 52(b) or 59, or of an order remanding a removed
 /// action; noncompliance waives costs.
 deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "D. Guam CVLR 54(b)"
-
 /// CVLR 54(b)(4): within 14 days after a bill of costs is filed, the party
 /// against whom costs are claimed files and serves specific objections.
 deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "D. Guam CVLR 54(b)"
-
 /// CVLR 54(b)(5): taxation of costs is reviewed on a motion filed and
 /// served within 7 days after taxation by the clerk.
 deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "D. Guam CVLR 54(b)"
-
 /// CVLR 54(c)(4): unless otherwise ordered, an opposing party may file a
 /// responsive memorandum within 14 days after service of the statement of
 /// consultation.
 deadline fee-response-period: 14.days after FeeConsultationStatementServed() counted_by frcp6 cite "D. Guam CVLR 54(c)"
-
 /// CVLR 54(c)(4): unless otherwise ordered, the moving party may file a
 /// reply memorandum within 7 days after service of the responsive
 /// memorandum.
 deadline fee-reply-period: 7.days after FeeResponseServed() counted_by frcp6 cite "D. Guam CVLR 54(c)"
-
 /// CVLR 58-2(a): except as otherwise ordered, within 7 days after the
 /// announcement of a decision requiring settlement as to form, the
 /// prevailing party prepares and serves a draft judgment or order.
 deadline draft-judgment-period: 7.days after DecisionAnnounced() counted_by frcp6 cite "D. Guam CVLR 58-2(a)"
-
 /// CVLR 58-2(a): a party receiving the proposed draft serves and files any
 /// objection and a substitute draft within 7 days thereafter.
 deadline draft-objection-period: 7.days after DraftJudgmentServed() counted_by frcp6 cite "D. Guam CVLR 58-2(a)"
-
 /// CVLR 73(b): a party added after reference to the magistrate judge on
 /// consent who chooses to consent files the notice within 21 days of its
 /// appearance.
 deadline added-party-consent-period: 21.days after AddedPartyAppeared() counted_by frcp6 cite "D. Guam CVLR 73(b)"
-
 /// CVLR 79(b): after final judgment and the time for new trial, rehearing
 /// and appeal, a party may withdraw its exhibit or deposition without
 /// order upon 14 days written notice to all parties, unless another files
 /// a notice of claim within that time.
 deadline exhibit-claim-period: 14.days after ExhibitWithdrawalNoticeGiven() counted_by frcp6 cite "D. Guam CVLR 79(b)"
-
 /// CVLR 79(c): exhibits and deposition transcripts not withdrawn within 40
 /// days after the time notice may first be given under CVLR 79(b) may be
 /// destroyed or otherwise disposed of by the clerk.

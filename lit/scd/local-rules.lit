@@ -99,143 +99,113 @@ event AwardNoticesIssued()
 /// each party against whom a claim is asserted within 90 days after it is
 /// filed, the filer files a status report within the same period.
 deadline service-status-report-period: 90.days after ComplaintFiled() counted_by frcp6 cite "D.S.C. Local Civ. Rule 4.01"
-
 /// Local Civ. Rule 7.06: a memorandum or response of an opposing party is
 /// filed within 14 days of the service of the motion unless the court
 /// imposes a different deadline.
 deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "D.S.C. Local Civ. Rule 7.06"
-
 /// Local Civ. Rule 7.07: replies are discouraged; a reply to matters raised
 /// initially in a response is filed within 7 days after service of the
 /// response, unless otherwise ordered.
 deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "D.S.C. Local Civ. Rule 7.07"
-
 /// Local Civ. Rule 7.10(B)(5): unless otherwise ordered, opposing counsel
 /// have 14 days from receipt to comment on a proposed order.
 deadline proposed-order-comment-period: 14.days after ProposedOrderReceived() counted_by frcp6 cite "D.S.C. Local Civ. Rule 7.10(B)"
-
 /// Local Civ. Rule 16.02(C)(1): the FRCP 26(f) conference is held no later
 /// than 45 days after the appearance of a defendant.
 deadline rule26f-conference-period: 45.days after DefendantAppeared() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.02(C)"
-
 /// Local Civ. Rule 16.02(C)(2): the FRCP 26(a)(1) initial disclosures are
 /// exchanged no later than 14 days after the FRCP 26(f) conference.
 deadline initial-disclosure-period: 14.days after PartiesConferred() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.02(C)"
-
 /// Local Civ. Rule 16.02(C)(3): the FRCP 26(f) report is filed no later
 /// than 14 days after the FRCP 26(f) conference.
 deadline rule26f-report-period: 14.days after PartiesConferred() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.02(C)"
-
 /// Local Civ. Rule 16.02(D)(3): affidavits of records custodians offered
 /// for authentication in lieu of live testimony are served no fewer than
 /// 30 days before the close of discovery unless otherwise ordered.
 deadline custodian-affidavit-period: 30.days before DiscoveryClosed() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.02(D)"
-
 /// Local Civ. Rule 16.02(D)(3): objections to a records custodian's
 /// affidavit are made within 14 days after service of the disclosure
 /// unless otherwise ordered.
 deadline custodian-objection-period: 14.days after CustodianAffidavitServed() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.02(D)"
-
 /// Local Civ. Rule 16.06(C): unless otherwise ordered, the parties select a
 /// mediator at least 21 days before the deadline for mediation.
 deadline mediator-selection-period: 21.days before MediationDeadlineReached() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.06(C)"
-
 /// Local Civ. Rule 16.07(A): unless otherwise ordered, the initial
 /// mediation conference is held within 28 days of the agreement upon or
 /// order appointing a mediator.
 deadline initial-mediation-period: 28.days after MediatorAppointed() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.07(A)"
-
 /// Local Civ. Rule 16.07(A): unless otherwise ordered, mediation is
 /// completed within 28 days after the initial mediation conference.
 deadline mediation-completion-period: 28.days after MediationConferenceHeld() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.07(A)"
-
 /// Local Civ. Rule 16.08(D): a more formal agreement the mediated
 /// settlement envisions is executed by the parties within 14 days of the
 /// date of the mediation conference.
 deadline settlement-documents-period: 14.days after MediationConferenceHeld() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.08(D)"
-
 /// Local Civ. Rule 16.10(H): the mediator forwards the completed ADR
 /// tracking form within 28 days of the conclusion of the mediation.
 deadline mediator-report-period: 28.days after MediationConcluded() counted_by frcp6 cite "D.S.C. Local Civ. Rule 16.10(H)"
-
 /// Local Civ. Rule 26.01: in a removed case the removing defendant files
 /// the Local Civ. Rule 26.01 answers with the removal papers; every other
 /// party files them no later than 14 days after service of the notice of
 /// removal.
 deadline removal-interrogatory-answers-period: 14.days after RemovalNoticeServed() counted_by frcp6 cite "D.S.C. Local Civ. Rule 26.01"
-
 /// Local Civ. Rule 26.01: a party that fails to file the answers on time is
 /// allowed 14 days to file them after the clerk draws the requirement to
 /// its attention; the clerk may extend the time.
 deadline late-interrogatory-answers-period: 14.days after InterrogatoryAnswersNoticeGiven() counted_by frcp6 cite "D.S.C. Local Civ. Rule 26.01"
-
 /// Local Civ. Rule 26.04: pretrial discovery in an action exempt under
 /// FRCP 26(a)(1)(B) is completed within 90 days following the joinder of
 /// issues unless otherwise ordered.
 deadline exempt-discovery-period: 90.days after IssueJoined() counted_by frcp6 cite "D.S.C. Local Civ. Rule 26.04"
-
 /// Local Civ. Rule 26.04: in an exempt action, FRCP 26(a)(2) expert
 /// disclosures are made at least 28 days before the close of discovery.
 deadline exempt-expert-disclosure-period: 28.days before DiscoveryClosed() counted_by frcp6 cite "D.S.C. Local Civ. Rule 26.04"
-
 /// Local Civ. Rule 26.05: a pretrial brief is furnished at least 7 days
 /// before the date set for jury selection, unless the court orders another
 /// date.
 deadline pretrial-brief-period: 7.days before JurySelected() counted_by frcp6 cite "D.S.C. Local Civ. Rule 26.05"
-
 /// Local Civ. Rule 26.05(O): requests for voir dire questions not submitted
 /// 7 days before jury selection are waived unless events at trial make them
 /// necessary.
 deadline voir-dire-request-period: 7.days before JurySelected() counted_by frcp6 cite "D.S.C. Local Civ. Rule 26.05(O)"
-
 /// Local Civ. Rule 26.07(A): unless otherwise ordered, counsel meet to mark
 /// and exchange trial exhibits at least 7 days before the date set for
 /// submitting pretrial briefs.
 deadline exhibit-exchange-period: 7.days before PretrialBriefsDue() counted_by frcp6 cite "D.S.C. Local Civ. Rule 26.07(A)"
-
 /// Local Civ. Rule 26.09: requests for jury instructions are submitted 7
 /// days before the beginning of trial, or are waived unless events at
 /// trial make them necessary.
 deadline jury-instruction-period: 7.days before TrialCommenced() counted_by frcp6 cite "D.S.C. Local Civ. Rule 26.09"
-
 /// Local Civ. Rule 30.02: a party objecting to a telephonic deposition
 /// makes the objection known at least 14 days before the deposition.
 deadline telephone-deposition-objection-period: 14.days before DepositionTaken() counted_by frcp6 cite "D.S.C. Local Civ. Rule 30.02"
-
 /// Local Civ. Rule 30.04(C): counsel who directs a witness not to answer,
 /// other than on privilege or to enforce a court-ordered limitation, moves
 /// for a protective order within 7 days of the suspension or termination
 /// of the deposition, or waives the objection.
 deadline deposition-protective-order-period: 7.days after DepositionSuspended() counted_by frcp6 cite "D.S.C. Local Civ. Rule 30.04(C)"
-
 /// Local Civ. Rule 37.01(A): a motion to compel is filed within 21 days
 /// after receipt of the discovery response it is directed to.
 deadline motion-to-compel-period: 21.days after DiscoveryResponseReceived() counted_by frcp6 cite "D.S.C. Local Civ. Rule 37.01(A)"
-
 /// Local Civ. Rule 37.01(A): where no response has been received, a motion
 /// to compel is filed within 21 days after the response was due.
 deadline motion-to-compel-no-response-period: 21.days after DiscoveryResponseOverdue() counted_by frcp6 cite "D.S.C. Local Civ. Rule 37.01(A)"
-
 /// Local Civ. Rule 54.01: juror costs may be assessed when a case set for
 /// jury trial is settled or disposed of before trial unless the court is
 /// notified at least one day before the date the action is scheduled for
 /// trial.
 deadline jury-cost-notice-period: 1.days before TrialDateScheduled() counted_by frcp6 cite "D.S.C. Local Civ. Rule 54.01"
-
 /// Local Civ. Rule 54.02(A): a memorandum opposing a petition for
 /// attorney's fees is filed within 14 days of the service of the petition.
 deadline fee-opposition-period: 14.days after FeePetitionServed() counted_by frcp6 cite "D.S.C. Local Civ. Rule 54.02(A)"
-
 /// Local Civ. Rule 83.I.07(B)(3): a party to be left unrepresented by
 /// counsel's withdrawal is told that any response must be received within
 /// 17 days of the filing date of the motion.
 deadline withdrawal-response-period: 17.days after WithdrawalMotionFiled() counted_by frcp6 cite "D.S.C. Local Civ. Rule 83.I.07(B)"
-
 /// Local Civ. Rule 83.II.01: unless an attorney of record or party in
 /// interest takes custody of or objects within 14 days of the posting of
 /// the clerk's notice, the clerk may dispose of the exhibits as stated.
 deadline exhibit-disposal-objection-period: 14.days after ExhibitDisposalNoticePosted() counted_by frcp6 cite "D.S.C. Local Civ. Rule 83.II.01"
-
 /// Local Civ. Rule 83.VII.10(A): a petition for attorney's fees out of
 /// past-due Social Security benefits is filed no later than 60 days after
 /// the issuance of all notices of award of benefits; the United States

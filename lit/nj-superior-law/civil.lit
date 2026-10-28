@@ -146,7 +146,8 @@ terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, 
 decision summary-judgment: "Summary judgment decided" by court cite "N.J. Ct. R. 4:46-1"
 {
   note "A party seeking affirmative relief may move for summary judgment at any time after 35 days from service of the pleading claiming it; a party against whom a claim is asserted may move at any time. Motions are returnable no later than 30 days before the scheduled trial date unless the court orders otherwise for good cause, and an adjournment is liberally granted if the decision is not communicated at least 10 days before trial. Unless R. 6:3-3 or the court provides otherwise, the motion is served and filed not later than 28 days before the return date; opposing papers and cross-motions not later than 10 days before it; and answers or responses to them not later than four days before it; no other papers without leave (R. 4:46-1). The summary judgment standard, R. 4:46-2, is not vendored."
-  edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-entered { event JudgmentEntered()
+  edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "N.J. Ct. R. 4:46-1"
   }
   edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-entered {

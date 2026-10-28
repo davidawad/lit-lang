@@ -41,35 +41,25 @@ limit review-petition {
 
 /// The appellant's brief is filed (Wis. Stat. § 809.19(1)).
 event AppellantBriefFiled() paper principal-brief
-
 /// The respondent's brief is filed (Wis. Stat. § 809.19(3)).
 event RespondentBriefFiled() paper principal-brief
-
 /// The appellant's reply brief is filed (Wis. Stat. § 809.19(4)).
 event ReplyBriefFiled() paper reply-brief
-
 /// A motion for reconsideration is filed (Wis. Stat. § 809.24(1)).
 event ReconsiderationMotionFiled() paper reconsideration-motion
-
 /// A petition for review is filed in the Supreme Court (Wis. Stat. §
 /// 809.62(1m)).
 event ReviewPetitionFiled() paper review-petition
-
 // The trigger events the court packages' graphs route on.
 /// An action, claim, petition or charge is filed and the proceeding begins.
 event ActionCommenced()
-
 /// A final judgment, decision or appealable order is entered.
 event JudgmentEntered()
-
 /// A notice of appeal, or a petition or appeal for review of a lower court's or tribunal's decision, is filed.
 event NoticeOfAppealFiled()
-
 /// The record on appeal or review is filed or transmitted.
 event RecordFiled()
-
 /// The reviewing court's or tribunal's decision or opinion is filed.
 event DecisionFiled()
-
 /// The mandate, remittitur or certificate of judgment issues.
 event MandateIssued()

@@ -82,7 +82,8 @@ state pretrial: "Pretrial conference and trial setting" cite "N.D.R.Civ.P. 16(a)
 state trial: "Trial (jury or bench)" cite "N.D.R.Civ.P. 38"
 {
   note "A jury demand is served no later than 14 days after the last pleading directed to the issue is served, and filed (N.D.R.Civ.P. 38(b)); the jury is six unless a jury of nine is demanded within that time (N.D.R.Civ.P. 38(c)); a party waives a jury unless its demand is properly served and filed (N.D.R.Civ.P. 38(e)). A motion for judgment as a matter of law may be made at any time before submission to the jury (N.D.R.Civ.P. 50(a)(2)); in a nonjury trial the court finds the facts specially and states its conclusions separately (N.D.R.Civ.P. 52(a))."
-  edge-trial-judgment-applicant "Verdict or findings for applicant" -> judgment-applicant { event JudgmentEntered()
+  edge-trial-judgment-applicant "Verdict or findings for applicant" -> judgment-applicant {
+    event JudgmentEntered()
     authority cite "N.D.R.Civ.P. 58(a)"
   }
   edge-trial-judgment-opponent "Verdict or findings for opponent" -> judgment-opponent {

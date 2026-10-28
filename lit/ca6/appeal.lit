@@ -40,42 +40,33 @@ event ClerkOrderNoticeServed()
 /// filing the notice of appeal. The circuit clerk may grant an additional
 /// 30 days; past 60 days the appellant moves within the 60-day period.
 deadline state-habeas-transcript-period: 30.days after StateHabeasNoticeFiled() counted_by frap26 cite "6 Cir. R. 30(b)(5)(B)"
-
 /// An appellee who needs other parts of the state court record transcribed
 /// provides them to the appellant within 30 days of the appellant's filing
 /// the transcript.
 deadline state-habeas-appellee-transcript-period: 30.days after StateHabeasTranscriptProvided() counted_by frap26 cite "6 Cir. R. 30(b)(5)(C)"
-
 /// In a death penalty case the appellee serves and files its brief within
 /// 60 days after the appellant's brief is served; the appellant's brief is
 /// due by the deadline the clerk sets (6 Cir. R. 31(c)(3)(A)).
 deadline capital-appellee-brief-period: 60.days after CapitalAppellantBriefServed() counted_by frap26 cite "6 Cir. R. 31(c)(3)(B)"
-
 /// In a death penalty case the appellant may serve and file a reply brief
 /// within 14 days after the appellee's brief is served.
 deadline capital-reply-brief-period: 14.days after CapitalAppelleeBriefServed() counted_by frap26 cite "6 Cir. R. 31(c)(3)(C)"
-
 /// The death penalty reply is also due at least 7 days before argument,
 /// unless the court for good cause allows a later filing.
 deadline capital-reply-before-argument-period: 7.days before ArgumentHeard() counted_by frap26 cite "6 Cir. R. 31(c)(3)(C)"
-
 /// A motion for additional oral argument time (each side has 15 minutes
 /// unless the notice of argument provides otherwise, 6 Cir. R. 34(f)(1)) is
 /// filed within 14 days of submission of the last brief.
 deadline argument-time-motion-period: 14.days after LastBriefSubmitted() counted_by frap26 cite "6 Cir. R. 34(f)(2)"
-
 /// The motion for additional argument time is filed not later than 7 days
 /// before the hearing.
 deadline argument-time-motion-before-hearing-period: 7.days before ArgumentHeard() counted_by frap26 cite "6 Cir. R. 34(f)(2)"
-
 /// A motion to stay the mandate must be received in the clerk's office
 /// within 7 days after the time to file a petition for rehearing expires.
 deadline mandate-stay-motion-period: 7.days after RehearingClosed(TimeExpired) counted_by frap26 cite "6 Cir. R. 41(b)"
-
 /// Or within seven days from entry of an order on a petition for
 /// rehearing.
 deadline mandate-stay-motion-after-rehearing-period: 7.days after RehearingOrderEntered() counted_by frap26 cite "6 Cir. R. 41(b)"
-
 /// A party adversely affected by a clerk's order may move for
 /// reconsideration by a judge or judges within 14 days of service of
 /// notice of entry of the order.

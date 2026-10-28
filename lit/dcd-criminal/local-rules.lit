@@ -54,19 +54,13 @@ import frcrimp.deadlines.{ SentencingScheduled }
 // United States v. Booker, Roe v. Flores-Ortega, Garza v. Idaho) are
 // FRCrimP, Speedy Trial Act or constitutional authority and belong to
 // lit/frcrimp; they are removed here: no reporter text is vendored.
-
 /// A memorandum of points and authorities in support of or in opposition
 /// to a motion: at most 45 pages without prior approval of the Court; the
 /// Clerk does not file a nonconforming document (D.D.C. LCrR 47(e)).
-limit motion-memorandum {
-  pages <= 45 cite "D.D.C. LCrR 47(e)"
-} cite "D.D.C. LCrR 47(e)"
-
+limit motion-memorandum { pages <= 45 cite "D.D.C. LCrR 47(e)" } cite "D.D.C. LCrR 47(e)"
 /// A reply memorandum: at most 25 pages without prior approval of the
 /// Court (D.D.C. LCrR 47(e)).
-limit reply-memorandum {
-  pages <= 25 cite "D.D.C. LCrR 47(e)"
-} cite "D.D.C. LCrR 47(e)"
+limit reply-memorandum { pages <= 25 cite "D.D.C. LCrR 47(e)" } cite "D.D.C. LCrR 47(e)"
 
 /// A motion with its statement of points and authorities is served (D.D.C.
 /// LCrR 47(a), (b)).

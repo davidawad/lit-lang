@@ -84,7 +84,8 @@ state discovery: "Discovery and pretrial" by applicant cite "M. R. Civ. P. 26"
 decision summary-judgment: "Summary judgment decided" by court cite "M. R. Civ. P. 56(c)"
 {
   note "Unless the court orders otherwise, a party may move at any time; the opponent files a response and opposing affidavits within 21 days after the motion is served or a responsive pleading is due, whichever is later; the movant may reply within 14 days after the response is served; and the right to a hearing is waived unless requested within 14 days after the time for a reply expires. Judgment should be rendered if there is no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law (M. R. Civ. P. 56(c)). The earlier outline named no Montana summary-judgment decision; none is vendored."
-  edge-summary-judgment-granted "Granted" -> judgment-entered { event JudgmentEntered()
+  edge-summary-judgment-granted "Granted" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "M. R. Civ. P. 56(c)"
   }
   edge-summary-judgment-denied "Denied" -> trial { authority cite "M. R. Civ. P. 56(c)" }
@@ -100,7 +101,8 @@ state trial: "Trial by jury or by the court" by court cite "M. R. Civ. P. 38"
 decision post-trial: "Post-trial motions" by applicant cite "M. R. Civ. P. 59"
 {
   note "A motion for a new trial is filed no later than 28 days after entry of judgment and states in its heading the dates 60 and 120 days from its filing (M. R. Civ. P. 59(b)); opposing affidavits follow within 14 days after service (M. R. Civ. P. 59(c)); a motion to alter or amend is filed no later than 28 days after entry (M. R. Civ. P. 59(e)). Either motion not addressed in a written order within 60 days from filing is deemed denied, or within 120 days if the court extended the time (M. R. Civ. P. 59(f)). The court must not extend these times (M. R. Civ. P. 6(b)(2)). A timely motion under Rules 50(b), 52(b), 59 or 60(b) restarts the time to appeal from its disposition or deemed denial (M. R. App. P. 4(5)(a)(v))."
-  edge-post-trial-resolved "Motions resolved or none filed" -> judgment-entered { event JudgmentEntered()
+  edge-post-trial-resolved "Motions resolved or none filed" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "M. R. Civ. P. 58"
   }
 }

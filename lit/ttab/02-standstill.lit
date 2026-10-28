@@ -15,7 +15,8 @@ state standstill-period: "Standstill: final 60-day extension by consent" by boar
   }
 }
 
-decision neg-posture: "Choose negotiating posture during standstill" by applicant cite "37 CFR 2.102(c)(3); TBMP 605" {
+decision neg-posture: "Choose negotiating posture during standstill" by applicant cite "37 CFR 2.102(c)(3); TBMP 605"
+{
   group standstill
   edge-02-standstill-neg-rebrand-1 "Lead with rebrand-with-transition + the opposer cost contribution" -> neg-rebrand {
     authority cite "TBMP 605.01"
@@ -33,7 +34,8 @@ decision neg-posture: "Choose negotiating posture during standstill" by applican
   }
 }
 
-chance neg-rebrand: "Talks led by rebrand-with-transition and cost share" by board cite "TBMP 605.01" {
+chance neg-rebrand: "Talks led by rebrand-with-transition and cost share" by board cite "TBMP 605.01"
+{
   group standstill
   tags [negotiation]
   edge-02-standstill-settle-rebrand-transition-1 "Deal: rebrand on a transition period with the opposer cost contribution" -> settle-rebrand-transition p 0.38 {
@@ -59,7 +61,8 @@ chance neg-rebrand: "Talks led by rebrand-with-transition and cost share" by boa
   }
 }
 
-chance neg-coexist: "Talks led by coexistence / consent agreement" by board cite "TBMP 605.03; TMEP 1207.01(d)(viii)" {
+chance neg-coexist: "Talks led by coexistence / consent agreement" by board cite "TBMP 605.03; TMEP 1207.01(d)(viii)"
+{
   group standstill
   tags [negotiation]
   edge-02-standstill-settle-rebrand-transition-2 "Deal: rebrand on a transition period with the opposer cost contribution" -> settle-rebrand-transition p 0.1 {

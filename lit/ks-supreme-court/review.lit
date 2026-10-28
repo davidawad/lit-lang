@@ -5,14 +5,16 @@ import ks-state-rules.{ ReviewPetitionFiled }
 // Supreme Court review of a Court of Appeals civil decision, from the
 // petitioner's side. Every period is stated in a note, not counted (K.S.A.
 // 60-206 is not vendored). The merits of review are not modeled.
-
 start petition
 
 decision petition: "Petition for review?" by applicant cite "K.S.A. 20-3018(b)"
 {
   note "A party aggrieved by a Court of Appeals decision may petition the Supreme Court for review within 30 days after the date of the decision (K.S.A. 20-3018(b)); the 30-day period is jurisdictional and cannot be extended (Kan. S. Ct. R. 8.03(b)(1)). A timely motion for rehearing or modification in the Court of Appeals suspends action on the petition; a petitioner seeking review of a modified decision files an amended petition no later than 30 days after the modified decision (Kan. S. Ct. R. 8.03(b)(2))."
   edge-petition-none "No petition" -> no-petition { authority cite "Kan. S. Ct. R. 7.03(b)" }
-  edge-petition-filed "Petition for review filed" -> review-decided { event ReviewPetitionFiled() authority cite "Kan. S. Ct. R. 8.03(b)" }
+  edge-petition-filed "Petition for review filed" -> review-decided {
+    event ReviewPetitionFiled()
+    authority cite "Kan. S. Ct. R. 8.03(b)"
+  }
 }
 
 decision review-decided: "Petition for review decided" by court cite "Kan. S. Ct. R. 8.03(g)"

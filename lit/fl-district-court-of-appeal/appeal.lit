@@ -1,6 +1,12 @@
 module fl-district-court-of-appeal.appeal
 
-import fl-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+import fl-state-rules.{
+  DecisionFiled,
+  MandateIssued,
+  NoticeOfAppealFiled,
+  RecordFiled,
+  ReviewPetitionFiled,
+}
 
 start threshold
 
@@ -19,13 +25,19 @@ decision notice: "Notice of appeal within 30 days of rendition?" by applicant ci
   edge-notice-late "Untimely notice" -> dismissed-untimely {
     authority cite "Fla. R. App. P. 9.110(b)"
   }
-  edge-notice-timely "Timely notice" -> record { event NoticeOfAppealFiled() authority cite "Fla. R. App. P. 9.110(b)" }
+  edge-notice-timely "Timely notice" -> record {
+    event NoticeOfAppealFiled()
+    authority cite "Fla. R. App. P. 9.110(b)"
+  }
 }
 
 state record: "Record prepared and transmitted" by office cite "Fla. R. App. P. 9.110(e)"
 {
   note "Within 50 days of the notice the clerk of the lower tribunal prepares the record rule 9.200 prescribes and serves the index; within 60 days it transmits the record or files a notice of inability (Fla. R. App. P. 9.110(e)). The record is all documents filed below, the exhibits that are not physical evidence and the transcripts filed, less the papers rule 9.200(a)(1) excepts."
-  edge-record-brief "Record transmitted" -> briefing { event RecordFiled() authority cite "Fla. R. App. P. 9.200(a)" }
+  edge-record-brief "Record transmitted" -> briefing {
+    event RecordFiled()
+    authority cite "Fla. R. App. P. 9.200(a)"
+  }
 }
 
 state briefing: "Briefs served" by applicant cite "Fla. R. App. P. 9.210(g)"
@@ -43,7 +55,8 @@ state argument: "Oral argument or submission" by court cite "Fla. R. App. P. 9.3
 state decision: "Order or decision issued" by court cite "Fla. R. App. P. 9.330(a)"
 {
   note "Disposition: affirm, reverse or remand. No leading decision is named."
-  edge-decision-issued "Order or decision issued" -> rehearing-decision { event DecisionFiled()
+  edge-decision-issued "Order or decision issued" -> rehearing-decision {
+    event DecisionFiled()
     authority cite "Fla. R. App. P. 9.330(a)"
   }
 }
@@ -67,7 +80,8 @@ state rehearing-order: "Rehearing motion decided" by court cite "Fla. R. App. P.
 state mandate: "Mandate issued" by office cite "Fla. R. App. P. 9.340(a)"
 {
   note "Unless the court orders otherwise, the clerk issues the mandate after expiration of 15 days from the order or decision (Fla. R. App. P. 9.340(a)); a timely motion for rehearing extends that until 15 days after rendition of the order denying it (Fla. R. App. P. 9.340(b)). The court may recall the mandate, but not more than 120 days after its issuance (Fla. R. App. P. 9.340(a))."
-  edge-mandate-further "Mandate issued" -> further-review { event MandateIssued()
+  edge-mandate-further "Mandate issued" -> further-review {
+    event MandateIssued()
     authority cite "Fla. R. App. P. 9.120(b)"
   }
 }
@@ -78,7 +92,8 @@ decision further-review: "Supreme Court review sought within 30 days?" by applic
   edge-further-review-none "No further review" -> final-decision {
     authority cite "Fla. R. App. P. 9.120(b)"
   }
-  edge-further-review-petition "Notice to invoke discretionary jurisdiction" -> review-invoked { event ReviewPetitionFiled()
+  edge-further-review-petition "Notice to invoke discretionary jurisdiction" -> review-invoked {
+    event ReviewPetitionFiled()
     authority cite "Fla. R. App. P. 9.120(b)"
   }
 }

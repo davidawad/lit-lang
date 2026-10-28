@@ -8,7 +8,10 @@ decision notice: "Notice of appeal within 30 days of entry?" by applicant cite "
 {
   note "In a civil case, unless a statute provides otherwise, the notice of appeal required by rule 3 is filed with the clerk of the lower court within 30 days of entry of the judgment, decree, appealable order or adjudication, or within 60 days if the Commonwealth or an officer or agency of it is a party (Mass. R. A. P. 4(a)(1)(A)); any other party may file within 14 days of the first notice (Mass. R. A. P. 4(a)(1)(C)). A timely postjudgment motion under Mass. R. Civ. P. 50(b), 52(b) or 59, or 60(b) served within 10 days, runs the time from the order disposing of the last of them (Mass. R. A. P. 4(a)(2)). On excusable neglect the lower court may extend the time by not more than 30 days from its expiration (Mass. R. A. P. 4(c)); no court may enlarge it beyond 1 year from entry (Mass. R. A. P. 14(b)). Periods are computed under Mass. R. A. P. 14(a), which excludes intermediate Saturdays, Sundays and legal holidays from a period under 7 days; they are stated here, not counted. No leading decision is named."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "Mass. R. A. P. 4(a)" }
-  edge-notice-timely "Timely notice" -> record { event NoticeOfAppealFiled() authority cite "Mass. R. A. P. 4(a)" }
+  edge-notice-timely "Timely notice" -> record {
+    event NoticeOfAppealFiled()
+    authority cite "Mass. R. A. P. 4(a)"
+  }
 }
 
 terminal dismissed-untimely: "Appeal lost: no timely notice" outcome [loss, dismissal] cite "Mass. R. A. P. 4(a)"
@@ -19,7 +22,8 @@ terminal dismissed-untimely: "Appeal lost: no timely notice" outcome [loss, dism
 state record: "Transcript ordered and record assembled" by office cite "Mass. R. A. P. 9(d)"
 {
   note "The appellant orders the transcript of the relevant court-reported proceedings within 14 days of filing the notice of appeal, or certifies that none is relevant or that it is on file (Mass. R. A. P. 8(b)(1)(A)). Within 14 days after filing the notice, each civil appellant delivers to the clerk of the lower court the transcript, a certificate that it has been ordered, or a certificate that none will be ordered (Mass. R. A. P. 9(d)(2)). The clerk of the lower court then assembles the record and sends notice of assembly."
-  edge-record-docket "Notice of assembly received" -> docketing { event RecordFiled()
+  edge-record-docket "Notice of assembly received" -> docketing {
+    event RecordFiled()
     authority cite "Mass. R. A. P. 10(a)"
   }
 }
@@ -27,7 +31,8 @@ state record: "Transcript ordered and record assembled" by office cite "Mass. R.
 state docketing: "Appeal docketed in the Appeals Court" by applicant cite "Mass. R. A. P. 10(a)"
 {
   note "Within 14 days after receiving the notice of assembly of the record, each appellant pays the appellate court's docket fee or requests its waiver, and the clerk enters the appeal on the docket (Mass. R. A. P. 10(a)(1)(A))."
-  edge-docketing-dar "Application for direct appellate review" -> direct-review { event ReviewPetitionFiled()
+  edge-docketing-dar "Application for direct appellate review" -> direct-review {
+    event ReviewPetitionFiled()
     authority cite "Mass. R. A. P. 11(a)"
   }
   edge-docketing-brief "Briefing in the Appeals Court" -> briefing {
@@ -55,7 +60,10 @@ state briefing: "Briefs served" by applicant cite "Mass. R. A. P. 19(a)"
 state argument: "Oral argument or submission" by court cite "Mass. R. A. P. 22(a)"
 {
   note "The clerk advises the parties of the time and place of argument; unless enlarged or limited, each side has 15 minutes (Mass. R. A. P. 22(a), (b))."
-  edge-argument-decide "Decision released" -> decision { event DecisionFiled() authority cite "Mass. R. A. P. 23(a)" }
+  edge-argument-decide "Decision released" -> decision {
+    event DecisionFiled()
+    authority cite "Mass. R. A. P. 23(a)"
+  }
 }
 
 decision decision: "Appeals Court decision" by court cite "Mass. R. A. P. 23(a)"
@@ -70,7 +78,8 @@ decision decision: "Appeals Court decision" by court cite "Mass. R. A. P. 23(a)"
 decision post-decision: "Reconsideration or further appellate review sought?" by applicant cite "Mass. R. A. P. 27.1(a)"
 {
   note "Within 14 days after the decision any party may move for reconsideration or modification, stating with particularity what the court overlooked or misapprehended, in not more than 10 pages or 2,000 words (Mass. R. A. P. 27(a), (b)). Within 21 days after the decision any party may apply to the Supreme Judicial Court for further appellate review on substantial reasons affecting the public interest or the interests of justice (Mass. R. A. P. 27.1(a)); any other party may respond within 14 days after the application is filed (Mass. R. A. P. 27.1(c)). A timely motion or application stays the rescript (Mass. R. A. P. 23(c))."
-  edge-post-decision-far "Application for further appellate review" -> review-applied { event ReviewPetitionFiled()
+  edge-post-decision-far "Application for further appellate review" -> review-applied {
+    event ReviewPetitionFiled()
     authority cite "Mass. R. A. P. 27.1(a)"
   }
   edge-post-decision-none "No motion or application" -> rescript-affirmed {

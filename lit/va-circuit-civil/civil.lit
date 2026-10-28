@@ -115,14 +115,18 @@ terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, 
 decision sj-motion: "Summary judgment decided" by court cite "Va. Sup. Ct. R. 3:20"
 {
   note "Any party may move for summary judgment at any time after the parties are at issue, except in divorce or annulment; the court grants it if the pleadings, pretrial orders and admissions show the movant entitled to judgment, and may not enter it if any material fact is genuinely in dispute. Discovery depositions may not support it unless all parties agree or Code § 8.01-420(B) allows; in an action only between business entities with $50,000 or more at issue, depositions and affidavits may be used (Va. Sup. Ct. R. 3:20). An order granting summary judgment disposes of the claims it addresses (Va. Sup. Ct. R. 1:1(d))."
-  edge-sj-motion-granted "Granted" -> judgment-entered { event JudgmentEntered() authority cite "Va. Sup. Ct. R. 1:1(d)" }
+  edge-sj-motion-granted "Granted" -> judgment-entered {
+    event JudgmentEntered()
+    authority cite "Va. Sup. Ct. R. 1:1(d)"
+  }
   edge-sj-motion-denied "Denied" -> trial { authority cite "Va. Sup. Ct. R. 3:22" }
 }
 
 state trial: "Trial by jury or by the court" by court cite "Va. Sup. Ct. R. 3:22"
 {
   note "Issues for which a jury was demanded under Rule 3:21 are tried by jury unless the parties stipulate to a bench trial or the court finds no jury right exists; other issues are tried by the court (Va. Sup. Ct. R. 3:22(a), (b)). A claim for attorney fees must have been demanded in a pleading, identifying its basis, or it is waived (Va. Sup. Ct. R. 3:25(b), (c))."
-  edge-trial-judgment "Verdict or decision" -> judgment-entered { event JudgmentEntered()
+  edge-trial-judgment "Verdict or decision" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "Va. Sup. Ct. R. 1:1(a)"
   }
 }

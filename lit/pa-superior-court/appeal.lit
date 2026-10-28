@@ -12,13 +12,13 @@ import pa-state-rules.{ NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
 // neither are the appellate courts' internal operating procedures. The
 // earlier outline named no leading decisions. Children's fast track
 // appeals, which have shorter periods throughout, are outside this package.
-
 start order-entered
 
 state order-entered: "Final order entered in the trial court" by applicant cite "Pa.R.A.P. 903(a)"
 {
   note "An appeal may be taken as of right from any final order of a trial court, one that disposes of all claims and of all parties or is entered as final on an express determination that an immediate appeal would facilitate resolution of the entire case; an application for that determination is filed within 30 days of entry of the order and is deemed denied unless acted on within 30 days after filing (Pa.R.A.P. 341(a)-(c)). The notice of appeal is filed within 30 days after the entry of the order appealed from (Pa.R.A.P. 903(a)). If a party files a timely notice of appeal, any other party may file one within 14 days of the date the first was served, or within the time otherwise prescribed, whichever period last expires (Pa.R.A.P. 903(b))."
-  edge-order-entered-notice "Notice of appeal filed in time" -> notice-filed { event NoticeOfAppealFiled()
+  edge-order-entered-notice "Notice of appeal filed in time" -> notice-filed {
+    event NoticeOfAppealFiled()
     authority cite "Pa.R.A.P. 902(a)"
   }
   edge-order-entered-late "Appeal time missed" -> time-barred { authority cite "Pa.R.A.P. 902(b)" }
@@ -32,7 +32,10 @@ terminal time-barred: "Appeal time missed" outcome [loss, dismissal] cite "Pa.R.
 state notice-filed: "Notice of appeal filed" by applicant cite "Pa.R.A.P. 902(a)"
 {
   note "The notice of appeal is filed with the clerk of the trial court in each docket in which the order has been entered (Pa.R.A.P. 902(a)). The appellant requests any transcript required and pays for it as the Pennsylvania Rules of Judicial Administration prescribe; failing that, the appellate court may dismiss the appeal (Pa.R.A.P. 1911(a), (d)). If the trial judge orders a concise statement of the errors complained of on appeal, the judge allows at least 21 days from the order's entry on the docket to file and serve it, and issues not included in a timely statement are waived (Pa.R.A.P. 1925(b), (b)(2)(i), (b)(4)(vii)). The judge files at least a brief opinion of the reasons for the order if they do not already appear of record (Pa.R.A.P. 1925(a)(1)). The record, with the transcript and exhibits, is transmitted to the appellate court within 60 days after the filing of the notice of appeal (Pa.R.A.P. 1931(a)(1))."
-  edge-notice-filed-record "Record transmitted" -> briefing { event RecordFiled() authority cite "Pa.R.A.P. 1931(a)" }
+  edge-notice-filed-record "Record transmitted" -> briefing {
+    event RecordFiled()
+    authority cite "Pa.R.A.P. 1931(a)"
+  }
 }
 
 state briefing: "Briefs filed" by applicant cite "Pa.R.A.P. 2185(a)"
@@ -72,7 +75,8 @@ decision after-affirmance: "Reargument, allowance of appeal, or neither" by appl
   edge-after-affirmance-reargument "Application for reargument" -> reargument {
     authority cite "Pa.R.A.P. 2542(a)"
   }
-  edge-after-affirmance-allowance "Petition for allowance of appeal" -> allowance-petitioned { event ReviewPetitionFiled()
+  edge-after-affirmance-allowance "Petition for allowance of appeal" -> allowance-petitioned {
+    event ReviewPetitionFiled()
     authority cite "Pa.R.A.P. 1113(a)"
   }
   edge-after-affirmance-none "No further review sought" -> affirmed {
@@ -84,7 +88,8 @@ decision reargument: "Reargument decided" by court cite "Pa.R.A.P. 2543"
 {
   note "Reargument is not a matter of right but of sound judicial discretion, allowed only for compelling reasons (Pa.R.A.P. 2543). The Superior Court or the Commonwealth Court may act on the application within 60 days after it is filed; if it does not, the application is deemed denied and the prothonotary enters an order denying it (Pa.R.A.P. 1113(a)(2), (a)(4)). Second or subsequent and untimely applications are not received (Pa.R.A.P. 2547)."
   edge-reargument-granted "Reargument granted" -> argument { authority cite "Pa.R.A.P. 2543" }
-  edge-reargument-denied "Reargument denied: petition for allowance of appeal" -> allowance-petitioned { event ReviewPetitionFiled()
+  edge-reargument-denied "Reargument denied: petition for allowance of appeal" -> allowance-petitioned {
+    event ReviewPetitionFiled()
     authority cite "Pa.R.A.P. 1113(a)"
   }
   edge-reargument-denied-final "Reargument denied: no further review" -> affirmed {

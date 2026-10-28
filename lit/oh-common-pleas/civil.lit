@@ -120,10 +120,12 @@ terminal voluntary-dismissal: "Voluntary dismissal" outcome [settlement] cite "C
 decision summary-judgment: "Summary judgment decided" by court cite "Civ.R. 56(C)"
 {
   note "A party seeking affirmative relief may move for summary judgment at any time after the time for the adverse party's responsive motion or pleading has expired, or after service of the adverse party's own motion; a defending party may move at any time; once the action is set for pretrial or trial, only with leave of court (Civ.R. 56(A), (B)). Responses to a summary judgment motion may be served within twenty-eight days after service of the motion, and the movant's reply within seven days after service of the response (Civ.R. 6(C)(1)), as Civ.R. 56(C) provides. Summary judgment is rendered forthwith if the materials timely filed show no genuine issue as to any material fact and that the movant is entitled to judgment as a matter of law, reasonable minds coming to but one conclusion adverse to the nonmovant on the evidence construed most strongly in its favor; an interlocutory summary judgment may be rendered on liability alone (Civ.R. 56(C)). A case not fully adjudicated proceeds on an order specifying the facts without controversy (Civ.R. 56(D))."
-  edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-entered { event JudgmentEntered()
+  edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "Civ.R. 56(C)"
   }
-  edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-entered { event JudgmentEntered()
+  edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "Civ.R. 56(C)"
   }
   edge-summary-judgment-denied "Denied" -> trial { authority cite "Civ.R. 56(D)" }
@@ -132,7 +134,8 @@ decision summary-judgment: "Summary judgment decided" by court cite "Civ.R. 56(C
 state trial: "Trial by jury or by the court" by court cite "Civ.R. 38(B)"
 {
   note "A party may demand a jury on any issue triable of right by serving a written demand at any time after commencement of the action and not later than fourteen days after service of the last pleading directed to the issue; the demand may be indorsed on a pleading, whose caption then states \"jury demand endorsed hereon.\" Unless the demand specifies fewer, the jury is composed of eight members in civil actions other than appropriation of a right of way, where it is twelve (Civ.R. 38(B)). A written motion for purposes of trial is served no later than twenty-eight days before the start of trial, and one for a hearing that is not a trial no later than fourteen days before it, unless a different period is fixed; no reply is permitted (Civ.R. 6(C)(2)). A motion for a directed verdict may be made on the opponent's opening statement, at the close of the opponent's evidence or at the close of all the evidence, and states its specific grounds (Civ.R. 50(A))."
-  edge-trial-judgment "Verdict or decision: judgment entry" -> judgment-entered { event JudgmentEntered()
+  edge-trial-judgment "Verdict or decision: judgment entry" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "Civ.R. 58(A)"
   }
   edge-trial-voluntary "Settled before trial: stipulation of dismissal" -> voluntary-dismissal {
@@ -161,7 +164,8 @@ decision post-trial: "Post-trial motions decided" by court cite "Civ.R. 59(B)"
 {
   note "A motion for judgment notwithstanding the verdict is served within twenty-eight days of the entry of judgment or, if the clerk has not completed service of the notice of judgment within the three-day period of Civ.R. 58(B), within twenty-eight days of the date the clerk actually completes service; if no verdict was returned, within twenty-eight days of the jury's discharge; unless a local rule or order provides otherwise, responses are served within fourteen days of service of the motion and the movant's reply within seven days of service of the response (Civ.R. 50(B)(1), (2)). Except as a statute provides otherwise, a motion for a new trial, remittitur, additur, prejudgment interest or attorney's fees is served within twenty-eight days of the entry of judgment, on the same terms, with responses within fourteen days and replies within seven days (Civ.R. 59(B)). The court may not extend the time for action under Civ.R. 50(B), 59(B), 59(D) or 60(B) except as those rules state (Civ.R. 6(B)(2)(e)). Objections to a magistrate's decision are filed within fourteen days of the filing of the decision, and any other party may file objections not later than ten days after the first objections are filed (Civ.R. 53(D)(3)(b)(i))."
   edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Civ.R. 59(A)" }
-  edge-post-trial-denied "Denied: judgment stands" -> judgment-entered { event JudgmentEntered()
+  edge-post-trial-denied "Denied: judgment stands" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "App.R. 4(B)"
   }
 }

@@ -1,13 +1,20 @@
 module va-court-of-appeals-civil.appeal
 
-import va-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+import va-state-rules.{
+  DecisionFiled,
+  MandateIssued,
+  NoticeOfAppealFiled,
+  RecordFiled,
+  ReviewPetitionFiled,
+}
 
 start notice-filed
 
 state notice-filed: "Notice of appeal filed" by applicant cite "Va. Sup. Ct. R. 5A:6(a)"
 {
   note "Except as a statute provides otherwise, no appeal is allowed unless, within 30 days after entry of final judgment or other appealable order, or any extension this Court grants under Rule 5A:3(a), counsel files a notice of appeal with the clerk of the trial court and sends a copy to all opposing counsel; a notice filed after the decision is announced but before entry is treated as filed on and after the date of entry (Va. Sup. Ct. R. 5A:6(a)). The notice states whether a transcript or written statement will be filed (Va. Sup. Ct. R. 5A:6(b)); a copy is filed with the clerk of this Court with the $50 statutory filing fee, and the appeal is dismissed if the fee is not received within 10 days of the notice (Va. Sup. Ct. R. 5A:6(c)). An appeal of right is perfected by the timely notice (Va. Sup. Ct. R. 5A:16(a)). Periods in this package are stated, not counted: Code § 1-210 computes them and is not vendored, and no lit/core counting rule encodes it. The earlier outline named no leading decision."
-  edge-notice-filed-record "Transcript and record" -> record { event NoticeOfAppealFiled()
+  edge-notice-filed-record "Transcript and record" -> record {
+    event NoticeOfAppealFiled()
     authority cite "Va. Sup. Ct. R. 5A:8(a)"
   }
 }
@@ -15,7 +22,8 @@ state notice-filed: "Notice of appeal filed" by applicant cite "Va. Sup. Ct. R. 
 state record: "Record on appeal prepared and transmitted" by office cite "Va. Sup. Ct. R. 5A:10"
 {
   note "A transcript is part of the record when filed in the trial court clerk's office no later than 60 days after entry of final judgment; a judge of this Court may extend that only on a written motion filed within 90 days after entry (Va. Sup. Ct. R. 5A:8(a)). Within 10 days after the transcript is filed (or after the notice of appeal, if the transcript came first) the appellant gives written notice of its filing (Va. Sup. Ct. R. 5A:8(b)); a written statement in lieu of a transcript is filed within 60 days after entry of judgment (Va. Sup. Ct. R. 5A:8(c)); objections are filed within 15 days after the notice of filing (Va. Sup. Ct. R. 5A:8(d)). The record's contents are listed in Rule 5A:7. The trial court clerk retains the record for 21 days after the notice of appeal (or after a later transcript, or five days after objections are acted on) and then transmits it, in any event in time to reach this Court within three months after entry of the judgment (Va. Sup. Ct. R. 5A:10(c))."
-  edge-record-briefing "Record filed in this Court" -> briefing { event RecordFiled()
+  edge-record-briefing "Record filed in this Court" -> briefing {
+    event RecordFiled()
     authority cite "Va. Sup. Ct. R. 5A:19(b)"
   }
 }
@@ -32,8 +40,12 @@ state briefing: "Assignments of error and briefs" by applicant cite "Va. Sup. Ct
 decision decision: "Court of Appeals decides" by court cite "Va. Sup. Ct. R. 5A:29"
 {
   note "Oral argument is permitted in an appeal of right except in a case disposed of under Rule 5A:27; the clerk gives at least 15 days' notice of it, and argument for a party may not exceed 15 minutes unless the Court directs otherwise (Va. Sup. Ct. R. 5A:28(a), (b)). The Court may dispense with argument if the parties agree or the panel unanimously finds it unnecessary (Va. Sup. Ct. R. 5A:27). The clerk promptly transmits the decision to counsel and to the trial court (Va. Sup. Ct. R. 5A:29)."
-  edge-decision-affirmed "Affirmed" -> post-decision { event DecisionFiled() authority cite "Va. Sup. Ct. R. 5A:29" }
-  edge-decision-reversed "Reversed or remanded" -> post-decision { event DecisionFiled()
+  edge-decision-affirmed "Affirmed" -> post-decision {
+    event DecisionFiled()
+    authority cite "Va. Sup. Ct. R. 5A:29"
+  }
+  edge-decision-reversed "Reversed or remanded" -> post-decision {
+    event DecisionFiled()
     authority cite "Va. Sup. Ct. R. 5A:29"
   }
 }
@@ -44,10 +56,12 @@ decision post-decision: "Rehearing, further review, or mandate" by applicant cit
   edge-post-decision-rehearing "Petition for rehearing" -> rehearing {
     authority cite "Va. Sup. Ct. R. 5A:33(a)"
   }
-  edge-post-decision-further "Appeal to the Supreme Court of Virginia" -> further-review-petitioned { event ReviewPetitionFiled()
+  edge-post-decision-further "Appeal to the Supreme Court of Virginia" -> further-review-petitioned {
+    event ReviewPetitionFiled()
     authority cite "Va. Sup. Ct. R. 5:14(a)"
   }
-  edge-post-decision-mandate "No further proceedings" -> mandate-issued { event MandateIssued()
+  edge-post-decision-mandate "No further proceedings" -> mandate-issued {
+    event MandateIssued()
     authority cite "Va. Sup. Ct. R. 5A:31(a)"
   }
 }

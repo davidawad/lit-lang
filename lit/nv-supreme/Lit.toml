@@ -1,0 +1,43 @@
+# Civil appeals to the Supreme Court of Nevada, and cases it assigns to the
+# Nevada Court of Appeals, under the Nevada Rules of Appellate Procedure,
+# as far as the vendored text states: the rules "Including Amendments
+# Through May 21, 2025" as published on the court's site
+# (sources/nv-supreme). Its PROVENANCE entry warns that the court's
+# rule-amendments page lists later orders, so this text may lag the
+# operative rules; no later amending order is vendored, so none is
+# layered here. Time is computed under NRAP 26(a), whose legal holidays
+# are Nevada's, not the federal ones; lit/core has no counting rule for
+# them, so the periods are stated in notes, not encoded as counted
+# deadlines. The trial-court side is lit/nv-district.
+[package]
+name = "nv-supreme-appellate"
+version = "0.1.0"
+language = 1
+pack_id = "nv-supreme-appellate"
+forum = "nv-supreme"
+authority = "StateRule"
+jurisdiction_id = "nevada"
+title = "Supreme Court of Nevada and Nevada Court of Appeals, civil appeals"
+description = "Civil appeals under the Nevada Rules of Appellate Procedure, as far as the vendored text states: appealable judgments and orders, the 30-day notice of appeal and its tolling motions, the filing fee, the docketing statement, the settlement conference program, transcripts and the appendix, the briefs, their times and their page and type-volume limits, assignment to the Court of Appeals, oral argument and submission on the briefs, entry of judgment, rehearing, en banc reconsideration, petitions for review by the Supreme Court, costs, and the remittitur."
+in_force = "2025-05-21"
+known_at = "2026-10-28"
+unknown_before = "2025-05-21"
+jurisdiction = "Supreme Court of Nevada; Nevada Court of Appeals"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.nv-nrap]
+title = "Nevada Rules of Appellate Procedure, effective July 1, 1973, including amendments through May 21, 2025 (Supreme Court of Nevada)"
+url = "https://nvcourts.gov/nevada_court_rules/nevada_appellate_court_rules2/nevada_rules_of_appellate_procedure"
+path = "sources/nv-supreme/nrap-sectioned.txt"
+path_sha256 = "da5766edaa2c73cdcc84090d1ffb4b9c8ed94bf19d19983a8d5fcc647a0b4ee5"
+sha256 = "7fae8b53b741809dbea22d8af492bc8571c51ea4c63280f488713086b358c020"
+as_of = "2025-05-21"
+cite_prefixes = ["NRAP"]
+section_heading = "NRAP {n}"

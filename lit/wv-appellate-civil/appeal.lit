@@ -1,0 +1,134 @@
+module wv-appellate-civil.appeal
+
+// Civil appeals from the West Virginia circuit courts to the Intermediate
+// Court of Appeals, and from the Intermediate Court to the Supreme Court of
+// Appeals, from the applicant's (petitioner's) side. Every period below is
+// stated in a note, not counted: time is computed under W. Va. R. App. P.
+// 39(a), and lit/core has no counting rule for it or for West Virginia's
+// legal holidays. The court may for good cause enlarge any time the rules
+// or an order prescribe, or permit a late act (Rule 39(b)); three days are
+// added after service by mail, but not to the deadline for docketing or
+// perfecting an appeal (Rule 39(c)). The earlier outline cited W. Va. Code
+// § 58-5-1 and § 51-11-1 et seq.; the Code is not vendored, so those cites
+// are dropped and the jurisdiction is bound to Rule 1(b) and Rule 5(a). The
+// outline named no leading decisions. The order of August 21, 2026 (No.
+// 25-57) amending Rule 5(a) and (b) is a dated layer over the base text:
+// the notice-of-appeal step has a version citing the order from the day it
+// was entered, superseding the base version; nothing else here changes.
+/// A petitioner's or respondent's brief: at most 40 pages, not counting
+/// the cover page, tables of contents and authorities, or certificate of
+/// service (Rule 38(c)).
+limit principal-brief { pages <= 40 cite "W. Va. R. App. P. 38(c)" } cite "W. Va. R. App. P. 38(c)"
+/// A reply brief: at most 20 pages (Rule 38(c)); 40 pages when a timely
+/// respondent's brief asserts cross-assignments of error, and 30 pages when
+/// more than one response brief is filed (Rule 10(g)).
+limit reply-brief { pages <= 20 cite "W. Va. R. App. P. 38(c)" } cite "W. Va. R. App. P. 38(c)"
+/// A summary response filed instead of a respondent's brief: at most 15
+/// pages (Rule 38(c)).
+limit summary-response { pages <= 15 cite "W. Va. R. App. P. 38(c)" } cite "W. Va. R. App. P. 38(c)"
+
+/// A petition for rehearing and a response to it: at most 15 pages each
+/// (Rule 38(c)).
+limit rehearing-petition {
+  pages <= 15 cite "W. Va. R. App. P. 38(c)"
+} cite "W. Va. R. App. P. 38(c)"
+
+start notice-filed
+
+/// Rule 5(b) as amended by the order of August 21, 2026 (No. 25-57), a
+/// dated layer over the base text: it supersedes the base version from the
+/// day the order was entered.
+state notice-filed: "Notice of appeal filed" by applicant effective [2026-08-21, ..) known_at 2026-10-28 supersedes notice-filed@2022-07-01 cite "W. Va. R. App. P. (2026) 5(b)"
+{
+  note "The order of August 21, 2026 (No. 25-57) amends Rule 5(a) and (b), marking additions by underscoring and deletions by strike-through; the vendored text extract does not show that marking, so the amended rule is quoted here as the order prints it and the original order is the authority for which words were added or struck. Rule 5(a) as printed reaches appeals from \"a mandate or other final decision order of the Intermediate Court\", with the same exceptions as the base text. Rule 5(b) as printed reads \"Within thirty days of entry of the judgment final order or mandate being appealed, the party appealing shall file the notice of appeal, including attachments required in the notice of appeal form contained in Appendix A of these Rules. To appeal an opinion or memorandum decision of the Intermediate Court to the Supreme Court, the party appealing shall attach the Intermediate Court's mandate.\" The thirty-day period reads the same in the base text and the order; filing in the Office of the Clerk under Rule 38 and service on all parties, the circuit clerk and each court reporter are printed unchanged."
+  edge-notice-filed-record "Appendix record and transcripts prepared" -> record {
+    authority cite "W. Va. R. App. P. 7(d)"
+  }
+}
+
+state notice-filed: "Notice of appeal filed" by applicant effective [2022-07-01, 2026-08-21) known_at 2026-10-28 cite "W. Va. R. App. P. 5(b)"
+{
+  note "The Intermediate Court has appellate jurisdiction of final judgments or orders of a circuit court in all civil cases entered after June 30, 2022; the Supreme Court may obtain jurisdiction over any civil case filed there, on its own motion or a party's (Rule 1(b)). Rule 5 governs appeals from an appealable circuit court order and from a mandate or other final order of the Intermediate Court, except abuse and neglect, workers' compensation, family court, Public Service Commission appeals and certified questions (Rule 5(a)). Within thirty days of entry of the final order or mandate being appealed, the party appealing files the notice of appeal with the attachments the Appendix A form requires, in the Office of the Clerk, and serves it on all parties, on the circuit clerk and on each court reporter from whom a transcript is requested (Rule 5(b)). The Clerk charges $200 for docketing a civil appeal in either court, except as provided by law for indigent parties (Rule 24(a)). A party designated in the notice as having no interest may remain a party by notifying the Clerk within twenty days of the filing of the notice (Rule 5(c)). The court may extend the time to file a notice of appeal for good cause shown (Rule 5(i)(1)). As soon as practicable after the notice is properly filed, the court issues a scheduling order setting the dates for the briefs, the appendix or designated record, the transcript and motions (Rule 5(d)); failure to comply may bring sanctions or dismissal (Rule 5(e))."
+  edge-notice-filed-record "Appendix record and transcripts prepared" -> record {
+    authority cite "W. Va. R. App. P. 7(d)"
+  }
+}
+
+state record: "Appendix record and transcripts prepared" by applicant cite "W. Va. R. App. P. 7(d)"
+{
+  note "The record on appeal is not transmitted automatically; the petitioner prepares and files the appendix (Rule 6(c), 7(d)) unless the court permits a designated record by order on a motion filed by the date the scheduling order sets (Rule 6(d), 8(a)). Without agreement on its contents, the petitioner serves a list of the parts of the record it intends to include within the time the scheduling order sets, and the respondent may serve a list of additional parts within ten days after receiving it (Rule 7(e)). The petitioner requests transcripts in the notice of appeal (Rule 9(c)); a respondent who finds them inadequate requests more within fourteen days after service of the notice of appeal (Rule 9(d)). Unless an order provides otherwise, a completed transcript is due forty-five days from the court reporter's receipt of the request, and the Clerk may extend that time (Rule 9(f), (g))."
+  edge-record-briefing "Petitioner's brief and appendix filed" -> briefing {
+    authority cite "W. Va. R. App. P. 5(g)"
+  }
+  edge-record-unperfected "Appeal not perfected" -> dismissed-unperfected {
+    authority cite "W. Va. R. App. P. 5(g)"
+  }
+}
+
+terminal dismissed-unperfected: "Dismissed for failure to perfect" outcome [loss, dismissal] cite "W. Va. R. App. P. 5(g)"
+{
+  note "Failure by the petitioner to perfect an appeal results in the case being dismissed from the docket (Rule 5(g)). Unless otherwise provided by law, an appeal must be perfected within four months of the date the judgment appealed was entered (Rule 5(f)); the circuit court or the appellate court may extend that time for good cause, by order entered of record, by no more than two months in total, if a complete notice of appeal was timely and properly filed (Rule 5(i)(2)). If an appeal is dismissed, costs are taxed against the petitioner unless the parties agree or the court orders otherwise (Rule 24(b))."
+}
+
+state briefing: "Briefs filed" by applicant cite "W. Va. R. App. P. 10(b)"
+{
+  note "An appeal is perfected by timely and properly filing the petitioner's brief under Rule 10 and the appendix record under Rule 7 (Rule 5(g)). Briefs are due when the scheduling order sets; typically the petitioner's brief is due four months from entry of the final order appealed, the respondent's brief forty-five days after the petitioner's, and any reply twenty days after the respondent's brief (Rule 10(b)). Briefs are filed when received in the Clerk's Office in proper form, not when mailed (Rule 10(b)). The respondent may file a summary response instead of a brief, which waives oral argument (Rule 10(e)), and may cross-assign error in its brief; then the reply is due thirty days after the respondent's brief and may run forty pages (Rule 10(g)). A respondent's brief that does not respond to an assignment of error is taken to agree with the petitioner on it (Rule 10(d)). A motion for disposition by memorandum decision is accepted no later than twenty days after the appeal is perfected, with ten days to respond (Rule 21(b)). After the response and any reply are filed or their time expires, the appeal is mature (Rule 5(h))."
+  edge-briefing-mature "Appeal mature for consideration" -> argument {
+    authority cite "W. Va. R. App. P. 5(h)"
+  }
+}
+
+decision argument: "Decided on the briefs, or set for Rule 19 or Rule 20 argument" by court cite "W. Va. R. App. P. 5(h)"
+{
+  note "Once the appeal is mature the court decides it on the merits without oral argument, sets it for oral argument and then decides it, or issues an appropriate order (Rule 5(h)). Oral argument is unnecessary when all parties waive it, the appeal is frivolous, the dispositive issues are authoritatively decided, or the briefs and record adequately present the case (Rule 18(a)). A case is ordinarily scheduled for argument at least thirty days before the argument date (Rule 18(b)), and the notice of a Rule 19 or Rule 20 argument issues at least thirty days before it unless circumstances otherwise require (Rule 19(b), 20(b)). A motion to continue, or a written waiver of argument, is due within ten days of the date of the notice (Rule 19(c), (f); 20(c), (f)). Rule 19 argument is limited to ten minutes per side and Rule 20 argument to twenty minutes per side unless the notice or an order provides otherwise; the petitioner opens and closes, and a party who filed no brief may not argue (Rule 19(d), (e); 20(d), (e))."
+  edge-argument-rule19 "Set for Rule 19 argument" -> merits-decision {
+    authority cite "W. Va. R. App. P. 19(a)"
+  }
+  edge-argument-rule20 "Set for Rule 20 argument" -> merits-decision {
+    authority cite "W. Va. R. App. P. 20(a)"
+  }
+  edge-argument-briefs "Decided without oral argument" -> merits-decision {
+    authority cite "W. Va. R. App. P. 18(a)"
+  }
+}
+
+decision merits-decision: "Memorandum decision or opinion released" by court cite "W. Va. R. App. P. 21(a)"
+{
+  note "At any time after the case is mature the court may issue a memorandum decision addressing the merits (Rule 21(a)); after Rule 20 argument it decides by opinion or other order and not by memorandum decision absent exceptional or compelling circumstances (Rule 20(g)). A memorandum decision affirms where there is no substantial question of law, no prejudicial error or other just cause (Rule 21(c)); one reversing states its reasons and is issued in limited circumstances (Rule 21(d)). Opinions and memorandum decisions take effect only when the mandate issues under Rule 26 (Rule 21(f), 22(a))."
+  edge-merits-decision-affirmed "Affirmed" -> after-decision {
+    authority cite "W. Va. R. App. P. 21(c)"
+  }
+  edge-merits-decision-reversed "Reversed, vacated or remanded" -> after-decision {
+    authority cite "W. Va. R. App. P. 21(d)"
+  }
+}
+
+decision after-decision: "Rehearing, appeal to the Supreme Court, or neither" by applicant cite "W. Va. R. App. P. 25(a)"
+{
+  note "A petition for rehearing may be filed within thirty days of release of a memorandum decision or opinion that passes upon the merits, unless an order shortens or enlarges the time (Rule 25(a)). A mandate or other final order of the Intermediate Court is appealed to the Supreme Court under Rule 5, within thirty days of entry of the mandate, with the mandate attached to the notice of appeal (Rule 5(a), (b))."
+  edge-after-decision-rehearing "Petition for rehearing filed" -> rehearing {
+    authority cite "W. Va. R. App. P. 25(a)"
+  }
+  edge-after-decision-appeal "Appeal from the Intermediate Court to the Supreme Court" -> notice-filed {
+    authority cite "W. Va. R. App. P. 5(a)"
+  }
+  edge-after-decision-mandate "No rehearing or further appeal" -> mandate-issued {
+    authority cite "W. Va. R. App. P. 26(b)"
+  }
+}
+
+decision rehearing: "Rehearing petition decided" by court cite "W. Va. R. App. P. 25(d)"
+{
+  note "Rehearing is granted only in exceptional cases; the petition states with particularity the points of law or fact the court overlooked or misapprehended, and repeating earlier argument is not a proper basis (Rule 25(b)). A response is not required; an opposing party may file one within fourteen days of the filing of the petition, after which the petition is mature (Rule 25(c), (d)). A timely petition stays issuance of the mandate (Rule 26(b))."
+  edge-rehearing-refused "Rehearing refused" -> mandate-issued {
+    authority cite "W. Va. R. App. P. 26(b)"
+  }
+  edge-rehearing-granted "Rehearing granted: further proceedings ordered" -> merits-decision {
+    authority cite "W. Va. R. App. P. 25(d)"
+  }
+}
+
+terminal mandate-issued: "Mandate issued" outcome [final] cite "W. Va. R. App. P. 26(b)"
+{
+  note "If no petition for rehearing is timely filed, the Clerk issues the mandate as soon as practicable after thirty days from release of the opinion or memorandum decision; if rehearing is refused, within seven days of the order refusing it, unless an order shortens or enlarges the time (Rule 26(b)). The mandate terminates the court's jurisdiction (Rule 26(a)). Costs are taxed against the petitioner if the judgment is affirmed and against the respondent if it is reversed, unless otherwise ordered (Rule 24(b)), and the Clerk inserts the statement of costs in the mandate (Rule 24(f)). A stay of the Supreme Court's mandate pending a petition for certiorari to the Supreme Court of the United States may be granted on motion, for no more than ninety days unless the order provides otherwise (Rule 26(c))."
+}

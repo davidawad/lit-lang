@@ -1,0 +1,61 @@
+# Civil appeals to the West Virginia Intermediate Court of Appeals and the
+# Supreme Court of Appeals under the West Virginia Rules of Appellate
+# Procedure, as far as the vendored text states: the rules as posted on the
+# Supreme Court of Appeals' rules page, retrieved 2026-10-28
+# (sources/wv-appellate-civil). The page states no edition date; by the PM
+# ruling of 2026-10-28 it is taken as the current base text, dated by Rule
+# 1(e) (appeals from orders entered after June 30, 2022), so in_force is
+# July 1, 2022. The order of August 21, 2026 (No. 25-57) amending Rule 5(a)
+# and (b) is a separate dated layer, never merged into the base text: its
+# own source binding (wv-rap-2026-rule5), cited by a version of the
+# notice-of-appeal step that supersedes the base's from the day the order
+# was entered (the order states no other effective date). It cannot be its
+# own `kind = "amendment"` package yet: lit/core's forum-family matrix has
+# no family for this state forum (L2011). Time is computed under W. Va. R. App.
+# P. 39(a), whose legal holidays (West Virginia Day, Lincoln's Day, days the
+# Governor or Legislature appoints) differ from the federal ones; lit/core
+# has no counting rule for it, so the periods are stated in notes, not
+# encoded as counted deadlines. The trial-court side is
+# lit/wv-circuit-civil.
+[package]
+name = "wv-appellate-civil"
+version = "0.1.0"
+language = 1
+pack_id = "wv-appellate-civil"
+forum = "wv-appellate-civil"
+authority = "StateRule"
+jurisdiction_id = "west-virginia"
+title = "West Virginia Intermediate Court of Appeals and Supreme Court of Appeals, civil appeals"
+description = "Civil appeals under the West Virginia Rules of Appellate Procedure, as far as the vendored text states: the notice of appeal and its fee, the scheduling order, the appendix record and transcripts, perfecting the appeal and its extension, the briefs and their page limits, the argument calendar and Rule 19 and Rule 20 argument, memorandum decisions and opinions, rehearing, the mandate and costs, and the appeal from the Intermediate Court to the Supreme Court."
+in_force = "2022-07-01"
+known_at = "2026-10-28"
+unknown_before = "2022-07-01"
+jurisdiction = "West Virginia Intermediate Court of Appeals; Supreme Court of Appeals of West Virginia"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.wv-rap]
+title = "West Virginia Rules of Appellate Procedure, as posted by the Supreme Court of Appeals of West Virginia (retrieved 2026-10-28; before the Rule 5 amendment of 2026-08-21)"
+url = "https://www.courtswv.gov/legal-community/court-rules/rules-appellate-procedure"
+path = "sources/wv-appellate-civil/wv-rules-of-appellate-procedure-sectioned.txt"
+path_sha256 = "f84e006703f6dd8d74ec52c3684c0c4d845f6e2a452ab86a3251cbd1a0d44df9"
+sha256 = "62e6aece2a9ee00573cc2cd05083de719d76b05a80200779ebe6fb0e93e721ae"
+as_of = "2022-07-01"
+cite_prefixes = ["W. Va. R. App. P."]
+section_heading = "Rule {n}"
+
+[sources.wv-rap-2026-rule5]
+title = "Order of August 21, 2026, Approval of Amendments to Rule 5 of the Rules of Appellate Procedure, No. 25-57"
+url = "https://www.courtswv.gov/sites/default/pubfilesmnt/2026-08/25-57%20-%20Approval%20Order.pdf"
+path = "sources/wv-appellate-civil/wv-rap-rule-5-amendment-order-2026-08-21-no-25-57-sectioned.txt"
+path_sha256 = "802c789b3b6e3ba1657fff819c6ed0e194db98a8a041a904903c8422fbcd6889"
+sha256 = "5804bc74d2fb783f1299ba5b4d0d25228ace767c698f9fa4c8ce7269794fd317"
+as_of = "2026-08-21"
+cite_prefixes = ["W. Va. R. App. P. (2026)"]
+section_heading = "Rule {n}"

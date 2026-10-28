@@ -233,24 +233,7 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
         .map_or_else(CiteSyntax::default, |cs| {
             cite_syntax::check(&mut c, cs.get_ref(), &raw.sources)
         });
-    if let Some(counting) = &p.counting {
-        c.check(is_ident(counting.get_ref()), range(counting), || {
-            format!(
-                "`counting` must be a counting-rule id, found `{}`",
-                counting.get_ref()
-            )
-        });
-    }
-    if let Some(recounts) = &p.recounts {
-        c.check(p.counting.is_some(), range(recounts), || {
-            "`recounts` needs the package's own `counting` rule".to_owned()
-        });
-        for name in recounts.get_ref() {
-            c.check(dependencies.contains_key(name), range(recounts), || {
-                format!("`recounts` names `{name}`, which is not a dependency")
-            });
-        }
-    }
+    counting(&mut c, p, &dependencies);
     let law = law(&mut c, p);
     let (kind, instrument) = kind(&mut c, p, &roles, &sources);
     let families = family::check(&mut c, p.name.get_ref(), &raw.family);
@@ -298,6 +281,29 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
         manifest,
         dependency_paths,
     })
+}
+
+/// `package.counting` must be a rule id; `package.recounts` needs that
+/// rule and may name only dependencies.
+fn counting(c: &mut Checker, p: &RawPackage, dependencies: &BTreeMap<String, String>) {
+    if let Some(counting) = &p.counting {
+        c.check(is_ident(counting.get_ref()), range(counting), || {
+            format!(
+                "`counting` must be a counting-rule id, found `{}`",
+                counting.get_ref()
+            )
+        });
+    }
+    if let Some(recounts) = &p.recounts {
+        c.check(p.counting.is_some(), range(recounts), || {
+            "`recounts` needs the package's own `counting` rule".to_owned()
+        });
+        for name in recounts.get_ref() {
+            c.check(dependencies.contains_key(name), range(recounts), || {
+                format!("`recounts` names `{name}`, which is not a dependency")
+            });
+        }
+    }
 }
 
 /// `package.law`: `procedure` (the default) or `substantive`.

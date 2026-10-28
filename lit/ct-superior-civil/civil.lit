@@ -1,0 +1,198 @@
+module ct-superior-court-civil.civil
+
+// Civil actions in the Connecticut Superior Court, from the applicant's
+// (plaintiff's) side. Every period below is stated in a note, not counted:
+// lit/core has no counting rule for Connecticut's court holidays. Summary
+// process and foreclosure actions, whose shorter pleading periods Section
+// 10-8 states, are out of scope. No filing fee is stated in the rules
+// cited here; the jury claim period and fee are General Statutes § 52-215's
+// (Practice Book § 14-10), which is not vendored. The earlier outline cited
+// General Statutes § 52-45a for commencement and § 51-199(c) for transfer
+// and further review; neither statute is vendored, so commencement is
+// bound to the process rule (Practice Book § 8-1). It named one decision,
+// Romprey v. Safeco Insurance Co. of America, 310 Conn. 304 (2013), on
+// summary judgment; no reporter text is vendored, so it is removed and the
+// standard is the rule's own (Practice Book § 17-49).
+start process-served
+
+state process-served: "Writ, summons and complaint served and returned" by applicant cite "Practice Book § 8-1"
+{
+  note "Process in civil actions is a writ of summons or attachment, describing the parties, the court to which it is returnable and the time and place of appearance, accompanied by the plaintiff's complaint, signed by a Commissioner of the Superior Court or a judge or clerk of the court; in civil actions other than family and summary process it is on Form JD-CV-1 (Practice Book § 8-1(a)). Pleadings, including motions and requests addressed to them, advance within thirty days from the return day, and each later pleading at least one step within each successive thirty days (Practice Book § 10-8)."
+  edge-process-served-pleads "Defendant appears and pleads" -> pleading-due {
+    authority cite "Practice Book § 10-8"
+  }
+  edge-process-served-no-appearance "No appearance by the second day after the return day" -> default-entered {
+    authority cite "Practice Book § 17-20"
+  }
+}
+
+decision pleading-due: "Motion to dismiss, motion to strike, answer, or no pleading" by office cite "Practice Book § 10-8"
+{
+  note "Commencing on the return day, pleadings, including motions and requests addressed to the pleadings, advance within thirty days from the return day; discovery does not suspend that time unless the judicial authority finds good cause (Practice Book § 10-8). A defendant wishing to contest the court's jurisdiction does so by a motion to dismiss filed within thirty days of the filing of an appearance (Practice Book § 10-30(b)). A party contesting the legal sufficiency of a complaint uses a motion to strike, with a memorandum of law (Practice Book § 10-39)."
+  edge-pleading-due-dismiss "Motion to dismiss" -> dismissal-motion {
+    authority cite "Practice Book § 10-30"
+  }
+  edge-pleading-due-strike "Motion to strike" -> strike-motion {
+    authority cite "Practice Book § 10-39"
+  }
+  edge-pleading-due-answer "Answer filed" -> discovery {
+    authority cite "Practice Book § 10-8"
+  }
+  edge-pleading-due-default "Failure to plead" -> default-entered {
+    authority cite "Practice Book § 17-32"
+  }
+}
+
+decision dismissal-motion: "Motion to dismiss decided" by court cite "Practice Book § 10-30"
+{
+  note "A motion to dismiss asserts lack of jurisdiction over the subject matter or the person, insufficiency of process or insufficiency of service of process, and is filed with a supporting memorandum of law (Practice Book § 10-30(a), (c)). An adverse party has thirty days from the filing of the motion to respond with a memorandum in opposition; except in summary process matters the motion goes on the short calendar not less than forty-five days after its filing, unless the judicial authority otherwise orders (Practice Book § 10-31)."
+  edge-dismissal-motion-granted "Granted: action dismissed" -> dismissed {
+    authority cite "Practice Book § 10-30"
+  }
+  edge-dismissal-motion-denied "Denied: pleadings advance" -> pleading-due {
+    authority cite "Practice Book § 10-8"
+  }
+}
+
+decision strike-motion: "Motion to strike decided" by court cite "Practice Book § 10-39"
+{
+  note "An adverse party has thirty days from the filing of the motion to strike to respond with a memorandum of law in opposition; except in summary process matters the motion goes on the short calendar not less than forty-five days after its filing, unless the judicial authority otherwise orders (Practice Book § 10-40)."
+  edge-strike-motion-granted "Granted: complaint stricken" -> stricken {
+    authority cite "Practice Book § 10-39"
+  }
+  edge-strike-motion-amend "Plaintiff amends the complaint" -> amended {
+    authority cite "Practice Book § 10-60"
+  }
+  edge-strike-motion-denied "Denied: pleadings advance" -> pleading-due {
+    authority cite "Practice Book § 10-8"
+  }
+}
+
+state amended: "Amended pleading" by applicant cite "Practice Book § 10-60"
+{
+  note "A party may amend by order of the judicial authority, by written consent of the adverse party, or by filing a request for leave with the amended pleading; if no party objects within fifteen days from the date the request is filed, the amendment is deemed filed by consent (Practice Book § 10-60(a)). The adverse party may plead to an amended pleading within the time provided by Section 10-8 or, if it has already pleaded, alter its pleading within ten days after the amendment (Practice Book § 10-61)."
+  edge-amended-pleads "Pleadings advance on the amended complaint" -> pleading-due {
+    authority cite "Practice Book § 10-61"
+  }
+}
+
+terminal dismissed: "Dismissed on a motion to dismiss" outcome [loss, dismissal] cite "Practice Book § 10-30"
+{
+  note "Outcome from the applicant's side. The appeal is lit/ct-appellate-supreme."
+}
+
+terminal stricken: "Complaint stricken and not repleaded" outcome [loss, dismissal] cite "Practice Book § 10-39"
+{
+  note "Outcome from the applicant's side: the motion to strike granted and no amended pleading filed."
+}
+
+state default-entered: "Default for failure to appear or to plead" by office cite "Practice Book § 17-32"
+{
+  note "If no appearance has been entered for a party on or before the second day following the return day, another party may move for a nonsuit or default for failure to appear; the clerk acts on a motion for default for failure to appear not less than seven days from its filing, and an appearance before judgment sets the default aside by operation of law (Practice Book § 17-20(a), (d)). Where a defendant is in default for failure to plead under Section 10-8, the plaintiff may move for default, acted on by the clerk not less than seven days from the filing of the motion; an answer filed before judgment sets the default aside unless a claim for a hearing in damages or a motion for judgment has been filed, and neither may be filed before fifteen days have run (Practice Book § 17-32). The judicial authority may render judgment after default as Section 17-33 provides."
+  edge-default-entered-judgment "Judgment after default" -> default-judgment {
+    authority cite "Practice Book § 17-33"
+  }
+  edge-default-entered-set-aside "Appearance or answer filed before judgment: default set aside" -> pleading-due {
+    authority cite "Practice Book § 17-32"
+  }
+}
+
+decision default-judgment: "Judgment after default rendered" by court cite "Practice Book § 17-33"
+{
+  note "Unless otherwise provided by law, a civil judgment may not be opened or set aside unless a motion to open or set aside is filed within four months succeeding the date on which notice was sent, and the moving party pays the filing fee prescribed by statute unless waived (Practice Book § 17-4(a), (b))."
+  edge-default-judgment-stands "Judgment stands" -> default-won {
+    authority cite "Practice Book § 17-33"
+  }
+  edge-default-judgment-opened "Motion to open granted within four months" -> pleading-due {
+    authority cite "Practice Book § 17-4"
+  }
+}
+
+terminal default-won: "Judgment after default for applicant" outcome [win] cite "Practice Book § 17-33"
+{
+  note "Outcome from the applicant's side: judgment after default under Section 17-33."
+}
+
+state discovery: "Discovery" by applicant cite "Practice Book § 13-2"
+{
+  note "A party may obtain discovery of information and of papers, documents and electronically stored information material to the subject matter of the action and not privileged (Practice Book § 13-2). Interrogatories are answered under oath and served within sixty days after the date of certification of service, unless a stipulation or the judicial authority allows longer or objections are filed and served within the sixty days (Practice Book § 13-7(a)); requests for production are answered within the same sixty days on the same terms (Practice Book § 13-10(a)). The Superior Court judges' amendments effective January 1, 2027 add a fifteen-day period in residential summary process matters to both sections and leave the sixty days unchanged."
+  edge-discovery-noncompliance "Failure to answer or comply with a discovery order" -> discovery-sanction {
+    authority cite "Practice Book § 13-14"
+  }
+  edge-discovery-sj "Motion for summary judgment" -> summary-judgment {
+    authority cite "Practice Book § 17-44"
+  }
+  edge-discovery-trial "Case claimed for trial" -> trial {
+    authority cite "Practice Book § 14-10"
+  }
+}
+
+decision discovery-sanction: "Order on failure to comply with discovery" by court cite "Practice Book § 13-14"
+{
+  note "On motion, the judicial authority may make such order proportional to the noncompliance as the ends of justice require, including an order of compliance, costs and a reasonable attorney's fee, an order taking designated facts as established, an order precluding evidence, or an order of dismissal, nonsuit or default (Practice Book § 13-14(a), (b))."
+  edge-discovery-sanction-continues "Order short of dismissal: discovery continues" -> discovery {
+    authority cite "Practice Book § 13-14"
+  }
+  edge-discovery-sanction-nonsuit "Nonsuit or dismissal of the action" -> dismissed-sanction {
+    authority cite "Practice Book § 13-14"
+  }
+}
+
+terminal dismissed-sanction: "Nonsuit or dismissal for discovery noncompliance" outcome [loss, dismissal] cite "Practice Book § 13-14"
+{
+  note "Outcome from the applicant's side: an order of dismissal or nonsuit under Section 13-14(b)(5)."
+}
+
+decision summary-judgment: "Summary judgment decided" by court cite "Practice Book § 17-49"
+{
+  note "Any party may move for summary judgment as a matter of right at any time if no scheduling order exists and the case has not been assigned for trial, or by the time a scheduling order specifies; if no scheduling order exists but the case is assigned for trial, the party needs permission (Practice Book § 17-44). Unless otherwise ordered, an adverse party files and serves its response within forty-five days of the filing of the motion, and the movant may not claim the motion to the short calendar less than forty-five days after filing it (Practice Book § 17-45(b), (c)). Judgment is rendered forthwith if the pleadings, affidavits and other proof show that there is no genuine issue as to any material fact and that the moving party is entitled to judgment as a matter of law (Practice Book § 17-49)."
+  edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-rendered {
+    authority cite "Practice Book § 17-49"
+  }
+  edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-rendered {
+    authority cite "Practice Book § 17-49"
+  }
+  edge-summary-judgment-denied "Denied: trial" -> trial {
+    authority cite "Practice Book § 17-44"
+  }
+}
+
+state trial: "Trial by jury or by the court" by court cite "Practice Book § 14-10"
+{
+  note "A claim of the case for the jury is made in writing, served on all other parties and filed with the clerk within the time General Statutes § 52-215 allows, and the jury claim fee is paid when the claim is filed (Practice Book § 14-10). After a verdict, a party who moved for a directed verdict may move, within the time Section 16-35 gives for a motion to set the verdict aside, to have judgment rendered in accordance with that motion (Practice Book § 16-37)."
+  edge-trial-verdict "Verdict accepted or decision rendered" -> post-verdict {
+    authority cite "Practice Book § 16-35"
+  }
+}
+
+decision post-verdict: "Motions after verdict" by court cite "Practice Book § 16-35"
+{
+  note "Motions in arrest of judgment, to set aside a verdict, for remittitur or additur, for a new trial (unless brought by petition) and for collateral source reduction are filed with the clerk within ten days after the day the verdict is accepted; for good cause the judicial authority may extend this time (Practice Book § 16-35). A motion to reargue a decision or order is filed within twenty days from the issuance of notice of its rendition (Practice Book § 11-12(a)); a motion to reargue a final judgment, and any motion that would delay or restart the appeal period, is filed under Section 11-11."
+  edge-post-verdict-new-trial "Verdict set aside: new trial" -> trial {
+    authority cite "Practice Book § 16-35"
+  }
+  edge-post-verdict-judgment "Judgment on the verdict" -> judgment-rendered {
+    authority cite "Practice Book § 16-35"
+  }
+}
+
+decision judgment-rendered: "Judgment rendered" by court cite "Practice Book § 63-1"
+{
+  note "Unless a statute provides otherwise, an appeal is filed within twenty days of the date notice of the judgment is given; notice in open court starts the period that day, notice only by mail or electronic delivery on the day the trial court clerk sends it, and in civil jury cases the period begins when the verdict is accepted (Practice Book § 63-1(a), (b)). A motion filed within the appeal period that, if granted, would render the judgment ineffective starts a new twenty-day period on notice of the ruling on the last such motion (Practice Book § 63-1(c)(1)). A civil judgment may be opened on a motion filed within four months succeeding the date on which notice was sent (Practice Book § 17-4(a))."
+  edge-judgment-rendered-appeal "Appeal filed" -> appeal-taken {
+    authority cite "Practice Book § 63-1"
+  }
+  edge-judgment-rendered-final "No appeal" -> final-no-appeal {
+    authority cite "Practice Book § 63-1"
+  }
+}
+
+terminal appeal-taken: "Appeal filed under the Rules of Appellate Procedure" outcome [appeal] cite "Practice Book § 63-1"
+{
+  note "An appeal filed within twenty days of notice of the judgment (Practice Book § 63-1(a)). The appeal is lit/ct-appellate-supreme."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Practice Book § 63-1"
+{
+  note "Judgment rendered and not appealed within the appeal period."
+}

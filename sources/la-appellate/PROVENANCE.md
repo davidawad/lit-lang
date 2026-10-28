@@ -25,3 +25,9 @@
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 8ce01cf1ca72910ca029f8b490ab9521527b4fad0f5e78c2a14b940acabb1b87. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `la-appellate/original/la-uniform-rules-courts-of-appeal.pdf` as served (sha256 2a99c1755c07ab9e380ecb51e0e97207dfb8454b4ab75d17b2c57f1e83601b63); extraction sha256 8ce01cf1ca72910ca029f8b490ab9521527b4fad0f5e78c2a14b940acabb1b87.
+
+### `la-appellate/la-uniform-rules-courts-of-appeal-sectioned.txt` — Uniform Rules of Louisiana Courts of Appeal, sectioned
+
+- Derived in the pod (lg-f3q8.18) from `la-appellate/la-uniform-rules-courts-of-appeal.txt` (extract sha256 8ce01cf1ca72910ca029f8b490ab9521527b4fad0f5e78c2a14b940acabb1b87); nothing fetched. One `## Rule <r>-<n>` line is inserted before each rule heading (`Rule 1-1. Promulgation ...` through `Rule 5-4. Applicability of Rules`, 40 rules), and one `## Rule <r>-<n>.<m>` line before each numbered subrule heading (`1-1.1. Promulgation and Effective Date` through `4-1.1. Briefs on Applications for Writs`, 82 subrules, including `2-2.2 Transmission of Record`, printed without its period). Every other line is the extract unchanged, so deleting the `## Rule` lines gives back the extract byte for byte.
+- Edition: as the extract, "As amended, with amendments effective as of July 1, 2026".
+- Sectioned sha256 fd58ac4ae45ac05c6ef162914d19826689f9d1f19da5a61538d33be1751fc491 (the `path_sha256` pinned by `lit/la-appellate/Lit.toml`).

@@ -1,0 +1,136 @@
+module la-appellate-civil.appeal
+
+start judgment-signed
+
+state judgment-signed: "Judgment signed" by applicant cite "La. C.C.P. art. 2083"
+{
+  note "A final judgment is appealable in all causes in which appeals are given by law, whether rendered after hearing, by default or by reformation; a partial final judgment under La. C.C.P. art. 1915(A) is appealable likewise; an interlocutory judgment is appealable only when expressly provided by law (La. C.C.P. art. 2083). A judgment that determines the merits in whole is final; one that determines only preliminary matters is interlocutory (La. C.C.P. art. 1841). Other rulings are reviewed by supervisory writ (Unif. R. La. Ct. App. 4-3). Periods in this package are stated, not counted: computation is La. C.C.P. art. 5059, not vendored. The trial-court graph is lit/la-district-court."
+  edge-judgment-signed-appeal "Order of appeal obtained in time" -> appeal-ordered {
+    authority cite "La. C.C.P. art. 2121"
+  }
+  edge-judgment-signed-writ "Notice of intention to apply for writs" -> writ-application {
+    authority cite "Unif. R. La. Ct. App. 4-2"
+  }
+  edge-judgment-signed-late "Delay missed" -> time-barred { authority cite "La. C.C.P. art. 2121" }
+}
+
+state appeal-ordered: "Order of appeal granted" by applicant cite "La. C.C.P. art. 2121"
+{
+  note "An appeal is taken by obtaining an order, within the delay allowed, from the court which rendered the judgment, on oral motion in open court, written motion or petition; the order shows the return day and the security to be furnished, and the clerk mails notice of the appeal (La. C.C.P. art. 2121). A suspensive appeal may be taken, and its security furnished, only within thirty days of the expiration of the delay for applying for a new trial or JNOV if none was timely filed, or of the mailing of notice of the refusal of a timely application; with several such motions the delay runs for all parties from the last one acted on; an order of appeal granted before all timely motions are disposed of is premature and takes effect on their denial; and a notice of removal to federal court interrupts the delay (La. C.C.P. art. 2123). The devolutive appeal delay (La. C.C.P. art. 2087) and the return day (La. C.C.P. art. 2125) are not vendored. Within seven (7) days of the order of appeal the trial-court clerk transmits the notice of appeal to the Court of Appeal and the judicial administrator of the Supreme Court (Unif. R. La. Ct. App. 2-2.1)."
+  edge-appeal-ordered-lodged "Record lodged" -> record-lodged {
+    authority cite "La. C.C.P. art. 2127"
+  }
+}
+
+state record-lodged: "Record lodged in the Court of Appeal" by office cite "La. C.C.P. art. 2127"
+{
+  note "The clerk of the trial court prepares the record and lodges it with the appellate court on or before the return day or any extension; the clerk's failure to do so timely or correctly does not prejudice the appeal (La. C.C.P. art. 2127; Unif. R. La. Ct. App. 2-2.2). The appellate clerk notifies counsel of the date of lodging (Unif. R. La. Ct. App. 2-2.3). An appeal is submitted without oral argument unless a written request is filed within thirty (30) days after lodging of the record and permission is granted; a timely request by one party applies to all (Unif. R. La. Ct. App. 2-11.4)."
+  edge-record-lodged-briefing "Briefing" -> briefing {
+    authority cite "Unif. R. La. Ct. App. 2-12.7"
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite "Unif. R. La. Ct. App. 2-12.7"
+{
+  note "The appellant's brief is filed not later than 25 calendar days after lodging of the record, the appellee's not later than 45 calendar days after lodging, and any reply brief not later than 10 calendar days after the appellee brief is filed (Unif. R. La. Ct. App. 2-12.7). An extension may be granted for good cause on motion filed on or before the due date; an extension to the appellant extends the appellee's time by twenty days from the extended date (Unif. R. La. Ct. App. 2-12.8). Original appellant and appellee briefs on legal-size paper may not exceed thirty-one pages and reply briefs thirteen; on letter-size paper forty-one and eighteen, excluding the cover, tables, the judgment and reasons, and the certificate of service; a motion to exceed is filed before the due date (Unif. R. La. Ct. App. 2-12.2). A party whose brief is late forfeits oral argument (Unif. R. La. Ct. App. 2-12.12). The clerk posts the docket not less than 30 days before the date fixed for argument or submission (Unif. R. La. Ct. App. 2-11.9); argument is limited to 40 minutes, divided equally between opposing parties (Unif. R. La. Ct. App. 2-15.2)."
+  edge-briefing-decided "Argued or submitted" -> appellate-decision {
+    authority cite "Unif. R. La. Ct. App. 2-11.7"
+  }
+  edge-briefing-abandoned "Appellant files no brief" -> appeal-abandoned {
+    authority cite "Unif. R. La. Ct. App. 2-8.6"
+  }
+}
+
+decision appellate-decision: "Court of Appeal decision" by court cite "La. C.C.P. art. 2164"
+{
+  note "The appellate court renders any judgment which is just, legal and proper upon the record on appeal, may award damages, including attorney fees, for a frivolous appeal, and may tax costs as it considers equitable (La. C.C.P. art. 2164). The scope of review is as the Louisiana Constitution provides (Unif. R. La. Ct. App. 1-3; the Constitution is not vendored). In a civil case where the trial court's judgment is to be modified or reversed and one judge dissents, the case is reargued or resubmitted before a panel of at least 5 judges (Unif. R. La. Ct. App. 1-5). Notice of judgment is transmitted to all counsel (Unif. R. La. Ct. App. 2-17.1)."
+  edge-decision-affirmed "Affirmed" -> affirmed { authority cite "La. C.C.P. art. 2164" }
+  edge-decision-reversed "Reversed or amended" -> reversed { authority cite "La. C.C.P. art. 2164" }
+  edge-decision-remanded "Remanded" -> remanded { authority cite "La. C.C.P. art. 2164" }
+  edge-decision-dismissed "Appeal dismissed" -> appeal-dismissed {
+    authority cite "Unif. R. La. Ct. App. 2-8.1"
+  }
+  edge-decision-rehearing "Application for rehearing" -> rehearing-applied {
+    authority cite "Unif. R. La. Ct. App. 2-18.2"
+  }
+}
+
+state rehearing-applied: "Application for rehearing" by applicant cite "Unif. R. La. Ct. App. 2-18.2"
+{
+  note "In cases governed by the Code of Civil Procedure an application for rehearing is filed on or before fourteen days after transmission of the notice of the judgment, and no extension is granted (Unif. R. La. Ct. App. 2-18.2). Except with permission it may not exceed 10 pages, and oral argument on it is not permitted (Unif. R. La. Ct. App. 2-18.1); the support brief is filed with it (Unif. R. La. Ct. App. 2-18.3). Rehearing is considered only where the court granted a writ on the merits, dismissed an appeal or ruled on the merits of an appeal (Unif. R. La. Ct. App. 2-18.7)."
+  edge-rehearing-granted "Rehearing granted" -> rehearing-granted {
+    authority cite "Unif. R. La. Ct. App. 2-18.5"
+  }
+  edge-rehearing-denied "Rehearing denied" -> decision-final {
+    authority cite "Unif. R. La. Ct. App. 2-18.2"
+  }
+}
+
+state writ-application: "Application for supervisory writs" by applicant cite "Unif. R. La. Ct. App. 4-3"
+{
+  note "The party intending to apply gives notice of intention to the opposing parties and asks the judge whose ruling is at issue to set a return date (Unif. R. La. Ct. App. 4-2). In civil cases the return date may not exceed 30 days from the date of notice of the judgment under La. C.C.P. art. 1914; the trial court or the Court of Appeal may extend it on a motion filed within the return date, and an application not filed in time is not considered absent a showing that the delay was not the applicant's fault (Unif. R. La. Ct. App. 4-3). A writ application does not stay the trial court's proceedings unless a stay is expressly ordered (Unif. R. La. Ct. App. 4-4)."
+  edge-writ-application-ruling "Application filed by the return date" -> writ-ruling {
+    authority cite "Unif. R. La. Ct. App. 4-7"
+  }
+}
+
+decision writ-ruling: "Action on the writ application" by court cite "Unif. R. La. Ct. App. 4-7"
+{
+  note "In its supervisory jurisdiction the court may act peremptorily, with or without a response, or order a response or a per curiam, or assign the case for argument or submission (Unif. R. La. Ct. App. 4-7). Rule 2-18 governs rehearing of a writ disposition (Unif. R. La. Ct. App. 4-9)."
+  edge-writ-ruling-granted "Writ granted" -> writ-granted {
+    authority cite "Unif. R. La. Ct. App. 4-7"
+  }
+  edge-writ-ruling-denied "Writ denied" -> writ-denied {
+    authority cite "Unif. R. La. Ct. App. 4-7"
+  }
+}
+
+terminal time-barred: "Appeal delay missed" outcome [loss, dismissal] cite "La. C.C.P. art. 2121"
+{
+  note "An appeal is taken by an order obtained within the delay allowed (La. C.C.P. art. 2121); a suspensive appeal after the thirty-day delay of La. C.C.P. art. 2123 is untimely. The devolutive delay (La. C.C.P. art. 2087) is not vendored."
+}
+
+terminal appeal-abandoned: "Appeal dismissed as abandoned" outcome [loss, dismissal] cite "Unif. R. La. Ct. App. 2-8.6"
+{
+  note "If the appellant files no brief in time, the clerk notifies the appellant that the appeal is subject to dismissal 30 days thereafter; with no brief within 30 days after that notice the appeal is subject to dismissal as abandoned, and the appellee's brief is due within 20 days from the due date shown on the notice (Unif. R. La. Ct. App. 2-8.6)."
+}
+
+terminal affirmed: "Affirmed" outcome [loss, final] cite "La. C.C.P. art. 2164"
+{
+  note "Review in the Louisiana Supreme Court is by writ under the Louisiana Constitution and Supreme Court Rule X, neither vendored."
+}
+
+terminal reversed: "Reversed or amended" outcome [win] cite "La. C.C.P. art. 2164"
+{
+  note "Costs may be taxed against any party as the court considers equitable (La. C.C.P. art. 2164)."
+}
+
+terminal remanded: "Remanded" outcome [remand] cite "La. C.C.P. art. 2164"
+{
+  note "The case returns to the trial court (lit/la-district-court)."
+}
+
+terminal appeal-dismissed: "Appeal dismissed" outcome [loss, dismissal] cite "Unif. R. La. Ct. App. 2-8.1"
+{
+  note "Motions to dismiss or remand are submitted without oral argument unless the court fixes them for argument (Unif. R. La. Ct. App. 2-8.1)."
+}
+
+terminal rehearing-granted: "Rehearing granted" outcome [procedural] cite "Unif. R. La. Ct. App. 2-18.5"
+{
+  note "When rehearing is granted, the case is submitted, with or without oral argument, as the court orders (Unif. R. La. Ct. App. 2-18.5); the resubmission is not modeled."
+}
+
+terminal decision-final: "Decision stands" outcome [final] cite "Unif. R. La. Ct. App. 2-18.6"
+{
+  note "Another application for rehearing is not considered unless the applicant has not been granted a rehearing or the court expressly allows it (Unif. R. La. Ct. App. 2-18.6). Supreme Court review is not modeled: its rules and the Constitution are not vendored."
+}
+
+terminal writ-granted: "Writ granted" outcome [win] cite "Unif. R. La. Ct. App. 4-7"
+{
+  note "The ruling complained of is acted on in the court's supervisory jurisdiction (Unif. R. La. Ct. App. 4-7)."
+}
+
+terminal writ-denied: "Writ denied" outcome [loss] cite "Unif. R. La. Ct. App. 4-7"
+{
+  note "The clerk transmits the disposition to the applicant, the respondents, the trial judge and the trial-court clerk (Unif. R. La. Ct. App. 4-6)."
+}

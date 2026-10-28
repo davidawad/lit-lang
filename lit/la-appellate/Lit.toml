@@ -1,0 +1,66 @@
+# Civil appeals to the Louisiana Courts of Appeal under the Louisiana Code
+# of Civil Procedure, as published by the Legislature on legis.la.gov and
+# retrieved on October 27, 2026 after the 2026 Regular Session
+# (sources/la-appellate/la-ccp.txt: only the articles this package cites),
+# and the Uniform Rules of Louisiana Courts of Appeal with amendments
+# effective as of July 1, 2026. Computation of time is La. C.C.P. art.
+# 5059, which is not vendored, and core has no Louisiana judicial
+# calendar, so the periods are stated in notes, not encoded as counted
+# deadlines. What the vendored text does not hold (the devolutive appeal
+# delay, art. 2087; the return day, art. 2125; the Louisiana Constitution,
+# art. V; the Louisiana Supreme Court Rules, Rule X) is named in a note,
+# never cited. The trial-court graph is lit/la-district-court.
+[package]
+name = "la-appellate-civil"
+version = "0.1.0"
+language = 1
+pack_id = "la-appellate-civil"
+forum = "la-appellate"
+authority = "StateRule"
+jurisdiction_id = "louisiana"
+title = "Louisiana Courts of Appeal, civil"
+description = "Civil appeals and supervisory writs in the Louisiana Courts of Appeal under the Code of Civil Procedure and the Uniform Rules of Louisiana Courts of Appeal, as far as the vendored text states: appealable judgments, the order of appeal and the suspensive appeal delay, the record, briefing periods and page limits, abandonment, oral argument, decision, rehearing, and writ applications."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "Louisiana Courts of Appeal (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.la-ccp]
+title = "Louisiana Code of Civil Procedure, articles 1841, 2083, 2121, 2123, 2127 and 2164, as published on legis.la.gov on October 27, 2026"
+url = "https://legis.la.gov/Legis/Laws_Toc.aspx?folder=68&level=Parent"
+path = "sources/la-appellate/la-ccp.txt"
+path_sha256 = "ebdc94a5fcf7cc7ddfe49781f6fb12b8f4412b5d66f6aed3603e25d623c73373"
+as_of = "2026-10-27"
+cite_prefixes = ["La. C.C.P. art."]
+section_heading = "La. C.C.P. art. {n}"
+
+[sources.la-urca]
+title = "Uniform Rules of Louisiana Courts of Appeal (as amended, with amendments effective as of July 1, 2026)"
+url = "https://www.la-fcca.org/clerks_office/UniformRulesoCtsofAppeal"
+path = "sources/la-appellate/la-uniform-rules-courts-of-appeal-sectioned.txt"
+path_sha256 = "fd58ac4ae45ac05c6ef162914d19826689f9d1f19da5a61538d33be1751fc491"
+sha256 = "2a99c1755c07ab9e380ecb51e0e97207dfb8454b4ab75d17b2c57f1e83601b63"
+as_of = "2026-07-01"
+
+[[cite_syntax.rules]]
+prefixes = ["Unif. R. La. Ct. App. 1-"]
+heading = "Rule 1-{}"
+source = "la-urca"
+
+[[cite_syntax.rules]]
+prefixes = ["Unif. R. La. Ct. App. 2-"]
+heading = "Rule 2-{}"
+source = "la-urca"
+
+[[cite_syntax.rules]]
+prefixes = ["Unif. R. La. Ct. App. 4-"]
+heading = "Rule 4-{}"
+source = "la-urca"

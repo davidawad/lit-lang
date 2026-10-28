@@ -1,0 +1,148 @@
+module id-supreme-appellate.appeal
+
+// Civil appeals from the Idaho district courts to the Supreme Court of
+// Idaho, and from the Idaho Court of Appeals on assignment, from the
+// applicant's (appellant's) side. Every period below is stated in a note,
+// not counted: time is computed under I.A.R. 22, which excludes the
+// trigger day and rolls a last day falling on a Saturday, Sunday or
+// non-judicial day under Idaho Code § 1-1607 to the next day that is none
+// of these; lit/core has no counting rule for it. A failure to file a
+// notice of appeal or cross-appeal, or a petition for rehearing, within
+// the time limits is jurisdictional; a failure to take any other step in
+// time is not, but may draw a sanction including dismissal (I.A.R. 21).
+// The earlier outline asked for a leading appealability decision; none is
+// named and no reporter text is vendored, so none is cited. It bound
+// briefing to I.A.R. 35 (content of briefs), argument to I.A.R. 36
+// (preparation of briefs) and the remittitur to I.A.R. 46 (extensions of
+// time); they are bound here to I.A.R. 34, 37 and 38.
+/// The first brief a party files: no more than 14,000 words, headings,
+/// footnotes and quotations included, with a certificate stating the
+/// count; a prisoner's handwritten first brief is limited to 50 pages
+/// instead (I.A.R. 34(b)(1), (3), (4)).
+limit principal-brief { words <= 14_000 cite "I.A.R. 34(b)(1)" } cite "I.A.R. 34(b)(1)"
+/// A reply brief: no more than 7,000 words (I.A.R. 34(b)(1)).
+limit reply-brief { words <= 7_000 cite "I.A.R. 34(b)(1)" } cite "I.A.R. 34(b)(1)"
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "I.A.R. 14(a)"
+{
+  note "An appeal as of right from the district court is taken only by physically filing a notice of appeal with the clerk of the district court within 42 days from the date of the clerk's filing stamp on the appealable judgment or order (I.A.R. 14(a)). A timely motion that could affect the findings, conclusions or judgment, other than an I.R.C.P. 60 motion or one regarding costs or attorney fees, terminates the time, which runs again from the filing stamp on the order deciding it (I.A.R. 14(a)). A cross-appeal is filed within the 42 days or within 21 days after the original notice of appeal is filed, whichever is later (I.A.R. 15(b)). The filing fee for an appeal in a civil case other than habeas corpus or post-conviction relief, and for a cross-appeal in one, is $94.00, collected by the district court clerk (I.A.R. 23(a), (b)). The appellant pays the estimated clerk's record fee on filing the notice or within three working days (I.A.R. 27(c))."
+  edge-notice-filed-appealability "Notice timely filed" -> appealability {
+    authority cite "I.A.R. 14(a)"
+  }
+  edge-notice-filed-untimely "Notice filed out of time" -> dismissed-untimely {
+    authority cite "I.A.R. 21"
+  }
+}
+
+terminal dismissed-untimely: "Dismissed as untimely" outcome [loss, dismissal] cite "I.A.R. 21"
+{
+  note "A notice of appeal not physically filed within the time limits is jurisdictional and causes automatic dismissal, on a party's motion or the Supreme Court's own initiative (I.A.R. 21)."
+}
+
+decision appealability: "Appealable judgment or order" by court cite "I.A.R. 11(a)"
+{
+  note "An appeal as of right lies from a district court's final judgment as defined in I.R.C.P. 54(a), a partial judgment certified final under I.R.C.P. 54(b), and the other judgments and orders I.A.R. 11(a) lists; a copy is attached to the notice of appeal (I.A.R. 11). An interlocutory order may be appealed only by permission: a motion to the district court within 14 days from its entry, then a motion to the Supreme Court within 14 days from the order approving or disapproving it (I.A.R. 12(b), (c))."
+  edge-appealability-record "Appealable: record prepared" -> record-assembled {
+    authority cite "I.A.R. 11(a)"
+  }
+  edge-appealability-dismissed "Not appealable" -> dismissed-jurisdiction {
+    authority cite "I.A.R. 11(a)"
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed for lack of an appealable order" outcome [loss, dismissal] cite "I.A.R. 11(a)"
+{
+  note "Outcome from the applicant's side: no appeal as of right lies (I.A.R. 11), and no appeal by permission was accepted (I.A.R. 12(d))."
+}
+
+state record-assembled: "Record and transcript prepared and filed" by office cite "I.A.R. 29"
+{
+  note "The district court clerk prepares the clerk's record and has it ready for service within 28 days of the filing of the notice of appeal (I.A.R. 27(d)). The reporter's transcript is due within 30 days of the reporter's notice from the Supreme Court if estimated under 100 pages, within 63 days if between 100 and 500 pages, and on the schedule the Court sets for a longer one (I.A.R. 24(e)). After settlement of the transcript and record, the district court clerk files the electronic copies with the Clerk of the Supreme Court within 7 days, and the Clerk notifies the parties of the filing date and when briefs are due (I.A.R. 29(b))."
+  edge-record-assembled-briefing "Record filed: briefing begins" -> briefing {
+    authority cite "I.A.R. 29(b)"
+  }
+}
+
+state briefing: "Briefing" by applicant cite "I.A.R. 34(c)"
+{
+  note "The appellant's brief is filed within 35 days of the filing of the reporter's transcript and the clerk's record with the Supreme Court; the respondent's and cross-appellant's brief within 28 days after service of the appellant's brief; any cross-respondent's brief within 28 days after the cross-appellant's brief; any reply brief within 21 days after service of the respondent's brief (I.A.R. 34(c)). A motion to extend a brief's time is made no later than its due date, supported by affidavit; extensions are not favored (I.A.R. 34(d))."
+  edge-briefing-argument "Briefs filed: case assigned and calendared" -> argument {
+    authority cite "I.A.R. 108"
+  }
+}
+
+decision argument: "Assignment, argument or submission on the briefs" by court cite "I.A.R. 37(a)"
+{
+  note "The Supreme Court may assign the case to the Court of Appeals, save the cases I.A.R. 108(a) reserves to it (I.A.R. 108). Oral argument is held in every appeal unless the parties stipulate, with the Court's approval, to submit on the briefs, or the Court orders submission on the briefs, to which any party may file a written objection within 21 days of the order (I.A.R. 37(a), 108(b)). Each side has 30 minutes unless the Court extends or shortens it (I.A.R. 37(b)). A party who filed no brief may not argue (I.A.R. 37(e))."
+  edge-argument-decision "Argued or submitted" -> decision-issued { authority cite "I.A.R. 37(a)" }
+}
+
+decision decision-issued: "Opinion filed" by court cite "I.A.R. 38(a)"
+{
+  note "The filing of an opinion is its announcement (I.A.R. 38(a)); the Court of Appeals may reverse, affirm or modify the judgment, direct the judgment to be entered, or order a new trial or further proceedings (I.A.R. 112). Within 14 days of the filing and announcement of the opinion, whether or not rehearing or review is sought, a party claiming costs files and serves a memorandum of costs, or costs are waived; objections are due no later than 14 days after its service (I.A.R. 40(c), (d))."
+  edge-decision-issued-rehearing "Opinion announced: rehearing or review may be sought" -> rehearing-window {
+    authority cite "I.A.R. 42(a)"
+  }
+}
+
+decision rehearing-window: "Rehearing or review sought" by applicant cite "I.A.R. 42(a)"
+{
+  note "A petition for rehearing is physically filed with the Clerk of the Supreme Court, with the filing fee, within 21 days after the filing date of the opinion, and served on all parties; a modified opinion opens another 21 days; no response is made unless the Court directs (I.A.R. 42(a)). The fee is $71.00 except in criminal, habeas corpus and post-conviction cases (I.A.R. 23(a)). The supporting brief is filed within 14 days of the petition (I.A.R. 42(b)). Rehearing of a Court of Appeals opinion is sought from that court in the same manner and time (I.A.R. 116)."
+  edge-rehearing-window-petition "Petition for rehearing filed" -> rehearing-ruling {
+    authority cite "I.A.R. 42(a)"
+  }
+  edge-rehearing-window-review "Court of Appeals opinion: petition for review" -> further-review {
+    authority cite "I.A.R. 118(a)"
+  }
+  edge-rehearing-window-none "No petition: opinion becomes final" -> mandate-issued {
+    authority cite "I.A.R. 38(b)"
+  }
+}
+
+decision rehearing-ruling: "Rehearing decided" by court cite "I.A.R. 42(d)"
+{
+  note "The Clerk serves the order granting or denying rehearing on all parties; an order granting it may set the issues to be reheard and directs the time and order of briefs (I.A.R. 42(d)), and argument on rehearing is scheduled as on the merits (I.A.R. 42(e))."
+  edge-rehearing-ruling-granted "Rehearing granted" -> rehearing-granted {
+    authority cite "I.A.R. 42(e)"
+  }
+  edge-rehearing-ruling-denied "Rehearing denied" -> mandate-issued {
+    authority cite "I.A.R. 38(b)"
+  }
+}
+
+terminal rehearing-granted: "Rehearing granted; opinion on rehearing" outcome [appeal] cite "I.A.R. 42(e)"
+{
+  note "Modeled as an exit; in practice the appeal returns to argument and a new opinion, which becomes final 21 days after its announcement (I.A.R. 38(b))."
+}
+
+decision further-review: "Petition for review by the Supreme Court" by court cite "I.A.R. 118(a)"
+{
+  note "A party aggrieved by a Court of Appeals opinion or order may physically file a petition for review with the Clerk of the Supreme Court within 21 days after its announcement, or after an order denying rehearing or an opinion on rehearing; rehearing need not be sought first. The supporting brief is filed with the petition or within 14 days after, and the petition is processed as a petition for rehearing under I.A.R. 42 (I.A.R. 118(a)). Review is discretionary and granted only for special and important reasons, on a majority of the Justices (I.A.R. 118(b))."
+  edge-further-review-denied "Review denied" -> review-denied { authority cite "I.A.R. 118(b)" }
+  edge-further-review-granted "Review granted" -> review-granted { authority cite "I.A.R. 118(b)" }
+}
+
+terminal review-denied: "Review denied" outcome [loss] cite "I.A.R. 118(b)"
+{
+  note "Outcome from the applicant's side: the Court of Appeals opinion stands, and its remittitur issues under I.A.R. 38 (I.A.R. 122)."
+}
+
+terminal review-granted: "Review granted" outcome [appeal] cite "I.A.R. 122"
+{
+  note "The assignment to the Court of Appeals terminates and no remittitur issues on its opinion; the Supreme Court decides on the original briefs unless it orders more, then enters its own opinion and remittitur (I.A.R. 118, 122)."
+}
+
+state mandate-issued: "Opinion final: remittitur issued" by court cite "I.A.R. 38(c)"
+{
+  note "An opinion becomes final 21 days after the last of its announcement, the announcement of an opinion on rehearing, or the announcement of a modified opinion without rehearing (I.A.R. 38(b)). The Clerk then issues and files the remittitur with the district court, which complies forthwith with the opinion's directive; taxed costs and fees are included if determined, but do not delay it (I.A.R. 38(c), (d))."
+  edge-mandate-issued-final "Remittitur filed in the district court" -> final-appellate {
+    authority cite "I.A.R. 38(c)"
+  }
+}
+
+terminal final-appellate: "Appellate judgment final" outcome [final] cite "I.A.R. 38(c)"
+{
+  note "The district court complies with the directive of the final opinion (I.A.R. 38(c))."
+}

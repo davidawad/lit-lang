@@ -1,0 +1,41 @@
+# Civil appeals to the Supreme Court of Idaho, and cases it assigns to the
+# Idaho Court of Appeals, under the Idaho Appellate Rules, as far as the
+# vendored text states: the rules as published on the Idaho Supreme
+# Court's rules page (page dated 2026-07-01, amendments incorporated on
+# their effective dates; sources/id-supreme). Time is computed under I.A.R.
+# 22, whose non-judicial days are those of Idaho Code § 1-1607 (not
+# vendored); lit/core has no counting rule for it, so the periods are
+# stated in notes, not encoded as counted deadlines. The trial-court side
+# is lit/id-district.
+[package]
+name = "id-supreme-appellate"
+version = "0.1.0"
+language = 1
+pack_id = "id-supreme-appellate"
+forum = "id-supreme"
+authority = "StateRule"
+jurisdiction_id = "idaho"
+title = "Supreme Court of Idaho and Idaho Court of Appeals, civil appeals"
+description = "Civil appeals under the Idaho Appellate Rules, as far as the vendored text states: appealable judgments and orders, the 42-day notice of appeal and its jurisdictional effect, the cross-appeal, the filing fee, the clerk's record and reporter's transcript, the briefs and their word limits, assignment to the Court of Appeals, submission on the briefs and oral argument, opinions and rehearing, petitions for review by the Supreme Court, costs, and finality and the remittitur."
+in_force = "2026-07-01"
+known_at = "2026-10-28"
+unknown_before = "2026-07-01"
+jurisdiction = "Supreme Court of Idaho; Idaho Court of Appeals"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.id-iar]
+title = "Idaho Appellate Rules, as published on the Idaho Supreme Court rules page (page dated 2026-07-01)"
+url = "https://isc.idaho.gov/rules-procedure/iar"
+path = "sources/id-supreme/iar-sectioned.txt"
+path_sha256 = "b98cd1e96172263e1b994535e8b5a3250c13af10b95a0e2f5e6c52f55969f18e"
+sha256 = "2f02140390fc0a619208872c1128fc132c8f8908f17235d601bc0c224dcfb3c0"
+as_of = "2026-07-01"
+cite_prefixes = ["I.A.R."]
+section_heading = "I.A.R. {n}"

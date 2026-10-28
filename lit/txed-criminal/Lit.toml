@@ -1,0 +1,56 @@
+# The U.S. District Court for the Eastern District of Texas's local
+# criminal rules (Local Rules CR-1 to CR-59) as a local-rule layer over
+# lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it declares only the
+# periods and limits the local criminal rules themselves state and
+# re-encodes no FRCrimP, Speedy Trial Act or FRAP 4(b) period (one source
+# of truth: lit/frcrimp). Each period is counted under FRCrimP 45(a),
+# which governs "any local rule", so each deadline names `forum frcrimp`.
+# The rules are the consolidated edition the court serves as current
+# ("Consolidated Local Rules as of February 9, 2026", page header "Local
+# Rules Effective December 1, 2025"; sources/txed), which incorporates
+# General Orders 25-07 and 26-02, so in_force is that date; earlier
+# editions are not vendored, so a query before it is a hole in the
+# corpus. General Order 26-08 (September 21, 2026) amends only the civil
+# rule CV-3(d). The court's Speedy Trial Act plan (18 U.S.C. § 3165) is
+# not vendored. An appeal goes to the Fifth Circuit under lit/frcrimp's
+# FRAP 4(b) period and lit/ca5.
+[package]
+name = "txed-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "txed-criminal-local-rules"
+forum = "txed-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Eastern District of Texas: Local Criminal Rules"
+description = "The U.S. District Court for the Eastern District of Texas's local criminal rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the motion response, reply and sur-reply periods and page limits, transcript redaction, the removal of exhibits, and objections to magistrate judge rulings."
+in_force = "2026-02-09"
+known_at = "2026-10-28"
+unknown_before = "2026-02-09"
+jurisdiction = "U.S. District Court for the Eastern District of Texas (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "txed-cr"
+issuer = "U.S. District Court for the Eastern District of Texas"
+date = "2026-02-09"
+designation = "Local Rules, Section II: Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.txed-cr]
+title = "Local Rules of the United States District Court for the Eastern District of Texas, Section II: Criminal Rules (consolidated as of February 9, 2026)"
+url = "https://www.txed.uscourts.gov/?q=node/14056/attachment/newest"
+path = "sources/txed/txed-local-rules-2026-02-09-sectioned.txt"
+path_sha256 = "5939a12e1e72c7c68bd78a058b70e228d793dfcf4d939f0e83cf2cd7dcd602fc"
+sha256 = "ec191586d6320a5ea48672cdc47378327a47e3150692a2a6847fe71d3ec3263e"
+as_of = "2026-02-09"
+cite_prefixes = ["E.D. Tex. Local Rule CR-", "Local Rule CR-"]
+section_heading = "CR-{n}"

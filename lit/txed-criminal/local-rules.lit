@@ -1,0 +1,196 @@
+module txed-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The Eastern District of Texas's own criminal periods, counted under the
+// criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here. A dispositive motion is
+// one which could, if granted, result in the dismissal of an indictment or
+// counts therein or the exclusion of evidence (Local Rule CR-47(a)).
+//
+// The objection to a magistrate judge's order or recommendation is FRCrimP
+// 59's period and stays in lit/frcrimp; this layer adds only the response
+// to an objection and the page limits (Local Rule CR-59(b), (c)).
+//
+// Conditions that are not deadlines from an event stay in notes: sealed
+// grand jury subpoenas are kept by the clerk for three years from the date
+// the witness is ordered to appear (CR-6(b)); the arraignment may be held
+// with the post-indictment initial appearance (CR-10); after the FRCrimP
+// 16.1 discovery conference the parties notify the court of the time
+// agreed for the expert disclosures of FRCrimP 16(a)(1)(G)(i) and
+// 16(b)(1)(C)(i) (CR-16.1); attorneys may converse with jurors after the
+// verdict only with leave (CR-24(a)); every motion carries a certificate of
+// conference unless it is of a kind CR-47(a)(3) exempts; an electronically
+// filed transcript is available only at the clerk's office for ninety days
+// after it is filed (CR-49.1(b)(1), (2)), and its restrictions are lifted
+// after that period ends (CR-49.1(b)(6), (7)). Filing, service and sealing
+// (CR-49) state no period. General Order 26-02 states CR-55(c) with words
+// the consolidated text omits (exhibits "outside of the court's Electronic
+// Filing System", disposed of under the retention provisions on the
+// court's website); the 30-day removal period is the same in both.
+//
+// The earlier E.D. Tex. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Brady v. Maryland, Barker v. Wingo, Zedner v.
+// United States, Boykin v. Alabama, Missouri v. Frye, Jackson v. Virginia,
+// United States v. Booker, Roe v. Flores-Ortega, Garza v. Idaho) are
+// FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// A dispositive motion, or a response to one: at most thirty pages,
+/// excluding attachments, unless leave of court is first obtained (E.D.
+/// Tex. Local Rule CR-47(a)(1)(A)).
+limit dispositive-motion {
+  pages <= 30 cite "E.D. Tex. Local Rule CR-47(a)"
+} cite "E.D. Tex. Local Rule CR-47(a)"
+
+/// A reply brief on a dispositive motion: at most ten pages, excluding
+/// attachments (E.D. Tex. Local Rule CR-47(a)(1)(A)).
+limit dispositive-reply {
+  pages <= 10 cite "E.D. Tex. Local Rule CR-47(a)"
+} cite "E.D. Tex. Local Rule CR-47(a)"
+
+/// A non-dispositive motion, or a response to one: at most fifteen pages,
+/// excluding attachments, unless leave of court is first obtained (E.D.
+/// Tex. Local Rule CR-47(a)(1)(B)).
+limit nondispositive-motion {
+  pages <= 15 cite "E.D. Tex. Local Rule CR-47(a)"
+} cite "E.D. Tex. Local Rule CR-47(a)"
+
+/// A reply brief on a non-dispositive motion: at most five pages,
+/// excluding attachments (E.D. Tex. Local Rule CR-47(a)(1)(B)).
+limit nondispositive-reply {
+  pages <= 5 cite "E.D. Tex. Local Rule CR-47(a)"
+} cite "E.D. Tex. Local Rule CR-47(a)"
+
+/// An objection to a magistrate judge's order on a non-dispositive matter,
+/// or a response to one: at most five pages (E.D. Tex. Local Rule
+/// CR-59(b)).
+limit magistrate-order-objection {
+  pages <= 5 cite "E.D. Tex. Local Rule CR-59(b)"
+} cite "E.D. Tex. Local Rule CR-59(b)"
+
+/// An objection to a magistrate judge's report and recommendation, or a
+/// response to one: at most eight pages (E.D. Tex. Local Rule CR-59(c)).
+limit recommendation-objection {
+  pages <= 8 cite "E.D. Tex. Local Rule CR-59(c)"
+} cite "E.D. Tex. Local Rule CR-59(c)"
+
+/// A dispositive motion is served (E.D. Tex. Local Rule CR-47(b)(1)).
+event DispositiveMotionServed() paper dispositive-motion
+/// A non-dispositive motion is served (E.D. Tex. Local Rule CR-47(b)(1)).
+event NondispositiveMotionServed() paper nondispositive-motion
+/// The response to an opposed motion is served (E.D. Tex. Local Rule
+/// CR-47(b)(2)).
+event ResponseServed()
+/// A reply brief is served (E.D. Tex. Local Rule CR-47(b)(2)).
+event ReplyServed()
+/// A transcript of criminal proceedings is filed in CM/ECF (E.D. Tex.
+/// Local Rule CR-49.1(b)(3), (5)).
+event TranscriptFiled()
+/// The transcript is delivered to the clerk (E.D. Tex. Local Rule
+/// CR-49.1(b)(4)).
+event TranscriptDelivered()
+/// The case is finally disposed of (E.D. Tex. Local Rule CR-55(c)).
+event FinalDisposition()
+/// A party is served with another party's objection to a magistrate
+/// judge's order on a non-dispositive matter (E.D. Tex. Local Rule
+/// CR-59(b)).
+event MagistrateObjectionServed() paper magistrate-order-objection
+
+/// E.D. Tex. Local Rule CR-47(b)(1): a party opposing a motion has
+/// fourteen days from the date the motion was served to serve and file a
+/// response and any supporting documents, after which the court considers
+/// the motion submitted; any party may move for an order lengthening or
+/// shortening the period. This is the period for a dispositive motion.
+deadline dispositive-response-period: 14.days after DispositiveMotionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Tex. Local Rule CR-47(b)"
+{
+  forum frcrimp
+}
+
+/// E.D. Tex. Local Rule CR-47(b)(1): the same fourteen-day response
+/// period, for a non-dispositive motion.
+deadline nondispositive-response-period: 14.days after NondispositiveMotionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Tex. Local Rule CR-47(b)"
+{
+  forum frcrimp
+}
+
+/// E.D. Tex. Local Rule CR-47(b)(2): unless the presiding judge directs
+/// otherwise, the movant on an opposed motion may serve and file a reply
+/// brief within seven days from the date the response is served.
+deadline reply-period: 7.days after ResponseServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Tex. Local Rule CR-47(b)"
+{
+  forum frcrimp
+}
+
+/// E.D. Tex. Local Rule CR-47(b)(2): a sur-reply responding to issues
+/// raised in the reply may be served and filed within seven days from the
+/// date the reply is served; absent leave, no further submissions are
+/// allowed.
+deadline sur-reply-period: 7.days after ReplyServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Tex. Local Rule CR-47(b)"
+{
+  forum frcrimp
+}
+
+/// E.D. Tex. Local Rule CR-49.1(b)(3): within seven days of the filing of
+/// the transcript in CM/ECF, each party wishing to redact it files a
+/// Notice of Intent to Request Redaction; if none is filed, the court
+/// assumes no redaction of personal data identifiers is necessary.
+deadline redaction-notice: 7.days after TranscriptFiled() counted_by frcrimp45 cite "E.D. Tex. Local Rule CR-49.1(b)"
+{
+  forum frcrimp
+}
+
+/// E.D. Tex. Local Rule CR-49.1(b)(4): a party requesting redaction
+/// submits to the court reporter or transcriber and files a statement of
+/// where the personal data identifiers appear within twenty-one days of
+/// the transcript's delivery to the clerk, or longer if the court orders.
+deadline redaction-statement: 21.days after TranscriptDelivered() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Tex. Local Rule CR-49.1(b)"
+{
+  forum frcrimp
+}
+
+/// E.D. Tex. Local Rule CR-49.1(b)(5): the court reporter or transcriber
+/// performs the requested redactions and files a redacted transcript
+/// within thirty-one days of the filing of the transcript, or longer if
+/// the court orders.
+deadline redacted-transcript: 31.days after TranscriptFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Tex. Local Rule CR-49.1(b)"
+{
+  forum frcrimp
+}
+
+/// E.D. Tex. Local Rule CR-55(c): the party offering an exhibit removes
+/// it within 30 days after final disposition of the case; an exhibit
+/// remaining longer may be disposed of by the clerk.
+deadline exhibit-removal: 30.days after FinalDisposition() counted_by frcrimp45 cite "E.D. Tex. Local Rule CR-55(c)"
+{
+  forum frcrimp
+}
+
+/// E.D. Tex. Local Rule CR-59(b): a party may respond to another party's
+/// objection to a magistrate judge's non-dispositive order within fourteen
+/// days after being served with a copy; the court need not await the
+/// response before ruling.
+deadline magistrate-objection-response: 14.days after MagistrateObjectionServed() counted_by frcrimp45 cite "E.D. Tex. Local Rule CR-59(b)"
+{
+  forum frcrimp
+}

@@ -32,3 +32,10 @@
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 ccbabd9124736d63735b0da3783071dc35caed4b01b1c99f2b7f187f23bd4ce7. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `txed/original/txed-go-25-07.pdf` as served (sha256 73e9a801d5f20a718aedf7198f992288f5cc2995812ebdd5e5aaf268c5267d08); extraction sha256 ccbabd9124736d63735b0da3783071dc35caed4b01b1c99f2b7f187f23bd4ce7.
+
+### `txed/txed-local-rules-2026-02-09-sectioned.txt` — E.D. Tex. Local Rules, criminal rules sectioned
+
+- Derived in the pod (lg-gddt.14) from `txed/txed-local-rules-2026-02-09.txt` (extract sha256 32f092439a7535a7101728bf7061b9a972dc26e9a869159cb9cfbd041dbf9332); nothing fetched. In the body of Section II: Criminal Rules (after the table of contents, before Section III: Attorneys), one marker line `## CR-<n>` is inserted before each rule's own heading line `LOCAL RULE CR-<n> ...` (CR-1 through CR-59, 10 rules). The civil, attorney, admiralty and patent parts carry no markers. Every other line is the extract unchanged, so deleting the `## CR-` lines gives back the extract byte for byte.
+- Edition: as the extract ("Consolidated Local Rules as of February 9, 2026"). General Order 26-02 states CR-55(c) with wording the consolidated text omits; its 30-day exhibit-removal period is the same.
+- Criminal forum (lg-gddt): txed-criminal.
+- Sectioned sha256 5939a12e1e72c7c68bd78a058b70e228d793dfcf4d939f0e83cf2cd7dcd602fc (the `path_sha256` pinned by `lit/txed-criminal/Lit.toml`).

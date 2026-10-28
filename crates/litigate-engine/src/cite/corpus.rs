@@ -339,10 +339,8 @@ Rule 13 — Counterclaim and Crossclaim
     #[test]
     fn unsectioned_eighth_circuit_iops_resolve_outline_cites() {
         let text = include_str!("../../../../sources/ca8/ca8-iops.txt");
-        let corpus = SourceCorpus::from_files([(
-            "sources/ca8/ca8-iops.txt".to_string(),
-            text.to_string(),
-        )]);
+        let corpus =
+            SourceCorpus::from_files([("sources/ca8/ca8-iops.txt".to_string(), text.to_string())]);
 
         for heading in ["IOP IV", "IOP IV.D", "IOP IV.F", "IOP Appendix A"] {
             let hits = corpus.lookup_all(heading);

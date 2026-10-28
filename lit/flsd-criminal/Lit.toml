@@ -1,0 +1,47 @@
+# The Southern District of Florida's criminal Local Rules (Rules 88.1
+# through 88.11) as a local-rule layer over lit/frcrimp (28 U.S.C. § 2071;
+# FRCrimP 57(a)): it declares only the periods those rules themselves
+# state and re-encodes no FRCrimP, Speedy Trial Act or FRAP period. Each
+# period is counted under FRCrimP 45(a), which governs "any local rule".
+# The rules are the 2025 Local Rules effective December 1, 2025
+# (sources/sd-fla). Federal habeas (Rule 88.2) is lit/habeas.
+[package]
+name = "flsd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "flsd-criminal-local-rules"
+forum = "flsd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Southern District of Florida: Local Rules (criminal)"
+description = "The Southern District of Florida's criminal Local Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): speedy trial status reports, the criminal motion period, the standard discovery schedule and expert disclosures, and the presentence interview and sentencing conference and notices."
+in_force = "2025-12-01"
+known_at = "2026-10-28"
+unknown_before = "2025-12-01"
+jurisdiction = "United States District Court, S.D. Florida (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+office = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "flsd-lr"
+issuer = "United States District Court for the Southern District of Florida"
+date = "2025-12-01"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.flsd-lr]
+title = "Local Rules of the United States District Court for the Southern District of Florida (2025 Local Rules effective December 1, 2025)"
+url = "https://www.flsd.uscourts.gov/sites/flsd/files/25-09-22%202025%20Local%20Rules%20effective%20120125%20-%20FINAL.pdf"
+path = "sources/sd-fla/local-rules-sectioned.txt"
+path_sha256 = "1c15c6ec3a46e94f03b3c8bfe18c8cda6e782e7da96b7898737aaf2d09e5a9cb"
+sha256 = "bac0fe34c01be93a05af039c967c903f0bd738503483a7aef56c55a93ac8f5df"
+as_of = "2025-12-01"
+cite_prefixes = ["S.D. Fla. L.R."]
+section_heading = "Rule {n}"

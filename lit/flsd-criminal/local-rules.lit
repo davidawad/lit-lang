@@ -1,0 +1,128 @@
+module flsd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Southern District's own criminal periods. A criminal motion follows
+// Local Rule 7.1 except 7.1(a)(3) and 7.1(b), carries a certificate of
+// conferral, and a motion needing evidentiary support a concise statement
+// of the material facts (88.9(a), (b)); proposed jury instructions name
+// their source (88.9(d)). Retained counsel's fees are not good cause to
+// withdraw after arraignment, and appearances state whether counsel is
+// retained for trial only or for trial and appeal (88.7(a), (b)): no
+// period. A defendant's request for the Standing Discovery Order is a
+// FRCrimP 16(a)(1)(A)-(F) request, and the government's Brady, Giglio and
+// other duties run under that order (88.10(a)-(n)). Discovery for a
+// pre-trial hearing other than a bail or detention hearing is made at least
+// forty-eight hours before it, and for a bail or detention hearing by its
+// start (88.10(o)(1)); the language has no hour unit, so the 48 hours stay
+// in this note, as do the duty magistrate judge's review of a criminal
+// complaint within the earlier of forty-eight hours after arrest or the
+// initial appearance (88.11). The conference "no later than fourteen (14)
+// days after a defendant's arraignment" (88.10(o)(6)) is FRCrimP 16.1(a)'s
+// own period and stays with lit/frcrimp. Petty offenses and collateral
+// forfeiture (88.3) and appointed counsel under the CJA plan (88.1) state
+// no period. The earlier outline's FRCrimP flow and its decisions belong to
+// lit/frcrimp and are removed here: no reporter text is vendored.
+/// The defendant's arraignment (S.D. Fla. L.R. 88.5, 88.9(c), 88.10(o)).
+event Arraigned()
+/// A party's written request for expert disclosure under FRCrimP
+/// 16(a)(1)(G)(i) or 16(b)(1)(C)(i) (S.D. Fla. L.R. 88.10(o)(3)(A)).
+event ExpertSummaryRequested()
+/// The date set for the commencement of trial (S.D. Fla. L.R.
+/// 88.10(o)(3)(B)).
+event TrialScheduled()
+/// A guilty plea or a guilty verdict is entered (S.D. Fla. L.R. 88.8(a)).
+event GuiltEntered()
+/// The date set for the sentencing hearing (S.D. Fla. L.R. 88.8(b)).
+event SentencingHearingScheduled()
+/// The date set for a post-trial hearing, a sentencing hearing included
+/// (S.D. Fla. L.R. 88.10(o)(4)).
+event PostTrialHearingScheduled()
+
+/// S.D. Fla. L.R. 88.5: within twenty-one days after arraignment, and
+/// every twenty-one days after that until trial or a plea, counsel for the
+/// government and each defendant file and serve a speedy trial status
+/// report (agreed and disputed excludable time, and the last day for trial
+/// under the court's Speedy Trial Plan). Only the first report is counted
+/// here; each later one falls twenty-one days after the one before.
+deadline speedy-trial-report-period: 21.days after Arraigned() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.5"
+{
+  forum frcrimp
+}
+
+/// S.D. Fla. L.R. 88.9(c): motions in criminal cases are filed and served
+/// within twenty-eight days from the arraignment of the defendant to whom
+/// the motion applies; a motion arising from a post-arraignment event
+/// within a reasonable time after the event.
+deadline criminal-motion-period: 28.days after Arraigned() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.9(c)"
+{
+  forum frcrimp
+}
+
+/// S.D. Fla. L.R. 88.10(o)(2): discovery in connection with trial is made
+/// not later than fourteen days after the arraignment, or at another time
+/// the court orders.
+deadline trial-discovery-period: 14.days after Arraigned() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.10(o)"
+{
+  forum frcrimp
+}
+
+/// S.D. Fla. L.R. 88.10(o)(3)(A): the initial written summary of expert
+/// testimony is provided within fourteen days of the written request, but
+/// need not be provided earlier than fourteen days after the arraignment.
+deadline expert-summary-period: 14.days after ExpertSummaryRequested() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.10(o)"
+{
+  forum frcrimp
+}
+
+/// S.D. Fla. L.R. 88.10(o)(3)(B)(i), (iii): the full FRCrimP 16(a)(1)(G)
+/// or 16(b)(1)(C) disclosure for testimony in a party's case-in-chief
+/// (the defendant's mental-condition testimony included) is made no later
+/// than twenty-one days before trial, but need not be made earlier than
+/// fourteen days after the arraignment.
+deadline expert-case-in-chief-disclosure-period: 21.days before TrialScheduled() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.10(o)"
+{
+  forum frcrimp
+}
+
+/// S.D. Fla. L.R. 88.10(o)(3)(B)(ii), (iv): the disclosure for expert
+/// testimony offered to counter the other side's timely disclosed expert
+/// testimony is made no later than seven days before trial.
+deadline expert-rebuttal-disclosure-period: 7.days before TrialScheduled() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.10(o)"
+{
+  forum frcrimp
+}
+
+/// S.D. Fla. L.R. 88.10(o)(4): discovery in connection with a post-trial
+/// hearing, a sentencing hearing included, is made not later than seven
+/// days before the hearing (the presentence report follows 88.8).
+deadline post-trial-discovery-period: 7.days before PostTrialHearingScheduled() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.10(o)"
+{
+  forum frcrimp
+}
+
+/// S.D. Fla. L.R. 88.8(a): within seven days after a guilty plea or
+/// verdict, defense counsel and the probation officer arrange the initial
+/// presentence interview.
+deadline presentence-interview-period: 7.days after GuiltEntered() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.8(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Fla. L.R. 88.8(b): counsel confer no later than seven days before
+/// the sentencing hearing on its anticipated length and the number of
+/// witnesses.
+deadline sentencing-conference-period: 7.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.8(b)"
+{
+  forum frcrimp
+}
+
+/// S.D. Fla. L.R. 88.8(b): a party anticipating a sentencing proceeding
+/// over one hour files and serves a notice of the witnesses and time
+/// needed, with a courtesy copy to Probation, no later than five days
+/// before it; any notice for enhancement of sentence or request for
+/// departure is filed in the same period.
+deadline sentencing-notice-period: 5.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Fla. L.R. 88.8(b)"
+{
+  forum frcrimp
+}

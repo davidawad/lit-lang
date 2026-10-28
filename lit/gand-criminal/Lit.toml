@@ -1,0 +1,47 @@
+# The Northern District of Georgia's Criminal Local Rules (LCrR) as a
+# local-rule layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it
+# declares only the periods those rules themselves state and re-encodes no
+# FRCrimP, Speedy Trial Act or FRAP period. Each period is counted under
+# FRCrimP 45(a), which governs "any local rule". The rules are the edition
+# the court lists as "Criminal Rules, Updated 04/02/2024"; the PDF carries
+# no edition date (sources/nd-ga), so 2024-04-02 is the listing date.
+[package]
+name = "gand-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "gand-criminal-local-rules"
+forum = "gand-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Northern District of Georgia: Criminal Local Rules"
+description = "The Northern District of Georgia's Criminal Local Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): nolo contendere tenders, the criminal motion period, reciprocal discovery, the pretrial conference, retained counsel's appearance and withdrawal, and objections to a magistrate judge's ruling."
+in_force = "2024-04-02"
+known_at = "2026-10-28"
+unknown_before = "2024-04-02"
+jurisdiction = "United States District Court, N.D. Georgia (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+office = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "gand-lcrr"
+issuer = "United States District Court for the Northern District of Georgia"
+date = "2024-04-02"
+designation = "Criminal Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.gand-lcrr]
+title = "Criminal Local Rules of the United States District Court for the Northern District of Georgia (listed as updated April 2, 2024)"
+url = "https://www.gand.uscourts.gov/sites/gand/files/local_rules/NDGARulesCR_3.pdf"
+path = "sources/nd-ga/ndga-criminal-local-rules-2024-04-02-sectioned.txt"
+path_sha256 = "ec91c1382ee1369aaed3c134e4f885d8592a3a900fefc4d7ce261440c849a0ae"
+sha256 = "7ef51f4faa42a6b3a298efaffddbd439a382b1d47ba1803d02f814447e74b8c8"
+as_of = "2024-04-02"
+cite_prefixes = ["N.D. Ga. LCrR"]
+section_heading = "LCrR {n}"

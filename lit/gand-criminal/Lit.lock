@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "gand-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:098f4c9d5d2f37693ef279f90d0bc4c094a271fe03f689e7c817ac1c8cd74d04"
+semantic = "sha256:91199386513d00f754d3f5749f238b63541329071787a198688ba95559f25ef6"
+texts = [
+    "gand-lcrr sources/nd-ga/ndga-criminal-local-rules-2024-04-02-sectioned.txt sha256:ec91c1382ee1369aaed3c134e4f885d8592a3a900fefc4d7ce261440c849a0ae",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

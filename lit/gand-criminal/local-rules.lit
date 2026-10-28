@@ -1,0 +1,114 @@
+module gand-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Northern District's own criminal periods. Arraignments are set under
+// the Speedy Trial Act and the court's Plan for Achieving Prompt
+// Disposition of Criminal Cases (LCrR 10.1(B)); the plan is the Act's and
+// stays with lit/frcrimp. The court tells the parties whether it accepts a
+// nolo contendere plea no later than fourteen days before trial (LCrR
+// 11.1(B)), a duty of the court, not a party's period. A magistrate judge
+// may extend the criminal motion period once, for fourteen days, for good
+// cause; failing to respond within fourteen days after the Court directs a
+// response means no opposition (LCrR 12.1(B)). The government makes Rule
+// 16 material and an inventory of seized items available at arraignment
+// (LCrR 16.1). The motion to withdraw is submitted to the judge fourteen
+// days after filing (LCrR 57.1(E)(2)(d)), a clerk's step. After an appeal
+// bond is revoked the defendant reports to the Marshal on the tenth day
+// after the clerk's notice, moved to Monday from a weekend and to the next
+// day from a holiday (LCrR 46.2(C)): the rule's own roll, not FRCrimP 45's,
+// so it stays in this note. Objections to a magistrate judge's report and
+// recommendation or order are filed within fourteen days of service (LCrR
+// 59(3)), FRCrimP 59(a) and (b)(2)'s own period, which stays with
+// lit/frcrimp; objections and responses are limited to twenty-five pages,
+// and a reply by leave to fifteen (LCrR 59(3)). The grand jury is drawn at
+// least forty days before its first day of service (LCrR 6.1), a court
+// administration step. The earlier outline's FRCrimP flow and its
+// decisions belong to lit/frcrimp and are removed here: no reporter text
+// is vendored.
+/// The defendant's arraignment (N.D. Ga. LCrR 12.1(B), 17.1(A)).
+event Arraigned()
+/// A tender of a nolo contendere plea is filed (N.D. Ga. LCrR 11.1(B)).
+event NoloTenderFiled()
+/// The date set for trial (N.D. Ga. LCrR 16.1).
+event TrialScheduled()
+/// Defense counsel is retained, or becomes associated with or substituted
+/// for counsel of record (N.D. Ga. LCrR 57.1(D)(1)(b)).
+event CounselRetained()
+/// An attorney's motion to withdraw is filed (N.D. Ga. LCrR 57.1(E)(2)).
+event WithdrawalMotionFiled()
+/// An attorney withdraws, dies, is removed or suspended, or otherwise
+/// ceases to act as attorney of record (N.D. Ga. LCrR 57.1(E)(5)).
+event AttorneyCeasedToAct()
+/// Objections to a magistrate judge's report and recommendation or order
+/// are served (N.D. Ga. LCrR 59(2), 59(3)).
+event ObjectionsServed()
+
+/// N.D. Ga. LCrR 11.1(B): the United States has seven days to respond to
+/// a tender of a nolo contendere plea.
+deadline nolo-response-period: 7.days after NoloTenderFiled() counted_by frcrimp45 cite "N.D. Ga. LCrR 11.1(B)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ga. LCrR 12.1(B): motions in criminal proceedings are filed within
+/// fourteen days after arraignment; to avoid waiver, pretrial matters are
+/// raised within this time (FRCrimP 12).
+deadline criminal-motion-period: 14.days after Arraigned() counted_by frcrimp45 cite "N.D. Ga. LCrR 12.1(B)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ga. LCrR 16.1: unless the Court orders otherwise, the defendant
+/// makes the discoverable materials the government requested available no
+/// later than twenty-one days before trial.
+deadline defense-discovery-period: 21.days before TrialScheduled() counted_by frcrimp45 cite "N.D. Ga. LCrR 16.1"
+{
+  forum frcrimp
+}
+
+/// N.D. Ga. LCrR 17.1(A)(1): in an Atlanta Division case with a not-guilty
+/// plea at arraignment, the magistrate judge holds a pretrial conference
+/// within fourteen days of the arraignment or at a later date as required.
+deadline pretrial-conference-period: 14.days after Arraigned() counted_by frcrimp45 cite "N.D. Ga. LCrR 17.1(A)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ga. LCrR 57.1(D)(1)(b): retained defense counsel files a notice of
+/// appearance within three days after being retained.
+deadline retained-appearance-period: 3.days after CounselRetained() counted_by frcrimp45 cite "N.D. Ga. LCrR 57.1(D)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ga. LCrR 57.1(E)(2)(b): the motion to withdraw states that the
+/// attorney gave the client fourteen days' prior notice of the intention
+/// to request permission to withdraw.
+deadline withdrawal-client-notice-period: 14.days before WithdrawalMotionFiled() counted_by frcrimp45 cite "N.D. Ga. LCrR 57.1(E)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ga. LCrR 57.1(E)(5): when an attorney ceases to act, the party
+/// must within twenty-one days, or before any further proceedings, notify
+/// the clerk of new counsel or of appearing pro se; failure is a default.
+deadline replacement-counsel-period: 21.days after AttorneyCeasedToAct() counted_by frcrimp45 cite "N.D. Ga. LCrR 57.1(E)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ga. LCrR 59(3): responses to objections may be filed within
+/// fourteen days from service of the objections.
+deadline objection-response-period: 14.days after ObjectionsServed() counted_by frcrimp45 cite "N.D. Ga. LCrR 59"
+{
+  forum frcrimp
+}
+
+/// N.D. Ga. LCrR 59(2)(b): if the objected-to order was oral, the parties
+/// file, within fourteen days after the objections are served and filed, a
+/// joint statement of how the issues arose and were decided.
+deadline oral-order-joint-statement-period: 14.days after ObjectionsServed() counted_by frcrimp45 cite "N.D. Ga. LCrR 59"
+{
+  forum frcrimp
+}

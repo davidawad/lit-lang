@@ -32,38 +32,37 @@ enum SettlementReport { ComplianceStatement, DismissalMotion }
 event SettlementDiscussionReported(paper: SettlementReport)
 
 /// RCFC Appendix J, the Patent Rules, supplementing the RCFC in every action
-/// under 28 U.S.C. § 1498(a) respecting patents (Rule 1(a)). Appendix J is
-/// not in the vendored corpus, so every cite stays a hole; the deadlines are
-/// in force as amended through July 27, 2026 (the vendored text's as-of
-/// date). Rule 1(b) lets the court modify them for complexity or good cause,
+/// under 28 U.S.C. § 1498(a) respecting patents (Rule 1(a)), vendored in
+/// sources/rcfc-appendices.txt (`PRCFC n`); the deadlines are in force as
+/// amended through July 27, 2026 (the vendored text's as-of date). Rule 1(b) lets the court modify them for complexity or good cause,
 /// the delegation each extendable one declares.
-rule duty patent-cascade cite ?("RCFC Appendix J") {
+rule duty patent-cascade cite "PRCFC 1" {
   /// Rule 3: the Joint Preliminary Status Report is due 49 days after the answer.
   deadline patent-jpsr-period: 49.days after AnswerFiled() counted_by rcfc6 delegable {
     to CaseOrder
     op set
-  } cite ?("RCFC Appendix J, Rule 3")
+  } cite "PRCFC 3"
 
   /// Rule 3: 98 days after the answer instead when the United States has moved
   /// under RCFC 14 to notify an interested third party.
   deadline patent-jpsr-noticed-period: 98.days after AnswerFiled() counted_by rcfc6 delegable {
     to CaseOrder
     op set
-  } cite ?("RCFC Appendix J, Rule 3")
+  } cite "PRCFC 3"
 
   /// Rule 4: the Preliminary Disclosure of Infringement Contentions is served
   /// 56 days after the answer.
   deadline infringement-contentions-period: 56.days after AnswerFiled() counted_by rcfc6 delegable {
     to CaseOrder
     op set
-  } cite ?("RCFC Appendix J, Rule 4")
+  } cite "PRCFC 4"
 
   /// Rule 6: the Preliminary Disclosure of Invalidity Contentions is served 56
   /// days after service of the infringement contentions.
   deadline invalidity-contentions-period: 56.days after InfringementContentionsServed() counted_by rcfc6 delegable {
     to CaseOrder
     op set
-  } cite ?("RCFC Appendix J, Rule 6")
+  } cite "PRCFC 6"
 
   /// Rule 9: the List of Proposed Claim Terms for Construction is due 42 days
   /// after any response to the invalidity contentions (Rule 8, the response,
@@ -71,33 +70,33 @@ rule duty patent-cascade cite ?("RCFC Appendix J") {
   deadline claim-terms-period: 42.days after InvalidityContentionsServed() counted_by rcfc6 delegable {
     to CaseOrder
     op set
-  } cite ?("RCFC Appendix J, Rule 9")
+  } cite "PRCFC 9"
 
   /// Rule 11: the Joint Claim Construction Chart is filed 35 days after the
   /// claim-term exchange.
   deadline joint-chart-period: 35.days after ClaimTermsExchanged() counted_by rcfc6 delegable {
     to CaseOrder
     op set
-  } cite ?("RCFC Appendix J, Rule 11")
+  } cite "PRCFC 11"
 
   /// Rule 13: claim-construction discovery closes 28 days after the Joint Claim
   /// Construction Appendix and Prehearing Statement is filed.
   deadline cc-discovery-period: 28.days after ClaimConstructionAppendixFiled() counted_by rcfc6 delegable {
     to CaseOrder
     op set
-  } cite ?("RCFC Appendix J, Rule 13")
+  } cite "PRCFC 13"
 
   /// Rule 14: the status conference follows the Joint Claim Construction
   /// Appendix within 7 days; the hearing is then set within 90 days.
   deadline cc-status-conference-period: 7.days after ClaimConstructionAppendixFiled() counted_by rcfc6 delegable {
     to CaseOrder
     op set
-  } cite ?("RCFC Appendix J, Rule 14")
+  } cite "PRCFC 14"
 
   /// Rule 16(a): the parties must hold a settlement discussion within 14 days
   /// after the Claim Construction Opinion and Order. The legacy pack marks it
   /// unextendable and records no delegation.
-  deadline settlement-discussion-period: 14.days after ClaimConstructionOrderEntered() counted_by rcfc6 cite ?("RCFC Appendix J, Rule 16(a)")
+  deadline settlement-discussion-period: 14.days after ClaimConstructionOrderEntered() counted_by rcfc6 cite "PRCFC 16(a)"
 
   /// Rule 17: "Within 7 days after each settlement discussion", a joint
   /// statement of compliance or a motion requesting that the case be
@@ -105,7 +104,7 @@ rule duty patent-cascade cite ?("RCFC Appendix J") {
   deadline settlement-statement-period: 7.days after SettlementDiscussionHeld() counted_by rcfc6 cite "PRCFC 17"
 }
 
-test "patent-jpsr-period: 49 days after AnswerFiled" cite ?("RCFC Appendix J, Rule 3") {
+test "patent-jpsr-period: 49 days after AnswerFiled" cite "PRCFC 3" {
   given AnswerFiled() on 2026-08-03
   expect deadline(patent-jpsr-period) == 2026-09-21
 }
@@ -116,7 +115,7 @@ test "patent-jpsr-period: Thanksgiving rolls to Friday" cite "RCFC 6(a)(1)(C)"
   expect deadline(patent-jpsr-period) == 2026-11-27
 }
 
-test "patent-jpsr-noticed-period: 98 days after AnswerFiled" cite ?("RCFC Appendix J, Rule 3") {
+test "patent-jpsr-noticed-period: 98 days after AnswerFiled" cite "PRCFC 3" {
   given AnswerFiled() on 2026-08-03
   expect deadline(patent-jpsr-noticed-period) == 2026-11-09
 }
@@ -127,7 +126,7 @@ test "patent-jpsr-noticed-period: Thanksgiving rolls to Friday" cite "RCFC 6(a)(
   expect deadline(patent-jpsr-noticed-period) == 2026-11-27
 }
 
-test "infringement-contentions-period: 56 days after AnswerFiled" cite ?("RCFC Appendix J, Rule 4") {
+test "infringement-contentions-period: 56 days after AnswerFiled" cite "PRCFC 4" {
   given AnswerFiled() on 2026-08-03
   expect deadline(infringement-contentions-period) == 2026-09-28
 }
@@ -138,7 +137,7 @@ test "infringement-contentions-period: Columbus Day rolls to Tuesday" cite "RCFC
   expect deadline(infringement-contentions-period) == 2026-10-13
 }
 
-test "invalidity-contentions-period: 56 days after InfringementContentionsServed" cite ?("RCFC Appendix J, Rule 6") {
+test "invalidity-contentions-period: 56 days after InfringementContentionsServed" cite "PRCFC 6" {
   given InfringementContentionsServed() on 2026-08-03
   expect deadline(invalidity-contentions-period) == 2026-09-28
 }
@@ -149,7 +148,7 @@ test "invalidity-contentions-period: Christmas Day rolls to Monday" cite "RCFC 6
   expect deadline(invalidity-contentions-period) == 2026-12-28
 }
 
-test "claim-terms-period: 42 days after InvalidityContentionsServed" cite ?("RCFC Appendix J, Rule 9") {
+test "claim-terms-period: 42 days after InvalidityContentionsServed" cite "PRCFC 9" {
   given InvalidityContentionsServed() on 2026-08-03
   expect deadline(claim-terms-period) == 2026-09-14
 }
@@ -160,7 +159,7 @@ test "claim-terms-period: Labor Day rolls to Tuesday" cite "RCFC 6(a)(1)(C)"
   expect deadline(claim-terms-period) == 2026-09-08
 }
 
-test "joint-chart-period: 35 days after ClaimTermsExchanged" cite ?("RCFC Appendix J, Rule 11") {
+test "joint-chart-period: 35 days after ClaimTermsExchanged" cite "PRCFC 11" {
   given ClaimTermsExchanged() on 2026-08-10
   expect deadline(joint-chart-period) == 2026-09-14
 }
@@ -171,7 +170,7 @@ test "joint-chart-period: Veterans Day rolls to Thursday" cite "RCFC 6(a)(1)(C)"
   expect deadline(joint-chart-period) == 2026-11-12
 }
 
-test "cc-discovery-period: 28 days after ClaimConstructionAppendixFiled" cite ?("RCFC Appendix J, Rule 13") {
+test "cc-discovery-period: 28 days after ClaimConstructionAppendixFiled" cite "PRCFC 13" {
   given ClaimConstructionAppendixFiled() on 2026-08-03
   expect deadline(cc-discovery-period) == 2026-08-31
 }
@@ -182,7 +181,7 @@ test "cc-discovery-period: Saturday rolls to Monday" cite "RCFC 6(a)(1)(C)"
   expect deadline(cc-discovery-period) == 2026-08-31
 }
 
-test "cc-status-conference-period: 7 days after ClaimConstructionAppendixFiled" cite ?("RCFC Appendix J, Rule 14") {
+test "cc-status-conference-period: 7 days after ClaimConstructionAppendixFiled" cite "PRCFC 14" {
   given ClaimConstructionAppendixFiled() on 2026-08-03
   expect deadline(cc-status-conference-period) == 2026-08-10
 }
@@ -193,7 +192,7 @@ test "cc-status-conference-period: Labor Day rolls to Tuesday" cite "RCFC 6(a)(1
   expect deadline(cc-status-conference-period) == 2026-09-08
 }
 
-test "settlement-discussion-period: 14 days after ClaimConstructionOrderEntered" cite ?("RCFC Appendix J, Rule 16(a)") {
+test "settlement-discussion-period: 14 days after ClaimConstructionOrderEntered" cite "PRCFC 16(a)" {
   given ClaimConstructionOrderEntered() on 2026-08-03
   expect deadline(settlement-discussion-period) == 2026-08-17
 }

@@ -114,7 +114,7 @@ state answer-filed: "Answer Filed" cite "RCFC 8; 12(a)"
   group pleading-group
   note "The United States admits, denies, or professes lack of knowledge as to each allegation, and pleads any affirmative defenses (including a §1500 or §2501 defense not resolved earlier, or a §1498(a) government-contractor-authorization defense). Filing the answer is the trigger event for BOTH the general Appendix A Joint Preliminary Status Report clock and, on the patent track, the Appendix J deadline cascade."
   e-answer-to-casetype "Answer triggers the JPSR clock (general or patent track)" -> case-type-fork {
-    authority cite ?("RCFC Appendix J Rule 1(a)")
+    authority cite "PRCFC 1(a)"
   }
 }
 
@@ -126,11 +126,11 @@ terminal voluntary-dismissal-early: "VOLUNTARY DISMISSAL (Before Answer/SJ/MJAR)
   payoff 0.usd
 }
 
-decision case-type-fork: "General Civil Track or §1498(a) Patent Track (Appendix J)?" cite ?("RCFC Appendix J, Rule 1(a)") {
+decision case-type-fork: "General Civil Track or §1498(a) Patent Track (Appendix J)?" cite "PRCFC 1(a)" {
   group pleading-group
   note "Appendix J's Patent Rules (PRCFC) automatically supplement the RCFC for any civil action under 28 U.S.C. §1498(a) respecting patent claims -- the court may modify their deadlines for complexity or good cause (PRCFC 1(b)), but the cascade applies by default the moment the case is identified as a §1498(a) patent action."
   e-casetype-general "General civil case (not brought under §1498(a))" -> general-jpsr-filed
   e-casetype-patent "§1498(a) patent case -- Appendix J (Patent Rules) applies" -> patent-early-meeting {
-    authority cite ?("RCFC Appendix J Rule 1(a)")
+    authority cite "PRCFC 1(a)"
   }
 }

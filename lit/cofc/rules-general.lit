@@ -22,16 +22,16 @@ event AdrConcluded(outcome: AdrOutcome)
 
 /// Appendix A ¶4 (case management under RCFC 16(b)): the Joint Preliminary
 /// Status Report is due 49 days after the answer, deferred while a
-/// case-dispositive motion is pending (¶6). Appendix A is not in the
-/// vendored corpus, so the cite stays a hole; in force as the rules stood
-/// amended through July 27, 2026 (the RCFC 16 amendment of that date). The
+/// case-dispositive motion is pending (¶6). Appendix A is vendored in
+/// sources/rcfc-appendices.txt (`RCFC App. A n`); in force as the rules
+/// stood amended through July 27, 2026 (the RCFC 16 amendment of that date). The
 /// court sets the schedule by order, the delegation the legacy pack records
 /// as "court order".
-rule duty joint-preliminary-status-report cite ?("RCFC 16(b)(1)(A); RCFC Appendix A ¶4") {
+rule duty joint-preliminary-status-report cite "RCFC 16(b)(1)(A); RCFC App. A 4" {
   deadline jpsr-period: 49.days after AnswerFiled() counted_by rcfc6 delegable {
     to CaseOrder
     op set
-  } cite ?("RCFC Appendix A ¶4") { extendable true, extension_authority "court order" }
+  } cite "RCFC App. A 4" { extendable true, extension_authority "court order" }
 }
 
 /// RCFC 56(b): "Unless the court orders otherwise, a party may file a
@@ -48,7 +48,7 @@ deadline sj-motion-period: 30.days after DiscoveryClosed() counted_by rcfc6 effe
   extension_authority "court order / local practice"
 }
 
-test "the JPSR is due 49 days after the answer" cite ?("RCFC Appendix A ¶4") {
+test "the JPSR is due 49 days after the answer" cite "RCFC App. A 4" {
   given AnswerFiled() on 2026-08-03
   expect deadline(jpsr-period) == 2026-09-21
 }

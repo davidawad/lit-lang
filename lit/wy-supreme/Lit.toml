@@ -1,0 +1,55 @@
+# A civil appeal from a Wyoming district court to the Wyoming Supreme
+# Court under the Wyoming Rules of Appellate Procedure, the consolidated
+# edition including the amendments effective January 19, 2026 to Rules
+# 3.02 and 3.09 (sources/wy-state-appellate; the versions in effect until
+# that date are sectioned apart and not cited). Wyoming has no
+# intermediate appellate court for these appeals. Computation of time is
+# W.R.A.P. 14.02, which counts Wyoming legal holidays; core has no Wyoming
+# calendar, so periods are stated in notes, not counted. The docket fee is
+# set by order of the court and published in the Rules of the Supreme
+# Court of Wyoming (W.R.A.P. 2.09(a)), which are not vendored: the amount
+# is a hole. Certiorari is a federal hand-off under Sup. Ct. R. 13; the
+# vendored Supreme Court rules are in force from March 16, 2026, so the
+# package is bound from that date.
+[package]
+name = "wy-supreme-court-civil-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "wy-supreme-court-civil-appeals"
+forum = "wy-state-appellate"
+authority = "StateRule"
+jurisdiction_id = "wyoming"
+title = "Wyoming Supreme Court, civil appeals"
+description = "Civil appeals from the Wyoming district courts to the Wyoming Supreme Court under the Wyoming Rules of Appellate Procedure, as far as the vendored text states: the appealable order, notice and its time, cross-appeals, the transcript and record, docketing, briefing and page limits, amicus briefs, the brief-only and oral argument dockets, disposition, rehearing, mandate, costs and dismissal. Certiorari is a federal hand-off under Sup. Ct. R. 13."
+in_force = "2026-03-16"
+known_at = "2026-10-28"
+unknown_before = "2026-03-16"
+jurisdiction = "Wyoming Supreme Court (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.wy-r-app-p]
+title = "Wyoming Rules of Appellate Procedure, consolidated edition including the amendments effective January 19, 2026"
+url = "https://www.wyocourts.gov/app/uploads/2025/01/WRAP-eff-Dec-1.pdf"
+path = "sources/wy-state-appellate/wrap-sectioned.txt"
+path_sha256 = "515a3474a1e5c02778cdc2a99fb7c78fee285cf2fd627532f1d25ce131f62a9a"
+sha256 = "ad75efc446f5956b7b94edda881b67fa6a5b0b1a55195fcc5c8e264c6e156874"
+as_of = "2026-01-19"
+cite_prefixes = ["W.R.A.P."]
+section_heading = "W.R.A.P. {n}"
+
+[sources.scotus]
+title = "Rules of the Supreme Court of the United States (adopted Feb. 17, 2026, effective Mar. 16, 2026)"
+url = "https://www.supremecourt.gov/filingandrules/2026RulesoftheCourt_WEB.pdf"
+path = "sources/scotus-rules.txt"
+path_sha256 = "881464325decc0ce5cc63ae4bac10facc84766e266dbff30454186f78dc3d5f2"
+sha256 = "5200e38d590cc40929cb719987c936dc529717b4037259d1b63a2309cb6b0f32"
+as_of = "2026-03-16"
+cite_prefixes = ["Sup. Ct. R."]
+section_heading = "Sup. Ct. R. {n}"

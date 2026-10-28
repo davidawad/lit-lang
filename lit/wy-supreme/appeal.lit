@@ -1,0 +1,167 @@
+module wy-supreme-court-civil-appeals.appeal
+
+/// A principal brief: except by permission of the appellate court, at
+/// most 60 pages, exclusive of the title page, table of contents, table
+/// of authorities, certificate of service and appendices (W.R.A.P.
+/// 7.05(a)(1)).
+limit principal-brief { pages <= 60 cite "W.R.A.P. 7.05(a)(1)" } cite "W.R.A.P. 7.05(a)(1)"
+/// A reply brief: except by permission, at most 18 pages, with the same
+/// exclusions (W.R.A.P. 7.05(a)(1)).
+limit reply-brief { pages <= 18 cite "W.R.A.P. 7.05(a)(1)" } cite "W.R.A.P. 7.05(a)(1)"
+/// An amicus curiae brief, filed by leave of court: at most 35 pages
+/// (W.R.A.P. 7.12(d)).
+limit amicus-brief { pages <= 35 cite "W.R.A.P. 7.12(d)" } cite "W.R.A.P. 7.12(d)"
+
+/// The appellant's brief is filed (W.R.A.P. 7.06(b)(1)).
+event AppellantBriefFiled() paper principal-brief
+/// The appellee's brief is filed (W.R.A.P. 7.06(c)(1)).
+event AppelleeBriefFiled() paper principal-brief
+/// The appellant's reply brief is filed (W.R.A.P. 7.06(d)(1)).
+event ReplyBriefFiled() paper reply-brief
+/// An amicus curiae's proposed brief accompanies its motion for leave
+/// (W.R.A.P. 7.12(b)).
+event AmicusBriefFiled() paper amicus-brief
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "W.R.A.P. 2.01(a)"
+{
+  note "An appeal is taken by filing the notice of appeal with the clerk of the trial court within 30 days from entry of the appealable order, concurrently serving it under W.R.C.P. 5 and serving a copy on the clerk of the appellate court (W.R.A.P. 2.01(a)). On a showing of excusable neglect the trial court may extend the time if the application, with a proposed notice of appeal and the docket fee or a motion to proceed in forma pauperis, is filed before 45 days from entry of the appealable order; an application not granted within 14 days of filing is deemed denied (W.R.A.P. 2.01(a)(1)). If a timely notice is filed, any other party may file a notice within the Rule 2.01(a) time or within 15 days of the date the first notice was filed (W.R.A.P. 2.01(a)(2)). A timely motion under W.R.C.P. 50(b), 52(b) or 59 stops the time for all parties; the full time runs from entry of the order disposing of it, or from its deemed denial (W.R.A.P. 2.02(a), (b)). The notice states the parties appealing, the judgment or order appealed, the court appealed to and the transcript certificate, and in a civil case lists in an appendix the claim-asserting pleadings and the orders and judgments disposing of claims (W.R.A.P. 2.07). The docket fee is delivered to the trial court clerk with the notice; its amount is set by order of the court (W.R.A.P. 2.09(a)), not vendored. If in forma pauperis status is denied, the fee is paid within 30 days of the order denying it or the appeal does not proceed (W.R.A.P. 2.09(c)). No leading decision is named."
+  edge-notice-filed-appealability "Notice filed" -> appealability { authority cite "W.R.A.P. 1.05" }
+}
+
+decision appealability: "Appealable order and timely notice" by court cite "W.R.A.P. 1.05"
+{
+  note "An appealable order is an order affecting a substantial right that in effect determines the action and prevents a judgment; one affecting a substantial right made in a special proceeding; one made on a summary application after judgment; an order granting a new trial on the grounds of W.R.C.P. 59(a)(4) and (5); or an interlocutory order granting, continuing, modifying or dissolving an injunction or refusing to, or appointing or winding up a receiver (W.R.A.P. 1.05). Other interlocutory review is by petition for a writ of review under W.R.A.P. 13. The appellate court acquires jurisdiction when the case is docketed and may then ascertain its jurisdiction (W.R.A.P. 6.01(b), (e))."
+  edge-appealability-dismissed-jurisdiction "Not appealable, or untimely" -> dismissed-jurisdiction {
+    authority cite "W.R.A.P. 1.05"
+  }
+  edge-appealability-record "Appealable order, timely notice" -> record {
+    authority cite "W.R.A.P. 2.05(a)"
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: no appealable order, or the notice was untimely" outcome [loss, dismissal, jurisdictional] cite "W.R.A.P. 1.05"
+{
+  note "Outcome from the applicant's side."
+}
+
+state record: "Transcript, record and docketing" cite "W.R.A.P. 2.05(a)"
+{
+  note "Concurrently with filing the notice of appeal, the appellant orders and arranges payment for the necessary transcript, or moves for in forma pauperis status, and endorses a certificate of compliance on the notice (W.R.A.P. 2.05(a)). Within 60 days after the notice of appeal is filed, the court reporter files the transcript with the trial court clerk, extendable by the trial court for good cause (W.R.A.P. 2.06). Within three working days after the record is completed the trial court clerk advises the appellate clerk (W.R.A.P. 3.05(a)). The case is docketed when that notice is transmitted with the docket fee or an in forma pauperis order, and the appellate clerk serves notice of docketing and the briefing schedule (W.R.A.P. 6.01(a))."
+  edge-record-briefing "Case docketed" -> briefing { authority cite "W.R.A.P. 6.01(a)" }
+}
+
+state briefing: "Briefing: appellant, appellee, reply" cite "W.R.A.P. 7.06"
+{
+  note "The appellant files its brief within 45 days after service of the notice that the case is docketed (W.R.A.P. 7.06(b)(1)); the appellee within 45 days after service of the appellant's brief (W.R.A.P. 7.06(c)(1)); the appellant may reply within 15 days after service of the appellee's brief (W.R.A.P. 7.06(d)(1)). The court may order shorter times (W.R.A.P. 7.06(e)(1)). An extension is obtained only from the appellate court on a motion certifying good cause made before the brief is due, filed at least 3 working days before (W.R.A.P. 7.10(a)). An amicus curiae files its motion for leave not later than 11 days after the principal brief of the party supported is filed, and one supporting neither party not later than 11 days after the first brief of any party; it may not file a reply (W.R.A.P. 7.12(e), (f)). A response to a motion that may substantially affect the disposition is due within 15 days after service (W.R.A.P. 16(b))."
+  edge-briefing-argument "Briefs complete" -> argument { authority cite "W.R.A.P. 8.01" }
+  edge-briefing-dismissed-brief "Appellant's brief not filed in time" -> dismissed-prosecution {
+    authority cite "W.R.A.P. 7.11(a)"
+  }
+}
+
+terminal dismissed-prosecution: "Dismissed for want of prosecution" outcome [loss, dismissal] cite "W.R.A.P. 7.11(a)"
+{
+  note "If the party holding the affirmative fails to file a brief within the time fixed, the case is dismissed for want of prosecution (W.R.A.P. 7.11(a)). Outcome from the applicant's side."
+}
+
+state argument: "Brief-only or oral argument docket" cite "W.R.A.P. 8.01"
+{
+  note "A case on the brief-only docket is submitted on entry of the order assigning it, without oral argument; one on the oral argument docket is submitted when argument is held (W.R.A.P. 8.01(a)). Any party may move, with good cause, not later than 15 days after the order assigning a case to the brief-only docket, to have it reassigned to the argument docket (W.R.A.P. 8.01(c))."
+  edge-argument-disposition "Submitted for decision" -> disposition {
+    authority cite "W.R.A.P. 9.01"
+  }
+}
+
+decision disposition: "Disposition" by court cite "W.R.A.P. 9.01"
+{
+  note "The decision is set forth in a written opinion or order filed with the clerk (W.R.A.P. 9.01). On reversal the court renders the judgment the trial court should have rendered or remands for judgment or further proceedings, and sends a mandate to the trial court for execution (W.R.A.P. 9.03); a partial new trial may be directed (W.R.A.P. 9.02). The court may by unanimous vote enter an abbreviated opinion (W.R.A.P. 9.06). Any motion for costs or fees is filed within 15 days after the final written opinion or order is filed (W.R.A.P. 10.06). No leading decision is named."
+  edge-disposition-affirmed-entered "Affirmed" -> affirmed-entered {
+    authority cite "W.R.A.P. 9.03"
+  }
+  edge-disposition-reversed-entered "Reversed, modified or remanded" -> reversed-entered {
+    authority cite "W.R.A.P. 9.03"
+  }
+}
+
+decision affirmed-entered: "Affirmed: rehearing election" by applicant cite "W.R.A.P. 9.08(a)"
+{
+  note "A petition for rehearing, with a supporting brief, is filed and served no later than 15 days after the decision is rendered; there is no oral argument unless the court requests it (W.R.A.P. 9.08(a)). A timely petition suspends proceedings under the decision until it is decided (W.R.A.P. 9.09)."
+  edge-affirmed-entered-rehearing-affirmed "Rehearing petition filed" -> rehearing-affirmed {
+    authority cite "W.R.A.P. 9.08(a)"
+  }
+  edge-affirmed-entered-mandate-affirmed "No rehearing petition" -> mandate-affirmed {
+    authority cite "W.R.A.P. 9.11(a)"
+  }
+}
+
+decision rehearing-affirmed: "Rehearing ruling (affirmed)" by court cite "W.R.A.P. 9.10"
+{
+  note "When rehearing is granted, the other party files an answer and supporting brief within 15 days of entry of the order granting it; the court may then amend the opinion or direct other proceedings (W.R.A.P. 9.10)."
+  edge-rehearing-affirmed-mandate-affirmed "Rehearing denied" -> mandate-affirmed {
+    authority cite "W.R.A.P. 9.11(a)"
+  }
+  edge-rehearing-affirmed-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite "W.R.A.P. 9.10"
+  }
+}
+
+decision mandate-affirmed: "Mandate issued: certiorari election" by applicant cite "W.R.A.P. 9.11(a)"
+{
+  note "On denial of a petition for rehearing, or if no petition for rehearing or other motion is filed within 15 days after the decision, the mandate issues to the trial court for execution and is sent to all parties (W.R.A.P. 9.11(a)); it awards costs, if applicable, and the court cannot entertain a motion for costs after it issues (W.R.A.P. 9.11(c)). A petition for certiorari to a state court of last resort is timely within 90 days after entry of the judgment (Sup. Ct. R. 13.1), running from entry and not from the mandate, or from the denial of a timely rehearing petition (Sup. Ct. R. 13.3)."
+  edge-mandate-affirmed-federal-review "Petition for certiorari" -> federal-review {
+    authority cite "Sup. Ct. R. 13.1"
+  }
+  edge-mandate-affirmed-affirmed-final "No petition" -> affirmed-final {
+    authority cite "W.R.A.P. 9.11(a)"
+  }
+}
+
+terminal affirmed-final: "Affirmed: final" outcome [loss] cite "W.R.A.P. 9.11(a)"
+{
+  note "The trial court proceeds on the mandate as if the judgment had been rendered there (W.R.A.P. 9.03). Outcome from the applicant's (appellant's) side."
+}
+
+decision reversed-entered: "Reversed, modified or remanded: rehearing election" by applicant cite "W.R.A.P. 9.08(a)"
+{
+  note "Rehearing is as after an affirmance: a petition no later than 15 days after the decision is rendered (W.R.A.P. 9.08(a)), which suspends proceedings under the decision (W.R.A.P. 9.09)."
+  edge-reversed-entered-rehearing-reversed "Rehearing petition filed" -> rehearing-reversed {
+    authority cite "W.R.A.P. 9.08(a)"
+  }
+  edge-reversed-entered-mandate-reversed "No rehearing petition" -> mandate-reversed {
+    authority cite "W.R.A.P. 9.11(a)"
+  }
+}
+
+decision rehearing-reversed: "Rehearing ruling (reversed, modified or remanded)" by court cite "W.R.A.P. 9.10"
+{
+  note "The answer to a granted rehearing is due within 15 days of entry of the order granting it (W.R.A.P. 9.10)."
+  edge-rehearing-reversed-mandate-reversed "Rehearing denied" -> mandate-reversed {
+    authority cite "W.R.A.P. 9.11(a)"
+  }
+  edge-rehearing-reversed-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite "W.R.A.P. 9.10"
+  }
+}
+
+decision mandate-reversed: "Mandate issued: certiorari election" by applicant cite "W.R.A.P. 9.11(a)"
+{
+  note "The mandate issues as W.R.A.P. 9.11(a) provides; certiorari timing is Sup. Ct. R. 13.1 and 13.3. On remand the trial court proceeds as the mandate directs (W.R.A.P. 9.03)."
+  edge-mandate-reversed-federal-review "Petition for certiorari" -> federal-review {
+    authority cite "Sup. Ct. R. 13.1"
+  }
+  edge-mandate-reversed-reversed-final "No petition" -> reversed-final {
+    authority cite "W.R.A.P. 9.11(a)"
+  }
+}
+
+terminal reversed-final: "Reversed, modified or remanded: final" outcome [win] cite "W.R.A.P. 9.03"
+{
+  note "Outcome from the applicant's (appellant's) side; a remand for further proceedings continues in lit/wy-district."
+}
+
+terminal federal-review: "Certiorari sought: continue in the Supreme Court of the United States" outcome [procedural] cite "Sup. Ct. R. 13.1"
+{
+  note "Federal review of a state court of last resort under 28 U.S.C. § 1257 (not vendored); the outline's further-review rulings belong to the federal hand-off."
+}

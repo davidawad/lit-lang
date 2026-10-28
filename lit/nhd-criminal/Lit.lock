@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "nhd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:f1797ec7729620ae948d6d8539091c1cf1d7395e1e7b785e2df34a1624a08e58"
+semantic = "sha256:ae57ab6b3f8acddb3164b658a2c5e5f915a09c0e0c2fc18ffbb45a57621c53ad"
+texts = [
+    "dnh-lcrr sources/dnh/dnh-local-criminal-rules-sectioned.txt sha256:e411bf616d6e3f2fc695871ea7b83a3c7db36592462b93667417d3508f6c6df4",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

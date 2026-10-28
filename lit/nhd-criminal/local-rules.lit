@@ -1,0 +1,315 @@
+module nhd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The District of New Hampshire's own criminal periods. Time periods are
+// determined under FRCrimP 45(a); FRCrimP 45(c) applies only to periods
+// running from service, never to periods running from filing (D.N.H.
+// LCrR 45.1). No trigger here carries a service method. The civil and
+// general local rules listed in LCrR 1.1(d), LR 7.1(a) and (c)-(f) among
+// them, also apply in criminal actions; their periods and page limits are
+// lit/nhd's and are not restated here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: objections to the initial presentence report are delivered within
+// 14 days after receiving it, and an objection not made in time is waived
+// unless its basis was not reasonably available (D.N.H. LCrR 32.1(e);
+// FRCrimP 32(f)(1)).
+//
+// Conditions that are not deadlines from an event stay in notes: the court
+// sets the trial date at the arraignment (D.N.H. LCrR 10.1); in a complex
+// case LCrR 12.1(a), 12.1(b), 16.1(b) and 16.1(c) do not apply and the
+// court sets the discovery and motion dates at the status conference
+// (LCrR 10.2); a defendant pleading guilty without a written plea
+// agreement submits an executed Acknowledgment and Waiver of Rights on or
+// before the change-of-plea hearing (LCrR 11.1); objections to motions in
+// limine and to exhibit lists are filed on the day of trial (LCrR 12.1(c),
+// 16.1(g)); exhibits are delivered to the clerk's office at least one day
+// before the start of evidence (LCrR 16.1(g)); the final pretrial
+// conference is held approximately 7 days before trial (LCrR 17.1.1);
+// jury instruction requests are filed no later than the first day of
+// trial (LCrR 30.1); if the court delays sentencing, the presentence
+// disclosure, objection and revised-report dates are continued
+// automatically (LCrR 32.1(a)); counts unresolved at sentencing are deemed
+// dismissed with prejudice unless reserved (LCrR 48.1). A defense motion
+// to continue trial carries the defendant's speedy-trial waiver or
+// counsel's certification (LCrR 12.1(d)).
+//
+// The earlier D.N.H. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Brady v. Maryland, Barker v. Wingo, Zedner
+// v. United States, Boykin v. Alabama, Missouri v. Frye, Jackson v.
+// Virginia, United States v. Booker, Roe v. Flores-Ortega, Garza v.
+// Idaho) are FRCrimP, Speedy Trial Act or constitutional authority and
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+
+/// The arraignment (D.N.H. LCrR 10.3, 12.1(a), 16.1(b), (c)).
+event Arraigned()
+/// The court determines at the arraignment that the case is likely to be
+/// unusually complex (D.N.H. LCrR 10.2).
+event ArraignedComplexCase()
+/// A Notice for Expedited Plea and Sentencing Hearing is filed with a
+/// final plea agreement or an Acknowledgement and Waiver of Rights in a
+/// reentry-after-deportation case (D.N.H. LCrR 11.2(a), (b)).
+event ExpeditedNoticeFiled()
+/// The expedited plea and sentencing hearing is scheduled (D.N.H. LCrR
+/// 11.2(c)).
+event ExpeditedHearingScheduled()
+/// A motion is filed (D.N.H. LCrR 12.1(f)).
+event MotionFiled()
+/// An order granting an assented-to motion to extend the time to indict
+/// (D.N.H. LCrR 12.1(e)).
+event ExtensionToIndictGranted()
+/// The date set for trial (D.N.H. LCrR 12.1(b), (c), 16.1, 24.1).
+event TrialScheduled()
+/// The commencement of a proceeding at which a witness is expected to
+/// testify (D.N.H. LCrR 16.1(e)).
+event ProceedingScheduled()
+/// The entry of a plea of guilty or nolo contendere, or a guilty verdict
+/// by a jury or the court (D.N.H. LCrR 32.1(a), (c)).
+event GuiltEstablished()
+/// The scheduled sentencing date (D.N.H. LCrR 32.1(d), (g), (i)).
+event SentencingHearingScheduled()
+/// The disposition of a case in which counsel was appointed under the
+/// Criminal Justice Act (D.N.H. LCrR 44.1(b)).
+event CjaDisposition()
+
+/// D.N.H. LCrR 10.2: in a case the court finds at the arraignment likely
+/// to be unusually complex, the court schedules a status conference within
+/// 14 days after the arraignment.
+deadline complex-case-status-conference: 14.days after ArraignedComplexCase() counted_by frcrimp45 cite "D.N.H. LCrR 10.2"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 10.3: counsel confer to discuss discovery within 7 days
+/// after the arraignment.
+deadline post-arraignment-meeting: 7.days after Arraigned() counted_by frcrimp45 cite "D.N.H. LCrR 10.3"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 11.2(b): the expedited plea and sentencing hearing is
+/// scheduled within 45 days after the filing of the Notice with the plea
+/// agreement or the Acknowledgement and Waiver of Rights, as close as
+/// possible to the end of the period. These deadlines supersede LCrR
+/// 32.1's in such cases (LCrR 11.2(e)).
+deadline expedited-hearing: 45.days after ExpeditedNoticeFiled() counted_by frcrimp45 cite "D.N.H. LCrR 11.2(b); D.N.H. LCrR 11.2(e)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 11.2(c): the probation office discloses the abbreviated
+/// presentence investigation report no later than 5 days before the
+/// scheduled expedited plea and sentencing hearing.
+deadline expedited-psr-disclosure: 5.days before ExpeditedHearingScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 11.2(c)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 12.1(a): discovery motions are filed within 30 days after
+/// the arraignment (not in a complex case, LCrR 10.2).
+deadline discovery-motions: 30.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.N.H. LCrR 12.1(a); D.N.H. LCrR 10.2"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 12.1(b): dispositive and evidentiary motions (motions to
+/// dismiss and to suppress among them, motions in limine not) are filed no
+/// later than 21 days before trial (not in a complex case, LCrR 10.2).
+deadline dispositive-motions: 21.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.N.H. LCrR 12.1(b); D.N.H. LCrR 10.2"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 12.1(c): motions in limine are filed no later than 7 days
+/// before trial.
+deadline motions-in-limine: 7.days before TrialScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 12.1(c)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 12.1(e): with an assented-to motion to extend the time to
+/// indict, or within 10 days after the order granting it, defense counsel
+/// files the defendant's signed speedy-trial waiver or the LCrR 12.1(d)
+/// certification.
+deadline indictment-extension-waiver: 10.days after ExtensionToIndictGranted() counted_by frcrimp45 cite "D.N.H. LCrR 12.1(e)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 12.1(f): unless the FRCrimP or the local rules provide
+/// otherwise, an objection and memorandum in opposition to a motion is
+/// filed within 14 days from the date the motion is filed; otherwise
+/// objections are deemed waived and the court may act on the motion.
+deadline objection-period: 14.days after MotionFiled() counted_by frcrimp45 cite "D.N.H. LCrR 12.1(f)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 16.1(b)(1); 16.1(c): within 14 days after the arraignment,
+/// unless the parties agree on another date or the defendant timely
+/// declines, the government discloses the FRCrimP 16(a)(1) information and
+/// any evidence of interception of the defendant's communications.
+deadline government-routine-discovery: 14.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.N.H. LCrR 16.1(b); D.N.H. LCrR 16.1(c)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 16.1(b)(2): within 30 days after the arraignment, unless
+/// the parties agree on another date or the defendant declined reciprocal
+/// discovery, the defendant discloses the FRCrimP 16(b) information.
+deadline defendant-routine-discovery: 30.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.N.H. LCrR 16.1(b)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 16.1(b)(3): later identified expert witnesses and later
+/// obtained FRCrimP 16(a)(1)(G)(iii) and (b)(1)(C)(iii) material are
+/// disclosed no later than 30 days before trial.
+deadline later-expert-disclosure: 30.days before TrialScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 16.1(b)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 16.1(b)(3): rebuttal expert witnesses and their FRCrimP
+/// 16(a)(1)(G)(iii) material are disclosed no later than 15 days before
+/// trial.
+deadline rebuttal-expert-disclosure: 15.days before TrialScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 16.1(b)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 16.1(d): the government discloses Brady and Giglio material
+/// at least 21 days before trial; for good cause it may seek approval to
+/// disclose later.
+deadline exculpatory-disclosure: 21.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.N.H. LCrR 16.1(d)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 16.1(e): the government discloses witness statements
+/// (FRCrimP 26.2(f); 18 U.S.C. § 3500) at least 7 days before the
+/// proceeding at which the witness is expected to testify, unless it
+/// determines that later disclosure is allowed by Rule 26.2 and § 3500.
+deadline witness-statements: 7.days before ProceedingScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 16.1(e)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 16.1(f): the government discloses the general nature of
+/// any Fed. R. Evid. 404(b) evidence at least 7 days before trial.
+deadline rule-404b-notice: 7.days before TrialScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 16.1(f)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 16.1(g): the parties exchange and file exhibit lists at
+/// least 7 days before trial.
+deadline exhibit-lists: 7.days before TrialScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 16.1(g)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 16.1(h): the parties file a statement on the use of the
+/// Jury Evidence Recording System at least 7 days before trial.
+deadline jers-statement: 7.days before TrialScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 16.1(h)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 16.1(i): the parties exchange and file witness lists at
+/// least 7 days before trial; for good cause the court may allow a later
+/// date.
+deadline witness-lists: 7.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.N.H. LCrR 16.1(i)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 24.1: requests for special voir dire are filed no later
+/// than 7 days before trial.
+deadline special-voir-dire: 7.days before TrialScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 24.1"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 32.1(a): sentencing occurs without unnecessary delay, but
+/// no more than 14 weeks (98 days) after the guilty plea or verdict,
+/// unless good cause justifies a later date.
+deadline sentencing-period: 98.days after GuiltEstablished() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.N.H. LCrR 32.1(a)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 32.1(c): no later than 14 days after a plea or verdict of
+/// guilty, the government provides the probation office a written version
+/// of the facts, including all relevant conduct.
+deadline government-version-of-facts: 14.days after GuiltEstablished() counted_by frcrimp45 cite "D.N.H. LCrR 32.1(c)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 32.1(d): the probation officer discloses the initial
+/// presentence report no later than 42 days before the scheduled
+/// sentencing date. FRCrimP 32(e)(2)'s own period (lit/frcrimp
+/// psr-disclosure) is not restated.
+deadline initial-psr-disclosure: 42.days before SentencingHearingScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 32.1(d)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 32.1(g): the probation officer provides the revised
+/// presentence report, the addendum and the proposed sentencing options and
+/// supervision conditions to the court and the parties no later than 14
+/// days before the scheduled sentencing date.
+deadline revised-psr-disclosure: 14.days before SentencingHearingScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 32.1(g)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 32.1(i): a motion for a departure or variance, or a
+/// sentencing memorandum (with any objection to the proposed sentencing
+/// options and supervision conditions), is filed no later than 10 days
+/// before the scheduled sentencing hearing.
+deadline sentencing-memorandum: 10.days before SentencingHearingScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 32.1(i)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 32.1(i): a response to a sentencing memorandum or a motion
+/// for a departure or variance is filed no later than 4 days before the
+/// scheduled sentencing hearing.
+deadline sentencing-response: 4.days before SentencingHearingScheduled() counted_by frcrimp45 cite "D.N.H. LCrR 32.1(i)"
+{
+  forum frcrimp
+}
+
+/// D.N.H. LCrR 44.1(b): counsel appointed under the Criminal Justice Act
+/// file the completed voucher for fees and expenses as soon as possible,
+/// but no later than 45 days from the date of disposition.
+deadline cja-voucher: 45.days after CjaDisposition() counted_by frcrimp45 cite "D.N.H. LCrR 44.1(b)"
+{
+  forum frcrimp
+}

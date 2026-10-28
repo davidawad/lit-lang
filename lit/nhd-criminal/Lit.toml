@@ -1,0 +1,52 @@
+# The U.S. District Court for the District of New Hampshire's Local
+# Criminal Rules (LCrR 1.1 to 58.1) as a local-rule layer over
+# lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it declares only the
+# periods the local criminal rules themselves state and re-encodes no
+# FRCrimP, Speedy Trial Act or FRAP 4(b) period (one source of truth:
+# lit/frcrimp). Time periods are determined under FRCrimP 45(a), and
+# 45(c) only for periods running from service (LCrR 45.1), so each
+# deadline names `forum frcrimp`. The rules are the Local Rules as
+# amended through December 1, 2025 (sources/dnh), the edition lit/nhd
+# also binds; earlier editions are not vendored, so a query before it is
+# a hole in the corpus. An appeal goes to the First Circuit under
+# lit/frcrimp's FRAP 4(b) period.
+[package]
+name = "nhd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "nhd-criminal-local-rules"
+forum = "nhd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of New Hampshire: Local Criminal Rules"
+description = "The District of New Hampshire's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the complex-case status conference, the post-arraignment meeting, the expedited reentry plea and sentencing procedure, discovery, dispositive and in-limine motion deadlines, objections, the speedy-trial waiver after an extension to indict, routine discovery and pretrial disclosures, voir dire requests, the sentencing timetable, and CJA vouchers."
+in_force = "2025-12-01"
+known_at = "2026-10-28"
+unknown_before = "2025-12-01"
+jurisdiction = "U.S. District Court for the District of New Hampshire (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "dnh-lcrr"
+issuer = "United States District Court for the District of New Hampshire"
+date = "2025-12-01"
+designation = "Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.dnh-lcrr]
+title = "Local Criminal Rules of the United States District Court for the District of New Hampshire (as amended through December 1, 2025)"
+url = "https://www.nhd.uscourts.gov/pdf/2025%20Local%20Rules%20-%20District%20of%20New%20Hampshire.pdf"
+path = "sources/dnh/dnh-local-criminal-rules-sectioned.txt"
+path_sha256 = "e411bf616d6e3f2fc695871ea7b83a3c7db36592462b93667417d3508f6c6df4"
+sha256 = "0c8a71f758a67912be5801f49cfdd23f9071dd7799b80c1c4e86a8f3feb94390"
+as_of = "2025-12-01"
+cite_prefixes = ["D.N.H. LCrR", "LCrR"]
+section_heading = "LCrR {n}"

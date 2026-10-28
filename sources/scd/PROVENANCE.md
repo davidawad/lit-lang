@@ -17,6 +17,7 @@
 
 - Source: https://www.scd.uscourts.gov/Rules/Criminal%20Rules%20-%20Current.pdf (official site; 18 pages, sha256 e9a5888b56e35227dfbf5dcd4e32839672029fab10a4177f7b8ab422c7445437).
 - Edition: Local Criminal Rules 'with revisions through July 17, 2019', republished November 23, 2020 to correct clerical errors (title page), the 'Criminal Rules - Current' file linked at https://www.scd.uscourts.gov/navtop/rules.asp. OLD EDITION: the court presents it as current. robots.txt of www.scd.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): scd-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 b7ea78cd12a7859d55c3b23640a9eb959e3efdbdc28d6c457b78226d5f65535e. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `scd/original/scd-local-criminal-rules-2019-07-17.pdf` as served (sha256 e9a5888b56e35227dfbf5dcd4e32839672029fab10a4177f7b8ab422c7445437); extraction sha256 b7ea78cd12a7859d55c3b23640a9eb959e3efdbdc28d6c457b78226d5f65535e.

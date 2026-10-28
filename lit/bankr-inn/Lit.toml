@@ -1,0 +1,49 @@
+# The Local Rules of the U.S. Bankruptcy Court for the Northern District of
+# Indiana over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares only
+# the periods the Local Rules themselves state and re-encodes no FRBP
+# period. It is a base package, not a `kind = "local-rule"` layer: lit/core
+# has no bankruptcy forum family (L2011 for `bankr-inn`), as for
+# lit/bankr-ct. Each period is counted under FRBP 9006(a), the FRCP 6(a)
+# method (core's frcp6). The rules, adopted January 1, 1994, are vendored
+# as the court's consolidation with cover date October 27, 2026
+# (sources/bankr-inn/PROVENANCE.md); its Publication Page lists the
+# amending orders, the latest two dated October 26, 2026 (LBR B-2016-1,
+# B-9011-1), and no amending order is vendored apart from the text, so the
+# consolidation is the only layer and `in_force` is the date of the latest
+# order (no effective date is stated for it). The earlier texts are not
+# vendored, so a query before October 26, 2026 is a hole in the corpus.
+[package]
+name = "bankr-inn-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-inn-local-rules"
+forum = "bankr-inn"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Northern District of Indiana: Local Rules"
+description = "The Bankr. N.D. Ind. Local Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): insider compensation statements, schedules of income for entities, the LBR B-2002-2 notice of opportunity to object, employment of professionals, monthly operating reports, claim withdrawal and objections, unclaimed funds, chapter 11 ballot reports, cramdown requests and confirmation deposits, chapter 13 surrender stay relief, discharge extension motions and discharge motions, continuances, sale reports, abandonment, motion practice and brief length, exhibits, class certification, dismissal of § 727 complaints, summary judgment, withdrawal of counsel and custody of exhibits."
+in_force = "2026-10-26"
+known_at = "2026-10-28"
+unknown_before = "2026-10-26"
+jurisdiction = "U.S. Bankruptcy Court for the Northern District of Indiana"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.innb-lbr]
+title = "Local Rules of the United States Bankruptcy Court for the Northern District of Indiana (cover dated October 27, 2026)"
+url = "https://www.innb.uscourts.gov/sites/innb/files/LocalRules.pdf"
+path = "sources/bankr-inn/innb-lbr-2026-10-27-sectioned.txt"
+path_sha256 = "5af35eecc69d593c1b4d2619d7e35a28ba006ba8c22f10d9f0ed34a99034a95f"
+sha256 = "3e4b79468488c0a1d2373ba6545775f02cfa5b5781f44b19e65bf12415b9f110"
+as_of = "2026-10-26"
+cite_prefixes = ["Bankr. N.D. Ind. LBR"]
+section_heading = "LBR {n}"

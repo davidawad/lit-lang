@@ -1,0 +1,452 @@
+module azd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Arizona's own periods, computed under the federal rules:
+// the time periods prescribed in the Local Rules are computed in accordance
+// with FRCP 6 (LRCiv 7.2 n.5). Additions or deletions to the court's
+// calendars other than for trials require two business days' notice unless
+// otherwise directed (LRCiv 1.1(a)). A motion to dismiss for lack of
+// personal or subject matter jurisdiction follows the summary judgment
+// briefing schedule of LRCiv 56.1 unless the court orders otherwise (LRCiv
+// 12.1(b)), and fee motions are briefed on the LRCiv 7.2 schedule (LRCiv
+// 54.2(b)(3)); those reuse the periods below. Court and clerk duties stay
+// comments: in the detainee track a service order sets the service date at
+// the FRCP 4(m) limit or sixty days from the service order, whichever is
+// later, and the scheduling order sets a discovery cutoff 150 days and a
+// dispositive motion deadline 180 days from its issue (LRCiv 16.2(b)(2));
+// in the standard track a preliminary scheduling conference is scheduled
+// within 180 days of filing (LRCiv 16.2(b)(3)); once the costs objection
+// period expires the clerk has thirty days to tax costs (LRCiv 54.1(b));
+// and a matter under advisement for more than 180 days calls for a written
+// status inquiry by counsel (LRCiv 7.2(n)). The earlier D. Ariz. outline's
+// FRCP flow and its Supreme Court decisions (Twombly, Iqbal, Celotex,
+// Anderson v. Liberty Lobby, Reeves, Catlin, Bowles, Hamer) are FRCP and
+// FRAP authority and belong to lit/frcp and lit/frap; its Ninth Circuit
+// decisions (Eitel v. McCool; Lopez v. Smith) are removed: no reporter text
+// is vendored.
+/// A capital habeas petition under 28 U.S.C. § 2254, a § 2255 motion, or any
+/// response: at most 200 pages, exclusive of attachments (LRCiv 3.5(b)).
+limit capital-habeas-petition { pages <= 200 cite "D. Ariz. LRCiv 3.5" } cite "D. Ariz. LRCiv 3.5"
+/// A reply in support of a capital habeas petition or § 2255 motion: at most
+/// 100 pages, exclusive of attachments (LRCiv 3.5(b)).
+limit capital-habeas-reply { pages <= 100 cite "D. Ariz. LRCiv 3.5" } cite "D. Ariz. LRCiv 3.5"
+/// A motion including its supporting memorandum, and the response including
+/// its supporting memorandum: at most seventeen pages, exclusive of
+/// attachments and any required statement of facts, unless the court permits
+/// otherwise (LRCiv 7.2(e)(1)).
+limit motion-or-response { pages <= 17 cite "D. Ariz. LRCiv 7.2" } cite "D. Ariz. LRCiv 7.2"
+/// A reply including its supporting memorandum: at most eleven pages,
+/// exclusive of attachments, unless the court permits otherwise (LRCiv
+/// 7.2(e)(2)).
+limit reply-memorandum { pages <= 11 cite "D. Ariz. LRCiv 7.2" } cite "D. Ariz. LRCiv 7.2"
+/// An objection to a magistrate judge's report and recommendation: at most
+/// ten pages, unless the court permits otherwise (LRCiv 7.2(e)(3)).
+limit recommendation-objection { pages <= 10 cite "D. Ariz. LRCiv 7.2" } cite "D. Ariz. LRCiv 7.2"
+/// An opening or answering brief in a Social Security case: at most
+/// twenty-five pages, including any statement of facts, unless the court
+/// orders otherwise (LRCiv 16.1(e)).
+limit social-security-brief { pages <= 25 cite "D. Ariz. LRCiv 16.1" } cite "D. Ariz. LRCiv 16.1"
+/// A reply brief in a Social Security case: at most eleven pages, unless the
+/// court orders otherwise (LRCiv 16.1(e)).
+limit social-security-reply { pages <= 11 cite "D. Ariz. LRCiv 16.1" } cite "D. Ariz. LRCiv 16.1"
+
+/// The court denies leave to exceed the capital habeas page limitation
+/// (LRCiv 3.5(b)).
+event CapitalHabeasLeaveDenied()
+/// A party appears in an action assigned to a magistrate judge (LRCiv
+/// 3.7(b)).
+event MagistrateCaseAppearance()
+/// A notice of lodging a document another party designated confidential is
+/// served (LRCiv 5.6(d)).
+event LodgingNoticeServed()
+/// An order denying in full a request to file under seal is entered (LRCiv
+/// 5.6(e)).
+event SealDenialEntered()
+/// A motion is served (LRCiv 7.2(c)).
+event MotionServed() paper motion-or-response
+/// The responsive memorandum is served (LRCiv 7.2(d)).
+event ResponseServed() paper motion-or-response
+/// The order that is the subject of a motion for reconsideration is filed
+/// (LRCiv 7.2(g)(2)).
+event OrderFiled()
+/// The order granting leave to amend a pleading is filed (LRCiv 15.1(a)).
+event LeaveToAmendGranted()
+/// The later of the filing of the answer and the entry of an order disposing
+/// of the last remaining motion under Supplemental Social Security Rule 4(c)
+/// (LRCiv 16.1(b)).
+event SocialSecurityAnswerOrRuling()
+/// The plaintiff's opening brief in a Social Security case is served (LRCiv
+/// 16.1(c)).
+event OpeningBriefServed() paper social-security-brief
+/// The defendant's answering brief in a Social Security case is served
+/// (LRCiv 16.1(d)).
+event AnsweringBriefServed() paper social-security-brief
+/// A civil jury trial is to begin (LRCiv 40.2(c)).
+event JuryTrialBegins()
+/// The court renders a decision requiring findings, in the presence of
+/// counsel, or notice of the decision is given (LRCiv 52.1).
+event DecisionRendered()
+/// The prevailing party's draft findings and conclusions are served (LRCiv
+/// 52.1).
+event DraftFindingsServed()
+/// Final judgment is entered (LRCiv 54.1(a), 54.2(b)(2)).
+event FinalJudgmentEntered()
+/// A bill of costs is served (LRCiv 54.1(b)).
+event BillOfCostsServed()
+/// Notice of the clerk's taxation of costs is given (LRCiv 54.1(b)).
+event TaxationNoticeSent()
+/// A motion for summary judgment is served (LRCiv 56.1(d)).
+event SummaryJudgmentMotionServed() paper motion-or-response
+/// The responsive memorandum opposing summary judgment is served (LRCiv
+/// 56.1(d)).
+event SummaryJudgmentResponseServed() paper motion-or-response
+/// Notice of an order to show cause based on discipline in another
+/// jurisdiction is sent to the attorney (LRCiv 83.2(c)).
+event ShowCauseNoticeSent()
+/// A notice of suspension or other action by the court is sent to the
+/// attorney (LRCiv 83.2(d)).
+event SuspensionNoticeSent()
+/// A change of name, address, firm name or e-mail address takes effect
+/// (LRCiv 83.3(d)).
+event AddressChangeEffective()
+
+/// LRCiv 3.5(b): if the court denies leave to exceed the capital habeas page
+/// limitation, the filer submits a revised filing that complies with it within
+/// 14 days, unless otherwise ordered.
+deadline revised-capital-habeas-filing-period: 14.days after CapitalHabeasLeaveDenied() counted_by frcp6 cite "D. Ariz. LRCiv 3.5"
+{
+  forum frcp
+}
+
+/// LRCiv 3.7(b): when an action is assigned to a magistrate judge, each party
+/// executes and files within fourteen days of its appearance either a written
+/// consent under 28 U.S.C. § 636(c) or a written election to have the action
+/// reassigned to a district judge.
+deadline magistrate-consent-period: 14.days after MagistrateCaseAppearance() counted_by frcp6 cite "D. Ariz. LRCiv 3.7"
+{
+  forum frcp
+}
+
+/// LRCiv 5.6(d): within fourteen days after service of the notice of lodging,
+/// the designating party files and serves either a notice withdrawing the
+/// confidentiality designation or a motion to seal; otherwise the court may
+/// make the document part of the public record.
+deadline seal-designation-response-period: 14.days after LodgingNoticeServed() counted_by frcp6 cite "D. Ariz. LRCiv 5.6"
+{
+  forum frcp
+}
+
+/// LRCiv 5.6(e): if a request to file under seal is denied in full, the
+/// submitting party may, within five days of the entry of the order,
+/// resubmit the document for filing in the public record.
+deadline public-resubmission-period: 5.days after SealDenialEntered() counted_by frcp6 cite "D. Ariz. LRCiv 5.6"
+{
+  forum frcp
+}
+
+/// LRCiv 7.2(c): unless otherwise ordered, and except as FRCP 56 and LRCiv
+/// 12.1 and 56.1 provide, the opposing party has fourteen days after service
+/// to serve and file a responsive memorandum.
+deadline response-memorandum-period: 14.days after MotionServed() counted_by frcp6 cite "D. Ariz. LRCiv 7.2"
+{
+  forum frcp
+}
+
+/// LRCiv 7.2(d): unless otherwise ordered, and except as LRCiv 12.1 and 56.1
+/// provide, the moving party has seven days after service of the responsive
+/// memorandum to file a reply memorandum.
+deadline reply-memorandum-period: 7.days after ResponseServed() counted_by frcp6 cite "D. Ariz. LRCiv 7.2"
+{
+  forum frcp
+}
+
+/// LRCiv 7.2(g)(2): absent good cause shown, a motion for reconsideration is
+/// filed no later than fourteen days after the date of the filing of the
+/// order that is its subject.
+deadline reconsideration-period: 14.days after OrderFiled() counted_by frcp6 cite "D. Ariz. LRCiv 7.2"
+{
+  forum frcp
+}
+
+/// LRCiv 15.1(a): if leave to amend is granted, the party whose pleading was
+/// amended files and serves the amended pleading within fourteen days of the
+/// filing of the order, unless the court orders otherwise.
+deadline amended-pleading-filing-period: 14.days after LeaveToAmendGranted() counted_by frcp6 cite "D. Ariz. LRCiv 15.1"
+{
+  forum frcp
+}
+
+/// LRCiv 16.1(b): within thirty days after the answer is filed or thirty days
+/// after entry of an order disposing of the last remaining motion under
+/// Supplemental Social Security Rule 4(c), whichever is later, the plaintiff
+/// files an opening brief.
+deadline social-security-opening-brief-period: 30.days after SocialSecurityAnswerOrRuling() counted_by frcp6 cite "D. Ariz. LRCiv 16.1"
+{
+  forum frcp
+}
+
+/// LRCiv 16.1(c): the defendant files an answering brief within thirty days
+/// after service of the plaintiff's opening brief.
+deadline social-security-answering-brief-period: 30.days after OpeningBriefServed() counted_by frcp6 cite "D. Ariz. LRCiv 16.1"
+{
+  forum frcp
+}
+
+/// LRCiv 16.1(d): the plaintiff may file a reply brief within fourteen days
+/// after service of the defendant's brief; the case is deemed submitted when
+/// the reply is filed or due (LRCiv 16.1(e)).
+deadline social-security-reply-brief-period: 14.days after AnsweringBriefServed() counted_by frcp6 cite "D. Ariz. LRCiv 16.1"
+{
+  forum frcp
+}
+
+/// LRCiv 40.2(c): in a civil jury trial, unless written notice is given to
+/// the clerk five days before the trial is to begin that the case has been
+/// settled or otherwise disposed of, the court may require payment of one
+/// day's jury fees by the party responsible.
+deadline jury-fee-settlement-notice-period: 5.days before JuryTrialBegins() counted_by frcp6 cite "D. Ariz. LRCiv 40.2"
+{
+  forum frcp
+}
+
+/// LRCiv 52.1: unless the court directs otherwise, the prevailing party
+/// prepares draft findings and conclusions within seven days after the
+/// rendition of the decision in the presence of counsel, and otherwise within
+/// seven days after notice of the decision.
+deadline draft-findings-period: 7.days after DecisionRendered() counted_by frcp6 cite "D. Ariz. LRCiv 52.1"
+{
+  forum frcp
+}
+
+/// LRCiv 52.1: the adverse party files and serves proposed objections,
+/// amendments or additions to the draft findings within seven days
+/// thereafter.
+deadline findings-objection-period: 7.days after DraftFindingsServed() counted_by frcp6 cite "D. Ariz. LRCiv 52.1"
+{
+  forum frcp
+}
+
+/// LRCiv 54.1(a): a party entitled to costs files and serves a bill of costs
+/// within fourteen days after the entry of final judgment, unless the time is
+/// extended under FRCP 6(b).
+deadline bill-of-costs-period: 14.days after FinalJudgmentEntered() counted_by frcp6 cite "D. Ariz. LRCiv 54.1"
+{
+  forum frcp
+}
+
+/// LRCiv 54.1(b): within fourteen days after service of the bill of costs, a
+/// party objecting to any cost item may file and serve itemized objections.
+deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "D. Ariz. LRCiv 54.1"
+{
+  forum frcp
+}
+
+/// LRCiv 54.1(b): the clerk's taxation of costs is final unless modified on
+/// review by the court on motion served within seven days thereafter, under
+/// FRCP 54(d).
+deadline taxation-review-period: 7.days after TaxationNoticeSent() counted_by frcp6 cite "D. Ariz. LRCiv 54.1"
+{
+  forum frcp
+}
+
+/// LRCiv 54.2(b)(2): unless a statute or order provides otherwise, a party
+/// seeking attorneys' fees and related non-taxable expenses from a party other
+/// than the United States files and serves the motion within fourteen days of
+/// the entry of judgment; fees against the United States follow 28 U.S.C.
+/// § 2412(d)(1)(B) (LRCiv 54.2(b)(1)).
+deadline fee-motion-period: 14.days after FinalJudgmentEntered() counted_by frcp6 cite "D. Ariz. LRCiv 54.2"
+{
+  forum frcp
+}
+
+/// LRCiv 56.1(d): notwithstanding LRCiv 7.2(c), (d) and (f), the party
+/// opposing summary judgment has, unless otherwise ordered, thirty days after
+/// service to serve and file a responsive memorandum.
+deadline summary-judgment-response-period: 30.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "D. Ariz. LRCiv 56.1"
+{
+  forum frcp
+}
+
+/// LRCiv 56.1(d): the moving party has, unless otherwise ordered, fifteen days
+/// after service of the responsive memorandum to serve and file a reply. No
+/// reply statement of facts may be filed (LRCiv 56.1(b)).
+deadline summary-judgment-reply-period: 15.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "D. Ariz. LRCiv 56.1"
+{
+  forum frcp
+}
+
+/// LRCiv 83.2(c): unless otherwise ordered, an attorney directed to show cause
+/// why reciprocal discipline should not issue responds in writing within
+/// fourteen days after notice of the order is sent.
+deadline discipline-response-period: 14.days after ShowCauseNoticeSent() counted_by frcp6 cite "D. Ariz. LRCiv 83.2"
+{
+  forum frcp
+}
+
+/// LRCiv 83.2(d): within seven days of the sending of a notice of suspension
+/// or other action, the attorney files in each pending action a notice
+/// certifying that the client has been notified.
+deadline client-notice-period: 7.days after SuspensionNoticeSent() counted_by frcp6 cite "D. Ariz. LRCiv 83.2"
+{
+  forum frcp
+}
+
+/// LRCiv 83.3(d): an attorney or unrepresented party files a notice of a name
+/// or address change, and an attorney of a firm name or e-mail address
+/// change, no later than fourteen days before the effective date.
+deadline address-change-notice-period: 14.days before AddressChangeEffective() counted_by frcp6 cite "D. Ariz. LRCiv 83.3"
+{
+  forum frcp
+}
+
+/// LRCiv 83.3(d): an unrepresented party who is incarcerated submits the
+/// notice within seven days after the effective date of the change.
+deadline incarcerated-address-change-period: 7.days after AddressChangeEffective() counted_by frcp6 cite "D. Ariz. LRCiv 83.3"
+{
+  forum frcp
+}
+
+test "revised capital habeas filing period: 14 days after the trigger" cite "D. Ariz. LRCiv 3.5"
+{
+  given CapitalHabeasLeaveDenied() on 2026-11-02
+  expect deadline(revised-capital-habeas-filing-period) == 2026-11-16
+}
+
+test "magistrate consent period: 14 days after the trigger" cite "D. Ariz. LRCiv 3.7"
+{
+  given MagistrateCaseAppearance() on 2026-11-02
+  expect deadline(magistrate-consent-period) == 2026-11-16
+}
+
+test "seal designation response period: 14 days after the trigger" cite "D. Ariz. LRCiv 5.6"
+{
+  given LodgingNoticeServed() on 2026-11-02
+  expect deadline(seal-designation-response-period) == 2026-11-16
+}
+
+test "public resubmission period: 5 days after the trigger" cite "D. Ariz. LRCiv 5.6"
+{
+  given SealDenialEntered() on 2026-11-02
+  expect deadline(public-resubmission-period) == 2026-11-09
+}
+
+test "response memorandum period: 14 days after the trigger" cite "D. Ariz. LRCiv 7.2"
+{
+  given MotionServed() on 2026-11-02
+  expect deadline(response-memorandum-period) == 2026-11-16
+}
+
+test "reply memorandum period: 7 days after the trigger" cite "D. Ariz. LRCiv 7.2"
+{
+  given ResponseServed() on 2026-11-02
+  expect deadline(reply-memorandum-period) == 2026-11-09
+}
+
+test "reconsideration period: 14 days after the trigger" cite "D. Ariz. LRCiv 7.2"
+{
+  given OrderFiled() on 2026-11-02
+  expect deadline(reconsideration-period) == 2026-11-16
+}
+
+test "amended pleading filing period: 14 days after the trigger" cite "D. Ariz. LRCiv 15.1"
+{
+  given LeaveToAmendGranted() on 2026-11-02
+  expect deadline(amended-pleading-filing-period) == 2026-11-16
+}
+
+test "social security opening brief period: 30 days after the trigger" cite "D. Ariz. LRCiv 16.1"
+{
+  given SocialSecurityAnswerOrRuling() on 2026-11-02
+  expect deadline(social-security-opening-brief-period) == 2026-12-02
+}
+
+test "social security answering brief period: 30 days after the trigger" cite "D. Ariz. LRCiv 16.1"
+{
+  given OpeningBriefServed() on 2026-11-02
+  expect deadline(social-security-answering-brief-period) == 2026-12-02
+}
+
+test "social security reply brief period: 14 days after the trigger" cite "D. Ariz. LRCiv 16.1"
+{
+  given AnsweringBriefServed() on 2026-11-02
+  expect deadline(social-security-reply-brief-period) == 2026-11-16
+}
+
+test "jury fee settlement notice period: 5 days before the trigger" cite "D. Ariz. LRCiv 40.2"
+{
+  given JuryTrialBegins() on 2027-02-02
+  expect deadline(jury-fee-settlement-notice-period) == 2027-01-28
+}
+
+test "draft findings period: 7 days after the trigger" cite "D. Ariz. LRCiv 52.1"
+{
+  given DecisionRendered() on 2026-11-02
+  expect deadline(draft-findings-period) == 2026-11-09
+}
+
+test "findings objection period: 7 days after the trigger" cite "D. Ariz. LRCiv 52.1"
+{
+  given DraftFindingsServed() on 2026-11-02
+  expect deadline(findings-objection-period) == 2026-11-09
+}
+
+test "bill of costs period: 14 days after the trigger" cite "D. Ariz. LRCiv 54.1"
+{
+  given FinalJudgmentEntered() on 2026-11-02
+  expect deadline(bill-of-costs-period) == 2026-11-16
+}
+
+test "costs objection period: 14 days after the trigger" cite "D. Ariz. LRCiv 54.1"
+{
+  given BillOfCostsServed() on 2026-11-02
+  expect deadline(costs-objection-period) == 2026-11-16
+}
+
+test "taxation review period: 7 days after the trigger" cite "D. Ariz. LRCiv 54.1"
+{
+  given TaxationNoticeSent() on 2026-11-02
+  expect deadline(taxation-review-period) == 2026-11-09
+}
+
+test "fee motion period: 14 days after the trigger" cite "D. Ariz. LRCiv 54.2"
+{
+  given FinalJudgmentEntered() on 2026-11-02
+  expect deadline(fee-motion-period) == 2026-11-16
+}
+
+test "summary judgment response period: 30 days after the trigger" cite "D. Ariz. LRCiv 56.1"
+{
+  given SummaryJudgmentMotionServed() on 2026-11-02
+  expect deadline(summary-judgment-response-period) == 2026-12-02
+}
+
+test "summary judgment reply period: 15 days after the trigger" cite "D. Ariz. LRCiv 56.1"
+{
+  given SummaryJudgmentResponseServed() on 2026-11-02
+  expect deadline(summary-judgment-reply-period) == 2026-11-17
+}
+
+test "discipline response period: 14 days after the trigger" cite "D. Ariz. LRCiv 83.2"
+{
+  given ShowCauseNoticeSent() on 2026-11-02
+  expect deadline(discipline-response-period) == 2026-11-16
+}
+
+test "client notice period: 7 days after the trigger" cite "D. Ariz. LRCiv 83.2"
+{
+  given SuspensionNoticeSent() on 2026-11-02
+  expect deadline(client-notice-period) == 2026-11-09
+}
+
+test "address change notice period: 14 days before the trigger" cite "D. Ariz. LRCiv 83.3"
+{
+  given AddressChangeEffective() on 2027-02-02
+  expect deadline(address-change-notice-period) == 2027-01-19
+}
+
+test "incarcerated address change period: 7 days after the trigger" cite "D. Ariz. LRCiv 83.3"
+{
+  given AddressChangeEffective() on 2026-11-02
+  expect deadline(incarcerated-address-change-period) == 2026-11-09
+}

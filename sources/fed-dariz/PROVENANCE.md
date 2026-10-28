@@ -15,3 +15,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 613d9fe4cae662fefbd81bc61a29bfea4c746c76b1ac8488bcfe03c20833c782. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `fed-dariz/original/azd-lrcrim-2025-2026.pdf` as served (sha256 2114eac2c26cd8b5ec8db71ae0ca79589fccff58e450df98806a5de61d8b1964); extraction sha256 613d9fe4cae662fefbd81bc61a29bfea4c746c76b1ac8488bcfe03c20833c782.
+
+### `fed-dariz/arizona-lrciv-sectioned.txt` — D. Ariz. LRCiv, sectioned
+
+- Derived in the pod (lg-f3q8.37) from `fed-dariz/arizona-lrciv.txt` (extract sha256 dd1ae5357e7186ef7b0d725b8e3c3748835795db302b3536a59f5483569e9b5c); nothing fetched. One `## LRCiv <n>` line is inserted before each rule's own heading line (`LRCiv 1.1` through `LRCiv 83.10`, 67 rules). Rule text was not edited: deleting the marker lines (`perl -ne 'print unless /^## LRCiv /'`) restores the extract byte for byte.
+- Edition: as the extract, 2025-2026 edition, effective 12/01/2025.
+- Sectioned sha256 0da384ed858ac43637c3ab1cc134d4294aa2575d7a72cd14cc53157198e5c365 (the `path_sha256` pinned by `lit/azd/Lit.toml`).

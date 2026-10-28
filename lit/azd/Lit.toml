@@ -1,0 +1,46 @@
+# The District of Arizona's Local Rules of Civil Procedure as a local-rule
+# layer over lit/frcp (28 U.S.C. § 2071; FRCP 83(a)): it declares only the
+# periods and page limits the Local Rules themselves state and re-encodes no
+# FRCP deadline. The time periods the Local Rules prescribe are computed
+# under FRCP 6 (LRCiv 7.2 n.5). The rules are the 2025-2026 edition,
+# effective December 1, 2025 (sources/fed-dariz).
+[package]
+name = "azd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "azd-local-rules"
+forum = "azd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, District of Arizona: Local Rules of Civil Procedure"
+description = "The District of Arizona's Local Rules of Civil Procedure as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): capital habeas page limits, magistrate judge consent, sealing of designated documents, motion briefing and page limits, reconsideration, amended pleadings, Social Security briefing, jury-fee settlement notice, findings, costs, attorneys' fees, summary judgment briefing, attorney discipline and notices of address change."
+in_force = "2025-12-01"
+known_at = "2026-10-27"
+unknown_before = "2025-12-01"
+jurisdiction = "United States District Court, D. Arizona"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "azd-lrciv"
+issuer = "United States District Court for the District of Arizona"
+date = "2025-12-01"
+designation = "Local Rules of Civil Procedure"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.azd-lrciv]
+title = "Local Rules of Civil Procedure of the United States District Court for the District of Arizona (2025-2026 edition, effective December 1, 2025)"
+url = "https://www.azd.uscourts.gov/sites/azd/files/local-rules/LRCiv%202025.pdf"
+path = "sources/fed-dariz/arizona-lrciv-sectioned.txt"
+path_sha256 = "0da384ed858ac43637c3ab1cc134d4294aa2575d7a72cd14cc53157198e5c365"
+sha256 = "614b8b1b8ffa83f23bca8d672c62e1526006f07dd5557dafde38a54256663984"
+as_of = "2025-12-01"
+cite_prefixes = ["D. Ariz. LRCiv"]
+section_heading = "LRCiv {n}"

@@ -1,0 +1,435 @@
+module cit.periods
+
+import core.calendar.{ us-federal-holidays }
+import core.time.{ ServiceMethod }
+
+// The periods the USCIT Rules state, each counted by USCIT R. 6(a) and each
+// in force from the vendored edition (as amended August 21, 2026): earlier
+// editions are not vendored, so the package's `unknown_before` makes an
+// earlier query a hole. USCIT R. 6(b)(2) forbids extending the Rule 59(b),
+// (d) and (e) and 60(c) periods; every other period here may be extended
+// for good cause under USCIT R. 6(b)(1).
+//
+// Rule 4 service carries no method: USCIT R. 6(d) adds time only after
+// service "under Rule 5(b)(2)(C) (mail), (D) (leaving it with the clerk), or
+// (F) (other means consented to)", so a period that runs from Rule 4
+// service of the summons and complaint is never extended by it.
+/// USCIT R. 6 as last amended Oct. 9, 2024, eff. Nov. 8, 2024 (its credits),
+/// in force here from the vendored edition of August 21, 2026: no earlier
+/// edition is vendored to prove the text before it.
+/// Exclude the trigger day, count every day and include the last day,
+/// rolling past a Saturday, Sunday or legal holiday (6(a)(1)) or a day the
+/// clerk's office is inaccessible (6(a)(3)). The legal holidays of
+/// 6(a)(6)(A) are the eleven of 5 U.S.C. § 6103(a), core's
+/// `us-federal-holidays`; days declared under 6(a)(6)(B) are not modeled,
+/// so such a last day yields the earlier date, never a later one. USCIT R.
+/// 6(d) adds 5 days, not the FRCP's 3, after service by mail, by leaving
+/// the paper with the clerk, or by other consented means; its Practice
+/// Comment notes that electronic service, the default under Administrative
+/// Order 02-01, adds none.
+counting uscit6 effective [2026-08-21, ..) known_at 2026-08-21 cite "USCIT R. 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 5.days
+    Clerk: 5.days
+    OtherConsented: 5.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "USCIT R. 6(d)"
+  holidays us-federal-holidays
+  forums [cit]
+  allow_hours
+  end_of_month clamp
+}
+
+/// A summons is filed with the clerk (USCIT R. 3(a)(1), (2)).
+event SummonsFiled()
+/// The complaint is filed with the clerk (USCIT R. 3(a)).
+event ComplaintFiled()
+/// The summons and complaint are served under USCIT R. 4.
+event ComplaintServed()
+
+/// Where a waiver of service was requested (USCIT R. 4(c)(1)).
+enum WaiverPlace { WithinDistrict, Abroad }
+
+/// The plaintiff sends a request to waive service (USCIT R. 4(c)(1)(E)).
+event WaiverRequestSent(place: WaiverPlace)
+/// Notice of the court's action denying or postponing a Rule 12 motion
+/// (USCIT R. 12(a)(2)(A)).
+event MotionDisposed()
+
+/// Papers whose service starts a response period.
+enum Paper {
+  Motion,
+  DispositiveMotion,
+  DispositiveResponse,
+  SchedulingOrder,
+  AgencyRecordMotion,
+  AgencyRecordResponse,
+  AgencyRecordReply,
+  FeeApplication,
+}
+
+/// A paper served under USCIT R. 5(b) by `method`; USCIT R. 6(d) adds 5
+/// days for mail, clerk and other consented service.
+event ServedPaper(paper: Paper, method: ServiceMethod)
+/// The agency files the administrative record (USCIT R. 73.2(a)).
+event AgencyRecordFiled()
+/// The reply briefs on a Rule 56.2 motion are filed (USCIT R. 56.2(c)(3)).
+event ReplyBriefsFiled()
+/// The agency files its remand determination (USCIT R. 56.2(h)).
+event RemandDeterminationFiled()
+/// Comments opposing the remand determination are filed; the latest filing
+/// date governs (USCIT R. 56.2(h)(3)).
+event RemandOppositionFiled()
+/// Responsive comments supporting the remand determination are filed
+/// (USCIT R. 56.2(h)(4)).
+event RemandSupportFiled()
+/// All discovery closes (USCIT R. 56(b)).
+event DiscoveryClosed()
+/// A default-judgment hearing is set (USCIT R. 55(b)).
+event DefaultHearingSet()
+/// Judgment or an order is entered (USCIT R. 58(c)).
+event JudgmentEntered()
+/// A judgment that requires a separate document is entered in the civil
+/// docket without one (USCIT R. 58(c)(2)).
+event DocketEntryWithoutSeparateDocument()
+/// The judgment becomes final and not appealable, the "final judgment" of
+/// 28 U.S.C. § 2412(d)(2)(G) (USCIT R. 54.1(a)).
+event FinalJudgment()
+
+/// In a § 1581(c) action contesting a determination listed in section
+/// 516A(a)(2) or (3) of the Tariff Act of 1930, the action is commenced by
+/// "A summons, and within 30 days thereafter a complaint".
+deadline complaint-after-summons-period: 30.days after SummonsFiled() counted_by uscit6 cite "USCIT R. 3(a)(2)"
+/// A defendant not served within 90 days after the complaint is filed is
+/// dismissed without prejudice or ordered served; good cause extends it.
+/// It does not apply to service in a foreign country.
+deadline service-period: 90.days after ComplaintFiled() counted_by uscit6 cite "USCIT R. 4(l)"
+/// The waiver request gives the defendant at least 30 days after it was
+/// sent (at least 60 days outside any judicial district) to return it.
+deadline waiver-return-period: 30.days after WaiverRequestSent(WithinDistrict) counted_by uscit6 cite "USCIT R. 4(c)(1)(F)"
+deadline waiver-return-abroad-period: 60.days after WaiverRequestSent(Abroad) counted_by uscit6 cite "USCIT R. 4(c)(1)(F)"
+/// A defendant who timely returns a waiver answers 60 days after the
+/// request was sent, or 90 days when sent outside any judicial district.
+deadline waiver-answer-period: 60.days after WaiverRequestSent(WithinDistrict) counted_by uscit6 cite "USCIT R. 4(c)(3)"
+deadline waiver-answer-abroad-period: 90.days after WaiverRequestSent(Abroad) counted_by uscit6 cite "USCIT R. 4(c)(3)"
+/// The United States answers within 60 days after service on the
+/// Attorney-in-Charge, International Trade Field Office; no answer is
+/// served in a § 1581(c) action (12(a)(1)(A)(i)).
+deadline government-answer-period: 60.days after ComplaintServed() counted_by uscit6 cite "USCIT R. 12(a)(1)(A)"
+/// In a § 1581(f) action for an order to make confidential information
+/// available under section 777(c)(2) of the Tariff Act of 1930, the answer
+/// is due 14 days after service of the summons and complaint.
+deadline confidential-information-answer-period: 14.days after ComplaintServed() counted_by uscit6 cite "USCIT R. 12(a)(1)(A)(ii)"
+/// Any other defendant answers within 21 days after being served.
+deadline answer-period: 21.days after ComplaintServed() counted_by uscit6 cite "USCIT R. 12(a)(1)(B)(i)"
+/// After the court denies a Rule 12 motion or postpones its disposition
+/// until trial, the responsive pleading is due 14 days after notice.
+deadline answer-after-motion-period: 14.days after MotionDisposed() counted_by uscit6 cite "USCIT R. 12(a)(2)(A)"
+/// A response to a motion is served within 21 days after service of the
+/// motion; to a dispositive motion (7(g)), within 35 days; the movant
+/// replies to that response within 21 days.
+deadline motion-response-period: 21.days after ServedPaper(Motion) counted_by uscit6 cite "USCIT R. 7(d)"
+deadline dispositive-response-period: 35.days after ServedPaper(DispositiveMotion) counted_by uscit6 cite "USCIT R. 7(d)"
+deadline dispositive-reply-period: 21.days after ServedPaper(DispositiveResponse) counted_by uscit6 cite "USCIT R. 7(d)"
+/// A motion for a statutory injunction against liquidation is filed within
+/// 30 days after service of the complaint.
+deadline statutory-injunction-period: 30.days after ComplaintServed() counted_by uscit6 cite "USCIT R. 56.2(a)(4)(A)"
+/// In a § 1581(c) action the agency files the record within 40 days after
+/// service of the complaint on it.
+deadline agency-record-period: 40.days after ComplaintServed() counted_by uscit6 cite "USCIT R. 73.2(a)"
+/// In a § 1581(a) or (b) action CBP files the entry documents within 90
+/// days after the summons is filed.
+deadline customs-documents-period: 90.days after SummonsFiled() counted_by uscit6 cite "USCIT R. 73.1(a)"
+/// The Joint Status Report and proposed briefing schedule are due no later
+/// than 30 days after the record is filed.
+deadline joint-status-report-period: 30.days after AgencyRecordFiled() counted_by uscit6 cite "USCIT R. 56.2(a)(5)(A)"
+/// Unless the scheduling order provides otherwise, the motion for judgment
+/// on the agency record is due 60 days after service of the scheduling
+/// order, responses 60 days after service of the movant's brief, and the
+/// reply 28 days after service of the response.
+deadline agency-record-motion-period: 60.days after ServedPaper(SchedulingOrder) counted_by uscit6 cite "USCIT R. 56.2(d)"
+deadline agency-record-response-period: 60.days after ServedPaper(AgencyRecordMotion) counted_by uscit6 cite "USCIT R. 56.2(d)"
+deadline agency-record-reply-period: 28.days after ServedPaper(AgencyRecordResponse) counted_by uscit6 cite "USCIT R. 56.2(d)"
+/// A motion for oral argument is due no later than 21 days after service of
+/// the reply brief.
+deadline agency-record-argument-period: 21.days after ServedPaper(AgencyRecordReply) counted_by uscit6 cite "USCIT R. 56.2(e)"
+/// The plaintiffs file a single joint appendix within 14 days of the filing
+/// of the reply briefs.
+deadline joint-appendix-period: 14.days after ReplyBriefsFiled() counted_by uscit6 cite "USCIT R. 56.2(c)(3)"
+/// A § 1581(c) plaintiff dismisses by notice only within 30 days after
+/// service of the complaint; later it needs a stipulation or an order.
+deadline voluntary-dismissal-notice-period: 30.days after ComplaintServed() counted_by uscit6 cite "USCIT R. 56.2(g)"
+/// Unless the remand order provides otherwise: the agency files the
+/// certified list within 14 days of filing its remand determination;
+/// opposing comments are due within 30 days after that filing; supporting
+/// comments within 30 days after the opposing comments; and the joint
+/// appendix within 14 days of the supporting comments.
+deadline remand-record-period: 14.days after RemandDeterminationFiled() counted_by uscit6 cite "USCIT R. 56.2(h)(1)"
+deadline remand-opposition-period: 30.days after RemandDeterminationFiled() counted_by uscit6 cite "USCIT R. 56.2(h)(2)"
+deadline remand-support-period: 30.days after RemandOppositionFiled() counted_by uscit6 cite "USCIT R. 56.2(h)(3)"
+deadline remand-appendix-period: 14.days after RemandSupportFiled() counted_by uscit6 cite "USCIT R. 56.2(h)(4)"
+/// Unless the court orders otherwise, a summary judgment motion may be
+/// filed until 30 days after the close of all discovery.
+deadline summary-judgment-period: 30.days after DiscoveryClosed() counted_by uscit6 cite "USCIT R. 56(b)"
+/// A defaulted party that has appeared is served with written notice of
+/// the application at least 14 days before the hearing.
+deadline default-notice-period: 14.days before DefaultHearingSet() counted_by uscit6 cite "USCIT R. 55(b)"
+/// A judgment that needs a separate document is entered when it is set out
+/// in one or 150 days after its docket entry, whichever is earlier.
+deadline deemed-entry-period: 150.days after DocketEntryWithoutSeparateDocument() counted_by uscit6 cite "USCIT R. 58(c)(2)(B)"
+
+/// A motion for a new trial or rehearing is served and filed not later than
+/// 30 days after entry; a motion to alter or amend, no later than 30 days.
+/// USCIT R. 6(b)(2): neither may be extended.
+deadline new-trial-period: 30.days after JudgmentEntered() counted_by uscit6 cite "USCIT R. 59(b)"
+{
+  extend { never cite "USCIT R. 6(b)(2)" }
+}
+
+deadline alter-amend-period: 30.days after JudgmentEntered() counted_by uscit6 cite "USCIT R. 59(e)"
+{
+  extend { never cite "USCIT R. 6(b)(2)" }
+}
+
+/// A Rule 60(b)(1)-(3) motion is made no more than a year after entry.
+deadline relief-from-judgment-period: 1.years after JudgmentEntered() counted_by uscit6 cite "USCIT R. 60(c)(1)"
+{
+  extend { never cite "USCIT R. 6(b)(2)" }
+}
+
+/// An EAJA application is filed within 30 days after the date of final
+/// judgment, and the response within 30 days of service of the application.
+deadline eaja-application-period: 30.days after FinalJudgment() counted_by uscit6 cite "USCIT R. 54.1(a)"
+deadline eaja-response-period: 30.days after ServedPaper(FeeApplication) counted_by uscit6 cite "USCIT R. 54.1(c)"
+
+test "the complaint follows the summons within 30 days" cite "USCIT R. 3(a)(2)"
+{
+  given SummonsFiled() on 2026-09-01
+  expect deadline(complaint-after-summons-period) == 2026-10-01
+}
+
+test "service is due 90 days after the complaint is filed" cite "USCIT R. 4(l)"
+{
+  given ComplaintFiled() on 2026-09-01
+  expect deadline(service-period) == 2026-11-30
+}
+
+test "a waiver request allows 30 days to return it" cite "USCIT R. 4(c)(1)(F)"
+{
+  given WaiverRequestSent(WithinDistrict) on 2026-09-01
+  expect deadline(waiver-return-period) == 2026-10-01
+}
+
+test "a waiver request sent abroad allows 60 days, rolling past a Saturday" cite "USCIT R. 4(c)(1)(F)"
+{
+  given WaiverRequestSent(Abroad) on 2026-09-01
+  expect deadline(waiver-return-abroad-period) == 2026-11-02
+}
+
+test "after a waiver the answer is due 60 days after the request" cite "USCIT R. 4(c)(3)"
+{
+  given WaiverRequestSent(WithinDistrict) on 2026-09-01
+  expect deadline(waiver-answer-period) == 2026-11-02
+}
+
+test "after a waiver sent abroad the answer is due 90 days after the request" cite "USCIT R. 4(c)(3)"
+{
+  given WaiverRequestSent(Abroad) on 2026-09-01
+  expect deadline(waiver-answer-abroad-period) == 2026-11-30
+}
+
+test "the United States answers 60 days after service, rolling past a Saturday" cite "USCIT R. 12(a)(1)(A)"
+{
+  given ComplaintServed() on 2026-09-01
+  expect deadline(government-answer-period) == 2026-11-02
+}
+
+test "a section 1581(f) confidential-information answer is due in 14 days" cite "USCIT R. 12(a)(1)(A)(ii)"
+{
+  given ComplaintServed() on 2026-09-01
+  expect deadline(confidential-information-answer-period) == 2026-09-15
+}
+
+test "another defendant answers 21 days after service" cite "USCIT R. 12(a)(1)(B)(i)"
+{
+  given ComplaintServed() on 2026-09-01
+  expect deadline(answer-period) == 2026-09-22
+}
+
+test "the answer is due 14 days after notice of the ruling" cite "USCIT R. 12(a)(2)(A)"
+{
+  given MotionDisposed() on 2026-09-01
+  expect deadline(answer-after-motion-period) == 2026-09-15
+}
+
+test "a motion response is due 21 days after service" cite "USCIT R. 7(d)"
+{
+  given ServedPaper(Motion, Electronic) on 2026-09-01
+  expect deadline(motion-response-period) == 2026-09-22
+}
+
+test "a dispositive-motion response is due 35 days after service" cite "USCIT R. 7(d)"
+{
+  given ServedPaper(DispositiveMotion, Electronic) on 2026-09-01
+  expect deadline(dispositive-response-period) == 2026-10-06
+}
+
+test "a dispositive-motion reply is due 21 days after the response" cite "USCIT R. 7(d)"
+{
+  given ServedPaper(DispositiveResponse, Electronic) on 2026-09-01
+  expect deadline(dispositive-reply-period) == 2026-09-22
+}
+
+test "a statutory injunction motion is due 30 days after service of the complaint" cite "USCIT R. 56.2(a)(4)(A)"
+{
+  given ComplaintServed() on 2026-09-01
+  expect deadline(statutory-injunction-period) == 2026-10-01
+}
+
+test "the agency record is due in 40 days, rolling past Sunday and Columbus Day" cite "USCIT R. 73.2(a)"
+{
+  given ComplaintServed() on 2026-09-01
+  expect deadline(agency-record-period) == 2026-10-13
+}
+
+test "CBP files the entry documents 90 days after the summons" cite "USCIT R. 73.1(a)"
+{
+  given SummonsFiled() on 2026-09-01
+  expect deadline(customs-documents-period) == 2026-11-30
+}
+
+test "the Joint Status Report is due 30 days after the record" cite "USCIT R. 56.2(a)(5)(A)"
+{
+  given AgencyRecordFiled() on 2026-09-01
+  expect deadline(joint-status-report-period) == 2026-10-01
+}
+
+test "the agency-record motion is due 60 days after the scheduling order" cite "USCIT R. 56.2(d)"
+{
+  given ServedPaper(SchedulingOrder, Electronic) on 2026-09-01
+  expect deadline(agency-record-motion-period) == 2026-11-02
+}
+
+test "the agency-record response is due 60 days after the motion" cite "USCIT R. 56.2(d)"
+{
+  given ServedPaper(AgencyRecordMotion, Electronic) on 2026-09-01
+  expect deadline(agency-record-response-period) == 2026-11-02
+}
+
+test "the agency-record reply is due 28 days after the response" cite "USCIT R. 56.2(d)"
+{
+  given ServedPaper(AgencyRecordResponse, Electronic) on 2026-09-01
+  expect deadline(agency-record-reply-period) == 2026-09-29
+}
+
+test "an oral-argument motion is due 21 days after the reply brief" cite "USCIT R. 56.2(e)"
+{
+  given ServedPaper(AgencyRecordReply, Electronic) on 2026-09-01
+  expect deadline(agency-record-argument-period) == 2026-09-22
+}
+
+test "the joint appendix is due 14 days after the reply briefs" cite "USCIT R. 56.2(c)(3)"
+{
+  given ReplyBriefsFiled() on 2026-09-01
+  expect deadline(joint-appendix-period) == 2026-09-15
+}
+
+test "a section 1581(c) notice of dismissal is due within 30 days of service" cite "USCIT R. 56.2(g)"
+{
+  given ComplaintServed() on 2026-09-01
+  expect deadline(voluntary-dismissal-notice-period) == 2026-10-01
+}
+
+test "the remand record is due 14 days after the remand determination" cite "USCIT R. 56.2(h)(1)"
+{
+  given RemandDeterminationFiled() on 2026-09-01
+  expect deadline(remand-record-period) == 2026-09-15
+}
+
+test "opposing remand comments are due in 30 days" cite "USCIT R. 56.2(h)(2)"
+{
+  given RemandDeterminationFiled() on 2026-09-01
+  expect deadline(remand-opposition-period) == 2026-10-01
+}
+
+test "supporting remand comments are due 30 days after the opposition" cite "USCIT R. 56.2(h)(3)"
+{
+  given RemandOppositionFiled() on 2026-09-01
+  expect deadline(remand-support-period) == 2026-10-01
+}
+
+test "the remand joint appendix is due 14 days after the supporting comments" cite "USCIT R. 56.2(h)(4)"
+{
+  given RemandSupportFiled() on 2026-09-01
+  expect deadline(remand-appendix-period) == 2026-09-15
+}
+
+test "summary judgment may be moved until 30 days after discovery closes" cite "USCIT R. 56(b)"
+{
+  given DiscoveryClosed() on 2026-09-01
+  expect deadline(summary-judgment-period) == 2026-10-01
+}
+
+test "default-judgment notice is served 14 days before the hearing" cite "USCIT R. 55(b)"
+{
+  given DefaultHearingSet() on 2026-10-01
+  expect deadline(default-notice-period) == 2026-09-17
+}
+
+test "judgment is deemed entered 150 days after the docket entry" cite "USCIT R. 58(c)(2)(B)"
+{
+  given DocketEntryWithoutSeparateDocument() on 2026-09-01
+  expect deadline(deemed-entry-period) == 2027-01-29
+}
+
+test "a new-trial motion is due 30 days after entry" cite "USCIT R. 59(b)"
+{
+  given JudgmentEntered() on 2026-09-01
+  expect deadline(new-trial-period) == 2026-10-01
+}
+
+test "a motion to alter or amend is due 30 days after entry" cite "USCIT R. 59(e)"
+{
+  given JudgmentEntered() on 2026-09-01
+  expect deadline(alter-amend-period) == 2026-10-01
+}
+
+test "a Rule 60(b)(1)-(3) motion is due a year after entry" cite "USCIT R. 60(c)(1)"
+{
+  given JudgmentEntered() on 2026-09-01
+  expect deadline(relief-from-judgment-period) == 2027-09-01
+}
+
+test "an EAJA application is due 30 days after final judgment" cite "USCIT R. 54.1(a)"
+{
+  given FinalJudgment() on 2026-09-01
+  expect deadline(eaja-application-period) == 2026-10-01
+}
+
+test "an EAJA response is due 30 days after service of the application" cite "USCIT R. 54.1(c)"
+{
+  given ServedPaper(FeeApplication, Electronic) on 2026-09-01
+  expect deadline(eaja-response-period) == 2026-10-01
+}
+
+test "mail service adds 5 days after the period, rolling past a Sunday" cite "USCIT R. 6(d)"
+{
+  given ServedPaper(Motion, Mail) on 2026-09-01
+  expect deadline(motion-response-period) == 2026-09-28
+}
+
+test "a period ending on Labor Day rolls to Tuesday" cite "USCIT R. 6(a)(1)(C)"
+{
+  given ComplaintServed() on 2026-08-24
+  expect deadline(confidential-information-answer-period) == 2026-09-08
+}

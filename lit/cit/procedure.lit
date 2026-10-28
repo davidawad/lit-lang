@@ -1,0 +1,228 @@
+module cit.procedure
+
+import cit.periods.{
+  agency-record-motion-period,
+  agency-record-period,
+  alter-amend-period,
+  answer-after-motion-period,
+  answer-period,
+  complaint-after-summons-period,
+  government-answer-period,
+  joint-status-report-period,
+  new-trial-period,
+  remand-opposition-period,
+  service-period,
+  summary-judgment-period,
+}
+
+// The outline's leading decisions are not carried: no reporter is vendored
+// to check them against. The court's own Practice Comments name two
+// decisions, cited there and noted below as the Comments state them.
+start commencement
+
+decision commencement: "How the action is commenced" by applicant cite "USCIT R. 3(a)"
+{
+  note "A civil action is commenced by filing with the clerk: a summons alone in an action described in 28 U.S.C. § 1581(a) or (b); a summons, and within 30 days thereafter a complaint, in a § 1581(c) action contesting a determination listed in section 516A(a)(2) or (3) of the Tariff Act of 1930; or a summons and complaint concurrently in all other actions (USCIT R. 3(a)). The filing fee is $400, except $175 in a § 1581(a) action and $35 in a § 1581(d)(1) action (USCIT R. 3(b)); a § 1581(a) complaint carries a $200 fee (USCIT R. 3(c)). The Practice Comment to USCIT R. 3 cites Georgetown Steel v. United States, 801 F.2d 1308 (Fed. Cir. 1986), for the 30-day complaint period. The jurisdictional grants of § 1581 and the limitations periods of 28 U.S.C. § 2636 are not vendored, so no limitations period is encoded."
+  edge-commencement-summons "Summons filed; the clerk serves it" -> summons-served {
+    authority cite "USCIT R. 4(a)"
+  }
+  edge-commencement-concurrent "Summons and complaint filed concurrently" -> plaintiff-service {
+    authority cite "USCIT R. 4(b)(1)"
+  }
+}
+
+state summons-served: "Summons served by the clerk" by court cite "USCIT R. 4(a)"
+{
+  note "In an action commenced by summons only, the clerk serves the Attorney General through the Attorney-in-Charge, International Trade Field Office (USCIT R. 4(a)(1)), and the further addressees USCIT R. 4(a)(2)-(4) name. In a § 1581(a) or (b) action CBP files the entry documents within 90 days after the summons is filed (USCIT R. 73.1(a)). In a § 1581(c) action under section 516A(a)(2) or (3) the complaint follows within 30 days of the summons (USCIT R. 3(a)(2)); the Practice Comment to USCIT R. 7 records that DaimlerChrysler Corp. v. United States, 442 F.3d 1313 (Fed. Cir. 2006), held the summons acts as the initial pleading in a § 1581(a) action."
+  edge-summons-served-complaint "Complaint filed" -> answer-due {
+    authority cite "USCIT R. 3(a)(2)"
+    within complaint-after-summons-period {
+      note "30 days after the summons in a § 1581(c) section 516A(a)(2) or (3) action."
+    }
+  }
+  edge-summons-served-agency-record "Section 1581(c) action: complaint filed; no answer is served" -> agency-record {
+    authority cite "USCIT R. 12(a)(1)(A)"
+    within complaint-after-summons-period { note "30 days after the summons." }
+  }
+}
+
+decision plaintiff-service: "Plaintiff serves the summons and complaint" by applicant cite "USCIT R. 4(b)"
+{
+  note "In an action commenced by concurrent filing the plaintiff causes service of the summons and complaint (USCIT R. 4(b)(1)), or requests a waiver, which gives the defendant at least 30 days (60 outside any judicial district) to return it (USCIT R. 4(c)(1)(F)); a defendant who timely returns a waiver answers 60 days after the request was sent, or 90 days outside any judicial district (USCIT R. 4(c)(3)). A defendant not served within 90 days after the complaint is filed is dismissed without prejudice or ordered served (USCIT R. 4(l))."
+  edge-plaintiff-service-served "Service made" -> answer-due {
+    authority cite "USCIT R. 4(l)"
+    within service-period { note "90 days after the complaint is filed." }
+  }
+  edge-plaintiff-service-dismissed "Not served within 90 days" -> dismissed-service {
+    authority cite "USCIT R. 4(l)"
+  }
+}
+
+decision answer-due: "Answer or Rule 12 motion" by office cite "USCIT R. 12(a)"
+{
+  note "The United States answers within 60 days after service on the Attorney-in-Charge, International Trade Field Office (USCIT R. 12(a)(1)(A)); in a § 1581(f) confidential-information action, within 14 days (USCIT R. 12(a)(1)(A)(ii)); any other defendant within 21 days after service (USCIT R. 12(a)(1)(B)(i)). A Rule 12(b) defense is raised by motion before pleading (USCIT R. 12(b)); a response to a dispositive motion is due within 35 days after its service (USCIT R. 7(d))."
+  edge-answer-due-answer "Answer served" -> pleadings-closed {
+    authority cite "USCIT R. 12(a)(1)(A)"
+    within government-answer-period { note "60 days after service on the United States." }
+  }
+  edge-answer-due-other-answer "Answer served by a defendant other than the United States" -> pleadings-closed {
+    authority cite "USCIT R. 12(a)(1)(B)(i)"
+    within answer-period { note "21 days after service." }
+  }
+  edge-answer-due-rule12 "Rule 12(b) motion" -> rule12-ruling {
+    authority cite "USCIT R. 12(b)"
+    within government-answer-period { note "Made before pleading, within the answer period." }
+  }
+  edge-answer-due-default "No answer or motion" -> default-judgment {
+    authority cite "USCIT R. 55(a)"
+  }
+}
+
+decision rule12-ruling: "Ruling on the Rule 12 motion" by court cite "USCIT R. 12(b)"
+{
+  note "The defenses that may be made by motion are listed in USCIT R. 12(b)(1)-(7); 12(b)(3) is reserved. If the court denies the motion or postpones it until trial, the responsive pleading is due 14 days after notice of its action (USCIT R. 12(a)(2)(A))."
+  edge-rule12-ruling-dismissed "Motion granted" -> dismissed-rule12 {
+    authority cite "USCIT R. 12(b)"
+  }
+  edge-rule12-ruling-answer "Motion denied or postponed" -> pleadings-closed {
+    authority cite "USCIT R. 12(a)(2)(A)"
+    within answer-after-motion-period { note "14 days after notice of the court's action." }
+  }
+}
+
+state pleadings-closed: "Pleadings closed; scheduling" by court cite "USCIT R. 16"
+{
+  note "Postassignment conferences, scheduling and management under USCIT R. 16."
+  edge-pleadings-closed-discovery "Scheduling order entered" -> discovery {
+    authority cite "USCIT R. 16"
+  }
+  edge-pleadings-closed-settled "Dismissal by notice or stipulation" -> settled {
+    authority cite "USCIT R. 41(a)"
+  }
+}
+
+state discovery: "Discovery" by applicant cite "USCIT R. 26"
+{
+  note "Disclosure and discovery under USCIT R. 26 through 37. A summary judgment motion may be filed, unless the court orders otherwise, at any time until 30 days after the close of all discovery (USCIT R. 56(b))."
+  edge-discovery-summary-judgment "Summary judgment motion" -> summary-judgment {
+    authority cite "USCIT R. 56(b)"
+    within summary-judgment-period { note "Until 30 days after the close of all discovery." }
+  }
+  edge-discovery-trial "Request for trial" -> trial-stage { authority cite "USCIT R. 40" }
+  edge-discovery-settled "Dismissal by stipulation or order" -> settled {
+    authority cite "USCIT R. 41(a)"
+  }
+}
+
+state agency-record: "Agency record filed; motion for judgment on the agency record" by applicant cite "USCIT R. 56.2"
+{
+  note "The agency files the record within 40 days after service of the complaint on it (USCIT R. 73.2(a)). No later than 30 days after the record is filed the parties file a Joint Status Report and proposed briefing schedule (USCIT R. 56.2(a)(5)(A)). Unless the scheduling order provides otherwise, the motion is due 60 days after service of the scheduling order, responses 60 days after service of the movant's brief, and the reply 28 days after service of the response (USCIT R. 56.2(d)); the joint appendix follows within 14 days of the reply briefs (USCIT R. 56.2(c)(3)). Cross-motions are prohibited (USCIT R. 56.2(b)). A statutory injunction motion is due within 30 days after service of the complaint (USCIT R. 56.2(a)(4)(A)), and a notice of voluntary dismissal within 30 days after service of the complaint (USCIT R. 56.2(g)). USCIT R. 56.1 governs agency-record actions other than § 1581(c). The standard of review of 28 U.S.C. § 2640 is not vendored."
+  edge-agency-record-briefed "Joint Status Report filed; motion briefed" -> agency-judgment-ruling {
+    authority cite "USCIT R. 56.2(d)"
+    within agency-record-motion-period {
+      note "60 days after service of the scheduling order, unless it provides otherwise."
+    }
+  }
+  edge-agency-record-report "Joint Status Report and proposed briefing schedule" -> agency-record {
+    authority cite "USCIT R. 56.2(a)(5)(A)"
+    within joint-status-report-period { note "30 days after the record is filed." }
+  }
+  edge-agency-record-record "Record filed by the agency" -> agency-record {
+    authority cite "USCIT R. 73.2(a)"
+    within agency-record-period { note "40 days after service of the complaint on the agency." }
+  }
+  edge-agency-record-dismissed "Notice of voluntary dismissal" -> settled {
+    authority cite "USCIT R. 56.2(g)"
+  }
+}
+
+decision agency-judgment-ruling: "Judgment on the agency record" by court cite "USCIT R. 56.2(f)"
+{
+  note "The court may grant judgment in whole or in part in any party's favor (USCIT R. 56.2(f)), and may enter judgment for an opposing party notwithstanding the absence of a cross-motion (USCIT R. 56.2(b))."
+  edge-agency-judgment-entered "Judgment on the agency record" -> judgment-entered {
+    authority cite "USCIT R. 56.2(f)"
+  }
+  edge-agency-judgment-remand "Remand to the agency" -> remanded {
+    authority cite "USCIT R. 56.2(h)"
+  }
+}
+
+state remanded: "Remanded to the agency" by court cite "USCIT R. 56.2(h)"
+{
+  note "Unless the remand order provides otherwise: the agency files the certified list and any new record documents within 14 days of filing its remand determination (USCIT R. 56.2(h)(1)); opposing comments are due within 30 days after the remand determination is filed (USCIT R. 56.2(h)(2)); supporting comments within 30 days after the opposing comments (USCIT R. 56.2(h)(3)); and the joint appendix within 14 days of the supporting comments (USCIT R. 56.2(h)(4))."
+  edge-remanded-ruling "Remand determination filed and commented on" -> agency-judgment-ruling {
+    authority cite "USCIT R. 56.2(h)(2)"
+    within remand-opposition-period {
+      note "Opposing comments within 30 days after the remand determination is filed."
+    }
+  }
+}
+
+decision summary-judgment: "Motion for summary judgment" by court cite "USCIT R. 56(a)"
+{
+  note "The court shall grant summary judgment if the movant shows that there is no genuine dispute as to any material fact and the movant is entitled to judgment as a matter of law (USCIT R. 56(a)); the statement of USCIT R. 56.3 is annexed to the motion."
+  edge-summary-judgment-granted "Granted in full" -> judgment-entered {
+    authority cite "USCIT R. 56(a)"
+  }
+  edge-summary-judgment-denied "Denied in whole or part" -> trial-stage {
+    authority cite "USCIT R. 56(a)"
+  }
+}
+
+state trial-stage: "Trial" by court cite "USCIT R. 39"
+{
+  note "Trial on request under USCIT R. 40. In an action tried without a jury the court finds the facts specially and states its conclusions of law separately (USCIT R. 52(a))."
+  edge-trial-stage-findings "Trial completed" -> findings { authority cite "USCIT R. 52(a)" }
+}
+
+state findings: "Findings of fact and conclusions of law" by court cite "USCIT R. 52(a)"
+{
+  edge-findings-judgment "Findings entered" -> judgment-entered { authority cite "USCIT R. 58" }
+}
+
+decision judgment-entered: "Judgment entered" by applicant cite "USCIT R. 58"
+{
+  note "Every judgment is set out in a separate document, with the exceptions of USCIT R. 58(a); where one is required, judgment is entered when it is set out in one or 150 days after its docket entry, whichever is earlier (USCIT R. 58(c)(2)). A motion for a new trial or rehearing is due not later than 30 days after entry (USCIT R. 59(b)); a motion to alter or amend no later than 30 days after entry (USCIT R. 59(e)); a Rule 60(b)(1)-(3) motion no more than a year after entry (USCIT R. 60(c)(1)); USCIT R. 6(b)(2) forbids extending those periods. An EAJA application is due within 30 days after the date of final judgment (USCIT R. 54.1(a))."
+  edge-judgment-post-trial "Post-judgment motion filed" -> post-trial-ruling {
+    authority cite "USCIT R. 59(b)"
+    within new-trial-period { note "Not later than 30 days after entry." }
+  }
+  edge-judgment-alter-amend "Motion to alter or amend" -> post-trial-ruling {
+    authority cite "USCIT R. 59(e)"
+    within alter-amend-period { note "No later than 30 days after entry." }
+  }
+  edge-judgment-appeal "Notice of appeal" -> appeal-taken {
+    authority cite "28 U.S.C. § 1295(a)(5)"
+  }
+  edge-judgment-final "No post-judgment motion or appeal" -> judgment-final {
+    authority cite "USCIT R. 58"
+  }
+}
+
+decision post-trial-ruling: "Ruling on new trial, rehearing, or alteration" by court cite "USCIT R. 59"
+{
+  edge-post-trial-denied "Motion denied" -> judgment-entered { authority cite "USCIT R. 59" }
+  edge-post-trial-granted "New trial or rehearing granted" -> trial-stage {
+    authority cite "USCIT R. 59(a)"
+  }
+}
+
+terminal default-judgment: "Default judgment" outcome [win] cite "USCIT R. 55(b)"
+{
+  note "The clerk enters the default (USCIT R. 55(a)); the party applies to the court for a default judgment, and a defaulted party that has appeared is served with notice at least 14 days before the hearing (USCIT R. 55(b)). Outcome from the applicant's side."
+}
+
+terminal dismissed-service: "Dismissed for failure to serve" outcome [loss] cite "USCIT R. 4(l)"
+{
+  note "Dismissal without prejudice against the unserved defendant (USCIT R. 4(l))."
+}
+
+terminal dismissed-rule12: "Dismissed on a Rule 12 motion" outcome [loss] cite "USCIT R. 12(b)"
+terminal settled: "Dismissed by notice, stipulation or order" outcome [settlement] cite "USCIT R. 41(a)"
+
+terminal appeal-taken: "Appeal to the Federal Circuit" outcome [procedural] cite "28 U.S.C. § 1295(a)(5)"
+{
+  note "The Federal Circuit has exclusive jurisdiction of an appeal from a final decision of the Court of International Trade (28 U.S.C. § 1295(a)(5)); its procedure is lit/cafc's. The notice-of-appeal period of 28 U.S.C. § 2645(c) is not vendored and is not encoded."
+}
+
+terminal judgment-final: "Judgment stands" outcome [procedural] cite "USCIT R. 58"

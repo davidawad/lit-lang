@@ -1,0 +1,55 @@
+# The United States Court of International Trade, promoted from
+# outlines/federal-circuit/court-of-international-trade (lg-f3q8.16).
+#
+# authority: the USCIT Rules are the court's rules of practice, the
+# FederalRule level of lit/core's lattice (as the RCFC are for lit/cofc).
+# in_force: the vendored edition, "As amended August 21, 2026, eff. August
+# 21, 2026" (sources/cit/PROVENANCE.md). Each period is stated from that
+# edition only; earlier editions are not vendored, so a query before it is a
+# hole (unknown_before), never a day with no rule.
+# 28 U.S.C. §§ 1581, 2636, 2640 and 2645 are not vendored: the graph cites
+# the USCIT Rules that restate their categories, and the notice-of-appeal
+# period of § 2645(c) stays a hole.
+[package]
+name = "cit"
+version = "0.1.0"
+language = 1
+pack_id = "cit"
+forum = "cit"
+authority = "FederalRule"
+title = "United States Court of International Trade"
+description = "A civil action in the U.S. Court of International Trade under the USCIT Rules as amended August 21, 2026: commencement by summons or summons and complaint (Rule 3), service (Rule 4), the answer or Rule 12 motion, motion practice (Rule 7), the agency-record track of Rule 56.2 with the record of Rule 73.2 and the remand comments of Rule 56.2(h), summary judgment (Rule 56), bench trial, judgment (Rule 58), post-judgment motions (Rules 59 and 60), EAJA applications (Rule 54.1), and the hand-off to the Federal Circuit under 28 U.S.C. § 1295(a)(5)."
+jurisdiction = "United States Court of International Trade"
+in_force = "2026-08-21"
+known_at = "2026-10-27"
+unknown_before = "2026-08-21"
+counting = "uscit6"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.uscit-rules]
+title = "Rules of the United States Court of International Trade, as amended August 21, 2026 (complete rules, forms, guidelines and administrative orders)"
+url = "https://www.cit.uscourts.gov/sites/cit/files/COMPLETE%20RULES%20AND%20FORMS.pdf"
+path = "sources/cit/cit-rules-and-forms.txt"
+path_sha256 = "c411c8e42d69f14c9c9aa7409ade836fd25727b3f4ffd47e211d72268f6e6f41"
+sha256 = "6ff22a48484b96c655f5738eae66ea0cfe92941a60e69dc845a41617c56a412a"
+as_of = "2026-08-21"
+
+[sources.usc28]
+title = "28 U.S.C. § 1295 (vendored section)"
+url = "https://www.law.cornell.edu/uscode/text/28/1295"
+path = "sources/usc-additional.txt"
+path_sha256 = "5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+
+[[cite_syntax.rules]]
+prefixes = ["USCIT R."]
+heading = "USCIT R. {}"
+source = "uscit-rules"

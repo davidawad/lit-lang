@@ -67,6 +67,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | ninth-circuit-court-of-appeals | `lit/ca9` | 14 | 0 | 14 | 0 |
 | dc-circuit-court-of-appeals | `lit/cadc` | 0 | 0 | 2 | 0 |
 | cafc | `lit/cafc` | 37 | 0 | 36 | 0 |
+| cit | `lit/cit` | 35 | 0 | 37 | 0 |
 | cofc | `lit/cofc` | 29 | 0 | 46 | 0 |
 | core | `lit/core` | 46 | 0 | 137 | 0 |
 | frcp-rule12-example | `lit/examples` | 2 | 0 | 2 | 0 |

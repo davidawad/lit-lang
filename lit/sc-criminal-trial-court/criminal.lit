@@ -1,0 +1,106 @@
+module sc-criminal-trial-court.criminal
+
+// Criminal cases in the South Carolina court of general sessions, from the
+// defendant's view of outcomes. Title 17 is vendored only as CURRENCY
+// UNCONFIRMED chapter pages, so every Title 17 cite is a hole naming the
+// section and every period it states is the vendored text, unverified,
+// stated in a note; the SCACR cites bind. The South Carolina Rules of
+// Criminal Procedure (arrest, preliminary hearing, discovery, pretrial
+// motions and the SCRCrimP 29 post-trial motion) are not vendored, so the
+// steps they govern carry hole cites with no period. The reporter text of
+// the decisions the outline named is not vendored, so they are removed.
+start arrested
+
+state arrested: "Arrest and bond hearing" by applicant cite ?("S.C. Code § 17-15-10, CURRENCY UNCONFIRMED")
+{
+  note "A person charged with a noncapital offense is ordinarily released on personal recognizance unless the court finds that release would not reasonably assure appearance or that the person is an unreasonable danger (S.C. Code § 17-15-10); the court considers the matters S.C. Code § 17-15-30 lists in setting conditions. The SCRCrimP rules on arrest and the preliminary hearing are not vendored (holes). CURRENCY UNCONFIRMED."
+  edge-arrested-charged "Indictment" -> charged {
+    authority cite ?("SCRCrimP, indictment and preliminary hearing (not vendored)")
+  }
+  edge-arrested-pti "Pretrial intervention" -> dismissed {
+    authority cite ?("S.C. Code § 17-22-30, CURRENCY UNCONFIRMED")
+  }
+}
+
+state charged: "Indicted; demand for trial" by applicant cite ?("S.C. Code § 17-23-90, CURRENCY UNCONFIRMED")
+{
+  note "A person committed for treason or felony who prays or petitions in open court in the first week of the term to be brought to trial, and is not indicted in the next term after commitment, is set at liberty on bail on a motion made on the last day of the term, unless the State shows on oath that its witnesses could not be produced; if not indicted and tried in the second term after commitment, the person is discharged from imprisonment (S.C. Code § 17-23-90). The statute counts in terms of court, not days. CURRENCY UNCONFIRMED: the text is the vendored text, unverified."
+  edge-charged-motions "Pretrial motions" -> motions-ruling {
+    authority cite ?("SCRCrimP, pretrial motions (not vendored)")
+  }
+  edge-charged-plea "Plea negotiations" -> plea-decision {
+    authority cite ?("SCRCrimP, pleas (not vendored)")
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite ?("SCRCrimP, pretrial motions (not vendored)")
+{
+  note "The SCRCrimP is not vendored, so the time for and the effect of pretrial motions are holes."
+  edge-motions-ruling-dismissed "Charges dismissed" -> dismissed {
+    authority cite ?("SCRCrimP, pretrial motions (not vendored)")
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite ?("SCRCrimP, pretrial motions (not vendored)")
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite ?("SCRCrimP, pleas (not vendored)")
+{
+  note "No person is punished until legally convicted (S.C. Code § 17-25-10, CURRENCY UNCONFIRMED). The plea rules are not vendored (a hole)."
+  edge-plea-decision-plea "Guilty plea accepted" -> judgment {
+    authority cite ?("SCRCrimP, pleas (not vendored)")
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite ?("S.C. Code § 17-23-80, CURRENCY UNCONFIRMED")
+  }
+}
+
+decision trial: "Verdict" by court cite ?("S.C. Code § 17-23-80, CURRENCY UNCONFIRMED")
+{
+  note "After the charge, the court excuses the jury so counsel may object to the charge or request more out of its presence (S.C. Code § 17-23-100). CURRENCY UNCONFIRMED."
+  edge-trial-acquittal "Not guilty" -> acquitted {
+    authority cite ?("S.C. Code § 17-23-80, CURRENCY UNCONFIRMED")
+  }
+  edge-trial-guilty "Guilty; post-trial motion" -> post-trial {
+    authority cite ?("S.C. Code § 17-23-110, CURRENCY UNCONFIRMED")
+  }
+}
+
+decision post-trial: "Post-trial motion" by court cite ?("S.C. Code § 17-23-110, CURRENCY UNCONFIRMED")
+{
+  note "The circuit courts may grant new trials in jury cases for the reasons new trials have usually been granted in the courts of law of the United States (S.C. Code § 17-23-110, CURRENCY UNCONFIRMED). The time for a post-trial motion under SCRCrimP 29(a) is not vendored (a hole); a timely one stays the time to appeal until receipt of written notice of entry of the order deciding it (S.C. App. Ct. R. 203(b)(2))."
+  edge-post-trial-granted "New trial granted" -> trial {
+    authority cite ?("S.C. Code § 17-23-110, CURRENCY UNCONFIRMED")
+  }
+  edge-post-trial-denied "Motion denied; sentence" -> judgment {
+    authority cite "S.C. App. Ct. R. 203(b)(2)"
+  }
+}
+
+decision judgment: "Sentence imposed" by applicant cite "S.C. App. Ct. R. 203(b)(2)"
+{
+  note "After a plea or trial resulting in conviction, or a revocation of probation, the notice of appeal is served on all respondents within ten days after the sentence is imposed; a timely SCRCrimP 29(a) motion stays that time until receipt of written notice of entry of the order granting or denying it (S.C. App. Ct. R. 203(b)(2))."
+  edge-judgment-appeal "Notice of appeal served within ten days" -> appeal-taken {
+    authority cite "S.C. App. Ct. R. 203(b)(2)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final {
+    authority cite "S.C. App. Ct. R. 203(b)(2)"
+  }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite ?("S.C. Code § 17-23-80, CURRENCY UNCONFIRMED")
+
+terminal dismissed: "Charges dismissed or diverted" outcome [win, dismissal] cite ?("S.C. Code § 17-22-30, CURRENCY UNCONFIRMED")
+{
+  note "Dismissal after pretrial intervention (S.C. Code Title 17, Chapter 22) or on a motion; whether it bars refiling is a hole."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "S.C. App. Ct. R. 203(b)(2)"
+{
+  note "The appeal continues under the SCACR (lit/sc-appellate-civil covers the civil path); no criminal appellate package is promoted."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "S.C. App. Ct. R. 203(b)(2)"
+{
+  note "An application for post-conviction relief is filed within one year after entry of the judgment of conviction, or within one year after the remittitur is sent or the final appellate decision filed, whichever is later (S.C. Code § 17-27-45(A), CURRENCY UNCONFIRMED: the value is the vendored text, unverified). Federal habeas under 28 U.S.C. § 2254 is lit/habeas's."
+}

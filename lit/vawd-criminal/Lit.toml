@@ -1,0 +1,49 @@
+# The Western District of Virginia's Local Rules, Title III (Criminal
+# Rules), as a local-rule layer over lit/frcrimp (28 U.S.C. § 2071;
+# FRCrimP 57(a)): it declares only the periods the criminal rules
+# themselves state and re-encodes no FRCrimP, Speedy Trial Act or FRAP
+# 4(b) period (those are lit/frcrimp's). Each period is counted under
+# FRCrimP 45(a), which governs "any local rule". The rules are the Local
+# Rules of August 2013, revised October 25, 2025 (sources/vawd). Federal
+# habeas is lit/habeas's; an appeal to the Fourth Circuit is
+# lit/frcrimp's and lit/ca4's.
+[package]
+name = "vawd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "vawd-criminal-local-rules"
+forum = "vawd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Western District of Virginia: Local Rules, Title III (Criminal)"
+description = "The Western District of Virginia's criminal Local Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the appellant's statement of grounds and memorandum on an appeal from a magistrate judge's conviction or sentence, with or without a transcript, and the appellee's responsive memorandum."
+in_force = "2025-10-25"
+known_at = "2026-10-28"
+unknown_before = "2025-10-25"
+jurisdiction = "United States District Court, W.D. Va. (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "vawd-crim"
+issuer = "United States District Court for the Western District of Virginia"
+date = "2025-10-25"
+designation = "Local Rules (August 2013, revised October 25, 2025), Title III"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.vawd-crim]
+title = "Local Rules of the United States District Court for the Western District of Virginia (August 2013, revised October 25, 2025), Title III - Criminal Rules"
+url = "https://www.vawd.uscourts.gov/sites/Public/assets/File/court/local_rules.pdf"
+path = "sources/vawd/vawd-local-criminal-rules-sectioned.txt"
+path_sha256 = "fb1d7cccf8ce212f27f39bf8be49730d2b81d5a7bd945d988776c493c37e5081"
+sha256 = "1ffd80a63eaaf3c4b3ab9e405b4365f43b56ab5d8f8410b58eefb61b707e971c"
+as_of = "2025-10-25"
+cite_prefixes = ["W.D. Va. Crim. R."]
+section_heading = "Criminal Rule {n}"

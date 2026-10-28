@@ -1,0 +1,50 @@
+module vawd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Western District of Virginia's own criminal periods. Stated in the
+// rules but not declared: the presentence report deemed disclosed one day
+// after a verbal announcement that it is available or three days after a
+// copy or notice is mailed (Criminal Rule 32(c)), which fixes the trigger
+// of FRCrimP 32(f)(1)'s objection period (lit/frcrimp's) rather than a
+// period of its own; the government's substantial-assistance motion, due
+// with its FRCrimP 32(f) objections (Criminal Rule 32(b)); and the
+// appellant's 14 days for a reply on an appeal from a magistrate judge
+// (Criminal Rule 59(b)), whose start the rule does not state (a hole).
+// The outline's flow (arrest to judgment) is lit/frcrimp's; its decisions
+// have no vendored reporter text and are removed.
+/// A notice of appeal from a magistrate judge's conviction or sentence is
+/// filed under FRCrimP 58(g)(2) (Criminal Rule 59(a)).
+event MagistrateAppealNoticed()
+/// The transcript of the proceedings before the magistrate judge, which the
+/// appellant ordered, is filed (Criminal Rule 59(a)).
+event AppealTranscriptFiled()
+/// The later of the filing of the appellant's memorandum and the filing of
+/// the transcript (Criminal Rule 59(b)).
+event AppellantCaseComplete()
+
+/// Criminal Rule 59(a): within 14 days after filing a notice of appeal from
+/// a magistrate judge's conviction or sentence, or another period the
+/// district judge directs, the appellant files a statement of the grounds
+/// for the appeal and a supporting memorandum of law.
+deadline appeal-grounds-period: 14.days after MagistrateAppealNoticed() counted_by frcrimp45 cite "W.D. Va. Crim. R. 59(a)"
+{
+  forum frcrimp
+}
+
+/// Criminal Rule 59(a): if the appellant ordered a transcript, the
+/// supporting memorandum is filed within 14 days of the filing of the
+/// transcript, or another period the district judge directs.
+deadline transcript-memorandum-period: 14.days after AppealTranscriptFiled() counted_by frcrimp45 cite "W.D. Va. Crim. R. 59(a)"
+{
+  forum frcrimp
+}
+
+/// Criminal Rule 59(b): the appellee has 21 days from the filing of the
+/// appellant's memorandum or of the transcript, whichever is later, or
+/// another period the district judge directs, to file a responsive
+/// memorandum.
+deadline appeal-response-period: 21.days after AppellantCaseComplete() counted_by frcrimp45 cite "W.D. Va. Crim. R. 59(b)"
+{
+  forum frcrimp
+}

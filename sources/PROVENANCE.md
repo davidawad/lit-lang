@@ -1068,11 +1068,8 @@ Entries live in the forum's own
   `https://www.ca8.uscourts.gov/sites/ca8/files/iops%20jan%202024.pdf` with
   `pdftotext -layout`. sha256:
   `2fb5815bf87b25d8af30298fa0fa21e148d81ddc6992c305bd94716c68fb0485`.
-- `ca8-local-rules.txt` — Eighth Circuit Local Rules, June 17, 2024. Extracted
-  from the official court PDF at
-  `https://www.ca8.uscourts.gov/sites/ca8/files/Eighth%20Circuit%20Local%20Rules%206.17.24.pdf`
-  with `pdftotext -layout`; the Rules & Procedures page lists this edition.
-  sha256: `74b1a57311b9f597caac5a9778ede3e8328b6076d816e5a19eb62c3bfd14f907`.
+- The Eighth Circuit Local Rules (June 17, 2024) this package also cites are
+  vendored once, as `ca8/ca8-local-rules.txt`; see `ca8/PROVENANCE.md`.
 - `ca8-iop.txt` — Eighth Circuit Internal Operating Procedures, extracted from
   the official court PDF at `https://ecf.ca8.uscourts.gov/newrules/coa/iops.pdf`
   with `pdftotext -layout`; the Rules & Procedures page links this edition.

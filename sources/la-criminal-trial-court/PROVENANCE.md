@@ -803,3 +803,5 @@
 - Extraction sha256 f15c6a8252a666ba72f81184311d6d36d89f493fc3c1be26cc20fafb3dd33bdc.
 
 - Note (lg-gddt): Louisiana criminal procedure is the Code of Criminal Procedure (this set); the Revised Statutes Title 15 (criminal procedure provisions) and the Louisiana Supreme Court Rules are not vendored. Criminal appeals: La. C.Cr.P. Arts. 911 et seq. (in this set) and the Louisiana Courts of Appeal Uniform Rules, covered by sources/la-appellate/ if it carries them.
+
+- Bound (lg-gddt.14) by `lit/la-criminal-trial-court/Lit.toml` as is: the extract already heads each article page `## CCRP <n>` (the `section_heading`), pinned at sha256 f15c6a8252a666ba72f81184311d6d36d89f493fc3c1be26cc20fafb3dd33bdc. CURRENCY UNCONFIRMED stands, so the package cites the Code for structure only and states no period from it.

@@ -1,0 +1,47 @@
+# Criminal cases in the Louisiana district courts under the Louisiana Code
+# of Criminal Procedure (La. C.Cr.P.), as far as the vendored text states.
+# The text is the Legislature's article pages as served on legis.la.gov,
+# retrieved 2026-10-28 (sources/la-criminal-trial-court), which state no
+# edition date; its PROVENANCE entry records CURRENCY UNCONFIRMED, so
+# in_force is the retrieval date and an earlier query is a hole in the
+# corpus. By the PM's standing ruling of 2026-10-27 such a source yields
+# holes, not values: this package cites the Code only for the structure of
+# the case (which article governs which step) and states no period, limit
+# or amount from it; where a step has one, the note names the article that
+# sets it. The Louisiana Constitution, the Revised Statutes' Title 15 and
+# the Louisiana Supreme Court rules are not vendored. A felony appeal goes
+# to a Louisiana court of appeal under the Uniform Rules of Louisiana
+# Courts of Appeal (sources/la-appellate; lit/la-appellate binds them for
+# civil appeals); a death sentence goes to the Louisiana Supreme Court.
+# Federal habeas belongs to lit/habeas.
+[package]
+name = "la-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "la-criminal-trial-court"
+forum = "la-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "louisiana"
+title = "Louisiana district courts, criminal"
+description = "Criminal cases in the Louisiana district courts under the Code of Criminal Procedure, as far as the vendored text states: the structure of the case from arrest and the appearance for appointment of counsel through bail, institution of prosecution, arraignment, discovery and pretrial motions, the speedy-trial and time-limitation articles, plea or trial, post-verdict motions, sentencing and the motion for appeal; no period from the currency-unconfirmed Code is stated."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Louisiana trial courts of general criminal jurisdiction"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.la-ccrp]
+title = "Louisiana Code of Criminal Procedure, article pages as served on legis.la.gov (no edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://legis.la.gov/Legis/Laws_Toc.aspx?folder=69&level=Parent"
+path = "sources/la-criminal-trial-court/la-code-of-criminal-procedure.txt"
+path_sha256 = "f15c6a8252a666ba72f81184311d6d36d89f493fc3c1be26cc20fafb3dd33bdc"
+as_of = "2026-10-28"
+cite_prefixes = ["La. C.Cr.P. art."]
+section_heading = "CCRP {n}"

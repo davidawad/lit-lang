@@ -1,0 +1,142 @@
+module id-district-court-criminal.criminal
+
+// Criminal cases in the Idaho district courts. The Idaho Criminal Rules
+// are CURRENCY UNCONFIRMED (sources/id-criminal-trial-court/PROVENANCE.md),
+// so they are cited for the structure of each step and no period, limit
+// or amount is taken from them: where a step has one, the note names the
+// rule that sets it and says that it is not stated. The Idaho Code (bail,
+// the speedy-trial statute § 19-3501, post-conviction relief) is not
+// vendored. The appeal period is stated from I.A.R. 14, which has a stated
+// edition. Outcomes are from the defendant's side. The earlier outline's
+// leading decisions (County of Riverside v. McLaughlin, Gerstein v. Pugh,
+// Gideon v. Wainwright, Brady v. Maryland, Mapp v. Ohio, Barker v. Wingo,
+// Boykin v. Alabama, Missouri v. Frye, Jackson v. Virginia, Apprendi v.
+// New Jersey, Roe v. Flores-Ortega, Garza v. Idaho) are removed: no
+// reporter text is vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "I.C.R. 4"
+{
+  note "A warrant or summons issues on a complaint (I.C.R. 3; 4). The initial appearance before a magistrate is the defendant's first appearance after arrest or summons, at which probable cause is determined and the defendant is advised of the charge and rights (I.C.R. 5); the time limits Rule 5 sets are not stated here (currency unconfirmed)."
+  edge-arrested-appearance "Initial appearance before a magistrate" -> initial-appearance {
+    authority cite "I.C.R. 5(a)"
+  }
+}
+
+decision initial-appearance: "Bail or release" by court cite "I.C.R. 46"
+{
+  note "A defendant charged with a crime not punishable by death must be admitted to bail or released on the defendant's own recognizance before conviction (I.C.R. 46(a)); bail conditions and amounts follow Rule 46 and the Idaho Code (not vendored)."
+  edge-initial-appearance-detained "Held on bail not posted" -> probable-cause {
+    authority cite "I.C.R. 46"
+  }
+  edge-initial-appearance-released "Released on bail or recognizance" -> probable-cause {
+    authority cite "I.C.R. 46(a)"
+  }
+}
+
+decision probable-cause: "Preliminary hearing or grand jury" by court cite "I.C.R. 5.1"
+{
+  note "Unless indicted by a grand jury, a defendant charged in a complaint with a felony is entitled to a preliminary hearing (I.C.R. 5.1(a)); the time within which it must be held is set by Rule 5.1 and not stated here (currency unconfirmed). The grand jury is governed by Rules 6 to 6.8."
+  edge-probable-cause-charged "Bound over or indicted" -> charged { authority cite "I.C.R. 5.1" }
+  edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
+    authority cite "I.C.R. 5.1"
+  }
+}
+
+state charged: "Indictment or information" by office cite "I.C.R. 7(a)"
+{
+  note "All felony offenses must be prosecuted by indictment or information (I.C.R. 7(a)); the time for filing an information after the preliminary hearing is set by Rule 7 and not stated here (currency unconfirmed)."
+  edge-charged-arraignment "Arraignment in district court" -> arraignment {
+    authority cite "I.C.R. 10(a)"
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "I.C.R. 10(a)"
+{
+  note "After an indictment or information is filed the defendant is arraigned on it by the court and must appear in person (I.C.R. 10(a)). A defendant may plead guilty or not guilty, and a refusal to plead is entered as not guilty (I.C.R. 11(a))."
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "I.C.R. 16(a)" }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "I.C.R. 12"
+{
+  note "As soon as practicable after charges are filed the prosecuting attorney must make the mandatory disclosures Rule 16(a) lists (I.C.R. 16(a)); the response periods Rule 16 sets are not stated here (currency unconfirmed). The only pleadings are the complaint, indictment or information and the pleas of guilty and not guilty, and defenses and objections are raised by motion (I.C.R. 12(a)); the pretrial-motion deadlines Rule 12 sets are not stated here (currency unconfirmed)."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling { authority cite "I.C.R. 12" }
+  edge-discovery-speedy "Motion to dismiss for unnecessary delay" -> motions-ruling {
+    authority cite "I.C.R. 48(a)"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "I.C.R. 11" }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "I.C.R. 12"
+{
+  note "The court, on notice to all parties, may dismiss a criminal action on its own motion or a party's motion for unnecessary delay in presenting the case or bringing the defendant to trial, among other grounds (I.C.R. 48(a)). The statutory speedy-trial periods (Idaho Code § 19-3501) are not vendored."
+  edge-motions-ruling-speedy "Dismissed for unnecessary delay" -> dismissed {
+    authority cite "I.C.R. 48(a)"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "I.C.R. 12"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "I.C.R. 12"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "I.C.R. 11"
+{
+  note "A guilty plea is accepted under Rule 11. In felony cases issues of fact are tried by a jury unless the defendant waives a jury in writing in open court with the prosecutor's consent (I.C.R. 23(a)); the number of jurors Rule 23 sets is not stated here (currency unconfirmed)."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "I.C.R. 11" }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "I.C.R. 23(a)" }
+}
+
+decision trial: "Verdict" by court cite "I.C.R. 31"
+{
+  note "The jury returns its verdict to a judge in open court, and the verdict must be unanimous (I.C.R. 31(a)). The court must enter a judgment of acquittal if the evidence is insufficient (I.C.R. 29(a)); the period for a motion after the verdict is set by Rule 29 and not stated here (currency unconfirmed)."
+  edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
+    authority cite "I.C.R. 29"
+  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial { authority cite "I.C.R. 34" }
+}
+
+decision post-trial: "Post-trial motions" by court cite "I.C.R. 34"
+{
+  note "On the defendant's motion the court may vacate a judgment and grant a new trial on any ground permitted by statute (I.C.R. 34(a)); the period for the motion is set by Rule 34 and not stated here (currency unconfirmed)."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted { authority cite "I.C.R. 29" }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "I.C.R. 34" }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "I.C.R. 33(a)"
+  }
+}
+
+state sentencing: "Presentence investigation and sentencing" by court cite "I.C.R. 33"
+{
+  note "The court may order a presentence investigation and report under the standards of Rule 32 (I.C.R. 32(a)). After a plea or verdict of guilty the court sets a time for pronouncing judgment and sentence (I.C.R. 33(a)(1)). The court may correct a sentence illegal on the face of the record at any time, and a sentence imposed in an illegal manner or a reduction within the period Rule 35(b) sets, which is not stated here (currency unconfirmed) (I.C.R. 35)."
+  edge-sentencing-judgment "Judgment and sentence entered" -> judgment {
+    authority cite "I.C.R. 33"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "I.C.R. 33"
+{
+  note "An appeal as of right from the district court is taken by physically filing a notice of appeal with the clerk of the district court within 42 days from the date of the clerk's filing stamp on the judgment or appealable order, in any civil or criminal action (I.A.R. 14(a))."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "I.A.R. 14(a)" }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "I.A.R. 14(a)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "I.C.R. 29"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty or a judgment of acquittal (I.C.R. 29, 31)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "I.C.R. 48"
+{
+  note "Outcome from the defendant's side: a dismissal for unnecessary delay or other grounds (I.C.R. 48(a)), on a pretrial motion, or for want of probable cause (I.C.R. 5.1)."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "I.A.R. 14"
+{
+  note "The appeal continues before the Idaho Supreme Court, which may assign it to the Court of Appeals, under the Idaho Appellate Rules (lit/id-supreme)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("Idaho Uniform Post-Conviction Procedure Act, Idaho Code chapter 49 of title 19: not vendored") {
+  note "Outcome from the defendant's side. Uniform post-conviction proceedings are outside the Criminal Rules except as Rule 39 provides (I.C.R. 1(g)); the Idaho Code is not vendored, and federal habeas belongs to lit/habeas."
+}

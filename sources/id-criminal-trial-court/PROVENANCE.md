@@ -9,3 +9,9 @@
 - Extraction sha256 8e28633aeb1f03c88d0736a5f9e9e6c16e86d9870aba8c50c014950df96b88bd.
 
 - Note (lg-gddt): Criminal appeals: Idaho Appellate Rules, covered by sources/id-supreme/ (rules-procedure/iar).
+
+### `id-criminal-trial-court/id-criminal-rules-sectioned.txt` — Idaho Criminal Rules (rules page), sectioned
+
+- Derived in the pod (lg-gddt.22) from `id-criminal-trial-court/id-criminal-rules.txt` (extract sha256 8e28633aeb1f03c88d0736a5f9e9e6c16e86d9870aba8c50c014950df96b88bd); nothing fetched. One marker line `## I.C.R. <n>` is inserted before each rule's own heading line `Idaho Criminal Rule <n>. <Title>` (83 rules, I.C.R. 1 through 54.1; Rules 44.2 and 44.3, whose headings read `Rule <n>.` without the prefix, carry no marker); the rule index lines and the forms list carry no markers. Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Edition: as the extract; CURRENCY UNCONFIRMED stands. `lit/id-criminal-trial-court` cites it for structure only and takes no value from it.
+- Sectioned sha256 33abf1b9d996d928be260c3af57c94dfe9369250f7f70bd9af0dabadfc116c0a (the `path_sha256` pinned by `lit/id-criminal-trial-court/Lit.toml`).

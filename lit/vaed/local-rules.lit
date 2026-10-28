@@ -1,0 +1,455 @@
+module vaed-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Eastern District of Virginia's own periods, computed under the
+// federal rules (FRCP 6(a) governs "any local rule"). Except for good cause
+// shown in advance of filing, opening and responsive briefs, exclusive of
+// affidavits and supporting documentation, may not exceed 30 double-spaced
+// pages and rebuttal briefs 20 (Local Civil Rule 7(F)(3)); discovery motions
+// follow the same briefing schedule and page limits unless otherwise
+// ordered (Local Civil Rule 37(B)). The page limits stay comments, not
+// `limit` declarations: the rule states them as "thirty (30) 8-1/2 inch x
+// 11 inch pages", a form the limit check does not read. The earlier
+// E.D. Va. outline's FRCP flow and its Supreme Court decisions (Twombly,
+// Iqbal, Foman, Frow, Celotex, Anderson v. Liberty Lobby, Catlin, Bowles)
+// are FRCP and FRAP authority and belong to lit/frcp and lit/frap; its
+// Third and Fourth Circuit decisions (Phillips; Fowler; Poulis; Goines v.
+// Valley Community Services Board; Anderson v. Foundation for Advancement,
+// Education and Employment of American Indians) are removed: no reporter
+// text is vendored.
+/// A waiver of service obtained under FRCP 4(d) is returned to the
+/// plaintiff (Local Civil Rule 4(A)).
+event WaiverReturned()
+/// The complaint is filed (Local Civil Rule 4(A)).
+event ComplaintFiled()
+/// A motion to file under seal is filed (Local Civil Rule 5(C)).
+event SealMotionFiled()
+/// A motion is filed (Local Civil Rule 7(E)).
+event MotionFiled()
+/// A motion and its supporting brief are served (Local Civil Rule 7(F)(1)).
+event MotionServed()
+/// The opposing party's response brief is served (Local Civil Rule
+/// 7(F)(1)).
+event ResponseBriefServed()
+/// The moving party's reply brief is served (Local Civil Rule 7(F)(1)).
+event ReplyBriefServed()
+/// A defendant first appears (Local Civil Rule 16(B)).
+event FirstAppearance()
+/// The complaint is served (Local Civil Rule 16(B)).
+event ComplaintServed()
+/// An interrogatory, request or application under FRCP 26 through 37 is
+/// served (Local Civil Rule 26(C)).
+event DiscoveryServed()
+/// A case in which discovery was served is removed or transferred to the
+/// court (Local Civil Rule 26(C)).
+event RemovedOrTransferred()
+/// The earlier of the date set for completion of discovery and the date
+/// set for the final pretrial conference (Local Civil Rule 26(D)(2)).
+event DiscoveryCompletionOrPretrialConference()
+/// The plaintiff's FRCP 26(a)(2) disclosure date (Local Civil Rule
+/// 26(D)(2)).
+event PlaintiffExpertDisclosureDue()
+/// The defendant's FRCP 26(a)(2) disclosure date (Local Civil Rule
+/// 26(D)(2)).
+event DefendantExpertDisclosureDue()
+/// The date the plaintiff is, or would be, required to disclose
+/// contradictory or rebuttal evidence (Local Civil Rule 26(D)(3)).
+event RebuttalDisclosureDue()
+/// Interrogatories clarifying an expert's written report are served (Local
+/// Civil Rule 26(D)(4)).
+event ExpertInterrogatoriesServed()
+/// A deposition is taken (Local Civil Rules 30(H), 45(F)).
+event DepositionTaken()
+/// The order on a discovery motion is entered (Local Civil Rule 37(C)).
+event DiscoveryOrderEntered()
+/// An added party is served with process or summons (Local Civil Rule 38).
+event AddedPartyServed()
+/// A hearing or trial is held (Local Civil Rules 45(E), 80(E)).
+event HearingOrTrialHeld()
+/// Trial commences on the date set (Local Civil Rules 47(B), 51).
+event TrialCommenced()
+/// Judgment is entered (Local Civil Rule 54(D)(1)).
+event JudgmentEntered()
+/// A bill of costs is served (Local Civil Rule 54(D)(2)).
+event BillOfCostsServed()
+/// An opposition to a bill of costs is filed (Local Civil Rule 54(D)(2)).
+event CostsOppositionFiled()
+
+/// Local Civil Rule 4(A): all waivers of service obtained under FRCP 4(d)
+/// are filed within five days after they are returned to the plaintiff.
+deadline waiver-filing-period: 5.days after WaiverReturned() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 4(A)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 4(A): unless, within ninety days after the complaint is
+/// filed, a defendant has been served, has appeared or has waived service,
+/// the clerk abates the action and dismisses it without prejudice as to that
+/// defendant after giving, and receiving no response to, the FRCP 4(m)
+/// notice.
+deadline abatement-period: 90.days after ComplaintFiled() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 4(A)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 5(C): parties and non-parties may submit memoranda
+/// supporting or opposing a motion to seal, and any person objecting files
+/// an objection with the clerk, within seven days after the motion to seal
+/// is filed; if no objection is filed in a timely manner, the court may
+/// treat the motion as uncontested.
+deadline seal-objection-period: 7.days after SealMotionFiled() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 5(C)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 7(E): unless otherwise ordered, a motion is deemed
+/// withdrawn if the movant does not set it for hearing (or arrange to submit
+/// it without a hearing) within thirty days after the date it is filed.
+deadline motion-setting-period: 30.days after MotionFiled() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 7(E)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 7(F)(1): unless otherwise directed by the court, the
+/// opposing party files a response brief within fourteen calendar days after
+/// service; the period is not expanded by the mode of service,
+/// notwithstanding FRCP 6(d).
+deadline response-brief-period: 14.days after MotionServed() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 7(F)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 7(F)(1): the moving party may file a reply brief within
+/// six calendar days after service of the opposing party's response brief;
+/// the period is not expanded by the mode of service, notwithstanding FRCP
+/// 6(d). No further briefs may be filed without leave of court.
+deadline reply-brief-period: 6.days after ResponseBriefServed() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 7(F)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 16(B): in addition to, or in lieu of, the initial
+/// pretrial conference, not later than sixty days from first appearance or
+/// ninety days after service of the complaint the court enters an order
+/// fixing the discovery cut-off dates, the final pretrial conference date
+/// and, whenever practicable, the trial date.
+deadline scheduling-order-appearance-period: 60.days after FirstAppearance() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 16(B)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 16(B): the scheduling order is entered not later than
+/// sixty days from first appearance or ninety days after service of the
+/// complaint.
+deadline scheduling-order-service-period: 90.days after ComplaintServed() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 16(B)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 26(C): unless otherwise ordered, an objection to any
+/// interrogatory, request or application under FRCP 26 through 37 is served
+/// within fifteen days after its service; the court may allow a shorter or
+/// longer time. The objection does not extend the time to answer any matter
+/// not specifically objected to.
+deadline discovery-objection-period: 15.days after DiscoveryServed() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 26(C)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 26(C): in a case removed or transferred to the court
+/// after discovery was served, an objection is served within fifteen days
+/// after the date of removal or transfer.
+deadline removed-discovery-objection-period: 15.days after RemovedOrTransferred() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 26(C)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 26(D)(2): absent a consent order or unless ordered
+/// otherwise, the FRCP 26(a)(2) disclosures are made first by the plaintiff
+/// not later than sixty days before the earlier of the date set for
+/// completion of discovery or for the final pretrial conference.
+deadline plaintiff-expert-disclosure-period: 60.days before DiscoveryCompletionOrPretrialConference() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 26(D)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 26(D)(2): the defendant makes its FRCP 26(a)(2)
+/// disclosures thirty days after the plaintiff's.
+deadline defendant-expert-disclosure-period: 30.days after PlaintiffExpertDisclosureDue() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 26(D)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 26(D)(2): the plaintiff discloses fifteen days after the
+/// defendant's disclosure any evidence that is solely contradictory or
+/// rebuttal evidence to it.
+deadline rebuttal-expert-disclosure-period: 15.days after DefendantExpertDisclosureDue() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 26(D)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 26(D)(3): all parties complete all forms of expert
+/// disclosure and discovery not later than thirty days after the date on
+/// which the plaintiff is, or would be, required to disclose contradictory or
+/// rebuttal evidence.
+deadline expert-completion-period: 30.days after RebuttalDisclosureDue() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 26(D)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 26(D)(4): answers to interrogatories directed at
+/// clarification of the written reports of expert witnesses disclosed under
+/// FRCP 26(a)(2) are due fifteen days after service.
+deadline expert-interrogatory-answer-period: 15.days after ExpertInterrogatoriesServed() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 26(D)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 30(H): as a general rule, eleven days in advance of the
+/// contemplated taking of a deposition in the continental United States is
+/// reasonable notice, varying with the complexity of the testimony and the
+/// urgency of taking it.
+deadline deposition-notice-period: 11.days before DepositionTaken() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 30(H)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 37(C): after the court rules on a discovery motion, the
+/// answer, production, designation, inspection or examination it requires is
+/// completed within eleven days after entry of the order, unless otherwise
+/// ordered.
+deadline discovery-order-compliance-period: 11.days after DiscoveryOrderEntered() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 37(C)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 38: when another party is added, the additional party
+/// may demand trial by jury at any time within twenty-one days after it is
+/// served with process or summons.
+deadline added-party-jury-demand-period: 21.days after AddedPartyServed() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 38"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 45(E): except as otherwise ordered for good cause
+/// shown, subpoenas for attendance of witnesses at hearings or trials are
+/// served not later than fourteen days before the date of the hearing or
+/// trial.
+deadline trial-subpoena-service-period: 14.days before HearingOrTrialHeld() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 45(E)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 45(F): except as otherwise ordered for good cause
+/// shown, subpoenas compelling attendance at a deposition are served not
+/// later than eleven days before the date of the deposition.
+deadline deposition-subpoena-service-period: 11.days before DepositionTaken() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 45(F)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 47(B): a motion for more than the usual number of
+/// peremptory challenges is made at least twenty-one days before the date
+/// set for commencement of trial; untimely motions are not entertained.
+deadline peremptory-challenge-motion-period: 21.days before TrialCommenced() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 47(B)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 51: except as a pretrial or scheduling order provides
+/// otherwise, in a jury case the parties file proposed instructions and voir
+/// dire questions at least seven days before the scheduled trial date.
+deadline jury-instructions-period: 7.days before TrialCommenced() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 51"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 54(D)(1): the party entitled to costs files a bill of
+/// costs as provided in 28 U.S.C. §§ 1920 and 1924 within fourteen days from
+/// the entry of judgment, unless the time is extended by order.
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 54(D)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 54(D)(2): a party from whom costs are sought may file an
+/// opposition within fourteen calendar days after service of the bill of
+/// costs, not expanded by the mode of service, notwithstanding FRCP 6(d).
+deadline costs-opposition-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 54(D)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 54(D)(2): within six calendar days after the opposition,
+/// the prevailing party may file responses to the objections, not expanded by
+/// the mode of service, notwithstanding FRCP 6(d).
+deadline costs-reply-period: 6.days after CostsOppositionFiled() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 54(D)"
+{
+  forum frcp
+}
+
+/// Local Civil Rule 80(E): requests for daily or expedited transcripts are
+/// made in writing to the court reporter (or the clerk), with copies to
+/// opposing counsel, not later than five days before the hearing or trial to
+/// be transcribed.
+deadline expedited-transcript-request-period: 5.days before HearingOrTrialHeld() counted_by frcp6 cite "E.D. Va. Loc. Civ. R. 80(E)"
+{
+  forum frcp
+}
+
+test "waiver filing period: 5 days after the trigger" cite "E.D. Va. Loc. Civ. R. 4(A)"
+{
+  given WaiverReturned() on 2026-11-02
+  expect deadline(waiver-filing-period) == 2026-11-09
+}
+
+test "abatement period: 90 days after the trigger" cite "E.D. Va. Loc. Civ. R. 4(A)"
+{
+  given ComplaintFiled() on 2026-11-02
+  expect deadline(abatement-period) == 2027-02-01
+}
+
+test "seal objection period: 7 days after the trigger" cite "E.D. Va. Loc. Civ. R. 5(C)"
+{
+  given SealMotionFiled() on 2026-11-02
+  expect deadline(seal-objection-period) == 2026-11-09
+}
+
+test "motion setting period: 30 days after the trigger" cite "E.D. Va. Loc. Civ. R. 7(E)"
+{
+  given MotionFiled() on 2026-11-02
+  expect deadline(motion-setting-period) == 2026-12-02
+}
+
+test "response brief period: 14 days after the trigger" cite "E.D. Va. Loc. Civ. R. 7(F)"
+{
+  given MotionServed() on 2026-11-02
+  expect deadline(response-brief-period) == 2026-11-16
+}
+
+test "reply brief period: 6 days after the trigger" cite "E.D. Va. Loc. Civ. R. 7(F)"
+{
+  given ResponseBriefServed() on 2026-11-02
+  expect deadline(reply-brief-period) == 2026-11-09
+}
+
+test "scheduling order appearance period: 60 days after the trigger" cite "E.D. Va. Loc. Civ. R. 16(B)"
+{
+  given FirstAppearance() on 2026-11-02
+  expect deadline(scheduling-order-appearance-period) == 2027-01-04
+}
+
+test "scheduling order service period: 90 days after the trigger" cite "E.D. Va. Loc. Civ. R. 16(B)"
+{
+  given ComplaintServed() on 2026-11-02
+  expect deadline(scheduling-order-service-period) == 2027-02-01
+}
+
+test "discovery objection period: 15 days after the trigger" cite "E.D. Va. Loc. Civ. R. 26(C)"
+{
+  given DiscoveryServed() on 2026-11-02
+  expect deadline(discovery-objection-period) == 2026-11-17
+}
+
+test "removed discovery objection period: 15 days after the trigger" cite "E.D. Va. Loc. Civ. R. 26(C)"
+{
+  given RemovedOrTransferred() on 2026-11-02
+  expect deadline(removed-discovery-objection-period) == 2026-11-17
+}
+
+test "plaintiff expert disclosure period: 60 days before the trigger" cite "E.D. Va. Loc. Civ. R. 26(D)"
+{
+  given DiscoveryCompletionOrPretrialConference() on 2027-02-02
+  expect deadline(plaintiff-expert-disclosure-period) == 2026-12-04
+}
+
+test "defendant expert disclosure period: 30 days after the trigger" cite "E.D. Va. Loc. Civ. R. 26(D)"
+{
+  given PlaintiffExpertDisclosureDue() on 2026-11-02
+  expect deadline(defendant-expert-disclosure-period) == 2026-12-02
+}
+
+test "rebuttal expert disclosure period: 15 days after the trigger" cite "E.D. Va. Loc. Civ. R. 26(D)"
+{
+  given DefendantExpertDisclosureDue() on 2026-11-02
+  expect deadline(rebuttal-expert-disclosure-period) == 2026-11-17
+}
+
+test "expert completion period: 30 days after the trigger" cite "E.D. Va. Loc. Civ. R. 26(D)"
+{
+  given RebuttalDisclosureDue() on 2026-11-02
+  expect deadline(expert-completion-period) == 2026-12-02
+}
+
+test "expert interrogatory answer period: 15 days after the trigger" cite "E.D. Va. Loc. Civ. R. 26(D)"
+{
+  given ExpertInterrogatoriesServed() on 2026-11-02
+  expect deadline(expert-interrogatory-answer-period) == 2026-11-17
+}
+
+test "deposition notice period: 11 days before the trigger" cite "E.D. Va. Loc. Civ. R. 30(H)"
+{
+  given DepositionTaken() on 2027-02-02
+  expect deadline(deposition-notice-period) == 2027-01-22
+}
+
+test "discovery order compliance period: 11 days after the trigger" cite "E.D. Va. Loc. Civ. R. 37(C)"
+{
+  given DiscoveryOrderEntered() on 2026-11-02
+  expect deadline(discovery-order-compliance-period) == 2026-11-13
+}
+
+test "added party jury demand period: 21 days after the trigger" cite "E.D. Va. Loc. Civ. R. 38"
+{
+  given AddedPartyServed() on 2026-11-02
+  expect deadline(added-party-jury-demand-period) == 2026-11-23
+}
+
+test "trial subpoena service period: 14 days before the trigger" cite "E.D. Va. Loc. Civ. R. 45(E)"
+{
+  given HearingOrTrialHeld() on 2027-02-02
+  expect deadline(trial-subpoena-service-period) == 2027-01-19
+}
+
+test "deposition subpoena service period: 11 days before the trigger" cite "E.D. Va. Loc. Civ. R. 45(F)"
+{
+  given DepositionTaken() on 2027-02-02
+  expect deadline(deposition-subpoena-service-period) == 2027-01-22
+}
+
+test "peremptory challenge motion period: 21 days before the trigger" cite "E.D. Va. Loc. Civ. R. 47(B)"
+{
+  given TrialCommenced() on 2027-02-02
+  expect deadline(peremptory-challenge-motion-period) == 2027-01-12
+}
+
+test "jury instructions period: 7 days before the trigger" cite "E.D. Va. Loc. Civ. R. 51"
+{
+  given TrialCommenced() on 2027-02-02
+  expect deadline(jury-instructions-period) == 2027-01-26
+}
+
+test "bill of costs period: 14 days after the trigger" cite "E.D. Va. Loc. Civ. R. 54(D)"
+{
+  given JudgmentEntered() on 2026-11-02
+  expect deadline(bill-of-costs-period) == 2026-11-16
+}
+
+test "costs opposition period: 14 days after the trigger" cite "E.D. Va. Loc. Civ. R. 54(D)"
+{
+  given BillOfCostsServed() on 2026-11-02
+  expect deadline(costs-opposition-period) == 2026-11-16
+}
+
+test "costs reply period: 6 days after the trigger" cite "E.D. Va. Loc. Civ. R. 54(D)"
+{
+  given CostsOppositionFiled() on 2026-11-02
+  expect deadline(costs-reply-period) == 2026-11-09
+}
+
+test "expedited transcript request period: 5 days before the trigger" cite "E.D. Va. Loc. Civ. R. 80(E)"
+{
+  given HearingOrTrialHeld() on 2027-02-02
+  expect deadline(expedited-transcript-request-period) == 2027-01-28
+}

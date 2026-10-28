@@ -36,6 +36,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | ptab-patent-trial-appeal-board | `lit/ptab` | 28 | 0 | 41 | 0 |
 | sdd-civil-local-rules | `lit/sdd` | 11 | 0 | 12 | 0 |
 | ttab-trademark-trial-and-appeal-board | `lit/ttab` | 21 | 0 | 30 | 0 |
+| vaed-local-rules | `lit/vaed` | 26 | 0 | 26 | 0 |
 
 ## States, DC and territories
 

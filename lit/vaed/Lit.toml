@@ -1,0 +1,45 @@
+# The Eastern District of Virginia's Local Civil Rules as a local-rule
+# layer over lit/frcp (28 U.S.C. § 2071; FRCP 83(a)): it declares only the
+# periods the Local Rules themselves state and re-encodes no FRCP deadline.
+# Each period is counted under FRCP 6(a), which governs "any local rule".
+# The rules are the Local Rules effective December 1, 2024 (sources/vaed).
+[package]
+name = "vaed-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "vaed-local-rules"
+forum = "vaed"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Eastern District of Virginia: Local Civil Rules"
+description = "The Eastern District of Virginia's Local Civil Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): waiver filing and abatement, sealing, motion setting and briefing with its page limits, the scheduling order, discovery objections, the expert disclosure sequence, deposition notice and subpoenas, discovery-order compliance, jury demands by added parties, peremptory challenges and jury instructions, costs, and expedited transcripts."
+in_force = "2024-12-01"
+known_at = "2026-10-27"
+unknown_before = "2024-12-01"
+jurisdiction = "United States District Court, E.D. Virginia"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "vaed-lr"
+issuer = "United States District Court for the Eastern District of Virginia"
+date = "2024-12-01"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.vaed-lr]
+title = "Local Rules of the United States District Court for the Eastern District of Virginia (effective December 1, 2024)"
+url = "https://www.vaed.uscourts.gov/sites/vaed/files/Local%20Rules%20EDVA%20December%201%202024.pdf"
+path = "sources/vaed/vaed-local-rules-sectioned.txt"
+path_sha256 = "3cd040ce347ecaff738f2a084443752f628dbe1a70b186113d16391e9ab11fcd"
+sha256 = "b2f28b233e18ec56ec75dfdf7176716bcd737000d9aabfddb94199272e419c7f"
+as_of = "2024-12-01"
+cite_prefixes = ["E.D. Va. Loc. Civ. R."]
+section_heading = "Civil Rule {n}"

@@ -512,9 +512,9 @@ Entries live in the forum's own
   vendored as text, the FRAP 26 granule, was retrieved 2026-10-27 from
   `https://www.govinfo.gov/content/pkg/USCODE-2024-title28/html/USCODE-2024-title28-app-federalru-rule26.htm`
   and re-fetched 2026-10-28 with the same sha256.
-- sha256 (this file): `e6aef2e7672430dd698945d200c41a1988ef4f78ba7bfc0a2d7eae8e216362b8`
+- sha256 (this file): `33425acd0e8c0ff8f9ab6a8701956acf866c6f77a2b012dde260104f689d050d`
 - Original: none as served for this file as a whole (assembled from transcribed amendment credits read from frcp.txt, frcrimp.txt, rcfc.txt, cfr-19-part201.txt and the govinfo 2024 FRAP granule); see the sources listed above.
-- Original: `original/rule-amendment-history/USCODE-2024-title28-app-federalru-rule26.htm` as served (sha256 1b1e1f0b76345262b3e275d5c2d5cfff2d47b813bdc1b0921ce96ed8a58fb878), the FRAP 26 credits only; extraction sha256 e6aef2e7672430dd698945d200c41a1988ef4f78ba7bfc0a2d7eae8e216362b8. Served at https://www.govinfo.gov/content/pkg/USCODE-2024-title28/html/USCODE-2024-title28-app-federalru-rule26.htm; fetched with curl, retrieved 2026-10-28.
+- Original: `original/rule-amendment-history/USCODE-2024-title28-app-federalru-rule26.htm` as served (sha256 1b1e1f0b76345262b3e275d5c2d5cfff2d47b813bdc1b0921ce96ed8a58fb878), the FRAP 26 credits only; extraction sha256 33425acd0e8c0ff8f9ab6a8701956acf866c6f77a2b012dde260104f689d050d. Served at https://www.govinfo.gov/content/pkg/USCODE-2024-title28/html/USCODE-2024-title28-app-federalru-rule26.htm; fetched with curl, retrieved 2026-10-28.
 
 ### `usc-28-app-frap4-history.txt` — FRAP 4 as printed in the 2008 and 2011 editions of 28 U.S.C. App.
 

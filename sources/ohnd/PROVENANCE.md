@@ -25,3 +25,8 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 8c27b13ef28a0e2e96cc6c051406ac6acb47e94b5d40b2ffca263c10515fb9d8. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `ohnd/original/ohnd-local-criminal-rules-2024-10-01.pdf` as served (sha256 cb7a73f4f7963e4935b64a6346acbb11c5229042e75f1ee2eac3f7421d77ff85); extraction sha256 8c27b13ef28a0e2e96cc6c051406ac6acb47e94b5d40b2ffca263c10515fb9d8.
+
+### `ohnd/ohnd-local-criminal-rules-2024-10-01-sectioned.txt` — N.D. Ohio Local Criminal Rules, sectioned
+- Derived in the pod (lg-gddt.16) from `ohnd/ohnd-local-criminal-rules-2024-10-01.txt` (extract sha256 8c27b13ef28a0e2e96cc6c051406ac6acb47e94b5d40b2ffca263c10515fb9d8); nothing fetched. One `## LCrR <n>` line is inserted right after each rule's own body heading line `Rule <n> <title>` (58 markers, LCrR 1.1 through LCrR 58.3; the table of contents is unmarked, and LCrR 58.3's section runs through the appendices to the end of the file). Rule text was not edited: deleting the marker lines (`sed '/^## LCrR /d'`) restores the extract byte for byte.
+- Edition: as the extract, the full Local Criminal Rules file dated October 1, 2024.
+- Sectioned sha256 05fdb1196bdf1b3ebabdaa54f8c5bf23bd0c47593d4d35f8c90102a184dac511 (the `path_sha256` pinned by `lit/ohnd-criminal/Lit.toml`).

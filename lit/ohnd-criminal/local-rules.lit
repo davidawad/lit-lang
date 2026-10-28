@@ -1,0 +1,54 @@
+module ohnd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The Northern District of Ohio's own criminal periods, counted under
+// FRCrimP 45(a), which governs a period stated in a local rule. The FRCrimP
+// periods the local rules repeat are lit/frcrimp's and are not declared
+// again: the 14 days to appeal or object to a magistrate judge's order or
+// report (LCrR 5.3(a), (b); FRCrimP 59(a), (b)(2)), the 14 days to object
+// to the presentence report after disclosure (LCrR 32.2(b)(2); FRCrimP
+// 32(f)(1)) and the 14-day appeal from a misdemeanor conviction by a
+// magistrate judge (LCrR 58.3; FRCrimP 58(g)(2)(B)). Stated in the rules
+// but not declared: the report "deemed to have been disclosed three (3)
+// days after" it is mailed (LCrR 32.2(b)(1)), a deemed date, not a period
+// a party meets; responses to sentencing information "no later than three
+// (3) business days prior to sentencing" (LCrR 32.2(c)), a business-day
+// period FRCrimP 45(a) does not define; the court's standard pretrial
+// order, whose deadlines the court sets (LCrR 17.1.1); the seven days to
+// ask in writing for a confiscated electronic device (LCrR 53.1), the
+// attorney admission, status-change and discipline periods (LCrR 57.5,
+// 57.7) and the court reporters' transcript delivery periods (LCrR 57.20),
+// which no event of the criminal case models; and the violation report
+// disclosed "at least 48 hours prior to the Revocation Hearing" (LCrR
+// 32.1.1), an hours period `core.frcrimp45` does not count.
+/// Objections to a magistrate judge's proposed findings, recommendations
+/// or report under LCrR 5.1(f) are served (LCrR 5.3(b)).
+event MagistrateObjectionsServed()
+/// A plea of guilty or nolo contendere, or a finding of guilt, is entered
+/// and the court orders a presentence report (LCrR 32.2(a)).
+event GuiltEnteredReportOrdered()
+
+/// LCrR 5.3(b): any party may respond to another party's objections to a
+/// magistrate judge's report within fourteen days after being served with
+/// a copy of them.
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionsServed() counted_by frcrimp45 cite "N.D. Ohio LCrR 5.3(b)"
+/// LCrR 32.2(a): when the court orders a presentence report it sets a
+/// sentencing date not less than fourteen weeks from the date the plea or
+/// conviction of guilty is entered; this is the earliest such date. The
+/// court may modify the time requirements on motion (LCrR 32.2(b)(5)).
+deadline earliest-sentencing-date: 14.weeks after GuiltEnteredReportOrdered() counted_by frcrimp45 cite "N.D. Ohio LCrR 32.2(a)"
+/// LCrR 32.2(b)(1): not less than six weeks before the date set for
+/// sentencing the probation officer discloses the presentence report to
+/// the defendant, defense counsel and the United States Attorney.
+deadline psr-disclosure-period: 6.weeks before SentencingScheduled() counted_by frcrimp45 cite "N.D. Ohio LCrR 32.2(b)"
+/// LCrR 32.2(b)(4): not later than two weeks before sentencing the
+/// probation officer submits the presentence report and the statement of
+/// unresolved objections to the sentencing judge and provides the revised
+/// report and statement to the parties.
+deadline revised-psr-period: 2.weeks before SentencingScheduled() counted_by frcrimp45 cite "N.D. Ohio LCrR 32.2(b)"
+/// LCrR 32.2(c): no later than one week before sentencing the parties file
+/// any information the court requires and any information they intend to
+/// rely on at sentencing, served on all parties and the probation officer.
+deadline sentencing-position-period: 1.weeks before SentencingScheduled() counted_by frcrimp45 cite "N.D. Ohio LCrR 32.2(c)"

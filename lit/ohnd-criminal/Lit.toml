@@ -1,0 +1,50 @@
+# The United States District Court for the Northern District of Ohio's
+# Local Criminal Rules as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods the Local Criminal
+# Rules themselves state and re-encodes no FRCrimP, Speedy Trial Act or
+# FRAP 4(b) period. FRCrimP 45(a) computes a period stated in a local rule.
+# The rules are the full set the court publishes as "Full_Criminal_Rules_
+# 10-1-2024" (sources/ohnd); later single-rule redlines on the court's
+# local-rules page are not vendored. An appeal goes to the Sixth Circuit
+# under lit/frap and lit/ca6; federal habeas is lit/habeas.
+[package]
+name = "ohnd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ohnd-criminal-local-rules"
+forum = "ohnd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Northern District of Ohio: Local Criminal Rules"
+description = "The Northern District of Ohio's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the response to objections to a magistrate judge's report, the earliest sentencing date after a plea or verdict, the six-week presentence report disclosure, the revised report and statement of unresolved objections two weeks before sentencing, and the parties' sentencing positions one week before."
+in_force = "2024-10-01"
+known_at = "2026-10-28"
+unknown_before = "2024-10-01"
+jurisdiction = "United States District Court, N.D. Ohio (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ohnd-lcrr"
+issuer = "United States District Court for the Northern District of Ohio"
+date = "2024-10-01"
+designation = "Local Criminal Rules (Full_Criminal_Rules_10-1-2024)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRCrimP periods; this package layers only the court's local criminal rules over them.
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.ohnd-lcrr]
+title = "Local Criminal Rules of the United States District Court for the Northern District of Ohio (full set, file dated October 1, 2024)"
+url = "https://www.ohnd.uscourts.gov/sites/ohnd/files/Full_Criminal_Rules_10-1-2024.pdf"
+path = "sources/ohnd/ohnd-local-criminal-rules-2024-10-01-sectioned.txt"
+path_sha256 = "05fdb1196bdf1b3ebabdaa54f8c5bf23bd0c47593d4d35f8c90102a184dac511"
+sha256 = "cb7a73f4f7963e4935b64a6346acbb11c5229042e75f1ee2eac3f7421d77ff85"
+as_of = "2024-10-01"
+cite_prefixes = ["N.D. Ohio LCrR"]
+section_heading = "LCrR {n}"

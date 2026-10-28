@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "dcd-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:31ff4b131b914c4e014bec91c61624e4bca4f38c4be66a448429178864558ce7"
+semantic = "sha256:f71b0c7fddd5a3c04ee1f7e4729f1ccbe71328ddc7a3c2ea62b2e44cb9383bea"
+texts = [
+    "ddc-lcvr sources/ddc/ddc-local-rules-sectioned.txt sha256:bd37334f433bef462749c105d023e8c0038ac10bb45c30c3243bd4d1717e3db3",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcp-civil-procedure 2024.12.0",
+]
+
+[[package]]
+name = "frcp-civil-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]

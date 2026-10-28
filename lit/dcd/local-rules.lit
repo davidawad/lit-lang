@@ -1,0 +1,250 @@
+module dcd-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcp6.{ frcp6 }
+import frcp.periods.{ ComplaintFiled, JudgmentEntered }
+
+// The District of Columbia district court's own civil periods, counted
+// under the federal rules (FRCP 6(a) governs "any local rule"; LCvR 30.1
+// says so of its deposition notice). No trigger carries a service method:
+// FRCP 6(d)'s three added days follow the manner of service, which is not
+// modeled here.
+//
+// Periods that are FRCP periods stay in lit/frcp and are only named here:
+// the conference of the parties at least 21 days before a scheduling
+// conference is held or a scheduling order is due (LCvR 16.3(a); FRCP
+// 26(f)(1)), and initial disclosures at or within 14 days after that
+// conference, or within 30 days after a later party is served or joined
+// (LCvR 26.2(a); FRCP 26(a)(1)(C), (D)). Costs are taxed as FRCP 54(d)
+// provides (LCvR 54.1(a)).
+//
+// Conditions that are not deadlines from an event stay in notes: a
+// dispositive motion is filed early enough to be fully briefed and ruled
+// on before the pretrial conference (LCvR 7(l)); counsel confer before
+// filing a nondispositive motion and state whether it is opposed (LCvR
+// 7(m)); a pro se in forma pauperis filer who omits the defendants'
+// addresses for 30 days after filing risks dismissal (LCvR 5.1(c)); in an
+// agency-review case the certified list of the administrative record is
+// filed within 30 days after service of the answer or with a dispositive
+// motion, whichever comes first (LCvR 7(n)(1)), of which only the 30-day
+// arm is a period from one event; on request, a hearing on a preliminary
+// injunction is set no later than 21 days after the application is filed,
+// a court obligation, and a party wishing live testimony asks 72 hours
+// before the hearing, which the corpus does not count (LCvR 65.1(d)); the
+// Clerk taxes costs once the judgment is final (LCvR 54.1(c)).
+//
+// The earlier D.D.C. outline's FRCP and FRAP flow and its decisions
+// (Twombly, Iqbal, Atherton v. D.C. Office of the Mayor, Celotex, Anderson
+// v. Liberty Lobby, Matsushita, Unitherm, Bowles v. Russell, Hamer,
+// Microsoft Corp. v. Baker) are FRCP, FRAP or D.C. Circuit authority and
+// belong to lit/frcp, lit/frap and lit/cadc; they are removed here: no
+// reporter text is vendored.
+/// A memorandum of points and authorities in support of or in opposition
+/// to a motion: at most 45 pages without prior approval of the Court; the
+/// Clerk does not file a nonconforming document (D.D.C. LCvR 7(e)).
+limit motion-memorandum { pages <= 45 cite "D.D.C. LCvR 7(e)" } cite "D.D.C. LCvR 7(e)"
+/// A reply memorandum: at most 25 pages without prior approval of the
+/// Court (D.D.C. LCvR 7(e)).
+limit reply-memorandum { pages <= 25 cite "D.D.C. LCvR 7(e)" } cite "D.D.C. LCvR 7(e)"
+/// An amicus curiae brief: at most 25 pages unless the Court orders
+/// otherwise (D.D.C. LCvR 7(o)(4)).
+limit amicus-brief { pages <= 25 cite "D.D.C. LCvR 7(o)" } cite "D.D.C. LCvR 7(o)"
+
+/// An attorney's or an unrepresented party's address or telephone number
+/// changes (D.D.C. LCvR 5.1(c)).
+event AddressChanged()
+/// A motion with its statement of points and authorities is served (D.D.C.
+/// LCvR 7(a), (b)).
+event MotionServed() paper motion-memorandum
+/// The memorandum in opposition to a motion is served (D.D.C. LCvR 7(d)).
+event OppositionServed() paper motion-memorandum
+/// A reply memorandum is filed (D.D.C. LCvR 7(d)).
+event ReplyFiled() paper reply-memorandum
+/// The Court grants a motion to vacate an entry of default or a default
+/// judgment (D.D.C. LCvR 7(g)).
+event DefaultVacated()
+/// In a case for judicial review of agency action, the answer to the
+/// complaint is served (D.D.C. LCvR 7(n)(1)).
+event AgencyReviewAnswerServed()
+/// The final memorandum on a dispositive motion in an agency-review case
+/// is filed (D.D.C. LCvR 7(n)(2)).
+event FinalDispositiveMemorandumFiled()
+/// A motion for leave to file an amicus curiae brief is served (D.D.C.
+/// LCvR 7(o)(2)).
+event AmicusMotionServed()
+/// An amicus curiae brief is filed (D.D.C. LCvR 7(o)(4)).
+event AmicusBriefFiled() paper amicus-brief
+/// The final Pretrial Conference (D.D.C. LCvR 16.5(a)).
+event FinalPretrialConference()
+/// A deposition is taken in or within 50 miles of the District of
+/// Columbia (D.D.C. LCvR 30.1).
+event Deposition()
+/// A deposition is taken more than 50 miles from the District of Columbia
+/// (D.D.C. LCvR 30.1).
+event DistantDeposition()
+/// An application for a preliminary injunction is served (D.D.C. LCvR
+/// 65.1(c)).
+event PreliminaryInjunctionApplicationServed()
+/// A bill of costs is served (D.D.C. LCvR 54.1(b)).
+event BillOfCostsServed()
+/// A party is served with a magistrate judge's order on a pretrial motion
+/// or matter (D.D.C. LCvR 72.2(a), (b)).
+event MagistrateRulingServed()
+/// A party is served with a magistrate judge's proposed findings and
+/// recommendations (D.D.C. LCvR 72.3(b)).
+event MagistrateRecommendationServed()
+
+/// D.D.C. LCvR 5.1(c)(1): notice of a change in the address or telephone
+/// number of an attorney or of a party not represented by an attorney is
+/// filed within 14 days of the change.
+deadline address-change-notice: 14.days after AddressChanged() counted_by frcp6 cite "D.D.C. LCvR 5.1(c)"
+{
+  forum frcp
+}
+
+/// D.D.C. LCvR 23.1(b): within 90 days after the complaint is filed in a
+/// case sought to be maintained as a class action, unless the Court
+/// extends the period, the plaintiff moves for certification under FRCP
+/// 23(c)(1).
+deadline class-certification-motion: 90.days after ComplaintFiled() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "D.D.C. LCvR 23.1(b)"
+{
+  forum frcp
+}
+
+/// D.D.C. LCvR 7(b): within 14 days of the date of service, or at such
+/// other time as the Court directs, an opposing party serves and files a
+/// memorandum of points and authorities in opposition; if none is filed in
+/// time, the Court may treat the motion as conceded. LCvR 72.2(b) and
+/// 72.3(b) apply it to oppositions to objections.
+deadline opposition-period: 14.days after MotionServed() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "D.D.C. LCvR 7(b)"
+{
+  forum frcp
+}
+
+/// D.D.C. LCvR 7(d): within seven days after service of the memorandum in
+/// opposition, the moving party may serve and file a reply memorandum.
+deadline reply-period: 7.days after OppositionServed() counted_by frcp6 cite "D.D.C. LCvR 7(d)"
+{
+  forum frcp
+}
+
+/// D.D.C. LCvR 7(g): on the granting of a motion to vacate an entry of
+/// default or a default judgment, the movant has 14 days to answer or
+/// otherwise respond to the complaint.
+deadline vacated-default-response: 14.days after DefaultVacated() counted_by frcp6 cite "D.D.C. LCvR 7(g)"
+{
+  forum frcp
+}
+
+/// D.D.C. LCvR 7(n)(1): unless the Court orders otherwise, the agency files
+/// a certified list of the contents of the administrative record within 30
+/// days following service of the answer (or with a dispositive motion, if
+/// that comes first; see the module note).
+deadline administrative-record-list: 30.days after AgencyReviewAnswerServed() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "D.D.C. LCvR 7(n)"
+{
+  forum frcp
+}
+
+/// D.D.C. LCvR 7(n)(2): the joint appendix of the cited portions of the
+/// administrative record is filed within 14 days following the final
+/// memorandum on the motion.
+deadline administrative-record-appendix: 14.days after FinalDispositiveMemorandumFiled() counted_by frcp6 cite "D.D.C. LCvR 7(n)"
+{
+  forum frcp
+}
+
+/// D.D.C. LCvR 7(o)(2): any party may oppose a motion for leave to file an
+/// amicus brief within 14 days after service of the motion or as the Court
+/// orders.
+deadline amicus-motion-opposition: 14.days after AmicusMotionServed() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "D.D.C. LCvR 7(o)"
+{
+  forum frcp
+}
+
+/// D.D.C. LCvR 16.5(a)(2): not less than 14 days before the final Pretrial
+/// Conference, each party files and serves a Pretrial Statement.
+deadline pretrial-statement: 14.days before FinalPretrialConference() counted_by frcp6 cite "D.D.C. LCvR 16.5(a)"
+{
+  forum frcp
+}
+
+/// D.D.C. LCvR 30.1: service of a notice of deposition seven days before
+/// the deposition is "reasonable notice" under FRCP 30(b); the Court may
+/// enlarge or shorten the time for good cause.
+deadline deposition-notice: 7.days before Deposition() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "D.D.C. LCvR 30.1"
+{
+  forum frcp
+}
+
+/// D.D.C. LCvR 30.1: for a deposition more than 50 miles from the District
+/// of Columbia, reasonable notice is 14 days.
+deadline distant-deposition-notice: 14.days before DistantDeposition() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "D.D.C. LCvR 30.1"
+{
+  forum frcp
+}
+
+/// D.D.C. LCvR 65.1(c): the opposition to an application for a preliminary
+/// injunction is served and filed within seven days after service of the
+/// application, with all affidavits the defendant relies on.
+deadline preliminary-injunction-opposition: 7.days after PreliminaryInjunctionApplicationServed() counted_by frcp6 cite "D.D.C. LCvR 65.1(c)"
+{
+  forum frcp
+}
+
+/// D.D.C. LCvR 54.1(a): a bill of costs is filed within 21 days after entry
+/// of judgment terminating the case as to the party seeking costs, unless
+/// the Court extends the time; a cost omitted from it is not allowed,
+/// except post-judgment costs.
+deadline bill-of-costs: 21.days after JudgmentEntered() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "D.D.C. LCvR 54.1(a)"
+{
+  forum frcp
+}
+
+/// D.D.C. LCvR 54.1(b): a party from whom costs are sought may oppose the
+/// bill within 14 days after service of the bill; if no objection is filed,
+/// the Clerk taxes the permitted costs.
+deadline bill-of-costs-opposition: 14.days after BillOfCostsServed() counted_by frcp6 cite "D.D.C. LCvR 54.1(b)"
+{
+  forum frcp
+}
+
+/// D.D.C. LCvR 72.2(b): written objections to a magistrate judge's ruling
+/// on a referred pretrial motion or matter are filed within 14 days after
+/// service of the order, unless the magistrate judge or the district judge
+/// prescribes a different time.
+deadline magistrate-ruling-objection: 14.days after MagistrateRulingServed() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "D.D.C. LCvR 72.2(b)"
+{
+  forum frcp
+}
+
+/// D.D.C. LCvR 72.3(b): written objections to a magistrate judge's proposed
+/// findings and recommendations are filed within 14 days after service of
+/// a copy.
+deadline magistrate-recommendation-objection: 14.days after MagistrateRecommendationServed() counted_by frcp6 cite "D.D.C. LCvR 72.3(b)"
+{
+  forum frcp
+}

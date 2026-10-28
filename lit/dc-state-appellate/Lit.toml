@@ -1,0 +1,47 @@
+# Civil appeals from the Superior Court of the District of Columbia to the
+# District of Columbia Court of Appeals under the Rules of the District of
+# Columbia Court of Appeals, as far as the vendored text states. The base
+# text is the edition the court serves, reflecting amendments in effect as
+# of May 11, 2026 (sources/dc-state-appellate), so in_force is that date;
+# earlier editions are not vendored, so a query before it is a hole in the
+# corpus. Computation of time is D.C. App. R. 26, with the District's legal
+# holidays (District of Columbia Emancipation Day among them), for which
+# lit/core has no counting rule, so the periods are stated in notes, not
+# encoded as counted deadlines. The D.C. Code (the court's jurisdiction
+# under § 11-721) is not vendored; its cite stays a hole. 28 U.S.C. § 1257
+# is not vendored, so certiorari is not modeled. The appeal comes from lit/dc-state-civil.
+[package]
+name = "dc-court-of-appeals-civil"
+version = "0.1.0"
+language = 1
+pack_id = "dc-court-of-appeals-civil"
+forum = "dc-state-appellate"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "district-of-columbia"
+title = "District of Columbia Court of Appeals, civil appeals"
+description = "Civil appeals from the Superior Court to the District of Columbia Court of Appeals under the Rules of the District of Columbia Court of Appeals, as far as the vendored text states: the notice of appeal and its 30-day time, the cross-appeal, tolling motions and the excusable-neglect extension, the transcript order and the record, the 40/30/21-day brief times and the 50- and 20-page limits, calendaring and argument, entry of judgment, rehearing and its 14-day time, and the mandate. The court's jurisdiction under D.C. Code § 11-721 and federal certiorari are not vendored."
+in_force = "2026-05-11"
+known_at = "2026-10-28"
+unknown_before = "2026-05-11"
+jurisdiction = "District of Columbia Court of Appeals (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The District's shared rule layer (its trigger events).
+dc-state-rules = { version = "^0.1.0", path = "../dc-rules" }
+
+[sources.dc-app-r]
+title = "Rules of the District of Columbia Court of Appeals, reflecting amendments in effect as of May 11, 2026"
+url = "https://www.dccourts.gov/sites/default/files/coa-rules/DCCA-Rules.pdf"
+path = "sources/dc-state-appellate/dcca-rules-sectioned.txt"
+path_sha256 = "17ed6746cb9c0e76cf59794b5f203a6e03a85e16838865ecf46b46b98c5d6555"
+sha256 = "5b71b874d774c74dc7f98b2873d3393363d259dd7edbaf315a18b7962d0197bf"
+as_of = "2026-05-11"
+cite_prefixes = ["D.C. App. R."]
+section_heading = "Rule {n}"

@@ -1,0 +1,29 @@
+# The District of Columbia base library (lg-u561.5 pattern): the trigger
+# events the District of Columbia court packages route their graphs on:
+# lit/dc-state-civil (the Superior Court's Civil Division) and
+# lit/dc-state-appellate (the District of Columbia Court of Appeals). It
+# declares no period: the rules' periods are stated in the court packages'
+# notes. No procedure of its own.
+[package]
+name = "dc-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "dc-state-rules"
+forum = "dc-state-rules"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "district-of-columbia"
+title = "District of Columbia court rules (base library)"
+description = "The rule layer the District of Columbia's local court packages share (Super. Ct. Civ. R., D.C. App. R.): the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-05-13"
+known_at = "2026-10-28"
+unknown_before = "2026-05-13"
+jurisdiction = "District of Columbia courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

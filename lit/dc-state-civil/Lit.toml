@@ -1,0 +1,56 @@
+# Civil actions in the Civil Division of the Superior Court of the District
+# of Columbia under its Rules of Civil Procedure, as far as the vendored
+# text states. The base text is the "Download All Rules" version the court
+# serves (sources/dc-state-civil): it states no edition date, carries
+# comments to 2026 amendments, and its PDF is dated 2026-05-13, so in_force
+# is that date; earlier editions are not vendored, so a query before it is
+# a hole in the corpus. Computation of time is Super. Ct. Civ. R. 6(a),
+# with the District's legal holidays (District of Columbia Emancipation Day
+# among them), for which lit/core has no counting rule, so the periods are
+# stated in notes, not encoded as counted deadlines. An appeal hands off to
+# lit/dc-state-appellate (D.C. App. R., sources/dc-state-appellate).
+[package]
+name = "dc-superior-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "dc-superior-court-civil"
+forum = "dc-state-civil"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "district-of-columbia"
+title = "Superior Court of the District of Columbia, civil"
+description = "Civil actions in the Superior Court of the District of Columbia under its Rules of Civil Procedure, as far as the vendored text states: commencement and the 60-day time to file proof of service, the time to answer and its alteration by a Rule 12 motion, motions practice, default and its 14-day effective date, amendment, the scheduling conference, the jury demand, summary judgment, post-trial motions, entry of judgment, relief from judgment, voluntary dismissal, and the 30-day notice of appeal, which hands off to the District of Columbia Court of Appeals package (lit/dc-state-appellate)."
+in_force = "2026-05-13"
+known_at = "2026-10-28"
+unknown_before = "2026-05-13"
+jurisdiction = "Superior Court of the District of Columbia (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The District's shared rule layer (its trigger events).
+dc-state-rules = { version = "^0.1.0", path = "../dc-rules" }
+
+[sources.dc-scr-civ]
+title = "Superior Court of the District of Columbia, Rules of Civil Procedure, 'Download All Rules' version as served (no edition date; PDF dated 2026-05-13; retrieved 2026-10-27)"
+url = "https://www.dccourts.gov/sites/default/files/superior-rules/Superior-Court-Rules-of-Civil-Procedure-Download-All-Rules-Version.pdf"
+path = "sources/dc-state-civil/scr-civil-rules-sectioned.txt"
+path_sha256 = "fe4d647085e65f0efa32cde713365878f10dd9d6d9e24a94ec504d28597f1096"
+sha256 = "b46082a8edee555671302aab2203905abb57f965e98d3e13c6ccbf89976e9c43"
+as_of = "2026-05-13"
+cite_prefixes = ["Super. Ct. Civ. R."]
+section_heading = "Rule {n}"
+
+[sources.dc-app-r]
+title = "Rules of the District of Columbia Court of Appeals, reflecting amendments in effect as of May 11, 2026"
+url = "https://www.dccourts.gov/sites/default/files/coa-rules/DCCA-Rules.pdf"
+path = "sources/dc-state-appellate/dcca-rules-sectioned.txt"
+path_sha256 = "17ed6746cb9c0e76cf59794b5f203a6e03a85e16838865ecf46b46b98c5d6555"
+sha256 = "5b71b874d774c74dc7f98b2873d3393363d259dd7edbaf315a18b7962d0197bf"
+as_of = "2026-05-11"
+cite_prefixes = ["D.C. App. R."]
+section_heading = "Rule {n}"

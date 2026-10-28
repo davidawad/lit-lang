@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "dc-court-of-appeals-civil"
+version = "0.1.0"
+language = 1
+source = "sha256:27ba5532fd5203d49f29ea4496fafc99ed92c86dd29b8e5e35926bab8ee5c7ef"
+semantic = "sha256:197dc6b40f86bab3343e88d06ba715ae63c058cfeb873ee5996fff8f87db96e4"
+texts = [
+    "dc-app-r sources/dc-state-appellate/dcca-rules-sectioned.txt sha256:17ed6746cb9c0e76cf59794b5f203a6e03a85e16838865ecf46b46b98c5d6555",
+]
+dependencies = [
+    "core 1.0.0",
+    "dc-state-rules 0.1.0",
+]
+
+[[package]]
+name = "dc-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]

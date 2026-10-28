@@ -1,0 +1,152 @@
+module dc-superior-court-civil.civil
+
+import dc-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
+// Civil actions in the Civil Division of the Superior Court of the District
+// of Columbia, from the defending side's view of outcomes. Every period
+// below is stated in a note, not counted: computation is Super. Ct. Civ. R.
+// 6(a), with the District's legal holidays, for which lit/core has no
+// counting rule; 3 days are added after service by mail, by leaving with
+// the clerk or by other consented means (Super. Ct. Civ. R. 6(d)). Filing
+// fees and the collection and subrogation rules (Rule 40-III) are not
+// modeled. The outline named no leading decision; none is cited.
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "Super. Ct. Civ. R. 3"
+{
+  note "A civil action is commenced by filing a complaint with the court (Super. Ct. Civ. R. 3). Within 60 days of the filing of the complaint, or within 60 days from the return date of an order of publication, the plaintiff files an acknowledgment of service or proof of service of the summons, complaint, Initial Order and the other orders directed at filing, separately for each defendant who has not responded; foreclosures of the right of redemption under D.C. Code § 47-1370 have 180 days, collection and subrogation cases follow Rule 40-III, and service abroad follows the governing statute or treaty (Super. Ct. Civ. R. 4(m)(1)). Before the period expires the plaintiff may move to extend it, and on good cause the court must extend it (Super. Ct. Civ. R. 4(m)(2)). The court must hold an initial scheduling and settlement conference as soon as practicable after the complaint is filed (Super. Ct. Civ. R. 16(b)(1))."
+  edge-complaint-filed-served "Summons and complaint served; proof filed" -> answer-due { event ActionCommenced()
+    authority cite "Super. Ct. Civ. R. 4"
+  }
+  edge-complaint-filed-unserved "No proof of service within the period" -> dismissed-unserved {
+    authority cite "Super. Ct. Civ. R. 4"
+  }
+}
+
+terminal dismissed-unserved: "Dismissed without prejudice for want of service" outcome [win, dismissal] cite "Super. Ct. Civ. R. 4"
+{
+  note "Except for service abroad under Rule 4(f), (h)(2) or (j)(1), or Rule 54-II, failure to comply results in dismissal of the complaint without prejudice; the clerk enters the dismissal and serves notice on the parties (Super. Ct. Civ. R. 4(m)(4)). Outcome from the defending side."
+}
+
+decision answer-due: "Answer, motion or default" by office cite "Super. Ct. Civ. R. 12"
+{
+  note "Unless a statute specifies another time, a defendant serves an answer within 21 days after being served with the summons and complaint; the United States or the District of Columbia, or an agency, officer or employee of either sued in an official capacity, within 60 days after service on the United States attorney or the Attorney General for the District of Columbia, and an officer or employee sued individually for acts in connection with official duties within 60 days after the later service (Super. Ct. Civ. R. 12(a)(1)-(3)). Before a default is ordered, the time to plead may be extended by an order on a motion showing good cause, or once by a praecipe signed by the parties for not more than 21 days (Super. Ct. Civ. R. 55(a)(3)). Failure to respond in time results in entry of a default by the clerk or the court on its own (Super. Ct. Civ. R. 12(a)(5))."
+  edge-answer-due-default "No response" -> default-entered {
+    authority cite "Super. Ct. Civ. R. 55"
+  }
+  edge-answer-due-motion "Rule 12(b) motion filed" -> pleading-motion {
+    authority cite "Super. Ct. Civ. R. 12"
+  }
+  edge-answer-due-answer "Answer filed" -> case-management {
+    authority cite "Super. Ct. Civ. R. 12"
+  }
+}
+
+decision pleading-motion: "Motion to dismiss decided" by court cite "Super. Ct. Civ. R. 12"
+{
+  note "Failure to state a claim upon which relief can be granted may be asserted by motion before pleading (Super. Ct. Civ. R. 12(b)). Within 14 days after service of a motion, or at such other time as the court directs, an opposing party files and serves an opposition, or the court may treat the motion as conceded; the movant may reply within 7 calendar days after service of the opposition (Super. Ct. Civ. R. 12-I(e), (g)). Before filing a nondispositive motion the movant must seek in good faith to learn whether it is opposed (Super. Ct. Civ. R. 12-I(a)). If the court denies the motion or postpones it to trial, the responsive pleading is served within 14 days after notice of the court's action; after a more definite statement, within 14 days after it is served (Super. Ct. Civ. R. 12(a)(4)). A party may amend once as a matter of course within 21 days after serving the pleading or, if a response is required, within 21 days after service of a responsive pleading or a Rule 12(b), (e) or (f) motion, whichever is earlier; otherwise with consent or leave (Super. Ct. Civ. R. 15(a))."
+  edge-pleading-motion-dismissed "Granted" -> dismissed-pleading {
+    authority cite "Super. Ct. Civ. R. 12"
+  }
+  edge-pleading-motion-leave "Granted with leave to amend" -> case-management {
+    authority cite "Super. Ct. Civ. R. 15"
+  }
+  edge-pleading-motion-denied "Denied: responsive pleading within 14 days after notice" -> case-management {
+    authority cite "Super. Ct. Civ. R. 12"
+  }
+}
+
+terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] cite "Super. Ct. Civ. R. 12"
+
+terminal default-entered: "Default entered" outcome [loss] cite "Super. Ct. Civ. R. 55"
+{
+  note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend, the clerk or the court enters its default (Super. Ct. Civ. R. 55(a)(1)). A default entered on the court's or the clerk's own initiative does not take effect until 14 days after it is docketed and must be vacated if the defendant shows good cause by motion within those 14 days (Super. Ct. Civ. R. 55(a)(2)). The plaintiff requests a default judgment from the clerk (a sum certain, on a verified complaint or affidavit filed at least 21 days before, outside consumer-debt collection) or applies to the court, in either case no more than 60 days after default is entered; a party who has appeared is served with notice of the motion at least 7 days before the hearing (Super. Ct. Civ. R. 55(b)). Outcome from the defending side."
+}
+
+state case-management: "Scheduling conference and order" by court cite "Super. Ct. Civ. R. 16"
+{
+  note "At the initial scheduling and settlement conference the judge ascertains the status of the case, explores settlement and alternative dispute resolution, and sets a time frame by scheduling order; counsel need not appear if a praecipe on Civil Action Form 113, signed by all attorneys, is filed no later than 7 calendar days before the conference consenting to a track I or track II order (Super. Ct. Civ. R. 16(b)). A party demands a jury by serving a written demand no later than 14 days after the last pleading directed to the issue is served and filing it; another party may demand a jury on other issues within 14 days after service of a demand limited to some issues; a party waives a jury unless its demand is properly served and filed (Super. Ct. Civ. R. 38(b)-(d))."
+  edge-case-management-discovery "Scheduling order entered" -> discovery {
+    authority cite "Super. Ct. Civ. R. 16"
+  }
+}
+
+state discovery: "Discovery" by applicant cite "Super. Ct. Civ. R. 26"
+{
+  note "Discovery is governed by Super. Ct. Civ. R. 26 through 37 and the scheduling order. Unless the court orders otherwise, a motion for summary judgment may be filed at any time until 30 days after the close of all discovery, with a statement of the material facts in separately numbered paragraphs (Super. Ct. Civ. R. 56(b))."
+  edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
+    authority cite "Super. Ct. Civ. R. 56"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial {
+    authority cite "Super. Ct. Civ. R. 38"
+  }
+  edge-discovery-settle "Settled or voluntarily dismissed" -> settled {
+    authority cite "Super. Ct. Civ. R. 41"
+  }
+}
+
+decision sj-motion: "Summary judgment decided" by court cite "Super. Ct. Civ. R. 56"
+{
+  note "The opposition is filed within 14 days after service of the motion and the reply within 7 calendar days after service of the opposition, unless the court directs otherwise (Super. Ct. Civ. R. 12-I(e), (g)). A party asserting that a fact is or is not genuinely disputed supports the assertion by citing particular parts of the record (Super. Ct. Civ. R. 56(c)(1))."
+  edge-sj-motion-granted "Granted" -> judgment-for-movant {
+    authority cite "Super. Ct. Civ. R. 56"
+  }
+  edge-sj-motion-denied "Denied or partly denied" -> trial {
+    authority cite "Super. Ct. Civ. R. 56"
+  }
+}
+
+terminal judgment-for-movant: "Judgment for the movant" outcome [win, judgment] cite "Super. Ct. Civ. R. 56"
+{
+  note "Partial summary judgment and an appeal from the judgment are not modeled on this branch."
+}
+
+state trial: "Trial" by court cite "Super. Ct. Civ. R. 38"
+{
+  note "Trial by jury on a timely demand, otherwise by the court (Super. Ct. Civ. R. 38(d)). Trial setting follows the scheduling order (Super. Ct. Civ. R. 16)."
+  edge-trial-post "Verdict or decision" -> post-trial {
+    authority cite "Super. Ct. Civ. R. 50"
+  }
+}
+
+decision post-trial: "Post-trial motions decided" by court cite "Super. Ct. Civ. R. 59"
+{
+  note "A renewed motion for judgment as a matter of law is filed no later than 28 days after entry of judgment, or 28 days after the jury was discharged if the motion addresses a jury issue not decided by a verdict (Super. Ct. Civ. R. 50(b)). A motion for a new trial, and a motion to alter or amend a judgment, are filed no later than 28 days after entry of judgment (Super. Ct. Civ. R. 59(b), (e)). A motion for relief from judgment is made within a reasonable time, and for mistake, newly discovered evidence or fraud no more than a year after entry; it does not suspend the judgment (Super. Ct. Civ. R. 60(c)). A timely Rule 50(b), 52(b) or 59 motion, or a Rule 60 motion filed no later than 10 days after entry, restarts the time to appeal from the order disposing of the last such motion (D.C. App. R. 4(a)(4))."
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered { event JudgmentEntered()
+    authority cite "Super. Ct. Civ. R. 58"
+  }
+  edge-post-trial-jmol "Judgment as a matter of law granted" -> judgment-for-movant {
+    authority cite "Super. Ct. Civ. R. 50"
+  }
+}
+
+state judgment-entered: "Judgment entered" by office cite "Super. Ct. Civ. R. 58"
+{
+  note "Every judgment and amended judgment is set out in a separate document, except an order disposing of a Rule 50(b), 52(b), 54, 59 or 60 motion; the clerk enters judgment on a general verdict, for costs or a sum certain, or on denial of all relief without awaiting the court's direction (Super. Ct. Civ. R. 58(a), (b))."
+  edge-judgment-entered-appeal "Next step" -> appeal-decision {
+    authority cite "D.C. App. R. 4"
+  }
+}
+
+decision appeal-decision: "Notice of appeal within time?" by applicant cite "D.C. App. R. 4"
+{
+  note "The notice of appeal is filed with the Clerk of the Superior Court within 30 days after entry of the judgment or order appealed from, unless another time is specified (D.C. App. R. 4(a)(1)); the Superior Court may extend the time on excusable neglect or good cause if the notice is filed no later than 30 days after the time expires (D.C. App. R. 4(a)(5)). The appeal continues in lit/dc-state-appellate."
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken { event NoticeOfAppealFiled()
+    authority cite "D.C. App. R. 4"
+  }
+  edge-appeal-decision-none "No notice filed" -> final-no-appeal {
+    authority cite "D.C. App. R. 4"
+  }
+}
+
+terminal appeal-taken: "Appeal to the District of Columbia Court of Appeals" outcome [appeal] cite "D.C. App. R. 4"
+{
+  note "Continue in lit/dc-state-appellate."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "D.C. App. R. 4"
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "Super. Ct. Civ. R. 41"
+{
+  note "The plaintiff may dismiss without a court order by a notice of dismissal before the opposing party serves an answer or a motion for summary judgment, or by a stipulation signed by all parties who have appeared; unless it states otherwise, the dismissal is without prejudice (Super. Ct. Civ. R. 41(a)(1)). Otherwise dismissal at the plaintiff's request is by court order on proper terms (Super. Ct. Civ. R. 41(a)(2)). Settlement terms are not modeled."
+}

@@ -1,0 +1,120 @@
+module or-appellate.appeal
+
+// Civil appeals from the Oregon circuit courts to the Court of Appeals,
+// and Supreme Court review of its decisions, from the applicant's
+// (appellant's) side. Every period below is stated in a note, not counted:
+// time is computed under ORAP 1.25, which excludes the trigger day and
+// includes the last day unless it is a Saturday, a legal holiday
+// (including Sunday) or a day the court is closed for filing, in which
+// case the period runs to the end of the next day the court is open; its
+// legal holidays are those of ORS 187.010 and 187.020, for which lit/core
+// has no counting rule. The time for the notice of appeal (ORS 19.255),
+// appealability (ORS 19.205), the transcript (ORS 19.370) and the filing
+// fees (ORS 21.010) are statutory; no statute is vendored, so none of
+// their values is stated. The earlier outline bound the notice of appeal
+// to ORAP 5.05 (specifications for briefs), the record to ORAP 5.20
+// (reference to evidence), briefing to ORAP 5.45 (assignments of error),
+// rehearing to ORAP 9.20 (allowance of review) and the mandate to ORAP
+// 11.20 (habeas corpus); they are bound here to ORAP 2.05, 3.05, 5.80,
+// 6.25 and 14.05. It named no decision.
+/// An opening or answering brief in the Court of Appeals: no more than
+/// 10,000 words, or 35 pages for a party without a word count (ORAP
+/// 5.05(1)(b)(ii)(A), (B), (1)(c)).
+limit coa-principal-brief { words <= 10_000 cite "ORAP 5.05(1)(b)" } cite "ORAP 5.05(1)(b)"
+/// A reply brief in the Court of Appeals: no more than 3,300 words, or 10
+/// pages (ORAP 5.05(1)(b)(ii)(E), (1)(c)).
+limit coa-reply-brief { words <= 3_300 cite "ORAP 5.05(1)(b)" } cite "ORAP 5.05(1)(b)"
+/// A petition for Supreme Court review: no more than 5,000 words, or 15
+/// pages (ORAP 9.05(3)(a)).
+limit petition-for-review { words <= 5_000 cite "ORAP 9.05(3)(a)" } cite "ORAP 9.05(3)(a)"
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "ORAP 2.05"
+{
+  note "The notice of appeal is served and filed within the time allowed by ORS 19.255 or other applicable statute, substantially in the form of Appendix 2.05; it designates the adverse parties, the parts of the proceedings to be transcribed and exhibits for the record, and the points relied on, and, if more than 30 days has elapsed after the date the judgment was entered, states why the appeal is nevertheless timely; if appellate jurisdiction is not free from doubt, it cites the statute or case law supporting it; it carries proof of service and a copy of the judgment appealed from (ORAP 2.05(4), (6)-(10), (12)). One filing fee is required for each appellant appearing separately, and a respondent's appearance fee for each respondent appearing separately; the amounts are statutory (ORS 21.010) and not stated in the rules (ORAP 2.15(2), (3)). A party not designated in the notice may appear by filing a notice of intent to participate within 21 days after the notice of appeal is filed (ORAP 2.25(3))."
+  edge-notice-filed-appealability "Appeal docketed" -> appealability { authority cite "ORAP 2.05" }
+}
+
+decision appealability: "Appealability" by court cite "ORAP 2.35"
+{
+  note "The Court of Appeals may make a summary determination of whether the decision appealed from is appealable (ORAP 2.35(2)). A petition for Supreme Court review of a summary determination is filed within 14 days after it, unless a shorter time is ordered (ORAP 2.35(4)). If the court determines the decision is not appealable and dismisses, and review or reconsideration is exhausted or expired, the appellate judgment issues immediately (ORAP 2.35(5))."
+  edge-appealability-dismissed "Not appealable: appeal dismissed" -> dismissed-jurisdiction {
+    authority cite "ORAP 2.35(5)"
+  }
+  edge-appealability-record "Appealable: record prepared" -> record-prepared {
+    authority cite "ORAP 3.05"
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: decision not appealable" outcome [loss, dismissal] cite "ORAP 2.35(5)"
+{
+  note "Outcome from the applicant's side: dismissal on a determination that the decision is not appealable (ORAP 2.35(5))."
+}
+
+state record-prepared: "Trial court record and transcript" by applicant cite "ORAP 3.05"
+{
+  note "The record on appeal is the trial court file and the parts of the exhibits and record of oral proceedings designated in the notices of appeal; the record of oral proceedings is a transcript unless the court waives it for an audio or video record on motion, and the parties may file an agreed narrative statement (ORAP 3.05(1), (2)). The transcript coordinator forwards the notice to the reporters or transcribers, and the party makes the financial arrangements for the transcript (ORAP 3.33(2)); the transcript is served and the certificate of preparation filed within the time of ORS 19.370 (ORAP 3.33(4)(c)), which is not vendored."
+  edge-record-prepared-briefing "Transcript settled, or none designated" -> briefing {
+    authority cite "ORAP 5.80(1)"
+  }
+}
+
+state briefing: "Briefing" by applicant cite "ORAP 5.80"
+{
+  note "Unless a statute or the rules provide otherwise, the appellant's opening brief and excerpt of record are served and filed within 49 days after the trial court order settling the transcript, the filing of an agreed narrative statement, the transcript being deemed settled, an order waiving a transcript, or, if no transcript or narrative statement is designated, the filing of the notice of appeal (ORAP 5.80(1)). The respondent's answering brief is due within 49 days after the opening brief is filed (ORAP 5.80(2)); a reply brief, if any, within 21 days after the answering brief is filed (ORAP 5.80(3)). In the Court of Appeals an opening or answering brief may not exceed 10,000 words and a reply brief 3,300 words; a party without a word count is held to 35 and 10 pages (ORAP 5.05(1)(b)(ii), (1)(c)). A party's appendix may not exceed 25 pages (ORAP 5.05(1)(e))."
+  edge-briefing-argument "Briefing complete" -> argument { authority cite "ORAP 6.05" }
+}
+
+decision argument: "Oral argument or submission on the briefs" by court cite "ORAP 6.05"
+{
+  note "A party who intends to appear at oral argument files an Oral Argument Appearance Request no later than 14 days after the filing of a reply brief or, if none is filed, after it was due (ORAP 6.05(2)(a), (4)(a)). If the parties agree that the case is suitable for submission on the briefs, they may file a Joint Request for Submission on the Briefs no later than the date the answering brief is due (ORAP 6.05(2)(b))."
+  edge-argument-decision "Argued or submitted" -> decision-issued { authority cite "ORAP 6.05" }
+}
+
+decision decision-issued: "Court of Appeals decision" by court cite "ORAP 14.05"
+{
+  note "A party seeking costs files a statement of costs and disbursements within 28 days after the date of the decision; a petition for review or reconsideration does not suspend that time; objections are filed within 14 days after service of the statement, and a reply within 14 days after service of the objections (ORAP 13.05(5)). The Administrator does not issue the appellate judgment for 35 days after a Court of Appeals decision, to allow time for a petition for review; if one is filed, the appellate judgment does not issue until it is resolved (ORAP 14.05(3)(a))."
+  edge-decision-issued-reconsideration "Petition for reconsideration" -> reconsideration {
+    authority cite "ORAP 6.25"
+  }
+  edge-decision-issued-review "Petition for Supreme Court review" -> further-review {
+    authority cite "ORAP 9.05"
+  }
+  edge-decision-issued-judgment "Neither: appellate judgment issues" -> appellate-judgment {
+    authority cite "ORAP 14.05(3)"
+  }
+}
+
+decision reconsideration: "Reconsideration by the Court of Appeals" by court cite "ORAP 6.25"
+{
+  note "A petition for reconsideration is filed within 14 days after the decision, on one or more of the grounds of ORAP 6.25(1)(a)-(e); claims addressing legal issues already argued and addressed are disfavored (ORAP 6.25(1), (2)). It is not needed to exhaust remedies or before a petition for review (ORAP 6.25(3)). A response is filed within seven days after the petition (ORAP 6.25(4)). A timely petition for reconsideration defers the time to petition for review for all parties until the Court of Appeals issues its written disposition of it (ORAP 9.05(2)(c)(i))."
+  edge-reconsideration-review "Disposed of: petition for review" -> further-review {
+    authority cite "ORAP 9.05(2)(c)"
+  }
+  edge-reconsideration-judgment "Disposed of: no petition for review" -> appellate-judgment {
+    authority cite "ORAP 14.05(3)"
+  }
+}
+
+decision further-review: "Petition for Supreme Court review" by court cite "ORAP 9.05"
+{
+  note "A party seeking review of a Court of Appeals decision files a petition for review in the Supreme Court within 35 days after the date of the decision, except for a summary determination of appealability; the Supreme Court may extend the time on motion (ORAP 9.05(2)(a), (b)). The petition is in the form of a brief and may not exceed 5,000 words, or 15 pages (ORAP 9.05(3)(a)). A response is due within 14 days after the petition is filed (ORAP 9.10(2)). The criteria the Supreme Court considers are published but neither exclusive nor binding (ORAP 9.07). A petition is allowed if one less than a majority of the judges eligible to vote vote to allow it, and the court may limit the questions on review (ORAP 9.20(1), (2))."
+  edge-further-review-denied "Review denied" -> review-denied { authority cite "ORAP 9.20" }
+  edge-further-review-allowed "Review allowed" -> review-allowed { authority cite "ORAP 9.20(1)" }
+}
+
+terminal review-denied: "Supreme Court review denied" outcome [loss] cite "ORAP 14.05(3)(b)"
+{
+  note "Outcome from the applicant's side as petitioner. The Administrator does not issue the appellate judgment for 28 days after a Supreme Court order denying review, to allow time for reconsideration under ORAP 9.25 or a statement of costs or petition for attorney fees (ORAP 14.05(3)(b)). A petition for reconsideration in the Supreme Court is filed within 14 days after the order or opinion, and a response within seven days after it (ORAP 9.25(1), (2))."
+}
+
+terminal review-allowed: "Supreme Court review allowed" outcome [appeal] cite "ORAP 9.20"
+{
+  note "On review, the parties' Court of Appeals briefs are the main briefs, supplemented by the petition, any response, briefs on the merits and additional memoranda; the record on review is the record before the Court of Appeals (ORAP 9.20(4), (5)). Reconsideration of a Supreme Court decision is sought within 14 days after it and results in affirmance, modification or reversal (ORAP 9.25(1), (3))."
+}
+
+terminal appellate-judgment: "Appellate judgment issued" outcome [final] cite "ORAP 14.05"
+{
+  note "The appellate judgment is the decision together with the final order and the seal of the court; in an appeal from circuit court the decision is effective on the date the Administrator sends a copy of the appellate judgment to the court below (ORAP 14.05(1)(a), (2)(a)). A party may request immediate issuance on a showing that no party intends to seek review, fees or other ruling (ORAP 14.05(3)(d)). A petition for review filed after the appellate judgment has issued must be accompanied by a motion to recall it (ORAP 9.05(2)(d))."
+}

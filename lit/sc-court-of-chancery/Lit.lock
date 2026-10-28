@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "sc-court-of-chancery"
+version = "0.1.0"
+language = 1
+source = "sha256:507755322d7550ed082586e218069dd3d19d8569c0d679859a98daf3e5b60ac8"
+semantic = "sha256:f1fe565049a819b0fc193672e8060fb48a77df55ab4d4cb6b38e25f9bcc2f2be"
+texts = [
+    "scrcp sources/sc-circuit-civil/scrcp-rule-pages-2026-10-28-sectioned.txt sha256:574cec1048ea5d046691dcf4c714ad4ccf7a9572db4dd1787556567caf82b0c5",
+]
+dependencies = [
+    "core 1.0.0",
+    "sc-state-rules 0.1.0",
+]
+
+[[package]]
+name = "sc-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]

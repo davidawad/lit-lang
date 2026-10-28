@@ -1,0 +1,46 @@
+# The historical Court of Chancery (Court of Equity) of South Carolina
+# (lg-u561.5, formbook parity). No rule, statute or order of the Court of
+# Chancery is vendored under sources/, so every period, cite and value of
+# its procedure stays a hole with a note; nothing is fetched in the pod.
+# The one vendored text is the South Carolina Rules of Civil Procedure
+# (sources/sc-circuit-civil), bound for the present-day rule that the SCRCP
+# govern all South Carolina civil suits "whether cognizable as cases at law
+# or in equity" (Rule 1) and that equity references go to the
+# master-in-equity (Rule 53): today's equity practice is lit/sc-circuit-civil.
+#
+# Layers: none. The court's own dates (its creation and abolition) are not
+# stated by any vendored text, so the package opens on the SCRCP's as_of.
+[package]
+name = "sc-court-of-chancery"
+version = "0.1.0"
+language = 1
+pack_id = "sc-court-of-chancery"
+forum = "sc-court-of-chancery"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "south-carolina"
+title = "Court of Chancery of South Carolina (historical; equity)"
+description = "The historical South Carolina Court of Chancery (Court of Equity): its procedure graph with every period, cite and value a hole, because none of its rules is vendored. Present-day equity practice is the circuit court under the South Carolina Rules of Civil Procedure (lit/sc-circuit-civil)."
+in_force = "2026-04-30"
+known_at = "2026-10-28"
+unknown_before = "2026-04-30"
+jurisdiction = "Court of Chancery of South Carolina (historical)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+sc-state-rules = { version = "^0.1.0", path = "../sc-rules" }
+
+[sources.scrcp]
+title = "South Carolina Rules of Civil Procedure, rule pages as served on sccourts.org 2026-10-28 (latest stated amendment: order of April 30, 2026)"
+url = "https://www.sccourts.org/resources/judicial-community/court-rules/civil/"
+path = "sources/sc-circuit-civil/scrcp-rule-pages-2026-10-28-sectioned.txt"
+path_sha256 = "574cec1048ea5d046691dcf4c714ad4ccf7a9572db4dd1787556567caf82b0c5"
+as_of = "2026-04-30"
+cite_prefixes = ["S.C. R. Civ. P."]
+section_heading = "Rule {n}"

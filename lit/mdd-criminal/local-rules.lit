@@ -1,0 +1,83 @@
+module mdd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The District of Maryland's own criminal periods. Local Rule 207.1 applies
+// Local Rule 105 to criminal proceedings except 105.2.c, 105.11 and 105.12,
+// so the opposition, reply and reconsideration periods of 105.2(a) and
+// 105.10 are declared here for the criminal forum. Stated in the rules but
+// not declared: the Speedy Trial Plan, which the rules do not reproduce
+// (Local Rule 203: the order "is available for public inspection through
+// the Clerk's Office"); the sentencing scheduling order entered on a plea or
+// verdict, whose form the Court en banc prescribes and the rules do not
+// reproduce (Local Rule 213.2); and the 14 days to appeal a magistrate
+// judge's decision to the District Court (Local Rule 302.1), which restates
+// FRCrimP 58(g)(2) and stays lit/frcrimp's. Local Rules 208 (arrest to
+// arraignment), 209 (discovery) and 212 (post-trial motions) are reserved,
+// so the FRCrimP periods govern alone. The outline's flow (arrest to
+// judgment) is lit/frcrimp's; its decisions (Salerno, Brady, Barker,
+// Zedner, Boykin, Frye, Jackson, Booker, Flores-Ortega, Garza) have no
+// vendored reporter text and are removed.
+/// A motion is served (Local Rules 105.2(a), 207.1).
+event MotionServed()
+/// A memorandum in opposition to a motion is served (Local Rules 105.2(a),
+/// 207.1).
+event OppositionServed()
+/// An order is entered (Local Rules 105.10, 207.1).
+event OrderEntered()
+/// The Court orders bail forfeited (Local Rule 206.3(a)).
+event BailForfeitureOrdered()
+/// A criminal appeal from a magistrate judge is docketed in the District
+/// Court (Local Rule 302.1).
+event MagistrateAppealDocketed()
+/// The appellant's memorandum on an appeal from a magistrate judge is filed
+/// (Local Rule 302.1).
+event AppellantMemorandumFiled()
+
+/// Local Rules 105.2(a), 207.1: unless the Court orders otherwise, a
+/// memorandum in opposition to a motion is filed within 14 days of service
+/// of the motion.
+deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 cite "D. Md. Local Rule 105.2(a)"
+{
+  forum frcrimp
+}
+
+/// Local Rules 105.2(a), 207.1: a reply memorandum is filed within 14 days
+/// after service of the opposition. Surreply memoranda are not permitted
+/// unless the Court orders otherwise.
+deadline reply-period: 14.days after OppositionServed() counted_by frcrimp45 cite "D. Md. Local Rule 105.2(a)"
+{
+  forum frcrimp
+}
+
+/// Local Rules 105.10, 207.1: a motion to reconsider an order is filed no
+/// later than 14 days after its entry.
+deadline reconsideration-period: 14.days after OrderEntered() counted_by frcrimp45 cite "D. Md. Local Rule 105.10"
+{
+  forum frcrimp
+}
+
+/// Local Rule 206.3(a): within 14 days of the date of a bail forfeiture
+/// order, the surety either produces the defendant in court or deposits the
+/// sum forfeited in the registry; a surety who does not is barred from
+/// writing other bails in the Court until it complies.
+deadline surety-forfeiture-period: 14.days after BailForfeitureOrdered() counted_by frcrimp45 cite "D. Md. Local Rule 206.3(a)"
+{
+  forum frcrimp
+}
+
+/// Local Rule 302.1: within 30 days of the docketing of a criminal appeal
+/// from a magistrate judge, the appellant files and serves a memorandum of
+/// the points of law, facts and authorities; the Court may dismiss the
+/// appeal if none is filed in time, and may extend the time for good cause.
+deadline magistrate-appeal-memorandum-period: 30.days after MagistrateAppealDocketed() counted_by frcrimp45 cite "D. Md. Local Rule 302.1"
+{
+  forum frcrimp
+}
+
+/// Local Rule 302.1: the appellee files an answering memorandum within 30
+/// days after the appellant's.
+deadline magistrate-appeal-answer-period: 30.days after AppellantMemorandumFiled() counted_by frcrimp45 cite "D. Md. Local Rule 302.1"
+{
+  forum frcrimp
+}

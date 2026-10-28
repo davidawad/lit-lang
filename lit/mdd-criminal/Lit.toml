@@ -1,0 +1,49 @@
+# The District of Maryland's Local Rules, Part II (Criminal), as a
+# local-rule layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it
+# declares only the periods the criminal Local Rules themselves state, or
+# adopt from the civil Local Rules, and re-encodes no FRCrimP, Speedy Trial
+# Act or FRAP 4(b) period (those are lit/frcrimp's). Each period is counted
+# under FRCrimP 45(a), which governs "any local rule". The rules are the
+# edition dated December 1, 2025 (sources/mdd). Federal habeas is
+# lit/habeas's; an appeal to the Fourth Circuit is lit/frcrimp's and
+# lit/ca4's.
+[package]
+name = "mdd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "mdd-criminal-local-rules"
+forum = "mdd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, District of Maryland: Local Rules (criminal)"
+description = "The District of Maryland's criminal Local Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): motion opposition, reply and reconsideration periods adopted from the civil rules, the surety's period after a bail forfeiture, and the memoranda on an appeal from a magistrate judge in a criminal case."
+in_force = "2025-12-01"
+known_at = "2026-10-28"
+unknown_before = "2025-12-01"
+jurisdiction = "United States District Court, D. Maryland (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "mdd-lr"
+issuer = "United States District Court for the District of Maryland"
+date = "2025-12-01"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.mdd-lr]
+title = "Local Rules of the United States District Court for the District of Maryland (December 1, 2025)"
+url = "https://www.mdd.uscourts.gov/sites/mdd/files/LocalRules.pdf"
+path = "sources/mdd/mdd-local-rules-sectioned.txt"
+path_sha256 = "287ac2420ed78aaff0f6d8b3d6c081393df5111e19f4180b88a054b951e286b4"
+sha256 = "0548bdddab14f278b80ad91c2625837e65ad06ddfe9613107a72a0121174cae9"
+as_of = "2025-12-01"
+cite_prefixes = ["D. Md. Local Rule"]
+section_heading = "Local Rule {n}"

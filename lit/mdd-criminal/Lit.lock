@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "mdd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:85392b54902b209de5cfff21613ffe0b030b99936e367815172bbe9bb7375b1d"
+semantic = "sha256:9bbe092e8cfdbd907139b5cbd599957966dc2422a9adc1a852c119163f61fc9d"
+texts = [
+    "mdd-lr sources/mdd/mdd-local-rules-sectioned.txt sha256:287ac2420ed78aaff0f6d8b3d6c081393df5111e19f4180b88a054b951e286b4",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

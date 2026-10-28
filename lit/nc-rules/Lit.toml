@@ -1,0 +1,30 @@
+# The North Carolina base library (lg-u561.5): what the North Carolina
+# court packages share. The North Carolina Rules of Appellate Procedure
+# (sources/nc-appellate-civil) and Rules of Civil Procedure
+# (sources/nc-superior-civil) are cited by the court packages themselves;
+# this library declares only the trigger events their graphs route on
+# (lit/nc-industrial-commission). It declares no period and no procedure
+# of its own.
+[package]
+name = "nc-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "nc-state-rules"
+forum = "nc-state-rules"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "north-carolina"
+title = "North Carolina state court rules (base library)"
+description = "The rule layer North Carolina's court packages share: the trigger events their graphs route on. No procedure of its own."
+in_force = "2025-09-02"
+known_at = "2026-10-28"
+unknown_before = "2025-09-02"
+jurisdiction = "North Carolina state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

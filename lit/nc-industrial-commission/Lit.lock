@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "nc-industrial-commission"
+version = "0.1.0"
+language = 1
+source = "sha256:fa25a792a48a84ed6c59cad18a80da40e3f57a84d4ccb8eda359f6937d7bc526"
+semantic = "sha256:a31f2e0ae2dc22f6c33fea4db9979ec37bdaa18a14d392a8051d8a30de4c6eb8"
+texts = [
+    "ncrap sources/nc-appellate-civil/nc-rules-of-appellate-procedure-sectioned.txt sha256:faa02aa4899f95553e42bccb296ed5dc8d4a6ec35b5509f4e0eb535648614d69",
+]
+dependencies = [
+    "core 1.0.0",
+    "nc-state-rules 0.1.0",
+]
+
+[[package]]
+name = "nc-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]

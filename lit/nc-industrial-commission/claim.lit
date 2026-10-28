@@ -1,0 +1,56 @@
+module nc-industrial-commission.claim
+
+import nc-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeOfAppealFiled }
+
+// A workers' compensation claim from the claimant's side. N.C. Gen. Stat.
+// Chapter 97 is not vendored: its cites are holes and none of its periods
+// is stated. Only the appeal to the appellate division binds, to N.C. R.
+// App. P. 18. No period is a counted deadline.
+start filed
+
+state filed: "Claim filed with the Industrial Commission" by applicant cite ?("N.C. Gen. Stat. § 97-24, Chapter 97 not vendored") {
+  note "The time and form for filing a claim, and any fee, are set by the Workers' Compensation Act, N.C. Gen. Stat. Chapter 97, which is not vendored; they stay holes. The earlier outline named no leading decision."
+  edge-filed-hearing "Set for hearing" -> hearing {
+    event ActionCommenced()
+    authority cite ?("N.C. Gen. Stat. § 97-84, Chapter 97 not vendored")
+  }
+}
+
+state hearing: "Hearing before a deputy commissioner" by court cite ?("N.C. Gen. Stat. § 97-84, Chapter 97 not vendored") {
+  note "Hearing procedure, evidence and the record before the deputy commissioner and on review by the Full Commission are set by N.C. Gen. Stat. Chapter 97 and the Commission's own rules, neither vendored; they stay holes. Where the Commission reviews a record of proceedings before a deputy commissioner, the items of that record needed to understand the issues go into the record on any appeal (N.C. R. App. P. 18(c)(7))."
+  edge-hearing-decision "Award or decision issued" -> decision {
+    authority cite ?("N.C. Gen. Stat. § 97-85, Chapter 97 not vendored")
+  }
+}
+
+chance decision: "Commission decides" by court cite ?("N.C. Gen. Stat. § 97-85, Chapter 97 not vendored") {
+  note "Outcome probabilities are unauthored holes: no sourced rate is vendored."
+  edge-decision-granted "Compensation awarded" -> review p ?("no sourced award rate vendored") {
+    event DecisionFiled()
+  }
+  edge-decision-denied "Compensation denied" -> review p ?("no sourced award rate vendored") {
+    event DecisionFiled()
+  }
+}
+
+decision review: "Appeal to the Court of Appeals?" by applicant cite "N.C. R. App. P. 18(b)"
+{
+  note "An appeal of right from an administrative tribunal directly to the appellate division under N.C.G.S. § 7A-29 follows the rules for appeals from the trial divisions except as Article IV provides (N.C. R. App. P. 18(a)). The times and methods are Rule 18's unless the General Statutes provide otherwise, in which case the General Statutes control (N.C. R. App. P. 18(b)(1)); the Industrial Commission's statute, N.C. Gen. Stat. § 97-86, is not vendored, so whether it displaces Rule 18 is a hole. Under Rule 18(b)(2) any party may appeal a final decision for alleged errors of law by filing and serving a notice of appeal within thirty days after receipt of a copy of the final decision, which is sent by registered or certified mail; the notice names the parties appealing, the decision and the court, and is signed. If no transcript of the fact-finding proceedings was made, the parties may order one under Rule 7 (N.C. R. App. P. 18(b)(3)). The period is stated, not counted."
+  edge-review-none "No appeal" -> final-decision {
+    event JudgmentEntered()
+    authority cite ?("N.C. Gen. Stat. § 97-86, Chapter 97 not vendored")
+  }
+  edge-review-sought "Notice of appeal filed and served" -> appeal {
+    event NoticeOfAppealFiled()
+    authority cite "N.C. R. App. P. 18(b)(2)"
+  }
+}
+
+terminal final-decision: "Commission's decision final" outcome [final] cite ?("N.C. Gen. Stat. § 97-86, Chapter 97 not vendored") {
+  note "Enforcement and payment of an award are set by N.C. Gen. Stat. Chapter 97, not vendored, and are outside this package."
+}
+
+terminal appeal: "Appeal to the Court of Appeals" outcome [final] cite "N.C. R. App. P. 18(d)"
+{
+  note "The printed record in a workers' compensation appeal includes a Form 44 (N.C. R. App. P. 18(c)(4)). The parties may settle the record by agreement within forty-five days after all ordered transcripts are delivered or after the last notice of appeal, whichever is later; otherwise the appellant serves a proposed record within the same time and an appellee may respond within thirty days after its service (N.C. R. App. P. 18(d)(1), (2)). A notice of appeal or petition for discretionary review to the Supreme Court in a case arising from the Industrial Commission is also served on the Chair of the Industrial Commission (N.C. R. App. P. 14(a), 15(b)), and discretionary review of an Industrial Commission appeal may be sought only after the Court of Appeals decides it (N.C. R. App. P. 15(a)). The appeal proceeds in lit/nc-appellate-civil."
+}

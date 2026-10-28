@@ -32,29 +32,29 @@ terminal cert-not-sought: "FINAL — Certiorari Not Sought" outcome [final] cite
   payoff_by_flag { panel-affirmed: 0.usd, panel-mixed: 250_000.usd, panel-reversed: 1_000_000.usd }
 }
 
-state cert-petition-filed: "Petition for Certiorari Filed" by office cite ?("Sup. Ct. R. 10; 28 U.S.C. § 1254(1)") {
+state cert-petition-filed: "Petition for Certiorari Filed" by office cite "Sup. Ct. R. 10; 28 U.S.C. § 1254(1)" {
   group cert-group
   cert-filed-to-review "Supreme Court considers the petition" -> cert-review-decision {
-    authority cite ?("Sup. Ct. R. 10")
+    authority cite "Sup. Ct. R. 10"
   }
 }
 
 /// A tribunal-discretion draw. It stays a `decision` by `office`, as in the
 /// pack, because a `chance` node lowers to kind `state`; its probabilities
 /// are the pack's, with their bases in each edge's note.
-chance cert-review-decision: "Supreme Court Grants or Denies Certiorari" by office discretion cite ?("Sup. Ct. R. 10") {
+chance cert-review-decision: "Supreme Court Grants or Denies Certiorari" by office discretion cite "Sup. Ct. R. 10" {
   group cert-group
   cert-review-deny "Certiorari denied" -> cert-denied p 0.99 {
-    authority cite ?("Sup. Ct. R. 10")
+    authority cite "Sup. Ct. R. 10"
     note "Widely cited SCOTUS-wide grant rate of roughly 1% of petitions (rule of four, Sup. Ct. R. 10); not Federal-Circuit-specific. Carried over from frap-appellate-procedure.json's identical figure."
   }
   cert-review-grant "Certiorari granted" -> cert-granted p 0.01 {
-    authority cite ?("28 U.S.C. § 1254(1); Sup. Ct. R. 10")
+    authority cite "28 U.S.C. § 1254(1); Sup. Ct. R. 10"
     note "See cert-review-deny's note — same source and basis."
   }
 }
 
-terminal cert-denied: "CERT DENIED (Final)" outcome [final] cite ?("Sup. Ct. R. 10") {
+terminal cert-denied: "CERT DENIED (Final)" outcome [final] cite "Sup. Ct. R. 10" {
   group cert-group
   note "Denial of certiorari is not a ruling on the merits and carries zero precedential weight — the Federal Circuit's judgment simply stands, so payoffByFlag restores whatever the panel actually decided, same mechanism and rationale as cert-not-sought."
   valence good
@@ -62,7 +62,7 @@ terminal cert-denied: "CERT DENIED (Final)" outcome [final] cite ?("Sup. Ct. R. 
   payoff_by_flag { panel-affirmed: 0.usd, panel-mixed: 250_000.usd, panel-reversed: 1_000_000.usd }
 }
 
-terminal cert-granted: "CERT GRANTED — Case Transfers to the Supreme Court" outcome [remand] cite ?("28 U.S.C. § 1254(1); Sup. Ct. R. 10") {
+terminal cert-granted: "CERT GRANTED — Case Transfers to the Supreme Court" outcome [remand] cite "28 U.S.C. § 1254(1); Sup. Ct. R. 10" {
   group cert-group
   note "This pack's jurisdiction over the case ends here; payoff is a neutral placeholder, not a merits prediction about the eventual Supreme Court disposition."
   valence good

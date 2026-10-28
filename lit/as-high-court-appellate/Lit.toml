@@ -1,0 +1,46 @@
+# A civil appeal of right from the Trial Division of the High Court of
+# American Samoa to its Appellate Division under the Appellate Court Rules
+# (ACR), as the American Samoa Bar Association's posting served them on
+# 2026-10-28 (sources/as-high-court-appellate). That posting is UNOFFICIAL
+# (the court publishes no rules) and CURRENCY UNCONFIRMED: it states no
+# edition, and the latest effective date it states is July 15, 1987 (Rules
+# 26, 27). Values are bound to it with that caveat (David's ruling
+# 2026-10-28, lg-f3q8.77). ACR 26(a) excludes intermediate weekends and
+# holidays from periods under 7 days and has no lit/core counting rule, so
+# the rules' periods are stated in notes, not counted deadlines. The
+# new-trial statute (43.0802 A.S.C.A.) is not vendored and is not cited.
+# The vendored rules provide no further review of an Appellate Division
+# judgment; the outline's 28 U.S.C. § 1259 cite (Supreme Court review of
+# the Court of Appeals for the Armed Forces) does not reach the High Court
+# and is removed. A Trial Division appeal arrives from lit/as-high-court.
+[package]
+name = "as-high-court-appellate"
+version = "0.1.0"
+language = 1
+pack_id = "as-high-court-appellate"
+forum = "as-high-court-appellate"
+authority = "StateRule"
+jurisdiction_id = "american-samoa"
+title = "High Court of American Samoa, Appellate Division"
+description = "A civil appeal of right from the Trial Division to the Appellate Division of the High Court of American Samoa under the Appellate Court Rules, as far as the vendored (unofficial, currency unconfirmed) text states. A Trial Division appeal arrives from lit/as-high-court."
+in_force = "1987-07-15"
+known_at = "2026-10-28"
+unknown_before = "1987-07-15"
+jurisdiction = "High Court of American Samoa, Appellate Division"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.as-acr]
+title = "American Samoa Appellate Court Rules (ACR), American Samoa Bar Association posting as served 2026-10-28 (page modified 2020-10-05); UNOFFICIAL, CURRENCY UNCONFIRMED (latest stated effective date July 15, 1987)"
+url = "https://asbar.org/?p=16557"
+path = "sources/as-high-court-appellate/as-appellate-rules-asbar-sectioned.txt"
+path_sha256 = "5ccb5f63c1073d2458993072050c3ec0a0cd3749b246851df72f52e796f94567"
+as_of = "1987-07-15"
+cite_prefixes = ["A.C.R."]
+section_heading = "Rule {n}"

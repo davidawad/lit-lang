@@ -1,0 +1,122 @@
+module nywd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The Western District of New York's own criminal periods, counted under
+// the criminal rules (FRCrimP 45(a) governs "any local rule"). Unless the
+// assigned District Judge orders otherwise, the motion procedures apply to
+// indictments and informations (Loc. R. Crim. P. 12). No trigger carries a
+// service method: FRCrimP 45(c)'s three added days follow the manner of
+// service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp: objections to a
+// magistrate judge's order or recommended disposition follow FRCrimP 59
+// (Loc. R. Crim. P. 59(c)).
+//
+// Conditions that are not deadlines from an event stay in notes: at or
+// after arraignment the court issues an order setting discovery and motion
+// deadlines (Loc. R. Crim. P. 12(a); not vendored); a letter application
+// to exceed a page limit is made at least seven days before the date the
+// memorandum must be filed (Loc. R. Crim. P. 12(c)), a period counted back
+// from another deadline; an edited video deposition is delivered at least
+// three days before it is shown and objections to it are served at least
+// 24 hours before (Loc. R. Crim. P. 15(f)), periods from a showing the
+// court schedules during trial; and a search warrant matter not timely
+// returned is unsealed 28 days from the warrant's issuance, or at the
+// return if earlier, unless the court orders it kept sealed (Loc. R. Crim.
+// P. 41(c), (d)), a step of the court rather than of a party.
+//
+// The earlier W.D.N.Y. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Barker v. Wingo, Zedner v. United States,
+// Brady v. Maryland and the others it named) are FRCrimP, Speedy Trial
+// Act or constitutional authority and belong to lit/frcrimp; they are
+// removed here: no reporter text is vendored.
+
+/// A memorandum in support of or in opposition to a motion: at most 25
+/// pages (W.D.N.Y. Loc. R. Crim. P. 12(c)).
+limit motion-memorandum {
+  pages <= 25 cite "W.D.N.Y. Loc. R. Crim. P. 12(c)"
+} cite "W.D.N.Y. Loc. R. Crim. P. 12(c)"
+
+/// A reply memorandum: at most 10 pages; no sur-reply without the judge's
+/// permission (W.D.N.Y. Loc. R. Crim. P. 12(c), (d)).
+limit reply-memorandum {
+  pages <= 10 cite "W.D.N.Y. Loc. R. Crim. P. 12(c)"
+} cite "W.D.N.Y. Loc. R. Crim. P. 12(c)"
+
+/// A motion is served (W.D.N.Y. Loc. R. Crim. P. 12(b)).
+event MotionServed() paper motion-memorandum
+/// The responding papers are served (W.D.N.Y. Loc. R. Crim. P. 12(b)).
+event ResponseServed() paper motion-memorandum
+/// Reply papers are filed and served (W.D.N.Y. Loc. R. Crim. P. 12(b)).
+event ReplyServed() paper reply-memorandum
+/// The trial date (W.D.N.Y. Loc. R. Crim. P. 15(d)).
+event TrialScheduled()
+/// A party receives the Clerk's notice to remove its paper or other
+/// physical exhibits (W.D.N.Y. Loc. R. Crim. P. 26(c)).
+event ExhibitRemovalNoticed()
+/// A search warrant is executed, or the time for its execution expires
+/// (W.D.N.Y. Loc. R. Crim. P. 41(b)).
+event SearchWarrantExecuted()
+/// A party is served with a magistrate judge's recommended disposition
+/// (W.D.N.Y. Loc. R. Crim. P. 59(c)(2)).
+event RecommendedDispositionServed()
+
+/// W.D.N.Y. Loc. R. Crim. P. 12(b)(2): if the Court sets no deadlines by
+/// order (12(b)(1)), the opposing party has 14 days after service of the
+/// motion to file and serve responding papers.
+deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D.N.Y. Loc. R. Crim. P. 12(b)"
+{
+  forum frcrimp
+}
+
+/// W.D.N.Y. Loc. R. Crim. P. 12(b)(2): absent a court order, the moving
+/// party has 7 days after service of the responding papers to file and
+/// serve reply papers.
+deadline reply-period: 7.days after ResponseServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D.N.Y. Loc. R. Crim. P. 12(b)"
+{
+  forum frcrimp
+}
+
+/// W.D.N.Y. Loc. R. Crim. P. 15(d): unresolved objections made at a
+/// deposition recorded on video and stenographically are submitted by a
+/// motion in limine no later than seven days before trial or any earlier
+/// deadline the Court sets.
+deadline video-deposition-objections: 7.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D.N.Y. Loc. R. Crim. P. 15(d)"
+{
+  forum frcrimp
+}
+
+/// W.D.N.Y. Loc. R. Crim. P. 26(c): a party that does not remove its paper
+/// or other physical exhibits within 30 days from the date of the Clerk's
+/// notice may have them destroyed or otherwise disposed of.
+deadline exhibit-removal: 30.days after ExhibitRemovalNoticed() counted_by frcrimp45 cite "W.D.N.Y. Loc. R. Crim. P. 26(c)"
+{
+  forum frcrimp
+}
+
+/// W.D.N.Y. Loc. R. Crim. P. 41(b): an executed search warrant is returned
+/// with its inventory to the designated Magistrate Judge within 14 days
+/// after it is executed or the time for execution has expired.
+deadline search-warrant-return: 14.days after SearchWarrantExecuted() counted_by frcrimp45 cite "W.D.N.Y. Loc. R. Crim. P. 41(b)"
+{
+  forum frcrimp
+}
+
+/// W.D.N.Y. Loc. R. Crim. P. 59(c)(2): a party seeking more time to object
+/// to a magistrate judge's recommended disposition moves the District
+/// Judge for an extension within 14 days after being served with it.
+deadline objection-extension-motion: 14.days after RecommendedDispositionServed() counted_by frcrimp45 cite "W.D.N.Y. Loc. R. Crim. P. 59(c)"
+{
+  forum frcrimp
+}

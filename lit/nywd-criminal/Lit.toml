@@ -1,0 +1,56 @@
+# The U.S. District Court for the Western District of New York's Local
+# Rules of Criminal Procedure (cited "Loc. R. Crim. P.") as a local-rule
+# layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a); Loc. R. Crim.
+# P. 1(a): they "supplement the Federal Rules of Criminal Procedure"): it
+# declares only the periods and limits the criminal rules themselves state
+# and re-encodes no FRCrimP, Speedy Trial Act or FRAP 4(b) period (one
+# source of truth: lit/frcrimp). Each period is counted under FRCrimP
+# 45(a), which governs "any local rule", so each deadline names `forum
+# frcrimp`. The rules are the edition effective January 1, 2025, with the
+# clerical corrections of order 26-4-7 (sources/wdny); the rules apply to
+# actions commenced on or after January 1, 2025, so in_force is that date;
+# earlier editions are not vendored, so a query before it is a hole in the
+# corpus. The scheduling order the court issues at arraignment (Loc. R.
+# Crim. P. 12(a)) and the Revised Plan for Prompt Disposition of Criminal
+# Cases are not vendored. An appeal goes to the Second Circuit under
+# lit/frcrimp's FRAP 4(b) period and lit/ca2.
+[package]
+name = "nywd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "nywd-criminal-local-rules"
+forum = "nywd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Western District of New York: Local Rules of Criminal Procedure"
+description = "The Western District of New York's Local Rules of Criminal Procedure as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the motion opposition and reply periods absent a court order and the memorandum page limits, objections to a video deposition before trial, the removal of exhibits after the Clerk's notice, the return of a search warrant, and a motion to extend the time to object to a magistrate judge's recommended disposition."
+in_force = "2025-01-01"
+known_at = "2026-10-28"
+unknown_before = "2025-01-01"
+jurisdiction = "U.S. District Court for the Western District of New York (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "wdny-lrcrp"
+issuer = "United States District Court for the Western District of New York"
+date = "2025-01-01"
+designation = "Local Rules of Criminal Procedure (with the clerical corrections of order 26-4-7)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.wdny-lrcrp]
+title = "Local Rules of Criminal Procedure of the United States District Court for the Western District of New York (effective January 1, 2025; clerical corrections, order 26-4-7)"
+url = "https://www.nywd.uscourts.gov/sites/nywd/files/26-4-7%20CLERICAL%20CORRECTIONS%20TO%202024%20Local%20Rules%20of%20Criminal%20Procedure.docx%20-%20Signed.pdf"
+path = "sources/wdny/wdny-local-criminal-rules-2025-01-01-sectioned.txt"
+path_sha256 = "26441fee7eab9c38b7b42ff48fa421cd60f2efd8c36c1657aaf8aef7c825c98c"
+sha256 = "cd28b9e96b16671aff855da1c85fa426ac3e0418e8782de7ea3ea15602c63bca"
+as_of = "2025-01-01"
+cite_prefixes = ["W.D.N.Y. Loc. R. Crim. P."]
+section_heading = "Loc. R. Crim. P. {n}"

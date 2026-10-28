@@ -15,3 +15,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 52093fb258114036d4f70501f5ba231119099461fa56a2c43974e0e4e54093f8. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `wdny/original/wdny-local-criminal-rules-2025-01-01.pdf` as served (sha256 cd28b9e96b16671aff855da1c85fa426ac3e0418e8782de7ea3ea15602c63bca); extraction sha256 52093fb258114036d4f70501f5ba231119099461fa56a2c43974e0e4e54093f8.
+
+### `wdny/wdny-local-criminal-rules-2025-01-01-sectioned.txt` — W.D.N.Y. Local Rules of Criminal Procedure, sectioned
+
+- Derived in the pod (lg-gddt.8) from `wdny/wdny-local-criminal-rules-2025-01-01.txt` (extract sha256 52093fb258114036d4f70501f5ba231119099461fa56a2c43974e0e4e54093f8); nothing fetched. After the table of contents, one `## Loc. R. Crim. P. <n>` line is inserted before each rule's own centered heading line `RULE <n>` (17 rules: 1, 5, 6, 7, 12, 15, 23, 26, 32, 41, 44, 49, 53, 55, 57, 58, 59); the rules cite themselves "Loc. R. Crim. P." (Loc. R. Crim. P. 1(a)). The cover, adoption order, contents and index are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Loc\. R\. Crim\. P\. /d'`) restores the extract byte for byte.
+- Edition: as the extract, effective January 1, 2025, with the clerical corrections of order 26-4-7.
+- Sectioned sha256 26441fee7eab9c38b7b42ff48fa421cd60f2efd8c36c1657aaf8aef7c825c98c (the `path_sha256` pinned by `lit/nywd-criminal/Lit.toml`).

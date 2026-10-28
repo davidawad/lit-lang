@@ -1,0 +1,52 @@
+# Civil actions in the Superior Court of the State of Delaware under its
+# Rules of Civil Procedure, consolidated edition of Mar. 2026
+# (sources/de-superior-civil). Two later amending orders (Mar. 13, 2026:
+# Rules 5(g), 37(e), new Rules 141-146; Sept. 30, 2026: Rule 26(b)) are
+# vendored as separate documents; no cite here binds to a provision they
+# amend. Time is computed under Super. Ct. Civ. R. 6(a), which excludes
+# intermediate weekends and Delaware legal holidays from a period under 11
+# days; lit/core has no counting rule for it, so the periods are stated in
+# notes, not encoded as counted deadlines. An appeal hands off to the
+# Delaware Supreme Court package (lit/de-supreme-civil).
+[package]
+name = "de-superior-civil"
+version = "0.1.0"
+language = 1
+pack_id = "de-superior-civil"
+forum = "de-superior-civil"
+authority = "StateRule"
+jurisdiction_id = "delaware"
+title = "Delaware Superior Court, civil"
+description = "Civil actions in the Superior Court of the State of Delaware under its Rules of Civil Procedure, as far as the vendored text states: commencement and the deposit for costs, service and its 120-day limit, the time to answer, Rule 12(b) motions and amendment, default judgment by the Prothonotary or the Court and setting it aside, discovery and its sanctions, summary judgment, jury demand and trial, post-trial motions and reargument, entry of judgment and costs, dismissal, and the appeal (lit/de-supreme-civil)."
+in_force = "2026-03-23"
+known_at = "2026-10-28"
+unknown_before = "2026-03-23"
+jurisdiction = "Superior Court of the State of Delaware (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.de-super-civ]
+title = "Rules of Civil Procedure for the Superior Court of the State of Delaware (consolidated, PDF of Mar. 23, 2026)"
+url = "https://courts.delaware.gov/forms/download.aspx?id=304488"
+path = "sources/de-superior-civil/rules-civ-2026-03-sectioned.txt"
+path_sha256 = "107f229c9ddead76c1d5c790c449ab610a4559cd7240fcccc4ef3ba0d2f6ff20"
+sha256 = "22ec3a0556439cef64be7bc81efa054093dfc04d3c4f7f421ab56c2cdb0f3ca5"
+as_of = "2026-03-23"
+cite_prefixes = ["Del. Super. Ct. Civ. R."]
+section_heading = "Del. Super. Ct. Civ. R. {n}"
+
+[sources.de-supr]
+title = "Rules of the Supreme Court of the State of Delaware (PDF of Feb. 3, 2026)"
+url = "https://courts.delaware.gov/forms/download.aspx?id=174928"
+path = "sources/de-supreme-civil/rules-2026-02-sectioned.txt"
+path_sha256 = "9f090e9a2450f3a591a66547027c2b3d4ce07e0041e2c5568d486346ed21518d"
+sha256 = "a183b8fed3a5a906dfed1aa1de41c3c20887163da6a60b7a335f39e4acad6073"
+as_of = "2026-02-03"
+cite_prefixes = ["Del. Supr. Ct. R."]
+section_heading = "Del. Supr. Ct. R. {n}"

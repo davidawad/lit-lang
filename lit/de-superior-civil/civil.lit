@@ -1,0 +1,205 @@
+module de-superior-civil.civil
+
+// Civil actions in the Superior Court of the State of Delaware, from the
+// applicant's (plaintiff's) side. Every period below is stated in a note,
+// not counted: time is computed under Super. Ct. Civ. R. 6(a), which
+// excludes intermediate Saturdays, Sundays and Delaware legal holidays from
+// a period under 11 days and extends a last day on which the Prothonotary's
+// office is closed, and Rule 6(e) adds 3 days after service by mail; lit/core
+// has no counting rule for it or for the State's legal holidays. The base
+// text is the consolidated edition of Mar. 2026; the amending orders of Mar.
+// 13, 2026 (sealing under Rule 5(g), presentation of discovery motions under
+// Rule 37(e), and the Complex Commercial Litigation Division Rules 141-146)
+// and Sept. 30, 2026 (litigation-funding discovery under Rule 26(b)) are
+// vendored separately and no cite here binds to a provision they amend. The
+// earlier outline named no leading decisions. The appeal to the Supreme
+// Court is governed by 10 Del. C. § 148 (not vendored) and the Supreme Court
+// Rules, which are.
+start complaint-filed
+
+state complaint-filed: "Action commenced" by applicant cite "Del. Super. Ct. Civ. R. 3(a)"
+{
+  note "Except amicable actions, an action is commenced by filing with the Prothonotary a complaint and a praecipe directing the Prothonotary to issue the writ, with a Case Information Statement; an objection to the Related Cases listed in a CIS is filed no later than ten days after the last responsive pleading, and any response within five days (Del. Super. Ct. Civ. R. 3(a)). Before any civil action is instituted the Prothonotary demands a deposit of $200 for fees and costs, and a nonrefundable deposit of not less than $750 where a special jury is requested (Del. Super. Ct. Civ. R. 3(e)). In a personal injury action the plaintiff files with the complaint answers to the Form 30 interrogatories and the special-damages documents (Del. Super. Ct. Civ. R. 3(h)). Process issued is served together with the complaint by the sheriff or a person specially appointed (Del. Super. Ct. Civ. R. 4(e)) and is returnable 20 days after issuance (Del. Super. Ct. Civ. R. 4(g)); after service on a nonresident under 10 Del. C. § 3104, § 3112 or § 3113, the return receipt and affidavit are filed as an amendment to the complaint within 10 days of the plaintiff's receipt of the return receipt (Del. Super. Ct. Civ. R. 4(h))."
+  edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    authority cite "Del. Super. Ct. Civ. R. 4(e)"
+  }
+  edge-complaint-filed-unserved "Not served within 120 days without good cause" -> dismissed-unserved {
+    authority cite "Del. Super. Ct. Civ. R. 4(j)"
+  }
+  edge-complaint-filed-dismissed "Plaintiff dismisses by notice before answer or summary judgment motion" -> dismissed-voluntary {
+    authority cite "Del. Super. Ct. Civ. R. 41(a)"
+  }
+}
+
+terminal dismissed-unserved: "Dismissed for untimely service" outcome [loss, dismissal] cite "Del. Super. Ct. Civ. R. 4(j)"
+{
+  note "Outcome from the applicant's side. If service of the summons and complaint is not made on a defendant within 120 days after the filing of the complaint and the plaintiff cannot show good cause, the action is dismissed as to that defendant without prejudice, on the court's own initiative with notice or on motion (Del. Super. Ct. Civ. R. 4(j))."
+}
+
+decision answer-due: "Answer, Rule 12(b) motion, or no response" by office cite "Del. Super. Ct. Civ. R. 12(a)"
+{
+  note "A defendant serves an answer within 20 days after service of process, complaint and affidavit, if any, on that defendant, or within 20 days after appearance if it appears before service; a reply to a counterclaim is served within 20 days after service of the answer (Del. Super. Ct. Civ. R. 12(a)). If the complaint bears a Rule 3(b) notation in an action under 10 Del. C. § 3901, the defendant serves an affidavit of defense, or a motion that judgment be refused, by the time for the answer (Del. Super. Ct. Civ. R. 3(b), 12(a)). The defenses of lack of subject matter or personal jurisdiction, improper venue, insufficiency of process or of service, failure to state a claim and failure to join a party under Rule 19 may be made by motion before pleading (Del. Super. Ct. Civ. R. 12(b)). The answer states defenses and admits or denies the averments (Del. Super. Ct. Civ. R. 8(b)); affirmative defenses are pleaded affirmatively (Del. Super. Ct. Civ. R. 8(c))."
+  edge-answer-due-answered "Answer served" -> answered {
+    authority cite "Del. Super. Ct. Civ. R. 12(a)"
+  }
+  edge-answer-due-motion "Rule 12(b) motion served" -> motion-pending {
+    authority cite "Del. Super. Ct. Civ. R. 12(b)"
+  }
+  edge-answer-due-default "No appearance, pleading or defense" -> default-judgment {
+    authority cite "Del. Super. Ct. Civ. R. 55(b)"
+  }
+}
+
+decision motion-pending: "Rule 12(b) motion decided" by court cite "Del. Super. Ct. Civ. R. 12(b)"
+{
+  note "If the court denies the motion or postpones its disposition until trial, the responsive pleading is served within 10 days after notice of the court's action; if it grants a motion for a more definite statement, within 10 days after service of the more definite statement, unless the court fixes a different time (Del. Super. Ct. Civ. R. 12(a)). If, on a motion to dismiss for failure to state a claim, matters outside the pleading are presented and not excluded, the motion is treated as one for summary judgment under Rule 56 (Del. Super. Ct. Civ. R. 12(b))."
+  edge-motion-pending-dismissed "Granted: claims dismissed" -> dismissed-pleading {
+    authority cite "Del. Super. Ct. Civ. R. 12(b)"
+  }
+  edge-motion-pending-amend "Amended pleading by leave or consent" -> amended {
+    authority cite "Del. Super. Ct. Civ. R. 15(a)"
+  }
+  edge-motion-pending-denied "Denied: defendant answers within 10 days after notice" -> answered {
+    authority cite "Del. Super. Ct. Civ. R. 12(a)"
+  }
+}
+
+state amended: "Amended pleading" by applicant cite "Del. Super. Ct. Civ. R. 15(a)"
+{
+  note "A party may amend once as a matter of course before a responsive pleading is served, or within 20 days after service if no responsive pleading is permitted and the action is not on the trial calendar; otherwise only by leave of court, freely given when justice so requires, or by written consent of the adverse party. A party pleads in response to an amended pleading within the time remaining for response to the original or within 10 days after service of the amendment, whichever is longer (Del. Super. Ct. Civ. R. 15(a)). The amended pleading indicates plainly how it differs from the pleading it amends (Del. Super. Ct. Civ. R. 15(aa)); relation back is governed by Del. Super. Ct. Civ. R. 15(c)."
+  edge-amended-motion "Amended pleading met with a new Rule 12(b) motion" -> motion-pending {
+    authority cite "Del. Super. Ct. Civ. R. 12(b)"
+  }
+  edge-amended-answered "Amended pleading answered" -> answered {
+    authority cite "Del. Super. Ct. Civ. R. 15(a)"
+  }
+}
+
+terminal dismissed-pleading: "Dismissed on a Rule 12(b) motion" outcome [loss, dismissal] cite "Del. Super. Ct. Civ. R. 12(b)"
+{
+  note "Outcome from the applicant's side. Unless the order specifies otherwise, a dismissal other than for lack of jurisdiction, improper venue or failure to join a party under Rule 19 operates as an adjudication on the merits (Del. Super. Ct. Civ. R. 41(b)). A notice of appeal from a final judgment in a civil case is filed in the Supreme Court within 30 days after its entry on the docket (Del. Supr. Ct. R. 6(a))."
+}
+
+decision default-judgment: "Judgment by default" by office cite "Del. Super. Ct. Civ. R. 55(b)"
+{
+  note "Superior Court Civil Rule 55(a), the entry of default, is omitted; judgment by default is entered directly. For a sum certain or one made certain by computation, the Prothonotary on the plaintiff's written direction, with a statement of the principal due, interest and an affidavit, enters judgment against a defendant who has failed to appear and is not an infant or incompetent person (Del. Super. Ct. Civ. R. 55(b)(1)). In all other cases the plaintiff applies to the Court, and a party who has appeared is served with written notice of the application at least 3 days before the hearing; the Court may hold hearings or order references to fix damages (Del. Super. Ct. Civ. R. 55(b)(2)). The Court may set aside a judgment by default in accordance with Rule 60(b) (Del. Super. Ct. Civ. R. 55(c))."
+  edge-default-judgment-stands "Judgment by default stands" -> default-won {
+    authority cite "Del. Super. Ct. Civ. R. 55(b)"
+  }
+  edge-default-judgment-vacated "Set aside under Rule 60(b): defendant answers" -> answered {
+    authority cite "Del. Super. Ct. Civ. R. 55(c)"
+  }
+}
+
+terminal default-won: "Default judgment for applicant" outcome [win] cite "Del. Super. Ct. Civ. R. 55(b)"
+{
+  note "Outcome from the applicant's side. Relief from the judgment remains available on the grounds of Del. Super. Ct. Civ. R. 60(b): mistake, inadvertence, surprise or excusable neglect; newly discovered evidence; fraud or misconduct of an adverse party; a void judgment; a satisfied or no longer equitable judgment; or any other reason justifying relief. The vendored rule states no time limit for the motion."
+}
+
+state answered: "Pleadings closed" by applicant cite "Del. Super. Ct. Civ. R. 8(b)"
+{
+  note "Any party may demand a jury trial of an issue triable of right by serving a written demand at any time after commencement and not later than 10 days after service of the last pleading directed to the issue, which may be endorsed on a pleading (Del. Super. Ct. Civ. R. 38(b)); another party may demand jury trial of other issues within 10 days after service of a demand limited to some issues (Del. Super. Ct. Civ. R. 38(c)). Except in exempted actions the Court enters a scheduling order limiting the time to join parties and amend, to file and hear motions, to complete discovery and to engage in compulsory alternative dispute resolution (Del. Super. Ct. Civ. R. 16(b)); the actions subject to mandatory non-binding arbitration follow Rule 16.1, which is part of the vendored Rule 16 text."
+  edge-answered-discovery "Case proceeds to discovery" -> discovery {
+    authority cite "Del. Super. Ct. Civ. R. 26(a)"
+  }
+}
+
+state discovery: "Discovery" by applicant cite "Del. Super. Ct. Civ. R. 26(a)"
+{
+  note "Parties may obtain discovery by depositions, written interrogatories, production of documents or things and entry on land, physical and mental examinations, and requests for admission (Del. Super. Ct. Civ. R. 26(a)). Answers and objections to interrogatories are served within 30 days after service, but a defendant may serve them within 45 days after service of the summons and complaint (Del. Super. Ct. Civ. R. 33(b)); the response to a request for production is served within 30 days after service, with the same 45 days for a defendant (Del. Super. Ct. Civ. R. 34(b)); a matter in a request for admission is admitted unless answered or objected to within 30 days after service, and a defendant need not answer before 45 days after service of the summons and complaint (Del. Super. Ct. Civ. R. 36(a)). The scope of discovery in Rule 26(b) was amended by the order of Sept. 30, 2026, which this package does not encode."
+  edge-discovery-dispute "Motion to compel discovery" -> discovery-dispute {
+    authority cite "Del. Super. Ct. Civ. R. 37(a)"
+  }
+  edge-discovery-sj "Motion for summary judgment" -> sj-motion {
+    authority cite "Del. Super. Ct. Civ. R. 56(a)"
+  }
+  edge-discovery-settled "Settled: stipulation of dismissal" -> dismissed-voluntary {
+    authority cite "Del. Super. Ct. Civ. R. 41(a)"
+  }
+  edge-discovery-trial "Case reaches trial" -> trial {
+    authority cite "Del. Super. Ct. Civ. R. 16(b)"
+  }
+}
+
+decision discovery-dispute: "Discovery motion decided" by court cite "Del. Super. Ct. Civ. R. 37(a)"
+{
+  note "A party, on reasonable notice to other parties and all persons affected, may apply for an order compelling discovery (Del. Super. Ct. Civ. R. 37(a)). If a party fails to obey an order to provide or permit discovery, the Court may take facts as established, refuse to let the disobedient party support or oppose claims or defenses, strike pleadings, stay the proceedings, dismiss the action, render a judgment by default, or treat the failure as contempt (Del. Super. Ct. Civ. R. 37(b)(2)). The presentation of discovery motions, including their timing and length, is governed by Rule 37(e) as amended by the order of Mar. 13, 2026, which this package does not encode."
+  edge-discovery-dispute-resolved "Order entered: discovery continues" -> discovery {
+    authority cite "Del. Super. Ct. Civ. R. 37(a)"
+  }
+  edge-discovery-dispute-sanction "Dismissal as a sanction for disobeying a discovery order" -> dismissed-sanction {
+    authority cite "Del. Super. Ct. Civ. R. 37(b)"
+  }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "Del. Super. Ct. Civ. R. 37(b)"
+{
+  note "Outcome from the applicant's side. A dismissal for failure to comply with the Rules or an order of the Court, other than for lack of jurisdiction, improper venue or failure to join a Rule 19 party, operates as an adjudication on the merits unless the order says otherwise (Del. Super. Ct. Civ. R. 41(b))."
+}
+
+state sj-motion: "Summary judgment motion" by applicant cite "Del. Super. Ct. Civ. R. 56(c)"
+{
+  note "A claimant may move for summary judgment after 20 days from the commencement of the action, or after service of a motion for summary judgment by the adverse party, and before the case is marked for trial; a defending party may move at any time (Del. Super. Ct. Civ. R. 56(a), (b)). The motion is served at least 10 days before the time fixed for the hearing, and the adverse party may serve opposing affidavits before the day of the hearing; judgment is rendered forthwith if there is no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law (Del. Super. Ct. Civ. R. 56(c)). An opening or answering brief is limited to 8,000 words and a reply brief to 5,500 words without leave of Court (Del. Super. Ct. Civ. R. 107(h))."
+  edge-sj-motion-ruling "Motion decided" -> sj-ruling {
+    authority cite "Del. Super. Ct. Civ. R. 56(c)"
+  }
+}
+
+decision sj-ruling: "Summary judgment decided" by court cite "Del. Super. Ct. Civ. R. 56(c)"
+{
+  note "If judgment is not rendered on the whole case, the Court ascertains what material facts exist without substantial controversy and enters an order specifying them, and the trial proceeds on that basis (Del. Super. Ct. Civ. R. 56(d)). Probabilities are not authored: no calibration is vendored."
+  edge-sj-ruling-granted "Granted" -> judgment-entered {
+    authority cite "Del. Super. Ct. Civ. R. 56(c)"
+  }
+  edge-sj-ruling-denied "Denied or granted in part: case proceeds to trial" -> trial {
+    authority cite "Del. Super. Ct. Civ. R. 56(d)"
+  }
+}
+
+state trial: "Trial by jury or by the Court" by court cite "Del. Super. Ct. Civ. R. 39(a)"
+{
+  note "When trial by a jury of 12 has been demanded under Rule 38, the issues demanded are tried by a jury of 12 unless the parties by stipulation consent to trial by the Court or the Court finds that no right of jury trial exists (Del. Super. Ct. Civ. R. 39(a)). A motion for judgment as a matter of law made at the close of all the evidence that is not granted is deemed to submit the action to the jury subject to later determination (Del. Super. Ct. Civ. R. 50(b))."
+  edge-trial-verdict "Verdict or decision: judgment entered" -> judgment-entered {
+    authority cite "Del. Super. Ct. Civ. R. 58"
+  }
+}
+
+decision judgment-entered: "Judgment entered" by applicant cite "Del. Super. Ct. Civ. R. 58"
+{
+  note "On a general verdict or a decision for a sum certain, costs or denial of all relief, the Prothonotary forthwith enters the judgment; on other decisions or special verdicts the Court promptly approves its form; a judgment is effective only when set forth and entered, and entry is not delayed for the taxing of costs (Del. Super. Ct. Civ. R. 58). Costs are allowed as of course to the prevailing party on application within ten days of the entry of final judgment unless the Court directs otherwise (Del. Super. Ct. Civ. R. 54(d)). A renewed motion for judgment as a matter of law is served and filed not later than 10 days after entry of judgment (Del. Super. Ct. Civ. R. 50(b)); a motion for a new trial not later than 10 days after entry of judgment, with opposing papers within 10 days after its service (Del. Super. Ct. Civ. R. 59(b)); a motion to alter or amend the judgment not later than 10 days after entry (Del. Super. Ct. Civ. R. 59(d)); and a motion for reargument within 5 days after the filing of the Court's opinion or decision, with a brief answer within 5 days after its service (Del. Super. Ct. Civ. R. 59(e)). The time for these motions may not be extended except as they state (Del. Super. Ct. Civ. R. 6(b))."
+  edge-judgment-entered-post "Post-trial motion or reargument" -> post-trial {
+    authority cite "Del. Super. Ct. Civ. R. 59(b)"
+  }
+  edge-judgment-entered-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "Del. Supr. Ct. R. 6(a)"
+  }
+  edge-judgment-entered-final "No appeal within time" -> final-no-appeal {
+    authority cite "Del. Supr. Ct. R. 6(a)"
+  }
+}
+
+decision post-trial: "Post-trial motion decided" by court cite "Del. Super. Ct. Civ. R. 59(a)"
+{
+  note "A new trial may be granted to all or any parties on all or part of the issues (Del. Super. Ct. Civ. R. 59(a)); not later than 10 days after entry of judgment the Court may order a new trial on its own initiative (Del. Super. Ct. Civ. R. 59(c)). A renewed motion for judgment as a matter of law may be joined with a motion for new trial (Del. Super. Ct. Civ. R. 50(b))."
+  edge-post-trial-new-trial "New trial ordered" -> trial {
+    authority cite "Del. Super. Ct. Civ. R. 59(a)"
+  }
+  edge-post-trial-denied "Motion denied: judgment stands" -> judgment-entered {
+    authority cite "Del. Super. Ct. Civ. R. 58"
+  }
+}
+
+terminal dismissed-voluntary: "Dismissed by notice or stipulation" outcome [settlement] cite "Del. Super. Ct. Civ. R. 41(a)"
+{
+  note "Subject to payment of costs and Rule 23(e), the plaintiff may dismiss without order by notice before the adverse party serves an answer or a motion for summary judgment, or by a stipulation signed by all parties who have appeared; unless stated otherwise the dismissal is without prejudice, except that a second notice of dismissal of the same claim is an adjudication on the merits (Del. Super. Ct. Civ. R. 41(a)(1)). Otherwise dismissal at the plaintiff's instance needs an order of the Court (Del. Super. Ct. Civ. R. 41(a)(2)). Separately, when the Court considers dismissal on its own motion for want of prosecution or noncompliance, the Prothonotary's notice directs the party to show cause within fifteen days from the date of the notice, and if no response is filed within that time the dismissal is deemed unopposed (Del. Super. Ct. Civ. R. 41(e))."
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Delaware Supreme Court package" outcome [appeal] cite "Del. Supr. Ct. R. 6(a)"
+{
+  note "A notice of appeal in a civil case is filed in the office of the Clerk of the Supreme Court within 30 days after entry on the docket of the judgment, order or decree appealed from, except appeals controlled by 10 Del. C. § 146 (Del. Supr. Ct. R. 6(a)); the time to appeal may not be enlarged (Del. Supr. Ct. R. 11(b)). An interlocutory order is reviewed only on certification and acceptance under Del. Supr. Ct. R. 42. Hand-off to lit/de-supreme-civil (de-supreme-civil)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Del. Supr. Ct. R. 6(a)"
+{
+  note "Without a notice of appeal within 30 days after entry of the judgment on the docket the judgment is final in the Superior Court; the time for taking an appeal may not be enlarged (Del. Supr. Ct. R. 6(a), 11(b))."
+}

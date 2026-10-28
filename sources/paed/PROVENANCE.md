@@ -39,3 +39,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 1122076f34a360a966deebd9db4f9f310f0f7859e704fddf615758dc3c60291c. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `paed/original/paed-notice-criminal-rule-6-1-2024-03-13.pdf` as served (sha256 b13823f97d49a440f9bac30aa6405d93a7d0e448e08033e35c28b87c924ddece); extraction sha256 1122076f34a360a966deebd9db4f9f310f0f7859e704fddf615758dc3c60291c.
+
+### `paed/paed-local-criminal-rules-2018-09-18-sectioned.txt` — E.D. Pa. Local Criminal Rules, sectioned
+
+- Derived in the pod (lg-gddt.10) from `paed/paed-local-criminal-rules-2018-09-18.txt` (extract sha256 8d3c8f8ad13cb7bc0813d67fa23f72349e65386a0f14688cb291cd3252592f12); nothing fetched. One `## LCrR <n>` line is inserted right after each rule's own body heading line `RULE <n> - <title>` (or `Rule 53.2 - ...`): 20 markers, LCrR 1.1 through LCrR 58.1; the table of contents and the Rule 58.1 collateral schedules after it are unmarked (they fall in LCrR 58.1). Rule text was not edited: deleting the marker lines (`sed '/^## LCrR /d'`) restores the extract byte for byte.
+- Edition: as the extract, the Local Criminal Rules dated September 18, 2018; the Notice and Order on Rule 6.1(b)(1) (`paed/paed-notice-criminal-rule-6-1-2024-03-13.txt`, order dated and effective September 18, 2018) is not merged into it.
+- Sectioned sha256 408f2ad33a1ebc51a58dcc6610fec727aa7399997d92d3fb6800d00b943bfd35 (the `path_sha256` pinned by `lit/paed-criminal/Lit.toml`).

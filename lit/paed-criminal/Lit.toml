@@ -1,0 +1,55 @@
+# The U.S. District Court for the Eastern District of Pennsylvania's Local
+# Criminal Rules as a local-rule layer over lit/frcrimp (28 U.S.C. § 2071;
+# FRCrimP 57(a)): it declares only the periods the local criminal rules
+# themselves state and re-encodes no FRCrimP, Speedy Trial Act or FRAP
+# 4(b) period (one source of truth: lit/frcrimp). Each period is counted
+# under FRCrimP 45(a), which governs "any local rule", so each deadline
+# names `forum frcrimp`. The rules are the edition dated September 18,
+# 2018 on its title page (sources/paed), so in_force is that date; the
+# court's later Notice and Order on Local Criminal Rule 6.1(b)(1) (listed
+# March 13, 2024; the order itself is dated and effective September 18,
+# 2018) adds a grand-jury procedure with no period. Earlier editions are
+# not vendored, so a query before it is a hole in the corpus. The Local
+# Civil Rules that LCrR 1.2 makes applicable are encoded once, in
+# lit/paed. An appeal goes to the Third Circuit under lit/frcrimp's FRAP
+# 4(b) period.
+[package]
+name = "paed-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "paed-criminal-local-rules"
+forum = "paed-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Eastern District of Pennsylvania: Local Criminal Rules"
+description = "The Eastern District of Pennsylvania's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the pretrial-motion period after arraignment and the answer to a motion, and the counsel's discovery conference after arraignment."
+in_force = "2018-09-18"
+known_at = "2026-10-28"
+unknown_before = "2018-09-18"
+jurisdiction = "U.S. District Court for the Eastern District of Pennsylvania (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "paed-lcrr"
+issuer = "United States District Court for the Eastern District of Pennsylvania"
+date = "2018-09-18"
+designation = "Local Criminal Rules (September 18, 2018)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.paed-lcrr]
+title = "Local Criminal Rules of the United States District Court for the Eastern District of Pennsylvania (September 18, 2018)"
+url = "https://www.paed.uscourts.gov/sites/paed/files/documents/locrules/criminal/crrules.pdf"
+path = "sources/paed/paed-local-criminal-rules-2018-09-18-sectioned.txt"
+path_sha256 = "408f2ad33a1ebc51a58dcc6610fec727aa7399997d92d3fb6800d00b943bfd35"
+sha256 = "2494467dd1ad53c451f03c9ed5d93b466770a3591a3d14a885e35bf318a85150"
+as_of = "2018-09-18"
+cite_prefixes = ["E.D. Pa. LCrR"]
+section_heading = "LCrR {n}"

@@ -1,0 +1,84 @@
+module paed-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The Eastern District of Pennsylvania's own criminal periods, counted
+// under the criminal rules (FRCrimP 45(a) governs "any local rule"). No
+// trigger carries a service method.
+//
+// Local Civil Rules apply in criminal proceedings only as LCrR 1.2 lists
+// them (among them Local Civil Rules 5.1, 7.1(g), 7.4, 40.3, 67.1 and
+// 72.1); their periods are encoded once, in lit/paed, and are not restated
+// here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: the presentence report is furnished not less than 35 days before
+// the sentencing hearing (E.D. Pa. LCrR 32.3 ¶ 3; FRCrimP 32(e)(2)), the
+// parties deliver objections within 14 days after receiving it (¶ 4;
+// FRCrimP 32(f)(1)), and the probation officer submits the report and
+// addendum not later than 7 days before the hearing (¶ 6; FRCrimP 32(g));
+// objections to a magistrate judge's order on a pretrial matter within 14
+// days after it issues and to proposed findings and recommendations within
+// 14 days after service (E.D. Pa. LCrR 50.2 § IV(a), (b); FRCrimP 59(a),
+// (b)(2)); and a defendant's appeal from a magistrate judge's misdemeanor
+// conviction within 14 days after entry of judgment (E.D. Pa. LCrR 50.2 §
+// IV(c); FRCrimP 58(g)(2)(B)). Post-trial motions under FRCrimP 29, 33 and
+// 34 are supported by memoranda filed within the time those rules provide
+// or such additional time as the Court allows (E.D. Pa. LCrR 47.1).
+//
+// Conditions that are not deadlines from a party's event stay in notes:
+// sentencing occurs not less than one hundred days after a plea of guilty
+// or nolo contendere or a guilty finding unless the judge directs an
+// earlier or later date (E.D. Pa. LCrR 32.3 ¶ 1), a window rather than a
+// deadline; the government notifies the probation officer in writing of an
+// intended Guidelines § 5K1.1 or statutory-minimum departure motion on or
+// before the date for objections to the report (¶ 5); defense counsel's
+// appearance is filed before or with the first court appearance or filing,
+// whichever is first (E.D. Pa. LCrR 44.1). A Rule 16 discovery or
+// protective-order motion is filed by the date for pretrial motions (E.D.
+// Pa. LCrR 16.1(c)(3)). The Notice and Order on Local Criminal Rule
+// 6.1(b)(1) (effective September 18, 2018; sources/paed) lets the
+// government take a motion to preclude notice under 18 U.S.C. § 2705(b) to
+// the duty magistrate judge and states no period.
+//
+// The earlier E.D. Pa. criminal outline's FRCrimP flow and its decisions
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// The defendant is arraigned (E.D. Pa. LCrR 10.1).
+event Arraigned()
+/// A party receives a pretrial motion with its brief or memorandum (E.D.
+/// Pa. LCrR 12.1).
+event MotionReceived()
+
+/// E.D. Pa. LCrR 12.1: motions FRCrimP 12 requires to be raised before
+/// trial are filed within fourteen days after arraignment, unless the
+/// Court provides otherwise, each with a brief or memorandum of law.
+deadline pretrial-motions: 14.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Pa. LCrR 12.1"
+{
+  forum frcrimp
+}
+
+/// E.D. Pa. LCrR 12.1: within seven days after receipt of a motion, a party
+/// opposing it files and serves an answer and a memorandum in opposition.
+deadline motion-answer: 7.days after MotionReceived() counted_by frcrimp45 cite "E.D. Pa. LCrR 12.1"
+{
+  forum frcrimp
+}
+
+/// E.D. Pa. LCrR 16.1(a): within seven days after arraignment, or within
+/// such other period as the Court sets, counsel for the government and for
+/// the defendant confer, and on the defendant's request the government
+/// complies, or agrees to comply as soon as possible, with FRCrimP
+/// 16(a)(1).
+deadline discovery-conference: 7.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Pa. LCrR 16.1(a)"
+{
+  forum frcrimp
+}

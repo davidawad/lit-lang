@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "paed-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:803cfa80d2280640555e15138edce561b87c9a7e0cb51604eee2d8a3526fb58f"
+semantic = "sha256:9291bf4a870d798891e565ce2884ce28ebb6042b58c0ae8d24fb8852b13dd7de"
+texts = [
+    "paed-lcrr sources/paed/paed-local-criminal-rules-2018-09-18-sectioned.txt sha256:408f2ad33a1ebc51a58dcc6610fec727aa7399997d92d3fb6800d00b943bfd35",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

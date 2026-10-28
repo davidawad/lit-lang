@@ -1,0 +1,763 @@
+﻿
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+	<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	    <meta name="robots" content="noimageindex">
+	    <meta charset="iso-8859-1">
+	    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+	    	    <title>Code of Laws - Title 17 - Chapter 5- - CRIMINAL PROCEDURES</title>
+	    <link rel="SHORTCUT ICON" href="/images/stateflagsmall.ico" />
+		<link rel="icon" href="/images/stateflagsmall.ico" type="image/ico" />
+		<link rel="SHORTCUT ICON" href="/images/South-Carolina-Flag2.ico" />
+
+		<link type="text/css" rel="stylesheet" href="/css/main.css" media="all" />
+				
+		<!--[if lte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/ie7main.css" media="all" />
+		<![endif]-->
+		<!--[if gte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/iemain.css" media="all" />
+		<![endif]-->
+		<link type="text/css" rel="stylesheet" href="/css/print.css" media="print" />
+		<link type="text/css" rel="stylesheet" href="/css/supplement.css" media="screen" />
+		<!--<link type="text/css" rel="stylesheet" href="/css/zipsearch.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/vote.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/contact.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/navwrap.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/linkbar.css" media="screen" />-->
+	
+		<!--<script type="text/javascript" src="/js/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>-->
+		<script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+				<script type="text/javascript" src="/js/main_linux.js"></script>
+		
+
+		
+
+
+
+		<!--<script type="text/javascript" src="/js/common.js"></script>
+		<script type="text/javascript" src="/js/utils.js"></script>
+		<script type="text/javascript" src="/js/date.js"></script>
+		<script type="text/javascript" src="/js/lightbox.js"></script>
+		<script type="text/javascript" src="/js/legislation.js"></script>
+		<script type="text/javascript" src="/js/logon_lits.js"></script>
+		<script type="text/javascript" src="/js/message.js"></script>
+		<script type="text/javascript" src="/js/comm_meeting.js"></script>-->
+		<script type="text/vbscript" src="/vbs/comm_meeting.vbs"></script>
+		<!--<script type="text/javascript" src="/js/regs.js"></script>-->
+				
+	   	<script type="text/javascript">
+	    //document.onclick = function () { document.getElementById('transbox').style.display= 'none' };
+	    	var xmlhttp=false;
+			xmlhttp = create_xml_object();
+	
+			function getElement(ele)
+			{
+				var theobj = false;
+				if(typeof ele == 'string')
+					theobj = (document.getElementById)?document.getElementById(ele):document.all[ele];
+				else
+					theobj = ele;
+			
+				return theobj;
+			}
+		
+			function checkreader(friendlyalert)
+			{
+			 	/*friendlyalert=friendlyalert||false;
+			 	
+			 	var browser_info = perform_acrobat_detection();
+				if (!browser_info.acrobat)
+				{
+				 	loadadobebox('adobebox', '/adobe.php');
+					return false;
+				}
+				else if (friendlyalert)
+				{
+			 		alert(friendlyalert);
+				}*/
+				return true;
+			}
+				
+			function loadadobebox(boxname, url)
+			{
+				var response = false;
+	
+				doRequest(xmlhttp, "GET", url, false, null, null);
+				if (xmlhttp.status == 200)
+				{
+		         	response = xmlhttp.responseText;
+				}
+	
+				if(response)
+				{
+			 		var ele = document.getElementById(boxname);
+				 	if (ele)
+				 	{
+				 		ele.style.visibility = 'hidden';
+		 				ele.style.display = 'block';
+	
+		 				positionElement(ele, 'center', 'center', true);
+	
+						ele.innerHTML = response;
+					    ele.style.visibility = 'visible';
+					    ele.style.display = 'block';
+	//				    ele.scrollIntoView(true);
+					}
+				}
+				return response;
+			}
+	
+	
+			function init()
+			{
+		 		var ld=document.getElementById("loading");
+				if(ld)
+				{
+					ld.style.display = 'none';
+				}
+			}
+			
+			function openmore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				 	var pos = findPos(id);
+				 	id.style.zIndex = 10;
+		//		 	id.style.left = pos[0]+'px';
+		//		  	id.style.top = pos[1]+'px';
+				  	id.style.height = '295px';
+				  	id.style.position = 'absolute';
+				  	id.style.backgroundColor = '#f7f4ec';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'none';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = 'none';
+				  	}
+				}
+			}
+		
+			function closemore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				  	id.style.height = '135px';
+				  	id.style.position = '';
+				  	id.style.backgroundColor = 'transparent';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'block';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = '';
+				  	}
+				}		 	
+			}
+		
+		<!-- This script and many more are available free online at -->
+		<!-- The JavaScript Source!! http://javascript.internet.com -->
+		
+		<!-- Begin
+		function right(e) {
+		var msg = "Use of this image is strictly prohibited unless express written permission is given to the user by South Carolina Legislative Services Agency.";
+		if (navigator.appName == 'Netscape' && e.which == 3) {
+		alert(msg);
+		return false;
+		stopEvent(e);
+		}
+		if (navigator.appName == 'Microsoft Internet Explorer' && event.button==2) {
+		alert(msg);
+		return false;
+			stopEvent(event);
+		}
+		else return true;
+		}
+		
+	function trap() 
+	{
+		if(document.images)
+		{
+			for(i=0;i<document.images.length;i++)
+			{
+				if(document.images[i].className == 'allowcontextmenu')
+				{
+					// this should have no scripting
+				}
+				else
+				{
+				 	document.images[i].onmousedown = right;
+					document.images[i].oncontextmenu = function(){ return false; };
+					//document.images[i].onmouseup = right;
+				}
+			}
+		}
+	}
+
+	function findfwtext(texttofind) 
+	{
+	 	var fwtextele = document.getElementById('fwtext');
+		if(fwtextele)
+		{
+			fwtextele.value = texttofind;
+		}
+	}	
+		// End -->
+		</script>
+
+		<!-- ADDED FOR V4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJY6FMNQKH"></script>
+
+
+<script type="text/javascript">
+
+//ADDED FOR V4
+//Google tag (gtag.js) 
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LJY6FMNQKH');
+
+ 
+ /* COMMENTING OUT UPGRADING TO V4 -A
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36207109-1']);
+  _gaq.push(['_setDomainName', 'scstatehouse.gov']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+ 
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+*/
+  
+      $(document).ready(function(){
+        // COMMENTING THIS OUT NO LONGER BEING ACTIVELY USED TO MONITOR FOR TRAFFIC TO SPECIFIC LINKS - A
+        /*
+          var anchors = $('div#contentsection a');
+
+          //console.log('anchors...'+anchors.length);
+          if(anchors.length > 0){
+            //console.log('setting up event handler...');
+            anchors.click(function(){
+              var a = $(this).attr('href');
+              if(_gaq && (a.substr(-3) == 'htm' || a.substr(-4) == 'html' || a.substr(-3) == 'doc' || a.substr(-4) == 'docx' || a.substr(-3) == 'pdf' || a.substr(-3) == 'xls' || a.substr(-4) == 'xlsx')) {
+                //console.log(a);
+                _gaq.push(['_trackPageview', $(this).attr('href')]);
+              }
+              
+              var aText = $(this).text().toLowerCase();
+              if (a.indexOf('getfile.php') > -1 && aText === 'word'){
+                    _gaq.push(['_trackEvent', 'Word Doc', 'Download', ('from page: ' + document.location + ' - href: ' + a)]);
+              }
+
+            });
+          }
+          */
+      });
+
+</script>
+	</head>
+	
+		
+	<body class="home"  onload="init(); trap();">
+	<noscript>Your browser does not support JavaScript!  This page will not render correctly.</noscript> 
+
+
+	
+	<div id="adobebox" style="position:absolute; width:400px; height:150px; border:2px solid #555555; background-color:#cccccc; display:none;"></div>
+	<div id="container" >	
+				<div id="header" class="nodisplay" style="text-align:center; height:100px;" >
+									<img id="headerimg" class="nodisplay" alt="South Carolina Legislature" title="South Carolina Legislature" src="/images/header8.png" />
+								
+							<!--	<div class="award"><span style="color:#831224; font-weight:bold; font-size:1.5em;">*</span> Recipient of<br>the Notable State Documents Award<br>by the<br>South Carolina<br>State Library.</div>-->
+				
+				
+			</div>
+			<div class="printdisplay"><img border="0" src="/images/titleprint.jpg" alt="South Carolina Legislature" title="South Carolina Legislature" alt="South Carolina Legislature" title="South Carolina State Legislature" /><br /><hr /><br /></div>
+	
+			<div id="pagebody" >
+	
+	
+<!--<div id="topmessage">
+<br style="display:block; margin-top:10px;">
+Searches and data queries will be unavailable beginning Friday, August 19, 2016, from 8:00 PM until Saturday, August 20th at 8:00 AM<br>due to scheduled maintenance.</div>-->
+				<!-- Prompt IE 8/7/6 users to upgrade to a newer browser. -->
+				<!--[if lte IE 8]>
+				<div class="oldframe">In order to improve your experience using this website, please <a href="http://browsehappy.com/">upgrade your browser</a>.</div>
+				<![endif]-->
+			
+			
+			
+			<div id="menu" class="nodisplay">
+				<ul class="nodisplay">
+				<li><a href="/index.php">Home</a></li>
+<li><a href="/senate.php">Senate</a></li>
+<li><a href="/house.php">House</a></li>
+<li><a href="/committeeinfo.php">Committee&nbsp;Postings&nbsp;and&nbsp;Reports</a></li>
+<li><a href="/council.php">Legislative Council</a></li>
+<li><a href="/citizens.php">Citizens&#39; Interest</a></li>
+<li><a href="/publications.php">Publications</a></li>
+		    	</ul>
+			</div>
+			<div id="search" class="nodisplay" style="height: 28px;"><div class="nodisplay" style="float:right; margin:6px 20px 0px 0;">
+							<!--<a style="color:#f7f4ec; height:15px;" href="#" onClick="rsswindow();"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+<!--				<a style="color:#f7f4ec; height:15px;" href="/splashpage/splashpage.html"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a> -->
+				<a style="color:#f7f4ec; height:15px;" href="/onlineservices/index.php"><img border="0" src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>
+			<!--	<a style="color:#f7f4ec; height:15px;" href="/maintenance_portal.php"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+						</div></div>
+			
+	
+					<div id="sidebar" class="nodisplay">
+	<div id="vidlinks" style="height: 50px;">
+						<!--<img src="/images/videobutton12d.png">-->
+											<ul id="vidsidemenu">
+	<li id="vidinnermenu" style="font-size:16px; margin: 0 0 5px 0;">Chamber Video</li>
+<li id="sbroadcast" style="float: left; width:50%;">
+<a id="liveS" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('S', false, false, '0')">Senate</a><br><a id="liveaudioS" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('S', false, false, '1');">(Audio Only)</a>
+</li>
+<li id="hbroadcast" style="float: left; width:50%;">
+<a id="liveH" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('H', false, false, '0')">House</a><br><a id="liveaudioH" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('H', false, false, '1');">(Audio Only)</a>
+</li>
+						</ul>
+					</div>
+					<div id="commvidlinks"><a href="/video/schedule.php">Video&nbsp;Schedule</a><a style="border-top:1px solid #fff; padding-top:12px;" href="/video/archives.php">Video Archives</a></div>
+										<div id="sidemenu">
+						<ul id="innermenu">
+		
+							<li><a href="/howdoi.php">How do I...</a></li>
+										
+							
+								<li class="nolink" onMouseOver="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='block'; document.sidesearchform.searchtext.focus();}" onMouseOut="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Quick Search</div>
+								<div id="sidesearch" class="sidesubmenu">
+									<form id="sidesearchform" name="sidesearchform" method="POST" action="/search.php">
+									<input type="hidden" name="search" value="side" />
+									<div class="topelement"><label for="searchtext"><span class="label">Search for:</span></label><input id="searchtext" name="searchtext" type="text"/><a id="searchlink2" href="javascript:void(0);" onClick="document.sidesearchform.submit();"><img id="searchicon" src="/images/searchbutton.png" alt="Search" title="Search"/></a></div>
+			<!--						<div><input type="checkbox" id="searchchoice_all" name="searchchoice_all" value="all" /><label for="searchchoice_all">All</label></div>-->
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_fullsite" name="category" value="FULLSITE" /><label for="searchchoice_fullsite">&nbsp;Full Site Search</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_billnumber" name="category" value="BILL" /><label for="searchchoice_billnumber">&nbsp;Bill Number</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_legislation" name="category" value="LEGISLATION" CHECKED /><label for="searchchoice_legislation">&nbsp;Legislation</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_budget" name="category" value="BUDGET" /><label for="searchchoice_budget">&nbsp;Budget</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeoflaws" name="category" value="CODEOFLAWS" /><label for="searchchoice_codeoflaws">&nbsp;Code of Laws</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeofregs" name="category" value="CODEOFREGS" /><label for="searchchoice_codeofregs">&nbsp;Code of Regulations</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_constitution" name="category" value="CONSTITUTION" /><label for="searchchoice_constitution">&nbsp;Constitution</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_housejournals" name="category" value="HOUSEJOURNALS" /><label for="searchchoice_housejournals">&nbsp;House Journals</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_senatejournals" name="category" value="SENATEJOURNALS" /><label for="searchchoice_senatejournals">&nbsp;Senate Journals</label></div>
+									<div class="bottomelement" style="padding-left:20px;"><input type="radio" id="searchchoice_billsummary" name="category" value="SUMMARY" /><label for="searchchoice_billsummary">&nbsp;LSA Bill Summary</label></div>
+								</form>
+									
+								</div>
+							</li>
+							<li><a href="/legislatorssearch.php">Find Your Legislators</a></li>
+							<li id="contactLegislatorLink"><a href="/email.php?chamber=B">Contact Your Legislator</a></li>
+									
+							<li><a href="/legislation.php">Legislation</a></li>
+							<li><a href="/listtracking/main.php" target="LTS">Track Legislation</a></li>
+							<li><a href="/multicriteria2/search.php" target="MCS">Multi-Criteria Search</a></li>
+									<!--<li><a href="#" onclick="multisearchwindow('INTROBOTH');">Multi-Criteria Search</a></li>-->
+									<!--<li><a href="#" onclick="multisearchwindow('INTROMANUAL');">Multi-Criteria Search</a></li>-->
+									<li><a href="/research.php">Research</a></li>
+	
+								<li class="nolink" onMouseOver="var ele=document.getElementById('law'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('law'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">South Carolina Law</div> 
+								<div id="law" class="sidesubmenu">
+									<div class="sidediv topelement"><a href="/newlaws.php">Ratifications &amp; Acts</a></div>
+									<div class="sidediv"><a href="/code/statmast.php">Code of Laws</a></div>
+									<div class="sidediv"><a href="/coderegs/statmast.php">Code of Regulations</a></div>
+									<div class="sidediv"><a href="/scconstitution/scconst.php">Constitution</a></div>
+									<div class="sidediv bottomelement"><a href="/state_register.php">State Register</a></div>
+								</div>
+							</li>
+										<li class="nolink" onMouseOver="var ele=document.getElementById('manual'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('manual'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Legislative Manual</div>
+								<div id="manual" class="sidesubmenu">
+								
+<!--									<div class="sidediv topelement"><a href="https://web.sc.gov/LSAShoppingcart/Default.aspx" target="_blank">Purchase Manual</a></div>-->
+								
+<!--									<div class="sidediv topelement"><a href="https://secure.scstatehouse.gov/cgi-bin/webstore.exe" target="_blank">Purchase Manual</a></div>-->
+									<div class="sidediv topelement"><a href="javascript:#" onClick="alert('We are sorry, but we are unable to process online transactions at this time.\n\nIf you would still like to make a purchase, please contact us directly at (803) 212-4490 during normal business hours (8:30am - 5:00pm EST).');">Purchase Manual</a></div>
+									<div class="sidediv bottomelement"><a href="/man26/manual26.php">View Manual Online</a></div>
+								</div>
+							</li>
+							<li><a href="http://www.studentconnection.scstatehouse.gov">Student Connection</a></li>
+							<li><a href="/visit.php">Visiting the State House</a></li>
+							<li><a href="/archives.php">Archives</a></li>
+							<li><a href="http://www.sc.gov/Agency-Listing" target="_blank">State Agency Websites</a></li>
+							<!--<li><a href="/stateagencysites.php">State Agency Websites</a></li>-->
+							<li><a href="/citizensinterestpage/media.php">Media Links</a></li>
+				 		</ul>
+			    	</div>
+	
+					<div id="side_ad">
+						<A href="http://www.sc.gov/" target="_blank"><img border=0 src="/images/scgov3.jpg" alt="SC.gov" title="SC.gov" /></a>
+													<A href="http://www.statelibrary.sc.gov" target="_blank"><img border=0 src="/images/scsl_logo_rgb_web.png" alt="StateLibrary.SC.gov" title="StateLibrary.SC.gov" /></a>
+											</div>	    	
+			</div>
+
+	
+	<script type="text/javascript"> 
+		if ( '' === '1'){
+		 	
+			var link = document.getElementById('contactLegislatorLink');
+			if (link != 'undefined' && link != null){
+				link.style.display = 'none'; 
+				link.style.visibility = 'hidden';
+			}
+		}
+		if ( '' === '1'){
+		 	setTimeout(function(){
+				var link2 = document.getElementById('sendMsgLink');
+				if (link2 != 'undefined' && link2 != null){
+					link2.style.display = 'none'; 
+					link2.style.visibility = 'hidden';
+				};
+			}, 20);
+			
+		}  
+	</script>
+<div class="mainwidepanel">
+
+				<div id="breadcrumbs">
+						South Carolina Law &gt; <a href="/code/statmast.php">Code of Laws</a> &gt; <a href="/code/title17.php">Title 17</a>
+				</div>
+
+					<h2 class="barheader">South Carolina Code of Laws<br />
+									Unannotated<br />
+					</h2>
+
+				<div id="contentsection">
+<div style="font-weight: bold; text-align: center;">Title 17 - CRIMINAL PROCEDURES</div>
+<br />
+
+<div style="text-align: center;">CHAPTER 5</div>
+<div style="text-align: center;">Coroners and Medical Examiners</div><br />
+<div style="text-align: center;">ARTICLE 1</div>
+<div style="text-align: center;">Definitions</div><br />
+<span style="font-weight: bold;"> SECTION 17-5-5.</span> Definitions.<br /><br />
+	As used in this chapter:<br /><br />
+	(1) &quot;Autopsy&quot; means the dissection of a dead body and the removal and examination of bone, tissue, organs, and foreign objects for the purpose of determining the cause of death and manner of death.<br /><br />
+	(2) &quot;Cause of death&quot; refers to the agent that has directly or indirectly resulted in a death.<br /><br />
+	(3) &quot;Coroner&quot; means the person elected or serving as the county coroner pursuant to Section 24 of Article V of the South Carolina Constitution, 1895, this chapter, and Chapter 7 of Title 17.<br /><br />
+	(4) &quot;Medical examiner&quot; means the licensed physician or pathologist designated by the county medical examiner&#39;s commission pursuant to Article 5 of this chapter for the purpose of performing post-mortem examinations, autopsies, and examinations of other forms of evidence required by this chapter.<br /><br />
+	(5) &quot;Deputy coroner&quot; means a person appointed pursuant to Section 17-5-70.<br /><br />
+	(6) &quot;Deputy medical examiner&quot; means a licensed physician employed by the medical examiner, with the approval of the commission, to perform post-mortem examinations, autopsies, and examinations of other forms of evidence as required by this chapter.<br /><br />
+	(7) &quot;Inquest&quot; means an official judicial inquiry before a coroner and coroner&#39;s jury for the purpose of determining the manner of death.<br /><br />
+	(8) &quot;Laboratory&quot; means a laboratory containing facilities for the scientific detection and identification of physical evidence connected with crimes and causes of death and other examinations of tissue, chemical substances, and gases that contribute to the health and well-being of all people.<br /><br />
+	(9) &quot;Manner of death&quot; refers to the means or fatal agency that caused a death. Manner of death is classified in one of the five following categories: A. natural, B. accident, C. homicide, D. suicide, and E. undetermined.<br /><br />
+	(10) &quot;Peace officer in charge&quot; means members of the county, city, or town policemen, county, city, or town detectives, South Carolina Highway Patrol, or South Carolina Law Enforcement Division who may be in charge of the investigation of any case involving a death covered by this chapter.<br /><br />
+	(11) &quot;Post-mortem examination&quot; means examination after death and includes an examination of the dead body and surroundings by the medical examiner but does not include dissection of the body for any purpose.<br /><br />
+HISTORY: 2001 Act No. 73, SECTION 1.<br /><br />
+<div style="text-align: center;">ARTICLE 3</div>
+<div style="text-align: center;">Coroners</div><br />
+<span style="font-weight: bold;"> SECTION 17-5-10.</span> Election of coroner.<br /><br />
+	There must be an election for coroner by the qualified voters in each county at each alternate general election beginning with the election in the year 1948.<br /><br />
+HISTORY: 1962 Code SECTION 17-51; 1952 Code SECTION 17-51; 1942 Code SECTION 3553; 1932 Code SECTION 3553; Civ. C. &#39;22 SECTION 2098; Civ. C. &#39;12 SECTION 1277; Civ. C. &#39;02 SECTION 878; G. S. 701; R. S. 749; 1870 (14) 338; 1897 (22) 591; 2001 Act No. 73, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-20.</span> Bond.<br /><br />
+	Before receiving his commission, the coroner must post a bond, to be executed by him and at least two sureties, but not more than twelve, to be approved, recorded, and filed as prescribed in Chapter 3 of Title 8. The bond must be in the penal sum of two thousand dollars.<br /><br />
+HISTORY: 1962 Code SECTION 17-53; 1952 Code SECTION 17-53; 1942 Code SECTION 3556; 1932 Code SECTION 3556; Civ. C. &#39;22 SECTION 2101; Civ. C. &#39;12 SECTION 1280; Civ. C. &#39;02 SECTION 881; G. S. 703; R. S. 752; 1868 (14) 19; 1919 (21) 75; 1930 (36) 1377; 1933 (38) 440; 1935 (39) 131; 2001 Act No. 73, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-30.</span> Official oaths; commission.<br /><br />
+	Before the coroner is qualified to act, he must take and subscribe the constitutional oath of office and also the additional oath required by Section 8-3-20. When a person has been elected or designated for appointment to the office of coroner and has taken and subscribed the oaths and given the bond as required by law, the Governor must issue a commission to him accordingly.<br /><br />
+HISTORY: 1962 Code SECTION 17-55; 1952 Code SECTION 17-55; 1942 Code SECTION 3557; 1932 Code SECTION 3557; Civ. C. &#39;22 SECTION 2102; Civ. C. &#39;12 SECTION 1281; Civ. C. &#39;02 SECTIONS 882, 883; G. S. 705, 706; R. S. 753, 754; 2001 Act No. 73, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-40.</span> Term.<br /><br />
+	A coroner shall serve a term of office for four years and until his successor is elected or appointed and qualifies.<br /><br />
+HISTORY: 1962 Code SECTION 17-56; 1952 Code SECTION 17-56; 1942 Code SECTION 3554; 1932 Code SECTION 3554; Civ. C. &#39;22 SECTION 2099; Civ. C. &#39;12 SECTION 1278; Civ. C. &#39;02 SECTION 879; G. S. 702; R. S. 750; 1870 (14) 338; 2001 Act No. 73, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-50.</span> Vacancy.<br /><br />
+	(A) Except as provided in subsection (B), in the event of a vacancy in the office of coroner, the Governor shall fill the office by appointing a qualified replacement to serve until the earlier of the following:<br /><br />
+	(1) the next general election for the office of coroner; or<br /><br />
+	(2) the next general election, in which case an election shall be to fill the unexpired term.<br /><br />
+	In either circumstance, the person appointed by the Governor shall hold office until his successor shall qualify.<br /><br />
+	(B) If a county coroner is suspended by the Governor upon the coroner&#39;s indictment or for other reasons, the chief magistrate of that county shall act as coroner until the suspended coroner is reinstated or until a coroner is elected and qualifies in the next general election for coroners, whichever occurs first.<br /><br />
+	(C) Except as provided in subsection (B), the chief deputy or second in command of the coroner&#39;s office shall act as coroner until the vacancy is filled by the Governor&#39;s appointment. While acting as coroner, the chief deputy or second in command is subject to the duties and liabilities incident to the office of coroner and shall receive the same salary as the former coroner at the time of the vacancy.<br /><br />
+HISTORY: 1962 Code SECTION 17-57; 1952 Code SECTION 17-57; 1942 Code SECTION 3555; 1932 Code SECTION 3555; Civ. C. &#39;22 SECTION 2100; Civ. C. &#39;12 SECTION 1279; Civ. C. &#39;02 SECTION 880; G. S. 713; R. S. 751; 1882 (17) 1126; 2001 Act No. 73, SECTION 1; 2007 Act No. 52, SECTION 1, eff June 6, 2007; 2008 Act No. 314, SECTION 1, eff June 11, 2008.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-60.</span> Office; book of inquisitions.<br /><br />
+	The coroner must keep a public office in his county which must have proper fixtures and in which he must keep his book of inquisitions.<br /><br />
+HISTORY: 1962 Code SECTION 17-58; 1952 Code SECTION 17-58; 1942 Code SECTION 3560; 1932 Code SECTION 3560; Civ. C. &#39;22 SECTION 2105; Civ. C. &#39;12 SECTION 1284; Civ. C. &#39;02 SECTION 886; G. S. 709; R. S. 757; 1839 (11) 78; 1965 (54) 213; 2001 Act No. 73, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-70.</span> Coroner&#39;s deputies, appointment and duties.<br /><br />
+	A county coroner shall appoint one or more deputies or investigators to be approved by the judge of the circuit or by any circuit judge presiding therein, who must take and subscribe the oath prescribed by the constitution before entering upon the duties of appointment as a deputy coroner. The oath may be administered by any officer authorized to administer oaths in the county. The appointment must be evidenced by a certificate thereof, signed by the coroner, and continue at the coroner&#39;s pleasure. The coroner may take a bond and surety from his deputy as he considers necessary to secure the faithful discharge of the duties of the appointment, but the coroner must always be answerable for the neglect of duty or misconduct in office of his deputy coroner. When duly qualified, as herein required, the deputy coroner may do and perform any or all of the duties appertaining to the office of the coroner.<br /><br />
+HISTORY: 1962 Code SECTION 17-59; 1952 Code SECTION 17-59; 1942 Code SECTION 3558; 1932 Code SECTION 3558; Civ. C. &#39;22 SECTION 2103; Civ. C. &#39;12 SECTION 1282; Civ. C. &#39;02 SECTION 884; G. S. 706, 707; R. S. 755; 1870 (14) 332; 1972 (57) 2259; 2001 Act No. 73, SECTION 1; 2007 Act No. 52, SECTION 2, eff June 6, 2007.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-90.</span> Coroner may not act under appointment of sheriff.<br /><br />
+	No coroner may act as jailer or deputy sheriff or under any appointment by a sheriff, and if he accepts or acts under the appointment of the sheriff of his county, the coroner&#39;s office must be vacated and must be filled in the manner provided by law in case of vacancy from any other cause.<br /><br />
+HISTORY: 1962 Code SECTION 17-63; 1952 Code SECTION 17-63; 1942 Code SECTION 3559; 1932 Code SECTION 3559; Civ. C. &#39;22 SECTION 2104; Civ. C. &#39;12 SECTION 1283; Civ. C. &#39;02 SECTION 885; G. S. 708; R. S. 756; 1839 (11) 71; 2001 Act No. 73, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-100.</span> Coroners must carry out orders of county governing body; fees and costs.<br /><br />
+	Coroners must execute all lawful orders directed to them by the respective governing bodies of their respective counties, or the chairmen thereof, and must receive the same fees and costs as are allowed in other cases.<br /><br />
+HISTORY: 1962 Code SECTION 17-64; 1952 Code SECTION 17-64; 1942 Code SECTION 3862; 1932 Code SECTION 3862; Civ. C. &#39;22 SECTION 1103; Civ. C. &#39;12 SECTION 982; Civ. C. &#39;02 SECTION 797; R. S. 679; 1893 (21) 489; 2001 Act No. 73, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-110.</span> Coroner or deputy coroner may carry pistol or other handgun.<br /><br />
+	A coroner or deputy coroner, while engaged in official duties of his office, is authorized to carry a pistol or other handgun. He is considered so engaged when going to or returning from the actual performance of his duties. However, coroners and deputy coroners must be certified and trained by the South Carolina Law Enforcement Division in the proper use of handguns.<br /><br />
+HISTORY: 1962 Code SECTION 17-65; 1975 (59) 194; 1994 Act No. 440, SECTION 1; 2001 Act No. 73, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-115.</span> Deputy coroners; training and law enforcement status.<br /><br />
+	(A) A person appointed by a coroner to the position of deputy coroner may, at the discretion of the coroner, attend the South Carolina Criminal Justice Academy to be trained and certified as a Class III officer.<br /><br />
+	(B) A law enforcement officer, as defined by Section 23-23-10(E)(1), who is certified by the South Carolina Law Enforcement Training Council and appointed to serve as a deputy coroner, may, at the discretion of the coroner, retain law enforcement status as a Class III officer.<br /><br />
+	(C) The classification is limited to the deputy coroner&#39;s official duties as provided by law and does not authorize the officer to enforce the state&#39;s general criminal laws.<br /><br />
+HISTORY: 2010 Act No. 222, SECTION 2, eff March 1, 2011.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-120.</span> Availability of medical records to coroner of another state.<br /><br />
+	Records, papers, or reports concerning the death of a person on file at any hospital, nursing home, or other medical facility in this State are available to a coroner of another state as they are to a coroner in this State if the deceased person was a resident of or is buried in the county in which the coroner serves in the other state. The release of these records to the coroner of another state is not prohibited by Chapter 4 of Title 30 or any other provision of law.<br /><br />
+HISTORY: 1986 Act No. 490; 2001 Act No. 73, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-130.</span> Coroner qualifications; affidavits of candidates; training; exemptions; Coroners Training Advisory Committee; Expenses.<br /><br />
+	(A)(1) A coroner in this State shall have all of the following qualifications, the person shall:<br /><br />
+	(a) be a citizen of the United States;<br /><br />
+	(b) be a resident of the county in which the person seeks the office of coroner for at least one year before qualifying for the election to the office;<br /><br />
+	(c) be a registered voter;<br /><br />
+	(d) have attained the age of twenty-one years before the date of qualifying for election to the office;<br /><br />
+	(e) have obtained a high school diploma or its recognized equivalent by the State Department of Education; and<br /><br />
+	(f) have not been convicted of a felony offense or an offense involving moral turpitude contrary to the laws of this State, another state, or the United States.<br /><br />
+	(2) In addition to the requirements of subsection (A)(1), a coroner in this State shall have at least one of the following qualifications, the person shall:<br /><br />
+	(a) have at least three years of experience in death investigation with a law enforcement agency, coroner, or medical examiner agency;<br /><br />
+	(b) have a two-year associate degree and two years of experience in death investigation with a law enforcement agency, coroner, or medical examiner agency;<br /><br />
+	(c) have a four-year baccalaureate degree and one year of experience in death investigation with a law enforcement agency, coroner, or medical examiner agency;<br /><br />
+	(d) be a law enforcement officer, as defined by Section 23-23-10(E)(1), who is certified by the South Carolina Law Enforcement Training Council with a minimum of two years of experience;<br /><br />
+	(e) have completed a recognized forensic science degree or certification program or be enrolled in a recognized forensic science degree or certification program to be completed within one year of being elected to the office of coroner;<br /><br />
+	(f) be a medical doctor; or<br /><br />
+	(g) have a bachelor of science degree in nursing.<br /><br />
+	(B)(1) A person who offers his candidacy for the office of coroner, no later than the close of filing, shall file a sworn affidavit with the county executive committee of the person&#39;s political party.<br /><br />
+	(2) The county executive committee of a political party with whom a person has filed his affidavit must file a copy of the affidavit with the appropriate county election commission by noon on the tenth day following the deadline for filing affidavits by candidates. If the tenth day falls on a Saturday, Sunday, or holiday, the affidavit must be filed by noon the following day.<br /><br />
+	(3) A person who seeks nomination by petition for the office of coroner, no later than the close of filing, shall file a sworn affidavit with the county election commission in the county of his residence.<br /><br />
+	(4) The affidavit required by the provisions of this subsection must contain the following information:<br /><br />
+	(a) the person&#39;s date and place of birth;<br /><br />
+	(b) the person&#39;s citizenship;<br /><br />
+	(c) the county the person is a resident of, and how long the person has been a resident of that county;<br /><br />
+	(d) whether the person is a registered voter;<br /><br />
+	(e) the date the person obtained a high school diploma or its recognized equivalent by the State Department of Education;<br /><br />
+	(f) whether the person has been convicted of a felony offense or an offense involving moral turpitude contrary to the laws of this State, another state, or the United States;<br /><br />
+	(g) the date the person obtained an associate or baccalaureate degree, if applicable;<br /><br />
+	(h) the date the person completed a recognized forensic science degree or certification program, or information regarding the person&#39;s enrollment in a recognized forensic science degree or certification program, if applicable; and<br /><br />
+	(i) the number of years of experience the person has as a death investigator, certified law enforcement officer, or licensed private investigator, if applicable.<br /><br />
+	(C) Each person serving as coroner in the person&#39;s first term is required to complete a basic training session to be determined by the South Carolina Criminal Justice Academy. This basic training session must be completed no later than the end of the calendar year following the person&#39;s election as coroner. A person appointed to fill the unexpired term in the office of coroner shall complete a basic training session to be determined by the South Carolina Criminal Justice Academy within one calendar year of the date of appointment. This section must not be construed to require an individual to repeat the basic training session if the person has successfully completed the session prior to the person&#39;s election or appointment as coroner. A coroner who is unable to attend this training session when offered because of an emergency or extenuating circumstances, within one year from the date the disability or cause terminates, shall complete the standard basic training session required of coroners. A coroner who does not fulfill the obligations of this subsection is subject to suspension by the Governor until the coroner completes the training session.<br /><br />
+	(D) A person holding the office of coroner or deputy coroner who was elected, appointed, or employed prior to January 1, 1994, and who has served continuously since that time shall attend a minimum of sixteen hours training annually as may be selected by the South Carolina Law Enforcement Training Council on or before December 31, 1995. Each year, all coroners and deputy coroners shall complete a minimum of sixteen hours training annually as selected by the council. Certification or records of attendance or training must be maintained as directed by the council.<br /><br />
+	(E)(1) The basis for the minimum annual requirement of in-service training is the calendar year. A coroner who satisfactorily completes the basic training session in accordance with the provisions of subsection (C) is excused from the minimum annual training requirements of subsection (D) for the calendar year in which the basic training session is completed.<br /><br />
+	(2) The Board of Directors of the South Carolina Coroners Association, in its discretion, may grant a waiver of the requirements of the annual in-service training upon presentation of evidence by a coroner that he was unable to complete the training due to an emergency or extenuating circumstances.<br /><br />
+	(3) A coroner who fails to complete the minimum annual in-service training required by this section may be suspended from office, without pay, by the Governor for ninety days. The Governor may continue to suspend a coroner until the coroner completes the annual minimum in-service training required in this section. The Governor shall appoint, at the time of the coroner&#39;s suspension, a qualified person to perform as acting coroner during the suspension.<br /><br />
+	(F) A coroner in office on the effective date of this section is exempt from the provisions of this section except for the provisions of subsection (D).<br /><br />
+	(G)(1) The Director of the South Carolina Criminal Justice Academy shall appoint a Coroners Training Advisory Committee to assist in the determination of training requirements for coroners and deputy coroners and to determine those forensic science degree and certification programs that qualify as &#39;recognized&#39; pursuant to the requirements of this section. Also, the committee shall assist in determining annual training requirements as set forth in this section. The committee must consist of no fewer than five coroners and at least one physician trained in forensic pathology as recommended by the South Carolina Coroners Association. The members of the committee shall serve without compensation.<br /><br />
+	(2) The Coroners Training Advisory Committee shall govern the qualifications of all coroners, deputy coroners, and candidates for coroner as set forth in this section. Also, the committee must certify all coroners. The committee may require a coroner or a deputy coroner to appear before it for performance review. Failure to appear before the committee or failure to follow state law relating to the performance of official duties may result in sanctioning in the form of a private or public reprimand. Also, the committee may recommend suspension to the Governor and loss of funding to the county council. A person may appeal an action of the committee pursuant to the provisions of Chapter 23, Title 1. The committee may hire an administrative assistant if it is determined necessary.<br /><br />
+	(H) Expenses of all training authorized or required by this section must be paid by the county the coroner or deputy coroner serves, and the South Carolina Law Enforcement Training Council is authorized to set and collect fees for this training.<br /><br />
+HISTORY: 1994 Act No. 307, SECTION 1; 1996 Act No. 459, SECTION 30; 2001 Act No. 73, SECTION 1; 2010 Act No. 222, SECTION 1, eff March 1, 2011; 2012 Act No. 205, SECTION 1.A, 1.B., eff June 11, 2012; 2014 Act No. 225 (H.3958), SECTION 2, eff June 2, 2014; 2018 Act No. 183 (S.170), SECTION 3, eff May 17, 2018.<br /><br />
+Effect of Amendment<br /><br />
+	2014 Act No. 225, SECTION 2, in subsection (C), substituted &quot;South Carolina Criminal Justice Academy&quot; for &quot;Department of Public Safety&quot; in the first sentence, and &quot;department&quot; in the third sentence.<br /><br />
+	2018 Act No. 183, SECTION 3, in (G), inserted the (1) designator and inserted the second sentence, and added (2).<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-135.</span> Opioid antidote administration by coroners.<br /><br />
+	A coroner, deputy coroner, or coroner&#39;s designee may possess and administer an opioid antidote pursuant to the requirements of the South Carolina Overdose Prevention Act. The coroner, deputy coroner, or coroner&#39;s designee must comply with all of the requirements of Section 44-130-90 and is entitled to immunity from civil or criminal liability or professional disciplinary action when administering an opioid antidote to a person he believes in good faith is experiencing an opioid overdose.<br /><br />
+HISTORY: 2023 Act No. 66 (H.3691), SECTION 1, eff May 19, 2023.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-140.</span> Funding for full-time county coroners; disbursement of remaining funds.<br /><br />
+	(A) From the funds appropriated for the implementation of this section, and subject to the provisions of subsection (C), the State Treasurer shall disburse an equal amount to each county treasurer on a monthly basis. These funds must supplement, and not supplant, existing funds utilized for full-time county coroners.<br /><br />
+	(B) From the funds received pursuant to this section, each county treasurer must pay the duly elected full-time coroner at least thirty-five thousand dollars annually. If the funds are not totally expended to pay the duly elected full-time coroner, then at the discretion of the coroner he may use the funds to hire a deputy coroner, administrative personnel, or personnel with forensic training. Also, the coroner may use the funds to provide an office or office equipment.<br /><br />
+	(C) Upon disbursing thirty-five thousand dollars to each county treasurer in a fiscal year, the State Treasurer shall credit any remaining funds pursuant to subsection (D) to the full-time coroners of each county for the performance of their duties. The remaining funds shall be disbursed as follows:<br /><br />
+	(1) For those counties with a population of one hundred fifty thousand and above, according to the latest official United States Decennial Census, each full-time coroner shall receive an equal share of fifty-five percent of the remaining funds.<br /><br />
+	(2) For those counties with a population of at least fifty thousand but not more than one hundred forty-nine thousand, nine hundred ninety-nine, according to the latest official United States Decennial Census, each full-time coroner shall receive an equal share of thirty-five percent of the remaining funds.<br /><br />
+	(3) For those counties with a population of less than fifty thousand, according to the latest official United States Decennial Census, each full-time coroner shall receive an equal share of ten percent of the remaining funds.<br /><br />
+	(D) Implementation of this section is contingent upon the appropriation of state general funds or the availability of financial support from other sources and must be operational within one year of adequate funding becoming available.<br /><br />
+HISTORY: 2018 Act No. 183 (S.170), SECTION 2, eff May 17, 2018.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-150.</span> Coroners and deputy coroners considered public safety officers.<br /><br />
+	Coroners and deputy coroners are considered public safety officers under 34 U.S.C. Section 10281, et seq., if killed in the line of duty.<br /><br />
+HISTORY: 2023 Act No. 66 (H.3691), SECTION 4, eff May 19, 2023.<br /><br />
+<div style="text-align: center;">ARTICLE 5</div>
+<div style="text-align: center;">Medical Examiners</div><br />
+<span style="font-weight: bold;"> SECTION 17-5-220.</span> Establishment and functions of medical examiner commissions in certain counties.<br /><br />
+	A county with a population of 100,000 or more, according to the last official United States census, may establish by appropriate implementing resolution a commission to be known as the medical examiner commission of that county, composed of five members, one of whom must be the chief administrative officer of the county health department who is a permanent member, and four of whom must be appointed by the Governor upon recommendation of the county legislative delegation. The initial terms of the appointive members are as follows: one member for a term of one year, one member for a term of two years, one member for a term of three years, and one member for a term of four years. After the initial terms, all members serve for terms of four years. The effective date of appointments is July first with terms expiring on June thirtieth. The members must serve without compensation. The length of the terms of those who serve first must be determined by lot at the first meeting of the commission.<br /><br />
+	The commission must meet as soon as practicable after appointment and must organize itself by electing one of its members as chairman and other officers as may be considered necessary. After this first meeting, the commission must meet at least every six months and more often as its duties require, upon the call of the chairman or a majority of its members.<br /><br />
+	The commission is authorized to adopt and promulgate regulations as it may consider necessary.<br /><br />
+HISTORY: 1962 Code SECTION 17-162; 1972 (57) 3064; 1973 (58) 101; 1984 Act No. 514; 1996 Act No. 458, Part II, SECTION 77A; 2001 Act No. 73, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-230.</span> Medical examiner commission shall employ medical examiner; duties; assistants; facilities.<br /><br />
+	The commission must employ a skilled physician or pathologist as medical examiner for the purpose of performing post-mortem examinations, autopsies, and the examination of other forms of evidence as required by this chapter. The medical examiner must, with the approval of the commission, employ such assistants as are necessary to carry out the purposes of this chapter. The commission must provide the medical examiner with facilities for proper pathological, toxicological, and other laboratory examinations as may be required in the performance of the medical examiner&#39;s duties.<br /><br />
+	The commission may enter into an agreement for the use of the laboratory facilities as may be necessary.<br /><br />
+HISTORY: 1962 Code SECTION 17-163; 1972 (57) 3064; 2001 Act No. 73, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-240.</span> Employment and duties of deputy medical examiners.<br /><br />
+	In addition to those powers granted in Section 17-5-330, the medical examiner is empowered to employ with the approval of the commission qualified physicians on a full-time, part-time, or per diem basis who, as deputy medical examiners, must carry out the instructions of the medical examiner and act in his absence or disqualification. A deputy medical examiner may do and perform any or all of the duties appertaining to the office of the medical examiner.<br /><br />
+HISTORY: 1962 Code SECTION 17-164; 1972 (57) 3064; 2001 Act No. 73, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-280.</span> Records to be kept in office of medical examiner; index; copies; admissibility in evidence.<br /><br />
+	The medical examiner&#39;s office must keep complete indexed records of all deaths investigated, containing all relevant information concerning the death and the autopsy report, if made. Any prosecuting attorney or law enforcement officer may secure copies of these records or information necessary for the performance of his official duties. Copies of such records or information must be furnished upon request to any party to whom the cause of death is a material issue.<br /><br />
+	Reports of post-mortem examinations, autopsies, copies of records, photographs, laboratory findings, and reports in the office of the county medical examiner when duly attested by the medical examiner or his assistant must be received as evidence in any court or other proceedings for any purpose for which the original could be received without any proof of the official character of the person whose name is signed thereto.<br /><br />
+HISTORY: 1962 Code SECTION 17-168; 1972 (57) 3064; 2001 Act No. 73, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-330.</span> Salaries and fees; annual budget.<br /><br />
+	The commission must fix the salary of the medical examiner. The medical examiner, with the approval of the county medical examiner commission, must fix (1) the salaries of the deputy medical examiners and all employees in the charge of the medical examiner and (2) all fees paid for toxocological examinations and other tests and examinations required. The annual budget for the operation of the medical examiner system must be submitted to and approved by the county governing body.<br /><br />
+HISTORY: 1962 Code SECTION 17-173; 1972 (57) 3064; 2001 Act No. 73, SECTION 1.<br /><br />
+<div style="text-align: center;">ARTICLE 7</div>
+<div style="text-align: center;">Duties of Coroners and Medical Examiners</div><br />
+<span style="font-weight: bold;"> SECTION 17-5-510.</span> Duties of coroner and medical examiner.<br /><br />
+	In counties which have both a coroner and a medical examiner:<br /><br />
+	(1) the coroner has the ultimate responsibility for carrying out the duties required by this article;<br /><br />
+	(2) the medical examiner&#39;s duties must be specified in an annual written contract between the county governing body and the medical examiner.<br /><br />
+HISTORY: 2001 Act No. 73, SECTION 1; 2023 Act No. 66 (H.3691), SECTION 3, eff May 19, 2023.<br /><br />
+Effect of Amendment<br /><br />
+	2023 Act No. 66, SECTION 3, reenacted the section with no apparent change.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-520.</span> Authority to order autopsy; request in event of child&#39;s death.<br /><br />
+	(A) In addition to the powers vested in other law enforcement officials to order an autopsy, the coroner or medical examiner is authorized to determine that an autopsy be made.<br /><br />
+	(B) The coroner or medical examiner immediately shall request an autopsy if a child&#39;s death occurs as defined in Section 17-5-540. The autopsy must be performed as soon as possible by a pathologist with forensic training.<br /><br />
+HISTORY: 2001 Act No. 73, SECTION 1; 2007 Act No. 52, SECTION 3, eff June 6, 2007.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-530.</span> Duty to notify coroner&#39;s or medical examiner&#39;s office of certain deaths and stillbirths; inquiry; findings; notification of next-of-kin; consent for certain actions.<br /><br />
+	(A) If a person dies:<br /><br />
+	(1) as a result of violence;<br /><br />
+	(2) as a result of apparent suicide;<br /><br />
+	(3) when in apparent good health;<br /><br />
+	(4) when unattended by a physician;<br /><br />
+	(5) in any suspicious or unusual manner;<br /><br />
+	(6) while an inmate of a penal or correctional institution;<br /><br />
+	(7) as a result of stillbirth when unattended by a physician; or<br /><br />
+	(8) in a health care facility, as defined in Section 44-7-130(10) other than nursing homes, within twenty-four hours of entering a health care facility or within twenty-four hours after having undergone an invasive surgical procedure at the health care facility;<br /><br />
+	a person having knowledge of the death immediately shall notify the county coroner&#39;s or medical examiner&#39;s office. This procedure also must be followed upon discovery of anatomical material suspected of being or determined to be a part of a human body.<br /><br />
+	(B) The coroner or medical examiner shall make an immediate inquiry into the cause and manner of death and shall reduce the findings to writing on forms provided for this purpose. If the inquiry is made by a medical examiner, the medical examiner shall retain one copy of the form and forward one copy to the coroner. In the case of violent death, one copy must be forwarded to the county solicitor of the county in which the death occurred.<br /><br />
+	(C) The coroner or medical examiner shall notify in writing the deceased person&#39;s next-of-kin, if known, that in the course of performing the autopsy, body parts may have been retained for the purpose of investigating the cause and manner of death.<br /><br />
+	(D) In performing an autopsy or post-mortem examination, no body parts, as defined in Section 44-43-305, removed from the body may be used for any purpose other than to determine the cause or manner of death unless the person authorized to consent, as defined in Section 44-43-315, has given informed consent to the procedure. The person giving the informed consent must be given the opportunity to give informed consent and authorize the procedure on a witnessed, written consent form using language understandable to the average lay person after face-to-face communication with a physician, coroner, or medical examiner about the procedure. If the person authorizing the procedure is unable to consent in person, consent may be given through a recorded telephonic communication.<br /><br />
+	(E) If the coroner or medical examiner orders an autopsy upon review of a death pursuant to item (8) of subsection (A), the autopsy must not be performed:<br /><br />
+	(1) at the health care facility where the death occurred;<br /><br />
+	(2) by a physician who treated the patient; or<br /><br />
+	(3) by a physician who is employed by the health care facility in which the death occurred;<br /><br />
+	unless the coroner or medical examiner certifies that no reasonable alternative exists.<br /><br />
+HISTORY: 2001 Act No. 73, SECTION 1; 2010 Act No. 226, SECTION 3, eff July 1, 2010; 2012 Act No. 128, SECTION 1, eff March 13, 2012.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-535.</span> Persons authorized to view photographs or videos of autopsy; training use exception; penalty.<br /><br />
+	(A) Photographs, videos, or other visual images and audio recordings of or related to the performance of an autopsy shall only be viewed by or disseminated to:<br /><br />
+	(1) the coroner or the medical examiner, or both, and their staff;<br /><br />
+	(2) members of law enforcement agencies, for official use only;<br /><br />
+	(3) parents of the deceased, surviving spouse, children, guardian, personal representative next of kin, and any other person given permission or authorization to view or possess the visual images by the personal representative of the deceased&#39;s estate;<br /><br />
+	(4) those involved in a judicial or administrative proceeding related to the death of the subject of the photograph, video, other visual image or audio recordings including, but not limited to:<br /><br />
+	(a) parties to a civil suit arising from, related to, or relevant to the death or autopsy of the subject of the photograph, video, other visual image or audio recordings, and the attorneys for the parties and the staff of the attorneys;<br /><br />
+	(b) a person charged with a crime arising from, related to or relevant to the death or autopsy of the subject of the photograph, video, other visual image or audio recordings, and the person&#39;s attorney and the staff of the attorney;<br /><br />
+	(c) staff of the prosecutor&#39;s office considering or prosecuting criminal charges arising from, related to or relevant to the death or autopsy of the subject of the photograph, video, other visual image or audio recordings;<br /><br />
+	(d) lay and expert witnesses conferred with, consulted or retained by a party or an attorney considering or involved in a legal or administrative proceeding arising from, related to or relevant to the death or autopsy of the subject of the photograph, video, other visual image or audio recordings;<br /><br />
+	(e) judges and administrative hearing officers, as well as their staff, involved in a judicial or administrative proceeding arising from, related to or relevant to the death or autopsy of the subject of the photograph, video, other visual image or audio recordings; and<br /><br />
+	(f) members of any jury, including grand juries, petit juries and coroner&#39;s juries, empanelled to hear or decide any issue arising from, related to or relevant to the death or autopsy of the subject of the photograph, video, other visual image or audio recordings;<br /><br />
+	(5) physicians and other persons consulted by or supervising the physicians or persons who were involved in the performance of the autopsy of the subject of the photograph, video, other visual images, or audio recordings; and<br /><br />
+	(6) a person who receives such photographs, videos, or other visual images pursuant to a validly issued court order, after notice and opportunity to object are provided to the personal representative of the deceased&#39;s estate.<br /><br />
+	These photographs and videos must be released and disseminated only as authorized by this section.<br /><br />
+	(B) Notwithstanding the provisions contained in subsection (A), a photograph, video, other visual image of an autopsy, or an audio recording of an autopsy, or a combination of each of these items, after all information immediately identifying the decedent has been redacted and after making facial recognition anonymous to the extent reasonably possible if lawfully obtained or possessed may be used for:<br /><br />
+	(1) legitimate medical scientific teaching or training purposes;<br /><br />
+	(2) legitimate teaching or training of law enforcement personnel;<br /><br />
+	(3) teaching or training of attorneys or other individuals with a professional need to use or understand forensic science or public health;<br /><br />
+	(4) conferring with medical or scientific experts in the field of forensic science or public health; or<br /><br />
+	(5) publication in a scientific or medical or legal journal or textbook.<br /><br />
+	(C) A person who violates this section is guilty of a misdemeanor and, upon conviction, must be fined not less than five thousand dollars nor more than fifty thousand dollars. Each violation under this section must be considered a separate offense.<br /><br />
+HISTORY: 2002 Act No. 350, SECTION 2, eff July 19, 2002; 2003 Act No. 34, SECTION 1, eff May 14, 2003.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-540.</span> Coroner or medical examiner to notify Department of Child Fatalities of certain child deaths.<br /><br />
+	The coroner or medical examiner, within twenty-four hours or one working day, whichever occurs first, must notify the Department of Child Fatalities when a child dies in the county he serves:<br /><br />
+	(1) as a result of violence;<br /><br />
+	(2) in any suspicious or unusual manner; or<br /><br />
+	(3) when the death is unexpected and unexplained including, but not limited to, possible sudden infant death syndrome.<br /><br />
+HISTORY: 2001 Act No. 73, SECTION 1; 2014 Act No. 281 (H.3102), SECTION 10, eff June 10, 2014.<br /><br />
+Effect of Amendment<br /><br />
+	2014 Act No. 281, SECTION 10, added paragraph (1), and redesignated former paragraphs (2) and (3) accordingly; in paragraph (2), deleted &quot;, as a result of violence, when unattended by a physician, and&quot;; and deleted the former last undesignated paragraph, defining &quot;unattended by a physician&quot;.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-541.</span> Local Child Fatality Review Teams; composition; notifications.<br /><br />
+	(A) For the purposes of this section, &quot;a person responsible for a child&#39;s welfare&quot; has the same meaning as in Section 63-7-20(16).<br /><br />
+	(B) The coroner of each county, within a timeframe not exceeding seven working days, shall schedule a local Child Fatality Review Team to perform a review of a case where a child under the age of eighteen dies in the county he serves. The team may be composed of:<br /><br />
+	(1) the county coroner or his designee;<br /><br />
+	(2) a local law enforcement officer;<br /><br />
+	(3) an agent from the State Law Enforcement Division&#39;s Department of Child Fatalities assigned to the case;<br /><br />
+	(4) a board certified child abuse pediatrician;<br /><br />
+	(5) a representative from the local county department of social services; and<br /><br />
+	(6) a forensic pathologist.<br /><br />
+	(C) In addition to the mandatory notification requirement in Section 17-5-540, the coroner shall immediately notify the local county department of social services and request any involvement of the agency, excluding any economic services, in the life of the child, a sibling, or a person responsible for a child&#39;s welfare that resulted in a referred, indicated, or unfounded case.<br /><br />
+	(D) The local county department of social services, within twenty-four hours or one working day, whichever comes first, must provide the coroner and the State Law Enforcement Division&#39;s Department of Child Fatalities information related to any involvement of the agency, excluding any economic services, in the life of the child, a sibling, or a person responsible for a child&#39;s welfare that resulted in a referred, indicated, or unfounded case.<br /><br />
+HISTORY: 2018 Act No. 183 (S.170), SECTION 1, eff May 17, 2018.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-542.</span> Local Child Fatality Review Teams; purpose; reports.<br /><br />
+	(A) The purpose of the local Child Fatality Review Team is to rapidly and expeditiously review all child deaths that occur in the county in which each coroner serves.<br /><br />
+	(B) To achieve this purpose, the local Child Fatality Review Team shall:<br /><br />
+	(1) enter the team&#39;s findings of each reviewed child death into the Child Death Review Case Reporting System at the direction of the coroner;<br /><br />
+	(2) submit to the State Child Fatality Advisory Committee, a monthly report and any other reports prepared by the team, including the team&#39;s findings of each reviewed child death; and<br /><br />
+	(3) submit a report of the findings of each reviewed child death to the Bureau of Vital Statistics as prescribed by the State.<br /><br />
+HISTORY: 2018 Act No. 183 (S.170), SECTION 1, eff May 17, 2018.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-543.</span> Meetings of Child Fatality Review Team; confidentiality; penalties.<br /><br />
+	(A) Meetings of the Child Fatality Review Team, the &quot;review team&quot;, are closed to the public and are not subject to Chapter 4, Title 30, the Freedom of Information Act, when the review team is discussing individual cases of child deaths.<br /><br />
+	(B) Except as provided in subsection (C), meetings of the review team are open to the public and subject to the Freedom of Information Act when the review team is not discussing individual cases of child deaths.<br /><br />
+	(C) Information identifying a deceased child or a family member, guardian, or caretaker of a deceased child, or an alleged or suspected perpetrator of abuse or neglect upon a child may not be disclosed during a public meeting and information regarding the involvement of any agency with the deceased child or family may not be disclosed during a public meeting.<br /><br />
+	(D) Violation of this section is a misdemeanor and, upon conviction, a person must be fined not more than five hundred dollars or imprisoned not more than six months, or both.<br /><br />
+HISTORY: 2018 Act No. 183 (S.170), SECTION 4, eff May 17, 2018.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-544.</span> Child Fatality Review team; exemptions from disclosure; public information; penalties.<br /><br />
+	(A) All information, documents, and records of the Child Fatality Review team, records acquired by the review team, or records prepared by members of the review team in the exercise of their purposes and duties pursuant to this article are confidential, exempt from disclosure under Chapter 4, Title 30, the Freedom of Information Act, and only may be disclosed as necessary to carry out the review team&#39;s duties and purposes.<br /><br />
+	(B) Statistical compilations of data that do not contain information that would permit the identification of a person to be ascertained are public records.<br /><br />
+	(C) Reports of the review team that do not contain information that would permit the identification of a person to be ascertained are public information.<br /><br />
+	(D) Except as necessary to carry out the review team&#39;s purposes and duties, members of the committee and persons attending their meeting may not disclose what transpired at a meeting and may not disclose information, the disclosure of which is prohibited by this section.<br /><br />
+	(E) Members of the Child Fatality Review Team, persons attending a committee meeting, and persons who present information to the review team may not be required to disclose in any civil or criminal proceeding information presented in or opinions formed as a result of a meeting, except that information available from other sources is not immune from introduction into evidence through those sources solely because it was presented during proceedings of the committee or department or because it is maintained by the committee or department. Nothing in this subsection may be construed to prevent a person from testifying to information obtained independently of the committee or which is public information.<br /><br />
+	(F) All information, documents, and records of the Child Fatality Review team, records acquired by the review team, and records prepared by the review team are not subject to subpoena, discovery, or the Freedom of Information Act, except that information, documents, and records otherwise available from other sources are not immune from subpoena, discovery, or the Freedom of Information Act through those sources solely because they were presented during proceedings of the committee or department or because they are maintained by the committee or department.<br /><br />
+	(G) Violation of this section is a misdemeanor and, upon conviction, a person must be fined not more than five hundred dollars or imprisoned for not more than six months, or both.<br /><br />
+HISTORY: 2018 Act No. 183 (S.170), SECTION 5, eff May 17, 2018.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-550.</span> Coroner or medical examiner may petition for warrant to inspect home of child whose death occurred elsewhere.<br /><br />
+	If the home or premises last inhabited by a child is not the scene of the death of a child, the coroner or medical examiner, while conducting an investigation of the death, may petition the local magistrate of the appropriate judicial circuit for a warrant to inspect the home or premises inhabited by the deceased before death. The local magistrate must issue the inspection warrant upon probable cause to believe that events in the home or premises may have contributed to the death of the child.<br /><br />
+HISTORY: 2001 Act No. 73, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-555.</span> Reporting certain deaths of vulnerable adults.<br /><br />
+	(A) The coroner or medical examiner, within twenty- four hours or one working day, whichever occurs first, must notify the Vulnerable Adults Investigations Unit of the South Carolina Law Enforcement Division or appropriate law enforcement when a vulnerable adult dies in the county he serves:<br /><br />
+	(1) as a result of violence, when unattended by a physician, and in any suspicious or unusual manner; or<br /><br />
+	(2) when the death is unexpected and unexplained.<br /><br />
+	(B) If the home or premises last inhabited by a vulnerable adult is not the scene of the death of the vulnerable adult, the coroner or medical examiner, while conducting an investigation of the death, may petition the local magistrate of the appropriate judicial circuit for a warrant to inspect the home or premises inhabited by the deceased before death. The local magistrate must issue the inspection warrant upon probable cause to believe that events in the home or premises may have contributed to the death of the vulnerable adult.<br /><br />
+	(C) For purposes of this section:<br /><br />
+	(1) &quot;vulnerable adult&quot; has the same meaning as defined in Section 43-35-10(11);<br /><br />
+	(2) a vulnerable adult is not considered to be &quot;unattended by a physician&quot; when a physician has, before death, provided diagnosis and treatment following a fatal injury;<br /><br />
+	(3) &quot;unexpected death&quot; includes all vulnerable adult deaths that, before investigation, appear possibly to have been caused by trauma, suspicious, or obscure circumstances, or abuse or neglect.<br /><br />
+HISTORY: 2006 Act No. 301, SECTION 10, eff May 23, 2006.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-560.</span> Certification of cause of death on death certificate.<br /><br />
+	(A) The coroner, deputy coroner, medical examiner, or deputy medical examiner must, in any case investigated, complete and sign the medical certification portion of the death certificate within twenty-four hours after being notified of the death.<br /><br />
+	(B) The coroner or medical examiner must, at the time of releasing a body to a funeral director or person acting as a funeral director, or as soon as practical after releasing the body, execute and sign the medical certification of the cause of death on the prescribed form.<br /><br />
+	(C) In any case where autopsy is scheduled and the coroner or medical examiner wishes to await its gross findings to confirm a tentative clinical finding, the coroner or medical examiner must give the funeral director notice as to when he expects to have the medical data necessary for the certification of cause of death. If the certificate cannot be signed within the prescribed time set forth, the coroner or medical examiner must indicate that the cause of death is pending and sign the certification accordingly. Immediately after the medical data necessary for determining the cause of death has been made known, the coroner or medical examiner must, over his signature, forward the cause of death to the registrar and notify the funeral director involved that this action has been taken.<br /><br />
+	(D) As used in this section, the terms &quot;sign&quot;, &quot; signed&quot;, or &quot;signature&quot; mean a written signature or an electronic signature authorized in the Electronic Commerce Act, Chapter 5, Title 26.<br /><br />
+HISTORY: 2001 Act No. 73, SECTION 1; 2002 Act No. 272, SECTION 1, eff May 28, 2002.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-570.</span> Release and burial of dead bodies; preservation and disposition of unidentified dead bodies.<br /><br />
+	(A) After the post-mortem examination, autopsy, or inquest has been completed, the dead body must be released to the person lawfully entitled to it for burial. If no person claims the body, the coroner or medical examiner must notify the board created pursuant to Section 44-43-510. If the board does not accept the body, the body must be turned over to the coroner of the county where death occurred for disposition as provided by law. If the deceased has an estate out of which burial expenses can be paid either in whole or in part, the estate must be taken for that purpose before an expense under this section is imposed upon a county.<br /><br />
+	(B) If the body cannot be identified through reasonable efforts, the coroner must forward the body to the Medical University of South Carolina or other suitable facility for preservation. If the body remains unidentified thirty days after the coroner forwarded the body, the Medical University of South Carolina or other facility preserving the body must immediately notify the State Law Enforcement Division (SLED). If the body has not been identified within thirty days after SLED has entered the unidentified person&#39;s DNA profile into the Combined DNA Indexing System pursuant to Section 23-3-635, the Medical University may retain possession of the body for its use and benefit or return the body to the coroner of the county where death occurred for disposition as provided by law. A facility other than the Medical University utilized by the coroner for storage of an unidentified body may dispose of the body as provided by law or return the body to the coroner of the county where death occurred for disposition.<br /><br />
+	(C) If an unidentified body is preserved at the Medical University, the county is responsible for transporting the body to and from the Medical University; however, the county is not responsible for the cost of preserving the body at the Medical University. If an unidentified body is preserved at the Medical University, the Medical University must absorb the cost of preserving the body for not less than thirty days.<br /><br />
+HISTORY: 2001 Act No. 73, SECTION 1; 2008 Act No. 413, SECTION 3.E, eff October 21, 2008.<br /><br />
+Editor&#39;s Note<br /><br />
+	2008 Act No. 413, SECTION 3.A provides as follows:<br /><br />
+	&quot;This SECTION may be referred to and cited as the &#39;Unidentified Human Remains DNA Database Act&#39;.&quot;<br /><br />
+	2008 Act No. 413, SECTION 7 provides as follows:<br /><br />
+	&quot;The provisions of Section 17-28-350 become effective upon the signature of the Governor. All other provisions become effective January 1, 2009. The enactment of these provisions prior to the effective date indicates the intent of the General Assembly that statewide laws or practices shall exist to ensure additional procedures for post-conviction DNA testing, and proper preservation of biological evidence connected to murder, rape, and nonnegligent homicide in order that application for available federal funds shall be made by the appropriate agencies and considered by the appropriate federal agencies prior to the effective date.&quot;<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-580.</span> Authorization for removal of dead body; penalties; coroner&#39;s jury.<br /><br />
+	(A)(1) It is unlawful for any person to move or authorize removal of a body from the place where the body is found until the investigation is completed and the removal is authorized by the coroner, deputy coroner, medical examiner, or deputy medical examiner in charge.<br /><br />
+	(2) It is unlawful for any person to move or transport a body across the county line until the investigation of the case, the post-mortem examination, or autopsy is complete and until removal of the body is authorized by the coroner or medical examiner or one of the coroner&#39;s or medical examiner&#39;s designated assistants.<br /><br />
+	(3) Any person who violates this subsection is guilty of a misdemeanor and, upon conviction, must be punished by a fine of not less than five hundred dollars nor more than one thousand dollars or by imprisonment for not more than sixty days, or both.<br /><br />
+	(B) No coroner&#39;s jury may be impaneled until the investigation is completed and copies of the reports of the county medical examiner and peace officer in charge are received by the coroner. The jury is not required to view the body.<br /><br />
+HISTORY: 2001 Act No. 73, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-590.</span> Disposition of remains of unidentified dead bodies.<br /><br />
+	(A) For purposes of this section:<br /><br />
+	(1) a body is unidentifiable if the dead person&#39;s identity is unknown or cannot be established after all available methods have been exhausted; and<br /><br />
+	(2) a body is unclaimed if:<br /><br />
+	(a) a person cannot be located to take custody of the body; or<br /><br />
+	(b) there is a person to take custody of the body, but that person cannot or will not assume financial responsibility for disposition of the body.<br /><br />
+	(B) If the body of a dead person is unidentifiable or unclaimed, the remains may be cremated thirty days from the date of death or date of discovery. The coroner or medical examiner may have the remains buried or interred in a cemetery in the county in which the remains were found.<br /><br />
+	(C) If a coroner has possession of human remains that have been identified and the deceased person has been determined to be an unclaimed veteran, then the coroner must release the remains to a funeral home, funeral establishment, or mortuary for disposition pursuant to the provisions of Chapter 12, Title 25.<br /><br />
+HISTORY: 2001 Act No. 73, SECTION 1; 2024 Act No. 142 (H.4376), SECTION 4, eff May 13, 2024; 2026 Act No. 145 (H.4188), SECTION 1, eff May 15, 2026.<br /><br />
+Effect of Amendment<br /><br />
+	2024 Act No. 142, SECTION 4, inserted the (A) designator and added (B).<br /><br />
+	2026 Act No. 145, SECTION 1, inserted (A) and made conforming changes; and in (B), in the first sentence, substituted &quot;unidentifiable or unclaimed, the remains may be cremated thirty days from the date of death or date of discovery&quot; for &quot;unidentifiable, the remains may not be cremated for at least thirty days&quot;, and in the second sentence, substituted &quot;may&quot; for &quot;must&quot;.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-600.</span> Permit required for cremation.<br /><br />
+	When the body of any dead person who died in the county is to be cremated, the person who has requested the cremation must secure a permit for the cremation from the coroner, deputy coroner, medical examiner, or deputy medical examiner. A person who wilfully fails to secure a permit for cremation is guilty of a misdemeanor and, upon conviction, must be fined not less than twenty dollars and not more than five hundred dollars. A permit for cremation promptly must be acted upon by the coroner or medical examiner.<br /><br />
+HISTORY: 2001 Act No. 73, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-5-610.</span> Duty to notify coroner or medical examiner in certain cases when body is buried without investigation.<br /><br />
+	If in a case of sudden, violent, or suspicious death a body is buried without an investigation by the coroner or medical examiner, a person having knowledge of this fact must notify the coroner or the medical examiner.<br /><br />
+HISTORY: 2001 Act No. 73, SECTION 1.<br /><br />
+
+</div>
+
+
+					</div>		 <!-- mainwidepanel -->
+					
+				</div>		 <!-- pagebody -->
+				
+				<div id="footer" class="nodisplay" style="height: 30px;" onContextMenu="return false;">
+			<div id="footerdiv" style="margin:0;">
+				South Carolina Legislative Services Agency * 223 Blatt Building * 1105 Pendleton Street * Columbia, SC 29201<!-- * 803-212-4420--><br>
+				
+								<a href="/disclaimer.php">Disclaimer</a> * <a href="/policies.php">Policies</a> * <a href="/credits.php">Photo Credits</a> * <a href="/contact.php">Contact Us</a>
+							</div>
+		</div>
+		<div id="printfooter" class="printdisplay serifNormal" align=center style="font-size: 8pt;">
+			<br>
+			<br>
+			<hr>
+			Legislative Services Agency
+			<br>
+			h t t p : / / w w w . s c s t a t e h o u s e . g o v
+		</div>
+	
+		</div>	<!-- container or main in mobile page-->
+</body>
+</html>
+

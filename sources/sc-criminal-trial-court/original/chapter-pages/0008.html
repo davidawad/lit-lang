@@ -1,0 +1,675 @@
+﻿
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+	<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	    <meta name="robots" content="noimageindex">
+	    <meta charset="iso-8859-1">
+	    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+	    	    <title>Code of Laws - Title 17 - Chapter 15- - CRIMINAL PROCEDURES</title>
+	    <link rel="SHORTCUT ICON" href="/images/stateflagsmall.ico" />
+		<link rel="icon" href="/images/stateflagsmall.ico" type="image/ico" />
+		<link rel="SHORTCUT ICON" href="/images/South-Carolina-Flag2.ico" />
+
+		<link type="text/css" rel="stylesheet" href="/css/main.css" media="all" />
+				
+		<!--[if lte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/ie7main.css" media="all" />
+		<![endif]-->
+		<!--[if gte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/iemain.css" media="all" />
+		<![endif]-->
+		<link type="text/css" rel="stylesheet" href="/css/print.css" media="print" />
+		<link type="text/css" rel="stylesheet" href="/css/supplement.css" media="screen" />
+		<!--<link type="text/css" rel="stylesheet" href="/css/zipsearch.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/vote.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/contact.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/navwrap.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/linkbar.css" media="screen" />-->
+	
+		<!--<script type="text/javascript" src="/js/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>-->
+		<script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+				<script type="text/javascript" src="/js/main_linux.js"></script>
+		
+
+		
+
+
+
+		<!--<script type="text/javascript" src="/js/common.js"></script>
+		<script type="text/javascript" src="/js/utils.js"></script>
+		<script type="text/javascript" src="/js/date.js"></script>
+		<script type="text/javascript" src="/js/lightbox.js"></script>
+		<script type="text/javascript" src="/js/legislation.js"></script>
+		<script type="text/javascript" src="/js/logon_lits.js"></script>
+		<script type="text/javascript" src="/js/message.js"></script>
+		<script type="text/javascript" src="/js/comm_meeting.js"></script>-->
+		<script type="text/vbscript" src="/vbs/comm_meeting.vbs"></script>
+		<!--<script type="text/javascript" src="/js/regs.js"></script>-->
+				
+	   	<script type="text/javascript">
+	    //document.onclick = function () { document.getElementById('transbox').style.display= 'none' };
+	    	var xmlhttp=false;
+			xmlhttp = create_xml_object();
+	
+			function getElement(ele)
+			{
+				var theobj = false;
+				if(typeof ele == 'string')
+					theobj = (document.getElementById)?document.getElementById(ele):document.all[ele];
+				else
+					theobj = ele;
+			
+				return theobj;
+			}
+		
+			function checkreader(friendlyalert)
+			{
+			 	/*friendlyalert=friendlyalert||false;
+			 	
+			 	var browser_info = perform_acrobat_detection();
+				if (!browser_info.acrobat)
+				{
+				 	loadadobebox('adobebox', '/adobe.php');
+					return false;
+				}
+				else if (friendlyalert)
+				{
+			 		alert(friendlyalert);
+				}*/
+				return true;
+			}
+				
+			function loadadobebox(boxname, url)
+			{
+				var response = false;
+	
+				doRequest(xmlhttp, "GET", url, false, null, null);
+				if (xmlhttp.status == 200)
+				{
+		         	response = xmlhttp.responseText;
+				}
+	
+				if(response)
+				{
+			 		var ele = document.getElementById(boxname);
+				 	if (ele)
+				 	{
+				 		ele.style.visibility = 'hidden';
+		 				ele.style.display = 'block';
+	
+		 				positionElement(ele, 'center', 'center', true);
+	
+						ele.innerHTML = response;
+					    ele.style.visibility = 'visible';
+					    ele.style.display = 'block';
+	//				    ele.scrollIntoView(true);
+					}
+				}
+				return response;
+			}
+	
+	
+			function init()
+			{
+		 		var ld=document.getElementById("loading");
+				if(ld)
+				{
+					ld.style.display = 'none';
+				}
+			}
+			
+			function openmore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				 	var pos = findPos(id);
+				 	id.style.zIndex = 10;
+		//		 	id.style.left = pos[0]+'px';
+		//		  	id.style.top = pos[1]+'px';
+				  	id.style.height = '295px';
+				  	id.style.position = 'absolute';
+				  	id.style.backgroundColor = '#f7f4ec';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'none';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = 'none';
+				  	}
+				}
+			}
+		
+			function closemore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				  	id.style.height = '135px';
+				  	id.style.position = '';
+				  	id.style.backgroundColor = 'transparent';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'block';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = '';
+				  	}
+				}		 	
+			}
+		
+		<!-- This script and many more are available free online at -->
+		<!-- The JavaScript Source!! http://javascript.internet.com -->
+		
+		<!-- Begin
+		function right(e) {
+		var msg = "Use of this image is strictly prohibited unless express written permission is given to the user by South Carolina Legislative Services Agency.";
+		if (navigator.appName == 'Netscape' && e.which == 3) {
+		alert(msg);
+		return false;
+		stopEvent(e);
+		}
+		if (navigator.appName == 'Microsoft Internet Explorer' && event.button==2) {
+		alert(msg);
+		return false;
+			stopEvent(event);
+		}
+		else return true;
+		}
+		
+	function trap() 
+	{
+		if(document.images)
+		{
+			for(i=0;i<document.images.length;i++)
+			{
+				if(document.images[i].className == 'allowcontextmenu')
+				{
+					// this should have no scripting
+				}
+				else
+				{
+				 	document.images[i].onmousedown = right;
+					document.images[i].oncontextmenu = function(){ return false; };
+					//document.images[i].onmouseup = right;
+				}
+			}
+		}
+	}
+
+	function findfwtext(texttofind) 
+	{
+	 	var fwtextele = document.getElementById('fwtext');
+		if(fwtextele)
+		{
+			fwtextele.value = texttofind;
+		}
+	}	
+		// End -->
+		</script>
+
+		<!-- ADDED FOR V4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJY6FMNQKH"></script>
+
+
+<script type="text/javascript">
+
+//ADDED FOR V4
+//Google tag (gtag.js) 
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LJY6FMNQKH');
+
+ 
+ /* COMMENTING OUT UPGRADING TO V4 -A
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36207109-1']);
+  _gaq.push(['_setDomainName', 'scstatehouse.gov']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+ 
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+*/
+  
+      $(document).ready(function(){
+        // COMMENTING THIS OUT NO LONGER BEING ACTIVELY USED TO MONITOR FOR TRAFFIC TO SPECIFIC LINKS - A
+        /*
+          var anchors = $('div#contentsection a');
+
+          //console.log('anchors...'+anchors.length);
+          if(anchors.length > 0){
+            //console.log('setting up event handler...');
+            anchors.click(function(){
+              var a = $(this).attr('href');
+              if(_gaq && (a.substr(-3) == 'htm' || a.substr(-4) == 'html' || a.substr(-3) == 'doc' || a.substr(-4) == 'docx' || a.substr(-3) == 'pdf' || a.substr(-3) == 'xls' || a.substr(-4) == 'xlsx')) {
+                //console.log(a);
+                _gaq.push(['_trackPageview', $(this).attr('href')]);
+              }
+              
+              var aText = $(this).text().toLowerCase();
+              if (a.indexOf('getfile.php') > -1 && aText === 'word'){
+                    _gaq.push(['_trackEvent', 'Word Doc', 'Download', ('from page: ' + document.location + ' - href: ' + a)]);
+              }
+
+            });
+          }
+          */
+      });
+
+</script>
+	</head>
+	
+		
+	<body class="home"  onload="init(); trap();">
+	<noscript>Your browser does not support JavaScript!  This page will not render correctly.</noscript> 
+
+
+	
+	<div id="adobebox" style="position:absolute; width:400px; height:150px; border:2px solid #555555; background-color:#cccccc; display:none;"></div>
+	<div id="container" >	
+				<div id="header" class="nodisplay" style="text-align:center; height:100px;" >
+									<img id="headerimg" class="nodisplay" alt="South Carolina Legislature" title="South Carolina Legislature" src="/images/header8.png" />
+								
+							<!--	<div class="award"><span style="color:#831224; font-weight:bold; font-size:1.5em;">*</span> Recipient of<br>the Notable State Documents Award<br>by the<br>South Carolina<br>State Library.</div>-->
+				
+				
+			</div>
+			<div class="printdisplay"><img border="0" src="/images/titleprint.jpg" alt="South Carolina Legislature" title="South Carolina Legislature" alt="South Carolina Legislature" title="South Carolina State Legislature" /><br /><hr /><br /></div>
+	
+			<div id="pagebody" >
+	
+	
+<!--<div id="topmessage">
+<br style="display:block; margin-top:10px;">
+Searches and data queries will be unavailable beginning Friday, August 19, 2016, from 8:00 PM until Saturday, August 20th at 8:00 AM<br>due to scheduled maintenance.</div>-->
+				<!-- Prompt IE 8/7/6 users to upgrade to a newer browser. -->
+				<!--[if lte IE 8]>
+				<div class="oldframe">In order to improve your experience using this website, please <a href="http://browsehappy.com/">upgrade your browser</a>.</div>
+				<![endif]-->
+			
+			
+			
+			<div id="menu" class="nodisplay">
+				<ul class="nodisplay">
+				<li><a href="/index.php">Home</a></li>
+<li><a href="/senate.php">Senate</a></li>
+<li><a href="/house.php">House</a></li>
+<li><a href="/committeeinfo.php">Committee&nbsp;Postings&nbsp;and&nbsp;Reports</a></li>
+<li><a href="/council.php">Legislative Council</a></li>
+<li><a href="/citizens.php">Citizens&#39; Interest</a></li>
+<li><a href="/publications.php">Publications</a></li>
+		    	</ul>
+			</div>
+			<div id="search" class="nodisplay" style="height: 28px;"><div class="nodisplay" style="float:right; margin:6px 20px 0px 0;">
+							<!--<a style="color:#f7f4ec; height:15px;" href="#" onClick="rsswindow();"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+<!--				<a style="color:#f7f4ec; height:15px;" href="/splashpage/splashpage.html"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a> -->
+				<a style="color:#f7f4ec; height:15px;" href="/onlineservices/index.php"><img border="0" src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>
+			<!--	<a style="color:#f7f4ec; height:15px;" href="/maintenance_portal.php"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+						</div></div>
+			
+	
+					<div id="sidebar" class="nodisplay">
+	<div id="vidlinks" style="height: 50px;">
+						<!--<img src="/images/videobutton12d.png">-->
+											<ul id="vidsidemenu">
+	<li id="vidinnermenu" style="font-size:16px; margin: 0 0 5px 0;">Chamber Video</li>
+<li id="sbroadcast" style="float: left; width:50%;">
+<a id="liveS" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('S', false, false, '0')">Senate</a><br><a id="liveaudioS" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('S', false, false, '1');">(Audio Only)</a>
+</li>
+<li id="hbroadcast" style="float: left; width:50%;">
+<a id="liveH" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('H', false, false, '0')">House</a><br><a id="liveaudioH" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('H', false, false, '1');">(Audio Only)</a>
+</li>
+						</ul>
+					</div>
+					<div id="commvidlinks"><a href="/video/schedule.php">Video&nbsp;Schedule</a><a style="border-top:1px solid #fff; padding-top:12px;" href="/video/archives.php">Video Archives</a></div>
+										<div id="sidemenu">
+						<ul id="innermenu">
+		
+							<li><a href="/howdoi.php">How do I...</a></li>
+										
+							
+								<li class="nolink" onMouseOver="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='block'; document.sidesearchform.searchtext.focus();}" onMouseOut="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Quick Search</div>
+								<div id="sidesearch" class="sidesubmenu">
+									<form id="sidesearchform" name="sidesearchform" method="POST" action="/search.php">
+									<input type="hidden" name="search" value="side" />
+									<div class="topelement"><label for="searchtext"><span class="label">Search for:</span></label><input id="searchtext" name="searchtext" type="text"/><a id="searchlink2" href="javascript:void(0);" onClick="document.sidesearchform.submit();"><img id="searchicon" src="/images/searchbutton.png" alt="Search" title="Search"/></a></div>
+			<!--						<div><input type="checkbox" id="searchchoice_all" name="searchchoice_all" value="all" /><label for="searchchoice_all">All</label></div>-->
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_fullsite" name="category" value="FULLSITE" /><label for="searchchoice_fullsite">&nbsp;Full Site Search</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_billnumber" name="category" value="BILL" /><label for="searchchoice_billnumber">&nbsp;Bill Number</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_legislation" name="category" value="LEGISLATION" CHECKED /><label for="searchchoice_legislation">&nbsp;Legislation</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_budget" name="category" value="BUDGET" /><label for="searchchoice_budget">&nbsp;Budget</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeoflaws" name="category" value="CODEOFLAWS" /><label for="searchchoice_codeoflaws">&nbsp;Code of Laws</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeofregs" name="category" value="CODEOFREGS" /><label for="searchchoice_codeofregs">&nbsp;Code of Regulations</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_constitution" name="category" value="CONSTITUTION" /><label for="searchchoice_constitution">&nbsp;Constitution</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_housejournals" name="category" value="HOUSEJOURNALS" /><label for="searchchoice_housejournals">&nbsp;House Journals</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_senatejournals" name="category" value="SENATEJOURNALS" /><label for="searchchoice_senatejournals">&nbsp;Senate Journals</label></div>
+									<div class="bottomelement" style="padding-left:20px;"><input type="radio" id="searchchoice_billsummary" name="category" value="SUMMARY" /><label for="searchchoice_billsummary">&nbsp;LSA Bill Summary</label></div>
+								</form>
+									
+								</div>
+							</li>
+							<li><a href="/legislatorssearch.php">Find Your Legislators</a></li>
+							<li id="contactLegislatorLink"><a href="/email.php?chamber=B">Contact Your Legislator</a></li>
+									
+							<li><a href="/legislation.php">Legislation</a></li>
+							<li><a href="/listtracking/main.php" target="LTS">Track Legislation</a></li>
+							<li><a href="/multicriteria2/search.php" target="MCS">Multi-Criteria Search</a></li>
+									<!--<li><a href="#" onclick="multisearchwindow('INTROBOTH');">Multi-Criteria Search</a></li>-->
+									<!--<li><a href="#" onclick="multisearchwindow('INTROMANUAL');">Multi-Criteria Search</a></li>-->
+									<li><a href="/research.php">Research</a></li>
+	
+								<li class="nolink" onMouseOver="var ele=document.getElementById('law'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('law'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">South Carolina Law</div> 
+								<div id="law" class="sidesubmenu">
+									<div class="sidediv topelement"><a href="/newlaws.php">Ratifications &amp; Acts</a></div>
+									<div class="sidediv"><a href="/code/statmast.php">Code of Laws</a></div>
+									<div class="sidediv"><a href="/coderegs/statmast.php">Code of Regulations</a></div>
+									<div class="sidediv"><a href="/scconstitution/scconst.php">Constitution</a></div>
+									<div class="sidediv bottomelement"><a href="/state_register.php">State Register</a></div>
+								</div>
+							</li>
+										<li class="nolink" onMouseOver="var ele=document.getElementById('manual'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('manual'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Legislative Manual</div>
+								<div id="manual" class="sidesubmenu">
+								
+<!--									<div class="sidediv topelement"><a href="https://web.sc.gov/LSAShoppingcart/Default.aspx" target="_blank">Purchase Manual</a></div>-->
+								
+<!--									<div class="sidediv topelement"><a href="https://secure.scstatehouse.gov/cgi-bin/webstore.exe" target="_blank">Purchase Manual</a></div>-->
+									<div class="sidediv topelement"><a href="javascript:#" onClick="alert('We are sorry, but we are unable to process online transactions at this time.\n\nIf you would still like to make a purchase, please contact us directly at (803) 212-4490 during normal business hours (8:30am - 5:00pm EST).');">Purchase Manual</a></div>
+									<div class="sidediv bottomelement"><a href="/man26/manual26.php">View Manual Online</a></div>
+								</div>
+							</li>
+							<li><a href="http://www.studentconnection.scstatehouse.gov">Student Connection</a></li>
+							<li><a href="/visit.php">Visiting the State House</a></li>
+							<li><a href="/archives.php">Archives</a></li>
+							<li><a href="http://www.sc.gov/Agency-Listing" target="_blank">State Agency Websites</a></li>
+							<!--<li><a href="/stateagencysites.php">State Agency Websites</a></li>-->
+							<li><a href="/citizensinterestpage/media.php">Media Links</a></li>
+				 		</ul>
+			    	</div>
+	
+					<div id="side_ad">
+						<A href="http://www.sc.gov/" target="_blank"><img border=0 src="/images/scgov3.jpg" alt="SC.gov" title="SC.gov" /></a>
+													<A href="http://www.statelibrary.sc.gov" target="_blank"><img border=0 src="/images/scsl_logo_rgb_web.png" alt="StateLibrary.SC.gov" title="StateLibrary.SC.gov" /></a>
+											</div>	    	
+			</div>
+
+	
+	<script type="text/javascript"> 
+		if ( '' === '1'){
+		 	
+			var link = document.getElementById('contactLegislatorLink');
+			if (link != 'undefined' && link != null){
+				link.style.display = 'none'; 
+				link.style.visibility = 'hidden';
+			}
+		}
+		if ( '' === '1'){
+		 	setTimeout(function(){
+				var link2 = document.getElementById('sendMsgLink');
+				if (link2 != 'undefined' && link2 != null){
+					link2.style.display = 'none'; 
+					link2.style.visibility = 'hidden';
+				};
+			}, 20);
+			
+		}  
+	</script>
+<div class="mainwidepanel">
+
+				<div id="breadcrumbs">
+						South Carolina Law &gt; <a href="/code/statmast.php">Code of Laws</a> &gt; <a href="/code/title17.php">Title 17</a>
+				</div>
+
+					<h2 class="barheader">South Carolina Code of Laws<br />
+									Unannotated<br />
+					</h2>
+
+				<div id="contentsection">
+<div style="font-weight: bold; text-align: center;">Title 17 - CRIMINAL PROCEDURES</div>
+<br />
+
+<div style="text-align: center;">CHAPTER 15</div>
+<div style="text-align: center;">Bail and Recognizances</div><br />
+<span style="font-weight: bold;"> SECTION 17-15-10.</span> Person charged with noncapital offense may be released on his own recognizance; conditions of release; bond hearing for burglary charges.<br /><br />
+	(A) A person charged with a noncapital offense triable in either the magistrates, county or circuit court, shall, at his appearance before any of such courts, be ordered released pending trial on his own recognizance without surety in an amount specified by the court, unless the court determines in its discretion that such a release will not reasonably assure the appearance of the person as required, or unreasonable danger to the community or an individual will result. If such a determination is made by the court, it may impose any one or more of the following conditions of release:<br /><br />
+	(1) require the execution of an appearance bond in a specified amount with good and sufficient surety or sureties approved by the court;<br /><br />
+	(2) place the person in the custody of a designated person or organization agreeing to supervise him;<br /><br />
+	(3) place restrictions on the travel, association, or place of abode of the person during the period of release;<br /><br />
+	(4) impose any other conditions deemed reasonably necessary to assure appearance as required, including a condition that the person return to custody after specified hours.<br /><br />
+	(B) A person charged with the offense of burglary in the first degree pursuant to Section 16-11-311 may have his bond hearing for that charge in summary court unless the solicitor objects.<br /><br />
+HISTORY: 1962 Code SECTION 17-300; 1969 (56) 383; 2012 Act No. 286, SECTION 3, eff June 29, 2012; 2015 Act No. 58 (S.3), Pt III, SECTION 12, eff June 4, 2015.<br /><br />
+Effect of Amendment<br /><br />
+	2015 Act No. 58, SECTION 12, in (A), inserted &quot;or an individual&quot;, and in (B), substituted &quot;A person&quot; for &quot;Any person&quot;.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-15.</span> Deposit of cash percentage in lieu of bond; assignment of deposit; restitution to victim.<br /><br />
+	(A) Except as provided in subsection (D), in lieu of requiring actual posting of bond as provided in Section 17-15-10(A), the court setting bond may permit the defendant to deposit in cash with the clerk of court an amount not to exceed ten percent of the amount of bond set, which amount, when the defendant fulfills the condition of the bond, must be returned to the defendant by the clerk except as provided in subsection (C).<br /><br />
+	(B) The cash deposit provided for in subsection (A) must be assignable at any time after it is posted with the clerk of court by written assignment executed by the defendant and delivered to the clerk. After assignment and after the defendant fulfills the condition of his bond, the clerk shall return the cash deposit to the assignee.<br /><br />
+	(C) In the event the cash deposit is not assigned but the defendant is required by the court to make restitution to the victim of his crime, the deposit may be used for the purpose of restitution.<br /><br />
+	(D) The provisions of this section do not apply if the defendant is charged with a violent offense, as defined by Section 16-1-60, or any felony offense involving a firearm while out on bond or other pretrial release. If the court, pursuant to the limitations of Section 17-15-30, finds that such defendant may be released pending trial, bond must be set at the full United States currency cash bond to the exclusion of all other forms of bond whether the bond is posted by the defendant or with a bondsman. After the defendant fulfills the conditions of the bond, the clerk shall return the cash bond amount paid to the defendant. However, in the event the defendant is required by the court to make restitution to the victim of his crime, the cash bond may be used for the purpose of such restitution.<br /><br />
+	Any currency cash bond must be conditioned on the person charged personally appearing before the court specified to answer the charge or indictment and to do and receive what is enjoined by the court, and not to leave the State, and be of good behavior toward all the citizens of the State, or especially toward a person or persons specified by the court. Additionally, the court may impose any other conditions allowed under Chapter 15, Title 17, and any other provision of law.<br /><br />
+HISTORY: 1980 Act No. 393, SECTION 2A; 2023 Act No. 83 (H.3532), SECTION 2, eff June 20, 2023.<br /><br />
+Effect of Amendment<br /><br />
+	2023 Act No. 83, SECTION 2, in (A), substituted &quot;Except as provided in subsection (D), in lieu of requiring actual posting of bond as provided in Section 17-15-10(A)&quot; for &quot;In lieu of requiring actual posting of bond as provided in subsection (A) of Section 17-15-10&quot; and &quot;must be returned&quot; for &quot;shall be returned&quot;; in (B), in the first sentence, substituted &quot;must be assignable&quot; for &quot;shall be assignable&quot; and in the second sentence, substituted &quot;assignee&quot; for &quot;assignee thereof&quot;; added (D); and made nonsubstantive changes.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-20.</span> Conditions of appearance recognizance or appearance bond; discharge, validity, relief of surety.<br /><br />
+	(A) An appearance recognizance or appearance bond must be conditioned on the person charged personally appearing before the court specified to answer the charge or indictment and to do and receive what is enjoined by the court, and not to leave the State, and be of good behavior toward all the citizens of the State, or especially toward a person or persons specified by the court.<br /><br />
+	(B) Unless a bench warrant is issued, an appearance recognizance or an appearance bond is discharged upon adjudication, a finding of guilt, a deferred disposition, or as otherwise provided by law. An appearance bond is valid for a period of three years from the date the bond is executed for a charge triable in circuit court and eighteen months from the date the bond is executed for a charge triable in magistrates or municipal court. In order for the surety to be relieved of liability on the appearance bond when the time period has run, the surety must provide sixty days written notice to the solicitor, when appropriate, and the respective clerk of court, chief magistrate, or municipal court judge with jurisdiction over the offense of the surety&#39;s intent to assert that the person is no longer subject to a valid appearance bond. If the appropriate court determines the person has substantially complied with his court obligations and the solicitor does not object within the required sixty days by demanding a hearing, the court shall order the appearance bond converted to a personal recognizance bond and the surety relieved of liability.<br /><br />
+HISTORY: 1962 Code SECTION 17-300.1; 1969 (56) 383; 2012 Act No. 115, SECTION 1, eff February 1, 2012.<br /><br />
+Editor&#39;s Note<br /><br />
+	2012 Act No. 286, SECTIONS 4, 5, provide as follows:<br /><br />
+	&quot;SECTION 4. The provisions of Section 1 of Act 115 of 2012 which amended Section 17-15-20 of the 1976 Code and allow sureties to be relieved of an appearance bond under certain designated circumstances are retroactive and apply to all existing and future appearance bonds.<br /><br />
+	&quot;SECTION 5. Except as provided in SECTION 4, the repeal or amendment by this act of any law, whether temporary or permanent or civil or criminal, does not affect pending actions, rights, duties, or liabilities founded thereon, or alter, discharge, release or extinguish any penalty, forfeiture, or liability incurred under the repealed or amended law, unless the repealed or amended provision shall so expressly provide. After the effective date of this act, all laws repealed or amended by this act must be taken and treated as remaining in full force and effect for the purpose of sustaining any pending or vested right, civil action, special proceeding, criminal prosecution, or appeal existing as of the effective date of this act, and for the enforcement of rights, duties, penalties, forfeitures, and liabilities as they stood under the repealed or amended laws.&quot;<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-30.</span> Matters to be considered in determining conditions of release; contempt.<br /><br />
+	(A) In determining conditions of release that will reasonably assure appearance, or if release would constitute an unreasonable danger to the community or an individual, a court may, on the basis of the following information, consider the nature and circumstances of an offense charged and the charged person&#39;s:<br /><br />
+	(1) family ties;<br /><br />
+	(2) employment;<br /><br />
+	(3) financial resources;<br /><br />
+	(4) character and mental condition;<br /><br />
+	(5) length of residence in the community;<br /><br />
+	(6) record of convictions; and<br /><br />
+	(7) record of flight to avoid prosecution or failure to appear at other court proceedings.<br /><br />
+	(B) A court must consider:<br /><br />
+	(1) a person&#39;s criminal record;<br /><br />
+	(2) any current charges pending against a person and any prior charges against a person at the time release is requested;<br /><br />
+	(3) all incident reports generated as a result of an offense charged;<br /><br />
+	(4) whether a person is an alien unlawfully present in the United States, and poses a substantial flight risk due to this status;<br /><br />
+	(5) whether the charged person appears in the state gang database maintained at the State Law Enforcement Division; and<br /><br />
+	(6) whether a person is currently out on bond for another offense.<br /><br />
+	(C)(1) Prior to or at the time of a hearing, the arresting law enforcement agency must provide the court with the following information:<br /><br />
+	(a) a person&#39;s criminal record;<br /><br />
+	(b) any charges pending against a person at the time release is requested;<br /><br />
+	(c) all incident reports generated as a result of the offense charged; and<br /><br />
+	(d) any other information that will assist the court in determining conditions of release to include, but not be limited to, notification of any existing bonds for another offense.<br /><br />
+	(2) The arresting law enforcement agency shall inform the court if any of the information is not available at the time of the hearing and the reason the information is not available. Failure on the part of the law enforcement agency to provide the court with the information does not constitute grounds for the postponement or delay of the person&#39;s hearing. Notwithstanding the provisions of this item, when a person is charged with a violation of Chapter 25, Title 16, the bond hearing may not proceed without the person&#39;s criminal record and incident report or the presence of the arresting officer. The bond hearing for a violation of Chapter 25, Title 16 must occur within twenty-four hours after the arrest.<br /><br />
+	(D) A court hearing these matters has contempt powers to enforce the provisions of this section.<br /><br />
+HISTORY: 1962 Code SECTION 17-300.2; 1969 (56) 383; 2005 Act No. 106, SECTION 8, eff January 1, 2006; 2008 Act No. 280, SECTION 16, eff June 4, 2008; 2010 Act No. 273, SECTION 9, eff June 2, 2010; 2012 Act No. 286, SECTION 1, eff June 29, 2012; 2014 Act No. 144 (S.19), SECTION 2, eff April 7, 2014; 2015 Act No. 58 (S.3), Pt III, SECTION 10, eff June 4, 2015; 2023 Act No. 83 (H.3532), SECTION 3, eff June 20, 2023.<br /><br />
+Effect of Amendment<br /><br />
+	2014 Act No. 144, SECTION 2, substituted &quot;person&quot; for &quot;accused&quot; throughout; in subsection (A), substituted &quot;the following information&quot; for &quot;available information&quot;; in subsection (B), deleted &quot;, if available&quot; following &quot;shall consider&quot;; added subsection (B)(5), relating to the state gang database; in subsection (C)(1), deleted &quot;, if available&quot; following &quot;following information&quot;; and made other nonsubstantive changes.<br /><br />
+	2015 Act No. 58, SECTION 10, in (A), inserted &quot;or an individual&quot;; and in (C)(2), added the last two sentences relating to Chapter 25, Title 16.<br /><br />
+	2023 Act No. 83, SECTION 3, in (B), substituted &quot;must consider&quot; for &quot;shall consider&quot;, in (2), substituted &quot;current charges pending against a person and any prior charges against a person&quot; for &quot;charges pending against a person&quot;, and added (6); in (C)(1), substituted &quot;must provide&quot; for &quot;shall provide&quot;, and in (d), added &quot;to include, but not be limited to, notification of any existing bonds for another offense&quot;; and made nonsubstantive changes.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-35.</span> Definitions; electronic monitoring as condition of bond.<br /><br />
+	(A) As used in this section:<br /><br />
+	(1) &quot;Approved active electronic monitoring device&quot; and &quot;monitoring device&quot; means a body worn or non-body worn device or mobile phone application approved by the South Carolina Law Enforcement Division which records or transmits oral or wire communications or an auditory sound, visual images, or information regarding the person&#39;s location and activities, that must verify live biometric, photographic, or videographic identification information, and that timely records and reports the person&#39;s location.<br /><br />
+	(2) &quot;Approved electronic monitoring agency&quot; means a law enforcement agency, licensed bondsman or bonding company, or electronic monitoring company that is certified by the South Carolina Law Enforcement Division to supply, maintain, and monitor electronic monitoring devices to participants ordered by the court to wear electronic monitoring devices under the provisions of this section.<br /><br />
+	(3) &quot;SLED&quot; means the South Carolina Law Enforcement Division.<br /><br />
+	(4) &quot;Monitoring agency&quot; or &quot;agency&quot; means an approved electronic monitoring agency.<br /><br />
+	(5) &quot;Participant&quot; means a person, ordered by the court or as a condition of bond to wear or possess an approved electronic monitoring device.<br /><br />
+	(B)(1) The court, in its discretion, may, for a person charged with a violation of criminal offense under the jurisdiction of the court of general sessions or any offense where the court finds sufficient evidence of a concern for the victim&#39;s safety or the safety of any member of the public, order that the person be placed on surveillance via an approved active electronic monitoring device which must be worn or possessed at all times for the duration specified by the court, either in lieu of setting or requiring the posting of bond or as an additional condition of the release on bond.<br /><br />
+	(2) For pretrial bond consideration, the judge is not limited to nonviolent offenses, but must take into consideration all concerns relating to the setting of an appropriate bond under Section 22-5-510, Sections 17-15-10, et seq., and Section 16-25-120. The device must be capable of recording the person&#39;s location at all times. If the court orders a device, before the participant is allowed to leave custody, the detention facility where the defendant is located, in coordination with the approved monitoring agency, must ensure the participant is fitted with an approved active electronic monitoring device, and that all appropriate bond paperwork, including the agreement with the bonding and electronic monitoring companies acknowledging the terms and restrictions of the bond, is completed.<br /><br />
+	(3) The participant who is ordered on supervision must:<br /><br />
+	(a) wear an approved device at all times to verify his compliance with the conditions of his detention or if the device is not body worn, must maintain possession of his approved device on or near his person at all times for the duration of the detention and must verify his identity and location at any time required by the order of the court and must maintain the monitoring device on or near his person at all times for the duration of the detention, subject to the order of the court and reasonable orders of an agent or employee of the monitoring agency in order to effectuate the conditions of the monitoring order. For purposes of this subsection, &quot;near&quot; means within hearing distance of the device&#39;s notification or call alerts but not farther than thirty feet. In areas of the State where cellular coverage requires the use of an alternate device, the approved electronic monitoring company may use an alternate approved device with approval of the court;<br /><br />
+	(b) charge and maintain the monitoring device in working order and must report any damage, destruction, or noticeable malfunction of the active monitoring device, whether the incident was accidental or intentional, and including the device having a dead battery, to at least one of the following parties within two hours of the incident: the monitoring agency, the appropriate law enforcement agency with jurisdiction over the underlying offense, or any other party specified in the order;<br /><br />
+	(c) abide by other terms and conditions set forth by the approved electronic monitoring agency with regard to the monitoring device and electronic monitoring program;<br /><br />
+	(d) turn himself in to custody of the appropriate detention facility upon the order of the monitoring agency, or the appropriate law enforcement agency with jurisdiction over the offense; and<br /><br />
+	(e) pay for the cost of the approved active electronic monitoring device and the operation of the monitoring device for the duration of the time the person is required to be electronically monitored, subject to an order of indigency by the court. The summary court or circuit court has jurisdiction upon motion of the defendant to consider exempting a person from the payment of a part or all of the cost during a part or all of the duration of the time the person is required to be electronically monitored, if it is determined that exceptional circumstances exist such that these payments cause a severe hardship to the person who is deemed indigent. If the indigency hearing is held at a time and date separate from the initial bond hearing, the defense must notify the prosecutor, the bondsman, and the monitoring agency of the date, time, and location of the hearing subject to the notice requirements of the court.<br /><br />
+	The payment of the cost must be a condition of supervision of the person and a delinquency of two weeks or more in making payments may operate as a violation of a term or condition of the electronic monitoring and bond. No person shall be denied the privilege of electronic monitoring under this statute based on inability to pay upon a finding by the court that the defendant meets the qualifications for indigency. The State shall allocate funds to be housed in an indigency fund under the control of the Department of Public Safety to be distributed to the monitoring companies as appropriate to cover the cost of indigent participants.<br /><br />
+	(C) A participant ordered by the court to be monitored under the provisions of this section, who fails to comply with any of the provisions of this section or who fails to comply with any additional condition of the court order including location restrictions, may have his bond revoked or may be punished for contempt at the discretion of the court.<br /><br />
+	(D) It is unlawful for any person, knowingly and without authority, to remove, tamper with, damage, destroy, shield the signal from, or otherwise circumvent an active electronic monitoring device, or to aid or assist a person ordered by the court to be electronically monitored under the provisions of this section to remove, tamper with, damage, destroy, shield the signal from, or otherwise circumvent a monitoring device and, upon conviction, the person must be punished under the provisions of Section 24-13-425. This subsection does not apply to a person or agent of the electronic monitoring agency or bonding company, or a member of law enforcement acting under the authority of and with compliance to the court order.<br /><br />
+	(E)(1) Upon violation of any of these requirements and a showing by affidavit and supporting records by the electronic monitoring company on a domestic violence bond or general sessions bond or where emergency circumstances exist on any other bond, the approved electronic monitoring company may approach a summary court judge for a bench warrant if one is not already provided for in the bond paperwork or other court order. Law enforcement shall immediately attempt to locate and incarcerate the defendant upon notice of the bench warrant. After incarceration, the prosecutor must be notified and the defendant must be brought before a summary court judge within three calendar days or before a circuit court judge within three business days, whichever has jurisdiction of the underlying charge, to determine whether the bond is to be reconsidered or bond conditions amended. The prosecution must provide the defense with any relevant evidence regarding the alleged violation within a reasonable time before the hearing and the hearing may be continued for cause.<br /><br />
+	(2) Nothing in this section shall reduce any duty of the bondsman to pick up the offending bailee and immediately incarcerate him for violation of bond conditions. Failure to do so may lead to bond estreatment for failure to enforce bond conditions by the bondsman and possible other administrative or criminal action.<br /><br />
+	(3) Nothing in this section may be used to hold the electronic monitoring agency civilly liable for any criminal acts of the defendant committed while being monitored.<br /><br />
+HISTORY: 2023 Act No. 83 (H.3532), SECTION 4, eff December 20, 2023.<br /><br />
+Editor&#39;s Note<br /><br />
+	2023 Act No. 83, SECTION 19, provides as follows:<br /><br />
+	&quot;SECTION 19. This act takes effect upon approval by the Governor; however, the provisions of Sections 17-15-35 and 17-15-37 take effect six months after approval by the Governor, and the provisions of Section 38-53-10(12) take effect July 1, 2024.&quot;<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-37.</span> Regulations regarding electronic monitoring by SLED; electronic monitoring agency requirements.<br /><br />
+	(A) The South Carolina Law Enforcement Division may promulgate regulations to effectuate the intent of Section 17-15-35 and this section, develop standards for the use and approval of active electronic monitoring devices, and shall certify electronic monitoring agencies, including law enforcement agencies, electronic monitoring companies, and bondsmen and bonding companies. SLED must keep a public list of those companies that are certified.<br /><br />
+	(B) The approved electronic monitoring agency must:<br /><br />
+	(1) provide active electronic monitoring devices or mobile phone applications approved by SLED that must provide verifiable identity and location information at regular and random intervals throughout the day, and that timely record and report the person&#39;s presence near or within a prohibited area or the person&#39;s departure from a specified geographic location;<br /><br />
+	(2) allow any law enforcement agency, including the prosecutor&#39;s office, to have access to real-time monitoring, if possible, and any reports requested by law enforcement or the prosecution must be provided within twenty-four hours of the request;<br /><br />
+	(3) notify the solicitor having jurisdiction over the participant and the bondsman within forty-eight hours when he becomes aware or should have become aware that the participant has violated any provision of the court&#39;s order for electronic monitoring, or the participant has been surrendered to the custody of law enforcement; and<br /><br />
+	(4) immediately notify local law enforcement and make reasonable attempts to immediately notify the victim if the participant violates any exclusion zones related to the victim.<br /><br />
+	(C) Failure of the electronic monitoring agency to maintain compliance with regulations established by SLED, the order of the court, or any applicable statute shall be reported to SLED by the solicitor for administrative action. SLED may impose a fine, or suspend or revoke the certification for any approved agency who demonstrates a failure to maintain the standards and reporting requirements set forth under the regulations and appropriate statutes.<br /><br />
+HISTORY: 2023 Act No. 83 (H.3532), SECTION 5, eff December 20, 2023.<br /><br />
+Editor&#39;s Note<br /><br />
+	2023 Act No. 83, SECTION 19, provides as follows:<br /><br />
+	&quot;SECTION 19. This act takes effect upon approval by the Governor; however, the provisions of Sections 17-15-35 and 17-15-37 take effect six months after approval by the Governor, and the provisions of Section 38-53-10(12) take effect July 1, 2024.&quot;<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-40.</span> Order of court shall state conditions imposed and other matters; acknowledgment by person released.<br /><br />
+	On releasing the person on any of the foregoing conditions, the court shall issue a brief order containing a statement of the conditions imposed, informing the person of the penalties for violation of the conditions of release and stating that a warrant for the person&#39;s arrest will be issued immediately upon any such violation. The person released shall acknowledge his understanding of the terms and conditions of his release and the penalties and forfeitures applicable in the event of violation thereof on a form to be prescribed by the Attorney General.<br /><br />
+HISTORY: 1962 Code SECTION 17-300.3; 1969 (56) 383.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-50.</span> Amendment of order.<br /><br />
+	The court with jurisdiction of the offense, at any time after notice and hearing, may amend the order to impose additional or different conditions of release.<br /><br />
+HISTORY: 1962 Code SECTION 17-300.4; 1969 (56) 383; 2015 Act No. 58 (S.3), Pt III, SECTION 14, eff June 4, 2015.<br /><br />
+Effect of Amendment<br /><br />
+	2015 Act No. 58, SECTION 14, substituted &quot;with jurisdiction of the offense&quot; for &quot;may&quot;, and inserted &quot;may&quot; before &quot;amend the order&quot;.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-55.</span> Reconsideration by circuit court of bond set by summary court; subsequent violent offenders.<br /><br />
+	(A)(1) The circuit courts, at their discretion, may review and reconsider bond for general sessions offenses set by summary court judges. Also, the circuit courts may consider motions regarding reconsideration of bond for general sessions offenses set by summary court judges upon motions filed with the clerks of court. Hearings on these motions must be scheduled. The rules of evidence do not apply to bond hearings.<br /><br />
+	(2) After a circuit court judge has heard and ruled upon a defendant&#39;s motion to reconsider a bond set by a summary court judge, further defense motions to reconsider may be heard by the circuit court only upon the defendant&#39;s prima facie showing of a material change in circumstances which relate to the factors provided in Section 17-15-30, and which have arisen since the prior motion to reconsider. In addition, the circuit court may hear further defense motions to reconsider based on the length of time the defendant has been held for trial after six months. The chief judge shall schedule a hearing or if such showing is not set forth in the written motion, deny the motion for failure to make a prima facie showing of a material change in circumstances. A defendant shall be advised of his right to a speedy trial. Notwithstanding another provision of law, nothing prevents a solicitor or the defendant from filing a motion for a speedy trial or requesting the court to set a date certain for trial based on the facts and circumstances in the case. If either party fails to comply with the terms of an order granting a speedy trial, the court may reconsider the terms of the defendant&#39;s bond, may consider sanctions and may grant other just and proper relief as the court determines.<br /><br />
+	(B)(1) Motions by the State to revoke or modify a bond must be made in writing, state with particularity the grounds for revocation or modification, and set forth the relief or order sought. The motions must be filed with the clerks of court, and a copy must be served on the chief judge, defense counsel of record, and bond surety, if any. The court must have a hearing and rule on the state&#39;s motion within thirty days of the filing.<br /><br />
+	(2) After a circuit court judge has heard and ruled upon the state&#39;s motion to reconsider a bond set by a summary court judge, further state motions to reconsider may be heard by the circuit court only upon the state&#39;s prima facie showing of a material change in circumstances which have arisen since the prior motion to reconsider. The chief judge shall schedule a hearing or if such showing is not set forth in the written motion, deny the motion for failure to make a prima facie showing of a material change in circumstances.<br /><br />
+	(3) If the state&#39;s motion to revoke or modify bond includes a prima facie showing of imminent danger to the community, imminent danger to the defendant, or flight by the defendant, the chief judge or presiding judge shall conduct or order an emergency bond hearing to be conducted by the circuit court judge within forty-eight hours of receiving service of the state&#39;s motion or as soon as practical. The chief judge shall order the solicitor to notify the defense counsel of record and bond surety of the time and date of the hearing, and the solicitor shall provide proof that reasonable efforts were made to affect the notice. Upon notice by the State, the defense counsel of record and bond surety shall make reasonable efforts to notify the defendant of the emergency hearing. The court may proceed with the hearing despite the absence of the defendant or bond surety. The court may not proceed with the hearing if the defense counsel of record is not present. If an emergency bond hearing is held without the presence of the defendant and bond is revoked, the judge having heard the matter may conduct the hearing on the defendant&#39;s motion to reconsider the revocation. Defense motions to reconsider revocation must be filed with the clerk of court and served on the solicitor and bond surety.<br /><br />
+	(C) If a person commits a violent offense, as defined in Section 16-1-60, or any felony offense involving a firearm, which was committed when the person was already out on bond for a previous violent offense or any felony offense involving a firearm and the subsequent offense did not arise out of the same series of events as the previous offense, then:<br /><br />
+	(1) the bond for the original offense must be revoked by operation of law and a hearing for the subsequent violent offense or any felony offense involving a firearm must be held in the circuit court within thirty days;<br /><br />
+	(2) during the bond hearing for the subsequent violent offense or felony offense involving a firearm, the court must issue findings of fact and conclusions of law addressing the revocation of bond for the original offense, whether a new bond is issued for the previous offense as well as if bond is appropriate for the subsequent violent offense or felony offense involving a firearm;<br /><br />
+	(3) if the court finds that certain conditions of release on bond will ensure that the person is unlikely to flee or pose a danger to any other person or the community and the person will abide by the terms of release on bond, the judge shall consider bond in accordance with the provisions of this chapter and set or amend bond accordingly. Notwithstanding the provisions of Section 17-15-15, any bond set for a violent offense or felony offense involving a firearm committed when the person was already out on bond for a previous violent offense or felony offense involving a firearm must be deposited to the court in cash or its equivalent in full, notwithstanding if posted by the person, his representative, or by a bond surety;<br /><br />
+	(4) if the court finds no such conditions will ensure that the person is unlikely to flee or not pose a danger to the community, the court shall not set a bond for the instant offense and must revoke all previously set bonds; and<br /><br />
+	(5) if a person commits a violent offense, as defined in Section 16-1-60, or felony offense involving a firearm which was committed when the person was already out on bond for a previous violent offense or felony offense involving a firearm, and the subsequent offense did not arise out of the same series of events as the previous offense, then the arresting law enforcement agency must transmit notice of the second arrest, implicating this subsection, to the solicitor of the circuit in which the offense was committed and the administrative chief judge of the circuit in which the offense was committed. The prosecuting agency must notify any victims of the initial or subsequent offenses pursuant to Chapter 3, Title 16 of any bond hearings.<br /><br />
+	(D) If a person commits a violent offense, as defined in Section 16-1-60, or felony offense involving a firearm which was committed when the person was already out on bond for two or more previous separate violent offenses or felony offenses involving a firearm for which separate bonds were set, and the subsequent offense did not arise out of the same series of events as the two or more previous separate offenses, and the court determines that under the totality of the circumstances the previous bonds should not be revoked and another bond should be set, any bond set by the court must be deposited in full and may not be posted by any bond surety company.<br /><br />
+	(E) Notwithstanding subsection (C)(2), if the original bond was set in another judicial circuit, that prosecution agency shall be notified of the revocation and any finding the court makes pursuant to this subsection. The prosecution agency having jurisdiction over the subsequent charge must make the notification required in this subsection within forty-eight hours of the conclusion of the preceding. The presiding judge has jurisdiction to make a finding on record to deny a new bond on the original charge or may order a new bond hearing to be scheduled on the original charge in the judicial circuit where the charges are pending. This hearing must be scheduled within thirty days by the prosecution agency having jurisdiction over the original charges.<br /><br />
+	(F) For the purpose of bond revocation only, a summary court has concurrent jurisdiction with the circuit court for thirty days from the date bond is first set on a charge by the summary court or the date of the grand jury indictment whichever occurs first to determine if bond should be revoked.<br /><br />
+HISTORY: 2012 Act No. 286, SECTION 2, eff June 29, 2012; 2014 Act No. 144 (S.19), SECTION 1, eff April 7, 2014; 2015 Act No. 58 (S.3), Pt III, SECTION 15, eff June 4, 2015; 2023 Act No. 83 (H.3532), SECTION 6, eff June 20, 2023.<br /><br />
+Effect of Amendment<br /><br />
+	2014 Act No. 144, SECTION 1, added subsections (C) and (D), relating to violent offenders.<br /><br />
+	2015 Act No. 58, SECTION 15, added (E), related to concurrent jurisdiction for bond revocation.<br /><br />
+	2023 Act No. 83, SECTION 6, rewrote the section.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-60.</span> Rules of evidence are inapplicable.<br /><br />
+	Information of probative value offered in connection with any judicial determination or order pursuant to SECTIONS 17-15-10 through 17-15-60 need not conform to the rules of evidence as in a court of law.<br /><br />
+HISTORY: 1962 Code SECTION 17-300.5; 1969 (56) 383.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-90.</span> Wilful failure to appear; penalties.<br /><br />
+	A person released pursuant to the provisions of Chapter 15, Title 17 who wilfully fails to appear before the court as required must:<br /><br />
+	(1) if he was released in connection with a charge for a felony or while awaiting sentencing after conviction, be fined not more than five thousand dollars or imprisoned for not more than five years, or both; or<br /><br />
+	(2) if he was released in connection with a charge for a misdemeanor for which the maximum possible sentence was at least one year, be fined not more than one thousand dollars or imprisoned for not more than one year, or both.<br /><br />
+HISTORY: 2008 Act No. 346, SECTION 2, eff June 25, 2008.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-100.</span> Power to punish for contempt not affected.<br /><br />
+	Nothing contained in Sections 17-15-10 through 17-15-60 shall affect the power of any court of the State to punish for contempt.<br /><br />
+HISTORY: 1962 Code SECTION 17-300.9; 1969 (56) 383.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-140.</span> Discharge of prosecutor or witness on own recognizance in cases not capital; costs.<br /><br />
+	When any prosecutor or witness in criminal cases less than capital is committed to jail for inability to give surety on his recognizance to prosecute or testify, the clerk of court of general sessions in which the case is pending may, in his discretion, discharge such prosecutor or witness on his own recognizance. Clerk&#39;s costs, not to exceed one dollar, may be charged for each such recognizance taken.<br /><br />
+HISTORY: 1962 Code SECTION 17-306; 1952 Code SECTIONS 17-306 to 17-308; 1942 Code SECTIONS 916, 917, 919; 1932 Code SECTIONS 916, 917, 919; Cr. P. &#39;22 SECTIONS 9, 10, 12; Cr. C. &#39;12 SECTIONS 9, 10, 12; Cr. C. &#39;02 SECTIONS 7, 8, 10; G. S. 2625, 2626, 2628; R. S. 6, 7, 9; 1857 (12) 636; 1961 (52) 39.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-160.</span> Recognizances shall be in name of State; signing.<br /><br />
+	In all recognizances by any person for keeping the peace, good behavior or appearing as a party, surety or witness at any court of criminal jurisdiction within the State the sum of money in which any such person shall be bound shall be made payable to the State and every such recognizance shall be good and effectual in law provided it be signed by every party thereto in the presence of a judge, clerk of a court of common pleas, magistrate or notary public who shall sign the recognizance as a witness.<br /><br />
+HISTORY: 1962 Code SECTION 17-310; 1952 Code SECTION 17-310; 1942 Code SECTION 1040; 1932 Code SECTION 1040; Cr. P. &#39;22 SECTION 129; Cr. C. &#39;12 SECTION 111; Cr. C. &#39;02 SECTION 84; G. S. 2659; R. S. 84; 1787 (5) 13; 1883 (18) 450.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-170.</span> Proceedings in case of forfeiture of recognizances.<br /><br />
+	Whenever the recognizance is forfeited by noncompliance with its condition, the Attorney General, solicitor, magistrate, or other person acting for him immediately shall issue a notice to summon every party bound in the forfeited recognizance to appear at the next ensuing court to show cause, if he has any, why judgment should not be confirmed against him. If any person so bound fails to appear or, upon appearing, does not give a reason for not performing the condition of the recognizance as the court considers sufficient, then the judgment on the recognizance is confirmed. A magistrate may confirm judgments of not more than the maximum fine allowable under Section 22-3-550 in addition to assessments.<br /><br />
+HISTORY: 1962 Code SECTION 17-311; 1952 Code SECTION 17-311; 1942 Code SECTION 1041; 1932 Code SECTION 1041; Cr. P. &#39;22 SECTION 130; Cr. C. &#39;12 SECTION 112; Cr. C. &#39;02 SECTION 85; G. S. 2660; R. S. 85; 1787 (5) 13; 1988 Act No. 508; 1998 Act No. 376, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-180.</span> Court may remit forfeiture in certain cases.<br /><br />
+	If any person shall forfeit a recognizance from ignorance or unavoidable impediment and not from wilful default, the court of sessions may, on affidavit stating the excuse or cause thereof, remit the whole or any part of the forfeiture as may be deemed reasonable.<br /><br />
+HISTORY: 1962 Code SECTION 17-312; 1952 Code SECTION 17-312; 1942 Code SECTION 1044; 1932 Code SECTION 1044; Cr. P. &#39;22 SECTION 133; Cr. C. &#39;12 SECTION 115; Cr. C. &#39;02 SECTION 88; G. S. 2663; R. S. 89; 1787 (5) 13.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-190.</span> Money may be deposited with officer of court in lieu of bond, recognizance, or undertaking.<br /><br />
+	Whenever in any criminal proceeding in any of the courts of this State a bond, recognizance or undertaking is authorized or required to be given, the party authorized or required to give it may deposit in lieu thereof a sum of lawful money of the United States of America equal in amount to the bond, recognizance or undertaking so required or authorized to be given. Such sum of money, when deposited as in this section provided, shall be held and taken as equivalent in all respects to the giving of such bond, recognizance or undertaking.<br /><br />
+HISTORY: 1962 Code SECTION 17-313; 1952 Code SECTION 17-313; 1942 Code SECTION 347; 1932 Code SECTION 347; Civ. P. &#39;22 SECTION 303; Civ. C. &#39;12 SECTION 3936; Civ. C. &#39;02 SECTION 2833; 1897 (22) 424.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-200.</span> Persons to whom a deposit in lieu of bond, recognizance, or undertaking must be paid.<br /><br />
+	Whenever such bond, recognizance or undertaking is required or authorized to be given in any criminal proceeding:<br /><br />
+	(1) In the courts of general sessions of this State the sum of money deposited in lieu thereof shall be paid to the clerk of the court of general sessions in which the proceeding is pending;<br /><br />
+	(2) In the Supreme Court or the court of appeals the sum of money shall be paid to the clerk of the Supreme Court or the court of appeals; and<br /><br />
+	(3) In a magistrates court or other court of inferior jurisdiction such sum of money shall be paid to the clerk of the court of common pleas and general sessions for the county in which such magistrates court or other court of inferior jurisdiction shall be.<br /><br />
+HISTORY: 1962 Code SECTION 17-314; 1952 Code SECTION 17-314; 1942 Code SECTION 348; 1932 Code SECTION 348; Civ. P. &#39;22 SECTION 304; Civ. C. &#39;12 SECTION 3937; Civ. C. &#39;02 SECTION 2834; 1897 (22) 424; 1999 Act No. 55, SECTION 23.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-210.</span> Receipt for deposit given in lieu of bond, recognizance, or undertaking.<br /><br />
+	Whenever any sum of money is so deposited in lieu of a bond, recognizance or undertaking the party depositing it shall be entitled to a receipt therefor, stating that the sum of money has been deposited and is held for the same purpose as would have been specified and conditioned in the bond, recognizance or undertaking in lieu whereof the sum of money is so deposited.<br /><br />
+HISTORY: 1962 Code SECTION 17-315; 1952 Code SECTION 17-315; 1942 Code SECTION 349; 1932 Code SECTION 349; Civ. P. &#39;22 SECTION 305; Civ. C. &#39;12 SECTION 3938; Civ. C. &#39;02 SECTION 2835; 1897 (22) 424.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-220.</span> Return of deposit given in lieu of bond, recognizance, or undertaking.<br /><br />
+	The person so depositing a sum of money in lieu of a bond, recognizance or undertaking shall be entitled upon application to the court wherein such deposit has been made, and subject to the order under which such fund is held, to receive back such sum of money whenever the purposes for which it has been received and deposited have been accomplished and the person would have been entitled to be released without payment or further payment of any sum from all liability on the required bond, recognizance or undertaking had it been given in lieu of such deposit of money.<br /><br />
+HISTORY: 1962 Code SECTION 17-316; 1952 Code SECTION 17-316; 1942 Code SECTION 349; 1932 Code SECTION 349; Civ. P. &#39;22 SECTION 305; Civ. C. &#39;12 SECTION 3938; Civ. C. &#39;02 SECTION 2835; 1897 (22) 424.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-230.</span> Requirement that surety company file undertaking with respect to guaranteed arrest bond certificates issued by automobile clubs; acceptance, forfeiture, and enforcement of certificates.<br /><br />
+	(A)(1) A domestic or foreign surety company qualified to transact business in this State may become a surety by filing with the Department of Insurance an undertaking to become surety of not more than one thousand five hundred dollars with respect to each guaranteed arrest bond certificate issued by an automobile club or association.<br /><br />
+	(2) The undertaking must be in a form to be prescribed by the department and must state the:<br /><br />
+	(a) name and address of the automobile club or automobile association with respect to which the surety company undertakes to guarantee the arrest bond certificates;<br /><br />
+	(b) unqualified obligation of the surety company to pay the fine or forfeiture of not more than one thousand five hundred dollars of a person who, after posting a guaranteed arrest bond certificate which the surety has undertaken to guarantee, fails to make the appearance for which the guaranteed arrest bond certificate was posted.<br /><br />
+	(B)(1) A guaranteed arrest bond certificate guaranteed by a surety company pursuant to this section must be accepted in lieu of cash bail or other bond of not more than one thousand five hundred dollars as a bail bond, when signed by the person whose signature appears on the certificate, to guarantee the appearance of that person in a court in this State at the time set by the court when the person is arrested for the violation of a motor vehicle law of the State or a motor vehicle ordinance of a municipality of this State. The guaranteed arrest bond certificate does not apply to and must not be accepted in lieu of cash bail or bond when the person has been arrested for an offense of driving under the influence of intoxicating liquors or drugs or for a felony.<br /><br />
+	(2) A guaranteed arrest bond certificate that is posted as a bail bond in a court is subject to the forfeiture and enforcement provisions with respect to bail bonds in criminal cases provided in this chapter.<br /><br />
+HISTORY: 1986 Act No. 413; 1992 Act No. 311, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-240.</span> Interest on bail bond money.<br /><br />
+	Court officers authorized by law to receive bail bond money may deposit that money in interest-bearing accounts in a financial institution in which deposits are insured by an agency of the United States government. The interest earned on the accounts is considered public funds and must be distributed as follows:<br /><br />
+	(1) Interest on bail bond money received for offenses triable in municipal court or held for transmittal to the county clerk of court must be credited to the general fund of the municipality.<br /><br />
+	(2) Interest on bail bond money received for offenses triable in magistrates court or held for transmittal to the county clerk of court must be credited to the general fund of the county.<br /><br />
+	(3) Interest on bail bond money received by the county clerk of court for offenses triable in family and circuit court must be credited to the general fund of the county.<br /><br />
+	South Carolina Court Administration shall prescribe appropriate procedures for handling and accounting for bail bond interest.<br /><br />
+HISTORY: 1990 Act No. 549, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-260.</span> Disposition of funds collected pursuant to chapter.<br /><br />
+	The funds collected pursuant to this chapter must be remitted in the following manner: twenty-five percent to the general fund of the State, twenty-five percent to the solicitor&#39;s office in the county in which the forfeiture is ordered, and fifty percent to the county general fund of the county in which the forfeiture is ordered.<br /><br />
+	However, if the case in which forfeiture is ordered is originated by a municipality, the funds collected pursuant to this chapter must be remitted in the following manner: twenty-five percent to the general fund of the State, twenty-five percent to the solicitor&#39;s office in the county in which the forfeiture is ordered, and twenty-five percent to the county general fund of the county in which the forfeiture is ordered and twenty-five percent to the municipality.<br /><br />
+	All funds to be deposited in the state general fund shall be transmitted to the State Treasurer.<br /><br />
+HISTORY: 1993 Act No. 164, Part II, SECTION 80A; 1996 Act No. 292, SECTION 4.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-270.</span> Additional offense for persons violating bond; violent crimes.<br /><br />
+	(A) It is unlawful for a person to commit a violent crime while under a bond order or other pretrial release order for a previous violent crime. If the person is convicted of the subsequent violent crime, and is thereafter convicted of a violation of this section, the person is guilty of a felony and must be imprisoned not more than five years. The sentence may be imposed concurrently or consecutively to the punishment for the principal offense.<br /><br />
+	(B) For purposes of this section:<br /><br />
+	(1) a violent crime is defined as those contained in Section 16-1-60;<br /><br />
+	(2) a subsequent violent crime is one that occurs at a later date and time than the offense that resulted in the imposition of the bond order or other pretrial release order.<br /><br />
+HISTORY: 2023 Act No. 83 (H.3532), SECTION 1, eff June 20, 2023.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-15-500.</span> Pretrial Reform Commission created.<br /><br />
+	(A) There is established the South Carolina Pretrial Reform Commission composed of fifteen members as follows:<br /><br />
+	(1) three members to be appointed by the Chairman of the Senate Judiciary Committee;<br /><br />
+	(2) three members to be appointed by the Chairman of the House of Representatives Judiciary Committee;<br /><br />
+	(3) three members of the judiciary to be appointed by the Chief Justice of the South Carolina Supreme Court;<br /><br />
+	(4) three members of the executive branch to be appointed by the Governor; and<br /><br />
+	(5) three members of the directly impacted community, including one crime survivor, one person that has been through the pretrial system, and a community member at large to be jointly appointed by the Chairmen of both the House and Senate Judiciary Committees.<br /><br />
+	(B) The members of the commission may begin meeting when at least a quorum has been appointed and shall elect one member to serve as chairman. A quorum shall consist of at least eight members.<br /><br />
+	(C) The primary duty of the South Carolina Pretrial Reform Commission is to prepare a comprehensive report that reviews and recommends:<br /><br />
+	(1) appropriate changes to the current pretrial system for all criminal offenses;<br /><br />
+	(2) maintaining, amending, or abolishing the current system for determining pretrial release or detention; and<br /><br />
+	(3) guidelines for legislation to improve the processing of cases in the court of general sessions, community safety, and court appearance outcomes.<br /><br />
+	(D) The purpose of the report is to enable the General Assembly to consider the Pretrial Reform Commission&#39;s findings and determine whether state laws should be amended.<br /><br />
+	(E) In making its recommendations, the commission must consider current case processing and correctional resources including, but not limited to, the capacities of local jails, community-based service providers, and state courts.<br /><br />
+	(F) The Pretrial Reform Commission must deliver its report and recommendations to the Chairman of the Senate Judiciary Committee and the Chairman of the House Judiciary Committee no later than July 1, 2024, and the commission shall terminate when the report is made.<br /><br />
+	(G) The Supreme Court shall provide appropriate staff for the commission. The Chairman of the Senate Judiciary Committee may provide additional staff for the Senate members, and the Chairman of the House Judiciary Committee may provide additional staff for the House members.<br /><br />
+	(H) Members of the Pretrial Reform Commission may receive per diem, subsistence, and mileage as provided by law for members of state boards, committees, and commissions.<br /><br />
+HISTORY: 2023 Act No. 83 (H.3532), SECTION 10, eff June 20, 2023.<br /><br />
+
+</div>
+
+
+					</div>		 <!-- mainwidepanel -->
+					
+				</div>		 <!-- pagebody -->
+				
+				<div id="footer" class="nodisplay" style="height: 30px;" onContextMenu="return false;">
+			<div id="footerdiv" style="margin:0;">
+				South Carolina Legislative Services Agency * 223 Blatt Building * 1105 Pendleton Street * Columbia, SC 29201<!-- * 803-212-4420--><br>
+				
+								<a href="/disclaimer.php">Disclaimer</a> * <a href="/policies.php">Policies</a> * <a href="/credits.php">Photo Credits</a> * <a href="/contact.php">Contact Us</a>
+							</div>
+		</div>
+		<div id="printfooter" class="printdisplay serifNormal" align=center style="font-size: 8pt;">
+			<br>
+			<br>
+			<hr>
+			Legislative Services Agency
+			<br>
+			h t t p : / / w w w . s c s t a t e h o u s e . g o v
+		</div>
+	
+		</div>	<!-- container or main in mobile page-->
+</body>
+</html>
+

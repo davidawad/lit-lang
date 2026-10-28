@@ -1,0 +1,819 @@
+﻿
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+	<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	    <meta name="robots" content="noimageindex">
+	    <meta charset="iso-8859-1">
+	    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+	    	    <title>Code of Laws - Title 17 - Chapter 22- - CRIMINAL PROCEDURES</title>
+	    <link rel="SHORTCUT ICON" href="/images/stateflagsmall.ico" />
+		<link rel="icon" href="/images/stateflagsmall.ico" type="image/ico" />
+		<link rel="SHORTCUT ICON" href="/images/South-Carolina-Flag2.ico" />
+
+		<link type="text/css" rel="stylesheet" href="/css/main.css" media="all" />
+				
+		<!--[if lte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/ie7main.css" media="all" />
+		<![endif]-->
+		<!--[if gte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/iemain.css" media="all" />
+		<![endif]-->
+		<link type="text/css" rel="stylesheet" href="/css/print.css" media="print" />
+		<link type="text/css" rel="stylesheet" href="/css/supplement.css" media="screen" />
+		<!--<link type="text/css" rel="stylesheet" href="/css/zipsearch.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/vote.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/contact.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/navwrap.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/linkbar.css" media="screen" />-->
+	
+		<!--<script type="text/javascript" src="/js/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>-->
+		<script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+				<script type="text/javascript" src="/js/main_linux.js"></script>
+		
+
+		
+
+
+
+		<!--<script type="text/javascript" src="/js/common.js"></script>
+		<script type="text/javascript" src="/js/utils.js"></script>
+		<script type="text/javascript" src="/js/date.js"></script>
+		<script type="text/javascript" src="/js/lightbox.js"></script>
+		<script type="text/javascript" src="/js/legislation.js"></script>
+		<script type="text/javascript" src="/js/logon_lits.js"></script>
+		<script type="text/javascript" src="/js/message.js"></script>
+		<script type="text/javascript" src="/js/comm_meeting.js"></script>-->
+		<script type="text/vbscript" src="/vbs/comm_meeting.vbs"></script>
+		<!--<script type="text/javascript" src="/js/regs.js"></script>-->
+				
+	   	<script type="text/javascript">
+	    //document.onclick = function () { document.getElementById('transbox').style.display= 'none' };
+	    	var xmlhttp=false;
+			xmlhttp = create_xml_object();
+	
+			function getElement(ele)
+			{
+				var theobj = false;
+				if(typeof ele == 'string')
+					theobj = (document.getElementById)?document.getElementById(ele):document.all[ele];
+				else
+					theobj = ele;
+			
+				return theobj;
+			}
+		
+			function checkreader(friendlyalert)
+			{
+			 	/*friendlyalert=friendlyalert||false;
+			 	
+			 	var browser_info = perform_acrobat_detection();
+				if (!browser_info.acrobat)
+				{
+				 	loadadobebox('adobebox', '/adobe.php');
+					return false;
+				}
+				else if (friendlyalert)
+				{
+			 		alert(friendlyalert);
+				}*/
+				return true;
+			}
+				
+			function loadadobebox(boxname, url)
+			{
+				var response = false;
+	
+				doRequest(xmlhttp, "GET", url, false, null, null);
+				if (xmlhttp.status == 200)
+				{
+		         	response = xmlhttp.responseText;
+				}
+	
+				if(response)
+				{
+			 		var ele = document.getElementById(boxname);
+				 	if (ele)
+				 	{
+				 		ele.style.visibility = 'hidden';
+		 				ele.style.display = 'block';
+	
+		 				positionElement(ele, 'center', 'center', true);
+	
+						ele.innerHTML = response;
+					    ele.style.visibility = 'visible';
+					    ele.style.display = 'block';
+	//				    ele.scrollIntoView(true);
+					}
+				}
+				return response;
+			}
+	
+	
+			function init()
+			{
+		 		var ld=document.getElementById("loading");
+				if(ld)
+				{
+					ld.style.display = 'none';
+				}
+			}
+			
+			function openmore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				 	var pos = findPos(id);
+				 	id.style.zIndex = 10;
+		//		 	id.style.left = pos[0]+'px';
+		//		  	id.style.top = pos[1]+'px';
+				  	id.style.height = '295px';
+				  	id.style.position = 'absolute';
+				  	id.style.backgroundColor = '#f7f4ec';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'none';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = 'none';
+				  	}
+				}
+			}
+		
+			function closemore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				  	id.style.height = '135px';
+				  	id.style.position = '';
+				  	id.style.backgroundColor = 'transparent';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'block';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = '';
+				  	}
+				}		 	
+			}
+		
+		<!-- This script and many more are available free online at -->
+		<!-- The JavaScript Source!! http://javascript.internet.com -->
+		
+		<!-- Begin
+		function right(e) {
+		var msg = "Use of this image is strictly prohibited unless express written permission is given to the user by South Carolina Legislative Services Agency.";
+		if (navigator.appName == 'Netscape' && e.which == 3) {
+		alert(msg);
+		return false;
+		stopEvent(e);
+		}
+		if (navigator.appName == 'Microsoft Internet Explorer' && event.button==2) {
+		alert(msg);
+		return false;
+			stopEvent(event);
+		}
+		else return true;
+		}
+		
+	function trap() 
+	{
+		if(document.images)
+		{
+			for(i=0;i<document.images.length;i++)
+			{
+				if(document.images[i].className == 'allowcontextmenu')
+				{
+					// this should have no scripting
+				}
+				else
+				{
+				 	document.images[i].onmousedown = right;
+					document.images[i].oncontextmenu = function(){ return false; };
+					//document.images[i].onmouseup = right;
+				}
+			}
+		}
+	}
+
+	function findfwtext(texttofind) 
+	{
+	 	var fwtextele = document.getElementById('fwtext');
+		if(fwtextele)
+		{
+			fwtextele.value = texttofind;
+		}
+	}	
+		// End -->
+		</script>
+
+		<!-- ADDED FOR V4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJY6FMNQKH"></script>
+
+
+<script type="text/javascript">
+
+//ADDED FOR V4
+//Google tag (gtag.js) 
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LJY6FMNQKH');
+
+ 
+ /* COMMENTING OUT UPGRADING TO V4 -A
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36207109-1']);
+  _gaq.push(['_setDomainName', 'scstatehouse.gov']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+ 
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+*/
+  
+      $(document).ready(function(){
+        // COMMENTING THIS OUT NO LONGER BEING ACTIVELY USED TO MONITOR FOR TRAFFIC TO SPECIFIC LINKS - A
+        /*
+          var anchors = $('div#contentsection a');
+
+          //console.log('anchors...'+anchors.length);
+          if(anchors.length > 0){
+            //console.log('setting up event handler...');
+            anchors.click(function(){
+              var a = $(this).attr('href');
+              if(_gaq && (a.substr(-3) == 'htm' || a.substr(-4) == 'html' || a.substr(-3) == 'doc' || a.substr(-4) == 'docx' || a.substr(-3) == 'pdf' || a.substr(-3) == 'xls' || a.substr(-4) == 'xlsx')) {
+                //console.log(a);
+                _gaq.push(['_trackPageview', $(this).attr('href')]);
+              }
+              
+              var aText = $(this).text().toLowerCase();
+              if (a.indexOf('getfile.php') > -1 && aText === 'word'){
+                    _gaq.push(['_trackEvent', 'Word Doc', 'Download', ('from page: ' + document.location + ' - href: ' + a)]);
+              }
+
+            });
+          }
+          */
+      });
+
+</script>
+	</head>
+	
+		
+	<body class="home"  onload="init(); trap();">
+	<noscript>Your browser does not support JavaScript!  This page will not render correctly.</noscript> 
+
+
+	
+	<div id="adobebox" style="position:absolute; width:400px; height:150px; border:2px solid #555555; background-color:#cccccc; display:none;"></div>
+	<div id="container" >	
+				<div id="header" class="nodisplay" style="text-align:center; height:100px;" >
+									<img id="headerimg" class="nodisplay" alt="South Carolina Legislature" title="South Carolina Legislature" src="/images/header8.png" />
+								
+							<!--	<div class="award"><span style="color:#831224; font-weight:bold; font-size:1.5em;">*</span> Recipient of<br>the Notable State Documents Award<br>by the<br>South Carolina<br>State Library.</div>-->
+				
+				
+			</div>
+			<div class="printdisplay"><img border="0" src="/images/titleprint.jpg" alt="South Carolina Legislature" title="South Carolina Legislature" alt="South Carolina Legislature" title="South Carolina State Legislature" /><br /><hr /><br /></div>
+	
+			<div id="pagebody" >
+	
+	
+<!--<div id="topmessage">
+<br style="display:block; margin-top:10px;">
+Searches and data queries will be unavailable beginning Friday, August 19, 2016, from 8:00 PM until Saturday, August 20th at 8:00 AM<br>due to scheduled maintenance.</div>-->
+				<!-- Prompt IE 8/7/6 users to upgrade to a newer browser. -->
+				<!--[if lte IE 8]>
+				<div class="oldframe">In order to improve your experience using this website, please <a href="http://browsehappy.com/">upgrade your browser</a>.</div>
+				<![endif]-->
+			
+			
+			
+			<div id="menu" class="nodisplay">
+				<ul class="nodisplay">
+				<li><a href="/index.php">Home</a></li>
+<li><a href="/senate.php">Senate</a></li>
+<li><a href="/house.php">House</a></li>
+<li><a href="/committeeinfo.php">Committee&nbsp;Postings&nbsp;and&nbsp;Reports</a></li>
+<li><a href="/council.php">Legislative Council</a></li>
+<li><a href="/citizens.php">Citizens&#39; Interest</a></li>
+<li><a href="/publications.php">Publications</a></li>
+		    	</ul>
+			</div>
+			<div id="search" class="nodisplay" style="height: 28px;"><div class="nodisplay" style="float:right; margin:6px 20px 0px 0;">
+							<!--<a style="color:#f7f4ec; height:15px;" href="#" onClick="rsswindow();"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+<!--				<a style="color:#f7f4ec; height:15px;" href="/splashpage/splashpage.html"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a> -->
+				<a style="color:#f7f4ec; height:15px;" href="/onlineservices/index.php"><img border="0" src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>
+			<!--	<a style="color:#f7f4ec; height:15px;" href="/maintenance_portal.php"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+						</div></div>
+			
+	
+					<div id="sidebar" class="nodisplay">
+	<div id="vidlinks" style="height: 50px;">
+						<!--<img src="/images/videobutton12d.png">-->
+											<ul id="vidsidemenu">
+	<li id="vidinnermenu" style="font-size:16px; margin: 0 0 5px 0;">Chamber Video</li>
+<li id="sbroadcast" style="float: left; width:50%;">
+<a id="liveS" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('S', false, false, '0')">Senate</a><br><a id="liveaudioS" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('S', false, false, '1');">(Audio Only)</a>
+</li>
+<li id="hbroadcast" style="float: left; width:50%;">
+<a id="liveH" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('H', false, false, '0')">House</a><br><a id="liveaudioH" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('H', false, false, '1');">(Audio Only)</a>
+</li>
+						</ul>
+					</div>
+					<div id="commvidlinks"><a href="/video/schedule.php">Video&nbsp;Schedule</a><a style="border-top:1px solid #fff; padding-top:12px;" href="/video/archives.php">Video Archives</a></div>
+										<div id="sidemenu">
+						<ul id="innermenu">
+		
+							<li><a href="/howdoi.php">How do I...</a></li>
+										
+							
+								<li class="nolink" onMouseOver="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='block'; document.sidesearchform.searchtext.focus();}" onMouseOut="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Quick Search</div>
+								<div id="sidesearch" class="sidesubmenu">
+									<form id="sidesearchform" name="sidesearchform" method="POST" action="/search.php">
+									<input type="hidden" name="search" value="side" />
+									<div class="topelement"><label for="searchtext"><span class="label">Search for:</span></label><input id="searchtext" name="searchtext" type="text"/><a id="searchlink2" href="javascript:void(0);" onClick="document.sidesearchform.submit();"><img id="searchicon" src="/images/searchbutton.png" alt="Search" title="Search"/></a></div>
+			<!--						<div><input type="checkbox" id="searchchoice_all" name="searchchoice_all" value="all" /><label for="searchchoice_all">All</label></div>-->
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_fullsite" name="category" value="FULLSITE" /><label for="searchchoice_fullsite">&nbsp;Full Site Search</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_billnumber" name="category" value="BILL" /><label for="searchchoice_billnumber">&nbsp;Bill Number</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_legislation" name="category" value="LEGISLATION" CHECKED /><label for="searchchoice_legislation">&nbsp;Legislation</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_budget" name="category" value="BUDGET" /><label for="searchchoice_budget">&nbsp;Budget</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeoflaws" name="category" value="CODEOFLAWS" /><label for="searchchoice_codeoflaws">&nbsp;Code of Laws</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeofregs" name="category" value="CODEOFREGS" /><label for="searchchoice_codeofregs">&nbsp;Code of Regulations</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_constitution" name="category" value="CONSTITUTION" /><label for="searchchoice_constitution">&nbsp;Constitution</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_housejournals" name="category" value="HOUSEJOURNALS" /><label for="searchchoice_housejournals">&nbsp;House Journals</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_senatejournals" name="category" value="SENATEJOURNALS" /><label for="searchchoice_senatejournals">&nbsp;Senate Journals</label></div>
+									<div class="bottomelement" style="padding-left:20px;"><input type="radio" id="searchchoice_billsummary" name="category" value="SUMMARY" /><label for="searchchoice_billsummary">&nbsp;LSA Bill Summary</label></div>
+								</form>
+									
+								</div>
+							</li>
+							<li><a href="/legislatorssearch.php">Find Your Legislators</a></li>
+							<li id="contactLegislatorLink"><a href="/email.php?chamber=B">Contact Your Legislator</a></li>
+									
+							<li><a href="/legislation.php">Legislation</a></li>
+							<li><a href="/listtracking/main.php" target="LTS">Track Legislation</a></li>
+							<li><a href="/multicriteria2/search.php" target="MCS">Multi-Criteria Search</a></li>
+									<!--<li><a href="#" onclick="multisearchwindow('INTROBOTH');">Multi-Criteria Search</a></li>-->
+									<!--<li><a href="#" onclick="multisearchwindow('INTROMANUAL');">Multi-Criteria Search</a></li>-->
+									<li><a href="/research.php">Research</a></li>
+	
+								<li class="nolink" onMouseOver="var ele=document.getElementById('law'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('law'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">South Carolina Law</div> 
+								<div id="law" class="sidesubmenu">
+									<div class="sidediv topelement"><a href="/newlaws.php">Ratifications &amp; Acts</a></div>
+									<div class="sidediv"><a href="/code/statmast.php">Code of Laws</a></div>
+									<div class="sidediv"><a href="/coderegs/statmast.php">Code of Regulations</a></div>
+									<div class="sidediv"><a href="/scconstitution/scconst.php">Constitution</a></div>
+									<div class="sidediv bottomelement"><a href="/state_register.php">State Register</a></div>
+								</div>
+							</li>
+										<li class="nolink" onMouseOver="var ele=document.getElementById('manual'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('manual'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Legislative Manual</div>
+								<div id="manual" class="sidesubmenu">
+								
+<!--									<div class="sidediv topelement"><a href="https://web.sc.gov/LSAShoppingcart/Default.aspx" target="_blank">Purchase Manual</a></div>-->
+								
+<!--									<div class="sidediv topelement"><a href="https://secure.scstatehouse.gov/cgi-bin/webstore.exe" target="_blank">Purchase Manual</a></div>-->
+									<div class="sidediv topelement"><a href="javascript:#" onClick="alert('We are sorry, but we are unable to process online transactions at this time.\n\nIf you would still like to make a purchase, please contact us directly at (803) 212-4490 during normal business hours (8:30am - 5:00pm EST).');">Purchase Manual</a></div>
+									<div class="sidediv bottomelement"><a href="/man26/manual26.php">View Manual Online</a></div>
+								</div>
+							</li>
+							<li><a href="http://www.studentconnection.scstatehouse.gov">Student Connection</a></li>
+							<li><a href="/visit.php">Visiting the State House</a></li>
+							<li><a href="/archives.php">Archives</a></li>
+							<li><a href="http://www.sc.gov/Agency-Listing" target="_blank">State Agency Websites</a></li>
+							<!--<li><a href="/stateagencysites.php">State Agency Websites</a></li>-->
+							<li><a href="/citizensinterestpage/media.php">Media Links</a></li>
+				 		</ul>
+			    	</div>
+	
+					<div id="side_ad">
+						<A href="http://www.sc.gov/" target="_blank"><img border=0 src="/images/scgov3.jpg" alt="SC.gov" title="SC.gov" /></a>
+													<A href="http://www.statelibrary.sc.gov" target="_blank"><img border=0 src="/images/scsl_logo_rgb_web.png" alt="StateLibrary.SC.gov" title="StateLibrary.SC.gov" /></a>
+											</div>	    	
+			</div>
+
+	
+	<script type="text/javascript"> 
+		if ( '' === '1'){
+		 	
+			var link = document.getElementById('contactLegislatorLink');
+			if (link != 'undefined' && link != null){
+				link.style.display = 'none'; 
+				link.style.visibility = 'hidden';
+			}
+		}
+		if ( '' === '1'){
+		 	setTimeout(function(){
+				var link2 = document.getElementById('sendMsgLink');
+				if (link2 != 'undefined' && link2 != null){
+					link2.style.display = 'none'; 
+					link2.style.visibility = 'hidden';
+				};
+			}, 20);
+			
+		}  
+	</script>
+<div class="mainwidepanel">
+
+				<div id="breadcrumbs">
+						South Carolina Law &gt; <a href="/code/statmast.php">Code of Laws</a> &gt; <a href="/code/title17.php">Title 17</a>
+				</div>
+
+					<h2 class="barheader">South Carolina Code of Laws<br />
+									Unannotated<br />
+					</h2>
+
+				<div id="contentsection">
+<div style="font-weight: bold; text-align: center;">Title 17 - CRIMINAL PROCEDURES</div>
+<br />
+
+<div style="text-align: center;">CHAPTER 22</div>
+<div style="text-align: center;">Intervention Programs</div><br />
+<div style="text-align: center;">ARTICLE 1</div>
+<div style="text-align: center;">Pretrial Intervention</div><br />
+<span style="font-weight: bold;"> SECTION 17-22-10.</span> Short title.<br /><br />
+	This article may be cited as the &quot;Pretrial Intervention Act.&quot;<br /><br />
+HISTORY: 1980 Act No. 360, SECTION 2.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-20.</span> Definitions.<br /><br />
+	When used in this chapter:<br /><br />
+	(1) The term &quot;prosecutorial discretion&quot; shall mean the power of the circuit solicitor to consider all circumstances of criminal proceedings and to determine whether any legal action is to be taken and, if so taken, of what kind and degree and to what conclusion.<br /><br />
+	(2) The term &quot;noncriminal disposition&quot; shall mean the dismissal of a criminal charge without prejudice to the State to reinstate criminal proceedings on motion of the solicitor.<br /><br />
+HISTORY: 1980 Act No. 360, SECTION 3.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-30.</span> Circuit solicitors to establish pretrial intervention programs; oversight of administrative procedures.<br /><br />
+	(A) Each circuit solicitor shall have the prosecutorial discretion as defined herein and shall as a matter of such prosecutorial discretion establish a pretrial intervention program in the respective circuits.<br /><br />
+	(B) The circuit solicitors are specifically endowed with and shall retain all discretionary powers under the common law.<br /><br />
+	(C) A pretrial intervention program shall be under the direct supervision and control of the circuit solicitor; however, he may contract for services with any agency desired.<br /><br />
+	(D) The South Carolina Commission on Prosecution Coordination shall oversee administrative procedures for the Circuit Solicitors&#39; Pretrial Intervention Programs.<br /><br />
+HISTORY: 1980 Act No. 360, SECTION 4; 1992 Act No. 453, SECTION 1; 1992 Act No. 499, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-40.</span> Pretrial intervention coordinator; staff; funding.<br /><br />
+	There is established the office of Pretrial Intervention Coordinator whose responsibility is to assist the solicitor in each judicial circuit in establishing and maintaining a pretrial intervention program. The office of Pretrial Intervention Coordinator must be within the South Carolina Commission on Prosecution Coordination. The coordinator and such staff as is necessary to assist in the implementation of the provisions of this article must be employed by the South Carolina Commission on Prosecution Coordination. The office of the coordinator must be funded by an appropriation to the Commission on Prosecution Coordination in the state general appropriation act.<br /><br />
+HISTORY: 1980 Act No. 360, SECTION 5; 1982 Act No. 421, SECTION 7; 1992 Act No. 453, SECTION 2; 1992 Act No. 499, SECTION 2.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-50.</span> Persons not to be considered for intervention.<br /><br />
+	(A) A person must not be considered for intervention if the person is charged with:<br /><br />
+	(1) blackmail;<br /><br />
+	(2) driving under the influence or driving with an unlawful alcohol concentration;<br /><br />
+	(3) a traffic-related offense which is punishable only by fine or loss of points;<br /><br />
+	(4) a fish, game, wildlife, or commercial fishery-related offense which is punishable by a loss of eighteen points as provided in Section 50-9-1120;<br /><br />
+	(5) a crime of violence as defined in Section 16-1-60; or<br /><br />
+	(6) an offense contained in Chapter 25 of Title 16 if the offender has been convicted previously of a violation of that chapter or a similar offense in another jurisdiction.<br /><br />
+	(B) However, this section does not apply if the solicitor determines the elements of the crime do not fit the charge.<br /><br />
+	(C) A person may participate in a pretrial intervention program pursuant to the provisions of this article, or any other provision of law related to the eligibility of pretrial intervention participation, more than once when twenty years have passed from the date of successful completion of a previous pretrial intervention program.<br /><br />
+HISTORY: 1980 Act No. 360, SECTION 6; 1982 Act No. 421, SECTION 1; 1985 Act No. 106, SECTION 1; 1992 Act No. 453, SECTION 3; 1992 Act No. 499, SECTION 3; 2003 Act No. 92, SECTION 4, eff January 1, 2004; 2008 Act No. 201, SECTION 17, eff at 12:00 p.m. on February 10, 2009; 2026 Act No. 216 (H.4720), SECTION 1, eff May 19, 2026.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	In 2014, at the direction of the Code Commissioner, in subsection (A)(2)(d), the reference to Section 50-9-1020 was changed to Section 50-9-1120, to correct a typographical error.<br /><br />
+Effect of Amendment<br /><br />
+	2026 Act No. 216, SECTION 1, rewrote (A); and added (C).<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-55.</span> Additional conditions for admission to pretrial intervention of person charged with fish, game, wildlife, or commercial fishery-related offense.<br /><br />
+	As a condition of admission to the pretrial intervention program of a person charged with a fish, game, wildlife, or commercial fishery-related offense which does not disqualify him for intervention, this person shall pay an additional administrative charge equal to the maximum monetary fine, not to exceed five hundred dollars, which could be imposed for the offense. The administrative charge must be deposited in the game and fish fund of the county where the offense was committed. Also, if any property was seized and confiscated at the time of the arrest for the offense, as a condition of admission to the pretrial intervention program, the offender must agree to the retention and sale of that property as provided by law by the law enforcement agency making the seizure. The proceeds from the sale also must be deposited in the game and fish fund of the county wherein the offense was committed.<br /><br />
+HISTORY: 1992 Act No. 499, SECTION 4.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-60.</span> Standards of eligibility for intervention program.<br /><br />
+	Intervention is appropriate only when:<br /><br />
+	(1) there is substantial likelihood that justice will be served if the offender is placed in an intervention program;<br /><br />
+	(2) it is determined that the needs of the offender and the State can better be met outside the traditional criminal justice process;<br /><br />
+	(3) it is apparent that the offender poses no threat to the community;<br /><br />
+	(4) it appears that the offender is unlikely to be involved in further criminal activity;<br /><br />
+	(5) the offender, in those cases where it is required, is likely to respond quickly to rehabilitative treatment;<br /><br />
+	(6) the offender has no significant history of prior delinquency or criminal activity; and<br /><br />
+	(7) at least twenty years have passed from the date of successful completion of a previous pretrial intervention program by the offender, if applicable.<br /><br />
+HISTORY: 1980 Act No. 360, SECTION 7; 1992 Act No. 453, SECTION 4; 1992 Act No. 499, SECTION 5; 1995 Act No. 7, Part I SECTION 22; 2026 Act No. 216 (H.4720), SECTION 2, eff May 19, 2026.<br /><br />
+Effect of Amendment<br /><br />
+	2026 Act No. 216, SECTION 2, rewrote (7) and made nonsubstantive changes.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-70.</span> Information which may be required by solicitor.<br /><br />
+	Prior to admittance of an offender into an intervention program, the solicitor or judge, if application is made to the court pursuant to Section 17-22-100, may require the offender to furnish information concerning the offender&#39;s past criminal record, education and work record, family history, medical or psychiatric treatment or care received, psychological tests taken and other information which, in the solicitor&#39;s or judge&#39;s opinion, has bearing on the decision as to whether the offender should be admitted. Solicitor&#39;s office records under this section shall adhere to and abide by Federal Confidentiality Regulation 42 CFR Part 2 and any other applicable federal, state, or local regulations.<br /><br />
+HISTORY: 1980 Act No. 360, SECTION 8; 1982 Act No. 421, SECTION 2; 1992 Act No. 453, SECTION 5; 1992 Act No. 499, SECTION 6.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-80.</span> Recommendations of victim and law enforcement agency.<br /><br />
+	Prior to any person being admitted to a pretrial intervention program the victim, if any, of the crime for which the applicant is charged and the law enforcement agency employing the arresting officer shall be asked to comment in writing as to whether or not the applicant should be allowed to enter an intervention program. In each case involving admission to an intervention program, the solicitor or judge, if application is made to the court pursuant to Section 17-22-100, shall consider the recommendations of the law enforcement agency and the victim, if any, in making a decision.<br /><br />
+HISTORY: 1980 Act No. 360, SECTION 9; 1992 Act No. 453, SECTION 6; 1992 Act No. 499, SECTION 7.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-90.</span> Agreements required of offender in program.<br /><br />
+	An offender who enters an intervention program shall:<br /><br />
+	(1) waive, in writing and contingent upon his successful completion of the program, his right to a speedy trial;<br /><br />
+	(2) agree, in writing, to the tolling while in the program of all periods of limitation established by statutes or rules of court;<br /><br />
+	(3) agree, in writing, to the conditions of the intervention program established by the solicitor;<br /><br />
+	(4) in the event there is a victim of the crime, agree, in writing, to make restitution to the victim within a specified period of time and in an amount to be determined by the solicitor;<br /><br />
+	(5) agree, in writing, that records relating to participation in pretrial intervention or information obtained through pretrial intervention is not admissible as evidence in subsequent proceedings, criminal or civil, and communication between pretrial intervention counselors and defendants shall remain as privileged communication unless a court of competent jurisdiction determines that there is a compelling public interest that the communication be revealed. A written admission of guilt may not be required of a defendant before acceptance or completion of the pretrial intervention program;<br /><br />
+	(6) if the offense is criminal sexual conduct with a minor in the third degree pursuant to Section 16-3-655(C), agree in the agreement between the solicitor&#39;s office and the offender as provided in Section 17-22-120 to allow information about the offense to be made available to day care centers, group day care homes, family day care homes, church or religious day care centers, and other facilities providing care to children and related agencies by the State Law Enforcement Division pursuant to regulations which the State Law Enforcement Division shall promulgate; and<br /><br />
+	(7) if the offense is domestic violence pursuant to Section 16-25-20, agree in writing to successful completion of a batterer&#39;s treatment program selected and approved by the Circuit Solicitor with jurisdiction over the offense or the Attorney General if the offense is prosecuted by the Attorney General&#39;s Office. If the offender moves to a different circuit after entering a treatment program selected by the Circuit Solicitor, the Circuit Solicitor for the county in which the offender resides shall have the authority to select and approve the batterer&#39;s treatment program.<br /><br />
+HISTORY: 1980 Act No. 360, SECTION 10; 1982 Act No. 421, SECTION 3; 1996 Act No. 444, SECTION 3; 2005 Act No. 166, SECTION 6, eff January 1, 2006; 2012 Act No. 255, SECTION 3, eff June 18, 2012; 2015 Act No. 58 (S.3), Pt IV, SECTION 19, eff June 4, 2015.<br /><br />
+Effect of Amendment<br /><br />
+	2015 Act No. 58, SECTION 19, rewrote (7).<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-100.</span> Time for application to intervention program.<br /><br />
+	An offender must make application to an intervention program or to the chief administrative judge of the court of general sessions no later than seventy-five days after service of the warrant or within ten days following appointment of counsel for the charge for which he makes the application. However, in the discretion of the solicitor or the chief administrative judge of the court of general sessions, if application is made directly to the judge, the provisions of this section may be waived. Applications received by the chief administrative judge of the court of general sessions under this section may be preliminarily approved by the judge pending a determination by the pretrial office that the offender is eligible to participate in a pretrial program pursuant to Sections 17-22-50 and 17-22-60. Applications received by the chief administrative judge of the court of general sessions and information obtained pursuant to Section 17-22-70 must be forwarded to the pretrial office.<br /><br />
+HISTORY: 1980 Act No. 360, SECTION 11; 1992 Act No. 453, SECTION 7; 1992 Act No. 499, SECTION 8.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-110.</span> Fees for application and participation; waiver.<br /><br />
+	An applicant to an intervention program or an offender who applies to the chief administrative judge of the court of general sessions for admission to a program pursuant to Section 17-22-100 shall pay a nonrefundable application fee of one hundred dollars and, if accepted into the program, a nonrefundable participation fee of two hundred fifty dollars prior to admission. All fees paid must be deposited into a special circuit solicitor&#39;s fund for operation of the pretrial intervention program. All fees or costs of supervision may be waived partially or totally by the solicitor in cases of indigency. The solicitor may also, if he determines necessary, in situations other than indigency allow scheduling of payments in lieu of lump sum payment. In no case shall aggregate fees for application and participation in an intervention program exceed three hundred fifty dollars. However, in cases where the solicitor determines that referral to another agency or program is needed to achieve rehabilitation for a problem directly related to the charge, the defendant may be required to pay his participation in that special program, except that no services may be denied due to inability to pay.<br /><br />
+HISTORY: 1980 Act No. 360, SECTION 12; 1982 Act No. 421, SECTION 4; 1987 Act No. 57 SECTION 1; 1992 Act No. 453, SECTION 8; 1992 Act No. 499, SECTION 9; 1997 Act No. 59, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-120.</span> Individual agreement between offender and solicitor; alcohol and drug abuse services.<br /><br />
+	In any case in which an offender agrees to an intervention program, a specific agreement must be made between the solicitor and the offender. This agreement shall include the terms of the intervention program, the length of the program and a section stating the period of time after which the prosecutor will either dismiss the charge or seek a conviction based upon that charge. The agreement must be signed by the offender and his or her counsel, if represented by counsel, and filed in the solicitor&#39;s office. The Commission on Alcohol and Drug Abuse shall provide training if requested on the recognition of alcohol and drug abuse to counselor employees of local pretrial intervention programs and the local agency authorized by Section 61-12-20 shall provide services to alcohol and drug abusers if referred by pretrial intervention programs. However, no services may be denied due to an offender&#39;s inability to pay.<br /><br />
+HISTORY: 1980 Act No. 360, SECTION 13; 1992 Act No. 453, SECTION 9; 1992 Act No. 499, SECTION 10.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-130.</span> Reports and identification as to offenders accepted for intervention program.<br /><br />
+	Notwithstanding the provisions of Section 17-1-40, in all cases where an offender is accepted for intervention a report must be made and retained on file in the solicitor&#39;s office, regardless of whether or not the offender successfully completes the intervention program. All reports must be retained on file in the solicitor&#39;s office for a period of two years after successful completion, two years after rejection, or two years after unsuccessful completion of the program. After the retention of these reports for two years, they may be destroyed. The circuit solicitor shall furnish to the South Carolina Law Enforcement Division personal identification information on each person who applies for intervention, is subsequently accepted or rejected and successfully or unsuccessfully completes the program. This information may only be used by the division and the State Coordinator&#39;s Office in those cases where a circuit solicitor inquires as to whether a person has previously been accepted in an intervention program. However, that information may be confidentially released to the State Coordinator&#39;s Office to assist in compiling annual reports. The identification information on any defendant must not be under any circumstances released as public knowledge.<br /><br />
+HISTORY: 1980 Act No. 360, SECTION 14; 1982 Act No. 421, SECTION 5; 1992 Act No. 453, SECTION 10; 1992 Act No. 499, SECTION 11.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-140.</span> Restitution to victim.<br /><br />
+	Prior to the completion of the pretrial intervention program the offender shall make restitution, as determined by the solicitor, to the victim, if any.<br /><br />
+HISTORY: 1980 Act No. 360, SECTION 15.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-150.</span> Disposition of charges against offenders accepted for intervention program.<br /><br />
+	(a) In the event an offender successfully completes a pretrial intervention program, the solicitor shall effect a noncriminal disposition of the charge or charges pending against the offender. Upon such disposition, the offender may apply to the court for an order to destroy all official records relating to his arrest and no evidence of the records pertaining to the charge may be retained by any municipal, county, or state entity or any individual, except as otherwise provided in Section 17-22-130. The effect of the order is to restore the person, in the contemplation of the law, to the status he occupied before the arrest. No person as to whom the order has been entered may be held thereafter under any provision of any law to be guilty of perjury or otherwise giving a false statement by reason of his failure to recite or acknowledge the arrest in response to any inquiry made of him for any purpose.<br /><br />
+	(b) In the event the offender violates the conditions of the program agreement: (1) the solicitor may terminate the offender&#39;s participation in the program, (2) the waiver executed pursuant to SECTION 17-22-90 shall be void on the date the offender is removed from the program for the violation and (3) the prosecution of pending criminal charges against the offender shall be resumed by the solicitor.<br /><br />
+HISTORY: 1980 Act No. 360, SECTION 16; 1982 Act No. 421, SECTION 6; 1992 Act No. 453, SECTION 11; 1992 Act No. 499, SECTION 12.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-170.</span> Unlawful retention or release of information regarding participation in intervention program; penalty.<br /><br />
+	Any municipal, county, or state entity or any individual who unlawfully retains or releases information on an offender&#39;s participation in a pretrial intervention program is guilty of a misdemeanor and, upon conviction, must be punished by a fine not exceeding two thousand dollars or by imprisonment not to exceed one year.<br /><br />
+	The provisions of this section do not apply to circuit solicitors or their staff in the performance of their official duties.<br /><br />
+HISTORY: 1992 Act No. 453, SECTION 12; 1992 Act No. 499, SECTION 13.<br /><br />
+<div style="text-align: center;">ARTICLE 3</div>
+<div style="text-align: center;">Traffic Education Program</div><br />
+<span style="font-weight: bold;"> SECTION 17-22-300.</span> Citation of article.<br /><br />
+	This article may be cited as the &quot;Traffic Education Program Act&quot;.<br /><br />
+HISTORY: 2008 Act No. 176, SECTION 2, eff 90 days after Governor&#39;s approval (approved February 4, 2008).<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-310.</span> Prosecutorial discretion of Circuit Solicitor to establish traffic education program; administration.<br /><br />
+	(A) Each circuit solicitor has the prosecutorial discretion as defined in this chapter and shall as a matter of prosecutorial discretion establish a traffic education program in the respective circuits for persons who commit traffic-related offenses that are punishable only by a fine and loss of four points or less. A person may not participate in a traffic education program if the person&#39;s traffic-related offense resulted in death or serious bodily injury to another person.<br /><br />
+	(B) The circuit solicitors are specifically endowed with and retain all discretionary powers pursuant to the common law.<br /><br />
+	(C) A traffic education program must be under the direct supervision and control of the circuit solicitor; however, the solicitor may contract for services with a county or municipality in the circuit.<br /><br />
+	(D) The South Carolina Commission on Prosecution Coordination shall oversee administrative procedures for the traffic education programs.<br /><br />
+	(E) A traffic education program must include both a community service and an educational component.<br /><br />
+HISTORY: 2008 Act No. 176, SECTION 2, eff 90 days after Governor&#39;s approval (approved February 4, 2008).<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-320.</span> Eligibility.<br /><br />
+	(A) A person may be considered for a traffic education program if he has no significant history of traffic violations. A person may not participate in a traffic education program more than once.<br /><br />
+	(B) A person&#39;s participation in a traffic education program does not prevent his participation in a pretrial intervention program pursuant to the provisions and conditions of Article 1.<br /><br />
+HISTORY: 2008 Act No. 176, SECTION 2, eff 90 days after Governor&#39;s approval (approved February 4, 2008); 2011 Act No. 55, SECTION 1, eff June 14, 2011.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-330.</span> Disposition of traffic-related offense on completion of program; subsequent violation.<br /><br />
+	(A) When a person successfully completes a traffic education program, the governmental agency administering the program shall effect a noncriminal disposition, as defined in this chapter, of the traffic-related offense, and there must be no record maintained of the traffic-related offense except by the appropriate traffic education program in order to ensure that a person does not benefit from the provisions of this article more than once.<br /><br />
+	(B) If applicable, the person may apply to the court for an order to destroy all official records relating to his arrest.<br /><br />
+	(C) If a person violates the conditions of a traffic education program, then the person may be terminated from the program and the traffic-related offense reinstated by the governmental agency administering the program in the appropriate municipality or county.<br /><br />
+	(D) If a person receives a subsequent traffic violation during the six months following the issuance of the ticket for which he has entered the traffic education program, he must be terminated from the program and the traffic-related offense must be reinstated by the governmental agency administering the program in the appropriate municipality or county.<br /><br />
+HISTORY: 2008 Act No. 176, SECTION 2, eff 90 days after Governor&#39;s approval (approved February 4, 2008).<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-340.</span> Office of Traffic Education Program Coordinator.<br /><br />
+	Each circuit solicitor may establish an Office of Traffic Education Program Coordinator whose responsibility is to assist in the establishment and maintenance of the traffic education program.<br /><br />
+HISTORY: 2008 Act No. 176, SECTION 2, eff 90 days after Governor&#39;s approval (approved February 4, 2008).<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-350.</span> Fees; waiver; distribution of fee proceeds.<br /><br />
+	(A) A person shall pay a nonrefundable one hundred forty-dollar fee to apply for a traffic education program that cannot be reduced or suspended. Additionally, a person shall pay a nonrefundable fee, not to exceed one hundred forty dollars, to participate in a traffic education program. Participation in a traffic education program may not be denied due to a person&#39;s inability to pay. If a person is deemed unable to pay, both the application fee and the participation fee must be waived.<br /><br />
+	(B) For offenses that would have been otherwise tried in magistrates court, the governmental agency administering the program shall retain the participation fee to support the traffic education program. The application fees must be remitted to the county treasurer. The county treasurer shall remit 9.17 percent of the revenue from the application fees to the county to be used for the purposes set forth in Section 14-1-207(D) and remit the balance of the revenue from the application fees to the Office of the State Treasurer on a monthly basis, by the fifteenth day of each month, and make reports on a form and in a manner prescribed by the State Treasurer. Fees paid in installments must be remitted as received. The State Treasurer shall deposit the amounts received as follows:<br /><br />
+	(1) 23.62 percent to the Department of Probation, Parole and Pardon Services;<br /><br />
+	(2) 15.12 percent to the South Carolina Criminal Justice Academy;<br /><br />
+	(3) .44 percent to the Department of Public Safety&#39;s South Carolina Law Enforcement Officers Hall of Fame;<br /><br />
+	(4) 13.73 percent to the Office of the Attorney General, South Carolina Crime Victim Services Division;<br /><br />
+	(5) 6.01 percent to the General Fund;<br /><br />
+	(6) 10.97 percent to the Commission on Indigent Defense;<br /><br />
+	(7) 1.34 percent to the Attorney General&#39;s Office;<br /><br />
+	(8) .90 percent to the Department of Juvenile Justice Arbitration Program;<br /><br />
+	(9) .81 percent to the Department of Juvenile Justice Marine Institutes;<br /><br />
+	(10) .90 percent to the Department of Juvenile Justice Regional Status Offender Program;<br /><br />
+	(11) 3.95 percent to the Department of Juvenile Justice Coastal Evaluation Center;<br /><br />
+	(12) 6.74 percent to the Circuit Solicitors;<br /><br />
+	(13) 2.68 percent to the State Law Enforcement Division;<br /><br />
+	(14) 2.68 percent to the Department of Corrections;<br /><br />
+	(15) .67 percent to the Judicial Department;<br /><br />
+	(16) .28 percent to the Department of Natural Resources; and<br /><br />
+	(17) .02 percent to the Forestry Commission.<br /><br />
+	(C) For offenses that would have been otherwise tried in municipal court, the governmental agency administering the program shall retain the participation fees to support the traffic education program. The application fees must be remitted to the city treasurer. The city treasurer shall remit 9.17 percent of the revenue from the application fees to the municipality to be used for the purposes set forth in Section 14-1-208(D) and remit the balance of the revenues from the application fees to the Office of the State Treasurer on a monthly basis, by the fifteenth day of each month, and make reports on a form and in a manner prescribed by the State Treasurer. Fees paid in installments must be remitted as received. The State Treasurer must deposit the amounts received as follows:<br /><br />
+	(1) 10.25 percent to the Department of Probation, Parole and Pardon Services;<br /><br />
+	(2) 10.13 percent to the South Carolina Criminal Justice Academy;<br /><br />
+	(3) .26 percent to the Department of Public Safety&#39;s South Carolina Law Enforcement Officer&#39;s Hall of Fame;<br /><br />
+	(4) 7.57 percent to the Office of the Attorney General, South Carolina Crime Victim Services Division;<br /><br />
+	(5) 2.77 percent to the General Fund;<br /><br />
+	(6) 11.02 percent to the Commission on Indigent Defense;<br /><br />
+	(7) 1.07 percent to the Attorney General&#39;s Office;<br /><br />
+	(8) .65 percent to the Department of Behavioral Health and Developmental Disabilities;<br /><br />
+	(9) 7.64 percent for the programs established pursuant to Section 56-5-2953(E);<br /><br />
+	(10) 9.93 percent to the Governor&#39;s Task Force on Litter;<br /><br />
+	(11) 9.93 percent to the Department of Juvenile Justice;<br /><br />
+	(12) .90 percent to the Department of Juvenile Justice Arbitration Program;<br /><br />
+	(13) .81 percent to the Department of Juvenile Justice Marine Institutes;<br /><br />
+	(14) .90 percent to the Department of Juvenile Justice Regional Status Offender Program;<br /><br />
+	(15) 3.95 percent to the Department of Juvenile Justice Coastal Evaluation Center;<br /><br />
+	(16) 6.74 percent to the Circuit Solicitors;<br /><br />
+	(17) 2.68 percent to the State Law Enforcement Division;<br /><br />
+	(18) 2.68 percent to the Department of Corrections;<br /><br />
+	(19) .67 percent to the Judicial Department;<br /><br />
+	(20) .28 percent to the Department of Natural Resources; and<br /><br />
+	(21) .02 percent to the Forestry Commission.<br /><br />
+HISTORY: 2008 Act No. 176, SECTION 2, eff 90 days after Governor&#39;s approval (approved February 4, 2008).<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	At the direction of the Code Commissioner, certain references in the S.C. Code to the State Department of Mental Health, South Carolina Mental Health Commission, Department of Disabilities and Special Needs, Department of Disabilities and Special Needs Commission, Department of Alcohol and Other Drug Abuse Services, and other related terms were changed to reflect the restructuring of these agencies into component offices under the Department of Behavioral Health and Developmental Disabilities, pursuant to 2025 Act No. 3, SECTION 18.<br /><br />
+	Pursuant to 2017 Act No. 96, SECTION 14, the references to &quot;State Office of Victim Assistance&quot; in (B)(4) and (C)(4) were changed to &quot;Office of the Attorney General, South Carolina Crime Victim Services Division&quot;.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-360.</span> Annual report.<br /><br />
+	Each governmental agency that administers a traffic education program shall submit a traffic education program annual report, by the first day of August, to the Commission on Prosecution Coordination providing the total number of participants by original traffic-related offenses, the total number of participants that successfully completed the traffic education program, the total amount of fees collected, and the total revenue remitted to the municipalities, counties, and Office of the State Treasurer for the state&#39;s fiscal year. The Commission on Prosecution Coordination may establish additional guidelines for the annual reports. The annual reports must be made available for public inspection.<br /><br />
+HISTORY: 2008 Act No. 176, SECTION 2, eff 90 days after Governor&#39;s approval (approved February 4, 2008).<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-370.</span> Submission of information necessary for creation and maintenance of list of participants.<br /><br />
+	Each governmental agency that administers a traffic education program shall submit to the Commission on Prosecution Coordination necessary identifying information on each participant for the creation and maintenance of a list of participants in traffic education programs. This list is to be used by the commission for the sole purpose of complying with Section 17-22-320(A). The information collected by the commission only may be released to a governmental agency administering the program for the purpose of determining eligibility for a traffic education program.<br /><br />
+HISTORY: 2008 Act No. 176, SECTION 2, eff 90 days after Governor&#39;s approval (approved February 4, 2008).<br /><br />
+<div style="text-align: center;">ARTICLE 5</div>
+<div style="text-align: center;">Alcohol Education Program</div><br />
+<span style="font-weight: bold;"> SECTION 17-22-500.</span> Citation of article.<br /><br />
+	This article may be cited as the &quot;Alcohol Education Program Act&quot;.<br /><br />
+HISTORY: 2007 Act No. 35, SECTION 2, eff June 6, 2007.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-510.</span> Prosecutorial discretion of Circuit Solicitor to establish alcohol education program; administration.<br /><br />
+	(A) Each circuit solicitor has the prosecutorial discretion as defined in this chapter and shall as a matter of prosecutorial discretion establish an alcohol education program in the respective circuits for persons who commit certain alcohol-related offenses.<br /><br />
+	(B) The circuit solicitors are specifically endowed with and retain all discretionary powers pursuant to the common law.<br /><br />
+	(C) An alcohol education program must be under the direct supervision and control of the circuit solicitor; however, the solicitor may contract for education and supervision services.<br /><br />
+	(D) The South Carolina Commission on Prosecution Coordination shall oversee administrative procedures for the alcohol education programs. The commission shall consult with the Office of Substance Use Services before the approval of these administrative procedures.<br /><br />
+	(E) An alcohol education program must include an educational and community service component.<br /><br />
+HISTORY: 2007 Act No. 35, SECTION 2, eff June 6, 2007.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	At the direction of the Code Commissioner, certain references in the S.C. Code to the State Department of Mental Health, South Carolina Mental Health Commission, Department of Disabilities and Special Needs, Department of Disabilities and Special Needs Commission, Department of Alcohol and Other Drug Abuse Services, and other related terms were changed to reflect the restructuring of these agencies into component offices under the Department of Behavioral Health and Developmental Disabilities, pursuant to 2025 Act No. 3, SECTION 18.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-520.</span> Eligibility requirements for consideration for program.<br /><br />
+	(A) A person may be considered for an alcohol education program if he:<br /><br />
+	(1) is at least seventeen years of age but less than twenty-one years of age at the time of arrest;<br /><br />
+	(2) has no prior alcohol-related offenses; and<br /><br />
+	(3) has no significant history of prior delinquency or criminal activity on his record.<br /><br />
+	(B) A person may not participate in an alcohol education program more than once.<br /><br />
+	(C) A person may be considered for an alcohol education program if he is charged with a violation of the following offenses:<br /><br />
+	(1) purchase or possession of beer or wine by a person under the age of twenty-one pursuant to Section 63-19-2440;<br /><br />
+	(2) purchase or possession of alcoholic liquors by a person under the age of twenty-one pursuant to Section 63-19-2450;<br /><br />
+	(3) open container in a motor vehicle pursuant to Section 61-4-110;<br /><br />
+	(4) public disorderly conduct pursuant to Section 16-17-530;<br /><br />
+	(5) littering pursuant to Section 16-11-700;<br /><br />
+	(6) providing false information concerning age to purchase beer or wine pursuant to Section 61-4-60;<br /><br />
+	(7) unlawful purchase of beer or wine for a person who cannot legally buy for consumption on the premises pursuant to Section 61-4-80;<br /><br />
+	(8) transfer of beer or wine for underage person&#39;s consumption pursuant to Section 61-4-90;<br /><br />
+	(9) transfer of alcoholic liquors for underage person&#39;s consumption pursuant to Section 61-6-4070;<br /><br />
+	(10) possession of an altered driver&#39;s license or other false documentation pursuant to Section 56-1-515; and<br /><br />
+	(11) another offense similar in nature and severity to the above-described offenses, as determined by the circuit solicitor. However, the provisions of this item may not be construed to include an offense enumerated in Section 56-5-2930 or Section 56-5-2933.<br /><br />
+	(D) A person&#39;s participation in an alcohol education program does not prevent his participation in a pretrial intervention program pursuant to the provisions and conditions of Article 1.<br /><br />
+HISTORY: 2007 Act No. 35, SECTION 2, eff June 6, 2007.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-530.</span> Disposition of alcohol-related offense on completion of program.<br /><br />
+	(A) When a person successfully completes an alcohol education program, the circuit solicitor shall effect a noncriminal disposition, as defined in this chapter, of the alcohol-related offense, and there must be no record maintained of the alcohol-related offense except by the Commission on Prosecution Coordination in order to ensure that a person does not benefit from the provisions of this article more than once.<br /><br />
+	(B) If applicable, the person may apply to the court for an order to destroy all official records relating to his arrest.<br /><br />
+	(C) If a person violates the conditions of an alcohol education program, the person may be terminated from the program and the alcohol-related offense reinstated by the circuit solicitor in the appropriate municipality or county.<br /><br />
+HISTORY: 2007 Act No. 35, SECTION 2, eff June 6, 2007.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-540.</span> Office of Alcohol Education Program Coordinator.<br /><br />
+	Each circuit solicitor may establish an Office of Alcohol Education Program Coordinator whose responsibility is to assist in the establishment and maintenance of the alcohol education program.<br /><br />
+HISTORY: 2007 Act No. 35, SECTION 2, eff June 6, 2007.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-550.</span> Fees; waiver.<br /><br />
+	A person shall pay a two-hundred-fifty-dollar fee to enroll in an alcohol education program. All fees must be deposited into a special circuit solicitor&#39;s fund for operation of the alcohol education program. In cases when the solicitor contracts with education and supervision providers, the person also may be subject to additional fees payable to the provider of these services. However, participation in an alcohol education program may not be denied due to a person&#39;s inability to pay these fees. If a person is deemed unable to pay, the fees for enrollment, education, and supervision services may be waived or reduced at the discretion of each solicitor.<br /><br />
+HISTORY: 2007 Act No. 35, SECTION 2, eff June 6, 2007.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-560.</span> Records.<br /><br />
+	Each circuit solicitor shall submit to the Commission on Prosecution Coordination necessary identifying information on each enrollee for the creation and maintenance of a list of enrollees in alcohol education programs. This list is to be used by the commission for the sole purpose of complying with Section 17-22-520(A) and (B). The information maintained by the commission may be released only to a circuit solicitor for the purpose of determining eligibility for an alcohol education program.<br /><br />
+HISTORY: 2007 Act No. 35, SECTION 2, eff June 6, 2007.<br /><br />
+<div style="text-align: center;">ARTICLE 7</div>
+<div style="text-align: center;">Worthless Check Unit</div><br />
+<span style="font-weight: bold;"> SECTION 17-22-710.</span> Establishing unit; fee schedule; administrative costs; disbursement of funds collected.<br /><br />
+	(A) A circuit solicitor may establish, under his direction and control and with the agreement of the county governing body, a Worthless Check Unit for the purpose of processing worthless checks and to assist the victims of these cases in the collection of restitution. The fee schedule is:<br /><br />
+	(1) fifty dollars for checks up to five hundred dollars;<br /><br />
+	(2) one hundred dollars for checks five hundred one dollars to one thousand dollars; and<br /><br />
+	(3) one hundred fifty dollars for checks one thousand one dollars or greater.<br /><br />
+	(B) An amount equal to the allowable administrative costs contained in Section 34-11-70(c) must be added to the fee. All fees collected by the Worthless Check Unit in accordance with the fee schedule promulgated pursuant to this section must be deposited into a fund known as the Worthless Check Fund maintained by the county treasurers of the counties comprising the circuit, other than court costs and an amount equal to the allowable administrative costs contained in Section 34-11-70(c) which must be remitted to the treasurer for deposit in the county general fund. All funds collected and deposited into this fund must be applied first to defray the costs of operating the Worthless Check Unit with the balance to be used by the solicitor to pay the normal operating expenses of his office. Withdrawals from this account may be made only at the request of the solicitor. The funds generated pursuant to this section may not be used to reduce the amount budgeted by the county to the solicitor&#39;s office. The solicitor shall maintain an account for the purpose of collecting and disbursing restitution funds collected for the benefit of victims&#39; worthless checks. The Worthless Check Unit shall disburse to the victim all restitution collected as a result of the original complaint filed. If the victim cannot be located after a reasonable time and diligent efforts the restitution due the victim must be transferred to the general fund of the county.<br /><br />
+HISTORY: 2008 Act No. 353, SECTION 2, Pt 11B, eff July 1, 2009.<br /><br />
+<div style="text-align: center;">ARTICLE 9</div>
+<div style="text-align: center;">Uniform Expungement of Criminal Records</div><br />
+<span style="font-weight: bold;"> SECTION 17-22-910.</span> Applications for expungement; administration.<br /><br />
+	(A) Applications for expungement of all criminal records must be administered by the solicitor&#39;s office in each circuit in the State as authorized pursuant to:<br /><br />
+	(1) Section 34-11-90(e), first offense misdemeanor fraudulent check or Section 34-11-90(f), multiple misdemeanor offenses of fraudulent check;<br /><br />
+	(2) Section 44-53-450(b), conditional discharge;<br /><br />
+	(3) Section 22-5-910, first offense conviction in magistrates court;<br /><br />
+	(4) Section 22-5-920, youthful offender act;<br /><br />
+	(5) Section 22-5-930, first offense simple possession or possession with intent to distribute drug convictions;<br /><br />
+	(6) Section 56-5-750(F), first offense failure to stop when signaled by a law enforcement vehicle;<br /><br />
+	(7) Section 17-22-150(a), pretrial intervention;<br /><br />
+	(8) Section 17-1-40, criminal records destruction, except as provided in Section 17-22-950;<br /><br />
+	(9) Section 63-19-2050, juvenile expungements;<br /><br />
+	(10) Section 17-22-530(A), alcohol education program;<br /><br />
+	(11) Section 17-22-330(A), traffic education program;<br /><br />
+	(12) Section 17-22-1010, Youth Challenge Academy and Jobs Challenge Program; and<br /><br />
+	(13) any other statutory authorization.<br /><br />
+	(B) A person&#39;s eligibility for expungement of an offense contained in this section, or authorized by any other provision of law, must be based on the offense that the person pled guilty to or was convicted of committing and not on an offense for which the person may have been charged. In addition, if an offense for which a person was convicted is subsequently repealed and the elements of the offense are consistent with an existing similar offense which is currently eligible for expungement, a person&#39;s eligibility for expungement of an offense must be based on the existing similar offense.<br /><br />
+	(C) The provisions of this section apply retroactively to allow expungement as provided by law for each offense delineated in subsection (A) by persons convicted prior to the enactment of this section or the addition of a specific item contained in subsection (A).<br /><br />
+HISTORY: 2009 Act No. 36, SECTION 2, eff June 2, 2009; 2014 Act No. 276 (H.4560), SECTION 3, eff June 9, 2014; 2015 Act No. 22 (S.133), SECTION 1, eff June 1, 2015; 2018 Act No. 254 (H.3209), SECTION 1, eff December 27, 2018; 2018 Act No. 262 (H.3789), SECTION 3, eff July 2, 2018; 2026 Act No. 248 (S.428), SECTION 2, eff June 25, 2026.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	At the direction of the Code Commissioner, the amendments to (A) made by 2018 Act No. 254 and 2018 Act No. 262 were read together and renumbered appropriately.<br /><br />
+Editor&#39;s Note<br /><br />
+	2018 Act No. 262, SECTION 1, provides as follows:<br /><br />
+	&quot;SECTION 1. This act may be cited as the South Carolina Youth Challenge Academy and South Carolina Jobs Challenge Program Expungement Act.&quot;<br /><br />
+Effect of Amendment<br /><br />
+	2014 Act No. 276, SECTION 3, in paragraph (2), deleted &quot;for simple possession of marijuana or hashish&quot;; added paragraph (10), relating to Section 17-22-330; and redesignated former paragraph (10) as (11).<br /><br />
+	2015 Act No. 22, SECTION 1, designated (A); in (A)(8), substituted &quot;63-19-2050&quot; for &quot;20-7-8525&quot;; in (A)(9), substituted &quot;17-22-530(A)&quot; for &quot;17-22-530(a)&quot;; and added (B).<br /><br />
+	2018 Act No. 254, SECTION 1, in (A), inserted (5), relating to first offense simple possession or possession with intent to distribute drug convictions, and redesignated (5) to (12) as (6) to (13).<br /><br />
+	2018 Act No. 262, SECTION 3, in (A), in (5), substituted &quot;Section 56-5-750(F)&quot; for &quot;Section 56-5-750(f)&quot;, inserted (11), relating to the Youth Challenge Academy and Jobs Challenge Program, and redesignated (11) as (12); in (B), added the second sentence, providing for eligibility for expungement of offenses subsequently repealed when elements of the offense are consistent with an existing similar offense which is subject to expungement; and added (C), providing that expungement provisions apply retroactively to the offenses delineated.<br /><br />
+	2026 Act No. 248, SECTION 2, in (A)(1), added &quot;or Section 34-11-90(f), multiple misdemeanor offenses of fraudulent check&quot;.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-920.</span> Direction of expungement process inquiries to county solicitor&#39;s office.<br /><br />
+	The clerk of court shall direct all inquiries concerning the expungement process to the corresponding solicitor&#39;s office to make application for expungement.<br /><br />
+HISTORY: 2009 Act No. 36, SECTION 2, eff June 2, 2009.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-930.</span> Obtaining and mandatory use of expungement form.<br /><br />
+	A person applying to expunge a criminal record shall obtain the appropriate blank expungement order form from the solicitor&#39;s office in the judicial circuit where the charge originated. The use of this form is mandatory and to the exclusion of all other expungement forms.<br /><br />
+HISTORY: 2009 Act No. 36, SECTION 2, eff June 2, 2009.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-940.</span> Fees; establishment of expungement process; requirements and duties of solicitor and SLED.<br /><br />
+	(A) In exchange for the expungement service that is provided by the solicitor&#39;s office, the applicant is responsible for payment to the solicitor&#39;s office of an administrative fee in the amount of two hundred fifty dollars per individual order, which must be retained by that office to defray the costs associated with the expungement process except as provided in items (1) and (2). The two hundred fifty dollar fee is nonrefundable, regardless of whether the offense is later determined to be statutorily ineligible for expungement or the solicitor or his designee does not consent to the expungement.<br /><br />
+	(1) Any person who applies to the solicitor&#39;s office for an expungement of general session charges pursuant to Section 17-1-40 is exempt from paying the administrative fee, unless the charge that is the subject of the expungement request was dismissed, discharged, or nolle prossed as part of the plea arrangement under which the defendant pled guilty and was sentenced to other charges.<br /><br />
+	(2) Each solicitor&#39;s office shall establish an account to collect private donations for the purpose of assisting in defraying the administrative fee of an expungement by up to fifty percent (50%). These funds shall be available on a first come, first serve basis to applicants. This item does not require the solicitor to request or solicit funds for this account.<br /><br />
+	(B) The solicitor&#39;s office shall implement policies and procedures consistent with this section to ensure that the expungement process is properly conducted. This includes, but is not limited to:<br /><br />
+	(1) assisting the applicant in completing the expungement order form;<br /><br />
+	(2) collecting from the applicant and distributing to the appropriate agencies separate certified checks or money orders for charges prescribed by this article;<br /><br />
+	(3) collecting funds from individuals choosing to contribute to the fund to defray the costs of administrative fees for expungements;<br /><br />
+	(4) coordinating with the South Carolina Law Enforcement Division (SLED) and, in the case of juvenile expungements, the Department of Juvenile Justice, to confirm that the criminal charge is statutorily appropriate for expungement;<br /><br />
+	(5) obtaining and verifying the presence of all necessary signatures;<br /><br />
+	(6) filing the completed expungement order with the clerk of court; and<br /><br />
+	(7) providing copies of the completed expungement order to all governmental agencies which must receive the order including, but not limited to, the:<br /><br />
+	(a) arresting law enforcement agency;<br /><br />
+	(b) detention facility or jail;<br /><br />
+	(c) solicitor&#39;s office;<br /><br />
+	(d) magistrates or municipal court where the arrest warrant originated;<br /><br />
+	(e) magistrates or municipal court that was involved in any way in the criminal process of the charge sought to be expunged;<br /><br />
+	(f) Department of Juvenile Justice; and<br /><br />
+	(g) SLED.<br /><br />
+	(C) The solicitor or his designee also must provide a copy of the completed expungement order to the applicant or his retained counsel.<br /><br />
+	(D) In cases when charges are sought to be expunged pursuant to Section 17-22-150(a), 17-22-530(A), 17-22-330(A), 22-5-910, or 44-53-450(b), or 17-22-1010, the circuit pretrial intervention director, alcohol education program director, traffic education program director, South Carolina Youth Challenge Academy director, or summary court judge shall attest by signature on the application to the eligibility of the charge for expungement before either the solicitor or his designee and then the circuit court judge, or the family court judge in the case of a juvenile, signs the application for expungement.<br /><br />
+	(E) SLED shall verify and document that the criminal charges in all cases, except in cases when charges are sought to be expunged pursuant to Section 17-1-40, Section 17-22-150(a), Section 17-22-530(A), Section 17-22-330(A), or Section 44-53-450(b), are appropriate for expungement before the solicitor or his designee, and then a circuit court judge, or a family court judge in the case of a juvenile, signs the application for expungement. If the expungement is sought pursuant to Section 34-11-90(e), Section 22-5-910, Section 22-5-920, Section 63-19-2050, or Section 56-5-750(f), the conviction for any minor traffic-related offense that is not related in any way to driving under the influence of alcohol or other drugs will not be considered as a bar to expungement.<br /><br />
+	(1) SLED shall receive a twenty-five dollar certified check or money order from the solicitor or his designee on behalf of the applicant made payable to SLED for each verification request, except that no verification fee may be charged when an expungement is sought pursuant to Section 17-1-40, Section 17-22-530(A), Section 17-22-330(A), Section 17-22-150(a), or Section 44-53-450(b). SLED then shall forward the necessary documentation back to the solicitor&#39;s office involved in the process.<br /><br />
+	(2) In the case of juvenile expungements, verification and documentation that the charge is statutorily appropriate for expungement must first be accomplished by the Department of Juvenile Justice and then SLED.<br /><br />
+	(3) Neither SLED, the Department of Juvenile Justice, nor any other official shall allow the applicant to take possession of the application for expungement during the expungement process.<br /><br />
+	(F) The applicant also is responsible to the clerk of court for the filing fee per individual order as required by Section 8-21-310(C)(4), which must be forwarded to the clerk of court by the solicitor or his designee and deposited in the county general fund. If the charge is determined to be statutorily ineligible for expungement, this prepaid clerk of court filing fee must be refunded to the applicant by the solicitor or his designee.<br /><br />
+	(G) Each expungement order may contain only one charge sought to be expunged, except in those circumstances when expungement is sought for multiple charges occurring out of a single incident and subject to expungement pursuant to Section 17-1-40 or 17-22-150(a). Only in those circumstances may more than one charge be included on a single application for expungement and, when applicable, only one two hundred fifty-dollar fee, one twenty-five dollar SLED verification fee, and one thirty-five dollar clerk of court filing fee may be charged.<br /><br />
+	(H) A filing fee may not be charged by the clerk&#39;s office to an applicant seeking the expungement of a criminal record pursuant to Section 17-1-40, when the charge was discharged, dismissed, nolle prossed, or the applicant was acquitted.<br /><br />
+	(I) Nothing in this article precludes an applicant from retaining counsel to apply to the solicitor&#39;s office on his behalf or precludes retained counsel from initiating an action in circuit court seeking a judicial determination of eligibility when the solicitor, in his discretion, does not consent to the expungement. In either event, retained counsel is responsible to the solicitor or his designee, when applicable, for the two hundred fifty-dollar fee, the twenty-five dollar SLED verification fee, and the thirty-five dollar clerk of court filing fee which must be paid by retained counsel&#39;s client.<br /><br />
+	(J) The solicitor or his designee has the discretion to waive the two hundred fifty-dollar fee only in those cases when it is determined that a person has been falsely accused of a crime as a result of identity theft.<br /><br />
+	(K) Each solicitor&#39;s office shall maintain a record of all fees collected related to the expungement of criminal records, which must be made available to the Chairmen of the House and Senate Judiciary Committees. Those records shall remain confidential otherwise.<br /><br />
+HISTORY: 2009 Act No. 36, SECTION 2, eff June 2, 2009; 2014 Act No. 276 (H.4560), SECTION 4, eff June 9, 2014; 2018 Act No. 254 (H.3209), SECTION 6, eff December 27, 2018; 2018 Act No. 262 (H.3789), SECTION 4, eff July 2, 2018.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	At the direction of the Code Commissioner, the amendments made by 2018 Act No. 254 and 2018 Act No. 262 were read together.<br /><br />
+Editor&#39;s Note<br /><br />
+	2018 Act No. 262, SECTION 1, provides as follows:<br /><br />
+	&quot;SECTION 1. This act may be cited as the South Carolina Youth Challenge Academy and South Carolina Jobs Challenge Program Expungement Act.&quot;<br /><br />
+Effect of Amendment<br /><br />
+	2014 Act No. 276, SECTION 4, in subsection (E), inserted &quot;traffic education program director,&quot;.<br /><br />
+	2018 Act No. 254, SECTION 6, rewrote the section, restructuring the fees process and allowing for the collection of private donations.<br /><br />
+	2018 Act No. 262, SECTION 4, in (E), inserted &quot;or 17-22-1010,&quot; following &quot;44-53-450(b),&quot;, and inserted &quot;South Carolina Youth Challenge Academy director,&quot; following &quot;traffic education director,&quot;.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-950.</span> Summary court expungement orders; removal of Internet-based public records; objections; forms.<br /><br />
+	(A) If criminal charges are brought in a summary court, the accused person is found not guilty or the charges are dismissed or nolle prossed, and the accused person was fingerprinted for the charges, the summary court, at no cost to the accused person, immediately shall issue an order to expunge the criminal records, including any associated bench warrants, of the accused person unless the dismissal of the charges occurs at a preliminary hearing or the accused person has charges pending in summary court and a court of general sessions and the charges arise out of the same course of events. Upon issuance of the order, the summary court shall obtain and verify the presence of all necessary signatures and provide copies of the completed expungement order to all governmental agencies which must receive the order, including, but not limited to, the arresting law enforcement agency; the detention facility or jail; the solicitor&#39;s office; the clerk of court, but only in cases in which the charges were appealed to the circuit court or remanded to the summary court from general sessions court; the summary court where the arrest or bench warrants originated; the summary court that was involved in any way in the criminal process of the charges or bench warrants; and SLED.<br /><br />
+	(B) If criminal charges are brought in a summary court, the accused person is found not guilty or the charges are dismissed or nolle prossed, and the person was not fingerprinted for the charges, the accused person may apply to the summary court, at no cost to the accused person, for an order to expunge the criminal records, including any associated bench warrants, of the accused person unless the dismissal of the charges occurs at a preliminary hearing or the accused person has charges pending in summary court and a court of general sessions and the charges arise out of the same course of events. Upon application, and after verification that the charges are appropriate for expungement, the summary court shall issue an order to expunge the criminal records, obtain and verify all necessary signatures, and provide copies of the completed expungement order to the arresting law enforcement agency and all summary courts that were involved in the criminal process of the charges. The summary court is not required to provide copies of the completed expungement order to SLED.<br /><br />
+	(C) An expungement pursuant to this section must occur no sooner than the appeal expiration date and no later than thirty days after the appeal expiration date.<br /><br />
+	(D) A summary court shall provide a copy of a completed expungement order issued pursuant to this section to the applicant or the applicant&#39;s counsel of record. The copy must be certified or marked with the court&#39;s raised seal.<br /><br />
+	(E) Criminal charges must be removed pursuant to this section from all Internet-based public records no later than thirty days from the disposition date, regardless of whether the accused person applies to the summary court for expungement pursuant to subsection (B). All other criminal records must be destroyed or retained pursuant to the provisions of Section 17-1-40.<br /><br />
+	(F) A prosecution or law enforcement agency may file an objection to a summary court expungement. If an objection is filed, the expungement must be heard by the judge of a general sessions court. The prosecution&#39;s or law enforcement agency&#39;s reason for objecting must be that the accused person has other charges pending or the charges are not eligible for expungement. The prosecution or law enforcement agency shall notify the accused person of the objection. The notice must be given in writing at the most current address on file with the summary court, or through the accused person&#39;s attorney, no later than thirty days after the accused person is found not guilty or the accused person&#39;s charges are dismissed or nolle prossed.<br /><br />
+	(G) The Office of Court Administration shall provide uniform application forms to be used for expungements pursuant to this section.<br /><br />
+HISTORY: 2009 Act No. 36, SECTION 2, eff June 2, 2009; 2014 Act No. 276 (H.4560), SECTION 5, eff June 9, 2014; 2016 Act No. 132 (S.255), SECTION 3, eff May 16, 2016.<br /><br />
+Editor&#39;s Note<br /><br />
+	2016 Act No. 132, SECTION 6, provides as follows:<br /><br />
+	&quot;SECTION 6. This act takes effect ninety days after approval by the Governor. This act applies retroactively to allow for the expungement of offenses charged, discharged, dismissed, or nolle prossed prior to the effective date of this act, and persons convicted or found not guilty prior to the effective date of this act.&quot;<br /><br />
+Effect of Amendment<br /><br />
+	2014 Act No. 276, SECTION 5, in subsection (A)(1), inserted the paragraph designator (1) and redesignated the subparagraphs accordingly, inserted &quot;, including any associated bench warrants,&quot; in the first sentence, inserted &quot;Except as provided in item (2),&quot; in the second sentence, and in the third sentence, inserted &quot;or bench&quot; and &quot;or bench warrant&quot;, and added paragraph (2); and in subsection (B), substituted &quot;(A)(1)(b)&quot; for &quot;(A)(2)&quot;.<br /><br />
+	2016 Act No. 132, SECTION 3, rewrote the section.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-960.</span> Expungement; employer immunity.<br /><br />
+	Any employer that employs a worker who has had an expungement shall not, at any time, be subject to any administrative or legal claim or cause of action related to the worker&#39;s expunged offense. Except for criminal justice agencies, employers shall not use expunged information adversely against an employee. No information related to an expungement shall be used or introduced as evidence in any administrative or legal proceeding involving negligent hiring, negligent retention, or similar claims.<br /><br />
+HISTORY: 2018 Act No. 254 (H.3209), SECTION 7, eff December 27, 2018.<br /><br />
+<div style="text-align: center;">ARTICLE 10</div>
+<div style="text-align: center;">South Carolina Youth Challenge Academy and South Carolina Jobs Challenge Program Expungement</div><br />
+<span style="font-weight: bold;"> SECTION 17-22-1010.</span> Completion of South Carolina Youth Challenge Academy and the South Carolina Jobs Challenge Program; expungement; records.<br /><br />
+	(A) A person who is eligible for expungement of his criminal record pursuant to the provisions of Sections 22-5-910, 22-5-920, 34-11-90(e), and 56-5-750(F) may apply to have his record expunged pursuant to the procedures provided in Article 9 if he graduates and successfully completes the South Carolina Youth Challenge Academy and the South Carolina Jobs Challenge Program administered by the South Carolina Army National Guard. Notwithstanding another provision of law, such person may apply for expungement immediately upon graduation and successful completion of the South Carolina Youth Challenge Academy and the South Carolina Jobs Challenge Program.<br /><br />
+	(B) If the person has had no other conviction during the approximately one-year period as provided in subsection (A), the circuit court may issue an order expunging the records including any associated bench warrant. No person may have his records expunged under this section more than once.<br /><br />
+	(C) If the expungement order is granted by the court, the records must be destroyed or retained by any law enforcement agency or municipal, county, or state agency or department pursuant to the provisions of Section 17-1-40.<br /><br />
+	(D) The effect of the expungement order is to restore the person, in the contemplation of the law, to the status he occupied before the arrest or indictment or information. No person as to whom the order has been entered may be held pursuant to another provision of law to be guilty of perjury or otherwise giving a false statement by reason of his failure to recite or acknowledge the arrest, or indictment or information, or trial in response to an inquiry made of him for any purpose.<br /><br />
+	(E) After the expungement, the South Carolina Law Enforcement Division is required to keep a nonpublic record of the offense and the date of the expungement to ensure that no person takes advantage of the rights of this section more than once. This nonpublic record is not subject to release pursuant to Section 34-11-95, the Freedom of Information Act, or any other provision of law except to those authorized law or court officials who need to know this information in order to prevent the rights afforded by this section from being taken advantage of more than once.<br /><br />
+	(F) As used in this section, &quot;conviction&quot; includes a guilty plea, a plea of nolo contendere, or the forfeiting of bail.<br /><br />
+HISTORY: 2018 Act No. 262 (H.3789), SECTION 2, eff July 2, 2018.<br /><br />
+Editor&#39;s Note<br /><br />
+	2018 Act No. 262, SECTION 1, provides as follows:<br /><br />
+	&quot;SECTION 1. This act may be cited as the South Carolina Youth Challenge Academy and South Carolina Jobs Challenge Program Expungement Act.&quot;<br /><br />
+<div style="text-align: center;">ARTICLE 11</div>
+<div style="text-align: center;">Office of Pretrial Intervention Coordinator Diversion Program Data and Reporting</div><br />
+<span style="font-weight: bold;"> SECTION 17-22-1110.</span> Definitions.<br /><br />
+	As used in this chapter:<br /><br />
+	(1) &quot;Criminal risk factors&quot; means characteristics and behaviors that, when addressed or changed, affect a person&#39;s risk for committing crimes. The characteristics may include, but not be limited to, the following risk and criminogenic need factors: antisocial behavior patterns; criminal personality; antisocial attitudes, values, and beliefs; poor impulse control; criminal thinking; substance abuse; criminal associates; dysfunctional family or marital relationships; or low levels of employment or education.<br /><br />
+	(2) &quot;Evidence-based practices&quot; means supervision policies, procedures, and practices that scientific research demonstrates reduce recidivism among individuals on probation, parole, or post-correctional supervision.<br /><br />
+HISTORY: 2010 Act No. 273, SECTION 56, eff January 1, 2011.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-22-1120.</span> Diversion program data and reporting.<br /><br />
+	(A) In addition to the information collected and processed by the Office of Pretrial Intervention Coordinator within the Commission on Prosecution Coordination pursuant to Articles 1, 3, 5, and 7, Chapter 22, Title 17, the Office of Pretrial Intervention Coordinator shall be responsible for collecting data on all programs administered by a circuit solicitor, the Commission on Prosecution Coordination, or a court, which divert offenders from prosecution to an alternative program or treatment.<br /><br />
+	(B) This shall include programs administered by circuit solicitors, which are either statutorily mandated or established by judicial order, and shall include, but are not limited to: alcohol education programs; drug courts for adults or juveniles; traffic education programs; worthless checks units; pretrial intervention; mental health courts; or juvenile arbitration.<br /><br />
+	(C) Notwithstanding the provisions of Section 17-22-130, 17-22-360, 17-22-370, or 17-22-560, the Office of Pretrial Intervention Coordinator shall collect and make available for public inspection an annual report on the numbers of individuals who apply for a diversion program, the number of individuals who begin a diversion program or treatment, the number of individuals who successfully complete a program or treatment within a twelve-month period, the number of individuals who do not successfully complete a program or treatment within the same twelve-month period, but who are still participating in the program or treatment, the number of individuals who did not complete the program within the twelve-month period and who have been prosecuted for the offense committed, and the number of individuals with fees fully or partially waived for indigence. The data collected and made available for public inspection shall be listed by each county, by each program or treatment, and the offense originally committed, but shall not contain any identifying information of the participant.<br /><br />
+	(D) A copy of the report shall be sent to the Sentencing Reform Oversight Committee for evaluation of the diversion programs and treatments being administered in the State by the circuit solicitors or a court, the effectiveness of each program, and to ascertain the need for additional programs, program modifications, or repeal of existing programs. In evaluating the programs and treatments, the Sentencing Reform Oversight Committee may request information on the evidence-based practices used in each program or treatment to identify offender risks and needs, and the specific interventions employed in each program or treatment to identify criminal risk factors and reduce recidivism.<br /><br />
+HISTORY: 2010 Act No. 273, SECTION 56, eff January 1, 2011.<br /><br />
+
+</div>
+
+
+					</div>		 <!-- mainwidepanel -->
+					
+				</div>		 <!-- pagebody -->
+				
+				<div id="footer" class="nodisplay" style="height: 30px;" onContextMenu="return false;">
+			<div id="footerdiv" style="margin:0;">
+				South Carolina Legislative Services Agency * 223 Blatt Building * 1105 Pendleton Street * Columbia, SC 29201<!-- * 803-212-4420--><br>
+				
+								<a href="/disclaimer.php">Disclaimer</a> * <a href="/policies.php">Policies</a> * <a href="/credits.php">Photo Credits</a> * <a href="/contact.php">Contact Us</a>
+							</div>
+		</div>
+		<div id="printfooter" class="printdisplay serifNormal" align=center style="font-size: 8pt;">
+			<br>
+			<br>
+			<hr>
+			Legislative Services Agency
+			<br>
+			h t t p : / / w w w . s c s t a t e h o u s e . g o v
+		</div>
+	
+		</div>	<!-- container or main in mobile page-->
+</body>
+</html>
+

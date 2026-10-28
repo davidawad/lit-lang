@@ -1,0 +1,1034 @@
+﻿
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+	<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	    <meta name="robots" content="noimageindex">
+	    <meta charset="iso-8859-1">
+	    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+	    	    <title>Code of Laws - Title 17 - Chapter 25- - CRIMINAL PROCEDURES</title>
+	    <link rel="SHORTCUT ICON" href="/images/stateflagsmall.ico" />
+		<link rel="icon" href="/images/stateflagsmall.ico" type="image/ico" />
+		<link rel="SHORTCUT ICON" href="/images/South-Carolina-Flag2.ico" />
+
+		<link type="text/css" rel="stylesheet" href="/css/main.css" media="all" />
+				
+		<!--[if lte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/ie7main.css" media="all" />
+		<![endif]-->
+		<!--[if gte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/iemain.css" media="all" />
+		<![endif]-->
+		<link type="text/css" rel="stylesheet" href="/css/print.css" media="print" />
+		<link type="text/css" rel="stylesheet" href="/css/supplement.css" media="screen" />
+		<!--<link type="text/css" rel="stylesheet" href="/css/zipsearch.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/vote.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/contact.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/navwrap.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/linkbar.css" media="screen" />-->
+	
+		<!--<script type="text/javascript" src="/js/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>-->
+		<script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+				<script type="text/javascript" src="/js/main_linux.js"></script>
+		
+
+		
+
+
+
+		<!--<script type="text/javascript" src="/js/common.js"></script>
+		<script type="text/javascript" src="/js/utils.js"></script>
+		<script type="text/javascript" src="/js/date.js"></script>
+		<script type="text/javascript" src="/js/lightbox.js"></script>
+		<script type="text/javascript" src="/js/legislation.js"></script>
+		<script type="text/javascript" src="/js/logon_lits.js"></script>
+		<script type="text/javascript" src="/js/message.js"></script>
+		<script type="text/javascript" src="/js/comm_meeting.js"></script>-->
+		<script type="text/vbscript" src="/vbs/comm_meeting.vbs"></script>
+		<!--<script type="text/javascript" src="/js/regs.js"></script>-->
+				
+	   	<script type="text/javascript">
+	    //document.onclick = function () { document.getElementById('transbox').style.display= 'none' };
+	    	var xmlhttp=false;
+			xmlhttp = create_xml_object();
+	
+			function getElement(ele)
+			{
+				var theobj = false;
+				if(typeof ele == 'string')
+					theobj = (document.getElementById)?document.getElementById(ele):document.all[ele];
+				else
+					theobj = ele;
+			
+				return theobj;
+			}
+		
+			function checkreader(friendlyalert)
+			{
+			 	/*friendlyalert=friendlyalert||false;
+			 	
+			 	var browser_info = perform_acrobat_detection();
+				if (!browser_info.acrobat)
+				{
+				 	loadadobebox('adobebox', '/adobe.php');
+					return false;
+				}
+				else if (friendlyalert)
+				{
+			 		alert(friendlyalert);
+				}*/
+				return true;
+			}
+				
+			function loadadobebox(boxname, url)
+			{
+				var response = false;
+	
+				doRequest(xmlhttp, "GET", url, false, null, null);
+				if (xmlhttp.status == 200)
+				{
+		         	response = xmlhttp.responseText;
+				}
+	
+				if(response)
+				{
+			 		var ele = document.getElementById(boxname);
+				 	if (ele)
+				 	{
+				 		ele.style.visibility = 'hidden';
+		 				ele.style.display = 'block';
+	
+		 				positionElement(ele, 'center', 'center', true);
+	
+						ele.innerHTML = response;
+					    ele.style.visibility = 'visible';
+					    ele.style.display = 'block';
+	//				    ele.scrollIntoView(true);
+					}
+				}
+				return response;
+			}
+	
+	
+			function init()
+			{
+		 		var ld=document.getElementById("loading");
+				if(ld)
+				{
+					ld.style.display = 'none';
+				}
+			}
+			
+			function openmore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				 	var pos = findPos(id);
+				 	id.style.zIndex = 10;
+		//		 	id.style.left = pos[0]+'px';
+		//		  	id.style.top = pos[1]+'px';
+				  	id.style.height = '295px';
+				  	id.style.position = 'absolute';
+				  	id.style.backgroundColor = '#f7f4ec';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'none';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = 'none';
+				  	}
+				}
+			}
+		
+			function closemore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				  	id.style.height = '135px';
+				  	id.style.position = '';
+				  	id.style.backgroundColor = 'transparent';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'block';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = '';
+				  	}
+				}		 	
+			}
+		
+		<!-- This script and many more are available free online at -->
+		<!-- The JavaScript Source!! http://javascript.internet.com -->
+		
+		<!-- Begin
+		function right(e) {
+		var msg = "Use of this image is strictly prohibited unless express written permission is given to the user by South Carolina Legislative Services Agency.";
+		if (navigator.appName == 'Netscape' && e.which == 3) {
+		alert(msg);
+		return false;
+		stopEvent(e);
+		}
+		if (navigator.appName == 'Microsoft Internet Explorer' && event.button==2) {
+		alert(msg);
+		return false;
+			stopEvent(event);
+		}
+		else return true;
+		}
+		
+	function trap() 
+	{
+		if(document.images)
+		{
+			for(i=0;i<document.images.length;i++)
+			{
+				if(document.images[i].className == 'allowcontextmenu')
+				{
+					// this should have no scripting
+				}
+				else
+				{
+				 	document.images[i].onmousedown = right;
+					document.images[i].oncontextmenu = function(){ return false; };
+					//document.images[i].onmouseup = right;
+				}
+			}
+		}
+	}
+
+	function findfwtext(texttofind) 
+	{
+	 	var fwtextele = document.getElementById('fwtext');
+		if(fwtextele)
+		{
+			fwtextele.value = texttofind;
+		}
+	}	
+		// End -->
+		</script>
+
+		<!-- ADDED FOR V4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJY6FMNQKH"></script>
+
+
+<script type="text/javascript">
+
+//ADDED FOR V4
+//Google tag (gtag.js) 
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LJY6FMNQKH');
+
+ 
+ /* COMMENTING OUT UPGRADING TO V4 -A
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36207109-1']);
+  _gaq.push(['_setDomainName', 'scstatehouse.gov']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+ 
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+*/
+  
+      $(document).ready(function(){
+        // COMMENTING THIS OUT NO LONGER BEING ACTIVELY USED TO MONITOR FOR TRAFFIC TO SPECIFIC LINKS - A
+        /*
+          var anchors = $('div#contentsection a');
+
+          //console.log('anchors...'+anchors.length);
+          if(anchors.length > 0){
+            //console.log('setting up event handler...');
+            anchors.click(function(){
+              var a = $(this).attr('href');
+              if(_gaq && (a.substr(-3) == 'htm' || a.substr(-4) == 'html' || a.substr(-3) == 'doc' || a.substr(-4) == 'docx' || a.substr(-3) == 'pdf' || a.substr(-3) == 'xls' || a.substr(-4) == 'xlsx')) {
+                //console.log(a);
+                _gaq.push(['_trackPageview', $(this).attr('href')]);
+              }
+              
+              var aText = $(this).text().toLowerCase();
+              if (a.indexOf('getfile.php') > -1 && aText === 'word'){
+                    _gaq.push(['_trackEvent', 'Word Doc', 'Download', ('from page: ' + document.location + ' - href: ' + a)]);
+              }
+
+            });
+          }
+          */
+      });
+
+</script>
+	</head>
+	
+		
+	<body class="home"  onload="init(); trap();">
+	<noscript>Your browser does not support JavaScript!  This page will not render correctly.</noscript> 
+
+
+	
+	<div id="adobebox" style="position:absolute; width:400px; height:150px; border:2px solid #555555; background-color:#cccccc; display:none;"></div>
+	<div id="container" >	
+				<div id="header" class="nodisplay" style="text-align:center; height:100px;" >
+									<img id="headerimg" class="nodisplay" alt="South Carolina Legislature" title="South Carolina Legislature" src="/images/header8.png" />
+								
+							<!--	<div class="award"><span style="color:#831224; font-weight:bold; font-size:1.5em;">*</span> Recipient of<br>the Notable State Documents Award<br>by the<br>South Carolina<br>State Library.</div>-->
+				
+				
+			</div>
+			<div class="printdisplay"><img border="0" src="/images/titleprint.jpg" alt="South Carolina Legislature" title="South Carolina Legislature" alt="South Carolina Legislature" title="South Carolina State Legislature" /><br /><hr /><br /></div>
+	
+			<div id="pagebody" >
+	
+	
+<!--<div id="topmessage">
+<br style="display:block; margin-top:10px;">
+Searches and data queries will be unavailable beginning Friday, August 19, 2016, from 8:00 PM until Saturday, August 20th at 8:00 AM<br>due to scheduled maintenance.</div>-->
+				<!-- Prompt IE 8/7/6 users to upgrade to a newer browser. -->
+				<!--[if lte IE 8]>
+				<div class="oldframe">In order to improve your experience using this website, please <a href="http://browsehappy.com/">upgrade your browser</a>.</div>
+				<![endif]-->
+			
+			
+			
+			<div id="menu" class="nodisplay">
+				<ul class="nodisplay">
+				<li><a href="/index.php">Home</a></li>
+<li><a href="/senate.php">Senate</a></li>
+<li><a href="/house.php">House</a></li>
+<li><a href="/committeeinfo.php">Committee&nbsp;Postings&nbsp;and&nbsp;Reports</a></li>
+<li><a href="/council.php">Legislative Council</a></li>
+<li><a href="/citizens.php">Citizens&#39; Interest</a></li>
+<li><a href="/publications.php">Publications</a></li>
+		    	</ul>
+			</div>
+			<div id="search" class="nodisplay" style="height: 28px;"><div class="nodisplay" style="float:right; margin:6px 20px 0px 0;">
+							<!--<a style="color:#f7f4ec; height:15px;" href="#" onClick="rsswindow();"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+<!--				<a style="color:#f7f4ec; height:15px;" href="/splashpage/splashpage.html"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a> -->
+				<a style="color:#f7f4ec; height:15px;" href="/onlineservices/index.php"><img border="0" src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>
+			<!--	<a style="color:#f7f4ec; height:15px;" href="/maintenance_portal.php"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+						</div></div>
+			
+	
+					<div id="sidebar" class="nodisplay">
+	<div id="vidlinks" style="height: 50px;">
+						<!--<img src="/images/videobutton12d.png">-->
+											<ul id="vidsidemenu">
+	<li id="vidinnermenu" style="font-size:16px; margin: 0 0 5px 0;">Chamber Video</li>
+<li id="sbroadcast" style="float: left; width:50%;">
+<a id="liveS" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('S', false, false, '0')">Senate</a><br><a id="liveaudioS" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('S', false, false, '1');">(Audio Only)</a>
+</li>
+<li id="hbroadcast" style="float: left; width:50%;">
+<a id="liveH" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('H', false, false, '0')">House</a><br><a id="liveaudioH" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('H', false, false, '1');">(Audio Only)</a>
+</li>
+						</ul>
+					</div>
+					<div id="commvidlinks"><a href="/video/schedule.php">Video&nbsp;Schedule</a><a style="border-top:1px solid #fff; padding-top:12px;" href="/video/archives.php">Video Archives</a></div>
+										<div id="sidemenu">
+						<ul id="innermenu">
+		
+							<li><a href="/howdoi.php">How do I...</a></li>
+										
+							
+								<li class="nolink" onMouseOver="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='block'; document.sidesearchform.searchtext.focus();}" onMouseOut="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Quick Search</div>
+								<div id="sidesearch" class="sidesubmenu">
+									<form id="sidesearchform" name="sidesearchform" method="POST" action="/search.php">
+									<input type="hidden" name="search" value="side" />
+									<div class="topelement"><label for="searchtext"><span class="label">Search for:</span></label><input id="searchtext" name="searchtext" type="text"/><a id="searchlink2" href="javascript:void(0);" onClick="document.sidesearchform.submit();"><img id="searchicon" src="/images/searchbutton.png" alt="Search" title="Search"/></a></div>
+			<!--						<div><input type="checkbox" id="searchchoice_all" name="searchchoice_all" value="all" /><label for="searchchoice_all">All</label></div>-->
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_fullsite" name="category" value="FULLSITE" /><label for="searchchoice_fullsite">&nbsp;Full Site Search</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_billnumber" name="category" value="BILL" /><label for="searchchoice_billnumber">&nbsp;Bill Number</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_legislation" name="category" value="LEGISLATION" CHECKED /><label for="searchchoice_legislation">&nbsp;Legislation</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_budget" name="category" value="BUDGET" /><label for="searchchoice_budget">&nbsp;Budget</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeoflaws" name="category" value="CODEOFLAWS" /><label for="searchchoice_codeoflaws">&nbsp;Code of Laws</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeofregs" name="category" value="CODEOFREGS" /><label for="searchchoice_codeofregs">&nbsp;Code of Regulations</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_constitution" name="category" value="CONSTITUTION" /><label for="searchchoice_constitution">&nbsp;Constitution</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_housejournals" name="category" value="HOUSEJOURNALS" /><label for="searchchoice_housejournals">&nbsp;House Journals</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_senatejournals" name="category" value="SENATEJOURNALS" /><label for="searchchoice_senatejournals">&nbsp;Senate Journals</label></div>
+									<div class="bottomelement" style="padding-left:20px;"><input type="radio" id="searchchoice_billsummary" name="category" value="SUMMARY" /><label for="searchchoice_billsummary">&nbsp;LSA Bill Summary</label></div>
+								</form>
+									
+								</div>
+							</li>
+							<li><a href="/legislatorssearch.php">Find Your Legislators</a></li>
+							<li id="contactLegislatorLink"><a href="/email.php?chamber=B">Contact Your Legislator</a></li>
+									
+							<li><a href="/legislation.php">Legislation</a></li>
+							<li><a href="/listtracking/main.php" target="LTS">Track Legislation</a></li>
+							<li><a href="/multicriteria2/search.php" target="MCS">Multi-Criteria Search</a></li>
+									<!--<li><a href="#" onclick="multisearchwindow('INTROBOTH');">Multi-Criteria Search</a></li>-->
+									<!--<li><a href="#" onclick="multisearchwindow('INTROMANUAL');">Multi-Criteria Search</a></li>-->
+									<li><a href="/research.php">Research</a></li>
+	
+								<li class="nolink" onMouseOver="var ele=document.getElementById('law'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('law'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">South Carolina Law</div> 
+								<div id="law" class="sidesubmenu">
+									<div class="sidediv topelement"><a href="/newlaws.php">Ratifications &amp; Acts</a></div>
+									<div class="sidediv"><a href="/code/statmast.php">Code of Laws</a></div>
+									<div class="sidediv"><a href="/coderegs/statmast.php">Code of Regulations</a></div>
+									<div class="sidediv"><a href="/scconstitution/scconst.php">Constitution</a></div>
+									<div class="sidediv bottomelement"><a href="/state_register.php">State Register</a></div>
+								</div>
+							</li>
+										<li class="nolink" onMouseOver="var ele=document.getElementById('manual'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('manual'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Legislative Manual</div>
+								<div id="manual" class="sidesubmenu">
+								
+<!--									<div class="sidediv topelement"><a href="https://web.sc.gov/LSAShoppingcart/Default.aspx" target="_blank">Purchase Manual</a></div>-->
+								
+<!--									<div class="sidediv topelement"><a href="https://secure.scstatehouse.gov/cgi-bin/webstore.exe" target="_blank">Purchase Manual</a></div>-->
+									<div class="sidediv topelement"><a href="javascript:#" onClick="alert('We are sorry, but we are unable to process online transactions at this time.\n\nIf you would still like to make a purchase, please contact us directly at (803) 212-4490 during normal business hours (8:30am - 5:00pm EST).');">Purchase Manual</a></div>
+									<div class="sidediv bottomelement"><a href="/man26/manual26.php">View Manual Online</a></div>
+								</div>
+							</li>
+							<li><a href="http://www.studentconnection.scstatehouse.gov">Student Connection</a></li>
+							<li><a href="/visit.php">Visiting the State House</a></li>
+							<li><a href="/archives.php">Archives</a></li>
+							<li><a href="http://www.sc.gov/Agency-Listing" target="_blank">State Agency Websites</a></li>
+							<!--<li><a href="/stateagencysites.php">State Agency Websites</a></li>-->
+							<li><a href="/citizensinterestpage/media.php">Media Links</a></li>
+				 		</ul>
+			    	</div>
+	
+					<div id="side_ad">
+						<A href="http://www.sc.gov/" target="_blank"><img border=0 src="/images/scgov3.jpg" alt="SC.gov" title="SC.gov" /></a>
+													<A href="http://www.statelibrary.sc.gov" target="_blank"><img border=0 src="/images/scsl_logo_rgb_web.png" alt="StateLibrary.SC.gov" title="StateLibrary.SC.gov" /></a>
+											</div>	    	
+			</div>
+
+	
+	<script type="text/javascript"> 
+		if ( '' === '1'){
+		 	
+			var link = document.getElementById('contactLegislatorLink');
+			if (link != 'undefined' && link != null){
+				link.style.display = 'none'; 
+				link.style.visibility = 'hidden';
+			}
+		}
+		if ( '' === '1'){
+		 	setTimeout(function(){
+				var link2 = document.getElementById('sendMsgLink');
+				if (link2 != 'undefined' && link2 != null){
+					link2.style.display = 'none'; 
+					link2.style.visibility = 'hidden';
+				};
+			}, 20);
+			
+		}  
+	</script>
+<div class="mainwidepanel">
+
+				<div id="breadcrumbs">
+						South Carolina Law &gt; <a href="/code/statmast.php">Code of Laws</a> &gt; <a href="/code/title17.php">Title 17</a>
+				</div>
+
+					<h2 class="barheader">South Carolina Code of Laws<br />
+									Unannotated<br />
+					</h2>
+
+				<div id="contentsection">
+<div style="font-weight: bold; text-align: center;">Title 17 - CRIMINAL PROCEDURES</div>
+<br />
+
+<div style="text-align: center;">CHAPTER 25</div>
+<div style="text-align: center;">Judgment and Execution</div><br />
+<div style="text-align: center;">ARTICLE 1</div>
+<div style="text-align: center;">Conviction and Sentence</div><br />
+<span style="font-weight: bold;"> SECTION 17-25-10.</span> No person shall be punished until legally convicted.<br /><br />
+	No person shall be punished for an offense unless duly and legally convicted thereof in a court having competent jurisdiction of the cause and of the person.<br /><br />
+HISTORY: 1962 Code SECTION 17-551; 1952 Code SECTION 17-551; 1942 Code SECTION 999; 1932 Code SECTION 999; Cr. P. &#39;22 SECTION 85; Cr. C. &#39;12 SECTION 79; Cr. C. &#39;02 SECTION 52; G. S. 2452; R. S. 51.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-20.</span> Punishment for felony when not specially provided.<br /><br />
+	When no special punishment is provided for a felony, it shall, at the discretion of the court, be by one or more of the following modes, to wit: Confinement in the Penitentiary or in a workhouse or penal farm, when such institutions shall exist, for a period of not less than three months nor more than ten years, with such imposition of hard labor and solitary confinement as may be directed.<br /><br />
+HISTORY: 1962 Code SECTION 17-552; 1952 Code SECTION 17-552; 1942 Code SECTION 1034; 1932 Code SECTION 1034; Cr. P. &#39;22 SECTION 124; Cr. C. &#39;12 SECTION 103; Cr. C. &#39;02 SECTION 76; G. S. 2614; R. S. 76; 1865 (13) 406; 1869 (14) 175.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-30.</span> Sentence when no punishment is provided.<br /><br />
+	In cases of legal conviction when no punishment is provided by statute the court shall award such sentence as is conformable to the common usage and practice in this State, according to the nature of the offense, and not repugnant to the Constitution.<br /><br />
+HISTORY: 1962 Code SECTION 17-553; 1952 Code SECTION 17-553; 1942 Code SECTION 1038; 1932 Code SECTION 1038; Cr. P. &#39;22 SECTION 127; Cr. C. &#39;12 SECTION 105; Cr. C. &#39;02 SECTION 78; G. S. 2653; R. S. 78.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-45.</span> Life sentence for person convicted for certain crimes.<br /><br />
+	(A) Notwithstanding any other provision of law, except in cases in which the death penalty is imposed, upon a conviction for a most serious offense as defined by this section, a person must be sentenced to a term of imprisonment for life without the possibility of parole if that person has either:<br /><br />
+	(1) one or more prior convictions for:<br /><br />
+	(a) a most serious offense; or<br /><br />
+	(b) a federal or out-of-state conviction for an offense that would be classified as a most serious offense under this section; or<br /><br />
+	(2) two or more prior convictions for:<br /><br />
+	(a) a serious offense; or<br /><br />
+	(b) a federal or out-of-state conviction for an offense that would be classified as a serious offense under this section.<br /><br />
+	(B) Notwithstanding any other provision of law, except in cases in which the death penalty is imposed, upon a conviction for a serious offense as defined by this section, a person must be sentenced to a term of imprisonment for life without the possibility of parole if that person has two or more prior convictions for:<br /><br />
+	(1) a serious offense;<br /><br />
+	(2) a most serious offense;<br /><br />
+	(3) a federal or out-of-state offense that would be classified as a serious offense or most serious offense under this section; or<br /><br />
+	(4) any combination of the offenses listed in items (1), (2), and (3) above.<br /><br />
+	(C) As used in this section:<br /><br />
+	(1) &quot;Most serious offense&quot; means:<br /><br />
+<table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
+  <tr>
+    <th></th>
+    <th style="padding: 4px 8px; text-align: left;">16-1-40</th>
+    <th style="padding: 4px 8px; text-align: left;">Accessory, for any offense enumerated in this item</th>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-1-80</td>
+    <td style="padding: 4px 8px; text-align: left;">Attempt, for any offense enumerated in this item</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-10</td>
+    <td style="padding: 4px 8px; text-align: left;">Murder</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-29</td>
+    <td style="padding: 4px 8px; text-align: left;">Attempted Murder</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-50</td>
+    <td style="padding: 4px 8px; text-align: left;">Voluntary manslaughter</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-85(A)(1)</td>
+    <td style="padding: 4px 8px; text-align: left;">Homicide by child abuse</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-85(A)(2)</td>
+    <td style="padding: 4px 8px; text-align: left;">Aiding and abetting homicide by child abuse</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-210</td>
+    <td style="padding: 4px 8px; text-align: left;">Lynching, First degree</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-210(B)</td>
+    <td style="padding: 4px 8px; text-align: left;">Assault and battery by mob, First degree</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-620</td>
+    <td style="padding: 4px 8px; text-align: left;">Assault and battery with intent to kill</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-652</td>
+    <td style="padding: 4px 8px; text-align: left;">Criminal sexual conduct, First degree</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-653</td>
+    <td style="padding: 4px 8px; text-align: left;">Criminal sexual conduct, Second degree</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-655</td>
+    <td style="padding: 4px 8px; text-align: left;">Criminal sexual conduct with minors, except where evidence presented at the criminal proceeding and the court, after the conviction, makes a specific finding on the record that the conviction obtained for this offense resulted from consensual sexual conduct where the victim was younger than the actor, as contained in Section 16-3-655(3)</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-656</td>
+    <td style="padding: 4px 8px; text-align: left;">Assault with intent to commit criminal sexual conduct, First and Second degree</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-910</td>
+    <td style="padding: 4px 8px; text-align: left;">Kidnapping</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-920</td>
+    <td style="padding: 4px 8px; text-align: left;">Conspiracy to commit kidnapping</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-1075</td>
+    <td style="padding: 4px 8px; text-align: left;">Carjacking</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-2020</td>
+    <td style="padding: 4px 8px; text-align: left;">Trafficking in persons</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-11-110(A)</td>
+    <td style="padding: 4px 8px; text-align: left;">Arson, First degree</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-11-311</td>
+    <td style="padding: 4px 8px; text-align: left;">Burglary, First degree</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-11-330(A)</td>
+    <td style="padding: 4px 8px; text-align: left;">Armed robbery</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-11-330(B)</td>
+    <td style="padding: 4px 8px; text-align: left;">Attempted armed robbery</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-11-540</td>
+    <td style="padding: 4px 8px; text-align: left;">Damaging or destroying building, vehicle, or other property by means of explosive incendiary, death results</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">24-13-450</td>
+    <td style="padding: 4px 8px; text-align: left;">Taking of a hostage by an inmate</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">25-7-30</td>
+    <td style="padding: 4px 8px; text-align: left;">Giving information respecting national or state defense to foreign contacts during war</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">25-7-40</td>
+    <td style="padding: 4px 8px; text-align: left;">Gathering information for an enemy</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">43-35-85(F)</td>
+    <td style="padding: 4px 8px; text-align: left;">Abuse or neglect of a vulnerable adult resulting in death</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">55-1-30(3)</td>
+    <td style="padding: 4px 8px; text-align: left;">Unlawful removing or damaging of airport facility or equipment when death results</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">56-5-1030(B)(3)</td>
+    <td style="padding: 4px 8px; text-align: left;">Interference with traffic-control devices or railroad signs or signals prohibited when death results from violation</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">58-17-4090</td>
+    <td style="padding: 4px 8px; text-align: left;">Obstruction of railroad, death results.</td>
+  </tr>
+</table>
+<br />
+	(2) &quot;Serious offense&quot; means:<br /><br />
+	(a) any offense which is punishable by a maximum term of imprisonment for thirty years or more which is not referenced in subsection (C)(1);<br /><br />
+	(b) those felonies enumerated as follows:<br /><br />
+<table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
+  <tr>
+    <th></th>
+    <th style="padding: 4px 8px; text-align: left;">16-3-220</th>
+    <th style="padding: 4px 8px; text-align: left;">Lynching, Second degree</th>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-210(C)</td>
+    <td style="padding: 4px 8px; text-align: left;">Assault and battery by mob, Second degree</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-600(B)</td>
+    <td style="padding: 4px 8px; text-align: left;">Assault and battery of a high and aggravated nature</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-3-810</td>
+    <td style="padding: 4px 8px; text-align: left;">Engaging child for sexual performance</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-9-220</td>
+    <td style="padding: 4px 8px; text-align: left;">Acceptance of bribes by officers</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-9-290</td>
+    <td style="padding: 4px 8px; text-align: left;">Accepting bribes for purpose of procuring public office</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-11-110(B)</td>
+    <td style="padding: 4px 8px; text-align: left;">Arson, Second degree</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-11-312(B)</td>
+    <td style="padding: 4px 8px; text-align: left;">Burglary, Second degree</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-11-380(B)</td>
+    <td style="padding: 4px 8px; text-align: left;">Theft of a person using an automated teller machine</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-13-210(1)</td>
+    <td style="padding: 4px 8px; text-align: left;">Embezzlement of public funds</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-13-230(B)(3)</td>
+    <td style="padding: 4px 8px; text-align: left;">Breach of trust with fraudulent intent</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-13-240(1)</td>
+    <td style="padding: 4px 8px; text-align: left;">Obtaining signature or property by false pretenses</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-25-20(B)</td>
+    <td style="padding: 4px 8px; text-align: left;">Domestic violence, First degree</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-25-65</td>
+    <td style="padding: 4px 8px; text-align: left;">Domestic violence of a high and aggravated nature</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">38-55-540(3)</td>
+    <td style="padding: 4px 8px; text-align: left;">Insurance fraud</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">44-53-370(e)</td>
+    <td style="padding: 4px 8px; text-align: left;">Trafficking in controlled substances</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">44-53-375(C)</td>
+    <td style="padding: 4px 8px; text-align: left;">Trafficking in ice, crank, or crack cocaine</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">44-53-445(B)(1)&amp;(2)</td>
+    <td style="padding: 4px 8px; text-align: left;">Distribute, sell, manufacture, or possess with intent to distribute controlled substances within proximity of school</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">56-5-2945</td>
+    <td style="padding: 4px 8px; text-align: left;">Causing death by operating vehicle while under influence of drugs or alcohol; and</td>
+  </tr>
+</table>
+<br />
+	(c) the offenses enumerated below:<br /><br />
+<table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
+  <tr>
+    <th></th>
+    <th style="padding: 4px 8px; text-align: left;">16-1-40</th>
+    <th style="padding: 4px 8px; text-align: left;">Accessory before the fact for any of the offenses listed in subitems (a) and (b)</th>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">16-1-80</td>
+    <td style="padding: 4px 8px; text-align: left;">Attempt to commit any of the offenses listed in subitems (a) and (b)</td>
+  </tr>
+  <tr>
+    <td></td>
+    <td style="padding: 4px 8px; text-align: left;">43-35-85(E)</td>
+    <td style="padding: 4px 8px; text-align: left;">Abuse or neglect of a vulnerable adult resulting in great bodily injury.</td>
+  </tr>
+</table>
+<br />
+	(3) &quot;Conviction&quot; means any conviction, guilty plea, or plea of nolo contendere.<br /><br />
+	(D) Except as provided in this subsection or subsection (E), no person sentenced pursuant to this section shall be eligible for early release or discharge in any form, whether by parole, work release, release to ameliorate prison overcrowding, or any other early release program, nor shall they be eligible for earned work credits, education credits, good conduct credits, or any similar program for early release. A person is eligible for work release if the person is sentenced for voluntary manslaughter (Section 16-3-50), kidnapping (Section 16-3-910), carjacking (Section 16-3-1075), burglary in the second degree (Section 16-11-312(B)), armed robbery (Section 16-11-330(A)), or attempted armed robbery (Section 16-11-330(B)), the crime did not involve any criminal sexual conduct or an additional violent crime as defined in Section 16-1-60, and the person is within three years of release from imprisonment.<br /><br />
+	(E) For the purpose of this section only, a person sentenced pursuant to this section may be paroled if:<br /><br />
+	(1) the Department of Corrections requests the Department of Probation, Parole and Pardon Services to consider the person for parole; and<br /><br />
+	(2) the Department of Probation, Parole and Pardon Services determines that due to the person&#39;s health or age he is no longer a threat to society; and<br /><br />
+	(a) the person has served at least thirty years of the sentence imposed pursuant to this section and has reached at least sixty-five years of age; or<br /><br />
+	(b) the person has served at least twenty years of the sentence imposed pursuant to this section and has reached at least seventy years of age; or<br /><br />
+	(c) the person is afflicted with a terminal illness where life expectancy is one year or less; or<br /><br />
+	(d) the person can produce evidence comprising the most extraordinary circumstances.<br /><br />
+	(F) For the purpose of determining a prior or previous conviction under this section and Section 17-25-50, a prior or previous conviction shall mean the defendant has been convicted of a most serious or serious offense, as may be applicable, on a separate occasion, prior to the instant adjudication. There is no requirement that the sentence for the prior or previous conviction must have been served or completed before a sentence of life without parole can be imposed under this section.<br /><br />
+	(G) The decision to invoke sentencing under this section is in the discretion of the solicitor.<br /><br />
+	(H) Where the solicitor is required to seek or determines to seek sentencing of a defendant under this section, written notice must be given by the solicitor to the defendant and defendant&#39;s counsel not less than ten days before trial.<br /><br />
+HISTORY: 1982 Act No. 358, SECTIONS 1, 2; 1986 Act No. 462, SECTION 37; 1995 Act No. 83, SECTION 18; 1997 Act No. 113, SECTION 4; 1997 Act No. 136, SECTION 4; 1998 Act No. 402, SECTION 3; 2002 Act No. 176, SECTIONS 1, 2, eff March 5, 2002; 2006 Act No. 342, SECTION 9, eff July 1, 2006; 2007 Act No. 72, SECTION 3, eff June 13, 2007; 2010 Act No. 273, SECTION 20, eff June 2, 2010; 2010 Act No. 289, SECTION 7, eff June 11, 2010; 2015 Act No. 7 (S.196), SECTION 6.C, eff April 2, 2015; 2015 Act No. 58 (S.3), Pt II, SECTION 7, eff June 4, 2015.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	Section 16-11-540, referenced in subsection (C)(1), was repealed by 2000 Act No. 237. Section 16-3-220, referenced in subsection (C)(2)(b), and Section 16-3-620, referenced in subsection (C)(1), were repealed by 2010 Act No. 273.<br /><br />
+Editor&#39;s Note<br /><br />
+	2010 Act No. 273, SECTION 7.C, provides:<br /><br />
+	&quot;Wherever in the 1976 Code of Laws reference is made to the common law offense of assault and battery of a high and aggravated nature, it means assault and battery with intent to kill, as contained in repealed Section 16-3-620, and, except for references in Section 16-1-60 and Section 17-25-45, wherever in the 1976 Code reference is made to assault and battery with intent to kill, it means attempted murder as defined in Section 16-3-29.&quot;<br /><br />
+Effect of Amendment<br /><br />
+	2015 Act No. 7, SECTION 6.C, in (C)(1), substituted &quot;16-3-2020&quot; for &quot;16-3-930&quot;.<br /><br />
+	2015 Act No. 58, SECTION 7, in (C)(2)(b), added 16-25-20(B), domestic violence, first degree, and 16-25-65, domestic violence of a high and aggravated nature.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-50.</span> Considering closely connected offenses as one offense.<br /><br />
+	In determining the number of offenses for the purpose of imposition of sentence, the court shall treat as one offense any number of offenses which have been committed at times so closely connected in point of time that they may be considered as one offense, notwithstanding under the law they constitute separate and distinct offenses.<br /><br />
+HISTORY: 1962 Code SECTION 17-553.2; 1955 (49) 179.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-60.</span> Change of sentence when former convictions were not considered at time of imposition.<br /><br />
+	If during the service of any such sentence, it is made to appear to the court that the defendant had been convicted of one or more crimes which were not taken into account at the time of the imposition of the original sentence, the court is authorized to issue a rule directed to the defendant requiring him to show cause before the court, not less than ten days from the granting of the rule, why the former sentence should not be revoked and the defendant be sentenced as required if all of the convictions had been brought to the attention of the court at the time of the imposition of the original sentence.<br /><br />
+HISTORY: 1962 Code SECTION 17-553.3; 1955 (49) 179.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-65.</span> Reduction of sentence for substantial assistance to the State; motion practice.<br /><br />
+	(A) Upon the state&#39;s motion made within one year of sentencing, the court may reduce a sentence if the defendant, after sentencing, provided:<br /><br />
+	(1) substantial assistance in investigating or prosecuting another person; or<br /><br />
+	(2) aid to a Department of Corrections employee or volunteer who was in danger of being seriously injured or killed.<br /><br />
+	(B) Upon the state&#39;s motion made more than one year after sentencing, the court may reduce a sentence if the defendant&#39;s substantial assistance involved:<br /><br />
+	(1) information not known to the defendant until one year or more after sentencing;<br /><br />
+	(2) information provided by the defendant to the State within one year of sentencing, but which did not become useful to the State until more than one year after sentencing;<br /><br />
+	(3) information, the usefulness of which could not reasonably have been anticipated by the defendant until more than one year after sentencing, and which was promptly provided to the State after its usefulness was reasonably apparent to the defendant; or<br /><br />
+	(4) aid to a Department of Corrections employee or volunteer who was in danger of being seriously injured or killed.<br /><br />
+	(C) A motion made pursuant to this provision shall be filed by that circuit solicitor in the county where the defendant&#39;s case arose. The State shall send a copy to the chief judge of the circuit within five days of filing. The chief judge or a circuit court judge currently assigned to that county shall have jurisdiction to hear and resolve the motion. Jurisdiction to resolve the motion is not limited to the original sentencing judge.<br /><br />
+HISTORY: 2010 Act No. 273, SECTION 13, eff June 2, 2010.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-70.</span> Authority of local officials to require able-bodied convicted persons to perform labor in public interest.<br /><br />
+	Notwithstanding another provision of law, a local governing body may authorize the sheriff or other official in charge of a local correctional facility to require any able-bodied convicted person committed to the facility to perform labor in the public interest. This labor may involve public service work or related activities which conform to the provisions of Section 24-13-660. The public service work may include, but is not limited to, maintenance or repair of the drainage systems, highways, streets, bridges, grounds, and buildings and litter control and emergency relief efforts. A convicted person physically capable of performing the labor who refuses to obey a direct order to perform the labor is not entitled to good behavior credits pursuant to Section 24-13-210 or productive duty credits pursuant to Section 24-13-230. An inmate participating in a local work punishment or other public service sentence program must not be removed arbitrarily from the program and required to perform work on the public works or ways. A local governing body may enter into a contractual agreement with another governmental entity for use of inmate labor in the performance of work for a public purpose.<br /><br />
+HISTORY: 1962 Code SECTION 17-554; 1952 Code SECTION 17-554; 1942 Code SECTIONS 1035, 1036, 3835; 1932 Code SECTIONS 1035, 1036, 3831, 3835; Civ. C. &#39;22 SECTIONS 723, 1078; Cr. P. &#39;22 SECTIONS 125, 126; Civ. C. &#39;12 SECTIONS 639, 957; Cr. C. &#39;12 SECTIONS 104, 943; Civ. C. &#39;02 SECTION 773; Cr. C. &#39;02 SECTION 657; R. S. 544, 663; 1885 (19) 125; 1892 (21) 22; 1894 (21) 481; 1896 (22) 245; 1899 (23) 13; 1905 (24) 915; 1911 (27) 169; 1912 (27) 553; 1914 (28) 515; 1917 (30) 265; 1922 (32) 947; 1960 (51) 1779; 1986 Act No. 462, SECTION 15; 1995 Act No. 7, Part II, SECTION 52.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-80.</span> Authority of Commissioner of Department of Corrections as to convicts sentenced to hard labor.<br /><br />
+	Notwithstanding the specific language of the sentence which confines an inmate to &quot;hard labor&quot; in the custody of the State Department of Corrections, the Commissioner thereof may assign such inmate to the type of labor he deems appropriate and necessary for the benefit of the Department and the inmate concerned, and such assignment shall fulfill the conditions of the sentence.<br /><br />
+HISTORY: 1962 Code SECTION 17-554.1; 1971 (57) 223.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-100.</span> Suspension of sentence in misdemeanor cases.<br /><br />
+	The circuit judges of this State may, in their discretion, suspend sentences imposed by them except in cases of felony upon such terms and upon such conditions as in their judgment may be fit and proper.<br /><br />
+HISTORY: 1962 Code SECTION 17-557; 1952 Code SECTION 17-557; 1942 Code SECTION 1039; 1932 Code SECTION 1039; Cr. P. &#39;22 SECTION 128; 1912 (27) 773.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-110.</span> Suspension of sentence shall run for period of time prescribed by judge.<br /><br />
+	When the sentence of any person who has been sentenced by a court of competent jurisdiction of this State shall be suspended by a judge of such court such suspension shall run for the period of time prescribed by such judge in the sentence or order of suspension and no person who has had a sentence so suspended shall be called back and required to do service under such sentence beyond and after the expiration of such period.<br /><br />
+HISTORY: 1962 Code SECTION 17-558; 1952 Code SECTION 17-558; 1942 Code SECTION 1039-4; 1935 (39) 431.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-120.</span> Restitution of stolen goods.<br /><br />
+	If any person shall rob or take away any money, goods or chattels from any person, from their person or otherwise, and be found guilty thereof, such money, goods and chattels shall be restored to the party so robbed or the owner thereof and the judge before whom any such person shall be found guilty shall award, from time to time, writs of restitution for such money, goods and chattels.<br /><br />
+HISTORY: 1962 Code SECTION 17-559; 1952 Code SECTION 17-559; 1942 Code SECTION 1148; 1932 Code SECTION 1148; Cr. C. &#39;22 SECTION 42; Cr. C. &#39;12 SECTION 187; Cr. C. &#39;02 SECTION 153; G. S. 2492; R. S. 149; 21 H. 8 c. 11; 1712 (2) 458.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-125.</span> Sentence for crimes involving the unlawful taking or receiving of or malicious injury to property may not be suspended unless restitution made.<br /><br />
+	Notwithstanding any other provision of law, in every case in which a person is sentenced for a crime involving the unlawful taking or receiving of or malicious injury to another&#39;s property, and the judge sentences such person less than the maximum sentence prescribed by law, a portion of such sentence may be suspended and the defendant placed on probation if he makes restitution to the victim in an amount equal to the monetary loss sustained by the victim as determined by the judge.<br /><br />
+	If the defendant fails to make restitution in accordance with the terms prescribed by the judge, the suspension shall be revoked and the defendant shall serve the original sentence.<br /><br />
+	Nothing contained herein shall preclude a judge from prescribing other conditions of probation.<br /><br />
+HISTORY: 1976 Act No. 645.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-130.</span> Accepted plea of guilty as equivalent of jury recommendation of mercy for sentencing purposes.<br /><br />
+	In all cases where by law the punishment is affected by the jury recommending the accused to the mercy of the court, and a plea of guilty is accepted with the approval of the court, the accused shall be sentenced in like manner as if the jury in a trial had recommended him to the mercy of the court.<br /><br />
+HISTORY: 1962 Code SECTION 17-553.4; 1962 (52) 2155.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-135.</span> Entry of sex offenders on Central Registry of Child Abuse and Neglect upon conviction of certain crimes.<br /><br />
+	(A) When a person is convicted of or pleads guilty or nolo contendere to an &quot;Offense Against the Person&quot; as provided for in Title 16, Chapter 3, an &quot;Offense Against Morality or Decency&quot; as provided for in Title 16, Chapter 15, criminal domestic violence, as defined in Section 16-25-20, criminal domestic violence of a high and aggravated nature as defined in Section 16-25-65, or the common law offense of assault and battery of a high and aggravated nature, and the act on which the conviction or the plea of guilty or nolo contendere is based involved sexual or physical abuse of a child, the court shall order that the person&#39;s name, any other identifying information, including, but not limited to, the person&#39;s date of birth, address, and any other identifying characteristics, and the nature of the act which led to the conviction or plea be placed in the Central Registry of Child Abuse and Neglect established by Subarticle 13, Article 3, Chapter 7, Title 63. The clerk shall forward the information to the Department of Social Services for this purpose in accordance with guidelines adopted by the department.<br /><br />
+	(B) For purposes of this section:<br /><br />
+	(1) &quot;Physical abuse&quot; means inflicting physical injury upon a child or encouraging or facilitating the infliction of physical injury upon a child by any person including, but not limited to, a person responsible for the child&#39;s welfare, as defined in Section 63-7-20.<br /><br />
+	(2) &quot;Sexual abuse&quot; means:<br /><br />
+	(a) actual or attempted sexual contact with a child; or<br /><br />
+	(b) permitting, enticing, encouraging, forcing, or otherwise facilitating a child&#39;s participation in prostitution or in a live performance or photographic representation of sexual activity or sexually explicit nudity; by any person including, but not limited to, a person responsible for the child&#39;s welfare, as defined in Section 63-7-20.<br /><br />
+HISTORY: 1997 Act No. 132, SECTION 1.<br /><br />
+Editor&#39;s Note<br /><br />
+	1997 Act No. 132, SECTION 10, provides as follows:<br /><br />
+	&quot;SECTION 10. (A) The data system which constituted the Central Registry of Child Abuse and Neglect prior to the effective date of this statute shall be incorporated into the statewide data systems of the department provided for in Section 20-7-680(A).<br /><br />
+	&quot;(B) Except as provided in subsection (C), information concerning perpetrators listed in the Central Registry of Child Abuse and Neglect prior to the effective date of this act must be placed in the modified Central Registry of Child Abuse and Neglect created by Subarticle 7, Article 7, Chapter 7, Title 20 of the 1976 Code if there has been an affirmative determination that the perpetrator physically or sexually abused the child or wilfully or recklessly neglected the child.<br /><br />
+	&quot;(C) Information concerning all cases indicated before January 1, 1993, shall be placed in the modified Central Registry of Child Abuse and Neglect created by Subarticle 7, Article 7, Chapter 7, Title 20 of the 1976 Code. At such time as the department receives a request for information concerning a perpetrator of child abuse or neglect in a case indicated prior to January 1, 1993, the department must review the records of the case. Information concerning the case may be released to the party requesting the information only if (1) the case was indicated for physical or sexual abuse or wilful or reckless neglect and (2) the department&#39;s determination that the perpetrator abused or neglected the child was confirmed by a finding in family court or an administrative fair hearing, or the subject of the report waived the opportunity for a family court determination or for an administrative review. Upon request of a person identified in the record as a perpetrator, the department may review records of cases indicated before January 1, 1993, and may decide whether confirmation or waiver occurred, whether the department should redesignate the person&#39;s status, or whether the department should provide a hearing pursuant to Section 20-7-655.<br /><br />
+	&quot;(D) For purposes of this section, &#39;wilful or reckless neglect&#39; refers to cases of neglect in which criminal charges were filed against the perpetrator.<br /><br />
+	&quot;(E) No other case shall be placed in the modified Central Registry of Child Abuse and Neglect created by Subarticle 7, Article 7, Chapter 7, Title 20 of the 1976 Code unless the requirements of Sections 20-7-650, 20-7-670, or 17-25-510 have been met.&quot;<br /><br />
+	2010 Act No. 273, SECTION 7.C, provides:<br /><br />
+	&quot;Wherever in the 1976 Code of Laws reference is made to the common law offense of assault and battery of a high and aggravated nature, it means assault and battery with intent to kill, as contained in repealed Section 16-3-620, and, except for references in Section 16-1-60 and Section 17-25-45, wherever in the 1976 Code reference is made to assault and battery with intent to kill, it means attempted murder as defined in Section 16-3-29.&quot;<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-137.</span> Liability of court imposing alternative sentence.<br /><br />
+	Notwithstanding another provision of law, a court which imposes an alternative sentence upon a defendant is not liable for any injuries sustained by the defendant while the defendant completes his sentence.<br /><br />
+HISTORY: 1999 Act No. 100, Part II, SECTION 97.<br /><br />
+<div style="text-align: center;">ARTICLE 2</div>
+<div style="text-align: center;">Community Penalties Programs</div><br />
+<span style="font-weight: bold;"> SECTION 17-25-140.</span> Definitions.<br /><br />
+	For purposes of this article the following definitions apply:<br /><br />
+	(1) &quot;Targeted offenders&quot; means criminal defendants not previously convicted of a violent crime as defined in SECTION 16-1-60 and who have not yet been convicted in a pending indictment and are determined by the community penalties program staff to face an imminent and substantial threat of imprisonment, with the exception of criminal defendants charged with a violent crime as defined in SECTION 16-1-60; provided, a targeted offender shall not mean a criminal defendant who has previously participated in a community penalties program or a pretrial intervention program.<br /><br />
+	(2) &quot;Community penalty plan&quot; means a plan presented in writing to the solicitor and presiding judge after an adjudication of guilt which provides a detailed description of the targeted offender&#39;s proposed specific plan for sentencing in the case;<br /><br />
+	(3) &quot;Community penalties program&quot; means an agency or individual within the judicial circuit which shall prepare community penalty plans and arrange or contract with public or private agencies for necessary services for offenders.<br /><br />
+HISTORY: 1986 Act No. 462, SECTION 3.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-145.</span> Implementation and operation of community penalties program; contracts for preparation of individual community penalty program plans.<br /><br />
+	The Department of Probation, Parole, and Pardon and Services must implement a community penalties program in each judicial circuit of the State. The Department at its discretion may operate the program or contract with public or private agencies for necessary services. Agencies or individuals may contract to prepare individual community penalty program plans for offenders in a particular judicial circuit as prescribed by the Department.<br /><br />
+HISTORY: 1986 Act No. 462, SECTION 3.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-150.</span> Responsibilities of program; mandatory community penalty plan provisions; limitation upon use of funds.<br /><br />
+	(A) Each community penalties program is responsible for:<br /><br />
+	(1) targeting offenders who face an imminent and substantial threat of imprisonment;<br /><br />
+	(2) preparing detailed community penalty plans for presentation to the presiding judge by the offender&#39;s attorney;<br /><br />
+	(3) contracting or arranging with public or private agencies for services described in the community penalty plan;<br /><br />
+	(4) defining objectives of the Communities Penalties Programs;<br /><br />
+	(5) outlining goals for reduction of offenders committed to prison for each county within the circuit, and a system of monitoring the number of commitments to prison;<br /><br />
+	(6) developing procedures for obtaining services from existing public or private agencies and preparation of a detailed budget for staff, contracted services, and all other costs;<br /><br />
+	(7) developing procedures for cooperation with the probation personnel who have supervisory responsibility for the offender;<br /><br />
+	(8) outlining procedures for evaluating the program&#39;s effect on numbers of prison commitments;<br /><br />
+	(9) outlining procedures for returning offenders who do not comply with their community penalty plan to court for action by the court.<br /><br />
+	(B) Every community penalty plan must include the following:<br /><br />
+	(1) notification to the victim of the offender&#39;s placement in the program;<br /><br />
+	(2) solicitation of victim response into the offender&#39;s proposed community penalty;<br /><br />
+	(3) restitution to the victim by the offender within a specified period of time and in an amount to be determined by the court;<br /><br />
+	(4) payment of such fees and costs of the program by the offender unless the court grants a waiver due to indigency. Procedures for collecting a fee from offenders must be implemented based on a sliding scale according to income and ability to pay;<br /><br />
+	(5) procedures for returning offenders who do not comply with their community penalty plan to court for action by the court.<br /><br />
+	(C) Funds provided for use under the provisions of this article may not be used for the operating cost, construction, or any other cost associated with local jail confinement.<br /><br />
+HISTORY: 1986 Act No. 462, SECTION 3.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-160.</span> Funds for implementing program.<br /><br />
+	The funds for implementing the provisions of the Community Penalties Program established in this article must be provided by the General Assembly in the annual general appropriations act from funds available pursuant to SECTION 14-1-210 of the 1976 Code.<br /><br />
+HISTORY: 1986 Act No. 462, SECTION 2.<br /><br />
+<div style="text-align: center;">ARTICLE 3</div>
+<div style="text-align: center;">Enforcement and Execution</div><br />
+<span style="font-weight: bold;"> SECTION 17-25-310.</span> Opening and enforcement of sealed sentences upon arrest.<br /><br />
+	Upon the arrest of a person for whom there is a sealed sentence the sheriff shall forthwith carry the prisoner before the clerk of the court who shall, in the presence of the prisoner and the attorney of record if there be one, open and publish such sentence and it shall at once be enforced unless stayed by appeal.<br /><br />
+HISTORY: 1962 Code SECTION 17-571; 1952 Code SECTION 17-571; 1942 Code SECTION 984; 1932 Code SECTION 984; Cr. P. &#39;22 SECTION 75; Cr. C. &#39;12 SECTION 72; 1910 (26) 587, 762; 1911 (27) 135.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-320.</span> Enforcement of sentence and judgment against corporations.<br /><br />
+	The sentence and judgment of the court of general sessions in a criminal case against a corporation shall be enforced in the same manner by execution against the property of the defendant as is provided by law for enforcing the judgments of the courts of common pleas in civil actions.<br /><br />
+HISTORY: 1962 Code SECTION 17-572; 1952 Code SECTION 17-572; 1942 Code SECTION 991; 1932 Code SECTION 991; Civ. C. &#39;22 SECTION 4299; Civ. C. &#39;12 SECTION 2832; 1911 (27) 41.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-322.</span> Restitution to crime victim by person convicted of crime; hearing; determination of method, manner, and amount; entry of order.<br /><br />
+	(A) When a defendant is convicted of a crime which has resulted in pecuniary damages or loss to a victim, the court must hold a hearing to determine the amount of restitution due the victim or victims of the defendant&#39;s criminal acts. The restitution hearings must be held unless the defendant in open court agrees to the amount due, and in addition to any other sentence which it may impose, the court shall order the defendant make restitution or compensate the victim for any pecuniary damages. The defendant, the victim or victims, or their representatives or the victim&#39;s legal representative as well as the Attorney General and the solicitor have the right to be present and be heard upon the issue of restitution at any of these hearings.<br /><br />
+	(B) In determining the manner, method, or amount of restitution to be ordered, the court may take into consideration the following:<br /><br />
+	(1) the financial resources of the defendant and the victim and the burden that the manner or method of restitution will impose upon the victim or the defendant;<br /><br />
+	(2) the ability of the defendant to pay restitution on an installment basis or on other conditions to be fixed by the court;<br /><br />
+	(3) the anticipated rehabilitative effect on the defendant regarding the manner of restitution or the method of payment;<br /><br />
+	(4) any burden or hardship upon the victim as a direct or indirect result of the defendant&#39;s criminal acts;<br /><br />
+	(5) the mental, physical, and financial well-being of the victim.<br /><br />
+	(C) At the restitution hearings, the defendant, the victim, the Attorney General, the solicitor, or other interested party may object to the imposition, amount or distribution of restitution, or the manner or method of them, and the court shall allow all of these objections to be heard and preserved as a matter of record. The court shall enter its order upon the record stating its findings and the underlying facts and circumstances of them. The restitution order shall specify a monthly payment schedule that will result in full payment for both restitution and collection fees by the end of eighty percent of the offender&#39;s supervision period. In the absence of a monthly payment schedule, the Department of Probation, Parole, and Pardon Services shall impose a payment schedule of equal monthly payments that will result in full restitution and collections fee being paid by the end of eighty percent of an offender&#39;s supervision period. The department, through its agents, must initiate legal process to bring every probationer, whose restitution is six months in arrears, back to court, regardless of wilful failure to pay. The judge shall make an order addressing the probationer&#39;s failure to pay.<br /><br />
+	(D) All restitution funds, excluding the twenty percent collection fee, collected before or after the effective date of this section that remain unclaimed by a crime victim for more than eighteen months from the day of last payment received must be transferred to the South Carolina Victim Compensation Fund, notwithstanding the Uniform Unclaimed Property Act of 1981.<br /><br />
+	(E) An offender may not be granted a pardon until the restitution and collection fees required by the restitution order have been paid in full.<br /><br />
+HISTORY: 1993 Act No. 140, SECTION 1; 1996 Act No. 437, SECTION 2.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	Pursuant to 2017 Act No. 96, SECTION 14, the reference to &quot;Victim&#39;s Compensation Fund&quot; in (D) was changed to &quot;Victim Compensation Fund&quot;.<br /><br />
+Editor&#39;s Note<br /><br />
+	1996 Act No. 437, SECTION 8, eff January 1, 1997, provides as follows:<br /><br />
+	&quot;Implementation of the changes in law effectuated by this act to Sections 16-3-1110, 16-3-1535, 17-25-322, 17-25-324, and 24-21-490 of the 1976 Code and the requirements thereunder or in any new provisions of law contained herein which would necessitate funding are contingent upon appropriations of sufficient funding by the General Assembly. Nothing herein shall relieve the various agencies and authorities within the offices of the respective clerks of court or judicial, correctional, and parole systems of this State from continuing to meet, enforce, and address those provisions of law related to restitution in effect prior to the enactment hereof.&quot;<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-323.</span> Continuing jurisdiction over court-ordered payments; default; hearing to show cause; enforcement; entry in records; satisfaction of judgment.<br /><br />
+	(A) The trial court retains jurisdiction of the case for the purpose of modifying the manner in which court-ordered payments are made until paid in full, or until the defendant&#39;s active sentence and probation or parole expires.<br /><br />
+	(B) When a defendant is placed on probation by the court or parole by the Board of Probation, Parole and Pardon Services, and ordered to make restitution, and the defendant is in default in the payment of them or any installment or any criminal fines, surcharges, assessments, costs, and fees ordered, the court, before the defendant completes his period of probation or parole, on motion of the victim or the victim&#39;s legal representative, the Attorney General, the solicitor, or a probation and parole agent, or upon its own motion, must hold a hearing to require the defendant to show cause why his default should not be treated as a civil judgment and a judgment lien attached. The court must enter:<br /><br />
+	(1) judgment in favor of the State for the unpaid balance, if any, of any fines, costs, fees, surcharges, or assessments imposed; and<br /><br />
+	(2) judgment in favor of each person entitled to restitution for the unpaid balance if any restitution is ordered plus reasonable attorney&#39;s fees and cost ordered by the court.<br /><br />
+	(C) When a defendant is ordered to make restitution by a magistrate or municipal court, and the defendant is in default in the payment of restitution or of any installment or any criminal fines, surcharges, assessments, costs, and fees ordered, the magistrate or municipal court, within one year of the imposition of the sentence, on motion of the victim or the victim&#39;s legal representative, the Attorney General, the solicitor, or the prosecuting law enforcement agency, or upon its own motion, must hold a hearing to require the defendant to show cause why his default should not be treated as a civil judgment and a judgment lien attached. The magistrate or municipal court must enter:<br /><br />
+	(1) judgment in favor of the State for the unpaid balance, if any, of any fines, costs, fees, surcharges, or assessments imposed; and<br /><br />
+	(2) judgment in favor of each person entitled to restitution for the unpaid balance if any restitution is ordered plus reasonable attorney&#39;s fees and cost ordered by the court.<br /><br />
+	Notwithstanding the provisions of Section 14-25-65, municipal courts shall have the authority and jurisdiction to convert unpaid restitution, fines, costs, fees, surcharges, and assessments to civil judgments.<br /><br />
+	The magistrate or municipal court, upon a conversion to a judgment, must transmit the judgment to the clerk of the circuit court in the county for entry pursuant to subsection (F). Judgments entered and docketed pursuant to this subsection must be handled in the same manner and have the same force and effect as judgments entered and docketed pursuant to Sections 22-3-300, 22-3-310, and 22-3-320.<br /><br />
+	(D) The judgments may be enforced as a civil judgment.<br /><br />
+	(E) A judgment issued pursuant to this section has the force and effect of a final judgment and may be enforced by the judgment creditor in the same manner as any other civil judgment with enforcement to take place in the court of common pleas.<br /><br />
+	(F) The clerk of the circuit court must enter a judgment issued pursuant to this section in the civil judgment records of the court. A judgment issued pursuant to this section is not effective until entry is made in the civil judgment records of the court as required pursuant to this subsection.<br /><br />
+	(G) A filing or other fee may not be required for seeking or for the filing of a civil judgment obtained or issued pursuant to this section.<br /><br />
+	(H) Upon full satisfaction of a judgment entered pursuant to this section, the judgment creditor must record the satisfaction on the margin of the copy of the judgment on file in the civil judgment records of the court.<br /><br />
+	(I) Any funds resulting from the collection of a judgment for unpaid fines, costs, fees, surcharges, or assessments must be distributed in the same manner and proportion as fines, costs, fees, surcharges, or assessments are distributed as otherwise set forth by law.<br /><br />
+HISTORY: 1993 Act No. 140, SECTION 2; 1996 Act No. 437, SECTION 3; 2013 Act No. 82, SECTION 4, eff June 13, 2013.<br /><br />
+Effect of Amendment<br /><br />
+	The 2013 amendment rewrote the section.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-324.</span> Restitution to secondary victims and third-party payees; reports.<br /><br />
+	(A) Secondary victims and third-party payees, excluding the offender&#39;s insurer, may receive restitution as determined by the court. The Department of Probation, Parole and Pardon Services shall ensure that a primary victim receives his portion of a restitution order before any of the offender&#39;s payments are credited to a secondary victim or a third party payee, or both.<br /><br />
+	(B) The department shall report to the Governor&#39;s Office, the President of the Senate, the Speaker of the House, the Chairman of the House Judiciary Committee, and the Chairman of the Senate Corrections and Penology Committee by the first day of the 1997 Legislative Session detailed recommendations for collection and distribution of restitution and issues relating to indigent offenders and use of civil remedies.<br /><br />
+HISTORY: 1996 Act No. 437, SECTION 7; 2002 Act No. 356, SECTION 1, Pt IV.F, eff July 1, 2002.<br /><br />
+Editor&#39;s Note<br /><br />
+	1996 Act No. 437, SECTION 8, eff January 1, 1997, provides as follows:<br /><br />
+	&quot;Implementation of the changes in law effectuated by this act to Sections 16-3-1110, 16-3-1535, 17-25-322, 17-25-324, and 24-21-490 of the 1976 Code and the requirements thereunder or in any new provisions of law contained herein which would necessitate funding are contingent upon appropriations of sufficient funding by the General Assembly. Nothing herein shall relieve the various agencies and authorities within the offices of the respective clerks of court or judicial, correctional, and parole systems of this State from continuing to meet, enforce, and address those provisions of law related to restitution in effect prior to the enactment hereof.&quot;<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-325.</span> Enforcement and execution of judgment in criminal case; findings supported by evidence.<br /><br />
+	The sentence and judgment of the court of general sessions in a criminal case against an individual may be enforced in the same manner by execution against the property of the defendant as is provided by law for enforcing the judgments of the courts of common pleas in civil actions. Before a general sessions court may enter a judgment against a defendant&#39;s property as authorized by this section, the judge must make findings of fact as to the amount of the judgment to be entered against the defendant. These findings must be supported by the preponderance of the relevant evidence as is offered by the parties.<br /><br />
+HISTORY: 1993 Act No. 140, SECTION 3.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-326.</span> Alteration, modification, or rescission of order; petition upon good cause; preponderance of evidence.<br /><br />
+	Any court order issued pursuant to the provisions of this article may be altered, modified, or rescinded upon the filing of a petition by the defendant, Attorney General, solicitor, or the victim for good and sufficient cause shown by a preponderance of the evidence.<br /><br />
+HISTORY: 1993 Act No. 140, SECTION 4; 1996 Act No. 437, SECTION 4.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-330.</span> Execution on forfeited recognizance or for fine.<br /><br />
+	When any recognizance shall be adjudged forfeited under the provisions of SECTION 17-15-170 or when any fine shall be imposed by or recovered for the use of the State in any court or before a magistrate, if the party incurring such fine or forfeiture shall fail to pay it down, with the costs of prosecution, then a writ in the nature of an execution shall issue, by virtue of which the sheriff or his deputy shall sell in the same manner as property is sold under execution in civil cases so much of such offender&#39;s estate, real or personal, as may be necessary to satisfy the fine or forfeiture, the cost of prosecution and the reasonable charges of taking, keeping and selling such property, returning the overplus, if any, to the offender, together with a bill of the fine or forfeiture, with costs and charges, if he requires it.<br /><br />
+HISTORY: 1962 Code SECTION 17-573; 1952 Code SECTION 17-573; 1942 Code SECTION 1042; 1932 Code SECTION 1042; Cr. P. &#39;22 SECTION 131; Cr. C. &#39;12 SECTION 113; Cr. C. &#39;02 SECTION 86; G. S. 2661; R. S. 86; 1787 (5) 13.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-340.</span> When offender may be committed to jail; privilege of insolvent debtors.<br /><br />
+	If the sheriff or his deputy return on oath that such offender refused to pay or has not any property or not sufficient whereon to levy, then a writ of capias ad satisfaciendum shall issue whereby he shall be committed to the common jail, until the forfeiture, costs and charges shall be satisfied. Such offender shall be entitled, however, to the privilege of insolvent debtors.<br /><br />
+HISTORY: 1962 Code SECTION 17-574; 1952 Code SECTION 17-574; 1942 Code SECTION 1043; 1932 Code SECTION 1043; Cr. P. &#39;22 SECTION 132; Cr. C. &#39;12 SECTION 114; Cr. C. &#39;02 SECTION 87; G. S. 2662; R. S. 87; 1787 (5) 13.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-350.</span> Schedule for payment of fine by indigent; consequences of failure to comply.<br /><br />
+	In any offense carrying a fine or imprisonment, the judge or magistrate hearing the case shall, upon a decision of guilty of the accused being determined and it being established that he is indigent at that time, set up a reasonable payment schedule for the payment of such fine, taking into consideration the income, dependents and necessities of life of the individual. Such payments shall be made to the magistrate or clerk of court as the case may be until such fine is paid in full. Failure to comply with the payment schedule shall constitute contempt of court; however, imprisonment for contempt may not exceed the amount of time of the original sentence, and where part of the fine has been paid the imprisonment cannot exceed the remaining pro rata portion of the sentence.<br /><br />
+	No person found to be indigent shall be imprisoned because of inability to pay the fine in full at the time of conviction.<br /><br />
+	Entitlement to free counsel shall not be determinative as to defendant&#39;s indigency.<br /><br />
+HISTORY: 1962 Code SECTION 17-574.1; 1973 (58) 266.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-360.</span> Fines in the alternative shall be apportioned when part of sentence has been served.<br /><br />
+	In all cases in this State when a sentence has been imposed by any judge, magistrate, mayor or intendant of any city or town in the alternative, by fine or imprisonment, and the person upon whom the sentence has been imposed shall enter upon the service of the sentence and thereafter such person or anyone in his behalf shall desire or offer to pay the fine imposed by the sentence, the clerk of the court in the county in which the sentence was imposed or the judge, magistrate, mayor or intendant who imposed the sentence shall apportion the fine imposed therein, so that the person or anyone in his behalf shall be allowed to pay such part of the fine as shall be in proportion to the balance of the time to be served under the sentence. Upon the payment of such proportionate part of the fine, the clerk, judge, magistrate, mayor or intendant shall release and discharge the person in behalf of whom the fine is so paid from further custody.<br /><br />
+HISTORY: 1962 Code SECTION 17-576; 1952 Code SECTION 17-576; 1942 Code SECTION 1045; 1932 Code SECTION 1045; 1922 (32) 767.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-370.</span> Execution of death sentence upon affirmance of judgment or dismissal or abandonment of appeal.<br /><br />
+	In all criminal cases in which the sentence of death is imposed and which are appealed to the Supreme Court or in which notice of intention to appeal is given, when the judgment below has been affirmed or the appeal dismissed or abandoned, the clerk of the Supreme Court, when the remittitur is sent down or the appeal is dismissed or abandoned, shall notify the Commissioner of the prison system or his duly appointed officer in charge of the State Penitentiary of the final disposition of such appeal and, on the fourth Friday after the receipt of such notice the sentence appealed from shall be duly carried out as provided by law in such cases, unless stayed by order of the Supreme Court or respite or commutation of the Governor.<br /><br />
+HISTORY: 1962 Code SECTION 17-578; 1952 Code SECTION 17-578; 1942 Code SECTION 1046; 1932 Code SECTION 1046; 1923 (33) 113; 1929 (36) 66; 1936 (39) 1306; 1960 (51) 1917.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-380.</span> Number of copies and form of notice under Section 17-25-370.<br /><br />
+	Two copies of the notice shall be served or sent by registered mail to the Director of the Department of Corrections or his duly appointed officer in charge of the applicable correctional facility. The notice, when the sentence has been affirmed, shall read substantially as follows:<br /><br />
+	&quot;This is to notify you that the sentence of death imposed in the case of State vs. __________ from which an appeal has been taken has been affirmed and finally disposed of by the Supreme Court and the remittitur has been sent down to the clerk of the Court of General Sessions of __________ County. It is, therefore, required of you by Section 17-25-370 of the Code of Laws of South Carolina to execute the judgment and sentence of death imposed on said defendant or defendants (if more than one) on the fourth Friday after the service upon you or receipt of this notice&quot;.<br /><br />
+	When the appeal has been dismissed or abandoned the notice shall be substantially the same as when the sentence has been affirmed except that the first sentence shall read as follows:<br /><br />
+	&quot;This is to notify you that the appeal from the sentence of death imposed in the case of State vs. __________ has been dismissed (or abandoned) and the notice has been sent down to the clerk of the Court of General Sessions of __________ County&quot;.<br /><br />
+HISTORY: 1962 Code SECTION 17-579; 1952 Code SECTION 17-579; 1942 Code SECTION 1046; 1932 Code SECTION 1046; 1923 (33) 113; 1929 (36) 66; 1936 (39) 1306; 1960 (51) 1917; 1996 Act No. 448, SECTION 3.<br /><br />
+Editor&#39;s Note<br /><br />
+	1996 Act No. 448, SECTION 1, eff June 18, 1996, provides as follows:<br /><br />
+	&quot;This act [consisting of SECTIONS 16-3-21, 17-25-380, 17-27-130, 17-27-150, and 17-27-160] is known and may be cited as the &#39;South Carolina Effective Death Penalty Act of 1996&#39;.&quot;<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-390.</span> Acknowledgment of receipt of notice.<br /><br />
+	The receipt of the notice shall be acknowledged in writing by the recipient. The acknowledgment shall be filed by the clerk of the Supreme Court and, in case of service, the return of service shall be filed.<br /><br />
+HISTORY: 1962 Code SECTION 17-580; 1952 Code SECTION 17-580; 1942 Code SECTION 1046; 1932 Code SECTION 1046; 1923 (33) 113; 1929 (36) 66; 1936 (39) 1306.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-400.</span> Service of notice on prisoner.<br /><br />
+	The Commissioner of the prison system or his duly appointed officer shall immediately serve one of the copies of the notice upon the defendant personally.<br /><br />
+HISTORY: 1962 Code SECTION 17-581; 1952 Code SECTION 17-581; 1942 Code SECTION 1046; 1932 Code SECTION 1046; 1923 (33) 113; 1929 (36) 66; 1936 (39) 1306; 1960 (51) 1917.<br /><br />
+<div style="text-align: center;">ARTICLE 5</div>
+<div style="text-align: center;">Notoriety for Profit</div><br />
+<span style="font-weight: bold;"> SECTION 17-25-500.</span> Title of act.<br /><br />
+	This article may be known as the &quot;South Carolina Notoriety for Profit Act&quot;.<br /><br />
+HISTORY: 2000 Act No. 306, SECTION 4.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-510.</span> Definitions.<br /><br />
+	As used in this article:<br /><br />
+	(1) &quot;Office&quot; means Office of the Attorney General, South Carolina Crime Victim Services Division.<br /><br />
+	(2) &quot;Convicted&quot; includes any conviction by entry of a plea of guilty or nolo contendere, conviction after trial, a finding of guilty but mentally ill, or a finding of not guilty by reason of insanity.<br /><br />
+	(3) &quot;Eligible person&quot; means:<br /><br />
+	(a) a victim of the particular crime in question who has suffered direct or threatened physical, psychological, or financial harm as a result of the commission of the particular crime;<br /><br />
+	(b) a victim&#39;s spouse;<br /><br />
+	(c) a victim&#39;s parent;<br /><br />
+	(d) a victim&#39;s child;<br /><br />
+	(e) a spouse, parent, child, or lawful representative of a victim who is:<br /><br />
+	(i) deceased;<br /><br />
+	(ii) a minor;<br /><br />
+	(iii) incompetent; or<br /><br />
+	(iv) physically or psychologically incapacitated; or<br /><br />
+	(f) a person dependent for principal support on the deceased victim of the crime.<br /><br />
+	&quot;Eligible person&quot; does not include the offender criminally responsible for the crime in question or a person aiding or abetting the offender criminally responsible.<br /><br />
+	(4) &quot;Offender&quot; means the person convicted of the particular crime in question.<br /><br />
+	(5) &quot;Profit from a crime&quot; includes any of the following:<br /><br />
+	(a) property obtained through or income generated from the commission of a crime for which the offender was convicted;<br /><br />
+	(b) property obtained or income generated from the sale, conversion, or exchange of proceeds of a crime for which the offender was convicted, including gain realized by the sale, conversion, or exchange; or<br /><br />
+	(c) property which the offender obtained or income generated as a result of having committed the crime for which the offender was convicted, including assets obtained through the unique knowledge obtained during the commission of or in preparation for the commission of the crime, as well as any property obtained by or income generated from the sale, conversion, or exchange of that property and any gain realized by that sale, conversion, or exchange.<br /><br />
+HISTORY: 2000 Act No. 306, SECTION 4.<br /><br />
+Code Commissioner&#39;s Note<br /><br />
+	Pursuant to 2017 Act No. 96, SECTION 14, the reference to &quot;State Office of Victim Assistance in the office of the Governor&quot; in (1) was changed to &quot;Office of the Attorney General, South Carolina Crime Victim Services Division&quot;.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-520.</span> Notice of payment of profit from crime; notification of victims.<br /><br />
+	If an offender, or his representative or agent, knowingly contracts for or agrees to be paid any profit from a crime, he must give written notice to the office of the payment or the obligation to pay and a copy of the contract between the offender and contracting party as soon as practical after discovering that the payment or intended payment is a profit from a crime. The office, upon receiving notice of the contract, agreement to pay, or payment of profits from a crime, shall request from all agencies with the duty to notify crime victims pursuant to Article 15, Chapter 3 of Title 16, the name and last known address of any eligible person who is a victim of the offender of the crime in question. It is the duty of the office to notify all known eligible persons at their last known address of the existence of profits.<br /><br />
+HISTORY: 2000 Act No. 306, SECTION 4.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-530.</span> Civil action to recover profits; limitations; action by Office of Victim Assistance to recover payments and expenses.<br /><br />
+	(A) Notwithstanding any other provision of law or rule of civil procedure, an eligible person has the right to bring a civil action in a court of competent jurisdiction to recover money damages from an offender or the legal representative of that offender within three years of the discovery of the existence of any profits from the crime. Damages awarded in this action are recoverable only up to the value of the profits from the crime.<br /><br />
+	(B) If an action is filed under this article after the expiration of all other applicable statutes of limitation, any other eligible person must file an action for damages as a result of the crime within three years of:<br /><br />
+	(1) the actual discovery of the existence of the profits from the crime; or<br /><br />
+	(2) actual notice received from or notice published by the office of the discovery of the existence of profits, whichever is later.<br /><br />
+	(C) If profits from a crime remain after the payment of all claims made under this article, the office has the right to bring an action in a court of competent jurisdiction against an offender or the legal representative of that offender within two years of the discovery of the existence of any profits to recover payments made by the office pursuant to Article 13, Chapter 3 of Title 16 and expenses incurred by the office pursuant to Article 13, 14, or 15 of Chapter 3 of Title 16 or Section 24 of Article 1 of the South Carolina Constitution with regard to the crime or the offender in question.<br /><br />
+HISTORY: 2000 Act No. 306, SECTION 4.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-540.</span> Notification of Office of Victim Assistance of commencement of action; duties of Office upon receipt of notification.<br /><br />
+	(A) Upon filing an action pursuant to Section 17-25-530, the eligible person shall give notice to the office by delivering or mailing a copy of the complaint. The eligible person may, prior to filing the action, notify the office of his intent to file an action in order to allow the office to apply for other appropriate remedies which are authorized prior to the commencement of an action.<br /><br />
+	(B) The office may act on behalf of all eligible persons and may apply for any remedies available to an eligible person bringing an action under Section 17-25-530. These remedies include the right of attachment, injunction, receivership, and notice of pendency. On the motion for a particular remedy, the moving party shall state whether any other remedy has been sought in the same action against the same offender. The court may require the moving party to elect its remedy.<br /><br />
+	(C) Upon receipt of a copy of the complaint, the office shall:<br /><br />
+	(1) use certified mail, return receipt requested, to notify all other known eligible persons whose addresses are known of the alleged existence of profits from a crime;<br /><br />
+	(2) publish, at least once a year for three years from the date it is initially notified by an eligible person under this section, a legal notice in newspapers of general circulation in the county where the crime was committed and in contiguous counties advising any eligible persons of the alleged existence of profits from a crime. The office may provide additional notice in its discretion; and<br /><br />
+	(3) avoid the wasting of the assets identified in the complaint as the newly discovered profits from a crime in any manner consistent with subsection (B).<br /><br />
+HISTORY: 2000 Act No. 306, SECTION 4.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-550.</span> Failure of offender or agent to notify Office of Victim Assistance of contract or monies; civil penalty; action to recover; disposition of proceeds.<br /><br />
+	(A) An offender or his representative or agent who wilfully fails to submit to the office a copy of the contract described in Section 17-25-520 or who fails to pay to the office the monies or other consideration, as required by this article, is subject to a civil penalty of not less than ten thousand dollars but not more than an amount equal to three times the contract amount for each offense.<br /><br />
+	(B) If two or more individuals are subject to the penalties provided in this section, the individuals are jointly and severally liable for the payment of the penalty imposed.<br /><br />
+	(C) The office may bring an action to recover a civil penalty assessed under this section in a court of competent jurisdiction within six years after the cause of action accrues.<br /><br />
+	(D) Civil penalties imposed pursuant to this section must be paid to the office and used for the compensation of victims of crime.<br /><br />
+HISTORY: 2000 Act No. 306, SECTION 4.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-560.</span> Obligation to report knowledge of profit from crime.<br /><br />
+	All state agencies, solicitors, and law enforcement agencies with knowledge of profit from a crime which an offender has obtained or generated shall report this information to the office promptly.<br /><br />
+HISTORY: 2000 Act No. 306, SECTION 4.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-25-570.</span> Action by offender to defeat purpose of article null and void.<br /><br />
+	Any action taken by an offender, whether by execution of a power of attorney, creation of corporate entities, or otherwise, to defeat the purpose of this article is null and void as against the public policy of this State.<br /><br />
+HISTORY: 2000 Act No. 306, SECTION 4.<br /><br />
+
+</div>
+
+
+					</div>		 <!-- mainwidepanel -->
+					
+				</div>		 <!-- pagebody -->
+				
+				<div id="footer" class="nodisplay" style="height: 30px;" onContextMenu="return false;">
+			<div id="footerdiv" style="margin:0;">
+				South Carolina Legislative Services Agency * 223 Blatt Building * 1105 Pendleton Street * Columbia, SC 29201<!-- * 803-212-4420--><br>
+				
+								<a href="/disclaimer.php">Disclaimer</a> * <a href="/policies.php">Policies</a> * <a href="/credits.php">Photo Credits</a> * <a href="/contact.php">Contact Us</a>
+							</div>
+		</div>
+		<div id="printfooter" class="printdisplay serifNormal" align=center style="font-size: 8pt;">
+			<br>
+			<br>
+			<hr>
+			Legislative Services Agency
+			<br>
+			h t t p : / / w w w . s c s t a t e h o u s e . g o v
+		</div>
+	
+		</div>	<!-- container or main in mobile page-->
+</body>
+</html>
+

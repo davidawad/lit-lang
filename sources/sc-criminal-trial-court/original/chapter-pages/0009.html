@@ -1,0 +1,538 @@
+﻿
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+	<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	    <meta name="robots" content="noimageindex">
+	    <meta charset="iso-8859-1">
+	    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+	    	    <title>Code of Laws - Title 17 - Chapter 17- - CRIMINAL PROCEDURES</title>
+	    <link rel="SHORTCUT ICON" href="/images/stateflagsmall.ico" />
+		<link rel="icon" href="/images/stateflagsmall.ico" type="image/ico" />
+		<link rel="SHORTCUT ICON" href="/images/South-Carolina-Flag2.ico" />
+
+		<link type="text/css" rel="stylesheet" href="/css/main.css" media="all" />
+				
+		<!--[if lte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/ie7main.css" media="all" />
+		<![endif]-->
+		<!--[if gte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/iemain.css" media="all" />
+		<![endif]-->
+		<link type="text/css" rel="stylesheet" href="/css/print.css" media="print" />
+		<link type="text/css" rel="stylesheet" href="/css/supplement.css" media="screen" />
+		<!--<link type="text/css" rel="stylesheet" href="/css/zipsearch.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/vote.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/contact.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/navwrap.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/linkbar.css" media="screen" />-->
+	
+		<!--<script type="text/javascript" src="/js/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>-->
+		<script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+				<script type="text/javascript" src="/js/main_linux.js"></script>
+		
+
+		
+
+
+
+		<!--<script type="text/javascript" src="/js/common.js"></script>
+		<script type="text/javascript" src="/js/utils.js"></script>
+		<script type="text/javascript" src="/js/date.js"></script>
+		<script type="text/javascript" src="/js/lightbox.js"></script>
+		<script type="text/javascript" src="/js/legislation.js"></script>
+		<script type="text/javascript" src="/js/logon_lits.js"></script>
+		<script type="text/javascript" src="/js/message.js"></script>
+		<script type="text/javascript" src="/js/comm_meeting.js"></script>-->
+		<script type="text/vbscript" src="/vbs/comm_meeting.vbs"></script>
+		<!--<script type="text/javascript" src="/js/regs.js"></script>-->
+				
+	   	<script type="text/javascript">
+	    //document.onclick = function () { document.getElementById('transbox').style.display= 'none' };
+	    	var xmlhttp=false;
+			xmlhttp = create_xml_object();
+	
+			function getElement(ele)
+			{
+				var theobj = false;
+				if(typeof ele == 'string')
+					theobj = (document.getElementById)?document.getElementById(ele):document.all[ele];
+				else
+					theobj = ele;
+			
+				return theobj;
+			}
+		
+			function checkreader(friendlyalert)
+			{
+			 	/*friendlyalert=friendlyalert||false;
+			 	
+			 	var browser_info = perform_acrobat_detection();
+				if (!browser_info.acrobat)
+				{
+				 	loadadobebox('adobebox', '/adobe.php');
+					return false;
+				}
+				else if (friendlyalert)
+				{
+			 		alert(friendlyalert);
+				}*/
+				return true;
+			}
+				
+			function loadadobebox(boxname, url)
+			{
+				var response = false;
+	
+				doRequest(xmlhttp, "GET", url, false, null, null);
+				if (xmlhttp.status == 200)
+				{
+		         	response = xmlhttp.responseText;
+				}
+	
+				if(response)
+				{
+			 		var ele = document.getElementById(boxname);
+				 	if (ele)
+				 	{
+				 		ele.style.visibility = 'hidden';
+		 				ele.style.display = 'block';
+	
+		 				positionElement(ele, 'center', 'center', true);
+	
+						ele.innerHTML = response;
+					    ele.style.visibility = 'visible';
+					    ele.style.display = 'block';
+	//				    ele.scrollIntoView(true);
+					}
+				}
+				return response;
+			}
+	
+	
+			function init()
+			{
+		 		var ld=document.getElementById("loading");
+				if(ld)
+				{
+					ld.style.display = 'none';
+				}
+			}
+			
+			function openmore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				 	var pos = findPos(id);
+				 	id.style.zIndex = 10;
+		//		 	id.style.left = pos[0]+'px';
+		//		  	id.style.top = pos[1]+'px';
+				  	id.style.height = '295px';
+				  	id.style.position = 'absolute';
+				  	id.style.backgroundColor = '#f7f4ec';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'none';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = 'none';
+				  	}
+				}
+			}
+		
+			function closemore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				  	id.style.height = '135px';
+				  	id.style.position = '';
+				  	id.style.backgroundColor = 'transparent';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'block';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = '';
+				  	}
+				}		 	
+			}
+		
+		<!-- This script and many more are available free online at -->
+		<!-- The JavaScript Source!! http://javascript.internet.com -->
+		
+		<!-- Begin
+		function right(e) {
+		var msg = "Use of this image is strictly prohibited unless express written permission is given to the user by South Carolina Legislative Services Agency.";
+		if (navigator.appName == 'Netscape' && e.which == 3) {
+		alert(msg);
+		return false;
+		stopEvent(e);
+		}
+		if (navigator.appName == 'Microsoft Internet Explorer' && event.button==2) {
+		alert(msg);
+		return false;
+			stopEvent(event);
+		}
+		else return true;
+		}
+		
+	function trap() 
+	{
+		if(document.images)
+		{
+			for(i=0;i<document.images.length;i++)
+			{
+				if(document.images[i].className == 'allowcontextmenu')
+				{
+					// this should have no scripting
+				}
+				else
+				{
+				 	document.images[i].onmousedown = right;
+					document.images[i].oncontextmenu = function(){ return false; };
+					//document.images[i].onmouseup = right;
+				}
+			}
+		}
+	}
+
+	function findfwtext(texttofind) 
+	{
+	 	var fwtextele = document.getElementById('fwtext');
+		if(fwtextele)
+		{
+			fwtextele.value = texttofind;
+		}
+	}	
+		// End -->
+		</script>
+
+		<!-- ADDED FOR V4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJY6FMNQKH"></script>
+
+
+<script type="text/javascript">
+
+//ADDED FOR V4
+//Google tag (gtag.js) 
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LJY6FMNQKH');
+
+ 
+ /* COMMENTING OUT UPGRADING TO V4 -A
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36207109-1']);
+  _gaq.push(['_setDomainName', 'scstatehouse.gov']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+ 
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+*/
+  
+      $(document).ready(function(){
+        // COMMENTING THIS OUT NO LONGER BEING ACTIVELY USED TO MONITOR FOR TRAFFIC TO SPECIFIC LINKS - A
+        /*
+          var anchors = $('div#contentsection a');
+
+          //console.log('anchors...'+anchors.length);
+          if(anchors.length > 0){
+            //console.log('setting up event handler...');
+            anchors.click(function(){
+              var a = $(this).attr('href');
+              if(_gaq && (a.substr(-3) == 'htm' || a.substr(-4) == 'html' || a.substr(-3) == 'doc' || a.substr(-4) == 'docx' || a.substr(-3) == 'pdf' || a.substr(-3) == 'xls' || a.substr(-4) == 'xlsx')) {
+                //console.log(a);
+                _gaq.push(['_trackPageview', $(this).attr('href')]);
+              }
+              
+              var aText = $(this).text().toLowerCase();
+              if (a.indexOf('getfile.php') > -1 && aText === 'word'){
+                    _gaq.push(['_trackEvent', 'Word Doc', 'Download', ('from page: ' + document.location + ' - href: ' + a)]);
+              }
+
+            });
+          }
+          */
+      });
+
+</script>
+	</head>
+	
+		
+	<body class="home"  onload="init(); trap();">
+	<noscript>Your browser does not support JavaScript!  This page will not render correctly.</noscript> 
+
+
+	
+	<div id="adobebox" style="position:absolute; width:400px; height:150px; border:2px solid #555555; background-color:#cccccc; display:none;"></div>
+	<div id="container" >	
+				<div id="header" class="nodisplay" style="text-align:center; height:100px;" >
+									<img id="headerimg" class="nodisplay" alt="South Carolina Legislature" title="South Carolina Legislature" src="/images/header8.png" />
+								
+							<!--	<div class="award"><span style="color:#831224; font-weight:bold; font-size:1.5em;">*</span> Recipient of<br>the Notable State Documents Award<br>by the<br>South Carolina<br>State Library.</div>-->
+				
+				
+			</div>
+			<div class="printdisplay"><img border="0" src="/images/titleprint.jpg" alt="South Carolina Legislature" title="South Carolina Legislature" alt="South Carolina Legislature" title="South Carolina State Legislature" /><br /><hr /><br /></div>
+	
+			<div id="pagebody" >
+	
+	
+<!--<div id="topmessage">
+<br style="display:block; margin-top:10px;">
+Searches and data queries will be unavailable beginning Friday, August 19, 2016, from 8:00 PM until Saturday, August 20th at 8:00 AM<br>due to scheduled maintenance.</div>-->
+				<!-- Prompt IE 8/7/6 users to upgrade to a newer browser. -->
+				<!--[if lte IE 8]>
+				<div class="oldframe">In order to improve your experience using this website, please <a href="http://browsehappy.com/">upgrade your browser</a>.</div>
+				<![endif]-->
+			
+			
+			
+			<div id="menu" class="nodisplay">
+				<ul class="nodisplay">
+				<li><a href="/index.php">Home</a></li>
+<li><a href="/senate.php">Senate</a></li>
+<li><a href="/house.php">House</a></li>
+<li><a href="/committeeinfo.php">Committee&nbsp;Postings&nbsp;and&nbsp;Reports</a></li>
+<li><a href="/council.php">Legislative Council</a></li>
+<li><a href="/citizens.php">Citizens&#39; Interest</a></li>
+<li><a href="/publications.php">Publications</a></li>
+		    	</ul>
+			</div>
+			<div id="search" class="nodisplay" style="height: 28px;"><div class="nodisplay" style="float:right; margin:6px 20px 0px 0;">
+							<!--<a style="color:#f7f4ec; height:15px;" href="#" onClick="rsswindow();"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+<!--				<a style="color:#f7f4ec; height:15px;" href="/splashpage/splashpage.html"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a> -->
+				<a style="color:#f7f4ec; height:15px;" href="/onlineservices/index.php"><img border="0" src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>
+			<!--	<a style="color:#f7f4ec; height:15px;" href="/maintenance_portal.php"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+						</div></div>
+			
+	
+					<div id="sidebar" class="nodisplay">
+	<div id="vidlinks" style="height: 50px;">
+						<!--<img src="/images/videobutton12d.png">-->
+											<ul id="vidsidemenu">
+	<li id="vidinnermenu" style="font-size:16px; margin: 0 0 5px 0;">Chamber Video</li>
+<li id="sbroadcast" style="float: left; width:50%;">
+<a id="liveS" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('S', false, false, '0')">Senate</a><br><a id="liveaudioS" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('S', false, false, '1');">(Audio Only)</a>
+</li>
+<li id="hbroadcast" style="float: left; width:50%;">
+<a id="liveH" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('H', false, false, '0')">House</a><br><a id="liveaudioH" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('H', false, false, '1');">(Audio Only)</a>
+</li>
+						</ul>
+					</div>
+					<div id="commvidlinks"><a href="/video/schedule.php">Video&nbsp;Schedule</a><a style="border-top:1px solid #fff; padding-top:12px;" href="/video/archives.php">Video Archives</a></div>
+										<div id="sidemenu">
+						<ul id="innermenu">
+		
+							<li><a href="/howdoi.php">How do I...</a></li>
+										
+							
+								<li class="nolink" onMouseOver="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='block'; document.sidesearchform.searchtext.focus();}" onMouseOut="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Quick Search</div>
+								<div id="sidesearch" class="sidesubmenu">
+									<form id="sidesearchform" name="sidesearchform" method="POST" action="/search.php">
+									<input type="hidden" name="search" value="side" />
+									<div class="topelement"><label for="searchtext"><span class="label">Search for:</span></label><input id="searchtext" name="searchtext" type="text"/><a id="searchlink2" href="javascript:void(0);" onClick="document.sidesearchform.submit();"><img id="searchicon" src="/images/searchbutton.png" alt="Search" title="Search"/></a></div>
+			<!--						<div><input type="checkbox" id="searchchoice_all" name="searchchoice_all" value="all" /><label for="searchchoice_all">All</label></div>-->
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_fullsite" name="category" value="FULLSITE" /><label for="searchchoice_fullsite">&nbsp;Full Site Search</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_billnumber" name="category" value="BILL" /><label for="searchchoice_billnumber">&nbsp;Bill Number</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_legislation" name="category" value="LEGISLATION" CHECKED /><label for="searchchoice_legislation">&nbsp;Legislation</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_budget" name="category" value="BUDGET" /><label for="searchchoice_budget">&nbsp;Budget</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeoflaws" name="category" value="CODEOFLAWS" /><label for="searchchoice_codeoflaws">&nbsp;Code of Laws</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeofregs" name="category" value="CODEOFREGS" /><label for="searchchoice_codeofregs">&nbsp;Code of Regulations</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_constitution" name="category" value="CONSTITUTION" /><label for="searchchoice_constitution">&nbsp;Constitution</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_housejournals" name="category" value="HOUSEJOURNALS" /><label for="searchchoice_housejournals">&nbsp;House Journals</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_senatejournals" name="category" value="SENATEJOURNALS" /><label for="searchchoice_senatejournals">&nbsp;Senate Journals</label></div>
+									<div class="bottomelement" style="padding-left:20px;"><input type="radio" id="searchchoice_billsummary" name="category" value="SUMMARY" /><label for="searchchoice_billsummary">&nbsp;LSA Bill Summary</label></div>
+								</form>
+									
+								</div>
+							</li>
+							<li><a href="/legislatorssearch.php">Find Your Legislators</a></li>
+							<li id="contactLegislatorLink"><a href="/email.php?chamber=B">Contact Your Legislator</a></li>
+									
+							<li><a href="/legislation.php">Legislation</a></li>
+							<li><a href="/listtracking/main.php" target="LTS">Track Legislation</a></li>
+							<li><a href="/multicriteria2/search.php" target="MCS">Multi-Criteria Search</a></li>
+									<!--<li><a href="#" onclick="multisearchwindow('INTROBOTH');">Multi-Criteria Search</a></li>-->
+									<!--<li><a href="#" onclick="multisearchwindow('INTROMANUAL');">Multi-Criteria Search</a></li>-->
+									<li><a href="/research.php">Research</a></li>
+	
+								<li class="nolink" onMouseOver="var ele=document.getElementById('law'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('law'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">South Carolina Law</div> 
+								<div id="law" class="sidesubmenu">
+									<div class="sidediv topelement"><a href="/newlaws.php">Ratifications &amp; Acts</a></div>
+									<div class="sidediv"><a href="/code/statmast.php">Code of Laws</a></div>
+									<div class="sidediv"><a href="/coderegs/statmast.php">Code of Regulations</a></div>
+									<div class="sidediv"><a href="/scconstitution/scconst.php">Constitution</a></div>
+									<div class="sidediv bottomelement"><a href="/state_register.php">State Register</a></div>
+								</div>
+							</li>
+										<li class="nolink" onMouseOver="var ele=document.getElementById('manual'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('manual'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Legislative Manual</div>
+								<div id="manual" class="sidesubmenu">
+								
+<!--									<div class="sidediv topelement"><a href="https://web.sc.gov/LSAShoppingcart/Default.aspx" target="_blank">Purchase Manual</a></div>-->
+								
+<!--									<div class="sidediv topelement"><a href="https://secure.scstatehouse.gov/cgi-bin/webstore.exe" target="_blank">Purchase Manual</a></div>-->
+									<div class="sidediv topelement"><a href="javascript:#" onClick="alert('We are sorry, but we are unable to process online transactions at this time.\n\nIf you would still like to make a purchase, please contact us directly at (803) 212-4490 during normal business hours (8:30am - 5:00pm EST).');">Purchase Manual</a></div>
+									<div class="sidediv bottomelement"><a href="/man26/manual26.php">View Manual Online</a></div>
+								</div>
+							</li>
+							<li><a href="http://www.studentconnection.scstatehouse.gov">Student Connection</a></li>
+							<li><a href="/visit.php">Visiting the State House</a></li>
+							<li><a href="/archives.php">Archives</a></li>
+							<li><a href="http://www.sc.gov/Agency-Listing" target="_blank">State Agency Websites</a></li>
+							<!--<li><a href="/stateagencysites.php">State Agency Websites</a></li>-->
+							<li><a href="/citizensinterestpage/media.php">Media Links</a></li>
+				 		</ul>
+			    	</div>
+	
+					<div id="side_ad">
+						<A href="http://www.sc.gov/" target="_blank"><img border=0 src="/images/scgov3.jpg" alt="SC.gov" title="SC.gov" /></a>
+													<A href="http://www.statelibrary.sc.gov" target="_blank"><img border=0 src="/images/scsl_logo_rgb_web.png" alt="StateLibrary.SC.gov" title="StateLibrary.SC.gov" /></a>
+											</div>	    	
+			</div>
+
+	
+	<script type="text/javascript"> 
+		if ( '' === '1'){
+		 	
+			var link = document.getElementById('contactLegislatorLink');
+			if (link != 'undefined' && link != null){
+				link.style.display = 'none'; 
+				link.style.visibility = 'hidden';
+			}
+		}
+		if ( '' === '1'){
+		 	setTimeout(function(){
+				var link2 = document.getElementById('sendMsgLink');
+				if (link2 != 'undefined' && link2 != null){
+					link2.style.display = 'none'; 
+					link2.style.visibility = 'hidden';
+				};
+			}, 20);
+			
+		}  
+	</script>
+<div class="mainwidepanel">
+
+				<div id="breadcrumbs">
+						South Carolina Law &gt; <a href="/code/statmast.php">Code of Laws</a> &gt; <a href="/code/title17.php">Title 17</a>
+				</div>
+
+					<h2 class="barheader">South Carolina Code of Laws<br />
+									Unannotated<br />
+					</h2>
+
+				<div id="contentsection">
+<div style="font-weight: bold; text-align: center;">Title 17 - CRIMINAL PROCEDURES</div>
+<br />
+
+<div style="text-align: center;">CHAPTER 17</div>
+<div style="text-align: center;">Habeas Corpus</div><br />
+<span style="font-weight: bold;"> SECTION 17-17-10.</span> Persons entitled to writ of habeas corpus.<br /><br />
+	If any person shall be or stand committed or detained for any crime, unless (a) for felony the punishment of which is death or treason, plainly expressed in the warrant of commitment, (b) charged as accessory before the fact to treason or felony the punishment of which is death or (c) charged with suspicion of treason or felony which is punishable with death, which shall be plainly expressed in the warrant of commitment, he shall be entitled to the writ of habeas corpus.<br /><br />
+HISTORY: 1962 Code SECTION 17-351; 1952 Code SECTION 17-351; 1942 Code SECTION 1047; 1932 Code SECTION 1047; Cr. P. &#39;22 SECTION 134; Cr. C. &#39;12 SECTION 116; Cr. C. &#39;02 SECTION 89; G. S. 2322; R. S. 89; 31 ch. 2 c. 2; 1679 (1) 118, 123; 1839 (11) 38.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-20.</span> Forfeiture of entitlement in certain cases.<br /><br />
+	If any person shall have wilfully neglected by the space of two whole terms after his imprisonment to pray a habeas corpus for his enlargement such person, so wilfully neglecting, shall not have any habeas corpus to be granted in vacation time in pursuance of this chapter.<br /><br />
+HISTORY: 1962 Code SECTION 17-352; 1952 Code SECTION 17-352; 1942 Code SECTION 1049; 1932 Code SECTION 1049; Cr. P. &#39;22 SECTION 136; Cr. C. &#39;12 SECTION 118; Cr. C. &#39;02 SECTION 91; G. S. 2324; R. S. 91; 1679 (1) 119.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-30.</span> Authority of judges to grant writs of habeas corpus.<br /><br />
+	Any of the judges of this State, in vacation time and out of term, upon view of the copy of the warrant of commitment and detainer or otherwise and upon oath made that such copy was denied to be given by the person in whose custody the prisoner is detained, shall, upon request made in writing by such person as is committed as aforesaid or any on his behalf, attested and subscribed by two witnesses who were present at the delivery of the request, award and grant a writ of habeas corpus, under the seal of such court, whereof he shall be one of the judges.<br /><br />
+HISTORY: 1962 Code SECTION 17-353; 1952 Code SECTION 17-353; 1942 Code SECTION 1050; 1932 Code SECTION 1050; Cr. P. &#39;22 SECTION 137; Cr. C. &#39;12 SECTION 119; Cr. C. &#39;02 SECTION 92; G. S. 2325; R. S. 92; 1679 (1) 118.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-40.</span> Authority of any two magistrates to grant writs of habeas corpus.<br /><br />
+	Any two magistrates shall grant the writ of habeas corpus as fully, effectually and lawfully as may any judge of the court of common pleas and general sessions or justice of the Supreme Court of this State, except in cases of felony the punishment for which is death or imprisonment for life and except in changing the custody of any child, in which cases magistrates shall have no jurisdiction in applications for habeas corpus.<br /><br />
+HISTORY: 1962 Code SECTION 17-354; 1952 Code SECTION 17-354; 1942 Code SECTION 1060; 1932 Code SECTION 1060; Cr. P. &#39;22 SECTION 147; Cr. C. &#39;12 SECTION 129; Cr. C. &#39;02 SECTION 102; G. S. 2335; R. S. 102; 1712 (2) 460; 1839 (11) 23; 1918 (30) 765.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-50.</span> Persons to whom writ shall be directed.<br /><br />
+	Such writ shall be directed to the officer in whose custody the party so committed or detained shall be and shall be returned immediately before the judge issuing it.<br /><br />
+HISTORY: 1962 Code SECTION 17-355; 1952 Code SECTION 17-355; 1942 Code SECTION 1051; 1932 Code SECTION 1051; Cr. P. &#39;22 SECTION 138; Cr. C. &#39;12 SECTION 120; Cr. C. &#39;02 SECTION 93; G. S. 2326; R. S. 93; 1679 (1) 118.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-60.</span> Service of writ.<br /><br />
+	The writ shall be served upon the officer or left at the jail or prison with any of the underofficers, underkeepers or deputies of any such officer or keeper.<br /><br />
+HISTORY: 1962 Code SECTION 17-356; 1952 Code SECTION 17-356; 1942 Code SECTION 1052; 1932 Code SECTION 1052; Cr. P. &#39;22 SECTION 139; Cr. C. &#39;12 SECTION 121; Cr. C. &#39;02 SECTION 94; G. S. 2327; R. S. 94; 1679 (1) 117.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-70.</span> Handling of prisoner after service of writ; payment of charges; return of writ.<br /><br />
+	Such officer or his underofficer, underkeeper or deputy shall, within three days after the service thereof and upon:<br /><br />
+	(1) Payment or tender of charges, not exceeding ten cents per mile, of bringing the prisoner, to be ascertained by the judge or court that awarded the writ and endorsed thereon; and<br /><br />
+	(2) Security given by his own bond (a) to pay the charges of carrying back the prisoner, if he shall be remanded by the court or judge to which he shall be brought and (b) that he will not make any escape by the way;<br /><br />
+	Make return of such writ and bring or cause to be brought the body of the person so committed or restrained unto or before the judge or court from whence the writ shall issue or unto and before such other person before whom the writ is made returnable, according to the command thereof, and shall then certify the true cause of his detainer or imprisonment; provided, however, that:<br /><br />
+	(1) If any prisoner be not able to pay such charges they shall be paid by the county wherein he is confined; and<br /><br />
+	(2) If such prisoner shall be acquitted of the charge against him or finally discharged on habeas corpus by the judge or court hearing the habeas corpus proceedings the expenses of the proceeding in habeas corpus shall be paid by the county in which the case is situated.<br /><br />
+HISTORY: 1962 Code SECTION 17-357; 1952 Code SECTION 17-357; 1942 Code SECTION 1053; 1932 Code SECTION 1053; Cr. P. &#39;22 SECTION 140; Cr. C. &#39;12 SECTION 122; Cr. C. &#39;02 SECTION 95; G. S. 2328; R. S. 95; 1870 (14) 400.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-80.</span> Time within which prisoners must be brought before court.<br /><br />
+	If the place of imprisonment of the person be beyond the distance of twenty miles from the place where such court is held and not above one hundred miles he shall be brought before the court or the person before whom the writ is returnable within the space of ten days and if beyond the distance of one hundred miles then within the space of twenty days after the delivery of such writ and not longer.<br /><br />
+HISTORY: 1962 Code SECTION 17-358; 1952 Code SECTION 17-358; 1942 Code SECTION 1054; 1932 Code SECTION 1054; Cr. P. &#39;22 SECTION 141; Cr. C. &#39;12 SECTION 123; Cr. C. &#39;02 SECTION 96; G. S. 2329; R. S. 96; 1679 (1) 117.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-90.</span> Granting of writ during term of court.<br /><br />
+	During the term of the circuit court for the county in which any prisoner is detained no person shall be removed from the common jail upon any writ of habeas corpus granted in pursuance of this chapter but, upon any such writ, shall be brought before the circuit judge, in open court, who is thereupon to do what to justice shall appertain.<br /><br />
+HISTORY: 1962 Code SECTION 17-359; 1952 Code SECTION 17-359; 1942 Code SECTION 1057; 1932 Code SECTION 1057; Cr. P. &#39;22 SECTION 144; Cr. C. &#39;12 SECTION 126; Cr. C. &#39;02 SECTION 99; G. S. 2332; R. S. 99; 1679 (1) 122.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-100.</span> Transfer of matter for hearing to judge of court in county where prisoner was convicted.<br /><br />
+	Any judge before whom a petition for a writ of habeas corpus is made by any person confined by the State Board of Corrections in any of its places of confinement who has been tried and convicted by a court of competent jurisdiction, shall upon issuance of the writ of habeas corpus transfer the matter for hearing to any judge of any court of competent jurisdiction in the county where the person was convicted.<br /><br />
+HISTORY: 1962 Code SECTION 17-359.1; 1966 (54) 2102.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-110.</span> Granting of writ after adjournment.<br /><br />
+	After the circuit court adjourns any person detained may have a writ of habeas corpus, according to the direction and intention of this chapter.<br /><br />
+HISTORY: 1962 Code SECTION 17-360; 1952 Code SECTION 17-360; 1942 Code SECTION 1058; 1932 Code SECTION 1058; Cr. P. &#39;22 SECTION 145; Cr. C. &#39;12 SECTION 127; Cr. C. &#39;02 SECTION 100; G. S. 2333; R. S. 100; 1679 (1) 122.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-120.</span> Discharge only after notice given to Attorney General, Circuit Solicitor, or attorney acting for State.<br /><br />
+	When it appears from the return of the writ or otherwise that the person is imprisoned on a criminal accusation he shall not be discharged until sufficient notice has been given to the Attorney General or circuit solicitor or other attorney acting for the State, that he may appear and object to such discharge, if he thinks fit.<br /><br />
+HISTORY: 1962 Code SECTION 17-361; 1952 Code SECTION 17-361; 1942 Code SECTION 1056; 1932 Code SECTION 1056; Cr. P. &#39;22 SECTION 143; Cr. C. &#39;12 SECTION 125; Cr. C. &#39;02 SECTION 98; G. S. 2331; R. S. 98.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-130.</span> Discharge of prisoner after hearing; recognizance in judge&#39;s discretion, appearance in the following term of court.<br /><br />
+	If, upon a hearing, the prisoner shall be entitled to his discharge then the judge before whom he is brought shall within two days after the prisoner shall be brought before him discharge the prisoner from his imprisonment, taking his recognizance, with one or more surety or sureties, in any sum according to the judge&#39;s discretion, having regard to the nature of the offense, for his appearance the term following in the court of general sessions for the county in which the offense is alleged to have been committed or in the court of such other county in which the alleged offense is properly cognizable, as the case shall require. And the judge shall then certify the writ, with the return thereof, and the recognizance into the court in which such appearance is to be made. But if no legal cause be shown for the imprisonment or restraint the prisoner shall be discharged therefrom.<br /><br />
+HISTORY: 1962 Code SECTION 17-362; 1952 Code SECTION 17-362; 1942 Code SECTION 1055; 1932 Code SECTION 1055; Cr. P. &#39;22 SECTION 142; Cr. C. &#39;12 SECTION 124; Cr. C. &#39;02 SECTION 97; G. S. 2330; R. S. 97; 1679 (1) 118.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-140.</span> Right to appeal from decision on writ.<br /><br />
+	An appeal from all final decisions rendered on applications for writs of habeas corpus shall be allowed as is provided by law in civil actions.<br /><br />
+HISTORY: 1962 Code SECTION 17-363; 1952 Code SECTION 17-363; 1942 Code SECTION 1065; 1932 Code SECTION 1065; Cr. P. &#39;22 SECTION 152; Cr. C. &#39;12 SECTION 134; Cr. C. &#39;02 SECTION 107.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-150.</span> Person discharged shall not be rearrested or committed for same offense.<br /><br />
+	No person who shall be delivered or set at large upon any writ of habeas corpus shall, at any time, be again imprisoned or committed for the same offense by any person whatsoever, other than by the legal order and process of such court wherein he shall be bound by recognizance to appear or other court having jurisdiction of the cause. If any other person shall knowingly, contrary to this chapter, recommit or imprison or knowingly procure or cause to be recommitted or imprisoned for the same offense or pretended offense any person delivered or set at large, as aforesaid, or be knowingly aiding or assisting therein, then he shall forfeit to the prisoner or person grieved the sum of two thousand five hundred dollars, any colorable pretense or variation in the warrant of commitment notwithstanding, to be recovered as provided in SECTION 17-17-180.<br /><br />
+HISTORY: 1962 Code SECTION 17-364; 1952 Code SECTION 17-364; 1942 Code SECTION 1059; 1932 Code SECTION 1059; Cr. P. &#39;22 SECTION 146; Cr. C. &#39;12 SECTION 128; Cr. C. &#39;02 SECTION 101; G. S. 2334; R. S. 101; 1679 (1) 119.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-160.</span> Officers shall execute writ.<br /><br />
+	Every sheriff, deputy sheriff or jailer shall give due obedience to the execution of every writ of habeas corpus made or signed by any person by law empowered to grant the writ and shall do and perform any matter or thing which by the writ he may be required to do. And if he shall wilfully neglect, refuse or omit to obey or perform the writ when legally requested and demanded in such case, for each such neglect, refusal, or omission, he shall forfeit the sum of five hundred dollars, to be recovered by indictment.<br /><br />
+HISTORY: 1962 Code SECTION 17-365; 1952 Code SECTION 17-365; 1942 Code SECTION 1066-1; 1932 Code SECTION 1532; Cr. C. &#39;22 SECTION 479; Cr. C. &#39;12 SECTION 553; Cr. C. &#39;02 SECTION 396; G. S. 680; R. S. 313; 1839 (11) 48.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-170.</span> Penalty for officers neglecting their duty.<br /><br />
+	Every person whatsoever to whom any power is given, either judicial or ministerial, by this chapter which, by virtue hereof, he is required and commanded to exercise who shall wilfully neglect, refuse or omit to exercise the power when such exercise shall be legally requested and demanded, according to the directions herein, and when the person so requesting and demanding such exercise is legally entitled so to request or demand by the provisions of this chapter, for each such offense shall forfeit the sum of five hundred dollars and shall be thereafter incapable of holding or executing his office.<br /><br />
+HISTORY: 1962 Code SECTION 17-366; 1952 Code SECTION 17-366; 1942 Code SECTION 1061; 1932 Code SECTION 1061; Cr. P. &#39;22 SECTION 148; Cr. C. &#39;12 SECTION 130; Cr. C. &#39;02 SECTION 103; G. S. 2336; R. S. 103; 1679 (1) 119; 1712 (2) 400.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-180.</span> Recovery of penalties.<br /><br />
+	Such penalties may be recovered by the prisoner or party grieved, his executors and administrators, against such offender, his executors or administrators, by action in any court of competent jurisdiction wherein no protection, privilege, injunction or stay of prosecution shall be admitted or allowed.<br /><br />
+HISTORY: 1962 Code SECTION 17-367; 1952 Code SECTION 17-367; 1942 Code SECTION 1062; 1932 Code SECTION 1062; Cr. P. &#39;22 SECTION 149; Cr. C. &#39;12 SECTION 131; Cr. C. &#39;02 SECTION 104; G. S. 2337; R. S. 104; 1679 (1) 119.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-190.</span> Suspension of habeas corpus by Governor.<br /><br />
+	If, during any insurrection, rebellion or any unlawful obstruction of the laws, as set forth in SECTION 25-1-1850, the Governor in his judgment shall deem the public safety to require it, he may suspend the privilege of the writ of habeas corpus in any case throughout the State or any part thereof.<br /><br />
+HISTORY: 1962 Code SECTION 17-368; 1952 Code SECTION 17-368; 1942 Code SECTION 1066; 1932 Code SECTION 1066; Cr. P. &#39;22 SECTION 153; Cr. C. &#39;12 SECTION 337; Cr. C. &#39;02 SECTION 250; G. S. 2584; R. S. 215; 1868 (14) 86.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-17-200.</span> Effect of suspension of writ.<br /><br />
+	Whenever the privilege of the writ of habeas corpus shall be suspended, as aforesaid, no military or other officer shall be compelled in answer to any writ of habeas corpus to return the body of any person detained by him by authority of the Governor. But upon certificate under oath of the officer having charge of anyone so detained that such person is detained by him as a prisoner under the authority of the Governor further proceedings under the writ of habeas corpus shall be suspended by the judge or court having issued the writ so long as such suspension by the Governor shall remain in force and the cause for such suspension continue.<br /><br />
+HISTORY: 1962 Code SECTION 17-369; 1952 Code SECTION 17-369; 1942 Code SECTION 1066; 1932 Code SECTION 1066; Cr. P. &#39;22 SECTION 153; Cr. C. &#39;12 SECTION 337; Cr. C. &#39;02 SECTION 250; G. S. 2584; R. S. 215; 1868 (14) 86.<br /><br />
+
+</div>
+
+
+					</div>		 <!-- mainwidepanel -->
+					
+				</div>		 <!-- pagebody -->
+				
+				<div id="footer" class="nodisplay" style="height: 30px;" onContextMenu="return false;">
+			<div id="footerdiv" style="margin:0;">
+				South Carolina Legislative Services Agency * 223 Blatt Building * 1105 Pendleton Street * Columbia, SC 29201<!-- * 803-212-4420--><br>
+				
+								<a href="/disclaimer.php">Disclaimer</a> * <a href="/policies.php">Policies</a> * <a href="/credits.php">Photo Credits</a> * <a href="/contact.php">Contact Us</a>
+							</div>
+		</div>
+		<div id="printfooter" class="printdisplay serifNormal" align=center style="font-size: 8pt;">
+			<br>
+			<br>
+			<hr>
+			Legislative Services Agency
+			<br>
+			h t t p : / / w w w . s c s t a t e h o u s e . g o v
+		</div>
+	
+		</div>	<!-- container or main in mobile page-->
+</body>
+</html>
+

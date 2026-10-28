@@ -1,0 +1,674 @@
+﻿
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+	
+	<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+	<head>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	    <meta name="robots" content="noimageindex">
+	    <meta charset="iso-8859-1">
+	    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=ISO-8859-1">
+	    	    <title>Code of Laws - Title 17 - Chapter 7- - CRIMINAL PROCEDURES</title>
+	    <link rel="SHORTCUT ICON" href="/images/stateflagsmall.ico" />
+		<link rel="icon" href="/images/stateflagsmall.ico" type="image/ico" />
+		<link rel="SHORTCUT ICON" href="/images/South-Carolina-Flag2.ico" />
+
+		<link type="text/css" rel="stylesheet" href="/css/main.css" media="all" />
+				
+		<!--[if lte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/ie7main.css" media="all" />
+		<![endif]-->
+		<!--[if gte IE 7]>
+		<link type="text/css" rel="stylesheet" href="/css/iemain.css" media="all" />
+		<![endif]-->
+		<link type="text/css" rel="stylesheet" href="/css/print.css" media="print" />
+		<link type="text/css" rel="stylesheet" href="/css/supplement.css" media="screen" />
+		<!--<link type="text/css" rel="stylesheet" href="/css/zipsearch.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/vote.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/contact.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/navwrap.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="/css/linkbar.css" media="screen" />-->
+	
+		<!--<script type="text/javascript" src="/js/jquery-1.10.1.min.js"></script>
+		<script type="text/javascript" src="/js/jquery-1.12.4.min.js"></script>-->
+		<script type="text/javascript" src="/js/jquery-3.5.1.min.js"></script>
+				<script type="text/javascript" src="/js/main_linux.js"></script>
+		
+
+		
+
+
+
+		<!--<script type="text/javascript" src="/js/common.js"></script>
+		<script type="text/javascript" src="/js/utils.js"></script>
+		<script type="text/javascript" src="/js/date.js"></script>
+		<script type="text/javascript" src="/js/lightbox.js"></script>
+		<script type="text/javascript" src="/js/legislation.js"></script>
+		<script type="text/javascript" src="/js/logon_lits.js"></script>
+		<script type="text/javascript" src="/js/message.js"></script>
+		<script type="text/javascript" src="/js/comm_meeting.js"></script>-->
+		<script type="text/vbscript" src="/vbs/comm_meeting.vbs"></script>
+		<!--<script type="text/javascript" src="/js/regs.js"></script>-->
+				
+	   	<script type="text/javascript">
+	    //document.onclick = function () { document.getElementById('transbox').style.display= 'none' };
+	    	var xmlhttp=false;
+			xmlhttp = create_xml_object();
+	
+			function getElement(ele)
+			{
+				var theobj = false;
+				if(typeof ele == 'string')
+					theobj = (document.getElementById)?document.getElementById(ele):document.all[ele];
+				else
+					theobj = ele;
+			
+				return theobj;
+			}
+		
+			function checkreader(friendlyalert)
+			{
+			 	/*friendlyalert=friendlyalert||false;
+			 	
+			 	var browser_info = perform_acrobat_detection();
+				if (!browser_info.acrobat)
+				{
+				 	loadadobebox('adobebox', '/adobe.php');
+					return false;
+				}
+				else if (friendlyalert)
+				{
+			 		alert(friendlyalert);
+				}*/
+				return true;
+			}
+				
+			function loadadobebox(boxname, url)
+			{
+				var response = false;
+	
+				doRequest(xmlhttp, "GET", url, false, null, null);
+				if (xmlhttp.status == 200)
+				{
+		         	response = xmlhttp.responseText;
+				}
+	
+				if(response)
+				{
+			 		var ele = document.getElementById(boxname);
+				 	if (ele)
+				 	{
+				 		ele.style.visibility = 'hidden';
+		 				ele.style.display = 'block';
+	
+		 				positionElement(ele, 'center', 'center', true);
+	
+						ele.innerHTML = response;
+					    ele.style.visibility = 'visible';
+					    ele.style.display = 'block';
+	//				    ele.scrollIntoView(true);
+					}
+				}
+				return response;
+			}
+	
+	
+			function init()
+			{
+		 		var ld=document.getElementById("loading");
+				if(ld)
+				{
+					ld.style.display = 'none';
+				}
+			}
+			
+			function openmore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				 	var pos = findPos(id);
+				 	id.style.zIndex = 10;
+		//		 	id.style.left = pos[0]+'px';
+		//		  	id.style.top = pos[1]+'px';
+				  	id.style.height = '295px';
+				  	id.style.position = 'absolute';
+				  	id.style.backgroundColor = '#f7f4ec';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'none';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = 'none';
+				  	}
+				}
+			}
+		
+			function closemore()
+			{
+			 	var id = document.getElementById('quicksearch');
+			 	if (id)
+			 	{
+				  	id.style.height = '135px';
+				  	id.style.position = '';
+				  	id.style.backgroundColor = 'transparent';
+				  	var id2 = document.getElementById('searchmore');
+				  	if (id2)
+				  	{
+				  	 	id2.style.display = 'block';
+				  	}
+				  	var id3 = document.getElementById('contactlegislatordiv');
+				  	if (id3)
+				  	{
+				  	 	id3.style.display = '';
+				  	}
+				}		 	
+			}
+		
+		<!-- This script and many more are available free online at -->
+		<!-- The JavaScript Source!! http://javascript.internet.com -->
+		
+		<!-- Begin
+		function right(e) {
+		var msg = "Use of this image is strictly prohibited unless express written permission is given to the user by South Carolina Legislative Services Agency.";
+		if (navigator.appName == 'Netscape' && e.which == 3) {
+		alert(msg);
+		return false;
+		stopEvent(e);
+		}
+		if (navigator.appName == 'Microsoft Internet Explorer' && event.button==2) {
+		alert(msg);
+		return false;
+			stopEvent(event);
+		}
+		else return true;
+		}
+		
+	function trap() 
+	{
+		if(document.images)
+		{
+			for(i=0;i<document.images.length;i++)
+			{
+				if(document.images[i].className == 'allowcontextmenu')
+				{
+					// this should have no scripting
+				}
+				else
+				{
+				 	document.images[i].onmousedown = right;
+					document.images[i].oncontextmenu = function(){ return false; };
+					//document.images[i].onmouseup = right;
+				}
+			}
+		}
+	}
+
+	function findfwtext(texttofind) 
+	{
+	 	var fwtextele = document.getElementById('fwtext');
+		if(fwtextele)
+		{
+			fwtextele.value = texttofind;
+		}
+	}	
+		// End -->
+		</script>
+
+		<!-- ADDED FOR V4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-LJY6FMNQKH"></script>
+
+
+<script type="text/javascript">
+
+//ADDED FOR V4
+//Google tag (gtag.js) 
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LJY6FMNQKH');
+
+ 
+ /* COMMENTING OUT UPGRADING TO V4 -A
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-36207109-1']);
+  _gaq.push(['_setDomainName', 'scstatehouse.gov']);
+  _gaq.push(['_setAllowLinker', true]);
+  _gaq.push(['_trackPageview']);
+ 
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+*/
+  
+      $(document).ready(function(){
+        // COMMENTING THIS OUT NO LONGER BEING ACTIVELY USED TO MONITOR FOR TRAFFIC TO SPECIFIC LINKS - A
+        /*
+          var anchors = $('div#contentsection a');
+
+          //console.log('anchors...'+anchors.length);
+          if(anchors.length > 0){
+            //console.log('setting up event handler...');
+            anchors.click(function(){
+              var a = $(this).attr('href');
+              if(_gaq && (a.substr(-3) == 'htm' || a.substr(-4) == 'html' || a.substr(-3) == 'doc' || a.substr(-4) == 'docx' || a.substr(-3) == 'pdf' || a.substr(-3) == 'xls' || a.substr(-4) == 'xlsx')) {
+                //console.log(a);
+                _gaq.push(['_trackPageview', $(this).attr('href')]);
+              }
+              
+              var aText = $(this).text().toLowerCase();
+              if (a.indexOf('getfile.php') > -1 && aText === 'word'){
+                    _gaq.push(['_trackEvent', 'Word Doc', 'Download', ('from page: ' + document.location + ' - href: ' + a)]);
+              }
+
+            });
+          }
+          */
+      });
+
+</script>
+	</head>
+	
+		
+	<body class="home"  onload="init(); trap();">
+	<noscript>Your browser does not support JavaScript!  This page will not render correctly.</noscript> 
+
+
+	
+	<div id="adobebox" style="position:absolute; width:400px; height:150px; border:2px solid #555555; background-color:#cccccc; display:none;"></div>
+	<div id="container" >	
+				<div id="header" class="nodisplay" style="text-align:center; height:100px;" >
+									<img id="headerimg" class="nodisplay" alt="South Carolina Legislature" title="South Carolina Legislature" src="/images/header8.png" />
+								
+							<!--	<div class="award"><span style="color:#831224; font-weight:bold; font-size:1.5em;">*</span> Recipient of<br>the Notable State Documents Award<br>by the<br>South Carolina<br>State Library.</div>-->
+				
+				
+			</div>
+			<div class="printdisplay"><img border="0" src="/images/titleprint.jpg" alt="South Carolina Legislature" title="South Carolina Legislature" alt="South Carolina Legislature" title="South Carolina State Legislature" /><br /><hr /><br /></div>
+	
+			<div id="pagebody" >
+	
+	
+<!--<div id="topmessage">
+<br style="display:block; margin-top:10px;">
+Searches and data queries will be unavailable beginning Friday, August 19, 2016, from 8:00 PM until Saturday, August 20th at 8:00 AM<br>due to scheduled maintenance.</div>-->
+				<!-- Prompt IE 8/7/6 users to upgrade to a newer browser. -->
+				<!--[if lte IE 8]>
+				<div class="oldframe">In order to improve your experience using this website, please <a href="http://browsehappy.com/">upgrade your browser</a>.</div>
+				<![endif]-->
+			
+			
+			
+			<div id="menu" class="nodisplay">
+				<ul class="nodisplay">
+				<li><a href="/index.php">Home</a></li>
+<li><a href="/senate.php">Senate</a></li>
+<li><a href="/house.php">House</a></li>
+<li><a href="/committeeinfo.php">Committee&nbsp;Postings&nbsp;and&nbsp;Reports</a></li>
+<li><a href="/council.php">Legislative Council</a></li>
+<li><a href="/citizens.php">Citizens&#39; Interest</a></li>
+<li><a href="/publications.php">Publications</a></li>
+		    	</ul>
+			</div>
+			<div id="search" class="nodisplay" style="height: 28px;"><div class="nodisplay" style="float:right; margin:6px 20px 0px 0;">
+							<!--<a style="color:#f7f4ec; height:15px;" href="#" onClick="rsswindow();"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+<!--				<a style="color:#f7f4ec; height:15px;" href="/splashpage/splashpage.html"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a> -->
+				<a style="color:#f7f4ec; height:15px;" href="/onlineservices/index.php"><img border="0" src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>
+			<!--	<a style="color:#f7f4ec; height:15px;" href="/maintenance_portal.php"><img border=0 src="/images/lock.png" style="vertical-align: middle; width: 15px; height: 15px;">&nbsp;Staff&nbsp;Portal</a>-->
+						</div></div>
+			
+	
+					<div id="sidebar" class="nodisplay">
+	<div id="vidlinks" style="height: 50px;">
+						<!--<img src="/images/videobutton12d.png">-->
+											<ul id="vidsidemenu">
+	<li id="vidinnermenu" style="font-size:16px; margin: 0 0 5px 0;">Chamber Video</li>
+<li id="sbroadcast" style="float: left; width:50%;">
+<a id="liveS" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('S', false, false, '0')">Senate</a><br><a id="liveaudioS" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('S', false, false, '1');">(Audio Only)</a>
+</li>
+<li id="hbroadcast" style="float: left; width:50%;">
+<a id="liveH" style="width: 100%; text-decoration:underline;" href="javascript:void(0);" onClick="live_stream('H', false, false, '0')">House</a><br><a id="liveaudioH" style="margin:-3px 0 0 0; text-decoration:underline; width: 100%; font-size: 8px;" href="javascript:void(0);" onClick="live_stream('H', false, false, '1');">(Audio Only)</a>
+</li>
+						</ul>
+					</div>
+					<div id="commvidlinks"><a href="/video/schedule.php">Video&nbsp;Schedule</a><a style="border-top:1px solid #fff; padding-top:12px;" href="/video/archives.php">Video Archives</a></div>
+										<div id="sidemenu">
+						<ul id="innermenu">
+		
+							<li><a href="/howdoi.php">How do I...</a></li>
+										
+							
+								<li class="nolink" onMouseOver="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='block'; document.sidesearchform.searchtext.focus();}" onMouseOut="var ele=document.getElementById('sidesearch'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Quick Search</div>
+								<div id="sidesearch" class="sidesubmenu">
+									<form id="sidesearchform" name="sidesearchform" method="POST" action="/search.php">
+									<input type="hidden" name="search" value="side" />
+									<div class="topelement"><label for="searchtext"><span class="label">Search for:</span></label><input id="searchtext" name="searchtext" type="text"/><a id="searchlink2" href="javascript:void(0);" onClick="document.sidesearchform.submit();"><img id="searchicon" src="/images/searchbutton.png" alt="Search" title="Search"/></a></div>
+			<!--						<div><input type="checkbox" id="searchchoice_all" name="searchchoice_all" value="all" /><label for="searchchoice_all">All</label></div>-->
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_fullsite" name="category" value="FULLSITE" /><label for="searchchoice_fullsite">&nbsp;Full Site Search</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_billnumber" name="category" value="BILL" /><label for="searchchoice_billnumber">&nbsp;Bill Number</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_legislation" name="category" value="LEGISLATION" CHECKED /><label for="searchchoice_legislation">&nbsp;Legislation</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_budget" name="category" value="BUDGET" /><label for="searchchoice_budget">&nbsp;Budget</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeoflaws" name="category" value="CODEOFLAWS" /><label for="searchchoice_codeoflaws">&nbsp;Code of Laws</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_codeofregs" name="category" value="CODEOFREGS" /><label for="searchchoice_codeofregs">&nbsp;Code of Regulations</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_constitution" name="category" value="CONSTITUTION" /><label for="searchchoice_constitution">&nbsp;Constitution</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_housejournals" name="category" value="HOUSEJOURNALS" /><label for="searchchoice_housejournals">&nbsp;House Journals</label></div>
+									<div style="padding-left:20px;"><input type="radio" id="searchchoice_senatejournals" name="category" value="SENATEJOURNALS" /><label for="searchchoice_senatejournals">&nbsp;Senate Journals</label></div>
+									<div class="bottomelement" style="padding-left:20px;"><input type="radio" id="searchchoice_billsummary" name="category" value="SUMMARY" /><label for="searchchoice_billsummary">&nbsp;LSA Bill Summary</label></div>
+								</form>
+									
+								</div>
+							</li>
+							<li><a href="/legislatorssearch.php">Find Your Legislators</a></li>
+							<li id="contactLegislatorLink"><a href="/email.php?chamber=B">Contact Your Legislator</a></li>
+									
+							<li><a href="/legislation.php">Legislation</a></li>
+							<li><a href="/listtracking/main.php" target="LTS">Track Legislation</a></li>
+							<li><a href="/multicriteria2/search.php" target="MCS">Multi-Criteria Search</a></li>
+									<!--<li><a href="#" onclick="multisearchwindow('INTROBOTH');">Multi-Criteria Search</a></li>-->
+									<!--<li><a href="#" onclick="multisearchwindow('INTROMANUAL');">Multi-Criteria Search</a></li>-->
+									<li><a href="/research.php">Research</a></li>
+	
+								<li class="nolink" onMouseOver="var ele=document.getElementById('law'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('law'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">South Carolina Law</div> 
+								<div id="law" class="sidesubmenu">
+									<div class="sidediv topelement"><a href="/newlaws.php">Ratifications &amp; Acts</a></div>
+									<div class="sidediv"><a href="/code/statmast.php">Code of Laws</a></div>
+									<div class="sidediv"><a href="/coderegs/statmast.php">Code of Regulations</a></div>
+									<div class="sidediv"><a href="/scconstitution/scconst.php">Constitution</a></div>
+									<div class="sidediv bottomelement"><a href="/state_register.php">State Register</a></div>
+								</div>
+							</li>
+										<li class="nolink" onMouseOver="var ele=document.getElementById('manual'); if(ele){ele.style.display='block';}" onMouseOut="var ele=document.getElementById('manual'); if(ele){ele.style.display='none';}"><div class="nolinkdiv">Legislative Manual</div>
+								<div id="manual" class="sidesubmenu">
+								
+<!--									<div class="sidediv topelement"><a href="https://web.sc.gov/LSAShoppingcart/Default.aspx" target="_blank">Purchase Manual</a></div>-->
+								
+<!--									<div class="sidediv topelement"><a href="https://secure.scstatehouse.gov/cgi-bin/webstore.exe" target="_blank">Purchase Manual</a></div>-->
+									<div class="sidediv topelement"><a href="javascript:#" onClick="alert('We are sorry, but we are unable to process online transactions at this time.\n\nIf you would still like to make a purchase, please contact us directly at (803) 212-4490 during normal business hours (8:30am - 5:00pm EST).');">Purchase Manual</a></div>
+									<div class="sidediv bottomelement"><a href="/man26/manual26.php">View Manual Online</a></div>
+								</div>
+							</li>
+							<li><a href="http://www.studentconnection.scstatehouse.gov">Student Connection</a></li>
+							<li><a href="/visit.php">Visiting the State House</a></li>
+							<li><a href="/archives.php">Archives</a></li>
+							<li><a href="http://www.sc.gov/Agency-Listing" target="_blank">State Agency Websites</a></li>
+							<!--<li><a href="/stateagencysites.php">State Agency Websites</a></li>-->
+							<li><a href="/citizensinterestpage/media.php">Media Links</a></li>
+				 		</ul>
+			    	</div>
+	
+					<div id="side_ad">
+						<A href="http://www.sc.gov/" target="_blank"><img border=0 src="/images/scgov3.jpg" alt="SC.gov" title="SC.gov" /></a>
+													<A href="http://www.statelibrary.sc.gov" target="_blank"><img border=0 src="/images/scsl_logo_rgb_web.png" alt="StateLibrary.SC.gov" title="StateLibrary.SC.gov" /></a>
+											</div>	    	
+			</div>
+
+	
+	<script type="text/javascript"> 
+		if ( '' === '1'){
+		 	
+			var link = document.getElementById('contactLegislatorLink');
+			if (link != 'undefined' && link != null){
+				link.style.display = 'none'; 
+				link.style.visibility = 'hidden';
+			}
+		}
+		if ( '' === '1'){
+		 	setTimeout(function(){
+				var link2 = document.getElementById('sendMsgLink');
+				if (link2 != 'undefined' && link2 != null){
+					link2.style.display = 'none'; 
+					link2.style.visibility = 'hidden';
+				};
+			}, 20);
+			
+		}  
+	</script>
+<div class="mainwidepanel">
+
+				<div id="breadcrumbs">
+						South Carolina Law &gt; <a href="/code/statmast.php">Code of Laws</a> &gt; <a href="/code/title17.php">Title 17</a>
+				</div>
+
+					<h2 class="barheader">South Carolina Code of Laws<br />
+									Unannotated<br />
+					</h2>
+
+				<div id="contentsection">
+<div style="font-weight: bold; text-align: center;">Title 17 - CRIMINAL PROCEDURES</div>
+<br />
+
+<div style="text-align: center;">CHAPTER 7</div>
+<div style="text-align: center;">Autopsies and Inquest on the Dead</div><br />
+<div style="text-align: center;">ARTICLE 1</div>
+<div style="text-align: center;">Autopsies, Preliminary Examinations, and Inquests</div><br />
+<span style="font-weight: bold;"> SECTION 17-7-10.</span> Coroners or solicitors shall order autopsies; autopsy to be ordered upon death of persons in penal institutions.<br /><br />
+	The coroner of the county in which a body is found dead or the solicitor of the judicial circuit in which the county lies shall order an autopsy or post-mortem examination to be conducted to ascertain the cause of death. If any person dies while detained, incarcerated, or under the jurisdiction of a municipal, county, or regional holdover facility, holding cell, overnight lockup or jail, a county or regional prison camp, or a state correctional facility, the coroner of the county in which the death occurs or, should that be unknown, the county in which the institution is located shall order an autopsy immediately upon notification of the death. However, if the official in charge of the institution is unable to arrange an autopsy within the State of South Carolina, he shall provide the coroner with an affidavit attesting to this inability.<br /><br />
+	In this event, the coroner shall consult with the physician who pronounced death, and, if not the same, with any other physician who is known to have treated the person within twelve months prior to his death. If the deceased person had a previously diagnosed contagious, terminal illness or condition which is considered to be the reason for death, written confirmation must be obtained from at least two physicians who attended him prior to his death, and at least one of these physicians may not have been employed by or under contract with the institution or agency which was responsible for custody of the deceased person.<br /><br />
+	The coroner may then determine that an autopsy is not required, and shall so certify in writing. Nevertheless, if the coroner decides that an autopsy is appropriate, he may order that one be arranged outside the State of South Carolina. Documentation of the death, the circumstances surrounding it, and all subsequent actions and decisions regarding the autopsy must be filed with the Jail and Prison Inspection Division of the Department of Corrections according to Section 24-9-35.<br /><br />
+HISTORY: 1962 Code SECTION 17-90; 1955 (49) 189; 1961 (52) 278; 1980 Act No. 512, SECTION 1; 1993 Act No. 116, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-15.</span> Return of body after autopsy or medical examination.<br /><br />
+	Whenever any county, state or municipal law enforcement agency transports a human body to a medical facility for autopsy or other medical examination to determine the cause of death, the law enforcement agency which ordered such medical examination shall provide for the return transportation of the body to the next of kin of the deceased if they reside within the State. The provisions of this section shall also apply to coroners and solicitors.<br /><br />
+HISTORY: 1979 Act No. 28.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-20.</span> Requirement of preliminary examination before formal inquest; issuance of burial permit, conclusion of inquiry or formal inquest.<br /><br />
+	Whenever a body is found dead and an investigation or inquest is deemed advisable the coroner or the magistrate acting as coroner, as the case may be, shall go to the body and examine the witnesses most likely to be able to explain the cause of death, take their testimony in writing and decide for himself whether there ought to be a trial or whether blame probably attaches to any living person for the death, and if so and if he shall receive the written request, if any, required by SECTION 17-7-50, he shall proceed to summon a jury and hold a formal inquest as required by law. But if there be, in his judgment, no apparent or probable blame against living persons as to the death he shall issue a burial permit and all further inquiry or formal inquest shall be dispensed with. Provided, however, that the coroner of Charleston County is authorized and empowered to issue a death certificate.<br /><br />
+HISTORY: 1962 Code SECTION 17-91; 1952 Code SECTION 17-91; 1942 Code SECTION 1097; 1932 Code SECTION 1097; Cr. P. &#39;22 SECTION 184; Cr. C. &#39;12 SECTION 1027; Cr. C. &#39;02 SECTION 729; 1894 (21) 825; 1964 (53) 2367.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-25.</span> Autopsy on unidentified body; preservation of DNA samples.<br /><br />
+	A coroner performing an autopsy on an unidentified body must obtain tissue and fluid samples suitable for DNA identification, typing, and testing. The samples must be transmitted to the State Law Enforcement Division.<br /><br />
+HISTORY: 2008 Act No. 413, SECTION 3.D, eff October 21, 2008.<br /><br />
+Editor&#39;s Note<br /><br />
+	2008 Act No. 413, SECTION 3.A provides as follows:<br /><br />
+	&quot;This SECTION may be referred to and cited as the &#39;Unidentified Human Remains DNA Database Act&#39;.&quot;<br /><br />
+	2008 Act No. 413, SECTION 7 provides as follows:<br /><br />
+	&quot;The provisions of Section 17-28-350 become effective upon the signature of the Governor. All other provisions become effective January 1, 2009. The enactment of these provisions prior to the effective date indicates the intent of the General Assembly that statewide laws or practices shall exist to ensure additional procedures for post-conviction DNA testing, and proper preservation of biological evidence connected to murder, rape, and nonnegligent homicide in order that application for available federal funds shall be made by the appropriate agencies and considered by the appropriate federal agencies prior to the effective date.&quot;<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-30.</span> Findings on preliminary examination and filing of evidence.<br /><br />
+	The evidence and the finding of the officer on such preliminary examination shall be filed in the clerk&#39;s office of the county, the finding to be that deceased came to death (a) from natural cause, (b) at his own hand, (c) from an act of God or (d) from mischance, without blame on the part of another person.<br /><br />
+HISTORY: 1962 Code SECTION 17-92; 1952 Code SECTION 17-92; 1942 Code SECTION 1097; 1932 Code SECTION 1097; Cr. P. &#39;22 SECTION 184; Cr. C. &#39;12 SECTION 1027; Cr. C. &#39;02 SECTION 729; 1884 (21) 825.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-40.</span> Fees for preliminary examination.<br /><br />
+	For such preliminary examination such officer shall receive the same fees paid in the same way as a magistrate for any ordinary preliminary examination in a criminal case, except that in counties in which the coroner receives a salary no fees shall be allowed to any officer for services in such preliminary examination.<br /><br />
+HISTORY: 1962 Code SECTION 17-93; 1952 Code SECTION 17-93; 1942 Code SECTION 1097; 1932 Code SECTION 1097; Cr. P. &#39;22 SECTION 184; Cr. C. &#39;12 SECTION 1027; Cr. C. &#39;02 SECTION 729; 1884 (21) 825.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-70.</span> Jurisdiction of coroners to take inquests.<br /><br />
+	Subject to the provisions of SECTIONS 17-7-20 to 17-7-40 every coroner, within the county for which he has been elected or appointed, may take inquest of casual or violent deaths when the dead body is lying within his county. Provided, however, if a person is injured in one county but removed to another county for medical purposes, the coroner of the county where the injury occurred shall have jurisdiction.<br /><br />
+HISTORY: 1962 Code SECTION 17-96; 1952 Code SECTION 17-96; 1942 Code SECTION 3561; 1932 Code SECTION 3561; Civ. C. &#39;22 SECTION 2106; Civ. C. &#39;12 SECTION 1285; Civ. C. &#39;02 SECTION 887; G. S. 711; R. S. 758; 1839 (11) 72; 1874 (15) 529; 1911 (27) 160; 1969 (56) 93.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-80.</span> Duties of coroner concerning motor vehicle, swimming, or boating accident deaths.<br /><br />
+	Every coroner or other official responsible for performing the duties of coroner shall examine the body within eight hours of death of any driver and any pedestrian, sixteen years old or older, who dies within four hours of a motor vehicle accident or any swimmer or boat occupant who dies within four hours of a boating accident, and take or cause to have taken by a qualified person such blood or other fluids of the victim as are necessary to a determination of the presence and percentages of alcohol or drugs. Such blood or other fluids shall be forwarded to the South Carolina Law Enforcement Division within five days after the accident in accordance with procedures established by the Law Enforcement Division.<br /><br />
+HISTORY: 1962 Code SECTION 17-96.1; 1974 (58) 2846; 1975 (59) 171.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-90.</span> Persons subject to jury duty are liable to serve on an inquest.<br /><br />
+	All persons subject to jury duty in the circuit courts shall be liable to serve as jurors on an inquest on a dead body found within their county.<br /><br />
+HISTORY: 1962 Code SECTION 17-97; 1952 Code SECTION 17-97; 1942 Code SECTION 1069; 1932 Code SECTION 1069; Cr. P. &#39;22 SECTION 156; Cr. C. &#39;12 SECTION 1001; Cr. C. &#39;02 SECTION 703; G. S. 2666; R. S. 582; 1839 (11) 72.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-100.</span> Mode of summoning a jury.<br /><br />
+	When the coroner upon the required preliminary examination shall determine that a formal inquest shall be held he shall make out his warrant directed to all or any of the constables of his county or to the sheriff of his county, requiring them or any of them forthwith to summon a jury of fourteen men of the county within a radius of ten miles to appear before him at the time and place specified in the warrant.<br /><br />
+HISTORY: 1962 Code SECTION 17-98; 1952 Code SECTION 17-98; 1942 Code SECTION 3572; 1932 Code SECTION 3573; 1931 (37) 229.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-110.</span> Procedures to be followed by person directed to summon jury; compensation.<br /><br />
+	The sheriff, deputy sheriff or magistrates&#39; constable who shall be designated and directed to summon a jury of inquest as provided in SECTION 17-7-100 shall forthwith summon such jury of inquest as directed by the coroner and shall not receive any additional compensation for such services. Any private citizen who shall be appointed and directed by the coroner to summon a jury of inquest shall forthwith summon such jury of inquest as directed and shall receive the sum of one dollar for such services and the voucher for such services must show that such private citizen was appointed according to the provisions of SECTION 17-7-100.<br /><br />
+HISTORY: 1962 Code SECTION 17-100; 1952 Code SECTION 17-100; 1942 Code SECTION 3572; 1932 Code SECTION 3573; 1931 (37) 229.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-120.</span> Form of warrant to summon jury.<br /><br />
+	The warrant to summon a jury shall be in this form:<br /><br />
+	&quot;The State of South Carolina,<br /><br />
+	To the sheriff (or to any constable or constables, as the case may be), of __________ County, greeting:<br /><br />
+	These are to require you, immediately on receipt and sight hereof, to summon and warn, verbally or otherwise, fourteen men of said county to be and appear before me, the coroner of said county, at __________ within said county, between the hours of ___ and ___ o&#39;clock on the ___ day of __________, then and there to inquire, upon the view of a body of a certain person there lying dead, how he came to his death. Fail not herein, as you will answer the contrary at your peril.<br /><br />
+	Given under my hand and seal, at __________, this ___ day of ___, A. D. __________, by me.<br /><br />
+	A. B. [L. S.]<br /><br />
+	Coroner for __________ County.&quot;<br /><br />
+HISTORY: 1962 Code SECTION 17-101; 1952 Code SECTION 17-101; 1942 Code SECTION 1067; 1932 Code SECTION 1067; Cr. P. &#39;22 SECTION 154; Cr. C. &#39;12 SECTION 999; Cr. C. &#39;02 SECTION 701; G. S. 2664; R. S. 580; 1839 (11) 72; 1875 (15) 8.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-130.</span> Execution and return of warrant; officer or juror subject to penalty for failure to perform.<br /><br />
+	Any constable or sheriff to whom such warrant shall come shall forthwith execute the warrant and repair unto the place at the time therein mentioned and make return of the warrant, with his proceedings thereon, to the coroner that granted it. Every constable or sheriff failing to perform the duty by such warrant required of him or failing to return it as aforesaid shall forfeit and pay the sum of twenty dollars, if without reasonable excuse, to be recovered by action. Each and every person summoned and warned as aforesaid to be a juror and failing to appear and act as such juror shall also forfeit and pay the sum of twenty dollars, if without reasonable excuse, to be recovered by action.<br /><br />
+HISTORY: 1962 Code SECTION 17-102; 1952 Code SECTION 17-102; 1942 Code SECTION 1068; 1932 Code SECTION 1068; Cr. P. &#39;22 SECTION 155; Cr. C. &#39;12 SECTION 1000; Cr. C. &#39;02 SECTION 702; G. S. 2665; R. S. 581; 1839 (11) 72.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-140.</span> Number of jurors and oath.<br /><br />
+	Of the jurors summoned and appearing the coroner shall swear six and administer to the foreman, appointed by him, an oath in the form following: &quot;You shall inquire and true presentment make on behalf of the State of South Carolina in what manner A B, here lying dead, came to his death and you shall deliver a true verdict thereon, according to such evidence as shall be given and according to your knowledge. So help you, God.&quot; To the others he shall administer an oath in this form: &quot;The oath which your foreman has taken on his part, you shall well and truly observe and keep on your part. So help you, God.&quot;<br /><br />
+HISTORY: 1962 Code SECTION 17-103; 1952 Code SECTION 17-103; 1942 Code SECTION 1070; 1932 Code SECTIONS 1070, 1074; Cr. P. &#39;22 SECTIONS 157, 161; Cr. C. &#39;12 SECTION 1002; Cr. C. &#39;02 SECTION 704; G. S. 2667; R. S. 583; 1839 (11) 73; 1914 (28) 517; 1917 (30) 161; 1933 (38) 23; 1936 (39) 1297.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-150.</span> Coroner shall charge jury.<br /><br />
+	The jury so sworn shall be charged by the coroner to declare, upon oath, whether the deceased came to his death:<br /><br />
+	(1) By mischance and accident or by felony;<br /><br />
+	(2) If by felony, whether by his own or another&#39;s;<br /><br />
+	(3) If by mischance, whether by the act of God or of man;<br /><br />
+	(4) If by another&#39;s felony, who were principals and who accessories, who threatened him of life, or murder, and with what instrument he was struck or wounded; and<br /><br />
+	(5) If by mischance or accident, by the act of God or man, whether by hurt, fall, stroke, drowning or otherwise.<br /><br />
+	And he shall also charge them to inquire of the persons that were present at the finding of the body whether he was killed in the same place or elsewhere and, if elsewhere, by whom or how he was there brought and of all other circumstances.<br /><br />
+HISTORY: 1962 Code SECTION 17-104; 1952 Code SECTION 17-104; 1942 Code SECTION 1071; 1932 Code SECTION 1071; Cr. P. &#39;22 SECTION 158; Cr. C. &#39;12 SECTION 1003; Cr. C. &#39;02 SECTION 705; G. S. 2668; R. S. 584; 1839 (11) 73.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-160.</span> Inquiry in case of suicide.<br /><br />
+	If the jury so charged find that the deceased came to his death by his own felony they shall further inquire into the manner, means and instrument and into all the circumstances of the death.<br /><br />
+HISTORY: 1962 Code SECTION 17-105; 1952 Code SECTION 17-105; 1942 Code SECTION 1072; 1932 Code SECTION 1072; Cr. P. &#39;22 SECTION 159; Cr. C. &#39;12 SECTION 1004; Cr. C. &#39;02 SECTION 706; G. S. 2669; R. S. 585; 1839 (11) 73.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-170.</span> Coroner&#39;s power to issue warrants and to summon and examine witnesses.<br /><br />
+	The coroner may issue warrants, summon witnesses and examine before the jury any person present, whether summoned or not, concerning the death. He shall serve a notice of hearing on any person who has been served with an arrest warrant charging him with causing death of the subject of the inquest. The notice of hearing shall be served at least four days prior to the inquest.<br /><br />
+HISTORY: 1962 Code SECTION 17-107; 1952 Code SECTION 17-107; 1942 Code SECTION 1075; 1932 Code SECTION 1075; Cr. P. &#39;22 SECTION 162; Cr. C. &#39;12 SECTION 1006; Cr. C. &#39;02 SECTION 708; G. S. 2671; R. S. 587; 1839 (11) 73; 1981 Act No. 7, SECTION 1.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-175.</span> Coroner&#39;s power to issue subpoena duces tecum.<br /><br />
+	In addition to the authority contained in Section 17-7-170, a coroner also may issue subpoenas duces tecum to compel individuals to produce copies of documents or other materials which are relevant to a death investigation. Any law enforcement officer with appropriate jurisdiction is empowered to serve these subpoenas and receive copies of documents and other materials for return to the coroner. In the alternative, the coroner may require the individual subpoenaed to appear at the inquest or proceeding in order to produce copies of the documents or materials subpoenaed. Reasonable costs incurred to comply with this section must be paid by the county. Any person violating a subpoena duces tecum issued pursuant to this section may be punished for contempt as provided by Section 17-7-190.<br /><br />
+HISTORY: 1988 Act No. 610.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-180.</span> Disregard of summons or refusal to testify.<br /><br />
+	Every person summoned or required to give evidence and disregarding such summons or refusing to testify, without such excuse as shall be lawful and sufficient, shall forfeit and pay the sum of twenty dollars and shall be committed to jail by the coroner until the next court of general sessions or until he testifies and is discharged by the coroner such forfeiture to be recovered by indictment, and in addition shall be liable to be indicted at the next court of general sessions for the county and upon conviction shall be fined and imprisoned, at the discretion of the court. And the coroner shall bind such witness so appearing, by recognizance, with good and sufficient surety, to appear at the next court of general sessions to stand his trial and a witness refusing to enter into such recognizance shall be forthwith committed to the jail of the county by commitment, under the hand and seal of the coroner, there to be kept until he enters into such recognizance as before required.<br /><br />
+HISTORY: 1962 Code SECTION 17-108; 1952 Code SECTION 17-108; 1942 Code SECTION 1075; 1932 Code SECTION 1075; Cr. P. &#39;22 SECTION 162; Cr. C. &#39;12 SECTION 1006; Cr. C. &#39;02 SECTION 708; G. S. 2671; R. S. 587; 1839 (11) 73.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-190.</span> Coroner may punish for contempt.<br /><br />
+	Whenever any person shall wilfully disturb or impede the proceedings of a jury of inquest while inquiring into the cause of any death or shall offer any contempt to the person or authority of the coroner while so engaged the coroner may commit such person to the common jail of the county for a time not exceeding twenty-four hours.<br /><br />
+	Any person who shall have been at any time duly summoned to attend and serve upon a coroner&#39;s jury who shall neglect or refuse to so attend and serve without proper excuse shall be liable to be punished for contempt and the coroner may punish such contempt by fine not exceeding twenty dollars or imprisonment not more than twenty-four hours, or both, at his discretion.<br /><br />
+HISTORY: 1962 Code SECTION 17-109; 1952 Code SECTION 17-109; 1942 Code SECTION 1095; 1932 Code SECTION 1095; Cr. P. &#39;22 SECTION 182; Cr. C. &#39;12 SECTION 1025; Cr. C. &#39;02 SECTION 727; G. S. 711; R. S. 606; 1839 (11) 78; 1874 (15) 529.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-200.</span> Coroner&#39;s power to adjourn the jury and bind jurors.<br /><br />
+	A coroner may, if he deems it necessary, adjourn the jury, either from day to day or to any other day and place, to receive evidence, binding the jurors severally by one recognizance, in such amount as he shall think fit, for their appearance. Such recognizance may be estreated as to any conusor for default by the court of general sessions.<br /><br />
+HISTORY: 1962 Code SECTION 17-110; 1952 Code SECTION 17-110; 1942 Code SECTION 1076; 1932 Code SECTION 1076; Cr. P. &#39;22 SECTION 163; Cr. C. &#39;12 SECTION 1007; Cr. C. &#39;02 SECTION 709; G. S. 2672; R. S. 588; 1839 (11) 74.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-210.</span> Supplying places of absent jurors.<br /><br />
+	If all or any part of the jurors shall fail to reappear at the day and place to which they were adjourned the coroner shall issue his warrant to supply the places of the absent jury or of so many of the jurors absent as may be necessary. And the jurors last summoned shall be sworn and charged as those first summoned were and shall have the same power and be liable to the same penalties.<br /><br />
+HISTORY: 1962 Code SECTION 17-111; 1952 Code SECTION 17-111; 1942 Code SECTION 1077; 1932 Code SECTION 1077; Cr. P. &#39;22 SECTION 164; Cr. C. &#39;12 SECTION 1008; Cr. C. &#39;02 SECTION 710; G. S. 2673; R. S. 589; 1839 (11) 74.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-220.</span> Oath of witnesses.<br /><br />
+	The witnesses examined upon the inquest shall be sworn as follows, by the coroner, who may administer the oath, that is to say: &quot;The evidence you shall give to this inquest concerning the death of A B, here lying dead, shall be the truth, the whole truth, and nothing but the truth. So help you God.&quot;<br /><br />
+HISTORY: 1962 Code SECTION 17-112; 1952 Code SECTION 17-112; 1942 Code SECTION 1078; 1932 Code SECTION 1078; Cr. P. &#39;22 SECTION 165; Cr. C. &#39;12 SECTION 1009; Cr. C. &#39;02 SECTION 711; G. S. 2674; R. S. 590.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-230.</span> Coroner shall take testimony in writing and bind over or commit witnesses.<br /><br />
+	The testimony of all witnesses examined upon an inquest shall be taken down in writing by the coroner and signed by the witnesses. If the testimony given tends to incriminate any person as concerned in the death of the deceased the coroner shall bind over the witness who gave it, in recognizance, with sufficient surety, to appear at the next court of general sessions to be holden for the county to give evidence concerning the death and such witness, for refusing to enter into such recognizance, shall be committed by the coroner to the jail of the county, by warrant under his hand and seal, there to be kept until the session of the court or until he shall enter into recognizance as required.<br /><br />
+HISTORY: 1962 Code SECTION 17-115; 1952 Code SECTION 17-115; 1942 Code SECTION 1079; 1932 Code SECTION 1079; Cr. P. &#39;22 SECTION 166; Cr. C. &#39;12 SECTION 1010; Cr. C. &#39;02 SECTION 712; G. S. 2675; R. S. 591; 1839 (11) 74.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-240.</span> Duty to render verdict; form.<br /><br />
+	The jury having viewed the body, heard the evidence and made inquiry into the cause and manner of the death shall render their verdict thereon, in writing, to the coroner under their hands and seals in the manner following, which shall pass by indenture interchangeably between the coroner and jury, that is to say:<br /><br />
+	&quot;South Carolina,<br /><br />
+	County of __________<br /><br />
+	An inquisition indented, taken at __________, in __________ County, the ___ day of __________, A. D. ___, before A B, coroner (or C D, magistrate, acting as coroner) for said county, upon view of the body of E F, of __________, then and there being dead, by the oaths of (inserting the names of the jurors), being a lawful jury of inquest, who, being charged and sworn to inquire for the State of South Carolina where and by what means the said E F came to his death, upon their oath do say, etc. (inserting how, where, at what time and by what instrument the deceased was killed).&quot;<br /><br />
+HISTORY: 1962 Code SECTION 17-119; 1952 Code SECTION 17-119; 1942 Code SECTION 1080; 1932 Code SECTION 1080; Cr. P. &#39;22 SECTION 167; Cr. C. &#39;12 SECTION 1011; Cr. C. &#39;02 SECTION 713; G. S. 2676; R. S. 592; 1839 (11) 74.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-250.</span> Form of conclusion of inquisition where deceased was wilfully killed.<br /><br />
+	If it shall appear that the deceased was wilfully killed by another the inquisition must be concluded in this form: &quot;And so the jurors aforesaid, upon their oaths aforesaid, do say that the aforesaid J K, in manner and form aforesaid, E F then and there feloniously did kill, against the peace and dignity of the same State aforesaid.&quot;<br /><br />
+HISTORY: 1962 Code SECTION 17-120; 1952 Code SECTION 17-120; 1942 Code SECTION 1080; 1932 Code SECTION 1080; Cr. P. &#39;22 SECTION 167; Cr. C. &#39;12 SECTION 1011; Cr. C. &#39;02 SECTION 713; G. S. 2676; R. S. 592; 1839 (11) 74.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-260.</span> Form of conclusion of inquisition where death was not wilful but by the hands of another.<br /><br />
+	If the proof shall be that the death was occasioned by the hands of another the conclusion shall be: &quot;That J K, the said E F, by misfortune and contrary to his will, in manner and form aforesaid, did kill and slay.&quot;<br /><br />
+HISTORY: 1962 Code SECTION 17-121; 1952 Code SECTION 17-121; 1942 Code SECTION 1084; 1932 Code SECTION 1084; Cr. P. &#39;22 SECTION 171; Cr. C. &#39;12 SECTION 1015; Cr. C. &#39;02 SECTION 717; G. S. 2680; R. S. 596; 1839 (11) 75.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-270.</span> Form of conclusion of inquisition in case of death by self-murder.<br /><br />
+	If it appears that the deceased died by self-murder the inquisition shall conclude: &quot;That the said E F, in manner and form aforesaid, then and there voluntarily and feloniously himself did kill, against the peace and dignity of the same State aforesaid.&quot;<br /><br />
+HISTORY: 1962 Code SECTION 17-122; 1952 Code SECTION 17-122; 1942 Code SECTION 1082; 1932 Code SECTION 1082; Cr. P. &#39;22 SECTION 169; Cr. C. &#39;12 SECTION 1013; Cr. C. &#39;02 SECTION 715; G. S. 2678; R. S. 594; 1839 (11) 75.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-280.</span> Form of conclusion of inquisition in case of death by means unknown.<br /><br />
+	If it shall appear that the deceased came to his death by means unknown to the jury the inquisition shall conclude thus: &quot;That the said E F was killed and murdered by some person or persons (or by some means) to the jurors unknown, against the peace and dignity of the same State aforesaid.&quot;<br /><br />
+HISTORY: 1962 Code SECTION 17-123; 1952 Code SECTION 17-123; 1942 Code SECTION 1081; 1932 Code SECTION 1081; Cr. P. &#39;22 SECTION 168; Cr. C. &#39;12 SECTION 1012; Cr. C. &#39;02 SECTION 714; G. S. 2677; R. S. 593; 1839 (11) 75.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-290.</span> Form of conclusion of inquisition in case of death by mischance.<br /><br />
+	If it appears that the deceased came to his death by mischance the finding shall conclude: &quot;That E F, in manner and form aforesaid, came to his death by misfortune or accident.&quot;<br /><br />
+HISTORY: 1962 Code SECTION 17-124; 1952 Code SECTION 17-124; 1942 Code SECTION 1083; 1932 Code SECTION 1083; Cr. P. &#39;22 SECTION 170; Cr. C. &#39;12 SECTION 1014; Cr. C. &#39;02 SECTION 716; G.S. 2679; R.S. 595; 1839 (11) 75.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-300.</span> Form of attestation clause; signature to inquisition.<br /><br />
+	After the conclusion as prescribed in Sections 17-7-250 to 17-7-290, according to the facts, the inquisition shall end in this form:.<br /><br />
+	&quot;In witness whereof, I __________, coroner aforesaid, and the jurors aforesaid, to this inquisition have interchangeably put our hands and seal, the day and year above mentioned.<br /><br />
+	A B (L. S.),<br /><br />
+	Coroner __________ County.<br /><br />
+	C D, etc. (L. S.),<br /><br />
+	Foreman of Jury of Inquest.<br /><br />
+	E F, etc. (L. S.),<br /><br />
+	Jurors.&quot;<br /><br />
+HISTORY: 1962 Code SECTION 17-125; 1952 Code SECTION 17-125; 1942 Code SECTION 1085; 1932 Code SECTION 1085; Cr. P. &#39;22 SECTION 172; Cr. C. &#39;12 SECTION 1016; Cr. C. &#39;02 SECTION 718; G. S. 2681; R. S. 597; 1839 (11) 75.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-310.</span> Return of inquisition and evidence to clerk.<br /><br />
+	The original inquisition and evidence, as taken by him, shall be returned by the coroner within ten days next after the finding thereof to the clerk of the court of general sessions for the county in which it was found.<br /><br />
+HISTORY: 1962 Code SECTION 17-126; 1952 Code SECTION 17-126; 1942 Code SECTION 3564; 1932 Code SECTION 3564; Civ. C. &#39;22 SECTION 2109; Civ. C. &#39;12 SECTION 1288; Civ. C. &#39;02 SECTION 890; G. S. 719; R. S. 761; 1839 (11) 75.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-320.</span> Endorsement on return of inquisition and evidence.<br /><br />
+	The coroner, before he returns such inquisition and evidence, shall endorse them in this form:<br /><br />
+<table style="border-collapse: collapse; width: 100%; margin: 10px 0;">
+  <tr>
+    <th style="padding: 4px 8px; text-align: left;">&quot;South Carolina,</th>
+    <th style="padding: 4px 8px; text-align: left;">)</th>
+  </tr>
+  <tr>
+    <td style="padding: 4px 8px; text-align: left;">________________ County,</td>
+    <td style="padding: 4px 8px; text-align: left;">)</td>
+  </tr>
+  <tr>
+    <td style="padding: 4px 8px; text-align: left;">The State vs. The Dead Body of A. B.</td>
+  </tr>
+  <tr>
+    <td style="padding: 4px 8px; text-align: left;">Inquisition taken this ______ day of __________, A. D. __________, by __________, coroner for said county, entered and recorded in Coroner&#39;s Book of Inquisitions, page ____, this ____ day of __________, A. D. __________.&quot;</td>
+  </tr>
+</table>
+<br />
+HISTORY: 1962 Code SECTION 17-127; 1952 Code SECTION 17-127; 1942 Code SECTION 3565; 1932 Code SECTION 3565; Civ. C. &#39;22 SECTION 2110; Civ. C. &#39;12 SECTION 1289; Civ. C. &#39;02 SECTION 891; R. S. 762; G. S. 720; 1839 (11) 75.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-330.</span> Coroner&#39;s Book of Inquisitions.<br /><br />
+	Every coroner shall keep a book to be called &quot;The Coroner&#39;s Book of Inquisitions&quot; into which he shall copy all inquests found within his county, together with evidence taken before the jury and all proceedings had before or after their findings. Such book shall be public property and shall be turned over to his successor in office.<br /><br />
+HISTORY: 1962 Code SECTION 17-128; 1952 Code SECTION 17-128; 1942 Code SECTIONS 3560, 3563; 1932 Code SECTIONS 3560, 3563; Civ. C. &#39;22 SECTIONS 2105, 2108; Civ. C. &#39;12 SECTIONS 1284, 1287; Civ. C. &#39;02 SECTIONS 886, 889; G. S. 709, 718; R. S. 757, 760; 1839 (11) 78.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-340.</span> Compensation and mileage allowed coroner&#39;s jurors.<br /><br />
+	For his services as such, each coroner&#39;s juror sworn shall, except as otherwise herein provided, be allowed mileage, as all jurors in the circuit courts, and a per diem of fifty cents to be paid on certificate of the coroner or magistrate holding the inquest as jurors in the circuit courts are paid.<br /><br />
+HISTORY: 1962 Code SECTION 17-129; 1952 Code SECTION 17-129; 1942 Code SECTION 1070; 1932 Code SECTIONS 1070, 1074; Cr. P. &#39;22 SECTIONS 157, 161; Cr. C. &#39;12 SECTION 1002; Cr. C. &#39;02 SECTION 704; G. S. 2667; R. S. 583; 1839 (11) 73; 1914 (28) 517; 1917 (30) 161; 1933 (38) 23; 1936 (39) 1297.<br /><br />
+<div style="text-align: center;">ARTICLE 3</div>
+<div style="text-align: center;">Bodies Buried Without Inquiry</div><br />
+<span style="font-weight: bold;"> SECTION 17-7-510.</span> Penalty for burying body without notice or inquiry.<br /><br />
+	It is unlawful for a person to bury or cause to be buried the dead body of a person supposed to have come to a violent death before notice to the coroner to examine the body and before inquiry is made into the manner and circumstances of the death.<br /><br />
+	A person who violates the provisions of this section is guilty of a misdemeanor and, upon conviction, must be fined in the discretion of the court or imprisoned not more than three years. The coroner shall bind him in recognizance, with sufficient surety, to appear and stand his trial.<br /><br />
+HISTORY: 1962 Code SECTION 17-141; 1952 Code SECTION 17-141; 1942 Code SECTIONS 1091, 1094; 1932 Code SECTIONS 1091, 1094; Cr. P. &#39;22 SECTIONS 178, 181; Cr. C. &#39;12 SECTIONS 1021, 1024; Cr. C. &#39;02 SECTIONS 723, 726; G. S. 2686, 2689; R. S. 602, 605; 1839 (11) 77, 78; 1993 Act No. 184, SECTION 192.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-520.</span> Order to take up buried body on suspicion of violent death; examination.<br /><br />
+	If the coroner shall know or be informed of the interment of a body of a person supposed to have come to a violent death he shall proceed to empanel a jury, as is directed in Article 1 of this chapter, and order such body to be taken up and shall conduct his examination into the cause and manner of the death as though such body had not been buried.<br /><br />
+HISTORY: 1962 Code SECTION 17-142; 1952 Code SECTION 17-142; 1942 Code SECTION 1092; 1932 Code SECTION 1092; Cr. P. &#39;22 SECTION 179; Cr. C. &#39;12 SECTION 1022; Cr. C. &#39;02 SECTION 724; G. S. 2687; R. S. 603; 1839 (11) 77.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-530.</span> Record of body long dead and buried or improperly kept.<br /><br />
+	If the body has been so long dead and buried or so injured by improper keeping as that the causes of the death cannot be ascertained upon the examination the coroner shall make a record of the fact, stating its condition, by whom and how long it had been kept or buried, the circumstances of the burial, and the identity, if discovered. Such record shall be entered in his book and returned, as any other inquisition, to the clerk of the court of general sessions for the county.<br /><br />
+HISTORY: 1962 Code SECTION 17-143; 1952 Code SECTION 17-143; 1942 Code SECTION 1093; 1932 Code SECTION 1093; Cr. P. &#39;22 SECTION 180; Cr. C. &#39;12 SECTION 1023; Cr. C. &#39;02 SECTION 725; G. S. 2688; R. S. 604; 1839 (11) 77.<br /><br />
+<div style="text-align: center;">ARTICLE 5</div>
+<div style="text-align: center;">Commitments and Reports</div><br />
+<span style="font-weight: bold;"> SECTION 17-7-610.</span> Warrant in case of wilful killing.<br /><br />
+	If the finding of the inquest be wilful killing by the hands or means of another the coroner shall forthwith issue his warrant directed to the sheriff or to one or more constables for the county for all the persons implicated by such finding.<br /><br />
+HISTORY: 1962 Code SECTION 17-151; 1952 Code SECTION 17-151; 1942 Code SECTION 1086; 1932 Code SECTION 1086; Cr. P. &#39;22 SECTION 173; Cr. C. &#39;12 SECTION 1017; Cr. C. &#39;02 SECTION 719; G. S. 2682; R. S. 598; 1839 (11) 75.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-620.</span> Form of warrant in case of wilful killing.<br /><br />
+	Such warrant shall be in this form:<br /><br />
+	&quot;The State of South Carolina,<br /><br />
+	By A B, coroner (or C D, magistrate, acting as coroner) for __________ County:<br /><br />
+	To __________, sheriff of __________ County:<br /><br />
+	&quot;Whereas, by inquisition by me held on (time and place inserted) it was found that (here insert the finding of the jury): These are, therefore, to command you forthwith to apprehend (here insert the name or names of the accused) and bring him (or them) before me to be dealt with according to law.<br /><br />
+	Given under my hand and seal, this ___ day of __________, A. D. __________<br /><br />
+	A B, coroner, (L. S.),<br /><br />
+	(or C D, magistrate, acting as coroner).&quot;<br /><br />
+HISTORY: 1962 Code SECTION 17-152; 1952 Code SECTION 17-152; 1942 Code SECTION 1086; 1932 Code SECTION 1086; Cr. P. &#39;22 SECTION 173; Cr. C. &#39;12 SECTION 1017; Cr. C. &#39;02 SECTION 719; G. S. 2682; R. S. 598; 1839 (11) 75.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-630.</span> Commitment of person named in warrant in case of wilful killing.<br /><br />
+	Upon the return of such warrant and the arrest of the person or persons named therein the coroner shall proceed to commit him or them by warrant, in the following form:<br /><br />
+	&quot;To the sheriff or jailer of __________ County:<br /><br />
+	You are hereby commanded and required to receive and keep in close confinement in the jail of your county (here insert the name or names of the person or persons) charged before me by the finding of a jury of inquest held on the ___ day of __________, at __________, with (here insert the finding) until he (or they) shall be delivered by due course of law. Herein fail not.<br /><br />
+	Given under my hand and seal, this ___ day of __________, A. D. __________<br /><br />
+	A B, coroner, (L. S.),<br /><br />
+	(or C D, magistrate, acting as coroner).&quot;<br /><br />
+HISTORY: 1962 Code SECTION 17-153; 1952 Code SECTION 17-153; 1942 Code SECTION 1087; 1932 Code SECTION 1087; Cr. P. &#39;22 SECTION 174; Cr. C. &#39;12 SECTION 1018; Cr. C. &#39;02 SECTION 720; G. S. 2683; R. S. 599; 1839 (11) 75.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-640.</span> Sheriff and jailers are required to keep persons committed.<br /><br />
+	All sheriffs and jailers are required to receive and keep securely all persons so committed by the coroner.<br /><br />
+HISTORY: 1962 Code SECTION 17-154; 1952 Code SECTION 17-154; 1942 Code SECTION 1088; 1932 Code SECTION 1088; Cr. P. &#39;22 SECTION 175; Cr. C. &#39;12 SECTION 1019; Cr. C. &#39;02 SECTION 721; G. S. 2684; R. S. 600; 1839 (11) 75.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-650.</span> Binding over person who killed another by mischance and witnesses.<br /><br />
+	If the finding of the inquest be that the deceased came to his death by mischance by the hands of another the coroner shall bind in recognizance, with sufficient surety, the party against whom the verdict has been rendered to appear at the next court of general sessions for the county, that the matter may be then and there inquired into. And the coroner shall also bind over by recognizance, with good surety, all such material witnesses as were examined before the jury of inquest.<br /><br />
+HISTORY: 1962 Code SECTION 17-155; 1952 Code SECTION 17-155; 1942 Code SECTION 1090; 1932 Code SECTION 1090; Cr. P. &#39;22 SECTION 177; Cr. C. &#39;12 SECTION 1020; Cr. C. &#39;02 SECTION 722; G. S. 2685; R. S. 601; 1839 (11) 77.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-660.</span> Report by county coroner to Governor in certain homicide cases.<br /><br />
+	Each county coroner, whenever a homicide has been committed in his county and the party committing such homicide has not been arrested or, having been arrested, has escaped custody before bill found, shall forward a report to the Governor within three days after the holding of an inquest by him or, in cases of escape, within three days after notice of such escape. The report shall embrace the name of the person killed and the name of the person, if known, charged with committing such homicide, together with a copy of the evidence taken before the jury of inquest and the verdict rendered thereupon. In case of escape the sheriff, or other officer having custody of the party, shall notify the coroner of the escape promptly.<br /><br />
+HISTORY: 1962 Code SECTION 17-156; 1952 Code SECTION 17-156; 1942 Code SECTION 1089; 1932 Code SECTION 1089; Cr. P. &#39;22 SECTION 176; Cr. C. &#39;12 SECTION 563; Cr. C. &#39;02 SECTION 406; G. S. 721; R. S. 321; 1873 (15) 439, 440.<br /><br />
+<span style="font-weight: bold;"> SECTION 17-7-670.</span> Report by coroners and magistrates to Public Service Commission in case of railroad accident.<br /><br />
+	All coroners and magistrates shall file with the Public Service Commission, upon written request for it and the tender of a fee of nine cents per hundred words, an exact copy of all evidence and proceedings of inquests held over bodies when death is caused by any accidents whatever by railroads. This report shall be filed with the Public Service Commission not later than five days after the inquest is finished.<br /><br />
+HISTORY: 1962 Code SECTION 17-157; 1952 Code SECTION 17-157; 1942 Code SECTION 3561; 1932 Code SECTION 3561; Civ. C. &#39;22 SECTION 2106; Civ. C. &#39;12 SECTION 1285; Civ. C. &#39;02 SECTION 887; G. S. 711; R. S. 758; 1839 (11) 72; 1874 (15) 529; 1911 (27) 160.<br /><br />
+
+</div>
+
+
+					</div>		 <!-- mainwidepanel -->
+					
+				</div>		 <!-- pagebody -->
+				
+				<div id="footer" class="nodisplay" style="height: 30px;" onContextMenu="return false;">
+			<div id="footerdiv" style="margin:0;">
+				South Carolina Legislative Services Agency * 223 Blatt Building * 1105 Pendleton Street * Columbia, SC 29201<!-- * 803-212-4420--><br>
+				
+								<a href="/disclaimer.php">Disclaimer</a> * <a href="/policies.php">Policies</a> * <a href="/credits.php">Photo Credits</a> * <a href="/contact.php">Contact Us</a>
+							</div>
+		</div>
+		<div id="printfooter" class="printdisplay serifNormal" align=center style="font-size: 8pt;">
+			<br>
+			<br>
+			<hr>
+			Legislative Services Agency
+			<br>
+			h t t p : / / w w w . s c s t a t e h o u s e . g o v
+		</div>
+	
+		</div>	<!-- container or main in mobile page-->
+</body>
+</html>
+

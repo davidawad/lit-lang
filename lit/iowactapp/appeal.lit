@@ -1,0 +1,125 @@
+module ia-appellate-civil.appeal
+
+/// A brief in a proportionally spaced typeface: at most 13,000 words,
+/// headings, footnotes and quotations counted; captions, tables, the
+/// statement of the issues, signature blocks and certificates not counted
+/// (Iowa R. App. P. 6.903(1)(i)(1)). A reply brief may contain no more than
+/// half that type volume; the monospaced (1,300 lines) and handwritten (50
+/// and 25 pages) limits are not encoded.
+limit brief { words <= 13_000 cite "Iowa R. App. P. 6.903" } cite "Iowa R. App. P. 6.903"
+
+/// The appellant's brief is filed (Iowa R. App. P. 6.901(1)(a)).
+event AppellantBriefFiled() paper brief
+/// The appellee's brief is filed (Iowa R. App. P. 6.901(1)(b)).
+event AppelleeBriefFiled() paper brief
+
+start notice
+
+decision notice: "Notice of appeal within 30 days?" by applicant cite "Iowa R. App. P. 6.101"
+{
+  note "An appeal from a final order appealable as a matter of right is taken by filing a notice of appeal with the clerk of the district court where the order was entered, with an informational copy to the clerk of the supreme court (Iowa R. App. P. 6.102(2)). The notice is filed within 30 days after the filing of the final order or judgment or, if a motion under Iowa R. Civ. P. 1.904(2) or 1.1007 is timely filed, within 30 days after the filing of the ruling on that motion (Iowa R. App. P. 6.101(1)(b), (c)). A notice of cross-appeal is filed within the 30-day limit or within 10 days after the notice of appeal is filed, whichever is later (Iowa R. App. P. 6.101(2)(b)). The time is tolled when the notice is served, if it is filed within a reasonable time (Iowa R. App. P. 6.101(4)). If the clerk of the district court failed to notify the appellant of the judgment, the supreme court may extend the time on a motion filed no later than 60 days after the original deadline, by not more than 30 days after the order granting it (Iowa R. App. P. 6.101(5)). The filing fee is $150, paid to the clerk of the supreme court within seven days after filing the notice of appeal (Iowa R. App. P. 6.102(3), 6.703(1)(a)). No leading decision is named."
+  edge-notice-timely "Timely notice" -> record { authority cite "Iowa R. App. P. 6.102" }
+  edge-notice-none "No timely notice" -> final-no-appeal { authority cite "Iowa R. App. P. 6.101" }
+}
+
+terminal final-no-appeal: "Judgment final: no timely appeal" outcome [loss, final] cite "Iowa R. App. P. 6.101"
+{
+  note "Outcome from the appellant's side."
+}
+
+state record: "Combined certificate, transcript and briefing notice" by office cite "Iowa R. App. P. 6.804"
+{
+  note "The appellant files the combined certificate with the clerks of the district court and the supreme court within seven days after filing the notice of appeal or the appointment of new appellate counsel, whichever is later, certifying any transcript ordered (Iowa R. App. P. 6.804(1), (2)). A transcript of an electronically recorded proceeding needs an application in the district court within seven days of the notice of appeal (Iowa R. App. P. 6.803(1)). The reporter files the transcript and certificate of filing within 40 days from service of the combined certificate in a civil case (Iowa R. App. P. 6.803(3)(b)(3)). When all ordered transcripts are filed, the clerk of the supreme court issues the notice of briefing deadline (Iowa R. App. P. 6.803(6))."
+  edge-record-briefing "Briefing notice issued" -> briefing {
+    authority cite "Iowa R. App. P. 6.803"
+  }
+  edge-record-default "Appellant's default not cured" -> dismissed-default {
+    authority cite "Iowa R. App. P. 6.1202"
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite "Iowa R. App. P. 6.901"
+{
+  note "The appellant's brief is filed within 50 days after the clerk gives the notice of briefing deadline; the appellee's brief, or a statement waiving it, within 30 days after service of the appellant's brief; and the appellant's reply brief within 21 days after service of the appellee's brief; with a cross-appeal the appellee/cross-appellant may reply within 14 days after service of the appellant/cross-appellee's reply (Iowa R. App. P. 6.901(1)). A brief in a proportionally spaced typeface may contain no more than 13,000 words and a reply brief half that type volume (Iowa R. App. P. 6.903(1)(i)(1)). Oral argument is requested in the brief and is denied if unlikely to assist the court (Iowa R. App. P. 6.908(1), (2))."
+  edge-briefing-routing "Briefing complete" -> routing { authority cite "Iowa R. App. P. 6.1101" }
+  edge-briefing-default "Appellant's default not cured" -> dismissed-default {
+    authority cite "Iowa R. App. P. 6.1202"
+  }
+}
+
+terminal dismissed-default: "Appeal dismissed for an uncured default" outcome [loss, dismissal] cite "Iowa R. App. P. 6.1202"
+{
+  note "When the appellant misses an appellate deadline, the clerk of the supreme court issues a notice that the appeal may be dismissed unless the default is cured within 15 days of issuance; if it is not cured the supreme court may dismiss the appeal; the attorney is assessed a $150 penalty for each default notice (Iowa R. App. P. 6.1202(1)(a), (2)). Outcome from the appellant's side."
+}
+
+decision routing: "Retained by the supreme court or transferred" by court cite "Iowa R. App. P. 6.1101"
+{
+  note "The supreme court may transfer any case to the court of appeals except one within its exclusive jurisdiction. It ordinarily retains cases presenting substantial constitutional questions, conflicts between published decisions, substantial issues of first impression, fundamental and urgent issues of broad public importance, lawyer discipline, or questions of enunciating or changing legal principles, and ordinarily transfers cases applying existing legal principles or appropriate for summary disposition (Iowa R. App. P. 6.1101(1)-(3))."
+  edge-routing-retained "Retained" -> supreme-decision { authority cite "Iowa R. App. P. 6.1101" }
+  edge-routing-transferred "Transferred to the court of appeals" -> appeals-decision {
+    authority cite "Iowa R. App. P. 6.1101"
+  }
+}
+
+decision appeals-decision: "Court of appeals decision" by court cite "Iowa R. App. P. 6.1101"
+{
+  note "A petition for rehearing in the court of appeals is filed within seven days after the decision is filed and is deemed denied if not expressly granted or denied within seven days after filing; it does not toll the time for further review (Iowa R. App. P. 6.1204(1), (2), (5))."
+  edge-appeals-decision-for "For the appellant" -> review-of-win {
+    authority cite "Iowa R. App. P. 6.1103"
+  }
+  edge-appeals-decision-against "Against the appellant" -> further-review-election {
+    authority cite "Iowa R. App. P. 6.1103"
+  }
+}
+
+decision further-review-election: "Apply for further review within 20 days?" by applicant cite "Iowa R. App. P. 6.1103"
+{
+  note "An application for further review is filed within 20 days following the filing of the court of appeals decision; a resistance may be filed within ten days after service of the application (Iowa R. App. P. 6.1103(1)(a)(2), (2)). Further review is not a matter of right but of judicial discretion (Iowa R. App. P. 6.1103(1)(b)). Unless the court of appeals orders otherwise, procedendo does not issue until 27 days after its opinion is filed or while an application for further review is pending (Iowa R. App. P. 6.1208(2)(b))."
+  edge-further-review-election-apply "Application filed" -> further-review {
+    authority cite "Iowa R. App. P. 6.1103"
+  }
+  edge-further-review-election-none "No application" -> final-loss {
+    authority cite "Iowa R. App. P. 6.1208"
+  }
+}
+
+decision further-review: "Further review decided" by court cite "Iowa R. App. P. 6.1103"
+{
+  note "If the application is granted, the supreme court may require the parties to file supplemental briefs on all or some of the issues to be reviewed (Iowa R. App. P. 6.1103(6))."
+  edge-further-review-granted "Granted" -> supreme-decision {
+    authority cite "Iowa R. App. P. 6.1103"
+  }
+  edge-further-review-denied "Denied" -> final-loss { authority cite "Iowa R. App. P. 6.1103" }
+}
+
+decision review-of-win: "Further review of the decision for the appellant" by court cite "Iowa R. App. P. 6.1103"
+{
+  note "The appellee may apply for further review within 20 days following the filing of the court of appeals decision (Iowa R. App. P. 6.1103(1)(a)(2))."
+  edge-review-of-win-granted "Application granted" -> supreme-decision {
+    authority cite "Iowa R. App. P. 6.1103"
+  }
+  edge-review-of-win-none "No application, or denied" -> final-win {
+    authority cite "Iowa R. App. P. 6.1208"
+  }
+}
+
+decision supreme-decision: "Supreme court decision" by court cite "Iowa R. App. P. 6.1205"
+{
+  note "A petition for rehearing in the supreme court is filed within 14 days after the opinion is filed unless the court shortens or enlarges the time; none lies from an order denying further review, and no response is permitted unless requested (Iowa R. App. P. 6.1205(1), (3)). Unless the court orders otherwise, procedendo does not issue until 21 days after the opinion is filed or while a petition for rehearing is pending (Iowa R. App. P. 6.1208(1)(a))."
+  edge-supreme-decision-for "For the appellant" -> final-win {
+    authority cite "Iowa R. App. P. 6.1208"
+  }
+  edge-supreme-decision-against "Against the appellant" -> final-loss {
+    authority cite "Iowa R. App. P. 6.1208"
+  }
+}
+
+terminal final-win: "Decision for the appellant: procedendo issued" outcome [win, final] cite "Iowa R. App. P. 6.1208"
+{
+  note "Outcome from the appellant's side."
+}
+
+terminal final-loss: "Decision against the appellant: procedendo issued" outcome [loss, final] cite "Iowa R. App. P. 6.1208"
+{
+  note "Outcome from the appellant's side."
+}

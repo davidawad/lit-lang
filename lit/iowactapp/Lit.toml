@@ -1,0 +1,41 @@
+# A civil appeal from the Iowa district court to the Supreme Court of
+# Iowa, decided there or on transfer by the Iowa Court of Appeals, under
+# the Iowa Rules of Appellate Procedure (Iowa Court Rules, chapter 6,
+# running header December 2025, in the Iowa Legislature's compilation of
+# September 30, 2026; sources/iowactapp). Time is computed under Iowa Code
+# section 4.1(34), which is not vendored, and core has no Iowa holiday
+# calendar, so the rules' periods are stated in notes, not encoded as
+# counted deadlines. Chapter 232 child welfare appeals, interlocutory and
+# discretionary review, certiorari and certified questions are not
+# modeled. A civil action in the district court is lit/ia-district.
+[package]
+name = "ia-appellate-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ia-appellate-civil"
+forum = "iowactapp"
+authority = "StateRule"
+title = "Supreme Court of Iowa and Iowa Court of Appeals, civil appeals"
+description = "A civil appeal as of right from a final order or judgment of the Iowa district court under the Iowa Rules of Appellate Procedure, as far as the vendored text states: the notice of appeal and cross-appeal, the filing fee, the combined certificate and transcript, the briefing notice and briefs with their word limit, default and dismissal, retention or transfer to the Court of Appeals, rehearing, further review in the Supreme Court and procedendo."
+in_force = "2026-09-30"
+known_at = "2026-10-28"
+unknown_before = "2026-09-30"
+jurisdiction = "Supreme Court of Iowa; Iowa Court of Appeals"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ia-r-app-p]
+title = "Iowa Court Rules, Chapter 6, Rules of Appellate Procedure (Iowa Legislature compilation of September 30, 2026)"
+url = "https://www.legis.iowa.gov/docs/ACO/CR/LINC/09-30-2026.chapter.6.pdf"
+path = "sources/iowactapp/iowa-rules-appellate-procedure-sectioned.txt"
+path_sha256 = "a6cb0e7fcb06ccd217389445992200360cfe96182b201bea2d150cc13109326d"
+sha256 = "8d3078cdc61be6ddb556a18c8dacf85f9126c6663ed4db7be2858419daf0e8b6"
+as_of = "2026-09-30"
+cite_prefixes = ["Iowa R. App. P."]
+section_heading = "Rule {n}"

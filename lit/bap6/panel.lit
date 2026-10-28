@@ -1,0 +1,239 @@
+module bap6.panel
+
+import core.frcp6.{ frcp6 }
+
+import frbp.appeals.{
+  appellant-brief-period,
+  appellant-designation-period,
+  appellant-election-period,
+  direct-certification-request-period,
+  election-validity-period,
+  notice-period,
+  other-party-election-period,
+  procedural-order-reconsideration-period,
+  rehearing-period,
+}
+
+import frbp.events.{
+  AppealJudgmentEntered,
+  BankruptcyOrderEntered,
+  ElectionStatementFiled,
+  NoticeOfAppealServed,
+  ProceduralOrderServed,
+}
+
+// The Sixth Circuit BAP's own period, counted under FRBP 9006(a). The
+// FRBP and 28 U.S.C. § 158(c)(1) periods (notice, election, record,
+// briefing, motions, rehearing, direct certification) are lit/frbp's and
+// are not declared again. A clerk's order on a procedural motion is
+// reconsidered on a motion filed within the FRBP 8013(b) period (6th Cir.
+// BAP LBR 8013-1(b)); that period is lit/frbp's
+// procedural-order-reconsideration-period.
+//
+// Stated in the rules but not declared: the statement regarding oral
+// argument in a brief does not exceed one page (8014-1(b)), a limit the
+// L1010 quote check cannot match in the singular ("one page"); briefs are
+// double-spaced in a font of not less than 12 points with margins of not
+// less than one inch (8014-1(d)), a form rule the limit grammar does not
+// carry; filing, briefs and the record follow the Sixth Circuit Guide to
+// Electronic Filing (8011-1, 8014-1(a), 8018-1). The outline named one
+// decision, Anderson v. City of Bessemer City, 470 U.S. 564 (1985), for
+// clear-error review of findings of fact; no opinion is vendored and
+// neither the FRBP nor the panel's rules state a standard of review, so it
+// is not cited.
+/// The panel clerk notifies an appellant or cross-appellant who has not
+/// complied with the FRBP or the panel's rules that the appeal will be
+/// dismissed for non-prosecution unless the default is remedied (6th Cir.
+/// BAP LBR 8003-1(a)).
+event ClerkNoticeOfDefaultIssued()
+
+/// 6th Cir. BAP LBR 8003-1(a): the default is remedied within fourteen
+/// days of the panel clerk's notice, or the panel clerk enters an order
+/// dismissing the appeal or cross-appeal for non-prosecution.
+deadline default-cure-period: 14.days after ClerkNoticeOfDefaultIssued() counted_by frcp6 cite "6th Cir. BAP LBR 8003-1(a)"
+{
+  forum frcp
+}
+
+test "a default is remedied within fourteen days of the clerk's notice" cite "6th Cir. BAP LBR 8003-1(a)"
+{
+  given ClerkNoticeOfDefaultIssued() on 2026-03-03
+  expect deadline(default-cure-period) == 2026-03-17
+}
+
+test "the notice of appeal is due 14 days after entry" cite "FRBP 8002(a)(1)"
+{
+  given BankruptcyOrderEntered() on 2026-03-03
+  expect deadline(notice-period) == 2026-03-17
+}
+
+test "another party elects the district court within 30 days after service of the notice" cite "28 U.S.C. § 158(c)(1)(B)"
+{
+  given NoticeOfAppealServed() on 2026-03-03
+  expect deadline(other-party-election-period) == 2026-04-02
+}
+
+test "a challenge to an election is due within 14 days of its filing" cite "FRBP 8005(c)"
+{
+  given ElectionStatementFiled() on 2026-03-03
+  expect deadline(election-validity-period) == 2026-03-17
+}
+
+test "reconsideration of a clerk's procedural order is sought within the FRBP 8013(b) period" cite "6th Cir. BAP LBR 8013-1(b)"
+{
+  given ProceduralOrderServed() on 2026-03-03
+  expect deadline(procedural-order-reconsideration-period) == 2026-03-10
+}
+
+test "rehearing is due 14 days after the panel's judgment" cite "FRBP 8022(a)(1)"
+{
+  given AppealJudgmentEntered() on 2026-03-03
+  expect deadline(rehearing-period) == 2026-03-17
+}
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "FRBP 8002(a)(1)"
+{
+  note "The notice of appeal is filed with the bankruptcy clerk within 14 days after entry of the judgment, order or decree (FRBP 8002(a)(1), lit/frbp). On a motion filed within that time, or within 21 days after it expires on a showing of excusable neglect, the bankruptcy court may extend it, except for the orders FRBP 8002(d)(2) lists (FRBP 8002(d))."
+  edge-notice-filed-appealability "Notice filed within 14 days" -> appealability {
+    authority cite "FRBP 8002(a)(1)"
+    within notice-period
+  }
+  edge-notice-filed-untimely "Notice filed outside the period" -> untimely {
+    authority cite "FRBP 8002(d)"
+  }
+}
+
+terminal untimely: "Notice of appeal untimely" outcome [loss] cite "FRBP 8002(a)(1)"
+
+decision appealability: "Appealable order and appeal route" by court cite "28 U.S.C. § 158(a)"
+{
+  note "Appeals lie from final judgments, orders and decrees, from interlocutory orders under 11 U.S.C. § 1121(d), and with leave from other interlocutory orders (28 U.S.C. § 158(a)). In districts that have authorized appeals to the BAP, every appeal, including one on a motion for leave to appeal, is heard by the BAP unless a party elects the district court in the manner FRBP 8005 requires and in the time 28 U.S.C. § 158(c)(1) sets: the appellant when filing, another party within 30 days after service of the notice (lit/frbp). A party other than the appellant that files any paper with the BAP other than a notice of appearance waives its election (6th Cir. BAP LBR 8005-1). A request to certify a direct appeal to the court of appeals is due within 60 days after entry (FRBP 8006(f)(1); 28 U.S.C. § 158(d)(2)(E))."
+  edge-appealability-dismissed-jurisdiction "Not appealable" -> dismissed-jurisdiction {
+    authority cite "28 U.S.C. § 158(a)"
+  }
+  edge-appealability-record "BAP appeal proceeds" -> record {
+    authority cite "6th Cir. BAP LBR 8005-1(a)"
+  }
+  edge-appealability-appellant-election "Appellant elects district court when filing" -> district-handoff {
+    authority cite "28 U.S.C. § 158(c)(1)(A)"
+    within appellant-election-period
+  }
+  edge-appealability-other-election "Another party elects district court" -> district-handoff {
+    authority cite "28 U.S.C. § 158(c)(1)(B)"
+    within other-party-election-period
+  }
+  edge-appealability-election-challenge "Election validity challenged" -> record {
+    authority cite "FRBP 8005(c)"
+    within election-validity-period
+  }
+  edge-appealability-direct-request "Direct-review certification requested" -> circuit-direct {
+    authority cite "FRBP 8006(f)(1)"
+    within direct-certification-request-period
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed for lack of an appealable order" outcome [loss] cite "28 U.S.C. § 158(a)"
+
+terminal district-handoff: "Appeal heard by the district court" outcome [procedural] cite "FRBP 8005(b)"
+{
+  note "The district court's local rules govern from here; they are outside this panel package."
+}
+
+terminal circuit-direct: "Direct appeal to the court of appeals" outcome [appeal] cite "FRBP 8006(g)"
+{
+  note "Within 30 days after the certification becomes effective, a party files a petition asking the court of appeals to authorize the direct appeal (FRBP 8006(g), lit/frbp; 28 U.S.C. § 158(d)(2)(A)). The Sixth Circuit's own procedure is outside this panel package."
+}
+
+state record: "Record designated and transmitted" by applicant cite "FRBP 8009"
+{
+  note "The appellant designates the record, states the issues and orders any transcript within 14 days after the notice of appeal becomes effective (FRBP 8009(a)(1)(B), (b)(1), lit/frbp). The record on appeal is filed as the Sixth Circuit Guide to Electronic Filing provides (6th Cir. BAP LBR 8018-1)."
+  edge-record-briefing "Record complete" -> briefing {
+    authority cite "FRBP 8009(a)(1)(B)"
+    within appellant-designation-period
+  }
+  edge-record-default "Panel clerk notices a default" -> default-noticed {
+    authority cite "6th Cir. BAP LBR 8003-1(a)"
+  }
+}
+
+state default-noticed: "Default noticed" by applicant cite "6th Cir. BAP LBR 8003-1(a)"
+{
+  note "An appellant or cross-appellant that fails to comply with the FRBP or the panel's rules is notified by the panel clerk that the appeal will be dismissed for non-prosecution unless the default is remedied within fourteen days; otherwise the panel clerk dismisses it (6th Cir. BAP LBR 8003-1(a)). A panel may also dismiss or take other action, including damages and attorney's fees, independent of that notice (8003-1(b))."
+  edge-default-noticed-briefing "Default remedied" -> briefing {
+    authority cite "6th Cir. BAP LBR 8003-1(a)"
+    within default-cure-period
+  }
+  edge-default-noticed-dismissed "Default not remedied" -> dismissed-prosecution {
+    authority cite "6th Cir. BAP LBR 8003-1(a)"
+  }
+}
+
+terminal dismissed-prosecution: "Dismissed for non-prosecution" outcome [loss] cite "6th Cir. BAP LBR 8003-1"
+{
+  note "The panel clerk may act on a motion to dismiss for want of prosecution (6th Cir. BAP LBR 8013-1(a)(3)); a party adversely affected by a panel clerk's order is entitled to reconsideration by a judge or panel on a motion filed within the FRBP 8013(b) period (8013-1(b); procedural-order-reconsideration-period, lit/frbp)."
+}
+
+state briefing: "Briefing" by applicant cite "FRBP 8018(a)"
+{
+  note "The FRBP 8018(a) brief periods are lit/frbp's. Under FRBP 8015(a)(7) a principal brief is limited to 30 pages or, with a certificate, 13,000 words or 1,300 monospaced lines; a reply brief to 15 pages or half that type volume. The appellant's and appellee's briefs include a statement regarding oral argument of not more than one page, after the table of authorities and outside the page maximum (6th Cir. BAP LBR 8014-1(b)); briefs are double-spaced in a font of at least 12 points with one-inch margins (8014-1(d)). An extension of time for a brief is sought by motion for good cause (8014-1(e)); the panel clerk may act on it (8013-1(a)(4)). Citing a decision designated not for publication is disfavored and requires serving a copy (8014-1(c))."
+  edge-briefing-argument "Briefing complete" -> argument {
+    authority cite "FRBP 8018(a)(1)"
+    within appellant-brief-period
+  }
+}
+
+decision argument: "Argument or submission" by court cite "FRBP 8019"
+{
+  note "Oral argument is allowed unless each BAP judge assigned determines it is unnecessary for a reason FRBP 8019(b) states. A panel may advance a case for hearing; postponement is sought by motion for good cause (6th Cir. BAP LBR 8019-1(a), (b)). No party is heard for whom no brief was filed unless the panel directs (8019-1(c)(1)). Argument may be waived by written stipulation unless the panel orders otherwise (8019-1(d)). Every appeal is reviewed by staff attorneys for a pre-argument conference (8027-1(a))."
+  edge-argument-argued "Argued" -> decision-issued { authority cite "FRBP 8019(b)" }
+  edge-argument-submitted "Submitted on the briefs" -> decision-issued {
+    authority cite "6th Cir. BAP LBR 8019-1(d)"
+  }
+}
+
+decision decision-issued: "Disposition" by court cite "FRBP 8024(a)"
+{
+  note "A unanimous panel that sees no jurisprudential purpose in a written opinion may dispose of the case in open court after argument; the clerk signs and enters a written judgment (6th Cir. BAP LBR 8024-1(a)). A panel may limit a decision's precedential effect by so stating (8024-1(b)). The rule text supplies no merits outcome probabilities or payoffs."
+  edge-decision-issued-rehearing-window "Judgment entered" -> rehearing-window {
+    authority cite "FRBP 8024(a)"
+  }
+}
+
+decision rehearing-window: "Rehearing" by applicant cite "FRBP 8022(a)(1)"
+{
+  note "A motion for rehearing is due within 14 days after entry of the judgment on appeal (FRBP 8022(a)(1), lit/frbp); the panel's rules set no other period."
+  edge-rehearing-window-further-review "No motion" -> further-review {
+    authority cite "FRBP 8022(a)(1)"
+  }
+  edge-rehearing-window-rehearing-ruling "Motion filed" -> rehearing-ruling {
+    authority cite "FRBP 8022(a)(1)"
+    within rehearing-period
+  }
+}
+
+decision rehearing-ruling: "Rehearing decided" by court cite "FRBP 8022(a)(5)"
+{
+  edge-rehearing-ruling-further-review "Denied" -> further-review {
+    authority cite "FRAP 6(b)(2)(A)(i)"
+  }
+  edge-rehearing-ruling-rehearing-granted "Granted" -> rehearing-granted {
+    authority cite "FRBP 8022(a)(5)"
+  }
+}
+
+terminal rehearing-granted: "Rehearing granted" outcome [appeal] cite "FRBP 8022(a)(5)"
+{
+  note "The BAP may dispose of the appeal without reargument, restore it to the calendar, or issue another order (FRBP 8022(a)(5)). Modeled as an exit."
+}
+
+decision further-review: "Appeal to the Sixth Circuit" by applicant cite "28 U.S.C. § 158(d)(1)"
+{
+  note "The court of appeals has jurisdiction of appeals from all final decisions of the BAP (28 U.S.C. § 158(d)(1)); the FRAP apply as FRAP 6(b) provides, and after a timely rehearing motion the time to appeal runs from the order disposing of it (FRAP 6(b)(2)(A)(i)). The appeal periods are lit/frap's."
+  edge-further-review-circuit "Appeal taken" -> circuit-appeal { authority cite "FRAP 6(b)(1)" }
+  edge-further-review-final "No appeal" -> final-appellate { authority cite "FRBP 8024(b)" }
+}
+
+terminal circuit-appeal: "Appeal to the court of appeals" outcome [appeal] cite "28 U.S.C. § 158(d)(1)"
+terminal final-appellate: "BAP judgment final" outcome [judgment] cite "FRBP 8024"

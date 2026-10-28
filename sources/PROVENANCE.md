@@ -244,6 +244,8 @@ Entries live in the forum's own
   mechanically.
 - sha256 (this file): `cf92787ff6bf24cb4d853cb347925f5f37dba41c1bc1cac26da0ffcfb6cf19ed`
 - Original: `original/frcrimp.pdf` as served (sha256 c89161b8a258b62af4d5298de832c43bd72f2eea1104c7625a5b561658e5875c); extraction sha256 cf92787ff6bf24cb4d853cb347925f5f37dba41c1bc1cac26da0ffcfb6cf19ed. Served at https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-criminal-procedure-dec-1-2024_0.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
+- Currency checked 2026-10-28 (lg-gddt): the current uscourts.gov print, "Federal Rules of Criminal Procedure, December 1, 2025" (House Judiciary Committee Print No. 5, https://www.uscourts.gov/sites/default/files/document/federal-rules-of-criminal-procedure.pdf, sha256 f1f7f98b64160e9174bca974d2bef2b06aaf949b9bfe9dba475d9d03710c689c), has rule text identical to the vendored Dec. 1, 2024 print (pdftotext of both from TITLE I on, running heads and page numbers dropped: 34,904 words each, 0 differences; only the committee roster differs). No criminal-rule amendments took effect Dec. 1, 2025, and none is pending for Dec. 1, 2026 (the pending-amendments page lists Criminal Rule 17 for Dec. 1, 2027). The 2025 print is kept as an original, below.
+- Original: `original/frcrimp-2025-12-01.pdf` as served (sha256 f1f7f98b64160e9174bca974d2bef2b06aaf949b9bfe9dba475d9d03710c689c): the Dec. 1, 2025 print, rule text identical to this extraction's source.
 
 ### `mpep.txt` — MPEP chapters 200 (partial), 600, 700, 800 (partial), 1200, 1300, 1400 (partial), 2200 (partial) — 473 sections
 

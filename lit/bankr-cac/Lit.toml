@@ -1,0 +1,45 @@
+# The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the Central
+# District of California over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075):
+# it declares only the periods and limits the Local Bankruptcy Rules
+# themselves state and re-encodes no FRBP period. It is a base package,
+# not a `kind = "local-rule"` layer: lit/core has no bankruptcy forum
+# family (L2011, as for lit/bankr-ak). Each period is counted under FRBP
+# 9006(a), the FRCP 6(a) method (core's frcp6). The rules are those
+# effective May 8, 2025 (sources/bankr-cac); no amending order is vendored,
+# so there are no dated layers and a query before May 8, 2025 is a hole in
+# the corpus.
+[package]
+name = "bankr-cac-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-cac-local-rules"
+forum = "bankr-cac"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Central District of California: Local Bankruptcy Rules"
+description = "The Bankr. C.D. Cal. Local Bankruptcy Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp): Rule 2004 examinations, insider compensation and employment notices, conversion duties, subchapter V fee estimates, bar dates, reports and final accounts, fee applications and administrative expenses, claim objections, the chapter 13 plan, payment, confirmation-order and tax-return periods, disclosure statements, ballots, reaffirmation, sales and abandonment, adversary status reports and pretrial stipulations, depositions, findings, costs, summary judgment, motion practice and the notice of opportunity for hearing, trial briefs and jury matters, contempt, proposed orders and removal, and the 35-page brief limit."
+in_force = "2025-05-08"
+known_at = "2026-10-28"
+unknown_before = "2025-05-08"
+jurisdiction = "U.S. Bankruptcy Court for the Central District of California"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.cacb-lbr]
+title = "Local Bankruptcy Rules, U.S. Bankruptcy Court for the Central District of California (effective May 8, 2025)"
+url = "https://www.cacb.uscourts.gov/sites/cacb/files/documents/local_rules/COMPLETE%20LBRS%20double-sided.pdf"
+path = "sources/bankr-cac/cacb-lbr-2025-05-08-sectioned.txt"
+path_sha256 = "e3c9e859c122e14b51f3bbfb38ddb5e6f23b5b072f83ab631e6e43e3b7208444"
+sha256 = "dbd54d14b9b5b70d407bd051d081e52bdc5c51227344ee48ff5adf7af8260322"
+as_of = "2025-05-08"
+cite_prefixes = ["Bankr. C.D. Cal. LBR"]
+section_heading = "LBR {n}"

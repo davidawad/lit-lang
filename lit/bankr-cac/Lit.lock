@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-cac-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:fb23bb3bbb2030336373d9433774d32d49b8527b406b68f55496fd2a75b9f5c5"
+semantic = "sha256:38b993164ae4f1b1310e1cf346df20c36723d1d8f195af3b29f7116479c80de3"
+texts = [
+    "cacb-lbr sources/bankr-cac/cacb-lbr-2025-05-08-sectioned.txt sha256:e3c9e859c122e14b51f3bbfb38ddb5e6f23b5b072f83ab631e6e43e3b7208444",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-cac"
-version = "0.0.1"
-language = 1
-source = "sha256:f484c70cdbd5d2b107a4d59efbf308a88986c5d57678937f26d21b6502878f76"
-semantic = "sha256:5711792f8f6154913f22edaaccdc4cafaf1412c2e14733fbaba85594f79f318c"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

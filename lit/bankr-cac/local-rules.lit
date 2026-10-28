@@ -1,0 +1,707 @@
+module bankr-cac-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ CaseConverted, FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
+
+// The Bankr. C.D. Cal. court's own periods, counted under FRBP 9006(a).
+// The FRBP periods (schedules and their extension, the chapter 13 plan,
+// claims in chapter 7, 12 and 13 cases, exemptions, discharge,
+// dischargeability, the adversary answer and summons, new trial, appeals)
+// are lit/frbp's and are not declared again. Not repeated either, as only
+// restating a national period: the 14 days to file missing case
+// commencement documents (LBR 1017-2(a), 3015-1(b); FRBP 1007(c), 3015(b));
+// the 120- and 180-day filing fee installments (LBR 1006-1(a); FRBP
+// 1006(b)(2)); the eviction certification 30 days after the petition (LBR
+// 4001-1(f); 11 U.S.C. § 362(l)); a jury demand on further issues (LBR
+// 9015-2(b)(3); FRCP 38(c)); and the 14-day attorney's fees motion (LBR
+// 7054-1(g); FRBP 7054(b)(2), FRCP 54(d)(2)(B)).
+//
+// Stated in the rules but not declared: hearing windows the court or a
+// trustee sets (a chapter 13 confirmation hearing no earlier than 20 days
+// after the § 341(a) meeting begins, 3015-1(d)(1); a prepackaged plan
+// hearing no more than 30 days after the order for relief, 2081-1; a sale
+// hearing no more than 30 days after the sale procedure hearing, 6004-1(b);
+// a status conference no later than 45 days after its notice, 9027-1(b);
+// the court's 7 days to set a cash disbursement motion for hearing,
+// 2016-2(g)); minimum notice of a hearing that a movant gives (not less than
+// 21 days on a fee application, 2016-1(a), (c); 45 days to other
+// professionals, 2016-1(a); 30 days on a claim objection, 3007-1(b); 42
+// days on a disclosure statement, 3017-1(a); 14 days on an abandonment
+// reply hearing, 6007-1(b); 7 days on a sale procedure motion, 6004-1(b);
+// 14 days of an investment of estate funds, 5095-1(a), and of a sale of
+// property, 6004-1(d), (e)); the one-day and two-day periods (sale
+// opposition one day before the hearing, 6004-1(b); continuances, 9013-1(m);
+// stipulations, 9013-1(r); proof of service, 9075-1); the 120-day interval
+// between interim fee hearings (2016-1(a), (b)); the trustee's 30-day
+// operating period (2070-1); the "whichever is later" removal filings
+// (9027-1(d)); the earlier-of exhibit filing (9070-1(d)); the 180-day bar
+// to refiling (3015-1(c), (k), (m)); the 90-day caps on suspended or
+// extended chapter 13 payments (3015-1(x)); the chapter 13 trustee's
+// holding period and administrative expense claims after dismissal
+// (3015-1(q)); and the attorney discipline and mediation program periods
+// of the appendices to LBR 9075-1. The earlier outline's Supreme Court
+// decisions construe the Code and the FRBP, not these rules, and are
+// removed here: no reporter text is vendored.
+
+/// A brief or memorandum of points and authorities: not more than 35
+/// pages, unless the court orders otherwise on motion (Bankr. C.D. Cal. LBR
+/// 9013-2(b)).
+limit brief { pages <= 35 cite "Bankr. C.D. Cal. LBR 9013-2(b)" } cite "Bankr. C.D. Cal. LBR 9013-2(b)"
+
+/// The date set for an FRBP 2004 examination (Bankr. C.D. Cal. LBR
+/// 2004-1(c), (f)).
+event ExaminationDate()
+/// Notice of setting or increasing insider compensation is served (Bankr.
+/// C.D. Cal. LBR 2014-1(a)).
+event InsiderCompensationNoticeServed()
+/// Notice of an application to employ a professional is served (Bankr. C.D.
+/// Cal. LBR 2014-1(b)).
+event EmploymentNoticeServed()
+/// The deadline to file a proposed subchapter V plan (Bankr. C.D. Cal. LBR
+/// 2015-3(e)).
+event PlanFilingDeadline()
+/// The hearing on an application for compensation (Bankr. C.D. Cal. LBR
+/// 2016-1(a), (c)).
+event FeeHearing()
+/// A chapter 7 trustee mails notice of intent to file a final report and
+/// account (Bankr. C.D. Cal. LBR 2016-1(c)).
+event FinalReportNoticeMailed()
+/// A chapter 7 trustee files notice of intent to pay administrative
+/// expenses (Bankr. C.D. Cal. LBR 2016-2(b)).
+event AdministrativeExpenseNoticeFiled()
+/// A chapter 7 trustee pays administrative expenses (Bankr. C.D. Cal. LBR
+/// 2016-2(e)).
+event AdministrativeExpensesPaid()
+/// An order setting a chapter 11 claims bar date is entered (Bankr. C.D.
+/// Cal. LBR 3003-1(b)).
+event BarDateOrderEntered()
+/// The hearing on a claim objection (Bankr. C.D. Cal. LBR 3007-1(b)).
+event ClaimObjectionHearing()
+/// The hearing on confirmation of a plan (Bankr. C.D. Cal. LBR 3015-1(g),
+/// (h), 3018-1(a)).
+event ConfirmationHearing()
+/// A chapter 13 debtor's duty to pay a domestic support obligation arises
+/// (Bankr. C.D. Cal. LBR 3015-1(b)).
+event DomesticSupportDutyArose()
+/// Notice of lodgment of a proposed chapter 13 confirmation order (Bankr.
+/// C.D. Cal. LBR 3015-1(d)).
+event ConfirmationOrderLodged()
+/// A chapter 13 debtor files a tax return after confirmation (Bankr. C.D.
+/// Cal. LBR 3015-1(o)).
+event TaxReturnFiled()
+/// The hearing on approval of a disclosure statement (Bankr. C.D. Cal. LBR
+/// 3017-1(b)).
+event DisclosureStatementHearing()
+/// An order confirming a subchapter V plan is entered (Bankr. C.D. Cal. LBR
+/// 3020-1(c), 3020-2(b)).
+event PlanConfirmed()
+/// The previously projected date of substantial consummation of a
+/// subchapter V plan (Bankr. C.D. Cal. LBR 3020-2(b)).
+event ProjectedConsummationDate()
+/// A consensual subchapter V plan is substantially consummated (Bankr. C.D.
+/// Cal. LBR 3020-2(b)).
+event PlanSubstantiallyConsummated()
+/// The final distribution to creditors under a subchapter V plan (Bankr.
+/// C.D. Cal. LBR 3022-2(b), (c)).
+event FinalDistributionMade()
+/// The first meeting of creditors concludes (Bankr. C.D. Cal. LBR
+/// 4008-1(c)).
+event FirstMeetingConcluded()
+/// An objection to a notice of intended abandonment is served (Bankr. C.D.
+/// Cal. LBR 6007-1(b)).
+event AbandonmentObjectionServed()
+/// Notice of a sale on the notice of opportunity for hearing procedure is
+/// served (Bankr. C.D. Cal. LBR 6004-1(c), (d)).
+event SaleNoticeServed()
+/// A sale of property not in the ordinary course of business (Bankr. C.D.
+/// Cal. LBR 6004-1(g)).
+event SaleClosed()
+/// A status conference in an adversary proceeding (Bankr. C.D. Cal. LBR
+/// 7016-1(a)).
+event StatusConference()
+/// The pretrial conference or, if none is ordered, the trial (Bankr. C.D.
+/// Cal. LBR 7016-1(b)).
+event PretrialConference()
+/// A party receives the plaintiff's proposed pretrial stipulation (Bankr.
+/// C.D. Cal. LBR 7016-1(d)).
+event ProposedStipulationReceived()
+/// The hearing or trial at which a deposition is offered (Bankr. C.D. Cal.
+/// LBR 7030-1(b)).
+event EvidentiaryHearing()
+/// Oral findings of fact and conclusions of law are rendered (Bankr. C.D.
+/// Cal. LBR 7052-1(a)).
+event OralFindingsRendered()
+/// Judgment is entered (Bankr. C.D. Cal. LBR 7054-1(c)).
+event JudgmentEntered()
+/// A bill of costs is served (Bankr. C.D. Cal. LBR 7054-1(e)).
+event BillOfCostsServed()
+/// The hearing date designated in a notice of motion (Bankr. C.D. Cal. LBR
+/// 9013-1(d), (f), (g), 7056-1).
+event MotionHearing()
+/// Notice of opportunity to request a hearing is served (Bankr. C.D. Cal.
+/// LBR 9013-1(o)).
+event OpportunityNoticeServed()
+/// A response and request for hearing is served (Bankr. C.D. Cal. LBR
+/// 9013-1(o)).
+event HearingRequestServed()
+/// Trial is scheduled to commence (Bankr. C.D. Cal. LBR 9013-2(a), 9015-1).
+event Trial()
+/// A jury demand with a statement of consent or non-consent is served
+/// (Bankr. C.D. Cal. LBR 9015-2(b)).
+event JuryDemandServed()
+/// A motion is granted at a hearing (Bankr. C.D. Cal. LBR 9021-1(b)).
+event MotionGranted()
+/// A proposed order is served on opposing counsel (Bankr. C.D. Cal. LBR
+/// 9021-1(b)).
+event ProposedOrderServed()
+/// A computation under a judgment or order is served (Bankr. C.D. Cal. LBR
+/// 9021-1(c)).
+event ComputationServed()
+/// The clerk issues and files notice of a status conference on a removed
+/// action (Bankr. C.D. Cal. LBR 9027-1(b)).
+event RemovalStatusNoticeFiled()
+/// A notice of removal is filed (Bankr. C.D. Cal. LBR 9027-1(c)).
+event RemovalNoticeFiled()
+/// A notice of removal is served (Bankr. C.D. Cal. LBR 9027-1(e)).
+event RemovalNoticeServed()
+/// The hearing on an order to show cause re contempt (Bankr. C.D. Cal. LBR
+/// 9020-1(e)).
+event ShowCauseHearing()
+
+/// Bankr. C.D. Cal. LBR 2004-1(c): not less than 21 days' notice of an FRBP
+/// 2004 examination is given, calculated from the date of service of the
+/// motion.
+deadline examination-notice-period: 21.days before ExaminationDate() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 2004-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 2004-1(f): a motion for a protective order is filed
+/// and served not less than 14 days before the date of the examination.
+deadline protective-order-motion-period: 14.days before ExaminationDate() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 2004-1(f)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 2014-1(a)(3): an insider may receive compensation
+/// if no objection is received within 14 days after service of the notice
+/// (30 days for an increase).
+deadline insider-compensation-objection-period: 14.days after InsiderCompensationNoticeServed() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 2014-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 2014-1(a)(3): an increase in insider compensation
+/// may be paid if no objection is received within 30 days after service of
+/// the notice.
+deadline insider-compensation-increase-objection-period: 30.days after InsiderCompensationNoticeServed() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 2014-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 2014-1(b): a response and request for hearing on an
+/// application to employ a professional is filed and served not later than
+/// 14 days from the date of service of the notice.
+deadline employment-response-period: 14.days after EmploymentNoticeServed() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 2014-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 2015-2(d)(3): within 7 days after entry of an order
+/// converting a chapter 11 case to chapter 7, the debtor in possession or
+/// trustee files and serves a verified schedule of all property of the
+/// estate.
+deadline conversion-property-schedule-period: 7.days after CaseConverted() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 2015-2(d)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 2015-3(e): not later than 14 days before the
+/// deadline to file a proposed plan, the subchapter V trustee files a
+/// notice of estimated fees and expenses.
+deadline subchapter-v-fee-estimate-period: 14.days before PlanFilingDeadline() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 2015-3(e)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 2016-1(a)(3), (c)(5): any opposition to a fee
+/// application is served and filed at least 14 days prior to the hearing.
+deadline fee-application-objection-period: 14.days before FeeHearing() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 2016-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 2016-1(c)(4)(B): a professional files and serves
+/// its final fee application on the chapter 7 trustee within 21 days of the
+/// mailing of the trustee's notice of intent to file a final report.
+deadline final-fee-application-period: 21.days after FinalReportNoticeMailed() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 2016-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 2016-2(b): a party objecting to payment of the
+/// administrative expenses in the trustee's notice files a response and
+/// request for hearing within 14 days after the notice is filed.
+deadline administrative-expense-objection-period: 14.days after AdministrativeExpenseNoticeFiled() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 2016-2(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 2016-2(e): the trustee files and serves a cash
+/// disbursements motion within 7 days after the expenses are paid.
+deadline cash-disbursements-motion-period: 7.days after AdministrativeExpensesPaid() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 2016-2(e)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3003-1(a)(2): in a subchapter V case, unless
+/// otherwise ordered, the claims bar date is 70 days after the latest of
+/// the order for relief and the other dates the rule lists (180 days for a
+/// governmental unit).
+deadline subchapter-v-claim-period: 70.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3003-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3003-1(b): in a non-subchapter V chapter 11 case,
+/// the debtor in possession or trustee files and serves the bar date notice
+/// within 7 days of the entry of the order setting the bar date.
+deadline bar-date-notice-period: 7.days after BarDateOrderEntered() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3003-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3007-1(b)(3)(A): a response to a claim objection is
+/// filed and served not later than 14 days prior to the hearing.
+deadline claim-objection-response-period: 14.days before ClaimObjectionHearing() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3007-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3015-1(b)(3): the debtor serves the notice of the
+/// confirmation hearing with the chapter 13 plan on all creditors and the
+/// trustee at least 14 days before the date first set for the § 341(a)
+/// meeting.
+deadline chapter-13-plan-notice-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3015-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3015-1(b)(3): a proof of service of the plan is
+/// filed and served on the trustee at least 7 days prior to the date first
+/// set for the meeting of creditors.
+deadline chapter-13-plan-service-proof-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3015-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3015-1(b): the debtor provides the required
+/// domestic support obligation information to the trustee no later than 28
+/// days after the duty arises.
+deadline domestic-support-information-period: 28.days after DomesticSupportDutyArose() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3015-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3015-1(b): a motion to value collateral under §
+/// 506(a) or to avoid a judgment lien under § 522(f) is filed within 28
+/// days of commencement of the case.
+deadline valuation-motion-period: 28.days after PetitionFiled() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3015-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3015-1(c): the debtor provides proof of income and
+/// the business documents the rule lists to the chapter 13 trustee at least
+/// 7 days before the § 341(a) meeting.
+deadline trustee-income-documents-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3015-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3015-1(d): within 7 days of the notice of lodgment,
+/// any party may object to the proposed chapter 13 confirmation order.
+deadline confirmation-order-objection-period: 7.days after ConfirmationOrderLodged() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3015-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3015-1(g): the stated documents are filed and
+/// served not less than 14 days before the date set for the confirmation
+/// hearing.
+deadline confirmation-declaration-period: 14.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3015-1(g)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3015-1(h): an amended plan that adversely affects
+/// no creditor is filed and served on the trustee at least 7 days before
+/// the confirmation hearing.
+deadline amended-plan-trustee-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3015-1(h)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3015-1(h): an amended plan that adversely affects
+/// creditors is filed and served on affected creditors and the trustee at
+/// least 28 days before the confirmation hearing.
+deadline amended-plan-creditor-period: 28.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3015-1(h)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3015-1(k): chapter 13 plan payments begin not later
+/// than 30 days after the petition is filed.
+deadline first-plan-payment-period: 30.days after PetitionFiled() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3015-1(k)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3015-1(k): in a case converted from chapter 7, the
+/// first plan payment is due 30 days from the date of conversion.
+deadline converted-first-plan-payment-period: 30.days after CaseConverted() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3015-1(k)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3015-1(o): each year after confirmation, the debtor
+/// provides the trustee a copy of each tax return within 14 days after it
+/// is filed.
+deadline tax-return-trustee-period: 14.days after TaxReturnFiled() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3015-1(o)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3017-1(b): objections to the adequacy of a
+/// disclosure statement are filed and served not less than 14 days before
+/// the hearing.
+deadline disclosure-statement-objection-period: 14.days before DisclosureStatementHearing() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3017-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3018-1(a)(2): the plan proponent files a ballot
+/// summary not later than 14 days before the confirmation hearing.
+deadline ballot-summary-period: 14.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3018-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3020-1(c): the first postconfirmation status report
+/// is filed within 120 days of entry of the order confirming the plan.
+deadline postconfirmation-report-period: 120.days after PlanConfirmed() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3020-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3020-2(b)(2): not later than 14 days after entry of
+/// the order confirming a consensual subchapter V plan, the debtor reports
+/// whether the plan has been substantially consummated.
+deadline substantial-consummation-report-period: 14.days after PlanConfirmed() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3020-2(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3020-2(b)(3): a supplemental report is filed and
+/// served not later than 14 days after the previously projected date of
+/// substantial consummation.
+deadline consummation-supplemental-report-period: 14.days after ProjectedConsummationDate() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3020-2(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3020-2(b)(4): not later than 14 days after a
+/// consensual plan is substantially consummated, the debtor files and
+/// serves notice of substantial consummation.
+deadline consummation-notice-period: 14.days after PlanSubstantiallyConsummated() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3020-2(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3022-2(b)(1): within 60 days after the final
+/// distribution under a consensual subchapter V plan, the debtor files the
+/// subchapter V final report and account.
+deadline consensual-final-report-period: 60.days after FinalDistributionMade() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3022-2(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 3022-2(c)(1): within 60 days after the final
+/// distribution under a nonconsensual subchapter V plan, the subchapter V
+/// trustee files the final report and account.
+deadline nonconsensual-final-report-period: 60.days after FinalDistributionMade() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 3022-2(c)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 4008-1(c): a reaffirmation agreement and motion for
+/// its approval is filed within 60 days following the conclusion of the
+/// first meeting of creditors, unless otherwise ordered.
+deadline reaffirmation-filing-period: 60.days after FirstMeetingConcluded() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 4008-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 6004-1(d): the notice of a sale states that any
+/// objection and request for hearing is filed and served not more than 14
+/// days after service of the notice.
+deadline sale-objection-period: 14.days after SaleNoticeServed() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 6004-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 6004-1(g): the report of sale under FRBP 6004(f)(1)
+/// is filed and served not later than 21 days after the sale.
+deadline sale-report-period: 21.days after SaleClosed() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 6004-1(g)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 6007-1(b): a party proposing abandonment files a
+/// reply and notice of hearing within 14 days from the date of service of
+/// an objection.
+deadline abandonment-reply-period: 14.days after AbandonmentObjectionServed() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 6007-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 7016-1(a)(2): at least 14 days before each status
+/// conference the parties file a joint status report.
+deadline joint-status-report-period: 14.days before StatusConference() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 7016-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 7016-1(a)(3): if a party fails to cooperate, each
+/// party files a unilateral status report not less than 7 days before the
+/// status conference.
+deadline unilateral-status-report-period: 7.days before StatusConference() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 7016-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 7016-1(b): the pretrial stipulation is filed or
+/// lodged and served not less than 14 days before the pretrial conference
+/// or trial.
+deadline pretrial-stipulation-period: 14.days before PretrialConference() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 7016-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 7016-1(b): the parties meet and confer at least 28
+/// days before the pretrial conference or trial to prepare the pretrial
+/// stipulation.
+deadline pretrial-meet-and-confer-period: 28.days before PretrialConference() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 7016-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 7016-1(d): each other party acts on the plaintiff's
+/// proposed pretrial stipulation within 3 days following its receipt.
+deadline pretrial-stipulation-response-period: 3.days after ProposedStipulationReceived() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 7016-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 7030-1(b)(1): the original deposition transcript is
+/// lodged with the clerk at least 7 days before the hearing or trial at
+/// which it is to be offered.
+deadline deposition-lodging-period: 7.days before EvidentiaryHearing() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 7030-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 7052-1(a): the prevailing party files and lodges
+/// proposed written findings and conclusions within 7 days of the hearing
+/// at which oral findings were rendered.
+deadline findings-lodging-period: 7.days after OralFindingsRendered() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 7052-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 7054-1(c): the prevailing party files and serves a
+/// bill of costs not later than 14 days after entry of judgment.
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 7054-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 7054-1(e)(1): an objection to a bill of costs is
+/// filed and served not later than 7 days after its service.
+deadline costs-objection-period: 7.days after BillOfCostsServed() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 7054-1(e)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 7056-1(b)(1): a motion for summary judgment is
+/// served and filed not later than 42 days before the hearing.
+deadline summary-judgment-motion-period: 42.days before MotionHearing() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 7056-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 7056-1(c)(1): a response opposing summary judgment
+/// is served and filed not later than 21 days before the hearing.
+deadline summary-judgment-response-period: 21.days before MotionHearing() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 7056-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 7056-1(d): the movant serves and files any reply
+/// not later than 14 days before the hearing.
+deadline summary-judgment-reply-period: 14.days before MotionHearing() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 7056-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 9013-1(d)(2): the notice of motion and motion are
+/// filed and served not later than 21 days before the hearing date, except
+/// as the rule provides.
+deadline motion-notice-period: 21.days before MotionHearing() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 9013-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 9013-1(f)(1): a party opposing a motion files and
+/// serves its response not later than 14 days before the hearing.
+deadline motion-response-period: 14.days before MotionHearing() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 9013-1(f)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 9013-1(g): the moving party may file and serve a
+/// reply not later than 7 days before the hearing.
+deadline motion-reply-period: 7.days before MotionHearing() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 9013-1(g)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 9013-1(o)(1): on the notice of opportunity for
+/// hearing procedure, a response and request for hearing is filed and
+/// served within 14 days after the date of service of the notice.
+deadline opportunity-response-period: 14.days after OpportunityNoticeServed() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 9013-1(o)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 9013-1(o)(4): within 14 days from service of a
+/// response and request for hearing, the movant schedules a hearing and
+/// gives notice of it.
+deadline opportunity-hearing-notice-period: 14.days after HearingRequestServed() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 9013-1(o)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 9013-2(a)(1): each counsel may file and serve a
+/// trial brief at least 7 days before trial is scheduled to commence.
+deadline trial-brief-period: 7.days before Trial() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 9013-2(a)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 9015-1(b)(1): proposed jury instructions are filed
+/// and served at least 7 days before trial is scheduled to begin.
+deadline jury-instructions-period: 7.days before Trial() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 9015-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 9015-1(d)(1): a request for a special verdict or
+/// general verdict with interrogatories is filed and served at least 7 days
+/// before trial.
+deadline special-verdict-period: 7.days before Trial() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 9015-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 9015-2(b)(2): within 14 days of service of a jury
+/// demand and statement of consent, all other parties file and serve a
+/// statement of consent or non-consent to a jury trial in the bankruptcy
+/// court.
+deadline jury-consent-statement-period: 14.days after JuryDemandServed() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 9015-2(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 9020-1(e)(1): the moving party serves an issued
+/// order to show cause re contempt not later than 21 days before the
+/// hearing.
+deadline show-cause-service-period: 21.days before ShowCauseHearing() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 9020-1(e)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 9021-1(b): a proposed order not presented at the
+/// hearing is served and lodged within 7 days of the granting of the
+/// motion.
+deadline proposed-order-period: 7.days after MotionGranted() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 9021-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 9021-1(b): opposing counsel files and serves a
+/// written objection to the form of a proposed order within 7 days after
+/// its service.
+deadline proposed-order-objection-period: 7.days after ProposedOrderServed() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 9021-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 9021-1(c): an opposing party may object to a
+/// computation within 7 days of its service.
+deadline computation-objection-period: 7.days after ComputationServed() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 9021-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 9027-1(b)(3): the removing party completes service
+/// of the notice of status conference no later than 14 days after it is
+/// issued and filed.
+deadline removal-status-notice-service-period: 14.days after RemovalStatusNoticeFiled() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 9027-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 9027-1(c): a motion for remand is filed not later
+/// than 30 days after the date of filing of the notice of removal.
+deadline remand-motion-period: 30.days after RemovalNoticeFiled() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 9027-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. C.D. Cal. LBR 9027-1(e): within 14 days after service of the
+/// notice of removal, a party complies with LBR 9015-2 to preserve any
+/// right to a jury trial.
+deadline removal-jury-demand-period: 14.days after RemovalNoticeServed() counted_by frcp6 cite "Bankr. C.D. Cal. LBR 9027-1(e)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed and served with notice of opportunity to request a hearing" by applicant cite "Bankr. C.D. Cal. LBR 9013-1(o)"
+{
+  note "On the notice of opportunity for hearing procedure, a response and request for hearing is filed and served within 14 days after service of the notice (LBR 9013-1(o)(1)). A motion set for hearing is instead filed and served not later than 21 days before it, with a response 14 days and a reply 7 days before it (LBR 9013-1(d), (f), (g)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-opposed "Response and request for hearing filed and served" -> opposed {
+    authority cite "Bankr. C.D. Cal. LBR 9013-1(o)"
+    within opportunity-response-period
+  }
+  edge-motion-filed-unopposed "No timely response" -> ruling {
+    authority cite "Bankr. C.D. Cal. LBR 9013-1(o)"
+  }
+}
+
+state opposed: "Response filed; hearing set" by opponent cite "Bankr. C.D. Cal. LBR 9013-1(o)"
+{
+  note "Within 14 days from service of the response and request for hearing the movant schedules a hearing on not less than 14 days' notice (LBR 9013-1(o)(4))."
+  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. C.D. Cal. LBR 9013-1(o)" }
+}
+
+decision ruling: "Motion decided" by court cite "Bankr. C.D. Cal. LBR 9013-1(h)"
+{
+  note "A failure to file a timely response may be deemed consent to the granting of the motion (LBR 9013-1(h)); the prevailing party lodges the order within 7 days (LBR 9021-1(b))."
+  edge-ruling-granted "Granted" -> decided { authority cite "Bankr. C.D. Cal. LBR 9021-1(b)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "Bankr. C.D. Cal. LBR 9021-1(b)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. C.D. Cal. LBR 1001-1"

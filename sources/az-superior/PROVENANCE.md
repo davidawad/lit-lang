@@ -147,3 +147,9 @@
 - Original: `az-superior/original/westlaw-pages/0140-Rule-83-Reserved.html` as served (sha256 febd78a46f43fdcb6b5f8bad6e7b151cf059893a7dfeae1d1fa1b8a38921ed92). Served at https://govt.westlaw.com/azrules/Document/NF2AF43E0894511E699A4BB097EBD55F8?viewType=FullText&originationContext=documenttoc&transitionType=CategoryPageItem&contextData=(sc.Default).
 - Original: `az-superior/original/westlaw-pages/0141-Rule-84-Forms.html` as served (sha256 8a7116496d0ba4bdcfca0d18304f77d59c394a0e9ad838bd7cf183782ae857bc). Served at https://govt.westlaw.com/azrules/Document/N6807A8E0894511E699029391C09D0CE5?viewType=FullText&originationContext=documenttoc&transitionType=CategoryPageItem&contextData=(sc.Default).
 - Extraction sha256 d305d1ee9c84015ed9c3e22bb6636b169c8fb253cee0a6731418679637bd11ba.
+
+### `az-superior/az-superior-rules-sectioned.txt` — Arizona Rules of Civil Procedure, sectioned
+
+- Derived in the pod (lg-f3q8.37) from `az-superior/az-superior-rules-westlaw-2026-10-01.txt` (extract sha256 d305d1ee9c84015ed9c3e22bb6636b169c8fb253cee0a6731418679637bd11ba); nothing fetched. One `## Rule <n>` line is inserted right after each rule page's own `## Rule <n>. <title>` heading (Rule 1 through Rule 84, 119 rules); the front matter, disposition table and Forms pages are unmarked. Rule text was not edited: deleting the marker lines (`sed -E '/^## Rule [0-9.]+$/d'`) restores the extract byte for byte.
+- Edition: as the extract, current with amendments effective through October 1, 2026.
+- Sectioned sha256 ed23ddba2d8d71524c635ead3b0c74d46248b2fc903fc116579f51bff9b15de7 (the `path_sha256` pinned by `lit/az-superior/Lit.toml`).

@@ -1,0 +1,169 @@
+module az-superior-court-civil.civil
+
+// Motion papers. Unless the court orders otherwise, a motion with its
+// supporting memorandum, and a responsive memorandum, may not exceed 17
+// pages, and a reply memorandum 11 pages, exclusive of attachments and any
+// required statement of facts (Ariz. R. Civ. P. 7.1(a)(2), (3)). A motion
+// to strike and its memorandum, and any response to it, may not exceed two
+// pages (Ariz. R. Civ. P. 7.1(f)(2)).
+/// A motion and supporting memorandum, or a responsive memorandum: at most
+/// 17 pages (Ariz. R. Civ. P. 7.1(a)).
+limit motion-memorandum {
+  pages <= 17 cite "Ariz. R. Civ. P. 7.1(a)"
+} cite "Ariz. R. Civ. P. 7.1(a)"
+
+/// A reply memorandum: at most 11 pages (Ariz. R. Civ. P. 7.1(a)).
+limit reply-memorandum { pages <= 11 cite "Ariz. R. Civ. P. 7.1(a)" } cite "Ariz. R. Civ. P. 7.1(a)"
+/// A motion to strike not expressly authorized by rule or statute, with its
+/// supporting memorandum, or a response to it: at most 2 pages (Ariz. R.
+/// Civ. P. 7.1(f)).
+limit strike-motion { pages <= 2 cite "Ariz. R. Civ. P. 7.1(f)" } cite "Ariz. R. Civ. P. 7.1(f)"
+
+/// A motion and its supporting memorandum are served (Ariz. R. Civ. P.
+/// 7.1(a)).
+event MotionServed() paper motion-memorandum
+/// A responsive memorandum is served (Ariz. R. Civ. P. 7.1(a)).
+event ResponseServed() paper motion-memorandum
+/// A reply memorandum is filed (Ariz. R. Civ. P. 7.1(a)).
+event ReplyFiled() paper reply-memorandum
+/// A motion to strike under Rule 7.1(f)(1) is served (Ariz. R. Civ. P.
+/// 7.1(f)).
+event StrikeMotionServed() paper strike-motion
+
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "Ariz. R. Civ. P. 3"
+{
+  note "A civil action is commenced by filing a complaint with the court (Ariz. R. Civ. P. 3). On or after filing, the clerk issues a summons for each party to be served, and the summons is served with a copy of the pleading (Ariz. R. Civ. P. 4(a)). Periods in this package are stated, not counted: Civil Rule 6(a) excludes the trigger day, includes the last day unless it is a Saturday, Sunday or legal holiday, and excludes intermediate Saturdays, Sundays and legal holidays from a period under 11 days; 5 calendar days are added after service under Rule 5(c)(2)(C), (D) or (E) (Ariz. R. Civ. P. 6(a), (c)). The filing fee is not stated in the vendored rules."
+  edge-complaint-filed-served "Summons and complaint served, or service waived or accepted" -> answer-due {
+    authority cite "Ariz. R. Civ. P. 4(f)"
+  }
+  edge-complaint-filed-unserved "Defendant not served within 90 days" -> service-review {
+    authority cite "Ariz. R. Civ. P. 4(i)"
+  }
+}
+
+decision service-review: "Good cause for failure to serve shown?" by court cite "Ariz. R. Civ. P. 4(i)"
+{
+  note "If a defendant is not served within 90 days after the complaint is filed, the court, on motion or on its own after notice to the plaintiff, must dismiss the action without prejudice against that defendant or order service within a specified time; on good cause it must extend the time for an appropriate period. The rule does not apply to service in a foreign country under Rules 4.2(i)-(l) (Ariz. R. Civ. P. 4(i))."
+  edge-service-review-cause "Time for service extended or ordered" -> answer-due {
+    authority cite "Ariz. R. Civ. P. 4(i)"
+  }
+  edge-service-review-dismissed "Dismissed as to the unserved defendant" -> dismissed-unserved {
+    authority cite "Ariz. R. Civ. P. 4(i)"
+  }
+}
+
+terminal dismissed-unserved: "Dismissed without prejudice for want of service" outcome [loss, dismissal] cite "Ariz. R. Civ. P. 4(i)"
+
+decision answer-due: "Answer, motion or default" by office cite "Ariz. R. Civ. P. 12(a)"
+{
+  note "Unless another rule or statute specifies, a defendant files and serves an answer within 20 days after service of the summons and complaint (subject to Rules 4.2(d)(3) and (m)), or, having timely waived service under Rule 4(f), within 60 days after the waiver request was sent (90 days if sent outside any judicial district of the United States); a party who accepts service gets no added time (Ariz. R. Civ. P. 12(a)(1)(A), 4(f)(1), (2)). A Rule 12 motion alters the period: if denied or deferred to trial, the responsive pleading is due within 10 days after notice of the court's action (Ariz. R. Civ. P. 12(a)(2)). A responsive memorandum on a motion is due within 10 days after service of the motion and a reply within 5 days after the response is served, unless a specific rule states otherwise (Ariz. R. Civ. P. 7.1(a)(3))."
+  edge-answer-due-default "No answer or defense: application for default" -> default-entered {
+    authority cite "Ariz. R. Civ. P. 55(a)"
+  }
+  edge-answer-due-motion "Rule 12(b) motion" -> pleading-motion {
+    authority cite "Ariz. R. Civ. P. 12(b)"
+  }
+  edge-answer-due-answer "Answer filed" -> discovery { authority cite "Ariz. R. Civ. P. 12(a)" }
+}
+
+decision pleading-motion: "Motion to dismiss decided" by court cite "Ariz. R. Civ. P. 12(b)"
+{
+  note "The defenses of Rule 12(b)(1)-(7) may be asserted by motion made before pleading; a good faith consultation certificate under Rule 7.1(h) accompanies a motion under (b)(3) or (b)(6) (Ariz. R. Civ. P. 12(b), (j)). If matters outside the pleadings are presented on a 12(b)(6) or 12(c) motion and not excluded, it is treated as one for summary judgment under Rule 56 (Ariz. R. Civ. P. 12(d)). The outline asked for the leading Arizona pleading-standard decision; none is vendored, so none is named."
+  edge-pleading-motion-granted "Granted" -> dismissed { authority cite "Ariz. R. Civ. P. 12(b)" }
+  edge-pleading-motion-amend "Leave to amend" -> amend { authority cite "Ariz. R. Civ. P. 15(a)" }
+  edge-pleading-motion-denied "Denied: answer within 10 days of notice" -> discovery {
+    authority cite "Ariz. R. Civ. P. 12(a)"
+  }
+}
+
+state amend: "Amended pleading" by applicant cite "Ariz. R. Civ. P. 15(a)"
+{
+  note "A party may amend once as a matter of course within 21 days after serving the pleading if no responsive pleading is permitted, or within 21 days after a responsive pleading is served or, if a Rule 12(b), (e) or (f) motion is served, by the date a response to it is due, whichever is earlier; otherwise only with leave, freely given when justice requires, or written consent (Ariz. R. Civ. P. 15(a)(1), (2)). After leave is granted, the amended pleading is filed and served within 10 days after entry of the order, and the response is due within the time remaining on the original pleading or within 10 days after service of the amendment, whichever is later (Ariz. R. Civ. P. 15(a)(5))."
+  edge-amend-tested "Amended pleading tested again" -> pleading-motion {
+    authority cite "Ariz. R. Civ. P. 12(b)"
+  }
+}
+
+terminal dismissed: "Dismissed on the pleadings" outcome [win, dismissal] cite "Ariz. R. Civ. P. 12(b)"
+{
+  note "Outcome from the defending side. Unless the order states otherwise, an involuntary dismissal, other than one for lack of jurisdiction, improper venue or failure to join a Rule 19 party, operates as an adjudication on the merits (Ariz. R. Civ. P. 41(b)). A judgment as to all claims and parties is final only if it recites that no further matters remain pending and that it is entered under Rule 54(c) (Ariz. R. Civ. P. 54(c))."
+}
+
+decision default-entered: "Default" by court cite "Ariz. R. Civ. P. 55(a)"
+{
+  note "Default is obtained on a written application and is effective 10 days after the application is filed; if the party pleads or otherwise defends within those 10 days, default does not become effective (Ariz. R. Civ. P. 55(a)(1), (2)). The applicant mails a copy to the defaulting party's last-known address (Ariz. R. Civ. P. 55(a)(3)). For a sum certain the court may enter default judgment on motion and affidavit without a hearing; otherwise the party applies for a default judgment by hearing (Ariz. R. Civ. P. 55(b)). The court may set aside an entry of default for good cause and a final default judgment under Rule 60(b) (Ariz. R. Civ. P. 55(c)). The outline named no set-aside decision."
+  edge-default-entered-judgment "Default judgment entered" -> default-judgment {
+    authority cite "Ariz. R. Civ. P. 55(b)"
+  }
+  edge-default-entered-set-aside "Default set aside for good cause" -> discovery {
+    authority cite "Ariz. R. Civ. P. 55(c)"
+  }
+}
+
+terminal default-judgment: "Default judgment" outcome [loss] cite "Ariz. R. Civ. P. 55(b)"
+{
+  note "Outcome from the defending side. A default judgment must not differ in kind from, or exceed in amount, what the pleading demands (Ariz. R. Civ. P. 55(b)(3))."
+}
+
+state discovery: "Disclosure, discovery and pretrial" by applicant cite "Ariz. R. Civ. P. 26.1(f)"
+{
+  note "A party seeking affirmative relief serves its initial disclosure no later than 30 days after the filing of the first responsive pleading to its claim, and a party filing a responsive pleading no later than 30 days after filing it; additional or amended disclosures follow within 30 days after the information is discovered (Ariz. R. Civ. P. 26.1(f)(1), (2)). Discovery per side is limited by tier: Tier 1, 5 hours of fact witness depositions, 5 interrogatories, 5 requests for production, 10 requests for admission and 120 days to complete discovery; Tier 2, 15 hours, 10, 10, 10 and 180 days; Tier 3, 30 hours, 20, 10, 20 and 240 days (Ariz. R. Civ. P. 26.2(f)). By damages claimed, $50,000 or less is Tier 1, more than $50,000 and less than $300,000 is Tier 2, and $300,000 or more is Tier 3 (Ariz. R. Civ. P. 26.2(c))."
+  edge-discovery-sj "Summary judgment motion" -> summary-judgment {
+    authority cite "Ariz. R. Civ. P. 56(a)"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Ariz. R. Civ. P. 38(a)" }
+  edge-discovery-settled "Voluntary dismissal" -> settled {
+    authority cite "Ariz. R. Civ. P. 41(a)"
+  }
+}
+
+decision summary-judgment: "Summary judgment decided" by court cite "Ariz. R. Civ. P. 56(a)"
+{
+  note "The court grants summary judgment if the movant shows no genuine dispute as to any material fact and entitlement to judgment as a matter of law (Ariz. R. Civ. P. 56(a)). A claimant may move only after a responsive pleading is due from the party opposing, or after that party files a Rule 12(b)(6) or summary judgment motion; any other party at any time; no motion is filed after the dispositive motion deadline or, absent one, later than 90 days before trial (Ariz. R. Civ. P. 56(b)). The response is due within 30 days after the motion is served and the reply 15 days after the response is served; on timely request the court must set oral argument unless it denies the motion or it is uncontested (Ariz. R. Civ. P. 56(c)(1), (2)). The outline's Orme School v. Reeves, 166 Ariz. 301, 802 P.2d 1000 (1990), is removed: no reporter text is vendored."
+  edge-summary-judgment-granted "Granted" -> judgment-entered {
+    authority cite "Ariz. R. Civ. P. 56(a)"
+  }
+  edge-summary-judgment-denied "Denied" -> trial { authority cite "Ariz. R. Civ. P. 56(a)" }
+}
+
+state trial: "Trial by jury or by the court" by court cite "Ariz. R. Civ. P. 38(a)"
+{
+  note "The right of trial by jury is preserved without a written demand; the parties waive it only by a written stipulation signed by all parties who appear at trial, filed no later than 30 days before trial is scheduled to begin, or later with court approval by written or oral stipulation (Ariz. R. Civ. P. 38(a), (b)). The outline's jury-demand period does not exist under the Arizona rule."
+  edge-trial-judgment "Verdict or decision" -> post-trial {
+    authority cite "Ariz. R. Civ. P. 58(b)"
+  }
+  edge-trial-settled "Settled before verdict" -> settled { authority cite "Ariz. R. Civ. P. 41(a)" }
+}
+
+decision post-trial: "Post-trial motions" by applicant cite "Ariz. R. Civ. P. 59(b)"
+{
+  note "A renewed motion for judgment as a matter of law is filed no later than 15 days after entry of judgment, or after the jury was discharged if the trial ends without a verdict deciding the issue (Ariz. R. Civ. P. 50(b)). A motion for a new trial and a motion to alter or amend the judgment are filed no later than 15 days after entry of judgment (Ariz. R. Civ. P. 59(b)(1), (d)), and a motion for amended or additional findings within the same 15 days (Ariz. R. Civ. P. 52(b)); none of these deadlines may be extended by stipulation or order except as Rule 6(b)(2) allows. A Rule 60(b) motion is made within a reasonable time, and for reasons (1)-(3) no more than 6 months after the judgment (Ariz. R. Civ. P. 60(c)(1)). A motion for reconsideration does not extend the time to appeal (Ariz. R. Civ. P. 7.1(e)(3)). The outline named no post-trial decision."
+  edge-post-trial-resolved "Motions resolved or none filed" -> judgment-entered {
+    authority cite "Ariz. R. Civ. P. 58(b)"
+  }
+}
+
+decision judgment-entered: "Final judgment entered" by office cite "Ariz. R. Civ. P. 58(b)"
+{
+  note "A proposed form of judgment is served on all parties; judgment may not be entered until 5 days after service unless the opposing party approves the form, and an objection is due within 5 days after service (Ariz. R. Civ. P. 58(a)). A judgment is entered when the clerk files it, and the clerk gives notice of entry (Ariz. R. Civ. P. 58(b), (c)). A judgment as to all claims and parties is final only with the Rule 54(c) recital; a judgment on fewer than all claims or parties needs the Rule 54(b) determination and recital (Ariz. R. Civ. P. 54(b), (c)). A motion for attorney's fees on a Rule 54(c) decision is filed within 20 days after the decision is filed, with the verified costs request the same day; without a fee motion, costs are requested within 20 days after the decision, and a response follows within 5 days of service and any reply within 5 days of the response (Ariz. R. Civ. P. 54(f), (g)). Taxable costs are those under A.R.S. § 12-332, which is not vendored."
+  edge-judgment-entered-appeal "Notice of appeal within 30 days of entry" -> appeal-taken {
+    authority cite "ARCAP 9(a)"
+  }
+  edge-judgment-entered-final "No appeal" -> final-no-appeal {
+    authority cite "Ariz. R. Civ. P. 58(b)"
+  }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Arizona appellate package" outcome [appeal] cite "ARCAP 9(a)"
+{
+  note "The notice of appeal is filed no later than 30 days after entry of the judgment, and a notice of cross-appeal no later than 20 days after the appellant's notice or 30 days after entry, whichever is later (ARCAP 9(a), (b)). A timely motion under Civil Rule 50(b), 52(b), 59(a) or 59(d), or under Rule 60 filed within 15 days after entry, restarts the time from entry of the signed order disposing of the last such motion (ARCAP 9(e)(1)). Hand-off to lit/az-court-of-appeals (az-appellate-civil)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Ariz. R. Civ. P. 58(b)"
+
+terminal settled: "Settled: voluntarily dismissed" outcome [settlement] cite "Ariz. R. Civ. P. 41(a)"
+{
+  note "The plaintiff may dismiss by notice before the opposing party serves an answer or a summary judgment motion, or by order on a stipulation signed by all parties who have appeared; unless stated otherwise the dismissal is without prejudice, but a second notice of dismissal of the same claim operates as an adjudication on the merits (Ariz. R. Civ. P. 41(a)(1))."
+}

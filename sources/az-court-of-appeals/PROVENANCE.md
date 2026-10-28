@@ -54,3 +54,9 @@
 - Original: `az-court-of-appeals/original/westlaw-pages/0047-Rule-31-Notice-of-Settlement.html` as served (sha256 9bb723939bc4677171d7881c7bed476b873e74ef8d5fa844f1d75ba9b578119d). Served at https://govt.westlaw.com/azrules/Document/ND4176BE03FB611E4B4D7C67CCE44C05C?viewType=FullText&originationContext=documenttoc&transitionType=CategoryPageItem&contextData=(sc.Default).
 - Original: `az-court-of-appeals/original/westlaw-pages/0048-Rule-32-Websites-and-Forms.html` as served (sha256 eeef752e1cf35cecd85d0db61f2748d16339ac1417c6b42be6903d01927734a9). Served at https://govt.westlaw.com/azrules/Document/NF6F2BE60B0B811F0BFBCC97E5C0DE315?viewType=FullText&originationContext=documenttoc&transitionType=CategoryPageItem&contextData=(sc.Default).
 - Extraction sha256 adfacc7bd2bd980fdd0f3770a7fbeea2f27560fc036fcb9440bfb8d1cfe1fe76.
+
+### `az-court-of-appeals/arcap-sectioned.txt` — Arizona Rules of Civil Appellate Procedure, sectioned
+
+- Derived in the pod (lg-f3q8.37) from `az-court-of-appeals/az-court-of-appeals-rules-westlaw-2026-10-01.txt` (extract sha256 adfacc7bd2bd980fdd0f3770a7fbeea2f27560fc036fcb9440bfb8d1cfe1fe76); nothing fetched. One `## ARCAP <n>` line is inserted right after each rule page's own `## Rule <n>. <title>` heading (Rule 1 through Rule 32, 39 pages); the front matter, correlation table and Forms pages are unmarked. The marker is `ARCAP <n>`, not `Rule <n>`, so a package that binds both this file and the Civil Rules resolves each cite to its own rule set. Rule text was not edited: deleting the marker lines (`sed -E '/^## ARCAP [0-9.]+$/d'`) restores the extract byte for byte.
+- Edition: as the extract, current with amendments effective through October 1, 2026.
+- Sectioned sha256 5dac95c5f28b17a36a65f55662200a3404dcf6722c7afe36c1749af17dc02886 (the `path_sha256` pinned by `lit/az-superior/Lit.toml` and `lit/az-court-of-appeals/Lit.toml`).

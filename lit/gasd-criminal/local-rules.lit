@@ -1,0 +1,173 @@
+module gasd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Southern District's own criminal periods and limits. In a
+// multi-defendant case the government responds to all FRCrimP 12(b)(3)
+// motions within fourteen days from the latest defendant's motion deadline
+// (LR Crim. 12(a)(1)). A handwritten motion and brief, or response, is
+// limited to twenty-five pages and a reply to ten (12(b)(2)), stated in
+// pages, so it stays in this note. Failing to respond in time may result
+// in the motion being granted without further notice (12(c)). Witness and
+// exhibit lists are due at least three business days before a motion
+// hearing (12(i)); business days have no engine lowering, so that period
+// is a hole kept here. A response to a motion to continue is due within
+// seven days, or sooner if the deadline, hearing or trial is earlier
+// (12(j)). Discovery otherwise follows FRCrimP 16 and 26.2, Brady, Agurs,
+// Giglio and the Jencks Act (16A). Objections to the draft presentence
+// report are filed within fourteen days of its filing (32A(c)), FRCrimP
+// 32(f)(1)'s own period, which stays with lit/frcrimp. In a revocation
+// proceeding the government discloses its evidence at least seventy-two
+// hours, and counsel confer at least forty-eight hours, before the final
+// hearing (32.1(c), (d)); core's FRCrimP 45 counting rule does not admit
+// hours (L3009), so those stay in this note. Criminal calendars follow the
+// Speedy Trial Act and the court's plan (50); collateral forfeiture follows
+// the court's schedule (58). The earlier outline's FRCrimP flow and its
+// decisions belong to lit/frcrimp and are removed here: no reporter text
+// is vendored.
+/// A combined motion and brief, or a response: at most 6,500 words, and
+/// filing certifies compliance (S.D. Ga. LR Crim. 12(b)(1)).
+limit criminal-motion {
+  words <= 6500 cite "S.D. Ga. LR Crim. 12(b)"
+} cite "S.D. Ga. LR Crim. 12(b)"
+
+/// A reply: at most 2,500 words (S.D. Ga. LR Crim. 12(b)(1)).
+limit criminal-reply { words <= 2500 cite "S.D. Ga. LR Crim. 12(b)" } cite "S.D. Ga. LR Crim. 12(b)"
+
+/// The defendant's arraignment (S.D. Ga. LR Crim. 12(a)(1), 16B(a)).
+event Arraigned()
+/// The last day for filing FRCrimP 12(b)(3) motions passes (S.D. Ga. LR
+/// Crim. 12(a)(1)).
+event MotionDeadlinePassed()
+/// A pretrial motion is filed (S.D. Ga. LR Crim. 12).
+event PretrialMotionFiled() paper criminal-motion
+/// A response to a motion is filed (S.D. Ga. LR Crim. 12).
+event MotionResponseFiled() paper criminal-motion
+/// A reply on a motion is filed (S.D. Ga. LR Crim. 12(b)).
+event MotionReplyFiled() paper criminal-reply
+/// The government requests the defendant's FRCrimP 16(b)(1) disclosure
+/// (S.D. Ga. LR Crim. 16D).
+event GovernmentDisclosureRequested()
+/// The date set for the pretrial conference, or for trial if none is held
+/// (S.D. Ga. LR Crim. 16E(c)).
+event PretrialConferenceScheduled()
+/// The date set for trial (S.D. Ga. LR Crim. 16B(b), 16E(c), (d), 24(a)).
+event TrialScheduled()
+/// The date set for the sentencing hearing (S.D. Ga. LR Crim. 32A(d)).
+event SentencingHearingScheduled()
+/// The sentence is imposed (S.D. Ga. LR Crim. 32B(b)).
+event Sentenced()
+/// A motion for joint representation is filed (S.D. Ga. LR Crim. 44D(a)).
+event JointRepresentationMotionFiled()
+/// The Court denies a motion to seal (S.D. Ga. LR Crim. 49.1(d)).
+event SealingDenied()
+
+/// S.D. Ga. LR Crim. 12(a)(1): every pretrial motion described in FRCrimP
+/// 12(b)(3) is filed within fourteen days from arraignment.
+deadline pretrial-motion-period: 14.days after Arraigned() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 12(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ga. LR Crim. 12(a)(1): responses to those motions are filed within
+/// fourteen days of the last day for filing motions.
+deadline pretrial-motion-response-period: 14.days after MotionDeadlinePassed() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 12(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ga. LR Crim. 12(a)(2): a response to any other pretrial motion is
+/// filed within seven days of its filing, or as soon as possible if the
+/// motion asks for relief sooner.
+deadline other-motion-response-period: 7.days after PretrialMotionFiled() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 12(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ga. LR Crim. 16B(a): within fourteen days of arraignment, or
+/// promptly after acquiring possession, the government discloses on request
+/// the FRCrimP 16(a)(1) information, and Brady material, identification
+/// procedures, vehicles, intercepts and grand jury transcripts.
+deadline government-initial-disclosure-period: 14.days after Arraigned() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 16B(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ga. LR Crim. 16B(b): no later than fourteen days before trial the
+/// government discloses Giglio material and the general nature of prior or
+/// intrinsic acts evidence.
+deadline government-later-disclosure-period: 14.days before TrialScheduled() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 16B(b)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ga. LR Crim. 16D: on the government's request, a defendant bound
+/// by FRCrimP 16(b)(1) discloses not more than seven days after the request,
+/// or promptly after acquiring possession.
+deadline defense-disclosure-period: 7.days after GovernmentDisclosureRequested() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 16D"
+{
+  forum frcrimp
+}
+
+/// S.D. Ga. LR Crim. 16E(c): at least seven days before the pretrial
+/// conference, or with none seven days before trial, counsel confer on
+/// stipulations of fact and of the authenticity or admissibility of
+/// exhibits.
+deadline stipulation-conference-period: 7.days before PretrialConferenceScheduled() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 16E(c)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ga. LR Crim. 16E(c): the parties file all stipulations, signed by
+/// the defendant, defense counsel and the government, at least two days
+/// before trial.
+deadline stipulation-filing-period: 2.days before TrialScheduled() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 16E(c)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ga. LR Crim. 16E(d): demonstrative, summary and composite exhibits
+/// (FRE 1006 included) are disclosed at least two days before trial.
+deadline demonstrative-exhibit-period: 2.days before TrialScheduled() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 16E(d)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ga. LR Crim. 24(a): unless ordered otherwise, requests for special
+/// voir dire are filed no later than seven days before trial.
+deadline voir-dire-request-period: 7.days before TrialScheduled() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 24(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ga. LR Crim. 32A(d): unless the judge orders otherwise, a
+/// sentencing memorandum on a complex sentencing issue is filed no later
+/// than the day before the sentencing hearing.
+deadline sentencing-memorandum-period: 1.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 32A(d)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ga. LR Crim. 32B(b): defense counsel files the Post-Conviction
+/// Consultation Certification, after explaining the appeal and the duty to
+/// file one on request (32B(a)), no later than fourteen days after
+/// sentencing.
+deadline post-conviction-certification-period: 14.days after Sentenced() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 32B(b)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ga. LR Crim. 44D(a): the government responds within seven days to
+/// a motion for joint representation.
+deadline joint-representation-response-period: 7.days after JointRepresentationMotionFiled() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 44D(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ga. LR Crim. 49.1(d): material a denied motion to seal sought to
+/// seal is returned unless the movant files a notice of intent to appeal
+/// the denial within fourteen days.
+deadline sealing-appeal-notice-period: 14.days after SealingDenied() counted_by frcrimp45 cite "S.D. Ga. LR Crim. 49.1(d)"
+{
+  forum frcrimp
+}

@@ -1,0 +1,49 @@
+# The Southern District of Georgia's Local Criminal Rules ("LR Crim.") as
+# a local-rule layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)):
+# it declares only the periods and limits those rules themselves state and
+# re-encodes no FRCrimP, Speedy Trial Act or FRAP period. Each period is
+# counted under FRCrimP 45(a), which governs "any local rule". The rules
+# take effect October 7, 2026 (LR Gen. 1A; sources/sd-ga); earlier
+# editions are not vendored, so a query before that date is a hole in the
+# corpus. The General Rules also apply in criminal proceedings (LR Gen.
+# 1A); they are not restated here.
+[package]
+name = "gasd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "gasd-criminal-local-rules"
+forum = "gasd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Southern District of Georgia: Local Criminal Rules"
+description = "The Southern District of Georgia's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): pretrial motion and response periods and word limits, the government's and the defendant's discovery periods, stipulations and exhibits before trial, voir dire requests, sentencing memoranda, the post-conviction consultation certification, joint representation and sealing."
+in_force = "2026-10-07"
+known_at = "2026-10-28"
+unknown_before = "2026-10-07"
+jurisdiction = "United States District Court, S.D. Georgia (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+office = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "gasd-lr"
+issuer = "United States District Court for the Southern District of Georgia"
+date = "2026-10-07"
+designation = "Local Rules, Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.gasd-lr]
+title = "Local Rules of the United States District Court for the Southern District of Georgia (effective October 7, 2026)"
+url = "https://www.gasd.uscourts.gov/sites/gasd/files/local_rules/SDGA_Local_Rules_Effective_10-07-2026.pdf"
+path = "sources/sd-ga/sdga-local-rules-sectioned.txt"
+path_sha256 = "6f5214a2bb86045dcae24edf5172748170dd920f2478c5c5f0240f4bd56c5f7b"
+sha256 = "878813a8fdeac35a2e87f4db51fd8ffff30172137f4943eeb88f3474185a0edf"
+as_of = "2026-10-07"
+cite_prefixes = ["S.D. Ga. LR Crim."]
+section_heading = "LR Crim. {n}"

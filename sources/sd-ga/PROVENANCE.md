@@ -17,3 +17,8 @@
 - Upstream: https://www.gasd.uscourts.gov/sites/gasd/files/local_rules/SDGA_Local_Rules_Effective_10-07-2026.pdf, retrieved 2026-10-27, as recorded on the `sd-ga/sdga-local-rules.txt` entry this file is derived from.
 - Edition: as the extract, Local Rules "Effective 10-07-2026" (LR Gen. 1A: "These Local Rules take effect on October 7, 2026").
 - Sectioned sha256 6f5214a2bb86045dcae24edf5172748170dd920f2478c5c5f0240f4bd56c5f7b (the `path_sha256` pinned by `lit/gasd/Lit.toml`).
+
+- Derived in the pod (lg-gddt.26) from `sd-ga/sdga-local-rules.txt` (extract sha256 06f9f6b1c290e7be9b1c54d37496153f0cd001f0d6912024cc72a31a7053292b); nothing fetched. One `## LR Gen. <n>`, `## LR Civ. <n>` or `## LR Crim. <n>` line is inserted before each rule's own heading line in the body (`LR Gen. 1A.` through `LR Crim. 58.`, 53 rules, the same 53 the table of contents lists); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LR \(Crim\|Civ\|Gen\)\. /d'`) restores the extract byte for byte.
+- Source: as the extract `sd-ga/sdga-local-rules.txt`, https://www.gasd.uscourts.gov/sites/gasd/files/local_rules/SDGA_Local_Rules_Effective_10-07-2026.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
+- Edition: as the extract, Local Rules effective October 7, 2026.
+- Sectioned sha256 6f5214a2bb86045dcae24edf5172748170dd920f2478c5c5f0240f4bd56c5f7b (the `path_sha256` pinned by `lit/gasd-criminal/Lit.toml`).

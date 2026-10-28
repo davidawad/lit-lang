@@ -1,0 +1,50 @@
+# Civil actions in the Montana District Courts under the Montana Rules of
+# Civil Procedure as the State Law Library served them on 2026-10-27
+# (date of last amendment June 28, 2022; sources/mt-district). Computation
+# of time is M. R. Civ. P. 6(a), the FRCP 6(a) method but with Montana's
+# own legal holidays (state general election day and days the Governor
+# declares, and no Juneteenth), which lit/core has no counting rule for,
+# so the rules' periods are stated in notes, not encoded as counted
+# deadlines; Rule 6(d) adds 3 days after service by the listed means. An
+# appeal hands off to lit/mt-supreme.
+[package]
+name = "mt-district-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "mt-district-court-civil"
+forum = "mt-district"
+authority = "StateRule"
+title = "Montana District Court, civil"
+description = "Civil actions in the Montana District Courts under the Montana Rules of Civil Procedure, as far as the vendored text states. An appeal hands off to the Montana appellate package (lit/mt-supreme)."
+in_force = "2022-06-28"
+known_at = "2026-10-28"
+unknown_before = "2022-06-28"
+jurisdiction = "Montana District Court (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.mt-civ]
+title = "Montana Rules of Civil Procedure (State Law Library of Montana; date of last amendment June 28, 2022; AF 07-0157)"
+url = "https://courts.mt.gov/external/rules/civ_proc.pdf"
+path = "sources/mt-district/mrcp-sectioned.txt"
+path_sha256 = "055033c8c2b37cf8792e4d2f97822effa8ffe36365608ad0c5edee03015206ca"
+sha256 = "7502442cb52ec026409c735276d06de6149553d5d01b8586f4610f0f14cceeda"
+as_of = "2022-06-28"
+cite_prefixes = ["M. R. Civ. P."]
+section_heading = "Rule {n}"
+
+[sources.mt-app]
+title = "Montana Rules of Appellate Procedure (State Law Library of Montana; date of last amendment October 12, 2021; AF 07-0016)"
+url = "https://courts.mt.gov/external/rules/mtr_app_pro.pdf"
+path = "sources/mt-supreme/mrap-sectioned.txt"
+path_sha256 = "8565e044af165525fbe7aa6f34d39bb48e12c22c22b681d36d356e8a1d31e217"
+sha256 = "e1e2f5bc2dcd9b5f6a733719b8a43f3f8be70b330372e34eb9498f22ecbbaea8"
+as_of = "2021-10-12"
+cite_prefixes = ["M. R. App. P."]
+section_heading = "Rule {n}"

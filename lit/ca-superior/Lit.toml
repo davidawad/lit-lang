@@ -1,0 +1,54 @@
+# Civil actions in the California superior courts under the Code of Civil
+# Procedure, as far as the vendored chapters state (sources/ca-superior:
+# the Legislature's leginfo pages as in effect on 2026-10-27). Computation
+# of time is CCP §§ 12-12a, which are not vendored, and lit/core has no
+# California counting rule, so the periods are stated in notes, not
+# encoded as counted deadlines. Sections 585 and 664 (with 415.20, 415.45,
+# 417.10, 417.40 and 632) have later versions operative January 1, 2027;
+# the package cites the versions in force now. An appeal hands off to the
+# California Court of Appeal package (lit/ca-court-of-appeal).
+[package]
+name = "ca-superior-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ca-superior-civil"
+forum = "ca-superior"
+authority = "StateRule"
+title = "California superior courts, civil"
+description = "Civil actions in the California superior courts under the Code of Civil Procedure, as far as the vendored chapters state: commencement, the summons and its 30-day response, demurrer, default, discovery, summary judgment, jury trial and its waiver, judgment notwithstanding the verdict and new trial, entry of judgment, dismissal, and the appeal (lit/ca-court-of-appeal)."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "California superior courts (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ccp]
+title = "California Code of Civil Procedure, cited chapters, as published on leginfo.legislature.ca.gov (in effect 2026-10-27)"
+url = "https://leginfo.legislature.ca.gov/faces/codesTOCSelected.xhtml?tocCode=CCP"
+path = "sources/ca-superior/ccp-cited-chapters-sectioned.txt"
+path_sha256 = "494bdb61129d96d2eee0776501204acb3bd5f1fd32641098efacd3558124e336"
+as_of = "2026-10-27"
+
+[sources.crc-title8]
+title = "California Rules of Court, Title 8, cited rules (as in force 2026-10-27)"
+url = "https://courts.ca.gov/cms/rules/index/eight/rule8_104"
+path = "sources/ca-court-of-appeal/cal-rules-of-court-title8-cited.txt"
+path_sha256 = "616d23ce45fc69c4d0c6c6b2e5684681c36f8bfe5954e99ce40a766d0ed5e010"
+as_of = "2026-10-27"
+
+[[cite_syntax.rules]]
+prefixes = ["Cal. Code Civ. Proc. §"]
+heading = "Cal. Code Civ. Proc. § {}"
+source = "ccp"
+
+[[cite_syntax.rules]]
+prefixes = ["Cal. Rules of Court, rule"]
+heading = "Cal. Rules of Court, rule {}"
+source = "crc-title8"

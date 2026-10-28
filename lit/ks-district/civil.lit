@@ -1,5 +1,7 @@
 module ks-district-civil.civil
 
+import ks-state-rules.{ JudgmentEntered }
+
 // Civil actions in the Kansas district courts, from the applicant's
 // (plaintiff's) side. Every period below is stated in a note, not counted:
 // computation of time is K.S.A. 60-206, which is not vendored, and lit/core
@@ -124,7 +126,7 @@ state trial: "Trial by jury or by the court" by court cite "K.S.A. 60-238(b)"
 decision post-trial: "Post-trial motions decided" by court cite "K.S.A. 60-250(b)"
 {
   note "No later than 28 days after the entry of judgment, or, if the motion addresses a jury issue not decided by the verdict, no later than 28 days after the jury was discharged, the movant may file a renewed motion for judgment as a matter of law, with an alternative or joint request for a new trial under K.S.A. 60-259 (K.S.A. 60-250(b)). A motion for a new trial by a party against whom judgment as a matter of law is rendered is filed no later than 28 days after the entry of judgment (K.S.A. 60-250(d)). Granting the renewed motion requires a conditional ruling on any new-trial motion (K.S.A. 60-250(c)). A timely motion under K.S.A. 60-250(b), 60-252(b) or 60-259 terminates the running of the appeal time, which runs in full from the order on it (K.S.A. 60-2103(a))."
-  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered { event JudgmentEntered()
     authority cite "K.S.A. 60-258"
   }
   edge-post-trial-jmol "Judgment as a matter of law granted" -> judgment-for-movant {
@@ -145,7 +147,7 @@ decision judgment-entered: "Judgment entered" by office cite "K.S.A. 60-258"
 
 terminal appeal-taken: "Appeal taken: continue in the Kansas appellate package" outcome [appeal] cite "K.S.A. 60-2103(a)"
 {
-  note "A party appeals from a judgment by filing a notice of appeal with the clerk of the district court; the notice specifies the parties taking the appeal, designates the judgment or part appealed from, and names the appellate court (K.S.A. 60-2103(a), (b)). An appellee seeking review of rulings files notice of cross-appeal within 21 days after the notice of appeal has been served on it and filed (K.S.A. 60-2103(h)). Hand-off to lit/ks-appellate (ks-appellate-civil)."
+  note "A party appeals from a judgment by filing a notice of appeal with the clerk of the district court; the notice specifies the parties taking the appeal, designates the judgment or part appealed from, and names the appellate court (K.S.A. 60-2103(a), (b)). An appellee seeking review of rulings files notice of cross-appeal within 21 days after the notice of appeal has been served on it and filed (K.S.A. 60-2103(h)). Hand-off to lit/ks-court-of-appeals (ks-appellate-civil)."
 }
 
 terminal final-no-appeal: "Final: no appeal" outcome [final] cite "K.S.A. 60-2103(a)"

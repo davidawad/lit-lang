@@ -1,0 +1,57 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-pa-court-of-judicial-discipline
+
+import pa-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start charges
+
+state charges: "Formal charges or articles filed" by office cite ?("Pa. Const. art. V, § 18(b)(5) (verify)")
+{
+  note "OUTLINE. The court tries the Judicial Conduct Board's complaints against judges; the Supreme Court hears appeals. Proceedings in the Court of Judicial Discipline of Pennsylvania: who files, notice and the respondent's rights are holes. The applicant is the respondent. Leading decisions: not yet identified in this pass; verify before use."
+  edge-charges-answer "Respondent served" -> answer { event ActionCommenced() authority cite ?("Pa. Const. art. V, § 18(b)(5) (verify)") }
+}
+
+state answer: "Answer and pretrial" by applicant cite ?("C.J.D.R.P. 413 (verify)")
+{
+  note "OUTLINE. Answer period, discovery and interim suspension are holes."
+  edge-answer-hearing "Set for trial or hearing" -> hearing { authority cite ?("C.J.D.R.P. 501 (verify)") }
+}
+
+state hearing: "Trial or hearing" by court cite ?("C.J.D.R.P. 501 (verify)")
+{
+  note "OUTLINE. Burden and standard of proof are holes."
+  edge-hearing-decision "Decision issued" -> decision { authority cite ?("Pa. Const. art. V, § 18(b)(5) (verify)") }
+}
+
+chance decision: "Tribunal decides" by court cite ?("Pa. Const. art. V, § 18(b)(5) (verify)")
+{
+  note "OUTLINE. Outcome probabilities are holes."
+  edge-decision-dismissed "Charges dismissed" -> charges-dismissed p ? { event DecisionFiled() }
+  edge-decision-sanction "Sanction imposed" -> sanction p ? { event DecisionFiled() }
+}
+
+decision sanction: "Review sought?" by applicant cite ?("Pa. Const. art. V, § 18(c) (verify)")
+{
+  note "OUTLINE. Review period and reviewing body are holes."
+  edge-sanction-final "No review" -> sanction-final { event JudgmentEntered() authority cite ?("Pa. Const. art. V, § 18(b)(5) (verify)") }
+  edge-sanction-review "Review sought" -> review-sought { event NoticeOfAppealFiled() authority cite ?("Pa. Const. art. V, § 18(c) (verify)") }
+}
+
+terminal charges-dismissed: "Charges dismissed" outcome [win] cite ?("Pa. Const. art. V, § 18(b)(5) (verify)")
+{
+  note "OUTLINE. Costs and confidentiality are holes."
+  payoff ?
+}
+
+terminal sanction-final: "Sanction final" outcome [loss] cite ?("Pa. Const. art. V, § 18(b)(5) (verify)")
+{
+  note "OUTLINE. Removal, suspension or censure takes effect."
+  payoff ?
+}
+
+terminal review-sought: "Review sought" outcome [final] cite ?("Pa. Const. art. V, § 18(c) (verify)")
+{
+  note "OUTLINE. The reviewing court is its own package."
+  payoff ?
+}

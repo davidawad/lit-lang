@@ -1,16 +1,28 @@
 version = 2
 
 [[package]]
+name = "ak-state-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:ebdcea2e25e6aa773244f16e491dea5336226445537fb8b00753041ad927fedd"
+semantic = "sha256:ba8bd528827fa243616e629167859e254760e349cb83ca9263913929feb123cf"
+texts = []
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
 name = "ak-superior-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:a4744996f87fcaf12a091e12c04b28afec0bbfa438415652a2b73e6c4b77ecc7"
-semantic = "sha256:4877f369e620a3ee5eda697f6b0729110642d16bec7a2df4a7b849ff9b19e7f1"
+source = "sha256:36e613252a0a2a7f37b823605db8316954ffe5dd0d625cdffd5e273018d8e4a7"
+semantic = "sha256:63199977bbe42857a7df745af97dd19120632f31cfef65c2c262649ae248c72c"
 texts = [
     "ak-app sources/ak-supreme/alaska-appellate-procedure-sectioned.txt sha256:98b14637ade4bd8b2ce42679338cf16575ff1be63cd074e2cfcfe7019bd31775",
     "ak-civ sources/ak-superior/alaska-civil-procedure-sectioned.txt sha256:10bdb43435fa80d4049dc39b8a5093891aeb5b4391cfffd5a69a960b3c248d30",
 ]
 dependencies = [
+    "ak-state-rules 0.1.0",
     "core 1.0.0",
 ]
 

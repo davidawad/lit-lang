@@ -1,0 +1,91 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-nc-court-of-appeals
+
+import outline-nc-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite ?("N.C. R. App. P. 3(c)")
+{
+  note "OUTLINE. Notice in the trial court; period, service and cross-appeal are holes. Cross-appeal period: N.C. R. App. P. 3(c). Actual notice and service rules: N.C. R. App. P. 3(c)(1)-(2)."
+  edge-notice-record "Record prepared" -> record { event NoticeOfAppealFiled()
+    authority cite ?("N.C. R. App. P. 9 (verify)")
+  }
+}
+
+state record: "Record or transcript prepared" by office cite ?("N.C. R. App. P. 9 (verify)")
+{
+  note "OUTLINE. Record contents, transcript and stays are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-record-brief "Briefing" -> briefing { event RecordFiled()
+    authority cite ?("N.C. R. App. P. 28 (verify)")
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite ?("N.C. R. App. P. 28 (verify)")
+{
+  note "OUTLINE. Brief form, length and reply are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-brief-argument "Argument or submission" -> argument {
+    authority cite ?("N.C. R. App. P. 30 (verify)")
+  }
+}
+
+decision argument: "Argument or submission" by court cite ?("N.C. R. App. P. 30 (verify)")
+{
+  note "OUTLINE. Argument is discretionary in some courts. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-arg-decision "Decision issued" -> decision {
+    authority cite ?("N.C. R. App. P. 30 (verify)")
+  }
+}
+
+chance decision: "Court decides" by court cite ?("N.C. R. App. P. 30 (verify)")
+{
+  note "OUTLINE. Probabilities are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-dec-affirmed "Affirmed" -> post-decision p ? {
+  }
+  edge-dec-reversed "Reversed or remanded" -> post-decision p ? {
+  }
+}
+
+decision post-decision: "Rehearing or further review decision" by applicant cite ?("N.C. R. App. P. 31 (verify)")
+{
+  note "OUTLINE. Rehearing and further review: N.C. R. App. P. 15 (discretionary review); N.C. Gen. Stat. § 7A-31 (verify). Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-pd-rehearing "Rehearing sought" -> rehearing {
+    authority cite ?("N.C. R. App. P. 31 (verify)")
+  }
+  edge-pd-further "Further review sought" -> further-review {
+    authority cite ?("N.C. R. App. P. 15 (discretionary review); N.C. Gen. Stat. § 7A-31 (verify)")
+  }
+  edge-pd-mandate "No further review" -> mandate-issued { event MandateIssued()
+    authority cite ?("N.C. R. App. P. 32 (verify)")
+  }
+}
+
+state rehearing: "Rehearing petition" by applicant cite ?("N.C. R. App. P. 31 (verify)")
+{
+  note "OUTLINE. Rehearing period and effect on finality are holes."
+  edge-rh-decision "Rehearing decided" -> post-decision {
+  }
+}
+
+state further-review: "Petition for further review" by applicant cite ?("N.C. R. App. P. 15 (discretionary review); N.C. Gen. Stat. § 7A-31 (verify)")
+{
+  note "OUTLINE. Petition period and grant standard are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-fr-mandate "Review denied" -> mandate-issued { event MandateIssued()
+  }
+  edge-fr-merits "Review granted" -> supreme-merits {
+  }
+}
+
+terminal mandate-issued: "Mandate or remittitur issued" outcome [final] cite ?("N.C. R. App. P. 32 (verify)")
+{
+  note "OUTLINE. Mandate or remittitur returns the case to the trial court. Costs: holes."
+  payoff ?
+}
+
+terminal supreme-merits: "Review granted on the merits" outcome [final] cite ?("N.C. R. App. P. 15 (discretionary review); N.C. Gen. Stat. § 7A-31 (verify)")
+{
+  note "OUTLINE. Merits review in the highest state court. Outcome is outside this outline."
+  payoff ?
+}
+

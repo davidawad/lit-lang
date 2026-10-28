@@ -1,0 +1,36 @@
+module va-supreme-court-civil.review
+
+import va-state-rules.{ MandateIssued, ReviewPetitionFiled }
+
+// An appeal from the Court of Appeals, from the petitioner's side. Every
+// period is stated in a note, not counted.
+
+start petition
+
+decision petition: "Appeal to the Supreme Court of Virginia?" by applicant cite "Va. Sup. Ct. R. 5:14(a)"
+{
+  note "An appeal to the Supreme Court of Virginia requires a notice of appeal filed with the clerk of the Court of Appeals within 30 days after entry of final judgment or of the order denying a timely petition for rehearing (Va. Sup. Ct. R. 5:14(a)), then a petition for appeal (Va. Sup. Ct. R. 5:17(a))."
+  edge-petition-none "No appeal" -> mandate-issued { event MandateIssued() authority cite "Va. Sup. Ct. R. 5A:31(a)" }
+  edge-petition-filed "Notice and petition for appeal" -> further-review { event ReviewPetitionFiled() authority cite "Va. Sup. Ct. R. 5:17(a)" }
+}
+
+decision further-review: "Petition for appeal in the Supreme Court of Virginia" by court cite "Va. Sup. Ct. R. 5:17(a)"
+{
+  note "In an appeal from the Court of Appeals, the petition for appeal is filed with the clerk of the Supreme Court within 30 days after entry of the judgment appealed from or the denial of a timely petition for rehearing; the Court may extend it on motion for good cause (Va. Sup. Ct. R. 5:17(a)(2)). Only assignments of error relating to those presented in, and to actions taken by, the Court of Appeals may be included (Va. Sup. Ct. R. 5:17(c)(1)(ii)). Except by leave of a Justice, the petition may not exceed the longer of 35 pages or 6,125 words (Va. Sup. Ct. R. 5:17(f)); the statutory filing fee must be received within 10 days of filing or the petition is dismissed (Va. Sup. Ct. R. 5:17(d))."
+  edge-further-review-refused "Petition refused" -> mandate-issued { event MandateIssued()
+    authority cite "Va. Sup. Ct. R. 5A:31(a)"
+  }
+  edge-further-review-granted "Petition granted" -> supreme-merits {
+    authority cite "Va. Sup. Ct. R. 5:17(a)"
+  }
+}
+
+terminal mandate-issued: "Mandate issued" outcome [final] cite "Va. Sup. Ct. R. 5A:31(a)"
+{
+  note "When there can be no further proceedings in the Court of Appeals or the Supreme Court, the clerk promptly forwards the mandate, with a certified copy of any opinion, to the court from which the appeal proceeded (Va. Sup. Ct. R. 5A:31). The clerk then returns the record to the trial court clerk (Va. Sup. Ct. R. 5A:10(e))."
+}
+
+terminal supreme-merits: "Appeal granted: merits in the Supreme Court of Virginia" outcome [final] cite "Va. Sup. Ct. R. 5:17(a)"
+{
+  note "Briefing, argument and decision on the merits in the Supreme Court of Virginia (Part Five) are outside this package."
+}

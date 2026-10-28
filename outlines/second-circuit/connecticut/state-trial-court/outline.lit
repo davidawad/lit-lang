@@ -1,0 +1,111 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-ct-trial-court
+
+import outline-ct-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start commenced
+
+state commenced: "Complaint Filed" by applicant cite ?("Conn. Gen. Stat. 52-45a (verify)")
+{
+  note "OUTLINE. A civil action commences with the filing of the complaint. Filing fee and service period are holes."
+  edge-commenced-response-due "Defendant served" -> response-due { event ActionCommenced()
+    authority cite ?("Conn. Practice Book 8-1 (verify)")
+  }
+}
+
+decision response-due: "Answer or Motion Due" by office cite ?("Conn. Practice Book 10-8 (verify)")
+{
+  note "OUTLINE. The response period is a hole until verified. Leading decision on pleading challenges (verify): No leading decision confirmed in this run; verify before use."
+  edge-response-due-default "No response" -> default-entered {
+    authority cite ?("Conn. Practice Book 17-20 (verify)")
+  }
+  edge-response-due-motion "Pre-answer motion filed" -> pleading-ruling {
+    authority cite ?("Conn. Practice Book 10-30 (verify)")
+  }
+  edge-response-due-discovery "Answer filed" -> discovery {
+    authority cite ?("Conn. Practice Book 10-8 (verify)")
+  }
+}
+
+decision pleading-ruling: "Pre-answer Motion Decided" by court cite ?("Conn. Practice Book 10-30 (verify)")
+{
+  note "OUTLINE. Motion to dismiss under Conn. Practice Book 10-30 (verify)."
+  edge-pleading-ruling-dismissed "Dismissed" -> dismissed {
+    authority cite ?("Conn. Practice Book 10-30 (verify)")
+  }
+  edge-pleading-ruling-discovery "Motion denied; case proceeds" -> discovery {
+    authority cite ?("Conn. Practice Book 10-8 (verify)")
+  }
+}
+
+state discovery: "Discovery" by applicant cite ?("Conn. Practice Book 13-2 (verify)")
+{
+  note "OUTLINE. Discovery under Conn. Practice Book 13 (verify). Scope, deadlines and sanctions are holes until verified."
+  edge-discovery-sj-ruling "Dispositive motion filed" -> sj-ruling {
+    authority cite ?("Conn. Practice Book 17-44 (verify)")
+  }
+  edge-discovery-trial-ready "No dispositive motion" -> trial-ready {
+    authority cite ?("Conn. Practice Book 14-1 (verify)")
+  }
+}
+
+decision sj-ruling: "Summary Judgment Decided" by court cite ?("Conn. Practice Book 17-44 (verify)")
+{
+  note "OUTLINE. Leading decision on summary judgment (verify): Romprey v. Safeco Insurance Co. of America, 310 Conn. 304 (2013)"
+  edge-sj-ruling-granted "Granted" -> sj-granted {
+    authority cite ?("Conn. Practice Book 17-44 (verify)")
+  }
+  edge-sj-ruling-denied "Denied" -> trial-ready {
+    authority cite ?("Conn. Practice Book 17-44 (verify)")
+  }
+}
+
+decision trial-ready: "Pretrial and Trial Setting" by court cite ?("Conn. Practice Book 14-1 (verify)")
+{
+  note "OUTLINE. Pretrial order, jury demand and trial setting. Settlement and dismissal paths are not modeled."
+  edge-trial-ready-verdict "Tried" -> verdict {
+    authority cite ?("Conn. Practice Book 16-1 (verify)")
+  }
+}
+
+state verdict: "Verdict Returned" by applicant cite ?("Conn. Practice Book 16-1 (verify)")
+{
+  note "OUTLINE. Motions for judgment as a matter of law and for a new trial follow the verdict."
+  edge-verdict-post-trial "Post-trial motions" -> post-trial { event JudgmentEntered()
+    authority cite ?("Conn. Practice Book 16-35 (verify)")
+  }
+}
+
+decision post-trial: "Post-trial Motions Decided" by court cite ?("Conn. Practice Book 16-35 (verify)")
+{
+  note "OUTLINE. Deadlines for renewed motions are holes until verified."
+  edge-post-trial-judgment "Judgment entered" -> judgment-entered { event JudgmentEntered()
+    authority cite ?("Conn. Practice Book 16-1 (verify)")
+  }
+}
+
+terminal judgment-entered: "Judgment entered on verdict" outcome [win] cite ?("Conn. Practice Book 16-1 (verify)")
+{
+  note "OUTLINE. Notice of appeal runs from entry of judgment; see the state's appellate court packages."
+  payoff ?
+}
+
+terminal default-entered: "Default entered" outcome [loss] cite ?("Conn. Practice Book 17-20 (verify)")
+{
+  note "OUTLINE. Default judgment and relief from default are holes until verified."
+  payoff ?
+}
+
+terminal dismissed: "Dismissed on the pleadings" outcome [loss] cite ?("Conn. Practice Book 10-30 (verify)")
+{
+  note "OUTLINE. Leading decision on pleading standard (verify): No leading decision confirmed in this run; verify before use."
+  payoff ?
+}
+
+terminal sj-granted: "Summary judgment granted" outcome [loss] cite ?("Conn. Practice Book 17-44 (verify)")
+{
+  note "OUTLINE. Leading decision on summary judgment (verify): Romprey v. Safeco Insurance Co. of America, 310 Conn. 304 (2013)"
+  payoff ?
+}
+

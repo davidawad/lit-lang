@@ -6,15 +6,29 @@ version = "1.0.0"
 dependencies = []
 
 [[package]]
+name = "ma-state-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:9053d3a88db5fcfdfdb35a109e6d5a6bb246d9bf6666336f1c5a149a7be0f4ec"
+semantic = "sha256:e040d982cb056b9b7207cfb8da66e2b7fb0c80cb8f78bfbfed43ef6214af7ff2"
+texts = [
+    "mass-r-a-p sources/ma-appeals-sjc/ma-rules-appellate-procedure-sectioned.txt sha256:1e933a8ddaecfe30dac949319d8f1f78f3a2ecc2a03e6815b10545072338eb5b",
+]
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
 name = "ma-superior-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:7e9f08bb59f0d682bbda7379cf68b0f2f3ec45d783f98856189dc0dc4830919c"
-semantic = "sha256:23feb78012477ac573ab7413247d7098af9239211d60f27a484eaec492a49f6f"
+source = "sha256:19b5023837e626f4739dfb5316307f031018484c527dd5113f2284023ce38f24"
+semantic = "sha256:65ffaeccb89e11a703e7d52df5126a543bff35a2cbde7cd196d08418e3595ecf"
 texts = [
     "mass-r-a-p sources/ma-appeals-sjc/ma-rules-appellate-procedure-sectioned.txt sha256:1e933a8ddaecfe30dac949319d8f1f78f3a2ecc2a03e6815b10545072338eb5b",
     "mass-r-civ-p sources/ma-superior-civil/ma-rules-civil-procedure-sectioned.txt sha256:3368e76c097f4f8dd3560ba731b88d6f6ca00fb93824103f2555d140a1952a1d",
 ]
 dependencies = [
     "core 1.0.0",
+    "ma-state-rules 0.1.0",
 ]

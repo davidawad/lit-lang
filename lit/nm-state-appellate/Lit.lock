@@ -9,11 +9,23 @@ dependencies = []
 name = "nm-appellate-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:957274872a4e9f1dedeaa166017451c1e1103d4585fc97911834ec2e0c537c04"
-semantic = "sha256:bf72eb2c4bf9233a0e33a8bbdc80f1681a828a38a96e592c605d848939f00013"
+source = "sha256:d5e1a37aaf51761673169b838e38a19b1ed7f28bc9f0814aeaa89826aae91fd5"
+semantic = "sha256:7782d01f675b7cc6008d122e412f7ae7e196b44c0a8c27782cf07ebd72b5f880"
 texts = [
     "nmra-12 sources/nm-state-appellate/nmra-rule-set-12-appellate-2026-sectioned.txt sha256:12baf7cd64f0f6014d3dd4c81f1f90ab14141d570ab8ceccd99ff719b418bff7",
 ]
+dependencies = [
+    "core 1.0.0",
+    "nm-state-rules 0.1.0",
+]
+
+[[package]]
+name = "nm-state-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:e64a2c16459500124349e57c0141308901a06cf185be6335d9a4f96586b65c9f"
+semantic = "sha256:6b4cbedcc516837a8454088109bc4f9f9f80fd5f66e94d8fa5600d9b9e6c8867"
+texts = []
 dependencies = [
     "core 1.0.0",
 ]

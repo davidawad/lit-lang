@@ -1,0 +1,27 @@
+# The Alaska base library (lg-u561.5): the trigger events the Alaska court
+# packages route their graphs on: lit/ak-superior, lit/ak-supreme and the
+# Court of Appeals outline (outlines/ninth-circuit/alaska/state-court-of-appeals).
+# It declares no period: the rules' periods are stated in the court
+# packages' notes. No procedure of its own.
+[package]
+name = "ak-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ak-state-rules"
+forum = "ak-state-rules"
+authority = "StateRule"
+jurisdiction_id = "alaska"
+title = "Alaska state court rules (base library)"
+description = "The rule layer Alaska's court packages share: the trigger events of its rules, and the trigger events their graphs route on. No procedure of its own."
+in_force = "2025-04-15"
+known_at = "2026-10-27"
+unknown_before = "2025-04-15"
+jurisdiction = "Alaska state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

@@ -1,0 +1,40 @@
+module ks-supreme-court-civil.review
+
+import ks-state-rules.{ ReviewPetitionFiled }
+
+// Supreme Court review of a Court of Appeals civil decision, from the
+// petitioner's side. Every period is stated in a note, not counted (K.S.A.
+// 60-206 is not vendored). The merits of review are not modeled.
+
+start petition
+
+decision petition: "Petition for review?" by applicant cite "K.S.A. 20-3018(b)"
+{
+  note "A party aggrieved by a Court of Appeals decision may petition the Supreme Court for review within 30 days after the date of the decision (K.S.A. 20-3018(b)); the 30-day period is jurisdictional and cannot be extended (Kan. S. Ct. R. 8.03(b)(1)). A timely motion for rehearing or modification in the Court of Appeals suspends action on the petition; a petitioner seeking review of a modified decision files an amended petition no later than 30 days after the modified decision (Kan. S. Ct. R. 8.03(b)(2))."
+  edge-petition-none "No petition" -> no-petition { authority cite "Kan. S. Ct. R. 7.03(b)" }
+  edge-petition-filed "Petition for review filed" -> review-decided { event ReviewPetitionFiled() authority cite "Kan. S. Ct. R. 8.03(b)" }
+}
+
+decision review-decided: "Petition for review decided" by court cite "Kan. S. Ct. R. 8.03(g)"
+{
+  note "A respondent may file a cross-petition or conditional cross-petition no later than 30 days after the petition is filed; a response to a petition, cross-petition or conditional cross-petition is due no later than 30 days after it is filed; a reply is due no later than 14 days after the response is filed (Kan. S. Ct. R. 8.03(c)(1), (d)(1), (e)). Review is a matter of right where a constitutional question arises for the first time from the Court of Appeals decision (K.S.A. 60-2101(b)); otherwise it is discretionary and requires the vote of three justices (Kan. S. Ct. R. 8.03(g)). The court considers the general importance of the question, conflicts with prior decisions, the need for supervisory authority, and whether the ruling is final or interlocutory (K.S.A. 20-3018(b))."
+  edge-review-decided-denied "Denied" -> review-denied { authority cite "Kan. S. Ct. R. 8.03(h)" }
+  edge-review-decided-granted "Granted" -> review-granted {
+    authority cite "Kan. S. Ct. R. 8.03(i)"
+  }
+}
+
+terminal review-denied: "Review denied" outcome [final] cite "Kan. S. Ct. R. 8.03(h)"
+{
+  note "The Court of Appeals decision is final as of the date of the order denying review, and the clerk issues the mandate under Rule 7.03(b). A denial imports no opinion on the merits and is not subject to a motion for reconsideration (Kan. S. Ct. R. 8.03(h))."
+}
+
+terminal review-granted: "Review granted" outcome [neutral] cite "Kan. S. Ct. R. 8.03(i)"
+{
+  note "The order granting review may limit the issues. No later than 14 days after the order the parties file copies of any paper briefs filed in the Court of Appeals; a party may file a supplemental brief no later than 30 days after the order, a response no later than 30 days after the supplemental brief is filed, and a reply no later than 14 days after the response, each at most half the pages Rule 6.07 permits for original briefs unless the court orders otherwise (Kan. S. Ct. R. 8.03(i)(2), (3)). The merits of review are not modeled."
+}
+
+terminal no-petition: "No petition: the Court of Appeals decision stands" outcome [final] cite "Kan. S. Ct. R. 7.03(b)"
+{
+  note "The mandate issues 7 days after the time to file a petition for review expires (Kan. S. Ct. R. 7.03(b))."
+}

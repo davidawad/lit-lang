@@ -1,0 +1,119 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-ct-court-of-appeals
+
+import outline-ct-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start notice-filed
+
+state notice-filed: "Notice of Appeal Filed" by applicant cite ?("Conn. Practice Book 63-1 (verify period)")
+{
+  note "OUTLINE. The filing deadline is a hole until verified. Leading decision on timeliness (verify): No leading decision confirmed in this run; verify before use."
+  edge-notice-filed-timeliness "Notice filed" -> timeliness {
+    authority cite ?("Conn. Practice Book 63-1 (verify period)")
+  }
+}
+
+decision timeliness: "Timeliness Reviewed" by court cite ?("Conn. Practice Book 63-1 (verify)")
+{
+  note "OUTLINE. Late notice is dismissed; timely post-judgment motions and tolling change the clock."
+  edge-timeliness-dismissed "Untimely" -> dismissed-untimely {
+    authority cite ?("Conn. Practice Book 63-1 (verify)")
+  }
+  edge-timeliness-record "Timely" -> record-transmitted {
+    authority cite ?("Conn. Practice Book 63-4 (verify)")
+  }
+}
+
+terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss] cite ?("Conn. Practice Book 63-1 (verify)")
+{
+  note "OUTLINE. Jurisdictional bar. Leading decision (verify): No leading decision confirmed in this run; verify before use."
+  payoff ?
+}
+
+state record-transmitted: "Record Transmitted and Docketed" by office cite ?("Conn. Practice Book 63-4 (verify)")
+{
+  note "OUTLINE. Record contents, appendix and docketing steps are holes until verified."
+  edge-record-briefing "Briefing schedule set" -> briefing { event RecordFiled()
+    authority cite ?("Conn. Practice Book 67-1 (verify)")
+  }
+}
+
+state briefing: "Briefs Filed" by applicant cite ?("Conn. Practice Book 67-1 (verify)")
+{
+  note "OUTLINE. Brief length, format and copy counts are holes. Certification to the Supreme Court under Conn. Gen. Stat. 51-199(c) (verify)."
+  edge-briefing-argument "Briefing complete" -> argument-decision {
+    authority cite ?("Conn. Practice Book 67-1 (verify)")
+  }
+}
+
+decision argument-decision: "Argument or Submission on Briefs" by court cite ?("Conn. Practice Book 67-1 (verify)")
+{
+  note "OUTLINE. Leading decision on standard of review (verify): No leading decision confirmed in this run; verify before use."
+  edge-argument-panel "Panel decides" -> panel-decision {
+    authority cite ?("Conn. Practice Book 70-1 (verify)")
+  }
+}
+
+decision panel-decision: "Panel Decision" by court cite ?("Conn. Practice Book 70-1 (verify)")
+{
+  note "OUTLINE. Affirmance and reversal both move to the rehearing step."
+  edge-panel-affirmed "Affirmed" -> rehearing {
+    authority cite ?("Conn. Practice Book 70-1 (verify)")
+  }
+  edge-panel-reversed "Reversed or vacated" -> rehearing {
+    authority cite ?("Conn. Practice Book 70-1 (verify)")
+  }
+}
+
+decision rehearing: "Rehearing or En Banc Petition" by court cite ?("Conn. Practice Book 71-1 (verify)")
+{
+  note "OUTLINE. Petition deadline is a hole until verified. Petitions are usually denied."
+  edge-rehearing-mandate-denied "Denied" -> mandate { event MandateIssued()
+    authority cite ?("Conn. Practice Book 71-1 (verify)")
+  }
+  edge-rehearing-mandate-none "No petition filed" -> mandate { event MandateIssued()
+    authority cite ?("Conn. Practice Book 71-1 (verify)")
+  }
+}
+
+state mandate: "Mandate Issues" by office cite ?("Conn. Practice Book 70-8 (verify)")
+{
+  note "OUTLINE. The mandate issues after the rehearing period; the stay of mandate is a hole until verified."
+  edge-mandate-further-review "Further review sought" -> further-review {
+    authority cite ?("Conn. Gen. Stat. 51-199(c) (verify)")
+  }
+  edge-mandate-final "No further review" -> final-judgment {
+    authority cite ?("Conn. Practice Book 70-8 (verify)")
+  }
+}
+
+decision further-review: "Further Review Petition Decided" by court cite ?("Conn. Gen. Stat. 51-199(c) (verify)")
+{
+  note "OUTLINE. Leading decision on further review (verify): No leading decision confirmed in this run; verify before use."
+  edge-further-denied "Denied" -> review-denied {
+    authority cite ?("Conn. Gen. Stat. 51-199(c) (verify)")
+  }
+  edge-further-granted "Granted" -> review-granted {
+    authority cite ?("Conn. Gen. Stat. 51-199(c) (verify)")
+  }
+}
+
+terminal final-judgment: "Judgment final after mandate" outcome [loss] cite ?("Conn. Practice Book 70-8 (verify)")
+{
+  note "OUTLINE. Outcome follows the panel disposition: affirmance is a loss for the appellant, reversal a win. Re-label before use."
+  payoff ?
+}
+
+terminal review-denied: "Further review denied" outcome [loss] cite ?("Conn. Gen. Stat. 51-199(c) (verify)")
+{
+  note "OUTLINE. Judgment final."
+  payoff ?
+}
+
+terminal review-granted: "Further review granted" outcome [win] cite ?("Conn. Gen. Stat. 51-199(c) (verify)")
+{
+  note "OUTLINE. Review granted; merits outcome not modeled here."
+  payoff ?
+}
+

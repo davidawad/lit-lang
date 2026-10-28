@@ -1,0 +1,41 @@
+module oh-supreme-court-civil.review
+
+import oh-state-rules.{ ReviewPetitionFiled }
+
+// A jurisdictional appeal from a court of appeals judgment, from the
+// appellant's side. Every period is stated in a note, not counted.
+
+start petition
+
+decision petition: "Jurisdictional appeal to the Supreme Court of Ohio?" by applicant cite "S.Ct.Prac.R. 7.01"
+{
+  note "To perfect a jurisdictional appeal the appellant files a notice of appeal in the Supreme Court within forty-five days from the entry of the court of appeals' judgment, together with a memorandum in support of jurisdiction; the period is mandatory and the Clerk refuses a late filing (S.Ct.Prac.R. 7.01(A)(1))."
+  edge-petition-none "No appeal" -> no-appeal { authority cite "S.Ct.Prac.R. 7.01" }
+  edge-petition-filed "Notice of appeal and memorandum in support of jurisdiction" -> supreme-review { event ReviewPetitionFiled() authority cite "S.Ct.Prac.R. 7.01" }
+}
+
+decision supreme-review: "Supreme Court of Ohio: jurisdiction accepted or declined" by court cite "S.Ct.Prac.R. 7.08"
+{
+  note "To perfect a jurisdictional appeal the appellant files a notice of appeal in the Supreme Court within forty-five days from the entry of the court of appeals' judgment, the date the court of appeals filed its judgment entry with its clerk under App.R. 22, together with a memorandum in support of jurisdiction; the period is mandatory and the Clerk refuses a late filing (S.Ct.Prac.R. 7.01(A)(1)). Another party may file a notice of appeal or cross-appeal within that time or ten days after the first notice, whichever is later (S.Ct.Prac.R. 7.01(A)(2)). The filing fee for a notice of appeal or cross-appeal is $100 (S.Ct.Prac.R. 3.04). The memorandum in support of jurisdiction is limited to fifteen numbered pages (S.Ct.Prac.R. 7.02(B)); an appellee may file a memorandum in response within thirty days after the memorandum in support is filed (S.Ct.Prac.R. 7.03(A)(1)). After the time for jurisdictional memoranda has passed, the Supreme Court reviews them and determines whether to accept the appeal and decide the case on the merits (S.Ct.Prac.R. 7.08(A))."
+  edge-supreme-review-declined "Jurisdiction declined" -> review-declined {
+    authority cite "S.Ct.Prac.R. 7.08"
+  }
+  edge-supreme-review-accepted "Appeal accepted for merits briefing" -> review-accepted {
+    authority cite "S.Ct.Prac.R. 7.08"
+  }
+}
+
+terminal review-declined: "Supreme Court of Ohio declines jurisdiction" outcome [final] cite "S.Ct.Prac.R. 7.08"
+{
+  note "The court of appeals' judgment stands."
+}
+
+terminal review-accepted: "Supreme Court of Ohio accepts the appeal" outcome [appeal] cite "S.Ct.Prac.R. 7.08"
+{
+  note "The case is briefed on the merits under S.Ct.Prac.R. Section 16 unless the Court orders otherwise (S.Ct.Prac.R. 7.08(B)). Merits briefing in the Supreme Court is not modeled here."
+}
+
+terminal no-appeal: "No appeal: the court of appeals' judgment stands" outcome [final] cite "S.Ct.Prac.R. 7.01"
+{
+  note "The forty-five-day period is mandatory (S.Ct.Prac.R. 7.01(A)(1))."
+}

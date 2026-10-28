@@ -1,0 +1,39 @@
+# The petition for appeal to the Supreme Court of Virginia from a Court of
+# Appeals civil decision (lg-u561.5), under Part Five of the Rules of the
+# Supreme Court of Virginia (sources/va-circuit-civil), from
+# lit/va-court-of-appeals. Periods are stated in notes (Code § 1-210 is not
+# vendored). The merits are not modeled.
+[package]
+name = "va-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "va-supreme-court-civil"
+forum = "va-supreme-court"
+authority = "StateRule"
+jurisdiction_id = "virginia"
+title = "Supreme Court of Virginia, appeals from the Court of Appeals (civil)"
+description = "The petition for appeal to the Supreme Court of Virginia from a Court of Appeals civil decision under Part Five of the Rules of the Supreme Court of Virginia, and its refusal or grant. The merits are not modeled."
+in_force = "2026-09-15"
+known_at = "2026-10-27"
+unknown_before = "2026-09-15"
+jurisdiction = "Supreme Court of Virginia (appeals from the Court of Appeals, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the trigger events of Parts Five and Five A of the Rules of the Supreme Court of Virginia and trigger events.
+va-state-rules = { version = "^0.1.0", path = "../va-rules" }
+
+[sources.va-r]
+title = "Rules of the Supreme Court of Virginia, all Parts, as currently effective (latest stated amendment effective September 15, 2026)"
+url = "https://www.vacourts.gov/static/courts/scv/rulesofcourt.pdf"
+path = "sources/va-circuit-civil/va-rules-of-supreme-court-sectioned.txt"
+path_sha256 = "d7909399a2a10c69c9877dc83abfbeb85d9932b1ba1091139295dea303a47f95"
+sha256 = "15a5095aba5043b863d2c7fb26f24c2556cad4908054874c0dff4f770af53a0f"
+as_of = "2026-09-15"
+cite_prefixes = ["Va. Sup. Ct. R."]
+section_heading = "Rule {n}"

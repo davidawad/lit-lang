@@ -9,11 +9,23 @@ dependencies = []
 name = "va-circuit-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:208e46531f6855b5b3c0677a7f4699913321e81655bb1d63a82146b53c496227"
-semantic = "sha256:1c7e0882e65abd87920f495732ff84e7461b993552dffc665088ff04eac1f64e"
+source = "sha256:100687f23a23d0ddcbf0041cbcb36b96b9b9964d258e0ecbd41b13f765f4ce70"
+semantic = "sha256:f9fdfb80976eae6a16ec30af399f93f5cdf557fb9c0bf4e0d7cff36e9e735995"
 texts = [
     "va-r sources/va-circuit-civil/va-rules-of-supreme-court-sectioned.txt sha256:d7909399a2a10c69c9877dc83abfbeb85d9932b1ba1091139295dea303a47f95",
 ]
+dependencies = [
+    "core 1.0.0",
+    "va-state-rules 0.1.0",
+]
+
+[[package]]
+name = "va-state-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:fba7a6240696b50f796f84f308dd19fee9511e3eb2648a66a8992077d638678b"
+semantic = "sha256:a6a0e35f4300f1a0a0390bf50b8e5174adbddf2ef0c84a4898e13ec9086be3a1"
+texts = []
 dependencies = [
     "core 1.0.0",
 ]

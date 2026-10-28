@@ -9,12 +9,24 @@ dependencies = []
 name = "sc-circuit-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:99fc83e6662aa0c94cf5b0725334527201ed6434d6ff8ad25b8efcc8353c7a72"
-semantic = "sha256:ecf48fbc5d910a6415e296c22c55d7091dd0eb0441eebc832a30f9ba419cdf66"
+source = "sha256:1d14548a9370439a052805cd42e4b0aebaa9bafbcf2a4136f95fc5c91bd5e545"
+semantic = "sha256:029a961348cc2ecb10afb0872af8147997e244e989300887667080eb94e34620"
 texts = [
     "scacr sources/sc-appellate-civil/scacr-rule-pages-2026-10-28-sectioned.txt sha256:7fd65d2c63a0f4333104a609033b534746a5161393dacd693a437ca4eafbb7da",
     "scrcp sources/sc-circuit-civil/scrcp-rule-pages-2026-10-28-sectioned.txt sha256:574cec1048ea5d046691dcf4c714ad4ccf7a9572db4dd1787556567caf82b0c5",
 ]
+dependencies = [
+    "core 1.0.0",
+    "sc-state-rules 0.1.0",
+]
+
+[[package]]
+name = "sc-state-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:346b33941ed426a2d692257477cb54f68e36531117deb1ee72532a12699e6b99"
+semantic = "sha256:4e27ab63aff189c81f4129740714759fa8a26dc6e6e51fc330106bdfb7e8800c"
+texts = []
 dependencies = [
     "core 1.0.0",
 ]

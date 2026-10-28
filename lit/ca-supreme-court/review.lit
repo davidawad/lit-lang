@@ -1,0 +1,37 @@
+module ca-supreme-court.review
+
+import ca-state-rules.{ MandateIssued, ReviewPetitionFiled }
+
+// A petition for review of a Court of Appeal decision, from the
+// petitioner's side. Every period is stated in a note, not counted.
+
+start petition
+
+decision petition: "Petition for review?" by applicant cite "Cal. Rules of Court, rule 8.500(e)"
+{
+  note "A party may petition the Supreme Court for review of any Court of Appeal decision (Cal. Rules of Court, rule 8.500(a)(1)). The petition is served and filed within 10 days after the decision is final in the Court of Appeal; that time may not be extended. An answer is due within 20 days after the petition is filed and a reply within 10 days after the answer (rule 8.500(e))."
+  edge-petition-none "No petition" -> no-petition { event MandateIssued() authority cite "Cal. Rules of Court, rule 8.272(b)" }
+  edge-petition-filed "Petition for review filed" -> review-decision { event ReviewPetitionFiled() authority cite "Cal. Rules of Court, rule 8.500(e)" }
+}
+
+decision review-decision: "Review granted or denied" by court cite "Cal. Rules of Court, rule 8.500(b)"
+{
+  note "The Supreme Court may order review to secure uniformity of decision or settle an important question of law, when the Court of Appeal lacked jurisdiction or the concurrence of sufficient qualified justices, or to transfer the matter back for proceedings it orders (Cal. Rules of Court, rule 8.500(b))."
+  edge-review-decision-denied "Review denied" -> review-denied { event MandateIssued() authority cite "Cal. Rules of Court, rule 8.272(b)" }
+  edge-review-decision-granted "Review granted" -> review-granted { authority cite "Cal. Rules of Court, rule 8.500(b)" }
+}
+
+terminal review-granted: "Review granted: continue in the Supreme Court" outcome [appeal] cite "Cal. Rules of Court, rule 8.500(b)"
+{
+  note "The Supreme Court's proceedings after a grant of review (rules 8.512-8.552) are not vendored. After Supreme Court review, the Court of Appeal issues its remittitur on receiving the Supreme Court remittitur if there will be no further proceedings there (Cal. Rules of Court, rule 8.272(b)(2))."
+}
+
+terminal no-petition: "No petition: the Court of Appeal decision stands" outcome [final] cite "Cal. Rules of Court, rule 8.272(b)"
+{
+  note "The Court of Appeal's remittitur issues when the period for granting review expires (Cal. Rules of Court, rule 8.272(b)(1))."
+}
+
+terminal review-denied: "Review denied: the Court of Appeal decision stands" outcome [final] cite "Cal. Rules of Court, rule 8.272(b)"
+{
+  note "The Court of Appeal's remittitur issues immediately after the Supreme Court denies review (Cal. Rules of Court, rule 8.272(b)(1))."
+}

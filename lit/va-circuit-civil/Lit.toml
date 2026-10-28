@@ -6,7 +6,7 @@
 # lit/core, so the rules' periods are stated in notes, not encoded as
 # counted deadlines; Rule 1:7 adds days for the mode of service. Code
 # sections the outline cited (§§ 8.01-273, 8.01-296) are not vendored and
-# are not cited. An appeal hands off to lit/va-appellate-civil.
+# are not cited. An appeal hands off to lit/va-court-of-appeals.
 [package]
 name = "va-circuit-court-civil"
 version = "0.1.0"
@@ -16,7 +16,7 @@ forum = "va-circuit-civil"
 authority = "StateRule"
 jurisdiction_id = "virginia"
 title = "Virginia Circuit Court, civil"
-description = "Civil actions in a Virginia circuit court under the Rules of the Supreme Court of Virginia, as far as the vendored text states. An appeal hands off to the Virginia appellate package (lit/va-appellate-civil)."
+description = "Civil actions in a Virginia circuit court under the Rules of the Supreme Court of Virginia, as far as the vendored text states. An appeal hands off to the Virginia appellate package (lit/va-court-of-appeals)."
 in_force = "2026-09-15"
 known_at = "2026-10-27"
 unknown_before = "2026-09-15"
@@ -29,6 +29,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+va-state-rules = { version = "^0.1.0", path = "../va-rules" }
 
 [sources.va-r]
 title = "Rules of the Supreme Court of Virginia, all Parts, as currently effective (latest stated amendment effective September 15, 2026)"

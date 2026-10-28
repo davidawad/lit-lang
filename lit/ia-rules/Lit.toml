@@ -1,0 +1,27 @@
+# The Iowa base library (lg-u561.5): the trigger events the Iowa court
+# packages route their graphs on: lit/ia-district, lit/iowactapp and the
+# outlines outlines/eighth-circuit/iowa/state-supreme-court.
+# It declares no period: the rules' periods are stated in the court
+# packages' notes. No procedure of its own.
+[package]
+name = "ia-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ia-state-rules"
+forum = "ia-state-rules"
+authority = "StateRule"
+jurisdiction_id = "iowa"
+title = "Iowa state court rules (base library)"
+description = "The rule layer Iowa's court packages share: the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-09-30"
+known_at = "2026-10-28"
+unknown_before = "2026-09-30"
+jurisdiction = "Iowa state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

@@ -1,0 +1,56 @@
+# The Kansas base library (lg-u561.5): what the Kansas court packages
+# share. The Supreme Court Rules relating to appellate practice (2026
+# Rulebook, sources/ks-state-appellate) govern both the Court of Appeals
+# (lit/ks-court-of-appeals) and the Supreme Court (lit/ks-supreme-court), so
+# their brief and petition page limits are declared once here; the court
+# packages also route their graphs on its trigger events. No procedure of
+# its own.
+[package]
+name = "ks-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ks-state-rules"
+forum = "ks-state-rules"
+authority = "StateRule"
+jurisdiction_id = "kansas"
+title = "Kansas state court rules (base library)"
+description = "The rule layer Kansas's court packages share: the brief and petition page limits of Kan. S. Ct. R. 6.07(c) and 8.03, and the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "Kansas state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ksa]
+title = "Kansas Statutes Annotated, chapter 60 (Code of Civil Procedure) and K.S.A. 20-3018, cited sections, as published by the Kansas Revisor of Statutes"
+url = "https://www.ksrevisor.gov/statutes/ksa_ch60.html"
+path = "sources/ks-state-civil/ks-ksa-cited-sections.txt"
+path_sha256 = "7674b42587ca255503d7b100fb801a1e910274fc5629fb0ea646354d6a613d87"
+as_of = "2026-10-27"
+
+[sources.ks-sct-rules]
+title = "Reports of Rules Adopted by the Supreme Court of the State of Kansas, 2026 Edition"
+url = "https://www.kscourts.gov/KSCourts/media/KsCourts/Rules/2026-RuleBook.pdf"
+path = "sources/ks-state-appellate/kansas-2026-rulebook-sectioned.txt"
+path_sha256 = "847c087e907f9696356fd0f57fc545bd354df58b085e8183608d0b93a9592dc9"
+sha256 = "6e897c9c92c2ca8be21ad0dc4710e0694ceac979d2d60115bbb9547b747d2bd0"
+as_of = "2026-01-01"
+cite_prefixes = ["Kan. S. Ct. R."]
+section_heading = "Kan. S. Ct. R. {n}"
+
+[[cite_syntax.rules]]
+prefixes = ["K.S.A. 60-"]
+heading = "K.S.A. 60-{}"
+source = "ksa"
+
+[[cite_syntax.rules]]
+prefixes = ["K.S.A. 20-"]
+heading = "K.S.A. 20-{}"
+source = "ksa"

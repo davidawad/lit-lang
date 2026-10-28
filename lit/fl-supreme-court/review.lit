@@ -1,0 +1,36 @@
+module fl-supreme-court.review
+
+import fl-state-rules.{ ReviewPetitionFiled }
+
+// Discretionary review of a district court of appeal decision, from the
+// petitioner's side. Every period is stated in a note, not counted.
+
+start petition
+
+decision petition: "Invoke the Supreme Court's discretionary jurisdiction?" by applicant cite "Fla. R. App. P. 9.120(b)"
+{
+  note "The supreme court's discretionary jurisdiction (Fla. R. App. P. 9.030(a)(2)(A)) is invoked by filing a notice with the clerk of the district court of appeal within 30 days of rendition of the order to be reviewed (Fla. R. App. P. 9.120(b)). The petitioner's brief on jurisdiction is served within 10 days of filing the notice and the respondent's within 30 days after service of the petitioner's; no reply is permitted (Fla. R. App. P. 9.120(d))."
+  edge-petition-none "No notice" -> no-review { authority cite "Fla. R. App. P. 9.120(b)" }
+  edge-petition-filed "Notice to invoke discretionary jurisdiction" -> review-decided { event ReviewPetitionFiled() authority cite "Fla. R. App. P. 9.120(b)" }
+}
+
+state review-decided: "Jurisdiction accepted or declined" by court cite "Fla. R. App. P. 9.120(e)"
+{
+  edge-review-decided-denied "Declined" -> review-denied {
+    authority cite "Fla. R. App. P. 9.120(e)"
+  }
+  edge-review-decided-granted "Accepted" -> review-granted {
+    authority cite "Fla. R. App. P. 9.120(e)"
+  }
+}
+terminal review-denied: "Supreme Court review declined" outcome [final] cite "Fla. R. App. P. 9.120(e)"
+
+terminal review-granted: "Supreme Court review accepted" outcome [neutral] cite "Fla. R. App. P. 9.120(e)"
+{
+  note "When the supreme court accepts or postpones decision on jurisdiction, the clerk of the district court of appeal transmits the record within 25 days thereafter or such other time as the court sets (Fla. R. App. P. 9.120(e)); the merits are not modeled."
+}
+
+terminal no-review: "No review sought: the district court decision stands" outcome [final] cite "Fla. R. App. P. 9.120(b)"
+{
+  note "The 30-day period runs from rendition of the order to be reviewed (Fla. R. App. P. 9.120(b))."
+}

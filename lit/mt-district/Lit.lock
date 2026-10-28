@@ -9,12 +9,24 @@ dependencies = []
 name = "mt-district-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:0ed3d6feaa3012c3bc2b59730dc05dc06fea8023eed925b053d886ea4703f61e"
-semantic = "sha256:367afde9649cf0fddfd1f40b2d2fa68f7db158de65cc711a16e380a626795d9a"
+source = "sha256:eebc2ff2de8edbc28c06480939ed33af537d4d285fa12f450f57a5e37488c613"
+semantic = "sha256:ab13d33a93510eb9c80785c17d683d66dbc881988f626649b2a42b0d4a6744a7"
 texts = [
     "mt-app sources/mt-supreme/mrap-sectioned.txt sha256:8565e044af165525fbe7aa6f34d39bb48e12c22c22b681d36d356e8a1d31e217",
     "mt-civ sources/mt-district/mrcp-sectioned.txt sha256:055033c8c2b37cf8792e4d2f97822effa8ffe36365608ad0c5edee03015206ca",
 ]
+dependencies = [
+    "core 1.0.0",
+    "mt-state-rules 0.1.0",
+]
+
+[[package]]
+name = "mt-state-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:14c4d9658ea4a0f54f12b47d7de6fb2722232804090a198f2df4e4e541420d67"
+semantic = "sha256:fa61b36fca1071742bf15baaadcbc1b242db4008b19be8a36d5383f29221dc32"
+texts = []
 dependencies = [
     "core 1.0.0",
 ]

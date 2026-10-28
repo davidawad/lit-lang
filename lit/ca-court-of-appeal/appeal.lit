@@ -1,5 +1,7 @@
 module ca-court-of-appeal.appeal
 
+import ca-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled }
+
 // A civil appeal to a California Court of Appeal, from the appellant's
 // side. Every period below is stated in a note, not counted: computation of
 // time (Cal. Rules of Court, rule 1.10; CCP §§ 12-12a) is not vendored and
@@ -17,7 +19,7 @@ state notice-filed: "Notice of appeal filed" by applicant cite "Cal. Rules of Co
   edge-notice-filed-late "Filed late" -> dismissed-untimely {
     authority cite "Cal. Rules of Court, rule 8.104(b)"
   }
-  edge-notice-filed-timely "Filed in time" -> appealability {
+  edge-notice-filed-timely "Filed in time" -> appealability { event NoticeOfAppealFiled()
     authority cite "Cal. Rules of Court, rule 8.104(a)"
   }
 }
@@ -46,7 +48,7 @@ terminal dismissed-jurisdiction: "Dismissed: no appealable judgment or order" ou
 state record-assembled: "Record on appeal" by applicant cite "Cal. Rules of Court, rule 8.120"
 {
   note "The normal record in a civil appeal is a record of the written documents (a clerk's transcript, an appendix, the original superior court file where a local rule permits, an agreed statement or a settled statement) and, if the appellant raises any issue requiring the oral proceedings, a reporter's transcript, agreed statement or settled statement; an administrative record admitted, refused or lodged below is included when an issue requires it (Cal. Rules of Court, rule 8.120(a), (b)). The designation deadlines are in rules 8.121-8.137, which are not vendored."
-  edge-record-assembled-briefing "Record filed" -> briefing {
+  edge-record-assembled-briefing "Record filed" -> briefing { event RecordFiled()
     authority cite "Cal. Rules of Court, rule 8.200(a)"
   }
 }
@@ -70,7 +72,7 @@ decision argument: "Oral argument or waiver; submission" by court cite "Cal. Rul
 decision decision-issued: "Decision filed" by court cite "Cal. Rules of Court, rule 8.1105(b)"
 {
   note "An opinion of a Court of Appeal is published in the Official Reports if a majority of the rendering court certifies it for publication before the decision is final in that court, under the standards of rule 8.1105(c); an opinion is no longer considered published if the court grants rehearing, and the Supreme Court may order publication or depublication (Cal. Rules of Court, rule 8.1105(b), (c), (e)). When a decision becomes final in the Court of Appeal is governed by rule 8.264, which is not vendored."
-  edge-decision-issued-rehearing "Decision filed" -> rehearing-window {
+  edge-decision-issued-rehearing "Decision filed" -> rehearing-window { event DecisionFiled()
     authority cite "Cal. Rules of Court, rule 8.268(b)"
   }
 }
@@ -121,7 +123,7 @@ terminal review-granted: "Review granted: continue in the Supreme Court" outcome
 state mandate-issued: "Remittitur issued" by court cite "Cal. Rules of Court, rule 8.272(b)"
 {
   note "A Court of Appeal must issue a remittitur after a decision in an appeal; if the decision is not reviewed, the clerk/executive officer issues it immediately after the Supreme Court denies review, the period for granting review expires, or review is dismissed, and sends it with a filed-endorsed copy of the opinion to the lower court (Cal. Rules of Court, rule 8.272(a), (b)(1)). It may issue immediately only on stipulation or on dismissal under rule 8.244(c)(2); for good cause the court may stay issuance or recall it. It is deemed issued when entered in the record, and the parties are notified (rule 8.272(c), (d))."
-  edge-mandate-issued-final "Remittitur issued" -> final-appellate {
+  edge-mandate-issued-final "Remittitur issued" -> final-appellate { event MandateIssued()
     authority cite "Cal. Rules of Court, rule 8.272(d)"
   }
 }

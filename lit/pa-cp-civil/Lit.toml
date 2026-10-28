@@ -6,7 +6,7 @@
 # Commonwealth's legal holidays differ from the federal ones; lit/core has
 # no counting rule for it, so the periods are stated in notes, not encoded
 # as counted deadlines. An appeal hands off to the Pennsylvania appellate
-# package (lit/pa-appellate-civil).
+# package (lit/pa-superior-court).
 [package]
 name = "pa-common-pleas-civil"
 version = "0.1.0"
@@ -16,7 +16,7 @@ forum = "pa-cp-civil"
 authority = "StateRule"
 jurisdiction_id = "pennsylvania"
 title = "Pennsylvania courts of common pleas, civil"
-description = "Civil actions in the Pennsylvania courts of common pleas under the Pennsylvania Rules of Civil Procedure, as far as the vendored text states: commencement and service of original process, the time to plead, preliminary objections and amendment, the ten-day notice and judgment by default, relief from a default judgment, discovery and its sanctions, summary judgment, trial and nonsuit, post-trial relief, entry of judgment, discontinuance, and the appeal (lit/pa-appellate-civil)."
+description = "Civil actions in the Pennsylvania courts of common pleas under the Pennsylvania Rules of Civil Procedure, as far as the vendored text states: commencement and service of original process, the time to plead, preliminary objections and amendment, the ten-day notice and judgment by default, relief from a default judgment, discovery and its sanctions, summary judgment, trial and nonsuit, post-trial relief, entry of judgment, discontinuance, and the appeal (lit/pa-superior-court)."
 in_force = "2026-08-08"
 known_at = "2026-10-28"
 unknown_before = "2026-08-08"
@@ -29,6 +29,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+pa-state-rules = { version = "^0.1.0", path = "../pa-rules" }
 
 [sources.pa-r-c-p]
 title = "Pennsylvania Rules of Civil Procedure, Pa. Code Title 231 Part I, effective through 56 Pa.B. 5370 (August 8, 2026)"

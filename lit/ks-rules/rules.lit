@@ -1,0 +1,72 @@
+module ks-state-rules
+
+/// `lit/ks-rules` is a base library: it declares what Kansas's court
+/// packages share and no procedure of its own. Its pack holds only this
+/// placeholder terminal, which no link or case may route through.
+start library
+
+terminal library: "Kansas state court rules library (no procedure)"
+
+/// The brief of an appellant: at most 50 pages, excluding the cover, table
+/// of contents, appendix and certificate of service, unless the court
+/// orders otherwise (Kan. S. Ct. R. 6.07(c)(1)).
+limit appellant-brief { pages <= 50 cite "Kan. S. Ct. R. 6.07(c)" } cite "Kan. S. Ct. R. 6.07(c)"
+
+/// The brief of an appellee: at most 50 pages (Kan. S. Ct. R. 6.07(c)(2)).
+limit appellee-brief { pages <= 50 cite "Kan. S. Ct. R. 6.07(c)" } cite "Kan. S. Ct. R. 6.07(c)"
+
+/// The brief of an appellee and cross-appellant, or of an appellee and
+/// cross-appellee: at most 60 pages (Kan. S. Ct. R. 6.07(c)(3), (4)).
+limit cross-appeal-principal-brief {
+  pages <= 60 cite "Kan. S. Ct. R. 6.07(c)"
+} cite "Kan. S. Ct. R. 6.07(c)"
+
+/// The brief of a cross-appellee: at most 25 pages (Kan. S. Ct. R.
+/// 6.07(c)(5)).
+limit cross-appellee-brief {
+  pages <= 25 cite "Kan. S. Ct. R. 6.07(c)"
+} cite "Kan. S. Ct. R. 6.07(c)"
+
+/// A reply brief: at most 15 pages (Kan. S. Ct. R. 6.07(c)(6)).
+limit reply-brief { pages <= 15 cite "Kan. S. Ct. R. 6.07(c)" } cite "Kan. S. Ct. R. 6.07(c)"
+
+/// The brief of an amicus curiae: at most 15 pages (Kan. S. Ct. R.
+/// 6.07(c)(7)).
+limit amicus-brief { pages <= 15 cite "Kan. S. Ct. R. 6.07(c)" } cite "Kan. S. Ct. R. 6.07(c)"
+
+/// A petition for review, cross-petition or conditional cross-petition:
+/// at most 15 pages, exclusive of the cover, table of contents, appendix
+/// and certificate of service (Kan. S. Ct. R. 8.03(b)(3), (c)(2)).
+limit petition-for-review {
+  pages <= 15 cite "Kan. S. Ct. R. 8.03(b)"
+} cite "Kan. S. Ct. R. 8.03(b)"
+
+/// A response to a petition for review: at most 15 pages (Kan. S. Ct. R.
+/// 8.03(d)(2)).
+limit petition-response { pages <= 15 cite "Kan. S. Ct. R. 8.03(d)" } cite "Kan. S. Ct. R. 8.03(d)"
+
+/// A reply to a response to a petition for review: at most 10 pages (Kan.
+/// S. Ct. R. 8.03(e)).
+limit petition-reply { pages <= 10 cite "Kan. S. Ct. R. 8.03(e)" } cite "Kan. S. Ct. R. 8.03(e)"
+
+// The trigger events the court packages' graphs route on.
+/// An action, claim, petition or charge is filed and the proceeding begins.
+event ActionCommenced()
+
+/// A final judgment, decision or appealable order is entered.
+event JudgmentEntered()
+
+/// A notice of appeal, or a petition or appeal for review of a lower court's or tribunal's decision, is filed.
+event NoticeOfAppealFiled()
+
+/// The record on appeal or review is filed or transmitted.
+event RecordFiled()
+
+/// The reviewing court's or tribunal's decision or opinion is filed.
+event DecisionFiled()
+
+/// A petition for discretionary review in a higher court (certiorari, transfer, leave or review) is filed.
+event ReviewPetitionFiled()
+
+/// The mandate, remittitur or certificate of judgment issues.
+event MandateIssued()

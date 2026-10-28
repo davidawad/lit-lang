@@ -1,0 +1,64 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-ny-appellate-terms-of-the-supreme-court
+
+import outline-ny-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start notice
+
+decision notice: "Notice of appeal within time?" by applicant cite ?("CPLR 5513 (verify)")
+{
+  note "OUTLINE. The Appellate Terms in the First and Second Departments hear appeals from the Civil Court, the District Courts and the City, Town and Village Courts; further review is by leave of the Appellate Division. Appeal to the Appellate Terms of the Supreme Court of New York: appealability, the notice period and service are holes. Leading decisions: not yet identified in this pass; verify before use."
+  edge-notice-late "No timely notice" -> dismissed-untimely { authority cite ?("CPLR 5513 (verify)") }
+  edge-notice-filed "Timely notice" -> record { event NoticeOfAppealFiled() authority cite ?("CPLR 5513 (verify)") }
+}
+
+state record: "Record or transcript prepared" by office cite ?("22 NYCRR 640.5 (verify)")
+{
+  note "OUTLINE. Record contents, transcript and fees are holes."
+  edge-record-briefing "Record filed" -> briefing { event RecordFiled() authority cite ?("22 NYCRR 640.5 (verify)") }
+}
+
+state briefing: "Briefs filed" by applicant cite ?("22 NYCRR 640.5 (verify)")
+{
+  note "OUTLINE. Briefing periods, form and length are holes."
+  edge-briefing-argument "Argument or submission" -> argument { authority cite ?("22 NYCRR 640.7 (verify)") }
+}
+
+state argument: "Argument or submission" by court cite ?("22 NYCRR 640.7 (verify)")
+{
+  note "OUTLINE. Argument may be discretionary."
+  edge-argument-decision "Decision issued" -> decision { authority cite ?("22 NYCRR 640 (verify)") }
+}
+
+chance decision: "Court decides" by court cite ?("22 NYCRR 640 (verify)")
+{
+  note "OUTLINE. Outcome probabilities are holes."
+  edge-decision-affirmed "Affirmed" -> post-decision p ? { event DecisionFiled() }
+  edge-decision-reversed "Reversed, vacated or remanded" -> post-decision p ? { event DecisionFiled() }
+}
+
+decision post-decision: "Rehearing or further review?" by applicant cite ?("CPLR 5703(a) (verify)")
+{
+  note "OUTLINE. Rehearing and further-review periods are holes."
+  edge-post-mandate "No further review" -> mandate-issued { event MandateIssued() authority cite ?("22 NYCRR 640 (verify)") }
+  edge-post-further "Further review sought" -> further-review { event ReviewPetitionFiled() authority cite ?("CPLR 5703(a) (verify)") }
+}
+
+terminal dismissed-untimely: "Dismissed: no timely notice" outcome [loss, dismissal] cite ?("CPLR 5513 (verify)")
+{
+  note "OUTLINE. Whether the time limit is jurisdictional is a hole."
+  payoff ?
+}
+
+terminal mandate-issued: "Mandate or remittitur issued" outcome [final] cite ?("22 NYCRR 640 (verify)")
+{
+  note "OUTLINE. The case returns to the court below; costs are holes."
+  payoff ?
+}
+
+terminal further-review: "Further review sought in a higher court" outcome [final] cite ?("CPLR 5703(a) (verify)")
+{
+  note "OUTLINE. Review in the higher court is its own package."
+  payoff ?
+}

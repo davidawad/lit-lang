@@ -5,7 +5,11 @@
 # § 904.1 (sources/ca-superior). Computation of time (Cal. Rules of Court,
 # rule 1.10, and CCP §§ 12-12a) is not vendored and lit/core has no
 # California counting rule, so the periods are stated in notes, not encoded
-# as counted deadlines. The trial-court side is lit/ca-superior.
+# as counted deadlines. The trial-court side is lit/ca-superior; the
+# petition for review is decided in lit/ca-supreme-court; each appellate
+# district is its own package over the same rules
+# (lit/ca-court-of-appeal-*-district), and all route on lit/ca-rules'
+# trigger events (lg-u561.5).
 [package]
 name = "ca-court-of-appeal"
 version = "0.1.0"
@@ -15,7 +19,7 @@ forum = "ca-court-of-appeal"
 authority = "StateRule"
 jurisdiction_id = "california"
 title = "California Courts of Appeal, civil appeals"
-description = "A civil appeal to a California Court of Appeal, as far as the vendored California Rules of Court state: the time to appeal and its bar on extension, appealability, the record, briefs, oral argument and submission, publication, rehearing, the petition for review in the Supreme Court, and the remittitur."
+description = "A civil appeal from a California superior court to the Court of Appeal under the California Rules of Court, Title 8, and CCP § 904.1: notice, appealability, record, briefing, argument, decision, rehearing, the petition for review (decided in lit/ca-supreme-court) and the remittitur. The six appellate districts are lit/ca-court-of-appeal-*-district."
 in_force = "2026-10-27"
 known_at = "2026-10-28"
 unknown_before = "2026-10-27"
@@ -28,6 +32,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the trigger events of the California Rules of Court, Title 8 and trigger events.
+ca-state-rules = { version = "^0.1.0", path = "../ca-rules" }
 
 [sources.crc-title8]
 title = "California Rules of Court, Title 8, cited rules (as in force 2026-10-27)"

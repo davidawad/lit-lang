@@ -1,0 +1,22 @@
+[package]
+name = "outline-ga-court-of-appeals"
+version = "0.0.1"
+language = 1
+pack_id = "outline-ga-court-of-appeals"
+forum = "ga-state-appellate"
+authority = "StateRule"
+title = "OUTLINE: Georgia Court of Appeals"
+description = "Outline only: structure, cites and holes, over the state's shared rule layer (state-rules). Every value is a hole until verified against vendored rule text."
+in_force = "2025-01-01"
+known_at = "2025-01-01"
+unknown_before = "2025-01-01"
+jurisdiction = "Georgia Court of Appeals"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+# The state's shared rule layer (its trigger events).
+outline-ga-state-rules = { version = "^0.0.1", path = "../state-rules" }

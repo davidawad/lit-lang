@@ -7,7 +7,7 @@
 # no counting rule in lit/core encodes it, so the rules' periods are
 # stated in notes, not encoded as counted deadlines. The Superior Court's
 # own rules (Rule 9A motion practice and the standing orders) are not
-# vendored. An appeal hands off to lit/ma-appeals-sjc.
+# vendored. An appeal hands off to lit/ma-appeals-court.
 [package]
 name = "ma-superior-court-civil"
 version = "0.1.0"
@@ -17,7 +17,7 @@ forum = "ma-superior-civil"
 authority = "StateRule"
 jurisdiction_id = "massachusetts"
 title = "Massachusetts Superior Court, civil"
-description = "Civil actions in the Massachusetts Superior Court under the Massachusetts Rules of Civil Procedure, as far as the vendored text states. An appeal hands off to the Massachusetts appellate package (lit/ma-appeals-sjc)."
+description = "Civil actions in the Massachusetts Superior Court under the Massachusetts Rules of Civil Procedure, as far as the vendored text states. An appeal hands off to the Massachusetts appellate package (lit/ma-appeals-court)."
 in_force = "2025-03-10"
 known_at = "2026-10-27"
 unknown_before = "2025-03-10"
@@ -30,6 +30,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+ma-state-rules = { version = "^0.1.0", path = "../ma-rules" }
 
 [sources.mass-r-civ-p]
 title = "Massachusetts Rules of Civil Procedure, Trial Court Law Libraries compilation including amendments effective March 10, 2025"

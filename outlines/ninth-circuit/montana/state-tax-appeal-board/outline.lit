@@ -1,0 +1,45 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-mt-tax-appeal-board
+
+import mt-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start filed
+
+state filed: "Claim, petition or appeal filed" by applicant cite ?("Mont. Code Ann. § 15-2-301 (verify)")
+{
+  note "OUTLINE. The board hears appeals from county tax appeal boards and the Department of Revenue; the district court reviews its decisions. Proceedings before the Montana Tax Appeal Board: filing period, form and fees are holes. Leading decisions: not yet identified in this pass; verify before use."
+  edge-filed-hearing "Set for hearing" -> hearing { event ActionCommenced() authority cite ?("Mont. Code Ann. § 15-2-301 (verify)") }
+}
+
+state hearing: "Hearing" by court cite ?("Mont. Code Ann. § 15-2-301 (verify)")
+{
+  note "OUTLINE. Hearing procedure, evidence and the record are holes."
+  edge-hearing-decision "Decision issued" -> decision { authority cite ?("Mont. Code Ann. § 15-2-301 (verify)") }
+}
+
+chance decision: "Tribunal decides" by court cite ?("Mont. Code Ann. § 15-2-301 (verify)")
+{
+  note "OUTLINE. Outcome probabilities are holes."
+  edge-decision-granted "Relief granted" -> review p ? { event DecisionFiled() }
+  edge-decision-denied "Relief denied" -> review p ? { event DecisionFiled() }
+}
+
+decision review: "Review or appeal sought?" by applicant cite ?("Mont. Code Ann. § 15-2-303 (verify)")
+{
+  note "OUTLINE. Review period and the reviewing body are holes."
+  edge-review-none "No review" -> final-decision { event JudgmentEntered() authority cite ?("Mont. Code Ann. § 15-2-301 (verify)") }
+  edge-review-sought "Review or judicial review sought" -> review-sought { event NoticeOfAppealFiled() authority cite ?("Mont. Code Ann. § 15-2-303 (verify)") }
+}
+
+terminal final-decision: "Decision final" outcome [final] cite ?("Mont. Code Ann. § 15-2-301 (verify)")
+{
+  note "OUTLINE. Enforcement and payment are outside this outline."
+  payoff ?
+}
+
+terminal review-sought: "Review or judicial review sought" outcome [final] cite ?("Mont. Code Ann. § 15-2-303 (verify)")
+{
+  note "OUTLINE. The reviewing court is its own package."
+  payoff ?
+}

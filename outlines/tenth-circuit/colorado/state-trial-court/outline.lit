@@ -1,0 +1,165 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+// Outcome tags are labels only; payoff is a hole. Rule numbers are from memory: verify each.
+module outline-co-trial-court
+
+import outline-co-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start complaint-filed
+
+state complaint-filed: "Complaint Filed" by applicant cite ?("C.R.C.P. 3")
+{
+  note "OUTLINE. Commencement of a civil action in Colorado district court. Rule numbers from memory; verify against official text."
+  edge-complaint-filed-service "Summons issued and served" -> service-check { event ActionCommenced()
+    authority cite ?("C.R.C.P. 4")
+  }
+}
+
+decision service-check: "Service Within Required Period" by office cite ?("C.R.C.P. 4")
+{
+  note "OUTLINE. Service period is a hole. Rule numbers from memory; verify against official text."
+  edge-service-check-served "Served" -> answer-due { event ActionCommenced()
+    authority cite ?("C.R.C.P. 12(a)")
+  }
+  edge-service-check-unserved "Not served in time" -> dismissed-unserved {
+    authority cite ?("C.R.C.P. 4")
+  }
+}
+
+decision answer-due: "Answer, Motion or Default" by office cite ?("C.R.C.P. 12(a)")
+{
+  note "OUTLINE. Response period is a hole. Rule numbers from memory; verify against official text."
+  edge-answer-due-default "No response" -> default-entered {
+    authority cite ?("C.R.C.P. 55(a)")
+  }
+  edge-answer-due-motion "Pleading motion filed" -> pleading-motion {
+    authority cite ?("C.R.C.P. 12(b)(5)")
+  }
+  edge-answer-due-answer "Answer filed" -> case-management {
+    authority cite ?("C.R.C.P. 16")
+  }
+}
+
+decision pleading-motion: "Pleading Motion Decided" by court cite ?("C.R.C.P. 12(b)(5)")
+{
+  note "OUTLINE. Leading decisions (verify): Warne v. Hall, 2016 CO 50 (plausibility) (verify). Rule numbers from memory; verify against official text."
+  edge-pleading-motion-dismissed "Granted with prejudice" -> dismissed-pleading {
+    authority cite ?("C.R.C.P. 12(b)(5)")
+  }
+  edge-pleading-motion-leave "Granted with leave to amend" -> case-management {
+    authority cite ?("C.R.C.P. 15(a)")
+  }
+  edge-pleading-motion-denied "Denied" -> case-management {
+    authority cite ?("C.R.C.P. 12(b)(5)")
+  }
+}
+
+terminal default-entered: "Default Entered" outcome [loss] cite ?("C.R.C.P. 55(a)")
+{
+  note "OUTLINE. Default judgment and setting aside default are not modeled. Rule numbers from memory; verify against official text."
+  payoff ?
+}
+
+terminal dismissed-unserved: "Dismissed for Failure to Serve" outcome [loss, dismissal] cite ?("C.R.C.P. 4")
+{
+  note "OUTLINE. Dismissal for untimely service (verify)."
+  payoff ?
+}
+
+terminal dismissed-pleading: "Dismissed on Pleading Motion" outcome [win, dismissal] cite ?("C.R.C.P. 12(b)(5)")
+{
+  note "OUTLINE. Dismissal on the pleadings (verify standard)."
+  payoff ?
+}
+
+state case-management: "Case Management and Scheduling" by court cite ?("C.R.C.P. 16")
+{
+  note "OUTLINE. Scheduling and case-management order is a hole. Rule numbers from memory; verify against official text."
+  edge-case-management-discovery "Scheduling order entered" -> discovery {
+    authority cite ?("C.R.C.P. 26")
+  }
+}
+
+state discovery: "Discovery" by applicant cite ?("C.R.C.P. 26")
+{
+  note "OUTLINE. Discovery scope and sanctions for failure to make discovery (verify). Rule numbers from memory; verify against official text."
+  edge-discovery-sj "Discovery closed" -> sj-motion {
+    authority cite ?("C.R.C.P. 56")
+  }
+  edge-discovery-settle "Settled during discovery" -> settled {
+    authority cite ?("C.R.C.P. 41(a)")
+  }
+}
+
+decision sj-motion: "Summary Judgment Motion Decided" by court cite ?("C.R.C.P. 56")
+{
+  note "OUTLINE. Leading decisions (verify): none named in this pass (verify). Rule numbers from memory; verify against official text."
+  edge-sj-motion-granted "Granted" -> judgment-for-movant {
+    authority cite ?("C.R.C.P. 56")
+  }
+  edge-sj-motion-denied "Denied or partly denied" -> trial {
+    authority cite ?("C.R.C.P. 16")
+  }
+}
+
+terminal judgment-for-movant: "Judgment for Movant on Summary Judgment" outcome [win, judgment] cite ?("C.R.C.P. 56")
+{
+  note "OUTLINE. Partial summary judgment is not modeled."
+  payoff ?
+}
+
+state trial: "Trial or Bench Decision" by court cite ?("C.R.C.P. 38")
+{
+  note "OUTLINE. Jury demand and trial setting are holes. Rule numbers from memory; verify against official text."
+  edge-trial-post "Verdict or decision" -> post-trial { event JudgmentEntered()
+    authority cite ?("C.R.C.P. 50(b)")
+  }
+}
+
+decision post-trial: "Post-Trial Motions Decided" by court cite ?("C.R.C.P. 50(b)")
+{
+  note "OUTLINE. Post-trial motions: judgment as a matter of law, new trial and relief from judgment. Time limits are holes. Rule numbers from memory; verify against official text."
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered { event JudgmentEntered()
+    authority cite ?("C.R.C.P. 58")
+  }
+  edge-post-trial-jmol "Judgment as a matter of law granted" -> judgment-for-movant {
+    authority cite ?("C.R.C.P. 50(b)")
+  }
+}
+
+state judgment-entered: "Judgment Entered" by office cite ?("C.R.C.P. 58")
+{
+  note "OUTLINE. Entry of judgment rule governs when the appeal clock starts. Rule numbers from memory; verify against official text."
+  edge-judgment-entered-appeal "Next step" -> appeal-decision {
+    authority cite ?("C.A.R. 4")
+  }
+}
+
+decision appeal-decision: "Notice of Appeal Within Time?" by applicant cite ?("C.A.R. 4")
+{
+  note "OUTLINE. Notice of appeal period and form are holes. Rule numbers from memory; verify against official text."
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken { event NoticeOfAppealFiled()
+    authority cite ?("C.A.R. 4")
+  }
+  edge-appeal-decision-none "No notice filed" -> final-no-appeal {
+    authority cite ?("C.A.R. 4")
+  }
+}
+
+terminal appeal-taken: "Appeal to Appellate Court" outcome [appeal] cite ?("C.A.R. 4")
+{
+  note "OUTLINE. Continue in the state's appellate court packages."
+  payoff ?
+}
+
+terminal final-no-appeal: "Final: No Appeal" outcome [final] cite ?("C.A.R. 4")
+{
+  note "OUTLINE. Final judgment with no notice filed in time."
+  payoff ?
+}
+
+terminal settled: "Settled or Stipulated Dismissal" outcome [settlement] cite ?("C.R.C.P. 41(a)")
+{
+  note "OUTLINE. Settlement or voluntary dismissal; terms are not modeled."
+  payoff ?
+}

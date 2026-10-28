@@ -9,12 +9,24 @@ dependencies = []
 name = "nm-district-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:9601e2c22bad20205d985698c898ac15babf1f23cf86d87e2618c63f0e29481d"
-semantic = "sha256:fd28a148ee437413003b6bd960e8e78c77e308ba1f2bea294f8c3ebe98e2c6cd"
+source = "sha256:bd75d0624583281443760639a09e0e7605f968aa5bf74b470ed5c575ee80954c"
+semantic = "sha256:e6dd8ea4f18a34a2255f50ac395cf1d8af3c9e453d31c566f532c3a796c61b10"
 texts = [
     "nmra-1 sources/nm-state-civil/nmra-rule-set-1-civil-2026-sectioned.txt sha256:3a0c71824c0bb61518f0e471fa352f041992926938eecc55b51b382b23622851",
     "nmra-12 sources/nm-state-appellate/nmra-rule-set-12-appellate-2026-sectioned.txt sha256:12baf7cd64f0f6014d3dd4c81f1f90ab14141d570ab8ceccd99ff719b418bff7",
 ]
+dependencies = [
+    "core 1.0.0",
+    "nm-state-rules 0.1.0",
+]
+
+[[package]]
+name = "nm-state-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:e64a2c16459500124349e57c0141308901a06cf185be6335d9a4f96586b65c9f"
+semantic = "sha256:6b4cbedcc516837a8454088109bc4f9f9f80fd5f66e94d8fa5600d9b9e6c8867"
+texts = []
 dependencies = [
     "core 1.0.0",
 ]

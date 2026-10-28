@@ -1,0 +1,64 @@
+module ma-state-rules
+
+/// `lit/ma-rules` is a base library: it declares what Massachusetts's court
+/// packages share and no procedure of its own. Its pack holds only this
+/// placeholder terminal, which no link or case may route through.
+start library
+
+terminal library: "Massachusetts state court rules library (no procedure)"
+
+/// A principal brief (Mass. R. A. P. 20(a)(2)(A)): 11,000 words in a
+/// proportionally spaced font, or 50 pages in a monospaced font. The
+/// cross-appeal limits of rule 20(a)(3) are not encoded.
+limit principal-brief {
+  words <= 11_000 cite "Mass. R. A. P. 20(a)"
+  pages <= 50 cite "Mass. R. A. P. 20(a)"
+} cite "Mass. R. A. P. 20(a)"
+
+/// A reply brief (Mass. R. A. P. 20(a)(2)(B)): 4,500 words or 20 pages.
+limit reply-brief {
+  words <= 4_500 cite "Mass. R. A. P. 20(a)"
+  pages <= 20 cite "Mass. R. A. P. 20(a)"
+} cite "Mass. R. A. P. 20(a)"
+
+/// A motion for reconsideration or modification of decision (Mass. R. A.
+/// P. 27(b)): 2,000 words or 10 pages, except by permission.
+limit reconsideration-motion {
+  words <= 2_000 cite "Mass. R. A. P. 27(b)"
+  pages <= 10 cite "Mass. R. A. P. 27(b)"
+} cite "Mass. R. A. P. 27(b)"
+
+/// The appellant's brief and appendix are served (Mass. R. A. P. 19(a)).
+event AppellantBriefServed() paper principal-brief
+
+/// The appellee's brief is served (Mass. R. A. P. 19(a)).
+event AppelleeBriefServed() paper principal-brief
+
+/// A reply brief is served (Mass. R. A. P. 19(a)).
+event ReplyBriefServed() paper reply-brief
+
+/// A motion for reconsideration or modification is filed (Mass. R. A. P.
+/// 27).
+event ReconsiderationMoved() paper reconsideration-motion
+
+// The trigger events the court packages' graphs route on.
+/// An action, claim, petition or charge is filed and the proceeding begins.
+event ActionCommenced()
+
+/// A final judgment, decision or appealable order is entered.
+event JudgmentEntered()
+
+/// A notice of appeal, or a petition or appeal for review of a lower court's or tribunal's decision, is filed.
+event NoticeOfAppealFiled()
+
+/// The record on appeal or review is filed or transmitted.
+event RecordFiled()
+
+/// The reviewing court's or tribunal's decision or opinion is filed.
+event DecisionFiled()
+
+/// A petition for discretionary review in a higher court (certiorari, transfer, leave or review) is filed.
+event ReviewPetitionFiled()
+
+/// The mandate, remittitur or certificate of judgment issues.
+event MandateIssued()

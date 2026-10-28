@@ -9,12 +9,24 @@ dependencies = []
 name = "nd-appellate-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:835316f9eb802c562a1ddbad50c1915c392c740c29d16f5e57f51ec36a11b5c9"
-semantic = "sha256:cd131e67f24c57e2db3fd9a086a642cd60c2f7a37f4524c8c908293b0130b051"
+source = "sha256:0202103ebd3443ace9f67cc8a9fdd1c552d2289b2881f70a748528fe26b2ae4b"
+semantic = "sha256:b7e4a02d1219b51755281ab99cc376a516472c08b363246be52f228cc4ce5d9f"
 texts = [
     "nd-r-app-p sources/ndctapp/ndrappp.txt sha256:1248b9444f50322e77dc258bdc3f1b8dbc52b2656bde3b7971ba085fcfeef91c",
     "scotus sources/scotus-rules.txt sha256:881464325decc0ce5cc63ae4bac10facc84766e266dbff30454186f78dc3d5f2",
 ]
+dependencies = [
+    "core 1.0.0",
+    "nd-state-rules 0.1.0",
+]
+
+[[package]]
+name = "nd-state-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:c2e0bd94c8c7a46e0cc839c27e7d9a4f3dca59278723e4d3d30adab5ffe80b13"
+semantic = "sha256:4b4b86ce285b929379dd97ef96576638f0892ce419895e3e5ef84e63a49a015b"
+texts = []
 dependencies = [
     "core 1.0.0",
 ]

@@ -9,11 +9,25 @@ dependencies = []
 name = "fl-circuit-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:9be2c0aadc9111ace63836c1dc3731310f361c6eed99b5af5a9ddc8829c75eef"
-semantic = "sha256:3e35aef1e8debe70e492728d62677b9c551295dc8ab22a522df6ab024134f0b6"
+source = "sha256:746c76dd27fbf6f7962995c7861f70a157833c113c8749dd5e7cd86dbd5ac7ca"
+semantic = "sha256:b543c54da16e5a5fa9a9a4aec8bfa716f8fb8a9f12fbf28c5d944d78e7cee045"
 texts = [
     "fla-r-app-p sources/fl-state-appellate/fl-rules-appellate-procedure-2026-10-01-sectioned.txt sha256:529ece835412697830636b5054b02b830048cf561f1f99edc4298967df7369d4",
     "fla-r-civ-p sources/fl-state-civil/fl-rules-civil-procedure-2026-10-01-sectioned.txt sha256:d769c6cb6d8b499bb1fe03349f3349e5c4fd8e315353fbce66e2337259a98f6d",
+]
+dependencies = [
+    "core 1.0.0",
+    "fl-state-rules 0.1.0",
+]
+
+[[package]]
+name = "fl-state-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:c1169dd8fc2caae617d28c0fcc15604ed35190c975c65426ab0848c438109b45"
+semantic = "sha256:02588ea8d4b7fe2396c8243d7873915f2c933c3ac5f6248d3df7e5cbc5727a04"
+texts = [
+    "fla-r-app-p sources/fl-state-appellate/fl-rules-appellate-procedure-2026-10-01-sectioned.txt sha256:529ece835412697830636b5054b02b830048cf561f1f99edc4298967df7369d4",
 ]
 dependencies = [
     "core 1.0.0",

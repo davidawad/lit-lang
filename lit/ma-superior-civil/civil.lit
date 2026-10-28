@@ -1,5 +1,7 @@
 module ma-superior-court-civil.civil
 
+import ma-state-rules.{ JudgmentEntered }
+
 start complaint-filed
 
 state complaint-filed: "Complaint filed" by applicant cite "Mass. R. Civ. P. 3"
@@ -94,7 +96,7 @@ state trial: "Trial" by court cite "Mass. R. Civ. P. 38(b)"
 decision post-trial: "Post-trial motions decided" by court cite "Mass. R. Civ. P. 59(b)"
 {
   note "A party who moved for a directed verdict may serve a motion for judgment notwithstanding the verdict not later than 10 days after entry of judgment, or within 10 days after the jury is discharged if no verdict was returned (Mass. R. Civ. P. 50(b)). A motion for a new trial, and a motion to alter or amend the judgment, are served not later than 10 days after entry of judgment (Mass. R. Civ. P. 59(b), (e)). The court may not extend these times (Mass. R. Civ. P. 6(b)). A timely motion under rule 50(b), 52(b) or 59 restarts the appeal period from the order disposing of the last of them (Mass. R. A. P. 4(a))."
-  edge-post-trial-judgment "Motions resolved or none served" -> judgment-entered {
+  edge-post-trial-judgment "Motions resolved or none served" -> judgment-entered { event JudgmentEntered()
     authority cite "Mass. R. Civ. P. 58(a)"
   }
   edge-post-trial-jnov "Judgment notwithstanding the verdict" -> judgment-for-movant {
@@ -121,7 +123,7 @@ decision appeal-decision: "Notice of appeal within 30 days of entry?" by applica
 
 terminal appeal-taken: "Appeal taken: continue in the Massachusetts appellate package" outcome [appeal] cite "Mass. R. A. P. 4(a)"
 {
-  note "Hand-off to lit/ma-appeals-sjc (ma-appeals-court)."
+  note "Hand-off to lit/ma-appeals-court (ma-appeals-court)."
 }
 
 terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Mass. R. A. P. 4(a)"

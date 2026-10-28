@@ -9,11 +9,26 @@ dependencies = []
 name = "oh-common-pleas-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:627cb8d5b67432b4aba16d09f4ecf8ce55d4e0db9976f6fb34f01739ecb512e1"
-semantic = "sha256:987e61136e632e4b9640ae2a83dcb6c1915be6429852848c08addca0b6e4dd97"
+source = "sha256:b5bf48040c26932be3be4ac07df32032189ec277a44357198a83515379a531c7"
+semantic = "sha256:07832d661a7d7572050a7bf8dfb965169b7f85bcd7a1680e5bd26d30ef9c28fb"
 texts = [
     "oh-app-r sources/oh-appellate/ohio-appellate-rules-sectioned.txt sha256:140f97309db187996c93d42dada5defa09fe1bfd4ef12c3fa521c08027f66034",
     "oh-civ-r sources/oh-common-pleas/ohio-civil-rules-sectioned.txt sha256:c160d248cef571563999330b31759050e39d8ee5da4b3542a95a4a73edb3c5a1",
+]
+dependencies = [
+    "core 1.0.0",
+    "oh-state-rules 0.1.0",
+]
+
+[[package]]
+name = "oh-state-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:4ed2816b000b9d3eb61f1f2a85fbf52ff61c8d76b1fbec6892e94cffb8829d32"
+semantic = "sha256:d36b508b4607f66f5dc74ed77a7a7bed4d0ef00b6c86009fa1f74b23e31b3cbe"
+texts = [
+    "oh-app-r sources/oh-appellate/ohio-appellate-rules-sectioned.txt sha256:140f97309db187996c93d42dada5defa09fe1bfd4ef12c3fa521c08027f66034",
+    "oh-sct-prac-r sources/oh-appellate/ohio-supreme-court-rules-of-practice-sectioned.txt sha256:ab366ec5b9b3093c03c5bfe2720724becaee9666c86cf511e89ca98a4f4cb164",
 ]
 dependencies = [
     "core 1.0.0",

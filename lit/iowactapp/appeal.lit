@@ -1,5 +1,7 @@
 module ia-appellate-civil.appeal
 
+import ia-state-rules.{ NoticeOfAppealFiled }
+
 /// A brief in a proportionally spaced typeface: at most 13,000 words,
 /// headings, footnotes and quotations counted; captions, tables, the
 /// statement of the issues, signature blocks and certificates not counted
@@ -18,7 +20,7 @@ start notice
 decision notice: "Notice of appeal within 30 days?" by applicant cite "Iowa R. App. P. 6.101"
 {
   note "An appeal from a final order appealable as a matter of right is taken by filing a notice of appeal with the clerk of the district court where the order was entered, with an informational copy to the clerk of the supreme court (Iowa R. App. P. 6.102(2)). The notice is filed within 30 days after the filing of the final order or judgment or, if a motion under Iowa R. Civ. P. 1.904(2) or 1.1007 is timely filed, within 30 days after the filing of the ruling on that motion (Iowa R. App. P. 6.101(1)(b), (c)). A notice of cross-appeal is filed within the 30-day limit or within 10 days after the notice of appeal is filed, whichever is later (Iowa R. App. P. 6.101(2)(b)). The time is tolled when the notice is served, if it is filed within a reasonable time (Iowa R. App. P. 6.101(4)). If the clerk of the district court failed to notify the appellant of the judgment, the supreme court may extend the time on a motion filed no later than 60 days after the original deadline, by not more than 30 days after the order granting it (Iowa R. App. P. 6.101(5)). The filing fee is $150, paid to the clerk of the supreme court within seven days after filing the notice of appeal (Iowa R. App. P. 6.102(3), 6.703(1)(a)). No leading decision is named."
-  edge-notice-timely "Timely notice" -> record { authority cite "Iowa R. App. P. 6.102" }
+  edge-notice-timely "Timely notice" -> record { event NoticeOfAppealFiled() authority cite "Iowa R. App. P. 6.102" }
   edge-notice-none "No timely notice" -> final-no-appeal { authority cite "Iowa R. App. P. 6.101" }
 }
 

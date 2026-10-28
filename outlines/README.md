@@ -14,16 +14,28 @@ The layout mirrors formbook's `courts/<circuit>/<jurisdiction>/`.
     outlines/<circuit>/<state>/federal-<district>/       each U.S. district court in the state (FRCP + local rules)
     outlines/<circuit>/<state>/bankruptcy-<district>/    each U.S. bankruptcy court (uses lit/frbp; local bankruptcy rules only)
     outlines/<circuit>/bankruptcy-appellate-panel/       each circuit's BAP (1st, 6th, 9th, 10th; the 8th is lit/bap8)
-    outlines/<circuit>/<state>/state-civil/              state trial court of general jurisdiction, civil
-    outlines/<circuit>/<state>/state-appellate/          state intermediate appellate and supreme court, civil appeals
+    outlines/<circuit>/<state>/state-rules/              the state's base library: the rule layer its court packages share
+    outlines/<circuit>/<state>/state-<court>/            one package per formbook state court, <court> its formbook path
+                                                         under state/ ('/' as '-'): supreme-court, court-of-appeals and each
+                                                         district of it, court-of-criminal-appeals, tax-court, court-of-chancery,
+                                                         workers' compensation and tax boards, judicial-discipline courts, ...
+    outlines/<circuit>/<state>/state-trial-court/        the trial court of general jurisdiction, civil, where formbook lists none
     outlines/<circuit>/<state>/state-criminal/           state trial courts of general criminal jurisdiction (every state, DC and territory)
-    outlines/<circuit>/<state>/court-of-criminal-appeals/  the TX, OK, AL and TN courts of criminal appeals
     outlines/<circuit>/<state>/federal-<district>-criminal/  each U.S. district court's local criminal rules (uses lit/frcrimp)
     outlines/federal-circuit/<court>/, outlines/national/<court>/, outlines/military/<court>/,
     outlines/supreme-court-of-the-united-states/          one package per court
 
 Each directory holds `Lit.toml` plus `outline.lit`. Copy
-`outlines/fifth-circuit/texas/state-civil/` as the template.
+`outlines/third-circuit/delaware/state-trial-court/` as the template.
+
+A state court package (`state-<court>`) depends on its state's base library
+(`state-rules`, or `lit/<st>-rules` once the state has promoted packages),
+imports the trigger events it declares (`ActionCommenced`, `JudgmentEntered`,
+`NoticeOfAppealFiled`, `RecordFiled`, `DecisionFiled`, `ReviewPetitionFiled`,
+`MandateIssued`) and binds its edges to them, so rule text the state's courts
+share is declared once, in the base. It carries a `Lit.lock` (`litigate lock
+DIR`). tests/fixtures/formbook-forums.json maps each formbook state court to
+its package (lg-u561.5).
 
 A bankruptcy-court outline differs: it depends on `lit/frbp` (and `lit/core`),
 imports the FRBP periods from it with their cites bound to the vendored FRBP

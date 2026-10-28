@@ -1,0 +1,137 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-la-court-of-appeal
+
+import outline-la-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start judgment-signed
+
+state judgment-signed: "Judgment signed" by applicant cite ?("La. C.C.P. art. 2083")
+{
+  note "OUTLINE. Appeal lies from final judgments (art. 1841) and specified interlocutory judgments (art. 2083; verify)."
+  edge-judgment-signed-notice "Appeal taken within delay" -> notice-filed {
+    authority cite ?("La. C.C.P. arts. 2121, 2123")
+  }
+  edge-judgment-signed-late "Delay missed" -> time-barred {
+    authority cite ?("La. C.C.P. arts. 2121, 2123")
+  }
+}
+
+state notice-filed: "Appeal taken" by applicant cite ?("La. C.C.P. arts. 2121, 2123")
+{
+  note "OUTLINE. Devolutive (art. 2121) and suspensive (art. 2123) appeal delays are holes (?) until verified. Security for a suspensive appeal is a hole (verify article)."
+  edge-notice-filed-record "Record lodged" -> record-lodged {
+    authority cite ?("La. C.C.P. art. 2127")
+  }
+}
+
+state record-lodged: "Record lodged" by office cite ?("La. C.C.P. art. 2127")
+{
+  note "OUTLINE. Record contents and transcript deadlines are holes (?)."
+  edge-record-lodged-briefs "Briefing schedule set" -> briefing { event RecordFiled()
+    authority cite ?("La. C.C.P. art. ?")
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite ?("La. C.C.P. art. ?")
+{
+  note "OUTLINE. Brief length and format are holes until verified against the court's rules."
+  edge-briefing-argument "Argument set" -> argument {
+    authority cite ?("La. C.C.P. art. ?")
+  }
+  edge-briefing-submitted "Submitted on briefs" -> appellate-decision {
+    authority cite ?("La. C.C.P. art. 2164")
+  }
+}
+
+state argument: "Oral argument" by office cite ?("La. C.C.P. art. ?")
+{
+  note "OUTLINE. Argument practice and time are holes until verified."
+  edge-argument-decision "Argued" -> appellate-decision {
+    authority cite ?("La. C.C.P. art. 2164")
+  }
+}
+
+decision appellate-decision: "Appellate decision" by court cite ?("La. C.C.P. art. 2164")
+{
+  note "OUTLINE. Standard of review is a hole until verified. Appellate court renders the judgment the record warrants (art. 2164; verify). Standard of review is a hole until verified. Briefing and argument are governed by the Uniform Rules of the Louisiana Courts of Appeal (rule number ?)."
+  edge-decision-affirmed "Affirmed" -> affirmed {
+    authority cite ?("La. C.C.P. art. 2164")
+  }
+  edge-decision-reversed "Reversed or amended" -> reversed {
+    authority cite ?("La. C.C.P. art. 2164")
+  }
+  edge-decision-remanded "Remanded" -> remanded {
+    authority cite ?("La. C.C.P. art. 2164")
+  }
+  edge-decision-dismissed "Appeal dismissed" -> appeal-dismissed {
+    authority cite ?("La. C.C.P. art. 2164")
+  }
+  edge-decision-rehearing "Rehearing sought" -> rehearing-filed {
+    authority cite ?("La. C.C.P. art. ?")
+  }
+}
+
+state rehearing-filed: "Application for rehearing" by applicant cite ?("La. C.C.P. art. ?")
+{
+  note "OUTLINE. Rehearing period is a hole (?). Denial or grant is a hole until verified."
+  edge-rehearing-supreme "Rehearing denied; review sought" -> supreme-review {
+    authority cite ?("La. Const. art. V, sec. 5(D); La. Sup. Ct. Rule X")
+  }
+  edge-rehearing-decision "Rehearing granted" -> appellate-decision {
+    authority cite ?("La. C.C.P. art. 2164")
+  }
+}
+
+state supreme-review: "Review or writ application to supreme court" by applicant cite ?("La. Const. art. V, sec. 5(D); La. Sup. Ct. Rule X")
+{
+  note "OUTLINE. Supreme Court review by writ is discretionary (La. Const. art. V, sec. 5(D); verify). Application timing under Supreme Court Rule X is a hole (verify)."
+  edge-supreme-review-denied "Review denied" -> review-denied {
+    authority cite ?("La. Const. art. V, sec. 5(D); La. Sup. Ct. Rule X")
+  }
+  edge-supreme-review-granted "Review granted" -> supreme-decided {
+    authority cite ?("La. Const. art. V, sec. 5(D); La. Sup. Ct. Rule X")
+  }
+}
+
+terminal time-barred: "Appeal time missed" outcome [loss] cite ?("La. C.C.P. arts. 2121, 2123")
+{
+  note "OUTLINE. Delay is generally jurisdictional or near-jurisdictional (verify)."
+  payoff ?
+}
+
+terminal affirmed: "Affirmed" outcome [loss] cite ?("La. C.C.P. art. 2164")
+{
+  note "OUTLINE. Further review: see supreme-review."
+  payoff ?
+}
+
+terminal reversed: "Reversed or amended" outcome [win] cite ?("La. C.C.P. art. 2164")
+{
+  note "OUTLINE. Fees and costs are holes."
+  payoff ?
+}
+
+terminal remanded: "Remanded" outcome [neutral] cite ?("La. C.C.P. art. 2164")
+{
+  note "OUTLINE. Remand outcome depends on the trial court's next ruling."
+  payoff ?
+}
+
+terminal appeal-dismissed: "Appeal dismissed" outcome [loss] cite ?("La. C.C.P. art. 2164")
+{
+  note "OUTLINE. Grounds for dismissal are holes until verified."
+  payoff ?
+}
+
+terminal review-denied: "Review denied" outcome [loss] cite ?("La. Const. art. V, sec. 5(D); La. Sup. Ct. Rule X")
+{
+  note "OUTLINE. Denial of review ends the state appeal path."
+  payoff ?
+}
+
+terminal supreme-decided: "Supreme court decided" outcome [neutral] cite ?("La. Const. art. V, sec. 5(D); La. Sup. Ct. Rule X")
+{
+  note "OUTLINE. Outcome is a hole until the decision is known."
+  payoff ?
+}

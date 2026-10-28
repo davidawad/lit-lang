@@ -1,5 +1,7 @@
 module nm-appellate-civil.appeal
 
+import nm-state-rules.{ NoticeOfAppealFiled }
+
 start threshold
 
 decision threshold: "Appealable judgment or order?" by applicant cite "NMRA 12-201(A)"
@@ -13,7 +15,7 @@ decision notice: "Notice of appeal within time?" by applicant cite "NMRA 12-201(
 {
   note "The notice of appeal is filed within thirty (30) days after the judgment or order appealed from is filed in the district court clerk's office (NMRA 12-201(A)(1)(b)); the three (3)-day period of NMRA 12-308(B) does not apply (NMRA 12-201(A)(2)). Another party may cross-appeal within fourteen (14) days after service of the first notice or within the time otherwise prescribed, whichever last expires (NMRA 12-201(B)(1)). A timely motion that may affect finality (NMSA 1978 § 39-1-1, NMRA 1-050(B), 1-052(D), 1-059, or 1-060(B) filed within thirty (30) days) restarts the full time from the order disposing of the last such motion (NMRA 12-201(D)(1)). The district court may extend the time on a motion filed before, or within thirty (30) days after, its expiry, for good cause or excusable neglect respectively; no extension exceeds thirty (30) days past the original due date (NMRA 12-201(E))."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "NMRA 12-201(A)" }
-  edge-notice-timely "Timely notice" -> docketing { authority cite "NMRA 12-201(A)" }
+  edge-notice-timely "Timely notice" -> docketing { event NoticeOfAppealFiled() authority cite "NMRA 12-201(A)" }
 }
 
 state docketing: "Docketing statement filed" by applicant cite "NMRA 12-208(B)"

@@ -9,12 +9,24 @@ dependencies = []
 name = "nd-district-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:72f5382d3abee56dc3156356bfa35f28af1e8423e7b8bbcd32e6d37d69b50943"
-semantic = "sha256:2268c8d2372707b3fe58fa39f163b773fd7780e45238ed31ac0922c609c5350d"
+source = "sha256:5e8bd790517e91ea5a66138687981ba86fefa57a85e13da541a13e659e494f27"
+semantic = "sha256:01ead652703ceedd4d401fcd973a161c47fff0ffba25da3d753bff03dd458522"
 texts = [
     "nd-r-app-p sources/ndctapp/ndrappp.txt sha256:1248b9444f50322e77dc258bdc3f1b8dbc52b2656bde3b7971ba085fcfeef91c",
     "nd-r-civ-p sources/nd-district/ndrcivp.txt sha256:e07933b29743f02b7ab922e9dc3b5c49404c5625abc52b95c308730c159053b4",
 ]
+dependencies = [
+    "core 1.0.0",
+    "nd-state-rules 0.1.0",
+]
+
+[[package]]
+name = "nd-state-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:c2e0bd94c8c7a46e0cc839c27e7d9a4f3dca59278723e4d3d30adab5ffe80b13"
+semantic = "sha256:4b4b86ce285b929379dd97ef96576638f0892ce419895e3e5ef84e63a49a015b"
+texts = []
 dependencies = [
     "core 1.0.0",
 ]

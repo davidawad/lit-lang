@@ -1,0 +1,124 @@
+module oh-court-of-appeals-civil.appeal
+
+import oh-state-rules.{ NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+// Civil appeals to an Ohio court of appeals and jurisdictional appeals to
+// the Supreme Court of Ohio, from the applicant's (appellant's) side. Every
+// period below is stated in a note, not counted (App.R. 14(A); S.Ct.Prac.R.
+// 3.03(A)); three days are added after service by mail or commercial
+// carrier (App.R. 14(C)). The court may not extend or reduce the time for
+// a notice of appeal under App.R. 4 or a motion to certify a conflict under
+// App.R. 25 (App.R. 14(B)). The earlier outline's final-order statute
+// (R.C. 2505.02) is not vendored, so it is not cited; courts of appeals'
+// local rules are not vendored either. The Supreme Court's limit of fifteen
+// numbered pages on jurisdictional memoranda (S.Ct.Prac.R. 7.02(B),
+// 7.03(B)) is stated in a note: a page limit here counts pages, and the
+// rule counts numbered pages, exclusive of the table of contents,
+// signature block and certificate of service.
+
+start judgment-entered
+
+state judgment-entered: "Trial court judgment entered" by applicant cite "App.R. 4(A)"
+{
+  note "A party who wishes to appeal from an order that is final upon its entry files the notice of appeal required by App.R. 3 within 30 days of that entry; from an order that becomes final later, within 30 days of the date on which it becomes final. In a civil case, if the clerk has not completed service of notice of the judgment within the three-day period of Civ.R. 58(B), the 30 days run from the date the clerk actually completes service (App.R. 4(A)). If one party timely files a notice of appeal, another may file within the appeal time or within ten days of the filing of the first notice. A timely Civ.R. 50(B) motion, Civ.R. 59 motion for a new trial, objection to a magistrate's decision under Civ.R. 53(D)(3)(b), request for findings of fact and conclusions of law, motion for attorney fees or motion for prejudgment interest starts the appeal time when the trial court resolves the last of them (App.R. 4(B)(1), (2))."
+  edge-judgment-entered-notice "Notice of appeal filed in time" -> notice-filed { event NoticeOfAppealFiled()
+    authority cite "App.R. 3(A)"
+  }
+  edge-judgment-entered-late "Appeal time missed" -> time-barred { authority cite "App.R. 4(A)" }
+}
+
+terminal time-barred: "Appeal time missed" outcome [loss, dismissal] cite "App.R. 14(B)"
+{
+  note "Outcome from the applicant's side. The court may not extend the time for filing a notice of appeal under App.R. 4 (App.R. 14(B))."
+}
+
+state notice-filed: "Notice of appeal filed" by applicant cite "App.R. 3(A)"
+{
+  note "An appeal of right is taken only by filing a notice of appeal with the clerk of the trial court within the time allowed by App.R. 4, with a time-stamped copy of the judgment or order appealed attached; a court of appeals may by local rule require a docketing statement. Failure to take any other step does not affect the validity of the appeal, but the court may take any action it considers appropriate, including dismissal (App.R. 3(A)). The appellant ensures that the proceedings it considers necessary are transcribed (App.R. 9(B)(1)). The record is transmitted when complete for the purposes of appeal, or when forty days (twenty for an accelerated calendar case) have elapsed after the filing of the notice of appeal and no extension has been granted (App.R. 10(A))."
+  edge-notice-filed-record "Record transmitted and filed" -> record-filed { event RecordFiled()
+    authority cite "App.R. 10(A)"
+  }
+  edge-notice-filed-no-record "Record not timely transmitted: appellee moves to dismiss" -> appeal-dismissed {
+    authority cite "App.R. 11(C)"
+  }
+}
+
+state record-filed: "Record filed" by office cite "App.R. 11(B)"
+{
+  note "Upon receipt of the record, the clerk of the court of appeals files it and immediately gives notice to all parties of the date it was filed (App.R. 11(B)). The briefing periods run from the date the clerk mails that notice (App.R. 18(A))."
+  edge-record-filed-briefing "Briefing" -> briefing { authority cite "App.R. 18(A)" }
+}
+
+state briefing: "Briefs filed" by applicant cite "App.R. 18(A)"
+{
+  note "The appellant serves and files its brief within twenty days after the clerk mails the App.R. 11(B) notice, the appellee within twenty days after service of the appellant's brief, and the appellant may reply within ten days after service of the appellee's brief (App.R. 18(A)). On an accelerated calendar the periods are fifteen and fifteen days and no reply brief is filed unless ordered (App.R. 11.1(C)). Briefs are limited to 9,000 words, replies to 4,500 (App.R. 19(A)), and contain the assignments of error and argument App.R. 16(A) requires. A response to a motion may be filed within ten days after its service and a reply within seven days after service of the opposition (App.R. 15(A)). If the appellant fails to file its brief in time the court may dismiss the appeal; an appellee that fails to file is not heard at oral argument except by permission, and the court may accept the appellant's statement of the facts and issues (App.R. 18(C))."
+  edge-briefing-argument "Oral argument scheduled" -> argument { authority cite "App.R. 21(A)" }
+  edge-briefing-submitted "Submitted on the briefs" -> appellate-decision {
+    authority cite "App.R. 12(A)"
+  }
+  edge-briefing-no-brief "Appellant's brief not filed: appeal dismissed" -> appeal-dismissed {
+    authority cite "App.R. 18(C)"
+  }
+}
+
+state argument: "Oral argument" by office cite "App.R. 21"
+{
+  note "The court schedules oral argument in all cases unless it has adopted a local rule requiring a party to request it, in which case the request is the words \"ORAL ARGUMENT REQUESTED\" on the cover of the appellant's or appellee's brief (App.R. 21(A)). The names of the three judges on the panel are made available no later than fourteen days before argument, or before submission on the briefs (App.R. 21(B)(2)). Unless otherwise ordered each side has fifteen minutes; a motion to vary the time is filed at least fourteen days before argument (App.R. 21(C))."
+  edge-argument-decision "Argued and submitted" -> appellate-decision {
+    authority cite "App.R. 12(A)"
+  }
+}
+
+decision appellate-decision: "Court of appeals determination" by court cite "App.R. 12(A)"
+{
+  note "On an undismissed appeal the court of appeals reviews and affirms, modifies or reverses the judgment or final order, determines the appeal on the assignments of error in the briefs, the record and any oral argument, and decides each assignment of error not made moot, giving reasons in writing; it may disregard an assignment of error not identified in the record or not separately argued (App.R. 12(A)). Where the appellee is entitled to affirmance as a matter of law the court enters judgment accordingly; where the appellant is entitled to judgment as a matter of law it reverses and renders the judgment the trial court should have rendered, or remands with instructions (App.R. 12(B)). A judgment against the manifest weight of the evidence is reversed under App.R. 12(C), in a jury case only on the concurrence of all three judges. The judgment is effective only when entered by the clerk upon the journal (App.R. 22(A))."
+  edge-appellate-decision-affirmed "Affirmed" -> affirmed { authority cite "App.R. 12(B)" }
+  edge-appellate-decision-reversed "Reversed and rendered" -> reversed {
+    authority cite "App.R. 12(B)"
+  }
+  edge-appellate-decision-remanded "Reversed and remanded" -> remanded {
+    authority cite "App.R. 12(C)"
+  }
+  edge-appellate-decision-reconsideration "Application for reconsideration or en banc consideration" -> reconsideration {
+    authority cite "App.R. 26(A)"
+  }
+  edge-appellate-decision-supreme "Jurisdictional appeal to the Supreme Court of Ohio" -> supreme-appeal-filed { event ReviewPetitionFiled()
+    authority cite "S.Ct.Prac.R. 7.01"
+  }
+}
+
+decision reconsideration: "Reconsideration or en banc consideration decided" by court cite "App.R. 26(A)"
+{
+  note "Unless shortened or extended by order or local rule, an application for reconsideration, and an application for en banc consideration, is filed no later than 15 days after the court's judgment is filed by the clerk (or 15 days after an amended decision is filed); an application asking for both is a single document of at most 15 pages; any response is filed within 15 days after the application is filed, and no other briefing is permitted except at the court's request. A motion to extend the time is granted only for the most compelling reasons. Consideration en banc is not favored and is ordered only to secure or maintain uniformity of decisions within the district on a dispositive issue (App.R. 26(A)(1), (2)). A timely application for reconsideration or en banc consideration moves the time to appeal to the Supreme Court to forty-five days after the decision denying it, or after the subsequent entry of judgment if it is granted (S.Ct.Prac.R. 7.01(A)(5), (6))."
+  edge-reconsideration-granted "Granted: the appeal is reconsidered" -> appellate-decision {
+    authority cite "App.R. 26(A)"
+  }
+  edge-reconsideration-denied "Denied: jurisdictional appeal to the Supreme Court" -> supreme-appeal-filed { event ReviewPetitionFiled()
+    authority cite "S.Ct.Prac.R. 7.01"
+  }
+}
+
+terminal supreme-appeal-filed: "Jurisdictional appeal filed in the Supreme Court of Ohio" outcome [appeal] cite "S.Ct.Prac.R. 7.01"
+{
+  note "The appellant files a notice of appeal in the Supreme Court within forty-five days from the entry of the court of appeals' judgment, with a memorandum in support of jurisdiction (S.Ct.Prac.R. 7.01(A)(1)). Whether the Supreme Court accepts the appeal is lit/oh-supreme-court."
+}
+
+terminal affirmed: "Affirmed" outcome [loss] cite "App.R. 12(B)"
+{
+  note "Outcome from the appellant's side."
+}
+
+terminal reversed: "Reversed and rendered" outcome [win] cite "App.R. 12(B)"
+{
+  note "Outcome from the appellant's side."
+}
+
+terminal remanded: "Reversed and remanded" outcome [remand] cite "App.R. 12(C)"
+{
+  note "The case returns to the trial court (lit/oh-common-pleas) for further proceedings."
+}
+
+terminal appeal-dismissed: "Appeal dismissed" outcome [loss, dismissal] cite "App.R. 18(C)"
+{
+  note "Outcome from the appellant's side. An appeal may be dismissed when the appellant fails to file its brief in time (App.R. 18(C)) or to make reasonable arrangements to transmit the record (App.R. 11(C))."
+}

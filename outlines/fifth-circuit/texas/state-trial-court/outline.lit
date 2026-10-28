@@ -1,0 +1,260 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-tx-trial-court
+
+import outline-tx-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start complaint-filed
+
+state complaint-filed: "Complaint Filed" by applicant cite ?("Tex. R. Civ. P. 22; 99(a)")
+{
+  note "OUTLINE. Petition filed and citation issued (Rules 22, 99(a); verify). Discovery level is pleaded (Rule 190; verify)."
+  edge-complaint-filed-service "Served" -> service-made {
+    authority cite ?("Tex. R. Civ. P. 99(b), 103, 106")
+  }
+}
+
+state service-made: "Served" by applicant cite ?("Tex. R. Civ. P. 99(b), 103, 106")
+{
+  note "OUTLINE. Service by authorized person (Rule 103) and substituted service (Rule 106); verify. Service period is a hole (?)."
+  edge-service-made-response "Served in time" -> response-due { event ActionCommenced()
+    authority cite ?("Tex. R. Civ. P. 99(b), 103, 106")
+  }
+  edge-service-made-lapsed "Not served in time" -> service-dismissal {
+    authority cite ?("Tex. R. Civ. P. 103")
+  }
+}
+
+decision response-due: "Answer, pleading challenge, or nothing" by office cite ?("Tex. R. Civ. P. 99(b), 92")
+{
+  note "OUTLINE. Answer due by 10:00 a.m. on the Monday next after 20 days from service (Rule 99(b); period verify). General denial (Rule 92)."
+  edge-response-due-answer "Answer filed" -> answered {
+    authority cite ?("Tex. R. Civ. P. 99(b), 92")
+  }
+  edge-response-due-pleading "Pleading challenge filed" -> pleading-motion {
+    authority cite ?("Tex. R. Civ. P. 91a; 91")
+  }
+  edge-response-due-default "No response" -> default-request {
+    authority cite ?("Tex. R. Civ. P. 239")
+  }
+}
+
+state pleading-motion: "Rule 91a motion or special exception" by office cite ?("Tex. R. Civ. P. 91a; 91")
+{
+  note "OUTLINE. Rule 91a motion to dismiss a baseless cause of action (timing is a hole under Rule 91a.3; verify). Special exceptions (Rule 91; verify). Verify: Bethel v. Quilling, Selander, Lownds, Winslett & Moser, P.C., 595 S.W.3d 651 (Tex. 2020) (Rule 91a standard)."
+  edge-pleading-motion-ruling "Court rules" -> pleading-ruling {
+    authority cite ?("Tex. R. Civ. P. 91a; 91")
+  }
+}
+
+decision pleading-ruling: "Ruling on pleading challenge" by court cite ?("Tex. R. Civ. P. 91a; 91")
+{
+  note "OUTLINE. Leave to amend is governed by the amendment rule (cite below). Verify leading decisions before use."
+  edge-pleading-ruling-dismissed "Dismissed with prejudice" -> dismissed-merits {
+    authority cite ?("Tex. R. Civ. P. 91a; 91")
+  }
+  edge-pleading-ruling-leave "Dismissed with leave to amend" -> amended {
+    authority cite ?("Tex. R. Civ. P. 63")
+  }
+  edge-pleading-ruling-denied "Denied" -> answered {
+    authority cite ?("Tex. R. Civ. P. 99(b), 92")
+  }
+}
+
+state amended: "Amended pleading filed" by applicant cite ?("Tex. R. Civ. P. 63")
+{
+  note "OUTLINE. Response period to the amended pleading is a hole (?)."
+  edge-amended-response "Amended pleading served" -> response-due { event ActionCommenced()
+    authority cite ?("Tex. R. Civ. P. 99(b), 92")
+  }
+}
+
+state answered: "Answer filed" by applicant cite ?("Tex. R. Civ. P. 99(b), 92")
+{
+  note "OUTLINE. Affirmative defenses must be pleaded (cite below); discovery opens after pleadings close."
+  edge-answered-discovery "Pleadings closed" -> discovery {
+    authority cite ?("Tex. R. Civ. P. 190.2, 190.3, 194, 196, 197, 199")
+  }
+}
+
+state default-request: "Default sought" by applicant cite ?("Tex. R. Civ. P. 239")
+{
+  note "OUTLINE. No answer by the Rule 99(b) date (Rule 239; verify). Notice of default judgment (Rule 239a; verify)."
+  edge-default-request-entered "Default entered" -> default-entered {
+    authority cite ?("Tex. R. Civ. P. 239")
+  }
+  edge-default-request-answered "Answer filed before default" -> answered {
+    authority cite ?("Tex. R. Civ. P. 99(b), 92")
+  }
+}
+
+state default-entered: "Default entered" by applicant cite ?("Tex. R. Civ. P. 239")
+{
+  note "OUTLINE. Default judgment requires proof of the claim; a hearing may be needed for damages (verify). Setting aside is a hole until verified."
+  edge-default-entered-judgment "Default judgment sought" -> default-judgment {
+    authority cite ?("Tex. R. Civ. P. 239")
+  }
+  edge-default-entered-set-aside "Defendant moves to set aside" -> set-aside-ruling {
+    authority cite ?("Tex. R. Civ. P. 239")
+  }
+}
+
+decision set-aside-ruling: "Set aside the default?" by court cite ?("Tex. R. Civ. P. 239")
+{
+  note "OUTLINE. Standard and any time limit are holes until verified."
+  edge-set-aside-granted "Set aside" -> answered {
+    authority cite ?("Tex. R. Civ. P. 239")
+  }
+  edge-set-aside-refused "Refused" -> default-judgment {
+    authority cite ?("Tex. R. Civ. P. 239")
+  }
+}
+
+state discovery: "Discovery" by applicant cite ?("Tex. R. Civ. P. 190.2, 190.3, 194, 196, 197, 199")
+{
+  note "OUTLINE. Discovery control plan (Rule 190; expedited Level 1 under 190.2 and Level 2 under 190.3; verify). Required initial disclosures (Rule 194; verify). Sanctions (Rule 215). Discovery period is a hole (?)."
+  edge-discovery-dispute "Discovery dispute" -> discovery-ruling {
+    authority cite ?("Tex. R. Civ. P. 190.2, 190.3, 194, 196, 197, 199")
+  }
+  edge-discovery-sj "Dispositive motion" -> sj-motion {
+    authority cite ?("Tex. R. Civ. P. 166a(c), 166a(i)")
+  }
+  edge-discovery-settled "Settled" -> settled {
+    authority cite ?("Tex. R. Civ. P. 11")
+  }
+  edge-discovery-voluntary "Voluntary dismissal" -> voluntary-dismissal {
+    authority cite ?("Tex. R. Civ. P. 162")
+  }
+  edge-discovery-inactive "No prosecution" -> inactivity-dismissal {
+    authority cite ?("Tex. R. Civ. P. 165a")
+  }
+}
+
+decision discovery-ruling: "Discovery ruling" by court cite ?("Tex. R. Civ. P. 215")
+{
+  note "OUTLINE. Meet-and-confer and sanction prerequisites are holes until verified."
+  edge-discovery-ruling-resolved "Dispute resolved" -> discovery {
+    authority cite ?("Tex. R. Civ. P. 190.2, 190.3, 194, 196, 197, 199")
+  }
+  edge-discovery-ruling-sanction "Sanction dismissal" -> sanction-dismissal {
+    authority cite ?("Tex. R. Civ. P. 215")
+  }
+}
+
+state sj-motion: "Summary judgment motion" by office cite ?("Tex. R. Civ. P. 166a(c), 166a(i)")
+{
+  note "OUTLINE. Traditional (166a(c)) and no-evidence (166a(i)) summary judgment (verify). Verify: Nixon v. Mr. Property Management Co., 690 S.W.2d 546 (Tex. 1985) (traditional standard); Valence Operating Co. v. Dorsett, 164 S.W.3d 656 (Tex. 2005) (verify)."
+  edge-sj-motion-ruling "Motion heard" -> sj-ruling {
+    authority cite ?("Tex. R. Civ. P. 166a(c), 166a(i)")
+  }
+}
+
+decision sj-ruling: "Summary judgment ruling" by court cite ?("Tex. R. Civ. P. 166a(c), 166a(i)")
+{
+  note "OUTLINE. Partial summary judgment availability is a hole until verified."
+  edge-sj-ruling-defense "Granted for defendant" -> sj-defense {
+    authority cite ?("Tex. R. Civ. P. 166a(c), 166a(i)")
+  }
+  edge-sj-ruling-applicant "Granted for applicant" -> judgment-for-applicant {
+    authority cite ?("Tex. R. Civ. P. 301, 306a")
+  }
+  edge-sj-ruling-denied "Denied" -> trial-setting {
+    authority cite ?("Tex. R. Civ. P. 216, 226a")
+  }
+}
+
+state trial-setting: "Trial setting and jury request" by office cite ?("Tex. R. Civ. P. 216, 226a")
+{
+  note "OUTLINE. Jury request and fee (Rule 216; timing is a hole, verify). Jury charge (Rules 271 to 279; verify)."
+  edge-trial-setting-result "Tried" -> trial-result {
+    authority cite ?("Tex. R. Civ. P. 216, 226a")
+  }
+}
+
+decision trial-result: "Judgment after trial" by court cite ?("Tex. R. Civ. P. 301, 306a")
+{
+  note "OUTLINE. Post-trial motion periods are holes (?) until verified."
+  edge-trial-result-applicant "Judgment for applicant" -> judgment-for-applicant {
+    authority cite ?("Tex. R. Civ. P. 301, 306a")
+  }
+  edge-trial-result-defense "Judgment for defendant" -> verdict-for-defendant {
+    authority cite ?("Tex. R. Civ. P. 301, 306a")
+  }
+  edge-trial-result-post "Post-trial motion filed" -> post-trial { event JudgmentEntered()
+    authority cite ?("Tex. R. Civ. P. 301, 329b")
+  }
+}
+
+decision post-trial: "Post-trial motion ruling" by court cite ?("Tex. R. Civ. P. 301, 329b")
+{
+  note "OUTLINE. Grounds and time limits are holes until verified. Leading decisions: verify."
+  edge-post-trial-new-trial "New trial granted" -> trial-setting {
+    authority cite ?("Tex. R. Civ. P. 301, 329b")
+  }
+  edge-post-trial-applicant "Denied; applicant's judgment stands" -> judgment-for-applicant {
+    authority cite ?("Tex. R. Civ. P. 301, 306a")
+  }
+  edge-post-trial-defense "Denied; defendant's judgment stands" -> verdict-for-defendant {
+    authority cite ?("Tex. R. Civ. P. 301, 306a")
+  }
+}
+
+terminal service-dismissal: "Dismissed for failure to serve" outcome [loss] cite ?("Tex. R. Civ. P. 103")
+{
+  note "OUTLINE. Service period and refiling effect are holes (?)."
+  payoff ?
+}
+
+terminal dismissed-merits: "Dismissed on the pleadings" outcome [loss] cite ?("Tex. R. Civ. P. 91a; 91")
+{
+  note "OUTLINE. Appeal route: see the state's appellate court packages."
+  payoff ?
+}
+
+terminal default-judgment: "Default judgment" outcome [win] cite ?("Tex. R. Civ. P. 239")
+{
+  note "OUTLINE. Damages and costs are holes."
+  payoff ?
+}
+
+terminal sanction-dismissal: "Dismissed as discovery sanction" outcome [loss] cite ?("Tex. R. Civ. P. 215")
+{
+  note "OUTLINE. Sanction prerequisites are holes until verified."
+  payoff ?
+}
+
+terminal inactivity-dismissal: "Dismissed for inactivity" outcome [loss] cite ?("Tex. R. Civ. P. 165a")
+{
+  note "OUTLINE. Period of inactivity and any notice requirement are holes (?)."
+  payoff ?
+}
+
+terminal voluntary-dismissal: "Voluntary dismissal" outcome [neutral] cite ?("Tex. R. Civ. P. 162")
+{
+  note "OUTLINE. Effect of dismissal on refiling is a hole until verified."
+  payoff ?
+}
+
+terminal settled: "Settled" outcome [neutral] cite ?("Tex. R. Civ. P. 11")
+{
+  note "OUTLINE. Terms are holes."
+  payoff ?
+}
+
+terminal sj-defense: "Summary judgment for defendant" outcome [loss] cite ?("Tex. R. Civ. P. 166a(c), 166a(i)")
+{
+  note "OUTLINE. Appeal route: see the state's appellate court packages."
+  payoff ?
+}
+
+terminal judgment-for-applicant: "Judgment for applicant" outcome [win] cite ?("Tex. R. Civ. P. 301, 306a")
+{
+  note "OUTLINE. Costs, interest and fee recovery are holes."
+  payoff ?
+}
+
+terminal verdict-for-defendant: "Judgment or verdict for defendant" outcome [loss] cite ?("Tex. R. Civ. P. 301, 306a")
+{
+  note "OUTLINE. Costs are holes."
+  payoff ?
+}

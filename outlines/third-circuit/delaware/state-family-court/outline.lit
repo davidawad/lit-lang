@@ -1,0 +1,77 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-de-family-court
+
+import outline-de-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start commenced
+
+state commenced: "Complaint, petition or appeal filed" by applicant cite ?("Fam. Ct. Civ. R. 3 (verify)")
+{
+  note "OUTLINE. Domestic relations, support, custody and juvenile matters; commissioners' orders are reviewed by a judge, and appeals go to the Supreme Court. Commencement in the Delaware Family Court: filing period, fees and pleading form are holes. Leading decisions: not yet identified in this pass; verify before use."
+  edge-commenced-served "Process served" -> pleadings { event ActionCommenced() authority cite ?("Fam. Ct. Civ. R. 4 (verify)") }
+}
+
+chance pleadings: "Answer or motion to dismiss" by court cite ?("Fam. Ct. Civ. R. 12 (verify)")
+{
+  note "OUTLINE. Response period and dismissal grounds are holes."
+  edge-pleadings-dismissed "Dismissed on the pleadings" -> dismissed p ? { authority cite ?("Fam. Ct. Civ. R. 12 (verify)") }
+  edge-pleadings-answered "Answered; case proceeds" -> discovery p ? { authority cite ?("Fam. Ct. Civ. R. 12 (verify)") }
+  edge-pleadings-settled "Settled or withdrawn" -> settled p ? { }
+}
+
+state discovery: "Discovery and pretrial" by applicant cite ?("Fam. Ct. Civ. R. 26 (verify)")
+{
+  note "OUTLINE. Discovery scope, limits and scheduling are holes."
+  edge-discovery-dispositive "Dispositive motion or trial setting" -> dispositive { authority cite ?("Fam. Ct. Civ. R. 56 (verify)") }
+}
+
+chance dispositive: "Summary disposition?" by court cite ?("Fam. Ct. Civ. R. 56 (verify)")
+{
+  note "OUTLINE. Summary-judgment standard and timing are holes."
+  edge-dispositive-granted "Decided without trial" -> judgment p ? { authority cite ?("Fam. Ct. Civ. R. 56 (verify)") }
+  edge-dispositive-trial "Tried" -> trial p ? { authority cite ?("Fam. Ct. Civ. R. 16 (verify)") }
+}
+
+state trial: "Trial or hearing" by court cite ?("Fam. Ct. Civ. R. 16 (verify)")
+{
+  note "OUTLINE. Jury availability and trial procedure are holes."
+  edge-trial-judgment "Decision rendered" -> judgment { authority cite ?("Fam. Ct. Civ. R. 58 (verify)") }
+}
+
+state judgment: "Judgment or decision entered" by court cite ?("Fam. Ct. Civ. R. 58 (verify)")
+{
+  note "OUTLINE. Entry, notice of entry and post-judgment motion periods are holes."
+  edge-judgment-entered "Judgment entered" -> post-judgment { event JudgmentEntered() authority cite ?("Fam. Ct. Civ. R. 58 (verify)") }
+}
+
+decision post-judgment: "Appeal or review?" by applicant cite ?("10 Del. C. § 1051 (verify)")
+{
+  note "OUTLINE. The appeal period and the court that hears it are holes."
+  edge-post-appeal "Appeal or petition for review filed" -> appeal-taken { event NoticeOfAppealFiled() authority cite ?("10 Del. C. § 1051 (verify)") }
+  edge-post-final "No appeal" -> final-no-appeal { }
+}
+
+terminal dismissed: "Dismissed" outcome [loss, dismissal] cite ?("Fam. Ct. Civ. R. 12 (verify)")
+{
+  note "OUTLINE. With or without prejudice is a hole."
+  payoff ?
+}
+
+terminal settled: "Settled or withdrawn" outcome [settlement] cite ?("Fam. Ct. Civ. R. 3 (verify)")
+{
+  note "OUTLINE. Settlement terms are outside this outline."
+  payoff ?
+}
+
+terminal appeal-taken: "Appeal or review taken" outcome [final] cite ?("10 Del. C. § 1051 (verify)")
+{
+  note "OUTLINE. The reviewing court is its own package."
+  payoff ?
+}
+
+terminal final-no-appeal: "Judgment final without appeal" outcome [final] cite ?("Fam. Ct. Civ. R. 58 (verify)")
+{
+  note "OUTLINE. Enforcement is outside this outline."
+  payoff ?
+}

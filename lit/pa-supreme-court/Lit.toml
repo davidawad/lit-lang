@@ -1,0 +1,46 @@
+# Allowance of appeal in the Supreme Court of Pennsylvania (lg-u561.5),
+# under Chapter 11 of the Pennsylvania Rules of Appellate Procedure
+# (sources/pa-appellate-civil), from lit/pa-superior-court. The merits are
+# not modeled.
+[package]
+name = "pa-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "pa-supreme-court-civil"
+forum = "pa-supreme-court"
+authority = "StateRule"
+jurisdiction_id = "pennsylvania"
+title = "Supreme Court of Pennsylvania, allowance of appeal (civil)"
+description = "The petition for allowance of appeal to the Supreme Court of Pennsylvania from a final order of the Superior Court or the Commonwealth Court under Pa.R.A.P. 1111-1114, and its grant or denial. The merits are not modeled."
+in_force = "2026-08-08"
+known_at = "2026-10-28"
+unknown_before = "2026-08-08"
+jurisdiction = "Supreme Court of Pennsylvania (allowance of appeal, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the brief word limits of Pa.R.A.P. 2135 and trigger events.
+pa-state-rules = { version = "^0.1.0", path = "../pa-rules" }
+
+[sources.pa-r-a-p]
+title = "Pennsylvania Rules of Appellate Procedure, Pa. Code Title 210 Part I, effective through 56 Pa.B. 5370 (August 8, 2026)"
+url = "https://www.pacodeandbulletin.gov/Display/pacode?file=/secure/pacode/data/210/partItoc.html&d="
+path = "sources/pa-appellate-civil/para-pa-code-title-210-part-i-2026-08-08-sectioned.txt"
+path_sha256 = "bd91de9532ce33d7cbfbbe96d21e354dc166124b0c610a17a1d78e635dbe713f"
+as_of = "2026-08-08"
+cite_prefixes = ["Pa.R.A.P."]
+section_heading = "Pa.R.A.P. {n}"
+
+[sources.pa-r-c-p]
+title = "Pennsylvania Rules of Civil Procedure, Pa. Code Title 231 Part I, effective through 56 Pa.B. 5370 (August 8, 2026)"
+url = "https://www.pacodeandbulletin.gov/Display/pacode?file=/secure/pacode/data/231/partItoc.html&d="
+path = "sources/pa-cp-civil/parcp-pa-code-title-231-part-i-2026-08-08-sectioned.txt"
+path_sha256 = "9257d95652b4d1ad36132bf7a4037c4e85a7fda9beedf1b292dc96fc38fa70d7"
+as_of = "2026-08-08"
+cite_prefixes = ["Pa.R.C.P."]
+section_heading = "Pa.R.C.P. {n}"

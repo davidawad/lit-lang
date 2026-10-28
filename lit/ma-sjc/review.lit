@@ -1,0 +1,56 @@
+module ma-sjc.review
+
+import ma-state-rules.{ ReviewPetitionFiled }
+
+// Direct and further appellate review in the Supreme Judicial Court, from
+// the applicant's side. Every period is stated in a note, not counted. The
+// merits in the Supreme Judicial Court are not modeled.
+
+start route
+
+decision route: "Apply to the Supreme Judicial Court?" by applicant cite "Mass. R. A. P. 27.1(a)"
+{
+  note "Within 21 days after an appeal is docketed in the Appeals Court any party may apply for direct appellate review (Mass. R. A. P. 11(a)); within 21 days after an Appeals Court decision any party may apply for further appellate review (Mass. R. A. P. 27.1(a))."
+  edge-route-direct "Application for direct appellate review" -> direct-review { event ReviewPetitionFiled() authority cite "Mass. R. A. P. 11(a)" }
+  edge-route-further "Application for further appellate review" -> further-review { event ReviewPetitionFiled() authority cite "Mass. R. A. P. 27.1(a)" }
+}
+
+decision direct-review: "Direct appellate review decided" by court cite "Mass. R. A. P. 11(a)"
+{
+  note "Within 21 days after the appeal is docketed in the Appeals Court, any party may apply to the Supreme Judicial Court for direct appellate review on questions of first impression or novel questions of law, constitutional questions, or questions of such public interest that justice requires a final determination by the full court (Mass. R. A. P. 11(a)); any other party may respond within 14 days after the application is filed (Mass. R. A. P. 11(c)). Briefing in a transferred case runs under Mass. R. A. P. 11(g); the Supreme Judicial Court's own decision is modeled by the same steps as the Appeals Court's."
+  edge-direct-review-allowed "Allowed: appeal transferred" -> dar-allowed {
+    authority cite "Mass. R. A. P. 11(g)"
+  }
+  edge-direct-review-denied "Denied: appeal stays in the Appeals Court" -> dar-denied {
+    authority cite "Mass. R. A. P. 11(a)"
+  }
+}
+
+decision further-review: "Further appellate review decided" by court cite "Mass. R. A. P. 27.1(a)"
+{
+  note "The application states the prior proceedings, the facts, the points on which review is sought and, in not more than 10 pages or 2,000 words, why further appellate review is appropriate, with the Appeals Court's rescript and decision appended (Mass. R. A. P. 27.1(b)). If the application is granted, the Appeals Court's rescript does not issue (Mass. R. A. P. 23(c))."
+  edge-further-review-denied "Denied" -> far-denied { authority cite "Mass. R. A. P. 23(c)" }
+  edge-further-review-granted "Granted" -> review-granted {
+    authority cite "Mass. R. A. P. 27.1(a)"
+  }
+}
+
+terminal review-granted: "Further appellate review granted" outcome [appeal] cite "Mass. R. A. P. 27.1(a)"
+{
+  note "The case proceeds in the Supreme Judicial Court (briefing under Mass. R. A. P. 27.1(f)); its merits outcome is not modeled here."
+}
+
+terminal dar-allowed: "Direct appellate review allowed: the appeal is heard here" outcome [appeal] cite "Mass. R. A. P. 11(g)"
+{
+  note "Briefing in a transferred case runs under Mass. R. A. P. 11(g); the merits are not modeled."
+}
+
+terminal dar-denied: "Direct appellate review denied: the appeal stays in the Appeals Court" outcome [neutral] cite "Mass. R. A. P. 11(a)"
+{
+  note "The appeal continues in lit/ma-appeals-court."
+}
+
+terminal far-denied: "Further appellate review denied: the Appeals Court rescript issues" outcome [final] cite "Mass. R. A. P. 23(c)"
+{
+  note "The rescript issues forthwith after the stayed application is disposed of (Mass. R. A. P. 23(c))."
+}

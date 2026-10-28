@@ -1,0 +1,143 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+
+module outline-as-high-court
+
+import outline-as-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start notice-filed
+
+state notice-filed: "Notice of Appeal Filed" by applicant cite ?("A.S. R. App. P. 4(a)")
+{
+  note "Notice period is a hole. Timeliness is a hole. Verify the rule and any jurisdictional treatment."
+  edge-notice-filed-appealability "Timely notice" -> appealability {
+    authority cite ?("A.S. R. App. P. 4(a)")
+  }
+  edge-notice-filed-dismissed-untimely "Late or defective notice" -> dismissed-untimely {
+    authority cite ?("A.S. R. App. P. 4(a)")
+  }
+}
+
+terminal dismissed-untimely: "Dismissed as untimely" outcome [loss] cite ?("A.S. R. App. P. 4(a)")
+{
+  note "Dismissal for untimely notice. Verify."
+  payoff ?
+}
+
+decision appealability: "Appealable Order or Judgment" by court cite ?("A.S. R. App. P. 3")
+{
+  note "Appealable order or judgment: statute or rule is the cite. Appealable judgments: verify the High Court appellate rule. Verify."
+  edge-appealability-dismissed-jurisdiction "Not appealable" -> dismissed-jurisdiction {
+    authority cite ?("A.S. R. App. P. 3")
+  }
+  edge-appealability-record-assembled "Appealable" -> record-assembled { event NoticeOfAppealFiled()
+    authority cite ?("A.S. R. App. P. 3")
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed for lack of appealable order" outcome [loss] cite ?("A.S. R. App. P. 3")
+{
+  note "OUTLINE. Interlocutory review routes are holes (verify)."
+  payoff ?
+}
+
+state record-assembled: "Record Assembled" by applicant cite ?("A.S. R. App. P. 10")
+{
+  note "Record and transcript deadlines are holes. Verify."
+  edge-record-assembled-briefing "Record transmitted" -> briefing { event RecordFiled()
+    authority cite ?("A.S. R. App. P. 10")
+  }
+}
+
+state briefing: "Briefing" by applicant cite ?("A.S. R. App. P. 28")
+{
+  note "Brief length and due dates are holes. Verify."
+  edge-briefing-argument "Briefing complete" -> argument {
+    authority cite ?("A.S. R. App. P. 28")
+  }
+}
+
+decision argument: "Argument or Submission" by court cite ?("A.S. R. App. P. 34")
+{
+  note "Calendaring and submission on briefs are holes. Verify."
+  edge-argument-decision-issued "Argued or submitted" -> decision-issued {
+    authority cite ?("A.S. R. App. P. 34")
+  }
+}
+
+decision decision-issued: "Decision" by court cite ?("A.S. R. App. P. 36")
+{
+  note "Standard of review and publication status are holes. Verify."
+  edge-decision-issued-rehearing-window "Disposition entered" -> rehearing-window {
+    authority cite ?("A.S. R. App. P. 36")
+  }
+}
+
+decision rehearing-window: "Rehearing or Reconsideration" by applicant cite ?("A.S. R. App. P. 40")
+{
+  note "Period is a hole. Verify."
+  edge-rehearing-window-mandate-issued "No petition" -> mandate-issued { event MandateIssued()
+    authority cite ?("A.S. R. App. P. 41")
+  }
+  edge-rehearing-window-rehearing-ruling "Petition filed" -> rehearing-ruling {
+    authority cite ?("A.S. R. App. P. 40")
+  }
+}
+
+decision rehearing-ruling: "Rehearing Decided" by court cite ?("A.S. R. App. P. 40")
+{
+  note "Period is a hole. Verify."
+  edge-rehearing-ruling-mandate-issued "Denied" -> mandate-issued { event MandateIssued()
+    authority cite ?("A.S. R. App. P. 40")
+  }
+  edge-rehearing-ruling-rehearing-granted "Granted" -> rehearing-granted {
+    authority cite ?("A.S. R. App. P. 40")
+  }
+}
+
+terminal rehearing-granted: "Rehearing granted; new decision" outcome [appeal] cite ?("A.S. R. App. P. 40")
+{
+  note "OUTLINE. Modeled as an exit; in practice it returns to the decision stage."
+  payoff ?
+}
+
+state mandate-issued: "Mandate or Remittitur Issued" by court cite ?("A.S. R. App. P. 41")
+{
+  note "Issuance timing is a hole. Verify."
+  edge-mandate-issued-further-review "Review sought" -> further-review {
+    authority cite ?("48 U.S.C. § 1661(c)")
+  }
+  edge-mandate-issued-final-appellate "No further review sought" -> final-appellate {
+    authority cite ?("A.S. R. App. P. 41")
+  }
+}
+
+decision further-review: "Further Review Petition" by applicant cite ?("48 U.S.C. § 1661(c)")
+{
+  note "No federal court has appellate jurisdiction over the Appellate Division of the High Court: 28 U.S.C. § 1259 is certiorari to the C.A.A.F., and no statute extends §§ 1257-1260 or the Ninth Circuit to American Samoa. Further review is Secretarial review by the Secretary of the Interior, who holds the territorial judicial power under 48 U.S.C. § 1661(c) and Exec. Order No. 10264 (see Corp. of Presiding Bishop v. Hodel, 830 F.2d 374 (D.C. Cir. 1987); verify). Request procedure, period and grounds are holes. Verify."
+  edge-further-review-review-denied "Denied" -> review-denied {
+    authority cite ?("48 U.S.C. § 1661(c)")
+  }
+  edge-further-review-review-granted "Granted" -> review-granted {
+    authority cite ?("48 U.S.C. § 1661(c)")
+  }
+}
+
+terminal review-denied: "Further review denied" outcome [loss] cite ?("48 U.S.C. § 1661(c)")
+{
+  note "OUTLINE. Denial ends further review; finality of the appellate judgment is a hole."
+  payoff ?
+}
+
+terminal review-granted: "Further review granted" outcome [appeal] cite ?("48 U.S.C. § 1661(c)")
+{
+  note "OUTLINE. Merits of further review are a hole."
+  payoff ?
+}
+
+terminal final-appellate: "Appellate judgment final" outcome [judgment] cite ?("A.S. R. App. P. 41")
+{
+  note "OUTLINE. Trial court regains jurisdiction on issuance (verify)."
+  payoff ?
+}
+

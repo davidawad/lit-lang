@@ -1,5 +1,7 @@
 module pa-common-pleas-civil.civil
 
+import pa-state-rules.{ JudgmentEntered }
+
 // Civil actions in the Pennsylvania courts of common pleas, from the
 // applicant's (plaintiff's) side. Every period below is stated in a note,
 // not counted: time is computed under Pa.R.J.A. 107, which is not vendored,
@@ -133,10 +135,10 @@ terminal dismissed-sanction: "Judgment of non pros as a discovery sanction" outc
 decision summary-judgment: "Summary judgment decided" by court cite "Pa.R.C.P. 1035.2"
 {
   note "After the relevant pleadings are closed, but within such time as not to unreasonably delay trial, any party may move for summary judgment in whole or in part whenever there is no genuine issue of any material fact as to a necessary element of the cause of action or defense which could be established by additional discovery or expert report, or if, after the completion of relevant discovery, an adverse party who will bear the burden of proof at trial has failed to produce evidence of facts essential to the cause of action or defense (Pa.R.C.P. 1035.2). The adverse party may not rest on the pleadings but files a response within thirty days after service of the motion identifying issues of fact or evidence in the record; summary judgment may be entered against a party who does not respond (Pa.R.C.P. 1035.3(a), (d)). No motion for post-trial relief lies from an order disposing of a summary judgment motion (Pa.R.C.P. 227.1, comment)."
-  edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-entered {
+  edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-entered { event JudgmentEntered()
     authority cite "Pa.R.C.P. 227.4(2)"
   }
-  edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-entered {
+  edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-entered { event JudgmentEntered()
     authority cite "Pa.R.C.P. 227.4(2)"
   }
   edge-summary-judgment-denied "Denied" -> trial { authority cite "Pa.R.C.P. 1035.3(c)" }
@@ -148,7 +150,7 @@ state trial: "Trial by jury or by the court" by court cite "Pa.R.C.P. 1038(a)"
   edge-trial-verdict "Verdict, decision or nonsuit" -> post-trial {
     authority cite "Pa.R.C.P. 227.1(c)"
   }
-  edge-trial-no-motion "No timely post-trial motion: judgment on praecipe" -> judgment-entered {
+  edge-trial-no-motion "No timely post-trial motion: judgment on praecipe" -> judgment-entered { event JudgmentEntered()
     authority cite "Pa.R.C.P. 227.4(1)"
   }
   edge-trial-nonsuit "Voluntary nonsuit with leave of court" -> discontinued {
@@ -160,7 +162,7 @@ decision post-trial: "Motion for post-trial relief decided" by court cite "Pa.R.
 {
   note "Post-trial motions are filed within ten days after the verdict, discharge of the jury for inability to agree, or nonsuit in a jury trial, or after notice of nonsuit or the filing of the decision in a trial without jury; once a party files a timely motion any other party may file one within ten days after the filing of the first (Pa.R.C.P. 227.1(c)). Relief is limited to grounds raised in pre-trial proceedings or at trial and specified in the motion (Pa.R.C.P. 227.1(b)). The court may order a new trial, direct the entry of judgment, remove a nonsuit, affirm, modify or change the decision, or enter any other appropriate order (Pa.R.C.P. 227.1(a)). If the court does not dispose of all timely motions within one hundred twenty days after the filing of the first, the prothonotary on praecipe enters judgment, final as to all parties and issues (Pa.R.C.P. 227.4(1)(b))."
   edge-post-trial-new-trial "New trial ordered" -> trial { authority cite "Pa.R.C.P. 227.1(a)" }
-  edge-post-trial-decided "Motions decided or not decided within 120 days: judgment entered" -> judgment-entered {
+  edge-post-trial-decided "Motions decided or not decided within 120 days: judgment entered" -> judgment-entered { event JudgmentEntered()
     authority cite "Pa.R.C.P. 227.4(1)"
   }
 }
@@ -183,7 +185,7 @@ terminal discontinued: "Discontinued or voluntary nonsuit" outcome [settlement] 
 
 terminal appeal-taken: "Appeal taken: continue in the Pennsylvania appellate package" outcome [appeal] cite "Pa.R.A.P. 902(a)"
 {
-  note "An appeal as of right from a trial court is taken by filing a notice of appeal with the clerk of the trial court within the time allowed by Pa.R.A.P. 903, in each docket in which the order has been entered (Pa.R.A.P. 902(a)). Hand-off to lit/pa-appellate-civil (pa-appellate-civil)."
+  note "An appeal as of right from a trial court is taken by filing a notice of appeal with the clerk of the trial court within the time allowed by Pa.R.A.P. 903, in each docket in which the order has been entered (Pa.R.A.P. 902(a)). Hand-off to lit/pa-superior-court (pa-appellate-civil)."
 }
 
 terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Pa.R.A.P. 903(a)"

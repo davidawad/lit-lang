@@ -1,0 +1,39 @@
+# The Florida base library (lg-u561.5): what the Florida court packages
+# share. The Florida Rules of Appellate Procedure (sources/fl-state-appellate)
+# govern the district courts of appeal (lit/fl-district-court-of-appeal and
+# its six districts) and the Supreme Court (lit/fl-supreme-court), so their
+# brief limits and the briefs they govern are declared once here; the court
+# packages also route their graphs on its trigger events. No procedure of
+# its own.
+[package]
+name = "fl-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "fl-state-rules"
+forum = "fl-state-rules"
+authority = "StateRule"
+jurisdiction_id = "florida"
+title = "Florida state court rules (base library)"
+description = "The rule layer Florida's court packages share: the brief limits of Fla. R. App. P. 9.210 and the briefs they govern, and the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-10-01"
+known_at = "2026-10-27"
+unknown_before = "2026-10-01"
+jurisdiction = "Florida state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.fla-r-app-p]
+title = "Florida Rules of Appellate Procedure, the Florida Bar's October 1, 2026 edition"
+url = "https://www-media.floridabar.org/uploads/2026/10/Appellate-Court-Rules-10-01-26.pdf"
+path = "sources/fl-state-appellate/fl-rules-appellate-procedure-2026-10-01-sectioned.txt"
+path_sha256 = "529ece835412697830636b5054b02b830048cf561f1f99edc4298967df7369d4"
+sha256 = "7b462cb689ec328b5138c6693c164c0a81adbe5914f02cd88f7bc7d87f1a7042"
+as_of = "2026-10-01"
+cite_prefixes = ["Fla. R. App. P."]
+section_heading = "Rule {n}"

@@ -1,0 +1,141 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+// Outcome tags are labels only; payoff is a hole. Rule numbers are from memory: verify each.
+module outline-al-court-of-civil-appeals
+
+import outline-al-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start threshold
+
+decision threshold: "Appealable Order or Judgment?" by applicant cite ?("Ala. R. App. P. 3")
+{
+  note "OUTLINE. Appealability of the order or judgment: final-judgment and interlocutory rules (verify). Leading decisions: none named in this pass (verify). Rule numbers from memory; verify against official text."
+  edge-threshold-no "Not appealable" -> dismissed-jurisdiction {
+    authority cite ?("Ala. R. App. P. 3")
+  }
+  edge-threshold-yes "Appealable" -> notice {
+    authority cite ?("Ala. R. App. P. 3")
+  }
+}
+
+decision notice: "Notice of Appeal Within Time?" by applicant cite ?("Ala. R. App. P. 4")
+{
+  note "OUTLINE. Notice-of-appeal period and form are holes. Rule numbers from memory; verify against official text."
+  edge-notice-late "Untimely notice" -> dismissed-untimely {
+    authority cite ?("Ala. R. App. P. 4")
+  }
+  edge-notice-timely "Timely notice" -> record { event NoticeOfAppealFiled()
+    authority cite ?("Ala. R. App. P. 4")
+  }
+}
+
+state record: "Record and Transcript Assembled" by office cite ?("Ala. R. App. P. 10")
+{
+  note "OUTLINE. Record, transcript and designation rules (verify). Rule numbers from memory; verify against official text."
+  edge-record-brief "Record filed" -> briefing { event RecordFiled()
+    authority cite ?("Ala. R. App. P. 10")
+  }
+}
+
+state briefing: "Briefs Filed" by applicant cite ?("Ala. R. App. P. 28")
+{
+  note "OUTLINE. Briefing schedule and page limits are holes. Rule numbers from memory; verify against official text."
+  edge-briefing-argue "Briefing complete" -> argument {
+    authority cite ?("Ala. R. App. P. 28")
+  }
+}
+
+state argument: "Oral Argument or Submission" by court cite ?("Ala. R. App. P. 34")
+{
+  note "OUTLINE. Oral argument or submission on the briefs. Rule numbers from memory; verify against official text."
+  edge-argument-decide "Decision" -> decision {
+    authority cite ?("Ala. R. App. P. 34")
+  }
+}
+
+state decision: "Decision Issued" by court cite ?("Ala. R. App. P. 1")
+{
+  note "OUTLINE. Disposition: affirm, reverse, or remand. Leading decisions: none named in this pass (verify). Rule numbers from memory; verify against official text."
+  edge-decision-issued "Opinion or judgment issued" -> rehearing-decision {
+    authority cite ?("Ala. R. App. P. 1")
+  }
+}
+
+decision rehearing-decision: "Rehearing Sought?" by applicant cite ?("Ala. R. App. P. 40")
+{
+  note "OUTLINE. Rehearing period is a hole. Rule numbers from memory; verify against official text."
+  edge-rehearing-decision-none "No petition" -> mandate { event MandateIssued()
+    authority cite ?("Ala. R. App. P. 40")
+  }
+  edge-rehearing-decision-sought "Petition filed" -> rehearing-order {
+    authority cite ?("Ala. R. App. P. 40")
+  }
+}
+
+state rehearing-order: "Rehearing Order" by court cite ?("Ala. R. App. P. 40")
+{
+  note "OUTLINE. Court order on the rehearing petition. Rule numbers from memory; verify against official text."
+  edge-rehearing-order-mandate "Rehearing decided" -> mandate { event MandateIssued()
+    authority cite ?("Ala. R. App. P. 40")
+  }
+}
+
+state mandate: "Mandate or Remittitur Issued" by office cite ?("Ala. R. App. P. 41")
+{
+  note "OUTLINE. Issuance of mandate or remittitur (verify). Rule numbers from memory; verify against official text."
+  edge-mandate-further "Mandate issued" -> further-review {
+    authority cite ?("Ala. R. App. P. 41")
+  }
+}
+
+decision further-review: "Further Review Sought?" by applicant cite ?("Ala. R. App. P. 39")
+{
+  note "OUTLINE. Further review or certiorari petition period is a hole. Rule numbers from memory; verify against official text."
+  edge-further-review-none "No further review" -> final-decision {
+    authority cite ?("Ala. R. App. P. 39")
+  }
+  edge-further-review-petition "Petition for review or certiorari" -> review-decided { event ReviewPetitionFiled()
+    authority cite ?("Ala. R. App. P. 39")
+  }
+}
+
+state review-decided: "Further Review Decided" by court cite ?("Ala. R. App. P. 39")
+{
+  note "OUTLINE. Court decision on the petition."
+  edge-review-decided-denied "Denied" -> review-denied {
+    authority cite ?("Ala. R. App. P. 39")
+  }
+  edge-review-decided-granted "Granted" -> review-granted {
+    authority cite ?("Ala. R. App. P. 39")
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: No Appellate Jurisdiction" outcome [loss, dismissal, jurisdictional] cite ?("Ala. R. App. P. 3")
+{
+  note "OUTLINE. Dismissal for lack of appellate jurisdiction."
+  payoff ?
+}
+
+terminal dismissed-untimely: "Dismissed: Untimely Notice" outcome [loss, dismissal] cite ?("Ala. R. App. P. 4")
+{
+  note "OUTLINE. Dismissal for untimely notice of appeal."
+  payoff ?
+}
+
+terminal final-decision: "Final: Decision Stands" outcome [final] cite ?("Ala. R. App. P. 41")
+{
+  note "OUTLINE. Decision stands after rehearing and mandate."
+  payoff ?
+}
+
+terminal review-denied: "Further Review Denied" outcome [final] cite ?("Ala. R. App. P. 39")
+{
+  note "OUTLINE. Further review denied."
+  payoff ?
+}
+
+terminal review-granted: "Further Review Granted" outcome [neutral] cite ?("Ala. R. App. P. 39")
+{
+  note "OUTLINE. Further review granted; the merits of the further review are not modeled."
+  payoff ?
+}

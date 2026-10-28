@@ -1,0 +1,32 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-ok-judicial-ethics-advisory-panel
+
+import outline-ok-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start request
+
+state request: "Motion or request filed" by applicant cite ?("Okla. Code of Jud. Conduct (verify)")
+{
+  note "OUTLINE. The panel issues advisory opinions on judicial ethics to judges and judicial candidates on request. Requests to the Oklahoma Judicial Ethics Advisory Panel: who may file, form and response periods are holes. Leading decisions: not yet identified in this pass; verify before use."
+  edge-request-decision "Submitted for decision" -> decision { event ActionCommenced() authority cite ?("Okla. Code of Jud. Conduct (verify)") }
+}
+
+chance decision: "Panel decides" by court cite ?("Okla. Code of Jud. Conduct (verify)")
+{
+  note "OUTLINE. Outcome probabilities are holes."
+  edge-decision-granted "Granted or opinion issued" -> granted p ? { event DecisionFiled() }
+  edge-decision-denied "Denied or declined" -> denied p ? { event DecisionFiled() }
+}
+
+terminal granted: "Granted or opinion issued" outcome [win] cite ?("Okla. Code of Jud. Conduct (verify)")
+{
+  note "OUTLINE. Effect of the order or opinion is a hole."
+  payoff ?
+}
+
+terminal denied: "Denied or declined" outcome [loss] cite ?("Okla. Code of Jud. Conduct (verify)")
+{
+  note "OUTLINE. Further review: none: an advisory opinion is not reviewable (verify)."
+  payoff ?
+}

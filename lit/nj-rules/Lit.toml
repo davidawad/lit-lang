@@ -1,0 +1,27 @@
+# The New Jersey base library (lg-u561.5): the trigger events the New Jersey court
+# packages route their graphs on: lit/nj-superior-law, lit/nj-appellate-civil and the
+# outlines outlines/third-circuit/new-jersey/state-supreme-court and outlines/third-circuit/new-jersey/state-tax-court.
+# It declares no period: the rules' periods are stated in the court
+# packages' notes. No procedure of its own.
+[package]
+name = "nj-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "nj-state-rules"
+forum = "nj-state-rules"
+authority = "StateRule"
+jurisdiction_id = "new-jersey"
+title = "New Jersey state court rules (base library)"
+description = "The rule layer New Jersey's court packages share: the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-09-01"
+known_at = "2026-10-28"
+unknown_before = "2026-09-01"
+jurisdiction = "New Jersey state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

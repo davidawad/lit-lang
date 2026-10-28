@@ -1,0 +1,69 @@
+module wi-supreme-court-civil.review
+
+import wi-state-rules.{ ReviewPetitionFiled }
+
+// A petition for review of a Court of Appeals decision, from the
+// petitioner's side. Every period is stated in a note, not counted.
+
+start petition
+
+decision petition: "Petition for review?" by applicant cite "Wis. Stat. § 808.10(1)"
+{
+  note "A decision of the court of appeals is reviewable only on a petition for review granted by the Supreme Court (Wis. Stat. § 808.10(1)). The decision the petition seeks to review is the Court of Appeals' affirmance, reversal or modification, or remand."
+  edge-petition-affirmed "Petition for review of an affirmance" -> affirmed-review { event ReviewPetitionFiled() authority cite "Wis. Stat. § 809.62" }
+  edge-petition-reversed "Petition for review of a reversal or modification" -> reversed-review { event ReviewPetitionFiled() authority cite "Wis. Stat. § 809.62" }
+  edge-petition-remanded "Petition for review of a remand" -> remanded-review { event ReviewPetitionFiled() authority cite "Wis. Stat. § 809.62" }
+}
+
+decision affirmed-review: "Petition for review decided (affirmed)" by court cite "Wis. Stat. § 809.62"
+{
+  note "A decision of the court of appeals is reviewable only on a petition for review granted by the Supreme Court (Wis. Stat. § 808.10(1)). An opposing party may respond within 14 days after service of the petition (Wis. Stat. § 809.62(3)); a party seeking to reverse, vacate or modify the decision files a petition for cross-review within the period for a petition for review or 30 days after another party's petition is filed, whichever is later (Wis. Stat. § 809.62(3m)). The petition is limited to 35 pages or 8,000 words, exclusive of appendix (Wis. Stat. § 809.62(4)). Remittitur is stayed until the Supreme Court rules on the petition (Wis. Stat. § 809.26(1))."
+  edge-affirmed-review-denied "Review denied" -> affirmed-final {
+    authority cite "Wis. Stat. § 809.62"
+  }
+  edge-affirmed-review-granted "Review granted" -> supreme-court-review {
+    authority cite "Wis. Stat. § 809.63"
+  }
+}
+
+terminal affirmed-final: "Affirmed: final, record remitted" outcome [loss] cite "Wis. Stat. § 809.26(1)"
+{
+  note "The clerk of the court of appeals transmits the judgment and decision and the record to the circuit court 31 days after the filing of the decision, or as soon thereafter as practicable; a petition for review or a reconsideration motion stays the transmittal (Wis. Stat. § 809.26(1)). Outcome from the applicant's side."
+}
+
+decision reversed-review: "Petition for review decided (reversed or modified)" by court cite "Wis. Stat. § 809.62"
+{
+  note "A decision of the court of appeals is reviewable only on a petition for review granted by the Supreme Court (Wis. Stat. § 808.10(1)). An opposing party may respond within 14 days after service of the petition (Wis. Stat. § 809.62(3)); a party seeking to reverse, vacate or modify the decision files a petition for cross-review within the period for a petition for review or 30 days after another party's petition is filed, whichever is later (Wis. Stat. § 809.62(3m)). The petition is limited to 35 pages or 8,000 words, exclusive of appendix (Wis. Stat. § 809.62(4)). Remittitur is stayed until the Supreme Court rules on the petition (Wis. Stat. § 809.26(1))."
+  edge-reversed-review-denied "Review denied" -> reversed-final {
+    authority cite "Wis. Stat. § 809.62"
+  }
+  edge-reversed-review-granted "Review granted" -> supreme-court-review {
+    authority cite "Wis. Stat. § 809.63"
+  }
+}
+
+terminal reversed-final: "Reversed or modified: final, record remitted" outcome [win] cite "Wis. Stat. § 809.26(1)"
+{
+  note "The clerk of the court of appeals transmits the judgment and decision and the record to the circuit court 31 days after the filing of the decision, or as soon thereafter as practicable; a petition for review or a reconsideration motion stays the transmittal (Wis. Stat. § 809.26(1)). Outcome from the applicant's side."
+}
+
+decision remanded-review: "Petition for review decided (remanded)" by court cite "Wis. Stat. § 809.62"
+{
+  note "A decision of the court of appeals is reviewable only on a petition for review granted by the Supreme Court (Wis. Stat. § 808.10(1)). An opposing party may respond within 14 days after service of the petition (Wis. Stat. § 809.62(3)); a party seeking to reverse, vacate or modify the decision files a petition for cross-review within the period for a petition for review or 30 days after another party's petition is filed, whichever is later (Wis. Stat. § 809.62(3m)). The petition is limited to 35 pages or 8,000 words, exclusive of appendix (Wis. Stat. § 809.62(4)). Remittitur is stayed until the Supreme Court rules on the petition (Wis. Stat. § 809.26(1))."
+  edge-remanded-review-denied "Review denied" -> remanded-final {
+    authority cite "Wis. Stat. § 809.62"
+  }
+  edge-remanded-review-granted "Review granted" -> supreme-court-review {
+    authority cite "Wis. Stat. § 809.63"
+  }
+}
+
+terminal remanded-final: "Remanded: final, record remitted" outcome [remand] cite "Wis. Stat. § 809.26(1)"
+{
+  note "The clerk of the court of appeals transmits the judgment and decision and the record to the circuit court 31 days after the filing of the decision, or as soon thereafter as practicable; a petition for review or a reconsideration motion stays the transmittal (Wis. Stat. § 809.26(1)). Outcome from the applicant's side."
+}
+
+terminal supreme-court-review: "Review granted: the merits continue in the Supreme Court" outcome [appeal] cite "Wis. Stat. § 809.63"
+{
+  note "Procedure in the Supreme Court after review is granted follows Wis. Stat. § 809.63; its briefing is not modeled here."
+}

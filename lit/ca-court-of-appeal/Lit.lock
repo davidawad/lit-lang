@@ -4,12 +4,24 @@ version = 2
 name = "ca-court-of-appeal"
 version = "0.1.0"
 language = 1
-source = "sha256:a9a08be618ca675e7ff0d13f502a89e3235969b192f859dd1a085935cf50dbdd"
-semantic = "sha256:5dd1f4b2476fc907a998fd3d16d993f59bf9fe6301449e6d03ef88750d92eb3c"
+source = "sha256:b818af33ea87278df77476739c4e476d98cbea84af94bfabcb014485f1eb410c"
+semantic = "sha256:0e27f37eee6685eb9c5f38cc7f779bab348f74bbbdafba1e8da304bcba85205d"
 texts = [
     "ccp sources/ca-superior/ccp-cited-chapters-sectioned.txt sha256:494bdb61129d96d2eee0776501204acb3bd5f1fd32641098efacd3558124e336",
     "crc-title8 sources/ca-court-of-appeal/cal-rules-of-court-title8-cited.txt sha256:616d23ce45fc69c4d0c6c6b2e5684681c36f8bfe5954e99ce40a766d0ed5e010",
 ]
+dependencies = [
+    "ca-state-rules 0.1.0",
+    "core 1.0.0",
+]
+
+[[package]]
+name = "ca-state-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:60a7aac60f16a7d3df7b9e7676fa37b235281a5711dfb05a034392c694e32e5c"
+semantic = "sha256:a91c944ac49d9c361c7952b99128c41c611d90b62653b01b4dec7d5f6b35ff3a"
+texts = []
 dependencies = [
     "core 1.0.0",
 ]

@@ -1,0 +1,39 @@
+# The Massachusetts base library (lg-u561.5): what the Massachusetts court
+# packages share. The Massachusetts Rules of Appellate Procedure
+# (sources/ma-appeals-sjc) govern the Appeals Court (lit/ma-appeals-court)
+# and the Supreme Judicial Court (lit/ma-sjc), so their brief and motion
+# limits and the papers they govern are declared once here; the court
+# packages also route their graphs on its trigger events. No procedure of
+# its own.
+[package]
+name = "ma-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ma-state-rules"
+forum = "ma-state-rules"
+authority = "StateRule"
+jurisdiction_id = "massachusetts"
+title = "Massachusetts state court rules (base library)"
+description = "The rule layer Massachusetts's court packages share: the brief and reconsideration-motion limits of Mass. R. A. P. 20 and 27 and the papers they govern, and the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-09-01"
+known_at = "2026-10-27"
+unknown_before = "2026-09-01"
+jurisdiction = "Massachusetts state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.mass-r-a-p]
+title = "Massachusetts Rules of Appellate Procedure, Trial Court Law Libraries compilation including amendments effective September 1, 2026"
+url = "https://www.mass.gov/doc/massachusetts-rules-of-appellate-procedure/download"
+path = "sources/ma-appeals-sjc/ma-rules-appellate-procedure-sectioned.txt"
+path_sha256 = "1e933a8ddaecfe30dac949319d8f1f78f3a2ecc2a03e6815b10545072338eb5b"
+sha256 = "0811b8698254509d2830120cc2b1596e76d7d24d913603842617efd6ac391b34"
+as_of = "2026-09-01"
+cite_prefixes = ["Mass. R. A. P."]
+section_heading = "Rule {n}"

@@ -1,0 +1,56 @@
+module fl-state-rules
+
+/// `lit/fl-rules` is a base library: it declares what Florida's court
+/// packages share and no procedure of its own. Its pack holds only this
+/// placeholder terminal, which no link or case may route through.
+start library
+
+terminal library: "Florida state court rules library (no procedure)"
+
+/// An initial or answer brief (Fla. R. App. P. 9.210(a)(2)(B)): a
+/// computer-generated brief is limited to 13,000 words, a handwritten or
+/// typewritten one to 50 pages (Fla. R. App. P. 9.210(a)(2)). The larger
+/// cross-appeal and capital-case limits of 9.210(a)(2)(B)-(D) are not
+/// encoded.
+limit initial-or-answer-brief {
+  words <= 13_000 cite "Fla. R. App. P. 9.210(a)"
+  pages <= 50 cite "Fla. R. App. P. 9.210(a)"
+} cite "Fla. R. App. P. 9.210(a)"
+
+/// A reply brief (Fla. R. App. P. 9.210(a)(2)(B)): 4,000 words or 15
+/// pages.
+limit reply-brief {
+  words <= 4_000 cite "Fla. R. App. P. 9.210(a)"
+  pages <= 15 cite "Fla. R. App. P. 9.210(a)"
+} cite "Fla. R. App. P. 9.210(a)"
+
+/// The appellant's initial brief is served (Fla. R. App. P. 9.110(f)).
+event InitialBriefServed() paper initial-or-answer-brief
+
+/// The appellee's answer brief is served (Fla. R. App. P. 9.210(g)).
+event AnswerBriefServed() paper initial-or-answer-brief
+
+/// The appellant's reply brief is served (Fla. R. App. P. 9.210(g)).
+event ReplyBriefServed() paper reply-brief
+
+// The trigger events the court packages' graphs route on.
+/// An action, claim, petition or charge is filed and the proceeding begins.
+event ActionCommenced()
+
+/// A final judgment, decision or appealable order is entered.
+event JudgmentEntered()
+
+/// A notice of appeal, or a petition or appeal for review of a lower court's or tribunal's decision, is filed.
+event NoticeOfAppealFiled()
+
+/// The record on appeal or review is filed or transmitted.
+event RecordFiled()
+
+/// The reviewing court's or tribunal's decision or opinion is filed.
+event DecisionFiled()
+
+/// A petition for discretionary review in a higher court (certiorari, transfer, leave or review) is filed.
+event ReviewPetitionFiled()
+
+/// The mandate, remittitur or certificate of judgment issues.
+event MandateIssued()

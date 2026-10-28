@@ -1,5 +1,7 @@
 module fl-circuit-court-civil.civil
 
+import fl-state-rules.{ JudgmentEntered }
+
 start complaint-filed
 
 state complaint-filed: "Complaint filed" by applicant cite "Fla. R. Civ. P. 1.050"
@@ -103,7 +105,7 @@ state trial: "Trial" by court cite "Fla. R. Civ. P. 1.430(b)"
 decision post-trial: "Post-trial motions decided" by court cite "Fla. R. Civ. P. 1.530(b)"
 {
   note "A party who timely moved for a directed verdict may serve a motion for judgment in accordance with it within 15 days after the return of a verdict or the discharge of the jury (Fla. R. Civ. P. 1.480(b)). A motion for new trial or rehearing is served not later than 15 days after the return of the verdict in a jury action or the filing of the judgment in a non-jury action (Fla. R. Civ. P. 1.530(b)). The court may not extend these times (Fla. R. Civ. P. 1.090(b)(2))."
-  edge-post-trial-judgment "Motions resolved or none served" -> judgment-entered {
+  edge-post-trial-judgment "Motions resolved or none served" -> judgment-entered { event JudgmentEntered()
     authority cite "Fla. R. Civ. P. 1.530(b)"
   }
   edge-post-trial-jmol "Judgment in accordance with the directed verdict motion" -> judgment-for-movant {
@@ -132,7 +134,7 @@ decision appeal-decision: "Notice of appeal within 30 days of rendition?" by app
 
 terminal appeal-taken: "Appeal taken: continue in the Florida appellate package" outcome [appeal] cite "Fla. R. App. P. 9.110(b)"
 {
-  note "Hand-off to lit/fl-state-appellate (fl-district-court-of-appeal)."
+  note "Hand-off to lit/fl-district-court-of-appeal (fl-district-court-of-appeal)."
 }
 
 terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Fla. R. App. P. 9.110(b)"

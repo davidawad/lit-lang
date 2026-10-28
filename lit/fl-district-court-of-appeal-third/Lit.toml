@@ -1,0 +1,47 @@
+# Florida Third District Court of Appeal (lg-u561.5): the statewide package lit/fl-district-court-of-appeal for this
+# district. Its graph is the statewide one: the district's internal
+# operating procedures are not vendored, so nothing here departs from the rules yet.
+#
+# Appeals of final orders to the Florida district courts of appeal under
+# the Florida Rules of Appellate Procedure (the Florida Bar's October 1,
+# 2026 edition, sources/fl-state-appellate). Discretionary review in the
+# Supreme Court of Florida is lit/fl-supreme-court; each district is its own
+# package over the same rules (lit/fl-district-court-of-appeal-*); the brief
+# limits are lit/fl-rules' (lg-u561.5). Computation of time is governed by
+# Florida Rule of General Practice and Judicial Administration 2.514 (Fla.
+# R. App. P. 9.420(e)), which is not vendored, so the rules' periods are
+# stated in notes, not encoded as counted deadlines.
+[package]
+name = "fl-district-court-of-appeal-third"
+version = "0.1.0"
+language = 1
+pack_id = "fl-district-court-of-appeal-third"
+forum = "fl-district-court-of-appeal-third"
+authority = "StateRule"
+jurisdiction_id = "florida"
+title = "Florida Third District Court of Appeal, civil appeals"
+description = "Florida Third District Court of Appeal: the district's internal operating procedures and administrative orders supplement the Florida Rules of Appellate Procedure; they are not vendored and not modeled. Appeals of final orders to the Florida district courts of appeal under the Florida Rules of Appellate Procedure (October 1, 2026): appealability, notice, record, briefs, argument, decision, rehearing, mandate and the notice invoking the Supreme Court's discretionary jurisdiction (decided in lit/fl-supreme-court). The six districts are lit/fl-district-court-of-appeal-*; the brief limits are lit/fl-rules'."
+in_force = "2026-10-01"
+known_at = "2026-10-27"
+unknown_before = "2026-10-01"
+jurisdiction = "Florida Third District Court of Appeal (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the brief limits of Fla. R. App. P. 9.210 and the briefs they govern and trigger events.
+fl-state-rules = { version = "^0.1.0", path = "../fl-rules" }
+
+[sources.fla-r-app-p]
+title = "Florida Rules of Appellate Procedure, the Florida Bar's October 1, 2026 edition"
+url = "https://www-media.floridabar.org/uploads/2026/10/Appellate-Court-Rules-10-01-26.pdf"
+path = "sources/fl-state-appellate/fl-rules-appellate-procedure-2026-10-01-sectioned.txt"
+path_sha256 = "529ece835412697830636b5054b02b830048cf561f1f99edc4298967df7369d4"
+sha256 = "7b462cb689ec328b5138c6693c164c0a81adbe5914f02cd88f7bc7d87f1a7042"
+as_of = "2026-10-01"
+cite_prefixes = ["Fla. R. App. P."]
+section_heading = "Rule {n}"

@@ -1,0 +1,29 @@
+# The Virginia base library (lg-u561.5): what the Virginia court packages
+# share. Parts Five and Five A of the Rules of the Supreme Court of Virginia
+# (sources/va-circuit-civil) govern the Court of Appeals
+# (lit/va-court-of-appeals) and the Supreme Court (lit/va-supreme-court);
+# the court packages route their graphs on this library's trigger events.
+# It declares no period: the rules' periods are stated in the court
+# packages' notes. No procedure of its own.
+[package]
+name = "va-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "va-state-rules"
+forum = "va-state-rules"
+authority = "StateRule"
+jurisdiction_id = "virginia"
+title = "Virginia state court rules (base library)"
+description = "The rule layer Virginia's court packages share: the trigger events of Parts Five and Five A of the Rules of the Supreme Court of Virginia, and the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-09-15"
+known_at = "2026-10-27"
+unknown_before = "2026-09-15"
+jurisdiction = "Virginia state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

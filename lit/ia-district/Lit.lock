@@ -9,12 +9,24 @@ dependencies = []
 name = "ia-district-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:e87debab443d8c6694665cb8e5039907d38b179c04e5eedc2bcf41d45682991f"
-semantic = "sha256:a3c5f9305ea7a9d932c4e41147eaaaa8ef38a86ccc004951a0bb2b6c0e9d8074"
+source = "sha256:3a200bb0675b108abfffde166f3999645b74d3d0fffe252c4b38ab5429435c9a"
+semantic = "sha256:bdfe171d862293b7dbb3c16675224949a3e4dce494db17dd3c4d7dded7e727a0"
 texts = [
     "ia-r-app-p sources/iowactapp/iowa-rules-appellate-procedure-sectioned.txt sha256:a6cb0e7fcb06ccd217389445992200360cfe96182b201bea2d150cc13109326d",
     "ia-r-civ-p sources/ia-district/iowa-rules-civil-procedure-sectioned.txt sha256:5f599c69732cc275e92ca4159c1ae015c5771c7179450bd4ff90de9050d2ee66",
 ]
+dependencies = [
+    "core 1.0.0",
+    "ia-state-rules 0.1.0",
+]
+
+[[package]]
+name = "ia-state-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:6f84fbd9f2204265e0705f4b3d5e2ea6f9daaa58e2587b04fc1b503c54b3be3a"
+semantic = "sha256:20335a65d0fe8d470a6113c8b0a217bbd1fd9b20943aa05ce146c5e64194f6be"
+texts = []
 dependencies = [
     "core 1.0.0",
 ]

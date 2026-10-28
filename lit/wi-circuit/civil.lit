@@ -1,5 +1,7 @@
 module wi-circuit-court-civil.civil
 
+import wi-state-rules.{ JudgmentEntered }
+
 // Civil actions in the Wisconsin circuit courts, from the applicant's
 // (plaintiff's) side. Every period below is stated in a note, not counted:
 // Wis. Stat. § 801.15(1)(b) excludes the day of the triggering act,
@@ -111,7 +113,7 @@ terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, 
 decision summary-judgment: "Summary judgment decided" by court cite "Wis. Stat. § 802.08(2)"
 {
   note "A party may move for summary judgment within 8 months of the filing of the summons and complaint or within the time set in a scheduling order (Wis. Stat. § 802.08(1)). Unless the scheduling order specifies earlier times, the motion is served at least 20 days before the time fixed for the hearing and the adverse party serves any opposing affidavits at least 5 days before it. Judgment is rendered if the pleadings, discovery and affidavits show no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law (Wis. Stat. § 802.08(2))."
-  edge-summary-judgment-granted "Granted" -> judgment-entered {
+  edge-summary-judgment-granted "Granted" -> judgment-entered { event JudgmentEntered()
     authority cite "Wis. Stat. § 802.08(2)"
   }
   edge-summary-judgment-denied "Denied" -> trial { authority cite "Wis. Stat. § 802.08(2)" }
@@ -123,7 +125,7 @@ state trial: "Trial by jury or by the court" by court cite "Wis. Stat. § 805.01
   edge-trial-verdict "Jury verdict rendered" -> motions-after-verdict {
     authority cite "Wis. Stat. § 805.16(1)"
   }
-  edge-trial-court "Decision after trial to the court" -> judgment-entered {
+  edge-trial-court "Decision after trial to the court" -> judgment-entered { event JudgmentEntered()
     authority cite "Wis. Stat. § 805.17(3)"
   }
   edge-trial-settled "Settled before verdict" -> settled { authority cite "Wis. Stat. § 805.04(1)" }
@@ -132,7 +134,7 @@ state trial: "Trial by jury or by the court" by court cite "Wis. Stat. § 805.01
 decision motions-after-verdict: "Motions after verdict" by court cite "Wis. Stat. § 805.16"
 {
   note "Motions after verdict are filed and served within 20 days after the verdict is rendered, unless the court within those 20 days sets a longer time by order; arguments are heard not less than 10 nor more than 60 days after the verdict unless enlarged under § 801.15(2)(a); if the court does not decide a motion within 90 days after the verdict, it is considered denied and judgment is entered on the verdict. A motion for a new trial on newly discovered evidence may be made within one year after verdict and is deemed denied unless decided within 90 days after it is made (Wis. Stat. § 805.16(1)-(4)). The time for deciding motions after verdict under § 805.16(3), for reconsideration motions under § 805.17(3), for relief under § 806.07 and for initiating an appeal under § 808.04 may not be enlarged (Wis. Stat. § 801.15(2)(c))."
-  edge-motions-after-verdict-resolved "Decided, considered denied, or none filed" -> judgment-entered {
+  edge-motions-after-verdict-resolved "Decided, considered denied, or none filed" -> judgment-entered { event JudgmentEntered()
     authority cite "Wis. Stat. § 805.16(3)"
   }
   edge-motions-after-verdict-new-trial "New trial ordered" -> trial {
@@ -167,7 +169,7 @@ decision relief-motion: "Relief from judgment decided" by court cite "Wis. Stat.
 
 terminal appeal-taken: "Appeal taken: continue in the Court of Appeals package" outcome [appeal] cite "Wis. Stat. § 809.10(1)"
 {
-  note "An appeal is initiated by filing a notice of appeal with the clerk of the circuit court in which the judgment or order was entered (Wis. Stat. § 809.10(1)(a)) within the time set by Wis. Stat. § 808.04(1). Hand-off to lit/wisctapp (wi-court-of-appeals-civil)."
+  note "An appeal is initiated by filing a notice of appeal with the clerk of the circuit court in which the judgment or order was entered (Wis. Stat. § 809.10(1)(a)) within the time set by Wis. Stat. § 808.04(1). Hand-off to lit/wi-court-of-appeals (wi-court-of-appeals-civil)."
 }
 
 terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Wis. Stat. § 808.04(1)"

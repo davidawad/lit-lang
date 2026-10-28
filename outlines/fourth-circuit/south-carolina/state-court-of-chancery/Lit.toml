@@ -1,0 +1,22 @@
+[package]
+name = "outline-sc-court-of-chancery"
+version = "0.0.1"
+language = 1
+pack_id = "outline-sc-court-of-chancery"
+forum = "sc-court-of-chancery"
+authority = "StateRule"
+title = "OUTLINE: Court of Chancery of South Carolina"
+description = "Outline only: structure, cites and holes, over the state's shared rule layer (lit/sc-rules). Every value is a hole until verified against vendored rule text."
+in_force = "2025-01-01"
+known_at = "2025-01-01"
+unknown_before = "2025-01-01"
+jurisdiction = "Court of Chancery of South Carolina"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+# The state's shared rule layer (its trigger events).
+sc-state-rules = { version = "^0.1.0", path = "../../../../lit/sc-rules" }

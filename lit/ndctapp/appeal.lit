@@ -1,5 +1,7 @@
 module nd-appellate-civil.appeal
 
+import nd-state-rules.{ NoticeOfAppealFiled }
+
 /// A principal brief: at most 38 pages, excluding any addendum, footnotes
 /// and endnotes counted (N.D.R.App.P. 32(a)(8)(A)). An argument on the
 /// appropriateness of N.D.R.Civ.P. 54(b) certification may add at most 5
@@ -29,7 +31,7 @@ start notice-filed
 state notice-filed: "Notice of appeal filed" by applicant cite "N.D.R.App.P. 4(a)"
 {
   note "An appeal permitted by law as of right is taken by filing a notice of appeal with the clerk of the supreme court within the time allowed by Rule 4, served on each other party with proof of service filed with it (N.D.R.App.P. 3(a)(1), 3(d)(1)). In a civil case the notice is filed within 60 days from service of notice of entry of the judgment or order appealed; any other party may file within 14 days after the first notice or within its own time, whichever ends later; a timely motion under N.D.R.Civ.P. 50(b), 52(b), 54 (fees), 59, or 60 if served and filed no later than 28 days after notice of entry, restarts the full time from service of notice of entry of the order disposing of the last such motion; and the supreme court may extend the time on a motion made no later than 30 days after it expires, for excusable neglect or good cause, by no more than 30 days (N.D.R.App.P. 4(a)). Notice of the appeal is not made until any required docket fee is paid or waived (N.D.R.App.P. 12). Periods in this package are stated, not counted: computation is N.D.R.App.P. 26(a), and 3 days are added after service by mail or commercial carrier unless the document is delivered on the date of service stated (N.D.R.App.P. 26(c))."
-  edge-notice-filed-appealability "Notice filed" -> appealability {
+  edge-notice-filed-appealability "Notice filed" -> appealability { event NoticeOfAppealFiled()
     authority cite "N.D.R.App.P. 3(a)"
   }
 }

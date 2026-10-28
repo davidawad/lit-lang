@@ -1,0 +1,96 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+// Texas Court of Criminal Appeals.
+module outline-tx-court-of-criminal-appeals
+
+import outline-tx-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start invoked
+
+state invoked: "Review invoked" by applicant cite ?("Tex. R. App. P. 68.2") {
+  note "OUTLINE. Texas's court of last resort in criminal cases. It reviews court-of-appeals decisions by petition for discretionary review, hears death-sentence appeals directly, and decides post-conviction habeas applications (Tex. Code Crim. Proc. arts. 11.07, 11.071; verify). A petition for discretionary review from a court of appeals' decision (Tex. R. App. P. 66-68; verify), or the automatic direct appeal of a death sentence (Tex. Code Crim. Proc. art. 37.071, § 2(h); verify). The filing period is a hole (?)."
+  edge-invoked-proceeds "Jurisdiction accepted" -> record-prepared { event NoticeOfAppealFiled()
+    authority cite ?("Tex. R. App. P. 66.3")
+  }
+  edge-invoked-dismissed "Untimely or not reviewable; dismissed" -> review-dismissed {
+    authority cite ?("Tex. R. App. P. 68.2")
+  }
+}
+
+state record-prepared: "Record filed" by office cite ?("Tex. R. App. P., record in the Court of Criminal Appeals (verify rule number)") {
+  note "OUTLINE. Record and transcript periods are holes (?)."
+  edge-record-prepared-briefing "Record complete" -> briefing { event RecordFiled()
+    authority cite ?("Tex. R. App. P. 70")
+  }
+}
+
+state briefing: "Briefing" by applicant cite ?("Tex. R. App. P. 70") {
+  note "OUTLINE. Brief periods, length limits and extension practice are holes (?). Key decisions (verify): Hernandez v. State, 726 S.W.2d 53 (Tex. Crim. App. 1986) (adopting Strickland v. Washington); Brooks v. State, 323 S.W.3d 893 (Tex. Crim. App. 2010) (sufficiency review under Jackson v. Virginia)."
+  edge-briefing-submitted "Briefs filed" -> argument {
+    authority cite ?("Tex. R. App. P., oral argument in the Court of Criminal Appeals (verify rule number)")
+  }
+}
+
+decision argument: "Oral argument or submission on briefs" by court cite ?("Tex. R. App. P., oral argument in the Court of Criminal Appeals (verify rule number)") {
+  note "OUTLINE. Whether argument is granted, and its time limits, are holes."
+  edge-argument-argued "Argued" -> decision {
+    authority cite ?("Tex. R. App. P., oral argument in the Court of Criminal Appeals (verify rule number)")
+  }
+  edge-argument-submitted "Submitted on the briefs" -> decision {
+    authority cite ?("Tex. R. App. P., oral argument in the Court of Criminal Appeals (verify rule number)")
+  }
+}
+
+decision decision: "Decision" by court cite ?("Tex. R. App. P. 77") {
+  note "OUTLINE. Standards of review (sufficiency, harmless error) are holes until verified. Key decision (verify): Jackson v. Virginia, 443 U.S. 307 (1979)."
+  edge-decision-affirmed "Conviction affirmed" -> after-affirmance {
+    authority cite ?("Tex. R. App. P. 77")
+  }
+  edge-decision-reversed "Reversed or remanded" -> conviction-reversed {
+    authority cite ?("Tex. R. App. P. 18")
+  }
+}
+
+decision after-affirmance: "Rehearing, further review or mandate" by applicant cite ?("Tex. R. App. P. 79") {
+  note "OUTLINE. The rehearing and further-review periods are holes (?)."
+  edge-after-affirmance-rehearing "Motion for rehearing" -> rehearing {
+    authority cite ?("Tex. R. App. P. 79")
+  }
+  edge-after-affirmance-further "Further review sought" -> further-review {
+    authority cite ?("Petition for a writ of certiorari to the Supreme Court of the United States under 28 U.S.C. section 1257(a) (verify)")
+  }
+  edge-after-affirmance-mandate "Mandate issues" -> conviction-affirmed {
+    authority cite ?("Tex. R. App. P. 18")
+  }
+}
+
+decision rehearing: "Rehearing ruling" by court cite ?("Tex. R. App. P. 79") {
+  note "OUTLINE. Grounds for rehearing are holes until verified."
+  edge-rehearing-granted "Rehearing granted" -> decision { authority cite ?("Tex. R. App. P. 79") }
+  edge-rehearing-denied-further "Rehearing denied; further review sought" -> further-review {
+    authority cite ?("Petition for a writ of certiorari to the Supreme Court of the United States under 28 U.S.C. section 1257(a) (verify)")
+  }
+  edge-rehearing-denied "Rehearing denied; mandate issues" -> conviction-affirmed {
+    authority cite ?("Tex. R. App. P. 18")
+  }
+}
+
+terminal review-dismissed: "Review dismissed" outcome [loss] cite ?("Tex. R. App. P. 68.2") {
+  note "OUTLINE. Payoff is a hole."
+  payoff ?
+}
+
+terminal conviction-affirmed: "Conviction affirmed; mandate issued" outcome [loss] cite ?("Tex. R. App. P. 18") {
+  note "OUTLINE. Collateral review is a hole (verify). Payoff is a hole."
+  payoff ?
+}
+
+terminal conviction-reversed: "Conviction reversed or remanded" outcome [win] cite ?("Tex. R. App. P. 18") {
+  note "OUTLINE. Retrial or resentencing on remand is a hole. Payoff is a hole."
+  payoff ?
+}
+
+terminal further-review: "Further review sought" outcome [appeal] cite ?("Petition for a writ of certiorari to the Supreme Court of the United States under 28 U.S.C. section 1257(a) (verify)") {
+  note "OUTLINE. Payoff is a hole."
+  payoff ?
+}

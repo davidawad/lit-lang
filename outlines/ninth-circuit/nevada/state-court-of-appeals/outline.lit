@@ -1,0 +1,143 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+
+module outline-nv-court-of-appeals
+
+import outline-nv-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start notice-filed
+
+state notice-filed: "Notice of Appeal Filed" by applicant cite ?("NRAP 4(a)(1)")
+{
+  note "Notice period is a hole. Timeliness is a hole. Verify the rule and any jurisdictional treatment."
+  edge-notice-filed-appealability "Timely notice" -> appealability {
+    authority cite ?("NRAP 4(a)(1)")
+  }
+  edge-notice-filed-dismissed-untimely "Late or defective notice" -> dismissed-untimely {
+    authority cite ?("NRAP 4(a)(1)")
+  }
+}
+
+terminal dismissed-untimely: "Dismissed as untimely" outcome [loss] cite ?("NRAP 4(a)(1)")
+{
+  note "Dismissal for untimely notice. Verify."
+  payoff ?
+}
+
+decision appealability: "Appealable Order or Judgment" by court cite ?("NRAP 3A(b)")
+{
+  note "Appealable order or judgment: statute or rule is the cite. Appealable judgments and orders: NRAP 3A(b). Verify. Verify."
+  edge-appealability-dismissed-jurisdiction "Not appealable" -> dismissed-jurisdiction {
+    authority cite ?("NRAP 3A(b)")
+  }
+  edge-appealability-record-assembled "Appealable" -> record-assembled { event NoticeOfAppealFiled()
+    authority cite ?("NRAP 3A(b)")
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed for lack of appealable order" outcome [loss] cite ?("NRAP 3A(b)")
+{
+  note "OUTLINE. Interlocutory review routes are holes (verify)."
+  payoff ?
+}
+
+state record-assembled: "Record Assembled" by applicant cite ?("NRAP 10")
+{
+  note "Record and transcript deadlines are holes. Verify."
+  edge-record-assembled-briefing "Record transmitted" -> briefing { event RecordFiled()
+    authority cite ?("NRAP 10")
+  }
+}
+
+state briefing: "Briefing" by applicant cite ?("NRAP 28")
+{
+  note "Brief length and due dates are holes. Verify."
+  edge-briefing-argument "Briefing complete" -> argument {
+    authority cite ?("NRAP 28")
+  }
+}
+
+decision argument: "Argument or Submission" by court cite ?("NRAP 34")
+{
+  note "Calendaring and submission on briefs are holes. Verify."
+  edge-argument-decision-issued "Argued or submitted" -> decision-issued {
+    authority cite ?("NRAP 34")
+  }
+}
+
+decision decision-issued: "Decision" by court cite ?("NRAP 36")
+{
+  note "Standard of review and publication status are holes. Verify."
+  edge-decision-issued-rehearing-window "Disposition entered" -> rehearing-window {
+    authority cite ?("NRAP 36")
+  }
+}
+
+decision rehearing-window: "Rehearing or Reconsideration" by applicant cite ?("NRAP 40")
+{
+  note "Period is a hole. Verify."
+  edge-rehearing-window-mandate-issued "No petition" -> mandate-issued { event MandateIssued()
+    authority cite ?("NRAP 41")
+  }
+  edge-rehearing-window-rehearing-ruling "Petition filed" -> rehearing-ruling {
+    authority cite ?("NRAP 40")
+  }
+}
+
+decision rehearing-ruling: "Rehearing Decided" by court cite ?("NRAP 40")
+{
+  note "Period is a hole. Verify."
+  edge-rehearing-ruling-mandate-issued "Denied" -> mandate-issued { event MandateIssued()
+    authority cite ?("NRAP 40")
+  }
+  edge-rehearing-ruling-rehearing-granted "Granted" -> rehearing-granted {
+    authority cite ?("NRAP 40")
+  }
+}
+
+terminal rehearing-granted: "Rehearing granted; new decision" outcome [appeal] cite ?("NRAP 40")
+{
+  note "OUTLINE. Modeled as an exit; in practice it returns to the decision stage."
+  payoff ?
+}
+
+state mandate-issued: "Mandate or Remittitur Issued" by court cite ?("NRAP 41")
+{
+  note "Issuance timing is a hole. Verify."
+  edge-mandate-issued-further-review "Review sought" -> further-review {
+    authority cite ?("NRAP 40B")
+  }
+  edge-mandate-issued-final-appellate "No further review sought" -> final-appellate {
+    authority cite ?("NRAP 41")
+  }
+}
+
+decision further-review: "Further Review Petition" by applicant cite ?("NRAP 40B")
+{
+  note "Petition period and grounds are holes. Verify."
+  edge-further-review-review-denied "Denied" -> review-denied {
+    authority cite ?("NRAP 40B")
+  }
+  edge-further-review-review-granted "Granted" -> review-granted {
+    authority cite ?("NRAP 40B")
+  }
+}
+
+terminal review-denied: "Further review denied" outcome [loss] cite ?("NRAP 40B")
+{
+  note "OUTLINE. Denial ends further review; finality of the appellate judgment is a hole."
+  payoff ?
+}
+
+terminal review-granted: "Further review granted" outcome [appeal] cite ?("NRAP 40B")
+{
+  note "OUTLINE. Merits of further review are a hole."
+  payoff ?
+}
+
+terminal final-appellate: "Appellate judgment final" outcome [judgment] cite ?("NRAP 41")
+{
+  note "OUTLINE. Trial court regains jurisdiction on issuance (verify)."
+  payoff ?
+}
+

@@ -1,0 +1,42 @@
+# Civil appeals to the Massachusetts Appeals Court under the Massachusetts
+# Rules of Appellate Procedure (the Trial Court Law Libraries' compilation
+# including amendments effective September 1, 2026,
+# sources/ma-appeals-sjc). Direct and further appellate review are the
+# Supreme Judicial Court's (lit/ma-sjc); the brief and motion limits both
+# courts share are lit/ma-rules' (lg-u561.5). Computation of time is Mass.
+# R. A. P. 14, which no counting rule in lit/core encodes, so the rules'
+# periods are stated in notes, not encoded as counted deadlines.
+[package]
+name = "ma-appeals-court"
+version = "0.1.0"
+language = 1
+pack_id = "ma-appeals-court"
+forum = "ma-appeals-court"
+authority = "StateRule"
+jurisdiction_id = "massachusetts"
+title = "Massachusetts Appeals Court, civil appeals"
+description = "Civil appeals from the Massachusetts trial courts to the Appeals Court under the Massachusetts Rules of Appellate Procedure, as far as the vendored text states, through reconsideration, an application for direct or further appellate review (decided in lit/ma-sjc), and the rescript. The brief and motion limits are lit/ma-rules'."
+in_force = "2026-09-01"
+known_at = "2026-10-27"
+unknown_before = "2026-09-01"
+jurisdiction = "Massachusetts Appeals Court (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the brief and reconsideration-motion limits of Mass. R. A. P. 20 and 27 and the papers they govern and trigger events.
+ma-state-rules = { version = "^0.1.0", path = "../ma-rules" }
+
+[sources.mass-r-a-p]
+title = "Massachusetts Rules of Appellate Procedure, Trial Court Law Libraries compilation including amendments effective September 1, 2026"
+url = "https://www.mass.gov/doc/massachusetts-rules-of-appellate-procedure/download"
+path = "sources/ma-appeals-sjc/ma-rules-appellate-procedure-sectioned.txt"
+path_sha256 = "1e933a8ddaecfe30dac949319d8f1f78f3a2ecc2a03e6815b10545072338eb5b"
+sha256 = "0811b8698254509d2830120cc2b1596e76d7d24d913603842617efd6ac391b34"
+as_of = "2026-09-01"
+cite_prefixes = ["Mass. R. A. P."]
+section_heading = "Rule {n}"

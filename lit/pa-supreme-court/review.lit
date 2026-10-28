@@ -1,0 +1,34 @@
+module pa-supreme-court-civil.review
+
+import pa-state-rules.{ ReviewPetitionFiled }
+
+// Allowance of appeal from a final order of the Superior Court or the
+// Commonwealth Court, from the petitioner's side.
+
+start petition
+
+decision petition: "Petition for allowance of appeal?" by applicant cite "Pa.R.A.P. 1114(a)"
+{
+  note "Review of a final order of the Superior Court or the Commonwealth Court is not a matter of right but of sound judicial discretion (Pa.R.A.P. 1114(a)); the petition is filed with the Prothonotary of the Supreme Court within 30 days after entry of the order sought to be reviewed."
+  edge-petition-none "No petition" -> affirmed { authority cite "Pa.R.A.P. 2572(a)" }
+  edge-petition-filed "Petition for allowance of appeal" -> allowance { event ReviewPetitionFiled() authority cite "Pa.R.A.P. 1114(a)" }
+}
+
+decision allowance: "Supreme Court of Pennsylvania: allowance of appeal granted or denied" by court cite "Pa.R.A.P. 1114(a)"
+{
+  note "Review of a final order of the Superior Court or the Commonwealth Court is not a matter of right but of sound judicial discretion, and an appeal is allowed only for special and important reasons, such as a conflict among intermediate appellate decisions or with the Pennsylvania or United States Supreme Court, a question of first impression or of substantial public importance, the constitutionality of a Commonwealth statute, a departure from accepted judicial practice, or an erroneous order quashing or dismissing an appeal (Pa.R.A.P. 1114(a), (b)). The petition is filed with proof of service on all other parties and the fee Chapter 27 prescribes (Pa.R.A.P. 1112(c)(1), (e))."
+  edge-allowance-denied "Allowance denied" -> affirmed { authority cite "Pa.R.A.P. 1114(a)" }
+  edge-allowance-granted "Allowance granted" -> review-granted {
+    authority cite "Pa.R.A.P. 1114(b)"
+  }
+}
+
+terminal affirmed: "Affirmed" outcome [loss] cite "Pa.R.A.P. 2572(a)"
+{
+  note "Outcome from the applicant's side. The intermediate appellate court remands the record 30 days after entry of its judgment or final order; remand is stayed until disposition of an application for reargument, any other application affecting the order, or a petition for allowance of appeal, and then follows 30 days after the later of the final order or the disposition of all post-decision applications (Pa.R.A.P. 2572(a)(2), (b))."
+}
+
+terminal review-granted: "Allowance of appeal granted: merits review in the Supreme Court" outcome [appeal] cite "Pa.R.A.P. 1114(b)"
+{
+  note "Merits review in the Supreme Court of Pennsylvania is outside this package."
+}

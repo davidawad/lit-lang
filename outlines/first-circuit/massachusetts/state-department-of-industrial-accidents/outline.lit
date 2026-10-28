@@ -1,0 +1,45 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-ma-department-of-industrial-accidents
+
+import ma-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start filed
+
+state filed: "Claim, petition or appeal filed" by applicant cite ?("G.L. c. 152, § 10 (verify)")
+{
+  note "OUTLINE. Conciliation, conference and hearing before an administrative judge; the reviewing board reviews (G.L. c. 152, § 11C) and the Appeals Court hears appeals (verify). Proceedings before the Massachusetts Department of Industrial Accidents: filing period, form and fees are holes. Leading decisions: not yet identified in this pass; verify before use."
+  edge-filed-hearing "Set for hearing" -> hearing { event ActionCommenced() authority cite ?("G.L. c. 152, § 11 (verify)") }
+}
+
+state hearing: "Hearing" by court cite ?("G.L. c. 152, § 11 (verify)")
+{
+  note "OUTLINE. Hearing procedure, evidence and the record are holes."
+  edge-hearing-decision "Decision issued" -> decision { authority cite ?("G.L. c. 152, § 11C (verify)") }
+}
+
+chance decision: "Tribunal decides" by court cite ?("G.L. c. 152, § 11C (verify)")
+{
+  note "OUTLINE. Outcome probabilities are holes."
+  edge-decision-granted "Relief granted" -> review p ? { event DecisionFiled() }
+  edge-decision-denied "Relief denied" -> review p ? { event DecisionFiled() }
+}
+
+decision review: "Review or appeal sought?" by applicant cite ?("G.L. c. 152, § 12 (verify)")
+{
+  note "OUTLINE. Review period and the reviewing body are holes."
+  edge-review-none "No review" -> final-decision { event JudgmentEntered() authority cite ?("G.L. c. 152, § 11C (verify)") }
+  edge-review-sought "Review or judicial review sought" -> review-sought { event NoticeOfAppealFiled() authority cite ?("G.L. c. 152, § 12 (verify)") }
+}
+
+terminal final-decision: "Decision final" outcome [final] cite ?("G.L. c. 152, § 11C (verify)")
+{
+  note "OUTLINE. Enforcement and payment are outside this outline."
+  payoff ?
+}
+
+terminal review-sought: "Review or judicial review sought" outcome [final] cite ?("G.L. c. 152, § 12 (verify)")
+{
+  note "OUTLINE. The reviewing court is its own package."
+  payoff ?
+}

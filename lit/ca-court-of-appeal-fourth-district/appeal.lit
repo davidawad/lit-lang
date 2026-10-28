@@ -1,0 +1,134 @@
+module ca-court-of-appeal-fourth-district.appeal
+
+import ca-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled }
+
+// A civil appeal to a California Court of Appeal, from the appellant's
+// side. Every period below is stated in a note, not counted: computation of
+// time (Cal. Rules of Court, rule 1.10; CCP §§ 12-12a) is not vendored and
+// lit/core has no California counting rule. The rules vendored are those
+// the earlier outline cited; the briefing schedule (rule 8.212), the brief
+// form and length rules (rule 8.204), finality of a decision (rule 8.264),
+// the record-designation rules (rules 8.121-8.137) and the Supreme Court
+// review rules after 8.500 are not, so they are named in notes but not
+// cited. The outline named no leading decisions.
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "Cal. Rules of Court, rule 8.104(a)"
+{
+  note "California Court of Appeal, Fourth Appellate District: the district's local rules (Ct. App. local rules under Cal. Rules of Court, rule 10.1030) supplement Title 8; they are not vendored and not modeled. Unless a statute or rule 8.108, 8.702 or 8.712 provides otherwise, a notice of appeal is filed on or before the earliest of 60 days after the superior court clerk serves a Notice of Entry of judgment or a filed-endorsed copy of the judgment, 60 days after a party serves or is served with one with proof of service, or 180 days after entry of judgment (Cal. Rules of Court, rule 8.104(a)(1)). Except as rule 8.66 provides, no court may extend the time, and a late notice of appeal must be dismissed (rule 8.104(b)). A notice filed after judgment is rendered but before it is entered is treated as filed immediately after entry, and a judgment includes an appealable order (rule 8.104(d), (e))."
+  edge-notice-filed-late "Filed late" -> dismissed-untimely {
+    authority cite "Cal. Rules of Court, rule 8.104(b)"
+  }
+  edge-notice-filed-timely "Filed in time" -> appealability { event NoticeOfAppealFiled()
+    authority cite "Cal. Rules of Court, rule 8.104(a)"
+  }
+}
+
+terminal dismissed-untimely: "Dismissed as untimely" outcome [loss, dismissal] cite "Cal. Rules of Court, rule 8.104(b)"
+{
+  note "If a notice of appeal is filed late, the reviewing court must dismiss the appeal; no court may extend the time except as rule 8.66 provides (Cal. Rules of Court, rule 8.104(b))."
+}
+
+decision appealability: "Appealable judgment or order" by court cite "Cal. Code Civ. Proc. § 904.1(a)"
+{
+  note "An appeal, other than in a limited civil case, is to the court of appeal, and lies from a judgment other than an interlocutory one (except as listed), an order after an appealable judgment, and the orders listed in Cal. Code Civ. Proc. § 904.1(a), among them an order granting a new trial or denying judgment notwithstanding the verdict, an order on an injunction, an order appointing a receiver, and an order directing payment of monetary sanctions over five thousand dollars ($5,000)."
+  edge-appealability-dismissed "No appealable judgment or order" -> dismissed-jurisdiction {
+    authority cite "Cal. Code Civ. Proc. § 904.1(a)"
+  }
+  edge-appealability-record "Appealable" -> record-assembled {
+    authority cite "Cal. Rules of Court, rule 8.120"
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: no appealable judgment or order" outcome [loss, dismissal] cite "Cal. Code Civ. Proc. § 904.1(a)"
+{
+  note "The judgment or order is not one Cal. Code Civ. Proc. § 904.1(a) makes appealable. Review by extraordinary writ is outside this package."
+}
+
+state record-assembled: "Record on appeal" by applicant cite "Cal. Rules of Court, rule 8.120"
+{
+  note "The normal record in a civil appeal is a record of the written documents (a clerk's transcript, an appendix, the original superior court file where a local rule permits, an agreed statement or a settled statement) and, if the appellant raises any issue requiring the oral proceedings, a reporter's transcript, agreed statement or settled statement; an administrative record admitted, refused or lodged below is included when an issue requires it (Cal. Rules of Court, rule 8.120(a), (b)). The designation deadlines are in rules 8.121-8.137, which are not vendored."
+  edge-record-assembled-briefing "Record filed" -> briefing { event RecordFiled()
+    authority cite "Cal. Rules of Court, rule 8.200(a)"
+  }
+}
+
+state briefing: "Briefing" by applicant cite "Cal. Rules of Court, rule 8.200(a)"
+{
+  note "Each appellant serves and files an opening brief, each respondent a respondent's brief, and each appellant may file a reply brief; no other brief may be filed without the presiding justice's permission, and a party may join in or adopt another brief (Cal. Rules of Court, rule 8.200(a)). An application to file an amicus curiae brief is due within 14 days after the last appellant's reply brief is filed or could have been filed under rule 8.212, whichever is earlier (rule 8.200(c)(1)). The briefing schedule (rule 8.212) and brief length (rule 8.204) are not vendored."
+  edge-briefing-argument "Briefing complete" -> argument {
+    authority cite "Cal. Rules of Court, rule 8.256(d)"
+  }
+}
+
+decision argument: "Oral argument or waiver; submission" by court cite "Cal. Rules of Court, rule 8.256(d)"
+{
+  note "The clerk/executive officer sends notice of the time and place of oral argument at least 20 days before the argument date, unless the presiding justice shortens it for good cause; unless the court provides otherwise, the appellant opens and closes and each side is allowed 30 minutes (Cal. Rules of Court, rule 8.256(b), (c)). A cause is submitted when the court has heard oral argument or approved its waiver and the time to file all briefs and papers has expired; the court may vacate submission only by an order stating its reasons and setting a timetable for resubmission (rule 8.256(d)(1), (e)(1))."
+  edge-argument-decision "Cause submitted" -> decision-issued {
+    authority cite "Cal. Rules of Court, rule 8.256(d)"
+  }
+}
+
+decision decision-issued: "Decision filed" by court cite "Cal. Rules of Court, rule 8.1105(b)"
+{
+  note "An opinion of a Court of Appeal is published in the Official Reports if a majority of the rendering court certifies it for publication before the decision is final in that court, under the standards of rule 8.1105(c); an opinion is no longer considered published if the court grants rehearing, and the Supreme Court may order publication or depublication (Cal. Rules of Court, rule 8.1105(b), (c), (e)). When a decision becomes final in the Court of Appeal is governed by rule 8.264, which is not vendored."
+  edge-decision-issued-rehearing "Decision filed" -> rehearing-window { event DecisionFiled()
+    authority cite "Cal. Rules of Court, rule 8.268(b)"
+  }
+}
+
+decision rehearing-window: "Petition for rehearing" by applicant cite "Cal. Rules of Court, rule 8.268(b)"
+{
+  note "A party may serve and file a petition for rehearing within 15 days after the filing of the decision (or a publication order restarting finality, a modification changing the appellate judgment, or a filed consent under rule 8.264). No answer is filed unless the court requests one, due within 8 days after the order unless the court orders otherwise; the presiding justice may for good cause relieve a party from a late petition or answer before the decision is final (Cal. Rules of Court, rule 8.268(b)). A party may petition for review in the Supreme Court without petitioning for rehearing (rule 8.500(c)(2))."
+  edge-rehearing-window-petition "Petition filed" -> rehearing-ruling {
+    authority cite "Cal. Rules of Court, rule 8.268(b)"
+  }
+  edge-rehearing-window-none "No petition" -> further-review {
+    authority cite "Cal. Rules of Court, rule 8.500(e)"
+  }
+}
+
+decision rehearing-ruling: "Rehearing decided" by court cite "Cal. Rules of Court, rule 8.268(c)"
+{
+  note "An order for rehearing must be filed before the decision is final; the time for granting or denying a petition may not be extended, and a petition the court does not rule on before the decision is final is deemed denied (Cal. Rules of Court, rule 8.268(a)(2), (c))."
+  edge-rehearing-ruling-granted "Granted" -> rehearing-granted {
+    authority cite "Cal. Rules of Court, rule 8.268(d)"
+  }
+  edge-rehearing-ruling-denied "Denied or deemed denied" -> further-review {
+    authority cite "Cal. Rules of Court, rule 8.268(c)"
+  }
+}
+
+terminal rehearing-granted: "Rehearing granted: the cause is at large" outcome [appeal] cite "Cal. Rules of Court, rule 8.268(d)"
+{
+  note "An order granting a rehearing vacates the decision and any opinion filed in the case and sets the cause at large in the Court of Appeal (Cal. Rules of Court, rule 8.268(d)). Modeled as an exit; in practice the appeal returns to argument and decision."
+}
+
+decision further-review: "Petition for review in the Supreme Court" by applicant cite "Cal. Rules of Court, rule 8.500(e)"
+{
+  note "A party may petition the Supreme Court for review of any Court of Appeal decision (Cal. Rules of Court, rule 8.500(a)(1)). The Supreme Court may order review to secure uniformity of decision or settle an important question of law, when the Court of Appeal lacked jurisdiction or the concurrence of sufficient qualified justices, or to transfer the matter back for proceedings it orders (rule 8.500(b)). The petition is served and filed within 10 days after the decision is final in the Court of Appeal; that time may not be extended, though the Chief Justice may relieve a late petitioner while the court can still order review on its own motion. An answer is due within 20 days after the petition is filed and a reply within 10 days after the answer (rule 8.500(e))."
+  edge-further-review-denied "Review denied or not sought" -> mandate-issued {
+    authority cite "Cal. Rules of Court, rule 8.272(b)"
+  }
+  edge-further-review-granted "Review granted" -> review-granted {
+    authority cite "Cal. Rules of Court, rule 8.500(b)"
+  }
+}
+
+terminal review-granted: "Review granted: continue in the Supreme Court" outcome [appeal] cite "Cal. Rules of Court, rule 8.500(b)"
+{
+  note "The Supreme Court's proceedings after a grant of review (rules 8.512-8.552) are not vendored. After Supreme Court review, the Court of Appeal issues its remittitur on receiving the Supreme Court remittitur if there will be no further proceedings there (Cal. Rules of Court, rule 8.272(b)(2))."
+}
+
+state mandate-issued: "Remittitur issued" by court cite "Cal. Rules of Court, rule 8.272(b)"
+{
+  note "A Court of Appeal must issue a remittitur after a decision in an appeal; if the decision is not reviewed, the clerk/executive officer issues it immediately after the Supreme Court denies review, the period for granting review expires, or review is dismissed, and sends it with a filed-endorsed copy of the opinion to the lower court (Cal. Rules of Court, rule 8.272(a), (b)(1)). It may issue immediately only on stipulation or on dismissal under rule 8.244(c)(2); for good cause the court may stay issuance or recall it. It is deemed issued when entered in the record, and the parties are notified (rule 8.272(c), (d))."
+  edge-mandate-issued-final "Remittitur issued" -> final-appellate { event MandateIssued()
+    authority cite "Cal. Rules of Court, rule 8.272(d)"
+  }
+}
+
+terminal final-appellate: "Appellate judgment final; remittitur issued" outcome [judgment] cite "Cal. Rules of Court, rule 8.272(d)"
+{
+  note "The remittitur is deemed issued when the clerk/executive officer enters it in the record (Cal. Rules of Court, rule 8.272(d)(1)). Proceedings on remand continue in lit/ca-superior."
+}

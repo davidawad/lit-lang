@@ -1,0 +1,22 @@
+[package]
+name = "outline-pa-commonwealth-court"
+version = "0.0.1"
+language = 1
+pack_id = "outline-pa-commonwealth-court"
+forum = "pa-commonwealth-court"
+authority = "StateRule"
+title = "OUTLINE: Commonwealth Court of Pennsylvania"
+description = "Outline only: structure, cites and holes, over the state's shared rule layer (lit/pa-rules). Every value is a hole until verified against vendored rule text."
+in_force = "2025-01-01"
+known_at = "2025-01-01"
+unknown_before = "2025-01-01"
+jurisdiction = "Commonwealth Court of Pennsylvania"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+# The state's shared rule layer (its trigger events).
+pa-state-rules = { version = "^0.1.0", path = "../../../../lit/pa-rules" }

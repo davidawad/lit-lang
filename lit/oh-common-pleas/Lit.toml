@@ -5,7 +5,7 @@
 # than seven days and takes its legal holidays from Ohio law; lit/core has
 # no counting rule for it, so the periods are stated in notes, not encoded
 # as counted deadlines. An appeal hands off to the Ohio appellate package
-# (lit/oh-appellate).
+# (lit/oh-court-of-appeals).
 [package]
 name = "oh-common-pleas-civil"
 version = "0.1.0"
@@ -15,7 +15,7 @@ forum = "oh-common-pleas"
 authority = "StateRule"
 jurisdiction_id = "ohio"
 title = "Ohio courts of common pleas, civil"
-description = "Civil actions in the Ohio courts of common pleas under the Ohio Rules of Civil Procedure, as far as the vendored text states: commencement and service, the answer, Civ.R. 12 motions and amendment, default judgment, discovery, summary judgment, jury demand and trial, post-trial motions, entry and notice of judgment, relief from judgment, dismissal, and the appeal to the court of appeals (lit/oh-appellate)."
+description = "Civil actions in the Ohio courts of common pleas under the Ohio Rules of Civil Procedure, as far as the vendored text states: commencement and service, the answer, Civ.R. 12 motions and amendment, default judgment, discovery, summary judgment, jury demand and trial, post-trial motions, entry and notice of judgment, relief from judgment, dismissal, and the appeal to the court of appeals (lit/oh-court-of-appeals)."
 in_force = "2026-07-01"
 known_at = "2026-10-28"
 unknown_before = "2026-07-01"
@@ -28,6 +28,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+oh-state-rules = { version = "^0.1.0", path = "../oh-rules" }
 
 [sources.oh-civ-r]
 title = "Ohio Rules of Civil Procedure (as amended effective July 1, 2026)"

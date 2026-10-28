@@ -1,0 +1,47 @@
+# Certiorari in the South Carolina Supreme Court to review a Court of
+# Appeals civil decision (lg-u561.5), under Rule 242 of the South Carolina
+# Appellate Court Rules (sources/sc-appellate-civil), from
+# lit/sc-court-of-appeals. Periods are stated in notes (Rule 263(a) is
+# encoded by no counting rule). The merits on certiorari are not modeled.
+[package]
+name = "sc-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "sc-supreme-court-civil"
+forum = "sc-supreme-court"
+authority = "StateRule"
+jurisdiction_id = "south-carolina"
+title = "South Carolina Supreme Court, certiorari to the Court of Appeals (civil)"
+description = "Certiorari in the South Carolina Supreme Court to review a Court of Appeals civil decision under Rule 242 of the South Carolina Appellate Court Rules: the petition, return and reply, and the grant or denial. The merits on certiorari are not modeled."
+in_force = "2026-04-30"
+known_at = "2026-10-28"
+unknown_before = "2026-04-30"
+jurisdiction = "South Carolina Supreme Court (certiorari to the Court of Appeals, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the trigger events of the South Carolina Appellate Court Rules and trigger events.
+sc-state-rules = { version = "^0.1.0", path = "../sc-rules" }
+
+[sources.scacr]
+title = "South Carolina Appellate Court Rules, rule pages as served on sccourts.org 2026-10-28"
+url = "https://www.sccourts.org/resources/judicial-community/court-rules/appellate/"
+path = "sources/sc-appellate-civil/scacr-rule-pages-2026-10-28-sectioned.txt"
+path_sha256 = "7fd65d2c63a0f4333104a609033b534746a5161393dacd693a437ca4eafbb7da"
+as_of = "2026-04-30"
+cite_prefixes = ["S.C. App. Ct. R."]
+section_heading = "Rule {n}"
+
+[sources.scrcp]
+title = "South Carolina Rules of Civil Procedure, rule pages as served on sccourts.org 2026-10-28 (latest stated amendment: order of April 30, 2026)"
+url = "https://www.sccourts.org/resources/judicial-community/court-rules/civil/"
+path = "sources/sc-circuit-civil/scrcp-rule-pages-2026-10-28-sectioned.txt"
+path_sha256 = "574cec1048ea5d046691dcf4c714ad4ccf7a9572db4dd1787556567caf82b0c5"
+as_of = "2026-04-30"
+cite_prefixes = ["S.C. R. Civ. P."]
+section_heading = "Rule {n}"

@@ -6,7 +6,7 @@
 # Sundays and holidays from a period of less than 11 days; lit/core has no
 # counting rule for it, so the periods are stated in notes, not encoded as
 # counted deadlines. An appeal hands off to the Wisconsin Court of Appeals
-# package (lit/wisctapp).
+# package (lit/wi-court-of-appeals).
 [package]
 name = "wi-circuit-court-civil"
 version = "0.1.0"
@@ -16,7 +16,7 @@ forum = "wi-circuit"
 authority = "StateRule"
 jurisdiction_id = "wisconsin"
 title = "Wisconsin circuit court, civil"
-description = "Civil actions in the Wisconsin circuit courts under Wis. Stat. chs. 801 to 806, as far as the vendored text states: commencement and service, the answer, motions to dismiss and amendment, default judgment, scheduling, discovery, summary judgment, trial, motions after verdict and reconsideration, entry and notice of entry of judgment, relief from judgment, and the appeal to the Court of Appeals (lit/wisctapp)."
+description = "Civil actions in the Wisconsin circuit courts under Wis. Stat. chs. 801 to 806, as far as the vendored text states: commencement and service, the answer, motions to dismiss and amendment, default judgment, scheduling, discovery, summary judgment, trial, motions after verdict and reconsideration, entry and notice of entry of judgment, relief from judgment, and the appeal to the Court of Appeals (lit/wi-court-of-appeals)."
 in_force = "2026-10-01"
 known_at = "2026-10-28"
 unknown_before = "2026-10-01"
@@ -29,6 +29,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+wi-state-rules = { version = "^0.1.0", path = "../wi-rules" }
 
 [sources.wis-stat-801]
 title = "Wisconsin Statutes ch. 801, Commencement of Action and Venue (Updated 2023-24 Wis. Stats., published and certified under s. 35.18, October 1, 2026)"

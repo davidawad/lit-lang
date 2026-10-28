@@ -7,7 +7,7 @@
 # time and excludes intermediate weekends and holidays from periods under
 # seven days; no lit/core counting rule encodes it, so the rules' periods
 # are stated in notes, not counted deadlines. An appeal hands off to
-# lit/sc-appellate-civil.
+# lit/sc-court-of-appeals.
 [package]
 name = "sc-circuit-court-civil"
 version = "0.1.0"
@@ -17,7 +17,7 @@ forum = "sc-circuit-civil"
 authority = "StateRule"
 jurisdiction_id = "south-carolina"
 title = "South Carolina Circuit Court, civil"
-description = "Civil actions in a South Carolina circuit court under the South Carolina Rules of Civil Procedure, as far as the vendored text states. An appeal hands off to the South Carolina appellate package (lit/sc-appellate-civil)."
+description = "Civil actions in a South Carolina circuit court under the South Carolina Rules of Civil Procedure, as far as the vendored text states. An appeal hands off to the South Carolina appellate package (lit/sc-court-of-appeals)."
 in_force = "2026-04-30"
 known_at = "2026-10-28"
 unknown_before = "2026-04-30"
@@ -30,6 +30,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+sc-state-rules = { version = "^0.1.0", path = "../sc-rules" }
 
 [sources.scrcp]
 title = "South Carolina Rules of Civil Procedure, rule pages as served on sccourts.org 2026-10-28 (latest stated amendment: order of April 30, 2026)"

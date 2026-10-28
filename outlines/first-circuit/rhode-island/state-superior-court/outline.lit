@@ -1,0 +1,111 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-ri-superior-court
+
+import outline-ri-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start commenced
+
+state commenced: "Complaint Filed" by applicant cite ?("R.I. Super. Ct. R. Civ. P. 3")
+{
+  note "OUTLINE. A civil action commences with the filing of the complaint. Filing fee and service period are holes."
+  edge-commenced-response-due "Defendant served" -> response-due { event ActionCommenced()
+    authority cite ?("R.I. Super. Ct. R. Civ. P. 4")
+  }
+}
+
+decision response-due: "Answer or Motion Due" by office cite ?("R.I. Super. Ct. R. Civ. P. 12(a) (verify period)")
+{
+  note "OUTLINE. The response period is a hole until verified. Leading decision on pleading challenges (verify): No leading decision confirmed in this run; verify before use."
+  edge-response-due-default "No response" -> default-entered {
+    authority cite ?("R.I. Super. Ct. R. Civ. P. 55")
+  }
+  edge-response-due-motion "Pre-answer motion filed" -> pleading-ruling {
+    authority cite ?("R.I. Super. Ct. R. Civ. P. 12(b)(6)")
+  }
+  edge-response-due-discovery "Answer filed" -> discovery {
+    authority cite ?("R.I. Super. Ct. R. Civ. P. 12(a) (verify period)")
+  }
+}
+
+decision pleading-ruling: "Pre-answer Motion Decided" by court cite ?("R.I. Super. Ct. R. Civ. P. 12(b)(6)")
+{
+  note "OUTLINE. Answer period and the Rule 12(a) computation are holes until verified."
+  edge-pleading-ruling-dismissed "Dismissed" -> dismissed {
+    authority cite ?("R.I. Super. Ct. R. Civ. P. 12(b)(6)")
+  }
+  edge-pleading-ruling-discovery "Motion denied; case proceeds" -> discovery {
+    authority cite ?("R.I. Super. Ct. R. Civ. P. 12(a) (verify period)")
+  }
+}
+
+state discovery: "Discovery" by applicant cite ?("R.I. Super. Ct. R. Civ. P. 26")
+{
+  note "OUTLINE. Discovery under R.I. Super. Ct. R. Civ. P. 26-37 (verify). Scope, deadlines and sanctions are holes until verified."
+  edge-discovery-sj-ruling "Dispositive motion filed" -> sj-ruling {
+    authority cite ?("R.I. Super. Ct. R. Civ. P. 56")
+  }
+  edge-discovery-trial-ready "No dispositive motion" -> trial-ready {
+    authority cite ?("R.I. Super. Ct. R. Civ. P. 16")
+  }
+}
+
+decision sj-ruling: "Summary Judgment Decided" by court cite ?("R.I. Super. Ct. R. Civ. P. 56")
+{
+  note "OUTLINE. Leading decision on summary judgment (verify): No leading decision confirmed in this run; verify before use."
+  edge-sj-ruling-granted "Granted" -> sj-granted {
+    authority cite ?("R.I. Super. Ct. R. Civ. P. 56")
+  }
+  edge-sj-ruling-denied "Denied" -> trial-ready {
+    authority cite ?("R.I. Super. Ct. R. Civ. P. 56")
+  }
+}
+
+decision trial-ready: "Pretrial and Trial Setting" by court cite ?("R.I. Super. Ct. R. Civ. P. 16")
+{
+  note "OUTLINE. Pretrial order, jury demand and trial setting. Settlement and dismissal paths are not modeled."
+  edge-trial-ready-verdict "Tried" -> verdict {
+    authority cite ?("R.I. Super. Ct. R. Civ. P. 50(a)")
+  }
+}
+
+state verdict: "Verdict Returned" by applicant cite ?("R.I. Super. Ct. R. Civ. P. 50(a)")
+{
+  note "OUTLINE. Motions for judgment as a matter of law and for a new trial follow the verdict."
+  edge-verdict-post-trial "Post-trial motions" -> post-trial { event JudgmentEntered()
+    authority cite ?("R.I. Super. Ct. R. Civ. P. 50(b), 59")
+  }
+}
+
+decision post-trial: "Post-trial Motions Decided" by court cite ?("R.I. Super. Ct. R. Civ. P. 50(b), 59")
+{
+  note "OUTLINE. Deadlines for renewed motions are holes until verified."
+  edge-post-trial-judgment "Judgment entered" -> judgment-entered { event JudgmentEntered()
+    authority cite ?("R.I. Super. Ct. R. Civ. P. 58")
+  }
+}
+
+terminal judgment-entered: "Judgment entered on verdict" outcome [win] cite ?("R.I. Super. Ct. R. Civ. P. 58")
+{
+  note "OUTLINE. Notice of appeal runs from entry of judgment; see the state's appellate court packages."
+  payoff ?
+}
+
+terminal default-entered: "Default entered" outcome [loss] cite ?("R.I. Super. Ct. R. Civ. P. 55")
+{
+  note "OUTLINE. Default judgment and relief from default are holes until verified."
+  payoff ?
+}
+
+terminal dismissed: "Dismissed on the pleadings" outcome [loss] cite ?("R.I. Super. Ct. R. Civ. P. 12(b)(6)")
+{
+  note "OUTLINE. Leading decision on pleading standard (verify): No leading decision confirmed in this run; verify before use."
+  payoff ?
+}
+
+terminal sj-granted: "Summary judgment granted" outcome [loss] cite ?("R.I. Super. Ct. R. Civ. P. 56")
+{
+  note "OUTLINE. Leading decision on summary judgment (verify): No leading decision confirmed in this run; verify before use."
+  payoff ?
+}
+

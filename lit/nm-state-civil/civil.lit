@@ -1,5 +1,7 @@
 module nm-district-court-civil.civil
 
+import nm-state-rules.{ JudgmentEntered }
+
 start complaint-filed
 
 state complaint-filed: "Complaint filed" by applicant cite "NMRA 1-003"
@@ -91,7 +93,7 @@ state trial: "Trial (jury or bench)" by court cite "NMRA 1-038(A)"
 decision post-trial: "Post-trial motions decided" by court cite "NMRA 1-050(B)"
 {
   note "A renewed motion for judgment as a matter of law is filed no later than thirty (30) days after entry of judgment, or thirty (30) days after the jury was discharged if it addresses an issue not decided by a verdict (NMRA 1-050(B)). A motion for a new trial is filed not later than thirty (30) days after entry of the judgment (NMRA 1-059(B)), as is a motion to alter, amend or reconsider a final judgment (NMRA 1-059(E)) and a motion to amend findings (NMRA 1-052(D)). A motion for relief from judgment for reasons (1), (2) and (3) is made not more than one (1) year after the judgment (NMRA 1-060(B))."
-  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered { event JudgmentEntered()
     authority cite "NMRA 1-058(D)"
   }
   edge-post-trial-jmol "Judgment as a matter of law granted" -> judgment-for-movant {

@@ -1,0 +1,39 @@
+# Discretionary review in the Supreme Court of Florida (lg-u561.5) under
+# Fla. R. App. P. 9.030(a)(2)(A) and 9.120 (sources/fl-state-appellate),
+# from lit/fl-district-court-of-appeal. Periods are stated in notes (Fla. R.
+# Gen. Prac. & Jud. Admin. 2.514 is not vendored). The merits are not
+# modeled.
+[package]
+name = "fl-supreme-court"
+version = "0.1.0"
+language = 1
+pack_id = "fl-supreme-court"
+forum = "fl-supreme-court"
+authority = "StateRule"
+jurisdiction_id = "florida"
+title = "Supreme Court of Florida, discretionary review of district court decisions (civil)"
+description = "Discretionary review in the Supreme Court of Florida of a district court of appeal decision under Fla. R. App. P. 9.030(a)(2)(A) and 9.120: the notice invoking jurisdiction, jurisdictional briefs, and acceptance or declination. The merits are not modeled."
+in_force = "2026-10-01"
+known_at = "2026-10-27"
+unknown_before = "2026-10-01"
+jurisdiction = "Supreme Court of Florida (discretionary review, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the brief limits of Fla. R. App. P. 9.210 and the briefs they govern and trigger events.
+fl-state-rules = { version = "^0.1.0", path = "../fl-rules" }
+
+[sources.fla-r-app-p]
+title = "Florida Rules of Appellate Procedure, the Florida Bar's October 1, 2026 edition"
+url = "https://www-media.floridabar.org/uploads/2026/10/Appellate-Court-Rules-10-01-26.pdf"
+path = "sources/fl-state-appellate/fl-rules-appellate-procedure-2026-10-01-sectioned.txt"
+path_sha256 = "529ece835412697830636b5054b02b830048cf561f1f99edc4298967df7369d4"
+sha256 = "7b462cb689ec328b5138c6693c164c0a81adbe5914f02cd88f7bc7d87f1a7042"
+as_of = "2026-10-01"
+cite_prefixes = ["Fla. R. App. P."]
+section_heading = "Rule {n}"

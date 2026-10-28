@@ -4,7 +4,7 @@
 # of General Practice and Judicial Administration 2.514 (Fla. R. Civ. P.
 # 1.090(a)), which is not vendored, so the rules' periods are stated in
 # notes, not encoded as counted deadlines. An appeal hands off to
-# lit/fl-state-appellate.
+# lit/fl-district-court-of-appeal.
 [package]
 name = "fl-circuit-court-civil"
 version = "0.1.0"
@@ -14,7 +14,7 @@ forum = "fl-state-civil"
 authority = "StateRule"
 jurisdiction_id = "florida"
 title = "Florida circuit courts, civil"
-description = "Civil actions in the Florida circuit courts under the Florida Rules of Civil Procedure, as far as the vendored text states. An appeal of a final order hands off to the Florida appellate package (lit/fl-state-appellate)."
+description = "Civil actions in the Florida circuit courts under the Florida Rules of Civil Procedure, as far as the vendored text states. An appeal of a final order hands off to the Florida appellate package (lit/fl-district-court-of-appeal)."
 in_force = "2026-10-01"
 known_at = "2026-10-27"
 unknown_before = "2026-10-01"
@@ -27,6 +27,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+fl-state-rules = { version = "^0.1.0", path = "../fl-rules" }
 
 [sources.fla-r-civ-p]
 title = "Florida Rules of Civil Procedure, the Florida Bar's October 1, 2026 edition"

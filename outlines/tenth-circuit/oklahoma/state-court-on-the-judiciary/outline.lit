@@ -1,0 +1,57 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-ok-court-on-the-judiciary
+
+import outline-ok-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start charges
+
+state charges: "Formal charges or articles filed" by office cite ?("Okla. Const. art. VII-A, § 4 (verify)")
+{
+  note "OUTLINE. The Trial Division tries the petition; the Appellate Division reviews it (verify). Proceedings in the Court on the Judiciary of Oklahoma: who files, notice and the respondent's rights are holes. The applicant is the respondent. Leading decisions: not yet identified in this pass; verify before use."
+  edge-charges-answer "Respondent served" -> answer { event ActionCommenced() authority cite ?("Okla. Const. art. VII-A, § 4 (verify)") }
+}
+
+state answer: "Answer and pretrial" by applicant cite ?("Okla. Ct. on Jud. R. (verify)")
+{
+  note "OUTLINE. Answer period, discovery and interim suspension are holes."
+  edge-answer-hearing "Set for trial or hearing" -> hearing { authority cite ?("Okla. Const. art. VII-A, § 4 (verify)") }
+}
+
+state hearing: "Trial or hearing" by court cite ?("Okla. Const. art. VII-A, § 4 (verify)")
+{
+  note "OUTLINE. Burden and standard of proof are holes."
+  edge-hearing-decision "Decision issued" -> decision { authority cite ?("Okla. Const. art. VII-A, § 5 (verify)") }
+}
+
+chance decision: "Tribunal decides" by court cite ?("Okla. Const. art. VII-A, § 5 (verify)")
+{
+  note "OUTLINE. Outcome probabilities are holes."
+  edge-decision-dismissed "Charges dismissed" -> charges-dismissed p ? { event DecisionFiled() }
+  edge-decision-sanction "Sanction imposed" -> sanction p ? { event DecisionFiled() }
+}
+
+decision sanction: "Review sought?" by applicant cite ?("Okla. Const. art. VII-A, § 4 (verify)")
+{
+  note "OUTLINE. Review period and reviewing body are holes."
+  edge-sanction-final "No review" -> sanction-final { event JudgmentEntered() authority cite ?("Okla. Const. art. VII-A, § 5 (verify)") }
+  edge-sanction-review "Review sought" -> review-sought { event NoticeOfAppealFiled() authority cite ?("Okla. Const. art. VII-A, § 4 (verify)") }
+}
+
+terminal charges-dismissed: "Charges dismissed" outcome [win] cite ?("Okla. Const. art. VII-A, § 5 (verify)")
+{
+  note "OUTLINE. Costs and confidentiality are holes."
+  payoff ?
+}
+
+terminal sanction-final: "Sanction final" outcome [loss] cite ?("Okla. Const. art. VII-A, § 5 (verify)")
+{
+  note "OUTLINE. Removal, suspension or censure takes effect."
+  payoff ?
+}
+
+terminal review-sought: "Review sought" outcome [final] cite ?("Okla. Const. art. VII-A, § 4 (verify)")
+{
+  note "OUTLINE. The reviewing court is its own package."
+  payoff ?
+}

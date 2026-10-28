@@ -1,5 +1,7 @@
 module ak-superior-court-civil.civil
 
+import ak-state-rules.{ JudgmentEntered }
+
 start complaint-filed
 
 state complaint-filed: "Complaint filed" by applicant cite "Alaska R. Civ. P. 3(a)"
@@ -92,7 +94,7 @@ state discovery: "Disclosure, discovery and pretrial" by applicant cite "Alaska 
 decision summary-judgment: "Summary judgment decided" by court cite "Alaska R. Civ. P. 56(c)"
 {
   note "A claimant may move at any time after 20 days from commencement, a defending party at any time (Alaska R. Civ. P. 56(a), (b)). The motion is made under Rule 77 with a memorandum showing no genuine issue of material fact; the opponent may serve affidavits and a statement of genuine issues; judgment is rendered forthwith if there is no genuine issue and a party is entitled to judgment as a matter of law (Alaska R. Civ. P. 56(c)). Opposition is due 15 days from service, or when the answer is due if the plaintiff moves before then, whichever is later (Alaska R. Civ. P. 77(c)). The outline's Christensen v. Alaska Sales & Service, Inc., 335 P.3d 514 (Alaska 2014), is removed: no reporter text is vendored."
-  edge-summary-judgment-granted "Granted" -> judgment-entered {
+  edge-summary-judgment-granted "Granted" -> judgment-entered { event JudgmentEntered()
     authority cite "Alaska R. Civ. P. 56(c)"
   }
   edge-summary-judgment-denied "Denied" -> trial { authority cite "Alaska R. Civ. P. 56(c)" }
@@ -110,7 +112,7 @@ state trial: "Trial by jury or by the court" by court cite "Alaska R. Civ. P. 38
 decision post-trial: "Post-trial motions" by applicant cite "Alaska R. Civ. P. 59"
 {
   note "A motion for a new trial, and a motion to alter or amend the judgment, are served not later than 10 days after the clerk's certificate of distribution on the judgment (or its entry); opposing affidavits follow within 10 days (Alaska R. Civ. P. 59(b), (c), (f)). A motion to amend findings is made within the same 10 days (Alaska R. Civ. P. 52(b)). The court may not extend these times (Alaska R. Civ. P. 6(b)). A timely motion under Rules 50(b), 52(b), 59 or 77(k) terminates the running of the time to appeal (Alaska R. App. P. 204(a)(3))."
-  edge-post-trial-resolved "Motions resolved or none filed" -> judgment-entered {
+  edge-post-trial-resolved "Motions resolved or none filed" -> judgment-entered { event JudgmentEntered()
     authority cite "Alaska R. Civ. P. 58"
   }
 }

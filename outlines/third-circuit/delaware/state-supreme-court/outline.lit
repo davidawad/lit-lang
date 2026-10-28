@@ -1,0 +1,91 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-de-supreme-court
+
+import outline-de-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite ?("10 Del. C. § 148; Del. Supr. Ct. R. 6 (verify)")
+{
+  note "OUTLINE. Notice in the trial court; period, service and cross-appeal are holes. "
+  edge-notice-record "Record prepared" -> record { event NoticeOfAppealFiled()
+    authority cite ?("Del. Supr. Ct. R. ? (record)")
+  }
+}
+
+state record: "Record or transcript prepared" by office cite ?("Del. Supr. Ct. R. ? (record)")
+{
+  note "OUTLINE. Record contents, transcript and stays are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-record-brief "Briefing" -> briefing { event RecordFiled()
+    authority cite ?("Del. Supr. Ct. R. ? (briefs)")
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite ?("Del. Supr. Ct. R. ? (briefs)")
+{
+  note "OUTLINE. Brief form, length and reply are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-brief-argument "Argument or submission" -> argument {
+    authority cite ?("Del. Supr. Ct. R. ? (argument)")
+  }
+}
+
+decision argument: "Argument or submission" by court cite ?("Del. Supr. Ct. R. ? (argument)")
+{
+  note "OUTLINE. Argument is discretionary in some courts. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-arg-decision "Decision issued" -> decision {
+    authority cite ?("Del. Supr. Ct. R. ? (decision)")
+  }
+}
+
+chance decision: "Court decides" by court cite ?("Del. Supr. Ct. R. ? (decision)")
+{
+  note "OUTLINE. Probabilities are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-dec-affirmed "Affirmed" -> post-decision p ? {
+  }
+  edge-dec-reversed "Reversed or remanded" -> post-decision p ? {
+  }
+}
+
+decision post-decision: "Rehearing or further review decision" by applicant cite ?("Del. Supr. Ct. R. ? (reargument)")
+{
+  note "OUTLINE. Rehearing and further review: Del. Supr. Ct. R. ? (further review). Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-pd-rehearing "Rehearing sought" -> rehearing {
+    authority cite ?("Del. Supr. Ct. R. ? (reargument)")
+  }
+  edge-pd-further "Further review sought" -> further-review {
+    authority cite ?("Del. Supr. Ct. R. ? (further review)")
+  }
+  edge-pd-mandate "No further review" -> mandate-issued { event MandateIssued()
+    authority cite ?("Del. Supr. Ct. R. ? (mandate)")
+  }
+}
+
+state rehearing: "Rehearing petition" by applicant cite ?("Del. Supr. Ct. R. ? (reargument)")
+{
+  note "OUTLINE. Rehearing period and effect on finality are holes."
+  edge-rh-decision "Rehearing decided" -> post-decision {
+  }
+}
+
+state further-review: "Petition for further review" by applicant cite ?("Del. Supr. Ct. R. ? (further review)")
+{
+  note "OUTLINE. Petition period and grant standard are holes. Leading decisions for this stage: not yet identified in this pass; verify before use."
+  edge-fr-mandate "Review denied" -> mandate-issued { event MandateIssued()
+  }
+  edge-fr-merits "Review granted" -> supreme-merits {
+  }
+}
+
+terminal mandate-issued: "Mandate or remittitur issued" outcome [final] cite ?("Del. Supr. Ct. R. ? (mandate)")
+{
+  note "OUTLINE. Mandate or remittitur returns the case to the trial court. Costs: holes."
+  payoff ?
+}
+
+terminal supreme-merits: "Review granted on the merits" outcome [final] cite ?("Del. Supr. Ct. R. ? (further review)")
+{
+  note "OUTLINE. Merits review in the highest state court. Outcome is outside this outline."
+  payoff ?
+}
+

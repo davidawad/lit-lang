@@ -1,0 +1,220 @@
+// OUTLINE (unverified). Structure, cites and holes only: every cite ?(...) and every
+// value ? stays a hole until a later pass verifies it against vendored rule text.
+module outline-ar-court-of-appeals
+
+import outline-ar-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite ?("Ark. R. App. P.–Civ. 2(a)")
+{
+  note "OUTLINE. Notice of appeal under App.-Civ. 2(a) period (hole; verify)."
+  edge-notice-filed-appealability "Notice filed" -> appealability {
+    authority cite ?("Ark. R. App. P.–Civ. 2(a)")
+  }
+}
+
+decision appealability: "Appellate jurisdiction check" by court cite ?("Ark. Const. amend. 80, § 6; Ark. Sup. Ct. R. 2-1(a)")
+{
+  note "OUTLINE. Appealable orders under Ark. Sup. Ct. R. 2-1(a) (verify). No leading decision named."
+  edge-appealability-dismissed-jurisdiction "Not an appealable order, or untimely" -> dismissed-jurisdiction {
+    authority cite ?("Ark. Const. amend. 80, § 6; Ark. Sup. Ct. R. 2-1(a)")
+  }
+  edge-appealability-record "Appealable order" -> record { event NoticeOfAppealFiled()
+    authority cite ?("Ark. Const. amend. 80, § 6; Ark. Sup. Ct. R. 2-1(a)")
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed for lack of appellate jurisdiction" outcome [loss] cite ?("Ark. Const. amend. 80, § 6; Ark. Sup. Ct. R. 2-1(a)")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}
+
+state record: "Record settled and transmitted" cite ?("Ark. Sup. Ct. R. 3-5(a)-(b)")
+{
+  note "OUTLINE. Record under Ark. Sup. Ct. R. 3-5 (verify)."
+  edge-record-briefing "Record filed" -> briefing { event RecordFiled()
+    authority cite ?("Ark. Sup. Ct. R. 3-5(a)-(b)")
+  }
+}
+
+state briefing: "Briefing: opening, response, reply" cite ?("Ark. Sup. Ct. R. 4-2(a)")
+{
+  note "OUTLINE. Briefing schedule is a hole. Brief content under Ark. Sup. Ct. R. 4-2 (verify); length is a hole."
+  edge-briefing-argument "Briefs complete" -> argument {
+    authority cite ?("Ark. Sup. Ct. R. 4-2(a)")
+  }
+}
+
+state argument: "Oral argument or submission on briefs" cite ?("Ark. Sup. Ct. R. 4-6(a) (verify)")
+{
+  note "OUTLINE. Argument may be waived."
+  edge-argument-disposition "Submitted for decision" -> disposition {
+    authority cite ?("Ark. Sup. Ct. R. 4-6(a) (verify)")
+  }
+}
+
+decision disposition: "Disposition" by court cite ?("Ark. Sup. Ct. R. 5-2 (verify)")
+{
+  note "OUTLINE. Disposition (verify)."
+  edge-disposition-affirmed-entered "Affirmed" -> affirmed-entered {
+    authority cite ?("Ark. Sup. Ct. R. 5-2 (verify)")
+  }
+  edge-disposition-reversed-entered "Reversed or vacated" -> reversed-entered {
+    authority cite ?("Ark. Sup. Ct. R. 5-2 (verify)")
+  }
+  edge-disposition-remanded-entered "Remanded" -> remanded-entered {
+    authority cite ?("Ark. Sup. Ct. R. 5-2 (verify)")
+  }
+}
+
+decision affirmed-entered: "Affirmed: rehearing election" by applicant cite ?("Ark. Sup. Ct. R. 5-2 (verify)")
+{
+  note "OUTLINE. Rehearing and mandate clocks run from entry."
+  edge-affirmed-entered-rehearing-affirmed "Rehearing petition filed" -> rehearing-affirmed {
+    authority cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+  }
+  edge-affirmed-entered-mandate-affirmed "No rehearing petition" -> mandate-affirmed { event MandateIssued()
+    authority cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+  }
+}
+
+decision rehearing-affirmed: "Rehearing ruling (affirmed)" by court cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+{
+  note "OUTLINE. Rehearing (verify)."
+  edge-rehearing-affirmed-mandate-affirmed "Rehearing denied" -> mandate-affirmed { event MandateIssued()
+    authority cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+  }
+  edge-rehearing-affirmed-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+  }
+}
+
+decision mandate-affirmed: "Mandate issued: further review election" by applicant cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+{
+  note "OUTLINE. Mandate and its effect on the trial court."
+  edge-mandate-affirmed-review-affirmed "Further review sought" -> review-affirmed {
+    authority cite ?("Ark. Sup. Ct. R. 1-3 (verify)")
+  }
+  edge-mandate-affirmed-affirmed-final "No further review" -> affirmed-final {
+    authority cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+  }
+}
+
+decision review-affirmed: "Further review ruling (affirmed)" by court cite ?("Ark. Sup. Ct. R. 1-3 (verify)")
+{
+  note "OUTLINE. Further review (verify)."
+  edge-review-affirmed-affirmed-final "Review denied" -> affirmed-final {
+    authority cite ?("Ark. Sup. Ct. R. 1-3 (verify)")
+  }
+  edge-review-affirmed-affirmed-final-2 "Review granted: merits in high court" -> affirmed-final {
+    authority cite ?("Ark. Sup. Ct. R. 1-3 (verify)")
+  }
+}
+
+terminal affirmed-final: "Affirmed: final" outcome [loss] cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}
+
+decision reversed-entered: "Reversed or vacated: rehearing election" by applicant cite ?("Ark. Sup. Ct. R. 5-2 (verify)")
+{
+  note "OUTLINE. Rehearing and mandate clocks run from entry."
+  edge-reversed-entered-rehearing-reversed "Rehearing petition filed" -> rehearing-reversed {
+    authority cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+  }
+  edge-reversed-entered-mandate-reversed "No rehearing petition" -> mandate-reversed { event MandateIssued()
+    authority cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+  }
+}
+
+decision rehearing-reversed: "Rehearing ruling (reversed or vacated)" by court cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+{
+  note "OUTLINE. Rehearing (verify)."
+  edge-rehearing-reversed-mandate-reversed "Rehearing denied" -> mandate-reversed { event MandateIssued()
+    authority cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+  }
+  edge-rehearing-reversed-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+  }
+}
+
+decision mandate-reversed: "Mandate issued: further review election" by applicant cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+{
+  note "OUTLINE. Mandate and its effect on the trial court."
+  edge-mandate-reversed-review-reversed "Further review sought" -> review-reversed {
+    authority cite ?("Ark. Sup. Ct. R. 1-3 (verify)")
+  }
+  edge-mandate-reversed-reversed-final "No further review" -> reversed-final {
+    authority cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+  }
+}
+
+decision review-reversed: "Further review ruling (reversed or vacated)" by court cite ?("Ark. Sup. Ct. R. 1-3 (verify)")
+{
+  note "OUTLINE. Further review (verify)."
+  edge-review-reversed-reversed-final "Review denied" -> reversed-final {
+    authority cite ?("Ark. Sup. Ct. R. 1-3 (verify)")
+  }
+  edge-review-reversed-reversed-final-2 "Review granted: merits in high court" -> reversed-final {
+    authority cite ?("Ark. Sup. Ct. R. 1-3 (verify)")
+  }
+}
+
+terminal reversed-final: "Reversed or vacated: final" outcome [win] cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}
+
+decision remanded-entered: "Remanded: rehearing election" by applicant cite ?("Ark. Sup. Ct. R. 5-2 (verify)")
+{
+  note "OUTLINE. Rehearing and mandate clocks run from entry."
+  edge-remanded-entered-rehearing-remanded "Rehearing petition filed" -> rehearing-remanded {
+    authority cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+  }
+  edge-remanded-entered-mandate-remanded "No rehearing petition" -> mandate-remanded { event MandateIssued()
+    authority cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+  }
+}
+
+decision rehearing-remanded: "Rehearing ruling (remanded)" by court cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+{
+  note "OUTLINE. Rehearing (verify)."
+  edge-rehearing-remanded-mandate-remanded "Rehearing denied" -> mandate-remanded { event MandateIssued()
+    authority cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+  }
+  edge-rehearing-remanded-disposition "Rehearing granted: re-decide" -> disposition {
+    authority cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+  }
+}
+
+decision mandate-remanded: "Mandate issued: further review election" by applicant cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+{
+  note "OUTLINE. Mandate and its effect on the trial court."
+  edge-mandate-remanded-review-remanded "Further review sought" -> review-remanded {
+    authority cite ?("Ark. Sup. Ct. R. 1-3 (verify)")
+  }
+  edge-mandate-remanded-remanded-final "No further review" -> remanded-final {
+    authority cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+  }
+}
+
+decision review-remanded: "Further review ruling (remanded)" by court cite ?("Ark. Sup. Ct. R. 1-3 (verify)")
+{
+  note "OUTLINE. Further review (verify)."
+  edge-review-remanded-remanded-final "Review denied" -> remanded-final {
+    authority cite ?("Ark. Sup. Ct. R. 1-3 (verify)")
+  }
+  edge-review-remanded-remanded-final-2 "Review granted: merits in high court" -> remanded-final {
+    authority cite ?("Ark. Sup. Ct. R. 1-3 (verify)")
+  }
+}
+
+terminal remanded-final: "Remanded: final" cite ?("Ark. Sup. Ct. R. 2-3 (verify)")
+{
+  note "OUTLINE. Outcome from the applicant's side."
+  payoff ?
+}

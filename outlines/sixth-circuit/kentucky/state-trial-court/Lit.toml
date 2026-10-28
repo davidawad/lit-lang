@@ -1,0 +1,22 @@
+[package]
+name = "outline-ky-trial-court"
+version = "0.0.1"
+language = 1
+pack_id = "outline-ky-trial-court"
+forum = "ky-circuit-court"
+authority = "StateRule"
+title = "OUTLINE: Kentucky circuit courts (general civil jurisdiction)"
+description = "Outline only: structure, cites and holes, over the state's shared rule layer (state-rules). Every value is a hole until verified against vendored rule text."
+in_force = "2025-01-01"
+known_at = "2025-01-01"
+unknown_before = "2025-01-01"
+jurisdiction = "Kentucky circuit courts (general civil jurisdiction)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+# The state's shared rule layer (its trigger events).
+outline-ky-state-rules = { version = "^0.0.1", path = "../state-rules" }

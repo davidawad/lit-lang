@@ -1,0 +1,58 @@
+# The Kansas Supreme Court's review of a Court of Appeals civil decision
+# (lg-u561.5): the petition for review under K.S.A. 20-3018(b)
+# (sources/ks-state-civil) and Kan. S. Ct. R. 8.03 (2026 Rulebook,
+# sources/ks-state-appellate), from lit/ks-court-of-appeals. Periods are
+# stated in notes, as there (K.S.A. 60-206 is not vendored). Direct appeals
+# and transfers under K.S.A. 20-3016 and 20-3017 are not modeled; those
+# sections are not vendored. The page limits are lit/ks-rules'.
+[package]
+name = "ks-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ks-supreme-court-civil"
+forum = "ks-supreme-court"
+authority = "StateRule"
+jurisdiction_id = "kansas"
+title = "Kansas Supreme Court, review of Court of Appeals decisions (civil)"
+description = "Supreme Court review of a Kansas Court of Appeals civil decision under K.S.A. 20-3018(b) and Kan. S. Ct. R. 8.03: the petition for review, cross-petitions and responses, and the grant or denial of review. The merits of review are not modeled. The page limits are lit/ks-rules'."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "Kansas Supreme Court (review of Court of Appeals decisions, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the brief and petition page limits of Kan. S. Ct. R. 6.07(c) and 8.03 and trigger events.
+ks-state-rules = { version = "^0.1.0", path = "../ks-rules" }
+
+[sources.ksa]
+title = "Kansas Statutes Annotated, chapter 60 (Code of Civil Procedure) and K.S.A. 20-3018, cited sections, as published by the Kansas Revisor of Statutes"
+url = "https://www.ksrevisor.gov/statutes/ksa_ch60.html"
+path = "sources/ks-state-civil/ks-ksa-cited-sections.txt"
+path_sha256 = "7674b42587ca255503d7b100fb801a1e910274fc5629fb0ea646354d6a613d87"
+as_of = "2026-10-27"
+
+[sources.ks-sct-rules]
+title = "Reports of Rules Adopted by the Supreme Court of the State of Kansas, 2026 Edition"
+url = "https://www.kscourts.gov/KSCourts/media/KsCourts/Rules/2026-RuleBook.pdf"
+path = "sources/ks-state-appellate/kansas-2026-rulebook-sectioned.txt"
+path_sha256 = "847c087e907f9696356fd0f57fc545bd354df58b085e8183608d0b93a9592dc9"
+sha256 = "6e897c9c92c2ca8be21ad0dc4710e0694ceac979d2d60115bbb9547b747d2bd0"
+as_of = "2026-01-01"
+cite_prefixes = ["Kan. S. Ct. R."]
+section_heading = "Kan. S. Ct. R. {n}"
+
+[[cite_syntax.rules]]
+prefixes = ["K.S.A. 60-"]
+heading = "K.S.A. 60-{}"
+source = "ksa"
+
+[[cite_syntax.rules]]
+prefixes = ["K.S.A. 20-"]
+heading = "K.S.A. 20-{}"
+source = "ksa"

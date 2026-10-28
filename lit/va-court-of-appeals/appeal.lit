@@ -1,0 +1,71 @@
+module va-court-of-appeals-civil.appeal
+
+import va-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "Va. Sup. Ct. R. 5A:6(a)"
+{
+  note "Except as a statute provides otherwise, no appeal is allowed unless, within 30 days after entry of final judgment or other appealable order, or any extension this Court grants under Rule 5A:3(a), counsel files a notice of appeal with the clerk of the trial court and sends a copy to all opposing counsel; a notice filed after the decision is announced but before entry is treated as filed on and after the date of entry (Va. Sup. Ct. R. 5A:6(a)). The notice states whether a transcript or written statement will be filed (Va. Sup. Ct. R. 5A:6(b)); a copy is filed with the clerk of this Court with the $50 statutory filing fee, and the appeal is dismissed if the fee is not received within 10 days of the notice (Va. Sup. Ct. R. 5A:6(c)). An appeal of right is perfected by the timely notice (Va. Sup. Ct. R. 5A:16(a)). Periods in this package are stated, not counted: Code § 1-210 computes them and is not vendored, and no lit/core counting rule encodes it. The earlier outline named no leading decision."
+  edge-notice-filed-record "Transcript and record" -> record { event NoticeOfAppealFiled()
+    authority cite "Va. Sup. Ct. R. 5A:8(a)"
+  }
+}
+
+state record: "Record on appeal prepared and transmitted" by office cite "Va. Sup. Ct. R. 5A:10"
+{
+  note "A transcript is part of the record when filed in the trial court clerk's office no later than 60 days after entry of final judgment; a judge of this Court may extend that only on a written motion filed within 90 days after entry (Va. Sup. Ct. R. 5A:8(a)). Within 10 days after the transcript is filed (or after the notice of appeal, if the transcript came first) the appellant gives written notice of its filing (Va. Sup. Ct. R. 5A:8(b)); a written statement in lieu of a transcript is filed within 60 days after entry of judgment (Va. Sup. Ct. R. 5A:8(c)); objections are filed within 15 days after the notice of filing (Va. Sup. Ct. R. 5A:8(d)). The record's contents are listed in Rule 5A:7. The trial court clerk retains the record for 21 days after the notice of appeal (or after a later transcript, or five days after objections are acted on) and then transmits it, in any event in time to reach this Court within three months after entry of the judgment (Va. Sup. Ct. R. 5A:10(c))."
+  edge-record-briefing "Record filed in this Court" -> briefing { event RecordFiled()
+    authority cite "Va. Sup. Ct. R. 5A:19(b)"
+  }
+}
+
+state briefing: "Assignments of error and briefs" by applicant cite "Va. Sup. Ct. R. 5A:19(b)"
+{
+  note "In an appeal of right the appellant files a preliminary statement of the assignments of error within 15 days of the filing of the record, and the appellee any additional assignments of cross-error within 10 days after it (Va. Sup. Ct. R. 5A:19(b)(1)). The opening brief is due within 40 days after the record is filed; the appellee's brief within 30 days after the opening brief or after the record is filed, whichever is later; a reply brief within 14 days after the appellee's brief; motions to extend these deadlines are filed no later than 10 days after the deadline expires (Va. Sup. Ct. R. 5A:19(b)(2)-(6)). Absent permission, an opening or appellee's brief may not exceed the longer of 50 pages or 12,300 words, and a reply brief the longer of 20 pages or 3,500 words (Va. Sup. Ct. R. 5A:19(a)). The page and word limits stay notes: a `limit` cannot state a longer-of rule."
+  edge-briefing-argued "Oral argument" -> decision { authority cite "Va. Sup. Ct. R. 5A:28(a)" }
+  edge-briefing-summary "Oral argument dispensed with" -> decision {
+    authority cite "Va. Sup. Ct. R. 5A:27"
+  }
+}
+
+decision decision: "Court of Appeals decides" by court cite "Va. Sup. Ct. R. 5A:29"
+{
+  note "Oral argument is permitted in an appeal of right except in a case disposed of under Rule 5A:27; the clerk gives at least 15 days' notice of it, and argument for a party may not exceed 15 minutes unless the Court directs otherwise (Va. Sup. Ct. R. 5A:28(a), (b)). The Court may dispense with argument if the parties agree or the panel unanimously finds it unnecessary (Va. Sup. Ct. R. 5A:27). The clerk promptly transmits the decision to counsel and to the trial court (Va. Sup. Ct. R. 5A:29)."
+  edge-decision-affirmed "Affirmed" -> post-decision { event DecisionFiled() authority cite "Va. Sup. Ct. R. 5A:29" }
+  edge-decision-reversed "Reversed or remanded" -> post-decision { event DecisionFiled()
+    authority cite "Va. Sup. Ct. R. 5A:29"
+  }
+}
+
+decision post-decision: "Rehearing, further review, or mandate" by applicant cite "Va. Sup. Ct. R. 5A:33(a)"
+{
+  note "A party seeking rehearing of a decision finally disposing of a case files a petition within 14 days after it, not exceeding the longer of 25 pages or 5,300 words (Va. Sup. Ct. R. 5A:33(a)); a petition for rehearing en banc of a panel decision is due in the same 14 days with the same limit (Va. Sup. Ct. R. 5A:34(a)). An appeal to the Supreme Court of Virginia requires a notice of appeal filed with the clerk of the Court of Appeals within 30 days after entry of final judgment or of the order denying a timely petition for rehearing (Va. Sup. Ct. R. 5:14(a))."
+  edge-post-decision-rehearing "Petition for rehearing" -> rehearing {
+    authority cite "Va. Sup. Ct. R. 5A:33(a)"
+  }
+  edge-post-decision-further "Appeal to the Supreme Court of Virginia" -> further-review-petitioned { event ReviewPetitionFiled()
+    authority cite "Va. Sup. Ct. R. 5:14(a)"
+  }
+  edge-post-decision-mandate "No further proceedings" -> mandate-issued { event MandateIssued()
+    authority cite "Va. Sup. Ct. R. 5A:31(a)"
+  }
+}
+
+state rehearing: "Petition for rehearing pending" by applicant cite "Va. Sup. Ct. R. 5A:33(a)"
+{
+  note "No response is received unless the Court requests one and there is no oral argument on the petition; it is granted only if a judge who decided the case adversely to the petitioner finds good cause (Va. Sup. Ct. R. 5A:33(b)-(d)). On a granted panel rehearing the respondent may file an answering brief within 21 days after the order granting it (Va. Sup. Ct. R. 5A:35(a)); on a granted rehearing en banc the mandate is stayed, the opening brief is due within 21 days after the order, the answering brief within 14 days after it, and a reply within 14 days after that (Va. Sup. Ct. R. 5A:35(b)). The Court may order rehearing en banc on its own motion no later than 20 days after the decision (Va. Sup. Ct. R. 5A:34(c))."
+  edge-rehearing-decided "Rehearing decided" -> post-decision {
+    authority cite "Va. Sup. Ct. R. 5A:33(d)"
+  }
+}
+
+terminal further-review-petitioned: "Petition for appeal filed in the Supreme Court of Virginia" outcome [appeal] cite "Va. Sup. Ct. R. 5:17(a)"
+{
+  note "The notice of appeal is filed with the clerk of the Court of Appeals within 30 days after final judgment or the denial of rehearing (Va. Sup. Ct. R. 5:14(a)), and the petition for appeal with the clerk of the Supreme Court (Va. Sup. Ct. R. 5:17(a)). The petition is the Supreme Court's: lit/va-supreme-court."
+}
+
+terminal mandate-issued: "Mandate issued" outcome [final] cite "Va. Sup. Ct. R. 5A:31(a)"
+{
+  note "When there can be no further proceedings in the Court of Appeals or the Supreme Court, the clerk promptly forwards the mandate, with a certified copy of any opinion, to the court from which the appeal proceeded (Va. Sup. Ct. R. 5A:31). The clerk then returns the record to the trial court clerk (Va. Sup. Ct. R. 5A:10(e))."
+}

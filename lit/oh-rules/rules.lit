@@ -1,0 +1,47 @@
+module oh-state-rules
+
+/// `lit/oh-rules` is a base library: it declares what Ohio's court
+/// packages share and no procedure of its own. Its pack holds only this
+/// placeholder terminal, which no link or case may route through.
+start library
+
+terminal library: "Ohio state court rules library (no procedure)"
+
+/// An initial brief of an appellant or cross-appellant, or an answer brief
+/// of an appellee or cross-appellee: at most 9,000 words without prior
+/// leave, exclusive of the cover page, tables, statement regarding oral
+/// argument, certificates, signature blocks and appendices; 30 pages at
+/// 12-point font are presumed compliant, and a court of appeals may adopt
+/// different limits by local rule (App.R. 19(A)).
+limit merit-brief { words <= 9000 cite "App.R. 19(A)" } cite "App.R. 19(A)"
+
+/// A reply brief: at most 4,500 words on the same terms; 15 pages at
+/// 12-point font are presumed compliant (App.R. 19(A)).
+limit reply-brief { words <= 4500 cite "App.R. 19(A)" } cite "App.R. 19(A)"
+
+/// An application for reconsideration, en banc consideration or both, and
+/// any response to it: at most 15 pages unless the court or a local rule
+/// allows otherwise (App.R. 26(A)(1)).
+limit reconsideration-application { pages <= 15 cite "App.R. 26(A)" } cite "App.R. 26(A)"
+
+// The trigger events the court packages' graphs route on.
+/// An action, claim, petition or charge is filed and the proceeding begins.
+event ActionCommenced()
+
+/// A final judgment, decision or appealable order is entered.
+event JudgmentEntered()
+
+/// A notice of appeal, or a petition or appeal for review of a lower court's or tribunal's decision, is filed.
+event NoticeOfAppealFiled()
+
+/// The record on appeal or review is filed or transmitted.
+event RecordFiled()
+
+/// The reviewing court's or tribunal's decision or opinion is filed.
+event DecisionFiled()
+
+/// A petition for discretionary review in a higher court (certiorari, transfer, leave or review) is filed.
+event ReviewPetitionFiled()
+
+/// The mandate, remittitur or certificate of judgment issues.
+event MandateIssued()

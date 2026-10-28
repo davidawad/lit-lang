@@ -1,11 +1,13 @@
 module wa-court-of-appeals.appeal
 
+import wa-state-rules.{ NoticeOfAppealFiled }
+
 start notice-filed
 
 state notice-filed: "Notice of appeal filed" by applicant cite "RAP 5.2(a)"
 {
   note "Except as RAP 3.2(e) and 5.2(d) and (f) provide, a notice of appeal is filed in the trial court within the longer of 30 days after entry of the decision the party wants reviewed or the time RAP 5.2(e) provides: 30 days after entry of an order deciding a timely motion for judgment as a matter of law (CR 50(b)), to amend findings (CR 52(b)), or for reconsideration, new trial or amendment of judgment (CR 59) (RAP 5.2(a), (e)). A notice for discretionary review runs the same 30 days from the act reviewed or from an order deciding a timely CR 59 motion (RAP 5.2(b)). A statute fixing another period governs (RAP 5.2(d)). Entry is determined by CR 5(e) and 58 (RAP 5.2(c)); a notice filed after announcement but before entry is treated as filed the day after entry (RAP 5.2(g)). Any other party seeking relief files its own notice within the later of 14 days after service of the first notice or its own time under RAP 5.2(a), (b), (d) or (e) (RAP 5.2(f)). Periods are stated, not counted: RAP 18.6 is not vendored."
-  edge-notice-filed-appealability "Notice filed" -> appealability { authority cite "RAP 5.2(a)" }
+  edge-notice-filed-appealability "Notice filed" -> appealability { event NoticeOfAppealFiled() authority cite "RAP 5.2(a)" }
 }
 
 decision appealability: "Appealable decision" by court cite "RAP 2.2(a)"

@@ -1,0 +1,39 @@
+# The Massachusetts Supreme Judicial Court's direct and further appellate
+# review of civil appeals (lg-u561.5) under Mass. R. A. P. 11 and 27.1
+# (sources/ma-appeals-sjc), from lit/ma-appeals-court. Periods are stated in
+# notes (Mass. R. A. P. 14 is encoded by no counting rule). The brief and
+# motion limits are lit/ma-rules'.
+[package]
+name = "ma-sjc"
+version = "0.1.0"
+language = 1
+pack_id = "ma-sjc"
+forum = "ma-sjc"
+authority = "StateRule"
+jurisdiction_id = "massachusetts"
+title = "Massachusetts Supreme Judicial Court, direct and further appellate review (civil)"
+description = "Applications to the Supreme Judicial Court for direct appellate review of a civil appeal docketed in the Appeals Court (Mass. R. A. P. 11) and for further appellate review of an Appeals Court decision (Mass. R. A. P. 27.1), and their allowance or denial. The merits in the Supreme Judicial Court are not modeled. The brief and motion limits are lit/ma-rules'."
+in_force = "2026-09-01"
+known_at = "2026-10-27"
+unknown_before = "2026-09-01"
+jurisdiction = "Massachusetts Supreme Judicial Court (direct and further appellate review, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the brief and reconsideration-motion limits of Mass. R. A. P. 20 and 27 and the papers they govern and trigger events.
+ma-state-rules = { version = "^0.1.0", path = "../ma-rules" }
+
+[sources.mass-r-a-p]
+title = "Massachusetts Rules of Appellate Procedure, Trial Court Law Libraries compilation including amendments effective September 1, 2026"
+url = "https://www.mass.gov/doc/massachusetts-rules-of-appellate-procedure/download"
+path = "sources/ma-appeals-sjc/ma-rules-appellate-procedure-sectioned.txt"
+path_sha256 = "1e933a8ddaecfe30dac949319d8f1f78f3a2ecc2a03e6815b10545072338eb5b"
+sha256 = "0811b8698254509d2830120cc2b1596e76d7d24d913603842617efd6ac391b34"
+as_of = "2026-09-01"
+cite_prefixes = ["Mass. R. A. P."]
+section_heading = "Rule {n}"

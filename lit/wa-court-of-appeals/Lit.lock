@@ -9,11 +9,23 @@ dependencies = []
 name = "wa-court-of-appeals"
 version = "0.1.0"
 language = 1
-source = "sha256:ea3c520c31b4add703da3c5170027900f2bb49e1ca9ab11fd981ae277151d25d"
-semantic = "sha256:92a0f39bb1e1ae511a06137c8908f677445c7d3f3b15f2b0d8ee80258c8c52be"
+source = "sha256:0eaffdcddee4d8db34e28ca54f763873dff77d006eab32d181bfc653ad8c08ce"
+semantic = "sha256:abab414fe3e98896229ae4f4d6ce8a532ce3017a1d6e988760b1fe96d48e8550"
 texts = [
     "wa-rap sources/wa-court-of-appeals/wa-rap-cited-sectioned.txt sha256:37da82ba6f7d769642ccfd23037601cbf2b1b43fa2139c7d4d396e6affbc578a",
 ]
+dependencies = [
+    "core 1.0.0",
+    "wa-state-rules 0.1.0",
+]
+
+[[package]]
+name = "wa-state-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:da2a2a160d9b3d537961ba64e1ff87adcb9e810991c11d289b2d9c981d88e370"
+semantic = "sha256:fd259f5c8720279ac7cac3a0e95d06f2c1eb3f27c9ad660b7c804311e50ac4a0"
+texts = []
 dependencies = [
     "core 1.0.0",
 ]

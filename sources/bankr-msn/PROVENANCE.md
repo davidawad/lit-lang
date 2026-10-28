@@ -1,0 +1,8 @@
+
+### `bankr-msn/msn-uniform-local-rules-2026-03-01.txt` — N.D. and S.D. Miss. Uniform Local Rules (as amended March 1, 2026)
+
+- Source: https://www.msnb.uscourts.gov/sites/msnb/files/local_rules/Final%20Uniform%20Local%20Rules%20%28Clean%20Version%29%20Eff.%203-1-2026.pdf (official site; 75 pages, sha256 e6d69f1b3370b0371ff67eefaaf0a2c8cb3681b049b8cf74b14888ccedbae186).
+- Edition: Uniform Local Rules of the U.S. Bankruptcy Courts for the Northern and Southern Districts of Mississippi, 'originally adopted February 1, 2010, as amended March 1, 2026' (title page), linked at https://www.msnb.uscourts.gov/rules-and-fees (same document as bankr-mss). A proposed amendment to Rule 9019-1 effective December 1, 2026 (invitation for public comment on that page) is pending, not in force, and not vendored. robots.txt (Crawl-delay 10 honored) and the court's privacy/security policy page (https://www.msnb.uscourts.gov/privacy-policy/) checked: no prohibition of automated access.
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 15a4fc38f57592a7ec67418d78b4c4f7340a45ef6190d0a91c9ab11edee66ed9. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `bankr-msn/original/msn-uniform-local-rules-2026-03-01.pdf` as served (sha256 e6d69f1b3370b0371ff67eefaaf0a2c8cb3681b049b8cf74b14888ccedbae186); extraction sha256 15a4fc38f57592a7ec67418d78b4c4f7340a45ef6190d0a91c9ab11edee66ed9.

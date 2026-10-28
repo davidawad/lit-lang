@@ -1,0 +1,10 @@
+
+### `ar-criminal-trial-court/ar-rules-of-criminal-procedure.txt` — Arkansas Rules of Criminal Procedure (Arkansas Judiciary court rules database; Rule 28 is speedy trial)
+
+- Source: https://opinions.arcourts.gov/ark/cr/en/1879/1/document.do (official site; 74 pages, sha256 04fadc2ef815d08b2d1a14f102e21762b9e803cee50d1495c49aa173674da35b).
+- Edition: Arkansas Rules of Criminal Procedure as served by the Arkansas Judiciary's court rules database (https://opinions.arcourts.gov/ark/cr/en/nav_date.do, 'Navigation by Rule, Current To: 2026'; served as Rules_of_Criminal_Procedure___Arkansas_Judiciary.pdf); the document states no edition date beyond the database's 'Current To: 2026' heading, CURRENCY UNCONFIRMED. opinions.arcourts.gov robots.txt read; no Disallow covering this path; site terms/privacy page not located or not checked; fetched on David's explicit ruling 2026-10-28 despite robots/terms (barrier: none (the rules database is a JavaScript application whose rule list is not available to plain curl; the PDF was fetched in BrowserOS neo with an in-page fetch)); tool: BrowserOS neo with the identifying User-Agent lit-lang-provenance/1.0 (angrybohr@proton.me).
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 360930a985cb80e7e1d8d8903b946341cd32baade7e49d4da48ce0cf9bb2d41d. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `ar-criminal-trial-court/original/ar-rules-of-criminal-procedure.pdf` as served (sha256 04fadc2ef815d08b2d1a14f102e21762b9e803cee50d1495c49aa173674da35b); extraction sha256 360930a985cb80e7e1d8d8903b946341cd32baade7e49d4da48ce0cf9bb2d41d.
+
+- Note (lg-gddt): Also fetched in the same session (not kept): the other 22 court-rules documents in that database were fetched as text by mistake while identifying this one (23 GETs); only this PDF was re-fetched as bytes and vendored. Criminal appeals: Arkansas Supreme Court and Court of Appeals Rules, covered by sources/arkctapp/ if it carries them.

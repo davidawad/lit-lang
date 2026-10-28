@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-als-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:13034d2eabdd4eddffc9e15ac6c391b55dbb2bed69b12a4563e2a2e6162940a8"
+semantic = "sha256:305d73b653a31e645da3cc9c5dacd4386ff69c7d10a0f5c8771a156067191e83"
+texts = [
+    "alsb-lbr sources/bankr-als/alsb-lbr-2026-07-01.txt sha256:d3ee7caffa42d3ffaec54fe0ef4def69bae4672899b20eebb434aefe6d4409c3",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-als"
-version = "0.0.1"
-language = 1
-source = "sha256:9b3c34e1e5e115eb6049772ff03239bf27eb691cd67a29dac831becd8ce4bcc3"
-semantic = "sha256:6fe364d3931bfa68fa29c7808a4ef95b8b69621daa524c72d11a3cd707964bc3"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

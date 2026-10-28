@@ -17,18 +17,11 @@ import frcrimp.deadlines.{ SentencingScheduled }
 // 35-day presentence disclosure (psr-disclosure) is not restated; the
 // local draft and final report periods below are the court's own.
 //
-// Periods measured in business days or to a clock time stay in notes,
-// because the counting rule declares no business-day unit: the felony
-// plea agreement, and any unsigned superseding charging document, is due
-// by noon of the business day preceding the change-of-plea hearing
-// (L.Crim.R. 11.2(a)(2), (c)); drugs, cash, firearms or similar exhibits
-// require contacting the U.S. Marshal not later than 2 business days
-// before the item is brought to the courtroom (L.Crim.R. 23.1(a)); a
-// disposition memorandum in a revocation is due not less than 2 business
-// days before the disposition hearing (L.Crim.R. 32.1.1(e)(2)(B)); a
-// written request for other pretrial release services, and a proposed
-// third-party custodian's completed forms, are due not less than 4
-// business days before the hearing (L.Crim.R. 46.1(d)(1), (e)(3)).
+// A period to a clock time stays in a note: the felony plea agreement,
+// and any unsigned superseding charging document, is due by noon of the
+// business day preceding the change-of-plea hearing (L.Crim.R. 11.2(a)(2),
+// (c)); the counting rule declares no time of day for a day-counted
+// period.
 //
 // Conditions that are not deadlines from an event stay in notes: a
 // change of plea requires a Notice of Intent to Change Plea (L.Crim.R.
@@ -63,6 +56,9 @@ event Arraigned()
 /// The date a blunt or edged weapon or similar exhibit is to be brought to
 /// the courtroom (D. Alaska L.Crim.R. 23.1(b)).
 event WeaponExhibitScheduled()
+/// The date drugs, cash, firearms or a similar exhibit is to be brought to
+/// the courtroom (D. Alaska L.Crim.R. 23.1(a)).
+event SensitiveExhibitScheduled()
 /// A petition alleging a violation of probation or supervised release is
 /// filed while the person is in custody (D. Alaska L.Crim.R. 32.1.1(a)).
 event RevocationPetitionFiledInCustody()
@@ -76,6 +72,10 @@ event DispositionHearingScheduled()
 /// A motion to authorize release or disclosure of a presentence report is
 /// filed (D. Alaska L.Crim.R. 32.1.2(e)).
 event PsrDisclosureMotionFiled()
+/// A hearing at which a request for other pretrial release services, or a
+/// proposed third-party custodian, is to be considered is scheduled (D.
+/// Alaska L.Crim.R. 46.1(d), (e)).
+event ReleaseServicesHearingScheduled()
 /// The date of a defendant's or defense witness's intended non-custodial
 /// travel (D. Alaska L.Crim.R. 46.2).
 event IntendedTravel()
@@ -120,6 +120,15 @@ deadline presentence-interview: 14.days after ChangeOfPleaProposed() counted_by 
 /// exclusive of expert reports, are provided to the defense within 14
 /// calendar days after the arraignment.
 deadline rule16-discovery: 14.days after Arraigned() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 16.1(a)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 23.1(a): a party wishing to introduce drugs, cash,
+/// firearms or similar items contacts the U.S. Marshal for instructions not
+/// later than 2 business days before the date the item is to be brought to
+/// the courtroom.
+deadline sensitive-exhibit-marshal-contact: 2.business_days before SensitiveExhibitScheduled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 23.1(a)"
 {
   forum frcrimp
 }
@@ -194,10 +203,32 @@ deadline violation-recommendation-filing: 7.days before DispositionHearingSchedu
   forum frcrimp
 }
 
+/// D. Alaska L.Crim.R. 32.1.1(e)(2)(B): unless otherwise ordered, a party
+/// with significant legal or factual disputes with the Sentencing
+/// Recommendation files a disposition memorandum not less than 2 business
+/// days before the disposition hearing.
+deadline disposition-memorandum: 2.business_days before DispositionHearingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Alaska L.Crim.R. 32.1.1(e)"
+{
+  forum frcrimp
+}
+
 /// D. Alaska L.Crim.R. 32.1.2(e)(2)(D): any interested party may file and
 /// serve an opposition to the release or disclosure of a presentence
 /// report within 14 days of the date the motion is filed.
 deadline psr-disclosure-opposition: 14.days after PsrDisclosureMotionFiled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1.2(e)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 46.1(d)(1): counsel requesting other release
+/// services gives Pretrial Services and opposing counsel a written request
+/// no less than 4 business days before the hearing at which it is
+/// considered; the third-party custodian forms are served on the same
+/// timetable (L.Crim.R. 46.1(e)(3)).
+deadline release-services-request: 4.business_days before ReleaseServicesHearingScheduled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 46.1(d)"
 {
   forum frcrimp
 }

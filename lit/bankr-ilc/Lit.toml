@@ -1,14 +1,12 @@
 # The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the Central
 # District of Illinois over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
-# declares only the periods the Local Rules themselves state and re-encodes
-# no FRBP period. It is a base package, not a `kind = "local-rule"` layer:
-# lit/core has no bankruptcy forum family (L2011 for `bankr-ilc`), as for
-# lit/bankr-ct. Each period is counted under FRBP 9006(a), the FRCP 6(a)
-# method (core's frcp6). The rules are those effective October 1, 2024
-# (sources/bankr-ilc/PROVENANCE.md); the amending-order check found no
-# order after them, so the consolidation is the only layer. No earlier
-# edition is vendored, so a query before October 1, 2024 is a hole in the
-# corpus.
+# declares only the periods the Local Rules themselves state and
+# re-encodes no FRBP period. Each period is counted under FRBP 9006(a),
+# the FRCP 6(a) method (core's frcp6). The rules are those effective
+# October 1, 2024 (sources/bankr-ilc/PROVENANCE.md); the amending-order
+# check found no order after them, so the consolidation is the only layer.
+# No earlier edition is vendored, so a query before October 1, 2024 is a
+# hole in the corpus.
 [package]
 name = "bankr-ilc-local-rules"
 version = "0.1.0"
@@ -16,6 +14,7 @@ language = 1
 pack_id = "bankr-ilc-local-rules"
 forum = "bankr-ilc"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Central District of Illinois: Local Bankruptcy Rules"
 description = "The Bankr. C.D. Ill. Local Bankruptcy Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): payment advices for the trustee and the notice period on a motion to dismiss a proceeding to deny or revoke a discharge (LBR 7041-1)."
 in_force = "2024-10-01"
@@ -23,6 +22,12 @@ known_at = "2026-10-28"
 unknown_before = "2024-10-01"
 jurisdiction = "U.S. Bankruptcy Court for the Central District of Illinois"
 counting = "frcp6"
+
+[package.instrument]
+source = "ilcb-lbr"
+issuer = "United States Bankruptcy Court for the Central District of Illinois"
+date = "2024-10-01"
+designation = "Local Bankruptcy Rules"
 
 [package.roles]
 applicant = "self"

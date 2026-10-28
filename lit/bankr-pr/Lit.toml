@@ -1,9 +1,8 @@
 # The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the District
-# of Puerto Rico over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
-# only the periods the rules themselves state and re-encodes no FRBP period.
-# It is a base package, not a `kind = "local-rule"` layer: lit/core has no
-# bankruptcy forum family (L2011 for `bankr-pr`), as for lit/bankr-dc. Each
-# period is counted under FRBP 9006(a), the FRCP 6(a) method (core's frcp6).
+# of Puerto Rico over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
+# declares only the periods the rules themselves state and re-encodes no
+# FRBP period. Each period is counted under FRBP 9006(a), the FRCP 6(a)
+# method (core's frcp6).
 #
 # Layers, in date order: the rules' undated "complete list" (CURRENCY
 # UNCONFIRMED: every period bound only to it has a hole cite), General
@@ -20,6 +19,7 @@ language = 1
 pack_id = "bankr-pr-local-rules"
 forum = "bankr-pr"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the District of Puerto Rico: Local Bankruptcy Rules"
 description = "The Bankr. D.P.R. Local Bankruptcy Rules, with General Orders 18-01, 18-02 and 26-01 as dated layers, as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): motion response times (LBR 9013-1), chapter 13 confirmation, denial, fees and discharge (LBR 3015-3), mediation (LBR 9019-1), and, as holes pending a current text, the petition documents, payment advices, chapter 11 notices, added creditors, consolidation, dismissal, the § 341 reports, Rule 2004 examinations, employment, chapter 13 fees, claims and objections, chapter 11 reports, confirmation and final decrees, stay relief and continuation, debtor representatives, lien avoidance, electronic service, reopening, continuances, sales, adversary pretrial practice and dismissal, local counsel, jury consent, removal, transcript redaction, exhibits and telephone hearings."
 in_force = "2018-06-19"
@@ -27,6 +27,12 @@ known_at = "2026-10-28"
 unknown_before = "2018-06-19"
 jurisdiction = "U.S. Bankruptcy Court for the District of Puerto Rico"
 counting = "frcp6"
+
+[package.instrument]
+source = "prb-lbr"
+issuer = "United States Bankruptcy Court for the District of Puerto Rico"
+date = "2018-06-19"
+designation = "Local Bankruptcy Rules"
 
 [package.roles]
 applicant = "self"

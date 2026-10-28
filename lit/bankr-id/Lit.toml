@@ -1,12 +1,10 @@
 # The Local Bankruptcy Rules of Procedure of the U.S. Bankruptcy Court for
-# the District of Idaho over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075):
-# it declares only the periods the Local Rules themselves state and
-# re-encodes no FRBP period. It is a base package, not a `kind =
-# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011, as
-# for lit/bankr-ak). Each period is counted under FRBP 9006(a), the FRCP
-# 6(a) method (core's frcp6). The rules are those "Revised and adopted
-# January 5, 2026", as the court's rule packet printed October 27, 2026
-# publishes them (sources/bankr-id); the packet carries no later
+# the District of Idaho over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
+# declares only the periods the Local Rules themselves state and
+# re-encodes no FRBP period. Each period is counted under FRBP 9006(a),
+# the FRCP 6(a) method (core's frcp6). The rules are those "Revised and
+# adopted January 5, 2026", as the court's rule packet printed October 27,
+# 2026 publishes them (sources/bankr-id); the packet carries no later
 # amendment, so there are no dated layers and a query before January 5,
 # 2026 is a hole in the corpus.
 [package]
@@ -16,6 +14,7 @@ language = 1
 pack_id = "bankr-id-local-rules"
 forum = "bankr-id"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the District of Idaho: Local Bankruptcy Rules of Procedure"
 description = "The Bankr. D. Idaho Local Bankruptcy Rules of Procedure over the Federal Rules of Bankruptcy Procedure (lit/frbp): non-signing joint debtors, voluntary chapter 13 dismissal, administrative expenses after conversion, negative notice and hearing notices, chapter 12 and amended chapter 13 plan confirmation, trustee expense procedures, § 341 meeting continuances, Rule 2004 examinations, employment, chapter 13 fees after dismissal, chapter 11 claims, claim objections, unclaimed funds, § 1111(b) elections, stay relief, rent deposits, individual chapter 11 discharge, costs, summary judgment, contested-matter witnesses and jury consent."
 in_force = "2026-01-05"
@@ -23,6 +22,12 @@ known_at = "2026-10-28"
 unknown_before = "2026-01-05"
 jurisdiction = "U.S. Bankruptcy Court for the District of Idaho"
 counting = "frcp6"
+
+[package.instrument]
+source = "idb-lbr"
+issuer = "United States Bankruptcy Court for the District of Idaho"
+date = "2026-01-05"
+designation = "Local Bankruptcy Rules of Procedure"
 
 [package.roles]
 applicant = "self"

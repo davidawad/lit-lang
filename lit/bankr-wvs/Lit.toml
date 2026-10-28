@@ -1,19 +1,17 @@
 # The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the Southern
 # District of West Virginia over lit/frbp (FRBP 9029(a); 28 U.S.C. §
 # 2075): it declares only the periods the Local Rules themselves state and
-# re-encodes no FRBP period. It is a base package, not a `kind =
-# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011 for
-# `bankr-wvs`), as for lit/bankr-md. Each period is counted under FRBP
-# 9006(a), the FRCP 6(a) method (core's frcp6). The rules are the November
-# 2012 edition the court lists as effective January 2, 2013. Two later
-# general orders rescind rules: General Order 23-05 rescinds LBR 3011-1
-# (vendored, but it states no date: CURRENCY UNCONFIRMED as to the day)
-# and General Order 25-03 rescinds LBR 3015-1.3 (not vendored; the court's
-# link returns 404) (sources/bankr-wvs/PROVENANCE.md). Neither rescission
-# has a stated effective date, so neither can be a dated layer; the
-# periods of LBR 3011-1 and 3015-1.3 are not declared at all rather than
-# declared without an end. The earlier editions are not vendored, so a
-# query before January 2, 2013 is a hole in the corpus.
+# re-encodes no FRBP period. Each period is counted under FRBP 9006(a),
+# the FRCP 6(a) method (core's frcp6). The rules are the November 2012
+# edition the court lists as effective January 2, 2013. Two later general
+# orders rescind rules: General Order 23-05 rescinds LBR 3011-1 (vendored,
+# but it states no date: CURRENCY UNCONFIRMED as to the day) and General
+# Order 25-03 rescinds LBR 3015-1.3 (not vendored; the court's link
+# returns 404) (sources/bankr-wvs/PROVENANCE.md). Neither rescission has a
+# stated effective date, so neither can be a dated layer; the periods of
+# LBR 3011-1 and 3015-1.3 are not declared at all rather than declared
+# without an end. The earlier editions are not vendored, so a query before
+# January 2, 2013 is a hole in the corpus.
 [package]
 name = "bankr-wvs-local-rules"
 version = "0.1.0"
@@ -21,6 +19,7 @@ language = 1
 pack_id = "bankr-wvs-local-rules"
 forum = "bankr-wvs"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Southern District of West Virginia: Local Bankruptcy Rules"
 description = "The Bankr. S.D. W. Va. Local Bankruptcy Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): extended schedules, joint-administration matrices, § 521(i) dismissal motions, chapter 13 funds on conversion or dismissal, meeting-of-creditors notices, motions and accommodation requests, conversion and dismissal fee applications, chapter 13 asset purchases, substituted counsel compensation, chapter 11 proofs of claim, confirmation continuances, ballot certifications, stay-relief final hearings and default notices, eviction certificates, facsimile originals, transcript redaction, auction reports, adversary motion responses (LBR 7007-1), default motion practice (LBR 9013-1), exhibit returns, proposed orders and telephone appearances."
 in_force = "2013-01-02"
@@ -28,6 +27,12 @@ known_at = "2026-10-28"
 unknown_before = "2013-01-02"
 jurisdiction = "U.S. Bankruptcy Court for the Southern District of West Virginia"
 counting = "frcp6"
+
+[package.instrument]
+source = "wvsb-lbr"
+issuer = "United States Bankruptcy Court for the Southern District of West Virginia"
+date = "2013-01-02"
+designation = "Local Bankruptcy Rules"
 
 [package.roles]
 applicant = "self"

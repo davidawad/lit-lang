@@ -1,13 +1,12 @@
-# The New Mexico Local Bankruptcy Rules of the U.S. Bankruptcy Court for the
-# District of New Mexico over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
-# declares only the periods the Local Rules themselves state and re-encodes
-# no FRBP period. It is a base package, not a `kind = "local-rule"` layer:
-# lit/core has no bankruptcy forum family (L2011, as for lit/bankr-mt). Each
-# period is counted under FRBP 9006(a), the FRCP 6(a) method (core's frcp6).
-# The rules are the version of December 1, 2025 (sources/bankr-nm, the
-# court's consolidated PDF of the rules adopted November 15, 2014 as since
-# amended); no amending order after it is vendored, so there are no dated
-# layers and the package runs from December 1, 2025.
+# The New Mexico Local Bankruptcy Rules of the U.S. Bankruptcy Court for
+# the District of New Mexico over lit/frbp (FRBP 9029(a); 28 U.S.C. §
+# 2075): it declares only the periods the Local Rules themselves state and
+# re-encodes no FRBP period. Each period is counted under FRBP 9006(a),
+# the FRCP 6(a) method (core's frcp6). The rules are the version of
+# December 1, 2025 (sources/bankr-nm, the court's consolidated PDF of the
+# rules adopted November 15, 2014 as since amended); no amending order
+# after it is vendored, so there are no dated layers and the package runs
+# from December 1, 2025.
 [package]
 name = "bankr-nm-local-rules"
 version = "0.1.0"
@@ -15,6 +14,7 @@ language = 1
 pack_id = "bankr-nm-local-rules"
 forum = "bankr-nm"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the District of New Mexico: Local Bankruptcy Rules"
 description = "The Bankr. D.N.M. Local Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp): payment advices, social security number statements, chapter 11 conversion and dismissal notice, chapter 13 voluntary dismissal, § 341 meeting rescheduling, Rule 2004 orders, substituted counsel and subchapter V trustee compensation, claim objections, chapter 13 plan objections and service, conduit mortgage payments, new debt notices, stay continuation and declaration motions, trustee information and documents, address changes, scanned images, abstention, adversary motion practice, depositions, costs, summary judgment, attorney withdrawal, contested-matter motion practice (NM LBR 9013-1), stay relief and exhibits."
 in_force = "2025-12-01"
@@ -22,6 +22,12 @@ known_at = "2026-10-28"
 unknown_before = "2025-12-01"
 jurisdiction = "U.S. Bankruptcy Court for the District of New Mexico"
 counting = "frcp6"
+
+[package.instrument]
+source = "nmb-lbr"
+issuer = "United States Bankruptcy Court for the District of New Mexico"
+date = "2025-12-01"
+designation = "Local Bankruptcy Rules"
 
 [package.roles]
 applicant = "self"

@@ -1,13 +1,11 @@
-# The U.S. Bankruptcy Court for the Southern District of Iowa over lit/frbp
-# (FRBP 9029(a); 28 U.S.C. § 2075). The court has no local bankruptcy
-# rules: its Bankruptcy Rules page states that "Effective August 4, 2003,
-# this court's local rules were abolished" and that attorneys and pro se
-# parties consult the Federal Rules of Bankruptcy Procedure
-# (sources/bankr-ias/PROVENANCE.md). So this package declares no local
-# period, page limit, filing or service rule: every period in the court is
-# lit/frbp's, and none is restated here. It is a base package, not a
-# `kind = "local-rule"` layer: lit/core has no bankruptcy forum family
-# (L2011 for `bankr-ias`), as for lit/bankr-dc.
+# The U.S. Bankruptcy Court for the Southern District of Iowa over
+# lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075). The court has no local
+# bankruptcy rules: its Bankruptcy Rules page states that "Effective
+# August 4, 2003, this court's local rules were abolished" and that
+# attorneys and pro se parties consult the Federal Rules of Bankruptcy
+# Procedure (sources/bankr-ias/PROVENANCE.md). So this package declares no
+# local period, page limit, filing or service rule: every period in the
+# court is lit/frbp's, and none is restated here.
 #
 # Layers: none. No amending order or later rule text is vendored; the
 # abolition date, August 4, 2003, opens the package.
@@ -18,6 +16,7 @@ language = 1
 pack_id = "bankr-ias-local-rules"
 forum = "bankr-ias"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Southern District of Iowa: no local bankruptcy rules (abolished August 4, 2003)"
 description = "The Bankr. S.D. Iowa layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): the court abolished its local rules effective August 4, 2003 and directs attorneys and pro se parties to the FRBP, so the layer declares no local period, page limit, filing or service rule."
 in_force = "2003-08-04"
@@ -25,6 +24,12 @@ known_at = "2026-10-28"
 unknown_before = "2003-08-04"
 jurisdiction = "U.S. Bankruptcy Court for the Southern District of Iowa"
 counting = "frcp6"
+
+[package.instrument]
+source = "iasb-rules-page"
+issuer = "United States Bankruptcy Court for the Southern District of Iowa"
+date = "2003-08-04"
+designation = "Abolition of the local bankruptcy rules, effective August 4, 2003"
 
 [package.roles]
 applicant = "self"

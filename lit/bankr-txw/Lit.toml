@@ -1,14 +1,12 @@
 # The Local Court Rules of the U.S. Bankruptcy Court for the Western
 # District of Texas over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
 # declares only the periods and limits the Local Court Rules themselves
-# state and re-encodes no FRBP period. It is a base package, not a `kind =
-# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011, as
-# for lit/bankr-mt). Each period is counted under FRBP 9006(a), the FRCP
-# 6(a) method (core's frcp6). The rules are those the order signed
-# December 17, 2024 adopted effective February 3, 2025, superseding the
-# prior rules; the standing orders page lists no order amending them and
-# earlier editions are not vendored (sources/bankr-txw), so the package
-# runs from February 3, 2025.
+# state and re-encodes no FRBP period. Each period is counted under FRBP
+# 9006(a), the FRCP 6(a) method (core's frcp6). The rules are those the
+# order signed December 17, 2024 adopted effective February 3, 2025,
+# superseding the prior rules; the standing orders page lists no order
+# amending them and earlier editions are not vendored (sources/bankr-txw),
+# so the package runs from February 3, 2025.
 [package]
 name = "bankr-txw-local-rules"
 version = "0.1.0"
@@ -16,6 +14,7 @@ language = 1
 pack_id = "bankr-txw-local-rules"
 forum = "bankr-txw"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Western District of Texas: Local Court Rules"
 description = "The Bankr. W.D. Tex. Local Court Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp): installment fees, chapter 13 tax returns and refunds, amended schedules and exemptions, conversion schedules, Rule 2004 notices, employment, monthly operating reports, claim objections, chapter 13 plan amendment, objection and confirmation declarations, mortgage notices, disclosure statement objections, stay relief negative notice and affidavits, emergency loans, chapter 7, 11 and 13 discharge, withdrawal of the reference, adversary motion practice and page limits, pretrial orders, trial briefs and exhibits, discovery, fees and costs, defaults, summary judgment, contested matters (L. Rule 9014-1), jury consent and remand."
 in_force = "2025-02-03"
@@ -23,6 +22,12 @@ known_at = "2026-10-28"
 unknown_before = "2025-02-03"
 jurisdiction = "U.S. Bankruptcy Court for the Western District of Texas"
 counting = "frcp6"
+
+[package.instrument]
+source = "txwb-lr"
+issuer = "United States Bankruptcy Court for the Western District of Texas"
+date = "2025-02-03"
+designation = "Local Court Rules"
 
 [package.roles]
 applicant = "self"

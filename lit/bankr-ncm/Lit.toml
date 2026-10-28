@@ -1,16 +1,13 @@
 # The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the Middle
 # District of North Carolina over lit/frbp (FRBP 9029(a); 28 U.S.C. §
 # 2075): it declares only the periods and length limits the Local Rules
-# themselves state and re-encodes no FRBP period. It is a base package,
-# not a `kind = "local-rule"` layer: lit/core has no bankruptcy forum
-# family (L2011 for `bankr-ncm`), as for lit/bankr-md. Each period is
-# counted under FRBP 9006(a), the FRCP 6(a) method (core's frcp6). The
-# rules are those current as of January 30, 2026, which supersede all
-# previous Local Rules (LBR 1001-1(b)(1)); the court's standing orders
-# page lists no later order amending them
-# (sources/bankr-ncm/PROVENANCE.md), so the consolidation is the only
-# layer. The earlier editions are not vendored, so a query before January
-# 30, 2026 is a hole in the corpus.
+# themselves state and re-encodes no FRBP period. Each period is counted
+# under FRBP 9006(a), the FRCP 6(a) method (core's frcp6). The rules are
+# those current as of January 30, 2026, which supersede all previous Local
+# Rules (LBR 1001-1(b)(1)); the court's standing orders page lists no
+# later order amending them (sources/bankr-ncm/PROVENANCE.md), so the
+# consolidation is the only layer. The earlier editions are not vendored,
+# so a query before January 30, 2026 is a hole in the corpus.
 [package]
 name = "bankr-ncm-local-rules"
 version = "0.1.0"
@@ -18,6 +15,7 @@ language = 1
 pack_id = "bankr-ncm-local-rules"
 forum = "bankr-ncm"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Middle District of North Carolina: Local Bankruptcy Rules"
 description = "The Bankr. M.D.N.C. Local Bankruptcy Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): business-entity resolutions, payment advices, joint-case consolidation, conversion fund objections, chapter 11 and subchapter V proofs of claim and disputed-claim notices, unclaimed-funds objections, § 1111(b) elections, stay-relief deficiency claims and surplus, withdrawal of the reference, corporate disclosure, adversary motion responses and brief length, prosecution, summary judgment, contested-matter responses (LBR 9013-1), final-order consent motions, mediated settlement conferences and proposed orders."
 in_force = "2026-01-30"
@@ -25,6 +23,12 @@ known_at = "2026-10-28"
 unknown_before = "2026-01-30"
 jurisdiction = "U.S. Bankruptcy Court for the Middle District of North Carolina"
 counting = "frcp6"
+
+[package.instrument]
+source = "ncmb-lbr"
+issuer = "United States Bankruptcy Court for the Middle District of North Carolina"
+date = "2026-01-30"
+designation = "Local Bankruptcy Rules"
 
 [package.roles]
 applicant = "self"

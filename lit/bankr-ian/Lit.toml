@@ -1,9 +1,7 @@
 # The Local Rules of Bankruptcy Practice and Procedure of the U.S.
 # Bankruptcy Court for the Northern District of Iowa over lit/frbp (FRBP
 # 9029(a); 28 U.S.C. § 2075): it declares only the periods the rules state
-# and re-encodes no FRBP period. It is a base package, not a `kind =
-# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011 for
-# `bankr-ian`), as for lit/bankr-dc. Each period is counted under FRBP
+# and re-encodes no FRBP period. Each period is counted under FRBP
 # 9006(a), the FRCP 6(a) method (core's frcp6).
 #
 # Layers, in date order: the rules as revised effective January 1, 2024
@@ -24,6 +22,7 @@ language = 1
 pack_id = "bankr-ian-local-rules"
 forum = "bankr-ian"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Northern District of Iowa: Local Rules of Bankruptcy Practice and Procedure"
 description = "The Bankr. N.D. Iowa Local Rules of Bankruptcy Practice and Procedure as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): filing fee installments and waiver denials, motions for exception from dismissal for missing tax returns, corporate disclosure deficiencies, Rule 2004 objections, pro hac vice certificates, unclaimed funds under liquidating plans, valuation appraisals, oral confirmation objections, ballot reports, chapter 12 deposits, stay relief answers, delinquent tax returns, exemption and lien avoidance objections, reaffirmation cures, electronic filing sanctions, transcript redaction, chapter 7 limited-notice dispositions, bills of costs, settled adversary proceedings and exhibits."
 in_force = "2024-01-01"
@@ -31,6 +30,12 @@ known_at = "2026-10-28"
 unknown_before = "2024-01-01"
 jurisdiction = "U.S. Bankruptcy Court for the Northern District of Iowa"
 counting = "frcp6"
+
+[package.instrument]
+source = "ianb-lbr"
+issuer = "United States Bankruptcy Court for the Northern District of Iowa"
+date = "2024-01-01"
+designation = "Local Rules of Bankruptcy Practice and Procedure"
 
 [package.roles]
 applicant = "self"

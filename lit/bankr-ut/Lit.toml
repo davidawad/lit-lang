@@ -1,14 +1,13 @@
-# The Local Rules of Practice of the U.S. Bankruptcy Court for the District
-# of Utah over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares only
-# the periods and limits the Local Rules themselves state and re-encodes no
-# FRBP period. It is a base package, not a `kind = "local-rule"` layer:
-# lit/core has no bankruptcy forum family (L2011, as for lit/bankr-mt). Each
-# period is counted under FRBP 9006(a), the FRCP 6(a) method (core's frcp6).
-# The rules are those effective December 1, 2025, adopted by General Order
-# 25-003, which supersede all prior versions and standing orders
-# (sources/bankr-ut; the vendored file is a posting of April 2026 that no
-# order explains); no later amending order is vendored, so there are no
-# dated layers and the package runs from December 1, 2025.
+# The Local Rules of Practice of the U.S. Bankruptcy Court for the
+# District of Utah over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
+# declares only the periods and limits the Local Rules themselves state
+# and re-encodes no FRBP period. Each period is counted under FRBP
+# 9006(a), the FRCP 6(a) method (core's frcp6). The rules are those
+# effective December 1, 2025, adopted by General Order 25-003, which
+# supersede all prior versions and standing orders (sources/bankr-ut; the
+# vendored file is a posting of April 2026 that no order explains); no
+# later amending order is vendored, so there are no dated layers and the
+# package runs from December 1, 2025.
 [package]
 name = "bankr-ut-local-rules"
 version = "0.1.0"
@@ -16,6 +15,7 @@ language = 1
 pack_id = "bankr-ut-local-rules"
 forum = "bankr-ut"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the District of Utah: Local Rules of Practice"
 description = "The Bankr. D. Utah Local Rules of Practice over the Federal Rules of Bankruptcy Procedure (lit/frbp): joint petition service, creditor lists, documents after conversion, chapter 7 compensation notices, § 341 rescheduling, chapter 11 and 12 financial reports, chapter 12 plan defaults, chapter 13 final plans, trustee documents, dismissal, eligibility, confirmation objections, postconfirmation dismissal, claims review, discharge requests, attorney withdrawal, chapter 11 bar dates, claim objections, final decrees, auctioneers, the planning-meeting report, findings, costs, summary judgment and motion page limits, response and reply times (LBR 9006-1), jury trial consent, proposed orders and exhibits."
 in_force = "2025-12-01"
@@ -23,6 +23,12 @@ known_at = "2026-10-28"
 unknown_before = "2025-12-01"
 jurisdiction = "U.S. Bankruptcy Court for the District of Utah"
 counting = "frcp6"
+
+[package.instrument]
+source = "utb-lbr"
+issuer = "United States Bankruptcy Court for the District of Utah"
+date = "2025-12-01"
+designation = "Local Rules of Practice"
 
 [package.roles]
 applicant = "self"

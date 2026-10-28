@@ -1,16 +1,15 @@
 # The Local Rules of the U.S. Bankruptcy Court for the Eastern District of
-# Oklahoma over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares only
-# the periods and limits the rules themselves state and re-encodes no FRBP
-# period. It is a base package, not a `kind = "local-rule"` layer: lit/core
-# has no bankruptcy forum family (L2011, as for lit/bankr-mt). Each period
-# is counted under FRBP 9006(a), the FRCP 6(a) method (core's frcp6). The
-# only vendored text is the court's undated printable rules, 'effective as
-# of December 1, 2009' with later per-rule amendments and no edition date on
-# the document or the court's page: CURRENCY UNCONFIRMED
-# (sources/bankr-oke/PROVENANCE.md). Every period and limit therefore has a
-# hole cite naming its pinpoint, the value the vendored text's, unverified,
-# as for lit/bankr-nyw. The package runs from the stated effective date; a
-# query before December 1, 2009 is a hole in the corpus.
+# Oklahoma over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
+# only the periods and limits the rules themselves state and re-encodes no
+# FRBP period. Each period is counted under FRBP 9006(a), the FRCP 6(a)
+# method (core's frcp6). The only vendored text is the court's undated
+# printable rules, 'effective as of December 1, 2009' with later per-rule
+# amendments and no edition date on the document or the court's page:
+# CURRENCY UNCONFIRMED (sources/bankr-oke/PROVENANCE.md). Every period and
+# limit therefore has a hole cite naming its pinpoint, the value the
+# vendored text's, unverified, as for lit/bankr-nyw. The package runs from
+# the stated effective date; a query before December 1, 2009 is a hole in
+# the corpus.
 [package]
 name = "bankr-oke-local-rules"
 version = "0.1.0"
@@ -18,6 +17,7 @@ language = 1
 pack_id = "bankr-oke-local-rules"
 forum = "bankr-oke"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Eastern District of Oklahoma: Local Rules"
 description = "The Bankr. E.D. Okla. Local Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp), every period and limit a hole pending a current text (the vendored printable rules are CURRENCY UNCONFIRMED): pro se disclosures, committee ownership statements, bar date notices to added creditors, chapter 12 and 13 amended plans, notices and objections, chapter 11 disclosure statement and confirmation notices and objections, final reports, stay relief discovery, tax returns on request, § 522(q) statements, sales, adversary brief deadlines, pretrial exchanges, summary judgment, continuances, motion objection dates (LBR 9013-1), jury trial settlement notice, witness and exhibit lists, settlements and settlement conferences."
 in_force = "2009-12-01"
@@ -25,6 +25,12 @@ known_at = "2026-10-28"
 unknown_before = "2009-12-01"
 jurisdiction = "U.S. Bankruptcy Court for the Eastern District of Oklahoma"
 counting = "frcp6"
+
+[package.instrument]
+source = "okeb-lr"
+issuer = "United States Bankruptcy Court for the Eastern District of Oklahoma"
+date = "2009-12-01"
+designation = "Local Rules"
 
 [package.roles]
 applicant = "self"

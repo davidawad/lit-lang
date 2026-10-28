@@ -1,14 +1,12 @@
 # The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the Western
 # District of Louisiana over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
 # declares only the periods and limits the Local Bankruptcy Rules
-# themselves state and re-encodes no FRBP period. It is a base package,
-# not a `kind = "local-rule"` layer: lit/core has no bankruptcy forum
-# family (L2011, as for lit/bankr-mt). Each period is counted under FRBP
-# 9006(a), the FRCP 6(a) method (core's frcp6). The rules are those
-# revised as of April 1, 2026 (adopted by General Order 2026-1); General
-# Order 2026-2 concerns the BNC outage and amends no rule, and earlier
-# editions are not vendored (sources/bankr-law), so the package runs from
-# April 1, 2026.
+# themselves state and re-encodes no FRBP period. Each period is counted
+# under FRBP 9006(a), the FRCP 6(a) method (core's frcp6). The rules are
+# those revised as of April 1, 2026 (adopted by General Order 2026-1);
+# General Order 2026-2 concerns the BNC outage and amends no rule, and
+# earlier editions are not vendored (sources/bankr-law), so the package
+# runs from April 1, 2026.
 [package]
 name = "bankr-law-local-rules"
 version = "0.1.0"
@@ -16,6 +14,7 @@ language = 1
 pack_id = "bankr-law-local-rules"
 forum = "bankr-law"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Western District of Louisiana: Local Bankruptcy Rules"
 description = "The Bankr. W.D. La. Local Bankruptcy Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp): amended schedules and exemptions, notice of a debtor's death, show-cause dismissal and missed meetings, Rule 2004 notices, retroactive employment, monthly operating reports, claim objections, unclaimed funds, chapter 11, 12 and 13 confirmation and modification objections, the seventeen-day stay-relief response deadline, chapter 13 discharge certifications, adversary motion practice and pretrial orders, brief length (LBR 7007-2), summary judgment responses, motion practice (LBR 9013-1, 9007-1) and exhibit removal."
 in_force = "2026-04-01"
@@ -23,6 +22,12 @@ known_at = "2026-10-28"
 unknown_before = "2026-04-01"
 jurisdiction = "U.S. Bankruptcy Court for the Western District of Louisiana"
 counting = "frcp6"
+
+[package.instrument]
+source = "lawb-lbr"
+issuer = "United States Bankruptcy Court for the Western District of Louisiana"
+date = "2026-04-01"
+designation = "Local Bankruptcy Rules"
 
 [package.roles]
 applicant = "self"

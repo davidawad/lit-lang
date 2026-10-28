@@ -1,9 +1,7 @@
 # The Local Rules of the U.S. Bankruptcy Court for the Middle District of
 # Florida over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares only
 # the periods and page limits the rules themselves state and re-encodes no
-# FRBP period. It is a base package, not a `kind = "local-rule"` layer:
-# lit/core has no bankruptcy forum family (L2011 for `bankr-flm`), as for
-# lit/bankr-dc. Each period is counted under FRBP 9006(a), the FRCP 6(a)
+# FRBP period. Each period is counted under FRBP 9006(a), the FRCP 6(a)
 # method (core's frcp6).
 #
 # Layers: the Local Rules with amendments effective August 15, 2025 are the
@@ -19,6 +17,7 @@ language = 1
 pack_id = "bankr-flm-local-rules"
 forum = "bankr-flm"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Middle District of Florida: Local Rules"
 description = "The Bankr. M.D. Fla. Local Rules (effective August 15, 2025) as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): payment advices, service of orders, negative notice (Local Rule 2002-4), Rule 2004 examinations, trustee record destruction, professional compensation, utility orders, attorney discipline and withdrawal, claims in reinstated cases, ballots, chapter 11 confirmation and post-confirmation duties, final decrees, § 362(c)(3) motions, stay discovery, deadlines reset in reinstated cases, withdrawal of the reference and abstention, transcript redaction, sales, the adversary proceeding procedures and 10-page motion limit of Local Rule 7001-1, depositions, defaults, appeal dismissals, motion opposition (Local Rule 9013-1), juror interviews, settlements, mediation, removal and remand, and exhibits."
 in_force = "2025-08-15"
@@ -26,6 +25,12 @@ known_at = "2026-10-28"
 unknown_before = "2025-08-15"
 jurisdiction = "U.S. Bankruptcy Court for the Middle District of Florida"
 counting = "frcp6"
+
+[package.instrument]
+source = "flmb-lbr"
+issuer = "United States Bankruptcy Court for the Middle District of Florida"
+date = "2025-08-15"
+designation = "Local Rules"
 
 [package.roles]
 applicant = "self"

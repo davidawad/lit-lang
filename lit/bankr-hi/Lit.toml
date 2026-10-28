@@ -1,14 +1,13 @@
 # The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the District
 # of Hawaii over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
 # only the periods and limits the Local Bankruptcy Rules themselves state
-# and re-encodes no FRBP period. It is a base package, not a `kind =
-# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011, as
-# for lit/bankr-ak). Each period is counted under FRBP 9006(a), the FRCP
-# 6(a) method (core's frcp6) with the Hawaii state holidays of LBR
-# 9006-1(a) closing a forward-counted period (FRBP 9006(a)(6)(C);
-# `bankr-hi-9006`). FRBP 9006(a)(6)(C) closes a forward-counted FRBP
-# period in this district on those days too, so in a matter that uses this
-# package `bankr-hi-9006` also counts lit/frbp's periods (`recounts`). The rules are those of December 1, 2025
+# and re-encodes no FRBP period. Each period is counted under FRBP
+# 9006(a), the FRCP 6(a) method (core's frcp6) with the Hawaii state
+# holidays of LBR 9006-1(a) closing a forward-counted period (FRBP
+# 9006(a)(6)(C); `bankr-hi-9006`). FRBP 9006(a)(6)(C) closes a
+# forward-counted FRBP period in this district on those days too, so in a
+# matter that uses this package `bankr-hi-9006` also counts lit/frbp's
+# periods (`recounts`). The rules are those of December 1, 2025
 # (sources/bankr-hi); no amending order is vendored, so there are no dated
 # layers and a query before December 1, 2025 is a hole in the corpus.
 [package]
@@ -18,6 +17,7 @@ language = 1
 pack_id = "bankr-hi-local-rules"
 forum = "bankr-hi"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the District of Hawaii: Local Bankruptcy Rules"
 description = "The Bankr. D. Haw. Local Bankruptcy Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp): amendments, conversion, responsible individuals, trustee administrative expenses, Subchapter V deposits, chapter 13 dismissal, sales and plan service, modification and confirmation denial, chapter 11 and Subchapter V claims, claim objections, disclosure statements, ballots and confirmation objections, final decrees, the trustee's notice of claims, stay relief, rent certifications, discharge certifications, rejected documents, transcript redaction, adversary scheduling, default and summary judgment, motion practice, sealing, reconsideration, proposed orders and remote appearances, and the brief, trial brief and concise statement page and word limits."
 in_force = "2025-12-01"
@@ -26,6 +26,12 @@ unknown_before = "2025-12-01"
 jurisdiction = "U.S. Bankruptcy Court for the District of Hawaii"
 counting = "bankr-hi-9006"
 recounts = ["frbp-bankruptcy-procedure"]
+
+[package.instrument]
+source = "hib-lbr"
+issuer = "United States Bankruptcy Court for the District of Hawaii"
+date = "2025-12-01"
+designation = "Local Bankruptcy Rules"
 
 [package.roles]
 applicant = "self"

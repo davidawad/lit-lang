@@ -2,15 +2,13 @@
 # and Southern Districts of Mississippi, as the U.S. Bankruptcy Court for
 # the Northern District of Mississippi applies them, over lit/frbp (FRBP
 # 9029(a); 28 U.S.C. § 2075): it declares only the periods the Uniform
-# Local Rules themselves state and re-encodes no FRBP period. It is a base
-# package, not a `kind = "local-rule"` layer: lit/core has no bankruptcy
-# forum family (L2011, as for lit/bankr-mt). Each period is counted under
-# FRBP 9006(a), the FRCP 6(a) method (core's frcp6). The rules are those
-# as amended March 1, 2026, vendored from this court's site
-# (sources/bankr-msn; the same text as the other district's copy); the pending
-# Rule 9019-1 amendment effective December 1, 2026 is not in force and
-# earlier editions are not vendored, so the package runs from March 1,
-# 2026.
+# Local Rules themselves state and re-encodes no FRBP period. Each period
+# is counted under FRBP 9006(a), the FRCP 6(a) method (core's frcp6). The
+# rules are those as amended March 1, 2026, vendored from this court's
+# site (sources/bankr-msn; the same text as the other district's copy);
+# the pending Rule 9019-1 amendment effective December 1, 2026 is not in
+# force and earlier editions are not vendored, so the package runs from
+# March 1, 2026.
 [package]
 name = "bankr-msn-local-rules"
 version = "0.1.0"
@@ -18,6 +16,7 @@ language = 1
 pack_id = "bankr-msn-local-rules"
 forum = "bankr-msn"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Northern District of Mississippi: Uniform Local Rules"
 description = "The Bankr. N.D. Miss. Uniform Local Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp): installment fees, added creditors' claim, exemption, discharge and dischargeability periods, chapter 13 dismissal objections, § 341 rescheduling and appearance waivers, Rule 2004 notices, chapter 12 operating reports, the chapter 11 and Subchapter V bar dates, ballots and final reports, stay relief, continuation and imposition, paper filings, withdrawal of the reference, adversary amendments, conferences, discovery, fees and summary judgment, committee appeal notices, motion practice (L.R. 9013-1), jury trials, exhibits and mediation."
 in_force = "2026-03-01"
@@ -25,6 +24,12 @@ known_at = "2026-10-28"
 unknown_before = "2026-03-01"
 jurisdiction = "U.S. Bankruptcy Court for the Northern District of Mississippi"
 counting = "frcp6"
+
+[package.instrument]
+source = "msnb-ulr"
+issuer = "United States Bankruptcy Court for the Northern District of Mississippi"
+date = "2026-03-01"
+designation = "Uniform Local Rules"
 
 [package.roles]
 applicant = "self"

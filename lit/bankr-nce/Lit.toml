@@ -1,11 +1,9 @@
-# The Local Rules of Practice and Procedure of the U.S. Bankruptcy Court for
-# the Eastern District of North Carolina over lit/frbp (FRBP 9029(a); 28
-# U.S.C. § 2075): it declares only the periods the Local Rules themselves
-# state and re-encodes no FRBP period. It is a base package, not a `kind =
-# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011 for
-# `bankr-nce`), as for lit/bankr-md. Each period is counted under FRBP
-# 9006(a), the FRCP 6(a) method (core's frcp6). The rules are those
-# effective October 15, 2026; no later amending order is vendored
+# The Local Rules of Practice and Procedure of the U.S. Bankruptcy Court
+# for the Eastern District of North Carolina over lit/frbp (FRBP 9029(a);
+# 28 U.S.C. § 2075): it declares only the periods the Local Rules
+# themselves state and re-encodes no FRBP period. Each period is counted
+# under FRBP 9006(a), the FRCP 6(a) method (core's frcp6). The rules are
+# those effective October 15, 2026; no later amending order is vendored
 # (sources/bankr-nce/PROVENANCE.md), so the consolidation is the only
 # layer. The earlier editions are not vendored, so a query before October
 # 15, 2026 is a hole in the corpus. The Rules for Complex Chapter 11 Cases
@@ -18,6 +16,7 @@ language = 1
 pack_id = "bankr-nce-local-rules"
 forum = "bankr-nce"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Eastern District of North Carolina: Local Rules of Practice and Procedure"
 description = "The Bankr. E.D.N.C. Local Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): next-friend appointments, installment fees, certificates of service, conversion forms and bankruptcy administrator abuse statements, chapter 11 notices of disputed claims and proofs of claim, attorney disclosures and discipline, chapter 13 amended plans and dismissed-case fees, servicer changes, stay continuation, debtor duties to the trustee and bankruptcy administrator in chapters 7, 11 and 12, adversary motions, pretrial procedure, prosecution and summary judgment, contested-matter responses (LBR 9014-1), settlements, mediated settlement conferences, service of orders and removal."
 in_force = "2026-10-15"
@@ -25,6 +24,12 @@ known_at = "2026-10-28"
 unknown_before = "2026-10-15"
 jurisdiction = "U.S. Bankruptcy Court for the Eastern District of North Carolina"
 counting = "frcp6"
+
+[package.instrument]
+source = "nceb-lbr"
+issuer = "United States Bankruptcy Court for the Eastern District of North Carolina"
+date = "2026-10-15"
+designation = "Local Rules of Practice and Procedure"
 
 [package.roles]
 applicant = "self"

@@ -1,11 +1,9 @@
 # The Local Rules of the U.S. Bankruptcy Court for the Eastern District of
-# Wisconsin over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares only
-# the periods the Local Rules themselves state and re-encodes no FRBP
-# period. It is a base package, not a `kind = "local-rule"` layer: lit/core
-# has no bankruptcy forum family (L2011 for `bankr-wie`), as for
-# lit/bankr-ct. Each period is counted under FRBP 9006(a), the FRCP 6(a)
-# method (core's frcp6). The rules are those adopted effective January 1,
-# 2026 (LBR 1001-1; sources/bankr-wie/PROVENANCE.md); no amending order is
+# Wisconsin over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
+# only the periods the Local Rules themselves state and re-encodes no FRBP
+# period. Each period is counted under FRBP 9006(a), the FRCP 6(a) method
+# (core's frcp6). The rules are those adopted effective January 1, 2026
+# (LBR 1001-1; sources/bankr-wie/PROVENANCE.md); no amending order is
 # vendored, so the consolidation is the only layer. The earlier rules are
 # not vendored, so a query before January 1, 2026 is a hole in the corpus.
 [package]
@@ -15,6 +13,7 @@ language = 1
 pack_id = "bankr-wie-local-rules"
 forum = "bankr-wie"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Eastern District of Wisconsin: Local Rules"
 description = "The Bankr. E.D. Wis. Local Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): documents for the trustee, a deceased debtor's declaration, Rule 2004 protective motions, employment and compensation, supplemental claims, claim objections, chapter 13 confirmation and modification objections, chapter 11 and subchapter V closing, adequate protection notices, stay relief, discharge forms and certifications, withdrawal of the reference, dismissal of discharge proceedings, summary judgment, expedited motions, § 362(c) and § 1112(b) motions, the negative-notice objection period and proposed orders."
 in_force = "2026-01-01"
@@ -22,6 +21,12 @@ known_at = "2026-10-28"
 unknown_before = "2026-01-01"
 jurisdiction = "U.S. Bankruptcy Court for the Eastern District of Wisconsin"
 counting = "frcp6"
+
+[package.instrument]
+source = "wieb-lr"
+issuer = "United States Bankruptcy Court for the Eastern District of Wisconsin"
+date = "2026-01-01"
+designation = "Local Rules"
 
 [package.roles]
 applicant = "self"

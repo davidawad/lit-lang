@@ -1,10 +1,8 @@
 # The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the District
-# of Rhode Island over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
-# only the periods and page limits the rules themselves state and
-# re-encodes no FRBP period. It is a base package, not a
-# `kind = "local-rule"` layer: lit/core has no bankruptcy forum family
-# (L2011 for `bankr-ri`), as for lit/bankr-dc. Each period is counted under
-# FRBP 9006(a), the FRCP 6(a) method (core's frcp6).
+# of Rhode Island over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
+# declares only the periods and page limits the rules themselves state and
+# re-encodes no FRBP period. Each period is counted under FRBP 9006(a),
+# the FRCP 6(a) method (core's frcp6).
 #
 # Layers, in date order: the rules as amended December 1, 2024 (the
 # consolidation), then General Orders 2025-001 (June 3, 2025; R.I. LBR
@@ -23,6 +21,7 @@ language = 1
 pack_id = "bankr-ri-local-rules"
 forum = "bankr-ri"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the District of Rhode Island: Local Bankruptcy Rules"
 description = "The Bankr. D.R.I. Local Bankruptcy Rules, with General Orders 2025-001 to 2026-001 as dated layers, as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): the seven-day petition documents, entity counsel, filing-fee installments, chapter 11 notices to disputed creditors, added creditors, dismissal for noncompliance, Rule 2004 examinations, professional employment and inventories, chapter 13 business debtors and fees, claims bar dates, supplements and objections, unclaimed funds, chapter 13 plans and confirmation, chapter 11 voting, confirmation and final reports, stay relief, cash collateral and borrowing, rent deposits, attorney addresses, exemptions, defective and late filings, electronic filing, interpreters, adversary jury consent, pretrial and discovery, extended discharge deadlines, expedited motions, sealing, removal, exhibits, proposed orders, the response times of R.I. LBR 1005-1(d), and the motion and reply page limits."
 in_force = "2024-12-01"
@@ -30,6 +29,12 @@ known_at = "2026-10-28"
 unknown_before = "2024-12-01"
 jurisdiction = "U.S. Bankruptcy Court for the District of Rhode Island"
 counting = "frcp6"
+
+[package.instrument]
+source = "rib-lbr"
+issuer = "United States Bankruptcy Court for the District of Rhode Island"
+date = "2024-12-01"
+designation = "Local Bankruptcy Rules"
 
 [package.roles]
 applicant = "self"

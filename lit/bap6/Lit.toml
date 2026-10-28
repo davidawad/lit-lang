@@ -5,12 +5,14 @@
 # direct-review periods are lit/frbp's; 28 U.S.C. § 158(c)(1) election is
 # lit/frbp's too). The rules are those "As Amended December 1, 2014", the
 # edition the panel's site serves (sources/ca6-bap/PROVENANCE.md); no
-# later order amends them, so the edition is the only layer. The package is
-# in force from the FRBP December 1, 2025 edition it composes with, a lower
-# bound: a query before then is a hole in the corpus. Each period is
+# later order amends them, so the edition is the only layer. The package
+# is in force from the FRBP December 1, 2025 edition it composes with, a
+# lower bound: a query before then is a hole in the corpus. Each period is
 # counted under FRBP 9006(a), the FRCP 6(a) method (core's frcp6). Like
 # lit/bap8 and lit/bap9 it is a base package, not a `kind = "local-rule"`
-# layer: lit/core has no bankruptcy forum family.
+# layer: its forum `bap6` is in none of lit/core's forum families (the
+# bankruptcy family holds the bankruptcy courts, not the appellate
+# panels), so a layer there would be L2011.
 [package]
 name = "sixth-circuit-bankruptcy-appellate-panel"
 version = "0.1.0"

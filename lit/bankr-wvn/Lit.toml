@@ -1,9 +1,7 @@
-# The Local Rules of the U.S. Bankruptcy Court for the Northern District of
-# West Virginia over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
+# The Local Rules of the U.S. Bankruptcy Court for the Northern District
+# of West Virginia over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
 # declares only the periods and the page limit the Local Rules themselves
-# state and re-encodes no FRBP period. It is a base package, not a `kind =
-# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011 for
-# `bankr-wvn`), as for lit/bankr-md. Each period is counted under FRBP
+# state and re-encodes no FRBP period. Each period is counted under FRBP
 # 9006(a), the FRCP 6(a) method (core's frcp6). The rules are those
 # effective October 1, 2019, in the court's file updated for General Order
 # 20-06, which rescinded LBR 7016-1; the order itself is not vendored, so
@@ -18,6 +16,7 @@ language = 1
 pack_id = "bankr-wvn-local-rules"
 forum = "bankr-wvn"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Northern District of West Virginia: Local Rules"
 description = "The Bankr. N.D.W. Va. Local Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): discharge-objection extensions for added creditors, venue objections, meeting-location requests, meeting appearance and continuance requests, § 362(c)(3) stay extensions, proposed orders, transcript redaction, reports of sale, adversary motion responses and replies (LBR 7007-1), the 25-page limit, motion responses (LBR 9013-1) and hearing objections."
 in_force = "2019-10-01"
@@ -25,6 +24,12 @@ known_at = "2026-10-28"
 unknown_before = "2019-10-01"
 jurisdiction = "U.S. Bankruptcy Court for the Northern District of West Virginia"
 counting = "frcp6"
+
+[package.instrument]
+source = "wvnb-lr"
+issuer = "United States Bankruptcy Court for the Northern District of West Virginia"
+date = "2019-10-01"
+designation = "Local Rules"
 
 [package.roles]
 applicant = "self"

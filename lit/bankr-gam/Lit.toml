@@ -1,9 +1,7 @@
 # The Local Rules of Bankruptcy Procedure of the U.S. Bankruptcy Court for
 # the Middle District of Georgia over lit/frbp (FRBP 9029(a); 28 U.S.C. §
 # 2075): it declares only the periods and page limits the rules themselves
-# state and re-encodes no FRBP period. It is a base package, not a `kind =
-# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011 for
-# `bankr-gam`), as for lit/bankr-dc. Each period is counted under FRBP
+# state and re-encodes no FRBP period. Each period is counted under FRBP
 # 9006(a), the FRCP 6(a) method (core's frcp6).
 #
 # Layers: the Local Rules as of October 1, 2026 are the only vendored text
@@ -20,6 +18,7 @@ language = 1
 pack_id = "bankr-gam-local-rules"
 forum = "bankr-gam"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Middle District of Georgia: Local Rules"
 description = "The Bankr. M.D. Ga. Local Rules (as of October 1, 2026) as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): extended schedules, chapter 13 amendments for new assets, separated joint cases, dismissal for missing documents, conversion amendments, the employment of professionals, chapter 11 and subchapter V claims bar dates, late-added creditors, valuation experts, chapter 11 consummation reports, debtor records, abandonment at the meeting of creditors, garnishment, exhibits, redaction, § 727 dismissals, costs, summary judgment (LBR 7056-1), motion page limits (LBR 9013-1(d)), certificates of service and jury consent."
 in_force = "2026-10-01"
@@ -27,6 +26,12 @@ known_at = "2026-10-28"
 unknown_before = "2026-10-01"
 jurisdiction = "U.S. Bankruptcy Court for the Middle District of Georgia"
 counting = "frcp6"
+
+[package.instrument]
+source = "gamb-lbr"
+issuer = "United States Bankruptcy Court for the Middle District of Georgia"
+date = "2026-10-01"
+designation = "Local Rules"
 
 [package.roles]
 applicant = "self"

@@ -1,11 +1,9 @@
 # The Massachusetts Local Bankruptcy Rules (MLBR) of the U.S. Bankruptcy
 # Court for the District of Massachusetts over lit/frbp (FRBP 9029(a); 28
-# U.S.C. § 2075): it declares only the periods and page limits the MLBR and
-# their Appendix 1 (the Chapter 13 Rules, adopted by MLBR 3015-1) state and
-# re-encodes no FRBP period. It is a base package, not a
-# `kind = "local-rule"` layer: lit/core has no bankruptcy forum family
-# (L2011 for `bankr-ma`), as for lit/bankr-dc. Each period is counted under
-# FRBP 9006(a), the FRCP 6(a) method (core's frcp6).
+# U.S.C. § 2075): it declares only the periods and page limits the MLBR
+# and their Appendix 1 (the Chapter 13 Rules, adopted by MLBR 3015-1)
+# state and re-encodes no FRBP period. Each period is counted under FRBP
+# 9006(a), the FRCP 6(a) method (core's frcp6).
 #
 # Layers, in date order: the MLBR effective May 1, 2025 with Appendix 1 of
 # the same date (the consolidation), then Standing Order 2025-01 (September
@@ -22,6 +20,7 @@ language = 1
 pack_id = "bankr-ma-local-rules"
 forum = "bankr-ma"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the District of Massachusetts: Local Bankruptcy Rules"
 description = "The Bankr. D. Mass. Local Bankruptcy Rules (MLBR) and Chapter 13 Rules (Appendix 1) as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): fee waivers, payment advices, defective petitions, a debtor's death, chapter 11 dismissal and conversion, address changes, patient care ombudsmen, professional employment, § 503(b)(9) claims, claim objections, unclaimed funds, chapter 11 final decrees, stay relief and continuation, tax-return requests, sales, abandonment, utilities, adversary discovery, inactivity and summary judgment, extended discharge deadlines, withdrawal, motion practice (MLBR 9013-1), jury consent, settlements and exhibits, and the chapter 13 documents, confirmation and plan amendments, surrogate claims, claim objections, sales, loan modifications, stay relief, dismissal, conversion and discharge."
 in_force = "2025-05-01"
@@ -29,6 +28,12 @@ known_at = "2026-10-28"
 unknown_before = "2025-05-01"
 jurisdiction = "U.S. Bankruptcy Court for the District of Massachusetts"
 counting = "frcp6"
+
+[package.instrument]
+source = "mab-mlbr"
+issuer = "United States Bankruptcy Court for the District of Massachusetts"
+date = "2025-05-01"
+designation = "Local Bankruptcy Rules"
 
 [package.roles]
 applicant = "self"

@@ -1,10 +1,8 @@
-# The Local Rules of the U.S. Bankruptcy Court for the Northern District of
-# Alabama over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares only
-# the periods the rules themselves state and re-encodes no FRBP period. It
-# is a base package, not a `kind = "local-rule"` layer: lit/core has no
-# bankruptcy forum family (L2011 for `bankr-aln`), as for lit/bankr-dc.
-# Each period is counted under FRBP 9006(a), the FRCP 6(a) method (core's
-# frcp6).
+# The Local Rules of the U.S. Bankruptcy Court for the Northern District
+# of Alabama over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
+# only the periods the rules themselves state and re-encodes no FRBP
+# period. Each period is counted under FRBP 9006(a), the FRCP 6(a) method
+# (core's frcp6).
 #
 # Layers: the Local Rules with an effective date of March 1, 2023 (Rule
 # 1001-1(d)) are the only vendored text (sources/bankr-aln/PROVENANCE.md).
@@ -21,6 +19,7 @@ language = 1
 pack_id = "bankr-aln-local-rules"
 forum = "bankr-aln"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Northern District of Alabama: Local Rules"
 description = "The Bankr. N.D. Ala. Local Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): installment filing fees (Rule 1006-1), negative-notice claim objections (Rule 3007-1), chapter 13 confirmation objections, the stay-relief fact summary sheet, a debtor's duties upon conversion to chapter 7, § 522(f) lien avoidance on negative notice (Rule 4003-2) and the withdrawal of exhibits."
 in_force = "2023-03-01"
@@ -28,6 +27,12 @@ known_at = "2026-10-28"
 unknown_before = "2023-03-01"
 jurisdiction = "U.S. Bankruptcy Court for the Northern District of Alabama"
 counting = "frcp6"
+
+[package.instrument]
+source = "alnb-lbr"
+issuer = "United States Bankruptcy Court for the Northern District of Alabama"
+date = "2023-03-01"
+designation = "Local Rules"
 
 [package.roles]
 applicant = "self"

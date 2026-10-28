@@ -1,9 +1,7 @@
 # The Amended and Restated Local Rules of Practice and Procedure of the
 # U.S. Bankruptcy Court for the Southern District of Florida over lit/frbp
 # (FRBP 9029(a); 28 U.S.C. § 2075): it declares only the periods the rules
-# themselves state and re-encodes no FRBP period. It is a base package, not
-# a `kind = "local-rule"` layer: lit/core has no bankruptcy forum family
-# (L2011 for `bankr-fls`), as for lit/bankr-dc. Each period is counted
+# themselves state and re-encodes no FRBP period. Each period is counted
 # under FRBP 9006(a), the FRCP 6(a) method (core's frcp6).
 #
 # Layers: the Amended and Restated Local Rules effective June 1, 2026 are
@@ -18,6 +16,7 @@ language = 1
 pack_id = "bankr-fls-local-rules"
 forum = "bankr-fls"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Southern District of Florida: Local Rules"
 description = "The Bankr. S.D. Fla. Amended and Restated Local Rules (effective June 1, 2026) as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): chapter 13 amendments and confirmation, delinquency cures, deadlines reset in reinstated cases and on late notice of the meeting of creditors, postpetition claims after conversion, Rule 2004 examinations, professional compensation, claims bar dates and objections, the chapter 7 final report, valuation motions, disclosure statements, final decrees, chapter 13 claims review, chapter 12 discharge, electronic signatures, withdrawal of the reference, sales on negative notice, abandonment, e-discovery, depositions, costs, negative notice (Local Rule 9013-3), contested matters, mediation, proposed orders, remand and redaction."
 in_force = "2026-06-01"
@@ -25,6 +24,12 @@ known_at = "2026-10-28"
 unknown_before = "2026-06-01"
 jurisdiction = "U.S. Bankruptcy Court for the Southern District of Florida"
 counting = "frcp6"
+
+[package.instrument]
+source = "flsb-lbr"
+issuer = "United States Bankruptcy Court for the Southern District of Florida"
+date = "2026-06-01"
+designation = "Local Rules"
 
 [package.roles]
 applicant = "self"

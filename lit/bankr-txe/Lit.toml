@@ -1,13 +1,11 @@
 # The Local Rules of Bankruptcy Procedure of the U.S. Bankruptcy Court for
 # the Eastern District of Texas over lit/frbp (FRBP 9029(a); 28 U.S.C. §
 # 2075): it declares only the periods and limits the Local Rules
-# themselves state and re-encodes no FRBP period. It is a base package,
-# not a `kind = "local-rule"` layer: lit/core has no bankruptcy forum
-# family (L2011, as for lit/bankr-mt). Each period is counted under FRBP
-# 9006(a), the FRCP 6(a) method (core's frcp6). The rules are those
-# revised August 22, 2022; the later General Orders 22-2, 24-1, 26-1 and
-# 26-2 amend no rule's text and the SBRA interim rules are not vendored
-# (sources/bankr-txe), so there are no dated layers.
+# themselves state and re-encodes no FRBP period. Each period is counted
+# under FRBP 9006(a), the FRCP 6(a) method (core's frcp6). The rules are
+# those revised August 22, 2022; the later General Orders 22-2, 24-1, 26-1
+# and 26-2 amend no rule's text and the SBRA interim rules are not
+# vendored (sources/bankr-txe), so there are no dated layers.
 [package]
 name = "bankr-txe-local-rules"
 version = "0.1.0"
@@ -15,6 +13,7 @@ language = 1
 pack_id = "bankr-txe-local-rules"
 forum = "bankr-txe"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Eastern District of Texas: Local Rules of Bankruptcy Procedure"
 description = "The Bankr. E.D. Tex. Local Rules of Bankruptcy Procedure over the Federal Rules of Bankruptcy Procedure (lit/frbp): the involuntary matrix, payment advices, the negative-notice response periods (14, 21, 28 and 30 days from service) for dismissal, Rule 2004, employment, claim objections, plan modifications, stay relief, residential lease certifications, exemptions, abandonment and adversary motions, chapter 11 operating and post-confirmation reports and bar dates, chapter 12 and 13 confirmation, the Trustee's Reconciliation Concerning Claims, plan completion and discharge, adversary pretrial deadlines, summary judgment timing and page limits, and exhibits."
 in_force = "2022-08-22"
@@ -22,6 +21,12 @@ known_at = "2026-10-28"
 unknown_before = "2022-08-22"
 jurisdiction = "U.S. Bankruptcy Court for the Eastern District of Texas"
 counting = "frcp6"
+
+[package.instrument]
+source = "txeb-lbr"
+issuer = "United States Bankruptcy Court for the Eastern District of Texas"
+date = "2022-08-22"
+designation = "Local Rules of Bankruptcy Procedure"
 
 [package.roles]
 applicant = "self"

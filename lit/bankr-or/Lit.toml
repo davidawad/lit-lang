@@ -1,13 +1,12 @@
 # The Local Rules of Bankruptcy Procedure of the U.S. Bankruptcy Court for
 # the District of Oregon over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075):
 # it declares only the periods and limits the Local Rules themselves state
-# and re-encodes no FRBP period. It is a base package, not a `kind =
-# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011, as
-# for lit/bankr-ak). Each period is counted under FRBP 9006(a), the FRCP
-# 6(a) method (core's frcp6). The rules are those effective December 1,
-# 2025 (sources/bankr-or); the court's 2026 proposals for public comment
-# are not adopted rules and are not vendored, so there are no dated layers
-# and a query before December 1, 2025 is a hole in the corpus.
+# and re-encodes no FRBP period. Each period is counted under FRBP
+# 9006(a), the FRCP 6(a) method (core's frcp6). The rules are those
+# effective December 1, 2025 (sources/bankr-or); the court's 2026
+# proposals for public comment are not adopted rules and are not vendored,
+# so there are no dated layers and a query before December 1, 2025 is a
+# hole in the corpus.
 [package]
 name = "bankr-or-local-rules"
 version = "0.1.0"
@@ -15,6 +14,7 @@ language = 1
 pack_id = "bankr-or-local-rules"
 forum = "bankr-or"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the District of Oregon: Local Rules of Bankruptcy Procedure"
 description = "The Bankr. D. Or. Local Rules of Bankruptcy Procedure over the Federal Rules of Bankruptcy Procedure (lit/frbp): authority to file, creditors' committees, Rule 2004 examinations, plan completion notices, compensation applications and chapter 13 attorney statements, secured creditor expenses, amended claims, chapter 13 wage orders, amended plans, confirmation objections and orders, small business plans, temporary claim allowance, chapter 11 confirmation orders, stay extension, § 522(q) motions, ECF registration, transcript redaction, sales, abandonment of a residence, adversary motions and pretrial orders, orders to compel, attorney status, motion objections, expert disclosure, costs and removal, and the 20- and 10-page adversary brief limits."
 in_force = "2025-12-01"
@@ -22,6 +22,12 @@ known_at = "2026-10-28"
 unknown_before = "2025-12-01"
 jurisdiction = "U.S. Bankruptcy Court for the District of Oregon"
 counting = "frcp6"
+
+[package.instrument]
+source = "orb-lbr"
+issuer = "United States Bankruptcy Court for the District of Oregon"
+date = "2025-12-01"
+designation = "Local Rules of Bankruptcy Procedure"
 
 [package.roles]
 applicant = "self"

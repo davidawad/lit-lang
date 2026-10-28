@@ -1,17 +1,18 @@
 # The Rules of the United States Bankruptcy Appellate Panel of the Ninth
 # Circuit over lit/frbp (FRBP 8026; 9th Cir. BAP R. Preamble): it declares
 # only the periods and the limit the panel's own rules state and
-# re-encodes no FRBP period (notice, election, record, briefing,
-# rehearing and the direct-review periods are lit/frbp's; 28 U.S.C.
-# § 158(c)(1) election is lit/frbp's too). The rules are those adopted
-# February 24, 2000, as revised June 15, 2015, the latest revision the
-# panel's site lists (sources/fed-ca9-bap/PROVENANCE.md); no later order
-# amends them, so the revision is the only layer. The package is in force
-# from the FRBP December 1, 2025 edition it composes with, a lower bound:
-# a query before then is a hole in the corpus. Each period is counted
-# under FRBP 9006(a), the FRCP 6(a) method (core's frcp6). Like lit/bap8 it
-# is a base package, not a `kind = "local-rule"` layer: lit/core has no
-# bankruptcy forum family.
+# re-encodes no FRBP period (notice, election, record, briefing, rehearing
+# and the direct-review periods are lit/frbp's; 28 U.S.C. § 158(c)(1)
+# election is lit/frbp's too). The rules are those adopted February 24,
+# 2000, as revised June 15, 2015, the latest revision the panel's site
+# lists (sources/fed-ca9-bap/PROVENANCE.md); no later order amends them,
+# so the revision is the only layer. The package is in force from the FRBP
+# December 1, 2025 edition it composes with, a lower bound: a query before
+# then is a hole in the corpus. Each period is counted under FRBP 9006(a),
+# the FRCP 6(a) method (core's frcp6). Like lit/bap8 it is a base package,
+# not a `kind = "local-rule"` layer: its forum `bap9` is in none of
+# lit/core's forum families (the bankruptcy family holds the bankruptcy
+# courts, not the appellate panels), so a layer there would be L2011.
 [package]
 name = "ninth-circuit-bankruptcy-appellate-panel"
 version = "0.1.0"

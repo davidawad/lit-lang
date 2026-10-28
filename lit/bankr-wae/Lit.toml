@@ -1,13 +1,12 @@
 # The Local Rules of the U.S. Bankruptcy Court for the Eastern District of
 # Washington over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
 # only the periods the Local Rules themselves state and re-encodes no FRBP
-# period. It is a base package, not a `kind = "local-rule"` layer:
-# lit/core has no bankruptcy forum family (L2011, as for lit/bankr-ak).
-# Each period is counted under FRBP 9006(a), the FRCP 6(a) method (core's
-# frcp6). The rules are the court's complete set in the file dated July
-# 17, 2026 (sources/bankr-wae; the cover carries no date and each rule its
-# own adoption date); no amending order is vendored, so there are no dated
-# layers and a query before July 17, 2026 is a hole in the corpus.
+# period. Each period is counted under FRBP 9006(a), the FRCP 6(a) method
+# (core's frcp6). The rules are the court's complete set in the file dated
+# July 17, 2026 (sources/bankr-wae; the cover carries no date and each
+# rule its own adoption date); no amending order is vendored, so there are
+# no dated layers and a query before July 17, 2026 is a hole in the
+# corpus.
 [package]
 name = "bankr-wae-local-rules"
 version = "0.1.0"
@@ -15,6 +14,7 @@ language = 1
 pack_id = "bankr-wae-local-rules"
 forum = "bankr-wae"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Eastern District of Washington: Local Rules"
 description = "The Bankr. E.D. Wash. Local Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp): extensions, payments declarations, involuntary matrices, joint administration, conversion and division, the 21-day objection period of LBR 2002-1(c) and the notice periods of particular motions (employment, compensation, chapter 13 modification and dismissal, disclosure statements, stay relief, cash collateral, the codebtor stay, lien avoidance, executory contracts, abandonment, redemption), the chapter 12 rules, chapter 11 claims, disclosure affidavits and status reports, servicer designations, claim objections, withdrawal of the reference, orders to compel, costs, attorney withdrawal, reconsideration, adjudication objections and hearing notice."
 in_force = "2026-07-17"
@@ -22,6 +22,12 @@ known_at = "2026-10-28"
 unknown_before = "2026-07-17"
 jurisdiction = "U.S. Bankruptcy Court for the Eastern District of Washington"
 counting = "frcp6"
+
+[package.instrument]
+source = "waeb-lbr"
+issuer = "United States Bankruptcy Court for the Eastern District of Washington"
+date = "2026-07-17"
+designation = "Local Rules"
 
 [package.roles]
 applicant = "self"

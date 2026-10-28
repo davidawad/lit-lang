@@ -1,10 +1,8 @@
-# The Local Rules of Practice of the U.S. Bankruptcy Court for the Northern
-# District of Georgia (BLR) over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075):
-# it declares only the periods and page limits the rules themselves state
-# and re-encodes no FRBP period. It is a base package, not a `kind =
-# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011 for
-# `bankr-gan`), as for lit/bankr-dc. Each period is counted under FRBP
-# 9006(a), the FRCP 6(a) method (core's frcp6).
+# The Local Rules of Practice of the U.S. Bankruptcy Court for the
+# Northern District of Georgia (BLR) over lit/frbp (FRBP 9029(a); 28
+# U.S.C. § 2075): it declares only the periods and page limits the rules
+# themselves state and re-encodes no FRBP period. Each period is counted
+# under FRBP 9006(a), the FRCP 6(a) method (core's frcp6).
 #
 # Layers: the Local Rules effective September 1, 2019 (BLR 1001-2) are the
 # only vendored text (sources/bankr-gan/PROVENANCE.md); the later general
@@ -18,6 +16,7 @@ language = 1
 pack_id = "bankr-gan-local-rules"
 forum = "bankr-gan"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Northern District of Georgia: Local Rules"
 description = "The Bankr. N.D. Ga. Local Rules (BLR) as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): Rule 2004 examinations by notice, withdrawal of the reference (BLR 5011-2, 5011-4), attorney conflicts, trustee abandonment notices, redemption and lien avoidance responses, adversary motion practice and its page limits (BLR 7007-1), the Rule 26(f) conference and default scheduling (BLR 7016-1), pretrial orders and trial briefs (BLR 7016-2), expert designations, summary judgment timing, certificates of service, attorney withdrawal, proposed orders, jury consent, exhibits and motions pending on removal."
 in_force = "2019-09-01"
@@ -25,6 +24,12 @@ known_at = "2026-10-28"
 unknown_before = "2019-09-01"
 jurisdiction = "U.S. Bankruptcy Court for the Northern District of Georgia"
 counting = "frcp6"
+
+[package.instrument]
+source = "ganb-lbr"
+issuer = "United States Bankruptcy Court for the Northern District of Georgia"
+date = "2019-09-01"
+designation = "Local Rules"
 
 [package.roles]
 applicant = "self"

@@ -1,11 +1,9 @@
-# The Nebraska Rules of Bankruptcy Procedure (Neb. R. Bankr. P.), the local
-# rules of the U.S. Bankruptcy Court for the District of Nebraska, over
-# lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares only the periods
-# the rules and their appendices state and re-encodes no FRBP period. It is
-# a base package, not a `kind = "local-rule"` layer: lit/core has no
-# bankruptcy forum family (L2011 for `bankr-ne`), as for lit/bankr-dc. Each
-# period is counted under FRBP 9006(a), the FRCP 6(a) method (core's
-# frcp6).
+# The Nebraska Rules of Bankruptcy Procedure (Neb. R. Bankr. P.), the
+# local rules of the U.S. Bankruptcy Court for the District of Nebraska,
+# over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares only the
+# periods the rules and their appendices state and re-encodes no FRBP
+# period. Each period is counted under FRBP 9006(a), the FRCP 6(a) method
+# (core's frcp6).
 #
 # Layers: the rules adopted by the district court October 8, 2025,
 # effective January 1, 2026 and updated January 7, 2026, with Appendices A
@@ -22,6 +20,7 @@ language = 1
 pack_id = "bankr-ne-local-rules"
 forum = "bankr-ne"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the District of Nebraska: Nebraska Rules of Bankruptcy Procedure"
 description = "The Nebraska Rules of Bankruptcy Procedure (Neb. R. Bankr. P.) and their appendices as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): joint administration objections, Rule 2004 document requests, trustees' notice to professionals, chapter 9 lists, plans, publication and resistances, deficiency claims after collateral disposition, chapter 13 claim objections, attorney employment, plan notice and filing after an extension, limited plan modifications, discharge certifications, confirmation certifications, responses and trial requests, payment default cures, subchapter V and chapter 12 deposits, stay relief service, adversary motion briefing (Rule 7007-1), replacement vehicle motions, motion resistance deadlines (Rule 9013-1), evidentiary hearing requests and chapter 13 fee applications after dismissal."
 in_force = "2026-01-01"
@@ -29,6 +28,12 @@ known_at = "2026-10-28"
 unknown_before = "2026-01-01"
 jurisdiction = "U.S. Bankruptcy Court for the District of Nebraska"
 counting = "frcp6"
+
+[package.instrument]
+source = "neb-lbr"
+issuer = "United States Bankruptcy Court for the District of Nebraska"
+date = "2026-01-01"
+designation = "Nebraska Rules of Bankruptcy Procedure"
 
 [package.roles]
 applicant = "self"

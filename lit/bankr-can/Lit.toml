@@ -1,12 +1,10 @@
 # The Bankruptcy Local Rules of the U.S. Bankruptcy Court for the Northern
 # District of California over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075):
 # it declares only the periods and limits the rules themselves state and
-# re-encodes no FRBP period. It is a base package, not a `kind =
-# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011, as
-# for lit/bankr-ak). Each period is counted under FRBP 9006(a), the FRCP
-# 6(a) method (core's frcp6). The rules are those effective May 4, 2026,
-# with the 1007-1 update (sources/bankr-can); B.L.R. 9039-1, adopted in
-# the same amendment set and effective the same day, is in the
+# re-encodes no FRBP period. Each period is counted under FRBP 9006(a),
+# the FRCP 6(a) method (core's frcp6). The rules are those effective May
+# 4, 2026, with the 1007-1 update (sources/bankr-can); B.L.R. 9039-1,
+# adopted in the same amendment set and effective the same day, is in the
 # consolidation as served, so there are no dated layers. A query before
 # May 4, 2026 is a hole in the corpus.
 [package]
@@ -16,6 +14,7 @@ language = 1
 pack_id = "bankr-can-local-rules"
 forum = "bankr-can"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Northern District of California: Bankruptcy Local Rules"
 description = "The Bankr. N.D. Cal. Bankruptcy Local Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp): Designated Fund deposits, chapter 11 claims, claim objections on 30 days, chapter 12 and amended chapter 13 plan confirmation, disclosure statements, final decrees, delayed discharges, adversary motions, the notice and opportunity for hearing, the hearing schedules for named-entity and general relief, removal, and the 25- and 15-page memorandum limits."
 in_force = "2026-05-04"
@@ -23,6 +22,12 @@ known_at = "2026-10-28"
 unknown_before = "2026-05-04"
 jurisdiction = "U.S. Bankruptcy Court for the Northern District of California"
 counting = "frcp6"
+
+[package.instrument]
+source = "canb-blr"
+issuer = "United States Bankruptcy Court for the Northern District of California"
+date = "2026-05-04"
+designation = "Bankruptcy Local Rules"
 
 [package.roles]
 applicant = "self"

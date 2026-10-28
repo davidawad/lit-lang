@@ -1,10 +1,8 @@
-# The Local Rules of the U.S. Bankruptcy Court for the Northern District of
-# Florida over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares only
-# the periods the rules themselves state and re-encodes no FRBP period. It
-# is a base package, not a `kind = "local-rule"` layer: lit/core has no
-# bankruptcy forum family (L2011 for `bankr-fln`), as for lit/bankr-dc.
-# Each period is counted under FRBP 9006(a), the FRCP 6(a) method (core's
-# frcp6).
+# The Local Rules of the U.S. Bankruptcy Court for the Northern District
+# of Florida over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
+# only the periods the rules themselves state and re-encodes no FRBP
+# period. Each period is counted under FRBP 9006(a), the FRCP 6(a) method
+# (core's frcp6).
 #
 # Layers, in date order: the Local Rules effective February 26, 2024 (the
 # consolidation), then Administrative Order No. 24-003 (done November 27,
@@ -21,6 +19,7 @@ language = 1
 pack_id = "bankr-fln-local-rules"
 forum = "bankr-fln"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Northern District of Florida: Local Rules"
 description = "The Bankr. N.D. Fla. Local Rules (effective February 26, 2024, with Administrative Order 24-003) as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): divisional transfer, conversion to chapter 7, negative notice (LBR 2002-2), Rule 2004 examinations, operating reports, trustee record destruction, professional compensation, chapter 11 post-confirmation duties, chapter 12 and 13 duties, claim transfers, chapter 13 deficiency claims and objections, valuation of collateral and lien stripping (LBR 3012-1, 3012-2), disclosure statements, ballots and confirmation objections, stay relief (LBR 4001-1), § 362(c)(3) motions, lien avoidance, transcript redaction, withdrawal of the reference and abstention, core determinations, motion responses (LBR 9013-1), jury consent and exhibits."
 in_force = "2024-02-26"
@@ -28,6 +27,12 @@ known_at = "2026-10-28"
 unknown_before = "2024-02-26"
 jurisdiction = "U.S. Bankruptcy Court for the Northern District of Florida"
 counting = "frcp6"
+
+[package.instrument]
+source = "flnb-lbr"
+issuer = "United States Bankruptcy Court for the Northern District of Florida"
+date = "2024-02-26"
+designation = "Local Rules"
 
 [package.roles]
 applicant = "self"

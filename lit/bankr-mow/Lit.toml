@@ -1,9 +1,7 @@
 # The Local Rules of Practice of the U.S. Bankruptcy Court for the Western
 # District of Missouri, with their Appendix, over lit/frbp (FRBP 9029(a);
 # 28 U.S.C. § 2075): it declares only the periods the rules and the
-# Appendix state and re-encodes no FRBP period. It is a base package, not a
-# `kind = "local-rule"` layer: lit/core has no bankruptcy forum family
-# (L2011 for `bankr-mow`), as for lit/bankr-dc. Each period is counted
+# Appendix state and re-encodes no FRBP period. Each period is counted
 # under FRBP 9006(a), the FRCP 6(a) method (core's frcp6).
 #
 # Layers, in date order: the Local Rules adopted January 5, 2026 (the
@@ -25,6 +23,7 @@ language = 1
 pack_id = "bankr-mow-local-rules"
 forum = "bankr-mow"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Western District of Missouri: Local Rules of Practice"
 description = "The Bankr. W.D. Mo. Local Rules of Practice and their Appendix as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): subchapter V trustee deposits, initial filings and matrices, added creditors, joint administration, a debtor's death, reinstatement after dismissal, conversion schedules, Rule 2004 objections, chapter 13 attorney fees after dismissal, rejection and avoidance claims, unclaimed funds, chapter 11 plan filing, chapter 13 mortgage modifications, plan service and objections, trustee claim notices, payee records, amended plans after dismissal motions, tax waivers, loan servicing and conditional stay orders, stay extension objections, IRS setoff, trustee information requests and collateral inspection, chapter 12 discharge, transcript redaction, final reports, reopening, reports of sale, discovery, motion responses and summary judgment (LR 9013-1), court-noticed motions and pro se filings."
 in_force = "2026-01-05"
@@ -32,6 +31,12 @@ known_at = "2026-10-28"
 unknown_before = "2026-01-05"
 jurisdiction = "U.S. Bankruptcy Court for the Western District of Missouri"
 counting = "frcp6"
+
+[package.instrument]
+source = "mowb-lbr"
+issuer = "United States Bankruptcy Court for the Western District of Missouri"
+date = "2026-01-05"
+designation = "Local Rules of Practice"
 
 [package.roles]
 applicant = "self"

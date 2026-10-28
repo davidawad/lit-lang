@@ -1,15 +1,13 @@
 # The Local Rules of Bankruptcy Procedure of the U.S. Bankruptcy Court for
 # the Western District of Washington over lit/frbp (FRBP 9029(a); 28
 # U.S.C. § 2075): it declares only the periods the Local Rules themselves
-# state and re-encodes no FRBP period. It is a base package, not a `kind
-# = "local-rule"` layer: lit/core has no bankruptcy forum family (L2011,
-# as for lit/bankr-ak). Each period is counted under FRBP 9006(a), the
-# FRCP 6(a) method (core's frcp6). The rules effective December 1, 2023
-# are the base; General Order 2026-6 (entered October 26, 2026) adopts
-# amended rules effective December 1, 2026, so each period is a dated
-# version over [2023-12-01, 2026-12-01) citing the 2023 text and one from
-# 2026-12-01 citing the 2026 text (sources/bankr-waw). A query before
-# December 1, 2023 is a hole in the corpus.
+# state and re-encodes no FRBP period. Each period is counted under FRBP
+# 9006(a), the FRCP 6(a) method (core's frcp6). The rules effective
+# December 1, 2023 are the base; General Order 2026-6 (entered October 26,
+# 2026) adopts amended rules effective December 1, 2026, so each period is
+# a dated version over [2023-12-01, 2026-12-01) citing the 2023 text and
+# one from 2026-12-01 citing the 2026 text (sources/bankr-waw). A query
+# before December 1, 2023 is a hole in the corpus.
 [package]
 name = "bankr-waw-local-rules"
 version = "0.1.0"
@@ -17,6 +15,7 @@ language = 1
 pack_id = "bankr-waw-local-rules"
 forum = "bankr-waw"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Western District of Washington: Local Rules of Bankruptcy Procedure"
 description = "The Bankr. W.D. Wash. Local Rules of Bankruptcy Procedure over the Federal Rules of Bankruptcy Procedure (lit/frbp), in the December 1, 2023 rules and the amended rules effective December 1, 2026 (General Order 2026-6): chapter 11 schedule amendments, the creditor list, debtor-in-possession tax returns, insurance and budget, chapter 13 fees, petition preparers, claim objections, chapter 13 plan service, confirmation replies and domestic support certifications, disclosure statements and confirmation objections, withdrawal of the reference, summons certificates, notices regarding final adjudication, pretrial statements and orders, motion timing, reconsideration, proposed orders, redaction, removal and mediation certification."
 in_force = "2023-12-01"
@@ -24,6 +23,12 @@ known_at = "2026-10-28"
 unknown_before = "2023-12-01"
 jurisdiction = "U.S. Bankruptcy Court for the Western District of Washington"
 counting = "frcp6"
+
+[package.instrument]
+source = "wawb-lbr"
+issuer = "United States Bankruptcy Court for the Western District of Washington"
+date = "2023-12-01"
+designation = "Local Rules of Bankruptcy Procedure"
 
 [package.roles]
 applicant = "self"

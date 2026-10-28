@@ -1,13 +1,11 @@
 # The Bankruptcy Local Rules of the U.S. Bankruptcy Court for the Southern
 # District of Texas over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
 # declares only the periods the Bankruptcy Local Rules themselves state
-# and re-encodes no FRBP period. It is a base package, not a `kind =
-# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011, as
-# for lit/bankr-mt). Each period is counted under FRBP 9006(a), the FRCP
-# 6(a) method (core's frcp6). The rules are those effective September 22,
-# 2025; the pending proposals are not in force and earlier editions are
-# not vendored (sources/bankr-txs), so the package runs from September
-# 22, 2025.
+# and re-encodes no FRBP period. Each period is counted under FRBP
+# 9006(a), the FRCP 6(a) method (core's frcp6). The rules are those
+# effective September 22, 2025; the pending proposals are not in force and
+# earlier editions are not vendored (sources/bankr-txs), so the package
+# runs from September 22, 2025.
 [package]
 name = "bankr-txs-local-rules"
 version = "0.1.0"
@@ -15,6 +13,7 @@ language = 1
 pack_id = "bankr-txs-local-rules"
 forum = "bankr-txs"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Southern District of Texas: Bankruptcy Local Rules"
 description = "The Bankr. S.D. Tex. Bankruptcy Local Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp): the social security statement, creditor amendments, chapter 13 trustee and tax dismissals, conversion schedules, Rule 2004 notices, trustee elections, retroactive employment, retainers and fixed fees, the chapter 11 and Subchapter V bar dates, claim objections, administrative expenses on dismissal, conditional disclosure statement approval, stay relief and FRBP 4001 motions, chapter 13 vehicle adequate protection, surrender of collateral, chapter 7 abandonment, motion practice (BLR 9013-1) and remote witnesses."
 in_force = "2025-09-22"
@@ -22,6 +21,12 @@ known_at = "2026-10-28"
 unknown_before = "2025-09-22"
 jurisdiction = "U.S. Bankruptcy Court for the Southern District of Texas"
 counting = "frcp6"
+
+[package.instrument]
+source = "txsb-blr"
+issuer = "United States Bankruptcy Court for the Southern District of Texas"
+date = "2025-09-22"
+designation = "Bankruptcy Local Rules"
 
 [package.roles]
 applicant = "self"

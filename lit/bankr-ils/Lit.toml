@@ -1,9 +1,7 @@
 # The Local Rules of Bankruptcy Procedure of the U.S. Bankruptcy Court for
 # the Southern District of Illinois over lit/frbp (FRBP 9029(a); 28 U.S.C.
 # § 2075): it declares only the periods the Local Rules themselves state
-# and re-encodes no FRBP period. It is a base package, not a `kind =
-# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011 for
-# `bankr-ils`), as for lit/bankr-ct. Each period is counted under FRBP
+# and re-encodes no FRBP period. Each period is counted under FRBP
 # 9006(a), the FRCP 6(a) method (core's frcp6). The rules took effect June
 # 1, 2012 (LBR 1001(C)); the vendored text is the edition "Revised
 # December 1, 2015 to Reflect Updated Form Numbers and Names", the court's
@@ -18,6 +16,7 @@ language = 1
 pack_id = "bankr-ils-local-rules"
 forum = "bankr-ils"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Southern District of Illinois: Local Rules of Bankruptcy Procedure"
 description = "The Bankr. S.D. Ill. Local Rules of Bankruptcy Procedure as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): involuntary schedules, amended matrices, payment advices, state tax returns, reinstatement, Rule 2004 motions, chapter 7 trustee reports, interim compensation, withdrawal of counsel, the chapter 11 claims bar date, ballots, closing a chapter 11 case early, stay relief oppositions, lien avoidance and redemption notices, withdrawal of the reference, auction proceeds, adversary pretrial exchanges, dismissal of adversary proceedings, summary judgment, briefs and their page limits, and jury consent."
 in_force = "2015-12-01"
@@ -25,6 +24,12 @@ known_at = "2026-10-28"
 unknown_before = "2015-12-01"
 jurisdiction = "U.S. Bankruptcy Court for the Southern District of Illinois"
 counting = "frcp6"
+
+[package.instrument]
+source = "ilsb-lbr"
+issuer = "United States Bankruptcy Court for the Southern District of Illinois"
+date = "2015-12-01"
+designation = "Local Rules of Bankruptcy Procedure"
 
 [package.roles]
 applicant = "self"

@@ -1,17 +1,15 @@
 # The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the District
 # of New Hampshire over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
 # declares only the periods the Local Bankruptcy Rules and the court's
-# Administrative Order 3015-4 themselves state and re-encodes no FRBP period
-# (Interim Bankruptcy Rules 1007-I and 5012 restate national rules and are
-# lit/frbp's). It is a base package, not a `kind = "local-rule"` layer:
-# lit/core has no bankruptcy forum family (L2011 for `bankr-nh`), as for
-# lit/bankr-dc. Each period is counted under FRBP 9006(a), the FRCP 6(a)
-# method (core's frcp6). The rules are those effective February 1, 2026 as
-# amended through May 1, 2026, General Order 26-02 (LBR 2016-1, effective
-# May 1, 2026) incorporated; the proposed revisions of Public Notice 26-03
-# are not in force (sources/bankr-nh/PROVENANCE.md), so the consolidation
-# is the only layer. The earlier editions are not vendored, so a query
-# before May 1, 2026 is a hole in the corpus.
+# Administrative Order 3015-4 themselves state and re-encodes no FRBP
+# period (Interim Bankruptcy Rules 1007-I and 5012 restate national rules
+# and are lit/frbp's). Each period is counted under FRBP 9006(a), the FRCP
+# 6(a) method (core's frcp6). The rules are those effective February 1,
+# 2026 as amended through May 1, 2026, General Order 26-02 (LBR 2016-1,
+# effective May 1, 2026) incorporated; the proposed revisions of Public
+# Notice 26-03 are not in force (sources/bankr-nh/PROVENANCE.md), so the
+# consolidation is the only layer. The earlier editions are not vendored,
+# so a query before May 1, 2026 is a hole in the corpus.
 [package]
 name = "bankr-nh-local-rules"
 version = "0.1.0"
@@ -19,6 +17,7 @@ language = 1
 pack_id = "bankr-nh-local-rules"
 forum = "bankr-nh"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the District of New Hampshire: Local Bankruptcy Rules"
 description = "The Bankr. D.N.H. Local Bankruptcy Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): installment fees, dismissal after a debtor's death, petition-preparer fees, chapter 13 proof of value and insurance, valuation motions, chapter 13 confirmation and modification objections and the trustee's recommendation and completion certificate, disclosure-statement objections, chapter 11 final decrees, lien-avoidance service, adversary pretrial conferences, motion practice (LBR 9013-1) and exhibits."
 in_force = "2026-05-01"
@@ -26,6 +25,12 @@ known_at = "2026-10-28"
 unknown_before = "2026-05-01"
 jurisdiction = "U.S. Bankruptcy Court for the District of New Hampshire"
 counting = "frcp6"
+
+[package.instrument]
+source = "nhb-lbr"
+issuer = "United States Bankruptcy Court for the District of New Hampshire"
+date = "2026-05-01"
+designation = "Local Bankruptcy Rules"
 
 [package.roles]
 applicant = "self"

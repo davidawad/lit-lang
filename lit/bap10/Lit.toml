@@ -1,8 +1,8 @@
 # The Tenth Circuit Bankruptcy Appellate Panel Local Rules over lit/frbp
 # (FRBP 8026; 10th Cir. BAP L.R. 8001-3(a)): it declares only the periods
 # the panel's own rules state and re-encodes no FRBP period (notice,
-# election, record, briefing, motions and rehearing are lit/frbp's; the
-# 28 U.S.C. § 158(c)(1) election is lit/frbp's too). The rules are those
+# election, record, briefing, motions and rehearing are lit/frbp's; the 28
+# U.S.C. § 158(c)(1) election is lit/frbp's too). The rules are those
 # effective January 1, 2026 (sources/ca10-bap/PROVENANCE.md), the edition
 # the panel's site lists; no later order amends them, so the edition is
 # the only layer. The FRBP Part VIII text printed with them is the
@@ -13,9 +13,11 @@
 # L.R. 8026-8(a)), the FRCP 6(a) method (core's frcp6), with Colorado's
 # holidays closing a forward-counted period (L.R. 8026-8(b); FRBP
 # 9006(a)(6)(C); `bap10-9006`), which also counts lit/frbp's periods in an
-# appeal before the panel (`recounts`). Like lit/bap8 and
-# lit/bap9 it is a base package, not a `kind = "local-rule"` layer:
-# lit/core has no bankruptcy forum family.
+# appeal before the panel (`recounts`). Like lit/bap8 and lit/bap9 it is a
+# base package, not a `kind = "local-rule"` layer: its forum `bap10` is in
+# none of lit/core's forum families (the bankruptcy family holds the
+# bankruptcy courts, not the appellate panels), so a layer there would be
+# L2011.
 [package]
 name = "tenth-circuit-bankruptcy-appellate-panel"
 version = "0.1.0"

@@ -1,14 +1,12 @@
 # The Local Rules of the U.S. Bankruptcy Court for the Eastern District of
 # Louisiana over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
 # only the periods the Local Rules themselves state and re-encodes no FRBP
-# period. It is a base package, not a `kind = "local-rule"` layer: lit/core
-# has no bankruptcy forum family (L2011, as for lit/bankr-mt). Each period
-# is counted under FRBP 9006(a), the FRCP 6(a) method (core's frcp6). The
-# rules are those adopted May 1, 2013, the edition the court still presents
-# as current (sources/bankr-lae: its Orders page lists no later amending
-# order, so there are no dated layers). Appeals go to the District Court
-# or, on direct certification, the Fifth Circuit under FRBP Part VIII
-# (lit/frbp).
+# period. Each period is counted under FRBP 9006(a), the FRCP 6(a) method
+# (core's frcp6). The rules are those adopted May 1, 2013, the edition the
+# court still presents as current (sources/bankr-lae: its Orders page
+# lists no later amending order, so there are no dated layers). Appeals go
+# to the District Court or, on direct certification, the Fifth Circuit
+# under FRBP Part VIII (lit/frbp).
 [package]
 name = "bankr-lae-local-rules"
 version = "0.1.0"
@@ -16,6 +14,7 @@ language = 1
 pack_id = "bankr-lae-local-rules"
 forum = "bankr-lae"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the Eastern District of Louisiana: Local Rules"
 description = "The Bankr. E.D. La. Local Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp): the involuntary mailing matrix and added creditors, the electronic filing declaration, rescheduled meetings of creditors and their deemed deadline extensions, Rule 2004 objections, chapter 13 plan service, chapter 11 objections, plan amendments, the confirmation affidavit, ballots, the final decree, stay extension motions, chapter 13 tax refunds, the individual chapter 11 budget, pleading extensions, exhibits, costs, defaults, and motion practice (LR 9013-1) with its objection and continuance deadlines."
 in_force = "2013-05-01"
@@ -23,6 +22,12 @@ known_at = "2026-10-28"
 unknown_before = "2013-05-01"
 jurisdiction = "U.S. Bankruptcy Court for the Eastern District of Louisiana"
 counting = "frcp6"
+
+[package.instrument]
+source = "laeb-lr"
+issuer = "United States Bankruptcy Court for the Eastern District of Louisiana"
+date = "2013-05-01"
+designation = "Local Rules"
 
 [package.roles]
 applicant = "self"

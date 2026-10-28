@@ -1,15 +1,13 @@
 # The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the District
 # of Colorado over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
 # only the periods and limits the Local Bankruptcy Rules themselves state
-# and re-encodes no FRBP period. It is a base package, not a `kind =
-# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011, as
-# for lit/bankr-mt). Each period is counted under FRBP 9006(a), the FRCP
-# 6(a) method (core's frcp6), with Colorado's holidays closing a
-# forward-counted period (FRBP 9006(a)(6)(C); `bankr-co-9006`), which also
-# counts lit/frbp's periods in a matter in this court (`recounts`). The
-# rules are those the court's Local Rules page states are effective
-# December 1, 2021 (sources/bankr-co, an HTML extract that drops the
-# subsection letters, so cites stop at the rule); no amending order is
+# and re-encodes no FRBP period. Each period is counted under FRBP
+# 9006(a), the FRCP 6(a) method (core's frcp6), with Colorado's holidays
+# closing a forward-counted period (FRBP 9006(a)(6)(C); `bankr-co-9006`),
+# which also counts lit/frbp's periods in a matter in this court
+# (`recounts`). The rules are those the court's Local Rules page states are
+# effective December 1, 2021 (sources/bankr-co, an HTML extract that drops
+# the subsection letters, so cites stop at the rule); no amending order is
 # vendored, so there are no dated layers and the package runs from
 # December 1, 2021.
 [package]
@@ -19,6 +17,7 @@ language = 1
 pack_id = "bankr-co-local-rules"
 forum = "bankr-co"
 authority = "LocalRule"
+kind = "local-rule"
 title = "U.S. Bankruptcy Court for the District of Colorado: Local Bankruptcy Rules"
 description = "The Bankr. D. Colo. Local Bankruptcy Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp): meeting-of-creditors continuances, Rule 2004 examinations, chapter 11 interim compensation, chapter 13 attorney fee applications, chapter 11 dismissal motions, chapter 12 and 13 confirmation, small business plan service, final decrees, stay relief, exemption and lien avoidance objections, withdrawal of the reference, adversary motion practice, depositions and discovery disputes, summary judgment, attorney withdrawal, motion practice (L.B.R. 9013-1) and witness and exhibit lists."
 in_force = "2021-12-01"
@@ -27,6 +26,12 @@ unknown_before = "2021-12-01"
 jurisdiction = "U.S. Bankruptcy Court for the District of Colorado"
 counting = "bankr-co-9006"
 recounts = ["frbp-bankruptcy-procedure"]
+
+[package.instrument]
+source = "cob-lbr"
+issuer = "United States Bankruptcy Court for the District of Colorado"
+date = "2021-12-01"
+designation = "Local Bankruptcy Rules"
 
 [package.roles]
 applicant = "self"

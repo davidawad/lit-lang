@@ -8,3 +8,9 @@
 - Original: `me-criminal-trial-court/original/me-rules-of-unified-criminal-procedure-2026-10-01.pdf` as served (sha256 395a6a69150bad2edbd8f778c7e6bc022dc22731c51af40803a33ccf9b832a60); extraction sha256 648562dd5c5dbb14945431393de97085f0726a3c93c91e009c1e7893de97fd1a.
 
 - Note (lg-gddt): Criminal appeals: Maine Rules of Appellate Procedure and Rule 37 etc.; covered by sources/me-law-court/ if it carries them.
+
+### `me-criminal-trial-court/me-rules-of-unified-criminal-procedure-2026-10-01-sectioned.txt` — Maine Rules of Unified Criminal Procedure, sectioned
+
+- Derived in the pod (lg-gddt.6) from `me-criminal-trial-court/me-rules-of-unified-criminal-procedure-2026-10-01.txt` (extract sha256 648562dd5c5dbb14945431393de97085f0726a3c93c91e009c1e7893de97fd1a); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (`RULE 1. TITLE, SCOPE, AND APPLICATION OF RULES` through `RULE 111. SEARCH WARRANTS FOR SCHEDULE Z DRUGS`, 103 rules, including lettered rules such as 4A, 5B, 11A, 16A, 36A to 36D and 41A to 41C; each section runs through that rule's advisory notes). No body heading holds a colon. The table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, including amendments effective October 1, 2026.
+- Sectioned sha256 788a5b6fc1696f5ae2fd440ae922ba685c2c1c84cc04c460c9e68cdc33073c2a (the `path_sha256` pinned by `lit/me-criminal-trial-court/Lit.toml`).

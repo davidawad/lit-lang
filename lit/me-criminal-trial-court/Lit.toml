@@ -1,0 +1,56 @@
+# Criminal cases in the Maine Unified Criminal Docket under the Maine
+# Rules of Unified Criminal Procedure (M.R.U. Crim. P.), with advisory
+# notes, including amendments effective October 1, 2026
+# (sources/me-criminal-trial-court/). Computation of time is M.R.U.
+# Crim. P. 45(a): intermediate Saturdays, Sundays and legal holidays are
+# excluded from periods under 7 days, and core has no Maine counting rule
+# or holiday calendar, so the rules' periods are stated in notes, not
+# encoded as counted deadlines (as lit/me-superior-civil does). The
+# criminal appeal hands off to the Law Court under M.R. App. P. 2B(b),
+# whose text is the edition including amendments effective November 1,
+# 2024 (sources/me-law-court/). Maine's statutes (Title 15, including the
+# Bail Code and post-conviction review, and Title 17-A) are not vendored;
+# those cites stay holes. Earlier editions are not vendored, so a query
+# before October 1, 2026 is a hole in the corpus.
+[package]
+name = "me-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "me-criminal-trial-court"
+forum = "me-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "maine"
+title = "Maine Unified Criminal Docket, criminal"
+description = "Criminal cases in the Maine Unified Criminal Docket under the Maine Rules of Unified Criminal Procedure, as far as the vendored text states: probable cause after a warrantless arrest, initial appearance and bail, indictment or waiver, arraignment, automatic discovery, the dispositional conference and pretrial motions, dismissal for unnecessary delay or for want of an indictment, plea or trial, post-trial motions, sentencing and judgment. An appeal goes to the Law Court within 21 days under M.R. App. P. 2B(b)."
+in_force = "2026-10-01"
+known_at = "2026-10-28"
+unknown_before = "2026-10-01"
+jurisdiction = "Maine Unified Criminal Docket (Superior and District Courts, criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.me-ru-crim-p]
+title = "Maine Rules of Unified Criminal Procedure, with advisory notes, including amendments effective October 1, 2026"
+url = "https://www.courts.maine.gov/rules/text/mru_crim_p_plus_2026-10-01.pdf"
+path = "sources/me-criminal-trial-court/me-rules-of-unified-criminal-procedure-2026-10-01-sectioned.txt"
+path_sha256 = "788a5b6fc1696f5ae2fd440ae922ba685c2c1c84cc04c460c9e68cdc33073c2a"
+sha256 = "395a6a69150bad2edbd8f778c7e6bc022dc22731c51af40803a33ccf9b832a60"
+as_of = "2026-10-01"
+cite_prefixes = ["M.R.U. Crim. P."]
+section_heading = "Rule {n}"
+
+[sources.me-r-app-p]
+title = "Maine Rules of Appellate Procedure with advisory notes, including amendments effective November 1, 2024"
+url = "https://www.courts.maine.gov/rules/text/mr_app_p_plus_2024-11-01.pdf"
+path = "sources/me-law-court/rules-of-appellate-procedure-sectioned.txt"
+path_sha256 = "c0893d371ac23ed296d1a7b7c26b34e0fed0f5b82db4239c2f0aef64d93082b9"
+sha256 = "2f56aa30698a5b5978097fdd607f1a03f95c075728a5507bd507a2e3042fffb4"
+as_of = "2024-11-01"
+cite_prefixes = ["M.R. App. P."]
+section_heading = "Rule {n}"

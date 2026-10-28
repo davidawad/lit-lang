@@ -1,0 +1,168 @@
+module me-criminal-trial-court.criminal
+
+// Criminal cases in the Maine Unified Criminal Docket under the Maine
+// Rules of Unified Criminal Procedure (October 1, 2026 edition). Every
+// period the rules state is given in the note of the step it governs;
+// none is encoded as a counted deadline because lit/core has no Maine
+// counting rule (M.R.U. Crim. P. 45(a) excludes intermediate weekends and
+// legal holidays from periods under 7 days, and the 48-hour periods of
+// Rules 4A and 5 count differently from each other). Outcomes are from the
+// defendant's side. Maine has no speedy-trial rule with a fixed day count
+// in these rules: Rule 48(b)(1) allows dismissal for unnecessary delay in
+// bringing a defendant to trial, and Rule 48(b)(2) requires dismissal of a
+// complaint not followed by an indictment within the period it sets; any
+// statutory speedy-trial provision is not vendored. The Maine statutes the
+// rules cite (Title 15, including the Bail Code, 15 M.R.S. §§ 1026 to 1029
+// and 1051, sentence review, §§ 2151 to 2157, and post-conviction review,
+// §§ 2121 to 2132) are not vendored and stay holes. The earlier outline's
+// leading decisions (County of Riverside v. McLaughlin, Gerstein v. Pugh,
+// Gideon v. Wainwright, Brady v. Maryland, Mapp v. Ohio, Barker v. Wingo,
+// Boykin v. Alabama, Missouri v. Frye, Jackson v. Virginia, Ramos v.
+// Louisiana, Apprendi v. New Jersey, Roe v. Flores-Ortega, Garza v. Idaho)
+// are removed: no reporter text is vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "M.R.U. Crim. P. 4"
+{
+  note "A complaint is a written statement of the essential facts constituting the crime charged (M.R.U. Crim. P. 3); on it the court issues an arrest warrant or a summons (M.R.U. Crim. P. 4). When a defendant arrested without a warrant is not released within 48 hours after arrest, including Saturdays, Sundays and legal holidays, the court or a justice of the peace determines within that time, except in a bona fide emergency or other extraordinary circumstance, whether there is probable cause, and discharges the defendant if there is none; at 36 hours the custodian notifies the attorney for the State; Rule 45(a) and (b) do not apply (M.R.U. Crim. P. 4A(a))."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance {
+    authority cite "M.R.U. Crim. P. 5(a)"
+  }
+  edge-arrested-no-probable-cause "No probable cause after a warrantless arrest; discharged" -> dismissed {
+    authority cite "M.R.U. Crim. P. 4A(a)"
+  }
+}
+
+decision initial-appearance: "Bail, release or detention" by court cite "M.R.U. Crim. P. 5(a)"
+{
+  note "A defendant arrested and not sooner released is brought before the court without unnecessary delay and no later than 48 hours after the arrest, excluding Saturdays, Sundays, legal holidays and court holidays; at 36 hours the custodian notifies the attorney for the State, and at 48 hours releases the defendant or brings the defendant forthwith before the court (M.R.U. Crim. P. 5(a)). A defendant arrested on a warrant 100 miles or more from the court, if bail was not set, is taken before the nearest court or bail commissioner, and the appearance should be set no fewer than 14 and not more than 42 days after the arrest (M.R.U. Crim. P. 5(a)(1)). The court states the defendant's rights, including the maximum sentence and the right to a jury trial (M.R.U. Crim. P. 5(b)), assigns counsel no later than the initial appearance to a defendant entitled to it (M.R.U. Crim. P. 5(e); Rules 44 to 44C), and a defendant charged with a Class D or E crime is called upon to plead (M.R.U. Crim. P. 5(d)). Bail is set under the Maine Bail Code (15 M.R.S. §§ 1001 to 1104, not vendored; M.R.U. Crim. P. 46). A defendant charged with a crime bailable as of right may file one petition for redetermination of bail by another justice or judge, no later than 14 days before the dispositional conference; an incarcerated defendant's petition is heard within 48 hours of filing, excluding weekends and holidays (M.R.U. Crim. P. 46(d)); review by a single justice of the Supreme Judicial Court lies under Rules 36(c) and 46(e)."
+  edge-initial-appearance-detained "Held on bail not posted, or detained" -> charging {
+    authority cite ?("15 M.R.S. § 1026 (bail; not vendored)")
+  }
+  edge-initial-appearance-released "Released on bail" -> charging {
+    authority cite "M.R.U. Crim. P. 46(a)"
+  }
+}
+
+decision charging: "Indictment, waiver or complaint" by court cite "M.R.U. Crim. P. 7(a)"
+{
+  note "Murder is prosecuted by indictment; a Class A, B or C crime by indictment unless indictment is waived, in which case by information or complaint (M.R.U. Crim. P. 7(a), (b)); a Class D or E crime may proceed on the complaint. A defendant charged by complaint with a Class C or higher crime is not called on to plead to it and is advised of the right to apply for a waiver of indictment (M.R.U. Crim. P. 5(c)). The grand jury is governed by Rule 6. If no indictment is returned within 6 months after the initial appearance or after the third regularly scheduled session of the grand jury after it, whichever is first, the court dismisses the complaint without prejudice unless the State, within that period, moves to enlarge it and shows good cause (M.R.U. Crim. P. 48(b)(2))."
+  edge-charging-charged "Indictment returned, or indictment waived" -> arraignment {
+    authority cite "M.R.U. Crim. P. 7(a)"
+  }
+  edge-charging-no-indictment "Complaint dismissed for want of an indictment" -> dismissed {
+    authority cite "M.R.U. Crim. P. 48(b)"
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "M.R.U. Crim. P. 10"
+{
+  note "Arraignment is conducted in open court by reading the indictment, information or complaint, or stating its substance, and calling on the defendant to plead; a represented defendant charged with a Class D or E crime may plead in writing through counsel (M.R.U. Crim. P. 10). A defendant may plead not guilty, not criminally responsible by reason of insanity, guilty or, with the court's consent, nolo contendere (M.R.U. Crim. P. 11(a)(1))."
+  edge-arraignment-discovery "Automatic discovery" -> discovery {
+    authority cite "M.R.U. Crim. P. 16(a)"
+  }
+}
+
+state discovery: "Discovery, dispositional conference and pretrial motions" by applicant cite "M.R.U. Crim. P. 16(b)"
+{
+  note "The State provides automatic discovery (M.R.U. Crim. P. 16(a)): at the initial appearance or arraignment on a Class A, B or C charge, within 7 days after a not-guilty plea to a Class D or E crime, and no later than 14 days before a dispositional conference held before indictment (M.R.U. Crim. P. 16(b)(1) to (4)); later material is disclosed within 14 days after the State obtains it (M.R.U. Crim. P. 16(b)(5)); the State answers a written discovery request within 14 days (M.R.U. Crim. P. 16(c)), and a motion for court-ordered discovery within 7 days (M.R.U. Crim. P. 16(d)). The defendant's reciprocal duties run from the dispositional conference: notice of expert mental-state evidence at least 7 days before it, and inspection and expert disclosures on request at least 14 days before it (M.R.U. Crim. P. 16A); a notice of alibi is due within 7 days after the State's demand, which may be served no later than 14 days before jury selection, and the State answers within 7 days (M.R.U. Crim. P. 16A). Motions to dismiss, on joinder, for court-ordered discovery, to suppress and on admissibility are served (not filed) at least 7 days before the dispositional conference and, if the matter is not resolved there, filed no later than the next court day (M.R.U. Crim. P. 12(b)(3)(A)); other motions are filed promptly (M.R.U. Crim. P. 12(b)(3)(B)); a motion in limine is made no later than 7 days before jury selection (M.R.U. Crim. P. 12(c)). A written motion and notice of its hearing are served at least 7 days before the hearing unless a rule or order fixes another period, and 3 days are added after service by mail (M.R.U. Crim. P. 45(d), (e)). At the dispositional conference the parties discuss resolution with the court (M.R.U. Crim. P. 18)."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "M.R.U. Crim. P. 12(b)"
+  }
+  edge-discovery-speedy "Motion to dismiss for unnecessary delay" -> motions-ruling {
+    authority cite "M.R.U. Crim. P. 48(b)"
+  }
+  edge-discovery-plea "Dispositional conference" -> plea-decision {
+    authority cite "M.R.U. Crim. P. 18"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "M.R.U. Crim. P. 12(b)"
+{
+  note "A motion raising defenses or objections before trial is determined before trial unless the court orders it deferred (M.R.U. Crim. P. 12(b)(4)); the effect of an adverse determination is governed by Rule 12(b)(5). If there is unnecessary delay in bringing a defendant to trial, the court on the defendant's motion or its own may dismiss the indictment, information or complaint and directs whether the dismissal is with or without prejudice (M.R.U. Crim. P. 48(b)(1)). A motion to suppress is governed by Rule 41A."
+  edge-motions-ruling-speedy "Dismissed for unnecessary delay" -> dismissed {
+    authority cite "M.R.U. Crim. P. 48(b)"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "M.R.U. Crim. P. 12(b)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "M.R.U. Crim. P. 12(b)"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "M.R.U. Crim. P. 18(d)"
+{
+  note "If the parties reach a plea agreement at the dispositional conference, the court takes the plea in open court or schedules it; if not, the matter is set for jury trial unless the defendant waives it (M.R.U. Crim. P. 18(d), (e)), and in a Class C or higher case on a complaint or information the defendant elects whether to waive indictment (M.R.U. Crim. P. 18(f)). Before accepting a guilty or nolo contendere plea to a Class C or higher crime the court determines that it is knowing, voluntary and has a factual basis (M.R.U. Crim. P. 11(b) to (e)); a conditional plea needs the court's approval and the State's consent (M.R.U. Crim. P. 11(a)(2)); plea agreements are governed by Rule 11A and filing agreements by Rule 11B. The attorney for the State may dismiss by a written dismissal stating the reasons, but not during trial without the defendant's consent (M.R.U. Crim. P. 48(a)). Scheduling and continuances follow Rule 25A."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite "M.R.U. Crim. P. 11(b)"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "M.R.U. Crim. P. 23(a)"
+  }
+  edge-plea-decision-dismissed "State files a dismissal" -> dismissed {
+    authority cite "M.R.U. Crim. P. 48(a)"
+  }
+}
+
+decision trial: "Verdict" by court cite "M.R.U. Crim. P. 31(a)"
+{
+  note "Every case proceeds to jury trial unless the defendant, with the court's approval, waives it in writing in open court (M.R.U. Crim. P. 23(a)); juries are of 12, or fewer by written stipulation approved by the court before verdict (M.R.U. Crim. P. 23(b)). The court on motion enters a judgment of acquittal if the evidence is insufficient (M.R.U. Crim. P. 29(a)). The verdict is unanimous (M.R.U. Crim. P. 31(a))."
+  edge-trial-acquittal "Not guilty, or acquittal at trial" -> acquitted {
+    authority cite "M.R.U. Crim. P. 29(a)"
+  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
+    authority cite "M.R.U. Crim. P. 29(b)"
+  }
+}
+
+decision post-trial: "Post-trial motions" by court cite "M.R.U. Crim. P. 33"
+{
+  note "After a guilty verdict or the jury's discharge without a verdict, a motion for judgment of acquittal may be made or renewed within 14 days after the jury is discharged or within further time the court fixes during that period (M.R.U. Crim. P. 29(b)). A motion for a new trial on a ground other than newly discovered evidence is made within 14 days after the verdict or finding of guilty, or within further time fixed during that period (M.R.U. Crim. P. 33). A motion in arrest of judgment is made before entry of judgment or within 14 days after it, or within further time fixed during that period (M.R.U. Crim. P. 34). A timely Rule 29, 33 or 34 motion filed within 21 days after entry of judgment extends the time to appeal to 21 days after entry of the order on it (M.R. App. P. 2B(b)(2))."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite "M.R.U. Crim. P. 29(b)"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "M.R.U. Crim. P. 33"
+  }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "M.R.U. Crim. P. 32(a)"
+  }
+}
+
+state sentencing: "Presentence report and sentencing" by court cite "M.R.U. Crim. P. 32(a)"
+{
+  note "Sentence is imposed without unreasonable delay (M.R.U. Crim. P. 32(a)(1)); before sentencing on a Class C or higher crime the defendant may make a statement (M.R.U. Crim. P. 32(a)(2)), and the court states its reasons for a sentence of one year or more (M.R.U. Crim. P. 32(a)(3)). The court may order a presentence investigation and report; where it has ordered a written report, sentence is not imposed until at least 48 hours after the report is filed with the clerk, so that the defendant and counsel may examine it (M.R.U. Crim. P. 32(c)). A motion to withdraw a guilty or nolo contendere plea may be made only before sentence is imposed (M.R.U. Crim. P. 32(d))."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "M.R.U. Crim. P. 32(b)"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "M.R.U. Crim. P. 32(b)"
+{
+  note "The judgment of conviction sets forth the plea, the verdict or findings, and the adjudication and sentence (M.R.U. Crim. P. 32(b)). An appeal in a criminal case is taken within 21 days after entry into the docket of the judgment or order appealed from, unless a shorter time is provided by law; a notice filed after the verdict or judgment but before its entry is treated as filed on the date of entry (M.R. App. P. 2B(a)(1), (b)(1)). A timely motion under M.R.U. Crim. P. 29, 33, 34 or 35(a) or (c) filed within 21 days after entry of judgment extends the time to 21 days after entry of the order on it (M.R. App. P. 2B(b)(2)). An application for leave to appeal a sentence is filed within the same time (M.R. App. P. 20(b); 15 M.R.S. §§ 2151 to 2157, not vendored). Within one year after a sentence is imposed the court may correct an illegal sentence, or reduce a sentence not yet completed (M.R.U. Crim. P. 35). A stay of execution pending appeal is governed by Rule 38. lit/core has no counting rule for the Maine appellate rules, so the 21-day period is not encoded as a counted deadline."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "M.R. App. P. 2B(b)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "M.R. App. P. 2B(b)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "M.R.U. Crim. P. 29"
+{
+  note "Outcome from the defendant's side: a unanimous verdict of not guilty or a judgment of acquittal (M.R.U. Crim. P. 29, 31)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "M.R.U. Crim. P. 48"
+{
+  note "Outcome from the defendant's side. A dismissal for want of an indictment is without prejudice (M.R.U. Crim. P. 48(b)(2)); on a dismissal for unnecessary delay the court directs whether it is with or without prejudice (M.R.U. Crim. P. 48(b)(1)); a defendant discharged for want of probable cause after a warrantless arrest is released (M.R.U. Crim. P. 4A(a))."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "M.R. App. P. 2B(b)"
+{
+  note "The appeal continues before the Maine Supreme Judicial Court sitting as the Law Court under the Maine Rules of Appellate Procedure (sources/me-law-court/)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("15 M.R.S. § 2121 (post-conviction review; not vendored)")
+{
+  note "Outcome from the defendant's side. Post-conviction review under 15 M.R.S. §§ 2121 to 2132 (procedure in M.R.U. Crim. P. 65 to 75A) and its statutory limitations period are not vendored; federal habeas belongs to lit/habeas."
+}

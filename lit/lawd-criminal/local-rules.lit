@@ -37,14 +37,11 @@ module lawd-criminal-local-rules.local-rules
 // United States v. Booker, Roe v. Flores-Ortega, Garza v. Idaho) are
 // FRCrimP, Speedy Trial Act or constitutional authority and belong to
 // lit/frcrimp; they are removed here: no reporter text is vendored.
-
 /// A memorandum in support of or in opposition to a criminal motion: at
 /// most 25 pages, exclusive of a table of contents or table of
 /// authorities; a judge may grant leave to exceed the limit in an
 /// extraordinary case (W.D. La. LCrR 47.1(a); LR 7.1).
-limit memorandum {
-  pages <= 25 cite "W.D. La. LR 7.1"
-} cite "W.D. La. LCrR 47; W.D. La. LR 7.1"
+limit memorandum { pages <= 25 cite "W.D. La. LR 7.1" } cite "W.D. La. LCrR 47; W.D. La. LR 7.1"
 
 /// A reply memorandum: at most 10 pages (W.D. La. LCrR 47.1(a); LR 7.1).
 limit reply-memorandum {

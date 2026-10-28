@@ -91,9 +91,7 @@ decision habeas-ruling: "Habeas relief granted or denied" by court cite "Tex. R.
 decision submission: "Oral argument or submission on the briefs" by court cite "Tex. R. App. P. 75.1"
 {
   note "Oral argument is permitted only in cases the Court designates; the clerk notifies the parties of the date set for argument or for submission without argument (Tex. R. App. P. 75.1). Counsel in a case not designated for argument may petition for it within 30 days of the clerk's notice, stating specific reasons (Tex. R. App. P. 75.2). Unless extended, argument is limited to 20 minutes per side (Tex. R. App. P. 75.3). The Court sits en banc in direct appeals, discretionary review and habeas cases (Tex. R. App. P. 76). If, after granting review, five judges conclude it should not have been granted, the case is dismissed (Tex. R. App. P. 69.3)."
-  edge-submission-argued "Argued" -> judgment {
-    authority cite "Tex. R. App. P. 75.3"
-  }
+  edge-submission-argued "Argued" -> judgment { authority cite "Tex. R. App. P. 75.3" }
   edge-submission-briefs "Submitted on the briefs" -> judgment {
     authority cite "Tex. R. App. P. 75.1"
   }
@@ -130,9 +128,7 @@ decision after-judgment: "Rehearing or mandate" by applicant cite "Tex. R. App. 
 decision rehearing: "Rehearing ruling" by court cite "Tex. R. App. P. 79.4"
 {
   note "If the Court grants rehearing, the case is set for submission and oral argument is normally not permitted (Tex. R. App. P. 79.4). No second motion for rehearing is considered after rehearing is denied; if rehearing is granted and an opinion on rehearing delivered, a party may file a further motion (Tex. R. App. P. 79.5)."
-  edge-rehearing-granted "Rehearing granted" -> submission {
-    authority cite "Tex. R. App. P. 79.4"
-  }
+  edge-rehearing-granted "Rehearing granted" -> submission { authority cite "Tex. R. App. P. 79.4" }
   edge-rehearing-denied "Rehearing denied; mandate issues" -> conviction-affirmed {
     authority cite "Tex. R. App. P. 79.5"
   }

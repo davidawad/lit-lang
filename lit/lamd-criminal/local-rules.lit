@@ -44,13 +44,10 @@ import frcrimp.deadlines.{ SentencingScheduled }
 // United States v. Booker, Roe v. Flores-Ortega, Garza v. Idaho) are
 // FRCrimP, Speedy Trial Act or constitutional authority and belong to
 // lit/frcrimp; they are removed here: no reporter text is vendored.
-
 /// A memorandum supporting or opposing a criminal motion: at most
 /// twenty-five pages excluding attachments, tables and the certificate of
 /// service, unless leave is obtained (M.D. La. LCrR 12; LR 7(g)).
-limit memorandum {
-  pages <= 25 cite "M.D. La. LR 7(g)"
-} cite "M.D. La. LCrR 12; M.D. La. LR 7(g)"
+limit memorandum { pages <= 25 cite "M.D. La. LR 7(g)" } cite "M.D. La. LCrR 12; M.D. La. LR 7(g)"
 
 /// A reply or surreply memorandum, if permitted: at most ten pages (M.D.
 /// La. LCrR 12; LR 7(g)).

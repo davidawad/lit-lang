@@ -37,19 +37,13 @@ import core.frcrimp45.{ frcrimp45 }
 // United States v. Booker, Roe v. Flores-Ortega, Garza v. Idaho) are
 // FRCrimP, Speedy Trial Act or constitutional authority and belong to
 // lit/frcrimp; they are removed here: no reporter text is vendored.
-
 /// A brief, including a brief supporting objections to a magistrate
 /// judge's ruling: at most 25 pages, excluding the tables of contents and
 /// authorities; the presiding judge permits more only for extraordinary
 /// and compelling reasons (N.D. Tex. LCrR 47.2(c); LCrR 59.1, 59.2).
-limit brief {
-  pages <= 25 cite "N.D. Tex. LCrR 47.2(c)"
-} cite "N.D. Tex. LCrR 47.2(c)"
-
+limit brief { pages <= 25 cite "N.D. Tex. LCrR 47.2(c)" } cite "N.D. Tex. LCrR 47.2(c)"
 /// A reply brief: at most 10 pages (N.D. Tex. LCrR 47.2(c)).
-limit reply-brief {
-  pages <= 10 cite "N.D. Tex. LCrR 47.2(c)"
-} cite "N.D. Tex. LCrR 47.2(c)"
+limit reply-brief { pages <= 10 cite "N.D. Tex. LCrR 47.2(c)" } cite "N.D. Tex. LCrR 47.2(c)"
 
 /// The scheduled date for trial (N.D. Tex. LCrR 16.1, 23.1, 30.1).
 event TrialScheduled()

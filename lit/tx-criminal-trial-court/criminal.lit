@@ -86,9 +86,7 @@ decision plea-decision: "Plea or trial" by applicant cite "Tex. Code Crim. Proc.
   edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
     authority cite "Tex. Code Crim. Proc. art. 26.13"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "Tex. Code Crim. Proc. art. 1.05"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "Tex. Code Crim. Proc. art. 1.05" }
 }
 
 decision trial: "Verdict on guilt" by court cite "Tex. Code Crim. Proc. art. 37.07"
@@ -113,9 +111,7 @@ state sentencing: "Punishment and sentence" by court cite "Tex. Code Crim. Proc.
 decision post-trial: "Motion for new trial" by court cite "Tex. R. App. P. 21.4"
 {
   note "The defendant may file a motion for new trial no later than 30 days after the date the trial court imposes or suspends sentence in open court, and may amend it without leave within that time before any earlier motion is overruled (Tex. R. App. P. 21.4). The motion is presented to the trial court within 10 days of filing unless the court permits it to be presented and heard within 75 days from sentencing (Tex. R. App. P. 21.6). The court rules within 75 days after imposing or suspending sentence, a grant needs a written order, and a motion not timely ruled on is deemed denied (Tex. R. App. P. 21.8)."
-  edge-post-trial-new-trial "New trial granted" -> trial {
-    authority cite "Tex. R. App. P. 21.8"
-  }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Tex. R. App. P. 21.8" }
   edge-post-trial-judgment "No motion, or motion denied" -> judgment {
     authority cite "Tex. R. App. P. 21.8"
   }
@@ -127,9 +123,7 @@ decision judgment: "Appeal" by applicant cite "Tex. R. App. P. 26.2"
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
     authority cite "Tex. R. App. P. 26.2"
   }
-  edge-judgment-no-appeal "No appeal" -> conviction-final {
-    authority cite "Tex. R. App. P. 26.2"
-  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Tex. R. App. P. 26.2" }
 }
 
 terminal acquitted: "Acquitted" outcome [win] cite "Tex. Code Crim. Proc. art. 37.07"

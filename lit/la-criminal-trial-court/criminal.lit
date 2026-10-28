@@ -25,12 +25,8 @@ state arrested: "Arrest" by applicant cite "La. C.Cr.P. art. 230.1"
 decision appearance: "Counsel and bail" by court cite "La. C.Cr.P. art. 230.1"
 {
   note "At the appearance the court appoints counsel for a defendant entitled to it and may fix bail (La. C.Cr.P. art. 230.1(B)); bail is governed by Title VIII of the Code (La. C.Cr.P. art. 311 and following), whose amounts and periods are not stated here (currency unconfirmed). The indictment or information must be filed within the periods after arrest that La. C.Cr.P. art. 701(B) sets for a defendant in custody and one not in custody, by class of offense; failing that, after a contradictory hearing at which just cause is not shown, a defendant in custody is released and a defendant on bail is relieved of the bail obligation (La. C.Cr.P. art. 701(B)). The periods are not stated here (currency unconfirmed)."
-  edge-appearance-detained "Held in custody" -> charge {
-    authority cite "La. C.Cr.P. art. 701"
-  }
-  edge-appearance-released "Released on bail" -> charge {
-    authority cite "La. C.Cr.P. art. 230.1"
-  }
+  edge-appearance-detained "Held in custody" -> charge { authority cite "La. C.Cr.P. art. 701" }
+  edge-appearance-released "Released on bail" -> charge { authority cite "La. C.Cr.P. art. 230.1" }
 }
 
 decision charge: "Indictment or information" by office cite "La. C.Cr.P. art. 382"
@@ -80,9 +76,7 @@ decision plea-decision: "Plea or trial" by applicant cite "La. C.Cr.P. art. 556.
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "La. C.Cr.P. art. 556.1"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "La. C.Cr.P. art. 782"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "La. C.Cr.P. art. 782" }
   edge-plea-decision-nolle "District attorney dismisses" -> dismissed {
     authority cite "La. C.Cr.P. art. 691"
   }
@@ -91,9 +85,7 @@ decision plea-decision: "Plea or trial" by applicant cite "La. C.Cr.P. art. 556.
 decision trial: "Verdict" by court cite "La. C.Cr.P. art. 782"
 {
   note "The number of jurors composing the jury, the number that must concur, and the defendant's waiver of jury trial are set by La. C.Cr.P. art. 782 by class of offense; they are not stated here (currency unconfirmed). The defendant may move for a post verdict judgment of acquittal, made and disposed of before sentence, granted only if the evidence viewed in the light most favorable to the state does not reasonably permit a finding of guilty (La. C.Cr.P. art. 821)."
-  edge-trial-acquittal "Not guilty" -> acquitted {
-    authority cite "La. C.Cr.P. art. 782"
-  }
+  edge-trial-acquittal "Not guilty" -> acquitted { authority cite "La. C.Cr.P. art. 782" }
   edge-trial-guilty "Guilty; post-verdict motions" -> post-verdict {
     authority cite "La. C.Cr.P. art. 821"
   }
@@ -105,9 +97,7 @@ decision post-verdict: "Post-verdict motions" by court cite "La. C.Cr.P. art. 85
   edge-post-verdict-acquittal "Post verdict judgment of acquittal" -> acquitted {
     authority cite "La. C.Cr.P. art. 821"
   }
-  edge-post-verdict-new-trial "New trial granted" -> trial {
-    authority cite "La. C.Cr.P. art. 851"
-  }
+  edge-post-verdict-new-trial "New trial granted" -> trial { authority cite "La. C.Cr.P. art. 851" }
   edge-post-verdict-denied "Motions denied; sentencing" -> sentencing {
     authority cite "La. C.Cr.P. art. 873"
   }
@@ -116,9 +106,7 @@ decision post-verdict: "Post-verdict motions" by court cite "La. C.Cr.P. art. 85
 state sentencing: "Sentencing" by court cite "La. C.Cr.P. art. 873"
 {
   note "After a felony conviction, and after the denial of a motion for a new trial or in arrest of judgment, the delays before sentence that La. C.Cr.P. art. 873 sets must elapse unless the defendant waives them; they are not stated here (currency unconfirmed). A motion to reconsider sentence may be filed under La. C.Cr.P. art. 881.1."
-  edge-sentencing-judgment "Sentence imposed" -> judgment {
-    authority cite "La. C.Cr.P. art. 912"
-  }
+  edge-sentencing-judgment "Sentence imposed" -> judgment { authority cite "La. C.Cr.P. art. 912" }
 }
 
 decision judgment: "Motion for appeal" by applicant cite "La. C.Cr.P. art. 914"
@@ -127,9 +115,7 @@ decision judgment: "Motion for appeal" by applicant cite "La. C.Cr.P. art. 914"
   edge-judgment-appeal "Motion for appeal granted" -> appeal-taken {
     authority cite "La. C.Cr.P. art. 914"
   }
-  edge-judgment-no-appeal "No appeal" -> conviction-final {
-    authority cite "La. C.Cr.P. art. 914"
-  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "La. C.Cr.P. art. 914" }
 }
 
 terminal acquitted: "Acquitted" outcome [win] cite "La. C.Cr.P. art. 821"

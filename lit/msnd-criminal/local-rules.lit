@@ -34,13 +34,10 @@ import core.frcrimp45.{ frcrimp45 }
 // United States v. Booker, Roe v. Flores-Ortega, Garza v. Idaho) are
 // FRCrimP, Speedy Trial Act or constitutional authority and belong to
 // lit/frcrimp; they are removed here: no reporter text is vendored.
-
 /// A memorandum of authorities supporting a motion, response or rebuttal:
 /// at most 35 pages without prior leave of court; it is filed at the same
 /// time as the paper it supports (U.L.Cr.R. 47(E)).
-limit memorandum {
-  pages <= 35 cite "U.L.Cr.R. 47(E)"
-} cite "U.L.Cr.R. 47(E)"
+limit memorandum { pages <= 35 cite "U.L.Cr.R. 47(E)" } cite "U.L.Cr.R. 47(E)"
 
 /// A motion is filed (U.L.Cr.R. 47(B)).
 event MotionFiled() paper memorandum

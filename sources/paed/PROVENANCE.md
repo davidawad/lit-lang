@@ -25,6 +25,7 @@
 
 - Source: https://www.paed.uscourts.gov/sites/paed/files/documents/locrules/criminal/crrules.pdf (official site; 84 pages, sha256 2494467dd1ad53c451f03c9ed5d93b466770a3591a3d14a885e35bf318a85150).
 - Edition: Local Criminal Rules 'SEPTEMBER 18, 2018' (title page), linked as 'Local Criminal Rules' at https://www.paed.uscourts.gov/local-rules/Local%20Criminal%20Rules. The Notice and Order regarding amended Criminal Rule 6.1 (March 13, 2024) is vendored separately and applies on top. robots.txt of www.paed.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): paed-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 8d3c8f8ad13cb7bc0813d67fa23f72349e65386a0f14688cb291cd3252592f12. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `paed/original/paed-local-criminal-rules-2018-09-18.pdf` as served (sha256 2494467dd1ad53c451f03c9ed5d93b466770a3591a3d14a885e35bf318a85150); extraction sha256 8d3c8f8ad13cb7bc0813d67fa23f72349e65386a0f14688cb291cd3252592f12.
@@ -33,6 +34,7 @@
 
 - Source: https://www.paed.uscourts.gov/sites/paed/files/documents/locrules/criminal/notcr1.pdf (official site; 4 pages, sha256 b13823f97d49a440f9bac30aa6405d93a7d0e448e08033e35c28b87c924ddece).
 - Edition: Notice and Order regarding Amended Criminal Rule 6.1, dated March 13, 2024 per the listing at https://www.paed.uscourts.gov/local-rules/Local%20Criminal%20Rules. Apply on top of paed-local-criminal-rules-2018-09-18.txt from its effective date. robots.txt of www.paed.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): paed-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 1122076f34a360a966deebd9db4f9f310f0f7859e704fddf615758dc3c60291c. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `paed/original/paed-notice-criminal-rule-6-1-2024-03-13.pdf` as served (sha256 b13823f97d49a440f9bac30aa6405d93a7d0e448e08033e35c28b87c924ddece); extraction sha256 1122076f34a360a966deebd9db4f9f310f0f7859e704fddf615758dc3c60291c.

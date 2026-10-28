@@ -1,0 +1,157 @@
+module mp-superior-court-criminal.criminal
+
+// Criminal cases in the CNMI Commonwealth Superior Court under the
+// Commonwealth Rules of Criminal Procedure (effective May 3, 2017;
+// sources/mp-criminal-trial-court). The extract is an OCR text layer, so a
+// period is stated only where its words and figures agree or the figure
+// repeats; the government-dismissal sentence of Rule 48(a), which the OCR
+// may have garbled, is not relied on. The periods are computed under Rule
+// 45 and stated in the notes; lit/core has no counting rule for them, so
+// none is encoded as a counted deadline. The Commonwealth Code (bail,
+// 6 CMC) is not vendored. Outcomes are from the defendant's side. The
+// earlier outline's leading decisions (County of Riverside v. McLaughlin,
+// Gerstein v. Pugh, Gideon v. Wainwright, Brady v. Maryland, Mapp v. Ohio,
+// Barker v. Wingo, Boykin v. Alabama, Missouri v. Frye, Jackson v.
+// Virginia, Apprendi v. New Jersey, Roe v. Flores-Ortega, Garza v. Idaho)
+// are removed: no reporter text is vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "Com. R. Crim. P. 4"
+{
+  note "On a complaint showing probable cause a summons or, at the government's request, an arrest warrant issues (Com. R. Crim. P. 4(a)); Rules 4 and 9 were amended in March 2015, as the filed amendments in the vendored text show. A person arrested with or without a warrant is taken without unnecessary delay before the nearest available judge of the Superior Court, and after a warrantless arrest a complaint is filed forthwith (Com. R. Crim. P. 5(a))."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance {
+    authority cite "Com. R. Crim. P. 5(a)"
+  }
+}
+
+decision initial-appearance: "Release or detention" by court cite "Com. R. Crim. P. 46"
+{
+  note "At the initial appearance the defendant is not called upon to plead; the judge informs the defendant of the complaint, the rights to retained or assigned counsel and to remain silent, pretrial release and the preliminary examination, and admits the defendant to bail as provided by statute or the rules (Com. R. Crim. P. 5(c)). A person ordered released on conditions who remains detained 24 hours after the release hearing for inability to meet them is entitled on application to have the conditions reviewed (Com. R. Crim. P. 46(a)(4)). The Commonwealth Code's bail provisions are not vendored."
+  edge-initial-appearance-detained "Detained" -> probable-cause {
+    authority cite "Com. R. Crim. P. 46(a)"
+  }
+  edge-initial-appearance-released "Released on conditions" -> probable-cause {
+    authority cite "Com. R. Crim. P. 46(a)"
+  }
+}
+
+decision probable-cause: "Preliminary examination" by court cite "Com. R. Crim. P. 5.1"
+{
+  note "A defendant substantially deprived of liberty is entitled to a preliminary examination unless waived, held within a reasonable time and in any event not later than ten (10) days after the initial appearance (Com. R. Crim. P. 5.1)."
+  edge-probable-cause-charged "Held to answer; information filed" -> charged {
+    authority cite "Com. R. Crim. P. 7(a)"
+  }
+  edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
+    authority cite "Com. R. Crim. P. 5.1"
+  }
+}
+
+state charged: "Information" by office cite "Com. R. Crim. P. 7(a)"
+{
+  note "All offenses except misdemeanors are prosecuted by information, which may be filed without leave of court (Com. R. Crim. P. 7(a)). A motion for a bill of particulars may be made before arraignment or within ten (10) days after it, or later with leave (Com. R. Crim. P. 7(f)). If there is unnecessary delay in filing an information against a defendant held to answer, or in bringing a defendant to trial, the court may dismiss the information or complaint (Com. R. Crim. P. 48(b))."
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Com. R. Crim. P. 10" }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "Com. R. Crim. P. 10"
+{
+  note "Arraignment is conducted in open court by reading the complaint or information or stating its substance and calling on the defendant to plead, after the defendant is given a copy (Com. R. Crim. P. 10). A defendant may plead not guilty, guilty or nolo contendere, and a refusal to plead is entered as not guilty (Com. R. Crim. P. 11(a))."
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "Com. R. Crim. P. 16" }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "Com. R. Crim. P. 12"
+{
+  note "On request the government discloses the defendant's statements and the other material Rule 16(a) lists (Com. R. Crim. P. 16(a)). Defects in instituting the prosecution or in the charge, motions to suppress, discovery requests and severance requests must be raised before trial, and the court may set a time for pretrial motions at or after arraignment (Com. R. Crim. P. 12(b), (c)). A written motion and notice of hearing are served not later than five (5) days before the hearing unless a different period is fixed, opposing affidavits not less than one (1) day before, and three (3) days are added after service by mail (Com. R. Crim. P. 45(d), (e))."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "Com. R. Crim. P. 12(b)"
+  }
+  edge-discovery-speedy "Motion to dismiss for unnecessary delay" -> motions-ruling {
+    authority cite "Com. R. Crim. P. 48(b)"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "Com. R. Crim. P. 11" }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "Com. R. Crim. P. 12"
+{
+  note "If there is unnecessary delay in bringing a defendant to trial, the court may dismiss the information or complaint (Com. R. Crim. P. 48(b)); the rules state no fixed trial-commencement period."
+  edge-motions-ruling-speedy "Dismissed for unnecessary delay" -> dismissed {
+    authority cite "Com. R. Crim. P. 48(b)"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "Com. R. Crim. P. 12(b)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "Com. R. Crim. P. 12"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Com. R. Crim. P. 11"
+{
+  note "A plea of guilty or nolo contendere is accepted under Rule 11. In a problem-solving court the court may, on the motion of both parties, hold a guilty or nolo contendere plea in abeyance under a written agreement, for not longer than 24 months absent an extension for good cause (Com. R. Crim. P. 11-1(b), (c)). Cases required to be tried by jury are so tried unless the defendant waives a jury in writing, and juries are of six unless the parties stipulate otherwise before verdict (Com. R. Crim. P. 23(a), (b))."
+  edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
+    authority cite "Com. R. Crim. P. 11"
+  }
+  edge-plea-decision-abeyance "Plea held in abeyance in a problem-solving court" -> sentencing {
+    authority cite "Com. R. Crim. P. 11-1"
+  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "Com. R. Crim. P. 23(a)" }
+}
+
+decision trial: "Verdict" by court cite "Com. R. Crim. P. 31"
+{
+  note "The verdict is unanimous and returned to the judge in open court (Com. R. Crim. P. 31(a)). After a guilty verdict or the jury's discharge, a motion for judgment of acquittal may be made or renewed within seven (7) days after the jury is discharged or such further time as the court fixes during that period (Com. R. Crim. P. 29(c))."
+  edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
+    authority cite "Com. R. Crim. P. 29"
+  }
+  edge-trial-guilty "Guilty; post-verdict motions" -> post-trial {
+    authority cite "Com. R. Crim. P. 33"
+  }
+}
+
+decision post-trial: "Post-verdict motions" by court cite "Com. R. Crim. P. 33"
+{
+  note "A motion for a new trial on newly discovered evidence may be made only before or within two years after final judgment; on any other ground within seven (7) days after the verdict or finding of guilty or such further time as the court fixes during that period (Com. R. Crim. P. 33). A motion in arrest of judgment is made within seven (7) days after the verdict or finding of guilty, or after a plea of guilty or nolo contendere (Com. R. Crim. P. 34)."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite "Com. R. Crim. P. 29"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Com. R. Crim. P. 33" }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "Com. R. Crim. P. 32(a)"
+  }
+}
+
+state sentencing: "Sentencing" by court cite "Com. R. Crim. P. 32(a)"
+{
+  note "Sentence is imposed without unreasonable delay, after the court confirms the defendant and counsel have read any presentence report and affords counsel, the defendant and the government an opportunity to speak (Com. R. Crim. P. 32(a)(1)). After sentence following a trial the court advises the defendant of the right to appeal, and the clerk files a notice of appeal on request (Com. R. Crim. P. 32(a)(2)). A sentence may be reduced within 120 days after it is imposed or probation revoked, or after the mandate or a final denial of review, and an illegal sentence corrected at any time (Com. R. Crim. P. 35)."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "Com. R. Crim. P. 32(b)"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "Com. R. Crim. P. 32(b)"
+{
+  note "A judgment of conviction sets forth the plea, the verdict or findings, and the adjudication and sentence (Com. R. Crim. P. 32(b)(1)). A defendant's notice of appeal must be filed in the Superior Court within 30 days after the later of the entry of the judgment or order appealed from or the government's notice of appeal (NMI Sup. Ct. R. 4(b)(1)(A))."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "NMI Sup. Ct. R. 4(b)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "NMI Sup. Ct. R. 4(b)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Com. R. Crim. P. 29"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty or a judgment of acquittal (Com. R. Crim. P. 29, 31)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "Com. R. Crim. P. 48"
+{
+  note "Outcome from the defendant's side: a dismissal for unnecessary delay (Com. R. Crim. P. 48(b)), on a pretrial motion, or for want of probable cause."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "NMI Sup. Ct. R. 4(b)"
+{
+  note "The appeal continues before the NMI Supreme Court under its rules (lit/mp-supreme)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "Com. R. Crim. P. 35"
+{
+  note "Outcome from the defendant's side. A sentence may be corrected or reduced under Rule 35; Commonwealth collateral relief statutes are not vendored, and federal habeas belongs to lit/habeas."
+}

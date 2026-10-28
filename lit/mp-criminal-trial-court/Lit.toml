@@ -1,0 +1,60 @@
+# Criminal cases in the Commonwealth Superior Court of the Northern
+# Mariana Islands under the Commonwealth Rules of Criminal Procedure (Com.
+# R. Crim. P.), the compilation the CNMI Law Revision Commission lists as
+# effective May 3, 2017 (sources/mp-criminal-trial-court): the rules
+# adopted January 22, 1995, the March 2015 amendments to Rules 4 and 9
+# filed with them, and Rule 11-1 (plea in abeyance) made permanent by
+# Administrative Order 2017-ADM-0010-RUL of May 3, 2017. Later amendments
+# were not checked; in_force is May 3, 2017 and an earlier query is a hole
+# in the corpus. The extract carries OCR errors (for instance "coun" for
+# "court"), so a period is stated only where its words and figures agree
+# or the figure repeats, and a sentence the OCR may have garbled is not
+# relied on. Criminal appeals go under NMI Supreme Court Rule 4(b), bound
+# to the text lit/mp-supreme binds (Administrative Order 2024-ADM-0006-RUL
+# of March 15, 2024; sources/mp-supreme). Time is computed under Com. R.
+# Crim. P. 45, which excludes intermediate Saturdays, Sundays and legal
+# holidays from periods under 11 days; lit/core has no counting rule for
+# it, so the periods are stated in notes, not encoded as counted
+# deadlines. The Commonwealth Code (6 CMC) the rules cite is not vendored.
+[package]
+name = "mp-superior-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "mp-superior-court-criminal"
+forum = "mp-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "northern-mariana-islands"
+title = "Commonwealth Superior Court of the Northern Mariana Islands, criminal"
+description = "Criminal cases in the CNMI Commonwealth Superior Court under the Commonwealth Rules of Criminal Procedure: arrest and initial appearance, release, the preliminary examination, the information, arraignment, discovery and pretrial motions, dismissal for unnecessary delay, plea or trial, post-verdict motions, sentencing, and the NMI Supreme Court Rule 4(b) notice of appeal, with the periods stated in notes from the vendored rules."
+in_force = "2017-05-03"
+known_at = "2026-10-28"
+unknown_before = "2017-05-03"
+jurisdiction = "Commonwealth Superior Court of the Northern Mariana Islands (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.mp-crim]
+title = "Commonwealth Rules of Criminal Procedure (CNMI Law Revision Commission R06, effective May 3, 2017)"
+url = "https://cnmilaw.gov/docs/courtrules/R06.pdf"
+path = "sources/mp-criminal-trial-court/mp-commonwealth-rules-of-criminal-procedure-2017-05-03-sectioned.txt"
+path_sha256 = "9899c4857aecc7a214d09c555c0830f9535c75d3b0c102856241a107463981a6"
+sha256 = "6b6ef92886367c5ad12ad80adfa0383ba6199fd1c5b2b8c1d10d8011d12ec5bf"
+as_of = "2017-05-03"
+cite_prefixes = ["Com. R. Crim. P."]
+section_heading = "Rule {n}"
+
+[sources.mp-sup]
+title = "Northern Mariana Islands Supreme Court Rules (Administrative Order 2024-ADM-0006-RUL of March 15, 2024), as listed by the CNMI Law Revision Commission"
+url = "https://cnmilaw.gov/docs/courtrules/R01.pdf"
+path = "sources/mp-supreme/nmi-supreme-court-rules-sectioned.txt"
+path_sha256 = "a10aa4e3bf1020d81cdaa148172700a92cb2df9a6a00d380ceed6b3e5e2d2f46"
+sha256 = "4bfe1a18ac71d532927cbb29111535353c40423d41ae107df519a0abb2aa5880"
+as_of = "2024-03-15"
+cite_prefixes = ["NMI Sup. Ct. R."]
+section_heading = "Rule {n}"

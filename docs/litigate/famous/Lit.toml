@@ -1,0 +1,63 @@
+# The famous cases (lg-wvlf.3): the periods the ten expect tests
+# tests/expect/{arthrex, blue-and-gold, celotex, ebay, hughes, iqbal,
+# oil-states, sas, suprema, twombly} count, ported from the tests/cases
+# JSON walks. Each period runs from one trigger event of its own, so a
+# matter counts only the periods whose triggers it records. Counting is
+# lit/core's (FRAP 26, Sup. Ct. R. 30, 19 C.F.R. § 201.14) and lit/mpep's
+# 37 C.F.R. § 1.7, by the version in force on each trigger's date. Public
+# law and the opinions' own facts only.
+[package]
+name = "famous-cases"
+version = "1.0.0"
+language = 1
+pack_id = "famous-cases"
+forum = "frap"
+authority = "FederalRule"
+title = "Famous cases: the appeal, rehearing and certiorari periods they count"
+in_force = "1968-07-01"
+known_at = "2026-10-28"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../lit/core" }
+# 37 C.F.R. § 1.7 (`uspto-1-7`), the PTAB notice-of-appeal period's counting.
+mpep-prosecution = { version = "^0.1.0", path = "../../../lit/mpep" }
+
+[sources.frap4-2008]
+title = "Federal Rules of Appellate Procedure, Rule 4, 28 U.S.C. App. (2008 ed.): the text as amended through Dec. 1, 2005"
+url = "https://www.govinfo.gov/content/pkg/USCODE-2008-title28/html/USCODE-2008-title28-app-federalru-rule4.htm"
+path = "sources/usc-28-app-frap4-history.txt"
+path_sha256 = "c246fa771851ef008653521977a993531d589881d85354e9c9f949f9c1b1a284"
+as_of = "2005-12-01"
+cite_prefixes = ["FRAP (2008 ed.)"]
+section_heading = "FRAP (2008 ed.) Rule {n}"
+
+[sources.usc28]
+title = "28 U.S.C. §§ 2101, 2107 and 2522"
+url = "https://www.law.cornell.edu/uscode/text/28/2522"
+path = "sources/usc-additional.txt"
+path_sha256 = "5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+
+# The 2012 text of 37 C.F.R. § 90.3, as published (77 FR 48677-48678).
+[sources.fr-77-90-3]
+title = "Federal Register, vol. 77 (37 C.F.R. § 90.3 as added by the PTAB trial and judicial review rules)"
+url = "https://www.govinfo.gov/content/pkg/FR-2012-08-14/html/2012-17900.htm"
+path = "sources/fr-uspto-90-3-history.txt"
+path_sha256 = "86152eebd93a8b638b25c9263e235194c7400797d2840e73d59da0977e4f4d74"
+as_of = "2012-08-14"
+cite_prefixes = ["77 FR"]
+section_heading = "77 FR {n}"
+
+[sources.cfr-210]
+title = "19 C.F.R. Part 210 (USITC Rules of Adjudication and Enforcement), current"
+url = "https://www.ecfr.gov/current/title-19/chapter-II/part-210"
+path = "sources/cfr-19-part210.txt"
+path_sha256 = "92d29ab6a95dc52eaaa5b4fa5b1d0991131546e01612bc83f8e365f40420c99e"
+as_of = "2026-08-26"
+cite_prefixes = ["19 C.F.R."]
+section_heading = "19 C.F.R. § {n}"

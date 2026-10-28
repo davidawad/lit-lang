@@ -251,7 +251,7 @@ library"):
   multi-year cycle, a weekend-observance rule, and a half-open effective
   interval per holiday (Juneteenth from 2021-06-17, Martin Luther King, Jr.
   Day from 1986-01-01, Inauguration Day every fourth year after 1965), so
-  historical dates (e.g. the famous cases in `tests/cases/`) compute as they
+  historical dates (e.g. the famous cases in `tests/expect/`) compute as they
   did at the time;
 - a **`CountingRule`**: closed weekdays, the calendars it closes on, an
   optional minimum length, and an ordered step pipeline — `anchor` (exclude

@@ -1,0 +1,17 @@
+case celotex
+uses famous-cases ^1.0.0
+as_of 1985-11-04
+summary "Celotex Corp. v. Catrett, 477 U.S. 317 (1986): the D.D.C.'s summary judgment ruling of July 21, 1982 and the D.C. Circuit's judgment of March 8, 1985."
+notes "Public-record facts of Catrett v. Johns-Manville Sales Corp., 756 F.2d 181 (D.C. Cir. 1985); Celotex Corp. v. Catrett, 477 U.S. 317 (1986) (opinion). Run under cadc.world (`litigate worlds`); expect.toml records each period's rule date."
+perspective celotex
+
+parties {
+  celotex: applicant Party
+}
+
+events {
+  summary-judgment: 1982-07-21 JudgmentEntered() on celotex
+  reversed: 1985-03-08 CertTriggerEntered() on celotex
+}
+
+stakes { recorded: 0.usd }

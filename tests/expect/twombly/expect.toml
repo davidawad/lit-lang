@@ -1,0 +1,73 @@
+# Bell Atlantic Corp. v. Twombly, 550 U.S. 544 (2007) (lg-wvlf.3, ported
+# from tests/cases/twombly.json; public record). Reversed and remanded,
+# 550 U.S. 544 (May 21, 2007).
+#
+# Sources: Twombly v. Bell Atlantic Corp., 313 F. Supp. 2d 174 (S.D.N.Y.
+# 2003)
+# <https://law.justia.com/cases/federal/district-courts/FSupp2/313/174/2580694/>;
+# Twombly v. Bell Atlantic Corp., 425 F.3d 99 (2d Cir. 2005)
+# <https://caselaw.findlaw.com/court/us-2nd-circuit/1367833.html>; Twombly
+# v. Bell Atlantic (2d Cir.) — argument date
+# <https://case-law.vlex.com/vid/twombly-v-bell-atlantic-893967109>; Bell
+# Atlantic Corp. v. Twombly, 550 U.S. 544 (2007) (opinion)
+# <https://www.law.cornell.edu/supct/html/05-1126.ZO.html>; Supreme Court
+# docket No. 05-1126
+# <https://www.supremecourt.gov/search.aspx?filename=/docketfiles/05-1126.htm>.
+#
+# From 2003-10-08 (the S.D.N.Y. dismissal (opinion date; the separate
+# judgment's entry date was not found)): FRAP 4(a)(1)(A): 30 days. Oct 8 +
+# 23 = Oct 31; + 7 = Nov 7, a Friday, not a holiday, so no roll. Due
+# 2003-11-07. The notice-of-appeal date was not found; the appeal was
+# docketed as No. 03-9213, i.e. in 2003.
+#
+# From 2005-10-03 (the Second Circuit's judgment): FRAP 40: 14 days. Oct 3
+# + 14 = Oct 17, a Monday (Columbus Day was Oct 10, inside the period,
+# which does not matter when counting calendar days). Due 2005-10-17. A
+# petition was filed and denied on 2006-01-03; its filing date was not
+# found.
+#
+# From 2006-01-03 (denial of rehearing (Sup. Ct. R. 13.3 runs the 90 days
+# from that denial)): Sup. Ct. R. 13.1: 90 days. Jan 3 + 28 = Jan 31; + 28
+# = Feb 28 (56); + 31 = Mar 31 (87); + 3 = Apr 3 (90), a Monday. Due
+# 2006-04-03. Petition filed 2006-03-06, four weeks early. Recorded as due
+# unknown: lit/core declares Sup. Ct. R. 30.1 only from its 2023 edition,
+# and the earlier editions are not vendored, so no counting rule is in
+# force on the trigger date.
+#
+# Re-record with `litigate test tests/expect --bless`, and say why in the
+# commit.
+
+paths = ["docs/litigate/famous"]
+
+[[run]]
+world = "ca2.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = ["famous-cases"]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "famous-cases::notice-of-appeal"
+trigger = "2003-10-08"
+due = "2003-11-07"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(1)(A)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run.expect.w1.deadlines]]
+deadline = "famous-cases::rehearing"
+trigger = "2005-10-03"
+due = "2005-10-17"
+status = "lapsed"
+cite = "FRAP 40(a)(1) before the December 2024 amendment (text not vendored)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run.expect.w1.deadlines]]
+deadline = "famous-cases::cert-petition"
+trigger = "2006-01-03"
+due = "unknown"
+status = "open"
+cite = "28 U.S.C. § 2101(c)"
+counted_by = "-"

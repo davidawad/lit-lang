@@ -1,0 +1,17 @@
+case hughes
+uses famous-cases ^1.0.0
+as_of 1999-03-01
+summary "Hughes Aircraft Co. v. United States, 717 F.2d 1351 (Fed. Cir. 1983); 140 F.3d 1470 (Fed. Cir. 1998): the Court of Claims' final judgment of October 8, 1982 and the Federal Circuit's denial of rehearing en banc on July 28, 1998."
+notes "Public-record facts of Hughes Aircraft Co. v. United States, 717 F.2d 1351 (Fed. Cir. 1983); Hughes Aircraft Co. v. United States, 31 Fed. Cl. 481 (1994); Hughes Aircraft Co. v. United States, 86 F.3d 1566 (Fed. Cir. 1996); United States v. Hughes Aircraft Co., 520 U.S. 1183 (1997) (GVR); Hughes Aircraft Co. v. United States, 140 F.3d 1470 (Fed. Cir. 1998); United States v. Hughes Aircraft Co., petition for a writ of certiorari (No. 98-871); United States v. Hughes Aircraft Co., 525 U.S. 1177 (1999) (cert. denied). Run under cafc.world (`litigate worlds`); expect.toml records each period's rule date."
+perspective hughes
+
+parties {
+  hughes: applicant Party
+}
+
+events {
+  ct-cl-judgment: 1982-10-08 CofcJudgmentEntered() on hughes
+  rehearing-denied: 1998-07-28 CertTriggerEntered() on hughes
+}
+
+stakes { recorded: 0.usd }

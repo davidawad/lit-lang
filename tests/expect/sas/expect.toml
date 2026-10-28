@@ -1,0 +1,63 @@
+# SAS Institute Inc. v. Iancu, 584 U.S. 357 (2018) (lg-wvlf.3, ported from
+# tests/cases/sas.json; public record). Reversed and remanded, 584 U.S.
+# 357 (April 24, 2018).
+#
+# Sources: SAS v. Matal: overview of oral argument (Nat'l L. Rev.) —
+# district suit and petition dates
+# <https://natlawreview.com/article/sas-v-matal-overview-oral-argument>;
+# SAS Institute v. ComplementSoft, IPR2013-00226, final written decision
+# summary (Nat'l L. Rev.)
+# <https://natlawreview.com/article/sas-institute-inc-v-complementsoft-llc-final-written-decision-ipr2013-00226>;
+# Federal Circuit Patent Bulletin: SAS Institute Inc. v. ComplementSoft,
+# LLC, 825 F.3d 1341 (Fed. Cir. 2016)
+# <https://www.wiley.law/newsroom-articles-Federal-Circuit-Patent-Bulletin-SAS-Institute-Inc-v-ComplementSoft-LLC.html>;
+# SAS Institute v. ComplementSoft, Nos. 2015-1346, -1347, order denying
+# rehearing en banc
+# <https://www.cafc.uscourts.gov/opinions-orders/15-1346.order.11-3-2016.1.pdf>;
+# Supreme Court docket No. 16-969
+# <https://www.supremecourt.gov/search.aspx?filename=/docket/docketfiles/html/public/16-969.html>;
+# SAS Institute Inc. v. Iancu, 584 U.S. 357 (2018) (opinion)
+# <https://www.law.cornell.edu/supremecourt/text/16-969>.
+#
+# From 2014-08-06 (the final written decision): 37 C.F.R. § 90.3(a): 63
+# days. Aug 6 + 25 = Aug 31; + 30 = Sep 30 (55); + 8 = Oct 8 (63), a
+# Wednesday. Due 2014-10-08. Notice-of-appeal dates not found; the appeals
+# are Nos. 2015-1346 and -1347.
+#
+# From 2016-11-07 (denial of rehearing en banc (Sup. Ct. R. 13.3)): Sup.
+# Ct. R. 13.1: 90 days. Nov 7 + 23 = Nov 30; + 31 = Dec 31 (54); + 31 =
+# Jan 31 (85); + 5 = Feb 5 (90), a Sunday, so it rolls to Monday Feb 6.
+# Due 2017-02-06. Petition filed 2017-01-31, within the window. Recorded
+# as due unknown: lit/core declares Sup. Ct. R. 30.1 only from its 2023
+# edition, and the earlier editions are not vendored, so no counting rule
+# is in force on the trigger date.
+#
+# Re-record with `litigate test tests/expect --bless`, and say why in the
+# commit.
+
+paths = ["docs/litigate/famous"]
+
+[[run]]
+world = "cafc.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = ["famous-cases"]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "famous-cases::ptab-notice-of-appeal"
+trigger = "2014-08-06"
+due = "2014-10-08"
+status = "lapsed"
+cite = "77 FR 48677"
+counted_by = "37 CFR 1.7(a)"
+
+[[run.expect.w1.deadlines]]
+deadline = "famous-cases::cert-petition"
+trigger = "2016-11-07"
+due = "unknown"
+status = "open"
+cite = "28 U.S.C. § 2101(c)"
+counted_by = "-"

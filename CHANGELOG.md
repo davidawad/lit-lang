@@ -9,6 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **The famous cases are expect tests** (lg-wvlf.3). The ten
+  `tests/cases/<slug>.json` walks (arthrex, blue-and-gold, celotex, ebay,
+  hughes, iqbal, oil-states, sas, suprema, twombly) are
+  `tests/expect/<slug>/`: a `.case` recording the orders each key period
+  runs from, the world it runs under, and `expect.toml` with each
+  period's due date, status and cites, run by `litigate test
+  tests/expect`. The periods are the new package `docs/litigate/famous`.
+  The 18 appeal, rehearing and petition-for-review dates are the JSON's;
+  the 8 certiorari dates are `unknown`, since lit/core declares Sup. Ct.
+  R. 30 only from its 2023 edition. The JSON files, their story
+  snapshots and `famous_cases.rs` are deleted.
+
 - **A precedent layer names its holdings and binding reach; dicta cannot
   edit** (lg-fg2h.1; SPEC §4.1, §5.7; docs/litigate/CHANGE.md §2.8). A
   `precedent`'s `[package.instrument]` requires `reach` (the forum

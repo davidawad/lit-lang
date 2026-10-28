@@ -1,0 +1,71 @@
+# eBay Inc. v. MercExchange, L.L.C., 547 U.S. 388 (2006) (lg-wvlf.3,
+# ported from tests/cases/ebay.json; public record). Vacated and remanded,
+# 547 U.S. 388 (May 15, 2006).
+#
+# Sources: eBay Inc. FY2003 Form 10-K (litigation disclosure: verdict and
+# judgment)
+# <https://www.sec.gov/Archives/edgar/data/0001065088/000089161804000676/f96707ore10vk.htm>;
+# MercExchange, L.L.C. v. eBay, Inc., 275 F. Supp. 2d 695 (E.D. Va. 2003)
+# <https://static.case.law/f-supp-2d/275/cases/0695-01.json>;
+# MercExchange, L.L.C. v. eBay, Inc., 401 F.3d 1323 (Fed. Cir. 2005)
+# <https://www.cafc.uscourts.gov/opinions-orders/03-1600.pdf>; Supreme
+# Court docket No. 05-130
+# <https://www.supremecourt.gov/search.aspx?filename=/docketfiles/05-130.htm>;
+# eBay Inc. v. MercExchange, L.L.C., 547 U.S. 388 (2006) (syllabus)
+# <https://www.law.cornell.edu/supct/html/05-130.ZS.html>.
+#
+# From 2003-08-06 (entry of judgment): FRAP 4(a)(1)(A): 30 days. Aug 6 +
+# 25 = Aug 31; + 5 = Sep 5 (30), a Friday. Due 2003-09-05.
+# Notice-of-appeal date not found; the appeal is No. 03-1600, docketed in
+# 2003.
+#
+# From 2005-03-16 (the Federal Circuit's judgment): Fed. Cir. R. 40: 30
+# days (no U.S. party). Mar 16 + 15 = Mar 31; + 15 = Apr 15 (30), a
+# Friday. Due 2005-04-15. The petition was denied 2005-04-26; its filing
+# date was not found. The pack encodes the current Federal Circuit rule;
+# the period in force in 2005 was not checked.
+#
+# From 2005-04-26 (denial of rehearing (Sup. Ct. R. 13.3)): Sup. Ct. R.
+# 13.1: 90 days. Apr 26 + 4 = Apr 30; + 31 = May 31 (35); + 30 = Jun 30
+# (65); + 25 = Jul 25 (90), a Monday. Due 2005-07-25. Petition filed
+# 2005-07-25, on the last day. Recorded as due unknown: lit/core declares
+# Sup. Ct. R. 30.1 only from its 2023 edition, and the earlier editions
+# are not vendored, so no counting rule is in force on the trigger date.
+#
+# Re-record with `litigate test tests/expect --bless`, and say why in the
+# commit.
+
+paths = ["docs/litigate/famous"]
+
+[[run]]
+world = "cafc.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = ["famous-cases"]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "famous-cases::notice-of-appeal"
+trigger = "2003-08-06"
+due = "2003-09-05"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(1)(A)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run.expect.w1.deadlines]]
+deadline = "famous-cases::fedcir-rehearing"
+trigger = "2005-03-16"
+due = "2005-04-15"
+status = "lapsed"
+cite = "Fed. Cir. R. 40 as in force in 2005 (text not vendored)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run.expect.w1.deadlines]]
+deadline = "famous-cases::cert-petition"
+trigger = "2005-04-26"
+due = "unknown"
+status = "open"
+cite = "28 U.S.C. § 2101(c)"
+counted_by = "-"

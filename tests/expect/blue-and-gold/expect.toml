@@ -1,0 +1,50 @@
+# Blue & Gold Fleet, L.P. v. United States, 492 F.3d 1308 (Fed. Cir. 2007)
+# (lg-wvlf.3, ported from tests/cases/blue-and-gold.json; public record).
+# Affirmed; no certiorari petition was found. Hornblower keeps the
+# concession.
+#
+# Sources: Blue & Gold Fleet, L.P. v. United States, 70 Fed. Cl. 487
+# (2006) <https://static.case.law/fed-cl/70/cases/0487-01.json>; Blue &
+# Gold Fleet, L.P. v. United States, 492 F.3d 1308 (Fed. Cir. 2007)
+# <https://static.case.law/f3d/492/cases/1308-01.json>.
+#
+# From 2006-03-22 (the Court of Federal Claims' decision (judgment was
+# directed the same day)): 28 U.S.C. § 2522: 60 days. Mar 22 + 9 = Mar 31;
+# + 30 = Apr 30 (39); + 21 = May 21 (60), a Sunday; rolls to Monday May
+# 22. Due 2006-05-22. Notice-of-appeal date not found; the appeal is No.
+# 2006-5064.
+#
+# From 2007-06-26 (the Federal Circuit's judgment): Fed. Cir. R. 40(a)(1):
+# 45 days because the United States is a party (links.json patches
+# cafc@cofc). Jun 26 + 4 = Jun 30; + 31 = Jul 31 (35); + 10 = Aug 10 (45),
+# a Friday. Due 2007-08-10. No rehearing petition was found.
+#
+# Re-record with `litigate test tests/expect --bless`, and say why in the
+# commit.
+
+paths = ["docs/litigate/famous"]
+
+[[run]]
+world = "cafc.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = ["famous-cases"]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "famous-cases::cofc-notice-of-appeal"
+trigger = "2006-03-22"
+due = "2006-05-22"
+status = "lapsed"
+cite = "28 U.S.C. § 2522"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run.expect.w1.deadlines]]
+deadline = "famous-cases::rehearing-us-party"
+trigger = "2007-06-26"
+due = "2007-08-10"
+status = "open"
+cite = "FRAP 40(a)(1) before the December 2024 amendment (text not vendored)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"

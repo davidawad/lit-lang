@@ -1,0 +1,17 @@
+case sas
+uses famous-cases ^1.0.0
+as_of 2017-05-22
+summary "SAS Institute Inc. v. Iancu, 584 U.S. 357 (2018): the Board's final written decision of August 6, 2014 and the Federal Circuit's denial of rehearing en banc on November 7, 2016."
+notes "Public-record facts of SAS v. Matal: overview of oral argument (Nat'l L. Rev.) — district suit and petition dates; SAS Institute v. ComplementSoft, IPR2013-00226, final written decision summary (Nat'l L. Rev.); Federal Circuit Patent Bulletin: SAS Institute Inc. v. ComplementSoft, LLC, 825 F.3d 1341 (Fed. Cir. 2016); SAS Institute v. ComplementSoft, Nos. 2015-1346, -1347, order denying rehearing en banc; Supreme Court docket No. 16-969; SAS Institute Inc. v. Iancu, 584 U.S. 357 (2018) (opinion). Run under cafc.world (`litigate worlds`); expect.toml records each period's rule date."
+perspective sas
+
+parties {
+  sas: applicant Party
+}
+
+events {
+  fwd: 2014-08-06 BoardDecisionEntered() on sas
+  rehearing-denied: 2016-11-07 CertTriggerEntered() on sas
+}
+
+stakes { recorded: 0.usd }

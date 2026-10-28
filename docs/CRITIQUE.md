@@ -270,9 +270,10 @@ turns out to be. `opponent_objective: None` (the default) delegates to
 
 ## Gaps found by replaying famous cases
 
-`tests/cases/` replays ten real procedural histories through the packs
-(`tests/README.md`). Each gap below is recorded in a case file as an
-expected failure, and the test fails once a pack closes it.
+The famous cases (now expect tests under `tests/expect/`, lg-wvlf.3)
+replayed ten real procedural histories through the packs
+(`tests/README.md`); each gap below was recorded in a case file as an
+expected failure.
 
 - **No Supreme Court merits stage.** Every `cert-granted` is terminal, so
   a reversal, an affirmance, or a grant-vacate-remand (Hughes Aircraft,

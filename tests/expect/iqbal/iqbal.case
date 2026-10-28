@@ -1,0 +1,17 @@
+case iqbal
+uses famous-cases ^1.0.0
+as_of 2008-06-16
+summary "Ashcroft v. Iqbal, 556 U.S. 662 (2009): the E.D.N.Y. order of September 27, 2005 denying the motion to dismiss and the Second Circuit's denial of rehearing on September 18, 2007."
+notes "Public-record facts of Iqbal v. Hasty, 490 F.3d 143 (2d Cir. 2007); Ashcroft v. Iqbal, 556 U.S. 662 (2009) (opinion); Supreme Court docket No. 07-1015. Run under ca2.world (`litigate worlds`); expect.toml records each period's rule date."
+perspective officials
+
+parties {
+  officials: applicant Party
+}
+
+events {
+  mtd-denied: 2005-09-27 UsPartyJudgmentEntered() on officials
+  rehearing-denied: 2007-09-18 CertTriggerEntered() on officials
+}
+
+stakes { recorded: 0.usd }

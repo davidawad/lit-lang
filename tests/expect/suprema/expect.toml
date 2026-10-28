@@ -1,0 +1,67 @@
+# Suprema, Inc. v. International Trade Commission, 742 F.3d 1350 (Fed.
+# Cir. 2013), vacated on reh'g en banc, 796 F.3d 1338 (Fed. Cir. 2015)
+# (lg-wvlf.3, ported from tests/cases/suprema.json; public record). The
+# Commission's violation finding and exclusion order stand; no certiorari
+# petition was found.
+#
+# Sources: 76 Fed. Reg. 69762 (Nov. 9, 2011), ITC notice of final
+# determination, Inv. No. 337-TA-720
+# <https://www.govinfo.gov/content/pkg/FR-2011-11-09/pdf/2011-27884.pdf>;
+# Suprema, Inc. v. ITC, 742 F.3d 1350 (Fed. Cir. 2013) (FindLaw)
+# <https://caselaw.findlaw.com/court/us-federal-circuit/1652241.html>;
+# Hunton: Suprema, Inc. v. ITC — Federal Circuit en banc hearing
+# <https://www.hunton.com/en/insights/suprema-inc-v-itc-federal-circuit-en-banc-hearing.html>;
+# Suprema, Inc. v. ITC, 796 F.3d 1338 (Fed. Cir. 2015) (en banc)
+# <https://www.cafc.uscourts.gov/opinions-orders/12-1170.opinion.8-6-2015.1.pdf>;
+# Suprema, Inc. v. ITC, No. 2012-1170 (Fed. Cir. Sept. 14, 2015)
+# (nonprecedential, after remand)
+# <https://www.cafc.uscourts.gov/opinions-orders/12-1170.opinion.9-9-2015.2.pdf>.
+#
+# From 2011-06-17 (the date the final ID issued (the 12 days actually run
+# from service, which the sources don't date)): 19 C.F.R. § 210.43(a)(1):
+# 12 days, computed under 19 C.F.R. § 201.14(a) (via § 210.6(a)). The
+# count begins with the first business day after the event: Friday Jun 17
+# -> Monday Jun 20 (day 1). Because the period is 7 days or more, calendar
+# days are counted: day 12 = Friday Jul 1, not a holiday. Jun 20, 2011 was
+# an ordinary business day; Juneteenth became a federal holiday only in
+# 2021. Due 2011-07-01. Petitions filed 2011-07-05, four days after this
+# date. That suggests the ID was served after its issue date, or the time
+# was extended; neither is in the sources read. (Before the engine's
+# holiday calendar respected Juneteenth's 2021 start, the op anchored at
+# Jun 21 and returned Jul 5.)
+#
+# From 2013-12-13 (the panel's judgment): Fed. Cir. R. 40(a)(1)(B): 45
+# days because the Commission, a U.S. agency, is a party (links.json
+# patches cafc@itc). Dec 13 + 18 = Dec 31; + 27 = Jan 27 (45), a Monday.
+# Due 2014-01-27. Petition filing dates not found; rehearing en banc was
+# granted in May 2014.
+#
+# Re-record with `litigate test tests/expect --bless`, and say why in the
+# commit.
+
+paths = ["docs/litigate/famous"]
+
+[[run]]
+world = "cafc.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = ["famous-cases"]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "famous-cases::itc-petition-for-review"
+trigger = "2011-06-17"
+due = "2011-07-01"
+status = "lapsed"
+cite = "19 C.F.R. § 210.43(a)(1) as in force in 2011 (text not vendored)"
+counted_by = "72 FR 13689"
+
+[[run.expect.w1.deadlines]]
+deadline = "famous-cases::rehearing-us-party"
+trigger = "2013-12-13"
+due = "2014-01-27"
+status = "lapsed"
+cite = "FRAP 40(a)(1) before the December 2024 amendment (text not vendored)"
+counted_by = "FRAP (2011 ed.) 26(a)"

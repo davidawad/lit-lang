@@ -1,0 +1,18 @@
+case twombly
+uses famous-cases ^1.0.0
+as_of 2006-06-26
+summary "Bell Atlantic Corp. v. Twombly, 550 U.S. 544 (2007): the S.D.N.Y. dismissal of October 8, 2003, the Second Circuit's judgment of October 3, 2005 and its denial of rehearing on January 3, 2006."
+notes "Public-record facts of Twombly v. Bell Atlantic Corp., 313 F. Supp. 2d 174 (S.D.N.Y. 2003); Twombly v. Bell Atlantic Corp., 425 F.3d 99 (2d Cir. 2005); Twombly v. Bell Atlantic (2d Cir.) — argument date; Bell Atlantic Corp. v. Twombly, 550 U.S. 544 (2007) (opinion); Supreme Court docket No. 05-1126. Run under ca2.world (`litigate worlds`); expect.toml records each period's rule date."
+perspective bell-atlantic
+
+parties {
+  bell-atlantic: applicant Party
+}
+
+events {
+  dismissed: 2003-10-08 JudgmentEntered() on bell-atlantic
+  vacated: 2005-10-03 CircuitJudgmentEntered() on bell-atlantic
+  rehearing-denied: 2006-01-03 CertTriggerEntered() on bell-atlantic
+}
+
+stakes { recorded: 0.usd }

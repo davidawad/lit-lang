@@ -1,0 +1,18 @@
+case ebay
+uses famous-cases ^1.0.0
+as_of 2005-11-28
+summary "eBay Inc. v. MercExchange, L.L.C., 547 U.S. 388 (2006): the E.D. Va. judgment of August 6, 2003, the Federal Circuit's judgment of March 16, 2005 and its denial of rehearing on April 26, 2005."
+notes "Public-record facts of eBay Inc. FY2003 Form 10-K (litigation disclosure: verdict and judgment); MercExchange, L.L.C. v. eBay, Inc., 275 F. Supp. 2d 695 (E.D. Va. 2003); MercExchange, L.L.C. v. eBay, Inc., 401 F.3d 1323 (Fed. Cir. 2005); Supreme Court docket No. 05-130; eBay Inc. v. MercExchange, L.L.C., 547 U.S. 388 (2006) (syllabus). Run under cafc.world (`litigate worlds`); expect.toml records each period's rule date."
+perspective ebay
+
+parties {
+  ebay: applicant Party
+}
+
+events {
+  judgment: 2003-08-06 JudgmentEntered() on ebay
+  affirmed-in-part: 2005-03-16 FedCirJudgmentEntered() on ebay
+  rehearing-denied: 2005-04-26 CertTriggerEntered() on ebay
+}
+
+stakes { recorded: 0.usd }

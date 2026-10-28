@@ -1,0 +1,17 @@
+case blue-and-gold
+uses famous-cases ^1.0.0
+as_of 2007-06-26
+summary "Blue & Gold Fleet, L.P. v. United States, 492 F.3d 1308 (Fed. Cir. 2007): the Court of Federal Claims' decision of March 22, 2006 and the Federal Circuit's judgment of June 26, 2007."
+notes "Public-record facts of Blue & Gold Fleet, L.P. v. United States, 70 Fed. Cl. 487 (2006); Blue & Gold Fleet, L.P. v. United States, 492 F.3d 1308 (Fed. Cir. 2007). Run under cafc.world (`litigate worlds`); expect.toml records each period's rule date."
+perspective blue-and-gold
+
+parties {
+  blue-and-gold: applicant Party
+}
+
+events {
+  cofc-decision: 2006-03-22 CofcJudgmentEntered() on blue-and-gold
+  affirmed: 2007-06-26 UsPartyCircuitJudgmentEntered() on blue-and-gold
+}
+
+stakes { recorded: 0.usd }

@@ -1,0 +1,17 @@
+case suprema
+uses famous-cases ^1.0.0
+as_of 2015-09-14
+summary "Suprema, Inc. v. International Trade Commission, 742 F.3d 1350 (Fed. Cir. 2013), vacated on reh'g en banc, 796 F.3d 1338 (Fed. Cir. 2015): the final initial determination of June 17, 2011 and the panel's judgment of December 13, 2013."
+notes "Public-record facts of 76 Fed. Reg. 69762 (Nov. 9, 2011), ITC notice of final determination, Inv. No. 337-TA-720; Suprema, Inc. v. ITC, 742 F.3d 1350 (Fed. Cir. 2013) (FindLaw); Hunton: Suprema, Inc. v. ITC — Federal Circuit en banc hearing; Suprema, Inc. v. ITC, 796 F.3d 1338 (Fed. Cir. 2015) (en banc); Suprema, Inc. v. ITC, No. 2012-1170 (Fed. Cir. Sept. 14, 2015) (nonprecedential, after remand). Run under cafc.world (`litigate worlds`); expect.toml records each period's rule date."
+perspective suprema
+
+parties {
+  suprema: applicant Party
+}
+
+events {
+  final-id: 2011-06-17 InitialDeterminationIssued() on suprema
+  panel-judgment: 2013-12-13 UsPartyCircuitJudgmentEntered() on suprema
+}
+
+stakes { recorded: 0.usd }

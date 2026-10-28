@@ -1,0 +1,17 @@
+case oil-states
+uses famous-cases ^1.0.0
+as_of 2017-06-12
+summary "Oil States Energy Services, LLC v. Greene's Energy Group, LLC, 584 U.S. 325 (2018): the Board's final written decision of May 1, 2015 and the Federal Circuit's denial of rehearing on July 26, 2016."
+notes "Public-record facts of Greene's Energy Group v. Oil States, IPR2014-00216, final written decision summary (Nat'l L. Rev.); Oil States Energy Servs. v. Greene's Energy Grp., No. 2015-1855 (Fed. Cir. May 4, 2016) (Rule 36 judgment); Supreme Court docket No. 16-712; Oil States Energy Services, LLC v. Greene's Energy Group, LLC, 584 U.S. 325 (2018) (opinion). Run under cafc.world (`litigate worlds`); expect.toml records each period's rule date."
+perspective oil-states
+
+parties {
+  oil-states: applicant Party
+}
+
+events {
+  fwd: 2015-05-01 BoardDecisionEntered() on oil-states
+  rehearing-denied: 2016-07-26 CertTriggerEntered() on oil-states
+}
+
+stakes { recorded: 0.usd }

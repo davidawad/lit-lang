@@ -248,8 +248,8 @@ sources/               vendored L0 primary-law text (see sources/PROVENANCE.md)
 docs/                  ARCHITECTURE, PACK_SCHEMA, COST_FUNCTIONS, CRITIQUE, CALIBRATION, UNCERTAINTY
 docs/                  ARCHITECTURE, PACK_SCHEMA, COST_FUNCTIONS, CRITIQUE, CALIBRATION, SETTLEMENT
 tests/fixtures/ts-parity/   golden outputs from the original TS engine
-tests/cases/           famous cases replayed through the packs (+ story snapshots)
 tests/golden/          hand-checked 2-6 node graphs; tests/README.md explains the layers
+tests/expect/          expect tests: a matter per directory, its worlds and recorded values (famous cases included)
 ```
 
 Issue tracking: [GitHub Issues](https://github.com/davidawad/litgraph/issues)

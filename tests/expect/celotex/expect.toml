@@ -1,0 +1,52 @@
+# Celotex Corp. v. Catrett, 477 U.S. 317 (1986) (lg-wvlf.3, ported from
+# tests/cases/celotex.json; public record). Reversed and remanded, 477
+# U.S. 317 (June 25, 1986).
+#
+# Sources: Catrett v. Johns-Manville Sales Corp., 756 F.2d 181 (D.C. Cir.
+# 1985)
+# <https://law.resource.org/pub/us/case/reporter/F2/756/756.F2d.181.83-1694.html>;
+# Celotex Corp. v. Catrett, 477 U.S. 317 (1986) (opinion)
+# <https://www.law.cornell.edu/supremecourt/text/477/317>.
+#
+# From 1982-07-21 (the bench ruling granting summary judgment (the date
+# the D.C. Circuit gives)): FRAP 4(a)(1)(A): 30 days. Jul 21 + 10 = Jul
+# 31; + 20 = Aug 20 (30), a Friday. Due 1982-08-20. Not found. The rule
+# runs from entry of the separate judgment, whose date was not found
+# either, so this trigger is the ruling date.
+#
+# From 1985-03-08 (the D.C. Circuit's judgment, assuming no rehearing
+# petition): Sup. Ct. R. 13.1: 90 days. Mar 8 + 23 = Mar 31; + 30 = Apr 30
+# (53); + 31 = May 31 (84); + 6 = Jun 6 (90), a Thursday. Due 1985-06-06.
+# Filing date not found. Recorded as due unknown: lit/core declares Sup.
+# Ct. R. 30.1 only from its 2023 edition, and the earlier editions are not
+# vendored, so no counting rule is in force on the trigger date.
+#
+# Re-record with `litigate test tests/expect --bless`, and say why in the
+# commit.
+
+paths = ["docs/litigate/famous"]
+
+[[run]]
+world = "cadc.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = ["famous-cases"]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "famous-cases::notice-of-appeal"
+trigger = "1982-07-21"
+due = "1982-08-20"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(1)(A)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run.expect.w1.deadlines]]
+deadline = "famous-cases::cert-petition"
+trigger = "1985-03-08"
+due = "unknown"
+status = "open"
+cite = "28 U.S.C. § 2101(c)"
+counted_by = "-"

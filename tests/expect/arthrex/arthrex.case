@@ -1,0 +1,17 @@
+case arthrex
+uses famous-cases ^1.0.0
+as_of 2023-05-22
+summary "United States v. Arthrex, Inc., 594 U.S. 1 (2021): the Board's final written decision of May 2, 2018 and the Federal Circuit's denial of rehearing after the second appeal on August 11, 2022."
+notes "Public-record facts of Arthrex, Inc. v. Smith & Nephew, Inc., 35 F.4th 1328 (Fed. Cir. 2022) (history of the IPR, the first appeal, and the Director-review remand); Supreme Court docket No. 19-1434; United States v. Arthrex, Inc., 594 U.S. 1 (2021) (opinion); Supreme Court docket No. 22-639 (Arthrex, Inc. v. Smith & Nephew, Inc.). Run under cafc.world (`litigate worlds`); expect.toml records each period's rule date."
+perspective arthrex
+
+parties {
+  arthrex: applicant Party
+}
+
+events {
+  fwd: 2018-05-02 BoardDecisionEntered() on arthrex
+  rehearing-denied: 2022-08-11 CertTriggerEntered() on arthrex
+}
+
+stakes { recorded: 0.usd }

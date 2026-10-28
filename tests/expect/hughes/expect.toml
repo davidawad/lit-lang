@@ -1,0 +1,66 @@
+# Hughes Aircraft Co. v. United States, 717 F.2d 1351 (Fed. Cir. 1983); 86
+# F.3d 1566 (Fed. Cir. 1996), vacated, 520 U.S. 1183 (1997); 140 F.3d 1470
+# (Fed. Cir. 1998) (lg-wvlf.3, ported from tests/cases/hughes.json; public
+# record). Certiorari denied (March 1, 1999); the judgment for Hughes
+# stands.
+#
+# Sources: Hughes Aircraft Co. v. United States, 717 F.2d 1351 (Fed. Cir.
+# 1983) <https://static.case.law/f2d/717/cases/1351-01.json>; Hughes
+# Aircraft Co. v. United States, 31 Fed. Cl. 481 (1994)
+# <https://static.case.law/fed-cl/31/cases/0481-01.json>; Hughes Aircraft
+# Co. v. United States, 86 F.3d 1566 (Fed. Cir. 1996)
+# <https://static.case.law/f3d/86/cases/1566-01.json>; United States v.
+# Hughes Aircraft Co., 520 U.S. 1183 (1997) (GVR)
+# <https://static.case.law/us/520/cases/1183-04.json>; Hughes Aircraft Co.
+# v. United States, 140 F.3d 1470 (Fed. Cir. 1998)
+# <https://static.case.law/f3d/140/cases/1470-01.json>; United States v.
+# Hughes Aircraft Co., petition for a writ of certiorari (No. 98-871)
+# <https://www.justice.gov/osg/brief/us-v-hughes-aircraft-co-petition>;
+# United States v. Hughes Aircraft Co., 525 U.S. 1177 (1999) (cert.
+# denied) <https://static.case.law/us/525/cases/1177-06.json>.
+#
+# From 1982-10-08 (the Court of Claims' final judgment for the United
+# States): 28 U.S.C. § 2522 / FRAP 4(a)(1)(B): 60 days. Oct 8 + 23 = Oct
+# 31; + 30 = Nov 30 (53); + 7 = Dec 7 (60), a Tuesday. Due 1982-12-07.
+# Notice-of-appeal date not found.
+#
+# From 1998-07-28 (denial of rehearing en banc (Sup. Ct. R. 13.3)): Sup.
+# Ct. R. 13.1: 90 days. Jul 28 + 3 = Jul 31; + 31 = Aug 31 (34); + 30 =
+# Sep 30 (64); + 26 = Oct 26 (90), a Monday. Due 1998-10-26. The Solicitor
+# General's petition is dated about November 1998, after the unextended
+# date; an extension is the likely explanation but was not found in the
+# sources read. The deadline check measures the second trip through
+# cert-window-file; the op computes the same length for either. Recorded
+# as due unknown: lit/core declares Sup. Ct. R. 30.1 only from its 2023
+# edition, and the earlier editions are not vendored, so no counting rule
+# is in force on the trigger date.
+#
+# Re-record with `litigate test tests/expect --bless`, and say why in the
+# commit.
+
+paths = ["docs/litigate/famous"]
+
+[[run]]
+world = "cafc.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = ["famous-cases"]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "famous-cases::cofc-notice-of-appeal"
+trigger = "1982-10-08"
+due = "1982-12-07"
+status = "lapsed"
+cite = "28 U.S.C. § 2522"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run.expect.w1.deadlines]]
+deadline = "famous-cases::cert-petition"
+trigger = "1998-07-28"
+due = "unknown"
+status = "open"
+cite = "28 U.S.C. § 2101(c)"
+counted_by = "-"

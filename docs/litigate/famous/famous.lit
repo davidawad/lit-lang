@@ -1,0 +1,120 @@
+module famous-cases.periods
+
+import core.frap26.{ frap26 }
+import core.itc210.{ itc210 }
+import core.supct30.{ sup-ct-30 }
+import mpep.deadlines.{ uspto-1-7 }
+
+start famous
+
+/// The package declares periods only, no procedure: a matter records the
+/// orders its periods run from, each firing its deadline's trigger.
+decision famous: "The famous cases' periods (no procedure)" by applicant effective [1968-07-01, ..)
+{
+  rest "Record the orders the periods run from" -> recorded
+}
+
+terminal recorded: "The orders recorded" effective [1968-07-01, ..)
+
+// The key deadlines of the famous cases (tests/expect/<case>/expect.toml),
+// each the rule's date for the period, not the day the parties filed. A
+// period here runs from entry (or issue) of the order it names, never from
+// service, so no trigger carries a service method.
+
+/// A district court enters the judgment or order appealed from.
+event JudgmentEntered()
+/// A district court enters the judgment or order appealed from in a case
+/// where the United States, or its officer sued for acts on its behalf, is
+/// a party.
+event UsPartyJudgmentEntered()
+/// The Court of Federal Claims (before October 1, 1982, the Court of
+/// Claims) enters its judgment.
+event CofcJudgmentEntered()
+/// The Patent Trial and Appeal Board enters its final written decision.
+event BoardDecisionEntered()
+/// An ITC administrative law judge issues the final initial determination
+/// on violation.
+event InitialDeterminationIssued()
+/// A regional court of appeals enters its judgment, no United States party.
+event CircuitJudgmentEntered()
+/// The Federal Circuit enters its judgment, no United States party.
+event FedCirJudgmentEntered()
+/// A court of appeals enters its judgment where the United States or its
+/// agency is a party.
+event UsPartyCircuitJudgmentEntered()
+/// The judgment below the Supreme Court is entered, or rehearing of it is
+/// denied (Sup. Ct. R. 13.3).
+event CertTriggerEntered()
+
+/// FRAP 4(a)(1)(A): a civil notice of appeal is due 30 days after entry of
+/// the judgment or order appealed from (30 days since FRAP took effect on
+/// July 1, 1968; 28 U.S.C. § 2107(a)).
+deadline notice-of-appeal: 30.days after JudgmentEntered() counted_by frap26 effective [1968-07-01, ..) cite "FRAP (2008 ed.) 4(a)(1)(A)" historical
+{
+  forum frap
+}
+
+/// FRAP 4(a)(1)(B): 60 days when the United States, its officer or agency
+/// is a party (28 U.S.C. § 2107(b)).
+deadline notice-of-appeal-us-party: 60.days after UsPartyJudgmentEntered() counted_by frap26 effective [1968-07-01, ..) cite "FRAP (2008 ed.) 4(a)(1)(B)" historical
+{
+  forum frap
+}
+
+/// 28 U.S.C. § 2522: an appeal from the Court of Federal Claims is taken
+/// "within the time and in the manner prescribed for appeals to United
+/// States courts of appeals from the United States district courts", the
+/// 60 days of FRAP 4(a)(1)(B) with the United States a party. Since the
+/// Federal Courts Improvement Act took effect on October 1, 1982.
+deadline cofc-notice-of-appeal: 60.days after CofcJudgmentEntered() counted_by frap26 effective [1982-10-01, ..) cite "28 U.S.C. § 2522" historical
+{
+  forum frap
+}
+
+/// 37 C.F.R. § 90.3(a)(1) as added in 2012: a notice of appeal from the
+/// Board is due 63 days after the date of the final decision, counted
+/// under 37 C.F.R. § 1.7 (§ 90.3(b)(2); 35 U.S.C. § 21(b)).
+deadline ptab-notice-of-appeal: 63.days after BoardDecisionEntered() counted_by uspto-1-7 effective [2012-09-16, ..) known_at 2012-08-14 cite "77 FR 48677" historical
+{
+  forum ptab
+}
+
+/// 19 C.F.R. § 210.43(a)(1): a petition for review of a final initial
+/// determination is due 12 days after service, counted under § 201.14(a)
+/// through § 210.6(a). The period runs here from the day the ID issued,
+/// which the sources date (service is not dated). The text in force in
+/// 2011 is not vendored; the 12 days are the current section's.
+deadline itc-petition-for-review: 12.days after InitialDeterminationIssued() counted_by itc210 effective [2007-03-23, ..) cite ?("19 C.F.R. § 210.43(a)(1) as in force in 2011 (text not vendored)")
+{
+  forum itc
+}
+
+/// FRAP 40(a)(1): a petition for panel rehearing is due 14 days after
+/// entry of judgment, no United States party.
+deadline rehearing: 14.days after CircuitJudgmentEntered() counted_by frap26 effective [1968-07-01, ..) cite ?("FRAP 40(a)(1) before the December 2024 amendment (text not vendored)")
+{
+  forum frap
+}
+
+/// The Federal Circuit's rehearing period, no United States party: 30 days
+/// under its rule. The period in force in 2005 is not vendored or checked;
+/// the 30 days are the current Fed. Cir. R. 40's.
+deadline fedcir-rehearing: 30.days after FedCirJudgmentEntered() counted_by frap26 effective [1982-10-01, ..) cite ?("Fed. Cir. R. 40 as in force in 2005 (text not vendored)")
+{
+  forum frap
+}
+
+/// FRAP 40(a)(1): 45 days after entry of judgment when the United States or
+/// its agency is a party.
+deadline rehearing-us-party: 45.days after UsPartyCircuitJudgmentEntered() counted_by frap26 effective [1968-07-01, ..) cite ?("FRAP 40(a)(1) before the December 2024 amendment (text not vendored)")
+{
+  forum frap
+}
+
+/// 28 U.S.C. § 2101(c) and Sup. Ct. R. 13.1: a petition for certiorari to
+/// review a civil judgment is due 90 days after its entry, or after the
+/// denial of rehearing (Sup. Ct. R. 13.3).
+deadline cert-petition: 90.days after CertTriggerEntered() counted_by sup-ct-30 effective [1948-09-01, ..) known_at 1948-06-25 cite "28 U.S.C. § 2101(c)" historical
+{
+  forum scotus
+}

@@ -56,7 +56,8 @@ table of case, world, field (a filing's verdict, a deadline's due date
 and status, an expectation), before and after, for each value that moved.
 `just ci-scoped` posts it in the job log. A change is for the reviewer to
 read, never a failure. The matters are public rulings
-(sources/change-corpus/rulings).
+(sources/change-corpus/rulings); docs/litigate/expect-corpus.md
+plans the leading decision per circuit per rule that extends them.
 
 ## Famous cases (`cases/`)
 

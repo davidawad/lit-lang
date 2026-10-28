@@ -1,0 +1,299 @@
+module bankr-iln-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ PetitionFiled }
+
+// The Bankr. N.D. Ill. court's own periods, counted under FRBP 9006(a).
+// The FRBP periods (schedules, claims, discharge, dischargeability, the
+// adversary answer and summons, appeals) are lit/frbp's and are not
+// declared again. Motions are noticed for presentment (LBR 9013-1), so many
+// periods run back from the date of presentment.
+//
+// Stated in the rules but not declared: the final filing-fee installment
+// no later than 120 days after the petition (LBR 1006-1(D)), FRBP
+// 1006(b)(2)'s, so only the 60-day first half is declared; a fee agreement
+// signed after the FRBP 2016(b) disclosure filed within 14 days (LBR
+// 2016-1), FRBP 2016(b)(2)'s supplemental statement; the business-day
+// periods (a notice of objection 2 business days before presentment, LBR
+// 9013-1(F)(1); a Complex Chapter 11 Case Management Summary within three
+// business days of the petition and first day motions within two, LBR
+// 9090-2(B), (C); an omnibus hearing agenda two business days before, LBR
+// 9090-3(C)); the investigation periods a financing order must leave open
+// (75 days after entry, or 60 after a committee forms, LBR
+// 4001-2(C)(1)(ii)) and the final financing hearing no earlier than 7 days
+// after a committee's appointment (LBR 4001-2(F)), conditions on the
+// court's orders; the clerk's and court's own acts (transfer delayed 14
+// days after the order, LBR 1014-1(A); a remand order's mailing delayed
+// fourteen days, LBR 9027-2; transmittal of proposed findings, LBR 9033-1);
+// and the attorney discipline waiting periods (five years before an
+// indefinitely suspended attorney petitions for reinstatement and one year
+// after a denial, LBR 9029-4B(E)(3), (10)) and the restriction of a filer
+// for no more than 10 years (LBR 9029-4C(C)). The fifteen-page limit of a
+// Complex Chapter 11 Case (LBR 9090-3(F)) repeats the general one (LBR
+// 5005-2(D)); it is declared once. The response windows of LBR
+// 9090-3(E)(1) apply as the motion was noticed 21 days or more, or fewer,
+// before the omnibus hearing; both are declared.
+/// A motion, objection, application, brief, memorandum, response or reply,
+/// without leave of court (LBR 5005-2(D); in a Complex Chapter 11 Case, LBR
+/// 9090-3(F)).
+limit motion-paper {
+  pages <= 15 cite "Bankr. N.D. Ill. LBR 5005-2(D)"
+} cite "Bankr. N.D. Ill. LBR 5005-2(D)"
+
+/// The clerk divides a joint case into two cases after one debtor's
+/// conversion (LBR 1019-1).
+event JointCaseDivided()
+/// The hearing on confirmation of a chapter 11 plan (LBR 3018-1).
+event ConfirmationHearing()
+/// The clerk issues a notice of deficiency to an unrepresented debtor who
+/// presented no acceptable photo identification (LBR 5005-1(E)(5)).
+event IdentityDeficiencyNoticed()
+/// The date of presentment of a motion to dismiss an adversary proceeding
+/// objecting to or seeking to revoke a discharge (LBR 7041-1).
+event DischargeDismissalPresentment()
+/// A judgment allowing costs is entered (LBR 7054-1(A)).
+event CostsJudgmentEntered()
+/// The date of presentment of a motion: the day it is to be presented in open
+/// court under its notice (LBR 1000-1(8), 9013-1).
+event Presentment()
+/// A motion is filed (LBR 9013-1(E)).
+event MotionFiled()
+/// A notice period longer than 30 days that applicable law requires for a
+/// motion expires (LBR 9013-1(E)).
+event NoticePeriodExpired()
+/// The court enters an order changing the proposed order in a way that
+/// affects a pro se party (LBR 9013-1(K)).
+event ModifiedOrderEntered()
+/// A notice of removal of a claim or cause of action from a state court is
+/// filed under FRBP 9027(a) (LBR 9027-1).
+event RemovalNoticed()
+/// A statement of disciplinary charges is served on an attorney (LBR
+/// 9029-4B(B)(4), (6), (7)).
+event ChargesServed()
+/// The bankruptcy court appoints the United States Trustee to investigate and
+/// prosecute a complaint of misconduct or to investigate a petition for
+/// reinstatement (LBR 9029-4B(B)(9), (E)(5)).
+event TrusteeDisciplineAppointed()
+/// The chief judge notifies a party that the court has been asked to declare
+/// it a restricted filer (LBR 9029-4C(B)(3)).
+event RestrictionResponseNoticed()
+/// All appeals in a matter whose exhibits were deposited with the clerk are
+/// completed (LBR 9070-1(B)).
+event AppealsCompleted()
+/// The clerk notifies a party to remove its deposited exhibits (LBR
+/// 9070-1(B)).
+event ExhibitRemovalNoticed()
+/// A Notice of Designation as a Complex Chapter 11 Case is filed (LBR
+/// 9090-1(C)).
+event ComplexDesignationFiled()
+/// The omnibus hearing at which a motion in a Complex Chapter 11 Case is
+/// noticed for presentment (LBR 9090-3(D), (E)).
+event OmnibusPresentment()
+
+/// LBR 1006-1(D): the clerk's order on an application to pay the filing fee
+/// in installments requires the debtor to pay fifty percent of the fee no
+/// later than 60 days after the petition date, in no more than four
+/// installments.
+deadline installment-first-half-period: 60.days after PetitionFiled() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 1006-1(D)"
+{
+  forum frcp
+}
+
+/// LBR 1019-1: when one debtor in a joint case converts and the clerk divides
+/// the case, each debtor files all necessary amendments to the schedules and
+/// statement of financial affairs within 14 days after the division.
+deadline divided-case-amendments-period: 14.days after JointCaseDivided() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 1019-1"
+{
+  forum frcp
+}
+
+/// LBR 3018-1(2): unless the court orders otherwise, the plan proponent files
+/// a ballot report on the court's form at least three days before the chapter
+/// 11 confirmation hearing; ballots are filed with the clerk (LBR 3018-1(1)).
+deadline ballot-report-period: 3.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 3018-1"
+{
+  forum frcp
+}
+
+/// LBR 5005-1(E)(5): an unrepresented debtor's want of acceptable photo
+/// identification is cured within 14 days of the clerk's notice of
+/// deficiency, or the clerk moves to dismiss the case.
+deadline identity-deficiency-cure-period: 14.days after IdentityDeficiencyNoticed() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 5005-1(E)"
+{
+  forum frcp
+}
+
+/// LBR 7041-1(A), (B): no proceeding to deny or revoke a discharge is
+/// dismissed except on motion with 21 days' notice to the debtor, the United
+/// States Trustee, any trustee, all creditors and parties in interest; a
+/// party who would prosecute it seeks leave when the motion is presented. The
+/// court may shorten the notice for cause (LBR 7041-1(D)).
+deadline discharge-dismissal-notice-period: 21.days before DischargeDismissalPresentment() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 7041-1(A)"
+{
+  forum frcp
+}
+
+/// LBR 7054-1(A): the prevailing party may file and serve a bill of costs
+/// within thirty days of the entry of a judgment allowing costs; otherwise
+/// costs under 28 U.S.C. § 1920, other than the clerk's, are waived. A motion
+/// filed before the time expires may extend it.
+deadline bill-of-costs-period: 30.days after CostsJudgmentEntered() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 7054-1(A)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(D): the notice of motion (Local Form G-3) is served at least 7
+/// days before the date of presentment; the motion is filed no later than the
+/// date it is served (LBR 9013-1(A)(2)).
+deadline motion-notice-period: 7.days before Presentment() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 9013-1(D)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(E): a motion is presented no more than 30 days after it is
+/// filed, unless applicable law requires a longer notice period.
+deadline motion-presentment-period: 30.days after MotionFiled() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 9013-1(E)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(E): if applicable law requires a notice period longer than 30
+/// days, the date of presentment is no later than 7 days after the notice
+/// period expires.
+deadline long-notice-presentment-period: 7.days after NoticePeriodExpired() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 9013-1(E)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(K): if the court enters an order changing the proposed order in
+/// a way that affects a pro se party, the movant serves the pro se party a
+/// copy within three days of its entry and files a proof of service.
+deadline modified-order-service-period: 3.days after ModifiedOrderEntered() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 9013-1(K)"
+{
+  forum frcp
+}
+
+/// LBR 9027-1: a party removing a claim or cause of action from a state court
+/// under 28 U.S.C. § 1452(a) files a complete copy of the state court record
+/// no later than 21 days after the notice of removal is filed.
+deadline removed-record-period: 21.days after RemovalNoticed() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 9027-1"
+{
+  forum frcp
+}
+
+/// LBR 9029-4B(B)(4), (7): within 28 days after service of a statement of
+/// charges, the charged attorney submits to the chief judge an answer showing
+/// cause why the attorney should not be disciplined; unanswered allegations
+/// are admitted (LBR 9029-4B(B)(8)).
+deadline disciplinary-answer-period: 28.days after ChargesServed() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 9029-4B(B)"
+{
+  forum frcp
+}
+
+/// LBR 9029-4B(B)(9), (E)(5): the United States Trustee appointed to
+/// investigate a complaint of misconduct or a petition for reinstatement may
+/// decline and notifies the chief judge of that decision within 30 days.
+deadline trustee-discipline-declination-period: 30.days after TrusteeDisciplineAppointed() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 9029-4B(B)"
+{
+  forum frcp
+}
+
+/// LBR 9029-4C(B)(3), (4): a party the court has been asked to declare a
+/// restricted filer has the right to respond in writing within 30 days of the
+/// chief judge's notice.
+deadline restricted-filer-response-period: 30.days after RestrictionResponseNoticed() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 9029-4C(B)"
+{
+  forum frcp
+}
+
+/// LBR 9070-1(B): exhibits deposited with the clerk are removed by the party
+/// responsible for them within ninety days after all appeals have been
+/// completed.
+deadline exhibit-removal-period: 90.days after AppealsCompleted() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 9070-1(B)"
+{
+  forum frcp
+}
+
+/// LBR 9070-1(B): exhibits still not removed thirty days after the clerk's
+/// notice may be sold or disposed of as the court orders.
+deadline exhibit-removal-notice-period: 30.days after ExhibitRemovalNoticed() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 9070-1(B)"
+{
+  forum frcp
+}
+
+/// LBR 9090-1(B)(2): a chapter 11 debtor whose case is not a Complex Chapter
+/// 11 Case by its size may file a Notice of Designation as a Complex Chapter
+/// 11 Case within 30 days of the petition date, explaining why the
+/// designation is warranted.
+deadline complex-designation-period: 30.days after PetitionFiled() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 9090-1(B)"
+{
+  forum frcp
+}
+
+/// LBR 9090-1(C): no later than 14 days after a Notice of Designation as a
+/// Complex Chapter 11 Case is filed, a party in interest may file an
+/// objection, noticed for presentment as a motion.
+deadline complex-designation-objection-period: 14.days after ComplexDesignationFiled() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 9090-1(C)"
+{
+  forum frcp
+}
+
+/// LBR 9090-3(D)(1), (2): in a Complex Chapter 11 Case the notice of motion
+/// is filed and served at least 14 days before the omnibus hearing of
+/// presentment, unless the motion asks for shortened notice for cause;
+/// otherwise the motion is continued to the next omnibus hearing.
+deadline omnibus-notice-period: 14.days before OmnibusPresentment() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 9090-3(D)"
+{
+  forum frcp
+}
+
+/// LBR 9090-3(E)(1)(a): if a motion is noticed for presentment 21 days or
+/// more before the omnibus hearing, an opposing party may file a response no
+/// later than 7 days before it.
+deadline omnibus-response-period: 7.days before OmnibusPresentment() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 9090-3(E)"
+{
+  forum frcp
+}
+
+/// LBR 9090-3(E)(1)(b): if a motion is noticed for presentment fewer than 21
+/// days before the omnibus hearing, an opposing party may file a response no
+/// later than 3 days before it; absent a response the movant may file a
+/// certification of no objection (LBR 9090-3(E)(2)).
+deadline omnibus-short-response-period: 3.days before OmnibusPresentment() counted_by frcp6 cite "Bankr. N.D. Ill. LBR 9090-3(E)"
+{
+  forum frcp
+}
+
+start motion-noticed
+
+state motion-noticed: "Motion filed and noticed for presentment" by applicant cite "Bankr. N.D. Ill. LBR 9013-1(C)"
+{
+  note "A motion is filed with a notice of motion on Local Form G-3, its exhibits, a proof of service under LBR 5005-3 and a Fillable proposed order (LBR 9013-1(C)); the notice is served at least 7 days before the date of presentment (LBR 9013-1(D)), and the motion is presented no more than 30 days after filing on a regular motion day of the assigned judge (LBR 9013-1(E)). Emergency motions follow LBR 9013-2. The motion's FRBP periods are lit/frbp's."
+  edge-motion-noticed-objection "Notice of objection filed 2 business days before presentment" -> objected {
+    authority cite "Bankr. N.D. Ill. LBR 9013-1(F)"
+  }
+  edge-motion-noticed-unopposed "No timely notice of objection; motion may be granted without a hearing" -> decided {
+    authority cite "Bankr. N.D. Ill. LBR 9013-1(F)"
+  }
+}
+
+state objected: "Notice of objection filed" by opponent cite "Bankr. N.D. Ill. LBR 9013-1(F)"
+{
+  note "The notice of objection need only say that the party objects; no reason need be given (LBR 9013-1(F)(1)). The court may set a briefing schedule (LBR 9014-1(A)); a memorandum, response or reply not filed when due is waived (LBR 9014-1(B))."
+  edge-objected-presentment "Motion called on the date of presentment" -> presentment {
+    authority cite "Bankr. N.D. Ill. LBR 9013-1(F)"
+  }
+}
+
+decision presentment: "Motion called at presentment" by court cite "Bankr. N.D. Ill. LBR 9013-1(E)"
+{
+  note "Oral argument is in the court's discretion (LBR 9013-1(G)); a motion not presented at the time set may be denied (LBR 9013-1(I))."
+  edge-presentment-decided "Motion granted or denied" -> decided {
+    authority cite "Bankr. N.D. Ill. LBR 9013-1(G)"
+  }
+}
+
+terminal decided: "Motion decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. N.D. Ill. LBR 1000-2(A)"
+{
+  note "The Local Bankruptcy Rules, promulgated under FRCP 83 and FRBP 9029, govern all bankruptcy cases and proceedings as defined in 28 U.S.C. § 157 (LBR 1000-2(A)); the District Court Local Rules apply only as they or these rules provide (LBR 1000-2(C))."
+}

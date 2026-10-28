@@ -11,6 +11,7 @@
 
 - Source: https://www.laed.uscourts.gov/sites/default/files/local_rules/2022%20CRIMINAL%20RULES%20LAED%20w%20Amendments%203.1.22.pdf (official site; 14 pages, sha256 70dc701024aae4682a84b6e5ed7525c21066634cc46681035404def2bca3e422).
 - Edition: Effective March 1, 2022 (amendments 3.1.22), as stated on the document and linked from https://www.laed.uscourts.gov/attorney-information/rules-and-orders/local-rules. Companion to laed-local-civil-rules.txt; not shared with lamd or lawd.
+- Also the criminal local rules (lg-gddt): this document is the E.D. La. Local Criminal Rules (LCrR); the civil rules are laed-local-civil-rules.txt.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 1041b19c19a1bd73076bd6a8ef24a5647832bf4872d2a9524985969f52dae22c. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `laed/original/laed-local-criminal-rules.pdf` as served (sha256 70dc701024aae4682a84b6e5ed7525c21066634cc46681035404def2bca3e422); extraction sha256 1041b19c19a1bd73076bd6a8ef24a5647832bf4872d2a9524985969f52dae22c.

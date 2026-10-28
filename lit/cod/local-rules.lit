@@ -1,0 +1,268 @@
+module cod-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Colorado's own civil periods, computed under FRCP 6(a),
+// which governs a period stated in a local rule (D.C.COLO.LCivR 30.1 and
+// 45.1 say so in terms). Rules that state no period this layer can count
+// stay out: the one stipulated extension of not more than 21 days beyond
+// an FRCP response time (D.C.COLO.LCivR 6.1(a)), a cap, not a deadline;
+// the objection to a motion to restrict, due three court business days
+// after its posting (D.C.COLO.LCivR 7.2(d)), counted in court business
+// days, which frcp6 does not count; the alternative consent deadline of 45
+// days after the first response other than an answer (D.C.COLO.LCivR
+// 40.1(c)(4), 72.2(c)), which runs whichever of the two is earlier and is
+// declared below beside the seven-day one; the successor-magistrate
+// consent form, due the later of 21 days after reassignment or the
+// paragraph 4 deadline (D.C.COLO.LCivR 40.1(c)(11)); the clerk's notice
+// of disposal 60 days after a final judgment with no appeal (D.C.COLO.LCivR
+// 79.1(b)(1)), which binds the clerk; the jury cost notice before noon on
+// the last business day before trial (D.C.COLO.LCivR 54.2); the font,
+// margin and paper rules (D.C.COLO.LCivR 10.1); the filing hour (D.C.COLO.LCivR
+// 77.1); and the criminal, patent, AP-docket and attorney rules. The
+// earlier D. Colo. outline's FRCP flow belongs to lit/frcp, lit/frap and
+// lit/ca10; its decisions (Twombly, Iqbal, Robbins v. Oklahoma, Celotex,
+// Anderson v. Liberty Lobby, Matsushita, Unitherm, Bowles v. Russell,
+// Hamer, Microsoft v. Baker) are FRCP and FRAP authority, and no reporter
+// text is vendored, so they are removed here.
+/// An unrepresented prisoner or party's name, mailing address or telephone
+/// number changes (D.C.COLO.LCivR 5.1(c)).
+event ContactInformationChanged()
+/// A motion is served (D.C.COLO.LCivR 7.1(d)).
+event MotionServed()
+/// A response to a motion is served (D.C.COLO.LCivR 7.1(d)).
+event ResponseServed()
+/// A hearing is held on a motion (D.C.COLO.LCivR 7.1(f)).
+event MotionHearing()
+/// A document is filed as a restricted document without an accompanying
+/// motion to restrict (D.C.COLO.LCivR 7.2(e)).
+event RestrictedDocumentFiled()
+/// An order granting leave to amend or supplement a pleading is filed
+/// (D.C.COLO.LCivR 15.1(b)).
+event LeaveToAmendGranted()
+/// A deposition is taken (D.C.COLO.LCivR 30.1).
+event DepositionTaken()
+/// The scheduling conference (D.C.COLO.LCivR 40.1(c)(4), 72.2(c)).
+event SchedulingConference()
+/// The first response, other than an answer, to the operative complaint is
+/// filed (D.C.COLO.LCivR 40.1(c)(4), 72.2(c)).
+event FirstNonAnswerResponseFiled()
+/// The clerk notifies a party added after reference to a magistrate judge
+/// of its obligation to file the consent form (D.C.COLO.LCivR 40.1(c)(7)).
+event AddedPartyNotified()
+/// The clerk mails an added party notice of its right to consent to a
+/// magistrate judge's jurisdiction (D.C.COLO.LCivR 72.2(e)).
+event AddedPartyConsentNoticeMailed()
+/// The date a subpoena specifies (D.C.COLO.LCivR 45.1).
+event SubpoenaReturnDate()
+/// A judgment or final order is entered (D.C.COLO.LCivR 54.1).
+event JudgmentEntered()
+/// A motion for summary judgment is served (D.C.COLO.LCivR 56.1(a)).
+event SummaryJudgmentMotionServed()
+/// A response to a motion for summary judgment is served (D.C.COLO.LCivR
+/// 56.1(a)).
+event SummaryJudgmentResponseServed()
+/// The clerk notifies the parties that it intends to dispose of
+/// conventionally submitted material or exhibits (D.C.COLO.LCivR
+/// 79.1(b)(1)).
+event ExhibitDisposalNoticed()
+/// A notice of removal is filed (D.C.COLO.LCivR 81.1(b)).
+event RemovalNoticeFiled()
+/// A hearing or trial (D.C.COLO.LCivR 83.3).
+event HearingOrTrial()
+/// A motion for withdrawal of the reference is served (D.C.COLO.LCivR
+/// 84.1(d)(2)).
+event WithdrawalMotionServed()
+/// The bankruptcy judge mails proposed findings and conclusions in a
+/// non-core proceeding (D.C.COLO.LCivR 84.1(e)).
+event BankruptcyRecommendationsMailed()
+
+/// D.C.COLO.LCivR 5.1(c): notice of a change of name, mailing address or
+/// telephone number of an unrepresented prisoner or party is filed not
+/// later than five days after the change.
+deadline contact-change-notice-period: 5.days after ContactInformationChanged() counted_by frcp6 cite "D.C.COLO.LCivR 5.1(c)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 7.1(d): the responding party has 21 days after the date
+/// of service of a motion, or such lesser or greater time as the court may
+/// allow, to file a response. The date of service of an electronically
+/// filed motion is the date of electronic service (D.C.COLO.LCivR 5.1(d)).
+deadline motion-response-period: 21.days after MotionServed() counted_by frcp6 cite "D.C.COLO.LCivR 7.1(d)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 7.1(d): the moving party may file a reply no later than
+/// 14 days after the date of service of the response, or such lesser or
+/// greater time as the court may allow.
+deadline motion-reply-period: 14.days after ResponseServed() counted_by frcp6 cite "D.C.COLO.LCivR 7.1(d)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 7.1(f): if the matter is set for hearing, any
+/// supplemental authority is filed no later than seven days before the
+/// hearing.
+deadline supplemental-authority-period: 7.days before MotionHearing() counted_by frcp6 cite "D.C.COLO.LCivR 7.1(f)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 7.2(e): a document filed as restricted without an
+/// accompanying motion to restrict keeps the restriction the filer chose
+/// for 14 days; if no motion to restrict is filed within that period, the
+/// restriction expires and the document is open to public inspection.
+deadline restriction-motion-period: 14.days after RestrictedDocumentFiled() counted_by frcp6 cite "D.C.COLO.LCivR 7.2(e)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 15.1(b): unless otherwise ordered, if a motion for leave
+/// to amend or supplement a pleading is granted, the moving party files and
+/// serves the amended or supplemental pleading no later than 14 days after
+/// the filing of the order granting leave.
+deadline amended-pleading-period: 14.days after LeaveToAmendGranted() counted_by frcp6 cite "D.C.COLO.LCivR 15.1(b)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 30.1: unless otherwise ordered, reasonable notice for
+/// taking a deposition is not less than 14 days, as computed under Fed. R.
+/// Civ. P. 6.
+deadline deposition-notice-period: 14.days before DepositionTaken() counted_by frcp6 cite "D.C.COLO.LCivR 30.1"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 40.1(c)(4): in an action directly assigned to a
+/// magistrate judge, unless otherwise ordered, each party files the
+/// mandatory Consent/Non-Consent form no later than seven days before the
+/// scheduling conference, if any, or 45 days after the filing of the first
+/// response other than an answer, whichever is earlier.
+deadline direct-assignment-consent-period: 7.days before SchedulingConference() counted_by frcp6 cite "D.C.COLO.LCivR 40.1(c)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 40.1(c)(4): the 45-day alternative to the seven-day
+/// consent deadline; the earlier of the two governs.
+deadline direct-assignment-consent-outer-period: 45.days after FirstNonAnswerResponseFiled() counted_by frcp6 cite "D.C.COLO.LCivR 40.1(c)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 40.1(c)(7): if a party added after reference to a
+/// magistrate judge does not consent within 21 days from the date of the
+/// clerk's notice, the action is assigned to a district judge.
+deadline added-party-direct-consent-period: 21.days after AddedPartyNotified() counted_by frcp6 cite "D.C.COLO.LCivR 40.1(c)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 72.2(c): unless the assigned district judge orders
+/// otherwise, written consent to proceed before a magistrate judge is filed
+/// no later than seven days before the scheduling conference, if any, or 45
+/// days after the filing of the first response other than an answer,
+/// whichever is earlier.
+deadline consent-jurisdiction-period: 7.days before SchedulingConference() counted_by frcp6 cite "D.C.COLO.LCivR 72.2(c)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 72.2(c): the 45-day alternative to the seven-day consent
+/// deadline; the earlier of the two governs.
+deadline consent-jurisdiction-outer-period: 45.days after FirstNonAnswerResponseFiled() counted_by frcp6 cite "D.C.COLO.LCivR 72.2(c)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 72.2(e): if an added party does not file a consent
+/// within 21 days from the date of mailing of the clerk's notice, the
+/// action returns to the assigned district judge.
+deadline added-party-consent-period: 21.days after AddedPartyConsentNoticeMailed() counted_by frcp6 cite "D.C.COLO.LCivR 72.2(e)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 45.1: except as D.C.COLO.LCivR 30.1 provides or the
+/// court orders, a subpoena is served no later than seven days before the
+/// date it specifies, calculated under Fed. R. Civ. P. 6(a)(1).
+deadline subpoena-service-period: 7.days before SubpoenaReturnDate() counted_by frcp6 cite "D.C.COLO.LCivR 45.1"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 54.1: a bill of costs is filed on the court's form no
+/// later than 14 days after entry of the judgment or final order.
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "D.C.COLO.LCivR 54.1"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 56.1(a): unless otherwise ordered, a response to a
+/// motion for summary judgment is filed no later than 21 days after the
+/// date of service of the motion.
+deadline sj-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "D.C.COLO.LCivR 56.1(a)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 56.1(a): a reply may be filed no later than 14 days
+/// after the date of service of the response.
+deadline sj-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "D.C.COLO.LCivR 56.1(a)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 79.1(b)(1): if no objection is filed within 14 days of
+/// the clerk's notice, the clerk may dispose of the conventionally
+/// submitted material or exhibit.
+deadline exhibit-disposal-objection-period: 14.days after ExhibitDisposalNoticed() counted_by frcp6 cite "D.C.COLO.LCivR 79.1(b)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 81.1(b): no later than 14 days after the filing of the
+/// notice of removal, the removing party files a current docket sheet
+/// (register of actions) and separately files each pending motion,
+/// petition, and related response, reply and brief.
+deadline state-court-record-period: 14.days after RemovalNoticeFiled() counted_by frcp6 cite "D.C.COLO.LCivR 81.1(b)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 83.3: unless otherwise ordered, counsel or an
+/// unrepresented party notifies the court of an accommodation required
+/// under the Americans with Disabilities Act no later than seven days
+/// before a hearing or trial.
+deadline ada-accommodation-period: 7.days before HearingOrTrial() counted_by frcp6 cite "D.C.COLO.LCivR 83.3"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 83.3: a request for an American Sign Language
+/// interpreter is made no later than 30 days before the hearing or trial.
+deadline asl-interpreter-period: 30.days before HearingOrTrial() counted_by frcp6 cite "D.C.COLO.LCivR 83.3"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 84.1(d)(2): no later than 14 days after service of a
+/// motion for withdrawal of the reference, a party may file in the
+/// bankruptcy court a response and a designation of any additional portion
+/// of the record.
+deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "D.C.COLO.LCivR 84.1(d)"
+{
+  forum frcp
+}
+
+/// D.C.COLO.LCivR 84.1(e): the parties have 14 days after the date of
+/// mailing of a bankruptcy judge's recommendations in a non-core proceeding
+/// (or such further time, not to exceed 30 days, as the bankruptcy judge
+/// may order) to file written objections.
+deadline bankruptcy-recommendation-objection-period: 14.days after BankruptcyRecommendationsMailed() counted_by frcp6 cite "D.C.COLO.LCivR 84.1(e)"
+{
+  forum frcp
+}

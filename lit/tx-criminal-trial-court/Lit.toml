@@ -1,0 +1,63 @@
+# Criminal cases in the Texas trial courts of general criminal
+# jurisdiction under the Texas Code of Criminal Procedure, as far as the
+# vendored text states, with the trial-court steps of the Texas Rules of
+# Appellate Procedure (the motion for new trial, Tex. R. App. P. 21, and
+# the criminal appeal, Tex. R. App. P. 25.2 and 26.2). The Code is the
+# Legislature's text "current through the 89th 2nd Called Legislative
+# Session, 2025", retrieved 2026-10-28 (sources/tx-criminal-trial-court);
+# its articles carry no per-article effective date in this form, so
+# in_force is the retrieval date and an earlier query is a hole in the
+# corpus. The TRAP are those "Last Amended February 6, 2026"
+# (sources/tx-appellate). The vendored Code states no speedy-trial period:
+# the right is the accused's "speedy public trial" (art. 1.05), and
+# chapter 32A (Speedy Trial) holds only the trial priorities of art.
+# 32A.01; the release-for-delay periods of art. 17.151
+# and the indictment period of art. 32.01 are the Code's time limits on
+# pretrial detention and charge. Time under the TRAP is computed under
+# Tex. R. App. P. 4.1, and the Code's periods count Texas days; lit/core
+# has no counting rule for Texas's legal holidays, so periods are stated
+# in notes, not encoded as counted deadlines. A non-death appeal goes to a
+# Texas court of appeals; a death sentence goes directly to the Court of
+# Criminal Appeals (lit/tx-court-of-criminal-appeals). Federal habeas
+# belongs to lit/habeas.
+[package]
+name = "tx-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "tx-criminal-trial-court"
+forum = "tx-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "texas"
+title = "Texas trial courts, criminal"
+description = "Criminal cases in the Texas district and county courts under the Code of Criminal Procedure, as far as the vendored text states: arrest and the magistrate's warnings and bail, appointment of counsel, release for delay, the examining trial, indictment or information, arraignment, discovery and the pretrial hearing, plea or trial, the punishment phase and sentence, the motion for new trial, and the notice of appeal under the Texas Rules of Appellate Procedure."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Texas trial courts of general criminal jurisdiction"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.tx-ccp]
+title = "Texas Code of Criminal Procedure, as served by the Texas Legislature (current through the 89th 2nd Called Legislative Session, 2025; retrieved 2026-10-28)"
+url = "https://statutes.capitol.texas.gov/"
+path = "sources/tx-criminal-trial-court/tx-code-of-criminal-procedure-sectioned.txt"
+path_sha256 = "423a47f1d8d791f7108bc8d3ba3770cdb7bdda206f58ac52a67dad30d4907c1a"
+as_of = "2026-10-28"
+cite_prefixes = ["Tex. Code Crim. Proc. art."]
+section_heading = "Tex. Code Crim. Proc. art. {n}"
+
+[sources.tx-trap]
+title = "Texas Rules of Appellate Procedure, last amended February 6, 2026 (Supreme Court of Texas and Court of Criminal Appeals)"
+url = "https://www.txcourts.gov/media/1463134/texas-rules-of-appellate-procedure-02062026.pdf"
+path = "sources/tx-appellate/tx-trap-sectioned.txt"
+path_sha256 = "4c3fb9bd4d05d8822b740e4b2fdc0c36755d2c5ee425a383ce8f4e5cbf407861"
+sha256 = "28d0d6236d84e1740c07ceb7a369602588c89787aed8d24a513700f369ebcf51"
+as_of = "2026-02-06"
+cite_prefixes = ["Tex. R. App. P."]
+section_heading = "Tex. R. App. P. {n}"

@@ -1,0 +1,127 @@
+module ky-criminal-trial-court.criminal
+
+// Criminal cases in the Kentucky trial courts, from the defendant's view of
+// outcomes. Every period below is stated in a note, not counted:
+// computation is RCr 1.10(a), with Kentucky's legal holidays and its rule
+// excluding weekends and holidays from periods under seven days, for which
+// lit/core has no counting rule. The time for a new-trial motion or an
+// appeal may not be extended (RCr 1.10(e)). The statutory speedy-trial
+// periods are not vendored and stay holes. The outline's decisions have no
+// vendored reporter text and are removed; the rules alone state the
+// procedure.
+start arrested
+
+state arrested: "Arrest on a warrant or without one" by applicant cite "RCr 3.02"
+{
+  note "An officer arresting on a warrant issued upon a complaint takes the arrested person without unnecessary delay before a judge; a person arrested without a warrant is taken before a judge without unnecessary delay and a post-arrest complaint is filed (RCr 3.02(1), (2))."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance { authority cite "RCr 3.02" }
+}
+
+decision initial-appearance: "Pretrial release or detention" by court cite "RCr 4.02"
+{
+  note "Pretrial release follows Chapter IV of the rules (RCr 4.00 to 4.58): eligibility, the authorized methods of release and their conditions, and the amount of bail."
+  edge-initial-appearance-detained "Held in custody" -> probable-cause { authority cite "RCr 3.10" }
+  edge-initial-appearance-released "Released before trial" -> probable-cause {
+    authority cite "RCr 3.10"
+  }
+}
+
+decision probable-cause: "Preliminary hearing or indictment" by court cite "RCr 3.10"
+{
+  note "The defendant may waive the preliminary hearing. Otherwise it is held within a reasonable time but no later than 10 days following the initial appearance if the defendant is in custody and 20 days if not, and not at all if the defendant is indicted first; if it is not held in time, the defendant is discharged from custody and proceeded against on that charge by indictment only. Without the defendant's consent the limits may be extended only on extraordinary circumstances where delay is indispensable to the interests of justice (RCr 3.10(2)). On waiver or a finding of probable cause, the judge holds the defendant to answer in the circuit court (RCr 3.14(1)). A defendant held to answer without being indicted for longer than 60 days from the finding of probable cause is, on motion, discharged from custody or has bail exonerated (RCr 5.22(3))."
+  edge-probable-cause-charged "Held to answer; indictment or information filed" -> charged {
+    authority cite "RCr 6.02"
+  }
+  edge-probable-cause-none "Not indicted; charges dismissed or defendant discharged" -> dismissed {
+    authority cite "RCr 5.22"
+  }
+}
+
+state charged: "Indictment or information" by office cite "RCr 6.02"
+{
+  note "Offenses that Section 12 of the Kentucky Constitution requires to be prosecuted by indictment are so prosecuted unless the defendant waives indictment in writing to the circuit court, when they may be prosecuted by information (RCr 6.02(1)). Prosecutions proceed when the defendant appears unless postponed for cause, and trials of persons in custody are held as promptly as reasonably possible (RCr 9.02); the statutory speedy-trial periods are not vendored."
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "RCr 8.02" }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "RCr 8.02"
+{
+  note "Arraignment is conducted in open court by reading or stating the substance of the charge and calling on the defendant to plead (RCr 8.02). On the defense's written request the Commonwealth discloses the defendant's statements and permits inspection of the items RCr 7.24(1) lists; a request for relief in a case set for trial is made a reasonable time before the trial date (RCr 7.24(6))."
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "RCr 7.24" }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "RCr 8.20"
+{
+  note "The court may, at arraignment or as soon afterward as practicable, set deadlines for pretrial motions, defenses, objections and requests, and decides each within a reasonable time before trial unless it finds good cause to defer (RCr 8.20). A written motion and notice of its hearing are served a reasonable time before the hearing unless a rule or order fixes a period (RCr 1.10(c))."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling { authority cite "RCr 8.20" }
+  edge-discovery-speedy "Speedy-trial motion" -> motions-ruling {
+    authority cite ?("Kentucky's statutory speedy-trial periods (KRS 500.110 among them) are not vendored")
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "RCr 8.08" }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "RCr 8.20"
+{
+  note "When factual issues are involved in deciding a motion, the court states its essential findings on the record (RCr 8.20(2))."
+  edge-motions-ruling-speedy "Dismissed for delay" -> dismissed {
+    authority cite ?("Kentucky's statutory speedy-trial remedy is not vendored")
+  }
+  edge-motions-ruling-dismissed "Commonwealth dismisses with the court's permission" -> dismissed {
+    authority cite "RCr 9.64"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "RCr 8.20"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "RCr 8.08"
+{
+  note "A defendant may plead not guilty, guilty or guilty but mentally ill; the court does not accept a plea of guilty or guilty but mentally ill without first determining that it is made voluntarily with understanding of the nature of the charge (RCr 8.08). Cases required to be tried by jury are so tried unless the defendant waives a jury in writing with the court's approval and the Commonwealth's consent (RCr 9.26(1))."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "RCr 8.08" }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "RCr 9.26" }
+}
+
+decision trial: "Verdict" by court cite "RCr 9.82"
+{
+  edge-trial-acquittal "Not guilty" -> acquitted { authority cite "RCr 9.82" }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial { authority cite "RCr 10.06" }
+}
+
+decision post-trial: "Post-trial motions" by court cite "RCr 10.02"
+{
+  note "A motion for a new trial is served not later than five days after return of the verdict; one on newly discovered evidence within one year after entry of the judgment, or later for good cause (RCr 10.06(1)). The court on its own initiative may order a new trial not later than ten days after the verdict (RCr 10.02(2)). A defendant who moved for a directed verdict at the close of all the evidence may move for a judgment of acquittal not later than five days after the verdict or the jury's discharge without one (RCr 10.24)."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted { authority cite "RCr 10.24" }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "RCr 10.02" }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing { authority cite "RCr 11.02" }
+}
+
+state sentencing: "Presentence investigation and sentence" by court cite "RCr 11.02"
+{
+  note "Sentence is imposed without unreasonable delay; before sentencing a defendant guilty of a felony the court has a presentence investigation conducted, considers the report and furnishes it to counsel (RCr 11.02(1)). After sentence in a case tried on a plea of not guilty, the court advises the defendant of the right to appeal and to appeal in forma pauperis (RCr 11.02(2))."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "RCr 11.04"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "RCr 11.04"
+{
+  note "The judgment sets forth the plea, the verdict or findings, the adjudication and sentence, and bail; it is signed by the judge and entered by the clerk (RCr 11.04(1), (3)). An appeal is taken by filing a notice of appeal in the trial court within thirty days after entry of the judgment, or, after a timely new-trial motion, within thirty days after entry of the order denying it (RCr 12.04(1), (3)). In felony cases other than on a guilty plea, the clerk's docket notation of service of notice of entry is the date of entry for RCr 12.04(3) (RCr 12.06). An inmate's notice is filed when deposited in the institution's mail system with postage by the last day (RCr 12.04(5))."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "RCr 12.04" }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "RCr 12.04" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "RCr 10.24"
+
+terminal dismissed: "Charges dismissed or defendant discharged" outcome [win] cite "RCr 5.22"
+{
+  note "A dismissal on the grand jury's failure to indict is without prejudice, and the charge may be submitted to another grand jury (RCr 5.22(1), (4))."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "RCr 12.04"
+{
+  note "The Rules of Appellate Procedure govern the appeal (RCr 12.02; sources/ky-appellate)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "RCr 11.42"
+{
+  note "A prisoner in custody, or a defendant on probation, parole or conditional discharge, may move the sentencing court to vacate, set aside or correct the sentence, within three years after the judgment becomes final unless an exception applies; the Commonwealth's attorney answers within 20 days after the clerk mails notice (RCr 11.42(1), (4), (10)). Federal habeas is lit/habeas."
+}

@@ -1,0 +1,45 @@
+# Criminal cases in the Kentucky trial courts under the Kentucky Rules of
+# Criminal Procedure (RCr), current with amendments received through
+# October 1, 2026 as published on the Westlaw public-access site the
+# Kentucky courts point to (sources/ky-criminal-trial-court). Computation
+# of time is RCr 1.10(a): the day of the event is excluded, a last day
+# falling on a Saturday, Sunday or legal holiday runs to the next day that
+# is none of those, and a period of less than seven days excludes
+# intermediate Saturdays, Sundays and legal holidays; lit/core has no
+# counting rule or holiday calendar for Kentucky, so the periods are stated
+# in notes, not encoded as counted deadlines. The rules state no
+# speedy-trial period beyond RCr 9.02; the statutory periods (KRS 500.110
+# among them) are not vendored and stay holes. The criminal appeal's time
+# is RCr 12.04; the Rules of Appellate Procedure govern the appeal itself
+# (RCr 12.02; sources/ky-appellate). Federal habeas is lit/habeas.
+[package]
+name = "ky-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "ky-criminal-trial-court"
+forum = "ky-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "kentucky"
+title = "Kentucky trial courts, criminal"
+description = "Criminal cases in the Kentucky trial courts under the Kentucky Rules of Criminal Procedure, as far as the vendored text states: the initial appearance, the preliminary hearing's time limits and the probable cause finding, discharge on the grand jury's failure to indict within 60 days, prosecution by indictment or information, arraignment and pleas, discovery and pretrial motion deadlines, trial by jury, new trial and judgment of acquittal motions, sentence with the presentence investigation, the judgment, the 30-day criminal appeal and its notice of entry, and the RCr 11.42 motion."
+in_force = "2026-10-01"
+known_at = "2026-10-28"
+unknown_before = "2026-10-01"
+jurisdiction = "Kentucky trial courts of general criminal jurisdiction"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ky-rcr]
+title = "Kentucky Rules of Criminal Procedure (current with amendments received through October 1, 2026; Westlaw public-access site)"
+url = "https://govt.westlaw.com/kyrules/Index"
+path = "sources/ky-criminal-trial-court/ky-rules-of-criminal-procedure-westlaw-sectioned.txt"
+path_sha256 = "05e5db9120ed1d7c28fcef10f405c97b6c03bcbbdf752692a7ba71f9db7d8e44"
+as_of = "2026-10-01"
+cite_prefixes = ["RCr"]
+section_heading = "RCr {n}"

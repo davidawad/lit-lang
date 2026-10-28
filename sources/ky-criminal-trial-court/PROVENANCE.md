@@ -233,3 +233,8 @@
 - Extraction sha256 8f7d188952dab410e9ad2156f6dbe53c6586eeba35727f70c399df01c696fe5d.
 
 - Note (lg-gddt): Criminal appeals: Kentucky Rules of Appellate Procedure (RAP) and RCr 12 as published; RAP is covered by sources/ky-appellate/ (ky-appellate-rules-westlaw.txt).
+
+### `ky-criminal-trial-court/ky-rules-of-criminal-procedure-westlaw-sectioned.txt` — Kentucky Rules of Criminal Procedure, sectioned
+- Derived in the pod (lg-gddt.16) from `ky-criminal-trial-court/ky-rules-of-criminal-procedure-westlaw.txt` (extract sha256 8f7d188952dab410e9ad2156f6dbe53c6586eeba35727f70c399df01c696fe5d); nothing fetched. One `## RCr <n>` line is inserted right after each rule page's own `## Rcr <n> <title>` heading: 213 markers, RCr 1.02 through RCr 13.15. The chapter "Refs & Annos" pages are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## RCr /d'`) restores the extract byte for byte.
+- Edition: as the extract, current with amendments received through October 1, 2026.
+- Sectioned sha256 05e5db9120ed1d7c28fcef10f405c97b6c03bcbbdf752692a7ba71f9db7d8e44 (the `path_sha256` pinned by `lit/ky-criminal-trial-court/Lit.toml`).

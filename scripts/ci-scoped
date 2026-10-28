@@ -31,7 +31,10 @@
 #       under a `cargo metadata --format-version 1 --no-deps` JSON.
 #   scripts/ci-scoped provenance [BASE]
 #       Every file added under sources/ since BASE has an entry in its
-#       forum's PROVENANCE.md (lg-t86b); one line per file that does not.
+#       forum's PROVENANCE.md (lg-t86b), no added or modified original
+#       is an interstitial (browser check, challenge, CAPTCHA, bare
+#       redirect) and no added or modified page-per-section extract has
+#       an empty page (lg-f3q8.86); one line per file that fails.
 #   scripts/ci-scoped self-test
 #       The scope computation on fixed synthetic workspaces, and on this
 #       one against `cargo tree --invert`; the provenance check on a
@@ -161,10 +164,19 @@ scope() {
 # retrieval date, the method, and the file's sha256, which must match.
 # Only added files are checked (committed since BASE, staged or
 # untracked); PROVENANCE.md and README.md files are the records, exempt.
+# Added and modified files are also checked for the as-served content
+# (lg-f3q8.86): an original is not an interstitial page, and a multi-page
+# extract has no empty page section (`content_of`).
 added_sources() {
+  changed_sources "$1" A
+}
+
+# BASE, diff filter -> the files under sources/ the branch changed that
+# way (committed since BASE, staged or untracked), records excluded.
+changed_sources() {
   {
-    git diff --name-only --no-renames --diff-filter=A "$1"...HEAD
-    git diff --name-only --no-renames --diff-filter=A HEAD
+    git diff --name-only --no-renames --diff-filter="$2" "$1"...HEAD
+    git diff --name-only --no-renames --diff-filter="$2" HEAD
     git ls-files --others --exclude-standard
   } | grep '^sources/' | grep -Ev '(^|/)(PROVENANCE|README)\.md$' | sort -u || true
 }
@@ -212,19 +224,23 @@ content_sha256() {
   sha256sum "$1" | cut -d' ' -f1
 }
 
+# A file (repo-relative, under sources/) -> the PROVENANCE.md recording
+# it: its forum's, or sources/PROVENANCE.md for a top-level file.
+record_of() {
+  local rel="${1#sources/}"
+  if [[ "$rel" == original/* || "$rel" != */* ]]; then
+    echo "sources/PROVENANCE.md"
+  else
+    echo "sources/${rel%%/*}/PROVENANCE.md"
+  fi
+}
+
 # One file (repo-relative, under sources/) -> 0, or the reasons it fails.
 provenance_of() {
-  local f="$1" rel forum record entry hash why=() original=
+  local f="$1" rel record entry hash why=() original=
   rel="${f#sources/}"
   [[ "$rel" == original/* || "$rel" == */original/* ]] && original=1
-  if [[ "$rel" == original/* ]]; then
-    record="sources/PROVENANCE.md"
-  elif [[ "$rel" == */* ]]; then
-    forum="${rel%%/*}"
-    record="sources/$forum/PROVENANCE.md"
-  else
-    record="sources/PROVENANCE.md"
-  fi
+  record="$(record_of "$f")"
   if [ ! -f "$record" ]; then
     echo "$f: no $record"
     return 1
@@ -257,15 +273,141 @@ provenance_of() {
   fi
 }
 
+# --- as-served content (lg-f3q8.86) ---
+
+# lg-y5b8: 35 Maryland originals were Westlaw's BrowserHawk redirect stub,
+# so their extract sections were empty and nothing failed until a cite
+# would not bind. An added or modified original must not be a known
+# interstitial, and an extract recorded with "- Original:" lines must
+# not have an empty `## <heading>` section unless its entry lists that
+# page on a "- Known hole:" line (naming the page's original or its
+# heading).
+
+# A file -> the length of its visible text: what is left outside tags,
+# comments and script, style and noscript blocks, whitespace dropped.
+visible_length() {
+  LC_ALL=C awk '
+    { s = s " " $0 }
+    END {
+      low = tolower(s); out = ""
+      n = split("script style noscript", tags, " ")
+      while (1) {
+        at = 0; close_ = ""
+        for (i = 1; i <= n; i++) {
+          p = index(low, "<" tags[i])
+          if (p && (!at || p < at)) { at = p; close_ = "</" tags[i] }
+        }
+        p = index(low, "<!--")
+        if (p && (!at || p < at)) { at = p; close_ = "-->" }
+        if (!at) break
+        out = out substr(low, 1, at - 1)
+        low = substr(low, at + 1)
+        e = index(low, close_)
+        if (!e) { low = ""; break }
+        low = substr(low, e + length(close_))
+        if (close_ != "-->") { e = index(low, ">"); low = e ? substr(low, e + 1) : "" }
+      }
+      out = out low
+      gsub(/<[^>]*>/, "", out)
+      gsub(/&[a-z0-9#]+;/, "", out)
+      gsub(/[ \t\r\n]+/, "", out)
+      print length(out)
+    }
+  ' "$1"
+}
+
+# An original -> the interstitial it is, or nothing. A PDF is never one.
+interstitial_of() {
+  local f="$1"
+  [ "$(head -c 5 "$f")" = "%PDF-" ] && return 0
+  if grep -aiqE 'browserhawk|bhawkTest|bhCookieSess' "$f"; then
+    echo "a BrowserHawk browser-check stub"
+    return 0
+  fi
+  if grep -aiqE '<title>[[:space:]]*just a moment|cf-browser-verification|cf_chl_opt|checking your browser before accessing|attention required! \| cloudflare' "$f"; then
+    echo "a Cloudflare challenge page"
+    return 0
+  fi
+  # A short page only: a real document may carry a CAPTCHA'd search box.
+  if grep -aiqE 'captcha|turnstile' "$f" && [ "$(visible_length "$f")" -lt 400 ]; then
+    echo "a CAPTCHA or Turnstile page"
+    return 0
+  fi
+  if grep -aiqE 'http-equiv[[:space:]]*=[[:space:]]*["'"'"']?refresh' "$f" &&
+    [ "$(visible_length "$f")" -lt 200 ]; then
+    echo "a meta-refresh-only page"
+  fi
+}
+
+# An extract and its PROVENANCE entry -> one line per empty `## ` section
+# of a page with an Original line that no Known hole line excuses. Only
+# an extract of one `## <heading>` per page is checked (as many sections
+# as Original lines, the k-th section the k-th page); the sections of an
+# extract of one original are not pages.
+empty_sections() {
+  LC_ALL=C awk '
+    FNR == 1 { file++ }
+    file == 1 && index($0, "- Original: `") == 1 {
+      p = substr($0, 14); p = substr(p, 1, index(p, "`") - 1)
+      orig[++norig] = p
+    }
+    file == 1 && index($0, "- Known hole:") == 1 { holes[++nholes] = $0 }
+    file == 2 && /^## / { head[++nsec] = substr($0, 4); body[nsec] = 0; next }
+    file == 2 && nsec && $0 ~ /[^ \t\r]/ { body[nsec] = 1 }
+    function excused(text,   i) {
+      if (text == "") return 0
+      for (i = 1; i <= nholes; i++) if (index(holes[i], text)) return 1
+      return 0
+    }
+    END {
+      if (norig < 2 || norig != nsec) exit
+      for (k = 1; k <= nsec; k++) {
+        if (body[k]) continue
+        base = orig[k]; sub(/.*\//, "", base)
+        if (excused(head[k]) || excused(orig[k]) || excused(base)) continue
+        print "empty section \"## " head[k] "\" (page " orig[k] ")"
+      }
+    }
+  ' <(printf '%s\n' "$2") "$1"
+}
+
+# One added or modified file -> 0, or the reasons its content fails.
+content_of() {
+  local f="$1" rel record entry what
+  rel="${f#sources/}"
+  if [[ "$rel" == original/* || "$rel" == */original/* ]]; then
+    what="$(interstitial_of "$f")"
+    if [ -n "$what" ]; then
+      echo "$f: the original is $what, not the document; refetch it as served"
+      return 1
+    fi
+    return 0
+  fi
+  record="$(record_of "$f")"
+  [ -f "$record" ] || return 0
+  entry="$(provenance_entry "$record" "$rel" "${f#"$(dirname "$record")"/}")"
+  [ -n "$entry" ] || return 0
+  what="$(empty_sections "$f" "$entry")"
+  if [ -n "$what" ]; then
+    sed "s|^|$f: |; s|\$|: refetch the page, or list it on a \"- Known hole:\" line in $record|" <<<"$what"
+    return 1
+  fi
+}
+
 provenance() {
-  local base f rc=0 n=0
+  local base f rc=0 n=0 m=0
   base="$(base_of "${1:-}")"
   while IFS= read -r f; do
     if [ -z "$f" ] || [ ! -f "$f" ]; then continue; fi
     n=$((n + 1))
     provenance_of "$f" || rc=1
   done < <(added_sources "$base")
-  echo "provenance: $n added source file(s) checked"
+  while IFS= read -r f; do
+    if [ -z "$f" ] || [ ! -f "$f" ]; then continue; fi
+    m=$((m + 1))
+    content_of "$f" || rc=1
+  done < <(changed_sources "$base" AM)
+  echo "provenance: $n added source file(s) checked; $m added or modified for content"
   return "$rc"
 }
 

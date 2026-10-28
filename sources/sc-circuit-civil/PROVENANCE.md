@@ -1,0 +1,106 @@
+
+### `sc-circuit-civil/scrcp-rule-pages-2026-10-28.txt` — South Carolina Rules of Civil Procedure (SCRCP), rule pages as served
+
+- Source: https://www.sccourts.org/resources/judicial-community/court-rules/civil/ (rule pages linked from https://www.sccourts.org/resources/judicial-community/court-rules/) (90 pages, each fetched with one GET).
+- Edition: Current rule pages on the Court Rules section of sccourts.org retrieved 2026-10-28; each page carries its own 'Last amended by Order dated ...' line; rule-maintenance orders of 2026 are vendored separately as dated layers (their amendments may already be reflected on the pages). fetched on David's explicit ruling 2026-10-28 despite robots/terms (barrier: robots.txt 'User-agent: * / Disallow: /' with Crawl-delay 120000 on www.sccourts.org; tool: curl with the identifying UA lit-lang-provenance/1.0, about one request per 1.2 s).
+- Retrieved 2026-10-28 on carbon (lg-f3q8.77 override); fetched with curl and the identifying UA; extracted with `htmlx.py 1.0` (stdlib html.parser, mode sc, one `## <page>` block per page, unedited text).
+- Extract sha256 1a64ab69f13105a7e581d376e63885838b4257f31f169665e168ae1204df3bee. Raw extract, not yet sectioned into `## <ref>` form beyond the per-page blocks.
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-1.html` as served (sha256 9c6e0fe3e3ce131444b8aab5f23da81e7ea18c3dc407d5e3cb7a632a359be8c4).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-2.html` as served (sha256 c3adf019cd32ad0df709a4414f4fb80114dbf8e7e296e076a65416c28aed4504).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-3.html` as served (sha256 a0c72329947e2c280a6b3e52d30bb51e1a98ea2aaa9e4845d8504c5d52026654).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-4.html` as served (sha256 da7adcb68b1f06c6060a2116df428623153ad2b7f7c7a3f964463ceddec3623b).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-4-1.html` as served (sha256 0c814a6b73e511d7b9b7cc46720aa3691a0eac529319bb942483884d1a891e41).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-5.html` as served (sha256 50d5bacc9259a0c3d6aa8980f6ad4cf72dce502b46dea3534767f27c195c37a2).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-6.html` as served (sha256 b84a290bd150fbc63d8968400f90b89a7aadc30bc16afcde9bb0fbcd423f19e2).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-7.html` as served (sha256 f17eb4f8804571ac7eeb0065b7b3b1bf5593b17a38ce165979dcc55d20ee7ab5).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-8.html` as served (sha256 5dfcae375bf9f7aa3d26f1244b60575075eceb2fd290da408527c52b349ebcd4).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-9.html` as served (sha256 a8aa50ee9e78ff1ea9b939070283a33b3c906b167ca335dd42d7909427540394).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-10.html` as served (sha256 98c011d5031264a15404452695a37fe318ff26a95e8e37b2c9eb07e560f4c7fb).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-11.html` as served (sha256 1822bf22448d69d95de6737ec0e2a978d9eaa8c6acc0faeeda741fbe9496539f).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-12.html` as served (sha256 f58374c41da6d94fcf2258f01c0d29fa9d58cac6a7bdb9fc1fa04c713d2ae20e).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-13.html` as served (sha256 d275f406f6368f8925107f8e5c7e7503b34b158259f980387cd9969731eb6f92).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-14.html` as served (sha256 f4cd52589da5e6a713172102b31e2c837168b8c3615467e14892325367141ffa).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-15.html` as served (sha256 2972be6a3f9719f455a369e4db6e13ac4459953f0a00ebbada4afd33c18e632b).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-16.html` as served (sha256 a3e2a95c7a00ed3c49cca9a73765a51360d1689b42fb420437deec726c4c77fb).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-17.html` as served (sha256 8743d61bf532fd202fc051e15dd69e93f0607d12dbb03ad1abeeb5aa423aa24b).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-18.html` as served (sha256 f9b4ea5af2edd99edf418477928b3d891b781e1ae1eea7982b7e07bbf773f3e9).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-19.html` as served (sha256 8fd67ab181c1bab05c2f3d7954ff7048eb9f43be616d01340e62f39186605882).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-20.html` as served (sha256 a121d78a3307a712cac68e30af0ee7ad72c782b35ec9df07d0dbf4b18185691a).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-21.html` as served (sha256 164b5191d532bd7efe1dba27a650565c6b17c211753674a2652f0d6d2048e7c1).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-22.html` as served (sha256 424ba019472941a627d9693a4c3128e6d7e77ef9e2050cd5781505d8f268e101).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-23.html` as served (sha256 8f75ac3758e80cda4763903162d12bf20eaa297ce675bca689575b09aa736ce0).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-24.html` as served (sha256 b4ec27ded4fc2821578e8938e40f9a1dd19466e94137b1b74be67286d08ebac1).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-25.html` as served (sha256 6a7f6606ee5006b0dbdfd941771858c79f1e79f86df5c4cd72560e87165147ac).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-26.html` as served (sha256 f3f8bd27bb0a61d5cc6847cdc3983a8b57310d60967b3eebe91dda161b787609).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-27.html` as served (sha256 a4ed53ee7b2dd1bb56d28b2344762846b6e25a49f778f15640fe980c0c425b51).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-28.html` as served (sha256 eb682c72a58ee8ddb4239304aa7d859fe4c55c6343f72a0d8febc79b5b85a7d8).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-29.html` as served (sha256 75d03b1729a583d3290c71ebda16602d53b6694033e0754111ce337555eff1bc).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-30.html` as served (sha256 1b69b9e26eb1c817266719250158ff9e67d4ef66134a8ec3b52ac05a02714774).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-31.html` as served (sha256 7c40556119dd84e0e791a46a271a320850cdd74b995482492eafafe95d5b24c2).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-32.html` as served (sha256 f9d807e194fd0db1297b29f6aa867dc88f333ce43b8030f6bf61178a5e6866c5).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-33.html` as served (sha256 86ffc491fa6349cf9fb8890a122d6e9a92057333766981343257c6fec4028f0f).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-34.html` as served (sha256 14d6466de6096687238cfb169d9f89876d0912b5485b953f4d95f0fb2c8a9ce9).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-35.html` as served (sha256 8ebff7184cee0dbda804998fb68e5a90f135f17d279341fc5dd9257d522a458d).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-36.html` as served (sha256 25548f48ffad1e964d6467e588927835edea25780c10a7e662835ce46d0e314b).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-37.html` as served (sha256 ef807627132ba0212a59f87c3af1cb5f5f48cfceb9b218117f677a714e4007ae).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-38.html` as served (sha256 99cbc76ce21c20b729c55a33e885e3651bdf3376f19cef973795f5de19bc20c6).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-39.html` as served (sha256 d153f3ca387c1604a949778f1c152519e055096dc7323ee8bdcc8e75b5ed6780).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-40.html` as served (sha256 56957938049aa030562cac4b8c970a2a60d2b8a1a7fe0ace26b31a5184f695e0).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-41.html` as served (sha256 5b16b1cee934e3b194b08e3c0a64f51feb64471c7cc03dead5a4868a2e3387db).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-41-1.html` as served (sha256 fae4c64d7e255431981189b4a9b17e3a2955c5928b7c255f7e99af3a3d8b13eb).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-41-2.html` as served (sha256 1648c2419eb682163bf31221d69e6f0ce6f7786ea361e4485ea5840c3a6cc856).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-42.html` as served (sha256 699164b3cd65b853f1a10effb3d03b9460bd08099d40faf970f76c7186f703e9).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-43.html` as served (sha256 303fed6c8f931c02dbb5650b5e94bc140be2db83dd1f193e701bfd32204aad97).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-44.html` as served (sha256 4d9b5c90239d3dc14d0ef40f08c4ac2a8fc4dd6b264e9ba9f29659e2590dbc5c).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-45.html` as served (sha256 45948e884e24b4e14d12b61784f2834bbbe61bb2809026bcb32ed5504ba929e1).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-46.html` as served (sha256 517487275999b4787a96dce392e72f6e8ed5c0bd9d60406a757356bff133694c).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-47.html` as served (sha256 7f2f8df202f432e2368edca08a12411230fc5ced7ac9236fc33ebbd9cf3323d3).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-48.html` as served (sha256 cfe7778b945ba37ce542529228451a1d680911ab0b87c8aabbcb93c81c5c22c5).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-49.html` as served (sha256 cab4add1bb78557dcabfb3cf3cb2018abc964cafc37180a3696239f178420085).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-50.html` as served (sha256 6802d284a4cbdae2859ebbd7f9e3d7ce010fc3c88e7cb08df2794afc4e47d2d9).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-51.html` as served (sha256 f25a54479f7c5d5639b21bb57940a78d755e1e08c7dc71643000f1de797162a6).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-52.html` as served (sha256 f17b08a891308abc08ad4a726510d46ce563bf21e93196b48fd897b551410c21).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-53.html` as served (sha256 f6d37a96d193e171f606e23ae65697949faf64a3c27d612d2c5b2f5d8a1b0300).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-54.html` as served (sha256 d23941fcbb403c38ffe50675ef1d950ff980ed1ba76d571de909e32c47eec37b).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-55.html` as served (sha256 1e12371e49e886ea9dbce05552b7e31ed5d3f34fe031361155f7a5ecfd17a1da).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-56.html` as served (sha256 7b50dd7c0e645882019cd53fe4e6291c9dbf6e918265aca97fd131a36ee77130).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-57.html` as served (sha256 31b7eb267b456110446b168229d78820c43e147a8c8a46e1e1cf217949208188).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-58.html` as served (sha256 36d6e3dccf5ad78c02d0c2d2f1485185e79333c978823457f3fc68561a4c16b4).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-59.html` as served (sha256 b666c9c55905add45bc1088c11dd6dbfefa0a28e92eb74c0fca198d82765490e).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-60.html` as served (sha256 795a674bd9c2366726252faa71b4c4b7d6b9f30139fe0963abc47935d53bae29).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-61.html` as served (sha256 df63f395b8f2da7ae3031aa35b1bc9864082cf2320e16b966173f4ece231a9f6).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-62.html` as served (sha256 3f13fc0a885e2c4d083203b5f93292fb1e074b3b7fe6d71343e834b0d0026921).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-63.html` as served (sha256 00dfb6e8a687235c51e79d546dd9d13bfbb8b133351e825af9037fbf75800ba1).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-64.html` as served (sha256 d1f7221e6b8d559f7db1552ff3ae4e28490f9cf479b99ab013ab4622afb1d1fb).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-65.html` as served (sha256 6149246000ab9b96c922946a1303b18da11311363befc605ca4ba58a30235d56).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-66.html` as served (sha256 f91fceed3c8c652ed7bac14d190c860b3b0089712a278a14c3856c7afe977b53).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-67.html` as served (sha256 d669648dfa1fbc08adfbdc49c7f50e6adf5deff124140f930696f6c1b4e5f346).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-68.html` as served (sha256 c52525ca87a4d83c6e1332fed6586a7a069dbdb9e79c745ae86222524778abf9).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-69.html` as served (sha256 cea2a6e1dfcd07803c1202e1def7b5921c551b6f658c5e04780e63e0fe7fd95c).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-70.html` as served (sha256 d3cb328da773863df0b66b0355686b4e0915f840e1f11be781c0f61c589df347).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-71.html` as served (sha256 4801a328dff830fdcf6d43dabb627b605dc0578de364263fec9ee5109c46a474).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-711.html` as served (sha256 277c35ccb6dce9a528b5008069bcd3ee1ce85f61b10f9543a19d182b08495664).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-72.html` as served (sha256 5293a317bc2504add98b5d979413ffa215a3140a1ebdcb0df9f95eebd3165db9).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-73.html` as served (sha256 67edff501acb7e5b1a788b0a0b48b7c0cac475f13070d640a006d30a951b7922).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-74.html` as served (sha256 794be657ab8a91d3efa80994c58c8b7964f21d9aeffa04eb2240cb37709a7380).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-75.html` as served (sha256 d9558cff58b8cb372b836a211524e863f552c9b5d5a80b2c60d9acc085f50a60).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-76.html` as served (sha256 9fee0005bbb1653c7c6b254b35f047cd34709ab7722996b050c0079ffd477205).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-77.html` as served (sha256 039338ce3c32912ab5235d354ffcc3d2395e0f87a8bd985c6dbb0dca267d76ed).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-78.html` as served (sha256 69a187bef37aea8b33c4384dc8741df5483864a90a8ea5ebb2d115cf7b54f531).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-79.html` as served (sha256 84e736256f4a88ae61e5882467678b3977a8cf57610f3478db07d1cb8a8d4a10).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-80.html` as served (sha256 5477ce544083dd8d13a9d4f855cc7c76458dd4499d96bf5aaf0f91ea15e95010).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-81.html` as served (sha256 8e91762f2d5066b49b8c933188f06cb3b75e78f606253be52b1d645c215f9b4b).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-82.html` as served (sha256 f447f763589864df8b0acfc9e4381a8faba552c7e76fb451a11687dba813dd4e).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-84.html` as served (sha256 5ffc5998e0499248166a0b27f319312f6a186a9378f07fc5d112b272d7eef75c).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-85.html` as served (sha256 212eb42c860c78732efaae30f2cf4362d12e22ff7761714903b0f3260937e4bf).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_rule-86.html` as served (sha256 5aca4478cfad958db5387197075e8725d46b34a2bbc8f77137ab9f58cf83974d).
+- Original: `sc-circuit-civil/original/sccourts-rule-pages/civil_appendix-of-forms.html` as served (sha256 d03c6779410e194f9338bd917f8850124e4bd882d96f39cda18ccb1287ef52bb).
+- Extraction sha256 1a64ab69f13105a7e581d376e63885838b4257f31f169665e168ae1204df3bee.
+
+### `sc-circuit-civil/scsc-order-2026-04-30-01.txt` — South Carolina Supreme Court order of April 30, 2026 (rule amendments to the SCRCP and the court-annexed ADR rules take effect)
+
+- Source: https://www.sccourts.org/media/courtOrders/PDFs/2026-04-30-01.pdf (official site; 1 pages, sha256 cdd4ec2b069fa4be30ea7cd4ac5f2828f594984d59f466477380a67e49c926d2).
+- Edition: Order dated April 30, 2026 declaring the amendments to the South Carolina Rules of Civil Procedure and the Court-Annexed ADR Rules (orders submitted to the General Assembly January 30, 2026) effective immediately. Listed under 2026 at https://www.sccourts.org/opinions-orders/court-orders/court-rule-maintenance/. The rule pages vendored beside it may already reflect it; apply by the order's effective date. fetched on David's explicit ruling 2026-10-28 despite robots/terms (barrier: robots.txt 'User-agent: * / Disallow: /' with Crawl-delay 120000 on www.sccourts.org; tool: curl with the identifying UA lit-lang-provenance/1.0).
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 cae4972e610bd039233189e5e8600b3fa4b9f78598ce3db96372d885fb3d3b24. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `sc-circuit-civil/original/scsc-order-2026-04-30-01.pdf` as served (sha256 cdd4ec2b069fa4be30ea7cd4ac5f2828f594984d59f466477380a67e49c926d2); extraction sha256 cae4972e610bd039233189e5e8600b3fa4b9f78598ce3db96372d885fb3d3b24.

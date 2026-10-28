@@ -1,0 +1,334 @@
+module bankr-tne-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ OrderForReliefEntered }
+
+// The Bankr. E.D. Tenn. court's own periods, counted under FRBP 9006(a),
+// the FRCP 6(a) method: the Local Rules as amended December 1, 2024, with
+// General Order 2025-01 (entered November 25, 2025, effective December 1,
+// 2025) as a dated layer adding the 28-day passive notice objection time of
+// LBR 9013-1(h)(3)(x); the order's other revisions (h)(1)(xvi), (xxii) and
+// (xxvi) list motions that may use passive notice and change no period. The
+// FRBP periods (schedules, claims, the chapter 13 plan, discharge,
+// dischargeability, exemptions, the adversary answer, appeals) are
+// lit/frbp's and are not declared again, nor are the statutory periods the
+// rules repeat: the governmental unit's 180-day claim period (LBR
+// 3003-1(b), 11 U.S.C. § 502(b)(9)) and the 20-day codebtor stay objection
+// (9013-1(h)(3)(ii), §§ 1201(d), 1301(d)). Stated in the rules but not
+// declared: deadlines that are an event itself (objections to confirmation
+// or to a confirmed plan's modification before the meeting with the trustee
+// or by the day it concludes, 3015-2(a)(5), 3015-3(a); proof of insurance
+// at or before the § 341 meeting, 4070-1; an abandonment notice request at
+// or before the meeting, 6007-1); hearing settings (a motion hearing at
+// least 21 and no more than 40 days after service, 30 to 50 days for claim
+// objections, 14 days for chapter 7 stay motions and 7 days for § 362(c)
+// motions, 9013-1(f)(2); confirmation hearings at least 7, 14 or 20 days
+// after the meeting, 3015-2(a)(6), 3015-3(b); the trustee meeting at least
+// 21 days after service of a modification, 3015-2(a)(3)); the relation-back
+// of an employment application filed within 7 days of the order for relief
+// (2014-1); the clerk's and transcriber's own periods (90 days of
+// restricted transcript access, a redacted transcript 31 days after filing,
+// 5077-1); the business-day and clock-time periods (the rent deposit by the
+// next business day, 4002-1; a withdrawal within 24 hours of a hearing,
+// 9013-1(e)); the 30-day reaffirmation enlargement the court ordinarily
+// grants (4008-1(a)); and the 30 days after which exhibits should be
+// withdrawn (9070-1), not a filing deadline.
+
+/// A chapter 13 case is converted to chapter 7 (LBR 1019-1).
+event Chapter13ConvertedToChapter7()
+/// An order dismissing or converting a chapter 13 case before confirmation
+/// is entered (LBR 2016-1).
+event DismissalOrConversionEntered()
+/// An agreed order of substitution of counsel is entered (LBR 2091-1).
+event SubstitutionOrderEntered()
+/// The trustee sends a creditor written notice that its secured claim lacks
+/// proof of perfection or the amount of the secured debt (LBR 3001-1).
+event PerfectionNoticeSent()
+/// The order confirming the chapter 13 plan that first rejects an executory
+/// contract or unexpired lease is entered (LBR 3002-1(a)).
+event RejectingPlanConfirmed()
+/// The order confirming a chapter 13 plan that surrenders collateral
+/// securing a filed secured claim is entered (LBR 3002-1(b)).
+event SurrenderPlanConfirmed()
+/// The order for relief in a case under Subchapter V of chapter 11 is
+/// entered (LBR 3003-1(c)).
+event SubchapterVReliefOrdered()
+/// The trustee certifies that the debtor has completed the plan payments in
+/// a chapter 12 or 13 case (LBR 4002-1).
+event PlanCompletionCertified()
+/// A court reporter or other transcriber files a transcript (LBR
+/// 5077-1(d)).
+event TranscriptFiled()
+/// A sale noticed or moved for under LBR 6004-1(a) or (b) closes (LBR
+/// 6004-1(c)).
+event SaleClosed()
+/// A motion is filed in an adversary proceeding (LBR 7007-1(a)).
+event AdversaryMotionFiled()
+/// An objection or response to an adversary proceeding motion is filed (LBR
+/// 7007-1(a)).
+event AdversaryResponseFiled()
+/// A respondent's statement of additional undisputed material facts is
+/// served (LBR 7056-1(c)).
+event AdditionalFactsServed()
+/// An order granting relief on an ex parte motion is entered (LBR
+/// 9013-1(g)(4)).
+event ExParteOrderEntered()
+/// A motion under the passive notice procedure of LBR 9013-1(h) is filed.
+event PassiveNoticeMotionFiled()
+/// An objection to a claim or claim supplement under FRBP 3007 or 3002.1(e)
+/// is filed with the passive notice legend (LBR 9013-1(h)(3)(i)).
+event PassiveClaimObjectionFiled()
+/// A chapter 7 motion for stay relief or adequate protection, a chapter 13
+/// stay motion on collateral surrendered under the plan, or a motion under
+/// FRBP 4001(d)(1) is filed with the passive notice legend (LBR
+/// 9013-1(h)(3)(iii)-(v)).
+event PassiveStayMotionFiled()
+/// A notice of abandonment or motion to compel abandonment under FRBP 6007
+/// is filed with the passive notice legend (LBR 9013-1(h)(3)(vi)).
+event PassiveAbandonmentFiled()
+/// An application of $1,000 or less to employ and pay a professional, or
+/// for an administrative expense, or a motion to confirm that no stay is in
+/// effect under § 362(c)(4)(A)(ii), is filed with the passive notice legend
+/// (LBR 9013-1(h)(3)(vii)-(ix)).
+event PassiveSmallFeeFiled()
+/// A chapter 13 motion under FRBP 3002.1(f)(1) or (g)(4)(A) is filed with
+/// the passive notice legend (LBR 9013-1(h)(3)(x), General Order 2025-01).
+event PassiveMortgageMotionFiled()
+/// A post-hearing motion under FRBP 7052, 9023, 9024 or 8007(a) in a
+/// contested matter is filed (LBR 9013-1(i)).
+event PostHearingMotionFiled()
+/// A mediation conference concludes (LBR 9019-2(k)).
+event MediationConferenceConcluded()
+/// The defendant or respondent receives the plaintiff's or movant's list of
+/// at least five proposed mediators (LBR 9019-2(l)).
+event MediatorListReceived()
+
+/// LBR 1007-2(a): in an involuntary case, the master address list is filed
+/// within 14 days after entry of the order for relief.
+deadline involuntary-address-list-period: 14.days after OrderForReliefEntered() counted_by frcp6 cite "E.D. Tenn. LBR 1007-2(a)"
+{
+  forum frcp
+}
+
+/// LBR 1019-1(a): within 14 days following conversion of a chapter 13 case
+/// to chapter 7, the debtor files the schedule of postpetition debts, a
+/// supplemental master address list and other necessary amendments.
+deadline converted-debtor-filings-period: 14.days after Chapter13ConvertedToChapter7() counted_by frcp6 cite "E.D. Tenn. LBR 1019-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 1019-1(b): within 30 days after conversion, the chapter 13 trustee
+/// pays the filing fee and administrative expenses, returns § 1306
+/// property, turns over records and files a final report and account.
+deadline converted-trustee-duties-period: 30.days after Chapter13ConvertedToChapter7() counted_by frcp6 cite "E.D. Tenn. LBR 1019-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 1019-1(c): if the chapter 13 trustee lacks funds to pay the filing
+/// fee, the debtor pays the balance within 45 days from conversion.
+deadline converted-filing-fee-period: 45.days after Chapter13ConvertedToChapter7() counted_by frcp6 cite "E.D. Tenn. LBR 1019-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 2016-1: the presumptive fee awarded in a dismissal or conversion
+/// order before confirmation stands absent a request by the attorney for
+/// another amount or an objection by the trustee or debtor within 14 days
+/// after entry of the order.
+deadline dismissal-fee-objection-period: 14.days after DismissalOrConversionEntered() counted_by frcp6 cite "E.D. Tenn. LBR 2016-1"
+{
+  forum frcp
+}
+
+/// LBR 2016-1: within 30 days from entry of the dismissal or conversion
+/// order, the debtor's attorney amends the Disclosure of Compensation to
+/// show refund of any retainer balance or a new agreement.
+deadline retainer-refund-disclosure-period: 30.days after DismissalOrConversionEntered() counted_by frcp6 cite "E.D. Tenn. LBR 2016-1"
+{
+  forum frcp
+}
+
+/// LBR 2091-1: within 14 days after entry of an agreed order of
+/// substitution of counsel, the new attorney files the Disclosure of
+/// Compensation of Attorney for Debtor.
+deadline substitute-counsel-disclosure-period: 14.days after SubstitutionOrderEntered() counted_by frcp6 cite "E.D. Tenn. LBR 2091-1"
+{
+  forum frcp
+}
+
+/// LBR 3001-1: a creditor given the trustee's notice under FRBP 9014(b) has
+/// 21 days from the date it was sent to cure the missing proof of
+/// perfection or amount of secured debt.
+deadline perfection-cure-period: 21.days after PerfectionNoticeSent() counted_by frcp6 cite "E.D. Tenn. LBR 3001-1"
+{
+  forum frcp
+}
+
+/// LBR 3002-1(a), (c): a claim arising from rejection of an executory
+/// contract or unexpired lease in a chapter 13 plan is filed within 60 days
+/// from entry of the confirmation order first rejecting it; a motion to
+/// extend must be filed within the 60 days.
+deadline rejection-claim-period: 60.days after RejectingPlanConfirmed() counted_by frcp6 cite "E.D. Tenn. LBR 3002-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 3002-1(b)-(c): a creditor whose collateral is surrendered under a
+/// chapter 13 plan amends its secured claim within 120 days from entry of
+/// the confirmation order for a deficiency to be paid; a motion to extend
+/// must be filed within the 120 days.
+deadline surrender-deficiency-period: 120.days after SurrenderPlanConfirmed() counted_by frcp6 cite "E.D. Tenn. LBR 3002-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3003-1(a): except for governmental units and Subchapter V cases, a
+/// chapter 11 proof of claim is timely if filed not later than 120 days
+/// after the order for relief.
+deadline chapter11-claim-period: 120.days after OrderForReliefEntered() counted_by frcp6 cite "E.D. Tenn. LBR 3003-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 3003-1(c): other than a governmental unit's, a proof of claim in a
+/// Subchapter V case is timely if filed not later than 70 days after the
+/// order for relief.
+deadline subchapter-v-claim-period: 70.days after SubchapterVReliefOrdered() counted_by frcp6 cite "E.D. Tenn. LBR 3003-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 4002-1: within 30 days following the trustee's certification that
+/// plan payments are complete in a chapter 12 or 13 case, the debtor files
+/// Bankruptcy Form B 2830 (domestic support obligations and § 522(q)).
+deadline domestic-support-certification-period: 30.days after PlanCompletionCertified() counted_by frcp6 cite "E.D. Tenn. LBR 4002-1"
+{
+  forum frcp
+}
+
+/// LBR 5077-1(d): a party wishing to redact a transcript files a notice of
+/// intent to request redaction within 7 calendar days after the transcript
+/// is filed.
+deadline redaction-notice-period: 7.days after TranscriptFiled() counted_by frcp6 cite "E.D. Tenn. LBR 5077-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 5077-1(d): the request for transcript redaction is filed and served
+/// on the transcriber within 21 days after the filing of the transcript
+/// (not of the notice of intent).
+deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frcp6 cite "E.D. Tenn. LBR 5077-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 6004-1(c): within 14 days of the closing of a sale, the party that
+/// filed the notice or motion files and serves a report of sale.
+deadline sale-report-period: 14.days after SaleClosed() counted_by frcp6 cite "E.D. Tenn. LBR 6004-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 7007-1(a): unless the court directs otherwise, an objection or
+/// response to an adversary proceeding motion, with its brief, is filed
+/// within 21 days after the motion is filed.
+deadline adversary-response-period: 21.days after AdversaryMotionFiled() counted_by frcp6 cite "E.D. Tenn. LBR 7007-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 7007-1(a): a reply to an objection or response is filed within 5
+/// days after the objection or response is filed.
+deadline adversary-reply-period: 5.days after AdversaryResponseFiled() counted_by frcp6 cite "E.D. Tenn. LBR 7007-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 7056-1(c): the summary judgment movant responds to the respondent's
+/// statement of additional undisputed material facts within 14 days after
+/// its service.
+deadline additional-facts-response-period: 14.days after AdditionalFactsServed() counted_by frcp6 cite "E.D. Tenn. LBR 7056-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(g)(4): a motion to reconsider relief granted by an ex parte
+/// order is filed within 14 days from its entry and set for hearing under
+/// LBR 9013-1(f).
+deadline ex-parte-reconsideration-period: 14.days after ExParteOrderEntered() counted_by frcp6 cite "E.D. Tenn. LBR 9013-1(g)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(h)(3): the objection time in the passive notice legend,
+/// running from the date the paper was filed, is 21 days unless an
+/// exception applies.
+deadline passive-notice-objection-period: 21.days after PassiveNoticeMotionFiled() counted_by frcp6 cite "E.D. Tenn. LBR 9013-1(h)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(h)(3)(i): for an objection to a claim or claim supplement,
+/// the objection time must be at least 30 days.
+deadline passive-claim-objection-period: 30.days after PassiveClaimObjectionFiled() counted_by frcp6 cite "E.D. Tenn. LBR 9013-1(h)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(h)(3)(iii)-(v): for a chapter 7 stay or adequate protection
+/// motion, a chapter 13 stay motion on surrendered collateral, or an FRBP
+/// 4001(d)(1) motion, the objection time must be at least 14 days.
+deadline passive-stay-objection-period: 14.days after PassiveStayMotionFiled() counted_by frcp6 cite "E.D. Tenn. LBR 9013-1(h)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(h)(3)(vi): for a notice of abandonment or motion to compel
+/// abandonment, the objection time must be at least 14 days.
+deadline passive-abandonment-objection-period: 14.days after PassiveAbandonmentFiled() counted_by frcp6 cite "E.D. Tenn. LBR 9013-1(h)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(h)(3)(vii)-(ix): for an application of $1,000 or less to
+/// employ and pay a professional or for an administrative expense, or a
+/// motion to confirm that no stay is in effect, the objection time must be
+/// at least 7 days.
+deadline passive-small-matter-objection-period: 7.days after PassiveSmallFeeFiled() counted_by frcp6 cite "E.D. Tenn. LBR 9013-1(h)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(h)(3)(x), added by General Order 2025-01 effective December
+/// 1, 2025: for a motion under FRBP 3002.1(f)(1) or (g)(4)(A), the
+/// objection time must be 28 days.
+deadline passive-mortgage-motion-objection-period: 28.days after PassiveMortgageMotionFiled() counted_by frcp6 effective [2025-12-01, ..) cite "E.D. Tenn. LBR (GO 2025-01) 9013-1(h)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(i)(2): unless the court reduces or extends the time, the
+/// opposing party files a response and brief in opposition to a post-
+/// hearing motion within 14 days after it is filed.
+deadline post-hearing-response-period: 14.days after PostHearingMotionFiled() counted_by frcp6 cite "E.D. Tenn. LBR 9013-1(i)"
+{
+  forum frcp
+}
+
+/// LBR 9019-2(k): within 7 days following the conclusion of each mediation
+/// conference, the mediator files a mediation report.
+deadline mediation-report-period: 7.days after MediationConferenceConcluded() counted_by frcp6 cite "E.D. Tenn. LBR 9019-2(k)"
+{
+  forum frcp
+}
+
+/// LBR 9019-2(l): when mediation is ordered without the parties' consent
+/// and they cannot agree on a mediator, the defendant or respondent selects
+/// one from the movant's list and gives notice within 7 days after
+/// receiving it, or the movant may select.
+deadline mediator-selection-period: 7.days after MediatorListReceived() counted_by frcp6 cite "E.D. Tenn. LBR 9019-2(l)"
+{
+  forum frcp
+}

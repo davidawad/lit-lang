@@ -1,6 +1,21 @@
 version = 2
 
 [[package]]
+name = "bankr-tne-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:bec4f855e67ea8df9bd3f7510b8a3d18e0d85c4166ff8232fff078adc3092cf1"
+semantic = "sha256:0bf6c73b96feb8cbdb091a87456a2e9d62b56abe47d5d085e5ebacada2e427f7"
+texts = [
+    "tneb-go-2025-01 sources/bankr-tne/tne-go-2025-01-sectioned.txt sha256:f91889304b456c784d13c4a8c3cf0dc8ba7f9ff3322f506c3b67d2572dbe6f3f",
+    "tneb-lbr sources/bankr-tne/tne-local-rules-2024-12-01-sectioned.txt sha256:645551b0ef543f20c97d63706302d067ab8f0731f1f15cc3c338584d1fa6a49c",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +59,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-tne"
-version = "0.0.1"
-language = 1
-source = "sha256:5d0102a87939d11995c51297305ad0ddcf31cd0350c41684319138b467122d00"
-semantic = "sha256:6826b4be15ec7d78e54e6194506ae8b35ec27099edf4b78bbecf925aa77888cd"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

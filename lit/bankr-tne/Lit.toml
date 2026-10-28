@@ -1,0 +1,66 @@
+# The Local Rules of the U.S. Bankruptcy Court for the Eastern District of
+# Tennessee over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
+# only the periods the rules themselves state and re-encodes no FRBP
+# period. Each period is counted under FRBP 9006(a), the FRCP 6(a) method
+# (core's frcp6).
+#
+# Layers, in date order: the Local Rules effective May 17, 2005 as amended
+# December 1, 2024 (the consolidation), then General Order 2025-01
+# (entered November 25, 2025), which amends LBR 9013-1(h) effective
+# December 1, 2025 and adds the 28-day objection time of (h)(3)(x), a
+# period dated from that day (local-rules.lit). General Order 2026-01 is a
+# proposal out for comment, not in force, and is not vendored. The earlier
+# editions are not vendored, so a query before December 1, 2024 is a hole
+# in the corpus.
+[package]
+name = "bankr-tne-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-tne-local-rules"
+forum = "bankr-tne"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. Bankruptcy Court for the Eastern District of Tennessee: Local Rules"
+description = "The Bankr. E.D. Tenn. Local Rules (as amended December 1, 2024), with General Order 2025-01 as a dated layer, as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): the involuntary master address list, conversion from chapter 13 to chapter 7 (debtor filings, trustee duties, filing fee), chapter 13 attorney fees on dismissal or conversion, substitute counsel's disclosure, the trustee's perfection notice, chapter 13 rejection and surrender claims, chapter 11 and Subchapter V claim periods, the domestic support certification, transcript redaction, reports of sale, adversary motion responses and replies (LBR 7007-1), summary judgment additional facts, reconsideration of ex parte orders, the passive notice objection times (LBR 9013-1(h)(3)), post-hearing motion responses, and mediation reports and mediator selection."
+in_force = "2024-12-01"
+known_at = "2026-10-28"
+unknown_before = "2024-12-01"
+jurisdiction = "U.S. Bankruptcy Court for the Eastern District of Tennessee"
+counting = "frcp6"
+
+[package.instrument]
+source = "tneb-lbr"
+issuer = "United States Bankruptcy Court for the Eastern District of Tennessee"
+date = "2024-12-01"
+designation = "Local Rules"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.tneb-lbr]
+title = "Local Rules of the United States Bankruptcy Court for the Eastern District of Tennessee (effective May 17, 2005, as amended through December 1, 2024)"
+url = "https://www.tneb.uscourts.gov/sites/tneb/files/local_rules/TNEB_Local_Rules.pdf"
+path = "sources/bankr-tne/tne-local-rules-2024-12-01-sectioned.txt"
+path_sha256 = "645551b0ef543f20c97d63706302d067ab8f0731f1f15cc3c338584d1fa6a49c"
+sha256 = "13b0ca60b892dc823ad97c4e7517f9e65116a30d7f5645704ac6aa14bbdb65bb"
+as_of = "2024-12-01"
+cite_prefixes = ["E.D. Tenn. LBR"]
+section_heading = "Rule {n}"
+
+[sources.tneb-go-2025-01]
+title = "General Order 2025-01, Amendment to Local Rule 9013-1(h) (entered November 25, 2025, effective December 1, 2025)"
+url = "https://www.tneb.uscourts.gov/sites/tneb/files/General%20Order%202025-01.pdf"
+path = "sources/bankr-tne/tne-go-2025-01-sectioned.txt"
+path_sha256 = "f91889304b456c784d13c4a8c3cf0dc8ba7f9ff3322f506c3b67d2572dbe6f3f"
+sha256 = "d15d65d17ee889f4aef849da54df4b48c187661e2a0fc107510ddb6be0815c2c"
+as_of = "2025-12-01"
+cite_prefixes = ["E.D. Tenn. LBR (GO 2025-01)"]
+section_heading = "GO 2025-01 Rule {n}"

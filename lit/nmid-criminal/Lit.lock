@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "nmid-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:f0e99859adb981c8cf4374dc63f408da6a30e442e9a6090abf31c79ffda576ed"
+semantic = "sha256:5e719ab5266b6636b015dcd28c429424e551d6efc7943836cf5fe522e0800598"
+texts = [
+    "dnmi-lcrr sources/fed-dnmi/dnmi-criminal-local-rules-2004-01-01-sectioned.txt sha256:2ef63a281046eb186e64712ccf2c56aafc25ee69cc63ace4c21a91b1357f907d",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

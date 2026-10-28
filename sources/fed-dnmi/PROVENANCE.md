@@ -22,3 +22,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 157e37d65f19be8b450358de65715524b3895693b12d3b0b99c5913bfbb1eb73. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `fed-dnmi/original/dnmi-criminal-local-rules-2004-01-01.pdf` as served (sha256 fd8584adf4a4787abd2f2f79b11d49d8192fe7729b8a5f7c9a1b4c1d0404318f); extraction sha256 157e37d65f19be8b450358de65715524b3895693b12d3b0b99c5913bfbb1eb73.
+
+### `fed-dnmi/dnmi-criminal-local-rules-2004-01-01-sectioned.txt` — D.N.M.I. Criminal Local Rules (effective January 1, 2004), sectioned
+
+- Derived in the pod (lg-gddt.22) from `fed-dnmi/dnmi-criminal-local-rules-2004-01-01.txt` (extract sha256 157e37d65f19be8b450358de65715524b3895693b12d3b0b99c5913bfbb1eb73); nothing fetched. One marker line `## LCrR <n>` is inserted before each rule's own body heading line `LCrR <n> - <Title>` (LCrR 12.1 and 17.1.1, the two rules the table of contents lists); the table of contents, preface and index carry no markers. Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Edition: as the extract, effective January 1, 2004 (Rev. 01/04). OLD EDITION presented by the court as current.
+- Sectioned sha256 2ef63a281046eb186e64712ccf2c56aafc25ee69cc63ace4c21a91b1357f907d (the `path_sha256` pinned by `lit/nmid-criminal/Lit.toml`).

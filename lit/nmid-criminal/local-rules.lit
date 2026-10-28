@@ -1,0 +1,31 @@
+module nmid-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The Northern Mariana Islands district court's own criminal period,
+// counted under the criminal rules (FRCrimP 45(a) governs "any local
+// rule"). No trigger carries a service method: FRCrimP 45(c)'s three added
+// days follow the manner of service, which is not modeled here. All other
+// aspects of motion practice follow the civil Local Rules (LCrR 12.1),
+// whose periods live in lit/nmid. The pretrial conference agenda (LCrR
+// 17.1.1) states no period. The court's Standards of Professional Conduct
+// in the preface are incorporated into the civil Local Rules and are not
+// encoded.
+//
+// The earlier D.N.M.I. criminal outline's FRCrimP flow and its decisions
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+/// The defendant's plea is entered (D.N.M.I. LCrR 12.1).
+event PleaEntered()
+
+/// D.N.M.I. LCrR 12.1: all motions under FRCrimP 12(b), including
+/// discovery motions, are filed within fourteen (14) days after entry of
+/// plea; the court may extend the time on motion for good cause.
+deadline pretrial-motions: 14.days after PleaEntered() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.N.M.I. LCrR 12.1"
+{
+  forum frcrimp
+}

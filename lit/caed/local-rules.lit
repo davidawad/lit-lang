@@ -1,0 +1,185 @@
+module caed-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Eastern District of California's own civil periods, computed under
+// FRCP 6(a), which governs a period stated in a local rule. Rules that state
+// no period this layer can count stay out: the hearing date, which is a
+// minimum (not less than thirty-five (35) days after service and filing of
+// the motion, E.D. Cal. L.R. 230(b)), not a deadline; the initial
+// stipulation extending time to respond by no more than twenty-eight (28)
+// days, a cap on an extension, not a period (E.D. Cal. L.R. 144(a)); and
+// the criminal and bankruptcy rules. The earlier E.D. Cal. outline's FRCP
+// flow and its decisions (Eitel v. McCool, Twombly, Iqbal, Lopez v. Smith,
+// Celotex, Anderson v. Liberty Lobby, Reeves, Catlin, Bowles v. Russell,
+// Hamer) are FRCP and FRAP authority and belong to lit/frcp and lit/frap; no
+// reporter text is vendored, so they are removed here.
+/// A motion is filed and served (E.D. Cal. L.R. 230(b), (c)).
+event MotionFiled()
+/// An opposition to a motion is filed (E.D. Cal. L.R. 230(d)).
+event OppositionFiled()
+/// A reply is filed (E.D. Cal. L.R. 230(m)).
+event ReplyFiled()
+/// The scheduled hearing date of a motion (E.D. Cal. L.R. 230(f)).
+event HearingDate()
+/// A motion in an action where one party is incarcerated and proceeding in
+/// propria persona is served (E.D. Cal. L.R. 230(l)).
+event PrisonerActionMotionServed()
+/// An opposition to a motion in such an action is filed in CM/ECF (E.D.
+/// Cal. L.R. 230(l)).
+event PrisonerActionOppositionFiled()
+/// The date the court sets for the final pretrial conference (E.D. Cal.
+/// L.R. 281(a)).
+event FinalPretrialConference()
+/// Judgment or an order under which costs may be claimed is entered (E.D.
+/// Cal. L.R. 292(b)).
+event JudgmentEntered()
+/// The bill of costs is served (E.D. Cal. L.R. 292(c)).
+event CostBillServed()
+/// Notice of the clerk's taxing of costs is served (E.D. Cal. L.R.
+/// 292(e)).
+event CostsTaxedNoticeServed()
+/// Final judgment is entered (E.D. Cal. L.R. 293(a)).
+event FinalJudgmentEntered()
+/// A magistrate judge's ruling on a general pretrial matter is served on
+/// the parties (E.D. Cal. L.R. 303(b)).
+event MagistrateRulingServed()
+/// A request for reconsideration by the district court of a magistrate
+/// judge's ruling is served (E.D. Cal. L.R. 303(d)).
+event ReconsiderationRequestServed()
+/// A magistrate judge's proposed findings and recommendations are served
+/// on the parties (E.D. Cal. L.R. 304(b)).
+event FindingsAndRecommendationsServed()
+/// Objections to proposed findings and recommendations are served (E.D.
+/// Cal. L.R. 304(d)).
+event ObjectionsServed()
+
+/// E.D. Cal. L.R. 230(c): an opposition, or a statement of non-opposition,
+/// is filed and served no later than fourteen (14) days after the motion was
+/// filed. A party that has not timely opposed is not heard at oral argument,
+/// and the court may treat the failure as non-opposition. A related
+/// counter-motion is due on the same date (E.D. Cal. L.R. 230(e)).
+deadline opposition-period: 14.days after MotionFiled() counted_by frcp6 cite "E.D. Cal. L.R. 230(c)"
+{
+  forum frcp
+}
+
+/// E.D. Cal. L.R. 230(d): the moving party may serve and file a reply no
+/// later than ten (10) days after the opposition was filed.
+deadline reply-period: 10.days after OppositionFiled() counted_by frcp6 cite "E.D. Cal. L.R. 230(d)"
+{
+  forum frcp
+}
+
+/// E.D. Cal. L.R. 230(f): a request to continue a hearing on the motion
+/// calendar is made at least seven (7) days before the scheduled hearing
+/// date; a continuance does not extend the time for opposition or reply
+/// unless the court orders otherwise.
+deadline continuance-request-period: 7.days before HearingDate() counted_by frcp6 cite "E.D. Cal. L.R. 230(f)"
+{
+  forum frcp
+}
+
+/// E.D. Cal. L.R. 230(l): in an action where one party is incarcerated and
+/// proceeding in propria persona, an opposition, or a statement of no
+/// opposition, is served and filed not more than twenty-one (21) days after
+/// the date of service of the motion.
+deadline prisoner-action-opposition-period: 21.days after PrisonerActionMotionServed() counted_by frcp6 cite "E.D. Cal. L.R. 230(l)"
+{
+  forum frcp
+}
+
+/// E.D. Cal. L.R. 230(l): in such an action the moving party may serve and
+/// file a reply not more than fourteen (14) days after the opposition has
+/// been filed; the motion is deemed submitted when that time expires.
+deadline prisoner-action-reply-period: 14.days after PrisonerActionOppositionFiled() counted_by frcp6 cite "E.D. Cal. L.R. 230(l)"
+{
+  forum frcp
+}
+
+/// E.D. Cal. L.R. 230(m)(1): if the reply submits new evidence, the
+/// opposing party may file and serve an Objection to Reply Evidence no later
+/// than seven (7) days after the reply is filed.
+deadline reply-evidence-objection-period: 7.days after ReplyFiled() counted_by frcp6 cite "E.D. Cal. L.R. 230(m)"
+{
+  forum frcp
+}
+
+/// E.D. Cal. L.R. 281(a)(1): with separate statements, the plaintiff serves
+/// and files its pretrial statement not less than fourteen (14) days before
+/// the final pretrial conference.
+deadline plaintiff-pretrial-statement-period: 14.days before FinalPretrialConference() counted_by frcp6 cite "E.D. Cal. L.R. 281(a)"
+{
+  forum frcp
+}
+
+/// E.D. Cal. L.R. 281(a)(1), (2): every other party's separate pretrial
+/// statement, or a joint pretrial statement, is filed not less than seven
+/// (7) days before the final pretrial conference, as the pretrial order
+/// requires.
+deadline pretrial-statement-period: 7.days before FinalPretrialConference() counted_by frcp6 cite "E.D. Cal. L.R. 281(a)"
+{
+  forum frcp
+}
+
+/// E.D. Cal. L.R. 292(b): the prevailing party may serve and file a bill of
+/// costs within fourteen (14) days after entry of the judgment or order
+/// under which costs may be claimed.
+deadline cost-bill-period: 14.days after JudgmentEntered() counted_by frcp6 cite "E.D. Cal. L.R. 292(b)"
+{
+  forum frcp
+}
+
+/// E.D. Cal. L.R. 292(c): the party against whom costs are claimed may file
+/// specific objections within seven (7) days from the date of service.
+deadline cost-objection-period: 7.days after CostBillServed() counted_by frcp6 cite "E.D. Cal. L.R. 292(c)"
+{
+  forum frcp
+}
+
+/// E.D. Cal. L.R. 292(e): the clerk's taxing of costs may be reviewed by the
+/// court on a motion filed and served within seven (7) days after notice of
+/// the taxing has been served.
+deadline cost-review-period: 7.days after CostsTaxedNoticeServed() counted_by frcp6 cite "E.D. Cal. L.R. 292(e)"
+{
+  forum frcp
+}
+
+/// E.D. Cal. L.R. 293(a): a motion for statutory attorneys' fees to a
+/// prevailing party is filed not later than twenty-eight (28) days after
+/// entry of final judgment, and is governed by E.D. Cal. L.R. 230.
+deadline fee-motion-period: 28.days after FinalJudgmentEntered() counted_by frcp6 cite "E.D. Cal. L.R. 293(a)"
+{
+  forum frcp
+}
+
+/// E.D. Cal. L.R. 303(b): a magistrate judge's ruling on a general pretrial
+/// matter is final unless reconsideration is sought within fourteen (14)
+/// days from service of the ruling, unless the magistrate judge or the
+/// judge prescribes a different time.
+deadline magistrate-reconsideration-period: 14.days after MagistrateRulingServed() counted_by frcp6 cite "E.D. Cal. L.R. 303(b)"
+{
+  forum frcp
+}
+
+/// E.D. Cal. L.R. 303(d): opposition to a request for reconsideration is
+/// served and filed within seven (7) days after service of the request.
+deadline reconsideration-opposition-period: 7.days after ReconsiderationRequestServed() counted_by frcp6 cite "E.D. Cal. L.R. 303(d)"
+{
+  forum frcp
+}
+
+/// E.D. Cal. L.R. 304(b): objections to a magistrate judge's proposed
+/// findings and recommendations are filed and served within fourteen (14)
+/// days after their service, unless the court prescribes a different time.
+deadline findings-objection-period: 14.days after FindingsAndRecommendationsServed() counted_by frcp6 cite "E.D. Cal. L.R. 304(b)"
+{
+  forum frcp
+}
+
+/// E.D. Cal. L.R. 304(d): responses to objections are filed and served
+/// within fourteen (14) days after service of the objections.
+deadline objection-response-period: 14.days after ObjectionsServed() counted_by frcp6 cite "E.D. Cal. L.R. 304(d)"
+{
+  forum frcp
+}

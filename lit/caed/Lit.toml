@@ -1,0 +1,49 @@
+# The United States District Court for the Eastern District of
+# California's Local Rules, civil part, as a local-rule layer over lit/frcp
+# (28 U.S.C. § 2071; FRCP 83(a)): it declares only the periods the Local
+# Rules themselves state and re-encodes no FRCP deadline. FRCP 6(a)
+# computes a period stated in a local rule. The rules are the Local Rules
+# effective February 23, 2026 (sources/fed-edcal), which the court's
+# local-rules page lists as current; the criminal and bankruptcy rules are
+# out of scope. An appeal goes to the Ninth Circuit under lit/frap and
+# lit/ca9.
+[package]
+name = "caed-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "caed-local-rules"
+forum = "caed"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Eastern District of California: Local Rules (civil)"
+description = "The Eastern District of California's Local Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): motion opposition and reply, continuances, prisoner-action motions, objections to reply evidence, pretrial statements, costs, statutory attorney's fees, and reconsideration of and objections to magistrate judge rulings."
+in_force = "2026-02-23"
+known_at = "2026-10-28"
+unknown_before = "2026-02-23"
+jurisdiction = "United States District Court, E.D. Cal."
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "caed-rules"
+issuer = "United States District Court for the Eastern District of California"
+date = "2026-02-23"
+designation = "Local Rules (effective February 23, 2026)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.caed-rules]
+title = "Local Rules of the United States District Court for the Eastern District of California (effective February 23, 2026)"
+url = "https://www.caed.uscourts.gov/caednew/assets/File/EDCA%20LOCAL%20RULES%20EFF_%2002-23-26.pdf"
+path = "sources/fed-edcal/edcal-local-rules-sectioned.txt"
+path_sha256 = "2687cac2861239ae26dffd16fce684409b0c852691175126e9b9f709fbde344c"
+sha256 = "280a7078af778ed24ce067dd5a9ac0122347b62140c1eca71c49e9f72ffd75f5"
+as_of = "2026-02-23"
+cite_prefixes = ["E.D. Cal. L.R."]
+section_heading = "E.D. Cal. L.R. {n}"

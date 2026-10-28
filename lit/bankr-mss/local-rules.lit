@@ -1,0 +1,459 @@
+module bankr-mss-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ OrderForReliefEntered, PetitionFiled }
+
+// The Bankr. S.D. Miss. court's own periods under the Uniform Local Rules
+// it shares with the other Mississippi district, counted under FRBP
+// 9006(a). The FRBP periods (schedules and the chapter 13 plan, which L.R.
+// 1007-1(c)(1) restates, claims in chapter 7, 12 and 13 cases, exemption
+// objections, discharge, dischargeability, the adversary answer and
+// summons, new trial, appeals, the 14-day stay of FRBP 4001(a)(4)) are
+// lit/frbp's and are not declared again; a governmental unit's claim 180
+// days after the order for relief (L.R. 3003-1(c)(3)(i)) is 11 U.S.C. §
+// 502(b)(9)'s. Stated in the rules but not declared: the business-day,
+// hour and two-day clock periods (consulting the United States Trustee two
+// business days before a chapter 11 petition, L.R. 1002-1; final cash-
+// collateral hearings five business days after service, L.R. 4001-1(b),
+// (c); first day motion service 24 hours ahead and certificates within 48
+// hours, L.R. 9013-1(g)); the "later of" windows (a chapter 11 added
+// creditor's bar date, L.R. 1009-1(a)(1)(B)(iv)(b), 3003-1(c)(3)(ii);
+// service of the chapter 13 plan seven days after the later of the case
+// notice or the plan, L.R. 3015-1(d); exemption objections, L.R.
+// 4003-1(a)); the 60-day and 21-day notices to added creditors whose start
+// the rule does not state (L.R. 1009-1(a)(1)(B)(ii), (iii)) and the 21-day
+// reopening objection period (L.R. 5010-1(b)); the hearing settings the
+// court makes on a motion to continue or impose the stay (L.R.
+// 4001-1(e)(2), (f)(2)) and the 30-day temporary stay of § 362(c)(3); the
+// 30-day response period an objector notices on a claim objection, which
+// runs from service the rule leaves to FRBP 3007 (L.R. 3007-1(a)(4)); the
+// seventy-five and sixty days a financing order must leave parties to
+// investigate (L.R. 4001-1(b)); the 14-day minimum deposition notice (L.R.
+// 7030-1); the ten years confidential documents stay sealed (L.R. 9018-1);
+// and the mediator's and the court's own deadlines (L.R. 9019-1). The
+// earlier outline's Supreme Court decisions construe the Code and the
+// FRBP, not these rules, and are removed here: no reporter text is
+// vendored.
+/// The court denies an application to pay the filing fee in installments
+/// because a fee from a previous case is unpaid (Miss. Bankr. L.R.
+/// 1006-1(b)(4)).
+event InstallmentApplicationDenied()
+/// The date of the notice a chapter 7, 12 or 13 debtor serves on creditors
+/// added by amendment after the § 341 notice (Miss. Bankr. L.R.
+/// 1009-1(a)(1)(B)(iv), 3002-1(c)).
+event AddedCreditorNoticeDated()
+/// The court enters an ex parte order granting a chapter 13 debtor's motion
+/// to dismiss under § 1307(b) (Miss. Bankr. L.R. 1017-1(f)(2)(C)).
+event DismissalOrderEntered()
+/// The date of a scheduled or rescheduled § 341(a) meeting of creditors
+/// (Miss. Bankr. L.R. 2003-1(a)(5), (6)).
+event CreditorsMeetingDate()
+/// The date set for an examination under FRBP 2004 initiated by notice
+/// (Miss. Bankr. L.R. 2004-1(a)(2)).
+event ExaminationDate()
+/// A calendar month ends (Miss. Bankr. L.R. 2015-1(c)).
+event CalendarMonthEnded()
+/// In a chapter 11 case, the debtor or trustee files an amendment changing
+/// the amount, nature, classification or characterization of a scheduled
+/// debt after a bar date is set (Miss. Bankr. L.R. 3003-1(c)(3)(ii)).
+event ScheduleAmendmentFiled()
+/// The hearing on confirmation of a chapter 11 plan (Miss. Bankr. L.R.
+/// 3018-1(f)).
+event ConfirmationHearing()
+/// The hearing on a motion to close a chapter 11 case (Miss. Bankr. L.R.
+/// 3022-1(a)(3)).
+event CaseClosingHearing()
+/// The date scheduled for hearing a motion for relief from the automatic
+/// stay (Miss. Bankr. L.R. 4001-1(a)(1)(F)).
+event StayReliefHearingDate()
+/// A motion and Declaration to continue the automatic stay under §
+/// 362(c)(3)(B) are filed (Miss. Bankr. L.R. 4001-1(e)(1)(C)).
+event StayContinuationMotionFiled()
+/// A motion and Declaration to impose the automatic stay under §
+/// 362(c)(4)(B) are filed (Miss. Bankr. L.R. 4001-1(f)(1)(B)).
+event StayImpositionMotionFiled()
+/// An amendment to the schedules adding a creditor, filed late in or after
+/// the FRBP objection periods, is served on the added creditor (Miss.
+/// Bankr. L.R. 4003-1(b), 4004-1(b), 4007-1(b)).
+event AddedCreditorAmendmentServed()
+/// A document submitted in paper is docketed in the court's electronic file
+/// (Miss. Bankr. L.R. 5005-1(a)(3)(G)).
+event PaperDocumentDocketed()
+/// A motion to withdraw the reference is served (Miss. Bankr. L.R.
+/// 5011-1(a)(4)).
+event WithdrawalMotionServed()
+/// An order granting leave to file an amended or supplemental pleading is
+/// entered (Miss. Bankr. L.R. 7015-1).
+event AmendmentLeaveGranted()
+/// A scheduling or pre-trial conference in an adversary proceeding (Miss.
+/// Bankr. L.R. 7016-1(c)).
+event PretrialConference()
+/// Answers to interrogatories electing to produce business records under
+/// FRCP 33(d) are served (Miss. Bankr. L.R. 7033-1(b)).
+event InterrogatoryAnswersServed()
+/// A motion for attorney's fees is filed (Miss. Bankr. L.R. 7054-1(b)(2)).
+event FeeMotionFiled()
+/// A motion for summary judgment and its memorandum brief are served (Miss.
+/// Bankr. L.R. 7056-1(3)).
+event SummaryJudgmentMotionServed()
+/// The response to a motion for summary judgment is served (Miss. Bankr.
+/// L.R. 7056-1(3)).
+event SummaryJudgmentResponseServed()
+/// A notice of appeal or cross-appeal is served (Miss. Bankr. L.R.
+/// 8003-1(c)(5)).
+event NoticeOfAppealServed()
+/// A hearing on a motion is held in the court (Miss. Bankr. L.R.
+/// 9013-1(e)).
+event HearingHeld()
+/// The bankruptcy court enters an order granting a jury demand under FRBP
+/// 9015(a) (Miss. Bankr. L.R. 9015-1(d)).
+event JuryDemandGranted()
+/// The final disposition of a case by the bankruptcy court, no appeal being
+/// perfected (Miss. Bankr. L.R. 9017-1(a)).
+event FinalDisposition()
+/// An order referring a case to mediation is entered (Miss. Bankr. L.R.
+/// 9019-1(f)(1)).
+event MediationReferralOrdered()
+/// The court's final order on a mediation referral, all objections disposed
+/// of, is entered (Miss. Bankr. L.R. 9019-1(f)(5)).
+event MediationReferralFinal()
+/// The date scheduled for a mediation (Miss. Bankr. L.R. 9019-1(g)).
+event MediationDate()
+/// A mediation conducted under the rule is completed (Miss. Bankr. L.R.
+/// 9019-1).
+event MediationCompleted()
+/// A party receives the neutral's statement of costs (Miss. Bankr. L.R.
+/// 9019-1).
+event NeutralStatementReceived()
+
+/// Miss. Bankr. L.R. 1006-1(b)(4): when the debtor owes a fee from a case
+/// filed within five calendar years, the court may deny an installment
+/// application and allow the debtor 14 days from entry of the order to pay
+/// the entire filing fee, or dismiss the case.
+deadline installment-denial-payment-period: 14.days after InstallmentApplicationDenied() counted_by frcp6 cite "Miss. Bankr. L.R. 1006-1(b)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 1009-1(a)(1)(B)(iv)(a), 3002-1(c): in a chapter 7, 12
+/// or 13 case, a creditor added after the § 341 notice is told of its right
+/// to file a proof of claim within 70 days from the date of the notice.
+deadline added-creditor-claim-period: 70.days after AddedCreditorNoticeDated() counted_by frcp6 cite "Miss. Bankr. L.R. 1009-1(a)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 1017-1(f)(2)(C): after an ex parte order granting a
+/// chapter 13 debtor's motion to dismiss, any party in interest may object
+/// to the motion within 14 days of entry of the order.
+deadline dismissal-order-objection-period: 14.days after DismissalOrderEntered() counted_by frcp6 cite "Miss. Bankr. L.R. 1017-1(f)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 2003-1(a)(5): a request to reschedule the § 341(a)
+/// meeting is submitted to the United States Trustee (or the delegated case
+/// trustee) at least seven days before the scheduled meeting, except in
+/// emergency or extraordinary circumstances.
+deadline meeting-reschedule-request-period: 7.days before CreditorsMeetingDate() counted_by frcp6 cite "Miss. Bankr. L.R. 2003-1(a)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 2003-1(a)(6): a motion to waive the debtor's
+/// appearance at the § 341(a) meeting is filed at least seven days before
+/// the initial or any rescheduled meeting.
+deadline appearance-waiver-motion-period: 7.days before CreditorsMeetingDate() counted_by frcp6 cite "Miss. Bankr. L.R. 2003-1(a)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 2004-1(a)(2): a consensual FRBP 2004 examination
+/// initiated by notice is filed and served no later than 14 days before the
+/// date set for the examination.
+deadline examination-notice-period: 14.days before ExaminationDate() counted_by frcp6 cite "Miss. Bankr. L.R. 2004-1(a)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 2015-1(c): in a chapter 12 case, the debtor in
+/// possession or trustee files the Monthly Operating Report on or before
+/// the 20th day of each month following the month reported, until a plan is
+/// confirmed or the case is converted or dismissed.
+deadline chapter-12-operating-report-period: 20.days after CalendarMonthEnded() counted_by frcp6 cite "Miss. Bankr. L.R. 2015-1(c)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 3003-1(c)(3)(i): unless the court orders otherwise,
+/// proofs of prepetition claims in a chapter 11 case are filed on or before
+/// the date 120 days after the date of the order for relief.
+deadline chapter-11-claims-bar-period: 120.days after OrderForReliefEntered() counted_by frcp6 cite "Miss. Bankr. L.R. 3003-1(c)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 3003-1(c)(3)(i): in a case under Subchapter V of
+/// chapter 11 the bar date is 70 days after the date of the order for
+/// relief, unless the court orders otherwise.
+deadline subchapter-v-claims-bar-period: 70.days after OrderForReliefEntered() counted_by frcp6 cite "Miss. Bankr. L.R. 3003-1(c)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 3003-1(c)(3)(ii): when a chapter 11 debtor or trustee
+/// amends a scheduled debt after a bar date is set, notice of the amendment
+/// is served on the creditor within 14 days of its filing, with notice of
+/// the creditor's right to file a claim.
+deadline schedule-amendment-notice-period: 14.days after ScheduleAmendmentFiled() counted_by frcp6 cite "Miss. Bankr. L.R. 3003-1(c)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 3018-1(f): at least three days before the chapter 11
+/// confirmation hearing, the plan proponent or its agent files the Ballot
+/// Summary and Certification, attaching the ballots unless the court orders
+/// otherwise.
+deadline ballot-certification-period: 3.days before ConfirmationHearing() counted_by frcp6 cite "Miss. Bankr. L.R. 3018-1(f)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 3022-1(a)(3): the debtor (or trustee) files a final
+/// report and account in the United States Trustee's form on or before
+/// fourteen days before the hearing on a motion to close the chapter 11
+/// case.
+deadline final-report-period: 14.days before CaseClosingHearing() counted_by frcp6 cite "Miss. Bankr. L.R. 3022-1(a)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 4001-1(a)(1)(F)(i): when the moving creditor, the
+/// debtor and the trustee agree on stay relief, an agreed order they have
+/// signed is submitted no later than 14 days after the date scheduled for
+/// hearing the motion.
+deadline stay-relief-agreed-order-period: 14.days after StayReliefHearingDate() counted_by frcp6 cite "Miss. Bankr. L.R. 4001-1(a)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 4001-1(e)(1)(A): a motion to extend the automatic stay
+/// under § 362(c)(3)(B) is filed within 7 days after the date of the filing
+/// of the petition.
+deadline stay-continuation-motion-period: 7.days after PetitionFiled() counted_by frcp6 cite "Miss. Bankr. L.R. 4001-1(e)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 4001-1(e)(1)(C): the debtor serves the motion to
+/// continue the stay and its Declaration on all parties against whom
+/// continuation is sought within 2 days after filing them, and files a
+/// certificate of service.
+deadline stay-continuation-service-period: 2.days after StayContinuationMotionFiled() counted_by frcp6 cite "Miss. Bankr. L.R. 4001-1(e)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 4001-1(f)(1)(B): the debtor serves the motion to
+/// impose the stay and its Declaration on all parties against whom
+/// imposition is sought within 2 days after filing them, and files a
+/// certificate of service.
+deadline stay-imposition-service-period: 2.days after StayImpositionMotionFiled() counted_by frcp6 cite "Miss. Bankr. L.R. 4001-1(f)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 4003-1(b): unless the court orders otherwise, a
+/// creditor added by an amendment filed and served fewer than 30 days
+/// before, or after, the FRBP 4003(b) deadline has 30 days from service of
+/// the amendment to object to the claimed exemptions.
+deadline added-creditor-exemption-objection-period: 30.days after AddedCreditorAmendmentServed() counted_by frcp6 cite "Miss. Bankr. L.R. 4003-1(b)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 4004-1(b): unless the court orders otherwise, a
+/// creditor added by an amendment filed and served less than 60 days
+/// before, or after, the FRBP 4004(a) deadline has 60 days from service of
+/// the amendment to file a complaint or motion objecting to discharge.
+deadline added-creditor-discharge-objection-period: 60.days after AddedCreditorAmendmentServed() counted_by frcp6 cite "Miss. Bankr. L.R. 4004-1(b)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 4007-1(b): unless the court orders otherwise, for a
+/// creditor added by an amendment filed and served less than 60 days
+/// before, or after, the FRBP 4007 deadline, the deadline for a
+/// dischargeability complaint on its claim is 60 days from service of the
+/// amendment on it.
+deadline added-creditor-dischargeability-period: 60.days after AddedCreditorAmendmentServed() counted_by frcp6 cite "Miss. Bankr. L.R. 4007-1(b)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 5005-1(a)(3)(G): unless a challenge to the docketed
+/// image of a paper filing is communicated to the clerk within 14 days of
+/// docketing, the document as docketed is conclusively confirmed as the one
+/// submitted.
+deadline paper-filing-challenge-period: 14.days after PaperDocumentDocketed() counted_by frcp6 cite "Miss. Bankr. L.R. 5005-1(a)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 5011-1(a)(4): any response or objection to a motion to
+/// withdraw the reference is filed within 14 days of the date of its
+/// service; the clerk then transmits the motion to the district court
+/// (a)(5).
+deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "Miss. Bankr. L.R. 5011-1(a)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 7015-1: when leave to amend or supplement a pleading
+/// is granted, the movant files the amended or supplemental pleading as a
+/// separately docketed item within seven days from entry of the order.
+deadline amended-pleading-filing-period: 7.days after AmendmentLeaveGranted() counted_by frcp6 cite "Miss. Bankr. L.R. 7015-1"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 7016-1(c): for cause shown, a party may request at
+/// least 2 days before a scheduling or pre-trial conference that it be
+/// held, or that the party participate, by telephone.
+deadline telephonic-conference-request-period: 2.days before PretrialConference() counted_by frcp6 cite "Miss. Bankr. L.R. 7016-1(c)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 7033-1(b): a party electing under FRCP 33(d) to
+/// produce business records in lieu of answering produces them or makes
+/// them available within 14 days after serving its answers, unless the
+/// court orders otherwise or the parties agree on a date.
+deadline business-records-production-period: 14.days after InterrogatoryAnswersServed() counted_by frcp6 cite "Miss. Bankr. L.R. 7033-1(b)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 7054-1(b)(2)(E): a response opposing a motion for
+/// attorney's fees is filed no later than 14 days after the motion is filed
+/// and states the disputed charges with particularity.
+deadline fee-motion-response-period: 14.days after FeeMotionFiled() counted_by frcp6 cite "Miss. Bankr. L.R. 7054-1(b)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 7056-1(3)(B): the respondent files its response and
+/// memorandum brief within 21 days of service of the motion for summary
+/// judgment and its memorandum.
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "Miss. Bankr. L.R. 7056-1(3)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 7056-1(3)(C): the movant may file a reply within 14
+/// days after the response is served.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "Miss. Bankr. L.R. 7056-1(3)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 8003-1(c)(5): an official committee that is not a
+/// party and wishes to be on an appeal's service list files a request for
+/// notice with the bankruptcy clerk within 21 days of service of the notice
+/// of appeal or cross-appeal.
+deadline committee-appeal-notice-request-period: 21.days after NoticeOfAppealServed() counted_by frcp6 cite "Miss. Bankr. L.R. 8003-1(c)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 9013-1(e): after a hearing, the prevailing party
+/// submits an order or judgment consistent with the ruling within 14 days
+/// of the hearing or such other time as the court directs.
+deadline order-submission-period: 14.days after HearingHeld() counted_by frcp6 cite "Miss. Bankr. L.R. 9013-1(e)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 9015-1(d): where a jury demand is granted and a party
+/// refuses consent to a bankruptcy court jury trial, any party may move the
+/// district court to withdraw the reference within 14 days of entry of the
+/// order; otherwise the jury demand is struck.
+deadline jury-withdrawal-motion-period: 14.days after JuryDemandGranted() counted_by frcp6 cite "Miss. Bankr. L.R. 9015-1(d)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 9017-1(a): absent a perfected appeal, exhibits are
+/// physically removed by the parties who filed them within sixty days from
+/// the final disposition of the case by the court, or may be destroyed.
+deadline exhibit-removal-period: 60.days after FinalDisposition() counted_by frcp6 cite "Miss. Bankr. L.R. 9017-1(a)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 9019-1(f)(1): within 14 days of entry of an order
+/// referring a case to mediation, a party may file a written objection to
+/// the referral.
+deadline mediation-referral-objection-period: 14.days after MediationReferralOrdered() counted_by frcp6 cite "Miss. Bankr. L.R. 9019-1(f)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 9019-1(f)(5): the parties have 21 days from entry of
+/// the court's final referral order to schedule the mediation; failing
+/// that, the court assigns the mediator and the date.
+deadline mediation-scheduling-period: 21.days after MediationReferralFinal() counted_by frcp6 cite "Miss. Bankr. L.R. 9019-1(f)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 9019-1(g)(1): objections to the mediator's pre-
+/// mediation documents are addressed to the mediator not less than 7 days
+/// before the scheduled mediation.
+deadline pre-mediation-objection-period: 7.days before MediationDate() counted_by frcp6 cite "Miss. Bankr. L.R. 9019-1(g)"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 9019-1 (Neutral's Post-Mediation Report to Court):
+/// within 14 days of the completion of a mediation, the neutral advises the
+/// bankruptcy judge in writing whether the case was resolved.
+deadline mediation-report-period: 14.days after MediationCompleted() counted_by frcp6 cite "Miss. Bankr. L.R. 9019-1"
+{
+  forum frcp
+}
+
+/// Miss. Bankr. L.R. 9019-1 (Payment of costs): the parties pay the neutral
+/// within 30 days from receipt of the neutral's statement.
+deadline neutral-payment-period: 30.days after NeutralStatementReceived() counted_by frcp6 cite "Miss. Bankr. L.R. 9019-1"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed and served" by applicant cite "Miss. Bankr. L.R. 9013-1(b)"
+{
+  note "A motion is filed and served under L.R. 9013-1(b), with limited notice where the FRBP or the rules allow (L.R. 2002-1(m)). The response time is the one the notice sets under the FRBP; those periods are lit/frbp's."
+  edge-motion-filed-opposed "Written objection filed" -> opposed {
+    authority cite "Miss. Bankr. L.R. 9013-1(c)"
+  }
+  edge-motion-filed-unopposed "No timely response" -> ruling {
+    authority cite "Miss. Bankr. L.R. 9013-1(d)"
+  }
+}
+
+state opposed: "Objection filed; matter heard" by opponent cite "Miss. Bankr. L.R. 9013-1(c)"
+{
+  note "Any objection to a motion, except one made in open court, is in writing and served under L.R. 9013-1(b)(1) (L.R. 9013-1(c))."
+  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Miss. Bankr. L.R. 9013-1(e)" }
+}
+
+decision ruling: "Motion decided" by court cite "Miss. Bankr. L.R. 9013-1(e)"
+{
+  note "Without a timely response the court may grant the relief before the hearing (L.R. 9013-1(d)); after a hearing the prevailing party submits the order within 14 days (L.R. 9013-1(e))."
+  edge-ruling-granted "Granted" -> decided { authority cite "Miss. Bankr. L.R. 9013-1(e)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "Miss. Bankr. L.R. 9013-1(e)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Miss. Bankr. L.R. 1001-1"

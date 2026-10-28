@@ -1,0 +1,8 @@
+
+### `bankr-okn/oknb-lbr-2025-03-21.txt` — Local Bankruptcy Rules, U.S. Bankruptcy Court for the Northern District of Oklahoma (as amended; updated March 21, 2025)
+
+- Source: https://www.oknb.uscourts.gov/sites/oknb/files/Local%20Rules.pdf (official site; 105 pages, sha256 7e7da309d70d1a74659e298dda3c0a132154e68457b117096e348010c459d0d5).
+- Edition: Local Bankruptcy Rules 'as amended', effective December 1, 2009, updated December 1, 2017 to include 10-GO-01, 12-GO-01, 15-GO-01 and 17-GO-04, and 'Updated March 21, 2025' to correct judge/clerk information (cover), linked as 'Local Rules' from https://www.oknb.uscourts.gov/court-info/local-rules-and-orders. robots.txt (Crawl-delay 10 honored; no rule covering these paths) and the Privacy Policy checked: no prohibition of automated access. Fetched with curl and the identifying User-Agent lit-lang-provenance/1.0 (angrybohr@proton.me).
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 4840d01f64572224b2972030081963708afdc8b369fac753a811b228f2344142. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `bankr-okn/original/oknb-lbr-2025-03-21.pdf` as served (sha256 7e7da309d70d1a74659e298dda3c0a132154e68457b117096e348010c459d0d5); extraction sha256 4840d01f64572224b2972030081963708afdc8b369fac753a811b228f2344142.

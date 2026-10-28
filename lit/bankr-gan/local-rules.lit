@@ -1,0 +1,380 @@
+module bankr-gan-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate }
+
+// The Bankr. N.D. Ga. court's own periods and page limits, counted under
+// FRBP 9006(a): the Local Rules effective September 1, 2019. The FRBP
+// periods (schedules, claims, the chapter 13 plan, discharge,
+// dischargeability, exemptions, the adversary answer and summons, appeals)
+// are lit/frbp's and are not declared again, nor are the national periods
+// the rules repeat: 14 days to object to a trustee's notice of proposed
+// abandonment (BLR 6007-1(b), FRBP 6007(a)), 14 days for another party's
+// jury demand on other issues (BLR 9015-1(b), FRCP 38(c)), 14 days for a
+// motion for reconsideration after entry of the order or judgment (BLR
+// 9023-1, FRBP 9023), and a motion to withdraw the reference in an adversary
+// proceeding by the time to answer (BLR 5011-2(b)).
+//
+// Stated in the rules but not declared: the business-day periods (service on
+// newly scheduled creditors within three Business Days, BLR 2002-1; the
+// Report of Balloting at least three Business Days before the confirmation
+// hearing, BLR 3018-1(c)); the clock-time periods (an ex parte stay-relief
+// order's 72 hours to surrender an uninsured vehicle, BLR 4001-1(b)(2)(C)-(D);
+// requests to charge by 9:30 a.m. on the trial date, BLR 7016-3(22)); the
+// clerk's own act (submitting a withdrawal motion to the judge 14 days after
+// its service, BLR 9010-5(b)(3)); the deadlines that are the later of two
+// dates (a motion to compel by the later of the close of discovery or 21
+// days after the response date, BLR 7037-1(d)); deadlines that are an event
+// itself (proposed findings by the opening of trial, BLR 7016-2(b)(18); a
+// Daubert motion by the date the pretrial order is submitted, BLR
+// 7026-2(c)); and the conditions and caps that are not deadlines (an
+// examination's six hours, BLR 2004-1(c); the 90-day grace period after an
+// affidavit of inability to file electronically, BLR 5005-6(b)(4); the
+// one-year retention of originals, BLR 5005-7(c), (g); six months without
+// proceedings for dismissal, BLR 7041-1(a)(3); a stipulated extension of at
+// most 60 days, BLR 9006-1; a leave of absence of fewer than 21 consecutive
+// days by letter, BLR 9010-5(e)(2); argument beyond 30 minutes a side, BLR
+// 7016-3(24)). Trial brief length in a jury case is left to each judge (BLR
+// 7016-3(21)).
+/// The date set for a Rule 2004 examination initiated by notice (BLR
+/// 2004-1(b)).
+event ExaminationDate()
+/// The motion, application or objection that initiates a contested matter is
+/// served (BLR 5011-2(c)).
+event ContestedMatterServed()
+/// A motion to withdraw the reference is served (BLR 5011-4).
+event WithdrawalReferenceMotionServed()
+/// A response to a motion to withdraw the reference is served (BLR 5011-4).
+event WithdrawalReferenceResponseServed()
+/// The date on which an attorney is scheduled to appear in the bankruptcy
+/// court and another court (BLR 5071-4(b)).
+event ConflictDate()
+/// The meeting of creditors at which a chapter 7 trustee gives verbal notice
+/// of a proposed abandonment (BLR 6007-1(b)).
+event AbandonmentMeetingHeld()
+/// A motion to redeem property under 11 U.S.C. § 722 or to avoid a lien on
+/// exempt property under § 522 is served (BLR 6008-1).
+event RedemptionMotionServed()
+/// A motion in an adversary proceeding, or in a contested matter to which
+/// Part VII applies, is served (BLR 7007-1(c)).
+event AdversaryMotionServed()
+/// A motion for summary judgment is served (BLR 7007-1(c)).
+event SummaryJudgmentMotionServed()
+/// A response to a motion under BLR 7007-1 is served (BLR 7007-1(d)).
+event MotionResponseServed()
+/// The latest of the first defendant's appearance by answer or motion, the
+/// resolution of a motion excluded from that appearance, or the removal of
+/// the proceeding (BLR 7016-1(a)(1)).
+event FirstDefendantAppearance()
+/// The Rule 26(f) conference is held (BLR 7016-1(a)(2)).
+event Rule26fConference()
+/// Discovery commences under the default schedule, on the last day of the BLR
+/// 7016-1(a)(1) period (BLR 7016-1(b)(2)(A)).
+event DiscoveryCommenced()
+/// The original or extended discovery period expires, or counsel give written
+/// notice that discovery is complete (BLR 7016-2(a), 7037-1(d)).
+event DiscoveryClosed()
+/// The date of trial in an adversary proceeding (BLR 7016-2(b)(13),
+/// 7016-3(18)(B)).
+event TrialDate()
+/// A motion to compel discovery is served (BLR 7037-1(c)).
+event CompelMotionServed()
+/// The date a trial or hearing was scheduled on a complaint or motion removed
+/// from the calendar as resolved (BLR 7041-1(a)(4)).
+event ResolvedMatterHearingDate()
+/// A party serves a notice required by the Bankruptcy Code or Rules that the
+/// clerk does not serve (BLR 9007-2(b)).
+event NoticeServed()
+/// An attorney serves the client with notice of intent to request permission
+/// to withdraw (BLR 9010-5(b)(1)).
+event WithdrawalNoticeServed()
+/// An attorney's motion for permission to withdraw is served (BLR
+/// 9010-5(b)(2)).
+event WithdrawalMotionServed()
+/// The bankruptcy judge pronounces a ruling, or a matter is called at a
+/// scheduled hearing without opposition (BLR 9013-2(a)).
+event RulingPronounced()
+/// The clerk notifies the parties of the right to consent to a jury trial in
+/// the bankruptcy court (BLR 9015-2).
+event JuryConsentNoticed()
+/// Thirty days after the order, judgment or recommendation in which exhibits
+/// were introduced becomes final and not subject to further review, the
+/// courtroom deputy's custody of them ends (BLR 9017-1(b)).
+event ExhibitCustodyEnded()
+/// An action or proceeding with pending, unbriefed motions is removed to the
+/// bankruptcy court (BLR 9027-1).
+event ProceedingRemoved()
+
+/// N.D. Ga. BLR 7007-1(e): absent prior permission, a brief in support of or
+/// in response to a motion under BLR 7007-1 (or BLR 9013-1) is limited to 25
+/// pages.
+limit motion-brief {
+  pages <= 25 cite "N.D. Ga. BLR 7007-1(e)"
+} cite "N.D. Ga. BLR 7007-1(e)"
+
+/// N.D. Ga. BLR 7007-1(e): a movant's reply brief may not exceed 15 pages.
+limit motion-reply-brief {
+  pages <= 15 cite "N.D. Ga. BLR 7007-1(e)"
+} cite "N.D. Ga. BLR 7007-1(e)"
+
+/// N.D. Ga. BLR 7016-2(b)(16): a trial brief with a non-jury pretrial order
+/// is limited to 25 pages unless leave is granted in advance; one over 15
+/// pages is indexed.
+limit trial-brief {
+  pages <= 25 cite "N.D. Ga. BLR 7016-2(b)"
+} cite "N.D. Ga. BLR 7016-2(b)"
+
+/// N.D. Ga. BLR 2004-1(b): a Rule 2004 examination by notice, with the
+/// examinee's consent, is noticed by filing and serving the notice no less
+/// than seven days before the date set for the examination.
+deadline examination-notice-period: 7.days before ExaminationDate() counted_by frcp6 cite "N.D. Ga. BLR 2004-1(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 5011-2(a): a motion to withdraw the reference of all or part
+/// of a bankruptcy case is served and filed on or before 30 days after the
+/// date first scheduled for the § 341(a) meeting of creditors.
+deadline case-withdrawal-motion-period: 30.days after FirstMeetingDate() counted_by frcp6 cite "N.D. Ga. BLR 5011-2(a)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 5011-2(c): a motion to withdraw the reference of a contested
+/// matter is served and filed not later than 14 days after service of the
+/// motion, application or objection that initiates it.
+deadline contested-withdrawal-motion-period: 14.days after ContestedMatterServed() counted_by frcp6 cite "N.D. Ga. BLR 5011-2(c)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 5011-4: opposing parties file and serve written responses to
+/// a motion to withdraw the reference within 14 days after being served with
+/// it.
+deadline withdrawal-reference-response-period: 14.days after WithdrawalReferenceMotionServed() counted_by frcp6 cite "N.D. Ga. BLR 5011-4"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 5011-4: the moving party may serve and file a reply within 14
+/// days after service of a response.
+deadline withdrawal-reference-reply-period: 14.days after WithdrawalReferenceResponseServed() counted_by frcp6 cite "N.D. Ga. BLR 5011-4"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 5071-4(b): an attorney with an unresolved scheduling conflict
+/// delivers the notice letter and proposed resolution not less than seven
+/// days prior to the date of conflict.
+deadline conflict-notice-period: 7.days before ConflictDate() counted_by frcp6 cite "N.D. Ga. BLR 5071-4(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 6007-1(b): a chapter 7 trustee's verbal notice of a proposed
+/// abandonment at the meeting of creditors is reduced to a writing stating
+/// its grounds and filed within 14 days after the meeting.
+deadline abandonment-writing-period: 14.days after AbandonmentMeetingHeld() counted_by frcp6 cite "N.D. Ga. BLR 6007-1(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 6008-1(b): the respondent files and serves a response to a
+/// motion to redeem or to avoid a lien on exempt property within 21 days of
+/// the date of service, or the motion is deemed unopposed.
+deadline redemption-response-period: 21.days after RedemptionMotionServed() counted_by frcp6 cite "N.D. Ga. BLR 6008-1(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 7007-1(c): a party opposing a motion files and serves its
+/// response, memorandum, affidavits and other responsive material not later
+/// than 14 days after service of the motion; failure to respond indicates no
+/// opposition.
+deadline motion-response-period: 14.days after AdversaryMotionServed() counted_by frcp6 cite "N.D. Ga. BLR 7007-1(c)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 7007-1(c): the time to respond to a motion for summary
+/// judgment is 21 days after its service.
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "N.D. Ga. BLR 7007-1(c)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 7007-1(d): a reply, when the movant deems one necessary, is
+/// filed and served not later than 14 days after service of the responsive
+/// pleading.
+deadline motion-reply-period: 14.days after MotionResponseServed() counted_by frcp6 cite "N.D. Ga. BLR 7007-1(d)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 7016-1(a)(1): the parties confer under FRCP 26(f) and discuss
+/// FRCP 16(b) scheduling within 21 days after the later of the first
+/// defendant's appearance, the resolution of an excluded motion or the
+/// removal of the proceeding.
+deadline rule26f-conference-period: 21.days after FirstDefendantAppearance() counted_by frcp6 cite "N.D. Ga. BLR 7016-1(a)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 7016-1(a)(2): the parties jointly submit the written
+/// discovery plan and proposed scheduling order within 14 days after the Rule
+/// 26(f) conference.
+deadline rule26f-report-period: 14.days after Rule26fConference() counted_by frcp6 cite "N.D. Ga. BLR 7016-1(a)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 7016-1(b)(2)(B): absent a separate scheduling order, motions
+/// to join other parties or to amend the pleadings are filed within 30 days
+/// of the beginning of discovery.
+deadline joinder-amendment-period: 30.days after DiscoveryCommenced() counted_by frcp6 cite "N.D. Ga. BLR 7016-1(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 7016-1(b)(2)(C): absent a separate scheduling order,
+/// discovery is completed within 90 days of its commencement, unless the
+/// court orders otherwise under BLR 7026-2.
+deadline discovery-period: 90.days after DiscoveryCommenced() counted_by frcp6 cite "N.D. Ga. BLR 7016-1(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 7016-2(a): the parties file the proposed consolidated
+/// pretrial order no later than 30 days after the close of discovery; a
+/// pending summary judgment motion suspends the time until 30 days after the
+/// court rules on it.
+deadline pretrial-order-period: 30.days after DiscoveryClosed() counted_by frcp6 cite "N.D. Ga. BLR 7016-2(a)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 7016-2(b)(13), 7016-3(18)(B): another party may rely on a
+/// representation that a witness will be called unless notice to the contrary
+/// is given 14 days prior to trial.
+deadline witness-withdrawal-notice-period: 14.days before TrialDate() counted_by frcp6 cite "N.D. Ga. BLR 7016-2(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 7026-2(c): absent cause shown, a party designates an expert
+/// witness not less than 30 days prior to the close of discovery.
+deadline expert-designation-period: 30.days before DiscoveryClosed() counted_by frcp6 cite "N.D. Ga. BLR 7026-2(c)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 7037-1(c): a response to a motion to compel discovery is
+/// served within 14 days after service of the motion.
+deadline compel-response-period: 14.days after CompelMotionServed() counted_by frcp6 cite "N.D. Ga. BLR 7037-1(c)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 7041-1(a)(4): when a matter is removed from the calendar as
+/// resolved, the plaintiff or movant submits a consent order, a dismissal or
+/// other papers effecting the resolution within 30 days of the date the trial
+/// or hearing was scheduled, or it may be dismissed for want of prosecution.
+deadline resolved-matter-papers-period: 30.days after ResolvedMatterHearingDate() counted_by frcp6 cite "N.D. Ga. BLR 7041-1(a)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 7056-1(b): unless the court orders otherwise, a motion for
+/// summary judgment is filed as soon as possible but not later than 28 days
+/// after the close of discovery.
+deadline summary-judgment-motion-period: 28.days after DiscoveryClosed() counted_by frcp6 cite "N.D. Ga. BLR 7056-1(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 9007-2(b): within three days of service, the party serving
+/// notices files a Certificate of Service complying with BLR 9013-3(a).
+deadline certificate-of-service-period: 3.days after NoticeServed() counted_by frcp6 cite "N.D. Ga. BLR 9007-2(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 9010-5(b)(1)(F): unless the withdrawal is with the client's
+/// consent, the client has 14 days from service of the attorney's notice of
+/// intent to contact the attorney and object; the notice gives the client 14
+/// days before the motion is filed.
+deadline client-withdrawal-objection-period: 14.days after WithdrawalNoticeServed() counted_by frcp6 cite "N.D. Ga. BLR 9010-5(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 9010-5(b)(2): the notice accompanying an attorney's motion to
+/// withdraw advises the client that any objection must be filed within 14
+/// days after its service.
+deadline withdrawal-motion-objection-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "N.D. Ga. BLR 9010-5(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 9013-2(a): a proposed order is submitted to the bankruptcy
+/// judge within seven days from the date of pronouncement or of the scheduled
+/// hearing.
+deadline proposed-order-period: 7.days after RulingPronounced() counted_by frcp6 cite "N.D. Ga. BLR 9013-2(a)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 9015-2: the parties have 30 days after the clerk's notice to
+/// execute and file a joint pleading consenting to a jury trial before the
+/// bankruptcy court.
+deadline jury-consent-period: 30.days after JuryConsentNoticed() counted_by frcp6 cite "N.D. Ga. BLR 9015-2"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 9017-1(b): within 30 days after the courtroom deputy's
+/// custody ends, the introducing party retrieves its exhibits, or they may be
+/// destroyed.
+deadline exhibit-retrieval-period: 30.days after ExhibitCustodyEnded() counted_by frcp6 cite "N.D. Ga. BLR 9017-1(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ga. BLR 9027-1: when a proceeding is removed with pending motions not
+/// yet briefed, the moving party serves a memorandum in support within 14
+/// days after removal; opponents respond under BLR 7007-1(c).
+deadline removed-motion-memorandum-period: 14.days after ProceedingRemoved() counted_by frcp6 cite "N.D. Ga. BLR 9027-1"
+{
+  forum frcp
+}
+
+start motion-served
+
+state motion-served: "Motion served in an adversary proceeding" by applicant cite "N.D. Ga. BLR 7007-1(a)"
+{
+  note "A motion is accompanied by a memorandum of law or other citation of authority and any supporting affidavits (BLR 7007-1(a)); briefs are limited to 25 pages absent prior permission (BLR 7007-1(e))."
+  edge-motion-served-response "Response filed" -> responded {
+    authority cite "N.D. Ga. BLR 7007-1(c)"
+  }
+  edge-motion-served-unopposed "No response: no opposition" -> ruling {
+    authority cite "N.D. Ga. BLR 7007-1(c)"
+  }
+}
+
+state responded: "Response filed" by opponent cite "N.D. Ga. BLR 7007-1(c)"
+{
+  note "The response is due 14 days after service of the motion (21 days for summary judgment, BLR 7007-1(c)); a reply, not routine, is due 14 days after service of the response and limited to 15 pages (BLR 7007-1(d)-(e))."
+  edge-responded-submitted "Motion submitted" -> ruling { authority cite "N.D. Ga. BLR 7007-1(d)" }
+}
+
+decision ruling: "Motion decided" by court cite "N.D. Ga. BLR 7007-1(f)"
+{
+  note "Motions are decided without a hearing unless the court orders one (BLR 7007-1(f)); the court may decline to consider a nonconforming motion or brief (BLR 7007-1(h))."
+  edge-ruling-granted "Granted" -> decided { authority cite "N.D. Ga. BLR 7007-1(f)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "N.D. Ga. BLR 7007-1(h)" }
+}
+
+terminal decided: "Motion decided: the proceeding continues under lit/frbp" outcome [procedural] cite "N.D. Ga. BLR 1001-3"
+{
+  note "The Rules supplement the District Court's Local Rules, the FRBP and the FRCP and are construed consistently with them (BLR 1001-3); in adversary proceedings and contested matters they govern over inconsistent District Court Local Rules (BLR 7001-1)."
+}

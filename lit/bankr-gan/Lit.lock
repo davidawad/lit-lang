@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-gan-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:37a9d2c7c8e6b54d896675ec8cf85ee0f2aecff1848378de5392d6135e6f9aaf"
+semantic = "sha256:4bae0b7af31ae9c49f4024d152c0fae96496ac3f740efcf272cdd409077cf302"
+texts = [
+    "ganb-lbr sources/bankr-gan/ganb-lbr-2019-09-01-sectioned.txt sha256:f4322f29f710dbedd0db79647c28ce3b6ccc0b4fd3935bd11e2f61297ead0aff",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-gan"
-version = "0.0.1"
-language = 1
-source = "sha256:19b2554a22f7675033dbabfc93306941a95b60440069dadea020327b234841b8"
-semantic = "sha256:cfc8e9a756a25f402f76b140f903cdae02606d2c42cf79218f0dff5901a4e397"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

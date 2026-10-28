@@ -1,0 +1,54 @@
+# The U.S. District Court for the Middle District of Pennsylvania's local
+# criminal rules (LCrR) as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods the criminal rules
+# themselves state and re-encodes no FRCrimP, Speedy Trial Act or FRAP
+# 4(b) period (one source of truth: lit/frcrimp). Each period is counted
+# under FRCrimP 45(a), which governs "any local rule", so each deadline
+# names `forum frcrimp`. The rules are the Rules of Court effective
+# December 1, 2014, which the court states were last amended then
+# (sources/pamd), so in_force is that date; earlier editions are not
+# vendored, so a query before it is a hole in the corpus. The general
+# Local Rules apply in criminal proceedings too unless they provide
+# otherwise (M.D. Pa. LR 1.1); their periods are encoded once, in
+# lit/pamd. An appeal goes to the Third Circuit under lit/frcrimp's FRAP
+# 4(b) period.
+[package]
+name = "pamd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "pamd-criminal-local-rules"
+forum = "pamd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Middle District of Pennsylvania: Local Criminal Rules"
+description = "The Middle District of Pennsylvania's local criminal rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the brief opposing a continuance of trial, the presentence schedule after a guilty verdict or plea (disclosure and sentencing dates, the government's statement of offense conduct and restitution information), the briefing of an appeal from a magistrate judge's misdemeanor judgment, and the election on a petty-offense violation notice."
+in_force = "2014-12-01"
+known_at = "2026-10-28"
+unknown_before = "2014-12-01"
+jurisdiction = "U.S. District Court for the Middle District of Pennsylvania (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "pamd-lcrr"
+issuer = "United States District Court for the Middle District of Pennsylvania"
+date = "2014-12-01"
+designation = "Rules of Court, Criminal Rules (effective December 1, 2014)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.pamd-lcrr]
+title = "Rules of Court of the United States District Court for the Middle District of Pennsylvania (effective December 1, 2014), Criminal Rules"
+url = "https://www.pamd.uscourts.gov/sites/pamd/files/LR120114.pdf"
+path = "sources/pamd/local-rules-2014-12-01-sectioned.txt"
+path_sha256 = "c85ec6d3297d11f3ccfb6fbb76d453fe11c4786c04305577d1e62f02dbfb4d0a"
+sha256 = "dc93f968e24b935be49f6f3bdcac3febaaec812442deb571f48b547e9deb9611"
+as_of = "2014-12-01"
+cite_prefixes = ["M.D. Pa. LCrR"]
+section_heading = "LCrR {n}"

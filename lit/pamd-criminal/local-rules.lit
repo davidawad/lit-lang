@@ -1,0 +1,143 @@
+module pamd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The Middle District of Pennsylvania's own criminal periods, counted under
+// the criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method.
+//
+// The general Local Rules apply in criminal proceedings unless they
+// provide otherwise (M.D. Pa. LR 1.1), among them the 14-day appeal from a
+// magistrate judge's non-dispositive order in a civil or criminal case (LR
+// 72.2); those periods are encoded once, in lit/pamd.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: the presentence report is provided at least 35 days before the
+// sentencing hearing (M.D. Pa. LCrR 32.1(e); FRCrimP 32(e)(2)), the
+// parties communicate objections within 14 days after receiving it
+// (LCrR 32.1(f); FRCrimP 32(f)(1)), and the final report and addendum go
+// to the court at least 7 days before the hearing (LCrR 32.1(g); FRCrimP
+// 32(g)).
+//
+// Conditions that are not deadlines from a party's event stay in notes: a
+// pretrial motion filed after arraignment states its Speedy Trial Act
+// excludable-time effect, and the opposing party answers that statement
+// with its responsive brief (LCrR 12.1(a), (b)); the government files a
+// statement on a superseding indictment (LCrR 7.1); a probation officer's
+// interview of the defendant postponed more than seven days needs the
+// presiding judge's approval (LCrR 32.1(b)); and the party that obtained a
+// sealing order moves to unseal as soon as its basis ends (LCrR 49(e)).
+// An appellant in a misdemeanor appeal who does not brief in time is
+// deemed to have withdrawn the appeal, and a United States Attorney who
+// does not is deemed not to oppose it (LCrR 58.1).
+//
+// The earlier M.D. Pa. criminal outline's FRCrimP flow and its decisions
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// A motion for a continuance of trial is served (M.D. Pa. LCrR 12.1(c)).
+event ContinuanceMotionServed()
+/// A verdict of guilty, or the entry of a plea of guilty or nolo
+/// contendere (M.D. Pa. LCrR 32.1(a), (c)).
+event GuiltyVerdictOrPlea()
+/// A defendant files an appeal from a magistrate judge's judgment of
+/// conviction (M.D. Pa. LCrR 58.1).
+event MisdemeanorAppealFiled()
+/// The United States Attorney receives a copy of the appellant's brief in
+/// a misdemeanor appeal (M.D. Pa. LCrR 58.1).
+event AppellantBriefReceived()
+/// The appellant receives the appellee's brief in a misdemeanor appeal
+/// (M.D. Pa. LCrR 58.1).
+event AppelleeBriefReceived()
+/// An enforcement officer issues a petty-offense violation notice (M.D. Pa.
+/// LCrR 58.2, 58.3(b)).
+event ViolationNoticeIssued()
+
+/// M.D. Pa. LCrR 12.1(c)(2): a party opposing a motion for a continuance of
+/// trial files a brief in opposition within seven days after service of
+/// the motion; a party that files none is deemed not to oppose it (LCrR
+/// 12.1(c)(3)).
+deadline continuance-opposition: 7.days after ContinuanceMotionServed() counted_by frcrimp45 cite "M.D. Pa. LCrR 12.1(c)"
+{
+  forum frcrimp
+}
+
+/// M.D. Pa. LCrR 32.1(a): the presentence report disclosure date the court
+/// sets is no later than fifty-six days after the verdict of guilty or the
+/// entry of a plea of guilty or nolo contendere; the court may modify the
+/// time for good cause (LCrR 32.1(j)).
+deadline psr-disclosure-date: 56.days after GuiltyVerdictOrPlea() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "M.D. Pa. LCrR 32.1(a); M.D. Pa. LCrR 32.1(j)"
+{
+  forum frcrimp
+}
+
+/// M.D. Pa. LCrR 32.1(a): the sentencing date is no later than ninety-eight
+/// days after the verdict of guilty or the entry of a plea of guilty or
+/// nolo contendere; the court may modify the time for good cause (LCrR
+/// 32.1(j)).
+deadline sentencing-date: 98.days after GuiltyVerdictOrPlea() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "M.D. Pa. LCrR 32.1(a); M.D. Pa. LCrR 32.1(j)"
+{
+  forum frcrimp
+}
+
+/// M.D. Pa. LCrR 32.1(c): within seven days after a verdict of guilty or
+/// the entry of a plea of guilty or nolo contendere, the government
+/// provides the probation officer and defense counsel a comprehensive
+/// Statement of Offense Conduct with supporting documentation.
+deadline offense-conduct-statement: 7.days after GuiltyVerdictOrPlea() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "M.D. Pa. LCrR 32.1(c); M.D. Pa. LCrR 32.1(j)"
+{
+  forum frcrimp
+}
+
+/// M.D. Pa. LCrR 32.1(c): if the defendant is responsible for restitution,
+/// the government within twenty-eight days submits the information the
+/// court needs to determine it (each victim, the loss of each, and its
+/// documentary support).
+deadline restitution-information: 28.days after GuiltyVerdictOrPlea() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "M.D. Pa. LCrR 32.1(c); M.D. Pa. LCrR 32.1(j)"
+{
+  forum frcrimp
+}
+
+/// M.D. Pa. LCrR 58.1: the appellant serves and submits a brief within
+/// fourteen days of the date of filing of the appeal.
+deadline misdemeanor-appellant-brief: 14.days after MisdemeanorAppealFiled() counted_by frcrimp45 cite "M.D. Pa. LCrR 58.1"
+{
+  forum frcrimp
+}
+
+/// M.D. Pa. LCrR 58.1: the United States Attorney serves and submits a
+/// brief within fourteen days after receipt of a copy of the appellant's
+/// brief.
+deadline misdemeanor-appellee-brief: 14.days after AppellantBriefReceived() counted_by frcrimp45 cite "M.D. Pa. LCrR 58.1"
+{
+  forum frcrimp
+}
+
+/// M.D. Pa. LCrR 58.1: the appellant may serve and submit a reply brief
+/// within seven days after receipt of the appellee's brief.
+deadline misdemeanor-reply-brief: 7.days after AppelleeBriefReceived() counted_by frcrimp45 cite "M.D. Pa. LCrR 58.1"
+{
+  forum frcrimp
+}
+
+/// M.D. Pa. LCrR 58.3(b): the violation notice instructs the defendant to
+/// mail it, stating the election to forfeit collateral or to plead not
+/// guilty and appear, to the Central Violations Bureau in no more than
+/// twenty-one days.
+deadline violation-notice-election: 21.days after ViolationNoticeIssued() counted_by frcrimp45 cite "M.D. Pa. LCrR 58.3(b)"
+{
+  forum frcrimp
+}

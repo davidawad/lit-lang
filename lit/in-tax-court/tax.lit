@@ -1,0 +1,150 @@
+module in-tax-court.tax
+
+// An original tax appeal in the Indiana Tax Court and the Supreme Court's
+// review of its decision, from the applicant's (petitioner's) side. The
+// Tax Court rules (Ind. Tax Ct. R.) and Ind. Code ch. 33-26 are not
+// vendored: the commencement of the original tax appeal, its filing
+// period and fee, and the Tax Court's trial-level procedure are holes.
+// Review is Appellate Rule 63; all other Appellate Rules apply to it
+// except as Rule 63 provides (App. R. 63(Q)). Every period is stated in a
+// note: Appellate Rule 25 counts over Indiana's non-business days, for
+// which lit/core has no counting rule. The earlier outline named no
+// Indiana decision; none is cited. Its Trial Rule 12, 26 and 56 cites
+// assumed the Trial Rules govern the Tax Court, which the vendored text
+// does not state; they are dropped, not carried as holes.
+/// A Petition for Review of a Tax Court decision, or a brief in response
+/// to one: thirty (30) pages, or, with a word count certificate, 14,000
+/// words (App. R. 44(D), (E); 63(I)).
+limit review-petition {
+  pages <= 30 cite "Ind. Appellate Rule 44(D)"
+  words <= 14_000 cite "Ind. Appellate Rule 44(E)"
+  requires certificate word-count for [words] cite "Ind. Appellate Rule 44(E)"
+} cite "Ind. Appellate Rule 63(I)"
+
+/// A reply brief to a brief in response to a Petition for Review of a Tax
+/// Court decision: fifteen (15) pages, or 7,000 words with a word count
+/// certificate (App. R. 44(D), (E); 63(I)).
+limit review-reply {
+  pages <= 15 cite "Ind. Appellate Rule 44(D)"
+  words <= 7_000 cite "Ind. Appellate Rule 44(E)"
+  requires certificate word-count for [words] cite "Ind. Appellate Rule 44(E)"
+} cite "Ind. Appellate Rule 63(I)"
+
+/// A Final Judgment or final disposition of the Tax Court is entered in
+/// its docket (App. R. 2(H), 63(A)).
+event TaxCourtJudgmentEntered()
+/// A Notice of Intent to Petition for Review is filed with the Clerk (App.
+/// R. 63(C)).
+event ReviewNoticeFiled()
+/// The Petition for Review is filed (App. R. 63(E)).
+event ReviewPetitionFiled() paper review-petition
+/// A brief in response to the Petition for Review is filed (App. R. 63(F)).
+event ReviewResponseFiled() paper review-petition
+/// The petitioner's reply brief is filed (App. R. 63(G)).
+event ReviewReplyFiled() paper review-reply
+
+start commenced
+
+state commenced: "Original tax appeal filed" by applicant cite ?("Ind. Code ch. 33-26; Ind. Tax Ct. R.: not vendored") {
+  note "Commencement of an original tax appeal from a final determination of the Department of State Revenue or the Indiana Board of Tax Review, its filing period, fee and form: holes, because neither the Tax Court rules nor Ind. Code ch. 33-26 is vendored. A party who proceeds in forma pauperis in the Tax Court pays no fee on a later Petition for Review (App. R. 63(P))."
+  edge-commenced-decision "Tried or submitted" -> tax-decision {
+    authority cite ?("Ind. Tax Ct. R.: not vendored")
+  }
+  edge-commenced-interlocutory "Interlocutory order: petition for review" -> interlocutory {
+    authority cite "Ind. Appellate Rule 63(H)"
+  }
+}
+
+decision interlocutory: "Interlocutory review" by court cite "Ind. Appellate Rule 63(H)"
+{
+  note "A party adversely affected by an interlocutory order of the Tax Court may petition the Supreme Court for review of it under Rule 14(B), which governs the Record on Appeal in interlocutory appeals; no Notice of Intent to Petition for Review is filed after the Supreme Court accepts a petition for interlocutory review (App. R. 63(H))."
+  edge-interlocutory-continue "Review declined or decided: the case proceeds" -> tax-decision {
+    authority cite "Ind. Appellate Rule 63(H)"
+  }
+}
+
+decision tax-decision: "Tax Court decision" by court cite ?("Ind. Tax Ct. R.: not vendored") {
+  note "The Tax Court's standard and scope of review of the agency determination, and its trial procedure, are holes (Tax Court rules and Ind. Code ch. 33-26 not vendored). A judgment disposing of all claims as to all parties, or otherwise final under App. R. 2(H), is a Final Judgment the Supreme Court may review (App. R. 63(A))."
+  edge-tax-decision-won "Decided for the petitioner" -> won {
+    event TaxCourtJudgmentEntered()
+    authority cite "Ind. Appellate Rule 63(A)"
+  }
+  edge-tax-decision-lost "Decided against the petitioner" -> post-judgment {
+    event TaxCourtJudgmentEntered()
+    authority cite "Ind. Appellate Rule 63(A)"
+  }
+}
+
+terminal won: "Decided for the petitioner" outcome [win] cite "Ind. Appellate Rule 63(A)"
+{
+  note "The adverse party may petition for rehearing in the Tax Court or for review in the Supreme Court within the Rule 63 periods (App. R. 63(B), (C)). Outcome from the applicant's side."
+}
+
+decision post-judgment: "Rehearing, review or acceptance" by applicant cite "Ind. Appellate Rule 63(B)"
+{
+  note "A party adversely affected by a Final Judgment or final disposition may file a Petition for Rehearing with the Tax Court, not a Motion to Correct Error, governed by Rule 54; it need not be filed to seek review, but when used, the ruling on it is the final decision from which one review may be sought (App. R. 63(B)). Rule 54(B) requires the Petition for Rehearing no later than thirty (30) days after the decision. The Notice of Intent to Petition for Review is filed with the Clerk under Rule 9 (except its filing fee) no later than thirty (30) days after the docket entry of the Final Judgment or final disposition, or, if a timely Petition for Rehearing was filed by any party, of its final disposition; Rule 25(C)'s three-day mail extension does not apply and no extension is granted (App. R. 63(C), (K))."
+  edge-post-judgment-rehearing "Petition for rehearing in the Tax Court" -> rehearing {
+    authority cite "Ind. Appellate Rule 63(B)"
+  }
+  edge-post-judgment-review "Notice of intent to petition for review" -> record {
+    event ReviewNoticeFiled()
+    authority cite "Ind. Appellate Rule 63(C)"
+  }
+  edge-post-judgment-final "No review sought" -> lost-final {
+    authority cite "Ind. Appellate Rule 63(C)"
+  }
+}
+
+decision rehearing: "Rehearing ruling" by court cite "Ind. Appellate Rule 63(B)"
+{
+  note "Rehearing is governed by Rule 54 (App. R. 63(B)). The ruling granting or denying it is the final decision from which review may be sought, and the thirty (30) days for the Notice of Intent run from its docket entry (App. R. 63(B), (C)(2))."
+  edge-rehearing-granted "Granted: decision revisited" -> tax-decision {
+    authority cite "Ind. Appellate Rule 63(B)"
+  }
+  edge-rehearing-review "Denied: notice of intent to petition for review" -> record {
+    event ReviewNoticeFiled()
+    authority cite "Ind. Appellate Rule 63(C)"
+  }
+  edge-rehearing-final "Denied: no review sought" -> lost-final {
+    authority cite "Ind. Appellate Rule 63(C)"
+  }
+}
+
+state record: "Clerk's Record and Transcript" by office cite "Ind. Appellate Rule 63(D)"
+{
+  note "The Clerk gives the Court Reporter notice of the Notice of Intent and assembles the Clerk's Record under Rule 10; the Court Reporter prepares and files the Transcript under Rule 11; the Clerk retains, transmits and grants access to the Record under Rule 12, where \"trial court clerk\" means the Clerk (App. R. 63(D))."
+  edge-record-petition "Notice of completion: petition for review" -> briefing {
+    event ReviewPetitionFiled()
+    authority cite "Ind. Appellate Rule 63(E)"
+  }
+}
+
+state briefing: "Petition for Review, response and reply" by applicant cite "Ind. Appellate Rule 63(E)"
+{
+  note "The Petition for Review is filed no later than thirty (30) days after the docket entry of the Clerk's Notice of Completion of Clerk's Record if it reports the Transcript complete or not requested, and otherwise of the Clerk's Notice of Completion of Transcript (App. R. 63(E)); the petitioner pays a $125.00 fee unless a state or governmental unit, or in forma pauperis in the Tax Court (App. R. 63(P)). A brief in response may be filed no later than thirty (30) days after the Petition is served, and a reply no later than fifteen (15) days after the response is served (App. R. 63(F), (G)). The Petition and response each carry a Reasons for Granting [or Denying] Review section immediately before the Argument, and no separate brief in support is filed (App. R. 63(I)); any brief may discuss the decision's fiscal impact (App. R. 63(J)). Extensions of these times may be sought under Rule 35 (App. R. 63(K)). Appendices follow Rules 49 to 51 (App. R. 63(L))."
+  edge-briefing-ruling "Briefs filed: review considered" -> review {
+    authority cite "Ind. Appellate Rule 63(M)"
+  }
+}
+
+decision review: "Review granted or denied" by court cite "Ind. Appellate Rule 63(M)"
+{
+  note "The grant of review is a matter of judicial discretion; the principal considerations are a conflict with Tax Court, Court of Appeals or Supreme Court decisions, an important undecided question of law, precedent in need of reconsideration, a conflict with the Supreme Court of the United States or a federal court of appeals on a federal question, and a significant departure from accepted law or practice (App. R. 63(M)). An evenly divided Court denies review (App. R. 63(R)). After review is granted the Tax Court keeps jurisdiction over interim relief and stays, which the Supreme Court may review (App. R. 63(O))."
+  edge-review-denied "Review denied" -> lost-final { authority cite "Ind. Appellate Rule 63(N)" }
+  edge-review-reversed "Granted: reversed" -> reversed {
+    authority cite "Ind. Appellate Rule 63(O)"
+  }
+  edge-review-affirmed "Granted: affirmed" -> lost-final {
+    authority cite "Ind. Appellate Rule 63(O)"
+  }
+}
+
+terminal lost-final: "Tax Court decision final" outcome [loss, final] cite "Ind. Appellate Rule 63(N)"
+{
+  note "Denial of review has no legal effect other than to terminate the litigation in the Supreme Court, and no Petition for Rehearing lies from it (App. R. 63(N)); where the Court is evenly divided the Tax Court's decision is final (App. R. 63(R)). Outcome from the applicant's side."
+}
+
+terminal reversed: "Reversed on review" outcome [win] cite "Ind. Appellate Rule 63(O)"
+{
+  note "The Supreme Court's disposition and the certification of its decision follow the other Appellate Rules (App. R. 63(Q)). Outcome from the applicant's side."
+}

@@ -1,0 +1,45 @@
+# The Indiana Tax Court and the Indiana Supreme Court's review of its
+# decisions. The Tax Court's own rules (Ind. Tax Ct. R.) and its statute
+# (Ind. Code ch. 33-26) are not vendored, so the original tax appeal, its
+# filing period and its trial-level procedure stay holes. The Supreme
+# Court's review is Appellate Rule 63 of the Indiana Rules of Appellate
+# Procedure, updated effective July 1, 2026 (the copy sectioned for
+# lit/indctapp; sources/indctapp): the Notice of Intent to Petition for
+# Review, the Petition for Review, the brief in response and reply, their
+# page and word limits (App. R. 44(D), (E)), and the effect of a grant,
+# denial or evenly divided Court. Time is computed under Appellate Rule 25,
+# for which lit/core has no counting rule, so every period is stated in a
+# note, not encoded as a counted deadline.
+[package]
+name = "in-tax-court"
+version = "0.1.0"
+language = 1
+pack_id = "in-tax-court"
+forum = "in-tax-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "indiana"
+title = "Indiana Tax Court, and Supreme Court review of its decisions"
+description = "Original tax appeals in the Indiana Tax Court, whose own rules and statute are not vendored and stay holes, and the Indiana Supreme Court's review of a Tax Court Final Judgment under Appellate Rule 63: rehearing in the Tax Court, the Notice of Intent to Petition for Review, the Petition for Review and its fee, the brief in response and reply and their page and word limits, interlocutory review, and the effect of a grant, denial or evenly divided Court."
+in_force = "2026-07-01"
+known_at = "2026-10-28"
+unknown_before = "2026-07-01"
+jurisdiction = "Indiana Tax Court"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.in-appellate-rules]
+title = "Indiana Rules of Appellate Procedure (adopted effective January 1, 2001; updated, effective July 1, 2026)"
+url = "https://rules.incourts.gov/pdf/PDF%20-%20Appellate/appellate.pdf"
+path = "sources/indctapp/in-appellate-rules-sectioned.txt"
+path_sha256 = "2cf5535875cdf99f49b2f9f4754e75f420d21879303a03afb2c858fbdfa1856e"
+sha256 = "60c64f89d3831e2f6dc5fe0ec474ca663019d258ec4bdf5d8fb3e620649705bb"
+as_of = "2026-07-01"
+cite_prefixes = ["Ind. Appellate Rule"]
+section_heading = "Ind. Appellate Rule {n}"

@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-alm-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:5fb7c138f1d1bad021d1e0a2a71c2becec8de5238c8ad7afb9de86635f375503"
+semantic = "sha256:cc8751e5a7ecddf82b4b166ca093a822b50f1a6825557f49b3b3a2ca7a3a9641"
+texts = [
+    "almb-lbr sources/bankr-alm/almb-lbr-2024-04-01-sectioned.txt sha256:0bc752f4274dda1d3698f34834066fbba8316e42991da79d3dd814b332910fce",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-alm"
-version = "0.0.1"
-language = 1
-source = "sha256:667baf3657ff4eacaee6d8272b0c1a3be3bc02fa2c77fc87275f311918199f3b"
-semantic = "sha256:98e5c8acc6cd506bb8f8dac505270f37294d6779d7cc88f774d5567ddc9b6af8"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

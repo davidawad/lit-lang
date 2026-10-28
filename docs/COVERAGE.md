@@ -12,6 +12,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 |---|---|--:|--:|--:|--:|
 | akd-local-rules | `lit/akd` | 49 | 0 | 49 | 0 |
 | bankr-ak-local-rules | `lit/bankr-ak` | 83 | 0 | 83 | 0 |
+| bankr-alm-local-rules | `lit/bankr-alm` | 22 | 0 | 0 | 0 |
 | bankr-are-local-rules | `lit/bankr-are` | 2 | 0 | 0 | 0 |
 | bankr-arw-local-rules | `lit/bankr-arw` | 2 | 0 | 0 | 0 |
 | bankr-az-local-rules | `lit/bankr-az` | 43 | 0 | 0 | 0 |

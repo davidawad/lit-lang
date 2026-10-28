@@ -1,0 +1,47 @@
+# The Local Rules of the U.S. Bankruptcy Court for the Middle District of
+# Alabama over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares only
+# the periods the rules themselves state and re-encodes no FRBP period. It
+# is a base package, not a `kind = "local-rule"` layer: lit/core has no
+# bankruptcy forum family (L2011 for `bankr-alm`), as for lit/bankr-dc.
+# Each period is counted under FRBP 9006(a), the FRCP 6(a) method (core's
+# frcp6).
+#
+# Layers: the Local Rules effective April 1, 2024 are the only vendored
+# text (sources/bankr-alm/PROVENANCE.md); no amending order is vendored, so
+# the consolidation is the only layer. No earlier edition is vendored, so a
+# query before April 1, 2024 is a hole in the corpus.
+[package]
+name = "bankr-alm-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-alm-local-rules"
+forum = "bankr-alm"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Middle District of Alabama: Local Rules"
+description = "The Bankr. M.D. Ala. Local Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): the electronic filing declaration, installment fee denials, negative-notice dismissal motions (LBR 1017-2), excused § 341 appearances, Rule 2004 examinations, negative-notice claim objections (LBR 3007-1) and filings (LBR 9007-1), chapter 13 conditional denials of stay relief, § 362(c)(3) motions, debtor duties, chapter 12 and 13 discharge motions, the chapter 13 insurance notice, scheduling conferences, removal and exhibits."
+in_force = "2024-04-01"
+known_at = "2026-10-28"
+unknown_before = "2024-04-01"
+jurisdiction = "U.S. Bankruptcy Court for the Middle District of Alabama"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.almb-lbr]
+title = "Local Rules of the United States Bankruptcy Court for the Middle District of Alabama (effective April 1, 2024)"
+url = "https://www.almb.uscourts.gov/sites/almb/files/ALMB%20Local%20Rules%2C%20April%201%2C%202024.pdf"
+path = "sources/bankr-alm/almb-lbr-2024-04-01-sectioned.txt"
+path_sha256 = "0bc752f4274dda1d3698f34834066fbba8316e42991da79d3dd814b332910fce"
+sha256 = "86b99199bb5e33aa9ac9aeab4d83884df3a640eff55b78ffdc56916fa6c8f12f"
+as_of = "2024-04-01"
+cite_prefixes = ["M.D. Ala. LBR"]
+section_heading = "Rule {n}"

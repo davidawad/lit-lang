@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "la-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "la-supreme-court-civil"
+version = "0.1.0"
+language = 1
+source = "sha256:a143495ec5ad208df4b35fb972843da2fe5cd07a7bd187e3ac315c87018d1b3d"
+semantic = "sha256:9477f374c960b84b176af6c1761a20f59997708245187b667b6a07dd5416ff29"
+texts = [
+    "la-ccp sources/la-appellate/la-ccp.txt sha256:ebdc94a5fcf7cc7ddfe49781f6fb12b8f4412b5d66f6aed3603e25d623c73373",
+]
+dependencies = [
+    "core 1.0.0",
+    "la-state-rules 0.1.0",
+]

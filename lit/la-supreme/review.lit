@@ -1,0 +1,79 @@
+module la-supreme-court-civil.review
+
+import la-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
+
+start petition
+
+decision petition: "Apply for a writ of review?" by applicant cite ?("La. Const. art. V, sec. 5; La. Sup. Ct. R. X") {
+  note "Review of a court of appeal decision in the Supreme Court of Louisiana is by writ application under the court's supervisory jurisdiction (La. Const. art. V, § 5) and Supreme Court Rule X; neither is vendored, so the application delay, its form, length and the grounds for a grant are holes. A court of appeal decision arrives from lit/la-appellate."
+  edge-petition-none "No application: the court of appeal decision stands" -> review-not-sought {
+    authority cite ?("La. Sup. Ct. R. X")
+  }
+  edge-petition-filed "Writ application filed" -> review-decision {
+    event ReviewPetitionFiled()
+    authority cite ?("La. Const. art. V, sec. 5; La. Sup. Ct. R. X")
+  }
+}
+
+chance review-decision: "Writ granted or denied" by court cite ?("La. Const. art. V, sec. 5; La. Sup. Ct. R. X") {
+  note "The grant of a writ is discretionary; the grant standard (La. Sup. Ct. R. X, not vendored) and the grant probability are holes."
+  edge-review-denied "Writ denied" -> review-denied p ? {}
+  edge-review-granted "Writ granted" -> briefing p ? {}
+}
+
+state briefing: "Briefs on the merits" by applicant cite ?("La. Sup. Ct. R.") {
+  note "Merits briefing periods, form and length are set by the Supreme Court Rules, which are not vendored; they are holes."
+  edge-briefing-argument "Argued or submitted" -> argument { authority cite ?("La. Sup. Ct. R.") }
+}
+
+state argument: "Argument or submission" by court cite ?("La. Sup. Ct. R.") {
+  note "Whether the case is argued or submitted on briefs is set by the Supreme Court Rules, which are not vendored."
+  edge-argument-decision "Decision rendered" -> decision { authority cite "La. C.C.P. art. 2164" }
+}
+
+chance decision: "Court decides" by court cite "La. C.C.P. art. 2164"
+{
+  note "The appellate court renders any judgment which is just, legal and proper upon the record on appeal, may award damages, including attorney fees, for a frivolous appeal or application for writs, and may tax the costs of the lower or appellate court against any party as it considers equitable (La. C.C.P. art. 2164). Outcome probabilities are holes."
+  edge-decision-affirmed "Affirmed" -> rehearing p ? { event DecisionFiled() }
+  edge-decision-reversed "Reversed, amended or remanded" -> rehearing p ? { event DecisionFiled() }
+}
+
+decision rehearing: "Apply for rehearing?" by applicant cite ?("La. Sup. Ct. R.") {
+  note "The rehearing delay and grounds are set by the Supreme Court Rules, which are not vendored; they are holes."
+  edge-rehearing-none "No rehearing" -> judgment-final {
+    event MandateIssued()
+    authority cite ?("La. Sup. Ct. R.")
+  }
+  edge-rehearing-sought "Rehearing applied for" -> rehearing-decision {
+    authority cite ?("La. Sup. Ct. R.")
+  }
+}
+
+chance rehearing-decision: "Rehearing granted or denied" by court cite ?("La. Sup. Ct. R.") {
+  note "The probability of a grant is a hole."
+  edge-rehearing-denied "Rehearing denied" -> judgment-final p ? {
+    event MandateIssued()
+    authority cite ?("La. Sup. Ct. R.")
+  }
+  edge-rehearing-granted "Rehearing granted" -> rehearing-granted p ? {}
+}
+
+terminal review-not-sought: "Court of appeal decision final" outcome [final] cite ?("La. Sup. Ct. R. X") {
+  note "When the decision becomes final without an application is set by rules that are not vendored."
+  payoff ?
+}
+
+terminal review-denied: "Writ denied" outcome [final, loss] cite ?("La. Const. art. V, sec. 5; La. Sup. Ct. R. X") {
+  note "Denial leaves the court of appeal decision in place. Review in the Supreme Court of the United States (28 U.S.C. § 1257) is not modeled."
+  payoff ?
+}
+
+terminal judgment-final: "Judgment final; case returns below" outcome [final] cite ?("La. Sup. Ct. R.") {
+  note "When the judgment becomes final and how the case returns to the court below are set by rules that are not vendored. Costs follow La. C.C.P. art. 2164."
+  payoff ?
+}
+
+terminal rehearing-granted: "Rehearing granted" outcome [procedural] cite ?("La. Sup. Ct. R.") {
+  note "Proceedings on rehearing are not modeled."
+  payoff ?
+}

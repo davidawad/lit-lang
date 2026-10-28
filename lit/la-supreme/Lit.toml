@@ -1,0 +1,45 @@
+# Discretionary review in the Supreme Court of Louisiana of a decision of a
+# Louisiana court of appeal (lit/la-appellate), promoted from
+# outlines/fifth-circuit/louisiana/state-supreme-court (lg-f3q8.110). The
+# only vendored text that reaches this court is La. C.C.P. art. 2164
+# (sources/la-appellate/la-ccp.txt: the appellate court renders the
+# judgment the record warrants). The Louisiana Constitution (art. V, § 5,
+# the court's supervisory jurisdiction) and the Rules of the Supreme Court
+# of Louisiana (Rule X, writ applications; its rehearing rule) are not
+# vendored, so the writ application delay, its form and grounds, briefing,
+# argument and rehearing stay holes with a note; no value is stated from
+# them. Direct appeals and original proceedings are not modeled.
+[package]
+name = "la-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "la-supreme-court-civil"
+forum = "la-supreme-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "louisiana"
+title = "Supreme Court of Louisiana, civil writ review"
+description = "Discretionary review by writ in the Supreme Court of Louisiana of a court of appeal decision, as far as the vendored text states: the writ application, grant or denial, briefing and argument, decision (La. C.C.P. art. 2164), rehearing and the return of the case; every period and limit is a hole because the Louisiana Constitution and the Supreme Court Rules are not vendored."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "Supreme Court of Louisiana (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+la-state-rules = { version = "^0.1.0", path = "../la-rules" }
+
+[sources.la-ccp]
+title = "Louisiana Code of Civil Procedure, articles 1841, 2083, 2121, 2123, 2127 and 2164, as published on legis.la.gov on October 27, 2026"
+url = "https://legis.la.gov/Legis/Laws_Toc.aspx?folder=68&level=Parent"
+path = "sources/la-appellate/la-ccp.txt"
+path_sha256 = "ebdc94a5fcf7cc7ddfe49781f6fb12b8f4412b5d66f6aed3603e25d623c73373"
+as_of = "2026-10-27"
+cite_prefixes = ["La. C.C.P. art."]
+section_heading = "La. C.C.P. art. {n}"

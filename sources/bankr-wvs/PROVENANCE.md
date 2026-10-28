@@ -14,3 +14,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 392227050cd81c12f70616d708594b2c3681c1f049cb893c7f27cb6a19b4a0c1. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-wvs/original/wvs-go-23-05.pdf` as served (sha256 fd31f5c4bdf8ff6cc2e9fa9215982b05ecdd05670a7c7c5695586c503d01b78d); extraction sha256 392227050cd81c12f70616d708594b2c3681c1f049cb893c7f27cb6a19b4a0c1.
+
+### `bankr-wvs/wvs-local-rules-2012-11-sectioned.txt` — S.D. W. Va. Local Bankruptcy Rules, sectioned
+
+- Derived in the pod (lg-u561.15) from `bankr-wvs/wvs-local-rules-2012-11.txt` (extract sha256 5f7389305622ba98f33cb9f085be078d40487da622ded7194968e35ddb2fcf12); nothing fetched. One `## Rule <n>` line is inserted before each rule's own `<n>   Title` heading line in the body of the rules (`1007-1` through `9076-1`, 107 rules, including the decimal rules such as 1019-1.1 and 3015-1.3, and the rescinded 3011-1 and 3015-1.3, which keep their sections; the heading `1007–2`, printed with an en dash, is keyed with an ASCII hyphen); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, November 2012 (court: effective January 2, 2013).
+- Sectioned sha256 cadb7f5fa10d6de52afbce7c4edc53c9c173ff9f6aea8f47ff9e09089f703af5 (the `path_sha256` pinned by `lit/bankr-wvs/Lit.toml`).

@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-wvs-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:13f79372f7778936e81fed22dd86396d1f6c99798ba517cc91ced4956eee1fec"
+semantic = "sha256:1e311bc0be29461d4a8493f065407bfa9c8fceafe047848a9c9dffe151f9e9da"
+texts = [
+    "wvsb-lbr sources/bankr-wvs/wvs-local-rules-2012-11-sectioned.txt sha256:cadb7f5fa10d6de52afbce7c4edc53c9c173ff9f6aea8f47ff9e09089f703af5",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-wvs"
-version = "0.0.1"
-language = 1
-source = "sha256:8f35551ddd3544e334335e5e629886b14de39761f9a8f2398245983ed146ffad"
-semantic = "sha256:74611e9097a7cc96de9a65c1183dd847734cff3d282bc80df63448f046956b99"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

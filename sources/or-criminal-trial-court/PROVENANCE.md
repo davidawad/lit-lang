@@ -16,3 +16,9 @@
 - Extraction sha256 88c1f987028d8a91fb49c27f2b82577397454db619b31775e3f4215bed0aa86a.
 
 - Note (lg-gddt): Oregon criminal procedure is statutory (these chapters; appeals in ORS chapter 138). Appellate rules: Oregon Rules of Appellate Procedure, covered by sources/or-court-of-appeals/.
+
+### `or-criminal-trial-court/or-ors-chapters-131-138-criminal-procedure-sectioned.txt` — Oregon Revised Statutes chapters 131 to 138 (2025 edition), sectioned
+
+- Derived in the pod (lg-gddt.22) from `or-criminal-trial-court/or-ors-chapters-131-138-criminal-procedure.txt` (extract sha256 88c1f987028d8a91fb49c27f2b82577397454db619b31775e3f4215bed0aa86a); nothing fetched. One marker line `## ORS <n>` is inserted before each section's own heading line (a line opening, after the extract's run of U+FFFD indent characters, with the section number `13x.xxx`, its catchline on the same or the next line; 1144 sections across chapters 131 to 138, repealed and renumbered entries included); the chapter tables of contents and the page `## ORS Chapter <n>` lines carry no new markers. Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Edition: as the extract ("2025 EDITION" on the chapter pages).
+- Sectioned sha256 4fac5e4023006db330595d355620dd36dc8f100f3367960f39f309cad5073ccc (the `path_sha256` pinned by `lit/or-criminal-trial-court/Lit.toml`).

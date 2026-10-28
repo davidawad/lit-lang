@@ -1,0 +1,43 @@
+# Criminal prosecutions in the Oregon circuit courts under Title 14 of the
+# Oregon Revised Statutes, Procedure in Criminal Matters (ORS chapters 131
+# to 138), the "2025 EDITION" chapter pages as served by the Oregon
+# Legislature (sources/or-criminal-trial-court). The edition states a
+# year, not a day, so in_force is the retrieval date and an earlier query
+# is a hole in the corpus. Oregon criminal procedure is statutory: ORS
+# 135.746 to 135.752 are the speedy-trial provisions, and appeals and
+# post-conviction relief are in ORS chapter 138 (in the same set). The
+# Oregon Rules of Civil Procedure that ORS 136.535 applies to new-trial
+# and arrest-of-judgment motions (ORCP 64) are not vendored. lit/core has
+# no counting rule for these statutes, so the periods are stated in notes,
+# not encoded as counted deadlines.
+[package]
+name = "or-circuit-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "or-circuit-court-criminal"
+forum = "or-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "oregon"
+title = "Oregon circuit courts, criminal"
+description = "Criminal prosecutions in the Oregon circuit courts under ORS chapters 131 to 138: arraignment and the release decision, the preliminary hearing or grand jury, discovery, the omnibus hearing, the ORS 135.746 trial-commencement limits and dismissal, pleas, jury trial and verdict, sentencing, the 30-day ORS 138.071 notice of appeal and the two-year post-conviction petition, with every period stated in notes from the vendored statutes."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Oregon circuit courts (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ors-14]
+title = "Oregon Revised Statutes, Title 14, Procedure in Criminal Matters, chapters 131 to 138 (2025 edition, as served October 28, 2026)"
+url = "https://www.oregonlegislature.gov/bills_laws/Pages/ORS.aspx"
+path = "sources/or-criminal-trial-court/or-ors-chapters-131-138-criminal-procedure-sectioned.txt"
+path_sha256 = "4fac5e4023006db330595d355620dd36dc8f100f3367960f39f309cad5073ccc"
+as_of = "2026-10-28"
+cite_prefixes = ["ORS"]
+section_heading = "ORS {n}"

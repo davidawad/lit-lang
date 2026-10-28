@@ -1,0 +1,139 @@
+module or-circuit-court-criminal.criminal
+
+// Criminal prosecutions in the Oregon circuit courts under ORS chapters
+// 131 to 138 (2025 edition; sources/or-criminal-trial-court). The
+// statutes' periods are stated in the notes; lit/core has no counting rule
+// for them, so none is encoded as a counted deadline. ORCP 64, which ORS
+// 136.535 applies to new-trial and arrest-of-judgment motions, is not
+// vendored, so its period is a hole. Outcomes are from the defendant's
+// side. The earlier outline's leading decisions (County of Riverside v.
+// McLaughlin, Gerstein v. Pugh, Gideon v. Wainwright, Brady v. Maryland,
+// Mapp v. Ohio, Barker v. Wingo, Boykin v. Alabama, Missouri v. Frye,
+// Jackson v. Virginia, Ramos v. Louisiana, Apprendi v. New Jersey, Roe v.
+// Flores-Ortega, Garza v. Idaho) are removed: no reporter text is
+// vendored.
+start arrested
+
+state arrested: "Arrest or citation" by applicant cite "ORS 135.245"
+{
+  note "A person in custody has the right to be taken before a magistrate without undue delay (ORS 135.245(1)). When the accusatory instrument has been filed and the defendant arrested, the defendant is arraigned; a defendant in custody is arraigned during the first 36 hours of custody, excluding holidays, Saturdays and Sundays, and in other cases within 96 hours after the arrest, except for good cause or at the defendant's request (ORS 135.010)."
+  edge-arrested-appearance "Arraignment or first appearance" -> initial-appearance {
+    authority cite "ORS 135.010"
+  }
+}
+
+decision initial-appearance: "Release decision" by court cite "ORS 135.245"
+{
+  note "The magistrate makes a release decision at the arraignment or other first appearance unless good cause to postpone it is shown, in which case a release hearing is held (ORS 135.245(2)). A defendant is released under ORS 135.230 to 135.290, except that release is denied on a charge of murder, aggravated murder or treason when the proof is evident or the presumption strong (ORS 135.240(1), (2)). A defendant is not released until a release agreement is filed or security deposited (ORS 135.255(1))."
+  edge-initial-appearance-detained "Release denied or postponed" -> probable-cause {
+    authority cite "ORS 135.240"
+  }
+  edge-initial-appearance-released "Released on a release agreement or security" -> probable-cause {
+    authority cite "ORS 135.255"
+  }
+}
+
+decision probable-cause: "Preliminary hearing or grand jury" by court cite "ORS 135.070"
+{
+  note "A defendant charged by information with a felony is informed of the right to a preliminary hearing, which, if requested, is held as soon as practicable and in any event within five judicial days if the defendant is in custody or 30 days if not, extendable for good cause (ORS 135.070(2)). If the hearing shows probable cause the magistrate holds the defendant for further proceedings by written order; otherwise the information is dismissed and the defendant discharged (ORS 135.185; 135.175). A grand jury is a body of seven persons (ORS 132.010)."
+  edge-probable-cause-charged "Held for further proceedings or indicted" -> charged {
+    authority cite "ORS 135.185"
+  }
+  edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
+    authority cite "ORS 135.175"
+  }
+}
+
+state charged: "Indictment or information" by office cite "ORS 135.030"
+{
+  note "A defendant charged with a crime punishable as a felony appears in person at the arraignment, and a misdemeanor defendant in person or by counsel (ORS 135.030(1), (2)). The trial-commencement clock runs from the filing of the charging instrument: a trial whose most serious charge is a misdemeanor must commence within two years, and one whose most serious charge is a felony within three years (ORS 135.746(1)); the limits cease to apply to a defendant who fails to appear for trial, and a represented defendant who does not object within seven days of notice of a trial date outside the limit extends it to that date (ORS 135.746(2), (3)). The periods ORS 135.748 lists are excluded."
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "ORS 135.030" }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "ORS 135.335"
+{
+  note "The pleas are guilty, not guilty and, with the court's consent, no contest; with the consent of the court and the State a defendant may enter a conditional plea reserving in writing review of a specified pretrial motion (ORS 135.335)."
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "ORS 135.805" }
+}
+
+state discovery: "Discovery and the omnibus hearing" by applicant cite "ORS 135.037"
+{
+  note "Discovery under ORS 135.805 to 135.873 applies to all prosecutions in a court of record, and the obligations to disclose are performed as soon as practicable following the filing of the indictment or information, with a continuing duty to disclose (ORS 135.805(1); 135.845). At any time after the accusatory instrument is filed and before trial, the court on a party's motion must, and on its own motion may, order an omnibus hearing to rule on pretrial motions, including suppression, identification, voluntariness and challenges to the accusatory instrument (ORS 135.037(1), (2))."
+  edge-discovery-motions "Pretrial motion at the omnibus hearing" -> motions-ruling {
+    authority cite "ORS 135.037"
+  }
+  edge-discovery-speedy "Motion to dismiss for delay" -> motions-ruling {
+    authority cite "ORS 135.752"
+  }
+  edge-discovery-plea "Plea discussions" -> plea-decision { authority cite "ORS 135.405" }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "ORS 135.037"
+{
+  note "If a trial is not commenced as ORS 135.746 requires, the court orders the charging instrument dismissed without prejudice unless it finds on the record substantial and compelling reasons to allow the proceeding to continue (ORS 135.752). Where there is sufficient reason for delay the court may continue the action and release the defendant (ORS 135.750)."
+  edge-motions-ruling-speedy "Dismissed for delay" -> dismissed { authority cite "ORS 135.752" }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "ORS 135.037"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "ORS 135.037"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "ORS 135.405"
+{
+  note "The district attorney may engage in plea discussions, through defense counsel, toward a plea agreement (ORS 135.405(1), (2)). A plea of guilty or no contest to a felony is put in by the defendant in person in open court (ORS 135.360(1)), and may be withdrawn at any time before judgment with the court's permission (ORS 135.365). Both the defendant and the State may waive a jury, the defendant's election being in writing and with the trial judge's consent (ORS 136.001(2))."
+  edge-plea-decision-plea "Guilty or no-contest plea accepted" -> sentencing {
+    authority cite "ORS 135.360"
+  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "ORS 136.001" }
+}
+
+decision trial: "Verdict" by court cite "ORS 136.450"
+{
+  note "The trial jury consists of 12 persons unless the parties consent to fewer, and of six where only misdemeanors are tried in circuit court (ORS 136.210). A jury may render a verdict of guilty only by unanimous agreement, and a verdict of not guilty only by a concurrence of at least 10 of 12 jurors (ORS 136.450)."
+  edge-trial-acquittal "Not guilty" -> acquitted { authority cite "ORS 136.450" }
+  edge-trial-guilty "Guilty; post-verdict motions" -> post-trial { authority cite "ORS 136.535" }
+}
+
+decision post-trial: "Post-verdict motions" by court cite "ORS 136.535"
+{
+  note "ORS 19.430 and ORCP 64 A, B and D to G regulate new trials in criminal actions, except that no new trial may be granted on the State's application, and ORCP 64 F governs motions in arrest of judgment (ORS 136.535); ORCP 64 is not vendored, so its time limit is a hole. If a motion for new trial or in arrest of judgment is timely served and filed, the notice of appeal is due within 30 days from the earlier of the order disposing of it or the date it is deemed denied (ORS 138.071(2))."
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "ORS 136.535" }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing { authority cite "ORS 137.020" }
+}
+
+state sentencing: "Presentence report and sentencing" by court cite "ORS 137.020"
+{
+  note "After a plea or verdict of guilty the court appoints a time for pronouncing judgment, at least two calendar days after the plea or verdict if the court remains in session; except for good cause, sentencing of a defendant held in custody may not be delayed more than 31 calendar days, or of a defendant not in custody more than 56 calendar days, after the plea or verdict (ORS 137.020(1), (2)). The presentence report and other written information the court considers are made available to the parties at least five judicial days before sentencing (ORS 137.079(1)). Felonies committed on or after November 1, 1989, are sentenced under the Oregon Criminal Justice Commission's rules (ORS 137.010(1))."
+  edge-sentencing-judgment "Sentence pronounced; judgment entered" -> judgment {
+    authority cite "ORS 137.020"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "ORS 138.035"
+{
+  note "A defendant may appeal to the Court of Appeals from a judgment conclusively disposing of the counts, convicting on at least one and imposing sentence (ORS 138.035(1)). Except as ORS 138.071 provides, the notice of appeal must be served and filed not later than 30 days after the judgment or order appealed from was entered in the register, and a defendant's notice of cross-appeal within 10 days after that time expires (ORS 138.071(1), (3))."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "ORS 138.071" }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "ORS 138.071" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "ORS 136.450"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty (ORS 136.450(2))."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "ORS 135.752"
+{
+  note "Outcome from the defendant's side. A dismissal for delay under ORS 135.752 is without prejudice; a discharge after a preliminary hearing dismisses the information (ORS 135.175)."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "ORS 138.035"
+{
+  note "The appeal continues before the Oregon Court of Appeals under ORS chapter 138 and the Oregon Rules of Appellate Procedure."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "ORS 138.510"
+{
+  note "Outcome from the defendant's side. A petition for post-conviction relief must be filed within two years of the entry of the judgment if no appeal is taken, or of the date the appeal is final, or of the denial of certiorari, unless the grounds could not reasonably have been raised earlier (ORS 138.510(3)); federal habeas belongs to lit/habeas."
+}

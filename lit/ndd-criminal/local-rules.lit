@@ -25,23 +25,34 @@ import core.frcrimp45.{ frcrimp45 }
 // Idaho) are FRCrimP and constitutional authority and belong to
 // lit/frcrimp; no reporter text is vendored, so they are removed here, and
 // the court's Speedy Trial Act plan (18 U.S.C. § 3165) is not vendored.
-
 /// A memorandum in support of a motion: at most 20 pages, a table of
 /// contents and table of authorities excluded (Crim. L.R. 47.1(A)(1)); a
 /// motion to reduce sentence is briefed to the same limits (47.1(A)(2)).
-limit motion-memorandum { pages <= 20 cite "D.N.D. Crim. L.R. 47.1(A)" } cite "D.N.D. Crim. L.R. 47.1(A)"
+limit motion-memorandum {
+  pages <= 20 cite "D.N.D. Crim. L.R. 47.1(A)"
+} cite "D.N.D. Crim. L.R. 47.1(A)"
+
 /// A response to a motion: at most 20 pages (Crim. L.R. 47.1(A)(1)).
-limit motion-response { pages <= 20 cite "D.N.D. Crim. L.R. 47.1(A)" } cite "D.N.D. Crim. L.R. 47.1(A)"
+limit motion-response {
+  pages <= 20 cite "D.N.D. Crim. L.R. 47.1(A)"
+} cite "D.N.D. Crim. L.R. 47.1(A)"
+
 /// A reply: at most 7 pages (Crim. L.R. 47.1(A)(1)).
 limit motion-reply { pages <= 7 cite "D.N.D. Crim. L.R. 47.1(A)" } cite "D.N.D. Crim. L.R. 47.1(A)"
+
 /// A memorandum in support of a motion for leave to file an additional
 /// filing or to exceed the page limits, or for oral argument: at most 2
 /// pages (Crim. L.R. 47.1(A)(3), (5)).
-limit leave-memorandum { pages <= 2 cite "D.N.D. Crim. L.R. 47.1(A)" } cite "D.N.D. Crim. L.R. 47.1(A)"
+limit leave-memorandum {
+  pages <= 2 cite "D.N.D. Crim. L.R. 47.1(A)"
+} cite "D.N.D. Crim. L.R. 47.1(A)"
+
 /// An objection to a magistrate judge's order or report and
 /// recommendations, or a response to one: at most 20 pages; no reply is
 /// permitted (Crim. L.R. 59.1(D)(2), (3)).
-limit magistrate-objection { pages <= 20 cite "D.N.D. Crim. L.R. 59.1(D)" } cite "D.N.D. Crim. L.R. 59.1(D)"
+limit magistrate-objection {
+  pages <= 20 cite "D.N.D. Crim. L.R. 59.1(D)"
+} cite "D.N.D. Crim. L.R. 59.1(D)"
 
 /// The date a grand jury witness is subpoenaed to appear or produce
 /// documents (Crim. L.R. 6.1(C)).

@@ -87,9 +87,7 @@ decision plea-decision: "Plea or trial" by applicant cite "Minn. R. Crim. P. 11.
 decision trial: "Verdict" by court cite "Minn. R. Crim. P. 26.03"
 {
   note "After a guilty verdict or the jury's discharge without verdict, a motion for judgment of acquittal may be brought within 15 days after the jury is discharged, or within any further time the court fixes during those 15 days (Minn. R. Crim. P. 26.03, subd. 18(3))."
-  edge-trial-acquittal "Not guilty" -> acquitted {
-    authority cite "Minn. R. Crim. P. 26.03"
-  }
+  edge-trial-acquittal "Not guilty" -> acquitted { authority cite "Minn. R. Crim. P. 26.03" }
   edge-trial-guilty "Guilty; post-verdict motions" -> post-verdict {
     authority cite "Minn. R. Crim. P. 26.04"
   }
@@ -132,7 +130,6 @@ decision judgment: "Judgment of conviction" by applicant cite "Minn. R. Crim. P.
 }
 
 terminal acquitted: "Acquitted" outcome [win] cite "Minn. R. Crim. P. 26.03"
-
 terminal dismissed: "Released or charge dismissed" outcome [win, dismissal] cite "Minn. R. Crim. P. 30.02"
 
 terminal appeal-taken: "Appeal to the Court of Appeals" outcome [appeal] cite "Minn. R. Crim. P. 28.02"

@@ -50,9 +50,7 @@ decision probable-cause: "Preliminary hearing, indictment or trial information" 
 state charged: "Indictment or trial information" by office cite "Iowa R. Crim. P. 2.5(1)"
 {
   note "Every indictable offense may be prosecuted by a trial information with minutes of testimony, filed at any time; a district judge (or a district associate judge with jurisdiction) approves and files it if the minutes, unexplained, would warrant a conviction, and otherwise the charge may go to the grand jury (Iowa R. Crim. P. 2.5(1), (4)). Arraignment is conducted as soon as practicable after the indictment is filed (2.8(1))."
-  edge-charged-arraignment "Arraignment" -> arraignment {
-    authority cite "Iowa R. Crim. P. 2.8(1)"
-  }
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Iowa R. Crim. P. 2.8(1)" }
 }
 
 state arraignment: "Arraignment and plea of not guilty" by applicant cite "Iowa R. Crim. P. 2.8(1)"
@@ -97,17 +95,13 @@ decision plea-decision: "Plea or trial" by applicant cite "Iowa R. Crim. P. 2.8(
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "Iowa R. Crim. P. 2.8(2)"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "Iowa R. Crim. P. 2.33(2)"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "Iowa R. Crim. P. 2.33(2)" }
 }
 
 decision trial: "Verdict" by court cite "Iowa R. Crim. P. 2.22"
 {
   note "Upon a verdict of not guilty the court renders judgment of acquittal immediately (Iowa R. Crim. P. 2.23(1)(a)). If the court declares a mistrial, the case is retried within 90 days unless double jeopardy bars further prosecution, the defendant waives speedy trial, or good cause for further delay is shown (2.19)."
-  edge-trial-acquittal "Not guilty" -> acquitted {
-    authority cite "Iowa R. Crim. P. 2.23(1)"
-  }
+  edge-trial-acquittal "Not guilty" -> acquitted { authority cite "Iowa R. Crim. P. 2.23(1)" }
   edge-trial-guilty "Guilty; motions after trial" -> post-trial {
     authority cite "Iowa R. Crim. P. 2.24(1)"
   }

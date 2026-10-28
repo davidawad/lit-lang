@@ -12,16 +12,14 @@ module mo-criminal-trial-court.criminal
 // vendored, so they are removed here.
 start arrested
 
-state arrested: "Arrest or summons" by applicant cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), arrest, summons and complaint, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
-{
+state arrested: "Arrest or summons" by applicant cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), arrest, summons and complaint, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)") {
   note "The rules governing arrest, the complaint and the initial appearance are not vendored; their periods are holes."
   edge-arrested-appearance "Initial appearance" -> initial-appearance {
     authority cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), initial appearance, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
   }
 }
 
-decision initial-appearance: "Initial appearance and release" by court cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), pretrial release, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
-{
+decision initial-appearance: "Initial appearance and release" by court cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), pretrial release, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)") {
   note "Release conditions and any detention-hearing period are holes (rules not vendored)."
   edge-initial-appearance-detained "Detained" -> charging {
     authority cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), pretrial release, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
@@ -31,8 +29,7 @@ decision initial-appearance: "Initial appearance and release" by court cite ?("M
   }
 }
 
-decision charging: "Preliminary hearing or grand jury" by court cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), preliminary hearing, indictment and information, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
-{
+decision charging: "Preliminary hearing or grand jury" by court cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), preliminary hearing, indictment and information, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)") {
   note "Whether a felony proceeds by indictment or information, and the time to charge, are holes (rules not vendored)."
   edge-charging-charged "Indictment or information filed" -> pretrial {
     authority cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), indictment and information, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
@@ -42,8 +39,7 @@ decision charging: "Preliminary hearing or grand jury" by court cite ?("Missouri
   }
 }
 
-state pretrial: "Arraignment, discovery and pretrial motions" by applicant cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), arraignment, discovery and pretrial motions, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
-{
+state pretrial: "Arraignment, discovery and pretrial motions" by applicant cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), arraignment, discovery and pretrial motions, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)") {
   note "If the defendant announces readiness for trial and files a request for a speedy trial, the court sets the case for trial as soon as reasonably possible; the statute is enforceable by mandamus, and neither a failure to comply with it nor the state's failure to prosecute is a ground for dismissing the indictment or information unless the court also finds the defendant denied the constitutional right to a speedy trial (RSMo 545.780; unverified, CURRENCY UNCONFIRMED). The rules' pretrial motion and discovery periods are holes."
   edge-pretrial-speedy "Request for a speedy trial" -> speedy-trial {
     authority cite ?("RSMo 545.780, CURRENCY UNCONFIRMED (the Revisor's page states no edition date); the value is the vendored text, unverified")
@@ -56,8 +52,7 @@ state pretrial: "Arraignment, discovery and pretrial motions" by applicant cite 
   }
 }
 
-state speedy-trial: "Speedy trial requested" by applicant cite ?("RSMo 545.780, CURRENCY UNCONFIRMED (the Revisor's page states no edition date); the value is the vendored text, unverified")
-{
+state speedy-trial: "Speedy trial requested" by applicant cite ?("RSMo 545.780, CURRENCY UNCONFIRMED (the Revisor's page states no edition date); the value is the vendored text, unverified") {
   note "On the request the court sets the case for trial as soon as reasonably possible (RSMo 545.780.1); the remedy is mandamus, and dismissal follows only on a finding that the constitutional right was denied (545.780.2). Unverified: CURRENCY UNCONFIRMED."
   edge-speedy-trial-set "Case set for trial" -> plea-decision {
     authority cite ?("RSMo 545.780, CURRENCY UNCONFIRMED (the Revisor's page states no edition date); the value is the vendored text, unverified")
@@ -67,8 +62,7 @@ state speedy-trial: "Speedy trial requested" by applicant cite ?("RSMo 545.780, 
   }
 }
 
-decision motions-ruling: "Ruling on pretrial motions" by court cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), pretrial motions, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
-{
+decision motions-ruling: "Ruling on pretrial motions" by court cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), pretrial motions, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)") {
   note "Dismissal for a speedy-trial violation requires a finding that the defendant was denied the constitutional right (RSMo 545.780.2; unverified). The rules' other grounds are holes."
   edge-motions-ruling-speedy "Dismissed: constitutional speedy-trial right denied" -> dismissed {
     authority cite ?("RSMo 545.780, CURRENCY UNCONFIRMED (the Revisor's page states no edition date); the value is the vendored text, unverified")
@@ -81,8 +75,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite ?("Missouri 
   }
 }
 
-decision plea-decision: "Plea or trial" by applicant cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), pleas and plea agreements, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
-{
+decision plea-decision: "Plea or trial" by applicant cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), pleas and plea agreements, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)") {
   note "The plea colloquy and plea-agreement rules are holes (rules not vendored)."
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), pleas and plea agreements, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
@@ -92,8 +85,7 @@ decision plea-decision: "Plea or trial" by applicant cite ?("Missouri Supreme Co
   }
 }
 
-decision trial: "Verdict" by court cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), trial and verdict, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
-{
+decision trial: "Verdict" by court cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), trial and verdict, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)") {
   edge-trial-acquittal "Not guilty" -> acquitted {
     authority cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), trial and verdict, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
   }
@@ -102,8 +94,7 @@ decision trial: "Verdict" by court cite ?("Missouri Supreme Court Rules of Crimi
   }
 }
 
-decision post-trial: "Post-trial motions" by court cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), motion for new trial or judgment of acquittal, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
-{
+decision post-trial: "Post-trial motions" by court cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), motion for new trial or judgment of acquittal, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)") {
   note "The post-trial motion periods are holes (rules not vendored)."
   edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
     authority cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), motion for judgment of acquittal, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
@@ -116,15 +107,13 @@ decision post-trial: "Post-trial motions" by court cite ?("Missouri Supreme Cour
   }
 }
 
-state sentencing: "Sentencing and judgment" by court cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), sentencing and judgment, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
-{
+state sentencing: "Sentencing and judgment" by court cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), sentencing and judgment, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)") {
   edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
     authority cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), judgment, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
   }
 }
 
-decision judgment: "Judgment of conviction" by applicant cite ?("Missouri Supreme Court Rules, criminal appeals (Rule 30), not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
-{
+decision judgment: "Judgment of conviction" by applicant cite ?("Missouri Supreme Court Rules, criminal appeals (Rule 30), not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)") {
   note "The criminal notice-of-appeal period is a hole (the appeal rules are not vendored)."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
     authority cite ?("Missouri Supreme Court Rules, criminal appeals (Rule 30), not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
@@ -135,13 +124,9 @@ decision judgment: "Judgment of conviction" by applicant cite ?("Missouri Suprem
 }
 
 terminal acquitted: "Acquitted" outcome [win] cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), trial and verdict, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
-
 terminal dismissed: "Charge dismissed" outcome [win, dismissal] cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), dismissal, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
-
 terminal appeal-taken: "Appeal taken" outcome [appeal] cite ?("Missouri Supreme Court Rules, criminal appeals (Rule 30), not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
 
-terminal conviction-final: "Conviction final" outcome [loss] cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), judgment, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)")
-{
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("Missouri Supreme Court Rules of Criminal Procedure (Rules 19-37), judgment, not vendored: PARTIAL set (courts.mo.gov refused the fetch, sources/mo-criminal-trial-court/PROVENANCE.md)") {
   note "Postconviction relief under the Supreme Court Rules is a hole (rules not vendored)."
 }
-

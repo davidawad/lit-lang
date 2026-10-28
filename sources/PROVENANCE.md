@@ -442,6 +442,22 @@ Entries live in the forum's own
 - Original: `original/usc-28-app-2017-time/001-nt-pkg-USCODE-2017-title28-html-USCODE-2017-title28-app-federalru-dup1-rule6.html` as served (sha256 43524cf8ac34d6e27356597cf5307a61b5fb0e6fd3516addc1fd7f12d5a9a740); extraction sha256 5d927c0a1b91b1a30a949a272c164ea6826cfebf6eac917da9a676732b22844d. Served at https://www.govinfo.gov/content/pkg/USCODE-2017-title28/html/USCODE-2017-title28-app-federalru-dup1-rule6.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
 - Original: `original/usc-28-app-2017-time/002-ontent-pkg-USCODE-2017-title28-html-USCODE-2017-title28-app-federalru-rule26.html` as served (sha256 6702848ddfeb87f0b06830920aa5ee4d71dd76249c5b0187cc50055a0b214c93); extraction sha256 5d927c0a1b91b1a30a949a272c164ea6826cfebf6eac917da9a676732b22844d. Served at https://www.govinfo.gov/content/pkg/USCODE-2017-title28/html/USCODE-2017-title28-app-federalru-rule26.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
 
+### `usc-28-app-2002-time.txt` — FRAP 26 as printed in the 2002 edition of 28 U.S.C. App.
+
+- The text `lit/core`'s 2002 version of `frap26` took effect with (as
+  amended December 1, 2002, the last amendment its credits list; next
+  amended December 1, 2005): `## FRAP (2002 ed.) Rule 26`, the rule's text,
+  amendment credits and Advisory Committee Notes. Not a canonical ref, as in
+  `usc-28-app-time-history.txt`.
+- Fetched 2026-10-28 from `www.govinfo.gov`'s official United States Code
+  (GPO), 2002 Edition (current through January 6, 2003), granule
+  `USCODE-2002-title28-app-federalru-rule26.htm` (sha256
+  `376b24ff236b967e9d4b3d3fad881f3f479218e9d3945487b727f226a4b20d0d`).
+  Everything from the page's section head to its end, one line per
+  paragraph, tags stripped, entities decoded, runs of spaces collapsed.
+- sha256 (this file): `77560dcd00af4016c24f1ed1817228500e35bc32797ec4d94a980b14556bb827`
+- Original: `original/usc-28-app-2002-time/001-ontent-pkg-USCODE-2002-title28-html-USCODE-2002-title28-app-federalru-rule26.html` as served (sha256 376b24ff236b967e9d4b3d3fad881f3f479218e9d3945487b727f226a4b20d0d); extraction sha256 77560dcd00af4016c24f1ed1817228500e35bc32797ec4d94a980b14556bb827. Served at https://www.govinfo.gov/content/pkg/USCODE-2002-title28/html/USCODE-2002-title28-app-federalru-rule26.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-28.
+
 ### `rule-amendment-history.txt` — amendment histories of the sections `lit/core`'s current versions cite
 
 - One `## versions <heading>` block per section (SPEC §4.3): an `as_of`

@@ -4,7 +4,7 @@
 //! section is then narrowed to the cite's pinpoint (`12(a)(1)(A)(i)`) in
 //! the vendored corpus text.
 use litigate_cli::verdict::Verdict;
-use litigate_engine::cite::{parse_cite_string, CiteGrammar, SourceCorpus};
+use litigate_engine::cite::{parse_cite_string, SourceCorpus};
 use litigate_engine::model::CiteSyntax;
 use litigate_lower::source_map::{Citations, L0Section};
 use litigate_lower::Document;
@@ -72,7 +72,7 @@ pub fn locate(
         .and_then(|v| from_sidecar(v, cite, line))
         .or_else(|| citations.map(Some(&cite.to_owned())).map(|m| m.sections))
         .unwrap_or_default();
-    let refs = parse_cite_string(cite, &CiteGrammar::new(citations.syntax()));
+    let refs = parse_cite_string(cite, &citations.grammar());
     sections
         .into_iter()
         .map(|s| {

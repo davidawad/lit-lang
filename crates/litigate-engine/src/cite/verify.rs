@@ -61,7 +61,7 @@ pub struct CiteCheck {
 #[must_use]
 pub fn check_pack(pack: &Pack, corpus: &SourceCorpus) -> Vec<CiteCheck> {
     let vendored_paths = pack_vendored_paths(pack, corpus);
-    let grammar = CiteGrammar::new(&pack.cite_syntax);
+    let grammar = CiteGrammar::new(&pack.cite_syntax).with_corpus(Some(corpus));
     let mut out = vec![];
     for n in &pack.nodes {
         let Some(cite) = &n.cite else { continue };

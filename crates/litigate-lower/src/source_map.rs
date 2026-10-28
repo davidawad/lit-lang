@@ -330,13 +330,19 @@ impl<'c> Citations<'c> {
         &self.syntax
     }
 
+    /// The grammar of [`Self::syntax`], reading hyphenated sections against
+    /// the corpus when there is one.
+    #[must_use]
+    pub fn grammar(&self) -> CiteGrammar<'_> {
+        CiteGrammar::new(&self.syntax).with_corpus(self.corpus)
+    }
+
     /// The map of `text`: litgraph's own citation parser, then the bound
     /// source and a corpus lookup of each heading.
     #[must_use]
     pub fn map(&self, text: Option<&String>) -> Option<CiteMap> {
         let text = text?;
-        let grammar = CiteGrammar::new(&self.syntax);
-        let sections = parse_cite_string(text, &grammar)
+        let sections = parse_cite_string(text, &self.grammar())
             .iter()
             .filter_map(|c| {
                 let heading = c.heading()?;

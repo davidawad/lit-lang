@@ -17,6 +17,7 @@
 //! family/title of the previous citation forward onto a bare trailing
 //! number the way legal writing does ("§§ 1292(a)(1), 1292(b)").
 
+use crate::cite::corpus::SourceCorpus;
 use crate::model::{CiteCode, CiteShorthand, CiteSyntax};
 
 /// Which body of law a citation belongs to. The title number on
@@ -82,11 +83,13 @@ impl CiteRef {
 }
 
 /// A pack's [`CiteSyntax`], ready to apply: every rule prefix paired with
-/// its body's heading template, plus the pack's shorthands.
+/// its body's heading template, plus the pack's shorthands, and the corpus
+/// its headings resolve in when the caller has one.
 #[derive(Debug, Clone, Default)]
 pub struct CiteGrammar<'a> {
     rules: Vec<(&'a str, &'a str)>,
     shorthands: &'a [CiteShorthand],
+    corpus: Option<&'a SourceCorpus>,
 }
 
 impl<'a> CiteGrammar<'a> {
@@ -104,7 +107,17 @@ impl<'a> CiteGrammar<'a> {
         CiteGrammar {
             rules,
             shorthands: &syntax.shorthands,
+            corpus: None,
         }
+    }
+
+    /// This grammar, reading a hyphenated section as one section rather
+    /// than a range wherever `corpus` has that section's own heading
+    /// (`N.D. Cal. Civil L.R. 7-11` is a rule, not Rules 7 through 11).
+    #[must_use]
+    pub fn with_corpus(mut self, corpus: Option<&'a SourceCorpus>) -> Self {
+        self.corpus = corpus;
+        self
     }
 
     /// The rule prefix `piece` is written with and the text after it,
@@ -137,11 +150,10 @@ pub fn parse_cite_string(raw: &str, grammar: &CiteGrammar<'_>) -> Vec<CiteRef> {
         // A case citation's own reporter cite ("551 U.S. 205 (2007)") is
         // comma-separated from the case name — never split it up.
         if looks_like_case_citation(segment) {
-            out.extend(expand_range(parse_one(
-                segment,
-                last_family.as_ref(),
+            out.extend(expand_range(
+                parse_one(segment, last_family.as_ref(), grammar),
                 grammar,
-            )));
+            ));
             continue;
         }
         for piece in split_top_level_commas(segment) {
@@ -173,7 +185,7 @@ pub fn parse_cite_string(raw: &str, grammar: &CiteGrammar<'_>) -> Vec<CiteRef> {
                 // an unrelated family from an earlier segment.
                 last_family = None;
             }
-            out.extend(expand_range(cref));
+            out.extend(expand_range(cref, grammar));
         }
     }
     out
@@ -185,13 +197,19 @@ pub fn parse_cite_string(raw: &str, grammar: &CiteGrammar<'_>) -> Vec<CiteRef> {
 /// range being treated as one literal, unmatched heading. A citation with its
 /// own subsections (`"12(b)(6)-(7)"`, not a form any pack in this repo
 /// actually uses) is left alone — which subsection each range member binds to
-/// is ambiguous, so guessing would be worse than not expanding. Anything that
-/// isn't a plain member-member range (not a range at all, spans more than 99
-/// members, or the two sides don't share a family/prefix) is returned
-/// unchanged.
-fn expand_range(cref: CiteRef) -> Vec<CiteRef> {
+/// is ambiguous, so guessing would be worse than not expanding. So is a
+/// hyphenated section the grammar's corpus has a heading for (`Civil L.R.
+/// 7-11` in a body numbered `<chapter>-<rule>`). Anything that isn't a plain
+/// member-member range (not a range at all, spans more than 99 members, or
+/// the two sides don't share a family/prefix) is returned unchanged.
+fn expand_range(cref: CiteRef, grammar: &CiteGrammar<'_>) -> Vec<CiteRef> {
     if cref.is_out_of_scope() || !cref.subsections.is_empty() {
         return vec![cref];
+    }
+    if let (Some(corpus), Some(heading)) = (grammar.corpus, cref.heading()) {
+        if !corpus.lookup_all(&heading).is_empty() {
+            return vec![cref];
+        }
     }
     let Some((sep, seplen)) = find_range_separator(&cref.section) else {
         return vec![cref];

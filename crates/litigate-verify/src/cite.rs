@@ -21,7 +21,7 @@ use crate::context::Cite;
 use crate::diag::{emit, note};
 use crate::Context;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity, Span};
-use litigate_engine::cite::{parse_cite_string, CiteGrammar, SourceCorpus};
+use litigate_engine::cite::{parse_cite_string, SourceCorpus};
 use litigate_engine::model::Pack;
 use litigate_lower::source_map::{Citations, L0Section, Pin};
 use litigate_sema::Hole;
@@ -221,7 +221,7 @@ fn unkeyed(
     span: &Span,
     cx: &Context<'_>,
 ) -> Vec<Diagnostic> {
-    let grammar = CiteGrammar::new(citations.syntax());
+    let grammar = citations.grammar();
     parse_cite_string(text, &grammar)
         .into_iter()
         .filter_map(|r| {

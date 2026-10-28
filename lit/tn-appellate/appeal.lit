@@ -1,0 +1,134 @@
+module tn-appellate-civil.appeal
+
+/// An application for permission to appeal to the Tennessee Supreme
+/// Court: at most 15,000 words (Tenn. R. App. P. 11(b)).
+limit permission-application {
+  words <= 15_000 cite "Tenn. R. App. P. 11(b)"
+} cite "Tenn. R. App. P. 11(b)"
+
+/// An answer in opposition to the application: at most 5,000 words; no
+/// reply is filed (Tenn. R. App. P. 11(d)).
+limit permission-answer {
+  words <= 5_000 cite "Tenn. R. App. P. 11(d)"
+} cite "Tenn. R. App. P. 11(d)"
+
+/// A petition for rehearing: at most 15 pages except by permission of the
+/// court or a judge (Tenn. R. App. P. 39(b)).
+limit rehearing-petition { pages <= 15 cite "Tenn. R. App. P. 39(b)" } cite "Tenn. R. App. P. 39(b)"
+
+/// The application for permission to appeal is filed with the clerk of
+/// the Supreme Court (Tenn. R. App. P. 11(b)).
+event PermissionApplicationFiled() paper permission-application
+/// An answer in opposition is filed (Tenn. R. App. P. 11(d)).
+event PermissionAnswerFiled() paper permission-answer
+/// A petition for rehearing is filed (Tenn. R. App. P. 39(b)).
+event RehearingPetitionFiled() paper rehearing-petition
+
+start judgment-entered
+
+state judgment-entered: "Final judgment entered in the trial court" by applicant cite "Tenn. R. App. P. 3"
+{
+  note "In civil actions every final judgment of a trial court from which an appeal lies to the Supreme Court or Court of Appeals is appealable as of right; an order adjudicating fewer than all claims or parties is not appealable except as Rule 9 or Tenn. R. Civ. P. 54.02 permits (Tenn. R. App. P. 3(a)). The notice of appeal is filed with the clerk of the appellate court within 30 days after the date of entry of the judgment appealed from (Tenn. R. App. P. 4(a)). A timely motion under Tenn. R. Civ. P. 50.02, 52.02, 59.07 or 59.04 runs the time for all parties from entry of the order disposing of it (Tenn. R. App. P. 4(b)); a prematurely filed notice is treated as filed after entry of the judgment (Tenn. R. App. P. 4(d)). An interlocutory order may be appealed only by permission of the trial and appellate courts: the motion in the trial court is filed and served within 30 days after entry of the order, and the application in the appellate court within 10 days after entry of the order or the trial court's statement of reasons, whichever is later; any answer is due within 10 days after the application is filed (Tenn. R. App. P. 9(b)-(d)). Periods in this package are stated, not counted: computation is Tenn. R. App. P. 21, not vendored. The outline named no leading decisions."
+  edge-judgment-entered-notice-filed "Notice of appeal filed in time" -> notice-filed {
+    authority cite "Tenn. R. App. P. 4"
+  }
+  edge-judgment-entered-time-barred "Appeal time missed" -> time-barred {
+    authority cite "Tenn. R. App. P. 4"
+  }
+}
+
+state notice-filed: "Notice of appeal filed" by applicant cite "Tenn. R. App. P. 3"
+{
+  note "The notice names each party taking the appeal, designates the judgment, and names the court to which the appeal is taken; an appeal is not dismissed for informality of form (Tenn. R. App. P. 3(f)). Cross appeals and separate appeals are not required: on a single notice any party may bring up issues for review (Tenn. R. App. P. 3(h), 13(a)). In a jury case, an issue predicated on trial error or another ground for a new trial is waived unless stated in a motion for a new trial (Tenn. R. App. P. 3(e)). Failure to take any step other than the timely notice does not affect the appeal's validity but may lead to dismissal (Tenn. R. App. P. 3(e))."
+  edge-notice-filed-record "Record prepared" -> record { authority cite "Tenn. R. App. P. 24" }
+}
+
+state record: "Record on appeal" by office cite "Tenn. R. App. P. 24"
+{
+  note "Within 15 days after filing the notice of appeal the appellant files and serves a description of the parts of the record, or of the transcript, it intends to include, with a short and plain declaration of the issues; the appellee may designate additional parts within 15 days after service (Tenn. R. App. P. 24(a), (b)). The transcript, or a statement of the evidence where no transcript is available, is filed with the clerk of the trial court within 60 days after filing the notice of appeal, and the appellee's objections within fifteen days after service of notice of the filing (Tenn. R. App. P. 24(b), (c)). If no transcript or statement is to be filed, the appellant gives notice within 15 days after filing the notice of appeal (Tenn. R. App. P. 24(d)). Differences about the record are settled by the trial court (Tenn. R. App. P. 24(e))."
+  edge-record-briefing "Record filed; briefing" -> briefing { authority cite "Tenn. R. App. P. 27" }
+}
+
+state briefing: "Briefs" by applicant cite "Tenn. R. App. P. 27"
+{
+  note "The appellant's brief contains, in order, a table of contents, a table of authorities, any jurisdictional statement, the issues presented, a statement of the case, a statement of facts, the argument with a concise standard of review for each issue, and a short conclusion (Tenn. R. App. P. 27(a)); the appellee's brief conforms (27(b)); the appellant may reply (27(c)). Briefs comply with the word limitations of Rule 30(e) except by order (Tenn. R. App. P. 27(i)); Rule 30(e) and the briefing times of Rule 29 are not vendored, so neither the limits nor the periods are encoded."
+  edge-briefing-appellate-decision "Argued or submitted" -> appellate-decision {
+    authority cite "Tenn. R. App. P. 13"
+  }
+}
+
+decision appellate-decision: "Court of Appeals decision" by court cite "Tenn. R. App. P. 13"
+{
+  note "Review generally extends only to the issues presented, but the court considers subject-matter jurisdiction whether or not presented and may consider other issues to prevent needless litigation, injury to the public interest or prejudice to the judicial process (Tenn. R. App. P. 13(b)). Unless a statute requires otherwise, a trial court's findings of fact in civil actions are reviewed de novo on the record with a presumption of correctness unless the preponderance of the evidence is otherwise; a jury's findings are set aside only if there is no material evidence to support the verdict (Tenn. R. App. P. 13(d))."
+  edge-appellate-decision-affirmed "Affirmed" -> affirmed { authority cite "Tenn. R. App. P. 13" }
+  edge-appellate-decision-reversed "Reversed or modified" -> reversed {
+    authority cite "Tenn. R. App. P. 13"
+  }
+  edge-appellate-decision-remanded "Remanded" -> remanded { authority cite "Tenn. R. App. P. 13" }
+  edge-appellate-decision-appeal-dismissed "Appeal dismissed" -> appeal-dismissed {
+    authority cite "Tenn. R. App. P. 3"
+  }
+  edge-appellate-decision-rehearing "Petition for rehearing" -> rehearing {
+    authority cite "Tenn. R. App. P. 39"
+  }
+  edge-appellate-decision-supreme-review "Application for permission to appeal" -> supreme-review {
+    authority cite "Tenn. R. App. P. 11"
+  }
+}
+
+state rehearing: "Petition for rehearing" by applicant cite "Tenn. R. App. P. 39"
+{
+  note "A petition for rehearing is filed within 10 days after entry of judgment unless the court shortens or enlarges the time, extensions being allowed only in extreme and unavoidable circumstances; it may not exceed 15 pages without permission (Tenn. R. App. P. 39(b)). No answer is permitted unless the court requests one (Tenn. R. App. P. 39(d)); rehearing is granted if a majority of the court's members are satisfied it is appropriate (Tenn. R. App. P. 39(e)); no further petition is filed in the Court of Appeals after it has acted on one (Tenn. R. App. P. 39(f))."
+  edge-rehearing-appellate-decision "Rehearing granted" -> appellate-decision {
+    authority cite "Tenn. R. App. P. 39"
+  }
+  edge-rehearing-supreme-review "Rehearing denied; application for permission to appeal" -> supreme-review {
+    authority cite "Tenn. R. App. P. 11"
+  }
+}
+
+decision supreme-review: "Application for permission to appeal to the Tennessee Supreme Court" by court cite "Tenn. R. App. P. 11"
+{
+  note "The application is filed with the clerk of the Supreme Court within 60 days after entry of the Court of Appeals' judgment, or, if a timely petition for rehearing is filed, within 60 days after its denial or the judgment on rehearing; it may not exceed 15,000 words (Tenn. R. App. P. 11(b)). Any answer in opposition is filed within 15 days after the application, may not exceed 5,000 words, and no reply is filed (Tenn. R. App. P. 11(d)). The application is granted if two members of the court are satisfied it should be (Tenn. R. App. P. 11(e)). If granted, the appellant serves and files a brief within 30 days, the appellee within 30 days after the appellant's brief or notice of election, and reply briefs within 14 days after the preceding brief (Tenn. R. App. P. 11(f))."
+  edge-supreme-review-review-denied "Permission denied" -> review-denied {
+    authority cite "Tenn. R. App. P. 11"
+  }
+  edge-supreme-review-supreme-decided "Permission granted" -> supreme-decided {
+    authority cite "Tenn. R. App. P. 11"
+  }
+}
+
+terminal time-barred: "Appeal time missed" outcome [loss] cite "Tenn. R. App. P. 4"
+{
+  note "The 30-day notice period runs from entry of the judgment or of the order disposing of a timely Rule 4(b) motion (Tenn. R. App. P. 4(a), (b)). Outcome from the appellant's side."
+}
+
+terminal affirmed: "Affirmed" outcome [loss] cite "Tenn. R. App. P. 13"
+{
+  note "Further review by permission under Tenn. R. App. P. 11. Outcome from the appellant's side."
+}
+
+terminal reversed: "Reversed or modified" outcome [win] cite "Tenn. R. App. P. 13"
+{
+  note "Outcome from the appellant's side."
+}
+
+terminal remanded: "Remanded" outcome [neutral] cite "Tenn. R. App. P. 13"
+{
+  note "The outcome turns on the trial court's further proceedings."
+}
+
+terminal appeal-dismissed: "Appeal dismissed" outcome [loss] cite "Tenn. R. App. P. 3"
+{
+  note "Failure to take a step other than the timely notice of appeal may lead to dismissal (Tenn. R. App. P. 3(e)). Outcome from the appellant's side."
+}
+
+terminal review-denied: "Permission to appeal denied" outcome [loss] cite "Tenn. R. App. P. 11"
+{
+  note "The Court of Appeals' judgment stands. A petition for certiorari is timely within 90 days after entry of the order denying discretionary review (Sup. Ct. R. 13.1). Outcome from the appellant's side."
+}
+
+terminal supreme-decided: "Tennessee Supreme Court decides" outcome [neutral] cite "Tenn. R. App. P. 11"
+{
+  note "The result is known only on decision. A petition for certiorari to a state court of last resort is timely within 90 days after entry of the judgment (Sup. Ct. R. 13.1), or after denial of a timely rehearing petition (Sup. Ct. R. 13.3)."
+}

@@ -1,0 +1,256 @@
+module mnd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Minnesota's own civil periods, computed under the federal
+// rules (FRCP 6(a) governs "any local rule"). Each period applies "unless
+// the court orders otherwise" where the rule says so. Rules that state no
+// civil period or limit stay out: scope, sanctions, the civil cover sheet,
+// service and fees (LR 1.1-4.2; the fee schedule is posted, not stated),
+// electronic filing and format (LR 5.1-5.2), amended pleadings (LR 15.1,
+// which sets no period), pretrial control and conferences (LR 16.1-16.6),
+// and the attorney rules (LR 83.5-83.8). The sealing procedure (LR 5.6),
+// transcript redaction (LR 5.5), Social Security cases (LR 7.2), the
+// registry and bond rules (LR 67.1-67.3) and the criminal rules are not
+// encoded. The earlier D. Minn. outline's FRCP and FRAP flow belongs to
+// lit/frcp and lit/frap; its decisions (Johnson v. Dayton Elec. Mfg. Co.,
+// 140 F.3d 781 (8th Cir. 1998); Braden v. Wal-Mart Stores, Inc., 588 F.3d
+// 585 (8th Cir. 2009); Torgerson v. City of Rochester, 643 F.3d 1031 (8th
+// Cir. 2011) (en banc); Twombly, Iqbal, Celotex and Anderson v. Liberty
+// Lobby) are removed: no reporter text is vendored.
+
+/// A memorandum of law on a motion: at most 12,000 words in a proportional
+/// font, or 1,100 lines of text in a monospaced font, except with the
+/// court's prior permission (LR 7.1(f)(1)(A)). A supporting memorandum and
+/// a reply memorandum together must not exceed the same limits (LR
+/// 7.1(f)(1)(B)); the caption, tables, signature block and certificates do
+/// not count (LR 7.1(f)(1)(C)). Text is at least 13-point and
+/// double-spaced (LR 7.1(h)(1)).
+limit memorandum {
+  words <= 12_000 cite "D. Minn. LR 7.1(f)"
+  lines <= 1_100 cite "D. Minn. LR 7.1(f)"
+} cite "D. Minn. LR 7.1(f)"
+
+/// Objections to a magistrate judge's order or recommended disposition,
+/// or a response to them: at most 3,500 words in a proportional font, or
+/// 320 lines of text in a monospaced font, except with the court's prior
+/// permission (LR 72.2(c)(1)(A)).
+limit magistrate-objection {
+  words <= 3_500 cite "D. Minn. LR 72.2(c)"
+  lines <= 320 cite "D. Minn. LR 72.2(c)"
+} cite "D. Minn. LR 72.2(c)"
+
+/// A paper that FRCP 5(d)(1) requires to be filed is served (LR 5.3).
+event PaperServed()
+/// A motion to extend time under FRCP 6(b) is filed (LR 6.1(b)(4)).
+event ExtensionMotionFiled()
+/// The hearing on a nondispositive motion is held (LR 7.1(b)(1)).
+event NondispositiveHearingHeld()
+/// A nondispositive motion and its supporting documents are filed (LR
+/// 7.1(b)(2)).
+event NondispositiveMotionFiled() paper memorandum
+/// The hearing on a dispositive motion is held (LR 7.1(c)(1)).
+event DispositiveHearingHeld()
+/// A dispositive motion and its supporting documents are filed (LR
+/// 7.1(c)(2)).
+event DispositiveMotionFiled() paper memorandum
+/// The response to a dispositive motion is filed (LR 7.1(c)(3)(A)).
+event DispositiveResponseFiled() paper memorandum
+/// The Rule 26(f) conference is held (LR 26.1(b)(1)).
+event Rule26fConferenceHeld()
+/// The trial date set under LR 39.1(a) arrives.
+event TrialDate()
+/// Final judgment, as 28 U.S.C. § 2412(d)(2)(G) defines it, is entered
+/// (LR 54.3(a)).
+event FinalJudgment()
+/// A timely motion for attorney's fees under FRCP 54(d)(2) is served (LR
+/// 54.3(b)).
+event FeeMotionServed()
+/// Judgment is entered (LR 54.3(c)(1)(A)).
+event JudgmentEntered()
+/// A verified bill of costs is served (LR 54.3(c)(1)(B)).
+event BillOfCostsServed()
+/// Objections to a bill of costs are served (LR 54.3(c)(1)(C)).
+event CostObjectionsServed()
+/// The clerk taxes costs (LR 54.3(c)(3)(A)).
+event CostsTaxed()
+/// A motion for review of the clerk's taxation is served (LR
+/// 54.3(c)(3)(B)).
+event CostReviewMotionServed()
+/// The court of appeals issues its mandate (LR 54.3(d)(2)).
+event MandateIssued()
+/// A magistrate judge's order on a nondispositive matter, or recommended
+/// disposition of a dispositive matter, is served (LR 72.2(a)(1), (b)(1)).
+event MagistrateRulingServed()
+/// Objections to a magistrate judge's ruling are served (LR 72.2(a)(2),
+/// (b)(2)).
+event MagistrateObjectionsServed() paper magistrate-objection
+
+/// LR 5.3: any paper FRCP 5(d)(1) requires to be filed is filed within 14
+/// days after service; this is the "reasonable time" under FRCP 5(d)(1).
+deadline filing-after-service-period: 14.days after PaperServed() counted_by frcp6 cite "D. Minn. LR 5.3"
+{
+  forum frcp
+}
+
+/// LR 6.1(b)(4): a party wishing to respond to a motion to extend time does
+/// so promptly, and in no event later than three days after the motion is
+/// filed; the court may rule before a response is filed.
+deadline extension-response-period: 3.days after ExtensionMotionFiled() counted_by frcp6 cite "D. Minn. LR 6.1(b)"
+{
+  forum frcp
+}
+
+/// LR 7.1(b)(1): at least 14 days before the hearing on a nondispositive
+/// motion, the movant files and serves the motion, notice of hearing,
+/// memorandum, affidavits and exhibits, meet-and-confer statement and
+/// proposed order. Nondispositive motions are heard by the magistrate
+/// judge; no reply is filed without the court's prior permission (LR
+/// 7.1(b)(3)).
+deadline nondispositive-motion-period: 14.days before NondispositiveHearingHeld() counted_by frcp6 cite "D. Minn. LR 7.1(b)"
+{
+  forum frcp
+}
+
+/// LR 7.1(b)(2): within 7 days after a nondispositive motion and its
+/// supporting documents are filed, the responding party files and serves
+/// its memorandum and any affidavits and exhibits.
+deadline nondispositive-response-period: 7.days after NondispositiveMotionFiled() counted_by frcp6 cite "D. Minn. LR 7.1(b)"
+{
+  forum frcp
+}
+
+/// LR 7.1(c)(1): at least 42 days before the hearing on a dispositive
+/// motion (or, with no hearing scheduled, as the courtroom deputy
+/// instructs), the movant files and serves its motion papers. Dispositive
+/// motions include motions for injunctive relief, judgment on the
+/// pleadings, dismissal, summary judgment, class certification and
+/// exclusion of experts (LR 7.1(c)(6)).
+deadline dispositive-motion-period: 42.days before DispositiveHearingHeld() counted_by frcp6 cite "D. Minn. LR 7.1(c)"
+{
+  forum frcp
+}
+
+/// LR 7.1(c)(2): within 21 days after a dispositive motion and its
+/// supporting documents are filed, the responding party files and serves
+/// its memorandum and any affidavits and exhibits.
+deadline dispositive-response-period: 21.days after DispositiveMotionFiled() counted_by frcp6 cite "D. Minn. LR 7.1(c)"
+{
+  forum frcp
+}
+
+/// LR 7.1(c)(3)(A): within 14 days after the response is filed, the movant
+/// files and serves a reply memorandum or a notice that no reply will be
+/// filed. A party may request a hearing by letter no sooner than 14 days
+/// after the reply or notice (LR 7.1(c)(5)(B)).
+deadline dispositive-reply-period: 14.days after DispositiveResponseFiled() counted_by frcp6 cite "D. Minn. LR 7.1(c)"
+{
+  forum frcp
+}
+
+/// LR 26.1(b)(1): within 14 days of the Rule 26(f) conference, the parties
+/// file a joint Rule 26(f) report and proposed scheduling order.
+deadline rule26f-report-period: 14.days after Rule26fConferenceHeld() counted_by frcp6 cite "D. Minn. LR 26.1(b)"
+{
+  forum frcp
+}
+
+/// LR 39.1(b)(1)(A): at least 14 days before the trial date, each party
+/// files and serves its trial brief, exhibit list, witness list,
+/// deposition designations and motions in limine; exhibits are made
+/// available by the same day (LR 39.1(b)(1)(B)); in a jury trial, proposed
+/// voir dire, jury instructions and verdict form (LR 39.1(b)(2)); in a
+/// bench trial, proposed findings and conclusions (LR 39.1(b)(3)). The
+/// judge notifies the parties of the trial calendar at least 21 days before
+/// the trial date (LR 39.1(a)).
+deadline pretrial-documents-period: 14.days before TrialDate() counted_by frcp6 cite "D. Minn. LR 39.1(b)"
+{
+  forum frcp
+}
+
+/// LR 39.1(b)(1)(C): at least 7 days before the trial date, a party
+/// objecting to designated deposition testimony files and serves a list of
+/// objections.
+deadline deposition-objections-period: 7.days before TrialDate() counted_by frcp6 cite "D. Minn. LR 39.1(b)"
+{
+  forum frcp
+}
+
+/// LR 54.3(a): an application for fees under the Equal Access to Justice
+/// Act is filed and served within 30 days of final judgment as 28 U.S.C.
+/// § 2412(d)(2)(G) defines it.
+deadline eaja-application-period: 30.days after FinalJudgment() counted_by frcp6 cite "D. Minn. LR 54.3(a)"
+{
+  forum frcp
+}
+
+/// LR 54.3(b): a party may respond to a timely FRCP 54(d)(2) fee motion
+/// within 14 days after being served with it; no reply brief unless the
+/// court orders otherwise.
+deadline fee-response-period: 14.days after FeeMotionServed() counted_by frcp6 cite "D. Minn. LR 54.3(b)"
+{
+  forum frcp
+}
+
+/// LR 54.3(c)(1)(A): within 30 days after judgment is entered, a party
+/// seeking costs files and serves a verified bill of costs on the clerk's
+/// form.
+deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "D. Minn. LR 54.3(c)"
+{
+  forum frcp
+}
+
+/// LR 54.3(c)(1)(B): within 14 days after being served with the bill of
+/// costs, the opposing party may file and serve objections.
+deadline cost-objections-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "D. Minn. LR 54.3(c)"
+{
+  forum frcp
+}
+
+/// LR 54.3(c)(1)(C): within 7 days after being served with objections, the
+/// party seeking costs may file and serve a response.
+deadline cost-objections-response-period: 7.days after CostObjectionsServed() counted_by frcp6 cite "D. Minn. LR 54.3(c)"
+{
+  forum frcp
+}
+
+/// LR 54.3(c)(3)(A): within 7 days after the clerk taxes costs, a party may
+/// move for review of the clerk's action.
+deadline cost-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "D. Minn. LR 54.3(c)"
+{
+  forum frcp
+}
+
+/// LR 54.3(c)(3)(B): within 7 days after being served with the motion for
+/// review, a party may respond; no reply brief unless the court orders
+/// otherwise.
+deadline cost-review-response-period: 7.days after CostReviewMotionServed() counted_by frcp6 cite "D. Minn. LR 54.3(c)"
+{
+  forum frcp
+}
+
+/// LR 54.3(d)(2): a party seeking costs taxable under FRAP 39(f) files a
+/// verified bill of costs within 14 days after the court of appeals issues
+/// the mandate; LR 54.3(c) otherwise governs it.
+deadline appeal-costs-period: 14.days after MandateIssued() counted_by frcp6 cite "D. Minn. LR 54.3(d)"
+{
+  forum frcp
+}
+
+/// LR 72.2(a)(1), (b)(1): a party may file and serve objections to a
+/// magistrate judge's order on a nondispositive matter, or specific
+/// written objections to a recommended disposition, within 14 days after
+/// being served with a copy, unless the court sets a different deadline.
+/// A defect in a nondispositive order not timely objected to may not be
+/// assigned as error (LR 72.2(a)(1)).
+deadline magistrate-objection-period: 14.days after MagistrateRulingServed() counted_by frcp6 cite "D. Minn. LR 72.2(a)"
+{
+  forum frcp
+}
+
+/// LR 72.2(a)(2), (b)(2): a party may respond to another party's
+/// objections within 14 days after being served with a copy.
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionsServed() counted_by frcp6 cite "D. Minn. LR 72.2(a)"
+{
+  forum frcp
+}

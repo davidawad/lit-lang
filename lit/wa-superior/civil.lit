@@ -1,0 +1,112 @@
+module wa-superior-court-civil.civil
+
+start complaint-filed
+
+state complaint-filed: "Action commenced" by applicant cite "CR 3(a)"
+{
+  note "A civil action is commenced by service of a summons and a copy of the complaint under rule 4, or by filing a complaint; on any other party's written demand the plaintiff pays the filing fee and files the summons and complaint within 14 days after service of the demand or the service is void, and commencement for tolling a statute of limitations is governed by RCW 4.16.170 (CR 3(a)). Periods in this package are stated, not counted: CR 6 (computation of time) is not vendored. The filing fee is not stated in the vendored rules. The earlier outline named no leading decision for this step."
+  edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    authority cite "CR 4(a)"
+  }
+}
+
+decision answer-due: "Answer, motion or default" by office cite "CR 12(a)"
+{
+  note "Unless a statute or rule sets another time, the summons requires the defendant to serve a defense within 20 days after service of the summons, exclusive of the day of service (CR 4(a)(2)). The answer is due within 20 days after personal service under rule 4; within 60 days from first publication when the summons is published under rule 4(d)(3); within 60 days after service out of state under RCW 4.28.180 and 4.28.185 or on the Secretary of State under RCW 46.64.040; within 60 days after service in a jail, detention facility or prison unless a statute states another time; or within any other period a statute or rule fixes (CR 12(a)(1)-(5)). A cross claim and a reply to a counterclaim are answered within 20 days (CR 12(a))."
+  edge-answer-due-default "No appearance, pleading or defense" -> default-entered {
+    authority cite "CR 55(a)"
+  }
+  edge-answer-due-motion "Rule 12(b) motion" -> pleading-motion { authority cite "CR 12(b)" }
+  edge-answer-due-answer "Answer served" -> discovery { authority cite "CR 12(a)" }
+}
+
+decision pleading-motion: "Motion to dismiss decided" by court cite "CR 12(b)"
+{
+  note "Every defense is asserted in the responsive pleading, except that the CR 12(b) defenses may be made by motion, which is made before pleading if a further pleading is permitted (CR 12(b)). If the court denies the motion or postpones it to trial, the responsive pleading is served within 10 days after notice of the court's action; after a more definite statement, within 10 days after its service (CR 12(a)(A), (B)). The earlier outline's pleading-standard decision (Haberman v. Washington Public Power Supply System, 109 Wn.2d 107 (1987)) is removed: no reporter text is vendored."
+  edge-pleading-motion-granted "Granted" -> dismissed { authority cite "CR 12(b)" }
+  edge-pleading-motion-denied "Denied: answer within 10 days of notice" -> discovery {
+    authority cite "CR 12(a)"
+  }
+}
+
+terminal dismissed: "Dismissed on the pleadings" outcome [win, dismissal] cite "CR 12(b)"
+{
+  note "Outcome from the defending side. Whether the dismissal is with or without prejudice, and any leave to amend, are stated in the order; CR 15 is not vendored."
+}
+
+decision default-entered: "Default" by court cite "CR 55(a)"
+{
+  note "When a party against whom affirmative relief is sought has failed to appear, plead or otherwise defend, and that is shown by motion and affidavit, a motion for default may be made (CR 55(a)(1)). A party who has appeared is served written notice of the motion and affidavit at least 5 days before the hearing; one who has not appeared before the motion is filed is not entitled to notice except under rule 55(f) (CR 55(a)(3)). A party may respond at any time before the motion is filed, and a party who appeared before then may do so until the hearing (CR 55(a)(2)). The motion states the basis for venue (CR 55(a)(4))."
+  edge-default-entered-judgment "Default judgment entered" -> default-judgment {
+    authority cite "CR 55(b)"
+  }
+}
+
+terminal default-judgment: "Default judgment" outcome [loss] cite "CR 55(b)"
+{
+  note "Outcome from the defending side. For a sum certain, the court enters judgment on motion and affidavit of the amount due; otherwise as CR 55(b) provides, with proof of service on file (CR 55(b))."
+}
+
+state discovery: "Discovery" by applicant cite "CR 26"
+{
+  note "The court may hold a discovery conference on a party's motion; objections or additions to the matters the motion sets forth are served not later than 10 days after service of the motion, and the court then enters a discovery plan and schedule (CR 26(f)). Each party and attorney must participate in good faith in framing a proposed discovery plan."
+  edge-discovery-settled "Settlement or voluntary dismissal" -> settled {
+    authority cite "CR 41(a)"
+  }
+  edge-discovery-want-of-prosecution "No action noted for trial within a year of joinder" -> dismissed-want-of-prosecution {
+    authority cite "CR 41(b)"
+  }
+  edge-discovery-summary-judgment "Dispositive motion" -> summary-judgment {
+    authority cite "CR 56(c)"
+  }
+  edge-discovery-trial "Case set for trial" -> trial { authority cite "CR 38(b)" }
+}
+
+terminal dismissed-want-of-prosecution: "Dismissed for want of prosecution" outcome [loss, dismissal] cite "CR 41(b)"
+{
+  note "On a party's motion, heard after 10 days' notice, an action is dismissed without prejudice if the claimant neglects to note it for trial or hearing within 1 year after an issue is joined, unless the mover caused the delay; noting the case before the hearing defeats the motion (CR 41(b)(1)). Where no action of record has occurred for 12 months, the clerk's notice warns of dismissal unless, within 30 days after its mailing, a party takes action of record or files a status report (CR 41(b)(2)(A))."
+}
+
+decision summary-judgment: "Summary judgment" by court cite "CR 56(c)"
+{
+  note "The motion and supporting papers are filed and served not later than 28 calendar days before the hearing; opposing papers not later than 11 calendar days before it; rebuttal not later than 5 calendar days before it. A response or rebuttal date falling on a Saturday, Sunday or legal holiday moves to the next day nearer the hearing. The motion is heard more than 14 calendar days before trial unless leave is granted. Judgment is rendered if there is no genuine issue as to any material fact and the moving party is entitled to judgment as a matter of law (CR 56(c)). The earlier outline's decision (Atherton Condominium Apartment-Owners Ass'n Board of Directors v. Blume Development Co., 115 Wn.2d 506 (1990)) is removed: no reporter text is vendored."
+  edge-summary-judgment-granted "Granted" -> judgment-entered { authority cite "CR 56(c)" }
+  edge-summary-judgment-denied "Denied" -> trial { authority cite "CR 56(c)" }
+}
+
+decision trial: "Jury or bench trial" by court cite "CR 38(b)"
+{
+  note "At or before the time the case is called to be set for trial, a party demands a jury by serving and filing a written demand and paying the jury fee; without a demand for 12, a jury of 6 tries the case with five concurring (CR 38(b)). If a demand specifies only some issues, any other party may demand a jury on other issues within 10 days after service of the demand (CR 38(c)); failure to serve, file and pay is a waiver (CR 38(d)). A case settled after assignment for trial is reported promptly, by telephone or in person if within 5 days before trial (CR 41(e))."
+  edge-trial-verdict "Verdict or decision" -> post-trial { authority cite "CR 50(b)" }
+  edge-trial-settled "Settled before verdict" -> settled { authority cite "CR 41(e)" }
+}
+
+decision post-trial: "Post-trial motions" by applicant cite "CR 59(b)"
+{
+  note "A renewed motion for judgment as a matter of law is filed no later than 10 days after entry of judgment and may join a motion for a new trial (CR 50(b)). A motion for a new trial or for reconsideration is filed not later than 10 days after entry of the judgment, order or other decision, noted to be heard within 30 days after entry unless the court directs otherwise (CR 59(b)); opposing affidavits are due 10 days after service, extendable up to 20 days (CR 59(c)). The court may order a new-trial hearing on its own initiative not later than 10 days after entry of judgment (CR 59(d))."
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+    authority cite "CR 58(a)"
+  }
+}
+
+decision judgment-entered: "Judgment entered" by court cite "CR 58(a)"
+{
+  note "Unless the court directs otherwise and subject to rule 54(b), judgments are entered immediately after the judge signs them (CR 58(a)), and are deemed entered from delivery to the clerk for filing (CR 58(b))."
+  edge-judgment-entered-appeal "Notice of appeal" -> appeal-filed { authority cite "RAP 5.2(a)" }
+  edge-judgment-entered-final "No appeal" -> judgment-final { authority cite "CR 58(a)" }
+}
+
+terminal appeal-filed: "Notice of appeal filed: continue in lit/wa-court-of-appeals" outcome [appeal] cite "RAP 5.2(a)"
+{
+  note "A notice of appeal is filed in the trial court within the longer of 30 days after entry of the decision or the time RAP 5.2(e) provides after a timely post-judgment motion such as CR 50(b) or CR 59 (RAP 5.2(a), (e)); the date of entry is determined by CR 5(e) and 58 (RAP 5.2(c)). The appeal continues in the Washington appellate package."
+}
+
+terminal judgment-final: "Final judgment, no appeal" outcome [judgment] cite "CR 58(b)"
+{
+  note "Outcome depends on the judgment entered."
+}
+
+terminal settled: "Settled or dismissed by agreement" outcome [settle] cite "CR 41(a)"
+{
+  note "An action is dismissed by the court on the written stipulation of all parties who have appeared, or on the plaintiff's motion before resting (CR 41(a)(1)); a pleaded counterclaim that cannot remain pending bars dismissal over the defendant's objection (CR 41(a)(3))."
+}

@@ -1,0 +1,360 @@
+module bankr-kye-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ PetitionFiled }
+
+// The Bankr. E.D. Ky. court's own periods, counted under FRBP 9006(a), the
+// FRCP 6(a) method: the Local Rules effective December 1, 2024. The FRBP
+// periods (schedules, claims, the chapter 13 plan, discharge,
+// dischargeability, the adversary answer, appeals) are lit/frbp's and are
+// not declared again. Stated in the rules but not declared: the business-
+// day and clock-time periods (U.S. Trustee contact 48 hours before a first-
+// day petition, KYEB LBR 2081-3(c); service of a first-day order within 2
+// business days, 2081-3(e)); the later-of period for employing a
+// professional on notice (the longer of 21 days after the petition or 14
+// days after the application, 2014-1); deadlines that are another date
+// itself (the chapter 11 bar date for unscheduled and disputed claims is
+// the first date set for the disclosure statement hearing, 3003-1; the
+// chapter 7 amended deficiency claim deadline is the last date for
+// objecting to the trustee's fee application, 3009-1); the plan
+// modification that must be filed and served 'more than 7 days' before the
+// confirmation hearing (3015-2(b)), whose counting the rules do not state;
+// the statutory 45-day chapter 12 confirmation hearing (3090(a), 11 U.S.C.
+// § 1224); the recurring six-month progress reports after the first
+// (3071-1); and the caps and conditions (four monthly fee installments,
+// 1006-1; 60 days of payment advices, 1007-1(c)).
+
+/// The debtor serves the amendment correcting a Statement About Your Social
+/// Security Numbers on the parties served with the notice of the case (KYEB
+/// LBR 1009-1(d)).
+event CorrectedSsnStatementServed()
+/// A hearing on a motion, objection, application or other request for
+/// relief is scheduled to be held (KYEB LBR 2002-1(a), 9014-1(b)).
+event HearingScheduled()
+/// A motion for an examination under FRBP 2004 is filed (KYEB LBR 2004-1).
+event ExaminationMotionFiled()
+/// A chapter 7 trustee submits to the U.S. Trustee the proposed interim
+/// distribution motion and its supporting forms (KYEB LBR 2015-1(c)).
+event InterimDistributionPackageSubmitted()
+/// A chapter 7 trustee files a motion to make an interim distribution (KYEB
+/// LBR 2015-1(c)).
+event InterimDistributionMotionFiled()
+/// An application for compensation or reimbursement of $1,000 or less is
+/// served on the limited service list (KYEB LBR 2016-1(c)).
+event SmallFeeApplicationServed()
+/// An order dismissing a chapter 13 case before confirmation of a plan is
+/// entered (KYEB LBR 2016-2(f)).
+event PreConfirmationDismissalEntered()
+/// An attorney commences representation of the debtor after the petition is
+/// filed (KYEB LBR 2016-3).
+event RepresentationCommenced()
+/// An attorney currently under discipline by any court becomes involved in
+/// a case or adversary proceeding before the court (KYEB LBR 2090-2).
+event BecameInvolvedInCase()
+/// An attorney is sanctioned or disciplined while a matter is pending
+/// before the court (KYEB LBR 2090-2).
+event AttorneySanctioned()
+/// A modified chapter 13 plan is filed (KYEB LBR 3015-3(a)).
+event ModifiedPlanFiled()
+/// An order on a secured creditor's proposed pre-confirmation adequate
+/// protection payments (Local Form 3015-4(c)) is entered (KYEB LBR
+/// 3015-4(c)).
+event AdequateProtectionOrderEntered()
+/// The hearing on approval of a chapter 11 disclosure statement is
+/// scheduled to be held (KYEB LBR 3017-1(b)).
+event DisclosureHearingScheduled()
+/// The hearing on confirmation of a chapter 9 or chapter 11 plan is
+/// scheduled to be held (KYEB LBR 3018-2, 3020-1).
+event ConfirmationHearingScheduled()
+/// The order confirming a chapter 11 plan is entered (KYEB LBR 3071-1).
+event Chapter11ConfirmationOrderEntered()
+/// The meeting of creditors, as originally noticed or as continued,
+/// concludes (KYEB LBR 4001-1(d)).
+event MeetingConcluded()
+/// In a chapter 13 case, an order or notice of default terminating the stay
+/// as to a claim secured by personal property that the trustee pays under
+/// the plan is entered (KYEB LBR 4001-1(f)(i)).
+event PersonalPropertyStayTerminated()
+/// In a chapter 13 case, an order or notice of default terminating the stay
+/// as to a claim secured by real property is entered (KYEB LBR
+/// 4001-1(f)(ii)).
+event RealPropertyStayTerminated()
+/// An individual chapter 11 debtor files the Certification of Plan
+/// Completion and Request for Discharge (KYEB LBR 4004-3(b)).
+event Chapter11DischargeCertificationFiled()
+/// The chapter 12 trustee serves the notice of plan completion and of the
+/// debtor's need to request a discharge (KYEB LBR 4004-4(a)).
+event Chapter12CompletionNoticeServed()
+/// A chapter 12 debtor files the Certification of Plan Completion and
+/// Request for Discharge (KYEB LBR 4004-4(c)).
+event Chapter12DischargeCertificationFiled()
+/// The chapter 13 trustee serves the notice of plan completion and of the
+/// debtor's need to request a discharge (KYEB LBR 4004-5(a)).
+event Chapter13CompletionNoticeServed()
+/// A chapter 13 debtor files the Certification of Plan Completion and
+/// Request for Discharge (KYEB LBR 4004-5(c)).
+event Chapter13DischargeCertificationFiled()
+/// A custodian transfers possession of property of the estate (KYEB LBR
+/// 6002-1).
+event CustodianPossessionTransferred()
+/// An order or judgment that the tendering party must serve other than by
+/// the ECF System is entered (KYEB LBR 9022-1(b)).
+event OrderEntered()
+/// A hearing or trial at which an exhibit not filed beforehand is admitted
+/// into evidence is held (KYEB LBR 9070-1(b)).
+event ExhibitHearingHeld()
+
+/// KYEB LBR 1007-1(c)(ii): copies of the payment advices the debtor
+/// received within 60 days before the petition are provided, not filed, to
+/// the trustee (and, except in chapter 13, the U.S. Trustee) and to any
+/// creditor that timely requests them, within 14 days of the filing of the
+/// petition.
+deadline payment-advices-period: 14.days after PetitionFiled() counted_by frcp6 cite "KYEB LBR 1007-1(c)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 1009-1(d): within 7 days of serving the amendment correcting
+/// the debtor's social security number, the debtor files a certificate of
+/// service.
+deadline corrected-ssn-certificate-period: 7.days after CorrectedSsnStatementServed() counted_by frcp6 cite "KYEB LBR 1009-1(d)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 2002-1(a): unless the Code, an FRBP or KYEB LBR 9013-1(c)
+/// provides otherwise, each party served is given at least 14 days notice
+/// of a deadline or hearing date, shown by the certificate of service.
+deadline hearing-notice-period: 14.days before HearingScheduled() counted_by frcp6 cite "KYEB LBR 2002-1(a)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 2004-1: an order on a motion for a Rule 2004 examination may be
+/// entered without a hearing unless an objection is filed within 3 days
+/// after the motion is filed.
+deadline examination-objection-period: 3.days after ExaminationMotionFiled() counted_by frcp6 cite "KYEB LBR 2004-1"
+{
+  forum frcp
+}
+
+/// KYEB LBR 2015-1(c): the chapter 7 trustee allows the U.S. Trustee at
+/// least 14 days to review the submissions before filing the motion to make
+/// an interim distribution.
+deadline interim-distribution-review-period: 14.days after InterimDistributionPackageSubmitted() counted_by frcp6 cite "KYEB LBR 2015-1(c)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 2015-1(c): within 14 days of the trustee's filing of a motion
+/// to make an interim distribution, the U.S. Trustee files a statement of
+/// no objection or an objection.
+deadline interim-distribution-statement-period: 14.days after InterimDistributionMotionFiled() counted_by frcp6 cite "KYEB LBR 2015-1(c)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 2016-1(c): an application for compensation or reimbursement of
+/// $1,000 or less may be served on the debtor, debtor's counsel, the
+/// trustee and any committee on 14 days notice.
+deadline small-fee-notice-period: 14.days after SmallFeeApplicationServed() counted_by frcp6 cite "KYEB LBR 2016-1(c)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 2016-2(a)(ii): to take the presumptively reasonable chapter 13
+/// fee, counsel for the debtor files the Certification of Local Form
+/// 2016-2(a)(ii) within 14 days of the filing of the petition.
+deadline chapter13-fee-certification-period: 14.days after PetitionFiled() counted_by frcp6 cite "KYEB LBR 2016-2(a)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 2016-2(f): an attorney seeking compensation in a chapter 13
+/// case dismissed before confirmation may file an itemized application
+/// within 14 days after entry of the order of dismissal.
+deadline dismissed-case-fee-application-period: 14.days after PreConfirmationDismissalEntered() counted_by frcp6 cite "KYEB LBR 2016-2(f)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 2016-3: an attorney who commences representation of the debtor
+/// after the petition files the FRBP 2016(b) statement no later than 14
+/// days after commencing representation.
+deadline later-counsel-disclosure-period: 14.days after RepresentationCommenced() counted_by frcp6 cite "KYEB LBR 2016-3"
+{
+  forum frcp
+}
+
+/// KYEB LBR 2090-2: an attorney under discipline by any court notifies the
+/// Clerk of the sanction within 7 days after becoming involved in a case or
+/// adversary proceeding before the court.
+deadline discipline-notice-period: 7.days after BecameInvolvedInCase() counted_by frcp6 cite "KYEB LBR 2090-2"
+{
+  forum frcp
+}
+
+/// KYEB LBR 2090-2: an attorney sanctioned during a matter pending before
+/// the court notifies the Clerk within 7 days after being sanctioned or
+/// disciplined.
+deadline sanction-notice-period: 7.days after AttorneySanctioned() counted_by frcp6 cite "KYEB LBR 2090-2"
+{
+  forum frcp
+}
+
+/// KYEB LBR 3015-3(a)(i): an objection to a modified chapter 13 plan is
+/// filed within 7 days after the modified plan is filed (a domestic support
+/// creditor's § 1325(a)(8) objection may be filed any time before
+/// confirmation, 3015-3(a)(ii)).
+deadline modified-plan-objection-period: 7.days after ModifiedPlanFiled() counted_by frcp6 cite "KYEB LBR 3015-3(a)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 3015-4(c): within 7 days of entry of the signed adequate
+/// protection order, the secured creditor serves it on all parties in
+/// interest and files a certificate of service.
+deadline adequate-protection-order-service-period: 7.days after AdequateProtectionOrderEntered() counted_by frcp6 cite "KYEB LBR 3015-4(c)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 3017-1(b): the order setting the disclosure statement hearing
+/// fixes the deadline for objections, which ordinarily is 7 days before the
+/// hearing.
+deadline disclosure-objection-period: 7.days before DisclosureHearingScheduled() counted_by frcp6 cite "KYEB LBR 3017-1(b)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 3018-2: the plan proponent files a summary of the voting
+/// results, including votes not counted, on or before 5 days before the
+/// confirmation hearing.
+deadline ballot-summary-period: 5.days before ConfirmationHearingScheduled() counted_by frcp6 cite "KYEB LBR 3018-2"
+{
+  forum frcp
+}
+
+/// KYEB LBR 3020-1(b): the Hearing Order fixes the deadline for objections
+/// to confirmation, which ordinarily is 7 days before the confirmation
+/// hearing.
+deadline confirmation-objection-period: 7.days before ConfirmationHearingScheduled() counted_by frcp6 cite "KYEB LBR 3020-1(b)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 3020-1(c): the Hearing Order fixes the time for holders of
+/// claims or interests to accept or reject the plan, which ordinarily is 7
+/// days before the confirmation hearing.
+deadline ballot-period: 7.days before ConfirmationHearingScheduled() counted_by frcp6 cite "KYEB LBR 3020-1(c)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 3071-1: unless the court orders otherwise, the proponent of a
+/// confirmed chapter 11 plan files a progress report within 45 days after
+/// entry of the confirmation order (and every 6 months thereafter until the
+/// final decree).
+deadline progress-report-period: 45.days after Chapter11ConfirmationOrderEntered() counted_by frcp6 cite "KYEB LBR 3071-1"
+{
+  forum frcp
+}
+
+/// KYEB LBR 4001-1(d): where the objection deadline in a combined stay-
+/// relief and abandonment motion expires before the meeting of creditors,
+/// the trustee has 14 days from the conclusion of the meeting to object to
+/// abandonment; the property is deemed abandoned on the 15th day.
+deadline abandonment-objection-period: 14.days after MeetingConcluded() counted_by frcp6 cite "KYEB LBR 4001-1(d)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 4001-1(f)(i): a chapter 13 creditor whose claim secured by
+/// personal property is paid under the plan has 90 days from the order or
+/// notice of default terminating the stay, unless extended, to file an
+/// amended claim for the unpaid balance.
+deadline personal-property-amended-claim-period: 90.days after PersonalPropertyStayTerminated() counted_by frcp6 cite "KYEB LBR 4001-1(f)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 4001-1(f)(ii): a chapter 13 creditor whose claim is secured by
+/// real property has 210 days from the order or notice of default
+/// terminating the stay, unless extended, to file an amended claim for the
+/// unpaid balance.
+deadline real-property-amended-claim-period: 210.days after RealPropertyStayTerminated() counted_by frcp6 cite "KYEB LBR 4001-1(f)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 4004-3(b): a response to an individual chapter 11 debtor's
+/// Certification of Plan Completion and Request for Discharge is filed
+/// within 14 days after the certification is filed.
+deadline chapter11-discharge-response-period: 14.days after Chapter11DischargeCertificationFiled() counted_by frcp6 cite "KYEB LBR 4004-3(b)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 4004-4(b): a chapter 12 debtor files the Certification of Plan
+/// Completion and Request for Discharge within 30 days of the trustee's
+/// notice of plan completion.
+deadline chapter12-discharge-certification-period: 30.days after Chapter12CompletionNoticeServed() counted_by frcp6 cite "KYEB LBR 4004-4(b)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 4004-4(c): a response to a chapter 12 debtor's certification
+/// and request for discharge is filed within 14 days after the
+/// certification is filed.
+deadline chapter12-discharge-response-period: 14.days after Chapter12DischargeCertificationFiled() counted_by frcp6 cite "KYEB LBR 4004-4(c)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 4004-5(b): a chapter 13 debtor files the Certification of Plan
+/// Completion and Request for Discharge within 30 days of the trustee's
+/// notice of plan completion.
+deadline chapter13-discharge-certification-period: 30.days after Chapter13CompletionNoticeServed() counted_by frcp6 cite "KYEB LBR 4004-5(b)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 4004-5(c): a response to a chapter 13 debtor's certification
+/// and request for discharge is filed within 14 days after the
+/// certification is filed.
+deadline chapter13-discharge-response-period: 14.days after Chapter13DischargeCertificationFiled() counted_by frcp6 cite "KYEB LBR 4004-5(c)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 6002-1: unless otherwise ordered, the custodian's FRBP 6002
+/// report and account is filed within 30 days of transfer of possession of
+/// the property.
+deadline custodian-report-period: 30.days after CustodianPossessionTransferred() counted_by frcp6 cite "KYEB LBR 6002-1"
+{
+  forum frcp
+}
+
+/// KYEB LBR 9014-1(b): an objection or response to a matter noticed for
+/// hearing is filed not less than 3 days before the scheduled hearing
+/// unless the court orders otherwise.
+deadline hearing-response-period: 3.days before HearingScheduled() counted_by frcp6 cite "KYEB LBR 9014-1(b)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 9022-1(b): the party responsible for serving an order or
+/// judgment other than by the ECF System files a certificate of service
+/// within 7 days of its entry.
+deadline order-service-certificate-period: 7.days after OrderEntered() counted_by frcp6 cite "KYEB LBR 9022-1(b)"
+{
+  forum frcp
+}
+
+/// KYEB LBR 9070-1(b): an exhibit admitted at a hearing or trial that was
+/// not filed electronically beforehand is filed electronically within 3
+/// days after the hearing or trial.
+deadline admitted-exhibit-filing-period: 3.days after ExhibitHearingHeld() counted_by frcp6 cite "KYEB LBR 9070-1(b)"
+{
+  forum frcp
+}

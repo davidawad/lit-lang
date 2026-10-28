@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-nce-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:e66199e8db99658c538b3c0c8be7e8f319f1f760a0c45d76b1981fbd90f16b1c"
+semantic = "sha256:ebab80ded85e9aa795b41a61002350c0426bc69c10c64d4131e51d4ac59c3b59"
+texts = [
+    "nceb-lbr sources/bankr-nce/nce-local-rules-2026-10-15-sectioned.txt sha256:e63b0c4082551ea265e76a968c4f461f5f9988affea162220be0a0c716d7519d",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-nce"
-version = "0.0.1"
-language = 1
-source = "sha256:7193b944ed5197c2cf173f2e3183e78f5adad16aff7928214d1d041de18b33f5"
-semantic = "sha256:844619c66bfab9604bfd641db110f14ccc3cef674be998c549807281c24b5dfb"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

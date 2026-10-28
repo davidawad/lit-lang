@@ -1422,8 +1422,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   directory.
 
 - **Calibration pipeline** (`docs/CALIBRATION.md`): `calibration/*.json`
-  overlay files — embedded at build time like `packs/*.json`, overridable
-  via `$LITGRAPH_CALIBRATION`/`--calibration-dir` — record a sourced
+  overlay files — embedded at build time like `packs/*.json` — record a sourced
   probability, duration, or node attribute (value, source URL/title,
   vintage, sample size `n`, and derivation notes). `scenario.calibration`
   (a list of set names) applies them by mutating the compiled graph exactly

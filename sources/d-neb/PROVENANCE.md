@@ -19,6 +19,7 @@
 
 - Source: https://www.ned.uscourts.gov/sites/default/files/documents/NECrimR.2025.pdf (official site; 77 pages, sha256 7ad46d57cd1da95f8a135b8847b36ffe456cd0d64e23df25580b43ff996c7d69).
 - Edition: Nebraska Criminal Rules 'Effective December 1, 2025' (first page), NECrimR.2025 listed under 'In Effect on and after December 1, 2025' at https://www.ned.uscourts.gov/local-rules; the 2026 proposed rules on that page are not in force and not vendored. robots.txt of www.ned.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): ned-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 5d4fb10fee85aaa9b8d248c0a679eeeed6a482658d855a5da289197d9c9f7556. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `d-neb/original/dneb-necrimr-2025-12-01.pdf` as served (sha256 7ad46d57cd1da95f8a135b8847b36ffe456cd0d64e23df25580b43ff996c7d69); extraction sha256 5d4fb10fee85aaa9b8d248c0a679eeeed6a482658d855a5da289197d9c9f7556.

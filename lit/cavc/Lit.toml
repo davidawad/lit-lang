@@ -1,0 +1,56 @@
+# The United States Court of Appeals for Veterans Claims, promoted from
+# outlines/federal-circuit/court-of-veteran-appeals (lg-f3q8.16).
+#
+# authority: the CAVC Rules of Practice and Procedure are the court's rules
+# of practice, the FederalRule level of lit/core's lattice (as the USCIT
+# Rules are for lit/cit).
+# in_force: the vendored edition, the PDF dated 2026-10-01 that
+# incorporates Miscellaneous Order 08-26, effective October 1, 2026
+# (sources/cavc/PROVENANCE.md). Earlier editions are not vendored, so a
+# query before it is a hole (unknown_before), never a day with no rule.
+# 38 U.S.C. (§§ 7252, 7261, 7266, 7291, 7292) is not vendored: the graph
+# cites the CAVC Rules that restate the periods those sections set, and
+# the standard of review of § 7261 is not encoded.
+[package]
+name = "cavc"
+version = "0.1.0"
+language = 1
+pack_id = "cavc"
+forum = "cavc"
+authority = "FederalRule"
+title = "United States Court of Appeals for Veterans Claims"
+description = "An appeal from a Board of Veterans' Appeals decision to the U.S. Court of Appeals for Veterans Claims under its Rules of Practice and Procedure as of October 1, 2026: the Notice of Appeal and its 120-day period (Rule 4(a)), docketing and the copy of the Board decision (Rule 4), the record before the agency and its disputes (Rule 10), the staff conference (Rule 33), briefing (Rules 28 and 31) and the record of proceedings (Rule 28.1), motions (Rule 27), oral argument and initial panel review (Rules 34 and 27.1), joint motions for remand and voluntary termination (Rules 41(c) and 42), decision, motions for reconsideration, panel decision or full Court review (Rule 35), judgment (Rule 36), mandate (Rule 41), EAJA applications (Rule 39), and the 60-day period to appeal to the Federal Circuit (Rule 36(a))."
+jurisdiction = "United States Court of Appeals for Veterans Claims"
+in_force = "2026-10-01"
+known_at = "2026-10-28"
+unknown_before = "2026-10-01"
+counting = "cavc26"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.cavc-rules]
+title = "Rules of Practice and Procedure of the U.S. Court of Appeals for Veterans Claims, the PDF dated 2026-10-01 (incorporating Miscellaneous Order 08-26, effective October 1, 2026)"
+url = "https://www.uscourts.cavc.gov/documents/RulesofPracticeandProcedure20261001.pdf"
+path = "sources/cavc/cavc-rules-of-practice-2026-10-01.txt"
+path_sha256 = "6b897600cfc39df751e4131c4e48d75ca30000b528eafd593c8a9e645ee41478"
+sha256 = "7b4eaca68957f99d60a76d83cfb5f690047ad0f1f0c99f5267c2bec4e3a5d81b"
+as_of = "2026-10-01"
+
+[sources.usc28]
+title = "28 U.S.C. § 2412 (vendored section)"
+url = "https://www.law.cornell.edu/uscode/text/28/2412"
+path = "sources/usc-additional.txt"
+path_sha256 = "5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+
+[[cite_syntax.rules]]
+prefixes = ["CAVC R."]
+heading = "CAVC R. {}"
+source = "cavc-rules"

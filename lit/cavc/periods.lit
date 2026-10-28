@@ -1,0 +1,525 @@
+module cavc.periods
+
+import core.calendar.{ us-federal-holidays }
+import core.time.{ ServiceMethod }
+
+// The periods the CAVC Rules of Practice and Procedure state, each counted
+// by CAVC R. 26(a) and each in force from the vendored edition (the PDF
+// dated 2026-10-01): earlier editions are not vendored, so the package's
+// `unknown_before` makes an earlier query a hole. CAVC R. 26(b) lets the
+// Court extend any period these Rules set for good cause, up to a total of
+// 45 days for a filing (beyond that only for extraordinary circumstances),
+// but never the time for a Notice of Appeal (except as Rule 4 provides) or
+// for an attorney-fee application.
+//
+// CAVC R. 26(c)(1) adds 5 days only to a period that runs from service of
+// a document by another party by mail. CAVC R. 26(c)(3) adds no time to
+// periods set in Court orders and notices or in Rules 4, 35 and 39(a), so
+// those periods run from events that carry no service method. The 30 days
+// CAVC R. 26(c)(2) adds when the Secretary serves, other than through
+// CM/ECF, a party located outside the United States, Puerto Rico or the
+// Virgin Islands are not modeled: such a period yields the earlier date,
+// never a later one.
+/// CAVC R. 26 as it stands in the vendored edition of October 1, 2026; no
+/// earlier edition is vendored to prove the text before it.
+/// Exclude the day of the event, include the last day, rolling past a
+/// Saturday, Sunday, legal holiday, or day the Court is closed at the
+/// direction of the Chief Judge (26(a)(1)). The legal holidays of 26(a)(2)
+/// are the eleven of 5 U.S.C. § 6103(a), core's `us-federal-holidays`;
+/// other days declared a holiday by the President or Congress are not
+/// modeled, so such a last day yields the earlier date, never a later one.
+/// Mail service by another party adds 5 days (26(c)(1)); service through
+/// CM/ECF (25(c)(1)), by personal delivery or by private commercial carrier
+/// (25(c)(2)) adds none.
+counting cavc26 effective [2026-10-01, ..) known_at 2026-10-01 cite "CAVC R. 26(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 5.days
+    CommercialCarrier: 0.days
+    Clerk: unrecognized
+    OtherConsented: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "CAVC R. 26(c)(1)"
+  holidays us-federal-holidays
+  forums [cavc]
+  allow_hours
+  end_of_month clamp
+}
+
+/// A principal brief may not exceed 30 pages and a reply brief 15 pages,
+/// not counting the tables, the appendix of superseded and unpublished
+/// authorities, and the certificate of service.
+limit principal-brief { pages <= 30 cite "CAVC R. 32(e)" } cite "CAVC R. 32(e)"
+limit reply-brief { pages <= 15 cite "CAVC R. 32(e)" } cite "CAVC R. 32(e)"
+/// A motion or response may not exceed 10 pages.
+limit motion { pages <= 10 cite "CAVC R. 27(d)" } cite "CAVC R. 27(d)"
+/// A Rule 35 motion or response may not exceed 15 pages.
+limit reconsideration-motion { pages <= 15 cite "CAVC R. 35(f)" } cite "CAVC R. 35(f)"
+/// A petition for extraordinary relief or answer may not exceed 20 pages.
+limit petition { pages <= 20 cite "CAVC R. 21(b)" } cite "CAVC R. 21(b)"
+/// No Rule 39 submission may exceed 20 pages, not counting the appendix
+/// the content requirements of 28 U.S.C. § 2412(d) need.
+limit fee-filing { pages <= 20 cite "CAVC R. 39(e)" } cite "CAVC R. 39(e)"
+
+/// The Board issues notice of its decision to the appellant and the
+/// appellant's authorized representative (CAVC R. 4(a)(1)).
+event BoardNoticeIssued()
+/// The Notice of Appeal is filed (CAVC R. 3(a), 3(f)).
+event NoticeOfAppealFiled()
+/// The Clerk sends the notice of docketing (CAVC R. 4(b)(3)).
+event DocketingNoticeIssued()
+/// The Secretary files the copy of the Board decision (CAVC R. 4(c)).
+event BoardDecisionCopyFiled()
+/// A redacted document is filed (CAVC R. 6(c)).
+event RedactedDocumentFiled()
+/// The 14-day period of CAVC R. 10(b) to raise a dispute over the record
+/// before the agency expires (CAVC R. 31(a)(1)(A)).
+event RecordDisputePeriodExpired()
+/// A Rule 33 staff conference is scheduled for this date (CAVC R. 33(b)(1)).
+event StaffConferenceSet()
+/// The Rule 33 staff conference is completed (CAVC R. 31(a)(1)(B)).
+event StaffConferenceCompleted()
+/// A party's principal brief is filed (CAVC R. 29(c), 32(e)).
+event PrincipalBriefFiled() paper principal-brief
+/// The appellant's reply brief is filed and served (CAVC R. 28.1(a)(3)).
+event ReplyBriefFiled() paper reply-brief
+/// The reply brief is filed or, if none is filed, its due date passes
+/// (CAVC R. 27.1(b)(1), 28(d), 34(b)(1)).
+event ReplyBriefFiledOrDue()
+/// A motion is filed (CAVC R. 27(d)).
+event MotionFiled() paper motion
+/// The Clerk announces an action on a procedural motion (CAVC R. 27(c)).
+event ClerkActionAnnounced()
+/// A petition for extraordinary relief is filed (CAVC R. 21(a), 22(b)(2)).
+event PetitionFiled() paper petition
+/// The respondent answers a petition for extraordinary relief (CAVC R.
+/// 27.1(b)(2), 34(b)(1)).
+event PetitionAnswered()
+
+/// Where the movant under Rule 35 is located (CAVC R. 35(d)).
+enum MovantPlace { Domestic, Abroad }
+
+/// The dispositive action for which reconsideration, panel decision or
+/// full Court review is sought (CAVC R. 35(d)).
+event DispositiveAction(place: MovantPlace)
+/// A Rule 35 motion is filed (CAVC R. 35(f)).
+event ReconsiderationMotionFiled() paper reconsideration-motion
+/// Judgment is entered (CAVC R. 36).
+event JudgmentEntered()
+/// The Court grants a joint motion to dismiss, terminate or remand, or
+/// grants or dismisses an uncontested fee application (CAVC R. 41(c)).
+event UncontestedDispositionOrdered()
+/// The Court's judgment becomes final (CAVC R. 39(a), 41(a)).
+event JudgmentFinal()
+/// An EAJA application is filed (CAVC R. 39(a)(1)).
+event FeeApplicationFiled() paper fee-filing
+/// The Secretary serves a response to the EAJA application (CAVC R.
+/// 39(a)(2)); Rule 26(c)(3) adds no time to it.
+event FeeResponseServed()
+/// The Court grants an EAJA application in whole or part (CAVC R. 39(b)).
+event FeeApplicationGranted()
+/// A supplemental EAJA application is filed (CAVC R. 39(b)(1)).
+event SupplementalApplicationFiled()
+/// The Federal Circuit issues its mandate on an appealed fee action (CAVC
+/// R. 39(b)(3)(A)).
+event FederalCircuitMandateIssued()
+
+/// Papers whose service by another party starts a response period.
+enum Paper {
+  Motion,
+  ExtensionMotion,
+  RecordBeforeAgency,
+  RecordDisputeMotion,
+  RecordOfProceedings,
+  ProceedingsDisputeMotion,
+  AppellantBrief,
+  SecretaryBrief,
+  SupplementalFeeResponse,
+}
+
+/// A paper served by `method`; CAVC R. 26(c)(1) adds 5 days for mail.
+event ServedPaper(paper: Paper, method: ServiceMethod)
+
+/// A Notice of Appeal must be received by the Clerk not later than 120
+/// days after the Board issues notice of the decision. CAVC R. 26(b): the
+/// Court may not extend it except as Rule 4 provides.
+deadline notice-of-appeal-period: 120.days after BoardNoticeIssued() counted_by cavc26 cite "CAVC R. 4(a)(1)"
+{
+  extend { never cite "CAVC R. 26(b)" }
+}
+
+/// The $50 filing fee is submitted with the Notice of Appeal or received
+/// not later than 14 days after its filing, unless waived under Rule 24.
+deadline filing-fee-period: 14.days after NoticeOfAppealFiled() counted_by cavc26 cite "CAVC R. 3(f)"
+/// The Secretary files and serves the copy of the Board decision not later
+/// than 30 days after the notice of docketing.
+deadline board-decision-copy-period: 30.days after DocketingNoticeIssued() counted_by cavc26 cite "CAVC R. 4(c)"
+/// Unless the Secretary moves to dismiss for untimeliness within 45 days
+/// after the filing date of the Board decision, the Notice of Appeal is
+/// treated as timely.
+deadline untimeliness-motion-period: 45.days after BoardDecisionCopyFiled() counted_by cavc26 cite "CAVC R. 4(a)(3)(A)"
+/// A redaction is challenged by motion within 15 days of the redacted
+/// document's filing.
+deadline redaction-challenge-period: 15.days after RedactedDocumentFiled() counted_by cavc26 cite "CAVC R. 6(c)"
+/// The Secretary serves the record before the agency not later than 60
+/// days following the notice of docketing.
+deadline record-before-agency-period: 60.days after DocketingNoticeIssued() counted_by cavc26 cite "CAVC R. 10(a)"
+/// A motion disputing the record before the agency is filed within 14 days
+/// after it is served; a response within 7 days after the motion is served.
+deadline record-dispute-period: 14.days after ServedPaper(RecordBeforeAgency) counted_by cavc26 cite "CAVC R. 10(b)"
+deadline record-dispute-response-period: 7.days after ServedPaper(RecordDisputeMotion) counted_by cavc26 cite "CAVC R. 10(b)"
+/// A notice of intervention by right, or a motion for permission to
+/// intervene, is filed not later than 60 days after the notice of docketing.
+deadline intervention-period: 60.days after DocketingNoticeIssued() counted_by cavc26 cite "CAVC R. 15(a)"
+deadline permissive-intervention-period: 60.days after DocketingNoticeIssued() counted_by cavc26 cite "CAVC R. 15(b)"
+/// A request for class certification in an appeal is filed within 45 days
+/// after the Secretary serves the record before the agency (or after a
+/// dispute over it is resolved, whichever is later); in a petition, within
+/// 30 days after the petition is filed.
+deadline class-request-period: 45.days after ServedPaper(RecordBeforeAgency) counted_by cavc26 cite "CAVC R. 22(b)(1)"
+deadline petition-class-request-period: 30.days after PetitionFiled() counted_by cavc26 cite "CAVC R. 22(b)(2)"
+/// An opposition to a motion to extend time is filed not later than 5 days
+/// after service; otherwise the motion is treated as unopposed.
+deadline extension-opposition-period: 5.days after ServedPaper(ExtensionMotion) counted_by cavc26 cite "CAVC R. 26(b)(2)"
+/// A response or opposition to a motion is filed not later than 14 days
+/// after service of the motion, unless these Rules prescribe otherwise.
+deadline motion-response-period: 14.days after ServedPaper(Motion) counted_by cavc26 cite "CAVC R. 27(b)(1)"
+/// A party adversely affected by the Clerk's action on a procedural motion
+/// may move to reconsider, vacate or modify it not later than 10 days after
+/// the action is announced.
+deadline clerk-action-review-period: 10.days after ClerkActionAnnounced() counted_by cavc26 cite "CAVC R. 27(c)"
+/// A motion for initial review by panel on the merits is filed no later
+/// than 14 days after the reply brief is due or filed; on a petition, no
+/// later than 7 days after the answer.
+deadline initial-panel-review-period: 14.days after ReplyBriefFiledOrDue() counted_by cavc26 cite "CAVC R. 27.1(b)(1)"
+deadline petition-panel-review-period: 7.days after PetitionAnswered() counted_by cavc26 cite "CAVC R. 27.1(b)(2)"
+/// An intervenor's brief is filed not later than 30 days after the reply
+/// brief is filed or due.
+deadline intervenor-brief-period: 30.days after ReplyBriefFiledOrDue() counted_by cavc26 cite "CAVC R. 28(d)"
+/// The Secretary files and serves the record of proceedings not later than
+/// 14 days after the reply brief is filed and served (or was due).
+deadline record-of-proceedings-period: 14.days after ReplyBriefFiled() counted_by cavc26 cite "CAVC R. 28.1(a)(3)"
+/// A motion disputing the record of proceedings is filed within 14 days
+/// after it is served; a response not later than 7 days after the motion
+/// is served.
+deadline proceedings-dispute-period: 14.days after ServedPaper(RecordOfProceedings) counted_by cavc26 cite "CAVC R. 28.1(b)"
+deadline proceedings-dispute-response-period: 7.days after ServedPaper(ProceedingsDisputeMotion) counted_by cavc26 cite "CAVC R. 28.1(b)"
+/// An amicus curiae moves for leave not later than 7 days after the
+/// principal brief of the party it supports is filed.
+deadline amicus-period: 7.days after PrincipalBriefFiled() counted_by cavc26 cite "CAVC R. 29(c)"
+/// The appellant's brief is due not later than 60 days after the 14-day
+/// Rule 10(b) period expires, or 30 days after the Rule 33 staff
+/// conference is completed, whichever is later.
+deadline appellant-brief-period: 60.days after RecordDisputePeriodExpired() counted_by cavc26 cite "CAVC R. 31(a)(1)(A)"
+deadline appellant-brief-after-conference-period: 30.days after StaffConferenceCompleted() counted_by cavc26 cite "CAVC R. 31(a)(1)(B)"
+/// The Secretary's brief is due not later than 60 days after service of
+/// the appellant's brief; the reply not later than 14 days after service
+/// of the Secretary's brief.
+deadline secretary-brief-period: 60.days after ServedPaper(AppellantBrief) counted_by cavc26 cite "CAVC R. 31(a)(2)"
+deadline reply-brief-period: 14.days after ServedPaper(SecretaryBrief) counted_by cavc26 cite "CAVC R. 31(a)(3)"
+/// The appellant submits the summary of issues no later than 14 days prior
+/// to a pre-briefing staff conference.
+deadline staff-conference-summary-period: 14.days before StaffConferenceSet() counted_by cavc26 cite "CAVC R. 33(b)(1)"
+/// A motion for oral argument on the merits is filed no later than 14 days
+/// after the reply brief is due or filed; on a petition, no later than 7
+/// days after the answer.
+deadline oral-argument-motion-period: 14.days after ReplyBriefFiledOrDue() counted_by cavc26 cite "CAVC R. 34(b)(1)"
+deadline petition-oral-argument-period: 7.days after PetitionAnswered() counted_by cavc26 cite "CAVC R. 34(b)(1)"
+/// A motion for reconsideration, panel decision or full Court review is
+/// filed not later than 21 days after the dispositive action, or 51 days if
+/// the movant is located outside the United States, Puerto Rico, or the
+/// Virgin Islands. Rule 26(c)(3) adds no service time to it.
+deadline reconsideration-period: 21.days after DispositiveAction(Domestic) counted_by cavc26 cite "CAVC R. 35(d)"
+deadline reconsideration-abroad-period: 51.days after DispositiveAction(Abroad) counted_by cavc26 cite "CAVC R. 35(d)"
+/// Judgment begins the 60-day time period for appealing to the U.S. Court
+/// of Appeals for the Federal Circuit.
+deadline federal-circuit-appeal-period: 60.days after JudgmentEntered() counted_by cavc26 cite "CAVC R. 36(a)"
+/// Mandate generally is 60 days after judgment, unless a timely notice of
+/// appeal to the Federal Circuit is filed or the Court directs otherwise;
+/// after an uncontested disposition, 60 days after the Court's order.
+deadline mandate-period: 60.days after JudgmentEntered() counted_by cavc26 cite "CAVC R. 41(b)"
+deadline uncontested-mandate-period: 60.days after UncontestedDispositionOrdered() counted_by cavc26 cite "CAVC R. 41(c)"
+
+/// An EAJA application is filed not later than 30 days after the judgment
+/// becomes final; the time is set by statute, and CAVC R. 26(b) forbids
+/// extending it.
+deadline eaja-application-period: 30.days after JudgmentFinal() counted_by cavc26 cite "CAVC R. 39(a)"
+{
+  extend { never cite "CAVC R. 26(b)" }
+}
+
+/// The Secretary responds not later than 30 days after the application is
+/// filed; the applicant may reply not later than 30 days after service of
+/// the response.
+deadline eaja-response-period: 30.days after FeeApplicationFiled() counted_by cavc26 cite "CAVC R. 39(a)(1)"
+deadline eaja-reply-period: 30.days after FeeResponseServed() counted_by cavc26 cite "CAVC R. 39(a)(2)"
+/// A supplemental application is filed not later than 20 days after the
+/// Court grants the application; the Secretary responds not later than 20
+/// days after it is filed, and the applicant replies not later than 10
+/// days after service of the response.
+deadline supplemental-application-period: 20.days after FeeApplicationGranted() counted_by cavc26 cite "CAVC R. 39(b)"
+deadline supplemental-response-period: 20.days after SupplementalApplicationFiled() counted_by cavc26 cite "CAVC R. 39(b)(1)"
+deadline supplemental-reply-period: 10.days after ServedPaper(SupplementalFeeResponse) counted_by cavc26 cite "CAVC R. 39(b)(2)"
+/// A supplemental application for work on a Federal Circuit appeal is
+/// filed not later than 20 days after that court issues its mandate.
+deadline federal-circuit-supplemental-period: 20.days after FederalCircuitMandateIssued() counted_by cavc26 cite "CAVC R. 39(b)(3)(A)"
+
+test "a Notice of Appeal is due 120 days after the Board's notice" cite "CAVC R. 4(a)(1)"
+{
+  given BoardNoticeIssued() on 2026-10-01
+  expect deadline(notice-of-appeal-period) == 2027-01-29
+}
+
+test "the filing fee is due 14 days after the Notice of Appeal" cite "CAVC R. 3(f)"
+{
+  given NoticeOfAppealFiled() on 2026-10-01
+  expect deadline(filing-fee-period) == 2026-10-15
+}
+
+test "the Board decision copy is due 30 days after docketing, rolling past a Saturday" cite "CAVC R. 4(c)"
+{
+  given DocketingNoticeIssued() on 2026-10-01
+  expect deadline(board-decision-copy-period) == 2026-11-02
+}
+
+test "an untimeliness motion is due 45 days after the Board decision is filed" cite "CAVC R. 4(a)(3)(A)"
+{
+  given BoardDecisionCopyFiled() on 2026-10-01
+  expect deadline(untimeliness-motion-period) == 2026-11-16
+}
+
+test "a redaction challenge is due within 15 days" cite "CAVC R. 6(c)"
+{
+  given RedactedDocumentFiled() on 2026-10-01
+  expect deadline(redaction-challenge-period) == 2026-10-16
+}
+
+test "the record before the agency is due 60 days after docketing" cite "CAVC R. 10(a)"
+{
+  given DocketingNoticeIssued() on 2026-10-01
+  expect deadline(record-before-agency-period) == 2026-11-30
+}
+
+test "a record dispute motion is due 14 days after service" cite "CAVC R. 10(b)"
+{
+  given ServedPaper(RecordBeforeAgency, Electronic) on 2026-10-01
+  expect deadline(record-dispute-period) == 2026-10-15
+}
+
+test "a record dispute response is due 7 days after service" cite "CAVC R. 10(b)"
+{
+  given ServedPaper(RecordDisputeMotion, Electronic) on 2026-10-01
+  expect deadline(record-dispute-response-period) == 2026-10-08
+}
+
+test "intervention by right is due 60 days after docketing" cite "CAVC R. 15(a)"
+{
+  given DocketingNoticeIssued() on 2026-10-01
+  expect deadline(intervention-period) == 2026-11-30
+}
+
+test "a motion to intervene is due 60 days after docketing" cite "CAVC R. 15(b)"
+{
+  given DocketingNoticeIssued() on 2026-10-01
+  expect deadline(permissive-intervention-period) == 2026-11-30
+}
+
+test "a class request in an appeal is due 45 days after the record is served" cite "CAVC R. 22(b)(1)"
+{
+  given ServedPaper(RecordBeforeAgency, Electronic) on 2026-10-01
+  expect deadline(class-request-period) == 2026-11-16
+}
+
+test "a class request in a petition is due 30 days after it is filed" cite "CAVC R. 22(b)(2)"
+{
+  given PetitionFiled() on 2026-10-01
+  expect deadline(petition-class-request-period) == 2026-11-02
+}
+
+test "an extension opposition is due 5 days after service" cite "CAVC R. 26(b)(2)"
+{
+  given ServedPaper(ExtensionMotion, Electronic) on 2026-10-01
+  expect deadline(extension-opposition-period) == 2026-10-06
+}
+
+test "a motion response is due 14 days after service" cite "CAVC R. 27(b)(1)"
+{
+  given ServedPaper(Motion, Electronic) on 2026-10-01
+  expect deadline(motion-response-period) == 2026-10-15
+}
+
+test "review of a Clerk action is due in 10 days, rolling past Sunday and Columbus Day" cite "CAVC R. 27(c)"
+{
+  given ClerkActionAnnounced() on 2026-10-01
+  expect deadline(clerk-action-review-period) == 2026-10-13
+}
+
+test "an initial panel review motion is due 14 days after the reply brief" cite "CAVC R. 27.1(b)(1)"
+{
+  given ReplyBriefFiledOrDue() on 2026-10-01
+  expect deadline(initial-panel-review-period) == 2026-10-15
+}
+
+test "a petition panel review motion is due 7 days after the answer" cite "CAVC R. 27.1(b)(2)"
+{
+  given PetitionAnswered() on 2026-10-01
+  expect deadline(petition-panel-review-period) == 2026-10-08
+}
+
+test "an intervenor's brief is due 30 days after the reply brief" cite "CAVC R. 28(d)"
+{
+  given ReplyBriefFiledOrDue() on 2026-10-01
+  expect deadline(intervenor-brief-period) == 2026-11-02
+}
+
+test "the record of proceedings is due 14 days after the reply brief" cite "CAVC R. 28.1(a)(3)"
+{
+  given ReplyBriefFiled() on 2026-10-01
+  expect deadline(record-of-proceedings-period) == 2026-10-15
+}
+
+test "a record of proceedings dispute is due 14 days after service" cite "CAVC R. 28.1(b)"
+{
+  given ServedPaper(RecordOfProceedings, Electronic) on 2026-10-01
+  expect deadline(proceedings-dispute-period) == 2026-10-15
+}
+
+test "a record of proceedings dispute response is due 7 days after service" cite "CAVC R. 28.1(b)"
+{
+  given ServedPaper(ProceedingsDisputeMotion, Electronic) on 2026-10-01
+  expect deadline(proceedings-dispute-response-period) == 2026-10-08
+}
+
+test "an amicus motion is due 7 days after the supported principal brief" cite "CAVC R. 29(c)"
+{
+  given PrincipalBriefFiled() on 2026-10-01
+  expect deadline(amicus-period) == 2026-10-08
+}
+
+test "the appellant's brief is due 60 days after the record dispute period" cite "CAVC R. 31(a)(1)(A)"
+{
+  given RecordDisputePeriodExpired() on 2026-10-01
+  expect deadline(appellant-brief-period) == 2026-11-30
+}
+
+test "the appellant's brief is due 30 days after the staff conference" cite "CAVC R. 31(a)(1)(B)"
+{
+  given StaffConferenceCompleted() on 2026-10-01
+  expect deadline(appellant-brief-after-conference-period) == 2026-11-02
+}
+
+test "the Secretary's brief is due 60 days after service of the appellant's brief" cite "CAVC R. 31(a)(2)"
+{
+  given ServedPaper(AppellantBrief, Electronic) on 2026-10-01
+  expect deadline(secretary-brief-period) == 2026-11-30
+}
+
+test "the reply brief is due 14 days after service of the Secretary's brief" cite "CAVC R. 31(a)(3)"
+{
+  given ServedPaper(SecretaryBrief, Electronic) on 2026-10-01
+  expect deadline(reply-brief-period) == 2026-10-15
+}
+
+test "an oral argument motion is due 14 days after the reply brief" cite "CAVC R. 34(b)(1)"
+{
+  given ReplyBriefFiledOrDue() on 2026-10-01
+  expect deadline(oral-argument-motion-period) == 2026-10-15
+}
+
+test "a petition oral argument motion is due 7 days after the answer" cite "CAVC R. 34(b)(1)"
+{
+  given PetitionAnswered() on 2026-10-01
+  expect deadline(petition-oral-argument-period) == 2026-10-08
+}
+
+test "a Rule 35 motion is due 21 days after the dispositive action" cite "CAVC R. 35(d)"
+{
+  given DispositiveAction(Domestic) on 2026-10-01
+  expect deadline(reconsideration-period) == 2026-10-22
+}
+
+test "a Rule 35 motion from abroad is due 51 days after the dispositive action" cite "CAVC R. 35(d)"
+{
+  given DispositiveAction(Abroad) on 2026-10-01
+  expect deadline(reconsideration-abroad-period) == 2026-11-23
+}
+
+test "a Federal Circuit appeal is due 60 days after judgment" cite "CAVC R. 36(a)"
+{
+  given JudgmentEntered() on 2026-10-01
+  expect deadline(federal-circuit-appeal-period) == 2026-11-30
+}
+
+test "mandate is 60 days after judgment" cite "CAVC R. 41(b)"
+{
+  given JudgmentEntered() on 2026-10-01
+  expect deadline(mandate-period) == 2026-11-30
+}
+
+test "mandate is 60 days after an uncontested disposition" cite "CAVC R. 41(c)"
+{
+  given UncontestedDispositionOrdered() on 2026-10-01
+  expect deadline(uncontested-mandate-period) == 2026-11-30
+}
+
+test "an EAJA application is due 30 days after the judgment is final" cite "CAVC R. 39(a)"
+{
+  given JudgmentFinal() on 2026-10-01
+  expect deadline(eaja-application-period) == 2026-11-02
+}
+
+test "the EAJA response is due 30 days after the application" cite "CAVC R. 39(a)(1)"
+{
+  given FeeApplicationFiled() on 2026-10-01
+  expect deadline(eaja-response-period) == 2026-11-02
+}
+
+test "the EAJA reply is due 30 days after the response" cite "CAVC R. 39(a)(2)"
+{
+  given FeeResponseServed() on 2026-10-01
+  expect deadline(eaja-reply-period) == 2026-11-02
+}
+
+test "a supplemental application is due 20 days after the grant" cite "CAVC R. 39(b)"
+{
+  given FeeApplicationGranted() on 2026-10-01
+  expect deadline(supplemental-application-period) == 2026-10-21
+}
+
+test "the supplemental response is due 20 days after the supplemental application" cite "CAVC R. 39(b)(1)"
+{
+  given SupplementalApplicationFiled() on 2026-10-01
+  expect deadline(supplemental-response-period) == 2026-10-21
+}
+
+test "the supplemental reply is due 10 days after the response, rolling past Columbus Day" cite "CAVC R. 39(b)(2)"
+{
+  given ServedPaper(SupplementalFeeResponse, Electronic) on 2026-10-01
+  expect deadline(supplemental-reply-period) == 2026-10-13
+}
+
+test "a supplemental application for Federal Circuit work is due 20 days after its mandate" cite "CAVC R. 39(b)(3)(A)"
+{
+  given FederalCircuitMandateIssued() on 2026-10-01
+  expect deadline(federal-circuit-supplemental-period) == 2026-10-21
+}
+
+test "the staff conference summary is due 14 days before the conference" cite "CAVC R. 33(b)(1)"
+{
+  given StaffConferenceSet() on 2026-11-03
+  expect deadline(staff-conference-summary-period) == 2026-10-20
+}
+
+test "mail service adds 5 days after the period" cite "CAVC R. 26(c)(1)"
+{
+  given ServedPaper(Motion, Mail) on 2026-10-01
+  expect deadline(motion-response-period) == 2026-10-20
+}

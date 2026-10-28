@@ -1,0 +1,51 @@
+# The United States District Court for the Western District of Michigan's
+# Local Criminal Rules (LCrR) as a local-rule layer over lit/frcrimp (28
+# U.S.C. § 2071; FRCrimP 57(a)): it declares only the periods and limits the
+# Local Criminal Rules themselves state and re-encodes no FRCrimP, Speedy
+# Trial Act or FRAP 4(b) period. FRCrimP 45(a) computes a period stated in
+# a local rule. The rules are the Local Criminal Rules as amended by
+# Administrative Order 26-RL-067 (August 13, 2026), in force from October
+# 12, 2026 (sources/miwd; LCrR 1.3: "amendments through August 13, 2026");
+# the prior edition is not vendored. An appeal goes to the Sixth Circuit
+# under lit/frap and lit/ca6; federal habeas is lit/habeas.
+[package]
+name = "miwd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "miwd-criminal-local-rules"
+forum = "miwd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Western District of Michigan: Local Criminal Rules"
+description = "The Western District of Michigan's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the marshal's subpoena lead time, the presentence schedule (initial interview and offense conduct information, disclosure 47 days before sentencing, the final report 21 days before, departure and variance motions and sentencing memoranda 14 days before and responses 7 days before, and the earliest sentencing after disclosure), dispositive and nondispositive motion responses and brief limits, and objections to an electronically filed signature."
+in_force = "2026-10-12"
+known_at = "2026-10-28"
+unknown_before = "2026-10-12"
+jurisdiction = "United States District Court, W.D. Mich. (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "miwd-lcrr"
+issuer = "United States District Court for the Western District of Michigan"
+date = "2026-08-13"
+designation = "Local Criminal Rules (Administrative Order 26-RL-067, effective October 12, 2026)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRCrimP periods; this package layers only the court's local criminal rules over them.
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.miwd-lcrr]
+title = "Local Rules of Practice and Procedure of the United States District Court for the Western District of Michigan, Local Criminal Rules (as amended by Administrative Order 26-RL-067, effective October 12, 2026)"
+url = "https://www.miwd.uscourts.gov/sites/miwd/files/MIWD_Local_Rules.pdf"
+path = "sources/miwd/miwd-local-criminal-rules-sectioned.txt"
+path_sha256 = "8f226ec6a907a2fbc5bf9817acae5890ecf50a58a7eeb278b05cf37b2aa3a3b5"
+sha256 = "61027d97dc83d2d8ea6c198f285912fa8e47d6dc5ad18b3f1a8d07d252468040"
+as_of = "2026-10-12"
+cite_prefixes = ["W.D. Mich. LCrR"]
+section_heading = "LCrR {n}"

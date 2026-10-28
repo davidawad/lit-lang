@@ -1,0 +1,110 @@
+module miwd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The Western District of Michigan's own criminal periods and limits,
+// counted under FRCrimP 45(a), which governs a period stated in a local
+// rule. The court may modify the presentence periods for good cause or on
+// its own motion, and the parties may agree to an expedited procedure
+// (LCrR 32.2(j)). The FRCrimP periods the local rules repeat are
+// lit/frcrimp's and are not declared again: the parties' written response
+// and objections within 14 days after disclosure of the presentence report
+// (LCrR 32.2(d); FRCrimP 32(f)(1)) and the 14-day appeal from a misdemeanor
+// conviction by a magistrate judge (LCrR 57.1(d); FRCrimP 58(g)(2)(B)).
+// Stated in the rules but not declared: the report "deemed disclosed" to a
+// pro se defendant three days after mailing (LCrR 32.2(c)(ii)), a deemed
+// date; the courtesy copy within 24 hours of filing (LCrR 47.1(b)(iii)), an
+// hours period `core.frcrimp45` does not count; the juror information and
+// paper copies due three business days before trial or a hearing (LCrR
+// 24.1, 49.1), a business-day period FRCrimP 45(a) does not define; the
+// fourteen days a writ of habeas corpus ad prosequendum or testificandum
+// should allow "every effort" (LCrR 57.2(d)), which is no deadline; and the
+// one-year retention of original signatures (LCrR 49.10(e)(viii)).
+/// A brief in support of or opposition to a dispositive motion produced on
+/// a computer: at most 10,800 words, excluding the caption, cover sheets,
+/// tables, signature block, attachments, exhibits, affidavits and other
+/// addenda (LCrR 47.1(b)(i)).
+limit dispositive-brief {
+  words <= 10_800 cite "W.D. Mich. LCrR 47.1(b)"
+} cite "W.D. Mich. LCrR 47.1(b)"
+
+/// The same brief hand-written or produced on a typewriter: at most 25
+/// pages (LCrR 47.1(b)(i)).
+limit dispositive-brief-handwritten {
+  pages <= 25 cite "W.D. Mich. LCrR 47.1(b)"
+} cite "W.D. Mich. LCrR 47.1(b)"
+
+/// A brief in support of or opposition to a nondispositive motion produced
+/// on a computer: at most 4,300 words (LCrR 47.2(b)(i)).
+limit nondispositive-brief {
+  words <= 4_300 cite "W.D. Mich. LCrR 47.2(b)"
+} cite "W.D. Mich. LCrR 47.2(b)"
+
+/// The same brief hand-written or produced on a typewriter: at most 10
+/// pages (LCrR 47.2(b)(i)).
+limit nondispositive-brief-handwritten {
+  pages <= 10 cite "W.D. Mich. LCrR 47.2(b)"
+} cite "W.D. Mich. LCrR 47.2(b)"
+
+/// A subpoena to be served by the United States Marshals Service names the
+/// date of the required appearance (LCrR 17.1).
+event SubpoenaAppearanceDate()
+/// The order setting the sentencing date is entered (LCrR 32.2(a)).
+event SentencingDateOrderEntered()
+/// The presentence report is disclosed to the parties (LCrR 32.2(c), (j)).
+event PresentenceReportDisclosed()
+/// A dispositive motion (to dismiss or quash an indictment or information,
+/// to suppress evidence, to dismiss involuntarily, or another dispositive
+/// motion as defined by law) is served (LCrR 47.1(a), (c)).
+event DispositiveMotionServed() paper dispositive-brief
+/// A nondispositive motion is served (LCrR 47.2(a), (c)).
+event NondispositiveMotionServed() paper nondispositive-brief
+/// An electronically filed document bearing a non-filing signatory's or a
+/// party's signature is served (LCrR 49.10(e)(viii)).
+event SignedDocumentServed()
+
+/// LCrR 17.1: unless otherwise ordered, a subpoena to be served by the
+/// United States Marshals Service allows a minimum of fourteen days before
+/// the required appearance.
+deadline marshal-subpoena-lead-time: 14.days before SubpoenaAppearanceDate() counted_by frcrimp45 cite "W.D. Mich. LCrR 17.1"
+/// LCrR 32.2(a): the initial interview with the defendant, defense counsel
+/// and the probation officer is scheduled within seven days of the order
+/// setting the sentencing date.
+deadline initial-interview-period: 7.days after SentencingDateOrderEntered() counted_by frcrimp45 cite "W.D. Mich. LCrR 32.2(a)"
+/// LCrR 32.2(a): counsel for the government makes the offense conduct
+/// information, including all relevant conduct, available within seven
+/// days of the order.
+deadline offense-conduct-period: 7.days after SentencingDateOrderEntered() counted_by frcrimp45 cite "W.D. Mich. LCrR 32.2(a)"
+/// LCrR 32.2(b): at least forty-seven days before the date scheduled for
+/// sentencing the probation officer provides the presentence report,
+/// except the sentencing rationale, to government and defense counsel or
+/// the pro se defendant.
+deadline psr-disclosure-period: 47.days before SentencingScheduled() counted_by frcrimp45 cite "W.D. Mich. LCrR 32.2(b)"
+/// LCrR 32.2(f): not less than twenty-one days before the date set for
+/// sentencing the probation officer submits the final report with its
+/// addendum of unresolved objections and provides a copy to counsel.
+deadline final-report-period: 21.days before SentencingScheduled() counted_by frcrimp45 cite "W.D. Mich. LCrR 32.2(f)"
+/// LCrR 32.2(g): not less than fourteen days before the date set for
+/// sentencing a party seeking a departure or variance submits a separate
+/// motion, and all sentencing memoranda are filed by the same date.
+deadline departure-motion-period: 14.days before SentencingScheduled() counted_by frcrimp45 cite "W.D. Mich. LCrR 32.2(g)"
+/// LCrR 32.2(g): not less than seven days before sentencing any party may
+/// respond to a previously filed motion or sentencing memorandum.
+deadline sentencing-response-period: 7.days before SentencingScheduled() counted_by frcrimp45 cite "W.D. Mich. LCrR 32.2(g)"
+/// LCrR 32.2(j): in no event is sentence imposed less than ten days
+/// following disclosure of the presentence report without the defendant's
+/// consent; this is the earliest such date.
+deadline earliest-sentencing-date: 10.days after PresentenceReportDisclosed() counted_by frcrimp45 cite "W.D. Mich. LCrR 32.2(j)"
+/// LCrR 47.1(c): unless otherwise ordered, a party opposing a dispositive
+/// motion files a responsive brief and supporting materials within
+/// twenty-eight days after service of the motion.
+deadline dispositive-response-period: 28.days after DispositiveMotionServed() counted_by frcrimp45 cite "W.D. Mich. LCrR 47.1(c)"
+/// LCrR 47.2(c): unless otherwise ordered, a party opposing a
+/// nondispositive motion files a responsive brief within fourteen days of
+/// service of the motion; a reply needs leave of court.
+deadline nondispositive-response-period: 14.days after NondispositiveMotionServed() counted_by frcrimp45 cite "W.D. Mich. LCrR 47.2(c)"
+/// LCrR 49.10(e)(viii): a non-filing signatory or party who disputes the
+/// authenticity of a signature on an electronically filed document files
+/// an objection within fourteen days after service of the document.
+deadline signature-objection-period: 14.days after SignedDocumentServed() counted_by frcrimp45 cite "W.D. Mich. LCrR 49.10(e)"

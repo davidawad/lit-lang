@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "miwd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:72f0b563f3d24bed6d834471db8990d1d0d7eef19ddd6c7ab4bd2e9a20e3c82c"
+semantic = "sha256:f9335618d14246a8297cf8bb14a27a2cbc16b05185ba71a3f72f863dc00fb06c"
+texts = [
+    "miwd-lcrr sources/miwd/miwd-local-criminal-rules-sectioned.txt sha256:8f226ec6a907a2fbc5bf9817acae5890ecf50a58a7eeb278b05cf37b2aa3a3b5",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

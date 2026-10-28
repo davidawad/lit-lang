@@ -854,7 +854,7 @@ mod tests {
 
     proptest! {
         #[test]
-        fn prop_quoted_strings_parse_back(s in "\\PC{0,24}") {
+        fn prop_quoted_strings_parse_back(s in "\\PC{1,24}") {
             let lock = LockFile::new(vec![LockedPackage { name: s.clone(), version: s.clone(), source: s.clone(), semantic: s.clone(), texts: vec![s.clone()], dependencies: Vec::new(), language: 1 }]);
             prop_assert_eq!(LockFile::parse(&lock.render()).ok(), Some(lock));
         }

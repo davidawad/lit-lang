@@ -1,6 +1,21 @@
 version = 2
 
 [[package]]
+name = "bankr-nd-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:bf638de7eda41c458fca332363360dbcb8192af8db61a1a09dd21a133fc28c41"
+semantic = "sha256:68ac96661c7fc137ec82397ae81dc0ae3a2c45e6a41789fbbe12afd81c51ad52"
+texts = [
+    "ndb-go-2023-lr-9013-2 sources/bankr-nd/ndb-go-2023-lr-9013-2.txt sha256:51b982ad39a7e769ef9b9c2f8bfb8f385184ea82eef1537c00fc25689bd7232d",
+    "ndb-lbr sources/bankr-nd/ndb-lbr-2023-02-06-sectioned.txt sha256:26644c7557d02067dbfc57c31e16c0002676c5c6da11b9a9010682cc41f552a4",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +59,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-nd"
-version = "0.0.1"
-language = 1
-source = "sha256:95ecc24f875ff34d5ea138a048a33b8a24b24e686a9ba9bbe768a642c7c3edbc"
-semantic = "sha256:4303abe77965ff854b689ec416e849ef86a3bd6616d6631605c861a7c7b7c53c"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

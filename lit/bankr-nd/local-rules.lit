@@ -1,0 +1,248 @@
+module bankr-nd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ OrderForReliefEntered }
+
+// The Bankr. D.N.D. court's own periods and page limits, counted under FRBP
+// 9006(a). The FRBP periods (schedules, claims in chapter 7, 12 and 13
+// cases, discharge, dischargeability, exemptions, the adversary answer and
+// summons, appeals) are lit/frbp's and are not declared again; the 21-day
+// notice of a motion to approve a settlement the trustee is party to is
+// FRBP 2002(a)(3)'s (L.R. 7007-1(G), 9014-1(F)).
+//
+// Stated in the rules but not declared: the business-day and clock-time
+// periods (witness and exhibit lists two business days before a contested
+// hearing, L.R. 9013-1(D), 9014-1(B); exhibits for a video hearing one
+// business day before it, L.R. 5001-2(C); requests to appear by telephone
+// or video generally 48 hours ahead, L.R. 5001-1(A), 5001-2(B); direct
+// notice of a continuance granted within 24 hours, or 48 hours where a
+// party is pro se, L.R. 5071-1; electronic filing before midnight on the
+// due date, L.R. 5005-1(D)); the minimum notices a paper must give rather
+// than deadlines of its own (a Rule 2004 examinee not required to attend
+// less than 14 days after delivery of the notice, L.R. 2004-1(C); a motion
+// for a notice period under seven days denied absent extraordinary
+// circumstances, L.R. 9006-1); the chapter 12 and 13 domestic support
+// certification no earlier than six months before plan payments end (L.R.
+// 4004-1(B)); the clerk's own acts (original exhibits returned, and copies
+// destroyed, 30 days after disposition, L.R. 9017-1(B)); the one-year bar
+// on a former law clerk's work on the judge's new cases (L.R. 9010-2(F));
+// and the fee caps, which are amounts rather than periods (the $4,000
+// presumptively reasonable chapter 13 fee and $1,000 and $1,500 simplified
+// applications, L.R. 2016-1; the $90 petition preparer fee, L.R. 2016-2).
+// A dispositive motion memorandum's 40 pages hold no more than 25 pages of
+// argument (L.R. 7007-1(A)); only the 40-page total is a `limit`.
+/// A memorandum in support of a dispositive motion (Fed. R. Civ. P. 12 or
+/// 56) in an adversary proceeding, or a response to it (L.R. 7007-1(A)).
+limit dispositive-memorandum {
+  pages <= 40 cite "D.N.D. Bankr. L.R. 7007-1(A)"
+} cite "D.N.D. Bankr. L.R. 7007-1(A)"
+
+/// A reply on a dispositive motion in an adversary proceeding (L.R.
+/// 7007-1(A)).
+limit dispositive-reply {
+  pages <= 10 cite "D.N.D. Bankr. L.R. 7007-1(A)"
+} cite "D.N.D. Bankr. L.R. 7007-1(A)"
+
+/// A memorandum in support of a non-dispositive motion in an adversary
+/// proceeding, or a response to it (L.R. 7007-1(B)).
+limit nondispositive-memorandum {
+  pages <= 20 cite "D.N.D. Bankr. L.R. 7007-1(B)"
+} cite "D.N.D. Bankr. L.R. 7007-1(B)"
+
+/// A reply on a non-dispositive motion in an adversary proceeding (L.R.
+/// 7007-1(B)).
+limit nondispositive-reply {
+  pages <= 7 cite "D.N.D. Bankr. L.R. 7007-1(B)"
+} cite "D.N.D. Bankr. L.R. 7007-1(B)"
+
+/// A memorandum in support of a motion for leave to make an additional
+/// filing or exceed the page limits, or of a motion for oral argument (L.R.
+/// 7007-1(D)-(E)).
+limit leave-memorandum {
+  pages <= 2 cite "D.N.D. Bankr. L.R. 7007-1(D)"
+} cite "D.N.D. Bankr. L.R. 7007-1(D)"
+
+/// The notice to an added creditor of an amendment to the schedules or
+/// statements is served (L.R. 1009-1(B)).
+event AmendmentNoticeServed()
+/// The first meeting of creditors in a joint case concludes (L.R. 1015-1).
+event FirstMeetingConcluded()
+/// A motion, application or other request for relief is served with its
+/// notice (L.R. 2002-1(B), 9013-1(A)).
+event RequestServed()
+/// A motion and notice for payment of unclaimed funds is served (L.R.
+/// 3011-1(C)).
+event UnclaimedFundsMotionServed()
+/// After a case is reopened, an application or motion for the relief sought
+/// is served with its notice (L.R. 5010-1).
+event ReopenedReliefRequestServed()
+/// A memorandum in support of a dispositive motion in an adversary
+/// proceeding is served (L.R. 7007-1(A)).
+event DispositiveMemorandumServed() paper dispositive-memorandum
+/// The response to a dispositive motion is served (L.R. 7007-1(A)).
+event DispositiveResponseServed() paper dispositive-memorandum
+/// The reply on a dispositive motion is served (L.R. 7007-1(A)).
+event DispositiveReplyServed() paper dispositive-reply
+/// A memorandum in support of a non-dispositive motion in an adversary
+/// proceeding is served (L.R. 7007-1(B)).
+event NondispositiveMemorandumServed() paper nondispositive-memorandum
+/// The response to a non-dispositive motion is served (L.R. 7007-1(B)).
+event NondispositiveResponseServed() paper nondispositive-memorandum
+/// The reply on a non-dispositive motion is served (L.R. 7007-1(B)).
+event NondispositiveReplyServed() paper nondispositive-reply
+/// A motion to approve a stipulation or settlement agreement in an
+/// adversary proceeding the trustee is not party to is served (L.R.
+/// 7007-1(G)).
+event AdversarySettlementMotionServed()
+/// A motion for judgment on the pleadings in a contested matter is served
+/// (L.R. 9014-1(D)).
+event PleadingsMotionServed()
+
+/// D.N.D. Bankr. L.R. 1009-1(B)(3): where the proof of claim deadline has
+/// passed or will pass within 30 days of an amendment adding a creditor,
+/// the notice provides that the creditor has 30 days after its service to
+/// file a proof of claim.
+deadline omitted-creditor-claim-period: 30.days after AmendmentNoticeServed() counted_by frcp6 cite "D.N.D. Bankr. L.R. 1009-1(B)"
+{
+  forum frcp
+}
+
+/// D.N.D. Bankr. L.R. 1009-1(B)(4): where the deadline for a complaint
+/// objecting to discharge or dischargeability has passed or will pass
+/// within 30 days, the notice provides that the creditor has 30 days after
+/// its service to file a complaint.
+deadline omitted-creditor-complaint-period: 30.days after AmendmentNoticeServed() counted_by frcp6 cite "D.N.D. Bankr. L.R. 1009-1(B)"
+{
+  forum frcp
+}
+
+/// D.N.D. Bankr. L.R. 1015-1: the estates in a joint case are jointly
+/// administered without further order unless the trustee or another party
+/// in interest objects within 14 days after the conclusion of the first
+/// meeting of creditors.
+deadline joint-administration-objection-period: 14.days after FirstMeetingConcluded() counted_by frcp6 cite "D.N.D. Bankr. L.R. 1015-1"
+{
+  forum frcp
+}
+
+/// D.N.D. Bankr. L.R. 2002-1(B): where neither these rules nor the FRBP
+/// provide a specific notice period, the proponent of a motion, application
+/// or other request for relief provides a 14-day notice.
+deadline default-notice-period: 14.days after RequestServed() counted_by frcp6 cite "D.N.D. Bankr. L.R. 2002-1(B)"
+{
+  forum frcp
+}
+
+/// D.N.D. Bankr. L.R. 3003-1: unless otherwise ordered or provided in the
+/// FRBP, the last day to file a proof of claim or interest in a chapter 11
+/// case is 70 days after the order for relief (the bar date FRBP 3003(c)(3)
+/// leaves to the court).
+deadline chapter11-claim-period: 70.days after OrderForReliefEntered() counted_by frcp6 cite "D.N.D. Bankr. L.R. 3003-1"
+{
+  forum frcp
+}
+
+/// D.N.D. Bankr. L.R. 3011-1(C): if no objection is received within 14 days
+/// after service of the motion and notice, an order may be entered granting
+/// payment of unclaimed funds.
+deadline unclaimed-funds-objection-period: 14.days after UnclaimedFundsMotionServed() counted_by frcp6 cite "D.N.D. Bankr. L.R. 3011-1(C)"
+{
+  forum frcp
+}
+
+/// D.N.D. Bankr. L.R. 5010-1: the notice period for an application or
+/// motion seeking relief after a case is reopened is 14 days, except for an
+/// amendment adding an omitted creditor or modifying a claim under L.R.
+/// 1009-1.
+deadline reopened-relief-notice-period: 14.days after ReopenedReliefRequestServed() counted_by frcp6 cite "D.N.D. Bankr. L.R. 5010-1"
+{
+  forum frcp
+}
+
+/// D.N.D. Bankr. L.R. 7007-1(A): the adverse party has 21 days after service
+/// of the memorandum in support of a dispositive motion to serve and file a
+/// response.
+deadline dispositive-response-period: 21.days after DispositiveMemorandumServed() counted_by frcp6 cite "D.N.D. Bankr. L.R. 7007-1(A)"
+{
+  forum frcp
+}
+
+/// D.N.D. Bankr. L.R. 7007-1(A): the moving party has 14 days to serve and
+/// file a reply on a dispositive motion.
+deadline dispositive-reply-period: 14.days after DispositiveResponseServed() counted_by frcp6 cite "D.N.D. Bankr. L.R. 7007-1(A)"
+{
+  forum frcp
+}
+
+/// D.N.D. Bankr. L.R. 7007-1(B): the adverse party has 14 days after service
+/// of the memorandum in support of a non-dispositive motion to serve and
+/// file a response.
+deadline nondispositive-response-period: 14.days after NondispositiveMemorandumServed() counted_by frcp6 cite "D.N.D. Bankr. L.R. 7007-1(B)"
+{
+  forum frcp
+}
+
+/// D.N.D. Bankr. L.R. 7007-1(B): the moving party has 7 days to serve and
+/// file a reply on a non-dispositive motion.
+deadline nondispositive-reply-period: 7.days after NondispositiveResponseServed() counted_by frcp6 cite "D.N.D. Bankr. L.R. 7007-1(B)"
+{
+  forum frcp
+}
+
+/// D.N.D. Bankr. L.R. 7007-1(G): where the trustee is not a party, the
+/// moving party serves a 21-day notice of the motion to approve a
+/// stipulation or settlement agreement on all parties appearing in the
+/// adversary proceeding, the trustee and the United States Trustee.
+deadline adversary-settlement-notice-period: 21.days after AdversarySettlementMotionServed() counted_by frcp6 cite "D.N.D. Bankr. L.R. 7007-1(G)"
+{
+  forum frcp
+}
+
+/// D.N.D. Bankr. L.R. 9013-1(A): for motions, applications and requests
+/// governed by FRBP 9013, interested parties have 14 days to file a
+/// response.
+deadline motion-response-period: 14.days after RequestServed() counted_by frcp6 cite "D.N.D. Bankr. L.R. 9013-1(A)"
+{
+  forum frcp
+}
+
+/// D.N.D. Bankr. L.R. 9014-1(D): Fed. R. Civ. P. 12(c) applies in contested
+/// matters, and a party opposing a motion for judgment on the pleadings has
+/// 21 days to file an objection.
+deadline pleadings-motion-objection-period: 21.days after PleadingsMotionServed() counted_by frcp6 cite "D.N.D. Bankr. L.R. 9014-1(D)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion, application or request served with notice" by applicant cite "D.N.D. Bankr. L.R. 2002-1(A)"
+{
+  note "The proponent serves the pleading and notice under the FRBP and the court's Notice and Service Requirements list (L.R. 2002-1(A)); absent a specific period, the notice is 14 days (L.R. 2002-1(B)), and interested parties have 14 days to respond to an FRBP 9013 motion (L.R. 9013-1(A)). The listed applications and motions may be ruled on upon filing without a hearing (L.R. 2002-1(E)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-response "Response filed" -> responded {
+    authority cite "D.N.D. Bankr. L.R. 9013-1(A)"
+  }
+  edge-motion-filed-unopposed "No response: deemed an admission that the motion is well taken" -> ruling {
+    authority cite "D.N.D. Bankr. L.R. 9013-1(B)"
+  }
+}
+
+state responded: "Response filed; contested matter" by opponent cite "D.N.D. Bankr. L.R. 9014-1(A)"
+{
+  note "Hearings are evidentiary unless the court sets a preliminary hearing; witness lists and exhibits are disclosed two business days before the hearing (L.R. 9013-1(C)-(D), 9014-1(A)-(B))."
+  edge-responded-hearing "Evidentiary hearing held" -> ruling {
+    authority cite "D.N.D. Bankr. L.R. 9014-1(A)"
+  }
+}
+
+decision ruling: "Motion decided" by court cite "D.N.D. Bankr. L.R. 9014-1(A)"
+{
+  note "The court rules after the hearing, or without one where no response is filed (L.R. 9013-1(B), 9014-1(E))."
+  edge-ruling-granted "Granted" -> decided { authority cite "D.N.D. Bankr. L.R. 9013-1(B)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "D.N.D. Bankr. L.R. 9014-1(A)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "D.N.D. Bankr. L.R. 1001-1(B)"
+{
+  note "The Bankruptcy Local Rules apply to all cases and proceedings in the court (L.R. 1001-1(B))."
+}

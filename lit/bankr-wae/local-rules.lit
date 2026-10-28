@@ -1,0 +1,509 @@
+module bankr-wae-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
+
+// The Bankr. E.D. Wash. court's own periods, counted under FRBP 9006(a).
+// The FRBP periods (schedules and their extension, the chapter 13 plan,
+// claims in chapter 7, 12 and 13 cases, exemptions, discharge,
+// dischargeability, the adversary answer and summons, new trial, appeals)
+// are lit/frbp's and are not declared again. Not repeated either, as only
+// restating a national or statutory period: a chapter 12 plan within 90
+// days of the petition (LBR 2082-1(h); 11 U.S.C. § 1221); the § 521(i)
+// extension motion within 45 days (LBR 1014-1(b); 11 U.S.C. § 521(i)(3));
+// the § 362(c)(3) hearing within 30 days of the petition (LBR 4001-1(b));
+// the chapter 11 status conference within 60 days of the order for relief,
+// a court-set date (LBR 3016-1(e)(1)); and the FRBP 9033(b) objections and
+// responses to proposed findings (LBR 9033-1(b)).
+//
+// Each "N days' notice" period below is declared as the time the movant
+// allows for objections after giving notice (LBR 2002-1(c): at least 21
+// days, plus 3 if FRBP 9006(f) applies, unless a rule prescribes another).
+// Stated in the rules but not declared: the "sooner" valuation motion (LBR
+// 2082-1(g)(1)); the court's valuation and confirmation hearing windows of
+// 90 to 105 and 120 to 135 days after the petition (LBR 2082-1(g), (j));
+// the 60-day status conference after an early chapter 12 plan (LBR
+// 2082-1(h)); the 5-day notice periods (LBR 1014-1(a), 2002-1(d), 2082-1(h),
+// 7016-1, 7026-1(b)); the one-day notice to chambers (LBR 1072-1(c)); the
+// deemed-moot periods for case closing (LBR 5009-1); the 280-words-per-page
+// average, a measure the language has no form for (LBR 9004-1(a)); and
+// the rent deposit for the 30 days after the petition (LBR 4001-4(a); 11
+// U.S.C. § 362(l)). The earlier outline's Supreme Court decisions construe
+// the Code and the FRBP, not these rules, and are removed here: no
+// reporter text is vendored.
+
+/// Notice of a motion to extend the time to file schedules, statements or a
+/// plan is given (Bankr. E.D. Wash. LBR 1007-1(a)).
+event ExtensionNoticeGiven()
+/// Notice of a motion for joint administration or consolidation is given
+/// (Bankr. E.D. Wash. LBR 1015-1(b)).
+event JointAdministrationNoticeGiven()
+/// Notice of a motion to convert a chapter 11 case to chapter 12 or 13, or
+/// to convert or dismiss a chapter 11 case, is given (Bankr. E.D. Wash. LBR
+/// 1017-2(a), 1017-3(a)).
+event ConversionNoticeGiven()
+/// Notice of a motion to divide a joint case is given (Bankr. E.D. Wash.
+/// LBR 1017-4(a)).
+event DivisionNoticeGiven()
+/// Notice of a proposed action is given (Bankr. E.D. Wash. LBR 2002-1(c)).
+event NoticeGiven()
+/// Notice of an application to employ an attorney or accountant is given
+/// (Bankr. E.D. Wash. LBR 2014-1(a)).
+event EmploymentNoticeGiven()
+/// Notice of an application for compensation over $1,000 is given (Bankr.
+/// E.D. Wash. LBR 2016-1(a)).
+event FeeApplicationNoticeGiven()
+/// A month of a chapter 12 case closes (Bankr. E.D. Wash. LBR 2082-1(e)).
+event MonthEnded()
+/// Notice of a chapter 12 motion to value is filed (Bankr. E.D. Wash. LBR
+/// 2082-1(g)).
+event ValuationNoticeFiled()
+/// The chapter 12 valuation hearing (Bankr. E.D. Wash. LBR 2082-1(g)).
+event ValuationHearing()
+/// Notice of the filing of a chapter 12 plan is mailed (Bankr. E.D. Wash.
+/// LBR 2082-1(h)).
+event PlanFilingNoticeMailed()
+/// The confirmation hearing (Bankr. E.D. Wash. LBR 2082-1(i)).
+event ConfirmationHearing()
+/// Notice of a chapter 12 debtor's motion for entry of discharge is given
+/// (Bankr. E.D. Wash. LBR 2082-1(n)).
+event DischargeNoticeGiven()
+/// Notice of a chapter 13 plan modification is given (Bankr. E.D. Wash. LBR
+/// 2083-1(i)).
+event ModificationNoticeGiven()
+/// Notice of a motion to dismiss or convert a chapter 13 case is given
+/// (Bankr. E.D. Wash. LBR 2083-1(o)).
+event DismissalNoticeGiven()
+/// A secured creditor designates or changes a servicing agent (Bankr. E.D.
+/// Wash. LBR 3002.1-1).
+event ServicerDesignated()
+/// The hearing on an objection to claim (Bankr. E.D. Wash. LBR 3007-1(c)).
+event ClaimObjectionHearing()
+/// The chapter 11 initial status conference (Bankr. E.D. Wash. LBR
+/// 3016-1(e)).
+event StatusConference()
+/// Notice of a disclosure statement and plan, or of the opportunity to
+/// object to confirmation, is given (Bankr. E.D. Wash. LBR 3018-1).
+event DisclosureNoticeGiven()
+/// Notice of a motion for relief from, or regarding, the automatic stay is
+/// given (Bankr. E.D. Wash. LBR 4001-1).
+event StayReliefNoticeGiven()
+/// A preliminary hearing on a motion for relief from stay (Bankr. E.D.
+/// Wash. LBR 4001-1(a)).
+event PreliminaryHearing()
+/// Notice of a cash collateral motion is given (Bankr. E.D. Wash. LBR
+/// 4001-2(a)).
+event CashCollateralNoticeGiven()
+/// Notice of a motion for relief from the codebtor stay is given (Bankr.
+/// E.D. Wash. LBR 4001-3(a)).
+event CodebtorNoticeGiven()
+/// Notice of a § 522(f) lien avoidance motion is given (Bankr. E.D. Wash.
+/// LBR 4003-2(a)).
+event LienAvoidanceNoticeGiven()
+/// The scheduling order in an adversary proceeding is entered (Bankr. E.D.
+/// Wash. LBR 5011-1(b)).
+event SchedulingOrderEntered()
+/// A motion to withdraw the reference is served (Bankr. E.D. Wash. LBR
+/// 5011-1(b)).
+event WithdrawalMotionServed()
+/// A response to a motion to withdraw the reference is served (Bankr. E.D.
+/// Wash. LBR 5011-1(b)).
+event WithdrawalResponseServed()
+/// Notice of a motion to assume or reject an executory contract or
+/// unexpired lease is given (Bankr. E.D. Wash. LBR 6006-1).
+event ExecutoryContractNoticeGiven()
+/// Notice of a motion to abandon property is given (Bankr. E.D. Wash. LBR
+/// 6007-1(a)).
+event AbandonmentNoticeGiven()
+/// Notice of a § 722 redemption motion is given (Bankr. E.D. Wash. LBR
+/// 6008-1).
+event RedemptionNoticeGiven()
+/// A party receives notice of an order to compel (Bankr. E.D. Wash. LBR
+/// 7026-1(c)).
+event CompelOrderNoticed()
+/// A judgment allowing costs is entered (Bankr. E.D. Wash. LBR 7054-1).
+event JudgmentEntered()
+/// An attorney's notice of intent to withdraw is served (Bankr. E.D. Wash.
+/// LBR 9010-1(b)).
+event WithdrawalIntentServed()
+/// A judgment or order is entered (Bankr. E.D. Wash. LBR 9013-1(e)).
+event OrderEntered()
+/// The initial status conference in an adversary proceeding (Bankr. E.D.
+/// Wash. LBR 9014-1).
+event InitialStatusConference()
+/// Objections to proposed findings and conclusions are filed (Bankr. E.D.
+/// Wash. LBR 9033-1(b)).
+event FindingsObjectionsFiled()
+/// A hearing scheduled at a party's request (Bankr. E.D. Wash. LBR
+/// 9073-1(b)).
+event ScheduledHearing()
+
+/// Bankr. E.D. Wash. LBR 1007-1(a): a debtor seeking more time to file
+/// schedules, statements, a chapter 12 or 13 plan or other documents gives
+/// seven days' notice and hearing to the trustee and the United States
+/// trustee.
+deadline extension-notice-period: 7.days after ExtensionNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 1007-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 1007-1(c): in a voluntary case, an individual
+/// debtor files the Declaration Regarding Payments with the petition or
+/// within 14 days thereafter.
+deadline payments-declaration-period: 14.days after PetitionFiled() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 1007-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 1007-1(c): in an involuntary case, the Declaration
+/// Regarding Payments is filed within 14 days after the order for relief.
+deadline involuntary-payments-declaration-period: 14.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 1007-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 1007-2(b): in an involuntary case, the matrix is
+/// filed within seven days of the order for relief or as the court directs.
+deadline involuntary-matrix-period: 7.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 1007-2(b)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 1015-1(b)(1): a motion for joint administration or
+/// consolidation is on 21 days' notice and hearing.
+deadline joint-administration-notice-period: 21.days after JointAdministrationNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 1015-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 1017-2(a), 1017-3(a): a motion to convert a
+/// chapter 11 case to chapter 12 or 13, or to convert or dismiss a chapter
+/// 11 case under § 1112(b), is on 21 days' notice and hearing.
+deadline chapter-11-conversion-notice-period: 21.days after ConversionNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 1017-2(a)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 1017-4(a): a motion to divide a joint case is on
+/// 14 days' notice and hearing.
+deadline joint-case-division-notice-period: 14.days after DivisionNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 1017-4(a)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 2002-1(c)(1): the moving party allows at least 21
+/// days, plus three if FRBP 9006(f) applies, for objections before
+/// presenting an order or taking an action, unless a different time is
+/// prescribed.
+deadline objection-period: 21.days after NoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 2002-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 2014-1(a): an attorney or accountant to be
+/// employed in a chapter 11 case, or a chapter 13 debtor's § 1303 attorney,
+/// gives seven days' notice and hearing.
+deadline employment-notice-period: 7.days after EmploymentNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 2014-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 2016-1(a): an application for compensation over
+/// $1,000 is on 21 days' notice to the Master Mailing List.
+deadline fee-application-notice-period: 21.days after FeeApplicationNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 2016-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 2082-1(b): a chapter 12 debtor provides its
+/// federal income tax returns to the trustee and any requesting creditor at
+/// least seven days before the meeting of creditors.
+deadline chapter-12-tax-returns-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 2082-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 2082-1(e)(1): a chapter 12 debtor files each
+/// monthly operating statement within 15 days of the close of the month.
+deadline chapter-12-monthly-statement-period: 15.days after MonthEnded() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 2082-1(e)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 2082-1(g)(2): written objections to a chapter 12
+/// motion to value are filed and served within 14 days from the filing of
+/// the notice.
+deadline valuation-objection-period: 14.days after ValuationNoticeFiled() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 2082-1(g)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 2082-1(g)(5): at least ten days before the
+/// valuation hearing, the parties exchange witness and exhibit lists.
+deadline valuation-witness-list-period: 10.days before ValuationHearing() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 2082-1(g)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 2082-1(h)(2): an objection to confirmation of a
+/// chapter 12 plan is made within 14 days of the mailing of the notice of
+/// the filing of the plan.
+deadline chapter-12-confirmation-objection-period: 14.days after PlanFilingNoticeMailed() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 2082-1(h)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 2082-1(i): the chapter 12 trustee files a
+/// confirmation summary no less than seven days before the confirmation
+/// hearing.
+deadline confirmation-summary-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 2082-1(i)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 2082-1(n): a chapter 12 debtor's motion for entry
+/// of discharge is on ten days' notice to the Master Mailing List.
+deadline chapter-12-discharge-notice-period: 10.days after DischargeNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 2082-1(n)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 2083-1(i): a chapter 13 plan modification is on 21
+/// days' notice and hearing.
+deadline modification-notice-period: 21.days after ModificationNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 2083-1(i)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 2083-1(o)(2): a party in interest or the United
+/// States trustee moving to dismiss or convert a chapter 13 case gives no
+/// less than 21 days' notice to the Master Mailing List.
+deadline chapter-13-dismissal-notice-period: 21.days after DismissalNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 2083-1(o)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 3001-1(c)(1): in a chapter 11 case, a creditor
+/// whose claim is unscheduled or scheduled as disputed, contingent or
+/// unliquidated files a proof of claim within 90 days after the first date
+/// set for the meeting of creditors.
+deadline chapter-11-claim-period: 90.days after FirstMeetingDate() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 3001-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 3002.1-1: notice of a designation of a servicing
+/// agent for a claim secured by the debtor's real property, or of a change,
+/// is filed and served within 30 days.
+deadline servicer-designation-period: 30.days after ServicerDesignated() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 3002.1-1"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 3007-1(c)(1): any written response to a claim
+/// objection is filed at least seven days before the hearing.
+deadline claim-objection-response-period: 7.days before ClaimObjectionHearing() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 3007-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 3016-1(b): a chapter 11 debtor files the
+/// disclosure affidavit with the petition or within 15 days thereafter.
+deadline chapter-11-disclosure-affidavit-period: 15.days after PetitionFiled() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 3016-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 3016-1(e)(3): not later than 14 days before the
+/// initial chapter 11 status conference, the debtor files and serves a
+/// report on its efforts toward a consensual plan.
+deadline status-conference-report-period: 14.days before StatusConference() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 3016-1(e)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 3018-1(a), (b), (c): a plan proponent gives 28
+/// days' notice to the Master Mailing List of the disclosure statement
+/// hearing or of the opportunity to object to confirmation.
+deadline disclosure-statement-notice-period: 28.days after DisclosureNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 3018-1"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 4001-1(a), (b): a motion for relief from the
+/// automatic stay, or regarding whether it is in effect, is on 14 days'
+/// notice.
+deadline stay-relief-notice-period: 14.days after StayReliefNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 4001-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 4001-1(a): affidavits and memoranda supporting and
+/// opposing modification of the stay are filed and served at least seven
+/// days before the preliminary hearing.
+deadline stay-preliminary-affidavits-period: 7.days before PreliminaryHearing() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 4001-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 4001-1(b)(2): a motion to continue the stay under
+/// § 362(c)(3)(B) is filed no later than seven days following the filing of
+/// the petition.
+deadline stay-continuation-motion-period: 7.days after PetitionFiled() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 4001-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 4001-2(a): a cash collateral motion is on 14 days'
+/// notice to parties with an interest in the collateral.
+deadline cash-collateral-notice-period: 14.days after CashCollateralNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 4001-2(a)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 4001-3(a)(1): a party seeking relief from the
+/// codebtor stay gives 20 days' notice to the debtor and codebtor.
+deadline codebtor-stay-notice-period: 20.days after CodebtorNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 4001-3(a)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 4003-2(a): a motion to avoid a lien under § 522(f)
+/// is on 14 days' notice to the trustee and the lienholder.
+deadline lien-avoidance-notice-period: 14.days after LienAvoidanceNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 4003-2(a)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 5011-1(b): a motion to withdraw the reference of
+/// an adversary proceeding is filed no later than 14 days following entry
+/// of the scheduling order.
+deadline adversary-withdrawal-motion-period: 14.days after SchedulingOrderEntered() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 5011-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 5011-1(b): responses to a motion to withdraw the
+/// reference are filed and served no later than 14 days after its service.
+deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 5011-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 5011-1(b): replies are filed and served no later
+/// than seven days after service of any response.
+deadline withdrawal-reply-period: 7.days after WithdrawalResponseServed() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 5011-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 6006-1(a), (c): a motion to assume or reject an
+/// executory contract or unexpired lease, or to compel that decision, is on
+/// 21 days' notice to the Master Mailing List.
+deadline executory-contract-notice-period: 21.days after ExecutoryContractNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 6006-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 6007-1(a): a motion to compel abandonment of
+/// property is on 14 days' notice to the Master Mailing List.
+deadline abandonment-notice-period: 14.days after AbandonmentNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 6007-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 6008-1: a debtor's § 722 redemption motion is on
+/// 14 days' notice to the trustee and the lienholder.
+deadline redemption-notice-period: 14.days after RedemptionNoticeGiven() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 6008-1"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 7026-1(c): a party against whom an order to compel
+/// is entered complies within ten days after receiving notice of the order,
+/// unless it specifies otherwise.
+deadline compel-compliance-period: 10.days after CompelOrderNoticed() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 7026-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 7054-1: a party allowed costs files the bill of
+/// costs and gives notice within 14 days of entry of the judgment.
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 7054-1"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 9010-1(b): an attorney's withdrawal date is at
+/// least 14 days after service of the notice of intent to withdraw.
+deadline attorney-withdrawal-period: 14.days after WithdrawalIntentServed() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 9010-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 9013-1(e): motions for reconsideration are filed
+/// and served within 14 days after entry of the judgment or order.
+deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 9013-1(e)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 9014-1: a party contending the bankruptcy court
+/// cannot finally adjudicate a matter objects no less than 14 days before
+/// the initial status conference in an adversary proceeding.
+deadline adjudication-objection-period: 14.days before InitialStatusConference() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 9014-1"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 9014-1: any response is filed at least seven days
+/// before the initial status conference.
+deadline adjudication-response-period: 7.days before InitialStatusConference() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 9014-1"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 9033-1(b)(1): any reply to objections to proposed
+/// findings and conclusions is filed within seven days after the objections
+/// are filed.
+deadline findings-reply-period: 7.days after FindingsObjectionsFiled() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 9033-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. E.D. Wash. LBR 9073-1(b)(1): the party requesting a hearing
+/// serves notice of it on all parties to the hearing no later than seven
+/// days before it.
+deadline hearing-notice-period: 7.days before ScheduledHearing() counted_by frcp6 cite "Bankr. E.D. Wash. LBR 9073-1(b)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed with notice and opportunity to object" by applicant cite "Bankr. E.D. Wash. LBR 2002-1(c)"
+{
+  note "The movant allows at least 21 days, plus three if FRBP 9006(f) applies, for objections unless a rule prescribes another period (LBR 2002-1(c)); many motions carry their own 7-, 14- or 20-day notice. The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-opposed "Objection filed" -> opposed {
+    authority cite "Bankr. E.D. Wash. LBR 2002-1(c)"
+    within objection-period
+  }
+  edge-motion-filed-unopposed "No timely objection" -> ruling {
+    authority cite "Bankr. E.D. Wash. LBR 2002-1(c)"
+  }
+}
+
+state opposed: "Objection filed; hearing" by opponent cite "Bankr. E.D. Wash. LBR 9013-1"
+{
+  note "The matter is heard on the objection under LBR 9013-1."
+  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. E.D. Wash. LBR 9013-1" }
+}
+
+decision ruling: "Motion decided" by court cite "Bankr. E.D. Wash. LBR 9013-1(c)"
+{
+  note "Orders are presented in the form LBR 9013-1(c) prescribes."
+  edge-ruling-granted "Granted" -> decided { authority cite "Bankr. E.D. Wash. LBR 9013-1(c)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "Bankr. E.D. Wash. LBR 9013-1(c)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. E.D. Wash. LBR 9029-1"

@@ -6,3 +6,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 4522e6f5521b4bbe233290fa99bac134a85f8ce90f78540c56a16cf366cb1651. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-wae/original/waeb-lbr-2026-07-17.pdf` as served (sha256 81f5dd678a3287cb8bd5f272ce74ac4aa8eb68c87f0428709bba6416714f0f8f); extraction sha256 4522e6f5521b4bbe233290fa99bac134a85f8ce90f78540c56a16cf366cb1651.
+
+### `bankr-wae/waeb-lbr-2026-07-17-sectioned.txt` — Bankr. E.D. Wash. Local Rules, sectioned
+
+- Derived in the pod (lg-u561.25) from `bankr-wae/waeb-lbr-2026-07-17.txt` (extract sha256 4522e6f5521b4bbe233290fa99bac134a85f8ce90f78540c56a16cf366cb1651); nothing fetched. One `## LBR <n>` line is inserted before each rule's own heading line in the body (an indented line, after an optional form feed, holding only `Rule <nnnn>-<n>` (a rule numbered `<nnnn>.<n>-<n>` is marked by its first number, `## LBR 3002.1`, as cite pinpoints read it; a rule number listed twice, abrogated and current, is marked once, at its first heading); the set is every such heading after the table of contents, from `1006-1` through `9073-1`, 83 rules); rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Edition: as the extract.
+- Sectioned sha256 51513586ee99644d69417ffd3433a5743b51a17c72200b986cacc42b598d63bb (the `path_sha256` pinned by `lit/bankr-wae/Lit.toml`).

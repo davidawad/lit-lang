@@ -426,6 +426,17 @@ pub struct Instrument {
     /// declaration editing an element no holding names is dicta (L2016).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub holdings: Vec<Holding>,
+    /// Whether the decision is the court's en banc: the only way a court
+    /// sitting in panels overrules its own precedent (Miller v. Gammie,
+    /// 335 F.3d 889, 899-900 (9th Cir. 2003) (en banc); 28 U.S.C. § 46(c)).
+    #[serde(default, skip_serializing_if = "is_no")]
+    pub en_banc: bool,
+    /// The precedent packages a decision of a court whose precedent binds
+    /// theirs abrogates without overruling them: its reasoning is "clearly
+    /// irreconcilable" with theirs (Miller v. Gammie, 335 F.3d at 900), so
+    /// they are withdrawn from its date as an overruling's are.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub abrogates: Vec<String>,
     /// False for a synthetic what-if layer: it may appear only in a
     /// counterfactual world (design review §2.5 item 2).
     #[serde(default = "yes", skip_serializing_if = "is_yes")]
@@ -456,6 +467,11 @@ fn is_yes(b: &bool) -> bool {
     *b
 }
 
+#[allow(clippy::trivially_copy_pass_by_ref)] // serde's skip_serializing_if signature
+fn is_no(b: &bool) -> bool {
+    !*b
+}
+
 /// One forum family's column of the class matrix (`[family.*]` in
 /// `lit/core`'s `Lit.toml`; docs/litigate/CHANGE.md §3): which classes
 /// exist there, what each may do there, and whose precedent binds there.
@@ -469,14 +485,54 @@ pub struct Family {
     /// The package `forum`s in it.
     pub forums: Vec<String>,
     /// The courts whose precedential decisions bind in it; `@circuit` is
-    /// the regional circuit of a world's location.
+    /// the regional circuit of a world's location, `@state` the courts
+    /// its state's entry in `states` names.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub precedent: Vec<String>,
     /// The values a location's `circuit` takes in it.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub circuits: Vec<String>,
+    /// The courts that sit in panels, a panel bound by its court's prior
+    /// panels: only the court en banc (or a court whose precedent binds
+    /// it) overrules one of its precedents (Miller v. Gammie, 335 F.3d
+    /// 889, 899-900 (9th Cir. 2003) (en banc)).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub panels: Vec<String>,
+    /// The values a location's `state` takes in it, each with the courts
+    /// whose precedent binds there.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub states: Vec<StateRule>,
     /// One cell per class that exists in it.
     pub classes: Vec<Cell>,
+}
+
+/// A state of a family (`[family.*.state.*]`): its own courts bind only
+/// in it, and on a federal question its courts follow its own rule of
+/// whose federal decisions bind them.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct StateRule {
+    /// Its id (the postal code: `nj`, `ca`).
+    pub id: String,
+    /// Its courts whose precedential decisions bind throughout the state.
+    pub courts: Vec<String>,
+    /// The federal courts, besides the Supreme Court, whose decisions on a
+    /// federal question bind its courts: none where they are persuasive
+    /// only (People v. Kin Kan, 78 N.Y.2d 54, 59-60 (1991)).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub federal: Vec<String>,
+    /// The decisions that settle both.
+    pub cite: String,
+}
+
+/// Where in a family law is applied, for whose precedent binds there: a
+/// world's location, or the seat of a court ([`Family::seat`]). `None`
+/// coordinates mean anywhere in the family.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq)]
+pub struct Place<'a> {
+    /// The regional circuit.
+    pub circuit: Option<&'a str>,
+    /// The state.
+    pub state: Option<&'a str>,
 }
 
 /// One cell of the matrix: a class that exists in a forum family.
@@ -507,16 +563,43 @@ impl Family {
     }
 
     /// Whether a precedential decision of `court` binds in the family at
-    /// `circuit` (a world's location); with no circuit, whether it binds
-    /// at some location of the family.
+    /// `at` (a world's location); a coordinate left out, whether it binds
+    /// at some value of it. The Supreme Court binds wherever the family
+    /// lists it; a circuit only at itself; a state's courts only in that
+    /// state, and a federal court in a state only as its own rule says.
     #[must_use]
-    pub fn binds(&self, court: &str, circuit: Option<&str>) -> bool {
-        self.precedent.iter().any(|p| {
-            p == court
-                || (p == "@circuit"
-                    && circuit
-                        .map_or_else(|| self.circuits.iter().any(|c| c == court), |c| c == court))
+    pub fn binds(&self, court: &str, at: Place<'_>) -> bool {
+        self.precedent.iter().any(|p| match p.as_str() {
+            "@circuit" => at
+                .circuit
+                .map_or_else(|| self.circuits.iter().any(|c| c == court), |c| c == court),
+            "@state" => self
+                .states
+                .iter()
+                .filter(|s| at.state.is_none_or(|id| s.id == id))
+                .any(|s| s.courts.iter().chain(&s.federal).any(|c| c == court)),
+            p => p == court,
         })
+    }
+
+    /// Where `court` sits in the family: its circuit, or the state whose
+    /// courts it is among.
+    #[must_use]
+    pub fn seat<'a>(&'a self, court: &'a str) -> Place<'a> {
+        Place {
+            circuit: self.circuits.iter().any(|c| c == court).then_some(court),
+            state: self
+                .states
+                .iter()
+                .find(|s| s.courts.iter().any(|c| c == court))
+                .map(|s| s.id.as_str()),
+        }
+    }
+
+    /// Whether `court` sits in panels bound by its prior panels.
+    #[must_use]
+    pub fn sits_in_panels(&self, court: &str) -> bool {
+        self.panels.iter().any(|c| c == court)
     }
 }
 

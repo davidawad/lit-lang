@@ -188,6 +188,15 @@ cases; what it does; its effect row (the forum-independent ceiling,
   Greene, 563 U.S. 692 n.7 (2011)); a Federal Circuit nonprecedential
   disposition is not binding (Fed. Cir. R. 32.1(d)); a PTAB decision
   binds from its designation date (SOP 2), which may follow the decision.
+  The Supreme Court binds everywhere; a circuit only its own district and
+  circuit courts, a panel later panels until the court en banc or the
+  Supreme Court overrules it (Miller v. Gammie, 335 F.3d 889, 899-900
+  (9th Cir. 2003) (en banc)); a state's courts only in that state
+  (`@state`), and a lower federal court in a state only as the state's
+  own rule says (`[family.state-civil.state.*] federal`; none in
+  California, Raven v. Deukmejian, 52 Cal. 3d 336, 352 (1990), or New
+  York, People v. Kin Kan, 78 N.Y.2d 54, 59-60 (1991)). A precedent
+  applies from its designation date until overruled or abrogated.
 - **Effects of a binding precedent:**
   - `interpret`: a priority between reasons, Horty-style: an `exception`
     to another package's default. The text stands. Or a reading of a
@@ -254,6 +263,13 @@ cases; what it does; its effect row (the forum-independent ceiling,
   date, retroactively to open cases (Harper), never reopening final
   judgments (Loper Bright Enterprises v. Raimondo (2024): prior holdings
   "are still subject to statutory stare decisis").
+- **Abrogation.** A decision (precedent or overruling) of a court whose
+  precedent binds the precedent's court may `abrogate` it without
+  overruling it, where its reasoning is "clearly irreconcilable" with the
+  precedent's (Miller v. Gammie, 335 F.3d at 900): withdrawn from the
+  abrogating decision's date like an overruling (`how = "abrogated"`).
+  The precedent's own court cannot abrogate; it overrules (en banc where
+  the family lists it in `panels`; a panel that tries is L2010).
 - **Row:** declare, invalidate: `overrules` withdraws whole precedents,
   and an `invalidate` declaration one of their claims (Bowles invalidates
   Thompson's "unique circumstances" default, §4).
@@ -357,6 +373,7 @@ layers = ["change-frcp-base", "change-frcp-2009-amendment", "change-sdny-local-c
 family = "district-civil"               # a [family.*] id of core
 court = "d-sdny"                        # optional
 circuit = "ca2"                         # required where the family's precedent names @circuit
+state = "ca"                            # required where it names @state (state-civil)
 judge = "..."                           # optional
 ```
 
@@ -373,10 +390,14 @@ judge = "..."                           # optional
   `ca1` precedent is persuasive, its binding effects are not in force
   (L9009, info), and the layer is reported `in_force: false`; at `ca1`
   it binds. This is how the lg-fq2.3 circuit splits differ by circuit.
-- **Overruling.** An overruling in Λ withdraws the precedents it names
-  from its date (`overruled_by`; with several, the earliest); an
-  overruling by a court that does not bind the precedent's court is
-  L2010.
+  In the `state-civil` family a California Supreme Court precedent binds
+  at `state = "ca"` and is persuasive at `"fl"`.
+- **Overruling and abrogation.** An overruling in Λ withdraws the
+  precedents it `overrules`, and any decision in Λ those it `abrogates`,
+  from its date (`overruled_by {by, how, from}`; with several, the
+  earliest); an overruling by a court that does not bind the precedent's
+  court, or by its own court sitting in panels without `en_banc`, and an
+  abrogation by a court that does not bind it, are L2010.
 - **Modality.** An actual world admits only authoritative layers (L1014
   for `authoritative = false`); a counterfactual world admits any layer
   and is never checked under the strict profile (L1014). Real-case and

@@ -4,7 +4,7 @@
 //! precedent binds there, and one cell per class that exists there; a cell
 //! may only narrow its class's row.
 use super::{is_kebab, range, Checker, Ordered};
-use crate::hir::{Cell, Effect, Family, Kind};
+use crate::hir::{Cell, Effect, Family, Kind, StateRule};
 use serde::Deserialize;
 use std::collections::BTreeMap;
 use toml::Spanned;
@@ -18,7 +18,19 @@ pub(super) struct RawFamily {
     precedent: Vec<String>,
     #[serde(default)]
     circuits: Vec<String>,
+    #[serde(default)]
+    panels: Vec<String>,
+    state: Option<Ordered<Spanned<RawState>>>,
     class: Ordered<Spanned<RawCell>>,
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct RawState {
+    courts: Vec<String>,
+    #[serde(default)]
+    federal: Vec<String>,
+    cite: Spanned<String>,
 }
 
 #[derive(Deserialize)]
@@ -58,24 +70,26 @@ pub(super) fn check(c: &mut Checker, name: &str, raw: &Ordered<Spanned<RawFamily
                     )
                 });
             }
+            let states = f.state.as_ref().map_or(&[][..], |s| s.0.as_slice());
             for court in &f.precedent {
-                let ok = if court == "@circuit" {
-                    !f.circuits.is_empty()
-                } else {
-                    is_kebab(court)
+                let ok = match court.as_str() {
+                    "@circuit" => !f.circuits.is_empty(),
+                    "@state" => !states.is_empty(),
+                    _ => is_kebab(court),
                 };
                 c.check(ok, at, || {
                     format!(
-                        "family `{id}`: precedent court `{court}` must be a kebab-case id, or \
-                         `@circuit` with `circuits` listed"
+                        "family `{id}`: precedent court `{court}` must be a kebab-case id, \
+                         `@circuit` with `circuits` listed, or `@state` with `[family.{id}.state.*]`"
                     )
                 });
             }
-            for circuit in &f.circuits {
+            for circuit in f.circuits.iter().chain(&f.panels) {
                 c.check(is_kebab(circuit), at, || {
-                    format!("family `{id}`: circuit `{circuit}` must be a kebab-case id")
+                    format!("family `{id}`: court `{circuit}` must be a kebab-case id")
                 });
             }
+            let states = self::states(c, id, states);
             c.check(f.class.0.iter().any(|(k, _)| k == "base"), at, || {
                 format!("family `{id}` has a `base` class: every forum has primary law")
             });
@@ -85,12 +99,49 @@ pub(super) fn check(c: &mut Checker, name: &str, raw: &Ordered<Spanned<RawFamily
                 forums: f.forums.get_ref().clone(),
                 precedent: f.precedent.clone(),
                 circuits: f.circuits.clone(),
+                panels: f.panels.clone(),
+                states,
                 classes: f
                     .class
                     .0
                     .iter()
                     .filter_map(|(class, cell)| self::cell(c, id, class, cell))
                     .collect(),
+            }
+        })
+        .collect()
+}
+
+/// A family's states: each names its binding courts by kebab-case id and
+/// cites the decisions that settle them.
+fn states(c: &mut Checker, id: &str, raw: &[(String, Spanned<RawState>)]) -> Vec<StateRule> {
+    raw.iter()
+        .map(|(state, raw)| {
+            let r = raw.get_ref();
+            c.check(is_kebab(state), range(raw), || {
+                format!("family `{id}`: state id `{state}` must be kebab-case")
+            });
+            c.check(
+                !r.courts.is_empty() && r.courts.iter().chain(&r.federal).all(|x| is_kebab(x)),
+                range(raw),
+                || {
+                    format!(
+                        "family `{id}`: state `{state}` names its binding `courts` (and any \
+                         `federal` ones) by kebab-case id"
+                    )
+                },
+            );
+            c.check(!r.cite.get_ref().trim().is_empty(), range(&r.cite), || {
+                format!(
+                    "family `{id}`: state `{state}` cites the decisions settling whose \
+                         precedent binds there"
+                )
+            });
+            StateRule {
+                id: state.clone(),
+                courts: r.courts.clone(),
+                federal: r.federal.clone(),
+                cite: r.cite.get_ref().clone(),
             }
         })
         .collect()

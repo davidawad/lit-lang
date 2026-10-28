@@ -266,6 +266,11 @@ forums = ["frcp", "almd", "alnd", "alsd", "akd", "azd", "ared", "arwd",
   "wvnd", "wvsd", "wied", "wiwd", "wyd"]
 precedent = ["scotus", "@circuit"]
 circuits = ["ca1", "ca2", "ca3", "ca4", "ca5", "ca6", "ca7", "ca8", "ca9", "ca10", "ca11", "cadc"]
+# A circuit panel is bound by the circuit's prior panels until the court en
+# banc or the Supreme Court overrules them, or a higher decision is "clearly
+# irreconcilable" with them (Miller v. Gammie, 335 F.3d 889, 899-900 (9th
+# Cir. 2003) (en banc); 28 U.S.C. § 46(c)).
+panels = ["ca1", "ca2", "ca3", "ca4", "ca5", "ca6", "ca7", "ca8", "ca9", "ca10", "ca11", "cadc"]
 
 [family.district-civil.class.base]
 cite = "28 U.S.C. §§ 2072, 2074; FRCP"
@@ -313,6 +318,11 @@ title = "Federal district court, criminal (FRCrimP)"
 forums = ["frcrimp", "dcd-criminal"]
 precedent = ["scotus", "@circuit"]
 circuits = ["ca1", "ca2", "ca3", "ca4", "ca5", "ca6", "ca7", "ca8", "ca9", "ca10", "ca11", "cadc"]
+# A circuit panel is bound by the circuit's prior panels until the court en
+# banc or the Supreme Court overrules them, or a higher decision is "clearly
+# irreconcilable" with them (Miller v. Gammie, 335 F.3d 889, 899-900 (9th
+# Cir. 2003) (en banc); 28 U.S.C. § 46(c)).
+panels = ["ca1", "ca2", "ca3", "ca4", "ca5", "ca6", "ca7", "ca8", "ca9", "ca10", "ca11", "cadc"]
 
 [family.district-criminal.class.base]
 cite = "28 U.S.C. § 2072; FRCrimP; 18 U.S.C. § 3161"
@@ -426,6 +436,11 @@ forums = ["frap", "ca1", "ca2", "ca3", "ca4", "ca5", "ca6", "ca7", "ca8",
   "ca9", "ca10", "ca11", "cadc"]
 precedent = ["scotus", "@circuit"]
 circuits = ["ca1", "ca2", "ca3", "ca4", "ca5", "ca6", "ca7", "ca8", "ca9", "ca10", "ca11", "cadc"]
+# A circuit panel is bound by the circuit's prior panels until the court en
+# banc or the Supreme Court overrules them, or a higher decision is "clearly
+# irreconcilable" with them (Miller v. Gammie, 335 F.3d 889, 899-900 (9th
+# Cir. 2003) (en banc); 28 U.S.C. § 46(c)).
+panels = ["ca1", "ca2", "ca3", "ca4", "ca5", "ca6", "ca7", "ca8", "ca9", "ca10", "ca11", "cadc"]
 
 [family.circuit-appellate.class.base]
 cite = "28 U.S.C. §§ 2072, 2107; FRAP"
@@ -471,6 +486,10 @@ example = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep551/usrep
 title = "Court of Appeals for the Federal Circuit"
 forums = ["cafc"]
 precedent = ["scotus", "cafc", "ccpa", "ct-cl"]
+# Federal Circuit panels are bound by prior panels and the en banc court's
+# precedent (South Corp. v. United States, 690 F.2d 1368, 1370 n.2 (Fed. Cir.
+# 1982) (en banc); Fed. Cir. IOP 13).
+panels = ["cafc"]
 
 [family.federal-circuit.class.base]
 cite = "FRAP; 28 U.S.C. § 1295; 35 U.S.C. §§ 141-142; 19 U.S.C. § 1337(c)"
@@ -517,6 +536,10 @@ cite = "Fed. Cir. IOP 13; 28 U.S.C. § 46(c)"
 title = "Court of Federal Claims (RCFC)"
 forums = ["cofc"]
 precedent = ["scotus", "cafc", "ct-cl"]
+# Federal Circuit panels are bound by prior panels and the en banc court's
+# precedent (South Corp. v. United States, 690 F.2d 1368, 1370 n.2 (Fed. Cir.
+# 1982) (en banc); Fed. Cir. IOP 13).
+panels = ["cafc"]
 
 [family.cofc.class.base]
 cite = "28 U.S.C. §§ 2501, 2503(b); RCFC"
@@ -554,6 +577,10 @@ cite = "28 U.S.C. § 1295(a)(3): only the Federal Circuit or the Supreme Court"
 title = "Patent Trial and Appeal Board (AIA trials)"
 forums = ["ptab"]
 precedent = ["scotus", "cafc", "ccpa", "ptab"]
+# Federal Circuit panels are bound by prior panels and the en banc court's
+# precedent (South Corp. v. United States, 690 F.2d 1368, 1370 n.2 (Fed. Cir.
+# 1982) (en banc); Fed. Cir. IOP 13).
+panels = ["cafc"]
 
 [family.ptab.class.base]
 cite = "35 U.S.C. §§ 2(b)(2), 21(b), 316(a); 37 C.F.R. parts 1, 41, 42, 90"
@@ -582,6 +609,10 @@ cite = "PTAB SOP 2, Rev. 11, § III (de-designation); 28 U.S.C. § 1295(a)(4)(A)
 title = "Trademark Trial and Appeal Board (inter partes)"
 forums = ["ttab"]
 precedent = ["scotus", "cafc", "ccpa", "ttab"]
+# Federal Circuit panels are bound by prior panels and the en banc court's
+# precedent (South Corp. v. United States, 690 F.2d 1368, 1370 n.2 (Fed. Cir.
+# 1982) (en banc); Fed. Cir. IOP 13).
+panels = ["cafc"]
 
 [family.ttab.class.base]
 cite = "15 U.S.C. § 1123; 37 C.F.R. part 2"
@@ -612,6 +643,10 @@ cite = "15 U.S.C. § 1071(a); 28 U.S.C. § 1295(a)(4)(B)"
 title = "International Trade Commission (Section 337)"
 forums = ["itc"]
 precedent = ["scotus", "cafc"]
+# Federal Circuit panels are bound by prior panels and the en banc court's
+# precedent (South Corp. v. United States, 690 F.2d 1368, 1370 n.2 (Fed. Cir.
+# 1982) (en banc); Fed. Cir. IOP 13).
+panels = ["cafc"]
 
 [family.itc.class.base]
 cite = "19 U.S.C. § 1337; 19 C.F.R. parts 201, 210"
@@ -634,3 +669,38 @@ cite = "19 U.S.C. § 1337(c); 28 U.S.C. § 1295(a)(6): Federal Circuit review"
 
 [family.itc.class.overruling]
 cite = "19 U.S.C. § 1337(c); 28 U.S.C. § 1295(a)(6)"
+
+[family.state-civil]
+# State courts, civil. A state's own courts bind only in that state; the
+# Supreme Court binds every state court on a federal question; whether a
+# lower federal court's decision on a federal question binds a state's
+# courts is that state's own rule (`federal`; none where they are
+# persuasive only). A world here names its `state`. Only the states whose
+# rule the cited decisions settle are listed; a state's intermediate
+# appellate courts, binding its trial courts (Auto Equity Sales, Inc. v.
+# Superior Court, 57 Cal. 2d 450, 455 (1962); Pardo v. State, 596 So. 2d
+# 665, 666 (Fla. 1992)), are not yet located by court.
+title = "State courts, civil"
+forums = ["ca-superior", "ca-court-of-appeal", "fl-state-civil", "fl-state-appellate"]
+precedent = ["scotus", "@state"]
+
+[family.state-civil.state.ca]
+courts = ["cal-supreme"]
+cite = "Auto Equity Sales, Inc. v. Superior Court, 57 Cal. 2d 450, 455 (1962); Raven v. Deukmejian, 52 Cal. 3d 336, 352 (1990): lower federal decisions on federal law are persuasive, not binding"
+
+[family.state-civil.state.fl]
+courts = ["fla-supreme"]
+cite = "Fla. Const. art. V, § 3; State v. Dwyer, 332 So. 2d 333, 335 (Fla. 1976): Florida courts are not bound by the lower federal courts on a federal question"
+
+[family.state-civil.state.ny]
+courts = ["ny-court-of-appeals"]
+cite = "People v. Kin Kan, 78 N.Y.2d 54, 59-60 (1991): New York courts are bound by the Supreme Court on a federal question, not by the lower federal courts"
+
+[family.state-civil.class.base]
+cite = "each state's constitution, statutes and rules of court"
+
+[family.state-civil.class.precedent]
+cite = "Auto Equity Sales, Inc. v. Superior Court, 57 Cal. 2d 450, 455 (1962); People v. Kin Kan, 78 N.Y.2d 54, 59-60 (1991)"
+
+[family.state-civil.class.overruling]
+cite = "a state's high court overrules its own precedent; the Supreme Court a state decision of federal law (U.S. Const. art. VI, cl. 2)"

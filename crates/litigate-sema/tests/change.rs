@@ -16,7 +16,7 @@ use litigate_sema::change::choice;
 use litigate_sema::change::world::{check_world, parse_world, Modality, WorldCheck};
 use litigate_sema::change::{class_index, key_range};
 use litigate_sema::db::span::TextRange;
-use litigate_sema::hir::{Effect, Kind, Scope};
+use litigate_sema::hir::{Effect, Kind, Place, Scope};
 use litigate_sema::pkg::load::LoadedPackage;
 use litigate_sema::pkg::manifest::parse_manifest;
 use std::fmt::Write as _;
@@ -248,9 +248,13 @@ cite = "c"
     );
     let local = civil.cell(&Kind::LocalRule).expect("cell");
     assert_eq!(local.row(Kind::LocalRule.row()), Kind::LocalRule.row());
-    assert!(civil.binds("ca1", Some("ca1")) && !civil.binds("ca1", Some("ca2")));
-    assert!(civil.binds("ca2", None) && !civil.binds("ca3", None));
-    assert!(civil.binds("scotus", Some("ca2")));
+    let at = |circuit| Place {
+        circuit,
+        state: None,
+    };
+    assert!(civil.binds("ca1", at(Some("ca1"))) && !civil.binds("ca1", at(Some("ca2"))));
+    assert!(civil.binds("ca2", at(None)) && !civil.binds("ca3", at(None)));
+    assert!(civil.binds("scotus", at(Some("ca2"))));
 }
 
 #[test]

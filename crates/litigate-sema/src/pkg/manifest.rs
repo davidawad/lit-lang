@@ -101,6 +101,8 @@ struct RawInstrument {
     overrules: Option<Spanned<Vec<String>>>,
     reach: Option<Spanned<Vec<String>>>,
     holdings: Option<Spanned<Vec<Spanned<RawHolding>>>>,
+    en_banc: Option<Spanned<bool>>,
+    abrogates: Option<Spanned<Vec<String>>>,
     authoritative: Option<bool>,
 }
 
@@ -661,6 +663,12 @@ fn instrument(
             .unwrap_or_default(),
         reach: raw.reach.as_ref().map(|r| r.get_ref().clone()),
         holdings: holdings(c, kind, raw),
+        en_banc: raw.en_banc.as_ref().is_some_and(|b| *b.get_ref()),
+        abrogates: raw
+            .abrogates
+            .as_ref()
+            .map(|a| a.get_ref().clone())
+            .unwrap_or_default(),
         authoritative: raw.authoritative.unwrap_or(true),
     })
 }
@@ -767,7 +775,8 @@ fn is_element(text: &str) -> bool {
 /// A judicial decision's keys (docs/litigate/CHANGE.md §2.8-§2.9): a
 /// precedent or overruling names its `court`, from which binding scope is
 /// computed; only a precedent is `designated` precedential, on or after
-/// its decision; only an overruling `overrules`, and names what.
+/// its decision; only an overruling `overrules`, and names what; only a
+/// decision sits `en_banc` or `abrogates`, and an abrogation names what.
 fn decision(c: &mut Checker, kind: &Kind, raw: &RawInstrument) {
     let decision = matches!(kind, Kind::Precedent { .. } | Kind::Overruling);
     let at = range(&raw.source);
@@ -809,6 +818,20 @@ fn decision(c: &mut Checker, kind: &Kind, raw: &RawInstrument) {
         None => c.check(!overruling, at, || {
             "an overruling names the precedent packages it `overrules`".to_owned()
         }),
+    }
+    if let Some(b) = &raw.en_banc {
+        c.check(decision, range(b), || {
+            "only a `precedent` or `overruling` sits `en_banc`".to_owned()
+        });
+    }
+    if let Some(a) = &raw.abrogates {
+        c.check(decision && !a.get_ref().is_empty(), range(a), || {
+            if decision {
+                "a decision that `abrogates` names at least one precedent package".to_owned()
+            } else {
+                "only a `precedent` or `overruling` `abrogates`".to_owned()
+            }
+        });
     }
 }
 

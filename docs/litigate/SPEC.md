@@ -805,6 +805,8 @@ binds = ["court"]               # guidance only, and required there: actors it b
 court = "ca9"                   # precedent and overruling only, required there
 designated = "2024-02-01"       # precedent only: designated precedential (absent: binds nowhere)
 overrules = ["pkg"]             # overruling only, required there: the precedents it withdraws
+en_banc = true                  # precedent and overruling only: the court sat en banc
+abrogates = ["pkg"]             # precedent and overruling only: precedents of a court it binds, withdrawn
 reach = ["circuit-appellate"]   # precedent only, required there: families where it binds (L2017)
 
 [[package.instrument.holdings]] # precedent only, at least one: what alone may edit (L2016)
@@ -881,13 +883,18 @@ at least one holding, each with its `holding`, the `pin` cite to the
 opinion page it is held at (`<reporter> at <page>`, the page starting
 with a digit) and the one rule element it `edits` (`pack::id`); only a
 precedent has either, and a holding without a pin cite or an edited
-element is L1004. `authoritative = false`
+element is L1004. Only a decision sits `en_banc` or `abrogates`, at least
+one package. `authoritative = false`
 marks a synthetic layer, admitted only to a counterfactual world (§5.8).
 `hypothetical` is not a kind: it is the modality of a world, in which a
 layer of any kind may appear (§2.5 item 2). A links manifest has neither
 key. Only the package named `core` declares `[family.*]`: ids and court
 ids kebab-case, every family with at least one forum and a `base` cell,
-a forum in one family, `@circuit` only with `circuits`, cells of known
+a forum in one family, `@circuit` only with `circuits`, `@state` only
+with `[family.*.state.*]` tables (each naming its binding `courts`, any
+`federal` courts whose federal-question decisions bind there, and the
+`cite` settling both), `panels` (courts whose panels only the court en
+banc overrules) of kebab-case ids, cells of known
 classes with a non-empty `cite`, an `https` `example`, a `row` of
 effects inside the class's own, and `window_days` (positive) only on
 `emergency-declaration`. Each violation is L1004.
@@ -2332,6 +2339,7 @@ layers = ["pkg-a", "pkg-b"]  # package names, at least one; a set
 family = "district-civil"    # a [family.*] id of core
 court = "d-sdny"             # optional
 circuit = "ca2"              # required when the family's precedent has @circuit; one of its circuits
+state = "ca"                 # required when the family's precedent has @state; one of its states
 judge = "..."                # optional
 
 [choice.rule-59e-2009]       # optional choice points (below)
@@ -2355,18 +2363,32 @@ one world against the loaded packages (the highest version of each name):
   only the set makes (L3003 between two independent local rules
   overriding one delegated period).
 - **Location.** A malformed file, an unknown modality, an empty or
-  unknown layer, an unknown family, a missing `circuit` where the family
-  needs one, or a circuit the family does not list is L1013.
+  unknown layer, an unknown family, a missing `circuit` (`state`) where
+  the family needs one, or a circuit (state) the family does not list is
+  L1013.
 - **Scope at ι.** A precedent layer's scope is recomputed at the world's
-  family and circuit. A precedent that is persuasive there but has an
-  effect outside the persuasive row is reported L9009 (info) at its
-  layer, and its layer is not in force in the world.
-- **Overruling.** An overruling layer withdraws each precedent layer it
-  `overrules` from its `date` (reported `overruled_by {by, from}`, not in
-  force). Its court must be the precedent's own or one whose precedent
-  binds at the precedent's court in the precedent's family; otherwise,
-  or when the target is not a precedent, L2010 at its manifest's
-  `overrules`.
+  family, circuit and state (`Family::binds`): `scotus` binds wherever
+  the family lists it; `@circuit` only the location's circuit; `@state`
+  only the location's state's `courts`, and the federal courts its
+  `federal` list names (on a federal question a state's courts follow
+  its own rule: none in California, Florida, New York). A precedent that
+  is persuasive there but has an effect outside the persuasive row is
+  reported L9009 (info) at its layer, and its layer is not in force in
+  the world. A precedent applies from its `designated` date (reported
+  `from`): a matter judged, or a corpus known, before it does not have
+  it.
+- **Overruling and abrogation.** An overruling layer withdraws each
+  precedent layer it `overrules`, and a precedent or overruling layer
+  each one it `abrogates`, from its `date` (reported `overruled_by {by,
+  how, from}`, `how` `overruled` or `abrogated`, not in force from then).
+  An overruling's court must be the precedent's own, sitting `en_banc`
+  where the family lists the court in `panels` (a panel is bound by its
+  prior panels: Miller v. Gammie, 335 F.3d 889, 899-900 (9th Cir. 2003)
+  (en banc)), or one whose precedent binds at the precedent's court (its
+  seat: circuit or state) in the precedent's family; an abrogation's
+  court only the latter (an intervening higher decision "clearly
+  irreconcilable" with it). Otherwise, or when the target is not a
+  precedent, L2010 at the manifest's `overrules` (`abrogates`).
 - **Modality.** In an `actual` world a layer whose instrument has
   `authoritative = false` is L1014; a `counterfactual` world is L1014
   under the strict profile and admits any layer under dev.
@@ -3284,7 +3306,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | `timeline` | `FILE` (`.case` or `.lit`), `--as-of`, `--known-at`, `--layers ID,+ID,-ID`, `--world ID` | a `litigate.timeline/1` document ([TIMELINE.md](TIMELINE.md), schema `timeline.v1.schema.json`) |
 | `calendar` | `CASE`, `--out FILE`, `--all`, `--remind DAYS` (repeatable) | `{case, as_of, written, events:[{uid, deadline, due, status, trigger, trigger_date, authority, counting, counting_cite}], unscheduled:[{deadline, trigger, trigger_date, status, reason}], ics}`: one all-day RFC 5545 `VEVENT` per deadline with a computed due date (open ones unless `--all`), `UID` a hash of case, deadline, trigger and trigger date, `DTSTAMP` the matter's `as_of`; an unknown due date is never given one. A matter with errors has no calendar |
 | `lint-filing` | `CASE EVENT`, `--date DATE`, `--by PARTY` \| `--on PARTY` | `{case, filing:{date, event, mode, party, line}, as_of, accepted, replay, discharges, triggers, pending, open_before}`: the matter replayed with `DATE EVENT by\|on PARTY` spliced into `events` in docket order and `as_of` moved to `DATE` when later. Diagnostics are every error of the matter with the filing (L4001 not a legal move, L4002 late, ...) and the warnings it adds, less the L9006 of the spliced line (which cannot declare an id); the matter must check clean without it. Each `open_before` obligation carries `moves {file, extend, orders}`, what protects it on `DATE`: `file`, the `{edge, event}` of each edge out of the replayed posture `within` its deadline, one per complete event the edge's pattern stands for (a parameter the pattern leaves open takes each variant of its enum, each boolean, or `?` for a date); `extend`, each non-lock grant of the version counting it as `{by, standard, window, request, until}` (`window` `before_expiry`, `after_expiry` or `any`; `request` the `on M()` pattern; `until` a bounded grant's bound); `orders`, the events declaring `extends` it. An obligation awaiting an order on a request one of its grants reads (`on M()`, filed after its trigger and its last extending order, with no `unless` denial since) carries `pending {request, date, state: "filed, awaiting order"}`; `pending` lists the obligations the filing itself makes so. Every event name is printed as the matter names it (§5.6): bare when that is unambiguous, else `pack::Name`, so each move proposed back resolves. Text that is not one event is a usage failure |
-| `worlds` | `CASE`, `--world FILE`, `--path PATH` (repeatable), `--layer NAME` (repeatable), `--vary NAME` (repeatable), `--as-of`, `--known-at` | `{case, world, modality, location, choices, as_of, known_at, worlds:[{id, choices, layers:[{name, version, class, in_force, overruled_by}], lawful, filings:{key: timeliness}, deadlines:[{deadline, trigger, trigger_date, due, status}], diagnostics}], filings:[{key, date, party, event, worlds:{timeliness:[id]}}], outcomes:[{worlds, filings}], chance:[{node, choice, basis, source?, branches:[{option, alpha, exact, p, worlds}]}], timelines:[{choices, worlds:[{id, p}], filings:{key: {timeliness: p}}}]}` (§5.8): the matter in every world the file spans. A late filing is an outcome, never an envelope error; the envelope fails only for the world file, a package in scope, or the matter's own L0xxx-L2xxx errors. Runs over an in-memory source too (wasm) |
+| `worlds` | `CASE`, `--world FILE`, `--path PATH` (repeatable), `--layer NAME` (repeatable), `--vary NAME` (repeatable), `--as-of`, `--known-at` | `{case, world, modality, location, choices, as_of, known_at, worlds:[{id, choices, layers:[{name, version, class, in_force, from, overruled_by}], lawful, filings:{key: timeliness}, deadlines:[{deadline, trigger, trigger_date, due, status}], diagnostics}], filings:[{key, date, party, event, worlds:{timeliness:[id]}}], outcomes:[{worlds, filings}], chance:[{node, choice, basis, source?, branches:[{option, alpha, exact, p, worlds}]}], timelines:[{choices, worlds:[{id, p}], filings:{key: {timeliness: p}}}]}` (§5.8): the matter in every world the file spans. A late filing is an outcome, never an envelope error; the envelope fails only for the world file, a package in scope, or the matter's own L0xxx-L2xxx errors. Runs over an in-memory source too (wasm) |
 | `actions` | `CASE`, `--party PARTY`, `--date DATE` | `{case, party, actor, as_of, marking, actions:[{event, mode, party, date, line, edge:{id, label, actor, to, authority, anytime}, discharges, triggers}]}` (DESIGN §10, agent action sets): the matter's replayed marking projected onto `PARTY`. The candidates are the edges a filing may take from the marking (each concurrent track's node, and the `anytime` edges, §5.6) whose actor the party plays or `either`, each event pattern completed as `lint-filing` prints its moves; each is replayed into the matter as `DATE EVENT by PARTY` exactly as `lint-filing` replays a filing (`as_of` moves to `DATE` when later), and only those replay accepts are listed, so a move that is not legal on `DATE` (another actor's, off every track, late: L4001, L4002) is absent rather than refused when filed. Served over MCP as `litigate_actions`. A party the matter does not declare is a usage failure; the matter must check clean first |
 | `match-docket` | `CASE DOCKET`, `--out FILE` | `{case, docket, as_of, advanced, unresolved, written, entries, text}`: PACER/RECAP docket entries (a JSON array of `{entry_number, date_filed, description, ...}`, or an object holding one under `docket_entries` or `results`) matched to the event forms of the packages the matter uses, in docket order. An entry is supported only when one form has every word of its name in the description (the most specific, when every other such form's words are among its own), the text settles every argument (an enum by one variant, chosen the same way; no other type is read from text) and one party follows `by`, `on` or `upon`; it then replays like a `lint-filing` filing with `docket N` from its entry number, on the matter as advanced so far. Each entry keeps its source verbatim, its candidates with `confidence` (the share of the name's words found) and a status: `advanced`, `rejected` (replay's diagnostics), `ambiguous`, `incomplete`, `unmatched`, or `recorded` (the matter has that docket number); only `advanced` changes the matter. `--out` writes the advanced matter; the matter must check clean first |
 | `calibrate-replay` | `CASE...`, `--id ID`, `--title T`, `--min-n N`, `--reviewed`, `--out FILE` | `{id, reviewed, min_n, written, histories, observations, withheld, set, declaration}`: `set` a calibration set (docs/CALIBRATION.md) derived from the replay traces of the matters, each a docket history citing its docket in a `source` titled `Docket ...` with a url (one without is listed `excluded`). An observation is a replay step taking an edge by a docketed event (`docket N`); facts, `anytime` acts and undocketed events never count. `edge-probability` is the share of docketed exits from a chance stage taking the edge (a matter still at the stage at `as_of` is censored); `edge-duration` the days from the docketed event entering the stage (`min`, median as `mode`, `max`). Each entry's `method` lists its observations (matter, docket entries, dates, docket url), arithmetic and selection criteria, and whether the matches were reviewed; estimates on fewer than `--min-n` observations are `withheld`. `declaration` is `{path, text}`, the set as a `calibration` declaration (§5.9) in the package it calibrates, checked there and lowered back to `set` (L6002 otherwise); `--out FILE` writes its text and needs `--reviewed`; every matter must check clean |

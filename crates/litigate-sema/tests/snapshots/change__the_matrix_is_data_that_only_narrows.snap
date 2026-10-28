@@ -12,8 +12,8 @@ expression: rows
         [
             "L1004 family id `Bad_Id` must be kebab-case",
             "L1004 family `Bad_Id` names at least one forum",
-            "L1004 family `Bad_Id`: precedent court `Not Kebab` must be a kebab-case id, or `@circuit` with `circuits` listed",
-            "L1004 family `Bad_Id`: circuit `CA 1` must be a kebab-case id",
+            "L1004 family `Bad_Id`: precedent court `Not Kebab` must be a kebab-case id, `@circuit` with `circuits` listed, or `@state` with `[family.Bad_Id.state.*]`",
+            "L1004 family `Bad_Id`: court `CA 1` must be a kebab-case id",
             "L1004 family `Bad_Id` has a `base` class: every forum has primary law",
             "L1004 family `Bad_Id`: the `local-rule` cell cites the instrument that makes it exist",
             "L1004 family `Bad_Id`: the `local-rule` example is an `https://` URL",
@@ -23,7 +23,7 @@ expression: rows
             "L1004 family `Bad_Id`: `hypothetical` is not a class (`base`, `amendment`, `local-rule`, `general-order`, `standing-order`, `case-order`, `emergency-declaration`, `guidance`, `precedent`, `overruling`)",
             "L1004 family `Bad_Id`: `window_days` bounds an `emergency-declaration`'s grants, and is positive",
             "L1004 forum `x` is in families `other` and `other`",
-            "L1004 family `other`: precedent court `@circuit` must be a kebab-case id, or `@circuit` with `circuits` listed",
+            "L1004 family `other`: precedent court `@circuit` must be a kebab-case id, `@circuit` with `circuits` listed, or `@state` with `[family.other.state.*]`",
         ],
     ),
 ]

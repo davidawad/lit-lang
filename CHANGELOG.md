@@ -39,6 +39,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   closed `effective` end (L2007 on an open one), declares the gap from that
   end. lit/bankr-waw declares the 2023 LBR 2015-1(c) budget and 2016-1(e)(2)
   excess-fee periods the 2026 rules drop this way.
+- **The binding-authority resolver applies exactly the binding layers
+  for a forum and date** (lg-fg2h.2; SPEC §3.2, §5.8; CHANGE.md §2.8,
+  §2.10, §5). A world's location may name its `state`: a `[family.*]`
+  precedent list's `@state` binds only the courts its
+  `[family.*.state.*]` entry names, plus the federal courts its `federal`
+  list makes binding on a federal question (none for California, Florida
+  and New York, per Raven v. Deukmejian, State v. Dwyer and People v. Kin
+  Kan); `lit/core` adds a `state-civil` family over the California and
+  Florida state forums. A family's `panels` lists the courts whose
+  panels are bound by prior panels: an `overruling` by such a court
+  needs `en_banc = true` (Miller v. Gammie, 335 F.3d 889 (9th Cir. 2003)
+  (en banc)), else L2010. A precedent or overruling may `abrogates` the
+  precedents of a court its court binds, withdrawing them from its date
+  (`overruled_by.how = "abrogated"`); its own court cannot abrogate. A
+  precedent layer applies only from its designation date (`from`).
 - **A matter declares per-decision opponent models** (lg-6wxa; SPEC
   §3.2, §5.6, §8.3). A `.case`'s `opponents` block, between `beliefs` and
   `analysis`, names a decision and how the opponent decides there:

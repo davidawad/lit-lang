@@ -346,6 +346,7 @@ impl Query<'_> {
                 json!({
                     "name": l.name, "version": l.version, "class": l.class,
                     "in_force": in_force.contains(&l.name),
+                    "from": l.from,
                     "overruled_by": l.overruled_by,
                 })
             })

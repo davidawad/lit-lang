@@ -11,7 +11,7 @@ use crate::db::ids::DeclId;
 use crate::db::inputs::{PackageInput, Workspace};
 use crate::db::queries::{check_decl, check_package, item_tree, manifest};
 use crate::db::span::{sort_diagnostics, Report, TextRange};
-use crate::hir::{Family, Kind, Manifest, Row};
+use crate::hir::{Family, Kind, Manifest, Place, Row};
 use crate::pkg::semver::Version;
 use litigate_base::{Diagnostic, DiagnosticCode as C, FileId, LineIndex, Profile};
 use serde::{Deserialize, Serialize};
@@ -31,7 +31,7 @@ pub enum Modality {
 }
 
 /// The location index ι: where the world's law is applied, so precedent
-/// binds per circuit (design review §3.2).
+/// binds per circuit and per state (design review §3.2).
 #[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Location {
     /// The forum family (a `[family.*]` id of `core`).
@@ -42,9 +42,23 @@ pub struct Location {
     /// The regional circuit (a court id the family lists in `circuits`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub circuit: Option<String>,
+    /// The state (an id the family lists in `[family.*.state.*]`).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub state: Option<String>,
     /// The judge.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub judge: Option<String>,
+}
+
+impl Location {
+    /// Where precedent binds: its circuit and state.
+    #[must_use]
+    pub fn place(&self) -> Place<'_> {
+        Place {
+            circuit: self.circuit.as_deref(),
+            state: self.state.as_deref(),
+        }
+    }
 }
 
 /// A parsed world.
@@ -77,9 +91,13 @@ pub struct Layer {
     pub class: String,
     /// Whether its claims are in force in the world: false for a precedent
     /// that does not bind at the location yet has binding effects, and for
-    /// a precedent an overruling of the world withdraws.
+    /// a precedent an overruling or abrogation of the world withdraws.
     pub in_force: bool,
-    /// The overruling withdrawing it, and from when.
+    /// A precedent's date, from which it applies: its designation's (the
+    /// decision's where the published opinion is the designation).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub from: Option<String>,
+    /// The overruling or abrogation withdrawing it, and from when.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub overruled_by: Option<Overruled>,
     /// Whether its claims apply at the location, overruled or not: false
@@ -91,25 +109,44 @@ pub struct Layer {
 
 impl Layer {
     /// Whether its claims are in force in a matter judged at `as_of` with
-    /// the corpus known at `known_at` (`None`: the latest): an overruling
-    /// withdraws a precedent from its date, retroactively for every case
-    /// still open (Harper v. Virginia Dep't of Taxation, 509 U.S. 86
-    /// (1993)), so a matter judged before that date, or at a `known_at`
-    /// before it, still has it.
+    /// the corpus known at `known_at` (`None`: the latest): a precedent
+    /// applies from its date, and an overruling or abrogation withdraws it
+    /// from its own, retroactively for every case still open (Harper v.
+    /// Virginia Dep't of Taxation, 509 U.S. 86 (1993)), so a matter judged
+    /// before that date, or at a `known_at` before it, still has it.
     #[must_use]
     pub fn in_force_at(&self, as_of: &str, known_at: Option<&str>) -> bool {
         self.applies
+            && self
+                .from
+                .as_deref()
+                .is_none_or(|f| f <= as_of && known_at.is_none_or(|k| f <= k))
             && self.overruled_by.as_ref().is_none_or(|o| {
                 o.from.as_str() > as_of || known_at.is_some_and(|k| o.from.as_str() > k)
             })
     }
 }
 
-/// An overruling of a world's precedent layer.
+/// How a precedent is withdrawn.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum Withdrawal {
+    /// Overruled: by its own court (en banc where it sits in panels) or by
+    /// one whose precedent binds it (`overrules`).
+    Overruled,
+    /// Abrogated: a decision of a court whose precedent binds its court is
+    /// clearly irreconcilable with it (`abrogates`; Miller v. Gammie, 335
+    /// F.3d 889, 900 (9th Cir. 2003) (en banc)).
+    Abrogated,
+}
+
+/// An overruling or abrogation of a world's precedent layer.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
 pub struct Overruled {
-    /// The overruling package.
+    /// The overruling or abrogating package.
     pub by: String,
+    /// Whether it overrules or abrogates.
+    pub how: Withdrawal,
     /// The overruling's date, from which the precedent's claims are
     /// withdrawn (to every case still open, Harper v. Virginia Dep't of
     /// Taxation, 509 U.S. 86 (1993)).
@@ -145,6 +182,7 @@ struct RawLocation {
     family: Spanned<String>,
     court: Option<String>,
     circuit: Option<Spanned<String>>,
+    state: Option<Spanned<String>>,
     judge: Option<String>,
 }
 
@@ -201,6 +239,9 @@ pub fn parse_world(text: &str) -> Result<(World, BTreeMap<String, TextRange>), V
     if let Some(c) = &l.circuit {
         at.insert("@circuit".to_owned(), range(c));
     }
+    if let Some(s) = &l.state {
+        at.insert("@state".to_owned(), range(s));
+    }
     if let Some(m) = &raw.modality {
         at.insert("@modality".to_owned(), range(m));
     }
@@ -222,6 +263,7 @@ pub fn parse_world(text: &str) -> Result<(World, BTreeMap<String, TextRange>), V
             family: l.family.get_ref().clone(),
             court: l.court.clone(),
             circuit: l.circuit.as_ref().map(|c| c.get_ref().clone()),
+            state: l.state.as_ref().map(|s| s.get_ref().clone()),
             judge: l.judge.clone(),
         },
     };
@@ -327,8 +369,7 @@ fn settled<'a>(
             let family = families(db, *pkg)
                 .iter()
                 .find(|f| f.id == world.location.family);
-            let circuit = world.location.circuit.as_deref();
-            (scope(m, family, circuit) == crate::hir::Scope::Binding).then(|| {
+            (scope(m, family, world.location.place()) == crate::hir::Scope::Binding).then(|| {
                 Report::new(
                     C::InvalidWorld,
                     at.get(&format!("@contested.{id}"))
@@ -453,7 +494,7 @@ impl Here<'_> {
         }
         let (kind, fits) = match &m.kind {
             Kind::Precedent { .. } => {
-                let s = scope(m, self.family, self.world.location.circuit.as_deref());
+                let s = scope(m, self.family, self.world.location.place());
                 let kind = Kind::Precedent { scope: s };
                 let fits = effects_of(db, pkg).within(kind.row());
                 if !fits {
@@ -463,11 +504,16 @@ impl Here<'_> {
             }
             other => (other.clone(), true),
         };
+        let from = matches!(m.kind, Kind::Precedent { .. })
+            .then(|| m.instrument.as_ref())
+            .flatten()
+            .map(|i| i.designated.clone().unwrap_or_else(|| i.date.clone()));
         let layer = Layer {
             name: name.clone(),
             version: m.version.clone(),
             class: kind.label().to_owned(),
             in_force: fits && overruled_by.is_none(),
+            from,
             overruled_by: overruled_by.cloned(),
             applies: fits,
         };
@@ -527,6 +573,36 @@ fn location<'f>(
         )),
         _ => {}
     }
+    let needs = family.precedent.iter().any(|p| p == "@state");
+    match &l.state {
+        None if needs => reports.push(Report::new(
+            C::InvalidWorld,
+            at["@family"],
+            format!(
+                "a world in the `{}` family names its `state`: a state's courts bind only in it",
+                family.id
+            ),
+        )),
+        Some(s) if !family.states.iter().any(|x| &x.id == s) => reports.push(Report::new(
+            C::InvalidWorld,
+            at["@state"],
+            if family.states.is_empty() {
+                format!("the `{}` family has no states", family.id)
+            } else {
+                format!(
+                    "`{s}` is not a state of the `{}` family ({})",
+                    family.id,
+                    family
+                        .states
+                        .iter()
+                        .map(|x| x.id.as_str())
+                        .collect::<Vec<_>>()
+                        .join(", ")
+                )
+            },
+        )),
+        _ => {}
+    }
     Some(family)
 }
 
@@ -538,15 +614,14 @@ fn not_binding(world: &World, m: &Manifest, at: TextRange, family: Option<&Famil
     let why = if i.is_some_and(|i| i.designated.is_none()) {
         "it was never designated precedential".to_owned()
     } else {
+        let l = &world.location;
         format!(
             "`{court}` precedent does not bind in the `{}` family{}",
-            world.location.family,
-            world
-                .location
-                .circuit
-                .as_ref()
-                .map(|c| format!(" at `{c}`"))
-                .unwrap_or_default()
+            l.family,
+            l.circuit
+                .iter()
+                .chain(&l.state)
+                .fold(String::new(), |at, c| at + " at `" + c + "`")
         )
     };
     let mut r = Report::new(
@@ -568,10 +643,13 @@ fn not_binding(world: &World, m: &Manifest, at: TextRange, family: Option<&Famil
     r
 }
 
-/// The precedents the overrulings of `layers` withdraw, by name, with
-/// the earliest valid overruling and its date; L2010, in the overruling's `Lit.toml`, for
-/// an overruling of something that is not a precedent, or by a court
-/// whose decisions do not bind the precedent's court.
+/// The precedents the overrulings and abrogations of `layers` withdraw,
+/// by name, with the earliest valid one and its date. L2010, in the
+/// withdrawing package's `Lit.toml`, for a target that is not a
+/// precedent; an overruling by a court that is neither the precedent's
+/// own (en banc, where it sits in panels: Miller v. Gammie, 335 F.3d 889,
+/// 899-900 (9th Cir. 2003) (en banc)) nor one whose precedent binds it;
+/// or an abrogation by a court whose precedent does not bind it.
 fn overrulings(
     db: &dyn salsa::Database,
     layers: &[(PackageInput, &Manifest)],
@@ -580,21 +658,32 @@ fn overrulings(
 ) -> BTreeMap<String, Overruled> {
     let by_name: BTreeMap<&str, &Manifest> =
         layers.iter().map(|(_, m)| (m.name.as_str(), *m)).collect();
-    let mut out = BTreeMap::new();
+    let mut out: BTreeMap<String, Overruled> = BTreeMap::new();
     for (pkg, o) in layers {
-        let Some(i) = o.instrument.as_ref().filter(|_| o.kind == Kind::Overruling) else {
+        let decision = matches!(o.kind, Kind::Overruling | Kind::Precedent { .. });
+        let Some(i) = o.instrument.as_ref().filter(|_| decision) else {
             continue;
         };
         let court = i.court.as_deref().unwrap_or_default();
         let text = pkg.manifest_text(db);
-        let at = super::key_range(text, "overrules");
-        let mut error = |message: String| {
-            diagnostics.push(
-                Report::new(C::ForbiddenEffect, at, message)
-                    .to_diagnostic(&FileId(pkg.manifest_path(db)), &LineIndex::new(text)),
-            );
-        };
-        for target in &i.overrules {
+        let targets = i
+            .overrules
+            .iter()
+            .filter(|_| o.kind == Kind::Overruling)
+            .map(|t| (t, Withdrawal::Overruled))
+            .chain(i.abrogates.iter().map(|t| (t, Withdrawal::Abrogated)));
+        for (target, how) in targets {
+            let key = match how {
+                Withdrawal::Overruled => "overrules",
+                Withdrawal::Abrogated => "abrogates",
+            };
+            let at = super::key_range(text, key);
+            let mut error = |message: String| {
+                diagnostics.push(
+                    Report::new(C::ForbiddenEffect, at, message)
+                        .to_diagnostic(&FileId(pkg.manifest_path(db)), &LineIndex::new(text)),
+                );
+            };
             let Some(p) = by_name.get(target.as_str()) else {
                 continue;
             };
@@ -604,28 +693,26 @@ fn overrulings(
                 .filter(|_| matches!(p.kind, Kind::Precedent { .. }))
             else {
                 error(format!(
-                    "`{}` overrules `{target}`, which is not a precedent",
+                    "`{}` {key} `{target}`, which is not a precedent",
                     o.name
                 ));
                 continue;
             };
             let theirs = pi.court.as_deref().unwrap_or_default();
             let family = family_of(families, &p.forum);
-            if court != theirs && !family.is_some_and(|f| f.binds(court, Some(theirs))) {
-                error(format!(
-                    "`{court}` cannot overrule `{theirs}` precedent `{target}`: an overruling is \
-                     by the same court (en banc) or one whose precedent binds it"
-                ));
+            if let Some(why) = unwithdrawable(family, how, (court, i.en_banc), theirs, target) {
+                error(why);
                 continue;
             }
-            // Withdrawn from the earliest overruling: a later one finds it
-            // already withdrawn (ties go to the first name).
+            // Withdrawn from the earliest: a later one finds it already
+            // withdrawn (ties go to the first name).
             let earlier = |old: &Overruled| (&i.date, &o.name) < (&old.from, &old.by);
             if out.get(target).is_none_or(earlier) {
                 out.insert(
                     target.clone(),
                     Overruled {
                         by: o.name.clone(),
+                        how,
                         from: i.date.clone(),
                     },
                 );
@@ -633,6 +720,39 @@ fn overrulings(
         }
     }
     out
+}
+
+/// Why a decision of `court` (`en_banc`: sitting en banc) cannot withdraw
+/// `target`, a precedent of `theirs` in `family`, the way `how` says:
+/// `None` when it can.
+fn unwithdrawable(
+    family: Option<&Family>,
+    how: Withdrawal,
+    (court, en_banc): (&str, bool),
+    theirs: &str,
+    target: &str,
+) -> Option<String> {
+    let higher = family.is_some_and(|f| court != theirs && f.binds(court, f.seat(theirs)));
+    let own = court == theirs && (en_banc || !family.is_some_and(|f| f.sits_in_panels(theirs)));
+    match how {
+        Withdrawal::Overruled if !(own || higher) => Some(if court == theirs {
+            format!(
+                "a `{court}` panel cannot overrule `{target}`: a panel is bound by its court's \
+                 prior panels until the court en banc (`en_banc = true`) or a court whose \
+                 precedent binds it overrules them"
+            )
+        } else {
+            format!(
+                "`{court}` cannot overrule `{theirs}` precedent `{target}`: an overruling is by \
+                 the same court (en banc) or one whose precedent binds it"
+            )
+        }),
+        Withdrawal::Abrogated if !higher => Some(format!(
+            "`{court}` cannot abrogate `{theirs}` precedent `{target}`: only a decision of a \
+             court whose precedent binds `{theirs}` abrogates it (its own court overrules)"
+        )),
+        _ => None,
+    }
 }
 
 /// The temporal and precedence diagnostics the layers have together but

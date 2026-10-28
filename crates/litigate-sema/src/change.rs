@@ -7,7 +7,7 @@ use crate::db::inputs::PackageInput;
 use crate::db::queries::manifest;
 use crate::db::resolution::core;
 use crate::db::span::{Report, TextRange};
-use crate::hir::{Cell, Family, Kind, Manifest, Row, Scope};
+use crate::hir::{Cell, Family, Kind, Manifest, Place, Row, Scope};
 use litigate_base::DiagnosticCode as C;
 
 pub mod choice;
@@ -49,17 +49,17 @@ pub fn family_of<'f>(families: &'f [Family], forum: &str) -> Option<&'f Family> 
         .find(|f| f.forums.iter().any(|x| x == forum))
 }
 
-/// A precedent's scope in `family` at `circuit` (a world's location;
-/// `None`: anywhere in the family): binding when it was designated
-/// precedential and its court's precedent binds there, else persuasive
-/// (design review §2.5 item 1: computed, never declared).
+/// A precedent's scope in `family` at `at` (a world's location; a
+/// coordinate left out: anywhere in the family): binding when it was
+/// designated precedential and its court's precedent binds there, else
+/// persuasive (design review §2.5 item 1: computed, never declared).
 #[must_use]
-pub fn scope(m: &Manifest, family: Option<&Family>, circuit: Option<&str>) -> Scope {
+pub fn scope(m: &Manifest, family: Option<&Family>, at: Place<'_>) -> Scope {
     let binding = m.instrument.as_ref().is_some_and(|i| {
         i.designated.is_some()
             && i.court
                 .as_deref()
-                .is_some_and(|court| family.is_some_and(|f| f.binds(court, circuit)))
+                .is_some_and(|court| family.is_some_and(|f| f.binds(court, at)))
     });
     if binding {
         Scope::Binding
@@ -78,7 +78,7 @@ pub fn class_index(db: &dyn salsa::Database, pkg: PackageInput) -> Option<ClassI
     let family = family_of(families, &m.forum);
     let kind = match &m.kind {
         Kind::Precedent { .. } => Kind::Precedent {
-            scope: scope(m, family, None),
+            scope: scope(m, family, Place::default()),
         },
         other => other.clone(),
     };
@@ -151,7 +151,7 @@ pub fn class_reports(db: &dyn salsa::Database, pkg: PackageInput, text: &str) ->
 pub fn reach<'f>(families: &'f [Family], court: &str, designated: bool) -> Vec<&'f str> {
     families
         .iter()
-        .filter(|f| designated && f.binds(court, None))
+        .filter(|f| designated && f.binds(court, Place::default()))
         .map(|f| f.id.as_str())
         .collect()
 }

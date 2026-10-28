@@ -1,0 +1,46 @@
+# The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the District
+# of Alaska over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
+# only the periods the Local Bankruptcy Rules themselves state and
+# re-encodes no FRBP period. It is a base package, not a `kind =
+# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011, as
+# for lit/bankr-dc). Each period is counted under FRBP 9006(a), the FRCP
+# 6(a) method (core's frcp6). The rules are those "as amended through
+# December 1, 2024" (sources/bankr-ak); the earlier editions are not
+# vendored, so a query before December 1, 2024 is a hole in the corpus.
+# Appeals go to the Ninth Circuit BAP or the District Court under FRBP
+# Part VIII (lit/frbp; AK LBR 8001-1).
+[package]
+name = "bankr-ak-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-ak-local-rules"
+forum = "bankr-ak"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the District of Alaska: Local Bankruptcy Rules"
+description = "The Bankr. D. Alaska Local Bankruptcy Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp): notice and certificates of service, the subchapter V trustee deposit, compensation and administrative expense applications, chapter 9 and 11 claims bar dates, § 506(b) claims, valuation of collateral, chapter 13 plan service, objection, recommendation and response, chapter 12 valuation, chapter 11 status conferences, disclosure statements, ballots and post-confirmation reports, stay relief and § 362(c) motions, debtors' domestic support duties, withdrawal of the reference, sales, executory contracts and redemption, adversary dismissal and summary judgment, attorney withdrawal, § 707(b) sanctions, motion practice (AK LBR 9013-1), jury consent, proposed orders, objections to nondispositive orders and hearings."
+in_force = "2024-12-01"
+known_at = "2026-10-28"
+unknown_before = "2024-12-01"
+jurisdiction = "U.S. Bankruptcy Court for the District of Alaska"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.akb-lbr]
+title = "Local Bankruptcy Rules of the United States Bankruptcy Court for the District of Alaska (as amended through December 1, 2024)"
+url = "https://www.akb.uscourts.gov/sites/akb/files/2024%20-%20Local%20Bankruptcy%20Rules.pdf"
+path = "sources/bankr-ak/akb-lbr-2024-12-01-sectioned.txt"
+path_sha256 = "4217d5b2b1b27b3958bad7eac8af0ecc961a40f8a4feece478265fb8fcda04f6"
+sha256 = "f310c607d6b5a6e9c84e329d858b86abe8ddd65fe7a057e8b3ec1fd2266e42ce"
+as_of = "2024-12-01"
+cite_prefixes = ["AK LBR"]
+section_heading = "LBR {n}"

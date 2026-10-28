@@ -146,7 +146,10 @@ fn unquoted(
 /// month count its whole years, and a period matches the sum of two
 /// different counts of one measure (37 C.F.R. § 2.102(c)(3): extensions
 /// `totaling ninety days` and then `an additional sixty days`, counted
-/// from the thirty-day period's end). A pinpoint the corpus sections apart
+/// from the thirty-day period's end), or of one count stated by two cited
+/// sections (a `3-month shortened statutory period`, MPEP § 710.01(a),
+/// extended by the fee `For reply within third month`, 37 C.F.R. §
+/// 1.17(a)(3)). A pinpoint the corpus sections apart
 /// (`MPEP § 710.01(a)` under `MPEP § 710.01`) is read with its section.
 /// A `historical` cite or a hole states no period. Sections that state no count of the
 /// measure (a period written `the next day`, or set in another section)
@@ -161,9 +164,10 @@ fn miscounted(
 ) -> Option<Diagnostic> {
     let (amount, unit) = period.filter(|&(n, _)| n > 0)?;
     let family = Measure::of(unit);
-    let counts: Vec<(u64, Measure)> = sections
+    let counts: Vec<(usize, u64, Measure)> = sections
         .iter()
-        .flat_map(|s| {
+        .enumerate()
+        .flat_map(|(at, s)| {
             let pinned = (1..=s.pinpoint.len()).map(|n| {
                 s.pinpoint[..n]
                     .iter()
@@ -180,19 +184,21 @@ fn miscounted(
                         .collect::<Vec<_>>()
                 })
                 .collect::<Vec<_>>()
+                .into_iter()
+                .map(move |(n, m)| (at, n, m))
         })
-        .filter(|(_, m)| m.monthly() == family.monthly())
+        .filter(|(_, _, m)| m.monthly() == family.monthly())
         .collect();
     let wanted = family.equivalents(amount);
-    let summed = counts.iter().any(|&(a, m)| {
-        counts
-            .iter()
-            .any(|&(b, n)| m == n && a < b && wanted.contains(&(a + b, m)))
+    let summed = counts.iter().any(|&(s, a, m)| {
+        counts.iter().any(|&(t, b, n)| {
+            m == n && (a < b || (a == b && s < t)) && wanted.contains(&(a + b, m))
+        })
     });
-    if counts.is_empty() || summed || counts.iter().any(|c| wanted.contains(c)) {
+    if counts.is_empty() || summed || counts.iter().any(|&(_, n, m)| wanted.contains(&(n, m))) {
         return None;
     }
-    let mut stated: Vec<String> = counts.iter().map(|&(n, m)| m.prose(n)).collect();
+    let mut stated: Vec<String> = counts.iter().map(|&(_, n, m)| m.prose(n)).collect();
     stated.sort();
     stated.dedup();
     let d = emit(

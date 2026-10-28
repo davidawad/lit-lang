@@ -2,7 +2,12 @@ module bankr-dc-local-rules.local-rules
 
 import core.frcp6.{ frcp6 }
 
-import frbp.events.{ BankruptcyOrderEntered, FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
+import frbp.events.{
+  BankruptcyOrderEntered,
+  FirstMeetingDate,
+  OrderForReliefEntered,
+  PetitionFiled,
+}
 
 // The Bankr. D.D.C. court's own periods, counted under FRBP 9006(a). The
 // FRBP periods (schedules, claims in chapter 7, 12 and 13 cases,
@@ -36,7 +41,6 @@ import frbp.events.{ BankruptcyOrderEntered, FirstMeetingDate, OrderForReliefEnt
 // the day before, 5071-1); and the discovery caps of 25 interrogatories,
 // 25 requests for admission and 25 requests for production (7026-1(a)).
 // "Last day" ends at 11:59 p.m. prevailing Eastern time (9006-1).
-
 /// A petition signed by neither the petitioner nor an attorney is
 /// filed and the Clerk's notice of the deficiency is served (LBR 1002-1(a)).
 event UnsignedPetitionNoticeServed()

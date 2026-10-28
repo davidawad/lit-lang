@@ -120,6 +120,24 @@ Entries live in the forum's own
   nav chrome) around the actual statute text. This port strips that
   boilerplate mechanically: keeps only the span from the `§NNNN. Title`
   heading line to the `[Excerpt ...]` marker the JSON's own author added.
+- Ported 2026-09-29 (4ce40edb). This repo holds no record of when the
+  sibling project retrieved its sources; their official URLs are the
+  USPTO Consolidated Patent Laws
+  (`https://www.uspto.gov/web/offices/pac/mpep/consolidated_laws.pdf`,
+  July 2025 update, still the edition served 2026-10-28), the USPTO
+  Consolidated Patent Rules
+  (`https://www.uspto.gov/web/offices/pac/mpep/consolidated_rules.pdf`,
+  served 2026-10-28 as the July 2026 update, not the July 2025 edition
+  the port used) and, for the 28 U.S.C. sections,
+  `https://uscode.house.gov/view.xhtml?req=(title:28%20section:<N>%20edition:prelim)`
+  (now 404; the same Code is at
+  `https://www.govinfo.gov/link/uscode/28/<N>?link-type=html`).
+- Checked 2026-10-28 (retrieved that day, with curl, from the URLs above):
+  the four 28 U.S.C. sections match the govinfo pages within 10-44 words
+  each (hyphenation and spacing). The 35 U.S.C. and 37 C.F.R. excerpts
+  could not be lined up word for word against the consolidations'
+  `pdftotext -layout` extraction (page furniture, and for the rules a later
+  edition), so they are not verified here.
 - sha256 (this file): `3d8bc2f973ecf54ebe7efc00ccb9756f0ed1e438dee88663f4b6ea65ee32be2a`
 - Repair (lg-2vwt, 2026-10-28): the 35 U.S.C. § 41 excerpt stopped at (a)(7) and omitted § 41(b) (maintenance fees), which `lit/mpep` cites. § 41(b)(1)–(3) added after (a)(7), copied verbatim from GPO's govinfo (United States Code, 2024 Edition, current through January 6, 2025; headings kept in that print's case). No other section was changed.
 - Original: none as served (assembled from a port of the sibling project's uscfr-full.json (USPTO Consolidated Patent Laws/Rules, July 2025, and uscode.house.gov pages for the 28 U.S.C. sections)); see the sources listed above.
@@ -460,7 +478,7 @@ Entries live in the forum's own
 - sha256 (this file): `77560dcd00af4016c24f1ed1817228500e35bc32797ec4d94a980b14556bb827`
 - Original: `original/usc-28-app-2002-time/001-ontent-pkg-USCODE-2002-title28-html-USCODE-2002-title28-app-federalru-rule26.html` as served (sha256 376b24ff236b967e9d4b3d3fad881f3f479218e9d3945487b727f226a4b20d0d); extraction sha256 77560dcd00af4016c24f1ed1817228500e35bc32797ec4d94a980b14556bb827. Served at https://www.govinfo.gov/content/pkg/USCODE-2002-title28/html/USCODE-2002-title28-app-federalru-rule26.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-28.
 
-### Amendment-history dataset — histories of the sections `lit/core`'s current versions cite
+### `rule-amendment-history.txt` — amendment histories of the sections `lit/core`'s current versions cite
 
 - One `## versions <heading>` block per section (SPEC §4.3): an `as_of`
   line, then the section's amendments as a `content_versions` list
@@ -484,8 +502,14 @@ Entries live in the forum's own
     27, 1976; August 4, 2003; November 7, 2011), except 56 FR 11923, whose
     effective date is not vendored and which is dated by publication
     (March 21, 1991).
+- Transcribed 2026-10-27 (f981db86). The vendored files read here record
+  their own source URLs in their entries in this file; the one source not
+  vendored as text, the FRAP 26 granule, was retrieved 2026-10-27 from
+  `https://www.govinfo.gov/content/pkg/USCODE-2024-title28/html/USCODE-2024-title28-app-federalru-rule26.htm`
+  and re-fetched 2026-10-28 with the same sha256.
 - sha256 (this file): `e6aef2e7672430dd698945d200c41a1988ef4f78ba7bfc0a2d7eae8e216362b8`
-- Original: none as served (assembled from transcribed amendment credits read from frcp.txt, frcrimp.txt, rcfc.txt, cfr-19-part201.txt and the govinfo 2024 FRAP granule); see the sources listed above.
+- Original: none as served for this file as a whole (assembled from transcribed amendment credits read from frcp.txt, frcrimp.txt, rcfc.txt, cfr-19-part201.txt and the govinfo 2024 FRAP granule); see the sources listed above.
+- Original: `original/rule-amendment-history/USCODE-2024-title28-app-federalru-rule26.htm` as served (sha256 1b1e1f0b76345262b3e275d5c2d5cfff2d47b813bdc1b0921ce96ed8a58fb878), the FRAP 26 credits only; extraction sha256 e6aef2e7672430dd698945d200c41a1988ef4f78ba7bfc0a2d7eae8e216362b8. Served at https://www.govinfo.gov/content/pkg/USCODE-2024-title28/html/USCODE-2024-title28-app-federalru-rule26.htm; fetched with curl, retrieved 2026-10-28.
 
 ### `usc-28-app-frap4-history.txt` — FRAP 4 as printed in the 2008 and 2011 editions of 28 U.S.C. App.
 
@@ -660,8 +684,15 @@ Entries live in the forum's own
   block per section (section number and heading restated as the first body
   line, `#### ` subpart headings and `*[NN FR ...]*` amendment-history lines
   dropped). No wording changed. Used by `packs/ttab-trademark-trial-and-appeal-board.json`.
+- Added 2026-10-21 (641a650c); the library copy's own retrieval date and
+  method are not recorded. Verified 2026-10-28 instead against the eCFR's
+  point-in-time text for the same date, retrieved with curl from the eCFR
+  versioner API (below): all 155 sections match it word for word, apart
+  from the restated `37 C.F.R. § 2.N —` heading line, four `### §§ ...
+  [Reserved]` lines, and the XML's spacing inside parentheses and before
+  em dashes.
 - sha256 (this file): `66402ce5e48bf2a9aa039058b3bfc181d3511b9e94137fac8b6a3d84a26b33a7`
-- Original: none as served (assembled from David's library copy of the eCFR Part 2 text as of 2026-10-19, split mechanically); see the sources listed above.
+- Original: `original/cfr-37-part2.xml` as served (sha256 3925c9b1ea8e2f426b491e8efc7d0ba57d0393d11f11aa715e59ebe678e050fd), the eCFR point-in-time XML of 37 C.F.R. Part 2 as of 2026-10-19, not the library copy the extraction was split from; extraction sha256 66402ce5e48bf2a9aa039058b3bfc181d3511b9e94137fac8b6a3d84a26b33a7. Served at https://www.ecfr.gov/api/versioner/v1/full/2026-10-19/title-37.xml?part=2; fetched with curl, retrieved 2026-10-28.
 
 ### `cfr-37-part2-answer-time-history.txt` — 37 C.F.R. §§ 2.105, 2.106, 2.113 and 2.116 (TTAB answer time) as of January 13 and 14, 2017
 
@@ -1060,61 +1091,106 @@ Entries live in the forum's own
 - Fetched 2026-10-26 from `tile.loc.gov/storage-services/service/ll/usrep/usrep375/usrep375384/usrep375384.pdf` (the U.S. Reports, Library of Congress), `pdftotext -layout`, every non-blank line kept with its leading spaces dropped; no wording changed. The precedent the overruling example (Bowles v. Russell, `sources/change-corpus/rulings/bowles-scotus-2007.txt`) withdraws.
 - sha256 (this file): `adb3b1d49b1a12c14f58d973942a3dc62825bb5287c56df17f4ed0eac64f9cc9`
 - Original: `original/change-thompson-v-ins-375-us-384.pdf` as served (sha256 a91fe042e81e3bb1609ae0d0e98e9dff546f9dd5747cc0b85ead8a4eb6b52be5); extraction sha256 adb3b1d49b1a12c14f58d973942a3dc62825bb5287c56df17f4ed0eac64f9cc9. Served at https://tile.loc.gov/storage-services/service/ll/usrep/usrep375/usrep375384/usrep375384.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
-### Post-dismissal opinions
+### `waetzig-v-halliburton.txt` — Waetzig v. Halliburton Energy Services, Inc., No. 23-971 (U.S. Feb. 26, 2025), slip opinion
 
-- Waetzig is the Supreme Court's official slip opinion (No. 23-971, decided
-  2025-02-26), downloaded from supremecourt.gov and extracted with
-  `pdftotext -layout`; sha256 `4325f20a34f4be3e51cc2b96eea4ef6ca20b8e50a1834ad8b5d51701853789ff`.
-- CRST is U.S. Reports vol. 578, pp. 419-436, downloaded from GovInfo and
-  extracted with `pdftotext -layout`; sha256
-  `3598727ae67d2b2a67986920aedf82b13435dadf4e1ab45a5b915c69f3a34b40`.
-- Cadkin is the Ninth Circuit's official published opinion, No. 08-55311,
-  downloaded from ca9.uscourts.gov and extracted with `pdftotext -layout`;
-  sha256 `52a8a2fa29edf0fed607bda629e6e8788a22e7b272d16ffd31f1fff4274e106b`.
+- The Supreme Court's slip opinion, extracted with `pdftotext -layout`; no
+  wording changed. Added 2026-10-26 (714d7bac). supremecourt.gov now serves
+  the case only as the preliminary print of 604 U.S. 305
+  (`https://www.supremecourt.gov/opinions/24pdf/604us1r14_6kg7.pdf`), so
+  the slip PDF was re-fetched from Cornell LII's copy of it; that PDF's
+  `pdftotext -layout` extraction is byte-identical to this file.
+- sha256 (this file): `4325f20a34f4be3e51cc2b96eea4ef6ca20b8e50a1834ad8b5d51701853789ff`
+- Original: `original/waetzig-v-halliburton.pdf` as served (sha256 6618d7c6939907c4de5c23b0673bb9c8fce219fb84083d0e42558ed9a9235c91); extraction sha256 4325f20a34f4be3e51cc2b96eea4ef6ca20b8e50a1834ad8b5d51701853789ff. Served at https://www.law.cornell.edu/supct/pdf/23-971.pdf (the slip opinion as issued by the Court); fetched with curl, retrieved 2026-10-28.
 
-### Eighth Circuit Bankruptcy Appellate Panel source set (retrieved 2026-10-27)
+### `crst-v-eeoc.txt` — CRST Van Expedited, Inc. v. EEOC, 578 U.S. 419 (2016)
 
-- `frbp.txt` — Federal Rules of Bankruptcy Procedure, December 1, 2025
-  edition. Extracted from the Administrative Office of the U.S. Courts official
-  PDF at `https://www.uscourts.gov/sites/default/files/document/federal-rules-of-bankruptcy-procedure.pdf`
-  with `pdftotext -layout`; headings were segmented by rule number and the
-  extracted rule text retained. This is the current edition listed on the
-  official current-rules page, which identifies the 2025 amendments effective
-  December 1, 2025. sha256: `0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8`.
-- `ca8-bap-local-rules.txt` — Eighth Circuit Bankruptcy Appellate Panel Local
-  Rules, revised December 1, 2023. Extracted from the official court PDF at
-  `https://ecf.ca8.uscourts.gov/newbap/rules/localrules_bapDec2023.pdf` with
-  `pdftotext -layout`; each local rule is headed by its canonical rule
-  reference. The official Panel Rules and Publications page lists this edition.
-  sha256: `ccc1e2198d478e0b31cd6c4d700bd699eb7e4993f073b3b894cb2f0cf48108ca`.
-- `ca8-bap-iop.txt` — Eighth Circuit Bankruptcy Appellate Panel Internal
-  Operating Procedures Manual, revised January 2024. Extracted from the
-  official court PDF at
-  `https://www.ca8.uscourts.gov/sites/ca8/files/iops%20jan%202024.pdf` with
-  `pdftotext -layout`. sha256:
-  `2fb5815bf87b25d8af30298fa0fa21e148d81ddc6992c305bd94716c68fb0485`.
-- The Eighth Circuit Local Rules (June 17, 2024) this package also cites are
-  vendored once, as `ca8/ca8-local-rules.txt`; see `ca8/PROVENANCE.md`.
-- `ca8-iop.txt` — Eighth Circuit Internal Operating Procedures, extracted from
-  the official court PDF at `https://ecf.ca8.uscourts.gov/newrules/coa/iops.pdf`
-  with `pdftotext -layout`; the Rules & Procedures page links this edition.
-  sha256: `a346115379cdf130c46d5d6c33462f03a0984fcebac95a8617b2d0222e6bc8f8`.
-- `usc-28-158.txt` — 28 U.S.C. § 158, extracted from the official Office of the
-  Law Revision Counsel page at `https://uscode.house.gov/us/usc/119-118/t28/s158/`
-  (text current through Public Law 119-120, October 7, 2026). HTML navigation
-  removed; statutory text retained. sha256:
-  `a0f615748b6a10805e6eeec6a05e94d7a3fc2dcd5fafbe94efae7af8ebf9987b`.
-- Leading decisions named in the outline were checked against their published
-  United States Reports: *Catlin v. United States*, 324 U.S. 229 (1945),
-  official Library of Congress scan at
-  `https://tile.loc.gov/storage-services/service/ll/usrep/usrep324/usrep324229/usrep324229.pdf`,
-  and *Bowles v. Russell*, 551 U.S. 205 (2007), official scan at
-  `https://tile.loc.gov/storage-services/service/ll/usrep/usrep551/usrep551205/usrep551205.pdf`.
-  They are omitted from the promoted package: *Catlin* addresses the finality
-  rule under the former 28 U.S.C. § 1291, not the bankruptcy appellate routes
-  modeled here; *Bowles* holds the statutory civil notice period in 28 U.S.C.
-  § 2107 jurisdictional, while the modeled bankruptcy notice period is set by
-  FRBP 8002. Neither decision supports a proposition needed by this outline.
+- United States Reports vol. 578, pp. 419-436, from GovInfo, extracted with
+  `pdftotext -layout`; no wording changed. Added 2026-10-26 (714d7bac);
+  re-fetched 2026-10-28 and the extraction reproduced byte for byte.
+- sha256 (this file): `3598727ae67d2b2a67986920aedf82b13435dadf4e1ab45a5b915c69f3a34b40`
+- Original: `original/crst-v-eeoc.pdf` as served (sha256 5ee0b16242e5c8656bed03ede66575dbbdb53585fbe08e87c5f9e6aa0d884c27); extraction sha256 3598727ae67d2b2a67986920aedf82b13435dadf4e1ab45a5b915c69f3a34b40. Served at https://www.govinfo.gov/content/pkg/USREPORTS-578/pdf/USREPORTS-578-419.pdf; fetched with curl, retrieved 2026-10-28.
+
+### `cadkin-v-loose.txt` — Cadkin v. Loose, No. 08-55311 (9th Cir. June 26, 2009)
+
+- The Ninth Circuit's official published opinion, extracted with
+  `pdftotext -layout`; no wording changed. Added 2026-10-26 (714d7bac);
+  re-fetched 2026-10-28 and the extraction reproduced byte for byte.
+- sha256 (this file): `52a8a2fa29edf0fed607bda629e6e8788a22e7b272d16ffd31f1fff4274e106b`
+- Original: `original/cadkin-v-loose.pdf` as served (sha256 481fb5c8dc2ad53681de70a8360d220b477230a40cb88d01e25efbb013a8c557); extraction sha256 52a8a2fa29edf0fed607bda629e6e8788a22e7b272d16ffd31f1fff4274e106b. Served at https://cdn.ca9.uscourts.gov/datastore/opinions/2009/06/26/08-55311.pdf; fetched with curl, retrieved 2026-10-28.
+
+### Eighth Circuit Bankruptcy Appellate Panel source set
+
+The files below were added for the Eighth Circuit BAP outline (8ac2b842,
+retrieved 2026-10-27). Each original was re-fetched 2026-10-28 from the URL
+its entry gives, and the vendored text checked against it word for word.
+The Eighth Circuit Local Rules (June 17, 2024) this package also cites are
+vendored once, as `ca8/ca8-local-rules.txt`; see `ca8/PROVENANCE.md`.
+
+Leading decisions named in the outline were checked against their published
+United States Reports: *Catlin v. United States*, 324 U.S. 229 (1945),
+official Library of Congress scan at
+`https://tile.loc.gov/storage-services/service/ll/usrep/usrep324/usrep324229/usrep324229.pdf`,
+and *Bowles v. Russell*, 551 U.S. 205 (2007), official scan at
+`https://tile.loc.gov/storage-services/service/ll/usrep/usrep551/usrep551205/usrep551205.pdf`.
+They are omitted from the promoted package: *Catlin* addresses the finality
+rule under the former 28 U.S.C. § 1291, not the bankruptcy appellate routes
+modeled here; *Bowles* holds the statutory civil notice period in 28 U.S.C.
+§ 2107 jurisdictional, while the modeled bankruptcy notice period is set by
+FRBP 8002. Neither decision supports a proposition needed by this outline.
+
+### `frbp.txt` — Federal Rules of Bankruptcy Procedure, December 1, 2025 edition
+
+- The Administrative Office of the U.S. Courts official PDF (the current
+  edition on its current-rules page, with the 2025 amendments effective
+  December 1, 2025), retrieved 2026-10-27. Extracted with `pdftotext
+  -layout`; the front matter and table of contents were dropped and each
+  rule headed `## FRBP N` for cite resolution. Rule text was not edited:
+  apart from those markers, every word of this file is in the extraction
+  of the PDF as served 2026-10-28, in order.
+- sha256 (this file): `0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8`
+- Original: `original/frbp.pdf` as served (sha256 664156bed2742130b7c26b6f632ee99544b4b784801448cfca6c5ee16d681ad8); extraction sha256 0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8. Served at https://www.uscourts.gov/sites/default/files/document/federal-rules-of-bankruptcy-procedure.pdf; fetched with curl, retrieved 2026-10-28.
+
+### `ca8-bap-local-rules.txt` — Eighth Circuit Bankruptcy Appellate Panel Local Rules, revised December 1, 2023
+
+- The court's official PDF (the edition listed on the Panel Rules and
+  Publications page), retrieved 2026-10-27. Extracted with `pdftotext
+  -layout`; the table of contents was dropped and each local rule headed
+  `## L.R. BAP 8th Cir. N` for cite resolution. Rule text was not edited:
+  apart from those markers, every word of this file is in the extraction
+  of the PDF as served 2026-10-28, in order.
+- sha256 (this file): `ccc1e2198d478e0b31cd6c4d700bd699eb7e4993f073b3b894cb2f0cf48108ca`
+- Original: `original/ca8-bap-local-rules.pdf` as served (sha256 791132e2c51ba53300e9d4af7193733c3c0dd1199aabc384284fdf3c4728b3d3); extraction sha256 ccc1e2198d478e0b31cd6c4d700bd699eb7e4993f073b3b894cb2f0cf48108ca. Served at https://ecf.ca8.uscourts.gov/newbap/rules/localrules_bapDec2023.pdf; fetched with curl, retrieved 2026-10-28.
+
+### `ca8-bap-iop.txt` — Eighth Circuit Bankruptcy Appellate Panel Internal Operating Procedures Manual, revised January 2024
+
+- The court's official PDF, retrieved 2026-10-27. Extracted with
+  `pdftotext -layout`; no wording changed (the extraction of the PDF as
+  served 2026-10-28 matches this file word for word; only whitespace and
+  page breaks differ).
+- sha256 (this file): `2fb5815bf87b25d8af30298fa0fa21e148d81ddc6992c305bd94716c68fb0485`
+- Original: `original/ca8-bap-iop.pdf` as served (sha256 bbc4c6ea689d554ebc20ae3d3ae24cb0202c95df6d36cbd71d3e3f37411260c0); extraction sha256 2fb5815bf87b25d8af30298fa0fa21e148d81ddc6992c305bd94716c68fb0485. Served at https://www.ca8.uscourts.gov/sites/ca8/files/iops%20jan%202024.pdf; fetched with curl, retrieved 2026-10-28.
+
+### `ca8-iop.txt` — Eighth Circuit Internal Operating Procedures, revised February 26, 2024
+
+- The court's official PDF (the edition the Rules & Procedures page
+  links), retrieved 2026-10-27. Extracted with `pdftotext -layout`; no
+  wording changed (the extraction of the PDF as served 2026-10-28 matches
+  this file word for word; only whitespace and page breaks differ).
+- sha256 (this file): `a346115379cdf130c46d5d6c33462f03a0984fcebac95a8617b2d0222e6bc8f8`
+- Original: `original/ca8-iop.pdf` as served (sha256 41097628db55700c9774760cb4a7334e427d086d69c429a1f4ec3edd1c9e0ff4); extraction sha256 a346115379cdf130c46d5d6c33462f03a0984fcebac95a8617b2d0222e6bc8f8. Served at https://ecf.ca8.uscourts.gov/newrules/coa/iops.pdf; fetched with curl, retrieved 2026-10-28.
+
+### `usc-28-158.txt` — 28 U.S.C. § 158 (bankruptcy appeals)
+
+- The Office of the Law Revision Counsel page (text current through Public
+  Law 119-120, October 7, 2026), retrieved 2026-10-27. HTML navigation
+  removed, tags stripped and entities decoded; the statutory text is
+  word for word the page as served 2026-10-28. The closing `## versions`
+  block (`as_of 2026-10-07`) was transcribed from the section's source
+  credit on that page: Pub. L. 98-353 (July 10, 1984), 101-650 (Dec. 1,
+  1990), 103-394 (Oct. 22, 1994), 109-8 (Apr. 20, 2005) and 111-327
+  (Dec. 22, 2010).
+- sha256 (this file): `a0f615748b6a10805e6eeec6a05e94d7a3fc2dcd5fafbe94efae7af8ebf9987b`
+- Original: `original/usc-28-158.html` as served (sha256 37906378d6069c6b5ca07640ef70d1d9ae9fa84cb074c2d90d95c798c320ce76); extraction sha256 a0f615748b6a10805e6eeec6a05e94d7a3fc2dcd5fafbe94efae7af8ebf9987b. Served at https://uscode.house.gov/us/usc/119-118/t28/s158/; fetched with curl, retrieved 2026-10-28.
 
 ## First Circuit Rulebook
 
@@ -1133,39 +1209,3 @@ Entries live in the forum's own
 - Vendored text sha256:
   `9e99b6ae551dc12ddf322afe896c98d7fc4c651c49a209f0cf45f313403b477a`.
 - Original: `original/ca1-first-circuit-rulebook-2026-06-01.pdf` as served (sha256 e126dc83b8a7ab1044273dc3fdc22cbc735cc6c81ce5793b345eb0e7bc7a6133); extraction sha256 9e99b6ae551dc12ddf322afe896c98d7fc4c651c49a209f0cf45f313403b477a.
-
-### `ca8-bap-local-rules.txt` — Eighth Circuit Bankruptcy Appellate Panel Local Rules
-
-- Source: https://ecf.ca8.uscourts.gov/newbap/rules/localrules_bapDec2023.pdf; official Panel rules PDF. Retrieved 2026-10-27 and extracted with `pdftotext -layout`. SHA-256: `ccc1e2198d478e0b31cd6c4d700bd699eb7e4993f073b3b894cb2f0cf48108ca`.
-
-### `ca8-bap-iop.txt` — Eighth Circuit Bankruptcy Appellate Panel Internal Operating Procedures
-
-- Source: https://www.ca8.uscourts.gov/sites/ca8/files/iops%20jan%202024.pdf; official court PDF. Retrieved 2026-10-27 and extracted with `pdftotext -layout`. SHA-256: `2fb5815bf87b25d8af30298fa0fa21e148d81ddc6992c305bd94716c68fb0485`.
-
-### `ca8-iop.txt` — Eighth Circuit Internal Operating Procedures
-
-- Source: https://ecf.ca8.uscourts.gov/newrules/coa/iops.pdf; official court PDF. Retrieved 2026-10-27 and extracted with `pdftotext -layout`. SHA-256: `a346115379cdf130c46d5d6c33462f03a0984fcebac95a8617b2d0222e6bc8f8`.
-
-### `frbp.txt` — Federal Rules of Bankruptcy Procedure
-
-- Source: https://www.uscourts.gov/sites/default/files/document/federal-rules-of-bankruptcy-procedure.pdf; Administrative Office of the U.S. Courts official PDF, December 1, 2025 edition. Retrieved 2026-10-27 and extracted with `pdftotext -layout`. SHA-256: `0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8`.
-
-### `rule-amendment-history.txt` — amendment histories of cited sections
-
-- Derived by transcribing amendment credits from the vendored primary texts, including https://www.uscourts.gov/rules-policies/current-rules-practice-procedure and the official U.S. Code sources listed in this record. Retrieved 2026-10-28; extracted/transcribed from those sources and vendored texts as described above. SHA-256: `e6aef2e7672430dd698945d200c41a1988ef4f78ba7bfc0a2d7eae8e216362b8`.
-
-### `usc-28-158.txt` — 28 U.S.C. § 158
-
-- Source: https://uscode.house.gov/us/usc/119-118/t28/s158/; Office of the Law Revision Counsel official text. Retrieved 2026-10-27; converted from HTML with navigation removed and statutory text retained. SHA-256: `a0f615748b6a10805e6eeec6a05e94d7a3fc2dcd5fafbe94efae7af8ebf9987b`.
-
-### `waetzig-v-halliburton.txt` — Waetzig v. Halliburton Energy Services, Inc.
-
-- Source: https://www.supremecourt.gov/opinions/24pdf/23-971_l6gn.pdf; official Supreme Court slip opinion. Retrieved 2026-10-28 and extracted with `pdftotext -layout`. SHA-256: `4325f20a34f4be3e51cc2b96eea4ef6ca20b8e50a1834ad8b5d51701853789ff`.
-
-### `crst-v-eeoc.txt` — CRST Van Expedited, Inc. v. EEOC
-
-- Source: https://www.govinfo.gov/content/pkg/USREPORTS-578/pdf/USREPORTS-578-419.pdf; official U.S. Reports. Retrieved 2026-10-28 and extracted with `pdftotext -layout`. SHA-256: `3598727ae67d2b2a67986920aedf82b13435dadf4e1ab45a5b915c69f3a34b40`.
-
-### `cadkin-v-loose.txt` — Cadkin v. Loose
-
-- Source: https://cdn.ca9.uscourts.gov/datastore/opinions/2009/06/26/08-55311.pdf; official Ninth Circuit opinion. Retrieved 2026-10-28 and extracted with `pdftotext -layout`. SHA-256: `52a8a2fa29edf0fed607bda629e6e8788a22e7b272d16ffd31f1fff4274e106b`.

@@ -1,0 +1,110 @@
+module pr-tribunal-apelaciones.appeal
+
+// Civil appeals from the Court of First Instance to the Puerto Rico Court
+// of Appeals, from the applicant's (appellant's) side. Every period below
+// is stated in a note, not counted: the Reglamento states no computation
+// rule and lit/core has none for Puerto Rico. The Reglamento is in Spanish;
+// the notes paraphrase it in English. Review in the Supreme Court of Puerto
+// Rico is governed by the Ley de la Judicatura de 2003 and the Reglamento
+// del Tribunal Supremo, neither of which is vendored, so it is an exit
+// edge. The earlier outline cited P.R. Civ. P. 13 for the appeal period;
+// the period is in Regl. T.A. R. 13(A), so it is cited there. The earlier
+// outline named no leading decisions. Certiorari from interlocutory and
+// other orders (Regl. T.A. R. 32(C): thirty days from the archivo en autos
+// of the notice, of strict compliance; opposition within ten days, R.
+// 37(A); the respondent's brief within thirty days of notice that the writ
+// issued, R. 39(A)) is a separate recourse this package does not model.
+start appeal-filed
+
+state appeal-filed: "Escrito de apelación filed and served" by applicant cite "Regl. T.A. R. 13(A)"
+{
+  note "An appeal from a civil judgment of the Court of First Instance is filed within the jurisdictional term of thirty days from the archivo en autos of a copy of the notice of judgment, unless a special law provides otherwise; the term is sixty days where the Commonwealth, its officers or a non-corporate instrumentality, or a municipality or its officers, is a party. The date the notice is sent by the electronic platform is the archivo en autos; for notice by mail on a later date, the term runs from the mailing (Regl. T.A. R. 13(A)). The appellant serves the appeal and appendices within the same term, which for service is of strict compliance, and certifies the date of service with its signature (Regl. T.A. R. 13(B)(1)). The appeal is perfected by filing the escrito with the fee; the date the fee is paid is the filing date (Regl. T.A. R. 14(A)). Filing a civil appeal stays proceedings below as to the judgment appealed unless the Court of Appeals orders otherwise, but not a sale of perishable goods, an injunction, mandamus or order to do or desist, a support order, or a custody or visitation order (Regl. T.A. R. 18)."
+  edge-appeal-filed-review "Court reviews jurisdiction and timeliness" -> jurisdiction {
+    authority cite "Regl. T.A. R. 83(C)"
+  }
+}
+
+decision jurisdiction: "Jurisdiction and timeliness reviewed" by court cite "Regl. T.A. R. 83(B)"
+{
+  note "A party may move at any time to dismiss for lack of jurisdiction, filing outside a strict-compliance term without just cause, lack of diligence or good faith, frivolousness, or mootness, and the court may dismiss on its own motion for the same reasons; it does not lose jurisdiction over a party's breach of a requirement that is neither jurisdictional nor of strict compliance (Regl. T.A. R. 83(B), (C)). No filing out of term is accepted unless the panel provides otherwise, and no extension is granted of a jurisdictional term (Regl. T.A. R. 72(C))."
+  edge-jurisdiction-dismissed "Dismissed" -> dismissed { authority cite "Regl. T.A. R. 83(B)" }
+  edge-jurisdiction-briefing "Appeal proceeds" -> briefing { authority cite "Regl. T.A. R. 22" }
+}
+
+state briefing: "Briefs filed" by applicant cite "Regl. T.A. R. 22"
+{
+  note "The escrito de apelación may not exceed twenty-five pages for a physical record or thirty-five for an electronic one, exclusive of the certificate of service, index and appendix, unless the court allows more (Regl. T.A. R. 16(D)); its appendix holds the pleadings, the judgment and notice of its archivo en autos, and the papers showing interruption and resumption of the appeal term, and the court may allow missing documents to be filed within fifteen days of notice of its order (Regl. T.A. R. 16(E)). Where error is assigned to the sufficiency or weighing of testimony, the appellant reproduces the oral evidence under Regl. T.A. R. 76, showing within ten days after filing the appeal that the method chosen is the fastest (Regl. T.A. R. 19(A), (B)), and may file a supplementary brief thirty days after the transcript or narrative statement is filed (Regl. T.A. R. 21). The appellee files its brief within thirty days after the appeal is filed, or after the reproduction of the oral evidence is filed where there is one, and may reply to a supplementary brief within thirty days (Regl. T.A. R. 22); the appellee's brief has the same page limits (Regl. T.A. R. 73(E)). A request for an extension must reach the clerk at least three business days before the term expires, and an extension runs from the end of the original term (Regl. T.A. R. 72(B))."
+  edge-briefing-argument "Briefing complete" -> argument { authority cite "Regl. T.A. R. 80(A)" }
+}
+
+decision argument: "Oral argument or submission on the briefs" by court cite "Regl. T.A. R. 80(A)"
+{
+  note "The court may order an oral hearing on its own motion or a party's request at any stage before its final decision (Regl. T.A. R. 80(A)(1)). The principal argument is at most fifteen minutes for each party, with five minutes for rebuttal in the court's discretion (Regl. T.A. R. 80(C)(2)(a))."
+  edge-argument-argued "Argued orally" -> panel-decision { authority cite "Regl. T.A. R. 80(A)" }
+  edge-argument-submitted "Submitted on the briefs" -> panel-decision {
+    authority cite "Regl. T.A. R. 10(A)"
+  }
+}
+
+decision panel-decision: "Panel decides" by court cite "Regl. T.A. R. 10(A)"
+{
+  note "The panel resolves the appeal by a resolution or judgment stating its grounds (Regl. T.A. R. 10(A)). The judge assigned circulates a draft within thirty calendar days of the vote, and the other members have ten days to say they will write separately, fifteen calendar days to circulate a reasoned separate vote (Regl. T.A. R. 10(B), (C))."
+  edge-panel-decision-affirmed "Affirmed" -> after-decision { authority cite "Regl. T.A. R. 10(A)" }
+  edge-panel-decision-reversed "Reversed or modified" -> reversed {
+    authority cite "Regl. T.A. R. 10(A)"
+  }
+}
+
+decision after-decision: "Reconsideration, Supreme Court review, or neither" by applicant cite "Regl. T.A. R. 84(A)"
+{
+  note "A motion for reconsideration in any civil matter is filed within the non-extendable term of fifteen days from the archivo en autos of a copy of the notice of the Court of Appeals' resolution or judgment; a timely motion suspends the terms to appeal or seek review in the Supreme Court, which run anew from the archivo en autos of the notice of the ruling that finally resolves it (Regl. T.A. R. 84(A)). The term to seek review in the Supreme Court is in the Ley de la Judicatura and the Reglamento del Tribunal Supremo, which are not vendored."
+  edge-after-decision-reconsideration "Motion for reconsideration" -> reconsideration {
+    authority cite "Regl. T.A. R. 84(A)"
+  }
+  edge-after-decision-supreme-court "Review sought in the Supreme Court" -> supreme-court {
+    authority cite "Regl. T.A. R. 84(A)"
+  }
+  edge-after-decision-none "No further review" -> affirmed { authority cite "Regl. T.A. R. 84(E)" }
+}
+
+decision reconsideration: "Reconsideration decided" by court cite "Regl. T.A. R. 84(B)"
+{
+  note "The motion addresses only the specific points on which the movant claims the court erred; the opposing party may oppose within ten days of its filing or the term the court sets, and the court may rule at any time (Regl. T.A. R. 84(B)). It is decided where possible by the same panel (Regl. T.A. R. 84(C)), and no second motion by the same party is allowed once the first is denied (Regl. T.A. R. 84(D))."
+  edge-reconsideration-denied "Denied" -> after-reconsideration {
+    authority cite "Regl. T.A. R. 84(D)"
+  }
+  edge-reconsideration-granted "Granted: appeal decided anew" -> panel-decision {
+    authority cite "Regl. T.A. R. 84(C)"
+  }
+}
+
+decision after-reconsideration: "Supreme Court review or none" by applicant cite "Regl. T.A. R. 84(A)"
+{
+  note "The terms to seek review in the Supreme Court run anew from the archivo en autos of the notice of the ruling that finally resolves the reconsideration (Regl. T.A. R. 84(A))."
+  edge-after-reconsideration-supreme-court "Review sought in the Supreme Court" -> supreme-court {
+    authority cite "Regl. T.A. R. 84(A)"
+  }
+  edge-after-reconsideration-none "No further review" -> affirmed {
+    authority cite "Regl. T.A. R. 84(E)"
+  }
+}
+
+terminal dismissed: "Appeal dismissed" outcome [loss] cite "Regl. T.A. R. 83(B)"
+{
+  note "Outcome from the appellant's side. The court's resolution under Regl. T.A. R. 83 states its grounds (Regl. T.A. R. 83(D))."
+}
+
+terminal affirmed: "Affirmed: mandate issues" outcome [loss] cite "Regl. T.A. R. 84(E)"
+{
+  note "Outcome from the appellant's side. The clerk sends the mandate, with any original record, to the Court of First Instance ten business days after the decision becomes final and firm, or earlier if the court so orders for cause (Regl. T.A. R. 84(E))."
+}
+
+terminal reversed: "Reversed or modified" outcome [win] cite "Regl. T.A. R. 10(A)"
+{
+  note "Outcome from the appellant's side. The appellee may move for reconsideration or seek Supreme Court review (Regl. T.A. R. 84(A))."
+}
+
+terminal supreme-court: "Review sought in the Supreme Court of Puerto Rico" outcome [appeal] cite "Regl. T.A. R. 84(A)"
+{
+  note "Review in the Supreme Court of Puerto Rico. Its rules are not vendored; the outcome is outside this package."
+}

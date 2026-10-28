@@ -1,0 +1,40 @@
+# Civil appeals from the Court of First Instance to the Puerto Rico Court of
+# Appeals (Tribunal de Apelaciones) under its Reglamento, as amended through
+# Resolution ER-2025-0003 of December 19, 2025 (sources/pr-tribunal-
+# apelaciones, Spanish). The Reglamento states no rule for computing time
+# and lit/core has no counting rule for Puerto Rico, so the periods are
+# stated in notes, not encoded as counted deadlines. The Reglamento del
+# Tribunal Supremo is not vendored, so review in the Supreme Court is an
+# edge out of this package.
+[package]
+name = "pr-tribunal-apelaciones"
+version = "0.1.0"
+language = 1
+pack_id = "pr-tribunal-apelaciones"
+forum = "pr-tribunal-apelaciones"
+authority = "StateRule"
+jurisdiction_id = "puerto-rico"
+title = "Puerto Rico Court of Appeals (Tribunal de Apelaciones), civil appeals"
+description = "Civil appeals and certiorari to the Puerto Rico Court of Appeals under its Reglamento, as far as the vendored text states: the jurisdictional appeal period and service of the appeal, filing and fees, the brief's page limits and appendix, the stay of proceedings below, reproduction of the oral evidence and the supplementary brief, the appellee's brief, extensions, oral argument, dismissal, the decision, reconsideration and the mandate."
+in_force = "2025-12-19"
+known_at = "2026-10-28"
+unknown_before = "2025-12-19"
+jurisdiction = "Commonwealth of Puerto Rico Court of Appeals (Tribunal de Apelaciones), civil"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.regl-ta]
+title = "Reglamento del Tribunal de Apelaciones de Puerto Rico (Resolución ER-2004-0010, as amended through Resolución ER-2025-0003 of Dec. 19, 2025)"
+url = "https://poderjudicial.pr/documentos/Leyes-Reglamentos/Leyes/Apelaciones.pdf"
+path = "sources/pr-tribunal-apelaciones/pr-reglamento-tribunal-apelaciones-sectioned.txt"
+path_sha256 = "922270e4114d4ec335d784912470c8389fff7f9c3c2619ea9e61089b29f3930b"
+sha256 = "e4b748ed5a8719597d14b73e0fd278eb42628dd535b37ce2bf0a595d36b16ca3"
+as_of = "2025-12-19"
+cite_prefixes = ["Regl. T.A. R."]
+section_heading = "Regla {n}"

@@ -1,0 +1,109 @@
+module ny-appellate-division-civil-appeals.appeal
+
+/// A computer-generated appellant's or respondent's brief: at most 14,000
+/// words, inclusive of point headings and footnotes and exclusive of
+/// signature blocks, tables, proof of service, the certificate of
+/// compliance and authorized addenda (22 NYCRR 1250.8(f)(2)). Typewritten
+/// and handwritten briefs are held to 50 pages, and their replies and
+/// amicus briefs to 25 pages (22 NYCRR 1250.8(g)(2), (i)(2)); those page
+/// limits are not encoded.
+limit principal-brief { words <= 14_000 cite "22 NYCRR 1250.8(f)" } cite "22 NYCRR 1250.8(f)"
+/// A computer-generated reply or amicus curiae brief: at most 7,000 words
+/// (22 NYCRR 1250.8(f)(2)).
+limit reply-brief { words <= 7_000 cite "22 NYCRR 1250.8(f)" } cite "22 NYCRR 1250.8(f)"
+
+/// The appellant files its brief in perfecting the appeal (22 NYCRR
+/// 1250.9(a)).
+event AppellantBriefFiled() paper principal-brief
+/// The respondent files its brief (22 NYCRR 1250.9(c)).
+event RespondentBriefFiled() paper principal-brief
+/// The appellant files its reply brief (22 NYCRR 1250.9(d)).
+event ReplyBriefFiled() paper reply-brief
+
+start notice
+
+decision notice: "Notice of appeal within 30 days of service with notice of entry?" by applicant cite "CPLR 5513(a)"
+{
+  note "An appeal as of right is taken within 30 days after service by a party upon the appellant of a copy of the judgment or order and written notice of its entry, or, when the appellant served them, within 30 days of that service (CPLR 5513(a)). A motion for permission to appeal is made within 30 days, computed the same way (CPLR 5513(b)). A party served with the adverse party's notice of appeal or motion for permission may appeal or move within 10 days after that service or within the time of subdivision (a) or (b), whichever is longer (CPLR 5513(c)). Service by mail or overnight delivery adds the days CPLR 2103(b)(2) and (6) provide (CPLR 5513(d)); CPLR 2103 is not vendored and the days are not stated. With the notice of appeal the appellant files with the clerk of the court of original instance, and serves, an initial informational statement on the court's form (22 NYCRR 1250.3(a)). The outline named no leading decision on timeliness that it had confirmed (its Leon v. Martinez reference concerned pleading); none is kept."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "CPLR 5513(a)" }
+  edge-notice-timely "Timely notice" -> record { authority cite "CPLR 5525(a)" }
+}
+
+terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismissal] cite "CPLR 5513(a)"
+{
+  note "Outcome from the appellant's side."
+}
+
+state record: "Transcript settled; record prepared" by office cite "CPLR 5525(c)"
+{
+  note "Where a stenographic record was made, the appellant, within the time for taking the appeal, requests the transcript from the reporter and deposits the fee (CPLR 5525(a)). Within 15 days after receiving the transcript the appellant serves proposed amendments and a copy on the respondent, who has 15 days after that service to propose amendments or objections; on at least four days' notice the transcript is submitted for settlement if the parties cannot agree (CPLR 5525(c)(1)). Where no stenographic record was made, the appellant serves a statement of the proceedings within 10 days after taking the appeal, and the respondent may object within 10 days after service (CPLR 5525(d)). The appellant perfects by the full record, appendix or agreed statement method or, where authorized, on the original record (22 NYCRR 1250.5(a)). On filing a record on a civil appeal the clerk's fee is $315, and $45 on each motion or cross motion other than one for leave to appeal as a poor person (22 NYCRR 1250.17(a))."
+  edge-record-briefing "Record and appellant's brief filed" -> briefing {
+    authority cite "22 NYCRR 1250.9(a)"
+  }
+  edge-record-unperfected "Not perfected within six months" -> dismissed-unperfected {
+    authority cite "22 NYCRR 1250.10(a)"
+  }
+}
+
+terminal dismissed-unperfected: "Appeal deemed dismissed for failure to perfect" outcome [loss, dismissal] cite "22 NYCRR 1250.10(a)"
+{
+  note "A civil appeal not perfected within six months of the date of the notice of appeal or order granting leave, as extended under 1250.9(b), is deemed dismissed without further order (22 NYCRR 1250.10(a)). A motion to vacate the dismissal may be made within one year of its date, with an affidavit of good cause, intent to perfect and merit (22 NYCRR 1250.10(c)). Outcome from the appellant's side."
+}
+
+state briefing: "Briefs filed" by applicant cite "22 NYCRR 1250.9(a)"
+{
+  note "Unless the court has set a time, the appellant perfects within six months of the date of the notice of appeal or order granting leave by filing the record or appendix and its brief with proof of service (22 NYCRR 1250.9(a)); the parties may stipulate, or the appellant may apply by letter, to extend that time up to 60 days, then by letter up to 30 days more, and further only by motion (22 NYCRR 1250.9(b)). The respondent files within 30 days of service of the appellant's submissions, and the appellant's reply within 10 days of service of the respondent's, or in the First Department under the court's published terms calendar (22 NYCRR 1250.9(c), (d)). Answering briefs may be extended by stipulation or letter up to 30 days and reply briefs up to 10 days, no more than twice, and further only by motion (22 NYCRR 1250.9(g)). In a cross appeal the respondent-appellant's answering brief is due within 30 days after service of the first brief, the appellant-respondent's reply within 30 days after the answering brief, and the respondent-appellant's reply within 10 days after that, unless stipulated otherwise (22 NYCRR 1250.9(f)(1)). Absent leave, sur-reply briefs are not permitted (22 NYCRR 1250.8(e))."
+  edge-briefing-argument "Briefing complete" -> argument { authority cite "22 NYCRR 1250.15(c)" }
+}
+
+state argument: "Oral argument or submission" by court cite "22 NYCRR 1250.15(c)"
+{
+  note "Oral argument is permitted unless proscribed by court rule or by the court in a particular cause; parties who file no brief may not argue (22 NYCRR 1250.15(c)(1)). Where argument is proscribed, leave is sought by letter or motion within 7 days of the filing of the respondent's brief (22 NYCRR 1250.15(c)(2)). Post-argument submissions need leave (22 NYCRR 1250.15(d)). The outline named no leading decision on the standard of review; none is kept."
+  edge-argument-decision "Submitted" -> decision { authority cite "CPLR 5522(a)" }
+}
+
+decision decision: "Appellate Division decision" by court cite "CPLR 5522(a)"
+{
+  note "The court may reverse, affirm or modify, wholly or in part, any judgment or order before it, and renders a final determination or remits for further proceedings; a reversal or modification without opinion briefly states its grounds (CPLR 5522(a)). A decision, order or judgment is deemed entered on the date it is issued (22 NYCRR 1250.16(a)), and the order determining the appeal is remitted with the record to the clerk of the court of original instance (22 NYCRR 1250.16(c)). Costs on appeal are allowed only as the court directs (22 NYCRR 1250.16(b)). An appeal is not affected by a later grant of reargument making substantially the same determination, by resettlement, or by denial of renewal on new facts (CPLR 5517(a))."
+  edge-decision-affirmed "Affirmed" -> post-decision-affirmed { authority cite "CPLR 5522(a)" }
+  edge-decision-reversed "Reversed or modified" -> post-decision-reversed {
+    authority cite "CPLR 5523"
+  }
+}
+
+decision post-decision-affirmed: "Reargument or leave to appeal to the Court of Appeals" by court cite "22 NYCRR 1250.16(d)"
+{
+  note "A motion for reargument or for leave to appeal to the Court of Appeals is made within 30 days after service of the order with notice of entry; a reargument affidavit sets out the points overlooked or misapprehended, and a leave affidavit the questions of law and why they merit review; in a civil matter the leave motion is determined, where practicable, by the panel that decided the appeal (22 NYCRR 1250.16(d)). An appeal lies to the Court of Appeals by permission of the Appellate Division, or of the Court of Appeals on the approval of two of its judges, from an order of the Appellate Division that finally determines an action originating in the supreme court and is not appealable as of right (CPLR 5602(a)(1)(i)). The Court of Appeals' own procedure (22 NYCRR Part 500) is not vendored. The outline named no leading decision on further review; none is kept."
+  edge-post-decision-affirmed-denied "Not sought or denied" -> affirmed {
+    authority cite "22 NYCRR 1250.16(d)"
+  }
+  edge-post-decision-affirmed-granted "Leave to appeal granted" -> review-granted {
+    authority cite "CPLR 5602(a)"
+  }
+}
+
+decision post-decision-reversed: "Restitution; reargument or leave sought by the respondent" by court cite "CPLR 5523"
+{
+  note "A court reversing or modifying a final judgment or order may order restitution of property or rights lost by it, or, where a good-faith purchaser's title would be affected, the value or purchase price (CPLR 5523). The respondent may move for reargument or leave to appeal to the Court of Appeals within 30 days after service of the order with notice of entry (22 NYCRR 1250.16(d))."
+  edge-post-decision-reversed-final "Not sought or denied" -> reversed {
+    authority cite "22 NYCRR 1250.16(d)"
+  }
+  edge-post-decision-reversed-review "Leave to appeal granted" -> review-granted {
+    authority cite "CPLR 5602(a)"
+  }
+}
+
+terminal affirmed: "Judgment affirmed" outcome [loss, judgment] cite "CPLR 5522(a)"
+{
+  note "Outcome from the appellant's side."
+}
+
+terminal reversed: "Judgment reversed or modified" outcome [win, judgment] cite "CPLR 5522(a)"
+{
+  note "Outcome from the appellant's side; further proceedings on remittal are not modeled."
+}
+
+terminal review-granted: "Leave granted: appeal to the Court of Appeals" outcome [appeal] cite "CPLR 5602(a)"
+{
+  note "The merits in the Court of Appeals are not modeled: its rules are not vendored."
+}

@@ -1,0 +1,53 @@
+# A civil appeal to the Appellate Division of the New York Supreme Court
+# under the CPLR sections vendored in
+# sources/ny-appellate-division-court-of-appeals (CPLR 5513, 5517, 5522,
+# 5523, 5525 and 5602, each the most recent revision the NY Senate Open
+# Legislation site showed on 2026-10-27) and the Practice Rules of the
+# Appellate Division, 22 NYCRR Part 1250, as amended November 25, 2019,
+# the edition the Second Department links (sectioned in the pod). Later
+# amendments to Part 1250, if any, are not vendored. Periods are stated in
+# notes, not encoded as counted deadlines: their computation (General
+# Construction Law §§ 20, 25-a; CPLR 2103) is not vendored and core has no
+# New York holiday calendar. The Court of Appeals' own rules (22 NYCRR
+# Part 500) are not vendored; further review ends at the leave decision.
+# The trial-level procedure is lit/ny-supreme-civil.
+[package]
+name = "ny-appellate-division-civil-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "ny-appellate-division-civil-appeals"
+forum = "ny-appellate-division"
+authority = "StateRule"
+title = "New York Supreme Court, Appellate Division: civil appeals"
+description = "A civil appeal to the Appellate Division under the CPLR and 22 NYCRR Part 1250, as far as the vendored text states: the time to appeal, the informational statement, the transcript, perfection and its six-month deadline, briefing and brief word limits, argument, decision and restitution, reargument, and leave to appeal to the Court of Appeals."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "New York Supreme Court, Appellate Division"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ny-cplr-appeals]
+title = "New York Civil Practice Law and Rules, cited appellate sections (NY Senate Open Legislation, most recent revision as shown 2026-10-27)"
+url = "https://www.nysenate.gov/legislation/laws/CVP"
+path = "sources/ny-appellate-division-court-of-appeals/cplr-cited.txt"
+path_sha256 = "cb29e2ce7130b0fa976664171631f52fd1a44b49008a9ac17c0ab9146039446d"
+as_of = "2026-10-27"
+cite_prefixes = ["CPLR"]
+section_heading = "CPLR {n}"
+
+[sources.ny-ad-practice-rules]
+title = "Practice Rules of the Appellate Division, 22 NYCRR Part 1250 (as amended November 25, 2019)"
+url = "https://www.nycourts.gov/courts/ad2/pdf/Practice_Rules_of_the_Appellate_Division.pdf"
+path = "sources/ny-appellate-division-court-of-appeals/nycrr-part-1250-sectioned.txt"
+path_sha256 = "964dd93c2e562e2669e0facbfb2bf2365546c2c2eac200c18e8cb77b0000451e"
+sha256 = "f99d1ca82f20ee74b71191b0e3de3ee775828d7f38650f12407555542cd45dac"
+as_of = "2019-11-25"
+cite_prefixes = ["22 NYCRR"]
+section_heading = "22 NYCRR {n}"

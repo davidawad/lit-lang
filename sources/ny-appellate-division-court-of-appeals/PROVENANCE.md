@@ -20,3 +20,9 @@
 - Extract sha256 a8131d6baa5adc02b873122dd8f7b03ec9bcd7db87cb84ca7ab8714153d452dd. Raw extract, not yet sectioned into `## <ref>` form.
 - Fetch method: BrowserOS neo; site served a bot challenge to plain automated requests (CoS ruling 2026-10-27). nycourts.gov robots.txt does not disallow /courts/ad2/pdf/; its privacy policy bars no automated access.
 - Original: `ny-appellate-division-court-of-appeals/original/nycrr-part-1250.pdf` as served (sha256 f99d1ca82f20ee74b71191b0e3de3ee775828d7f38650f12407555542cd45dac); extraction sha256 a8131d6baa5adc02b873122dd8f7b03ec9bcd7db87cb84ca7ab8714153d452dd.
+
+### `ny-appellate-division-court-of-appeals/nycrr-part-1250-sectioned.txt` — 22 NYCRR Part 1250, sectioned
+
+- Derived in the pod (lg-f3q8.51) from `ny-appellate-division-court-of-appeals/nycrr-part-1250.txt` (extract sha256 a8131d6baa5adc02b873122dd8f7b03ec9bcd7db87cb84ca7ab8714153d452dd), which was retrieved 2026-10-27 from https://www.nycourts.gov/courts/ad2/pdf/Practice_Rules_of_the_Appellate_Division.pdf as recorded above; nothing fetched in the pod. Method: one `## 22 NYCRR <n>` line is inserted before each section's own heading line in the body (1250.1 through 1250.17, 17 sections); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## 22 NYCRR /d'`) restores the extract byte for byte.
+- Edition: as the extract, as amended November 25, 2019.
+- Sectioned sha256 964dd93c2e562e2669e0facbfb2bf2365546c2c2eac200c18e8cb77b0000451e (the `path_sha256` pinned by `lit/ny-appellate-division/Lit.toml`).

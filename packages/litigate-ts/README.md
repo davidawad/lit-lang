@@ -65,8 +65,8 @@ version `crates/litigate-wasm` pins). Dev dependencies are pinned in
 ## The litigate CLI in wasm
 
 `lg.litigate` runs `litigate check`, `build`, `run`, the op subcommands
-(`solve`, `chain`, ...), `engine` and the case boundary (`timeline`,
-`calendar`, `actions`, `lint-filing`) over an in-memory file tree: the same
+(`solve`, `chain`, ...) and the case boundary (`timeline`, `calendar`,
+`actions`, `lint-filing`) over an in-memory file tree: the same
 arguments, envelope (`LitigateEnvelope`) and exit code as the native CLI
 over a disk holding those files, with `build`'s outputs handed back
 instead of written. An op compiles the matter or package it names, and

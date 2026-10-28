@@ -1,0 +1,51 @@
+# The Western District of Louisiana's Local Civil Rules as a local-rule
+# layer over lit/frcp (28 U.S.C. § 2071; FRCP 83(a)): it declares only the
+# periods and limits the local civil rules themselves state and re-encodes
+# no FRCP deadline. Each period is counted under FRCP 6(a), which governs
+# "any local rule", so each deadline names `forum frcp` (lit/core's frcp6
+# computes frcp periods only). The rules are the edition effective May 7,
+# 2024 (sources/lawd), which incorporates the court's amending order of
+# that date; earlier editions are not vendored, so a query before that
+# date is a hole in the corpus. The Local Admiralty Rules and the Local
+# Criminal Rules (forum lawd-criminal) are not encoded. An appeal goes to
+# the Fifth Circuit under lit/frap and lit/ca5.
+[package]
+name = "lawd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "lawd-local-rules"
+forum = "lawd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Western District of Louisiana: Local Civil Rules"
+description = "The Western District of Louisiana's Local Civil Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): objections to electronic signatures, the default motion briefing periods and memorandum page limits, the post-discovery ADR conference, dismissal for failure to prosecute and reinstatement, proposed jury instructions, the bill of costs, default judgment, and exhibit removal."
+in_force = "2024-05-07"
+known_at = "2026-10-28"
+unknown_before = "2024-05-07"
+jurisdiction = "United States District Court, W.D. Louisiana"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "lawd-lr"
+issuer = "United States District Court for the Western District of Louisiana"
+date = "2024-05-07"
+designation = "Civil and Criminal Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.lawd-lr]
+title = "Civil and Criminal Local Rules of the United States District Court for the Western District of Louisiana (effective May 7, 2024)"
+url = "https://www.lawd.uscourts.gov/sites/lawd/files/UPLOADS/CivilCrimLRs.Barbara.updated.Ver3.030526.ppm.pdf"
+path = "sources/lawd/lawd-local-rules-sectioned.txt"
+path_sha256 = "98d5dc04a3b3f2956976bc5d7f877837c858c95afb11b2e4f733b611e47efa1a"
+sha256 = "80e6ba6dcea5200b390b51e7ffaff8cf3549f36e5de3786d3b72639bab89fbb5"
+as_of = "2024-05-07"
+cite_prefixes = ["W.D. La. LR"]
+section_heading = "LR {n}"

@@ -1,0 +1,148 @@
+module lawd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Western District of Louisiana's own civil periods, computed under
+// the federal rules (FRCP 6(a) governs "any local rule"). The motion
+// briefing periods are the default rule only: for a contested motion the
+// clerk ordinarily issues a Notice of Motion Setting with the briefing
+// deadlines, and a judge may order other instructions (LR 7.4); the
+// periods below apply when neither issues. A judge may grant leave to
+// exceed the memorandum page limits in an extraordinary case, and a
+// memorandum over 10 pages needs tables of contents and authorities (LR
+// 7.1); LR 7.8 states the same limits for briefs. Objections to an item
+// of costs "within seven days" (LR 54.4) state no starting event, so they
+// stay in this note; review of the clerk's taxation within seven days (LR
+// 54.5) is FRCP 54(d)(1)'s period and belongs to lit/frcp. The court's
+// own grounds for dismissal for lack of prosecution (no service within 90
+// days of filing, no responsive pleading or default within 60 days of
+// service, six months without proceedings, a returned address left
+// uncorrected for 30 days: LR 41.3) are court actions, so they stay in
+// this note. Attorney admission and discipline (LR 83.2) are not encoded.
+// The earlier W.D. La. outline's FRCP flow and its decisions (Twombly,
+// Iqbal, Celotex, Anderson, Matsushita, Frow v. De La Vega) are FRCP
+// authority and belong to lit/frcp; they are removed here: no reporter
+// text is vendored.
+
+/// A memorandum in support of or in opposition to a motion: at most 25
+/// pages, exclusive of a table of contents or table of authorities
+/// (W.D. La. LR 7.1).
+limit memorandum {
+  pages <= 25 cite "W.D. La. LR 7.1"
+} cite "W.D. La. LR 7.1"
+
+/// A reply memorandum: at most 10 pages (W.D. La. LR 7.1).
+limit reply-memorandum {
+  pages <= 10 cite "W.D. La. LR 7.1"
+} cite "W.D. La. LR 7.1"
+
+/// A document bearing several signatures is served electronically
+/// (W.D. La. LR 5.7.08).
+event MultiSignatureDocumentServed()
+/// A motion is filed (W.D. La. LR 7.4).
+event MotionFiled() paper memorandum
+/// A memorandum in opposition to a motion is filed (W.D. La. LR 7.4).
+event OppositionFiled() paper memorandum
+/// A reply memorandum is filed (W.D. La. LR 7.4).
+event ReplyFiled() paper reply-memorandum
+/// The scheduling order's deadline for close of discovery passes
+/// (W.D. La. LR 16.3.1).
+event DiscoveryCloseDeadline()
+/// Notice of a proposed dismissal for failure to prosecute is mailed to
+/// the plaintiff (W.D. La. LR 41.3).
+event ProsecutionNoticeMailed()
+/// An order dismissing the action for failure to prosecute is entered
+/// (W.D. La. LR 41.3).
+event ProsecutionDismissalOrdered()
+/// The date on which the jury trial is scheduled (W.D. La. LR 51.1).
+event JuryTrialScheduled()
+/// The prevailing party receives notice of entry of judgment
+/// (W.D. La. LR 54.3).
+event JudgmentEntryNoticed()
+/// The clerk enters default (W.D. La. LR 55.1).
+event DefaultEntered()
+/// The civil case is finally disposed of (W.D. La. LR 79.3).
+event FinalDisposition()
+
+/// W.D. La. LR 5.7.08: a non-filing signatory or party who disputes the
+/// authenticity of an electronically filed document with several
+/// signatures, or of the signatures, files an objection within 14 days
+/// from service of the document.
+deadline signature-objection-period: 14.days after MultiSignatureDocumentServed() counted_by frcp6 cite "W.D. La. LR 5.7.08"
+{
+  forum frcp
+}
+
+/// W.D. La. LR 7.4: if no Notice of Motion Setting issues and the judge
+/// orders no briefing instructions, a memorandum in opposition may be
+/// filed within 14 days after the motion is filed.
+deadline opposition-period: 14.days after MotionFiled() counted_by frcp6 cite "W.D. La. LR 7.4"
+{
+  forum frcp
+}
+
+/// W.D. La. LR 7.4: under the same default rule, a reply memorandum may
+/// be filed within seven days after the opposition is filed.
+deadline reply-period: 7.days after OppositionFiled() counted_by frcp6 cite "W.D. La. LR 7.4"
+{
+  forum frcp
+}
+
+/// W.D. La. LR 16.3.1: within 60 days after the deadline for close of
+/// discovery (and before the initial Rule 26(f) conference), counsel
+/// discuss with their clients and opposing counsel the appropriateness and
+/// timing of alternative dispute resolution.
+deadline adr-conference-period: 60.days after DiscoveryCloseDeadline() counted_by frcp6 cite "W.D. La. LR 16.3.1"
+{
+  forum frcp
+}
+
+/// W.D. La. LR 41.3: before a dismissal for failure to prosecute, the
+/// plaintiff has 30 calendar days from mailing of the notice to file
+/// evidence of good cause; with no response in time the clerk may dismiss.
+deadline prosecution-good-cause-period: 30.days after ProsecutionNoticeMailed() counted_by frcp6 cite "W.D. La. LR 41.3"
+{
+  forum frcp
+}
+
+/// W.D. La. LR 41.3: a dismissal for failure to prosecute is without
+/// prejudice, and the order allows reinstatement within 30 days for good
+/// cause shown.
+deadline reinstatement-period: 30.days after ProsecutionDismissalOrdered() counted_by frcp6 cite "W.D. La. LR 41.3"
+{
+  forum frcp
+}
+
+/// W.D. La. LR 51.1: unless the court orders otherwise, the joint and
+/// separate proposed jury instructions are filed, with a copy to the
+/// trial judge, at least seven days in advance of the date on which the
+/// jury trial is scheduled.
+deadline jury-instructions-period: 7.days before JuryTrialScheduled() counted_by frcp6 cite "W.D. La. LR 51.1"
+{
+  forum frcp
+}
+
+/// W.D. La. LR 54.3: within 30 days after receiving notice of entry of
+/// judgment, unless otherwise ordered, the prevailing party serves and
+/// files a Bill of Costs with a supporting memorandum; without the
+/// memorandum the clerk may deny costs.
+deadline bill-of-costs-period: 30.days after JudgmentEntryNoticed() counted_by frcp6 cite "W.D. La. LR 54.3"
+{
+  forum frcp
+}
+
+/// W.D. La. LR 55.1: a judgment of default is not entered until 14
+/// calendar days after entry of default; this is the earliest date, not a
+/// last day.
+deadline default-judgment-waiting-period: 14.days after DefaultEntered() counted_by frcp6 cite "W.D. La. LR 55.1"
+{
+  forum frcp
+}
+
+/// W.D. La. LR 79.3: exhibits in civil cases in the clerk's custody are
+/// removed within 30 days of the final disposition of the case, or may be
+/// destroyed or otherwise disposed of by the clerk.
+deadline exhibit-removal-period: 30.days after FinalDisposition() counted_by frcp6 cite "W.D. La. LR 79.3"
+{
+  forum frcp
+}

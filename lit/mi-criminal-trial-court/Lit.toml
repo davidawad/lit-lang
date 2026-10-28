@@ -1,0 +1,43 @@
+# Felony cases in the Michigan courts under Chapter 6 of the Michigan Court
+# Rules of 1985 (Criminal Procedure), with the criminal appeal of right
+# under Chapter 7, as updated September 2, 2026 (sources/mi-circuit-court,
+# the document lit/mi-circuit-court and lit/mi-appellate bind; Chapter 6's
+# pages are "Chapter Updated July 31, 2026"). Computation of time is MCR
+# 1.108, with Michigan's legal holidays and court-closure days, for which
+# lit/core has no counting rule, so the periods are stated in notes, not
+# encoded as counted deadlines. The speedy-trial rule is MCR 6.004; the
+# statutory provisions it rests on (MCL 768.1, MCL 780.131) are not
+# vendored. An appeal of right goes to the Court of Appeals (the forum of
+# lit/mi-appellate); federal habeas is lit/habeas.
+[package]
+name = "mi-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "mi-criminal-trial-court"
+forum = "mi-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "michigan"
+title = "Michigan trial courts, criminal"
+description = "Felony cases in the Michigan courts under MCR Chapter 6, as far as the vendored text states: arraignment on the warrant or complaint with its probable cause conference and preliminary examination dates, the preliminary examination and bindover, the information and arraignment on it, the speedy-trial rule's recognizance release and 180-day rule, discovery and its 21-day compliance period, pleas, jury trial, directed verdict and new trial motions, the presentence report's disclosure, sentencing and the written judgment, the 42-day appeal of right to the Court of Appeals, and relief from judgment."
+in_force = "2026-09-02"
+known_at = "2026-10-28"
+unknown_before = "2026-09-02"
+jurisdiction = "Michigan trial courts of general criminal jurisdiction"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.mcr]
+title = "Michigan Court Rules of 1985, Chapters 1-9 (updated September 2, 2026)"
+url = "https://www.courts.michigan.gov/siteassets/rules-instructions-administrative-orders/michigan-court-rules/michigan-court-rules.pdf"
+path = "sources/mi-circuit-court/mcr-chapters-1-9-sectioned.txt"
+path_sha256 = "34a24b105ffcab26ce2fe4d4f6a0b8d3fb11024e7716e7546d9a8d4d123242a3"
+sha256 = "31ed59fbef8d2f177f6e8b50ff976a06ebd14aef16706a76987e03469f278a02"
+as_of = "2026-09-02"
+cite_prefixes = ["MCR"]
+section_heading = "MCR {n}"

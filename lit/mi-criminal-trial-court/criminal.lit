@@ -1,0 +1,133 @@
+module mi-criminal-trial-court.criminal
+
+// Felony cases in the Michigan courts, from the defendant's view of
+// outcomes. Every period below is stated in a note, not counted:
+// computation is MCR 1.108, with Michigan's legal holidays and court-
+// closure days, for which lit/core has no counting rule; MCR 7.204(A)
+// applies MCR 1.108 to the appeal of right. The statutes behind the
+// speedy-trial rule (MCL 768.1, MCL 780.131) are not vendored. The
+// outline's decisions have no vendored reporter text and are removed; the
+// rules alone state the procedure.
+start arrested
+
+state arrested: "Arrest on a warrant or complaint" by applicant cite "MCR 6.104(A)"
+{
+  note "Unless released beforehand, an arrested person is taken without unnecessary delay before a court for arraignment, or arraigned without unnecessary delay by two-way interactive video (MCR 6.104(A)). An accused arrested without a warrant is arraigned on a complaint filed at or before the arraignment (MCR 6.104(D))."
+  edge-arrested-arraignment "Arraignment on the warrant or complaint" -> district-arraignment {
+    authority cite "MCR 6.104(E)"
+  }
+}
+
+decision district-arraignment: "Pretrial release and the examination dates" by court cite "MCR 6.104(E)"
+{
+  note "At the arraignment the court informs the accused of the charge and its maximum and any mandatory minimum sentence, advises of the rights to silence and to a lawyer, sets a probable cause conference not less than 7 nor more than 14 days after the arraignment and a preliminary examination not less than 5 nor more than 7 days after that conference, and determines what form of pretrial release, if any, is appropriate (MCR 6.104(E)). A felony defendant incarcerated 180 days or more to answer for the same crime, excluding the delays MCR 6.004(C) lists, is released on personal recognizance unless the court finds by clear and convincing evidence a likely failure to appear or danger (MCR 6.004(C))."
+  edge-district-arraignment-detained "Held in custody" -> preliminary-examination {
+    authority cite "MCR 6.110(B)"
+  }
+  edge-district-arraignment-released "Released before trial" -> preliminary-examination {
+    authority cite "MCR 6.110(B)"
+  }
+}
+
+decision preliminary-examination: "Preliminary examination" by court cite "MCR 6.110"
+{
+  note "The people and the defendant are entitled to a prompt preliminary examination, which the defendant may waive with the prosecutor's consent (MCR 6.110(A)). Unless adjourned it is held on the date set at arraignment; over a party's objection it is adjourned only on a finding of good cause on the record (MCR 6.110(B)(1)). If the court finds probable cause that a felony was committed and that the defendant committed it, it binds the defendant over for trial; if not, it discharges the defendant without prejudice to a later prosecution, or reduces the charge to one that is not a felony (MCR 6.110(E), (F))."
+  edge-preliminary-examination-bound "Bound over for trial" -> charged {
+    authority cite "MCR 6.110(E)"
+  }
+  edge-preliminary-examination-discharged "No probable cause; discharged" -> dismissed {
+    authority cite "MCR 6.110(F)"
+  }
+}
+
+state charged: "Information or indictment" by office cite "MCR 6.112(B)"
+{
+  note "A prosecution is based on an information or an indictment, filed on or before the date set for the arraignment (MCR 6.112(B), (C)). A notice of intent to seek an enhanced sentence is filed within 21 days after the defendant's arraignment on the information (MCR 6.112(F)). The defendant and the people are entitled to a speedy trial; a violation of the defendant's constitutional right to a speedy trial entitles the defendant to dismissal with prejudice (MCR 6.004(A))."
+  edge-charged-arraignment "Arraignment on the information" -> arraignment {
+    authority cite "MCR 6.113(A)"
+  }
+}
+
+state arraignment: "Arraignment on the information" by applicant cite "MCR 6.113"
+{
+  note "Unless the defendant waives arraignment or the court for good cause orders a delay, the court with trial jurisdiction arraigns the defendant on the scheduled date (MCR 6.113(A)). On request a party provides the witness list and the other mandatory disclosures of MCR 6.201(A); the witness list may be amended without leave no later than 28 days before trial. Unless the court orders otherwise, the prosecutor complies within 21 days of a request and the defendant within 21 days of a request (MCR 6.201(G)). A defendant who will offer expert evidence of diminished capacity files notice not less than 30 days before the trial date (MCR 6.201(B))."
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "MCR 6.201(G)" }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "MCR 6.201"
+{
+  note "A party who fails to comply with MCR 6.201 may be ordered to disclose, have the evidence excluded, or face another just order (MCR 6.201(K)). A state prisoner against whom a charge is pending is brought to trial within 180 days after the department of corrections delivers to the prosecutor notice of the place of imprisonment and a request for final disposition; if action is not commenced in time, the court loses jurisdiction and dismisses with prejudice (MCR 6.004(D))."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling { authority cite "MCR 6.201(K)" }
+  edge-discovery-speedy "Speedy-trial motion" -> motions-ruling { authority cite "MCR 6.004(A)" }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "MCR 6.302(C)" }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "MCR 6.110(H)"
+{
+  note "If the trial court on proper motion finds a violation at the preliminary examination, it dismisses the information or remands to the district court (MCR 6.110(H))."
+  edge-motions-ruling-speedy "Dismissed with prejudice for a speedy-trial violation" -> dismissed {
+    authority cite "MCR 6.004(A)"
+  }
+  edge-motions-ruling-dismissed "Information dismissed" -> dismissed {
+    authority cite "MCR 6.110(H)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "MCR 6.201"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "MCR 6.302(A)"
+{
+  note "The court may not accept a plea of guilty or nolo contendere unless convinced it is understanding, voluntary and accurate; it places the defendant under oath and carries out MCR 6.302(B)-(E) personally (MCR 6.302(A)). The defendant has the right to a jury, or may with the prosecutor's consent and the court's approval waive it (MCR 6.401)."
+  edge-plea-decision-plea "Plea accepted" -> sentencing { authority cite "MCR 6.302(A)" }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "MCR 6.401" }
+}
+
+decision trial: "Verdict" by court cite "MCR 6.420"
+{
+  note "After the prosecutor rests its case-in-chief or after the close of all the evidence, the court on the defendant's motion must direct a verdict of acquittal on any charged offense for which the evidence is insufficient to sustain a conviction, and may consider that question on its own (MCR 6.419(A))."
+  edge-trial-acquittal "Not guilty" -> acquitted { authority cite "MCR 6.419(A)" }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial { authority cite "MCR 6.419(C)" }
+}
+
+decision post-trial: "Post-trial motions" by court cite "MCR 6.431(A)"
+{
+  note "A motion for a new trial may be filed before a timely claim of appeal is filed; once a claim of appeal is filed, only under MCR 7.208(B) or the remand procedure of MCR 7.211(C)(1); a defendant who may appeal only by leave, or who has not filed a timely claim, may move within the time for an application for leave under MCR 7.205(A)(2) (MCR 6.431(A)). After a jury verdict an original or renewed motion for directed verdict of acquittal is filed in the same manner (MCR 6.419(C))."
+  edge-post-trial-acquittal "Directed verdict of acquittal" -> acquitted {
+    authority cite "MCR 6.419(C)"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "MCR 6.431(B)" }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing { authority cite "MCR 6.425" }
+}
+
+state sentencing: "Presentence report and sentence" by court cite "MCR 6.425(D)"
+{
+  note "The court provides the presentence report to the prosecutor and the defendant's lawyer, or the unrepresented defendant, at a reasonable time but not less than two business days before the day of sentencing; if it does not, they are entitled on oral motion to an adjournment (MCR 6.425(B)). The court uses the sentencing guidelines, gives each party an opportunity to challenge the report's accuracy and states the sentence (MCR 6.425(C), (D)). Within 7 days after sentencing the court dates and signs a written judgment of sentence (MCR 6.427)."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "MCR 6.427"
+  }
+}
+
+decision judgment: "Judgment of sentence" by applicant cite "MCR 6.427"
+{
+  note "An appeal of right in a criminal case is taken under MCR 6.425(G)(1), within 42 days after entry of an order denying a timely request for appointed appellate counsel, within 42 days after entry of the judgment, or within 42 days after an order denying a timely motion for new trial, directed verdict of acquittal or to correct an invalid sentence; the time is jurisdictional and MCR 1.108 computes it (MCR 7.204(A)). Without a timely claim, an application for leave to appeal may be filed within the times of MCR 7.205(A)(2)."
+  edge-judgment-appeal "Claim of appeal filed" -> appeal-taken { authority cite "MCR 7.204(A)" }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "MCR 7.204(A)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "MCR 6.419(A)"
+
+terminal dismissed: "Charges dismissed or defendant discharged" outcome [win] cite "MCR 6.110(F)"
+{
+  note "A discharge for want of probable cause is without prejudice to a later prosecution for the same offense (MCR 6.110(F)); a speedy-trial dismissal is with prejudice (MCR 6.004(A), (D)(2))."
+}
+
+terminal appeal-taken: "Appeal taken to the Court of Appeals" outcome [appeal] cite "MCR 7.204(A)"
+{
+  note "The appeal continues in the Court of Appeals (the forum of lit/mi-appellate)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "MCR 6.502(A)"
+{
+  note "Relief from judgment is sought by motion under subchapter 6.500, limited to one judgment and, with stated exceptions, one motion (MCR 6.502(A), (B), (G)). Federal habeas is lit/habeas."
+}

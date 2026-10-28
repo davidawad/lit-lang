@@ -15,3 +15,4 @@
 - Upstream: https://www.courts.michigan.gov/siteassets/rules-instructions-administrative-orders/michigan-court-rules/michigan-court-rules.pdf, retrieved 2026-10-27, as recorded on the `mi-circuit-court/mcr-chapters-1-9.txt` entry this file is derived from.
 - Edition: as the extract, the Michigan Court Rules of 1985, Chapters 1-9, "Updated September 2, 2026".
 - Sectioned sha256 34a24b105ffcab26ce2fe4d4f6a0b8d3fb11024e7716e7546d9a8d4d123242a3 (the `path_sha256` pinned by `lit/mi-circuit-court/Lit.toml` and `lit/mi-appellate/Lit.toml`).
+- Also bound (lg-gddt.16) by `lit/mi-criminal-trial-court` for MCR Chapter 6 (Criminal Procedure, pages "Chapter Updated July 31, 2026") and the criminal appeal of right (MCR 7.204(A)(2)), at the same `path_sha256`; nothing re-sectioned.

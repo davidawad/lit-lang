@@ -1,0 +1,372 @@
+module bankr-ct-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ CaseConverted, FirstMeetingDate }
+
+// The Bankr. D. Conn. court's own periods, counted under FRBP 9006(a). The
+// FRBP periods (schedules, claims, discharge, dischargeability, the
+// adversary answer and summons, appeals) are lit/frbp's and are not
+// declared again; LBR 8000-1 sends appeals to FRBP Part VIII.
+//
+// Stated in the rules but not declared: the business-day and clock-time
+// periods (counsel's notice to the United States Trustee two business days
+// before a chapter 11 petition, LBR 1002-2; a business entity's authority
+// documents within five business days of the petition, LBR 1004-1; chapter
+// 13 plan and hearing notices served within three business days, LBR
+// 3015-2(c), (d); the certification of ballots two business days before
+// confirmation, LBR 3018-1; First Day Orders served within 48 hours, LBR
+// 9013-2(b); a continuance of a Final Hearing moved for three business days
+// before it, LBR 9014-1(k)(1); a reply filed the last business day at least
+// three days before the Initial Hearing, LBR 9014-1(g)(1); an attorney's
+// PACER contact update within three business days, LBR 9083-5(a)); the
+// creditor list within 14 days of an order for relief in an involuntary
+// case (LBR 1007-1(a)(1)), which FRBP 1007(a)(2) sets at 7 days and is
+// lit/frbp's; the four months to pay installment fees (LBR 1006-1; FRBP
+// 1006(b)(2)); the minimum notice periods a paper or order must give, not
+// deadlines of their own (a Rule 2004 motion's objection date at least 7
+// days after filing, LBR 2004-1(c)(1); a fee application's response date of
+// at least 21 days, LBR 2016-1; seven and five days' notice before a lender's
+// remedies or the end of cash collateral, and the 60-day investigation
+// period, LBR 4001-3(c), (e); 14 days' notice of a § 1121(e) extension
+// motion, LBR 3016-1(b); 60 days' notice of an auctioneer's bond
+// cancellation, LBR 6005-1(d); 30 days of marketing before a chapter 13
+// sale on the local form, LBR 6004-2); the later-of and recurring periods
+// (an employment application deemed timely within 30 days after the later
+// of the petition or the start of services, LBR 2014-1(c); the subchapter V
+// trustee deposit's later $1,000 installments every 30 days, LBR 2015-2(a);
+// the post-confirmation reports every 90 days after the first, LBR 2015-1);
+// the confirmation hearing window of 20 to 45 days after the § 341 meeting
+// (LBR 3015-2(b); 11 U.S.C. § 1324(b)); and the court's own acts (default
+// judgment after 90 days in default, LBR 7055-1). The Response Date of LBR
+// 9014-1(d)(1) is 14 days, or 21 where FRBP 2002(a) requires 21 days'
+// notice; the 21-day notices are lit/frbp's, so only the 14-day Response
+// Date is declared. The appendices (Appendix A's electronic filing
+// procedures, the Chapter 12 Operating Order of Appendix F and the others)
+// are not encoded.
+/// A brief in an adversary proceeding, excluding the table of contents and
+/// table of authorities (LBR 7007-2(a)).
+limit brief { pages <= 25 cite "Bankr. D. Conn. LBR 7007-2(a)" } cite "Bankr. D. Conn. LBR 7007-2(a)"
+/// A reply brief in an adversary proceeding (LBR 7007-2(a)).
+limit reply-brief { pages <= 10 cite "Bankr. D. Conn. LBR 7007-2(a)" } cite "Bankr. D. Conn. LBR 7007-2(a)"
+/// A response or objection to a motion under the Contested Matter
+/// Procedure (LBR 9014-1(e)).
+limit contested-matter-response { pages <= 10 cite "Bankr. D. Conn. LBR 9014-1(e)" } cite "Bankr. D. Conn. LBR 9014-1(e)"
+/// A reply to a response or objection in a Contested Matter (LBR
+/// 9014-1(g)(1)).
+limit contested-matter-reply { pages <= 5 cite "Bankr. D. Conn. LBR 9014-1(g)" } cite "Bankr. D. Conn. LBR 9014-1(g)"
+/// An objection to a 2004 Agreement or to a Rule 2004 motion (LBR
+/// 2004-1(b)(2)(C), (c)(2)).
+limit rule-2004-objection { pages <= 5 cite "Bankr. D. Conn. LBR 2004-1(b)" } cite "Bankr. D. Conn. LBR 2004-1(b)"
+
+/// A creditor list, schedule or statement is amended to add parties or
+/// correct addresses (LBR 1009-1(a)).
+event ListAmended()
+/// The court enters an order granting joint administration (LBR 1015-1(b)).
+event JointAdministrationOrdered()
+/// The debtor's attorney learns of the debtor's death or of a finding of the
+/// debtor's incompetency or legal incapacity (LBR 1016-1).
+event DeathOrIncompetencyLearned()
+/// A notice of a 2004 Agreement is filed (LBR 2004-1(b)).
+event Rule2004AgreementNoticed()
+/// An order confirming a chapter 11 or subchapter V plan is entered (LBR
+/// 2015-1).
+event PlanConfirmed()
+/// The Notice of Appointment of Subchapter V Trustee is filed (LBR
+/// 2015-2(a), (d)).
+event SubchapterVTrusteeAppointed()
+/// The United States Trustee appoints a committee (LBR 2021-1).
+event CommitteeAppointed()
+/// The bar date for proofs of claim in a chapter 9 or 11 case (LBR 3003-1).
+event ClaimsBarDate()
+/// The date set for the initial confirmation hearing in a chapter 9 or 11
+/// case (LBR 3003-1).
+event InitialConfirmationHearingScheduled()
+/// The debtor files its initial plan of reorganization in a subchapter V
+/// case (LBR 3014-1).
+event SubchapterVPlanFiled()
+/// The date set for the hearing on confirmation of a chapter 12 plan (LBR
+/// 3015-1).
+event Chapter12ConfirmationHearingScheduled()
+/// The date set for the hearing on confirmation of a chapter 13 plan (LBR
+/// 3015-2(a)).
+event Chapter13ConfirmationHearingScheduled()
+/// The date set for the hearing on confirmation of a chapter 11 plan (LBR
+/// 3020-1).
+event Chapter11ConfirmationHearingScheduled()
+/// The date of a public sale of estate property (LBR 6004-1(d)).
+event PublicSaleScheduled()
+/// The summons and complaint are served (LBR 7004-1(a)(1), (b)(1)).
+event SummonsServed()
+/// A defendant in a foreign country is properly served with the summons and
+/// complaint (LBR 7004-1(b)(3)).
+event ForeignServiceMade()
+/// A motion is filed in an adversary proceeding (LBR 7007-1).
+event AdversaryMotionFiled()
+/// The deadline for filing a brief in an adversary proceeding (LBR
+/// 7007-2(a)).
+event BriefDue()
+/// The date set for the initial pretrial conference in an adversary
+/// proceeding (LBR 7016-1(a)).
+event PretrialConferenceScheduled()
+/// A Notice of Contested Matter Procedure is filed with a motion or
+/// application (LBR 9014-1(d)).
+event ContestedMatterNoticed()
+/// The date set for the Initial Hearing on a Contested Matter (LBR
+/// 9014-1(j)).
+event InitialHearingScheduled()
+/// A notice of removal is filed (LBR 9027-1(d)).
+event RemovalNoticed()
+/// A self-represented filer, claimant or other party in interest changes
+/// its mailing address (LBR 9083-5(b)).
+event MailingAddressChanged()
+
+/// LBR 1009-1(a): within 7 days of filing an amendment adding parties or
+/// correcting addresses, the debtor files an amended creditor list, schedule
+/// or statement identifying the changes.
+deadline amended-list-period: 7.days after ListAmended() counted_by frcp6 cite "Bankr. D. Conn. LBR 1009-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 1015-1(b): unless otherwise ordered, the debtor serves an order
+/// granting joint administration on all creditors and parties in interest
+/// within 7 days after its entry.
+deadline joint-administration-service-period: 7.days after JointAdministrationOrdered() counted_by frcp6 cite "Bankr. D. Conn. LBR 1015-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 1016-1: within 30 days of learning of the debtor's death or
+/// incompetency, the debtor's attorney files and serves a Notice of the
+/// Debtor's Death or Incompetency.
+deadline death-notice-period: 30.days after DeathOrIncompetencyLearned() counted_by frcp6 cite "Bankr. D. Conn. LBR 1016-1"
+{
+  forum frcp
+}
+
+/// LBR 1019-1: within 14 days after an order converting a case to chapter
+/// 7, the debtor files the schedules of remaining assets, abandoned property,
+/// property released from the stay and unpaid post-petition obligations.
+deadline conversion-documents-period: 14.days after CaseConverted() counted_by frcp6 cite "Bankr. D. Conn. LBR 1019-1"
+{
+  forum frcp
+}
+
+/// LBR 2004-1(b)(2): an objection to the examination or production under a
+/// 2004 Agreement is filed and served within 7 days after the notice of the
+/// agreement is filed; absent one, the agreement is deemed ordered.
+deadline rule-2004-agreement-objection-period: 7.days after Rule2004AgreementNoticed() counted_by frcp6 cite "Bankr. D. Conn. LBR 2004-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 2015-1: within 45 days after the order confirming a chapter 11 or
+/// subchapter V plan, the debtor in possession, trustee, distributor or plan
+/// proponent files its first report on consummation of the plan.
+deadline post-confirmation-report-period: 45.days after PlanConfirmed() counted_by frcp6 cite "Bankr. D. Conn. LBR 2015-1"
+{
+  forum frcp
+}
+
+/// LBR 2015-2(a), (d): no later than 7 days after the Notice of Appointment
+/// of Subchapter V Trustee is filed, the debtor tenders $1,000.00 to the
+/// trustee for the trustee's fees and expenses.
+deadline subchapter-v-deposit-period: 7.days after SubchapterVTrusteeAppointed() counted_by frcp6 cite "Bankr. D. Conn. LBR 2015-2(a)"
+{
+  forum frcp
+}
+
+/// LBR 2021-1: within 5 days of appointing a committee, the United States
+/// Trustee files a list of its members' names, addresses and telephone
+/// numbers.
+deadline committee-list-period: 5.days after CommitteeAppointed() counted_by frcp6 cite "Bankr. D. Conn. LBR 2021-1"
+{
+  forum frcp
+}
+
+/// LBR 3003-1: the chapter 9 or 11 debtor serves creditors scheduled as
+/// disputed, contingent or unliquidated with notice of the claims bar date
+/// on the earlier of 45 days before the bar date or the initial
+/// confirmation hearing (this period and the next; the earlier controls).
+deadline disputed-claim-notice-period: 45.days before ClaimsBarDate() counted_by frcp6 cite "Bankr. D. Conn. LBR 3003-1"
+{
+  forum frcp
+}
+
+/// LBR 3003-1: the same notice, measured from the initial confirmation
+/// hearing.
+deadline disputed-claim-notice-hearing-period: 45.days before InitialConfirmationHearingScheduled() counted_by frcp6 cite "Bankr. D. Conn. LBR 3003-1"
+{
+  forum frcp
+}
+
+/// LBR 3014-1: unless 11 U.S.C. § 1125 applies, a class of secured
+/// creditors in a subchapter V case makes the § 1111(b) election on or
+/// before 7 days after the debtor files its initial plan.
+deadline subchapter-v-1111b-election-period: 7.days after SubchapterVPlanFiled() counted_by frcp6 cite "Bankr. D. Conn. LBR 3014-1"
+{
+  forum frcp
+}
+
+/// LBR 3015-1: unless the court orders otherwise, an objection to
+/// confirmation of a chapter 12 plan is filed no later than 7 days before
+/// the confirmation hearing.
+deadline chapter12-confirmation-objection-period: 7.days before Chapter12ConfirmationHearingScheduled() counted_by frcp6 cite "Bankr. D. Conn. LBR 3015-1"
+{
+  forum frcp
+}
+
+/// LBR 3015-2(a): unless the court orders otherwise, an objection to
+/// confirmation of a chapter 13 plan is filed no later than 7 days before
+/// the confirmation hearing.
+deadline chapter13-confirmation-objection-period: 7.days before Chapter13ConfirmationHearingScheduled() counted_by frcp6 cite "Bankr. D. Conn. LBR 3015-2(a)"
+{
+  forum frcp
+}
+
+/// LBR 3020-1: unless the court orders otherwise, an objection to
+/// confirmation of a chapter 11 plan is filed and served no later than 4
+/// days before the confirmation hearing.
+deadline chapter11-confirmation-objection-period: 4.days before Chapter11ConfirmationHearingScheduled() counted_by frcp6 cite "Bankr. D. Conn. LBR 3020-1"
+{
+  forum frcp
+}
+
+/// LBR 4002-1(a): in a chapter 7 case, no later than 7 days before the
+/// first scheduled meeting of creditors, the debtor delivers to the trustee
+/// the documents listed in Appendix I.
+deadline chapter7-trustee-documents-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. D. Conn. LBR 4002-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 4002-1(b): in a chapter 13 case, no later than 7 days before the
+/// first scheduled meeting of creditors, the debtor delivers to the trustee
+/// the documents listed in Appendix J.
+deadline chapter13-trustee-documents-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. D. Conn. LBR 4002-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 4002-1(c)(2): unless the court orders otherwise, an individual
+/// debtor's payment advices for the 60 days before the petition go to the
+/// chapter 7, 12 or 13 trustee, not the court, no later than 7 days before
+/// the initially scheduled § 341 meeting.
+deadline payment-advices-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. D. Conn. LBR 4002-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 6004-1(d): unless otherwise ordered, a public sale is advertised at
+/// least 14 days before the sale.
+deadline public-sale-advertising-period: 14.days before PublicSaleScheduled() counted_by frcp6 cite "Bankr. D. Conn. LBR 6004-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 7004-1(a)(1), (b)(1): the plaintiff or petitioning creditor files a
+/// certificate of service of the summons within 7 days after service.
+deadline summons-service-certificate-period: 7.days after SummonsServed() counted_by frcp6 cite "Bankr. D. Conn. LBR 7004-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 7004-1(b)(3): a defendant served in a foreign country files a motion
+/// or answer within 30 days from proper service of the summons and
+/// complaint, unless the court orders a different deadline.
+deadline foreign-defendant-answer-period: 30.days after ForeignServiceMade() counted_by frcp6 cite "Bankr. D. Conn. LBR 7004-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 7007-1: unless ordered or noticed otherwise, the 21-day response
+/// deadline of D. Conn. L. Civ. R. 7 applies to every motion in an adversary
+/// proceeding.
+deadline adversary-motion-response-period: 21.days after AdversaryMotionFiled() counted_by frcp6 cite "Bankr. D. Conn. LBR 7007-1"
+{
+  forum frcp
+}
+
+/// LBR 7007-2(a): a motion to exceed the brief page limits is filed at least
+/// 7 days before the deadline for filing the brief.
+deadline excess-pages-motion-period: 7.days before BriefDue() counted_by frcp6 cite "Bankr. D. Conn. LBR 7007-2(a)"
+{
+  forum frcp
+}
+
+/// LBR 7016-1(a): unless otherwise ordered, the initial pretrial order or
+/// initial joint pretrial order is filed 7 days before the initial pretrial
+/// conference.
+deadline initial-pretrial-order-period: 7.days before PretrialConferenceScheduled() counted_by frcp6 cite "Bankr. D. Conn. LBR 7016-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 9014-1(d)(1), (e): a response or objection is filed no later than the
+/// Response Date, 14 days from the filing of the Notice of Contested Matter
+/// Procedure (21 days where FRBP 2002(a) applies, which is lit/frbp's).
+deadline contested-matter-response-period: 14.days after ContestedMatterNoticed() counted_by frcp6 cite "Bankr. D. Conn. LBR 9014-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 9014-1(j)(1): a request for continuance of an Initial Hearing is made
+/// at least 7 days before the scheduled Initial Hearing.
+deadline initial-hearing-continuance-period: 7.days before InitialHearingScheduled() counted_by frcp6 cite "Bankr. D. Conn. LBR 9014-1(j)"
+{
+  forum frcp
+}
+
+/// LBR 9027-1(d): a party whose removed complaint or answer does not comply
+/// with FRBP 7008 and 7012(b) files an amended complaint or answer
+/// addressing the entry of final orders within 5 days after the notice of
+/// removal is filed.
+deadline removal-amended-pleading-period: 5.days after RemovalNoticed() counted_by frcp6 cite "Bankr. D. Conn. LBR 9027-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 9083-5(b): within 7 days after a change of mailing address, a
+/// self-represented filer, claimant or other party in interest files notice
+/// of it.
+deadline address-change-notice-period: 7.days after MailingAddressChanged() counted_by frcp6 cite "Bankr. D. Conn. LBR 9083-5(b)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed with a Notice of Contested Matter Procedure" by applicant cite "Bankr. D. Conn. LBR 9014-1(d)"
+{
+  note "A motion subject to the Contested Matter Procedure (LBR 9014-1(c); the matters of Appendices M and N excepted, LBR 9014-1(m), (n)) is filed with a proposed order (LBR 9013-3, 9014-1(b)(2)), a certificate of service (LBR 9014-1(b)(1)) and a Notice of Contested Matter Procedure stating a Response Date of 14 or 21 days from its filing (LBR 9014-1(d)), served with the motion. The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-response "Response or objection filed by the Response Date" -> response {
+    authority cite "Bankr. D. Conn. LBR 9014-1(e)"
+  }
+  edge-motion-filed-unopposed "No timely response; order may enter without further notice and hearing" -> decided {
+    authority cite "Bankr. D. Conn. LBR 9014-1(d)"
+  }
+}
+
+state response: "Response filed; Notice of Initial Hearing issued" by opponent cite "Bankr. D. Conn. LBR 9014-1(f)"
+{
+  note "A response is no more than ten pages and states its specific legal and factual bases (LBR 9014-1(e)). On a timely response the Clerk issues a Notice of Initial Hearing, which the movant serves (LBR 9014-1(f)(1)). A reply of no more than five pages is filed by the last business day at least three days before the Initial Hearing; sur-replies need leave (LBR 9014-1(g)). A continuance of the Initial Hearing is requested at least 7 days before it (LBR 9014-1(j))."
+  edge-response-initial-hearing "Initial Hearing held" -> initial-hearing { authority cite "Bankr. D. Conn. LBR 9014-1(h)" }
+}
+
+decision initial-hearing: "Initial Hearing" by court cite "Bankr. D. Conn. LBR 9014-1(h)"
+{
+  note "The Initial Hearing is not evidentiary unless the court so notices or emergency relief is sought (LBR 9014-1(h)(1)); the court may grant any relief it deems appropriate there (LBR 9014-1(h)(2))."
+  edge-initial-hearing-decided "Relief granted or denied at the Initial Hearing" -> decided { authority cite "Bankr. D. Conn. LBR 9014-1(h)" }
+  edge-initial-hearing-final "Final Hearing scheduled" -> final-hearing { authority cite "Bankr. D. Conn. LBR 9014-1(i)" }
+}
+
+decision final-hearing: "Final Hearing" by court cite "Bankr. D. Conn. LBR 9014-1(i)"
+{
+  note "The Clerk sends a Notice of Final Hearing, which the movant serves; the Final Hearing may be evidentiary (LBR 9014-1(i)). A continuance is sought by motion at least three business days before it (LBR 9014-1(k))."
+  edge-final-hearing-decided "Matter decided" -> decided { authority cite "Bankr. D. Conn. LBR 9014-1(i)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. D. Conn. LBR 1001-1"
+{
+  note "The Local Bankruptcy Rules supplement the Federal Rules of Bankruptcy Procedure and incorporate the District Court's local rules where they say so (LBR 1001-1)."
+}

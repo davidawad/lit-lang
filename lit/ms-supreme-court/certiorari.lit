@@ -1,0 +1,115 @@
+module ms-supreme-court-civil.certiorari
+
+import ms-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
+
+// Certiorari review of a civil Court of Appeals decision, from the
+// petitioner's side. Every period is stated in a note, not counted.
+start petition
+
+decision petition: "Petition for a writ of certiorari?" by applicant cite "M.R.A.P. 17(b)"
+{
+  note "A decision of the Court of Appeals is final and reviewable by the Supreme Court only on writ of certiorari, which is a matter of judicial discretion (M.R.A.P. 17(a)). A party seeking review must first move for rehearing in the Court of Appeals; the petition is then filed in the Supreme Court and served on the other parties within fourteen (14) days from the date of entry of the Court of Appeals' judgment on the motion for rehearing, unless extended on a motion filed within that time, and an untimely petition may be summarily dismissed by a single justice (M.R.A.P. 17(b)). The petition may not exceed ten (10) pages, states briefly the precise basis for review, may not incorporate authority or argument by reference, is filed as an original and ten (10) copies, and attaches the Court of Appeals' opinion and judgment and the motion for rehearing (M.R.A.P. 17(b)). Neither briefs nor oral argument are allowed in support of the petition unless the Supreme Court requests them (M.R.A.P. 17(c)). The outline named no leading decision on the grant standard; none is kept."
+  edge-petition-none "No petition: the Court of Appeals decision stands" -> review-not-sought {
+    authority cite "M.R.A.P. 41(b)"
+  }
+  edge-petition-filed "Petition filed" -> response {
+    event ReviewPetitionFiled()
+    authority cite "M.R.A.P. 17(b)"
+  }
+  edge-petition-late "Untimely petition" -> dismissed-untimely { authority cite "M.R.A.P. 17(b)" }
+}
+
+state response: "Response period" by office cite "M.R.A.P. 17(d)"
+{
+  note "Within seven (7) days after the petition is filed any other party may, but need not, file and serve a written response in opposition, an original and 10 copies of no more than ten (10) pages, with no authority or argument incorporated by reference; the respondent may attach its response to the motion for rehearing (M.R.A.P. 17(d)). The timely petition stays the issuance of the Court of Appeals' mandate (M.R.A.P. 17(j))."
+  edge-response-decision "Response filed or time expired" -> grant {
+    authority cite "M.R.A.P. 17(e)"
+  }
+}
+
+decision grant: "Writ granted or denied" by court cite "M.R.A.P. 17(e)"
+{
+  note "The Supreme Court may grant the petition on the affirmative vote of four of its members (M.R.A.P. 17(a)). Review will ordinarily be limited to a Court of Appeals decision in conflict with a prior Court of Appeals or published Supreme Court decision, one that did not consider a controlling constitutional provision, or a case that should have been decided by the Supreme Court because the statute or rules require it or it involves fundamental issues of broad public importance; the court may decline despite these factors or grant without them (M.R.A.P. 17(a)). The court acts within ninety (90) days of the filing of the response or, if none is filed, of the last day for it; failure to issue the writ within that period is a rejection and the petition is deemed denied (M.R.A.P. 17(e)). Neither acceptance nor rejection is subject to rehearing or reconsideration (M.R.A.P. 17(f)); the clerk notifies the parties of the disposition at once (M.R.A.P. 17(g))."
+  edge-grant-denied "Denied, or deemed denied after ninety days" -> review-denied {
+    authority cite "M.R.A.P. 17(e)"
+  }
+  edge-grant-granted "Writ granted" -> supplemental-briefs { authority cite "M.R.A.P. 17(a)" }
+}
+
+state supplemental-briefs: "Review on the record and supplemental briefs" by applicant cite "M.R.A.P. 17(h)"
+{
+  note "On notice of a grant any party may, within 10 days, file an original and 10 copies of a supplemental brief not to exceed 10 pages; no additional time or pages are allowed, and the court may require supplemental briefs on the merits and may limit the question on review (M.R.A.P. 17(h)). Review is conducted on the record and briefs previously filed in the Court of Appeals and any supplemental briefs (M.R.A.P. 17(h)). Oral argument is not allowed unless the court requests or requires it (M.R.A.P. 17(i)). Before final disposition the court may on its own motion find no need for further review and dismiss the certiorari proceeding (M.R.A.P. 17(f))."
+  edge-supplemental-briefs-decision "Decided on review" -> decision {
+    authority cite "M.R.A.P. 17(h)"
+  }
+  edge-supplemental-briefs-dismissed "Certiorari dismissed on the court's own motion" -> review-dismissed {
+    authority cite "M.R.A.P. 17(f)"
+  }
+}
+
+decision decision: "Supreme Court decision on review" by court cite "M.R.A.P. 40(a)"
+{
+  note "A motion for rehearing may be filed within 14 days after a decision on the merits by the Supreme Court, stating with particularity the points of law or fact overlooked or misapprehended; any other party may respond within seven days; oral argument on it is not permitted (M.R.A.P. 40(a)). Except by permission the motion and any response may not exceed twenty-five (25) pages, and in a case decided by the Supreme Court an original and ten (10) copies are filed conventionally (M.R.A.P. 40(b))."
+  edge-decision-affirmed "Court of Appeals affirmed" -> rehearing {
+    event DecisionFiled()
+    authority cite "M.R.A.P. 17(h)"
+  }
+  edge-decision-reversed "Court of Appeals reversed, vacated or remanded" -> rehearing {
+    event DecisionFiled()
+    authority cite "M.R.A.P. 17(h)"
+  }
+}
+
+decision rehearing: "Motion for rehearing?" by applicant cite "M.R.A.P. 40(a)"
+{
+  note "The timely filing of a motion for rehearing stays the mandate until its disposition; if the motion is denied the mandate issues seven (7) days after entry of the order denying it, and otherwise 21 days after entry of judgment, unless the time is shortened or enlarged by order (M.R.A.P. 41(a)). After a denial no further motion for rehearing may be filed; after a grant a second motion may be filed within 14 days after the judgment on rehearing (M.R.A.P. 40(a))."
+  edge-rehearing-none "No motion" -> mandate-issued {
+    event MandateIssued()
+    authority cite "M.R.A.P. 41(a)"
+  }
+  edge-rehearing-sought "Motion for rehearing filed" -> rehearing-decision {
+    authority cite "M.R.A.P. 40(a)"
+  }
+}
+
+decision rehearing-decision: "Rehearing decided" by court cite "M.R.A.P. 40(a)"
+{
+  note "If rehearing is granted the court may make a final disposition without reargument, restore the cause to the calendar for reargument or resubmission, or make other appropriate orders (M.R.A.P. 40(a))."
+  edge-rehearing-decision-denied "Rehearing denied" -> mandate-issued {
+    event MandateIssued()
+    authority cite "M.R.A.P. 41(a)"
+  }
+  edge-rehearing-decision-granted "Rehearing granted" -> rehearing-granted {
+    authority cite "M.R.A.P. 40(a)"
+  }
+}
+
+terminal review-not-sought: "Review not sought: the Court of Appeals decision is final" outcome [final] cite "M.R.A.P. 41(b)"
+{
+  note "Unless otherwise ordered the Court of Appeals' mandate issues 21 days after the latest of the entry of judgment or the disposition of a timely motion for rehearing (M.R.A.P. 41(b))."
+}
+
+terminal dismissed-untimely: "Untimely petition dismissed" outcome [loss, dismissal] cite "M.R.A.P. 17(b)"
+{
+  note "An untimely petition may be summarily dismissed by a single justice (M.R.A.P. 17(b)); the Court of Appeals' mandate then issues under M.R.A.P. 41(b)."
+}
+
+terminal review-denied: "Certiorari denied" outcome [final, loss] cite "M.R.A.P. 17(j)"
+{
+  note "On an order denying the petition or the expiration of the period for the court's consideration of it, the clerk of the Supreme Court issues the mandate under M.R.A.P. 41 (M.R.A.P. 17(j)); the Court of Appeals' mandate issues 21 days after the denial or dismissal (M.R.A.P. 41(b)). A stay of the mandate pending a petition to the United States Supreme Court may be sought under M.R.A.P. 41(c); federal certiorari (28 U.S.C. § 1257) is not vendored and not modeled."
+}
+
+terminal review-dismissed: "Certiorari proceeding dismissed" outcome [final] cite "M.R.A.P. 17(f)"
+{
+  note "The court found no need for further review (M.R.A.P. 17(f)); the Court of Appeals' mandate issues 21 days after the dismissal (M.R.A.P. 41(b))."
+}
+
+terminal mandate-issued: "Supreme Court mandate issued" outcome [final] cite "M.R.A.P. 41(a)"
+{
+  note "The mandate consists of a certified copy of the Supreme Court's judgment with any direction as to costs and a copy of its written opinion, if any (M.R.A.P. 41(a)). A motion to retax costs is filed within 14 days after issuance of the mandate (M.R.A.P. 36(d))."
+}
+
+terminal rehearing-granted: "Rehearing granted" outcome [neutral] cite "M.R.A.P. 40(a)"
+{
+  note "Proceedings on rehearing are not modeled; a second motion for rehearing may be filed within 14 days after the judgment on rehearing (M.R.A.P. 40(a))."
+}

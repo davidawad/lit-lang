@@ -1,0 +1,50 @@
+# Review in the Mississippi Supreme Court of a civil decision of the
+# Mississippi Court of Appeals, on writ of certiorari under M.R.A.P. 17
+# (the "Current" file on courts.ms.gov, latest amendment in the text June
+# 23, 2025; sources/ms-appellate). A decision of the Court of Appeals is
+# reviewable only on certiorari (M.R.A.P. 17(a)). The appeal itself, from
+# the notice of appeal through the Court of Appeals' decision and the
+# motion for rehearing that must precede the petition, is
+# lit/ms-appellate's. Computation of time is M.R.A.P. 26(a), which counts
+# by Mississippi legal holidays and days the clerk's office is closed;
+# lit/core has no Mississippi counting rule, so periods are stated in
+# notes, not counted. Original proceedings and the Supreme Court's
+# appellate jurisdiction by statute are not vendored and not modeled.
+[package]
+name = "ms-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ms-supreme-court-civil"
+forum = "ms-supreme-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "mississippi"
+title = "Mississippi Supreme Court, certiorari review of the Court of Appeals (civil)"
+description = "A petition for a writ of certiorari in the Mississippi Supreme Court for review of a civil decision of the Court of Appeals under M.R.A.P. 17, as far as the vendored text states: the petition and its time and length, the response, the 90-day period for action and deemed denial, supplemental briefs on a grant, the decision on review, rehearing (M.R.A.P. 40) and the mandate (M.R.A.P. 41)."
+in_force = "2025-06-23"
+known_at = "2026-10-28"
+unknown_before = "2025-06-23"
+jurisdiction = "Mississippi Supreme Court (certiorari review of the Court of Appeals, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+ms-state-rules = { version = "^0.1.0", path = "../ms-rules" }
+
+[sources.mrap]
+title = "Mississippi Rules of Appellate Procedure (\"Current\" file; latest amendment in the text June 23, 2025)"
+url = "https://courts.ms.gov/research/rules/msrulesofcourt/Rules%20of%20Appellate%20Procedure%20Current.pdf"
+path = "sources/ms-appellate/rules-of-appellate-procedure-sectioned.txt"
+path_sha256 = "0b719c334e842c8d3b7912af0e4ec6adb2bdc04d225d77b3c47ad16637032e28"
+sha256 = "3615b91c68ce90481d2fe54d275aff762e03486127af3a0e10c0e95406d9b942"
+as_of = "2025-06-23"
+
+[[cite_syntax.rules]]
+prefixes = ["M.R.A.P."]
+heading = "M.R.A.P. {}"
+source = "mrap"

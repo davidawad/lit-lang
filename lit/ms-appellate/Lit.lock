@@ -9,11 +9,19 @@ dependencies = []
 name = "ms-appellate-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:33e0a656a99e5f5bd10d2fad47c30eb823be333380b436a85294669791fc793f"
-semantic = "sha256:837cab2ab3b0ccdca0e68a464c156f6e0087d4de059ebb52d24eec3a99a51f43"
+source = "sha256:026fb23f5544ec5cefd3cf655d714cc230427f2351af40f3837d4fa340afe833"
+semantic = "sha256:5eb446da76e1b014cd5d4bdb35baf24a1567069ac33aa829fc54d7617c15add0"
 texts = [
     "mrap sources/ms-appellate/rules-of-appellate-procedure-sectioned.txt sha256:0b719c334e842c8d3b7912af0e4ec6adb2bdc04d225d77b3c47ad16637032e28",
 ]
+dependencies = [
+    "core 1.0.0",
+    "ms-state-rules 0.1.0",
+]
+
+[[package]]
+name = "ms-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

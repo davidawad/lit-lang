@@ -1,0 +1,27 @@
+# The Mississippi base library (lg-u561.5 pattern): the trigger events the
+# Mississippi civil court packages route their graphs on:
+# lit/ms-circuit-court, lit/ms-chancery-courts, lit/ms-appellate and
+# lit/ms-supreme-court. It declares no period: the rules' periods are
+# stated in the court packages' notes. No procedure of its own.
+[package]
+name = "ms-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ms-state-rules"
+forum = "ms-state-rules"
+authority = "StateRule"
+jurisdiction_id = "mississippi"
+title = "Mississippi state court rules (base library)"
+description = "The rule layer Mississippi's civil court packages share (M.R.C.P., M.R.A.P.): the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-07-01"
+known_at = "2026-10-28"
+unknown_before = "2026-07-01"
+jurisdiction = "Mississippi state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

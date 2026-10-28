@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "ms-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "ms-supreme-court-civil"
+version = "0.1.0"
+language = 1
+source = "sha256:4f9cf08f808e5c62ef5c5bd27eed2e49f465d33826bb83e2e37f614d53820efc"
+semantic = "sha256:112c1a5c3bf162cb4ab5926a32e07fc9f94ce79651506a6369ef3da3a9cbdd33"
+texts = [
+    "mrap sources/ms-appellate/rules-of-appellate-procedure-sectioned.txt sha256:0b719c334e842c8d3b7912af0e4ec6adb2bdc04d225d77b3c47ad16637032e28",
+]
+dependencies = [
+    "core 1.0.0",
+    "ms-state-rules 0.1.0",
+]

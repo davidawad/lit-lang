@@ -1,11 +1,14 @@
 module ms-circuit-court-civil.civil
 
+import ms-state-rules.{ ActionCommenced, JudgmentEntered }
+
 start complaint-filed
 
 state complaint-filed: "Complaint filed" by applicant cite "M.R.C.P. 3(a)"
 {
   note "A civil action is commenced by filing a complaint with the court, with the costs deposit the law and rules require (M.R.C.P. 3(a)). Periods in this package are stated, not counted: computation is M.R.C.P. 6(a). The outline's one named decision, Brown v. Credit Center, Inc., 444 So. 2d 358 (Miss. 1983), could not be checked against a vendored reporter and is removed."
   edge-complaint-filed-service "Summons issued for service" -> service-made {
+    event ActionCommenced()
     authority cite "M.R.C.P. 4(h)"
   }
 }
@@ -141,9 +144,11 @@ decision trial-result: "Judgment after trial" by court cite "M.R.C.P. 58"
 {
   note "Every judgment is set forth on a separate document titled \"Judgment\" and is effective only when entered as provided in M.R.C.P. 79(a) (M.R.C.P. 58). A motion for judgment notwithstanding the verdict is filed not later than ten days after entry of judgment (M.R.C.P. 50(b)); a motion for a new trial, or to alter or amend the judgment, not later than ten days after entry of judgment (M.R.C.P. 59(b), (e)); a motion to amend findings not later than ten days after entry (M.R.C.P. 52(b)). The time for appeal is lit/ms-appellate's."
   edge-trial-result-applicant "Judgment for applicant" -> judgment-for-applicant {
+    event JudgmentEntered()
     authority cite "M.R.C.P. 58"
   }
   edge-trial-result-defense "Judgment for defendant" -> verdict-for-defendant {
+    event JudgmentEntered()
     authority cite "M.R.C.P. 58"
   }
   edge-trial-result-post "Post-trial motion filed" -> post-trial { authority cite "M.R.C.P. 59(b)" }

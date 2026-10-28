@@ -13,6 +13,7 @@ version = "0.1.0"
 language = 1
 pack_id = "ms-circuit-court-civil"
 forum = "ms-circuit-court"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "mississippi"
 title = "Mississippi circuit courts, civil"
@@ -29,6 +30,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+ms-state-rules = { version = "^0.1.0", path = "../ms-rules" }
 
 [sources.mrcp]
 title = "Mississippi Rules of Civil Procedure with Advisory Committee Notes (file dated 2026-07-01; amendments through September 10, 2025)"

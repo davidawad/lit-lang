@@ -1,0 +1,176 @@
+module ms-chancery-courts-civil.chancery
+
+import ms-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
+start complaint-filed
+
+decision complaint-filed: "Complaint or petition filed: ordinary action or Rule 4(i) matter?" by applicant cite "M.R.C.P. 3(a)"
+{
+  note "A civil action is commenced by filing a complaint with the court, with the costs deposit the law and rules require (M.R.C.P. 3(a)); in a statute's terms a bill of complaint is a complaint and a decree a judgment (M.R.C.P. 81(e)). The rules govern the chancery courts in all suits of a civil nature, subject to the limitations of Rule 81 (M.R.C.P. 1), and statutory procedures for the proceedings Rule 81(a) lists, among them Titles 91 and 93 of the Mississippi Code, control where they conflict (M.R.C.P. 81(a)); those statutes are not vendored. The actions and matters M.R.C.P. 4(i)(1) and (2) enumerate follow the special procedure of Rule 4(i); other actions are answered under M.R.C.P. 12. The Uniform Chancery Court Rules are not vendored. Periods in this package are stated, not counted: computation is M.R.C.P. 6(a). The outline named no leading decisions."
+  edge-complaint-filed-ordinary "Ordinary action: summons issued" -> service-made {
+    event ActionCommenced()
+    authority cite "M.R.C.P. 4(h)"
+  }
+  edge-complaint-filed-special "Rule 4(i) action or matter: returnable summons issued" -> special-summons {
+    event ActionCommenced()
+    authority cite "M.R.C.P. 4(i)"
+  }
+}
+
+state special-summons: "Returnable summons served; hearing set" by applicant cite "M.R.C.P. 4(i)"
+{
+  note "On filing, a summons returnable to a date, time and place certain, in substantial conformity with Form 1D or 1DD, commands the defendant or respondent to appear and defend at the hearing, set by court order or by the clerk or court administrator if the court so authorizes (M.R.C.P. 4(i)(5)). Adoption, termination of parental rights, paternity, heirship, partition, will contests, child custody and child support and the other matters of Rule 4(i)(1) are triable 30 days after completion of service other than by publication; temporary relief in divorce, separate maintenance, paternity, custody or support, modification or enforcement of custody, support and alimony judgments, contempt and the estate matters of Rule 4(i)(2) are triable 7 days after it; either is triable 30 days after the first publication where process is by publication (M.R.C.P. 4(i)(1), (2)). No answer is required, but the court may order one, and a party who fails to answer when ordered may not present evidence (M.R.C.P. 4(i)(4)). A defendant who appears at the initial setting receives notice of later hearings under Rule 5; one properly served who does not appear needs no further notice or process, and a matter not heard on the day set may be continued by order without new summons (M.R.C.P. 4(i)(5))."
+  edge-special-summons-hearing "Matter heard" -> special-hearing { authority cite "M.R.C.P. 4(i)" }
+}
+
+decision special-hearing: "Hearing on proof" by court cite "M.R.C.P. 4(i)"
+{
+  note "An unanswered complaint or petition in a Rule 4(i) matter is not taken as confessed or subject to default judgment, and adequate proof is required to support a judgment (M.R.C.P. 4(i)(3)). In an action tried on the facts without a jury the court may, and on any party's request shall, find the facts specially and state its conclusions of law separately (M.R.C.P. 52(a))."
+  edge-special-hearing-granted "Relief granted on adequate proof" -> judgment-for-applicant {
+    event JudgmentEntered()
+    authority cite "M.R.C.P. 4(i)"
+  }
+  edge-special-hearing-denied "Relief denied" -> judgment-for-defendant {
+    event JudgmentEntered()
+    authority cite "M.R.C.P. 52(a)"
+  }
+}
+
+decision service-made: "Served within 120 days?" by applicant cite "M.R.C.P. 4(h)"
+{
+  note "If service of the summons and complaint is not made on a defendant within 120 days after the filing of the complaint and good cause is not shown, the action is dismissed as to that defendant without prejudice, on the court's own initiative with notice or on motion (M.R.C.P. 4(h))."
+  edge-service-made-response "Served in time" -> response-due { authority cite "M.R.C.P. 4(h)" }
+  edge-service-made-lapsed "Not served in time" -> service-dismissal {
+    authority cite "M.R.C.P. 4(h)"
+  }
+}
+
+decision response-due: "Answer, Rule 12 motion, or nothing" by office cite "M.R.C.P. 12(a)"
+{
+  note "A defendant serves the answer within thirty days after service of the summons and complaint, or within the time directed under Rule 4 (M.R.C.P. 12(a)). If a Rule 12 motion is denied or postponed, the responsive pleading is served within ten days after notice of the court's action (M.R.C.P. 12(a)(1)); these times may be extended once only, for not more than ten days, by written stipulation filed in the record (M.R.C.P. 12(a))."
+  edge-response-due-answer "Answer filed" -> discovery { authority cite "M.R.C.P. 12(a)" }
+  edge-response-due-motion "Rule 12(b) motion filed" -> pleading-ruling {
+    authority cite "M.R.C.P. 12(b)"
+  }
+  edge-response-due-default "No response" -> default-request { authority cite "M.R.C.P. 55(a)" }
+}
+
+decision pleading-ruling: "Ruling on the pleading challenge" by court cite "M.R.C.P. 12(b)"
+{
+  note "Failure to state a claim upon which relief can be granted may be raised by motion (M.R.C.P. 12(b)(6)); on sustaining it, leave to amend shall be granted when justice so requires (M.R.C.P. 15(a))."
+  edge-pleading-ruling-dismissed "Dismissed" -> dismissed-merits { authority cite "M.R.C.P. 12(b)" }
+  edge-pleading-ruling-denied "Denied" -> discovery { authority cite "M.R.C.P. 12(a)" }
+}
+
+state default-request: "Default sought" by applicant cite "M.R.C.P. 55(a)"
+{
+  note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend and that fact is made to appear by affidavit or otherwise, the clerk enters the default (M.R.C.P. 55(a)); a decree pro confesso in a statute's terms means entry of default (M.R.C.P. 81(e)). The party entitled to a default judgment applies to the court; a party who has appeared is served with written notice of the application at least three days before the hearing (M.R.C.P. 55(b)). For good cause shown the court may set aside an entry of default (M.R.C.P. 55(c))."
+  edge-default-request-judgment "Default judgment entered" -> default-judgment {
+    event JudgmentEntered()
+    authority cite "M.R.C.P. 55(b)"
+  }
+  edge-default-request-set-aside "Default set aside or answer filed first" -> discovery {
+    authority cite "M.R.C.P. 55(c)"
+  }
+}
+
+state discovery: "Discovery" by applicant cite "M.R.C.P. 26(b)"
+{
+  note "Parties may obtain discovery of any matter, not privileged, relevant to the issues raised by the claims or defenses of any party (M.R.C.P. 26(b)(1)). Where no action of record has been taken during the preceding twelve months, the clerk mails notice that the case will be dismissed for want of prosecution unless within thirty days action of record is taken or good cause is shown (M.R.C.P. 41(d)(1))."
+  edge-discovery-sj "Summary judgment motion" -> sj-ruling { authority cite "M.R.C.P. 56(c)" }
+  edge-discovery-trial "Set for trial" -> trial { authority cite "M.R.C.P. 40(b)" }
+  edge-discovery-settled "Settled: dismissal by stipulation" -> settled {
+    authority cite "M.R.C.P. 41(a)"
+  }
+  edge-discovery-inactive "No action of record for twelve months" -> inactivity-dismissal {
+    authority cite "M.R.C.P. 41(d)"
+  }
+}
+
+decision sj-ruling: "Summary judgment ruling" by court cite "M.R.C.P. 56(c)"
+{
+  note "The motion is served at least ten days before the time fixed for the hearing, and judgment is rendered forthwith if there is no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law (M.R.C.P. 56(c))."
+  edge-sj-ruling-applicant "Granted for applicant" -> judgment-for-applicant {
+    event JudgmentEntered()
+    authority cite "M.R.C.P. 56(c)"
+  }
+  edge-sj-ruling-defense "Granted for defendant" -> judgment-for-defendant {
+    event JudgmentEntered()
+    authority cite "M.R.C.P. 56(c)"
+  }
+  edge-sj-ruling-denied "Denied" -> trial { authority cite "M.R.C.P. 56(d)" }
+}
+
+decision trial: "Trial and findings by the court" by court cite "M.R.C.P. 52(a)"
+{
+  note "Cases are set on the trial docket at least twenty (20) days before the trial date unless all parties agree to a shorter period (M.R.C.P. 40(b)). In actions tried on the facts without a jury the court may, and on any party's request shall, find the facts specially and state separately its conclusions of law, and judgment is entered accordingly (M.R.C.P. 52(a)); whether a jury may be had in chancery rests on the Constitution and statute, which are not vendored (M.R.C.P. 38(a)). Every judgment is set forth on a separate document and is effective only when entered as provided in M.R.C.P. 79(a) (M.R.C.P. 58). A motion to amend the findings is filed not later than ten days after entry of judgment or of the findings (M.R.C.P. 52(b)); a motion for a new trial, or to alter or amend the judgment, not later than ten days after entry of judgment (M.R.C.P. 59(b), (e))."
+  edge-trial-applicant "Judgment for applicant" -> post-judgment {
+    event JudgmentEntered()
+    authority cite "M.R.C.P. 58"
+  }
+  edge-trial-defense "Judgment for defendant" -> post-judgment-defense {
+    event JudgmentEntered()
+    authority cite "M.R.C.P. 58"
+  }
+}
+
+decision post-judgment: "Judgment for applicant: post-trial motions" by office cite "M.R.C.P. 59(e)"
+{
+  note "A motion under M.R.C.P. 52(b) or 59 filed within ten days after entry of judgment makes the time for appeal run for all parties from entry of the order disposing of the last such motion (M.R.A.P. 4(d))."
+  edge-post-judgment-stands "Judgment stands" -> judgment-for-applicant {
+    authority cite "M.R.C.P. 58"
+  }
+  edge-post-judgment-new-trial "New trial granted" -> trial { authority cite "M.R.C.P. 59(a)" }
+}
+
+decision post-judgment-defense: "Judgment for defendant: appeal?" by applicant cite "M.R.A.P. 4(a)"
+{
+  note "The notice of appeal is filed with the clerk of the trial court within 30 days after the date of entry of the judgment or order appealed from (M.R.A.P. 4(a)); a timely motion under M.R.C.P. 52(b) or 59 makes the time run from entry of the order disposing of the last such motion (M.R.A.P. 4(d)). The appeal proceeds under lit/ms-appellate."
+  edge-post-judgment-defense-appeal "Notice of appeal filed" -> appeal-taken {
+    event NoticeOfAppealFiled()
+    authority cite "M.R.A.P. 4(a)"
+  }
+  edge-post-judgment-defense-none "No appeal" -> judgment-for-defendant {
+    authority cite "M.R.A.P. 4(a)"
+  }
+}
+
+terminal service-dismissal: "Dismissed for failure to serve" outcome [loss, dismissal] cite "M.R.C.P. 4(h)"
+{
+  note "Dismissal for failure to serve within 120 days is without prejudice as to that defendant (M.R.C.P. 4(h))."
+}
+
+terminal dismissed-merits: "Dismissed on the pleadings" outcome [loss, dismissal] cite "M.R.C.P. 12(b)"
+{
+  note "The notice of appeal is due within 30 days after entry of the judgment (M.R.A.P. 4(a)); the appeal is lit/ms-appellate's."
+}
+
+terminal inactivity-dismissal: "Dismissed for want of prosecution" outcome [loss, dismissal] cite "M.R.C.P. 41(d)"
+{
+  note "If no action of record is taken and no good cause is shown within thirty days after the clerk's notice, the court dismisses the case without prejudice (M.R.C.P. 41(d)(1))."
+}
+
+terminal settled: "Settled" outcome [settlement] cite "M.R.C.P. 41(a)"
+{
+  note "Dismissal by a stipulation signed by all parties who have appeared (M.R.C.P. 41(a)(1)(ii))."
+}
+
+terminal default-judgment: "Default judgment" outcome [win] cite "M.R.C.P. 55(b)"
+{
+  note "Costs are allowed as of course to the prevailing party unless the court otherwise directs (M.R.C.P. 54(e))."
+}
+
+terminal judgment-for-applicant: "Judgment for applicant" outcome [win] cite "M.R.C.P. 58"
+{
+  note "Costs are allowed as of course to the prevailing party unless the court otherwise directs (M.R.C.P. 54(e)). An adverse party's appeal is lit/ms-appellate's."
+}
+
+terminal judgment-for-defendant: "Judgment for defendant" outcome [loss] cite "M.R.C.P. 58"
+{
+  note "The time for appeal is 30 days after entry of the judgment (M.R.A.P. 4(a)); the appeal is lit/ms-appellate's."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "M.R.A.P. 4(a)"
+{
+  note "The appeal proceeds under lit/ms-appellate."
+}

@@ -1,5 +1,7 @@
 module ms-appellate-civil.appeal
 
+import ms-state-rules.{ NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
 start judgment-entered
 
 decision judgment-entered: "Judgment or order entered: appeal or permission sought?" by applicant cite "M.R.A.P. 3(a)"
@@ -24,13 +26,19 @@ decision notice: "Notice of appeal within time?" by applicant cite "M.R.A.P. 4(a
 {
   note "The notice of appeal is filed with the clerk of the trial court within 30 days after the date of entry of the judgment or order appealed from (M.R.A.P. 4(a)). If a timely notice is filed, any other party may file a notice within 14 days after the first notice was filed, or within the time otherwise prescribed, whichever last expires (M.R.A.P. 4(c)). A timely motion under M.R.C.P. 50(b), 52(b) or 59, or under M.R.C.P. 60 filed no later than 10 days after entry of judgment, makes the time run for all parties from entry of the order disposing of the last such motion (M.R.A.P. 4(d)). The trial court may extend the time on a motion filed not later than 30 days after the time expires, for good cause before expiry or excusable neglect after; no extension exceeds 30 days past the prescribed time or 10 days from the order granting it, whichever is later (M.R.A.P. 4(g)). The trial court may reopen the time for 14 days for a party that did not receive notice of entry within 21 days, on a motion filed within 180 days of entry or 7 days of receipt of notice, whichever is earlier (M.R.A.P. 4(h)). The appellant pays the docket fee to the trial court clerk on filing the notice (M.R.A.P. 3(e))."
   edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "M.R.A.P. 2(a)" }
-  edge-notice-timely "Timely notice" -> record { authority cite "M.R.A.P. 4(a)" }
+  edge-notice-timely "Timely notice" -> record {
+    event NoticeOfAppealFiled()
+    authority cite "M.R.A.P. 4(a)"
+  }
 }
 
 state record: "Record designated, cost deposited and record filed" by applicant cite "M.R.A.P. 10(b)"
 {
   note "Within seven (7) days after filing the notice of appeal the appellant files and serves a written designation of the parts of the record necessary for the appeal (M.R.A.P. 10(b)(1)), with a statement of the issues unless the entire record is designated (M.R.A.P. 10(b)(4)); the appellee may designate more within 14 days after service (M.R.A.P. 10(b)(4)). Within seven (7) days after filing the notice the appellant also estimates and deposits the cost of preparing the record and files a certificate of compliance (M.R.A.P. 11(b)(1)). Where no transcript is available, a statement of the evidence is filed within 60 days after filing the notice of appeal (M.R.A.P. 10(c)). The clerk of the Supreme Court dockets the appeal on receipt of the notice and files the record on receipt, giving notice of the date of filing (M.R.A.P. 13)."
-  edge-record-assignment "Record filed" -> assignment { authority cite "M.R.A.P. 13(b)" }
+  edge-record-assignment "Record filed" -> assignment {
+    event RecordFiled()
+    authority cite "M.R.A.P. 13(b)"
+  }
   edge-record-dismissed "Deficiency not corrected within 14 days of notice" -> dismissed-default {
     authority cite "M.R.A.P. 2(a)"
   }
@@ -76,6 +84,7 @@ decision rehearing: "Rehearing decided; certiorari sought from a Court of Appeal
     authority cite "M.R.A.P. 41(b)"
   }
   edge-rehearing-certiorari "Petition for certiorari filed" -> certiorari {
+    event ReviewPetitionFiled()
     authority cite "M.R.A.P. 17(b)"
   }
 }
@@ -114,5 +123,5 @@ terminal review-denied: "Certiorari denied" outcome [final] cite "M.R.A.P. 41(b)
 
 terminal review-granted: "Certiorari granted" outcome [neutral] cite "M.R.A.P. 17(h)"
 {
-  note "Review is on the record and briefs filed in the Court of Appeals and any supplemental briefs (M.R.A.P. 17(h)); the Supreme Court's proceedings on the merits are not modeled, and its mandate then issues under M.R.A.P. 41(a) (M.R.A.P. 41(b))."
+  note "Review is on the record and briefs filed in the Court of Appeals and any supplemental briefs (M.R.A.P. 17(h)); the Supreme Court's proceedings on the merits are lit/ms-supreme-court's, and its mandate then issues under M.R.A.P. 41(a) (M.R.A.P. 41(b))."
 }

@@ -9,11 +9,19 @@ dependencies = []
 name = "ms-circuit-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:da6a6acf26a527d8cb96411f9907e2db06e84c688ceb31fad46e383e6a29a041"
-semantic = "sha256:da988278a67d1a3b510d0ccdff88b1563f368a7494f1f645a46cfdaa7bd0d5c1"
+source = "sha256:7a7dba52ea10e059f529e1ca2c270b5cef484e3fca8e0f29a7cd0a79f5213bd6"
+semantic = "sha256:debd7289869818f8954a14494d87dc4f18644362ab2338a426dec06cc578a082"
 texts = [
     "mrcp sources/ms-circuit-court/rules-of-civil-procedure-sectioned.txt sha256:b18aa683d774d658c98456a49c6b8c6c228b72eaaa11c178582a491e441b7328",
 ]
+dependencies = [
+    "core 1.0.0",
+    "ms-state-rules 0.1.0",
+]
+
+[[package]]
+name = "ms-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

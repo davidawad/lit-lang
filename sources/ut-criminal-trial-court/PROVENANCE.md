@@ -9,3 +9,9 @@
 - Extraction sha256 5e532be7ab722b065ca7c292c102a723ff86be2006ce2ce7d9adcf1d47b992e2.
 
 - Note (lg-gddt): Criminal appeals: Utah Rules of Appellate Procedure, covered by sources/ut-state-appellate/.
+
+### `ut-criminal-trial-court/ut-urcrp-all-rules-sectioned.txt` — URCrP, sectioned
+
+- Derived in the pod (lg-gddt.24) from `ut-criminal-trial-court/ut-urcrp-all-rules.txt` (extract sha256 5e532be7ab722b065ca7c292c102a723ff86be2006ce2ce7d9adcf1d47b992e2); nothing fetched. One `## URCrP <n>` line is inserted before each rule's own heading line `Rule <n>. <Title>` (URCrP 1 through 42, 55 rules, the active rules the page lists, including the lettered and decimal rules such as 4A, 7B, 9.5 and 21A). Rule text was not edited: deleting the marker lines (each `## URCrP ` line with its newline) restores the extract byte for byte.
+- Edition: as the extract; CURRENCY UNCONFIRMED beyond each rule's stated effective date.
+- Sectioned sha256 6882a0b1814cd68a1a0329e4d0f10e1c611f822a3cd0106cae5819d4f6723758 (the `path_sha256` pinned by `lit/ut-criminal-trial-court/Lit.toml`).

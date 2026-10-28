@@ -1,0 +1,56 @@
+# Criminal cases in the Utah district courts under the Utah Rules of
+# Criminal Procedure (URCrP), as far as the vendored text states. The text
+# is the all-rules page of the Utah Courts legacy rules host as printed on
+# October 28, 2026 (sources/ut-criminal-trial-court); each rule states its
+# own effective date, but the host points elsewhere for current rules and
+# the PROVENANCE entry records CURRENCY UNCONFIRMED beyond the per-rule
+# dates, so in_force is the retrieval date. By the PM's standing ruling of
+# 2026-10-27 such a source yields holes, not values: this package cites the
+# URCrP only for the structure of the case and states no period, limit or
+# amount from them. The speedy-trial statute (Utah Code 77-29-1) is not
+# vendored and stays a hole. The appeal hand-off cites URAP 4, whose
+# vendored text (each rule as in force on October 26, 2026;
+# sources/ut-state-appellate) is not flagged; lit/core has no counting rule
+# for URAP 22, so its period is stated in a note.
+[package]
+name = "ut-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "ut-criminal-trial-court"
+forum = "ut-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "utah"
+title = "Utah district courts, criminal"
+description = "Felony cases in the Utah district courts under the Utah Rules of Criminal Procedure, as far as the vendored text states: the structure of the case from arrest and probable cause determination through first appearance, preliminary examination, arraignment, pretrial motions, plea or trial, post-trial motions, sentence and judgment; no period from the currency-unconfirmed rules is stated. An appeal goes up under URAP 4."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Utah trial courts of general criminal jurisdiction (district courts)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.urcrp]
+title = "Utah Rules of Criminal Procedure, all rules as printed by the Utah Courts legacy rules host on October 28, 2026; CURRENCY UNCONFIRMED beyond each rule's stated effective date"
+url = "https://legacy.utcourts.gov/rules/viewall.php?type=urcrp"
+path = "sources/ut-criminal-trial-court/ut-urcrp-all-rules-sectioned.txt"
+path_sha256 = "6882a0b1814cd68a1a0329e4d0f10e1c611f822a3cd0106cae5819d4f6723758"
+sha256 = "2178c613d006149edc46c67426109ab7617bc324d2ecfb5ef945309895e5eddb"
+as_of = "2026-10-28"
+cite_prefixes = ["URCrP"]
+section_heading = "URCrP {n}"
+
+[sources.urap]
+title = "Utah Rules of Appellate Procedure, each rule as in force on October 26, 2026"
+url = "https://legacy.utcourts.gov/rules/viewall.php?type=urap"
+path = "sources/ut-state-appellate/utah-urap-all-rules-sectioned.txt"
+path_sha256 = "d69fcfe874d6a0518319e08d04f4ec6e069f5727d56c3df994e57301ab2a5888"
+sha256 = "0d36f22202ea09e7f5bd334b7af79c96a4a37473ecce883c6a004115d5c037a5"
+as_of = "2026-10-26"
+cite_prefixes = ["URAP"]
+section_heading = "URAP {n}"

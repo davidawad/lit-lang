@@ -212,8 +212,9 @@ pub fn parse_cite_string(raw: &str, grammar: &CiteGrammar<'_>) -> Vec<CiteRef> {
 /// 7-11` in a body numbered `<chapter>-<rule>`), and, against a corpus, one
 /// whose ends aren't both headings there (`MLBR App. 1 Rule 13-99` is one
 /// unknown rule, not Rules 13 through 99). Anything that isn't a plain
-/// member-member range (not a range at all, spans more than 99 members, or
-/// the two sides don't share a family/prefix) is returned unchanged.
+/// member-member range (not a range at all, spans more than 99 members, a
+/// `<set>-<rule>` number like `NMRA 5-101`, or the two sides don't share a
+/// family/prefix) is returned unchanged.
 fn expand_range(cref: CiteRef, grammar: &CiteGrammar<'_>) -> Vec<CiteRef> {
     if cref.is_out_of_scope() || !cref.subsections.is_empty() {
         return vec![cref];
@@ -270,11 +271,15 @@ fn find_range_separator(s: &str) -> Option<(usize, usize)> {
 /// one: `3002.1-1` is the undivided local rule 3002.1-1, not a one-member
 /// range collapsing to `3002.1`. Nor is a zero-padded side ever a range end:
 /// `NMRA 1-012` is the single state rule 1-012 (`<set>-<rule>` numbering),
-/// not Rules 1 through 12.
+/// not Rules 1 through 12. Nor is an unpadded one whose high end widens to
+/// three or more digits: `NMRA 5-101` is the single rule 5-101, not the 97
+/// rules 5 through 101 — with no corpus to look the heading up in, the
+/// widening is the only sign of `<set>-<rule>` numbering, and no rule body
+/// is cited by a range running from below 100 past it.
 fn range_members(lo: &str, hi: &str) -> Option<Vec<String>> {
     if let (Ok(a), Ok(b)) = (lo.parse::<u32>(), hi.parse::<u32>()) {
         let padded = |s: &str| s.len() > 1 && s.starts_with('0');
-        if padded(lo) || padded(hi) {
+        if padded(lo) || padded(hi) || (hi.len() >= 3 && hi.len() > lo.len()) {
             return None;
         }
         return (b > a && b - a < 100).then(|| (a..=b).map(|n| n.to_string()).collect());

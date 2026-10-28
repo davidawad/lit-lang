@@ -1,0 +1,92 @@
+module az-tax-court.tax
+
+import az-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
+start commenced
+
+state commenced: "Complaint filed in the Tax Court" by applicant cite "Ariz. R. Civ. P. 3"
+{
+  note "A civil action is commenced by filing a complaint with the court (Ariz. R. Civ. P. 3); the Civil Rules govern all civil actions and proceedings in the superior court (Ariz. R. Civ. P. 1), and an action in the Tax Court is an action in superior court with no change of judge as a matter of right (Ariz. R. Civ. P. 42.1(a)). The Tax Court's jurisdiction, the time to bring a tax appeal, its filing fee and its small claims division are set by statutes that are not vendored, so they are holes and are not modeled. Periods are stated, not counted: Civil Rule 6(a) excludes intermediate Saturdays, Sundays and legal holidays from a period under 11 days (Ariz. R. Civ. P. 6(a)). Leading decisions: none is vendored, so none is named."
+  edge-commenced-served "Summons and complaint served" -> pleadings {
+    event ActionCommenced()
+    authority cite "Ariz. R. Civ. P. 4(a)"
+  }
+}
+
+decision pleadings: "Answer, motion to dismiss or dismissal by the plaintiff" by court cite "Ariz. R. Civ. P. 12(a)"
+{
+  note "A defendant files and serves an answer within 20 days after service of the summons and complaint, unless another rule or statute specifies another time (Ariz. R. Civ. P. 12(a)(1)(A)); whether a tax statute does is a hole. A Rule 12(b) defense may be made by motion before pleading; if the motion is denied or deferred to trial, the responsive pleading is due within 10 days after notice of the court's action (Ariz. R. Civ. P. 12(a)(2), (b)). The plaintiff may dismiss by notice before an answer or summary judgment motion is served, or by order on a stipulation of all parties who have appeared (Ariz. R. Civ. P. 41(a)(1))."
+  edge-pleadings-dismissed "Dismissed on a Rule 12(b) motion" -> dismissed {
+    authority cite "Ariz. R. Civ. P. 12(b)"
+  }
+  edge-pleadings-answered "Answered; the case proceeds" -> discovery {
+    authority cite "Ariz. R. Civ. P. 12(a)"
+  }
+  edge-pleadings-settled "Settled or voluntarily dismissed" -> settled {
+    authority cite "Ariz. R. Civ. P. 41(a)"
+  }
+}
+
+state discovery: "Disclosure and discovery" by applicant cite "Ariz. R. Civ. P. 26"
+{
+  note "Discovery is governed by Civil Rules 26 to 37, with prompt disclosure under Rule 26.1 and tiered limits under Rule 26.2 (Ariz. R. Civ. P. 26, 26.1, 26.2); any Tax Court practice displacing them is not vendored and is a hole."
+  edge-discovery-dispositive "Summary judgment motion or trial setting" -> dispositive {
+    authority cite "Ariz. R. Civ. P. 56(b)"
+  }
+}
+
+decision dispositive: "Summary judgment?" by court cite "Ariz. R. Civ. P. 56(a)"
+{
+  note "The court grants summary judgment if the movant shows no genuine dispute as to any material fact and entitlement to judgment as a matter of law (Ariz. R. Civ. P. 56(a)). The motion may be filed no later than the court's dispositive motion deadline or, absent one, 90 days before trial; the response is due within 30 days after service and the reply 15 days after the response is served (Ariz. R. Civ. P. 56(b)(3), (c)(2))."
+  edge-dispositive-granted "Granted: decided without trial" -> judgment {
+    authority cite "Ariz. R. Civ. P. 56(a)"
+  }
+  edge-dispositive-trial "Denied or not sought: tried" -> trial {
+    authority cite "Ariz. R. Civ. P. 56(a)"
+  }
+}
+
+state trial: "Trial" by court cite "Ariz. R. Civ. P. 39"
+{
+  note "Trial is by jury unless waived under Rule 38(b) or the court finds no right to a jury trial on some or all issues; on a waiver the court tries all issues (Ariz. R. Civ. P. 39(a), (b)). Whether a jury is available in the Tax Court is set by statute, which is not vendored, so it is a hole."
+  edge-trial-judgment "Decision rendered" -> judgment { authority cite "Ariz. R. Civ. P. 58(b)" }
+}
+
+state judgment: "Judgment entered" by court cite "Ariz. R. Civ. P. 58(b)"
+{
+  note "A judgment is in writing and signed, is not effective before entry, and is entered when the clerk files it; the clerk then distributes notice of entry (Ariz. R. Civ. P. 58(b), (c)). A proposed form of judgment may not be entered until 5 days after it is served, absent approval, waiver or default (Ariz. R. Civ. P. 58(a)(2)). A judgment as to all claims and parties is not final unless it recites that no further matters remain pending and that it is entered under Rule 54(c) (Ariz. R. Civ. P. 54(c))."
+  edge-judgment-entered "Judgment entered" -> post-judgment {
+    event JudgmentEntered()
+    authority cite "Ariz. R. Civ. P. 54(c)"
+  }
+}
+
+decision post-judgment: "Appeal?" by applicant cite "ARCAP 9(a)"
+{
+  note "The notice of appeal is filed with the clerk of the superior court no later than 30 days after entry of the judgment, unless ARCAP 9 or the law provides another time (ARCAP 9(a)); the statute governing appeals from the Tax Court is not vendored, so whether it provides another time is a hole."
+  edge-post-appeal "Notice of appeal filed" -> appeal-taken {
+    event NoticeOfAppealFiled()
+    authority cite "ARCAP 9(a)"
+  }
+  edge-post-final "No appeal" -> final-no-appeal { authority cite "ARCAP 9(a)" }
+}
+
+terminal dismissed: "Dismissed" outcome [loss, dismissal] cite "Ariz. R. Civ. P. 12(b)"
+{
+  note "Unless the order states otherwise, a dismissal other than for lack of jurisdiction, improper venue or failure to join a party under Rule 19 operates as an adjudication on the merits (Ariz. R. Civ. P. 41(b))."
+}
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "Ariz. R. Civ. P. 41(a)"
+{
+  note "Unless the notice or order states otherwise, a voluntary dismissal is without prejudice (Ariz. R. Civ. P. 41(a)(1)(B)). Settlement terms are outside this package."
+}
+
+terminal appeal-taken: "Appeal taken; continue in lit/az-court-of-appeals" outcome [appeal] cite "ARCAP 9(a)"
+{
+  note "The appeal continues in the Arizona appellate package (lit/az-court-of-appeals)."
+}
+
+terminal final-no-appeal: "Judgment final without appeal" outcome [final] cite "Ariz. R. Civ. P. 54(c)"
+{
+  note "Enforcement is outside this package."
+}

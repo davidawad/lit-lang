@@ -1,0 +1,56 @@
+# Actions in the Arizona Tax Court under the Rules of Civil Procedure for
+# the Superior Courts of Arizona, as the Westlaw public-access site served
+# them on 2026-10-28, current with amendments effective through October 1,
+# 2026 (sources/az-superior). The Civil Rules govern all civil actions in
+# the superior court (Ariz. R. Civ. P. 1), and Civil Rule 42.1(a) treats an
+# action in the Tax Court as an action in superior court. The statutes
+# that establish the Tax Court, set its jurisdiction, the time to bring a
+# tax appeal, its small claims division and its appeals (A.R.S. Title 12,
+# ch. 1, art. 4; A.R.S. Title 42) and any rules of the Tax Court itself are
+# not vendored and are not cited; what they alone state stays a hole.
+# Computation of time is Civil Rule 6(a), which has no counting rule in
+# lit/core, so periods are stated in notes, not encoded as counted
+# deadlines. An appeal hands off to lit/az-court-of-appeals.
+[package]
+name = "az-tax-court"
+version = "0.1.0"
+language = 1
+pack_id = "az-tax-court"
+forum = "az-tax-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "arizona"
+title = "Arizona Tax Court"
+description = "An action in the Arizona Tax Court through pleadings, disclosure and discovery, summary judgment or trial, judgment and the notice of appeal, as far as the vendored Civil Rules and ARCAP state; the Tax Court statutes are not vendored and stay holes. An appeal hands off to the Arizona appellate package (lit/az-court-of-appeals)."
+in_force = "2026-10-01"
+known_at = "2026-10-28"
+unknown_before = "2026-10-01"
+jurisdiction = "Arizona Tax Court"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+az-state-rules = { version = "^0.1.0", path = "../az-rules" }
+
+[sources.az-civ]
+title = "Rules of Civil Procedure for the Superior Courts of Arizona (Westlaw public-access site, current with amendments effective through October 1, 2026, as served on October 28, 2026)"
+url = "https://govt.westlaw.com/azrules/Index"
+path = "sources/az-superior/az-superior-rules-sectioned.txt"
+path_sha256 = "ed23ddba2d8d71524c635ead3b0c74d46248b2fc903fc116579f51bff9b15de7"
+as_of = "2026-10-01"
+cite_prefixes = ["Ariz. R. Civ. P."]
+section_heading = "Rule {n}"
+
+[sources.arcap]
+title = "Arizona Rules of Civil Appellate Procedure (Westlaw public-access site, current with amendments effective through October 1, 2026, as served on October 28, 2026)"
+url = "https://govt.westlaw.com/azrules/Index"
+path = "sources/az-court-of-appeals/arcap-sectioned.txt"
+path_sha256 = "5dac95c5f28b17a36a65f55662200a3404dcf6722c7afe36c1749af17dc02886"
+as_of = "2026-10-01"
+cite_prefixes = ["ARCAP", "Ariz. R. Civ. App. P."]
+section_heading = "ARCAP {n}"

@@ -1,0 +1,27 @@
+# The Arizona base library (lg-u561.5 pattern): the trigger events the
+# Arizona court packages route their graphs on (lit/az-tax-court). It
+# declares no period: the rules' periods are stated in the court
+# packages' notes. No procedure of its own.
+[package]
+name = "az-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "az-state-rules"
+forum = "az-state-rules"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "arizona"
+title = "Arizona state court rules (base library)"
+description = "The rule layer Arizona's court packages share: the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-10-01"
+known_at = "2026-10-28"
+unknown_before = "2026-10-01"
+jurisdiction = "Arizona state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

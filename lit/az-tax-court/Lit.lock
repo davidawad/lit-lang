@@ -1,0 +1,28 @@
+version = 2
+
+[[package]]
+name = "az-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "az-tax-court"
+version = "0.1.0"
+language = 1
+source = "sha256:22daa3d4f14772166f2a4d038a1351e4715af7f169d5b8622e5f5c2b40fe10e9"
+semantic = "sha256:61eb4c52398bc8066025cc85b7b5fbba5b5256479280de6084c1d76a748a2e47"
+texts = [
+    "arcap sources/az-court-of-appeals/arcap-sectioned.txt sha256:5dac95c5f28b17a36a65f55662200a3404dcf6722c7afe36c1749af17dc02886",
+    "az-civ sources/az-superior/az-superior-rules-sectioned.txt sha256:ed23ddba2d8d71524c635ead3b0c74d46248b2fc903fc116579f51bff9b15de7",
+]
+dependencies = [
+    "az-state-rules 0.1.0",
+    "core 1.0.0",
+]
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []

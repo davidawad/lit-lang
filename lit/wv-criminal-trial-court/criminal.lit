@@ -1,0 +1,135 @@
+module wv-criminal-trial-court.criminal
+
+// Criminal cases in the West Virginia circuit courts, from the defendant's
+// view of outcomes. The Rules of Criminal Procedure are vendored only as a
+// CURRENCY UNCONFIRMED page, so every cite is a hole naming the rule and
+// every period is the vendored text, unverified, stated in a note. Not
+// vendored, and so holes: the three-term rule of W. Va. Code § 62-3-21;
+// the magistrate-court appeal time of W. Va. Code § 50-5-13, which Rule
+// 37(a)(2) refers to; and the reporter text of the decisions the outline
+// named, which are removed.
+start arrested
+
+state arrested: "Arrest and initial appearance" by applicant cite ?("W. Va. R. Crim. P. 5(a), CURRENCY UNCONFIRMED")
+{
+  note "An arrested person is taken without unnecessary delay before a magistrate in the county of arrest (W. Va. R. Crim. P. 5(a)). CURRENCY UNCONFIRMED."
+  edge-arrested-appearance "Initial appearance; bail" -> probable-cause {
+    authority cite ?("W. Va. R. Crim. P. 5, CURRENCY UNCONFIRMED")
+  }
+}
+
+decision probable-cause: "Preliminary examination or waiver" by court cite ?("W. Va. R. Crim. P. 5.1, CURRENCY UNCONFIRMED")
+{
+  note "A defendant whose offense is to be presented for indictment is entitled to a preliminary examination unless waived, held not later than 10 days after the initial appearance if the defendant is in custody and 20 days if not, and not held once the defendant is indicted (W. Va. R. Crim. P. 5(c)). On probable cause the magistrate holds the defendant to answer in circuit court (W. Va. R. Crim. P. 5.1(a)). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
+  edge-probable-cause-held "Held to answer, or examination waived" -> charged {
+    authority cite ?("W. Va. R. Crim. P. 5.1(a), CURRENCY UNCONFIRMED")
+  }
+  edge-probable-cause-none "No probable cause; discharged" -> dismissed {
+    authority cite ?("W. Va. R. Crim. P. 5.1, CURRENCY UNCONFIRMED")
+  }
+}
+
+state charged: "Indictment or information" by office cite ?("W. Va. R. Crim. P. 7, CURRENCY UNCONFIRMED")
+{
+  note "If there is unnecessary delay of more than one year in presenting the charge to a grand jury or filing an information against a defendant held to answer, the court on its own motion dismisses without prejudice; for unnecessary delay in bringing a defendant to trial, it may dismiss on proper motion (W. Va. R. Crim. P. 48(b)). The three-term rule of W. Va. Code § 62-3-21 is not vendored (a hole). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
+  edge-charged-delay "Dismissed for unnecessary delay" -> dismissed {
+    authority cite ?("W. Va. R. Crim. P. 48(b), CURRENCY UNCONFIRMED")
+  }
+  edge-charged-arraignment "Arraignment" -> pretrial {
+    authority cite ?("W. Va. R. Crim. P. 10, CURRENCY UNCONFIRMED")
+  }
+}
+
+state pretrial: "Pretrial motions and discovery" by applicant cite ?("W. Va. R. Crim. P. 12, CURRENCY UNCONFIRMED")
+{
+  note "Unless a local rule provides otherwise, the court may at arraignment or soon after set a time for pretrial motions and requests (W. Va. R. Crim. P. 12(c)); defenses, objections and requests that must be made before trial, among them suppression and Rule 16 discovery, are waived if not made by then, but the court for cause should grant relief (W. Va. R. Crim. P. 12(b), (f)). On the State's written demand, the defendant serves notice of an alibi defense within 10 days or another time the court directs (W. Va. R. Crim. P. 12.1(a)). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
+  edge-pretrial-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite ?("W. Va. R. Crim. P. 12(c), CURRENCY UNCONFIRMED")
+  }
+  edge-pretrial-plea "Plea negotiations" -> plea-decision {
+    authority cite ?("W. Va. R. Crim. P. 11, CURRENCY UNCONFIRMED")
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite ?("W. Va. R. Crim. P. 12, CURRENCY UNCONFIRMED")
+{
+  note "CURRENCY UNCONFIRMED."
+  edge-motions-ruling-dismissed "Charges dismissed" -> dismissed {
+    authority cite ?("W. Va. R. Crim. P. 12, CURRENCY UNCONFIRMED")
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite ?("W. Va. R. Crim. P. 12, CURRENCY UNCONFIRMED")
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite ?("W. Va. R. Crim. P. 11, CURRENCY UNCONFIRMED")
+{
+  note "Pleas are governed by W. Va. R. Crim. P. 11. A motion in arrest of judgment after a plea of guilty or nolo contendere is made within ten days, or a further time the court fixes within them (W. Va. R. Crim. P. 34). CURRENCY UNCONFIRMED: the value is the vendored text, unverified."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite ?("W. Va. R. Crim. P. 11, CURRENCY UNCONFIRMED")
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite ?("W. Va. R. Crim. P. 23, CURRENCY UNCONFIRMED")
+  }
+}
+
+decision trial: "Verdict" by court cite ?("W. Va. R. Crim. P. 31, CURRENCY UNCONFIRMED")
+{
+  note "CURRENCY UNCONFIRMED."
+  edge-trial-acquittal "Not guilty" -> acquitted {
+    authority cite ?("W. Va. R. Crim. P. 31, CURRENCY UNCONFIRMED")
+  }
+  edge-trial-guilty "Guilty; post-verdict motions" -> post-trial {
+    authority cite ?("W. Va. R. Crim. P. 29(c), CURRENCY UNCONFIRMED")
+  }
+}
+
+decision post-trial: "Post-verdict motions" by court cite ?("W. Va. R. Crim. P. 33, CURRENCY UNCONFIRMED")
+{
+  note "A motion for judgment of acquittal may be made or renewed within ten days after the jury is discharged (W. Va. R. Crim. P. 29(c)); a motion for new trial on grounds other than newly discovered evidence within ten days after the verdict or finding of guilty (W. Va. R. Crim. P. 33); and a motion in arrest of judgment within ten days after the verdict or finding (W. Va. R. Crim. P. 34); each period may be extended by the court only during it. A new-trial motion on newly discovered evidence may be made only after final judgment (W. Va. R. Crim. P. 33). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite ?("W. Va. R. Crim. P. 29(c), CURRENCY UNCONFIRMED")
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite ?("W. Va. R. Crim. P. 33, CURRENCY UNCONFIRMED")
+  }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite ?("W. Va. R. Crim. P. 32, CURRENCY UNCONFIRMED")
+  }
+}
+
+state sentencing: "Sentence and judgment" by court cite ?("W. Va. R. Crim. P. 32, CURRENCY UNCONFIRMED")
+{
+  note "A motion to reduce a sentence may be made, or the court may reduce it on its own, within 120 days after the sentence is imposed or probation revoked, or within 120 days after the Supreme Court of Appeals' mandate affirming, or its order dismissing or rejecting a petition for appeal (W. Va. R. Crim. P. 35(b)). CURRENCY UNCONFIRMED: the value is the vendored text, unverified."
+  edge-sentencing-judgment "Judgment entered in the criminal docket" -> judgment {
+    authority cite ?("W. Va. R. Crim. P. 37(b)(1), CURRENCY UNCONFIRMED")
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite ?("W. Va. R. Crim. P. 37(b), CURRENCY UNCONFIRMED")
+{
+  note "A defendant's notice of intent to appeal is filed with the Clerk of the Supreme Court of Appeals within 30 days after entry of the judgment in the criminal docket, a notice filed after announcement but before entry being treated as filed on entry (W. Va. R. Crim. P. 37(a)(1), (b)(1)); the appeal is perfected within four months of the entry of the circuit court order under Rule 5 of the Rules of Appellate Procedure, which may extend it (W. Va. R. Crim. P. 37(b)(3)). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
+  edge-judgment-appeal "Notice of intent to appeal within 30 days" -> appeal-taken {
+    authority cite ?("W. Va. R. Crim. P. 37(b)(1), CURRENCY UNCONFIRMED")
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final {
+    authority cite ?("W. Va. R. Crim. P. 37(b)(1), CURRENCY UNCONFIRMED")
+  }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite ?("W. Va. R. Crim. P. 31, CURRENCY UNCONFIRMED")
+
+terminal dismissed: "Charges dismissed or defendant discharged" outcome [win, dismissal] cite ?("W. Va. R. Crim. P. 48, CURRENCY UNCONFIRMED")
+{
+  note "A Rule 48(b) dismissal for delay in presenting the charge is without prejudice; the effect of other dismissals is a hole."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite ?("W. Va. R. Crim. P. 37(b)(3), CURRENCY UNCONFIRMED")
+{
+  note "The appeal is perfected within four months under the Rules of Appellate Procedure (lit/wv-appellate-civil binds them for civil appeals); no criminal appellate package is promoted."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("W. Va. R. Crim. P. 37(b)(1), CURRENCY UNCONFIRMED")
+{
+  note "State habeas corpus is not vendored (a hole); federal habeas under 28 U.S.C. § 2254 is lit/habeas's."
+}

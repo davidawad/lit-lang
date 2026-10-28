@@ -1,0 +1,38 @@
+# Criminal cases in the West Virginia circuit courts under the West
+# Virginia Rules of Criminal Procedure (sources/wv-criminal-trial-court),
+# whose single page states no edition date: its PROVENANCE records
+# CURRENCY UNCONFIRMED, so every cite is a hole, `?("..., CURRENCY
+# UNCONFIRMED")`, and every period is stated in a note as the vendored
+# text states it, unverified. The criminal notice of intent to appeal and
+# the time to perfect the appeal are the Rules' own (W. Va. R. Crim. P.
+# 37(b)). The speedy-trial statute, W. Va. Code § 62-3-21, is not vendored
+# (a hole); Rule 48(b) is the rule. lit/core has no West Virginia counting
+# rule, so no period is a counted deadline. Federal habeas is
+# lit/habeas's.
+[package]
+name = "wv-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "wv-criminal-trial-court"
+forum = "wv-criminal-trial-court"
+authority = "StateRule"
+title = "West Virginia circuit courts, criminal"
+description = "Criminal cases in the West Virginia circuit courts under the West Virginia Rules of Criminal Procedure, as far as the vendored text states: the preliminary examination within 10 or 20 days, pretrial motions at the time the court sets, the alibi notice, dismissal for unnecessary delay, the post-verdict motions within ten days, the reduction of sentence within 120 days, and the 30-day notice of intent to appeal with the appeal perfected within four months. The source is CURRENCY UNCONFIRMED, so every cite is a hole."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "West Virginia trial courts of general criminal jurisdiction"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.wv-rcrp]
+title = "West Virginia Rules of Criminal Procedure, as posted by the Supreme Court of Appeals of West Virginia (retrieved 2026-10-28, no edition date; CURRENCY UNCONFIRMED)"
+url = "https://www.courtswv.gov/legal-community/court-rules/rules-criminal-procedure-contents"
+path = "sources/wv-criminal-trial-court/wv-rules-of-criminal-procedure.txt"
+path_sha256 = "201a896dc832fc979132b783534cf2e16e9a1abb495ab82ff31c259671602737"

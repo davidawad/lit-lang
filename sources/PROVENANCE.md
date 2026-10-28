@@ -460,7 +460,7 @@ Entries live in the forum's own
 - sha256 (this file): `77560dcd00af4016c24f1ed1817228500e35bc32797ec4d94a980b14556bb827`
 - Original: `original/usc-28-app-2002-time/001-ontent-pkg-USCODE-2002-title28-html-USCODE-2002-title28-app-federalru-rule26.html` as served (sha256 376b24ff236b967e9d4b3d3fad881f3f479218e9d3945487b727f226a4b20d0d); extraction sha256 77560dcd00af4016c24f1ed1817228500e35bc32797ec4d94a980b14556bb827. Served at https://www.govinfo.gov/content/pkg/USCODE-2002-title28/html/USCODE-2002-title28-app-federalru-rule26.htm; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-28.
 
-### `rule-amendment-history.txt` — amendment histories of the sections `lit/core`'s current versions cite
+### Amendment-history dataset — histories of the sections `lit/core`'s current versions cite
 
 - One `## versions <heading>` block per section (SPEC §4.3): an `as_of`
   line, then the section's amendments as a `content_versions` list
@@ -1060,7 +1060,7 @@ Entries live in the forum's own
 - Fetched 2026-10-26 from `tile.loc.gov/storage-services/service/ll/usrep/usrep375/usrep375384/usrep375384.pdf` (the U.S. Reports, Library of Congress), `pdftotext -layout`, every non-blank line kept with its leading spaces dropped; no wording changed. The precedent the overruling example (Bowles v. Russell, `sources/change-corpus/rulings/bowles-scotus-2007.txt`) withdraws.
 - sha256 (this file): `adb3b1d49b1a12c14f58d973942a3dc62825bb5287c56df17f4ed0eac64f9cc9`
 - Original: `original/change-thompson-v-ins-375-us-384.pdf` as served (sha256 a91fe042e81e3bb1609ae0d0e98e9dff546f9dd5747cc0b85ead8a4eb6b52be5); extraction sha256 adb3b1d49b1a12c14f58d973942a3dc62825bb5287c56df17f4ed0eac64f9cc9. Served at https://tile.loc.gov/storage-services/service/ll/usrep/usrep375/usrep375384/usrep375384.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
-### Post-dismissal opinions (`waetzig-v-halliburton.txt`, `crst-v-eeoc.txt`, `cadkin-v-loose.txt`)
+### Post-dismissal opinions
 
 - Waetzig is the Supreme Court's official slip opinion (No. 23-971, decided
   2025-02-26), downloaded from supremecourt.gov and extracted with
@@ -1133,3 +1133,39 @@ Entries live in the forum's own
 - Vendored text sha256:
   `9e99b6ae551dc12ddf322afe896c98d7fc4c651c49a209f0cf45f313403b477a`.
 - Original: `original/ca1-first-circuit-rulebook-2026-06-01.pdf` as served (sha256 e126dc83b8a7ab1044273dc3fdc22cbc735cc6c81ce5793b345eb0e7bc7a6133); extraction sha256 9e99b6ae551dc12ddf322afe896c98d7fc4c651c49a209f0cf45f313403b477a.
+
+### `ca8-bap-local-rules.txt` — Eighth Circuit Bankruptcy Appellate Panel Local Rules
+
+- Source: https://ecf.ca8.uscourts.gov/newbap/rules/localrules_bapDec2023.pdf; official Panel rules PDF. Retrieved 2026-10-27 and extracted with `pdftotext -layout`. SHA-256: `ccc1e2198d478e0b31cd6c4d700bd699eb7e4993f073b3b894cb2f0cf48108ca`.
+
+### `ca8-bap-iop.txt` — Eighth Circuit Bankruptcy Appellate Panel Internal Operating Procedures
+
+- Source: https://www.ca8.uscourts.gov/sites/ca8/files/iops%20jan%202024.pdf; official court PDF. Retrieved 2026-10-27 and extracted with `pdftotext -layout`. SHA-256: `2fb5815bf87b25d8af30298fa0fa21e148d81ddc6992c305bd94716c68fb0485`.
+
+### `ca8-iop.txt` — Eighth Circuit Internal Operating Procedures
+
+- Source: https://ecf.ca8.uscourts.gov/newrules/coa/iops.pdf; official court PDF. Retrieved 2026-10-27 and extracted with `pdftotext -layout`. SHA-256: `a346115379cdf130c46d5d6c33462f03a0984fcebac95a8617b2d0222e6bc8f8`.
+
+### `frbp.txt` — Federal Rules of Bankruptcy Procedure
+
+- Source: https://www.uscourts.gov/sites/default/files/document/federal-rules-of-bankruptcy-procedure.pdf; Administrative Office of the U.S. Courts official PDF, December 1, 2025 edition. Retrieved 2026-10-27 and extracted with `pdftotext -layout`. SHA-256: `0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8`.
+
+### `rule-amendment-history.txt` — amendment histories of cited sections
+
+- Derived by transcribing amendment credits from the vendored primary texts, including https://www.uscourts.gov/rules-policies/current-rules-practice-procedure and the official U.S. Code sources listed in this record. Retrieved 2026-10-28; extracted/transcribed from those sources and vendored texts as described above. SHA-256: `e6aef2e7672430dd698945d200c41a1988ef4f78ba7bfc0a2d7eae8e216362b8`.
+
+### `usc-28-158.txt` — 28 U.S.C. § 158
+
+- Source: https://uscode.house.gov/us/usc/119-118/t28/s158/; Office of the Law Revision Counsel official text. Retrieved 2026-10-27; converted from HTML with navigation removed and statutory text retained. SHA-256: `a0f615748b6a10805e6eeec6a05e94d7a3fc2dcd5fafbe94efae7af8ebf9987b`.
+
+### `waetzig-v-halliburton.txt` — Waetzig v. Halliburton Energy Services, Inc.
+
+- Source: https://www.supremecourt.gov/opinions/24pdf/23-971_l6gn.pdf; official Supreme Court slip opinion. Retrieved 2026-10-28 and extracted with `pdftotext -layout`. SHA-256: `4325f20a34f4be3e51cc2b96eea4ef6ca20b8e50a1834ad8b5d51701853789ff`.
+
+### `crst-v-eeoc.txt` — CRST Van Expedited, Inc. v. EEOC
+
+- Source: https://www.govinfo.gov/content/pkg/USREPORTS-578/pdf/USREPORTS-578-419.pdf; official U.S. Reports. Retrieved 2026-10-28 and extracted with `pdftotext -layout`. SHA-256: `3598727ae67d2b2a67986920aedf82b13435dadf4e1ab45a5b915c69f3a34b40`.
+
+### `cadkin-v-loose.txt` — Cadkin v. Loose
+
+- Source: https://cdn.ca9.uscourts.gov/datastore/opinions/2009/06/26/08-55311.pdf; official Ninth Circuit opinion. Retrieved 2026-10-28 and extracted with `pdftotext -layout`. SHA-256: `52a8a2fa29edf0fed607bda629e6e8788a22e7b272d16ffd31f1fff4274e106b`.

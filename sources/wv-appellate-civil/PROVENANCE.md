@@ -8,6 +8,10 @@
 
 ### Later amendment orders (separate dated layers, NOT merged into the base text)
 
+### `wv-appellate-civil/wv-rap-rule-5-amendment-order-2026-08-21-no-25-57.txt` — Rule 5 amendment order (text extract)
+
+- Retrieved 2026-10-28 on carbon and extracted with `pdftotext -layout` from the source URL below; sha256 90d3b8f0a473d6e242f8b283473c745897788067cac041bfaf820ab876ced8ab.
+
 - `wv-rap-rule-5-amendment-order-2026-08-21-no-25-57.txt` — Order of 2026-08-21, "Approval of Amendments to Rule 5 of the Rules of Appellate Procedure, No. 25-57" (amends Rule 5(a), (b)). Source: https://www.courtswv.gov/sites/default/pubfilesmnt/2026-08/25-57%20-%20Approval%20Order.pdf. Original `original/wv-rap-rule-5-amendment-order-2026-08-21-no-25-57.pdf` sha256 5804bc74d2fb783f1299ba5b4d0d25228ace767c698f9fa4c8ce7269794fd317; extract (pdftotext -layout) sha256 90d3b8f0a473d6e242f8b283473c745897788067cac041bfaf820ab876ced8ab. Additions/deletions are shown by underscore/strike-through in the PDF, which the text extract cannot show; consult the PDF.
 - Discovery list: `original/wv-recent-rules-orders-list.html` (https://www.courtswv.gov/legal-community/court-rules/recent-rules-orders, retrieved 2026-10-28) sha256 bfc77d8ab4da411fba80e7f6c8d0e730b8936dd750080c114870b3f16357928c. It lists exactly one Rules of Appellate Procedure order (08/21/26, Rule 5); no other RAP amendment order appears on it. The list shows only recent orders, so earlier orders after the base text are not ruled out.
 
@@ -21,4 +25,5 @@
 ### `wv-appellate-civil/wv-rap-rule-5-amendment-order-2026-08-21-no-25-57-sectioned.txt` — Rule 5 amendment order No. 25-57 (2026-08-21), sectioned
 
 - Derived in the pod (lg-f3q8.32) from `wv-appellate-civil/wv-rap-rule-5-amendment-order-2026-08-21-no-25-57.txt` (extract sha256 90d3b8f0a473d6e242f8b283473c745897788067cac041bfaf820ab876ced8ab); nothing fetched. One `## Rule 5` line is inserted before the order's `Rule 5. Appeals from ...` line; nothing else changed: `sed '/^## Rule /d'` restores the extract byte for byte. The underscoring and strike-through of the PDF are still not shown.
+- Upstream: https://www.courtswv.gov/sites/default/pubfilesmnt/2026-08/25-57%20-%20Approval%20Order.pdf, retrieved 2026-10-28, as recorded on the source extract entry this file is derived from.
 - Sectioned sha256 802c789b3b6e3ba1657fff819c6ed0e194db98a8a041a904903c8422fbcd6889 (the `path_sha256` of the `wv-rap-2026-rule5` source in `lit/wv-appellate-civil/Lit.toml`).

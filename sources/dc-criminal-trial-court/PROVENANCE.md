@@ -12,5 +12,6 @@
 ### `dc-criminal-trial-court/dc-superior-court-rules-of-criminal-procedure-sectioned.txt` — D.C. Superior Court Rules of Criminal Procedure, sectioned
 
 - Derived in the pod (lg-gddt.4) from `dc-criminal-trial-court/dc-superior-court-rules-of-criminal-procedure.txt` (extract sha256 e690ce58a0b8b05348e75db8f323a94498fe957d82938ff74a64b5ea541adbc8); nothing fetched. One marker line `## Rule <n>` is inserted before each rule's heading line `Rule <n>. <Title>` (107 rules, Rule 1 through Rule 120, including hyphenated and decimal rules such as 4-I and 5.1; the Rule 41 heading is indented; extract lines 157 and 3852, which begin with "Rule 5." and "Rule 47-I." mid-paragraph, are not headings and carry no marker). Every other line is the extract unchanged, so deleting the `## Rule` lines (`sed '/^## Rule /d'`) gives back the extract byte for byte.
+- Upstream: https://www.dccourts.gov/sites/default/files/superior-rules/Superior%20Court%20Rules%20of%20Criminal%20Procedure.pdf, retrieved 2026-10-28, as recorded on the source extract entry this file is derived from.
 - Edition: as the extract; CURRENCY UNCONFIRMED stands. `lit/dc-criminal-trial-court` cites it for structure only and takes no value from it.
 - Sectioned sha256 f108105a55e505ee427ccbe5398aa9ab3b431391115b0c0ca2b94d6cefa10827 (the `path_sha256` pinned by `lit/dc-criminal-trial-court/Lit.toml`).

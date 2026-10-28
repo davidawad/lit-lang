@@ -1,0 +1,112 @@
+module insd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Southern District of Indiana's own criminal periods, counted under
+// the criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: objections or corrections to the presentence report within 14
+// days following its disclosure, unless the court determines otherwise
+// (S.D. Ind. L. Cr. R. 32-2(e); FRCrimP 32(f)(1)), and the report with its
+// addendum to the sentencing judge no later than 7 days before the
+// sentencing date (L. Cr. R. 32-2(g); FRCrimP 32(g)). The report is
+// deemed disclosed when electronically served on counsel through CM/ECF
+// (L. Cr. R. 32-2(d)).
+//
+// A motion to quash a grand-jury subpoena is due no later than 48 hours
+// before the appearance or production date unless good cause exists for a
+// later filing (L. Cr. R. 6-1(c)(2)); lit/core's FRCrimP 45(a) rule counts
+// days, so the 48 hours stay in this note. A non-exempt party filing a
+// document with the clerk presents it within 1 business day after filing
+// the notice of manual filing (L. Cr. R. 49-1(e)(2)), a business-day
+// period also kept in this note.
+//
+// Conditions that are not deadlines from an event stay in notes: the court
+// may issue a standard order served with the indictment or information
+// (L. Cr. R. 7-1), not vendored; a continuance motion sets out its
+// conformity with the Speedy Trial Act with a proposed entry (L. Cr. R.
+// 12-1); the sentencing hearing is scheduled after a plea petition, plea
+// agreement, guilty plea or verdict (L. Cr. R. 32-2(a)); a motion to keep
+// a case sealed is filed no later than the initial appearance (L. Cr. R.
+// 49.1-2(a)); an opposition to a motion to maintain under seal runs under
+// S.D. Ind. L.R. 7-1 from the filing of the brief in support (L. Cr. R.
+// 49.1-2(i)), a civil period that stays in lit/insd. Petitions under 28
+// U.S.C. §§ 2241, 2254 and 2255 and capital challenges (L. Cr. R. 38-1,
+// 38-2) belong to federal habeas (lit/habeas) and are not encoded here.
+//
+// The earlier S.D. Ind. criminal outline's FRCrimP flow and its decisions
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// A brief in support of a motion to maintain a case or document under
+/// seal: at most 10 pages (S.D. Ind. L. Cr. R. 49.1-2(h)).
+limit seal-brief {
+  pages <= 10 cite "S.D. Ind. L. Cr. R. 49.1-2(h)"
+} cite "S.D. Ind. L. Cr. R. 49.1-2(h)"
+
+/// A brief in opposition to a motion to maintain a case or document under
+/// seal: at most 10 pages (S.D. Ind. L. Cr. R. 49.1-2(i)).
+limit seal-opposition-brief {
+  pages <= 10 cite "S.D. Ind. L. Cr. R. 49.1-2(i)"
+} cite "S.D. Ind. L. Cr. R. 49.1-2(i)"
+
+/// A motion to reassign a criminal case as related is filed (S.D. Ind. L.
+/// Cr. R. 12-2(b)).
+event ReassignmentMotionFiled()
+/// A petition to enter a plea of guilty or a plea agreement is filed, a
+/// guilty plea is entered, or a guilty verdict is returned (S.D. Ind. L.
+/// Cr. R. 32-2(a), (c)).
+event SentencingProcessCommenced()
+/// A Motion to Maintain Document(s) Under Seal identifying another party as
+/// the designating party is served (S.D. Ind. L. Cr. R. 49.1-2(g)).
+event SealMotionServed()
+/// A brief in support of a motion to maintain under seal is filed (S.D.
+/// Ind. L. Cr. R. 49.1-2(h), (i)).
+event SealBriefFiled() paper seal-brief
+/// A brief in opposition to a motion to maintain under seal is filed (S.D.
+/// Ind. L. Cr. R. 49.1-2(i)).
+event SealOppositionFiled() paper seal-opposition-brief
+/// An order denying a motion to maintain a case or document under seal is
+/// served (S.D. Ind. L. Cr. R. 49.1-2(a), (j)).
+event SealDenialServed()
+
+/// S.D. Ind. L. Cr. R. 12-2(b): any objection to a motion to reassign a
+/// criminal case as related is filed within 7 days of the filing of the
+/// motion.
+deadline reassignment-objection: 7.days after ReassignmentMotionFiled() counted_by frcrimp45 cite "S.D. Ind. L. Cr. R. 12-2(b)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ind. L. Cr. R. 32-2(c): within 14 days after a plea petition, plea
+/// agreement, guilty plea or guilty verdict, government and defense counsel
+/// each submit in writing their version of the facts of the offense to the
+/// probation officer, or notify the officer that it is captured in a
+/// document already available, providing it to the other party first or
+/// at the same time.
+deadline offense-versions: 14.days after SentencingProcessCommenced() counted_by frcrimp45 cite "S.D. Ind. L. Cr. R. 32-2(c)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ind. L. Cr. R. 49.1-2(g)(2): the designating party files a
+/// Statement Authorizing Unsealing or a Brief in Support within 14 days of
+/// service of the Motion to Maintain Document(s) Under Seal; if it does
+/// not, the court may rule summarily.
+deadline designating-party-statement: 14.days after SealMotionServed() counted_by frcrimp45 cite "S.D. Ind. L. Cr. R. 49.1-2(g)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ind. L. Cr. R. 49.1-2(a), (j): after the court denies a motion to
+/// maintain a case or document under seal, the clerk unseals it 21 days
+/// after service of the order, absent a FRCrimP 59(a) objection, a motion
+/// to reconsider, notice of an intended interlocutory appeal or a further
+/// order; a party acts within the 21 days to keep the seal.
+deadline unseal-after-denial: 21.days after SealDenialServed() counted_by frcrimp45 cite "S.D. Ind. L. Cr. R. 49.1-2(j); S.D. Ind. L. Cr. R. 49.1-2(a)"
+{
+  forum frcrimp
+}

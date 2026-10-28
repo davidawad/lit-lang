@@ -1,0 +1,55 @@
+# The U.S. District Court for the Southern District of Indiana's local
+# criminal rules as a local-rule layer over lit/frcrimp (28 U.S.C. § 2071;
+# FRCrimP 57(a)): it declares only the periods and limits the local
+# criminal rules themselves state and re-encodes no FRCrimP, Speedy Trial
+# Act or FRAP 4(b) period (one source of truth: lit/frcrimp). Each period
+# is counted under FRCrimP 45(a), which governs "any local rule", so each
+# deadline names `forum frcrimp`. The rules are the edition the court
+# serves as current (amendments through July 1, 2026; sources/insd), so
+# in_force is that date; earlier editions are not vendored, so a query
+# before it is a hole in the corpus. Amendments the court noticed on
+# October 16, 2026 take effect December 1, 2026 and are not vendored; they
+# will be a dated layer over this one. The court's Speedy Trial Act plan
+# (18 U.S.C. § 3165) and its standard orders under L. Cr. R. 7-1 are not
+# vendored. An appeal goes to the Seventh Circuit under lit/frcrimp's
+# FRAP 4(b) period and lit/ca7.
+[package]
+name = "insd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "insd-criminal-local-rules"
+forum = "insd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Southern District of Indiana: Local Criminal Rules"
+description = "The U.S. District Court for the Southern District of Indiana's local criminal rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the motion to quash a grand-jury subpoena, the objection to a related-case reassignment motion, the parties' versions of the offense for the presentence report, and the sealing procedure's designating-party statement, unsealing after a denial and the 10-page brief limits."
+in_force = "2026-07-01"
+known_at = "2026-10-28"
+unknown_before = "2026-07-01"
+jurisdiction = "U.S. District Court for the Southern District of Indiana (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "insd-lcrr"
+issuer = "U.S. District Court for the Southern District of Indiana"
+date = "2026-07-01"
+designation = "Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.insd-lcrr]
+title = "Local Rules of the United States District Court for the Southern District of Indiana (with amendments through July 1, 2026): Local Criminal Rules"
+url = "https://www.insd.uscourts.gov/sites/insd/files/Local%20Rules%207-1-26.pdf"
+path = "sources/insd/insd-criminal-rules-sectioned.txt"
+path_sha256 = "c2fe06cd87967e0921bea134a6671d53fa45ab18e3d1401dae893b377d2dc665"
+sha256 = "1e832484f765290b64b70b7ceb32c90980b3b071b1ca4690f680778bec1b0149"
+as_of = "2026-07-01"
+cite_prefixes = ["S.D. Ind. L. Cr. R."]
+section_heading = "S.D. Ind. L. Cr. R. {n}"

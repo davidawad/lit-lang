@@ -4,27 +4,25 @@ start complaint-filed
 
 state complaint-filed: "Complaint filed" by applicant cite "Unif. Super. Ct. R. 36.10"
 {
-  note "A complaint or petition is filed only when accompanied by the filing fee, the fee for sheriff service or a pauper's affidavit, a civil case initiation form and any forms required by law or rule; the filer furnishes the service copies (Rule 36.10). Commencement and service of process are governed by the Civil Practice Act (O.C.G.A. §§ 9-11-3, 9-11-4), which is not vendored: the service period is not stated. Periods in this package are stated, not counted: the counting statute (O.C.G.A. § 1-3-1) is not vendored."
+  note "A complaint or petition is filed only when accompanied by the filing fee, the fee for sheriff service or a pauper's affidavit, a civil case initiation form and any forms required by law or rule; the filer furnishes the service copies (Rule 36.10). On the filing of the complaint the clerk forthwith issues a summons and delivers it for service (O.C.G.A. § 9-11-4(a)); the summons states the time within which the defendant must appear and file defensive pleadings and warns of judgment by default (O.C.G.A. § 9-11-4(b)). Periods in this package are stated, not counted: the Civil Practice Act computes them under O.C.G.A. § 1-3-1(d)(3) (O.C.G.A. § 9-11-6(a)), which is not vendored. Three days are added to a period running from service of a paper other than process served by mail or e-mail (O.C.G.A. § 9-11-6(e))."
   edge-complaint-filed-service "Summons issued and served" -> service {
-    authority cite "Unif. Super. Ct. R. 36.11"
+    authority cite "O.C.G.A. § 9-11-4"
   }
 }
 
 state service: "Service and return of service" by office cite "Unif. Super. Ct. R. 36.11"
 {
-  note "The sheriff or other authorized person enters the return of service on a form provided by the clerk and files it with the clerk (Rule 36.11). Dismissal for untimely service is a matter of the Civil Practice Act, which is not vendored, and is not modeled."
-  edge-service-answer "Served" -> answer-due { authority cite "Unif. Super. Ct. R. 15" }
+  note "The sheriff or other authorized person enters the return of service on a form provided by the clerk and files it with the clerk (Rule 36.11). The person serving the process files proof of service with the court within five business days of the service date; if it is not filed within five business days, the time to answer does not begin to run until it is filed (O.C.G.A. § 9-11-4(h)). Dismissal for untimely service is not modeled."
+  edge-service-answer "Served" -> answer-due { authority cite "O.C.G.A. § 9-11-4" }
 }
 
-decision answer-due: "Answer, motion or default" by office cite "Unif. Super. Ct. R. 15"
+decision answer-due: "Answer, motion or default" by office cite "O.C.G.A. § 9-11-12"
 {
-  note "The answer period (O.C.G.A. § 9-11-12(a)) and default (O.C.G.A. § 9-11-55) are not vendored, so the period is not stated. The Uniform Rules start the discovery period 30 days after service when no answer is filed within 30 days of service or by the date set by an extension or order (Rule 5.1); that is a discovery rule, not the answer deadline."
+  note "A defendant serves an answer within 30 days after service of the summons and complaint unless a statute provides otherwise; serving a motion under § 9-11-12 alters that time unless the court sets another: the answer is due within 15 days after notice of the court denying the motion or postponing it to trial, or within 15 days after service of a more definite statement (O.C.G.A. § 9-11-12(a)). If no answer is filed within the time required, the case is automatically in default unless the time was extended as provided by law; the default may be opened as of right by filing defenses within 15 days of the day of default on payment of costs (O.C.G.A. § 9-11-55(a)). The Uniform Rules start the discovery period 30 days after service when no answer is filed within 30 days of service or by the date set by an extension or order (Rule 5.1); that is a discovery rule, not the answer deadline."
   edge-answer-due-default "No defensive pleading filed" -> default-entered {
-    authority cite "Unif. Super. Ct. R. 15"
+    authority cite "O.C.G.A. § 9-11-55"
   }
-  edge-answer-due-motion "Motion filed" -> pleading-motion {
-    authority cite "Unif. Super. Ct. R. 6.1"
-  }
+  edge-answer-due-motion "Motion filed" -> pleading-motion { authority cite "O.C.G.A. § 9-11-12" }
   edge-answer-due-answer "Answer filed" -> case-management {
     authority cite "Unif. Super. Ct. R. 5.1"
   }
@@ -32,7 +30,7 @@ decision answer-due: "Answer, motion or default" by office cite "Unif. Super. Ct
 
 decision pleading-motion: "Motion decided" by court cite "Unif. Super. Ct. R. 6.3"
 {
-  note "A pretrial motion includes citations of supporting authorities and, where unstipulated facts are relied on, affidavits or citations to the record; an e-filer notifies the opposing parties and the assigned judge by e-mail no later than 24 hours after e-filing (Rule 6.1). Unless the judge orders otherwise or law provides, each opposing party serves and files its response not later than 30 days after service of the motion (Rule 6.2). Motions are decided without oral hearing unless the court orders otherwise (Rule 6.3). The grounds of a motion to dismiss and amendment of pleadings are the Civil Practice Act's (O.C.G.A. §§ 9-11-12(b), 9-11-15), not vendored; the re-pleading loop is not modeled. No leading decision is named."
+  note "A pretrial motion includes citations of supporting authorities and, where unstipulated facts are relied on, affidavits or citations to the record; an e-filer notifies the opposing parties and the assigned judge by e-mail no later than 24 hours after e-filing (Rule 6.1). Unless the judge orders otherwise or law provides, each opposing party serves and files its response not later than 30 days after service of the motion (Rule 6.2). Motions are decided without oral hearing unless the court orders otherwise (Rule 6.3). The defenses that may be made by motion are lack of subject-matter or personal jurisdiction, improper venue, insufficiency of process or of service, failure to state a claim and failure to join a party under § 9-11-19 (O.C.G.A. § 9-11-12(b)). A party may amend a pleading as a matter of course before entry of a pretrial order, and afterwards only by leave or written consent (O.C.G.A. § 9-11-15(a)); the re-pleading loop is not modeled. No leading decision is named."
   edge-pleading-motion-dismissed "Granted" -> dismissed-pleading {
     authority cite "Unif. Super. Ct. R. 6.3"
   }
@@ -41,9 +39,9 @@ decision pleading-motion: "Motion decided" by court cite "Unif. Super. Ct. R. 6.
   }
 }
 
-terminal default-entered: "Default judgment" outcome [loss] cite "Unif. Super. Ct. R. 15"
+terminal default-entered: "Default judgment" outcome [loss] cite "O.C.G.A. § 9-11-55"
 {
-  note "The party seeking a default judgment certifies in writing, attached to the proposed judgment, the date and type of service, that proof of service was filed within 5 business days of service (or the date it was filed), that no defensive pleading has been filed as shown by court records, and the defendant's military status if required (Rule 15). Opening a default is the Civil Practice Act's (O.C.G.A. § 9-11-55(b)), not vendored, and is not modeled. Outcome from the defending side."
+  note "The party seeking a default judgment certifies in writing, attached to the proposed judgment, the date and type of service, that proof of service was filed within 5 business days of service (or the date it was filed), that no defensive pleading has been filed as shown by court records, and the defendant's military status if required (Rule 15). After the 15-day period the plaintiff is entitled to judgment by default as if every item of the complaint were supported by proper evidence, but must introduce evidence of damages in an action ex delicto or for unliquidated damages (O.C.G.A. § 9-11-55(a)). Before final judgment the court may open a default for providential cause, excusable neglect or a proper case, on a showing under oath that sets up a meritorious defense (O.C.G.A. § 9-11-55(b)); that is not modeled. Outcome from the defending side."
 }
 
 terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] cite "Unif. Super. Ct. R. 6.3"
@@ -70,12 +68,10 @@ state discovery: "Discovery" by applicant cite "Unif. Super. Ct. R. 5.1"
   }
 }
 
-decision sj-motion: "Summary judgment decided" by court cite "Unif. Super. Ct. R. 6.5"
+decision sj-motion: "Summary judgment decided" by court cite "O.C.G.A. § 9-11-56"
 {
-  note "The motion annexes a separate, short and concise statement of each theory of recovery and each material fact as to which the movant contends there is no genuine issue to be tried; the response includes a statement of each material fact as to which a genuine issue is contended to exist (Rule 6.5). The motion is filed early enough not to delay the trial, and no trial is continued by reason of its delayed filing (Rule 6.6). The response is due not later than 30 days after service of the motion unless ordered otherwise (Rule 6.2). The motion is decided without oral hearing unless a separate 'Request for Oral Hearing' is filed with the motion or not later than 5 days after the time for response (Rule 6.3); the time requirements for summary judgment are not shortened as emergency motions (Rule 6.7). The summary judgment standard (O.C.G.A. § 9-11-56) is not vendored. The outline's leading decision, Lau's Corp. v. Haskins, 261 Ga. 491 (1991), is removed: no reporter text of it is vendored."
-  edge-sj-motion-granted "Granted" -> judgment-for-movant {
-    authority cite "Unif. Super. Ct. R. 6.5"
-  }
+  note "The motion annexes a separate, short and concise statement of each theory of recovery and each material fact as to which the movant contends there is no genuine issue to be tried; the response includes a statement of each material fact as to which a genuine issue is contended to exist (Rule 6.5). The motion is filed early enough not to delay the trial, and no trial is continued by reason of its delayed filing (Rule 6.6). The response is due not later than 30 days after service of the motion unless ordered otherwise (Rule 6.2). The motion is decided without oral hearing unless a separate 'Request for Oral Hearing' is filed with the motion or not later than 5 days after the time for response (Rule 6.3); the time requirements for summary judgment are not shortened as emergency motions (Rule 6.7). A claimant may move at any time after 30 days from the commencement of the action or after service of the adverse party's motion; a defending party may move at any time (O.C.G.A. § 9-11-56(a), (b)). The motion is served at least 30 days before the time fixed for the hearing, and judgment is rendered forthwith if the record shows no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law (O.C.G.A. § 9-11-56(c)). An order granting summary judgment is subject to review by appeal; an order denying it, by direct appeal under O.C.G.A. § 5-6-34(b) (O.C.G.A. § 9-11-56(h)). The outline's leading decision, Lau's Corp. v. Haskins, 261 Ga. 491 (1991), is removed: no reporter text of it is vendored."
+  edge-sj-motion-granted "Granted" -> judgment-for-movant { authority cite "O.C.G.A. § 9-11-56" }
   edge-sj-motion-denied "Denied or partly denied" -> pretrial {
     authority cite "Unif. Super. Ct. R. 7.1"
   }
@@ -115,18 +111,18 @@ terminal dismissed-no-response: "Dismissed without prejudice for failure to resp
 
 decision post-trial: "Post-trial motions decided" by court cite "Unif. Super. Ct. R. 41.1"
 {
-  note "Motions for new trial and for judgment notwithstanding the verdict are heard orally, unlike other civil motions (Rule 6.3). The motion for new trial is heard and decided as promptly as possible (Rule 41.1). The periods for these motions (O.C.G.A. §§ 5-5-40, 9-11-50(b)) are not vendored."
+  note "Motions for new trial and for judgment notwithstanding the verdict are heard orally, unlike other civil motions (Rule 6.3). The motion for new trial is heard and decided as promptly as possible (Rule 41.1). A party who moved for a directed verdict may move for judgment notwithstanding the verdict not later than 30 days after entry of judgment, or, if no verdict was returned, within 30 days after the jury was discharged; a motion for new trial may be joined with it (O.C.G.A. § 9-11-50(b)). No extension of time is granted for filing a motion for new trial or for judgment notwithstanding the verdict (O.C.G.A. § 9-11-6(b)). The new-trial period itself (O.C.G.A. § 5-5-40) is not vendored."
   edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
     authority cite "Unif. Super. Ct. R. 41.1"
   }
   edge-post-trial-jnov "Judgment notwithstanding the verdict granted" -> judgment-for-movant {
-    authority cite "Unif. Super. Ct. R. 6.3"
+    authority cite "O.C.G.A. § 9-11-50"
   }
 }
 
-state judgment-entered: "Judgment filed" by office cite "Unif. Super. Ct. R. 36.10"
+state judgment-entered: "Judgment filed" by office cite "O.C.G.A. § 9-11-58"
 {
-  note "Judgments, settlements, dismissals and other dispositions are filed only with a civil case disposition form (Rule 36.10). Entry of judgment under the Civil Practice Act (O.C.G.A. § 9-11-58) is not vendored."
+  note "Judgments, settlements, dismissals and other dispositions are filed only with a civil case disposition form (Rule 36.10). A judgment is signed by the judge and filed with the clerk; filing the signed judgment with the fully completed civil case disposition form is its entry, and unless the court directs otherwise no judgment is effective until entered (O.C.G.A. § 9-11-58(a), (b))."
   edge-judgment-entered-appeal "Next step" -> appeal-decision {
     authority cite "Ga. Ct. App. R. 16"
   }
@@ -150,5 +146,5 @@ terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Ga. Ct. App. 
 
 terminal settled: "Settled or dismissed" outcome [settlement] cite "Unif. Super. Ct. R. 4.10"
 {
-  note "Immediately on the settlement or dismissal of a civil action the attorneys notify the assigned judge and, where appropriate, the calendar clerk (Rule 4.10). Voluntary dismissal itself is the Civil Practice Act's (O.C.G.A. § 9-11-41(a)), not vendored."
+  note "Immediately on the settlement or dismissal of a civil action the attorneys notify the assigned judge and, where appropriate, the calendar clerk (Rule 4.10). The plaintiff may dismiss without order by filing a written notice of dismissal at any time before the sixtieth day following the date the opposing party serves an answer, or by a stipulation signed by all parties who have appeared; the dismissal is without prejudice unless the plaintiff previously dismissed an action on the same claim (O.C.G.A. § 9-11-41(a)). An action in which no written order is taken for five years automatically stands dismissed (O.C.G.A. § 9-11-41(e))."
 }

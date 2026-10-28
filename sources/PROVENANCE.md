@@ -492,7 +492,12 @@ Entries live in the forum's own
     through January 6, 2025), granule
     `USCODE-2024-title28-app-federalru-rule26.htm` (sha256
     `1b1e1f0b76345262b3e275d5c2d5cfff2d47b813bdc1b0921ce96ed8a58fb878`),
-    fetched 2026-10-27; `frap.txt` prints none.
+    fetched 2026-10-27; `frap.txt` prints none. Re-read (lg-eapo,
+    2026-10-28) against the credits closing FRAP 26 in the House Judiciary
+    print of December 1, 2025 (`frap/frap.txt`, printed p. 29): the same
+    thirteen amendments, the last "Apr. 24, 2023, eff. Dec. 1, 2023" (the
+    OCR reads "2028" for the order year; the 2024 granule gives 2023), so
+    the list is unchanged and its `as_of` moves to 2025-12-01.
   - `RCFC 6`: "As revised and reissued May 1, 2002; as amended June 20,
     2006, Nov. 3, 2008, Jan. 11, 2010, Aug. 1, 2017, July 29, 2024" in
     `rcfc.txt` (no issue dates printed).

@@ -17,6 +17,7 @@
 
 - Source: https://www.sdd.uscourts.gov/sites/sdd/files/Criminal%20Local%20Rules%20-%20final%2C%20approved.pdf (official site; 36 pages, sha256 c14f37a0684b4e6add374ae6a70be467f0919fe65b7caae848acdfcbf3a3c25e).
 - Edition: Criminal Local Rules of Practice, 'Complete Set' (final, approved) linked at https://www.sdd.uscourts.gov/LocalRulesCriminal; CURRENCY UNCONFIRMED: neither the PDF nor the page states an effective date. robots.txt of www.sdd.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): sdd-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 b98938d2f72ee568905e6c9c31c6432d19cfc3eab11e58cbd75927faef635ae8. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `sdd/original/sdd-criminal-local-rules-complete-set.pdf` as served (sha256 c14f37a0684b4e6add374ae6a70be467f0919fe65b7caae848acdfcbf3a3c25e); extraction sha256 b98938d2f72ee568905e6c9c31c6432d19cfc3eab11e58cbd75927faef635ae8.

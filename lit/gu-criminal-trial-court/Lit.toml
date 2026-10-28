@@ -1,0 +1,69 @@
+# Criminal cases in the Superior Court of Guam under the Criminal
+# Procedure Code (Title 8, Guam Code Annotated) and the Superior Court's
+# Criminal Procedure Rules (sources/gu-criminal-trial-court). Title 8 is
+# the Compiler of Laws' chapter files (table of contents dated October
+# 26, 2026), whose PROVENANCE entry records CURRENCY UNCONFIRMED; by the
+# PM's standing ruling of 2026-10-27 such a source yields holes, not
+# values, so this package cites 8 GCA for the structure of each step and
+# states no period from it, including the § 80.60 speedy-trial periods.
+# The Superior Court's local Criminal Procedure Rules (one rule, CR 1.1)
+# are updated through Promulgation Order PRM13-002-02 of April 9, 2014,
+# effective April 1, 2014, and their periods are stated. Criminal appeals
+# go under Guam Rule of Appellate Procedure 4(b), bound to the text
+# lit/gu-supreme binds (as of February 24, 2014; sources/gu-supreme), and
+# its period is stated. in_force is the retrieval date, because the
+# Title 8 text has no confirmed edition, and an earlier query is a hole in
+# the corpus. lit/core has no counting rule for these, so the periods are
+# stated in notes, not encoded as counted deadlines.
+[package]
+name = "gu-superior-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "gu-superior-court-criminal"
+forum = "gu-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "guam"
+title = "Superior Court of Guam, criminal"
+description = "Criminal cases in the Superior Court of Guam under the Criminal Procedure Code (8 GCA) and the court's Criminal Procedure Rules: arrest and first appearance, release, the preliminary examination or grand jury, indictment, information or complaint, arraignment and pleas, pretrial motions and discovery, the § 80.60 dismissal for time, trial, post-verdict motions, sentencing and the Guam R. App. P. 4(b) notice of appeal; 8 GCA periods are holes (currency unconfirmed), the local rule and appellate periods are stated."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Superior Court of Guam (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.gu-gca-8]
+title = "Guam Code Annotated, Title 8, Criminal Procedure (Compiler of Laws chapter files, table of contents dated October 26, 2026); CURRENCY UNCONFIRMED"
+url = "https://col.guamcourts.gov/legal-publications/guam-code-annotated"
+path = "sources/gu-criminal-trial-court/gu-gca-title-8-criminal-procedure-sectioned.txt"
+path_sha256 = "a353a59cb767b2c82ee43687380cbbdc92497c94ddba5ef9ffe48cd9733562ad"
+as_of = "2026-10-26"
+cite_prefixes = ["8 GCA"]
+section_heading = "8 GCA § {n}"
+
+[sources.gu-crim-lr]
+title = "Local Rules of the Superior Court of Guam, Criminal Procedure Rules (effective April 1, 2014, updated through Promulgation Order No. PRM13-002-02, April 9, 2014)"
+url = "https://guamcourts.gov/sites/default/files/Criminal-Procedure-Rules_2025-10-13.pdf"
+path = "sources/gu-criminal-trial-court/gu-superior-court-criminal-procedure-rules-sectioned.txt"
+path_sha256 = "46a317bbeb84c322f41f8015f30a913ef2f4156ba8adc231becbdd31e7ff0f20"
+sha256 = "665e8162f0c0daa670fe71ee5503c8329319d56acf1bbff99dd69fbc702fa8ec"
+as_of = "2014-04-09"
+cite_prefixes = ["Guam Super. Ct. CR"]
+section_heading = "CR {n}"
+
+
+[sources.gu-grap]
+title = "Guam Rules of Appellate Procedure (as of February 24, 2014)"
+url = "https://www.guamcourts.gov/sites/default/files/GRAP_20140224.pdf"
+path = "sources/gu-supreme/guam-rules-of-appellate-procedure-sectioned.txt"
+path_sha256 = "7151ec99e54e97315b88de099186256181f8350998da456f400f4140175b321c"
+sha256 = "7021c87f1aa8db5bb4a00f8c3e71a148bc3c1e10b68a4ac6a0801fda71564295"
+as_of = "2014-02-24"
+cite_prefixes = ["Guam R. App. P."]
+section_heading = "Rule {n}"

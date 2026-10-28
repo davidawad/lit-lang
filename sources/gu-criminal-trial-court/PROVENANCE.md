@@ -53,3 +53,15 @@
 - Extraction sha256 be7ad8f30092d25b6eb82e6b37ecfe4e7ea3648e7e67603da87081427fc0677b.
 
 - Note (lg-gddt): Criminal appeals: Guam Supreme Court rules and 8 GCA chapter 130 (appeals); the Guam Supreme Court rules are covered by sources/gu-supreme/.
+
+### `gu-criminal-trial-court/gu-gca-title-8-criminal-procedure-sectioned.txt` — Guam Code Annotated Title 8 (Criminal Procedure), sectioned
+
+- Derived in the pod (lg-gddt.22) from `gu-criminal-trial-court/gu-gca-title-8-criminal-procedure.txt` (extract sha256 be7ad8f30092d25b6eb82e6b37ecfe4e7ea3648e7e67603da87081427fc0677b); nothing fetched. One marker line `## 8 GCA § <n>` is inserted before each section's own body heading line `§ <n>. <Title>`: within each `## Chapter` block a section number appears first in the chapter's table of contents and then at its body heading, and the marker goes before the second occurrence (or the only one; 425 sections, chapters 1 to 164); comment and note lines that cite a section carry no markers. Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Edition: as the extract; CURRENCY UNCONFIRMED stands. `lit/gu-criminal-trial-court` cites it for structure only and takes no value from it.
+- Sectioned sha256 a353a59cb767b2c82ee43687380cbbdc92497c94ddba5ef9ffe48cd9733562ad (the `path_sha256` pinned by `lit/gu-criminal-trial-court/Lit.toml`).
+
+### `gu-criminal-trial-court/gu-superior-court-criminal-procedure-rules-sectioned.txt` — Superior Court of Guam Criminal Procedure Rules (through PRM13-002-02, April 9, 2014), sectioned
+
+- Derived in the pod (lg-gddt.22) from `gu-criminal-trial-court/gu-superior-court-criminal-procedure-rules.txt` (extract sha256 c4454250de43fdc4b5a570206e0f57e8e60e36565cca9868a736356ffd3a03c6); nothing fetched. One marker line `## CR 1.1` is inserted before the rule's body heading line `CR 1.1 Pleadings and Pretrial Motions.` (the only rule; the contents and forms list carry no marker). Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Edition: as the extract, effective April 1, 2014, updated through Promulgation Order No. PRM13-002-02 (April 9, 2014).
+- Sectioned sha256 46a317bbeb84c322f41f8015f30a913ef2f4156ba8adc231becbdd31e7ff0f20 (the `path_sha256` pinned by `lit/gu-criminal-trial-court/Lit.toml`).

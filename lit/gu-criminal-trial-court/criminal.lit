@@ -1,0 +1,151 @@
+module gu-superior-court-criminal.criminal
+
+// Criminal cases in the Superior Court of Guam. The Criminal Procedure
+// Code (8 GCA) is CURRENCY UNCONFIRMED (sources/gu-criminal-trial-court/
+// PROVENANCE.md), so it is cited for the structure of each step and no
+// period, limit or amount is taken from it: where a step has one, the
+// note names the section that sets it and says that it is not stated. The
+// Superior Court's Criminal Procedure Rule CR 1.1 (2014) and Guam R. App.
+// P. 4(b) (as of February 24, 2014) have stated editions, and their
+// periods are stated. lit/core has no counting rule for any of them, so
+// none is encoded as a counted deadline. Outcomes are from the
+// defendant's side. The earlier outline's leading decisions (County of
+// Riverside v. McLaughlin, Gerstein v. Pugh, Gideon v. Wainwright, Brady v.
+// Maryland, Mapp v. Ohio, Barker v. Wingo, Boykin v. Alabama, Missouri v.
+// Frye, Jackson v. Virginia, Apprendi v. New Jersey, Roe v. Flores-Ortega,
+// Garza v. Idaho) are removed: no reporter text is vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "8 GCA § 45.10"
+{
+  note "An officer making an arrest under a warrant, or a person arresting without one, takes the arrested person without unnecessary delay before a judge of the Superior Court (8 GCA § 45.10(a)); the outer limit 8 GCA § 45.10(c) sets is not stated here (currency unconfirmed). A complaint is filed as 8 GCA § 45.20 provides."
+  edge-arrested-appearance "First appearance" -> initial-appearance {
+    authority cite "8 GCA § 45.30"
+  }
+}
+
+decision initial-appearance: "Release or detention" by court cite "8 GCA § 40.10"
+{
+  note "At the first appearance the court informs the defendant of the complaint, the rights to retain or request assigned counsel, and the circumstances of pretrial release (8 GCA § 45.30(a)). Release on bail is generally permitted (8 GCA § 40.10), with release on recognizance, bail conditions and redetermination governed by 8 GCA §§ 40.15 to 40.50; their periods are not stated here (currency unconfirmed)."
+  edge-initial-appearance-detained "Detained" -> probable-cause { authority cite "8 GCA § 40.50" }
+  edge-initial-appearance-released "Released on bail or recognizance" -> probable-cause {
+    authority cite "8 GCA § 40.15"
+  }
+}
+
+decision probable-cause: "Preliminary examination or grand jury" by court cite "8 GCA § 45.50"
+{
+  note "A felony and any related misdemeanor are prosecuted by indictment or, if indictment is waived or the defendant is held to answer after a preliminary hearing, by indictment or information; other offenses by complaint (8 GCA § 1.15). Unless waived, an information may not be filed until a preliminary examination is held and an order issued holding the defendant to answer (8 GCA § 1.17). The court fixes the date of the preliminary examination at the first appearance, within the period 8 GCA § 45.50(b) sets, which is not stated here (currency unconfirmed); the holding or discharge follows 8 GCA § 45.80. A grand jury indicts when the evidence gives reasonable cause to believe an indictable offense was committed by the defendant (8 GCA § 50.54(b))."
+  edge-probable-cause-charged "Held to answer or indicted" -> charged {
+    authority cite "8 GCA § 45.80"
+  }
+  edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
+    authority cite "8 GCA § 45.80"
+  }
+}
+
+state charged: "Indictment, information or complaint" by office cite "8 GCA § 1.15"
+{
+  note "An indictment is a written accusation presented by the grand jury charging a felony or a felony and a related misdemeanor (8 GCA § 50.54(a)). The court must dismiss if an information is not filed or an indictment returned within the time 8 GCA §§ 45.45, 45.50 and 45.80 prescribe (8 GCA § 80.60(a)(1)); the periods are not stated here (currency unconfirmed)."
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "8 GCA § 60.10" }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "8 GCA § 60.10"
+{
+  note "The defendant is arraigned promptly after the indictment, information or complaint is filed, in open court, by reading the charge or stating its substance and calling on the defendant to plead (8 GCA § 60.10). The pleas are not guilty, not guilty by reason of mental illness, disease or defect, guilty and nolo contendere, and a refusal to plead is entered as not guilty (8 GCA § 60.40). The trial-commencement periods of 8 GCA § 80.60(a)(2) and (3) run from arraignment; they are not stated here (currency unconfirmed)."
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "8 GCA § 70.10" }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "8 GCA § 65.15"
+{
+  note "Defects in the institution of the prosecution or in the charge, among other matters, must be raised before trial by motion (8 GCA § 65.15), and the prosecutor's discovery obligations are in 8 GCA § 70.10. Under the Superior Court's rule, a motion is in writing with a supporting memorandum, states whether an evidentiary hearing is requested, and is served under 8 GCA §§ 1.25 and 1.29; the parties file and serve their witness lists within twenty-four (24) hours of a scheduled evidentiary hearing (Guam Super. Ct. CR 1.1(b), (c)). The assigned judge issues a criminal trial scheduling order setting the trial date within ninety (90) days of the case being filed (or of its assignment, if assigned more than thirty (30) days after filing), changed only for good cause, and no continuance is granted merely on the parties' stipulation (Guam Super. Ct. CR 1.1(e), (f)). A party may request or waive oral argument within three (3) days after the last paper on a motion is filed (Guam Super. Ct. CR 1.1(g))."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "8 GCA § 65.15"
+  }
+  edge-discovery-speedy "Motion to dismiss for time" -> motions-ruling {
+    authority cite "8 GCA § 80.60"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "8 GCA § 60.80" }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "8 GCA § 65.40"
+{
+  note "The court must dismiss a criminal action if an information or indictment is not timely filed, or if trial has not commenced within the periods 8 GCA § 80.60(a) sets for a defendant in custody and out of custody at arraignment, except as 8 GCA § 80.60(b) provides; the periods are not stated here (currency unconfirmed). On dismissal the defendant is released or exonerated as 8 GCA § 80.75 provides. A motion for reconsideration may be renewed only on a material difference in fact or law, new facts or a change of law, or a manifest failure to consider material facts (Guam Super. Ct. CR 1.1(d))."
+  edge-motions-ruling-speedy "Dismissed for reasons of time" -> dismissed {
+    authority cite "8 GCA § 80.60"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "8 GCA § 65.55"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "8 GCA § 65.40"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "8 GCA § 60.40"
+{
+  note "Before accepting a guilty or nolo contendere plea the court advises the defendant and determines that the plea is voluntary and has a factual basis (8 GCA §§ 60.50, 60.60, 60.70); plea bargaining is regulated by 8 GCA § 60.80. A jury trial may be waived only with the consent of the government and the court (8 GCA § 85.10)."
+  edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
+    authority cite "8 GCA § 60.70"
+  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "8 GCA § 90.10" }
+  edge-plea-decision-dismissed "Prosecutor dismisses" -> dismissed {
+    authority cite "8 GCA § 80.70"
+  }
+}
+
+decision trial: "Verdict" by court cite "8 GCA § 105.30"
+{
+  note "The verdict must be unanimous and is declared in open court, with a poll on request (8 GCA § 105.30). A motion for judgment of acquittal may be made or renewed after a guilty verdict or a hung jury within the period 8 GCA § 100.30 sets, which is not stated here (currency unconfirmed)."
+  edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
+    authority cite "8 GCA § 100.30"
+  }
+  edge-trial-guilty "Guilty; post-verdict motions" -> post-trial { authority cite "8 GCA § 110.30" }
+}
+
+decision post-trial: "Post-verdict motions" by court cite "8 GCA § 110.30"
+{
+  note "The court may grant a new trial if required in the interests of justice, and a motion in arrest of judgment lies if the charge states no offense or the court lacked jurisdiction (8 GCA § 110.30(a); 115.10(a)); the periods for these motions, set by 8 GCA §§ 110.30 and 115.10, are not stated here (currency unconfirmed). A timely motion under the Criminal Procedure Code postpones the notice of appeal until ten (10) days after the order disposing of the last such motion (Guam R. App. P. 4(b)(3)(A))."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted { authority cite "8 GCA § 100.30" }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "8 GCA § 110.20" }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "8 GCA § 120.14"
+  }
+}
+
+state sentencing: "Judgment and sentence" by court cite "8 GCA § 120.14"
+{
+  note "On a judgment of guilty the court sets the time for sentencing within the period 8 GCA § 120.14 sets, which is not stated here (currency unconfirmed); counsel and the defendant may speak before sentence (8 GCA § 120.26), and the court advises of the right to appeal where required (8 GCA § 120.30). A sentence may be corrected or lowered within the times 8 GCA § 120.46 sets, not stated here (currency unconfirmed)."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "8 GCA § 120.18"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "8 GCA § 130.40"
+{
+  note "A defendant's notice of appeal must be filed in the Superior Court within ten (10) days after the later of the entry of the judgment or order appealed from or the government's notice of appeal; the government's within thirty (30) days (Guam R. App. P. 4(b)(1)). The statutory time for the notice (8 GCA § 130.40) is not stated here (currency unconfirmed)."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "Guam R. App. P. 4(b)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Guam R. App. P. 4(b)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "8 GCA § 100.30"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty or a judgment of acquittal (8 GCA §§ 100.30, 105.30)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "8 GCA § 80.60"
+{
+  note "Outcome from the defendant's side: a dismissal for reasons of time (8 GCA § 80.60), on a pretrial motion, or for want of probable cause (8 GCA § 45.80)."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "8 GCA § 130.15"
+{
+  note "The appeal continues before the Supreme Court of Guam under the Guam Rules of Appellate Procedure (lit/gu-supreme)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "8 GCA § 135.10"
+{
+  note "Outcome from the defendant's side. A person unlawfully imprisoned may prosecute a writ of habeas corpus (8 GCA § 135.10); federal habeas belongs to lit/habeas."
+}

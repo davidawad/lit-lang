@@ -1,0 +1,177 @@
+module fisc.fisc
+
+/// A petition to modify, set aside or compel compliance with a directive
+/// under 50 U.S.C. § 1881a(h), or a response to it (FISC R. 25(a)): 20
+/// pages including attachments other than the directive, unless the Court
+/// directs otherwise.
+limit directive-paper { pages <= 20 cite "FISC R. 25(a)" } cite "FISC R. 25(a)"
+/// A petition challenging a production or nondisclosure order under 50
+/// U.S.C. § 1861(f) (FISC R. 35): 20 pages including attachments other
+/// than the challenged order.
+limit production-paper { pages <= 20 cite "FISC R. 35" } cite "FISC R. 35"
+/// The government's response to a production-order petition (FISC R.
+/// 40(a)): 20 pages including attachments other than the challenged order.
+limit production-response { pages <= 20 cite "FISC R. 40(a)" } cite "FISC R. 40(a)"
+/// A petition for rehearing en banc, or a response to it (FISC R. 47(b)):
+/// 15 pages including attachments other than the challenged order or
+/// decision.
+limit en-banc-petition { pages <= 15 cite "FISC R. 47(b)" } cite "FISC R. 47(b)"
+
+/// A provider's petition on a directive is filed (FISC R. 21).
+event DirectivePetitionFiled() paper directive-paper
+/// A response to a directive petition is filed (FISC R. 24).
+event DirectiveResponseFiled() paper directive-paper
+/// A petition challenging a production or nondisclosure order is filed
+/// (FISC R. 33).
+event ProductionPetitionFiled() paper production-paper
+/// The government's response to that petition is filed (FISC R. 40(a)).
+event ProductionResponseFiled() paper production-response
+/// A petition for rehearing en banc, or a response, is filed (FISC R. 47).
+event EnBancPetitionFiled() paper en-banc-petition
+
+start matter
+
+decision matter: "Means of requesting relief" by applicant cite "FISC R. 6"
+{
+  note "The government may file an application for a Court order under the Act or a certification under 50 U.S.C. § 1881a(g); a party may file a petition for review of a production or nondisclosure order under 50 U.S.C. § 1861 or for review or enforcement of a directive under 50 U.S.C. § 1881a; any other relief is sought by motion (FISC R. 6). The Act is not vendored. Issues the rules and the Act do not address may be resolved under the Federal Rules of Criminal or Civil Procedure (FISC R. 1). Periods are computed in calendar days under FISC R. 10; they are stated here, not counted."
+  edge-matter-application "Application or certification" -> application-submitted {
+    authority cite "FISC R. 6(a)"
+  }
+  edge-matter-directive "Provider petition on a directive" -> directive-petition {
+    authority cite "FISC R. 21"
+  }
+  edge-matter-production "Petition challenging a production or nondisclosure order" -> production-petition {
+    authority cite "FISC R. 33(a)"
+  }
+}
+
+state application-submitted: "Application submitted" by applicant cite "FISC R. 9"
+{
+  note "Except after an emergency authorization or as the Court permits, a proposed application is submitted no later than seven days before the government seeks to have the matter entertained; the final application is filed no later than 10:00 a.m. Eastern Time on that day, with any differences from the proposed application identified (FISC R. 9(a), (b), (e)). A submission raising an issue not previously presented, a new surveillance or search technique, or a new issue of law needs written notice or a memorandum, at the latest with the first proposed application raising it (FISC R. 11). The Judge decides whether a hearing is necessary; a hearing in a non-adversarial matter is ex parte (FISC R. 17(a), (b))."
+  edge-application-submitted-ruling "Application presented to a Judge" -> ex-parte-ruling {
+    authority cite "FISC R. 17(a)"
+  }
+}
+
+decision ex-parte-ruling: "Ruling on the application" by court cite "FISC R. 18"
+{
+  note "A Judge who denies the government's application must immediately provide a written statement of each reason and serve it on the government; any later submission on the matter goes to that Judge (FISC R. 18(b)). An expiration date in an order is stated in Eastern Time and computed from the issuance of the order or of an emergency authorization (FISC R. 18(c)). The outline's In re Sealed Case, 310 F.3d 717 (FISA Ct. Rev. 2002), is removed: no reporter text is vendored."
+  edge-ex-parte-ruling-approved "Order granted" -> order-approved { authority cite "FISC R. 18(c)" }
+  edge-ex-parte-ruling-denied "Application denied" -> adverse-ruling {
+    authority cite "FISC R. 18(b)"
+  }
+}
+
+state directive-petition: "Petition on a directive filed and assigned" by applicant cite "FISC R. 21"
+{
+  note "A provider that receives a directive under 50 U.S.C. § 1881a(h)(1) may petition to modify or set aside it (FISC R. 21); the government may petition to compel compliance (FISC R. 22), to which the provider may respond within seven days after service (FISC R. 24(b)). The petition states the relief, the grounds, the date the directive was served and whether a hearing is requested (FISC R. 23). A petition and response are limited to 20 pages; no supplements, replies or sur-replies without leave (FISC R. 25). The Presiding Judge assigns the petition no later than 24 hours after its filing and the Clerk transmits it no later than 24 hours after the assignment (FISC R. 26, 27). Proceedings are in camera (FISC R. 30)."
+  edge-directive-petition-review "Assigned for initial review" -> directive-initial-review {
+    authority cite "FISC R. 27(a)"
+  }
+}
+
+decision directive-initial-review: "Initial review of the directive petition" by court cite "FISC R. 28(a)"
+{
+  note "The Judge conducts an initial review within five days after being assigned the petition; a petition not warranted by existing law or a nonfrivolous argument is promptly denied, the directive affirmed and compliance ordered, with a written statement of reasons (FISC R. 28(a))."
+  edge-directive-initial-review-frivolous "Denied on initial review" -> adverse-ruling {
+    authority cite "FISC R. 28(a)"
+  }
+  edge-directive-initial-review-plenary "Plenary review" -> directive-plenary {
+    authority cite "FISC R. 28(b)"
+  }
+}
+
+decision directive-plenary: "Plenary review of the directive" by court cite "FISC R. 28(b)"
+{
+  note "On notice that plenary review is necessary the government may respond within seven days (FISC R. 24(a)). The Judge affirms, modifies or sets aside the directive within the time the Act permits, on a hearing or on the papers (FISC R. 28(b)); the petition is granted only if the directive does not meet the requirements of 50 U.S.C. § 1881a or is otherwise unlawful (FISC R. 28(c)), and a directive not explicitly modified or set aside remains in full effect (FISC R. 28(d))."
+  edge-directive-plenary-granted "Directive modified or set aside" -> petition-granted {
+    authority cite "FISC R. 28(c)"
+  }
+  edge-directive-plenary-affirmed "Directive affirmed" -> adverse-ruling {
+    authority cite "FISC R. 28(d)"
+  }
+}
+
+state production-petition: "Petition challenging a production or nondisclosure order filed and assigned" by applicant cite "FISC R. 33(b)"
+{
+  note "The recipient of a production order must petition within 20 days after the order has been served; a petition challenging a nondisclosure order may not be filed earlier than one year after the order was entered, nor a later petition on the same order earlier than one year after a denial (FISC R. 33(b)). The petition is limited to 20 pages (FISC R. 35) and does not automatically stay production (FISC R. 36(a)). The Presiding Judge assigns it immediately and the Clerk transmits it no later than 24 hours after the assignment (FISC R. 37, 38). Proceedings are in camera (FISC R. 43)."
+  edge-production-petition-review "Assigned for initial review" -> production-initial-review {
+    authority cite "FISC R. 38(a)"
+  }
+}
+
+decision production-initial-review: "Initial review of the production-order petition" by court cite "FISC R. 39(a)"
+{
+  note "The Judge reviews the petition within 72 hours after being assigned it; a frivolous petition is immediately denied and the order affirmed, with a written statement of reasons; otherwise the Judge promptly sets a schedule (FISC R. 39)."
+  edge-production-initial-review-frivolous "Denied as frivolous" -> adverse-ruling {
+    authority cite "FISC R. 39(b)"
+  }
+  edge-production-initial-review-merits "Not frivolous: scheduled" -> production-merits {
+    authority cite "FISC R. 39(c)"
+  }
+}
+
+decision production-merits: "Ruling on a non-frivolous petition" by court cite "FISC R. 41"
+{
+  note "Unless the Judge orders otherwise the government responds within 20 days after the scheduling order, in not more than 20 pages; no supplements, replies or sur-replies without leave (FISC R. 40). The Judge gives a written statement of reasons for modifying, setting aside or affirming the order; an order not modified or set aside is affirmed and the recipient ordered to comply (FISC R. 41). If the recipient then fails to comply the government may move for immediate enforcement (FISC R. 42)."
+  edge-production-merits-granted "Order modified or set aside" -> petition-granted {
+    authority cite "FISC R. 41(a)"
+  }
+  edge-production-merits-affirmed "Order affirmed" -> adverse-ruling {
+    authority cite "FISC R. 41(b)"
+  }
+}
+
+decision adverse-ruling: "Rehearing en banc or review sought?" by applicant cite "FISC R. 55"
+{
+  note "A party may petition for rehearing en banc no later than 30 days after the order or decision is entered; in an adversarial proceeding a response is due within 14 days after filing and service of the petition (FISC R. 47(a)). A party must file a petition for review with the Clerk no later than 30 days after entry of the decision or order, except as the Act provides otherwise (FISC R. 54, 55(a)). Appeals from rulings on directive and production-order petitions are by petition to the Court of Review (FISC R. 31, 44)."
+  edge-adverse-ruling-en-banc "Petition for rehearing en banc" -> en-banc {
+    authority cite "FISC R. 47(a)"
+  }
+  edge-adverse-ruling-review "Petition for review" -> appealed { authority cite "FISC R. 55(a)" }
+  edge-adverse-ruling-none "No further review" -> ruling-final { authority cite "FISC R. 55(a)" }
+}
+
+decision en-banc: "En banc review granted?" by court cite "FISC R. 53(a)"
+{
+  note "Hearing or rehearing en banc is ordered only if necessary to secure or maintain uniformity of the Court's decisions or the proceeding involves a question of exceptional importance (FISC R. 45). The petition is limited to 15 pages and states the party's position on whether the challenged order should remain in effect (FISC R. 47(b), 51(b)). The Presiding Judge sets a deadline for the Judges' votes (FISC R. 50(a)); an order granting or denying en banc review is entered on the majority's vote (FISC R. 53(a)). The Court en banc may enter a stay or modifying order while en banc proceedings are pending (FISC R. 51(a))."
+  edge-en-banc-granted "Granted" -> en-banc-proceeding { authority cite "FISC R. 53(a)" }
+  edge-en-banc-denied "Denied" -> review-after-en-banc { authority cite "FISC R. 53(a)" }
+}
+
+state en-banc-proceeding: "En banc proceeding" by court cite "FISC R. 52"
+{
+  note "The Court may require supplemental briefs (FISC R. 52); the order granting review may set the time of the hearing and address whether the challenged order stays in effect (FISC R. 53(b))."
+  edge-en-banc-proceeding-decided "En banc decision" -> review-after-en-banc {
+    authority cite "FISC R. 55(b)"
+  }
+}
+
+decision review-after-en-banc: "Petition for review after en banc proceedings?" by applicant cite "FISC R. 55(b)"
+{
+  note "After a timely petition for rehearing en banc, the time for taking an appeal runs from the date the petition is denied or dismissed or, if en banc review is granted, from the en banc decision on the merits (FISC R. 55(b))."
+  edge-review-after-en-banc-review "Petition for review" -> appealed {
+    authority cite "FISC R. 55(b)"
+  }
+  edge-review-after-en-banc-none "No petition" -> ruling-final { authority cite "FISC R. 55(b)" }
+}
+
+terminal order-approved: "Order granted" outcome [win] cite "FISC R. 18(c)"
+{
+  note "Outcome from the government's side. Returns on a search order are due with a renewal application or within 90 days of execution, whichever is sooner (FISC R. 16(a)); duration, minimization and renewal are the Act's and are not modeled."
+}
+
+terminal petition-granted: "Directive or order modified or set aside" outcome [win] cite "FISC R. 28(c)"
+{
+  note "Outcome from the petitioner's side."
+}
+
+terminal ruling-final: "Adverse ruling stands" outcome [loss] cite "FISC R. 55(a)"
+{
+  note "No rehearing en banc or petition for review is taken."
+}
+
+terminal appealed: "Petition for review to the Court of Review" outcome [appeal] cite "FISC R. 54"
+{
+  note "The appeal is taken by filing a petition for review with the Clerk, together with a motion to transmit the record (FISC R. 54, 57); it continues in lit/fiscr."
+}

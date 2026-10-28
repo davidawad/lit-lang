@@ -1,0 +1,232 @@
+module rid-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Rhode Island's own civil periods, computed under FRCP
+// 6(a), which governs a period stated in a local rule. Rules that state no
+// period this layer can count stay out: the default-judgment certification
+// against an unrepresented party, filed "not less than 14 days" after the
+// motion (LR Cv 55(b)), an earliest time; execution "14 days after
+// judgment has been entered" (LR Cv 69(a)), also an earliest time, and the
+// officer's 60- and 30-day returns of a writ (LR Cv 69(c)), which bind the
+// officer, not a party; the 30-minute opening statement (LR Cv 39(a)); the
+// bond of the judgment plus 10% (LR Cv 62); the registry fees (LR Cv 67);
+// the font and format rules (LR Cv 5(a)(3)); dismissal for lack of
+// prosecution within the time a show cause order prescribes (LR Cv 41);
+// the statement of claims, "a brief (2-3 page) written statement" (LR Cv
+// 16(b)), which states its length in a form the limit check does not read;
+// the consent form returned within the time the Clerk's notice specifies
+// (LR Cv 73(b)(1)); and the general, admiralty and criminal rules. The
+// earlier D.R.I. outline's FRCP flow belongs to lit/frcp and lit/frap; its
+// decisions (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby) are FRCP
+// authority, and no reporter text is vendored, so they are removed here.
+
+/// The summons is served, unless service is waived (LR Cv 5.1(a)).
+event SummonsServed()
+/// A motion is served (LR Cv 7(a)(3)).
+event MotionServed()
+/// A response to a motion is served (LR Cv 7(a)(4)).
+event ResponseServed()
+/// The initial scheduling conference under Fed. R. Civ. P. 16(a) (LR Cv
+/// 16(a)).
+event InitialSchedulingConference()
+/// A party asserting a claim files its statement of claims (LR Cv 16(b)).
+event StatementOfClaimsFiled()
+/// The last answer or responsive pleading is filed by all parties against
+/// whom claims have been asserted (LR Cv 26(a)).
+event LastAnswerFiled()
+/// A motion to compel discovery is granted (LR Cv 37(b)).
+event CompelOrderEntered()
+/// The jury is empanelled (LR Cv 39(b)(1), 47(b)).
+event Empanelment()
+/// Transcripts of recorded conversations are furnished to the Court and
+/// counsel (LR Cv 39(b)(3)).
+event TranscriptsFurnished()
+/// Judgment is entered (LR Cv 54(a)).
+event JudgmentEntered()
+/// The Clerk notifies the parties of the costs allowed (LR Cv 54(c)).
+event CostsNotified()
+/// A motion to review the Clerk's taxation of costs is filed (LR Cv 54(d)).
+event CostsReviewMotionFiled()
+/// A party is served with a magistrate judge's order or ruling in a
+/// nondispositive matter (LR Cv 72(c)(1)).
+event MagistrateOrderServed()
+/// A party is served with a magistrate judge's Report and Recommendation
+/// (LR Cv 72(d)(1)).
+event MagistrateReportServed()
+/// An objection to a magistrate judge's order or ruling is served (LR Cv
+/// 72(c)(3)).
+event MagistrateOrderObjectionServed()
+/// An objection to a magistrate judge's Report and Recommendation is served
+/// (LR Cv 72(d)(3)).
+event MagistrateReportObjectionServed()
+/// A response to an objection to a magistrate judge's order or ruling is
+/// served (LR Cv 72(c)(3)).
+event MagistrateOrderResponseServed()
+/// A response to an objection to a magistrate judge's Report and
+/// Recommendation is served (LR Cv 72(d)(3)).
+event MagistrateReportResponseServed()
+/// A notice of removal is filed (LR Cv 81(a)).
+event RemovalNoticeFiled()
+
+/// LR Cv 5.1(a): unless service is waived, proof of service of a summons is
+/// filed within 14 days after service is made.
+deadline proof-of-service-period: 14.days after SummonsServed() counted_by frcp6 cite "D.R.I. LR Cv 5.1(a)"
+{
+  forum frcp
+}
+
+/// LR Cv 7(a)(3): a response to a motion is filed within 14 days after
+/// service of the motion unless the Court shortens or extends the time.
+/// The same period governs objections to a motion for summary judgment
+/// (LR Cv 56(d)).
+deadline motion-response-period: 14.days after MotionServed() counted_by frcp6 cite "D.R.I. LR Cv 7(a)"
+{
+  forum frcp
+}
+
+/// LR Cv 7(a)(4): a reply, which is not required, is filed within 7 days
+/// after service of the response; sur-replies only with prior leave (LR Cv
+/// 7(a)(5)).
+deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6 cite "D.R.I. LR Cv 7(a)"
+{
+  forum frcp
+}
+
+/// LR Cv 16(b): at least 7 days before the initial scheduling conference,
+/// counsel for each party asserting a claim, counterclaim or cross claim
+/// files the statement of claims.
+deadline statement-of-claims-period: 7.days before InitialSchedulingConference() counted_by frcp6 cite "D.R.I. LR Cv 16(b)"
+{
+  forum frcp
+}
+
+/// LR Cv 26(a): unless the Court orders otherwise, the parties confer for
+/// the purposes of Fed. R. Civ. P. 26(f) within 14 days after the last
+/// answer or responsive pleading is filed; if a motion that would dispose
+/// of the entire case is filed in lieu of an answer, the conference may be
+/// deferred until not later than 14 days after the answer is later filed.
+deadline discovery-conference-period: 14.days after LastAnswerFiled() counted_by frcp6 cite "D.R.I. LR Cv 26(a)"
+{
+  forum frcp
+}
+
+/// LR Cv 37(b): when a motion to compel discovery is granted, the required
+/// response is provided within 21 days or such other time as the Court
+/// orders.
+deadline compelled-response-period: 21.days after CompelOrderEntered() counted_by frcp6 cite "D.R.I. LR Cv 37(b)"
+{
+  forum frcp
+}
+
+/// LR Cv 39(b)(1): at least 14 days before empanelment, a party proposing
+/// to offer a recorded conversation furnishes the Court and counsel a list
+/// of the recordings and a transcript of each.
+deadline recorded-conversations-period: 14.days before Empanelment() counted_by frcp6 cite "D.R.I. LR Cv 39(b)"
+{
+  forum frcp
+}
+
+/// LR Cv 39(b)(3): within 7 days after the transcripts are furnished, or
+/// such other period as the Court allows, a party disputing a recording or
+/// transcript files its objection.
+deadline recorded-conversations-objection-period: 7.days after TranscriptsFurnished() counted_by frcp6 cite "D.R.I. LR Cv 39(b)"
+{
+  forum frcp
+}
+
+/// LR Cv 47(b): proposed voir dire questions, when the Court directs
+/// counsel to submit them, are served and submitted at least 5 days before
+/// empanelment.
+deadline voir-dire-questions-period: 5.days before Empanelment() counted_by frcp6 cite "D.R.I. LR Cv 47(b)"
+{
+  forum frcp
+}
+
+/// LR Cv 54(a): within 14 days after entry of judgment, a party seeking
+/// costs files and serves a bill of costs; failure waives any claim for
+/// costs unless the Court otherwise orders for good cause shown.
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "D.R.I. LR Cv 54(a)"
+{
+  forum frcp
+}
+
+/// LR Cv 54(d): a challenge to the costs the Clerk taxed is made by motion
+/// served and filed within 7 days after the Clerk's notification under LR
+/// Cv 54(c).
+deadline costs-review-period: 7.days after CostsNotified() counted_by frcp6 cite "D.R.I. LR Cv 54(d)"
+{
+  forum frcp
+}
+
+/// LR Cv 54(d): within 7 days of the filing of the motion to review, a
+/// party objecting to it may file a response.
+deadline costs-review-response-period: 7.days after CostsReviewMotionFiled() counted_by frcp6 cite "D.R.I. LR Cv 54(d)"
+{
+  forum frcp
+}
+
+/// LR Cv 54(e): within 14 days after a motion to review the Clerk's action
+/// is filed, all interested parties meet and confer to resolve it, at the
+/// moving party's initiative.
+deadline costs-review-conference-period: 14.days after CostsReviewMotionFiled() counted_by frcp6 cite "D.R.I. LR Cv 54(e)"
+{
+  forum frcp
+}
+
+/// LR Cv 72(c)(1): an objection to a magistrate judge's order or ruling in
+/// a nondispositive matter is filed and served within 14 days after the
+/// order or ruling is served, and the transcript of any evidentiary
+/// hearing is ordered within the same period; failure waives review by
+/// the district judge and the right to appeal.
+deadline magistrate-order-objection-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "D.R.I. LR Cv 72(c)"
+{
+  forum frcp
+}
+
+/// LR Cv 72(c)(3): a response to the objection is served and filed within
+/// 14 days after the objection is served.
+deadline magistrate-order-response-period: 14.days after MagistrateOrderObjectionServed() counted_by frcp6 cite "D.R.I. LR Cv 72(c)"
+{
+  forum frcp
+}
+
+/// LR Cv 72(c)(3): the objecting party may serve and file a reply within 7
+/// days after the response.
+deadline magistrate-order-reply-period: 7.days after MagistrateOrderResponseServed() counted_by frcp6 cite "D.R.I. LR Cv 72(c)"
+{
+  forum frcp
+}
+
+/// LR Cv 72(d)(1): an objection to a magistrate judge's Report and
+/// Recommendation is filed and served within 14 days after it is served on
+/// the objecting party, and the transcript of any evidentiary hearing is
+/// ordered within the same period; failure waives review by the district
+/// judge and the right to appeal.
+deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6 cite "D.R.I. LR Cv 72(d)"
+{
+  forum frcp
+}
+
+/// LR Cv 72(d)(3): a response to the objection is served and filed within
+/// 14 days after the objection is served.
+deadline magistrate-report-response-period: 14.days after MagistrateReportObjectionServed() counted_by frcp6 cite "D.R.I. LR Cv 72(d)"
+{
+  forum frcp
+}
+
+/// LR Cv 72(d)(3): the objecting party may serve and file a reply within 7
+/// days after the response.
+deadline magistrate-report-reply-period: 7.days after MagistrateReportResponseServed() counted_by frcp6 cite "D.R.I. LR Cv 72(d)"
+{
+  forum frcp
+}
+
+/// LR Cv 81(a): within 14 days after filing a notice of removal, the
+/// removing party does whatever is necessary to enable the state court
+/// clerk to assemble and electronically transmit a certified copy of the
+/// docket sheet and all documents filed in the removed case.
+deadline state-court-record-period: 14.days after RemovalNoticeFiled() counted_by frcp6 cite "D.R.I. LR Cv 81(a)"
+{
+  forum frcp
+}

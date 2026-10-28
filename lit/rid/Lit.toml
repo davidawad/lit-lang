@@ -1,0 +1,49 @@
+# The United States District Court for the District of Rhode Island's Local
+# Rules applicable to civil proceedings as a local-rule layer over lit/frcp
+# (28 U.S.C. § 2071; FRCP 83(a)): it declares only the periods the LR Cv
+# rules themselves state and re-encodes no FRCP deadline. FRCP 6(a)
+# computes a period stated in a local rule. The rules are the Local Rules
+# "Effective January 1, 2006, As Amended through April 1, 2024"
+# (sources/dri), the edition the court's local-rules page lists. The
+# general (LR Gen), admiralty (LAR) and criminal (LR Cr) rules are out of
+# scope. An appeal goes to the First Circuit under lit/frap.
+[package]
+name = "rid-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "rid-local-rules"
+forum = "rid"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the District of Rhode Island: Local Rules (civil)"
+description = "The District of Rhode Island's Local Rules applicable to civil proceedings as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): proof of service of the summons, motion responses and replies, the statement of claims before the scheduling conference, the discovery conference, compliance with an order compelling discovery, recorded conversations and voir dire before empanelment, the bill of costs and review of the Clerk's taxation, objections to a magistrate judge's orders and reports and recommendations, and the state court record on removal."
+in_force = "2024-04-01"
+known_at = "2026-10-28"
+unknown_before = "2024-04-01"
+jurisdiction = "United States District Court, D.R.I."
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "dri-lr"
+issuer = "United States District Court for the District of Rhode Island"
+date = "2024-04-01"
+designation = "Local Rules (effective January 1, 2006, as amended through April 1, 2024)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.dri-lr]
+title = "Local Rules of the United States District Court for the District of Rhode Island (effective January 1, 2006, as amended through April 1, 2024)"
+url = "https://www.rid.uscourts.gov/sites/rid/files/documents/Approved%20Dec%202024%20Rules.pdf"
+path = "sources/dri/dri-local-rules-civil-sectioned.txt"
+path_sha256 = "d7336fb266673f689ca05837e781a88deb245825225c4e4e4f74b79be56d7abe"
+sha256 = "7f03a8fca5401c942b3bbb962180aa9d352237aa3a18be9a89f381d3d98c038e"
+as_of = "2024-04-01"
+cite_prefixes = ["D.R.I. LR Cv"]
+section_heading = "LR Cv {n}"

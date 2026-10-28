@@ -1,0 +1,118 @@
+module ms-appellate-civil.appeal
+
+start judgment-entered
+
+decision judgment-entered: "Judgment or order entered: appeal or permission sought?" by applicant cite "M.R.A.P. 3(a)"
+{
+  note "An appeal permitted by law as of right is taken by filing a notice of appeal with the clerk of the trial court within the time allowed by M.R.A.P. 4 (M.R.A.P. 3(a)); which judgments are appealable as of right rests on statute, which is not vendored. The date of entry of judgment is the date it is entered in the general docket (M.R.A.P. 4, Comment). An interlocutory order may be appealed only by permission: a petition for permission to appeal is filed with the clerk of the Supreme Court within 21 days after entry of the order (M.R.A.P. 5(a)). Periods in this package are stated, not counted: computation is M.R.A.P. 26(a), and three days are added after service by mail (M.R.A.P. 26(c)). The outline named no leading decisions."
+  edge-judgment-entered-notice "Appeal as of right" -> notice { authority cite "M.R.A.P. 3(a)" }
+  edge-judgment-entered-interlocutory "Petition for permission to appeal an interlocutory order" -> interlocutory-petition {
+    authority cite "M.R.A.P. 5(a)"
+  }
+}
+
+decision interlocutory-petition: "Permission to appeal granted?" by court cite "M.R.A.P. 5(a)"
+{
+  note "Permission may be sought where a substantial basis exists for a difference of opinion on a question of law whose resolution may materially advance the termination of the litigation, protect a party from substantial and irreparable injury, or resolve an issue of general importance (M.R.A.P. 5(a))."
+  edge-interlocutory-petition-granted "Granted" -> record { authority cite "M.R.A.P. 5(a)" }
+  edge-interlocutory-petition-denied "Denied" -> permission-denied {
+    authority cite "M.R.A.P. 5(a)"
+  }
+}
+
+decision notice: "Notice of appeal within time?" by applicant cite "M.R.A.P. 4(a)"
+{
+  note "The notice of appeal is filed with the clerk of the trial court within 30 days after the date of entry of the judgment or order appealed from (M.R.A.P. 4(a)). If a timely notice is filed, any other party may file a notice within 14 days after the first notice was filed, or within the time otherwise prescribed, whichever last expires (M.R.A.P. 4(c)). A timely motion under M.R.C.P. 50(b), 52(b) or 59, or under M.R.C.P. 60 filed no later than 10 days after entry of judgment, makes the time run for all parties from entry of the order disposing of the last such motion (M.R.A.P. 4(d)). The trial court may extend the time on a motion filed not later than 30 days after the time expires, for good cause before expiry or excusable neglect after; no extension exceeds 30 days past the prescribed time or 10 days from the order granting it, whichever is later (M.R.A.P. 4(g)). The trial court may reopen the time for 14 days for a party that did not receive notice of entry within 21 days, on a motion filed within 180 days of entry or 7 days of receipt of notice, whichever is earlier (M.R.A.P. 4(h)). The appellant pays the docket fee to the trial court clerk on filing the notice (M.R.A.P. 3(e))."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "M.R.A.P. 2(a)" }
+  edge-notice-timely "Timely notice" -> record { authority cite "M.R.A.P. 4(a)" }
+}
+
+state record: "Record designated, cost deposited and record filed" by applicant cite "M.R.A.P. 10(b)"
+{
+  note "Within seven (7) days after filing the notice of appeal the appellant files and serves a written designation of the parts of the record necessary for the appeal (M.R.A.P. 10(b)(1)), with a statement of the issues unless the entire record is designated (M.R.A.P. 10(b)(4)); the appellee may designate more within 14 days after service (M.R.A.P. 10(b)(4)). Within seven (7) days after filing the notice the appellant also estimates and deposits the cost of preparing the record and files a certificate of compliance (M.R.A.P. 11(b)(1)). Where no transcript is available, a statement of the evidence is filed within 60 days after filing the notice of appeal (M.R.A.P. 10(c)). The clerk of the Supreme Court dockets the appeal on receipt of the notice and files the record on receipt, giving notice of the date of filing (M.R.A.P. 13)."
+  edge-record-assignment "Record filed" -> assignment { authority cite "M.R.A.P. 13(b)" }
+  edge-record-dismissed "Deficiency not corrected within 14 days of notice" -> dismissed-default {
+    authority cite "M.R.A.P. 2(a)"
+  }
+}
+
+decision assignment: "Retained by the Supreme Court or assigned to the Court of Appeals" by court cite "M.R.A.P. 16(d)"
+{
+  note "All appeals from final orders are filed in the Supreme Court, which assigns cases, as appropriate, to the Court of Appeals (M.R.A.P. 16(a)). The Supreme Court may not assign cases involving the death penalty, utility rates, annexations, bond issues, election contests or a holding that a statute is unconstitutional (M.R.A.P. 16(b)), and ordinarily retains major questions of first impression, issues of broad public importance, substantial constitutional questions and conflicts in the decisions (M.R.A.P. 16(d)). A party has no right to have its case heard by the Supreme Court except where the statute requires retention, and may not seek reassignment (M.R.A.P. 16(d), (e))."
+  edge-assignment-retained "Retained by the Supreme Court" -> briefing {
+    authority cite "M.R.A.P. 16(d)"
+  }
+  edge-assignment-coa "Assigned to the Court of Appeals" -> briefing {
+    authority cite "M.R.A.P. 16(d)"
+  }
+}
+
+state briefing: "Briefing" by applicant cite "M.R.A.P. 31(b)"
+{
+  note "The appellant's brief is due within 40 days after the date on which the record is filed, the appellee's within 30 days after service of the appellant's brief, and any reply within 14 days after service of the appellee's brief; cross-appeal briefing follows M.R.A.P. 31(b). Except by permission, principal briefs may not exceed 50 pages and reply briefs 25 pages (M.R.A.P. 28(h)); the summary of the argument should seldom exceed two and never five pages (M.R.A.P. 28(a)(6)). Record excerpts accompany the brief (M.R.A.P. 30). A party wanting oral argument states ORAL ARGUMENT REQUESTED on the cover of its brief, the appellee on its principal brief and the appellant on its reply brief or by letter within the time for it (M.R.A.P. 34(b))."
+  edge-briefing-argument "Oral argument set" -> argument { authority cite "M.R.A.P. 34(a)" }
+  edge-briefing-submitted "Submitted on the briefs" -> decision { authority cite "M.R.A.P. 34(b)" }
+}
+
+state argument: "Oral argument" by court cite "M.R.A.P. 34(a)"
+{
+  note "Oral argument is allowed unless the court or panel unanimously agrees that the appeal is frivolous, the dispositive issue has been recently authoritatively decided, or argument would not significantly aid the decisional process (M.R.A.P. 34(a)). The clerk serves notice of argument at least 14 days before the date set (M.R.A.P. 34(c))."
+  edge-argument-decision "Argued" -> decision { authority cite "M.R.A.P. 34(a)" }
+}
+
+state decision: "Decision handed down" by court cite "M.R.A.P. 35-A(a)"
+{
+  note "The Supreme Court and the Court of Appeals publish their written opinions (M.R.A.P. 35-A(a), 35-B(a)). A motion for rehearing may be filed within 14 days after a decision on the merits; any other party may respond within seven days; except by permission it may not exceed twenty-five (25) pages (M.R.A.P. 40(a), (b)). A party seeking review of a Court of Appeals judgment must first move for rehearing in that court (M.R.A.P. 17(b))."
+  edge-decision-rehearing "Motion for rehearing filed" -> rehearing {
+    authority cite "M.R.A.P. 40(a)"
+  }
+  edge-decision-final "No rehearing sought" -> final-decision { authority cite "M.R.A.P. 41(a)" }
+}
+
+decision rehearing: "Rehearing decided; certiorari sought from a Court of Appeals judgment?" by applicant cite "M.R.A.P. 40(a)"
+{
+  note "If rehearing is granted, the court may dispose of the cause without reargument or restore it to the calendar; after a grant a party may file a second motion within 14 days after the judgment on rehearing, but no further motion follows a denial (M.R.A.P. 40(a)). A petition for a writ of certiorari to review a Court of Appeals decision is filed in the Supreme Court and served within fourteen (14) days from entry of the Court of Appeals' judgment on the motion for rehearing, unless extended on motion filed within that time; it may not exceed ten (10) pages (M.R.A.P. 17(b)). Review is discretionary and ordinarily limited to conflicts, an unconsidered controlling constitutional provision, and cases the Supreme Court should have decided (M.R.A.P. 17(a))."
+  edge-rehearing-final "No certiorari petition" -> final-decision {
+    authority cite "M.R.A.P. 41(b)"
+  }
+  edge-rehearing-certiorari "Petition for certiorari filed" -> certiorari {
+    authority cite "M.R.A.P. 17(b)"
+  }
+}
+
+decision certiorari: "Certiorari decided" by court cite "M.R.A.P. 17(e)"
+{
+  note "Any other party may respond within seven (7) days after the petition is filed, in no more than ten (10) pages (M.R.A.P. 17(d)). The Supreme Court acts within ninety (90) days of the response, or of the last day for it; failure to issue the writ within that period is a denial (M.R.A.P. 17(e)). On a grant, any party may file a supplemental brief of no more than 10 pages within 10 days (M.R.A.P. 17(h))."
+  edge-certiorari-denied "Denied" -> review-denied { authority cite "M.R.A.P. 17(e)" }
+  edge-certiorari-granted "Granted" -> review-granted { authority cite "M.R.A.P. 17(a)" }
+}
+
+terminal dismissed-untimely: "Dismissed: untimely notice" outcome [loss, dismissal] cite "M.R.A.P. 2(a)"
+{
+  note "An appeal shall be dismissed if the notice of appeal was not timely filed under M.R.A.P. 4 or 5 (M.R.A.P. 2(a)(1))."
+}
+
+terminal dismissed-default: "Dismissed: deficiency not corrected" outcome [loss, dismissal] cite "M.R.A.P. 2(a)"
+{
+  note "On notice from the clerk of a failure to prosecute or to comply substantially with the rules, an appeal is dismissed if the deficiency is not corrected within fourteen (14) days (M.R.A.P. 2(a)(2))."
+}
+
+terminal permission-denied: "Permission to appeal denied" outcome [loss] cite "M.R.A.P. 5(a)"
+{
+  note "The case continues in the trial court; review awaits a final judgment."
+}
+
+terminal final-decision: "Final: decision stands" outcome [final] cite "M.R.A.P. 41(a)"
+{
+  note "The Supreme Court's mandate issues 21 days after entry of judgment, or seven (7) days after an order denying rehearing, unless the time is shortened or enlarged (M.R.A.P. 41(a)); the Court of Appeals' mandate issues 21 days after the latest of judgment, disposition of a timely rehearing motion, or denial or dismissal of certiorari (M.R.A.P. 41(b)). A motion to retax costs is filed within 14 days after issuance of the mandate (M.R.A.P. 36(d))."
+}
+
+terminal review-denied: "Certiorari denied" outcome [final] cite "M.R.A.P. 41(b)"
+{
+  note "The Court of Appeals' mandate issues 21 days after the denial or dismissal of the petition (M.R.A.P. 41(b))."
+}
+
+terminal review-granted: "Certiorari granted" outcome [neutral] cite "M.R.A.P. 17(h)"
+{
+  note "Review is on the record and briefs filed in the Court of Appeals and any supplemental briefs (M.R.A.P. 17(h)); the Supreme Court's proceedings on the merits are not modeled, and its mandate then issues under M.R.A.P. 41(a) (M.R.A.P. 41(b))."
+}

@@ -20,25 +20,16 @@ import core.frcp6.{ frcp6 }
 // Goines v. Valley Community Services Board and Anderson v. Foundation for
 // Advancement) are FRCP authority, and no reporter text is vendored, so
 // they are removed here.
-
 /// Any brief, absent a different limit in the assigned judge's Standing
 /// Civil Order or the Case Management Order: at most 25 pages (LCvR
 /// 7.1(d)).
-limit brief {
-  pages <= 25 cite "W.D.N.C. LCvR 7.1(d)"
-} cite "W.D.N.C. LCvR 7.1(d)"
-
+limit brief { pages <= 25 cite "W.D.N.C. LCvR 7.1(d)" } cite "W.D.N.C. LCvR 7.1(d)"
 /// A notice of supplemental authority, and any response: at most two pages
 /// (LCvR 7.1).
-limit supplemental-authority-notice {
-  pages <= 2 cite "W.D.N.C. LCvR 7.1"
-} cite "W.D.N.C. LCvR 7.1"
-
+limit supplemental-authority-notice { pages <= 2 cite "W.D.N.C. LCvR 7.1" } cite "W.D.N.C. LCvR 7.1"
 /// The plaintiff's one reply brief in a Social Security case: at most five
 /// pages (LCvR 7.2(g)).
-limit social-security-reply {
-  pages <= 5 cite "W.D.N.C. LCvR 7.2(g)"
-} cite "W.D.N.C. LCvR 7.2(g)"
+limit social-security-reply { pages <= 5 cite "W.D.N.C. LCvR 7.2(g)" } cite "W.D.N.C. LCvR 7.2(g)"
 
 /// A request for waiver of service on a current or former NCDPS employee is
 /// filed (LCvR 4.3(b)).

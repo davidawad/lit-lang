@@ -69,6 +69,17 @@ calendar us-federal-holidays cite "5 U.S.C. § 6103(a)" historical
   christmas-day: fixed(12, 25) effective [1971-02-11, ..) observed nearest_weekday
 }
 
+/// Placeholder for the state holidays required by FRCP 6(a)(6)(C) and
+/// FRBP 9006(a)(6)(C). Each district needs its own list from the applicable
+/// state's law or a court rule. No such state-law texts are vendored for
+/// those districts, so this calendar deliberately has no dates; until a
+/// source is added, a date that depends on a state holiday remains an
+/// earlier-date result (the missing source is the district's state-holiday
+/// statute/rule).
+calendar district-state-holidays cite "FRCP 6(a)(6)(C)"
+{
+}
+
 /// RCFC 6(a)(6)(A)'s legal holidays: the § 6103(a) days in force when the
 /// RCFC time-computation rules here are (2002 onward), plus Inauguration
 /// Day, which FRCP 6(a)(6) does not name. § 6103(c) makes January 20 "of

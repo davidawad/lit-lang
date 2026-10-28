@@ -1,0 +1,142 @@
+module ne-district-civil.civil
+
+// Civil actions in the Nebraska district courts, from the applicant's
+// (plaintiff's) side. Every period below is stated in a note, not counted:
+// computation of time is Neb. Rev. Stat. § 25-2221, which is not vendored,
+// and lit/core has no Nebraska counting rule. The sections vendored are
+// those the earlier outline cited (Neb. Ct. R. Pldg. §§ 6-1112, 6-1114,
+// 6-1115; Neb. Ct. R. Discov. §§ 6-326, 6-333, 6-337; Neb. Rev. Stat. §§
+// 25-505.01, 25-508.01, 25-601, 25-1102, 25-1144.01, 25-1301, 25-1329,
+// 25-1332, 25-1902, 25-1912, 25-2001). Commencement (Neb. Rev. Stat. §
+// 25-501), default judgment, the summary judgment statutes other than §
+// 25-1332 and the pretrial conference rules are not vendored, so they are
+// named in notes but not cited. The outline's cites of § 25-2001 for
+// commencement, of § 6-1115 for default and of § 6-1114 for amendment did
+// not match the vendored text (§ 25-2001 vacates judgments; § 6-1115 is
+// amendment; § 6-1114, third-party practice, is reserved) and are
+// replaced. The outline named no leading decisions.
+start summons-served
+
+state summons-served: "Summons served" by applicant cite "Neb. Rev. Stat. § 25-505.01(1)"
+{
+  note "Unless otherwise limited by statute or the court, the plaintiff elects personal, residence, certified mail or designated delivery service; certified mail and designated delivery service are made by sending the summons within ten days of issuance and filing proof of service with the signed receipt (Neb. Rev. Stat. § 25-505.01(1)). Failure to serve by the elected method does not affect the validity of service (§ 25-505.01(2)). An individual other than a person under fourteen may be served by any of the four methods (Neb. Rev. Stat. § 25-508.01(1)). Commencement of the action (§ 25-501) and the time to serve the summons are not vendored."
+  edge-summons-served-answer "Defendant served" -> answer-due {
+    authority cite "Neb. Ct. R. Pldg. § 6-1112(a)"
+  }
+}
+
+decision answer-due: "Answer, § 6-1112 motion, or default" by office cite "Neb. Ct. R. Pldg. § 6-1112(a)"
+{
+  note "A defendant serves an answer within 30 days after being served with the summons and complaint or completion of service by publication; an answer to a counterclaim or cross-claim within 30 days after service of the pleading stating it; and a reply to an answer within 21 days after service of an order to reply, unless the order specifies a different time (Neb. Ct. R. Pldg. § 6-1112(a)(1)). A motion asserting a defense under § 6-1112(b) is made before pleading if a responsive pleading is allowed (§ 6-1112(b)). The default rule is not vendored."
+  edge-answer-due-default "No timely response" -> default-entered {
+    authority cite "Neb. Ct. R. Pldg. § 6-1112(a)"
+  }
+  edge-answer-due-motion "Motion under § 6-1112(b) filed" -> pleading-motion {
+    authority cite "Neb. Ct. R. Pldg. § 6-1112(b)"
+  }
+  edge-answer-due-answer "Answer served: issues of fact joined" -> discovery {
+    authority cite "Neb. Rev. Stat. § 25-1102"
+  }
+}
+
+decision pleading-motion: "Motion to dismiss decided" by court cite "Neb. Ct. R. Pldg. § 6-1112(b)"
+{
+  note "The defenses that may be made by motion are lack of subject matter or personal jurisdiction, pendency of another action between the same parties on the same subject matter, insufficient process or service, failure to state a claim, and failure to join a party under § 25-323 (Neb. Ct. R. Pldg. § 6-1112(b)). If matters outside the pleadings are presented on a (b)(6) or (c) motion and not excluded, it is treated as one for summary judgment under Neb. Rev. Stat. §§ 25-1330 to 25-1336 (§ 6-1112(d)). If the court denies the motion or postpones it to trial, the responsive pleading is served within 21 days after notice of the court's action; if it grants a motion for a more definite statement, within 21 days after the statement is served (§ 6-1112(a)(2)). An order for a more definite statement not obeyed within 14 days after notice may lead to striking the pleading (§ 6-1112(e)); a motion to strike is made before responding or, if no response is allowed, within 30 days after service of the pleading (§ 6-1112(f)). A party may amend once as a matter of course no later than 30 days after serving the pleading or, if a responsive pleading is required, 14 days after service of a responsive pleading or of a § 6-1112(b), (e) or (f) motion, whichever is earlier; a required response to an amended pleading is made within the time remaining or 14 days after service of the amendment, whichever is later (Neb. Ct. R. Pldg. § 6-1115(a)). The court sets the time to cure when it grants a motion that can be cured (§ 6-1112, comment [4]). No leading decision is named."
+  edge-pleading-motion-dismissed "Granted" -> dismissed-pleading {
+    authority cite "Neb. Ct. R. Pldg. § 6-1112(b)"
+  }
+  edge-pleading-motion-amend "Pleading amended" -> answer-due {
+    authority cite "Neb. Ct. R. Pldg. § 6-1115(a)"
+  }
+  edge-pleading-motion-denied "Denied: responsive pleading within 21 days after notice" -> discovery {
+    authority cite "Neb. Ct. R. Pldg. § 6-1112(a)"
+  }
+}
+
+terminal default-entered: "Default against the defendant" outcome [win] cite "Neb. Ct. R. Pldg. § 6-1112(a)"
+{
+  note "The defendant served no answer or motion within the 30 days of § 6-1112(a)(1). The rule and statute governing default judgment are not vendored. Outcome from the applicant's side."
+}
+
+terminal dismissed-pleading: "Dismissed on the motion" outcome [loss, dismissal] cite "Neb. Ct. R. Pldg. § 6-1112(b)"
+{
+  note "Outcome from the applicant's side. If the court determines at any time that it lacks subject matter jurisdiction, it must dismiss; on another action pending it may dismiss or stay (Neb. Ct. R. Pldg. § 6-1112(h)(3))."
+}
+
+state discovery: "Discovery" by applicant cite "Neb. Ct. R. Discov. § 6-326(a)"
+{
+  note "Discovery methods may be used in any sequence (Neb. Ct. R. Discov. § 6-326(a)(2)). Absent a stipulation or court order, expert disclosures are made within 180 days after the first responsive pleading was served, or, for rebuttal evidence only, within 45 days after the other party's disclosure (§ 6-326(c)(2)). A party may serve no more than 50 interrogatories, including discrete subparts, on another party unless stipulated or ordered (Neb. Ct. R. Discov. § 6-333(a)(1)); answers and objections are served within 30 days after service of the interrogatories, but a defending party may answer within 45 days after service of the summons if that is longer (§ 6-333(b)(2)). A requesting party who proves a matter another party failed to admit may move for its expenses within 30 days of so proving (Neb. Ct. R. Discov. § 6-337(c)). The rules apply to cases filed on or after January 1, 2025 and to cases then pending unless the court orders otherwise (§ 6-326(h))."
+  edge-discovery-sj "Summary judgment motion served" -> sj-motion {
+    authority cite "Neb. Rev. Stat. § 25-1332(1)"
+  }
+  edge-discovery-sanction "Discovery sanction dismisses the action" -> dismissed-sanction {
+    authority cite "Neb. Ct. R. Discov. § 6-337(d)"
+  }
+  edge-discovery-settle "Settled or dismissed without prejudice" -> settled {
+    authority cite "Neb. Rev. Stat. § 25-601"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial {
+    authority cite "Neb. Rev. Stat. § 25-1102"
+  }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "Neb. Ct. R. Discov. § 6-337(d)"
+{
+  note "On a party's failure to attend its own deposition, answer interrogatories, respond to a request for inspection or disclose, the court may order any of the sanctions of Rule 37(b)(1)(A)-(F), including dismissing the action (Neb. Ct. R. Discov. § 6-337(d)(3)); on an intentional failure to preserve electronically stored information it may dismiss the action (§ 6-337(e)(2)(C)). Outcome from the applicant's side."
+}
+
+decision sj-motion: "Summary judgment decided" by court cite "Neb. Rev. Stat. § 25-1332(1)"
+{
+  note "The motion is served at least ten days before the time fixed for the hearing; the adverse party may serve opposing affidavits before the day of the hearing. Judgment is rendered forthwith if the pleadings and the evidence admitted at the hearing show no genuine dispute as to any material fact and that the movant is entitled to judgment as a matter of law; a summary judgment on liability alone may be rendered although damages are disputed (Neb. Rev. Stat. § 25-1332(1)). A fact asserted as undisputed or disputed is supported by citations to the record; if it is not, the court may give an opportunity to support it, consider it undisputed or grant summary judgment (§ 25-1332(2), (3)). No leading decision is named."
+  edge-sj-motion-granted "Granted" -> judgment-for-movant {
+    authority cite "Neb. Rev. Stat. § 25-1332(1)"
+  }
+  edge-sj-motion-denied "Denied" -> trial { authority cite "Neb. Rev. Stat. § 25-1332(1)" }
+}
+
+terminal judgment-for-movant: "Summary judgment for the movant" outcome [judgment] cite "Neb. Rev. Stat. § 25-1332(1)"
+{
+  note "Who the movant is decides whether it is a win or a loss for the applicant. An order denying summary judgment on sovereign or official immunity is a final order appealable within thirty days after its entry or after entry of judgment (Neb. Rev. Stat. § 25-1902(1)(d), (2)). An appeal from the judgment runs from its entry (Neb. Rev. Stat. § 25-1912(1))."
+}
+
+state trial: "Trial" by court cite "Neb. Rev. Stat. § 25-1102"
+{
+  note "An issue of fact arises on a material allegation denied by a responsive pleading or considered denied (Neb. Rev. Stat. § 25-1102). Any § 6-1112(b) defense and a motion for judgment on the pleadings are heard and decided before trial on a party's motion unless the court defers them (Neb. Ct. R. Pldg. § 6-1112(i)). The plaintiff may dismiss without prejudice before final submission of the case (Neb. Rev. Stat. § 25-601)."
+  edge-trial-post "Verdict or decision; judgment entered" -> post-trial {
+    authority cite "Neb. Rev. Stat. § 25-1301(3)"
+  }
+}
+
+decision post-trial: "Post-trial motions decided" by court cite "Neb. Rev. Stat. § 25-1144.01"
+{
+  note "A motion for a new trial is filed no later than ten days after the entry of the judgment (Neb. Rev. Stat. § 25-1144.01); a motion to alter or amend a judgment, no later than ten days after entry (Neb. Rev. Stat. § 25-1329). Either, filed after the verdict or decision is announced but before entry, is treated as filed on the day of entry. A timely motion under § 25-1144.01, § 25-1329 or § 25-1315.02 terminates the running of the appeal time for all parties, and the full thirty days runs from entry of the order ruling on it (Neb. Rev. Stat. § 25-1912(3)). The court may vacate or modify its judgment after the term on a motion filed within six months after its entry (Neb. Rev. Stat. § 25-2001(1)), and on the grounds of § 25-2001(4)."
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+    authority cite "Neb. Rev. Stat. § 25-1301(3)"
+  }
+}
+
+decision judgment-entered: "Judgment entered" by office cite "Neb. Rev. Stat. § 25-1301(3)"
+{
+  note "Rendition is the judge's signing of a single written document stating all the relief granted or denied (Neb. Rev. Stat. § 25-1301(2)); entry occurs when the clerk file-stamps and dates it, and for the time for appeal the stamped date is the date of entry (§ 25-1301(3)). A notice of appeal is filed with the district court clerk, with the docket fee, within thirty days after entry of the judgment, decree or final order (Neb. Rev. Stat. § 25-1912(1)); a notice filed after the decision is announced but before entry is treated as filed on the date of entry (§ 25-1912(2))."
+  edge-judgment-entered-appeal "Notice of appeal filed within 30 days" -> appeal-taken {
+    authority cite "Neb. Rev. Stat. § 25-1912(1)"
+  }
+  edge-judgment-entered-none "No notice filed in time" -> final-no-appeal {
+    authority cite "Neb. Rev. Stat. § 25-1912(1)"
+  }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Nebraska appellate package" outcome [appeal] cite "Neb. Rev. Stat. § 25-1912(4)"
+{
+  note "The appeal is perfected, and the appellate court has jurisdiction, when the notice of appeal is filed and the docket fee deposited with the district court clerk; no other step is jurisdictional (Neb. Rev. Stat. § 25-1912(4)). Within thirty days after the notice is filed, the district court clerk files a certified transcript with the Clerk of the Supreme Court (§ 25-1912(6)). The appeal goes to the Court of Appeals except in the cases § 24-1106(1) excepts (Neb. Rev. Stat. § 24-1106(1)). Hand-off to lit/nebctapp (nebctapp-civil-appeals)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Neb. Rev. Stat. § 25-1912(1)"
+{
+  note "Final judgment with no notice of appeal filed and docket fee deposited within thirty days after entry (Neb. Rev. Stat. § 25-1912(1))."
+}
+
+terminal settled: "Settled or dismissed without prejudice" outcome [settlement] cite "Neb. Rev. Stat. § 25-601"
+{
+  note "The plaintiff may dismiss without prejudice to a future action before final submission of the case to the jury, or to the court in a bench trial (Neb. Rev. Stat. § 25-601(1)). Settlement terms are not modeled."
+}

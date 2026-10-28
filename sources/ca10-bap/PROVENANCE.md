@@ -13,3 +13,11 @@
 - Source: as the extract `ca10-bap/bap-local-rules-and-frbp-part-viii-2026.txt`, https://www.bap10.uscourts.gov/sites/bap10/files/clerk/Bankruptcy%20Rules%20and%20BAP%20Local%20Rules%20%5BPrint%5D.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, BAP Local Rules effective January 1, 2026.
 - Sectioned sha256 e691d77aa7ed5d4820a3f077cdd2bd371993f79baafb2dc56ed61f2d94d2de4f (the `path_sha256` pinned by `lit/bap10/Lit.toml`).
+
+### `ca10-bap/bap10-home-2026-10-28.txt` — Tenth Circuit BAP home page (court location)
+
+- Source: https://www.bap10.uscourts.gov/ (official site), the page's "Court Location" block: Byron White Court House, 1823 Stout Street, Denver, CO 80257.
+- Why: 10th Cir. BAP L.R. 8026-8(b) makes a holiday of "the state in which this Court's clerk's office is located" a legal holiday; the rules do not say where that office is (lg-q28z, `colorado-legal-holidays` in lit/bap10).
+- Retrieved 2026-10-28 in the pod (lg-q28z) with one curl fetch (User-Agent 'litgraph-rules-vendor/1.0 (public court rules)'); HTML converted to text (scripts and styles dropped, tags stripped, whitespace collapsed).
+- Extract sha256 c29bb012f957bdc48ac63a74aef0043b9d83fe3aa2b3a325a39492d4e2ace77f.
+- Original: `ca10-bap/original/bap10-home-2026-10-28.html` as served (sha256 53f6895ea5087a15e633092b004d6f3bc8aa311984eb69a5135ce142c48b1279); extraction sha256 c29bb012f957bdc48ac63a74aef0043b9d83fe3aa2b3a325a39492d4e2ace77f. Served at https://www.bap10.uscourts.gov/; fetched with curl (User-Agent litgraph-rules-vendor/1.0 (public court rules)), retrieved 2026-10-28.

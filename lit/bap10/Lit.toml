@@ -10,7 +10,10 @@
 # 2025 edition lit/frbp vendors instead. The package is in force from the
 # rules' effective date, a lower bound: a query before then is a hole in
 # the corpus. Each period is counted under FRBP 9006(a) (10th Cir. BAP
-# L.R. 8026-8(a)), the FRCP 6(a) method (core's frcp6). Like lit/bap8 and
+# L.R. 8026-8(a)), the FRCP 6(a) method (core's frcp6), with Colorado's
+# holidays closing a forward-counted period (L.R. 8026-8(b); FRBP
+# 9006(a)(6)(C); `bap10-9006`), which also counts lit/frbp's periods in an
+# appeal before the panel (`recounts`). Like lit/bap8 and
 # lit/bap9 it is a base package, not a `kind = "local-rule"` layer:
 # lit/core has no bankruptcy forum family.
 [package]
@@ -26,7 +29,8 @@ in_force = "2026-01-01"
 known_at = "2026-10-28"
 unknown_before = "2026-01-01"
 jurisdiction = "Bankruptcy Appellate Panel of the Tenth Circuit"
-counting = "frcp6"
+counting = "bap10-9006"
+recounts = ["frbp-bankruptcy-procedure"]
 
 [package.roles]
 applicant = "self"
@@ -48,6 +52,16 @@ sha256 = "87b15eee973d27cbc6682c0d06f88c305f10d27b3d87f3ccfc84e24b5c71951e"
 as_of = "2026-01-01"
 cite_prefixes = ["10th Cir. BAP L.R."]
 section_heading = "10th Cir. BAP L.R. {n}"
+
+[sources.crcp]
+title = "Colorado Rules of Civil Procedure, Colorado Revised Statutes 2023 court-rules volume (OLLS)"
+url = "https://content.leg.colorado.gov/sites/default/files/images/olls/crs2023-court-rules.pdf"
+path = "sources/co-state-civil/co-crcp-sectioned.txt"
+path_sha256 = "12b58d278bf2a00f3deebf83066c8168ef27f579bc5877bcb1fe03c88457d7e4"
+sha256 = "07a0129954b015ff26ed4774e5979408d05631a78fff9967ee0a56f5622347e7"
+as_of = "2023-07-20"
+cite_prefixes = ["C.R.C.P."]
+section_heading = "Rule {n}"
 
 [sources.frbp]
 title = "Federal Rules of Bankruptcy Procedure, December 1, 2025 edition"

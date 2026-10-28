@@ -6,3 +6,10 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 918c4ce766efbd4b908a04649f8aed1619dba0e3ab2c06a1b0f304721e90e527. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-vi/original/vi-local-rules-2026-02-01.pdf` as served (sha256 5e2ba985d0f6f73d4c086a85effe00f6bec91833eddd03941b4d90c1155ebbc6); extraction sha256 918c4ce766efbd4b908a04649f8aed1619dba0e3ab2c06a1b0f304721e90e527.
+
+### `bankr-vi/vi-local-rules-2026-02-01-sectioned.txt` — D.V.I. Local Bankruptcy Rules, sectioned
+
+- Derived in the pod (lg-u561.13) from `bankr-vi/vi-local-rules-2026-02-01.txt` (extract sha256 918c4ce766efbd4b908a04649f8aed1619dba0e3ab2c06a1b0f304721e90e527); nothing fetched. One `## Rule <n>` line is inserted before each rule's own `Rule <n> <TITLE>` heading line in the body (`1001-1` through `9070-1`, 71 rules); the order of January 30, 2026 and the index are unmarked. The text numbers two rules `3016-1`: the first (the chapter 11 disclosure statement form) is marked; the second (`USE OF DISCLOSURE STATEMENT AND PLAN FORM IN CHAPTER 11, SUBCHAPTER V CASES`, the subchapter V status report and plan forms, stating no period) is left unmarked, so it reads within the `## Rule 3016-2` section and is not citable as its own section. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-vi/vi-local-rules-2026-02-01.txt`, https://www.vid.uscourts.gov/sites/vid/files/local_rules/260130_Local%20Bankruptcy%20Rules_effective%202.1.26%5BECF%2010-3%5D.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
+- Edition: as the extract, effective February 1, 2026 (LBR 1001-3; order of January 30, 2026).
+- Sectioned sha256 d5cfb7b2d496bcd4957b2eb26138be883e64fc261efb1553884cf82e8ae4ef65 (the `path_sha256` pinned by `lit/bankr-vi/Lit.toml`).

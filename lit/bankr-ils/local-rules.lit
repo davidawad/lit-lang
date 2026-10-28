@@ -34,10 +34,15 @@ import frbp.events.{ FirstMeetingDate }
 // withdraw the reference is due within 14 days of the later of the first
 // related pleading or the pretrial order (LBR 5011(A)), one deadline per
 // limb; the later governs. Chapter 13 practice is in the Chapter 13
-// Procedures Manual (LBR 3015), which is not vendored. A summary
-// judgment pleading or memorandum may not exceed "20 numbered pages"
-// exclusive of the signature page and attachments (LBR 7056(G)), a form the
-// limit check does not read, so it is not declared as a limit.
+// Procedures Manual (LBR 3015), which is not vendored.
+/// A pleading or memorandum regarding summary judgment: at most 20 numbered
+/// pages, exclusive of the signature page and attachments, absent leave of
+/// court (LBR 7056(G)).
+limit summary-judgment-memorandum {
+  pages <= 20 cite "Bankr. S.D. Ill. LBR 7056(G)"
+  excludes [signature-page, attachments]
+} cite "Bankr. S.D. Ill. LBR 7056(G)"
+
 /// A brief, exclusive of the signature page and attachments, absent leave of
 /// court (LBR 9013-5(F)).
 limit brief {

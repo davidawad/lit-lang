@@ -1,8 +1,13 @@
 module ak-appellate-civil.appeal
 
-// A principal brief may not exceed 50 numbered pages exclusive of
-// appendices (Alaska R. App. P. 212(c)(4)); it stays a note, not a `limit`:
-// the rule states "50 numbered pages", a form the limit check does not read.
+/// The appellant's or appellee's principal brief: at most 50 numbered
+/// pages, counted from the jurisdictional statement, exclusive of
+/// appendices (Alaska R. App. P. 212(c)(4)).
+limit principal-brief {
+  pages <= 50 cite "Alaska R. App. P. 212(c)"
+  excludes [appendices]
+} cite "Alaska R. App. P. 212(c)"
+
 /// The appellant's reply brief: at most 20 pages (Alaska R. App. P.
 /// 212(c)(4)).
 limit reply-brief { pages <= 20 cite "Alaska R. App. P. 212(c)" } cite "Alaska R. App. P. 212(c)"

@@ -1,6 +1,22 @@
 version = 2
 
 [[package]]
+name = "bankr-mow-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:8d6b947bf266ad4693c1b47cf2d91432a49130a7f436b808337d870a87169168"
+semantic = "sha256:a52854b4bfb7d6bb98f488e5e4b09389b24323990b1dc9deda2df7cbb220e5d9"
+texts = [
+    "mowb-go-2026-1 sources/bankr-mow/mowb-go-2026-1-lr-1073-1b.txt sha256:f347829e090ff7457a1dea0440ac3adc6bb9f95178cc7607d8c384cf56704f72",
+    "mowb-lbr sources/bankr-mow/mowb-lbr-2026-01-05-sectioned.txt sha256:6b38e0072b44dcc3ef55637ce965a73a30092ae37bbf34eb0276bb49525df930",
+    "mowb-lbr-appendix sources/bankr-mow/mowb-lbr-appendix-2026-10-sectioned.txt sha256:ac3d8fd9096b7b9d909e599e2060e6acd482e7115153f3b53971ae0d80d3a341",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +60,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-mow"
-version = "0.0.1"
-language = 1
-source = "sha256:4147ecf343c4fe66a6c44e176cf6caf5ab3e0775d4ba9d8f85742df3b84b030a"
-semantic = "sha256:1315b172a8de42f7910a5e92b75fa596ca53d6b323896d1ecaef390c9e5bb8ea"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

@@ -1,0 +1,73 @@
+# The Local Rules of Practice of the U.S. Bankruptcy Court for the Western
+# District of Missouri, with their Appendix, over lit/frbp (FRBP 9029(a);
+# 28 U.S.C. § 2075): it declares only the periods the rules and the
+# Appendix state and re-encodes no FRBP period. It is a base package, not a
+# `kind = "local-rule"` layer: lit/core has no bankruptcy forum family
+# (L2011 for `bankr-mow`), as for lit/bankr-dc. Each period is counted
+# under FRBP 9006(a), the FRCP 6(a) method (core's frcp6).
+#
+# Layers, in date order: the Local Rules adopted January 5, 2026 (the
+# cover's EFFECTIVE field is blank, so the adoption date opens the package;
+# the consolidation), the Appendix as updated October 2026 (part of the
+# local-rules text; no earlier Appendix is vendored, so its periods are
+# unknown before October 1, 2026), and General Order 2026-1 (dated
+# September 10, 2026), which amends LR 1073-1(B), the assignment of new
+# cases to judges by county, effective September 14, 2026. The order
+# states no period, page limit, filing or service rule (the 180 days it
+# names is the venue period of 28 U.S.C. § 1408), so it changes no
+# declaration here and needs no dated version. No earlier edition of the
+# rules is vendored, so a query before January 5, 2026 is a hole in the
+# corpus.
+[package]
+name = "bankr-mow-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-mow-local-rules"
+forum = "bankr-mow"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Western District of Missouri: Local Rules of Practice"
+description = "The Bankr. W.D. Mo. Local Rules of Practice and their Appendix as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): subchapter V trustee deposits, initial filings and matrices, added creditors, joint administration, a debtor's death, reinstatement after dismissal, conversion schedules, Rule 2004 objections, chapter 13 attorney fees after dismissal, rejection and avoidance claims, unclaimed funds, chapter 11 plan filing, chapter 13 mortgage modifications, plan service and objections, trustee claim notices, payee records, amended plans after dismissal motions, tax waivers, loan servicing and conditional stay orders, stay extension objections, IRS setoff, trustee information requests and collateral inspection, chapter 12 discharge, transcript redaction, final reports, reopening, reports of sale, discovery, motion responses and summary judgment (LR 9013-1), court-noticed motions and pro se filings."
+in_force = "2026-01-05"
+known_at = "2026-10-28"
+unknown_before = "2026-01-05"
+jurisdiction = "U.S. Bankruptcy Court for the Western District of Missouri"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.mowb-lbr]
+title = "Local Rules of Practice, U.S. Bankruptcy Court for the Western District of Missouri (adopted January 5, 2026)"
+url = "https://www.mow.uscourts.gov/sites/mow/files/Local%20Rules%20Adopted%201-5-2026.pdf"
+path = "sources/bankr-mow/mowb-lbr-2026-01-05-sectioned.txt"
+path_sha256 = "6b38e0072b44dcc3ef55637ce965a73a30092ae37bbf34eb0276bb49525df930"
+sha256 = "c931eb5d5f6ba93c523e349ca21c071aeb1f1e00f556a502e679380256fdce22"
+as_of = "2026-01-05"
+cite_prefixes = ["W.D. Mo. Bankr. L.R."]
+section_heading = "Rule {n}"
+
+[sources.mowb-lbr-appendix]
+title = "Appendix to the Local Rules of Practice, U.S. Bankruptcy Court for the Western District of Missouri (updated October 2026)"
+url = "https://www.mow.uscourts.gov/sites/mow/files/BK-LR-Appendix-102026.pdf"
+path = "sources/bankr-mow/mowb-lbr-appendix-2026-10-sectioned.txt"
+path_sha256 = "ac3d8fd9096b7b9d909e599e2060e6acd482e7115153f3b53971ae0d80d3a341"
+sha256 = "956a8853bcaab240aa298b42f647ba9ea8a43cf961b93d14cfb06e0a0cebbc32"
+as_of = "2026-10-01"
+cite_prefixes = ["W.D. Mo. Bankr. L.R. Appendix 1-"]
+section_heading = "Appendix 1-{n}"
+
+[sources.mowb-go-2026-1]
+title = "General Order No. 2026-1, Order Amending Local Rule 1073-1(B) and Vacating in Part General Order 2024-1 (September 10, 2026; effective September 14, 2026)"
+url = "https://www.mow.uscourts.gov/sites/mow/files/BK-GO-2026-1.pdf"
+path = "sources/bankr-mow/mowb-go-2026-1-lr-1073-1b.txt"
+path_sha256 = "f347829e090ff7457a1dea0440ac3adc6bb9f95178cc7607d8c384cf56704f72"
+sha256 = "0476a43eece39266700725f5e8e4f110e284a4ce38688ad040b26de102fcac75"
+as_of = "2026-09-14"

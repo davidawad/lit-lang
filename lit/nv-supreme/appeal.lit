@@ -1,8 +1,13 @@
 module nv-supreme-appellate.appeal
 
+import nv-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled }
+
 // Civil appeals from the Nevada district courts to the Supreme Court of
-// Nevada, and on assignment to the Nevada Court of Appeals, from the
-// applicant's (appellant's) side. Every period below is stated in a note,
+// Nevada, from the applicant's (appellant's) side. Every appeal is filed
+// in the Supreme Court; a case it assigns to the Court of Appeals under
+// NRAP 17(b) continues in lit/nv-court-of-appeals, where the petition for
+// Supreme Court review under NRAP 40B is modeled. The brief and petition
+// limits are lit/nv-rules' limit declarations. Every period below is stated in a note,
 // not counted: time is computed under NRAP 26(a), which excludes the
 // trigger day, counts every day and rolls a last day falling on a
 // Saturday, Sunday or legal holiday to the next day that is none of these;
@@ -14,51 +19,18 @@ module nv-supreme-appellate.appeal
 // appellant's failure to take any step other than the timely filing of a
 // notice of appeal does not affect the validity of the appeal, but is
 // ground for the court to act as it deems appropriate, including dismissal
-// (NRAP 3(a)(2)). The earlier outline named no Nevada decision; none is
-// cited. It bound the record to NRAP 10 and the decision to NRAP 36, which
+// (NRAP 3(a)(2)). The earlier outlines named no Nevada decision; none is
+// cited. They bound the record to NRAP 10 and the decision to NRAP 36, which
 // stand, and cited NRAP 3A(b) for appealability, which it is.
-/// An opening or answering brief in a noncapital case: no more than 30
-/// pages or, alternatively, 14,000 words or, in a monospaced typeface,
-/// 1,300 lines of text (NRAP 32(a)(7)(A)). A reply brief may run 15 pages
-/// or half the type-volume of an opening or answering brief (NRAP
-/// 32(a)(7)(A)); that half is not stated as a number and is left out.
-limit principal-brief {
-  pages <= 30 cite "NRAP 32(a)"
-  words <= 14_000 cite "NRAP 32(a)"
-  lines <= 1_300 cite "NRAP 32(a)"
-} cite "NRAP 32(a)"
-
-/// A petition for rehearing, or a response to one: no more than 10 pages,
-/// 4,667 words or, in a monospaced typeface, 433 lines of text, except by
-/// the court's permission (NRAP 40(g)).
-limit rehearing-petition {
-  pages <= 10 cite "NRAP 40(g)"
-  words <= 4_667 cite "NRAP 40(g)"
-  lines <= 433 cite "NRAP 40(g)"
-} cite "NRAP 40(g)"
-
-/// A petition for en banc reconsideration, or a response to one: the same
-/// 10 pages, 4,667 words or 433 lines (NRAP 40A(f)).
-limit en-banc-petition {
-  pages <= 10 cite "NRAP 40A(f)"
-  words <= 4_667 cite "NRAP 40A(f)"
-  lines <= 433 cite "NRAP 40A(f)"
-} cite "NRAP 40A(f)"
-
-/// A petition for review by the Supreme Court, or a response to one: the
-/// same 10 pages, 4,667 words or 433 lines (NRAP 40B(f)).
-limit review-petition {
-  pages <= 10 cite "NRAP 40B(f)"
-  words <= 4_667 cite "NRAP 40B(f)"
-  lines <= 433 cite "NRAP 40B(f)"
-} cite "NRAP 40B(f)"
-
 start notice-filed
 
 state notice-filed: "Notice of appeal filed" by applicant cite "NRAP 4(a)"
 {
   note "An appeal permitted by law from a district court is taken only by filing a notice of appeal with the district court clerk within the time allowed by Rule 4 (NRAP 3(a)(1)): in a civil case, no later than 30 days after written notice of entry of the judgment or order appealed from is served, unless a statute sets a different time (NRAP 4(a)(1)). If one party timely files, any other party may file a notice of appeal no later than 14 days after the first notice was served, or within the time otherwise prescribed, whichever ends later (NRAP 4(a)(3)). A timely motion under NRCP 50(b), 52(b) or 59, or under NRCP 60 filed no later than 28 days after service of written notice of entry, runs the time from service of written notice of entry of the order disposing of the last such motion (NRAP 4(a)(5)). On filing the notice, the appellant pays the district court clerk the Supreme Court filing fee, $250 for each notice of appeal, and any district court fees (NRAP 3(e)). A telephonic 14-day extension is not available for the notice of appeal (NRAP 26(b))."
-  edge-notice-filed-appealability "Timely notice" -> appealability { authority cite "NRAP 4(a)" }
+  edge-notice-filed-appealability "Timely notice" -> appealability {
+    event NoticeOfAppealFiled()
+    authority cite "NRAP 4(a)"
+  }
   edge-notice-filed-dismissed-untimely "Late notice" -> dismissed-untimely {
     authority cite "NRAP 3(a)"
   }
@@ -89,6 +61,7 @@ state record-assembled: "Docketing statement, settlement program and record" by 
 {
   note "Within 21 days after the appeal is docketed under Rule 12, the appellant files a docketing statement on the clerk's form; the respondent may file a single-page response within 7 days after service of it (NRAP 14(b), (f)). In the civil settlement conference program, each party submits a settlement statement, limited to 4,667 words, to the settlement judge within 14 days of the clerk's assignment notice, and the settlement judge holds an initial settlement conference within 120 days of assignment (NRAP 16). No later than 14 days from docketing, the appellant requests the necessary transcripts from the court reporter or recorder, or files a certificate that none will be requested (NRAP 9(a)); the reporter files the transcript within 30 days after the request form is served (NRAP 9(b))."
   edge-record-assembled-briefing "Record and transcripts in place" -> briefing {
+    event RecordFiled()
     authority cite "NRAP 10"
   }
   edge-record-assembled-settled "Settled in the settlement conference program" -> settled {
@@ -104,56 +77,78 @@ terminal settled: "Settled on appeal" outcome [settlement] cite "NRAP 16"
 state briefing: "Briefing" by applicant cite "NRAP 31(a)"
 {
   note "The appellant serves and files the opening brief no later than 120 days after the appeal is docketed; the respondent the answering brief no later than 30 days after the appellant's brief is served; the appellant the reply brief no later than 30 days after the respondent's brief is served (NRAP 31(a)(1)). A party that has not earlier moved to extend the time for a brief may obtain a single streamlined extension of up to 30 days (NRAP 31(b))."
-  edge-briefing-argument "Briefing complete" -> argument { authority cite "NRAP 34" }
+  edge-briefing-routing "Briefing complete" -> routing { authority cite "NRAP 17(d)" }
+}
+
+decision routing: "Retained by the Supreme Court or assigned to the Court of Appeals" by court cite "NRAP 17"
+{
+  note "Each principal brief carries a routing statement setting forth whether the matter is retained by the Supreme Court under Rule 17(a) or presumptively assigned to the Court of Appeals under Rule 17(b) (NRAP 17(d)(1)). Except as Rule 17(a) reserves cases to it, the Supreme Court may assign to the Court of Appeals any case filed in it (NRAP 17(b)). A party may not move for reassignment of a case the Supreme Court has assigned to the Court of Appeals (NRAP 17(d)(3)); on the transfer, the clerk issues a notice to the parties (NRAP 17(e))."
+  edge-routing-retained "Retained by the Supreme Court" -> argument { authority cite "NRAP 17(a)" }
+  edge-routing-assigned "Assigned to the Court of Appeals" -> assigned-court-of-appeals {
+    authority cite "NRAP 17(b)"
+  }
+}
+
+terminal assigned-court-of-appeals: "Assigned to the Court of Appeals" outcome [appeal] cite "NRAP 17(e)"
+{
+  note "Upon the transfer of a case to the Court of Appeals, the clerk issues a notice to the parties; except for a petition for Supreme Court review under Rule 40B, pleadings after the transfer are entitled \"In the Court of Appeals of the State of Nevada\" (NRAP 17(e)). The appeal continues in lit/nv-court-of-appeals."
 }
 
 decision argument: "Oral argument or submission on the briefs" by court cite "NRAP 34"
 {
-  note "Except as Rule 17(a) reserves cases to it, the Supreme Court may assign any case filed in it to the Court of Appeals (NRAP 17(b)). The clerk advises the parties of the date, time, place and court of oral argument; unless the case is submitted on the briefs or the court orders otherwise, each side has 15 minutes (NRAP 34(a), (b)). The court may order a case submitted for decision on the briefs, without oral argument (NRAP 34(f))."
-  edge-argument-decided "Argued or submitted" -> decision-issued { authority cite "NRAP 34" }
+  note "The clerk advises the parties of the date, time, place and court of oral argument; unless the case is submitted on the briefs or the court orders otherwise, each side has 15 minutes (NRAP 34(a), (b)). The court may order a case submitted for decision on the briefs, without oral argument (NRAP 34(f))."
+  edge-argument-decided "Argued or submitted: decision filed" -> decision-issued {
+    event DecisionFiled()
+    authority cite "NRAP 36"
+  }
 }
 
 decision decision-issued: "Decision entered" by court cite "NRAP 36"
 {
-  note "The filing of the court's decision or order is the entry of judgment, and the clerk serves the parties a copy of the opinion or order on that date (NRAP 36(a), (b)). The Supreme Court and the Court of Appeals decide by published opinion or unpublished disposition (NRAP 36(c)). A party seeking costs files an itemized and verified bill of costs within 14 days after entry of judgment; objections are filed within 7 days after service of the bill; taxable costs are capped at $750 (NRAP 39(b))."
+  note "The filing of the court's decision or order is the entry of judgment, and the clerk serves the parties a copy of the opinion or order on that date (NRAP 36(a), (b)). The Supreme Court decides by published opinion or unpublished disposition (NRAP 36(c)). A party seeking costs files an itemized and verified bill of costs within 14 days after entry of judgment; objections are filed within 7 days after service of the bill; taxable costs are capped at $750 (NRAP 39(b))."
   edge-decision-issued-rehearing "Petition for rehearing" -> rehearing-ruling {
     authority cite "NRAP 40(c)"
   }
-  edge-decision-issued-review "Court of Appeals decision: petition for review" -> further-review {
-    authority cite "NRAP 40B(c)"
+  edge-decision-issued-en-banc "Petition for en banc reconsideration" -> en-banc-ruling {
+    authority cite "NRAP 40A(c)"
   }
   edge-decision-issued-remittitur "No petition: remittitur issues" -> final-appellate {
+    event MandateIssued()
     authority cite "NRAP 41(b)"
   }
 }
 
 decision rehearing-ruling: "Rehearing decided" by court cite "NRAP 40"
 {
-  note "Unless the time is shortened or enlarged by order, a petition for rehearing is filed within 14 days after the filing of the decision under Rule 36 (NRAP 40(c)), with a $150 filing fee unless a statute provides otherwise (NRAP 40(d)). Rehearing may be granted when the court overlooked or misapprehended a material fact or question of law, or overlooked, misapplied or failed to consider a directly controlling statute, rule, regulation or decision, among the grounds of NRAP 40(a). No response may be filed unless the court requests one, within 14 days after the order requesting it, and rehearing is ordinarily not granted without one (NRAP 40(e)). A party may petition for en banc reconsideration of a Supreme Court panel's decision within 14 days after its filing or, after a timely rehearing petition, within 14 days after the decision denying rehearing (NRAP 40A(c)). A timely rehearing or en banc petition stays the remittitur; if denied, the remittitur issues 21 days after the order denying it (NRAP 41(d)(1))."
-  edge-rehearing-ruling-denied "Denied" -> final-appellate { authority cite "NRAP 41(d)" }
+  note "Unless the time is shortened or enlarged by order, a petition for rehearing is filed within 14 days after the filing of the decision under Rule 36 (NRAP 40(c)), with a $150 filing fee unless a statute provides otherwise (NRAP 40(d)). Rehearing may be granted when the court overlooked or misapprehended a material fact or question of law, or overlooked, misapplied or failed to consider a directly controlling statute, rule, regulation or decision, among the grounds of NRAP 40(a). No response may be filed unless the court requests one, within 14 days after the order requesting it, and rehearing is ordinarily not granted without one (NRAP 40(e)). A petition for en banc reconsideration may not be filed while a petition for rehearing is pending before the panel (NRAP 40A(c)). A timely rehearing petition stays the remittitur; if denied, the remittitur issues 21 days after the order denying it (NRAP 41(d)(1))."
+  edge-rehearing-ruling-denied "Denied" -> final-appellate {
+    event MandateIssued()
+    authority cite "NRAP 41(d)"
+  }
+  edge-rehearing-ruling-en-banc "Denied: petition for en banc reconsideration" -> en-banc-ruling {
+    authority cite "NRAP 40A(c)"
+  }
   edge-rehearing-ruling-granted "Granted" -> rehearing-granted { authority cite "NRAP 40" }
 }
 
 terminal rehearing-granted: "Rehearing granted" outcome [appeal] cite "NRAP 40"
 {
-  note "Modeled as an exit; the court acts on the rehearing under NRAP 40(i), and a Supreme Court panel's decision on rehearing may be the subject of a petition for en banc reconsideration within 14 days after its filing (NRAP 40A(c))."
+  note "Modeled as an exit; the court acts on the rehearing under NRAP 40(i). No petition for en banc reconsideration of a panel's decision to grant rehearing is allowed, but any party may petition for en banc reconsideration of the panel's decision on rehearing within 14 days after its filing (NRAP 40A(c))."
 }
 
-decision further-review: "Petition for review by the Supreme Court" by court cite "NRAP 40B"
+decision en-banc-ruling: "En banc reconsideration decided" by court cite "NRAP 40A"
 {
-  note "A decision of the Court of Appeals is final and reviewable by the Supreme Court only on petition for review, which is a matter of judicial discretion, not of right (NRAP 40B(a)). Unless the time is shortened or enlarged by order, the petition is filed within 14 days after the filing of the Court of Appeals' decision under Rule 36 or its decision on rehearing (NRAP 40B(c)). A timely petition stays the Court of Appeals' remittitur; on an order denying it, the clerk of the Supreme Court issues the remittitur (NRAP 41(d)(2))."
-  edge-further-review-denied "Denied" -> review-denied { authority cite "NRAP 40B" }
-  edge-further-review-granted "Granted" -> review-granted { authority cite "NRAP 40B" }
+  note "En banc reconsideration of a Supreme Court panel's decision is not favored and ordinarily will not be ordered except when reconsideration by the full court is necessary to secure or maintain uniformity of decisions of the Supreme Court or Court of Appeals, or the proceeding involves a substantial precedential, constitutional or public policy issue (NRAP 40A(a)). Unless the time is shortened or enlarged by order, the petition is filed within 14 days after the filing of the panel's decision under Rule 36 or, after a timely rehearing petition, within 14 days after the filing of the decision to deny rehearing; the 3-day mailing period of Rule 26(c) does not apply (NRAP 40A(c)). No response may be filed unless the court requests one, and the petition will ordinarily not be granted without one (NRAP 40A(d)). Any two justices may compel the court to grant the petition; the decision to grant or deny is final and not subject to further requests for rehearing or reconsideration (NRAP 40A(g)). A timely petition stays the remittitur; if denied, the remittitur issues 21 days after the order denying it (NRAP 41(d)(1))."
+  edge-en-banc-ruling-denied "Denied" -> final-appellate {
+    event MandateIssued()
+    authority cite "NRAP 41(d)"
+  }
+  edge-en-banc-ruling-granted "Granted" -> en-banc-granted { authority cite "NRAP 40A(h)" }
 }
 
-terminal review-denied: "Review denied; remittitur issues" outcome [final] cite "NRAP 41(d)"
+terminal en-banc-granted: "En banc reconsideration granted" outcome [appeal] cite "NRAP 40A(h)"
 {
-  note "The Court of Appeals' decision stands; the clerk of the Supreme Court issues the remittitur on the order denying review (NRAP 41(d)(2))."
-}
-
-terminal review-granted: "Review granted by the Supreme Court" outcome [appeal] cite "NRAP 40B"
-{
-  note "Unless otherwise ordered, a grant of a petition for review does not vacate the Court of Appeals' decision (NRAP 40B(h))."
+  note "If the petition is granted, the court may make a final disposition of the cause without argument, place it on the en banc calendar for argument or resubmission, or make other appropriate orders (NRAP 40A(h))."
 }
 
 terminal final-appellate: "Remittitur issued; appellate judgment final" outcome [final] cite "NRAP 41"

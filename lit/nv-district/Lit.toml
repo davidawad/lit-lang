@@ -6,13 +6,15 @@
 # not the federal ones; lit/core has no counting rule for them, so the
 # periods are stated in notes, not encoded as counted deadlines. Appeals
 # are governed by the Nevada Rules of Appellate Procedure
-# (sources/nv-supreme), encoded in lit/nv-supreme.
+# (sources/nv-supreme), encoded in lit/nv-supreme; the graph routes on
+# the trigger events of the Nevada base library, lit/nv-rules.
 [package]
 name = "nv-district-civil"
 version = "0.1.0"
 language = 1
 pack_id = "nv-district-civil"
 forum = "nv-district"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "nevada"
 title = "Nevada District Court, civil"
@@ -29,6 +31,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+nv-state-rules = { version = "^0.1.0", path = "../nv-rules" }
 
 [sources.nv-nrcp]
 title = "Nevada Rules of Civil Procedure, effective January 1, 1953 and including amendments through October 31, 2025 (Nevada Legislature, Legal Division law library; Rev. 4/15/2026)"

@@ -1,0 +1,87 @@
+module nv-court-of-appeals-civil.appeal
+
+import nv-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
+
+// Civil appeals in the Nevada Court of Appeals, from the applicant's
+// (appellant's) side. Every appeal is filed in the Supreme Court, which
+// may assign to the Court of Appeals any case Rule 17(a) does not reserve
+// to it (NRAP 17(b)); the notice, docketing, record and briefing are
+// lit/nv-supreme's. Every period below is stated in a note, not counted:
+// time is computed under NRAP 26(a), and lit/core has no counting rule for
+// Nevada's legal holidays. The 3-day addition of NRAP 26(c) does not apply
+// to the rehearing and review periods (NRAP 40(c), 40B(c)). The brief and
+// petition limits are lit/nv-rules' limit declarations. The earlier
+// outline named no Nevada decision; none is cited.
+start assigned
+
+state assigned: "Case assigned to the Court of Appeals" by court cite "NRAP 17(b)"
+{
+  note "The Court of Appeals hears and decides the matters the Supreme Court assigns to it and those within its original jurisdiction (NRAP 17(b)). Upon the transfer, the clerk issues a notice to the parties; except for a petition for Supreme Court review under Rule 40B, pleadings after the transfer are entitled \"In the Court of Appeals of the State of Nevada\" (NRAP 17(e)). A party may not move for reassignment of a case the Supreme Court has assigned to the Court of Appeals (NRAP 17(d)(3))."
+  edge-assigned-argument "Transfer noticed" -> argument { authority cite "NRAP 17(e)" }
+}
+
+decision argument: "Oral argument or submission on the briefs" by court cite "NRAP 34"
+{
+  note "The clerk advises the parties of the date, time, place and court of oral argument; unless the case is submitted on the briefs or the court orders otherwise, each side has 15 minutes (NRAP 34(a), (b)). The court may order a case submitted for decision on the briefs, without oral argument (NRAP 34(f))."
+  edge-argument-decided "Argued or submitted: decision filed" -> decision-issued {
+    event DecisionFiled()
+    authority cite "NRAP 36"
+  }
+}
+
+decision decision-issued: "Decision entered" by court cite "NRAP 36"
+{
+  note "The filing of the court's decision or order is the entry of judgment, and the clerk serves the parties a copy of the opinion or order on that date (NRAP 36(a), (b)). The Court of Appeals decides by published opinion or unpublished disposition (NRAP 36(c)). A party seeking costs files an itemized and verified bill of costs within 14 days after entry of judgment; objections are filed within 7 days after service of the bill; taxable costs are capped at $750 (NRAP 39(b))."
+  edge-decision-issued-rehearing "Petition for rehearing" -> rehearing-ruling {
+    authority cite "NRAP 40(c)"
+  }
+  edge-decision-issued-review "Petition for review by the Supreme Court" -> further-review {
+    event ReviewPetitionFiled()
+    authority cite "NRAP 40B(c)"
+  }
+  edge-decision-issued-remittitur "No petition: remittitur issues" -> final-appellate {
+    event MandateIssued()
+    authority cite "NRAP 41(b)"
+  }
+}
+
+decision rehearing-ruling: "Rehearing decided" by court cite "NRAP 40"
+{
+  note "Unless the time is shortened or enlarged by order, a petition for rehearing is filed within 14 days after the filing of the decision under Rule 36 (NRAP 40(c)), with a $150 filing fee unless a statute provides otherwise (NRAP 40(d)). Rehearing may be granted when the court overlooked or misapprehended a material fact or question of law, or overlooked, misapplied or failed to consider a directly controlling statute, rule, regulation or decision, among the grounds of NRAP 40(a). No response may be filed unless the court requests one, within 14 days after the order requesting it, and rehearing is ordinarily not granted without one (NRAP 40(e)). A petition for review may not be filed while a petition for rehearing is pending in the Court of Appeals (NRAP 40B(c)). A timely rehearing petition stays the remittitur; if denied, the remittitur issues 21 days after the order denying it (NRAP 41(d)(1))."
+  edge-rehearing-ruling-denied "Denied" -> final-appellate {
+    event MandateIssued()
+    authority cite "NRAP 41(d)"
+  }
+  edge-rehearing-ruling-review "Denied: petition for review by the Supreme Court" -> further-review {
+    event ReviewPetitionFiled()
+    authority cite "NRAP 40B(c)"
+  }
+  edge-rehearing-ruling-granted "Granted" -> rehearing-granted { authority cite "NRAP 40" }
+}
+
+terminal rehearing-granted: "Rehearing granted" outcome [appeal] cite "NRAP 40"
+{
+  note "Modeled as an exit; the court acts on the rehearing under NRAP 40(i), and a petition for Supreme Court review lies within 14 days after the filing of the decision on rehearing (NRAP 40B(c))."
+}
+
+decision further-review: "Petition for review by the Supreme Court decided" by court cite "NRAP 40B"
+{
+  note "A decision of the Court of Appeals is final and reviewable by the Supreme Court only on petition for review, which is a matter of judicial discretion, not of right; the court considers, among other factors, whether the question is one of first impression of general statewide significance, whether the decision conflicts with a prior decision of the Court of Appeals, the Supreme Court or the United States Supreme Court, and whether the case involves fundamental issues of statewide public importance (NRAP 40B(a)). Unless the time is shortened or enlarged by order, the petition is filed within 14 days after the filing of the Court of Appeals' decision under Rule 36 or its decision on rehearing (NRAP 40B(c)). No response may be filed unless the Supreme Court requests one, and the petition will not ordinarily be granted without one (NRAP 40B(d)). The Supreme Court may grant the petition on the affirmative vote of a majority of the justices; its decision to grant or deny is final and not subject to further requests for rehearing or reconsideration (NRAP 40B(g)). A timely petition stays the Court of Appeals' remittitur; on an order denying it, the clerk of the Supreme Court issues the remittitur (NRAP 41(d)(2))."
+  edge-further-review-denied "Denied" -> review-denied { authority cite "NRAP 40B(g)" }
+  edge-further-review-granted "Granted" -> review-granted { authority cite "NRAP 40B(g)" }
+}
+
+terminal review-denied: "Review denied; remittitur issues" outcome [final] cite "NRAP 41(d)"
+{
+  note "The Court of Appeals' decision stands; the clerk of the Supreme Court issues the remittitur on the order denying review (NRAP 41(d)(2))."
+}
+
+terminal review-granted: "Review granted by the Supreme Court" outcome [appeal] cite "NRAP 40B(h)"
+{
+  note "The Supreme Court may limit the questions on review; review is conducted on the record and briefs previously filed in the Court of Appeals, though the court may require supplemental briefs; unless otherwise ordered, a grant does not vacate the Court of Appeals' decision (NRAP 40B(h))."
+}
+
+terminal final-appellate: "Remittitur issued; appellate judgment final" outcome [final] cite "NRAP 41"
+{
+  note "The remittitur issues 21 days after entry of judgment unless the time is shortened or enlarged by order, and is effective when issued; it carries a certified copy of the judgment and decision and any direction as to costs (NRAP 41(a)-(c))."
+}

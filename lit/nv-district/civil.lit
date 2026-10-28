@@ -1,5 +1,7 @@
 module nv-district-civil.civil
 
+import nv-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
 // Civil actions in the Nevada district courts, from the applicant's
 // (plaintiff's) side. Every period below is stated in a note, not counted:
 // time is computed under NRCP 6(a), which excludes the trigger day, counts
@@ -27,6 +29,7 @@ state complaint-filed: "Complaint filed" by applicant cite "NRCP 3"
 {
   note "A civil action is commenced by filing a complaint with the court (Rule 3). The summons and complaint must be served on a defendant no later than 120 days after the complaint is filed unless the court extends the time; if not, the court must dismiss the action without prejudice as to that defendant on motion or on its own order to show cause. A motion to extend made before the period expires gets an extension on good cause; one made after it must also show good cause for the late motion (Rule 4(e))."
   edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    event ActionCommenced()
     authority cite "NRCP 4"
   }
   edge-complaint-filed-unserved "Not served within 120 days" -> dismissed-unserved {
@@ -136,9 +139,11 @@ decision summary-judgment: "Summary judgment decided" by court cite "NRCP 56(a)"
 {
   note "The court shall grant summary judgment if the movant shows that there is no genuine dispute as to any material fact and that it is entitled to judgment as a matter of law, and should state on the record its reasons for granting or denying the motion (Rule 56(a))."
   edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "NRCP 56(a)"
   }
   edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "NRCP 56(a)"
   }
   edge-summary-judgment-denied "Denied or granted in part: trial" -> trial {
@@ -149,7 +154,10 @@ decision summary-judgment: "Summary judgment decided" by court cite "NRCP 56(a)"
 state trial: "Trial by jury or by the court" by court cite "NRCP 38"
 {
   note "A motion for judgment as a matter of law may be made at any time before the case is submitted to the jury (Rule 50(a)(2)). A renewed motion, which may include an alternative request for a new trial, is filed no later than 28 days after service of written notice of entry of judgment, or 28 days after the jury was discharged if the motion addresses a jury issue not decided by a verdict; the time cannot be extended (Rule 50(b))."
-  edge-trial-verdict "Verdict or decision" -> judgment-entered { authority cite "NRCP 58" }
+  edge-trial-verdict "Verdict or decision" -> judgment-entered {
+    event JudgmentEntered()
+    authority cite "NRCP 58"
+  }
   edge-trial-settled "Settlement during trial" -> settled { authority cite "NRCP 41(a)" }
 }
 
@@ -158,6 +166,7 @@ decision judgment-entered: "Judgment entered" by court cite "NRCP 58"
   note "A judgment is approved and signed by the court and filed with the clerk, and its filing is its entry; entry is not delayed for taxing costs (Rule 58(b), (c)). Within 14 days after entry, the party the court designates serves written notice of entry with a copy of the judgment on each party not in default and files it; the judgment may not be executed on until that notice is served (Rule 58(e)). A judgment adjudicating fewer than all claims or parties is final only on an express determination that there is no just reason for delay (Rule 54(b)). A motion for a new trial, and a motion to alter or amend the judgment, is filed no later than 28 days after service of written notice of entry of judgment, and the time cannot be extended (Rule 59(b), (e), (f)). A motion for attorney fees is filed no later than 21 days after written notice of entry of judgment is served, unless a statute or order provides otherwise (Rule 54(d)(2)(B))."
   edge-judgment-entered-new-trial "New trial granted" -> trial { authority cite "NRCP 59(a)" }
   edge-judgment-entered-appeal "Notice of appeal filed" -> appeal-taken {
+    event NoticeOfAppealFiled()
     authority cite "NRAP 4(a)"
   }
   edge-judgment-entered-final "No post-trial motion or appeal" -> final-no-appeal {

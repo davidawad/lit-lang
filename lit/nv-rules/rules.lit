@@ -1,0 +1,62 @@
+module nv-state-rules
+
+/// `lit/nv-rules` is a base library: it declares what Nevada's court
+/// packages share and no procedure of its own. Its pack holds only this
+/// placeholder terminal, which no link or case may route through.
+start library
+
+terminal library: "Nevada state court rules library (no procedure)"
+
+/// An opening or answering brief in a noncapital case: no more than 30
+/// pages or, alternatively, 14,000 words or, in a monospaced typeface,
+/// 1,300 lines of text (NRAP 32(a)(7)(A)). A reply brief may run 15 pages
+/// or half the type-volume of an opening or answering brief (NRAP
+/// 32(a)(7)(A)); that half is not stated as a number and is left out.
+limit principal-brief {
+  pages <= 30 cite "NRAP 32(a)"
+  words <= 14_000 cite "NRAP 32(a)"
+  lines <= 1_300 cite "NRAP 32(a)"
+} cite "NRAP 32(a)"
+
+/// A petition for rehearing, or a response to one: no more than 10 pages,
+/// 4,667 words or, in a monospaced typeface, 433 lines of text, except by
+/// the court's permission (NRAP 40(g)).
+limit rehearing-petition {
+  pages <= 10 cite "NRAP 40(g)"
+  words <= 4_667 cite "NRAP 40(g)"
+  lines <= 433 cite "NRAP 40(g)"
+} cite "NRAP 40(g)"
+
+/// A petition for en banc reconsideration of a Supreme Court panel
+/// decision, or a response to one: the same 10 pages, 4,667 words or 433
+/// lines (NRAP 40A(f)).
+limit en-banc-petition {
+  pages <= 10 cite "NRAP 40A(f)"
+  words <= 4_667 cite "NRAP 40A(f)"
+  lines <= 433 cite "NRAP 40A(f)"
+} cite "NRAP 40A(f)"
+
+/// A petition for review by the Supreme Court of a Court of Appeals
+/// decision, or a response to one: the same 10 pages, 4,667 words or 433
+/// lines (NRAP 40B(f)).
+limit review-petition {
+  pages <= 10 cite "NRAP 40B(f)"
+  words <= 4_667 cite "NRAP 40B(f)"
+  lines <= 433 cite "NRAP 40B(f)"
+} cite "NRAP 40B(f)"
+
+// The trigger events the court packages' graphs route on.
+/// An action, claim, petition or charge is filed and the proceeding begins.
+event ActionCommenced()
+/// A final judgment, decision or appealable order is entered.
+event JudgmentEntered()
+/// A notice of appeal, or a petition or appeal for review of a lower court's or tribunal's decision, is filed.
+event NoticeOfAppealFiled()
+/// The record on appeal or review is filed or transmitted.
+event RecordFiled()
+/// The reviewing court's or tribunal's decision or opinion is filed.
+event DecisionFiled()
+/// A petition for discretionary review in a higher court (certiorari, transfer, leave or review) is filed.
+event ReviewPetitionFiled()
+/// The mandate, remittitur or certificate of judgment issues.
+event MandateIssued()

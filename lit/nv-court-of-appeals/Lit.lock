@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "nv-court-of-appeals-civil"
+version = "0.1.0"
+language = 1
+source = "sha256:8ac73081d67705a9b7b0227f45d3ac6c37a732800da91a0a4396b7ca6bd0cae3"
+semantic = "sha256:1cd618c69559acb8354a79a425e350567d80fd4ebc64a09d1518966a292cb677"
+texts = [
+    "nv-nrap sources/nv-supreme/nrap-sectioned.txt sha256:da5766edaa2c73cdcc84090d1ffb4b9c8ed94bf19d19983a8d5fcc647a0b4ee5",
+]
+dependencies = [
+    "core 1.0.0",
+    "nv-state-rules 0.1.0",
+]
+
+[[package]]
+name = "nv-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]

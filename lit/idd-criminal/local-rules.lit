@@ -1,0 +1,112 @@
+module idd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The District of Idaho's own criminal periods, counted under the criminal
+// rules (FRCrimP 45(a) governs "any local rule"). No trigger carries a
+// service method: FRCrimP 45(c)'s three added days follow the manner of
+// service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: the presentence report is disclosed not less than thirty-five (35)
+// days before sentencing, objections are filed within fourteen (14) days,
+// and the final report goes to the sentencing judge seven (7) days before
+// the hearing (Loc. Crim. R. 32.1(b)(3), (5)), FRCrimP 32(e)(2)'s, 32(f)(1)'s
+// and 32(g)'s periods; the 35-day period may be shortened only with the
+// defendant's express consent (Loc. Crim. R. 32.1(b)(7)). A defendant
+// convicted by a magistrate judge appeals within fourteen (14) days after
+// entry of judgment (Loc. Crim. R. 58.2(a)), FRCrimP 58(g)(2)(B)'s period;
+// objections to a magistrate judge's order or report and recommendation
+// are filed under FRCrimP 59 (Loc. Crim. R. 59.1(b)).
+//
+// Conditions that are not deadlines from an event stay in notes:
+// sentencing occurs no less than seventy (70) days after a guilty plea or
+// verdict (Loc. Crim. R. 32.1(b)(1)), a floor on the setting; the court
+// sets the discovery, motion and jury-instruction cutoffs at arraignment
+// (Loc. Crim. R. 12.1(a)); if no transcript is ordered within fourteen
+// (14) days after the notice of appeal, the record is deemed complete, and
+// argument is set not less than sixty (60) nor more than ninety (90) days
+// after the Clerk's notice (Loc. Crim. R. 58.2(b), (d)).
+//
+// The earlier D. Idaho criminal outline's FRCrimP flow and its decisions
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+/// Objections to a magistrate judge's order on a non-dispositive matter or
+/// report and recommendation on a dispositive matter: not more than twenty
+/// (20) pages (Dist. Idaho Loc. Crim. R. 59.1(b)).
+limit magistrate-objection {
+  pages <= 20 cite "Dist. Idaho Loc. Crim. R. 59.1(b)"
+} cite "Dist. Idaho Loc. Crim. R. 59.1(b)"
+
+/// A response to objections: not more than ten (10) pages (Dist. Idaho
+/// Loc. Crim. R. 59.1(b)).
+limit magistrate-objection-response {
+  pages <= 10 cite "Dist. Idaho Loc. Crim. R. 59.1(b)"
+} cite "Dist. Idaho Loc. Crim. R. 59.1(b)"
+
+/// A transcript is ordered on an appeal from a magistrate judge's
+/// conviction (Dist. Idaho Loc. Crim. R. 58.2(b)).
+event AppealTranscriptOrdered()
+/// The Clerk notifies the parties of the time set for oral argument on
+/// the appeal (Dist. Idaho Loc. Crim. R. 58.2(d), (e)).
+event MisdemeanorAppealHearingNoticed()
+/// The appellant's brief is served (Dist. Idaho Loc. Crim. R. 58.2(e)).
+event AppellantBriefServed()
+/// The appellee's brief is served (Dist. Idaho Loc. Crim. R. 58.2(e)).
+event AppelleeBriefServed()
+/// A party is served with another party's objections to a magistrate
+/// judge's order or report and recommendation (Dist. Idaho Loc. Crim. R.
+/// 59.1(b)).
+event MagistrateObjectionServed() paper magistrate-objection
+/// A response to objections is filed (Dist. Idaho Loc. Crim. R. 59.1(b)).
+event MagistrateObjectionResponseFiled() paper magistrate-objection-response
+
+/// Dist. Idaho Loc. Crim. R. 58.2(b): within thirty (30) days after a
+/// transcript has been ordered, the transcript is filed with the Clerk.
+deadline misdemeanor-appeal-transcript: 30.days after AppealTranscriptOrdered() counted_by frcrimp45 cite "Dist. Idaho Loc. Crim. R. 58.2(b)"
+{
+  forum frcrimp
+}
+
+/// Dist. Idaho Loc. Crim. R. 58.2(e): the appellant serves and files a
+/// brief within twenty-one (21) days after the notice of hearing; the
+/// assigned judge may alter the periods for good cause.
+deadline misdemeanor-appellant-brief: 21.days after MisdemeanorAppealHearingNoticed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "Dist. Idaho Loc. Crim. R. 58.2(e)"
+{
+  forum frcrimp
+}
+
+/// Dist. Idaho Loc. Crim. R. 58.2(e): the appellee serves and files a brief
+/// within twenty-one (21) days after service of the appellant's brief.
+deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "Dist. Idaho Loc. Crim. R. 58.2(e)"
+{
+  forum frcrimp
+}
+
+/// Dist. Idaho Loc. Crim. R. 58.2(e): the appellant may serve and file a
+/// reply brief within seven (7) days after service of the appellee's brief.
+deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "Dist. Idaho Loc. Crim. R. 58.2(e)"
+{
+  forum frcrimp
+}
+
+/// Dist. Idaho Loc. Crim. R. 59.1(b): a party may respond to another
+/// party's objections within fourteen (14) days of being served with a
+/// copy, or at another time the magistrate judge sets.
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "Dist. Idaho Loc. Crim. R. 59.1(b)"
+{
+  forum frcrimp
+}

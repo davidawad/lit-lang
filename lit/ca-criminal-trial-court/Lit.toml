@@ -1,0 +1,56 @@
+# Felony prosecutions in the California superior courts, as far as the
+# vendored text states: California Rules of Court, Title 4 (Criminal
+# Rules), and the Penal Code sections vendored beside them (1050, 1381,
+# 1381.5, 1382 and 1473; sources/ca-criminal-trial-court). Both are
+# CURRENCY UNCONFIRMED in their PROVENANCE entries (the Title 4 PDF has
+# no edition date; the Penal Code pages carry only each section's own
+# history), and the rest of Penal Code Part 2 is not vendored. By the PM's
+# standing ruling of 2026-10-27 such sources yield holes, not values: this
+# package cites them only for the structure of the case and states no
+# period, limit or amount from them, including the Penal Code § 1382
+# speedy-trial periods. The criminal notice of appeal is governed by
+# California Rules of Court, rule 8.308, which is not vendored (the Title 8
+# subset lit/ca-court-of-appeal binds holds rule 8.104 and others, not
+# 8.308), so the appeal period is a hole. in_force is the retrieval date
+# and an earlier query is a hole in the corpus.
+[package]
+name = "ca-superior-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "ca-superior-court-criminal"
+forum = "ca-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "california"
+title = "California superior courts, criminal"
+description = "Felony prosecutions in the California superior courts under the Penal Code and Title 4 of the California Rules of Court, as far as the vendored text states: the structure of the case from arraignment on the information or indictment through pretrial motions, continuances and the Penal Code § 1382 dismissal, readiness and pre-voir dire conferences, trial, sentencing and habeas corpus; no period from the currency-unconfirmed sources is stated, and the rule 8.308 appeal period is a hole."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "California superior courts (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.crc-title4]
+title = "California Rules of Court, Title 4, Criminal Rules (roc-title-4 PDF as served, no edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://courts.ca.gov/system/files?file=file/roc-title-4.pdf"
+sha256 = "28800aa0f531d61ad9cd71898bc244b191ab170f9d5cda14a411a24872cec6f8"
+path = "sources/ca-criminal-trial-court/ca-rules-of-court-title-4-criminal-sectioned.txt"
+path_sha256 = "dba7a1f830790c37fab4276a7d8e390d72ecf6e8568409a8a04bde7bfd30c5a3"
+as_of = "2026-10-28"
+cite_prefixes = ["Cal. Rules of Court, rule"]
+section_heading = "Cal. Rules of Court, rule {n}"
+
+[sources.ca-penal]
+title = "California Penal Code sections 1050, 1381, 1381.5, 1382 and 1473, as served by leginfo (retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=PEN"
+path = "sources/ca-criminal-trial-court/ca-penal-code-1050-1381-1382-1473.txt"
+path_sha256 = "9ffe136449bac7fe3e0512b24b544975ae4771b96ba393ad7a2b779326d6ad56"
+as_of = "2026-10-28"
+cite_prefixes = ["Cal. Penal Code"]
+section_heading = "Cal. Penal Code {n}"

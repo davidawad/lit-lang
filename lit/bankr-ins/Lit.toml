@@ -1,0 +1,47 @@
+# The Local Rules of the U.S. Bankruptcy Court for the Southern District of
+# Indiana over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares only
+# the periods the Local Rules themselves state and re-encodes no FRBP
+# period. It is a base package, not a `kind = "local-rule"` layer: lit/core
+# has no bankruptcy forum family (L2011 for `bankr-ins`), as for
+# lit/bankr-ct. Each period is counted under FRBP 9006(a), the FRCP 6(a)
+# method (core's frcp6). The rules took effect June 1, 2010; the vendored
+# text is the edition "As Amended Through December 1, 2025"
+# (sources/bankr-ins/PROVENANCE.md), which consolidates the amendments and
+# lists no separate amending order, so the consolidation is the only layer
+# and `in_force` is its date. The earlier texts are not vendored, so a
+# query before December 1, 2025 is a hole in the corpus.
+[package]
+name = "bankr-ins-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-ins-local-rules"
+forum = "bankr-ins"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Southern District of Indiana: Local Rules"
+description = "The Bankr. S.D. Ind. Local Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): emergency filings and their dismissal deadlines, installment fees, the first extension of schedules, noticing agents, claim status changes, § 521(i) dismissal, conversion to chapter 7, Objection Notices (final reports, employment, turnover, claim withdrawal and objections, stay relief, lien avoidance, sales, executory contracts, abandonment, redemption, settlements, final decrees), professional fees, chapter 13 plans, mortgage conduits and wage orders, chapter 11 plan distribution and balloting, discharge motions, withdrawal of the reference, sale reports and auction proceeds, Rule 7012 and summary judgment briefing and page limits, depositions, § 727 dismissals, withdrawal of counsel, First Day Motions, jury trials, subpoenas, seals, mediation, remand and exhibits."
+in_force = "2025-12-01"
+known_at = "2026-10-28"
+unknown_before = "2025-12-01"
+jurisdiction = "U.S. Bankruptcy Court for the Southern District of Indiana"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.insb-lbr]
+title = "Local Rules of the United States Bankruptcy Court for the Southern District of Indiana (effective June 1, 2010, as amended through December 1, 2025)"
+url = "https://www.insb.uscourts.gov/sites/insb/files/Local-Rules.pdf"
+path = "sources/bankr-ins/insb-lbr-2025-12-01-sectioned.txt"
+path_sha256 = "87dbad10ea1900f6d25884a4edcf764a8d34308ff9857490b17b47e78b1154e8"
+sha256 = "7bdbda10109b1a8a8ae0967ce7d4e9b756acae3470dd585074b5318a14473997"
+as_of = "2025-12-01"
+cite_prefixes = ["Bankr. S.D. Ind. LBR"]
+section_heading = "LBR {n}"

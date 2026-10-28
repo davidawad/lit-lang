@@ -1,0 +1,52 @@
+# The U.S. District Court for the Western District of Oklahoma's Local
+# Criminal Rules (LCrR) as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods and limits the
+# local criminal rules themselves state and re-encodes no FRCrimP, Speedy
+# Trial Act or FRAP 4(b) period (one source of truth: lit/frcrimp). Each
+# period is counted under FRCrimP 45(a), which governs "any local rule",
+# so each deadline names `forum frcrimp`. The rules are the Local Court
+# Rules revised as of April 23, 2026 (Local Criminal Rules part;
+# sources/wd-okla), the edition the court serves as current, so in_force
+# is that date; earlier editions are not vendored, so a query before it is
+# a hole in the corpus. An appeal goes to the Tenth Circuit under
+# lit/frcrimp's FRAP 4(b) period and lit/ca10.
+[package]
+name = "okwd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "okwd-criminal-local-rules"
+forum = "okwd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Western District of Oklahoma: Local Criminal Rules"
+description = "The U.S. District Court for the Western District of Oklahoma's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): restitution information, the pretrial motion, response and reply rules, notice of defenses, the discovery conference and joint statement, motions in limine, expert disclosures, voir dire and jury instruction requests with their objections, sentencing memoranda and motions, CJA vouchers, post-trial motion responses and transcript redaction requests."
+in_force = "2026-04-23"
+known_at = "2026-10-28"
+unknown_before = "2026-04-23"
+jurisdiction = "U.S. District Court for the Western District of Oklahoma (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "okwd-lcrr"
+issuer = "U.S. District Court for the Western District of Oklahoma"
+date = "2026-04-23"
+designation = "Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.okwd-lcrr]
+title = "Local Court Rules of the United States District Court for the Western District of Oklahoma, Local Criminal Rules (revised as of April 23, 2026)"
+url = "https://www.okwd.uscourts.gov/sites/okwd/files/LocalRules2026.pdf"
+path = "sources/wd-okla/wd-okla-local-rules-2026-criminal-sectioned.txt"
+path_sha256 = "72b239eadea3d599fab4091afa78c82f566d49b5f97985c4a9741fcfedfcde06"
+sha256 = "ec602e29b4e91d0f87f3a0549dcb0141e0f4cd40cdaecbe6ccd95daf3fdeee81"
+as_of = "2026-04-23"
+cite_prefixes = ["W.D. Okla. LCrR"]
+section_heading = "LCrR{n}"

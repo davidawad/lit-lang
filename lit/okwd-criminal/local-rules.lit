@@ -1,0 +1,223 @@
+module okwd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The Western District of Oklahoma's own criminal periods, counted under
+// the criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here.
+//
+// Settings that are not periods for a party stay in notes: initial
+// appearances are held at 3:00 p.m. each business day unless otherwise
+// set, the government presents complaints no later than noon, and the
+// arresting agency presents a defendant in custody to the U.S. Marshal by
+// noon on the day of the first appearance (W.D. Okla. LCrR5.1(a)); after a
+// plea of not guilty the magistrate judge sets trial on the first day of
+// the trial docket following the Speedy Trial Act's 30-day period, or with
+// the parties' consent on the first day of any trial docket not more than
+// 70 days after arraignment (W.D. Okla. LCrR10.2), periods that are the
+// Speedy Trial Act's and stay in lit/frcrimp. A motion to extend time or
+// continue states the event that started the Speedy Trial Act clock
+// (W.D. Okla. LCrR12.1(f)). A CJA voucher submitted beyond 45 days must be
+// accompanied by a letter showing good cause (W.D. Okla. LCrR44.2). A
+// response to a motion under 28 U.S.C. § 2255 is needed only if the court
+// orders one (W.D. Okla. LCrR47.1(b)); collateral review belongs to
+// lit/habeas.
+//
+// The earlier W.D. Okla. criminal outline's FRCrimP flow and its decisions
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// A reply brief to a pretrial motion, permitted only with leave of
+/// court: at most 10 pages unless the court authorizes more (W.D. Okla.
+/// LCrR12.1(c)).
+limit pretrial-reply-brief {
+  pages <= 10 cite "W.D. Okla. LCrR12.1(c)"
+} cite "W.D. Okla. LCrR12.1(c)"
+
+/// The change of plea hearing in a case with identified victims and
+/// potential restitution (W.D. Okla. LCrR11.2).
+event ChangeOfPleaHearingHeld()
+/// A plea of not guilty is entered (W.D. Okla. LCrR12.1(a); 12.3.1;
+/// 16.1(a)).
+event NotGuiltyPleaEntered()
+/// A pretrial motion is filed (W.D. Okla. LCrR12.1(b)).
+event PretrialMotionFiled()
+/// A reply brief, filed with leave (W.D. Okla. LCrR12.1(c)).
+event PretrialReplyFiled() paper pretrial-reply-brief
+/// The discovery conference is completed (W.D. Okla. LCrR16.1(b)).
+event DiscoveryConferenceCompleted()
+/// The commencement of the scheduled trial docket (W.D. Okla. LCrR12.3;
+/// 16.4; 24.1; 30.1).
+event TrialDocketScheduled()
+/// A party receives the presentence report containing any final addendum
+/// or revisions (W.D. Okla. LCrR32.2).
+event FinalPsrReceived()
+/// A sentencing memorandum or motion is filed (W.D. Okla. LCrR32.2).
+event SentencingFilingMade()
+/// The case is dismissed or the defendant is sentenced (W.D. Okla.
+/// LCrR44.2).
+event CaseDismissedOrSentenced()
+/// A post-trial or post-conviction motion, other than one under 28 U.S.C.
+/// § 2255, is filed (W.D. Okla. LCrR47.1(b)).
+event PostTrialMotionFiled()
+/// An official transcript is filed (W.D. Okla. LCrR49.1.1(b), (c)).
+event TranscriptFiled()
+
+/// W.D. Okla. LCrR11.2: in cases with identified victims and potential
+/// restitution, government counsel provides the probation officer and
+/// defense counsel the victims' names, contact details and amounts due, to
+/// the extent practicable at the change of plea hearing or no later than
+/// 14 days after it.
+deadline restitution-information: 14.days after ChangeOfPleaHearingHeld() counted_by frcrimp45 cite "W.D. Okla. LCrR11.2"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR12.1(a): unless otherwise ordered or addressed elsewhere
+/// by the rules, all pretrial motions, including requests for rulings on
+/// contested discovery, are filed and served within 21 days from the date
+/// a plea of not guilty is entered.
+deadline pretrial-motions: 21.days after NotGuiltyPleaEntered() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Okla. LCrR12.1(a)"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR12.1(b): the opposing party files and serves a response
+/// within 9 days after the motion is filed.
+deadline pretrial-response: 9.days after PretrialMotionFiled() counted_by frcrimp45 cite "W.D. Okla. LCrR12.1(b)"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR12.3.1: notice of a defense under FRCrimP 12.1, 12.2 or
+/// 12.3 is given at the discovery conference or within 14 days from the
+/// date a plea of not guilty is entered.
+deadline notice-of-defenses: 14.days after NotGuiltyPleaEntered() counted_by frcrimp45 cite "W.D. Okla. LCrR12.3.1"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR16.1(a): counsel meet and confer at a discovery
+/// conference within 14 days after a plea of not guilty is entered.
+deadline discovery-conference: 14.days after NotGuiltyPleaEntered() counted_by frcrimp45 cite "W.D. Okla. LCrR16.1(a)"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR16.1(b): within 7 days after the discovery conference
+/// is completed, the parties file a joint statement memorializing it
+/// (Appendix V form).
+deadline discovery-joint-statement: 7.days after DiscoveryConferenceCompleted() counted_by frcrimp45 cite "W.D. Okla. LCrR16.1(b)"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR12.3: a motion in limine is filed and served at least 7
+/// days before the commencement of the scheduled trial docket.
+deadline motion-in-limine: 7.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR12.3"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR12.3: objections to a motion in limine are filed 4 days
+/// before the commencement of the scheduled trial docket.
+deadline motion-in-limine-objection: 4.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR12.3"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR16.4: unless otherwise ordered, expert witness
+/// disclosures under FRCrimP 16(a)(1)(G) or 16(b)(1)(C) are made at least
+/// 14 days before the commencement of the scheduled trial docket.
+deadline expert-disclosure: 14.days before TrialDocketScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Okla. LCrR16.4"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR24.1: requested voir dire, if any, is filed and served
+/// at least 7 days before the commencement of the scheduled trial docket.
+deadline voir-dire-request: 7.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR24.1"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR24.1: objections to requested voir dire are filed at
+/// least 4 days before the commencement of the scheduled trial docket.
+deadline voir-dire-objection: 4.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR24.1"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR30.1: requested jury instructions, supported by
+/// authority, are filed and served at least 7 days before the commencement
+/// of the scheduled trial docket, and submitted in Word format.
+deadline jury-instructions: 7.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR30.1"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR30.1: objections to requested jury instructions are
+/// filed at least 4 days before the commencement of the scheduled trial
+/// docket.
+deadline jury-instruction-objection: 4.days before TrialDocketScheduled() counted_by frcrimp45 cite "W.D. Okla. LCrR30.1"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR32.2: all sentencing memoranda and motions are filed
+/// within 14 days after receipt of the presentence report containing any
+/// final addendum or revisions.
+deadline sentencing-memoranda: 14.days after FinalPsrReceived() counted_by frcrimp45 cite "W.D. Okla. LCrR32.2"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR32.2: any response to a sentencing memorandum or motion
+/// is filed within 14 days thereafter.
+deadline sentencing-response: 14.days after SentencingFilingMade() counted_by frcrimp45 cite "W.D. Okla. LCrR32.2"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR44.2: all Criminal Justice Act vouchers are submitted
+/// within 45 days after the case is dismissed or the defendant is
+/// sentenced.
+deadline cja-voucher: 45.days after CaseDismissedOrSentenced() counted_by frcrimp45 cite "W.D. Okla. LCrR44.2"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR47.1(b): for a post-trial or post-conviction motion,
+/// other than one under 28 U.S.C. § 2255, a response is filed within 21
+/// days after the motion is filed.
+deadline post-trial-response: 21.days after PostTrialMotionFiled() counted_by frcrimp45 cite "W.D. Okla. LCrR47.1(b)"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR49.1.1(b): a request to redact personal data identifiers
+/// from an official transcript is filed, on the Appendix VII form, within
+/// 21 days of the filing of the transcript.
+deadline transcript-redaction-request: 21.days after TranscriptFiled() counted_by frcrimp45 cite "W.D. Okla. LCrR49.1.1(b)"
+{
+  forum frcrimp
+}
+
+/// W.D. Okla. LCrR49.1.1(c): a motion for redactions other than the
+/// listed personal data identifiers is filed within 21 days of the filing
+/// of the transcript, unless otherwise ordered.
+deadline transcript-redaction-motion: 21.days after TranscriptFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Okla. LCrR49.1.1(c)"
+{
+  forum frcrimp
+}

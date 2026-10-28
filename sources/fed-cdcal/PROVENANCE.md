@@ -17,6 +17,7 @@
 
 - Source: https://www.cacd.uscourts.gov/sites/default/files/documents/2025%20December%20LRs%20Chap%203.pdf (official site; 31 pages, sha256 7dfff103913ab1a60867ba248e07028bcec86640c8a596625a2196903493421e).
 - Edition: Chapter III Local Criminal Rules of the Local Rules of the Central District of California, the PDF named '2025 December LRs Chap 3' linked at https://www.cacd.uscourts.gov/court-procedures/local-rules (Chapter I, the June 2026 civil rules, and Chapter II, admiralty, are separate files; the civil chapter is the document already vendored as cdcal-local-civil-rules.txt). robots.txt of www.cacd.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): cacd-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 a358ca020b9c70833a117cff36581aa28ff7af5efe87f9f8ca43e02b0bfadabf. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `fed-cdcal/original/cdcal-local-criminal-rules-chap-iii-2025-12.pdf` as served (sha256 7dfff103913ab1a60867ba248e07028bcec86640c8a596625a2196903493421e); extraction sha256 a358ca020b9c70833a117cff36581aa28ff7af5efe87f9f8ca43e02b0bfadabf.

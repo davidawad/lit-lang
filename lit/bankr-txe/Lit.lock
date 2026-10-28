@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-txe-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:49f2e59520200707fa9247af4e55a4f2ee58bace64d3dd26bbbc473ef5ec14fa"
+semantic = "sha256:f61ead5c1f4b1150641e29cf47fac1a7a0d9673dc2f95b52a420acb2aa16edae"
+texts = [
+    "txeb-lbr sources/bankr-txe/txe-local-rules-2022-08-22-sectioned.txt sha256:7f5356644d3f66a359281f591b674b2aacfd903c796d81da92d7675261e0abc6",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-txe"
-version = "0.0.1"
-language = 1
-source = "sha256:8a07fd7692be5aba717c26e4ee5db040df5c506cbe92b2a5c7a96dc0815e4e15"
-semantic = "sha256:0d87c313256adae7debad4eafae419e0d505a715e11bc406637eb7aca1512204"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

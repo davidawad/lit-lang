@@ -1,0 +1,318 @@
+module ned-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Nebraska's own periods, computed under the federal rules
+// (NECivR 6.1(a): FRCP 6 applies to any period these rules state). Rules
+// that state no period or limit stay out: filing fees and in forma
+// pauperis applications (NECivR 3.2, 3.3), summonses (4.1), electronic
+// filing, service, privacy and discovery filing (5.1-5.4), proposed
+// orders, stipulations, certified questions and sealing (7.2-7.5),
+// pleading special matters (9.1), form of documents (10.1), amended
+// pleadings (15.1), scheduling orders and the final pretrial conference
+// (16.1(a)-(b), 16.2), class actions (23.1), disclosure, discovery
+// stipulations and the interrogatory, production and admission formats
+// (26.1-36.1), jury demand notation (38.1), argument (39.1), jury
+// selection and deliberation (47.1-48.2), fee applications (54.3, 54.4),
+// default (55.1), satisfaction of judgment (58.1), sureties and deposits
+// (65.1-67.1), magistrate judges' duties and consent (72.1, 72.3, 73.1)
+// and removed motions (81.1). Periods stated in units lit/core does not
+// count stay in notes: written objections to an edited video served at
+// least 24 hours before it is shown (NECivR 32.1(c)) and notice of a
+// settlement at least 24 hours before trial to avoid juror costs (54.2).
+// The court's own periods are not declared: the pro se progression order
+// issues "approximately 30 days" after the last answer (16.1(c)). Other
+// periods stay in notes because the rule does not say what they run
+// from or binds the court, not a party: a response to a motion to exceed
+// the word limits "within 7 days" (7.1(d)(1)(F)), the exhibit list
+// delivered "on the day before the trial begins" (39.3(a)), a file
+// checked out of the clerk's office returned "no later than 7 days"
+// (79.1(d)) and exhibits retained at least 1 year after the judgment is
+// final (79.1(f)(1)(A)(i)). The jury has 6 to 12 members (48.1). The
+// earlier D. Neb. outline's FRCP flow and its decisions (Twombly, Iqbal,
+// Celotex, Anderson v. Liberty Lobby; Johnson v. Dayton Elec. Mfg. Co.,
+// Braden v. Wal-Mart Stores and Torgerson v. City of Rochester in the
+// Eighth Circuit) are FRCP authority and belong to lit/frcp; they are
+// removed here: no reporter text is vendored.
+/// A supporting or opposing brief: at most 13,000 words except with the
+/// court's prior permission; all text, including the caption, headings,
+/// footnotes and quotations, counts, and the brief carries a certificate
+/// of the word count (NECivR 7.1(d)(1)(A), (C), (D)). The limit applies to
+/// summary judgment briefs but not to the statement of material facts or
+/// the response to it (NECivR 56.1(a)(4)).
+limit brief { words <= 13_000 cite "NECivR 7.1(d)(1)(A)" } cite "NECivR 7.1(d)(1)(A)"
+/// A moving party's reply brief: at most 6,500 words except with the
+/// court's prior permission (NECivR 7.1(d)(1)(B)).
+limit reply-brief { words <= 6_500 cite "NECivR 7.1(d)(1)(B)" } cite "NECivR 7.1(d)(1)(B)"
+/// A motion for permission to exceed the word limits, and a response in
+/// opposition to it: each at most 500 words (NECivR 7.1(d)(1)(F)).
+limit word-limit-motion { words <= 500 cite "NECivR 7.1(d)(1)(F)" } cite "NECivR 7.1(d)(1)(F)"
+
+/// A motion to dismiss, for judgment on the pleadings, for a more definite
+/// statement or for summary judgment, and its supporting brief, are filed
+/// and served (NECivR 7.1(b)(1)(B)).
+event DispositiveMotionServed() paper brief
+/// Any other motion and its supporting brief are filed and served (NECivR
+/// 7.1(b)(1)(B)).
+event MotionServed() paper brief
+/// The opposing party files and serves its brief opposing a motion for
+/// summary judgment (NECivR 7.1(c)(1)).
+event SummaryJudgmentOppositionServed() paper brief
+/// The opposing party files and serves its brief opposing any other motion
+/// (NECivR 7.1(c)(1)).
+event OppositionServed() paper brief
+/// A reply brief is filed (NECivR 7.1(c)).
+event ReplyFiled() paper reply-brief
+/// A motion for permission to exceed the word limits is filed and served
+/// (NECivR 7.1(d)(1)(F)).
+event WordLimitMotionFiled() paper word-limit-motion
+/// A party receives the notice of electronic filing of a document whose
+/// authenticity or electronic signature it disputes (NECivR 11.1(a)).
+event NefReceived()
+/// The court rules on a party's motion to dismiss (NECivR 12.1).
+event MotionToDismissRuled()
+/// Trial begins on the date scheduled (NECivR 30.1(f), 39.2(a), 51.1,
+/// 52.1).
+event TrialBegins()
+/// The edited video deposition is shown at trial (NECivR 32.1(c)).
+event VideoShown()
+/// The notice of removal is served (NECivR 40.1(b)).
+event RemovalNoticeServed()
+/// A motion requesting a place of trial different from the one first
+/// requested is filed (NECivR 40.1(b)).
+event PlaceOfTrialMotionFiled()
+/// The trial judge designates a place of trial different from the one
+/// requested (NECivR 40.1(d)).
+event PlaceOfTrialDesignated()
+/// The attorneys notify the court or clerk that the parties have settled
+/// (NECivR 41.1).
+event SettlementNotified()
+/// The court dismisses a settled action for failure to file the
+/// terminating documents (NECivR 41.1).
+event SettlementDismissalEntered()
+/// The adverse party receives notice of a subpoena for production or
+/// inspection to be served on a nonparty (NECivR 45.1(a)).
+event SubpoenaNoticeReceived()
+/// Judgment is entered (NECivR 54.1(b), 79.1(f)(1)).
+event JudgmentEntered()
+/// A verdict is rendered (NECivR 79.1(f)(1)).
+event VerdictRendered()
+/// The movant serves its summary judgment motion and supporting statement
+/// of material facts (NECivR 56.1(b)(3)).
+event SummaryJudgmentMotionServed() paper brief
+/// The opposing party serves a statement of additional material facts
+/// (NECivR 56.1(c)).
+event AdditionalFactsServed()
+/// A party is served with a magistrate judge's order or findings and
+/// recommendations (NECivR 72.2(a)).
+event MagistrateOrderServed()
+/// A party is served with a statement of objections to a magistrate
+/// judge's order or findings and recommendations (NECivR 72.2(a)).
+event ObjectionsServed() paper brief
+
+/// NECivR 7.1(b)(1)(B): a brief opposing a motion to dismiss, for judgment
+/// on the pleadings, for a more definite statement or for summary judgment
+/// is filed and served within 21 days after the motion and supporting
+/// brief are filed and served. Failure to file it is not a confession of
+/// the motion but precludes contesting the movant's statement of facts
+/// (NECivR 7.1(b)(1)(C)).
+deadline dispositive-opposition-period: 21.days after DispositiveMotionServed() counted_by frcp6 cite "NECivR 7.1(b)(1)(B)"
+{
+  forum frcp
+}
+
+/// NECivR 7.1(b)(1)(B): a brief opposing any other motion is filed and
+/// served within 14 days after the motion and supporting brief are filed
+/// and served.
+deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "NECivR 7.1(b)(1)(B)"
+{
+  forum frcp
+}
+
+/// NECivR 7.1(c)(1): a reply brief and index of evidence supporting a
+/// motion for summary judgment may be filed within 14 days after the
+/// opposing party files and serves the opposing brief. Further briefs need
+/// leave (NECivR 7.1(c)(3)); the motion is submitted when the reply time
+/// expires (NECivR 7.1(g)).
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frcp6 cite "NECivR 7.1(c)(1)"
+{
+  forum frcp
+}
+
+/// NECivR 7.1(c)(1): a reply brief supporting any other motion is filed
+/// and served within 7 days after the opposing party files and serves the
+/// opposing brief.
+deadline reply-period: 7.days after OppositionServed() counted_by frcp6 cite "NECivR 7.1(c)(1)"
+{
+  forum frcp
+}
+
+/// NECivR 11.1(a)(1)(B), (2)(B), (3)(B): a party challenging the
+/// authenticity of an electronically filed document or of a signature on
+/// it files an objection within 7 days of receiving the NEF.
+deadline signature-objection-period: 7.days after NefReceived() counted_by frcp6 cite "NECivR 11.1(a)(1)(B)"
+{
+  forum frcp
+}
+
+/// NECivR 12.1: when a party files a motion to dismiss, its time to answer
+/// all claims, including those the motion does not address, is suspended
+/// until 14 days after the court rules on the motion.
+deadline answer-after-ruling-period: 14.days after MotionToDismissRuled() counted_by frcp6 cite "NECivR 12.1"
+{
+  forum frcp
+}
+
+/// NECivR 30.1(f): the party seeking to use a video deposition at trial
+/// submits unresolved objections in a motion in limine, with a transcript,
+/// no later than 7 days before trial or, alternatively, the date the
+/// pretrial order sets.
+deadline video-objections-period: 7.days before TrialBegins() counted_by frcp6 cite "NECivR 30.1(f)"
+{
+  forum frcp
+}
+
+/// NECivR 32.1(c): at least 7 days before showing the video, the party
+/// seeking to use it delivers a copy of the edited video to opposing
+/// attorneys; their written objections are served at least 24 hours
+/// before it is shown.
+deadline edited-video-period: 7.days before VideoShown() counted_by frcp6 cite "NECivR 32.1(c)"
+{
+  forum frcp
+}
+
+/// NECivR 39.2(a): unless ordered otherwise, each party files a trial brief
+/// at least 7 days before the trial begins.
+deadline trial-brief-period: 7.days before TrialBegins() counted_by frcp6 cite "NECivR 39.2(a)"
+{
+  forum frcp
+}
+
+/// NECivR 40.1(b): the plaintiff in a removed action may file a written
+/// request for trial at Omaha, Lincoln or North Platte within 14 days
+/// after service of the notice of removal.
+deadline removed-place-of-trial-period: 14.days after RemovalNoticeServed() counted_by frcp6 cite "NECivR 40.1(b)"
+{
+  forum frcp
+}
+
+/// NECivR 40.1(b): a request for a place of trial different from the one
+/// first requested is filed as a motion, and any other party then has 14
+/// days to respond.
+deadline place-of-trial-response-period: 14.days after PlaceOfTrialMotionFiled() counted_by frcp6 cite "NECivR 40.1(b)"
+{
+  forum frcp
+}
+
+/// NECivR 40.1(d): responses to the trial judge's designation of a
+/// different place of trial are filed within 14 days of the designation
+/// unless the trial judge specifies a shorter time.
+deadline designation-response-period: 14.days after PlaceOfTrialDesignated() counted_by frcp6 cite "NECivR 40.1(d)"
+{
+  forum frcp
+}
+
+/// NECivR 41.1: within 30 days after notifying the court or clerk of a
+/// settlement, the attorneys file all documents necessary to terminate the
+/// action, unless the court directs otherwise by written order; otherwise
+/// the court may dismiss without further notice and without prejudice.
+deadline settlement-papers-period: 30.days after SettlementNotified() counted_by frcp6 cite "NECivR 41.1"
+{
+  forum frcp
+}
+
+/// NECivR 41.1: after such a dismissal, the case may be reinstated within
+/// 30 days after the date of the order on a showing of good cause why the
+/// parties did not consummate the settlement.
+deadline reinstatement-period: 30.days after SettlementDismissalEntered() counted_by frcp6 cite "NECivR 41.1"
+{
+  forum frcp
+}
+
+/// NECivR 45.1(b): after receipt of notice of a nonparty subpoena for
+/// production or inspection, the adverse party has 7 days to serve written
+/// objections on the noticing party; no contested subpoena issues until
+/// the objections are resolved.
+deadline subpoena-objection-period: 7.days after SubpoenaNoticeReceived() counted_by frcp6 cite "NECivR 45.1(b)"
+{
+  forum frcp
+}
+
+/// NECivR 51.1(a): unless ordered otherwise, each party files requested
+/// jury instructions 7 days before the first day of trial.
+deadline jury-instructions-period: 7.days before TrialBegins() counted_by frcp6 cite "NECivR 51.1(a)"
+{
+  forum frcp
+}
+
+/// NECivR 51.1(b): objections to requested jury instructions, with
+/// supporting authority, are filed at least 3 days before the first day of
+/// trial.
+deadline instruction-objections-period: 3.days before TrialBegins() counted_by frcp6 cite "NECivR 51.1(b)"
+{
+  forum frcp
+}
+
+/// NECivR 52.1: in a civil nonjury trial, parties should file their
+/// proposed findings of fact at least 7 days before the first day of
+/// trial.
+deadline proposed-findings-period: 7.days before TrialBegins() counted_by frcp6 cite "NECivR 52.1"
+{
+  forum frcp
+}
+
+/// NECivR 54.1(b), (d): a party entitled to recover costs files a verified
+/// bill of costs within 30 days after entry of judgment; post-trial
+/// motions do not extend the time, and a party who does not file within
+/// it waives taxable costs.
+deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "NECivR 54.1(b)"
+{
+  forum frcp
+}
+
+/// NECivR 56.1(b)(3): the opposing party's brief and response to the
+/// movant's statement of material facts may be filed within 21 days after
+/// service of the motion and supporting statement.
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "NECivR 56.1(b)(3)"
+{
+  forum frcp
+}
+
+/// NECivR 56.1(c): when the opposing party submits a statement of
+/// additional material facts, the movant serves and files its responses
+/// within 14 days after service of the opposing statement.
+deadline additional-facts-response-period: 14.days after AdditionalFactsServed() counted_by frcp6 cite "NECivR 56.1(c)"
+{
+  forum frcp
+}
+
+/// NECivR 72.2(a): a party objects to a magistrate judge's order or
+/// findings and recommendations within 14 days after being served with
+/// them, unless the order or recommendation states a different time.
+deadline magistrate-objections-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "NECivR 72.2(a)"
+{
+  forum frcp
+}
+
+/// NECivR 72.2(a): unless ordered otherwise, an opposing party may file an
+/// opposing brief within 14 days of being served with the statement of
+/// objections; the objecting party may not reply without leave.
+deadline magistrate-opposition-period: 14.days after ObjectionsServed() counted_by frcp6 cite "NECivR 72.2(a)"
+{
+  forum frcp
+}
+
+/// NECivR 79.1(f)(1): within 14 days after a verdict is rendered, the
+/// offering attorney withdraws all exhibits in the clerk's custody and
+/// gives the clerk a receipt.
+deadline exhibit-withdrawal-verdict-period: 14.days after VerdictRendered() counted_by frcp6 cite "NECivR 79.1(f)(1)"
+{
+  forum frcp
+}
+
+/// NECivR 79.1(f)(1): within 14 days after a judgment is entered, the
+/// offering attorney withdraws all exhibits in the clerk's custody.
+deadline exhibit-withdrawal-judgment-period: 14.days after JudgmentEntered() counted_by frcp6 cite "NECivR 79.1(f)(1)"
+{
+  forum frcp
+}

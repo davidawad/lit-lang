@@ -23,3 +23,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 5d4fb10fee85aaa9b8d248c0a679eeeed6a482658d855a5da289197d9c9f7556. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `d-neb/original/dneb-necrimr-2025-12-01.pdf` as served (sha256 7ad46d57cd1da95f8a135b8847b36ffe456cd0d64e23df25580b43ff996c7d69); extraction sha256 5d4fb10fee85aaa9b8d248c0a679eeeed6a482658d855a5da289197d9c9f7556.
+
+### `d-neb/ne-civil-rules-sectioned.txt` — D. Neb. Civil Rules (NECivR), sectioned
+
+- Derived in the pod (lg-f3q8.9) from `d-neb/ne-civil-rules.txt` (extract sha256 903a924152c81694a3e69e2eb8aa7e4df2669c0b90bea71ecf73359d926c2bef); nothing fetched. One `## NECivR <n>` line is inserted before each rule's own heading line in the body after the table of contents (`NECivR 1.1` through `NECivR 85.1`, 62 rules, `NECivR 65.1.1` included). Rule text was not edited: deleting the marker lines (`sed '/^## NECivR /d'`) restores the extract byte for byte.
+- Edition: as the extract, effective December 1, 2025.
+- Sectioned sha256 cb0d2937e9bb6fa2e7fd65709557d84da6a61dfac80246b104b060e1895fb2cd (the `path_sha256` pinned by `lit/ned/Lit.toml`).

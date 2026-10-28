@@ -1,0 +1,756 @@
+module wawd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Western District of Washington's own civil periods, computed under
+// the federal rules (FRCP 6(a) governs "any local rule"; LCR 7(d)(6)
+// restates its weekend and holiday roll for responses and replies). Each
+// period applies "unless otherwise ordered" where the rule says so. The
+// LCR 7(d) noting dates (no earlier than 14, 21 or 28 days after filing)
+// are the day the motion is ready for decision, not a party's deadline;
+// the response and reply periods below are. Rules stated in hours (the
+// LCR 65(b)(5) notice of opposition within twenty-four hours and response
+// within forty-eight hours) or in court days (the LCR 39.2(n)(2) notice of
+// intention to move for a new trial within ten court days) stay out: lit/core
+// has no hour or court-day clock for them. So do duties the rules lay on
+// the court or the clerk (the LCR 3(i) transfer or remand order's effect 14 days
+// after filing, LCR 39.2(o) judgment within 30 days after a bench trial) and the
+// discretionary LCR 83.2(b) withdrawal limit. Filing fees are not stated
+// in the rules (LCR 3(b) points to the court's fee schedule). The earlier
+// W.D. Washington outline's FRCP flow and its Supreme Court decisions
+// (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby, Reeves, Catlin,
+// Bowles, Hamer) are FRCP and FRAP authority and belong to lit/frcp and
+// lit/frap; its Ninth Circuit decisions (Eitel v. McCool; Lopez v. Smith)
+// are removed: no reporter text is vendored.
+/// A motion noted for the day it is filed under LCR 7(d)(1), other than a
+/// motion for a temporary restraining order: at most 2,100 words, or six
+/// pages if written by hand or with a typewriter (LCR 7(e)(1)). Captions,
+/// tables, signature blocks and certificates of service are not counted,
+/// and the signature block certifies the word count (LCR 7(e)(6)).
+limit same-day-motion { words <= 2_100 cite "W.D. Wash. LCR 7(e)" } cite "W.D. Wash. LCR 7(e)"
+/// A motion noted under LCR 7(d)(2) or 7(d)(3), and the brief in response:
+/// at most 4,200 words, or twelve pages if written by hand or with a
+/// typewriter (LCR 7(e)(2), (3)).
+limit standard-motion { words <= 4_200 cite "W.D. Wash. LCR 7(e)" } cite "W.D. Wash. LCR 7(e)"
+/// A reply brief on a motion noted under LCR 7(d)(2) or 7(d)(3): at most
+/// 2,100 words, or six pages if written by hand or with a typewriter (LCR
+/// 7(e)(2), (3)).
+limit standard-reply { words <= 2_100 cite "W.D. Wash. LCR 7(e)" } cite "W.D. Wash. LCR 7(e)"
+/// A motion noted under LCR 7(d)(4) (to dismiss, for judgment on the
+/// pleadings, for summary judgment, for a preliminary injunction, for class
+/// certification, or to change the forum), and the brief in response: at
+/// most 8,400 words, or twenty-four pages if written by hand or with a
+/// typewriter (LCR 7(e)(4)).
+limit dispositive-motion { words <= 8_400 cite "W.D. Wash. LCR 7(e)" } cite "W.D. Wash. LCR 7(e)"
+/// A reply brief on a motion noted under LCR 7(d)(4): at most 4,200 words,
+/// or twelve pages if written by hand or with a typewriter (LCR 7(e)(4)).
+limit dispositive-reply { words <= 4_200 cite "W.D. Wash. LCR 7(e)" } cite "W.D. Wash. LCR 7(e)"
+/// Motions in limine, filed as one motion under LCR 7(d)(5), and any brief
+/// in response: at most 6,300 words, or eighteen pages if written by hand
+/// or with a typewriter (LCR 7(e)(5)).
+limit limine-motion { words <= 6_300 cite "W.D. Wash. LCR 7(e)" } cite "W.D. Wash. LCR 7(e)"
+/// A motion to file an over-length motion or brief: no more than 700 words,
+/// or two pages if written by hand or with a typewriter, requesting a
+/// specific number of additional words or pages (LCR 7(f)(2)); no
+/// opposition is filed unless the court requests one (LCR 7(f)(3)).
+limit overlength-motion { words <= 700 cite "W.D. Wash. LCR 7(f)" } cite "W.D. Wash. LCR 7(f)"
+/// A surreply requesting that the court strike material in or attached to a
+/// reply brief: at most 1,050 words, or three pages if written by hand or
+/// typewriter (LCR 7(g)(3)).
+limit surreply { words <= 1_050 cite "W.D. Wash. LCR 7(g)" } cite "W.D. Wash. LCR 7(g)"
+
+/// The text each side contributes to a joint LCR 37 submission: at most
+/// 4,200 words, or twelve pages if written by hand or typewriter (LCR
+/// 37(a)(2)(E)); the moving party's reply on each disputed request is at
+/// most 175 words (LCR 37(a)(2)(D)).
+limit discovery-joint-submission {
+  words <= 4_200 cite "W.D. Wash. LCR 37(a)"
+} cite "W.D. Wash. LCR 37(a)"
+
+/// A party's mediation memorandum on liability and damages: should not
+/// exceed 3,500 words, or 10 pages if written by hand or typewriter (LCR
+/// 39.1(c)(5)(C)).
+limit mediation-memorandum {
+  words <= 3_500 cite "W.D. Wash. LCR 39.1(c)"
+} cite "W.D. Wash. LCR 39.1(c)"
+
+/// A motion for a temporary restraining order, and the response to it: at
+/// most 8,400 words, or twenty-four pages if written by hand or typewriter;
+/// no reply is permitted (LCR 65(b)(2), (5)).
+limit tro-paper { words <= 8_400 cite "W.D. Wash. LCR 65" } cite "W.D. Wash. LCR 65"
+/// An objection to a magistrate judge's order or recommended disposition,
+/// and any response: at most 4,200 words, or twelve pages if written by
+/// hand or typewriter (LCR 72).
+limit magistrate-objection { words <= 4_200 cite "W.D. Wash. LCR 72" } cite "W.D. Wash. LCR 72"
+/// The appellant's and appellee's initial briefs in a bankruptcy appeal: at
+/// most 10,500 words, or thirty pages if written by hand or typewriter (LCR
+/// 88(c)(2)).
+limit bankruptcy-appeal-brief { words <= 10_500 cite "W.D. Wash. LCR 88" } cite "W.D. Wash. LCR 88"
+/// The appellant's reply brief in a bankruptcy appeal: at most 7,000 words,
+/// or twenty pages if written by hand or typewriter (LCR 88(c)(2)).
+limit bankruptcy-appeal-reply { words <= 7_000 cite "W.D. Wash. LCR 88" } cite "W.D. Wash. LCR 88"
+
+/// A party who has appeared learns of another action pending in this
+/// district that may be related to its case and is not listed as related in
+/// the civil cover sheet or notice of related cases (LCR 3(g)(3)).
+event RelatedActionLearned()
+/// A party learns that another action involving all or a material part of
+/// the same subject matter and substantially the same parties is pending in
+/// another federal or state court, before an administrative body, or before
+/// an arbitrator (LCR 3(h)).
+event OtherActionLearned()
+/// A motion noted for the day it is filed is filed (LCR 7(d)(1)).
+event SameDayMotionFiled() paper same-day-motion
+/// A motion for relief from a deadline or for a protective order is filed
+/// (LCR 7(d)(2)).
+event FourteenDayMotionFiled() paper standard-motion
+/// Any other motion not listed in LCR 7(d)(1), (2), (4) or (5) is filed
+/// (LCR 7(d)(3)).
+event TwentyOneDayMotionFiled() paper standard-motion
+/// A motion listed in LCR 7(d)(4) is filed (LCR 7(d)(4)).
+event TwentyEightDayMotionFiled() paper dispositive-motion
+/// A brief in response to a motion noted under LCR 7(d)(2) or 7(d)(3) is
+/// filed (LCR 7(e)).
+event StandardResponseFiled() paper standard-motion
+/// A reply brief on a motion noted under LCR 7(d)(2) or 7(d)(3) is filed
+/// (LCR 7(e)).
+event StandardReplyFiled() paper standard-reply
+/// A brief in response to a motion noted under LCR 7(d)(4) is filed (LCR
+/// 7(e)).
+event DispositiveResponseFiled() paper dispositive-motion
+/// A reply brief on a motion noted under LCR 7(d)(4) is filed (LCR 7(e)).
+event DispositiveReplyFiled() paper dispositive-reply
+/// The scheduled pretrial conference (LCR 7(d)(5)).
+event PretrialConferenceScheduled()
+/// Motions in limine are filed as one motion (LCR 7(d)(5)).
+event LimineMotionFiled() paper limine-motion
+/// The underlying motion or brief is due (LCR 7(f)(1)).
+event UnderlyingBriefDue()
+/// A motion to file an over-length motion or brief is filed (LCR 7(f)).
+event OverlengthMotionFiled() paper overlength-motion
+/// A reply brief containing or attaching material the opposing party asks
+/// to strike is filed (LCR 7(g)).
+event ReplyBriefFiled()
+/// A surreply is filed (LCR 7(g)).
+event SurreplyFiled() paper surreply
+/// An order a party asks the court to reconsider is filed (LCR 7(h)(2)).
+event OrderFiled()
+/// A motion for leave to file an amicus brief is served (LCR 7(o)).
+event AmicusMotionServed()
+/// An attorney's or unrepresented party's address, telephone number or
+/// email address changes (LCR 10(f)).
+event ContactInformationChanged()
+/// After a ruling on a motion to dismiss allows it, the plaintiff files the
+/// amended complaint (LCR 12(a)(1)).
+event AmendedComplaintFiled()
+/// The order granting a motion for leave to amend a pleading is filed (LCR
+/// 15(a)).
+event LeaveToAmendGranted()
+/// The date for filing the proposed pretrial order (LCR 16(h), (i), (k)).
+event ProposedPretrialOrderDue()
+/// The proposed date of a deposition of a person in custody, where no
+/// agreement was reached with the institution (LCR 30(a)(2)).
+event CustodyDepositionProposed()
+/// The opposing party receives the moving party's draft LCR 37 joint
+/// submission (LCR 37(a)(2)(C)).
+event DiscoverySubmissionReceived()
+/// The moving party receives the opposing party's rebuttal to the LCR 37
+/// submission (LCR 37(a)(2)(D)).
+event DiscoveryRebuttalReceived()
+/// The joint LCR 37 submission is filed (LCR 37(a)(2)(E)).
+event JoinedDiscoverySubmissionFiled() paper discovery-joint-submission
+/// The day a case set for trial by jury is set (LCR 39(d)).
+event JuryTrialSet()
+/// The mediation conference (LCR 39.1(c)).
+event MediationConferenceSet()
+/// A party's mediation memorandum is delivered and served (LCR
+/// 39.1(c)(5)(C)).
+event MediationMemorandumServed() paper mediation-memorandum
+/// An arbitration award is filed (LCR 39.1(d)(16)(A)).
+event ArbitrationAwardFiled()
+/// The court approves an individualized trial agreement (LCR 39.2(d)).
+event TrialAgreementApproved()
+/// An individualized trial agreement is filed (LCR 39.2(e)).
+event TrialAgreementFiled()
+/// The individualized trial conference (LCR 39.2(f)).
+event IndividualizedTrialConferenceSet()
+/// Mail or email the clerk directed to a pro se plaintiff is returned (LCR
+/// 41(b)(2)).
+event ProSeMailReturned()
+/// The date proposed jury instructions are due (LCR 51(e)).
+event JuryInstructionsDue()
+/// Judgment is entered in a party's favor (LCR 54(d)(1)).
+event JudgmentEntered()
+/// The clerk taxes costs (LCR 54(d)(4)).
+event CostsTaxed()
+/// A motion for a temporary restraining order is filed (LCR 65(b)).
+event TroMotionFiled() paper tro-paper
+/// An objection to a magistrate judge's order or recommended disposition is
+/// filed (LCR 72).
+event MagistrateObjectionFiled() paper magistrate-objection
+/// An administrative agency, as plaintiff or petitioner, files a complaint
+/// or petition seeking review of a final agency decision (LCR 79(h)).
+event AgencyReviewComplaintFiled()
+/// An attorney's status changes so that the attorney no longer meets the
+/// requirements of LCR 83.1(b) (LCR 83.3(b)(1)).
+event EligibilityStatusChanged()
+/// A party to a pending action files for bankruptcy (LCR 89).
+event BankruptcyPetitionFiled()
+/// A party learns of another party's bankruptcy filing for which no Notice
+/// of Bankruptcy Filing has been filed (LCR 89).
+event OtherPartyBankruptcyLearned()
+/// An appellant's or appellee's initial brief in a bankruptcy appeal is
+/// filed (LCR 88(c)(2)).
+event BankruptcyAppealBriefFiled() paper bankruptcy-appeal-brief
+/// The appellant's reply brief in a bankruptcy appeal is filed (LCR
+/// 88(c)(2)).
+event BankruptcyAppealReplyFiled() paper bankruptcy-appeal-reply
+
+/// LCR 3(g)(3): unless the action is already listed as related, parties who
+/// have appeared file a Notice of Related Cases within five days of
+/// learning of another action pending in this district that may be related.
+deadline related-cases-notice-period: 5.days after RelatedActionLearned() counted_by frcp6 cite "W.D. Wash. LCR 3(g)"
+{
+  forum frcp
+}
+
+/// LCR 3(h): a party files a Notice of Pendency of Other Action within five
+/// days of learning of the other action (and LCR 102(b) for other federal
+/// courts).
+deadline other-action-notice-period: 5.days after OtherActionLearned() counted_by frcp6 cite "W.D. Wash. LCR 3(h)"
+{
+  forum frcp
+}
+
+/// LCR 7(d)(2): a motion for relief from a deadline or for a protective
+/// order is noted no earlier than 14 days after filing; any response is
+/// filed and received by the moving party no later than 9 days after the
+/// filing date of the motion.
+deadline fourteen-day-response-period: 9.days after FourteenDayMotionFiled() counted_by frcp6 cite "W.D. Wash. LCR 7(d)"
+{
+  forum frcp
+}
+
+/// LCR 7(d)(2): any reply is filed and received by the opposing party no
+/// later than 14 days after the filing date of the motion.
+deadline fourteen-day-reply-period: 14.days after FourteenDayMotionFiled() counted_by frcp6 cite "W.D. Wash. LCR 7(d)"
+{
+  forum frcp
+}
+
+/// LCR 7(d)(3): every other motion, including a Daubert motion, is noted no
+/// earlier than 21 days from filing; any response is filed and received by
+/// the moving party no later than 15 days after the filing date of the
+/// motion.
+deadline twenty-one-day-response-period: 15.days after TwentyOneDayMotionFiled() counted_by frcp6 cite "W.D. Wash. LCR 7(d)"
+{
+  forum frcp
+}
+
+/// LCR 7(d)(3): any reply is filed and received by the opposing party no
+/// later than 21 days after the filing date of the motion.
+deadline twenty-one-day-reply-period: 21.days after TwentyOneDayMotionFiled() counted_by frcp6 cite "W.D. Wash. LCR 7(d)"
+{
+  forum frcp
+}
+
+/// LCR 7(d)(4): a motion to dismiss, for judgment on the pleadings, for
+/// summary judgment, for a preliminary injunction, for class certification,
+/// or to change the forum is noted no earlier than 28 days after filing;
+/// any response is filed and received by the moving party no later than 21
+/// days after the filing date of the motion.
+deadline twenty-eight-day-response-period: 21.days after TwentyEightDayMotionFiled() counted_by frcp6 cite "W.D. Wash. LCR 7(d)"
+{
+  forum frcp
+}
+
+/// LCR 7(d)(4): any reply is filed and received by the opposing party no
+/// later than 28 days after the filing date of the motion.
+deadline twenty-eight-day-reply-period: 28.days after TwentyEightDayMotionFiled() counted_by frcp6 cite "W.D. Wash. LCR 7(d)"
+{
+  forum frcp
+}
+
+/// LCR 7(d)(5): except on good cause or as otherwise ordered, motions in
+/// limine are filed as one motion no later than 21 days before any
+/// scheduled pretrial conference.
+deadline limine-motion-period: 21.days before PretrialConferenceScheduled() counted_by frcp6 cite "W.D. Wash. LCR 7(d)"
+{
+  forum frcp
+}
+
+/// LCR 7(d)(5): any response is filed and received by the moving party no
+/// later than 6 days before the pretrial conference; no reply is filed.
+deadline limine-response-period: 6.days before PretrialConferenceScheduled() counted_by frcp6 cite "W.D. Wash. LCR 7(d)"
+{
+  forum frcp
+}
+
+/// LCR 7(f)(1): a motion to file an over-length motion or brief is filed as
+/// soon as possible but no later than three days before the underlying
+/// motion or brief is due, noted for the day it is filed.
+deadline overlength-motion-period: 3.days before UnderlyingBriefDue() counted_by frcp6 cite "W.D. Wash. LCR 7(f)"
+{
+  forum frcp
+}
+
+/// LCR 7(g)(2): a surreply requesting that the court strike material in a
+/// reply brief is filed within five days of the filing of the reply brief,
+/// after a notice of intent filed as soon as practicable (LCR 7(g)(1)).
+deadline surreply-period: 5.days after ReplyBriefFiled() counted_by frcp6 cite "W.D. Wash. LCR 7(g)"
+{
+  forum frcp
+}
+
+/// LCR 7(h)(2): a motion for reconsideration is filed within fourteen days
+/// after the order to which it relates is filed, and noted for the day it
+/// is filed.
+deadline reconsideration-motion-period: 14.days after OrderFiled() counted_by frcp6 cite "W.D. Wash. LCR 7(h)"
+{
+  forum frcp
+}
+
+/// LCR 7(o): any party may file an opposition to a motion for leave to file
+/// an amicus brief within 7 days after service of the motion, or as the
+/// court orders.
+deadline amicus-opposition-period: 7.days after AmicusMotionServed() counted_by frcp6 cite "W.D. Wash. LCR 7(o)"
+{
+  forum frcp
+}
+
+/// LCR 10(f): notice of a change in address, telephone number or email
+/// address must be received by the Clerk's Office within ten days of the
+/// change.
+deadline contact-change-notice-period: 10.days after ContactInformationChanged() counted_by frcp6 cite "W.D. Wash. LCR 10(f)"
+{
+  forum frcp
+}
+
+/// LCR 12(a)(1): where the court, ruling on a motion to dismiss, allows an
+/// amended complaint, the responsive pleading is due 14 days after the
+/// earlier of the amended complaint's filing or the court's deadline for
+/// filing it.
+deadline amended-complaint-response-period: 14.days after AmendedComplaintFiled() counted_by frcp6 cite "W.D. Wash. LCR 12(a)"
+{
+  forum frcp
+}
+
+/// LCR 15(a): a party given leave to amend files and serves the amended
+/// pleading within fourteen days of the filing of the order granting leave,
+/// unless the court orders otherwise.
+deadline amended-pleading-filing-period: 14.days after LeaveToAmendGranted() counted_by frcp6 cite "W.D. Wash. LCR 15(a)"
+{
+  forum frcp
+}
+
+/// LCR 16(h): not later than 30 days before the date for filing the
+/// proposed pretrial order, plaintiff's counsel serves (but does not file)
+/// the plaintiff's pretrial statement.
+deadline plaintiff-pretrial-statement-period: 30.days before ProposedPretrialOrderDue() counted_by frcp6 cite "W.D. Wash. LCR 16(h)"
+{
+  forum frcp
+}
+
+/// LCR 16(i): not later than 20 days before the filing of the proposed
+/// pretrial order, each defense counsel serves (but does not file) the
+/// defendant's pretrial statement.
+deadline defendant-pretrial-statement-period: 20.days before ProposedPretrialOrderDue() counted_by frcp6 cite "W.D. Wash. LCR 16(i)"
+{
+  forum frcp
+}
+
+/// LCR 16(k): not later than ten days before the filing of the proposed
+/// pretrial order, counsel hold the conference of attorneys, which
+/// plaintiff's counsel arranges.
+deadline attorney-conference-period: 10.days before ProposedPretrialOrderDue() counted_by frcp6 cite "W.D. Wash. LCR 16(k)"
+{
+  forum frcp
+}
+
+/// LCR 30(a)(2): without agreement with the institution, the party noting
+/// the deposition of a person in custody serves notice at least 14 days
+/// before the proposed deposition.
+deadline custody-deposition-notice-period: 14.days before CustodyDepositionProposed() counted_by frcp6 cite "W.D. Wash. LCR 30(a)"
+{
+  forum frcp
+}
+
+/// LCR 30(a)(2): not later than seven days before the proposed deposition,
+/// the attorney for the institution may file, serve and note a motion
+/// objecting to it; absent a timely motion the deposition proceeds.
+deadline custody-deposition-objection-period: 7.days before CustodyDepositionProposed() counted_by frcp6 cite "W.D. Wash. LCR 30(a)"
+{
+  forum frcp
+}
+
+/// LCR 37(a)(2)(C): within seven days of receipt of the moving party's LCR
+/// 37 submission, the opposing party serves its rebuttal; if the opposing
+/// party fails to respond, the moving party may file the submission and
+/// state that no response was received.
+deadline discovery-rebuttal-period: 7.days after DiscoverySubmissionReceived() counted_by frcp6 cite "W.D. Wash. LCR 37(a)"
+{
+  forum frcp
+}
+
+/// LCR 37(a)(2)(D): within four days of receipt of the opposing party's
+/// rebuttal, the moving party adds its reply and files the joint
+/// submission, or gives notice that it no longer intends to move.
+deadline discovery-reply-period: 4.days after DiscoveryRebuttalReceived() counted_by frcp6 cite "W.D. Wash. LCR 37(a)"
+{
+  forum frcp
+}
+
+/// LCR 39(d): notice that a case set for jury trial has settled or will be
+/// tried without a jury is filed as soon as possible but no later than five
+/// days before the day the case is set; otherwise the agreeing parties pay
+/// the government's jury expenses.
+deadline jury-waiver-notice-period: 5.days before JuryTrialSet() counted_by frcp6 cite "W.D. Wash. LCR 39(d)"
+{
+  forum frcp
+}
+
+/// LCR 39.1(c)(2): in a case ordered to mediation, the attorneys meet and
+/// attempt in good faith to negotiate a settlement no later than 30 days
+/// before the mediation conference, unless the court sets a different date.
+deadline mediation-settlement-conference-period: 30.days before MediationConferenceSet() counted_by frcp6 cite "W.D. Wash. LCR 39.1(c)"
+{
+  forum frcp
+}
+
+/// LCR 39.1(c)(5)(C): each party's mediation memorandum is delivered to the
+/// mediator and served on all other parties at least seven days before the
+/// mediation conference.
+deadline mediation-memorandum-period: 7.days before MediationConferenceSet() counted_by frcp6 cite "W.D. Wash. LCR 39.1(c)"
+{
+  forum frcp
+}
+
+/// LCR 39.1(d)(16)(A): unless the agreement to arbitrate waived trial de
+/// novo, any party may serve and file a written demand for trial de novo
+/// within 30 days of the filing of the award.
+deadline trial-de-novo-demand-period: 30.days after ArbitrationAwardFiled() counted_by frcp6 cite "W.D. Wash. LCR 39.1(d)"
+{
+  forum frcp
+}
+
+/// LCR 39.2(d): if not already exchanged or due, the FRCP 26(a)(1)(A)
+/// disclosures are exchanged within seven days after the individualized
+/// trial agreement is approved.
+deadline individualized-trial-disclosures-period: 7.days after TrialAgreementApproved() counted_by frcp6 cite "W.D. Wash. LCR 39.2(d)"
+{
+  forum frcp
+}
+
+/// LCR 39.2(e): the initial individualized trial conference occurs no later
+/// than thirty days after the filing of the agreement, unless otherwise
+/// ordered; the plaintiff requests it immediately.
+deadline individualized-trial-conference-period: 30.days after TrialAgreementFiled() counted_by frcp6 cite "W.D. Wash. LCR 39.2(e)"
+{
+  forum frcp
+}
+
+/// LCR 39.2(f): the parties file a Joint Individualized Trial Statement
+/// seven days before the individualized trial conference.
+deadline individualized-trial-statement-period: 7.days before IndividualizedTrialConferenceSet() counted_by frcp6 cite "W.D. Wash. LCR 39.2(f)"
+{
+  forum frcp
+}
+
+/// LCR 41(b)(2): if mail or email directed to a pro se plaintiff is
+/// returned and the plaintiff does not notify the court and opposing
+/// parties of a current address within 60 days, the court may dismiss
+/// without prejudice for failure to prosecute.
+deadline pro-se-address-period: 60.days after ProSeMailReturned() counted_by frcp6 cite "W.D. Wash. LCR 41(b)"
+{
+  forum frcp
+}
+
+/// LCR 51(e): twenty-one days before jury instructions are due, the parties
+/// exchange proposed instructions, verdict forms and any special
+/// interrogatories.
+deadline jury-instruction-exchange-period: 21.days before JuryInstructionsDue() counted_by frcp6 cite "W.D. Wash. LCR 51(e)"
+{
+  forum frcp
+}
+
+/// LCR 54(d)(1): the party in whose favor judgment is rendered and who
+/// seeks costs files and serves a motion for costs (bill of costs) within
+/// twenty-one days after the entry of judgment, noted under LCR 7(d)(3).
+deadline bill-of-costs-period: 21.days after JudgmentEntered() counted_by frcp6 cite "W.D. Wash. LCR 54(d)"
+{
+  forum frcp
+}
+
+/// LCR 54(d)(4): the clerk's taxation of costs is final unless a motion to
+/// retax is filed and served within seven days after costs have been taxed.
+deadline retax-motion-period: 7.days after CostsTaxed() counted_by frcp6 cite "W.D. Wash. LCR 54(d)"
+{
+  forum frcp
+}
+
+/// LCR 79(h): unless extended for good cause, where the agency is the
+/// plaintiff or petitioner the record of the agency proceeding is filed
+/// within thirty days of the filing of the complaint or petition; an agency
+/// defendant files it with the answer.
+deadline agency-record-period: 30.days after AgencyReviewComplaintFiled() counted_by frcp6 cite "W.D. Wash. LCR 79(h)"
+{
+  forum frcp
+}
+
+/// LCR 83.3(b)(1): an attorney who no longer meets the requirements of LCR
+/// 83.1(b) notifies the Clerk of Court in writing no later than 10 days
+/// after the change in status.
+deadline eligibility-change-notice-period: 10.days after EligibilityStatusChanged() counted_by frcp6 cite "W.D. Wash. LCR 83.3(b)"
+{
+  forum frcp
+}
+
+/// LCR 89: a party who files for bankruptcy while an action is pending
+/// notifies the court within three days by filing a Notice of Bankruptcy
+/// Filing.
+deadline bankruptcy-notice-period: 3.days after BankruptcyPetitionFiled() counted_by frcp6 cite "W.D. Wash. LCR 89"
+{
+  forum frcp
+}
+
+/// LCR 89: if the filing party has not filed the Notice, another party who
+/// learns of the bankruptcy files it within five days of learning of the
+/// filing.
+deadline other-party-bankruptcy-notice-period: 5.days after OtherPartyBankruptcyLearned() counted_by frcp6 cite "W.D. Wash. LCR 89"
+{
+  forum frcp
+}
+
+test "related cases notice period: 5 days after the trigger" cite "W.D. Wash. LCR 3(g)"
+{
+  given RelatedActionLearned() on 2026-11-02
+  expect deadline(related-cases-notice-period) == 2026-11-09
+}
+
+test "other action notice period: 5 days after the trigger" cite "W.D. Wash. LCR 3(h)"
+{
+  given OtherActionLearned() on 2026-11-02
+  expect deadline(other-action-notice-period) == 2026-11-09
+}
+
+test "fourteen day response period: 9 days after the trigger" cite "W.D. Wash. LCR 7(d)"
+{
+  given FourteenDayMotionFiled() on 2026-11-02
+  expect deadline(fourteen-day-response-period) == 2026-11-12
+}
+
+test "fourteen day reply period: 14 days after the trigger" cite "W.D. Wash. LCR 7(d)"
+{
+  given FourteenDayMotionFiled() on 2026-11-02
+  expect deadline(fourteen-day-reply-period) == 2026-11-16
+}
+
+test "twenty one day response period: 15 days after the trigger" cite "W.D. Wash. LCR 7(d)"
+{
+  given TwentyOneDayMotionFiled() on 2026-11-02
+  expect deadline(twenty-one-day-response-period) == 2026-11-17
+}
+
+test "twenty one day reply period: 21 days after the trigger" cite "W.D. Wash. LCR 7(d)"
+{
+  given TwentyOneDayMotionFiled() on 2026-11-02
+  expect deadline(twenty-one-day-reply-period) == 2026-11-23
+}
+
+test "twenty eight day response period: 21 days after the trigger" cite "W.D. Wash. LCR 7(d)"
+{
+  given TwentyEightDayMotionFiled() on 2026-11-02
+  expect deadline(twenty-eight-day-response-period) == 2026-11-23
+}
+
+test "twenty eight day reply period: 28 days after the trigger" cite "W.D. Wash. LCR 7(d)"
+{
+  given TwentyEightDayMotionFiled() on 2026-11-02
+  expect deadline(twenty-eight-day-reply-period) == 2026-11-30
+}
+
+test "limine motion period: 21 days before the trigger" cite "W.D. Wash. LCR 7(d)"
+{
+  given PretrialConferenceScheduled() on 2027-03-02
+  expect deadline(limine-motion-period) == 2027-02-09
+}
+
+test "limine response period: 6 days before the trigger" cite "W.D. Wash. LCR 7(d)"
+{
+  given PretrialConferenceScheduled() on 2027-03-02
+  expect deadline(limine-response-period) == 2027-02-24
+}
+
+test "overlength motion period: 3 days before the trigger" cite "W.D. Wash. LCR 7(f)"
+{
+  given UnderlyingBriefDue() on 2027-03-02
+  expect deadline(overlength-motion-period) == 2027-02-26
+}
+
+test "surreply period: 5 days after the trigger" cite "W.D. Wash. LCR 7(g)"
+{
+  given ReplyBriefFiled() on 2026-11-02
+  expect deadline(surreply-period) == 2026-11-09
+}
+
+test "reconsideration motion period: 14 days after the trigger" cite "W.D. Wash. LCR 7(h)"
+{
+  given OrderFiled() on 2026-11-02
+  expect deadline(reconsideration-motion-period) == 2026-11-16
+}
+
+test "amicus opposition period: 7 days after the trigger" cite "W.D. Wash. LCR 7(o)"
+{
+  given AmicusMotionServed() on 2026-11-02
+  expect deadline(amicus-opposition-period) == 2026-11-09
+}
+
+test "contact change notice period: 10 days after the trigger" cite "W.D. Wash. LCR 10(f)"
+{
+  given ContactInformationChanged() on 2026-11-02
+  expect deadline(contact-change-notice-period) == 2026-11-12
+}
+
+test "amended complaint response period: 14 days after the trigger" cite "W.D. Wash. LCR 12(a)"
+{
+  given AmendedComplaintFiled() on 2026-11-02
+  expect deadline(amended-complaint-response-period) == 2026-11-16
+}
+
+test "amended pleading filing period: 14 days after the trigger" cite "W.D. Wash. LCR 15(a)"
+{
+  given LeaveToAmendGranted() on 2026-11-02
+  expect deadline(amended-pleading-filing-period) == 2026-11-16
+}
+
+test "plaintiff pretrial statement period: 30 days before the trigger" cite "W.D. Wash. LCR 16(h)"
+{
+  given ProposedPretrialOrderDue() on 2027-03-02
+  expect deadline(plaintiff-pretrial-statement-period) == 2027-01-29
+}
+
+test "defendant pretrial statement period: 20 days before the trigger" cite "W.D. Wash. LCR 16(i)"
+{
+  given ProposedPretrialOrderDue() on 2027-03-02
+  expect deadline(defendant-pretrial-statement-period) == 2027-02-10
+}
+
+test "attorney conference period: 10 days before the trigger" cite "W.D. Wash. LCR 16(k)"
+{
+  given ProposedPretrialOrderDue() on 2027-03-02
+  expect deadline(attorney-conference-period) == 2027-02-19
+}
+
+test "custody deposition notice period: 14 days before the trigger" cite "W.D. Wash. LCR 30(a)"
+{
+  given CustodyDepositionProposed() on 2027-03-02
+  expect deadline(custody-deposition-notice-period) == 2027-02-16
+}
+
+test "custody deposition objection period: 7 days before the trigger" cite "W.D. Wash. LCR 30(a)"
+{
+  given CustodyDepositionProposed() on 2027-03-02
+  expect deadline(custody-deposition-objection-period) == 2027-02-23
+}
+
+test "discovery rebuttal period: 7 days after the trigger" cite "W.D. Wash. LCR 37(a)"
+{
+  given DiscoverySubmissionReceived() on 2026-11-02
+  expect deadline(discovery-rebuttal-period) == 2026-11-09
+}
+
+test "discovery reply period: 4 days after the trigger" cite "W.D. Wash. LCR 37(a)"
+{
+  given DiscoveryRebuttalReceived() on 2026-11-02
+  expect deadline(discovery-reply-period) == 2026-11-06
+}
+
+test "jury waiver notice period: 5 days before the trigger" cite "W.D. Wash. LCR 39(d)"
+{
+  given JuryTrialSet() on 2027-03-02
+  expect deadline(jury-waiver-notice-period) == 2027-02-25
+}
+
+test "mediation settlement conference period: 30 days before the trigger" cite "W.D. Wash. LCR 39.1(c)"
+{
+  given MediationConferenceSet() on 2027-03-02
+  expect deadline(mediation-settlement-conference-period) == 2027-01-29
+}
+
+test "mediation memorandum period: 7 days before the trigger" cite "W.D. Wash. LCR 39.1(c)"
+{
+  given MediationConferenceSet() on 2027-03-02
+  expect deadline(mediation-memorandum-period) == 2027-02-23
+}
+
+test "trial de novo demand period: 30 days after the trigger" cite "W.D. Wash. LCR 39.1(d)"
+{
+  given ArbitrationAwardFiled() on 2026-11-02
+  expect deadline(trial-de-novo-demand-period) == 2026-12-02
+}
+
+test "individualized trial disclosures period: 7 days after the trigger" cite "W.D. Wash. LCR 39.2(d)"
+{
+  given TrialAgreementApproved() on 2026-11-02
+  expect deadline(individualized-trial-disclosures-period) == 2026-11-09
+}
+
+test "individualized trial conference period: 30 days after the trigger" cite "W.D. Wash. LCR 39.2(e)"
+{
+  given TrialAgreementFiled() on 2026-11-02
+  expect deadline(individualized-trial-conference-period) == 2026-12-02
+}
+
+test "individualized trial statement period: 7 days before the trigger" cite "W.D. Wash. LCR 39.2(f)"
+{
+  given IndividualizedTrialConferenceSet() on 2027-03-02
+  expect deadline(individualized-trial-statement-period) == 2027-02-23
+}
+
+test "pro se address period: 60 days after the trigger" cite "W.D. Wash. LCR 41(b)"
+{
+  given ProSeMailReturned() on 2026-11-02
+  expect deadline(pro-se-address-period) == 2027-01-04
+}
+
+test "jury instruction exchange period: 21 days before the trigger" cite "W.D. Wash. LCR 51(e)"
+{
+  given JuryInstructionsDue() on 2027-03-02
+  expect deadline(jury-instruction-exchange-period) == 2027-02-09
+}
+
+test "bill of costs period: 21 days after the trigger" cite "W.D. Wash. LCR 54(d)"
+{
+  given JudgmentEntered() on 2026-11-02
+  expect deadline(bill-of-costs-period) == 2026-11-23
+}
+
+test "retax motion period: 7 days after the trigger" cite "W.D. Wash. LCR 54(d)"
+{
+  given CostsTaxed() on 2026-11-02
+  expect deadline(retax-motion-period) == 2026-11-09
+}
+
+test "agency record period: 30 days after the trigger" cite "W.D. Wash. LCR 79(h)"
+{
+  given AgencyReviewComplaintFiled() on 2026-11-02
+  expect deadline(agency-record-period) == 2026-12-02
+}
+
+test "eligibility change notice period: 10 days after the trigger" cite "W.D. Wash. LCR 83.3(b)"
+{
+  given EligibilityStatusChanged() on 2026-11-02
+  expect deadline(eligibility-change-notice-period) == 2026-11-12
+}
+
+test "bankruptcy notice period: 3 days after the trigger" cite "W.D. Wash. LCR 89"
+{
+  given BankruptcyPetitionFiled() on 2026-11-02
+  expect deadline(bankruptcy-notice-period) == 2026-11-05
+}
+
+test "other party bankruptcy notice period: 5 days after the trigger" cite "W.D. Wash. LCR 89"
+{
+  given OtherPartyBankruptcyLearned() on 2026-11-02
+  expect deadline(other-party-bankruptcy-notice-period) == 2026-11-09
+}

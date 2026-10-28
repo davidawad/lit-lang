@@ -1,0 +1,48 @@
+# The Western District of Washington's Local Civil Rules as a local-rule
+# layer over lit/frcp (28 U.S.C. § 2071; FRCP 83(a)): it declares only the
+# periods and limits the Local Civil Rules themselves state and re-encodes
+# no FRCP deadline. Each period is counted under FRCP 6(a), which governs
+# "any local rule". The rules are those last revised effective January 13,
+# 2026 (sources/fed-wdwash); the proposed amendments out for comment are
+# not in force. An appeal goes to the Ninth Circuit under lit/frap and
+# lit/ca9.
+[package]
+name = "wawd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "wawd-local-rules"
+forum = "wawd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Western District of Washington: Local Civil Rules"
+description = "The Western District of Washington's Local Civil Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): related and parallel actions, the LCR 7(d) motion calendar and its response and reply periods, LCR 7(e) word limits, over-length motions, surreplies, reconsideration, amicus briefs, contact changes, amended pleadings, pretrial statements, custody depositions, LCR 37 joint discovery submissions, jury waivers, mediation and arbitration, individualized trials, pro se addresses, jury instructions, costs, temporary restraining orders, magistrate judge objections, agency records, attorney eligibility, bankruptcy notices and bankruptcy appeal briefs."
+in_force = "2026-01-13"
+known_at = "2026-10-28"
+unknown_before = "2026-01-13"
+jurisdiction = "United States District Court, W.D. Washington"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "wawd-lcr"
+issuer = "United States District Court for the Western District of Washington"
+date = "2026-01-13"
+designation = "Local Civil Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.wawd-lcr]
+title = "Local Civil Rules of the United States District Court for the Western District of Washington (last revised effective January 13, 2026)"
+url = "https://www.wawd.uscourts.gov/sites/wawd/files/WAWD%20Local%20Civil%20Rules%20%282026%29%20-%20Clean.pdf"
+path = "sources/fed-wdwash/wdwash-local-civil-rules-sectioned.txt"
+path_sha256 = "6e36487f123d77750b4503501397b9ff436c3ee1667e22c19e1717f5523f9fc3"
+sha256 = "d9befea781ff1b8d449e6b0bf598097fbf570e64f7234a56fb3de1c9ef704562"
+as_of = "2026-01-13"
+cite_prefixes = ["W.D. Wash. LCR"]
+section_heading = "LCR {n}"

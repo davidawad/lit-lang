@@ -136,6 +136,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | vaed-local-rules | `lit/vaed` | 26 | 0 | 26 | 0 |
 | vawd-local-rules | `lit/vawd` | 16 | 0 | 16 | 0 |
 | vtd-local-rules | `lit/vtd` | 26 | 0 | 0 | 0 |
+| wawd-local-rules | `lit/wawd` | 39 | 0 | 39 | 0 |
 | wied-local-rules | `lit/wied` | 21 | 0 | 21 | 0 |
 | wiwd-local-rules | `lit/wiwd` | 1 | 0 | 1 | 0 |
 

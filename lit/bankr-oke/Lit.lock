@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-oke-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:19fa38eb3e0d71045779983520ebf3453428aa914b575ad53347fbc1d1d95887"
+semantic = "sha256:ef38bb25f87684d70fd30db4155c5746ca1deb681d745ecf0424fba920621afe"
+texts = [
+    "okeb-lr sources/bankr-oke/okeb-lbr-printable.txt sha256:2123a8a6d6b35a1fffe0859462f1d6677ee59ab3ee21b8d9b69565f63f767fb0",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-oke"
-version = "0.0.1"
-language = 1
-source = "sha256:1a2468eff76af5e7d71b7d9a157caa4954b89c2628abdec343ba45ef6e8924ac"
-semantic = "sha256:80f086d8a8a65f6387167fb3815d6b4f9d6b6f71caf38f0d2c88619d696404fd"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

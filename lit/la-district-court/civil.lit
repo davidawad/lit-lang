@@ -1,0 +1,209 @@
+module la-district-court-civil.civil
+
+start petition-filed
+
+state petition-filed: "Petition filed" by applicant cite "La. C.C.P. art. 421"
+{
+  note "A civil action is commenced by the filing of a pleading presenting the demand to a court of competent jurisdiction; amicable demand is not a condition precedent unless the law requires it (La. C.C.P. art. 421). The petition sets out the parties, a short, clear and concise statement of the causes of action and material facts, a physical and an email address for service, and a prayer for relief (La. C.C.P. art. 891). Service of the citation is requested on all named defendants within ninety days of commencement of the action, and the clerk's fees for service are paid within that ninety-day period, or, for additional fees, within the longer of that period and thirty days from receipt of the clerk's statement (La. C.C.P. art. 1201). Service may be personal or domiciliary and made at any time of day or night (La. C.C.P. art. 1231). Periods in this package are stated, not counted: computation is La. C.C.P. art. 5059, not vendored."
+  edge-petition-filed-served "Citation requested and served" -> answer-due {
+    authority cite "La. C.C.P. art. 1201"
+  }
+  edge-petition-filed-not-requested "Service not requested in time" -> service-dismissal {
+    authority cite "La. C.C.P. art. 1201"
+  }
+  edge-petition-filed-abandoned "No step taken for three years" -> abandoned {
+    authority cite "La. C.C.P. art. 561"
+  }
+}
+
+decision answer-due: "Answer, exception or default" by office cite "La. C.C.P. art. 1001"
+{
+  note "A defendant files an answer within twenty-one days after service of citation, except as otherwise provided by law; if the plaintiff files and serves a discovery request with the petition, the answer is due within thirty days after service of citation and of the discovery request (La. C.C.P. art. 1001). The court may grant additional time for answering (La. C.C.P. art. 1001). The answer sets forth affirmative defenses (La. C.C.P. art. 1005). The declinatory and dilatory exceptions are pleaded prior to or in the answer and in any event prior to the signing of a default judgment (La. C.C.P. art. 928)."
+  edge-answer-due-answer "Answer filed" -> answered { authority cite "La. C.C.P. art. 1001" }
+  edge-answer-due-exception "Exception filed" -> exception-pending {
+    authority cite "La. C.C.P. art. 928"
+  }
+  edge-answer-due-default "No answer or other pleading" -> default-sought {
+    authority cite "La. C.C.P. art. 1702"
+  }
+}
+
+state exception-pending: "Declinatory, dilatory or peremptory exception" by office cite "La. C.C.P. art. 928"
+{
+  note "The declinatory exception raises, among others, insufficiency of citation or of service (including failure to request service within the time of La. C.C.P. art. 1201), lis pendens, improper venue and lack of personal jurisdiction (La. C.C.P. art. 925); the dilatory exception raises, among others, prematurity, vagueness and nonconformity with La. C.C.P. art. 891 (La. C.C.P. art. 926); objections not pleaded in those exceptions are waived. The peremptory exception raises, among others, prescription, res judicata, no cause of action and no right of action (La. C.C.P. art. 927), and may be pleaded at any stage before submission of the case for decision (La. C.C.P. art. 928). An exception is accompanied by a proposed order setting it for hearing (La. Dist. Ct. R. 9.8). Outside juvenile and family proceedings no hearing is scheduled until at least fifteen calendar days after filing, unless good cause is shown for an expedited hearing (La. Dist. Ct. R. 9.8). The exceptor's memorandum is received by the other parties at least fifteen calendar days before the hearing, the opposition memorandum at least eight calendar days before it, and any reply memorandum before 4:00 p.m. on a day that allows one full working day before the hearing (La. Dist. Ct. R. 9.9). The outline's decision on no cause of action (Everything on Wheels Subaru, Inc. v. Subaru South, Inc., 616 So. 2d 1234 (La. 1993)) is removed: no reporter text is vendored."
+  edge-exception-pending-ruling "Exception heard" -> exception-ruling {
+    authority cite "La. Dist. Ct. R. 9.8"
+  }
+}
+
+decision exception-ruling: "Ruling on the exception" by court cite "La. C.C.P. art. 934"
+{
+  note "When the grounds of a peremptory exception may be removed by amendment, the judgment sustaining it orders amendment within the delay the court allows; if they cannot be removed, or the plaintiff fails to amend, the action, claim, demand, issue or theory is dismissed (La. C.C.P. art. 934). When an exception filed before answer is overruled or referred to the merits, the answer is due within fifteen days after that ruling (La. C.C.P. art. 1001)."
+  edge-exception-ruling-dismissed "Sustained; grounds cannot be removed" -> dismissed-on-exception {
+    authority cite "La. C.C.P. art. 934"
+  }
+  edge-exception-ruling-amend "Sustained; amendment ordered" -> amended {
+    authority cite "La. C.C.P. art. 934"
+  }
+  edge-exception-ruling-overruled "Overruled or referred to the merits" -> answered {
+    authority cite "La. C.C.P. art. 1001"
+  }
+}
+
+state amended: "Amended petition filed and served" by applicant cite "La. C.C.P. art. 934"
+{
+  note "When an exception is sustained and amendment of the petition ordered, the answer is filed within fifteen days after service of the amended petition (La. C.C.P. art. 1001)."
+  edge-amended-answer "Answer to the amended petition" -> answered {
+    authority cite "La. C.C.P. art. 1001"
+  }
+}
+
+state default-sought: "Default judgment sought" by applicant cite "La. C.C.P. art. 1702"
+{
+  note "There is no preliminary default: La. C.C.P. art. 1701 was repealed effective January 1, 2022. If a defendant fails to answer or file other pleadings within the time prescribed and the plaintiff establishes a prima facie case by competent and admissible evidence admitted on the record, a default judgment may be rendered (La. C.C.P. art. 1702). Where the defendant has appeared of record, or its attorney has contacted the plaintiff in writing, notice of intent to obtain a default judgment is sent by certified mail or actually delivered at least seven days before a default judgment may be rendered; in delictual actions otherwise, it is sent by regular mail to the address where service was obtained, at least seven days before (La. C.C.P. art. 1702). By moving for a default judgment the plaintiff certifies the failure to answer and that any required notice was sent (La. Dist. Ct. R. 9.19). Setting aside a default judgment is not modeled: its articles are not vendored."
+  edge-default-sought-judgment "Prima facie case proved" -> default-judgment {
+    authority cite "La. C.C.P. art. 1702"
+  }
+  edge-default-sought-answered "Answer filed before judgment" -> answered {
+    authority cite "La. C.C.P. art. 1001"
+  }
+}
+
+state answered: "Answer filed" by applicant cite "La. C.C.P. art. 1005"
+{
+  note "Affirmative defenses are set forth in the answer; a mistaken designation of an affirmative defense as a peremptory exception, or the reverse, may be treated as properly designated (La. C.C.P. art. 1005)."
+  edge-answered-discovery "Discovery" -> discovery { authority cite "La. C.C.P. art. 1421" }
+}
+
+state discovery: "Discovery" by applicant cite "La. C.C.P. art. 1421"
+{
+  note "Discovery is by depositions, interrogatories, production and entry, physical and mental examinations, release of medical records and requests for admission (La. C.C.P. art. 1421). Interrogatories may accompany the petition; they may not exceed thirty-five in number, including subparts, without leave of court, and thirty-five more are allowed on ex parte motion (La. C.C.P. art. 1457); a court may not restrict a party to fewer than thirty-five (La. Dist. Ct. R. 10.0). Requests for production and entry are La. C.C.P. art. 1461; protective orders and motions to quash are La. C.C.P. art. 1426. Before a motion to compel, the parties confer, the date confirmed by written notice sent at least five days before the conference (La. Dist. Ct. R. 10.1). Formal discovery is a step in the prosecution or defense that interrupts abandonment (La. C.C.P. art. 561)."
+  edge-discovery-dispute "Motion to compel; order disobeyed" -> discovery-ruling {
+    authority cite "La. C.C.P. art. 1471"
+  }
+  edge-discovery-sj "Motion for summary judgment" -> sj-motion {
+    authority cite "La. C.C.P. art. 966"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial-setting {
+    authority cite "La. C.C.P. art. 1733"
+  }
+  edge-discovery-voluntary "Voluntary dismissal" -> voluntary-dismissal {
+    authority cite "La. C.C.P. art. 1671"
+  }
+  edge-discovery-abandoned "No step taken for three years" -> abandoned {
+    authority cite "La. C.C.P. art. 561"
+  }
+}
+
+decision discovery-ruling: "Sanctions for disobeying a discovery order" by court cite "La. C.C.P. art. 1471"
+{
+  note "On failure to obey an order to provide or permit discovery, the court may take facts as established, bar claims, defenses or evidence, strike pleadings, stay the proceedings, dismiss the action, render a default judgment, or hold the failure in contempt, and requires the party or attorney to pay the reasonable expenses caused unless the failure was substantially justified (La. C.C.P. art. 1471)."
+  edge-discovery-ruling-proceeds "Lesser sanction; case proceeds" -> trial-setting {
+    authority cite "La. C.C.P. art. 1471"
+  }
+  edge-discovery-ruling-dismissed "Action dismissed" -> sanction-dismissal {
+    authority cite "La. C.C.P. art. 1471"
+  }
+}
+
+state sj-motion: "Motion for summary judgment" by office cite "La. C.C.P. art. 966"
+{
+  note "A plaintiff may move after the answer is filed; a defendant at any time (La. C.C.P. art. 966). Unless extended by the court and agreed by all parties, the motion and supporting documents are filed and served not less than sixty-five days prior to the trial, any opposition not less than fifteen days prior to the hearing, and any reply memorandum not less than five days, inclusive of legal holidays, prior to the hearing; a deadline falling on a legal holiday moves to the next day that is not one (La. C.C.P. art. 966). Unless otherwise agreed, the hearing is set not less than thirty days after the filing and not less than thirty days prior to the trial date, notice of it is served not less than thirty days prior to the hearing, and the court renders judgment not less than twenty days prior to the trial (La. C.C.P. art. 966). The motion is granted if the motion, memorandum and supporting documents show no genuine issue as to material fact and that the mover is entitled to judgment as a matter of law; the burden of proof rests with the mover (La. C.C.P. art. 966). Affidavits are made on personal knowledge (La. C.C.P. art. 967). The memoranda list the essential elements and the disputed or undisputed material facts with references to the proving documents (La. Dist. Ct. R. 9.10). The outline's decision on the standard (Hines v. Garrett, 2004-0806 (La. 6/25/04), 876 So. 2d 764) is removed: no reporter text is vendored."
+  edge-sj-motion-ruling "Motion heard" -> sj-ruling { authority cite "La. C.C.P. art. 966" }
+}
+
+decision sj-ruling: "Summary judgment ruling" by court cite "La. C.C.P. art. 966"
+{
+  note "A summary judgment may be dispositive of a particular issue, theory, cause of action or defense without disposing of the entire case (La. C.C.P. art. 966); partial summary judgment is not modeled. The court states its reasons on the record or in writing (La. C.C.P. art. 966)."
+  edge-sj-ruling-defense "Granted for defendant" -> sj-defense {
+    authority cite "La. C.C.P. art. 966"
+  }
+  edge-sj-ruling-applicant "Granted for applicant" -> judgment-for-applicant {
+    authority cite "La. C.C.P. art. 966"
+  }
+  edge-sj-ruling-denied "Denied" -> trial-setting { authority cite "La. C.C.P. art. 966" }
+}
+
+state trial-setting: "Trial setting and jury demand" by office cite "La. C.C.P. art. 1733"
+{
+  note "The right of trial by jury is recognized except as limited by La. C.C.P. art. 1732 (La. C.C.P. art. 1731); there is no jury, among others, in a suit where no individual petitioner's cause of action exceeds ten thousand dollars exclusive of interest and costs, or in summary, executory and other listed proceedings (La. C.C.P. art. 1732). The pleading demanding a jury is filed not later than ten days after service of the last pleading directed to any issue triable by a jury, with a bond in the amount and within the time the court sets under La. C.C.P. art. 1734 (not vendored); in a delictual suit where the petitioner's cause of action exceeds ten thousand dollars and is less than fifty thousand dollars, a cash deposit of five thousand dollars is provided no later than sixty days after the request, failing which the jury is waived (La. C.C.P. art. 1733). The court may not require the jury bond or costs more than 180 days before trial (La. Dist. Ct. R. 12.0)."
+  edge-trial-setting-tried "Tried" -> trial-result { authority cite "La. C.C.P. art. 1841" }
+}
+
+decision trial-result: "Judgment after trial" by court cite "La. C.C.P. art. 1841"
+{
+  note "A judgment that determines the merits in whole is a final judgment (La. C.C.P. art. 1841). A party may move for judgment notwithstanding the verdict not later than seven days, exclusive of legal holidays, after the clerk has mailed or delivered, or the sheriff has served, the notice of judgment (La. C.C.P. art. 1811), and for a new trial within the same delay (La. C.C.P. art. 1974)."
+  edge-trial-result-applicant "Judgment for applicant" -> judgment-for-applicant {
+    authority cite "La. C.C.P. art. 1841"
+  }
+  edge-trial-result-defense "Judgment for defendant" -> verdict-for-defendant {
+    authority cite "La. C.C.P. art. 1841"
+  }
+  edge-trial-result-post "Motion for new trial or JNOV" -> post-trial {
+    authority cite "La. C.C.P. art. 1974"
+  }
+}
+
+decision post-trial: "Ruling on new trial or JNOV" by court cite "La. C.C.P. art. 1811"
+{
+  note "A new trial is granted when the verdict or judgment is clearly contrary to the law and the evidence, on newly discovered evidence, or for jury misconduct (La. C.C.P. art. 1972). If a JNOV is granted the court also rules conditionally on any motion for new trial; the party whose verdict was set aside may move for a new trial within seven days, exclusive of legal holidays, after notice of the signing of the JNOV (La. C.C.P. art. 1811)."
+  edge-post-trial-new-trial "New trial granted" -> new-trial-ordered {
+    authority cite "La. C.C.P. art. 1972"
+  }
+  edge-post-trial-applicant "Judgment for applicant stands or JNOV for applicant" -> judgment-for-applicant {
+    authority cite "La. C.C.P. art. 1811"
+  }
+  edge-post-trial-defense "Judgment for defendant stands or JNOV for defendant" -> verdict-for-defendant {
+    authority cite "La. C.C.P. art. 1811"
+  }
+}
+
+terminal service-dismissal: "Dismissed: service not timely requested" outcome [loss, dismissal] cite "La. C.C.P. art. 925"
+{
+  note "Failure to request service of citation within the time of La. C.C.P. art. 1201 is raised by the declinatory exception of insufficiency of service of process (La. C.C.P. art. 925); unless the defendant so excepts, or moves under La. C.C.P. art. 1672 (not vendored), the requirement is expressly waived (La. C.C.P. art. 1201). The effect of the dismissal is not vendored."
+}
+
+terminal abandoned: "Dismissed as abandoned" outcome [loss, dismissal] cite "La. C.C.P. art. 561"
+{
+  note "An action is abandoned when the parties take no step in its prosecution or defense in the trial court for three years; abandonment operates without formal order, and on an ex parte motion with the required affidavit the court enters a judgment of dismissal without prejudice as of the date of abandonment (La. C.C.P. art. 561). A motion to set aside an ex parte dismissal may be filed within thirty days after the sheriff's service of the judgment, and an appeal may be taken within sixty days after that service, or after the clerk's transmission of a judgment rendered after a contradictory hearing or of an order denying the motion to set aside (La. C.C.P. art. 561)."
+}
+
+terminal dismissed-on-exception: "Dismissed on exception" outcome [loss, dismissal] cite "La. C.C.P. art. 934"
+{
+  note "Appeal: lit/la-appellate."
+}
+
+terminal default-judgment: "Default judgment" outcome [win, judgment] cite "La. C.C.P. art. 1702"
+{
+  note "A final judgment rendered by default is appealable (La. C.C.P. art. 2083; lit/la-appellate)."
+}
+
+terminal sanction-dismissal: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "La. C.C.P. art. 1471"
+{
+  note "Dismissal of the action or proceeding for disobeying an order to provide or permit discovery (La. C.C.P. art. 1471)."
+}
+
+terminal voluntary-dismissal: "Voluntary dismissal" outcome [neutral] cite "La. C.C.P. art. 1671"
+{
+  note "A judgment of dismissal without prejudice is rendered on the plaintiff's application and payment of all costs if made before any appearance of record by the defendant; after an appearance the court may refuse dismissal except with prejudice (La. C.C.P. art. 1671). Settlement by compromise (La. C.C. art. 3071) is not modeled: the Civil Code is not vendored."
+}
+
+terminal sj-defense: "Summary judgment for defendant" outcome [loss, judgment] cite "La. C.C.P. art. 966"
+{
+  note "Appeal: lit/la-appellate."
+}
+
+terminal judgment-for-applicant: "Judgment for applicant" outcome [win, judgment] cite "La. C.C.P. art. 1841"
+{
+  note "Appeal: lit/la-appellate."
+}
+
+terminal verdict-for-defendant: "Judgment for defendant" outcome [loss, judgment] cite "La. C.C.P. art. 1841"
+{
+  note "Appeal: lit/la-appellate."
+}
+
+terminal new-trial-ordered: "New trial ordered" outcome [procedural] cite "La. C.C.P. art. 1972"
+{
+  note "The case returns for a new trial (La. C.C.P. art. 1972); the retrial is not modeled as a second pass through this graph."
+}

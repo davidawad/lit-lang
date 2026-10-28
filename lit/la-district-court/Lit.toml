@@ -1,0 +1,54 @@
+# Civil actions in the Louisiana district courts under the Louisiana Code
+# of Civil Procedure, as published by the Legislature on legis.la.gov and
+# retrieved on October 27, 2026 after the 2026 Regular Session
+# (sources/la-district-court/la-ccp.txt: only the articles this package
+# cites), and the Louisiana District Court Rules, Title II, with
+# amendments through March 31, 2022. The Code takes precedence over the
+# District Court Rules (Rule 9.8, Comment (a)). Computation of time is La.
+# C.C.P. art. 5059, which is not vendored, and core has no Louisiana
+# judicial calendar, so the periods are stated in notes, not encoded as
+# counted deadlines. A Code article the vendored text does not hold (the
+# devolutive appeal delay, art. 2087; setting aside a default; the jury
+# bond, art. 1734; compromise, La. C.C. art. 3071) is named in a note,
+# never cited. An appeal hands off to lit/la-appellate.
+[package]
+name = "la-district-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "la-district-court-civil"
+forum = "la-district-court"
+authority = "StateRule"
+jurisdiction_id = "louisiana"
+title = "Louisiana district courts, civil"
+description = "Civil actions in the Louisiana district courts under the Code of Civil Procedure and the District Court Rules (Title II), as far as the vendored text states: commencement and the request for service, the delay for answering, exceptions and memoranda, default judgment, discovery, summary judgment, jury trial, motions for new trial and judgment notwithstanding the verdict, abandonment and voluntary dismissal, and the hand-off to appeal (lit/la-appellate)."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "Louisiana district courts (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.la-ccp]
+title = "Louisiana Code of Civil Procedure, articles 421, 561, 891, 925-928, 934, 966, 967, 1001, 1005, 1201, 1231, 1421, 1426, 1457, 1461, 1471, 1671, 1701, 1702, 1731-1733, 1811, 1841, 1972 and 1974, as published on legis.la.gov on October 27, 2026"
+url = "https://legis.la.gov/Legis/Laws_Toc.aspx?folder=68&level=Parent"
+path = "sources/la-district-court/la-ccp.txt"
+path_sha256 = "e84b8a694b603fa07e3d8f9491ea71de24651754a0ad6a42afd2f2a3c6f8bd65"
+as_of = "2026-10-27"
+cite_prefixes = ["La. C.C.P. art."]
+section_heading = "La. C.C.P. art. {n}"
+
+[sources.la-dcr-ii]
+title = "Louisiana District Court Rules, Title II: Rules for Civil Proceedings in District Courts (amendments through March 31, 2022)"
+url = "https://www.lasc.org/rules/dist.ct/Title_II.pdf"
+path = "sources/la-district-court/la-district-court-rules-title-ii-sectioned.txt"
+path_sha256 = "4e51890974b6ca32c45ff59142ccb4f8a353e151e4ef3a61bb2db4af453c13f2"
+sha256 = "982e831c61e7722d873109f13c1cd89c2ba4330b8c4927168ebcd74f0b8ea742"
+as_of = "2022-03-31"
+cite_prefixes = ["La. Dist. Ct. R."]
+section_heading = "Rule {n}"

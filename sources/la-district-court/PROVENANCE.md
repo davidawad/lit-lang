@@ -79,3 +79,9 @@
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 e7d9704ae9fcc6c4853e8af6a972829f39b99446d0684feced6f15d898a856fd. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `la-district-court/original/la-district-court-rules-title-i.pdf` as served (sha256 6ef8e13a0d37a036db89e7b3c805af665780c8e13cfe678c61671d7afef8ff21); extraction sha256 e7d9704ae9fcc6c4853e8af6a972829f39b99446d0684feced6f15d898a856fd.
+
+### `la-district-court/la-district-court-rules-title-ii-sectioned.txt` — Louisiana District Court Rules, Title II, sectioned
+
+- Derived in the pod (lg-f3q8.18) from `la-district-court/la-district-court-rules-title-ii.txt` (extract sha256 983800770573ad23b6d0928311be213fb8c441efd64143440a8a4ef05fc6a9dd); nothing fetched. In the body (after the table of contents), one `## Rule <n>` line is inserted before each rule's own heading line (`Rule 9.0 Daily Order of Business` through `Rule 13.4 Parole Revocation Appeals [Renumbered]`, 32 rules). Every other line is the extract unchanged, so deleting the `## Rule` lines gives back the extract byte for byte.
+- Edition: as the extract, "Includes Amendments through March 31, 2022".
+- Sectioned sha256 4e51890974b6ca32c45ff59142ccb4f8a353e151e4ef3a61bb2db4af453c13f2 (the `path_sha256` pinned by `lit/la-district-court/Lit.toml`).

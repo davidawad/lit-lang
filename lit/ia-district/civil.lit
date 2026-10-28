@@ -1,0 +1,131 @@
+module ia-district-court-civil.civil
+
+start commenced
+
+state commenced: "Action commenced" by applicant cite "Iowa R. Civ. P. 1.301"
+{
+  note "For all purposes a civil action is commenced by filing a petition with the court; the filing date determines whether it was commenced within the limitation period (Iowa R. Civ. P. 1.301(1)). The plaintiff serves the original notice with a copy of the petition (Iowa R. Civ. P. 1.302(3)). If service is not made within 90 days after the petition is filed, the court, on motion or its own initiative after notice, dismisses without prejudice as to that party or directs another time or manner of service, and extends the time for good cause (Iowa R. Civ. P. 1.302(5)). Periods in this package are stated, not counted: the rules state no general method of computing time and core has no Iowa holiday calendar. The filing fee is not stated in the vendored rules."
+  edge-commenced-served "Original notice and petition served" -> answer-due {
+    authority cite "Iowa R. Civ. P. 1.302"
+  }
+  edge-commenced-unserved "Not served within 90 days" -> dismissed-unserved {
+    authority cite "Iowa R. Civ. P. 1.302"
+  }
+}
+
+terminal dismissed-unserved: "Dismissed without prejudice for want of service" outcome [loss, dismissal] cite "Iowa R. Civ. P. 1.302"
+{
+  note "Dismissal without prejudice as to the unserved party after notice, unless the court directs another time or manner of service or extends the time for good cause (Iowa R. Civ. P. 1.302(5))."
+}
+
+decision answer-due: "Motion, answer or default" by office cite "Iowa R. Civ. P. 1.303"
+{
+  note "Unless otherwise provided, the defendant serves, and within a reasonable time thereafter files, a motion or answer within 20 days after service of the original notice and petition; an Iowa statute fixing another time governs; a defendant served by publication answers by the date in the published notice, not less than 20 days after the last publication; and one served by mail under rule 1.306 by the date in the mailed notice, not less than 60 days after mailing (Iowa R. Civ. P. 1.303(1), (2), (4), (5)). An answer to a cross-claim and a reply to a counterclaim are served within 20 days after service (Iowa R. Civ. P. 1.441(2)). For good cause, but not ex parte, the court may extend the time to answer or reply by not more than 30 days (Iowa R. Civ. P. 1.441(6)). No leading decision is named."
+  edge-answer-due-default "No timely motion or answer" -> default-entered {
+    authority cite "Iowa R. Civ. P. 1.971"
+  }
+  edge-answer-due-motion "Pre-answer motion served" -> pleading-motion {
+    authority cite "Iowa R. Civ. P. 1.421"
+  }
+  edge-answer-due-answer "Answer served" -> discovery { authority cite "Iowa R. Civ. P. 1.405" }
+}
+
+decision pleading-motion: "Pre-answer motion decided" by court cite "Iowa R. Civ. P. 1.421"
+{
+  note "Lack of subject matter or personal jurisdiction, insufficiency of the original notice or its service, a motion to recast or strike or for a more specific statement, and failure to state a claim may be raised by pre-answer motion; the motions under rule 1.421(1)(b)-(f) are combined in a single motion (Iowa R. Civ. P. 1.421(1), (3)). A party opposing a motion files a written resistance within ten days after service of the motion, unless the court or a rule or statute provides otherwise; the movant may reply within seven days after service of the resistance or before any hearing, whichever is earlier (Iowa R. Civ. P. 1.431(4), (5)). The court rules within 30 days after submission unless it extends the time of record (Iowa R. Civ. P. 1.431(7)). If the ruling requires further pleading, the pleading is served within ten days after notice of the court's action (Iowa R. Civ. P. 1.441(3)). No leading decision is named."
+  edge-pleading-motion-dismissed "Sustained: claim dismissed" -> dismissed-pleading {
+    authority cite "Iowa R. Civ. P. 1.421"
+  }
+  edge-pleading-motion-denied "Overruled: plead within ten days after notice" -> answer-due {
+    authority cite "Iowa R. Civ. P. 1.441"
+  }
+}
+
+terminal dismissed-pleading: "Dismissed on the pre-answer motion" outcome [win, dismissal] cite "Iowa R. Civ. P. 1.421"
+
+terminal default-entered: "Default entered" outcome [loss] cite "Iowa R. Civ. P. 1.972"
+{
+  note "A party is in default when it fails to serve and file a motion or answer as rule 1.303 requires (Iowa R. Civ. P. 1.971(1)). The clerk enters that default on written application, which must certify that written notice of intention to apply was given after the default occurred and at least ten days before the application was filed, the ten days running from the date of mailing (Iowa R. Civ. P. 1.972(2), (3)(c)); the notice provisions do not apply to small claims, forcible entry and detainer, juvenile cases or service by publication (Iowa R. Civ. P. 1.972(4)). Judgment on a sum certain is entered by the clerk on affidavit, otherwise on the prevailing party's motion (Iowa R. Civ. P. 1.973). On motion for good cause the court may set aside a default or its judgment for mistake, inadvertence, surprise, excusable neglect or unavoidable casualty; the motion is filed promptly after the grounds are discovered and not more than 60 days after entry of the judgment (Iowa R. Civ. P. 1.977). Outcome from the defending side."
+}
+
+state discovery: "Disclosures, discovery and trial setting" by applicant cite "Iowa R. Civ. P. 1.507"
+{
+  note "The parties confer as soon as practicable, but no later than 21 days after any defendant has answered or appeared, and submit a written report outlining the discovery plan within seven days after the conference (Iowa R. Civ. P. 1.507(1), (2)). Initial disclosures are made at or within 14 days after the discovery conference unless a stipulation or order sets another time (Iowa R. Civ. P. 1.500(1)(f)). No later than 21 days after any defendant has answered or appeared, the clerk sends a notice of a trial-setting conference to be held no earlier than 35 and no later than 50 days after that answer or appearance (Iowa R. Civ. P. 1.906). The court may enter a scheduling order on application or its own motion, which is modified only for good cause (Iowa R. Civ. P. 1.602(2)). A written jury demand is made not later than ten days after the last pleading directed to the issue; otherwise jury trial is waived (Iowa R. Civ. P. 1.902(1), (2)). Every civil action is to be tried within one year of filing; a case whose petition was filed more than one year before July 15 of a year is tried before January 1 of the next year or dismissed without prejudice after the clerk's notice, and reinstatement is sought within six months of dismissal (Iowa R. Civ. P. 1.944(1), (2), (6))."
+  edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
+    authority cite "Iowa R. Civ. P. 1.981"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Iowa R. Civ. P. 1.906" }
+  edge-discovery-settle "Settled or voluntarily dismissed" -> settled {
+    authority cite "Iowa R. Civ. P. 1.943"
+  }
+  edge-discovery-want-of-prosecution "Not tried by January 1 after the clerk's notice" -> dismissed-want-of-prosecution {
+    authority cite "Iowa R. Civ. P. 1.944"
+  }
+}
+
+terminal dismissed-want-of-prosecution: "Dismissed for want of prosecution" outcome [loss, dismissal] cite "Iowa R. Civ. P. 1.944"
+{
+  note "Dismissal without prejudice at the plaintiff's costs unless satisfactory reasons are shown by application (Iowa R. Civ. P. 1.944(2)); the court shall reinstate on a showing of oversight, mistake or other reasonable cause, on application filed within six months from the date of dismissal (Iowa R. Civ. P. 1.944(6))."
+}
+
+decision sj-motion: "Summary judgment decided" by court cite "Iowa R. Civ. P. 1.981"
+{
+  note "The motion is filed not less than 60 days before the date the case is set for trial unless the court orders otherwise; a party resisting it files a resistance within 15 days after service of the motion, with a statement of disputed facts and a memorandum of authorities; the hearing or nonoral submission is not less than 20 days after the motion is filed unless the court shortens it (Iowa R. Civ. P. 1.981(3)). Judgment is rendered forthwith if the record shows no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law (Iowa R. Civ. P. 1.981(3)); the motion carries a statement of undisputed material facts and a memorandum of authorities (Iowa R. Civ. P. 1.981(8)). No leading decision is named."
+  edge-sj-motion-granted "Granted" -> judgment-for-movant { authority cite "Iowa R. Civ. P. 1.981" }
+  edge-sj-motion-denied "Denied or partly denied" -> trial {
+    authority cite "Iowa R. Civ. P. 1.981"
+  }
+}
+
+terminal judgment-for-movant: "Judgment for the movant" outcome [win, judgment] cite "Iowa R. Civ. P. 1.981"
+{
+  note "An order on a case not fully adjudicated on the motion, specifying the facts without substantial controversy (Iowa R. Civ. P. 1.981(4)), is not modeled."
+}
+
+state trial: "Trial" by court cite "Iowa R. Civ. P. 1.904"
+{
+  note "In a trial without a jury the court finds the facts in writing, separately states its conclusions of law and directs judgment (Iowa R. Civ. P. 1.904(1)). All judgments and orders are entered on the record of the court (Iowa R. Civ. P. 1.959)."
+  edge-trial-post "Verdict or decision filed" -> post-trial {
+    authority cite "Iowa R. Civ. P. 1.1007"
+  }
+}
+
+decision post-trial: "Post-trial motions decided" by court cite "Iowa R. Civ. P. 1.1007"
+{
+  note "Motions for judgment notwithstanding the verdict and for a new trial are filed within fifteen days after the verdict, report or decision is filed with the clerk, or after discharge of a jury that failed to return a verdict, unless the court for good cause, not ex parte, grants additional time not exceeding 30 days (Iowa R. Civ. P. 1.1003, 1.1004, 1.1007). A motion to reconsider, enlarge or amend findings and conclusions is joined with or filed within the time allowed for a motion for new trial, and one directed to another order, ruling, judgment or decree is timely if filed within 15 days after its filing; successive rule 1.904(2) motions are barred unless directed only at a modification (Iowa R. Civ. P. 1.904(2)-(4)). A petition to vacate or modify a judgment under rule 1.1012 is filed and served in the original action within one year after entry of the judgment (Iowa R. Civ. P. 1.1013(1))."
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Iowa R. Civ. P. 1.1004" }
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+    authority cite "Iowa R. Civ. P. 1.959"
+  }
+}
+
+state judgment-entered: "Final judgment entered" by office cite "Iowa R. Civ. P. 1.959"
+{
+  note "Judgments and orders are entered on the record of the court and clearly specify the relief granted (Iowa R. Civ. P. 1.959)."
+  edge-judgment-entered-appeal "Next step" -> appeal-decision {
+    authority cite "Iowa R. App. P. 6.101"
+  }
+}
+
+decision appeal-decision: "Notice of appeal within 30 days?" by applicant cite "Iowa R. App. P. 6.101"
+{
+  note "A notice of appeal is filed in the district court, with an informational copy to the supreme court, within 30 days after the filing of the final order or judgment; if a motion under Iowa R. Civ. P. 1.904(2) or 1.1007 is timely filed, within 30 days after the filing of the ruling on that motion (Iowa R. App. P. 6.101(1)(b), (c)). In chapter 232 termination and child in need of assistance proceedings the period is 15 days (Iowa R. App. P. 6.101(1)(a)). A notice of cross-appeal is filed within the 30-day limit or within 10 days after the notice of appeal is filed, whichever is later (Iowa R. App. P. 6.101(2)(b))."
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken {
+    authority cite "Iowa R. App. P. 6.102"
+  }
+  edge-appeal-decision-none "No notice filed" -> final-no-appeal {
+    authority cite "Iowa R. App. P. 6.101"
+  }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Iowa appellate package" outcome [appeal] cite "Iowa R. App. P. 6.102"
+{
+  note "Hand-off to lit/iowactapp (ia-appellate-civil)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Iowa R. App. P. 6.101"
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "Iowa R. Civ. P. 1.943"
+{
+  note "A party may dismiss its own petition, counterclaim, cross-claim, cross-petition or petition of intervention without order of court at any time up until ten days before trial is scheduled to begin; afterward only with the court's consent. The dismissal is without prejudice unless stated otherwise, but a second dismissal of an action on the same cause operates as an adjudication on the merits unless the court orders otherwise (Iowa R. Civ. P. 1.943)."
+}

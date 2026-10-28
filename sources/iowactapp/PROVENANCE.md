@@ -7,3 +7,9 @@
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 cab303e717c4815ebb7309ffe65ffc8d2a4afc3d35ea0910a358bd3f0f0a05a8. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `iowactapp/original/iowa-rules-appellate-procedure.pdf` as served (sha256 8d3078cdc61be6ddb556a18c8dacf85f9126c6663ed4db7be2858419daf0e8b6); extraction sha256 cab303e717c4815ebb7309ffe65ffc8d2a4afc3d35ea0910a358bd3f0f0a05a8.
+
+### `iowactapp/iowa-rules-appellate-procedure-sectioned.txt` — sectioned
+
+- Derived in the pod (lg-f3q8.6) from `iowactapp/iowa-rules-appellate-procedure.txt` (extract sha256 cab303e717c4815ebb7309ffe65ffc8d2a4afc3d35ea0910a358bd3f0f0a05a8); nothing fetched. One `## Rule <n>` line is inserted before the first body heading line of each rule (`Rule 6.1` through `Rule 6.1601`, 70 rules; a heading after a page's form feed keeps its form feed on the heading line, after the marker). The table of contents and the repeated timeline and chart headings are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, Iowa Court Rules chapter 6 (running header December 2025) in the 09-30-2026 compilation.
+- Sectioned sha256 a6cb0e7fcb06ccd217389445992200360cfe96182b201bea2d150cc13109326d.

@@ -1,0 +1,48 @@
+# Civil actions in the Iowa district court under the Iowa Rules of Civil
+# Procedure (Iowa Court Rules, chapter 1, running header July 2023, in the
+# Iowa Legislature's compilation of September 30, 2026; sources/ia-district).
+# The rules state no general method of computing time and core has no
+# Iowa holiday calendar, so the rules' periods are stated in notes, not
+# encoded as counted deadlines. A notice of appeal hands off to
+# lit/iowactapp (Iowa Rules of Appellate Procedure, chapter 6).
+[package]
+name = "ia-district-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ia-district-court-civil"
+forum = "ia-district"
+authority = "StateRule"
+title = "Iowa District Court, civil"
+description = "Civil actions in the Iowa district court under the Iowa Rules of Civil Procedure, as far as the vendored text states: commencement and service of the original notice, the time to move or answer, pre-answer motions and motion practice, default and the notice of intent, discovery and scheduling, jury demand, summary judgment, voluntary dismissal and dismissal for want of prosecution, findings and post-trial motions, and the notice of appeal (lit/iowactapp)."
+in_force = "2026-09-30"
+known_at = "2026-10-28"
+unknown_before = "2026-09-30"
+jurisdiction = "Iowa District Court (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ia-r-civ-p]
+title = "Iowa Court Rules, Chapter 1, Rules of Civil Procedure (Iowa Legislature compilation of September 30, 2026)"
+url = "https://www.legis.iowa.gov/docs/ACO/CR/LINC/09-30-2026.chapter.1.pdf"
+path = "sources/ia-district/iowa-rules-civil-procedure-sectioned.txt"
+path_sha256 = "5f599c69732cc275e92ca4159c1ae015c5771c7179450bd4ff90de9050d2ee66"
+sha256 = "ae6ecf5e9a558a4f80cd0e63a5bc3229fb7681ecd5946a4ca8fbe1773f7c56b6"
+as_of = "2026-09-30"
+cite_prefixes = ["Iowa R. Civ. P."]
+section_heading = "Rule {n}"
+
+[sources.ia-r-app-p]
+title = "Iowa Court Rules, Chapter 6, Rules of Appellate Procedure (Iowa Legislature compilation of September 30, 2026)"
+url = "https://www.legis.iowa.gov/docs/ACO/CR/LINC/09-30-2026.chapter.6.pdf"
+path = "sources/iowactapp/iowa-rules-appellate-procedure-sectioned.txt"
+path_sha256 = "a6cb0e7fcb06ccd217389445992200360cfe96182b201bea2d150cc13109326d"
+sha256 = "8d3078cdc61be6ddb556a18c8dacf85f9126c6663ed4db7be2858419daf0e8b6"
+as_of = "2026-09-30"
+cite_prefixes = ["Iowa R. App. P."]
+section_heading = "Rule {n}"

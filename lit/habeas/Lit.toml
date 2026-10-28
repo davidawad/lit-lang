@@ -1,0 +1,74 @@
+# Federal habeas corpus and the motion attacking a federal sentence: the
+# limitation periods, gatekeeping and appeal certificate of 28 U.S.C.
+# ch. 153 as the Antiterrorism and Effective Death Penalty Act of 1996
+# (Pub. L. 104-132, Apr. 24, 1996) left them, with the Rules Governing
+# Section 2254 Cases and Section 2255 Proceedings (as amended to Dec. 1,
+# 2019). It declares only the periods those texts state. The criminal
+# case and its FRAP 4(b) notice of appeal are lit/frcrimp's
+# (`criminal-appeal`); the appeal from a final order here runs under FRAP
+# 4(a) in lit/frap (2254 and 2255 Rule 11(b)), and the certificate of
+# appealability is sought under FRAP 22 (Rule 11(a)), which states no
+# period. The package is `FederalRule`, as lit/frcrimp's is beside the
+# Speedy Trial Act: the authority lattice ranks a deadline by its package.
+[package]
+name = "habeas-corpus"
+version = "0.1.0"
+language = 1
+pack_id = "habeas-corpus"
+forum = "habeas"
+authority = "FederalRule"
+title = "Federal Habeas Corpus and Section 2255 Proceedings"
+description = "Post-conviction review in the federal courts under 28 U.S.C. §§ 2241-2255 and the Rules Governing Section 2254 Cases and Section 2255 Proceedings: the one-year AEDPA limitation periods of § 2244(d)(1) (state prisoners) and § 2255(f) (federal prisoners), each running from the latest of its four triggers; the court of appeals' 30 days to decide a motion to authorize a second or successive application (§ 2244(b)(3)(D)); and the 14 days to object to a magistrate judge's proposed findings (Rule 8(b)). The appeal from a final order needs a certificate of appealability (§ 2253(c)) and runs under FRAP 4(a) (lit/frap); the direct criminal appeal is FRAP 4(b) (lit/frcrimp)."
+jurisdiction = "U.S. District Courts and Courts of Appeals (28 U.S.C. ch. 153)"
+in_force = "2024-12-01"
+known_at = "2026-10-28"
+unknown_before = "1996-04-24"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+respondent = "opponent"
+court = "nature"
+
+[dependencies]
+# Types, the authority lattice, and the FRCP 6 / FRAP 26 counting rules.
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.usc28-ch153]
+title = "28 U.S.C. ch. 153 (Habeas Corpus), §§ 2241-2255, United States Code 2024 Edition"
+url = "https://www.govinfo.gov/app/collection/uscode"
+path = "sources/habeas/usc-28-ch153.txt"
+path_sha256 = "f1dfb723280d4c91a2dd80783f3e99fa8a8a82474c653f8684b13c1511471a68"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+
+[sources.habeas-rules]
+title = "Rules Governing Section 2254 Cases and Section 2255 Proceedings, as amended to Dec. 1, 2019"
+url = "https://www.uscourts.gov/sites/default/files/rules_governing_section_2254_and_2255_cases_in_the_u.s._district_courts_-_dec_1_2019.pdf"
+path = "sources/habeas/rules-2254-2255-sectioned.txt"
+path_sha256 = "be083eed23c594c4a1abaaaed37e889cc6f95b54565ff5e75f21970bdf47d7a5"
+sha256 = "70549fca9076e18dc55942766686562cb370af2a069eb644ac1bb3774a6e369d"
+as_of = "2019-12-01"
+
+[sources.frap-rules]
+title = "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2024 (FRAP 4(a) and 22, the appeal from a final order)"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-appellate-procedure-dec-1-2024_0.pdf"
+path = "sources/frap.txt"
+path_sha256 = "b370cc0558698ff88b62b6cec212742fde8afbdd2fe653a3b255d69dec893172"
+sha256 = "d61711eca8e1f65955d12f1b7d29d4cc453d9ee1e30c4fff6c54b23f113454f6"
+as_of = "2024-12-01"
+
+[[cite_syntax.rules]]
+prefixes = ["FRAP", "Fed. R. App. P."]
+heading = "FRAP {}"
+source = "frap-rules"
+
+[[cite_syntax.rules]]
+prefixes = ["2254 Rule"]
+heading = "2254 Rule {}"
+source = "habeas-rules"
+
+[[cite_syntax.rules]]
+prefixes = ["2255 Rule"]
+heading = "2255 Rule {}"
+source = "habeas-rules"

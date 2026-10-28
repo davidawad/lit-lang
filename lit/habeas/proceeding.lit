@@ -1,0 +1,141 @@
+// The collateral proceeding from a final judgment of conviction to the
+// appeal from the final order, for both a state prisoner's § 2254 petition
+// and a federal prisoner's § 2255 motion: the two sets of Rules track each
+// other rule for rule, and each node cites both where they differ only in
+// name. No probability, duration or cost is declared: none is sourced.
+// Outcomes are read from the applicant's side.
+module habeas-corpus.proceeding
+
+import habeas-corpus.limitations.{
+  federal-motion-limitation,
+  proposed-findings-objections,
+  state-petition-limitation,
+  successive-authorization-ruling,
+}
+
+start custody
+
+state custody: "In custody under a final judgment" by applicant cite "28 U.S.C. § 2254(a); 28 U.S.C. § 2255(a)"
+{
+  note "A person in custody under a state-court judgment applies for a writ of habeas corpus under § 2254, only on the ground that the custody violates the Constitution, laws or treaties of the United States (§ 2254(a)), after exhausting the remedies available in the state courts (§ 2254(b)(1)(A)). A federal prisoner moves the sentencing court to vacate, set aside or correct the sentence under § 2255(a); habeas under § 2241 is open to that prisoner only when the motion is inadequate or ineffective (§ 2255(e)). The direct criminal appeal, whose 14-day FRAP 4(b) notice period is lit/frcrimp's `criminal-appeal`, comes first; when the conviction became final is the matter's to record (limitations module note). Each application has one year from the latest of four dates (§ 2244(d)(1); § 2255(f)), less, for a § 2254 petition, the time a properly filed state collateral application is pending (§ 2244(d)(2), not counted here)."
+  edge-custody-state-petition "File a § 2254 petition" -> preliminary-review {
+    authority cite "28 U.S.C. § 2244(d)(1); 2254 Rule 3(c)"
+    within state-petition-limitation {
+      extendable false
+      note "The statute states no extension; the § 2244(d)(2) exclusion is not modeled, so a pending state application makes the true last day later than the counted one. An inmate's paper is timely if deposited in the institution's internal mailing system on or before the last day (2254 Rule 3(d))."
+    }
+  }
+  edge-custody-federal-motion "File a § 2255 motion" -> preliminary-review {
+    authority cite "28 U.S.C. § 2255(f); 2255 Rule 3(c)"
+    within federal-motion-limitation {
+      extendable false
+      note "The statute states no extension. An inmate's paper is timely if deposited in the institution's internal mailing system on or before the last day (2255 Rule 3(d))."
+    }
+  }
+  edge-custody-successive "Move to authorize a second or successive application" -> authorization {
+    authority cite "28 U.S.C. § 2244(b)(3)(A); 2254 Rule 9; 2255 Rule 9"
+  }
+  edge-custody-time-barred "Year expired before filing" -> time-barred {
+    authority cite "28 U.S.C. § 2244(d)(1); 28 U.S.C. § 2255(f)"
+  }
+}
+
+decision authorization: "Court of appeals rules on authorization" by court cite "28 U.S.C. § 2244(b)(3)(B)"
+{
+  note "A three-judge panel decides the motion (§ 2244(b)(3)(B)) and may authorize the application only on a prima facie showing that it satisfies § 2244(b) (§ 2244(b)(3)(C)), grant or deny within 30 days after the motion is filed (§ 2244(b)(3)(D)). A claim presented in a prior § 2254 application is dismissed; a new claim must rest on a new, retroactive rule of constitutional law or on a previously undiscoverable factual predicate showing by clear and convincing evidence that no reasonable factfinder would have found the applicant guilty (§ 2244(b)(1)-(2)). A second § 2255 motion must be certified to contain such newly discovered evidence or such a new rule (§ 2255(h)). The ruling is not appealable and is not subject to rehearing or certiorari (§ 2244(b)(3)(E)), and the district court still dismisses any authorized claim that does not satisfy the section (§ 2244(b)(4))."
+  edge-authorization-granted "Authorized" -> preliminary-review {
+    authority cite "28 U.S.C. § 2244(b)(3)(C)"
+    within successive-authorization-ruling {
+      extendable false
+      note "The court of appeals' own period; the statute states no consequence of a later ruling."
+    }
+  }
+  edge-authorization-denied "Authorization denied" -> authorization-denied {
+    authority cite "28 U.S.C. § 2244(b)(3)(E)"
+  }
+}
+
+decision preliminary-review: "Preliminary review" by court cite "2254 Rule 4; 2255 Rule 4"
+{
+  note "The judge must promptly examine the petition or motion and dismiss it if it plainly appears that the applicant is not entitled to relief; otherwise the judge orders the respondent to answer, move or otherwise respond within a fixed time (2254 Rule 4; 2255 Rule 4(b)). The answer must state whether any claim is barred by failure to exhaust, a procedural bar, non-retroactivity or a statute of limitations (2254 Rule 5(b)); the time for the applicant's reply is set by the judge unless a local rule sets it (2254 Rule 5(e))."
+  edge-preliminary-review-dismissed "Summarily dismissed" -> district-certificate {
+    authority cite "2254 Rule 4; 2255 Rule 4"
+  }
+  edge-preliminary-review-answer "Answer ordered" -> merits {
+    authority cite "2254 Rule 4; 2255 Rule 4"
+  }
+}
+
+state merits: "Answer, record and hearing" by court cite "2254 Rule 8(a); 2255 Rule 8(a)"
+{
+  note "Discovery only by leave for good cause (Rule 6(a)); the record may be expanded (Rule 7); the judge decides from the answer, the state-court record and any Rule 7 materials whether an evidentiary hearing is warranted (Rule 8(a)). For a § 2254 claim the applicant who failed to develop its factual basis in state court gets a hearing only on the showings of § 2254(e)(2), and state-court findings are presumed correct (§ 2254(e)(1)). A judge may refer the matter to a magistrate judge, whose proposed findings and recommendations the clerk serves on the parties (Rule 8(b))."
+  edge-merits-objections "Object to the magistrate judge's proposed findings" -> merits-decision {
+    authority cite "2254 Rule 8(b); 2255 Rule 8(b)"
+    within proposed-findings-objections {
+      note "Objections are filed as local court rule provides; the judge determines de novo any finding or recommendation objected to (Rule 8(b))."
+    }
+  }
+  edge-merits-submitted "Submitted for decision" -> merits-decision {
+    authority cite "2254 Rule 8(a); 2255 Rule 8(a)"
+  }
+}
+
+decision merits-decision: "Final order on the application" by court cite "28 U.S.C. § 2254(d); 28 U.S.C. § 2255(b)"
+{
+  note "A claim adjudicated on the merits in state court is not granted unless the state decision was contrary to, or an unreasonable application of, clearly established Federal law as determined by the Supreme Court, or rested on an unreasonable determination of the facts (§ 2254(d)). On a § 2255 motion the court vacates the judgment and discharges, resentences, retries or corrects the sentence as appropriate (§ 2255(b))."
+  edge-merits-decision-granted "Relief granted" -> relief-granted {
+    authority cite "28 U.S.C. § 2254(a); 28 U.S.C. § 2255(b)"
+  }
+  edge-merits-decision-denied "Relief denied" -> district-certificate {
+    authority cite "2254 Rule 11(a); 2255 Rule 11(a)"
+  }
+}
+
+decision district-certificate: "District court on a certificate of appealability" by court cite "2254 Rule 11(a); 2255 Rule 11(a)"
+{
+  note "The district court must issue or deny a certificate when it enters a final order adverse to the applicant, stating the issues that make the substantial showing of the denial of a constitutional right (§ 2253(c)(2)-(3)); a denial is not appealable, but a certificate may be sought from the court of appeals under FRAP 22, and a motion to reconsider a denial does not extend the time to appeal (Rule 11(a)). A timely notice of appeal under FRAP 4(a) must be filed even if the certificate issues (Rule 11(b)): 30 days after entry, or 60 when the United States is a party, as on a § 2255 motion (lit/frap)."
+  edge-district-certificate-issued "Certificate issued" -> appeal {
+    authority cite "28 U.S.C. § 2253(c)(1)"
+  }
+  edge-district-certificate-denied "Certificate denied" -> circuit-certificate {
+    authority cite "FRAP 22(b)(1)"
+  }
+}
+
+decision circuit-certificate: "Court of appeals on a certificate of appealability" by court cite "FRAP 22(b)(1); 28 U.S.C. § 2253(c)(1)"
+{
+  note "Unless a circuit justice or judge issues a certificate, no appeal may be taken from the final order in a § 2254 proceeding or on a § 2255 motion (§ 2253(c)(1)). If the applicant files a notice of appeal without a request, the notice is a request addressed to the judges of the court of appeals (FRAP 22(b)(2)). The State or the United States needs no certificate to appeal (FRAP 22(b)(3))."
+  edge-circuit-certificate-issued "Certificate issued" -> appeal {
+    authority cite "28 U.S.C. § 2253(c)(1)"
+  }
+  edge-circuit-certificate-denied "Certificate denied" -> relief-denied {
+    authority cite "28 U.S.C. § 2253(c)(1)"
+  }
+}
+
+decision appeal: "Court of appeals decides the certified issues" by court cite "28 U.S.C. § 2253(a)"
+{
+  note "The final order is reviewed by the court of appeals for the circuit in which the proceeding is held (§ 2253(a)), on the issues the certificate names (§ 2253(c)(3)). The appeal runs under lit/frap."
+  edge-appeal-reversed "Reversed" -> relief-granted { authority cite "28 U.S.C. § 2253(a)" }
+  edge-appeal-affirmed "Affirmed" -> relief-denied { authority cite "28 U.S.C. § 2253(a)" }
+}
+
+terminal time-barred: "Application time-barred" outcome [loss, dismissal] cite "28 U.S.C. § 2244(d)(1); 28 U.S.C. § 2255(f)"
+{
+  note "The answer must state whether any claim is barred by a statute of limitations (2254 Rule 5(b))."
+}
+
+terminal authorization-denied: "Second or successive application not authorized" outcome [loss, dismissal] cite "28 U.S.C. § 2244(b)(3)(E)"
+{
+  note "The denial is not appealable and is not subject to rehearing or certiorari (§ 2244(b)(3)(E))."
+}
+
+terminal relief-granted: "Writ granted or sentence vacated" outcome [win, judgment] cite "28 U.S.C. § 2243; 28 U.S.C. § 2255(b)"
+{
+  note "Proceedings after the grant (release, retrial, resentencing) are not modeled."
+}
+
+terminal relief-denied: "Relief denied" outcome [loss, judgment] cite "28 U.S.C. § 2253(c)(1)"
+{
+  note "Review by certiorari is not modeled."
+}

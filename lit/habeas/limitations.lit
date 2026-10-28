@@ -1,0 +1,118 @@
+// The periods of 28 U.S.C. ch. 153 and the Rules Governing Section 2254
+// Cases and Section 2255 Proceedings. The habeas rules set no counting
+// rule of their own: Rule 12 of each set applies the Federal Rules of
+// Civil Procedure "to the extent that they are not inconsistent with any
+// statutory provisions or these rules", so the periods count under FRCP
+// 6(a), which reaches "any statute that does not specify a method of
+// computing time" (`forum frcp`, with Rule 12 as the adopting rule). FRCrimP
+// 45, which the 2255 Rules also adopt, is silent on periods stated in
+// years, so the § 2255(f) year counts under FRCP 6 too. A year runs to the
+// anniversary of its start (`frcp6`'s year provision, Ross v. Artuz there).
+//
+// Not modeled, each a hole rather than a value:
+// - § 2244(d)(2): "The time during which a properly filed application for
+//   State post-conviction or other collateral review ... is pending shall
+//   not be counted". The language has no suspended period, so the due
+//   date below is the untolled one, the earliest the year can end; a
+//   matter with a pending state application must add that time itself.
+// - Finality of a federal conviction (§ 2255(f)(1)) is not defined by the
+//   statute, and § 2244(d)(1)(A)'s "expiration of the time for seeking
+//   such review" turns on the state's and the Supreme Court's periods: the
+//   matter records the finality date as the trigger, never a chain.
+// - § 2244(b)(3)(E): the authorization ruling is not appealable and not
+//   subject to rehearing or certiorari, and § 2253(c)'s certificate of
+//   appealability gates the appeal; neither is a period.
+module habeas-corpus.limitations
+
+import core.frap26.{ frap26 }
+import core.frcp6.{ frcp6 }
+import core.time.{ ServiceMethod }
+
+/// What starts a § 2244(d)(1) year: "The limitation period shall run from
+/// the latest of" (A) finality of the state judgment "by the conclusion of
+/// direct review or the expiration of the time for seeking such review",
+/// (B) removal of an unconstitutional state-created impediment, (C) the
+/// Supreme Court's initial recognition of a new right made retroactive to
+/// cases on collateral review, (D) the date the factual predicate "could
+/// have been discovered through the exercise of due diligence".
+enum StateLimitationStart {
+  StateJudgmentFinal,
+  StateImpedimentRemoved,
+  RightNewlyRecognized,
+  FactualPredicateDiscoverable,
+}
+
+/// One of the § 2244(d)(1)(A)-(D) dates, as the matter records it.
+event StateLimitationTrigger(start: StateLimitationStart)
+
+/// What starts a § 2255(f) year, "the latest of" (1) the date the judgment
+/// of conviction becomes final, (2) removal of an impediment created by
+/// governmental action, (3) the Supreme Court's initial recognition of a
+/// new right made retroactive to cases on collateral review, (4) the date
+/// the supporting facts "could have been discovered through the exercise
+/// of due diligence".
+enum FederalLimitationStart {
+  ConvictionFinal,
+  GovernmentImpedimentRemoved,
+  RightNewlyRecognized,
+  FactsDiscoverable,
+}
+
+/// One of the § 2255(f)(1)-(4) dates, as the matter records it.
+event FederalLimitationTrigger(start: FederalLimitationStart)
+/// The applicant's motion in the court of appeals for an order authorizing
+/// the district court to consider a second or successive application
+/// (§ 2244(b)(3)(A); 2254 Rule 9; for a § 2255 motion, § 2255(h) and 2255
+/// Rule 9).
+event SuccessiveAuthorizationMoved()
+/// The clerk's service of a magistrate judge's proposed findings and
+/// recommendations on the parties (2254 Rule 8(b); 2255 Rule 8(b)).
+event ProposedFindingsServed(method: ServiceMethod)
+
+/// § 2244(d)(1): a 1-year period for an application by a person in custody
+/// under a state-court judgment, from the latest of its four dates (added
+/// by Pub. L. 104-132, § 101, Apr. 24, 1996, and not amended since: the
+/// section's credits). 2254 Rule 3(c): "The time for filing a petition is
+/// governed by 28 U.S.C. § 2244(d)." The statute states no extension; the
+/// (d)(2) exclusion is not modeled (module note).
+deadline state-petition-limitation: 1.years after StateLimitationTrigger() counted_by frcp6 effective [1996-04-24, ..) known_at 1996-04-24 cite "28 U.S.C. § 2244(d)(1)"
+{
+  forum frcp cite "2254 Rule 12"
+    quote "are not inconsistent with any statutory provisions or these rules,"
+  trigger latest
+}
+
+/// § 2255(f): a 1-year period for a motion attacking a federal sentence,
+/// from the latest of its four dates. Added by Pub. L. 104-132, § 105,
+/// Apr. 24, 1996 as an undesignated paragraph, designated subsection (f)
+/// without change of words by Pub. L. 110-177, § 511, Jan. 7, 2008 (the
+/// section's notes), so one version covers both. 2255 Rule 3(c) still cites
+/// it as "§ 2255 para. 6". The statute states no extension.
+deadline federal-motion-limitation: 1.years after FederalLimitationTrigger() counted_by frcp6 effective [1996-04-24, ..) known_at 1996-04-24 cite "28 U.S.C. § 2255(f)"
+{
+  forum frcp cite "2255 Rule 12"
+    quote "with any statutory provisions or these rules, may be applied to a"
+  trigger latest
+}
+
+/// § 2244(b)(3)(D): the court of appeals "shall grant or deny the
+/// authorization to file a second or successive application not later
+/// than 30 days after the filing of the motion". A period of the court of
+/// appeals, counted under FRAP 26(a), which governs "any statute that does
+/// not specify a method of computing time". The statute states no
+/// consequence of a ruling after the 30 days.
+deadline successive-authorization-ruling: 30.days after SuccessiveAuthorizationMoved() counted_by frap26 effective [1996-04-24, ..) known_at 1996-04-24 cite "28 U.S.C. § 2244(b)(3)(D)"
+{
+  forum frap
+}
+
+/// Rule 8(b) of each set: "Within 14 days after being served, a party may
+/// file objections as provided by local court rule." The vendored rules
+/// carry no amendment history, so this is the vintage of the vendored
+/// text (as amended to Dec. 1, 2019); an earlier date is not declared.
+/// FRCP 6(d)'s added days follow the method of service.
+deadline proposed-findings-objections: 14.days after ProposedFindingsServed() counted_by frcp6 effective [2019-12-01, ..) known_at 2019-12-01 cite "2254 Rule 8(b); 2255 Rule 8(b)"
+{
+  forum frcp cite "2254 Rule 12"
+    quote "are not inconsistent with any statutory provisions or these rules,"
+}

@@ -29,3 +29,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 290902f33c89cb227c92b4ebe995662582ef5dd695151843ce43f2d7d277ab9f. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `habeas/original/rules-2254-2255.pdf` as served (sha256 70549fca9076e18dc55942766686562cb370af2a069eb644ac1bb3774a6e369d); extraction sha256 290902f33c89cb227c92b4ebe995662582ef5dd695151843ce43f2d7d277ab9f.
+
+### `habeas/rules-2254-2255-sectioned.txt` — Rules Governing Section 2254 Cases and Section 2255 Proceedings, sectioned
+
+- Derived in the pod (lg-gddt.1) from `habeas/rules-2254-2255.txt` (extract sha256 290902f33c89cb227c92b4ebe995662582ef5dd695151843ce43f2d7d277ab9f); nothing fetched. One `## 2254 Rule <n>` line is inserted before each Section 2254 rule's own heading line (`Rule 1.` through `Rule 12.`) and one `## 2255 Rule <n>` line before each Section 2255 rule's; the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## 225[45] Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, as amended to Dec. 1, 2019.
+- Sectioned sha256 be083eed23c594c4a1abaaaed37e889cc6f95b54565ff5e75f21970bdf47d7a5 (the `path_sha256` pinned by `lit/habeas/Lit.toml`).

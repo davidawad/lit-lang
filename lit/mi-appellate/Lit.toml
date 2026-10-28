@@ -1,5 +1,4 @@
-# Civil appeals to the Michigan Court of Appeals and applications for leave
-# to appeal to the Michigan Supreme Court under Chapter 7 of the Michigan
+# Civil appeals to the Michigan Court of Appeals under Chapter 7 of the Michigan
 # Court Rules of 1985, as updated September 2, 2026 (sources/mi-circuit-court,
 # the one vendored edition of Chapters 1-9, shared with the circuit court
 # package). Computation of time is MCR 1.108, which MCR 7.204(A) and
@@ -8,21 +7,23 @@
 # runs to the end of the next day that is none of those. lit/core has no
 # counting rule or holiday calendar for Michigan, so the periods are stated
 # in notes, not encoded as counted deadlines. The appeal comes from the
-# circuit court package (lit/mi-circuit-court).
+# circuit court package (lit/mi-circuit-court); an application for leave
+# to the Supreme Court hands off to lit/mi-supreme-court.
 [package]
 name = "mi-appellate-civil"
 version = "0.1.0"
 language = 1
 pack_id = "mi-appellate-civil"
 forum = "mi-appellate"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "michigan"
-title = "Michigan Court of Appeals and Michigan Supreme Court, civil appeals"
-description = "Civil appeals under Chapter 7 of the Michigan Court Rules, as far as the vendored text states: the appeal of right and its 21-day claim of appeal, delayed applications for leave, the record and transcript, briefing and its word limits, oral argument, decision and reconsideration, and the application for leave to appeal to the Michigan Supreme Court."
+title = "Michigan Court of Appeals, civil appeals"
+description = "Civil appeals under Chapter 7 of the Michigan Court Rules, as far as the vendored text states: the appeal of right and its 21-day claim of appeal, delayed applications for leave, the record and transcript, briefing and its word limits, oral argument, decision and reconsideration, and the hand-off of an application for leave to appeal to the Michigan Supreme Court (lit/mi-supreme-court)."
 in_force = "2026-09-02"
 known_at = "2026-10-28"
 unknown_before = "2026-09-02"
-jurisdiction = "Michigan Court of Appeals; Michigan Supreme Court"
+jurisdiction = "Michigan Court of Appeals"
 
 [package.roles]
 applicant = "self"
@@ -31,6 +32,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+mi-state-rules = { version = "^0.1.0", path = "../mi-rules" }
 
 [sources.mcr]
 title = "Michigan Court Rules of 1985, Chapters 1-9 (updated September 2, 2026)"

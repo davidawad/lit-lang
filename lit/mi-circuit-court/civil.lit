@@ -1,5 +1,7 @@
 module mi-circuit-court-civil.civil
 
+import mi-state-rules.{ JudgmentEntered }
+
 // Civil actions in the Michigan circuit courts, from the plaintiff's view of
 // outcomes. Every period below is stated in a note, not counted:
 // computation is MCR 1.108, with Michigan's legal holidays and court-closure
@@ -110,7 +112,7 @@ decision sj-motion: "Summary disposition under MCR 2.116(C)(10) decided" by cour
 state trial: "Trial" by court cite "MCR 2.508(A)"
 {
   note "The right of trial by jury declared by the constitution is preserved (MCR 2.508(A)). In an action tried without a jury the defendant may move for dismissal after the plaintiff's evidence (MCR 2.504(B)(2))."
-  edge-trial-result "Verdict or decision; judgment entered" -> post-trial {
+  edge-trial-result "Verdict or decision; judgment entered" -> post-trial { event JudgmentEntered()
     authority cite "MCR 2.602(B)"
   }
 }

@@ -1,0 +1,119 @@
+module mi-supreme-court-civil.appeal
+
+import mi-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
+
+// A civil application for leave to appeal to the Michigan Supreme Court
+// after a Court of Appeals decision, and the appeal on a grant, from the
+// applicant's side. Every period is stated in a note, not counted (MCR
+// 1.108). The outline cited "MCR 7.302" for the application; Chapter 7 has
+// no Rule 7.302, so the application cites MCR 7.305. Its "MCR 7.212",
+// "7.214" and "7.215" cites for briefing, argument, decision and rehearing
+// are Court of Appeals rules; the Supreme Court's own are MCR 7.311 to
+// 7.315. The outline named no leading decisions.
+
+/// A brief on appeal, prepared in conformity with MCR 7.212(B) as to
+/// length (MCR 7.312(A)(1)), and an application for leave prepared in
+/// conformity with it (MCR 7.305(A)(1)): at most 16,000 words unless the
+/// court orders otherwise (MCR 7.212(B)(1)).
+limit brief { words <= 16_000 cite "MCR 7.212(B)" } cite "MCR 7.312(A)"
+/// A reply to an answer to the application: at most 3,200 words, or 10
+/// pages for a self-represented litigant without a word-processing
+/// system, exclusive of tables, indexes and appendixes (MCR 7.305(E)(3)).
+limit application-reply { words <= 3_200 cite "MCR 7.305(E)" } cite "MCR 7.305(E)"
+/// A response to an adverse amicus curiae brief: at most 3,200 words (MCR
+/// 7.312(A)(2)(c)).
+limit amicus-response { words <= 3_200 cite "MCR 7.312(A)" } cite "MCR 7.312(A)"
+/// A motion for rehearing: at most 16,000 words (MCR 7.311(F)(1)).
+limit rehearing-motion { words <= 16_000 cite "MCR 7.311(F)" } cite "MCR 7.311(F)"
+/// A motion for reconsideration of an order: at most 3,200 words (MCR
+/// 7.311(G)).
+limit reconsideration-motion { words <= 3_200 cite "MCR 7.311(G)" } cite "MCR 7.311(G)"
+
+start application
+
+decision application: "Application for leave to appeal?" by applicant cite "MCR 7.305(C)"
+{
+  note "Except as provided in MCR 1.112, in a civil case the application is filed within 42 days after the Court of Appeals order or opinion resolving the appeal or original action (including an order denying leave), its order remanding while retaining jurisdiction, its order denying a timely motion for reconsideration, or its grant of a request to publish an opinion first released unpublished (MCR 7.305(C)(2)); from a decision remanding for further proceedings, within 42 days in a civil case (MCR 7.305(C)(5)); from an interlocutory order that does not resolve the appeal, within 28 days (MCR 7.305(C)(3)). The Court will not accept a motion to file a late application (MCR 7.316(B)). The application is 1 signed copy prepared in conformity with MCR 7.212(B), with the judgment appealed and its date of entry, the questions presented, tables, a statement of proceedings and facts, an argument establishing a ground, and the relief sought; the opinions below; proof of service on the parties and of notice to the clerks of the Court of Appeals and the trial court; and the fee of MCR 7.319(D)(1) (MCR 7.305(A)). It must show a ground of MCR 7.305(B): a substantial question about the validity of a legislative act; significant public interest in a case by or against the state, its agencies or subdivisions or their officers; a legal principle of major significance to the state's jurisprudence; or that the Court of Appeals decision is clearly erroneous and will cause material injustice, or conflicts with a Supreme Court decision or another Court of Appeals decision (MCR 7.305(B)(1)-(3), (5))."
+  edge-application-none "No application: the Court of Appeals decision stands" -> not-sought {
+    authority cite "MCR 7.305(C)"
+  }
+  edge-application-filed "Application filed" -> answer-reply { event ReviewPetitionFiled()
+    authority cite "MCR 7.305(A)"
+  }
+}
+
+state answer-reply: "Answer and reply; application submitted" by office cite "MCR 7.305(H)"
+{
+  note "A responding party may file 1 signed copy of an answer in accordance with MCR 7.212(B) within 28 days after service of the application (MCR 7.305(D)). The appellant may reply within 21 days after service of the answer, with a rebuttal only, a table of contents and an index of authorities (MCR 7.305(E)). An amicus brief on the application is filed on motion granted, within 21 days after the answer is filed or the time for it has passed (MCR 7.305(F)). A nonconforming pleading may be ordered corrected or struck, and does not satisfy the time limit unless corrected in the time specified (MCR 7.305(G)). The application may be submitted for decision after the reply is filed or the time for it has expired, whichever occurs first; there is no oral argument on it unless the Court orders argument (MCR 7.305(H))."
+  edge-answer-reply-submitted "Submitted for decision" -> leave-decision { authority cite "MCR 7.305(H)" }
+}
+
+decision leave-decision: "Application decided" by court cite "MCR 7.305(I)"
+{
+  note "The Court may grant or deny the application, enter a final decision, direct argument on the application, or issue a peremptory order; the clerk issues the order to each party and the Court of Appeals clerk (MCR 7.305(I)(1)). If leave is denied, the Court of Appeals decision becomes the final adjudication and may be enforced in accordance with its terms; if granted, jurisdiction vests in the Supreme Court and subchapter 7.300 applies (MCR 7.305(I)(3)). Unless otherwise ordered, the appeal is limited to the issues raised in the application (MCR 7.305(I)(4)(a)). The reasons for denying leave, filed in the clerk's office, are not published and are not precedent (MCR 7.301(E)). A motion for reconsideration of the order is filed within 21 days after its certification and does not stay it (MCR 7.311(G))."
+  edge-leave-decision-denied "Leave denied" -> leave-denied { authority cite "MCR 7.305(I)" }
+  edge-leave-decision-peremptory "Final decision or peremptory order on the application" -> peremptory-order {
+    event DecisionFiled() authority cite "MCR 7.305(I)"
+  }
+  edge-leave-decision-granted "Leave granted, or argument on the application directed" -> briefing {
+    authority cite "MCR 7.305(I)"
+  }
+}
+
+state briefing: "Briefs and appendixes filed" by applicant cite "MCR 7.312(E)"
+{
+  note "Unless the Court directs otherwise, the appellant's brief and appendixes are due within 56 days of the order granting leave, or within 42 days of the order directing argument on the application; the appellee's within 35 days after service of the appellant's brief in a calendar case, or 21 days in a case argued on the application; the reply within 21 days after service of the appellee's brief in a calendar case, or 14 days on the application; and a response to an adverse amicus brief within 21 or 14 days of its service (MCR 7.312(E)). Briefs conform to MCR 7.212(B), (C), (D) and (G) as to form and length (MCR 7.312(A)(1)); an argument of any one issue over 6,500 words needs a summary of the argument, counted in the limit (MCR 7.312(B)(2)); and an appendix conforming to MCR 7.212(J) is filed with them (MCR 7.312(D)). Each party files 1 signed copy and 1 set of appendixes, and serves 2 copies on each attorney who has appeared for a separate party (MCR 7.312(F))."
+  edge-briefing-calendar "Briefs filed or time expired; case noticed for a session" -> argument {
+    authority cite "MCR 7.313(B)"
+  }
+}
+
+state argument: "Session calendar; argument or submission on briefs" by office cite "MCR 7.313(B)"
+{
+  note "After both parties' briefs are filed or the time for the reply has expired, the clerk notifies the parties that the case will be heard at a monthly session not less than 35 days after the notice (MCR 7.313(B)(1)). A party who did not request oral argument on the title page of its brief, or forfeited it by a late brief, is not entitled to argue unless it moves at least 21 days before the session; if neither side is entitled, the case is submitted on briefs (MCR 7.313(B)(2)). The calendar is set at least 21 days before the session (MCR 7.313(C)). Argument time in a calendar case is provided in the order granting leave; on the application each side entitled to argue has 15 minutes unless the Court orders otherwise (MCR 7.314(B))."
+  edge-argument-decision "Argued or submitted" -> decision { authority cite "MCR 7.315(A)" }
+}
+
+decision decision: "Supreme Court decision" by court cite "MCR 7.315(A)"
+{
+  note "An opinion is written and signed by each justice deciding the case; except for affirmance by an even division, a decision is made by concurrence of a majority of the justices voting (MCR 7.315(A)). The Court may enter any judgment or order that ought to have been entered and grant relief as the case requires (MCR 7.316(A)(7)). The clerk enters an order or judgment pursuant to the opinion as of the date the opinion is filed (MCR 7.315(C)(1)). A motion for rehearing is filed within 21 days after the opinion is filed (MCR 7.311(F)(1))."
+  edge-decision-affirmed "Court of Appeals affirmed" -> affirmed { event DecisionFiled() authority cite "MCR 7.315(C)" }
+  edge-decision-reversed "Reversed, vacated or remanded" -> reversed { event DecisionFiled() authority cite "MCR 7.316(A)" }
+  edge-decision-rehearing "Rehearing moved" -> rehearing { event DecisionFiled() authority cite "MCR 7.311(F)" }
+}
+
+decision rehearing: "Motion for rehearing decided" by court cite "MCR 7.311(F)"
+{
+  note "The motion is filed within 21 days after the opinion, states why the Court should modify its opinion, and is subject to the restrictions of MCR 2.119(F)(3); any party or participating amicus may answer within 14 days after service; there is no oral argument on it unless ordered; and the clerk refuses a late motion or a motion to reconsider an order denying rehearing (MCR 7.311(F)(1), (3)-(5)). A timely motion postpones issuance of the judgment order until the motion is denied or, if granted, until at least 21 days after the decision on rehearing (MCR 7.311(F)(2))."
+  edge-rehearing-granted "Granted: decision on rehearing" -> decision { authority cite "MCR 7.311(F)" }
+  edge-rehearing-denied "Denied: judgment order issues" -> judgment-issued { event MandateIssued()
+    authority cite "MCR 7.315(C)"
+  }
+}
+
+terminal not-sought: "No application: the Court of Appeals decision stands" outcome [final] cite "MCR 7.305(C)"
+
+terminal leave-denied: "Leave to appeal denied" outcome [final, loss] cite "MCR 7.305(I)"
+{
+  note "The Court of Appeals decision becomes the final adjudication and may be enforced in accordance with its terms (MCR 7.305(I)(3)). Federal certiorari (28 U.S.C. § 1257) is not vendored and not modeled."
+}
+
+terminal peremptory-order: "Decided on the application" outcome [final] cite "MCR 7.305(I)"
+{
+  note "An order other than one by opinion is entered on the date of filing and, unless otherwise stated, is effective the date it is entered (MCR 7.315(D))."
+}
+
+terminal affirmed: "Court of Appeals affirmed" outcome [final, loss] cite "MCR 7.315(C)"
+{
+  note "If no motion for rehearing is timely filed, the clerk sends a certified copy of the order or judgment to the Court of Appeals and the trial court not less than 21 or more than 28 days after its entry (MCR 7.315(C)(2)(a)); enforcement is obtained in the trial court (MCR 7.315(C)(4))."
+}
+
+terminal reversed: "Reversed, vacated or remanded" outcome [win, judgment] cite "MCR 7.316(A)"
+{
+  note "The order or judgment issues as MCR 7.315(C)(2)(a) provides and is enforced in the trial court (MCR 7.315(C)(4)); the original record is returned to the court to which the case is remanded (MCR 7.310(B))."
+}
+
+terminal judgment-issued: "Rehearing denied: judgment order issued" outcome [final] cite "MCR 7.315(C)"
+{
+  note "On denial of a timely motion for rehearing the clerk promptly sends the certified order or judgment to the Court of Appeals and the trial court (MCR 7.315(C)(2)(b))."
+}

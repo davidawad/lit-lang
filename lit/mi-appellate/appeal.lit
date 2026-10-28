@@ -1,23 +1,21 @@
 module mi-appellate-civil.appeal
 
-// Civil appeals from a Michigan circuit court to the Court of Appeals, and
-// applications for leave to the Supreme Court, from the appellant's side.
+import mi-state-rules.{ DecisionFiled, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+// Civil appeals from a Michigan circuit court to the Court of Appeals, from
+// the appellant's side, to the application for leave to the Supreme Court
+// (its procedure is lit/mi-supreme-court's).
 // Every period below is stated in a note, not counted: time is computed
 // under MCR 1.108, with Michigan's legal holidays and court-closure days,
 // for which lit/core has no counting rule. The appeal entry fee is the fee
 // the claim of appeal must carry (MCR 7.204(B)(2)); the vendored rules do
-// not state its amount. The outline cited "MCR 7.302" for the Supreme
-// Court application; Chapter 7 has no Rule 7.302, so the application cites
-// MCR 7.305. The outline named no leading decisions.
-/// A brief in the Court of Appeals, and an application for leave to the
-/// Supreme Court prepared in conformity with it: at most 16,000 words unless
+// not state its amount. The outline named no leading decisions.
+/// A brief in the Court of Appeals: at most 16,000 words unless
 /// the court orders otherwise; a self-represented party without a
 /// word-processing system may file a typewritten or handwritten brief of
-/// at most 50 pages (MCR 7.212(B)(1), 7.305(A)(1)).
+/// at most 50 pages (MCR 7.212(B)(1)).
 limit brief { words <= 16_000 cite "MCR 7.212(B)" } cite "MCR 7.212(B)"
-/// A reply brief: at most 3,200 words (MCR 7.212(G)); the reply to an
-/// answer to an application for leave in the Supreme Court has the same
-/// limit (MCR 7.305(E)(3)).
+/// A reply brief: at most 3,200 words (MCR 7.212(G)).
 limit reply-brief { words <= 3_200 cite "MCR 7.212(G)" } cite "MCR 7.212(G)"
 /// A motion for reconsideration in the Court of Appeals: at most 3,200
 /// words (MCR 7.215(I)(1)).
@@ -31,7 +29,7 @@ start judgment-entered
 state judgment-entered: "Final judgment entered in the circuit court" by applicant cite "MCR 7.203(A)"
 {
   note "The Court of Appeals has jurisdiction of an appeal of right by an aggrieved party from a final judgment or final order of the circuit court, except one on appeal from another court (MCR 7.203(A)(1)); other orders are reviewed by leave (MCR 7.203(B)). The time limit for an appeal of right is jurisdictional and MCR 1.108 computes it; 'entry' is the date the judgment is signed or entered in the register of actions (MCR 7.204(A)). In a civil case the appeal of right is taken within 21 days after entry of the judgment, or of an order deciding a motion for new trial, rehearing, reconsideration or other relief filed within the initial 21-day period (MCR 7.204(A)(1))."
-  edge-judgment-entered-claim "Claim of appeal filed within 21 days" -> claim-filed {
+  edge-judgment-entered-claim "Claim of appeal filed within 21 days" -> claim-filed { event NoticeOfAppealFiled()
     authority cite "MCR 7.204(A)"
   }
   edge-judgment-entered-late "21 days pass without a claim of appeal" -> late-application {
@@ -59,7 +57,7 @@ state claim-filed: "Claim of appeal filed" by applicant cite "MCR 7.204(B)"
 state record: "Record and transcript" by office cite "MCR 7.210"
 {
   note "Within seven days after a transcript is ordered, the court reporter or recorder files a certificate that it has been ordered and paid for or secured, with the estimated number of pages (MCR 7.210(B)(3)(a))."
-  edge-record-briefing "Transcript filed; briefing" -> briefing { authority cite "MCR 7.212(A)" }
+  edge-record-briefing "Transcript filed; briefing" -> briefing { event RecordFiled() authority cite "MCR 7.212(A)" }
 }
 
 state briefing: "Briefs filed" by applicant cite "MCR 7.212(A)"
@@ -80,10 +78,10 @@ state argument: "Oral argument" by office cite "MCR 7.214(B)"
 decision decision: "Court of Appeals decision" by court cite "MCR 7.216(A)"
 {
   note "The court may enter any judgment or order or grant further or different relief as the case requires, remand to take additional evidence, or dismiss an appeal for lack of jurisdiction or failure to pursue it in conformity with the rules (MCR 7.216(A)(5), (7), (10)). An opinion is published if it meets the standards of MCR 7.215(B). A motion for reconsideration may be filed within 21 days after the date of the order or opinion, and a party may answer within 14 days after service (MCR 7.215(I)(1), (2)). Unless otherwise ordered, the judgment is effective after the time for an application for leave to the Supreme Court expires or, if one is filed, after the Supreme Court disposes of the case (MCR 7.215(F)(1)(a))."
-  edge-decision-affirmed "Affirmed" -> affirmed { authority cite "MCR 7.216(A)" }
-  edge-decision-reversed "Reversed or modified" -> reversed { authority cite "MCR 7.216(A)" }
-  edge-decision-remanded "Remanded" -> remanded { authority cite "MCR 7.216(A)" }
-  edge-decision-dismissed "Appeal dismissed" -> appeal-dismissed { authority cite "MCR 7.216(A)" }
+  edge-decision-affirmed "Affirmed" -> affirmed { event DecisionFiled() authority cite "MCR 7.216(A)" }
+  edge-decision-reversed "Reversed or modified" -> reversed { event DecisionFiled() authority cite "MCR 7.216(A)" }
+  edge-decision-remanded "Remanded" -> remanded { event DecisionFiled() authority cite "MCR 7.216(A)" }
+  edge-decision-dismissed "Appeal dismissed" -> appeal-dismissed { event DecisionFiled() authority cite "MCR 7.216(A)" }
   edge-decision-reconsideration "Reconsideration sought" -> reconsideration {
     authority cite "MCR 7.215(I)"
   }
@@ -93,17 +91,19 @@ decision reconsideration: "Motion for reconsideration decided" by court cite "MC
 {
   note "The motion must include all facts, arguments and authorities in a single document and include the order or opinion; it is subject to the palpable-error standard of MCR 2.119(F)(3) (MCR 7.215(I)(1))."
   edge-reconsideration-granted "Granted" -> decision { authority cite "MCR 7.215(I)" }
-  edge-reconsideration-denied "Denied; leave sought in the Supreme Court" -> supreme-review {
+  edge-reconsideration-denied "Denied" -> supreme-review {
     authority cite "MCR 7.305(C)"
   }
 }
 
-decision supreme-review: "Application for leave to appeal to the Supreme Court" by court cite "MCR 7.305(I)"
+decision supreme-review: "Application for leave to appeal to the Supreme Court?" by applicant cite "MCR 7.305(C)"
 {
-  note "In a civil case the application is filed within 42 days after the Court of Appeals order or opinion resolving the appeal, or its order denying a timely motion for reconsideration (MCR 7.305(C)(2)); it must show one of the grounds of MCR 7.305(B). An answer may be filed within 28 days after service of the application, and a reply within 21 days after service of the answer (MCR 7.305(D), (E)). There is no oral argument on the application unless the Court orders it (MCR 7.305(H)). The Court may grant or deny leave, enter a final decision, direct argument on the application, or issue a peremptory order (MCR 7.305(I)(1))."
-  edge-supreme-review-denied "Leave denied" -> review-denied { authority cite "MCR 7.305(I)" }
-  edge-supreme-review-granted "Leave granted or peremptory order" -> supreme-decided {
-    authority cite "MCR 7.305(I)"
+  note "In a civil case the application is filed within 42 days after the Court of Appeals order or opinion resolving the appeal, or its order denying a timely motion for reconsideration (MCR 7.305(C)(2)); it must show one of the grounds of MCR 7.305(B). The Supreme Court will not accept a motion to file a late application (MCR 7.316(B)). The application, its answer and reply, and the Court's decision on it are lit/mi-supreme-court's."
+  edge-supreme-review-none "Not sought: the Court of Appeals decision stands" -> review-not-sought {
+    authority cite "MCR 7.215(F)"
+  }
+  edge-supreme-review-filed "Application for leave filed" -> leave-sought { event ReviewPetitionFiled()
+    authority cite "MCR 7.305(C)"
   }
 }
 
@@ -126,9 +126,12 @@ terminal remanded: "Remanded to the circuit court" outcome [win] cite "MCR 7.216
 
 terminal appeal-dismissed: "Appeal dismissed" outcome [loss, dismissal] cite "MCR 7.216(A)"
 
-terminal review-denied: "Leave to appeal denied" outcome [final] cite "MCR 7.305(I)"
+terminal review-not-sought: "Court of Appeals decision final" outcome [final, loss] cite "MCR 7.215(F)"
 {
-  note "Denial of leave ends the state appeal; the Court of Appeals decision stands."
+  note "Unless otherwise ordered, the Court of Appeals judgment is effective after the time for an application for leave to the Supreme Court expires (MCR 7.215(F)(1)(a))."
 }
 
-terminal supreme-decided: "Decided by the Supreme Court" outcome [final] cite "MCR 7.305(I)"
+terminal leave-sought: "Application for leave pending in the Supreme Court" outcome [appeal] cite "MCR 7.305(C)"
+{
+  note "The application proceeds in the Supreme Court under MCR 7.305 (lit/mi-supreme-court). If one is filed, the Court of Appeals judgment is effective after the Supreme Court disposes of the case (MCR 7.215(F)(1)(a))."
+}

@@ -14,6 +14,7 @@ version = "0.1.0"
 language = 1
 pack_id = "mi-circuit-court-civil"
 forum = "mi-circuit-court"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "michigan"
 title = "Michigan circuit courts, civil"
@@ -30,6 +31,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+mi-state-rules = { version = "^0.1.0", path = "../mi-rules" }
 
 [sources.mcr]
 title = "Michigan Court Rules of 1985, Chapters 1-9 (updated September 2, 2026)"

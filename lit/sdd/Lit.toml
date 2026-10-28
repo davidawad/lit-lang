@@ -1,9 +1,8 @@
 # The District of South Dakota's civil local rules over lit/frcp (FRCP
 # 83(a)): it declares only the periods the local rules themselves state
-# and re-encodes no FRCP deadline. It is a base package, not a
-# `kind = "local-rule"` layer, because lit/core's district-civil family
-# lists only the forum `frcp` (L2011 for `sdd`); its procedure is the
-# local motion practice of LR 7.1. Each period is counted
+# and re-encodes no FRCP deadline. It is a `kind = "local-rule"` layer at
+# its own forum `sdd` (lit/core's district-civil family); its procedure is
+# the local motion practice of LR 7.1. Each period is counted
 # under FRCP 6(a), which governs "any local rule". The rules take effect on
 # placement on the court's website after the comment period (LR 1.1(B));
 # the document date, February 28, 2025, stands for that date.
@@ -14,6 +13,7 @@ language = 1
 pack_id = "sdd-civil-local-rules"
 forum = "sdd"
 authority = "LocalRule"
+kind = "local-rule"
 title = "United States District Court, District of South Dakota: Civil Local Rules"
 description = "The District of South Dakota's civil local rules of practice as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): motion briefing, extensions of time to answer, amended pleadings, continuances, costs and attorney's fees."
 in_force = "2025-02-28"
@@ -26,6 +26,12 @@ counting = "frcp6"
 applicant = "self"
 opponent = "opponent"
 court = "nature"
+
+[package.instrument]
+source = "sdd-civ-lr"
+issuer = "United States District Court for the District of South Dakota"
+date = "2025-02-28"
+designation = "Civil Local Rules of Practice"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }

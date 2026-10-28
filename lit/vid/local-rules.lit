@@ -1,0 +1,303 @@
+module vid-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District Court of the Virgin Islands' own civil periods, computed
+// under the federal rules (FRCP 6(a) governs "any local rule"; LRCi 6.1(a)
+// adds to "legal holiday" any day on which both divisions of the court are
+// closed). Motions under Rules 12 and 56 are filed within the FRCP
+// deadlines or as a court order sets (LRCi 6.1(b)(1)(i)), so they belong
+// to lit/frcp. Absent an order setting deadlines, and except for motions
+// in limine, the parties may negotiate one extension of a motion, response
+// or reply deadline, of at most 30 days from the deadline the rule sets,
+// on notice filed before the original filing date (LRCi 6.1(b)(5)); it
+// extends a period and declares none of its own, so it stays in this note.
+// A non-dispositive motion represents that consent was sought at least 24
+// hours before filing (LRCi 7.1(e)); the corpus counts no hours, so it
+// stays in this note. Three periods are counted in business days, which
+// FRCP 6(a) does not define: the initial pretrial memorandum, no less than
+// three business days before the initial Rule 16 scheduling conference
+// (LRCi 16.1(a)); depositions eligible for filing, at least three business
+// days before trial (LRCi 30.1(e)); and proposed trial exhibits, in
+// electronic form at least three business days before the first day of
+// trial (LRCi 39.1(a)); they stay in this note. A de bene esse deposition
+// solely to authenticate records may be taken after the discovery deadline
+// without leave only more than 28 days before trial (LRCi 26.4(a)); an
+// expert whose testimony was not video-taped and who is unavailable does
+// not delay a trial set at least 45 days in advance (LRCi 26.3(c)); motions
+// to compel are filed within the discovery period (LRCi 26.5); the
+// judgment creditor files a garnishment receipt every three months after
+// serving the levy (LRCi 69.1(d)(1)). These are conditions, not deadlines
+// from an event, so they stay in this note. Review of the clerk's taxation
+// of costs by motion served within seven days of the clerk's action (LRCi
+// 54.1(d)) is FRCP 54(d)(1)'s period and belongs to lit/frcp. A civil
+// cover sheet is not required of a pro se filer (LRCi 3.1(c)). Rules that
+// state no period or limit stay out. The earlier D.V.I. outline's FRCP
+// flow and its decisions (Twombly, Iqbal, Phillips v. County of Allegheny,
+// Fowler v. UPMC Shadyside, Goines, Foman v. Davis, Frow v. De La Vega,
+// Poulis v. State Farm, Celotex, Anderson v. Liberty Lobby, Catlin, Bowles
+// v. Russell) are FRCP or FRAP authority and belong to lit/frcp and
+// lit/frap; they are removed here: no reporter text is vendored.
+/// A motion, response or reply: at most the greater of 20 pages or 6,000
+/// words, excluding exhibits, supporting documentation, the caption, the
+/// signature block and certificates, without leave of Court; a filing over
+/// 20 substantive pages carries a word-count certificate, and leave granted
+/// to the movant gives the respondent an equal extension (D.V.I. LRCi
+/// 7.1(b)).
+limit motion-paper {
+  pages <= 20 cite "D.V.I. LRCi 7.1(b)"
+  words <= 6_000 cite "D.V.I. LRCi 7.1(b)"
+} cite "D.V.I. LRCi 7.1(b)"
+
+/// The Clerk gives notice that a complaint was filed without a completed
+/// civil cover sheet (D.V.I. LRCi 3.1(b)).
+event CoverSheetOmissionNoticed()
+/// The hearing on a motion to withdraw as counsel for an individual
+/// (D.V.I. LRCi 5.2(b)).
+event WithdrawalHearing()
+/// The Court enters the order or decision of which reconsideration is
+/// sought (D.V.I. LRCi 6.1(b)(1)(ii)).
+event OrderEntered()
+/// The day scheduled for jury selection (D.V.I. LRCi 6.1(b)(1)(iii)).
+event JurySelection()
+/// A motion is served (D.V.I. LRCi 6.1(b)(2)).
+event MotionServed() paper motion-paper
+/// A response to a motion is served (D.V.I. LRCi 6.1(b)(2)).
+event ResponseServed() paper motion-paper
+/// A Rule 12 motion is filed (D.V.I. LRCi 6.1(b)(3)(i)).
+event Rule12MotionFiled() paper motion-paper
+/// A response to a Rule 12 motion is filed (D.V.I. LRCi 6.1(b)(3)(i)).
+event Rule12ResponseFiled() paper motion-paper
+/// A Rule 56 motion for summary judgment is filed
+/// (D.V.I. LRCi 6.1(b)(3)(ii)).
+event SummaryJudgmentMotionFiled() paper motion-paper
+/// A response to a Rule 56 motion is filed (D.V.I. LRCi 6.1(b)(3)(ii)).
+event SummaryJudgmentResponseFiled() paper motion-paper
+/// A motion for reconsideration is served (D.V.I. LRCi 6.1(b)(3)(iii)).
+event ReconsiderationMotionServed() paper motion-paper
+/// A response to a motion for reconsideration is filed
+/// (D.V.I. LRCi 6.1(b)(3)(iii)).
+event ReconsiderationResponseFiled() paper motion-paper
+/// A motion in limine is filed (D.V.I. LRCi 6.1(b)(3)(iv)).
+event LimineMotionFiled() paper motion-paper
+/// A response to a motion in limine is filed (D.V.I. LRCi 6.1(b)(3)(iv)).
+event LimineResponseFiled() paper motion-paper
+/// A motion, response or reply over the page and word limit is filed
+/// (D.V.I. LRCi 7.1(b)).
+event OversizePaperFiled() paper motion-paper
+/// The date set for trial (D.V.I. LRCi 16.1(c)).
+event TrialDate()
+/// An expert witness's deposition (D.V.I. LRCi 26.3(d)).
+event ExpertDeposition()
+/// The deposition of an individual (D.V.I. LRCi 30.1(a)).
+event IndividualDeposition()
+/// The deposition of an organization under FRCP 30(b)(6)
+/// (D.V.I. LRCi 30.1(a)).
+event OrganizationDeposition()
+/// Notice of an FRCP 30(b)(6) deposition is served (D.V.I. LRCi 30.1(b)).
+event OrganizationDepositionNoticeServed()
+/// The moving party serves a written communication requesting the
+/// discovery conference of counsel (D.V.I. LRCi 37.1(b)).
+event DiscoveryConferenceRequested()
+/// The offering party receives the Clerk's written request to claim
+/// exhibits (D.V.I. LRCi 39.1(d)).
+event ExhibitClaimRequestReceived()
+/// An interpreter's services are required at an in-court proceeding
+/// (D.V.I. LRCi 43.1).
+event InterpreterNeeded()
+/// A final judgment, or a judgment allowing costs, is entered
+/// (D.V.I. LRCi 54.1(a)).
+event CostsJudgmentEntered()
+/// A wage garnishment levy is satisfied (D.V.I. LRCi 69.1(d)).
+event LevySatisfied()
+
+/// D.V.I. LRCi 3.1(b): if the outstanding civil cover sheet is not filed
+/// within three days of the Clerk's notice of the omission, the Court may
+/// dismiss the action.
+deadline cover-sheet-period: 3.days after CoverSheetOmissionNoticed() counted_by frcp6 cite "D.V.I. LRCi 3.1(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 5.2(b)(1): a request by an individual whose counsel moves
+/// to withdraw to appear at the hearing by video or teleconference is made
+/// by motion at least three days before the hearing.
+deadline withdrawal-remote-appearance-period: 3.days before WithdrawalHearing() counted_by frcp6 cite "D.V.I. LRCi 5.2(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 6.1(b)(1)(ii) and 7.3(a): a motion for reconsideration is
+/// filed within 14 days after entry of the order or decision, unless the
+/// Court extends the time for good cause.
+deadline reconsideration-motion-period: 14.days after OrderEntered() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 6.1(b)(1)(iii): motions in limine are filed no later than
+/// 28 days before the day scheduled for jury selection, or as the Court
+/// directs.
+deadline limine-motion-period: 28.days before JurySelection() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 6.1(b)(2): except as LRCi 6.1(b)(3) or an order provides, a
+/// response is filed within 14 days after service of a motion; the Court
+/// may shorten or extend the time.
+deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 6.1(b)(2): a reply, if any, is filed within seven days
+/// after service of the response.
+deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 6.1(b)(3)(i): a response to a Rule 12 motion is filed
+/// within 21 days of the filing of the motion.
+deadline rule12-response-period: 21.days after Rule12MotionFiled() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 6.1(b)(3)(i): a reply on a Rule 12 motion is filed within
+/// 14 days of the filing of the response.
+deadline rule12-reply-period: 14.days after Rule12ResponseFiled() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 6.1(b)(3)(ii): a response to a Rule 56 motion, with
+/// affidavits and supporting documents, may be filed within 21 days of the
+/// filing of the motion.
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionFiled() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 6.1(b)(3)(ii): a reply on a Rule 56 motion is filed within
+/// 14 days of the filing of the response.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseFiled() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 6.1(b)(3)(iii): a response to a motion for reconsideration
+/// may be filed within 14 days after service of the motion.
+deadline reconsideration-response-period: 14.days after ReconsiderationMotionServed() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 6.1(b)(3)(iii): a reply on a motion for reconsideration is
+/// filed within seven days of the filing of the response.
+deadline reconsideration-reply-period: 7.days after ReconsiderationResponseFiled() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 6.1(b)(3)(iv): a response to a motion in limine is filed
+/// within seven days of the filing of the motion.
+deadline limine-response-period: 7.days after LimineMotionFiled() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 6.1(b)(3)(iv): a reply on a motion in limine is filed
+/// within seven days of the filing of the response.
+deadline limine-reply-period: 7.days after LimineResponseFiled() counted_by frcp6 cite "D.V.I. LRCi 6.1(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 7.1(b)(1): leave to exceed the page or word limit is
+/// sought at least two days before the filing of the document.
+deadline oversize-leave-period: 2.days before OversizePaperFiled() counted_by frcp6 cite "D.V.I. LRCi 7.1(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 16.1(c): no later than seven days before the date set for
+/// trial, or as the Court directs, each party files a trial brief and, in
+/// a jury case, requests to charge or, in a non-jury case, proposed
+/// findings of fact and conclusions of law.
+deadline trial-brief-period: 7.days before TrialDate() counted_by frcp6 cite "D.V.I. LRCi 16.1(c)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 26.3(d)(1): unless the Court provides otherwise, a proposed
+/// bill for the expert's charges is provided to the party seeking
+/// discovery 20 days before the deposition.
+deadline expert-bill-period: 20.days before ExpertDeposition() counted_by frcp6 cite "D.V.I. LRCi 26.3(d)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 30.1(a): "reasonable written notice" under FRCP 30(b)(1)
+/// is at least 14 days before the deposition of an individual.
+deadline individual-deposition-notice-period: 14.days before IndividualDeposition() counted_by frcp6 cite "D.V.I. LRCi 30.1(a)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 30.1(a): "reasonable written notice" under FRCP 30(b)(1)
+/// is at least 21 days before the deposition of an organization under FRCP
+/// 30(b)(6).
+deadline organization-deposition-notice-period: 21.days before OrganizationDeposition() counted_by frcp6 cite "D.V.I. LRCi 30.1(a)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 30.1(b): the party taking an FRCP 30(b)(6) deposition
+/// initiates and conducts the conference on the matters for examination
+/// at least five days before service of the notice of deposition.
+deadline organization-deposition-conference-period: 5.days before OrganizationDepositionNoticeServed() counted_by frcp6 cite "D.V.I. LRCi 30.1(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 37.1(b): unless a stipulation or order provides otherwise,
+/// the conference of counsel before a discovery motion is completed within
+/// 15 calendar days after the moving party serves its written request for
+/// the conference.
+deadline discovery-conference-period: 15.days after DiscoveryConferenceRequested() counted_by frcp6 cite "D.V.I. LRCi 37.1(b)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 39.1(d): the offering party claims its exhibits from the
+/// Clerk within thirty days of receipt of the Clerk's written request;
+/// unclaimed exhibits may be destroyed or otherwise disposed of.
+deadline exhibit-claim-period: 30.days after ExhibitClaimRequestReceived() counted_by frcp6 cite "D.V.I. LRCi 39.1(d)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 43.1: the parties submit the names and qualifications of
+/// qualified interpreters for approval at least six days before the
+/// interpreter's services are required.
+deadline interpreter-submission-period: 6.days before InterpreterNeeded() counted_by frcp6 cite "D.V.I. LRCi 43.1"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 54.1(a): within 14 days after entry of a final judgment or
+/// a judgment allowing costs, the prevailing party serves and files a Bill
+/// of Costs.
+deadline bill-of-costs-period: 14.days after CostsJudgmentEntered() counted_by frcp6 cite "D.V.I. LRCi 54.1(a)"
+{
+  forum frcp
+}
+
+/// D.V.I. LRCi 69.1(d)(4): the judgment creditor moves to vacate a wage
+/// levy within 20 days after it has been satisfied.
+deadline levy-vacatur-period: 20.days after LevySatisfied() counted_by frcp6 cite "D.V.I. LRCi 69.1(d)"
+{
+  forum frcp
+}

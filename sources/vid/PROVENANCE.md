@@ -15,3 +15,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 cf0c5337ddf0d91d89b1c1618e3b3aa3f14930f709fb109eabc1d986ce434200. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `vid/original/vid-local-criminal-rules-2026-02-01.pdf` as served (sha256 06db72fa21bfc64d469e4cc423ff8f27842bf56a083f39e694fef96622637b53); extraction sha256 cf0c5337ddf0d91d89b1c1618e3b3aa3f14930f709fb109eabc1d986ce434200.
+
+### `vid/local-rules-civ-2026-02-01-sectioned.txt` — D.V.I. Local Rules of Civil Procedure, sectioned
+
+- Derived in the pod (lg-f3q8.76) from `vid/local-rules-civ-2026-02-01.txt` (extract sha256 e5369189343fab8d7e3538fd223fdbf2d9ae49fc4f71d07588c6667fec3e262e); nothing fetched. In the body (after each part's table of contents), one marker line `## LRCi <n>` is inserted before each rule's own heading line `Rule <n>. <title>` (LRCi 1.1 through LRCi 83.2, 54 rules). Every other line is the extract unchanged, so deleting the `## LRCi` lines (`sed '/^## LRCi /d'`) gives back the extract byte for byte.
+- Edition: as the extract, "Effective February 1, 2026".
+- Sectioned sha256 f681ae577068a35019bb2203e10d01e771feaa11789e66b8ad2f6019e7eb4843 (the `path_sha256` pinned by `lit/vid/Lit.toml`).

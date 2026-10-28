@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcp-civil-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "vid-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:c0222884c81a096329cf7f8cccb8ee59ea6ffcfd7c69a5e259c707fbf6a06662"
+semantic = "sha256:7a9657fcc44bfc2e5b15b868a20d2571e4c8571d35c6af1f6dd0c777e1b6137b"
+texts = [
+    "vid-lrci sources/vid/local-rules-civ-2026-02-01-sectioned.txt sha256:f681ae577068a35019bb2203e10d01e771feaa11789e66b8ad2f6019e7eb4843",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcp-civil-procedure 2024.12.0",
+]

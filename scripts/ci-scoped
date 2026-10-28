@@ -343,7 +343,6 @@ run() {
   stage provenance provenance "$base"
   stage self-test bash -c "'$self' self-test && '$(dirname "$self")/cov-gate' self-test"
   stage lit-sync-check just lit-sync-check
-  stage coverage-check just coverage-check
   if grep -q '^editors/tree-sitter-litigate/' <<<"$files"; then
     stage tree-sitter-test just tree-sitter-test
   else

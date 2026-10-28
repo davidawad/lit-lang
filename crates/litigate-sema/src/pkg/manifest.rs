@@ -70,6 +70,8 @@ struct RawPackage {
     roles: Option<Spanned<Ordered<Spanned<String>>>>,
     description: Option<Spanned<String>>,
     jurisdiction: Option<Spanned<String>>,
+    // The US state, DC or territory of a state-court pack (`litigate coverage`).
+    jurisdiction_id: Option<Spanned<String>>,
     counting: Option<Spanned<String>>,
     // Procedure (default) or substantive law (SPEC §4.1, §5.6).
     law: Option<Spanned<String>>,
@@ -243,6 +245,7 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
         title: text_of(&p.title).unwrap_or_default(),
         description: text_of(&p.description),
         jurisdiction: text_of(&p.jurisdiction),
+        jurisdiction_id: text_of(&p.jurisdiction_id),
         roles,
         in_force: Interval {
             from: p.in_force.get_ref().clone(),
@@ -308,7 +311,11 @@ fn package_table(c: &mut Checker, p: &RawPackage) {
             format!("pack id `{}` must be kebab-case", id.get_ref())
         });
     }
-    for (key, value) in [("forum", &p.forum), ("authority", &p.authority)] {
+    for (key, value) in [
+        ("forum", &p.forum),
+        ("authority", &p.authority),
+        ("jurisdiction_id", &p.jurisdiction_id),
+    ] {
         if let Some(value) = value {
             c.check(is_ident(value.get_ref()), range(value), || {
                 format!("`{key}` must be an identifier, found `{}`", value.get_ref())
@@ -355,6 +362,7 @@ fn identity(c: &mut Checker, text: &str, raw: &RawManifest) -> bool {
     let pack_only = [
         ("description", p.description.as_ref().map(range)),
         ("jurisdiction", p.jurisdiction.as_ref().map(range)),
+        ("jurisdiction_id", p.jurisdiction_id.as_ref().map(range)),
         ("counting", p.counting.as_ref().map(range)),
         ("law", p.law.as_ref().map(range)),
         ("cite_syntax", raw.cite_syntax.as_ref().map(range)),

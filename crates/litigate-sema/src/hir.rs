@@ -87,6 +87,11 @@ pub struct Manifest {
     pub description: Option<String>,
     /// Pack jurisdiction.
     pub jurisdiction: Option<String>,
+    /// The US state, DC or territory of a state-court pack
+    /// (`package.jurisdiction_id`, a `litigate coverage` jurisdiction such
+    /// as `alaska`); `None` for a federal pack.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub jurisdiction_id: Option<String>,
     /// Declared actors and their default litgraph roles (`[package.roles]`).
     pub roles: BTreeMap<String, ActorRole>,
     /// Default in-force interval and corpus date for every declaration.

@@ -1,7 +1,7 @@
 //! `litigate coverage [ROOT] [--check]`: `ROOT/docs/COVERAGE.md`, the
 //! per-jurisdiction coverage table, generated from `ROOT/lit`,
 //! `ROOT/outlines` and `ROOT/tests/expect`, never written by hand (lg-wvlf.2). `--check` writes
-//! nothing and exits 2 when the committed table differs from the one the
+//! nothing and exits 2 when the table on disk differs from the one the
 //! repository yields.
 //!
 //! Each row counts, over its packages' `.lit` modules (parsed, so comments
@@ -17,8 +17,8 @@
 //! jurisdiction's packages are its state-court outlines
 //! (`outlines/<circuit>/<jurisdiction>/<court>/`, `<court>` not
 //! `federal-*`) and the `lit/` packages promoted from them, recognized by
-//! the outline's `forum` or, once the outline is deleted, by
-//! [`PROMOTED`]; its status is `promoted` when a `lit/` package has its
+//! the outline's `forum` or, once the outline is deleted, by its
+//! manifest's `jurisdiction_id`; its status is `promoted` when a `lit/` package has its
 //! forum, else `outline` when an outline exists, else `none` (zero counts
 //! until modeled). Its counts are those of the packages at its status. A
 //! `lit/` package of `StateRule` authority promoted from no jurisdiction
@@ -103,55 +103,6 @@ const JURISDICTIONS: [(&str, &str, &str); 56] = [
     ("virgin-islands", "U.S. Virgin Islands", TERRITORY),
 ];
 
-/// The forum of each promoted state-court `lit/` package and its
-/// jurisdiction (a [`JURISDICTIONS`] directory), so the package keeps its
-/// row once its outline is deleted. List a package here when it is
-/// promoted.
-const PROMOTED: &[(&str, &str)] = &[
-    ("ak-superior", "alaska"),
-    ("ak-supreme", "alaska"),
-    ("ca-court-of-appeal", "california"),
-    ("ca-superior", "california"),
-    ("fl-state-appellate", "florida"),
-    ("fl-state-civil", "florida"),
-    ("gu-superior", "guam"),
-    ("gu-supreme", "guam"),
-    ("ia-district", "iowa"),
-    ("iowactapp", "iowa"),
-    ("ks-appellate", "kansas"),
-    ("ks-district", "kansas"),
-    ("ma-appeals-sjc", "massachusetts"),
-    ("ma-superior-civil", "massachusetts"),
-    ("me-law-court", "maine"),
-    ("me-superior-civil", "maine"),
-    ("mp-supreme", "northern-mariana-islands"),
-    ("mp-trial", "northern-mariana-islands"),
-    ("mt-district", "montana"),
-    ("mt-supreme", "montana"),
-    ("nd-district", "north-dakota"),
-    ("ndctapp", "north-dakota"),
-    ("nj-appellate-civil", "new-jersey"),
-    ("nj-superior-law", "new-jersey"),
-    ("nm-state-appellate", "new-mexico"),
-    ("nm-state-civil", "new-mexico"),
-    ("oh-appellate", "ohio"),
-    ("oh-common-pleas", "ohio"),
-    ("pa-appellate-civil", "pennsylvania"),
-    ("pa-cp-civil", "pennsylvania"),
-    ("sc-appellate-civil", "south-carolina"),
-    ("sc-circuit-civil", "south-carolina"),
-    ("sd", "south-dakota"),
-    ("sd-circuit", "south-dakota"),
-    ("va-appellate-civil", "virginia"),
-    ("va-circuit-civil", "virginia"),
-    ("vt-superior-civil", "vermont"),
-    ("vt-supreme", "vermont"),
-    ("wa-court-of-appeals", "washington"),
-    ("wa-superior", "washington"),
-    ("wi-circuit", "wisconsin"),
-    ("wisctapp", "wisconsin"),
-];
-
 /// What a row counts.
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Serialize)]
 struct Counts {
@@ -182,6 +133,9 @@ struct Package {
     forum: String,
     #[serde(skip)]
     authority: String,
+    /// `package.jurisdiction_id`: a state-court package's jurisdiction.
+    #[serde(skip)]
+    jurisdiction_id: Option<String>,
     #[serde(flatten)]
     counts: Counts,
 }
@@ -265,31 +219,37 @@ pub fn coverage(root: Option<&str>, check: bool) -> Outcome {
 }
 
 /// `lit` split into the packages promoted from each jurisdiction (by an
-/// outline's forum in `by_slug` or by [`PROMOTED`]) and the federal rest.
+/// outline's forum in `by_slug` or by its `jurisdiction_id`) and the
+/// federal rest.
 ///
 /// # Errors
-/// A `StateRule` package promoted from no jurisdiction.
+/// A `StateRule` package promoted from no jurisdiction, or a
+/// `jurisdiction_id` naming no US state, DC or territory.
 fn split(
     lit: Vec<Package>,
     by_slug: &ByJurisdiction,
 ) -> Result<(ByJurisdiction, Vec<Package>), Failure> {
-    let forums: BTreeMap<&str, &'static str> = PROMOTED
+    let forums: BTreeMap<&str, &'static str> = by_slug
         .iter()
-        .copied()
-        .chain(
-            by_slug
-                .iter()
-                .flat_map(|(slug, packages)| packages.iter().map(|p| (p.forum.as_str(), *slug))),
-        )
+        .flat_map(|(slug, packages)| packages.iter().map(|p| (p.forum.as_str(), *slug)))
         .collect();
     let mut promoted = ByJurisdiction::new();
     let mut federal = Vec::new();
     for package in lit {
-        match forums.get(package.forum.as_str()) {
-            Some(slug) => promoted.entry(*slug).or_default().push(package),
+        let declared = match &package.jurisdiction_id {
+            Some(id) => Some(jurisdiction(id).ok_or_else(|| {
+                Failure::new(format!(
+                    "{}/Lit.toml: `jurisdiction_id = \"{id}\"` is no US state, DC or territory",
+                    package.dir
+                ))
+            })?),
+            None => forums.get(package.forum.as_str()).copied(),
+        };
+        match declared {
+            Some(slug) => promoted.entry(slug).or_default().push(package),
             None if package.authority == "StateRule" => {
                 return Err(Failure::new(format!(
-                    "{}: state-court forum `{}` has no outline and no `PROMOTED` jurisdiction",
+                    "{}: state-court forum `{}` has no outline and no `jurisdiction_id`",
                     package.dir, package.forum
                 )));
             }
@@ -313,11 +273,17 @@ fn state_court(dir: &str) -> Result<Option<&'static str>, Failure> {
     if court.starts_with("federal-") || court.starts_with("bankruptcy-") {
         return Ok(None);
     }
+    jurisdiction(slug)
+        .map(Some)
+        .ok_or_else(|| Failure::new(format!("{dir}: `{slug}` is no US state, DC or territory")))
+}
+
+/// The [`JURISDICTIONS`] directory `slug`, if any.
+fn jurisdiction(slug: &str) -> Option<&'static str> {
     JURISDICTIONS
         .iter()
         .find(|(s, _, _)| *s == slug)
-        .map(|(s, _, _)| Some(*s))
-        .ok_or_else(|| Failure::new(format!("{dir}: `{slug}` is no US state, DC or territory")))
+        .map(|(s, _, _)| *s)
 }
 
 /// The number of matter expect tests of each `lit/<d>` package directory:
@@ -439,6 +405,7 @@ fn read<'a>(
         name: manifest.name,
         forum: manifest.forum,
         authority: manifest.authority,
+        jurisdiction_id: manifest.jurisdiction_id,
         counts,
     })
 }
@@ -462,8 +429,7 @@ fn render(states: usize, federal: &[Package], rows: &[Row]) -> String {
         "# Coverage\n\n\
          **States with a promoted package: {states} of {total}.**\n\n\
          <!-- Generated by `just coverage` (`litigate coverage`) from lit/, \
-         outlines/ and tests/expect/; do not edit. `just coverage-check` (in `just ci`) fails \
-         when this file is stale. -->\n\n\
+         outlines/ and tests/expect/; do not edit, do not commit. -->\n\n\
          Per package or jurisdiction, counted over its `.lit` modules: **rules** \
          are `deadline` and `rule` declarations, **precedents** are bound case \
          cites (the distinct `[sources.*]` bindings titled as a case plus the \
@@ -473,7 +439,7 @@ fn render(states: usize, federal: &[Package], rows: &[Row]) -> String {
          in). A jurisdiction's packages are its state-court outlines \
          (`outlines/<circuit>/<jurisdiction>/`, federal district and \
          bankruptcy courts excluded) and the `lit/` packages promoted from them (an outline's \
-         `forum`, kept once the outline is deleted). Status: `promoted` (a `lit/` package), `outline` (outlines \
+         `forum`, or the package's `jurisdiction_id`). Status: `promoted` (a `lit/` package), `outline` (outlines \
          only, counted as such), `none` (zero until modeled). Public law only.\n\n\
          ## Federal packages (lit/)\n\n\
          | Package | Directory | Rules | Precedents | Tests | Matters |\n\
@@ -536,16 +502,6 @@ mod tests {
                     .to_owned()
             )
         );
-    }
-
-    #[test]
-    fn every_promoted_forum_names_a_jurisdiction() {
-        for &(forum, slug) in PROMOTED {
-            assert!(
-                JURISDICTIONS.iter().any(|(s, _, _)| *s == slug),
-                "{forum}: `{slug}`"
-            );
-        }
     }
 
     #[test]

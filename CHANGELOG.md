@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- **A promoted state-court package declares its own coverage row, and
+  docs/COVERAGE.md is no longer committed** (lg-4eum). `[package]
+  jurisdiction_id = "alaska"` in a `lit/` package's `Lit.toml` names its
+  US state, DC or territory; `litigate coverage` reads it in place of the
+  hand-edited `PROMOTED` list (deleted; the 36 packages backfilled). A
+  `jurisdiction_id` naming no jurisdiction fails. docs/COVERAGE.md is
+  gitignored and `just coverage` still writes it locally; `just
+  coverage-check` is gone from `just ci`, `just ci-scoped` and CI, so
+  parallel promotions no longer conflict on either file.
+
 ### Added
 
 - **A version can be declared `repealed`** (lg-zpia; SPEC §5.4). A

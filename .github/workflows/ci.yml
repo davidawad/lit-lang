@@ -71,8 +71,6 @@ jobs:
         with:
           tool: just
       - run: just lit-sync-check
-      # docs/COVERAGE.md is generated from lit/ and outlines/: fail when stale.
-      - run: just coverage-check
 
   # packages/litigate-ts: types generated from the Rust schemas (ts-test
   # regenerates them), and the client's unit, type-level and golden (wasm vs

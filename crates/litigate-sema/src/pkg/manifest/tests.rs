@@ -63,6 +63,21 @@ fn keeps_source_order_and_dependency_paths() {
 }
 
 #[test]
+fn reads_a_state_court_packs_jurisdiction_id() {
+    let state = MINIMAL.replace(
+        "authority = \"FederalRule\"",
+        "authority = \"StateRule\"\njurisdiction_id = \"alaska\"",
+    );
+    let id = |text: &str| {
+        parse_manifest(text)
+            .ok()
+            .and_then(|m| m.manifest.jurisdiction_id)
+    };
+    assert_eq!(id(&state).as_deref(), Some("alaska"));
+    assert_eq!(id(MINIMAL), None);
+}
+
+#[test]
 fn rejects_unknown_missing_and_invalid_values() {
     assert!(
         errors(&MINIMAL.replace("title = \"Demo\"", "title = \"Demo\"\ncolour = 1"))[0]

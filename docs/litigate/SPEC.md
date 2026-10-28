@@ -781,6 +781,7 @@ authority = "FederalRule"       # default authority level
 title = "..."                   # Pack.title
 description = "..."             # optional, Pack.description
 jurisdiction = "..."            # optional, Pack.jurisdiction
+jurisdiction_id = "alaska"      # optional; a state-court pack's US state, DC or territory (`litigate coverage`)
 in_force = "2009-12-01"         # default effective start
 in_force_until = "2030-01-01"   # optional default effective end (exclusive)
 known_at = "2025-01-01"         # default corpus date

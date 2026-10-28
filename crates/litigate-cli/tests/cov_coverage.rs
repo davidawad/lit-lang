@@ -1,12 +1,11 @@
-//! `coverage`: the generated docs/COVERAGE.md for this repository is
-//! current, and on a scratch repository the table's rows, statuses and
+//! `coverage`: on a scratch repository the table's rows, statuses and
 //! counts (matter expect tests from tests/expect), writing once, `--check` on a stale table, and failures.
 // Test helpers below may unwrap: a panic is the failed assertion.
 #![allow(clippy::unwrap_used)]
 mod support;
 
 use std::path::Path;
-use support::{litigate, litigate_in, scratch};
+use support::{litigate_in, scratch};
 
 /// Writes `text` at `root/relative`, creating its directories.
 fn put(root: &Path, relative: &str, text: impl AsRef<[u8]>) {
@@ -51,7 +50,7 @@ state served: "Served" {
 
 /// A scratch repository: a federal package, a promoted Florida package
 /// (and Florida's outlines, which it supersedes), a promoted Iowa package
-/// whose outline is deleted, a Delaware outline, a federal-district and a
+/// whose outline is deleted (its `jurisdiction_id` keeps its row), a Delaware outline, a federal-district and a
 /// national outline.
 fn repository(name: &str) -> std::path::PathBuf {
     let root = scratch(name);
@@ -83,7 +82,10 @@ fn repository(name: &str) -> std::path::PathBuf {
     put(
         &root,
         "lit/ia-district/Lit.toml",
-        manifest("ia-district", "ia-district", ""),
+        manifest("ia-district", "ia-district", "").replace(
+            "authority = \"StateRule\"",
+            "authority = \"StateRule\"\njurisdiction_id = \"iowa\"",
+        ),
     );
     put(&root, "lit/ia-district/m.lit", MODULE);
     let outline = |dir: &str, forum: &str| {
@@ -116,16 +118,6 @@ fn repository(name: &str) -> std::path::PathBuf {
     put(&root, "tests/expect/README", "not an expect test");
     put(&root, "tests/expect/fl-state-civil/a.toml", matter);
     root
-}
-
-#[test]
-fn the_committed_table_is_current() {
-    let run = litigate(&["coverage", "--check"]);
-    assert_eq!(
-        run.code, 0,
-        "docs/COVERAGE.md is stale: run `just coverage`"
-    );
-    assert_eq!(run.json["result"]["changed"], false);
 }
 
 #[test]
@@ -282,7 +274,7 @@ fn an_unreadable_repository_is_a_usage_error() {
         "lit/xx-civil/Lit.toml",
         manifest("xx-civil", "xx-civil", ""),
     );
-    insta::assert_snapshot!(failure(&stateless), @"litigate coverage: lit/xx-civil: state-court forum `xx-civil` has no outline and no `PROMOTED` jurisdiction");
+    insta::assert_snapshot!(failure(&stateless), @"litigate coverage: lit/xx-civil: state-court forum `xx-civil` has no outline and no `jurisdiction_id`");
 
     let dangling = repository("coverage-dangling");
     put(&dangling, "tests/expect/gone/a.toml", "case = \"m.case\"\n");

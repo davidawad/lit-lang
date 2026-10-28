@@ -104,9 +104,8 @@ litigate diff lit/frcp --against target/lit-build/packs/frcp-civil-procedure.jso
 litigate compat old/lit/frcp lit/frcp      # compatibility class of a release + the bump it needs (SPEC §4.4)
 just lit-sync                               # regenerate every Lit.lock; build packs/, scenarios/ into target/lit-build/
 just lit-sync-check                         # CI gate: fail on a stale Lit.lock or a committed generated file
-just coverage                               # regenerate docs/COVERAGE.md (`litigate coverage`): per-jurisdiction rules,
-                                            # precedents, expect tests (inline and tests/expect) and package status
-just coverage-check                         # CI gate: fail when the committed docs/COVERAGE.md is stale
+just coverage                               # write docs/COVERAGE.md locally (`litigate coverage`, gitignored): per-jurisdiction
+                                            # rules, precedents, expect tests (inline and tests/expect) and package status
 ```
 
 `Lit.lock` files hold one row per package with only that package's own
@@ -204,9 +203,10 @@ the gate (`scripts/cov-gate`) over fixed known-low and known-ok inputs.
    procedure in its `lit/<forum>/` package (a matter in `cases/`), run
    `litigate check`, then `just lit-sync` and commit the source and its
    `Lit.lock` changes (the generated JSON is a build output, never
-   committed); `just ci` fails on a stale `Lit.lock`. A change to `lit/` or
-   `outlines/` that moves a count also needs `just coverage` and the
-   regenerated `docs/COVERAGE.md` (`just coverage-check` fails otherwise). Every new
+   committed); `just ci` fails on a stale `Lit.lock`. `docs/COVERAGE.md` is
+   generated locally by `just coverage` and never committed; a promoted
+   state-court package declares its row with `[package] jurisdiction_id`
+   (e.g. `"alaska"`) in its own `Lit.toml`. Every new
    `authority`/`cite` must be traceable to a `sources` entry or a public
    citation (`sources[].path` is repo-relative only — never a local
    filesystem path); in `.lit` an unresolved cite is a hole. Run

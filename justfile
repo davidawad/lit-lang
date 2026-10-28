@@ -280,11 +280,11 @@ nix-check:
 
 # The single CI entry point: fast, deterministic gates only. Coverage,
 # audit, and deny hit the network/build cache so they're last.
-ci: fmt-check lint cov-gate-test mirror-sync-test lit-sync-check coverage-check tree-sitter-test test emacs-test ts-test doctest cov cov-litigate audit deny
+ci: fmt-check lint cov-gate-test mirror-sync-test lit-sync-check tree-sitter-test test emacs-test ts-test doctest cov cov-litigate audit deny
     @echo "ci: all gates passed"
 
 # The per-bead gate (scripts/ci-scoped): global checks (fmt, typos,
-# lit-sync-check, coverage-check, tree-sitter-test when the grammar changed, cargo check
+# lit-sync-check, tree-sitter-test when the grammar changed, cargo check
 # --workspace, audit, deny), then clippy, a nextest run under the `gate`
 # profile (parallel, no whole-corpus sweeps, no coverage) and doctests for
 # the packages changed since BASE (default: the merge-base with
@@ -310,18 +310,10 @@ clean:
 # docs/COVERAGE.md, the per-jurisdiction coverage table (rules, precedents
 # and expect tests modeled, package status for every federal package in lit/
 # and every state, DC and territory), generated from lit/, outlines/ and
-# tests/expect/ by `litigate coverage`; never edit it by hand.
+# tests/expect/ by `litigate coverage`; never edit it by hand, never commit it
+# (it is gitignored; lg-4eum).
 coverage:
     cargo run -q -p litigate-cli -- --format human coverage > /dev/null
-
-# CI gate: fail when the committed docs/COVERAGE.md is stale.
-coverage-check:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    if ! cargo run -q -p litigate-cli -- --format human coverage --check > /dev/null; then
-      echo "coverage-check: docs/COVERAGE.md is stale; run \`just coverage\` and commit the result" >&2
-      exit 1
-    fi
 
 # --- litigate authoring language -------------------------------------------
 # Check of the stdlib and matters under the default `dev` profile (SPEC §9.3):

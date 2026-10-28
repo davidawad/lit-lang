@@ -11,6 +11,7 @@
 
 - Source: https://www.utd.uscourts.gov/sites/utd/files/Criminal%20Rules%20Final%202025.pdf (official site; 28 pages, sha256 688f5d4f237a536ad45bff7aace8dfcee5d93f60f88d84b48309b5fb09d68f52).
 - Edition: Local Criminal Rules 'effective December 1, 2025' (DUCrimR 1-1), the file 'Criminal Rules Final 2025' linked at https://www.utd.uscourts.gov/rules-practice. robots.txt of www.utd.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): utd-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 fbc43db846d8439626a2e327e9cc446bb29bdbaf79b06707ca8121ea7b4e3ff2. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `d-utah/original/dutah-local-criminal-rules-2025-12-01.pdf` as served (sha256 688f5d4f237a536ad45bff7aace8dfcee5d93f60f88d84b48309b5fb09d68f52); extraction sha256 fbc43db846d8439626a2e327e9cc446bb29bdbaf79b06707ca8121ea7b4e3ff2.

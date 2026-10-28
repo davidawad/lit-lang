@@ -1,0 +1,167 @@
+module bankr-aln-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ PetitionFiled }
+
+// The Bankr. N.D. Ala. court's own periods, counted under FRBP 9006(a): the
+// Local Rules effective March 1, 2023. The FRBP periods (schedules, claims,
+// the chapter 13 plan, discharge, dischargeability, exemptions, the
+// adversary answer and summons, appeals) are lit/frbp's and are not
+// declared again.
+//
+// Stated in the rules but not declared: the business-day periods (a
+// deficiency notice cured within 2 business days, Rules 3007-1(c)(6),
+// 4003-2(f)); the clerk's own acts (the notice of hearing on a motion to
+// extend the stay or for it to take effect, giving seven to 14 days'
+// notice, Rule 4001-1.1(c)); the window's opening day (a proposed order on
+// negative notice is submitted no sooner than 30 days after the filing and
+// service, Rules 3007-1(c)(5), 4003-2(e), whose closing day is declared);
+// the conditions that are not deadlines (180 days' location for venue,
+// Rule 1073-1(a); prior cases dismissed within the preceding year, Rule
+// 4001-1.1(a)(1); a prior case filed within five calendar years, Rule
+// 1006-1(a); installments paid not less often than monthly, Rule
+// 1006-1(b)(2)); a motion to extend the stay filed "with the original
+// bankruptcy petition or immediately thereafter" (Rule 4001-1.1(b)); and the
+// response date a claim-objection notice states, which the rule leaves to
+// the notice (Rule 3007-1(c)(3)). Rule 1071-1 (divisions) is abrogated by 28
+// U.S.C. § 81 (2024), effective October 1, 2025, as its note states. The
+// rules state no page limit.
+/// The debtor's application to pay the filing fee in installments is
+/// denied because the debtor owes an unpaid fee from a case filed within
+/// five calendar years (Rule 1006-1(a)).
+event InstallmentApplicationDenied()
+/// An objection to claim under the negative notice procedure is filed and
+/// served (Rule 3007-1(c)).
+event ClaimObjectionServed()
+/// The confirmation hearing on a chapter 13 plan (Rule 3015-2(a)).
+event ConfirmationHearing()
+/// The first hearing date on a motion for relief from stay or the codebtor
+/// stay, to renew one, or for adequate protection (Rule 4001-1(c)).
+event StayReliefHearing()
+/// An individual debtor's case is converted to a case under chapter 7
+/// (Rule 4002-1).
+event ConvertedToChapter7()
+/// A § 522(f) motion to avoid a lien is filed and served (Rule 4003-2(c),
+/// (e)).
+event LienAvoidanceMotionServed()
+/// The final disposition of a contested matter, adversary proceeding or
+/// case, including any appeal or the expiration of the time for one (Rule
+/// 9070-1).
+event FinalDisposition()
+
+/// Bankr. N.D. Ala. R. 1006-1(a): when the court denies an installment
+/// application because of an unpaid fee from a previous case, the debtor has
+/// 14 days from the petition date to pay the entire filing fee, or the case
+/// may be dismissed without a hearing. The debtor files the application
+/// with the petition, so the period runs from the petition date.
+deadline prior-fee-payment-period: 14.days after PetitionFiled() counted_by frcp6 cite "Bankr. N.D. Ala. R. 1006-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. N.D. Ala. R. 1006-1(b)(1): an installment application is approved
+/// without a hearing only if a minimum payment of 25 percent of the filing
+/// fee is paid within 30 days of the petition date.
+deadline first-installment-period: 30.days after PetitionFiled() counted_by frcp6 cite "Bankr. N.D. Ala. R. 1006-1(b)(1)"
+{
+  forum frcp
+}
+
+/// Bankr. N.D. Ala. R. 3007-1(c)(5): if no response is filed to a
+/// negative-notice objection to claim, the objecting party submits a
+/// proposed order no later than 45 days after the objection was filed and
+/// served (and no sooner than 30 days after).
+deadline claim-objection-order-period: 45.days after ClaimObjectionServed() counted_by frcp6 cite "Bankr. N.D. Ala. R. 3007-1(c)(5)"
+{
+  forum frcp
+}
+
+/// Bankr. N.D. Ala. R. 3015-2(a): unless the court orders otherwise, an
+/// objection to confirmation of a chapter 13 plan, or to the attorney's
+/// compensation it proposes, is filed at least 7 days before the
+/// confirmation hearing.
+deadline confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. N.D. Ala. R. 3015-2(a)"
+{
+  forum frcp
+}
+
+/// Bankr. N.D. Ala. R. 4001-1(c): in a chapter 7 or 13 case the movant files
+/// and serves the completed fact summary sheet at least 14 days prior to the
+/// first hearing date on the motion.
+deadline fact-summary-period: 14.days before StayReliefHearing() counted_by frcp6 cite "Bankr. N.D. Ala. R. 4001-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. N.D. Ala. R. 4002-1: upon conversion of an individual debtor's
+/// case to chapter 7, the debtor files within 14 days of the conversion the
+/// chapter 7 means-test forms (122A-1, 122A-2), a statement of compensation
+/// paid to professionals and the Summary of Assets and Liabilities (106Sum).
+deadline conversion-filings-period: 14.days after ConvertedToChapter7() counted_by frcp6 cite "Bankr. N.D. Ala. R. 4002-1"
+{
+  forum frcp
+}
+
+/// Bankr. N.D. Ala. R. 4003-2(c): the notice of opportunity to object to a
+/// § 522(f) lien avoidance motion advises that objections must be filed
+/// within 30 days of the date of service of the motion.
+deadline lien-avoidance-objection-period: 30.days after LienAvoidanceMotionServed() counted_by frcp6 cite "Bankr. N.D. Ala. R. 4003-2(c)"
+{
+  forum frcp
+}
+
+/// Bankr. N.D. Ala. R. 4003-2(e): if no objection or response is filed, the
+/// movant submits a proposed order no later than 45 days after the motion
+/// was filed and served (and no sooner than 30 days after).
+deadline lien-avoidance-order-period: 45.days after LienAvoidanceMotionServed() counted_by frcp6 cite "Bankr. N.D. Ala. R. 4003-2(e)"
+{
+  forum frcp
+}
+
+/// Bankr. N.D. Ala. R. 9070-1: exhibits received into evidence that are not
+/// withdrawn within 30 days after final disposition may be destroyed or
+/// otherwise disposed of by the clerk's office.
+deadline exhibit-withdrawal-period: 30.days after FinalDisposition() counted_by frcp6 cite "Bankr. N.D. Ala. R. 9070-1"
+{
+  forum frcp
+}
+
+start motion-served
+
+state motion-served: "Lien avoidance motion filed and served with notice of opportunity to object" by applicant cite "Bankr. N.D. Ala. R. 4003-2(b)"
+{
+  note "A § 522(f) motion in substantial compliance with the court's form is served on the trustee, the affected creditor and any committee (Rule 4003-2(b)); its notice advises that objections are due within 30 days of service and that the court may set a hearing by later notice (Rule 4003-2(c))."
+  edge-motion-served-objection "Objection or response filed" -> objected {
+    authority cite "Bankr. N.D. Ala. R. 4003-2(d)"
+  }
+  edge-motion-served-unopposed "No objection; proposed order submitted" -> order-submitted {
+    authority cite "Bankr. N.D. Ala. R. 4003-2(e)"
+  }
+  edge-motion-served-deficient "Deficiency not corrected; motion dismissed or denied" -> decided {
+    authority cite "Bankr. N.D. Ala. R. 4003-2(f)"
+  }
+}
+
+state objected: "Objection filed; hearing set" by opponent cite "Bankr. N.D. Ala. R. 4003-2(d)"
+{
+  note "The objecting or responding party serves the debtor, the trustee, the affected creditor and any committee and attaches a certificate of service (Rule 4003-2(d)); the court may set a hearing by later notice (Rule 4003-2(c))."
+  edge-objected-hearing "Hearing held" -> ruling { authority cite "Bankr. N.D. Ala. R. 4003-2(c)" }
+}
+
+state order-submitted: "Proposed order submitted" by applicant cite "Bankr. N.D. Ala. R. 4003-2(e)"
+{
+  note "With no objection or response, the movant submits a proposed order in substantial compliance with the court's form no sooner than 30 and no later than 45 days after the motion was filed and served (Rule 4003-2(e))."
+  edge-order-submitted-ruling "Order considered" -> ruling { authority cite "Bankr. N.D. Ala. R. 4003-2(e)" }
+}
+
+decision ruling: "Motion decided" by court cite "Bankr. N.D. Ala. R. 4003-2(a)"
+{
+  note "A proceeding to avoid a lien under § 522(f) is a contested matter governed by FRBP 9014 (Rule 4003-2(a))."
+  edge-ruling-granted "Lien avoided" -> decided { authority cite "Bankr. N.D. Ala. R. 4003-2(c)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "Bankr. N.D. Ala. R. 4003-2(a)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. N.D. Ala. R. 1001-1(c)"
+{
+  note "The Local Rules govern practice and procedure in all cases and proceedings in the court; where neither they nor the Bankruptcy Rules provide, the court regulates its practice consistently with both (Rule 1001-1(c))."
+}

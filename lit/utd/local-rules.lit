@@ -1,0 +1,380 @@
+module utd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Utah's own civil periods and limits, computed under
+// FRCP 6(a), which governs a period stated in a local rule. Rules that
+// state no period this layer can count stay out: the first extension of
+// time to answer, which the court may grant without a response if it is
+// the first request, seeks 14 days or fewer and is filed before the time
+// expires (DUCivR 6-2(a)), a condition on a motion rather than a period;
+// the response to a short form discovery motion, due 5 business days
+// after its filing and not subject to FRCP 6(d)'s 3 added days (DUCivR
+// 37-1(b)(3)), a business-day period core does not count; the response
+// to an evidentiary objection, due when any response or reply is due or
+// 7 days after the objection, whichever is later (DUCivR 7-1), which runs
+// from two events; the 26(f) meeting and scheduling motion after removal,
+// which run from the later of the remand period's expiry and the denial of
+// a remand motion (DUCivR 81-1); pseudonym, sealing, transcript-redaction,
+// in forma pauperis, attorney admission, withdrawal and discipline
+// periods (DUCivR 3-2, 5-3, 5-4, 10-2, 83-1.1, 83-1.4, 83-1.7); exhibits
+// (DUCivR 83-3); and the bankruptcy rules (DUCivR 83-6). The court sets
+// no local period for an objection to a magistrate judge's order or
+// recommendation: FRCP 72(a) and (b) govern (DUCivR 72-2; lit/frcp). The
+// earlier D. Utah outline's FRCP flow and its decisions (Twombly, Iqbal,
+// Celotex, Anderson v. Liberty Lobby, Matsushita, Unitherm, Bowles v.
+// Russell, Hamer, Microsoft v. Baker; Robbins v. Oklahoma (10th Cir.))
+// are FRCP and FRAP authority and belong to lit/frcp and lit/frap; no
+// reporter text is vendored, so they are removed here.
+/// A motion under FRCP 12(b), 12(c) or 23(c), or a response to one: at
+/// most 25 pages or 7,750 words unless the court orders otherwise or the
+/// parties stipulate to less (DUCivR 7-1(a)(4)(A)(i)). Headings,
+/// citations, quotations and footnotes count; a paper over the page limit
+/// certifies its word count (DUCivR 7-1(a)(6)).
+limit pleading-motion {
+  pages <= 25 cite "DUCivR 7-1(a)(4)"
+  words <= 7_750 cite "DUCivR 7-1(a)(4)"
+  requires certificate compliance for [words] cite "DUCivR 7-1(a)(6)"
+} cite "DUCivR 7-1(a)(4)"
+
+/// A reply on a motion under FRCP 12(b), 12(c) or 23(c): at most 10 pages
+/// or 3,100 words (DUCivR 7-1(a)(4)(A)(ii)).
+limit pleading-motion-reply {
+  pages <= 10 cite "DUCivR 7-1(a)(4)"
+  words <= 3_100 cite "DUCivR 7-1(a)(4)"
+  requires certificate compliance for [words] cite "DUCivR 7-1(a)(6)"
+} cite "DUCivR 7-1(a)(4)"
+
+/// A motion for summary judgment under FRCP 56(a), or a response to one:
+/// at most 40 pages or 12,400 words (DUCivR 7-1(a)(4)(B)(i); DUCivR 56-1).
+limit summary-judgment-motion {
+  pages <= 40 cite "DUCivR 7-1(a)(4)"
+  words <= 12_400 cite "DUCivR 7-1(a)(4)"
+  requires certificate compliance for [words] cite "DUCivR 7-1(a)(6)"
+} cite "DUCivR 7-1(a)(4)"
+
+/// A reply on a summary judgment motion: at most 20 pages or 6,200 words
+/// (DUCivR 7-1(a)(4)(B)(ii)).
+limit summary-judgment-reply {
+  pages <= 20 cite "DUCivR 7-1(a)(4)"
+  words <= 6_200 cite "DUCivR 7-1(a)(4)"
+  requires certificate compliance for [words] cite "DUCivR 7-1(a)(6)"
+} cite "DUCivR 7-1(a)(4)"
+
+/// A motion under FRCP 65, or a response to one: at most 25 pages or
+/// 7,750 words (DUCivR 7-1(a)(4)(C)(i)).
+limit injunction-motion {
+  pages <= 25 cite "DUCivR 7-1(a)(4)"
+  words <= 7_750 cite "DUCivR 7-1(a)(4)"
+  requires certificate compliance for [words] cite "DUCivR 7-1(a)(6)"
+} cite "DUCivR 7-1(a)(4)"
+
+/// A reply on a motion under FRCP 65: at most 10 pages or 3,100 words
+/// (DUCivR 7-1(a)(4)(C)(ii)).
+limit injunction-reply {
+  pages <= 10 cite "DUCivR 7-1(a)(4)"
+  words <= 3_100 cite "DUCivR 7-1(a)(4)"
+  requires certificate compliance for [words] cite "DUCivR 7-1(a)(6)"
+} cite "DUCivR 7-1(a)(4)"
+
+/// Any other motion, response or reply: at most 10 pages or 3,100 words
+/// (DUCivR 7-1(a)(4)(D)(i)).
+limit motion-paper {
+  pages <= 10 cite "DUCivR 7-1(a)(4)"
+  words <= 3_100 cite "DUCivR 7-1(a)(4)"
+  requires certificate compliance for [words] cite "DUCivR 7-1(a)(6)"
+} cite "DUCivR 7-1(a)(4)"
+
+/// A Notice of Supplemental Authority, and a response to it: at most 2
+/// pages each (DUCivR 7-1).
+limit supplemental-authority-notice { pages <= 2 cite "DUCivR 7-1" } cite "DUCivR 7-1"
+
+/// An amicus curiae memorandum: except as the court authorizes, at most 25
+/// pages or 7,750 words (DUCivR 7-6(c)(2)).
+limit amicus-memorandum {
+  pages <= 25 cite "DUCivR 7-6(c)"
+  words <= 7_750 cite "DUCivR 7-6(c)"
+} cite "DUCivR 7-6(c)"
+
+/// A Short Form Discovery Motion, and the response to it: at most 500
+/// words, the caption and signature block excluded (DUCivR 37-1(b)(1),
+/// (3)).
+limit short-form-discovery-motion { words <= 500 cite "DUCivR 37-1(b)" } cite "DUCivR 37-1(b)"
+
+/// An objection to a magistrate judge's order or report and
+/// recommendation under FRCP 72(a) or (b), and a response the district
+/// judge orders: at most 15 pages or 4,650 words (DUCivR 72-2(a),
+/// (b)(1)).
+limit magistrate-objection {
+  pages <= 15 cite "DUCivR 72-2(a)"
+  words <= 4_650 cite "DUCivR 72-2(a)"
+} cite "DUCivR 72-2(a)"
+
+/// A complaint or other case-initiating document is filed, the filing fee
+/// unpaid (DUCivR 3-1).
+event ComplaintFiled()
+/// A motion under FRCP 12(b), 12(c) or 23(c) is served (DUCivR
+/// 7-1(a)(4)(A)).
+event PleadingMotionServed() paper pleading-motion
+/// The response to a motion under FRCP 12(b), 12(c) or 23(c) is served
+/// (DUCivR 7-1(a)(4)(A)).
+event PleadingResponseServed() paper pleading-motion
+/// A motion for summary judgment under FRCP 56(a) is served (DUCivR
+/// 7-1(a)(4)(B)).
+event SummaryJudgmentMotionServed() paper summary-judgment-motion
+/// The response to a summary judgment motion is served (DUCivR
+/// 7-1(a)(4)(B)).
+event SummaryJudgmentResponseServed() paper summary-judgment-motion
+/// A motion under FRCP 65 is served (DUCivR 7-1(a)(4)(C)).
+event InjunctionMotionServed() paper injunction-motion
+/// The response to a motion under FRCP 65 is served (DUCivR
+/// 7-1(a)(4)(C)).
+event InjunctionResponseServed() paper injunction-motion
+/// Any other motion is served (DUCivR 7-1(a)(4)(D)).
+event MotionServed() paper motion-paper
+/// The response to any other motion is served (DUCivR 7-1(a)(4)(D)).
+event ResponseServed() paper motion-paper
+/// A reply offering new evidence is served (DUCivR 7-1(b)(3)).
+event ReplyWithNewEvidenceServed()
+/// A Notice of Supplemental Authority is served (DUCivR 7-1).
+event SupplementalAuthorityNoticeServed() paper supplemental-authority-notice
+/// A motion for leave to file an amicus memorandum is served (DUCivR
+/// 7-6(b)(3)).
+event AmicusMotionServed()
+/// The court grants leave to file an amicus memorandum (DUCivR 7-6(b)(4)).
+event AmicusLeaveGranted()
+/// The moving party files the motion an amicus supports (DUCivR
+/// 7-6(e)(1)).
+event SupportedMotionFiled()
+/// The response to the motion an amicus opposes is filed (DUCivR
+/// 7-6(e)(2)).
+event OpposedResponseFiled()
+/// An amicus memorandum is filed (DUCivR 7-6).
+event AmicusMemorandumFiled() paper amicus-memorandum
+/// The prompt written communication on a discovery dispute is sent to the
+/// opposing party (DUCivR 37-1(a)(2)).
+event DiscoveryDisputeLetterSent()
+/// A Short Form Discovery Motion is filed (DUCivR 37-1(b)).
+event ShortFormDiscoveryMotionFiled() paper short-form-discovery-motion
+/// Final judgment is entered (DUCivR 54-1).
+event FinalJudgmentEntered()
+/// An appellate remand modifies or imposes a fee award (DUCivR
+/// 54-1(a)(2)(A)(ii)).
+event FeeAwardRemanded()
+/// A bill of costs is served (DUCivR 54-1(b)(2)(C)).
+event BillOfCostsServed()
+/// An objection to the bill of costs is served (DUCivR 54-1(b)(2)(D)).
+event CostsObjectionServed()
+/// The clerk enters the bill of costs (DUCivR 54-1(b)(2)(E)).
+event CostsTaxed()
+/// An objection to a magistrate judge's order is filed (DUCivR 72-2).
+event MagistrateObjectionFiled() paper magistrate-objection
+/// The Clerk's Office sends a party the magistrate judge Consent Form
+/// (DUCivR 72-3(c)(3)).
+event ConsentFormSent()
+/// An action is removed from state court (DUCivR 81-1).
+event ActionRemoved()
+
+/// DUCivR 3-1: the filing fee should be paid when the complaint or other
+/// case-initiating document is filed, except as DUCivR 3-2 provides; if it
+/// is not paid within 7 days, the Clerk closes the case.
+deadline filing-fee-period: 7.days after ComplaintFiled() counted_by frcp6 cite "DUCivR 3-1"
+{
+  forum frcp
+}
+
+/// DUCivR 7-1(a)(4)(A)(iii): a response to a motion under FRCP 12(b),
+/// 12(c) or 23(c) is filed within 28 days after service of the motion,
+/// unless the court orders otherwise. A stipulation to extend a filing
+/// time is ineffective without a court order (DUCivR 7-1(a)(5)), and the
+/// court may grant a motion not timely opposed without further notice
+/// (DUCivR 7-1).
+deadline pleading-response-period: 28.days after PleadingMotionServed() counted_by frcp6 cite "DUCivR 7-1(a)(4)"
+{
+  forum frcp
+}
+
+/// DUCivR 7-1(a)(4)(A)(iv): a reply may be filed within 14 days after
+/// service of the response.
+deadline pleading-reply-period: 14.days after PleadingResponseServed() counted_by frcp6 cite "DUCivR 7-1(a)(4)"
+{
+  forum frcp
+}
+
+/// DUCivR 7-1(a)(4)(B)(iii): a response to a summary judgment motion is
+/// filed within 28 days after service of the motion. If a party fails to
+/// respond timely, the court may grant the motion without further notice
+/// if the movant has established that it is entitled to judgment as a
+/// matter of law (DUCivR 56-1).
+deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "DUCivR 7-1(a)(4)"
+{
+  forum frcp
+}
+
+/// DUCivR 7-1(a)(4)(B)(iv): a reply may be filed within 14 days after
+/// service of the response.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "DUCivR 7-1(a)(4)"
+{
+  forum frcp
+}
+
+/// DUCivR 7-1(a)(4)(C)(iii): a response to a motion under FRCP 65 is
+/// filed within 14 days after service of the motion.
+deadline injunction-response-period: 14.days after InjunctionMotionServed() counted_by frcp6 cite "DUCivR 7-1(a)(4)"
+{
+  forum frcp
+}
+
+/// DUCivR 7-1(a)(4)(C)(iv): a reply may be filed within 14 days after
+/// service of the response.
+deadline injunction-reply-period: 14.days after InjunctionResponseServed() counted_by frcp6 cite "DUCivR 7-1(a)(4)"
+{
+  forum frcp
+}
+
+/// DUCivR 7-1(a)(4)(D)(ii): a response to any other motion is filed within
+/// 14 days after service of the motion.
+deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "DUCivR 7-1(a)(4)"
+{
+  forum frcp
+}
+
+/// DUCivR 7-1(a)(4)(D)(iii): a reply may be filed within 14 days after
+/// service of the response.
+deadline reply-period: 14.days after ResponseServed() counted_by frcp6 cite "DUCivR 7-1(a)(4)"
+{
+  forum frcp
+}
+
+/// DUCivR 7-1(b)(3): if new evidence is offered in a reply, an evidentiary
+/// objection is filed within 7 days after service of the reply. A motion
+/// to strike evidence is improper (DUCivR 7-1(b)(1)).
+deadline evidentiary-objection-period: 7.days after ReplyWithNewEvidenceServed() counted_by frcp6 cite "DUCivR 7-1(b)"
+{
+  forum frcp
+}
+
+/// DUCivR 7-1: if the court has not ruled on the motion, a party may file
+/// a response to a Notice of Supplemental Authority within 7 days after
+/// service of the notice; the court may decide the motion without waiting
+/// for it.
+deadline supplemental-authority-response-period: 7.days after SupplementalAuthorityNoticeServed() counted_by frcp6 cite "DUCivR 7-1"
+{
+  forum frcp
+}
+
+/// DUCivR 7-6(b)(3): any party may file a response to a motion for leave
+/// to file an amicus memorandum, without responding to the substance of
+/// the proposed memorandum, within 7 days after service of the motion.
+deadline amicus-motion-response-period: 7.days after AmicusMotionServed() counted_by frcp6 cite "DUCivR 7-6(b)"
+{
+  forum frcp
+}
+
+/// DUCivR 7-6(b)(4): a party granted leave files the amicus memorandum
+/// within 3 days of the order.
+deadline amicus-memorandum-filing-period: 3.days after AmicusLeaveGranted() counted_by frcp6 cite "DUCivR 7-6(b)"
+{
+  forum frcp
+}
+
+/// DUCivR 7-6(e)(1): an amicus supporting the moving party files its
+/// motion for leave and memorandum no later than 14 days after the moving
+/// party files its motion. The court may modify the deadline for good
+/// cause and no unfair prejudice (DUCivR 7-6(e)(3)).
+deadline amicus-supporting-period: 14.days after SupportedMotionFiled() counted_by frcp6 cite "DUCivR 7-6(e)"
+{
+  forum frcp
+}
+
+/// DUCivR 7-6(e)(2): an amicus opposing the moving party files its motion
+/// for leave and memorandum no later than 7 days after the response to the
+/// motion is filed.
+deadline amicus-opposing-period: 7.days after OpposedResponseFiled() counted_by frcp6 cite "DUCivR 7-6(e)"
+{
+  forum frcp
+}
+
+/// DUCivR 37-1(b)(2)(C): a Short Form Discovery Motion is filed no later
+/// than 45 days after the prompt written communication of DUCivR
+/// 37-1(a)(2) was sent to opposing counsel, unless the court extends the
+/// time for good cause; failure to meet the deadline may result in
+/// automatic denial of the motion.
+deadline short-form-discovery-motion-period: 45.days after DiscoveryDisputeLetterSent() counted_by frcp6 cite "DUCivR 37-1(b)"
+{
+  forum frcp
+}
+
+/// DUCivR 54-1(a)(2)(A)(i): unless a statute provides otherwise or the
+/// court extends it under FRCP 6(b), a motion for attorney's fees is filed
+/// and served within 14 days after entry of a final judgment.
+deadline fee-motion-period: 14.days after FinalJudgmentEntered() counted_by frcp6 cite "DUCivR 54-1(a)"
+{
+  forum frcp
+}
+
+/// DUCivR 54-1(a)(2)(A)(ii): or within 14 days after an appellate remand
+/// that modifies or imposes a fee award.
+deadline fee-motion-on-remand-period: 14.days after FeeAwardRemanded() counted_by frcp6 cite "DUCivR 54-1(a)"
+{
+  forum frcp
+}
+
+/// DUCivR 54-1(b)(2)(A): within 14 days after the entry of final
+/// judgment, the party entitled to recover costs files a bill of costs on
+/// the court's form and a supporting memorandum.
+deadline bill-of-costs-period: 14.days after FinalJudgmentEntered() counted_by frcp6 cite "DUCivR 54-1(b)"
+{
+  forum frcp
+}
+
+/// DUCivR 54-1(b)(2)(C): an objection to the requested costs is filed
+/// within 14 days after service of the bill of costs.
+deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "DUCivR 54-1(b)"
+{
+  forum frcp
+}
+
+/// DUCivR 54-1(b)(2)(D): within 14 days of service of the objection, the
+/// party requesting the costs may file a reply.
+deadline costs-reply-period: 14.days after CostsObjectionServed() counted_by frcp6 cite "DUCivR 54-1(b)"
+{
+  forum frcp
+}
+
+/// DUCivR 54-1(b)(2)(E): a party seeks judicial review of the taxation of
+/// costs by a motion filed within 7 days of the clerk's entry of the bill
+/// of costs.
+deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "DUCivR 54-1(b)"
+{
+  forum frcp
+}
+
+/// DUCivR 72-2(b)(3): if the district judge does not overrule an objection
+/// to a magistrate judge's order within 14 days after it is filed, the
+/// non-objecting party emails a proposed order to chambers. A response is
+/// filed only if the district judge orders one (DUCivR 72-2(b)(1)).
+deadline magistrate-objection-proposed-order-period: 14.days after MagistrateObjectionFiled() counted_by frcp6 cite "DUCivR 72-2(b)"
+{
+  forum frcp
+}
+
+/// DUCivR 72-3(c)(3)(A): a party has 21 days from the date the Clerk's
+/// Office sends it the Consent Form to return it to the Clerk's Office;
+/// the form is returned confidentially, never filed electronically
+/// (DUCivR 72-3(c)(3)(B)).
+deadline consent-form-period: 21.days after ConsentFormSent() counted_by frcp6 cite "DUCivR 72-3(c)"
+{
+  forum frcp
+}
+
+/// DUCivR 81-1(a)(2)(C): in a diversity removal, if the citizenship
+/// information or service dates the Notice of Removal must state are
+/// unknown, the removing party files an amended notice containing them
+/// within 21 days after removal. Pending state court motions are denied
+/// without prejudice on removal and state scheduling deadlines are
+/// vacated (DUCivR 81-1(c)(1)).
+deadline removal-amended-notice-period: 21.days after ActionRemoved() counted_by frcp6 cite "DUCivR 81-1(a)"
+{
+  forum frcp
+}

@@ -1,0 +1,58 @@
+# The United States Navy-Marine Corps Court of Criminal Appeals, under its
+# Rules of Appellate Procedure, effective 1 June 2022, published together
+# with the Joint Rules of Appellate Procedure for Courts of Criminal
+# Appeals (sources/nmcca; the copy sectioned in the pod from the vendored
+# extract), as far as that text states: the Court's jurisdiction (Rule 5),
+# waiver or withdrawal of appellate review (Rule 16), the accused's
+# assignments of error, the Government's answer and the reply (Rule 18 and
+# its Service Court rules), appeals by the United States under Articles 62
+# and 56(d), UCMJ (Rule 20), and reconsideration (Rule 31). The rules are
+# the 2022 edition, so in_force is 1 June 2022; earlier editions are not
+# vendored. The UCMJ (10 U.S.C. ch. 47) and the Rules for Courts-Martial
+# are not vendored, so the statute's own terms and the trial and
+# post-trial procedure stay holes. Time is computed under Rule 15, which
+# also extends a period over a day the Court is closed; lit/core has no
+# counting rule for that, so every period is stated in a note, not encoded
+# as a counted deadline. Review by the Court of Appeals for the Armed
+# Forces is outside this package.
+[package]
+name = "nmcca"
+version = "0.1.0"
+language = 1
+pack_id = "nmcca"
+forum = "nmcca"
+family = "circuit-appellate"
+authority = "FederalRule"
+title = "United States Navy-Marine Corps Court of Criminal Appeals"
+description = "Review in the Navy-Marine Corps Court of Criminal Appeals under its 2022 Rules of Appellate Procedure and the Joint Rules, as far as the vendored text states: automatic review and appeal by the accused, waiver or withdrawal of review, assignments of error, answer and reply, merit submissions, review of Judge Advocate General action under Article 69(d), Government appeals under Articles 62 and 56(d), the Court's decision and reconsideration, with the periods stated in notes. The UCMJ and the Rules for Courts-Martial are not vendored and stay holes."
+in_force = "2022-06-01"
+known_at = "2026-10-28"
+unknown_before = "2022-06-01"
+jurisdiction = "United States Navy-Marine Corps Court of Criminal Appeals"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.nmcca-rules]
+title = "United States Navy-Marine Corps Court of Criminal Appeals Rules of Appellate Procedure, effective 1 June 2022, with the Joint Rules of Appellate Procedure for Courts of Criminal Appeals"
+url = "https://www.jag.navy.mil/documents/4691/2022_NMCCA_Rules_of_App_Proc.pdf"
+path = "sources/nmcca/nmcca-rules-sectioned.txt"
+path_sha256 = "df704eee30133e0f1dd2efa0ed9b907a5c9501a71c7c8017c154c6a5d2bd9d2b"
+sha256 = "2ae7408f6a85bb739894cac79421e85250d2dc35f1c8004399b817182f625b9c"
+as_of = "2022-06-01"
+cite_prefixes = ["NMCCA R."]
+section_heading = "NMCCA R. {n}"
+
+# The UCMJ is not vendored: a 10 U.S.C. cite binds to the title by prefix
+# and stays a hole.
+[sources.usc-10]
+title = "10 U.S.C. (Armed Forces, including the Uniform Code of Military Justice, ch. 47); not vendored"
+url = "https://www.law.cornell.edu/uscode/text/10"
+as_of = "2026-10-26"
+cite_prefixes = ["10 U.S.C."]
+section_heading = "10 U.S.C. § {n}"

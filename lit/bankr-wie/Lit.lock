@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-wie-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:87a0db10fc3ad9cfcd7a1bcbf9523ef0ea645ef4ac95462c64cfd35208b70937"
+semantic = "sha256:af442b63d20a5cd193178fa3457f37d3382672e6fea3bb2a4d270ac9a8d8972e"
+texts = [
+    "wieb-lr sources/bankr-wie/wieb-lbr-2026-01-01-sectioned.txt sha256:fb9b0c005a53ccc8b3f3e96825651136b91a8bf7151027f700ce2abd7197fa52",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-wie"
-version = "0.0.1"
-language = 1
-source = "sha256:5ec3e27558005fbfa74dc7e5bd5d7b02746fcde5cfe1145c5a480fd4781e193b"
-semantic = "sha256:685f7da3607411766fd2db841008c39f64ac387ccab51e5b10f944ea61142a88"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

@@ -16,11 +16,7 @@ import core.frcp6.{ frcp6 }
 // the date set (CVLR 54(a)), and the scheduling conference "approximately
 // ninety (90) days" after the complaint (CVLR 16-1(b)(1)). The negotiated
 // extension caps of CVLR 7(g) (14 days for an opposition, 7 for a reply,
-// one extension per motion) bound an extension, not a filing. The summary
-// judgment concise statement's limit, "no longer than five (5) pages,
-// unless it contains no more than 1500 words" (CVLR 56(e)), is not
-// declared: the cite check reads a word bound only as "1,500 words", which
-// the vendored text does not write. The earlier
+// one extension per motion) bound an extension, not a filing. The earlier
 // D. Guam outline's FRCP flow and its Supreme Court decisions (Twombly,
 // Iqbal, Celotex, Anderson v. Liberty Lobby, Reeves, Catlin, Bowles,
 // Hamer) are FRCP and FRAP authority and belong to lit/frcp and lit/frap;
@@ -41,6 +37,13 @@ limit trial-brief { pages <= 25 cite "D. Guam CVLR 16-1(e)" } cite "D. Guam CVLR
 /// less, inclusive of all exhibits, unless otherwise ordered (CVLR
 /// 37(c)(2)).
 limit discovery-letter-brief { pages <= 5 cite "D. Guam CVLR 37(c)" } cite "D. Guam CVLR 37(c)"
+/// A concise statement supporting or opposing summary judgment: no longer
+/// than five pages, unless it contains no more than 1500 words (CVLR
+/// 56(e)).
+limit concise-statement {
+  pages <= 5 cite "D. Guam CVLR 56(e)"
+  words <= 1_500 cite "D. Guam CVLR 56(e)"
+} cite "D. Guam CVLR 56(e)"
 
 /// A motion is filed (CVLR 7(f)).
 event MotionFiled() paper motion-memorandum

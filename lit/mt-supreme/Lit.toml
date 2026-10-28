@@ -1,0 +1,42 @@
+# A civil appeal from a Montana District Court to the Montana Supreme
+# Court under the Montana Rules of Appellate Procedure as the State Law
+# Library served them on 2026-10-27 (date of last amendment October 12,
+# 2021; sources/mt-supreme). Computation of time is M. R. App. P. 3: the
+# trigger day is excluded, weekends and holidays are counted, no time is
+# added for mailing, and a period ending on a weekend or holiday runs to
+# the next business day. lit/core has no counting rule for it, so the
+# rules' periods are stated in notes, not encoded as counted deadlines.
+# The appealability statute (Mont. Code Ann. § 25-2-103) and 28 U.S.C. §
+# 1257 are not vendored and are not cited. A district court appeal arrives
+# from lit/mt-district.
+[package]
+name = "mt-supreme-court-civil-appeal"
+version = "0.1.0"
+language = 1
+pack_id = "mt-supreme-court-civil-appeal"
+forum = "mt-supreme"
+authority = "StateRule"
+title = "Montana Supreme Court, civil appeals"
+description = "A civil appeal from a Montana District Court to the Montana Supreme Court, through appealability, mediation, record, briefing with its word and page limits, oral argument or submission, decision, rehearing and remittitur, as far as the vendored Montana Rules of Appellate Procedure state."
+in_force = "2021-10-12"
+known_at = "2026-10-28"
+unknown_before = "2021-10-12"
+jurisdiction = "Montana Supreme Court (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.mt-app]
+title = "Montana Rules of Appellate Procedure (State Law Library of Montana; date of last amendment October 12, 2021; AF 07-0016)"
+url = "https://courts.mt.gov/external/rules/mtr_app_pro.pdf"
+path = "sources/mt-supreme/mrap-sectioned.txt"
+path_sha256 = "8565e044af165525fbe7aa6f34d39bb48e12c22c22b681d36d356e8a1d31e217"
+sha256 = "e1e2f5bc2dcd9b5f6a733719b8a43f3f8be70b330372e34eb9498f22ecbbaea8"
+as_of = "2021-10-12"
+cite_prefixes = ["M. R. App. P."]
+section_heading = "Rule {n}"

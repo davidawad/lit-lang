@@ -84,7 +84,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | Minnesota | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/minnesota/state-appellate`, `outlines/eighth-circuit/minnesota/state-civil` |
 | Mississippi | state | outline | 0 | 0 | 0 | 0 | `outlines/fifth-circuit/mississippi/state-appellate`, `outlines/fifth-circuit/mississippi/state-civil` |
 | Missouri | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/missouri/state-appellate`, `outlines/eighth-circuit/missouri/state-civil` |
-| Montana | state | promoted | 0 | 0 | 0 | 0 | `lit/mt-district` |
+| Montana | state | promoted | 0 | 0 | 0 | 0 | `lit/mt-district`, `lit/mt-supreme` |
 | Nebraska | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/nebraska/state-appellate`, `outlines/eighth-circuit/nebraska/state-civil` |
 | Nevada | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/nevada/state-appellate`, `outlines/ninth-circuit/nevada/state-civil` |
 | New Hampshire | state | outline | 0 | 0 | 0 | 0 | `outlines/first-circuit/new-hampshire/state-appellate`, `outlines/first-circuit/new-hampshire/state-civil` |

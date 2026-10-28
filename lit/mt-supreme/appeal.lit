@@ -1,0 +1,126 @@
+module mt-supreme-court-civil-appeal.appeal
+
+/// A principal brief: at most 10,000 words if proportionately spaced, or
+/// 30 pages in a monospaced typeface, excluding the tables, certificates
+/// and statutory appendix (M. R. App. P. 11(4)(a), (b), (d)).
+limit principal-brief {
+  words <= 10_000 cite "M. R. App. P. 11(4)"
+  pages <= 30 cite "M. R. App. P. 11(4)"
+} cite "M. R. App. P. 11(4)"
+
+/// A reply brief, including one that also answers a cross-appellant's
+/// principal brief: at most 5,000 words, or 14 pages monospaced (M. R. App.
+/// P. 11(4)(a), (b)).
+limit reply-brief {
+  words <= 5_000 cite "M. R. App. P. 11(4)"
+  pages <= 14 cite "M. R. App. P. 11(4)"
+} cite "M. R. App. P. 11(4)"
+
+/// A motion or a response to it, with supporting argument and authority:
+/// at most 1,250 words, or 5 pages monospaced; no reply is filed (M. R.
+/// App. P. 16(3)).
+limit motion-paper {
+  words <= 1_250 cite "M. R. App. P. 16(3)"
+  pages <= 5 cite "M. R. App. P. 16(3)"
+} cite "M. R. App. P. 16(3)"
+
+/// A petition for rehearing and objections to it: at most 2,500 words, or
+/// 10 pages monospaced (M. R. App. P. 20(3)).
+limit rehearing-paper {
+  words <= 2_500 cite "M. R. App. P. 20(3)"
+  pages <= 10 cite "M. R. App. P. 20(3)"
+} cite "M. R. App. P. 20(3)"
+
+/// The appellant's or appellee's principal brief is served and filed (M.
+/// R. App. P. 13(1)).
+event PrincipalBriefServed() paper principal-brief
+/// The appellant's reply brief is served and filed (M. R. App. P. 13(1)).
+event ReplyBriefServed() paper reply-brief
+/// A motion or response is filed (M. R. App. P. 16).
+event MotionFiled() paper motion-paper
+/// A petition for rehearing or objections to it is filed (M. R. App. P.
+/// 20).
+event RehearingPaperFiled() paper rehearing-paper
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "M. R. App. P. 4(5)"
+{
+  note "An appeal is taken by filing a notice of appeal with the clerk of the supreme court, with the statutory filing fee or an affidavit to proceed without it, and serving a copy on the district court clerk and all parties (M. R. App. P. 4(2)(a)). In civil cases the notice is filed within 30 days from entry of the judgment or order, or 60 days where the United States, the State or a subdivision, officer or agency is a party, running from service of notice of entry where M. R. Civ. P. 77(d) requires it; a cross-appeal follows within 15 days after the first notice or the time otherwise prescribed, whichever expires last; and a timely motion under M. R. Civ. P. 50(b), 52(b), 59 or 60(b) restarts the time from its disposition or deemed denial (M. R. App. P. 4(5)(a)). A timely notice is required to invoke the court's jurisdiction, save an out-of-time appeal (M. R. App. P. 4(2)(c)). Periods are stated, not counted: the trigger day is excluded, weekends and holidays are included, no time is added for mailing, and a period ending on a weekend or holiday runs to the next business day (M. R. App. P. 3). The filing fee is set by statute, not stated in the rules."
+  edge-notice-filed-appealability "Timely notice" -> appealability {
+    authority cite "M. R. App. P. 4(5)"
+  }
+  edge-notice-filed-untimely "Late notice; no out-of-time appeal" -> dismissed-untimely {
+    authority cite "M. R. App. P. 4(2)"
+  }
+}
+
+terminal dismissed-untimely: "Appeal fails: notice untimely" outcome [loss, dismissal] cite "M. R. App. P. 4(6)"
+{
+  note "Only in the infrequent harsh case, under extraordinary circumstances amounting to a gross miscarriage of justice, may the supreme court grant an out-of-time appeal on a verified petition; mistake, inadvertence and excusable neglect are not extraordinary circumstances (M. R. App. P. 4(6))."
+}
+
+decision appealability: "Appealable final judgment or order?" by court cite "M. R. App. P. 6"
+{
+  note "A party may appeal from a final judgment and from the final orders listed in Rule 6(3) and (4), and the court reviews all previous orders and rulings excepted or objected to that led to the judgment (M. R. App. P. 6(1)). A final judgment includes any necessary determination of costs, attorney fees or sanctions (M. R. App. P. 4(1)(a)). Among the orders not appealable are an order adjudicating fewer than all claims as to all parties, the denial of summary judgment or of a motion to dismiss, partial summary judgment and sanctions orders, unless the district court certifies the judgment under M. R. Civ. P. 54(b) with the factors it relied on (M. R. App. P. 6(5), (6)). The outline's cite of Mont. Code Ann. § 25-2-103 is replaced: the statute is not vendored."
+  edge-appealability-dismissed "Not appealable" -> dismissed-jurisdiction {
+    authority cite "M. R. App. P. 6(5)"
+  }
+  edge-appealability-mediation "Appealable" -> mediation-and-record {
+    authority cite "M. R. App. P. 6(1)"
+  }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: no appealable judgment or order" outcome [loss, dismissal] cite "M. R. App. P. 6(5)"
+
+state mediation-and-record: "Mediation and record" by applicant cite "M. R. App. P. 9"
+{
+  note "Appeals in actions seeking money damages are among those subject to mandatory appellate mediation, which the parties and mediator complete within 75 days; by stipulation the rules' other times may be held in abeyance until the earlier of the mediator's report or the end of the 75 days (M. R. App. P. 7(2)(c), (3)). The appellant orders the transcript in writing on the day the notice of appeal is filed, and the appellee orders additional transcripts within 11 days of the later notice (M. R. App. P. 8(3)). The record, with any transcript, is transmitted to the supreme court within 40 days after the notice of appeal is filed unless the time is changed by order or held in abeyance (M. R. App. P. 9(1))."
+  edge-mediation-and-record-briefing "Record filed" -> briefing {
+    authority cite "M. R. App. P. 13(1)"
+  }
+}
+
+state briefing: "Briefing" by applicant cite "M. R. App. P. 13(1)"
+{
+  note "The appellant serves and files a brief within 30 days after the record is filed; the appellee an answer brief within 30 days after service of the appellant's; the appellant may reply within 14 days after service of the appellee's, or with a cross-appeal files a combined reply and answer within 30 days after service of the cross-appellant's brief (M. R. App. P. 13(1)). A principal brief is limited to 10,000 words (30 pages monospaced) and a reply to 5,000 words (14 pages) (M. R. App. P. 11(4)). One 30-day extension to file a brief may be granted on motion (M. R. App. P. 26)."
+  edge-briefing-argument "Briefing complete" -> argument { authority cite "M. R. App. P. 17(1)" }
+}
+
+decision argument: "Oral argument or submission on the briefs" by court cite "M. R. App. P. 17(1)"
+{
+  note "Oral argument is allowed only on the court's order, which schedules it and sets each party's time; every case not designated for argument is decided on the briefs and the record (M. R. App. P. 17(1)-(3))."
+  edge-argument-decided "Argued or submitted" -> decision-issued {
+    authority cite "M. R. App. P. 19(1)"
+  }
+}
+
+decision decision-issued: "Decision: affirm, reverse or remand" by court cite "M. R. App. P. 19(1)"
+{
+  note "The court affirms, reverses or remands; a dismissal of the appeal is with prejudice and is the court's final judgment unless otherwise ordered (M. R. App. P. 19(1), (2)). Costs on appeal go to the prevailing party, and the court may sanction a frivolous or vexatious appeal (M. R. App. P. 19(3), (5)). The clerk promptly notifies each party of the decision (M. R. App. P. 21(1))."
+  edge-decision-issued-rehearing "Petition for rehearing filed" -> rehearing {
+    authority cite "M. R. App. P. 20(2)"
+  }
+  edge-decision-issued-remittitur "No petition: remittitur issues" -> remittitur-issued {
+    authority cite "M. R. App. P. 21(2)"
+  }
+}
+
+decision rehearing: "Rehearing decided" by court cite "M. R. App. P. 20(1)"
+{
+  note "A petition for rehearing is filed and served within 15 days after the decision is filed unless the court changes the time; objections follow within 15 days after the petition; no reply is accepted; an extension, sought within the 15 days, is granted only on unusual merit and never beyond 15 days (M. R. App. P. 20(2)). It lies only where the court overlooked a material fact or a decisive question, or its decision conflicts with a statute or controlling decision it did not address (M. R. App. P. 20(1)(a)). The petition and objections are limited to 2,500 words (10 pages monospaced) (M. R. App. P. 20(3))."
+  edge-rehearing-denied "Denied: remittitur issues" -> remittitur-issued {
+    authority cite "M. R. App. P. 21(4)"
+  }
+  edge-rehearing-granted "Granted" -> rehearing-granted { authority cite "M. R. App. P. 20(1)" }
+}
+
+terminal rehearing-granted: "Rehearing granted: the decision is modified or reheard" outcome [appeal] cite "M. R. App. P. 21(3)"
+{
+  note "If the court modifies its decision on rehearing, remittitur issues immediately when the time to petition for rehearing of the modified decision expires (M. R. App. P. 21(3))."
+}
+
+terminal remittitur-issued: "Remittitur issued: the case returns to the district court" outcome [final] cite "M. R. App. P. 21(2)"
+{
+  note "Remittitur issues when the time to petition for rehearing expires, or immediately if the court so directs, or on denial of a petition, certified by the clerk of the supreme court to the clerk of the district court (M. R. App. P. 21(2), (4)). Review by the United States Supreme Court under 28 U.S.C. § 1257 is not modeled: the statute is not vendored."
+}

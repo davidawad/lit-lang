@@ -1,0 +1,120 @@
+module wyd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The District of Wyoming's own criminal periods, counted under the
+// criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here.
+//
+// Periods that are FRCrimP or Speedy Trial Act periods stay in lit/frcrimp
+// and are only named here: the Probation Office discloses the presentence
+// report no later than 35 days before the sentencing hearing, unless the
+// defendant waives the minimum period, and the report is deemed disclosed
+// when filed in CM/ECF (D. Wyo. L.Cr.R. 32.1(d); FRCrimP 32(e)(2));
+// objections are filed in CM/ECF within 14 days after its filing (D. Wyo.
+// L.Cr.R. 32.1(d); FRCrimP 32(f)(1)); the probation officer submits the
+// report and addendum to the judge not later than 7 days before the
+// hearing (D. Wyo. L.Cr.R. 32.1(g); FRCrimP 32(g)); a party appeals a
+// magistrate judge's judgment by a notice of appeal within 14 days after
+// its entry (D. Wyo. L.Cr.R. 58.1; FRCrimP 58(g)(2)(B)); and at arraignment
+// counsel and the Court strive for consensus on the status of the 70- and
+// 90-day speedy trial periods (D. Wyo. L.Cr.R. 10; 18 U.S.C. §§ 3161,
+// 3164).
+//
+// Other conditions stay in notes: the sentencing hearing is set no less
+// than 70 days after the verdict or change of plea unless the Court orders
+// otherwise (D. Wyo. L.Cr.R. 32.1(a)), a floor on the setting; counsel's
+// unavailability for the presentence interview for more than five business
+// days after notice is "undue delay" (D. Wyo. L.Cr.R. 32.1(c)); and,
+// absent prior approval, sentencing memoranda and related materials are
+// filed not less than three business days before the sentencing hearing
+// (D. Wyo. L.Cr.R. 32.1(l)). Business days are not lowered by the engine.
+//
+// The earlier D. Wyo. criminal outline's FRCrimP flow and its decisions
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// A victim is served with notice of a subpoena that expressly seeks the
+/// victim's personal or confidential information (D. Wyo. L.Cr.R.
+/// 17.1(d)).
+event VictimSubpoenaNoticeServed()
+/// The date set for trial (D. Wyo. L.Cr.R. 30.1).
+event TrialScheduled()
+/// The presentence report is disclosed by filing in CM/ECF (D. Wyo.
+/// L.Cr.R. 32.1(d), (e)).
+event PsrFiled()
+/// The case terminates in this Court (D. Wyo. L.Cr.R. 44.1(e)).
+event CaseTerminated()
+/// A motion is filed (D. Wyo. L.Cr.R. 47.1(a)).
+event MotionFiled()
+/// The Clerk notifies the admitting party that its exhibits are ready for
+/// retrieval (D. Wyo. L.Cr.R. 55.1(b)).
+event ExhibitRetrievalNoticed()
+
+/// D. Wyo. L.Cr.R. 17.1(d): a victim may file a sealed motion to quash or
+/// modify, or otherwise object to, the subpoena within 14 days after
+/// service of the notice; if none is filed, the movant files a sealed ex
+/// parte certificate of compliance.
+deadline victim-subpoena-objection: 14.days after VictimSubpoenaNoticeServed() counted_by frcrimp45 cite "D. Wyo. L.Cr.R. 17.1(d)"
+{
+  forum frcrimp
+}
+
+/// D. Wyo. L.Cr.R. 30.1: unless otherwise ordered, the parties file
+/// proposed voir dire, jury instructions and verdict forms seven calendar
+/// days before trial.
+deadline voir-dire-instructions-verdict-forms: 7.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Wyo. L.Cr.R. 30.1"
+{
+  forum frcrimp
+}
+
+/// D. Wyo. L.Cr.R. 32.1(b): under 18 U.S.C. § 3664(d)(1), the attorney for
+/// the government gives the probation officer a listing of the amounts
+/// subject to restitution not later than 60 days before the date initially
+/// set for sentencing.
+deadline restitution-listing: 60.days before SentencingScheduled() counted_by frcrimp45 cite "D. Wyo. L.Cr.R. 32.1(b)"
+{
+  forum frcrimp
+}
+
+/// D. Wyo. L.Cr.R. 32.1(e): if counsel believe the material in the
+/// presentence report is accurate, they file a statement to that effect in
+/// CM/ECF within 14 days after its disclosure.
+deadline psr-accuracy-statement: 14.days after PsrFiled() counted_by frcrimp45 cite "D. Wyo. L.Cr.R. 32.1(e)"
+{
+  forum frcrimp
+}
+
+/// D. Wyo. L.Cr.R. 44.1(e)(1): CJA Form 20 is submitted to the Clerk's
+/// office for payment no later than 45 days from the termination of the
+/// case in this Court.
+deadline cja-form-20: 45.days after CaseTerminated() counted_by frcrimp45 cite "D. Wyo. L.Cr.R. 44.1(e)"
+{
+  forum frcrimp
+}
+
+/// D. Wyo. L.Cr.R. 47.1(a): unless otherwise ordered, a party opposing a
+/// motion files a response within 14 calendar days after the filing of the
+/// motion.
+deadline response-period: 14.days after MotionFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Wyo. L.Cr.R. 47.1(a)"
+{
+  forum frcrimp
+}
+
+/// D. Wyo. L.Cr.R. 55.1(b): exhibits are kept until the time to appeal has
+/// expired or any appeal has concluded; if counsel has not retrieved them
+/// fourteen days after the Clerk's notice, the Clerk's office destroys
+/// them.
+deadline exhibit-retrieval: 14.days after ExhibitRetrievalNoticed() counted_by frcrimp45 cite "D. Wyo. L.Cr.R. 55.1(b)"
+{
+  forum frcrimp
+}

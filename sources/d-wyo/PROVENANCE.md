@@ -22,3 +22,9 @@
 - Source: as the extract, https://www.wyd.uscourts.gov/sites/wyd/files/local_rules/2022%20Civil%20Local%20Rules%20-%20FINAL.pdf, retrieved 2026-10-27.
 - Edition: as the extract, Local Civil Rules, January 2022.
 - Sectioned sha256 7961602f05ecd83efb529a3b713b2386b54dc8cbe9f45ebfb6bc905b2b7b1036 (the `path_sha256` pinned by `lit/wyd/Lit.toml`).
+
+### `d-wyo/dwyo-local-criminal-rules-2026-08-01-sectioned.txt` — D. Wyo. Local Criminal Rules, sectioned
+
+- Derived in the pod (lg-gddt.24) from `d-wyo/dwyo-local-criminal-rules-2026-08-01.txt` (extract sha256 b29eaa75f2618c3ca1aab8268a27ff961593ed58353432ab1f5ba56b969b2b8b); nothing fetched. In the body (after the table of contents), one marker line `## L.Cr.R. <n>` is inserted before each rule's own indented heading line `RULE <n> <TITLE>` (or `Rule <n> <TITLE>`), L.Cr.R. 1.1 through 61.4, 28 rules; the page footers (`Rule <n> <page> August 1, 2026`) carry no marker. Rule text was not edited: deleting the marker lines (each `## L.Cr.R. ` line with its newline) restores the extract byte for byte.
+- Edition: as the extract, "Current Revision: August 1, 2026".
+- Sectioned sha256 2cfb2515449c4416ac9f97b561466bb3eadf0d66a3a47a8d81f9a8e2016683dd (the `path_sha256` pinned by `lit/wyd-criminal/Lit.toml`).

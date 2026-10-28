@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "wyd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:b535b2af000f3d6e2c2d348d5736d8e6e771b0ea752f9de027e8702421d9c227"
+semantic = "sha256:de524542a5ae7fa7492d837900cd62c46f38fe263f5b77ef2abf492fc0778033"
+texts = [
+    "wyd-lcrr sources/d-wyo/dwyo-local-criminal-rules-2026-08-01-sectioned.txt sha256:2cfb2515449c4416ac9f97b561466bb3eadf0d66a3a47a8d81f9a8e2016683dd",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

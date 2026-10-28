@@ -1,0 +1,51 @@
+# The U.S. District Court for the District of Wyoming's Local Criminal
+# Rules (L.Cr.R.) as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods the local criminal
+# rules themselves state and re-encodes no FRCrimP, Speedy Trial Act or
+# FRAP 4(b) period (one source of truth: lit/frcrimp). Each period is
+# counted under FRCrimP 45(a), which governs "any local rule", so each
+# deadline names `forum frcrimp`. The rules are the current revision of
+# August 1, 2026 (sources/d-wyo), the edition the court serves as current,
+# so in_force is that date; earlier editions are not vendored, so a query
+# before it is a hole in the corpus. An appeal goes to the Tenth Circuit
+# under lit/frcrimp's FRAP 4(b) period and lit/ca10.
+[package]
+name = "wyd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "wyd-criminal-local-rules"
+forum = "wyd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of Wyoming: Local Criminal Rules"
+description = "The U.S. District Court for the District of Wyoming's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): a victim's objection to a subpoena, proposed voir dire, instructions and verdict forms, the government's restitution listing, the statement that the presentence report is accurate, the CJA Form 20, the motion response period, and the retrieval of exhibits."
+in_force = "2026-08-01"
+known_at = "2026-10-28"
+unknown_before = "2026-08-01"
+jurisdiction = "U.S. District Court for the District of Wyoming (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "wyd-lcrr"
+issuer = "U.S. District Court for the District of Wyoming"
+date = "2026-08-01"
+designation = "Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.wyd-lcrr]
+title = "Local Criminal Rules of the United States District Court for the District of Wyoming (current revision August 1, 2026)"
+url = "https://www.wyd.uscourts.gov/sites/wyd/files/localrules-cr.pdf"
+path = "sources/d-wyo/dwyo-local-criminal-rules-2026-08-01-sectioned.txt"
+path_sha256 = "2cfb2515449c4416ac9f97b561466bb3eadf0d66a3a47a8d81f9a8e2016683dd"
+sha256 = "622a6585c60e644213c9013460c571669794b4c097325764177c23d0b121533b"
+as_of = "2026-08-01"
+cite_prefixes = ["D. Wyo. L.Cr.R."]
+section_heading = "L.Cr.R. {n}"

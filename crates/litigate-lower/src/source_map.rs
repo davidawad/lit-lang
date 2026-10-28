@@ -214,15 +214,21 @@ pub struct GuardOpTrace {
     pub span: Option<Span>,
 }
 
+/// A heading template or shorthand family, the source id bound to it, its
+/// vendored path and the prefixes it is cited with.
+type Binding = (Family, String, Option<String>, Vec<String>);
+
 /// Resolves citations under one pack's citation syntax and source
 /// bindings against an optional vendored corpus.
 pub struct Citations<'c> {
     syntax: CiteSyntax,
-    /// Heading template or shorthand code/title to bound source id and
-    /// its vendored path. Several bindings may share one template (19
-    /// C.F.R. parts 201 and 210 in separate files); the one whose file
+    /// Heading template or shorthand code/title to bound source id, its
+    /// vendored path and the prefixes it is cited with. Several bindings
+    /// may share one template (19 C.F.R. parts 201 and 210 in separate
+    /// files; two rule bodies both headed `Rule {n}`); a citation goes to
+    /// those written with its prefix, and of them the one whose file
     /// holds the heading wins.
-    bound: Vec<(Family, String, Option<String>)>,
+    bound: Vec<Binding>,
     /// Source id to its binding's expression date, vendored path, and how
     /// that file checks against its pin.
     pins: BTreeMap<String, Bound>,
@@ -255,7 +261,16 @@ impl<'c> Citations<'c> {
                 .find(|s| s.id == id)
                 .and_then(|s| s.path.clone())
         };
-        let mut shared = Vec::new();
+        // A pack rule's own prefixes, before any source's are merged in.
+        let mut bound: Vec<Binding> = syntax
+            .rules
+            .iter()
+            .filter_map(|r| {
+                let id = r.source.clone()?;
+                let p = path(&id);
+                Some((Family::Rules(r.heading.clone()), id, p, r.prefixes.clone()))
+            })
+            .collect();
         for s in sources.iter().filter(|s| !s.cite_prefixes.is_empty()) {
             let heading = s
                 .section_heading
@@ -269,20 +284,20 @@ impl<'c> Citations<'c> {
                         rule.prefixes.push(p.clone());
                     }
                 }
-                shared.push((Family::Rules(heading), s.id.clone(), s.path.clone()));
             } else {
                 syntax.rules.push(CiteRuleForm {
                     prefixes: s.cite_prefixes.clone(),
-                    heading,
+                    heading: heading.clone(),
                     source: Some(s.id.clone()),
                 });
             }
+            bound.push((
+                Family::Rules(heading),
+                s.id.clone(),
+                s.path.clone(),
+                s.cite_prefixes.clone(),
+            ));
         }
-        let rules = syntax.rules.iter().filter_map(|r| {
-            let id = r.source.clone()?;
-            let p = path(&id);
-            Some((Family::Rules(r.heading.clone()), id, p))
-        });
         let shorthands = syntax.shorthands.iter().filter_map(|s| {
             let family = match s.code {
                 CiteCode::Usc => Family::Usc(s.title),
@@ -290,9 +305,9 @@ impl<'c> Citations<'c> {
             };
             let id = s.source.clone()?;
             let p = path(&id);
-            Some((family, id, p))
+            Some((family, id, p, Vec::new()))
         });
-        let bound = rules.chain(shorthands).chain(shared).collect();
+        bound.extend(shorthands);
         let mut hashes = BTreeMap::new();
         let mut hash = |path: &String| -> Option<String> {
             let text = corpus?.files.get(path)?;
@@ -349,15 +364,25 @@ impl<'c> Citations<'c> {
     #[must_use]
     pub fn map(&self, text: Option<&String>) -> Option<CiteMap> {
         let text = text?;
-        let sections = parse_cite_string(text, &self.grammar())
+        let grammar = self.grammar();
+        // The prefix the last prefixed citation was written with, which a
+        // bare trailing number (`MLBRA 1, 2`) carries forward.
+        let mut written: Option<&str> = None;
+        let sections = parse_cite_string(text, &grammar)
             .iter()
             .filter_map(|c| {
                 let heading = c.heading()?;
-                let candidates: Vec<_> = self
-                    .bound
-                    .iter()
-                    .filter(|(f, _, _)| *f == c.family)
-                    .collect();
+                if let Some(prefix) = grammar.rule_prefix(&c.raw) {
+                    written = Some(prefix);
+                }
+                let of_family = || self.bound.iter().filter(|(f, ..)| *f == c.family);
+                let by_prefix = |(_, _, _, ps): &&Binding| {
+                    written.is_some_and(|w| ps.iter().any(|p| p.eq_ignore_ascii_case(w)))
+                };
+                let mut candidates: Vec<_> = of_family().filter(by_prefix).collect();
+                if candidates.is_empty() {
+                    candidates = of_family().collect();
+                }
                 let holds = |p: &Option<String>| {
                     self.corpus.is_some_and(|corpus| {
                         corpus
@@ -368,9 +393,9 @@ impl<'c> Citations<'c> {
                 };
                 let source = candidates
                     .iter()
-                    .find(|(_, _, p)| holds(p))
+                    .find(|(_, _, p, _)| holds(p))
                     .or_else(|| candidates.first())
-                    .map(|(_, s, _)| s.clone());
+                    .map(|(_, s, ..)| s.clone());
                 Some(self.locate(heading, c.subsections.clone(), source))
             })
             .collect();

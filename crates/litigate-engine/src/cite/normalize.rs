@@ -120,6 +120,16 @@ impl<'a> CiteGrammar<'a> {
         self
     }
 
+    /// The rule prefix `piece` starts with, the longest when several do:
+    /// the one a citation of it was parsed under.
+    #[must_use]
+    pub fn rule_prefix(&self, piece: &str) -> Option<&'a str> {
+        self.rules
+            .iter()
+            .find(|&&(prefix, _)| prefix_byte_len(piece, prefix).is_some())
+            .map(|&(prefix, _)| prefix)
+    }
+
     /// The rule prefix `piece` is written with and the text after it,
     /// when `piece` continues one of this grammar's rule prefixes without
     /// a word break (`SDCL 15-6-4(` then `z)`): text there is the

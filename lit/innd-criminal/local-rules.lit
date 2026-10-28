@@ -1,0 +1,68 @@
+module innd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Northern District of Indiana's own criminal periods, counted under
+// the criminal rules (FRCrimP 45(a) governs "any local rule"). The local
+// criminal rules govern all criminal cases, and the local civil rules
+// govern them too except where inconsistent with the criminal rules
+// (N.D. Ind. L. Cr. R. 1-1(a), (b)); those civil periods are the civil
+// rules' own and stay in lit/innd. The court may suspend or modify any
+// local criminal rule in a particular case in the interest of justice
+// (L. Cr. R. 1-1(c)). No trigger carries a service method: FRCrimP
+// 45(c)'s three added days follow the manner of service, which is not
+// modeled here.
+//
+// Conditions that are not deadlines from an event stay in notes: the
+// court may issue a standard order at arraignment setting the trial date,
+// discovery and the deadlines for filing and responding to pretrial
+// motions (L. Cr. R. 16-1), not vendored; the court will ordinarily rule
+// on a motion to quash or limit a grand-jury subpoena before the
+// appearance or production date (L. Cr. R. 6-1(d)(3)); a continuance is
+// granted only on an ends-of-justice finding or another reason it will not
+// violate the Speedy Trial Act, with a proposed entry (L. Cr. R. 47-1);
+// sureties (L. Cr. R. 46-1), jury instructions (L. Cr. R. 30-1), related
+// cases (L. Cr. R. 13-1), special orders and release of information
+// (L. Cr. R. 53-1, 53-2) and forfeiture of collateral (L. Cr. R. 58-1)
+// set no period. The 28-day reply after an answer brief in a 28 U.S.C.
+// § 2254 or § 2255 case (L. Cr. R. 47-2) and the notices in § 2254
+// death-penalty cases (L. Cr. R. 47-3) belong to federal habeas
+// (lit/habeas), not to the criminal case, and are not encoded here.
+//
+// The earlier N.D. Ind. criminal outline's FRCrimP flow and its decisions
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// The appearance or production date of a grand-jury subpoena (N.D. Ind.
+/// L. Cr. R. 6-1(d)).
+event GrandJurySubpoenaReturnDate()
+/// The date set for trial (N.D. Ind. L. Cr. R. 12-1).
+event TrialDateSet()
+
+/// N.D. Ind. L. Cr. R. 6-1(d)(2): absent good cause, a motion to quash or
+/// to limit a grand-jury subpoena is filed and served on the United States
+/// at least seven days before the appearance or production date; a
+/// pre-indictment challenge is in writing, filed with the clerk and states
+/// the grand-jury number, the date of service and the return date (L. Cr.
+/// R. 6-1(d)(1)).
+deadline grand-jury-subpoena-challenge: 7.days before GrandJurySubpoenaReturnDate() counted_by frcrimp45 cite "N.D. Ind. L. Cr. R. 6-1(d)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ind. L. Cr. R. 12-1(a): a party using the pretrial authentication
+/// procedure serves on opposing parties, at least 30 days before trial, a
+/// copy of each exhibit and a statement of intent to authenticate it under
+/// Fed. R. Evid. 901 or to lay a Fed. R. Evid. 803(6) foundation.
+deadline authentication-notice: 30.days before TrialDateSet() counted_by frcrimp45 cite "N.D. Ind. L. Cr. R. 12-1(a)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ind. L. Cr. R. 12-1(b): if the subdivision (a) procedure is used,
+/// an objection to an exhibit's authenticity or foundation is waived
+/// unless an opposing party files it at least 14 days before trial.
+deadline authentication-objection: 14.days before TrialDateSet() counted_by frcrimp45 cite "N.D. Ind. L. Cr. R. 12-1(b)"
+{
+  forum frcrimp
+}

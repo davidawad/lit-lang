@@ -1,0 +1,54 @@
+# The U.S. District Court for the Northern District of Indiana's local
+# criminal rules (N.D. Ind. L. Cr. R.) as a local-rule layer over
+# lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it declares only the
+# periods the local criminal rules themselves state and re-encodes no
+# FRCrimP, Speedy Trial Act or FRAP 4(b) period (one source of truth:
+# lit/frcrimp). Each period is counted under FRCrimP 45(a), which governs
+# "any local rule", so each deadline names `forum frcrimp`. The rules are
+# the edition the court serves as current (effective February 25, 2022;
+# the court's page lists no later adopted amendment; sources/innd), so
+# in_force is that date; earlier editions are not vendored, so a query
+# before it is a hole in the corpus. The court's Speedy Trial Act plan (18
+# U.S.C. § 3165) and its standard orders under L. Cr. R. 16-1 are not
+# vendored. An appeal goes to the Seventh Circuit under lit/frcrimp's FRAP
+# 4(b) period and lit/ca7.
+[package]
+name = "innd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "innd-criminal-local-rules"
+forum = "innd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Northern District of Indiana: Local Criminal Rules"
+description = "The U.S. District Court for the Northern District of Indiana's local criminal rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the motion to quash or limit a grand-jury subpoena, and the pretrial authentication of exhibits and objections to it."
+in_force = "2022-02-25"
+known_at = "2026-10-28"
+unknown_before = "2022-02-25"
+jurisdiction = "U.S. District Court for the Northern District of Indiana (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "innd-lcrr"
+issuer = "U.S. District Court for the Northern District of Indiana"
+date = "2022-02-25"
+designation = "Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.innd-lcrr]
+title = "Local Rules of the United States District Court for the Northern District of Indiana (effective February 25, 2022): Local Criminal Rules"
+url = "https://www.innd.uscourts.gov/sites/innd/files/CurrentLocalRules.pdf"
+path = "sources/innd/innd-criminal-rules-sectioned.txt"
+path_sha256 = "894b3c2b4570e93f4a2ff644af4a67225ffa56bd953ca88433b52f13218616cd"
+sha256 = "380ac564b7712f1836d4d0b8a3b89fae0e7de750abb0658d524212dfb016e097"
+as_of = "2022-02-25"
+cite_prefixes = ["N.D. Ind. L. Cr. R."]
+section_heading = "N.D. Ind. L. Cr. R. {n}"

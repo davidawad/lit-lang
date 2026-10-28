@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "innd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:722731b55ec1488c34efb564936836426f0104903d1878c357ec6aece33366cf"
+semantic = "sha256:0c4e8f736641a9f8135c51ca94267d9f5c36cc8ce3dae4b4fb7c686904c3d5cb"
+texts = [
+    "innd-lcrr sources/innd/innd-criminal-rules-sectioned.txt sha256:894b3c2b4570e93f4a2ff644af4a67225ffa56bd953ca88433b52f13218616cd",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

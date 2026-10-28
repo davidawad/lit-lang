@@ -360,7 +360,7 @@ empty_sections() {
       return 0
     }
     END {
-      if (norig < 2 || norig != nsec) exit
+      if (norig == 0 || norig != nsec) exit
       for (k = 1; k <= nsec; k++) {
         if (body[k]) continue
         base = orig[k]; sub(/.*\//, "", base)
@@ -371,9 +371,77 @@ empty_sections() {
   ' <(printf '%s\n' "$2") "$1"
 }
 
+# Count visible words in an HTML or JSON-wrapped HTML original/extract. This
+# deliberately removes style/script blocks before stripping tags; a broken
+# html2txt run that leaves only a heading must not pass merely because it is
+# nonempty. JSON escapes are separators, so words in a served Html string are
+# still counted.
+visible_words() {
+  LC_ALL=C awk '
+    { s = s " " $0 }
+    END {
+      low = tolower(s); out = ""
+      while (1) {
+        at = 0; close_ = ""
+        for (i = 1; i <= 2; i++) {
+          tag = i == 1 ? "script" : "style"
+          p = index(low, "<" tag)
+          if (p && (!at || p < at)) { at = p; close_ = "</" tag }
+        }
+        if (!at) break
+        out = out substr(low, 1, at - 1)
+        low = substr(low, at + 1)
+        e = index(low, close_)
+        if (!e) { low = ""; break }
+        low = substr(low, e + length(close_))
+        e = index(low, ">")
+        low = e ? substr(low, e + 1) : ""
+      }
+      out = out low
+      gsub(/<[^>]*>/, " ", out)
+      gsub(/\\[nrt\"\\]/, " ", out)
+      n = split(out, words, /[^[:alnum:]]+/)
+      count = 0
+      for (i = 1; i <= n; i++) if (length(words[i]) > 1) count++
+      print count
+    }
+  ' "$1"
+}
+
+# Extract -> one line for any page section that retains under 10% of the
+# visible words in its corresponding HTML/API original (minimum 30 words in
+# the source to avoid noise from short records). PDF originals have no
+# comparable text here and are handled by the empty-section check.
+truncated_sections() {
+  local extract="$1" entry="$2" i=0 section orig words source_words
+  local -a originals=() headings=() counts=()
+  while IFS= read -r orig; do originals+=("$orig"); done < <(sed -n 's/^- Original: `\([^`]*\)`.*/\1/p' <<<"$entry")
+  [ "${#originals[@]}" -ge 1 ] || return 0
+  while IFS=$'\t' read -r h count; do headings+=("$h"); counts+=("$count"); done < <(
+    awk '
+      function words(s, n,a,i,c) { gsub(/<[^>]*>/," ",s); n=split(s,a,/[^[:alnum:]]+/); c=0; for(i=1;i<=n;i++) if(length(a[i])>1)c++; return c }
+      /^## / { if(n) print h "\t" words(body); h=substr($0,4); body=""; n=1; next }
+      n { body=body " " $0 }
+      END { if(n) print h "\t" words(body) }
+    ' "$extract"
+  )
+  [ "${#headings[@]}" -eq "${#originals[@]}" ] || return 0
+  for ((i=0; i<${#originals[@]}; i++)); do
+    orig="${originals[$i]}"; source="${orig#sources/}"
+    source="sources/$source"
+    [ -f "$source" ] || continue
+    source_words="$(visible_words "$source")"
+    [ "$source_words" -ge 30 ] || continue
+    words="${counts[$i]}"
+    if [ "$((words * 10))" -lt "$source_words" ]; then
+      printf 'truncated section "## %s" (page %s: %s/%s visible words)\n' "${headings[$i]}" "$orig" "$words" "$source_words"
+    fi
+  done
+}
+
 # One added or modified file -> 0, or the reasons its content fails.
 content_of() {
-  local f="$1" rel record entry what
+  local f="$1" rel record entry what truncated
   rel="${f#sources/}"
   if [[ "$rel" == original/* || "$rel" == */original/* ]]; then
     what="$(interstitial_of "$f")"
@@ -390,6 +458,11 @@ content_of() {
   what="$(empty_sections "$f" "$entry")"
   if [ -n "$what" ]; then
     sed "s|^|$f: |; s|\$|: refetch the page, or list it on a \"- Known hole:\" line in $record|" <<<"$what"
+    return 1
+  fi
+  truncated="$(truncated_sections "$f" "$entry")"
+  if [ -n "$truncated" ]; then
+    sed "s|^|$f: |; s|\$|: refetch the page or repair the extraction in $record|" <<<"$truncated"
     return 1
   fi
 }
@@ -812,6 +885,31 @@ provenance_self_test() {
      printf '%%PDF other' > sources/fed-x/original/new.pdf
      entry fed-x/new.txt https://example.gov/new.pdf 2026-10-27 '$m' $ok >> sources/fed-x/PROVENANCE.md
      printf -- '- Original: \`fed-x/original/new.pdf\` as served (sha256 $pdf).\n' >> sources/fed-x/PROVENANCE.md"
+  local bad hash
+  for bad in 'BrowserHawk bhawkTest' '<title>Just a moment...</title> cf_chl_opt' \
+    '<meta http-equiv="refresh" content="0;url=/real">' \
+    'Please solve this CAPTCHA to continue' 'Turnstile verification required'; do
+    hash="$(sha "$bad")"
+    pcase fail "interstitial original signature: ${bad%% *}" yes \
+      "printf 'new rule' > sources/fed-x/new.txt && mkdir -p sources/fed-x/original
+       printf '%s' '$bad' > sources/fed-x/original/new.html
+       entry fed-x/new.txt https://example.gov/new.html 2026-10-27 '$m' $ok >> sources/fed-x/PROVENANCE.md
+       printf -- '- Original: \`fed-x/original/new.html\` as served (sha256 $hash).\\n' >> sources/fed-x/PROVENANCE.md"
+  done
+  # Regression for the SD API response that wrapped a second html/head inside
+  # the first head. html2txt could then retain only the first section heading.
+  local long_html long_hash second_hash short_hash
+  long_html='<html><head><html><head></head></head><body>alpha bravo charlie delta echo foxtrot golf hotel india juliet kilo lima mike november oscar papa quebec romeo sierra tango uniform victor whiskey xray yankee zulu alpha bravo charlie delta echo foxtrot golf hotel india juliet kilo lima mike november oscar papa quebec romeo sierra tango uniform victor whiskey xray yankee zulu</body></html>'
+  long_hash="$(sha "$long_html")"
+  second_hash="$(sha '<html><body>alpha bravo charlie delta echo foxtrot golf hotel india juliet kilo lima mike november oscar papa quebec romeo sierra tango uniform victor whiskey xray yankee zulu alpha bravo charlie delta echo foxtrot golf hotel india juliet kilo lima mike november oscar papa quebec romeo sierra tango uniform victor whiskey xray yankee zulu</body></html>')"
+  short_hash="$(sha $'## Rule one\nA\n')"
+  pcase fail "doubled html/head original whose extraction is truncated" yes \
+    "mkdir -p sources/fed-x/original
+     printf '## Rule one\nA\n\n## Rule two\nA complete second rule has enough words here for a normal page extraction.\n' > sources/fed-x/new.txt
+     printf '%s' '$long_html' > sources/fed-x/original/one.html
+     printf '%s' '<html><body>alpha bravo charlie delta echo foxtrot golf hotel india juliet kilo lima mike november oscar papa quebec romeo sierra tango uniform victor whiskey xray yankee zulu alpha bravo charlie delta echo foxtrot golf hotel india juliet kilo lima mike november oscar papa quebec romeo sierra tango uniform victor whiskey xray yankee zulu</body></html>' > sources/fed-x/original/two.html
+     entry fed-x/new.txt https://example.gov/new.html 2026-10-27 '$m' $short_hash >> sources/fed-x/PROVENANCE.md
+     printf -- '- Original: \`fed-x/original/one.html\` as served (sha256 $long_hash).\n- Original: \`fed-x/original/two.html\` as served (sha256 $second_hash).\n' >> sources/fed-x/PROVENANCE.md"
   return "$failures"
 }
 

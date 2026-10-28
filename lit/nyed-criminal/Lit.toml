@@ -1,0 +1,53 @@
+# The U.S. District Court for the Eastern District of New York's Local
+# Criminal Rules, the Joint Local Rules it shares with the Southern
+# District, as a local-rule layer over lit/frcrimp (28 U.S.C. § 2071;
+# FRCrimP 57(a); Local Criminal Rule 1.1): it declares only the periods
+# and limits the Local Criminal Rules themselves state and re-encodes no
+# FRCrimP, Speedy Trial Act or FRAP 4(b) period (one source of truth:
+# lit/frcrimp). Each period is counted under FRCrimP 45(a), which governs
+# "any local rule" (Local Criminal Rule 45.1 is withdrawn), so each
+# deadline names `forum frcrimp`. The rules are the edition effective
+# January 2, 2026 (sources/sdny); earlier editions are not vendored, so a
+# query before that date is a hole in the corpus. lit/nysd-criminal binds
+# the same text for the Southern District. An appeal goes to the Second
+# Circuit under lit/frcrimp's FRAP 4(b) period and lit/ca2.
+[package]
+name = "nyed-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "nyed-criminal-local-rules"
+forum = "nyed-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Eastern District of New York: Local Criminal Rules"
+description = "The Eastern District of New York's Local Criminal Rules (the Joint Local Rules of the Southern and Eastern Districts) as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the supplemental disclosure statement, the government's and the defense's expert disclosures before trial, the motion opposition and reply periods, and the reconsideration period with its memorandum page limits."
+in_force = "2026-01-02"
+known_at = "2026-10-28"
+unknown_before = "2026-01-02"
+jurisdiction = "U.S. District Court for the Eastern District of New York (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "sdny-edny-lcrr"
+issuer = "United States District Courts for the Southern and Eastern Districts of New York"
+date = "2026-01-02"
+designation = "Joint Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.sdny-edny-lcrr]
+title = "Local Rules of the United States District Courts for the Southern and Eastern Districts of New York, Local Criminal Rules (effective January 2, 2026)"
+url = "https://www.nysd.uscourts.gov/sites/default/files/local_rules/2026-01-02%20-%20EDNY%20and%20SDNY%20Joint%20Local%20Rules%20As%20Amended.pdf"
+path = "sources/sdny/local-rules-joint-sdny-edny-criminal-sectioned.txt"
+path_sha256 = "6f1a7ac5c06034a7e203c3dfbd8898cfeaab5cc55bc5e06e61f0bb5d9a779628"
+sha256 = "439b9e2c67fd4ca1d1be65a7f28ca53707820bcbabb4b459323ade1a773607af"
+as_of = "2026-01-02"
+cite_prefixes = ["E.D.N.Y. Local Crim. R."]
+section_heading = "Local Criminal Rule {n}"

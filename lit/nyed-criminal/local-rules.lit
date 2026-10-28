@@ -1,0 +1,122 @@
+module nyed-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The Eastern District of New York's own criminal periods, counted under
+// the criminal rules (FRCrimP 45(a) governs "any local rule"; the
+// district's own computation rule, Local Criminal Rule 45.1, is
+// withdrawn). The Local Criminal Rules apply listed Local Civil Rules in
+// criminal proceedings (Local Criminal Rule 1.1(b)), among them Local
+// Civil Rule 6.2 (orders on motions), 39.1 (custody of exhibits) and 72.1
+// (powers of magistrate judges, also Local Criminal Rule 59.1(c)); the
+// Local Civil Rules are not sectioned in the corpus, so none of their
+// periods is encoded here. No trigger carries a service method: FRCrimP
+// 45(c)'s three added days follow the manner of service (Local Criminal
+// Rule 49.1(c): service under FRCrimP 49), which is not modeled here.
+//
+// Conditions that are not deadlines from an event stay in notes: a
+// discovery or bill-of-particulars motion is heard only with counsel's
+// good-faith conference affidavit (Local Criminal Rule 16.1); post-trial
+// motions, including FRCrimP 34 and 35 motions, go to the trial judge
+// (Local Criminal Rule 34.1), within the FRCrimP periods in lit/frcrimp;
+// a represented defendant may not file pro se while the case is pending
+// (Local Criminal Rule 49.2); and on a Criminal Rules Emergency the chief
+// judge may issue orders not inconsistent with FRCrimP 62 (Local Criminal
+// Rule 62.1).
+//
+// The earlier E.D.N.Y. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Barker v. Wingo, Zedner v. United States,
+// Brady v. Maryland and the others it named) are FRCrimP, Speedy Trial
+// Act or constitutional authority and belong to lit/frcrimp; they are
+// removed here: no reporter text is vendored.
+
+/// The memorandum accompanying a motion for reconsideration: at most 10
+/// pages (Local Criminal Rule 49.1(b)).
+limit reconsideration-memorandum {
+  pages <= 10 cite "E.D.N.Y. Local Crim. R. 49.1(b)"
+} cite "E.D.N.Y. Local Crim. R. 49.1(b)"
+
+/// A reply memorandum on a motion for reconsideration: at most 5 pages; an
+/// answering memorandum is at most 10 (Local Criminal Rule 49.1(b)).
+limit reconsideration-reply {
+  pages <= 5 cite "E.D.N.Y. Local Crim. R. 49.1(b)"
+} cite "E.D.N.Y. Local Crim. R. 49.1(b)"
+
+/// The information a party's FRCrimP 12.4 disclosure statement requires
+/// changes (Local Criminal Rule 12.4).
+event DisclosureInformationChanged()
+/// The date set for trial (Local Criminal Rule 16.2).
+event TrialScheduled()
+/// Motion papers are served (Local Criminal Rule 49.1(a)(1)).
+event MotionServed()
+/// Opposing papers are served (Local Criminal Rule 49.1(a)(2)).
+event OppositionServed()
+/// The court determines a motion (Local Criminal Rule 49.1(b)).
+event MotionDetermined()
+/// A motion for reconsideration is filed with its memorandum (Local
+/// Criminal Rule 49.1(b)).
+event ReconsiderationFiled() paper reconsideration-memorandum
+/// A reply memorandum on reconsideration is filed (Local Criminal Rule
+/// 49.1(b)).
+event ReconsiderationReplyFiled() paper reconsideration-reply
+
+/// Local Criminal Rule 12.4: for FRCrimP 12.4(b)(2), "promptly" means
+/// within 14 days: a supplemental disclosure statement is filed within 14
+/// days of any change in the information the statement requires.
+deadline supplemental-disclosure-statement: 14.days after DisclosureInformationChanged() counted_by frcrimp45 cite "E.D.N.Y. Local Crim. R. 12.4"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 16.2: unless the court orders otherwise, the
+/// government makes its FRCrimP 16(a)(1)(G) expert disclosures at least 60
+/// days before trial.
+deadline government-expert-disclosure: 60.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D.N.Y. Local Crim. R. 16.2"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 16.2: unless the court orders otherwise, the defense
+/// makes its expert disclosures at least 30 days before trial.
+deadline defense-expert-disclosure: 30.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D.N.Y. Local Crim. R. 16.2"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 49.1(a)(1): unless a statute or rule provides
+/// otherwise or the court orders otherwise in a judge's individual
+/// practices or in the case, opposing papers are filed within 14 days after
+/// service of the motion papers.
+deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D.N.Y. Local Crim. R. 49.1(a)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 49.1(a)(2): reply papers are filed within seven days
+/// after service of the opposing papers, unless the court orders
+/// otherwise.
+deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D.N.Y. Local Crim. R. 49.1(a)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 49.1(b): a motion for reconsideration of an order
+/// determining a motion is filed within 14 days after the court's
+/// determination of the original motion.
+deadline reconsideration-period: 14.days after MotionDetermined() counted_by frcrimp45 cite "E.D.N.Y. Local Crim. R. 49.1(b)"
+{
+  forum frcrimp
+}

@@ -1,0 +1,854 @@
+module akd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Alaska's own periods, computed under the federal rules
+// (FRCP 6(a) governs "any local rule"). Each period applies "unless
+// otherwise ordered" where the rule says so. Rules that state no period or
+// limit stay out: the civil cover sheet and fees (L.Civ.R. 3.1, the fee
+// schedule is posted, not stated), venue, form of filings, sanctions,
+// excess interrogatories (L.Civ.R. 33.1), the 25-request cap on requests
+// for admission (L.Civ.R. 36.1, a count, not a paper limit), and the
+// discretionary conference report within 7 days after the FRCP 26(f)
+// conference, which binds only when the court requires it (L.Civ.R.
+// 26.1(b)). L.Civ.R. 56.1 requires a summary judgment movant to serve a
+// pro se prisoner the notice that Rand v. Rowland, 154 F.3d 952 (9th Cir.
+// 1998), prescribes; the decision is named by the rule itself and its
+// reporter text is not vendored. The earlier D. Alaska outline's FRCP flow
+// and its Supreme Court decisions (Twombly, Iqbal, Celotex, Anderson v.
+// Liberty Lobby, Reeves, Catlin, Bowles, Hamer) are FRCP and FRAP
+// authority and belong to lit/frcp and lit/frap; its Ninth Circuit
+// decisions (Eitel v. McCool; Lopez v. Smith) are removed: no reporter
+// text is vendored.
+/// A memorandum supporting or opposing a motion under FRCP 12(b), 12(c) or
+/// 56: at most 35 pages or 10,000 words, exclusive of the caption,
+/// signature blocks, tables, Rand notices and reproduced statutes and rules
+/// (L.Civ.R. 7.4(a)(1), (4)). Word counts are certified at the end of the
+/// document (L.Civ.R. 7.4(a)(3)).
+limit dispositive-memorandum {
+  words <= 10_000 cite "D. Alaska L.Civ.R. 7.4(a)"
+  pages <= 35 cite "D. Alaska L.Civ.R. 7.4(a)"
+} cite "D. Alaska L.Civ.R. 7.4(a)"
+
+/// A reply on a motion under FRCP 12(b), 12(c) or 56: at most 20 pages or
+/// 5,700 words (L.Civ.R. 7.4(a)(1)).
+limit dispositive-reply {
+  words <= 5_700 cite "D. Alaska L.Civ.R. 7.4(a)"
+  pages <= 20 cite "D. Alaska L.Civ.R. 7.4(a)"
+} cite "D. Alaska L.Civ.R. 7.4(a)"
+
+/// A memorandum supporting or opposing any other motion: at most 20 pages
+/// or 5,700 words (L.Civ.R. 7.4(a)(2)).
+limit nondispositive-memorandum {
+  words <= 5_700 cite "D. Alaska L.Civ.R. 7.4(a)"
+  pages <= 20 cite "D. Alaska L.Civ.R. 7.4(a)"
+} cite "D. Alaska L.Civ.R. 7.4(a)"
+
+/// A reply on any other motion: at most 10 pages or 2,750 words (L.Civ.R.
+/// 7.4(a)(2)).
+limit nondispositive-reply {
+  words <= 2_750 cite "D. Alaska L.Civ.R. 7.4(a)"
+  pages <= 10 cite "D. Alaska L.Civ.R. 7.4(a)"
+} cite "D. Alaska L.Civ.R. 7.4(a)"
+
+/// A notice of supplemental authority, and any response to it: at most
+/// 350 words (L.Civ.R. 7.1(d)(1)).
+limit supplemental-authority-notice {
+  words <= 350 cite "D. Alaska L.Civ.R. 7.1(d)"
+} cite "D. Alaska L.Civ.R. 7.1(d)"
+
+/// A motion for reconsideration, and a response or reply the court
+/// requests: at most 5 pages (L.Civ.R. 7.3(h)(2)-(4)).
+limit reconsideration-paper {
+  pages <= 5 cite "D. Alaska L.Civ.R. 7.3(h)"
+} cite "D. Alaska L.Civ.R. 7.3(h)"
+
+/// A trial brief: at most 25 pages (L.Civ.R. 39.2(b)).
+limit trial-brief {
+  pages <= 25 cite "D. Alaska L.Civ.R. 39.2(b)"
+} cite "D. Alaska L.Civ.R. 39.2(b)"
+
+/// An electronically filed document is served (L.Civ.R. 5.1(e)(4)).
+event DocumentServed()
+/// A notice of pertinent and significant supplemental authority is filed
+/// and served (L.Civ.R. 7.1(d)(1)).
+event SupplementalAuthorityNoticeFiled() paper supplemental-authority-notice
+/// The last filing pertaining to a motion is made (L.Civ.R. 7.1(f), (g)).
+event LastMotionFilingMade()
+/// An oral argument, evidentiary hearing or trial at which a party will
+/// use the Digital Evidence Presentation System is held (L.Civ.R. 7.1(i)).
+event DepsProceedingHeld()
+/// A motion under FRCP 12(b), 12(c) or 56 is served (L.Civ.R. 7.2(b)(1)).
+event DispositiveMotionServed() paper dispositive-memorandum
+/// Any other motion is served (L.Civ.R. 7.2(b)(1)).
+event MotionServed() paper nondispositive-memorandum
+/// An opposition to a motion under FRCP 12(b), 12(c) or 56 is served
+/// (L.Civ.R. 7.2(b)(2)).
+event DispositiveOppositionServed() paper dispositive-memorandum
+/// An opposition to any other motion is served (L.Civ.R. 7.2(b)(2)).
+event OppositionServed() paper nondispositive-memorandum
+/// A reply on a motion under FRCP 12(b), 12(c) or 56 is filed (L.Civ.R.
+/// 7.2(b)(2)).
+event DispositiveReplyFiled() paper dispositive-reply
+/// A reply on any other motion is filed (L.Civ.R. 7.2(b)(2)).
+event ReplyFiled() paper nondispositive-reply
+/// The court grants a motion to submit documents for in camera review
+/// (L.Civ.R. 7.3(g)(3)).
+event InCameraReviewGranted()
+/// The order to be reconsidered is entered (L.Civ.R. 7.3(h)(2)(A)).
+event OrderEntered()
+/// New material facts are discovered or the law changes (L.Civ.R.
+/// 7.3(h)(2)(B)).
+event NewFactsOrLawChange()
+/// A motion for reconsideration is filed (L.Civ.R. 7.3(h)(2)).
+event ReconsiderationMotionFiled() paper reconsideration-paper
+/// The court enters an order requesting a response to a motion for
+/// reconsideration (L.Civ.R. 7.3(h)(3)).
+event ReconsiderationResponseRequested()
+/// The court enters an order requesting a reply on a motion for
+/// reconsideration (L.Civ.R. 7.3(h)(4)).
+event ReconsiderationReplyRequested()
+/// An appearing attorney's address, telephone number or e-mail address
+/// changes (L.Civ.R. 11.1(b)(1), 83.1(i)).
+event AttorneyContactChanged()
+/// A court order or other mail is served on a pro se plaintiff and
+/// returned undeliverable (L.Civ.R. 11.1(b)(3)).
+event ProSeMailServedAndReturned()
+/// The hearing on a motion to withdraw that would leave the party without
+/// counsel is held (L.Civ.R. 11.1(c)(4)(B)).
+event WithdrawalHearingHeld()
+/// The order granting a motion to amend a pleading is entered (L.Civ.R.
+/// 15.1(b)).
+event AmendmentGranted()
+/// The Pretrial Scheduling Order is entered (L.Civ.R. 16.1(c)(2)).
+event PretrialSchedulingOrderEntered()
+/// Discovery closes (L.Civ.R. 16.1(c)(5), (7), (9)).
+event DiscoveryClosed()
+/// Expert discovery closes (L.Civ.R. 16.1(c)(8)).
+event ExpertDiscoveryClosed()
+/// A Notice of Related Case is filed (L.Civ.R. 16.1(e)).
+event RelatedCaseNoticeFiled()
+/// The settlement conference judge files the report of a settlement
+/// (L.Civ.R. 16.2(d)(3)).
+event SettlementReportFiled()
+/// In an agency appeal, the agency first appears (L.Civ.R. 16.3(b)(1)).
+event AgencyAppeared()
+/// The agency record, or the certified list of its contents, is filed
+/// (L.Civ.R. 16.3(b)(2), (c)(1)).
+event AgencyRecordFiled()
+/// The court rules on a motion to supplement the agency record (L.Civ.R.
+/// 16.3(c)(1)).
+event SupplementRuling()
+/// The plaintiff files and serves the opening brief in an agency appeal
+/// (L.Civ.R. 16.3(c)(2)).
+event AgencyOpeningBriefServed()
+/// The defendant's brief in an agency appeal is served (L.Civ.R.
+/// 16.3(c)(3)).
+event AgencyOppositionBriefServed()
+/// The final brief in an agency appeal is filed (L.Civ.R.
+/// 16.3(b)(1)(B)(iii)).
+event AgencyFinalBriefFiled()
+/// Trial begins on the scheduled date (L.Civ.R. 39.2, 39.3, 47.1, 51.1).
+event TrialBegins()
+/// A trial brief is filed and served (L.Civ.R. 39.2).
+event TrialBriefFiled() paper trial-brief
+/// Judgment, or an applicable order, is entered (L.Civ.R. 54.1(a),
+/// 58.1(c)(1)).
+event JudgmentEntered()
+/// A bill of costs is filed (L.Civ.R. 54.1(c)).
+event BillOfCostsFiled()
+/// The Clerk decides the bill of costs (L.Civ.R. 54.1(d)).
+event CostsTaxed()
+/// The prevailing party's computation of prejudgment interest is served
+/// (L.Civ.R. 58.1(c)(2)).
+event InterestComputationServed()
+/// The judgment debtor requests an acknowledgment of satisfaction
+/// (L.Civ.R. 58.2(a)).
+event SatisfactionRequested()
+/// The Notice of Intent to reassign the case to a magistrate judge is
+/// served (L.Civ.R. 73.1(c)).
+event MagistrateNoticeServed()
+/// A court proceeding for which remote public access is sought is held
+/// (L.Civ.R. 77.3(c)).
+event ProceedingHeld()
+/// The trial or hearing for which a real-time reporter and daily
+/// transcripts are requested is held (L.Civ.R. 80.1(a)(3)).
+event TrialOrHearingHeld()
+
+/// L.Civ.R. 5.1(e)(4): an objection to a signature on an electronically
+/// filed document is served on the filing party and filed not later than
+/// 14 days after the document is served.
+deadline signature-objection-period: 14.days after DocumentServed() counted_by frcp6 cite "D. Alaska L.Civ.R. 5.1(e)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 7.1(d)(1): any response to a notice of supplemental authority
+/// is filed and served within 7 days of the notice and is limited to 350
+/// words.
+deadline supplemental-authority-response-period: 7.days after SupplementalAuthorityNoticeFiled() counted_by frcp6 cite "D. Alaska L.Civ.R. 7.1(d)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 7.1(f): oral argument is discretionary; it is requested below
+/// the title of the motion or response, or by separate filing within 5 days
+/// of the last filing pertaining to the motion.
+deadline oral-argument-request-period: 5.days after LastMotionFilingMade() counted_by frcp6 cite "D. Alaska L.Civ.R. 7.1(f)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 7.1(g): a party may move for an evidentiary hearing on a motion
+/// within 5 days of the last filing pertaining to the motion.
+deadline evidentiary-hearing-motion-period: 5.days after LastMotionFilingMade() counted_by frcp6 cite "D. Alaska L.Civ.R. 7.1(g)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 7.1(i)(2): a party using DEPS files a notice of intent not less
+/// than 7 days in advance of the proceeding.
+deadline deps-notice-period: 7.days before DepsProceedingHeld() counted_by frcp6 cite "D. Alaska L.Civ.R. 7.1(i)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 7.2(b)(1): unless otherwise ordered or provided by statute or
+/// rule, an opposition to a motion under FRCP 12(b), 12(c) or 56 is filed
+/// and served within 21 days of service of the motion.
+deadline dispositive-opposition-period: 21.days after DispositiveMotionServed() counted_by frcp6 cite "D. Alaska L.Civ.R. 7.2(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 7.2(b)(1): an opposition to any other motion is filed within 14
+/// days of service. Failure to respond to a non-dispositive motion subjects
+/// it to summary ruling and may be deemed an admission that it is well
+/// taken (L.Civ.R. 7.1(h)).
+deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "D. Alaska L.Civ.R. 7.2(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 7.2(b)(2): a reply on a motion under FRCP 12(b), 12(c) or 56,
+/// if filed, is filed and served within 14 days. The rule names no trigger
+/// for this reply; the 7-day reply for other motions in the same paragraph
+/// runs from service of the opposition, and this period is read the same
+/// way.
+deadline dispositive-reply-period: 14.days after DispositiveOppositionServed() counted_by frcp6 cite "D. Alaska L.Civ.R. 7.2(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 7.2(b)(2): a reply on any other motion, if filed, is filed
+/// within 7 days of service of the opposition. Replies are optional and
+/// limited to rebuttal (L.Civ.R. 7.1(c)).
+deadline reply-period: 7.days after OppositionServed() counted_by frcp6 cite "D. Alaska L.Civ.R. 7.2(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 7.3(g)(3): if in camera review is granted, the documents are
+/// filed via CM/ECF as an ex parte document within 7 days.
+deadline in-camera-filing-period: 7.days after InCameraReviewGranted() counted_by frcp6 cite "D. Alaska L.Civ.R. 7.3(g)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 7.3(h)(2)(A): a motion for reconsideration for manifest error
+/// of law or fact is filed and served not later than 7 days after entry of
+/// the order. The rule does not apply to motions under FRCP 59 or 60
+/// (L.Civ.R. 7.3(h)(5)).
+deadline reconsideration-error-period: 7.days after OrderEntered() counted_by frcp6 cite "D. Alaska L.Civ.R. 7.3(h)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 7.3(h)(2)(B): a motion for reconsideration on new material
+/// facts or an intervening change in the law is filed and served within 14
+/// days of the discovery or change in law.
+deadline reconsideration-new-ground-period: 14.days after NewFactsOrLawChange() counted_by frcp6 cite "D. Alaska L.Civ.R. 7.3(h)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 7.3(h)(3): no response to a motion for reconsideration is filed
+/// unless the court requests one; unless otherwise ordered, it is filed
+/// within 7 days of entry of the order requesting it.
+deadline reconsideration-response-period: 7.days after ReconsiderationResponseRequested() counted_by frcp6 cite "D. Alaska L.Civ.R. 7.3(h)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 7.3(h)(4): no reply is filed unless the court requests one;
+/// unless otherwise ordered, it is filed within 7 days of the order
+/// requesting it.
+deadline reconsideration-reply-period: 7.days after ReconsiderationReplyRequested() counted_by frcp6 cite "D. Alaska L.Civ.R. 7.3(h)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 11.1(b)(1): an attorney who has appeared files and serves a
+/// notice of change of address, telephone number or e-mail address within
+/// 7 days of the change; L.Civ.R. 83.1(i) asks admitted attorneys to notify
+/// the Clerk not later than 7 days after it becomes effective.
+deadline attorney-address-notice-period: 7.days after AttorneyContactChanged() counted_by frcp6 cite "D. Alaska L.Civ.R. 11.1(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 11.1(b)(3): if mail served on a pro se plaintiff is returned
+/// undeliverable and no notice of change of address is filed within 14
+/// days of the service date, the court may dismiss for failure to
+/// prosecute under L.Civ.R. 41.1.
+deadline pro-se-address-notice-period: 14.days after ProSeMailServedAndReturned() counted_by frcp6 cite "D. Alaska L.Civ.R. 11.1(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 11.1(c)(4)(B): an attorney whose withdrawal would leave the
+/// party without counsel arranges a hearing and gives the client at least
+/// 21 days written notice of it, unless good cause is shown why no hearing
+/// is required.
+deadline withdrawal-hearing-notice-period: 21.days before WithdrawalHearingHeld() counted_by frcp6 cite "D. Alaska L.Civ.R. 11.1(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 15.1(b): unless otherwise ordered, the moving party files a
+/// complete, clean copy of the amended pleading within 7 days of the order
+/// granting the motion to amend.
+deadline amended-pleading-filing-period: 7.days after AmendmentGranted() counted_by frcp6 cite "D. Alaska L.Civ.R. 15.1(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16.1(c)(2): unless otherwise ordered, motions to amend
+/// pleadings or add parties are filed not later than 60 days after the
+/// Pretrial Scheduling Order is entered; after that, leave to modify the
+/// deadline is sought under FRCP 16(b)(4).
+deadline amend-or-add-parties-period: 60.days after PretrialSchedulingOrderEntered() counted_by frcp6 cite "D. Alaska L.Civ.R. 16.1(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16.1(c)(5): final discovery witness lists are filed not later
+/// than 45 days before the close of discovery.
+deadline witness-list-period: 45.days before DiscoveryClosed() counted_by frcp6 cite "D. Alaska L.Civ.R. 16.1(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16.1(c)(7): motions under the discovery rules are filed not
+/// later than 14 days after the close of discovery.
+deadline discovery-motion-period: 14.days after DiscoveryClosed() counted_by frcp6 cite "D. Alaska L.Civ.R. 16.1(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16.1(c)(8): motions to exclude expert testimony are filed not
+/// later than 30 days after the close of expert discovery.
+deadline expert-exclusion-motion-period: 30.days after ExpertDiscoveryClosed() counted_by frcp6 cite "D. Alaska L.Civ.R. 16.1(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16.1(c)(9): dispositive motions are filed not later than 30
+/// days after the close of discovery.
+deadline dispositive-motion-period: 30.days after DiscoveryClosed() counted_by frcp6 cite "D. Alaska L.Civ.R. 16.1(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16.1(e): other parties have 14 days to respond to a Notice of
+/// Related Case.
+deadline related-case-response-period: 14.days after RelatedCaseNoticeFiled() counted_by frcp6 cite "D. Alaska L.Civ.R. 16.1(e)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16.2(d)(3): if a judicial settlement conference results in a
+/// settlement, the parties file closing papers within 30 days from the
+/// filing of the settlement conference judge's report.
+deadline settlement-closing-papers-period: 30.days after SettlementReportFiled() counted_by frcp6 cite "D. Alaska L.Civ.R. 16.2(d)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16.3(b)(1): in an APA or Social Security appeal, the agency
+/// serves and files the agency record not later than 60 days after its
+/// initial appearance.
+deadline agency-record-period: 60.days after AgencyAppeared() counted_by frcp6 cite "D. Alaska L.Civ.R. 16.3(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16.3(b)(2): a motion to supplement the agency record is filed
+/// not later than 21 days after the record or its certified list is filed.
+deadline record-supplement-motion-period: 21.days after AgencyRecordFiled() counted_by frcp6 cite "D. Alaska L.Civ.R. 16.3(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16.3(b)(1)(B)(iii): for an agency record over 5000 pages, the
+/// parties file the appendix not later than 14 days after the final brief
+/// is filed.
+deadline agency-appendix-period: 14.days after AgencyFinalBriefFiled() counted_by frcp6 cite "D. Alaska L.Civ.R. 16.3(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16.3(c)(1): the plaintiff's opening brief is filed not later
+/// than 30 days following the filing of the agency record or 30 days after
+/// the ruling on a motion to supplement it, whichever is later; failure to
+/// file it timely may result in dismissal. This is the period from the
+/// record; `opening-brief-supplement-period` is the other.
+deadline opening-brief-record-period: 30.days after AgencyRecordFiled() counted_by frcp6 cite "D. Alaska L.Civ.R. 16.3(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16.3(c)(1): the opening brief period running from the ruling on
+/// a motion to supplement the agency record; the later of the two governs.
+deadline opening-brief-supplement-period: 30.days after SupplementRuling() counted_by frcp6 cite "D. Alaska L.Civ.R. 16.3(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16.3(c)(2): the defendant's brief in opposition is filed not
+/// later than 30 days after the plaintiff files and serves the opening
+/// brief. One extension of up to 14 days is routinely granted for each
+/// brief (L.Civ.R. 16.3(c)(5)).
+deadline agency-opposition-brief-period: 30.days after AgencyOpeningBriefServed() counted_by frcp6 cite "D. Alaska L.Civ.R. 16.3(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16.3(c)(3): the plaintiff may file a reply not later than 14
+/// days after service of the defendant's brief; no further briefs without
+/// leave (L.Civ.R. 16.3(c)(4)).
+deadline agency-reply-brief-period: 14.days after AgencyOppositionBriefServed() counted_by frcp6 cite "D. Alaska L.Civ.R. 16.3(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 39.2(a): unless otherwise ordered, each party files and serves
+/// a trial brief, of at most 25 pages, not less than 21 days before the
+/// scheduled trial date.
+deadline trial-brief-period: 21.days before TrialBegins() counted_by frcp6 cite "D. Alaska L.Civ.R. 39.2(a)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 39.3(b)(1): at least 14 days before trial the parties exchange
+/// trial exhibits and lists and confer on stipulations.
+deadline exhibit-exchange-period: 14.days before TrialBegins() counted_by frcp6 cite "D. Alaska L.Civ.R. 39.3(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 39.3(b)(2): at least 7 days before trial each party files its
+/// Civil Exhibit List identifying stipulations as to authenticity and
+/// admissibility.
+deadline exhibit-list-period: 7.days before TrialBegins() counted_by frcp6 cite "D. Alaska L.Civ.R. 39.3(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 47.1: unless otherwise ordered, proposed questions for
+/// potential jurors are filed 7 days prior to trial.
+deadline voir-dire-questions-period: 7.days before TrialBegins() counted_by frcp6 cite "D. Alaska L.Civ.R. 47.1"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 51.1(a): unless otherwise ordered, no later than 21 days before
+/// trial the parties meet and confer on jury instructions.
+deadline jury-instruction-conference-period: 21.days before TrialBegins() counted_by frcp6 cite "D. Alaska L.Civ.R. 51.1(a)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 51.1(b): unless otherwise ordered, the parties file proposed
+/// jury instructions no later than 14 days before trial.
+deadline jury-instructions-period: 14.days before TrialBegins() counted_by frcp6 cite "D. Alaska L.Civ.R. 51.1(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 54.1(a): a bill of costs is filed and served no later than 14
+/// days after entry of judgment or an applicable order; otherwise claims
+/// for costs are waived.
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "D. Alaska L.Civ.R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 54.1(c): objections to a bill of costs are filed and served
+/// within 7 days of its filing.
+deadline costs-objection-period: 7.days after BillOfCostsFiled() counted_by frcp6 cite "D. Alaska L.Civ.R. 54.1(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 54.1(d): a party disagreeing with the Clerk's decision on costs
+/// moves for review by the court within 7 days of the decision.
+deadline costs-review-motion-period: 7.days after CostsTaxed() counted_by frcp6 cite "D. Alaska L.Civ.R. 54.1(d)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 58.1(c)(1): when prejudgment interest is sought, the prevailing
+/// party files and serves a computation of interest and its basis within 14
+/// days of the entry of judgment.
+deadline interest-computation-period: 14.days after JudgmentEntered() counted_by frcp6 cite "D. Alaska L.Civ.R. 58.1(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 58.1(c)(2): a party disagreeing with the computation files an
+/// alternative computation within 7 days of its service.
+deadline alternative-interest-computation-period: 7.days after InterestComputationServed() counted_by frcp6 cite "D. Alaska L.Civ.R. 58.1(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 58.2(a): on the judgment debtor's request, the judgment
+/// creditor files and serves an acknowledgment of satisfaction or partial
+/// satisfaction within 14 days of the request.
+deadline satisfaction-acknowledgment-period: 14.days after SatisfactionRequested() counted_by frcp6 cite "D. Alaska L.Civ.R. 58.2(a)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 73.1(c), (d): a party declines consent to a magistrate judge by
+/// signing and returning the Declination of Consent form within 14 calendar
+/// days from service of the Notice of Intent; failure to return it timely
+/// is deemed consent.
+deadline magistrate-declination-period: 14.days after MagistrateNoticeServed() counted_by frcp6 cite "D. Alaska L.Civ.R. 73.1(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 73.1(c): an incarcerated plaintiff proceeding pro se declines
+/// consent within 21 calendar days from service of the Notice.
+deadline pro-se-prisoner-magistrate-declination-period: 21.days after MagistrateNoticeServed() counted_by frcp6 cite "D. Alaska L.Civ.R. 73.1(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 77.3(c): absent good cause, a request for remote public access
+/// is filed at least 14 days before the proceeding.
+deadline remote-access-request-period: 14.days before ProceedingHeld() counted_by frcp6 cite "D. Alaska L.Civ.R. 77.3(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 77.3(c): an objection to remote public access is filed at least
+/// 7 days before the proceeding.
+deadline remote-access-objection-period: 7.days before ProceedingHeld() counted_by frcp6 cite "D. Alaska L.Civ.R. 77.3(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 80.1(a)(3): a request for a real-time court reporter and daily
+/// transcripts is filed not later than 30 days before the date set for the
+/// trial or hearing.
+deadline realtime-reporter-request-period: 30.days before TrialOrHearingHeld() counted_by frcp6 cite "D. Alaska L.Civ.R. 80.1(a)"
+{
+  forum frcp
+}
+
+test "signature objection period: 14 days after the trigger" cite "D. Alaska L.Civ.R. 5.1(e)"
+{
+  given DocumentServed() on 2026-11-02
+  expect deadline(signature-objection-period) == 2026-11-16
+}
+
+test "supplemental authority response period: 7 days after the trigger" cite "D. Alaska L.Civ.R. 7.1(d)"
+{
+  given SupplementalAuthorityNoticeFiled() on 2026-11-02
+  expect deadline(supplemental-authority-response-period) == 2026-11-09
+}
+
+test "oral argument request period: 5 days after the trigger" cite "D. Alaska L.Civ.R. 7.1(f)"
+{
+  given LastMotionFilingMade() on 2026-11-02
+  expect deadline(oral-argument-request-period) == 2026-11-09
+}
+
+test "evidentiary hearing motion period: 5 days after the trigger" cite "D. Alaska L.Civ.R. 7.1(g)"
+{
+  given LastMotionFilingMade() on 2026-11-02
+  expect deadline(evidentiary-hearing-motion-period) == 2026-11-09
+}
+
+test "deps notice period: 7 days before the trigger" cite "D. Alaska L.Civ.R. 7.1(i)"
+{
+  given DepsProceedingHeld() on 2027-03-02
+  expect deadline(deps-notice-period) == 2027-02-23
+}
+
+test "dispositive opposition period: 21 days after the trigger" cite "D. Alaska L.Civ.R. 7.2(b)"
+{
+  given DispositiveMotionServed() on 2026-11-02
+  expect deadline(dispositive-opposition-period) == 2026-11-23
+}
+
+test "opposition period: 14 days after the trigger" cite "D. Alaska L.Civ.R. 7.2(b)"
+{
+  given MotionServed() on 2026-11-02
+  expect deadline(opposition-period) == 2026-11-16
+}
+
+test "dispositive reply period: 14 days after the trigger" cite "D. Alaska L.Civ.R. 7.2(b)"
+{
+  given DispositiveOppositionServed() on 2026-11-02
+  expect deadline(dispositive-reply-period) == 2026-11-16
+}
+
+test "reply period: 7 days after the trigger" cite "D. Alaska L.Civ.R. 7.2(b)"
+{
+  given OppositionServed() on 2026-11-02
+  expect deadline(reply-period) == 2026-11-09
+}
+
+test "in camera filing period: 7 days after the trigger" cite "D. Alaska L.Civ.R. 7.3(g)"
+{
+  given InCameraReviewGranted() on 2026-11-02
+  expect deadline(in-camera-filing-period) == 2026-11-09
+}
+
+test "reconsideration error period: 7 days after the trigger" cite "D. Alaska L.Civ.R. 7.3(h)"
+{
+  given OrderEntered() on 2026-11-02
+  expect deadline(reconsideration-error-period) == 2026-11-09
+}
+
+test "reconsideration new ground period: 14 days after the trigger" cite "D. Alaska L.Civ.R. 7.3(h)"
+{
+  given NewFactsOrLawChange() on 2026-11-02
+  expect deadline(reconsideration-new-ground-period) == 2026-11-16
+}
+
+test "reconsideration response period: 7 days after the trigger" cite "D. Alaska L.Civ.R. 7.3(h)"
+{
+  given ReconsiderationResponseRequested() on 2026-11-02
+  expect deadline(reconsideration-response-period) == 2026-11-09
+}
+
+test "reconsideration reply period: 7 days after the trigger" cite "D. Alaska L.Civ.R. 7.3(h)"
+{
+  given ReconsiderationReplyRequested() on 2026-11-02
+  expect deadline(reconsideration-reply-period) == 2026-11-09
+}
+
+test "attorney address notice period: 7 days after the trigger" cite "D. Alaska L.Civ.R. 11.1(b)"
+{
+  given AttorneyContactChanged() on 2026-11-02
+  expect deadline(attorney-address-notice-period) == 2026-11-09
+}
+
+test "pro se address notice period: 14 days after the trigger" cite "D. Alaska L.Civ.R. 11.1(b)"
+{
+  given ProSeMailServedAndReturned() on 2026-11-02
+  expect deadline(pro-se-address-notice-period) == 2026-11-16
+}
+
+test "withdrawal hearing notice period: 21 days before the trigger" cite "D. Alaska L.Civ.R. 11.1(c)"
+{
+  given WithdrawalHearingHeld() on 2027-03-02
+  expect deadline(withdrawal-hearing-notice-period) == 2027-02-09
+}
+
+test "amended pleading filing period: 7 days after the trigger" cite "D. Alaska L.Civ.R. 15.1(b)"
+{
+  given AmendmentGranted() on 2026-11-02
+  expect deadline(amended-pleading-filing-period) == 2026-11-09
+}
+
+test "amend or add parties period: 60 days after the trigger" cite "D. Alaska L.Civ.R. 16.1(c)"
+{
+  given PretrialSchedulingOrderEntered() on 2026-11-02
+  expect deadline(amend-or-add-parties-period) == 2027-01-04
+}
+
+test "witness list period: 45 days before the trigger" cite "D. Alaska L.Civ.R. 16.1(c)"
+{
+  given DiscoveryClosed() on 2027-03-02
+  expect deadline(witness-list-period) == 2027-01-15
+}
+
+test "discovery motion period: 14 days after the trigger" cite "D. Alaska L.Civ.R. 16.1(c)"
+{
+  given DiscoveryClosed() on 2026-11-02
+  expect deadline(discovery-motion-period) == 2026-11-16
+}
+
+test "expert exclusion motion period: 30 days after the trigger" cite "D. Alaska L.Civ.R. 16.1(c)"
+{
+  given ExpertDiscoveryClosed() on 2026-11-02
+  expect deadline(expert-exclusion-motion-period) == 2026-12-02
+}
+
+test "dispositive motion period: 30 days after the trigger" cite "D. Alaska L.Civ.R. 16.1(c)"
+{
+  given DiscoveryClosed() on 2026-11-02
+  expect deadline(dispositive-motion-period) == 2026-12-02
+}
+
+test "related case response period: 14 days after the trigger" cite "D. Alaska L.Civ.R. 16.1(e)"
+{
+  given RelatedCaseNoticeFiled() on 2026-11-02
+  expect deadline(related-case-response-period) == 2026-11-16
+}
+
+test "settlement closing papers period: 30 days after the trigger" cite "D. Alaska L.Civ.R. 16.2(d)"
+{
+  given SettlementReportFiled() on 2026-11-02
+  expect deadline(settlement-closing-papers-period) == 2026-12-02
+}
+
+test "agency record period: 60 days after the trigger" cite "D. Alaska L.Civ.R. 16.3(b)"
+{
+  given AgencyAppeared() on 2026-11-02
+  expect deadline(agency-record-period) == 2027-01-04
+}
+
+test "record supplement motion period: 21 days after the trigger" cite "D. Alaska L.Civ.R. 16.3(b)"
+{
+  given AgencyRecordFiled() on 2026-11-02
+  expect deadline(record-supplement-motion-period) == 2026-11-23
+}
+
+test "agency appendix period: 14 days after the trigger" cite "D. Alaska L.Civ.R. 16.3(b)"
+{
+  given AgencyFinalBriefFiled() on 2026-11-02
+  expect deadline(agency-appendix-period) == 2026-11-16
+}
+
+test "opening brief record period: 30 days after the trigger" cite "D. Alaska L.Civ.R. 16.3(c)"
+{
+  given AgencyRecordFiled() on 2026-11-02
+  expect deadline(opening-brief-record-period) == 2026-12-02
+}
+
+test "opening brief supplement period: 30 days after the trigger" cite "D. Alaska L.Civ.R. 16.3(c)"
+{
+  given SupplementRuling() on 2026-11-02
+  expect deadline(opening-brief-supplement-period) == 2026-12-02
+}
+
+test "agency opposition brief period: 30 days after the trigger" cite "D. Alaska L.Civ.R. 16.3(c)"
+{
+  given AgencyOpeningBriefServed() on 2026-11-02
+  expect deadline(agency-opposition-brief-period) == 2026-12-02
+}
+
+test "agency reply brief period: 14 days after the trigger" cite "D. Alaska L.Civ.R. 16.3(c)"
+{
+  given AgencyOppositionBriefServed() on 2026-11-02
+  expect deadline(agency-reply-brief-period) == 2026-11-16
+}
+
+test "trial brief period: 21 days before the trigger" cite "D. Alaska L.Civ.R. 39.2(a)"
+{
+  given TrialBegins() on 2027-03-02
+  expect deadline(trial-brief-period) == 2027-02-09
+}
+
+test "exhibit exchange period: 14 days before the trigger" cite "D. Alaska L.Civ.R. 39.3(b)"
+{
+  given TrialBegins() on 2027-03-02
+  expect deadline(exhibit-exchange-period) == 2027-02-16
+}
+
+test "exhibit list period: 7 days before the trigger" cite "D. Alaska L.Civ.R. 39.3(b)"
+{
+  given TrialBegins() on 2027-03-02
+  expect deadline(exhibit-list-period) == 2027-02-23
+}
+
+test "voir dire questions period: 7 days before the trigger" cite "D. Alaska L.Civ.R. 47.1"
+{
+  given TrialBegins() on 2027-03-02
+  expect deadline(voir-dire-questions-period) == 2027-02-23
+}
+
+test "jury instruction conference period: 21 days before the trigger" cite "D. Alaska L.Civ.R. 51.1(a)"
+{
+  given TrialBegins() on 2027-03-02
+  expect deadline(jury-instruction-conference-period) == 2027-02-09
+}
+
+test "jury instructions period: 14 days before the trigger" cite "D. Alaska L.Civ.R. 51.1(b)"
+{
+  given TrialBegins() on 2027-03-02
+  expect deadline(jury-instructions-period) == 2027-02-16
+}
+
+test "bill of costs period: 14 days after the trigger" cite "D. Alaska L.Civ.R. 54.1(a)"
+{
+  given JudgmentEntered() on 2026-11-02
+  expect deadline(bill-of-costs-period) == 2026-11-16
+}
+
+test "costs objection period: 7 days after the trigger" cite "D. Alaska L.Civ.R. 54.1(c)"
+{
+  given BillOfCostsFiled() on 2026-11-02
+  expect deadline(costs-objection-period) == 2026-11-09
+}
+
+test "costs review motion period: 7 days after the trigger" cite "D. Alaska L.Civ.R. 54.1(d)"
+{
+  given CostsTaxed() on 2026-11-02
+  expect deadline(costs-review-motion-period) == 2026-11-09
+}
+
+test "interest computation period: 14 days after the trigger" cite "D. Alaska L.Civ.R. 58.1(c)"
+{
+  given JudgmentEntered() on 2026-11-02
+  expect deadline(interest-computation-period) == 2026-11-16
+}
+
+test "alternative interest computation period: 7 days after the trigger" cite "D. Alaska L.Civ.R. 58.1(c)"
+{
+  given InterestComputationServed() on 2026-11-02
+  expect deadline(alternative-interest-computation-period) == 2026-11-09
+}
+
+test "satisfaction acknowledgment period: 14 days after the trigger" cite "D. Alaska L.Civ.R. 58.2(a)"
+{
+  given SatisfactionRequested() on 2026-11-02
+  expect deadline(satisfaction-acknowledgment-period) == 2026-11-16
+}
+
+test "magistrate declination period: 14 days after the trigger" cite "D. Alaska L.Civ.R. 73.1(c)"
+{
+  given MagistrateNoticeServed() on 2026-11-02
+  expect deadline(magistrate-declination-period) == 2026-11-16
+}
+
+test "pro se prisoner magistrate declination period: 21 days after the trigger" cite "D. Alaska L.Civ.R. 73.1(c)"
+{
+  given MagistrateNoticeServed() on 2026-11-02
+  expect deadline(pro-se-prisoner-magistrate-declination-period) == 2026-11-23
+}
+
+test "remote access request period: 14 days before the trigger" cite "D. Alaska L.Civ.R. 77.3(c)"
+{
+  given ProceedingHeld() on 2027-03-02
+  expect deadline(remote-access-request-period) == 2027-02-16
+}
+
+test "remote access objection period: 7 days before the trigger" cite "D. Alaska L.Civ.R. 77.3(c)"
+{
+  given ProceedingHeld() on 2027-03-02
+  expect deadline(remote-access-objection-period) == 2027-02-23
+}
+
+test "realtime reporter request period: 30 days before the trigger" cite "D. Alaska L.Civ.R. 80.1(a)"
+{
+  given TrialOrHearingHeld() on 2027-03-02
+  expect deadline(realtime-reporter-request-period) == 2027-01-29
+}

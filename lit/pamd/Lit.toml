@@ -1,0 +1,48 @@
+# The United States District Court for the Middle District of
+# Pennsylvania's Local Rules of Court as a local-rule layer over lit/frcp
+# (28 U.S.C. § 2071; FRCP 83(a)): it declares only the periods and limits
+# the Local Rules themselves state and re-encodes no FRCP deadline. FRCP
+# 6(a) computes a period stated in a local rule. The rules are the edition
+# effective December 1, 2014 (sources/pamd), which the court's page states
+# were last amended that day. An appeal goes to the Third Circuit under
+# lit/frap.
+[package]
+name = "pamd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "pamd-local-rules"
+forum = "pamd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Middle District of Pennsylvania: Local Rules of Court"
+description = "The Middle District of Pennsylvania's Local Rules of Court as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): motion briefing periods and brief length, reconsideration, third-party joinder, service of an amended pleading adding a defendant, the attorneys' conference and case management statement, the pretrial memorandum, class determination, the default close of discovery, bills of costs, appeals and objections to a magistrate judge's orders and reports, and Social Security review briefing and its limits."
+in_force = "2014-12-01"
+known_at = "2026-10-28"
+unknown_before = "2014-12-01"
+jurisdiction = "United States District Court, M.D. Pa."
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "pamd-lr"
+issuer = "United States District Court for the Middle District of Pennsylvania"
+date = "2014-12-01"
+designation = "Local Rules of Court (effective December 1, 2014)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.pamd-lr]
+title = "Rules of Court of the United States District Court for the Middle District of Pennsylvania (effective December 1, 2014)"
+url = "https://www.pamd.uscourts.gov/sites/pamd/files/LR120114.pdf"
+path = "sources/pamd/local-rules-2014-12-01-sectioned.txt"
+path_sha256 = "a4ff8b7c6353c56408da5112bcdc10880673ed744a877e5b2bc68c73190bae0f"
+sha256 = "dc93f968e24b935be49f6f3bdcac3febaaec812442deb571f48b547e9deb9611"
+as_of = "2014-12-01"
+cite_prefixes = ["M.D. Pa. L.R."]
+section_heading = "LR {n}"

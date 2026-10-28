@@ -1,0 +1,311 @@
+module pamd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Middle District of Pennsylvania's own civil periods and limits,
+// computed under FRCP 6(a), which governs a period stated in a local rule.
+// Rules that state no period or limit, or one this layer cannot count, stay
+// out: the motion for leave to exceed the brief limits two working days
+// before the brief is due (LR 7.8(b)(3)), counted in working days; the
+// scheduling order within 120 days (LR 16.4) and the mediation scheduling
+// (LR 16.8), which bind the court and the mediator; the counts of
+// interrogatories and requests for admission (LR 33.3, 36.1), which this
+// layer has no measure for; the trial brief and jury requests three days
+// before trial (LR 39.7, 51.1); the 28-day notice before dismissal for
+// inactivity (LR 41.1), which the court gives; the disposal of exhibits and
+// unsealing of records (LR 79.4, 79.5); attorney discipline (LR 83.20 to
+// 83.30); the habeas and section 2255 periods and limits (LR 83.32), which
+// belong to a habeas package; and the time for appeal of an incarcerated
+// party (LR 83.33). The earlier M.D. Pa. outline's FRCP flow belongs to
+// lit/frcp and lit/frap; its decisions (Twombly, Iqbal, Foman v. Davis,
+// Celotex, Anderson v. Liberty Lobby, Frow v. De La Vega, Catlin, Bowles v.
+// Russell, and in the Third and Fourth Circuits Phillips v. County of
+// Allegheny, Fowler v. UPMC Shadyside, Poulis v. State Farm, Goines and
+// Anderson v. Foundation for Advancement) are FRCP authority, and no
+// reporter text is vendored, so they are removed here.
+/// A brief: at most 15 pages, or longer if it does not exceed 5,000 words
+/// and carries a word-count certificate (LR 7.8(b)(1), (2)); a brief in a
+/// bankruptcy appeal is exempt unless the court orders otherwise (LR
+/// 7.8(c)).
+limit brief {
+  words <= 5_000 cite "M.D. Pa. L.R. 7.8(b)"
+  pages <= 15 cite "M.D. Pa. L.R. 7.8(b)"
+} cite "M.D. Pa. L.R. 7.8(b)"
+
+/// The body of a notice of supplemental authority: at most 100 words, with
+/// no argument (LR 7.36).
+limit supplemental-authority-notice {
+  words <= 100 cite "M.D. Pa. L.R. 7.36"
+} cite "M.D. Pa. L.R. 7.36"
+
+/// The plaintiff's or the defendant's brief in a Social Security review:
+/// at most 15 pages (LR 83.40.7).
+limit social-security-brief {
+  pages <= 15 cite "M.D. Pa. L.R. 83.40.7"
+} cite "M.D. Pa. L.R. 83.40.7"
+
+/// The plaintiff's reply brief in a Social Security review: at most 10
+/// pages (LR 83.40.7).
+limit social-security-reply {
+  pages <= 10 cite "M.D. Pa. L.R. 83.40.7"
+} cite "M.D. Pa. L.R. 83.40.7"
+
+/// A motion is filed (LR 7.5).
+event MotionFiled()
+/// The movant's brief supporting a motion other than for summary judgment
+/// is served (LR 7.6).
+event SupportingBriefServed() paper brief
+/// A motion that needs no supporting brief is served (LR 7.5(a) to (c),
+/// 7.6).
+event BrieflessMotionServed()
+/// The movant's brief supporting a motion for summary judgment is served
+/// (LR 7.4, 7.6).
+event SummaryJudgmentBriefServed() paper brief
+/// A brief in opposition to a motion is served (LR 7.7).
+event OppositionBriefServed() paper brief
+/// An order is entered (LR 7.10).
+event OrderEntered()
+/// An order setting the case for trial is entered (LR 14.1, 14.2).
+event TrialSettingOrderEntered()
+/// The moving party's answer to the complaint or counterclaim is served
+/// (LR 14.1, 14.2).
+event MovantAnswerServed()
+/// An order granting leave to file an amended pleading that adds a new
+/// defendant is entered (LR 15.1(a)).
+event LeaveToAddDefendantGranted()
+/// The initial case management conference is held (LR 16.3(a)).
+event CaseManagementConferenceHeld()
+/// The final pretrial conference is held (LR 16.3(b), 16.6).
+event FinalPretrialConferenceHeld()
+/// A complaint in a class action is filed (LR 23.3).
+event ClassComplaintFiled()
+/// A party files its last pleading (LR 26.4).
+event LastPleadingFiled()
+/// Final judgment is entered (LR 54.3).
+event FinalJudgmentEntered()
+/// The clerk taxes a bill of costs (LR 54.3).
+event CostsTaxed()
+/// A magistrate judge's order on a non-dispositive matter issues (LR
+/// 72.2).
+event MagistrateOrderIssued()
+/// The appellant's brief on an appeal or objection from a magistrate judge
+/// is served (LR 72.2, 72.3).
+event MagistrateAppealBriefServed()
+/// The brief opposing an appeal or objection from a magistrate judge is
+/// served (LR 72.2, 72.3).
+event MagistrateResponseBriefServed()
+/// A magistrate judge's proposed findings, recommendations or report is
+/// served (LR 72.3).
+event MagistrateReportServed()
+/// A complaint for review of a Social Security disability decision is filed
+/// (LR 83.40.2).
+event SocialSecurityComplaintFiled()
+/// The complaint in a Social Security review is served (LR 83.40.3).
+event SocialSecurityComplaintServed()
+/// The defendant's answer and the certified administrative transcript are
+/// served (LR 83.40.4).
+event SocialSecurityAnswerServed()
+/// The plaintiff's brief in a Social Security review is served (LR
+/// 83.40.5).
+event SocialSecurityPlaintiffBriefServed() paper social-security-brief
+/// The defendant's brief in a Social Security review is filed (LR
+/// 83.40.6).
+event SocialSecurityDefendantBriefFiled() paper social-security-brief
+
+/// LR 7.5: within fourteen days after filing a motion, the movant files a
+/// supporting brief, or the motion is deemed withdrawn; a motion for a
+/// protective order carries its brief, and a motion for enlargement of time,
+/// one with every party's concurrence, or one for appointment of counsel
+/// needs none.
+deadline supporting-brief-period: 14.days after MotionFiled() counted_by frcp6 cite "M.D. Pa. L.R. 7.5"
+{
+  forum frcp
+}
+
+/// LR 7.6: a party opposing a motion other than for summary judgment files
+/// its brief within fourteen days after service of the movant's brief, or
+/// is deemed not to oppose it.
+deadline opposition-period: 14.days after SupportingBriefServed() counted_by frcp6 cite "M.D. Pa. L.R. 7.6"
+{
+  forum frcp
+}
+
+/// LR 7.6: where the rules require no supporting brief, the opposition is
+/// due within seven days after service of the motion.
+deadline briefless-opposition-period: 7.days after BrieflessMotionServed() counted_by frcp6 cite "M.D. Pa. L.R. 7.6"
+{
+  forum frcp
+}
+
+/// LR 7.6: a brief in opposition to a motion for summary judgment, with the
+/// LR 56.1 responsive statement, is due within twenty-one days after
+/// service of the movant's brief.
+deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentBriefServed() counted_by frcp6 cite "M.D. Pa. L.R. 7.6"
+{
+  forum frcp
+}
+
+/// LR 7.7: the movant may file a reply brief within fourteen days after
+/// service of the brief in opposition; no further brief without leave.
+deadline reply-period: 14.days after OppositionBriefServed() counted_by frcp6 cite "M.D. Pa. L.R. 7.7"
+{
+  forum frcp
+}
+
+/// LR 7.10: a motion for reconsideration or reargument, with its supporting
+/// brief, is filed within fourteen days after entry of the order concerned;
+/// a motion under FRCP 59 is outside the rule.
+deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6 cite "M.D. Pa. L.R. 7.10"
+{
+  forum frcp
+}
+
+/// LR 14.1, 14.2: a motion for leave to join a third-party defendant under
+/// FRCP 14(a) or (b) is made within three months after an order setting the
+/// case for trial, or six months after service of the movant's answer,
+/// whichever comes first; LR 14.3 lets the court suspend the rule for good
+/// cause.
+deadline third-party-joinder-trial-period: 3.months after TrialSettingOrderEntered() counted_by frcp6 cite "M.D. Pa. L.R. 14.1"
+{
+  forum frcp
+}
+
+/// LR 14.1, 14.2: the six-month limb, from service of the movant's answer.
+deadline third-party-joinder-answer-period: 6.months after MovantAnswerServed() counted_by frcp6 cite "M.D. Pa. L.R. 14.1"
+{
+  forum frcp
+}
+
+/// LR 15.1(a): a party granted leave to file an amended pleading that adds
+/// a new defendant files and serves it within thirty days after the date of
+/// the order granting leave.
+deadline amended-pleading-new-defendant-period: 30.days after LeaveToAddDefendantGranted() counted_by frcp6 cite "M.D. Pa. L.R. 15.1(a)"
+{
+  forum frcp
+}
+
+/// LR 16.3(a): lead counsel confer at least fourteen days before the
+/// initial case management conference.
+deadline case-management-conference-meeting: 14.days before CaseManagementConferenceHeld() counted_by frcp6 cite "M.D. Pa. L.R. 16.3(a)"
+{
+  forum frcp
+}
+
+/// LR 16.3(a): the joint case management form, which is the FRCP 26(f)
+/// discovery plan, is filed seven days before the case management
+/// conference.
+deadline case-management-statement: 7.days before CaseManagementConferenceHeld() counted_by frcp6 cite "M.D. Pa. L.R. 16.3(a)"
+{
+  forum frcp
+}
+
+/// LR 16.3(b): lead counsel meet and confer at least fourteen calendar days
+/// before the final pretrial conference.
+deadline final-pretrial-meeting: 14.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "M.D. Pa. L.R. 16.3(b)"
+{
+  forum frcp
+}
+
+/// LR 16.6: each party files and serves its pretrial memorandum at least
+/// seven days before the final pretrial conference.
+deadline pretrial-memorandum: 7.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "M.D. Pa. L.R. 16.6"
+{
+  forum frcp
+}
+
+/// LR 23.3: within ninety days after filing a class action complaint,
+/// unless extended for good cause, the plaintiff moves for a determination
+/// under FRCP 23(c)(1).
+deadline class-determination-motion-period: 90.days after ClassComplaintFiled() counted_by frcp6 cite "M.D. Pa. L.R. 23.3"
+{
+  forum frcp
+}
+
+/// LR 26.4: absent a discovery deadline in a court order, each party
+/// completes discovery within six months of the date of the last pleading
+/// it filed.
+deadline discovery-close-period: 6.months after LastPleadingFiled() counted_by frcp6 cite "M.D. Pa. L.R. 26.4"
+{
+  forum frcp
+}
+
+/// LR 54.3: a bill of costs is filed no later than thirty days after entry
+/// of final judgment, unless an extension is granted.
+deadline bill-of-costs-period: 30.days after FinalJudgmentEntered() counted_by frcp6 cite "M.D. Pa. L.R. 54.3"
+{
+  forum frcp
+}
+
+/// LR 54.3: a party appealing the clerk's taxation files a written
+/// specification of the items objected to and the grounds within seven
+/// days of the taxation, and serves it within seven days.
+deadline costs-appeal-period: 7.days after CostsTaxed() counted_by frcp6 cite "M.D. Pa. L.R. 54.3"
+{
+  forum frcp
+}
+
+/// LR 72.2: a party may appeal a magistrate judge's non-dispositive order
+/// within fourteen days after its issuance, unless the magistrate judge or
+/// a judge prescribes a different time, filing a brief with the appeal.
+deadline magistrate-order-appeal-period: 14.days after MagistrateOrderIssued() counted_by frcp6 cite "M.D. Pa. L.R. 72.2"
+{
+  forum frcp
+}
+
+/// LR 72.2, 72.3: a party opposing the appeal or objections files its brief
+/// within fourteen days after service of the appellant's brief.
+deadline magistrate-response-brief-period: 14.days after MagistrateAppealBriefServed() counted_by frcp6 cite "M.D. Pa. L.R. 72.2"
+{
+  forum frcp
+}
+
+/// LR 72.2, 72.3: a reply brief may be filed within seven days after
+/// service of the opposing party's brief.
+deadline magistrate-reply-brief-period: 7.days after MagistrateResponseBriefServed() counted_by frcp6 cite "M.D. Pa. L.R. 72.2"
+{
+  forum frcp
+}
+
+/// LR 72.3: a party may object to a magistrate judge's proposed findings,
+/// recommendations or report within fourteen days after being served with
+/// it.
+deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6 cite "M.D. Pa. L.R. 72.3"
+{
+  forum frcp
+}
+
+/// LR 83.40.2: the plaintiff serves the summons and complaint under FRCP
+/// 4(i) within fourteen days of filing the complaint.
+deadline social-security-service-period: 14.days after SocialSecurityComplaintFiled() counted_by frcp6 cite "M.D. Pa. L.R. 83.40.2"
+{
+  forum frcp
+}
+
+/// LR 83.40.3: the defendant serves and files an answer with a certified
+/// copy of the administrative transcript within sixty days of service of
+/// the complaint.
+deadline social-security-answer-period: 60.days after SocialSecurityComplaintServed() counted_by frcp6 cite "M.D. Pa. L.R. 83.40.3"
+{
+  forum frcp
+}
+
+/// LR 83.40.4: the plaintiff serves and files a brief within forty-five days
+/// of service of the defendant's answer.
+deadline social-security-plaintiff-brief-period: 45.days after SocialSecurityAnswerServed() counted_by frcp6 cite "M.D. Pa. L.R. 83.40.4"
+{
+  forum frcp
+}
+
+/// LR 83.40.5: the defendant files and serves its brief within thirty days
+/// after service of the plaintiff's brief.
+deadline social-security-defendant-brief-period: 30.days after SocialSecurityPlaintiffBriefServed() counted_by frcp6 cite "M.D. Pa. L.R. 83.40.5"
+{
+  forum frcp
+}
+
+/// LR 83.40.6: the plaintiff may file and serve a reply within fourteen days
+/// of the filing of the defendant's brief.
+deadline social-security-reply-period: 14.days after SocialSecurityDefendantBriefFiled() counted_by frcp6 cite "M.D. Pa. L.R. 83.40.6"
+{
+  forum frcp
+}

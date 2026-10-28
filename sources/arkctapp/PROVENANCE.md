@@ -15,3 +15,9 @@
 - Retrieved 2026-10-27 on carbon (the court site refuses agent pods: lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 039cb6ae5df1eeb38a0be219ebf093b41622768649397394a82652bbaf3c3052. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `arkctapp/original/ar-supreme-court-rules.pdf` as served (sha256 7f26989c58f09c36964c5add5424f6709db177bfc367ea648aab2905b88c4484); extraction sha256 039cb6ae5df1eeb38a0be219ebf093b41622768649397394a82652bbaf3c3052.
+
+### `arkctapp/arap-civil-sectioned.txt` — Arkansas Rules of Appellate Procedure—Civil, sectioned
+
+- Derived in the pod (lg-f3q8.3) from `arkctapp/arap-civil.txt` (extract sha256 baa4d8fdce843d9f59ad162212be7de918cd3ab5566e6ae9c6a2bbdf530dfdda); nothing fetched. One `## Rule <n>` line is inserted before the first heading line `Rule <n>. <Title>` of each rule (Rule 1 through Rule 12; the second, paper-record heading of Rule 7 is unmarked). Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, current through October 1, 2026.
+- Sectioned sha256 719cd64215710d56deaec57509ac5435f9659211e69574bf1196f26c610f6d12 (the `path_sha256` pinned by `lit/ar-circuit/Lit.toml` and `lit/arkctapp/Lit.toml`).

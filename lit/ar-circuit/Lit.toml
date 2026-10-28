@@ -1,0 +1,54 @@
+# Civil actions in the Arkansas circuit courts under the Arkansas Rules of
+# Civil Procedure, current through October 1, 2026 (sources/ar-circuit).
+# Computation of time is Ark. R. Civ. P. 6(a), which excludes the day of
+# the event, carries a last day that falls on a Saturday, Sunday, legal
+# holiday or other day the clerk's office is closed to the next day it is
+# open, and, for a period of less than 14 days, excludes intermediate
+# Saturdays, Sundays and legal holidays, a legal holiday including a day
+# the laws of Arkansas designate; core has neither that method nor an
+# Arkansas holiday calendar, so the rules' periods are stated in notes,
+# not encoded as counted deadlines. An appeal hands off to lit/arkctapp
+# under the Arkansas Rules of Appellate Procedure--Civil, current through
+# October 1, 2026 (sources/arkctapp).
+[package]
+name = "ar-circuit-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ar-circuit-court-civil"
+forum = "ar-circuit"
+authority = "StateRule"
+jurisdiction_id = "arkansas"
+title = "Arkansas circuit court, civil"
+description = "Civil actions in the Arkansas circuit courts under the Arkansas Rules of Civil Procedure, as far as the vendored text states: commencement and the time limit for service, the time to answer, Rule 12(b) motions and motion practice, default, discovery and the jury demand, summary judgment, trial, post-trial motions, entry of judgment, voluntary nonsuit, and the notice of appeal (lit/arkctapp)."
+in_force = "2026-10-01"
+known_at = "2026-10-28"
+unknown_before = "2026-10-01"
+jurisdiction = "Arkansas circuit court (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ark-r-civ-p]
+title = "Arkansas Rules of Civil Procedure (current through October 1, 2026)"
+url = "https://opinions.arcourts.gov/ark/cr/en/16712/1/document.do"
+path = "sources/ar-circuit/arcp-sectioned.txt"
+path_sha256 = "6c829071f46786d015e71140098aa042a70e44dcce95ad7f5b4282334a273385"
+sha256 = "b72f17dcaf0261c1b94a76509f2a35ef4d6eceeb21c613a3aea13d682e19c0d6"
+as_of = "2026-10-01"
+cite_prefixes = ["Ark. R. Civ. P."]
+section_heading = "Rule {n}"
+
+[sources.ark-r-app-p-civ]
+title = "Arkansas Rules of Appellate Procedure--Civil (current through October 1, 2026)"
+url = "https://opinions.arcourts.gov/ark/cr/en/1885/1/document.do"
+path = "sources/arkctapp/arap-civil-sectioned.txt"
+path_sha256 = "719cd64215710d56deaec57509ac5435f9659211e69574bf1196f26c610f6d12"
+sha256 = "c854fb5600e8cb1595791154a4befca952fd984ae346f1e4aacf45672923d36e"
+as_of = "2026-10-01"
+cite_prefixes = ["Ark. R. App. P.–Civ."]
+section_heading = "Rule {n}"

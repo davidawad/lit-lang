@@ -1,0 +1,54 @@
+module ared-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Eastern District of Arkansas's own periods in a criminal case under
+// the joint Local Rules. L.R. 7.2 governs "all motions" (its (f) names the
+// Federal Rules of Criminal Procedure), and its (b) says FRCP 6, including
+// 6(d), counts its days; in a criminal case FRCrimP 45(a) computes a
+// period "in any local rule", so these count under frcrimp45, whose
+// 45(c) adds the three days after service by mail that FRCP 6(d) adds.
+// "For cause shown" the court may shorten or lengthen the L.R. 7.2(b)
+// times. Stated in the rules but not declared: the summary-judgment reply
+// (L.R. 7.2(b), 56.1), a civil motion; the reply of a party seeking relief
+// under 28 U.S.C. § 2254 or § 2255 (L.R. 7.2(b)), lit/habeas's; the
+// fourteen days to appeal a magistrate judge's referred nondispositive
+// ruling and to object to proposed findings and recommendations (L.R.
+// 72.1, parts VII.B and VIII.C), which in a criminal case are FRCrimP
+// 59(a) and 59(b)(2)'s fourteen days, lit/frcrimp's to state; the
+// filing of served papers within seven days (L.R. 5.4), stated under FRCP
+// 5(d); and the pro se plaintiff's thirty days (L.R. 5.5(c)(2)), a civil
+// rule. Criminal cases are assigned only at random, never as related
+// cases (L.R. 40.1(d)); the magistrate judges' misdemeanor, forfeiture of
+// collateral, Rule 40 commitment, arraignment, subpoena and dismissal
+// duties (L.R. 72.1, parts I-VI) state no period. The earlier E.D. Ark.
+// criminal outline's FRCrimP flow and its decisions (Salerno, Brady,
+// Barker v. Wingo, Zedner, Boykin, Missouri v. Frye, Jackson v. Virginia,
+// Booker, Roe v. Flores-Ortega, Garza v. Idaho) are FRCrimP and
+// constitutional authority and belong to lit/frcrimp; no reporter text is
+// vendored, so they are removed here, and the court's Speedy Trial Act
+// plan (18 U.S.C. § 3165) is not vendored.
+/// A motion and its supporting papers are served (L.R. 7.2(b)).
+event MotionServed()
+/// A magistrate judge takes a reviewable action whose review no law or
+/// other local rule provides for (L.R. 72.1, part XI).
+event MagistrateActionTaken()
+
+/// L.R. 7.2(b): within fourteen days from the date of service of a motion
+/// and its supporting papers, a party opposing it serves and files a
+/// concise statement in opposition with supporting authorities. The
+/// failure to respond timely to a nondispositive motion is an adequate
+/// basis, without more, for granting it (L.R. 7.2(f)).
+deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 cite "E.D. Ark. L.R. 7.2(b)"
+{
+  forum frcrimp
+}
+
+/// L.R. 72.1, part XI.A: a party may file and serve an application for
+/// review of a magistrate judge's action, review of which is not
+/// otherwise specifically provided for by law or the local rules, not
+/// later than fourteen days after it.
+deadline magistrate-review-period: 14.days after MagistrateActionTaken() counted_by frcrimp45 cite "E.D. Ark. L.R. 72.1"
+{
+  forum frcrimp
+}

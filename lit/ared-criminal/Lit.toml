@@ -1,0 +1,54 @@
+# The Local Rules of the United States District Courts for the Eastern
+# and Western Districts of Arkansas, as applied in the Eastern District's
+# criminal cases, as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods the Local Rules
+# themselves state for a criminal case and re-encodes no FRCrimP,
+# Speedy Trial Act or FRAP 4(b) period. The rules are one joint text for
+# both districts and both kinds of case (sources/ared, the "Complete Copy"
+# last modified 2020-11-17; its newest amendment note is L.R. 5.1's,
+# November 5, 2020), so the package runs from that date; lit/arwd-criminal
+# declares the same rules for the Western District and lit/ared the civil
+# layer. The rules have no separate criminal part: L.R. 72.1, parts I-VI,
+# assign criminal matters to magistrate judges and state no period. Habeas
+# (28 U.S.C. §§ 2254, 2255) is lit/habeas's; an appeal goes to the Eighth
+# Circuit under FRAP 4(b) (lit/frcrimp) and lit/ca8.
+[package]
+name = "ared-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ared-criminal-local-rules"
+forum = "ared-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Eastern District of Arkansas: Local Rules (criminal)"
+description = "The Local Rules of the Eastern and Western Districts of Arkansas, as applied in the Eastern District's criminal cases, as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the response to a motion and review of a magistrate judge's action the rules do not otherwise provide for."
+in_force = "2020-11-05"
+known_at = "2026-10-28"
+unknown_before = "2020-11-05"
+jurisdiction = "United States District Court, E.D. Arkansas (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ared-lr"
+issuer = "United States District Courts for the Eastern and Western Districts of Arkansas"
+date = "2020-11-05"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.ared-lr]
+title = "Local Rules of the United States District Court for the Eastern and Western Districts of Arkansas (Complete Copy, last modified 2020-11-17)"
+url = "https://www.are.uscourts.gov/sites/are/files/local_rules/All_LR.pdf"
+path = "sources/ared/ared-arwd-local-rules-sectioned.txt"
+path_sha256 = "9ffe4767e0a2f226a2c05119182219877a27b0c28c3edda6bd4442ab6c411cd4"
+sha256 = "9fc211b94a6b06e77953f28f1b88c5e61f8d567dc68d71a78a91eee7715fa459"
+as_of = "2020-11-05"
+cite_prefixes = ["E.D. Ark. L.R."]
+section_heading = "L.R. {n}"

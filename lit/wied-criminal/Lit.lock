@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "wied-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:32b1c953b11316bb16830ad59405b592b8707e0a5f1a7e57a2e4f7280dff6736"
+semantic = "sha256:676b0971ee5298ecb635f9239d52f01625580578e0510f2437c03f7c5697da9a"
+texts = [
+    "wied-criminal sources/wied/wied-local-rules-sectioned.txt sha256:c2afa26b772157af4f061f06d67a3828eb3da88bdf9c1e96d927bf8d99a9a472",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

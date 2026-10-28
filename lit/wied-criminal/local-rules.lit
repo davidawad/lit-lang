@@ -1,0 +1,152 @@
+module wied-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The Eastern District of Wisconsin's own criminal periods, counted under
+// the criminal rules (FRCrimP 45(a) governs "any local rule"). The
+// Criminal Rules of Part C govern criminal and petty offense proceedings
+// (E.D. Wis. Criminal L. R. 1). In a proceeding that needs no indictment,
+// a deadline that runs from arraignment on an indictment runs instead from
+// the entry of a not-guilty plea on the trial document (Criminal L. R.
+// 58(a)(1)); `ArraignedOnIndictment` is that event too. No trigger carries
+// a service method: FRCrimP 45(c)'s three added days follow the manner of
+// service, which is not modeled here.
+//
+// Periods counted in business days stay in notes, since lit/core's FRCrimP
+// 45(a) rule counts calendar days: under the Expanded Discovery Policy,
+// grand jury transcripts of the government's trial witnesses are made
+// available no later than 1 business day before trial, and the defense
+// discloses FRCrimP 16(b)(1)(C) material not later than 5 business days
+// before trial absent good cause (Criminal L. R. 16(a)(4)).
+//
+// Conditions that are not deadlines from an event stay in notes: the judge
+// in each criminal case issues the FRCrimP 5(f) Brady order (Criminal L. R.
+// 5); in an unusually complex case the government notifies the Clerk when
+// the indictment or information is filed, and a pretrial scheduling
+// conference may set the case's deadlines (Criminal L. R. 12(a)(1), (2));
+// absent such a conference the government uses its best efforts to make
+// discovery available at arraignment or within 5 days after it (Criminal
+// L. R. 12(a)(3)), a best-efforts target rather than a deadline; a
+// corporate disclosure statement is filed with the first appearance
+// (Criminal L. R. 12.4(b)); a motion to compel discovery states the
+// conference held (Criminal L. R. 16(b)); grand jury materials (Criminal L.
+// R. 6), presentence report confidentiality (Criminal L. R. 32(a)), sealed
+// hearings (Criminal L. R. 49) and misdemeanors and petty offenses
+// (Criminal L. R. 58) set no other period.
+//
+// The earlier E.D. Wis. criminal outline's FRCrimP flow and its decisions
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// The defendant is arraigned on an indictment, or, where no indictment is
+/// necessary, a not-guilty plea is entered on the trial document (E.D. Wis.
+/// Criminal L. R. 12(b)(1), 16.1(a), 58(a)(1)).
+event ArraignedOnIndictment()
+/// The date on which a Rule 12(b)(3) motion is due (E.D. Wis. Criminal L.
+/// R. 12(b)(2)).
+event PretrialMotionDue()
+/// The date on which the non-movant's response is due (E.D. Wis. Criminal
+/// L. R. 12(b)(3)).
+event PretrialResponseDue()
+/// A motion seeking an evidentiary hearing is filed (E.D. Wis. Criminal L.
+/// R. 12(c)).
+event EvidentiaryHearingMotionFiled()
+/// A motion to reassign a criminal case as related is filed (E.D. Wis.
+/// Criminal L. R. 13(b)).
+event ReassignmentMotionFiled()
+/// Trial commences (E.D. Wis. Criminal L. R. 16(a)(4), (5)).
+event TrialCommences()
+
+/// E.D. Wis. Criminal L. R. 12(b)(1): absent a court order, every motion
+/// raising an issue described in FRCrimP 12(b)(3) is filed within 20 days
+/// after arraignment on an indictment, with a supporting memorandum or a
+/// certificate that none will be filed.
+deadline pretrial-motions: 20.days after ArraignedOnIndictment() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Wis. Criminal L. R. 12(b); E.D. Wis. Criminal L. R. 58(a)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wis. Criminal L. R. 12(b)(2): absent a court order, the non-movant
+/// may file a response within 10 days from the date the motion is due, or
+/// files a statement that it will not respond.
+deadline pretrial-motion-response: 10.days after PretrialMotionDue() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Wis. Criminal L. R. 12(b)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wis. Criminal L. R. 12(b)(3): absent a court order, the movant may
+/// file a reply within 5 days from the date the response is due.
+deadline pretrial-motion-reply: 5.days after PretrialResponseDue() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Wis. Criminal L. R. 12(b)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wis. Criminal L. R. 12(c): the non-movant may file a response
+/// opposing an evidentiary hearing, stating why it is unnecessary, within
+/// 3 days after the filing of the motion seeking one.
+deadline evidentiary-hearing-opposition: 3.days after EvidentiaryHearingMotionFiled() counted_by frcrimp45 cite "E.D. Wis. Criminal L. R. 12(c)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wis. Criminal L. R. 13(b): any objection to a motion to reassign a
+/// criminal case as related is filed within 7 days of the filing of the
+/// motion.
+deadline reassignment-objection: 7.days after ReassignmentMotionFiled() counted_by frcrimp45 cite "E.D. Wis. Criminal L. R. 13(b)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wis. Criminal L. R. 16.1(a): as soon after indictment as
+/// practicable, and in no event more than 14 days after arraignment, the
+/// attorney for the government and defense counsel confer regarding
+/// discovery.
+deadline discovery-conference: 14.days after ArraignedOnIndictment() counted_by frcrimp45 cite "E.D. Wis. Criminal L. R. 16.1(a)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wis. Criminal L. R. 16(a)(4): unless the Court orders otherwise,
+/// when the government follows its Expanded Discovery Policy it discloses
+/// FRCrimP 16(a)(1)(G) material not later than 15 days before trial,
+/// absent good cause for later disclosure.
+deadline expert-disclosure: 15.days before TrialCommences() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Wis. Criminal L. R. 16(a)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wis. Criminal L. R. 16(a)(5): if the government follows the
+/// Expanded Discovery Policy, the defense discloses FRCrimP 16(b)(1)(A) and
+/// (B) material as soon as reasonably practicable and not later than 15
+/// days before trial, absent good cause for later disclosure.
+deadline defense-reciprocal-disclosure: 15.days before TrialCommences() counted_by frcrimp45 cite "E.D. Wis. Criminal L. R. 16(a)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wis. Criminal L. R. 32(b): when the defendant has waived the
+/// FRCrimP 32(e)(2) time limits, objections to the presentence report are
+/// submitted in writing to the Probation Department and served on the
+/// opposing party at least 10 days before the scheduled sentencing, unless
+/// the Court orders otherwise.
+deadline psr-objections-on-waiver: 10.days before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Wis. Criminal L. R. 32(b)"
+{
+  forum frcrimp
+}

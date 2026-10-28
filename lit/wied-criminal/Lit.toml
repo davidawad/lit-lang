@@ -1,0 +1,52 @@
+# The U.S. District Court for the Eastern District of Wisconsin's criminal
+# local rules (Part C) as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods the criminal local
+# rules themselves state and re-encodes no FRCrimP, Speedy Trial Act or
+# FRAP 4(b) period (one source of truth: lit/frcrimp). Each period is
+# counted under FRCrimP 45(a), which governs "any local rule", so each
+# deadline names `forum frcrimp`. The rules are the edition the court
+# serves as current (effective February 1, 2010, as amended July 29, 2026;
+# sources/wied), so in_force is that date; earlier editions are not
+# vendored, so a query before it is a hole in the corpus. The court's
+# Speedy Trial Act plan (18 U.S.C. § 3165) is not vendored. An appeal goes
+# to the Seventh Circuit under lit/frcrimp's FRAP 4(b) period and lit/ca7.
+[package]
+name = "wied-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "wied-criminal-local-rules"
+forum = "wied-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Eastern District of Wisconsin: Criminal Local Rules"
+description = "The U.S. District Court for the Eastern District of Wisconsin's criminal local rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the pretrial-motion period and the response and reply, the response opposing an evidentiary hearing, the objection to a related-case reassignment motion, the discovery conference, the expert and reciprocal disclosures under the government's Expanded Discovery Policy, and presentence objections when the FRCrimP 32(e)(2) time limits are waived."
+in_force = "2026-07-29"
+known_at = "2026-10-28"
+unknown_before = "2026-07-29"
+jurisdiction = "U.S. District Court for the Eastern District of Wisconsin (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "wied-criminal"
+issuer = "U.S. District Court for the Eastern District of Wisconsin"
+date = "2026-07-29"
+designation = "Criminal Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.wied-criminal]
+title = "Local Rules of the United States District Court for the Eastern District of Wisconsin (effective February 1, 2010, as amended July 29, 2026): Part C, Criminal Rules"
+url = "https://www.wied.uscourts.gov/sites/wied/files/documents/Local%20Rules%202010-0201-Amended%202026-0729.pdf"
+path = "sources/wied/wied-local-rules-sectioned.txt"
+path_sha256 = "c2afa26b772157af4f061f06d67a3828eb3da88bdf9c1e96d927bf8d99a9a472"
+sha256 = "51726fd2dac1b42fa8943d0ee0755b2a5acddc4b0e030a405f33a41af9c61628"
+as_of = "2026-07-29"
+cite_prefixes = ["E.D. Wis. Criminal L. R."]
+section_heading = "Criminal L. R. {n}"

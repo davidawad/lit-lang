@@ -17,3 +17,5 @@
 - Source: as the extract `wied/wied-local-rules.txt`, https://www.wied.uscourts.gov/sites/wied/files/documents/Local%20Rules%202010-0201-Amended%202026-0729.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, Local Rules effective February 1, 2010, as amended July 29, 2026.
 - Sectioned sha256 c2afa26b772157af4f061f06d67a3828eb3da88bdf9c1e96d927bf8d99a9a472 (the `path_sha256` pinned by `lit/wied/Lit.toml`).
+
+- Note (lg-gddt.18): `lit/wied-criminal` binds the Part C criminal rules through the existing `## Criminal L. R. <n>` markers of `wied/wied-local-rules-sectioned.txt` (sha256 c2afa26b772157af4f061f06d67a3828eb3da88bdf9c1e96d927bf8d99a9a472); the file is unchanged.

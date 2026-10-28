@@ -1,0 +1,182 @@
+module arwd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Western District of Arkansas's own periods under the joint Local
+// Rules, computed under the federal rules: L.R. 7.2(b) says FRCP 6,
+// "including subparagraph 6(d)", determines how its days are counted,
+// and FRCP 6(a) governs "any local rule". The 3 days FRCP 6(d) adds after
+// service by mail are lit/frcp's and are not added here. "For cause
+// shown" the court may shorten or lengthen the L.R. 7.2(b) times. Rules
+// that state no period stay out: summons and proof of service (L.R. 4.1),
+// costs and bonds (L.R. 4.2, 4.3), electronic filing (L.R. 5.1), forms
+// for incarcerated persons (L.R. 9.1), scheduling orders and exempt
+// actions (L.R. 16.1, 16.2), the Rule 26(f) report and pretrial
+// disclosure sheet outlines (L.R. 26.1, 26.2), discovery responses (L.R.
+// 33.1), assignment (L.R. 40.1), settlement notice and jurors (L.R. 41.1,
+// 47.1), the separate statement of undisputed facts (L.R. 56.1(a)-(c)),
+// satisfaction of judgments and registry funds (L.R. 58.2, 67.1), clerks'
+// offices and files (L.R. 77.1, 79.1) and the bankruptcy reference,
+// courtroom and attorney rules (L.R. 83.1-83.8) beyond the review period
+// below. Periods that are caps or conditions, not deadlines, stay in
+// notes: the clerk may extend by consent the time to plead or to respond
+// to discovery by not more than 21 days (L.R. 6.2(a)); the L.R. 26.1(11),
+// (12) and (13) notes that discovery and motions deadlines in the typical
+// case fall no later than 60 days before trial and class certification
+// motions no later than 90 days after the Rule 26(f) conference are
+// guidance for the parties' proposals, not periods; a condemning
+// authority files its initial pleadings within seven days of the
+// assignment of civil action numbers (L.R. 71A.1(b)); and exhibits are
+// returned to the clerk within 24 hours of a request (L.R. 79.1(d)(2)).
+// The E.D. Ark. General Order No. 39 attached to L.R. 40.1 does not
+// govern this district. The criminal rules are not encoded. The earlier
+// W.D. Ark. outline's FRCP flow and its decisions (Twombly, Iqbal,
+// Celotex, Anderson v. Liberty Lobby, Johnson v. Dayton Elec. Mfg. Co.,
+// Braden v. Wal-Mart Stores, Torgerson v. City of Rochester) are FRCP
+// authority and belong to lit/frcp; they are removed here: no reporter
+// text is vendored.
+/// A paper required to be served is served (L.R. 5.4; FRCP 5(d)).
+event PaperServed()
+/// The order granting leave to amend a pleading is entered (L.R. 5.5(e)).
+event LeaveToAmendGranted()
+/// The court sends a communication to a pro se plaintiff (L.R. 5.5(c)(2)).
+event ProSeCommunicationSent()
+/// A motion and its supporting papers are served (L.R. 7.2(b)).
+event MotionServed()
+/// The opposition to a summary judgment motion is filed (L.R. 7.2(b),
+/// 56.1(d)).
+event SummaryJudgmentResponseFiled()
+/// The response to a petition or motion under 28 U.S.C. § 2254 or § 2255
+/// is filed (L.R. 7.2(b)).
+event HabeasResponseFiled()
+/// A motion for class certification is filed (L.R. 23.1(3)).
+event ClassCertificationMotionFiled()
+/// Judgment or an order of dismissal permitting attorney's fees is
+/// entered, or, after a post-trial motion, the order granting or denying
+/// it (L.R. 54.1(a)).
+event FeeJudgmentEntered()
+/// The motion for attorney's fees is served on the party against whom the
+/// award is sought (L.R. 54.1(a)).
+event FeeMotionServed()
+/// A magistrate judge decides a matter referred under 28 U.S.C.
+/// § 636(b)(1)(A) (L.R. 72.1, part VII.B).
+event MagistrateRulingEntered()
+/// A party is served with a magistrate judge's proposed findings and
+/// recommendations (L.R. 72.1, part VIII.C).
+event RecommendationServed()
+/// A magistrate judge takes another reviewable action (L.R. 72.1, part
+/// XI.A).
+event MagistrateActionTaken()
+/// The bankruptcy court enters an order dismissing an appeal (L.R. 83.1,
+/// part II(d)A).
+event BankruptcyDismissalEntered()
+
+/// L.R. 5.4: seven days is construed to be a "reasonable time" after
+/// service within which papers are filed under FRCP 5(d).
+deadline filing-after-service-period: 7.days after PaperServed() counted_by frcp6 cite "W.D. Ark. L.R. 5.4"
+{
+  forum frcp
+}
+
+/// L.R. 5.5(e): the party amending files the original of the amended
+/// pleading within seven days of the entry of the order granting leave to
+/// amend, unless the court orders otherwise. The rule does not apply to
+/// parties proceeding pro se.
+deadline amended-pleading-period: 7.days after LeaveToAmendGranted() counted_by frcp6 cite "W.D. Ark. L.R. 5.5(e)"
+{
+  forum frcp
+}
+
+/// L.R. 5.5(c)(2): if a communication from the court to a pro se
+/// plaintiff is not responded to within thirty days, the case may be
+/// dismissed without prejudice.
+deadline pro-se-response-period: 30.days after ProSeCommunicationSent() counted_by frcp6 cite "W.D. Ark. L.R. 5.5(c)(2)"
+{
+  forum frcp
+}
+
+/// L.R. 7.2(b): within fourteen days from the date of service of a motion
+/// and its supporting papers, a party opposing it serves and files a
+/// concise statement in opposition with supporting authorities. The
+/// failure to respond timely to a nondispositive motion is an adequate
+/// basis, without more, for granting it (L.R. 7.2(f)). L.R. 56.1(d)
+/// applies the same time to a summary judgment response.
+deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "W.D. Ark. L.R. 7.2(b)"
+{
+  forum frcp
+}
+
+/// L.R. 7.2(b), 56.1(d): a party moving for summary judgment has seven
+/// days to file a reply in further support of the motion.
+deadline summary-judgment-reply-period: 7.days after SummaryJudgmentResponseFiled() counted_by frcp6 cite "W.D. Ark. L.R. 7.2(b)"
+{
+  forum frcp
+}
+
+/// L.R. 7.2(b): a party seeking relief under 28 U.S.C. § 2254 or § 2255
+/// may file a reply within seven days of the response.
+deadline habeas-reply-period: 7.days after HabeasResponseFiled() counted_by frcp6 cite "W.D. Ark. L.R. 7.2(b)"
+{
+  forum frcp
+}
+
+/// L.R. 23.1(3): the other parties respond to a motion for class
+/// certification within fourteen days, admitting or denying the facts
+/// alleged. The motion's own deadline is set in the Final Scheduling
+/// Order; missing it abandons the class allegations.
+deadline class-certification-response-period: 14.days after ClassCertificationMotionFiled() counted_by frcp6 cite "W.D. Ark. L.R. 23.1"
+{
+  forum frcp
+}
+
+/// L.R. 54.1(a): a motion for attorney's fees is filed within fourteen
+/// days after the entry of judgment or an order of dismissal permitting
+/// fees; after a post-trial motion the period runs from the order granting
+/// or denying it. A late petition may be treated as a waiver. The period
+/// does not apply where the statute creating the right to fees sets its
+/// own (L.R. 54.1(d)).
+deadline fee-motion-period: 14.days after FeeJudgmentEntered() counted_by frcp6 cite "W.D. Ark. L.R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// L.R. 54.1(a): objections to an allowance of fees are filed within
+/// fourteen days after service on the party against whom the award is
+/// sought.
+deadline fee-objection-period: 14.days after FeeMotionServed() counted_by frcp6 cite "W.D. Ark. L.R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// L.R. 72.1, part VII.B: a party appeals a magistrate judge's ruling on
+/// a referred nondispositive matter to the district judge by motion within
+/// fourteen days of the decision, unless the district judge or magistrate
+/// judge sets a shorter period.
+deadline magistrate-appeal-period: 14.days after MagistrateRulingEntered() counted_by frcp6 cite "W.D. Ark. L.R. 72.1"
+{
+  forum frcp
+}
+
+/// L.R. 72.1, part VIII.C: within fourteen days after being served with a
+/// magistrate judge's proposed findings and recommendations, any party may
+/// serve and file written objections.
+deadline recommendation-objection-period: 14.days after RecommendationServed() counted_by frcp6 cite "W.D. Ark. L.R. 72.1"
+{
+  forum frcp
+}
+
+/// L.R. 72.1, part XI.A: a party may file and serve an application for
+/// review of another magistrate judge action not later than fourteen days
+/// after it.
+deadline magistrate-review-period: 14.days after MagistrateActionTaken() counted_by frcp6 cite "W.D. Ark. L.R. 72.1"
+{
+  forum frcp
+}
+
+/// L.R. 83.1, part II(d)A: a bankruptcy court order dismissing a late or
+/// incomplete appeal is reviewed by the district court on motion filed
+/// within fourteen days after entry of the order.
+deadline bankruptcy-dismissal-review-period: 14.days after BankruptcyDismissalEntered() counted_by frcp6 cite "W.D. Ark. L.R. 83.1"
+{
+  forum frcp
+}

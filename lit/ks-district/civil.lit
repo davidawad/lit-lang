@@ -1,0 +1,154 @@
+module ks-district-civil.civil
+
+// Civil actions in the Kansas district courts, from the applicant's
+// (plaintiff's) side. Every period below is stated in a note, not counted:
+// computation of time is K.S.A. 60-206, which is not vendored, and lit/core
+// has no Kansas counting rule. The sections vendored are those the earlier
+// outline cited (K.S.A. 60-203 through 60-258, 60-2101, 60-2103); new trial
+// (K.S.A. 60-259), relief from judgment (K.S.A. 60-260), the Supreme Court
+// Rules for district courts and local district court rules are not, so they
+// are named in notes but not cited. The outline named no leading decisions.
+start complaint-filed
+
+state complaint-filed: "Petition filed" by applicant cite "K.S.A. 60-203(a)"
+{
+  note "A civil action is commenced at the time of filing a petition with the court if service of process is obtained, or the first publication is made for service by publication, within 90 days after the petition is filed; the court may extend that time an additional 30 days on a showing of good cause by the plaintiff. Otherwise the action is commenced only at service of process or first publication (K.S.A. 60-203(a)). If purported service is later adjudicated invalid, the action is considered commenced at the time under subsection (a) if valid service is obtained within 90 days after that adjudication, extendable by 30 days for good cause (K.S.A. 60-203(b)). An entry of appearance has the same effect as service (K.S.A. 60-203(c)). Substantial compliance with any method of serving process effects valid service if the party served was made aware of the action (K.S.A. 60-204). A pleading demanding money damages over $75,000 without a specific amount states only that the damages exceed $75,000, except in contract actions; a demand of $75,000 or less specifies the amount (K.S.A. 60-208(a))."
+  edge-complaint-filed-served "Served within 90 days (or the extended 30)" -> answer-due {
+    authority cite "K.S.A. 60-203(a)"
+  }
+  edge-complaint-filed-late "Served later: commenced only at service" -> late-service {
+    authority cite "K.S.A. 60-203(a)"
+  }
+}
+
+state late-service: "Action commenced at service" by applicant cite "K.S.A. 60-203(a)"
+{
+  note "When service of process or first publication is not made within the 90 days (or the 30-day extension), the action is commenced at the time of service or first publication, not at filing (K.S.A. 60-203(a)(2)); whether a limitations period has run by then is outside this package."
+  edge-late-service-answer "Defendant served" -> answer-due { authority cite "K.S.A. 60-212(a)" }
+}
+
+decision answer-due: "Answer, K.S.A. 60-212 motion, or default" by office cite "K.S.A. 60-212(a)"
+{
+  note "Unless otherwise provided by law, a defendant serves an answer within 21 days after being served with the summons and petition, or within the time fixed in the notice when service is by publication, which must not be less than 41 days from first publication. An answer to a counterclaim or crossclaim is due within 21 days after service of the pleading, and a reply to an answer within 21 days after service of an order to reply (K.S.A. 60-212(a)(1)). Unless the court sets a different time, serving a K.S.A. 60-212 motion alters these periods: if the court denies the motion or postpones it until trial, the responsive pleading is served within 14 days after notice of the court's action; if it grants a motion for a more definite statement, within 14 days after that statement is served (K.S.A. 60-212(a)(2)). Affirmative defenses are stated in the responsive pleading (K.S.A. 60-208(c))."
+  edge-answer-due-answer "Answer served" -> case-management { authority cite "K.S.A. 60-216(b)" }
+  edge-answer-due-motion "Motion under K.S.A. 60-212(b)" -> pleading-motion {
+    authority cite "K.S.A. 60-212(b)"
+  }
+  edge-answer-due-default "No answer: the defendant has failed to plead or otherwise defend" -> default-judgment {
+    authority cite "K.S.A. 60-255(a)"
+  }
+}
+
+decision pleading-motion: "K.S.A. 60-212 motion decided" by court cite "K.S.A. 60-212(b)"
+{
+  note "The defenses of lack of subject-matter or personal jurisdiction, improper venue, insufficient process or service of process, failure to state a claim upon which relief can be granted, and failure to join a party under K.S.A. 60-219 may be made by motion, before pleading if a responsive pleading is allowed (K.S.A. 60-212(b)). After the pleadings close a party may move for judgment on the pleadings; matters outside the pleadings presented and not excluded on a motion under subsection (b)(6) or (c) turn it into a summary judgment motion under K.S.A. 60-256 (K.S.A. 60-212(c), (d)). An order for a more definite statement not obeyed within 14 days after notice may lead the court to strike the pleading (K.S.A. 60-212(e)); a motion to strike is made before responding or, if no response is allowed, within 21 days after service of the pleading (K.S.A. 60-212(f)). The court that determines at any time that it lacks subject-matter jurisdiction must dismiss the action (K.S.A. 60-212(h)(3))."
+  edge-pleading-motion-granted "Granted: claims dismissed" -> dismissed-pleading {
+    authority cite "K.S.A. 60-241(b)"
+  }
+  edge-pleading-motion-amend "Pleading amended" -> amended { authority cite "K.S.A. 60-215(a)" }
+  edge-pleading-motion-denied "Denied: answer within 14 days after notice" -> case-management {
+    authority cite "K.S.A. 60-212(a)"
+  }
+}
+
+state amended: "Amended pleading" by applicant cite "K.S.A. 60-215(a)"
+{
+  note "A party may amend its pleading once as a matter of course within 21 days after serving it or, if a responsive pleading is required, within 21 days after service of a responsive pleading or of a motion under K.S.A. 60-212(b), (e) or (f), whichever is earlier; otherwise only with the opposing party's written consent or the court's leave, which the court should freely give when justice so requires. Unless the court orders otherwise, a required response to an amended pleading is made within the time remaining to respond to the original pleading or within 21 days after service of the amended pleading, whichever is later (K.S.A. 60-215(a)). An amendment relates back as K.S.A. 60-215(c) provides."
+  edge-amended-tested "Amended pleading tested again" -> pleading-motion {
+    authority cite "K.S.A. 60-212(b)"
+  }
+  edge-amended-answered "Amended pleading answered" -> case-management {
+    authority cite "K.S.A. 60-215(a)"
+  }
+}
+
+terminal dismissed-pleading: "Dismissed on the pleadings" outcome [loss, dismissal] cite "K.S.A. 60-241(b)"
+{
+  note "Outcome from the applicant's side. Unless the dismissal order states otherwise, a dismissal not under K.S.A. 60-241, except one for lack of jurisdiction, improper venue or failure to join a party under K.S.A. 60-219, operates as an adjudication on the merits (K.S.A. 60-241(b)(1)). An appeal runs from the final judgment (K.S.A. 60-2103(a))."
+}
+
+terminal default-judgment: "Default judgment for applicant" outcome [win, judgment] cite "K.S.A. 60-255(a)"
+{
+  note "Outcome from the applicant's side. A party against whom a judgment for affirmative relief is sought that has failed to plead or otherwise defend is in default; on request and a showing of entitlement the court renders judgment. A default judgment against a minor or incapacitated person requires a representative who has appeared or a guardian ad litem. A party in default who has appeared personally or by a representative is served with written notice of the request at least seven days before the hearing (K.S.A. 60-255(a)). The court may set aside a final default judgment under K.S.A. 60-260(b) and 60-309 (K.S.A. 60-255(b)); a default judgment against the state, its officers or agencies requires proof that satisfies the court (K.S.A. 60-255(c))."
+}
+
+state case-management: "Case management conference" by court cite "K.S.A. 60-216(b)"
+{
+  note "The court must on any party's request, or may on its own, conduct a case management conference, scheduled as soon as possible and conducted within 45 days after the filing of an answer unless the court extends the time. At it the court considers issues, alternative dispute resolution, a discovery plan and schedule, electronically stored information, privilege agreements, completion of discovery within a definite number of days, deadlines for motions, joinder and amendment, and conference and trial dates (K.S.A. 60-216(b)(1)). If a conference is held, no depositions other than of the parties may be taken until after it, except by agreement, court order or as K.S.A. 60-230(a)(2)(B) provides; the restriction lapses if no conference is held within 45 days after the answer (K.S.A. 60-216(b)(2)). A motion for more time to complete discovery is filed before the original period expires, with a discovery plan (K.S.A. 60-216(b)(3)). The order after a conference controls the case unless modified; an order after the final pretrial conference may be modified only to prevent manifest injustice (K.S.A. 60-216(d), (e))."
+  edge-case-management-discovery "Discovery plan set" -> discovery {
+    authority cite "K.S.A. 60-226(a)"
+  }
+}
+
+state discovery: "Discovery" by applicant cite "K.S.A. 60-226(b)"
+{
+  note "Parties may obtain discovery regarding any nonprivileged matter relevant to any party's claim or defense and proportional to the needs of the case (K.S.A. 60-226(b)(1)). A party provides any third-party litigation funding agreement to the court for in camera review, and delivers a sworn disclosure statement to all other parties, within 30 days after commencement of the action or 30 days after execution of the agreement, whichever is later (K.S.A. 60-226(b)(3)(B)(i)). Absent a stipulation or court order, expert disclosures are made at least 90 days before the date set for trial or for the case to be ready for trial, or, for evidence intended solely to rebut another party's expert disclosure, within 30 days after that disclosure (K.S.A. 60-226(b)(6)(C)); additions or changes to an expert's disclosure or deposition testimony are disclosed at least 30 days before trial unless the court orders otherwise (K.S.A. 60-226(e)(2))."
+  edge-discovery-sj "Summary judgment motion" -> sj-motion { authority cite "K.S.A. 60-256(c)" }
+  edge-discovery-settle "Notice or stipulation of dismissal" -> settled {
+    authority cite "K.S.A. 60-241(a)"
+  }
+  edge-discovery-prosecution "Failure to prosecute: dismissal" -> prosecution-dismissal {
+    authority cite "K.S.A. 60-241(b)"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial { authority cite "K.S.A. 60-238(b)" }
+}
+
+terminal prosecution-dismissal: "Dismissed for failure to prosecute" outcome [loss, dismissal] cite "K.S.A. 60-241(b)"
+{
+  note "Outcome from the applicant's side. If the plaintiff fails to prosecute or to comply with chapter 60 or a court order, a defendant may move to dismiss; the dismissal operates as an adjudication on the merits unless the order states otherwise (K.S.A. 60-241(b)(1)). On its own the court may dismiss without prejudice for lack of prosecution only after notice to counsel of record, not less than 14 days before the intended dismissal, that the order will be entered unless cause is shown (K.S.A. 60-241(b)(2))."
+}
+
+terminal settled: "Voluntary dismissal" outcome [settlement] cite "K.S.A. 60-241(a)"
+{
+  note "Subject to K.S.A. 60-223(e), 60-223a and 60-223b and any applicable statute, the plaintiff may dismiss without a court order by filing a notice of dismissal before the opposing party serves an answer or a summary judgment motion, or a stipulation of dismissal signed by all parties who have appeared; unless it states otherwise the dismissal is without prejudice, but a notice of dismissal after a prior dismissal of the same claim operates as an adjudication on the merits (K.S.A. 60-241(a)(1)). Otherwise dismissal at the plaintiff's request is by court order (K.S.A. 60-241(a)(2)). Settlement terms are not modeled."
+}
+
+decision sj-motion: "Summary judgment decided" by court cite "K.S.A. 60-256(c)"
+{
+  note "Unless a local rule sets a different time or the court orders otherwise, a party may move for summary judgment at any time until 30 days after the close of all discovery; a party opposing the motion files a response within 21 days after the motion is served or a responsive pleading is due, whichever is later; and the movant may reply within 14 days after the response is served (K.S.A. 60-256(c)(1)). Judgment should be rendered if the record shows no genuine issue as to any material fact and that the movant is entitled to judgment as a matter of law (K.S.A. 60-256(c)(2)). An opposing party may not rest on its pleading but must set out specific facts by affidavit or declaration (K.S.A. 60-256(e)(2)); a party that cannot yet present essential facts may obtain denial, a continuance or other just order (K.S.A. 60-256(f))."
+  edge-sj-motion-granted "Granted" -> judgment-for-movant { authority cite "K.S.A. 60-256(c)" }
+  edge-sj-motion-denied "Denied or partly denied" -> trial { authority cite "K.S.A. 60-256(d)" }
+}
+
+terminal judgment-for-movant: "Judgment for movant" outcome [judgment] cite "K.S.A. 60-256(c)"
+{
+  note "Judgment as a matter of law on summary judgment or after trial; who the movant is decides whether it is a win or a loss for the applicant. An interlocutory summary judgment on liability alone is not modeled (K.S.A. 60-256(d)(2)). An appeal runs from the entry of judgment (K.S.A. 60-2103(a))."
+}
+
+state trial: "Trial by jury or by the court" by court cite "K.S.A. 60-238(b)"
+{
+  note "On any issue triable of right by a jury, a party may demand a jury by serving the other parties with a written demand, which may be included in a pleading, no later than 14 days after the last pleading directed to the issue is served, and filing it; if the demand covers only some issues, any other party may demand a jury on other issues within 14 days after being served with the demand or a shorter time the court orders; a party waives a jury unless its demand is properly served and filed (K.S.A. 60-238(b)-(d)). A motion for judgment as a matter of law may be made at any time before the case is submitted to the jury (K.S.A. 60-250(a)(2))."
+  edge-trial-post "Verdict or decision" -> post-trial { authority cite "K.S.A. 60-250(b)" }
+}
+
+decision post-trial: "Post-trial motions decided" by court cite "K.S.A. 60-250(b)"
+{
+  note "No later than 28 days after the entry of judgment, or, if the motion addresses a jury issue not decided by the verdict, no later than 28 days after the jury was discharged, the movant may file a renewed motion for judgment as a matter of law, with an alternative or joint request for a new trial under K.S.A. 60-259 (K.S.A. 60-250(b)). A motion for a new trial by a party against whom judgment as a matter of law is rendered is filed no later than 28 days after the entry of judgment (K.S.A. 60-250(d)). Granting the renewed motion requires a conditional ruling on any new-trial motion (K.S.A. 60-250(c)). A timely motion under K.S.A. 60-250(b), 60-252(b) or 60-259 terminates the running of the appeal time, which runs in full from the order on it (K.S.A. 60-2103(a))."
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+    authority cite "K.S.A. 60-258"
+  }
+  edge-post-trial-jmol "Judgment as a matter of law granted" -> judgment-for-movant {
+    authority cite "K.S.A. 60-250(b)"
+  }
+}
+
+decision judgment-entered: "Judgment entered" by office cite "K.S.A. 60-258"
+{
+  note "Entry of judgment is subject to K.S.A. 60-254(b). No judgment is effective unless and until a journal entry or judgment form is signed by the judge and filed with the clerk. When judgment is entered by judgment form, the clerk serves a copy on all attorneys of record within three days, excluding Saturdays, Sundays and legal holidays; failure of that service does not affect the judgment's validity (K.S.A. 60-258). When an appeal is permitted, it may be taken within 30 days from the entry of judgment; on a showing of excusable neglect based on a party's failure to learn of the entry, the district court may extend the time by not more than 30 days from the expiration of the original time (K.S.A. 60-2103(a))."
+  edge-judgment-entered-appeal "Notice of appeal filed within 30 days" -> appeal-taken {
+    authority cite "K.S.A. 60-2103(a)"
+  }
+  edge-judgment-entered-none "No notice filed in time" -> final-no-appeal {
+    authority cite "K.S.A. 60-2103(a)"
+  }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Kansas appellate package" outcome [appeal] cite "K.S.A. 60-2103(a)"
+{
+  note "A party appeals from a judgment by filing a notice of appeal with the clerk of the district court; the notice specifies the parties taking the appeal, designates the judgment or part appealed from, and names the appellate court (K.S.A. 60-2103(a), (b)). An appellee seeking review of rulings files notice of cross-appeal within 21 days after the notice of appeal has been served on it and filed (K.S.A. 60-2103(h)). Hand-off to lit/ks-appellate (ks-appellate-civil)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "K.S.A. 60-2103(a)"
+{
+  note "Final judgment with no notice of appeal filed within the 30 days from entry or any extension (K.S.A. 60-2103(a))."
+}

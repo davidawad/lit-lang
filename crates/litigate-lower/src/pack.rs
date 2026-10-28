@@ -300,17 +300,7 @@ pub(crate) fn pack(
         jurisdiction: m.jurisdiction.clone(),
         forum: Some(m.forum.clone()),
         counting,
-        recounts: m
-            .recounts
-            .iter()
-            .map(|name| {
-                build
-                    .packages
-                    .iter()
-                    .find(|p| p.manifest.name == *name)
-                    .map_or_else(|| name.clone(), |p| p.manifest.pack_id.clone())
-            })
-            .collect(),
+        recounts: recounts(build, m),
         start_node_id: pkg.start.clone(),
         groups: pkg
             .groups
@@ -330,6 +320,20 @@ pub(crate) fn pack(
     };
     let map = pack_map(build, pkg, &pack, &origins, &edges, &limits);
     (pack, map)
+}
+
+fn recounts(build: &Build<'_, '_>, manifest: &hir::Manifest) -> Vec<String> {
+    manifest
+        .recounts
+        .iter()
+        .map(|name| {
+            build
+                .packages
+                .iter()
+                .find(|pkg| pkg.manifest.name == *name)
+                .map_or_else(|| name.clone(), |pkg| pkg.manifest.pack_id.clone())
+        })
+        .collect()
 }
 
 /// The holes of a lowered pack: each `?` its nodes (`origins`, in pack

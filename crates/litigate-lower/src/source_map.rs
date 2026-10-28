@@ -254,76 +254,7 @@ impl<'c> Citations<'c> {
         sources: &[litigate_sema::hir::SourceBinding],
         corpus: Option<&'c SourceCorpus>,
     ) -> Self {
-        let mut syntax = syntax;
-        let path = |id: &str| {
-            sources
-                .iter()
-                .find(|s| s.id == id)
-                .and_then(|s| s.path.clone())
-        };
-        // A pack rule's own prefixes, before any source's are merged in.
-        let mut bound: Vec<Binding> = syntax
-            .rules
-            .iter()
-            .filter_map(|r| {
-                let id = r.source.clone()?;
-                let p = path(&id);
-                Some((Family::Rules(r.heading.clone()), id, p, r.prefixes.clone()))
-            })
-            .collect();
-        for s in sources.iter().filter(|s| !s.cite_prefixes.is_empty()) {
-            let heading = s
-                .section_heading
-                .as_deref()
-                .map_or_else(|| "{}".to_owned(), |h| h.replace("{n}", "{}"));
-            // A prefix a rule of another heading declares stays that
-            // rule's (`1st Cir. R.` heads `1st Cir. R. {}`, not the
-            // source's `FRAP {n}`).
-            let prefixes: Vec<String> = s
-                .cite_prefixes
-                .iter()
-                .filter(|p| {
-                    !syntax.rules.iter().any(|r| {
-                        r.heading != heading && r.prefixes.iter().any(|q| q.eq_ignore_ascii_case(p))
-                    })
-                })
-                .cloned()
-                .collect();
-            if prefixes.is_empty() {
-                continue;
-            }
-            // A heading another rule already reads also takes this
-            // source's prefixes, so its citations parse and are checked.
-            if let Some(rule) = syntax.rules.iter_mut().find(|r| r.heading == heading) {
-                for p in &prefixes {
-                    if !rule.prefixes.iter().any(|q| q.eq_ignore_ascii_case(p)) {
-                        rule.prefixes.push(p.clone());
-                    }
-                }
-            } else {
-                syntax.rules.push(CiteRuleForm {
-                    prefixes: prefixes.clone(),
-                    heading: heading.clone(),
-                    source: Some(s.id.clone()),
-                });
-            }
-            bound.push((
-                Family::Rules(heading),
-                s.id.clone(),
-                s.path.clone(),
-                prefixes,
-            ));
-        }
-        let shorthands = syntax.shorthands.iter().filter_map(|s| {
-            let family = match s.code {
-                CiteCode::Usc => Family::Usc(s.title),
-                CiteCode::Cfr => Family::Cfr(s.title),
-            };
-            let id = s.source.clone()?;
-            let p = path(&id);
-            Some((family, id, p, Vec::new()))
-        });
-        bound.extend(shorthands);
+        let (syntax, bound) = bindings(syntax, sources);
         let mut hashes = BTreeMap::new();
         let mut hash = |path: &String| -> Option<String> {
             let text = corpus?.files.get(path)?;
@@ -462,6 +393,74 @@ impl<'c> Citations<'c> {
         }
         Some(map)
     }
+}
+
+fn bindings(
+    mut syntax: CiteSyntax,
+    sources: &[litigate_sema::hir::SourceBinding],
+) -> (CiteSyntax, Vec<Binding>) {
+    let path = |id: &str| {
+        sources
+            .iter()
+            .find(|s| s.id == id)
+            .and_then(|s| s.path.clone())
+    };
+    let mut bound: Vec<Binding> = syntax
+        .rules
+        .iter()
+        .filter_map(|r| {
+            let id = r.source.clone()?;
+            let p = path(&id);
+            Some((Family::Rules(r.heading.clone()), id, p, r.prefixes.clone()))
+        })
+        .collect();
+    for s in sources.iter().filter(|s| !s.cite_prefixes.is_empty()) {
+        let heading = s
+            .section_heading
+            .as_deref()
+            .map_or_else(|| "{}".to_owned(), |h| h.replace("{n}", "{}"));
+        // A prefix a rule of another heading declares stays that rule's
+        // (`1st Cir. R.` heads `1st Cir. R. {}`, not the source's `FRAP {n}`).
+        let prefixes: Vec<String> = s
+            .cite_prefixes
+            .iter()
+            .filter(|p| {
+                !syntax.rules.iter().any(|r| {
+                    r.heading != heading && r.prefixes.iter().any(|q| q.eq_ignore_ascii_case(p))
+                })
+            })
+            .cloned()
+            .collect();
+        if prefixes.is_empty() {
+            continue;
+        }
+        // A heading another rule already reads also takes this source's prefixes.
+        if let Some(rule) = syntax.rules.iter_mut().find(|r| r.heading == heading) {
+            for p in &prefixes {
+                if !rule.prefixes.iter().any(|q| q.eq_ignore_ascii_case(p)) {
+                    rule.prefixes.push(p.clone());
+                }
+            }
+        } else {
+            syntax.rules.push(CiteRuleForm {
+                prefixes: prefixes.clone(),
+                heading: heading.clone(),
+                source: Some(s.id.clone()),
+            });
+        }
+        bound.push((Family::Rules(heading), s.id.clone(), s.path.clone(), prefixes));
+    }
+    let shorthands = syntax.shorthands.iter().filter_map(|s| {
+        let family = match s.code {
+            CiteCode::Usc => Family::Usc(s.title),
+            CiteCode::Cfr => Family::Cfr(s.title),
+        };
+        let id = s.source.clone()?;
+        let p = path(&id);
+        Some((family, id, p, Vec::new()))
+    });
+    bound.extend(shorthands);
+    (syntax, bound)
 }
 
 /// A source binding as citations see it.

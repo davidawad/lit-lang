@@ -11,6 +11,7 @@
 
 - Source: https://www.nmd.uscourts.gov/sites/nmd/files/local_rules/Local%20Rules%20of%20Criminal%20Procedure%20Adopted%20November%2014%2C%202025.pdf (official site; 25 pages, sha256 9b4a610265e607a6627912064ad81560ab4a4b6f6cf8f08945ce9c883538f499).
 - Edition: Local Rules of Criminal Procedure adopted by administrative order 25-MC-00004-35 filed November 14, 2025 (first page), linked at https://www.nmd.uscourts.gov/court-info/local-rules-and-orders/local-rules. robots.txt of www.nmd.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): nmd-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 ef23cfd806f842e7106ca2bebb85ca04f5d342a3934cbdb180517ac6ef84c003. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `d-nm/original/dnm-local-criminal-rules-2025-11-14.pdf` as served (sha256 9b4a610265e607a6627912064ad81560ab4a4b6f6cf8f08945ce9c883538f499); extraction sha256 ef23cfd806f842e7106ca2bebb85ca04f5d342a3934cbdb180517ac6ef84c003.

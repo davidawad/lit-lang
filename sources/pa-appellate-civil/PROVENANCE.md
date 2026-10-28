@@ -29,3 +29,9 @@
 - Original: `pa-appellate-civil/original/pacode-title-210/210_chapter40_chap40toc.html` as served (sha256 eccbc7878c34421e5f1dea8df8fac3193de49885508c0e2b5b344f1bba25a8d1).
 - Original: `pa-appellate-civil/original/pacode-title-210/210_chapter51_chap51toc.html` as served (sha256 d7c5e0cb933e23b83a4f5a88113a11bb9944b5c07c384f7ef29f44d5f9bd1770).
 - Extraction sha256 4ed03186810f0dafd041768ab1e2d875248f2b73099d37369385ced3e03e48fe.
+
+### `pa-appellate-civil/para-pa-code-title-210-part-i-2026-08-08-sectioned.txt` — Pennsylvania Rules of Appellate Procedure, sectioned
+
+- Derived in the pod (lg-f3q8.75) from `pa-appellate-civil/para-pa-code-title-210-part-i-2026-08-08.txt` (extract sha256 4ed03186810f0dafd041768ab1e2d875248f2b73099d37369385ced3e03e48fe); nothing fetched. One `## Pa.R.A.P. <n>` line is inserted right before the first line of the form `Rule <n>. <title>` for each rule number (353 markers); a later line of that form for the same number gets no marker. Rule text was not edited: deleting the marker lines (`sed '/^## Pa\.R\.A\.P\. /d'`) restores the extract byte for byte.
+- Edition: as the extract, Pa. Code Title 210 Part I effective through 56 Pa.B. 5370 (August 8, 2026).
+- Sectioned sha256 bd91de9532ce33d7cbfbbe96d21e354dc166124b0c610a17a1d78e635dbe713f (the `path_sha256` pinned by `lit/pa-appellate-civil/Lit.toml` and `lit/pa-cp-civil/Lit.toml`).

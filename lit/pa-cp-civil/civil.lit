@@ -1,0 +1,192 @@
+module pa-common-pleas-civil.civil
+
+// Civil actions in the Pennsylvania courts of common pleas, from the
+// applicant's (plaintiff's) side. Every period below is stated in a note,
+// not counted: time is computed under Pa.R.J.A. 107, which is not vendored,
+// and lit/core has no counting rule for it or for the Commonwealth's legal
+// holidays. The earlier outline named no leading decisions. Each court of
+// common pleas also has local rules (for example Local Rule 1028(c) and
+// Local Rule 1035.2(a), which Pa.R.C.P. 239.5 and 239.7 require); none is
+// vendored. Which appellate court hears the appeal is set by statute (42
+// Pa.C.S.), which is not vendored either.
+start complaint-filed
+
+state complaint-filed: "Action commenced" by applicant cite "Pa.R.C.P. 1007"
+{
+  note "An action may be commenced by filing with the prothonotary a praecipe for a writ of summons or a complaint (Pa.R.C.P. 1007). Every complaint begins with a notice to defend warning that the defendant must take action within twenty days after the complaint and notice are served (Pa.R.C.P. 1018.1(a), (b)). Original process is served within the Commonwealth within 30 days after the issuance of the writ or the filing of the complaint (Pa.R.C.P. 401(a)); if it is not, the prothonotary on praecipe reissues the writ or reinstates the complaint, which may be done at any time and any number of times, and the reissued or reinstated process is served within the same period after reissuance or reinstatement (Pa.R.C.P. 401(b)(1), (2), (4)). Within the Commonwealth original process is served only by the sheriff, except in the actions Pa.R.C.P. 400(b) lists, where a competent adult may also serve it (Pa.R.C.P. 400(a), (b)). The filing fee is not stated in the vendored rules."
+  edge-complaint-filed-served "Complaint with notice to defend served" -> pleading-due {
+    authority cite "Pa.R.C.P. 400(a)"
+  }
+  edge-complaint-filed-discontinued "Plaintiff discontinues before trial" -> discontinued {
+    authority cite "Pa.R.C.P. 229(a)"
+  }
+}
+
+decision pleading-due: "Answer, preliminary objections, or no pleading" by office cite "Pa.R.C.P. 1026(a)"
+{
+  note "Every pleading subsequent to the complaint is filed within twenty days after service of the preceding pleading, but no pleading need be filed unless the preceding pleading contains a notice to defend or is endorsed with a notice to plead (Pa.R.C.P. 1026(a)). A defendant served outside the United States has sixty days from service of the complaint to plead (Pa.R.C.P. 1026(b)). Preliminary objections may be filed by any party to any pleading on the grounds Pa.R.C.P. 1028(a) lists, all raised at one time (Pa.R.C.P. 1028(a), (b)). The answer admits or denies each averment of fact; averments to which a responsive pleading is required are admitted when not denied specifically or by necessary implication (Pa.R.C.P. 1029(a), (b)). Affirmative defenses are pleaded under the heading New Matter, except assumption of the risk, comparative negligence and contributory negligence (Pa.R.C.P. 1030(a), (b)); a counterclaim may be set forth in the answer (Pa.R.C.P. 1031(a))."
+  edge-pleading-due-answer "Answer filed" -> answered { authority cite "Pa.R.C.P. 1029(a)" }
+  edge-pleading-due-objections "Preliminary objections filed" -> preliminary-objections {
+    authority cite "Pa.R.C.P. 1028(a)"
+  }
+  edge-pleading-due-none "No pleading within the time required" -> default-notice {
+    authority cite "Pa.R.C.P. 237.1(a)"
+  }
+}
+
+decision preliminary-objections: "Preliminary objections decided" by court cite "Pa.R.C.P. 1028(c)"
+{
+  note "The grounds are lack of jurisdiction over the subject matter or the person, improper venue or improper form or service of process; failure of a pleading to conform to law or rule of court or inclusion of scandalous or impertinent matter; insufficient specificity; legal insufficiency of a pleading (demurrer); lack of capacity to sue, nonjoinder of a necessary party or misjoinder of a cause of action; pendency of a prior action or an agreement for alternative dispute resolution; failure to exercise or exhaust a statutory remedy; and a full, complete and adequate non-statutory remedy at law (Pa.R.C.P. 1028(a)). A party may file an amended pleading as of course within twenty days after service of a copy of preliminary objections, which makes the objections to the original pleading moot; the court determines all preliminary objections promptly (Pa.R.C.P. 1028(c)). If the objections are overruled, the objecting party may plead over within twenty days after notice of the order or such other time as the court fixes (Pa.R.C.P. 1028(d)); an amendment allowed or required is filed within twenty days after notice of the order or such other time as the court fixes (Pa.R.C.P. 1028(e))."
+  edge-preliminary-objections-sustained "Sustained: claims dismissed" -> dismissed-pleading {
+    authority cite "Pa.R.C.P. 1028(a)"
+  }
+  edge-preliminary-objections-amend "Amended pleading filed" -> amended {
+    authority cite "Pa.R.C.P. 1028(e)"
+  }
+  edge-preliminary-objections-overruled "Overruled: defendant pleads over within twenty days after notice" -> answered {
+    authority cite "Pa.R.C.P. 1028(d)"
+  }
+}
+
+state amended: "Amended pleading" by applicant cite "Pa.R.C.P. 1033(a)"
+{
+  note "Besides the amendment as of course after preliminary objections (Pa.R.C.P. 1028(c)(1)), a party may amend by filed consent of the adverse party or by leave of court at any time, including to add a party, correct a party's name or conform the pleading to the evidence (Pa.R.C.P. 1033(a)). An amendment correcting the name of a party relates back if, within 90 days after the period provided by law for commencing the action, the party received notice of the action and knew or should have known it would have been brought against it but for a mistake concerning identity (Pa.R.C.P. 1033(b)). A motion to amend attaches a clean copy and a comparison copy of the proposed amended pleading (Pa.R.C.P. 1033(d))."
+  edge-amended-tested "Amended pleading met with new preliminary objections" -> preliminary-objections {
+    authority cite "Pa.R.C.P. 1028(f)"
+  }
+  edge-amended-answered "Amended pleading answered" -> answered {
+    authority cite "Pa.R.C.P. 1026(a)"
+  }
+}
+
+terminal dismissed-pleading: "Dismissed on preliminary objections" outcome [loss, dismissal] cite "Pa.R.C.P. 1028(a)"
+{
+  note "Outcome from the applicant's side. An order that disposes of all claims and of all parties is a final order appealable as of right (Pa.R.A.P. 341(a), (b)(1)); the notice of appeal is filed within 30 days after its entry (Pa.R.A.P. 903(a)). No motion for post-trial relief lies from an order disposing of preliminary objections (Pa.R.C.P. 227.1, comment)."
+}
+
+state default-notice: "Ten-day notice of intention to seek a default judgment" by applicant cite "Pa.R.C.P. 237.1(a)"
+{
+  note "The prothonotary enters no judgment by default for failure to plead unless the praecipe certifies that a written notice of intention to file it was mailed or delivered, after the failure to plead to a complaint and at least ten days before the praecipe is filed, to the party against whom judgment is to be entered and to its attorney of record; the ten days are calculated forward from the mailing or delivery under Pa.R.J.A. 107, a copy of the notice is attached to the praecipe, and the notice and certification may not be waived (Pa.R.C.P. 237.1(a)(2)-(4)). The rule does not apply to a judgment entered by order of court (Pa.R.C.P. 237.1(b))."
+  edge-default-notice-praecipe "Praecipe for default judgment after the ten days" -> default-judgment {
+    authority cite "Pa.R.C.P. 1037(b)"
+  }
+  edge-default-notice-pleads "Defendant pleads before the praecipe" -> answered {
+    authority cite "Pa.R.C.P. 1029(a)"
+  }
+}
+
+decision default-judgment: "Default judgment entered" by office cite "Pa.R.C.P. 1037(b)"
+{
+  note "The prothonotary, on praecipe of the plaintiff, enters judgment against a defendant who fails to plead within the required time to a complaint containing a notice to defend, and assesses damages if they are a sum certain or can be made certain by computation; otherwise damages are assessed at a trial limited to their amount (Pa.R.C.P. 1037(b), (b)(1)). Only the court may grant equitable relief on a default (Pa.R.C.P. 1037(d)). The prothonotary immediately gives written notice of the entry of the judgment (Pa.R.C.P. 236(a)(2)). If a petition for relief is filed within ten days after the entry of the default judgment on the docket, the court opens the judgment if one or more of the proposed preliminary objections has merit or the proposed answer states a meritorious defense; the petition attaches the proposed pleading and raises all grounds for relief in a single petition (Pa.R.C.P. 237.3(a), (b)(2))."
+  edge-default-judgment-stands "No petition to open: judgment stands" -> default-won {
+    authority cite "Pa.R.C.P. 1037(b)"
+  }
+  edge-default-judgment-opened "Petition filed within ten days: judgment opened" -> answered {
+    authority cite "Pa.R.C.P. 237.3(b)"
+  }
+}
+
+terminal default-won: "Default judgment for applicant" outcome [win] cite "Pa.R.C.P. 1037(b)"
+{
+  note "Outcome from the applicant's side. A petition filed more than ten days after entry falls outside Pa.R.C.P. 237.3(b), which does not set a standard of timeliness in other circumstances (Pa.R.C.P. 237.3, note)."
+}
+
+state answered: "Pleadings closed" by applicant cite "Pa.R.C.P. 1029(b)"
+{
+  note "A reply to new matter or a counterclaim endorsed with a notice to plead is due within twenty days after service (Pa.R.C.P. 1026(a)). A demand for a jury trial is filed and served not later than twenty days after service of the last permissible pleading, by endorsement on a pleading or a separate writing; otherwise the right is deemed waived (Pa.R.C.P. 1007.1(a)). After the relevant pleadings are closed, but within such time as not to unreasonably delay the trial, any party may move for judgment on the pleadings (Pa.R.C.P. 1034(a))."
+  edge-answered-discovery "Case proceeds to discovery" -> discovery {
+    authority cite "Pa.R.C.P. 4003.1(a)"
+  }
+}
+
+state discovery: "Discovery" by applicant cite "Pa.R.C.P. 4003.1(a)"
+{
+  note "A party may obtain discovery of any matter, not privileged, relevant to the subject matter of the pending action (Pa.R.C.P. 4003.1(a)). Answers and objections to interrogatories are served within thirty days after service of the interrogatories (Pa.R.C.P. 4006(a)(2)); the answer to a request for production is served within thirty days after service of the request (Pa.R.C.P. 4009.12(a)). A matter in a request for admission is admitted unless an answer or objection is served within thirty days after service of the request, or a shorter or longer time the court allows, but a defendant need not answer before forty-five days after service of original process upon it unless the court shortens the time (Pa.R.C.P. 4014(b)). In a jury case above the compulsory arbitration limit the court gives notice of the earliest trial date, and pre-trial statements are filed by the plaintiff not later than sixty days, the defendant thirty days and an additional defendant fifteen days before it, subject to local rule or special order (Pa.R.C.P. 212.1(a)-(c))."
+  edge-discovery-dispute "Motion for discovery sanctions" -> discovery-dispute {
+    authority cite "Pa.R.C.P. 4019(a)"
+  }
+  edge-discovery-sj "Motion for summary judgment" -> summary-judgment {
+    authority cite "Pa.R.C.P. 1035.2"
+  }
+  edge-discovery-discontinued "Settled: discontinuance" -> discontinued {
+    authority cite "Pa.R.C.P. 229(a)"
+  }
+  edge-discovery-trial "Case reaches trial" -> trial { authority cite "Pa.R.C.P. 212.1(a)" }
+}
+
+decision discovery-dispute: "Discovery sanctions motion decided" by court cite "Pa.R.C.P. 4019(a)"
+{
+  note "The court may, on motion, make an appropriate order when a party fails to answer interrogatories, to appear for a noticed deposition, to respond to or permit inspection under a request for production, or otherwise fails to make discovery or obey a discovery order; a failure is not excused because the discovery sought is objectionable unless the party filed an objection or sought a protective order (Pa.R.C.P. 4019(a)). The order may take facts as established, preclude claims, defenses or evidence, strike pleadings, stay proceedings, enter a judgment of non pros or by default, or punish for contempt (Pa.R.C.P. 4019(c)). Expenses including attorney's fees follow a disobeyed order compelling compliance (Pa.R.C.P. 4019(g)). A motions court may by Local Rule 208.2(e) require a certification that counsel conferred to resolve the matter (Pa.R.C.P. 4019, note)."
+  edge-discovery-dispute-resolved "Order entered: discovery continues" -> discovery {
+    authority cite "Pa.R.C.P. 4019(c)"
+  }
+  edge-discovery-dispute-sanction "Judgment of non pros against the applicant as a sanction" -> dismissed-sanction {
+    authority cite "Pa.R.C.P. 4019(c)"
+  }
+}
+
+terminal dismissed-sanction: "Judgment of non pros as a discovery sanction" outcome [loss, dismissal] cite "Pa.R.C.P. 4019(c)"
+{
+  note "Outcome from the applicant's side. Relief from a judgment of non pros is sought by a single petition alleging that it is timely, that there is a reasonable explanation or legitimate excuse for the conduct that gave rise to it, and that there is a meritorious cause of action (Pa.R.C.P. 3051(a), (b))."
+}
+
+decision summary-judgment: "Summary judgment decided" by court cite "Pa.R.C.P. 1035.2"
+{
+  note "After the relevant pleadings are closed, but within such time as not to unreasonably delay trial, any party may move for summary judgment in whole or in part whenever there is no genuine issue of any material fact as to a necessary element of the cause of action or defense which could be established by additional discovery or expert report, or if, after the completion of relevant discovery, an adverse party who will bear the burden of proof at trial has failed to produce evidence of facts essential to the cause of action or defense (Pa.R.C.P. 1035.2). The adverse party may not rest on the pleadings but files a response within thirty days after service of the motion identifying issues of fact or evidence in the record; summary judgment may be entered against a party who does not respond (Pa.R.C.P. 1035.3(a), (d)). No motion for post-trial relief lies from an order disposing of a summary judgment motion (Pa.R.C.P. 227.1, comment)."
+  edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-entered {
+    authority cite "Pa.R.C.P. 227.4(2)"
+  }
+  edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-entered {
+    authority cite "Pa.R.C.P. 227.4(2)"
+  }
+  edge-summary-judgment-denied "Denied" -> trial { authority cite "Pa.R.C.P. 1035.3(c)" }
+}
+
+state trial: "Trial by jury or by the court" by court cite "Pa.R.C.P. 1038(a)"
+{
+  note "A trial without a jury is conducted as nearly as may be as a jury trial, including the right to move for nonsuit; the decision may consist only of general findings but disposes of all claims, and the trial judge renders it within seven days after the conclusion of the trial except in protracted or extraordinarily complex cases, the prothonotary notifying all parties of the date of filing (Pa.R.C.P. 1038(a)-(c)). In an action with one plaintiff and one defendant the court may enter a compulsory nonsuit at the close of the plaintiff's case on liability if the plaintiff has failed to establish a right to relief (Pa.R.C.P. 230.1(a)(1)). A voluntary nonsuit is the exclusive method of voluntary termination during trial, only with leave of court on good cause and not after the close of all the evidence (Pa.R.C.P. 230)."
+  edge-trial-verdict "Verdict, decision or nonsuit" -> post-trial {
+    authority cite "Pa.R.C.P. 227.1(c)"
+  }
+  edge-trial-no-motion "No timely post-trial motion: judgment on praecipe" -> judgment-entered {
+    authority cite "Pa.R.C.P. 227.4(1)"
+  }
+  edge-trial-nonsuit "Voluntary nonsuit with leave of court" -> discontinued {
+    authority cite "Pa.R.C.P. 230(b)"
+  }
+}
+
+decision post-trial: "Motion for post-trial relief decided" by court cite "Pa.R.C.P. 227.1(a)"
+{
+  note "Post-trial motions are filed within ten days after the verdict, discharge of the jury for inability to agree, or nonsuit in a jury trial, or after notice of nonsuit or the filing of the decision in a trial without jury; once a party files a timely motion any other party may file one within ten days after the filing of the first (Pa.R.C.P. 227.1(c)). Relief is limited to grounds raised in pre-trial proceedings or at trial and specified in the motion (Pa.R.C.P. 227.1(b)). The court may order a new trial, direct the entry of judgment, remove a nonsuit, affirm, modify or change the decision, or enter any other appropriate order (Pa.R.C.P. 227.1(a)). If the court does not dispose of all timely motions within one hundred twenty days after the filing of the first, the prothonotary on praecipe enters judgment, final as to all parties and issues (Pa.R.C.P. 227.4(1)(b))."
+  edge-post-trial-new-trial "New trial ordered" -> trial { authority cite "Pa.R.C.P. 227.1(a)" }
+  edge-post-trial-decided "Motions decided or not decided within 120 days: judgment entered" -> judgment-entered {
+    authority cite "Pa.R.C.P. 227.4(1)"
+  }
+}
+
+decision judgment-entered: "Judgment entered" by applicant cite "Pa.R.C.P. 227.4"
+{
+  note "The prothonotary on praecipe of a party enters judgment on a nonsuit, verdict or decision when no timely post-trial motion is filed or the court has not disposed of the motions within one hundred twenty days, and when the court grants or denies relief without itself entering judgment (Pa.R.C.P. 227.4(1), (2)). The prothonotary immediately gives written notice of the entry of any order or judgment to each party's attorney of record, or to each unrepresented party, with a copy, and notes the notice on the docket (Pa.R.C.P. 236(a)(2), (b)). An appeal as of right lies from a final order (Pa.R.A.P. 341(a)); the notice of appeal is filed within 30 days after the entry of the order appealed from (Pa.R.A.P. 903(a))."
+  edge-judgment-entered-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "Pa.R.A.P. 902(a)"
+  }
+  edge-judgment-entered-final "No appeal within time" -> final-no-appeal {
+    authority cite "Pa.R.A.P. 903(a)"
+  }
+}
+
+terminal discontinued: "Discontinued or voluntary nonsuit" outcome [settlement] cite "Pa.R.C.P. 229(a)"
+{
+  note "A discontinuance is the exclusive method of voluntary termination of an action by the plaintiff before commencement of the trial; as to less than all defendants it needs the written consent of all parties or leave of court, and the court may strike it off to protect a party from unreasonable inconvenience, vexation, harassment, expense or prejudice (Pa.R.C.P. 229(a)-(c)). Court approval is required where a minor or an incapacitated person is a party and in a class action (Pa.R.C.P. 229, note)."
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Pennsylvania appellate package" outcome [appeal] cite "Pa.R.A.P. 902(a)"
+{
+  note "An appeal as of right from a trial court is taken by filing a notice of appeal with the clerk of the trial court within the time allowed by Pa.R.A.P. 903, in each docket in which the order has been entered (Pa.R.A.P. 902(a)). Hand-off to lit/pa-appellate-civil (pa-appellate-civil)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Pa.R.A.P. 903(a)"
+{
+  note "The failure to file a notice of appeal within the time allowed by Pa.R.A.P. 903 renders an appeal invalid (Pa.R.A.P. 902(b)(2))."
+}

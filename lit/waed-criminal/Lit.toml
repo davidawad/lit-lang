@@ -1,0 +1,52 @@
+# The U.S. District Court for the Eastern District of Washington's Local
+# Criminal Rules (LCrR) as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods and limits the
+# local criminal rules themselves state and re-encodes no FRCrimP, Speedy
+# Trial Act or FRAP 4(b) period (one source of truth: lit/frcrimp). Each
+# period is counted under FRCrimP 45(a), which governs "any local rule",
+# so each deadline names `forum frcrimp`. The rules are the edition
+# effective February 20, 2015 (LCrR 57(b)), which the court still presents
+# as current (sources/fed-edwash); earlier editions are not vendored, so a
+# query before that date is a hole in the corpus. Motion response and
+# reply periods follow LCivR 7.1 (LCrR 45, 47) and live in lit/waed. An
+# appeal goes to the Ninth Circuit under lit/frcrimp's FRAP 4(b) period.
+[package]
+name = "waed-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "waed-criminal-local-rules"
+forum = "waed-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Eastern District of Washington: Local Criminal Rules"
+description = "The Eastern District of Washington's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): responses to objections to a magistrate judge's plea recommendation, the reconsideration page limit, the government's and defense's discovery and defense-notice schedule, the trial brief, voir dire and jury instruction filings, and the briefs on an appeal from a magistrate judge's judgment."
+in_force = "2015-02-20"
+known_at = "2026-10-28"
+unknown_before = "2015-02-20"
+jurisdiction = "U.S. District Court for the Eastern District of Washington (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "edwash-lcrr"
+issuer = "U.S. District Court for the Eastern District of Washington"
+date = "2015-02-20"
+designation = "Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.edwash-lcrr]
+title = "Local Criminal Rules of the U.S. District Court for the Eastern District of Washington (effective February 20, 2015)"
+url = "https://www.waed.uscourts.gov/sites/cst/waed/files/local-rules/LocalCriminalRules.pdf"
+path = "sources/fed-edwash/edwash-local-criminal-rules-2015-02-20-sectioned.txt"
+path_sha256 = "aaa4633f837117f9920bdb1ca5c967c0d15757b2c5ca066bfd8bb2f7043ed1b0"
+sha256 = "b9115c4078491a7bb4a5f8b37e228a4f57e3a045e9e4077a21d1c5d97b6968a4"
+as_of = "2015-02-20"
+cite_prefixes = ["E.D. Wash. LCrR"]
+section_heading = "LCrR {n}"

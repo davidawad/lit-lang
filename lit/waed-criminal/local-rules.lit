@@ -1,0 +1,148 @@
+module waed-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The Eastern District of Washington's own criminal periods, counted under
+// the criminal rules (FRCrimP 45(a) governs "any local rule"). The rules
+// are subject to any order of the presiding judge in an individual case
+// (LCrR 1(a)). No trigger carries a service method: FRCrimP 45(c)'s three
+// added days follow the manner of service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay with the Federal Rules and are
+// only named here: objections to a magistrate judge's report and
+// recommendation on a felony plea are filed within fourteen (14) days
+// after its service (LCrR 11(i)), FRCrimP 59(b)(2)'s period.
+//
+// A period in hours stays in a note, because language version 1 lowers no
+// hour deadline: when the initial appearance after a warrantless arrest
+// will not or is likely not to be held within forty-eight (48) hours, a
+// complaint and affidavit are presented to the Magistrate Judge within
+// forty-eight (48) hours after the arrest (LCrR 5(b)(1)).
+//
+// Conditions that are not deadlines from an event stay in notes: a copy of
+// a preliminary hearing recording will "whenever possible" be provided
+// within five (5) days of the request (LCrR 5.1(g)(1)); an expedited
+// motion sets a hearing not less than seven (7) days after its filing
+// (LCrR 12(c)(3)), a floor on the setting; a response to a reconsideration
+// motion is filed only on the court's request, which sets its time (LCrR
+// 12(c)(5)); a motion to transfer under FRCrimP 21 is made within the time
+// for pretrial motions (LCrR 21(d)); the LCivR 7.1 response and reply
+// periods include FRCrimP 45(c)'s three days regardless of the method of
+// service (LCrR 45).
+//
+// The earlier E.D. Wash. criminal outline's FRCrimP flow and its decisions
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+/// A motion for reconsideration: limited to five (5) pages (E.D. Wash.
+/// LCrR 12(c)(5)).
+limit reconsideration-motion {
+  pages <= 5 cite "E.D. Wash. LCrR 12(c)"
+} cite "E.D. Wash. LCrR 12(c)"
+
+/// Written objections to a magistrate judge's plea report and
+/// recommendation are served (E.D. Wash. LCrR 11(i)).
+event PleaObjectionsServed()
+/// A motion for reconsideration is filed (E.D. Wash. LCrR 12(c)(5)).
+event ReconsiderationMotionFiled() paper reconsideration-motion
+/// The defendant is arraigned (E.D. Wash. LCrR 16(a)).
+event Arraigned()
+/// Trial is set (E.D. Wash. LCrR 16, 23(d), 24(a), 30(a)).
+event TrialScheduled()
+/// A notice of appeal from a magistrate judge's order or judgment is filed
+/// (E.D. Wash. LCrR 58(g)(2)(E)).
+event MagistrateAppealNoticed()
+/// The appellant's brief is filed and served (E.D. Wash. LCrR
+/// 58(g)(2)(E)).
+event AppellantBriefServed()
+/// The appellee's responsive brief is filed and served (E.D. Wash. LCrR
+/// 58(g)(2)(E)).
+event AppelleeBriefServed()
+
+/// E.D. Wash. LCrR 11(i): a party opposing objections to the plea report
+/// and recommendation files and serves a written response within seven (7)
+/// days thereafter.
+deadline plea-objection-response: 7.days after PleaObjectionsServed() counted_by frcrimp45 cite "E.D. Wash. LCrR 11(i)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wash. LCrR 16(a): absent notice to the contrary, at arraignment or
+/// within fourteen (14) days thereafter the government makes its Rule 16(a),
+/// interception, search warrant, warrantless seizure, identification and
+/// Brady disclosures.
+deadline government-disclosure: 14.days after Arraigned() counted_by frcrimp45 cite "E.D. Wash. LCrR 16(a)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wash. LCrR 16(a)(7)-(9): no later than twenty-eight (28) days
+/// before trial, the government provides Henthorn information, its Rule
+/// 404(b) summary and its Rule 609 convictions list.
+deadline government-pretrial-disclosure: 28.days before TrialScheduled() counted_by frcrimp45 cite "E.D. Wash. LCrR 16(a)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wash. LCrR 16(b): no later than fourteen (14) days before trial,
+/// the defense makes its Rule 16(b) case-in-chief material available.
+deadline defense-disclosure: 14.days before TrialScheduled() counted_by frcrimp45 cite "E.D. Wash. LCrR 16(b)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wash. LCrR 16(b)(1), (2): no later than twenty-one (21) days before
+/// trial, the defense files and serves any notice of an insanity or other
+/// mental-condition defense under FRCrimP 12.2 and of a public-authority
+/// defense under FRCrimP 12.3.
+deadline defense-notices: 21.days before TrialScheduled() counted_by frcrimp45 cite "E.D. Wash. LCrR 16(b)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wash. LCrR 23(d): each party files and serves any trial brief no
+/// later than seven (7) days before trial or as ordered by the presiding
+/// judge.
+deadline trial-brief: 7.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Wash. LCrR 23(d)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wash. LCrR 24(a): each party files and serves any suggested voir
+/// dire questions no later than seven (7) days before trial.
+deadline voir-dire-questions: 7.days before TrialScheduled() counted_by frcrimp45 cite "E.D. Wash. LCrR 24(a)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wash. LCrR 30(a): each party files and serves proposed jury
+/// instructions no later than seven (7) days before trial; unanticipated
+/// instructions may be filed during trial.
+deadline jury-instructions: 7.days before TrialScheduled() counted_by frcrimp45 cite "E.D. Wash. LCrR 30(a)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wash. LCrR 58(g)(2)(E): the appellant's brief is filed and served
+/// within twenty-eight (28) days after the filing of the notice of appeal.
+deadline magistrate-appeal-appellant-brief: 28.days after MagistrateAppealNoticed() counted_by frcrimp45 cite "E.D. Wash. LCrR 58(g)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wash. LCrR 58(g)(2)(E): the appellee's responsive brief is filed
+/// and served within fourteen (14) days thereafter.
+deadline magistrate-appeal-appellee-brief: 14.days after AppellantBriefServed() counted_by frcrimp45 cite "E.D. Wash. LCrR 58(g)"
+{
+  forum frcrimp
+}
+
+/// E.D. Wash. LCrR 58(g)(2)(E): the appellant may file and serve a reply
+/// brief within seven (7) days thereafter.
+deadline magistrate-appeal-reply-brief: 7.days after AppelleeBriefServed() counted_by frcrimp45 cite "E.D. Wash. LCrR 58(g)"
+{
+  forum frcrimp
+}

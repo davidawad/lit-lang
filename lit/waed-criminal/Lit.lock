@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "waed-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:61fc67f1296aec3a16faac53a8d69af56e02a7cb756ab9351c340b57d2e218d1"
+semantic = "sha256:776d38e5444edbefed7b5b3e8ee699e097ea837a2d5b07272e9fbcefee794e18"
+texts = [
+    "edwash-lcrr sources/fed-edwash/edwash-local-criminal-rules-2015-02-20-sectioned.txt sha256:aaa4633f837117f9920bdb1ca5c967c0d15757b2c5ca066bfd8bb2f7043ed1b0",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

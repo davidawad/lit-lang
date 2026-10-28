@@ -1,0 +1,47 @@
+# Criminal causes in the Maryland circuit courts (and the District Court
+# where Title 4 says so) under Title 4 of the Maryland Rules, with the
+# criminal notice of appeal of Rule 8-202. Both texts are the Westlaw
+# public-access extracts (sources/md-criminal-trial-court and
+# sources/md-appellate-civil), whose PROVENANCE entries record CURRENCY
+# UNCONFIRMED: every cite is therefore a hole, `?("..., CURRENCY
+# UNCONFIRMED")`, and every period is stated in a note as the vendored text
+# states it, unverified. Computation of time is Md. Rule 1-203, which is
+# not vendored, and lit/core has no Maryland counting rule, so no period
+# is a counted deadline. The speedy-trial statute, Code, Criminal Procedure
+# Article, § 6-103, is not vendored; Rule 4-271 is the rule. Federal habeas
+# is lit/habeas's.
+[package]
+name = "md-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "md-criminal-trial-court"
+forum = "md-criminal-trial-court"
+authority = "StateRule"
+title = "Maryland trial courts, criminal"
+description = "Criminal causes in the Maryland trial courts under Title 4 of the Maryland Rules, as far as the vendored text states: the preliminary-hearing request, mandatory motions and their response, discovery, the 180-day trial date of Rule 4-271, the motion for new trial and revisory power, the revisory power over a sentence, and the 30-day criminal notice of appeal of Rule 8-202. The source is CURRENCY UNCONFIRMED, so every cite is a hole."
+in_force = "2026-09-01"
+known_at = "2026-10-28"
+unknown_before = "2026-09-01"
+jurisdiction = "Maryland trial courts of general criminal jurisdiction"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.md-rules-title-4]
+title = "Maryland Rules, Title 4 (Criminal Causes), Westlaw public-access text current with amendments received through September 1, 2026 (CURRENCY UNCONFIRMED)"
+url = "https://govt.westlaw.com/mdc/Index"
+path = "sources/md-criminal-trial-court/md-rules-title-4-criminal-causes-westlaw.txt"
+path_sha256 = "0ff3adcb22012ce133119429f22e6371e219074c904ca9a3adbe06e849932161"
+as_of = "2026-09-01"
+
+[sources.md-rules-title-8]
+title = "Maryland Rules, Title 8 (Appellate Review in the Supreme Court and the Appellate Court), Westlaw public-access text current with amendments received through September 1, 2026 (CURRENCY UNCONFIRMED)"
+url = "https://govt.westlaw.com/mdc/Index"
+path = "sources/md-appellate-civil/md-appellate-civil-rules-sectioned.txt"
+path_sha256 = "0694de4a0728cf6eda3351cc4fe4b299d1993e5c462add44ef16969ccf35664f"
+as_of = "2026-09-01"

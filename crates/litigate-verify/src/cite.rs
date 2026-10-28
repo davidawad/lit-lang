@@ -138,10 +138,7 @@ fn holds(body: &str, quote: &str) -> bool {
             };
             let word = r.find(' ').unwrap_or(r.len());
             rest = &r[word..];
-            word > 0
-                && rest
-                    .strip_prefix(' ')
-                    .is_some_and(|r| r.starts_with(after))
+            word > 0 && rest.strip_prefix(' ').is_some_and(|r| r.starts_with(after))
         })
     })
 }

@@ -12,7 +12,8 @@
 - Source: https://www.ca3.uscourts.gov/sites/ca3/files/LAR%2026%20and%20Misc.%20LAR%20113%28c%29%20Effective%20July%201%202023.pdf (official site; 2 pages, sha256 3ae4a1f48f206c7cdaddfbfb07c17053c9523f347c551eb39cc6afe035de67c5).
 - Edition: L.A.R. 26.0 and L.A.R. Misc. 113.3(c) effective July 1, 2023, as linked 'Recent Amendments to the Local Rules (PDF)' on https://www.ca3.uscourts.gov/rules-procedures-0 (retrieved 2026-10-27). Amending order to the consolidated Local Appellate Rules of Aug. 1, 2011 (ca3/lar-2011-08-01.txt); supersedes L.A.R. 26 and Misc. 113.3(c) there.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 20b568c049144c1ce701c184cec72f652ddff3d5871ab21006adaabaec21c6cb. Raw extract, not yet sectioned into `## <ref>` form.
+- Extract sha256 20b568c049144c1ce701c184cec72f652ddff3d5871ab21006adaabaec21c6cb. Sectioned for cite resolution (lg-f3q8.72): one `## 3d Cir. L.A.R. 26.1` marker line was inserted before the body heading `26.1     Deadline for Filing`. Rule text was not edited: deleting the marker line (`sed '/^## 3d Cir\. /d'`) restores the extract byte for byte.
+- Sectioned file sha256 5bbaa52f80528133987ddebc24de5aa9701da086300ac8a3124031c8a28f6c51 (the `path_sha256` pinned by `lit/ca3/Lit.toml`).
 - Original: `ca3/original/lar-amendment-2023-07-01.pdf` as served (sha256 3ae4a1f48f206c7cdaddfbfb07c17053c9523f347c551eb39cc6afe035de67c5); extraction sha256 20b568c049144c1ce701c184cec72f652ddff3d5871ab21006adaabaec21c6cb.
 
 ### `ca3/iops-2023-01-06.txt` — Third Circuit Internal Operating Procedures
@@ -20,7 +21,8 @@
 - Source: https://www.ca3.uscourts.gov/sites/ca3/files/IOPs.pdf (official site; 23 pages, sha256 28e1dd7531d89ffc1e54e0901662b5204297ca501bc44c83db3b268071aefcbf).
 - Edition: Internal Operating Procedures, effective January 6, 2023, as linked 'Internal Operating Procedures (PDF)' on https://www.ca3.uscourts.gov/rules-procedures-0 (retrieved 2026-10-27).
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
-- Extract sha256 b11341de5c2397f9fd1152d8c8c6fcd7be09df57267b3501617967d4edf0dd18. Raw extract, not yet sectioned into `## <ref>` form.
+- Extract sha256 b11341de5c2397f9fd1152d8c8c6fcd7be09df57267b3501617967d4edf0dd18. Sectioned for cite resolution (lg-f3q8.72): a `## 3d Cir. I.O.P. N.M` marker line was inserted before each body heading `N.M    <title>.` (58 markers); the table of contents and the introduction (A-D) are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## 3d Cir\. /d'`) restores the extract byte for byte.
+- Sectioned file sha256 89d2b64f9653355500465df5b6ab68a81c9612d796e7a919cf64539bf0d613a2 (the `path_sha256` pinned by `lit/ca3/Lit.toml`).
 
 - CURRENCY UNCONFIRMED (PM ruling 2026-10-27) for `ca3/lar-2011-08-01.txt` : the court page lists only one amending order (July 1, 2023) on a 2011 consolidated base, so other amendments since 2011 may be missing. Treat every value taken from these as a hole until a current edition is confirmed.
 - Original: `ca3/original/iops-2023-01-06.pdf` as served (sha256 28e1dd7531d89ffc1e54e0901662b5204297ca501bc44c83db3b268071aefcbf); extraction sha256 b11341de5c2397f9fd1152d8c8c6fcd7be09df57267b3501617967d4edf0dd18.

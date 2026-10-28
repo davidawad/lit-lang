@@ -1,0 +1,85 @@
+# The United States Court of Appeals for the Third Circuit as a local-rule
+# layer over lit/frap (FRAP 47(a)): it declares only the periods the
+# circuit's own vendored text states and re-encodes no FRAP period. The
+# bound texts are the Internal Operating Procedures (effective January 6,
+# 2023) and the July 1, 2023 amendment of L.A.R. 26.1. The consolidated
+# Local Appellate Rules of August 1, 2011 (sources/ca3/lar-2011-08-01.txt)
+# are CURRENCY UNCONFIRMED (sources/ca3/PROVENANCE.md): no value or cite is
+# taken from them until a current edition is vendored.
+[package]
+name = "third-circuit-court-of-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "third-circuit-court-of-appeals"
+forum = "ca3"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States Court of Appeals for the Third Circuit"
+description = "A civil appeal in the Third Circuit: its Internal Operating Procedures and the 2023 L.A.R. 26.1 filing-time rule over the FRAP periods of lit/frap; the answer to a petition for panel rehearing or rehearing en banc."
+jurisdiction = "United States Court of Appeals for the Third Circuit"
+in_force = "2024-12-01"
+known_at = "2026-10-28"
+unknown_before = "2024-12-01"
+counting = "frap26"
+
+[package.instrument]
+source = "ca3-iops"
+issuer = "United States Court of Appeals for the Third Circuit"
+date = "2023-01-06"
+designation = "Internal Operating Procedures (effective January 6, 2023)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frap-appellate-procedure = { version = "^0.1.0", path = "../frap" }
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[sources.frap]
+title = "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2024"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-appellate-procedure-dec-1-2024_0.pdf"
+path = "sources/frap.txt"
+path_sha256 = "b370cc0558698ff88b62b6cec212742fde8afbdd2fe653a3b255d69dec893172"
+sha256 = "d61711eca8e1f65955d12f1b7d29d4cc453d9ee1e30c4fff6c54b23f113454f6"
+as_of = "2024-12-01"
+
+[sources.ca3-iops]
+title = "Internal Operating Procedures of the United States Court of Appeals for the Third Circuit (effective January 6, 2023)"
+url = "https://www.ca3.uscourts.gov/sites/ca3/files/IOPs.pdf"
+path = "sources/ca3/iops-2023-01-06.txt"
+path_sha256 = "89d2b64f9653355500465df5b6ab68a81c9612d796e7a919cf64539bf0d613a2"
+sha256 = "28e1dd7531d89ffc1e54e0901662b5204297ca501bc44c83db3b268071aefcbf"
+as_of = "2023-01-06"
+
+[sources.ca3-lar-26-2023]
+title = "Third Circuit L.A.R. 26.0 and L.A.R. Misc. 113.3(c) (effective July 1, 2023)"
+url = "https://www.ca3.uscourts.gov/sites/ca3/files/LAR%2026%20and%20Misc.%20LAR%20113%28c%29%20Effective%20July%201%202023.pdf"
+path = "sources/ca3/lar-amendment-2023-07-01.txt"
+path_sha256 = "5bbaa52f80528133987ddebc24de5aa9701da086300ac8a3124031c8a28f6c51"
+sha256 = "3ae4a1f48f206c7cdaddfbfb07c17053c9523f347c551eb39cc6afe035de67c5"
+as_of = "2023-07-01"
+
+[sources.usc28]
+title = "28 U.S.C. §§ 1254, 1291 (vendored sections)"
+url = "https://www.law.cornell.edu/uscode/text/28/1291"
+path = "sources/usc-additional.txt"
+path_sha256 = "5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+
+[[cite_syntax.rules]]
+prefixes = ["FRAP", "Fed. R. App. P."]
+heading = "FRAP {}"
+source = "frap"
+
+[[cite_syntax.rules]]
+prefixes = ["3d Cir. I.O.P."]
+heading = "3d Cir. I.O.P. {}"
+source = "ca3-iops"
+
+[[cite_syntax.rules]]
+prefixes = ["3d Cir. L.A.R."]
+heading = "3d Cir. L.A.R. {}"
+source = "ca3-lar-26-2023"

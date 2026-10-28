@@ -1,0 +1,166 @@
+module ca3.appeal
+
+import core.frap26.{ frap26 }
+
+// The FRAP periods are lit/frap's: the notice-of-appeal periods of FRAP
+// 4(a)(1), the petition for permission to appeal of FRAP 5(a)(2), the
+// transcript periods of FRAP 10(b)(1) and 11(b)(1), the brief periods of
+// FRAP 31(a)(1), the rehearing periods of FRAP 40(d)(1) and the mandate
+// period of FRAP 41(b). This package is the Third Circuit's layer over
+// them: it declares the periods the circuit's own current text states. The
+// Internal Operating Procedures (effective January 6, 2023) count calendar
+// days (3d Cir. I.O.P., Introduction D); FRAP 26(a) computes a period set
+// by court order, and these periods run from one. The 2011 consolidated
+// Local Appellate Rules are CURRENCY UNCONFIRMED (sources/ca3/PROVENANCE.md),
+// so no period, fee or length limit is taken from them: the docketing fee,
+// the disclosure statement of L.A.R. 26.1.1 (2011) and the brief and
+// appendix rules of L.A.R. 28.1, 28.3, 31.1 and 32.1 stay unmodeled until a
+// current edition is vendored. The leading decisions on appellate
+// jurisdiction and the notice deadline (Bowles v. Russell, Catlin v. United
+// States) are lit/frap's; Mohawk Industries v. Carpenter and Swint v.
+// Chambers County Commission are not cited, as no reporter text of either is
+// vendored.
+/// The authoring judge orders an answer to a petition for panel rehearing
+/// (3d Cir. I.O.P. 8.2).
+event PanelRehearingAnswerOrdered()
+/// The authoring judge orders an answer to a petition for rehearing en banc
+/// (3d Cir. I.O.P. 9.5).
+event EnBancAnswerOrdered()
+
+/// When a member of the panel majority asks for one, the author orders an
+/// answer to the petition for panel rehearing filed within 14 calendar days.
+deadline panel-rehearing-answer-period: 14.days after PanelRehearingAnswerOrdered() counted_by frap26 cite "3d Cir. I.O.P. 8.2"
+{
+  forum frap
+}
+
+/// When four active judges vote for an answer, or there are four votes for
+/// an answer or rehearing with at least one for an answer, the authoring
+/// judge orders an answer to the petition for rehearing en banc within 14
+/// calendar days from the date of the order.
+deadline en-banc-answer-period: 14.days after EnBancAnswerOrdered() counted_by frap26 cite "3d Cir. I.O.P. 9.5"
+{
+  forum frap
+}
+
+test "panel rehearing answer is due 14 days after the order directing it" cite "3d Cir. I.O.P. 8.2"
+{
+  given PanelRehearingAnswerOrdered() on 2026-11-02
+  expect deadline(panel-rehearing-answer-period) == 2026-11-16
+}
+
+test "en banc answer due on a Saturday rolls to Monday" cite "3d Cir. I.O.P. 9.5"
+{
+  given EnBancAnswerOrdered() on 2026-11-07
+  expect deadline(en-banc-answer-period) == 2026-11-23
+}
+
+start threshold
+
+decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+{
+  note "A final decision of a district court is appealable under 28 U.S.C. § 1291. An interlocutory order may be reviewed on a petition for permission to appeal (FRAP 5); its period is lit/frap's. When an appeal is dismissed for want of an FRCP 54(b) certification, the court's form order allows a new appeal on the present briefs and record if the district court makes the determination within 30 days (3d Cir. I.O.P. 17.4)."
+  edge-threshold-no "Not appealable" -> dismissed-jurisdiction {
+    authority cite "28 U.S.C. § 1291; 3d Cir. I.O.P. 17.3"
+  }
+  edge-threshold-leave "Interlocutory, permission sought" -> leave-petition {
+    authority cite "FRAP 5(a)"
+  }
+  edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
+}
+
+decision leave-petition: "Permission to Appeal Granted?" by court cite "FRAP 5"
+{
+  note "The petition is filed with the circuit clerk within the time the authorizing statute or rule sets (FRAP 5(a)(2)); an order granting permission is followed by the fee and docketing under FRAP 5(d)."
+  edge-leave-granted "Permission granted" -> docketed { authority cite "FRAP 5(d)" }
+  edge-leave-denied "Permission denied" -> dismissed-jurisdiction { authority cite "FRAP 5(a)(1)" }
+}
+
+decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)(A)"
+{
+  note "The notice is filed with the district clerk within 30 days after entry of judgment, or 60 days when the United States is a party (FRAP 4(a)(1)); lit/frap encodes both periods and the FRAP 4(a)(4)(A) tolling motions. The docketing fee is not modeled: its amount is not stated in the vendored current text."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "FRAP 4(a)(1)(A)" }
+  edge-notice-timely "Timely notice" -> docketed { authority cite "FRAP 3(a)(1)" }
+}
+
+state docketed: "Appeal Docketed" by office cite "FRAP 12(a)"
+{
+  note "On receiving the notice the circuit clerk dockets the appeal (FRAP 12(a)). A filing after the appeal begins is timely only if the clerk receives it, or an electronic filer completes the transaction, by 5:00 p.m. Eastern Time on the last day (3d Cir. L.A.R. 26.1(a)); the cutoff does not reach the papers that initiate the appeal (3d Cir. L.A.R. 26.1(b)) or an inmate's filing under FRAP 25(a)(2)(A)(iii) (3d Cir. L.A.R. 26.1(d)). A corporate party files its disclosure statement under FRAP 26.1."
+  edge-docketed-record "Record transmitted" -> record { authority cite "FRAP 11(b)" }
+}
+
+state record: "Record on Appeal" by office cite "FRAP 10; FRAP 11"
+{
+  note "The record is the district court's papers, exhibits, transcript and docket entries (FRAP 10(a)), forwarded under FRAP 11(b); lit/frap encodes the transcript-order period."
+  edge-record-briefing "Briefing begins" -> briefing { authority cite "FRAP 31(a)(1)" }
+}
+
+state briefing: "Briefs Filed" by applicant cite "FRAP 28; FRAP 31(a)"
+{
+  note "Principal and reply briefs under FRAP 28 and 31(a), within the FRAP 32(a)(7) limits; lit/frap encodes the periods. Electronic filers file briefs and appendices electronically under the 5:00 p.m. cutoff, which does not reach paper copies of briefs already filed electronically (3d Cir. L.A.R. 26.1(c)). Amicus briefs: FRAP 29. Before summary action affirming, reversing or remanding, the court affords the parties an opportunity to argue for or against it if merits briefs have not been filed (3d Cir. I.O.P. 10.6)."
+  edge-briefing-summary "Summary action" -> decision { authority cite "3d Cir. I.O.P. 10.6" }
+  edge-briefing-argument "Briefing closed" -> argument { authority cite "FRAP 31(a)(1)" }
+}
+
+decision argument: "Oral Argument?" by court cite "FRAP 34(a); 3d Cir. I.O.P. 2.1"
+{
+  note "Briefs reach chambers at least four full weeks before the panel sitting (3d Cir. I.O.P. 1.1). There is argument if any panel judge requests it; usually 15 minutes per side is allotted, up to 20 on a single judge's request (3d Cir. I.O.P. 2.1). About 18 calendar days before the sitting the clerk tells counsel the panel's names and whether the case will be argued (3d Cir. I.O.P. 2.5)."
+  edge-argument-argued "Argued" -> decision { authority cite "FRAP 34; 3d Cir. I.O.P. 2.1" }
+  edge-argument-submitted "Submitted without argument" -> decision {
+    authority cite "FRAP 34(a)(2); 3d Cir. I.O.P. 2.1"
+  }
+}
+
+state decision: "Opinion or Judgment Order Issued" by court cite "FRAP 36; 3d Cir. I.O.P. 5.1"
+{
+  note "The court decides by precedential or not precedential opinion, or by judgment order when the panel is unanimous that no opinion is needed (3d Cir. I.O.P. 5.1, 6.1). A precedential opinion binds later panels and is overruled only en banc (3d Cir. I.O.P. 9.1)."
+  edge-decision-judgment "Judgment entered" -> rehearing-decision { authority cite "FRAP 36" }
+}
+
+decision rehearing-decision: "Rehearing Sought?" by applicant cite "FRAP 40(d)(1)"
+{
+  note "A petition for panel rehearing or rehearing en banc is due within 14 days after entry of judgment, or 45 days in a civil case with a United States party (FRAP 40(d)(1)); lit/frap encodes both. Rehearing en banc is not favored (3d Cir. I.O.P. 9.3)."
+  edge-rehearing-none "No petition" -> mandate { authority cite "FRAP 41(b)" }
+  edge-rehearing-sought "Petition filed" -> rehearing {
+    authority cite "FRAP 40; 3d Cir. I.O.P. 8.1"
+  }
+}
+
+state rehearing: "Rehearing Petition Pending" by court cite "FRAP 40; 3d Cir. I.O.P. 8.1; 3d Cir. I.O.P. 9.5"
+{
+  note "The petition circulates to the panel and, for rehearing en banc, to the active judges. If an answer is ordered it is due within 14 calendar days of the order (3d Cir. I.O.P. 8.2, 9.5). Panel rehearing is granted on two panel votes and vacates the opinion and judgment (3d Cir. I.O.P. 8.3); rehearing en banc needs a majority of the active judges not disqualified (3d Cir. I.O.P. 9.5). A timely petition delays the mandate (FRAP 41(b))."
+  edge-rehearing-decided "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
+}
+
+state mandate: "Mandate Issued" by office cite "FRAP 41(b)"
+{
+  note "The mandate issues 7 days after the time to petition for rehearing expires or 7 days after entry of an order denying a timely petition (FRAP 41(b)); lit/frap encodes the period. The court does not stay or recall the mandate pending certiorari unless the failure to do so affects a substantive right of the applicant (3d Cir. I.O.P. 10.8). Costs: FRAP 39."
+  edge-mandate-further "Mandate issued" -> further-review { authority cite "FRAP 41(b)" }
+}
+
+decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+{
+  note "Certiorari under 28 U.S.C. § 1254; its period is lit/frap's."
+  edge-further-review-none "No further review" -> final-decision {
+    authority cite "28 U.S.C. § 1254"
+  }
+  edge-further-review-petition "Petition for certiorari" -> review-decided {
+    authority cite "28 U.S.C. § 1254"
+  }
+}
+
+state review-decided: "Further Review Decided" by court cite "28 U.S.C. § 1254"
+{
+  edge-review-decided-denied "Denied" -> review-denied { authority cite "28 U.S.C. § 1254" }
+  edge-review-decided-granted "Granted" -> review-granted { authority cite "28 U.S.C. § 1254" }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: No Appellate Jurisdiction" outcome [loss, dismissal, jurisdictional] cite "28 U.S.C. § 1291"
+terminal dismissed-untimely: "Dismissed: Untimely Notice" outcome [loss, dismissal] cite "FRAP 4(a)(1)(A)"
+terminal final-decision: "Final: Decision Stands" outcome [final] cite "FRAP 41(b)"
+terminal review-denied: "Further Review Denied" outcome [final] cite "28 U.S.C. § 1254"
+
+terminal review-granted: "Further Review Granted" outcome [neutral] cite "28 U.S.C. § 1254"
+{
+  note "Certiorari granted; the merits are not modeled."
+}

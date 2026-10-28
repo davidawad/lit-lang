@@ -1,0 +1,410 @@
+module bankr-ncm-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, OrderForReliefEntered }
+
+// The Bankr. M.D.N.C. court's own periods and length limits, computed under
+// FRBP 9006(a), which states the FRCP 6(a) method. Every FRBP period
+// (schedules, chapter 7, 12 and 13 claims, confirmation objections,
+// discharge, dischargeability, adversary answers, appeals) is lit/frbp's; a
+// period the rules restate from the FRBP or the Code is not declared again
+// (the 60-day payment-advice look-back of 11 U.S.C. § 521(a)(1)(B)(iv), LBR
+// 1007-1(d); FRBP 2002(a) notice of a trustee election, LBR 2007.1-1).
+// Stated in the rules but not declared: the business-day periods (a
+// certificate of service 3 business days after a disputed-claim notice, LBR
+// 3003-1(c); a voting summary 3 business days before confirmation, LBR
+// 3018-1(b); a reaffirmation lien filing 3 business days after the
+// agreement, LBR 4008-1(b); and the 3- and 7-business-day caps on motion
+// responses and briefs, LBR 7007-1(c)(1), 9013-1(d)-(e)), which frcp6 does
+// not count; the later-of chapter 13 trustee's final report on conversion
+// (45 days after conversion or 30 days after a final order on a funds
+// objection, LBR 1019-1(b)) and the later-of exhibit retention (LBR
+// 9070-1); the 70-day limitation of chapter 13 notices (LBR 2002-1(a)); the
+// 7-day threshold for immediate service of a reduced-notice order (LBR
+// 9006-1(b)); the clerk's dismissal notice after 6 months of inactivity
+// (LBR 7055-1(a)); the 10 days after a missed proposed-order deadline
+// before the court acts (LBR 9072-1(c)); and the 14-day bankruptcy
+// administrator motion on a disputed trustee election (LBR 2007.1-1(a)(3)),
+// which runs from the administrator's own report.
+/// A business entity, other than a sole proprietorship, files a voluntary
+/// petition (LBR 1007-1(a)).
+event EntityPetitionFiled()
+/// A party in interest makes a written request to a chapter 13 debtor for
+/// payment advices (LBR 1007-1(d)(4)).
+event PaymentAdviceRequested()
+/// The meeting of creditors under 11 U.S.C. § 341 concludes (LBR 1015-1).
+event MeetingConcluded()
+/// A chapter 13 case is converted to chapter 7 (LBR 1019-1(a)(2)).
+event Chapter13ConvertedTo7()
+/// A chapter 11 debtor files the schedules, adds a creditor, or first
+/// designates a claim contingent, disputed or unliquidated (LBR 3003-1(c)).
+event Chapter11SchedulesFiled()
+/// An application for unclaimed funds is served on all parties LBR
+/// 3011-1(c)(3) lists (LBR 3011-1(d)).
+event UnclaimedFundsApplicationServed()
+/// The first plan in a subchapter V case in which 11 U.S.C. § 1125 does not
+/// apply is served (LBR 3014-1).
+event FirstPlanServed()
+/// The order granting relief from the automatic stay is entered (LBR
+/// 4001-1(c)(3)).
+event StayReliefOrderEntered()
+/// The property subject to a stay-relief order is disposed of (LBR
+/// 4001-1(c)(4)).
+event StayPropertyDisposed()
+/// The movant serves its designation of the record with a motion to
+/// withdraw the reference (LBR 5011-1(b)).
+event RecordDesignationServed()
+/// A motion to withdraw the reference is served (LBR 5011-1(c)).
+event WithdrawalMotionServed()
+/// A response to a motion to withdraw the reference is served (LBR
+/// 5011-1(c)).
+event WithdrawalResponseServed()
+/// A corporate party is appointed to a creditors' committee (LBR
+/// 5020-1(b)).
+event CommitteeAppointment()
+/// A written motion in an adversary proceeding is served (LBR 7007-1(b)).
+event AdversaryMotionServed()
+/// The clerk sends notice that an inactive adversary proceeding will be
+/// dismissed without prejudice (LBR 7055-1(a)).
+event ProsecutionNoticeSent()
+/// A motion for summary judgment is served (LBR 7056-1(c)).
+event SummaryJudgmentMotionServed()
+/// A brief in opposition to summary judgment is served (LBR 7056-1(d)).
+event SummaryJudgmentOppositionServed()
+/// A motion in the case is served (LBR 9013-1(d)).
+event MotionServed()
+/// The court first enters a scheduling order (LBR 9015-1).
+event SchedulingOrderEntered()
+/// An order requiring attendance at a mediated settlement conference is
+/// entered (LBR 9019-2(a)(2)).
+event MediationOrderEntered()
+/// A motion to dispense with the mediated settlement conference is served
+/// (LBR 9019-2(a)(2)).
+event MediationDispenseMotionServed()
+/// The parties reach agreement, before or during the mediated settlement
+/// conference (LBR 9019-2(d)).
+event MediatedSettlementReached()
+/// The mediated settlement conference concludes without agreement (LBR
+/// 9019-2(f)(2)(C)).
+event MediationConcluded()
+/// The objection deadline set with a tentative hearing date passes with no
+/// objection filed (LBR 9072-1(a)(1)).
+event ObjectionDeadlinePassed()
+/// The court gives its oral ruling at a hearing (LBR 9072-1(a)(2)).
+event OralRulingGiven()
+
+/// A brief or memorandum supporting or opposing a motion in an adversary
+/// proceeding, prepared electronically: at most 6,250 words, counting the
+/// body, headings and footnotes (LBR 7007-1(c)(2)(A)); LBR 9013-1(e)
+/// applies the same limit in contested matters.
+limit motion-brief { words <= 6_250 cite "M.D.N.C. LBR 7007-1(c)" } cite "M.D.N.C. LBR 7007-1(c)"
+
+/// A handwritten brief or memorandum on a motion: at most 20 pages (LBR
+/// 7007-1(c)(2)(B)).
+limit handwritten-motion-brief {
+  pages <= 20 cite "M.D.N.C. LBR 7007-1(c)"
+} cite "M.D.N.C. LBR 7007-1(c)"
+
+/// An electronically prepared reply brief on summary judgment: at most
+/// 3,125 words (LBR 7056-1(e)).
+limit summary-judgment-reply {
+  words <= 3_125 cite "M.D.N.C. LBR 7056-1(e)"
+} cite "M.D.N.C. LBR 7056-1(e)"
+
+/// A handwritten reply brief on summary judgment: at most 10 pages (LBR
+/// 7056-1(e)).
+limit handwritten-summary-judgment-reply {
+  pages <= 10 cite "M.D.N.C. LBR 7056-1(e)"
+} cite "M.D.N.C. LBR 7056-1(e)"
+
+/// LBR 1007-1(a): a business entity debtor files the signed resolution of
+/// its governing body authorizing the petition within 14 days after the
+/// petition.
+deadline entity-resolution-period: 14.days after EntityPetitionFiled() counted_by frcp6 cite "M.D.N.C. LBR 1007-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 1007-1(d)(2): on timely written request a chapter 7, 11 or 12 debtor
+/// provides copies of payment advices at least 7 days before the date first
+/// set for the meeting of creditors.
+deadline payment-advices-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "M.D.N.C. LBR 1007-1(d)(2)"
+{
+  forum frcp
+}
+
+/// LBR 1007-1(d)(2): to be timely, the request must be received at least 14
+/// days before the date first set for the meeting of creditors.
+deadline payment-advices-request-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "M.D.N.C. LBR 1007-1(d)(2)"
+{
+  forum frcp
+}
+
+/// LBR 1007-1(d)(4): a chapter 13 debtor provides copies of payment advices
+/// for examination within 7 days after a written request, unless the court
+/// orders otherwise.
+deadline chapter13-payment-advices-period: 7.days after PaymentAdviceRequested() counted_by frcp6 cite "M.D.N.C. LBR 1007-1(d)(4)"
+{
+  forum frcp
+}
+
+/// LBR 1015-1: the estates of spouses on a joint petition are deemed
+/// consolidated unless the court orders otherwise on a motion filed within
+/// 14 days after the meeting of creditors concludes.
+deadline joint-deconsolidation-motion-period: 14.days after MeetingConcluded() counted_by frcp6 cite "M.D.N.C. LBR 1015-1"
+{
+  forum frcp
+}
+
+/// LBR 1019-1(a)(2): an objection or motion on the distribution of funds
+/// the chapter 13 trustee holds is filed within 10 days after the case is
+/// converted.
+deadline conversion-funds-objection-period: 10.days after Chapter13ConvertedTo7() counted_by frcp6 cite "M.D.N.C. LBR 1019-1(a)(2)"
+{
+  forum frcp
+}
+
+/// LBR 3003-1(a): in a chapter 11 case other than under subchapter V, non-
+/// governmental units file proofs of claim within 90 days after the date
+/// first set for the meeting of creditors, unless the court orders
+/// otherwise first.
+deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frcp6 cite "M.D.N.C. LBR 3003-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 3003-1(b): in a subchapter V case, non-governmental units file
+/// proofs of claim within 70 days after the order for relief, unless the
+/// court orders otherwise first.
+deadline subchapter-v-claim-period: 70.days after OrderForReliefEntered() counted_by frcp6 cite "M.D.N.C. LBR 3003-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3003-1(c): a chapter 11 debtor notifies each creditor whose claim is
+/// scheduled as contingent, disputed or unliquidated within 14 days after
+/// the schedules, the addition or the amendment.
+deadline disputed-claim-notice-period: 14.days after Chapter11SchedulesFiled() counted_by frcp6 cite "M.D.N.C. LBR 3003-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 3011-1(d): an objection to an application for unclaimed funds is
+/// filed and served within 21 days after the application is served;
+/// otherwise the court may decide it without a hearing.
+deadline unclaimed-funds-objection-period: 21.days after UnclaimedFundsApplicationServed() counted_by frcp6 cite "M.D.N.C. LBR 3011-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 3014-1: in a subchapter V case in which § 1125 does not apply, a
+/// class of secured creditors may elect § 1111(b)(2) within 14 days after
+/// service of the first plan, or a later time the court fixes.
+deadline subchapter-v-election-period: 14.days after FirstPlanServed() counted_by frcp6 cite "M.D.N.C. LBR 3014-1"
+{
+  forum frcp
+}
+
+/// LBR 4001-1(c)(3): a proposed stay-relief order states that the creditor
+/// has 120 days from its entry to file a deficiency claim for personal
+/// property, unless extended by motion filed before it expires.
+deadline personal-property-deficiency-claim-period: 120.days after StayReliefOrderEntered() counted_by frcp6 cite "M.D.N.C. LBR 4001-1(c)(3)"
+{
+  forum frcp
+}
+
+/// LBR 4001-1(c)(3): the order states 180 days from its entry for a
+/// deficiency claim for real property.
+deadline real-property-deficiency-claim-period: 180.days after StayReliefOrderEntered() counted_by frcp6 cite "M.D.N.C. LBR 4001-1(c)(3)"
+{
+  forum frcp
+}
+
+/// LBR 4001-1(c)(4): in chapter 7 and 13 cases, after disposing of the
+/// property the movant explains any surplus to the trustee, the debtor's
+/// attorney and the debtor within 14 days.
+deadline surplus-explanation-period: 14.days after StayPropertyDisposed() counted_by frcp6 cite "M.D.N.C. LBR 4001-1(c)(4)"
+{
+  forum frcp
+}
+
+/// LBR 4001-1(c)(4): the movant sends any surplus to the trustee within 60
+/// days, pending further order.
+deadline surplus-payment-period: 60.days after StayPropertyDisposed() counted_by frcp6 cite "M.D.N.C. LBR 4001-1(c)(4)"
+{
+  forum frcp
+}
+
+/// LBR 5011-1(b): within 14 days after service of the movant's designation
+/// of the record, any other party may designate additional portions for the
+/// district court.
+deadline additional-record-designation-period: 14.days after RecordDesignationServed() counted_by frcp6 cite "M.D.N.C. LBR 5011-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 5011-1(c): parties opposing a motion to withdraw the reference file
+/// and serve written responses within 14 days after its service.
+deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "M.D.N.C. LBR 5011-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 5011-1(c): the movant may file and serve a reply within 14 days
+/// after service of a response.
+deadline withdrawal-reply-period: 14.days after WithdrawalResponseServed() counted_by frcp6 cite "M.D.N.C. LBR 5011-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 5020-1(b): a corporate party serving on a creditors' committee files
+/// its corporate disclosure statement within 14 days after being appointed.
+deadline committee-disclosure-period: 14.days after CommitteeAppointment() counted_by frcp6 cite "M.D.N.C. LBR 5020-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 7007-1(b): a party in interest may respond to a written motion in an
+/// adversary proceeding within 21 days after its service; a brief in
+/// opposition is due by the earlier of that day or 7 business days before
+/// any hearing (LBR 7007-1(c)(1)).
+deadline adversary-motion-response-period: 21.days after AdversaryMotionServed() counted_by frcp6 cite "M.D.N.C. LBR 7007-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 7055-1(a): a party shows good cause in writing why an inactive
+/// adversary proceeding should not be dismissed within 30 days after the
+/// date of the clerk's notice.
+deadline prosecution-cause-period: 30.days after ProsecutionNoticeSent() counted_by frcp6 cite "M.D.N.C. LBR 7055-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 7056-1(c): a party opposing summary judgment files and serves its
+/// brief and Statement of Disputed Material Facts within 21 days after
+/// service of the motion.
+deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "M.D.N.C. LBR 7056-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 7056-1(d): a brief in reply may be filed and served within 14 days
+/// after service of the brief in opposition.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frcp6 cite "M.D.N.C. LBR 7056-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(d): absent a date in the clerk's notice, a party in interest
+/// may respond to a motion within the earlier of 14 days after its service
+/// or 3 business days before the hearing.
+deadline motion-response-period: 14.days after MotionServed() counted_by frcp6 cite "M.D.N.C. LBR 9013-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(e): an optional brief in opposition to a motion is filed and
+/// served within the earlier of 21 days after its service or 7 business
+/// days before any hearing.
+deadline motion-opposition-brief-period: 21.days after MotionServed() counted_by frcp6 cite "M.D.N.C. LBR 9013-1(e)"
+{
+  forum frcp
+}
+
+/// LBR 9015-1: a party that does not consent to final orders by the court
+/// has 30 days from the first scheduling order to move to determine whether
+/// the court may enter them, or its right to a jury trial is waived.
+deadline final-order-motion-period: 30.days after SchedulingOrderEntered() counted_by frcp6 cite "M.D.N.C. LBR 9015-1"
+{
+  forum frcp
+}
+
+/// LBR 9019-2(a)(2): within 14 days after an order requiring a mediated
+/// settlement conference, any party may move to dispense with it.
+deadline mediation-dispense-motion-period: 14.days after MediationOrderEntered() counted_by frcp6 cite "M.D.N.C. LBR 9019-2(a)(2)"
+{
+  forum frcp
+}
+
+/// LBR 9019-2(a)(2): any party may respond within 14 days after service of
+/// the motion to dispense.
+deadline mediation-dispense-response-period: 14.days after MediationDispenseMotionServed() counted_by frcp6 cite "M.D.N.C. LBR 9019-2(a)(2)"
+{
+  forum frcp
+}
+
+/// LBR 9019-2(a)(3): within 14 days after the order, any party may move, by
+/// consent, to use another dispute resolution procedure instead.
+deadline other-procedure-motion-period: 14.days after MediationOrderEntered() counted_by frcp6 cite "M.D.N.C. LBR 9019-2(a)(3)"
+{
+  forum frcp
+}
+
+/// LBR 9019-2(b)(1): the parties may select a mediator by filing a
+/// Designation of Mediator within 21 days after the order, or such other
+/// time as the court directs.
+deadline mediator-designation-period: 21.days after MediationOrderEntered() counted_by frcp6 cite "M.D.N.C. LBR 9019-2(b)(1)"
+{
+  forum frcp
+}
+
+/// LBR 9019-2(d): on agreement the parties provide the mediator a formal,
+/// executed written agreement within 7 days of the settlement.
+deadline mediated-agreement-period: 7.days after MediatedSettlementReached() counted_by frcp6 cite "M.D.N.C. LBR 9019-2(d)"
+{
+  forum frcp
+}
+
+/// LBR 9019-2(f)(2)(C): the mediator submits a Report of Mediator within 14
+/// days after a conference concludes without agreement.
+deadline mediator-report-period: 14.days after MediationConcluded() counted_by frcp6 cite "M.D.N.C. LBR 9019-2(f)(2)(C)"
+{
+  forum frcp
+}
+
+/// LBR 9072-1(a)(1): when no objection is filed by the objection deadline
+/// set with a tentative hearing, the movant submits a proposed order within
+/// 5 days after the deadline passes.
+deadline unopposed-proposed-order-period: 5.days after ObjectionDeadlinePassed() counted_by frcp6 cite "M.D.N.C. LBR 9072-1(a)(1)"
+{
+  forum frcp
+}
+
+/// LBR 9072-1(a)(2): the party that prevails at a hearing submits a
+/// proposed order conforming to the oral ruling within 10 days after it.
+deadline hearing-proposed-order-period: 10.days after OralRulingGiven() counted_by frcp6 cite "M.D.N.C. LBR 9072-1(a)(2)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed and served" by applicant cite "M.D.N.C. LBR 9013-1(b)"
+{
+  note "A written motion states its grounds and relief, is served on the parties it affects, and is filed with its supporting documents (LBR 9013-1(b)); the clerk sets the hearing and gives notice (LBR 9013-1(f), 9007-1). Responses are due by the date in the clerk's notice or within the earlier of 14 days after service or 3 business days before the hearing (LBR 9013-1(d)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-response "Response filed" -> response {
+    authority cite "M.D.N.C. LBR 9013-1(d)"
+  }
+  edge-motion-filed-unopposed "No timely objection; proposed order submitted" -> ruling {
+    authority cite "M.D.N.C. LBR 9072-1(a)"
+  }
+}
+
+state response: "Response filed" by opponent cite "M.D.N.C. LBR 9013-1(d)"
+{
+  note "A response must reasonably disclose the basis of the party's position and the issues contested, or the court may resolve the matter without a hearing (LBR 9013-1(d)); an optional opposing brief is limited as LBR 7007-1(c)(2) provides (LBR 9013-1(e))."
+  edge-response-ruling "Matter heard" -> ruling { authority cite "M.D.N.C. LBR 9013-1(f)" }
+}
+
+decision ruling: "Motion decided" by court cite "M.D.N.C. LBR 9013-1(f)"
+{
+  note "The prevailing party submits a proposed order within 10 days after the oral ruling, or 5 days after an unopposed objection deadline; if none is submitted, the court may enter its own order or a show-cause order (LBR 9072-1)."
+  edge-ruling-granted "Granted" -> decided { authority cite "M.D.N.C. LBR 9072-1(a)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "M.D.N.C. LBR 9072-1(a)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "M.D.N.C. LBR 1001-1(b)"
+{
+  note "The FRBP and these rules govern practice and procedure in all bankruptcy cases and adversary proceedings in the district; the rules supplement the FRBP (LBR 1001-1(b))."
+}

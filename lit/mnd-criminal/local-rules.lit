@@ -1,0 +1,155 @@
+module mnd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The District of Minnesota's own periods in a criminal case. FRCrimP
+// 45(a) computes a period "in any local rule" of a criminal case, so these
+// count under frcrimp45. The court may modify the LR 12.1 schedule for
+// good cause (LR 12.1(f)); the arraignment order typically sets the
+// disclosure deadlines (2019 Advisory Committee's Note to LR 12.1). Stated
+// in the rules but not declared: the conference on a disclosure timetable
+// no later than 14 days after arraignment (LR 12.1(a)(1)), which is FRCrimP
+// 16.1(a)'s; the fourteen days to object to a magistrate judge's order or
+// recommended disposition (LR 72.2(a)(1), (b)(1)), FRCrimP 59(a) and
+// 59(b)(2)'s; the objections to the preliminary presentence report by the
+// probation officer's deadline under FRCrimP 32(f)(1) (LR 83.10(c)), its
+// fourteen days FRCrimP 32's; the motion hearing no earlier than 42 days
+// after arraignment (LR 12.1(d)), the court reporter's redacted transcript
+// within 31 days (LR 5.5(d)) and the 90-day transcript access restrictions
+// (LR 80.1(b)), which bind the court and its officers; and the notice
+// that a case concerns a child "as soon as possible" (LR 12.1(e)). The
+// civil periods are lit/mnd's. The earlier D. Minn. criminal outline's
+// FRCrimP flow and its decisions (Salerno, Brady, Barker v. Wingo, Zedner,
+// Boykin, Missouri v. Frye, Jackson v. Virginia, Booker, Roe v.
+// Flores-Ortega, Garza v. Idaho) are FRCrimP and constitutional authority
+// and belong to lit/frcrimp; no reporter text is vendored, so they are
+// removed here, and the court's Speedy Trial Act plan (18 U.S.C. § 3165)
+// is not vendored.
+
+/// A transcript of a court proceeding is filed under LR 80.1(a) (LR
+/// 5.5(b)(2)).
+event TranscriptFiled()
+/// The defendant's arraignment (LR 12.1).
+event Arraignment()
+/// The order denying, in whole or in part, a motion to seal is entered
+/// (LR 49.1(d)(5)).
+event SealDenied()
+/// Objections to a magistrate judge's order or recommended disposition
+/// are served (LR 72.2(a)(2), (b)(2)).
+event ObjectionsServed()
+/// The date of the final presentence report (LR 83.10(e)).
+event FinalPresentenceReport()
+/// An evidentiary hearing on sentencing (LR 83.10(f)(2)).
+event SentencingEvidentiaryHearing()
+/// The sentencing (LR 83.10(g)).
+event Sentencing()
+
+/// D. Minn. LR 5.5(b)(2): within 21 days after a transcript of a court
+/// proceeding is filed in a criminal case, the government and, if a
+/// defendant ordered it, that defendant's attorney (standby counsel
+/// included) each file a Statement Regarding Redaction stating whether it
+/// must be redacted under FRCrimP 49.1 (and, in a case that concerns a
+/// child, 18 U.S.C. § 3509(d)).
+deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by frcrimp45 cite "D. Minn. LR 5.5(b)(2)"
+{
+  forum frcrimp
+}
+
+/// D. Minn. LR 12.1(a)(2): to the extent practicable, the government
+/// fulfills its FRCrimP 16(a) discovery obligations within 7 days after
+/// the arraignment.
+deadline government-discovery-period: 7.days after Arraignment() counted_by frcrimp45 cite "D. Minn. LR 12.1(a)(2)"
+{
+  forum frcrimp
+}
+
+/// D. Minn. LR 12.1(a)(3): to the extent practicable, the defendant
+/// fulfills the FRCrimP 16(b) discovery obligations within 14 days after
+/// the arraignment.
+deadline defendant-discovery-period: 14.days after Arraignment() counted_by frcrimp45 cite "D. Minn. LR 12.1(a)(3)"
+{
+  forum frcrimp
+}
+
+/// D. Minn. LR 12.1(c)(1)(A): a motion under FRCrimP 12(b) is filed within
+/// 21 days after the arraignment, after the moving party confers with the
+/// responding party (LR 12.1(b)).
+deadline pretrial-motion-period: 21.days after Arraignment() counted_by frcrimp45 cite "D. Minn. LR 12.1(c)(1)(A)"
+{
+  forum frcrimp
+}
+
+/// D. Minn. LR 12.1(c)(2): a response to an FRCrimP 12(b) motion is filed
+/// within 35 days after the arraignment.
+deadline pretrial-motion-response-period: 35.days after Arraignment() counted_by frcrimp45 cite "D. Minn. LR 12.1(c)(2)"
+{
+  forum frcrimp
+}
+
+/// D. Minn. LR 12.1(c)(3)(A): a party intending to call witnesses at the
+/// hearing on an FRCrimP 12(b) motion files a notice within 35 days after
+/// the arraignment.
+deadline witness-notice-period: 35.days after Arraignment() counted_by frcrimp45 cite "D. Minn. LR 12.1(c)(3)(A)"
+{
+  forum frcrimp
+}
+
+/// D. Minn. LR 12.1(c)(3)(B): a party that, after reviewing such a
+/// notice, intends to call witnesses at the same hearing files a
+/// responsive notice within 38 days after the arraignment.
+deadline responsive-witness-notice-period: 38.days after Arraignment() counted_by frcrimp45 cite "D. Minn. LR 12.1(c)(3)(B)"
+{
+  forum frcrimp
+}
+
+/// D. Minn. LR 49.1(d)(5)(A): within 7 days after entry of the order
+/// denying a motion to seal, the moving party may withdraw the temporarily
+/// sealed document by a notice of withdrawal; a document not timely
+/// withdrawn is unsealed.
+deadline sealed-document-withdrawal-period: 7.days after SealDenied() counted_by frcrimp45 cite "D. Minn. LR 49.1(d)(5)(A)"
+{
+  forum frcrimp
+}
+
+/// D. Minn. LR 72.2(a)(2), (b)(2): a party may respond to another party's
+/// objections to a magistrate judge's order or recommended disposition
+/// within 14 days after being served with a copy. LR 72.2's format and
+/// filing requirements apply in criminal cases (2012 Advisory Committee's
+/// Note to LR 72.2).
+deadline objection-response-period: 14.days after ObjectionsServed() counted_by frcrimp45 cite "D. Minn. LR 72.2(a)(2); D. Minn. LR 72.2(b)(2)"
+{
+  forum frcrimp
+}
+
+/// D. Minn. LR 83.10(e): within 14 days of the date of the final
+/// presentence report, each party files and serves a Position Regarding
+/// Sentencing; a motion for an evidentiary hearing is filed with it (LR
+/// 83.10(f)(1)).
+deadline sentencing-position-period: 14.days after FinalPresentenceReport() counted_by frcrimp45 cite "D. Minn. LR 83.10(e)"
+{
+  forum frcrimp
+}
+
+/// D. Minn. LR 83.10(f)(2): at least 7 days before an evidentiary hearing
+/// each party gives the judge, the opposing party and the probation
+/// officer a witness list and an exhibit list.
+deadline sentencing-hearing-lists-period: 7.days before SentencingEvidentiaryHearing() counted_by frcrimp45 cite "D. Minn. LR 83.10(f)(2)"
+{
+  forum frcrimp
+}
+
+/// D. Minn. LR 83.10(g)(1): at least 7 days before sentencing, each party
+/// may file and serve a response to the opposing party's Position
+/// Regarding Sentencing.
+deadline sentencing-response-period: 7.days before Sentencing() counted_by frcrimp45 cite "D. Minn. LR 83.10(g)(1)"
+{
+  forum frcrimp
+}
+
+/// D. Minn. LR 83.10(g)(2): a government motion for a downward departure
+/// under U.S.S.G. § 5K1.1 or 18 U.S.C. § 3553(e) is made, under seal, at
+/// least 7 days before sentencing.
+deadline downward-departure-motion-period: 7.days before Sentencing() counted_by frcrimp45 cite "D. Minn. LR 83.10(g)(2)"
+{
+  forum frcrimp
+}

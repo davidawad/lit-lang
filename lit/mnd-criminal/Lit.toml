@@ -1,0 +1,52 @@
+# The District of Minnesota's Local Rules, as applied in its criminal
+# cases, as a local-rule layer over lit/frcrimp (28 U.S.C. § 2071;
+# FRCrimP 57(a)): it declares only the periods the Local Rules themselves
+# state for a criminal case and re-encodes no FRCrimP, Speedy Trial Act
+# or FRAP 4(b) period. The rules apply "in all civil and criminal actions"
+# (LR 1.1(c)) and have no separate criminal part; the criminal provisions
+# are LR 5.5(b)(2), 12.1, 49.1, 72.2 and 83.10. The text is the complete
+# set dated June 10, 2026 (sources/mnd), the edition the court lists as
+# current, so the package runs from that date; earlier editions are not
+# vendored. lit/mnd declares the civil layer. Habeas (28 U.S.C. §§ 2254,
+# 2255) is lit/habeas's; an appeal goes to the Eighth Circuit under FRAP
+# 4(b) (lit/frcrimp) and lit/ca8.
+[package]
+name = "mnd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "mnd-criminal-local-rules"
+forum = "mnd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the District of Minnesota: Local Rules (criminal)"
+description = "The District of Minnesota's Local Rules, as applied in its criminal cases, as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the statement regarding transcript redaction, the criminal discovery and pretrial motion schedule, withdrawal of a document after a motion to seal is denied, responses to objections to a magistrate judge's ruling, and the sentencing position papers, witness and exhibit lists, responses and downward departure motions."
+in_force = "2026-06-10"
+known_at = "2026-10-28"
+unknown_before = "2026-06-10"
+jurisdiction = "United States District Court, D. Minnesota (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "mnd-lr"
+issuer = "United States District Court for the District of Minnesota"
+date = "2026-06-10"
+designation = "Local Rules (complete set dated June 10, 2026)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.mnd-lr]
+title = "Local Rules of the United States District Court for the District of Minnesota (complete set, June 10, 2026)"
+url = "https://www.mnd.uscourts.gov/sites/mnd/files/Local-Rules-Master.pdf"
+path = "sources/mnd/local-rules-sectioned.txt"
+path_sha256 = "55de9589101301bed6b7ee7835d50d4f628b1dc51f9ce2c3365e845bfa1b50cf"
+sha256 = "01aa8892b4d346f976b203d66a6739fa8b1bb028d3b005092ddd003da796eda1"
+as_of = "2026-06-10"
+cite_prefixes = ["D. Minn. LR"]
+section_heading = "LR {n}"

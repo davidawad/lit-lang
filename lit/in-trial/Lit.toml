@@ -1,0 +1,53 @@
+# Civil actions in the Indiana trial courts (circuit and superior) under the
+# Indiana Rules of Trial Procedure, as far as the vendored text states: the
+# rules as updated effective August 1, 2026 (sources/in-trial). Time is
+# computed under Trial Rule 6(A), which, unlike FRCP 6(a), rolls a last day
+# falling on a legal holiday as defined by Indiana statute or a day the
+# office is closed, and excludes intermediate Saturdays, Sundays, legal
+# holidays and closed days from a period of less than seven days; lit/core
+# has no counting rule for it, so the periods are stated in notes, not
+# encoded as counted deadlines. The notice of appeal is governed by the
+# Indiana Rules of Appellate Procedure (sources/indctapp), encoded in
+# lit/indctapp.
+[package]
+name = "in-trial-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "in-trial-court-civil"
+forum = "in-trial"
+authority = "StateRule"
+jurisdiction_id = "indiana"
+title = "Indiana trial courts (circuit, superior), civil"
+description = "Civil actions in the Indiana circuit and superior courts under the Indiana Rules of Trial Procedure, as far as the vendored text states: commencement, the time to respond and its automatic enlargement, Rule 12 motions and amendment, default and default judgment, the jury demand, pre-trial conferences, discovery and its sanctions, summary judgment and its timing, dismissal for failure to prosecute, offers of judgment, entry of judgment, the motion to correct error and its deemed denial, relief from judgment, and the notice of appeal under the Indiana Rules of Appellate Procedure (lit/indctapp)."
+in_force = "2026-08-01"
+known_at = "2026-10-28"
+unknown_before = "2026-08-01"
+jurisdiction = "Indiana trial courts (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.in-trial-rules]
+title = "Indiana Rules of Trial Procedure (adopted January 1, 1970; updated, effective August 1, 2026)"
+url = "https://rules.incourts.gov/pdf/PDF%20-%20Trial/trial.pdf"
+path = "sources/in-trial/in-trial-rules-sectioned.txt"
+path_sha256 = "92ba49510cdaa0189c416ba35f18cbb4c46eb3107cf6a25dde81f11a1dd7091c"
+sha256 = "34afd2958651379db88f18df64487773aa61a39c076fcef0edd5ea9190953e3d"
+as_of = "2026-08-01"
+cite_prefixes = ["Ind. Trial Rule"]
+section_heading = "Ind. Trial Rule {n}"
+
+[sources.in-appellate-rules]
+title = "Indiana Rules of Appellate Procedure (adopted effective January 1, 2001; updated, effective July 1, 2026)"
+url = "https://rules.incourts.gov/pdf/PDF%20-%20Appellate/appellate.pdf"
+path = "sources/indctapp/in-appellate-rules-sectioned.txt"
+path_sha256 = "2cf5535875cdf99f49b2f9f4754e75f420d21879303a03afb2c858fbdfa1856e"
+sha256 = "60c64f89d3831e2f6dc5fe0ec474ca663019d258ec4bdf5d8fb3e620649705bb"
+as_of = "2026-07-01"
+cite_prefixes = ["Ind. Appellate Rule"]
+section_heading = "Ind. Appellate Rule {n}"

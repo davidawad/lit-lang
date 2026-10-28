@@ -1,0 +1,181 @@
+module in-trial-court-civil.civil
+
+// Civil actions in the Indiana circuit and superior courts, from the
+// applicant's (plaintiff's) side. Every period below is stated in a note,
+// not counted: Trial Rule 6(A) excludes the day of the triggering act and
+// includes the last day unless it is a Saturday, a Sunday, a legal holiday
+// as defined by state statute or a day the office is closed, and excludes
+// those days from a period of less than seven days; lit/core has no
+// counting rule for Indiana's legal holidays. Three days are added to a
+// period running from service of a paper by United States mail (T.R.
+// 6(G)). The court may enlarge a time for cause shown before it expires, or
+// for excusable neglect after, but not the times under Rules 50(A), 52(B),
+// 56, 59(C), 59(E) or 60(B) except as those rules state (T.R. 6(C)). The
+// filing fee is set by statute and is not stated in the rules. The earlier
+// outline's Indiana Supreme Court decisions (Trail v. Boys, 884 N.E.2d 294
+// (Ind. 2008), on the T.R. 12(B)(6) standard; Hughley v. State, 15 N.E.3d
+// 1000 (Ind. 2014), on the summary judgment burden) are removed: no
+// reporter text is vendored. County local rules (T.R. 81) and judges'
+// orders are not vendored.
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "Ind. Trial Rule 3"
+{
+  note "A civil action is commenced by filing a complaint or the equivalent pleading a statute specifies, by paying the prescribed filing fee or filing an order waiving it, and, where service of process is required, by furnishing the clerk the copies of the complaint and summons needed (T.R. 3). The summons states the time within which the rules require the person served to respond and warns that judgment by default may be rendered for failure to do so (T.R. 4(C)). A written motion that cannot be heard ex parte, with notice of its hearing, is served not less than five days before the hearing unless a rule or order fixes another period; opposing affidavits may be served not less than one day before it (T.R. 6(E), (F)). Whenever no action has been taken in a civil case for sixty days, the court, on motion or on its own, orders a hearing to dismiss it, and dismisses it at the plaintiff's costs absent sufficient cause shown (T.R. 41(E))."
+  edge-complaint-filed-served "Summons and complaint served" -> response-due {
+    authority cite "Ind. Trial Rule 4.1"
+  }
+  edge-complaint-filed-not-prosecuted "No action taken for sixty days: dismissed" -> dismissed-with-prejudice {
+    authority cite "Ind. Trial Rule 41(E)"
+  }
+}
+
+decision response-due: "Answer, Rule 12 motion, or no response" by office cite "Ind. Trial Rule 6(D)"
+{
+  note "Except as the rules otherwise provide or the court orders, a response to a pleading is filed within twenty days after service of the pleading; a response to a motion within twenty days after service and any reply within fourteen days after service of the response, except for motions to continue, summary judgment motions, motions to correct error and Rule 60(B) motions (T.R. 6(D)). A party may receive one automatic thirty-day enlargement of time to respond to a complaint or other pleading by filing a notice, granted without order if filed on or before the original due date (T.R. 6(B)). A motion under Rule 12(B) is made before pleading if a further pleading is permitted; if the court does not grant it, the responsive pleading is filed within ten days of the order (T.R. 12(A)(1), (B)). A party may demand a jury by filing and serving a written demand not later than ten (10) days after the first responsive pleading to the complaint (T.R. 38(B))."
+  edge-response-due-default "No timely response: default" -> default-entered {
+    authority cite "Ind. Trial Rule 55(A)"
+  }
+  edge-response-due-motion "Motion to dismiss filed" -> motion-ruling {
+    authority cite "Ind. Trial Rule 12(B)"
+  }
+  edge-response-due-answer "Answer filed" -> sched { authority cite "Ind. Trial Rule 6(D)" }
+}
+
+decision motion-ruling: "Motion to dismiss ruling" by court cite "Ind. Trial Rule 12(B)"
+{
+  note "The defenses that may be made by motion include failure to state a claim upon which relief can be granted, which includes failure to name the real party in interest (T.R. 12(B)(6)). When a (B)(6) motion is sustained, the pleading may be amended once as of right under Rule 15(A) within ten days after service of notice of the order, and thereafter with the court's permission. If the court does not grant the motion, the responsive pleading is filed within ten days of the order. If matters outside the pleading are presented and not excluded on a (B)(6) motion, it is treated as one for summary judgment under Rule 56 (T.R. 12(B))."
+  edge-motion-ruling-dismissed "Sustained, not amended: dismissed" -> dismissed-with-prejudice {
+    authority cite "Ind. Trial Rule 12(B)"
+  }
+  edge-motion-ruling-amend "Sustained: pleading amended within ten days" -> response-due {
+    authority cite "Ind. Trial Rule 15(A)"
+  }
+  edge-motion-ruling-denied "Not granted: responsive pleading within ten days" -> sched {
+    authority cite "Ind. Trial Rule 12(A)"
+  }
+}
+
+state sched: "Pre-trial conference" by court cite "Ind. Trial Rule 16(A)"
+{
+  note "In any action except criminal cases the court may in its discretion, and must on any party's motion, direct the attorneys to appear for a pre-trial conference to consider, among other things, simplifying the issues, amendments, admissions, a limit on expert witnesses, a discovery order, alternative dispute resolution and deadlines for dispositive motions (T.R. 16(A)). The clerks give at least thirty days' notice of the pre-trial conference unless the court directs otherwise (T.R. 16(B)(1)). Unless otherwise ordered, at least ten days before the conference the attorneys meet and confer to mark and exchange exhibits, stipulate facts and exchange witness lists (T.R. 16(C)); a list of facts or exhibits opposing counsel refuses to stipulate is furnished at least two days before it (T.R. 16(F))."
+  edge-sched-discovery "Discovery proceeds" -> discovery { authority cite "Ind. Trial Rule 26" }
+}
+
+state discovery: "Discovery" by applicant cite "Ind. Trial Rule 26"
+{
+  note "Interrogatories are answered within the period the serving party designates, not less than thirty days after service (T.R. 33(C)); a request to produce is answered within the period designated, not less than thirty days after service (T.R. 34(D)); a request for admission may be served without leave not earlier than ten days after the issues are first closed on the merits, and a matter is admitted unless answered or objected to within the period designated, not less than thirty days after service (T.R. 36(B), (C)). A request or subpoena to a non-party is not served until at least ten days after a copy is served on all other parties; an objecting party serves a written response within ten days and moves to quash within twenty days of the objection (T.R. 34(G)). The court may alter these times. Failure to obey a discovery order may be sanctioned by dismissing the action (T.R. 37(B)(2))."
+  edge-discovery-sj "Summary judgment motion" -> sj-ruling {
+    authority cite "Ind. Trial Rule 56(A)"
+  }
+  edge-discovery-sanction "Discovery sanction dismisses the action" -> dismissed-with-prejudice {
+    authority cite "Ind. Trial Rule 37(B)"
+  }
+  edge-discovery-settled "Settlement or voluntary dismissal" -> settled {
+    authority cite "Ind. Trial Rule 41(A)"
+  }
+  edge-discovery-pretrial "No dispositive motion" -> pretrial {
+    authority cite "Ind. Trial Rule 16(A)"
+  }
+}
+
+decision sj-ruling: "Summary judgment ruling" by court cite "Ind. Trial Rule 56(C)"
+{
+  note "A claimant may move for summary judgment at any time after twenty days from the commencement of the action or after service of a summary judgment motion by the adverse party; a defending party may move at any time (T.R. 56(A), (B)). An adverse party has thirty (30) days after service of the motion to serve a response and opposing affidavits. On a party's motion made no later than ten (10) days after the response was filed or due, the court holds a hearing not less than ten (10) days after the time for filing the response. Each party designates the evidence it relies on, and the opponent each material issue of fact it asserts precludes judgment; judgment is rendered if the designated evidence shows no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law (T.R. 56(C)). For cause found, the court may alter any time limit in the rule on a motion made within it (T.R. 56(I))."
+  edge-sj-ruling-applicant "Granted for applicant" -> judgment-applicant {
+    authority cite "Ind. Trial Rule 56(C)"
+  }
+  edge-sj-ruling-opponent "Granted for opponent" -> judgment-opponent {
+    authority cite "Ind. Trial Rule 56(C)"
+  }
+  edge-sj-ruling-denied "Denied" -> pretrial { authority cite "Ind. Trial Rule 56(C)" }
+}
+
+state pretrial: "Pre-trial order and trial setting" by court cite "Ind. Trial Rule 16(A)"
+{
+  note "At any time more than ten [10] days before the trial begins, a party defending against a claim may serve an offer of judgment; the adverse party accepts by serving written notice within ten [10] days after service of the offer, and an offeree whose judgment is not more favorable than an unaccepted offer pays the costs incurred after it was made (T.R. 68)."
+  edge-pretrial-trial "Trial set" -> trial { authority cite "Ind. Trial Rule 16(A)" }
+  edge-pretrial-settled "Offer of judgment accepted or settlement" -> settled {
+    authority cite "Ind. Trial Rule 68"
+  }
+}
+
+state trial: "Trial (jury or bench)" by court cite "Ind. Trial Rule 39"
+{
+  note "Issues triable of right by jury are tried to a jury on timely demand (T.R. 38(B), 39). A party may move for judgment on the evidence after another party carrying the burden of proof on an issue completes its evidence on it, after all the evidence and before judgment, or in a motion to correct error (T.R. 50(A)). In issues tried without a jury, the court finds the facts specially and states its conclusions on its own motion or on a party's written request filed before the admission of evidence (T.R. 52(A))."
+  edge-trial-applicant "Verdict or findings for applicant" -> judgment-applicant {
+    authority cite "Ind. Trial Rule 58(A)"
+  }
+  edge-trial-opponent "Verdict or findings for opponent" -> judgment-opponent {
+    authority cite "Ind. Trial Rule 58(A)"
+  }
+}
+
+state judgment-applicant: "Judgment for applicant entered" by court cite "Ind. Trial Rule 58(A)"
+{
+  note "On a verdict or decision the court promptly prepares and signs the judgment, and the clerk enters it in the Record of Judgments and Orders and notes the entry in the Chronological Case Summary (T.R. 58(A)). A motion to correct error is required only for newly discovered evidence or a claim that a jury verdict is excessive or inadequate, and is filed not later than thirty (30) days after the entry of a final judgment is noted in the Chronological Case Summary (T.R. 59(A), (C)). The notice of appeal is filed within thirty (30) days after the entry of a final judgment is noted in the Chronological Case Summary (Ind. Appellate Rule 9(A)(1))."
+  edge-judgment-applicant-post "Motion to correct error" -> post-judgment-ruling {
+    authority cite "Ind. Trial Rule 59(C)"
+  }
+  edge-judgment-applicant-appeal "Notice of appeal filed" -> appellate-review {
+    authority cite "Ind. Appellate Rule 9(A)"
+  }
+  edge-judgment-applicant-final "No appeal within time" -> final-win {
+    authority cite "Ind. Appellate Rule 9(A)"
+  }
+}
+
+state judgment-opponent: "Judgment for opponent entered" by court cite "Ind. Trial Rule 58(A)"
+{
+  note "Entered as under T.R. 58(A). A motion to correct error is filed not later than thirty (30) days after the entry of a final judgment is noted in the Chronological Case Summary (T.R. 59(C)). A motion for relief from judgment for mistake, surprise, excusable neglect, newly discovered evidence, fraud or a default after service by publication is filed not more than one year after the judgment, and for the other grounds within a reasonable time; it does not affect the judgment's finality (T.R. 60(B)). The notice of appeal is filed within thirty (30) days after the entry of a final judgment is noted in the Chronological Case Summary (Ind. Appellate Rule 9(A)(1))."
+  edge-judgment-opponent-post "Motion to correct error" -> post-judgment-ruling {
+    authority cite "Ind. Trial Rule 59(C)"
+  }
+  edge-judgment-opponent-appeal "Notice of appeal filed" -> appellate-review {
+    authority cite "Ind. Appellate Rule 9(A)"
+  }
+  edge-judgment-opponent-final "No appeal within time" -> final-loss {
+    authority cite "Ind. Appellate Rule 9(A)"
+  }
+}
+
+decision post-judgment-ruling: "Motion to correct error ruling" by court cite "Ind. Trial Rule 53.3(A)"
+{
+  note "A party opposing a motion to correct error may file a statement in opposition not later than fifteen [15] days after service of the motion (T.R. 59(E)). If the court fails for forty-five (45) days to set the motion for hearing, or fails to rule within thirty (30) days after it was heard or forty-five (45) days after it was filed if no hearing is required, the motion is deemed denied, unless the parties agree on record or the judge extends the time by no more than thirty (30) days by an entry noted before the time expires (T.R. 53.3(A), (B), (D)). If a party files a timely motion to correct error, the notice of appeal is filed within thirty (30) days after the ruling is noted in the Chronological Case Summary or the motion is deemed denied under T.R. 53.3, whichever occurs first (Ind. Appellate Rule 9(A)(1); T.R. 53.3(A))."
+  edge-post-judgment-ruling-granted "Granted: new trial" -> pretrial {
+    authority cite "Ind. Trial Rule 59(C)"
+  }
+  edge-post-judgment-ruling-denied "Denied or deemed denied: appeal clock runs" -> appellate-review {
+    authority cite "Ind. Trial Rule 53.3(A)"
+  }
+}
+
+terminal default-entered: "Default judgment against opponent" outcome [win] cite "Ind. Trial Rule 55(B)"
+{
+  note "A party who has failed to plead or otherwise comply with the rules may be defaulted (T.R. 55(A)). The party entitled to a default judgment applies to the court; a party who has appeared is served with written notice of the application at least three [3] days before the hearing on it (T.R. 55(B)). A default judgment may be set aside under Rule 60(B) (T.R. 55(C)). Outcome from the applicant's side."
+}
+
+terminal dismissed-with-prejudice: "Dismissed" outcome [loss, dismissal] cite "Ind. Trial Rule 41(B)"
+{
+  note "Unless the order otherwise specifies, an involuntary dismissal, including one for failure to prosecute under T.R. 41(E), operates as an adjudication on the merits other than a dismissal for lack of jurisdiction (T.R. 41(B)); a dismissal with prejudice may be set aside under Rule 60(B) (T.R. 41(F)). Outcome from the applicant's side."
+}
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "Ind. Trial Rule 41(A)"
+{
+  note "The plaintiff may dismiss without order of court by notice before the adverse party serves an answer or a summary judgment motion, whichever first occurs, or by a stipulation of dismissal signed by all parties who have appeared (T.R. 41(A)(1)). Settlement terms are matter facts."
+}
+
+terminal final-win: "Final judgment for applicant, no appeal" outcome [win] cite "Ind. Appellate Rule 9(A)"
+{
+  note "Unless the notice of appeal is timely filed, the right to appeal is forfeited except as provided by P.C.R. 2 (Ind. Appellate Rule 9(A)(5))."
+}
+
+terminal final-loss: "Final judgment for opponent, no appeal" outcome [loss] cite "Ind. Appellate Rule 9(A)"
+{
+  note "Unless the notice of appeal is timely filed, the right to appeal is forfeited except as provided by P.C.R. 2 (Ind. Appellate Rule 9(A)(5))."
+}
+
+terminal appellate-review: "Appeal taken: continue in the appellate package" outcome [appeal] cite "Ind. Appellate Rule 9(A)"
+{
+  note "A party initiates an appeal by filing a Notice of Appeal with the Clerk (Ind. Appellate Rule 9(A)(1)) and pays the $250 filing fee when it is filed, unless proceeding in forma pauperis or for a governmental unit (Ind. Appellate Rule 9(E)). Hand-off to lit/indctapp (in-appellate-civil)."
+}

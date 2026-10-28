@@ -1,0 +1,135 @@
+module bia.appeal
+
+start ij-decision
+
+state ij-decision: "Immigration judge decision" by office cite "8 C.F.R. § 1003.38(a)"
+{
+  note "Decisions of immigration judges may be appealed to the Board as 8 C.F.R. § 1003.1(b) authorizes (8 C.F.R. § 1003.38(a)). Removal proceedings themselves are under the Act (8 U.S.C. § 1229a), which is not vendored. Except when certified to the Board, the immigration judge's decision becomes final on waiver of appeal or on expiration of the time to appeal (8 C.F.R. § 1003.39)."
+  edge-ij-decision-notice "Notice of appeal (Form EOIR-26)" -> notice-of-appeal {
+    authority cite "8 C.F.R. § 1003.3(a)"
+  }
+}
+
+decision notice-of-appeal: "Notice of appeal filed in time?" by applicant cite "8 C.F.R. § 1003.38(b)"
+{
+  note "The Notice of Appeal is filed directly with the Board within 10 calendar days of the immigration judge's decision, or within 30 calendar days where the judge adjudicated an asylum application and did not deny it under section 208(a)(2)(A), (B) or (C) of the Act (8 C.F.R. § 1003.38(b)(1), (2)). The period runs from the oral decision or the mailing or electronic notification of a written decision, and a last day on a Saturday, Sunday or legal holiday carries to the next business day (8 C.F.R. § 1003.38(b)(3)). The notice is filed when the Board receives it (8 C.F.R. § 1003.38(c)) and must state the reasons for the appeal (8 C.F.R. § 1003.3(b)); issues not raised are waived (8 C.F.R. § 1003.38(b)(3)). It must be accompanied by the fee or a fee waiver request (Form EOIR-26A), or the decision is final as though no appeal had been taken (8 C.F.R. § 1003.38(d), 1003.8(a)); the fee amount is in 8 C.F.R. § 1103.7, which is not vendored. Periods are stated here, not counted."
+  edge-notice-of-appeal-timely "Timely, with fee or waiver request" -> board-screening {
+    authority cite "8 C.F.R. § 1003.38(b)"
+  }
+  edge-notice-of-appeal-late "Untimely" -> dismissed-untimely {
+    authority cite "8 C.F.R. § 1003.1(d)(2)"
+  }
+}
+
+decision board-screening: "Summary dismissal or acceptance for merits review" by court cite "8 C.F.R. § 1003.1(d)(2)"
+{
+  note "A single Board member or panel may summarily dismiss an appeal on the grounds of 8 C.F.R. § 1003.1(d)(2)(i), including unstated reasons, a promised brief not filed, lack of jurisdiction and untimeliness. For appeals of decisions issued on or after March 9, 2026 (other than appeals under paragraphs (b)(5), (6), (7) and (14) of § 1003.1), the Board summarily dismisses the appeal unless a majority of the permanent Board members vote en banc to accept it for adjudication on the merits; on a referral the vote is held no later than 10 days after the appeal is filed, failing which the appeal is deemed summarily dismissed, and every summary dismissal issues as a written order no later than 15 days after filing (8 C.F.R. § 1003.1(d)(2)(ii)). A summary dismissal is the Board's final decision and the final order of removal for section 242(b)(1) of the Act (8 C.F.R. § 1003.1(d)(2)(iii))."
+  edge-board-screening-dismissed "Summarily dismissed" -> final-order {
+    authority cite "8 C.F.R. § 1003.1(d)(2)"
+  }
+  edge-board-screening-accepted "Accepted: briefing schedule set" -> briefing {
+    authority cite "8 C.F.R. § 1003.3(c)"
+  }
+}
+
+state briefing: "Briefing before the Board" by applicant cite "8 C.F.R. § 1003.3(c)"
+{
+  note "The Board sets a briefing schedule for every appeal it has not summarily dismissed. Where no transcript is warranted, briefs are due simultaneously within 20 days of the scheduling order and in no case more than 35 days after the appeal was filed; where a transcript is warranted, within 20 days of the order setting the schedule and making the transcript available. No reply brief unless the Board invites or orders one, and no extension except in exceptional circumstances as defined by section 240(e)(1) of the Act (8 C.F.R. § 1003.3(c)(1))."
+  edge-briefing-board-ruling "Briefing complete" -> board-ruling {
+    authority cite "8 C.F.R. § 1003.1(e)"
+  }
+}
+
+decision board-ruling: "Board decision on the appeal" by court cite "8 C.F.R. § 1003.1(d)(3)"
+{
+  note "The Board reviews the immigration judge's findings of fact, including credibility, only for clear error, and questions of law, discretion and judgment de novo (8 C.F.R. § 1003.1(d)(3)). Cases go to a single Board member unless they meet the standards for a three-member panel (8 C.F.R. § 1003.1(e)); the member may affirm without opinion (8 C.F.R. § 1003.1(e)(4)). The Board decides as soon as practicable after the record is complete (8 C.F.R. § 1003.1(e)(8)). The outline's Matter of Acosta, 19 I&N Dec. 211 (BIA 1985), is removed: no reporter text is vendored."
+  edge-board-ruling-dismissed "Appeal dismissed or decision affirmed" -> final-order {
+    authority cite "8 C.F.R. § 1003.1(d)(7)"
+  }
+  edge-board-ruling-sustained "Appeal sustained" -> relief-granted {
+    authority cite "8 C.F.R. § 1003.1(d)(7)"
+  }
+  edge-board-ruling-remand "Returned to the immigration judge" -> remanded-to-ij {
+    authority cite "8 C.F.R. § 1003.1(d)(7)"
+  }
+}
+
+state remanded-to-ij: "Returned to the immigration judge" by court cite "8 C.F.R. § 1003.1(d)(7)"
+{
+  note "The Board may return a case to DHS or an immigration judge for further action without entering a final decision on the merits (8 C.F.R. § 1003.1(d)(7)(i))."
+  edge-remanded-to-ij-decision "New decision on remand" -> ij-decision {
+    authority cite "8 C.F.R. § 1003.1(d)(7)"
+  }
+}
+
+state final-order: "Final Board decision" by office cite "8 C.F.R. § 1003.1(d)(7)"
+{
+  note "The Board's decision is final except in cases the Attorney General reviews (8 C.F.R. § 1003.1(d)(7)(i)). The outline's INS v. Cardoza-Fonseca, 480 U.S. 421 (1987), is removed: no reporter text is vendored."
+  edge-final-order-post "Post-decision choice" -> post-decision {
+    authority cite "8 C.F.R. § 1003.2(a)"
+  }
+}
+
+decision post-decision: "Motion to reconsider, motion to reopen, or petition for review" by applicant cite "8 C.F.R. § 1003.2(a)"
+{
+  note "A motion to reconsider specifies the errors of fact or law and is filed within 30 days after the mailing of the Board decision; only one is allowed (8 C.F.R. § 1003.2(b)). A motion to reopen states the new facts, with evidentiary material, and is filed no later than 90 days after the final administrative decision; only one is allowed, subject to the exceptions of 8 C.F.R. § 1003.2(c)(3) (8 C.F.R. § 1003.2(c)). Either motion is filed with the Board with the fee or a waiver request; the opposing party has 20 days to file a brief in opposition (8 C.F.R. § 1003.2(g)). Judicial review is by petition for review under section 242 of the Act (8 U.S.C. § 1252), which is not vendored; its period and venue are not stated here."
+  edge-post-decision-reconsider "Motion to reconsider" -> reconsider-ruling {
+    authority cite "8 C.F.R. § 1003.2(b)"
+  }
+  edge-post-decision-reopen "Motion to reopen" -> reopen-ruling {
+    authority cite "8 C.F.R. § 1003.2(c)"
+  }
+  edge-post-decision-review "Petition for review" -> judicial-review {
+    authority cite "8 C.F.R. § 1003.1(d)(2)"
+  }
+  edge-post-decision-none "No motion or petition" -> order-final {
+    authority cite "8 C.F.R. § 1003.1(d)(7)"
+  }
+}
+
+decision reconsider-ruling: "Ruling on the motion to reconsider" by court cite "8 C.F.R. § 1003.2(b)"
+{
+  note "The decision to grant or deny a motion to reconsider is within the Board's discretion (8 C.F.R. § 1003.2(a)); a party may not seek reconsideration of a decision denying a previous motion to reconsider (8 C.F.R. § 1003.2(b)(2))."
+  edge-reconsider-granted "Granted" -> board-ruling { authority cite "8 C.F.R. § 1003.2(b)" }
+  edge-reconsider-denied "Denied" -> review-election { authority cite "8 C.F.R. § 1003.2(b)" }
+}
+
+decision reopen-ruling: "Ruling on the motion to reopen" by court cite "8 C.F.R. § 1003.2(c)"
+{
+  note "A motion to reopen is not granted unless the evidence is material and was not available and could not have been presented at the former hearing (8 C.F.R. § 1003.2(c)(1)); the Board may deny it even on a prima facie case for relief (8 C.F.R. § 1003.2(a))."
+  edge-reopen-granted "Granted: proceedings reopened" -> ij-decision {
+    authority cite "8 C.F.R. § 1003.2(c)"
+  }
+  edge-reopen-denied "Denied" -> review-election { authority cite "8 C.F.R. § 1003.2(c)" }
+}
+
+decision review-election: "Petition for review sought?" by applicant cite "8 C.F.R. § 1003.1(d)(7)"
+{
+  note "Judicial review of the Board's final decision is under section 242 of the Act (8 U.S.C. § 1252), which is not vendored."
+  edge-review-election-petition "Petition for review" -> judicial-review {
+    authority cite "8 C.F.R. § 1003.1(d)(7)"
+  }
+  edge-review-election-none "No petition" -> order-final {
+    authority cite "8 C.F.R. § 1003.1(d)(7)"
+  }
+}
+
+terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismissal] cite "8 C.F.R. § 1003.1(d)(2)"
+{
+  note "An untimely appeal may be summarily dismissed (8 C.F.R. § 1003.1(d)(2)(i)(G)); the immigration judge's decision is final (8 C.F.R. § 1003.39)."
+}
+
+terminal relief-granted: "Appeal sustained" outcome [win] cite "8 C.F.R. § 1003.1(d)(7)"
+{
+  note "Outcome from the respondent's side; the form of relief is not modeled."
+}
+
+terminal order-final: "Board decision final" outcome [loss, final] cite "8 C.F.R. § 1003.1(d)(7)"
+{
+  note "No motion or petition for review is taken."
+}
+
+terminal judicial-review: "Petition for review in the court of appeals" outcome [appeal] cite "8 C.F.R. § 1003.1(d)(2)"
+{
+  note "Review proceeds in the court of appeals under 8 U.S.C. § 1252 (not vendored) and FRAP 15 (lit/frap)."
+}

@@ -14,3 +14,7 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 fb92b8e398501d4703702245e0e4a2f14095d57490f357593191599d55c616c5. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `ct-appellate-supreme/original/ct-pb-appellate-amendments-2026-07-14.pdf` as served (sha256 3445f8f949a9ae8ea096a30e0f2aa3de7b88933d66dcb75f468317bbb6bb84fd); extraction sha256 fb92b8e398501d4703702245e0e4a2f14095d57490f357593191599d55c616c5.
+
+### Sectioned text (lg-f3q8.49)
+
+- `lit/ct-appellate-supreme` binds the single-column, sectioned derivation of this edition, `ct-superior-civil/ct-practice-book-2026-sectioned.txt` (sha256 7a33d1bb397e575e0a7b5f010aab0cfc4d9afd70228a83544d187e51d0c1efac), derived in the pod from `ct-superior-civil/ct-practice-book-2026.txt`, whose bytes equal `ct-appellate-supreme/ct-practice-book-2026.txt` (extract sha256 821170aa7b3d9a80966739cb80c952f923ea6d6c8587fdf1931792b96c61b2d2); the derivation is recorded in `sources/ct-superior-civil/PROVENANCE.md`. Nothing fetched.

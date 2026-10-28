@@ -1,0 +1,44 @@
+# Civil appeals to the Connecticut Appellate Court and Supreme Court under
+# the Rules of Appellate Procedure in the official 2026 Connecticut
+# Practice Book (Revision of 1998), whose own amendments take effect
+# January 1, 2026 (sources/ct-appellate-supreme; the single-column,
+# sectioned text is shared with lit/ct-superior-civil). lit/core has no
+# counting rule for Connecticut's court holidays, so the periods are stated
+# in notes, not encoded as counted deadlines. The amendments approved June
+# 30, 2026 (Connecticut Law Journal, July 14, 2026) take effect January 1,
+# 2027, after this package's dates, except Sections 60-4, 62-6 and 85-2
+# (generative AI), which this package does not cite; of the sections cited
+# here they amend 63-4, 67-3, 67-3A and 67-5A without changing any period
+# or limit stated here, so they are noted, not applied.
+[package]
+name = "ct-appellate-supreme"
+version = "0.1.0"
+language = 1
+pack_id = "ct-appellate-supreme"
+forum = "ct-appellate-supreme"
+authority = "StateRule"
+jurisdiction_id = "connecticut"
+title = "Connecticut Appellate Court and Supreme Court, civil appeals"
+description = "Civil appeals to the Connecticut Appellate Court and Supreme Court under the Rules of Appellate Procedure of the 2026 Connecticut Practice Book, as far as the vendored text states: the right of appeal, the twenty-day appeal period and its extension, the cross appeal, the papers due after filing, the briefs, their times and their page and word limits, the reply brief, oral argument and submission on the briefs, opinions and the official release date, reconsideration, transfer between the courts, and certification to the Supreme Court."
+in_force = "2026-01-01"
+known_at = "2026-10-28"
+unknown_before = "2026-01-01"
+jurisdiction = "Connecticut Appellate Court and Supreme Court (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ct-pb]
+title = "Official 2026 Connecticut Practice Book (Revision of 1998): Rules for the Superior Court and Rules of Appellate Procedure"
+url = "https://www.jud.ct.gov/Publications/PracticeBook/PB.pdf"
+path = "sources/ct-superior-civil/ct-practice-book-2026-sectioned.txt"
+path_sha256 = "7a33d1bb397e575e0a7b5f010aab0cfc4d9afd70228a83544d187e51d0c1efac"
+sha256 = "bb406ab49314de7f6b49f5de43e1b2e354465bb70ce52ecc37412ec058db69d6"
+as_of = "2026-01-01"
+cite_prefixes = ["Practice Book §"]
+section_heading = "Practice Book § {n}"

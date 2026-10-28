@@ -1,0 +1,122 @@
+module ct-appellate-supreme.appeal
+
+// Civil appeals from the Connecticut Superior Court to the Appellate Court,
+// and from the Appellate Court to the Supreme Court on certification, from
+// the applicant's (appellant's) side. Every period below is stated in a
+// note, not counted: lit/core has no counting rule for Connecticut's court
+// holidays. The earlier outline bound briefing to Section 67-1, the
+// mandate to Section 70-8 (special sessions) and rehearing to Section 71-1
+// (appellate judgment files); they are bound here to Sections 67-3A, 67-5A,
+// 71-4 and 71-5, Connecticut having a rescript and official release date,
+// not a mandate. It cited General Statutes § 51-199(c) for transfer and
+// further review; the statute is not vendored, so transfer is bound to
+// Section 65-1, which invokes it, and further review to the certification
+// rules (Sections 84-1, 84-4). It named no decision and none is cited.
+
+/// An appellant's or appellee's brief filed electronically: at most 13,500
+/// words, exclusive of party appendices, the cover page, the tables, the
+/// statement of issues, the signature block and certifications; the clerk
+/// grants 2000 more words on request for a state constitutional claim
+/// (Practice Book § 67-3A).
+limit principal-brief { words <= 13_500 cite "Practice Book § 67-3A" } cite "Practice Book § 67-3A"
+/// The combined appellee and cross appellant brief: at most 18,000 words
+/// (Practice Book § 67-3A).
+limit cross-appellant-brief { words <= 18_000 cite "Practice Book § 67-3A" } cite "Practice Book § 67-3A"
+/// The combined cross appellee and appellant reply brief: at most 16,000
+/// words (Practice Book § 67-3A).
+limit cross-appellee-brief { words <= 16_000 cite "Practice Book § 67-3A" } cite "Practice Book § 67-3A"
+/// A reply brief filed electronically: at most 6500 words (Practice Book §
+/// 67-5A).
+limit reply-brief { words <= 6500 cite "Practice Book § 67-5A" } cite "Practice Book § 67-5A"
+/// A petition for certification, and an opposition to one: at most 4000
+/// words, exclusive of the caption, signature block, certifications and
+/// appendix (Practice Book §§ 84-5(b), 84-6(a)).
+limit certification-petition { words <= 4000 cite "Practice Book § 84-5" } cite "Practice Book § 84-5"
+
+start appeal-filed
+
+state appeal-filed: "Appeal filed" by applicant cite "Practice Book § 63-1"
+{
+  note "An aggrieved party may appeal from a final judgment, except as otherwise provided by law (Practice Book § 61-1). Unless a statute provides a different period, an appeal is filed within twenty days of the date notice of the judgment or decision is given; in civil jury cases the period begins when the verdict is accepted (Practice Book § 63-1(a), (b)). A motion filed within the appeal period that, if granted, would render the judgment ineffective starts a new twenty-day period (Practice Book § 63-1(c)(1)). The trial judge may extend the time to appeal by no more than twenty days from the expiration of the appeal period, except where a statute sets a jurisdictional limit (Practice Book § 66-1(a)). An appellee aggrieved by the judgment may file a cross appeal within ten days from the filing of the appeal; no entry fee is required (Practice Book § 61-8). All appeals are filed and all fees paid under Section 60-7 or 60-8 (Practice Book § 63-3)."
+  edge-appeal-filed-papers "Appeal docketed" -> papers-filed {
+    authority cite "Practice Book § 63-3"
+  }
+  edge-appeal-filed-untimely "Filed out of time" -> dismissed-untimely {
+    authority cite "Practice Book § 63-1"
+  }
+}
+
+terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismissal] cite "Practice Book § 63-1"
+{
+  note "Outcome from the appellant's side: an appeal not filed within the twenty-day period of Section 63-1 or an extension under Section 66-1(a)."
+}
+
+state papers-filed: "Preliminary papers and transcript order filed" by applicant cite "Practice Book § 63-4"
+{
+  note "Within ten days of filing an appeal, the appellant files with the appellate clerk a preliminary statement of the issues, a designation of the proposed contents of the clerk appendix, a certificate that no transcript is needed or a transcript order confirmation, and a docketing statement; an appellee presenting alternative grounds or adverse rulings files its own preliminary statement of issues within twenty days from the filing of the appellant's, and another party may designate clerk appendix contents within seven days from the appellant's designation (Practice Book § 63-4(a))."
+  edge-papers-filed-briefing "Briefing" -> briefing {
+    authority cite "Practice Book § 67-3A"
+  }
+  edge-papers-filed-transfer "Transferred to the Supreme Court" -> briefing {
+    authority cite "Practice Book § 65-1"
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite "Practice Book § 67-3A"
+{
+  note "Except as otherwise ordered, the appellant's brief, at most 13,500 words, is filed with any party appendix within forty-five days after the delivery date of the initial transcript order or forty-five days after the clerk appendix is sent to the parties, whichever is later; where no transcript is required, forty-five days after the clerk appendix is sent. The appellee's brief, at most 13,500 words, is filed within thirty days after the filing of the appellant's brief or the delivery of transcript portions ordered only by that appellee, whichever is later (Practice Book § 67-3A). A paper filer excluded or exempt from electronic filing is limited instead to thirty-five pages for each of those briefs, on the same times (Practice Book § 67-3). The reply brief is filed within twenty days after the filing of the last appellee's brief and is at most 6500 words, or fifteen pages for a paper filer (Practice Book § 67-5A). The Supreme Court may transfer a matter to itself from the Appellate Court or from itself to the Appellate Court under General Statutes § 51-199(c) (Practice Book § 65-1)."
+  edge-briefing-argued "Assigned for oral argument" -> decision {
+    authority cite "Practice Book § 70-1"
+  }
+  edge-briefing-submitted "Decided on the briefs and record" -> decision {
+    authority cite "Practice Book § 70-1"
+  }
+}
+
+decision decision: "Appeal decided" by court cite "Practice Book § 71-4"
+{
+  note "Oral argument is allowed as of right except in civil cases where the dispositive issue was recently authoritatively decided or the briefs adequately present the facts and arguments; then notice issues that the case will be decided on the briefs and record, and any party may request argument within ten days of the notice (Practice Book § 70-1(a), (b)). Notice of the decision is deemed given, for all purposes, on the official release date in the court's opinion or memorandum decision (Practice Book § 71-4(a))."
+  edge-decision-affirmed "Affirmed" -> reconsideration {
+    authority cite "Practice Book § 71-4"
+  }
+  edge-decision-reversed "Reversed or remanded" -> reconsideration {
+    authority cite "Practice Book § 71-4"
+  }
+}
+
+decision reconsideration: "Reconsideration" by court cite "Practice Book § 71-5"
+{
+  note "A motion for reconsideration, or for reconsideration en banc, is not entertained unless filed with the appellate clerk within ten days from the date the decision or order is officially released (Practice Book § 71-5). Unless the chief justice or chief judge directs otherwise, a stay in effect during the appeal continues until the time for reconsideration has expired and, in the Appellate Court, until the time to petition for certification has expired (Practice Book § 71-6(a))."
+  edge-reconsideration-certification "Certification to the Supreme Court sought" -> certification {
+    authority cite "Practice Book § 84-1"
+  }
+  edge-reconsideration-final "No further review" -> final-judgment {
+    authority cite "Practice Book § 71-4"
+  }
+}
+
+decision certification: "Petition for certification decided" by court cite "Practice Book § 84-4"
+{
+  note "No appeal may be taken from a final decision of the Appellate Court to the Supreme Court unless the Supreme Court grants certification (Practice Book § 84-1). The petition is filed within twenty days of the official release of the opinion or of notice of the order finally determining the cause, whichever is earlier; a timely motion for reconsideration or application for fee waiver restarts the twenty days from notice of its decision; a cross petition is filed within ten days of the filing of the petition (Practice Book § 84-4(a), (c)). An opposition is filed within ten days of the filing of the petition (Practice Book § 84-6(a)). Petitions and oppositions are limited to 4000 words (Practice Book §§ 84-5(b), 84-6(a))."
+  edge-certification-denied "Denied" -> review-denied {
+    authority cite "Practice Book § 84-1"
+  }
+  edge-certification-granted "Granted" -> review-granted {
+    authority cite "Practice Book § 84-1"
+  }
+}
+
+terminal final-judgment: "Appellate judgment final" outcome [final] cite "Practice Book § 71-4"
+{
+  note "The decision stands after the reconsideration period and, in the Appellate Court, the certification period; its outcome for the appellant follows the disposition."
+}
+
+terminal review-denied: "Certification denied" outcome [final] cite "Practice Book § 84-1"
+{
+  note "The Appellate Court's decision stands."
+}
+
+terminal review-granted: "Certification granted" outcome [appeal] cite "Practice Book § 84-1"
+{
+  note "The petitioner may file an appeal to the Supreme Court (Practice Book § 84-1); the merits are not modeled here."
+}

@@ -1,0 +1,155 @@
+module wi-circuit-court-criminal.criminal
+
+// Criminal cases in the Wisconsin circuit courts, from the defendant's
+// side. Wisconsin's criminal procedure is statutory (Wis. Stat. chs. 967
+// to 979); the rules of evidence and practice in civil actions apply in
+// criminal proceedings unless the context manifestly requires otherwise
+// (Wis. Stat. § 972.11(1)). Every period below is stated in a note, not
+// counted: the criminal chapters state no computation rule, the general
+// rule (Wis. Stat. § 990.001(4)) is not vendored, and lit/core has no
+// counting rule for Wisconsin. The earlier outline's leading decisions
+// (County of Riverside v. McLaughlin, Gerstein v. Pugh, Gideon v.
+// Wainwright, Brady v. Maryland, Mapp v. Ohio, Barker v. Wingo, Boykin v.
+// Alabama, Missouri v. Frye, Jackson v. Virginia, Ramos v. Louisiana,
+// Apprendi v. New Jersey, Roe v. Flores-Ortega, Garza v. Idaho) are
+// removed: no reporter text is vendored, only the statutes' own
+// annotations.
+start arrested
+
+state arrested: "Arrest or summons on a complaint" by applicant cite "Wis. Stat. § 968.04(1)"
+{
+  note "A complaint is issued only by the district attorney of the county where the crime is alleged to have been committed, and its filing with a judge commences the action; a circuit judge may permit its filing after a hearing if the district attorney refuses or is unavailable (Wis. Stat. § 968.02). On probable cause the judge issues a warrant or a summons (Wis. Stat. § 968.04(1)). An arrested person is taken within a reasonable time before a judge in the county where the offense was allegedly committed, and after a warrantless arrest a complaint is filed forthwith (Wis. Stat. § 970.01). The statute states no hour count; the 48-hour probable-cause rule appears only in the annotations' summary of County of Riverside v. McLaughlin and State v. Koch, which are not vendored."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance {
+    authority cite "Wis. Stat. § 970.01(1)"
+  }
+}
+
+decision initial-appearance: "Release or detention" by court cite "Wis. Stat. § 970.02"
+{
+  note "At the initial appearance the judge informs the defendant of the charge and penalties, the right to counsel and appointed counsel, and the right to a preliminary examination on a felony, admits the defendant to bail under ch. 969, and on a misdemeanor sets a trial date immediately on the defendant's request (Wis. Stat. § 970.02(1)-(3)). Before conviction a defendant is eligible for release under reasonable conditions, and bail is imposed only on the findings § 969.01(1)(b) lists (Wis. Stat. § 969.01(1)). A circuit court may deny release to a person accused of an offense § 969.035(2) lists; the pretrial detention hearing is commenced within 10 days from the date the defendant is detained or brought before the court, and after the findings the court may deny bail for an additional period not to exceed 60 days following the hearing, delay expressly requested by the defendant excluded (Wis. Stat. § 969.035(5), (8), (9)); a detained defendant's case is placed on an expedited trial calendar (§ 969.035(11)). Indigency and appointment of counsel follow Wis. Stat. § 967.06 and ch. 977."
+  edge-initial-appearance-detained "Detained after a pretrial detention hearing" -> probable-cause {
+    authority cite "Wis. Stat. § 969.035(8)"
+  }
+  edge-initial-appearance-released "Released on conditions" -> probable-cause {
+    authority cite "Wis. Stat. § 969.01(1)"
+  }
+}
+
+decision probable-cause: "Preliminary examination" by court cite "Wis. Stat. § 970.03(1)"
+{
+  note "A defendant charged with a felony is entitled to a preliminary examination unless it is waived in writing or in open court; on waiver the judge binds the defendant over for trial (Wis. Stat. §§ 970.02(1)(c), (4); 971.02(1)). The examination is commenced within 20 days after the initial appearance if the defendant has been released from custody, or within 10 days if the defendant is in custody and bail has been fixed in excess of $500; on stipulation or on motion for cause the court may extend the time (Wis. Stat. § 970.03(2)). If the court finds probable cause to believe that a felony was committed by the defendant, it binds the defendant over; if only a misdemeanor, it amends the complaint; if none, it orders the defendant discharged forthwith (Wis. Stat. § 970.03(7)-(9)). After a discharge the district attorney may file another complaint on additional evidence (Wis. Stat. § 970.04). A misdemeanor proceeds on the complaint without a preliminary examination."
+  edge-probable-cause-bound-over "Bound over for trial" -> charged {
+    authority cite "Wis. Stat. § 970.03(7)"
+  }
+  edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
+    authority cite "Wis. Stat. § 970.03(9)"
+  }
+}
+
+state charged: "Information filed" by office cite "Wis. Stat. § 971.01(1)"
+{
+  note "The district attorney files an information with the clerk within 30 days after the completion of the preliminary examination or its waiver, unless the court extends the period for cause on the district attorney's motion with notice to the defendant; failure to file in time entitles the defendant to have the action dismissed without prejudice (Wis. Stat. § 971.01(2)). The omission of a preliminary examination does not invalidate an information unless the defendant moves to dismiss before entering a plea (Wis. Stat. § 971.02(1)). A defendant has a right to one substitution of judge: a request to substitute the judge originally assigned to the trial is filed before any motion to the trial court and before arraignment, and one to substitute a newly assigned trial judge within 15 days of the clerk's notice of the assignment, or within 48 hours if notice comes within 20 days of the trial date (Wis. Stat. § 971.20(2), (4), (5))."
+  edge-charged-arraignment "Arraignment" -> arraignment {
+    authority cite "Wis. Stat. § 971.05"
+  }
+  edge-charged-late-information "Information not filed in time: dismissed without prejudice" -> dismissed {
+    authority cite "Wis. Stat. § 971.01(2)"
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "Wis. Stat. § 971.05"
+{
+  note "Arraignment is in open court; the district attorney delivers a copy of the information in a felony case and reads the information or complaint unless the defendant waives the reading, and the defendant then pleads unless a motion under § 971.31 requires determination first (Wis. Stat. § 971.05). The defendant may plead guilty, not guilty, no contest with the court's approval, or not guilty by reason of mental disease or defect; a defendant who stands mute is entered as pleading not guilty (Wis. Stat. § 971.06). An alibi is noticed at the arraignment or at least 30 days before trial (Wis. Stat. § 971.23(8)(a))."
+  edge-arraignment-discovery "Discovery" -> discovery {
+    authority cite "Wis. Stat. § 971.23(1)"
+  }
+}
+
+state discovery: "Discovery, pretrial motions and speedy-trial demand" by applicant cite "Wis. Stat. § 971.31(5)"
+{
+  note "Upon demand, the district attorney discloses the materials § 971.23(1) lists, including any exculpatory evidence, within a reasonable time before trial, and the defendant those § 971.23(2m) lists (Wis. Stat. § 971.23). Defenses and objections based on defects in the institution of the proceedings, insufficiency of the complaint, information or indictment, invalidity of the statute or the use of illegal means to secure evidence are raised before trial by motion or deemed waived (Wis. Stat. § 971.31(2)). Motions before trial are served and filed within 10 days after the initial appearance in a misdemeanor action or 10 days after arraignment in a felony action unless the court otherwise permits; in a felony action a suppression motion is not made until an information has been filed, and an objection to the sufficiency of the complaint is made before the preliminary examination or its waiver (Wis. Stat. § 971.31(5)). Speedy trial: in a misdemeanor action trial commences within 60 days from the defendant's initial appearance; in a felony action within 90 days from the date trial is demanded in writing or on the record, which may not be made before the information or indictment is filed (Wis. Stat. § 971.10(1), (2)(a)). A continuance is granted only on the record's finding that the ends of justice outweigh the interest in a speedy trial, and not for court congestion or the state's lack of diligence (Wis. Stat. § 971.10(3))."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "Wis. Stat. § 971.31(5)"
+  }
+  edge-discovery-speedy "Speedy-trial period expired" -> motions-ruling {
+    authority cite "Wis. Stat. § 971.10(4)"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite "Wis. Stat. § 971.08(1)"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "Wis. Stat. § 971.31(4)"
+{
+  note "A pretrial motion is determined before trial unless the court defers it, and issues of fact on it are tried by the court (Wis. Stat. § 971.31(4)). On a dismissal for a defect in the charging document or the institution of the proceedings, the court may hold the defendant in custody or continue bail for not more than 72 hours pending a new summons, warrant or charge (Wis. Stat. § 971.31(6)). A defendant not tried within the § 971.10 periods is discharged from custody, but the obligations of the bond or other release conditions continue until modified or released (Wis. Stat. § 971.10(4)); the statute does not dismiss the charge. An order denying suppression may be reviewed on appeal from the judgment even after a guilty or no-contest plea (Wis. Stat. § 971.31(10))."
+  edge-motions-ruling-speedy "Not tried in time: discharged from custody; the case proceeds" -> plea-decision {
+    authority cite "Wis. Stat. § 971.10(4)"
+  }
+  edge-motions-ruling-dismissed "Charge dismissed" -> dismissed {
+    authority cite "Wis. Stat. § 971.31(6)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "Wis. Stat. § 971.31(4)"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Wis. Stat. § 971.06(1)"
+{
+  note "Before accepting a plea of guilty or no contest the court addresses the defendant personally to determine that the plea is voluntary and understood, satisfies itself that the defendant committed the crime, gives the deportation advisement, and asks whether the district attorney has complied with the victim-consultation duty of § 971.095(2) (Wis. Stat. § 971.08(1)); a failure to give the advisement entitles a defendant facing deportation consequences to withdraw the plea (Wis. Stat. § 971.08(2))."
+  edge-plea-decision-plea "Guilty or no-contest plea accepted" -> sentencing {
+    authority cite "Wis. Stat. § 971.08(1)"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "Wis. Stat. § 972.02(1)"
+  }
+}
+
+decision trial: "Verdict" by court cite "Wis. Stat. § 972.02"
+{
+  note "A criminal case is tried by a jury selected as in civil cases unless the defendant waives it in writing or in open court with the court's approval and the state's consent; the parties may stipulate before verdict to a jury of fewer than 12 (Wis. Stat. § 972.02(1), (2)). Each side has 4 peremptory challenges, 6 when the crime is punishable by life imprisonment (Wis. Stat. § 972.03). The defendant may move on the record for dismissal at the close of the state's case and at the close of the entire case (Wis. Stat. § 972.10(4)). A judgment of conviction is entered on a verdict or finding of guilty; on acquittal, judgment is entered accordingly (Wis. Stat. § 972.13(1), (3))."
+  edge-trial-acquittal "Not guilty, or dismissal on the evidence" -> acquitted {
+    authority cite "Wis. Stat. § 972.10(4)"
+  }
+  edge-trial-guilty "Guilty; sentencing" -> sentencing {
+    authority cite "Wis. Stat. § 972.13(1)"
+  }
+}
+
+state sentencing: "Presentence investigation and sentencing" by court cite "Wis. Stat. § 972.15(1)"
+{
+  note "After a conviction the court may order a presentence investigation (an employee of the department only after a felony conviction), and discloses the report to defense counsel and the district attorney before sentencing (Wis. Stat. § 972.15(1), (2)); the statute states no disclosure period. A sentence of imprisonment for a felony committed on or after December 31, 1999, or a misdemeanor committed on or after February 1, 2003, is a bifurcated sentence of confinement followed by extended supervision (Wis. Stat. § 973.01(1), (2)). The court may adjourn the case to pronounce sentence (Wis. Stat. § 972.13(2))."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "Wis. Stat. § 972.13(3)"
+  }
+}
+
+decision judgment: "Judgment of conviction and postconviction relief" by applicant cite "Wis. Stat. § 974.02(1)"
+{
+  note "A defendant's postconviction motion and appeal are taken in the time and manner of Wis. Stat. § 809.30 (Wis. Stat. § 974.02(1)). Within 20 days after the date of sentencing the defendant files in circuit court and serves a notice of intent to pursue postconviction relief, and trial counsel continues representation to file it (Wis. Stat. § 809.30(2)(a), (b)). The state public defender appoints counsel and requests transcripts within 30 days after receiving the clerk's materials, or 50 days if indigency must be determined; a defendant not represented by it requests the transcript within 30 days after the notice, or within 90 days after a denial of representation (Wis. Stat. § 809.30(2)(e), (f)). The notice of appeal or postconviction motion is filed within 60 days after the later of service of the transcript or the circuit court case record, and a postconviction motion must precede the appeal unless the grounds are sufficiency of the evidence or issues previously raised (Wis. Stat. § 809.30(2)(h); § 974.02(2)). The circuit court decides the motion within 60 days after filing or it is considered denied, unless the court of appeals extends the time (Wis. Stat. § 809.30(2)(i)), and the notice of appeal from the judgment and the order is filed within 20 days of the entry of the order on the motion (Wis. Stat. § 809.30(2)(j)). lit/core has no counting rule for Wisconsin, so these periods are not encoded as counted deadlines."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "Wis. Stat. § 809.30(2)"
+  }
+  edge-judgment-no-appeal "No postconviction relief sought" -> conviction-final {
+    authority cite "Wis. Stat. § 809.30(2)"
+  }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Wis. Stat. § 972.13(3)"
+{
+  note "Outcome from the defendant's side: a verdict or finding of not guilty, or a dismissal on the evidence at trial (Wis. Stat. §§ 972.10(4), 972.13(3))."
+}
+
+terminal dismissed: "Charges dismissed or defendant discharged" outcome [win, dismissal] cite "Wis. Stat. § 970.03(9)"
+{
+  note "Outcome from the defendant's side. A discharge after the preliminary examination does not bar another complaint on additional evidence (Wis. Stat. § 970.04), and a dismissal for a late information is without prejudice (Wis. Stat. § 971.01(2))."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "Wis. Stat. § 809.30(2)"
+{
+  note "The appeal continues before the Wisconsin Court of Appeals; after the record is transmitted, it proceeds under the procedures for civil appeals (Wis. Stat. § 809.30(2)(k); lit/wi-court-of-appeals)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "Wis. Stat. § 974.06(1)"
+{
+  note "Outcome from the defendant's side. After the time for appeal or postconviction remedy under § 974.02 has expired, a prisoner may move the sentencing court to vacate, set aside or correct the sentence on constitutional or jurisdictional grounds, at any time (Wis. Stat. § 974.06(1), (2)); an appeal from it follows the civil appeal procedures (Wis. Stat. § 809.30(2)(L)). Federal habeas belongs to lit/habeas."
+}

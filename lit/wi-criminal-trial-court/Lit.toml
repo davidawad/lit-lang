@@ -1,0 +1,55 @@
+# Criminal cases in the Wisconsin circuit courts under Wisconsin's
+# statutory criminal procedure (Wis. Stat. chs. 967 to 979), with the
+# hand-off to the court of appeals under Wis. Stat. § 809.30. The base text
+# is the Legislature's chapter PDFs, "Updated 2023-24 Wis. Stats.",
+# updated through 2025 Wis. Act 247 and the Supreme Court orders in effect
+# on October 1, 2026 (published 10-1-26; sources/wi-criminal-trial-court),
+# sectioned into one `## § <n>` per section; ch. 809 is the copy
+# sectioned for lit/wi-court-of-appeals (sources/wisctapp), of the same
+# edition. in_force is that edition's date; earlier editions are not
+# vendored, so a query before it is a hole in the corpus. The criminal
+# chapters state no time-computation rule of their own, and the general
+# rule of Wis. Stat. § 990.001(4) is not vendored; lit/core has no
+# counting rule for Wisconsin, so every period below is stated in a note,
+# not encoded as a counted deadline. Circuit court local rules and judges'
+# standing orders are not vendored.
+[package]
+name = "wi-circuit-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "wi-circuit-court-criminal"
+forum = "wi-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "wisconsin"
+title = "Wisconsin circuit courts, criminal"
+description = "Criminal cases in the Wisconsin circuit courts under Wis. Stat. chs. 967 to 979: complaint, initial appearance and release, preliminary examination and information, arraignment, pretrial motions, the § 971.10 speedy-trial periods, plea or jury trial, judgment and sentencing, and the § 809.30 notice of intent, postconviction motion and appeal to the court of appeals; periods are stated in notes."
+in_force = "2026-10-01"
+known_at = "2026-10-28"
+unknown_before = "2026-10-01"
+jurisdiction = "Wisconsin trial courts of general criminal jurisdiction"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.wis-stat-crim]
+title = "Wisconsin Statutes chs. 967 to 979, Criminal Procedure (Updated 2023-24 Wis. Stats., through 2025 Wis. Act 247, published and certified under s. 35.18, October 1, 2026)"
+url = "https://docs.legis.wisconsin.gov/statutes/statutes"
+path = "sources/wi-criminal-trial-court/wi-stat-chapters-967-979-criminal-procedure-sectioned.txt"
+path_sha256 = "901a61a9fb1460cee6dd86f5f211674baa4ed25a2cb025bb7845a773010e9d63"
+as_of = "2026-10-01"
+cite_prefixes = ["Wis. Stat. §"]
+section_heading = "§ {n}"
+
+[sources.wis-stat-809]
+title = "Wisconsin Statutes ch. 809, Rules of Appellate Procedure (Updated 2023-24 Wis. Stats., published and certified under s. 35.18, October 1, 2026)"
+url = "https://docs.legis.wisconsin.gov/statutes/statutes/809.pdf"
+path = "sources/wisctapp/wis-stat-ch809-sectioned.txt"
+path_sha256 = "55eaa45120fd15038303810878dddae1289081531ce4a658a8f46d01a12feaad"
+as_of = "2026-10-01"
+cite_prefixes = ["Wis. Stat. §"]
+section_heading = "§ {n}"

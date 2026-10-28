@@ -1,0 +1,52 @@
+# Civil actions in the Alabama circuit courts under the Alabama Rules of
+# Civil Procedure, as far as the vendored rules state (sources/
+# al-state-civil: Rules 3, 4, 12, 15, 16, 26, 38, 41, 50, 55, 56 and 58,
+# current through the amendment of Rule 3 effective September 3, 2025),
+# and the notice of appeal under the Alabama Rules of Appellate Procedure
+# (sources/al-state-appellate, current through October 1, 2025).
+# Computation of time is Ala. R. Civ. P. 6, which is not vendored, and
+# core has no Alabama holiday calendar, so the rules' periods are stated
+# in notes, not encoded as counted deadlines. The 2026 amendments to Rules
+# 5, 6, 11, 14, 22, 59(a), 70A, 71B and 71C touch no rule this package
+# cites and are not vendored. The district court variations (each rule's
+# "(dc)" paragraph) are not modeled. An appeal hands off to
+# lit/al-state-appellate.
+[package]
+name = "al-circuit-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "al-circuit-court-civil"
+forum = "al-state-civil"
+authority = "StateRule"
+title = "Alabama Circuit Courts, civil"
+description = "Civil actions in the Alabama circuit courts under the Alabama Rules of Civil Procedure, as far as the vendored text states: commencement and the time for service, the time to answer, Rule 12(b) motions, amendment, default, scheduling and discovery, summary judgment, jury demand, judgment as a matter of law, entry of judgment, voluntary dismissal, and the notice of appeal (lit/al-state-appellate)."
+in_force = "2025-10-01"
+known_at = "2026-10-28"
+unknown_before = "2025-10-01"
+jurisdiction = "Alabama circuit courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ala-r-civ-p]
+title = "Alabama Rules of Civil Procedure, Rules 3, 4, 12, 15, 16, 26, 38, 41, 50, 55, 56 and 58 (per-rule PDFs, current through the amendment of Rule 3 effective September 3, 2025)"
+url = "https://judicial.alabama.gov/library/CivilProcedure"
+path = "sources/al-state-civil/rules-cited.txt"
+path_sha256 = "7e3bd1574604836629a225c7b6f0575becd497857f2fb0f7c7c7b429056112a8"
+as_of = "2025-09-03"
+cite_prefixes = ["Ala. R. Civ. P."]
+section_heading = "Ala. R. Civ. P. {n}"
+
+[sources.ala-r-app-p]
+title = "Alabama Rules of Appellate Procedure, Rules 1, 3, 4, 10, 28, 34, 39, 40 and 41 (per-rule PDFs, current through the amendments effective October 1, 2025)"
+url = "https://judicial.alabama.gov/library/AppellateProcedure"
+path = "sources/al-state-appellate/rules-cited.txt"
+path_sha256 = "27c571a08b388a5e8bebbdb95de13e325d6855381e8060dfbc4c970346535bd9"
+as_of = "2025-10-01"
+cite_prefixes = ["Ala. R. App. P."]
+section_heading = "Ala. R. App. P. {n}"

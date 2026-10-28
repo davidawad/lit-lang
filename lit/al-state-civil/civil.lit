@@ -1,0 +1,135 @@
+module al-circuit-court-civil.civil
+
+start commenced
+
+state commenced: "Action commenced" by applicant cite "Ala. R. Civ. P. 3(a)"
+{
+  note "A civil action is commenced by filing a complaint with the court; except in domestic-relations cases each initial complaint is filed with a completed informational cover sheet, whose omission does not invalidate the commencement (Ala. R. Civ. P. 3(a), (b)). If service of the summons and complaint is not made upon a defendant within 120 days after the filing of the complaint, the court, on motion or on its own initiative and after at least fourteen days' notice to the plaintiff, may dismiss the action without prejudice as to that defendant or direct that service be effected within a specified time; on good cause for the failure the court extends the time (Ala. R. Civ. P. 4(b)). Periods in this package are stated, not counted: computation is Ala. R. Civ. P. 6, which is not vendored."
+  edge-commenced-served "Defendant served" -> answer-due { authority cite "Ala. R. Civ. P. 4" }
+  edge-commenced-unserved "Not served within 120 days" -> dismissed-unserved {
+    authority cite "Ala. R. Civ. P. 4(b)"
+  }
+}
+
+terminal dismissed-unserved: "Dismissed for failure to serve" outcome [loss, dismissal] cite "Ala. R. Civ. P. 4(b)"
+{
+  note "Dismissal without prejudice as to the defendant not served, after at least fourteen days' notice to the plaintiff (Ala. R. Civ. P. 4(b))."
+}
+
+decision answer-due: "Answer, motion or default" by office cite "Ala. R. Civ. P. 12(a)"
+{
+  note "A defendant serves an answer within thirty days after service of the summons and complaint, except when service is by publication and a different time is prescribed; an answer to a cross-claim is due within thirty days after service, and a reply to a counterclaim within thirty days after service of the answer (Ala. R. Civ. P. 12(a)). No leading decision is named."
+  edge-answer-due-default "No response" -> default-entered {
+    authority cite "Ala. R. Civ. P. 55(a)"
+  }
+  edge-answer-due-motion "Rule 12(b) motion filed" -> pleading-motion {
+    authority cite "Ala. R. Civ. P. 12(b)"
+  }
+  edge-answer-due-answer "Answer served" -> case-management {
+    authority cite "Ala. R. Civ. P. 16(b)"
+  }
+}
+
+decision pleading-motion: "Motion to dismiss decided" by court cite "Ala. R. Civ. P. 12(b)"
+{
+  note "The defenses that may be made by motion before pleading include failure to state a claim upon which relief can be granted; a motion presenting matters outside the pleading that the court does not exclude is treated as one for summary judgment under Rule 56 (Ala. R. Civ. P. 12(b)). If the court denies the motion or postpones it to trial, the responsive pleading is served within ten days after notice of the court's action, unless the court fixes a different time (Ala. R. Civ. P. 12(a)). A party may amend without leave at any time more than forty-two days before the first setting of the case for trial, and thereafter only by leave on a showing of good cause; a response to an amended pleading is due within the time remaining for the original or within ten days after service of the amendment, whichever is longer (Ala. R. Civ. P. 15(a)). No leading decision is named."
+  edge-pleading-motion-dismissed "Granted" -> dismissed-pleading {
+    authority cite "Ala. R. Civ. P. 12(b)"
+  }
+  edge-pleading-motion-leave "Granted with leave to amend" -> case-management {
+    authority cite "Ala. R. Civ. P. 15(a)"
+  }
+  edge-pleading-motion-denied "Denied: responsive pleading within ten days after notice" -> case-management {
+    authority cite "Ala. R. Civ. P. 12(a)"
+  }
+}
+
+terminal default-entered: "Default entered" outcome [loss] cite "Ala. R. Civ. P. 55(a)"
+{
+  note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend, the clerk enters the party's default (Ala. R. Civ. P. 55(a)). Against a party who has appeared, judgment by default needs a hearing on at least three days' written notice of the application, except that the court may enter it on the day the case is set for trial (Ala. R. Civ. P. 55(b)(2)). The court may set aside an entry of default at any time before judgment, and a default judgment on its own motion within thirty days after its entry or on a party's motion filed not later than thirty days after its entry (Ala. R. Civ. P. 55(c)). Outcome from the defending side."
+}
+
+terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] cite "Ala. R. Civ. P. 12(b)"
+
+state case-management: "Scheduling and pretrial conferences" by court cite "Ala. R. Civ. P. 16(b)"
+{
+  note "The court may enter a scheduling order limiting the time to join parties and amend the pleadings, to file and hear motions and to complete discovery; once issued, it is modified only by leave of court on good cause (Ala. R. Civ. P. 16(b)). When the court has not ordered a pretrial conference, any party may require one on written notice served in time for it to take place at least twenty-one days before the case is set for trial (Ala. R. Civ. P. 16(a))."
+  edge-case-management-discovery "Scheduling order entered" -> discovery {
+    authority cite "Ala. R. Civ. P. 26(b)"
+  }
+}
+
+state discovery: "Discovery" by applicant cite "Ala. R. Civ. P. 26(b)"
+{
+  note "Parties may obtain discovery of any matter, not privileged, relevant to the subject matter of the action and proportional to the needs of the case (Ala. R. Civ. P. 26(b)(1)). A party withholding information on a claim of privilege or trial-preparation protection serves its supporting description within twenty-one days of the date a written request is served, unless otherwise ordered (Ala. R. Civ. P. 26(b)(6)(A)). A jury demand is served not later than thirty days after service of the last pleading directed to the issue; failure to serve and file it waives a jury (Ala. R. Civ. P. 38(b), (d))."
+  edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
+    authority cite "Ala. R. Civ. P. 56(c)"
+  }
+  edge-discovery-settle "Settled or voluntarily dismissed" -> settled {
+    authority cite "Ala. R. Civ. P. 41(a)"
+  }
+}
+
+decision sj-motion: "Summary judgment decided" by court cite "Ala. R. Civ. P. 56(c)"
+{
+  note "A claimant may move at any time after thirty days from the commencement of the action or after the adverse party's motion, and a defending party at any time (Ala. R. Civ. P. 56(a), (b)). The motion is supported by a narrative summary of the undisputed material facts with specific record references, and the opponent who contends facts are in dispute files a statement in opposition (Ala. R. Civ. P. 56(c)(1)). The motion and its supporting materials are served at least ten days before the hearing, unless the parties consent to less, and any statement or affidavit in opposition at least two days before it (Ala. R. Civ. P. 56(c)(2)). Judgment is rendered if there is no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law (Ala. R. Civ. P. 56(c)(3)). No leading decision is named."
+  edge-sj-motion-granted "Granted" -> judgment-for-movant { authority cite "Ala. R. Civ. P. 56(c)" }
+  edge-sj-motion-denied "Denied or partly denied" -> trial {
+    authority cite "Ala. R. Civ. P. 56(d)"
+  }
+}
+
+terminal judgment-for-movant: "Judgment for the movant" outcome [win, judgment] cite "Ala. R. Civ. P. 56(c)"
+{
+  note "Partial summary judgment and an order specifying the facts without substantial controversy (Ala. R. Civ. P. 56(d)) are not modeled."
+}
+
+state trial: "Trial" by court cite "Ala. R. Civ. P. 38(b)"
+{
+  note "A party who demanded a jury on only some issues leaves any other party ten days after service of the demand, or less if the court orders, to demand a jury on the others (Ala. R. Civ. P. 38(c)). A motion for judgment as a matter of law may be made at any time before submission of the case to the jury (Ala. R. Civ. P. 50(a)(2))."
+  edge-trial-post "Verdict or decision; judgment entered" -> post-trial {
+    authority cite "Ala. R. Civ. P. 50(b)"
+  }
+}
+
+decision post-trial: "Post-trial motions decided" by court cite "Ala. R. Civ. P. 50(b)"
+{
+  note "A motion for judgment as a matter of law made at the close of all the evidence may be renewed by service and filing not later than thirty days after entry of judgment, with a Rule 59 motion for a new trial joined or in the alternative (Ala. R. Civ. P. 50(b)); a party against whom judgment as a matter of law is entered may move for a new trial not later than thirty days after its entry (Ala. R. Civ. P. 50(c)(2)). A post-judgment motion under Rule 50, 52, 55 or 59 suspends the time for appeal, which runs in full from the entry of the order granting or denying it, or from its denial by operation of law under Rule 59.1 (Ala. R. App. P. 4(a)(3)). Rules 52, 59 and 59.1 are not vendored."
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+    authority cite "Ala. R. Civ. P. 58(c)"
+  }
+  edge-post-trial-jmol "Judgment as a matter of law granted" -> judgment-for-movant {
+    authority cite "Ala. R. Civ. P. 50(b)"
+  }
+}
+
+state judgment-entered: "Judgment entered" by office cite "Ala. R. Civ. P. 58(c)"
+{
+  note "A judge renders an order or judgment by a separate writing, in an opinion, by endorsement on a motion, by a notation in the court records or electronically (Ala. R. Civ. P. 58(a)). It is entered, for these rules and the Rules of Appellate Procedure, on the date of its input into the State Judicial Information System, or for an electronic rendition on the date the judge transmits it to the electronic-filing system; entry is not delayed for the taxing of costs (Ala. R. Civ. P. 58(c))."
+  edge-judgment-entered-appeal "Next step" -> appeal-decision {
+    authority cite "Ala. R. App. P. 4(a)(1)"
+  }
+}
+
+decision appeal-decision: "Notice of appeal within 42 days of entry?" by applicant cite "Ala. R. App. P. 4(a)(1)"
+{
+  note "The notice of appeal is filed with the clerk of the trial court within 42 days (6 weeks) of the date of entry of the judgment or order appealed from, or within an extension under Ala. R. Civ. P. 77(d); an appeal from the interlocutory and other orders Rule 4(a)(1)(A)-(E) lists is taken within 14 days (2 weeks) (Ala. R. App. P. 4(a)(1)). After a timely notice, any other party may appeal within 14 days of the first notice or within the time otherwise prescribed, whichever is later (Ala. R. App. P. 4(a)(2))."
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken {
+    authority cite "Ala. R. App. P. 3(a)"
+  }
+  edge-appeal-decision-none "No notice filed" -> final-no-appeal {
+    authority cite "Ala. R. App. P. 4(a)(1)"
+  }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Alabama appellate package" outcome [appeal] cite "Ala. R. App. P. 3(a)"
+{
+  note "Hand-off to lit/al-state-appellate (al-appellate-courts-civil-appeals)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Ala. R. App. P. 4(a)(1)"
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "Ala. R. Civ. P. 41(a)"
+{
+  note "A plaintiff may dismiss without order by notice before the adverse party serves an answer or a summary judgment motion, whichever first occurs, or by a stipulation signed by all parties who have appeared; unless stated otherwise the dismissal is without prejudice, but a notice of dismissal by a plaintiff who has once dismissed an action on the same claim operates as an adjudication on the merits (Ala. R. Civ. P. 41(a)(1))."
+}

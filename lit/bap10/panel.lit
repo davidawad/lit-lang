@@ -195,6 +195,12 @@ test "the combined statements are due 14 days after the docketing notice" cite "
   expect deadline(combined-statements-period) == 2026-03-17
 }
 
+test "a forward period rolls on Colorado's Frances Cabrini Day" cite "10th Cir. BAP L.R. 8026-8(b)"
+{
+  given LeaveResponseServed() on 2026-09-28
+  expect deadline(leave-reply-period) == 2026-10-06
+}
+
 test "the appeal fee is paid within 14 days after the notice of appeal" cite "10th Cir. BAP L.R. 8003-3(b)"
 {
   given NoticeOfAppealFiled() on 2026-03-03

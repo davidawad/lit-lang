@@ -7,13 +7,15 @@
 # notes, not encoded as counted deadlines. The Illinois Constitution
 # (art. VI, § 6), Rules 326 and 343 (record and briefing schedule) and 28
 # U.S.C. § 1257 are not vendored and are not cited. A circuit court
-# appeal arrives from lit/il-circuit.
+# appeal arrives from lit/il-circuit; leave allowed continues in
+# lit/il-supreme-court.
 [package]
 name = "illappct-appellate-civil"
 version = "0.1.0"
 language = 1
 pack_id = "illappct-appellate-civil"
 forum = "illappct"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "illinois"
 title = "Illinois Appellate Court and Supreme Court, civil appeals"
@@ -30,6 +32,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+il-state-rules = { version = "^0.1.0", path = "../il-rules" }
 
 [sources.ill-sct-rules]
 title = "Illinois Supreme Court Rules (the rules the outlines cite, each as linked from the court's Supreme Court Rules page on 2026-10-27)"

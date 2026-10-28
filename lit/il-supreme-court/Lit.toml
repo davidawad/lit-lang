@@ -1,0 +1,45 @@
+# Review in the Illinois Supreme Court of a civil judgment of the Appellate
+# Court on a petition for leave to appeal, under the Illinois Supreme Court
+# Rules the outline cites, each as the court linked it on 2026-10-27 with
+# its own amendment history (sources/illappct). Computation of time is the
+# Statute on Statutes (5 ILCS 70/1.11), which is not vendored and has no
+# counting rule in lit/core, so the rules' periods are stated in notes, not
+# encoded as counted deadlines. Appeals as of right (Rules 316, 317), direct
+# appeals (Rule 302), original proceedings, the briefing schedule rule (Rule
+# 343) and 28 U.S.C. § 1257 are not vendored and are not modeled. No Rule
+# governing the form of the Supreme Court's own disposition is vendored
+# (Rule 23 governs the Appellate Court only). The Appellate Court side is
+# lit/illappct.
+[package]
+name = "il-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "il-supreme-court-civil"
+forum = "il-supreme-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "illinois"
+title = "Illinois Supreme Court, civil review on leave to appeal"
+description = "A petition for leave to appeal from the Illinois Appellate Court under Rule 315, as far as the vendored text states: the petition's time, contents and length, the answer, the grant or denial, the election to let the petition stand as the brief and the briefing times on leave allowed, argument, rehearing with the Rule 367 length limit, and the mandate."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "Illinois Supreme Court (leave to appeal, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+il-state-rules = { version = "^0.1.0", path = "../il-rules" }
+
+[sources.ill-sct-rules]
+title = "Illinois Supreme Court Rules (the rules the outlines cite, each as linked from the court's Supreme Court Rules page on 2026-10-27)"
+url = "https://www.illinoiscourts.gov/rules-law/supreme-court-rules"
+path = "sources/illappct/ill-sct-rules-cited.txt"
+path_sha256 = "3a70c5b53b40b924fa22edaf53095a4d8f92574093db11af7c463e176a287fb9"
+cite_prefixes = ["Ill. S. Ct. R."]
+section_heading = "Ill. S. Ct. R. {n}"

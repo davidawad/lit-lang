@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "il-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "il-supreme-court-civil"
+version = "0.1.0"
+language = 1
+source = "sha256:c3e75d8ff1c01b17d32ba716a693c7f52738e01e3e97f4b0d1841332a980c160"
+semantic = "sha256:263cc9c510f86072329924d0fb95360a28e9a73a2bbff7a0a06c2dea25eb6ced"
+texts = [
+    "ill-sct-rules sources/illappct/ill-sct-rules-cited.txt sha256:3a70c5b53b40b924fa22edaf53095a4d8f92574093db11af7c463e176a287fb9",
+]
+dependencies = [
+    "core 1.0.0",
+    "il-state-rules 0.1.0",
+]

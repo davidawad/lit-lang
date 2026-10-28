@@ -9,12 +9,20 @@ dependencies = []
 name = "il-circuit-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:4f517c047871d3b2301337ad222f2485cb9a2c15880a95949c72390742df9b4a"
-semantic = "sha256:20a1f73c5d34a53bf4ad4195ed3957781782b7ca302f0f531e5fa1bd6ece1385"
+source = "sha256:e616f8a7b9db560b34d0bc91831f04bf2ea96b38fbc8237a95a5ac198b52d5ae"
+semantic = "sha256:999189e9bd95902e39b474609cc15287250dc278d294cc52745c12678680a664"
 texts = [
     "ilcs-735-5-art2 sources/il-circuit/ilcs-735-5-art2-sectioned.txt sha256:91de34e3946f909cd9f377bdb7fb9d1c1c660f0d605c617eae24a686bd492099",
     "ill-sct-rules sources/illappct/ill-sct-rules-cited.txt sha256:3a70c5b53b40b924fa22edaf53095a4d8f92574093db11af7c463e176a287fb9",
 ]
+dependencies = [
+    "core 1.0.0",
+    "il-state-rules 0.1.0",
+]
+
+[[package]]
+name = "il-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

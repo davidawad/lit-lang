@@ -13,6 +13,7 @@ version = "0.1.0"
 language = 1
 pack_id = "il-circuit-court-civil"
 forum = "il-circuit"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "illinois"
 title = "Illinois circuit court, civil"
@@ -29,6 +30,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+il-state-rules = { version = "^0.1.0", path = "../il-rules" }
 
 [sources.ilcs-735-5-art2]
 title = "Code of Civil Procedure, Article II (Civil Practice), 735 ILCS 5/ (Illinois General Assembly ILCS database, as displayed 2026-10-27)"

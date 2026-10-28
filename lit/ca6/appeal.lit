@@ -1,0 +1,272 @@
+module ca6.appeal
+
+import core.frap26.{ frap26 }
+import frap.events.{ RehearingClosed }
+
+// The FRAP periods are lit/frap's: the notice-of-appeal periods of FRAP
+// 4(a)(1), the transcript-order period of FRAP 10(b)(1), the appellee's and
+// reply brief periods of FRAP 31(a)(1), which apply under the briefing
+// schedule the court sets except that the clerk sets the appellant's brief
+// date (6 Cir. R. 31(c)(1)), the rehearing periods of FRAP 40(d)(1), and the
+// mandate period of FRAP 41(b). This package is the Sixth Circuit's layer
+// over them: it declares the circuit's own periods. The leading decisions on
+// appellate jurisdiction and the notice deadline are lit/frap's.
+/// A notice of appeal is filed in a state habeas corpus appeal where the
+/// state court record is not in writing (6 Cir. R. 30(b)(5)).
+event StateHabeasNoticeFiled()
+/// The appellant provides the appellee the written transcript of the
+/// unwritten state court record (6 Cir. R. 30(b)(5)(B)).
+event StateHabeasTranscriptProvided()
+/// The appellant's brief is served in a death penalty case: an application
+/// under 28 U.S.C. § 2254 or § 2255 by a person under a death sentence, or
+/// an appeal from a federal sentence of death (6 Cir. R. 31(c)(3)).
+event CapitalAppellantBriefServed()
+/// The appellee's brief is served in a death penalty case (6 Cir. R.
+/// 31(c)(3)(C)).
+event CapitalAppelleeBriefServed()
+/// The last brief is submitted (6 Cir. R. 34(f)(2)).
+event LastBriefSubmitted()
+/// The date the case is set for oral argument (6 Cir. R. 31(c)(3)(C),
+/// 34(f)(2)).
+event ArgumentHeard()
+/// The court enters an order on a petition for rehearing (6 Cir. R. 41(b)).
+event RehearingOrderEntered()
+/// Notice of entry of a clerk's order under 6 Cir. R. 45(a) is served (6
+/// Cir. R. 45(c)).
+event ClerkOrderNoticeServed()
+
+/// In a state habeas appeal on an unwritten state court record, the
+/// appellant provides the transcript to the appellee within 30 days of
+/// filing the notice of appeal. The circuit clerk may grant an additional
+/// 30 days; past 60 days the appellant moves within the 60-day period.
+deadline state-habeas-transcript-period: 30.days after StateHabeasNoticeFiled() counted_by frap26 cite "6 Cir. R. 30(b)(5)(B)"
+{
+  forum frap
+}
+
+/// An appellee who needs other parts of the state court record transcribed
+/// provides them to the appellant within 30 days of the appellant's filing
+/// the transcript.
+deadline state-habeas-appellee-transcript-period: 30.days after StateHabeasTranscriptProvided() counted_by frap26 cite "6 Cir. R. 30(b)(5)(C)"
+{
+  forum frap
+}
+
+/// In a death penalty case the appellee serves and files its brief within
+/// 60 days after the appellant's brief is served; the appellant's brief is
+/// due by the deadline the clerk sets (6 Cir. R. 31(c)(3)(A)).
+deadline capital-appellee-brief-period: 60.days after CapitalAppellantBriefServed() counted_by frap26 cite "6 Cir. R. 31(c)(3)(B)"
+{
+  forum frap
+}
+
+/// In a death penalty case the appellant may serve and file a reply brief
+/// within 14 days after the appellee's brief is served.
+deadline capital-reply-brief-period: 14.days after CapitalAppelleeBriefServed() counted_by frap26 cite "6 Cir. R. 31(c)(3)(C)"
+{
+  forum frap
+}
+
+/// The death penalty reply is also due at least 7 days before argument,
+/// unless the court for good cause allows a later filing.
+deadline capital-reply-before-argument-period: 7.days before ArgumentHeard() counted_by frap26 cite "6 Cir. R. 31(c)(3)(C)"
+{
+  forum frap
+}
+
+/// A motion for additional oral argument time (each side has 15 minutes
+/// unless the notice of argument provides otherwise, 6 Cir. R. 34(f)(1)) is
+/// filed within 14 days of submission of the last brief.
+deadline argument-time-motion-period: 14.days after LastBriefSubmitted() counted_by frap26 cite "6 Cir. R. 34(f)(2)"
+{
+  forum frap
+}
+
+/// The motion for additional argument time is filed not later than 7 days
+/// before the hearing.
+deadline argument-time-motion-before-hearing-period: 7.days before ArgumentHeard() counted_by frap26 cite "6 Cir. R. 34(f)(2)"
+{
+  forum frap
+}
+
+/// A motion to stay the mandate must be received in the clerk's office
+/// within 7 days after the time to file a petition for rehearing expires.
+deadline mandate-stay-motion-period: 7.days after RehearingClosed(TimeExpired) counted_by frap26 cite "6 Cir. R. 41(b)"
+{
+  forum frap
+}
+
+/// Or within seven days from entry of an order on a petition for
+/// rehearing.
+deadline mandate-stay-motion-after-rehearing-period: 7.days after RehearingOrderEntered() counted_by frap26 cite "6 Cir. R. 41(b)"
+{
+  forum frap
+}
+
+/// A party adversely affected by a clerk's order may move for
+/// reconsideration by a judge or judges within 14 days of service of
+/// notice of entry of the order.
+deadline clerk-order-reconsideration-period: 14.days after ClerkOrderNoticeServed() counted_by frap26 cite "6 Cir. R. 45(c)"
+{
+  forum frap
+}
+
+test "state habeas transcript is due 30 days after the notice of appeal" cite "6 Cir. R. 30(b)(5)(B)"
+{
+  given StateHabeasNoticeFiled() on 2026-08-03
+  expect deadline(state-habeas-transcript-period) == 2026-09-02
+}
+
+test "appellee's additional state habeas transcript is due 30 days after the appellant's" cite "6 Cir. R. 30(b)(5)(C)"
+{
+  given StateHabeasTranscriptProvided() on 2026-08-03
+  expect deadline(state-habeas-appellee-transcript-period) == 2026-09-02
+}
+
+test "death penalty appellee's brief is due 60 days after the appellant's brief is served" cite "6 Cir. R. 31(c)(3)(B)"
+{
+  given CapitalAppellantBriefServed() on 2026-08-03
+  expect deadline(capital-appellee-brief-period) == 2026-10-02
+}
+
+test "death penalty reply is due 14 days after the appellee's brief is served" cite "6 Cir. R. 31(c)(3)(C)"
+{
+  given CapitalAppelleeBriefServed() on 2026-08-03
+  expect deadline(capital-reply-brief-period) == 2026-08-17
+}
+
+test "death penalty reply is due at least 7 days before argument" cite "6 Cir. R. 31(c)(3)(C)"
+{
+  given ArgumentHeard() on 2026-09-16
+  expect deadline(capital-reply-before-argument-period) == 2026-09-09
+}
+
+test "motion for more argument time is due 14 days after the last brief" cite "6 Cir. R. 34(f)(2)"
+{
+  given LastBriefSubmitted() on 2026-08-03
+  expect deadline(argument-time-motion-period) == 2026-08-17
+}
+
+test "motion for more argument time is due 7 days before the hearing" cite "6 Cir. R. 34(f)(2)"
+{
+  given ArgumentHeard() on 2026-09-16
+  expect deadline(argument-time-motion-before-hearing-period) == 2026-09-09
+}
+
+test "motion to stay the mandate is due 7 days after the rehearing time expires" cite "6 Cir. R. 41(b)"
+{
+  given RehearingClosed(TimeExpired) on 2026-08-03
+  expect deadline(mandate-stay-motion-period) == 2026-08-10
+}
+
+test "motion to stay the mandate is due 7 days after an order on rehearing" cite "6 Cir. R. 41(b)"
+{
+  given RehearingOrderEntered() on 2026-08-03
+  expect deadline(mandate-stay-motion-after-rehearing-period) == 2026-08-10
+}
+
+test "reconsideration of a clerk's order is due 14 days after notice of entry is served" cite "6 Cir. R. 45(c)"
+{
+  given ClerkOrderNoticeServed() on 2026-08-03
+  expect deadline(clerk-order-reconsideration-period) == 2026-08-17
+}
+
+start threshold
+
+decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+{
+  note "A final decision of a district court is appealable under 28 U.S.C. § 1291; interlocutory routes are lit/frap's."
+  edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "28 U.S.C. § 1291" }
+  edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
+}
+
+decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)(A)"
+{
+  note "The notice is due 30 days after entry of judgment, or 60 days when the United States is a party (FRAP 4(a)(1)); lit/frap encodes both periods."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "FRAP 4(a)(1)(A)" }
+  edge-notice-timely "Timely notice" -> record {
+    authority cite "FRAP 3(a)(1); 6 Cir. R. 3"
+    note "The court may dismiss an appeal if required fees are not paid (6 Cir. R. 3); the fee schedule is published on the court's web site (6 Cir. I.O.P. 3(a)) and is not vendored here, so no cost is encoded. Counsel files a Form for Appearance of Counsel to file documents or argue (6 Cir. R. 12(a))."
+  }
+}
+
+state record: "Record and Transcript" by applicant cite "FRAP 10; 6 Cir. R. 10"
+{
+  note "Represented parties order the transcript, or certify that none is needed, through the electronic transcript order in CM/ECF (6 Cir. R. 10(a)(1)); the court reads the district court's electronic record directly and the district clerk does not forward it (6 Cir. R. 11(a)(1)). In a civil case the appellant files a Civil Appeal Statement of Parties and Issues as the court directs (6 Cir. R. 33(a)). A state habeas appeal on an unwritten state court record carries the transcript periods of 6 Cir. R. 30(b)(5)."
+  edge-record-brief "Briefing schedule set" -> briefing { authority cite "6 Cir. R. 31(c)(1)" }
+  edge-record-default "Appellant fails to order a transcript or pay the fees" -> dismissed-prosecution {
+    authority cite "6 Cir. R. 10(a)(2); 6 Cir. R. 3"
+  }
+}
+
+state briefing: "Briefs Filed" by applicant cite "FRAP 31(a)(1); 6 Cir. R. 31(c)"
+{
+  note "The court sets a briefing schedule; the FRAP 31(a)(1) periods apply except that the clerk sets the appellant's brief date (6 Cir. R. 31(c)(1)). Preliminary injunction appeals and the other cases 6 Cir. R. 31(c)(2) lists are briefed on an expedited schedule; death penalty cases run on 6 Cir. R. 31(c)(3), and their briefs may be one-and-a-half times the FRAP 32(a)(7) length (6 Cir. R. 32(b)(2)), a number the rule does not write out, so it is not encoded. Extensions are sought by written motion and are disfavored (6 Cir. R. 26(a)(1)). A party wanting oral argument says why in the brief, in a statement of not more than one page (6 Cir. R. 34(a))."
+  edge-briefing-argue "Briefing complete" -> argument {
+    authority cite "FRAP 31(a)(1); 6 Cir. R. 31(c)"
+  }
+  edge-briefing-default "Appellant fails to file a brief or meet a deadline" -> dismissed-prosecution {
+    authority cite "6 Cir. R. 26(b)"
+  }
+}
+
+state argument: "Oral Argument or Submission" by court cite "FRAP 34; 6 Cir. R. 34"
+{
+  note "The court may deem argument waived if a party fails to request it in the brief or the parties stipulate to waive it (6 Cir. R. 34(b)). Each side has 15 minutes unless the notice of argument provides otherwise; a motion for more time is due within 14 days of submission of the last brief and not later than 7 days before the hearing (6 Cir. R. 34(f))."
+  edge-argument-decide "Decision" -> decision { authority cite "FRAP 34" }
+}
+
+state decision: "Decision Issued" by court cite "FRAP 36; 6 Cir. R. 36"
+{
+  note "The court announces its decision in an opinion or order and the clerk enters a signed written judgment; a unanimous panel may decide from the bench (6 Cir. R. 36)."
+  edge-decision-issued "Judgment entered" -> rehearing-decision { authority cite "FRAP 36" }
+}
+
+decision rehearing-decision: "Rehearing Sought?" by applicant cite "FRAP 40(d)(1)"
+{
+  note "The petition is due 14 days after entry of judgment, or 45 days in a civil case with a United States party (FRAP 40(d)(1)); lit/frap encodes both periods. A petition seeking rehearing en banc must say so plainly on the cover and in the title, and a copy of the opinion or order accompanies it (6 Cir. R. 40(a)); an extension is granted only for the most compelling reasons (6 Cir. R. 40(c))."
+  edge-rehearing-decision-none "No petition" -> mandate { authority cite "FRAP 41(b)" }
+  edge-rehearing-decision-sought "Petition filed" -> rehearing-order {
+    authority cite "FRAP 40(d)(1); 6 Cir. R. 40"
+  }
+}
+
+state rehearing-order: "Rehearing Order" by court cite "FRAP 40; 6 Cir. R. 40"
+{
+  note "Granting rehearing en banc vacates the panel's opinion and judgment, stays the mandate and restores the case as a pending appeal (6 Cir. R. 40(d)). Only the original panel reviews a petition for panel rehearing alone (6 Cir. I.O.P. 40(a)(2))."
+  edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
+}
+
+state mandate: "Mandate Issued" by office cite "FRAP 41(b); 6 Cir. R. 41"
+{
+  note "The mandate issues under FRAP 41(b); lit/frap encodes the period. A stay pending certiorari requires a showing that the petition would present a substantial question and good cause (6 Cir. R. 41(a)); the motion must be received within 7 days after the rehearing time expires or from entry of an order on rehearing (6 Cir. R. 41(b))."
+  edge-mandate-further "Mandate issued" -> further-review { authority cite "FRAP 41(b)" }
+}
+
+decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+{
+  note "Certiorari under 28 U.S.C. § 1254; its period is lit/frap's. A petition for rehearing is not a prerequisite to certiorari (6 Cir. I.O.P. 40(a)(1)(B))."
+  edge-further-review-none "No further review" -> final-decision {
+    authority cite "28 U.S.C. § 1254"
+  }
+  edge-further-review-petition "Petition for certiorari" -> review-decided {
+    authority cite "28 U.S.C. § 1254"
+  }
+}
+
+state review-decided: "Further Review Decided" by court cite "28 U.S.C. § 1254"
+{
+  edge-review-decided-denied "Denied" -> review-denied { authority cite "28 U.S.C. § 1254" }
+  edge-review-decided-granted "Granted" -> review-granted { authority cite "28 U.S.C. § 1254" }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: No Appellate Jurisdiction" outcome [loss, dismissal, jurisdictional] cite "28 U.S.C. § 1291"
+terminal dismissed-untimely: "Dismissed: Untimely Notice" outcome [loss, dismissal] cite "FRAP 4(a)(1)(A)"
+terminal dismissed-prosecution: "Dismissed: Failure to Prosecute" outcome [loss, dismissal] cite "6 Cir. R. 26(b)"
+terminal final-decision: "Final: Decision Stands" outcome [final] cite "FRAP 41(b)"
+terminal review-denied: "Further Review Denied" outcome [final] cite "28 U.S.C. § 1254"
+
+terminal review-granted: "Further Review Granted" outcome [neutral] cite "28 U.S.C. § 1254"
+{
+  note "Certiorari granted; the merits are not modeled."
+}

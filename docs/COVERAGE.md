@@ -33,6 +33,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | first-circuit-court-of-appeals | `lit/ca1` | 0 | 1 | 9 | 0 |
 | eleventh-circuit-court-of-appeals | `lit/ca11` | 7 | 0 | 14 | 0 |
 | fifth-circuit-court-of-appeals | `lit/ca5` | 9 | 0 | 9 | 0 |
+| sixth-circuit-court-of-appeals | `lit/ca6` | 10 | 0 | 10 | 0 |
 | ca8-court-of-appeals | `lit/ca8` | 0 | 0 | 3 | 0 |
 | ninth-circuit-court-of-appeals | `lit/ca9` | 14 | 0 | 14 | 0 |
 | dc-circuit-court-of-appeals | `lit/cadc` | 0 | 0 | 2 | 0 |

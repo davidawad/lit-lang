@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "alnd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:0898b5a1bc35f512b31d928bc667baae82482f74f4785cc7d36c63e117da3630"
+semantic = "sha256:162b4a1e7a9efbf7190cc9000bff2c0f391596aca89fea7ebebc066bff700057"
+texts = [
+    "alnd-lr sources/nd-ala/local-rules.txt sha256:5fefae2739c468bdaf46051017e6b8ed7e8cb524bf8169cb68e25b3fce949f8f",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]

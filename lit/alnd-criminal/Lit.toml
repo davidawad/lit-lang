@@ -1,0 +1,45 @@
+# The Northern District of Alabama's Local Rules as a local-rule layer
+# over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)) at its criminal forum.
+# The Local Rules effective December 4, 2019 (sources/nd-ala) have no
+# criminal rules: the assignment of criminal matters to magistrate judges
+# is left to the court's General and Standing Orders (LR 72.1(c)), which
+# are not vendored. The layer declares no period and re-encodes no FRCrimP,
+# Speedy Trial Act or FRAP period.
+[package]
+name = "alnd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "alnd-criminal-local-rules"
+forum = "alnd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Northern District of Alabama: Local Rules (criminal)"
+description = "The Northern District of Alabama's Local Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp). The rules state no criminal period: criminal practice is set by the court's General and Standing Orders, which are not vendored."
+in_force = "2019-12-04"
+known_at = "2026-10-28"
+unknown_before = "2019-12-04"
+jurisdiction = "United States District Court, N.D. Alabama (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+office = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "alnd-lr"
+issuer = "United States District Court for the Northern District of Alabama"
+date = "2019-12-04"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.alnd-lr]
+title = "Local Rules of the United States District Court for the Northern District of Alabama (effective December 4, 2019)"
+url = "https://alnd.uscourts.gov/sites/alnd/files/ALND%20Local%20Rules%20Revised%2012-04-2019.pdf"
+path = "sources/nd-ala/local-rules.txt"
+path_sha256 = "5fefae2739c468bdaf46051017e6b8ed7e8cb524bf8169cb68e25b3fce949f8f"
+sha256 = "b9295a56444a7d46926807423bca614fae4ae5ce04f5c6031e82a7eb6870e4a2"
+as_of = "2019-12-04"

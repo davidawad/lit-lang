@@ -1,0 +1,583 @@
+module bankr-hi-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
+
+// The Bankr. D. Haw. court's own periods, counted under FRBP 9006(a).
+// The FRBP periods (schedules and their extension, the chapter 13 plan,
+// claims in chapter 7, 12 and 13 cases, exemptions, discharge,
+// dischargeability, the adversary answer and summons, new trial, appeals)
+// are lit/frbp's and are not declared again. Not repeated either, as only
+// restating a national period: 28 days' notice of a disclosure statement
+// hearing (LBR 3017-1(a); FRBP 3017(a)); the FRCP 26(f) conference at
+// least 21 days before the scheduling conference (LBR 7026-1(a); FRBP
+// 7026); the eviction certification within 30 days after the petition
+// (LBR 4001-4(c); 11 U.S.C. § 362(l)); and a stay-extension hearing within
+// 30 days of the petition (LBR 4001-5(a); 11 U.S.C. § 362(c)(3)(B)).
+//
+// Stated in the rules but not declared: the "earlier" and "later of"
+// deadlines (payment advices 7 days before the § 341 meeting or 45 days
+// after the petition, LBR 1007-1(b); the chapter 13 trustee's final report
+// on conversion, LBR 1019-5; the earliest date of a contested Rule 2004
+// examination, LBR 2004-1(b), (c); reimbursement claims, LBR 3001-2(c);
+// chapter 13 plan objections 7 days before the hearing or 21 days after
+// filing, LBR 3015-3(a); the trustee's notice of claims, LBR 3070-2(d);
+// codebtor stay opposition, LBR 4001-1(e)(2)); notice minimums a party
+// gives (21 days of a cash collateral stipulation, LBR 4001-1(g)); the
+// 3-day intention-to-proceed, status and countermotion periods (LBR
+// 3017-1(d), 3020-1(d), 9013-1(d), 9006-1(c)); the 70-day limit on serving
+// amended chapter 13 plans on all creditors (LBR 3015-1(g)(1)); the 60-month
+// plan extension (LBR 3015-2(b)); the 90-day lien retention after a sale
+// (LBR 2083-2(e)); the 90-day transcript restriction (LBR 5077-1(c)); the
+// 30-day conformed-copy retention (LBR 9072-1(i)); the five-day late-filing
+// rule (LBR 5005-2(b)); and the Bankruptcy Dispute Resolution program's
+// periods (LBR 9019-2). The earlier outline's Supreme Court decisions
+// construe the Code and the FRBP, not these rules, and are removed here:
+// no reporter text is vendored.
+
+/// A supporting or responsive brief or memorandum: not more than 25 pages
+/// unless the filer certifies it holds no more than 6,250 words (Bankr. D.
+/// Haw. LBR 9013-2(a)).
+limit brief {
+  pages <= 25 cite "Bankr. D. Haw. LBR 9013-2(a)"
+  words <= 6_250 cite "Bankr. D. Haw. LBR 9013-2(a)"
+  requires certificate compliance for [words] cite "Bankr. D. Haw. LBR 9013-2(a)"
+} cite "Bankr. D. Haw. LBR 9013-2(a)"
+
+/// A reply brief or memorandum: not more than 15 pages unless the filer
+/// certifies it holds no more than 3,750 words (Bankr. D. Haw. LBR
+/// 9013-2(a)).
+limit reply-brief {
+  pages <= 15 cite "Bankr. D. Haw. LBR 9013-2(a)"
+  words <= 3_750 cite "Bankr. D. Haw. LBR 9013-2(a)"
+  requires certificate compliance for [words] cite "Bankr. D. Haw. LBR 9013-2(a)"
+} cite "Bankr. D. Haw. LBR 9013-2(a)"
+
+/// A principal trial or post-trial brief: not more than 30 pages, or with a
+/// certificate not more than 13,000 words or 1,300 lines (Bankr. D. Haw.
+/// LBR 7017-1(b)).
+limit trial-brief {
+  pages <= 30 cite "Bankr. D. Haw. LBR 7017-1(b)"
+  words <= 13_000 cite "Bankr. D. Haw. LBR 7017-1(b)"
+  lines <= 1_300 cite "Bankr. D. Haw. LBR 7017-1(b)"
+  requires certificate compliance for [words, lines] cite "Bankr. D. Haw. LBR 7017-1(b)"
+} cite "Bankr. D. Haw. LBR 7017-1(b)"
+
+/// A concise statement supporting or opposing summary judgment: not more
+/// than 5 pages unless it holds no more than 1,500 words, with the
+/// certificate (Bankr. D. Haw. LBR 7056-1(c)).
+limit concise-statement {
+  pages <= 5 cite "Bankr. D. Haw. LBR 7056-1(c)"
+  words <= 1_500 cite "Bankr. D. Haw. LBR 7056-1(c)"
+  requires certificate compliance for [words] cite "Bankr. D. Haw. LBR 7056-1(c)"
+} cite "Bankr. D. Haw. LBR 7056-1(c)"
+
+/// Amendments to lists or schedules are filed electronically (Bankr. D.
+/// Haw. LBR 1009-1(b)).
+event AmendmentsFiledElectronically()
+/// A chapter 7 debtor's motion to convert is filed (Bankr. D. Haw. LBR
+/// 1017-1).
+event ConversionMotionFiled()
+/// The notice to file proofs of claim describing the trustee's expense
+/// procedure (Bankr. D. Haw. LBR 2015-1(a)).
+event ClaimsNoticeDated()
+/// A chapter 7 trustee's motion and notice to approve an administrative
+/// expense over $1,000 is served (Bankr. D. Haw. LBR 2015-1(b)).
+event AdministrativeExpenseNoticeServed()
+/// The Notice of Appointment of Subchapter V Trustee is filed (Bankr. D.
+/// Haw. LBR 2015-2).
+event TrusteeAppointmentNoticeFiled()
+/// The hearing on a motion to dismiss a chapter 13 case (Bankr. D. Haw. LBR
+/// 2083-1(e)).
+event DismissalHearing()
+/// The hearing on a chapter 13 debtor's motion to sell property (Bankr. D.
+/// Haw. LBR 2083-2(c), (d)).
+event SaleHearing()
+/// A sale of property closes (Bankr. D. Haw. LBR 2083-2(f)).
+event SaleClosed()
+/// A change in an attorney's contact information takes effect (Bankr. D.
+/// Haw. LBR 2091-1(c)).
+event AttorneyContactChanged()
+/// Notice of a claim filed for a creditor under FRBP 3004 or 3005 is served
+/// (Bankr. D. Haw. LBR 3004-1(b)).
+event SurrogateClaimNoticeServed()
+/// The scheduled hearing on a claim objection (Bankr. D. Haw. LBR
+/// 3007-1(c)).
+event ClaimObjectionHearing()
+/// The confirmation hearing (Bankr. D. Haw. LBR 3015-1(g), 3018-1(c),
+/// 3020-1(b)).
+event ConfirmationHearing()
+/// The hearing on a motion to modify a confirmed chapter 13 plan (Bankr. D.
+/// Haw. LBR 3015-2(b)).
+event ModificationHearing()
+/// An order denying chapter 13 plan confirmation is entered (Bankr. D. Haw.
+/// LBR 3015-3(d)).
+event ConfirmationDenied()
+/// The hearing on approval of a disclosure statement (Bankr. D. Haw. LBR
+/// 3017-1(c)).
+event DisclosureStatementHearing()
+/// An application for a final decree is filed (Bankr. D. Haw. LBR 3022-1).
+event FinalDecreeApplicationFiled()
+/// The chapter 13 trustee files the notice of claims filed (Bankr. D. Haw.
+/// LBR 3070-2(g)).
+event ClaimsNoticeFiled()
+/// A chapter 13 case is dismissed or converted (Bankr. D. Haw. LBR
+/// 3070-2(i)).
+event CaseDismissedOrConverted()
+/// The hearing on a motion for relief from the automatic stay (Bankr. D.
+/// Haw. LBR 4001-1(e)).
+event StayReliefHearing()
+/// Notice of an opportunity to object to a rent payment certification is
+/// served on the landlord (Bankr. D. Haw. LBR 4001-4(c)).
+event RentCertificationNoticeServed()
+/// A chapter 11 individual's discharge certification and notice is filed
+/// (Bankr. D. Haw. LBR 4004-3(b)).
+event ChapterElevenDischargeNoticeFiled()
+/// The clerk's notice of a chapter 12 or 13 discharge certification (Bankr.
+/// D. Haw. LBR 4004-3(c)).
+event DischargeCertificationNoticeDated()
+/// The clerk's notice rejecting a document (Bankr. D. Haw. LBR 5005-1(c)).
+event RejectionNoticeDated()
+/// A document requiring a Declaration re: Electronic Filing is filed
+/// (Bankr. D. Haw. LBR 5005-4(f)).
+event DocumentFiledElectronically()
+/// A transcript is filed (Bankr. D. Haw. LBR 5077-1(f)).
+event TranscriptFiled()
+/// The court grants a motion to redact a transcript (Bankr. D. Haw. LBR
+/// 5077-1(g)).
+event RedactionMotionGranted()
+/// A notice of need to file a proof of claim describing a sale procedure is
+/// filed (Bankr. D. Haw. LBR 6004-1(d)).
+event ClaimNoticeFiled()
+/// The scheduling conference in an adversary proceeding (Bankr. D. Haw. LBR
+/// 7016-1(b)).
+event SchedulingConference()
+/// Notice of a proposed dismissal of a claim objecting to discharge is
+/// filed (Bankr. D. Haw. LBR 7041-1(b)).
+event DischargeDismissalNoticeFiled()
+/// The hearing on a motion for default judgment (Bankr. D. Haw. LBR
+/// 7055-1(b)).
+event DefaultJudgmentHearing()
+/// The trial date (Bankr. D. Haw. LBR 7056-1(j), 9074-1(a)).
+event TrialDate()
+/// The hearing on a motion (Bankr. D. Haw. LBR 9013-1(c), 9074-1(b)).
+event MotionHearing()
+/// A motion to seal is filed (Bankr. D. Haw. LBR 9018-1(c)).
+event SealMotionFiled()
+/// An interlocutory order is entered (Bankr. D. Haw. LBR 9024-1(a)).
+event InterlocutoryOrderEntered()
+/// The court announces its ruling (Bankr. D. Haw. LBR 9072-1(d)).
+event RulingAnnounced()
+/// The drafting party gives notice of submission of a proposed order
+/// (Bankr. D. Haw. LBR 9072-1(d)).
+event OrderSubmissionNoticed()
+/// A request for remote participation is filed (Bankr. D. Haw. LBR
+/// 9074-1(a)).
+event RemoteRequestFiled()
+
+/// Bankr. D. Haw. LBR 1009-1(b): when amendments are filed electronically,
+/// the debtor submits the signed declaration not later than 7 days after
+/// the date of electronic filing.
+deadline amendment-declaration-period: 7.days after AmendmentsFiledElectronically() counted_by frcp6 cite "Bankr. D. Haw. LBR 1009-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 1017-1: the court may grant a chapter 7 debtor's
+/// motion to convert without further notice or hearing if no objection is
+/// filed within 14 days after the motion was filed.
+deadline conversion-objection-period: 14.days after ConversionMotionFiled() counted_by frcp6 cite "Bankr. D. Haw. LBR 1017-1"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 1074-1(b): a debtor that is not an individual files
+/// its designation of a natural person responsible for the debtor's duties
+/// within 14 days after the petition is filed.
+deadline responsible-individual-period: 14.days after PetitionFiled() counted_by frcp6 cite "Bankr. D. Haw. LBR 1074-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 2015-1(a)(2): a chapter 7 trustee's notice to file
+/// claims advises that parties may object to the trustee's procedure for
+/// paying small administrative expenses within 28 days after the date of
+/// the notice.
+deadline expense-procedure-objection-period: 28.days after ClaimsNoticeDated() counted_by frcp6 cite "Bankr. D. Haw. LBR 2015-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 2015-1(b): the trustee's motion to pay an
+/// administrative expense over $1,000 provides 14-day notice of a deadline
+/// to object.
+deadline administrative-expense-objection-period: 14.days after AdministrativeExpenseNoticeServed() counted_by frcp6 cite "Bankr. D. Haw. LBR 2015-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 2015-2: unless the court orders otherwise, the
+/// Subchapter V debtor tenders $1,000 to the Subchapter V Trustee no later
+/// than 14 days after the filing of the Notice of Appointment.
+deadline subchapter-v-deposit-period: 14.days after TrusteeAppointmentNoticeFiled() counted_by frcp6 cite "Bankr. D. Haw. LBR 2015-2"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 2083-1(e)(1): a motion to dismiss a chapter 13 case
+/// requires 28-day notice of the hearing to the debtor.
+deadline dismissal-hearing-notice-period: 28.days before DismissalHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 2083-1(e)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 2083-1(e)(2): the debtor's attorney meets and confers
+/// with the trustee at least 7 days before the dismissal hearing.
+deadline dismissal-meet-and-confer-period: 7.days before DismissalHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 2083-1(e)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 2083-2(c): notice of the hearing on a chapter 13
+/// debtor's motion to sell is given not less than 28 days in advance of the
+/// hearing.
+deadline sale-hearing-notice-period: 28.days before SaleHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 2083-2(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 2083-2(d): an objection to the sale is timely if
+/// filed not less than 7 days before the hearing.
+deadline sale-objection-period: 7.days before SaleHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 2083-2(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 2083-2(f)(1): within 14 days after the closing of the
+/// sale, the debtor files a report of sale.
+deadline sale-report-period: 14.days after SaleClosed() counted_by frcp6 cite "Bankr. D. Haw. LBR 2083-2(f)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 2091-1(c): an attorney files notice of a change of
+/// contact information in each pending case within 14 days of the effective
+/// date of the change.
+deadline contact-change-notice-period: 14.days after AttorneyContactChanged() counted_by frcp6 cite "Bankr. D. Haw. LBR 2091-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 3003-1: unless the court orders otherwise, proofs of
+/// claim or interest in a chapter 11 case are filed within 90 days after
+/// the first date set for the § 341 meeting.
+deadline chapter-11-claim-period: 90.days after FirstMeetingDate() counted_by frcp6 cite "Bankr. D. Haw. LBR 3003-1"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 3003-1: in a Subchapter V case a proof of claim is
+/// timely if filed not later than 70 days after the order for relief under
+/// that chapter.
+deadline subchapter-v-claim-period: 70.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. D. Haw. LBR 3003-1"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 3004-1(b): a creditor may file an amended proof of
+/// claim within 30 days after service of the notice of a claim filed on its
+/// behalf.
+deadline amended-surrogate-claim-period: 30.days after SurrogateClaimNoticeServed() counted_by frcp6 cite "Bankr. D. Haw. LBR 3004-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 3007-1(b): a claim objection gives not less than 30
+/// days' notice of the deadline to respond.
+deadline claim-objection-notice-period: 30.days before ClaimObjectionHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 3007-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 3007-1(c): a response to a claim objection is due 7
+/// days before the scheduled hearing.
+deadline claim-objection-response-period: 7.days before ClaimObjectionHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 3007-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 3015-1(g)(3)(B): the debtor serves the chapter 13
+/// plan and files a certificate of service at least 28 days before the
+/// confirmation hearing.
+deadline plan-service-period: 28.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 3015-1(g)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 3015-2(b)(1)(C), (2): an objection or response to a
+/// motion to modify a confirmed chapter 13 plan is filed not later than 7
+/// days before the hearing.
+deadline modification-objection-period: 7.days before ModificationHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 3015-2(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 3015-3(d)(1): the case is dismissed unless, within 14
+/// days after entry of the order denying confirmation, the debtor files an
+/// amended plan or converts.
+deadline denied-confirmation-action-period: 14.days after ConfirmationDenied() counted_by frcp6 cite "Bankr. D. Haw. LBR 3015-3(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 3017-1(c): a written objection to a disclosure
+/// statement is filed not later than 7 days before the hearing.
+deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 3017-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 3018-1(c): the plan proponent files a ballot
+/// tabulation report not later than 7 days before the confirmation hearing.
+deadline ballot-report-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 3018-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 3020-1(b): unless the court orders otherwise,
+/// objections to confirmation of a chapter 11 plan are filed not later than
+/// 7 days before the hearing.
+deadline confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 3020-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 3022-1: if no objection is filed within 30 days after
+/// the filing of an application for a final decree, the court may enter it.
+deadline final-decree-objection-period: 30.days after FinalDecreeApplicationFiled() counted_by frcp6 cite "Bankr. D. Haw. LBR 3022-1"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 3070-2(g): to suspend distribution on a disputed
+/// claim, the debtor files and serves an objection not later than 28 days
+/// after the trustee's notice of claims filed.
+deadline disputed-claim-objection-period: 28.days after ClaimsNoticeFiled() counted_by frcp6 cite "Bankr. D. Haw. LBR 3070-2(g)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 3070-2(i): debtor's counsel seeking a distribution
+/// after dismissal or conversion files a fee application not later than 14
+/// days after it.
+deadline post-dismissal-fee-application-period: 14.days after CaseDismissedOrConverted() counted_by frcp6 cite "Bankr. D. Haw. LBR 3070-2(i)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 4001-1(e)(1)(A): an opposition to a motion for relief
+/// from the automatic stay is filed and served 14 days before the hearing.
+deadline stay-relief-opposition-period: 14.days before StayReliefHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 4001-1(e)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 4001-1(e)(1)(B): the movant's reply is filed and
+/// served 7 days before the hearing.
+deadline stay-relief-reply-period: 7.days before StayReliefHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 4001-1(e)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 4001-4(c)(2): the debtor's notice gives the landlord
+/// a 14-day objection deadline on the rent payment certification.
+deadline rent-certification-objection-period: 14.days after RentCertificationNoticeServed() counted_by frcp6 cite "Bankr. D. Haw. LBR 4001-4(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 4004-3(b)(1): an objection to a chapter 11
+/// individual's discharge certification is filed within 30 days after the
+/// certification and notice are filed.
+deadline chapter-11-discharge-objection-period: 30.days after ChapterElevenDischargeNoticeFiled() counted_by frcp6 cite "Bankr. D. Haw. LBR 4004-3(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 4004-3(c)(1): any objection to a chapter 12 or 13
+/// discharge certification is filed within 30 days after the date of the
+/// notice.
+deadline chapter-13-discharge-objection-period: 30.days after DischargeCertificationNoticeDated() counted_by frcp6 cite "Bankr. D. Haw. LBR 4004-3(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 5005-1(c)(4): a party affected by the clerk's
+/// rejection of a document may move for judicial action within 7 days after
+/// the rejection notice.
+deadline rejection-review-period: 7.days after RejectionNoticeDated() counted_by frcp6 cite "Bankr. D. Haw. LBR 5005-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 5005-4(f): the Declaration re: Electronic Filing is
+/// filed within 7 days after the electronic filing of the document.
+deadline electronic-filing-declaration-period: 7.days after DocumentFiledElectronically() counted_by frcp6 cite "Bankr. D. Haw. LBR 5005-4(f)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 5077-1(f): a party requests redaction of personal
+/// identifiers, or moves to redact other information, not later than 21
+/// days after the transcript is filed.
+deadline transcript-redaction-period: 21.days after TranscriptFiled() counted_by frcp6 cite "Bankr. D. Haw. LBR 5077-1(f)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 5077-1(g): the transcriber files a redacted
+/// transcript not later than 14 days after the court grants the motion.
+deadline redacted-transcript-period: 14.days after RedactionMotionGranted() counted_by frcp6 cite "Bankr. D. Haw. LBR 5077-1(g)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 6004-1(d): an objection to the sale procedure
+/// described in a notice is filed not later than 21 days after the notice
+/// is filed.
+deadline sale-procedure-objection-period: 21.days after ClaimNoticeFiled() counted_by frcp6 cite "Bankr. D. Haw. LBR 6004-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 7016-1(b)(2): each party files and serves a
+/// scheduling conference statement not later than 7 days before the
+/// scheduling conference.
+deadline scheduling-statement-period: 7.days before SchedulingConference() counted_by frcp6 cite "Bankr. D. Haw. LBR 7016-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 7041-1(b)(3): absent an objection filed within 14
+/// days after the notice is filed, the court may dismiss the objection to
+/// discharge.
+deadline discharge-dismissal-objection-period: 14.days after DischargeDismissalNoticeFiled() counted_by frcp6 cite "Bankr. D. Haw. LBR 7041-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 7055-1(b): a default judgment under FRCP 55(b)(2) is
+/// obtained on a motion heard on notice of not less than 28 days to the
+/// defendant.
+deadline default-judgment-notice-period: 28.days before DefaultJudgmentHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 7055-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 7056-1(j): a motion for summary judgment is filed so
+/// as to be heard not later than 28 days before the trial date.
+deadline summary-judgment-hearing-period: 28.days before TrialDate() counted_by frcp6 cite "Bankr. D. Haw. LBR 7056-1(j)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 9013-1(c)(1): unless the court directs otherwise, a
+/// movant gives notice of the hearing not later than 28 days before it.
+deadline motion-notice-period: 28.days before MotionHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 9013-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 9013-1(c)(2): all responses are filed and served not
+/// less than 14 days before the hearing.
+deadline motion-response-period: 14.days before MotionHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 9013-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 9013-1(c)(2): the movant may reply not less than 7
+/// days before the hearing.
+deadline motion-reply-period: 7.days before MotionHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 9013-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 9018-1(c): no later than 7 days after a motion to
+/// seal is filed, a party contending the information is not entitled to
+/// confidential treatment may object.
+deadline seal-objection-period: 7.days after SealMotionFiled() counted_by frcp6 cite "Bankr. D. Haw. LBR 9018-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 9024-1(a): a motion for reconsideration of an
+/// interlocutory order is filed no later than 14 days after its entry.
+deadline reconsideration-period: 14.days after InterlocutoryOrderEntered() counted_by frcp6 cite "Bankr. D. Haw. LBR 9024-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 9072-1(d)(1), (2): the drafting party submits or
+/// circulates the proposed order within 7 days after the announcement of
+/// the court's ruling.
+deadline proposed-order-period: 7.days after RulingAnnounced() counted_by frcp6 cite "Bankr. D. Haw. LBR 9072-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 9072-1(d)(3): an objecting party submits a statement
+/// of objections and an alternate form of order within 7 days after the
+/// notice of submission.
+deadline form-of-order-objection-period: 7.days after OrderSubmissionNoticed() counted_by frcp6 cite "Bankr. D. Haw. LBR 9072-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 9074-1(a): a request for remote participation in a
+/// trial or evidentiary hearing is filed no later than 28 days before it.
+deadline remote-participation-request-period: 28.days before TrialDate() counted_by frcp6 cite "Bankr. D. Haw. LBR 9074-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 9074-1(a): objections to remote participation are
+/// filed within 7 days after the request is filed.
+deadline remote-participation-objection-period: 7.days after RemoteRequestFiled() counted_by frcp6 cite "Bankr. D. Haw. LBR 9074-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Haw. LBR 9074-1(b): for good cause, a party moves for a remote
+/// video appearance at least 14 days before the hearing.
+deadline remote-video-motion-period: 14.days before MotionHearing() counted_by frcp6 cite "Bankr. D. Haw. LBR 9074-1(b)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed with notice of hearing" by applicant cite "Bankr. D. Haw. LBR 9013-1(c)"
+{
+  note "Notice of the hearing is given not later than 28 days before it; responses are due 14 days, and any reply 7 days, before the hearing (LBR 9013-1(c)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-opposed "Response filed and served" -> opposed {
+    authority cite "Bankr. D. Haw. LBR 9013-1(c)"
+  }
+  edge-motion-filed-unopposed "No timely response" -> ruling {
+    authority cite "Bankr. D. Haw. LBR 9013-1(c)"
+  }
+}
+
+state opposed: "Response filed; reply and hearing" by opponent cite "Bankr. D. Haw. LBR 9013-1(c)"
+{
+  note "No surreply or further briefing is permitted without leave of court."
+  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. D. Haw. LBR 9013-1(c)" }
+}
+
+decision ruling: "Motion decided" by court cite "Bankr. D. Haw. LBR 9013-1(c)"
+{
+  note "If no one files a timely response, the movant may file a declaration and request for entry of an order (LBR 9013-1(c)(3)); the drafting party submits the order within 7 days after the ruling (LBR 9072-1(d))."
+  edge-ruling-granted "Granted" -> decided { authority cite "Bankr. D. Haw. LBR 9072-1(d)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "Bankr. D. Haw. LBR 9072-1(d)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. D. Haw. LBR 1001-1"

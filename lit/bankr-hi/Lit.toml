@@ -1,0 +1,44 @@
+# The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the District
+# of Hawaii over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
+# only the periods and limits the Local Bankruptcy Rules themselves state
+# and re-encodes no FRBP period. It is a base package, not a `kind =
+# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011, as
+# for lit/bankr-ak). Each period is counted under FRBP 9006(a), the FRCP
+# 6(a) method (core's frcp6). The rules are those of December 1, 2025
+# (sources/bankr-hi); no amending order is vendored, so there are no dated
+# layers and a query before December 1, 2025 is a hole in the corpus.
+[package]
+name = "bankr-hi-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-hi-local-rules"
+forum = "bankr-hi"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the District of Hawaii: Local Bankruptcy Rules"
+description = "The Bankr. D. Haw. Local Bankruptcy Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp): amendments, conversion, responsible individuals, trustee administrative expenses, Subchapter V deposits, chapter 13 dismissal, sales and plan service, modification and confirmation denial, chapter 11 and Subchapter V claims, claim objections, disclosure statements, ballots and confirmation objections, final decrees, the trustee's notice of claims, stay relief, rent certifications, discharge certifications, rejected documents, transcript redaction, adversary scheduling, default and summary judgment, motion practice, sealing, reconsideration, proposed orders and remote appearances, and the brief, trial brief and concise statement page and word limits."
+in_force = "2025-12-01"
+known_at = "2026-10-28"
+unknown_before = "2025-12-01"
+jurisdiction = "U.S. Bankruptcy Court for the District of Hawaii"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.hib-lbr]
+title = "Local Bankruptcy Rules, U.S. Bankruptcy Court for the District of Hawaii (December 1, 2025)"
+url = "https://www.hib.uscourts.gov/sites/hib/files/documents/local-rules/LBR2025_dec01_rev2.pdf"
+path = "sources/bankr-hi/hib-lbr-2025-12-01-sectioned.txt"
+path_sha256 = "c726e7910c9e114feda5966d2636776815faa362ac33f03ca5392665d893f30f"
+sha256 = "302353db200f52ff227d8aade52ee48abc999fa743bedad0647859722931e33f"
+as_of = "2025-12-01"
+cite_prefixes = ["Bankr. D. Haw. LBR"]
+section_heading = "LBR {n}"

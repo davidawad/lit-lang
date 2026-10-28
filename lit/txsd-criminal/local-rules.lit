@@ -1,0 +1,120 @@
+module txsd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Southern District of Texas's own criminal periods, counted under the
+// criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here. Alternative delivery of a
+// presentence report extends no time limit (Cr32.4).
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: the presentence report's disclosure not less than 35 days before
+// sentencing unless the defendant waives it (Cr32.2; FRCrimP 32(e)(2)),
+// written objections within 14 days after disclosure of the initial
+// report (Cr32.6(A); FRCrimP 32(f)(1)), the final report no later than 7
+// days before sentencing (Cr32.7(B); FRCrimP 32(g)), and, unless the
+// defendant waives it, a sentencing date at least 7 days after the final
+// report is delivered (Cr32.10). At the determination of guilt the court
+// fixes the initial disclosure date, the normal schedule for the initial
+// report being 35 days (Cr32.2); that date is set by order. A party not
+// objecting delivers a statement of non-opposition (Cr32.6(B)); absent
+// good cause no new objection is heard at sentencing (Cr32.9).
+//
+// Conditions that are not deadlines from an event stay in notes: the
+// judicial officer sets the time for pretrial motions and responses at
+// arraignment (Cr12.5), and a motion or response that does not comply is
+// waived (Cr12.1); a motion to waive the presentence investigation is
+// filed before rearraignment (Cr32.1(A)); a request to attend presentence
+// interviews is made to the probation office immediately after the
+// determination of guilt (Cr32.3(A)); grand jury witness names may be
+// sealed for cause (CrLR 6); jurors are contacted after trial only with
+// leave (Cr24.1). Electronic filing follows Civil Local Rule 5 (CrLR 49).
+// Venue within the district (CrLR 18), bonds (Cr46.1, 46.2), courtroom
+// behavior and admission (Cr57.1 to 57.3) and petty offenses (Cr58.1)
+// state no period.
+//
+// The earlier S.D. Tex. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Brady v. Maryland, Barker v. Wingo, Zedner v.
+// United States, Boykin v. Alabama, Missouri v. Frye, Jackson v. Virginia,
+// United States v. Booker, Roe v. Flores-Ortega, Garza v. Idaho) are
+// FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// The court determines the defendant's guilt (S.D. Tex. Cr32.3(A)).
+event GuiltDetermined()
+/// The time for objections to the initial presentence report ends (S.D.
+/// Tex. Cr32.7(B)).
+event ObjectionPeriodEnded()
+/// An exhibit is listed and made available to the other parties (S.D.
+/// Tex. Cr55.2(A)).
+event ExhibitListed()
+/// The trial date (S.D. Tex. Cr55.2(B)).
+event TrialScheduled()
+/// The trial is completed (S.D. Tex. Cr55.2(C)(1)).
+event TrialCompleted()
+/// The case is disposed of and no appeal is taken (S.D. Tex. Cr55.2(C)(2)).
+event DisposedWithoutAppeal()
+/// The clerk gives written notice that exhibits returned by the court of
+/// appeals are to be removed (S.D. Tex. Cr55.2(C)(2)).
+event ReturnedExhibitsNoticed()
+
+/// S.D. Tex. Cr32.3(A): defense counsel's request to be present at the
+/// probation officer's interviews, made immediately after the
+/// determination of guilt, is followed by written notice to the probation
+/// office within 7 days.
+deadline interview-attendance-notice: 7.days after GuiltDetermined() counted_by frcrimp45 cite "S.D. Tex. Cr 32.3(A)"
+{
+  forum frcrimp
+}
+
+/// S.D. Tex. Cr32.7(B): within 14 days after the time for objections, but
+/// in no event later than 7 days before sentencing (FRCrimP 32(g), not
+/// restated), the probation office submits the final report to the
+/// sentencing judge with an addendum of unresolved objections.
+deadline final-report: 14.days after ObjectionPeriodEnded() counted_by frcrimp45 cite "S.D. Tex. Cr 32.7(B)"
+{
+  forum frcrimp
+}
+
+/// S.D. Tex. Cr55.2(A): a party requiring authentication of an exhibit
+/// notifies the offering party in writing within 7 days after the exhibit
+/// is listed and made available; failure to object in writing before
+/// trial concedes authenticity.
+deadline authentication-notice: 7.days after ExhibitListed() counted_by frcrimp45 cite "S.D. Tex. Cr 55.2(A)"
+{
+  forum frcrimp
+}
+
+/// S.D. Tex. Cr55.2(B): objections to the admissibility of exhibits are
+/// made at least 7 days before trial by notifying the court in writing of
+/// the disputes, with copies of the disputed exhibits and authority.
+deadline exhibit-objections: 7.days before TrialScheduled() counted_by frcrimp45 cite "S.D. Tex. Cr 55.2(B)"
+{
+  forum frcrimp
+}
+
+/// S.D. Tex. Cr55.2(C)(1): exhibits not easily stored in a file folder are
+/// withdrawn within 7 days after the completion of the trial, and reduced
+/// reproductions or photographs substituted.
+deadline oversized-exhibit-withdrawal: 7.days after TrialCompleted() counted_by frcrimp45 cite "S.D. Tex. Cr 55.2(C)"
+{
+  forum frcrimp
+}
+
+/// S.D. Tex. Cr55.2(C)(2): if there is no appeal, the offering party
+/// removes its exhibits within thirty days after disposition of the case;
+/// exhibits not removed are disposed of by the clerk at the offering
+/// party's expense.
+deadline exhibit-removal: 30.days after DisposedWithoutAppeal() counted_by frcrimp45 cite "S.D. Tex. Cr 55.2(C)"
+{
+  forum frcrimp
+}
+
+/// S.D. Tex. Cr55.2(C)(2): when there is an appeal, the offering party
+/// removes exhibits returned by the court of appeals within 14 days after
+/// the clerk's written notice.
+deadline returned-exhibit-removal: 14.days after ReturnedExhibitsNoticed() counted_by frcrimp45 cite "S.D. Tex. Cr 55.2(C)"
+{
+  forum frcrimp
+}

@@ -1,0 +1,55 @@
+# The U.S. District Court for the Southern District of Texas's local
+# criminal rules (CrLR 6 to CrLR 58, with their Cr sub-rules) as a
+# local-rule layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it
+# declares only the periods the local criminal rules themselves state and
+# re-encodes no FRCrimP, Speedy Trial Act or FRAP 4(b) period (one source
+# of truth: lit/frcrimp). Each period is counted under FRCrimP 45(a),
+# which governs "any local rule", so each deadline names `forum frcrimp`.
+# The rules are the edition the court serves as current (effective May 1,
+# 2000, "Reprinted March 2026", newest listed change LR 16.4 effective
+# March 27, 2026; the criminal rules were last amended by CrLR 18,
+# effective May 14, 2019; sources/txsd), so in_force is March 27, 2026;
+# earlier editions are not vendored, so a query before it is a hole in
+# the corpus. The court's Speedy Trial Act plan (18 U.S.C. § 3165) is not
+# vendored. An appeal goes to the Fifth Circuit under lit/frcrimp's FRAP
+# 4(b) period and lit/ca5.
+[package]
+name = "txsd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "txsd-criminal-local-rules"
+forum = "txsd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Southern District of Texas: Local Criminal Rules"
+description = "The U.S. District Court for the Southern District of Texas's local criminal rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): defense counsel's notice of attendance at presentence interviews, the final presentence report after the objection period, authentication of and objections to trial exhibits, and the withdrawal and removal of exhibits."
+in_force = "2026-03-27"
+known_at = "2026-10-28"
+unknown_before = "2026-03-27"
+jurisdiction = "U.S. District Court for the Southern District of Texas (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "txsd-cr"
+issuer = "U.S. District Court for the Southern District of Texas"
+date = "2026-03-27"
+designation = "Local Rules, Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.txsd-cr]
+title = "Local Rules of the United States District Court for the Southern District of Texas, Criminal Rules (effective May 1, 2000, reprinted March 2026)"
+url = "https://www.txs.uscourts.gov/sites/txs/files/LR_March_2026.pdf"
+path = "sources/txsd/tx-sd-local-rules-sectioned.txt"
+path_sha256 = "da2c8f7e181658ea39b0f0dbe367930bb16f62b9cfe663232b0eecc3d40d4523"
+sha256 = "932940b61024065adaf0ac67efe16817871cdd41ca2398956352eea808c75eac"
+as_of = "2026-03-27"
+cite_prefixes = ["S.D. Tex. Cr"]
+section_heading = "Cr {n}"

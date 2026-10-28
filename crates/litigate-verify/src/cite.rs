@@ -12,7 +12,9 @@
 //! the pack's citation syntax plus the bindings' `cite_prefixes`), so the
 //! verdict here and the sidecar can never disagree. Case citations and
 //! other text the parser treats as out of scope are not rule cites and are
-//! never checked (the same policy as the engine's `lint` op).
+//! not checked (the same policy as the engine's `lint` op), except text
+//! that names a rule body a vendored source heads its sections with, or a
+//! division of it, which is a rule cite the parser could not bind.
 //!
 //! A cite of a declaration `litigate import` marked `/// imported` is
 //! exempt in `dev`: its failures are warnings, so a freshly imported pack
@@ -21,7 +23,7 @@ use crate::context::{Cite, GAP, GAP_WORDS};
 use crate::diag::{emit, note};
 use crate::Context;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity, Span};
-use litigate_engine::cite::{parse_cite_string, SourceCorpus};
+use litigate_engine::cite::{parse_cite_string, CiteGrammar, Family, SourceCorpus};
 use litigate_engine::model::Pack;
 use litigate_lower::source_map::{Citations, L0Section, Pin};
 use litigate_sema::Hole;
@@ -46,7 +48,7 @@ pub(crate) fn unresolved(
                 .map(Some(&text.to_owned()))
                 .map(|m| m.sections)
                 .unwrap_or_default();
-            let unkeyed = unkeyed(&citations, text, &span, cx);
+            let unkeyed = unkeyed(&citations, corpus, text, &span, cx);
             let hole = written(holes, text, &span);
             sections
                 .iter()
@@ -231,13 +233,19 @@ fn within(inner: &Span, outer: &Span) -> bool {
         && (inner.end_line, inner.end_col) <= (outer.end_line, outer.end_col)
 }
 
-/// Rule or statute citations that do not normalize to a heading at all,
-/// and citations that continue a declared rule prefix with a section or
+/// Rule or statute citations that do not normalize to a heading at all;
+/// citations that continue a declared rule prefix with a section or
 /// pinpoint that does not parse (`SDCL 15-6-4(z)` under the prefix
-/// `SDCL 15-6-4(`): the parser leaves those out of scope, so nothing else
-/// would check them.
+/// `SDCL 15-6-4(`) or with a division the prefix's vendored text numbers
+/// but has no heading for (`Neb. R. Bankr. P. Appendix Z`, the text
+/// heading `Appendix A` through `Appendix H`); and citations of a body a
+/// vendored source heads its sections with but whose prefix no binding
+/// declares (`FRBP 9999` beside `[sources.frbp]`, headed `## FRBP 1001`,
+/// with no `cite_prefixes`). The parser leaves those out of scope, so
+/// nothing else would check them.
 fn unkeyed(
     citations: &Citations<'_>,
+    corpus: &SourceCorpus,
     text: &str,
     span: &Span,
     cx: &Context<'_>,
@@ -246,24 +254,139 @@ fn unkeyed(
     parse_cite_string(text, &grammar)
         .into_iter()
         .filter_map(|r| {
-            let why = if r.is_out_of_scope() {
-                let (prefix, rest) = grammar.glued_rule_prefix(&r.raw)?;
-                format!(
-                    "`{}` in `{text}` is written with the rule prefix `{prefix}`, but its \
-                     section and pinpoint `{rest}` do not parse",
-                    r.raw
-                )
+            let (why, fix) = if r.is_out_of_scope() {
+                if let Some((prefix, rest)) = grammar.glued_rule_prefix(&r.raw) {
+                    let why = format!(
+                        "`{}` in `{text}` is written with the rule prefix `{prefix}`, but its \
+                         section and pinpoint `{rest}` do not parse",
+                        r.raw
+                    );
+                    (why, None)
+                } else if r.family == Family::Other {
+                    undivided(cx, citations, corpus, &grammar, &r.raw, text)
+                        .or_else(|| unprefixed(cx, corpus, &r.raw, text))?
+                } else {
+                    return None;
+                }
             } else if r.heading().is_none() {
-                format!(
+                let why = format!(
                     "`{}` in `{text}` does not normalize to a source heading",
                     r.raw
-                )
+                );
+                (why, None)
             } else {
                 return None;
             };
-            Some(emit(C::UnboundCite, cx.profile, span.clone(), why))
+            let d = emit(C::UnboundCite, cx.profile, span.clone(), why);
+            Some(match fix {
+                Some(fix) => note(d, None, fix),
+                None => d,
+            })
         })
         .collect()
+}
+
+/// The `## ` headings of the corpus file at `path`.
+fn headings<'a>(corpus: &'a SourceCorpus, path: &str) -> impl Iterator<Item = &'a str> {
+    corpus
+        .files
+        .get(path)
+        .map_or("", String::as_str)
+        .lines()
+        .filter_map(|l| l.strip_prefix("## ").map(str::trim))
+}
+
+/// Why `raw`, written with one of `grammar`'s rule prefixes and then text
+/// that is no section number (`Neb. R. Bankr. P. Appendix Z`), does not
+/// resolve: the prefix's vendored file heads divisions with the text's
+/// first word (`## Appendix A`) but none the text starts with. A word the
+/// file heads nothing with (`RCFC Appendix A` against the rules alone)
+/// names a division that is not vendored, and stays out of scope.
+fn undivided(
+    cx: &Context<'_>,
+    citations: &Citations<'_>,
+    corpus: &SourceCorpus,
+    grammar: &CiteGrammar<'_>,
+    raw: &str,
+    text: &str,
+) -> Option<(String, Option<String>)> {
+    let prefix = grammar.rule_prefix(raw)?;
+    let rest = raw.get(prefix.len()..)?.trim();
+    let word = rest.split_whitespace().next()?;
+    let id = citations
+        .syntax()
+        .rules
+        .iter()
+        .find(|r| r.prefixes.iter().any(|p| p.eq_ignore_ascii_case(prefix)))?
+        .source
+        .as_ref()?;
+    let path = cx
+        .package
+        .manifest
+        .sources
+        .iter()
+        .find(|s| &s.id == id)?
+        .path
+        .as_deref()?;
+    let mut division = headings(corpus, path)
+        .filter(|h| h.split_whitespace().next() == Some(word))
+        .peekable();
+    division.peek()?;
+    let found = division.any(|h| {
+        rest.strip_prefix(h)
+            .is_some_and(|after| !after.starts_with(char::is_alphanumeric))
+    });
+    if found {
+        return None;
+    }
+    let why = format!(
+        "`{raw}` in `{text}` cites `{rest}` under the rule prefix `{prefix}`, but none of \
+         the `## {word} ...` headings of `{path}` is `{rest}`"
+    );
+    let fix = "cite a division that exists in the vendored text, or mark the cite \
+               `?(\"why\")` until the source is vendored";
+    Some((why, Some(fix.to_owned())))
+}
+
+/// Why `raw`, a body's name then one section token (`FRBP 9999`), does
+/// not resolve: one of the package's vendored sources heads its sections
+/// `<name> <number>` (`## FRBP 1001`), but no binding declares the name a
+/// cite prefix, so the cite binds to nothing and the parser leaves it out
+/// of scope.
+fn unprefixed(
+    cx: &Context<'_>,
+    corpus: &SourceCorpus,
+    raw: &str,
+    text: &str,
+) -> Option<(String, Option<String>)> {
+    let at = raw
+        .match_indices(' ')
+        .map(|(i, _)| i + 1)
+        .find(|&i| raw[i..].starts_with(|c: char| c.is_ascii_digit()))?;
+    let (name, section) = (raw[..at].trim_end(), &raw[at..]);
+    if name.is_empty() || section.contains(char::is_whitespace) {
+        return None;
+    }
+    let source = cx.package.manifest.sources.iter().find(|s| {
+        s.path.as_deref().is_some_and(|path| {
+            headings(corpus, path).any(|h| {
+                h.strip_prefix(name)
+                    .and_then(|r| r.strip_prefix(' '))
+                    .is_some_and(|r| r.starts_with(|c: char| c.is_ascii_digit()))
+            })
+        })
+    })?;
+    let id = &source.id;
+    let path = source.path.as_deref().unwrap_or_default();
+    let why = format!(
+        "`{raw}` in `{text}` cites `{name}`, which `{path}` heads its sections with, but no \
+         source binding declares the cite prefix `{name}`, so it resolves through none"
+    );
+    let fix = format!(
+        "bind the prefix: add `cite_prefixes = [\"{name}\"]` and \
+         `section_heading = \"{name} {{n}}\"` to `[sources.{id}]`"
+    );
+    Some((why, Some(fix)))
 }
 
 fn section(

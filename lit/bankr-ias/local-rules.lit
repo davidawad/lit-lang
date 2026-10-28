@@ -10,7 +10,7 @@ module bankr-ias-local-rules.local-rules
 // not vendored; any period they state is a hole in the corpus.
 start case-pending
 
-state case-pending: "Case pending under the Federal Rules of Bankruptcy Procedure" by applicant cite "FRBP 1001"
+state case-pending: "Case pending under the Federal Rules of Bankruptcy Procedure" by applicant cite ?("Rule 1001 of the Federal Rules of Bankruptcy Procedure (scope and short title): sources/frbp.txt does not vendor Rules 1001 through 1006")
 {
   note "The court abolished its local rules effective August 4, 2003; attorneys and pro se parties consult the FRBP (the court's Bankruptcy Rules page). The case runs on lit/frbp's periods."
   edge-case-pending-frbp "No local rule: the FRBP govern" -> governed {

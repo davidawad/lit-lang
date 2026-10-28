@@ -1,0 +1,172 @@
+module mi-circuit-court-civil.civil
+
+// Civil actions in the Michigan circuit courts, from the plaintiff's view of
+// outcomes. Every period below is stated in a note, not counted:
+// computation is MCR 1.108, with Michigan's legal holidays and court-closure
+// days, for which lit/core has no counting rule. The filing, jury and
+// appeal entry fees are those "provided by law" (MCR 2.508(B)(1), 7.204(B)),
+// which the vendored rules do not state. The outline named Maiden v.
+// Rozwood, 461 Mich. 109 (1999), and Spiek v. Department of Transportation,
+// 456 Mich. 331 (1998), on summary disposition; no reporter text is
+// vendored, so they are removed and MCR 2.116 alone states the standard.
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "MCR 2.101(B)"
+{
+  note "There is one form of action, the civil action, and it is commenced by filing a complaint with a court (MCR 2.101(A), (B)). On the filing of the complaint the clerk issues a summons, to be served as MCR 2.103 and 2.105 provide (MCR 2.102(A))."
+  edge-complaint-filed-served "Defendant served before the summons expires" -> response-due {
+    authority cite "MCR 2.108(A)"
+  }
+  edge-complaint-filed-unserved "Summons expires unserved" -> service-dismissal {
+    authority cite "MCR 2.102(E)"
+  }
+}
+
+decision response-due: "Answer, motion, or nothing" by office cite "MCR 2.108(A)"
+{
+  note "A defendant served in Michigan under MCR 2.105(A)(1) serves and files an answer or takes other permitted action within 21 days after service of the summons and complaint; within 28 days if served outside Michigan or by registered mail (MCR 2.108(A)(1), (2)). A motion raising a defense or objection to a pleading is served and filed within the time for the responsive pleading (MCR 2.108(B)). Affirmative defenses must be stated in the responsive pleading (MCR 2.111(F)(3))."
+  edge-response-due-answer "Answer filed" -> answered { authority cite "MCR 2.108(A)" }
+  edge-response-due-motion "Motion for summary disposition before answering" -> pleading-motion {
+    authority cite "MCR 2.116(B)"
+  }
+  edge-response-due-default "No answer or other action" -> default-entered {
+    authority cite "MCR 2.603(A)"
+  }
+}
+
+decision pleading-motion: "Summary disposition under MCR 2.116(C)(7) or (C)(8) decided" by court cite "MCR 2.116(C)"
+{
+  note "A party may move for dismissal of or judgment on all or part of a claim; the hearing on a motion brought by a party asserting a claim may not take place until at least 28 days after the opposing party was served with the pleading (MCR 2.116(B)). Grounds include release, payment, prior judgment, immunity granted by law, the statute of limitations and the other bars listed in (C)(7), and failure to state a claim on which relief can be granted (C)(8) (MCR 2.116(C)). Unless the court sets a different period, the motion with its brief is filed and served at least 21 days before the hearing, the response at least 7 days before, and a reply, limited to 5 pages, at least 4 days before (MCR 2.116(G)(1)(a)). On grounds under (C)(8), (9) or (10) the court gives the parties an opportunity to amend unless amendment would not be justified (MCR 2.116(I)(5)). If a motion under MCR 2.116 made before a responsive pleading is denied, the responsive pleading is due within 21 days after notice of the denial (MCR 2.108(C)(1))."
+  edge-pleading-motion-dismissed "Granted" -> dismissed-merits { authority cite "MCR 2.116(I)" }
+  edge-pleading-motion-leave "Granted with leave to amend" -> amended {
+    authority cite "MCR 2.116(I)"
+  }
+  edge-pleading-motion-denied "Denied: answer within 21 days after notice" -> answered {
+    authority cite "MCR 2.108(C)"
+  }
+}
+
+state amended: "Amended pleading filed" by applicant cite "MCR 2.118(A)"
+{
+  note "A party may amend once as a matter of course within 14 days after being served with a responsive pleading, and otherwise only by leave of court or written consent; leave shall be freely given when justice so requires (MCR 2.118(A)(1), (2)). An order granting a motion under MCR 2.116 sets the time for the amended pleading (MCR 2.108(C)(2)). The response to an amended pleading is due within the time remaining for the original or within 21 days after service of the amendment, whichever is longer (MCR 2.108(C)(3))."
+  edge-amended-response "Amended pleading served" -> response-due { authority cite "MCR 2.118(B)" }
+}
+
+state default-entered: "Default entered" by applicant cite "MCR 2.603(A)"
+{
+  note "If a party against whom affirmative relief is sought has failed to plead or otherwise defend, the clerk enters the default when that fact is known to the clerk or verified in a request for default; notice is sent to all parties who have appeared and to the defaulted party (MCR 2.603(A)). A party requesting a default judgment gives notice at least 7 days before entry when the defaulted party has appeared, the relief differs from or exceeds the pleadings, or no specific amount is demanded (MCR 2.603(B)(1)). The clerk may enter judgment for a sum certain against a defendant defaulted for failure to appear; otherwise the party moves the court (MCR 2.603(B)(2), (3))."
+  edge-default-entered-judgment "Default judgment sought" -> default-judgment {
+    authority cite "MCR 2.603(B)"
+  }
+  edge-default-entered-set-aside "Defendant moves to set aside" -> set-aside-ruling {
+    authority cite "MCR 2.603(D)"
+  }
+}
+
+decision set-aside-ruling: "Set aside the default?" by court cite "MCR 2.603(D)"
+{
+  note "A motion to set aside a default or default judgment, except when grounded on lack of jurisdiction, is granted only if good cause is shown and a verified statement of facts showing a meritorious defense is filed (MCR 2.603(D)(1)). Where personal service was made, the motion must be filed before entry of a default judgment or within 21 days after it is entered, except as MCR 2.612 provides (MCR 2.603(D)(2), (3)). The order is conditioned on paying the taxable costs incurred in reliance on the default (MCR 2.603(D)(4))."
+  edge-set-aside-granted "Set aside" -> answered { authority cite "MCR 2.603(D)" }
+  edge-set-aside-refused "Refused" -> default-judgment { authority cite "MCR 2.603(D)" }
+}
+
+state answered: "Answer filed; discovery" by applicant cite "MCR 2.302(B)"
+{
+  note "Parties may obtain discovery of any non-privileged matter relevant to any party's claims or defenses and proportional to the needs of the case (MCR 2.302(B)(1)). A party may demand a jury by filing a written demand within 28 days after the filing of the answer or a timely reply, paying the jury fee provided by law; failure to file the demand or pay the fee waives trial by jury (MCR 2.508(B)(1), (D)(1)). The court may dismiss an action in which no steps or proceedings appear to have been taken within 91 days for lack of progress, after notice (MCR 2.502(A))."
+  edge-answered-dispute "Motion to compel" -> discovery-ruling { authority cite "MCR 2.313(A)" }
+  edge-answered-sj "Motion under MCR 2.116(C)(10)" -> sj-motion { authority cite "MCR 2.116(C)" }
+  edge-answered-settled "Settled; stipulation of dismissal" -> settled {
+    authority cite "MCR 2.504(A)"
+  }
+  edge-answered-voluntary "Voluntary dismissal" -> voluntary-dismissal {
+    authority cite "MCR 2.504(A)"
+  }
+  edge-answered-inactive "No progress for 91 days" -> inactivity-dismissal {
+    authority cite "MCR 2.502(A)"
+  }
+}
+
+decision discovery-ruling: "Discovery motion decided" by court cite "MCR 2.313(A)"
+{
+  note "A party may move to compel disclosure or discovery on reasonable notice (MCR 2.313(A)). If a party fails to obey an order to provide or permit discovery, the court may enter orders including dismissing the action or a part of it or rendering a judgment by default (MCR 2.313(B)(2))."
+  edge-discovery-ruling-resolved "Resolved; discovery continues" -> answered {
+    authority cite "MCR 2.313(A)"
+  }
+  edge-discovery-ruling-sanction "Order disobeyed; action dismissed" -> sanction-dismissal {
+    authority cite "MCR 2.313(B)"
+  }
+}
+
+decision sj-motion: "Summary disposition under MCR 2.116(C)(10) decided" by court cite "MCR 2.116(C)"
+{
+  note "The motion may rest on the ground that, except as to the amount of damages, there is no genuine issue as to any material fact and the moving party is entitled to judgment as a matter of law (MCR 2.116(C)(10)); it must specifically identify the issues as to which there is no genuine issue, and the adverse party may not rest on its pleadings (MCR 2.116(G)(4)). The motion is filed and served at least 21 days before the hearing, the response at least 7 days before, and a reply of no more than 5 pages at least 4 days before, unless the court sets a different period (MCR 2.116(G)(1)(a)). If the proofs show no genuine issue of material fact the court renders judgment without delay, and it may render judgment for the opposing party (MCR 2.116(I)(1), (2))."
+  edge-sj-motion-defense "Granted for defendant" -> sj-defense { authority cite "MCR 2.116(I)" }
+  edge-sj-motion-applicant "Granted for plaintiff" -> judgment-for-applicant {
+    authority cite "MCR 2.116(I)"
+  }
+  edge-sj-motion-denied "Denied" -> trial { authority cite "MCR 2.116(J)" }
+}
+
+state trial: "Trial" by court cite "MCR 2.508(A)"
+{
+  note "The right of trial by jury declared by the constitution is preserved (MCR 2.508(A)). In an action tried without a jury the defendant may move for dismissal after the plaintiff's evidence (MCR 2.504(B)(2))."
+  edge-trial-result "Verdict or decision; judgment entered" -> post-trial {
+    authority cite "MCR 2.602(B)"
+  }
+}
+
+decision post-trial: "Post-trial motions decided" by court cite "MCR 2.611(B)"
+{
+  note "Within 7 days after a judgment is granted, or later if the court allows, a party may serve a proposed judgment with notice that it will be signed absent written objections within 7 days of service (MCR 2.602(B)(3)). A motion for judgment notwithstanding the verdict is made within 21 days after entry of judgment, or within 21 days after the jury is discharged if no verdict was returned (MCR 2.610(A)). A motion for a new trial or to alter or amend the judgment is filed and served within 21 days after entry of the judgment, and the opposing party has 21 days after service to file opposing affidavits (MCR 2.611(B), (D)(2)). A motion for rehearing or reconsideration of a decision on a motion is filed within 21 days after the order deciding it (MCR 2.119(F)(1)). Relief from judgment for mistake, inadvertence, surprise or excusable neglect, newly discovered evidence, or fraud is sought within a reasonable time and not more than one year after the judgment (MCR 2.612(C)(2)). Costs taxed by the clerk are presented within 28 days after the judgment is signed or after entry of an order denying a postjudgment motion; objections are due within 14 days after service of the bill, and review of the clerk's taxation within 7 days after notice of it (MCR 2.625(F)(2)-(4))."
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "MCR 2.611(A)" }
+  edge-post-trial-applicant "Judgment for plaintiff stands" -> judgment-for-applicant {
+    authority cite "MCR 2.610(B)"
+  }
+  edge-post-trial-defense "Judgment for defendant stands or entered" -> verdict-for-defendant {
+    authority cite "MCR 2.610(B)"
+  }
+}
+
+terminal service-dismissal: "Dismissed without prejudice for failure to serve" outcome [loss] cite "MCR 2.102(E)"
+{
+  note "A summons expires 91 days after it is issued unless, on a showing of due diligence within those 91 days, the judge orders a second summons for a definite period not exceeding 1 year; the 91 days are tolled while a motion challenging the summons or its service is pending (MCR 2.102(D)). On expiration the action is deemed dismissed without prejudice as to a defendant not served who has not submitted to the court's jurisdiction (MCR 2.102(E)(1)). The dismissal may be set aside on stipulation or, among other conditions, on a motion filed within 28 days after notice of the dismissal order (MCR 2.102(F))."
+}
+
+terminal dismissed-merits: "Dismissed on summary disposition" outcome [loss] cite "MCR 2.116(I)"
+{
+  note "An appeal of right goes to the Court of Appeals: see the Michigan appellate package (lit/mi-appellate)."
+}
+
+terminal default-judgment: "Default judgment" outcome [win, judgment] cite "MCR 2.603(B)"
+{
+  note "The party who sought the default judgment promptly serves it on all parties (MCR 2.603(B)(4))."
+}
+
+terminal sanction-dismissal: "Dismissed as a discovery sanction" outcome [loss] cite "MCR 2.313(B)"
+
+terminal inactivity-dismissal: "Dismissed for lack of progress" outcome [loss, dismissal] cite "MCR 2.502(B)"
+{
+  note "The dismissal is without prejudice unless the court specifies otherwise; on motion for good cause the court may reinstate the action (MCR 2.502(B)(1), (C))."
+}
+
+terminal voluntary-dismissal: "Voluntarily dismissed" outcome [dismissal] cite "MCR 2.504(A)"
+{
+  note "The plaintiff may dismiss without order by notice before the adverse party serves an answer or a motion under MCR 2.116, or by a stipulation signed by all parties; unless stated otherwise the dismissal is without prejudice, but a notice of dismissal operates as an adjudication on the merits when the plaintiff has previously dismissed an action based on the same claim (MCR 2.504(A)(1))."
+}
+
+terminal settled: "Settled" outcome [settlement] cite "MCR 2.504(A)"
+
+terminal sj-defense: "Summary disposition for defendant" outcome [loss] cite "MCR 2.116(I)"
+{
+  note "An appeal of right goes to the Court of Appeals: see the Michigan appellate package (lit/mi-appellate)."
+}
+
+terminal judgment-for-applicant: "Judgment for plaintiff" outcome [win, judgment] cite "MCR 2.610(B)"
+{
+  note "An appeal of right in a civil case is taken within 21 days after entry of the judgment, or of an order deciding a postjudgment motion filed within the initial 21-day period (MCR 7.204(A)(1)); see lit/mi-appellate."
+}
+
+terminal verdict-for-defendant: "Judgment for defendant" outcome [loss] cite "MCR 2.610(B)"
+{
+  note "An appeal of right in a civil case is taken within 21 days after entry of the judgment, or of an order deciding a postjudgment motion filed within the initial 21-day period (MCR 7.204(A)(1)); see lit/mi-appellate."
+}

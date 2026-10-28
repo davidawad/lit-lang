@@ -1,0 +1,42 @@
+# Civil actions in the Michigan circuit courts under the Michigan Court Rules
+# of 1985, Chapters 1-9, as updated September 2, 2026 (sources/mi-circuit-court).
+# Computation of time is MCR 1.108: the day of the triggering event is
+# excluded and a last day falling on a Saturday, Sunday, legal holiday or day
+# on which the court is closed by court order runs to the end of the next
+# day that is none of those; lit/core has no counting rule or holiday
+# calendar for Michigan, so the rules' periods are stated in notes, not
+# encoded as counted deadlines. An appeal of right hands off to the Michigan
+# appellate package (lit/mi-appellate), whose Chapter 7 rules are in the
+# same vendored document.
+[package]
+name = "mi-circuit-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "mi-circuit-court-civil"
+forum = "mi-circuit-court"
+authority = "StateRule"
+jurisdiction_id = "michigan"
+title = "Michigan circuit courts, civil"
+description = "Civil actions in the Michigan circuit courts under the Michigan Court Rules, as far as the vendored text states: commencement and the expiration of the summons, the time to answer and its alteration by motion, summary disposition under MCR 2.116, amendment, default and default judgment and setting them aside, discovery and sanctions, dismissal for lack of progress and voluntary dismissal, the jury demand, judgment notwithstanding the verdict, new trial and relief from judgment, costs, and the appeal of right to the Court of Appeals (lit/mi-appellate)."
+in_force = "2026-09-02"
+known_at = "2026-10-28"
+unknown_before = "2026-09-02"
+jurisdiction = "Michigan circuit courts (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.mcr]
+title = "Michigan Court Rules of 1985, Chapters 1-9 (updated September 2, 2026)"
+url = "https://www.courts.michigan.gov/siteassets/rules-instructions-administrative-orders/michigan-court-rules/michigan-court-rules.pdf"
+path = "sources/mi-circuit-court/mcr-chapters-1-9-sectioned.txt"
+path_sha256 = "34a24b105ffcab26ce2fe4d4f6a0b8d3fb11024e7716e7546d9a8d4d123242a3"
+sha256 = "31ed59fbef8d2f177f6e8b50ff976a06ebd14aef16706a76987e03469f278a02"
+as_of = "2026-09-02"
+cite_prefixes = ["MCR"]
+section_heading = "MCR {n}"

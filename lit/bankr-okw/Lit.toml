@@ -1,0 +1,46 @@
+# The Local Rules of the U.S. Bankruptcy Court for the Western District of
+# Oklahoma over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares only
+# the periods and limits the Local Rules themselves state and re-encodes no
+# FRBP period. It is a base package, not a `kind = "local-rule"` layer:
+# lit/core has no bankruptcy forum family (L2011, as for lit/bankr-mt). Each
+# period is counted under FRBP 9006(a), the FRCP 6(a) method (core's frcp6).
+# The rules are those of January 15, 2026 (sources/bankr-okw), the court's
+# current edition; no amending order after it is vendored, so there are no
+# dated layers and the package runs from January 15, 2026. The general
+# orders the rules annex as Appendices A to D (electronic filing, chapter
+# 12, chapter 13 and subchapter V procedures) are not declared.
+[package]
+name = "bankr-okw-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-okw-local-rules"
+forum = "bankr-okw"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Western District of Oklahoma: Local Rules"
+description = "The Bankr. W.D. Okla. Local Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp): fee refunds, deconsolidation, death of a debtor, committee ownership statements, Rule 2004 examinations, employment and compensation, chapter 12 business reports, claim and exemption objections, unclaimed funds, valuation, stay relief, co-debtor stay, stay continuation and imposition, domestic support information, lien avoidance, reopening, withdrawal of the reference, abstention, sales and sales free and clear, executory contracts, abandonment, redemption, costs, default judgment, summary judgment and brief page limits, attorney withdrawal, motion practice (LBR 9013-1), contested-matter evidence notices and compromises."
+in_force = "2026-01-15"
+known_at = "2026-10-28"
+unknown_before = "2026-01-15"
+jurisdiction = "U.S. Bankruptcy Court for the Western District of Oklahoma"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.okwb-lr]
+title = "Local Rules of the United States Bankruptcy Court for the Western District of Oklahoma (January 15, 2026)"
+url = "https://www.okwb.uscourts.gov/sites/okwb/files/Local_Rules.pdf"
+path = "sources/bankr-okw/okwb-lbr-2026-01-15-sectioned.txt"
+path_sha256 = "244f2c28785bb9baf1f554ad484399c4396fa2e63d3110701f36ea8063025a68"
+sha256 = "82504e61cfc118fed5d9ba77507c7dd3b3259d5445d9093dada43f10f6139276"
+as_of = "2026-01-15"
+cite_prefixes = ["W.D. Okla. LBR"]
+section_heading = "LBR {n}"

@@ -1,0 +1,407 @@
+module nvd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Nevada's own periods, computed under the federal rules
+// (FRCP 6(a) governs "any local rule"). Most apply "unless the court orders
+// otherwise" where the rule says so; an extension request must meet LR IA
+// 6-1, and one to extend a discovery-plan date also LR 26-3. Rules that
+// state no period or limit stay out, as do these: the scheduling order
+// within 30 days of the discovery plan or of the first defendant's answer
+// (LR 16-1(a), (b)) and the early neutral evaluation session within 90 days
+// after the first responding party appears (LR 16-6(d)), which bind the
+// court; the 180 days of discovery measured from the first defendant's
+// appearance past which a discovery plan needs special scheduling review
+// (LR 26-1(b)(1)), a review threshold and not a deadline; the 270 days
+// without a proceeding of record after which an action may be dismissed for
+// want of prosecution (LR 41-1), a court power and not a party's deadline;
+// the suspended joint pretrial order until 30 days after decision on the
+// dispositive motions (LR 26-1(b)(5)), which runs from the court's
+// decision; the clerk's custody of exhibits (LR 79-1(c)); the motion for
+// attorney's fees, whose time is FRCP 54(d)(2)(B)'s and lit/frcp's (LR
+// 54-14 sets its content only); the motion for reconsideration of an
+// interlocutory order "within a reasonable time" (LR 59-1(c)); and the
+// Local Patent Rules (Part III), which are out of scope. LR 7.1-1 (the
+// disclosure statement with a party's first appearance) states no period.
+// No fee is stated. The earlier D. Nev. outline's FRCP flow and its Supreme
+// Court decisions (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby,
+// Reeves, Catlin, Bowles, Hamer) are FRCP and FRAP authority and belong to
+// lit/frcp and lit/frap; its Ninth Circuit decisions (Eitel v. McCool;
+// Lopez v. Smith) are removed: no reporter text is vendored.
+/// A motion for summary judgment or a response to one, its statement of
+/// facts included (LR 56-1): at most 30 pages, excluding exhibits (LR
+/// 7-3(a)).
+limit summary-judgment-brief { pages <= 30 cite "D. Nev. LR 7-3(a)" } cite "D. Nev. LR 7-3(a)"
+/// A reply in support of a motion for summary judgment: at most 20 pages
+/// (LR 7-3(a)).
+limit summary-judgment-reply { pages <= 20 cite "D. Nev. LR 7-3(a)" } cite "D. Nev. LR 7-3(a)"
+/// Any other motion or response to a motion, and a pretrial or post-trial
+/// brief, the motion and its points and authorities combined in one
+/// document (LR 7-2(a)): at most 24 pages, excluding exhibits (LR 7-3(b)).
+/// Objections to a magistrate judge's order or findings and
+/// recommendations, and responses to them, are subject to the same limits
+/// (LR IB 3-1(a), 3-2(a)).
+limit motion-brief { pages <= 24 cite "D. Nev. LR 7-3(b)" } cite "D. Nev. LR 7-3(b)"
+/// Any other reply: at most 12 pages, excluding exhibits (LR 7-3(b)).
+limit reply-brief { pages <= 12 cite "D. Nev. LR 7-3(b)" } cite "D. Nev. LR 7-3(b)"
+/// A motion to exceed the page limits, filed before the motion or brief is
+/// due with a declaration of the reasons for and number of the additional
+/// pages: at most three pages (LR 7-3(c)).
+limit page-limit-motion { pages <= 3 cite "D. Nev. LR 7-3(c)" } cite "D. Nev. LR 7-3(c)"
+
+/// A motion for summary judgment is served (LR 7-2(b)).
+event SummaryJudgmentMotionServed() paper summary-judgment-brief
+/// A response to a motion for summary judgment is served (LR 7-2(b)).
+event SummaryJudgmentResponseServed() paper summary-judgment-brief
+/// Any other motion is served (LR 7-2(b)).
+event MotionServed() paper motion-brief
+/// A response to any other motion is served (LR 7-2(b)).
+event ResponseServed() paper motion-brief
+/// The prevailing party serves a proposed order for approval as to form
+/// (LR 7-2(f)).
+event ProposedOrderServed()
+/// An opposing party is served with notice that the prevailing party filed
+/// its proposed order (LR 7-2(f)).
+event ProposedOrderFilingNoticed()
+/// Trial is set to begin (LR 16-3(a)).
+event TrialBegins()
+/// A motion in limine is served (LR 16-3(a)).
+event LimineMotionServed() paper motion-brief
+/// An order scheduling the early neutral evaluation session is entered (LR
+/// 16-6(c)).
+event EvaluationSessionOrderEntered()
+/// A motion for exemption from the Early Neutral Evaluation Program is
+/// served (LR 16-6(c)).
+event EvaluationExemptionMotionServed() paper motion-brief
+/// The early neutral evaluation session is set to be held (LR 16-6(f)).
+event EvaluationSessionHeld()
+/// The first defendant answers or otherwise appears (LR 22-1, 26-1(a),
+/// 26-2).
+event FirstDefendantAppeared()
+/// The parties hold the FRCP 26(f) conference (LR 26-1(a)).
+event RuleTwentySixFConferenceHeld()
+/// The close of discovery set by the discovery plan (LR 26-1(b)).
+event DiscoveryCutoff()
+/// The initial disclosure of experts under FRCP 26(a)(2) is made (LR
+/// 26-1(b)(3)).
+event ExpertDisclosureMade()
+/// The deadline for dispositive motions set by the discovery plan passes
+/// (LR 26-1(b)(5)).
+event DispositiveMotionDeadline()
+/// A deadline set in a discovery plan expires (LR 26-3).
+event DiscoveryPlanDeadline()
+/// A court proceeding at which an interpreter will be used is held (LR
+/// 43-1).
+event InterpretedProceedingHeld()
+/// The judgment or decree under which costs are claimed is entered (LR
+/// 54-1(a)).
+event JudgmentEntered()
+/// A bill of costs is served (LR 54-1(c)).
+event CostBillServed()
+/// An objection to a bill of costs is served (LR 54-1(c)).
+event CostObjectionServed()
+/// A party receives notice of the clerk's taxation of costs under LR
+/// 54-1(f) (LR 54-12(a)).
+event CostsTaxationNoticed()
+/// The hearing on appointment of a receiver is held (LR 66-2).
+event ReceiverHearingHeld()
+/// A permanent receiver is appointed (LR 66-4(b)).
+event PermanentReceiverAppointed()
+/// A hearing on a receiver's further report or on a petition listed in LR
+/// 66-5 is held (LR 66-5).
+event ReceivershipHearingHeld()
+/// A party withdraws an exhibit it produced (LR 79-1(d)).
+event ExhibitWithdrawn()
+/// The clerk notifies the parties to claim their exhibits (LR 79-1(e)).
+event ExhibitClaimNoticed()
+/// An attorney's motion to withdraw is filed (LR IA 11-6(b)).
+event WithdrawalMotionFiled()
+/// A party is served with a magistrate judge's order on a pretrial matter
+/// (LR IB 3-1(a)).
+event MagistrateOrderServed()
+/// A party is served with a magistrate judge's findings and
+/// recommendations (LR IB 3-2(a)).
+event MagistrateFindingsServed()
+/// A party is served with objections to a magistrate judge's order or
+/// findings and recommendations (LR IB 3-1(a), 3-2(a)).
+event MagistrateObjectionServed() paper motion-brief
+
+/// LR 7-2(b): the deadline to file and serve points and authorities in
+/// response to a motion for summary judgment is 21 days after service of
+/// the motion; the time to file the motion itself is FRCP 56(b)'s. A
+/// failure to respond is not consent to the motion (LR 7-2(d)).
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "D. Nev. LR 7-2(b)"
+{
+  forum frcp
+}
+
+/// LR 7-2(b): the deadline to file and serve a reply in support of a
+/// motion for summary judgment is 14 days after service of the response.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "D. Nev. LR 7-2(b)"
+{
+  forum frcp
+}
+
+/// LR 7-2(b): for any other motion, the deadline to file and serve points
+/// and authorities in response is 14 days after service of the motion. A
+/// failure to respond, except to a motion for attorney's fees, is consent
+/// to the granting of the motion (LR 7-2(d)).
+deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "D. Nev. LR 7-2(b)"
+{
+  forum frcp
+}
+
+/// LR 7-2(b): the deadline to file and serve a reply in support of any
+/// other motion is seven days after service of the response. Surreplies
+/// need leave of court.
+deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "D. Nev. LR 7-2(b)"
+{
+  forum frcp
+}
+
+/// LR 7-2(f): the opposing parties have three days after service of a
+/// proposed order to notify the prevailing party of any reason for
+/// disapproval; failing that, they are deemed to approve it.
+deadline proposed-order-disapproval-period: 3.days after ProposedOrderServed() counted_by frcp6 cite "D. Nev. LR 7-2(f)"
+{
+  forum frcp
+}
+
+/// LR 7-2(f): an opposing party that timely served reasons for disapproval
+/// may file a competing proposed order within three days of being served
+/// with notice that the prevailing party filed its proposed order.
+deadline competing-proposed-order-period: 3.days after ProposedOrderFilingNoticed() counted_by frcp6 cite "D. Nev. LR 7-2(f)"
+{
+  forum frcp
+}
+
+/// LR 16-3(a): unless the court orders otherwise, motions in limine are
+/// filed 30 days before trial.
+deadline limine-motion-period: 30.days before TrialBegins() counted_by frcp6 cite "D. Nev. LR 16-3(a)"
+{
+  forum frcp
+}
+
+/// LR 16-3(a): responses to a motion in limine are filed and served no
+/// later than 14 days after service of the motion; replies only with leave.
+deadline limine-response-period: 14.days after LimineMotionServed() counted_by frcp6 cite "D. Nev. LR 16-3(a)"
+{
+  forum frcp
+}
+
+/// LR 16-6(c): in an employment-discrimination action, a motion for
+/// exemption from the Early Neutral Evaluation Program is filed no later
+/// than seven days after entry of the order scheduling the session.
+deadline evaluation-exemption-motion-period: 7.days after EvaluationSessionOrderEntered() counted_by frcp6 cite "D. Nev. LR 16-6(c)"
+{
+  forum frcp
+}
+
+/// LR 16-6(c): a response to the motion for exemption is filed within 14
+/// days after service of the motion; no reply is allowed.
+deadline evaluation-exemption-response-period: 14.days after EvaluationExemptionMotionServed() counted_by frcp6 cite "D. Nev. LR 16-6(c)"
+{
+  forum frcp
+}
+
+/// LR 16-6(f): the parties submit their written evaluation statements to
+/// the evaluating magistrate judge's chambers by 4:00 p.m. seven days
+/// before the session; they are not filed or served.
+deadline evaluation-statement-period: 7.days before EvaluationSessionHeld() counted_by frcp6 cite "D. Nev. LR 16-6(f)"
+{
+  forum frcp
+}
+
+/// LR 22-1: in an interpleader action, the plaintiff moves for a
+/// scheduling conference within 30 days after the first defendant answers
+/// or otherwise appears; LR 26-1(a) and (b) do not apply (LR 26-1(d)).
+deadline interpleader-conference-motion-period: 30.days after FirstDefendantAppeared() counted_by frcp6 cite "D. Nev. LR 22-1"
+{
+  forum frcp
+}
+
+/// LR 26-1(a): the plaintiff initiates the scheduling of the FRCP 26(f)
+/// conference, to be held within 30 days after the first defendant answers
+/// or otherwise appears.
+deadline discovery-conference-period: 30.days after FirstDefendantAppeared() counted_by frcp6 cite "D. Nev. LR 26-1(a)"
+{
+  forum frcp
+}
+
+/// LR 26-1(a): fourteen days after the FRCP 26(f) conference, the parties
+/// submit a stipulated discovery plan and scheduling order.
+deadline discovery-plan-period: 14.days after RuleTwentySixFConferenceHeld() counted_by frcp6 cite "D. Nev. LR 26-1(a)"
+{
+  forum frcp
+}
+
+/// LR 26-1(b)(2): unless the discovery plan otherwise provides and the
+/// court so orders, motions to amend the pleadings or to add parties are
+/// filed 90 days before the close of discovery.
+deadline amendment-motion-period: 90.days before DiscoveryCutoff() counted_by frcp6 cite "D. Nev. LR 26-1(b)"
+{
+  forum frcp
+}
+
+/// LR 26-1(b)(3): unless the discovery plan otherwise provides and the
+/// court so orders, expert disclosures under FRCP 26(a)(2) are made 60
+/// days before the discovery cut-off date, modifying FRCP 26(a)(2)(D).
+deadline expert-disclosure-period: 60.days before DiscoveryCutoff() counted_by frcp6 cite "D. Nev. LR 26-1(b)"
+{
+  forum frcp
+}
+
+/// LR 26-1(b)(3): rebuttal-expert disclosures are made 30 days after the
+/// initial disclosure of experts.
+deadline rebuttal-expert-disclosure-period: 30.days after ExpertDisclosureMade() counted_by frcp6 cite "D. Nev. LR 26-1(b)"
+{
+  forum frcp
+}
+
+/// LR 26-1(b)(4): unless the discovery plan otherwise provides and the
+/// court so orders, dispositive motions are filed 30 days after the
+/// discovery cut-off date.
+deadline dispositive-motion-period: 30.days after DiscoveryCutoff() counted_by frcp6 cite "D. Nev. LR 26-1(b)"
+{
+  forum frcp
+}
+
+/// LR 26-1(b)(5): unless the discovery plan otherwise provides and the
+/// court so orders, the joint pretrial order is due 30 days after the
+/// dispositive-motion deadline; if dispositive motions are filed, it is
+/// suspended until 30 days after their decision or further order.
+deadline joint-pretrial-order-period: 30.days after DispositiveMotionDeadline() counted_by frcp6 cite "D. Nev. LR 26-1(b)"
+{
+  forum frcp
+}
+
+/// LR 26-2: unless the court orders otherwise, where no discovery plan is
+/// required, discovery is completed within 180 days from the time the first
+/// defendant answers or otherwise appears.
+deadline discovery-without-plan-period: 180.days after FirstDefendantAppeared() counted_by frcp6 cite "D. Nev. LR 26-2"
+{
+  forum frcp
+}
+
+/// LR 26-3: a motion or stipulation to extend a deadline set in a discovery
+/// plan must be received by the court no later than 21 days before the
+/// deadline expires; a later request needs good cause, and one after it
+/// expires also excusable neglect.
+deadline discovery-extension-request-period: 21.days before DiscoveryPlanDeadline() counted_by frcp6 cite "D. Nev. LR 26-3"
+{
+  forum frcp
+}
+
+/// LR 43-1: a party who anticipates needing an interpreter files a written
+/// notice at least 14 days before the proceeding; a party needing an
+/// American Sign Language interpreter contacts the courtroom administrator
+/// at least 14 days before it.
+deadline interpreter-notice-period: 14.days before InterpretedProceedingHeld() counted_by frcp6 cite "D. Nev. LR 43-1"
+{
+  forum frcp
+}
+
+/// LR 54-1(a): a prevailing party who claims costs files and serves a bill
+/// of costs and disbursements on the clerk's form no later than 14 days
+/// after entry of the judgment or decree.
+deadline cost-bill-period: 14.days after JudgmentEntered() counted_by frcp6 cite "D. Nev. LR 54-1(a)"
+{
+  forum frcp
+}
+
+/// LR 54-1(c): the deadline to file and serve an objection to a bill of
+/// costs is 14 days after its service; failing to object may be consent to
+/// all the costs (LR 54-1(d)).
+deadline cost-objection-period: 14.days after CostBillServed() counted_by frcp6 cite "D. Nev. LR 54-1(c)"
+{
+  forum frcp
+}
+
+/// LR 54-1(c): the deadline to file and serve a response to an objection is
+/// seven days after service of the objection.
+deadline cost-objection-response-period: 7.days after CostObjectionServed() counted_by frcp6 cite "D. Nev. LR 54-1(c)"
+{
+  forum frcp
+}
+
+/// LR 54-12(a): a motion to re-tax costs under FRCP 54(d), with points and
+/// authorities, is filed and served within seven days after receipt of the
+/// notice of the clerk's taxation under LR 54-1(f).
+deadline retax-motion-period: 7.days after CostsTaxationNoticed() counted_by frcp6 cite "D. Nev. LR 54-12(a)"
+{
+  forum frcp
+}
+
+/// LR 66-2: a receiver is not appointed except after a hearing preceded by
+/// at least 14 days' notice to the party sought to be subjected to
+/// receivership and to all known creditors; a temporary receiver may be
+/// appointed without notice under FRCP 65(b).
+deadline receiver-notice-period: 14.days before ReceiverHearingHeld() counted_by frcp6 cite "D. Nev. LR 66-2"
+{
+  forum frcp
+}
+
+/// LR 66-4(b): within 60 days of being appointed, a permanent receiver files
+/// a verified report and account of the administration, heard on 14 days'
+/// notice to all parties and known creditors.
+deadline receiver-report-period: 60.days after PermanentReceiverAppointed() counted_by frcp6 cite "D. Nev. LR 66-4(b)"
+{
+  forum frcp
+}
+
+/// LR 66-5: unless the court orders otherwise, the receiver gives all
+/// interested parties and creditors at least 14 days' notice of the hearing
+/// of its further reports and of the petitions the rule lists.
+deadline receivership-hearing-notice-period: 14.days before ReceivershipHearingHeld() counted_by frcp6 cite "D. Nev. LR 66-5"
+{
+  forum frcp
+}
+
+/// LR 79-1(d): if no appeal is taken, after final judgment and the time for
+/// a notice of appeal and a new-trial motion have passed, a party may
+/// withdraw an exhibit it produced on 21 days' prior written notice to all
+/// parties.
+deadline exhibit-withdrawal-notice-period: 21.days before ExhibitWithdrawn() counted_by frcp6 cite "D. Nev. LR 79-1(d)"
+{
+  forum frcp
+}
+
+/// LR 79-1(e): exhibits not withdrawn within 21 days after the clerk
+/// notifies the parties to claim them are destroyed or disposed of as the
+/// court orders.
+deadline exhibit-claim-period: 21.days after ExhibitClaimNoticed() counted_by frcp6 cite "D. Nev. LR 79-1(e)"
+{
+  forum frcp
+}
+
+/// LR IA 11-6(b): unless the court orders otherwise, the affected client
+/// may file a response to its attorney's motion to withdraw within 14 days
+/// of the filing of the motion.
+deadline withdrawal-response-period: 14.days after WithdrawalMotionFiled() counted_by frcp6 cite "D. Nev. LR IA 11-6(b)"
+{
+  forum frcp
+}
+
+/// LR IB 3-1(a): the deadline to file and serve specific written
+/// objections to a magistrate judge's order on a pretrial matter is 14 days
+/// after service of the order.
+deadline magistrate-order-objection-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "D. Nev. LR IB 3-1(a)"
+{
+  forum frcp
+}
+
+/// LR IB 3-2(a): the deadline to file and serve specific written
+/// objections, with points and authorities, to a magistrate judge's
+/// findings and recommendations is 14 days after their service.
+deadline magistrate-findings-objection-period: 14.days after MagistrateFindingsServed() counted_by frcp6 cite "D. Nev. LR IB 3-2(a)"
+{
+  forum frcp
+}
+
+/// LR IB 3-1(a), 3-2(a): the deadline to file and serve a response to
+/// objections is 14 days after service of the objection; replies only with
+/// leave of court.
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionServed() counted_by frcp6 cite "D. Nev. LR IB 3-1(a)"
+{
+  forum frcp
+}

@@ -1,0 +1,72 @@
+# The United States District Court for the District of Nevada's Local Rules
+# of Civil Practice (Part II), with the parts of Parts IA and IB that set
+# civil periods, as a local-rule layer over lit/frcp (28 U.S.C. § 2071;
+# FRCP 83(a); LR 1-1(a)): it declares only the periods and limits the
+# Local Rules themselves state and re-encodes no FRCP deadline. Each period
+# is counted under FRCP 6(a), which governs "any local rule". The rules are
+# the Local Rules of Practice "as amended, take effect on April 17, 2020"
+# (LR IA 1-5; General Order 2020-07), the edition the court still links as
+# its Local Rules (sources/fed-dnev). The Local Patent Rules (Part III), the
+# Local Criminal Rules (Part IV, forum nvd-criminal) and the special
+# proceedings and appeals rules (Part V) are out of scope. An appeal goes
+# to the Ninth Circuit under lit/frap and lit/ca9.
+[package]
+name = "nvd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "nvd-local-rules"
+forum = "nvd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, District of Nevada: Local Rules of Civil Practice"
+description = "The District of Nevada's Local Rules of Civil Practice as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): motion briefing periods and page limits, proposed orders, motions in limine, early neutral evaluation, interpleader scheduling, the Rule 26(f) conference and the default discovery-plan deadlines, discovery without a plan, extension requests, interpreters, costs and their retaxing, receivers, exhibit withdrawal, attorney withdrawal and objections to a magistrate judge's orders and findings and recommendations."
+in_force = "2020-04-17"
+known_at = "2026-10-28"
+unknown_before = "2020-04-17"
+jurisdiction = "United States District Court, D. Nev."
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "nvd-lr"
+issuer = "United States District Court for the District of Nevada"
+date = "2020-04-17"
+designation = "Local Rules of Practice (as amended, effective April 17, 2020; General Order 2020-07): Parts IA, IB and II"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.nvd-lr]
+title = "Local Rules of Practice for the United States District Court for the District of Nevada (April 17, 2020), Part II: Civil Practice"
+url = "https://www.nvd.uscourts.gov/wp-content/uploads/2020/04/Local-Rules-of-Practice-Amended-2020.pdf"
+path = "sources/fed-dnev/dnev-local-rules-2020-04-17-sectioned.txt"
+path_sha256 = "1f0f9aab6084f6c537612da46e869a18e018b047ff5136dbef92fbd712b78058"
+sha256 = "f90ed909fa5aa88cf17fc97853803b834aa791003d2894707b3fd93c5ae64346"
+as_of = "2020-04-17"
+cite_prefixes = ["D. Nev. LR"]
+section_heading = "LR {n}"
+
+[sources.nvd-lr-ia]
+title = "Local Rules of Practice for the United States District Court for the District of Nevada (April 17, 2020), Part IA: Introduction"
+url = "https://www.nvd.uscourts.gov/wp-content/uploads/2020/04/Local-Rules-of-Practice-Amended-2020.pdf"
+path = "sources/fed-dnev/dnev-local-rules-2020-04-17-sectioned.txt"
+path_sha256 = "1f0f9aab6084f6c537612da46e869a18e018b047ff5136dbef92fbd712b78058"
+sha256 = "f90ed909fa5aa88cf17fc97853803b834aa791003d2894707b3fd93c5ae64346"
+as_of = "2020-04-17"
+cite_prefixes = ["D. Nev. LR IA"]
+section_heading = "LR IA {n}"
+
+[sources.nvd-lr-ib]
+title = "Local Rules of Practice for the United States District Court for the District of Nevada (April 17, 2020), Part IB: United States Magistrate Judges"
+url = "https://www.nvd.uscourts.gov/wp-content/uploads/2020/04/Local-Rules-of-Practice-Amended-2020.pdf"
+path = "sources/fed-dnev/dnev-local-rules-2020-04-17-sectioned.txt"
+path_sha256 = "1f0f9aab6084f6c537612da46e869a18e018b047ff5136dbef92fbd712b78058"
+sha256 = "f90ed909fa5aa88cf17fc97853803b834aa791003d2894707b3fd93c5ae64346"
+as_of = "2020-04-17"
+cite_prefixes = ["D. Nev. LR IB"]
+section_heading = "LR IB {n}"

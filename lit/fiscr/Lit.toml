@@ -1,0 +1,39 @@
+# Appeals to the Foreign Intelligence Surveillance Court of Review, as far
+# as the FISC Rules of Procedure, effective November 1, 2010
+# (sources/fisc, shared with lit/fisc), state them: the petition for
+# review, the record and notification (FISC R. 31, 44, 54-59). The Court
+# of Review's own procedure and 50 U.S.C. § 1803 are vendored nowhere in
+# sources/, so they are named in notes and every cite binds to the FISC
+# Rules. FISC R. 10 has no counting rule in lit/core, so periods are
+# stated in notes, not encoded as counted deadlines.
+[package]
+name = "fiscr"
+version = "0.1.0"
+language = 1
+pack_id = "fiscr"
+forum = "fiscr"
+authority = "FederalRule"
+title = "Foreign Intelligence Surveillance Court of Review"
+description = "Appeals from the Foreign Intelligence Surveillance Court to the Court of Review, as far as the vendored FISC Rules of Procedure state: the petition for review and its 30-day period, the effect of en banc proceedings, the stay, the record and its transmission."
+in_force = "2010-11-01"
+known_at = "2026-10-27"
+unknown_before = "2010-11-01"
+jurisdiction = "Foreign Intelligence Surveillance Court of Review"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.fisc-rules]
+title = "Foreign Intelligence Surveillance Court Rules of Procedure, effective November 1, 2010"
+url = "https://www.fisc.uscourts.gov/sites/default/files/FISC%20Rules%20of%20Procedure.pdf"
+path = "sources/fisc/fisc-rules-of-procedure-sectioned.txt"
+path_sha256 = "52659378ae78d618d899e20d75b920fe1b503d69f6bab03f2c5588c3aa7e950e"
+sha256 = "f6cccb36e8711d7d5de9989ae1e3757f68c139d525117b9c18bac716c9abec15"
+as_of = "2010-11-01"
+cite_prefixes = ["FISC R."]
+section_heading = "Rule {n}"

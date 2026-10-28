@@ -1,0 +1,52 @@
+module fiscr.appeal
+
+start ruling-appealed
+
+state ruling-appealed: "FISC ruling to be appealed" by applicant cite "FISC R. 54"
+{
+  note "An appeal to the Court of Review, as permitted by law, is taken by filing a petition for review with the Clerk of the FISC (FISC R. 54). The government or the provider may petition for review of a ruling on a directive petition under 50 U.S.C. § 1881a(h) (FISC R. 31), and the government or the petitioner of a ruling on a production or nondisclosure order under 50 U.S.C. § 1861(f) (FISC R. 44). The statute is not vendored. The FISC proceedings are lit/fisc."
+  edge-ruling-appealed-petition "Petition for review" -> petition-filed {
+    authority cite "FISC R. 54"
+  }
+}
+
+decision petition-filed: "Petition for review filed in time?" by applicant cite "FISC R. 55(a)"
+{
+  note "Except as the Act provides otherwise, the petition for review is filed no later than 30 days after entry of the decision or order (FISC R. 55(a)). After a timely petition for rehearing en banc, or a grant of rehearing en banc on the Court's own initiative, the time runs from the denial or dismissal of the petition or from the en banc decision on the merits (FISC R. 55(b)). Periods are computed in calendar days under FISC R. 10; they are stated here, not counted."
+  edge-petition-filed-timely "Filed in time" -> record-transmitted {
+    authority cite "FISC R. 55(a)"
+  }
+  edge-petition-filed-late "Filed late" -> dismissed-untimely { authority cite "FISC R. 55(a)" }
+}
+
+state record-transmitted: "Record transmitted under seal" by office cite "FISC R. 58"
+{
+  note "With the petition for review the appellant files a motion to transmit the record (FISC R. 57). The Clerk transmits the record under seal, with the FISC's statement of reasons, as expeditiously as possible and no later than 30 days after the appeal is filed (FISC R. 58), and orally notifies the Presiding Judge of the Court of Review on the filing of the petition (FISC R. 59). The FISC may stay or modify its order while the appeal is pending (FISC R. 56)."
+  edge-record-transmitted-decision "Record before the Court of Review" -> court-review-decision {
+    authority cite "FISC R. 58"
+  }
+}
+
+decision court-review-decision: "Court of Review decision" by court cite "FISC R. 54"
+{
+  note "The Court of Review's own procedure is not vendored and is not modeled; neither is review of its decision in the Supreme Court. The outline's In re Sealed Case, 310 F.3d 717 (FISA Ct. Rev. 2002), and In re Directives, 551 F.3d 1004 (FISA Ct. Rev. 2008), are removed: no reporter text is vendored. Outcomes are read from the appellant's side."
+  edge-court-review-affirmed "Affirmed" -> review-affirmed { authority cite "FISC R. 54" }
+  edge-court-review-reversed "Reversed or remanded" -> review-reversed {
+    authority cite "FISC R. 54"
+  }
+}
+
+terminal dismissed-untimely: "Petition for review out of time" outcome [loss, dismissal] cite "FISC R. 55(a)"
+{
+  note "A petition for review filed more than 30 days after entry of the decision or order, absent en banc proceedings or a provision of the Act, is out of time (FISC R. 55)."
+}
+
+terminal review-affirmed: "FISC ruling affirmed" outcome [loss] cite "FISC R. 54"
+{
+  note "The FISC ruling stands."
+}
+
+terminal review-reversed: "FISC ruling reversed or remanded" outcome [win] cite "FISC R. 54"
+{
+  note "Proceedings on remand in the FISC are not modeled."
+}

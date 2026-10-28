@@ -22,6 +22,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | core | `lit/core` | 46 | 0 | 137 | 0 |
 | frcp-rule12-example | `lit/examples` | 2 | 0 | 2 | 0 |
 | fisc | `lit/fisc` | 0 | 0 | 0 | 0 |
+| fiscr | `lit/fiscr` | 0 | 0 | 0 | 0 |
 | flmd-local-rules | `lit/flmd` | 14 | 0 | 14 | 0 |
 | flnd-local-rules | `lit/flnd` | 13 | 0 | 13 | 0 |
 | flsd-local-rules | `lit/flsd` | 12 | 0 | 12 | 0 |

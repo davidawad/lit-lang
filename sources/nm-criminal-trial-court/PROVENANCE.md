@@ -8,3 +8,9 @@
 - Original: `nm-criminal-trial-court/original/nm-nmra-rule-set-5-criminal-procedure-district-courts-2025.pdf` as served (sha256 b2370faf9e8753540f3a98468f67495a0e86619bf82d5b70d73c3251ab1fbb3d); extraction sha256 0051655525aa33012484b0144fe893ad3471447016181c2e8c6614de53eec171.
 
 - Note (lg-gddt): Rule Sets 6 (Magistrate Courts) and 7 (Metropolitan Courts) criminal rules and Rule Set 9 (Criminal Forms) are separate documents, not vendored; criminal appeals: Rule Set 12 (Rules of Appellate Procedure), covered by sources/nm-state-appellate/.
+
+### `nm-criminal-trial-court/nm-nmra-rule-set-5-2025-sectioned.txt` — NMRA Rule Set 5, sectioned
+
+- Derived in the pod (lg-gddt.24) from `nm-criminal-trial-court/nm-nmra-rule-set-5-criminal-procedure-district-courts-2025.txt` (extract sha256 0051655525aa33012484b0144fe893ad3471447016181c2e8c6614de53eec171); nothing fetched. One `## NMRA <n>` line is inserted before each rule's own heading line `<n>. <Title>` (`NMRA 5-101` through `NMRA 5-903`, 109 rules, including the decimal rules such as 5-103.1 and 5-614.1). Rule text was not edited: deleting the marker lines (each `## NMRA 5-` line with its newline) restores the extract byte for byte.
+- Edition: as the extract, NMRA Unannotated Rule Set 5, 2025 edition as of December 31, 2025.
+- Sectioned sha256 51c947d8634168ede5254af5497b498994dd84768a6a3685bb92a3df1017f773 (the `path_sha256` pinned by `lit/nm-criminal-trial-court/Lit.toml`).

@@ -15,3 +15,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 a70eb14678c7c85bd294523f6a7d7aa950f6e4e37b82e3521359aaca8aa8825a. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `fed-dhaw/original/dhaw-criminal-local-rules-2023-01-01.pdf` as served (sha256 12d2ec99eec2289197a10b0f89bf79ee66c1401e96f0cb1ed7eaebbaea579af6); extraction sha256 a70eb14678c7c85bd294523f6a7d7aa950f6e4e37b82e3521359aaca8aa8825a.
+
+### `fed-dhaw/dhaw-local-rules-sectioned.txt` — D. Haw. Local Rules (civil and general), sectioned
+
+- Derived in the pod (lg-f3q8.42) from `fed-dhaw/dhaw-local-rules.txt` (extract sha256 47e02f2e80565f033be9dd7f0fd5b024f4fceb9fb625931b53d037b3d8a37681); nothing fetched. One `## LR <n>` line is inserted before each Local Rule's own heading line in the body (`LR1.1.` through `LR8009.1.`, 88 rules; `LR1070.1(a)` through `(e)` share the one marker `## LR 1070.1`); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LR /d'`) restores the extract byte for byte.
+- Edition: as the extract, the Local Rules as amended by the administrative order of 2019-08-26, effective September 1, 2019.
+- Sectioned sha256 6fb5b0546e0094dae365ecdfdfa4fce3de96fd6b95c7bba9c22a4afa07d684f2 (the `path_sha256` pinned by `lit/hid/Lit.toml`).

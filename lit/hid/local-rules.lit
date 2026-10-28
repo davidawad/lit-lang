@@ -1,0 +1,586 @@
+module hid-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Hawaii's own periods, computed under the federal rules
+// (FRCP 6(a) governs "any local rule"; LR1.4(d): days are calendar days).
+// Most apply "unless otherwise ordered" where the rule says so. Rules that
+// state no period or limit stay out, as do these: the 35-day minimum
+// between service of a motion and its hearing (LR7.1(a)), an earliest
+// date rather than a deadline, which the language does not encode; hard
+// copy service on the day of filing (LR5.5); the scheduling order within
+// the earlier of 90 days after service or 60 days after appearance
+// (LR16.2(a)), which restates FRCP 16(b)(2) and binds the court; the
+// Rule 26(f) conference "within twenty-one (21) days before any
+// scheduling conference" (LR26.1(a)), which can be read as a window or as
+// FRCP 26(f)(1)'s "at least 21 days before" and so is left to lit/frcp;
+// the three days LR81.1(e) adds to a response period in a case with a
+// self-represented litigant, a FRCP 6(d)-style addition and not a period
+// of its own; the receiver's reports every three months after the first
+// (LR66.1(b)), a recurring period; the one-year unsealing of criminal
+// warrants and the clerk's 60-day notice (LR79.2), criminal and clerk
+// duties; and the briefing of bankruptcy appeals, which LR8009.1(a)
+// leaves to FRBP 8018(a) (lit/frbp). No fee is stated: the admission and
+// pro hac vice fees are "the applicable fee" (LR83.1(b), (c)(2)(C)).
+// The earlier D. Haw. outline's FRCP flow and its Supreme Court decisions
+// (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby, Reeves, Catlin,
+// Bowles, Hamer) are FRCP and FRAP authority and belong to lit/frcp and
+// lit/frap; its Ninth Circuit decisions (Eitel v. McCool; Lopez v. Smith)
+// are removed: no reporter text is vendored.
+
+/// A brief or memorandum supporting or opposing any motion, petition or
+/// appeal, including a pro se party's: at most 25 pages, or longer if it
+/// contains no more than 6,250 words and carries the word-count certificate
+/// (LR7.4(a), (b), (e)). Headings, footnotes and quotations count; the
+/// caption, tables, exhibits, declarations and certificates do not
+/// (LR7.4(d)). The same limits apply to bankruptcy appeals (LR8009.1(c)).
+limit memorandum {
+  words <= 6_250 cite "D. Haw. LR 7.4(b)"
+  pages <= 25 cite "D. Haw. LR 7.4(a)"
+} cite "D. Haw. LR 7.4(a)"
+
+/// A reply brief or memorandum: at most 15 pages, unless it contains no
+/// more than 3,750 words and carries the word-count certificate (LR7.4(c),
+/// (e)).
+limit reply-memorandum {
+  words <= 3_750 cite "D. Haw. LR 7.4(c)"
+  pages <= 15 cite "D. Haw. LR 7.4(c)"
+} cite "D. Haw. LR 7.4(c)"
+
+/// A concise statement supporting or opposing a motion for summary
+/// judgment: at most 5 pages, unless it contains no more than 1,500 words,
+/// counted under LR7.4(d) and certified under LR7.4(e) (LR56.1(c)).
+limit concise-statement {
+  words <= 1_500 cite "D. Haw. LR 56.1(c)"
+  pages <= 5 cite "D. Haw. LR 56.1(c)"
+} cite "D. Haw. LR 56.1(c)"
+
+/// A letter brief under the expedited discovery procedure: five pages or
+/// less, inclusive of all exhibits, unless the court orders otherwise
+/// (LR37.1(c)(2)).
+limit discovery-letter-brief {
+  pages <= 5 cite "D. Haw. LR 37.1(c)"
+} cite "D. Haw. LR 37.1(c)"
+
+/// A motion to file under seal is filed (LR5.2(c)).
+event SealMotionFiled()
+/// The court denies a motion to file under seal (LR5.2(c)).
+event SealMotionDenied()
+/// The court enters an order on a motion to file under seal (LR5.2(c)).
+event SealOrderEntered()
+/// A motion to file publicly a matter another party designated confidential
+/// is filed (LR5.2(d)).
+event PublicFilingMotionFiled()
+/// A document required or permitted to be served is served (LR5.6).
+event DocumentServed()
+/// The hearing on a motion set for hearing is held (LR7.2, LR7.7).
+event MotionHearingHeld()
+/// A non-hearing motion is served (LR7.2).
+event NonHearingMotionServed() paper memorandum
+/// An opposition to a non-hearing motion is served (LR7.2).
+event NonHearingOppositionServed() paper memorandum
+/// An opposition to a non-hearing counter motion is served (LR7.7).
+event CounterMotionOppositionServed() paper reply-memorandum
+/// The motion or opposition in which a party seeks to join substantively is
+/// filed (LR7.7).
+event JoinedPaperFiled()
+/// A motion subject to the pre-filing conference is filed (LR7.8).
+event MotionFiled() paper memorandum
+/// The order granting leave to amend a pleading is filed (LR10.4).
+event AmendmentGranted()
+/// The scheduling conference is held (LR16.2(b)).
+event SchedulingConferenceHeld()
+/// The settlement conference is held (LR16.5(b)(1)).
+event SettlementConferenceHeld()
+/// The FRCP 26(f) conference of the parties is held (LR26.1(b)).
+event PartiesConferenceHeld()
+/// The plaintiff files the FRCP 26(f) report (LR26.1(b)).
+event PlaintiffReportFiled()
+/// A Notice of Related Case is served (LR40.2).
+event RelatedCaseNoticeServed()
+/// Trial begins on the date set (LR47.2, LR51.1).
+event TrialBegins()
+/// An action tried without a jury, or with an advisory jury under FRCP
+/// 39(c), concludes (LR52.1).
+event BenchTrialConcluded()
+/// Judgment, or the settlement agreement on which a fee motion is founded,
+/// is entered (LR54.1(b), LR54.2).
+event JudgmentEntered()
+/// An order denying a motion under FRCP 50(b), 52(b) or 59 is entered
+/// (LR54.1(b)).
+event PostTrialMotionDenied()
+/// An order remanding a removed action to state court is entered
+/// (LR54.1(b)).
+event RemandOrderEntered()
+/// A Bill of Costs is served (LR54.1(d)).
+event BillOfCostsServed()
+/// The clerk taxes costs (LR54.1(e)).
+event CostsTaxed()
+/// The respondent receives the movant's fee records, rates and expense
+/// evidence (LR54.2(d)(5)).
+event FeeInformationReceived()
+/// The LR54.2(d) exchange of fee information is completed (LR54.2(d)).
+event FeeExchangeCompleted()
+/// A Fee Motion is served (LR54.2(g)).
+event FeeMotionServed() paper memorandum
+/// The responsive memorandum on a Fee Motion is served (LR54.2(g)).
+event FeeResponseServed() paper memorandum
+/// The court announces a decision awarding a judgment or order that
+/// requires settlement and approval as to form (LR58.2).
+event DecisionAnnounced()
+/// The prevailing party's draft order or judgment is served (LR58.2).
+event DraftJudgmentServed()
+/// An interlocutory order is issued (LR60.1).
+event InterlocutoryOrderIssued()
+/// A receiver or similar officer takes possession of the estate
+/// (LR66.1(a)).
+event ReceiverTookPossession()
+/// The receiver files the inventory (LR66.1(b)).
+event ReceiverInventoryFiled()
+/// A magistrate judge's non-dispositive order or findings and
+/// recommendations is served (LR74.1(a)).
+event MagistrateOrderServed()
+/// An objection to a magistrate judge's order or findings and
+/// recommendations is served (LR74.1(b)).
+event MagistrateObjectionServed()
+/// The clerk notifies a self-represented litigant that a document or item
+/// cannot be scanned and must be served by other means (LR81.1(c)(3)(B)).
+event ServiceByOtherMeansNotified()
+/// A change occurs that might render an attorney ineligible to practice in
+/// the court (LR83.1(d)).
+event AttorneyStatusChanged()
+/// An attorney's or self-represented litigant's address or contact
+/// information changes (LR83.1(e)(1)).
+event ContactInformationChanged()
+/// A document the court directed to an attorney or self-represented
+/// litigant is returned as not deliverable (LR83.1(e)(2)).
+event CourtMailReturned()
+/// The court mails a notice to show cause why disbarment or suspension
+/// should not occur (LR83.4(b)).
+event DisciplineNoticeMailed()
+/// A party learns the identity of a mediator the court selected, or facts
+/// that form the basis of an objection (LR88.1(l)).
+event MediatorIdentityLearned()
+/// A motion to vacate or correct sentence under 28 U.S.C. § 2255 is served
+/// (LR99.3(d)).
+event Section2255MotionServed()
+/// The scheduling order in a pro se prisoner action is entered (LR99.16.2).
+event PrisonerSchedulingOrderEntered()
+/// The bankruptcy court enters an order under LR8005.1(a) dismissing an
+/// appeal or ruling on an extension or consolidation (LR8005.1(b)).
+event BankruptcyAppealOrderEntered()
+
+/// LR5.2(c): no later than 7 days after the filing of a motion to seal, any
+/// person may oppose it.
+deadline seal-opposition-period: 7.days after SealMotionFiled() counted_by frcp6 cite "D. Haw. LR 5.2(c)"
+{
+  forum frcp
+}
+
+/// LR5.2(c): if the court denies the motion, the movant informs the court
+/// within 4 days whether it wants to withdraw the document or have it filed
+/// publicly; absent notice within 4 days the document is returned to the
+/// movant.
+deadline seal-denial-election-period: 4.days after SealMotionDenied() counted_by frcp6 cite "D. Haw. LR 5.2(c)"
+{
+  forum frcp
+}
+
+/// LR5.2(c): the movant, within 4 days of an order, files a version of the
+/// document consistent with the order.
+deadline seal-conforming-filing-period: 4.days after SealOrderEntered() counted_by frcp6 cite "D. Haw. LR 5.2(c)"
+{
+  forum frcp
+}
+
+/// LR5.2(d): within 7 days after a motion to file publicly a matter another
+/// party designated confidential is filed, any party may oppose it and seek
+/// to have the matter sealed.
+deadline public-filing-opposition-period: 7.days after PublicFilingMotionFiled() counted_by frcp6 cite "D. Haw. LR 5.2(d)"
+{
+  forum frcp
+}
+
+/// LR5.6: proof of service is filed or mailed for filing within 1 day of
+/// service, except where the FRCP prescribes a particular method of proof.
+deadline proof-of-service-period: 1.days after DocumentServed() counted_by frcp6 cite "D. Haw. LR 5.6"
+{
+  forum frcp
+}
+
+/// LR7.2: an opposition to a motion set for hearing, or a statement of no
+/// opposition or no position, is served and filed at least 21 days before
+/// the hearing. Summary judgment briefing follows the same schedule
+/// (LR56.1(a), (j)).
+deadline hearing-opposition-period: 21.days before MotionHearingHeld() counted_by frcp6 cite "D. Haw. LR 7.2"
+{
+  forum frcp
+}
+
+/// LR7.2: an opposition to a non-hearing motion, or a statement of no
+/// opposition or no position, is served and filed within 14 days after
+/// service of the motion.
+deadline nonhearing-opposition-period: 14.days after NonHearingMotionServed() counted_by frcp6 cite "D. Haw. LR 7.2"
+{
+  forum frcp
+}
+
+/// LR7.2: any reply in support of a motion set for hearing is served and
+/// filed at least 14 days before the hearing. An untimely opposition or
+/// reply may be disregarded or stricken.
+deadline hearing-reply-period: 14.days before MotionHearingHeld() counted_by frcp6 cite "D. Haw. LR 7.2"
+{
+  forum frcp
+}
+
+/// LR7.2: any reply in support of a non-hearing motion is served and filed
+/// within 14 days after service of the opposition.
+deadline nonhearing-reply-period: 14.days after NonHearingOppositionServed() counted_by frcp6 cite "D. Haw. LR 7.2"
+{
+  forum frcp
+}
+
+/// LR7.7: the movant on a counter motion set for hearing files and serves
+/// any reply at least 7 days before the hearing.
+deadline counter-motion-hearing-reply-period: 7.days before MotionHearingHeld() counted_by frcp6 cite "D. Haw. LR 7.7"
+{
+  forum frcp
+}
+
+/// LR7.7: the movant on a non-hearing counter motion files and serves any
+/// reply within 7 days after service of the opposition to the counter
+/// motion.
+deadline counter-motion-nonhearing-reply-period: 7.days after CounterMotionOppositionServed() counted_by frcp6 cite "D. Haw. LR 7.7"
+{
+  forum frcp
+}
+
+/// LR7.7: except with leave of court for good cause, a substantive joinder
+/// in a motion or opposition is filed and served within 3 days of the
+/// filing of the motion or opposition joined in. A joinder of simple
+/// agreement may be filed at any time.
+deadline substantive-joinder-period: 3.days after JoinedPaperFiled() counted_by frcp6 cite "D. Haw. LR 7.7"
+{
+  forum frcp
+}
+
+/// LR7.8: counsel contemplating a motion confer with opposing counsel at
+/// least 7 days before filing it; discovery motions (LR37.1), TRO and
+/// preliminary injunction applications, matters with a pro se party, and
+/// motions during trial are excepted.
+deadline prefiling-conference-period: 7.days before MotionFiled() counted_by frcp6 cite "D. Haw. LR 7.8"
+{
+  forum frcp
+}
+
+/// LR10.4: if leave is granted, the amended pleading is filed, with redline
+/// formatting removed, and served within 14 days of the filing of the order
+/// granting leave, unless the court orders otherwise.
+deadline amended-pleading-period: 14.days after AmendmentGranted() counted_by frcp6 cite "D. Haw. LR 10.4"
+{
+  forum frcp
+}
+
+/// LR16.2(b): each party files and serves a Scheduling Conference Statement
+/// at least 7 days before the scheduling conference.
+deadline scheduling-statement-period: 7.days before SchedulingConferenceHeld() counted_by frcp6 cite "D. Haw. LR 16.2(b)"
+{
+  forum frcp
+}
+
+/// LR16.5(b)(1): at least 7 days before the settlement conference, each
+/// party delivers a Confidential Settlement Conference Statement directly
+/// to the settlement judge; it is not filed or served.
+deadline settlement-statement-period: 7.days before SettlementConferenceHeld() counted_by frcp6 cite "D. Haw. LR 16.5(b)"
+{
+  forum frcp
+}
+
+/// LR26.1(b): unless the parties agree or the court orders otherwise, the
+/// plaintiff files the FRCP 26(f) report within 14 days after the
+/// conference.
+deadline parties-report-period: 14.days after PartiesConferenceHeld() counted_by frcp6 cite "D. Haw. LR 26.1(b)"
+{
+  forum frcp
+}
+
+/// LR26.1(b): the defendant may file a supplemental report within 7 days if
+/// it objects to the plaintiff's report. The rule names no trigger; the
+/// period is read to run from the plaintiff's report to which it objects.
+deadline supplemental-report-period: 7.days after PlaintiffReportFiled() counted_by frcp6 cite "D. Haw. LR 26.1(b)"
+{
+  forum frcp
+}
+
+/// LR40.2: a party receiving a Notice of Related Case responds within 7
+/// days of service, or its objections are waived.
+deadline related-case-response-period: 7.days after RelatedCaseNoticeServed() counted_by frcp6 cite "D. Haw. LR 40.2"
+{
+  forum frcp
+}
+
+/// LR47.2: when a civil case set for jury trial settles or is otherwise
+/// disposed of, counsel notify the court at least one full business day
+/// before trial is set to begin, or juror costs may be assessed.
+deadline jury-settlement-notice-period: 1.court_days before TrialBegins() counted_by frcp6 cite "D. Haw. LR 47.2"
+{
+  forum frcp
+}
+
+/// LR51.1(e): unless otherwise ordered, the parties serve their proposed
+/// jury instructions on each other at least 21 days before trial, then meet
+/// and confer.
+deadline jury-instruction-exchange-period: 21.days before TrialBegins() counted_by frcp6 cite "D. Haw. LR 51.1(e)"
+{
+  forum frcp
+}
+
+/// LR51.1(g): the jointly agreed and separately proposed instructions are
+/// filed at least 14 days before trial.
+deadline jury-instruction-filing-period: 14.days before TrialBegins() counted_by frcp6 cite "D. Haw. LR 51.1(g)"
+{
+  forum frcp
+}
+
+/// LR51.1(g): each party files its written objections to the instructions
+/// the other party proposed at least 7 days before trial.
+deadline jury-instruction-objection-period: 7.days before TrialBegins() counted_by frcp6 cite "D. Haw. LR 51.1(g)"
+{
+  forum frcp
+}
+
+/// LR52.1: except as otherwise ordered, within 28 days of the conclusion of
+/// an action tried without a jury the parties simultaneously file separate
+/// draft findings of fact and conclusions of law.
+deadline draft-findings-period: 28.days after BenchTrialConcluded() counted_by frcp6 cite "D. Haw. LR 52.1"
+{
+  forum frcp
+}
+
+/// LR54.1(b): unless otherwise ordered, a Bill of Costs is filed and served
+/// within 14 days after entry of judgment. Non-compliance with LR54.1 is
+/// deemed a waiver of costs (LR54.1(a)).
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "D. Haw. LR 54.1(b)"
+{
+  forum frcp
+}
+
+/// LR54.1(b): a Bill of Costs is filed and served within 14 days after
+/// entry of an order denying a motion under FRCP 50(b), 52(b) or 59.
+deadline post-trial-bill-of-costs-period: 14.days after PostTrialMotionDenied() counted_by frcp6 cite "D. Haw. LR 54.1(b)"
+{
+  forum frcp
+}
+
+/// LR54.1(b): a Bill of Costs is filed and served within 14 days after
+/// entry of an order remanding a removed action to state court.
+deadline remand-bill-of-costs-period: 14.days after RemandOrderEntered() counted_by frcp6 cite "D. Haw. LR 54.1(b)"
+{
+  forum frcp
+}
+
+/// LR54.1(d): within 7 days after a Bill of Costs is served, the party
+/// against whom costs are claimed files and serves any specific objections;
+/// absent objections the clerk may tax all the requested costs.
+deadline costs-objection-period: 7.days after BillOfCostsServed() counted_by frcp6 cite "D. Haw. LR 54.1(d)"
+{
+  forum frcp
+}
+
+/// LR54.1(e): taxation of costs may be reviewed by the court on motion
+/// filed and served within 7 days after taxation by the clerk, under FRCP
+/// 54(d)(1).
+deadline costs-review-motion-period: 7.days after CostsTaxed() counted_by frcp6 cite "D. Haw. LR 54.1(e)"
+{
+  forum frcp
+}
+
+/// LR54.2(b): unless a court order sets a different schedule, a Fee Motion
+/// is filed and served within 49 days after entry of the judgment or
+/// settlement agreement on which it is founded. FRCP 54(d)(2)(B) yields its
+/// 14 days to a "statute or a court order"; whether a local rule is such an
+/// order is not settled by the vendored text, so this period stands beside
+/// lit/frcp's, not over it.
+deadline fee-motion-period: 49.days after JudgmentEntered() counted_by frcp6 cite "D. Haw. LR 54.2(b)"
+{
+  forum frcp
+}
+
+/// LR54.2(d)(4): the movant provides the respondent its time records, rates
+/// and expense evidence within 14 days after the judgment, unless the court
+/// sets a different schedule.
+deadline fee-information-period: 14.days after JudgmentEntered() counted_by frcp6 cite "D. Haw. LR 54.2(d)"
+{
+  forum frcp
+}
+
+/// LR54.2(d)(5): if no agreement is reached, the respondent, within 14 days
+/// of receipt of that information, discloses the evidence it will use to
+/// oppose the requested hours, rates or expenses.
+deadline fee-disclosure-period: 14.days after FeeInformationReceived() counted_by frcp6 cite "D. Haw. LR 54.2(d)"
+{
+  forum frcp
+}
+
+/// LR54.2(d): 7 days after the exchange of information is completed and
+/// before the motion is filed, the parties identify the hours, rates and
+/// expenses that will and will not be objected to.
+deadline fee-objection-identification-period: 7.days after FeeExchangeCompleted() counted_by frcp6 cite "D. Haw. LR 54.2(d)"
+{
+  forum frcp
+}
+
+/// LR54.2(e): the parties complete the joint statement within 42 days after
+/// entry of the judgment or settlement agreement on which the fee motion
+/// will be based, unless the court orders otherwise.
+deadline fee-joint-statement-period: 42.days after JudgmentEntered() counted_by frcp6 cite "D. Haw. LR 54.2(e)"
+{
+  forum frcp
+}
+
+/// LR54.2(g): unless otherwise ordered, any opposing party may file and
+/// serve a responsive memorandum within 7 days after service of the Fee
+/// Motion.
+deadline fee-response-period: 7.days after FeeMotionServed() counted_by frcp6 cite "D. Haw. LR 54.2(g)"
+{
+  forum frcp
+}
+
+/// LR54.2(g): the movant may file and serve a reply memorandum within 7
+/// days after service of the responsive memorandum; the motion is then
+/// decided without a hearing unless otherwise ordered.
+deadline fee-reply-period: 7.days after FeeResponseServed() counted_by frcp6 cite "D. Haw. LR 54.2(g)"
+{
+  forum frcp
+}
+
+/// LR58.2: except as otherwise ordered, within 7 days after the
+/// announcement of a decision awarding a judgment or order that requires
+/// settlement and approval as to form, the prevailing party files and
+/// serves a draft.
+deadline draft-judgment-period: 7.days after DecisionAnnounced() counted_by frcp6 cite "D. Haw. LR 58.2"
+{
+  forum frcp
+}
+
+/// LR58.2: a party receiving the proposed draft files and serves, within 7
+/// days, any objection and a substitute proposed draft.
+deadline draft-judgment-objection-period: 7.days after DraftJudgmentServed() counted_by frcp6 cite "D. Haw. LR 58.2"
+{
+  forum frcp
+}
+
+/// LR60.1: a motion for reconsideration of an interlocutory order for
+/// manifest error of law or fact (LR60.1(c)) is filed and served within 14
+/// days after the order is issued. Reconsideration of a case-dispositive
+/// order is governed by FRCP 59 or 60 (lit/frcp).
+deadline reconsideration-period: 14.days after InterlocutoryOrderIssued() counted_by frcp6 cite "D. Haw. LR 60.1"
+{
+  forum frcp
+}
+
+/// LR66.1(a): unless otherwise ordered, a receiver or similar officer files
+/// an inventory within 28 days after taking possession of the estate.
+deadline receiver-inventory-period: 28.days after ReceiverTookPossession() counted_by frcp6 cite "D. Haw. LR 66.1(a)"
+{
+  forum frcp
+}
+
+/// LR66.1(b): within one month after the filing of the inventory, unless
+/// the court directs other times, the receiver files a report of receipts,
+/// expenditures and transactions; later reports follow at three-month
+/// intervals (not encoded, a recurring period).
+deadline receiver-first-report-period: 1.months after ReceiverInventoryFiled() counted_by frcp6 cite "D. Haw. LR 66.1(b)"
+{
+  forum frcp
+}
+
+/// LR74.1(a): except where the parties consented under LR73.1, a party may
+/// object to a magistrate judge's non-dispositive order or findings and
+/// recommendations within 14 days after being served. A reconsideration
+/// motion tolls the time (LR74.1(d)).
+deadline magistrate-objection-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "D. Haw. LR 74.1(a)"
+{
+  forum frcp
+}
+
+/// LR74.1(b): any party may file and serve a response within 14 days after
+/// service of the objection; no reply without leave (LR74.1(c)).
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionServed() counted_by frcp6 cite "D. Haw. LR 74.1(b)"
+{
+  forum frcp
+}
+
+/// LR81.1(c)(3)(B): when a self-represented litigant presents a document or
+/// item that cannot be scanned, the clerk notifies the litigant to serve it
+/// by other means within 3 business days.
+deadline pro-se-other-service-period: 3.court_days after ServiceByOtherMeansNotified() counted_by frcp6 cite "D. Haw. LR 81.1(c)"
+{
+  forum frcp
+}
+
+/// LR83.1(d): an attorney who is a member of the bar of the court, or has
+/// permission to practice in it, files notice of a change that might render
+/// the attorney ineligible within 14 days of the change.
+deadline attorney-status-notice-period: 14.days after AttorneyStatusChanged() counted_by frcp6 cite "D. Haw. LR 83.1(d)"
+{
+  forum frcp
+}
+
+/// LR83.1(e)(1): an attorney or self-represented litigant whose address or
+/// contact information changes while appearing in a pending case files and
+/// serves a Notice of Change of Address within 14 days.
+deadline address-change-notice-period: 14.days after ContactInformationChanged() counted_by frcp6 cite "D. Haw. LR 83.1(e)"
+{
+  forum frcp
+}
+
+/// LR83.1(e)(2): sanctions, including dismissal or judgment, may follow
+/// when a document the court directed to an attorney or self-represented
+/// litigant is returned as not deliverable and the court receives no
+/// written current address within 30 days of the return.
+deadline returned-mail-response-period: 30.days after CourtMailReturned() counted_by frcp6 cite "D. Haw. LR 83.1(e)"
+{
+  forum frcp
+}
+
+/// LR83.4(b): a person disbarred or suspended elsewhere, found guilty of a
+/// qualifying crime, or no longer meeting the admission requirements shows
+/// cause within 14 days after the mailing of the notice why disbarment or
+/// suspension in this court should not occur.
+deadline discipline-show-cause-period: 14.days after DisciplineNoticeMailed() counted_by frcp6 cite "D. Haw. LR 83.4(b)"
+{
+  forum frcp
+}
+
+/// LR88.1(l): a party objecting to a mediator the court selected files an
+/// objection within 7 days after learning the mediator's identity, or
+/// within 7 days of learning the facts on which the objection rests.
+deadline mediator-objection-period: 7.days after MediatorIdentityLearned() counted_by frcp6 cite "D. Haw. LR 88.1(l)"
+{
+  forum frcp
+}
+
+/// LR99.3(d): within 35 days of service of a motion to vacate or correct
+/// sentence under 28 U.S.C. § 2255, the respondent files a response, unless
+/// otherwise ordered.
+deadline section-2255-response-period: 35.days after Section2255MotionServed() counted_by frcp6 cite "D. Haw. LR 99.3(d)"
+{
+  forum frcp
+}
+
+/// LR99.16.2: in a pro se prisoner action, a motion asserting failure to
+/// exhaust prison administrative remedies under 42 U.S.C. § 1997e(a) is
+/// filed within 70 days after entry of the scheduling order.
+deadline prisoner-exhaustion-motion-period: 70.days after PrisonerSchedulingOrderEntered() counted_by frcp6 cite "D. Haw. LR 99.16.2"
+{
+  forum frcp
+}
+
+/// LR8005.1(b): a bankruptcy court order under LR8005.1(a) may be reviewed
+/// by the district court on motion filed within 14 days after entry of the
+/// order.
+deadline bankruptcy-appeal-order-review-period: 14.days after BankruptcyAppealOrderEntered() counted_by frcp6 cite "D. Haw. LR 8005.1(b)"
+{
+  forum frcp
+}

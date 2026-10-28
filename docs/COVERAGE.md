@@ -41,6 +41,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | frbp-bankruptcy-procedure | `lit/frbp` | 77 | 0 | 59 | 0 |
 | frcp-civil-procedure | `lit/frcp` | 22 | 24 | 49 | 12 |
 | frcrimp-criminal-procedure | `lit/frcrimp` | 10 | 0 | 19 | 0 |
+| gud-local-rules | `lit/gud` | 31 | 0 | 0 | 0 |
 | itc-337 | `lit/itc` | 22 | 3 | 33 | 0 |
 | jpml | `lit/jpml` | 0 | 0 | 0 | 0 |
 | links | `lit/links` | 2 | 0 | 3 | 0 |

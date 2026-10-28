@@ -1,0 +1,47 @@
+# The District Court of Guam's Civil Local Rules of Practice as a
+# local-rule layer over lit/frcp (28 U.S.C. § 2071; FRCP 83(a); CVLR 1(c):
+# the rules "supplement the Federal Rules of Civil Procedure"): it declares
+# only the periods and limits the CVLR themselves state and re-encodes no
+# FRCP deadline. Each period is counted under FRCP 6(a), which governs "any
+# local rule". The rules are those effective July 22, 2019
+# (sources/fed-dguam). An appeal goes to the Ninth Circuit under lit/frap.
+[package]
+name = "gud-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "gud-local-rules"
+forum = "gud"
+authority = "LocalRule"
+kind = "local-rule"
+title = "District Court of Guam: Civil Local Rules of Practice"
+description = "The District Court of Guam's Civil Local Rules of Practice (CVLR) as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): motion briefing and its page limits, oral argument requests, evidentiary hearing disclosures, reconsideration, the pro se Rule 12 notice, the scheduling notice and the Scheduling and Planning Conference Report, the standard pretrial times, the mediator's report, expedited discovery letter briefs, costs and attorney's fees, summary judgment concise statements, settlement of judgments, magistrate judge consent by an added party, and the withdrawal and disposition of exhibits."
+in_force = "2019-07-22"
+known_at = "2026-10-28"
+unknown_before = "2019-07-22"
+jurisdiction = "District Court of Guam"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "gud-cvlr"
+issuer = "District Court of Guam"
+date = "2019-07-22"
+designation = "Civil Local Rules of Practice"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.gud-cvlr]
+title = "Civil Local Rules of Practice for the District Court of Guam (effective July 22, 2019)"
+url = "https://www.gud.uscourts.gov/sites/gud/files/civil_rules_effective_20190722_0.pdf"
+path = "sources/fed-dguam/guam-civil-local-rules-sectioned.txt"
+path_sha256 = "cc6ad77f119104f442bc2a1d17885dd456acf931f0f7bf69113819f58b241d38"
+sha256 = "1fb1637ce3f48ddb24269a09105d40de3489e229a38cd3c63a6515e8da6a887c"
+as_of = "2019-07-22"
+cite_prefixes = ["D. Guam CVLR"]
+section_heading = "CVLR {n}"

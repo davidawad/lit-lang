@@ -1,0 +1,99 @@
+module njd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The District of New Jersey's own criminal periods, counted under the
+// criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method.
+//
+// Local Civil Rules apply in criminal cases only as L.Cr.R. 1.1 lists them
+// (among them L.Civ.R. 6.1(a)(1)-(2), 7.1(a), (c)(1), (e), (g) and (i),
+// 7.2 and 54.1); their periods are encoded once, in lit/njd, and are not
+// restated here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: objections to a magistrate judge's proposed findings and
+// recommendations on a dispositive motion within 14 days after service
+// (D.N.J. L.Cr.R. 5.1(o)(3), by the procedure of L.Civ.R. 72.1(c)(2);
+// FRCrimP 59(b)(2)), and a defendant's notice of appeal from a magistrate
+// judge's misdemeanor or petty-offense judgment within 14 days after its
+// entry (D.N.J. L.Cr.R. 58.1(d)(1); FRCrimP 58(g)(2)(B)).
+//
+// Duties that are not a party's deadline stay in notes: the magistrate
+// judge files the record of proceedings in a petty-offense or misdemeanor
+// case not later than 21 days after final disposition, and in other cases
+// transmits the file to the Clerk within 21 days after discharge,
+// commitment or release on bail (D.N.J. L.Cr.R. 55.1(a), (c)); the Clerk
+// calendars a misdemeanor appeal for hearing fifty days after the notice
+// of appeal is filed (D.N.J. L.Cr.R. 58.1(d)(2)); and an attorney to whom
+// trial exhibits are returned preserves them until the time for appeal has
+// passed, during any appeal, or for six months, whichever is longer
+// (D.N.J. L.Cr.R. 55.2). Defense counsel files a formal appearance
+// "promptly" after the indictment or information (D.N.J. L.Cr.R. 44.1),
+// which states no period.
+//
+// The earlier D.N.J. criminal outline's FRCrimP flow and its decisions are
+// FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// The defendant pleads to the indictment or information (D.N.J. L.Cr.R.
+/// 12.1, 41.1).
+event PleaEntered()
+/// A defendant files a notice of appeal from a magistrate judge's judgment
+/// of conviction in a misdemeanor or petty-offense case (D.N.J. L.Cr.R.
+/// 58.1(d)(1)).
+event MisdemeanorAppealNoticed()
+/// The appellee receives a copy of the appellant's brief in a misdemeanor
+/// appeal (D.N.J. L.Cr.R. 58.1(d)(2)).
+event AppellantBriefReceived()
+/// The appellant receives the appellee's brief in a misdemeanor appeal
+/// (D.N.J. L.Cr.R. 58.1(d)(2)).
+event AppelleeBriefReceived()
+
+/// D.N.J. L.Cr.R. 12.1: defenses and objections permitted by FRCrimP 12
+/// are made before pleading or within 30 days thereafter, unless the Court
+/// at arraignment, on application of counsel, specifies otherwise, or good
+/// cause is shown.
+deadline rule12-motions: 30.days after PleaEntered() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.N.J. L.Cr.R. 12.1"
+{
+  forum frcrimp
+}
+
+/// D.N.J. L.Cr.R. 41.1: defenses and objections permitted by FRCrimP 41 are
+/// made before pleading or within 30 days thereafter, unless the Court at
+/// arraignment, on application of counsel, specifies otherwise, or good
+/// cause is shown.
+deadline rule41-motions: 30.days after PleaEntered() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.N.J. L.Cr.R. 41.1"
+{
+  forum frcrimp
+}
+
+/// D.N.J. L.Cr.R. 58.1(d)(2): in an appeal from a magistrate judge's
+/// misdemeanor or petty-offense judgment, the appellant serves and submits
+/// a brief within 21 days of the filing of the notice of appeal; briefs
+/// conform to L.Civ.R. 7.2(b).
+deadline misdemeanor-appellant-brief: 21.days after MisdemeanorAppealNoticed() counted_by frcrimp45 cite "D.N.J. L.Cr.R. 58.1(d)"
+{
+  forum frcrimp
+}
+
+/// D.N.J. L.Cr.R. 58.1(d)(2): the appellee serves and submits a brief
+/// within 21 days after receipt of a copy of the appellant's brief.
+deadline misdemeanor-appellee-brief: 21.days after AppellantBriefReceived() counted_by frcrimp45 cite "D.N.J. L.Cr.R. 58.1(d)"
+{
+  forum frcrimp
+}
+
+/// D.N.J. L.Cr.R. 58.1(d)(2): the appellant may serve and submit a reply
+/// brief within seven days after receipt of the appellee's brief.
+deadline misdemeanor-reply-brief: 7.days after AppelleeBriefReceived() counted_by frcrimp45 cite "D.N.J. L.Cr.R. 58.1(d)"
+{
+  forum frcrimp
+}

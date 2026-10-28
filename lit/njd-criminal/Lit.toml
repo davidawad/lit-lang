@@ -1,0 +1,53 @@
+# The U.S. District Court for the District of New Jersey's Local Criminal
+# Rules (L.Cr.R.) as a local-rule layer over lit/frcrimp (28 U.S.C. §
+# 2071; FRCrimP 57(a)): it declares only the periods the local criminal
+# rules themselves state and re-encodes no FRCrimP, Speedy Trial Act or
+# FRAP 4(b) period (one source of truth: lit/frcrimp). Each period is
+# counted under FRCrimP 45(a), which governs "any local rule", so each
+# deadline names `forum frcrimp`. The rules are the consolidated Local
+# Civil and Criminal Rules "With Revisions as of October 21, 2026"
+# (sources/njd), so in_force is that date; earlier editions are not
+# vendored, so a query before it is a hole in the corpus. The Local Civil
+# Rules that L.Cr.R. 1.1 makes applicable in criminal cases are encoded
+# once, in lit/njd. An appeal goes to the Third Circuit under lit/frcrimp's
+# FRAP 4(b) period.
+[package]
+name = "njd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "njd-criminal-local-rules"
+forum = "njd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of New Jersey: Local Criminal Rules"
+description = "The District of New Jersey's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the period for Rule 12 and Rule 41 defenses and objections after pleading, and the briefing schedule of an appeal from a magistrate judge's misdemeanor or petty-offense judgment."
+in_force = "2026-10-21"
+known_at = "2026-10-28"
+unknown_before = "2026-10-21"
+jurisdiction = "U.S. District Court for the District of New Jersey (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "njd-lcrr"
+issuer = "United States District Court for the District of New Jersey"
+date = "2026-10-21"
+designation = "Local Criminal Rules (with revisions as of October 21, 2026)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.njd-lcrr]
+title = "Local Civil and Criminal Rules of the United States District Court for the District of New Jersey (with revisions as of October 21, 2026), Local Criminal Rules"
+url = "https://www.njd.uscourts.gov/sites/njd/files/CompleteLocalRules.pdf"
+path = "sources/njd/local-rules-2026-10-21-sectioned.txt"
+path_sha256 = "009dd759ad0ef2daf6649cdb3fbe090876e95e62c0bed8a124cc166f21716a6f"
+sha256 = "d77ecfd388077db5fa8ba0ff098751a9e4dd9ad146e7f0fa8dac46ee2597e22e"
+as_of = "2026-10-21"
+cite_prefixes = ["D.N.J. L.Cr.R."]
+section_heading = "L.Cr.R. {n}"

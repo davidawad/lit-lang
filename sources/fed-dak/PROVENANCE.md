@@ -17,6 +17,7 @@
 
 - Source: https://www.akd.uscourts.gov/sites/akd/files/local_rules/Local_Criminal_Rules_10-2025_0.pdf (official site; 27 pages, sha256 c3f9e80d4ad5762414e7758715d179d982f0367ae258bedfba84fe0fbff809db).
 - Edition: Local Criminal Rules, 2025 Revised Edition effective October 15, 2025, superseding the December 2020 edition (title page), listed as 'Criminal (effective October 15, 2025)' at https://www.akd.uscourts.gov/court-info/local-rules-and-orders/local-rules. robots.txt of www.akd.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): akd-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 2dc784b33cd13751d9027158501d6f631ffc0cdd8deae47b8d0b27bccad66dfe. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `fed-dak/original/dak-local-criminal-rules-2025-10-15.pdf` as served (sha256 c3f9e80d4ad5762414e7758715d179d982f0367ae258bedfba84fe0fbff809db); extraction sha256 2dc784b33cd13751d9027158501d6f631ffc0cdd8deae47b8d0b27bccad66dfe.

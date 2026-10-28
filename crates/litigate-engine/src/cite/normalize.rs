@@ -199,7 +199,9 @@ pub fn parse_cite_string(raw: &str, grammar: &CiteGrammar<'_>) -> Vec<CiteRef> {
 /// actually uses) is left alone — which subsection each range member binds to
 /// is ambiguous, so guessing would be worse than not expanding. So is a
 /// hyphenated section the grammar's corpus has a heading for (`Civil L.R.
-/// 7-11` in a body numbered `<chapter>-<rule>`). Anything that isn't a plain
+/// 7-11` in a body numbered `<chapter>-<rule>`), and, against a corpus, one
+/// whose ends aren't both headings there (`MLBR App. 1 Rule 13-99` is one
+/// unknown rule, not Rules 13 through 99). Anything that isn't a plain
 /// member-member range (not a range at all, spans more than 99 members, or
 /// the two sides don't share a family/prefix) is returned unchanged.
 fn expand_range(cref: CiteRef, grammar: &CiteGrammar<'_>) -> Vec<CiteRef> {
@@ -219,6 +221,22 @@ fn expand_range(cref: CiteRef, grammar: &CiteGrammar<'_>) -> Vec<CiteRef> {
     let Some(members) = range_members(lo, hi) else {
         return vec![cref];
     };
+    if let Some(corpus) = grammar.corpus {
+        let missing = |section: Option<&String>| {
+            section
+                .and_then(|section| {
+                    CiteRef {
+                        section: section.clone(),
+                        ..cref.clone()
+                    }
+                    .heading()
+                })
+                .is_none_or(|heading| corpus.lookup_all(&heading).is_empty())
+        };
+        if missing(members.first()) || missing(members.last()) {
+            return vec![cref];
+        }
+    }
     members
         .into_iter()
         .map(|section| CiteRef {

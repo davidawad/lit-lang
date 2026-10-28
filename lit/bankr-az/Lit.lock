@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-az-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:47524f39fd7c105779bf65349fcfe8a2dd3364d1a2ab841df6b420b6f427ef95"
+semantic = "sha256:e85e36c0bb2d3b877623541afc87600a3391d7ea459927451e7307a36dca2d6b"
+texts = [
+    "azb-lr sources/bankr-az/azb-lbr-2026-06-01-sectioned.txt sha256:00e707dfecbac3cb1db639b06d58c5f7444dfee799197c98245ed067135ed86b",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-az"
-version = "0.0.1"
-language = 1
-source = "sha256:0b7480021afa37f67dc59ebf7f1cd58ca43990c30a8cb1c48be40a6f26610cde"
-semantic = "sha256:ef5c0ce4363796c6718e38347d09e01118eb9c5ed0f6635befc037d4ef3f79c0"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

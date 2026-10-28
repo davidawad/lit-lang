@@ -1,0 +1,498 @@
+module bankr-az-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ CaseConverted, FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
+
+// The Bankr. D. Ariz. court's own periods, counted under FRBP 9006(a).
+// The FRBP periods (schedules and their extension, claims in chapter 7, 12
+// and 13 cases, exemptions, discharge, dischargeability, the adversary
+// answer and summons, new trial, appeals) are lit/frbp's and are not
+// declared again; LR 9023-1(a) only restates FRBP 9023's 14 days and is
+// not repeated, and a governmental unit's claim 180 days after the order
+// for relief (LR 3003-1(c)(2)) is 11 U.S.C. § 502(b)(9)'s.
+//
+// Stated in the rules but not declared: the "whichever is later" deadlines
+// (a creditor's chapter 13 plan objection 7 days before the initial
+// confirmation hearing or 28 days after service of the plan, LR 2084-9(a);
+// the trustee's recommendation on an amended plan, LR 2084-10(a)(2); the
+// removed-litigation filings, LR 9027-1(c)); the hearing windows the court
+// sets (the initial chapter 13 confirmation hearing 20 to 45 days after
+// the first date set for the § 341 meeting, LR 2084-11; a trustee's
+// dismissal hearing on at least 21 days' notice, LR 2084-15(a)); notice a
+// bar-date order must give (no less than 60 days, LR 3003-1(a)); the
+// clock-hour and business-day periods (24 hours' advance notice of first
+// day motions to the United States Trustee, LR 4001-4(a); the ballot report
+// 3 business days before the confirmation hearing, LR 3018-1(c); input on
+// a draft pretrial statement within 7 business days, LR 7016-1(b)); the
+// 180-day bar on refiling after a dismissal with prejudice, LR 1017-1(e);
+// the trustee's own disbursement timing (LR 2084-6(d), 2084-13(f)); the
+// 30-day window within which a § 362(e) waiver is deemed (LR 4001-1(g)(3));
+// the bar on briefing stipulations closer than 5 days to a hearing (LR
+// 9013-1(d)); the 60-day advisement inquiry (LR 9014-4); and the ADR
+// program's mediator-selection and conference periods (LR 9072-7, 9072-8,
+// 9072-9). The earlier outline's Supreme Court decisions construe the Code
+// and the FRBP, not these rules, and are removed here: no reporter text is
+// vendored.
+
+/// A motion, a response or reply and the supporting memoranda: not more
+/// than 15 pages exclusive of attachments, unless ordered otherwise (Bankr.
+/// D. Ariz. LR 9013-1(b)).
+limit motion-paper { pages <= 15 cite "Bankr. D. Ariz. LR 9013-1(b)" } cite "Bankr. D. Ariz. LR 9013-1(b)"
+
+/// Any other document: not more than 15 pages exclusive of attachments,
+/// except chapter 11 disclosure statements, plans and objections (Bankr. D.
+/// Ariz. LR 9004-1(h)).
+limit document { pages <= 15 cite "Bankr. D. Ariz. LR 9004-1(h)" } cite "Bankr. D. Ariz. LR 9004-1(h)"
+
+/// A miscellaneous proceeding is filed without its fee (Bankr. D. Ariz. LR
+/// 1006-1(c)).
+event MiscellaneousProceedingFiled()
+/// Schedules and statements are filed after an extension (Bankr. D. Ariz.
+/// LR 1007-1(c)).
+event ExtendedSchedulesFiled()
+/// A motion to waive the debtor's appearance at the § 341 meeting is filed
+/// (Bankr. D. Ariz. LR 2003-1(b)).
+event AppearanceWaiverMotionFiled()
+/// The chapter 13 trustee receives notice of a change in a monthly conduit
+/// payment (Bankr. D. Ariz. LR 2084-4(b)).
+event ConduitChangeNoticeReceived()
+/// The chapter 13 trustee files notice of a changed conduit payment (Bankr.
+/// D. Ariz. LR 2084-4(b)).
+event ConduitChangeNoticeFiled()
+/// A change of the name or address where a real property creditor's
+/// payments are made takes effect (Bankr. D. Ariz. LR 2084-4(b)).
+event PaymentAddressChanged()
+/// A proposed order dismissing a chapter 13 case for failure to file a plan
+/// is served (Bankr. D. Ariz. LR 2084-4(f)).
+event ProposedDismissalOrderServed()
+/// A dismissed chapter 13 case is reinstated after the creditor objection
+/// deadline (Bankr. D. Ariz. LR 2084-9(a)).
+event CaseReinstated()
+/// The initial chapter 13 confirmation hearing (Bankr. D. Ariz. LR
+/// 2084-10(a)).
+event InitialConfirmationHearing()
+/// The last date set for creditor objections to a chapter 13 plan (Bankr.
+/// D. Ariz. LR 2084-10(a)).
+event CreditorObjectionDeadline()
+/// The chapter 13 trustee files a recommendation or objection (Bankr. D.
+/// Ariz. LR 2084-10(b)).
+event TrusteeRecommendationFiled()
+/// The trustee receives a proposed chapter 13 confirmation order (Bankr. D.
+/// Ariz. LR 2084-13(e)).
+event ProposedConfirmationOrderReceived()
+/// A claim objection is served (Bankr. D. Ariz. LR 3007-1(b)).
+event ClaimObjectionServed()
+/// Notice of a stay relief motion or stipulation is served (Bankr. D. Ariz.
+/// LR 4001-1(c)).
+event StayReliefNoticeServed()
+/// Notice of a cash collateral or financing motion and interim order is
+/// served (Bankr. D. Ariz. LR 4001-2(a)).
+event CashCollateralNoticeServed()
+/// Notice of a § 522(f) lien avoidance motion is served (Bankr. D. Ariz. LR
+/// 4003-2(b)).
+event LienAvoidanceNoticeServed()
+/// The time to appeal expires or an appeal becomes final (Bankr. D. Ariz.
+/// LR 5005-1(b)).
+event AppealConcluded()
+/// A paper document is docketed in electronic form (Bankr. D. Ariz. LR
+/// 5005-4(g)).
+event PaperDocumentDocketed()
+/// A sale not in the ordinary course of business closes (Bankr. D. Ariz.
+/// LR 6004-1(d)).
+event SaleClosed()
+/// Notice of a motion to reject, assume or assign an executory contract or
+/// unexpired lease is served (Bankr. D. Ariz. LR 6006-1(d)).
+event ExecutoryContractNoticeServed()
+/// Notice of an abandonment is served (Bankr. D. Ariz. LR 6007-1(d)).
+event AbandonmentNoticeServed()
+/// Notice of a redemption motion is served (Bankr. D. Ariz. LR 6008-1(b)).
+event RedemptionNoticeServed()
+/// The date of trial (Bankr. D. Ariz. LR 7016-1(a)).
+event TrialDate()
+/// The deadline to file the joint pretrial statement (Bankr. D. Ariz. LR
+/// 7016-1(b)).
+event PretrialStatementDeadline()
+/// Judgment is entered in an adversary proceeding (Bankr. D. Ariz. LR
+/// 7054-1(a)).
+event JudgmentEntered()
+/// A cost statement is served (Bankr. D. Ariz. LR 7054-1(b)).
+event CostStatementServed()
+/// A motion is served (Bankr. D. Ariz. LR 9013-1(c)).
+event MotionServed() paper motion-paper
+/// A response to a motion is served (Bankr. D. Ariz. LR 9013-1(c)).
+event ResponseServed() paper motion-paper
+/// A motion for summary judgment is served (Bankr. D. Ariz. LR 9013-1(h)).
+event SummaryJudgmentMotionServed() paper motion-paper
+/// A response to a summary judgment motion is served (Bankr. D. Ariz. LR
+/// 9013-1(h)).
+event SummaryJudgmentResponseServed() paper motion-paper
+/// Notice of a motion on 21-day bar date notice is served (Bankr. D. Ariz.
+/// LR 2002-2(b), 9013-1(l)).
+event BarDateNoticeServed()
+/// A default judgment or order is entered (Bankr. D. Ariz. LR 9022-1(e)).
+event DefaultJudgmentEntered()
+/// A notice of removal is served (Bankr. D. Ariz. LR 9027-1(e)).
+event RemovalNoticeServed()
+
+/// Bankr. D. Ariz. LR 1006-1(a)(1): an individual debtor who files without
+/// the full filing fee pays it, applies to pay in installments with an
+/// initial payment, or applies for a waiver within 14 days of the filing of
+/// the petition, or the case is dismissed without further notice.
+deadline filing-fee-period: 14.days after PetitionFiled() counted_by frcp6 cite "Bankr. D. Ariz. LR 1006-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 1006-1(c)(2): an unpaid miscellaneous proceeding is
+/// closed by the Clerk after 14 days.
+deadline miscellaneous-fee-period: 14.days after MiscellaneousProceedingFiled() counted_by frcp6 cite "Bankr. D. Ariz. LR 1006-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 1007-1(a)(3): the debtor has seven days from the
+/// filing of the petition to file a complying master mailing list.
+deadline master-mailing-list-period: 7.days after PetitionFiled() counted_by frcp6 cite "Bankr. D. Ariz. LR 1007-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 1007-1(c): the signed Local Form 1007-1 declaration
+/// is filed within 21 days after filing the petition, or the case is
+/// dismissed without further notice.
+deadline declaration-period: 21.days after PetitionFiled() counted_by frcp6 cite "Bankr. D. Ariz. LR 1007-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 1007-1(c): where the schedules and statements were
+/// filed on an extension, the declaration is filed no later than seven days
+/// after they are filed.
+deadline extended-declaration-period: 7.days after ExtendedSchedulesFiled() counted_by frcp6 cite "Bankr. D. Ariz. LR 1007-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 1007-1(d): an individual debtor's Statement of
+/// Social Security Number is submitted within seven days of the filing of
+/// the petition, or the petition may be dismissed.
+deadline social-security-statement-period: 7.days after PetitionFiled() counted_by frcp6 cite "Bankr. D. Ariz. LR 1007-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 1007-1(g): a debtor without an attorney files Local
+/// Form 1007-3 within 14 days after the petition is filed.
+deadline unrepresented-declaration-period: 14.days after PetitionFiled() counted_by frcp6 cite "Bankr. D. Ariz. LR 1007-1(g)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 2002-2(b): a 21-day negative notice states that a
+/// response is due within 21 days after service of the notice, failing
+/// which the court may grant the motion without further notice.
+deadline negative-notice-response-period: 21.days after BarDateNoticeServed() counted_by frcp6 cite "Bankr. D. Ariz. LR 2002-2(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 2003-1(b): the case trustee and the United States
+/// Trustee have seven days to respond to a motion to waive the debtor's
+/// appearance at the meeting of creditors.
+deadline appearance-waiver-response-period: 7.days after AppearanceWaiverMotionFiled() counted_by frcp6 cite "Bankr. D. Ariz. LR 2003-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 2003-2(b): an individual chapter 7 debtor's
+/// questionnaire and documents are mailed to the trustee postmarked no
+/// later than 14 days before the date set for the § 341 meeting.
+deadline trustee-questionnaire-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. D. Ariz. LR 2003-2(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 2084-4(a): a chapter 13 debtor serves the Business
+/// Questionnaire and Authorization to Release Information on the trustee
+/// within seven days of the petition date.
+deadline chapter-13-trustee-forms-period: 7.days after PetitionFiled() counted_by frcp6 cite "Bankr. D. Ariz. LR 2084-4(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 2084-4(b): within 28 days after receiving notice of a
+/// change in the monthly conduit payment, the trustee files notice of the
+/// change.
+deadline conduit-change-notice-period: 28.days after ConduitChangeNoticeReceived() counted_by frcp6 cite "Bankr. D. Ariz. LR 2084-4(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 2084-4(b): a party in interest may object to the
+/// trustee's conduit-change notice within 28 days after the trustee files
+/// it.
+deadline conduit-change-objection-period: 28.days after ConduitChangeNoticeFiled() counted_by frcp6 cite "Bankr. D. Ariz. LR 2084-4(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 2084-4(b): a real property creditor files its proof
+/// of claim with attachments within 70 days after the filing of the
+/// petition.
+deadline real-property-claim-period: 70.days after PetitionFiled() counted_by frcp6 cite "Bankr. D. Ariz. LR 2084-4(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 2084-4(b): on conversion, the real property
+/// creditor's proof of claim is due within 70 days after the conversion.
+deadline converted-real-property-claim-period: 70.days after CaseConverted() counted_by frcp6 cite "Bankr. D. Ariz. LR 2084-4(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 2084-4(b): at least 60 days before a change of the
+/// name or address where payments are made, the real property creditor
+/// files and serves notice of the change.
+deadline payment-address-notice-period: 60.days before PaymentAddressChanged() counted_by frcp6 cite "Bankr. D. Ariz. LR 2084-4(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 2084-4(f): unless the deficiency is cured or a
+/// hearing requested within 14 days of service of the trustee's proposed
+/// dismissal order, the court may dismiss without further notice.
+deadline plan-dismissal-cure-period: 14.days after ProposedDismissalOrderServed() counted_by frcp6 cite "Bankr. D. Ariz. LR 2084-4(f)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 2084-9(a)(3): where the case is reinstated after the
+/// creditor objection deadline, the deadline is no earlier than 14 days
+/// after reinstatement (the later of that and the original deadline).
+deadline reinstated-objection-period: 14.days after CaseReinstated() counted_by frcp6 cite "Bankr. D. Ariz. LR 2084-9(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 2084-10(a)(1): on an original chapter 13 plan, the
+/// trustee files a recommendation or objection no later than three days
+/// before the initial confirmation hearing.
+deadline trustee-recommendation-period: 3.days before InitialConfirmationHearing() counted_by frcp6 cite "Bankr. D. Ariz. LR 2084-10(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 2084-10(a)(3): on a modified plan, the trustee files
+/// a recommendation or objection within 28 days after the last date set for
+/// creditor objections.
+deadline modified-plan-recommendation-period: 28.days after CreditorObjectionDeadline() counted_by frcp6 cite "Bankr. D. Ariz. LR 2084-10(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 2084-10(b): within 30 days after the trustee files
+/// the recommendation or objection, the debtor complies with the trustee's
+/// requests or files an objection.
+deadline trustee-recommendation-compliance-period: 30.days after TrusteeRecommendationFiled() counted_by frcp6 cite "Bankr. D. Ariz. LR 2084-10(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 2084-13(e): no later than 45 days after receiving a
+/// proposed confirmation order, the trustee approves and lodges it or files
+/// a notice of rejection.
+deadline confirmation-order-lodging-period: 45.days after ProposedConfirmationOrderReceived() counted_by frcp6 cite "Bankr. D. Ariz. LR 2084-13(e)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 3003-1(c)(1): in a Subchapter V case, unless the
+/// court orders otherwise, a non-governmental creditor's proof of claim is
+/// timely if filed not later than 70 days after the order for relief.
+deadline subchapter-v-claim-period: 70.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. D. Ariz. LR 3003-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 3007-1(b): the claimant has 21 days from service of
+/// a claim objection to file and serve a response.
+deadline claim-objection-response-period: 21.days after ClaimObjectionServed() counted_by frcp6 cite "Bankr. D. Ariz. LR 3007-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 4001-1(c): the notice of a stay relief motion or
+/// stipulation states that the court may approve it if no objection is
+/// filed and served within 14 days of service.
+deadline stay-relief-objection-period: 14.days after StayReliefNoticeServed() counted_by frcp6 cite "Bankr. D. Ariz. LR 4001-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 4001-2(a): objections to a motion for the use of cash
+/// collateral or financing are filed and served within 14 days from the
+/// date the notice is served, unless the court orders otherwise.
+deadline cash-collateral-objection-period: 14.days after CashCollateralNoticeServed() counted_by frcp6 cite "Bankr. D. Ariz. LR 4001-2(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 4003-2(b): a response or objection to a lien
+/// avoidance motion is filed within 14 days of service of the notice.
+deadline lien-avoidance-objection-period: 14.days after LienAvoidanceNoticeServed() counted_by frcp6 cite "Bankr. D. Ariz. LR 4003-2(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 5005-1(b)(1): exhibits in the Clerk's custody are
+/// returned on a written request received within 30 days after the time
+/// to appeal expires or an appeal becomes final; otherwise destroyed.
+deadline exhibit-return-period: 30.days after AppealConcluded() counted_by frcp6 cite "Bankr. D. Ariz. LR 5005-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 5005-4(g): the filer of a paper document confirms the
+/// converted document or objects within 14 days of its entry.
+deadline converted-document-objection-period: 14.days after PaperDocumentDocketed() counted_by frcp6 cite "Bankr. D. Ariz. LR 5005-4(g)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 6004-1(d): the movant files a notice of consummation
+/// and sale report within 21 days of the sale's closing.
+deadline sale-report-period: 21.days after SaleClosed() counted_by frcp6 cite "Bankr. D. Ariz. LR 6004-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 6006-1(d): the notice of an executory contract or
+/// lease motion states that it may be granted if no objection is served
+/// and filed within 21 days of service.
+deadline executory-contract-objection-period: 21.days after ExecutoryContractNoticeServed() counted_by frcp6 cite "Bankr. D. Ariz. LR 6006-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 6007-1(d): objections to an abandonment are filed and
+/// served within 14 days of service of the notice, unless ordered
+/// otherwise.
+deadline abandonment-objection-period: 14.days after AbandonmentNoticeServed() counted_by frcp6 cite "Bankr. D. Ariz. LR 6007-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 6008-1(b)(1): an objection to a redemption motion is
+/// filed and served within 14 days of service of the notice and motion.
+deadline redemption-objection-period: 14.days after RedemptionNoticeServed() counted_by frcp6 cite "Bankr. D. Ariz. LR 6008-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 7016-1(a): if the court sets no time, the joint
+/// pretrial statement is filed not less than seven calendar days before the
+/// date of trial.
+deadline pretrial-statement-period: 7.days before TrialDate() counted_by frcp6 cite "Bankr. D. Ariz. LR 7016-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 7016-1(b): unless the parties agree otherwise, the
+/// plaintiff's or movant's counsel sends the initial draft pretrial
+/// statement no later than 14 days before the filing deadline.
+deadline pretrial-draft-period: 14.days before PretrialStatementDeadline() counted_by frcp6 cite "Bankr. D. Ariz. LR 7016-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 7054-1(a): unless ordered otherwise, a prevailing
+/// party files a verified cost statement within 14 days of entry of
+/// judgment.
+deadline cost-statement-period: 14.days after JudgmentEntered() counted_by frcp6 cite "Bankr. D. Ariz. LR 7054-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 7054-1(b): an adverse party files and serves any
+/// objection to a request for costs within 14 days after service of the
+/// cost statement.
+deadline cost-objection-period: 14.days after CostStatementServed() counted_by frcp6 cite "Bankr. D. Ariz. LR 7054-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 9013-1(c): unless ordered otherwise, a party
+/// responding to a motion serves and files a response within 14 days after
+/// service.
+deadline motion-response-period: 14.days after MotionServed() counted_by frcp6 cite "Bankr. D. Ariz. LR 9013-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 9013-1(c): the moving party serves and files a reply
+/// within 14 days after service of the response.
+deadline motion-reply-period: 14.days after ResponseServed() counted_by frcp6 cite "Bankr. D. Ariz. LR 9013-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 9013-1(h)(3): unless ordered otherwise, a party
+/// opposing summary judgment serves and files a response within 30 days
+/// after service.
+deadline summary-judgment-response-period: 30.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "Bankr. D. Ariz. LR 9013-1(h)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 9013-1(h)(3): the summary judgment movant serves and
+/// files a reply within 14 days after service of the response.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "Bankr. D. Ariz. LR 9013-1(h)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 9022-1(e): an objection to the court's authority to
+/// enter a default judgment or order is filed within 14 days after its
+/// entry; failure to object is deemed consent.
+deadline default-authority-objection-period: 14.days after DefaultJudgmentEntered() counted_by frcp6 cite "Bankr. D. Ariz. LR 9022-1(e)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Ariz. LR 9027-1(e): within 14 days of service of the notice of
+/// removal, a party complies with FRBP 9015 to preserve any right to a jury
+/// trial.
+deadline removal-jury-demand-period: 14.days after RemovalNoticeServed() counted_by frcp6 cite "Bankr. D. Ariz. LR 9027-1(e)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed and served" by applicant cite "Bankr. D. Ariz. LR 9013-1(a)"
+{
+  note "A motion is answered within 14 days after service unless a rule or the notice sets otherwise (LR 9013-1(c)); matters listed in LR 9013-1(l) may proceed on 21-day bar date notice (LR 2002-2). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-opposed "Response filed and served" -> opposed {
+    authority cite "Bankr. D. Ariz. LR 9013-1(c)"
+    within motion-response-period
+  }
+  edge-motion-filed-unopposed "No timely response" -> ruling {
+    authority cite "Bankr. D. Ariz. LR 2002-2(b)"
+  }
+}
+
+state opposed: "Response filed; reply and hearing" by opponent cite "Bankr. D. Ariz. LR 9013-1(c)"
+{
+  note "The movant may reply within 14 days after service of the response (LR 9013-1(c)); an initial hearing on a contested matter takes no live testimony (LR 9014-3)."
+  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. D. Ariz. LR 9014-3" }
+}
+
+decision ruling: "Motion decided" by court cite "Bankr. D. Ariz. LR 2002-2(b)"
+{
+  note "On a negative notice without a timely response the court may grant the motion without further notice (LR 2002-2(b))."
+  edge-ruling-granted "Granted" -> decided { authority cite "Bankr. D. Ariz. LR 9022-1(a)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "Bankr. D. Ariz. LR 9022-1(a)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. D. Ariz. LR 1001-1"

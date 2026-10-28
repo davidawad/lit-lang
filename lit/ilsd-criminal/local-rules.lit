@@ -1,0 +1,56 @@
+module ilsd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Southern District of Illinois's own periods in a criminal case,
+// counted under the criminal rules (FRCrimP 45(a) governs "any local
+// rule"). The Local Rules and their Appendices apply in all civil and
+// criminal proceedings (SDIL-LR 1.1(b)). The court's criminal rules are
+// Appendix A, which the vendored document lists by title only: its text,
+// and every period it sets, is a hole (the trial-date cross-reference
+// "SDIL-LR Appendix A, Cr50.1" in SDIL-LR 16.1(e) cannot be followed).
+//
+// Conditions that are not deadlines from an event stay in notes: criminal
+// motions are filed in accordance with orders entered at or after
+// arraignment (SDIL-LR 7.1(b)(3)), so the civil response and reply periods
+// of SDIL-LR 7.1 do not apply; trial dates follow the District's Plan for
+// Prompt Disposition of Criminal Cases (SDIL-LR 16.1(e)), and discovery
+// the Standard Order for Pretrial Discovery and Inspection (SDIL-LR
+// 26.1(e)(1)), neither of which is vendored; review of a magistrate
+// judge's release or detention order is sought by motion filed promptly
+// and within the time the magistrate judge designates (SDIL-LR 73.1(f)),
+// not a period the rule states; a party producing a controlled substance,
+// weapon or child pornography exhibit takes custody of it at the end of
+// each day and moves to withdraw it at the end of the proceeding (SDIL-LR
+// 79.2(c), (d)). Exhibits are kept by the producing attorneys after trial
+// unless the presiding judge orders otherwise (SDIL-LR 79.1(b)).
+//
+// The earlier S.D. Ill. criminal outline's FRCrimP flow and its decisions
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// A final decision is rendered and no appeal is taken from it (SDIL-LR
+/// 79.1(b)(1)).
+event FinalDecisionUnappealed()
+/// The reviewing court's mandate is filed after an appeal (SDIL-LR
+/// 79.1(b)(2)).
+event AppellateMandateFiled()
+
+/// SDIL-LR 79.1(b)(1): an exhibit not removed by the attorney who produced
+/// it, including an electronic file, is destroyed or otherwise disposed of
+/// 90 days after a final decision is rendered if no appeal is taken,
+/// unless the presiding judge orders otherwise.
+deadline exhibit-removal: 90.days after FinalDecisionUnappealed() counted_by frcrimp45 cite "SDIL-LR 79.1(b)"
+{
+  forum frcrimp
+}
+
+/// SDIL-LR 79.1(b)(2): when an appeal is taken, an exhibit not removed is
+/// destroyed or otherwise disposed of within 90 days after the reviewing
+/// court's mandate is filed; on appeal the parties make the exhibits
+/// available for the record under Seventh Circuit Rule 10 (SDIL-LR
+/// 79.1(c)).
+deadline exhibit-removal-after-mandate: 90.days after AppellateMandateFiled() counted_by frcrimp45 cite "SDIL-LR 79.1(b)"
+{
+  forum frcrimp
+}

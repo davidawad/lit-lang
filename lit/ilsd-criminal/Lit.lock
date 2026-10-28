@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "ilsd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:c3350608435f203434ad7187b323493728f97bc02c013d668389a6c2ae459a73"
+semantic = "sha256:24d9ea58b52eb3812a800e02a95844c0e7ef425c304f35cd4aab1352404a0f89"
+texts = [
+    "ilsd-lr sources/ilsd/ilsd-local-rules-sectioned.txt sha256:2f93faac3661abe55136b45631a7d3ec496e0142942d8bff0dcf52295793f4bb",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

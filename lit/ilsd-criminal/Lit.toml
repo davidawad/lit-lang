@@ -1,0 +1,57 @@
+# The U.S. District Court for the Southern District of Illinois's local
+# rules for criminal cases as a local-rule layer over lit/frcrimp (28
+# U.S.C. § 2071; FRCrimP 57(a)): it declares only the periods the local
+# rules themselves state for a criminal case and re-encodes no FRCrimP,
+# Speedy Trial Act or FRAP 4(b) period (one source of truth: lit/frcrimp).
+# Each period is counted under FRCrimP 45(a), which governs "any local
+# rule", so each deadline names `forum frcrimp`. The vendored Local Rules
+# (effective September 22, 2025; sources/ilsd) apply in all civil and
+# criminal proceedings (SDIL-LR 1.1(b)), but the court's criminal rules
+# are its Appendix A, which the vendored document lists by title only and
+# whose text is not vendored: every criminal-rule period (Cr 50.1 and the
+# others) is a hole until Appendix A is fetched on carbon. So are the
+# court's Plan for Prompt Disposition of Criminal Cases (18 U.S.C. § 3165;
+# SDIL-LR 16.1(e)) and its Standard Order for Pretrial Discovery and
+# Inspection (SDIL-LR 26.1(e)). in_force is the edition's effective date;
+# earlier editions are not vendored. An appeal goes to the Seventh Circuit
+# under lit/frcrimp's FRAP 4(b) period and lit/ca7.
+[package]
+name = "ilsd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ilsd-criminal-local-rules"
+forum = "ilsd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Southern District of Illinois: Local Rules in Criminal Cases"
+description = "The U.S. District Court for the Southern District of Illinois's local rules for criminal cases as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp), as far as the vendored text states: the removal of trial exhibits after the final decision or the appellate mandate. The court's criminal rules (Appendix A) are not vendored and are holes."
+in_force = "2025-09-22"
+known_at = "2026-10-28"
+unknown_before = "2025-09-22"
+jurisdiction = "U.S. District Court for the Southern District of Illinois (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ilsd-lr"
+issuer = "U.S. District Court for the Southern District of Illinois"
+date = "2025-09-22"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.ilsd-lr]
+title = "Local Rules, United States District Court, Southern District of Illinois (revised, effective September 22, 2025)"
+url = "https://www.ilsd.uscourts.gov/sites/ilsd/files/LocalRules.pdf"
+path = "sources/ilsd/ilsd-local-rules-sectioned.txt"
+path_sha256 = "2f93faac3661abe55136b45631a7d3ec496e0142942d8bff0dcf52295793f4bb"
+sha256 = "dd223d2b5056467544ae7450e0b0d45641727071dd894e831c18b49443397d3b"
+as_of = "2025-09-22"
+cite_prefixes = ["SDIL-LR"]
+section_heading = "Rule {n}"

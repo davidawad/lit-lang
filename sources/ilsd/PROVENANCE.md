@@ -17,3 +17,5 @@
 - Upstream: https://www.ilsd.uscourts.gov/sites/ilsd/files/LocalRules.pdf, retrieved 2026-10-27, as recorded on the `ilsd/ilsd-local-rules.txt` entry this file is derived from.
 - Edition: as the extract, revised Local Rules effective September 22, 2025.
 - Sectioned sha256 2f93faac3661abe55136b45631a7d3ec496e0142942d8bff0dcf52295793f4bb (the `path_sha256` pinned by `lit/ilsd/Lit.toml`).
+
+- Note (lg-gddt.18): the vendored extract does not hold the criminal rules. It ends at page 65 with the list of appendix titles (`APPENDIX A: CRIMINAL RULES` at extract line 2819 is a title only; the extract has 2836 lines, so the "from extract line 2883" pointer above does not resolve). Appendix A (and Appendices B to G) are separate documents on the court site and are not vendored; `lit/ilsd-criminal` encodes only the periods the main Local Rules state for criminal proceedings (SDIL-LR 1.1(b)) and leaves the Appendix A rules as holes until they are fetched on carbon.

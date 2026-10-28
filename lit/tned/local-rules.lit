@@ -1,0 +1,135 @@
+module tned-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Eastern District of Tennessee's own civil periods, computed under
+// the federal rules (FRCP 6(a) governs "any local rule"). The briefing
+// schedule of LR 7.1(a) holds "Unless the Court notifies the parties to
+// the contrary", and may be set aside by order or by a stipulated
+// schedule the court approves within 14 days after the motion is filed.
+// If all counsel agree, a party is entitled to one 21-day initial
+// extension of the time to respond to a complaint, cross-claim or
+// counterclaim, filed as a stipulation without an order (LR 12.1(a)); it
+// lengthens lit/frcp's FRCP 12(a) period and is not a period of its own.
+// Rules that state no period or limit stay out: the civil cover sheet
+// and divisional filing (LR 3.1-3.2), service and fees (LR 4.1-4.5),
+// paper format (LR 5.1, apart from the page limit LR 7.1(b) incorporates),
+// electronic filing (LR 5.2), amendment form (LR 15.1), sealing (LR
+// 26.2), discovery motion form (LR 37.2), continuances (LR 38.2) and the
+// magistrate judges' duties (LR 72.2). The court-annexed mediation and
+// arbitration programs (LR 16.4, 16.5) run on referral orders and are not
+// encoded. The earlier E.D. Tenn. outline's FRCP flow and its decisions
+// (Twombly, Iqbal, Frow v. De La Vega, Celotex, Anderson v. Liberty Lobby
+// and Matsushita) are FRCP authority and belong to lit/frcp; they are
+// removed here: no reporter text is vendored.
+/// A brief in support of or in opposition to a motion, or a reply brief:
+/// at most 25 pages unless the court orders otherwise, in LR 5.1's format
+/// (LR 7.1(b)). The limit also applies to briefs in bankruptcy appeals.
+limit brief { pages <= 25 cite "E.D. Tenn. L.R. 7.1(b)" } cite "E.D. Tenn. L.R. 7.1(b)"
+/// A supplemental brief calling the court's attention to developments
+/// after a party's final brief, and the response to it: at most 5 pages
+/// (LR 7.1(d)).
+limit supplemental-brief { pages <= 5 cite "E.D. Tenn. L.R. 7.1(d)" } cite "E.D. Tenn. L.R. 7.1(d)"
+
+/// A non-dispositive motion and its opening brief are served and filed
+/// (LR 7.1(a)(1)).
+event OpeningBriefServed() paper brief
+/// A dispositive motion and its opening brief are served and filed (LR
+/// 7.1(a)(1), (2)).
+event DispositiveOpeningBriefServed() paper brief
+/// The answering brief is served and filed (LR 7.1(a)(2)).
+event AnsweringBriefServed() paper brief
+/// A supplemental brief is served (LR 7.1(d)).
+event SupplementalBriefServed() paper supplemental-brief
+/// Trial of a non-jury case begins on the date set (LR 52.1).
+event NonJuryTrialBegins()
+/// Judgment is entered (LR 54.1, 54.2).
+event JudgmentEntered()
+/// The prevailing party files and serves its bill of costs (LR 54.1).
+event BillOfCostsServed()
+/// The opposing party serves its written objections to the bill of
+/// costs (LR 54.1).
+event CostObjectionsServed()
+/// The court enters an order notifying the parties of the availability of
+/// a magistrate judge (LR 72.3(c)).
+event MagistrateAvailabilityNoticed()
+
+/// LR 7.1(a)(2): the answering brief to a motion is served and filed no
+/// later than 14 days after the service of the opening brief.
+deadline answering-brief-period: 14.days after OpeningBriefServed() counted_by frcp6 cite "E.D. Tenn. L.R. 7.1(a)"
+{
+  forum frcp
+}
+
+/// LR 7.1(a)(2): parties have 21 days in which to respond to dispositive
+/// motions.
+deadline dispositive-answering-brief-period: 21.days after DispositiveOpeningBriefServed() counted_by frcp6 cite "E.D. Tenn. L.R. 7.1(a)"
+{
+  forum frcp
+}
+
+/// LR 7.1(a)(3), (c): any reply brief is served and filed no later than 7
+/// days after the service of the answering brief; unless the court states
+/// otherwise a reply is not necessary, and it may not reargue the opening
+/// brief.
+deadline reply-brief-period: 7.days after AnsweringBriefServed() counted_by frcp6 cite "E.D. Tenn. L.R. 7.1(a)"
+{
+  forum frcp
+}
+
+/// LR 7.1(d): any response to a supplemental brief is filed within 7 days
+/// after service of the supplemental brief. No other additional paper
+/// may be filed without prior approval of the court.
+deadline supplemental-response-period: 7.days after SupplementalBriefServed() counted_by frcp6 cite "E.D. Tenn. L.R. 7.1(d)"
+{
+  forum frcp
+}
+
+/// LR 52.1: in non-jury cases counsel supply suggested findings of fact
+/// and conclusions of law at least 14 days prior to the trial date unless
+/// otherwise ordered; failure may result in dismissal of the plaintiff's
+/// action or entry of default against the defendant.
+deadline proposed-findings-period: 14.days before NonJuryTrialBegins() counted_by frcp6 cite "E.D. Tenn. L.R. 52.1"
+{
+  forum frcp
+}
+
+/// LR 54.1: if counsel cannot agree on costs, the prevailing party files
+/// a bill of costs with the Clerk within 21 days from the entry of
+/// judgment.
+deadline bill-of-costs-period: 21.days after JudgmentEntered() counted_by frcp6 cite "E.D. Tenn. L.R. 54.1"
+{
+  forum frcp
+}
+
+/// LR 54.1: opposing counsel file written objections within 21 days from
+/// the date of service of the bill of costs.
+deadline cost-objections-period: 21.days after BillOfCostsServed() counted_by frcp6 cite "E.D. Tenn. L.R. 54.1"
+{
+  forum frcp
+}
+
+/// LR 54.1: the prevailing party may file a reply to any objections
+/// within 14 days from the date of service.
+deadline cost-reply-period: 14.days after CostObjectionsServed() counted_by frcp6 cite "E.D. Tenn. L.R. 54.1"
+{
+  forum frcp
+}
+
+/// LR 54.2: unless a statute or order provides otherwise, a motion for
+/// attorneys' fees and related nontaxable expenses under FRCP 54(d)(2) is
+/// filed no later than 30 days after entry of judgment; fees and expenses
+/// not moved for in time are waived. The court may extend the time on a
+/// motion filed within it.
+deadline fee-motion-period: 30.days after JudgmentEntered() counted_by frcp6 cite "E.D. Tenn. L.R. 54.2"
+{
+  forum frcp
+}
+
+/// LR 72.3(c): within 45 days from the entry of an order notifying the
+/// parties of the availability of a magistrate judge, the parties jointly
+/// file a completed consent form.
+deadline magistrate-consent-period: 45.days after MagistrateAvailabilityNoticed() counted_by frcp6 cite "E.D. Tenn. L.R. 72.3(c)"
+{
+  forum frcp
+}

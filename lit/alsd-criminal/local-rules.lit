@@ -1,0 +1,147 @@
+module alsd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Southern District's own criminal periods. In a proceeding needing no
+// indictment, a period that runs from arraignment on an indictment runs
+// instead from the entry of a not-guilty plea on the trial docket (CrLR
+// 58(a)(1)); `Arraigned()` stands for either. A motion to continue a trial
+// setting states the Speedy Trial Act grounds and, from a defendant, comes
+// with the defendant's declaration (CrLR 12(a)(2)). A defendant relying on
+// entrapment gives written notice within the time for pretrial motions or
+// later as ordered (CrLR 12.5): the court's period, not declared here. A
+// non-governmental party's disclosure statement is due at its first
+// appearance (CrLR 12.4(b)). The government tenders its discovery under
+// CrLR 16 at arraignment or on a court-set date, and the defendant's
+// reciprocal discovery is due on a court-set date. In a complex case a
+// pretrial scheduling conference may set every pretrial date (CrLR 17.1).
+// Sentencing is set no earlier than seventy-five days after a guilty or
+// nolo contendere plea or a guilty verdict unless agreed or ordered (CrLR
+// 32(a)): a floor, not a deadline. The presentence report is posted at
+// least thirty-five days before sentencing (CrLR 32(b)(2)), which is
+// FRCrimP 32(e)(2)'s own period and stays with lit/frcrimp. A U.S.S.G.
+// § 5K1.1 downward-departure motion is filed no later than twenty-four
+// hours before the sentencing hearing (CrLR 32(c)); the language has no
+// hour unit, so it stays in this note. Bonds (CrLR 46), detention review
+// (CrLR 46.1), sealed hearings (CrLR 49.2) and petty-offense collateral
+// (CrLR 58(a)(2)) state no period. The earlier outline's FRCrimP flow and
+// its decisions belong to lit/frcrimp and are removed here: no reporter
+// text is vendored.
+/// Arraignment on an indictment, or in a proceeding needing no indictment
+/// the entry of a not-guilty plea on the trial docket (S.D. Ala. CrLR
+/// 12(a)(1), 44(a)(1), 58(a)(1)).
+event Arraigned()
+/// The indictment or information is filed (S.D. Ala. CrLR 12.4(b)).
+event ChargeFiled()
+/// A motion is served (S.D. Ala. CrLR 12(a)(3)).
+event MotionServed()
+/// A response to a motion is served (S.D. Ala. CrLR 12(a)(4)).
+event MotionResponseServed()
+/// A motion seeking an evidentiary hearing is served (S.D. Ala. CrLR
+/// 12(b)).
+event EvidentiaryHearingMotionServed()
+/// A motion to find criminal cases related and reassign them is filed
+/// (S.D. Ala. CrLR 13(b)).
+event RelatedCaseMotionFiled()
+/// The defendant is convicted (S.D. Ala. CrLR 16(e)).
+event Convicted()
+/// The date set for the sentencing hearing (S.D. Ala. CrLR 32(b)).
+event SentencingHearingScheduled()
+
+/// S.D. Ala. CrLR 12(a)(1): absent a court order, every motion raising an
+/// issue described in FRCrimP 12(b)(3) is filed within fourteen days after
+/// arraignment on an indictment.
+deadline pretrial-motion-period: 14.days after Arraigned() counted_by frcrimp45 cite "S.D. Ala. CrLR 12(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ala. CrLR 12(a)(3): absent a court order, the non-movant has seven
+/// days from service of the motion to file a response.
+deadline motion-response-period: 7.days after MotionServed() counted_by frcrimp45 cite "S.D. Ala. CrLR 12(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ala. CrLR 12(a)(4): absent a court order, the movant has seven
+/// days from service of the response to file a reply.
+deadline motion-reply-period: 7.days after MotionResponseServed() counted_by frcrimp45 cite "S.D. Ala. CrLR 12(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ala. CrLR 12(b): the non-movant may file a response opposing an
+/// evidentiary hearing within seven days after service of the motion
+/// seeking one.
+deadline evidentiary-hearing-response-period: 7.days after EvidentiaryHearingMotionServed() counted_by frcrimp45 cite "S.D. Ala. CrLR 12(b)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ala. CrLR 12.4(b): the government files its disclosure statement,
+/// when required, within fourteen days after the indictment or information
+/// is filed.
+deadline government-disclosure-statement-period: 14.days after ChargeFiled() counted_by frcrimp45 cite "S.D. Ala. CrLR 12.4(b)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ala. CrLR 13(b): absent a court order, an objection to a motion to
+/// reassign related criminal cases is filed within seven days of the
+/// motion's filing.
+deadline related-case-objection-period: 7.days after RelatedCaseMotionFiled() counted_by frcrimp45 cite "S.D. Ala. CrLR 13(b)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ala. CrLR 16(e): within three days of conviction the government
+/// gives the defendant any additional information it provided to the
+/// Probation Office for the guideline calculation.
+deadline post-conviction-disclosure-period: 3.days after Convicted() counted_by frcrimp45 cite "S.D. Ala. CrLR 16(e)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ala. CrLR 32(b)(4): fourteen days before the sentencing hearing,
+/// each side files its "Position ... with Respect to Sentencing Factors",
+/// adopting the presentence report or stating each dispute, with a
+/// certificate of conferral; beyond the objections raised there and left
+/// unresolved, the report is accepted as accurate, though the court may
+/// allow a new objection for good cause (32(b)(7)).
+deadline sentencing-position-period: 14.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Ala. CrLR 32(b)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ala. CrLR 32(b)(5): counsel confer no later than ten days before
+/// the sentencing hearing on its length and witnesses.
+deadline sentencing-conference-period: 10.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Ala. CrLR 32(b)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ala. CrLR 32(b)(5): a party anticipating a sentencing hearing over
+/// thirty minutes files a notice of the witnesses and time needed no later
+/// than seven days before it.
+deadline sentencing-length-notice-period: 7.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Ala. CrLR 32(b)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ala. CrLR 32(b)(6): the Probation Office files under seal the
+/// presentence report, its addendum of unresolved disputes and its
+/// recommendation no later than seven days before the sentencing hearing.
+deadline presentence-addendum-period: 7.days before SentencingHearingScheduled() counted_by frcrimp45 cite "S.D. Ala. CrLR 32(b)"
+{
+  forum frcrimp
+}
+
+/// S.D. Ala. CrLR 44(a)(1): unless the court is notified in writing
+/// within fourteen days after arraignment of retained counsel's withdrawal
+/// for the defendant's failure to make satisfactory financial
+/// arrangements, counsel represents the defendant to the conclusion of the
+/// action; nonpayment is normally not good cause after that.
+deadline retained-counsel-withdrawal-period: 14.days after Arraigned() counted_by frcrimp45 cite "S.D. Ala. CrLR 44(a)"
+{
+  forum frcrimp
+}

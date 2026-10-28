@@ -15,3 +15,10 @@
 - Upstream: https://www.alsd.uscourts.gov/sites/alsd/files/local-rules.pdf, retrieved 2026-10-27, as recorded on the `sd-ala/local-rules.txt` entry this file is derived from.
 - Edition: as the extract, effective August 1, 2015.
 - Sectioned sha256 7a4f621ebf7fdfaf8041bc877c5635252b9ec09a72b6d5e488fe8de097ef2ad8 (the `path_sha256` pinned by `lit/alsd/Lit.toml`).
+
+### `sd-ala/local-rules-sectioned.txt` — S.D. Ala. Local Rules, sectioned
+
+- Derived in the pod (lg-gddt.26) from `sd-ala/local-rules.txt` (extract sha256 095b0d373a88b544a467b05f7ec87aa958a54d747471d0148ba05fbd995203c1); nothing fetched. One `## GenLR <n>`, `## CivLR <n>` or `## CrLR <n>` line, after the rules' own citation forms "S.D. Ala. GenLR", "S.D. Ala. CivLR" and "S.D. Ala. CrLR" (GenLR 1(a)), is inserted before each rule's own heading line in the body (`General L.R. 1.` through `Criminal L.R. 58.`, 68 rules, the same 68 the table of contents lists; three headings open with a form feed); the table of contents and the forms are unmarked. Rule text was not edited, and the extract's carriage returns are kept: deleting the marker lines (`sed '/^## \(GenLR\|CivLR\|CrLR\) /d'`) restores the extract byte for byte.
+- Source: as the extract `sd-ala/local-rules.txt`, https://www.alsd.uscourts.gov/sites/alsd/files/local-rules.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
+- Edition: as the extract, effective August 1, 2015.
+- Sectioned sha256 331a3562ff29d0d9adec344caf7377f0a45cb7ab8bc032ddcb066ec044a02246 (the `path_sha256` pinned by `lit/alsd-criminal/Lit.toml`).

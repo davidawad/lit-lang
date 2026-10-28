@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "alsd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:9fd944723e2a40667c07afbd2641c05c10db0c6d293ee271dbad4d31d77e3284"
+semantic = "sha256:d8ee9e3818fc600040a4969d39a4b785758876da63c6b16583a720483dc3f56f"
+texts = [
+    "alsd-crlr sources/sd-ala/local-rules-sectioned.txt sha256:331a3562ff29d0d9adec344caf7377f0a45cb7ab8bc032ddcb066ec044a02246",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]

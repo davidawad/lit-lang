@@ -1,0 +1,48 @@
+# The Southern District of Alabama's Criminal Rules (Part C of its Local
+# Rules, "S.D. Ala. CrLR") as a local-rule layer over lit/frcrimp (28
+# U.S.C. § 2071; FRCrimP 57(a)): it declares only the periods those rules
+# themselves state and re-encodes no FRCrimP, Speedy Trial Act or FRAP
+# period. Each period is counted under FRCrimP 45(a), which governs "any
+# local rule". The rules are effective August 1, 2015 (sources/sd-ala).
+# Part A's General Rules also govern criminal proceedings (GenLR 1(a));
+# they are not restated here.
+[package]
+name = "alsd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "alsd-criminal-local-rules"
+forum = "alsd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Southern District of Alabama: Local Rules, Criminal Rules"
+description = "The Southern District of Alabama's Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): pretrial motion, response and reply periods, the government's disclosure statement, related-case objections, post-conviction disclosures, the sentencing-factors positions and conferences, and retained counsel's withdrawal window."
+in_force = "2015-08-01"
+known_at = "2026-10-28"
+unknown_before = "2015-08-01"
+jurisdiction = "United States District Court, S.D. Alabama (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+office = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "alsd-crlr"
+issuer = "United States District Court for the Southern District of Alabama"
+date = "2015-08-01"
+designation = "Local Rules, Part C: Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.alsd-crlr]
+title = "Local Rules of the United States District Court for the Southern District of Alabama (effective August 1, 2015), Part C: Criminal Rules"
+url = "https://www.alsd.uscourts.gov/sites/alsd/files/local-rules.pdf"
+path = "sources/sd-ala/local-rules-sectioned.txt"
+path_sha256 = "331a3562ff29d0d9adec344caf7377f0a45cb7ab8bc032ddcb066ec044a02246"
+sha256 = "e3b7d7c414fe29cecc4ca7a26b0a777d34c514f03dfb37fa67cfea986e8bbf06"
+as_of = "2015-08-01"
+cite_prefixes = ["S.D. Ala. CrLR"]
+section_heading = "CrLR {n}"

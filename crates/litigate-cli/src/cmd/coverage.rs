@@ -132,6 +132,7 @@ const PROMOTED: &[(&str, &str)] = &[
     ("ndctapp", "north-dakota"),
     ("nj-appellate-civil", "new-jersey"),
     ("nj-superior-law", "new-jersey"),
+    ("nm-state-appellate", "new-mexico"),
     ("nm-state-civil", "new-mexico"),
     ("oh-appellate", "ohio"),
     ("oh-common-pleas", "ohio"),

@@ -1,0 +1,41 @@
+# A civil appeal from a New Mexico district court under the Rules of
+# Appellate Procedure (NMRA Rule Set 12), as published in the NMRA
+# "Unannotated" collection on NMOneSource and retrieved on October 27,
+# 2026 (sources/nm-state-appellate; its latest amendment notes are
+# effective December 31, 2025). Appeals not reserved to the Supreme Court
+# go to the Court of Appeals (NMRA 12-102(B)); review of its decision is
+# by certiorari to the Supreme Court (NMRA 12-502). Computation of time
+# is NMRA 12-308, which core does not model, so the rules' periods are
+# stated in notes, not encoded as counted deadlines. Which orders are
+# appealable rests on statute (NMSA 1978), which is not vendored.
+[package]
+name = "nm-appellate-civil"
+version = "0.1.0"
+language = 1
+pack_id = "nm-appellate-civil"
+forum = "nm-state-appellate"
+authority = "StateRule"
+title = "New Mexico Court of Appeals and Supreme Court, civil appeals"
+description = "A civil appeal from a New Mexico district court under the Rules of Appellate Procedure (NMRA Rule Set 12), as far as the vendored text states: the notice of appeal and its time, cross-appeals, tolling motions and extensions, the docketing statement, calendar assignment (general, summary and legal calendars), transcript, briefing periods and length limits, oral argument, disposition, rehearing, costs, mandate and certiorari to the Supreme Court."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "New Mexico Court of Appeals and Supreme Court (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.nmra-12]
+title = "NMRA Rule Set 12, Rules of Appellate Procedure (unannotated), as published on NMOneSource on October 27, 2026"
+url = "https://nmonesource.com/nmos/nmra-unanno/en/18482/1/document.do"
+path = "sources/nm-state-appellate/nmra-rule-set-12-appellate-2026-sectioned.txt"
+path_sha256 = "12baf7cd64f0f6014d3dd4c81f1f90ab14141d570ab8ceccd99ff719b418bff7"
+sha256 = "53575fd821574077ab2dcf60f0840cf9324a8b8ddd4c24d0eadcc9836a5ef734"
+as_of = "2026-10-27"
+cite_prefixes = ["NMRA 12-"]
+section_heading = "NMRA 12-{n}"

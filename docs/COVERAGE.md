@@ -177,7 +177,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | Nevada | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/nevada/state-appellate`, `outlines/ninth-circuit/nevada/state-civil`, `outlines/ninth-circuit/nevada/state-criminal` |
 | New Hampshire | state | outline | 0 | 0 | 0 | 0 | `outlines/first-circuit/new-hampshire/state-appellate`, `outlines/first-circuit/new-hampshire/state-civil`, `outlines/first-circuit/new-hampshire/state-criminal` |
 | New Jersey | state | promoted | 0 | 0 | 0 | 0 | `lit/nj-appellate-civil`, `lit/nj-superior-law` |
-| New Mexico | state | promoted | 0 | 0 | 0 | 0 | `lit/nm-state-civil` |
+| New Mexico | state | promoted | 0 | 0 | 0 | 0 | `lit/nm-state-appellate`, `lit/nm-state-civil` |
 | New York | state | outline | 0 | 0 | 0 | 0 | `outlines/second-circuit/new-york/state-appellate`, `outlines/second-circuit/new-york/state-civil`, `outlines/second-circuit/new-york/state-criminal` |
 | North Carolina | state | outline | 0 | 0 | 0 | 0 | `outlines/fourth-circuit/north-carolina/state-appellate`, `outlines/fourth-circuit/north-carolina/state-civil`, `outlines/fourth-circuit/north-carolina/state-criminal` |
 | North Dakota | state | promoted | 0 | 0 | 0 | 0 | `lit/nd-district`, `lit/ndctapp` |

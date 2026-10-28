@@ -1,0 +1,126 @@
+module nm-appellate-civil.appeal
+
+start threshold
+
+decision threshold: "Appealable judgment or order?" by applicant cite "NMRA 12-201(A)"
+{
+  note "An appeal permitted by law as of right is taken by filing a notice of appeal (NMRA 12-201, 12-202(A)); which judgments and orders are appealable rests on statute (NMSA 1978), which is not vendored. An order granting a motion for new trial in a civil case is not appealable and renders any prior judgment non-appealable (NMRA 12-201(D)(5)). Appeals not reserved to the Supreme Court go to the Court of Appeals (NMRA 12-102(B)). Periods in this package are stated, not counted: computation is NMRA 12-308(A). The outline named no leading decisions."
+  edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "NMRA 12-201(D)" }
+  edge-threshold-yes "Appealable" -> notice { authority cite "NMRA 12-202(A)" }
+}
+
+decision notice: "Notice of appeal within time?" by applicant cite "NMRA 12-201(A)"
+{
+  note "The notice of appeal is filed within thirty (30) days after the judgment or order appealed from is filed in the district court clerk's office (NMRA 12-201(A)(1)(b)); the three (3)-day period of NMRA 12-308(B) does not apply (NMRA 12-201(A)(2)). Another party may cross-appeal within fourteen (14) days after service of the first notice or within the time otherwise prescribed, whichever last expires (NMRA 12-201(B)(1)). A timely motion that may affect finality (NMSA 1978 § 39-1-1, NMRA 1-050(B), 1-052(D), 1-059, or 1-060(B) filed within thirty (30) days) restarts the full time from the order disposing of the last such motion (NMRA 12-201(D)(1)). The district court may extend the time on a motion filed before, or within thirty (30) days after, its expiry, for good cause or excusable neglect respectively; no extension exceeds thirty (30) days past the original due date (NMRA 12-201(E))."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "NMRA 12-201(A)" }
+  edge-notice-timely "Timely notice" -> docketing { authority cite "NMRA 12-201(A)" }
+}
+
+state docketing: "Docketing statement filed" by applicant cite "NMRA 12-208(B)"
+{
+  note "Within thirty (30) days after filing the notice of appeal the appellant files a docketing statement in the Court of Appeals, or a statement of the issues in the Supreme Court, or within thirty (30) days after the notice becomes effective under NMRA 12-201(D)(4) (NMRA 12-208(B)); the docket fee accompanies it unless free process has been granted (NMRA 12-208(H)). No response to it is permitted (NMRA 12-208(I))."
+  edge-docketing-calendar "Docketed" -> calendar { authority cite "NMRA 12-210(B)" }
+}
+
+decision calendar: "Calendar assignment" by court cite "NMRA 12-210(B)"
+{
+  note "After the docketing statement is filed, the court assigns the case to the general, summary or legal calendar on the record proper and the docketing statement, and the clerk serves notice of the assignment (NMRA 12-210(B))."
+  edge-calendar-general "General calendar" -> transcript { authority cite "NMRA 12-210(C)" }
+  edge-calendar-summary "Summary calendar" -> summary { authority cite "NMRA 12-210(D)" }
+  edge-calendar-legal "Legal calendar" -> briefing { authority cite "NMRA 12-210(E)" }
+}
+
+state transcript: "Transcript designated and filed" by office cite "NMRA 12-211(C)"
+{
+  note "Where proceedings were audio recorded, the district court clerk sends the recording within fifteen (15) days after receipt of the general calendar assignment, and the appellant files proof of satisfactory cost arrangements within five (5) days of its service (NMRA 12-211(B)). Otherwise the appellant designates the parts of the proceedings to transcribe, or files a notice that no transcript will be designated, within fifteen (15) days after service of the general calendar assignment (NMRA 12-211(C)(1)). Filing of the transcript or of the notice of nondesignation starts the briefing schedule (NMRA 12-210(C)(2))."
+  edge-transcript-briefing "Transcript filed or nondesignation noticed" -> briefing {
+    authority cite "NMRA 12-210(C)"
+  }
+}
+
+state summary: "Summary calendar: proposed disposition" by court cite "NMRA 12-210(D)"
+{
+  note "No briefs or transcript are filed; the clerk serves a notice of proposed summary disposition, and the parties have twenty (20) days from its service to file a memorandum in opposition or support (NMRA 12-210(D)(1), (2)), whose body may not exceed thirty-five (35) pages, or eleven thousand (11,000) words or one thousand two hundred (1,200) monospaced lines, except by permission (NMRA 12-210(D)(3)). The court then reassigns the case to the general or legal calendar, issues another notice, or decides summarily; no oral argument is heard (NMRA 12-210(D)(4))."
+  edge-summary-decision "Decided summarily" -> decision { authority cite "NMRA 12-210(D)" }
+  edge-summary-briefing "Reassigned to the general or legal calendar" -> briefing {
+    authority cite "NMRA 12-210(D)"
+  }
+}
+
+state briefing: "Briefing" by applicant cite "NMRA 12-318"
+{
+  note "General calendar: brief in chief within forty-five (45) days after service of notice that all transcripts are filed (or after service of the notice of nondesignation), answer brief within forty-five (45) days after service of the brief in chief, reply within twenty (20) days after service of the answer brief (NMRA 12-210(C)(2)). Legal calendar: brief in chief within thirty (30) days of service of the calendar notice, answer brief within thirty (30) days, reply within twenty (20) days (NMRA 12-210(E)(2)). Except by permission, the body of a brief in chief or answer brief may not exceed thirty-five (35) pages and of a reply brief fifteen (15) pages (NMRA 12-318(F)(2)), unless it keeps within eleven thousand (11,000) words, or four thousand four hundred (4,400) for a reply (NMRA 12-318(F)(3)). Cross-appeal briefing periods are NMRA 12-318(I)."
+  edge-briefing-argument "Briefing complete" -> argument { authority cite "NMRA 12-319(A)" }
+}
+
+state argument: "Submission or oral argument" by court cite "NMRA 12-319(A)"
+{
+  note "After briefing the case is submitted; the court may order oral argument at its discretion, and a party requests it on the cover or first page of its opening brief (NMRA 12-319(A), (B)). No oral argument is allowed on the legal calendar unless the Court of Appeals orders it (NMRA 12-210(E)(3))."
+  edge-argument-decision "Submitted" -> decision { authority cite "NMRA 12-402(A)" }
+}
+
+state decision: "Disposition entered" by court cite "NMRA 12-402(A)"
+{
+  note "Writings evidencing the disposition are filed with the appellate court clerk, and filing is entry (NMRA 12-402(A)); the court may dispose by non-precedential order, decision or memorandum opinion (NMRA 12-405(B)). A party may request costs by motion within fifteen (15) days after entry of disposition (NMRA 12-403(A))."
+  edge-decision-rehearing "Disposition filed" -> rehearing-decision {
+    authority cite "NMRA 12-404(A)"
+  }
+}
+
+decision rehearing-decision: "Rehearing sought?" by applicant cite "NMRA 12-404(A)"
+{
+  note "A motion for rehearing may be filed within fifteen (15) days after filing of the disposition or any later modification, unless the time is shortened or enlarged by order; the three (3)-day mailing period of NMRA 12-308 does not apply (NMRA 12-404(A))."
+  edge-rehearing-decision-none "No motion" -> further-review { authority cite "NMRA 12-502(B)" }
+  edge-rehearing-decision-sought "Motion filed" -> rehearing-order {
+    authority cite "NMRA 12-404(A)"
+  }
+}
+
+state rehearing-order: "Rehearing motion decided" by court cite "NMRA 12-404(B)"
+{
+  note "Rehearing is granted on the request of two participating judges of the Court of Appeals, or three justices of the Supreme Court (NMRA 12-404(B)); granting it suspends the decision until final determination (NMRA 12-404(C)). If granted, a party who has not filed a brief on rehearing may do so within fifteen (15) days after notice (NMRA 12-404(A))."
+  edge-rehearing-order-review "Rehearing decided" -> further-review {
+    authority cite "NMRA 12-502(B)"
+  }
+}
+
+decision further-review: "Certiorari sought?" by applicant cite "NMRA 12-502(B)"
+{
+  note "A petition for writ of certiorari to review a Court of Appeals decision is filed with the Supreme Court clerk within thirty (30) days after final action by the Court of Appeals, which is the filing of its decision or the disposition of the last timely rehearing motion; the three (3)-day period of NMRA 12-308(B) does not apply (NMRA 12-502(B)). Its body may not exceed ten (10) pages, unless it keeps within three thousand one hundred fifty (3,150) words or three hundred forty-two (342) monospaced lines (NMRA 12-502(D)). Court of Appeals mandate does not issue until the time for certiorari has elapsed or the petition is finally disposed of; Supreme Court mandate issues fifteen (15) days after the latest disposition or modification unless otherwise ordered (NMRA 12-402(B), (C))."
+  edge-further-review-none "No petition" -> final-decision { authority cite "NMRA 12-402(C)" }
+  edge-further-review-petition "Petition filed" -> review-decided {
+    authority cite "NMRA 12-502(B)"
+  }
+}
+
+decision review-decided: "Certiorari decided" by court cite "NMRA 12-502"
+{
+  note "The Supreme Court grants or denies the writ; mandate from the Court of Appeals does not issue until final disposition of the petition or, if granted, final action by the Supreme Court (NMRA 12-402(C))."
+  edge-review-decided-denied "Denied" -> review-denied { authority cite "NMRA 12-402(C)" }
+  edge-review-decided-granted "Granted" -> review-granted { authority cite "NMRA 12-502" }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: not appealable" outcome [loss, dismissal, jurisdictional] cite "NMRA 12-401(B)"
+{
+  note "Dismissal by the appellate court on an appellee's motion or for failure to comply with the rules (NMRA 12-401(B)(3), (4))."
+}
+
+terminal dismissed-untimely: "Dismissed: untimely notice" outcome [loss, dismissal] cite "NMRA 12-201(A)"
+{
+  note "No notice of appeal within the time of NMRA 12-201(A), as extended under NMRA 12-201(E)."
+}
+
+terminal final-decision: "Final: decision stands" outcome [final] cite "NMRA 12-402(C)"
+{
+  note "Mandate issues once the time for certiorari has elapsed (NMRA 12-402(C))."
+}
+
+terminal review-denied: "Certiorari denied" outcome [final] cite "NMRA 12-402(C)"
+{
+  note "Mandate issues on final disposition of the petition (NMRA 12-402(C))."
+}
+
+terminal review-granted: "Certiorari granted" outcome [neutral] cite "NMRA 12-502"
+{
+  note "The writ is granted; the Supreme Court's proceedings on the merits are not modeled."
+}

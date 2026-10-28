@@ -1,10 +1,10 @@
 module sd-criminal-trial-court.criminal
 
 // A criminal prosecution in the South Dakota circuit court, from the
-// defendant's view of outcomes. Every cite is a hole: the vendored SDCL
-// Title 23A is CURRENCY UNCONFIRMED, and many of its sections' text is
-// absent from the vendored file, so those cites carry no value. Every
-// period is stated in a note: lit/core has no South Dakota counting rule.
+// defendant's view of outcomes. The vendored SDCL Title 23A now includes
+// full text for the cited chapters, but its currency is unconfirmed; cites
+// remain holes and values are stated in notes as unverified. Every period
+// is stated in a note: lit/core has no South Dakota counting rule.
 // The outline's decisions (Gerstein, McLaughlin, Gideon, Brady, Barker v.
 // Wingo, Boykin, Missouri v. Frye, Jackson v. Virginia, Roe v.
 // Flores-Ortega, Garza v. Idaho) are federal constitutional authority with
@@ -13,31 +13,31 @@ start arrested
 
 state arrested: "Arrest" by applicant cite ?("SDCL § 23A-3-2, CURRENCY UNCONFIRMED (the Legislature's API states no edition date); the value is the vendored text, unverified")
 {
-  note "A law enforcement officer's power to arrest without a warrant, and the circumstances permitting it, are SDCL §§ 23A-3-2 and 23A-3-2.1. Unverified: CURRENCY UNCONFIRMED. The initial appearance and preliminary hearing (chapter 23A-4) are not in the vendored text."
+  note "A law enforcement officer's power to arrest without a warrant, and the circumstances permitting it, are SDCL §§ 23A-3-2 and 23A-3-2.1. Unverified: CURRENCY UNCONFIRMED. The initial appearance and preliminary hearing are governed by SDCL §§ 23A-4-1 to 23A-4-8; periods include 15 days if in custody and 45 days if not in custody for a preliminary hearing (§ 23A-4-3). Unverified: CURRENCY UNCONFIRMED."
   edge-arrested-appearance "Initial appearance before a magistrate" -> initial-appearance {
-    authority cite ?("SDCL § 23A-4, text not in the vendored file (only the chapter's table of contents)")
+    authority cite ?("SDCL §§ 23A-4-1 to 23A-4-8, CURRENCY UNCONFIRMED (text present; value unverified)")
   }
 }
 
-decision initial-appearance: "Initial appearance and release" by court cite ?("SDCL § 23A-4, text not in the vendored file (only the chapter's table of contents)")
+decision initial-appearance: "Initial appearance and release" by court cite ?("SDCL §§ 23A-4-1 to 23A-4-8, CURRENCY UNCONFIRMED (text present; value unverified)")
 {
-  note "Release on personal recognizance or bond (SDCL § 23A-43-2) and the preliminary proceedings (chapter 23A-4) are not in the vendored text: holes. The 180-day period runs from the date the defendant first appears before a judicial officer on an indictment, information or complaint (§ 23A-44-5.1(2)). Unverified: CURRENCY UNCONFIRMED."
+  note "Release on personal recognizance or unsecured bond is governed by SDCL § 23A-43-2, and preliminary proceedings by §§ 23A-4-1 to 23A-4-8; both texts are present but currency is unconfirmed. The 180-day period runs from the date the defendant first appears before a judicial officer on an indictment, information or complaint (§ 23A-44-5.1(2)). Unverified: CURRENCY UNCONFIRMED."
   edge-initial-appearance-detained "Held on bail" -> charging {
-    authority cite ?("SDCL § 23A-43-2, text not in the vendored file (only the chapter's table of contents)")
+    authority cite ?("SDCL § 23A-43-2, CURRENCY UNCONFIRMED (text present; value unverified)")
   }
   edge-initial-appearance-released "Released on recognizance or bond" -> charging {
-    authority cite ?("SDCL § 23A-43-2, text not in the vendored file (only the chapter's table of contents)")
+    authority cite ?("SDCL § 23A-43-2, CURRENCY UNCONFIRMED (text present; value unverified)")
   }
 }
 
-decision charging: "Preliminary hearing; indictment or information" by court cite ?("SDCL § 23A-6-3, text not in the vendored file (only the chapter's table of contents)")
+decision charging: "Preliminary hearing; indictment or information" by court cite ?("SDCL § 23A-6-3, CURRENCY UNCONFIRMED (text present; value unverified)")
 {
-  note "The preliminary hearing required for a felony information (SDCL § 23A-6-3) is not in the vendored text: a hole."
+  note "The preliminary hearing provisions are stated in SDCL § 23A-6-3; its deadline to file a felony information is 30 days after the preliminary hearing unless extended by the court. Unverified: CURRENCY UNCONFIRMED."
   edge-charging-charged "Indictment or information filed" -> arraignment {
-    authority cite ?("SDCL § 23A-6-1, text not in the vendored file (only the chapter's table of contents)")
+    authority cite ?("SDCL § 23A-6-1, CURRENCY UNCONFIRMED (text present; value unverified)")
   }
   edge-charging-none "No probable cause; discharged" -> dismissed {
-    authority cite ?("SDCL § 23A-4, text not in the vendored file (only the chapter's table of contents)")
+    authority cite ?("SDCL §§ 23A-4-1 to 23A-4-8, CURRENCY UNCONFIRMED (text present; value unverified)")
   }
 }
 
@@ -51,9 +51,9 @@ state arraignment: "Arraignment and plea" by applicant cite ?("SDCL § 23A-7-1, 
 
 state pretrial: "Discovery and pretrial motions" by applicant cite ?("SDCL § 23A-44-5.1, CURRENCY UNCONFIRMED (the Legislature's API states no edition date); the value is the vendored text, unverified")
 {
-  note "Every person indicted, informed or complained against is brought to trial within one hundred eighty days from the first appearance before a judicial officer on the charge (or from a mistrial, the filing of an order for new trial or of the mandate on remand), excluding the delay from other proceedings concerning the defendant (including the time from filing to final disposition of the defendant's pretrial motions), continuances at the defendant's request or with consent approved by written order, certain prosecution continuances, the defendant's absence, a change of judge the defendant obtains, a declared judicial emergency, and other delay the court finds is for good cause (SDCL § 23A-44-5.1(1)-(4)). Unverified: CURRENCY UNCONFIRMED. Pretrial motions (§ 23A-8-3) and discovery (chapter 23A-13) are not in the vendored text."
+  note "Every person indicted, informed or complained against is brought to trial within one hundred eighty days from the first appearance before a judicial officer on the charge (or from a mistrial, the filing of an order for new trial or of the mandate on remand), excluding the delay from other proceedings concerning the defendant (including the time from filing to final disposition of the defendant's pretrial motions), continuances at the defendant's request or with consent approved by written order, certain prosecution continuances, the defendant's absence, a change of judge the defendant obtains, a declared judicial emergency, and other delay the court finds is for good cause (SDCL § 23A-44-5.1(1)-(4)). Unverified: CURRENCY UNCONFIRMED. Pretrial motions and discovery are addressed in §§ 23A-8-3 and 23A-13-1 et seq.; no general filing deadline is stated in these cited provisions."
   edge-pretrial-motions "Pretrial motion filed" -> motions-ruling {
-    authority cite ?("SDCL § 23A-8-3, text not in the vendored file (only the chapter's table of contents)")
+    authority cite ?("SDCL § 23A-8-3, CURRENCY UNCONFIRMED (text present; value unverified)")
   }
   edge-pretrial-speedy "180 days run; motion to dismiss" -> motions-ruling {
     authority cite ?("SDCL § 23A-44-5.1, CURRENCY UNCONFIRMED (the Legislature's API states no edition date); the value is the vendored text, unverified")
@@ -70,7 +70,7 @@ decision motions-ruling: "Ruling on pretrial motions" by court cite ?("SDCL § 2
     authority cite ?("SDCL § 23A-44-5.1, CURRENCY UNCONFIRMED (the Legislature's API states no edition date); the value is the vendored text, unverified")
   }
   edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
-    authority cite ?("SDCL § 23A-8-3, text not in the vendored file (only the chapter's table of contents)")
+    authority cite ?("SDCL § 23A-8-3, CURRENCY UNCONFIRMED (text present; value unverified)")
   }
 }
 
@@ -85,27 +85,27 @@ decision plea-decision: "Plea or trial" by applicant cite ?("SDCL § 23A-7-2, CU
   }
 }
 
-decision trial: "Verdict" by court cite ?("SDCL § 23A-26, text not in the vendored file (only the chapter's table of contents)")
+decision trial: "Verdict" by court cite ?("SDCL § 23A-26, CURRENCY UNCONFIRMED (text present; value unverified)")
 {
-  note "The verdict (chapter 23A-26), motion for judgment of acquittal (23A-23), new trial (23A-29) and arrest of judgment (23A-30) chapters are not in the vendored text: their periods are holes."
+  note "The verdict, judgment of acquittal, new-trial and arrest-of-judgment provisions are in SDCL chapters 23A-26, 23A-23, 23A-29 and 23A-30. New-trial and arrest-of-judgment motions are due within ten days (§§ 23A-29-1, 23A-30-1). Unverified: CURRENCY UNCONFIRMED."
   edge-trial-acquittal "Not guilty" -> acquitted {
-    authority cite ?("SDCL § 23A-26, text not in the vendored file (only the chapter's table of contents)")
+    authority cite ?("SDCL § 23A-26, CURRENCY UNCONFIRMED (text present; value unverified)")
   }
   edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
-    authority cite ?("SDCL § 23A-29, text not in the vendored file (only the chapter's table of contents)")
+    authority cite ?("SDCL § 23A-29, CURRENCY UNCONFIRMED (text present; value unverified)")
   }
 }
 
-decision post-trial: "Post-trial motions" by court cite ?("SDCL § 23A-29, text not in the vendored file (only the chapter's table of contents)")
+decision post-trial: "Post-trial motions" by court cite ?("SDCL § 23A-29, CURRENCY UNCONFIRMED (text present; value unverified)")
 {
   edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
-    authority cite ?("SDCL § 23A-23, text not in the vendored file (only the chapter's table of contents)")
+    authority cite ?("SDCL § 23A-23, CURRENCY UNCONFIRMED (text present; value unverified)")
   }
   edge-post-trial-new-trial "New trial granted" -> trial {
-    authority cite ?("SDCL § 23A-29, text not in the vendored file (only the chapter's table of contents)")
+    authority cite ?("SDCL § 23A-29, CURRENCY UNCONFIRMED (text present; value unverified)")
   }
   edge-post-trial-arrest "Judgment arrested" -> dismissed {
-    authority cite ?("SDCL § 23A-30, text not in the vendored file (only the chapter's table of contents)")
+    authority cite ?("SDCL § 23A-30, CURRENCY UNCONFIRMED (text present; value unverified)")
   }
   edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
     authority cite ?("SDCL § 23A-27-1, CURRENCY UNCONFIRMED (the Legislature's API states no edition date); the value is the vendored text, unverified")
@@ -122,16 +122,16 @@ state sentencing: "Sentence and judgment" by court cite ?("SDCL § 23A-27-1, CUR
 
 decision judgment: "Judgment of conviction" by applicant cite ?("SDCL § 23A-32-2, CURRENCY UNCONFIRMED (the Legislature's API states no edition date); the value is the vendored text, unverified")
 {
-  note "The defendant may appeal to the Supreme Court from a final judgment of conviction (SDCL § 23A-32-2); the prosecution's appeals under §§ 23A-32-4 and 23A-32-5 are taken within ten days after written notice of entry of the judgment or order (§ 23A-32-6). Unverified: CURRENCY UNCONFIRMED. The time for the defendant's appeal (§ 23A-32-15) is not in the vendored text: a hole."
+  note "The defendant may appeal to the Supreme Court from a final judgment of conviction (SDCL § 23A-32-2); the prosecution's appeals under §§ 23A-32-4 and 23A-32-5 are taken within ten days after written notice of entry of the judgment or order (§ 23A-32-6). Unverified: CURRENCY UNCONFIRMED. A judgment appeal must be taken within thirty days after the judgment is signed, attested and filed; other appeals within thirty days after written notice (§ 23A-32-15). A timely new-trial motion tolls the appeal period as specified there. Unverified: CURRENCY UNCONFIRMED."
   edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
-    authority cite ?("SDCL § 23A-32-15, text not in the vendored file (only the chapter's table of contents)")
+    authority cite ?("SDCL § 23A-32-15, CURRENCY UNCONFIRMED (text present; value unverified)")
   }
   edge-judgment-no-appeal "No appeal" -> conviction-final {
-    authority cite ?("SDCL § 23A-32-15, text not in the vendored file (only the chapter's table of contents)")
+    authority cite ?("SDCL § 23A-32-15, CURRENCY UNCONFIRMED (text present; value unverified)")
   }
 }
 
-terminal acquitted: "Acquitted" outcome [win] cite ?("SDCL § 23A-26, text not in the vendored file (only the chapter's table of contents)")
+terminal acquitted: "Acquitted" outcome [win] cite ?("SDCL § 23A-26, CURRENCY UNCONFIRMED (text present; value unverified)")
 
 terminal dismissed: "Charge dismissed or judgment arrested" outcome [win, dismissal] cite ?("SDCL § 23A-44-5.1, CURRENCY UNCONFIRMED (the Legislature's API states no edition date); the value is the vendored text, unverified")
 

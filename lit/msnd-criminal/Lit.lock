@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "msnd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:fb3a6c09abc74bdb605b9daa4bf7a89263224d0303ac96fa232b8244cd6d4d7b"
+semantic = "sha256:ab6f158190506aa4fcf88b5ca524d113cd860c527e640024330a570857c781c1"
+texts = [
+    "msnd-ulcrr sources/msnd/msnd-uniform-local-criminal-rules-2019-12-01-sectioned.txt sha256:43a6852ec1eb974869aa39cac10c05f51c0667aecf89caa92fcbe4d7b189e36b",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

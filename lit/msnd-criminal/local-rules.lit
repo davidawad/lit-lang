@@ -1,0 +1,67 @@
+module msnd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Northern District of Mississippi's own criminal periods under the Uniform Local
+// Criminal Rules, counted under the criminal rules (FRCrimP 45(a) governs
+// "any local rule"). No trigger carries a service method: FRCrimP 45(c)'s
+// three added days follow the manner of service, which is not modeled
+// here.
+//
+// Every other criminal deadline is set by order: at the arraignment the
+// magistrate judge enters a scheduling and discovery order setting the
+// trial, discovery, motion, plea-notice, motion in limine and jury
+// instruction dates, and on request the dates for expert summaries under
+// FRCrimP 16(a)(1)(G) and 16(b)(1)(C) (U.L.Cr.R. 10.1); every motion is
+// filed within the time limits the magistrate judge orders (U.L.Cr.R.
+// 47(B)), and a motion filed after that deadline may be denied as untimely
+// (U.L.Cr.R. 47(H)). Conditions that are not deadlines stay in notes: a
+// motion carries a certificate of conference unless it is of a kind
+// U.L.Cr.R. 47(A) exempts; a Rule 17(c) subpoena returnable before trial
+// needs the magistrate judge's prior approval (U.L.Cr.R. 17); the
+// probation officer's initial sentence recommendation is not disclosed
+// unless the sentencing judge orders it (U.L.Cr.R. 32); motions are
+// decided without a hearing unless the court orders one (U.L.Cr.R.
+// 47(F)); plea agreements and cooperation motions are sealed as U.L.Cr.R.
+// 49.1 provides; misdemeanor cases go to the magistrate judges (U.L.Cr.R.
+// 58). No response to a motion for post-conviction relief, including a 28
+// U.S.C. § 2255 motion, is required unless the court directs one
+// (U.L.Cr.R. 47(C)(1)); federal habeas belongs to lit/habeas.
+//
+// The earlier N.D. Miss. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Brady v. Maryland, Barker v. Wingo, Zedner v.
+// United States, Boykin v. Alabama, Missouri v. Frye, Jackson v. Virginia,
+// United States v. Booker, Roe v. Flores-Ortega, Garza v. Idaho) are
+// FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// A memorandum of authorities supporting a motion, response or rebuttal:
+/// at most 35 pages without prior leave of court; it is filed at the same
+/// time as the paper it supports (U.L.Cr.R. 47(E)).
+limit memorandum {
+  pages <= 35 cite "U.L.Cr.R. 47(E)"
+} cite "U.L.Cr.R. 47(E)"
+
+/// A motion is filed (U.L.Cr.R. 47(B)).
+event MotionFiled() paper memorandum
+/// The response to a motion is served (U.L.Cr.R. 47(C), (D)).
+event ResponseServed() paper memorandum
+/// A rebuttal is filed (U.L.Cr.R. 47(D)).
+event RebuttalFiled() paper memorandum
+
+/// U.L.Cr.R. 47(C)(1): within eleven calendar days after a motion is
+/// filed, the opposing party responds to it or notifies the court of its
+/// intent not to respond. For a motion other than a dispositive motion or
+/// a motion for post-conviction relief, the court may grant the motion as
+/// unopposed if a party does neither in time.
+deadline response-period: 11.days after MotionFiled() counted_by frcrimp45 cite "U.L.Cr.R. 47(C)"
+{
+  forum frcrimp
+}
+
+/// U.L.Cr.R. 47(D): counsel who desires to file a rebuttal may do so
+/// within five calendar days after service of the response.
+deadline rebuttal-period: 5.days after ResponseServed() counted_by frcrimp45 cite "U.L.Cr.R. 47(D)"
+{
+  forum frcrimp
+}

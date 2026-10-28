@@ -1,0 +1,60 @@
+# The Southern District of Alabama's General and Civil Local Rules (Parts
+# A and B) as a local-rule layer over lit/frcp (28 U.S.C. § 2071; FRCP
+# 83; GenLR 1(b): the rules "supplement the Federal Rules of Civil
+# Procedure"): it declares only the periods and page limits the Local
+# Rules themselves state and re-encodes no FRCP deadline. Each period is
+# counted under FRCP 6(a), which governs "any local rule". The rules are
+# the edition effective August 1, 2015 (sources/sd-ala); earlier editions
+# are not vendored, so a query before that date is a hole in the corpus.
+# The criminal rules (Part C, S.D. Ala. CrLR) are not encoded. An appeal
+# goes to the Eleventh Circuit under lit/frap.
+[package]
+name = "alsd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "alsd-local-rules"
+forum = "alsd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Southern District of Alabama: Local Rules (general and civil)"
+description = "The Southern District of Alabama's General and Civil Local Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): unsealing, objections to a magistrate judge's determination, files and exhibits, proof and waiver of service, motion briefing and its page limits, disclosure statements, pseudonyms, answers to amended pleadings, the joint pretrial document, early neutral evaluation, the bill of costs and its review, summary judgment briefing, and the admiralty and maritime periods."
+in_force = "2015-08-01"
+known_at = "2026-10-28"
+unknown_before = "2015-08-01"
+jurisdiction = "United States District Court, S.D. Alabama"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "alsd-civlr"
+issuer = "United States District Court for the Southern District of Alabama"
+date = "2015-08-01"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.alsd-genlr]
+title = "Local Rules of the United States District Court for the Southern District of Alabama, Part A: General Rules (August 1, 2015)"
+url = "https://www.alsd.uscourts.gov/sites/alsd/files/local-rules.pdf"
+path = "sources/sd-ala/local-rules-civil-sectioned.txt"
+path_sha256 = "7a4f621ebf7fdfaf8041bc877c5635252b9ec09a72b6d5e488fe8de097ef2ad8"
+sha256 = "e3b7d7c414fe29cecc4ca7a26b0a777d34c514f03dfb37fa67cfea986e8bbf06"
+as_of = "2015-08-01"
+cite_prefixes = ["S.D. Ala. GenLR"]
+section_heading = "GenLR {n}"
+
+[sources.alsd-civlr]
+title = "Local Rules of the United States District Court for the Southern District of Alabama, Part B: Civil Rules (August 1, 2015)"
+url = "https://www.alsd.uscourts.gov/sites/alsd/files/local-rules.pdf"
+path = "sources/sd-ala/local-rules-civil-sectioned.txt"
+path_sha256 = "7a4f621ebf7fdfaf8041bc877c5635252b9ec09a72b6d5e488fe8de097ef2ad8"
+sha256 = "e3b7d7c414fe29cecc4ca7a26b0a777d34c514f03dfb37fa67cfea986e8bbf06"
+as_of = "2015-08-01"
+cite_prefixes = ["S.D. Ala. CivLR"]
+section_heading = "CivLR {n}"

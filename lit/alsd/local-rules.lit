@@ -1,0 +1,381 @@
+module alsd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Southern District of Alabama's own periods and page limits,
+// computed under the federal rules (FRCP 6(a) governs "any local rule").
+// The briefing periods of CivLR 7 and 56 apply "unless the Court orders
+// otherwise", and the court may set different motion and summary
+// judgment practice in a case (CivLR 7(i), 56(f)). Rules that state no
+// period or limit stay out: individual judges' procedures (GenLR 1.1),
+// serving and filing (GenLR 5), requests for court action (GenLR 7),
+// witnesses, jury instructions and places of trial (GenLR 43, 51, 77),
+// magistrate judges' duties (GenLR 73), decorum, appearances and pro se
+// parties (GenLR 83.1, 83.2, 83.5), forms, the effective date and
+// bankruptcy reference (GenLR 84, 86, 87), commencing an action (CivLR
+// 3), discovery filings (CivLR 5), pleading (CivLR 8, 9), pro se Rule 12
+// motions (CivLR 12), discovery (CivLR 26-37), consolidation (CivLR 42),
+// sureties (CivLR 65.1) and the registry (CivLR 67, 67.1). Unsealing on
+// a criminal indictment or complaint (GenLR 5.2(d)(3), (4)) and the
+// criminal peremptory challenge request (GenLR 47(d)) are criminal
+// rules; the admission and discipline periods of GenLR 83.3 and 83.4
+// govern attorneys, not a civil action; neither is encoded. The court's
+// own power to dismiss when a served defendant has not answered within
+// six months of the complaint (CivLR 41(b)) sets no party's deadline and
+// stays in this note. Periods in business days, a unit lit/core does not
+// count, stay in notes: the balance of a bid over $1,000.00 within three
+// business days (CivLR 104(m)(2)(B)), an objection to a sale within
+// three business days following it (CivLR 104(m)(6)) and the appraiser's
+// one business day's notice (CivLR 104(i)). The notices CivLR 102(b)(5)
+// and (6) prescribe restate Supplemental Rule C(6), FRCP authority, and
+// are not re-encoded. Amounts are not declared: the supersedeas bond of
+// the judgment plus 15% and $500.00 (CivLR 62(a)), security for costs of
+// $500.00 (CivLR 65.2, 104(g)) and $1,000.00 (CivLR 105(a)), and the
+// bid deposit (CivLR 104(m)(2)). The earlier S.D. Ala. outline's FRCP and
+// FRAP flow and its decisions (Twombly, Iqbal, Celotex, Anderson v.
+// Liberty Lobby, Matsushita, Unitherm, Bowles v. Russell, Hamer,
+// Microsoft v. Baker, and Khalik v. United Air Lines, a Tenth Circuit
+// decision it misattributed to this circuit) are FRCP and FRAP authority
+// and belong to lit/frcp and lit/frap; they are removed here: no reporter
+// text is vendored.
+/// A principal brief in support of, or in opposition to, a motion: at
+/// most 30 pages, excluding the caption, cover page, tables and signature
+/// block, absent prior leave (CivLR 7(e)).
+limit principal-brief { pages <= 30 cite "S.D. Ala. CivLR 7(e)" } cite "S.D. Ala. CivLR 7(e)"
+/// A reply brief: at most 15 pages, with the same exclusions, absent
+/// prior leave (CivLR 7(e)).
+limit reply-brief { pages <= 15 cite "S.D. Ala. CivLR 7(e)" } cite "S.D. Ala. CivLR 7(e)"
+
+/// A notice of supplemental authority: at most 2 pages, presenting no new
+/// argument (CivLR 7(f)(3)).
+limit supplemental-authority-notice {
+  pages <= 2 cite "S.D. Ala. CivLR 7(f)(3)"
+} cite "S.D. Ala. CivLR 7(f)(3)"
+
+/// An order sealing a document not otherwise listed in GenLR 5.2(d) is
+/// entered (GenLR 5.2(d)(5)).
+event SealingOrderEntered()
+/// An objection to a magistrate judge's determination is served (GenLR
+/// 72(c)).
+event MagistrateObjectionServed()
+/// A response to the objection is served (GenLR 72(c)(3)).
+event MagistrateObjectionResponseServed()
+/// A party receives a court file, exhibit, document or transcript on an
+/// order allowing its temporary withdrawal (GenLR 79(d)).
+event FileWithdrawn()
+/// A trial is concluded, by verdict, mistrial, settlement or otherwise
+/// (GenLR 79(f)(1)).
+event TrialConcluded()
+/// A case is concluded, by judgment, order of dismissal or otherwise
+/// (GenLR 79(f)(1), (2)).
+event CaseConcluded()
+/// The judgment becomes final (GenLR 79(f)(3)(A)).
+event JudgmentFinal()
+/// The complaint is filed (CivLR 4(a)(3)).
+event ComplaintFiled()
+/// Service is completed by summons (CivLR 4(a)(1)).
+event ServiceCompleted()
+/// The plaintiff receives a waiver of service (CivLR 4(a)(2)).
+event WaiverReceived()
+/// A motion other than one under FRCP 56 is served (CivLR 7(c)).
+event MotionServed() paper principal-brief
+/// The non-movant's response to that motion is served (CivLR 7(d)).
+event ResponseServed() paper principal-brief
+/// A reply brief is filed (CivLR 7(d), (e)).
+event ReplyFiled() paper reply-brief
+/// A notice of pertinent and significant authority is filed (CivLR
+/// 7(f)(3)).
+event SupplementalAuthorityNoticed() paper supplemental-authority-notice
+/// A party's initial filing is made without its Disclosure Statement,
+/// filing it being impossible or impracticable (CivLR 7.1(a)).
+event InitialFilingMade()
+/// The complaint of a plaintiff proceeding under a pseudonym is served
+/// (CivLR 10(c)).
+event PseudonymousComplaintServed()
+/// The court grants a motion to amend a pleading (CivLR 15(c)).
+event AmendmentGranted()
+/// The final pretrial conference is held (CivLR 16(c)(1)).
+event FinalPretrialConference()
+/// The case is referred to early neutral evaluation (CivLR 16(d)(4)(B)).
+event EneReferred()
+/// Judgment is entered (CivLR 54(a)(1)).
+event JudgmentEntered()
+/// The order resolving a timely FRCP 50(b) or 59 motion is entered (CivLR
+/// 54(a)(1)).
+event PostTrialMotionResolved()
+/// A verified bill of costs is served (CivLR 54(a)(3)).
+event BillOfCostsServed()
+/// Objections to the bill of costs are served (CivLR 54(a)(3)).
+event CostsObjectionsServed()
+/// The clerk taxes costs (CivLR 54(b)).
+event CostsTaxed()
+/// A motion for summary judgment is served (CivLR 56(b)).
+event SummaryJudgmentMotionServed() paper principal-brief
+/// The non-movant's response to the summary judgment motion is served
+/// (CivLR 56(c)).
+event SummaryJudgmentResponseServed() paper principal-brief
+/// The Rule C(3)(c) summons to show cause is served on the person having
+/// control of intangible property (CivLR 102(a)).
+event IntangibleSummonsServed()
+/// Property is seized in an action in rem (CivLR 102(b)).
+event PropertySeized()
+/// An order to post security for costs under Rule E(2)(b) is entered
+/// (CivLR 104(g)).
+event SecurityOrderEntered()
+/// The Marshal requests that the seizing party advance additional sums
+/// (CivLR 104(j)).
+event MarshalAdvanceRequested()
+/// Property is sold in an action in rem (CivLR 104(m)).
+event SaleHeld()
+/// The court confirms the sale (CivLR 104(m)(2)(C)).
+event SaleConfirmed()
+
+/// GenLR 5.2(d)(5): unless the court orders otherwise, other sealed
+/// documents are unsealed 120 days from the date of entry of the sealing
+/// order.
+deadline unsealing-period: 120.days after SealingOrderEntered() counted_by frcp6 cite "S.D. Ala. GenLR 5.2(d)(5)"
+{
+  forum frcp
+}
+
+/// GenLR 72(c)(2): where the parties have not consented to magistrate
+/// judge jurisdiction, any other party may serve and file a response to an
+/// objection within fourteen days from the date of service of the
+/// objection, unless the court sets a different deadline.
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionServed() counted_by frcp6 cite "S.D. Ala. GenLR 72(c)(2)"
+{
+  forum frcp
+}
+
+/// GenLR 72(c)(3): unless the court orders otherwise, the objecting party
+/// may serve and file a reply within seven days from the date of service
+/// of the response.
+deadline magistrate-objection-reply-period: 7.days after MagistrateObjectionResponseServed() counted_by frcp6 cite "S.D. Ala. GenLR 72(c)(3)"
+{
+  forum frcp
+}
+
+/// GenLR 79(d): a party granted temporary withdrawal returns the court
+/// file, exhibit, document or transcript within seven days, unless the
+/// judge by order sets a different time.
+deadline file-return-period: 7.days after FileWithdrawn() counted_by frcp6 cite "S.D. Ala. GenLR 79(d)"
+{
+  forum frcp
+}
+
+/// GenLR 79(f)(1): within fourteen days after a trial is concluded, the
+/// offering party withdraws all exhibits in the clerk's custody.
+deadline exhibit-withdrawal-period: 14.days after TrialConcluded() counted_by frcp6 cite "S.D. Ala. GenLR 79(f)(1)"
+{
+  forum frcp
+}
+
+/// GenLR 79(f)(1): within fourteen days after a case is concluded, the
+/// offering party withdraws all discovery material in the clerk's custody.
+deadline discovery-withdrawal-period: 14.days after CaseConcluded() counted_by frcp6 cite "S.D. Ala. GenLR 79(f)(1)"
+{
+  forum frcp
+}
+
+/// GenLR 79(f)(2): exhibits and discovery material not withdrawn within
+/// sixty days after a case is concluded may be disposed of by the clerk.
+deadline exhibit-disposal-period: 60.days after CaseConcluded() counted_by frcp6 cite "S.D. Ala. GenLR 79(f)(2)"
+{
+  forum frcp
+}
+
+/// GenLR 79(f)(3)(A): a party retains exhibits and discovery material
+/// withdrawn from the clerk's custody for at least one year after the
+/// judgment is final.
+deadline exhibit-retention-period: 1.years after JudgmentFinal() counted_by frcp6 cite "S.D. Ala. GenLR 79(f)(3)(A)"
+{
+  forum frcp
+}
+
+/// CivLR 4(a)(1): unless the court orders otherwise, if service is
+/// completed by summons, the person making service files proof of it
+/// within seven days of the date of service.
+deadline proof-of-service-period: 7.days after ServiceCompleted() counted_by frcp6 cite "S.D. Ala. CivLR 4(a)(1)"
+{
+  forum frcp
+}
+
+/// CivLR 4(a)(2): if service is waived, the plaintiff files the waiver
+/// within seven days after receipt of the waiver.
+deadline waiver-filing-period: 7.days after WaiverReceived() counted_by frcp6 cite "S.D. Ala. CivLR 4(a)(2)"
+{
+  forum frcp
+}
+
+/// CivLR 4(a)(3): if within forty-five days after the filing of the
+/// complaint the plaintiff has neither completed service by summons nor
+/// received a waiver, the plaintiff files a notice describing its efforts
+/// to complete service and their results.
+deadline service-attempt-notice-period: 45.days after ComplaintFiled() counted_by frcp6 cite "S.D. Ala. CivLR 4(a)(3)"
+{
+  forum frcp
+}
+
+/// CivLR 7(c): unless the court orders otherwise, the non-movant files
+/// any brief or paper in opposition to a motion, other than one under FRCP
+/// 56, within fourteen days of service of the motion.
+deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "S.D. Ala. CivLR 7(c)"
+{
+  forum frcp
+}
+
+/// CivLR 7(d): unless the court orders otherwise, a reply in support of a
+/// motion, other than one under FRCP 56, is filed within seven days of
+/// service of the non-movant's response.
+deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "S.D. Ala. CivLR 7(d)"
+{
+  forum frcp
+}
+
+/// CivLR 7.1(a): where filing the Disclosure Statement with the initial
+/// filing is impossible or impracticable, it is filed within seven days
+/// after the initial filing, or such other time as the court directs.
+deadline disclosure-statement-period: 7.days after InitialFilingMade() counted_by frcp6 cite "S.D. Ala. CivLR 7.1(a)"
+{
+  forum frcp
+}
+
+/// CivLR 10(c): a party who commences a civil action under a pseudonym
+/// files and serves a motion for permission to proceed under it within
+/// twenty-one days of service of the complaint.
+deadline pseudonym-motion-period: 21.days after PseudonymousComplaintServed() counted_by frcp6 cite "S.D. Ala. CivLR 10(c)"
+{
+  forum frcp
+}
+
+/// CivLR 15(c): if a responsive pleading is required, a party that has
+/// appeared and was served with the proposed amended pleading serves its
+/// answer or other responsive pleading within fourteen days after the
+/// court grants the motion to amend.
+deadline amended-pleading-response-period: 14.days after AmendmentGranted() counted_by frcp6 cite "S.D. Ala. CivLR 15(c)"
+{
+  forum frcp
+}
+
+/// CivLR 16(c)(1): unless otherwise ordered, the parties file a joint
+/// pretrial document seven days before the final pretrial conference.
+deadline joint-pretrial-document-period: 7.days before FinalPretrialConference() counted_by frcp6 cite "S.D. Ala. CivLR 16(c)(1)"
+{
+  forum frcp
+}
+
+/// CivLR 16(d)(4)(B): within thirty days of the case being referred to
+/// ENE, the neutral evaluator hosts the confidential evaluation meeting.
+deadline ene-session-period: 30.days after EneReferred() counted_by frcp6 cite "S.D. Ala. CivLR 16(d)(4)(B)"
+{
+  forum frcp
+}
+
+/// CivLR 54(a)(1): no later than fourteen days after entry of judgment, a
+/// party seeking costs files a verified bill of costs. Absent court order,
+/// an appeal does not extend the deadline (CivLR 54(a)(2)).
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "S.D. Ala. CivLR 54(a)(1)"
+{
+  forum frcp
+}
+
+/// CivLR 54(a)(1): if a timely FRCP 50(b) or 59 motion is filed, the bill
+/// of costs is filed within fourteen days after entry of the order
+/// resolving the motion.
+deadline bill-of-costs-post-motion-period: 14.days after PostTrialMotionResolved() counted_by frcp6 cite "S.D. Ala. CivLR 54(a)(1)"
+{
+  forum frcp
+}
+
+/// CivLR 54(a)(3): a party opposing taxation of costs files its
+/// objections within fourteen days of service of the bill of costs.
+deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "S.D. Ala. CivLR 54(a)(3)"
+{
+  forum frcp
+}
+
+/// CivLR 54(a)(3): the party claiming costs serves any response within
+/// seven days of service of the objections.
+deadline costs-objection-response-period: 7.days after CostsObjectionsServed() counted_by frcp6 cite "S.D. Ala. CivLR 54(a)(3)"
+{
+  forum frcp
+}
+
+/// CivLR 54(b): a party may move for review of the clerk's taxation of
+/// costs no later than seven days after taxation.
+deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "S.D. Ala. CivLR 54(b)"
+{
+  forum frcp
+}
+
+/// CivLR 56(b): unless the court orders otherwise, the non-movant files
+/// any response in opposition to a summary judgment motion within
+/// twenty-eight days of service of the motion.
+deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "S.D. Ala. CivLR 56(b)"
+{
+  forum frcp
+}
+
+/// CivLR 56(c): unless the court orders otherwise, any reply is filed
+/// within fourteen days of service of the non-movant's response.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "S.D. Ala. CivLR 56(c)"
+{
+  forum frcp
+}
+
+/// CivLR 102(a): the Rule C(3)(c) summons directs the person having
+/// control of intangible property to show cause no later than fourteen
+/// days after service why it should not be delivered to the court; a
+/// judicial officer may lengthen or shorten the time.
+deadline intangible-show-cause-period: 14.days after IntangibleSummonsServed() counted_by frcp6 cite "S.D. Ala. CivLR 102(a)"
+{
+  forum frcp
+}
+
+/// CivLR 102(b): the Rule C(4) notice, published once a week for three
+/// consecutive weeks, begins not later than twenty-one days following
+/// seizure.
+deadline arrest-notice-period: 21.days after PropertySeized() counted_by frcp6 cite "S.D. Ala. CivLR 102(b)"
+{
+  forum frcp
+}
+
+/// CivLR 104(g): a party ordered to post security for costs posts it
+/// within seven days after the order is entered; a party who fails to may
+/// not participate further except by order of court.
+deadline admiralty-security-period: 7.days after SecurityOrderEntered() counted_by frcp6 cite "S.D. Ala. CivLR 104(g)"
+{
+  forum frcp
+}
+
+/// CivLR 104(j): the Marshal may, on notice, petition for an order to
+/// release the vessel if additional sums are not advanced within seven
+/// days after the Marshal's request.
+deadline marshal-advance-period: 7.days after MarshalAdvanceRequested() counted_by frcp6 cite "S.D. Ala. CivLR 104(j)"
+{
+  forum frcp
+}
+
+/// CivLR 104(m)(1): unless otherwise ordered, the last publication of the
+/// notice of sale is not less than seven days immediately preceding the
+/// sale.
+deadline sale-notice-period: 7.days before SaleHeld() counted_by frcp6 cite "S.D. Ala. CivLR 104(m)(1)"
+{
+  forum frcp
+}
+
+/// CivLR 104(m)(2)(C): if an objection to the sale is timely filed, the
+/// bidder is excused from paying the balance of the purchase price until
+/// five days after the sale is confirmed.
+deadline objected-sale-balance-period: 5.days after SaleConfirmed() counted_by frcp6 cite "S.D. Ala. CivLR 104(m)(2)(C)"
+{
+  forum frcp
+}
+
+/// CivLR 104(m)(7): if no objection is timely filed, the sale is
+/// confirmed by order no sooner than five days and no later than seven
+/// days after the sale.
+deadline sale-confirmation-period: 7.days after SaleHeld() counted_by frcp6 cite "S.D. Ala. CivLR 104(m)(7)"
+{
+  forum frcp
+}

@@ -8,3 +8,9 @@
 - Original: `dc-criminal-trial-court/original/dc-superior-court-rules-of-criminal-procedure.pdf` as served (sha256 983683a5f5518723d8097cb6da58677c103b26588ba592a9d1dd59607cf0b5b3); extraction sha256 e690ce58a0b8b05348e75db8f323a94498fe957d82938ff74a64b5ea541adbc8.
 
 - Note (lg-gddt): Criminal appeals: D.C. Court of Appeals Rules, covered by sources/dc-state-appellate/. The D.C. Code Title 23 (criminal procedure, incl. 23-102 speedy trial) is not vendored.
+
+### `dc-criminal-trial-court/dc-superior-court-rules-of-criminal-procedure-sectioned.txt` — D.C. Superior Court Rules of Criminal Procedure, sectioned
+
+- Derived in the pod (lg-gddt.4) from `dc-criminal-trial-court/dc-superior-court-rules-of-criminal-procedure.txt` (extract sha256 e690ce58a0b8b05348e75db8f323a94498fe957d82938ff74a64b5ea541adbc8); nothing fetched. One marker line `## Rule <n>` is inserted before each rule's heading line `Rule <n>. <Title>` (107 rules, Rule 1 through Rule 120, including hyphenated and decimal rules such as 4-I and 5.1; the Rule 41 heading is indented; extract lines 157 and 3852, which begin with "Rule 5." and "Rule 47-I." mid-paragraph, are not headings and carry no marker). Every other line is the extract unchanged, so deleting the `## Rule` lines (`sed '/^## Rule /d'`) gives back the extract byte for byte.
+- Edition: as the extract; CURRENCY UNCONFIRMED stands. `lit/dc-criminal-trial-court` cites it for structure only and takes no value from it.
+- Sectioned sha256 f108105a55e505ee427ccbe5398aa9ab3b431391115b0c0ca2b94d6cefa10827 (the `path_sha256` pinned by `lit/dc-criminal-trial-court/Lit.toml`).

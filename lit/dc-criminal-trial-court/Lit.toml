@@ -1,0 +1,61 @@
+# Criminal cases in the Superior Court of the District of Columbia under
+# its Rules of Criminal Procedure (D.C. Super. Ct. R. Crim. P.), as far as
+# the vendored text states. The base text is the "Download All Rules" PDF
+# the court serves (sources/dc-criminal-trial-court/), which states no
+# edition date; its PROVENANCE entry records CURRENCY UNCONFIRMED (its
+# newest comment is to 2026 amendments of Rule 4, effective date not
+# stated), so in_force is the retrieval date and an earlier query is a
+# hole in the corpus. By the PM's standing ruling of 2026-10-27 such a
+# source yields holes, not values: this package cites the rules only for
+# the structure of the case (which rule governs which step) and states no
+# period, limit or amount from them. The D.C. Code's Title 23 (criminal
+# procedure, including the speedy-trial provision D.C. Code § 23-102, the
+# release and detention provisions §§ 23-1321 to -1331 that Rule 46
+# adopts, and collateral attack under § 23-110) is not vendored; those
+# cites stay holes. The appeal hand-off cites D.C. App. R. 4(b), whose
+# vendored text has a stated edition (amendments in effect as of May 11,
+# 2026; sources/dc-state-appellate/); lit/core has no counting rule for
+# the D.C. Court of Appeals rules, so its period is stated in a note, not
+# encoded as a counted deadline.
+[package]
+name = "dc-superior-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "dc-superior-court-criminal"
+forum = "dc-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "district-of-columbia"
+title = "Superior Court of the District of Columbia, criminal"
+description = "Criminal cases in the Superior Court of the District of Columbia under its Rules of Criminal Procedure, as far as the vendored text states: the structure of the case from arrest and initial appearance through preliminary hearing, charge, arraignment, pretrial motions, plea or trial, post-trial motions, sentencing and judgment; no period from the currency-unconfirmed rules is stated. An appeal goes to the District of Columbia Court of Appeals under D.C. App. R. 4(b)."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Superior Court of the District of Columbia (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.dc-scr-crim]
+title = "Superior Court of the District of Columbia, Rules of Criminal Procedure, 'Download All Rules' PDF as served (no edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://www.dccourts.gov/sites/default/files/superior-rules/Superior%20Court%20Rules%20of%20Criminal%20Procedure.pdf"
+path = "sources/dc-criminal-trial-court/dc-superior-court-rules-of-criminal-procedure-sectioned.txt"
+path_sha256 = "f108105a55e505ee427ccbe5398aa9ab3b431391115b0c0ca2b94d6cefa10827"
+sha256 = "983683a5f5518723d8097cb6da58677c103b26588ba592a9d1dd59607cf0b5b3"
+as_of = "2026-10-28"
+cite_prefixes = ["D.C. Super. Ct. R. Crim. P."]
+section_heading = "Rule {n}"
+
+[sources.dc-app-r]
+title = "Rules of the District of Columbia Court of Appeals, reflecting amendments in effect as of May 11, 2026"
+url = "https://www.dccourts.gov/sites/default/files/coa-rules/DCCA-Rules.pdf"
+path = "sources/dc-state-appellate/dcca-rules-sectioned.txt"
+path_sha256 = "17ed6746cb9c0e76cf59794b5f203a6e03a85e16838865ecf46b46b98c5d6555"
+sha256 = "5b71b874d774c74dc7f98b2873d3393363d259dd7edbaf315a18b7962d0197bf"
+as_of = "2026-05-11"
+cite_prefixes = ["D.C. App. R."]
+section_heading = "Rule {n}"

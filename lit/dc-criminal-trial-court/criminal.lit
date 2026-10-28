@@ -1,0 +1,167 @@
+module dc-superior-court-criminal.criminal
+
+// Criminal cases in the Superior Court of the District of Columbia. The
+// Superior Court Rules of Criminal Procedure are CURRENCY UNCONFIRMED
+// (sources/dc-criminal-trial-court/PROVENANCE.md), so they are cited for
+// the structure of each step and no period, limit or amount is taken from
+// them: where a step has one, the note names the rule that sets it and
+// says that it is not stated. The D.C. Code's criminal-procedure title
+// (Title 23) is not vendored, so its speedy-trial, release and detention,
+// and collateral-attack provisions are holes. Outcomes are from the
+// defendant's side. The earlier outline's leading decisions (County of
+// Riverside v. McLaughlin, Gerstein v. Pugh, Gideon v. Wainwright, Brady
+// v. Maryland, Mapp v. Ohio, Barker v. Wingo, Boykin v. Alabama, Missouri
+// v. Frye, Jackson v. Virginia, Ramos v. Louisiana, Apprendi v. New
+// Jersey, Roe v. Flores-Ortega, Garza v. Idaho) are removed: no reporter
+// text is vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "D.C. Super. Ct. R. Crim. P. 4"
+{
+  note "A complaint is a written statement of the essential facts constituting the offense charged, made under oath (D.C. Super. Ct. R. Crim. P. 3); on a complaint establishing probable cause the court issues an arrest warrant or a summons (D.C. Super. Ct. R. Crim. P. 4), and a complaint, warrant or summons may be sought by telephone or other reliable electronic means (D.C. Super. Ct. R. Crim. P. 4.1). An officer making an arrest within the District of Columbia must take the arrested person without unnecessary delay before the court, and a person arrested without a warrant must be charged forthwith by complaint or information (D.C. Super. Ct. R. Crim. P. 5(a); 7(a))."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance {
+    authority cite "D.C. Super. Ct. R. Crim. P. 5(a)"
+  }
+}
+
+decision initial-appearance: "Release or detention" by court cite "D.C. Super. Ct. R. Crim. P. 5(d)"
+{
+  note "At the initial appearance the court informs the defendant of the complaint, the right to retained or appointed counsel, the right to a preliminary hearing if a felony is charged, and the right to remain silent, allows time to consult counsel, and detains or releases the defendant as provided by statute or the rules (D.C. Super. Ct. R. Crim. P. 5(b)-(d)); counsel is assigned under Rule 44 and Rule 44-I. After an arrest without a warrant, if the release conditions significantly restrain pretrial liberty, the prosecutor files a sworn statement of fact and the court determines probable cause, with or without a hearing; the filing period Rule 5(e)(1) sets is not stated here (currency unconfirmed). Pretrial release and detention are governed by D.C. Code §§ 23-1321 to -1331, which Rule 46(a) adopts and which are not vendored."
+  edge-initial-appearance-detained "Detained" -> probable-cause {
+    authority cite ?("D.C. Code § 23-1322 (pretrial detention; not vendored)")
+  }
+  edge-initial-appearance-released "Released on conditions" -> probable-cause {
+    authority cite "D.C. Super. Ct. R. Crim. P. 46(a)"
+  }
+}
+
+decision probable-cause: "Preliminary hearing or indictment" by court cite "D.C. Super. Ct. R. Crim. P. 5.1(a)"
+{
+  note "A defendant charged with a felony is entitled to a preliminary hearing unless the defendant waives it, is indicted, or the government files a felony information under Rule 7(b) or a misdemeanor information (D.C. Super. Ct. R. Crim. P. 5.1(a)). The hearing is held within the periods Rule 5.1(b) sets for a detained and for a released defendant, which the court may extend under Rule 5.1(c); the periods are not stated here (currency unconfirmed). Probable cause may rest on hearsay and the hearing is not for discovery (D.C. Super. Ct. R. Crim. P. 5.1(d)). A defendant held to await grand jury action is set free if the grand jury does not act within the time Rule 48(c)(1) sets, which the court may enlarge for good cause (Rule 48(c)(2)); the period is not stated here (currency unconfirmed)."
+  edge-probable-cause-charged "Probable cause found; indictment or information filed" -> charged {
+    authority cite "D.C. Super. Ct. R. Crim. P. 5.1(d)"
+  }
+  edge-probable-cause-none "No probable cause; complaint dismissed and defendant discharged" -> dismissed {
+    authority cite "D.C. Super. Ct. R. Crim. P. 5.1(e)"
+  }
+}
+
+state charged: "Indictment or information" by office cite "D.C. Super. Ct. R. Crim. P. 7(a)"
+{
+  note "An offense punishable by imprisonment for more than one year must be prosecuted by indictment unless the defendant waives indictment in open court; any other offense may be prosecuted by indictment or information, and an information may be filed without leave of court (D.C. Super. Ct. R. Crim. P. 7(a), (b)). The indictment or information is a plain, concise and definite written statement of the essential facts, signed by an attorney for the government (D.C. Super. Ct. R. Crim. P. 7(c)(1)). The grand jury is governed by Rule 6. A statutory speedy-trial clock (D.C. Code § 23-102) is not vendored."
+  edge-charged-arraignment "Arraignment" -> arraignment {
+    authority cite "D.C. Super. Ct. R. Crim. P. 10(a)"
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "D.C. Super. Ct. R. Crim. P. 10(a)"
+{
+  note "Arraignment is conducted in open court: the defendant is given a copy of the indictment or information, its substance is read or stated, and the defendant is asked to plead (D.C. Super. Ct. R. Crim. P. 10(a)); appearance may be waived in writing on an indictment or misdemeanor information, and arraignment by video teleconference requires the defendant's consent after an opportunity to consult counsel (D.C. Super. Ct. R. Crim. P. 10(b), (c)). A defendant who refuses to plead is entered as pleading not guilty (D.C. Super. Ct. R. Crim. P. 11(a)(4))."
+  edge-arraignment-discovery "Discovery" -> discovery {
+    authority cite "D.C. Super. Ct. R. Crim. P. 16(a)"
+  }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "D.C. Super. Ct. R. Crim. P. 12(b)"
+{
+  note "Discovery and inspection are governed by Rule 16 and informal discovery by Rule 16-I; notices of alibi, insanity and public-authority defenses by Rules 12.1 to 12.3. A defect in instituting the prosecution (including a violation of the constitutional right to a speedy trial), a defect in the charge, suppression, severance and discovery must be raised by pretrial motion if the basis is reasonably available (D.C. Super. Ct. R. Crim. P. 12(b)(3)). The court may set a pretrial-motion deadline at or after arraignment; if it sets none, the deadline is the start of trial, and an untimely Rule 12(b)(3) motion may be considered only for good cause (D.C. Super. Ct. R. Crim. P. 12(c)). An opposing party files opposing points and authorities within the period Rule 12-I(b) sets or the court directs, failing which the motion may be treated as conceded; the period is not stated here (currency unconfirmed)."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "D.C. Super. Ct. R. Crim. P. 12(c)"
+  }
+  edge-discovery-speedy "Speedy-trial motion" -> motions-ruling {
+    authority cite "D.C. Super. Ct. R. Crim. P. 12(b)"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite "D.C. Super. Ct. R. Crim. P. 11(c)"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "D.C. Super. Ct. R. Crim. P. 12(d)"
+{
+  note "The court must decide every pretrial motion before trial unless it finds good cause to defer, and must not defer if deferral will adversely affect a party's right to appeal; on factual issues it states its essential findings on the record (D.C. Super. Ct. R. Crim. P. 12(d)). The court may dismiss an indictment, information or complaint for unnecessary delay in presenting a charge to a grand jury, filing an information, or bringing a defendant to trial (D.C. Super. Ct. R. Crim. P. 48(b)). On a dismissal for a defect in instituting the prosecution or in the charge, the court may order the defendant released or detained until a new charge is filed (D.C. Super. Ct. R. Crim. P. 12(e)). Whether a statutory speedy-trial dismissal bars refiling is a hole (D.C. Code § 23-102 is not vendored)."
+  edge-motions-ruling-speedy "Dismissed for unnecessary delay" -> dismissed {
+    authority cite "D.C. Super. Ct. R. Crim. P. 48(b)"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "D.C. Super. Ct. R. Crim. P. 12(e)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "D.C. Super. Ct. R. Crim. P. 12(d)"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "D.C. Super. Ct. R. Crim. P. 11(a)"
+{
+  note "A defendant may plead not guilty, guilty, or, with the court's consent, nolo contendere, and with the consent of the court and the government may enter a conditional plea reserving review of a specified pretrial motion (D.C. Super. Ct. R. Crim. P. 11(a)). Before accepting a guilty or nolo contendere plea the court addresses the defendant personally in open court and determines that the plea is voluntary and has a factual basis (D.C. Super. Ct. R. Crim. P. 11(b)); plea agreements are governed by Rule 11(c). The government may dismiss an information or complaint, or with leave of court an indictment, but not during trial without the defendant's consent (D.C. Super. Ct. R. Crim. P. 48(a)). A continuance is sought under Rule 111."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite "D.C. Super. Ct. R. Crim. P. 11(b)"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "D.C. Super. Ct. R. Crim. P. 23(a)"
+  }
+  edge-plea-decision-nolle "Government dismisses or enters a nolle prosequi" -> dismissed {
+    authority cite "D.C. Super. Ct. R. Crim. P. 48(a)"
+  }
+}
+
+decision trial: "Verdict" by court cite "D.C. Super. Ct. R. Crim. P. 31(a)"
+{
+  note "A defendant entitled to a jury trial is tried by jury unless the defendant waives it in writing and orally in open court, the government consents and the court approves; the jury's size, and when a smaller jury may return a verdict, are set by Rule 23(b) and are not stated here (currency unconfirmed) (D.C. Super. Ct. R. Crim. P. 23). The court on the defendant's motion must enter a judgment of acquittal of any offense for which the evidence is insufficient (D.C. Super. Ct. R. Crim. P. 29(a)). The jury returns its verdict to a judge in open court, and the verdict must be unanimous (D.C. Super. Ct. R. Crim. P. 31(a)); a mistrial is governed by Rule 26.3."
+  edge-trial-acquittal "Not guilty, or acquittal at trial" -> acquitted {
+    authority cite "D.C. Super. Ct. R. Crim. P. 29(a)"
+  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
+    authority cite "D.C. Super. Ct. R. Crim. P. 29(c)"
+  }
+}
+
+decision post-trial: "Post-trial motions" by court cite "D.C. Super. Ct. R. Crim. P. 29(c)"
+{
+  note "A defendant may move for or renew a motion for a judgment of acquittal after a guilty verdict or the jury's discharge, and no motion before submission to the jury is required (D.C. Super. Ct. R. Crim. P. 29(c)(1), (3)); the court may vacate a judgment and grant a new trial if the interest of justice so requires (D.C. Super. Ct. R. Crim. P. 33(a)); a motion to arrest judgment lies under Rule 34. The periods for these motions, set by Rules 29(c)(1), 33(b) and 34, are not stated here (currency unconfirmed). A timely Rule 29, 33 or 34 motion postpones the time to appeal (D.C. App. R. 4(b)(3)(A))."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite "D.C. Super. Ct. R. Crim. P. 29(c)"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "D.C. Super. Ct. R. Crim. P. 33(a)"
+  }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "D.C. Super. Ct. R. Crim. P. 32(a)"
+  }
+}
+
+state sentencing: "Presentence report and sentencing" by court cite "D.C. Super. Ct. R. Crim. P. 32(c)"
+{
+  note "The time of sentencing and the presentence investigation, report and its disclosure are governed by Rule 32(a) and (b), whose periods are not stated here (currency unconfirmed). At sentencing the court verifies that the defendant and counsel have read the report, rules on disputed portions, gives defense counsel, the defendant, the government and any victim present an opportunity to speak, and pronounces sentence (D.C. Super. Ct. R. Crim. P. 32(c)). After a not-guilty plea and conviction, the court advises the defendant of the right to appeal, and the clerk files a notice of appeal on the defendant's request (D.C. Super. Ct. R. Crim. P. 32(d))."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "D.C. Super. Ct. R. Crim. P. 32(f)"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "D.C. Super. Ct. R. Crim. P. 32(f)"
+{
+  note "The judgment of conviction sets forth the plea, the verdict or findings, the adjudication and the sentence; the court signs it and the clerk enters it (D.C. Super. Ct. R. Crim. P. 32(f)). A sentence may be corrected or reduced under Rule 35, within periods not stated here (currency unconfirmed). A notice of appeal in a criminal case is filed with the Clerk of the Superior Court within 30 days after entry of the judgment or order appealed from, unless the D.C. Code specifies a different time; a notice filed after the verdict, sentence or order is announced but before entry is treated as filed on and after the entry (D.C. App. R. 4(b)(1), (2)). After a timely Rule 29, 33 or 34 motion, the notice is due within 30 days after entry of the order disposing of the last such motion or of the judgment, whichever ends later (D.C. App. R. 4(b)(3)(A)). lit/core has no counting rule for the D.C. Court of Appeals rules (D.C. App. R. 26), so the period is not encoded as a counted deadline. Release pending appeal is governed by D.C. Code § 23-1325 (Rule 46(b); not vendored) and D.C. App. R. 9."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "D.C. App. R. 4(b)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "D.C. App. R. 4(b)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "D.C. Super. Ct. R. Crim. P. 29(c)"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty or a judgment of acquittal (D.C. Super. Ct. R. Crim. P. 29, 31)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "D.C. Super. Ct. R. Crim. P. 48"
+{
+  note "Outcome from the defendant's side. A government dismissal is without prejudice unless otherwise stated (D.C. Super. Ct. R. Crim. P. 48(a)), and a discharge for want of probable cause does not preclude later prosecution for the same offense (D.C. Super. Ct. R. Crim. P. 5.1(e)); reprosecution by summons is governed by Rule 4-I."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "D.C. App. R. 4(b)"
+{
+  note "The appeal continues before the District of Columbia Court of Appeals under its rules (sources/dc-state-appellate/)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("D.C. Code § 23-110 (collateral attack on sentence; not vendored)")
+{
+  note "Outcome from the defendant's side. Collateral attack on a sentence under D.C. Code § 23-110 and federal habeas review are not vendored here; federal habeas belongs to lit/habeas."
+}

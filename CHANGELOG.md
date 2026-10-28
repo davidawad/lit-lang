@@ -46,6 +46,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   petition through its two extensions: every one timely, as the Court
   held in granting it.
 
+  NEW_BUG: Matsushita, Florida Power & Light v. Lorion, Strawbridge, and
+  United States v. Ionia Management remain without expect replays. The
+  attempt could not source a usable docket record for the first two or
+  Ionia's notice-of-appeal date; Strawbridge predates the federal courts of
+  appeals. Keep those dates and outcomes as holes until a source supports
+  them; do not infer them from the opinions.
+
 - **A version can be declared `repealed`** (lg-zpia; SPEC §5.4). A
   later edition that drops a declaration ends its last version with no
   successor, an undeclared trailing gap (L3002) unless something

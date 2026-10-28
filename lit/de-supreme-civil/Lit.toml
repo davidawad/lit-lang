@@ -1,0 +1,40 @@
+# Civil appeals to the Supreme Court of the State of Delaware under its
+# Rules (PDF of Feb. 3, 2026, which includes the Feb. 2, 2026 amendment to
+# Rule 26; sources/de-supreme-civil). Time is computed under Supr. Ct. R.
+# 11(a), which excludes intermediate weekends and Delaware legal holidays
+# from a period under 7 days and extends a last day on which the Clerk's
+# office is closed; lit/core has no counting rule for it, so the periods
+# are stated in notes, not encoded as counted deadlines. The appeal comes
+# from the Superior Court package (lit/de-superior-civil).
+[package]
+name = "de-supreme-civil"
+version = "0.1.0"
+language = 1
+pack_id = "de-supreme-civil"
+forum = "de-supreme-civil"
+authority = "StateRule"
+jurisdiction_id = "delaware"
+title = "Delaware Supreme Court, civil appeals"
+description = "Civil appeals to the Supreme Court of the State of Delaware under its Rules, as far as the vendored text states: the notice of appeal and cross-appeal and their time, the filing fee, the transcript designation and transmission of the record, the briefing schedule and word limits, extensions, argument or submission on the briefs, the written decision, reargument and rehearing en Banc, the mandate and costs, and dismissal."
+in_force = "2026-02-03"
+known_at = "2026-10-28"
+unknown_before = "2026-02-03"
+jurisdiction = "Supreme Court of the State of Delaware"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.de-supr]
+title = "Rules of the Supreme Court of the State of Delaware (PDF of Feb. 3, 2026)"
+url = "https://courts.delaware.gov/forms/download.aspx?id=174928"
+path = "sources/de-supreme-civil/rules-2026-02-sectioned.txt"
+path_sha256 = "9f090e9a2450f3a591a66547027c2b3d4ce07e0041e2c5568d486346ed21518d"
+sha256 = "a183b8fed3a5a906dfed1aa1de41c3c20887163da6a60b7a335f39e4acad6073"
+as_of = "2026-02-03"
+cite_prefixes = ["Del. Supr. Ct. R."]
+section_heading = "Del. Supr. Ct. R. {n}"

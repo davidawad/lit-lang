@@ -1,0 +1,116 @@
+module de-supreme-civil.appeal
+
+// Civil appeals to the Supreme Court of the State of Delaware, from the
+// appellant's side. Every period below is stated in a note, not counted:
+// time is computed under Supr. Ct. R. 11(a), which excludes intermediate
+// Saturdays, Sundays and Delaware legal holidays from a period under 7
+// days, and Rule 11(c) adds 3 days after service by mail or eFiling; lit/core
+// has no counting rule for it. The Supreme Court's appellate jurisdiction is
+// set by the Delaware Constitution and 10 Del. C. § 148, neither vendored.
+// The earlier outline named no leading decisions; its generic "further
+// review" stage is removed: the Supreme Court of Delaware is the State's
+// highest court, and review of its judgments by certiorari belongs to the
+// Supreme Court of the United States (lit/scotus), which this package does
+// not re-encode.
+start judgment-entered
+
+state judgment-entered: "Judgment entered in the trial court" by applicant cite "Del. Supr. Ct. R. 6(a)"
+{
+  note "A notice of appeal in a civil case is filed in the office of the Clerk of the Supreme Court within 30 days after entry upon the docket of the judgment, order or decree appealed from, except appeals controlled by 10 Del. C. § 146; a challenge to a final award under the Delaware Rapid Arbitration Act is filed within 15 days after issuance of the final award (Del. Supr. Ct. R. 6(a)). The time for taking an appeal or cross-appeal may not be enlarged (Del. Supr. Ct. R. 11(b)). An appeal from an interlocutory order lies only on certification by the trial court, applied for within 10 days of the order's entry, and acceptance by the Supreme Court, with a notice of appeal served and filed within 30 days after the order's entry (Del. Supr. Ct. R. 42(c), (d))."
+  edge-judgment-entered-notice "Notice of appeal filed in time" -> notice-filed {
+    authority cite "Del. Supr. Ct. R. 7(a)"
+  }
+  edge-judgment-entered-late "Appeal time missed" -> time-barred {
+    authority cite "Del. Supr. Ct. R. 11(b)"
+  }
+}
+
+terminal time-barred: "Appeal time missed" outcome [loss, dismissal] cite "Del. Supr. Ct. R. 29(b)"
+{
+  note "Outcome from the appellant's side. The time for taking an appeal may not be enlarged (Del. Supr. Ct. R. 11(b)); the Court may dismiss an appeal sua sponte for untimely filing, on a notice directing the appellant to show cause within 10 days after receipt (Del. Supr. Ct. R. 29(b))."
+}
+
+state notice-filed: "Notice of appeal filed" by applicant cite "Del. Supr. Ct. R. 7(a)"
+{
+  note "The notice of appeal is served in duplicate on an attorney of record for each party below and then filed with the Clerk of the Supreme Court in duplicate with proof of service; the Clerk forwards the duplicate to the clerk of the trial court (Del. Supr. Ct. R. 7(a)). The notice names the court and judge below, the parties and their attorneys, and the judgment reviewed, contains the transcript designation, and attaches a copy of the order appealed from (Del. Supr. Ct. R. 7(c)). In a civil action any other party may file a notice of cross-appeal within 15 days after the first notice of appeal was filed or within 30 days after entry of the judgment, whichever is later (Del. Supr. Ct. R. 6(b)). A party filing a notice of appeal pays the Clerk a nonrefundable fee of $500 and a $10 Court Security Assessment (Del. Supr. Ct. R. 20(a)); the appellant also pays the trial court's record preparation and transmittal fee within the time the trial court sets, or the appeal may be dismissed (Del. Supr. Ct. R. 9(aa))."
+  edge-notice-filed-record "Transcript ordered and record transmitted" -> briefing {
+    authority cite "Del. Supr. Ct. R. 9(b)"
+  }
+}
+
+state briefing: "Briefs served and filed" by applicant cite "Del. Supr. Ct. R. 15(a)"
+{
+  note "The notice of appeal designates the parts of the proceedings to be transcribed or states that no transcript is needed; where it designates, the appellant serves the court reporter and within 7 days after filing the notice files a certificate that the transcript cost has been or will be paid; within 15 days after the appeal is docketed each other party serves and files its own designation; the court reporter files the transcript not later than 40 days after the latest direction (Del. Supr. Ct. R. 9(e)). The trial court clerk transmits the record within 10 days after receipt of the transcript, or within 20 days after receipt of the duplicate notice when no transcript is required (Del. Supr. Ct. R. 9(b)). The appellant's opening brief and appendix are served and filed not later than 45 days after the notice of appeal where no transcript was ordered, otherwise not later than 30 days after filing of the record; the answering brief not later than 30 days after service of the opening brief; the reply brief not later than 15 days after service of the answering brief, or 30 days when it answers a cross-appeal, and the cross-appellee's reply not later than 10 days after it (Del. Supr. Ct. R. 15(a)). A motion to extend is docketed at least five days before the due date; the Clerk may grant an unopposed first extension of three days, and a Justice further extensions totaling not more than fifteen days for an opening or answering brief or ten days for a reply (Del. Supr. Ct. R. 15(b)). Without leave of Court an opening or answering brief may not exceed 10,000 words and a reply brief 5,500 words; on a cross-appeal the appellee's answering/opening brief 14,000 words and the appellant's reply/answering brief 10,000 words; a party without word processing is held to 35 and 20 pages (Del. Supr. Ct. R. 14(d))."
+  edge-briefing-submitted "Briefs filed: case at issue" -> argument {
+    authority cite "Del. Supr. Ct. R. 16(c)"
+  }
+  edge-briefing-no-brief "Appellant's brief not filed in time and no leave obtained" -> appeal-dismissed {
+    authority cite "Del. Supr. Ct. R. 15(b)"
+  }
+  edge-briefing-voluntary "Appellant dismisses before the answering brief" -> appeal-dismissed {
+    authority cite "Del. Supr. Ct. R. 29(a)"
+  }
+}
+
+state argument: "Argument or submission on the briefs" by court cite "Del. Supr. Ct. R. 16(a)"
+{
+  note "There is oral argument only in appeals the Court designates; otherwise cases are submitted for decision on the briefs (Del. Supr. Ct. R. 16(a)). On the filing of the reply brief, or the expiration of its due date, the case is at issue and ready for argument at the call of the Court (Del. Supr. Ct. R. 16(c)). Unless the Court orders otherwise each side has 20 minutes before a panel and 25 minutes before the Court en Banc, and an application for more time is presented not later than 30 days after the filing of the appellee's brief (Del. Supr. Ct. R. 16(f))."
+  edge-argument-decision "Court files its opinion or order" -> decision {
+    authority cite "Del. Supr. Ct. R. 17(a)"
+  }
+}
+
+decision decision: "Supreme Court decides" by court cite "Del. Supr. Ct. R. 17(a)"
+{
+  note "All decisions finally determining or terminating a case are made by written opinion or order, filed with the Clerk and bearing the dates of submission and decision (Del. Supr. Ct. R. 17). A unanimous decision of a panel of 3 Justices is the decision of the Court, subject to rehearing en Banc (Del. Supr. Ct. R. 4(e))."
+  edge-decision-affirmed "Affirmed" -> after-decision { authority cite "Del. Supr. Ct. R. 17(a)" }
+  edge-decision-reversed "Reversed" -> reversed { authority cite "Del. Supr. Ct. R. 19(a)" }
+  edge-decision-remanded "Remanded for further proceedings" -> remanded {
+    authority cite "Del. Supr. Ct. R. 19(c)"
+  }
+}
+
+decision after-decision: "Reargument, rehearing en Banc, or neither" by applicant cite "Del. Supr. Ct. R. 18"
+{
+  note "A motion for reargument may be filed with the Clerk within 15 days after the filing of the Court's opinion or order unless the Court enlarges or shortens the time; no answer is permitted unless requested, and there is no reargument when the mandate issues forthwith (Del. Supr. Ct. R. 18). Unless a unanimous panel decision provides for the mandate to issue forthwith, a motion for rehearing before the Court en Banc may be filed within 15 days after the filing of the opinion or order, on the grounds of an exceptional question, uniformity of decisions, or a prior decision to be overruled or modified; it is granted on the vote of 2 or more members (Del. Supr. Ct. R. 4(f))."
+  edge-after-decision-reargument "Motion for reargument" -> reargument {
+    authority cite "Del. Supr. Ct. R. 18"
+  }
+  edge-after-decision-en-banc "Motion for rehearing en Banc" -> reargument {
+    authority cite "Del. Supr. Ct. R. 4(f)"
+  }
+  edge-after-decision-none "No motion: mandate issues" -> affirmed {
+    authority cite "Del. Supr. Ct. R. 19(a)"
+  }
+}
+
+decision reargument: "Reargument or rehearing decided" by court cite "Del. Supr. Ct. R. 18"
+{
+  note "If a motion for reargument or rehearing en Banc is filed, the mandate issues on the Court's disposition of it (Del. Supr. Ct. R. 19(a)). An order denying reargument or rehearing en Banc is not itself subject to reargument (Del. Supr. Ct. R. 18)."
+  edge-reargument-granted "Granted: case reheard" -> argument {
+    authority cite "Del. Supr. Ct. R. 4(f)"
+  }
+  edge-reargument-denied "Denied: mandate issues" -> affirmed {
+    authority cite "Del. Supr. Ct. R. 19(a)"
+  }
+}
+
+terminal affirmed: "Affirmed: mandate issued" outcome [loss] cite "Del. Supr. Ct. R. 19(a)"
+{
+  note "Outcome from the appellant's side. Unless the Court orders otherwise or a motion for reargument or rehearing en Banc is filed, the mandate issues as a matter of course on expiration of the period for those motions, directing the affirmance, reversal or modification and the assessment of costs (Del. Supr. Ct. R. 19(a)). If a judgment is affirmed or the appeal dismissed, costs are taxed against the appellant (Del. Supr. Ct. R. 20(d)). On a petition for certiorari to the Supreme Court of the United States, the Clerk is first paid the estimated cost of preparing and certifying the transcript (Del. Supr. Ct. R. 20(c))."
+}
+
+terminal reversed: "Reversed" outcome [win] cite "Del. Supr. Ct. R. 19(a)"
+{
+  note "Outcome from the appellant's side. If a judgment is reversed, costs are taxed against the appellee; if affirmed in part and reversed in part, as the Court orders (Del. Supr. Ct. R. 20(d)). The appellee may move for reargument or rehearing en Banc within the same 15 days (Del. Supr. Ct. R. 18, 4(f))."
+}
+
+terminal remanded: "Remanded" outcome [remand] cite "Del. Supr. Ct. R. 19(c)"
+{
+  note "If the decision remands for a determination by the trial court with jurisdiction reserved, the trial court files its determination within the time specified or, if none, within 60 days of issuance of the certified copy of the decision, or a status report, and the determination is made no later than an additional 60 days (Del. Supr. Ct. R. 19(c))."
+}
+
+terminal appeal-dismissed: "Appeal dismissed" outcome [loss, dismissal] cite "Del. Supr. Ct. R. 29(a)"
+{
+  note "Outcome from the appellant's side. Before the appellee's brief is filed the appellant may dismiss voluntarily by serving and filing a notice of dismissal and paying the costs; otherwise only by stipulation of all parties with the Court's approval (Del. Supr. Ct. R. 29(a)). The Clerk does not accept an untimely brief without leave to file out of time, and the Court may then dismiss the appeal (Del. Supr. Ct. R. 15(b)). If an appeal is dismissed, costs are taxed against the appellant (Del. Supr. Ct. R. 20(d))."
+}

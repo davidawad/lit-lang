@@ -66,7 +66,7 @@ pub(crate) struct Warn {
 pub(super) fn hint(e: &Error) -> &'static str {
     match e {
         Error::NotFound(_) => {
-            r#"list ids with the graph or packs op (`--op graph`, `--op packs`); local ids work when unique"#
+            "list ids with the graph or packs op (`--op graph`, `--op packs`); local ids work when unique"
         }
         Error::Expr(_) => {
             r#"see the describe op (`--op describe`) for variables/functions; test with `--op '{"op":"metric","spec":"..."}'`"#

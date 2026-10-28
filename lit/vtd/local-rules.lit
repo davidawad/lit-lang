@@ -33,23 +33,34 @@ import core.frcp6.{ frcp6 }
 // outline's FRCP flow and its Supreme Court decisions (Twombly, Iqbal,
 // Celotex, Anderson v. Liberty Lobby) are FRCP authority and belong to
 // lit/frcp; they are removed here: no reporter text is vendored.
-
 /// A memorandum supporting or opposing a dispositive motion: at most 25
 /// pages, excluding exhibits and attachments, unless the judge grants
 /// prior leave (L.R. 7(a)(4)(A)).
-limit dispositive-memorandum { pages <= 25 cite "D. Vt. L.R. 7(a)(4)(A)" } cite "D. Vt. L.R. 7(a)(4)(A)"
+limit dispositive-memorandum {
+  pages <= 25 cite "D. Vt. L.R. 7(a)(4)(A)"
+} cite "D. Vt. L.R. 7(a)(4)(A)"
+
 /// A memorandum supporting or opposing a non-dispositive motion: at most
 /// 15 pages, excluding exhibits and attachments (L.R. 7(a)(4)(B)).
-limit nondispositive-memorandum { pages <= 15 cite "D. Vt. L.R. 7(a)(4)(B)" } cite "D. Vt. L.R. 7(a)(4)(B)"
+limit nondispositive-memorandum {
+  pages <= 15 cite "D. Vt. L.R. 7(a)(4)(B)"
+} cite "D. Vt. L.R. 7(a)(4)(B)"
+
 /// A reply memorandum: at most 10 pages, excluding exhibits and
 /// attachments (L.R. 7(a)(5)(B)).
 limit reply-memorandum { pages <= 10 cite "D. Vt. L.R. 7(a)(5)(B)" } cite "D. Vt. L.R. 7(a)(5)(B)"
+
 /// Motions and memoranda in a Social Security case: a total of at most 25
 /// pages (L.R. 9(a)(6)(A)).
-limit social-security-memorandum { pages <= 25 cite "D. Vt. L.R. 9(a)(6)(A)" } cite "D. Vt. L.R. 9(a)(6)(A)"
+limit social-security-memorandum {
+  pages <= 25 cite "D. Vt. L.R. 9(a)(6)(A)"
+} cite "D. Vt. L.R. 9(a)(6)(A)"
+
 /// An early neutral evaluation statement: at most 10 pages, excluding
 /// exhibits and attachments (L.R. 16.1(h)(1)(A)).
-limit evaluation-statement { pages <= 10 cite "D. Vt. L.R. 16.1(h)(1)(A)" } cite "D. Vt. L.R. 16.1(h)(1)(A)"
+limit evaluation-statement {
+  pages <= 10 cite "D. Vt. L.R. 16.1(h)(1)(A)"
+} cite "D. Vt. L.R. 16.1(h)(1)(A)"
 
 /// A dispositive motion, such as a motion to dismiss or for summary
 /// judgment, is served (L.R. 7(a)(3)(A)).

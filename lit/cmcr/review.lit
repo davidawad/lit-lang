@@ -1,0 +1,125 @@
+module cmcr.review
+
+start matter-before-court
+
+decision matter-before-court: "Matter before the Court of Military Commission Review" by office cite "CMCR R. 3(a)"
+{
+  note "The Court decides all cases and matters referred to it under R.M.C. 908, 1111, 1201(c) and 1210 (CMCR R. 3(a)); its jurisdiction rests on the Military Commissions Act, the Manual for Military Commissions and the Regulation for Trial by Military Commissions (CMCR R. 2(a)), none of which is vendored. Trial before the military commission is outside this package. A petition for new trial the convening authority refers under R.M.C. 1210 is ordinarily decided on the materials submitted to the convening authority, without further briefs or argument (CMCR R. 24); it is not modeled. Where these rules conflict with the Act (10 U.S.C. §§ 948a et seq.), the Manual or the Regulation, those control (CMCR R. 1(b)). The outline's Hamdan v. Rumsfeld, 548 U.S. 557 (2006), is removed: no reporter text is vendored."
+  edge-matter-referral "Record referred after the convening authority's action" -> appellate-referral {
+    authority cite "CMCR R. 2(b)"
+  }
+  edge-matter-interlocutory "Government appeals an order or ruling" -> government-appeal {
+    authority cite "CMCR R. 23(a)"
+  }
+  edge-matter-writ "Petition for extraordinary relief" -> writ-petition {
+    authority cite "CMCR R. 22(a)"
+  }
+}
+
+decision appellate-referral: "Appellate review or its waiver" by applicant cite "CMCR R. 2(b)"
+{
+  note "The record of trial of every military commission case with a finding of guilty of any offense is referred to the Court after the convening authority's action under M.C.A. §§ 950b and 950c and R.M.C. 1111 and 1201(c), unless review has been waived (CMCR R. 2(b)). Waivers and withdrawals of appellate review are processed under M.C.A. § 950c and RTMC ¶ 24-2b (CMCR R. 14); the statute and the Regulation are not vendored, so the election period stays a hole. Detailed counsel forward notice of all counsel to the clerk within five days after service of the authenticated record (CMCR R. 11)."
+  edge-appellate-referral-briefs "Referred to the Court" -> defense-brief {
+    authority cite "CMCR R. 15(c)(2)"
+  }
+  edge-appellate-referral-waived "Review waived or withdrawn" -> waived {
+    authority cite "CMCR R. 14"
+  }
+}
+
+state defense-brief: "Briefs on referral" by applicant cite "CMCR R. 15(c)(2)"
+{
+  note "Unless the Court directs otherwise, any defense brief is filed and served on government counsel within 30 days after detailed military defense counsel receives the authenticated record of trial; the government files any answer within 30 days after receiving the defense brief; a defense reply needs a motion for leave filed within five days after receiving the government brief; an amicus curiae brief is due by the government brief's due date (CMCR R. 15(c)(2)). Briefs and answers are limited to 30 pages (CMCR R. 15(f)). The Court may specify issues on its own motion (CMCR R. 15(b)), and an extension needs a particularized showing, may not exceed 30 days, and is moved for at least three days before the deadline; the motion does not toll the period (CMCR R. 22(h), (i)). Periods exclude the day of the event and run past a last day that is a Saturday, Sunday or federal legal holiday (CMCR R. 8(a)); they are stated here, not counted. A filing after 5:00 p.m. Eastern Time is filed the next day, but an electronic filing on the last day is timely until midnight (CMCR R. 8(c))."
+  edge-defense-brief-submitted "Submitted for decision" -> cmcr-decision {
+    authority cite "CMCR R. 3(b)"
+  }
+}
+
+decision cmcr-decision: "Court of Military Commission Review decision" by court cite "CMCR R. 3(c)"
+{
+  note "The Court acts only on the findings and sentence as approved by the convening authority, and affirms only the findings of guilty and the sentence it finds correct in law and fact and determines, on the entire record, should be approved; it may weigh the evidence, judge the credibility of witnesses and determine controverted questions of fact (CMCR R. 3(c), quoting 10 U.S.C. § 950f(d)). A panel of at least three judges decides by majority (CMCR R. 4). The clerk enters judgment on the filing of the opinion and distributes it that day (CMCR R. 29). Review in the D.C. Circuit under 10 U.S.C. § 950g is not vendored and not modeled. The outline's Al Bahlul v. United States, 767 F.3d 1 (D.C. Cir. 2014) (en banc), is removed: no reporter text is vendored. Outcomes are read from the appellant's side."
+  edge-cmcr-decision-affirmed "Affirmed" -> review-affirmed { authority cite "CMCR R. 3(c)" }
+  edge-cmcr-decision-set-aside "Findings or sentence set aside" -> review-set-aside {
+    authority cite "CMCR R. 3(c)"
+  }
+  edge-cmcr-decision-reconsider "Motion for reconsideration" -> reconsideration {
+    authority cite "CMCR R. 20(b)"
+  }
+}
+
+state reconsideration: "Reconsideration" by applicant cite "CMCR R. 20(b)"
+{
+  note "A motion for reconsideration is filed by detailed appellate defense or government counsel within five days after counsel receives the decision or order (CMCR R. 20(b)); a reply is received only if filed within five days of receipt of the motion (CMCR R. 20(c)). The Court may also announce on its own motion its intent to reconsider within fifteen days after service of the decision on both appellate counsel, whichever is later (CMCR R. 20(a)). These periods cannot be extended under Rule 22 (CMCR R. 20(d)). The grounds are an overlooked or misapplied material matter, an overlooked change in the law, or a conflict with a decision of the Supreme Court, an Article III court, the Court or any other court of the United States, or a presidential or Secretary of Defense order (CMCR R. 20(f)). A timely request does not stay the decision (CMCR R. 20(g)); an order granting reconsideration vacates it unless the order says otherwise (CMCR R. 20(h)). A petition for reconsideration en banc is due within the same time (CMCR R. 5(c)) and may not exceed 15 pages (CMCR R. 5(b)(2))."
+  edge-reconsideration-decided "Reconsideration decided" -> cmcr-decision {
+    authority cite "CMCR R. 20(h)"
+  }
+}
+
+state government-appeal: "Interlocutory appeal by the United States" by office cite "CMCR R. 15(c)(1)"
+{
+  note "Interlocutory appeals by the United States follow the procedures, standards and time limits of R.M.C. 908 and RTMC ¶ 25-5 (CMCR R. 23(a)), which are not vendored; appeals under R.M.C. 908(d) follow that rule's own limits. In other R.M.C. 908 appeals, unless the Court directs otherwise, the government files its notice of appeal with the clerk and serves it on the accused's military defense counsel within five days of the order or ruling appealed; its brief is due within ten days of the notice, the defense answer within ten days of receiving the government brief, any amicus brief by the defense brief's due date, and a government reply, with a motion for leave, within five days after receiving the defense brief (CMCR R. 15(c)(1)). These appeals take priority whenever practicable (CMCR R. 23(b))."
+  edge-government-appeal-decided "Appeal submitted" -> interlocutory-decision {
+    authority cite "CMCR R. 23(c)"
+  }
+}
+
+decision interlocutory-decision: "Interlocutory appeal decided" by court cite "CMCR R. 23(c)"
+{
+  note "An interlocutory appeal is ordinarily decided within 30 calendar days after oral argument or the filing of briefs, whichever is later, unless the chief judge extends the time, and may be decided by order in lieu of a full opinion (CMCR R. 23(c), (d)). Outcomes are read from the accused's side."
+  edge-interlocutory-granted "Ruling reversed for the United States" -> interlocutory-reversed {
+    authority cite "CMCR R. 23(d)"
+  }
+  edge-interlocutory-denied "Ruling upheld" -> interlocutory-upheld {
+    authority cite "CMCR R. 23(d)"
+  }
+}
+
+state writ-petition: "Petition for extraordinary relief" by applicant cite "CMCR R. 22(a)"
+{
+  note "The Court may entertain petitions for extraordinary relief under 28 U.S.C. § 1651(a) and 10 U.S.C. § 950f and the D.C. Circuit decision the rule cites (CMCR R. 22(a)); the petition states the history, facts, issue, relief and reasons, and why relief cannot be had in the ordinary course of review, and is captioned for the writ sought and any stay (CMCR R. 22(a), (b)). A supporting brief accompanies it; on a show cause order the respondent answers within 10 days of receipt, and the petitioner may reply within 7 days of receipt of the answer (CMCR R. 22(e))."
+  edge-writ-petition-decided "Petition submitted" -> writ-decision {
+    authority cite "CMCR R. 22(f)"
+  }
+}
+
+decision writ-decision: "Action on the petition" by court cite "CMCR R. 22(g)"
+{
+  note "The Court may dismiss or deny the petition, order the respondent to show cause, or take other action (CMCR R. 22(f)); it may hear argument, refer the matter to a special master, or grant or deny relief on the pleadings alone (CMCR R. 22(g))."
+  edge-writ-granted "Relief granted" -> writ-granted { authority cite "CMCR R. 22(g)" }
+  edge-writ-denied "Dismissed or denied" -> writ-denied { authority cite "CMCR R. 22(f)" }
+}
+
+terminal waived: "Appellate review waived or withdrawn" outcome [decided] cite "CMCR R. 14"
+{
+  note "No review by the Court follows a waiver or withdrawal (CMCR R. 2(b), 14)."
+}
+
+terminal review-affirmed: "Findings and sentence affirmed" outcome [loss] cite "CMCR R. 3(c)"
+{
+  note "Review in the D.C. Circuit under 10 U.S.C. § 950g is not modeled."
+}
+
+terminal review-set-aside: "Findings or sentence set aside" outcome [win] cite "CMCR R. 3(c)"
+{
+  note "Any rehearing or further proceedings before the convening authority or the commission are not modeled."
+}
+
+terminal interlocutory-reversed: "Ruling reversed on the government's appeal" outcome [loss] cite "CMCR R. 23(d)"
+{
+  note "Proceedings resume before the military commission."
+}
+
+terminal interlocutory-upheld: "Ruling upheld" outcome [win] cite "CMCR R. 23(d)"
+{
+  note "The military judge's ruling stands."
+}
+
+terminal writ-granted: "Extraordinary relief granted" outcome [win] cite "CMCR R. 22(g)"
+{
+  note "The relief the Court orders is not modeled."
+}
+
+terminal writ-denied: "Petition dismissed or denied" outcome [loss] cite "CMCR R. 22(f)"
+{
+  note "Proceedings continue in the ordinary course."
+}

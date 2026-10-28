@@ -10,3 +10,8 @@
 - Extract sha256 9c8651cae945756b677ffed9ef5512f37a8edb587afdd3808290b4c16cddfb72. Raw extract, not yet sectioned into `## <ref>` form.
 - Fetch method: BrowserOS neo; site served a bot challenge to plain automated requests (CoS ruling 2026-10-27). mc.mil serves no robots.txt (404); the DoD Privacy & Security page (defense.gov) bars no automated access. mc.mil is a DoD site; no bot challenge text was shown beyond the CoS ruling's general scope.
 - Original: `cmcr/original/cmcr-rules-of-practice-2016.pdf` as served (sha256 ee5eac39d4fc6e2105fd3768a26de30c08874a8adf1816fc889aad2eb79c19a5); extraction sha256 9c8651cae945756b677ffed9ef5512f37a8edb587afdd3808290b4c16cddfb72.
+
+### `cmcr/cmcr-rules-of-practice-2016-sectioned.txt` — CMCR Rules of Practice (Feb 3, 2016), sectioned
+
+- Derived in the pod (lg-f3q8.131) from the extract above (sha256 9c8651cae945756b677ffed9ef5512f37a8edb587afdd3808290b4c16cddfb72); nothing further fetched. Method: one `## Rule <n>` line is inserted before each line opening a 2016 rule in the rules body (`RULE 1. TITLE; SCOPE OF RULES` through `RULE 33. PUBLIC RELEASE OF CMCR FILINGS AND DECISIONS`, 33 rules; the table of contents is left unmarked), `## Appendix 1` and `## Appendix 2` before the two appendix headings, and `## Enclosure 2008` before Administrative Order No. 08-02 (page 49), so the enclosed 2008 Revised Rules are not read as part of 2016 Rule 33. Rule text was not edited: deleting the marker lines (`perl -ne 'print unless /^## /'`) restores the extract byte for byte.
+- Sectioned sha256 49bf75c3ad8f3cabbf7c15c8160ed17a91bdad19f0e1e4e3b6edb30001b1bcba (the `path_sha256` pinned by `lit/cmcr/Lit.toml`).

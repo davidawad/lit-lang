@@ -1,0 +1,44 @@
+# Review in the United States Court of Military Commission Review under
+# its vendored Rules of Practice, effective February 3, 2016 (sources/cmcr):
+# referral of the record after the convening authority's action or its
+# waiver (CMCR R. 2(b), 14), the defense brief, answer and reply (CMCR R.
+# 15(c)(2)), the Court's standard of review (CMCR R. 3(c)), reconsideration
+# (CMCR R. 20), interlocutory appeals by the United States (CMCR R. 15(c)(1),
+# 23) and petitions for extraordinary relief (CMCR R. 22). The Military
+# Commissions Act (10 U.S.C. §§ 948a et seq.), the Manual for Military
+# Commissions and the Regulation for Trial by Military Commissions are
+# vendored nowhere in sources/, so they are named in notes. CMCR R. 8 has no
+# counting rule in lit/core, so periods are stated in notes, not encoded as
+# counted deadlines.
+[package]
+name = "cmcr"
+version = "0.1.0"
+language = 1
+pack_id = "cmcr"
+forum = "cmcr"
+family = "circuit-appellate"
+authority = "FederalRule"
+title = "United States Court of Military Commission Review"
+description = "Review of military commission cases in the Court of Military Commission Review under the vendored 2016 Rules of Practice: referral after the convening authority's action or waiver of review, the 30-day defense brief and government answer, the Court's standard of review, the 5-day reconsideration motion, government interlocutory appeals and their 5- and 10-day periods, and petitions for extraordinary relief."
+in_force = "2016-02-03"
+known_at = "2026-10-28"
+unknown_before = "2016-02-03"
+jurisdiction = "United States Court of Military Commission Review"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.cmcr-rules]
+title = "Rules of Practice for the United States Court of Military Commission Review, February 3, 2016 (email addresses updated Dec. 13, 2022)"
+url = "https://www.mc.mil/Portals/0/pdfs/CMCR%20Rules%20of%20Practice%20(Feb%203%202016)(email%20addresses%20updated%20Dec%2013%202022).pdf"
+path = "sources/cmcr/cmcr-rules-of-practice-2016-sectioned.txt"
+path_sha256 = "49bf75c3ad8f3cabbf7c15c8160ed17a91bdad19f0e1e4e3b6edb30001b1bcba"
+sha256 = "ee5eac39d4fc6e2105fd3768a26de30c08874a8adf1816fc889aad2eb79c19a5"
+as_of = "2016-02-03"
+cite_prefixes = ["CMCR R."]
+section_heading = "Rule {n}"

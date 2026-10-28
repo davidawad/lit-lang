@@ -1,0 +1,46 @@
+# Criminal cases in the Criminal Division of the Vermont Superior Court, as
+# far as the vendored text states. The Vermont Rules of Criminal Procedure
+# (V.R.Cr.P.), the speedy-trial provisions and the criminal statutes of
+# Title 13 are not vendored (no sources/vt-criminal-trial-court; the
+# vendored Vermont rules are the V.R.C.P. and the V.R.A.P., current with
+# rule changes received through March 16, 2026), so every step of the
+# trial-court case cites its V.R.Cr.P. rule as a hole and states no period
+# from it. The appeal hand-off cites V.R.A.P. 4, which names the V.R.Cr.P.
+# post-trial motions that toll the appeal period. Computation of time is
+# V.R.C.P. 6(a) (V.R.A.P. 26(a)), whose legal holidays include any day the
+# State of Vermont declares; lit/core has no Vermont holiday calendar, so
+# the appeal period is stated in a note, not encoded as a counted
+# deadline. An appeal goes to the Vermont Supreme Court, Vermont's only
+# appellate court (lit/vt-supreme covers the civil appeal).
+[package]
+name = "vt-superior-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "vt-superior-court-criminal"
+forum = "vt-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "vermont"
+title = "Vermont Superior Court, Criminal Division"
+description = "Criminal cases in the Criminal Division of the Vermont Superior Court, as far as the vendored text states: the structure of the case from arrest and arraignment through pretrial motions, plea or trial, post-trial motions, sentencing and judgment, each trial-court step a hole until the Vermont Rules of Criminal Procedure are vendored; the appeal to the Vermont Supreme Court within 30 days after entry of the judgment under V.R.A.P. 4, tolled by the V.R.Cr.P. 29(c), 33 and 34 motions it names."
+in_force = "2026-03-16"
+known_at = "2026-10-28"
+unknown_before = "2026-03-16"
+jurisdiction = "Vermont Superior Court, Criminal Division"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.vt-r-app-p]
+title = "Vermont Rules of Appellate Procedure, current with rule changes received through March 16, 2026"
+url = "https://advance.lexis.com/"
+path = "sources/vt-supreme/vrap-sectioned.txt"
+path_sha256 = "fb1c5b25a8a63cfa372f669dfbc78884b15a7fb681e3f081e553a7c120814b05"
+sha256 = "3d59c45082c9aaefa1489895bc461f8d4fe510374caeba1423b7ee7f93b8fa53"
+as_of = "2026-03-16"
+cite_prefixes = ["V.R.A.P."]
+section_heading = "Rule {n}"

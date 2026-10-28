@@ -1,0 +1,135 @@
+module vt-superior-court-criminal.criminal
+
+// Criminal cases in the Criminal Division of the Vermont Superior Court.
+// The Vermont Rules of Criminal Procedure are not vendored, so each
+// trial-court step cites its rule as a hole and no period, limit or amount
+// is stated from it; the numbering is the V.R.Cr.P.'s own as V.R.A.P.
+// 4(b)(8)-(12) cites it (29(c), 33, 34, 35(c)), the rest marked as not
+// verified. The speedy-trial provisions and Title 13 are holes. The appeal
+// cites the vendored V.R.A.P. 4. Outcomes are from the defendant's side.
+// The earlier outline's leading decisions (County of Riverside v.
+// McLaughlin, Gideon v. Wainwright, Brady v. Maryland, Barker v. Wingo,
+// Boykin v. Alabama, Jackson v. Virginia, Apprendi v. New Jersey, Roe v.
+// Flores-Ortega and the others it named) are removed: no reporter text is
+// vendored.
+start arrested
+
+state arrested: "Arrest or citation" by applicant cite ?("V.R.Cr.P. 3, 4 (arrest, citation and summons; not vendored; verify numbering)")
+{
+  note "Arrest, citation and the time to bring an arrested person before a judicial officer are set by the Vermont Rules of Criminal Procedure, which are not vendored; the period is a hole."
+  edge-arrested-arraignment "Arraignment" -> arraignment {
+    authority cite ?("V.R.Cr.P. 5, 10 (appearance and arraignment; not vendored; verify numbering)")
+  }
+}
+
+decision arraignment: "Arraignment, counsel and release" by court cite ?("V.R.Cr.P. 5 (initial appearance; not vendored; verify numbering)")
+{
+  note "Arraignment, the assignment of counsel, and conditions of release or bail are holes: the V.R.Cr.P. and the release statutes of Title 13 are not vendored, and so is any period for a probable cause determination."
+  edge-arraignment-released "Released on conditions" -> pretrial {
+    authority cite ?("V.R.Cr.P. 46 (release; not vendored; verify numbering)")
+  }
+  edge-arraignment-held "Held on bail or without bail" -> pretrial {
+    authority cite ?("V.R.Cr.P. 46 (release; not vendored; verify numbering)")
+  }
+  edge-arraignment-no-cause "No probable cause; charge dismissed" -> dismissed {
+    authority cite ?("V.R.Cr.P. 5(c) (probable cause; not vendored; verify numbering)")
+  }
+}
+
+state pretrial: "Plea of not guilty, discovery and pretrial motions" by applicant cite ?("V.R.Cr.P. 12, 16 (pretrial motions and discovery; not vendored; verify numbering)")
+{
+  note "Discovery, notice of defenses and the time for pretrial motions are set by the V.R.Cr.P., which are not vendored; the periods are holes, and so is the speedy-trial rule and its remedy."
+  edge-pretrial-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite ?("V.R.Cr.P. 12 (pretrial motions; not vendored; verify numbering)")
+  }
+  edge-pretrial-plea "Plea discussions" -> plea-decision {
+    authority cite ?("V.R.Cr.P. 11 (pleas; not vendored; verify numbering)")
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite ?("V.R.Cr.P. 12 (pretrial motions; not vendored; verify numbering)")
+{
+  note "Dismissal for unnecessary delay or a speedy-trial violation, and whether it bars refiling, are holes until the V.R.Cr.P. are vendored."
+  edge-motions-ruling-dismissed "Charges dismissed" -> dismissed {
+    authority cite ?("V.R.Cr.P. 12, 48 (dismissal; not vendored; verify numbering)")
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite ?("V.R.Cr.P. 12 (pretrial motions; not vendored; verify numbering)")
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite ?("V.R.Cr.P. 11 (pleas; not vendored; verify numbering)")
+{
+  note "The plea colloquy, plea agreements and withdrawal of a plea are holes (V.R.Cr.P. 11 is not vendored), and so is the prosecutor's dismissal (V.R.Cr.P. 48(a))."
+  edge-plea-decision-plea "Plea of guilty or nolo contendere accepted" -> sentencing {
+    authority cite ?("V.R.Cr.P. 11 (pleas; not vendored; verify numbering)")
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite ?("V.R.Cr.P. 23 (trial by jury; not vendored; verify numbering)")
+  }
+  edge-plea-decision-dismissed "Prosecutor dismisses" -> dismissed {
+    authority cite ?("V.R.Cr.P. 48(a) (dismissal by the prosecutor; not vendored; verify numbering)")
+  }
+}
+
+decision trial: "Verdict" by court cite ?("V.R.Cr.P. 31 (verdict; not vendored; verify numbering)")
+{
+  note "The jury right, jury size and the verdict rule are holes (V.R.Cr.P. not vendored)."
+  edge-trial-acquittal "Not guilty" -> acquitted {
+    authority cite ?("V.R.Cr.P. 29 (judgment of acquittal; not vendored; verify numbering)")
+  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
+    authority cite "V.R.A.P. 4(b)"
+  }
+}
+
+decision post-trial: "Post-trial motions" by court cite "V.R.A.P. 4(b)"
+{
+  note "The V.R.Cr.P. 29(c) motion for judgment of acquittal after verdict, the V.R.Cr.P. 33 motion for a new trial and the V.R.Cr.P. 34 motion in arrest of judgment, if timely filed, toll the appeal: the full time for appeal runs for all parties from the entry of the order disposing of the last remaining motion; a V.R.Cr.P. 33 motion on newly discovered evidence tolls only if made before or within 30 days after entry of judgment (V.R.A.P. 4(b)(8)-(11)). The periods for making these motions are set by the V.R.Cr.P., which are not vendored; they are holes."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite ?("V.R.Cr.P. 29(c) (not vendored)")
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite ?("V.R.Cr.P. 33 (not vendored)")
+  }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "V.R.A.P. 4(b)"
+  }
+}
+
+state sentencing: "Presentence investigation and sentencing" by court cite ?("V.R.Cr.P. 32 (sentence and judgment; not vendored; verify numbering)")
+{
+  note "The presentence investigation, its disclosure and the sentencing hearing are governed by V.R.Cr.P. 32, which is not vendored; their periods are holes."
+  edge-sentencing-judgment "Sentence imposed; judgment entered in the criminal docket" -> judgment {
+    authority cite "V.R.A.P. 4(e)"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "V.R.A.P. 4(a)"
+{
+  note "The notice of appeal is filed with the superior court clerk within 30 days after entry of the judgment or order appealed from (V.R.A.P. 4(a)(1)); in a criminal case a judgment is entered when it is entered in the criminal docket (V.R.A.P. 4(e)(3)). A notice filed after the court announces a decision or sentence but before entry is treated as filed on the date of entry (V.R.A.P. 4(a)(3)). If one party timely files, any other party may file within 14 days after the first notice or within the time otherwise prescribed, whichever ends later (V.R.A.P. 4(a)(6)). The State's appeal in a criminal case is due within 7 business days after entry, or within 30 days in a case resulting in a life sentence where the defendant has not waived appeal (V.R.A.P. 4(a)(2)). The superior court may extend the time for excusable neglect or good cause on a motion filed no later than 30 days after the time expires, by no more than 30 days after the original time or 14 days after the order granting the motion, whichever is later (V.R.A.P. 4(d)). An inmate's notice is timely if deposited in the institution's internal mail system on or before the last day (V.R.A.P. 4(f)). Computation of time follows V.R.A.P. 26(a); lit/core has no Vermont holiday calendar, so the period is not encoded as a counted deadline. Sentence reduction or modification (V.R.Cr.P. 35) is a hole."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "V.R.A.P. 4(a)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "V.R.A.P. 4(a)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite ?("V.R.Cr.P. 29, 31 (not vendored; verify numbering)")
+{
+  note "Outcome from the defendant's side: a verdict of not guilty or a judgment of acquittal."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite ?("V.R.Cr.P. 48 (dismissal; not vendored; verify numbering)")
+{
+  note "Outcome from the defendant's side. Whether a dismissal bars refiling is a hole (V.R.Cr.P. 48 is not vendored)."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "V.R.A.P. 4(a)"
+{
+  note "The appeal continues before the Vermont Supreme Court under the V.R.A.P. (sources/vt-supreme)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("13 V.S.A. § 7131 (post-conviction relief; not vendored; verify numbering)")
+{
+  note "Outcome from the defendant's side. State post-conviction relief is not vendored; federal habeas belongs to lit/habeas."
+}

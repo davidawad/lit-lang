@@ -1,0 +1,38 @@
+# Civil actions in the Missouri circuit courts under the Missouri Supreme
+# Court Rules. The rules are not vendored: courts.mo.gov
+# answered HTTP 403 to every fetch (sources/mo-criminal-trial-court/
+# PROVENANCE.md), tracked as lg-3sut (#15). The package keeps the
+# procedure's structure with every cite a hole naming that issue and
+# no period, count or limit: none is stated in vendored text. A notice
+# of appeal hands off to lit/moctapp and the district packages
+# (lit/moctapp-ed, lit/moctapp-sd, lit/moctapp-wd).
+[package]
+name = "mo-circuit-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "mo-circuit-court-civil"
+forum = "mo-circuit"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "missouri"
+title = "Missouri Circuit Court, civil"
+description = "Civil actions in the Missouri circuit courts, every cite a hole: the Missouri Supreme Court Rules are not vendored (lg-3sut, #15). The structure runs from the petition through the response, motions to dismiss, discovery, summary judgment, trial, judgment, post-judgment motions and the notice of appeal (lit/moctapp)."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Missouri circuit court (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+mo-state-rules = { version = "^0.1.0", path = "../mo-rules" }
+
+[sources.mo-sup-ct-r]
+title = "Missouri Supreme Court Rules, NOT VENDORED: courts.mo.gov answered HTTP 403 to every fetch (lg-3sut, #15); every cite naming it is a hole"
+url = "https://www.courts.mo.gov/"
+cite_prefixes = ["Mo. Sup. Ct. R."]

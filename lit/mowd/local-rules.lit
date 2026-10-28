@@ -1,0 +1,302 @@
+module mowd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Western District of Missouri's own periods under its Local Civil
+// Rules, computed under FRCP 6(a), which governs "any local rule". Rules
+// that state no period or limit stay out. Periods that restate an FRCP
+// period stay in notes: initial disclosures no later than 14 days after
+// the FRCP 26(f) conference (L.R. 26.1(a); FRCP 26(a)(1)(C)), and the 14
+// days to appeal a magistrate judge's order or object to a recommendation
+// and to respond to objections (L.R. 74.1(a)(2), (b)(2); FRCP 72(a),
+// (b)(2)), with the extension of the objection time by up to 21 days for
+// excusable neglect or good cause (L.R. 74.1(b)(2)), lit/frcp's. Floors
+// and caps that are not deadlines stay in notes: the FRCP 26(f)
+// conference not earlier than 30 days before the scheduling order is due
+// (L.R. 26.1(a)), a proposed dispositive motion deadline within 30 days
+// after the proposed discovery close (L.R. 16.1), more than 180 days of
+// proposed discovery needing an explanation (L.R. 26.1), and leave to pay
+// an in forma pauperis fee within no fewer than 30 days (L.R. 83.7(c),
+// (d)). Periods binding only the court, its officers or a special master
+// stay in notes: the receiver's reports every 3 months (L.R. 66.1(c)),
+// stated in months; the 90-day public-inspection period and the court
+// reporter's redacted transcript within 31 days (L.R. 80.1(a)(1), (4));
+// and the attorney discipline periods (L.R. 83.6). The misdemeanor appeal
+// (L.R. 74.1(d)) and the Local Criminal Rules are lit/mowd-criminal's.
+// The earlier W.D. Mo. outline's FRCP flow belongs to lit/frcp, and its
+// decisions (Bell Atlantic Corp. v. Twombly, Ashcroft v. Iqbal, Celotex
+// Corp. v. Catrett, Anderson v. Liberty Lobby, Inc., Johnson v. Dayton
+// Elec. Mfg. Co., Braden v. Wal-Mart Stores, Inc. and Torgerson v. City of
+// Rochester) are FRCP authority not stated in the Local Rules; they are
+// removed here: no reporter text is vendored.
+/// Supporting or opposing suggestions: at most 15 pages unless the court
+/// orders otherwise; exhibits, signature blocks, certificates of service
+/// and statements of fact do not count, nor the table of contents and
+/// table of authorities suggestions over 10 pages must have (L.R. 7.0(d)).
+limit suggestions { pages <= 15 cite "W.D. Mo. L.R. 7.0(d)" } cite "W.D. Mo. L.R. 7.0(d)"
+/// Reply suggestions: at most 10 pages (L.R. 7.0(d)(1)(C)).
+limit reply-suggestions { pages <= 10 cite "W.D. Mo. L.R. 7.0(d)" } cite "W.D. Mo. L.R. 7.0(d)"
+
+/// A written motion is filed with its supporting suggestions (L.R.
+/// 7.0(c)(1), (2)).
+event MotionFiled() paper suggestions
+/// A motion for summary judgment is filed (L.R. 7.0(c)(2)).
+event SummaryJudgmentMotionFiled() paper suggestions
+/// Opposing suggestions are filed (L.R. 7.0(c)(3)).
+event OpposingSuggestionsFiled() paper suggestions
+/// Information in a filed certificate of interest changes before the time
+/// to appeal from final judgment expires (L.R. 7.1(c)).
+event InterestInformationChanged()
+/// The defendant has notice of a Social Security action (L.R. 9.1(b)).
+event SocialSecurityNotice()
+/// The certified copy of the administrative record is filed (L.R.
+/// 9.1(d)(1)).
+event AdministrativeRecordFiled()
+/// The plaintiff's brief in a Social Security case is served (L.R.
+/// 9.1(d)(2)).
+event SocialSecurityBriefServed()
+/// The Commissioner's brief is served (L.R. 9.1(d)(3)).
+event CommissionerBriefServed()
+/// Opposing suggestions to a habeas petition are served (L.R. 9.2(h)).
+event HabeasOppositionServed()
+/// The court grants leave to amend a pleading (L.R. 15.1(b)).
+event LeaveToAmendGranted()
+/// The parties hold the FRCP 26(f) conference (L.R. 16.1(b)).
+event DiscoveryConferenceHeld()
+/// The date designated in the original notice for a deposition (L.R.
+/// 30.1).
+event DepositionDate()
+/// The date of the trial setting (L.R. 47.1(c)).
+event TrialSetting()
+/// Final judgment is entered under FRCP 58 (L.R. 54.1(a)).
+event FinalJudgmentEntered()
+/// A bill of costs is filed (L.R. 54.1(a)).
+event BillOfCostsFiled()
+/// Objections to a bill of costs are filed (L.R. 54.1(a)).
+event CostObjectionsFiled()
+/// The Court of Appeals issues its mandate (L.R. 54.1(b)).
+event MandateIssued()
+/// A motion for entry of default is filed (L.R. 55.1(a)).
+event DefaultMotionFiled()
+/// The court announces a decision whose judgment or order requires
+/// settlement as to form (L.R. 58.2).
+event DecisionAnnounced()
+/// A party receives the prevailing party's draft judgment or order (L.R.
+/// 58.2).
+event DraftJudgmentReceived()
+/// A receiver or similar officer takes possession of the estate (L.R.
+/// 66.1(b)).
+event ReceiverPossession()
+/// A verdict is rendered or a judgment entered (L.R. 79.2(a)).
+event VerdictOrJudgment()
+/// A transcript is filed (L.R. 80.1(a)).
+event TranscriptFiled()
+/// An attorney not a member of the court's bar enters a limited initial
+/// appearance (L.R. 83.5(f)(2)).
+event LimitedAppearanceEntered()
+/// A party is notified of a filing fee imposed on a person who sought
+/// leave to proceed in forma pauperis (L.R. 83.7(e)).
+event IfpFeeNotified()
+
+/// W.D. Mo. L.R. 7.0(c)(2): within 14 days after a motion is filed, each
+/// party opposing it files opposing suggestions.
+deadline opposing-suggestions-period: 14.days after MotionFiled() counted_by frcp6 cite "W.D. Mo. L.R. 7.0(c)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 7.0(c)(2): for a summary judgment motion a party instead
+/// has 21 days to file its opposing suggestions.
+deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionFiled() counted_by frcp6 cite "W.D. Mo. L.R. 7.0(c)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 7.0(c)(3): within 14 days after the opposing suggestions
+/// are filed, the moving party may file reply suggestions.
+deadline reply-suggestions-period: 14.days after OpposingSuggestionsFiled() counted_by frcp6 cite "W.D. Mo. L.R. 7.0(c)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 7.1(c): if the information in a certificate of interest
+/// changes before the time to appeal from final judgment expires, the
+/// party files an amended certificate within 7 days after the change.
+deadline amended-certificate-period: 7.days after InterestInformationChanged() counted_by frcp6 cite "W.D. Mo. L.R. 7.1(c)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 9.1(b): within 90 days after notice of a Social Security
+/// action, the defendant serves an answer, which may be limited to a
+/// certified copy of the administrative record.
+deadline social-security-answer-period: 90.days after SocialSecurityNotice() counted_by frcp6 cite "W.D. Mo. L.R. 9.1(b)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 9.1(d)(1): the plaintiff files and serves its brief within
+/// 40 days after the certified copy of the administrative record is filed.
+deadline social-security-brief-period: 40.days after AdministrativeRecordFiled() counted_by frcp6 cite "W.D. Mo. L.R. 9.1(d)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 9.1(d)(2): the Commissioner files a brief and serves it
+/// within 40 days after service of the plaintiff's brief.
+deadline commissioner-brief-period: 40.days after SocialSecurityBriefServed() counted_by frcp6 cite "W.D. Mo. L.R. 9.1(d)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 9.1(d)(3): the plaintiff may file and serve a reply brief
+/// within 21 days after service of the Commissioner's brief.
+deadline social-security-reply-period: 21.days after CommissionerBriefServed() counted_by frcp6 cite "W.D. Mo. L.R. 9.1(d)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 9.2(h): unless the court extends it, the petitioner files
+/// any reply suggestions within 14 days after the respondent's opposing
+/// suggestions are served; absent a timely reply and good cause, the court
+/// deems admitted all facts well pleaded in the opposing suggestions.
+deadline habeas-reply-period: 14.days after HabeasOppositionServed() counted_by frcp6 cite "W.D. Mo. L.R. 9.2(h)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 15.1(b): when the court grants leave to amend, the moving
+/// party files and serves the pleading within 7 days after the grant, or as
+/// the court directs.
+deadline amended-pleading-period: 7.days after LeaveToAmendGranted() counted_by frcp6 cite "W.D. Mo. L.R. 15.1(b)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 16.1(b): the parties file a proposed scheduling order
+/// within 14 days after holding the FRCP 26(f) conference.
+deadline proposed-scheduling-order-period: 14.days after DiscoveryConferenceHeld() counted_by frcp6 cite "W.D. Mo. L.R. 16.1(b)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 30.1: a party other than the one conducting a deposition
+/// that will record it by non-stenographic means files the method and the
+/// technician's name, address and employer no later than 3 days before the
+/// date designated in the original notice.
+deadline recording-notice-period: 3.days before DepositionDate() counted_by frcp6 cite "W.D. Mo. L.R. 30.1"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 47.1(c): a party wanting additional peremptory challenges
+/// files a motion at least 30 days before the date of the trial setting; a
+/// late motion waives the request.
+deadline peremptory-challenge-motion-period: 30.days before TrialSetting() counted_by frcp6 cite "W.D. Mo. L.R. 47.1(c)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 54.1(a)(1): a party seeking costs files a verified bill of
+/// costs no later than 21 days after entry of final judgment under FRCP
+/// 58.
+deadline bill-of-costs-period: 21.days after FinalJudgmentEntered() counted_by frcp6 cite "W.D. Mo. L.R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 54.1(a)(1): within 14 days after the bill of costs is
+/// filed, each objecting party files suggestions stating specific
+/// objections; absent a timely objection the Clerk taxes costs as claimed
+/// (L.R. 54.1(a)(2)).
+deadline cost-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "W.D. Mo. L.R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 54.1(a)(1): within 14 days after objections are filed,
+/// the party seeking costs may file reply suggestions.
+deadline cost-reply-period: 14.days after CostObjectionsFiled() counted_by frcp6 cite "W.D. Mo. L.R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 54.1(b): the Clerk taxes FRAP 39(e) costs if a bill of
+/// costs or amended bill is filed within 21 days after the Court of
+/// Appeals issues the mandate.
+deadline appeal-costs-period: 21.days after MandateIssued() counted_by frcp6 cite "W.D. Mo. L.R. 54.1(b)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 55.1(a)(1): written notice of the intention to move for
+/// entry of default is given at least 14 days before the motion is filed.
+deadline default-notice-period: 14.days before DefaultMotionFiled() counted_by frcp6 cite "W.D. Mo. L.R. 55.1(a)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 58.2: when the court so orders, the prevailing party
+/// prepares, serves and files a draft of the judgment or order within 7
+/// days after the decision is announced.
+deadline draft-judgment-period: 7.days after DecisionAnnounced() counted_by frcp6 cite "W.D. Mo. L.R. 58.2"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 58.2: within 7 days after receiving the draft, any party
+/// may file a statement of approval or disapproval of its form, with its
+/// objections and a substitute draft if it disapproves.
+deadline draft-judgment-response-period: 7.days after DraftJudgmentReceived() counted_by frcp6 cite "W.D. Mo. L.R. 58.2"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 66.1(b): unless the court orders otherwise, a receiver or
+/// similar officer files the inventories of the estate as soon as
+/// practicable, but not later than 30 days after taking possession.
+deadline receiver-inventory-period: 30.days after ReceiverPossession() counted_by frcp6 cite "W.D. Mo. L.R. 66.1(b)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 79.2(a): after trial or as soon as possible, but no more
+/// than 14 days after a verdict is rendered or a judgment entered, the
+/// offering attorney withdraws any exhibits in the Clerk's custody and
+/// gives the Clerk a receipt.
+deadline exhibit-withdrawal-period: 14.days after VerdictOrJudgment() counted_by frcp6 cite "W.D. Mo. L.R. 79.2(a)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 80.1(a)(2): within 7 days after a transcript is filed,
+/// each party wishing to redact personal data identifiers under FRCP 5.2
+/// files a Notice of Intent to Redact.
+deadline redaction-notice-period: 7.days after TranscriptFiled() counted_by frcp6 cite "W.D. Mo. L.R. 80.1(a)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 80.1(a)(3): within 21 days after the transcript is filed,
+/// a party that filed a Notice of Intent to Redact files a statement of
+/// the page and line numbers of the identifiers.
+deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by frcp6 cite "W.D. Mo. L.R. 80.1(a)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 83.5(f)(2): an attorney not a member of the court's bar
+/// who enters a limited initial appearance complies with L.R. 83.5(f)(3)
+/// within 14 days after entering it, or may be removed from the case.
+deadline admission-compliance-period: 14.days after LimitedAppearanceEntered() counted_by frcp6 cite "W.D. Mo. L.R. 83.5(f)"
+{
+  forum frcp
+}
+
+/// W.D. Mo. L.R. 83.7(e): any party may file written objections to a fee
+/// imposed on a person who sought leave to proceed in forma pauperis
+/// within 21 days after being notified of the fee.
+deadline ifp-fee-objection-period: 21.days after IfpFeeNotified() counted_by frcp6 cite "W.D. Mo. L.R. 83.7(e)"
+{
+  forum frcp
+}

@@ -1,0 +1,38 @@
+# Civil appeals in the Missouri Court of Appeals, Western District, under
+# the Missouri Supreme Court Rules and the district's own
+# local and special rules. Neither is vendored: courts.mo.gov answered
+# HTTP 403 to every fetch (sources/mo-criminal-trial-court/
+# PROVENANCE.md), tracked as lg-3sut (#15). The package keeps the
+# appeal's structure with every cite a hole naming that issue and no
+# period, count or limit. The statewide appeal is lit/moctapp; transfer
+# to the Supreme Court is lit/mo-supreme.
+[package]
+name = "mo-court-of-appeals-western-district-civil"
+version = "0.1.0"
+language = 1
+pack_id = "mo-court-of-appeals-western-district-civil"
+forum = "mo-court-of-appeals-western-district"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "missouri"
+title = "Missouri Court of Appeals, Western District, civil"
+description = "Civil appeals in the Missouri Court of Appeals, Western District, every cite a hole: the Missouri Supreme Court Rules and the district's local rules are not vendored (lg-3sut, #15). The structure runs from the notice of appeal through appealability, the record, briefing, argument, disposition, rehearing, the mandate and transfer (lit/mo-supreme)."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Missouri Court of Appeals, Western District"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+mo-state-rules = { version = "^0.1.0", path = "../mo-rules" }
+
+[sources.mo-sup-ct-r]
+title = "Missouri Supreme Court Rules, NOT VENDORED: courts.mo.gov answered HTTP 403 to every fetch (lg-3sut, #15); every cite naming it is a hole"
+url = "https://www.courts.mo.gov/"
+cite_prefixes = ["Mo. Sup. Ct. R."]

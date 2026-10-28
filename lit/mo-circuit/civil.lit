@@ -1,0 +1,186 @@
+module mo-circuit-court-civil.civil
+
+// A civil action in the Missouri circuit court, from the applicant's
+// view of outcomes.
+// The Missouri Supreme Court Rules are not vendored: courts.mo.gov answered
+// HTTP 403 to every fetch (sources/mo-criminal-trial-court/PROVENANCE.md),
+// tracked as lg-3sut (#15). Every cite is therefore a hole naming that
+// issue, its rule number carried from the outline unverified, and no
+// period, count, limit, probability or payoff is stated: each is a hole
+// until the rule text is vendored and read.
+// The outline's decisions (Nazeri v. Missouri Valley College; ITT
+// Commercial Finance Corp. v. Mid-America Marine Supply Corp.) have no
+// reporter text vendored, so they are removed here.
+
+import mo-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
+start complaint-filed
+
+state complaint-filed: "Action commenced" by applicant cite ?("Mo. Sup. Ct. R. 53.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "Petition filed under Rule 53.01 (unverified). Ultimate-facts pleading standard (unverified). Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  edge-complaint-filed-response-due "Summons served" -> response-due { event ActionCommenced()
+    authority cite ?("Mo. Sup. Ct. R. 54.01, 54.13; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+}
+
+state response-due: "Response due: answer or motion" cite ?("Mo. Sup. Ct. R. 55.25; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "The time to answer or move under Rule 55.25 or 55.27(a)(6) (unverified) is a hole. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  edge-response-due-default-entered "No timely response" -> default-entered {
+    authority cite ?("Mo. Sup. Ct. R. 74.05; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+  edge-response-due-motion-ruling "Motion to dismiss filed" -> motion-ruling {
+    authority cite ?("Mo. Sup. Ct. R. 55.27(a)(6); not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+  edge-response-due-sched "Answer filed" -> sched {
+    authority cite ?("Mo. Sup. Ct. R. 55.25; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+}
+
+decision motion-ruling: "Motion to dismiss ruling" by court cite ?("Mo. Sup. Ct. R. 55.27(a)(6); not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "The grounds and standard for dismissal under Rule 55.27(a)(6) (unverified) are holes. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  edge-motion-ruling-dismissed-with-prejudice "Dismissed with prejudice" -> dismissed-with-prejudice {
+    authority cite ?("Mo. Sup. Ct. R. 67.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+  edge-motion-ruling-response-due "Dismissed with leave to amend" -> response-due { event ActionCommenced()
+    authority cite ?("Mo. Sup. Ct. R. 55.33; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+  edge-motion-ruling-sched "Denied" -> sched {
+    authority cite ?("Mo. Sup. Ct. R. 55.27(a)(6); not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+}
+
+state sched: "Scheduling order and initial disclosures" cite ?("Mo. Sup. Ct. R. 56.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "Rule 56.01 scope; case management is a hole. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  edge-sched-discovery "Order entered" -> discovery {
+    authority cite ?("Mo. Sup. Ct. R. 56.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+}
+
+state discovery: "Discovery" cite ?("Mo. Sup. Ct. R. 56.01, 57.01, 58.01, 59.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "Discovery Rules 56 to 59 (unverified); limits are holes. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  edge-discovery-sj-ruling "Dispositive motion filed" -> sj-ruling {
+    authority cite ?("Mo. Sup. Ct. R. 74.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+  edge-discovery-dismissed-with-prejudice "Discovery sanction dismisses claims" -> dismissed-with-prejudice {
+    authority cite ?("Mo. Sup. Ct. R. 61.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+  edge-discovery-settled "Settlement or voluntary dismissal" -> settled {
+    authority cite ?("Mo. Sup. Ct. R. 67.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+  edge-discovery-pretrial "No dispositive motion" -> pretrial {
+    authority cite ?("Mo. Sup. Ct. R. 56.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+}
+
+decision sj-ruling: "Summary judgment ruling" by court cite ?("Mo. Sup. Ct. R. 74.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "The summary judgment standard and response period under Rule 74.04 (unverified) are holes. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  edge-sj-ruling-judgment-applicant "Granted for applicant" -> judgment-applicant {
+    authority cite ?("Mo. Sup. Ct. R. 74.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+  edge-sj-ruling-judgment-opponent "Granted for opponent" -> judgment-opponent {
+    authority cite ?("Mo. Sup. Ct. R. 74.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+  edge-sj-ruling-pretrial "Denied" -> pretrial {
+    authority cite ?("Mo. Sup. Ct. R. 74.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+}
+
+state pretrial: "Pretrial order" cite ?("Mo. Sup. Ct. R. 56.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "Pretrial conference, order and trial setting. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  edge-pretrial-trial "Trial set" -> trial {
+    authority cite ?("Mo. Sup. Ct. R. 56.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+}
+
+state trial: "Trial (jury or bench)" cite ?("Mo. Sup. Ct. R. 69.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "Trial and findings or verdict. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  edge-trial-judgment-applicant "Verdict or findings for applicant" -> judgment-applicant {
+    authority cite ?("Mo. Sup. Ct. R. 74.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+  edge-trial-judgment-opponent "Verdict or findings for opponent" -> judgment-opponent {
+    authority cite ?("Mo. Sup. Ct. R. 74.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+}
+
+state judgment-applicant: "Judgment for applicant entered" cite ?("Mo. Sup. Ct. R. 74.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "Entry of judgment. Court keeps control under Rule 75.01 (unverified); new trial under Rule 78.07 (unverified). Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  edge-judgment-applicant-post-judgment-ruling "Post-judgment motion" -> post-judgment-ruling { event JudgmentEntered()
+    authority cite ?("Mo. Sup. Ct. R. 75.01, 78.07; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+  edge-judgment-applicant-appellate-review "Notice of appeal filed" -> appellate-review { event NoticeOfAppealFiled()
+    authority cite ?("Mo. Sup. Ct. R. 81.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+  edge-judgment-applicant-final-win "No appeal within time" -> final-win {
+    authority cite ?("Mo. Sup. Ct. R. 81.04(a); not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+}
+
+state judgment-opponent: "Judgment for opponent entered" cite ?("Mo. Sup. Ct. R. 74.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "Entry of judgment. Court keeps control under Rule 75.01 (unverified); new trial under Rule 78.07 (unverified). Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  edge-judgment-opponent-post-judgment-ruling "Post-judgment motion" -> post-judgment-ruling { event JudgmentEntered()
+    authority cite ?("Mo. Sup. Ct. R. 75.01, 78.07; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+  edge-judgment-opponent-appellate-review "Notice of appeal filed" -> appellate-review { event NoticeOfAppealFiled()
+    authority cite ?("Mo. Sup. Ct. R. 81.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+  edge-judgment-opponent-final-loss "No appeal within time" -> final-loss {
+    authority cite ?("Mo. Sup. Ct. R. 81.04(a); not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+}
+
+decision post-judgment-ruling: "Post-judgment motion ruling" by court cite ?("Mo. Sup. Ct. R. 75.01, 78.07; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "Whether and how a post-judgment motion moves the appeal clock is a hole. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  edge-post-judgment-ruling-pretrial "Granted: new trial" -> pretrial {
+    authority cite ?("Mo. Sup. Ct. R. 75.01, 78.07; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+  edge-post-judgment-ruling-appellate-review "Denied: appeal clock runs from order" -> appellate-review { event NoticeOfAppealFiled()
+    authority cite ?("Mo. Sup. Ct. R. 81.04(a); not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+  }
+}
+
+terminal default-entered: "Default entered against opponent" outcome [win] cite ?("Mo. Sup. Ct. R. 74.05; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "Default under the rule; judgment by default is a separate entry. Outcome is from the applicant's side. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  payoff ?
+}
+
+terminal dismissed-with-prejudice: "Dismissed with prejudice" outcome [loss] cite ?("Mo. Sup. Ct. R. 67.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "Outcome from the applicant's side. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  payoff ?
+}
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite ?("Mo. Sup. Ct. R. 67.01; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "Settlement terms are a hole. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  payoff ?
+}
+
+terminal final-win: "Final judgment for applicant, no appeal" outcome [win] cite ?("Mo. Sup. Ct. R. 81.04(a); not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "Judgment final when the appeal period lapses. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  payoff ?
+}
+
+terminal final-loss: "Final judgment for opponent, no appeal" outcome [loss] cite ?("Mo. Sup. Ct. R. 81.04(a); not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "Judgment final when the appeal period lapses. Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  payoff ?
+}
+
+terminal appellate-review: "Appeal taken: continue in the appellate package" cite ?("Mo. Sup. Ct. R. 81.04; not vendored: courts.mo.gov blocked the fetch (lg-3sut, #15)")
+{
+  note "Hand-off to lit/moctapp and the district packages (lit/moctapp-ed, lit/moctapp-sd, lit/moctapp-wd). Hole: the Missouri rule text is not vendored (lg-3sut, #15)."
+  payoff ?
+}

@@ -1,0 +1,386 @@
+module moed-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Eastern District of Missouri's own periods under its civil Local
+// Rules, computed under FRCP 6(a), which governs "any local rule". For
+// good cause the court may extend or shorten any time limit the rules
+// impose (L.R. 1.05). Rules that state no period or limit stay out. The
+// disclosure statement filed with a party's first appearance (L.R.
+// 2.09(A)(2)) runs from no fixed date, and only its supplement is
+// declared. Periods stated in months, or binding only the court, the
+// clerk or a neutral, stay in notes: a case pending six months without
+// action may be ordered to show cause (L.R. 8.01); the transfer of a file
+// after a venue transfer waits fourteen days (L.R. 4.06); the neutral's
+// compliance report within fourteen days after the ADR referral ends and
+// the neutral's attendance determination seven days before the
+// conference (L.R. 6.02, 6.05(B)); and a self-represented party's thirty
+// days to give a change of address before the court may dismiss (L.R.
+// 2.06(B)) run from returned mail, a court event. Stated in the rules but
+// not declared: the redacted sealing material within three business days
+// (L.R. 13.05(A)(4)(c)), counted in business days, which frcp6 does not
+// count; the further 14 days a denial of sealing stays after an appellate
+// ruling affirms it (L.R. 13.05(A)(4)(g)), which runs from another
+// court's ruling; the unsealing motion not less than 30 days after a
+// final disposition and the Clerk's 90 days of sealing (L.R.
+// 13.05(B)(2)), a floor and a court period; the admiralty notice's
+// restatement of Supplemental Rule C(6)'s claim and answer periods (L.R.
+// 10.02(D)), lit/frcp's; and the Local Patent Rules (L.R. 13.05's
+// section runs to their end), not encoded. The criminal provisions are
+// lit/moed-criminal's. The earlier E.D. Mo. outline's FRCP flow belongs to
+// lit/frcp, and its decisions (Bell Atlantic Corp. v. Twombly, Ashcroft
+// v. Iqbal, Celotex Corp. v. Catrett, Anderson v. Liberty Lobby, Inc.,
+// Johnson v. Dayton Elec. Mfg. Co., Braden v. Wal-Mart Stores, Inc. and
+// Torgerson v. City of Rochester) are FRCP authority not stated in the
+// Local Rules; they are removed here: no reporter text is vendored.
+/// A motion, memorandum or brief: at most fifteen numbered pages,
+/// exclusive of the table of contents, table of authorities, signature
+/// page and attachments, without leave of court; statements of material
+/// fact under L.R. 4.01(E) are not counted (L.R. 4.01(D)).
+limit motion-paper { pages <= 15 cite "E.D. Mo. L.R. 4.01(D)" } cite "E.D. Mo. L.R. 4.01(D)"
+/// A brief in a Social Security appeal: at most fifteen standard typed
+/// pages, exclusive of a signature page and attachments (L.R. 9.02).
+limit social-security-brief { pages <= 15 cite "E.D. Mo. L.R. 9.02" } cite "E.D. Mo. L.R. 9.02"
+/// A reply brief in a Social Security appeal: at most ten typed pages
+/// (L.R. 9.02).
+limit social-security-reply-brief { pages <= 10 cite "E.D. Mo. L.R. 9.02" } cite "E.D. Mo. L.R. 9.02"
+
+/// Information a Disclosure Statement must state changes, or a later
+/// event could affect jurisdiction under 28 U.S.C. § 1332(a) (L.R.
+/// 2.09(A)(2)).
+event DisclosureInformationChanged()
+/// The date set for a trial or hearing (L.R. 2.06(C)).
+event TrialOrHearingDate()
+/// A motion is served (L.R. 4.01(B)).
+event MotionServed() paper motion-paper
+/// A motion seeking an extension of time is served (L.R. 4.01(B)).
+event ExtensionMotionServed()
+/// A memorandum in opposition to a motion is served (L.R. 4.01(C)).
+event OppositionServed() paper motion-paper
+/// A motion for summary judgment is served (L.R. 4.01(F)).
+event SummaryJudgmentMotionServed() paper motion-paper
+/// The ADR conference is held (L.R. 6.02).
+event AdrConference()
+/// The last ADR conference is held (L.R. 6.05(C), (D)).
+event LastAdrConference()
+/// The court's final decision after a non-jury trial (L.R. 7.02(C)).
+event BenchTrialDecision()
+/// Final judgment is entered under FRCP 58 (L.R. 8.02, 8.03(A)).
+event FinalJudgmentEntered()
+/// A motion for attorney's fees is served (L.R. 8.02).
+event FeeMotionServed()
+/// A memorandum opposing a motion for attorney's fees is served (L.R.
+/// 8.02).
+event FeeOppositionServed()
+/// A bill of costs is served (L.R. 8.03(A)(3)).
+event BillOfCostsServed()
+/// A memorandum objecting to a bill of costs is served (L.R.
+/// 8.03(A)(3)).
+event CostObjectionServed()
+/// The Court of Appeals issues its mandate or other order terminating the
+/// action (L.R. 8.03(B)).
+event MandateIssued()
+/// The District Court issues its Case Management Order in a bankruptcy
+/// appeal (L.R. 9.01(D)).
+event BankruptcyCaseManagementOrder()
+/// The complaint in a Social Security appeal is served (L.R. 9.02).
+event SocialSecurityComplaintServed()
+/// The Commissioner serves the answer and the administrative record (L.R.
+/// 9.02).
+event CommissionerAnswerServed()
+/// The plaintiff's brief in a Social Security appeal is served (L.R.
+/// 9.02).
+event SocialSecurityBriefServed() paper social-security-brief
+/// The Commissioner's brief in a Social Security appeal is served (L.R.
+/// 9.02).
+event CommissionerBriefServed() paper social-security-brief
+/// The complaint in a condemnation action is filed (L.R. 9.04(D)).
+event CondemnationComplaintFiled()
+/// A Marshal's sale is held in an admiralty action (L.R. 10.03).
+event AdmiraltySaleHeld()
+/// A Motion for Sealing or Motion for Continued Sealing is filed (L.R.
+/// 13.05(A)(4)(d)).
+event SealingMotionFiled()
+/// A Memorandum Opposing Sealing is filed (L.R. 13.05(A)(4)(e)).
+event SealingOppositionFiled()
+/// An order denying a Motion for Sealing or for Continued Sealing is
+/// entered (L.R. 13.05(A)(4)(g)).
+event SealingDenied()
+
+/// E.D. Mo. L.R. 2.09(A)(2): if the required information changes, or a
+/// later event could affect jurisdiction under 28 U.S.C. § 1332(a), the
+/// party files a supplemental Disclosure Statement within seven days
+/// after the change or event.
+deadline supplemental-disclosure-period: 7.days after DisclosureInformationChanged() counted_by frcp6 cite "E.D. Mo. L.R. 2.09"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 2.06(C)(1): a self-represented litigant proceeding in
+/// forma pauperis files a written request for witness subpoenas not less
+/// than twenty-one days before the date set for trial or hearing.
+deadline pro-se-subpoena-request-period: 21.days before TrialOrHearingDate() counted_by frcp6 cite "E.D. Mo. L.R. 2.06(C)"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 2.06(C)(2): a self-represented litigant's application
+/// for a writ of habeas corpus ad testificandum for a non-party witness is
+/// filed not less than twenty-one days before the date set for trial or
+/// hearing.
+deadline pro-se-writ-application-period: 21.days before TrialOrHearingDate() counted_by frcp6 cite "E.D. Mo. L.R. 2.06(C)"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 4.01(B): except as the rules or an order provide
+/// otherwise, a party opposing a motion files a single memorandum within
+/// fourteen days after service of the motion.
+deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "E.D. Mo. L.R. 4.01(B)"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 4.01(B): an opposition to a motion seeking an extension
+/// of time is filed within seven days after service of the motion.
+deadline extension-opposition-period: 7.days after ExtensionMotionServed() counted_by frcp6 cite "E.D. Mo. L.R. 4.01(B)"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 4.01(C): the moving party may file a reply memorandum
+/// within ten days after being served with the memorandum in opposition;
+/// further memoranda only with leave.
+deadline reply-period: 10.days after OppositionServed() counted_by frcp6 cite "E.D. Mo. L.R. 4.01(C)"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 4.01(F): a party opposing a motion for summary judgment
+/// files its memorandum and documentary evidence twenty-one days after
+/// being served with the motion, with a Response to Statement of Material
+/// Facts (L.R. 4.01(E)).
+deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "E.D. Mo. L.R. 4.01(F)"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 6.02: not later than fourteen days before the ADR
+/// Conference, each party gives all parties and the neutral a list of
+/// the persons who will participate for it and how each will attend.
+deadline adr-participant-list-period: 14.days before AdrConference() counted_by frcp6 cite "E.D. Mo. L.R. 6.02"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 6.02: a party contesting another party's manner of
+/// attendance, or a necessary party's absence, informs the neutral in
+/// writing no fewer than ten days before the conference.
+deadline adr-attendance-contest-period: 10.days before AdrConference() counted_by frcp6 cite "E.D. Mo. L.R. 6.02"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 6.02: a government entity precluded by law from
+/// delegating full settlement authority discloses that in writing not less
+/// than fourteen days before the scheduled ADR conference.
+deadline adr-government-authority-period: 14.days before AdrConference() counted_by frcp6 cite "E.D. Mo. L.R. 6.02"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 6.02: not later than ten days before the initial ADR
+/// conference, each party gives the neutral a confidential memorandum of
+/// the disputed facts and its position on liability and damages.
+deadline adr-memorandum-period: 10.days before AdrConference() counted_by frcp6 cite "E.D. Mo. L.R. 6.02"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 6.05(C): when the parties settle a claim during the ADR
+/// referral, the signed settlement agreement, stipulation, motion for
+/// leave to dismiss or proposed consent judgment is filed no later than
+/// thirty days after the last ADR conference, or as the court orders.
+deadline adr-settlement-filing-period: 30.days after LastAdrConference() counted_by frcp6 cite "E.D. Mo. L.R. 6.05"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 6.05(D): when the ADR referral yields scheduling or case
+/// management agreements, the parties file a proposed litigation plan or
+/// motion to amend the Case Management Order no later than fourteen days
+/// after the last ADR conference.
+deadline adr-litigation-plan-period: 14.days after LastAdrConference() counted_by frcp6 cite "E.D. Mo. L.R. 6.05"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 7.02(C): after a non-jury trial the parties who offered
+/// exhibits remove them from the Clerk's custody within thirty days of the
+/// court's final decision; an exhibit not timely removed after the Clerk's
+/// notice may be discarded.
+deadline exhibit-removal-period: 30.days after BenchTrialDecision() counted_by frcp6 cite "E.D. Mo. L.R. 7.02(C)"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 8.02: a party seeking attorney's fees files its motion no
+/// later than twenty-one days after entry of final judgment under FRCP
+/// 58; a late motion may waive the fees.
+deadline fee-motion-period: 21.days after FinalJudgmentEntered() counted_by frcp6 cite "E.D. Mo. L.R. 8.02"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 8.02: each party opposing a motion for attorney's fees
+/// files its memorandum and evidence within fourteen days after being
+/// served with the motion (also L.R. 4.01(F)).
+deadline fee-opposition-period: 14.days after FeeMotionServed() counted_by frcp6 cite "E.D. Mo. L.R. 8.02"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 8.02: the moving party may file a reply memorandum within
+/// seven days after being served with the memorandum in opposition.
+deadline fee-reply-period: 7.days after FeeOppositionServed() counted_by frcp6 cite "E.D. Mo. L.R. 8.02"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 8.03(A)(1): unless the court orders otherwise, a party
+/// seeking costs files a verified bill of costs no later than twenty-one
+/// days after entry of final judgment under FRCP 58; a late bill may waive
+/// taxable costs (L.R. 8.03(A)(2)).
+deadline bill-of-costs-period: 21.days after FinalJudgmentEntered() counted_by frcp6 cite "E.D. Mo. L.R. 8.03(A)"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 8.03(A)(3): each party objecting to a bill of costs files
+/// a memorandum of specific objections within fourteen days of being
+/// served; absent a timely objection the Clerk taxes costs as claimed
+/// (also L.R. 4.01(F)).
+deadline cost-objection-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "E.D. Mo. L.R. 8.03(A)"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 8.03(A)(3): the moving party may file a reply memorandum
+/// within seven days after being served with the objections.
+deadline cost-reply-period: 7.days after CostObjectionServed() counted_by frcp6 cite "E.D. Mo. L.R. 8.03(A)"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 8.03(B): FRAP 39(e) costs on appeal are taxed in the
+/// district court if a bill of costs is filed within twenty-one days of the
+/// issuance of the mandate or other order terminating the action by the
+/// Court of Appeals.
+deadline appeal-costs-period: 21.days after MandateIssued() counted_by frcp6 cite "E.D. Mo. L.R. 8.03(B)"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 9.01(D)(2): a motion for review of the Bankruptcy
+/// Court's ruling on consolidation of appeals is filed within twenty-eight
+/// days of the District Court's Case Management Order.
+deadline bankruptcy-consolidation-review-period: 28.days after BankruptcyCaseManagementOrder() counted_by frcp6 cite "E.D. Mo. L.R. 9.01(D)"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 9.01(D)(3): a motion to dismiss a procedurally defective
+/// bankruptcy appeal is filed within twenty-eight days of the Case
+/// Management Order.
+deadline bankruptcy-dismissal-motion-period: 28.days after BankruptcyCaseManagementOrder() counted_by frcp6 cite "E.D. Mo. L.R. 9.01(D)"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 9.02: in a 42 U.S.C. § 405(g) review the Commissioner
+/// files any motion to dismiss or to remand, or the answer with the
+/// administrative record, within sixty days of service of the complaint.
+deadline commissioner-answer-period: 60.days after SocialSecurityComplaintServed() counted_by frcp6 cite "E.D. Mo. L.R. 9.02"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 9.02: unless the court orders otherwise, the plaintiff
+/// serves and files a brief in support of the complaint within thirty days
+/// after the Commissioner serves the answer and the administrative record.
+deadline social-security-brief-period: 30.days after CommissionerAnswerServed() counted_by frcp6 cite "E.D. Mo. L.R. 9.02"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 9.02: the Commissioner serves and files a brief in support
+/// of the answer within thirty days after service of the plaintiff's
+/// brief.
+deadline commissioner-brief-period: 30.days after SocialSecurityBriefServed() counted_by frcp6 cite "E.D. Mo. L.R. 9.02"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 9.02: the plaintiff has fourteen days after service of the
+/// Commissioner's brief to file a reply brief; further briefs only by
+/// leave for good cause.
+deadline social-security-reply-period: 14.days after CommissionerBriefServed() counted_by frcp6 cite "E.D. Mo. L.R. 9.02"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 9.04(D)(1): within thirty days of filing a condemnation
+/// complaint, the government files a current abstract of title or other
+/// title document with a list of all parties who may claim an interest in
+/// the tract.
+deadline condemnation-title-period: 30.days after CondemnationComplaintFiled() counted_by frcp6 cite "E.D. Mo. L.R. 9.04"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 10.03(B)(2): a successful bidder of $1,000 or more pays
+/// the balance of the bid to the Marshal within seven days of the sale
+/// (deferred until confirmation if an objection is filed).
+deadline sale-balance-period: 7.days after AdmiraltySaleHeld() counted_by frcp6 cite "E.D. Mo. L.R. 10.03"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 10.03(C)(1): objections to a sale are filed within seven
+/// days after the sale date and served on the Marshal; absent objection
+/// the sale is deemed confirmed (L.R. 10.03(D)(1)).
+deadline sale-objection-period: 7.days after AdmiraltySaleHeld() counted_by frcp6 cite "E.D. Mo. L.R. 10.03"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 10.03(D)(1): the buyer submits a proposed order of
+/// confirmation no later than fourteen days after the sale.
+deadline sale-confirmation-order-period: 14.days after AdmiraltySaleHeld() counted_by frcp6 cite "E.D. Mo. L.R. 10.03"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 13.05(A)(4)(d): within seven days from the filing of a
+/// Motion for Sealing, a party or non-party may file a Memorandum Opposing
+/// Sealing.
+deadline sealing-opposition-period: 7.days after SealingMotionFiled() counted_by frcp6 cite "E.D. Mo. L.R. 13.05(A)(4)(d)"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 13.05(A)(4)(e): within seven days from the filing of a
+/// Memorandum Opposing Sealing, the movant may file a Reply Supporting
+/// Sealing.
+deadline sealing-reply-period: 7.days after SealingOppositionFiled() counted_by frcp6 cite "E.D. Mo. L.R. 13.05(A)(4)(e)"
+{
+  forum frcp
+}
+
+/// E.D. Mo. L.R. 13.05(A)(4)(g): an order denying sealing is stayed for
+/// 14 days after its entry, during which an appeal from it may be filed
+/// or the sealed material withdrawn before it becomes public.
+deadline sealing-denial-stay-period: 14.days after SealingDenied() counted_by frcp6 cite "E.D. Mo. L.R. 13.05(A)(4)(g)"
+{
+  forum frcp
+}

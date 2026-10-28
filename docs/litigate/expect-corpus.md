@@ -696,6 +696,35 @@ modeled circuit rule the cell is open:
 | `lit/cadc` | D.C. Cir. R. 31 | open |
 | `lit/cafc` | Fed. Cir. R. 8, 26, 28.1, 30, 31, 36, 40, 41, 47.3, 47.4, 47.6 | Fed. Cir. R. 36: `cafc36` |
 
+### lg-wvlf.4 batch disposition (2026-10-28)
+
+The batch contains ten appellate candidates. Bowles, Smith v. Barry, and
+Torres are encoded as every-circuit expect tests under `tests/expect/`.
+Under the MVP drop rule, the other six candidates without a dated filing
+event that the current model can count are retained in the opinion corpus
+but have no expect test: Cohen v. Beneficial Industrial Loan Corp. (337 U.S.
+541 (1949); interlocutory appealability), Cooter & Gell v. Hartmarx Corp.
+(496 U.S. 384 (1990); sanctions review), Gonzalez v. Crosby (545 U.S. 524
+(2005); Rule 60(b)(6)), Anderson v. City of Bessemer City (470 U.S. 564
+(1985); review standard), Ornelas v. United States (517 U.S. 690 (1996);
+review standard), and United States v. American Railway Express Co. (265
+U.S. 425 (1924); cross-appeal scope). These opinions remain sourced under
+`sources/change-corpus/rulings/`; their holdings are not expected as
+dated-deadline outcomes by this batch.
+
+Foman v. Davis (371 U.S. 178 (1962)) is also retained without an expect
+test. Its opinion supplies dated events (judgment December 19, 1960; Rule
+59 motion December 20, 1960; notices of appeal January 17 and 26, 1961),
+but the applicable FRCP 73(a) appeal-tolling rule and contemporaneous Rule
+6(a) computation predate the modeled timeline. Modeling the deadline needs
+a sourced, dated historical rule layer; this batch does not infer one from
+the opinion. See the FRCP 16(b)(4) row above.
+
+The three encoded cases use opinion-cited record entries and dates. Their
+RECAP/PACER docket entries were not independently retrieved in this run;
+the expect files identify that provenance limitation rather than treating
+the docket as reviewed.
+
 ## 4. Batches
 
 One bead per batch. Each takes about 10 `planned` cells, in matrix order

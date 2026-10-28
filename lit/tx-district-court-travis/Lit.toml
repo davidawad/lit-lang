@@ -1,0 +1,59 @@
+# District Courts of Travis County, Texas (lg-u561.5): the statewide
+# package lit/tx-district-court for this county. Its graph is the statewide
+# one: the Travis County district courts' local rules (Tex. R. Civ. P. 3a)
+# are not vendored, so nothing here departs from the Texas Rules of Civil
+# Procedure yet.
+#
+# Civil suits under the Texas Rules of Civil Procedure "Last Amended
+# October 1, 2026" (sources/tx-district-court), so in_force is that date;
+# earlier editions are not vendored, so a query before it is a hole in the
+# corpus. Time is computed under Tex. R. Civ. P. 4; lit/core has no
+# counting rule for Texas's legal holidays, so the periods are stated in
+# notes, not encoded as counted deadlines. The appeal goes to a Texas court
+# of appeals under the Texas Rules of Appellate Procedure
+# (lit/tx-courts-of-appeals).
+[package]
+name = "tx-district-court-travis-civil"
+version = "0.1.0"
+language = 1
+pack_id = "tx-district-court-travis-civil"
+forum = "tx-district-court-travis"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "texas"
+title = "District Courts of Travis County, Texas (Austin), civil"
+description = "District Courts of Travis County, Texas: the county's local rules supplement the Texas Rules of Civil Procedure; they are not vendored and not modeled. Civil suits under the Texas Rules of Civil Procedure (October 1, 2026): petition and citation, service, the answer day, the Rule 91a motion to dismiss and special exceptions, default judgment, the discovery control plan and initial disclosures, discovery sanctions, summary judgment, the jury request, trial and judgment, findings of fact, the motion for new trial and plenary power, dismissal for want of prosecution and reinstatement, nonsuit, and the notice of appeal (lit/tx-courts-of-appeals)."
+in_force = "2026-10-01"
+known_at = "2026-10-28"
+unknown_before = "2026-10-01"
+jurisdiction = "District Courts of Travis County, Texas (Austin), civil"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+tx-state-rules = { version = "^0.1.0", path = "../tx-rules" }
+
+[sources.tx-trcp]
+title = "Texas Rules of Civil Procedure, last amended October 1, 2026 (Supreme Court of Texas)"
+url = "https://www.txcourts.gov/media/1463426/texas-rules-of-civil-procedure.pdf"
+path = "sources/tx-district-court/tx-trcp-sectioned.txt"
+path_sha256 = "1b10047990b61641bf4b89dd2b14a8724617f8d104236b83245e7449934d2d1a"
+sha256 = "bd9d874a40e3fdd9a25a675daad31de2fa3db30acea44d80d3e3362c9d4e178a"
+as_of = "2026-10-01"
+cite_prefixes = ["Tex. R. Civ. P."]
+section_heading = "Tex. R. Civ. P. {n}"
+
+[sources.tx-trap]
+title = "Texas Rules of Appellate Procedure, last amended February 6, 2026 (Supreme Court of Texas and Court of Criminal Appeals)"
+url = "https://www.txcourts.gov/media/1463134/texas-rules-of-appellate-procedure-02062026.pdf"
+path = "sources/tx-appellate/tx-trap-sectioned.txt"
+path_sha256 = "4c3fb9bd4d05d8822b740e4b2fdc0c36755d2c5ee425a383ce8f4e5cbf407861"
+sha256 = "28d0d6236d84e1740c07ceb7a369602588c89787aed8d24a513700f369ebcf51"
+as_of = "2026-02-06"
+cite_prefixes = ["Tex. R. App. P."]
+section_heading = "Tex. R. App. P. {n}"

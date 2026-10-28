@@ -1,0 +1,149 @@
+module txsd-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcp6.{ frcp6 }
+
+// The Southern District of Texas's own civil periods, counted under FRCP
+// 6. The court may, on its own motion or on application, shorten or extend
+// these periods (LR 7.8). The notice of electronic filing is service on
+// filing users (LR 5.1). No trigger carries a service method: FRCP 6(d)'s
+// three added days follow the manner of service, which is not modeled
+// here; the motion periods here run from filing, not service.
+//
+// Rules that state no period this layer can count stay in notes: the
+// judge, not a party, holds the initial pretrial conference and enters a
+// scheduling order within 140 days after the filing of a complaint or
+// notice of removal, except in the kinds of case LR 16.1 lists; counsel
+// discuss ADR with their clients and opposing counsel before the initial
+// conference and within 60 days after the deadline for close of discovery
+// (LR 16.4(B)(1)); settlements are reported immediately (LR 16.3); no more
+// than twenty-five interrogatories, counting sub-parts, may be served
+// without leave (LR 33.1), a count, not a document limit. The civil Local
+// Rules state no page limit for motions or briefs; the judges' individual
+// procedures are not vendored.
+//
+// The earlier S.D. Tex. outline's FRCP flow belongs to lit/frcp and
+// lit/frap; its Supreme Court decisions (Twombly, Iqbal, Frow v. De La
+// Vega, Celotex, Anderson v. Liberty Lobby, Matsushita) are FRCP authority,
+// and no reporter text is vendored, so they are removed here.
+
+/// An opposed motion is filed (S.D. Tex. LR 7.3).
+event OpposedMotionFiled()
+/// The response to an opposed motion is filed (S.D. Tex. LR 7.4).
+event ResponseFiled()
+/// An order referring the case to ADR is entered (S.D. Tex. LR 16.4).
+event AdrOrderEntered()
+/// An ADR proceeding is completed (S.D. Tex. LR 16.4).
+event AdrCompleted()
+/// An exhibit is listed and made available (S.D. Tex. LR 44.1).
+event ExhibitListed()
+/// Trial (S.D. Tex. LR 46).
+event TrialDate()
+/// Trial is completed (S.D. Tex. LR 79.2).
+event TrialCompleted()
+/// A final judgment is entered (S.D. Tex. LR 54.2).
+event FinalJudgmentEntered()
+/// A bill of costs is filed (S.D. Tex. LR 54.2).
+event BillOfCostsFiled()
+/// The case is disposed of with no appeal (S.D. Tex. LR 79.2).
+event DispositionWithoutAppeal()
+/// The clerk gives written notice that exhibits returned by the court of
+/// appeals are to be removed (S.D. Tex. LR 79.2).
+event ReturnedExhibitsNoticed()
+
+/// S.D. Tex. LR 7.3, 7.4: an opposed motion is submitted to the judge 21
+/// days from filing without notice from the clerk and without appearance
+/// by counsel, and a response must be filed by the submission day; failure
+/// to respond is taken as a representation of no opposition.
+deadline response-period: 21.days after OpposedMotionFiled() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "S.D. Tex. LR 7.3"
+{
+  forum frcp
+}
+
+/// S.D. Tex. LR 7.4(E): unless the presiding judge directs otherwise, the
+/// movant may file a reply brief within 7 days from the date the response
+/// is filed.
+deadline reply-period: 7.days after ResponseFiled() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "S.D. Tex. LR 7.4"
+{
+  forum frcp
+}
+
+/// S.D. Tex. LR 16.4(E): a party opposing the ADR referral, method or
+/// appointed provider files written objections, with its reasons, within
+/// ten days of entry of the order for ADR.
+deadline adr-objection-period: 10.days after AdrOrderEntered() counted_by frcp6 cite "S.D. Tex. LR 16.4"
+{
+  forum frcp
+}
+
+/// S.D. Tex. LR 16.4(K): within 14 days of completion of the ADR
+/// proceeding, the parties jointly file a memorandum stating what the rule
+/// lists, including whether the case settled and the provider's fees; it
+/// does not apply to non-binding arbitration under 28 U.S.C. § 654.
+deadline adr-report-period: 14.days after AdrCompleted() counted_by frcp6 cite "S.D. Tex. LR 16.4"
+{
+  forum frcp
+}
+
+/// S.D. Tex. LR 44.1: a party requiring authentication of an exhibit
+/// notifies the offering party in writing within 7 days after the exhibit
+/// is listed and made available; failure to object in writing before trial
+/// concedes authenticity.
+deadline authentication-objection-period: 7.days after ExhibitListed() counted_by frcp6 cite "S.D. Tex. LR 44.1"
+{
+  forum frcp
+}
+
+/// S.D. Tex. LR 46: objections to the admissibility of exhibits are made at
+/// least 7 days before trial, in writing, with copies of the disputed
+/// exhibit and authority.
+deadline admissibility-objection-period: 7.days before TrialDate() counted_by frcp6 cite "S.D. Tex. LR 46"
+{
+  forum frcp
+}
+
+/// S.D. Tex. LR 54.2: a bill of costs, with any application for attorney's
+/// fees taxable as costs, is filed within 14 days of the entry of a final
+/// judgment.
+deadline bill-of-costs-period: 14.days after FinalJudgmentEntered() counted_by frcp6 cite "S.D. Tex. LR 54.2"
+{
+  forum frcp
+}
+
+/// S.D. Tex. LR 54.2: objections to the bill, the attorney's fees or both
+/// are filed within 7 days of the bill's filing.
+deadline bill-of-costs-objection-period: 7.days after BillOfCostsFiled() counted_by frcp6 cite "S.D. Tex. LR 54.2"
+{
+  forum frcp
+}
+
+/// S.D. Tex. LR 79.2(A): exhibits not easily stored in a file folder are
+/// withdrawn within 7 days after the completion of the trial, and reduced
+/// reproductions or photographs substituted.
+deadline oversized-exhibit-withdrawal: 7.days after TrialCompleted() counted_by frcp6 cite "S.D. Tex. LR 79.2"
+{
+  forum frcp
+}
+
+/// S.D. Tex. LR 79.2(B): if there is no appeal, the offering party removes
+/// its exhibits within thirty days after disposition of the case; exhibits
+/// not removed are disposed of by the clerk at the offering party's
+/// expense.
+deadline exhibit-removal: 30.days after DispositionWithoutAppeal() counted_by frcp6 cite "S.D. Tex. LR 79.2"
+{
+  forum frcp
+}
+
+/// S.D. Tex. LR 79.2(B): when there is an appeal, exhibits returned by the
+/// court of appeals are removed by the offering party within 14 days after
+/// written notice from the clerk.
+deadline returned-exhibit-removal: 14.days after ReturnedExhibitsNoticed() counted_by frcp6 cite "S.D. Tex. LR 79.2"
+{
+  forum frcp
+}

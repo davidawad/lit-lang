@@ -1,0 +1,170 @@
+module tx-courts-of-appeals-civil.appeal
+
+import tx-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+// A civil appeal to a Texas court of appeals, from the appellant's side.
+// Every period below is stated in a note, not counted: time is computed
+// under Tex. R. App. P. 4.1, which excludes the trigger day, includes the
+// last day and rolls a last day falling on a Saturday, Sunday or legal
+// holiday to the next day that is none of these, and extends a filing
+// period while the clerk's office is closed or inaccessible on its last
+// day; lit/core has no counting rule for Texas's legal holidays. Word
+// limits apply to computer-generated documents, page limits to others,
+// and a court may on motion permit a longer document (Tex. R. App. P.
+// 9.4(i)). The earlier outline's leading decision (Valence Operating Co.
+// v. Dorsett, on summary judgment review) is removed: no reporter text is
+// vendored, and the standard of review is not modeled.
+start notice
+
+decision notice: "Notice of appeal within time?" by applicant cite "Tex. R. App. P. 26.1"
+{
+  note "An appeal is perfected when a written notice of appeal is filed with the trial court clerk; a notice mistakenly filed with the appellate court is deemed filed the same day with the trial court clerk (Tex. R. App. P. 25.1(a)). A party who seeks to alter the judgment must file a notice (Tex. R. App. P. 25.1(c)); the notice must state what Rule 25.1(d) lists, be served on all parties and be delivered to each court reporter (Tex. R. App. P. 25.1(e)), and may be amended to correct a defect before the appellant's brief is filed (Tex. R. App. P. 25.1(g)). The notice is filed within 30 days after the judgment is signed, or within 90 days if any party timely files a motion for new trial, a motion to modify the judgment, a motion to reinstate under Tex. R. Civ. P. 165a, or a request for findings of fact and conclusions of law that are required or could properly be considered; within 20 days in an accelerated appeal; within six months in a restricted appeal; and another party may file within the applicable period or 14 days after the first notice, whichever is later (Tex. R. App. P. 26.1). The appellate court may extend the time if, within 15 days after the deadline, the party files the notice in the trial court and a motion complying with Rule 10.5(b) in the appellate court (Tex. R. App. P. 26.3). Filing the notice does not suspend enforcement of the judgment unless it is superseded under Rule 24 (Tex. R. App. P. 25.1(h))."
+  edge-notice-late "No timely notice" -> time-barred {
+    authority cite "Tex. R. App. P. 26.1"
+  }
+  edge-notice-filed "Notice of appeal filed" -> record {
+    event NoticeOfAppealFiled()
+    authority cite "Tex. R. App. P. 25.1"
+  }
+}
+
+state record: "Appellate record prepared and filed" by office cite "Tex. R. App. P. 35.1"
+{
+  note "The appellate record is filed within 60 days after the judgment is signed; within 120 days if Rule 26.1(a) applies; within 10 days after the notice of appeal in an accelerated appeal; within 30 days after the notice in a restricted appeal (Tex. R. App. P. 35.1). The trial court clerk prepares the clerk's record once a notice of appeal is filed and the fee is paid or arranged, and the court reporter the reporter's record once it is requested and paid for or arranged; each extension of the deadline may not exceed 30 days in an ordinary or restricted appeal or 10 days in an accelerated appeal (Tex. R. App. P. 35.3). If the record is late, the appellate clerk asks that it be filed within 30 days, or 10 days in an accelerated appeal (Tex. R. App. P. 37.3(a)); if the clerk's record is not filed because the appellant failed to pay or arrange the fee, the court may dismiss for want of prosecution after a reasonable opportunity to cure, and without a reporter's record for that reason it may decide the issues that do not require one (Tex. R. App. P. 37.3(b), (c))."
+  edge-record-filed "Record filed" -> briefing {
+    event RecordFiled()
+    authority cite "Tex. R. App. P. 35.1"
+  }
+  edge-record-dismissed "Clerk's record not filed through the appellant's fault" -> appeal-dismissed {
+    authority cite "Tex. R. App. P. 37.3"
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite "Tex. R. App. P. 38.6"
+{
+  note "The appellant files a brief within 30 days, 20 days in an accelerated appeal, after the later of the filing of the clerk's record or of the reporter's record; the appellee's brief is due within 30 days, 20 in an accelerated appeal, after the appellant's brief is filed; any reply within 20 days after the appellee's brief is filed; the court may extend the time on a motion complying with Rule 10.5(b), filed before or after the brief is due (Tex. R. App. P. 38.6). A brief or response may run 15,000 words if computer-generated and 50 pages if not, and in a civil case all of a party's briefs together 27,000 words or 90 pages; a reply brief 7,500 words or 25 pages (Tex. R. App. P. 9.4(i)(2)(B), (C)). A party requests oral argument on the front cover of its first brief (Tex. R. App. P. 9.4(g), 39.7). If the appellant fails to file a brief timely, the court may dismiss for want of prosecution unless the failure is reasonably explained and the appellee is not significantly injured, or may affirm on the appellee's brief (Tex. R. App. P. 38.8(a))."
+  edge-briefing-submission "Briefs filed; case set" -> submission {
+    authority cite "Tex. R. App. P. 39.8"
+  }
+  edge-briefing-no-brief "No appellant's brief" -> appeal-dismissed {
+    authority cite "Tex. R. App. P. 38.8"
+  }
+  edge-briefing-settled "Voluntary dismissal or settlement" -> settled {
+    authority cite "Tex. R. App. P. 42.1"
+  }
+}
+
+decision submission: "Oral argument or submission without argument" by court cite "Tex. R. App. P. 39.1"
+{
+  note "A party who has filed a brief and timely requested oral argument may argue unless the court, after examining the briefs, decides argument is unnecessary because the appeal is frivolous, the dispositive issues have been authoritatively decided, the briefs and record adequately present the facts and arguments, or argument would not significantly aid the decision (Tex. R. App. P. 39.1). If the court sets argument, every party that filed a brief may participate (Tex. R. App. P. 39.7). The clerk sends notice at least 21 days before the date set for argument or submission of whether argument is allowed, the date, the time allotted and the panel (Tex. R. App. P. 39.8). A case is decided by a panel of three justices unless the court votes to decide it en banc (Tex. R. App. P. 41.1)."
+  edge-submission-argued "Argued" -> decision {
+    authority cite "Tex. R. App. P. 39.1"
+  }
+  edge-submission-briefs "Submitted without argument" -> decision {
+    authority cite "Tex. R. App. P. 39.8"
+  }
+}
+
+decision decision: "Judgment of the court of appeals" by court cite "Tex. R. App. P. 43.2"
+{
+  note "The court may affirm in whole or in part, modify and affirm as modified, reverse and render the judgment the trial court should have rendered, reverse and remand for further proceedings, vacate the judgment and dismiss the case, or dismiss the appeal (Tex. R. App. P. 43.2); it hands down a written opinion as brief as practicable that addresses every issue raised and necessary to final disposition (Tex. R. App. P. 47.1). On a party's motion, or on its own initiative after ten days' notice, the court may dismiss or affirm for want of jurisdiction, want of prosecution, or failure to comply with the rules, an order or a clerk's notice (Tex. R. App. P. 42.3)."
+  edge-decision-affirmed "Affirmed" -> after-judgment {
+    event DecisionFiled()
+    authority cite "Tex. R. App. P. 43.2"
+  }
+  edge-decision-reversed "Reversed and rendered, or modified" -> after-judgment-won {
+    event DecisionFiled()
+    authority cite "Tex. R. App. P. 43.2"
+  }
+  edge-decision-remanded "Reversed and remanded" -> remanded {
+    event DecisionFiled()
+    authority cite "Tex. R. App. P. 43.2"
+  }
+  edge-decision-dismissed "Appeal dismissed" -> appeal-dismissed {
+    event DecisionFiled()
+    authority cite "Tex. R. App. P. 42.3"
+  }
+}
+
+decision after-judgment: "Judgment against the appellant: rehearing, review or mandate" by applicant cite "Tex. R. App. P. 49.1"
+{
+  note "A motion for rehearing may be filed within 15 days after the judgment or order is rendered and must clearly state the issues relied on (Tex. R. App. P. 49.1); a motion for en banc reconsideration may be filed within the same time, with or without a motion for rehearing (Tex. R. App. P. 49.5); in an accelerated appeal the court may deny the right to file either motion or shorten the time (Tex. R. App. P. 49.7). A motion for rehearing runs 4,500 words or 15 pages (Tex. R. App. P. 9.4(i)(2)(E)). A petition for review is filed in the Supreme Court within 45 days after the court of appeals rendered judgment if no timely motion for rehearing or en banc reconsideration is filed, or after the court of appeals' last ruling on all timely filed motions (Tex. R. App. P. 53.7(a)). Absent a timely petition for review or a pending motion to extend time, the clerk issues the mandate ten days after the time to move to extend the time to file a petition for review has expired (Tex. R. App. P. 18.1(a))."
+  edge-after-judgment-rehearing "Motion for rehearing or en banc reconsideration" -> rehearing {
+    authority cite "Tex. R. App. P. 49.1"
+  }
+  edge-after-judgment-review "Petition for review" -> review-sought {
+    event ReviewPetitionFiled()
+    authority cite "Tex. R. App. P. 53.7"
+  }
+  edge-after-judgment-mandate "No further step; mandate issues" -> affirmed {
+    event MandateIssued()
+    authority cite "Tex. R. App. P. 18.1"
+  }
+}
+
+decision after-judgment-won: "Judgment for the appellant: the appellee's rehearing or review" by court cite "Tex. R. App. P. 49.1"
+{
+  note "The appellee may move for rehearing within 15 days after the judgment is rendered (Tex. R. App. P. 49.1) or petition for review within the Rule 53.7(a) period; otherwise the clerk issues the mandate under Rule 18.1(a)."
+  edge-after-judgment-won-rehearing "Rehearing sought by the appellee" -> rehearing {
+    authority cite "Tex. R. App. P. 49.1"
+  }
+  edge-after-judgment-won-review "Petition for review by the appellee" -> review-sought {
+    event ReviewPetitionFiled()
+    authority cite "Tex. R. App. P. 53.7"
+  }
+  edge-after-judgment-won-mandate "Mandate issues" -> reversed {
+    event MandateIssued()
+    authority cite "Tex. R. App. P. 18.1"
+  }
+}
+
+decision rehearing: "Rehearing or en banc reconsideration decided" by court cite "Tex. R. App. P. 49.3"
+{
+  note "A motion for rehearing may be granted by a majority of the justices who participated in the decision; if rehearing is granted, the court may dispose of the case with or without rebriefing and oral argument (Tex. R. App. P. 49.3). A majority of the en banc court may order reconsideration, and the judgment then does not become final (Tex. R. App. P. 49.5)."
+  edge-rehearing-granted "Rehearing granted" -> decision {
+    authority cite "Tex. R. App. P. 49.3"
+  }
+  edge-rehearing-denied-review "Rehearing denied; petition for review" -> review-sought {
+    event ReviewPetitionFiled()
+    authority cite "Tex. R. App. P. 53.7"
+  }
+  edge-rehearing-denied-mandate "Rehearing denied; mandate issues" -> affirmed {
+    event MandateIssued()
+    authority cite "Tex. R. App. P. 18.1"
+  }
+}
+
+terminal time-barred: "No timely notice of appeal" outcome [loss, dismissal] cite "Tex. R. App. P. 26.1"
+{
+  note "Without a notice filed within the Rule 26.1 period or the Rule 26.3 extension, the trial court's judgment stands."
+}
+
+terminal affirmed: "Affirmed; mandate issued" outcome [final, loss] cite "Tex. R. App. P. 18.1"
+{
+  note "The mandate is sent to the trial court clerk and all parties (Tex. R. App. P. 18.1)."
+}
+
+terminal reversed: "Reversed or modified; mandate issued" outcome [final, win] cite "Tex. R. App. P. 43.2"
+{
+  note "The court of appeals renders the judgment the trial court should have rendered, or modifies it (Tex. R. App. P. 43.2(b), (c))."
+}
+
+terminal remanded: "Reversed and remanded" outcome [neutral] cite "Tex. R. App. P. 43.2"
+{
+  note "The case returns to the trial court for further proceedings (Tex. R. App. P. 43.2(d)); lit/tx-district-court."
+}
+
+terminal appeal-dismissed: "Appeal dismissed" outcome [loss, dismissal] cite "Tex. R. App. P. 42.3"
+{
+  note "Dismissal for want of jurisdiction, want of prosecution or noncompliance (Tex. R. App. P. 42.3), or for the record or brief defaults of Rules 37.3 and 38.8."
+}
+
+terminal settled: "Dismissed by motion or agreement" outcome [neutral] cite "Tex. R. App. P. 42.1"
+{
+  note "On the appellant's motion the court may dismiss the appeal or affirm; on the parties' signed agreement it may render judgment effectuating it, set aside the trial court's judgment and remand for judgment under it, or abate the appeal; absent agreement, costs are taxed against the appellant (Tex. R. App. P. 42.1)."
+}
+
+terminal review-sought: "Petition for review to the Supreme Court of Texas" outcome [appeal] cite "Tex. R. App. P. 53.1"
+{
+  note "The Supreme Court may review a court of appeals' final judgment on a petition for review (Tex. R. App. P. 53.1); review proceeds in lit/tx-supreme-court."
+}

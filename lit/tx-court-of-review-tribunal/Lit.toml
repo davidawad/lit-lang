@@ -1,0 +1,32 @@
+# The Texas review tribunal for judicial removal or retirement (lg-u561.5:
+# one package per formbook court), from the respondent judge's side, as
+# structure only. None of its governing text is vendored: the Texas
+# Constitution's judicial-conduct article, Government Code chapter 33 and
+# the procedural rules for removal or retirement of judges are not in
+# sources/. Every cite is therefore a hole naming the text it needs, and
+# every period stays a hole with a note.
+[package]
+name = "tx-court-of-review-tribunal"
+version = "0.1.0"
+language = 1
+pack_id = "tx-court-of-review-tribunal"
+forum = "tx-court-of-review-tribunal"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "texas"
+title = "Texas Court of Review Tribunal"
+description = "The review tribunal that hears a recommendation of the State Commission on Judicial Conduct to remove or retire a judge, from the respondent judge's side, as structure only. Its constitutional, statutory and procedural text is not vendored, so every cite and period is a hole."
+in_force = "2025-01-01"
+known_at = "2026-10-28"
+unknown_before = "2025-01-01"
+jurisdiction = "Texas Court of Review Tribunal"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+tx-state-rules = { version = "^0.1.0", path = "../tx-rules" }

@@ -1,0 +1,34 @@
+# The Courts of Civil Appeals of Texas, the state's historical intermediate
+# appellate courts in civil cases (lg-u561.5: one package per formbook
+# court). None of their governing text is vendored: the constitutional
+# provision that created them, the statutes on their jurisdiction and the
+# rules of civil procedure that governed appeals to them are not in
+# sources/, and the current Texas Rules of Appellate Procedure
+# (sources/tx-appellate) do not mention them. Every cite is therefore a
+# hole naming the text it needs, and every period stays a hole with a
+# note. The current courts of appeals are lit/tx-courts-of-appeals.
+[package]
+name = "tx-court-of-civil-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "tx-court-of-civil-appeals"
+forum = "tx-court-of-civil-appeals"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "texas"
+title = "Courts of Civil Appeals of Texas (historical)"
+description = "The historical Courts of Civil Appeals of Texas: the appeal's notice, record, briefs, argument, decision and further review, as structure only. Their constitutional, statutory and rule text is not vendored, so every cite and period is a hole."
+in_force = "2025-01-01"
+known_at = "2026-10-28"
+unknown_before = "2025-01-01"
+jurisdiction = "Court of Civil Appeals of Texas"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+tx-state-rules = { version = "^0.1.0", path = "../tx-rules" }

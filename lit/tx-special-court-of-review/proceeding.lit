@@ -1,0 +1,45 @@
+module tx-special-court-of-review.proceeding
+
+import tx-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered }
+
+// A judge's appeal to a Texas special court of review from a sanction
+// issued by the State Commission on Judicial Conduct, from the appellant
+// judge's side, as structure only. Government Code chapter 33 and the
+// procedural rules for the removal or retirement of judges are not
+// vendored, so each cite is a hole naming the text it needs and no period,
+// burden or standard is stated; the court's composition, the form of its
+// review and the finality of its decision are not stated either. No
+// leading decision was named; none is kept.
+start appeal
+
+state appeal: "Appeal of the Commission's sanction filed" by applicant cite ?("Tex. Gov't Code § 33.034 (not vendored)")
+{
+  note "The period to appeal, its form and the record are stated in text that is not vendored; they stay holes."
+  edge-appeal-hearing "Charging document filed; set for hearing" -> hearing {
+    event ActionCommenced()
+    authority cite ?("Tex. Gov't Code § 33.034 (not vendored)")
+  }
+}
+
+decision hearing: "Special court of review decides" by court cite ?("Tex. Gov't Code § 33.034 (not vendored)")
+{
+  note "The procedure, burden and standard, and the decisions the court may render, are stated in text that is not vendored; they stay holes."
+  edge-hearing-dismissed "Sanction dismissed" -> sanction-dismissed {
+    event DecisionFiled()
+    authority cite ?("Tex. Gov't Code § 33.034 (not vendored)")
+  }
+  edge-hearing-sanction "Sanction affirmed or modified" -> sanction-final {
+    event JudgmentEntered()
+    authority cite ?("Tex. Gov't Code § 33.034 (not vendored)")
+  }
+}
+
+terminal sanction-dismissed: "Sanction dismissed" outcome [win] cite ?("Tex. Gov't Code § 33.034 (not vendored)")
+{
+  note "Costs and confidentiality are stated in text that is not vendored."
+}
+
+terminal sanction-final: "Sanction stands" outcome [loss] cite ?("Tex. Gov't Code § 33.034 (not vendored)")
+{
+  note "Whether the decision is final or reviewable is stated in text that is not vendored."
+}

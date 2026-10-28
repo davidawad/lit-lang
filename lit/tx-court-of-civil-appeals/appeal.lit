@@ -1,0 +1,84 @@
+module tx-court-of-civil-appeals.appeal
+
+import tx-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+// An appeal to a Texas Court of Civil Appeals, from the appellant's side,
+// as structure only. The courts' constitutional basis, jurisdiction
+// statutes and the rules of procedure that governed appeals to them are
+// not vendored (sources/ holds only the current Texas Rules of Civil and
+// Appellate Procedure, which do not mention them), so each cite is a hole
+// naming the text it needs and no period is stated. The earlier outline's
+// date for the courts becoming the courts of appeals is not verified
+// against any vendored text and is not repeated here. No leading decision
+// was named; none is kept.
+start notice
+
+decision notice: "Notice of appeal within time?" by applicant cite ?("Tex. Const. art. V, § 6 (1891) (not vendored)")
+{
+  note "The appealability of the judgment, the period for the notice or appeal bond and its service are stated in text that is not vendored; they stay holes."
+  edge-notice-late "No timely notice" -> dismissed-untimely {
+    authority cite ?("Tex. Const. art. V, § 6 (1891) (not vendored)")
+  }
+  edge-notice-filed "Timely notice" -> record {
+    event NoticeOfAppealFiled()
+    authority cite ?("Tex. Const. art. V, § 6 (1891) (not vendored)")
+  }
+}
+
+state record: "Record or transcript prepared" by office cite ?("Tex. R. Civ. P. (1941), appellate rules (not vendored)")
+{
+  note "The contents of the transcript and statement of facts, the time to file them and the fees are stated in rules that are not vendored; they stay holes."
+  edge-record-briefing "Record filed" -> briefing {
+    event RecordFiled()
+    authority cite ?("Tex. R. Civ. P. (1941), appellate rules (not vendored)")
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite ?("Tex. R. Civ. P. (1941), appellate rules (not vendored)")
+{
+  note "The briefing periods, form and length are stated in rules that are not vendored; they stay holes."
+  edge-briefing-submission "Argument or submission" -> submission {
+    authority cite ?("Tex. R. Civ. P. (1941), appellate rules (not vendored)")
+  }
+}
+
+decision submission: "Court decides" by court cite ?("Tex. R. Civ. P. (1941), appellate rules (not vendored)")
+{
+  note "Whether argument was heard and the judgments the court could render are stated in text that is not vendored."
+  edge-submission-affirmed "Affirmed" -> post-decision {
+    event DecisionFiled()
+    authority cite ?("Tex. R. Civ. P. (1941), appellate rules (not vendored)")
+  }
+  edge-submission-reversed "Reversed, vacated or remanded" -> post-decision {
+    event DecisionFiled()
+    authority cite ?("Tex. R. Civ. P. (1941), appellate rules (not vendored)")
+  }
+}
+
+decision post-decision: "Rehearing or further review?" by applicant cite ?("Tex. R. Civ. P. (1941), appellate rules (not vendored)")
+{
+  note "The rehearing period and the writ of error to the Supreme Court of Texas are stated in text that is not vendored; they stay holes."
+  edge-post-mandate "No further review" -> mandate-issued {
+    event MandateIssued()
+    authority cite ?("Tex. R. Civ. P. (1941), appellate rules (not vendored)")
+  }
+  edge-post-further "Further review sought" -> further-review {
+    event ReviewPetitionFiled()
+    authority cite ?("Tex. R. Civ. P. (1941), appellate rules (not vendored)")
+  }
+}
+
+terminal dismissed-untimely: "Dismissed: no timely notice" outcome [loss, dismissal] cite ?("Tex. Const. art. V, § 6 (1891) (not vendored)")
+{
+  note "Whether the time limit was jurisdictional is stated in text that is not vendored."
+}
+
+terminal mandate-issued: "Mandate issued" outcome [final] cite ?("Tex. R. Civ. P. (1941), appellate rules (not vendored)")
+{
+  note "The case returns to the court below."
+}
+
+terminal further-review: "Further review sought in the Supreme Court of Texas" outcome [final] cite ?("Tex. R. Civ. P. (1941), appellate rules (not vendored)")
+{
+  note "Review in the Supreme Court of Texas under the current rules is lit/tx-supreme-court; the historical procedure is not vendored."
+}

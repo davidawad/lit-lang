@@ -1,0 +1,147 @@
+module tx-supreme-court-civil.review
+
+import tx-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
+
+// Review in the Supreme Court of Texas of a court of appeals' final
+// judgment in a civil case, from the petitioner's side. Every period below
+// is stated in a note, not counted: time is computed under Tex. R. App. P.
+// 4.1, which excludes the trigger day, includes the last day and rolls a
+// last day falling on a Saturday, Sunday or legal holiday to the next day
+// that is none of these, and extends a filing period while the clerk's
+// office is closed or inaccessible on its last day; lit/core has no
+// counting rule for Texas's legal holidays. Word limits apply to
+// computer-generated documents, page limits to others, and the Court may on
+// motion permit a longer document (Tex. R. App. P. 9.4(i)). The earlier
+// outline named no leading decision on the grant standard; the factors the
+// Court considers are the rule's (Tex. R. App. P. 56.1(a)).
+start petition
+
+decision petition: "Petition for review?" by applicant cite "Tex. R. App. P. 53.7"
+{
+  note "The Supreme Court may review a court of appeals' final judgment on a petition for review; a party who seeks to alter that judgment must file one (Tex. R. App. P. 53.1). Unless the Court orders an earlier deadline, the petition is filed with the Supreme Court clerk within 45 days after the court of appeals rendered judgment if no motion for rehearing or en banc reconsideration is timely filed, or after the court of appeals' last ruling on all timely filed motions (Tex. R. App. P. 53.7(a)); a premature petition is treated as filed after the last ruling (Tex. R. App. P. 53.7(b)); after a timely petition any other party may file within 45 days after the last timely rehearing motion is overruled or 30 days after any preceding petition, whichever is later (Tex. R. App. P. 53.7(c)). The Court may extend the time on a motion complying with Rule 10.5(b) filed no later than 15 days after the last day for filing (Tex. R. App. P. 53.7(f)); a petition mistakenly filed in the court of appeals is deemed filed the same day with the Supreme Court clerk (Tex. R. App. P. 53.7(g)). The petition contains the items Rule 53.2 lists, including an introduction of no more than 1,000 words or 4 pages (Tex. R. App. P. 53.2(a)), and runs 6,500 words or 20 pages in all (Tex. R. App. P. 9.4(i)(2)(D))."
+  edge-petition-none "No petition: the court of appeals' judgment stands" -> review-not-sought {
+    authority cite "Tex. R. App. P. 18.1"
+  }
+  edge-petition-filed "Petition for review filed" -> response {
+    event ReviewPetitionFiled()
+    authority cite "Tex. R. App. P. 53.1"
+  }
+}
+
+decision response: "Response requested or ordered?" by court cite "Tex. R. App. P. 53.3"
+{
+  note "A response need not be filed unless the Court orders one, and a petition will not be granted before a response has been filed or ordered (Tex. R. App. P. 53.3). A response is filed within 30 days after it is ordered, and any reply within 15 days after the response is filed; the Court may extend either time on a motion complying with Rule 10.5(b) (Tex. R. App. P. 53.7(d), (e), (f)). A response runs 6,500 words or 20 pages, and a reply 3,250 words or 10 pages (Tex. R. App. P. 9.4(i)(2)(D), (F)). With or without granting the petition, the Court may request the record from the court of appeals (Tex. R. App. P. 54.1) and order briefs on the merits (Tex. R. App. P. 55.1)."
+  edge-response-none "Denied or dismissed without a response" -> petition-denied {
+    authority cite "Tex. R. App. P. 56.1"
+  }
+  edge-response-ordered "Response filed or ordered" -> merits-briefs {
+    authority cite "Tex. R. App. P. 53.3"
+  }
+}
+
+state merits-briefs: "Briefs on the merits, if ordered" by applicant cite "Tex. R. App. P. 55.1"
+{
+  note "A brief on the merits is not filed unless the Court orders it (Tex. R. App. P. 55.1). Briefs follow the schedule in the clerk's notice; if none is stated, the petitioner's brief is due within 30 days after the notice, the respondent's within 30 days after receiving it, and any reply within 15 days after receiving the respondent's brief, and the Court may extend the time on a motion complying with Rule 10.5(b) (Tex. R. App. P. 55.7). The petitioner's brief is confined to the issues stated in the petition (Tex. R. App. P. 55.2); a party may rely on its court of appeals brief (Tex. R. App. P. 55.5). A brief and response may run 15,000 words or 50 pages, and a reply brief 7,500 words or 25 pages (Tex. R. App. P. 9.4(i)(2)(B), (C))."
+  edge-merits-briefs-order "Petition considered" -> petition-order {
+    authority cite "Tex. R. App. P. 56.1"
+  }
+}
+
+decision petition-order: "Order on the petition" by court cite "Tex. R. App. P. 56.1"
+{
+  note "Whether to grant review is a matter of judicial discretion; among the factors the Court considers are disagreement among the court of appeals' justices on an important point of law, a conflict between courts of appeals, the construction or validity of a statute, constitutional issues, an error of law important to the state's jurisprudence, and an important question of state law the Court has not resolved (Tex. R. App. P. 56.1(a)). The Court may deny the petition (\"Denied\"), dismiss it for want of jurisdiction, or, after a response has been filed or ordered, refuse it (\"Refused\"), which gives the court of appeals' opinion the precedential value of the Court's own (Tex. R. App. P. 56.1(b), (c)). A moot case may be dismissed, and a settled case disposed of to effectuate the agreement (Tex. R. App. P. 56.2, 56.3). The clerk sends written notice of the disposition to the court of appeals, the trial court and the parties (Tex. R. App. P. 56.4)."
+  edge-petition-order-denied "Denied, dismissed or refused" -> petition-denied {
+    authority cite "Tex. R. App. P. 56.1"
+  }
+  edge-petition-order-granted "Granted" -> submission {
+    authority cite "Tex. R. App. P. 59.2"
+  }
+}
+
+decision submission: "Submission with or without argument" by court cite "Tex. R. App. P. 59.2"
+{
+  note "If at least six members of the Court so vote, a petition may be granted and an opinion handed down without oral argument (Tex. R. App. P. 59.1). If argument would aid the Court, it sets the case for argument and the clerk notifies the parties of the submission date (Tex. R. App. P. 59.2); each side has the time the Court orders, extendable on a motion filed before the day of argument (Tex. R. App. P. 59.4). If the Court later decides review should not have been granted, it may set aside the grant and dismiss, deny or refuse the petition (Tex. R. App. P. 56.1(d))."
+  edge-submission-argued "Argued" -> judgment {
+    authority cite "Tex. R. App. P. 59.2"
+  }
+  edge-submission-per-curiam "Decided without argument" -> judgment {
+    authority cite "Tex. R. App. P. 59.1"
+  }
+  edge-submission-improvident "Grant set aside as improvident" -> petition-denied {
+    authority cite "Tex. R. App. P. 56.1"
+  }
+}
+
+decision judgment: "Judgment of the Supreme Court" by court cite "Tex. R. App. P. 60.2"
+{
+  note "The clerk announces the Court's judgments (Tex. R. App. P. 60.1). The Court may affirm in whole or in part, modify and affirm, reverse and render, reverse and remand, vacate the lower courts' judgments and dismiss, or vacate and remand in light of changes in the law (Tex. R. App. P. 60.2)."
+  edge-judgment-affirmed "Court of appeals affirmed" -> rehearing {
+    event DecisionFiled()
+    authority cite "Tex. R. App. P. 60.2"
+  }
+  edge-judgment-reversed "Reversed, rendered or remanded" -> rehearing-won {
+    event DecisionFiled()
+    authority cite "Tex. R. App. P. 60.2"
+  }
+}
+
+decision rehearing: "Rehearing sought?" by applicant cite "Tex. R. App. P. 64.1"
+{
+  note "A motion for rehearing may be filed with the clerk within 15 days from the date the Court renders judgment or makes an order disposing of a petition for review; in exceptional cases the Court may shorten the time or deny the right to file (Tex. R. App. P. 64.1). It must specify the points relied on (Tex. R. App. P. 64.2); no response is needed unless ordered, and the motion will not be granted without one (Tex. R. App. P. 64.3). A second motion is considered only if the Court modifies or vacates its judgment or issues a different opinion (Tex. R. App. P. 64.4). The Court may extend the time on a motion complying with Rule 10.5(b) filed no later than 15 days after the last date for filing (Tex. R. App. P. 64.5). A motion for rehearing runs 4,500 words or 15 pages (Tex. R. App. P. 9.4(i)(2)(E)). Absent a timely motion, the mandate issues ten days after the time to move to extend the time for rehearing has expired (Tex. R. App. P. 18.1(b)); a party may move to stay it pending a petition for certiorari to the Supreme Court of the United States (Tex. R. App. P. 18.2)."
+  edge-rehearing-none "No rehearing; mandate issues" -> judgment-lost {
+    event MandateIssued()
+    authority cite "Tex. R. App. P. 18.1"
+  }
+  edge-rehearing-sought "Motion for rehearing" -> rehearing-decision {
+    authority cite "Tex. R. App. P. 64.1"
+  }
+}
+
+decision rehearing-won: "Judgment for the petitioner: the respondent's rehearing" by court cite "Tex. R. App. P. 64.1"
+{
+  note "The respondent may move for rehearing within 15 days (Tex. R. App. P. 64.1); otherwise the mandate issues under Rule 18.1(b)."
+  edge-rehearing-won-none "Mandate issues" -> judgment-won {
+    event MandateIssued()
+    authority cite "Tex. R. App. P. 18.1"
+  }
+  edge-rehearing-won-sought "Respondent moves for rehearing" -> rehearing-decision {
+    authority cite "Tex. R. App. P. 64.1"
+  }
+}
+
+decision rehearing-decision: "Rehearing decided" by court cite "Tex. R. App. P. 64.3"
+{
+  note "A motion for rehearing will not be granted unless a response has been filed or ordered (Tex. R. App. P. 64.3)."
+  edge-rehearing-decision-granted "Rehearing granted" -> judgment {
+    authority cite "Tex. R. App. P. 64.4"
+  }
+  edge-rehearing-decision-denied "Rehearing denied" -> rehearing-denied {
+    event MandateIssued()
+    authority cite "Tex. R. App. P. 18.1"
+  }
+}
+
+terminal review-not-sought: "Review not sought: the court of appeals' judgment is final" outcome [final] cite "Tex. R. App. P. 18.1"
+{
+  note "The court of appeals clerk issues the mandate ten days after the time to move to extend the time to file a petition for review has expired (Tex. R. App. P. 18.1(a))."
+}
+
+terminal petition-denied: "Petition denied, dismissed or refused" outcome [final, loss] cite "Tex. R. App. P. 56.1"
+{
+  note "The court of appeals' judgment stands; a motion for rehearing of the order disposing of the petition may be filed within 15 days (Tex. R. App. P. 64.1). Federal certiorari (28 U.S.C. § 1257) is not vendored and not modeled."
+}
+
+terminal judgment-lost: "Judgment against the petitioner; mandate issued" outcome [final, loss] cite "Tex. R. App. P. 18.1"
+{
+  note "The mandate issues to the court below (Tex. R. App. P. 18.1(b))."
+}
+
+terminal judgment-won: "Judgment for the petitioner; mandate issued" outcome [final, win] cite "Tex. R. App. P. 60.2"
+{
+  note "A remand returns the case to the court of appeals or the trial court for further proceedings (Tex. R. App. P. 60.2(d), (f))."
+}
+
+terminal rehearing-denied: "Rehearing denied; mandate issued" outcome [final] cite "Tex. R. App. P. 64.4"
+{
+  note "No second motion for rehearing is considered unless the Court modifies its judgment or issues a different opinion (Tex. R. App. P. 64.4)."
+}

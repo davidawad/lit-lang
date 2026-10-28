@@ -1,0 +1,46 @@
+# The Texas Judicial Panel on Multidistrict Litigation (lg-u561.5: one
+# package per formbook court), which transfers related cases to a
+# pretrial court, from the movant's side, as structure only. The Texas
+# Rules of Civil Procedure "Last Amended October 1, 2026"
+# (sources/tx-district-court) say only that pretrial proceedings in
+# multidistrict litigation may also be governed by Rules 11 and 13 of the
+# Rules of Judicial Administration (Tex. R. Civ. P. 166); those rules and
+# the Government Code provisions creating the panel are not vendored, so
+# the panel's own cites are holes naming the text they need and every
+# period stays a hole with a note. in_force is the TRCP edition's date;
+# earlier editions are not vendored.
+[package]
+name = "tx-judicial-panel-on-multidistrict-litigation"
+version = "0.1.0"
+language = 1
+pack_id = "tx-judicial-panel-on-multidistrict-litigation"
+forum = "tx-judicial-panel-on-multidistrict-litigation"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "texas"
+title = "Texas Judicial Panel on Multidistrict Litigation"
+description = "Motions to the Texas Judicial Panel on Multidistrict Litigation to transfer related cases to a pretrial court, as structure only: the Rules of Judicial Administration and the Government Code provisions that govern the panel are not vendored, so its cites and periods are holes; the Texas Rules of Civil Procedure state only that Rules 11 and 13 of the Rules of Judicial Administration may govern pretrial proceedings in multidistrict litigation."
+in_force = "2026-10-01"
+known_at = "2026-10-28"
+unknown_before = "2026-10-01"
+jurisdiction = "Texas Judicial Panel on Multidistrict Litigation"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+tx-state-rules = { version = "^0.1.0", path = "../tx-rules" }
+
+[sources.tx-trcp]
+title = "Texas Rules of Civil Procedure, last amended October 1, 2026 (Supreme Court of Texas)"
+url = "https://www.txcourts.gov/media/1463426/texas-rules-of-civil-procedure.pdf"
+path = "sources/tx-district-court/tx-trcp-sectioned.txt"
+path_sha256 = "1b10047990b61641bf4b89dd2b14a8724617f8d104236b83245e7449934d2d1a"
+sha256 = "bd9d874a40e3fdd9a25a675daad31de2fa3db30acea44d80d3e3362c9d4e178a"
+as_of = "2026-10-01"
+cite_prefixes = ["Tex. R. Civ. P."]
+section_heading = "Tex. R. Civ. P. {n}"

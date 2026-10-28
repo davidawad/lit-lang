@@ -1,0 +1,48 @@
+# Civil appeals to the Texas courts of appeals under the Texas Rules of
+# Appellate Procedure (Tex. R. App. P. 25 to 51 in civil cases, with the
+# general rules they use), as far as the vendored text states. The base
+# text is the TRAP "Last Amended February 6, 2026" (sources/tx-appellate),
+# so in_force is that date; earlier editions are not vendored, so a query
+# before it is a hole in the corpus. Time is computed under Tex. R. App. P.
+# 4.1, whose legal holidays are Texas's; lit/core has no counting rule for
+# them, so the periods are stated in notes, not encoded as counted
+# deadlines. The fourteen courts' local rules are not vendored. The trial
+# court is lit/tx-district-court; review in the Supreme Court of Texas is
+# lit/tx-supreme-court; criminal appeals are lit/tx-criminal-trial-court's
+# and lit/tx-court-of-criminal-appeals'.
+[package]
+name = "tx-courts-of-appeals-civil"
+version = "0.1.0"
+language = 1
+pack_id = "tx-courts-of-appeals-civil"
+forum = "tx-appellate"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "texas"
+title = "Texas courts of appeals, civil appeals"
+description = "Civil appeals to the Texas courts of appeals under the Texas Rules of Appellate Procedure (February 6, 2026), as far as the vendored text states: the notice of appeal and its periods (ordinary, accelerated, restricted) and extension, the appellate record, briefs and their length limits, oral argument and submission, the types of judgment and the written opinion, voluntary and involuntary dismissal, rehearing and en banc reconsideration, the petition for review (decided in lit/tx-supreme-court), and the mandate."
+in_force = "2026-02-06"
+known_at = "2026-10-28"
+unknown_before = "2026-02-06"
+jurisdiction = "Texas courts of appeals (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+tx-state-rules = { version = "^0.1.0", path = "../tx-rules" }
+
+[sources.tx-trap]
+title = "Texas Rules of Appellate Procedure, last amended February 6, 2026 (Supreme Court of Texas and Court of Criminal Appeals)"
+url = "https://www.txcourts.gov/media/1463134/texas-rules-of-appellate-procedure-02062026.pdf"
+path = "sources/tx-appellate/tx-trap-sectioned.txt"
+path_sha256 = "4c3fb9bd4d05d8822b740e4b2fdc0c36755d2c5ee425a383ce8f4e5cbf407861"
+sha256 = "28d0d6236d84e1740c07ceb7a369602588c89787aed8d24a513700f369ebcf51"
+as_of = "2026-02-06"
+cite_prefixes = ["Tex. R. App. P."]
+section_heading = "Tex. R. App. P. {n}"
+

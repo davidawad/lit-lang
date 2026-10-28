@@ -1,0 +1,31 @@
+# The Texas base library (lg-u561.5 pattern): the trigger events the Texas
+# civil court packages route their graphs on: lit/tx-district-court,
+# lit/tx-district-court-travis, lit/tx-courts-of-appeals,
+# lit/tx-supreme-court, lit/tx-court-of-civil-appeals,
+# lit/tx-court-of-review-tribunal, lit/tx-special-court-of-review and
+# lit/tx-judicial-panel-on-multidistrict-litigation. It declares no
+# period: the rules' periods are stated in the court packages' notes. No
+# procedure of its own.
+[package]
+name = "tx-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "tx-state-rules"
+forum = "tx-state-rules"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "texas"
+title = "Texas state court rules (base library)"
+description = "The rule layer Texas's civil court packages share (Tex. R. Civ. P., Tex. R. App. P.): the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-02-06"
+known_at = "2026-10-28"
+unknown_before = "2026-02-06"
+jurisdiction = "Texas state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

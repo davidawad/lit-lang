@@ -16,3 +16,10 @@
 - Edition: as the extract (effective May 1, 2000, "Reprinted March 2026", newest listed amendment LR 16.4 effective March 27, 2026).
 - Criminal forum (lg-gddt): txsd-criminal.
 - Sectioned sha256 da2c8f7e181658ea39b0f0dbe367930bb16f62b9cfe663232b0eecc3d40d4523 (the `path_sha256` pinned by `lit/txsd-criminal/Lit.toml`).
+
+### `txsd/tx-sd-local-rules-civil-sectioned.txt` — S.D. Tex. Local Rules, civil rules sectioned
+
+- Derived in the pod (lg-f3q8.87) from `txsd/tx-sd-local-rules.txt` (extract sha256 241a3d09ca1137e0450a773bab0d3726190b17b1eb33e96065adabea19e7df1a); nothing fetched. In the body of the Civil Rules (after the table of contents, before the Criminal Rules), one marker line `## LR <n>` is inserted before each rule's own heading line (`LR3. COMMENCEMENT OF ACTION` through `LR83. MISCELLANEOUS LOCAL RULES`, 20 rules) and one marker line `## LR <n>.<m>` before each sub-rule's own heading line (`5.1 Electronic Filing` through `83.8 ...`, 43 sub-rules). The criminal rules and appendices carry no markers. Every other line is the extract unchanged, so deleting the `## LR` lines gives back the extract byte for byte.
+- Upstream: https://www.txs.uscourts.gov/sites/txs/files/LR_March_2026.pdf, retrieved 2026-10-27, as recorded on the `txsd/tx-sd-local-rules.txt` entry this file is derived from.
+- Edition: as the extract (effective May 1, 2000, "Reprinted March 2026", newest listed amendment LR 16.4 effective March 27, 2026).
+- Sectioned sha256 7ba04130b9f24741036e32a0cf00f03216e901d603b8609e3e7c317e062b698f (the `path_sha256` pinned by `lit/txsd/Lit.toml`).

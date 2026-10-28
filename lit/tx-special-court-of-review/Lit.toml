@@ -1,0 +1,31 @@
+# The Texas special court of review of judicial-conduct sanctions
+# (lg-u561.5: one package per formbook court), from the appellant judge's
+# side, as structure only. None of its governing text is vendored:
+# Government Code chapter 33 and the procedural rules for removal or
+# retirement of judges are not in sources/. Every cite is therefore a hole
+# naming the text it needs, and every period stays a hole with a note.
+[package]
+name = "tx-special-court-of-review"
+version = "0.1.0"
+language = 1
+pack_id = "tx-special-court-of-review"
+forum = "tx-special-court-of-review"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "texas"
+title = "Texas Special Court of Review"
+description = "The special court of review that hears a judge's appeal of a sanction by the State Commission on Judicial Conduct, from the appellant judge's side, as structure only. Its statutory and procedural text is not vendored, so every cite and period is a hole."
+in_force = "2025-01-01"
+known_at = "2026-10-28"
+unknown_before = "2025-01-01"
+jurisdiction = "Texas Special Court of Review"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+tx-state-rules = { version = "^0.1.0", path = "../tx-rules" }

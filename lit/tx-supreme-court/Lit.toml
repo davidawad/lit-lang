@@ -1,0 +1,52 @@
+# Review in the Supreme Court of Texas, the state's court of last resort
+# in civil cases, under the Texas Rules of Appellate Procedure (Tex. R. App.
+# P. 53 to 64, with the general rules they use), as far as the vendored
+# text states: the petition for review of a court of appeals' final
+# judgment, the response and reply, briefs on the merits, the order on the
+# petition, argument or submission, judgment, rehearing and mandate. The
+# base text is the TRAP "Last Amended February 6, 2026"
+# (sources/tx-appellate), so in_force is that date; earlier editions are
+# not vendored, so a query before it is a hole in the corpus. Time is
+# computed under Tex. R. App. P. 4.1, whose legal holidays are Texas's;
+# lit/core has no counting rule for them, so the periods are stated in
+# notes, not encoded as counted deadlines. Direct appeals (Tex. R. App. P.
+# 57), certified questions (Tex. R. App. P. 58) and original proceedings
+# (Tex. R. App. P. 52) are not modeled. The court of appeals side is
+# lit/tx-courts-of-appeals; criminal cases go to
+# lit/tx-court-of-criminal-appeals.
+[package]
+name = "tx-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "tx-supreme-court-civil"
+forum = "tx-supreme-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "texas"
+title = "Supreme Court of Texas, petitions for review"
+description = "Review in the Supreme Court of Texas under the Texas Rules of Appellate Procedure (February 6, 2026), as far as the vendored text states: the petition for review and its time, contents and length, the response and reply, briefs on the merits, the considerations in granting review and the dispositions of a petition (denied, dismissed, refused, granted), submission with or without argument, the types of judgment, rehearing and its extension, and the mandate."
+in_force = "2026-02-06"
+known_at = "2026-10-28"
+unknown_before = "2026-02-06"
+jurisdiction = "Supreme Court of Texas (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+tx-state-rules = { version = "^0.1.0", path = "../tx-rules" }
+
+[sources.tx-trap]
+title = "Texas Rules of Appellate Procedure, last amended February 6, 2026 (Supreme Court of Texas and Court of Criminal Appeals)"
+url = "https://www.txcourts.gov/media/1463134/texas-rules-of-appellate-procedure-02062026.pdf"
+path = "sources/tx-appellate/tx-trap-sectioned.txt"
+path_sha256 = "4c3fb9bd4d05d8822b740e4b2fdc0c36755d2c5ee425a383ce8f4e5cbf407861"
+sha256 = "28d0d6236d84e1740c07ceb7a369602588c89787aed8d24a513700f369ebcf51"
+as_of = "2026-02-06"
+cite_prefixes = ["Tex. R. App. P."]
+section_heading = "Tex. R. App. P. {n}"
+

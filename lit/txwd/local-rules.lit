@@ -1,0 +1,275 @@
+module txwd-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcp6.{ frcp6 }
+
+// The Western District of Texas's own civil periods and limits, counted
+// under FRCP 6 (the court's own computing-time rule, CV-6, is deleted).
+// Any judge may waive a requirement of these rules for that judge's docket
+// (Rule CV-1(e)). After leave to file is granted, the time limits a filing
+// triggers run from its filing by the clerk (Rule CV-7(b)). No trigger
+// carries a service method: FRCP 6(d)'s three added days follow the manner
+// of service, which is not modeled here; the motion periods here run from
+// filing, not service.
+//
+// Rules that state no period or limit this layer can count stay in notes:
+// the conference requirement for nondispositive motions (CV-7(g)); the
+// prompt notice of a changed name or address (CV-10(d)); written discovery
+// is untimely unless the response would be due before the discovery
+// deadline (CV-16(e)); the voir dire statement is no longer than half a
+// page (CV-16(f)(2)); requests for admissions are limited to 30 without
+// leave (CV-36), a count, not a document limit; the clerk does not tax
+// costs until 21 days after the proposed bill is filed, and an
+// uncontested bill is deemed taxed as proposed if the clerk has not taxed
+// it within 28 days (CV-54(a)(4)), periods that bind the clerk. A claim
+// for attorney's fees is made by motion not later than 14 days after entry
+// of judgment (CV-54(b)(1)): that is FRCP 54(d)(2)(B)'s period and stays
+// in lit/frcp; a later motion may be deemed untimely and a waiver.
+//
+// The earlier W.D. Tex. outline's FRCP flow belongs to lit/frcp and
+// lit/frap; its Supreme Court decisions (Twombly, Iqbal, Frow v. De La
+// Vega, Celotex, Anderson v. Liberty Lobby, Matsushita) are FRCP authority,
+// and no reporter text is vendored, so they are removed here.
+
+/// A discovery or case management motion, or a response to one: at most
+/// 10 pages, exclusive of the caption, signature block, certificates and
+/// accompanying documents, unless the court authorizes otherwise (W.D.
+/// Tex. Local Rule CV-7(c)(2), (d)(3)).
+limit discovery-motion {
+  pages <= 10 cite "W.D. Tex. Local Rule CV-7(c)"
+} cite "W.D. Tex. Local Rule CV-7(c)"
+
+/// Any other motion, or a response to one: at most 20 pages (W.D. Tex.
+/// Local Rule CV-7(c)(2), (d)(3)).
+limit motion {
+  pages <= 20 cite "W.D. Tex. Local Rule CV-7(c)"
+} cite "W.D. Tex. Local Rule CV-7(c)"
+
+/// A reply in support of a discovery or case management motion: at most 5
+/// pages (W.D. Tex. Local Rule CV-7(e)(3)).
+limit discovery-reply {
+  pages <= 5 cite "W.D. Tex. Local Rule CV-7(e)"
+} cite "W.D. Tex. Local Rule CV-7(e)"
+
+/// A reply in support of any other motion: at most 10 pages (W.D. Tex.
+/// Local Rule CV-7(e)(3)).
+limit reply {
+  pages <= 10 cite "W.D. Tex. Local Rule CV-7(e)"
+} cite "W.D. Tex. Local Rule CV-7(e)"
+
+/// The clerk informs the filing party that the civil cover sheet must be
+/// completed and executed (W.D. Tex. Local Rule CV-3(a)).
+event CoverSheetDeficiencyNoticed()
+/// A discovery or case management motion is filed (W.D. Tex. Local Rule
+/// CV-7(d)).
+event DiscoveryMotionFiled() paper discovery-motion
+/// Any other motion is filed (W.D. Tex. Local Rule CV-7(d)).
+event MotionFiled() paper motion
+/// The response to a motion is filed (W.D. Tex. Local Rule CV-7(e)).
+event ResponseFiled()
+/// A first motion under FRCP 12(b) is filed (W.D. Tex. Local Rule
+/// CV-15(a)).
+event FirstRule12bMotionFiled()
+/// A defendant appears (W.D. Tex. Local Rule CV-16(c)).
+event DefendantAppeared()
+/// The scheduling order's discovery deadline (W.D. Tex. Local Rule
+/// CV-16(e)).
+event DiscoveryDeadline()
+/// The first of the scheduled dates for trial, jury selection, docket call
+/// or the final pretrial conference (W.D. Tex. Local Rule CV-16(f), (g)).
+event FirstTrialSetting()
+/// The producing party has actual notice that a document it produced will
+/// be used (W.D. Tex. Local Rule CV-26(d)).
+event ProducedDocumentUseNoticed()
+/// A party's attorney serves interrogatory answers without the party's
+/// signature (W.D. Tex. Local Rule CV-33(a)).
+event UnexecutedAnswersServed()
+/// Judgment is entered (W.D. Tex. Local Rule CV-54(a)).
+event JudgmentEntered()
+/// A proposed bill of costs is filed (W.D. Tex. Local Rule CV-54(a)).
+event ProposedBillOfCostsFiled()
+/// The clerk taxes costs (W.D. Tex. Local Rule CV-54(a)).
+event CostsTaxed()
+/// The case is finally disposed of, including any appeal (W.D. Tex. Local
+/// Rule CV-79(a)).
+event FinalDisposition()
+/// The trial setting (W.D. Tex. Local Rule CV-88(a)).
+event TrialSetting()
+
+/// W.D. Tex. Local Rule CV-3(a): a filing party who did not file a
+/// complete and executed Civil Cover Sheet completes and executes it not
+/// later than 7 days after the clerk informs it; otherwise the clerk
+/// advises the court. Unrepresented and confined filers are exempt.
+deadline cover-sheet-period: 7.days after CoverSheetDeficiencyNoticed() counted_by frcp6 cite "W.D. Tex. Local Rule CV-3(a)"
+{
+  forum frcp
+}
+
+/// W.D. Tex. Local Rule CV-7(d)(2): a response to a discovery or case
+/// management motion is filed not later than 7 days after the filing of
+/// the motion; without a timely response the court may grant the motion
+/// as unopposed.
+deadline discovery-response-period: 7.days after DiscoveryMotionFiled() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Tex. Local Rule CV-7(d)"
+{
+  forum frcp
+}
+
+/// W.D. Tex. Local Rule CV-7(d)(2): a response to any other motion is
+/// filed not later than 14 days after the filing of the motion, except as
+/// Rule CV-15 provides.
+deadline response-period: 14.days after MotionFiled() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Tex. Local Rule CV-7(d)"
+{
+  forum frcp
+}
+
+/// W.D. Tex. Local Rule CV-7(e)(2): a reply in support of a motion is filed
+/// not later than 7 days after the filing of the response; absent leave,
+/// no further submissions are allowed, and the court need not wait for the
+/// reply.
+deadline reply-period: 7.days after ResponseFiled() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Tex. Local Rule CV-7(e)"
+{
+  forum frcp
+}
+
+/// W.D. Tex. Local Rule CV-15(a): notwithstanding Rule CV-7's time limits,
+/// a party may respond to a first FRCP 12(b) motion by filing an amended
+/// pleading as a matter of course not later than 21 days after the filing
+/// of the motion.
+deadline amendment-as-of-course-period: 21.days after FirstRule12bMotionFiled() counted_by frcp6 cite "W.D. Tex. Local Rule CV-15(a)"
+{
+  forum frcp
+}
+
+/// W.D. Tex. Local Rule CV-16(c): not later than 60 days after any
+/// appearance of any defendant, the parties, having first conferred under
+/// FRCP 26(f), submit a proposed scheduling order; the court sets the
+/// dates in its discretion.
+deadline proposed-scheduling-order-period: 60.days after DefendantAppeared() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Tex. Local Rule CV-16(c)"
+{
+  forum frcp
+}
+
+/// W.D. Tex. Local Rule CV-16(e): absent exceptional circumstances, no
+/// motion relating to discovery is filed after the discovery deadline
+/// unless it is filed within 14 days after the deadline and pertains to
+/// conduct during the final 7 days of discovery.
+deadline late-discovery-motion-period: 14.days after DiscoveryDeadline() counted_by frcp6 cite "W.D. Tex. Local Rule CV-16(e)"
+{
+  forum frcp
+}
+
+/// W.D. Tex. Local Rule CV-16(f): unless the court orders otherwise, each
+/// party serves and files its voir dire questions, stipulated facts,
+/// exhibit and witness lists, deposition designations, proposed jury
+/// instructions or findings, motions in limine and trial estimate at least
+/// 14 days before the first of the scheduled dates for trial, jury
+/// selection, docket call or the final pretrial conference.
+deadline pretrial-disclosure-period: 14.days before FirstTrialSetting() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Tex. Local Rule CV-16(f)"
+{
+  forum frcp
+}
+
+/// W.D. Tex. Local Rule CV-16(g): at least 7 days before that date, each
+/// party serves and files its objections to deposition designations and
+/// exhibits and its responses to motions in limine; exhibit objections not
+/// disclosed, other than under Federal Rules of Evidence 402 and 403, are
+/// waived unless excused for good cause.
+deadline pretrial-objection-period: 7.days before FirstTrialSetting() counted_by frcp6 cite "W.D. Tex. Local Rule CV-16(g)"
+{
+  forum frcp
+}
+
+/// W.D. Tex. Local Rule CV-26(d)(2): once the producing party has actual
+/// notice that a produced document will be used, it objects to the
+/// document's authenticity within the time the court orders or Rule CV-16
+/// specifies, and otherwise within 14 days; without a timely objection,
+/// production authenticates the document for use against it.
+deadline authenticity-objection-period: 14.days after ProducedDocumentUseNoticed() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Tex. Local Rule CV-26(d)"
+{
+  forum frcp
+}
+
+/// W.D. Tex. Local Rule CV-33(a): properly executed interrogatory answers
+/// are served not later than 21 days after the attorney serves the
+/// unexecuted answers; the court may extend the time.
+deadline executed-answers-period: 21.days after UnexecutedAnswersServed() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Tex. Local Rule CV-33(a)"
+{
+  forum frcp
+}
+
+/// W.D. Tex. Local Rule CV-54(a)(1): a party awarded costs files and serves
+/// a proposed bill of costs on Form AO 133 not later than 14 days after the
+/// entry of judgment.
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Tex. Local Rule CV-54(a)"
+{
+  forum frcp
+}
+
+/// W.D. Tex. Local Rule CV-54(a)(2): a party opposing the proposed bill of
+/// costs notifies the requesting party not later than 7 days after it is
+/// filed, and the parties confer.
+deadline bill-of-costs-opposition-period: 7.days after ProposedBillOfCostsFiled() counted_by frcp6 cite "W.D. Tex. Local Rule CV-54(a)"
+{
+  forum frcp
+}
+
+/// W.D. Tex. Local Rule CV-54(a)(3): if a dispute remains, the joint or
+/// requesting party's motion on the bill of costs is filed not later than
+/// 21 days after the filing of the proposed bill.
+deadline bill-of-costs-motion-period: 21.days after ProposedBillOfCostsFiled() counted_by frcp6 cite "W.D. Tex. Local Rule CV-54(a)"
+{
+  forum frcp
+}
+
+/// W.D. Tex. Local Rule CV-54(a)(5): a party dissatisfied with the clerk's
+/// action may move for review not later than 7 days after the clerk has
+/// taxed costs.
+deadline cost-review-motion-period: 7.days after CostsTaxed() counted_by frcp6 cite "W.D. Tex. Local Rule CV-54(a)"
+{
+  forum frcp
+}
+
+/// W.D. Tex. Local Rule CV-79(a): the party offering an exhibit or
+/// deposition removes it from the clerk's office within 60 days after the
+/// final disposition of the case, including appeal; one remaining longer
+/// may be destroyed or otherwise disposed of by the clerk.
+deadline exhibit-removal: 60.days after FinalDisposition() counted_by frcp6 cite "W.D. Tex. Local Rule CV-79(a)"
+{
+  forum frcp
+}
+
+/// W.D. Tex. Local Rule CV-88(a): unless specifically ordered otherwise,
+/// the parties agree on an ADR method, provider, compensation and
+/// completion date, and the ADR proceeding is completed not later than 60
+/// days before the date of the trial setting.
+deadline adr-completion-period: 60.days before TrialSetting() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Tex. Local Rule CV-88(a)"
+{
+  forum frcp
+}

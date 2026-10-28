@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcp-civil-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "txwd-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:a8d0b19f6f43b6368085c0bc5f1534a5e997cc03049a95061894d70251d7f45b"
+semantic = "sha256:8d2f0021923014d2f6aac01012438d2c45f2b3ece898ea2c4a8adbd6d953287d"
+texts = [
+    "txwd-cv sources/txwd/tx-wd-local-rules-civil-sectioned.txt sha256:67cca82c99afdd4244e8bd94d7806d0b2ca68041c857e8f0eb7ef7a97e66dcbb",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcp-civil-procedure 2024.12.0",
+]

@@ -1,0 +1,294 @@
+module tx-district-court-civil.civil
+
+import tx-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
+// A civil suit in a Texas district court, from the plaintiff's side. Every
+// period below is stated in a note, not counted: time is computed under
+// Tex. R. Civ. P. 4, which excludes the trigger day, includes the last day
+// and rolls a last day falling on a Saturday, Sunday or legal holiday to
+// the next day that is none of these; Saturdays, Sundays and legal
+// holidays are not counted in a period of five days or less, except for
+// the three days Rules 21 and 21a add when service is by mail; lit/core
+// has no counting rule for Texas's legal holidays. The court may enlarge a
+// period for cause on an application made before it expires, or permit a
+// late act for good cause, but not the periods for new trials except as
+// the rules state (Tex. R. Civ. P. 5). A paper mailed first-class on or
+// before the last day and received within ten days is deemed filed in
+// time (Tex. R. Civ. P. 5); an electronically filed document is timely if
+// filed before midnight in the court's time zone on the deadline (Tex. R.
+// Civ. P. 21). The earlier outline's leading decisions (Bethel v.
+// Quilling, Selander, Lownds, Winslett & Moser; Nixon v. Mr. Property
+// Management Co.; Valence Operating Co. v. Dorsett) are removed: no
+// reporter text is vendored.
+start petition-filed
+
+state petition-filed: "Petition filed" by applicant cite "Tex. R. Civ. P. 22"
+{
+  note "A civil suit in the district or county court is commenced by a petition filed in the office of the clerk (Tex. R. Civ. P. 22). The plaintiff alleges in the first numbered paragraph of the original petition whether discovery is intended to be conducted under Level 1, 2 or 3 (Tex. R. Civ. P. 190.1). A suit in which every claimant pleads that it seeks only monetary relief aggregating $325,000 or less is an expedited action under Rule 169, with discovery under Rule 190.2 (Tex. R. Civ. P. 169). On the filing of the petition the clerk, when requested, issues the citation; the requesting party is responsible for obtaining service of the citation and a copy of the petition (Tex. R. Civ. P. 99)."
+  edge-petition-filed-served "Citation served" -> service-made {
+    event ActionCommenced()
+    authority cite "Tex. R. Civ. P. 106"
+  }
+}
+
+state service-made: "Citation served" by applicant cite "Tex. R. Civ. P. 106"
+{
+  note "Unless the citation or a court order directs otherwise, the citation is served by delivering it and the petition to the defendant in person or by registered or certified mail, return receipt requested; on a sworn motion showing unsuccessful attempts, the court may authorize substituted service, including electronically by social media or email (Tex. R. Civ. P. 106). A sheriff, constable, person authorized by law or by written order who is at least eighteen, or a certified process server may serve; a party or interested person may not (Tex. R. Civ. P. 103). The return of service must be completed, signed and filed (Tex. R. Civ. P. 107). The vendored rules state no period within which the citation must be served; a case not prosecuted may be dismissed under Rule 165a."
+  edge-service-made-response "Answer day" -> response-due {
+    authority cite "Tex. R. Civ. P. 99"
+  }
+  edge-service-made-unserved "Not prosecuted; dismissal for want of prosecution" -> inactivity-dismissal {
+    authority cite "Tex. R. Civ. P. 165a"
+  }
+}
+
+decision response-due: "Answer, Rule 91a motion or special exception, or no answer" by office cite "Tex. R. Civ. P. 99"
+{
+  note "The citation directs the defendant to file a written answer on or before 10:00 a.m. on the Monday next after the expiration of twenty days after the date of service, and warns that a default judgment may be taken otherwise (Tex. R. Civ. P. 99(b), (c)). A general denial puts in issue matters not required to be denied under oath and extends to matters a later amended pleading sets up (Tex. R. Civ. P. 92); affirmative defenses must be pleaded (Tex. R. Civ. P. 94)."
+  edge-response-due-answer "Answer filed" -> answered {
+    authority cite "Tex. R. Civ. P. 92"
+  }
+  edge-response-due-motion "Rule 91a motion to dismiss or special exception" -> pleading-motion {
+    authority cite "Tex. R. Civ. P. 91a.1"
+  }
+  edge-response-due-default "No answer" -> default-request {
+    authority cite "Tex. R. Civ. P. 239"
+  }
+}
+
+state pleading-motion: "Rule 91a motion to dismiss or special exception" by office cite "Tex. R. Civ. P. 91a.3"
+{
+  note "Except in a Family Code case or one governed by Chapter 14 of the Civil Practice and Remedies Code, a party may move to dismiss a cause of action that has no basis in law (the allegations, taken as true with reasonable inferences, do not entitle the claimant to relief) or in fact (no reasonable person could believe the facts pleaded) (Tex. R. Civ. P. 91a.1). The motion must state that it is made under the rule, identify each cause of action and state the specific reasons (Tex. R. Civ. P. 91a.2). It must be filed within 60 days after the first pleading containing the challenged cause of action is served on the movant, filed at least 21 days before it is heard, and granted or denied within 45 days after it is filed (Tex. R. Civ. P. 91a.3); any response is due no later than 7 days before the hearing (Tex. R. Civ. P. 91a.4). The court may not rule if, at least 3 days before the hearing, the respondent nonsuits the cause of action or the movant withdraws the motion; an amendment at least 3 days before the hearing lets the movant withdraw or amend, and an amended motion restarts the periods (Tex. R. Civ. P. 91a.5). Each party is entitled to at least 14 days' notice of the hearing, and the court decides on the pleading alone (Tex. R. Civ. P. 91a.6). A special exception points out the defect in the pleading with particularity (Tex. R. Civ. P. 91)."
+  edge-pleading-motion-ruling "Court rules" -> pleading-ruling {
+    authority cite "Tex. R. Civ. P. 91a.3"
+  }
+}
+
+decision pleading-ruling: "Ruling on the motion or exception" by court cite "Tex. R. Civ. P. 91a.3"
+{
+  note "Except in an action by or against a governmental entity or a public official acting officially, the court may award the prevailing party on a Rule 91a motion its costs and reasonable and necessary attorney fees on the challenged cause of action, on evidence (Tex. R. Civ. P. 91a.7). The vendored rules state no standard for leave to amend after a sustained special exception; amendment otherwise follows Rule 63."
+  edge-pleading-ruling-dismissed "Cause of action dismissed" -> dismissed-merits {
+    authority cite "Tex. R. Civ. P. 91a.1"
+  }
+  edge-pleading-ruling-amend "Pleading amended" -> amended {
+    authority cite "Tex. R. Civ. P. 63"
+  }
+  edge-pleading-ruling-denied "Denied" -> answered {
+    authority cite "Tex. R. Civ. P. 91a.3"
+  }
+}
+
+state amended: "Amended pleading filed" by applicant cite "Tex. R. Civ. P. 63"
+{
+  note "Parties may amend their pleadings at such time as not to operate as a surprise to the opposite party; a pleading offered within seven days of the date of trial or thereafter, or after the time a Rule 166 pretrial order sets, needs leave, which is granted unless it would operate as a surprise (Tex. R. Civ. P. 63). A defendant's general denial is presumed to extend to the matters the amended pleading sets up (Tex. R. Civ. P. 92)."
+  edge-amended-response "Amended pleading served" -> response-due {
+    authority cite "Tex. R. Civ. P. 63"
+  }
+}
+
+state default-request: "Default judgment sought" by applicant cite "Tex. R. Civ. P. 239"
+{
+  note "At any time after a defendant is required to answer, the plaintiff may take judgment by default against a defendant who has not filed an answer, provided the return of service has been on file for the time Rule 107 requires (Tex. R. Civ. P. 239): ten days, exclusive of the day of filing and the day of judgment (Tex. R. Civ. P. 107(h)). At or immediately before rendition, the party taking the default certifies the defaulting party's last known email and mailing address, and the clerk sends notice of the signed judgment (Tex. R. Civ. P. 239a)."
+  edge-default-request-judgment "Default judgment signed" -> default-entered {
+    authority cite "Tex. R. Civ. P. 239"
+  }
+  edge-default-request-answered "Answer filed before default" -> answered {
+    authority cite "Tex. R. Civ. P. 239"
+  }
+}
+
+decision default-entered: "Default judgment signed; motion for new trial?" by office cite "Tex. R. Civ. P. 329b"
+{
+  note "A defaulted defendant may move for a new trial prior to or within thirty days after the judgment is signed (Tex. R. Civ. P. 329b(a)); the periods run from the date the judgment is signed, or, for a party who neither received the clerk's notice nor acquired actual knowledge within twenty days, from the earlier of receiving it or acquiring knowledge, but never more than ninety days after signing (Tex. R. Civ. P. 306a). The vendored rules state no standard for setting a default judgment aside."
+  edge-default-entered-final "No motion: default judgment stands" -> default-judgment {
+    event JudgmentEntered()
+    authority cite "Tex. R. Civ. P. 329b"
+  }
+  edge-default-entered-motion "Motion for new trial filed" -> set-aside-ruling {
+    event JudgmentEntered()
+    authority cite "Tex. R. Civ. P. 329b"
+  }
+}
+
+decision set-aside-ruling: "New trial after default?" by court cite "Tex. R. Civ. P. 329b"
+{
+  note "A motion for new trial not determined by written order signed within seventy-five days after the judgment was signed is overruled by operation of law (Tex. R. Civ. P. 329b(c)); the court has plenary power to grant a new trial until thirty days after all timely motions are overruled (Tex. R. Civ. P. 329b(e))."
+  edge-set-aside-granted "New trial granted" -> answered {
+    authority cite "Tex. R. Civ. P. 329b"
+  }
+  edge-set-aside-refused "Overruled" -> default-judgment {
+    authority cite "Tex. R. Civ. P. 329b"
+  }
+}
+
+state answered: "Answer on file" by applicant cite "Tex. R. Civ. P. 92"
+{
+  note "A party makes the initial disclosures of Rule 194.2(b) within 30 days after the filing of the first answer or general appearance unless agreement or order sets a different time; a party first served or joined later makes them within 30 days after being served or joined (Tex. R. Civ. P. 194.2(a)). Some proceedings are exempt (Tex. R. Civ. P. 194.2(c))."
+  edge-answered-discovery "Discovery period" -> discovery {
+    authority cite "Tex. R. Civ. P. 194.2"
+  }
+}
+
+state discovery: "Discovery under the discovery control plan" by applicant cite "Tex. R. Civ. P. 190.1"
+{
+  note "Every case is governed by a discovery control plan (Tex. R. Civ. P. 190.1). Under Level 1 (expedited actions under Rule 169 and certain divorces), the discovery period in a suit not under the Family Code begins when the first initial disclosures are due and continues for 180 days; each party has 20 hours of oral depositions and 15 interrogatories, 15 requests for production and 15 requests for admissions (Tex. R. Civ. P. 190.2(b)). Under Level 2, the default, the period begins when the first initial disclosures are due and continues until the earlier of 30 days before the date set for trial or nine months after the first initial disclosures are due; each side has 50 hours of oral depositions and each party 25 interrogatories (Tex. R. Civ. P. 190.3(b)). A Level 3 plan is set by order (Tex. R. Civ. P. 190.4)."
+  edge-discovery-dispute "Motion to compel or for sanctions" -> discovery-ruling {
+    authority cite "Tex. R. Civ. P. 215.1"
+  }
+  edge-discovery-sj "Summary judgment motion" -> sj-motion {
+    authority cite "Tex. R. Civ. P. 166a"
+  }
+  edge-discovery-trial "Trial setting" -> trial-setting {
+    authority cite "Tex. R. Civ. P. 216"
+  }
+  edge-discovery-settled "Settled" -> settled {
+    authority cite "Tex. R. Civ. P. 11"
+  }
+  edge-discovery-nonsuit "Nonsuit" -> voluntary-dismissal {
+    authority cite "Tex. R. Civ. P. 162"
+  }
+  edge-discovery-inactive "Not prosecuted" -> inactivity-dismissal {
+    authority cite "Tex. R. Civ. P. 165a"
+  }
+}
+
+decision discovery-ruling: "Discovery ruling" by court cite "Tex. R. Civ. P. 215.2"
+{
+  note "On reasonable notice a party may move for an order compelling discovery or for sanctions; a granted motion carries the reasonable expenses of obtaining the order unless the opposition was substantially justified (Tex. R. Civ. P. 215.1). For failure to comply with proper discovery requests or a discovery order, the court may, after notice and hearing, make just orders, including striking pleadings, dismissing the action with or without prejudice, or rendering a default judgment (Tex. R. Civ. P. 215.2(b))."
+  edge-discovery-ruling-resolved "Dispute resolved" -> discovery {
+    authority cite "Tex. R. Civ. P. 215.1"
+  }
+  edge-discovery-ruling-sanction "Action dismissed as a sanction" -> sanction-dismissal {
+    authority cite "Tex. R. Civ. P. 215.2"
+  }
+}
+
+state sj-motion: "Summary judgment motion" by office cite "Tex. R. Civ. P. 166a"
+{
+  note "A traditional motion seeks to establish that no genuine issue of material fact exists and the movant is entitled to judgment as a matter of law; a no-evidence motion, filed after adequate time for discovery, that there is no evidence of an essential element on which the nonmovant has the burden; a motion may combine both and must be titled accordingly (Tex. R. Civ. P. 166a(a), (b)). Except on leave or agreement, the nonmovant files a response within 21 days after the motion is filed, and the movant a reply within 7 days after the response is filed (Tex. R. Civ. P. 166a(d), (e)). No hearing or submission may be set within 35 days after the motion's filing, and the court must set it within 60 days, or 90 days if the docket requires, on good cause, or if the movant agrees (Tex. R. Civ. P. 166a(g)); no oral testimony is received (Tex. R. Civ. P. 166a(g))."
+  edge-sj-motion-ruling "Heard or submitted" -> sj-ruling {
+    authority cite "Tex. R. Civ. P. 166a"
+  }
+}
+
+decision sj-ruling: "Summary judgment ruling" by court cite "Tex. R. Civ. P. 166a"
+{
+  note "The court must grant a traditional motion if, except as to the amount of damages, there is no genuine issue of material fact and the movant is entitled to judgment as a matter of law, and a no-evidence motion unless the respondent produces evidence raising a genuine issue of material fact; it may grant no judgment on grounds the motion does not state (Tex. R. Civ. P. 166a(h)). If it does not grant the relief requested, it may specify the facts established as a matter of law (Tex. R. Civ. P. 166a(h)). The court signs a written ruling within 90 days after the hearing or submission date (Tex. R. Civ. P. 166a(i))."
+  edge-sj-ruling-defense "Granted for the defendant" -> sj-defense {
+    authority cite "Tex. R. Civ. P. 166a"
+  }
+  edge-sj-ruling-applicant "Granted for the plaintiff" -> post-trial {
+    event JudgmentEntered()
+    authority cite "Tex. R. Civ. P. 166a"
+  }
+  edge-sj-ruling-denied "Denied" -> trial-setting {
+    authority cite "Tex. R. Civ. P. 166a"
+  }
+}
+
+state trial-setting: "Trial setting and jury request" by office cite "Tex. R. Civ. P. 216"
+{
+  note "No jury trial is had unless a written request is filed a reasonable time before the date set for trial on the non-jury docket, but not less than thirty days in advance, with the jury fee (ten dollars in the district court) deposited within the same time (Tex. R. Civ. P. 216). In an expedited action, on any party's request the court sets trial within 90 days after the discovery period ends, may continue it twice for no more than 60 days in total, and each side has no more than eight hours for trial (Tex. R. Civ. P. 169(d))."
+  edge-trial-setting-tried "Tried" -> trial-result {
+    authority cite "Tex. R. Civ. P. 301"
+  }
+  edge-trial-setting-settled "Settled" -> settled {
+    authority cite "Tex. R. Civ. P. 11"
+  }
+  edge-trial-setting-nonsuit "Nonsuit before the plaintiff rests" -> voluntary-dismissal {
+    authority cite "Tex. R. Civ. P. 162"
+  }
+}
+
+decision trial-result: "Judgment after trial" by court cite "Tex. R. Civ. P. 301"
+{
+  note "The judgment conforms to the pleadings, the case proved and the verdict, if any; on motion and reasonable notice the court may render judgment notwithstanding the verdict if a directed verdict would have been proper, or disregard a jury finding that has no support in the evidence; only one final judgment is rendered (Tex. R. Civ. P. 301). In a case tried without a jury a party may request findings of fact and conclusions of law within twenty days after the judgment is signed; the court sends them within twenty days after a timely request, and if it does not, a notice of past due findings filed within thirty days after the request extends its time to forty days from the request (Tex. R. Civ. P. 296, 297)."
+  edge-trial-result-applicant "Judgment for the plaintiff" -> post-trial {
+    event JudgmentEntered()
+    authority cite "Tex. R. Civ. P. 301"
+  }
+  edge-trial-result-defense "Judgment for the defendant" -> post-trial-defense {
+    event JudgmentEntered()
+    authority cite "Tex. R. Civ. P. 301"
+  }
+}
+
+decision post-trial: "Judgment for the plaintiff: post-judgment motions and appeal" by court cite "Tex. R. Civ. P. 329b"
+{
+  note "The date the judgment is signed begins the periods for the court's plenary power and for motions for new trial, to modify, to reinstate and to vacate, and requests for findings (Tex. R. Civ. P. 306a(1)). A motion for new trial, if filed, is filed prior to or within thirty days after the judgment is signed (Tex. R. Civ. P. 329b(a)); a motion not determined by signed order within seventy-five days after the judgment was signed is overruled by operation of law (Tex. R. Civ. P. 329b(c)). Without a timely motion the court has plenary power for thirty days after the judgment is signed; with one, until thirty days after all timely motions are overruled (Tex. R. Civ. P. 329b(d), (e)). The notice of appeal is filed within 30 days after the judgment is signed, or within 90 days if any party timely files a motion for new trial, to modify, to reinstate under Rule 165a, or a qualifying request for findings (Tex. R. App. P. 26.1)."
+  edge-post-trial-new-trial "New trial granted" -> trial-setting {
+    authority cite "Tex. R. Civ. P. 329b"
+  }
+  edge-post-trial-final "Judgment stands" -> judgment-for-applicant {
+    authority cite "Tex. R. Civ. P. 329b"
+  }
+  edge-post-trial-appeal "Defendant appeals" -> appealed {
+    event NoticeOfAppealFiled()
+    authority cite "Tex. R. App. P. 26.1"
+  }
+}
+
+decision post-trial-defense: "Judgment for the defendant: new trial or appeal?" by applicant cite "Tex. R. Civ. P. 329b"
+{
+  note "The plaintiff may move for a new trial within thirty days after the judgment is signed (Tex. R. Civ. P. 329b(a)) and file a notice of appeal within 30 days after the judgment is signed, or within 90 days after it if any party timely files a motion for new trial, to modify, to reinstate or a qualifying request for findings (Tex. R. App. P. 26.1). The appellate court may extend the time if, within 15 days after the deadline, the party files the notice in the trial court and a motion complying with Rule 10.5(b) in the appellate court (Tex. R. App. P. 26.3)."
+  edge-post-trial-defense-new-trial "New trial granted" -> trial-setting {
+    authority cite "Tex. R. Civ. P. 329b"
+  }
+  edge-post-trial-defense-final "Judgment stands" -> verdict-for-defendant {
+    authority cite "Tex. R. Civ. P. 329b"
+  }
+  edge-post-trial-defense-appeal "Plaintiff appeals" -> appealed {
+    event NoticeOfAppealFiled()
+    authority cite "Tex. R. App. P. 26.1"
+  }
+}
+
+terminal inactivity-dismissal: "Dismissed for want of prosecution" outcome [loss, dismissal] cite "Tex. R. Civ. P. 165a"
+{
+  note "A case may be dismissed for want of prosecution on a party's failure to appear for a hearing or trial of which it had notice, after notice of the dismissal hearing, or for failure to meet the Supreme Court's time standards (Tex. R. Civ. P. 165a(1), (2)). A verified motion to reinstate is filed within 30 days after the dismissal order is signed; the court reinstates on finding the failure was not intentional or the result of conscious indifference; a motion not decided by signed order within seventy-five days after the judgment is signed is overruled by operation of law (Tex. R. Civ. P. 165a(3))."
+}
+
+terminal dismissed-merits: "Dismissed under Rule 91a" outcome [loss] cite "Tex. R. Civ. P. 91a.1"
+{
+  note "The dismissal of the cause of action is reviewable on appeal from a final judgment (lit/tx-courts-of-appeals); costs and fees may be awarded under Rule 91a.7."
+}
+
+terminal default-judgment: "Default judgment" outcome [win] cite "Tex. R. Civ. P. 239"
+{
+  note "The clerk sends notice of the signed default judgment (Tex. R. Civ. P. 239a). A restricted appeal lies within six months after the judgment is signed (Tex. R. App. P. 26.1(c))."
+}
+
+terminal sanction-dismissal: "Dismissed as a discovery sanction" outcome [loss] cite "Tex. R. Civ. P. 215.2"
+{
+  note "An order under Rule 215.2(b) is reviewable on appeal from the final judgment."
+}
+
+terminal voluntary-dismissal: "Nonsuit" outcome [neutral] cite "Tex. R. Civ. P. 162"
+{
+  note "At any time before introducing all of its evidence other than rebuttal evidence, the plaintiff may dismiss or take a nonsuit; it does not prejudice an adverse party's pending claim for affirmative relief or excuse costs, and leaves pending sanctions and fee motions to the court (Tex. R. Civ. P. 162)."
+}
+
+terminal settled: "Settled" outcome [neutral] cite "Tex. R. Civ. P. 11"
+{
+  note "An agreement between attorneys or parties touching a pending suit is enforced only if it is in writing, signed and filed, or made in open court and entered of record (Tex. R. Civ. P. 11)."
+}
+
+terminal sj-defense: "Summary judgment for the defendant" outcome [loss] cite "Tex. R. Civ. P. 166a"
+{
+  note "The notice of appeal runs from the signing of the judgment (Tex. R. App. P. 26.1); see lit/tx-courts-of-appeals."
+}
+
+terminal judgment-for-applicant: "Judgment for the plaintiff" outcome [win] cite "Tex. R. Civ. P. 301"
+{
+  note "A judgment awarding monetary damages states the exempt-property notice Rule 306a(3) prescribes (Tex. R. Civ. P. 306a)."
+}
+
+terminal verdict-for-defendant: "Judgment for the defendant" outcome [loss] cite "Tex. R. Civ. P. 301"
+{
+  note "Once plenary power expires, the judgment cannot be set aside except by bill of review for sufficient cause, filed within the time allowed by law (Tex. R. Civ. P. 329b(f))."
+}
+
+terminal appealed: "Appeal to a court of appeals" outcome [appeal] cite "Tex. R. App. P. 25.1"
+{
+  note "An appeal is perfected when a written notice of appeal is filed with the trial court clerk (Tex. R. App. P. 25.1(a)). The appeal proceeds in lit/tx-courts-of-appeals."
+}

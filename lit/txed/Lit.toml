@@ -1,0 +1,67 @@
+# The U.S. District Court for the Eastern District of Texas's local civil
+# rules (Local Rules CV-1 to CV-83) as a local-rule layer over lit/frcp
+# (28 U.S.C. § 2071; FRCP 83(a)): it declares only the periods and limits
+# the local civil rules themselves state and re-encodes no FRCP deadline.
+# Each period is counted under FRCP 6, which governs a period stated in a
+# local rule (FRCP 6(a)); Texas's own holidays (FRCP 6(a)(6)(C)) are not
+# vendored and not modeled. The rules are the consolidated edition the
+# court serves as current ("Consolidated Local Rules as of February 9,
+# 2026", page header "Local Rules Effective December 1, 2025";
+# sources/txed), which incorporates General Orders 25-07 and 26-02, so
+# in_force is that date; earlier editions are not vendored, so a query
+# before it is a hole in the corpus. General Order 26-08 (September 21,
+# 2026), amending CV-3(d), is a dated layer over the base text with its own
+# source binding (txed-go-26-08), never an edit of it. The criminal rules
+# are lit/txed-criminal's; the attorney, admiralty and patent rules are not
+# encoded. An appeal goes to the Fifth Circuit under lit/frap.
+[package]
+name = "txed-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "txed-local-rules"
+forum = "txed"
+family = "district-civil"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Eastern District of Texas: Local Civil Rules"
+description = "The U.S. District Court for the Eastern District of Texas's local civil rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): habeas and civil-rights page limits (CV-3(d) as amended by General Order 26-08), the stay-of-execution motion, redacted versions of sealed filings, transcript redaction, motion page limits and the response, reply and sur-reply periods, the bill of costs, objections to magistrate judge rulings, and the removal of exhibits."
+in_force = "2026-02-09"
+known_at = "2026-10-28"
+unknown_before = "2026-02-09"
+jurisdiction = "U.S. District Court for the Eastern District of Texas (civil)"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "txed-cv"
+issuer = "U.S. District Court for the Eastern District of Texas"
+date = "2026-02-09"
+designation = "Local Rules, Section I: Civil Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.txed-cv]
+title = "Local Rules of the United States District Court for the Eastern District of Texas, Section I: Civil Rules (consolidated as of February 9, 2026)"
+url = "https://www.txed.uscourts.gov/?q=node/14056/attachment/newest"
+path = "sources/txed/txed-local-rules-2026-02-09-civil-sectioned.txt"
+path_sha256 = "ef11cd1e7e6bb767b5472ee63a39de1b2d18c87c21957ca4e7ce1bccfdf24aa0"
+sha256 = "ec191586d6320a5ea48672cdc47378327a47e3150692a2a6847fe71d3ec3263e"
+as_of = "2026-02-09"
+cite_prefixes = ["E.D. Tex. Local Rule CV-"]
+section_heading = "CV-{n}"
+
+[sources.txed-go-26-08]
+title = "E.D. Tex. General Order 26-08, Amending Local Rule CV-3 Regarding Page Limitations in Civil Rights Lawsuits (September 21, 2026)"
+url = "https://www.txed.uscourts.gov/sites/default/files/goFiles/GO%2026-08%20Amending%20LR%20CV-3%28d%29.pdf"
+path = "sources/txed/txed-go-26-08-sectioned.txt"
+path_sha256 = "2a602e5870d3222abc47ea45952802c6ad636263d73ad345e6bd4588da41ae10"
+sha256 = "4d4ffeb395e5e1c393cd6c3381e51c7f97004e1248b20e23dcde9ccb14ac7500"
+as_of = "2026-09-21"
+cite_prefixes = ["E.D. Tex. Gen. Order 26-08, Local Rule CV-"]
+section_heading = "CV-{n}"

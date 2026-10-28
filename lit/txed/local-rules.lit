@@ -1,0 +1,301 @@
+module txed-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcp6.{ frcp6 }
+
+// The Eastern District of Texas's own civil periods and limits, counted
+// under FRCP 6. Service is deemed completed at the "entered on" time of
+// the Notice of Electronic Filing, but a document filed electronically, or
+// served by facsimile or electronic means, after 5:00 p.m. Central Time is
+// deemed served on the following day for calculating responsive deadlines
+// (Local Rule CV-5(a)(3)(C), (d)); filing must be completed before
+// midnight Central Time to be timely that day (CV-5(a)(3)(D)). When a
+// document is corrected or refiled after a deficiency notice from the
+// clerk, the response time runs from service of the corrected document
+// (CV-6). The response to a document filed with a motion for leave runs
+// from the order on the motion (CV-7(k)). No trigger carries a service
+// method: FRCP 6(d)'s three added days follow the manner of service,
+// which is not modeled here.
+//
+// Rules that state no period or limit this layer can count stay in notes:
+// an unopposed extension of the time to answer or to file a Rule 12(b)
+// motion that does not extend the defendant's deadline overall by more
+// than forty-five days is sought by application to the clerk, not motion
+// (CV-12), a cap and not a deadline; documents over ten pages need tables
+// of contents and authorities (CV-3(b), (d)), and a paper copy goes to
+// chambers (CV-5(a)(9)); juror costs may be taxed for a settlement not
+// reported at least one day before trial (CV-38(b)); the total page limits
+// for summary judgment motions also govern Rule 50 motions (CV-50); a
+// supersedeas bond is the judgment plus 20% plus $250 unless the judge
+// orders otherwise (CV-62(a)), an amount, not declared; motions pending in
+// state court are moot on removal unless re-urged (CV-81(d)). The
+// objection to a magistrate judge's order or recommendation is FRCP 72's
+// period and stays in lit/frcp; this layer adds only the response to an
+// objection and the page limits (CV-72(b), (c)).
+//
+// The earlier E.D. Tex. outline's FRCP flow belongs to lit/frcp and
+// lit/frap; its Supreme Court decisions (Twombly, Iqbal, Frow v. De La
+// Vega, Celotex, Anderson v. Liberty Lobby, Matsushita) are FRCP authority,
+// and no reporter text is vendored, so they are removed here.
+
+/// A 28 U.S.C. § 2241 or § 2254 habeas petition or § 2255 motion, or the
+/// initial responsive pleading to one, in a non-death-penalty case: at
+/// most thirty pages, excluding attachments, absent leave of court (E.D.
+/// Tex. Local Rule CV-3(b)).
+limit habeas-petition {
+  pages <= 30 cite "E.D. Tex. Local Rule CV-3(b)"
+} cite "E.D. Tex. Local Rule CV-3(b)"
+
+/// The same in a death-penalty case: at most one hundred pages (E.D. Tex.
+/// Local Rule CV-3(b)).
+limit capital-habeas-petition {
+  pages <= 100 cite "E.D. Tex. Local Rule CV-3(b)"
+} cite "E.D. Tex. Local Rule CV-3(b)"
+
+/// A reply or sur-reply, or any other motion or response, in a habeas or
+/// § 2255 proceeding in a non-death-penalty case: at most fifteen pages,
+/// excluding attachments (E.D. Tex. Local Rule CV-3(b)).
+limit habeas-other-paper {
+  pages <= 15 cite "E.D. Tex. Local Rule CV-3(b)"
+} cite "E.D. Tex. Local Rule CV-3(b)"
+
+/// The same in a death-penalty case: at most thirty pages (E.D. Tex. Local
+/// Rule CV-3(b)).
+limit capital-habeas-other-paper {
+  pages <= 30 cite "E.D. Tex. Local Rule CV-3(b)"
+} cite "E.D. Tex. Local Rule CV-3(b)"
+
+/// A complaint, or the initial responsive pleading to it, in a civil
+/// rights proceeding: at most twenty pages, excluding attachments, absent
+/// leave of court (E.D. Tex. Local Rule CV-3(d), consolidated text).
+limit civil-rights-pleading effective [2026-02-09, 2026-09-21) known_at 2026-10-28 {
+  pages <= 20 cite "E.D. Tex. Local Rule CV-3(d)"
+} cite "E.D. Tex. Local Rule CV-3(d)"
+
+/// General Order 26-08, signed September 21, 2026, a dated layer over the
+/// consolidated text: it strikes "twenty" and inserts "thirty" in CV-3(d),
+/// adopted for immediate implementation subject to public notice and
+/// comment (28 U.S.C. § 2071(b)) and Fifth Circuit Judicial Council review
+/// (28 U.S.C. § 2071(c)(1)). The vendored text extract prints both words
+/// without the order's underline and strikeout; the order's footnote
+/// states the marking, and the original order is the authority for which
+/// word was struck.
+limit civil-rights-pleading effective [2026-09-21, ..) known_at 2026-10-28 supersedes civil-rights-pleading@2026-02-09 {
+  pages <= 30 cite "E.D. Tex. Gen. Order 26-08, Local Rule CV-3(d)"
+} cite "E.D. Tex. Gen. Order 26-08, Local Rule CV-3(d)"
+
+/// A case dispositive motion, or a response to one: at most thirty pages,
+/// excluding attachments, unless leave of court is first obtained (E.D.
+/// Tex. Local Rule CV-7(a)(1)).
+limit dispositive-motion {
+  pages <= 30 cite "E.D. Tex. Local Rule CV-7(a)"
+} cite "E.D. Tex. Local Rule CV-7(a)"
+
+/// A reply or sur-reply on an opposed case dispositive motion: at most ten
+/// pages, excluding attachments (E.D. Tex. Local Rule CV-7(a)(1)).
+limit dispositive-reply {
+  pages <= 10 cite "E.D. Tex. Local Rule CV-7(a)"
+} cite "E.D. Tex. Local Rule CV-7(a)"
+
+/// A non-dispositive motion (including a motion to transfer venue, for
+/// partial summary judgment, for a new trial under FRCP 59, or in limine),
+/// or a response to one: at most fifteen pages, excluding attachments,
+/// unless leave of court is first obtained (E.D. Tex. Local Rule
+/// CV-7(a)(2), (m)).
+limit nondispositive-motion {
+  pages <= 15 cite "E.D. Tex. Local Rule CV-7(a)"
+} cite "E.D. Tex. Local Rule CV-7(a)"
+
+/// A reply or sur-reply on an opposed non-dispositive motion: at most five
+/// pages, excluding attachments (E.D. Tex. Local Rule CV-7(a)(2)).
+limit nondispositive-reply {
+  pages <= 5 cite "E.D. Tex. Local Rule CV-7(a)"
+} cite "E.D. Tex. Local Rule CV-7(a)"
+
+/// A party's summary judgment motions, or a nonmovant's responses to them,
+/// when a party files more than one: at most sixty pages collectively,
+/// excluding attachments (E.D. Tex. Local Rule CV-7(a)(3)(A), (B)); the
+/// same total governs motions for judgment as a matter of law (CV-50).
+limit summary-judgment-motions-total {
+  pages <= 60 cite "E.D. Tex. Local Rule CV-7(a)"
+} cite "E.D. Tex. Local Rule CV-7(a)"
+
+/// Reply, or the nonmovant's sur-reply, briefing on a party's summary
+/// judgment motions: at most twenty pages collectively, excluding
+/// attachments (E.D. Tex. Local Rule CV-7(a)(3)(C), (D)).
+limit summary-judgment-replies-total {
+  pages <= 20 cite "E.D. Tex. Local Rule CV-7(a)"
+} cite "E.D. Tex. Local Rule CV-7(a)"
+
+/// An objection to a magistrate judge's order on a non-dispositive matter,
+/// or a response to one: at most five pages (E.D. Tex. Local Rule
+/// CV-72(b)).
+limit magistrate-order-objection {
+  pages <= 5 cite "E.D. Tex. Local Rule CV-72(b)"
+} cite "E.D. Tex. Local Rule CV-72(b)"
+
+/// An objection to a magistrate judge's report and recommendation, or a
+/// response to one: at most eight pages (E.D. Tex. Local Rule CV-72(c)).
+limit recommendation-objection {
+  pages <= 8 cite "E.D. Tex. Local Rule CV-72(c)"
+} cite "E.D. Tex. Local Rule CV-72(c)"
+
+/// The petitioner's scheduled execution date in a habeas proceeding
+/// challenging a sentence of death (E.D. Tex. Local Rule CV-3(c)).
+event ExecutionScheduled()
+/// A document is filed under seal (E.D. Tex. Local Rule CV-5(a)(7)(E)).
+event SealedDocumentFiled()
+/// A transcript is filed in CM/ECF (E.D. Tex. Local Rule CV-5.2(b)(3),
+/// (5)).
+event TranscriptFiled()
+/// The transcript is delivered to the clerk (E.D. Tex. Local Rule
+/// CV-5.2(b)(4)).
+event TranscriptDelivered()
+/// A motion other than a summary judgment motion is served (E.D. Tex.
+/// Local Rule CV-7(e)).
+event MotionServed()
+/// A motion for summary judgment is served (E.D. Tex. Local Rule CV-7(e)).
+event SummaryJudgmentMotionServed() paper dispositive-motion
+/// The response to an opposed motion is served (E.D. Tex. Local Rule
+/// CV-7(f)).
+event ResponseServed()
+/// A reply brief is served (E.D. Tex. Local Rule CV-7(f)).
+event ReplyServed()
+/// The clerk enters on the docket a final judgment, or a judgment the
+/// presiding judge directs be entered as final under FRCP 54(b), awarding
+/// costs (E.D. Tex. Local Rule CV-54(a)).
+event CostsJudgmentDocketed()
+/// A party is served with another party's objection to a magistrate
+/// judge's order on a non-dispositive matter (E.D. Tex. Local Rule
+/// CV-72(b)).
+event MagistrateObjectionServed() paper magistrate-order-objection
+/// The case is finally disposed of (E.D. Tex. Local Rule CV-79(a)(4)).
+event FinalDisposition()
+
+/// E.D. Tex. Local Rule CV-3(c): a motion for stay of execution on behalf
+/// of a petitioner challenging a sentence of death must be filed at least
+/// seven days before the scheduled execution date, or recite good cause
+/// for a late filing.
+deadline stay-of-execution-motion: 7.days before ExecutionScheduled() counted_by frcp6 cite "E.D. Tex. Local Rule CV-3(c)"
+{
+  forum frcp
+}
+
+/// E.D. Tex. Local Rule CV-5(a)(7)(E): except as Local Rule CR-49
+/// provides, a party filing a document under seal must publicly file a
+/// version with the confidential information redacted within seven days,
+/// unless the entire document is confidential information.
+deadline redacted-public-version: 7.days after SealedDocumentFiled() counted_by frcp6 cite "E.D. Tex. Local Rule CV-5(a)"
+{
+  forum frcp
+}
+
+/// E.D. Tex. Local Rule CV-5.2(b)(3): within seven days of the filing of
+/// a transcript in CM/ECF, each party wishing to redact it files a Notice
+/// of Intent to Request Redaction; if none is filed, the court assumes no
+/// redaction of personal data identifiers is necessary. The transcript is
+/// available only at the clerk's office for ninety days after filing
+/// (CV-5.2(b)(1)).
+deadline redaction-notice: 7.days after TranscriptFiled() counted_by frcp6 cite "E.D. Tex. Local Rule CV-5.2(b)"
+{
+  forum frcp
+}
+
+/// E.D. Tex. Local Rule CV-5.2(b)(4): a party requesting redaction submits
+/// to the court reporter or transcriber and files a statement of where the
+/// personal data identifiers appear within twenty-one days of the
+/// transcript's delivery to the clerk, or longer if the court orders.
+deadline redaction-statement: 21.days after TranscriptDelivered() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Tex. Local Rule CV-5.2(b)"
+{
+  forum frcp
+}
+
+/// E.D. Tex. Local Rule CV-5.2(b)(5): the court reporter or transcriber
+/// performs the requested redactions and files a redacted transcript
+/// within thirty-one days of the filing of the transcript, or longer if
+/// the court orders.
+deadline redacted-transcript: 31.days after TranscriptFiled() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Tex. Local Rule CV-5.2(b)"
+{
+  forum frcp
+}
+
+/// E.D. Tex. Local Rule CV-7(e): a party opposing a motion has fourteen
+/// days from the date the motion was served to file a response and any
+/// supporting documents, after which the court considers the motion
+/// submitted; any party may move to lengthen or shorten the period.
+deadline response-period: 14.days after MotionServed() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Tex. Local Rule CV-7(e)"
+{
+  forum frcp
+}
+
+/// E.D. Tex. Local Rule CV-7(e): twenty-one days for a summary judgment
+/// motion.
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Tex. Local Rule CV-7(e)"
+{
+  forum frcp
+}
+
+/// E.D. Tex. Local Rule CV-7(f): unless the presiding judge directs
+/// otherwise, the movant on an opposed motion may serve and file a reply
+/// brief within seven days from the date the response is served; the
+/// court need not wait for it before ruling.
+deadline reply-period: 7.days after ResponseServed() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Tex. Local Rule CV-7(f)"
+{
+  forum frcp
+}
+
+/// E.D. Tex. Local Rule CV-7(f): a sur-reply responding to issues raised
+/// in the reply may be served and filed within seven days from the date
+/// the reply is served; absent leave, no further submissions are allowed.
+deadline sur-reply-period: 7.days after ReplyServed() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Tex. Local Rule CV-7(f)"
+{
+  forum frcp
+}
+
+/// E.D. Tex. Local Rule CV-54(a): unless a statute or the presiding judge
+/// provides otherwise, the bill of costs is filed with the clerk and
+/// served no later than fourteen days after the clerk enters the judgment
+/// on the docket; the proposed bill first goes to opposing counsel and the
+/// parties meet and confer (CV-54(b)).
+deadline bill-of-costs-period: 14.days after CostsJudgmentDocketed() counted_by frcp6 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Tex. Local Rule CV-54(a)"
+{
+  forum frcp
+}
+
+/// E.D. Tex. Local Rule CV-72(b): a party may respond to another party's
+/// objection to a magistrate judge's non-dispositive order within fourteen
+/// days after being served with a copy; the court need not await the
+/// response before ruling.
+deadline magistrate-objection-response: 14.days after MagistrateObjectionServed() counted_by frcp6 cite "E.D. Tex. Local Rule CV-72(b)"
+{
+  forum frcp
+}
+
+/// E.D. Tex. Local Rule CV-79(a)(4): the party offering an exhibit removes
+/// it within 30 days after final disposition of the case; an exhibit
+/// remaining longer may be disposed of by the clerk.
+deadline exhibit-removal: 30.days after FinalDisposition() counted_by frcp6 cite "E.D. Tex. Local Rule CV-79(a)"
+{
+  forum frcp
+}

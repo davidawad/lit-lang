@@ -1,0 +1,28 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcp-civil-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "txed-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:a1d1362e187b951d7f61213c43a20feb410554cabae6ae65daade37872f83eff"
+semantic = "sha256:898394e9fcf309708ee86afdc8182f74585c3cbb8fc6d4a801ed9d1689a028f7"
+texts = [
+    "txed-cv sources/txed/txed-local-rules-2026-02-09-civil-sectioned.txt sha256:ef11cd1e7e6bb767b5472ee63a39de1b2d18c87c21957ca4e7ce1bccfdf24aa0",
+    "txed-go-26-08 sources/txed/txed-go-26-08-sectioned.txt sha256:2a602e5870d3222abc47ea45952802c6ad636263d73ad345e6bd4588da41ae10",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcp-civil-procedure 2024.12.0",
+]

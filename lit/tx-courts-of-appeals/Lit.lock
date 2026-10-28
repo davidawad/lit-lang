@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "tx-courts-of-appeals-civil"
+version = "0.1.0"
+language = 1
+source = "sha256:b7d8bb6195f993af737c8ac37058b3ce8e6a1d7554dc728ddb3853b1d7dc877e"
+semantic = "sha256:90ec03e78949c331897e85363c89a4d72a266e4b597e04c65d39fa8c197947e7"
+texts = [
+    "tx-trap sources/tx-appellate/tx-trap-sectioned.txt sha256:4c3fb9bd4d05d8822b740e4b2fdc0c36755d2c5ee425a383ce8f4e5cbf407861",
+]
+dependencies = [
+    "core 1.0.0",
+    "tx-state-rules 0.1.0",
+]
+
+[[package]]
+name = "tx-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]

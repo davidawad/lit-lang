@@ -22,3 +22,10 @@
 - Upstream: https://www.txnd.uscourts.gov/sites/default/files/documents/CRIMRULES.pdf, retrieved 2026-10-28, as recorded on the `txnd/txnd-local-criminal-rules-2026-09-01.txt` entry this file is derived from.
 - Edition: as the extract, "Effective September 1, 2026".
 - Sectioned sha256 71c01d4ff9d104fc207dad508d798109df0e0a947033212ab1aed039dbfd789c (the `path_sha256` pinned by `lit/txnd-criminal/Lit.toml`).
+
+### `txnd/tx-nd-local-civil-rules-sectioned.txt` — N.D. Tex. Local Civil Rules, sectioned
+
+- Derived in the pod (lg-f3q8.87) from `txnd/tx-nd-local-civil-rules.txt` (extract sha256 329e0a1b010d56726debec13a00b19dd866bc4f886d036a44e5efa9eee7e6a77); nothing fetched. In the body (after the table of contents), one marker line `## LR <n>` is inserted before each rule's own heading line (`LR 1.1 Definitions.` through `LR 83.18 Photographs, Broadcasting, Recording, and Television Forbidden.`, 81 rules, repealed rules included). Every other line is the extract unchanged, so deleting the `## LR` lines gives back the extract byte for byte.
+- Upstream: https://www.txnd.uscourts.gov/sites/default/files/documents/CIVRULES.pdf, retrieved 2026-10-27, as recorded on the `txnd/tx-nd-local-civil-rules.txt` entry this file is derived from.
+- Edition: as the extract, "Effective September 1, 2026".
+- Sectioned sha256 02d1282a92209c098499f53867dfa6434370a1c46ef4235c890f9ec955baef06 (the `path_sha256` pinned by `lit/txnd/Lit.toml`).

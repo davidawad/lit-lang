@@ -9,12 +9,20 @@ dependencies = []
 name = "wy-district-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:1a7bee1b47a32933647b7b754732699a223bbd9635d60f25676e2b0646fa339d"
-semantic = "sha256:45e37499ab5f05350c43cc1fc921b63eba506baa33df6bf5c30cf73d85f942cc"
+source = "sha256:513caf685d10bfaaccee3f5542ad71186747857e049c966341dc810967021637"
+semantic = "sha256:abaa38639e6f666806adc2ff79253dfb2861e8cd784af4be552927519ef2d621"
 texts = [
     "wy-r-app-p sources/wy-state-appellate/wrap-sectioned.txt sha256:515a3474a1e5c02778cdc2a99fb7c78fee285cf2fd627532f1d25ce131f62a9a",
     "wy-r-civ-p sources/wy-state-civil/wrcp-sectioned.txt sha256:17d84d74bc55a79fe70c5bd3bcde611b93913cdbe457c46b7de3f9a973580f17",
 ]
+dependencies = [
+    "core 1.0.0",
+    "wy-state-rules 0.1.0",
+]
+
+[[package]]
+name = "wy-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

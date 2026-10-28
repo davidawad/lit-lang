@@ -1,0 +1,48 @@
+# The Wyoming base library (lg-u561.5): the trigger events the Wyoming
+# court packages route their graphs on: lit/wy-district and lit/wy-supreme.
+# It declares no period: the rules' periods are stated in the court
+# packages' notes (W.R.C.P. 6(a) and W.R.A.P. 14.02 count Wyoming legal
+# holidays, for which core has no calendar). No procedure of its own.
+[package]
+name = "wy-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "wy-state-rules"
+forum = "wy-state-rules"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "wyoming"
+title = "Wyoming state court rules (base library)"
+description = "The rule layer Wyoming's court packages share (W.R.C.P., W.R.A.P.): the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-09-21"
+known_at = "2026-10-28"
+unknown_before = "2026-09-21"
+jurisdiction = "Wyoming state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.wy-r-civ-p]
+title = "Wyoming Rules of Civil Procedure, consolidated edition including the amendments effective September 21, 2026"
+url = "https://www.wyocourts.gov/app/uploads/2025/01/WY-Rules-of-Civ.-Procedure-Eff.-9-21-26.pdf"
+path = "sources/wy-state-civil/wrcp-sectioned.txt"
+path_sha256 = "17d84d74bc55a79fe70c5bd3bcde611b93913cdbe457c46b7de3f9a973580f17"
+sha256 = "a22efdb9680278b9c4fb388eefaf65fb7136cf2e8a95347c9811d32d4bd42adb"
+as_of = "2026-09-21"
+cite_prefixes = ["W.R.C.P."]
+section_heading = "W.R.C.P. {n}"
+
+[sources.wy-r-app-p]
+title = "Wyoming Rules of Appellate Procedure, consolidated edition including the amendments effective January 19, 2026"
+url = "https://www.wyocourts.gov/app/uploads/2025/01/WRAP-eff-Dec-1.pdf"
+path = "sources/wy-state-appellate/wrap-sectioned.txt"
+path_sha256 = "515a3474a1e5c02778cdc2a99fb7c78fee285cf2fd627532f1d25ce131f62a9a"
+sha256 = "ad75efc446f5956b7b94edda881b67fa6a5b0b1a55195fcc5c8e264c6e156874"
+as_of = "2026-01-19"
+cite_prefixes = ["W.R.A.P."]
+section_heading = "W.R.A.P. {n}"

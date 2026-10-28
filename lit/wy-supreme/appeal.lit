@@ -1,5 +1,7 @@
 module wy-supreme-court-civil-appeals.appeal
 
+import wy-state-rules.{ DecisionFiled, MandateIssued, RecordFiled, ReviewPetitionFiled }
+
 /// A principal brief: except by permission of the appellate court, at
 /// most 60 pages, exclusive of the title page, table of contents, table
 /// of authorities, certificate of service and appendices (W.R.A.P.
@@ -49,7 +51,10 @@ terminal dismissed-jurisdiction: "Dismissed: no appealable order, or the notice 
 state record: "Transcript, record and docketing" cite "W.R.A.P. 2.05(a)"
 {
   note "Concurrently with filing the notice of appeal, the appellant orders and arranges payment for the necessary transcript, or moves for in forma pauperis status, and endorses a certificate of compliance on the notice (W.R.A.P. 2.05(a)). Within 60 days after the notice of appeal is filed, the court reporter files the transcript with the trial court clerk, extendable by the trial court for good cause (W.R.A.P. 2.06). Within three working days after the record is completed the trial court clerk advises the appellate clerk (W.R.A.P. 3.05(a)). The case is docketed when that notice is transmitted with the docket fee or an in forma pauperis order, and the appellate clerk serves notice of docketing and the briefing schedule (W.R.A.P. 6.01(a))."
-  edge-record-briefing "Case docketed" -> briefing { authority cite "W.R.A.P. 6.01(a)" }
+  edge-record-briefing "Case docketed" -> briefing {
+    event RecordFiled()
+    authority cite "W.R.A.P. 6.01(a)"
+  }
 }
 
 state briefing: "Briefing: appellant, appellee, reply" cite "W.R.A.P. 7.06"
@@ -78,9 +83,11 @@ decision disposition: "Disposition" by court cite "W.R.A.P. 9.01"
 {
   note "The decision is set forth in a written opinion or order filed with the clerk (W.R.A.P. 9.01). On reversal the court renders the judgment the trial court should have rendered or remands for judgment or further proceedings, and sends a mandate to the trial court for execution (W.R.A.P. 9.03); a partial new trial may be directed (W.R.A.P. 9.02). The court may by unanimous vote enter an abbreviated opinion (W.R.A.P. 9.06). Any motion for costs or fees is filed within 15 days after the final written opinion or order is filed (W.R.A.P. 10.06). No leading decision is named."
   edge-disposition-affirmed-entered "Affirmed" -> affirmed-entered {
+    event DecisionFiled()
     authority cite "W.R.A.P. 9.03"
   }
   edge-disposition-reversed-entered "Reversed, modified or remanded" -> reversed-entered {
+    event DecisionFiled()
     authority cite "W.R.A.P. 9.03"
   }
 }
@@ -92,6 +99,7 @@ decision affirmed-entered: "Affirmed: rehearing election" by applicant cite "W.R
     authority cite "W.R.A.P. 9.08(a)"
   }
   edge-affirmed-entered-mandate-affirmed "No rehearing petition" -> mandate-affirmed {
+    event MandateIssued()
     authority cite "W.R.A.P. 9.11(a)"
   }
 }
@@ -100,6 +108,7 @@ decision rehearing-affirmed: "Rehearing ruling (affirmed)" by court cite "W.R.A.
 {
   note "When rehearing is granted, the other party files an answer and supporting brief within 15 days of entry of the order granting it; the court may then amend the opinion or direct other proceedings (W.R.A.P. 9.10)."
   edge-rehearing-affirmed-mandate-affirmed "Rehearing denied" -> mandate-affirmed {
+    event MandateIssued()
     authority cite "W.R.A.P. 9.11(a)"
   }
   edge-rehearing-affirmed-disposition "Rehearing granted: re-decide" -> disposition {
@@ -111,6 +120,7 @@ decision mandate-affirmed: "Mandate issued: certiorari election" by applicant ci
 {
   note "On denial of a petition for rehearing, or if no petition for rehearing or other motion is filed within 15 days after the decision, the mandate issues to the trial court for execution and is sent to all parties (W.R.A.P. 9.11(a)); it awards costs, if applicable, and the court cannot entertain a motion for costs after it issues (W.R.A.P. 9.11(c)). A petition for certiorari to a state court of last resort is timely within 90 days after entry of the judgment (Sup. Ct. R. 13.1), running from entry and not from the mandate, or from the denial of a timely rehearing petition (Sup. Ct. R. 13.3)."
   edge-mandate-affirmed-federal-review "Petition for certiorari" -> federal-review {
+    event ReviewPetitionFiled()
     authority cite "Sup. Ct. R. 13.1"
   }
   edge-mandate-affirmed-affirmed-final "No petition" -> affirmed-final {
@@ -130,6 +140,7 @@ decision reversed-entered: "Reversed, modified or remanded: rehearing election" 
     authority cite "W.R.A.P. 9.08(a)"
   }
   edge-reversed-entered-mandate-reversed "No rehearing petition" -> mandate-reversed {
+    event MandateIssued()
     authority cite "W.R.A.P. 9.11(a)"
   }
 }
@@ -138,6 +149,7 @@ decision rehearing-reversed: "Rehearing ruling (reversed, modified or remanded)"
 {
   note "The answer to a granted rehearing is due within 15 days of entry of the order granting it (W.R.A.P. 9.10)."
   edge-rehearing-reversed-mandate-reversed "Rehearing denied" -> mandate-reversed {
+    event MandateIssued()
     authority cite "W.R.A.P. 9.11(a)"
   }
   edge-rehearing-reversed-disposition "Rehearing granted: re-decide" -> disposition {
@@ -149,6 +161,7 @@ decision mandate-reversed: "Mandate issued: certiorari election" by applicant ci
 {
   note "The mandate issues as W.R.A.P. 9.11(a) provides; certiorari timing is Sup. Ct. R. 13.1 and 13.3. On remand the trial court proceeds as the mandate directs (W.R.A.P. 9.03)."
   edge-mandate-reversed-federal-review "Petition for certiorari" -> federal-review {
+    event ReviewPetitionFiled()
     authority cite "Sup. Ct. R. 13.1"
   }
   edge-mandate-reversed-reversed-final "No petition" -> reversed-final {

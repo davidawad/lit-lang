@@ -96,6 +96,21 @@ Entries live in the forum's own
 - Original: `original/frcp.pdf` as served (sha256 bd8705fc038d87e4fe222a7ea2e4324222c9430e2373fce56826bd2dfa2f8baf); extraction sha256 cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44. Served at https://www.uscourts.gov/sites/default/files/document/federal-rules-of-civil-procedure.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27. CURRENCY: served document differs from the vendored extraction (sha256 bd8705fc038d87e4fe222a7ea2e4324222c9430e2373fce56826bd2dfa2f8baf); re-vendor pending.
 - Comparison (lg-f3q8.82, 2026-10-27): the served file is the House Judiciary Committee print "Federal Rules of Civil Procedure, December 1, 2025" (142 pages). Each of the 97 vendored rules was compared word for word with the print's text (page headers, title lines and GPO hyphenation ignored). The vendored text predates the amendments effective December 1, 2025 (order of April 23, 2025, which "affected Rules 16 and 26, and added new Rule 16.1"). Differences: (1) Rule 16(b)(3)(B)(iv) gains the words "the timing and method for complying with Rule 26(b)(5)(A) and" before "any agreements the parties reach for asserting claims of privilege or of protection as trial-preparation material after information is produced, including agreements reached under Federal Rule of Evidence 502"; (2) Rule 26(f)(3)(D) gains the same words ("...method for complying with Rule 26(b)(5)(A) and—if the parties agree on a procedure..."); (3) Rule 16.1 (Multidistrict Litigation) is absent from frcp.txt; (4) the amendment credits of Rules 16 and 26 gain "Apr. 23, 2025, eff. Dec. 1, 2025" and Rule 16.1's reads "As added Apr. 23, 2025, eff. Dec. 1, 2025". No other rule's wording differs. frcp.txt is not edited here.
 
+### `fre.txt` — Federal Rules of Evidence (69 rules), as amended to December 1, 2024
+
+- The House Judiciary Committee print "Federal Rules of Evidence, December
+  1, 2024" (Committee Print No. 11, 118th Cong., 2d Sess.; 44 pages), as
+  served by `www.uscourts.gov`, fetched 2026-10-28 with curl (User-Agent
+  lit-lang-provenance/1.0) for `lit/frcp`'s FRE cites (lg-pd9k).
+  `pdftotext -layout`; from the first `Rule 101.` heading after the
+  contents, one `## FRE N` section per `Rule N. Title` line (the line kept
+  as the section's first line), page headers (`N  FEDERAL RULES OF
+  EVIDENCE  Rule N`), `(1)` page numbers and the printer's mark dropped,
+  leading indentation stripped; lines, end-of-line hyphens and each
+  rule's "(As amended ...)" credit kept as printed. No wording changed.
+- sha256 (this file): `151363e8d73035fb2ff533fafe366d102d4d2a756f512d868edab1d8d5b03b32`
+- Original: `original/fre.pdf` as served (sha256 6d40b9dca62b1acb0d7e762473b6fad7779ef58b6cf19384575210af81a444ad); extraction sha256 151363e8d73035fb2ff533fafe366d102d4d2a756f512d868edab1d8d5b03b32. Served at https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-evidence-dec-1-2024_0.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-28.
+
 ### `frap.txt` — Federal Rules of Appellate Procedure (55 rules)
 
 - Ported from `civ-pro-the-gathering/content/reference/frap-full.json`,

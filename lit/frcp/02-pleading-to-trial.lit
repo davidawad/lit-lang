@@ -864,7 +864,7 @@ decision discovery-closed: "Discovery Closed" cite "FRCP 16(b)(3)"
     cost 20_000.usd
   }
   edge-discovery-closed-daubert-motion-filed "Move to exclude opposing expert testimony pretrial" -> daubert-motion-filed {
-    authority cite ?("FRE 702")
+    authority cite "FRE 702"
     effort 35.hours
     cost 15_000.usd
   }
@@ -966,39 +966,39 @@ state partial-summary-judgment: "Partial Summary Judgment" by applicant cite "FR
   group pretrial-motions-group
   note "Some claims or defenses are resolved as a matter of law; the remainder proceeds toward trial. If the court does not grant all requested relief, it may enter an order stating any material fact -- including an item of damages or other relief -- that is not genuinely in dispute, treating that fact as established for the rest of the case (Rule 56(g))."
   edge-partial-summary-judgment-daubert-motion-filed "Proceed toward trial on the remaining claims" -> daubert-motion-filed {
-    authority cite ?("FRE 702")
+    authority cite "FRE 702"
     effort 0.hours
     note "Hours: 0, a default/no-action transition with no billable work of its own."
   }
 }
 
-state daubert-motion-filed: "Daubert / Rule 702 Motion Filed" by applicant cite ?("FRE 702; FRE 104(a)") {
+state daubert-motion-filed: "Daubert / Rule 702 Motion Filed" by applicant cite "FRE 702; FRE 104(a)" {
   group pretrial-motions-group
   note "The proponent of expert testimony must show by a preponderance of the evidence (2023 amendment to FRE 702 made this explicit) that the witness's specialized knowledge will help the trier of fact, the testimony is based on sufficient facts/data, is the product of reliable principles/methods, and reflects a reliable application of those principles to the case's facts. The court decides this preliminary admissibility question itself under FRE 104(a), not the jury -- a pretrial gatekeeping motion, not a trial objection."
   edge-daubert-motion-filed-daubert-ruling "Complete FRE 702 gatekeeping briefing (FRE 104(a))" -> daubert-ruling {
-    authority cite ?("FRE 702; FRE 104(a)")
+    authority cite "FRE 702; FRE 104(a)"
     effort 20.hours
   }
 }
 
 // The rule text commits this ruling to the court's discretion.
-chance daubert-ruling: "Court Rules on Daubert Motion" by examiner discretion cite ?("FRE 702") {
+chance daubert-ruling: "Court Rules on Daubert Motion" by examiner discretion cite "FRE 702" {
   group pretrial-motions-group
   note "Outcome distribution authored at 0.6 admitted / 0.4 excluded-in-whole-or-part -- APPROXIMATE. Missing the scheduling-order's expert-motion cutoff forfeits a pretrial Daubert challenge entirely -- a mid-trial objection to qualified expert testimony is ordinarily too late and the jury has already heard the opinion, the trap this pack's frcp-fragment rulepack flags as fre/daubert-not-moved."
   daubert-admitted "Expert testimony admitted -- reliability and fit satisfied" -> motions-in-limine-filed p 0.6 {
-    authority cite ?("FRE 702")
+    authority cite "FRE 702"
   }
   daubert-excluded "Expert testimony excluded in whole or in part" -> motions-in-limine-filed p 0.4 {
-    authority cite ?("FRE 702")
+    authority cite "FRE 702"
   }
 }
 
-state motions-in-limine-filed: "Motions in Limine" by applicant cite ?("FRE 103(d)") {
+state motions-in-limine-filed: "Motions in Limine" by applicant cite "FRE 103(d)" {
   group pretrial-motions-group
   note "Pretrial motions to admit or exclude specific categories of evidence before trial begins, avoiding prejudicial suggestion to the jury. A ruling on a motion in limine is often preliminary and non-definitive; FRE 103(b) requires the losing party to RENEW its objection when the evidence is actually offered at trial to preserve the issue for appeal absent a definitive ruling on the record (Luce v. United States, 469 U.S. 38 (1984)) -- failing to renew forfeits appellate review of a non-definitive ruling."
   court_listener_url "https://www.courtlistener.com/opinion/111284/luce-v-united-states/"
   edge-motions-in-limine-filed-final-pretrial-conference "Complete motions in limine (FRE 103(d))" -> final-pretrial-conference {
-    authority cite ?("FRE 103(d)")
+    authority cite "FRE 103(d)"
     effort 10.hours
     cost 4_000.usd
   }

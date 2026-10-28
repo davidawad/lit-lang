@@ -39,6 +39,14 @@ path_sha256 = "cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44"
 sha256 = "c86b327b3bbe7dd3e68ea434a2bf0bc62aee8e85229f3456f094a1b232568317"
 as_of = "2024-12-01"
 
+[sources.fre-rules]
+title = "Federal Rules of Evidence, as amended to Dec. 1, 2024"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-evidence-dec-1-2024_0.pdf"
+path = "sources/fre.txt"
+path_sha256 = "151363e8d73035fb2ff533fafe366d102d4d2a756f512d868edab1d8d5b03b32"
+sha256 = "6d40b9dca62b1acb0d7e762473b6fad7779ef58b6cf19384575210af81a444ad"
+as_of = "2024-12-01"
+
 [sources.frap-rules]
 title = "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2025 (FRAP 4(a) civil appeal clock)"
 url = "https://www.uscourts.gov/sites/default/files/document/federal-rules-of-appellate-procedure.pdf"
@@ -164,3 +172,8 @@ title = "Amendment histories of FRCP, FRAP, FRCrimP, Federal Circuit and RCFC ru
 url = "https://www.govinfo.gov/app/collection/uscode/2024"
 path = "sources/rule-amendment-history.txt"
 path_sha256 = "7cb224d67077603c4f6c18fb07cceb87002e8ea747d3cd16793271ea4fc972b0"
+
+[[cite_syntax.rules]]
+prefixes = ["FRE", "Fed. R. Evid."]
+heading = "FRE {}"
+source = "fre-rules"

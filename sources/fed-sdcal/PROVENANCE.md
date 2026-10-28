@@ -15,3 +15,9 @@
 - Source: as the extract `fed-sdcal/casd-local-rules-2026-06-01.txt`, https://www.casd.uscourts.gov/_assets/pdf/rules/2026.06.01%20Local%20Rules.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, Local Rules revised as of June 1, 2026.
 - Sectioned sha256 61112f367b39c26fdcc4ac0f66eeb5a5d438341d21ceb6f1449e25a226bb94c7 (the `path_sha256` pinned by `lit/casd/Lit.toml`).
+
+### `fed-sdcal/casd-local-rules-2026-06-01-crim-sectioned.txt` — S.D. Cal. Local Rules (revised June 1, 2026), criminal rules sectioned
+
+- Derived in the pod (lg-gddt.22) from `fed-sdcal/casd-local-rules-2026-06-01.txt` (extract sha256 4ad9cbadcc5f9a3bac8ec6a3c82c8a8c6de1b43c1e0169171c74ad16df3bcee7); nothing fetched. One marker line `## S.D. Cal. CrimLR <n>` is inserted before each criminal rule's own body heading line `Criminal Rule <n> <Title>` (CrimLR 1.1 through 58.2, 24 rules, including 16.1.a, 16.1.b and 57.2.1, matching the table of contents); the civil rules, table of contents and other parts carry no markers (the civil copy `casd-local-rules-2026-06-01-sectioned.txt` marks only the civil rules). Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Edition: as the extract, Local Rules revised as of June 1, 2026.
+- Sectioned sha256 54db951f06daa7379fe18f2b573261d0880aa0fd2811d29dd12c5669d5bfdb98 (the `path_sha256` pinned by `lit/casd-criminal/Lit.toml`).

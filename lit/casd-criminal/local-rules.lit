@@ -1,0 +1,241 @@
+module casd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The Southern District of California's own criminal periods, counted
+// under the criminal rules (FRCrimP 45(a) governs "any local rule"). A
+// judge may waive any of the rules in the interest of justice (CrimLR
+// 1.1(d)). No trigger carries a service method: FRCrimP 45(c)'s three
+// added days follow the manner of service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: the presentence report is filed thirty-five (35) days before the
+// sentencing hearing (CrimLR 32.1(a)(3)), FRCrimP 32(e)(2)'s period
+// (psr-disclosure); a defendant convicted by a magistrate judge appeals by
+// a timely notice under FRCrimP 58(g) (CrimLR 58.1(b)(1)).
+//
+// Conditions that are not deadlines from an event stay in notes:
+// sentencing is normally set seventy-seven (77) days after conviction
+// (CrimLR 32.1(a)(1)), a target rather than a deadline; a Rule 17(c)
+// subpoena motion is returnable in no less than seven (7) days from its
+// filing and is served not less than seventy-two (72) hours before the
+// return date (CrimLR 17.1(b)), a floor on the return date and an hour
+// period; a continuance for arraignment to retain counsel may not exceed
+// seven (7) days at any one time (CrimLR 44.1(a)), a cap on the court's
+// continuance; on a misdemeanor appeal the record is deemed complete if no
+// transcript is ordered within fourteen (14) days after the notice of
+// appeal, and argument is set not less than sixty (60) nor more than
+// ninety (90) days after the Clerk's notice (CrimLR 58.1(b)(2), (3)).
+// Late sentencing filings are not considered absent good cause (CrimLR
+// 32.1(a)(12)).
+//
+// The earlier S.D. Cal. criminal outline's FRCrimP flow and its decisions
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+/// Briefs or memoranda in support of or in opposition to all motions
+/// noticed for the same motion day: not more than twenty-five (25) pages
+/// in total without leave of a district judge (S.D. Cal. CrimLR 47.1(e)).
+limit motion-day-briefs {
+  pages <= 25 cite "S.D. Cal. CrimLR 47.1(e)"
+} cite "S.D. Cal. CrimLR 47.1(e)"
+
+/// A magistrate judge enters findings and a recommendation on a felony
+/// guilty plea (S.D. Cal. CrimLR 11.1(d)).
+event PleaRecommendationEntered()
+/// The defendant is arraigned on an indictment or information (S.D. Cal.
+/// CrimLR 16.1.a).
+event Arraigned()
+/// The first motion hearing is scheduled (S.D. Cal. CrimLR 16.1.a).
+event FirstMotionHearingScheduled()
+/// The presentence report is filed later than thirty-five days before the
+/// scheduled sentencing date (S.D. Cal. CrimLR 32.1(a)(5)).
+event LatePsrFiled()
+/// The hearing on a motion is noticed (S.D. Cal. CrimLR 47.1(b), (c)).
+event MotionHearingScheduled()
+/// A motion brief or opposition is filed for a motion day (S.D. Cal.
+/// CrimLR 47.1(e)).
+event MotionBriefFiled() paper motion-day-briefs
+/// The later of service of a Notice of Related Case on the defendant and
+/// the defendant's first appearance in the case (S.D. Cal. CrimLR
+/// 57.2.1(d)(1)).
+event RelatedCaseObjectionWindowOpens()
+/// A defendant files an objection to a Notice of Related Case (S.D. Cal.
+/// CrimLR 57.2.1(d)(1)).
+event RelatedCaseObjectionFiled()
+/// The day the United States Attorney's reply on a related-case objection
+/// is due (S.D. Cal. CrimLR 57.2.1(d)(1)).
+event RelatedCaseReplyDue()
+/// A transcript is ordered on an appeal from a magistrate judge's
+/// conviction (S.D. Cal. CrimLR 58.1(b)(2)).
+event AppealTranscriptOrdered()
+/// The Clerk notifies the parties of the time set for oral argument on a
+/// misdemeanor appeal (S.D. Cal. CrimLR 58.1(b)(3), (4)).
+event MisdemeanorAppealHearingNoticed()
+/// The appellant's brief is served (S.D. Cal. CrimLR 58.1(b)(4)).
+event AppellantBriefServed()
+/// The appellee's brief is served (S.D. Cal. CrimLR 58.1(b)(4)).
+event AppelleeBriefServed()
+
+/// S.D. Cal. CrimLR 11.1(d): objections to the magistrate judge's findings
+/// and recommendation on a guilty plea are filed within fourteen (14) days
+/// of their entry.
+deadline plea-recommendation-objection: 14.days after PleaRecommendationEntered() counted_by frcrimp45 cite "S.D. Cal. CrimLR 11.1(d)"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 11.1(f): if the district judge requests it, the Clerk
+/// provides a transcript of the Rule 11 allocution at least seven (7) days
+/// before the sentencing hearing.
+deadline allocution-transcript: 7.days before SentencingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 11.1(f)"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 16.1.a: not later than fourteen (14) calendar days
+/// after the arraignment, defense counsel and the attorney for the
+/// government confer on a timetable and procedures for FRCrimP 16
+/// disclosure.
+deadline discovery-meet-and-confer: 14.days after Arraigned() counted_by frcrimp45 cite "S.D. Cal. CrimLR 16.1.a"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 16.1.a: not later than seven (7) calendar days before
+/// the first motion hearing, the parties inform the Court in writing of the
+/// agreed discovery timetable, the proposed expert disclosure timing and
+/// any disagreement.
+deadline discovery-timetable-report: 7.days before FirstMotionHearingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 16.1.a"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 32.1(a)(5): fourteen (14) days before the sentencing
+/// hearing, all objections to the presentence report are filed and served.
+deadline psr-objections: 14.days before SentencingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 32.1(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 32.1(a)(5): if the presentence report is not filed
+/// thirty-five days before sentencing, the parties have seventeen (17)
+/// days after its actual filing to file and serve objections.
+deadline psr-objections-after-late-report: 17.days after LatePsrFiled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 32.1(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 32.1(a)(6): unless otherwise ordered, a motion for
+/// departure (other than under USSG § 5K1.1) is filed and served no less
+/// than fourteen (14) days before the sentencing hearing.
+deadline departure-motion: 14.days before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "S.D. Cal. CrimLR 32.1(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 32.1(a)(6), (7), (8): an opposition to a departure
+/// motion, a sentencing memorandum (summarizing any written plea
+/// agreement) and each party's sentencing summary chart are filed and
+/// served no less than seven (7) days before the sentencing hearing; if no
+/// opposition is filed, the departure motion is deemed unopposed.
+deadline sentencing-filings: 7.days before SentencingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 32.1(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 32.1(a)(9): no less than seven (7) days before the
+/// sentencing hearing, the Probation Department files and serves an
+/// addendum addressing all timely objections.
+deadline psr-addendum: 7.days before SentencingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 32.1(a)"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 47.1(b): a motion is filed and served at least
+/// fourteen (14) days before the date for which it is noticed, unless the
+/// Court for good cause and by order shortens the time; the Clerk does not
+/// file an untimely motion without the judicial officer's consent.
+deadline motion-filing: 14.days before MotionHearingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "S.D. Cal. CrimLR 47.1(b)"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 47.1(c): each opposing party serves and files an
+/// opposition, or a statement of non-opposition, not later than seven (7)
+/// days before the hearing; supporting declarations follow the same
+/// deadlines (CrimLR 47.1(g)(3)).
+deadline motion-opposition: 7.days before MotionHearingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 47.1(c)"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 57.2.1(d)(1): within seven (7) days of receiving
+/// service of a Notice of Related Case, or of first appearing in the case,
+/// whichever is later, a defendant may file an objection with a detailed
+/// statement of reasons.
+deadline related-case-objection: 7.days after RelatedCaseObjectionWindowOpens() counted_by frcrimp45 cite "S.D. Cal. CrimLR 57.2.1(d)"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 57.2.1(d)(1): within seven (7) days of any objection,
+/// the United States Attorney may file and serve a reply.
+deadline related-case-reply: 7.days after RelatedCaseObjectionFiled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 57.2.1(d)"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 57.2.1(d)(1): where one judge is assigned to the
+/// cases, the judge decides whether they are related within seven (7) days
+/// after the reply is due.
+deadline related-case-ruling: 7.days after RelatedCaseReplyDue() counted_by frcrimp45 cite "S.D. Cal. CrimLR 57.2.1(d)"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 58.1(b)(2): within thirty (30) days after a transcript
+/// has been ordered, the original and one copy are filed with the
+/// magistrate judge.
+deadline misdemeanor-appeal-transcript: 30.days after AppealTranscriptOrdered() counted_by frcrimp45 cite "S.D. Cal. CrimLR 58.1(b)"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 58.1(b)(4): the appellant serves and files its brief
+/// within twenty-one (21) days after the notice of hearing; the assigned
+/// judge may alter the period.
+deadline misdemeanor-appellant-brief: 21.days after MisdemeanorAppealHearingNoticed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "S.D. Cal. CrimLR 58.1(b)"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 58.1(b)(4): the appellee serves and files its brief
+/// within twenty-one (21) days after service of the appellant's brief.
+deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "S.D. Cal. CrimLR 58.1(b)"
+{
+  forum frcrimp
+}
+
+/// S.D. Cal. CrimLR 58.1(b)(4): the appellant may serve and file a reply
+/// brief within seven (7) days after service of the appellee's brief.
+deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "S.D. Cal. CrimLR 58.1(b)"
+{
+  forum frcrimp
+}

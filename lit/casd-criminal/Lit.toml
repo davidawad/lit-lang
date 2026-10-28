@@ -1,0 +1,55 @@
+# The U.S. District Court for the Southern District of California's
+# Criminal Local Rules (CrimLR) as a local-rule layer over lit/frcrimp (28
+# U.S.C. § 2071; FRCrimP 57(a)): it declares only the periods and limits
+# the local criminal rules themselves state and re-encodes no FRCrimP,
+# Speedy Trial Act or FRAP 4(b) period (one source of truth: lit/frcrimp).
+# Each period is counted under FRCrimP 45(a), which governs "any local
+# rule", so each deadline names `forum frcrimp`. The rules are the Local
+# Rules revised as of June 1, 2026 (sources/fed-sdcal; CrimLR 1.1(b)
+# states the criminal rules' own effective date, January 2, 2025); earlier
+# editions are not vendored, so a query before June 1, 2026 is a hole in
+# the corpus. The criminal part is bound through its own sectioned copy of
+# the extract (the civil copy lit/casd binds marks only the civil rules).
+# The Civil Local Rules CrimLR 1.1(e) lists apply in criminal cases and
+# live in lit/casd. An appeal goes to the Ninth Circuit under lit/frcrimp's
+# FRAP 4(b) period.
+[package]
+name = "casd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "casd-criminal-local-rules"
+forum = "casd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Southern District of California: Criminal Local Rules"
+description = "The Southern District of California's Criminal Local Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): objections to a magistrate judge's plea findings, the Rule 16 meet-and-confer and discovery timetable, the sentencing objection, departure, memorandum, chart and addendum schedule, motion filing, opposition and the brief page limit, related-case objections, and the transcript and briefs on an appeal from a magistrate judge's conviction."
+in_force = "2026-06-01"
+known_at = "2026-10-28"
+unknown_before = "2026-06-01"
+jurisdiction = "U.S. District Court for the Southern District of California (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "casd-crimlr"
+issuer = "U.S. District Court for the Southern District of California"
+date = "2026-06-01"
+designation = "Criminal Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.casd-crimlr]
+title = "Local Rules of the U.S. District Court for the Southern District of California (revised as of June 1, 2026), Criminal Local Rules"
+url = "https://www.casd.uscourts.gov/_assets/pdf/rules/2026.06.01%20Local%20Rules.pdf"
+path = "sources/fed-sdcal/casd-local-rules-2026-06-01-crim-sectioned.txt"
+path_sha256 = "54db951f06daa7379fe18f2b573261d0880aa0fd2811d29dd12c5669d5bfdb98"
+sha256 = "a8dcb48ef9e7be52e84f0156bdfce23d4ca58b91411b44cb4e86a9cad6ee6746"
+as_of = "2026-06-01"
+cite_prefixes = ["S.D. Cal. CrimLR"]
+section_heading = "S.D. Cal. CrimLR {n}"

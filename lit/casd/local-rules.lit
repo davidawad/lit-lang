@@ -1,0 +1,163 @@
+module casd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Southern District of California's own civil periods and limits,
+// computed under FRCP 6, which the Civil Local Rules adopt for computing
+// time (S.D. Cal. CivLR 7.1(c)). Most motion periods run backward from the
+// date for which the matter is noticed. Rules that state no period this
+// layer can count stay out: the three days the 60-, 28- and 14-day notice
+// periods grow by for service by mail on a party not served electronically
+// (S.D. Cal. CivLR 7.1(e)(4)); the window of not less than fourteen (14)
+// nor more than twenty-one (21) days from the notice of the clerk's costs
+// hearing (S.D. Cal. CivLR 54.1(a)), a range set by the notice; the case
+// management conference within thirty (30) days after the ENE conference,
+// which the judge holds (S.D. Cal. CivLR 16.1(c)(2)); the eminent domain
+// statements (S.D. Cal. CivLR 16.1(f)(3)(d)); and the criminal, magistrate
+// and bankruptcy parts. The earlier S.D. Cal. outline's FRCP flow and its
+// decisions (Eitel v. McCool, Twombly, Iqbal, Lopez v. Smith, Celotex,
+// Anderson v. Liberty Lobby, Reeves, Catlin, Bowles v. Russell, Hamer) are
+// FRCP and FRAP authority and belong to lit/frcp and lit/frap; no reporter
+// text is vendored, so they are removed here.
+/// The briefs or memoranda one party files in support of or in opposition
+/// to all motions noticed for the same motion day: at most twenty-five (25)
+/// pages in total without leave of the judge (S.D. Cal. CivLR 7.1(h)).
+limit motion-brief { pages <= 25 cite "S.D. Cal. CivLR 7.1(h)" } cite "S.D. Cal. CivLR 7.1(h)"
+/// A reply memorandum: at most ten (10) pages without leave of the judge
+/// (S.D. Cal. CivLR 7.1(h)).
+limit reply-memorandum { pages <= 10 cite "S.D. Cal. CivLR 7.1(h)" } cite "S.D. Cal. CivLR 7.1(h)"
+
+/// The date for which a motion or other matter requiring a ruling is
+/// noticed (S.D. Cal. CivLR 7.1(e)).
+event HearingDate()
+/// The certified administrative record is filed in a Social Security case
+/// (S.D. Cal. CivLR 7.1(e)(6)).
+event AdministrativeRecordFiled()
+/// The plaintiff's merits brief in a Social Security case is served (S.D.
+/// Cal. CivLR 7.1(e)(6)).
+event SocialSecurityPlaintiffBriefServed()
+/// The Social Security Administration's opposition brief is served (S.D.
+/// Cal. CivLR 7.1(e)(6)).
+event SocialSecurityOppositionServed()
+/// A ruling, order or judgment is entered (S.D. Cal. CivLR 7.1(i)).
+event RulingEntered()
+/// An answer is filed (S.D. Cal. CivLR 16.1(c)).
+event AnswerFiled()
+/// The pretrial hearing date (S.D. Cal. CivLR 16.1(f)).
+event PretrialHearing()
+/// Judgment is entered (S.D. Cal. CivLR 54.1(a)).
+event JudgmentEntered()
+/// A party receives the clerk's notice of the taxation of costs (S.D. Cal.
+/// CivLR 54.1(h)).
+event CostsNoticeReceived()
+
+/// S.D. Cal. CivLR 7.1(e)(1): unless the court shortens time, a motion and
+/// its supporting documents are filed (and, by the rule's example, served)
+/// no later than twenty-eight (28) days before the date for which the
+/// matter is noticed.
+deadline motion-filing-period: 28.days before HearingDate() counted_by frcp6 cite "S.D. Cal. CivLR 7.1(e)"
+{
+  forum frcp
+}
+
+/// S.D. Cal. CivLR 7.1(e)(2): each opposing party files and serves its
+/// opposition, or a statement of non-opposition, not later than fourteen
+/// (14) calendar days before the noticed hearing; a failure to do so may be
+/// taken as consent to granting the motion (S.D. Cal. CivLR 7.1(f)(3)).
+deadline opposition-period: 14.days before HearingDate() counted_by frcp6 cite "S.D. Cal. CivLR 7.1(e)"
+{
+  forum frcp
+}
+
+/// S.D. Cal. CivLR 7.1(e)(3): any reply memorandum is filed and served not
+/// later than seven (7) days before the date for which the matter is
+/// noticed.
+deadline reply-period: 7.days before HearingDate() counted_by frcp6 cite "S.D. Cal. CivLR 7.1(e)"
+{
+  forum frcp
+}
+
+/// S.D. Cal. CivLR 7.1(e)(6)(e)(1): unless the court orders otherwise, the
+/// plaintiff's merits brief in a Social Security case is due within 30 days
+/// of the filing of the administrative record.
+deadline social-security-plaintiff-brief-period: 30.days after AdministrativeRecordFiled() counted_by frcp6 cite "S.D. Cal. CivLR 7.1(e)"
+{
+  forum frcp
+}
+
+/// S.D. Cal. CivLR 7.1(e)(6)(e)(2): the Social Security Administration's
+/// opposition is due 30 days after service of the plaintiff's brief.
+deadline social-security-opposition-period: 30.days after SocialSecurityPlaintiffBriefServed() counted_by frcp6 cite "S.D. Cal. CivLR 7.1(e)"
+{
+  forum frcp
+}
+
+/// S.D. Cal. CivLR 7.1(e)(6)(e)(3): the plaintiff's reply brief, if any, is
+/// due 14 days after service of the defendant's brief.
+deadline social-security-reply-period: 14.days after SocialSecurityOppositionServed() counted_by frcp6 cite "S.D. Cal. CivLR 7.1(e)"
+{
+  forum frcp
+}
+
+/// S.D. Cal. CivLR 7.1(i)(2): except as FRCP 59 and 60 allow, a motion or
+/// application for reconsideration is filed within twenty-eight (28) days
+/// after entry of the ruling, order or judgment it concerns.
+deadline reconsideration-period: 28.days after RulingEntered() counted_by frcp6 cite "S.D. Cal. CivLR 7.1(i)"
+{
+  forum frcp
+}
+
+/// S.D. Cal. CivLR 16.1(c)(1): within forty-five (45) days of the filing of
+/// an answer, counsel and the parties appear before the assigned judge for
+/// an early neutral evaluation conference, with full settlement authority.
+deadline ene-conference-period: 45.days after AnswerFiled() counted_by frcp6 cite "S.D. Cal. CivLR 16.1(c)"
+{
+  forum frcp
+}
+
+/// S.D. Cal. CivLR 16.1(f)(2)(a): unless the court specifies otherwise, each
+/// party serves and files its Memorandum of Contentions of Fact and Law no
+/// later than 5:00 p.m. twenty-eight (28) days before the pretrial hearing.
+deadline contentions-memorandum-period: 28.days before PretrialHearing() counted_by frcp6 cite "S.D. Cal. CivLR 16.1(f)"
+{
+  forum frcp
+}
+
+/// S.D. Cal. CivLR 16.1(f)(4)(a): the attorneys meet at least twenty-one
+/// (21) days before the pretrial hearing, after the memoranda are filed.
+deadline counsel-meeting-period: 21.days before PretrialHearing() counted_by frcp6 cite "S.D. Cal. CivLR 16.1(f)"
+{
+  forum frcp
+}
+
+/// S.D. Cal. CivLR 16.1(f)(6)(a): plaintiff's counsel provides opposing
+/// counsel the proposed pretrial order not less than fourteen (14) days
+/// before the pretrial hearing.
+deadline proposed-pretrial-order-period: 14.days before PretrialHearing() counted_by frcp6 cite "S.D. Cal. CivLR 16.1(f)"
+{
+  forum frcp
+}
+
+/// S.D. Cal. CivLR 16.1(f)(6)(b): the plaintiff lodges the Pretrial Order
+/// with the judge's chambers no later than seven (7) days before the
+/// pretrial hearing.
+deadline pretrial-order-lodging-period: 7.days before PretrialHearing() counted_by frcp6 cite "S.D. Cal. CivLR 16.1(f)"
+{
+  forum frcp
+}
+
+/// S.D. Cal. CivLR 54.1(a): within fourteen (14) days after entry of
+/// judgment, the party claiming costs files its bill of costs with a notice
+/// of the clerk's hearing; a motion under FRCP 59 or 60 does not extend the
+/// time unless the court orders otherwise.
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "S.D. Cal. CivLR 54.1(a)"
+{
+  forum frcp
+}
+
+/// S.D. Cal. CivLR 54.1(h)(1): a motion to retax is served and filed within
+/// seven (7) days after receipt of the clerk's notice of the taxation.
+deadline retax-motion-period: 7.days after CostsNoticeReceived() counted_by frcp6 cite "S.D. Cal. CivLR 54.1(h)"
+{
+  forum frcp
+}

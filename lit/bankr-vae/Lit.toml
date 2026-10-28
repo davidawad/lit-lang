@@ -1,0 +1,48 @@
+# The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the Eastern
+# District of Virginia over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
+# declares only the periods the Local Bankruptcy Rules themselves state
+# and re-encodes no FRBP period. It is a base package, not a `kind =
+# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011 for
+# `bankr-vae`), as for lit/bankr-md. Each period is counted under FRBP
+# 9006(a), the FRCP 6(a) method (core's frcp6). The rules are the
+# consolidation "ver 11/26/2025" effective December 1, 2025, which carries
+# the amendments to LBR 3002.1-1 and Exhibit 17 of that date; Standing
+# Orders 20-2 and 20-3 (February 2020) precede it and are not vendored
+# (sources/bankr-vae/PROVENANCE.md), so the consolidation is the only
+# layer. The earlier editions are not vendored, so a query before December
+# 1, 2025 is a hole in the corpus.
+[package]
+name = "bankr-vae-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-vae-local-rules"
+forum = "bankr-vae"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Eastern District of Virginia: Local Bankruptcy Rules"
+description = "The Bankr. E.D. Va. Local Bankruptcy Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): creditor lists, social security and credit counseling statements, payment advices, joint administration, rescheduled meetings, Rule 2004 and chapter 11 employment objections, chapter 11 final reports, fee-suspension hearings, chapter 13 mortgage certifications, chapter 11 bar dates and disputed-claim notices, claim objections, unclaimed funds, chapter 13 dismissal after denial, disclosure statement and chapter 11 plan objections, trustee distributions, stay-relief and lien-avoidance responses, discharge notices and course certificates, deficient filings, withdrawal of the reference, sales and abandonment, discovery and expert disclosure, voluntary dismissal of discharge complaints, default judgment, summary judgment, motion practice (LBR 9013-1), subpoenas, mediation, proposed orders and exhibits."
+in_force = "2025-12-01"
+known_at = "2026-10-28"
+unknown_before = "2025-12-01"
+jurisdiction = "U.S. Bankruptcy Court for the Eastern District of Virginia"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.vaeb-lbr]
+title = "Local Bankruptcy Rules of the United States Bankruptcy Court for the Eastern District of Virginia (ver 11/26/2025, effective December 1, 2025)"
+url = "https://www.vaeb.uscourts.gov/sites/vaeb/files/LBR%20%20changes%2012-1-2025.pdf"
+path = "sources/bankr-vae/vae-local-rules-2025-12-01-sectioned.txt"
+path_sha256 = "606652fba6f5d0bcc42224d061cc9805d995790aa6bd3f38af8dc94845390eca"
+sha256 = "34ffcae9a88cbb8968e324661c25e8cca6b7e6595c7622702a70935bb75f0388"
+as_of = "2025-12-01"
+cite_prefixes = ["E.D. Va. LBR"]
+section_heading = "Rule {n}"

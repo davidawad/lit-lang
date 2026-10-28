@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-vae-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:c188988111fdd1b32c7d2a39586bca7d141c5d241ceff07a564df25c382acd92"
+semantic = "sha256:be4e838785218ce28448aedd474d8be9c50b33cb4db9912ab348c919f3b00ea1"
+texts = [
+    "vaeb-lbr sources/bankr-vae/vae-local-rules-2025-12-01-sectioned.txt sha256:606652fba6f5d0bcc42224d061cc9805d995790aa6bd3f38af8dc94845390eca",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-vae"
-version = "0.0.1"
-language = 1
-source = "sha256:56a2c9332b0528d1fcaa422d7ffec94eee8d4bdaadde748a60cbc1caeaadbd49"
-semantic = "sha256:3968edafeac9715e716533fc07ca27647c53888f46e90a741fa789f3269d8cad"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

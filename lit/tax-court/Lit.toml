@@ -1,0 +1,43 @@
+# Deficiency cases in the United States Tax Court under its Rules of
+# Practice and Procedure, as amended through August 2024 (the latest
+# amendments effective August 8, 2024; sources/tax-court, the sectioned
+# extract). T.C. R. 25(a) counts periods much as FRCP 6(a) does but with
+# its own legal holidays (District of Columbia days included) and
+# Clerk's-office inaccessibility rule, which no counting rule in lit/core
+# encodes, so the rules' periods are stated in notes, not encoded as
+# counted deadlines. The Internal Revenue Code (26 U.S.C.) is vendored
+# nowhere in sources/, so its sections (the petition period of § 6213(a),
+# small tax cases under § 7463, finality and review under §§ 7481-7483)
+# are named in notes and every cite binds to the Tax Court Rules. An
+# appeal hands off to the courts of appeals under FRAP 13 and 14.
+[package]
+name = "tax-court"
+version = "0.1.0"
+language = 1
+pack_id = "tax-court"
+forum = "tax-court"
+authority = "FederalRule"
+title = "United States Tax Court, deficiency cases"
+description = "A deficiency case in the United States Tax Court under its Rules of Practice and Procedure, as far as the vendored text states: the petition and filing fee, the small tax case election, answer and reply, discovery, summary judgment, trial calendars, briefs, computation for entry of decision, reconsideration and vacatur, and the notice of appeal."
+in_force = "2024-08-08"
+known_at = "2026-10-27"
+unknown_before = "2024-08-08"
+jurisdiction = "United States Tax Court"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.tc-rules]
+title = "United States Tax Court Rules of Practice and Procedure, as amended through August 2024"
+url = "https://www.ustaxcourt.gov/files/documents/Complete-Rules-of-Practice-and-Procedure.pdf"
+path = "sources/tax-court/tax-court-rules-sectioned.txt"
+path_sha256 = "6d2998bbbf3de127c53557ae53ddb5e4087720a35463d80b232ff181bb380f1a"
+sha256 = "60040032eaed0001c3fabeb100bcec4ae5ddb14a4add628c563ef8c3ad956eb3"
+as_of = "2024-08-08"
+cite_prefixes = ["T.C. R."]
+section_heading = "Rule {n}"

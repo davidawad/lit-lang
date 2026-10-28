@@ -1,0 +1,154 @@
+module tax-court.deficiency
+
+/// A brief of an amicus curiae (T.C. R. 151.1(d)): generally no more than
+/// 25 pages.
+limit amicus-brief { pages <= 25 cite "T.C. R. 151.1(d)" } cite "T.C. R. 151.1(d)"
+
+/// An amicus brief is filed (T.C. R. 151.1).
+event AmicusBriefFiled() paper amicus-brief
+
+start notice-of-deficiency
+
+state notice-of-deficiency: "Notice of deficiency issued" by office cite "T.C. R. 13(a)"
+{
+  note "In a case a taxpayer commences, the Court's jurisdiction depends on the Commissioner's issuance of a notice of deficiency (T.C. R. 13(a); Code secs. 6212, 6213, 6901). The period for filing the petition is fixed by Code sec. 6213(a), which is not vendored, and the Court cannot extend it (T.C. R. 25(b)(2)(C)). A case is commenced by filing a petition (T.C. R. 20(a)) substantially in accordance with Form 1, with the notice of deficiency attached (T.C. R. 34(b)). The outline's Boechler, P.C. v. Commissioner, 596 U.S. 199 (2022), is removed: no reporter text is vendored."
+  edge-notice-of-deficiency-petition "Petitioner files a petition" -> petition-window {
+    authority cite "T.C. R. 20(a)"
+  }
+}
+
+decision petition-window: "Petition filed within the statutory period?" by applicant cite "T.C. R. 25(b)"
+{
+  note "Periods under the Rules, Court orders and statutes that state no method are computed under T.C. R. 25(a): exclude the trigger day, count every day, and carry a last day on a Saturday, Sunday or legal holiday (District of Columbia holidays included) to the next day; an electronic filing is timely through 11:59 p.m. Eastern Time on the last day (T.C. R. 22(d), 25(a)). Timely mailing is governed by Code sec. 7502 (T.C. R. 22(c)). The statutory petition period cannot be extended (T.C. R. 25(b)(2)(C)). A fee of $60 is paid when the petition is filed, unless waived on an affidavit or declaration of inability to pay (T.C. R. 20(d))."
+  edge-petition-window-timely "Timely petition and fee" -> petition-track {
+    authority cite "T.C. R. 20(d)"
+    cost 60.usd
+  }
+  edge-petition-window-late "Late" -> dismissed-jurisdiction { authority cite "T.C. R. 25(b)" }
+}
+
+decision petition-track: "Small tax case or regular case" by applicant cite "T.C. R. 171(a)"
+{
+  note "A small tax case is one in which the amount in dispute is $50,000 or less, the petitioner has requested small tax case procedure and the Court has concurred (T.C. R. 170; Code secs. 7436(c), 7463). The request may be made in the petition or later, before trial (T.C. R. 171(a), (c)); the Commissioner may oppose it by motion filed with the answer (T.C. R. 171(b)), and the Court may remove the designation before trial (T.C. R. 171(d))."
+  edge-petition-track-small "Small tax case" -> small-case { authority cite "T.C. R. 170" }
+  edge-petition-track-regular "Regular case" -> answer-due { authority cite "T.C. R. 34(b)" }
+}
+
+state small-case: "Small tax case tried" by court cite "T.C. R. 174"
+{
+  note "Small tax cases are tried as informally as orderly procedure allows; any evidence the Court deems probative is admissible, and neither briefs nor oral argument are required unless the Court directs (T.C. R. 174(b), (c)). Except as the Small Tax Case Rules provide, the general Rules apply (T.C. R. 170)."
+  edge-small-case-decision "Decision" -> small-case-decision { authority cite "T.C. R. 174(b)" }
+}
+
+decision answer-due: "Commissioner answers or moves" by office cite "T.C. R. 36(a)"
+{
+  note "The Commissioner has 60 days from service of the petition to answer, or 45 days to move with respect to it, with like periods for amendments (T.C. R. 36(a)). Every material allegation of the petition not expressly admitted or denied is deemed admitted (T.C. R. 36(c)). After a motion on jurisdiction or the sufficiency of a pleading, the time for the responsive pleading runs from service of the order disposing of it (T.C. R. 25(b)(2)(A))."
+  edge-answer-due-answer "Answer filed" -> reply-or-pleadings-closed {
+    authority cite "T.C. R. 36(a)"
+  }
+  edge-answer-due-motion "Motion to dismiss" -> motion-to-dismiss-ruling {
+    authority cite "T.C. R. 53"
+  }
+}
+
+decision motion-to-dismiss-ruling: "Ruling on the motion to dismiss" by court cite "T.C. R. 53"
+{
+  note "A case may be dismissed for cause on motion of a party or on the Court's initiative (T.C. R. 53). The outline named no decision here."
+  edge-motion-to-dismiss-granted "Granted" -> dismissed-jurisdiction { authority cite "T.C. R. 53" }
+  edge-motion-to-dismiss-denied "Denied: answer follows" -> reply-or-pleadings-closed {
+    authority cite "T.C. R. 25(b)"
+  }
+}
+
+state reply-or-pleadings-closed: "Reply, if required; case at issue" by applicant cite "T.C. R. 37(a)"
+{
+  note "The petitioner has 45 days from service of the answer to reply, or 30 days to move with respect to it (T.C. R. 37(a)). If no reply is filed, the answer's affirmative allegations are deemed denied unless the Commissioner, within 45 days after the time for reply expires, moves that they be deemed admitted (T.C. R. 37(c)). The case is at issue on the filing of the answer, or where a reply is required, on the reply, the order on the 37(c) motion or the lapse of the 37(c) period (T.C. R. 38)."
+  edge-pleadings-closed-discovery "Case at issue" -> discovery { authority cite "T.C. R. 38" }
+}
+
+state discovery: "Discovery" by applicant cite "T.C. R. 70(a)"
+{
+  note "The Court expects informal consultation first; discovery is by interrogatories, document production, and depositions only as T.C. R. 74 allows (T.C. R. 70(a)(1)). Without leave, discovery may not begin before 30 days after joinder of issue, and it must be completed, with any motion to compel filed, no later than 45 days before the date set for call of the case from a trial calendar (T.C. R. 70(a)(2)). A case at issue is placed on a trial calendar, with a Standing Pretrial Order (T.C. R. 131(a), (b))."
+  edge-discovery-pretrial "Case calendared" -> pretrial-disposition {
+    authority cite "T.C. R. 131(a)"
+  }
+}
+
+decision pretrial-disposition: "Summary judgment or trial" by court cite "T.C. R. 121(b)"
+{
+  note "Unless the Court orders otherwise, a motion for summary judgment may be filed beginning 30 days after the pleadings are closed and no later than 60 days before the first day of the session at which the case is calendared for trial; the response is due as the Court directs (T.C. R. 121(b)). Settlement is not modeled. The outline's Sundstrand Corp. v. Commissioner, 96 T.C. 226 (1991), is removed: no reporter text is vendored."
+  edge-pretrial-summary-judgment "Summary judgment motion" -> summary-judgment {
+    authority cite "T.C. R. 121(b)"
+  }
+  edge-pretrial-trial "Trial at the calendar call" -> trial { authority cite "T.C. R. 131(c)" }
+}
+
+decision summary-judgment: "Summary judgment ruling" by court cite "T.C. R. 121(a)"
+{
+  note "The Court grants summary judgment if the movant shows that there is no genuine dispute as to any material fact and the movant is entitled to judgment as a matter of law (T.C. R. 121(a)(2))."
+  edge-summary-judgment-granted "Granted in full" -> opinion { authority cite "T.C. R. 121(a)" }
+  edge-summary-judgment-denied "Denied in whole or part" -> trial {
+    authority cite "T.C. R. 121(a)"
+  }
+}
+
+state trial: "Trial and briefs" by court cite "T.C. R. 131(c)"
+{
+  note "Each case is called at the scheduled calendar call and tried in due course (T.C. R. 131(c)). The burden of proof is on the petitioner, except as a statute or the Court provides and except on new matter, increases in deficiency and affirmative defenses pleaded in the answer (T.C. R. 142(a)). Unless the Judge orders otherwise, opening briefs are due 75 days after the trial concludes, answering briefs 45 days after the opening brief's due date, and seriatim reply briefs 30 days after the answering brief's due date (T.C. R. 151(b))."
+  edge-trial-opinion "Trial and briefing complete" -> opinion { authority cite "T.C. R. 151(b)" }
+}
+
+decision opinion: "Opinion; computation for entry of decision" by court cite "T.C. R. 155(a)"
+{
+  note "The Court may withhold entry of decision for the parties to submit computations; agreed or competing computations are filed within 90 days of service of the opinion or order unless the Court directs otherwise (T.C. R. 155(a), (b)). A motion for reconsideration of an opinion or findings is filed within 30 days after the opinion or the transcript pages of oral findings are served (T.C. R. 161)."
+  edge-opinion-decision "Decision computed and entered" -> decision-entered {
+    authority cite "T.C. R. 155(a)"
+  }
+  edge-opinion-reconsideration "Motion for reconsideration" -> reconsideration-ruling {
+    authority cite "T.C. R. 161"
+  }
+}
+
+decision reconsideration-ruling: "Motion for reconsideration decided" by court cite "T.C. R. 161"
+{
+  note "Reconsideration of an opinion or findings is sought within 30 days of service (T.C. R. 161); a motion to vacate or revise a decision within 30 days after its entry, unless the Court permits otherwise (T.C. R. 162)."
+  edge-reconsideration-ruling-denied "Denied" -> decision-entered { authority cite "T.C. R. 161" }
+  edge-reconsideration-ruling-revised "Granted: opinion revised" -> decision-entered {
+    authority cite "T.C. R. 161"
+  }
+}
+
+decision decision-entered: "Notice of appeal filed?" by applicant cite "T.C. R. 190(a)"
+{
+  note "Review by a United States Court of Appeals is obtained by filing a notice of appeal and the required filing fee with the Clerk of the Tax Court within 90 days after the decision is entered; if one party timely appeals, any other party may appeal within 120 days after entry (T.C. R. 190(a); Code sec. 7483). Venue is under Code sec. 7482(b) (T.C. R. 190(c)). A notice of appeal does not stay assessment or collection unless a bond is filed under Code sec. 7485 on or before its filing (T.C. R. 192). Finality of the decision is governed by Code sec. 7481, which is not vendored."
+  edge-decision-entered-appeal "Notice of appeal filed" -> record-on-appeal {
+    authority cite "T.C. R. 190(a)"
+  }
+  edge-decision-entered-final "No appeal" -> decision-final { authority cite "T.C. R. 190(a)" }
+}
+
+state record-on-appeal: "Record on appeal prepared and forwarded" by office cite "T.C. R. 191"
+{
+  note "The Clerk prepares the record on appeal and forwards it to the Clerk of the Court of Appeals under FRAP 10 and 11, with a copy of the index to each party (T.C. R. 191)."
+  edge-record-on-appeal-forwarded "Record forwarded" -> appealed { authority cite "T.C. R. 191" }
+}
+
+terminal dismissed-jurisdiction: "Dismissed (late petition or motion granted)" outcome [loss, dismissal] cite "T.C. R. 53"
+{
+  note "Outcome from the petitioner's side."
+}
+
+terminal small-case-decision: "Small tax case decision" outcome [final] cite "T.C. R. 174(b)"
+{
+  note "Review and precedential effect of a small tax case decision are governed by Code sec. 7463(b), which is not vendored."
+}
+
+terminal decision-final: "Decision entered; no appeal" outcome [final] cite "T.C. R. 190(a)"
+{
+  note "Assessment or refund under the decision is outside this package."
+}
+
+terminal appealed: "Appeal to the court of appeals" outcome [appeal] cite "T.C. R. 190(a)"
+{
+  note "The appeal proceeds in the court of appeals under FRAP 13 and 14 (T.C. R. 190(a)); lit/frap covers the federal appellate rules."
+}

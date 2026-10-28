@@ -1,0 +1,42 @@
+# Civil actions in the Supreme Court of the State of New York under the
+# Civil Practice Law and Rules, as far as the vendored sections state
+# (sources/ny-supreme-civil: CPLR 304, 306-b, 3012, 3101, 3211, 3212,
+# 3215, 4011, 4401, 4404 and 5016, each the most recent revision the NY
+# Senate Open Legislation site showed on 2026-10-27). Periods are stated
+# in notes, not encoded as counted deadlines: their computation (General
+# Construction Law §§ 20, 24, 25-a and CPLR 2103) is not vendored and
+# core has no New York holiday calendar. CPLR sections the cited ones
+# refer to but that are not vendored here (CPLR 320, 2102, 3402, 4405)
+# stay out. An appeal hands off to
+# lit/ny-appellate-division.
+[package]
+name = "ny-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ny-supreme-court-civil"
+forum = "ny-supreme-civil"
+authority = "StateRule"
+title = "Supreme Court of the State of New York, civil actions"
+description = "Civil actions in the New York Supreme Court under the CPLR, as far as the vendored sections state: commencement by filing and service, the time to answer and the demand for a complaint, the CPLR 3211 motion to dismiss, default judgment, disclosure, summary judgment, trial, post-trial motions, entry of judgment, and the appeal (lit/ny-appellate-division)."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "Supreme Court of the State of New York"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ny-cplr]
+title = "New York Civil Practice Law and Rules, cited sections (NY Senate Open Legislation, most recent revision as shown 2026-10-27)"
+url = "https://www.nysenate.gov/legislation/laws/CVP"
+path = "sources/ny-supreme-civil/cplr-cited.txt"
+path_sha256 = "37637ac88309f1c2885180639c2f2167bfe306b125fa7ec22cb4d45b60b9a2b2"
+as_of = "2026-10-27"
+cite_prefixes = ["CPLR"]
+section_heading = "CPLR {n}"
+

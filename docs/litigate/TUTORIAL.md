@@ -104,9 +104,9 @@ litigate check lit/my-court         # types, references, cites, verification obl
 and usually a machine-applicable fix (`litigate fix lit/my-court`).
 `litigate explain <code>` gives the long explanation of any code. A
 probability you do not know yet is a hole, `p ?("no data yet")`. Holes
-compile under the default `dev` profile with a warning. Under `--profile
-strict`, the repository gate (`just lit-check`), they are errors (L5002), as
-are cites that resolve to no source. A cite whose vendored text is dated
+compile under the default `dev` profile with a warning; the repository gate
+(`just lit-check`) runs that profile. Under `--profile strict`, the release
+bar, they are errors (L5002), as are cites that resolve to no source. A cite whose vendored text is dated
 after its declaration takes effect is a hole too, unless the section's
 vendored amendment history shows the text unamended since (SPEC §7): that
 is why `in_force` above is the date of the vendored FRCP text.

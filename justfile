@@ -324,9 +324,10 @@ coverage-check:
     fi
 
 # --- litigate authoring language -------------------------------------------
-# Strict check of the stdlib and matters (SPEC §9.3); the epic gate once
-# lit/core lands. `just lit-check --profile dev lit/examples` for one package.
-lit-check *ARGS='--profile strict lit cases':
+# Check of the stdlib and matters under the default `dev` profile (SPEC §9.3):
+# fails on real errors only; holes stay L9002 warnings until release, when
+# `--profile strict` is the bar. `just lit-check lit/examples` for one package.
+lit-check *ARGS='lit cases':
     cargo run -q -p litigate-cli -- --format human check {{ARGS}}
 
 # The generated files (DESIGN §11.4, SPEC §9.4): every pack, links.json,

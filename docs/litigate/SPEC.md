@@ -3189,7 +3189,8 @@ the run's (a links package that does not check fails the run), while its
 dependencies outside the matter's scope are loaded for it but not
 reported.
 
-`justfile` recipes: `lit-check` runs `litigate check --profile strict lit cases`.
+`justfile` recipes: `lit-check` runs `litigate check lit cases` (the default
+`dev` profile: real errors fail it, holes do not; `strict` is the release bar).
 `lit-sync` regenerates every `Lit.lock` and builds the generated files (§9.4)
 into `target/lit-build/`; `lit-sync-check` runs it and fails when a `Lit.lock`
 changed or a generated file is tracked by git, and is part of `just ci`.
@@ -3246,7 +3247,8 @@ profile (ruling 2026-10-23): `build.args` names no `--profile`, and
 `build` defaults to `dev`. A fail-closed hole (`?`, §7) is then an L9002
 warning and lowers to `lowered.holes`, so the build never blocks on an
 unverified rule text, date or authority, and nothing is filled in to pass
-`strict`. `strict` grades the same sources in `just lit-check`.
+`strict`. `just lit-check` checks the same sources under `dev`; `strict`
+grades them at release.
 
 Generated JSON is the canonical rendering of §8.6, so its bytes need not
 match a hand-written predecessor; `litigate diff` is the equality that

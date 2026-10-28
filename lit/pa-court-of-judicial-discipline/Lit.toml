@@ -1,0 +1,42 @@
+# Proceedings in the Court of Judicial Discipline of Pennsylvania on formal
+# charges filed by the Judicial Conduct Board, from the respondent judge's
+# side. Neither Article V, § 18 of the Pennsylvania Constitution nor the
+# Court of Judicial Discipline Rules of Procedure is vendored under
+# sources/, so every cite is a hole naming the provision the outline
+# pointed to and no period, standard or sanction is stated; no tracking
+# issue names that gap yet. The structure is the outline's: charges,
+# answer and pretrial, trial, decision, and review in the Supreme Court of
+# Pennsylvania, which is not modeled.
+[package]
+name = "pa-court-of-judicial-discipline"
+version = "0.1.0"
+language = 1
+pack_id = "pa-court-of-judicial-discipline"
+forum = "pa-court-of-judicial-discipline"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "pennsylvania"
+title = "Court of Judicial Discipline of Pennsylvania"
+description = "Formal charges against a judge in the Court of Judicial Discipline of Pennsylvania: charges, answer and pretrial, trial, decision and review. Every cite is a hole: Pa. Const. art. V, § 18 and the Court of Judicial Discipline Rules of Procedure are not vendored, so no period, standard of proof or sanction is stated."
+in_force = "2026-08-08"
+known_at = "2026-10-28"
+unknown_before = "2026-08-08"
+jurisdiction = "Court of Judicial Discipline of Pennsylvania"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+pa-state-rules = { version = "^0.1.0", path = "../pa-rules" }
+
+[sources.pa-const-art-v-18]
+title = "Constitution of Pennsylvania, Article V, § 18 (Suspension, removal, discipline and other sanctions), not vendored"
+url = "https://www.palegis.us/statutes/constitution"
+
+[sources.cjdrp]
+title = "Court of Judicial Discipline Rules of Procedure, not vendored"
+url = "https://www.pacourts.us/courts/court-of-judicial-discipline"

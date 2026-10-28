@@ -1,0 +1,142 @@
+module pa-commonwealth-court-civil.review
+
+import pa-state-rules.{ DecisionFiled, NoticeOfAppealFiled, RecordFiled, ReviewPetitionFiled }
+
+// Appellate-jurisdiction review in the Commonwealth Court of Pennsylvania,
+// from the petitioner's (appellant's) side. Every period below is stated in
+// a note, not counted: time is computed under Pa.R.A.P. 107 and Pa.R.J.A.
+// 107 (Pa.R.A.P. 903, comment), and Pa.R.J.A. 107 is not vendored. Which
+// matters the court hears is set by 42 Pa.C.S. §§ 762 and 763, which are
+// not vendored, so they are not cited; neither are the court's internal
+// operating procedures. Original-jurisdiction petitions for review, whose
+// pleadings follow Pa.R.A.P. 1516(b), are not modeled. The earlier outline
+// named no leading decisions.
+start order-entered
+
+decision order-entered: "Order entered: petition for review or notice of appeal?" by applicant cite "Pa.R.A.P. 1512(a)"
+{
+  note "Review of a quasijudicial order of a government unit, or of an order appealable under 42 Pa.C.S. § 763(b) (awards of arbitrators) or any other provision of law, is obtained by filing a petition for review with the prothonotary of the appellate court within 30 days after the entry of the order; any other party may cross-petition within 14 days of service of the first petition or within the 30 days, whichever last expires (Pa.R.A.P. 1511, 1512(a)). Shorter or longer periods apply to the determinations listed in Pa.R.A.P. 1512(b). An appeal from a final order of a court of common pleas is taken by notice of appeal filed with the clerk of the trial court within 30 days after the entry of the order (Pa.R.A.P. 902(a), 903(a))."
+  edge-order-entered-petition "Petition for review of a government unit's order" -> petition-filed {
+    event NoticeOfAppealFiled()
+    authority cite "Pa.R.A.P. 1511"
+  }
+  edge-order-entered-notice "Notice of appeal from a court of common pleas" -> notice-filed {
+    event NoticeOfAppealFiled()
+    authority cite "Pa.R.A.P. 902(a)"
+  }
+  edge-order-entered-late "Time for review missed" -> time-barred {
+    authority cite "Pa.R.A.P. 1511"
+  }
+}
+
+terminal time-barred: "Time for review missed" outcome [loss, dismissal] cite "Pa.R.A.P. 1511"
+{
+  note "Outcome from the applicant's side. Failure to take any step other than the timely filing of a petition for review does not affect the validity of the review proceeding (Pa.R.A.P. 1511); likewise, failure to file a notice of appeal within the time Pa.R.A.P. 903 allows renders an appeal invalid, while other defects do not (Pa.R.A.P. 902(b)(1), (2))."
+}
+
+state petition-filed: "Petition for review filed" by applicant cite "Pa.R.A.P. 1513(d)"
+{
+  note "The aggrieved party is named as petitioner and, unless it is disinterested, the government unit and no one else as respondent (Pa.R.A.P. 1513(a)). The petition states the basis for jurisdiction, the parties, the order and its date of entry, a general statement of objections (an omitted issue is not waived if the court can address it on the certified record), the relief sought, a copy of the order and the Pa.R.A.P. 127 certificate of compliance, with a notice to participate if other parties below are not named; no notice to plead or verification is needed (Pa.R.A.P. 1513(d)). No answer is authorized (Pa.R.A.P. 1516(a)). A party below may intervene as of right by notice within 30 days after notice of the filing of the petition (Pa.R.A.P. 1531(a)). In counseled matters a docketing statement is filed within ten days of receipt of the notice of docketing, on pain of dismissal (Pa.R.A.P. 3706(b)(1), (d)). The government unit files the certified record within 40 days after service of the petition, and the prothonotary notifies the parties of the filing date (Pa.R.A.P. 1952(a))."
+  edge-petition-filed-record "Certified record filed" -> briefing {
+    event RecordFiled()
+    authority cite "Pa.R.A.P. 1952(a)"
+  }
+}
+
+state notice-filed: "Notice of appeal filed" by applicant cite "Pa.R.A.P. 902(a)"
+{
+  note "The notice of appeal is filed with the clerk of the trial court in each docket in which the order has been entered (Pa.R.A.P. 902(a)). If a party files a timely notice of appeal, any other party may file one within 14 days of service of the first or within the time otherwise prescribed, whichever last expires (Pa.R.A.P. 903(b)). In counseled matters a docketing statement is filed within ten days of receipt of the notice of docketing (Pa.R.A.P. 3706(b)(1)). The record, with the transcript and exhibits, is transmitted to the appellate court within 60 days after the filing of the notice of appeal (Pa.R.A.P. 1931(a)(1))."
+  edge-notice-filed-record "Record transmitted" -> briefing {
+    event RecordFiled()
+    authority cite "Pa.R.A.P. 1931(a)"
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite "Pa.R.A.P. 2185(a)"
+{
+  note "The appellant or petitioner serves and files its brief within 40 days after the date on which the record is filed, unless the prothonotary fixes a later date under a deferred briefing schedule; the appellee or respondent within 30 days after service of that brief and the reproduced record; a reply brief within 14 days after service of the preceding brief, received at least three days before argument except for good cause (Pa.R.A.P. 2185(a)(1), (b)). The prothonotary may grant a first, unopposed extension of 30 days or less on written request; any other extension needs a formal application (Pa.R.A.P. 3714(c)). A principal brief is limited to 14,000 words and a reply brief to 7,000 (Pa.R.A.P. 2135(a)(1)). On review of a quasijudicial order only questions raised before the government unit are heard, except questions of the validity of a statute, of the government unit's subject-matter jurisdiction, or that could not by due diligence have been raised below (Pa.R.A.P. 1551(a))."
+  edge-briefing-argument "Briefs filed: case listed for argument or submitted" -> argument {
+    authority cite "Pa.R.A.P. 3714(a)"
+  }
+  edge-briefing-no-brief "Appellant's brief not filed in time: appellee moves to dismiss" -> appeal-dismissed {
+    authority cite "Pa.R.A.P. 2188"
+  }
+}
+
+state argument: "Argument or submission on the briefs" by court cite "Pa.R.A.P. 3714(a)"
+{
+  note "A matter determined on the certified record is eligible for listing after the record is filed; when all briefs and reproduced records are filed, the prothonotary lists it for oral argument on a specified date with at least ten days' written notice, and the court may direct submission on briefs without argument (Pa.R.A.P. 3714(a)). Argument may be heard by the court en banc or by a panel of at least three judges (Pa.R.A.P. 3713). Oral argument is not a matter of right (Pa.R.A.P. 2315(a))."
+  edge-argument-decision "Commonwealth Court enters its order" -> appellate-decision {
+    authority cite "Pa.R.A.P. 1561(a)"
+  }
+}
+
+decision appellate-decision: "Commonwealth Court decides" by court cite "Pa.R.A.P. 1561(a)"
+{
+  note "On a petition for review the court may affirm, modify, vacate, set aside or reverse the order, and may remand and direct the entry of an appropriate order or further proceedings (Pa.R.A.P. 1561(a)); money damages on tort or contract claims are not granted except on review of the Board of Claims or similar agencies (Pa.R.A.P. 1561(c)). A final order of the Commonwealth Court is any order that concludes an appeal, including one that remands in whole or in part, unless the court remands and retains jurisdiction (Pa.R.A.P. 1112(b)). The prothonotary enters the judgment and mails notice of its entry to all parties (Pa.R.A.P. 2521(a))."
+  edge-appellate-decision-affirmed "Affirmed" -> after-affirmance {
+    event DecisionFiled()
+    authority cite "Pa.R.A.P. 2542(a)"
+  }
+  edge-appellate-decision-reversed "Reversed or set aside" -> reversed {
+    event DecisionFiled()
+    authority cite "Pa.R.A.P. 1561(a)"
+  }
+  edge-appellate-decision-remanded "Vacated and remanded" -> remanded {
+    event DecisionFiled()
+    authority cite "Pa.R.A.P. 1561(a)"
+  }
+}
+
+decision after-affirmance: "Reargument, allowance of appeal, or neither" by applicant cite "Pa.R.A.P. 2542(a)"
+{
+  note "An application for reargument is filed within 14 days after entry of the judgment or order (Pa.R.A.P. 2542(a)(1)); the court may allow reargument before the court en banc only for compelling and persuasive reasons (Pa.R.A.P. 3723). No application for reargument is permitted from a final order under the Election Code or the Local Government Unit Debt Act (Pa.R.A.P. 2543). A petition for allowance of appeal is filed with the Prothonotary of the Supreme Court within 30 days after entry of the order sought to be reviewed (ten days in Election Code and public-debt matters); if a timely application for reargument is filed, the time for all parties runs from the order denying reargument or the decision on reargument (Pa.R.A.P. 1113(a), (a)(1), (c))."
+  edge-after-affirmance-reargument "Application for reargument" -> reargument {
+    authority cite "Pa.R.A.P. 2542(a)"
+  }
+  edge-after-affirmance-allowance "Petition for allowance of appeal" -> allowance-petitioned {
+    event ReviewPetitionFiled()
+    authority cite "Pa.R.A.P. 1113(a)"
+  }
+  edge-after-affirmance-none "No further review sought" -> affirmed {
+    authority cite "Pa.R.A.P. 2572(a)"
+  }
+}
+
+decision reargument: "Reargument decided" by court cite "Pa.R.A.P. 2543"
+{
+  note "Reargument is not a matter of right but of sound judicial discretion, allowed only for compelling reasons (Pa.R.A.P. 2543, 3723). The Commonwealth Court may act on the application within 60 days after it is filed; if it does not, the application is deemed denied and the prothonotary enters an order denying it, and a petition for allowance of appeal filed before that disposition has no effect (Pa.R.A.P. 1113(a)(2), (a)(4))."
+  edge-reargument-granted "Reargument granted" -> argument { authority cite "Pa.R.A.P. 3723" }
+  edge-reargument-denied "Reargument denied: petition for allowance of appeal" -> allowance-petitioned {
+    event ReviewPetitionFiled()
+    authority cite "Pa.R.A.P. 1113(a)"
+  }
+  edge-reargument-denied-final "Reargument denied: no further review" -> affirmed {
+    authority cite "Pa.R.A.P. 2572(b)"
+  }
+}
+
+terminal allowance-petitioned: "Petition for allowance of appeal filed in the Supreme Court" outcome [appeal] cite "Pa.R.A.P. 1114(a)"
+{
+  note "The petition is filed with the Prothonotary of the Supreme Court within 30 days after entry of the order sought to be reviewed (Pa.R.A.P. 1113). Allowance is the Supreme Court's: lit/pa-supreme-court."
+}
+
+terminal affirmed: "Affirmed" outcome [loss] cite "Pa.R.A.P. 2572(a)"
+{
+  note "Outcome from the applicant's side. The record is remanded to the court or government unit that certified it 30 days after entry of the judgment or final order; remand is stayed until disposition of an application for reargument, any other application affecting the order, or a petition for allowance of appeal, and then follows 30 days after the later of the final order or the disposition of all post-decision applications (Pa.R.A.P. 2572(a)(2), (b))."
+}
+
+terminal reversed: "Reversed or set aside" outcome [win] cite "Pa.R.A.P. 1561(a)"
+{
+  note "Outcome from the applicant's side. The respondent or appellee may seek reargument or allowance of appeal within the same periods (Pa.R.A.P. 2542(a)(1); Pa.R.A.P. 1113(a)); the record is remanded as Pa.R.A.P. 2572(a)(2) and (b) provide."
+}
+
+terminal remanded: "Vacated and remanded" outcome [remand] cite "Pa.R.A.P. 1561(a)"
+{
+  note "The matter returns to the government unit or trial court for the order or further proceedings the court directs (Pa.R.A.P. 1561(a)); on review of a quasijudicial order the court may remand for consideration of an additional question it allows to be raised (Pa.R.A.P. 1551(a)(3)). The record is remanded as Pa.R.A.P. 2572(a)(2) and (b) provide."
+}
+
+terminal appeal-dismissed: "Appeal or petition dismissed" outcome [loss, dismissal] cite "Pa.R.A.P. 2188"
+{
+  note "Outcome from the applicant's side. If an appellant fails to file its designation of reproduced record, brief or required reproduced record within the time prescribed or as extended, an appellee may move for dismissal (Pa.R.A.P. 2188); failing to take a step other than timely filing of the petition for review is grounds for such action as the court deems appropriate, including dismissal (Pa.R.A.P. 1511)."
+}

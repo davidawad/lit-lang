@@ -1,0 +1,69 @@
+module pa-court-of-judicial-discipline.discipline
+
+import pa-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeOfAppealFiled }
+
+// Formal charges in the Court of Judicial Discipline of Pennsylvania, from
+// the respondent judge's side. Pa. Const. art. V, § 18 and the Court of
+// Judicial Discipline Rules of Procedure are not vendored, so every cite is
+// a hole naming the provision the outline pointed to, and no period,
+// burden, standard of proof or sanction is stated. The outline named no
+// decision.
+start charges
+
+state charges: "Formal charges filed by the Judicial Conduct Board" by office cite ?("Pa. Const. art. V, § 18(b)(5): not vendored") {
+  note "The Judicial Conduct Board files formal charges against a judge in the Court of Judicial Discipline. Who may file, notice and the respondent's rights are not stated: Pa. Const. art. V, § 18(b)(5) is not vendored."
+  edge-charges-answer "Respondent served" -> answer {
+    event ActionCommenced()
+    authority cite ?("Pa. Const. art. V, § 18(b)(5): not vendored")
+  }
+}
+
+state answer: "Answer and pretrial" by applicant cite ?("C.J.D.R.P. 413: not vendored") {
+  note "The respondent answers the charges. The answer period, discovery and interim suspension are not stated: the Court of Judicial Discipline Rules of Procedure are not vendored."
+  edge-answer-hearing "Set for trial" -> hearing {
+    authority cite ?("C.J.D.R.P. 501: not vendored")
+  }
+}
+
+state hearing: "Trial" by court cite ?("C.J.D.R.P. 501: not vendored") {
+  note "The charges are tried before the court. The burden and standard of proof are not stated: the Court of Judicial Discipline Rules of Procedure and Pa. Const. art. V, § 18(b)(5) are not vendored."
+  edge-hearing-decision "Decision issued" -> decision {
+    authority cite ?("Pa. Const. art. V, § 18(b)(5): not vendored")
+  }
+}
+
+decision decision: "Court of Judicial Discipline decides" by court cite ?("Pa. Const. art. V, § 18(b)(5): not vendored") {
+  note "The court dismisses the charges or imposes a sanction. The grounds and available sanctions are not stated: Pa. Const. art. V, § 18(b)(5) and (d) are not vendored."
+  edge-decision-dismissed "Charges dismissed" -> charges-dismissed {
+    event DecisionFiled()
+    authority cite ?("Pa. Const. art. V, § 18(b)(5): not vendored")
+  }
+  edge-decision-sanction "Sanction imposed" -> sanction {
+    event DecisionFiled()
+    authority cite ?("Pa. Const. art. V, § 18(b)(5): not vendored")
+  }
+}
+
+decision sanction: "Review sought?" by applicant cite ?("Pa. Const. art. V, § 18(c): not vendored") {
+  note "The outline routes review of a sanction to the Supreme Court of Pennsylvania. The review period, the reviewing body's composition and its standard of review are not stated: Pa. Const. art. V, § 18(c) is not vendored."
+  edge-sanction-final "No review" -> sanction-final {
+    event JudgmentEntered()
+    authority cite ?("Pa. Const. art. V, § 18(b)(5): not vendored")
+  }
+  edge-sanction-review "Review sought" -> review-sought {
+    event NoticeOfAppealFiled()
+    authority cite ?("Pa. Const. art. V, § 18(c): not vendored")
+  }
+}
+
+terminal charges-dismissed: "Charges dismissed" outcome [win] cite ?("Pa. Const. art. V, § 18(b)(5): not vendored") {
+  note "Outcome from the respondent's side. Costs and confidentiality are not stated: Pa. Const. art. V, § 18 is not vendored."
+}
+
+terminal sanction-final: "Sanction final" outcome [loss] cite ?("Pa. Const. art. V, § 18(b)(5): not vendored") {
+  note "Outcome from the respondent's side. The sanction (removal, suspension, censure or another) takes effect; its terms are not stated: Pa. Const. art. V, § 18(d) is not vendored."
+}
+
+terminal review-sought: "Review sought in the Supreme Court" outcome [appeal] cite ?("Pa. Const. art. V, § 18(c): not vendored") {
+  note "Review is outside this package; lit/pa-supreme-court models only allowance of appeal under Pa.R.A.P. Chapter 11, not review of the Court of Judicial Discipline."
+}

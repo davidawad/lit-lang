@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "pa-commonwealth-court-civil"
+version = "0.1.0"
+language = 1
+source = "sha256:292ccfbaa8b1d37658b8569be398ae1cbcf8bcbf8830ed0d6da73547a7cce425"
+semantic = "sha256:625cebb242ec1f655bd64e49fe5182a4e6e2ae07b82a80a77237b83d367eb562"
+texts = [
+    "pa-r-a-p sources/pa-appellate-civil/para-pa-code-title-210-part-i-2026-08-08-sectioned.txt sha256:bd91de9532ce33d7cbfbbe96d21e354dc166124b0c610a17a1d78e635dbe713f",
+]
+dependencies = [
+    "core 1.0.0",
+    "pa-state-rules 0.1.0",
+]
+
+[[package]]
+name = "pa-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]

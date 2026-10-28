@@ -579,118 +579,6 @@
         "us-federal-holidays"
       ],
       "hours": {
-        "inaccessibleText": "FRBP 9006(a): the clerk's office is inaccessible during the last hour; extend to the same time on {date}",
-        "rollText": "FRBP 9006(a): the period ends on a weekend or legal holiday; continue to the same time on {date}",
-        "text": "FRBP 9006(a): count every hour from the trigger; +{n} hour(s)"
-      },
-      "id": "frbp9006",
-      "label": "FRBP 9006(a)",
-      "months": {
-        "endOfMonth": "clamp",
-        "text": "FRBP 9006(a): count {n} {unit} {after} the anchor to the corresponding day, else the last day of that month -> {date}"
-      },
-      "sourceUrl": "https://www.uscourts.gov/sites/default/files/document/federal-rules-of-bankruptcy-procedure.pdf",
-      "steps": [
-        {
-          "kind": "trigger",
-          "op": "anchor",
-          "text": "FRBP 9006(a): exclude the trigger date {trigger}"
-        },
-        {
-          "op": "count",
-          "periods": [
-            {
-              "count": "calendar",
-              "text": "FRBP 9006(a): count {n} calendar day(s) {after} the anchor -> {date}",
-              "unit": "calendar"
-            },
-            {
-              "count": "business",
-              "text": "FRBP 9006(a): count {n} court day(s) {forward}, skipping weekends and holidays -> {date}",
-              "unit": "court"
-            },
-            {
-              "count": "business",
-              "text": "FRBP 9006(a): count {n} business day(s) {forward}, skipping weekends and holidays -> {date}",
-              "unit": "business"
-            }
-          ]
-        },
-        {
-          "backward": {
-            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll backward -> {date}",
-            "toward": "earlier"
-          },
-          "forward": {
-            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll forward -> {date}",
-            "toward": "later"
-          },
-          "op": "roll"
-        },
-        {
-          "op": "base"
-        },
-        {
-          "backwardText": "FRBP 9006(a): service extensions apply to forward periods only; ignored",
-          "methods": [
-            {
-              "days": 0,
-              "method": "personal"
-            },
-            {
-              "days": 0,
-              "method": "electronic"
-            },
-            {
-              "days": 3,
-              "method": "mail"
-            },
-            {
-              "days": 3,
-              "method": "clerk"
-            },
-            {
-              "days": 3,
-              "method": "other-consented"
-            }
-          ],
-          "op": "service",
-          "text": "FRBP 9006(a): service by {method} adds {days} day(s) -> {date}",
-          "unrecognized": [
-            "commercial-carrier",
-            "prison-mail",
-            "mail-foreign",
-            "express",
-            "express-foreign"
-          ]
-        },
-        {
-          "backward": {
-            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll backward -> {date}",
-            "toward": "earlier"
-          },
-          "forward": {
-            "text": "FRBP 9006(a): the last day is a weekend or legal holiday; roll forward -> {date}",
-            "toward": "later"
-          },
-          "op": "roll"
-        },
-        {
-          "ignoredText": "FRBP 9006(a): no inaccessibility extension applies; ignored",
-          "op": "clerkInaccessible",
-          "text": "FRBP 9006(a): the clerk's office is inaccessible on the last day; extend -> {date}"
-        }
-      ]
-    },
-    {
-      "closedWeekdays": [
-        "saturday",
-        "sunday"
-      ],
-      "holidays": [
-        "us-federal-holidays"
-      ],
-      "hours": {
         "inaccessibleText": "FRCP 6(a): the clerk's office is inaccessible during the last hour; extend to the same time on {date}",
         "rollText": "FRCP 6(a): the period ends on a weekend or legal holiday; continue to the same time on {date}",
         "text": "FRCP 6(a): count every hour from the trigger; +{n} hour(s)"
@@ -1223,12 +1111,12 @@
     "knownAt": "2026-10-22",
     "pins": [
       {
-        "digest": "sha256:b7401c5fbf171f68a04407800c8310c1f8ee33209275adb4ecb1ef28a5cd1d5f",
+        "digest": "sha256:121cabe90eadfac2452b420591fee935410c87ee1b104ef7143d1a4aba852cfd",
         "name": "core",
         "version": "1.0.0"
       }
     ],
-    "worldDigest": "sha256:ae85074f712266d9c79c6fe1c35f15fd73a975c149e9d3ec30d56bdf9b3e3dca"
+    "worldDigest": "sha256:4979ef46c614ba150785a48166835f33b9f9177bf5904fc6050fdd0d7f3c91e6"
   },
   "schemaVersion": 4
 }

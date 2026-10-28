@@ -6,3 +6,11 @@
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 5fff80527ba4ae3a38f0e3d377f193d260fa079099e091555e883aab32ae0ca4. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `d-del/original/local-rules-2026-09-01.pdf` as served (sha256 af3b341e6b0c9de46e2de2fb92447d654b44b46d4a82c1f9d1947dbb2270b769); extraction sha256 5fff80527ba4ae3a38f0e3d377f193d260fa079099e091555e883aab32ae0ca4.
+
+### `d-del/ddel-lr-crim-speedy-trial-1987-amended-2011-05-02.txt` — D. Del. Time Limits and Procedures for Achieving Prompt Disposition of Criminal Cases (amended May 2, 2011)
+
+- Source: https://www.ded.uscourts.gov/sites/ded/files/local-rules/LR-Crim.pdf (official site; 21 pages, sha256 1f9ba30eb7afcbba8bfda7839b108a81851f8ec8613b509a3e3fe503ff3a63ff).
+- Edition: Section II of the District Plan for Disposition of Criminal Cases under the Speedy Trial Act, 'AMENDED MAY 2, 2011', the file LR-Crim linked as 'Time Limits and Procedures for Achieving Prompt Disposition of Criminal Cases' at https://www.ded.uscourts.gov/local-rules (the only criminal local-rule document on that page; the civil local rules effective September 1, 2026 are vendored as local-rules-2026-09-01.txt). robots.txt of www.ded.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 049fe639690eae8dd3b9c46057c9c26f152a935d37fc15fea5cd406103eb3ace. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `d-del/original/ddel-lr-crim-speedy-trial-1987-amended-2011-05-02.pdf` as served (sha256 1f9ba30eb7afcbba8bfda7839b108a81851f8ec8613b509a3e3fe503ff3a63ff); extraction sha256 049fe639690eae8dd3b9c46057c9c26f152a935d37fc15fea5cd406103eb3ace.

@@ -1,0 +1,106 @@
+module vt-superior-court-civil.civil
+
+start commenced
+
+state commenced: "Action commenced" by applicant cite "V.R.C.P. 3"
+{
+  note "A civil action is commenced by filing a complaint, or, where no attachment, trustee process or replevin is to be made, by service of the summons and complaint. An action commenced by filing is served within 60 days after the complaint is filed; an action commenced by service has its complaint filed within 21 days after service on the first defendant served is completed; if service or filing is not timely the action may be dismissed on motion, including the court's under Rule 41(b)(1), and notice (V.R.C.P. 3(a)). Periods in this package are stated, not counted: computation is V.R.C.P. 6(a). The filing fee is not stated in the vendored rules; its waiver is V.R.C.P. 3.1."
+  edge-commenced-served "Defendant served" -> answer-due { authority cite "V.R.C.P. 4" }
+  edge-commenced-unserved "Service not made or complaint not filed in time" -> dismissed-unserved {
+    authority cite "V.R.C.P. 3"
+  }
+}
+
+terminal dismissed-unserved: "Dismissed for untimely service or filing" outcome [loss, dismissal] cite "V.R.C.P. 3"
+{
+  note "Dismissal on motion and notice; if the action was vexatiously commenced the court may tax a reasonable attorney's fee as costs for the defendant (V.R.C.P. 3(a)). The court may also dismiss on its own motion when no proof of service is filed within 90 days of the filing of the action or of an extended service deadline (V.R.C.P. 41(b)(1)(ii))."
+}
+
+decision answer-due: "Answer, motion or default" by office cite "V.R.C.P. 12(a)"
+{
+  note "A defendant serves an answer within 21 days after being served with the summons and complaint, or within 49 days when served under Rule 4(e), 4(f) or 4(k) outside the continental United States or Canada; when service was timely waived under Rule 4(l), within 60 days after the waiver request was sent, or 90 days if the defendant was addressed outside the United States. An answer to a cross-claim and a reply to a counterclaim are due within 21 days (V.R.C.P. 12(a)). No leading decision is named."
+  edge-answer-due-default "No response" -> default-entered { authority cite "V.R.C.P. 55(a)" }
+  edge-answer-due-motion "Rule 12(b) motion filed" -> pleading-motion {
+    authority cite "V.R.C.P. 12(b)"
+  }
+  edge-answer-due-answer "Answer served" -> discovery { authority cite "V.R.C.P. 26" }
+}
+
+decision pleading-motion: "Motion to dismiss decided" by court cite "V.R.C.P. 12(b)"
+{
+  note "The defenses that may be made by motion include failure to state a claim upon which relief can be granted; a motion presenting matters outside the pleading is treated as one for summary judgment (V.R.C.P. 12(b)). A memorandum in opposition to a dispositive motion is filed not more than 30 days after service of the motion, and to a nondispositive motion not more than 14 days after; a reply may be filed within 14 days after service of the opposition (V.R.C.P. 7(b)(4)). If the court denies the motion or postpones it to trial, the responsive pleading is served within 14 days after notice of the court's action (V.R.C.P. 12(a)(3)). No leading decision is named."
+  edge-pleading-motion-dismissed "Granted" -> dismissed-pleading { authority cite "V.R.C.P. 12(b)" }
+  edge-pleading-motion-denied "Denied: responsive pleading within 14 days after notice" -> discovery {
+    authority cite "V.R.C.P. 12(a)"
+  }
+}
+
+terminal default-entered: "Default judgment" outcome [loss] cite "V.R.C.P. 55(a)"
+{
+  note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend, the party seeking relief may file a motion for a default judgment (V.R.C.P. 55(a)); judgment against a party who has not appeared needs an affidavit on liability and damages, and against one who has appeared a hearing on at least 7 days' written notice served by the clerk (V.R.C.P. 55(c)). The court may set aside its order for good cause, and a final default judgment under Rule 60(b) (V.R.C.P. 55(d)). The court may dismiss on its own motion when all defendants are served and in default and the plaintiff has not moved for a default judgment within 60 days of the last date to answer (V.R.C.P. 41(b)(1)(i)). The Supreme Court's promulgation order of October 6, 2026 (sources/vt-superior-civil/vt-vrcp-55a-order-2026-10-06.txt) adds to Rule 55(a), effective January 1, 2027, that a motion relying on service outside the state under the law of the place of service must specify the statute or rule authorizing that manner of service; it changes no period and is not in force at this package's dates. Outcome from the defending side."
+}
+
+terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] cite "V.R.C.P. 12(b)"
+
+state discovery: "Discovery" by applicant cite "V.R.C.P. 26"
+{
+  note "Discovery is governed by V.R.C.P. 26 through 37; a scheduling order may set the dates for pretrial motions, third-party joinder and the close of discovery, after which the case is ready for trial (V.R.C.P. 16.2). The court may direct a pretrial conference, and its order controls the subsequent course of the action (V.R.C.P. 16). A jury demand is served not later than 14 days after service of the last pleading directed to the issue; failure to serve and file it waives a jury (V.R.C.P. 38(b), (d))."
+  edge-discovery-sj "Summary judgment motion filed" -> sj-motion { authority cite "V.R.C.P. 56(b)" }
+  edge-discovery-trial "No dispositive motion" -> trial { authority cite "V.R.C.P. 16" }
+  edge-discovery-settle "Settled or voluntarily dismissed" -> settled {
+    authority cite "V.R.C.P. 41(a)"
+  }
+}
+
+decision sj-motion: "Summary judgment decided" by court cite "V.R.C.P. 56(a)"
+{
+  note "A party may move for summary judgment at any time until 30 days after the close of all discovery unless a stipulation or order sets another time; an adverse party may oppose within 30 days after service of the motion, and the movant may reply within 14 days after service of the opposition (V.R.C.P. 56(b)). The motion is supported by a separate statement of undisputed material facts with record citations, and the opposition by a paragraph-by-paragraph response (V.R.C.P. 56(c)). The court grants summary judgment if the movant shows no genuine dispute as to any material fact and entitlement to judgment as a matter of law (V.R.C.P. 56(a)). No leading decision is named."
+  edge-sj-motion-granted "Granted" -> judgment-for-movant { authority cite "V.R.C.P. 56(a)" }
+  edge-sj-motion-denied "Denied or partly denied" -> trial { authority cite "V.R.C.P. 56(g)" }
+}
+
+terminal judgment-for-movant: "Judgment for the movant" outcome [win, judgment] cite "V.R.C.P. 56(a)"
+{
+  note "Partial summary judgment and an order treating facts as established (V.R.C.P. 56(g)) are not modeled."
+}
+
+state trial: "Trial" by court cite "V.R.C.P. 16"
+{
+  note "A party who demanded a jury on only some issues leaves any other party 14 days after service of the demand to demand a jury on the others (V.R.C.P. 38(c)). A motion for judgment as a matter of law may be made at any time before submission to the jury (V.R.C.P. 50(a)). In a nonjury trial a party may request findings within 7 days after notice of the decision (V.R.C.P. 52(a))."
+  edge-trial-post "Verdict or decision; judgment entered" -> post-trial {
+    authority cite "V.R.C.P. 58"
+  }
+}
+
+decision post-trial: "Post-trial motions decided" by court cite "V.R.C.P. 59(b)"
+{
+  note "A motion for judgment as a matter of law is renewed not later than 28 days after entry of judgment (V.R.C.P. 50(b)); a motion to amend findings, not later than 28 days after entry (V.R.C.P. 52(b)); a motion for a new trial, not later than 28 days after entry (V.R.C.P. 59(b)); a motion to alter or amend the judgment, not later than 28 days after entry (V.R.C.P. 59(e)). The court may not extend these times (V.R.C.P. 6(b)(2)). A motion under Rule 60(b)(1)-(3) is filed not more than one year after the judgment (V.R.C.P. 60(b))."
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+    authority cite "V.R.C.P. 58"
+  }
+}
+
+state judgment-entered: "Final judgment entered" by office cite "V.R.C.P. 58"
+{
+  note "A judgment is set forth on a separate document and is effective when entered under Rule 79(a) and set forth on the separate document, or when 150 days have run from entry (V.R.C.P. 58(a), (b)). No execution issues and no enforcement proceeding is taken until 30 days after entry or until the time for appeal as extended by Appellate Rule 4 has expired (V.R.C.P. 62(a)(1))."
+  edge-judgment-entered-appeal "Next step" -> appeal-decision { authority cite "V.R.A.P. 4(a)" }
+}
+
+decision appeal-decision: "Notice of appeal within 30 days of entry?" by applicant cite "V.R.A.P. 4(a)"
+{
+  note "The notice of appeal is filed with the superior court clerk within 30 days after entry of the judgment or order appealed from (V.R.A.P. 4(a)(1)). A timely motion under V.R.C.P. 50(b), 52(b), 59 and the other motions Rule 4(b) lists restarts the full time from entry of the order disposing of the last remaining motion (V.R.A.P. 4(b))."
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken { authority cite "V.R.A.P. 3(b)" }
+  edge-appeal-decision-none "No notice filed" -> final-no-appeal { authority cite "V.R.A.P. 4(a)" }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Vermont Supreme Court package" outcome [appeal] cite "V.R.A.P. 3(b)"
+{
+  note "Hand-off to lit/vt-supreme (vt-supreme-court-civil-appeals)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "V.R.A.P. 4(a)"
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "V.R.C.P. 41(a)"
+{
+  note "A plaintiff may dismiss without order by notice before the adverse party files an answer or a summary judgment motion, or by a stipulation signed by all parties who have appeared; unless stated otherwise the dismissal is without prejudice (V.R.C.P. 41(a)(1), (2), (6))."
+}

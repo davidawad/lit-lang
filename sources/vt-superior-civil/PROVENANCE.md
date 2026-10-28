@@ -14,3 +14,9 @@
 - Retrieved 2026-10-28 on carbon by David's BrowserOS neo pass (Method: BrowserOS neo, Lexis public-access viewer text, David's explicit ruling 2026-10-28; Lexis annotations excluded); the viewer's per-document records were captured as JSON (BrowserOS tool framing stripped, content unedited) and saved as the original; the extraction is the PM session's plain-text rendering of those records, in document order. No other served original exists for this text. Barrier: LexisNexis public access (reCAPTCHA on document pages; lg-f3q8.77 row); fetched on David's explicit ruling 2026-10-28 despite robots/terms.
 - Extract sha256 97c37263b450dad65df451e34be464d814ca7eb2390b10bdae1696d36375080f.
 - Original: `vt-superior-civil/original/vrcp.json` as served to the viewer (sha256 e6750c9690c20c1da0385432958b6407ce1a9669ab7009c4bc853bd7bf281f71); extraction sha256 97c37263b450dad65df451e34be464d814ca7eb2390b10bdae1696d36375080f.
+
+### `vt-superior-civil/vrcp-sectioned.txt` — Vermont Rules of Civil Procedure, sectioned
+
+- Derived in the pod (lg-f3q8.52) from `vt-superior-civil/vrcp.txt` (extract sha256 97c37263b450dad65df451e34be464d814ca7eb2390b10bdae1696d36375080f); nothing fetched. One `## Rule <n>` line is inserted before each `===== V.R.C.P. Rule <n> =====` record line (Rule 1 through Rule 86, 115 rules; the appendix of forms record is unmarked). Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, current with rule changes received through March 16, 2026. The October 6, 2026 Rule 55(a) promulgation order (effective January 1, 2027) is a separate dated document and is not merged into it.
+- Sectioned sha256 8583220322f0a9df87238db26261c190ade801d0ff4e6d0656b84fe20bb4c004 (the `path_sha256` pinned by `lit/vt-superior-civil/Lit.toml` and `lit/vt-supreme/Lit.toml`).

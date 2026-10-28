@@ -1,6 +1,6 @@
 module bap10.panel
 
-import core.frbp9006.{ frbp9006 }
+import core.calendar.{ us-federal-holidays }
 
 import frbp.appeals.{
   appellant-brief-period,
@@ -13,6 +13,45 @@ import frbp.appeals.{
 
 import frbp.events.{ LeaveToAppealGranted, NoticeOfAppealFiled }
 
+/// The Colorado legal holiday not already in 5 U.S.C. § 6103(a): Frances
+/// Cabrini Day, the first Monday in October. Colorado's other Rule 6(a)(2)
+/// holidays coincide with federal holidays. C.R.C.P. 6(a)(2) is vendored in
+/// this package as the 2023 edition; gubernatorial holidays and any other
+/// day the court closes are not modeled (the earlier due date).
+calendar colorado-legal-holidays cite "C.R.C.P. 6(a)(2)"
+{
+  frances-cabrini-day: nth(1, monday, 10) effective [2026-01-01, ..)
+}
+
+/// FRBP 9006(a)(6)(C), as applied by 10th Cir. BAP L.R. 8026-8(b):
+/// Colorado's state holidays close periods measured forward from an event.
+/// The BAP clerk's office is in Denver. The states of originating districts
+/// (Kansas, New Mexico, Oklahoma, Utah and Wyoming) are not modeled because
+/// the matter does not identify the originating district.
+counting bap10-9006 effective [2026-01-01, ..) known_at 2026-01-01 cite "10th Cir. BAP L.R. 8026-8"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forward_holidays colorado-legal-holidays cite "FRBP 9006(a)(6)(C)"
+  forums [bap10]
+  allow_hours
+  end_of_month clamp
+}
+
 // The Tenth Circuit BAP's own periods, counted under FRBP 9006(a) (10th
 // Cir. BAP L.R. 8026-8(a)). The FRBP and 28 U.S.C. § 158(c)(1) periods
 // (notice, election, record, transcript, briefing, motions, costs,
@@ -23,9 +62,10 @@ import frbp.events.{ LeaveToAppealGranted, NoticeOfAppealFiled }
 //
 // Counting: a "legal holiday" under FRBP 9006(a) here also includes a day
 // appointed as a holiday by the state where the clerk's office sits or the
-// state of the originating district (10th Cir. BAP L.R. 8026-8(b)). core's
-// frbp9006 counts the federal holidays only; a state holiday on a last day is
-// not modeled.
+// state of the originating district (10th Cir. BAP L.R. 8026-8(b));
+// `bap10-9006` counts Colorado holidays for forward periods. The originating
+// district's state holidays are not modeled because that district is not
+// identified in the matter.
 //
 // Stated in the rules but not declared: the combined statements are also
 // due before a party files a motion or response, if that comes first
@@ -64,50 +104,50 @@ event ConstitutionalCertificationServed()
 /// the appeal has been docketed, a party files the Statement of Admission
 /// to Practice or Pro Se Status, the Statement of Interested Parties and
 /// the Statement Regarding Oral Argument.
-deadline combined-statements-period: 14.days after AppealDocketingNoticed() counted_by frbp9006 cite "10th Cir. BAP L.R. 8003-2"
+deadline combined-statements-period: 14.days after AppealDocketingNoticed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8003-2"
 
 /// 10th Cir. BAP L.R. 8003-3(b): the appeal may be dismissed without
 /// further notice if, within 14 days after filing the notice of appeal, a
 /// party fails to pay the required fee or file a timely motion to waive it.
-deadline fee-payment-period: 14.days after NoticeOfAppealFiled() counted_by frbp9006 cite "10th Cir. BAP L.R. 8003-3(b)"
+deadline fee-payment-period: 14.days after NoticeOfAppealFiled() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8003-3(b)"
 
 /// 10th Cir. BAP L.R. 8003-3(b): on an interlocutory appeal, the same 14
 /// days run from entry of the order granting leave to appeal.
-deadline fee-payment-leave-period: 14.days after LeaveToAppealGranted() counted_by frbp9006 cite "10th Cir. BAP L.R. 8003-3(b)"
+deadline fee-payment-leave-period: 14.days after LeaveToAppealGranted() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8003-3(b)"
 
 /// 10th Cir. BAP L.R. 8003-3(b)(3): the required fee is paid within 14 days
 /// after entry of an order denying the appellant's motion to waive it.
-deadline fee-after-waiver-denial-period: 14.days after FeeWaiverDenied() counted_by frbp9006 cite "10th Cir. BAP L.R. 8003-3(b)(3)"
+deadline fee-after-waiver-denial-period: 14.days after FeeWaiverDenied() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8003-3(b)(3)"
 
 /// 10th Cir. BAP L.R. 8004-2: the movant may file a reply to a response to
 /// a motion for leave to appeal within 7 days after service of the
 /// response, addressing only matters raised in the response.
-deadline leave-reply-period: 7.days after LeaveResponseServed() counted_by frbp9006 cite "10th Cir. BAP L.R. 8004-2"
+deadline leave-reply-period: 7.days after LeaveResponseServed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8004-2"
 
 /// 10th Cir. BAP L.R. 8013-2: notwithstanding FRBP 8013(a)(3), a response
 /// to a motion to intervene is filed within 14 days after the motion is
 /// served.
-deadline intervention-response-period: 14.days after InterventionMotionServed() counted_by frbp9006 cite "10th Cir. BAP L.R. 8013-2"
+deadline intervention-response-period: 14.days after InterventionMotionServed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8013-2"
 
 /// 10th Cir. BAP L.R. 8013-2: a reply on a motion to intervene is filed
 /// within 7 days after the response is served.
-deadline intervention-reply-period: 7.days after InterventionResponseServed() counted_by frbp9006 cite "10th Cir. BAP L.R. 8013-2"
+deadline intervention-reply-period: 7.days after InterventionResponseServed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8013-2"
 
 /// 10th Cir. BAP L.R. 8019-1(c): within 14 days after the notice of oral
 /// argument is docketed, each party who has filed a brief files a statement
 /// of who will appear at argument for it.
-deadline argument-appearance-period: 14.days after ArgumentNoticeDocketed() counted_by frbp9006 cite "10th Cir. BAP L.R. 8019-1(c)"
+deadline argument-appearance-period: 14.days after ArgumentNoticeDocketed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8019-1(c)"
 
 /// 10th Cir. BAP L.R. 8026-7(a): within 14 days after the date of the
 /// notice that the appeal has been docketed, a party questioning the
 /// constitutionality of an Act of Congress or a state statute, where the
 /// government is not a party, files a written notice.
-deadline constitutional-notice-period: 14.days after AppealDocketingNoticed() counted_by frbp9006 cite "10th Cir. BAP L.R. 8026-7(a)"
+deadline constitutional-notice-period: 14.days after AppealDocketingNoticed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8026-7(a)"
 
 /// 10th Cir. BAP L.R. 8026-7(c): an attorney general may appear in the
 /// appeal within 30 days after the date the BAP clerk serves its
 /// certification.
-deadline attorney-general-appearance-period: 30.days after ConstitutionalCertificationServed() counted_by frbp9006 cite "10th Cir. BAP L.R. 8026-7(c)"
+deadline attorney-general-appearance-period: 30.days after ConstitutionalCertificationServed() counted_by bap10-9006 cite "10th Cir. BAP L.R. 8026-7(c)"
 
 test "the combined statements are due 14 days after the docketing notice" cite "10th Cir. BAP L.R. 8003-2"
 {
@@ -167,6 +207,12 @@ test "an attorney general may appear within 30 days of the certification" cite "
 {
   given ConstitutionalCertificationServed() on 2026-03-03
   expect deadline(attorney-general-appearance-period) == 2026-04-02
+}
+
+test "a forward period rolls on Colorado's Frances Cabrini Day" cite "10th Cir. BAP L.R. 8026-8(b)"
+{
+  given LeaveResponseServed() on 2026-09-28
+  expect deadline(leave-reply-period) == 2026-10-06
 }
 
 start notice-filed

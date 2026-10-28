@@ -1,0 +1,55 @@
+# Civil actions in the Ohio Court of Claims. The court's own statute,
+# R.C. Chapter 2743 (the state's waiver of immunity, trial to the court,
+# the public-records special master and the appeal to the court of
+# appeals), is not vendored, so what it alone states stays a hole with a
+# note. Procedure is the Ohio Rules of Civil Procedure as amended effective
+# July 1, 2026 (sources/oh-common-pleas), which govern all courts of this
+# state in the exercise of civil jurisdiction (Civ.R. 1(A)), and the appeal
+# time is App.R. 4 (sources/oh-appellate). Periods are stated in notes, not
+# counted: Civ.R. 6(A) has no counting rule in lit/core. An appeal hands off
+# to the Ohio appellate package (lit/oh-court-of-appeals).
+[package]
+name = "oh-court-of-claims"
+version = "0.1.0"
+language = 1
+pack_id = "oh-court-of-claims"
+forum = "oh-court-of-claims"
+authority = "StateRule"
+family = "state-civil"
+jurisdiction_id = "ohio"
+title = "Ohio Court of Claims"
+description = "Civil actions in the Ohio Court of Claims under the Ohio Rules of Civil Procedure, as far as the vendored text states: commencement and service, the answer and Civ.R. 12 motions, discovery, summary judgment, trial, entry and notice of judgment, post-trial motions, relief from judgment, dismissal, and the appeal to the court of appeals (lit/oh-court-of-appeals). What only R.C. Chapter 2743 states is a hole: it is not vendored."
+in_force = "2026-07-01"
+known_at = "2026-10-28"
+unknown_before = "2026-07-01"
+jurisdiction = "Ohio Court of Claims"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+oh-state-rules = { version = "^0.1.0", path = "../oh-rules" }
+
+[sources.oh-civ-r]
+title = "Ohio Rules of Civil Procedure (as amended effective July 1, 2026)"
+url = "https://www.supremecourt.ohio.gov/docs/LegalResources/Rules/civil/CivilProcedure.pdf"
+path = "sources/oh-common-pleas/ohio-civil-rules-sectioned.txt"
+path_sha256 = "c160d248cef571563999330b31759050e39d8ee5da4b3542a95a4a73edb3c5a1"
+sha256 = "49201001c188b1545e68567cdfdcfd011d0840b4811d74b5ab4c4be83c74e040"
+as_of = "2026-07-01"
+cite_prefixes = ["Civ.R."]
+section_heading = "Civ.R. {n}"
+
+[sources.oh-app-r]
+title = "Ohio Rules of Appellate Procedure (as amended effective July 1, 2026)"
+url = "https://www.supremecourt.ohio.gov/docs/LegalResources/Rules/appellate/AppellateProcedure.pdf"
+path = "sources/oh-appellate/ohio-appellate-rules-sectioned.txt"
+path_sha256 = "140f97309db187996c93d42dada5defa09fe1bfd4ef12c3fa521c08027f66034"
+sha256 = "ac120dddbcaaad3c4423e40f03f1d312dc03ce6bf743a95bdbfa91ebacc94df6"
+as_of = "2026-07-01"
+cite_prefixes = ["App.R."]
+section_heading = "App.R. {n}"

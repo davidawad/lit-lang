@@ -1,0 +1,142 @@
+module oh-court-of-claims.claims
+
+import oh-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
+// Civil actions against the state in the Ohio Court of Claims, from the
+// applicant's (claimant's) side. The Ohio Rules of Civil Procedure govern
+// all courts of this state in the exercise of civil jurisdiction at law or
+// in equity, except as Civ.R. 1(C), 73 and 75 provide (Civ.R. 1(A)). The
+// court's statute, R.C. Chapter 2743, is not vendored: the waiver of
+// immunity (R.C. 2743.02), trial to the court without a jury (R.C.
+// 2743.11), the public-records special master (R.C. 2743.75) and the
+// appeal route (R.C. 2743.20) stay holes. Every period below is stated in
+// a note, not counted: lit/core has no counting rule for Civ.R. 6(A). The
+// earlier outline named no Ohio decision.
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "Civ.R. 3(A)"
+{
+  note "A civil action is commenced by filing a complaint with the court, if service is obtained within one year from such filing upon a named defendant (Civ.R. 3(A)). Upon the filing of the complaint the clerk forthwith issues a summons for each defendant (Civ.R. 4(A)). If service is not made upon a defendant within six months after the filing of the complaint and the party cannot show good cause, the action is dismissed as to that defendant without prejudice (Civ.R. 4(E)). The court's jurisdiction over claims against the state, the limitations period and the filing fee are set by R.C. Chapter 2743, which is not vendored. A public-records complaint referred to a special master (R.C. 2743.75) is outside this package."
+  edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    event ActionCommenced()
+    authority cite "Civ.R. 4.1"
+  }
+  edge-complaint-filed-unserved "Not served within six months without good cause" -> service-dismissal {
+    authority cite "Civ.R. 4(E)"
+  }
+}
+
+terminal service-dismissal: "Dismissed without prejudice for failure of service" outcome [loss, dismissal] cite "Civ.R. 4(E)"
+{
+  note "Outcome from the applicant's side. The dismissal is without prejudice (Civ.R. 4(E))."
+}
+
+decision answer-due: "Answer or Civ.R. 12 motion" by office cite "Civ.R. 12(A)"
+{
+  note "The defendant serves an answer within twenty-eight days after service of the summons and complaint (Civ.R. 12(A)(1)). Service of a Civ.R. 12 motion alters this period unless the court fixes a different time: if the motion is denied, the responsive pleading is served within fourteen days after notice of the court's action (Civ.R. 12(A)(2)). Whether R.C. Chapter 2743 sets a different answer period for the state is a hole: the statute is not vendored. No default judgment is entered against the state or an officer or agency of it unless the claimant establishes the claim by evidence satisfactory to the court (Civ.R. 55(D))."
+  edge-answer-due-answer "Answer served" -> discovery { authority cite "Civ.R. 12(A)" }
+  edge-answer-due-motion "Civ.R. 12(B) or 12(C) motion" -> pleading-motion {
+    authority cite "Civ.R. 12(B)"
+  }
+}
+
+decision pleading-motion: "Civ.R. 12(B) or 12(C) motion decided" by court cite "Civ.R. 12(B)"
+{
+  note "The defenses of lack of subject-matter or personal jurisdiction, improper venue, insufficiency of process or of service of process, failure to state a claim upon which relief can be granted, and failure to join a party may be made by motion before pleading (Civ.R. 12(B)). After the pleadings are closed a party may move for judgment on the pleadings (Civ.R. 12(C)). A response to a written motion may be served within fourteen days after service of the motion, and the movant's reply within seven days after service of the response (Civ.R. 6(C)(1), (3))."
+  edge-pleading-motion-granted "Granted: claims dismissed" -> dismissed-merits {
+    authority cite "Civ.R. 41(B)"
+  }
+  edge-pleading-motion-denied "Denied: answer within fourteen days after notice" -> discovery {
+    authority cite "Civ.R. 12(A)"
+  }
+}
+
+terminal dismissed-merits: "Dismissed on the pleadings" outcome [loss, dismissal] cite "Civ.R. 41(B)"
+{
+  note "Outcome from the applicant's side. A dismissal for lack of jurisdiction over the person or the subject matter is a failure otherwise than on the merits; any other dismissal not provided for in Civ.R. 41 operates as an adjudication upon the merits unless the court otherwise specifies (Civ.R. 41(B)(3), (4)). An appeal runs from the final order (App.R. 4(A))."
+}
+
+state discovery: "Discovery" by applicant cite "Civ.R. 26(B)"
+{
+  note "Parties may obtain discovery regarding any nonprivileged matter relevant to any party's claim or defense and proportional to the needs of the case (Civ.R. 26(B)(1)). A party may serve up to forty written interrogatories without leave of court (Civ.R. 33(A)); responses to interrogatories, requests for production and requests for admission are due within a designated period not less than twenty-eight days after service (Civ.R. 33(A), 34(B), 36(A))."
+  edge-discovery-sj "Summary judgment motion" -> summary-judgment { authority cite "Civ.R. 56(A)" }
+  edge-discovery-voluntary "Notice or stipulation of dismissal" -> voluntary-dismissal {
+    authority cite "Civ.R. 41(A)"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial {
+    authority cite ?("R.C. 2743.11 (trial to the court) is not vendored")
+  }
+}
+
+terminal voluntary-dismissal: "Voluntary dismissal or settlement" outcome [settlement] cite "Civ.R. 41(A)"
+{
+  note "A plaintiff may dismiss without order of court by filing a notice of dismissal at any time before the commencement of trial, or by filing a stipulation of dismissal signed by all parties who have appeared; unless otherwise stated the dismissal is without prejudice (Civ.R. 41(A)(1))."
+}
+
+decision summary-judgment: "Summary judgment decided" by court cite "Civ.R. 56(C)"
+{
+  note "Responses to a summary judgment motion may be served within twenty-eight days after service of the motion, and the movant's reply within seven days after service of the response (Civ.R. 6(C)(1)). Summary judgment is rendered forthwith if the materials timely filed show no genuine issue as to any material fact and that the movant is entitled to judgment as a matter of law (Civ.R. 56(C)). A case not fully adjudicated proceeds on an order specifying the facts without controversy (Civ.R. 56(D))."
+  edge-summary-judgment-granted "Granted" -> judgment-entered {
+    event JudgmentEntered()
+    authority cite "Civ.R. 56(C)"
+  }
+  edge-summary-judgment-denied "Denied" -> trial { authority cite "Civ.R. 56(D)" }
+}
+
+state trial: "Trial" by court cite ?("R.C. 2743.11 (trial to the court) is not vendored") {
+  note "Whether a jury is available is set by R.C. 2743.11, which is not vendored: a hole. Civ.R. 38 preserves the right to trial by jury inviolate (Civ.R. 38(A)) but does not itself say whether one lies against the state. A written motion for purposes of trial is served no later than twenty-eight days before the start of trial unless a different period is fixed (Civ.R. 6(C)(2))."
+  edge-trial-judgment "Decision: judgment entry" -> judgment-entered {
+    event JudgmentEntered()
+    authority cite "Civ.R. 58(A)"
+  }
+  edge-trial-voluntary "Settled before trial: stipulation of dismissal" -> voluntary-dismissal {
+    authority cite "Civ.R. 41(A)"
+  }
+}
+
+decision judgment-entered: "Judgment entered and noticed" by office cite "Civ.R. 58(A)"
+{
+  note "The judgment is effective only when entered by the clerk upon the journal (Civ.R. 58(A)(1)). Within three days of entering the judgment upon the journal, the clerk serves notice of the judgment and its date of entry on all parties not in default for failure to appear (Civ.R. 58(B)). A party who wishes to appeal files the notice of appeal within 30 days of entry; in a civil case, if the clerk has not completed service of notice within the three-day period, the 30 days run from the date the clerk actually completes service (App.R. 4(A)). A timely Civ.R. 50(B) or 59 motion, objection to a magistrate's decision, or request for findings of fact and conclusions of law delays the appeal time until the trial court resolves the last of them (App.R. 4(B)). Which court of appeals hears the appeal is set by R.C. 2743.20, which is not vendored: a hole."
+  edge-judgment-entered-post-trial "Post-trial motion served" -> post-trial {
+    authority cite "Civ.R. 59(B)"
+  }
+  edge-judgment-entered-appeal "Notice of appeal filed" -> appeal-taken {
+    event NoticeOfAppealFiled()
+    authority cite "App.R. 4(A)"
+  }
+  edge-judgment-entered-relief "Motion for relief from judgment" -> relief-motion {
+    authority cite "Civ.R. 60(B)"
+  }
+  edge-judgment-entered-final "No appeal within time" -> final-no-appeal {
+    authority cite "App.R. 4(A)"
+  }
+}
+
+decision post-trial: "Post-trial motions decided" by court cite "Civ.R. 59(B)"
+{
+  note "Except as a statute provides otherwise, a motion for a new trial is served within twenty-eight days of the entry of judgment, with responses within fourteen days and replies within seven days (Civ.R. 59(B)). The court may not extend the time for action under Civ.R. 50(B), 59(B), 59(D) or 60(B) except as those rules state (Civ.R. 6(B)(2)(e)). Objections to a magistrate's decision are filed within fourteen days of the filing of the decision (Civ.R. 53(D)(3)(b)(i))."
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Civ.R. 59(A)" }
+  edge-post-trial-denied "Denied: judgment stands" -> judgment-entered {
+    event JudgmentEntered()
+    authority cite "App.R. 4(B)"
+  }
+}
+
+decision relief-motion: "Relief from judgment decided" by court cite "Civ.R. 60(B)"
+{
+  note "The motion is made within a reasonable time and, for mistake, inadvertence, surprise or excusable neglect, newly discovered evidence, or fraud, not more than one year after the judgment was entered; it does not affect the finality of the judgment or suspend its operation (Civ.R. 60(B))."
+  edge-relief-motion-granted "Relief granted: proceedings reopened" -> discovery {
+    authority cite "Civ.R. 60(B)"
+  }
+  edge-relief-motion-denied "Relief denied" -> final-no-appeal { authority cite "Civ.R. 60(B)" }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Ohio appellate package" outcome [appeal] cite "App.R. 3(A)"
+{
+  note "An appeal as of right is taken by filing a notice of appeal with the clerk of the trial court within the time allowed by App.R. 4 (App.R. 3(A)). Hand-off to lit/oh-court-of-appeals (oh-court-of-appeals-civil)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "App.R. 4(A)"
+{
+  note "Outcome from the applicant's side. Payment of a judgment against the state is set by R.C. Chapter 2743, which is not vendored."
+}

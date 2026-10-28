@@ -1,0 +1,517 @@
+module bankr-or-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, OrderForReliefEntered }
+
+// The Bankr. D. Or. court's own periods, counted under FRBP 9006(a). The
+// FRBP periods (schedules and their extension, the chapter 13 plan, claims
+// in chapter 7, 12 and 13 cases, exemptions, discharge, dischargeability,
+// the adversary answer and summons, new trial, appeals) are lit/frbp's and
+// are not declared again. Not repeated either, as only restating a national
+// period: a reaffirmation agreement no later than 60 days after the first
+// date set for the meeting of creditors (LBR 4008-1(a); FRBP 4008(a)); and
+// the 21-day objection to relief of a kind FRBP 2002(a)(3) or (4) describes
+// (LBR 9013-1(c)(2)(A)).
+//
+// Stated in the rules but not declared: the two-day small business
+// designation after conversion (LBR 1019-1(b)); the "earlier" and "later
+// of" deadlines (destroying a debtor's information 60 days after dismissal
+// or closing, LBR 1007-1(g); an LBF 1305 statement, LBR 2016-1(e); the
+// distribution on an amended claim, LBR 3001-1(c); a discovery motion, LBR
+// 7026-1(d); the mediator's report, LBR 9019-1(e); case closing, LBR
+// 5009-2(b)); the window for a notice of confirmation 30 to 45 days after
+// the order (LBR 3020-1(b)); the chapter 11 status reports at 120 and then
+// 180 days (LBR 2015-1(b)); trustee docketing duties and the UST's final
+// account (LBR 2015-1(a)); notice a trustee gives before destroying records
+// (LBR 2015-1(d)); the 35-day clerk correction window (LBR 2002-1(f)); the
+// three-day FRBP 9006(f) addition (LBR 2002-1(h)); the business-day periods
+// (LBR 2016-1(i), 3018-1(d), 7001-1(d), 7007-1, 9004-1(b), 9013-1(c),
+// 9021-1(a)); the expense-objection deadline 60 days before the final plan
+// payment (LBR 2016-1(i)); and the exhibit return periods after finality
+// (LBR 9017-1(e)). The earlier outline's Supreme Court decisions construe
+// the Code and the FRBP, not these rules, and are removed here: no
+// reporter text is vendored.
+
+/// A nondiscovery brief in an adversary proceeding: not more than 20 pages,
+/// exclusive of exhibits, unless the court authorizes an over-length brief
+/// (Bankr. D. Or. LBR 7007-1(b)).
+limit nondiscovery-brief { pages <= 20 cite "Bankr. D. Or. LBR 7007-1(b)" } cite "Bankr. D. Or. LBR 7007-1(b)"
+
+/// A discovery brief in an adversary proceeding: not more than ten pages,
+/// exclusive of exhibits (Bankr. D. Or. LBR 7007-1(b)).
+limit discovery-brief { pages <= 10 cite "Bankr. D. Or. LBR 7007-1(b)" } cite "Bankr. D. Or. LBR 7007-1(b)"
+
+/// The meeting of creditors is completed or concludes (Bankr. D. Or. LBR
+/// 1002-1(a), 3015-1(b), 3015-3(c)).
+event FirstMeetingCompleted()
+/// An order to show cause on a petition filed by an attorney in fact is
+/// entered (Bankr. D. Or. LBR 1002-1(a)).
+event ShowCauseOrderEntered()
+/// A motion for an FRBP 2004 examination is filed (Bankr. D. Or. LBR
+/// 2004-1(b)).
+event ExaminationMotionFiled()
+/// The chapter 12 or 13 trustee's request for entry of discharge (Bankr. D.
+/// Or. LBR 2015-1(c)).
+event DischargeRequestFiled()
+/// An order confirming a plan is entered (Bankr. D. Or. LBR 2016-1(c)).
+event PlanConfirmed()
+/// Notice of a fee application is served (Bankr. D. Or. LBR 2016-1(c)).
+event FeeNoticeServed()
+/// The trustee serves the notice of plan completion (Bankr. D. Or. LBR
+/// 2016-1(d)).
+event PlanCompletionNoticeServed()
+/// The final chapter 13 plan-confirmation hearing (Bankr. D. Or. LBR
+/// 2016-1(e)).
+event FinalConfirmationHearing()
+/// Postconfirmation compensation requested on LBF 1307 is allowed (Bankr.
+/// D. Or. LBR 2016-1(e)).
+event SupplementalFeesAllowed()
+/// A request for itemization of a secured creditor's expenses is served
+/// (Bankr. D. Or. LBR 2016-1(i)).
+event ExpenseRequestServed()
+/// An amended claim is filed after the initial claims deadline (Bankr. D.
+/// Or. LBR 3001-1(c)).
+event AmendedClaimFiled()
+/// The pending confirmation hearing (Bankr. D. Or. LBR 3015-2(b),
+/// 3015-3(b), (c)).
+event ConfirmationHearing()
+/// A small business debtor files its plan and any disclosure statement
+/// (Bankr. D. Or. LBR 3017.1-1(a)).
+event SmallBusinessPlanFiled()
+/// A small business debtor serves its plan and disclosure statement before
+/// filing (Bankr. D. Or. LBR 3017.1-1(a)).
+event SmallBusinessPlanServed()
+/// The initial notice of the disclosure statement hearing is served (Bankr.
+/// D. Or. LBR 3018-1(c)).
+event DisclosureHearingNoticeServed()
+/// A chapter 11 confirmation order is entered (Bankr. D. Or. LBR
+/// 3020-1(b)).
+event ConfirmationOrderEntered()
+/// The final chapter 11 confirmation hearing (Bankr. D. Or. LBR 3020-1(b)).
+event FinalChapterElevenConfirmationHearing()
+/// An order specially admitting an attorney is entered (Bankr. D. Or. LBR
+/// 5005-4(b)).
+event SpecialAdmissionEntered()
+/// A transcript is filed (Bankr. D. Or. LBR 5077-1(a)).
+event TranscriptFiled()
+/// A hearing or evidentiary hearing (Bankr. D. Or. LBR 5077-1(c),
+/// 9013-1(d), 9017-1(c)).
+event EvidentiaryHearing()
+/// A sale of estate property is completed (Bankr. D. Or. LBR 6004-1(b)).
+event SaleCompleted()
+/// A motion is filed in an adversary proceeding (Bankr. D. Or. LBR
+/// 7007-1(b)).
+event AdversaryMotionFiled()
+/// An opposition to an adversary motion is filed (Bankr. D. Or. LBR
+/// 7007-1(b)).
+event AdversaryOppositionFiled()
+/// The pretrial order deadline in the scheduling order (Bankr. D. Or. LBR
+/// 7016-1(c)).
+event PretrialOrderDeadline()
+/// The plaintiff's proposed pretrial order is served (Bankr. D. Or. LBR
+/// 7016-1(c)).
+event ProposedPretrialOrderServed()
+/// An order to compel is entered (Bankr. D. Or. LBR 7037-1(d)).
+event CompelOrderEntered()
+/// An attorney's status changes as LBR 9010-1(b) lists (Bankr. D. Or. LBR
+/// 9010-1(b)).
+event AttorneyStatusChanged()
+/// The first hearing or trial at which a certified law student appears
+/// (Bankr. D. Or. LBR 9011-2(d)).
+event StudentFirstHearing()
+/// A motion is served (Bankr. D. Or. LBR 9013-1(c)).
+event MotionServed()
+/// The order or judgment to which costs relate is entered (Bankr. D. Or.
+/// LBR 9021-1(d)).
+event JudgmentEntered()
+/// A cost bill is served (Bankr. D. Or. LBR 9021-1(d)).
+event CostBillServed()
+/// An objection to a cost bill is served (Bankr. D. Or. LBR 9021-1(d)).
+event CostObjectionServed()
+/// A notice of removal is filed (Bankr. D. Or. LBR 9027-1(a)).
+event RemovalNoticeFiled()
+
+/// Bankr. D. Or. LBR 1002-1(a)(1): an objection to a voluntary petition for
+/// the debtor's lack of authority is made by motion filed no later than 14
+/// days after the meeting of creditors is completed.
+deadline authority-objection-period: 14.days after FirstMeetingCompleted() counted_by frcp6 cite "Bankr. D. Or. LBR 1002-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 1002-1(a)(3): within 14 days after entry of the order
+/// to show cause, the debtor files the statement the rule requires.
+deadline attorney-in-fact-statement-period: 14.days after ShowCauseOrderEntered() counted_by frcp6 cite "Bankr. D. Or. LBR 1002-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 1020-1: a motion under § 1102(a)(3) to dispense with a
+/// creditors' committee is filed no later than 14 days after the order for
+/// relief.
+deadline committee-dispensation-period: 14.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. D. Or. LBR 1020-1"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 2004-1(b)(3): except for good cause or agreement, FRBP
+/// 2004 examinations or depositions are set no less than 14 days after the
+/// motion is filed.
+deadline examination-setting-period: 14.days after ExaminationMotionFiled() counted_by frcp6 cite "Bankr. D. Or. LBR 2004-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 2015-1(c): at least 35 days before requesting entry of
+/// a discharge, the chapter 12 or 13 trustee serves a notice of plan
+/// completion on the debtor and counsel.
+deadline plan-completion-notice-period: 35.days before DischargeRequestFiled() counted_by frcp6 cite "Bankr. D. Or. LBR 2015-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 2016-1(c): an application for compensation through
+/// plan confirmation is filed no later than 28 days after entry of the
+/// confirmation order.
+deadline confirmation-fee-application-period: 28.days after PlanConfirmed() counted_by frcp6 cite "Bankr. D. Or. LBR 2016-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 2016-1(c): when notice is required and no objection is
+/// filed, the applicant lodges a proposed order no later than 28 days after
+/// service.
+deadline fee-no-objection-order-period: 28.days after FeeNoticeServed() counted_by frcp6 cite "Bankr. D. Or. LBR 2016-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 2016-1(d)(1): a chapter 13 debtor's attorney files an
+/// application for compensation on LBF 1214 no later than 28 days after
+/// service of the trustee's notice of plan completion.
+deadline completion-fee-application-period: 28.days after PlanCompletionNoticeServed() counted_by frcp6 cite "Bankr. D. Or. LBR 2016-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 2016-1(e): an attorney files any required amended LBF
+/// 1305, and any LBF 1306 itemization, no later than seven days before the
+/// final confirmation hearing.
+deadline amended-attorney-statement-period: 7.days before FinalConfirmationHearing() counted_by frcp6 cite "Bankr. D. Or. LBR 2016-1(e)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 2016-1(e): if allowance of LBF 1307 compensation
+/// requires a plan modification, the debtor files a notice of
+/// postconfirmation amendment or a motion within 28 days after the
+/// allowance.
+deadline fee-plan-modification-period: 28.days after SupplementalFeesAllowed() counted_by frcp6 cite "Bankr. D. Or. LBR 2016-1(e)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 2016-1(i): a secured creditor gives a written
+/// itemization of expenses not in its proof of claim no later than 28 days
+/// after service of a request.
+deadline expense-itemization-period: 28.days after ExpenseRequestServed() counted_by frcp6 cite "Bankr. D. Or. LBR 2016-1(i)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 3001-1(c): to prevent distribution, an objection to an
+/// amended claim is filed no later than 14 days after the amended claim was
+/// filed.
+deadline amended-claim-objection-period: 14.days after AmendedClaimFiled() counted_by frcp6 cite "Bankr. D. Or. LBR 3001-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 3015-1(b): no later than seven days after the meeting
+/// of creditors, the chapter 13 debtor files a proposed wage order or the
+/// alternative the rule allows.
+deadline wage-order-period: 7.days after FirstMeetingCompleted() counted_by frcp6 cite "Bankr. D. Or. LBR 3015-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 3015-2(b): a preconfirmation amended chapter 13 plan
+/// is filed at least 28 days before the pending confirmation hearing.
+deadline amended-plan-period: 28.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. D. Or. LBR 3015-2(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 3015-3(b)(2): the debtor delivers a proposed
+/// confirmation order to the trustee no later than seven days before the
+/// confirmation hearing.
+deadline confirmation-order-delivery-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. D. Or. LBR 3015-3(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 3015-3(c)(1): a chapter 13 confirmation objection is
+/// filed and served within 14 days after the meeting of creditors
+/// concludes.
+deadline confirmation-objection-period: 14.days after FirstMeetingCompleted() counted_by frcp6 cite "Bankr. D. Or. LBR 3015-3(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 3015-3(c)(2): if no objection is timely filed, the
+/// debtor submits the proposed confirmation order no later than 21 days
+/// after the meeting of creditors concludes.
+deadline unopposed-confirmation-order-period: 21.days after FirstMeetingCompleted() counted_by frcp6 cite "Bankr. D. Or. LBR 3015-3(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 3015-3(c)(2): the trustee lodges an approved proposed
+/// order no later than seven days before the confirmation hearing.
+deadline trustee-lodging-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. D. Or. LBR 3015-3(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 3017.1-1(a): no later than 14 days before filing the
+/// plan and any disclosure statement, a small business debtor serves them
+/// on the parties the rule lists.
+deadline small-business-service-period: 14.days before SmallBusinessPlanFiled() counted_by frcp6 cite "Bankr. D. Or. LBR 3017.1-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 3017.1-1(a): no later than seven days after service,
+/// the parties served inform the debtor of any objection to the disclosure
+/// statement.
+deadline small-business-comment-period: 7.days after SmallBusinessPlanServed() counted_by frcp6 cite "Bankr. D. Or. LBR 3017.1-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 3018-1(c): a claimant seeking temporary allowance of a
+/// disputed claim for voting files and serves a motion no later than 30
+/// days after service of the initial notice of the disclosure statement
+/// hearing.
+deadline temporary-allowance-period: 30.days after DisclosureHearingNoticeServed() counted_by frcp6 cite "Bankr. D. Or. LBR 3018-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 3020-1(b)(1)(B): the chapter 11 confirmation order
+/// requires payment of unpaid clerk's fees no later than 14 days after it
+/// is entered.
+deadline clerk-fees-payment-period: 14.days after ConfirmationOrderEntered() counted_by frcp6 cite "Bankr. D. Or. LBR 3020-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 3020-1(b)(1)(C): the chapter 11 confirmation order is
+/// lodged no later than seven days after the final confirmation hearing.
+deadline confirmation-order-lodging-period: 7.days after FinalChapterElevenConfirmationHearing() counted_by frcp6 cite "Bankr. D. Or. LBR 3020-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 4001-1(e)(2): a motion to extend the stay under §
+/// 362(c)(3) is filed no later than seven days after the order for relief.
+deadline stay-extension-motion-period: 7.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. D. Or. LBR 4001-1(e)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 4004-1(c): in a chapter 7 case, a motion to determine
+/// under § 727(a)(12) that a discharge should not be granted is filed no
+/// later than 60 days after the first date set for the meeting of
+/// creditors.
+deadline discharge-applicability-motion-period: 60.days after FirstMeetingDate() counted_by frcp6 cite "Bankr. D. Or. LBR 4004-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 5005-4(b)(4): a specially admitted attorney registers
+/// as an ECF Participant no later than 14 days after the admission order,
+/// unless local counsel files.
+deadline ecf-registration-period: 14.days after SpecialAdmissionEntered() counted_by frcp6 cite "Bankr. D. Or. LBR 5005-4(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 5077-1(a)(2): no later than seven days after a
+/// transcript is filed, a party may file a notice of intent to request
+/// redaction.
+deadline redaction-intent-period: 7.days after TranscriptFiled() counted_by frcp6 cite "Bankr. D. Or. LBR 5077-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 5077-1(a)(3): a party that filed a notice of intent
+/// submits its list of redactions no later than 21 days after the
+/// transcript was filed.
+deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frcp6 cite "Bankr. D. Or. LBR 5077-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 5077-1(a)(3): the redacted transcript is filed no
+/// later than 31 days after the original transcript was filed.
+deadline redacted-transcript-period: 31.days after TranscriptFiled() counted_by frcp6 cite "Bankr. D. Or. LBR 5077-1(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 5077-1(c): a party offering a transcript into
+/// evidence, other than for impeachment, produces it to opposing parties at
+/// least 14 days before the hearing.
+deadline transcript-evidence-period: 14.days before EvidentiaryHearing() counted_by frcp6 cite "Bankr. D. Or. LBR 5077-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 6004-1(b): the FRBP 6004(f)(1) statement is filed no
+/// later than 28 days after a sale of estate property.
+deadline sale-report-period: 28.days after SaleCompleted() counted_by frcp6 cite "Bankr. D. Or. LBR 6004-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 6007-1(b): in a chapter 7 case the trustee may abandon
+/// the debtor's residence unless a creditor objects no later than seven
+/// days before the first date set for the meeting of creditors.
+deadline residence-abandonment-objection-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. D. Or. LBR 6007-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 7007-1(b): an opposition statement and supporting
+/// brief is filed and served no later than 14 days after the filing of a
+/// motion.
+deadline adversary-opposition-period: 14.days after AdversaryMotionFiled() counted_by frcp6 cite "Bankr. D. Or. LBR 7007-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 7007-1(b): a reply, allowed only on summary judgment
+/// or withdrawal of the reference, is filed and served no later than 14
+/// days after the opposition.
+deadline adversary-reply-period: 14.days after AdversaryOppositionFiled() counted_by frcp6 cite "Bankr. D. Or. LBR 7007-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 7016-1(c)(1): the plaintiff serves a proposed pretrial
+/// order at least 30 days before the deadline in the scheduling order.
+deadline proposed-pretrial-order-period: 30.days before PretrialOrderDeadline() counted_by frcp6 cite "Bankr. D. Or. LBR 7016-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 7016-1(c)(2): within 14 days after service of the
+/// proposed pretrial order, each other party serves its objections,
+/// additions and changes.
+deadline pretrial-order-objection-period: 14.days after ProposedPretrialOrderServed() counted_by frcp6 cite "Bankr. D. Or. LBR 7016-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 7037-1(d): the party against whom an order to compel
+/// is entered complies within 14 days after its entry.
+deadline compel-compliance-period: 14.days after CompelOrderEntered() counted_by frcp6 cite "Bankr. D. Or. LBR 7037-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 9010-1(b): an admitted attorney notifies the clerk and
+/// the chief judge within 14 days after a change of status the rule lists.
+deadline attorney-status-notice-period: 14.days after AttorneyStatusChanged() counted_by frcp6 cite "Bankr. D. Or. LBR 9010-1(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 9011-2(d): the supervising attorney files notice at
+/// least seven days before the first hearing or trial at which a law
+/// student appears.
+deadline student-appearance-notice-period: 7.days before StudentFirstHearing() counted_by frcp6 cite "Bankr. D. Or. LBR 9011-2(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 9013-1(c)(2)(A): an objection to a motion is filed no
+/// later than 14 days after service of the motion, unless an FRBP specifies
+/// another notice period.
+deadline motion-objection-period: 14.days after MotionServed() counted_by frcp6 cite "Bankr. D. Or. LBR 9013-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 9013-1(d): in a contested matter, FRCP 26(a)(2)
+/// disclosure is due 14 days before an evidentiary hearing.
+deadline expert-disclosure-period: 14.days before EvidentiaryHearing() counted_by frcp6 cite "Bankr. D. Or. LBR 9013-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 9017-1(c)(2): a party notifies the court of its need
+/// for court equipment no later than 14 days before the hearing.
+deadline court-equipment-notice-period: 14.days before EvidentiaryHearing() counted_by frcp6 cite "Bankr. D. Or. LBR 9017-1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 9021-1(d)(2): a cost bill is filed and served no later
+/// than 14 days after entry of the order or judgment.
+deadline cost-bill-period: 14.days after JudgmentEntered() counted_by frcp6 cite "Bankr. D. Or. LBR 9021-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 9021-1(d)(3)(A): an objection to a cost bill is filed
+/// and served no later than 14 days after the cost bill is served.
+deadline cost-objection-period: 14.days after CostBillServed() counted_by frcp6 cite "Bankr. D. Or. LBR 9021-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 9021-1(d)(3)(A): the party filing the cost bill may
+/// reply no later than seven days after service of an objection.
+deadline cost-reply-period: 7.days after CostObjectionServed() counted_by frcp6 cite "Bankr. D. Or. LBR 9021-1(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Or. LBR 9027-1(a): no later than seven days after filing a
+/// notice of removal, the removing party files evidence of compliance with
+/// FRBP 9027(b).
+deadline removal-notice-evidence-period: 7.days after RemovalNoticeFiled() counted_by frcp6 cite "Bankr. D. Or. LBR 9027-1(a)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed and served" by applicant cite "Bankr. D. Or. LBR 9013-1(c)"
+{
+  note "An objection is filed no later than 14 days after service of the motion unless an FRBP sets another notice period (LBR 9013-1(c)(2)(A)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-opposed "Objection filed" -> opposed {
+    authority cite "Bankr. D. Or. LBR 9013-1(c)"
+    within motion-objection-period
+  }
+  edge-motion-filed-unopposed "No timely objection" -> ruling {
+    authority cite "Bankr. D. Or. LBR 2002-1(h)"
+  }
+}
+
+state opposed: "Objection filed; hearing" by opponent cite "Bankr. D. Or. LBR 9013-1(c)"
+{
+  note "A reply in a chapter 9, 11 or 15 case is due three business days before the hearing (LBR 9013-1(c))."
+  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. D. Or. LBR 9013-1(c)" }
+}
+
+decision ruling: "Motion decided" by court cite "Bankr. D. Or. LBR 9021-1(a)"
+{
+  note "Without a timely objection the movant lodges a proposed order with a certificate that no objection was filed (LBR 2002-1(h))."
+  edge-ruling-granted "Granted" -> decided { authority cite "Bankr. D. Or. LBR 9021-1(a)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "Bankr. D. Or. LBR 9021-1(a)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. D. Or. LBR 1001-1"

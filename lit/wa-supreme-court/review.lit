@@ -1,0 +1,90 @@
+module wa-supreme-court-review.review
+
+import wa-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
+
+// Discretionary review of a Court of Appeals decision terminating review,
+// from the petitioner's side. Every period is stated in a note, not
+// counted: RAP 18.6 is not vendored.
+start petition
+
+decision petition: "Petition for review within 30 days?" by applicant cite "RAP 13.4(a)"
+{
+  note "A party seeking discretionary review by the Supreme Court of a Court of Appeals decision terminating review serves on all other parties and files a petition for review, or an answer to the petition that raises new issues; the petition should be filed in the Court of Appeals. Absent a timely motion to publish or to reconsider, the petition is filed within 30 days after the decision is filed; after such a motion, within 30 days after the order denying reconsideration or determining the motion to publish, and a petition filed before that order is not forwarded until it is filed. The first petitioner pays the statutory filing fee to the Court of Appeals clerk (RAP 13.4(a)). The petition contains, under headings in this order, a cover, tables, the identity of the petitioner, the citation to the Court of Appeals decision, the issues presented, a statement of the case, argument under the RAP 13.4(b) tests, a conclusion and an appendix with the decision and any reconsideration order (RAP 13.4(c)); its form follows RAP 10.3, 10.4 and 18.17 and its length RAP 18.17, which is not vendored (RAP 13.4(e), (f)). No leading decision on the acceptance standard is named."
+  edge-petition-none "No petition: the Court of Appeals decision stands" -> review-not-sought {
+    authority cite "RAP 12.5(b)"
+  }
+  edge-petition-filed "Petition filed" -> answer {
+    event ReviewPetitionFiled()
+    authority cite "RAP 13.4(a)"
+  }
+}
+
+state answer: "Answer and reply" by court cite "RAP 13.4(d)"
+{
+  note "A party may file an answer, served on all other parties, within 30 days after service of the petition; an issue not raised in the petition, including one raised but not decided in the Court of Appeals, is raised only in an answer. A reply is filed only if the answer seeks review of new issues, is limited to them, and is filed within 15 days after service of the answer. Answers and replies are filed in the Supreme Court, which may call for either (RAP 13.4(d)). An amicus curiae memorandum, with permission, should be received not later than 60 days from the date the petition is filed (RAP 13.4(h))."
+  edge-answer-consideration "Petition ready for decision" -> acceptance {
+    authority cite "RAP 13.4(i)"
+  }
+}
+
+decision acceptance: "Review accepted or denied" by court cite "RAP 13.4(b)"
+{
+  note "The Supreme Court decides the petition without oral argument (RAP 13.4(i)). Review is accepted only if the Court of Appeals decision conflicts with a decision of the Supreme Court or with a published Court of Appeals decision, a significant question of law under the Washington or United States Constitution is involved, or the petition involves an issue of substantial public interest that the Supreme Court should determine (RAP 13.4(b)). No motion for reconsideration of an order denying a petition for review may be filed (RAP 12.4(a))."
+  edge-acceptance-denied "Review denied" -> review-denied {
+    event MandateIssued()
+    authority cite "RAP 12.5(b)"
+  }
+  edge-acceptance-accepted "Review accepted" -> briefing { authority cite "RAP 13.4(b)" }
+}
+
+state briefing: "Briefing on review" by applicant cite "RAP 10.3(a)"
+{
+  note "A brief contains, under headings in the order RAP 10.3(a) gives, a title page, tables, an introduction, assignments of error, a statement of the case, argument, a conclusion and an appendix (RAP 10.3(a)). Whether and when supplemental briefs are filed after review is accepted (RAP 13.7) and the times for briefs (RAP 10.2) are in rules not vendored and are not stated here."
+  edge-briefing-argument "Briefing complete" -> argument { authority cite "RAP 11.2(a)" }
+}
+
+decision argument: "Oral argument or submission" by court cite "RAP 11.2(a)"
+{
+  note "A party may present oral argument only if it has filed a brief; amicus curiae argues only in time a party yields or the court grants (RAP 11.2)."
+  edge-argument-decision "Argued or submitted" -> decision-filed {
+    event DecisionFiled()
+    authority cite "RAP 12.2"
+  }
+}
+
+decision decision-filed: "Decision terminating review" by court cite "RAP 12.2"
+{
+  note "The Supreme Court may reverse, affirm or modify the decision reviewed and take any other action the merits and the interest of justice require; on issuance of the mandate the decision binds the parties and governs all later proceedings, unless the mandate is recalled (RAP 12.2)."
+  edge-decision-filed-reconsideration "Motion for reconsideration" -> reconsideration {
+    authority cite "RAP 12.4(b)"
+  }
+  edge-decision-filed-mandate "No motion for reconsideration" -> mandate {
+    event MandateIssued()
+    authority cite "RAP 12.5(c)"
+  }
+}
+
+decision reconsideration: "Reconsideration decided" by court cite "RAP 12.4(b)"
+{
+  note "A motion for reconsideration of a decision terminating review is filed within 20 days after the decision is filed, states with particularity the points overlooked or misapprehended, and is decided without oral argument; no answer or reply is filed unless the court requests one, and each party may file only one unless the court withdraws its opinion and files a new one (RAP 12.4(b)-(d), (f), (h)). An amicus memorandum should be received not later than 5 days after the motion is filed (RAP 12.4(i)). If the motion is granted, the court may modify the decision without new argument, call for new argument or take other appropriate action (RAP 12.4(g))."
+  edge-reconsideration-granted "Granted" -> decision-filed { authority cite "RAP 12.4(g)" }
+  edge-reconsideration-denied "Denied" -> mandate {
+    event MandateIssued()
+    authority cite "RAP 12.5(c)"
+  }
+}
+
+terminal review-not-sought: "Review not sought: Court of Appeals decision final" outcome [judgment] cite "RAP 12.5(b)"
+{
+  note "Absent a stipulation, the Court of Appeals clerk issues the mandate 30 days after the decision is filed, or 30 days after the RAP 13.4(a) time expires when a timely motion for reconsideration or to publish was filed (RAP 12.5(b)(1), (2))."
+}
+
+terminal review-denied: "Review denied; Court of Appeals mandate issues" outcome [loss, judgment] cite "RAP 12.5(b)"
+{
+  note "When a timely petition for review is denied, the Court of Appeals clerk issues the mandate upon denial (RAP 12.5(b)(3))."
+}
+
+terminal mandate: "Supreme Court mandate issued; decision final" outcome [judgment] cite "RAP 12.5(c)"
+{
+  note "The Supreme Court clerk issues the mandate on a stipulation that no motion for reconsideration will be filed; otherwise 20 days after the decision is filed unless a motion for reconsideration (or, for a commissioner's or clerk's ruling, a motion to modify) was earlier filed, and on the filing of the order denying a timely motion for reconsideration (RAP 12.5(c))."
+}

@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "wa-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "wa-supreme-court-review"
+version = "0.1.0"
+language = 1
+source = "sha256:f8ff70e3ea1bcca9ce5d7d65c3b42bff80d8d53d2890baadf81e301c834d7403"
+semantic = "sha256:1af1fc2bdb21818ea012e2a4791da935651d6e244508a3266986b0f1093007d3"
+texts = [
+    "wa-rap sources/wa-court-of-appeals/wa-rap-cited-sectioned.txt sha256:37da82ba6f7d769642ccfd23037601cbf2b1b43fa2139c7d4d396e6affbc578a",
+]
+dependencies = [
+    "core 1.0.0",
+    "wa-state-rules 0.1.0",
+]

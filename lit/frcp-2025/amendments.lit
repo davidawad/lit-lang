@@ -1,0 +1,41 @@
+module frcp-2025-amendment.amendments
+
+import frcp.periods.{ Rule26fConferenceHeld, initial-disclosure-period }
+
+// The order of April 23, 2025 (docs/litigate/CHANGE.md §2.2), as the
+// December 1, 2025 print gives the amended text (`FRCP (2025) ...`, source
+// `frcp-2025`; sources/PROVENANCE.md lists every difference from the
+// December 1, 2024 text):
+//
+// - Rule 16(b) is retitled "Scheduling and Management", and
+//   16(b)(3)(B)(iv) lets the scheduling order "include the timing and
+//   method for complying with Rule 26(b)(5)(A)" as well as the parties'
+//   agreements for asserting privilege after production.
+// - Rule 26(f)(3)(D): the discovery plan states the parties' views on
+//   "the timing and method for complying with Rule 26(b)(5)(A)".
+// - Rule 16.1 (Multidistrict Litigation) is new: the transferee court
+//   "should" hold an initial management conference and enter an initial
+//   management order; it states no period.
+//
+// The amended provisions say what a scheduling order may contain and what
+// a discovery plan addresses. None states a period or a move, so no
+// declaration of lit/frcp takes a new value on 2025-12-01: its
+// `rule26f-conference` and `scheduling-order-issued` nodes (FRCP 26(f),
+// 16(b)), its `initial-disclosure-period` (FRCP 26(a)(1)(C)) and its other
+// Rule 16 and 26 cites name provisions the order left as they were, and
+// they stay in force across the effective date as the earlier layer. No
+// lit/ package models multidistrict litigation, so nothing here declares
+// Rule 16.1. A later declaration that relies on the amended text cites
+// this layer's source, `FRCP (2025) 16(b)(3)(B)(iv)` or
+// `FRCP (2025) 26(f)(3)(D)`, and is versioned effective [2025-12-01, ..).
+test "from December 1, 2025 initial disclosures are still due 14 days after the Rule 26(f) conference" cite "FRCP (2025) 26(a)(1)(C)"
+{
+  given Rule26fConferenceHeld() on 2026-03-02
+  expect deadline(initial-disclosure-period) == 2026-03-16
+}
+
+test "before December 1, 2025 the period is the same 14 days" cite "FRCP 26(a)(1)(C)"
+{
+  given Rule26fConferenceHeld() on 2025-11-14
+  expect deadline(initial-disclosure-period) == 2025-11-28
+}

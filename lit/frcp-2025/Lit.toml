@@ -1,0 +1,46 @@
+# The Supreme Court's order of April 23, 2025 amending the FRCP, effective
+# December 1, 2025 (28 U.S.C. § 2074(a)): Rule 16(b) is retitled "Scheduling
+# and Management" and 16(b)(3)(B)(iv) lets the scheduling order include "the
+# timing and method for complying with Rule 26(b)(5)(A)"; Rule 26(f)(3)(D)
+# adds the same subject to the discovery plan; Rule 16.1 (Multidistrict
+# Litigation) is new. An amendment layer over lit/frcp (docs/litigate/
+# CHANGE.md §2.2): lit/frcp's declarations and cites stay the earlier layer,
+# and this package records the instrument and binds the amended text.
+[package]
+name = "frcp-2025-amendment"
+version = "1.0.0"
+language = 1
+pack_id = "frcp-2025-amendment"
+forum = "frcp"
+authority = "FederalRule"
+title = "FRCP amendments of April 23, 2025 (Rules 16, 16.1, 26), effective December 1, 2025"
+in_force = "2025-12-01"
+known_at = "2026-10-28"
+kind = "amendment"
+
+[package.roles]
+court = "nature"
+
+[package.instrument]
+source = "frcp-2025"
+issuer = "Supreme Court of the United States"
+date = "2025-04-23"
+designation = "Order of April 23, 2025, effective December 1, 2025 (28 U.S.C. § 2074(a))"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+# sources/frcp.txt is the House Judiciary Committee print of December 1,
+# 2025; Rules 16, 16.1 and 26 there are the amended text (sources/
+# PROVENANCE.md). Cited as `FRCP (2025) 16(b)` so a cite of this layer never
+# resolves through lit/frcp's binding of the same file as of 2024-12-01.
+[sources.frcp-2025]
+title = "Federal Rules of Civil Procedure, December 1, 2025 (House Judiciary Committee print): Rules 16, 16.1 and 26 as amended by the order of April 23, 2025"
+url = "https://www.uscourts.gov/sites/default/files/document/federal-rules-of-civil-procedure.pdf"
+path = "sources/frcp.txt"
+path_sha256 = "527fb9fbfe1665bdbdc5565ea5614b299e16b07b07edba803aae6eb5f957b990"
+sha256 = "bd8705fc038d87e4fe222a7ea2e4324222c9430e2373fce56826bd2dfa2f8baf"
+as_of = "2025-12-01"
+cite_prefixes = ["FRCP (2025)"]
+section_heading = "Rule {n}"

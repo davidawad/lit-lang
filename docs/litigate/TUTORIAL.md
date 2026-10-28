@@ -39,7 +39,7 @@ core = { version = "^1.0.0", path = "../core" }
 title = "Federal Rules of Civil Procedure"
 url = "https://www.law.cornell.edu/rules/frcp"
 path = "sources/frcp.txt"     # the vendored text cites resolve against,
-path_sha256 = "cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44"
+path_sha256 = "527fb9fbfe1665bdbdc5565ea5614b299e16b07b07edba803aae6eb5f957b990"
 as_of = "2024-12-01"          # pinned by its SHA-256; the expression's date
 cite_prefixes = ["FRCP"]
 section_heading = "Rule {n}"

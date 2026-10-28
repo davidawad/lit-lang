@@ -82,7 +82,7 @@ fn bindings_sharing_a_template_are_told_apart_by_the_corpus() {
 }
 
 /// The vendored FRCP text's SHA-256, as `lit/core` pins it.
-const FRCP_SHA: &str = "cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44";
+const FRCP_SHA: &str = "527fb9fbfe1665bdbdc5565ea5614b299e16b07b07edba803aae6eb5f957b990";
 
 fn pinned(path: Option<&str>, pin: Option<&str>) -> SourceBinding {
     SourceBinding {

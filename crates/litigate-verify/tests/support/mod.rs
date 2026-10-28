@@ -15,7 +15,7 @@ use std::fmt::Write as _;
 /// The `[sources.frcp]` binding to the vendored FRCP text.
 pub const FRCP: &str = "[sources.frcp]\ntitle = \"Federal Rules of Civil Procedure\"\n\
      url = \"https://www.law.cornell.edu/rules/frcp\"\npath = \"sources/frcp.txt\"\n\
-     path_sha256 = \"cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44\"\n\
+     path_sha256 = \"527fb9fbfe1665bdbdc5565ea5614b299e16b07b07edba803aae6eb5f957b990\"\n\
      cite_prefixes = [\"FRCP\"]\nsection_heading = \"Rule {n}\"\n";
 
 /// A package `name` at `pkgs/<name>` with one module file `main.lit`,

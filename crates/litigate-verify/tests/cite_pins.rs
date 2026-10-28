@@ -30,7 +30,7 @@ fn under(from: &str, to: &str, lit: &str) -> Checked {
 }
 
 const PIN: &str =
-    "path_sha256 = \"cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44\"\n";
+    "path_sha256 = \"527fb9fbfe1665bdbdc5565ea5614b299e16b07b07edba803aae6eb5f957b990\"\n";
 
 #[test]
 fn an_unpinned_or_mismatched_file_is_unverified_text() {
@@ -45,7 +45,7 @@ fn an_unpinned_or_mismatched_file_is_unverified_text() {
     let note = &unpinned.verification.diagnostics[0].notes[0].message;
     assert!(note.contains(PIN.trim()), "{note}");
     let mismatched = under(
-        "cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44",
+        "527fb9fbfe1665bdbdc5565ea5614b299e16b07b07edba803aae6eb5f957b990",
         &"0".repeat(64),
         &base,
     );

@@ -19,7 +19,7 @@ fn bound(name: &str) -> PathBuf {
     let manifest = read("lit/examples/Lit.toml").replace(
         "cite_prefixes = [\"FRCP\"]",
         "path = \"sources/frcp.txt\"\n\
-         path_sha256 = \"cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44\"\n\
+         path_sha256 = \"527fb9fbfe1665bdbdc5565ea5614b299e16b07b07edba803aae6eb5f957b990\"\n\
          cite_prefixes = [\"FRCP\"]\nsection_heading = \"Rule {n}\"",
     );
     std::fs::write(pkg.join("Lit.toml"), manifest).unwrap();

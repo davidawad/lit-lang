@@ -83,7 +83,7 @@ Entries live in the forum's own
 
 ## Files
 
-### `frcp.txt` — Federal Rules of Civil Procedure (112 rules)
+### `frcp.txt` — Federal Rules of Civil Procedure (98 rules), December 1, 2025
 
 - Ported from `civ-pro-the-gathering/content/reference/frcp-full.json`
   (sibling project, same author, also public-domain rule text with its own
@@ -92,9 +92,27 @@ Entries live in the forum's own
   `https://www.uscourts.gov/rules-policies/current-rules-practice-procedure`).
   Re-formatted into this file's `## Rule N` section convention; no wording
   changed.
-- sha256 (this file): `cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44`
-- Original: `original/frcp.pdf` as served (sha256 bd8705fc038d87e4fe222a7ea2e4324222c9430e2373fce56826bd2dfa2f8baf); extraction sha256 cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44. Served at https://www.uscourts.gov/sites/default/files/document/federal-rules-of-civil-procedure.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27. CURRENCY: served document differs from the vendored extraction (sha256 bd8705fc038d87e4fe222a7ea2e4324222c9430e2373fce56826bd2dfa2f8baf); re-vendor pending.
-- Comparison (lg-f3q8.82, 2026-10-27): the served file is the House Judiciary Committee print "Federal Rules of Civil Procedure, December 1, 2025" (142 pages). Each of the 97 vendored rules was compared word for word with the print's text (page headers, title lines and GPO hyphenation ignored). The vendored text predates the amendments effective December 1, 2025 (order of April 23, 2025, which "affected Rules 16 and 26, and added new Rule 16.1"). Differences: (1) Rule 16(b)(3)(B)(iv) gains the words "the timing and method for complying with Rule 26(b)(5)(A) and" before "any agreements the parties reach for asserting claims of privilege or of protection as trial-preparation material after information is produced, including agreements reached under Federal Rule of Evidence 502"; (2) Rule 26(f)(3)(D) gains the same words ("...method for complying with Rule 26(b)(5)(A) and—if the parties agree on a procedure..."); (3) Rule 16.1 (Multidistrict Litigation) is absent from frcp.txt; (4) the amendment credits of Rules 16 and 26 gain "Apr. 23, 2025, eff. Dec. 1, 2025" and Rule 16.1's reads "As added Apr. 23, 2025, eff. Dec. 1, 2025". No other rule's wording differs. frcp.txt is not edited here.
+- Re-vendored (lg-f3q8.83, 2026-10-28) to the edition of December 1, 2025,
+  the House Judiciary Committee print below, which adds the amendments of
+  the order of April 23, 2025, effective December 1, 2025. Only `## Rule
+  16` and `## Rule 26` were edited, each to the print's wording (from
+  `pdftotext -layout` of the original; compared word for word with the
+  print afterwards, running heads and GPO hyphenation ignored, no
+  difference): Rule 16(b) is retitled "SCHEDULING AND MANAGEMENT."
+  (missed by the lg-f3q8.82 comparison, which ignored title lines);
+  16(b)(3)(B)(iv) and 26(f)(3)(D) gain "the timing and method for
+  complying with Rule 26(b)(5)(A) and"; both credits gain "Apr. 23, 2025,
+  eff. Dec. 1, 2025". `## Rule 16.1` (Multidistrict Litigation, "As
+  added Apr. 23, 2025, eff. Dec. 1, 2025") is new, from the same
+  extraction with the running heads dropped. Every other section is
+  byte-identical to the December 1, 2024 extraction (sha256
+  `cb9a19a0ad99acdbd04f46acd3893bb96fbd34c9a8f66de57f5d171dbd268b44`).
+  `lit/frcp` cites this file as of 2024-12-01 (none of its cites names an
+  amended provision); `lit/frcp-2025`, the amendment layer, cites it as
+  `FRCP (2025)`, as of 2025-12-01.
+- sha256 (this file): `527fb9fbfe1665bdbdc5565ea5614b299e16b07b07edba803aae6eb5f957b990`
+- Original: `original/frcp.pdf` as served (sha256 bd8705fc038d87e4fe222a7ea2e4324222c9430e2373fce56826bd2dfa2f8baf); extraction sha256 527fb9fbfe1665bdbdc5565ea5614b299e16b07b07edba803aae6eb5f957b990. Served at https://www.uscourts.gov/sites/default/files/document/federal-rules-of-civil-procedure.pdf; fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-27.
+- Comparison (lg-f3q8.82, 2026-10-27, against the December 1, 2024 extraction): the served file is the House Judiciary Committee print "Federal Rules of Civil Procedure, December 1, 2025" (142 pages). Each of the 97 vendored rules was compared word for word with the print's text (page headers, title lines and GPO hyphenation ignored). The vendored text predated the amendments effective December 1, 2025 (order of April 23, 2025, which "affected Rules 16 and 26, and added new Rule 16.1"). Differences: (1) Rule 16(b)(3)(B)(iv) gains the words "the timing and method for complying with Rule 26(b)(5)(A) and" before "any agreements the parties reach for asserting claims of privilege or of protection as trial-preparation material after information is produced, including agreements reached under Federal Rule of Evidence 502"; (2) Rule 26(f)(3)(D) gains the same words ("...method for complying with Rule 26(b)(5)(A) and—if the parties agree on a procedure..."); (3) Rule 16.1 (Multidistrict Litigation) was absent; (4) the amendment credits of Rules 16 and 26 gain "Apr. 23, 2025, eff. Dec. 1, 2025" and Rule 16.1's reads "As added Apr. 23, 2025, eff. Dec. 1, 2025". No other rule's wording differs. Re-vendored by lg-f3q8.83 (above).
 
 ### `fre.txt` — Federal Rules of Evidence (69 rules), as amended to December 1, 2024
 

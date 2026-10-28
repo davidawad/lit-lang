@@ -1,0 +1,369 @@
+# Torres v. Oakland Scavenger Co., 487 U.S. 312 (1988) (lg-wvlf.4; public
+# record, sources/change-corpus/rulings/torres-scotus-1988). The district
+# court (N.D. Cal., Civ. No. C 75-0060 CAL) dismissed the intervenors'
+# complaint under FRCP 12(b)(6) on August 31, 1981: docket entry 87 (4
+# Record, Doc. No. 87; 487 U.S. at 313). The notice of appeal filed
+# September 29, 1981 omitted Torres (ibid.), and "the failure to name a
+# party in a notice of appeal ... constitutes a failure of that party to
+# appeal" (id. at 314): Torres never filed within the 30 days of FRAP
+# 4(a)(1), which ran to Wednesday, September 30, 1981, nor moved to extend
+# within the 30 days after (to Friday, October 30). The matter is Torres
+# alone: the engine counts a deadline for the matter, not per party, so
+# the co-intervenors' notice would discharge it, which the Court held it
+# did not. No RECAP docket was read (CourtListener's API needs
+# credentials this run did not have); the docket entry is the one the
+# opinion cites. The conflict the Court resolved (id.
+# at 314 n.1) is whether the omission is jurisdictional, not when the
+# notice is due: every circuit world gives the same values (the Federal
+# Circuit is not a location of the circuit-appellate family). Re-record
+# with `litigate test tests/expect --bless`, and say why in the commit.
+
+paths = ["docs/litigate/change"]
+
+[[run]]
+world = "ca1.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = [
+    "change-deadline-frap-2005-amendment",
+    "change-deadline-frap-2009-amendment",
+    "change-deadline-frap-base",
+]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::appeal-extension-motion"
+trigger = "1981-08-31"
+due = "1981-10-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(5)(A)(i)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::notice-of-appeal"
+trigger = "1981-08-31"
+due = "1981-09-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(1)(A)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run]]
+world = "ca2.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = [
+    "change-deadline-frap-2005-amendment",
+    "change-deadline-frap-2009-amendment",
+    "change-deadline-frap-base",
+]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::appeal-extension-motion"
+trigger = "1981-08-31"
+due = "1981-10-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(5)(A)(i)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::notice-of-appeal"
+trigger = "1981-08-31"
+due = "1981-09-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(1)(A)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run]]
+world = "ca3.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = [
+    "change-deadline-frap-2005-amendment",
+    "change-deadline-frap-2009-amendment",
+    "change-deadline-frap-base",
+]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::appeal-extension-motion"
+trigger = "1981-08-31"
+due = "1981-10-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(5)(A)(i)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::notice-of-appeal"
+trigger = "1981-08-31"
+due = "1981-09-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(1)(A)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run]]
+world = "ca4.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = [
+    "change-deadline-frap-2005-amendment",
+    "change-deadline-frap-2009-amendment",
+    "change-deadline-frap-base",
+]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::appeal-extension-motion"
+trigger = "1981-08-31"
+due = "1981-10-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(5)(A)(i)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::notice-of-appeal"
+trigger = "1981-08-31"
+due = "1981-09-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(1)(A)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run]]
+world = "ca5.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = [
+    "change-deadline-frap-2005-amendment",
+    "change-deadline-frap-2009-amendment",
+    "change-deadline-frap-base",
+]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::appeal-extension-motion"
+trigger = "1981-08-31"
+due = "1981-10-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(5)(A)(i)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::notice-of-appeal"
+trigger = "1981-08-31"
+due = "1981-09-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(1)(A)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run]]
+world = "ca6.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = [
+    "change-deadline-frap-2005-amendment",
+    "change-deadline-frap-2009-amendment",
+    "change-deadline-frap-base",
+]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::appeal-extension-motion"
+trigger = "1981-08-31"
+due = "1981-10-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(5)(A)(i)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::notice-of-appeal"
+trigger = "1981-08-31"
+due = "1981-09-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(1)(A)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run]]
+world = "ca7.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = [
+    "change-deadline-frap-2005-amendment",
+    "change-deadline-frap-2009-amendment",
+    "change-deadline-frap-base",
+]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::appeal-extension-motion"
+trigger = "1981-08-31"
+due = "1981-10-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(5)(A)(i)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::notice-of-appeal"
+trigger = "1981-08-31"
+due = "1981-09-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(1)(A)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run]]
+world = "ca8.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = [
+    "change-deadline-frap-2005-amendment",
+    "change-deadline-frap-2009-amendment",
+    "change-deadline-frap-base",
+]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::appeal-extension-motion"
+trigger = "1981-08-31"
+due = "1981-10-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(5)(A)(i)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::notice-of-appeal"
+trigger = "1981-08-31"
+due = "1981-09-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(1)(A)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run]]
+world = "ca9.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = [
+    "change-deadline-frap-2005-amendment",
+    "change-deadline-frap-2009-amendment",
+    "change-deadline-frap-base",
+]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::appeal-extension-motion"
+trigger = "1981-08-31"
+due = "1981-10-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(5)(A)(i)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::notice-of-appeal"
+trigger = "1981-08-31"
+due = "1981-09-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(1)(A)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run]]
+world = "ca10.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = [
+    "change-deadline-frap-2005-amendment",
+    "change-deadline-frap-2009-amendment",
+    "change-deadline-frap-base",
+]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::appeal-extension-motion"
+trigger = "1981-08-31"
+due = "1981-10-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(5)(A)(i)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::notice-of-appeal"
+trigger = "1981-08-31"
+due = "1981-09-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(1)(A)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run]]
+world = "ca11.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = [
+    "change-deadline-frap-2005-amendment",
+    "change-deadline-frap-2009-amendment",
+    "change-deadline-frap-base",
+]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::appeal-extension-motion"
+trigger = "1981-08-31"
+due = "1981-10-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(5)(A)(i)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::notice-of-appeal"
+trigger = "1981-08-31"
+due = "1981-09-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(1)(A)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run]]
+world = "cadc.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = [
+    "change-deadline-frap-2005-amendment",
+    "change-deadline-frap-2009-amendment",
+    "change-deadline-frap-base",
+]
+
+[run.expect.w1.outcome]
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::appeal-extension-motion"
+trigger = "1981-08-31"
+due = "1981-10-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(5)(A)(i)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-deadline-frap-base::notice-of-appeal"
+trigger = "1981-08-31"
+due = "1981-09-30"
+status = "lapsed"
+cite = "FRAP (2008 ed.) 4(a)(1)(A)"
+counted_by = "FRAP (2008 ed.) 26 (1967 Advisory Committee Note)"

@@ -8,6 +8,7 @@ Primary-source opinions deciding whether a federal filing was timely under FRCP 
 - 7 further entries are kept only as the opposing or supporting opinions of a circuit split (`counts_as_validation_ruling: false`).
 - 2 circuit splits, confirmed from the opinions themselves (below).
 - 10 Supreme Court criminal decisions lit/frcrimp and lit/frcp cite (lg-wvlf.6, `counts_as_validation_ruling: false`): stored and their positions confirmed, below; none is a timeliness ruling.
+- 9 Supreme Court opinions of expect corpus batch 1 (lg-wvlf.4), also `counts_as_validation_ruling: false` (below).
 
 ## Sources and provenance
 
@@ -114,3 +115,7 @@ No expect test is written for them yet. None decides whether a filing was timely
 - Rulings 2009-2016 that exercise the e-service +3 days rule in the litigant's favour are thin (Serna only); a pre-2016 ruling applying 6(d) to ECF service would strengthen the 2016 boundary.
 - Weak/partial entries: fletcher (assumes tolling and Rule 6(e) arguendo), midwest-employers (the dispute is excusable neglect; arithmetic is DERIVED), justice (Rule 6(a)(3) discussed in dictum).
 - Dropped from the first landing: Vazquez-Rivera (administrative deadline) and LeGras (ERISA contract period), replaced by pure Rule 6 / FRAP 26 rulings.
+
+## Expect corpus batch 1 (lg-wvlf.4)
+
+The Supreme Court appellate decisions of the expect corpus plan's first batch (docs/litigate/expect-corpus.md), from the Caselaw Access Project static files like the other reporter texts. Bowles (`bowles-scotus-2007`) was already stored. Two are encoded as expect tests, run in every circuit world: `smith-v-barry-scotus-1992` (tests/expect/smith-v-barry) and `torres-scotus-1988` (tests/expect/torres-v-oakland-scavenger); Bowles's test (tests/expect/bowles-v-russell) now runs in every circuit too. The other seven are stored, not encoded; each entry's `notes` says why (no dated filing the engine counts, or, for Foman, periods before the 1963 FRCP amendments that no package models): `foman-scotus-1962`, `gonzalez-v-crosby-scotus-2005`, `anderson-bessemer-scotus-1985`, `cooter-gell-scotus-1990`, `cohen-scotus-1949`, `ornelas-scotus-1996`, `american-railway-express-scotus-1924`. No RECAP docket was read: CourtListener's API needs credentials this run did not have, so the dates are the opinions' and the record entries they cite.

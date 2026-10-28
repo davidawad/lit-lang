@@ -8,8 +8,11 @@
 # Russell, which overrules it from June 14, 2007: replayed on June 13,
 # Thompson is in force and the notice is late, as the Sixth Circuit held;
 # from June 14 Thompson is withdrawn and the notice is late, as the Supreme
-# Court held. Re-record with `litigate test tests/expect --bless`, and say
-# why in the commit.
+# Court held. FRAP 4(a)(6) and both precedents bind in every circuit, so
+# the other circuit worlds (lg-wvlf.4) give the same values. The RECAP
+# docket was not read (CourtListener's API needs credentials this run did
+# not have); the dates are the opinion's (551 U.S. at 207). Re-record with `litigate test tests/expect
+# --bless`, and say why in the commit.
 
 paths = [
     "docs/litigate/examples/change",
@@ -41,6 +44,479 @@ counted_by = "FRAP (2002 ed.) 26(a)(2)"
 
 [[run]]
 world = "ca6.world"
+as_of = "2007-06-14"
+known_at = "2007-06-14"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = ["change-bowles-v-russell"]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca1.world"
+as_of = "2007-06-13"
+known_at = "2007-06-13"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = [
+    "change-bowles-v-russell",
+    "change-thompson-v-ins",
+]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca1.world"
+as_of = "2007-06-14"
+known_at = "2007-06-14"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = ["change-bowles-v-russell"]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca2.world"
+as_of = "2007-06-13"
+known_at = "2007-06-13"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = [
+    "change-bowles-v-russell",
+    "change-thompson-v-ins",
+]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca2.world"
+as_of = "2007-06-14"
+known_at = "2007-06-14"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = ["change-bowles-v-russell"]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca3.world"
+as_of = "2007-06-13"
+known_at = "2007-06-13"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = [
+    "change-bowles-v-russell",
+    "change-thompson-v-ins",
+]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca3.world"
+as_of = "2007-06-14"
+known_at = "2007-06-14"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = ["change-bowles-v-russell"]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca4.world"
+as_of = "2007-06-13"
+known_at = "2007-06-13"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = [
+    "change-bowles-v-russell",
+    "change-thompson-v-ins",
+]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca4.world"
+as_of = "2007-06-14"
+known_at = "2007-06-14"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = ["change-bowles-v-russell"]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca5.world"
+as_of = "2007-06-13"
+known_at = "2007-06-13"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = [
+    "change-bowles-v-russell",
+    "change-thompson-v-ins",
+]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca5.world"
+as_of = "2007-06-14"
+known_at = "2007-06-14"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = ["change-bowles-v-russell"]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca7.world"
+as_of = "2007-06-13"
+known_at = "2007-06-13"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = [
+    "change-bowles-v-russell",
+    "change-thompson-v-ins",
+]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca7.world"
+as_of = "2007-06-14"
+known_at = "2007-06-14"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = ["change-bowles-v-russell"]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca8.world"
+as_of = "2007-06-13"
+known_at = "2007-06-13"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = [
+    "change-bowles-v-russell",
+    "change-thompson-v-ins",
+]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca8.world"
+as_of = "2007-06-14"
+known_at = "2007-06-14"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = ["change-bowles-v-russell"]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca9.world"
+as_of = "2007-06-13"
+known_at = "2007-06-13"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = [
+    "change-bowles-v-russell",
+    "change-thompson-v-ins",
+]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca9.world"
+as_of = "2007-06-14"
+known_at = "2007-06-14"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = ["change-bowles-v-russell"]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca10.world"
+as_of = "2007-06-13"
+known_at = "2007-06-13"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = [
+    "change-bowles-v-russell",
+    "change-thompson-v-ins",
+]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca10.world"
+as_of = "2007-06-14"
+known_at = "2007-06-14"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = ["change-bowles-v-russell"]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca11.world"
+as_of = "2007-06-13"
+known_at = "2007-06-13"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = [
+    "change-bowles-v-russell",
+    "change-thompson-v-ins",
+]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca11.world"
+as_of = "2007-06-14"
+known_at = "2007-06-14"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = ["change-bowles-v-russell"]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "cadc.world"
+as_of = "2007-06-13"
+known_at = "2007-06-13"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = [
+    "change-bowles-v-russell",
+    "change-thompson-v-ins",
+]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2002 ed.) 26(a)(2)"
+
+[[run]]
+world = "cadc.world"
 as_of = "2007-06-14"
 known_at = "2007-06-14"
 

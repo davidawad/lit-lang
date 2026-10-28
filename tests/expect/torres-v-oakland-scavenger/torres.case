@@ -1,0 +1,16 @@
+case torres-v-oakland-scavenger
+uses change-deadline-frap-base ^1.0.0
+as_of 1988-06-24
+summary "Torres v. Oakland Scavenger Co., 487 U.S. 312 (1988): the dismissal entered August 31, 1981, and no notice of appeal naming Torres."
+notes "Public-record facts of torres-scotus-1988 (sources/change-corpus/rulings): the district court dismissed the intervenors' complaint on August 31, 1981 (4 Record, Doc. No. 87; 487 U.S. at 313); the notice of appeal filed September 29, 1981 omitted Torres's name (ibid.), and 'the failure to name a party in a notice of appeal ... constitutes a failure of that party to appeal' (id. at 314). The engine's deadlines are the matter's, not each party's, so the co-intervenors' notice is not an event of Torres's matter: it would discharge his deadline, which the Court held it did not. Run in every circuit (`litigate worlds`): Torres's time to appeal lapsed September 30, 1981."
+perspective torres
+
+parties {
+  torres: appellant Person
+}
+
+events {
+  dismissed: 1981-08-31 JudgmentEntered() on torres
+}
+
+stakes { appealed: 0.usd, extension-moved: 0.usd, reopening-moved: 0.usd, judgment-stands: 0.usd }

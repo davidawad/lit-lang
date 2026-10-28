@@ -116,7 +116,7 @@ Does anything short of serving the motion itself (a warning letter) satisfy the 
 
 | court | decision | citation | position (planner; batch confirms) | status |
 |---|---|---|---|---|
-| U.S. | Cooter & Gell v. Hartmarx Corp. | 496 U.S. 384 (1990) |  | planned |
+| U.S. | Cooter & Gell v. Hartmarx Corp. | 496 U.S. 384 (1990) |  | corpus (`cooter-gell-scotus-1990`); not encoded: no dated filing (lg-wvlf.4) |
 | 2d Cir. | In re Pennie & Edmonds LLP | 323 F.3d 86 (2d Cir. 2003) | related: sua sponte sanctions | planned |
 | 2d Cir. | Star Mark Management, Inc. v. Koon Chun Hing Kee Soy & Sauce Factory, Ltd. | 682 F.3d 170 (2d Cir. 2012) |  | planned |
 | 3d Cir. | In re Schaefer Salt Recovery, Inc. | 542 F.3d 90 (3d Cir. 2008) |  | planned |
@@ -255,7 +255,7 @@ Does "mistake" include a judge's legal error, and within what time? **Split:** r
 |---|---|---|---|---|
 | U.S. | Ackermann v. United States | 340 U.S. 193 (1950) |  | planned |
 | U.S. | Liljeberg v. Health Services Acquisition Corp. | 486 U.S. 847 (1988) |  | planned |
-| U.S. | Gonzalez v. Crosby | 545 U.S. 524 (2005) |  | planned |
+| U.S. | Gonzalez v. Crosby | 545 U.S. 524 (2005) |  | corpus (`gonzalez-v-crosby-scotus-2005`); not encoded: Rule 60(b)(6) sets no counted period (lg-wvlf.4) |
 | U.S. | Kemp v. United States | 596 U.S. 528 (2022) |  | planned |
 | 2d Cir. | In re 310 Associates | 346 F.3d 31 (2d Cir. 2003) |  | planned |
 | 3d Cir. | Page v. Schweiker | 786 F.2d 150 (3d Cir. 1986) |  | planned |
@@ -343,7 +343,7 @@ The civil appeal period and its jurisdictional character.
 
 | court | decision | citation | position (planner; batch confirms) | status |
 |---|---|---|---|---|
-| U.S. | Bowles v. Russell | 551 U.S. 205 (2007) |  | corpus (`bowles-scotus-2007`) |
+| U.S. | Bowles v. Russell | 551 U.S. 205 (2007) |  | corpus+expect (`bowles-scotus-2007`; tests/expect/bowles-v-russell, every circuit) |
 | 5th Cir. | Lashley v. Ford Motor Co. | 518 F.2d 749 (5th Cir. 1975) |  | corpus+expect (`lashley-5cir-1975`) |
 
 Open (no verified leading decision named yet; research, never fill by guess): 1st Cir., 2d Cir., 3d Cir., 4th Cir., 6th Cir., 7th Cir., 8th Cir., 9th Cir., 10th Cir., 11th Cir., D.C. Cir., Fed. Cir.
@@ -468,7 +468,7 @@ Amending after the scheduling-order deadline: good cause first.
 
 | court | decision | citation | position (planner; batch confirms) | status |
 |---|---|---|---|---|
-| U.S. | Foman v. Davis | 371 U.S. 178 (1962) |  | planned |
+| U.S. | Foman v. Davis | 371 U.S. 178 (1962) |  | corpus (`foman-scotus-1962`); not encoded: FRCP 73(a) and 6(a) before 1963 are not modeled (lg-wvlf.4) |
 | 1st Cir. | O'Connell v. Hyatt Hotels of Puerto Rico | 357 F.3d 152 (1st Cir. 2004) |  | planned |
 | 2d Cir. | Parker v. Columbia Pictures Industries | 204 F.3d 326 (2d Cir. 2000) |  | planned |
 | 3d Cir. | Eastern Minerals & Chemicals Co. v. Mahan | 225 F.3d 330 (3d Cir. 2000) |  | planned |
@@ -592,7 +592,7 @@ Clear-error review of findings.
 
 | court | decision | citation | position (planner; batch confirms) | status |
 |---|---|---|---|---|
-| U.S. | Anderson v. City of Bessemer City | 470 U.S. 564 (1985) |  | planned |
+| U.S. | Anderson v. City of Bessemer City | 470 U.S. 564 (1985) |  | corpus (`anderson-bessemer-scotus-1985`); not encoded: no dated filing (lg-wvlf.4) |
 
 Open (no verified leading decision named yet; research, never fill by guess): 1st Cir., 2d Cir., 3d Cir., 4th Cir., 5th Cir., 6th Cir., 7th Cir., 8th Cir., 9th Cir., 10th Cir., 11th Cir., D.C. Cir. Fed. Cir.: applies regional-circuit law to procedural questions not unique to patent law, so the regional cell governs.
 
@@ -612,8 +612,8 @@ Contents of the notice of appeal; functional equivalents.
 
 | court | decision | citation | position (planner; batch confirms) | status |
 |---|---|---|---|---|
-| U.S. | Torres v. Oakland Scavenger Co. | 487 U.S. 312 (1988) |  | planned |
-| U.S. | Smith v. Barry | 502 U.S. 244 (1992) |  | planned |
+| U.S. | Torres v. Oakland Scavenger Co. | 487 U.S. 312 (1988) |  | corpus+expect (`torres-scotus-1988`; tests/expect/torres-v-oakland-scavenger, every circuit) |
+| U.S. | Smith v. Barry | 502 U.S. 244 (1992) |  | corpus+expect (`smith-v-barry-scotus-1992`; tests/expect/smith-v-barry, every circuit) |
 | U.S. | Becker v. Montgomery | 532 U.S. 757 (2001) |  | planned |
 
 Open (no verified leading decision named yet; research, never fill by guess): 1st Cir., 2d Cir., 3d Cir., 4th Cir., 5th Cir., 6th Cir., 7th Cir., 8th Cir., 9th Cir., 10th Cir., 11th Cir., D.C. Cir., Fed. Cir.

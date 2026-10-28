@@ -1,0 +1,17 @@
+case smith-v-barry
+uses change-deadline-frap-base ^1.0.0
+as_of 1992-01-14
+summary "Smith v. Barry, 502 U.S. 244 (1992): the order denying J.N.O.V. entered April 13, 1988 and the informal brief returned to the Fourth Circuit on May 4, which may serve as the notice of appeal."
+notes "Public-record facts of smith-v-barry-scotus-1992 (sources/change-corpus/rulings): the order denying the psychologists' J.N.O.V. motion was entered April 13, 1988 (counsel's letter of April 21, App. 17; 502 U.S. at 246), and the informal brief was returned May 4, 1988, 'within the deadline for filing a notice of appeal' (id. at 246-247). Under FRAP 4(a)(4) the time runs from the order disposing of the motion, so it is the entry here; the premature notice filed while the motion was pending was 'without effect' (id. at 246) and its date is not in the opinion, so it is not an event. The brief is the notice of appeal the Court held a brief may be (id. at 248-249). Run in every circuit (`litigate worlds`): timely, due May 13, 1988."
+perspective smith
+
+parties {
+  smith: appellant Person
+}
+
+events {
+  entered: 1988-04-13 JudgmentEntered() on smith
+  brief: 1988-05-04 NoticeOfAppealFiled() by smith
+}
+
+stakes { appealed: 0.usd, extension-moved: 0.usd, reopening-moved: 0.usd, judgment-stands: 0.usd }

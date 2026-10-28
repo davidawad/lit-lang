@@ -6,3 +6,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 3b048d25496bf8520c7313e9ca0f743ae1b7f93a345280d4075f4f574f189105. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-txs/original/txs-bankruptcy-local-rules-2025-09-22.pdf` as served (sha256 bd61c3522e19172d161048029a94da06793479b0928c46dd069f9cb3b9844db1); extraction sha256 3b048d25496bf8520c7313e9ca0f743ae1b7f93a345280d4075f4f574f189105.
+
+### `bankr-txs/txs-bankruptcy-local-rules-2025-09-22-sectioned.txt` — Bankr. S.D. Tex. Bankruptcy Local Rules, sectioned
+
+- Derived in the pod (lg-u561.17) from `bankr-txs/txs-bankruptcy-local-rules-2025-09-22.txt` (extract sha256 3b048d25496bf8520c7313e9ca0f743ae1b7f93a345280d4075f4f574f189105); nothing fetched. One `## BLR <n>` line is inserted before each rule's own heading line in the body (a line opening at the margin, after an optional form feed, with `Local Rule <nnnn>-<n>.`, or `Rule 9017-1.` for the one rule headed without `Local`; the edition has no table of contents, so the set is every such heading, from `1001-1` through `9037-1`, 50 rules; indented cross-references are unmarked). Rule text was not edited: deleting the marker lines (`sed '/^## BLR /d'`) restores the extract byte for byte.
+- Edition: as the extract.
+- Sectioned sha256 ffbf381754336221d4f61b05c651da8d516913c10dbae9b4dd6836e43bea44b7 (the `path_sha256` pinned by `lit/bankr-txs/Lit.toml`).

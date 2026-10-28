@@ -1,0 +1,99 @@
+module ut-appellate-civil.appeal
+
+start threshold
+
+decision threshold: "Appealable order or judgment?" by applicant cite "URAP 3(a)"
+{
+  note "Except as otherwise provided by law, a party appeals a final order or judgment of a district court by filing a notice of appeal with the trial court clerk within the time Rule 4 allows (URAP 3(a)(1)). An interlocutory order is reviewed only on a petition for permission to appeal, filed and served within 21 days after entry of the trial court's signed order and limited to 20 pages; no response is received unless the court requests one, and permission is granted only if the order involves substantial rights and may materially affect the final decision or early review better serves justice (URAP 5(a), (d), (f), (g)). A party may move at any time to dismiss for lack of jurisdiction; a response is due within 14 days from service (URAP 10(a)(1)). Periods in this package are stated, not counted: computation is URAP 22(a). The outline named no leading decisions."
+  edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "URAP 10(a)" }
+  edge-threshold-yes "Appealable" -> notice { authority cite "URAP 3(a)" }
+}
+
+decision notice: "Notice of appeal within time?" by applicant cite "URAP 4(a)"
+{
+  note "The notice of appeal is filed with the clerk of the trial court within 30 days after the date of entry of the judgment or order appealed from (URAP 4(a)). A timely motion under URCP 50(b), 52(b) or 59, a URCP 60(b) motion filed no later than 28 days after entry, or a motion or claim for attorney fees under URCP 73 starts the time from entry of the dispositive order (URAP 4(b)(1)). Another party may cross-appeal within 14 days after the first notice is filed or within the time otherwise prescribed, whichever expires last (URAP 4(d)). The trial court may extend the time on a motion filed before it expires, or for good cause or excusable neglect on a motion filed no later than 30 days after it expires, by no more than 30 days beyond the prescribed time or 14 days beyond entry of the order granting it, whichever is later (URAP 4(e)). The appellant pays the filing fee to the trial court clerk (URAP 3(f))."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "URAP 4(a)" }
+  edge-notice-timely "Timely notice" -> record { authority cite "URAP 4(a)" }
+}
+
+state record: "Docketing statement, record and transcript" by office cite "URAP 11(a)"
+{
+  note "Within 21 days after the notice of appeal is filed, the appellant files and serves the docketing statement; in a civil appeal failure to file it in time may result in dismissal (URAP 9(b), (f)). Within 21 days after filing the docketing statement, the appellant orders the transcript and serves a designation of the parts to be transcribed, or files a certificate that none is requested; the appellee may cross-designate within 14 days after service (URAP 11(c)(1), (3)). The transcript is completed and filed within 30 days after payment arrangements are made, and the trial court transmits the index and the paginated record within 20 days from the appellate court's request (URAP 12(a)(2), (b))."
+  edge-record-briefing "Record transmitted" -> briefing { authority cite "URAP 12(b)" }
+}
+
+state briefing: "Briefs filed" by applicant cite "URAP 26(a)"
+{
+  note "The appellant files and serves its principal brief within 40 days after the date of the clerk's Rule 13 notice; the appellee's principal brief is due within 30 days after service of the appellant's, and any reply brief within 30 days after the appellee's (URAP 26(a)). Unless a brief complies with the page limit it must comply with the word limit: outside death-sentence cases a principal brief is limited to 30 pages or 14,000 words and a reply brief to 15 pages or 7,000 words; headings, footnotes and quotations count (URAP 24(g)). Stipulated extensions for any brief may not exceed 60 days in total (URAP 22(b)(3)). The Supreme Court may transfer a case to the Court of Appeals at any time before it is set for oral argument, except a case within its exclusive jurisdiction; after a notice of intent to transfer, a retention letter is filed within ten days (URAP 42(a), (c)(3))."
+  edge-briefing-argument "Briefing complete" -> argument { authority cite "URAP 26(a)" }
+}
+
+state argument: "Oral argument or submission" by court cite "URAP 29(a)"
+{
+  note "The clerk gives notice of oral argument not later than 28 days before the case is calendared (URAP 29(b)(1), (2)). In the Supreme Court the parties may jointly move to cancel argument not later than 14 days from the clerk's notice; in the Court of Appeals a party may waive argument by a written waiver filed within that time (URAP 29(b)(1)(A), (2)(A))."
+  edge-argument-decision "Case submitted" -> decision { authority cite "URAP 30(a)" }
+}
+
+state decision: "Decision issued" by court cite "URAP 30(a)"
+{
+  note "The court may reverse, affirm, modify or otherwise dispose of the order or judgment appealed (URAP 30(a)); the reasons are stated in writing (URAP 30(d)), and the entry of the decision in the court's records constitutes entry of its judgment (URAP 30(f)). The outline named no leading decisions."
+  edge-decision-rehearing-decision "Decision entered" -> rehearing-decision {
+    authority cite "URAP 30(f)"
+  }
+}
+
+decision rehearing-decision: "Rehearing sought?" by applicant cite "URAP 35(a)"
+{
+  note "A petition for rehearing may be filed within 14 days after the court issues its decision resolving the appeal on the merits, unless the time is shortened or enlarged by order; it may not exceed 15 pages (URAP 35(a)(2), (6))."
+  edge-rehearing-decision-none "No petition" -> further-review { authority cite "URAP 35(a)" }
+  edge-rehearing-decision-sought "Petition filed" -> rehearing-order { authority cite "URAP 35(a)" }
+}
+
+state rehearing-order: "Rehearing order" by court cite "URAP 35(a)"
+{
+  note "No response is received unless the court requests one, due within 14 days after the order requesting it, and a petition is not granted without a request for a response (URAP 35(a)(4))."
+  edge-rehearing-order-further-review "Rehearing decided" -> further-review {
+    authority cite "URAP 35(a)"
+  }
+}
+
+decision further-review: "Certiorari sought?" by applicant cite "URAP 48(a)"
+{
+  note "Review of a Court of Appeals decision is by petition for a writ of certiorari to the Utah Supreme Court (URAP 45(a)), filed with the Supreme Court clerk within 30 days after the Court of Appeals' final decision issues, or after a timely rehearing petition is denied or decided (URAP 48(a), (c)); the Supreme Court grants an extension of up to 30 days if requested before the time expires, and on good cause or excusable neglect within 30 days after (URAP 48(e)). The petition may not exceed 20 pages (URAP 49(d)). A Supreme Court decision issues its remittitur 15 days after judgment, or five days after the order disposing of a timely rehearing petition (URAP 36(a)(1)); the Court of Appeals issues its remittitur when the time for certiorari expires (URAP 36(a)(2))."
+  edge-further-review-none "No further review" -> final-decision { authority cite "URAP 36(a)" }
+  edge-further-review-petition "Petition for certiorari" -> review-decided {
+    authority cite "URAP 48(a)"
+  }
+}
+
+decision review-decided: "Certiorari decided" by court cite "URAP 51(a)"
+{
+  note "Certiorari is a matter of judicial discretion, granted only for special and important reasons (URAP 46(a)). No petition is granted absent a request for a response; a response is due within 30 days after the request and may not exceed 20 pages, and a reply within 7 days after service of the response, at most five pages (URAP 50(a), (b), (d)). The Supreme Court enters an order denying or granting the petition, summarily and without oral argument (URAP 51(a))."
+  edge-review-decided-denied "Denied" -> review-denied { authority cite "URAP 51(c)" }
+  edge-review-decided-granted "Granted" -> review-granted { authority cite "URAP 51(b)" }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: no appellate jurisdiction" outcome [loss, dismissal, jurisdictional] cite "URAP 10(a)"
+{
+  note "Dismissal on a motion for lack of jurisdiction (URAP 10(a)(1))."
+}
+
+terminal dismissed-untimely: "Dismissed: untimely notice" outcome [loss, dismissal] cite "URAP 4(a)"
+{
+  note "A notice of appeal not filed within the time Rule 4 allows does not take the appeal (URAP 3(a)(1), 4(a))."
+}
+
+terminal final-decision: "Final: decision stands" outcome [final] cite "URAP 36(a)"
+{
+  note "The remittitur issues and the decision stands (URAP 36(a))."
+}
+
+terminal review-denied: "Certiorari denied" outcome [final] cite "URAP 51(c)"
+{
+  note "The clerk of the Supreme Court notifies the Court of Appeals and counsel of the denial (URAP 51(c)); the Court of Appeals issues its remittitur five days after the order denying the petition (URAP 36(a)(2))."
+}
+
+terminal review-granted: "Certiorari granted" outcome [neutral] cite "URAP 51(b)"
+{
+  note "Certiorari granted in whole or in part (URAP 51(a), (b)); the merits of the review are not modeled."
+}

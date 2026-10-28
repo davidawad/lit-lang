@@ -1,0 +1,131 @@
+module ri-superior-court-civil.civil
+
+// Civil actions in the Rhode Island Superior Court, from the defending
+// side's view of outcomes. Every period below is stated in a note, not
+// counted: computation is Super. R. Civ. P. 6(a), with Rhode Island's legal
+// holidays, for which lit/core has no counting rule. The filing fee is "the
+// fees prescribed by law" (R. 3), which the vendored rules do not state. The
+// earlier outline named no leading decisions.
+start commenced
+
+state commenced: "Complaint filed" by applicant cite "R.I. Super. Ct. R. Civ. P. 3"
+{
+  note "A civil action is commenced by filing a complaint and all other required documents together with the fees prescribed by law (R.I. Super. Ct. R. Civ. P. 3). If service of the summons, complaint, Language Assistance Notice and other required documents is not made on a defendant within 120 days after commencement, the court on motion or on its own initiative after notice to the plaintiff dismisses the action without prejudice as to that defendant or directs service within a specified time; on good cause the court extends the time (R.I. Super. Ct. R. Civ. P. 4(l)). A defendant asked to waive service has at least 30 days from the request (60 if addressed outside the United States) to return the waiver (R.I. Super. Ct. R. Civ. P. 4(d))."
+  edge-commenced-served "Defendant served" -> answer-due {
+    authority cite "R.I. Super. Ct. R. Civ. P. 12(a)"
+  }
+  edge-commenced-unserved "Not served within 120 days" -> dismissed-unserved {
+    authority cite "R.I. Super. Ct. R. Civ. P. 4(l)"
+  }
+}
+
+terminal dismissed-unserved: "Dismissed without prejudice for want of service" outcome [win, dismissal] cite "R.I. Super. Ct. R. Civ. P. 4(l)"
+
+decision answer-due: "Answer, motion or default" by office cite "R.I. Super. Ct. R. Civ. P. 12(a)"
+{
+  note "A defendant serves an answer within 20 days after service of the summons, complaint, Language Assistance Notice and other required documents (or after the last publication of an order of notice), or, if service was timely waived under Rule 4(d), within 60 days after the request for waiver was sent (90 days if addressed outside the United States). An answer to a cross-claim and a reply to a counterclaim are due within 20 days after service (R.I. Super. Ct. R. Civ. P. 12(a)). A party served electronically or by mail has one added day for a period running from service (R.I. Super. Ct. R. Civ. P. 6(d))."
+  edge-answer-due-default "No response" -> default-entered {
+    authority cite "R.I. Super. Ct. R. Civ. P. 55(a)"
+  }
+  edge-answer-due-motion "Rule 12(b) motion filed" -> pleading-motion {
+    authority cite "R.I. Super. Ct. R. Civ. P. 12(b)"
+  }
+  edge-answer-due-answer "Answer served" -> discovery {
+    authority cite "R.I. Super. Ct. R. Civ. P. 12(a)"
+  }
+}
+
+decision pleading-motion: "Motion to dismiss decided" by court cite "R.I. Super. Ct. R. Civ. P. 12(b)"
+{
+  note "The defenses that may be made by motion before pleading include failure to state a claim upon which relief can be granted; if matters outside the pleading are presented and not excluded on that motion, it is treated as one for summary judgment under Rule 56 (R.I. Super. Ct. R. Civ. P. 12(b)). A written motion and notice of its hearing are served not later than 10 days before the hearing unless a rule or order fixes another period (R.I. Super. Ct. R. Civ. P. 6(c)). If the court denies the motion or postpones it to trial, the responsive pleading is served within 10 days after notice of the court's action (R.I. Super. Ct. R. Civ. P. 12(a))."
+  edge-pleading-motion-dismissed "Granted" -> dismissed-pleading {
+    authority cite "R.I. Super. Ct. R. Civ. P. 12(b)"
+  }
+  edge-pleading-motion-denied "Denied: responsive pleading within 10 days after notice" -> discovery {
+    authority cite "R.I. Super. Ct. R. Civ. P. 12(a)"
+  }
+}
+
+terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] cite "R.I. Super. Ct. R. Civ. P. 12(b)"
+
+terminal default-entered: "Default entered" outcome [loss] cite "R.I. Super. Ct. R. Civ. P. 55(a)"
+{
+  note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend and that is made to appear by affidavit or otherwise, the clerk enters the default (R.I. Super. Ct. R. Civ. P. 55(a)). The clerk enters judgment for a sum certain against a defendant defaulted for failure to appear; otherwise the party applies to the court, and a party who has appeared is served with written notice of the application at least 10 days before the hearing (R.I. Super. Ct. R. Civ. P. 55(b)). For good cause the court may set aside an entry of default, and a default judgment under Rule 60(b) (R.I. Super. Ct. R. Civ. P. 55(c)). Outcome from the defending side."
+}
+
+state discovery: "Pleadings closed; discovery" by applicant cite "R.I. Super. Ct. R. Civ. P. 26"
+{
+  note "Discovery is governed by R.I. Super. Ct. R. Civ. P. 26 through 37. A party demands a jury by serving a written demand not later than 10 days after service of the last pleading directed to the issue and filing it; another party may demand a jury on other issues within 10 days after service of a demand limited to some issues; failure to serve and file a demand waives trial by jury (R.I. Super. Ct. R. Civ. P. 38(b)-(d)). The court may direct a pretrial conference and enters an order that controls the subsequent course of the action (R.I. Super. Ct. R. Civ. P. 16)."
+  edge-discovery-sj "Summary judgment motion filed" -> sj-motion {
+    authority cite "R.I. Super. Ct. R. Civ. P. 56(c)"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial {
+    authority cite "R.I. Super. Ct. R. Civ. P. 16"
+  }
+  edge-discovery-settle "Settled or voluntarily dismissed" -> settled {
+    authority cite "R.I. Super. Ct. R. Civ. P. 41(a)"
+  }
+}
+
+decision sj-motion: "Summary judgment decided" by court cite "R.I. Super. Ct. R. Civ. P. 56(c)"
+{
+  note "A claimant may move for summary judgment after 20 days from commencement or after the adverse party serves such a motion; a defending party may move at any time (R.I. Super. Ct. R. Civ. P. 56(a), (b)). The motion is served at least 10 days before the hearing, and the adverse party may serve opposing affidavits before the day of hearing; judgment is rendered forthwith if the record shows no genuine issue as to any material fact and that the moving party is entitled to judgment as a matter of law (R.I. Super. Ct. R. Civ. P. 56(c)). An adverse party may not rest on the allegations or denials of its pleading but must set forth specific facts showing a genuine issue for trial (R.I. Super. Ct. R. Civ. P. 56(e)). No leading decision is named."
+  edge-sj-motion-granted "Granted" -> judgment-for-movant {
+    authority cite "R.I. Super. Ct. R. Civ. P. 56(c)"
+  }
+  edge-sj-motion-denied "Denied or partly denied" -> trial {
+    authority cite "R.I. Super. Ct. R. Civ. P. 56(d)"
+  }
+}
+
+terminal judgment-for-movant: "Summary judgment for the movant" outcome [win, judgment] cite "R.I. Super. Ct. R. Civ. P. 56(c)"
+{
+  note "Summary judgment on liability alone and an order specifying the facts without substantial controversy (R.I. Super. Ct. R. Civ. P. 56(c), (d)) are not modeled. Appeal from the judgment is not modeled on this path."
+}
+
+state trial: "Trial" by court cite "R.I. Super. Ct. R. Civ. P. 50(a)"
+{
+  note "Motions for judgment as a matter of law may be made at any time before submission of the case to the jury (R.I. Super. Ct. R. Civ. P. 50(a)). In a nonjury trial the court finds the facts specially and states its conclusions of law, and judgment is entered under Rule 58 (R.I. Super. Ct. R. Civ. P. 52(a))."
+  edge-trial-post "Verdict or decision; judgment entered" -> post-trial {
+    authority cite "R.I. Super. Ct. R. Civ. P. 58(a)"
+  }
+}
+
+decision post-trial: "Post-trial motions decided" by court cite "R.I. Super. Ct. R. Civ. P. 59(b)"
+{
+  note "Every judgment is set forth on a separate document and is entered when so set forth and signed by the clerk; entry is not delayed for taxing costs (R.I. Super. Ct. R. Civ. P. 58(a)). A motion for judgment as a matter of law may be renewed not later than 10 days after entry of judgment (R.I. Super. Ct. R. Civ. P. 50(b)); a motion to amend findings, not later than 10 days after entry (R.I. Super. Ct. R. Civ. P. 52(b)); a motion for a new trial, not later than 10 days after entry, with opposing affidavits within 10 days after service of the motion's affidavits (R.I. Super. Ct. R. Civ. P. 59(b), (c)); a motion to alter or amend the judgment, not later than 10 days after entry (R.I. Super. Ct. R. Civ. P. 59(e)). These times may not be enlarged except as those rules state (R.I. Super. Ct. R. Civ. P. 6(b)). Costs may be taxed by the clerk on 10 days' notice by the prevailing party, served with the bill of costs (R.I. Super. Ct. R. Civ. P. 54(d)). No execution issues until 20 days after entry of judgment or until the time for appeal has expired (R.I. Super. Ct. R. Civ. P. 62(a))."
+  edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+    authority cite "R.I. Super. Ct. R. Civ. P. 58(a)"
+  }
+}
+
+state judgment-entered: "Final judgment entered" by office cite "R.I. Super. Ct. R. Civ. P. 58(a)"
+{
+  note "A motion for relief under Rule 60(b)(1)-(3) is made within a reasonable time and not more than one year after the judgment (R.I. Super. Ct. R. Civ. P. 60(b))."
+  edge-judgment-entered-appeal "Next step" -> appeal-decision {
+    authority cite "R.I. Sup. Ct. R. App. P. 4(a)"
+  }
+}
+
+decision appeal-decision: "Notice of appeal within 20 days of entry?" by applicant cite "R.I. Sup. Ct. R. App. P. 4(a)"
+{
+  note "In a civil case the notice of appeal is filed with the clerk of the trial court within 20 days of the entry of the judgment, order or decree appealed from, with a filing fee of $150; once a timely notice is filed any other party may file a notice within 20 days of it. A timely motion under Super. R. Civ. P. 50(b), 52(b) or 59 terminates the running of the time, which runs in full from entry of the order deciding it. On a showing of excusable neglect the trial court may extend the time by up to 30 days from the expiration of the original time (R.I. Sup. Ct. R. App. P. 4(a))."
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken {
+    authority cite "R.I. Sup. Ct. R. App. P. 3(a)"
+  }
+  edge-appeal-decision-none "No notice filed" -> final-no-appeal {
+    authority cite "R.I. Sup. Ct. R. App. P. 4(a)"
+  }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Rhode Island Supreme Court package" outcome [appeal] cite "R.I. Sup. Ct. R. App. P. 3(a)"
+{
+  note "Hand-off to lit/ri-supreme (ri-supreme-court-civil-appeals)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "R.I. Sup. Ct. R. App. P. 4(a)"
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "R.I. Super. Ct. R. Civ. P. 41(a)"
+{
+  note "A plaintiff may dismiss without order by notice before the adverse party serves an answer or a summary judgment motion, or by a stipulation signed by all parties who have appeared; unless stated otherwise the dismissal is without prejudice (R.I. Super. Ct. R. Civ. P. 41(a)(1)). The court may dismiss an action pending more than five years for lack of prosecution (R.I. Super. Ct. R. Civ. P. 41(b)(1))."
+}

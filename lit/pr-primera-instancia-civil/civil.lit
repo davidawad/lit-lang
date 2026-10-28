@@ -1,0 +1,165 @@
+module pr-primera-instancia-civil.civil
+
+// Civil actions in the Puerto Rico Court of First Instance, from the
+// plaintiff's (applicant's) side, under the Reglas de Procedimiento Civil
+// de 2009 in the compilation with statutory amendments through March 2023
+// (the base edition; a later amendment is a dated layer over it). The
+// rules are in Spanish; the notes paraphrase them in English. Every period
+// is stated in a note, not counted: Rule 68.1 counts by Puerto Rico legal
+// holidays and lit/core has no Puerto Rico counting rule or calendar. The
+// rules state no filing fee (the aranceles are statutory and not vendored).
+// The earlier outline cited Rule 3.1 for commencement (it is Rule 2),
+// Rule 39 for trial (Rule 39 is dismissal) and Rule 45 for default, and
+// had a jury verdict step the rules do not provide; those are corrected
+// below. It named no leading decision, so none is cited.
+start complaint-filed
+
+state complaint-filed: "Demanda filed" by applicant cite "P.R. R. Civ. P. 2"
+{
+  note "An action begins with the filing of a complaint in the court (P.R. R. Civ. P. 2). The plaintiff files the summons form with the complaint for immediate issuance by the clerk (P.R. R. Civ. P. 4.1). Periods are stated, not counted: the day of the triggering act is excluded; the last day is included unless it is a Saturday, Sunday or legal holiday, in which case the period runs to the end of the next day that is not; intermediate Saturdays, Sundays and legal holidays are excluded from a period of less than seven days; a half holiday counts as a full one (P.R. R. Civ. P. 68.1). Three days are added to a period that runs from a notice served by mail, but not to a period counted from the archivo en autos of the notice of judgment (P.R. R. Civ. P. 68.3). The base text is the compilation with statutory amendments through March 2023."
+  edge-complaint-filed-served "Summons served within 120 days" -> answer-due {
+    authority cite "P.R. R. Civ. P. 4.3(c)"
+  }
+  edge-complaint-filed-unserved "Summons not served within 120 days" -> dismissed-unserved {
+    authority cite "P.R. R. Civ. P. 4.3(c)"
+  }
+}
+
+terminal dismissed-unserved: "Dismissed without prejudice for want of service" outcome [loss, dismissal] cite "P.R. R. Civ. P. 4.3(c)"
+{
+  note "The summons is served within 120 days from the filing of the complaint or from the issuance of the summons by edict. The clerk issues the summonses the day the complaint is filed; any delay in issuing them is added to the time the court grants on a timely motion for extension. When the period runs without service, the court must enter judgment dismissing and archiving the action without prejudice; a later dismissal for the same failure is an adjudication on the merits (P.R. R. Civ. P. 4.3(c))."
+}
+
+decision answer-due: "Contestación, pre-answer motion or default" by office cite "P.R. R. Civ. P. 10.1"
+{
+  note "A defendant in or outside Puerto Rico serves its answer within 30 days after delivery of the summons and complaint, or after publication of the edict when served under Rule 4.6. A crossclaim is answered within 10 days of its notice and a counterclaim replied to within 10 days of notice of the answer. Where the Commonwealth, the municipalities, their officers or an instrumentality other than a public corporation is a party, any party answers within an improrrogable 60 days of delivery of the summons and complaint. A motion under the rules or Rule 36 alters the period unless the court fixes another: if denied or postponed to trial, the responsive pleading is served within 10 days after notice of the order; if a more definite statement is granted, within 10 days after notice of it (P.R. R. Civ. P. 10.1)."
+  edge-answer-due-default "No answer or defense" -> default-entered {
+    authority cite "P.R. R. Civ. P. 45.1"
+  }
+  edge-answer-due-motion "Motion to dismiss under Rule 10.2" -> pleading-motion {
+    authority cite "P.R. R. Civ. P. 10.2"
+  }
+  edge-answer-due-answer "Answer served" -> case-management {
+    authority cite "P.R. R. Civ. P. 10.1"
+  }
+}
+
+decision pleading-motion: "Motion to dismiss decided" by court cite "P.R. R. Civ. P. 10.2"
+{
+  note "The defenses of lack of jurisdiction over the subject matter or the person, insufficiency of the summons or of its service, failure to state a claim that justifies relief, and failure to join an indispensable party may be raised by a duly grounded motion; if matters outside the pleading are presented on the failure-to-state-a-claim defense and not excluded, the motion is treated as one for summary judgment under Rule 36 (P.R. R. Civ. P. 10.2). The earlier outline named no leading decision on the pleading standard."
+  edge-pleading-motion-granted "Granted" -> dismissed { authority cite "P.R. R. Civ. P. 10.2" }
+  edge-pleading-motion-amend "Leave to amend" -> amend { authority cite "P.R. R. Civ. P. 13.1" }
+  edge-pleading-motion-denied "Denied: answer within 10 days of notice" -> case-management {
+    authority cite "P.R. R. Civ. P. 10.1"
+  }
+}
+
+state amend: "Amended pleading" by applicant cite "P.R. R. Civ. P. 13.1"
+{
+  note "A party may amend its pleading at any time before a responsive pleading is served; otherwise only with leave of court, given liberally when justice so requires, or the adverse party's written consent, and a motion for leave is accompanied by the complete amended pleading. A party answers an amended pleading within the time remaining to answer the original or within 20 days of notice of the amendment, whichever is longer, unless the court orders otherwise (P.R. R. Civ. P. 13.1)."
+  edge-amend-tested "Amended pleading tested again" -> pleading-motion {
+    authority cite "P.R. R. Civ. P. 10.2"
+  }
+}
+
+terminal dismissed: "Dismissed on the pleadings" outcome [loss, dismissal] cite "P.R. R. Civ. P. 10.2"
+{
+  note "Unless the order says otherwise, a dismissal other than for lack of jurisdiction or failure to join an indispensable party is an adjudication on the merits (P.R. R. Civ. P. 39.2(c)). Appeal runs from the archivo en autos of the notice of judgment (P.R. R. Civ. P. 52.2(a))."
+}
+
+decision default-entered: "Rebeldía" by court cite "P.R. R. Civ. P. 45.1"
+{
+  note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend, shown by sworn statement or otherwise, the clerk enters its default; the entry deems admitted the averments of the affirmative pleadings, subject to Rule 45.2(b) (P.R. R. Civ. P. 45.1). The clerk enters judgment for a sum certain on the plaintiff's request and a sworn statement of the amount due, against a defaulted defendant who is not a minor or incapacitated; in other cases the court enters it, holding the hearings it needs, and a defaulted party that has appeared is notified of any hearing (P.R. R. Civ. P. 45.2). A default judgment may not differ in kind from or exceed the amount demanded (P.R. R. Civ. P. 42.4). In a money claim against the Commonwealth, its municipalities, agencies or officers, no default judgment is entered unless the claimant proves the claim to the court's satisfaction (P.R. R. Civ. P. 45.5). The court may set aside an entry of default for good cause, and a default judgment under Rule 49.2 (P.R. R. Civ. P. 45.3)."
+  edge-default-entered-judgment "Default judgment entered" -> default-judgment {
+    authority cite "P.R. R. Civ. P. 45.2"
+  }
+  edge-default-entered-set-aside "Default set aside for good cause" -> case-management {
+    authority cite "P.R. R. Civ. P. 45.3"
+  }
+}
+
+terminal default-judgment: "Default judgment" outcome [win] cite "P.R. R. Civ. P. 45.2"
+{
+  note "The defaulted party may move to set the judgment aside under Rule 49.2 within a reasonable time and in no case more than six months after its registration (P.R. R. Civ. P. 45.3; 49.2)."
+}
+
+state case-management: "Case management and discovery" by applicant cite "P.R. R. Civ. P. 37.1"
+{
+  note "In contested cases other than those under Rules 45 and 60, family cases and others governed by special laws, the attorneys meet no later than 40 days from the last answer of a defendant, co-defendant served or third-party defendant, or from expiry of the time to answer, exchange documents, witnesses, experts and a discovery plan, and file a joint Informe para el manejo del caso within 10 days after the meeting; these terms are of strict compliance, subject to Rule 37.7 (P.R. R. Civ. P. 37.1). The court sets an initial conference no later than 60 days after the report is filed, other than in Rule 60 cases or those governed by special laws, and there fixes among other things the final term for discovery, the term for dispositive motions and the trial date (P.R. R. Civ. P. 37.2). It then issues a scheduling order whose terms and settings are of strict compliance (P.R. R. Civ. P. 37.3). Discovery reaches any non-privileged matter relevant to the subject of the action (P.R. R. Civ. P. 23.1(a)). Breach of a term or order under Rule 37 without just cause draws an economic sanction (P.R. R. Civ. P. 37.7)."
+  edge-case-management-sj "Summary judgment motion" -> summary-judgment {
+    authority cite "P.R. R. Civ. P. 36.1"
+  }
+  edge-case-management-pretrial "No dispositive motion" -> pretrial {
+    authority cite "P.R. R. Civ. P. 37.4"
+  }
+  edge-case-management-inactive "No step taken for six months" -> inactivity {
+    authority cite "P.R. R. Civ. P. 39.2(b)"
+  }
+}
+
+decision inactivity: "Order to show cause for inactivity" by court cite "P.R. R. Civ. P. 39.2(b)"
+{
+  note "The court dismisses and archives every pending civil matter in which no party has taken a step in the last six months unless the inactivity is timely justified; motions to suspend or transfer a hearing or for an extension are not a step. Its order requires the parties to state in writing, within 10 days of the clerk's notice, why the matter should not be dismissed (P.R. R. Civ. P. 39.2(b)). On a first failure to comply with the rules or an order, dismissal follows only after a warning to counsel, sanctions on counsel and notice to the party, and the party has a reasonable time to cure of no less than 30 days unless the circumstances justify less (P.R. R. Civ. P. 39.2(a))."
+  edge-inactivity-justified "Inactivity justified" -> case-management {
+    authority cite "P.R. R. Civ. P. 39.2(b)"
+  }
+  edge-inactivity-dismissed "Dismissed and archived" -> dismissed-inactive {
+    authority cite "P.R. R. Civ. P. 39.2(b)"
+  }
+}
+
+terminal dismissed-inactive: "Dismissed for inactivity" outcome [loss, dismissal] cite "P.R. R. Civ. P. 39.2(b)"
+
+decision summary-judgment: "Summary judgment decided" by court cite "P.R. R. Civ. P. 36.3"
+{
+  note "A claimant may move for summary judgment any time after 20 days from service on the defendant, or after the adverse party has served such a motion, and a defending party any time from its service; neither later than 30 days after the date the court set to close discovery (P.R. R. Civ. P. 36.1; 36.2). The opposition is filed within 20 days of notice of the motion, with numbered references to the controverted facts; if it is not filed in time, the motion stands submitted (P.R. R. Civ. P. 36.3(b), (e)). The judgment is entered immediately if the record shows no real and substantial controversy of material fact and the movant is entitled to it as a matter of law (P.R. R. Civ. P. 36.3(e)). If the motion does not dispose of the whole action and trial is needed, the court must state the material facts not in substantial controversy and those in good faith controverted (P.R. R. Civ. P. 36.4). The earlier outline named no leading decision on summary judgment."
+  edge-summary-judgment-granted "Granted" -> judgment-entered {
+    authority cite "P.R. R. Civ. P. 36.3(e)"
+  }
+  edge-summary-judgment-denied "Denied or partly granted" -> pretrial {
+    authority cite "P.R. R. Civ. P. 36.4"
+  }
+}
+
+state pretrial: "Pretrial report and conference" by applicant cite "P.R. R. Civ. P. 37.5"
+{
+  note "Where a pretrial conference is set, the attorneys meet at least 15 days before it and file the Informe preliminar entre abogados y abogadas 10 days before it; documents, witnesses or issues not identified in it are not admitted at trial without just cause, and objections and defenses not specified are waived (P.R. R. Civ. P. 37.4). The conference is held at least 30 days before the trial date, and its order governs the later course of the action unless modified at trial to prevent manifest injustice (P.R. R. Civ. P. 37.5)."
+  edge-pretrial-trial "Tried to the court" -> judgment-entered {
+    authority cite "P.R. R. Civ. P. 42.2"
+  }
+  edge-pretrial-withdrawn "Voluntary dismissal" -> withdrawn {
+    authority cite "P.R. R. Civ. P. 39.1(a)"
+  }
+}
+
+terminal withdrawn: "Desistimiento" outcome [settlement] cite "P.R. R. Civ. P. 39.1(a)"
+
+decision judgment-entered: "Sentencia notified and archived" by office cite "P.R. R. Civ. P. 46"
+{
+  note "In every action the court states the facts proved and its conclusions of law separately, except on motions under Rules 10, 36.1 and 36.2, in default cases, by stipulation, or where the court deems it unnecessary (P.R. R. Civ. P. 42.2). The clerk notifies the judgment, files in the record a copy of it and of the notice, and registers it; the judgment takes effect, and the appeal period runs, from the archivo en autos of the copy of its notice to all parties (P.R. R. Civ. P. 46). A term counted from the archivo en autos runs from the mailing of the notice when that date is later (P.R. R. Civ. P. 68.3). The prevailing party files and serves a sworn memorandum of costs within 10 days of the archivo en autos of the notice of judgment; any party may challenge it within 10 days of its notice (P.R. R. Civ. P. 44.1(b)). Clerical errors may be corrected at any time (P.R. R. Civ. P. 49.1). Relief from judgment for mistake, newly discovered evidence, fraud, voidness, satisfaction or other reason is sought within a reasonable time and never more than six months after registration, and does not suspend the judgment (P.R. R. Civ. P. 49.2). The court may not extend or shorten the terms of Rules 43.1, 44.1, 47, 48.2, 48.4, 49.2 and 52.2 (P.R. R. Civ. P. 68.2)."
+  edge-judgment-entered-post "Reconsideration, new findings or new trial sought" -> post-judgment {
+    authority cite "P.R. R. Civ. P. 47"
+  }
+  edge-judgment-entered-appeal "Apelación within 30 days" -> appeal-taken {
+    authority cite "P.R. R. Civ. P. 52.2(a)"
+  }
+  edge-judgment-entered-final "No appeal" -> final-no-appeal { authority cite "P.R. R. Civ. P. 46" }
+}
+
+decision post-judgment: "Post-judgment motion decided" by court cite "P.R. R. Civ. P. 47"
+{
+  note "A party adversely affected by a judgment may move for reconsideration within the jurisdictional term of 15 days from the archivo en autos of the notice of judgment, and serves the motion on the other parties within the same 15 days, a term of strict compliance; a motion without the required particularity is denied and does not interrupt the term to appeal. A proper motion interrupts the terms to seek review for all parties, which run again from the archivo en autos of the notice of the resolution deciding it (P.R. R. Civ. P. 47). A motion for initial or additional findings is filed and served within 15 days after the archivo en autos of the notice of judgment and also interrupts the appeal term; findings, reconsideration and new-trial requests go in a single filing (P.R. R. Civ. P. 43.1; 43.2). A motion for a new trial is filed within 15 days of the archivo en autos of the notice of judgment, or, on newly discovered evidence, before the appeal term expires (P.R. R. Civ. P. 48.2); the opposing party has 15 days after notice to serve counter-affidavits, extendable once by no more than 15 days for just cause (P.R. R. Civ. P. 48.3). The court may order a new trial on its own within 15 days after registration of the judgment (P.R. R. Civ. P. 48.4)."
+  edge-post-judgment-new-trial "New trial ordered" -> pretrial {
+    authority cite "P.R. R. Civ. P. 48.1"
+  }
+  edge-post-judgment-decided "Motion decided: appeal term runs again" -> judgment-entered {
+    authority cite "P.R. R. Civ. P. 47"
+  }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Court of Appeals package (lit/pr-tribunal-apelaciones)" outcome [appeal] cite "P.R. R. Civ. P. 52.2(a)"
+{
+  note "An appeal to the Court of Appeals is filed within the jurisdictional term of 30 days from the archivo en autos of the copy of the notice of judgment (P.R. R. Civ. P. 52.2(a)); 60 days where the Commonwealth, the municipalities, their officers or an instrumentality other than a public corporation is a party (P.R. R. Civ. P. 52.2(c)). Certiorari to review other orders and resolutions is filed within 30 days of their notice, a term of strict compliance (P.R. R. Civ. P. 52.2(b))."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "P.R. R. Civ. P. 46"

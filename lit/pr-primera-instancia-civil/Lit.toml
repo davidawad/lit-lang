@@ -1,0 +1,46 @@
+# Civil actions in the Puerto Rico Court of First Instance (Tribunal de
+# Primera Instancia) under the Reglas de Procedimiento Civil de 2009, in
+# the compilation of the Secretariado de la Conferencia Judicial y Notarial
+# "según enmendadas", with statutory amendments through March 2023
+# (sources/pr-primera-instancia-civil, Spanish). That compilation is the
+# latest the judicial branch publishes and is the base edition (PM ruling
+# 2026-10-28); a later statutory amendment is added as a dated layer, never
+# an edit of the base. Computation of time is P.R. R. Civ. P. 68.1, which
+# excludes intermediate Saturdays, Sundays and legal holidays from a period
+# under seven days and extends a period ending on one; lit/core has no
+# Puerto Rico counting rule or holiday calendar, so the periods are stated
+# in notes, not encoded as counted deadlines. An appeal hands off to
+# lit/pr-tribunal-apelaciones.
+[package]
+name = "pr-primera-instancia-civil"
+version = "0.1.0"
+language = 1
+pack_id = "pr-primera-instancia-civil"
+forum = "pr-primera-instancia-civil"
+authority = "StateRule"
+jurisdiction_id = "puerto-rico"
+title = "Puerto Rico Court of First Instance (Tribunal de Primera Instancia), civil"
+description = "Civil actions in the Puerto Rico Court of First Instance under the Reglas de Procedimiento Civil de 2009 as compiled with statutory amendments through March 2023, as far as the vendored text states: commencement and service of the summons, the answer and pre-answer motions, amendment, default and its setting aside, case management (the attorneys' meeting, the case-management report, the initial and pretrial conferences), summary judgment, dismissal for noncompliance or inactivity, the judgment and its notice, findings, reconsideration, new trial, costs, relief from judgment and the appeal period. An appeal hands off to the Court of Appeals package (lit/pr-tribunal-apelaciones)."
+in_force = "2023-03-31"
+known_at = "2026-10-28"
+unknown_before = "2023-03-31"
+jurisdiction = "Commonwealth of Puerto Rico Court of First Instance (Tribunal de Primera Instancia), civil"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.pr-rpc]
+title = "Reglas de Procedimiento Civil de Puerto Rico de 2009 (según enmendadas; compilation with statutory amendments through March 2023)"
+url = "https://poderjudicial.pr/Documentos/SecretariadoConf/Reglas-de-Proc-Civil.pdf"
+path = "sources/pr-primera-instancia-civil/pr-reglas-procedimiento-civil-sectioned.txt"
+path_sha256 = "a15b24afbeccbfe00fe8fd2ab49f3e10df5218d9e1dd705c6a61a941cbc797f2"
+sha256 = "1502b6ede6639914dbe2fafc696a09e12a4adeaef21c6c284cdd3e6493e2615a"
+as_of = "2023-03-31"
+cite_prefixes = ["P.R. R. Civ. P."]
+section_heading = "Regla {n}"

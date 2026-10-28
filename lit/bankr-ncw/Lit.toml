@@ -1,0 +1,47 @@
+# The Rules of Practice and Procedure of the U.S. Bankruptcy Court for the
+# Western District of North Carolina over lit/frbp (FRBP 9029(a); 28
+# U.S.C. § 2075): it declares only the periods and the page limit the
+# Local Rules themselves state and re-encodes no FRBP period. It is a base
+# package, not a `kind = "local-rule"` layer: lit/core has no bankruptcy
+# forum family (L2011 for `bankr-ncw`), as for lit/bankr-md. Each period
+# is counted under FRBP 9006(a), the FRCP 6(a) method (core's frcp6). The
+# rules are those revised effective September 1, 2021, the only edition
+# the court links; its administrative orders page identifies no order
+# amending them (sources/bankr-ncw/PROVENANCE.md), so the consolidation is
+# the only layer. The earlier editions are not vendored, so a query before
+# September 1, 2021 is a hole in the corpus.
+[package]
+name = "bankr-ncw-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-ncw-local-rules"
+forum = "bankr-ncw"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Western District of North Carolina: Rules of Practice and Procedure"
+description = "The Bankr. W.D.N.C. Local Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): chapter 11 and chapter 13 plan service, chapter 13 confirmation objections, meeting-of-creditors continuances and waivers, professional and chapter 13 attorney fees, chapter 11 and subchapter V proofs of claim, conduit mortgage payments, unclaimed funds, converted-case funds, stay-relief payment histories, deficiency claims and secured-creditor notices, chapter 7 document requests, exemption amendments, chapter 13 discharge motions, final-order objections, adversary prosecution, special settings, no-protest and ex parte motions (LBR 9013-1), the 25-page brief limit, mediation reports, remote meeting appearances and transcript redaction."
+in_force = "2021-09-01"
+known_at = "2026-10-28"
+unknown_before = "2021-09-01"
+jurisdiction = "U.S. Bankruptcy Court for the Western District of North Carolina"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.ncwb-lbr]
+title = "Rules of Practice and Procedure of the United States Bankruptcy Court for the Western District of North Carolina (revised effective September 1, 2021)"
+url = "https://www.ncwb.uscourts.gov/sites/ncwb/files/WDNC%20Bankruptcy%20Local%20Rules%20Sept%202021.pdf"
+path = "sources/bankr-ncw/ncw-local-rules-2021-09-01-sectioned.txt"
+path_sha256 = "e04946fbfc66347989f5f03a0bfb0289dc2a68b2628678ea9257a3445079ad58"
+sha256 = "2842be87600719b11b3e44554481b73e0d804460c7deb05dccb95c06fee897e2"
+as_of = "2021-09-01"
+cite_prefixes = ["W.D.N.C. LBR"]
+section_heading = "Rule {n}"

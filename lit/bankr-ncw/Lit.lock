@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-ncw-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:26f213234f85e59187a31ff2c9e73e1635b1f27f8a197b71f412f9deb192be55"
+semantic = "sha256:2cdc248eb8b2d97897646ac7f7d6a964e4a6b40325ff64c5f262cdfd239847bf"
+texts = [
+    "ncwb-lbr sources/bankr-ncw/ncw-local-rules-2021-09-01-sectioned.txt sha256:e04946fbfc66347989f5f03a0bfb0289dc2a68b2628678ea9257a3445079ad58",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-ncw"
-version = "0.0.1"
-language = 1
-source = "sha256:531548215c879c6f2a2d5f0e444c4e3e9dec54ecfb19a4050658cca0598d83bb"
-semantic = "sha256:ce40300f845904131bf4721469629ee91abeb7d978aa4c2ed7e75a8b52b0b440"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

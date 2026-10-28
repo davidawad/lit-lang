@@ -1,0 +1,47 @@
+# The Local Rules of the United States District Court for the Southern
+# District of Illinois as a local-rule layer over lit/frcp (28 U.S.C.
+# § 2071; FRCP 83(a)): it declares only the periods and limits the local
+# rules themselves state and re-encodes no FRCP deadline. Each period is
+# counted under FRCP 6(a), which governs "any local rule". The rules are
+# the revised Local Rules effective September 22, 2025 (sources/ilsd). An
+# appeal goes to the Seventh Circuit under lit/frap.
+[package]
+name = "ilsd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ilsd-local-rules"
+forum = "ilsd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "S.D. Illinois: Local Rules"
+description = "The Local Rules of the Southern District of Illinois as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): change-of-address notices by parties in custody, reply and supplemental-pleading motion page limits, motion response and reply periods, the cutoff for dispositive motions before trial, the joint scheduling report (including in class actions), objections to costs and the request for costs, summary judgment brief limits, appeals of a magistrate judge's non-dispositive orders, documents in capital habeas cases, and the appearance of assigned pro bono counsel."
+in_force = "2025-09-22"
+known_at = "2026-10-28"
+unknown_before = "2025-09-22"
+jurisdiction = "United States District Court, S.D. Illinois"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ilsd-lr"
+issuer = "United States District Court for the Southern District of Illinois"
+date = "2025-09-22"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.ilsd-lr]
+title = "Local Rules, United States District Court, Southern District of Illinois (revised, effective September 22, 2025)"
+url = "https://www.ilsd.uscourts.gov/sites/ilsd/files/LocalRules.pdf"
+path = "sources/ilsd/ilsd-local-rules-sectioned.txt"
+path_sha256 = "2f93faac3661abe55136b45631a7d3ec496e0142942d8bff0dcf52295793f4bb"
+sha256 = "dd223d2b5056467544ae7450e0b0d45641727071dd894e831c18b49443397d3b"
+as_of = "2025-09-22"
+cite_prefixes = ["SDIL-LR"]
+section_heading = "Rule {n}"

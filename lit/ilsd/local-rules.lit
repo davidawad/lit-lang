@@ -1,0 +1,188 @@
+module ilsd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Southern District of Illinois's own periods and page limits, computed
+// under the federal rules (FRCP 6(a) governs "any local rule"). Each
+// applies "unless otherwise ordered" where the rule says so. Rules that
+// state no period or limit stay out, and so do periods that bind the court
+// or the clerk, or that lit/core does not count: the final pretrial
+// conference not less than 7 days before the presumptive trial date and the
+// proposed final pretrial order 3 business days before it (SDIL-LR
+// 16.2(b)), notice of a jury case's settlement by 3:00 p.m. on the last
+// full court business day before trial (SDIL-LR 54.1(a)), the 14 days the
+// court of appeals keeps sealed documents sealed (SDIL-LR 5.2), and
+// disposal of unremoved exhibits 90 days after a final decision or after
+// the mandate (SDIL-LR 79.1(b)), which the clerk does. The FRCP 26(f)
+// conference at least 21 days before the scheduling conference and the
+// report within 14 days after conferring (SDIL-LR 16.2(a)) restate FRCP
+// 26(f)(1) and (2), and objections to and responses on a magistrate judge's
+// report within 14 days after service (SDIL-LR 73.1(b)) restate FRCP
+// 72(b)(2); they belong to lit/frcp. The general brief limit of SDIL-LR
+// 7.1(a)(3), no brief "longer than 20 double-spaced typewritten pages in
+// 12-point font" except one responding to a habeas petition, is stated here
+// and not declared: the cite check reads the bound only as "20 pages",
+// which that rule does not write; SDIL-LR 56.1(e) states it for summary
+// judgment briefs. The criminal, bankruptcy and other appendices are
+// outside this layer. The earlier S.D. Ill. outline's FRCP flow and its
+// Supreme Court decisions (Twombly, Iqbal, Celotex, Anderson v. Liberty
+// Lobby) are FRCP authority and belong to lit/frcp and lit/frap; its
+// Seventh Circuit decisions (Cracco v. Vitran Express, Inc.; Swanson v.
+// Citibank, N.A.) are removed: no reporter text is vendored.
+/// A reply brief: not favored, at most five pages, and filed only in
+/// exceptional circumstances; sur-replies are never accepted (SDIL-LR
+/// 7.1(a)(4)).
+limit reply-brief { pages <= 5 cite "SDIL-LR 7.1(a)" } cite "SDIL-LR 7.1(a)"
+/// A motion for leave to file a supplemental pleading: at most two pages
+/// (SDIL-LR 7.1(a)(6)).
+limit supplemental-pleading-motion { pages <= 2 cite "SDIL-LR 7.1(a)" } cite "SDIL-LR 7.1(a)"
+/// A brief in support of or in opposition to a motion for summary judgment:
+/// at most 20 pages, exclusive of the documents SDIL-LR 7.1(a)(3) lists and
+/// the statements of material facts and responses (SDIL-LR 56.1(e)).
+limit sj-brief { pages <= 20 cite "SDIL-LR 56.1(e)" } cite "SDIL-LR 56.1(e)"
+
+/// A petitioner or plaintiff in custody is transferred or otherwise changes
+/// address (SDIL-LR 3.1).
+event CustodyAddressChanged()
+/// A civil motion to remand, to dismiss, for judgment on the pleadings, for
+/// summary judgment, to exclude expert testimony, or a post-trial motion is
+/// served with its brief (SDIL-LR 7.1(b)(1)).
+event BriefedMotionServed()
+/// The response to a motion listed in SDIL-LR 7.1(b)(1) is served.
+event BriefedMotionResponseServed()
+/// A civil motion not listed in SDIL-LR 7.1(b)(1) is served (SDIL-LR
+/// 7.1(b)(2)).
+event OtherMotionServed()
+/// The response to a motion not listed in SDIL-LR 7.1(b)(1) is served
+/// (SDIL-LR 7.1(b)(2)).
+event OtherMotionResponseServed()
+/// A reply brief is filed (SDIL-LR 7.1(a)(4)).
+event ReplyFiled() paper reply-brief
+/// A motion for leave to file a supplemental pleading is filed (SDIL-LR
+/// 7.1(a)(6)).
+event SupplementalPleadingMotionFiled() paper supplemental-pleading-motion
+/// A brief in support of or in opposition to a motion for summary judgment
+/// is filed (SDIL-LR 56.1(e)).
+event SummaryJudgmentBriefFiled() paper sj-brief
+/// The trial date, or with no trial date set, the first day of the
+/// presumptive trial month (SDIL-LR 7.1(b)(1)(C)).
+event TrialDate()
+/// The scheduling conference, or in a class action the scheduling and
+/// discovery conference, set by the court is held (SDIL-LR 16.2(a),
+/// 23.1(b)).
+event SchedulingConferenceHeld()
+/// The clerk gives notice of the taxation of costs (SDIL-LR 54.2(b)).
+event CostsNoticeGiven()
+/// Judgment is entered (SDIL-LR 54.2(c)).
+event JudgmentEntered()
+/// A magistrate judge issues an order under 28 U.S.C. § 636(b)(1)(A)
+/// determining a motion or matter (SDIL-LR 73.1(a)).
+event MagistrateOrderIssued()
+/// A petition or motion within the scope of the death penalty case rule is
+/// filed (SDIL-LR 83.7).
+event CapitalHabeasPetitionFiled()
+/// Counsel assigned under the pro bono program receives notice of the
+/// assignment (SDIL-LR 83.10(a)).
+event AssignmentNoticeReceived()
+
+/// SDIL-LR 3.1: a petitioner or plaintiff in custody informs the clerk and
+/// each opposing party in writing of a transfer or other change in address
+/// not later than 14 days after it occurs; failure may result in dismissal.
+deadline custody-address-notice-period: 14.days after CustodyAddressChanged() counted_by frcp6 cite "SDIL-LR 3.1"
+{
+  forum frcp
+}
+
+/// SDIL-LR 7.1(b)(1)(A): an adverse party has 30 days after service of a
+/// motion listed in SDIL-LR 7.1(b)(1) to file a response.
+deadline briefed-motion-response-period: 30.days after BriefedMotionServed() counted_by frcp6 cite "SDIL-LR 7.1(b)"
+{
+  forum frcp
+}
+
+/// SDIL-LR 7.1(b)(1)(B): reply briefs, if any, are filed within 14 days of
+/// the service of a response.
+deadline briefed-motion-reply-period: 14.days after BriefedMotionResponseServed() counted_by frcp6 cite "SDIL-LR 7.1(b)"
+{
+  forum frcp
+}
+
+/// SDIL-LR 7.1(b)(1)(C): all civil motions to dismiss, for judgment on the
+/// pleadings and for summary judgment are filed no later than 100 days
+/// before the trial date or, with no trial date set, before the first day
+/// of the presumptive trial month.
+deadline dispositive-motion-cutoff: 100.days before TrialDate() counted_by frcp6 cite "SDIL-LR 7.1(b)"
+{
+  forum frcp
+}
+
+/// SDIL-LR 7.1(b)(2)(A): a party opposing a civil motion not listed in
+/// SDIL-LR 7.1(b)(1) has 14 days after service of the motion to file a
+/// written response.
+deadline other-motion-response-period: 14.days after OtherMotionServed() counted_by frcp6 cite "SDIL-LR 7.1(b)"
+{
+  forum frcp
+}
+
+/// SDIL-LR 7.1(b)(2)(B): a reply, if any, is filed within 7 days of the
+/// service of the response.
+deadline other-motion-reply-period: 7.days after OtherMotionResponseServed() counted_by frcp6 cite "SDIL-LR 7.1(b)"
+{
+  forum frcp
+}
+
+/// SDIL-LR 16.2(a): the jointly prepared report of the FRCP 26(f)
+/// conference is submitted at least 7 days before the date of the
+/// scheduling conference.
+deadline joint-report-period: 7.days before SchedulingConferenceHeld() counted_by frcp6 cite "SDIL-LR 16.2(a)"
+{
+  forum frcp
+}
+
+/// SDIL-LR 23.1(b): seven days prior to any scheduling and discovery
+/// conference in a class action, the parties submit their Joint Report and
+/// Proposed Scheduling and Discovery Order, or without agreement each its
+/// own proposed order and memorandum.
+deadline class-action-report-period: 7.days before SchedulingConferenceHeld() counted_by frcp6 cite "SDIL-LR 23.1(b)"
+{
+  forum frcp
+}
+
+/// SDIL-LR 54.2(b): opposing counsel has 14 days from the date the clerk
+/// gives notice to file objections to costs; without objection the clerk
+/// taxes the appropriate costs.
+deadline costs-objection-period: 14.days after CostsNoticeGiven() counted_by frcp6 cite "SDIL-LR 54.2(b)"
+{
+  forum frcp
+}
+
+/// SDIL-LR 54.2(c): unless a federal statute separately authorizes
+/// otherwise, a request for costs is filed no later than 30 days after the
+/// entry of judgment; untimely requests are stricken.
+deadline costs-request-period: 30.days after JudgmentEntered() counted_by frcp6 cite "SDIL-LR 54.2(c)"
+{
+  forum frcp
+}
+
+/// SDIL-LR 73.1(a): any party may appeal a magistrate judge's order under
+/// 28 U.S.C. § 636(b)(1)(A) within 14 days after its issuance, unless a
+/// magistrate or district judge prescribes a different time.
+deadline magistrate-order-appeal-period: 14.days after MagistrateOrderIssued() counted_by frcp6 cite "SDIL-LR 73.1(a)"
+{
+  forum frcp
+}
+
+/// SDIL-LR 83.7: in a death penalty case within the rule, the petitioner or
+/// movant files legible copies of the listed documents within 10 days after
+/// filing the petition or motion.
+deadline capital-habeas-documents-period: 10.days after CapitalHabeasPetitionFiled() counted_by frcp6 cite "SDIL-LR 83.7"
+{
+  forum frcp
+}
+
+/// SDIL-LR 83.10(a): upon notice of the assignment, assigned counsel files
+/// an appearance within 14 days or as the court directs.
+deadline assigned-counsel-appearance-period: 14.days after AssignmentNoticeReceived() counted_by frcp6 cite "SDIL-LR 83.10(a)"
+{
+  forum frcp
+}

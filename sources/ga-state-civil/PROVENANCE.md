@@ -23,3 +23,9 @@
 - Retrieved 2026-10-28 on carbon by David's BrowserOS neo pass (Method: BrowserOS neo, Lexis public-access viewer text, David's explicit ruling 2026-10-28; Lexis annotations excluded); the viewer's per-document records were captured as JSON (BrowserOS tool framing stripped, content unedited) and saved as the original; the extraction is the PM session's plain-text rendering of those records, in document order. No other served original exists for this text. Barrier: LexisNexis public access (reCAPTCHA on document pages; lg-f3q8.77 row); fetched on David's explicit ruling 2026-10-28 despite robots/terms.
 - Extract sha256 9c1b147bc6a55908a124cc8ea820b4deae95c5db047c683c95c986fdfc767248.
 - Original: `ga-state-civil/original/ocga-title-9-ch-11.json` as served to the viewer (sha256 833d33ee3970f491f9cbb032636d6969cc9fb6cb886848393849a651c3e924de); extraction sha256 9c1b147bc6a55908a124cc8ea820b4deae95c5db047c683c95c986fdfc767248.
+
+### `ga-state-civil/gauscr-uniform-superior-court-rules-2026-04-09-sectioned.txt` — Uniform Superior Court Rules of Georgia, sectioned
+
+- Derived in the pod (lg-f3q8.15) from `ga-state-civil/gauscr-uniform-superior-court-rules-2026-04-09.txt` (extract sha256 84ba00bf9765d69c960f5c9e1f63fadcf4174371ad141e8b66e5fe43e5bf3818); nothing fetched. One `## Rule <n>` line is inserted before each rule's and sub-rule's own heading line in the body (`Rule 1. PREAMBLE` through `Rule 49. EMERGENCY DISPOSSESSORY`, 254 headings, the same set the table of contents lists). Every other line is the extract unchanged, so deleting the `## Rule` lines gives back the extract byte for byte.
+- Edition: as the extract, the file dated April 9, 2026. The order of October 5, 2026 (`gauscr-order-2026-10-05.txt`) is not merged into it.
+- Sectioned sha256 45dfab2fe5405c78d8116551ace05b3af5702fef7bb2149cf19d75b20a9c7510 (the `path_sha256` pinned by `lit/ga-state-civil/Lit.toml`).

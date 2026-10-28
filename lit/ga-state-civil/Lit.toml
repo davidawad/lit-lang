@@ -1,0 +1,54 @@
+# Civil actions in the Georgia superior courts, as far as the Uniform
+# Superior Court Rules (file dated April 9, 2026, sources/ga-state-civil)
+# state. The Civil Practice Act (O.C.G.A. Title 9, Chapter 11: service,
+# the answer period, pleading motions, amendment, default, summary
+# judgment, entry of judgment) is not vendored (LexisNexis public access is
+# behind a reCAPTCHA, lg-f3q8.77), so its periods are left unstated, not
+# encoded; nor are the counting statute (O.C.G.A. § 1-3-1), the new-trial
+# period (O.C.G.A. § 5-5-40) or the notice-of-appeal period (O.C.G.A.
+# § 5-6-38). The periods the Uniform Rules set are in notes, not counted
+# deadlines, for the same reason. The Supreme Court of Georgia's order of
+# October 5, 2026 (effective November 5, 2026) amends Rules 4.3, 10.2 and
+# 21 only, none of which this package cites. An appeal hands off to
+# lit/gactapp.
+[package]
+name = "ga-superior-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ga-superior-court-civil"
+forum = "ga-state-civil"
+authority = "StateRule"
+title = "Georgia superior courts, civil"
+description = "Civil actions in the Georgia superior courts under the Uniform Superior Court Rules (April 9, 2026 file): filing, return of service, default certificates, motion practice and summary judgment statements, discovery, pretrial, the trial calendar, dismissal at call, new trial and settlement. The Civil Practice Act is not vendored, so its periods are not stated. An appeal hands off to the Court of Appeals package (lit/gactapp)."
+in_force = "2026-04-09"
+known_at = "2026-10-28"
+unknown_before = "2026-04-09"
+jurisdiction = "Georgia superior courts (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.gauscr]
+title = "Uniform Superior Court Rules of Georgia (file dated April 9, 2026)"
+url = "https://www.gasupreme.us/wp-content/uploads/2026/04/UNIFORM-SUPERIOR-COURT-RULES-2026_04_09.pdf"
+path = "sources/ga-state-civil/gauscr-uniform-superior-court-rules-2026-04-09-sectioned.txt"
+path_sha256 = "45dfab2fe5405c78d8116551ace05b3af5702fef7bb2149cf19d75b20a9c7510"
+sha256 = "b9a6e2d7f13dc5315d7572419c938f6fafaefdc9497f67e0d41a200b238579bf"
+as_of = "2026-04-09"
+cite_prefixes = ["Unif. Super. Ct. R."]
+section_heading = "Rule {n}"
+
+[sources.gacoa-rules]
+title = "Rules of the Court of Appeals of Georgia (effective March 26, 2026)"
+url = "https://www.gaappeals.gov/wp-content/uploads/2026/03/COA-Rules-Complete-Eff-26-March-26.pdf"
+path = "sources/ga-state-appellate/gacoa-rules-sectioned.txt"
+path_sha256 = "1ba9ab5e9e3965f192d7beb21c38054173c2a31255ec4229a21213778f4895a8"
+sha256 = "227e393aa93eda9a871f6bf00bdc834dec01bdfe94a2aaeadf841aac75a06a94"
+as_of = "2026-03-26"
+cite_prefixes = ["Ga. Ct. App. R."]
+section_heading = "Rule {n}"

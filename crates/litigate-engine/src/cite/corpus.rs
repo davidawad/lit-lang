@@ -138,14 +138,24 @@ impl SourceCorpus {
 /// the next line is not itself a heading — vendored files put an optional
 /// human-readable heading line right after `## <ref>`, which is included
 /// in `body` (a fuzzy match on the body should still find it).
+///
+/// A file with no `## ` line at all (an unsectioned local-rules extract,
+/// e.g. the Eighth Circuit's) is split on its `RULE N:` lines instead, each
+/// becoming a `Local Rule N` section. A file that has `## ` headings is
+/// split on those alone: its `RULE N:` lines are body text.
 fn parse_sections(text: &str) -> Vec<Section> {
     let mut sections = vec![];
     let mut current: Option<(String, String)> = None;
+    let rule_lines_are_headings = !text.lines().any(|line| line.starts_with("## "));
     for line in text.lines() {
-        let rule_heading = line.trim().strip_prefix("RULE ").and_then(|line| {
-            line.split_once(':')
-                .map(|(number, _)| format!("Local Rule {}", number.trim()))
-        });
+        let rule_heading = line
+            .trim()
+            .strip_prefix("RULE ")
+            .filter(|_| rule_lines_are_headings)
+            .and_then(|line| {
+                line.split_once(':')
+                    .map(|(number, _)| format!("Local Rule {}", number.trim()))
+            });
         if let Some(heading) = line
             .strip_prefix("## ")
             .map(str::to_string)

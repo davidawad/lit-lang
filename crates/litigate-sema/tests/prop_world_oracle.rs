@@ -28,7 +28,6 @@ const START: &str = "module core.start\nstart z\nstate z: \"Z\"\n";
 const FAMILY: &str = r#"
 [family.civil]
 title = "Civil"
-forums = ["civil"]
 precedent = ["scotus", "@circuit"]
 circuits = ["ca1", "ca2"]
 
@@ -255,7 +254,11 @@ fn core() -> LoadedPackage {
 }
 
 fn in_forum(manifest: &str) -> String {
-    manifest.replacen("forum = \"demo\"", "forum = \"civil\"", 1)
+    manifest.replacen(
+        "forum = \"demo\"",
+        "forum = \"civil\"\nfamily = \"civil\"",
+        1,
+    )
 }
 
 /// The base rules: a period delegated to local rules, and a default a

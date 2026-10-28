@@ -1,19 +1,18 @@
 //! `[family.*]`: the forum-family class matrix (docs/litigate/CHANGE.md
 //! §3), data in `lit/core`'s manifest rather than compiler code (design
-//! review 2026-10-23 §2.5 item 4). Each family lists its forums, whose
-//! precedent binds there, and one cell per class that exists there; a cell
-//! may only narrow its class's row.
+//! review 2026-10-23 §2.5 item 4). Each family names whose precedent binds
+//! there and one cell per class that exists there; a cell may only narrow
+//! its class's row. Its forums are not listed here: each package declares
+//! its own (`[package] family`), so a new forum never edits `core`.
 use super::{is_kebab, range, Checker, Ordered};
 use crate::hir::{Cell, Effect, Family, Kind, StateRule};
 use serde::Deserialize;
-use std::collections::BTreeMap;
 use toml::Spanned;
 
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(super) struct RawFamily {
     title: String,
-    forums: Spanned<Vec<String>>,
     #[serde(default)]
     precedent: Vec<String>,
     #[serde(default)]
@@ -49,7 +48,6 @@ pub(super) fn check(c: &mut Checker, name: &str, raw: &Ordered<Spanned<RawFamily
             "only `core` declares the forum-family matrix (`[family.*]`)".to_owned()
         });
     }
-    let mut forums: BTreeMap<&str, &str> = BTreeMap::new();
     raw.0
         .iter()
         .map(|(id, f)| {
@@ -58,18 +56,6 @@ pub(super) fn check(c: &mut Checker, name: &str, raw: &Ordered<Spanned<RawFamily
             c.check(is_kebab(id), at, || {
                 format!("family id `{id}` must be kebab-case")
             });
-            c.check(!f.forums.get_ref().is_empty(), range(&f.forums), || {
-                format!("family `{id}` names at least one forum")
-            });
-            for forum in f.forums.get_ref() {
-                let other = forums.insert(forum, id);
-                c.check(other.is_none(), range(&f.forums), || {
-                    format!(
-                        "forum `{forum}` is in families `{}` and `{id}`",
-                        other.unwrap_or_default()
-                    )
-                });
-            }
             let states = f.state.as_ref().map_or(&[][..], |s| s.0.as_slice());
             for court in &f.precedent {
                 let ok = match court.as_str() {
@@ -96,7 +82,7 @@ pub(super) fn check(c: &mut Checker, name: &str, raw: &Ordered<Spanned<RawFamily
             Family {
                 id: id.clone(),
                 title: f.title.clone(),
-                forums: f.forums.get_ref().clone(),
+                forums: Vec::new(),
                 precedent: f.precedent.clone(),
                 circuits: f.circuits.clone(),
                 panels: f.panels.clone(),

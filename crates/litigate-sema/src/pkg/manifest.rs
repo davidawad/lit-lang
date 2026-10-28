@@ -65,6 +65,8 @@ struct RawPackage {
     // Pack identity: required in a pack, absent in a links package.
     pack_id: Option<Spanned<String>>,
     forum: Option<Spanned<String>>,
+    // The forum family of `core`'s matrix the package's forum is in.
+    family: Option<Spanned<String>>,
     authority: Option<Spanned<String>>,
     title: Option<Spanned<String>>,
     roles: Option<Spanned<Ordered<Spanned<String>>>>,
@@ -249,6 +251,7 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
         language: 1,
         pack_id: text_of(&p.pack_id).unwrap_or_default(),
         forum: text_of(&p.forum).unwrap_or_default(),
+        family: text_of(&p.family),
         authority: text_of(&p.authority).unwrap_or_default(),
         title: text_of(&p.title).unwrap_or_default(),
         description: text_of(&p.description),
@@ -357,6 +360,14 @@ fn package_table(c: &mut Checker, p: &RawPackage) {
                 format!("`{key}` must be an identifier, found `{}`", value.get_ref())
             });
         }
+    }
+    if let Some(family) = &p.family {
+        c.check(is_kebab(family.get_ref()), range(family), || {
+            format!(
+                "`family` must be a forum-family id such as `district-civil`, found `{}`",
+                family.get_ref()
+            )
+        });
     }
     c.date("in_force", &p.in_force);
     c.date("known_at", &p.known_at);

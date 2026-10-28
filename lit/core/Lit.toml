@@ -240,9 +240,10 @@ as_of = "2026-10-24"
 
 # The forum-family class matrix (docs/litigate/CHANGE.md §3; design review
 # 2026-10-23 §2.5 item 4): data, not compiler code. A family lists the
-# package forums in it, the courts whose precedential decisions bind there
-# (`@circuit`: the regional circuit of a world's location), and one cell per
-# instrument class that exists there. A class with no cell does not exist
+# courts whose precedential decisions bind there (`@circuit`: the regional
+# circuit of a world's location) and one cell per instrument class that
+# exists there. Its forums are not listed here: each package declares its
+# own (`[package] family = "district-civil"`, beside `forum`). A class with no cell does not exist
 # in the family (L2011); a cell's `row` narrows the class's effect row
 # (SPEC §5.7) and can never widen it. Every `cite` and `example` is from
 # the lg-fq2.1 research register (fetched 2026-10-23).
@@ -253,17 +254,6 @@ as_of = "2026-10-24"
 # Islands: 48 U.S.C. §§ 1424, 1821, 1611): a district's local rules (28
 # U.S.C. § 2071; FRCP 83(a)) and its orders are packages at its forum.
 title = "Federal district court, civil (FRCP)"
-forums = ["frcp", "almd", "alnd", "alsd", "akd", "azd", "ared", "arwd",
-  "cacd", "caed", "cand", "casd", "cod", "ctd", "ded", "dcd", "flmd",
-  "flnd", "flsd", "gamd", "gand", "gasd", "gud", "hid", "idd", "ilcd",
-  "ilnd", "ilsd", "innd", "insd", "iand", "iasd", "ksd", "kyed", "kywd",
-  "laed", "lamd", "lawd", "med", "mdd", "mad", "mied", "miwd", "mnd",
-  "msnd", "mssd", "moed", "mowd", "mtd", "ned", "nvd", "nhd", "njd", "nmd",
-  "nyed", "nynd", "nysd", "nywd", "nced", "ncmd", "ncwd", "ndd", "nmid",
-  "ohnd", "ohsd", "oked", "oknd", "okwd", "ord", "paed", "pamd", "pawd",
-  "prd", "rid", "scd", "sdd", "tned", "tnmd", "tnwd", "txed", "txnd",
-  "txsd", "txwd", "utd", "vtd", "vid", "vaed", "vawd", "waed", "wawd",
-  "wvnd", "wvsd", "wied", "wiwd", "wyd"]
 precedent = ["scotus", "@circuit"]
 circuits = ["ca1", "ca2", "ca3", "ca4", "ca5", "ca6", "ca7", "ca8", "ca9", "ca10", "ca11", "cadc"]
 # A circuit panel is bound by the circuit's prior panels until the court en
@@ -315,7 +305,6 @@ example = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep551/usrep
 
 [family.district-criminal]
 title = "Federal district court, criminal (FRCrimP)"
-forums = ["frcrimp", "dcd-criminal", "mdd-criminal", "nced-criminal", "ncmd-criminal", "ncwd-criminal", "scd-criminal", "vaed-criminal", "vawd-criminal", "wvnd-criminal", "wvsd-criminal", "nywd-criminal", "nynd-criminal", "nysd-criminal", "nyed-criminal", "med-criminal", "mad-criminal", "nhd-criminal", "prd-criminal", "rid-criminal", "ctd-criminal", "vtd-criminal"]
 precedent = ["scotus", "@circuit"]
 circuits = ["ca1", "ca2", "ca3", "ca4", "ca5", "ca6", "ca7", "ca8", "ca9", "ca10", "ca11", "cadc"]
 # A circuit panel is bound by the circuit's prior panels until the court en
@@ -372,25 +361,6 @@ example = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep521/usrep
 # local bankruptcy rules (FRBP 9029(a); 28 U.S.C. § 2075) and the
 # bankruptcy court's orders are packages at its forum.
 title = "Federal bankruptcy court (FRBP)"
-forums = ["frbp", "bankr-alm", "bankr-aln", "bankr-als", "bankr-ak",
-  "bankr-az", "bankr-are", "bankr-arw", "bankr-cac", "bankr-cae",
-  "bankr-can", "bankr-cas", "bankr-co", "bankr-ct", "bankr-de",
-  "bankr-dc", "bankr-flm", "bankr-fln", "bankr-fls", "bankr-gam",
-  "bankr-gan", "bankr-gas", "bankr-gu", "bankr-hi", "bankr-id",
-  "bankr-ilc", "bankr-iln", "bankr-ils", "bankr-inn", "bankr-ins",
-  "bankr-ian", "bankr-ias", "bankr-ks", "bankr-kye", "bankr-kyw",
-  "bankr-lae", "bankr-lam", "bankr-law", "bankr-me", "bankr-md",
-  "bankr-ma", "bankr-mie", "bankr-miw", "bankr-mn", "bankr-msn",
-  "bankr-mss", "bankr-moe", "bankr-mow", "bankr-mt", "bankr-ne",
-  "bankr-nv", "bankr-nh", "bankr-nj", "bankr-nm", "bankr-nye",
-  "bankr-nyn", "bankr-nys", "bankr-nyw", "bankr-nce", "bankr-ncm",
-  "bankr-ncw", "bankr-nd", "bankr-mp", "bankr-ohn", "bankr-ohs",
-  "bankr-oke", "bankr-okn", "bankr-okw", "bankr-or", "bankr-pae",
-  "bankr-pam", "bankr-paw", "bankr-pr", "bankr-ri", "bankr-sc",
-  "bankr-sd", "bankr-tne", "bankr-tnm", "bankr-tnw", "bankr-txe",
-  "bankr-txn", "bankr-txs", "bankr-txw", "bankr-ut", "bankr-vt",
-  "bankr-vi", "bankr-vae", "bankr-vaw", "bankr-wae", "bankr-waw",
-  "bankr-wvn", "bankr-wvs", "bankr-wie", "bankr-wiw", "bankr-wy"]
 precedent = ["scotus", "@circuit"]
 circuits = ["ca1", "ca2", "ca3", "ca4", "ca5", "ca6", "ca7", "ca8", "ca9", "ca10", "ca11", "cadc"]
 
@@ -432,8 +402,6 @@ cite = "Rodriguez de Quijas v. Shearson/American Express, Inc., 490 U.S. 477, 48
 # U.S.C. § 41): a circuit's own rules (FRAP 47(a); 28 U.S.C. § 2071) and
 # its orders are packages at its forum.
 title = "Regional court of appeals (FRAP and circuit rules)"
-forums = ["frap", "ca1", "ca2", "ca3", "ca4", "ca5", "ca6", "ca7", "ca8",
-  "ca9", "ca10", "ca11", "cadc"]
 precedent = ["scotus", "@circuit"]
 circuits = ["ca1", "ca2", "ca3", "ca4", "ca5", "ca6", "ca7", "ca8", "ca9", "ca10", "ca11", "cadc"]
 # A circuit panel is bound by the circuit's prior panels until the court en
@@ -484,7 +452,6 @@ example = "https://tile.loc.gov/storage-services/service/ll/usrep/usrep551/usrep
 
 [family.federal-circuit]
 title = "Court of Appeals for the Federal Circuit"
-forums = ["cafc"]
 precedent = ["scotus", "cafc", "ccpa", "ct-cl"]
 # Federal Circuit panels are bound by prior panels and the en banc court's
 # precedent (South Corp. v. United States, 690 F.2d 1368, 1370 n.2 (Fed. Cir.
@@ -534,7 +501,6 @@ cite = "Fed. Cir. IOP 13; 28 U.S.C. § 46(c)"
 # under a national code: there is no local-rule layer, and no FRCP 87.
 [family.cofc]
 title = "Court of Federal Claims (RCFC)"
-forums = ["cofc"]
 precedent = ["scotus", "cafc", "ct-cl"]
 # Federal Circuit panels are bound by prior panels and the en banc court's
 # precedent (South Corp. v. United States, 690 F.2d 1368, 1370 n.2 (Fed. Cir.
@@ -575,7 +541,6 @@ cite = "28 U.S.C. § 1295(a)(3): only the Federal Circuit or the Supreme Court"
 # acts by regulation, order (42.5) and Director-designated precedent.
 [family.ptab]
 title = "Patent Trial and Appeal Board (AIA trials)"
-forums = ["ptab"]
 precedent = ["scotus", "cafc", "ccpa", "ptab"]
 # Federal Circuit panels are bound by prior panels and the en banc court's
 # precedent (South Corp. v. United States, 690 F.2d 1368, 1370 n.2 (Fed. Cir.
@@ -607,7 +572,6 @@ cite = "PTAB SOP 2, Rev. 11, § III (de-designation); 28 U.S.C. § 1295(a)(4)(A)
 
 [family.ttab]
 title = "Trademark Trial and Appeal Board (inter partes)"
-forums = ["ttab"]
 precedent = ["scotus", "cafc", "ccpa", "ttab"]
 # Federal Circuit panels are bound by prior panels and the en banc court's
 # precedent (South Corp. v. United States, 690 F.2d 1368, 1370 n.2 (Fed. Cir.
@@ -641,7 +605,6 @@ cite = "15 U.S.C. § 1071(a); 28 U.S.C. § 1295(a)(4)(B)"
 # (Inv. No. 337-TA-1236, Order No. 2): a case order, not a standing order.
 [family.itc]
 title = "International Trade Commission (Section 337)"
-forums = ["itc"]
 precedent = ["scotus", "cafc"]
 # Federal Circuit panels are bound by prior panels and the en banc court's
 # precedent (South Corp. v. United States, 690 F.2d 1368, 1370 n.2 (Fed. Cir.
@@ -681,7 +644,6 @@ cite = "19 U.S.C. § 1337(c); 28 U.S.C. § 1295(a)(6)"
 # Superior Court, 57 Cal. 2d 450, 455 (1962); Pardo v. State, 596 So. 2d
 # 665, 666 (Fla. 1992)), are not yet located by court.
 title = "State courts, civil"
-forums = ["ca-superior", "ca-court-of-appeal", "fl-state-civil", "fl-state-appellate"]
 precedent = ["scotus", "@state"]
 
 [family.state-civil.state.ca]

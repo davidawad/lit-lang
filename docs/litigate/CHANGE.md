@@ -284,8 +284,10 @@ synthetic what-if layer of any class carries `authoritative = false`.
 ## 3. The matrix by forum family
 
 The matrix is data, in `lit/core/Lit.toml` (`[family.*]`), not compiler
-code (design review §2.5 item 4). A family lists its package `forums`,
-its `precedent` courts, its `circuits`, and one cell per class that
+code (design review §2.5 item 4). A family's forums are not listed
+there: each package declares its own (`[package] family`, beside
+`forum`), so a new forum never edits `core`. A family lists its
+`precedent` courts, its `circuits`, and one cell per class that
 exists there with the instrument that makes it exist (`cite`), a real
 example (`example`, every URL fetched), an optional narrowed `row`, and
 for an emergency declaration its `window_days`. A class with no cell does

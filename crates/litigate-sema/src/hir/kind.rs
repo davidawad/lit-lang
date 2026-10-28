@@ -482,7 +482,10 @@ pub struct Family {
     pub id: String,
     /// What it is.
     pub title: String,
-    /// The package `forum`s in it.
+    /// The package `forum`s in it: those of the workspace's packages
+    /// declaring it (`package.family`, filled by
+    /// [`crate::change::families`]; empty as `core` parses it).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub forums: Vec<String>,
     /// The courts whose precedential decisions bind in it; `@circuit` is
     /// the regional circuit of a world's location, `@state` the courts

@@ -79,6 +79,11 @@ pub struct Manifest {
     pub pack_id: String,
     /// Forum key emitted as `Pack.forum`.
     pub forum: String,
+    /// The forum family of `core`'s matrix its forum is in
+    /// (`package.family`): membership is declared here, never listed in
+    /// `core`.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub family: Option<String>,
     /// Default authority level of the package's declarations.
     pub authority: String,
     /// Pack title.

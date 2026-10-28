@@ -14,7 +14,7 @@ use legal::{pkg, render, workspace, CORE};
 use litigate_base::{FileId, LineIndex, Profile};
 use litigate_sema::change::choice;
 use litigate_sema::change::world::{check_world, parse_world, Modality, WorldCheck};
-use litigate_sema::change::{class_index, key_range};
+use litigate_sema::change::{class_index, families, family_of, key_range};
 use litigate_sema::db::span::TextRange;
 use litigate_sema::hir::{Effect, Kind, Place, Scope};
 use litigate_sema::pkg::load::LoadedPackage;
@@ -28,7 +28,6 @@ const START: &str = "module core.start\nstart z\nstate z: \"Z\"\n";
 const FAMILIES: &str = r#"
 [family.civil]
 title = "Civil"
-forums = ["civil"]
 precedent = ["scotus", "@circuit"]
 circuits = ["ca1", "ca2"]
 
@@ -64,7 +63,6 @@ cite = "Rodriguez de Quijas"
 
 [family.claims]
 title = "Claims"
-forums = ["claims"]
 precedent = ["scotus", "fed"]
 
 [family.claims.class.base]
@@ -114,8 +112,19 @@ terminal t: \"T\"
     p
 }
 
+/// `manifest` at `forum`, declaring its family where the matrix has one
+/// of that id (`civil`, `claims`).
 fn forum(manifest: &str, forum: &str) -> String {
-    manifest.replacen("forum = \"demo\"", &format!("forum = \"{forum}\""), 1)
+    let family = if matches!(forum, "civil" | "claims") {
+        format!("\nfamily = \"{forum}\"")
+    } else {
+        String::new()
+    };
+    manifest.replacen(
+        "forum = \"demo\"",
+        &format!("forum = \"{forum}\"{family}"),
+        1,
+    )
 }
 
 /// A layer `name` of class `kind` in `forum`, with `authority`, `extra`
@@ -192,7 +201,6 @@ fn the_matrix_is_data_that_only_narrows() {
             bad(r#"
 [family.Bad_Id]
 title = "B"
-forums = []
 precedent = ["@circuit", "Not Kebab"]
 circuits = ["CA 1"]
 
@@ -211,7 +219,6 @@ window_days = 0
 
 [family.other]
 title = "O"
-forums = ["x", "x"]
 precedent = ["@circuit"]
 
 [family.other.class.base]
@@ -255,6 +262,31 @@ cite = "c"
     assert!(civil.binds("ca1", at(Some("ca1"))) && !civil.binds("ca1", at(Some("ca2"))));
     assert!(civil.binds("ca2", at(None)) && !civil.binds("ca3", at(None)));
     assert!(civil.binds("scotus", at(Some("ca2"))));
+}
+
+/// A package joins a family by declaring it (`[package] family`): `core`'s
+/// matrix names no forum, so a new forum never edits `core` (lg-60mg).
+#[test]
+fn a_package_declaring_a_family_is_in_it_without_editing_core() {
+    let mut lr = layer("lr", "local-rule", "newcourt", "LocalRule", "", "");
+    lr.manifest = lr
+        .manifest
+        .replacen("forum = \"newcourt\"", "forum = \"newcourt\"\nfamily = \"civil\"", 1);
+    let all = [core(), fed(), lr];
+    let core_manifest = parse_manifest(&all[0].manifest).expect("valid").manifest;
+    assert!(core_manifest.families.iter().all(|f| f.forums.is_empty()));
+    let (db, ws) = workspace(&all);
+    let p = ws.packages(&db)[2];
+    let ix = class_index(&db, p).as_ref().expect("valid");
+    assert_eq!(ix.family.as_ref().map(|f| f.0.as_str()), Some("civil"));
+    assert!(ix.missing.is_none(), "{:?}", ix.missing);
+    let civil = families(&db, p).iter().find(|f| f.id == "civil").expect("civil");
+    assert_eq!(civil.forums, ["civil", "newcourt"]);
+    assert_eq!(
+        family_of(families(&db, p), "newcourt").map(|f| f.id.as_str()),
+        Some("civil")
+    );
+    assert_eq!(diagnostics(&all[2..]), Vec::<String>::new());
 }
 
 #[test]

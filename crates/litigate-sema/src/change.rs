@@ -3,12 +3,13 @@
 //! `core`), the binding scope of a precedent computed from the court
 //! hierarchy, and worlds ([`world`]): a set of layers at a location, in a
 //! modality.
-use crate::db::inputs::PackageInput;
+use crate::db::inputs::{PackageInput, Workspace};
 use crate::db::queries::manifest;
 use crate::db::resolution::core;
 use crate::db::span::{Report, TextRange};
 use crate::hir::{Cell, Family, Kind, Manifest, Place, Row, Scope};
 use litigate_base::DiagnosticCode as C;
+use std::collections::{BTreeMap, BTreeSet};
 
 pub mod choice;
 pub mod world;
@@ -22,8 +23,8 @@ pub struct ClassIndex {
     pub kind: Kind,
     /// The effects its declarations may have.
     pub row: Row,
-    /// Its forum family's id and title, when `core` has a matrix listing
-    /// its forum.
+    /// Its forum family's id and title, when it declares one of `core`'s
+    /// matrix.
     pub family: Option<(String, String)>,
     /// The family's cell for the class, when it exists there.
     pub cell: Option<Cell>,
@@ -31,14 +32,45 @@ pub struct ClassIndex {
     pub missing: Option<String>,
 }
 
-/// The matrix `pkg` is checked against: `core`'s `[family.*]` tables.
-pub fn families(db: &dyn salsa::Database, pkg: PackageInput) -> &[Family] {
-    pkg.files(db)
-        .first()
-        .map(|f| f.workspace(db))
-        .and_then(|ws| core(db, ws, pkg))
-        .and_then(|c| manifest(db, c).as_ref().ok())
-        .map_or(&[], |m| m.manifest.families.as_slice())
+/// The matrix `pkg` is checked against: `core`'s `[family.*]` tables,
+/// each family's forums those of the workspace's packages declaring it
+/// (`package.family`), so a package joins a family without editing `core`.
+#[salsa::tracked(returns(ref))]
+pub fn families(db: &dyn salsa::Database, pkg: PackageInput) -> Vec<Family> {
+    let Some(ws) = pkg.files(db).first().map(|f| f.workspace(db)) else {
+        return Vec::new();
+    };
+    let Some(m) = core(db, ws, pkg).and_then(|c| manifest(db, c).as_ref().ok()) else {
+        return Vec::new();
+    };
+    let members = members(db, ws);
+    m.manifest
+        .families
+        .iter()
+        .map(|f| Family {
+            forums: members.get(&f.id).cloned().unwrap_or_default(),
+            ..f.clone()
+        })
+        .collect()
+}
+
+/// Each declared family's forums, from the workspace's packages: family id
+/// to the sorted forums of the packages declaring it.
+#[salsa::tracked(returns(ref))]
+fn members(db: &dyn salsa::Database, ws: Workspace) -> BTreeMap<String, Vec<String>> {
+    let mut out: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+    for p in ws.packages(db) {
+        if let Some(m) = manifest(db, *p).as_ref().ok().map(|m| &m.manifest) {
+            if let Some(family) = &m.family {
+                out.entry(family.clone())
+                    .or_default()
+                    .insert(m.forum.clone());
+            }
+        }
+    }
+    out.into_iter()
+        .map(|(id, forums)| (id, forums.into_iter().collect()))
+        .collect()
 }
 
 /// The family of a package whose `forum` is `forum`.
@@ -75,7 +107,10 @@ pub fn scope(m: &Manifest, family: Option<&Family>, at: Place<'_>) -> Scope {
 pub fn class_index(db: &dyn salsa::Database, pkg: PackageInput) -> Option<ClassIndex> {
     let m = &manifest(db, pkg).as_ref().ok()?.manifest;
     let families = families(db, pkg);
-    let family = family_of(families, &m.forum);
+    let family = m
+        .family
+        .as_ref()
+        .and_then(|id| families.iter().find(|f| &f.id == id));
     let kind = match &m.kind {
         Kind::Precedent { .. } => Kind::Precedent {
             scope: scope(m, family, Place::default()),
@@ -120,7 +155,8 @@ pub fn class_reports(db: &dyn salsa::Database, pkg: PackageInput, text: &str) ->
     let Some(ix) = class_index(db, pkg) else {
         return Vec::new();
     };
-    let mut out = reach_reports(db, pkg, text);
+    let mut out = family_reports(db, pkg, text);
+    out.extend(reach_reports(db, pkg, text));
     let Some(why) = &ix.missing else {
         return out;
     };
@@ -142,6 +178,47 @@ pub fn class_reports(db: &dyn salsa::Database, pkg: PackageInput, text: &str) ->
     }
     out.push(report);
     out
+}
+
+/// L1004 for `pkg`'s manifest `text`: a declared `family` that is not one
+/// of `core`'s matrix, or a forum whose packages declare different
+/// families. Without a matrix in `core` (a test library) nothing is
+/// checked.
+fn family_reports(db: &dyn salsa::Database, pkg: PackageInput, text: &str) -> Vec<Report> {
+    let families = families(db, pkg);
+    let Some((m, id)) = manifest(db, pkg)
+        .as_ref()
+        .ok()
+        .and_then(|m| Some((&m.manifest, m.manifest.family.as_ref()?)))
+        .filter(|_| !families.is_empty())
+    else {
+        return Vec::new();
+    };
+    let at = key_range(text, "family");
+    if !families.iter().any(|f| &f.id == id) {
+        let ids: Vec<String> = families.iter().map(|f| format!("`{}`", f.id)).collect();
+        return vec![Report::new(
+            C::InvalidManifest,
+            at,
+            format!("`{id}` is not a forum family of `core`'s matrix"),
+        )
+        .note(format!("the families: {}", ids.join(", ")))];
+    }
+    families
+        .iter()
+        .filter(|f| &f.id != id && f.forums.contains(&m.forum))
+        .map(|f| {
+            Report::new(
+                C::InvalidManifest,
+                at,
+                format!(
+                    "forum `{}` is in families `{}` and `{id}`: every package at a forum \
+                     declares the same family",
+                    m.forum, f.id
+                ),
+            )
+        })
+        .collect()
 }
 
 /// The forum families where a precedent of `court`, designated

@@ -782,6 +782,7 @@ version = "2024.12.0"           # SemVer
 language = 1
 pack_id = "frcp-civil-procedure" # explicit litgraph Pack.id; never derived
 forum = "frcp"                  # Pack.forum
+family = "district-civil"       # optional; the forum's family of core's matrix (§5.7)
 authority = "FederalRule"       # default authority level
 title = "..."                   # Pack.title
 description = "..."             # optional, Pack.description
@@ -842,9 +843,9 @@ title = 19
 section_parts = 2
 source = "cfr-210"              # optional
 
-[family.district-civil]         # core only: the forum-family class matrix (§5.7)
+[family.district-civil]         # core only: the forum-family class matrix (§5.7); its
+                                # forums are the packages declaring `family`, never listed
 title = "..."
-forums = ["frcp"]               # the package forums in the family, each in one family
 precedent = ["scotus", "@circuit"]  # courts whose designated precedent binds; @circuit: ι's
 circuits = ["ca1", "ca2"]       # the values a world's circuit takes (needed by @circuit)
 

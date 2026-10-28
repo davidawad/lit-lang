@@ -1,0 +1,120 @@
+module al-criminal-trial-court.criminal
+
+// Every period the Alabama Rules of Criminal Procedure state is a hole
+// here: the vendored rules carry no edition or effective date and are
+// marked CURRENCY UNCONFIRMED, so no period is asserted from them until
+// the edition is confirmed against the rules as amended. The rules' cites
+// are bound for structure only. The appeal period (Ala. R. App. P. 4(b))
+// is from a current source and is stated. The outline's decisions
+// (County of Riverside v. McLaughlin, Gerstein v. Pugh, Gideon, Brady,
+// Mapp, Barker, Boykin, Frye, Jackson, Ramos, Apprendi, Flores-Ortega,
+// Garza) are removed: no reporter text is vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "Ala. R. Crim. P. 4.1"
+{
+  note "Arrest by an officer and on a warrant or summons (Ala. R. Crim. P. 4.1); the initial appearance after an arrest without a warrant is Ala. R. Crim. P. 4.3(a). The period to the initial appearance is a hole: the vendored rules' currency is unconfirmed."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance {
+    authority cite "Ala. R. Crim. P. 4.3"
+  }
+}
+
+decision initial-appearance: "Release or detention" by court cite "Ala. R. Crim. P. 7.1"
+{
+  note "Release on personal recognizance or conditions (Ala. R. Crim. P. 7.1 and following). Any detention-hearing period is a hole (currency unconfirmed)."
+  edge-initial-appearance-preliminary "Preliminary hearing on a complaint" -> preliminary-hearing {
+    authority cite "Ala. R. Crim. P. 5.1"
+  }
+}
+
+decision preliminary-hearing: "Preliminary hearing or indictment" by court cite "Ala. R. Crim. P. 5.1"
+{
+  note "A defendant charged by complaint with a felony may demand a preliminary hearing (Ala. R. Crim. P. 5.1(a)); the periods to demand and to hold it are holes (currency unconfirmed). A formal charge is by indictment, information or complaint (Ala. R. Crim. P. 15.1(a)); the indictment is Ala. R. Crim. P. 13.1."
+  edge-preliminary-hearing-charged "Indictment returned" -> arraignment {
+    authority cite "Ala. R. Crim. P. 13.1"
+  }
+  edge-preliminary-hearing-none "No probable cause: discharged" -> dismissed {
+    authority cite "Ala. R. Crim. P. 5.1"
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "Ala. R. Crim. P. 14.1"
+{
+  note "Arraignment (Ala. R. Crim. P. 14.1). Alabama has no fixed-day speedy-trial rule: Rule 8.1 gives criminal trials priority insofar as practicable, and the constitutional standard governs; no period is stated."
+  edge-arraignment-motions "Pretrial motions and discovery" -> pretrial {
+    authority cite "Ala. R. Crim. P. 15.3"
+  }
+}
+
+decision pretrial: "Pretrial motions and discovery" by applicant cite "Ala. R. Crim. P. 15.3"
+{
+  note "The time for pretrial motions under Rule 15.2 is Ala. R. Crim. P. 15.3(a); discovery on the defendant's written request is Ala. R. Crim. P. 16.1. Both periods are holes (currency unconfirmed)."
+  edge-pretrial-granted "Charge dismissed on motion" -> dismissed {
+    authority cite "Ala. R. Crim. P. 15.3"
+  }
+  edge-pretrial-plea "Plea negotiations" -> plea-decision { authority cite "Ala. R. Crim. P. 14.4" }
+  edge-pretrial-speedy "Trial set with priority" -> trial { authority cite "Ala. R. Crim. P. 8.1" }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Ala. R. Crim. P. 14.4"
+{
+  note "The colloquy before a guilty plea is Ala. R. Crim. P. 14.4."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite "Ala. R. Crim. P. 14.4"
+  }
+  edge-plea-decision-trial "Proceed to trial" -> trial { authority cite "Ala. R. Crim. P. 8.1" }
+}
+
+decision trial: "Trial and verdict" by court cite "Ala. R. Crim. P. 20.1"
+{
+  note "A motion for judgment of acquittal on the defendant's motion stating the grounds (Ala. R. Crim. P. 20.1); its post-verdict renewal and the deemed-denial period are Ala. R. Crim. P. 20.3, a hole (currency unconfirmed)."
+  edge-trial-acquitted "Judgment of acquittal or not guilty" -> acquitted {
+    authority cite "Ala. R. Crim. P. 20.1"
+  }
+  edge-trial-guilty "Guilty: sentencing" -> sentencing { authority cite "Ala. R. Crim. P. 26.6" }
+}
+
+state sentencing: "Sentence imposed" by court cite "Ala. R. Crim. P. 26.6"
+{
+  note "Imposition of sentence (Ala. R. Crim. P. 26.6)."
+  edge-sentencing-post-trial "Post-trial motions" -> post-trial {
+    authority cite "Ala. R. Crim. P. 24.1"
+  }
+}
+
+decision post-trial: "Motion for new trial or in arrest of judgment" by court cite "Ala. R. Crim. P. 24.1"
+{
+  note "After sentence the court may grant a new trial (Ala. R. Crim. P. 24.1); a motion not ruled on is deemed denied after the period of Ala. R. Crim. P. 24.4. The filing and deemed-denial periods of the criminal rules are holes (currency unconfirmed); Ala. R. App. P. 4(b)(1) counts the appeal from the denial of a motion filed within 30 days from pronouncement of the sentence."
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Ala. R. Crim. P. 24.1" }
+  edge-post-trial-denied "Denied, deemed denied or none filed" -> appeal-decision {
+    authority cite "Ala. R. App. P. 4(b)"
+  }
+}
+
+decision appeal-decision: "Notice of appeal within 42 days?" by applicant cite "Ala. R. App. P. 4(b)"
+{
+  note "The defendant's notice of appeal is filed with the trial clerk within 42 days (six weeks) after pronouncement of the sentence, or after the denial of a motion in arrest of judgment, for new trial or for judgment of acquittal filed within 30 days from pronouncement, or after its deemed denial under Ala. R. Crim. P. 20.3(f) or 24.4; it may be oral (Ala. R. App. P. 4(b)(1))."
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken {
+    authority cite "Ala. R. App. P. 4(b)"
+  }
+  edge-appeal-decision-none "No notice" -> conviction-final {
+    authority cite "Ala. R. App. P. 4(b)"
+  }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Ala. R. Crim. P. 20.1"
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "Ala. R. Crim. P. 15.3"
+{
+  note "Whether the dismissal bars a new charge is a hole."
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Court of Criminal Appeals" outcome [appeal] cite "Ala. R. App. P. 4(b)"
+{
+  note "Hand-off to lit/al-court-of-criminal-appeals."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "Ala. R. Crim. P. 32.1"
+{
+  note "Post-conviction relief under Ala. R. Crim. P. 32.1, subject to the preclusions of Rule 32.2; its limitations period is a hole (currency unconfirmed). Federal habeas is lit/habeas."
+}

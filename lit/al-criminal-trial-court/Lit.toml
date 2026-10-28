@@ -1,0 +1,49 @@
+# Criminal cases in the Alabama trial courts under the Alabama Rules of
+# Criminal Procedure (sources/al-criminal-trial-court), with the criminal
+# notice of appeal under Ala. R. App. P. 4(b) (sources/al-state-appellate).
+# The criminal rules are the per-rule PDFs the Alabama Judicial System
+# serves with no edition or effective date: their PROVENANCE marks them
+# CURRENCY UNCONFIRMED, so every period they state is a hole here (noted,
+# never asserted) until the edition is confirmed; their cites are bound to
+# the vendored text for structure only. Alabama has no fixed-day
+# speedy-trial rule (Rule 8.1 sets priorities). The appeal hands off to
+# lit/al-court-of-criminal-appeals.
+[package]
+name = "al-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "al-criminal-trial-court"
+forum = "al-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "alabama"
+title = "Alabama trial courts, criminal"
+description = "Criminal cases in the Alabama circuit courts under the Alabama Rules of Criminal Procedure: arrest and initial appearance, release, preliminary hearing, indictment, arraignment, pretrial motions, discovery, plea or trial, judgment of acquittal, new trial, sentencing and the criminal notice of appeal (Ala. R. App. P. 4(b)). The criminal rules' own periods are holes: the vendored edition's currency is unconfirmed."
+in_force = "2025-10-01"
+known_at = "2026-10-28"
+unknown_before = "2025-10-01"
+jurisdiction = "Alabama trial courts of general criminal jurisdiction"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ala-r-crim-p]
+title = "Alabama Rules of Criminal Procedure, Rules 1-36 as posted rule by rule by the Alabama Judicial System (no edition or effective date; CURRENCY UNCONFIRMED)"
+url = "https://judicial.alabama.gov/library/CriminalProcedure"
+path = "sources/al-criminal-trial-court/al-rules-of-criminal-procedure.txt"
+path_sha256 = "c074519eb52340242c75d028b45a7620450bb1691b0c72f7f0c94a6f95179cae"
+cite_prefixes = ["Ala. R. Crim. P."]
+section_heading = "Rule {n}."
+
+[sources.ala-r-app-p-cited]
+title = "Alabama Rules of Appellate Procedure, Rules 1, 3, 4, 10, 28, 34, 39, 40 and 41 (per-rule PDFs current through the October 1, 2025 amendments)"
+url = "https://judicial.alabama.gov/library/AppellateProcedure"
+path = "sources/al-state-appellate/rules-cited.txt"
+path_sha256 = "27c571a08b388a5e8bebbdb95de13e325d6855381e8060dfbc4c970346535bd9"
+as_of = "2025-10-01"
+cite_prefixes = ["Ala. R. App. P."]
+section_heading = "Ala. R. App. P. {n}"

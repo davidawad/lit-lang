@@ -1,10 +1,10 @@
 
 ### `nj-criminal-trial-court/nj-court-rules-part-iii-criminal-practice.txt` — New Jersey Court Rules, Part III, Rules Governing Criminal Practice
 
-- Source: https://www.njcourts.gov/attorneys/rules-of-court (JSON endpoints /njcourts_rules_of_court/subtree?tid= and /get-term?tid=; 190 GETs).
+- Source: https://www.njcourts.gov/attorneys/rules-of-court (JSON endpoints /njcourts_rules_of_court/subtree?tid= and /get-term?tid=; 195 GETs: 190 initially plus 5 single-rule chapter records added in a follow-up).
 - Edition: New Jersey Court Rules, Part III, Rules Governing Criminal Practice (33 chapters 3:1 to 3:30, one rule per record, 190 JSON responses; includes R. 3:25-3 dismissal for delay and R. 3:25-4 speedy trial for certain defendants) from the New Jersey Judiciary's Rules of Court tree; the site states no edition date, CURRENCY UNCONFIRMED. www.njcourts.gov robots.txt read; no Disallow covering this path; home page not retrievable (403); terms not read; fetched on David's explicit ruling 2026-10-28 despite robots/terms (barrier: a bot filter, not a robots or terms refusal: plain curl answered HTTP 403; the rule tree is lazy-loaded by the page's own JSON endpoints (/njcourts_rules_of_court/subtree and /get-term), called with in-page fetch from the loaded origin at about 1 request per 1.1 s); tool: BrowserOS neo with the identifying User-Agent lit-lang-provenance/1.0 (angrybohr@proton.me).
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); each response kept as the original; the 'description' HTML of each rule extracted with html2txt v2 (stdlib html.parser), unedited, in tree order.
-- Extract sha256 5fedea600ca7f29efb7ff2eb7bbd67224be9e7d3aaaa9a3c5622e9d835593d4d. Raw extract, not yet sectioned into `## <ref>` form.
+- Extract sha256 3609801f980c7857f0c87a9b8c5cd0255e9bf590d8bcc5b4e0763a822c2b5183. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `nj-criminal-trial-court/original/part-iii-rules/0001-subtree.json` as served (sha256 92b3733dc34b561d421e34de5b60c02b80eadc26008edb9e52c2e4e101c39d86). Served at https://www.njcourts.gov/njcourts_rules_of_court/subtree?tid=22636.
 - Original: `nj-criminal-trial-court/original/part-iii-rules/0002-term.json` as served (sha256 76beab22a3860c49d36ad5c325c0c2c6a0bf68fd7343ea1bb720b590fc4f7db7). Served at https://www.njcourts.gov/njcourts_rules_of_court/get-term?tid=26666.
 - Original: `nj-criminal-trial-court/original/part-iii-rules/0003-term.json` as served (sha256 36c9f169bef880991564b58d0d013bfb374717a71027fe2b8879a9a2dc5193ae). Served at https://www.njcourts.gov/njcourts_rules_of_court/get-term?tid=26671.
@@ -195,6 +195,11 @@
 - Original: `nj-criminal-trial-court/original/part-iii-rules/0188-subtree.json` as served (sha256 fdd828999103899f9e03560cb487597451eba5b75321d81fabee1a70d7eda57d). Served at https://www.njcourts.gov/njcourts_rules_of_court/subtree?tid=22796.
 - Original: `nj-criminal-trial-court/original/part-iii-rules/0189-term.json` as served (sha256 09ba6be6f779f24b2542b76d8c1e4a1e3eae214590d0062026ce2fa995ca75e1). Served at https://www.njcourts.gov/njcourts_rules_of_court/get-term?tid=31526.
 - Original: `nj-criminal-trial-court/original/part-iii-rules/0190-term.json` as served (sha256 642ef6cd3dae5bedd75aed09e4633a9942caecdd5fc8604c19a8c9fde6460021). Served at https://www.njcourts.gov/njcourts_rules_of_court/get-term?tid=31531.
-- Extraction sha256 5fedea600ca7f29efb7ff2eb7bbd67224be9e7d3aaaa9a3c5622e9d835593d4d.
+- Original: `nj-criminal-trial-court/original/part-iii-rules/0191-term.json` as served (sha256 b231b5310de8305ceaed1a042d01d70b247f6f4a75b43bc56cde3dbd9d4366ca). Served at https://www.njcourts.gov/njcourts_rules_of_court/get-term?tid=22656; chapter record (single-rule chapter) for tid 22656.
+- Original: `nj-criminal-trial-court/original/part-iii-rules/0192-term.json` as served (sha256 2bee92772ffb66ea7e6dfd8cdaebc3a6a8b46c8ed3bdd659f294b4cf4cc05469). Served at https://www.njcourts.gov/njcourts_rules_of_court/get-term?tid=22721; chapter record (single-rule chapter) for tid 22721.
+- Original: `nj-criminal-trial-court/original/part-iii-rules/0193-term.json` as served (sha256 0418f0a0558bf032a16248781e310949df2d0520d957291c81e5c2f2135078f4). Served at https://www.njcourts.gov/njcourts_rules_of_court/get-term?tid=22726; chapter record (single-rule chapter) for tid 22726.
+- Original: `nj-criminal-trial-court/original/part-iii-rules/0194-term.json` as served (sha256 4d2ffbafb16766bec287fbaa502ab631cc8ce7c2f1626e1c0e8d44241750b2f0). Served at https://www.njcourts.gov/njcourts_rules_of_court/get-term?tid=22761; chapter record (single-rule chapter) for tid 22761.
+- Original: `nj-criminal-trial-court/original/part-iii-rules/0195-term.json` as served (sha256 c4041a3b1864ecd2f6059fd04835db270b02c3d4294a5f7b04e49a1584969f40). Served at https://www.njcourts.gov/njcourts_rules_of_court/get-term?tid=22791; chapter record (single-rule chapter) for tid 22791.
+- Extraction sha256 3609801f980c7857f0c87a9b8c5cd0255e9bf590d8bcc5b4e0763a822c2b5183.
 
 - Note (lg-gddt): Criminal appeals: N.J. Court Rules Part II (appellate practice), covered by sources/nj-appellate-civil/ if it carries Part II.

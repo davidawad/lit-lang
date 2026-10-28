@@ -1,0 +1,141 @@
+module oknd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The Northern District of Oklahoma's own criminal periods, counted under
+// the criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: the probation officer discloses the presentence report at least
+// 35 days before sentencing (N.D. Okla. LCrR32-3; FRCrimP 32(e)(2)); the
+// parties communicate any material correction or objection to the
+// probation officer within 14 days of receiving it (N.D. Okla. LCrR32-4;
+// FRCrimP 32(f)(1)); and the probation officer submits the revised report
+// or addendum at least seven days before sentencing (N.D. Okla. LCrR32-4;
+// FRCrimP 32(g)).
+//
+// Periods counted in business days, which the engine does not lower, stay
+// in notes: the government provides the plea agreement and any charging
+// Information to the Court and defense counsel, and files any superseding
+// Information a plea agreement contemplates, at least three business days
+// before the change-of-plea hearing (N.D. Okla. LCrR11-1(a), (b)), and
+// defense counsel provides the unsigned Petition to Enter Plea of Guilty
+// at least three business days before it (N.D. Okla. LCrR11-3). Other
+// conditions that are not deadlines from an event: sentencing is
+// scheduled no earlier than 90 days after a guilty plea or jury verdict
+// unless the Court orders otherwise on the parties' consent (N.D. Okla.
+// LCrR32-1), a floor on the setting; a motion for leave to file a brief
+// over 25 pages is filed at least one day before the brief is due, and a
+// brief over 15 pages carries an indexed table of authorities (N.D. Okla.
+// LCrR47-5).
+//
+// The earlier N.D. Okla. criminal outline's FRCrimP flow and its decisions
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// A brief: at most 25 pages without leave of Court (N.D. Okla.
+/// LCrR47-5(a)).
+limit brief {
+  pages <= 25 cite "N.D. Okla. LCrR47-5(a)"
+} cite "N.D. Okla. LCrR47-5(a)"
+
+/// The date set for the pretrial conference (N.D. Okla. LCrR16-2).
+event PretrialConferenceScheduled()
+/// A party requests expert-witness disclosures fewer than 21 days before
+/// the pretrial conference (N.D. Okla. LCrR16-2).
+event LateExpertDisclosureRequested()
+/// The defendant is arraigned (N.D. Okla. LCrR47-2).
+event Arraigned()
+/// A motion is filed (N.D. Okla. LCrR47-2).
+event MotionFiled() paper brief
+
+/// N.D. Okla. LCrR16-2: unless otherwise ordered, the expert-witness
+/// disclosures FRCrimP 16(a)(1)(G) or (b)(1)(C) requires are made at least
+/// 15 days before the pretrial conference.
+deadline expert-disclosure: 15.days before PretrialConferenceScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D. Okla. LCrR16-2"
+{
+  forum frcrimp
+}
+
+/// N.D. Okla. LCrR16-2: disclosures in response to requests made fewer
+/// than 21 days before the pretrial conference are made within six days of
+/// the request.
+deadline late-request-expert-disclosure: 6.days after LateExpertDisclosureRequested() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D. Okla. LCrR16-2"
+{
+  forum frcrimp
+}
+
+/// N.D. Okla. LCrR32-4: if the probation officer rejects a proposed
+/// revision, the party files any objection of record, with its basis and
+/// authority, at least 14 days before the date set for sentencing.
+deadline psr-objection-of-record: 14.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Okla. LCrR32-4"
+{
+  forum frcrimp
+}
+
+/// N.D. Okla. LCrR32-5: motions for departure or variance, each filed
+/// separately, at least 14 days before sentencing.
+deadline departure-variance-motion: 14.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Okla. LCrR32-5"
+{
+  forum frcrimp
+}
+
+/// N.D. Okla. LCrR32-5: written responses to a departure or variance
+/// motion at least seven days before the date set for sentencing.
+deadline departure-variance-response: 7.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Okla. LCrR32-5"
+{
+  forum frcrimp
+}
+
+/// N.D. Okla. LCrR32-5: a separate sentencing memorandum at least 14 days
+/// before the date set for sentencing.
+deadline sentencing-memorandum: 14.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Okla. LCrR32-5"
+{
+  forum frcrimp
+}
+
+/// N.D. Okla. LCrR32-5: a response to a sentencing memorandum at least
+/// seven days before the date set for sentencing.
+deadline sentencing-memorandum-response: 7.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Okla. LCrR32-5"
+{
+  forum frcrimp
+}
+
+/// N.D. Okla. LCrR32-7: the Probation Office discloses its sentencing
+/// recommendation to the Court, and not to the parties, at least seven
+/// days before the date set for sentencing.
+deadline sentencing-recommendation: 7.days before SentencingScheduled() counted_by frcrimp45 cite "N.D. Okla. LCrR32-7"
+{
+  forum frcrimp
+}
+
+/// N.D. Okla. LCrR47-2: unless ordered otherwise, all motions are filed
+/// within 14 days after the defendant's arraignment.
+deadline motions-period: 14.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D. Okla. LCrR47-2"
+{
+  forum frcrimp
+}
+
+/// N.D. Okla. LCrR47-2: responses are filed within seven days of the
+/// motion's filing; after that the Court may treat the motion as ripe
+/// even if no response has been filed.
+deadline response-period: 7.days after MotionFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D. Okla. LCrR47-2"
+{
+  forum frcrimp
+}

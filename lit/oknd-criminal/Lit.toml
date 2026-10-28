@@ -1,0 +1,52 @@
+# The U.S. District Court for the Northern District of Oklahoma's local
+# criminal rules (LCrR) as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods and limits the
+# local criminal rules themselves state and re-encodes no FRCrimP, Speedy
+# Trial Act or FRAP 4(b) period (one source of truth: lit/frcrimp). Each
+# period is counted under FRCrimP 45(a), which governs "any local rule",
+# so each deadline names `forum frcrimp`. The rules are the Local Rules
+# effective July 31, 2026 (Criminal Rules part; sources/nd-okla), the
+# edition the court serves as current, so in_force is that date; earlier
+# editions are not vendored, so a query before it is a hole in the corpus.
+# An appeal goes to the Tenth Circuit under lit/frcrimp's FRAP 4(b) period
+# and lit/ca10.
+[package]
+name = "oknd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "oknd-criminal-local-rules"
+forum = "oknd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Northern District of Oklahoma: Local Criminal Rules"
+description = "The U.S. District Court for the Northern District of Oklahoma's local criminal rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): expert-witness disclosures, objections of record to the presentence report, departure and variance motions and sentencing memoranda with their responses, the probation office's sentencing recommendation, the motion and response periods, and the brief page limit."
+in_force = "2026-07-31"
+known_at = "2026-10-28"
+unknown_before = "2026-07-31"
+jurisdiction = "U.S. District Court for the Northern District of Oklahoma (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "oknd-lcrr"
+issuer = "U.S. District Court for the Northern District of Oklahoma"
+date = "2026-07-31"
+designation = "Local Rules, Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.oknd-lcrr]
+title = "Local Rules of the United States District Court for the Northern District of Oklahoma, Criminal Rules (effective July 31, 2026)"
+url = "https://www.oknd.uscourts.gov/sites/default/files/2026-07-31%20Local%20Rules.pdf"
+path = "sources/nd-okla/nd-okla-local-rules-2026-criminal-sectioned.txt"
+path_sha256 = "e3dd4216a76092003426b54a5c61db73a62d511749c324a0dc5612999837293a"
+sha256 = "acb17193b5b6a6c0651484c14fc850f17e8affac0679dbffe4ff5d9b49d69400"
+as_of = "2026-07-31"
+cite_prefixes = ["N.D. Okla. LCrR"]
+section_heading = "LCrR{n}"

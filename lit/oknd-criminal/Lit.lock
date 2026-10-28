@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "oknd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:90994f149701ae0ccb660d229d1fb41bab33d4ceedec37524791134cc07eb32c"
+semantic = "sha256:a5e462f69f5035c5b4b35ae2a47d47d2ecd4c5a9d6a0729cf1ba52c414a3ac08"
+texts = [
+    "oknd-lcrr sources/nd-okla/nd-okla-local-rules-2026-criminal-sectioned.txt sha256:e3dd4216a76092003426b54a5c61db73a62d511749c324a0dc5612999837293a",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

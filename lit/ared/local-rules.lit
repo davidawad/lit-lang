@@ -182,3 +182,81 @@ deadline bankruptcy-dismissal-review-period: 14.days after BankruptcyDismissalEn
 {
   forum frcp
 }
+
+test "filing after service period: 7 days after the trigger" cite "E.D. Ark. L.R. 5.4"
+{
+  given PaperServed() on 2026-11-02
+  expect deadline(filing-after-service-period) == 2026-11-09
+}
+
+test "amended pleading period: 7 days after the trigger" cite "E.D. Ark. L.R. 5.5(e)"
+{
+  given LeaveToAmendGranted() on 2026-11-02
+  expect deadline(amended-pleading-period) == 2026-11-09
+}
+
+test "pro se response period: 30 days after the trigger" cite "E.D. Ark. L.R. 5.5(c)(2)"
+{
+  given ProSeCommunicationSent() on 2026-11-02
+  expect deadline(pro-se-response-period) == 2026-12-02
+}
+
+test "opposition period: 14 days after the trigger" cite "E.D. Ark. L.R. 7.2(b)"
+{
+  given MotionServed() on 2026-11-02
+  expect deadline(opposition-period) == 2026-11-16
+}
+
+test "summary judgment reply period: 7 days after the trigger" cite "E.D. Ark. L.R. 7.2(b)"
+{
+  given SummaryJudgmentResponseFiled() on 2026-11-02
+  expect deadline(summary-judgment-reply-period) == 2026-11-09
+}
+
+test "habeas reply period: 7 days after the trigger" cite "E.D. Ark. L.R. 7.2(b)"
+{
+  given HabeasResponseFiled() on 2026-11-02
+  expect deadline(habeas-reply-period) == 2026-11-09
+}
+
+test "class certification response period: 14 days after the trigger" cite "E.D. Ark. L.R. 23.1"
+{
+  given ClassCertificationMotionFiled() on 2026-11-02
+  expect deadline(class-certification-response-period) == 2026-11-16
+}
+
+test "fee motion period: 14 days after the trigger" cite "E.D. Ark. L.R. 54.1(a)"
+{
+  given FeeJudgmentEntered() on 2026-11-02
+  expect deadline(fee-motion-period) == 2026-11-16
+}
+
+test "fee objection period: 14 days after the trigger" cite "E.D. Ark. L.R. 54.1(a)"
+{
+  given FeeMotionServed() on 2026-11-02
+  expect deadline(fee-objection-period) == 2026-11-16
+}
+
+test "magistrate appeal period: 14 days after the trigger" cite "E.D. Ark. L.R. 72.1"
+{
+  given MagistrateRulingEntered() on 2026-11-02
+  expect deadline(magistrate-appeal-period) == 2026-11-16
+}
+
+test "recommendation objection period: 14 days after the trigger" cite "E.D. Ark. L.R. 72.1"
+{
+  given RecommendationServed() on 2026-11-02
+  expect deadline(recommendation-objection-period) == 2026-11-16
+}
+
+test "magistrate review period: 14 days after the trigger" cite "E.D. Ark. L.R. 72.1"
+{
+  given MagistrateActionTaken() on 2026-11-02
+  expect deadline(magistrate-review-period) == 2026-11-16
+}
+
+test "bankruptcy dismissal review period: 14 days after the trigger" cite "E.D. Ark. L.R. 83.1"
+{
+  given BankruptcyDismissalEntered() on 2026-11-02
+  expect deadline(bankruptcy-dismissal-review-period) == 2026-11-16
+}

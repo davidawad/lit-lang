@@ -1,0 +1,50 @@
+# Civil actions in the North Dakota district courts under the North
+# Dakota Rules of Civil Procedure, each rule as in force on October 27,
+# 2026 with its own effective date (sources/nd-district; the latest,
+# N.D.R.Civ.P. 60, effective July 1, 2026). Computation of time is
+# N.D.R.Civ.P. 6(a), which carries a last day that falls on a Saturday,
+# Sunday or legal holiday to the next day that is not one, a legal
+# holiday being a day set aside under N.D.C.C. §§ 1-03-01, 1-03-02 and
+# 1-03-02.1; those sections are not vendored and core has no North
+# Dakota holiday calendar, so the rules' periods are stated in notes, not
+# encoded as counted deadlines. Motion practice under N.D.R.Ct. 3.2 is
+# not vendored. An appeal hands off to lit/ndctapp.
+[package]
+name = "nd-district-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "nd-district-court-civil"
+forum = "nd-district"
+authority = "StateRule"
+title = "North Dakota district court, civil"
+description = "Civil actions in the North Dakota district courts under the North Dakota Rules of Civil Procedure, as far as the vendored text states: commencement and service, the time to answer, Rule 12(b) motions, default, scheduling and discovery, summary judgment, trial and jury demand, post-trial motions, entry and notice of entry of judgment, costs, voluntary and involuntary dismissal, and the appeal (lit/ndctapp)."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "North Dakota district court (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.nd-r-civ-p]
+title = "North Dakota Rules of Civil Procedure, each rule as in force on October 27, 2026"
+url = "https://www.ndcourts.gov/legal-resources/rules/ndrcivp"
+path = "sources/nd-district/ndrcivp.txt"
+path_sha256 = "e07933b29743f02b7ab922e9dc3b5c49404c5625abc52b95c308730c159053b4"
+as_of = "2026-10-27"
+cite_prefixes = ["N.D.R.Civ.P."]
+section_heading = "N.D.R.Civ.P. {n}"
+
+[sources.nd-r-app-p]
+title = "North Dakota Rules of Appellate Procedure, each rule as in force on October 27, 2026"
+url = "https://www.ndcourts.gov/legal-resources/rules/ndrappp"
+path = "sources/ndctapp/ndrappp.txt"
+path_sha256 = "1248b9444f50322e77dc258bdc3f1b8dbc52b2656bde3b7971ba085fcfeef91c"
+as_of = "2026-10-27"
+cite_prefixes = ["N.D.R.App.P."]
+section_heading = "N.D.R.App.P. {n}"

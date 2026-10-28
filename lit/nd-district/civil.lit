@@ -1,0 +1,158 @@
+module nd-district-court-civil.civil
+
+start complaint-filed
+
+state complaint-filed: "Action commenced" by applicant cite "N.D.R.Civ.P. 3"
+{
+  note "A civil action is commenced by the service of a summons (N.D.R.Civ.P. 3). The summons states the time within which the rules require the defendant to appear and defend, and a copy of the complaint is served with it except when service is by publication (N.D.R.Civ.P. 4(c)). Service by publication, or personal service outside the state, is made within 60 days after the declaration for publication is filed, or the action is considered discontinued as to any defendant not served in that time, and is complete fifteen days after the first publication or the out-of-state service (N.D.R.Civ.P. 4(e)(6), 4(g)). Periods in this package are stated, not counted: computation is N.D.R.Civ.P. 6(a). No leading decision is named."
+  edge-complaint-filed-response-due "Summons served" -> response-due {
+    authority cite "N.D.R.Civ.P. 4(d)"
+  }
+}
+
+state response-due: "Response due: answer or motion" cite "N.D.R.Civ.P. 12(a)"
+{
+  note "A defendant serves an answer within 21 days after being served with the summons and complaint; an answer to a counterclaim or crossclaim is due within 21 days after service of the pleading stating it (N.D.R.Civ.P. 12(a)(1)). A defense of failure to state a claim upon which relief can be granted may be asserted by motion (N.D.R.Civ.P. 12(b)(6)). Where service is made by mail or third-party commercial carrier under Rule 4, the period begins on delivery (N.D.R.Civ.P. 6(e)(2))."
+  edge-response-due-default-entered "No timely response" -> default-entered {
+    authority cite "N.D.R.Civ.P. 55(a)"
+  }
+  edge-response-due-motion-ruling "Motion to dismiss filed" -> motion-ruling {
+    authority cite "N.D.R.Civ.P. 12(b)"
+  }
+  edge-response-due-sched "Answer filed" -> sched { authority cite "N.D.R.Civ.P. 12(a)" }
+}
+
+decision motion-ruling: "Motion to dismiss ruling" by court cite "N.D.R.Civ.P. 12(b)"
+{
+  note "If the court denies the motion or postpones it until trial, the responsive pleading is served within 14 days after notice of the court's action (N.D.R.Civ.P. 12(a)(2)(A)). If matters outside the pleadings are presented on a Rule 12(b)(6) motion and not excluded, the motion is treated as one for summary judgment under Rule 56 (N.D.R.Civ.P. 12(d)). After amendment, a required response is due within the time remaining to respond to the original pleading or within 14 days after service of the amended pleading, whichever is later (N.D.R.Civ.P. 15(a)(3)). No leading decision is named."
+  edge-motion-ruling-dismissed-with-prejudice "Dismissed on the merits" -> dismissed-with-prejudice {
+    authority cite "N.D.R.Civ.P. 41(b)"
+  }
+  edge-motion-ruling-response-due "Dismissed with leave to amend" -> response-due {
+    authority cite "N.D.R.Civ.P. 15(a)"
+  }
+  edge-motion-ruling-sched "Denied: responsive pleading within 14 days after notice" -> sched {
+    authority cite "N.D.R.Civ.P. 12(a)"
+  }
+}
+
+state sched: "Scheduling conference and order" cite "N.D.R.Civ.P. 16(b)"
+{
+  note "The court must hold a pretrial conference to enter a scheduling order when a triggering event occurs: more than six months since filing of the summons and complaint or answer without final disposition or a dispositive motion; service more than six months before filing and ninety days since filing; a Rule 40(e) notice whose response asks that the case be left open; or any party's written request. The conference is held within 60 days of the triggering event (N.D.R.Civ.P. 16(b))."
+  edge-sched-discovery "Order entered" -> discovery { authority cite "N.D.R.Civ.P. 16(b)" }
+}
+
+state discovery: "Discovery" cite "N.D.R.Civ.P. 26(a)"
+{
+  note "Discovery methods are N.D.R.Civ.P. 26(a); scope and limits 26(b); sanctions N.D.R.Civ.P. 37. No earlier than 40 days after the complaint is filed, a party may request in writing a meeting on discovery; the parties then meet within 21 days, and submit an agreed discovery plan, or a joint report of the parts agreed, within 14 days after the meeting (N.D.R.Civ.P. 26(f)). The court may dismiss without prejudice an action with a lack of prosecution for more than one year (N.D.R.Civ.P. 40(e)); a party seeking a trial continuance requests it within 14 days after receiving notice of trial (N.D.R.Civ.P. 40(d))."
+  edge-discovery-sj-ruling "Summary judgment motion filed" -> sj-ruling {
+    authority cite "N.D.R.Civ.P. 56(c)"
+  }
+  edge-discovery-dismissed-with-prejudice "Discovery sanction dismisses claims" -> dismissed-with-prejudice {
+    authority cite "N.D.R.Civ.P. 37(b)"
+  }
+  edge-discovery-settled "Settlement or voluntary dismissal" -> settled {
+    authority cite "N.D.R.Civ.P. 41(a)"
+  }
+  edge-discovery-pretrial "No dispositive motion" -> pretrial {
+    authority cite "N.D.R.Civ.P. 16(a)"
+  }
+}
+
+decision sj-ruling: "Summary judgment ruling" by court cite "N.D.R.Civ.P. 56(c)"
+{
+  note "A claiming party may move after 21 days from commencement or after the opposing party serves a summary judgment motion; a defending party may move at any time (N.D.R.Civ.P. 56(a), (b)). The motion and supporting documents are filed at least 90 days before the day set for trial and 45 days before the hearing unless otherwise ordered; an opposing party has 30 days after service of a brief to serve and file an answer brief, and the moving party 14 days to serve and file a reply brief (N.D.R.Civ.P. 56(c)(1)). A principal or answer brief may not exceed 38 pages and a reply brief 12 pages, footnotes included; an application to exceed them may not exceed two pages and is filed no later than seven days before the brief is due (N.D.R.Civ.P. 56(c)(2)). Judgment is rendered if there is no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law (N.D.R.Civ.P. 56(c)(3)). No leading decision is named."
+  edge-sj-ruling-judgment-applicant "Granted for applicant" -> judgment-applicant {
+    authority cite "N.D.R.Civ.P. 58(a)"
+  }
+  edge-sj-ruling-judgment-opponent "Granted for opponent" -> judgment-opponent {
+    authority cite "N.D.R.Civ.P. 58(a)"
+  }
+  edge-sj-ruling-pretrial "Denied" -> pretrial { authority cite "N.D.R.Civ.P. 56(d)" }
+}
+
+state pretrial: "Pretrial conference and trial setting" cite "N.D.R.Civ.P. 16(a)"
+{
+  note "Contested cases are assigned trial dates by the trial judge under the presiding judge's supervision (N.D.R.Civ.P. 40(c))."
+  edge-pretrial-trial "Trial set" -> trial { authority cite "N.D.R.Civ.P. 40(c)" }
+}
+
+state trial: "Trial (jury or bench)" cite "N.D.R.Civ.P. 38"
+{
+  note "A jury demand is served no later than 14 days after the last pleading directed to the issue is served, and filed (N.D.R.Civ.P. 38(b)); the jury is six unless a jury of nine is demanded within that time (N.D.R.Civ.P. 38(c)); a party waives a jury unless its demand is properly served and filed (N.D.R.Civ.P. 38(e)). A motion for judgment as a matter of law may be made at any time before submission to the jury (N.D.R.Civ.P. 50(a)(2)); in a nonjury trial the court finds the facts specially and states its conclusions separately (N.D.R.Civ.P. 52(a))."
+  edge-trial-judgment-applicant "Verdict or findings for applicant" -> judgment-applicant {
+    authority cite "N.D.R.Civ.P. 58(a)"
+  }
+  edge-trial-judgment-opponent "Verdict or findings for opponent" -> judgment-opponent {
+    authority cite "N.D.R.Civ.P. 58(a)"
+  }
+}
+
+state judgment-applicant: "Judgment for applicant entered" cite "N.D.R.Civ.P. 58(a)"
+{
+  note "On the filing of an order for judgment the prevailing party submits a form of judgment, which the clerk signs, files and enters; if it fails to within 30 days, any party may (N.D.R.Civ.P. 58(a)). Within 14 days after entry, the prevailing party serves notice of entry of judgment with a copy of the judgment (N.D.R.Civ.P. 58(b)(2)). A party awarded costs serves and files a verified statement within 30 days after entry of the order for judgment, and objections are due within 14 days after its service (N.D.R.Civ.P. 54(e)(1)); a motion for attorneys' fees is served and filed within 21 days after notice of entry of judgment (N.D.R.Civ.P. 54(e)(2)). Execution is stayed for 30 days after filing notice of entry of judgment unless the court orders otherwise (N.D.R.Civ.P. 62(a))."
+  edge-judgment-applicant-post-judgment-ruling "Post-judgment motion" -> post-judgment-ruling {
+    authority cite "N.D.R.Civ.P. 59(c)"
+  }
+  edge-judgment-applicant-appellate-review "Notice of appeal filed" -> appellate-review {
+    authority cite "N.D.R.App.P. 4(a)"
+  }
+  edge-judgment-applicant-final-win "No appeal within time" -> final-win {
+    authority cite "N.D.R.App.P. 4(a)"
+  }
+}
+
+state judgment-opponent: "Judgment for opponent entered" cite "N.D.R.Civ.P. 58(a)"
+{
+  note "Entry and notice of entry, costs, fees and the automatic stay are as for a judgment for the applicant (N.D.R.Civ.P. 54(e), 58, 62(a)). The notice of appeal is filed with the clerk of the supreme court within 60 days from service of notice of entry of the judgment (N.D.R.App.P. 4(a)(1)); service of notice is not required to start that time if the record clearly shows the appealing party's actual knowledge of entry through its own affirmative action (N.D.R.Civ.P. 58(b)(4))."
+  edge-judgment-opponent-post-judgment-ruling "Post-judgment motion" -> post-judgment-ruling {
+    authority cite "N.D.R.Civ.P. 59(c)"
+  }
+  edge-judgment-opponent-appellate-review "Notice of appeal filed" -> appellate-review {
+    authority cite "N.D.R.App.P. 4(a)"
+  }
+  edge-judgment-opponent-final-loss "No appeal within time" -> final-loss {
+    authority cite "N.D.R.App.P. 4(a)"
+  }
+}
+
+decision post-judgment-ruling: "Post-judgment motion ruling" by court cite "N.D.R.Civ.P. 59(c)"
+{
+  note "A renewed motion for judgment as a matter of law is served and filed no later than 28 days after notice of entry of judgment (N.D.R.Civ.P. 50(b)); a motion to amend findings, no later than 28 days after notice of entry (N.D.R.Civ.P. 52(b)); a motion for a new trial, within six months after notice of entry on the ground of newly discovered evidence and within 60 days on any other ground unless the court for good cause extends the time (N.D.R.Civ.P. 59(c)); a motion to alter or amend, no later than 28 days after notice of entry (N.D.R.Civ.P. 59(j)). The court cannot extend the times under Rules 50(b) and (d), 52(b), 59(i) and (j), and 60(b) (N.D.R.Civ.P. 6(b)(2)). A Rule 60(b)(1)-(3) motion is made no more than a year after notice of entry (N.D.R.Civ.P. 60(c)(1)). A timely motion under Rule 50(b), 52(b), 54 (fees), 59, or 60 if served and filed no later than 28 days after notice of entry, restarts the full appeal time from service of notice of entry of the order disposing of the last such motion (N.D.R.App.P. 4(a)(3))."
+  edge-post-judgment-ruling-pretrial "Granted: new trial" -> pretrial {
+    authority cite "N.D.R.Civ.P. 59(b)"
+  }
+  edge-post-judgment-ruling-appellate-review "Denied: appeal time runs from notice of the order" -> appellate-review {
+    authority cite "N.D.R.App.P. 4(a)"
+  }
+}
+
+terminal default-entered: "Default judgment against opponent" outcome [win] cite "N.D.R.Civ.P. 55(a)"
+{
+  note "If a party against whom affirmative relief is sought has failed to plead or otherwise appear, the court may direct the clerk to enter a default judgment: for a sum certain on a declaration of the amount due, otherwise on the proof the court requires (N.D.R.Civ.P. 55(a)(1), (2)). A party who has appeared is served with the motion for judgment, with notice complying with N.D.R.Ct. 3.2(a) (N.D.R.Civ.P. 55(a)(3)). Outcome from the applicant's side."
+}
+
+terminal dismissed-with-prejudice: "Dismissed on the merits" outcome [loss] cite "N.D.R.Civ.P. 41(b)"
+{
+  note "Unless the order states otherwise, an involuntary dismissal operates as an adjudication on the merits, except one for lack of jurisdiction, improper venue or failure to join a party under Rule 19 (N.D.R.Civ.P. 41(b)). Outcome from the applicant's side."
+}
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "N.D.R.Civ.P. 41(a)"
+{
+  note "The plaintiff may dismiss without a court order by notice before the opposing party serves an answer or a summary judgment motion, or by a stipulation signed by all parties who have appeared; unless stated otherwise the dismissal is without prejudice (N.D.R.Civ.P. 41(a)(1)). Settlement terms are matter facts."
+}
+
+terminal final-win: "Final judgment for applicant, no appeal" outcome [win] cite "N.D.R.App.P. 4(a)"
+{
+  note "Judgment final when the 60-day appeal time and any extension (no more than 30 days after the prescribed time, on motion no later than 30 days after it expires) have run (N.D.R.App.P. 4(a)(1), (4))."
+}
+
+terminal final-loss: "Final judgment for opponent, no appeal" outcome [loss] cite "N.D.R.App.P. 4(a)"
+{
+  note "Judgment final when the appeal time has run (N.D.R.App.P. 4(a)(1), (4))."
+}
+
+terminal appellate-review: "Appeal taken: continue in the North Dakota appellate package" cite "N.D.R.App.P. 4(a)"
+{
+  note "Hand-off to lit/ndctapp (nd-appellate-civil)."
+}

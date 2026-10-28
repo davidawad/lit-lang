@@ -30,7 +30,17 @@ see how hard it has been pushed.
 
 ## Expect tests (`expect/`)
 
-`tests/expect/<forum>/<name>.toml` lists what a change to the law should
+A matter's own expect test is a directory `tests/expect/<case>/`: its
+`.case` and `Lit.lock`, one `.world` per circuit or forum it runs under,
+and `expect.toml` recording, per world, the verdict, the layers in force,
+each filing's outcome and each deadline's due date, status and cites
+(docs/litigate/SPEC.md §5.8, expect tests; `bowles-v-russell/` is the
+first). `litigate test tests/expect`, run by `just ci` and `just
+ci-scoped`, fails on any value that moved, with a table of case, world,
+field, expected and actual; `litigate test tests/expect --bless`
+re-records them, and the commit says why.
+
+The other files, `tests/expect/<forum>/<name>.toml`, list what a change to the law should
 be read against: each names a matter and the world it runs in
 
 ```toml

@@ -8,6 +8,7 @@ mod compat;
 mod coverage;
 mod diff;
 mod docket;
+pub(crate) mod expect;
 mod explain;
 pub(crate) mod filing;
 mod fix;
@@ -82,7 +83,8 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
             filter,
             library,
             impact: None,
-        } => test::test(&paths, filter.as_deref(), &library.lib),
+            bless,
+        } => test::test(&paths, filter.as_deref(), &library.lib, bless),
         Command::Coverage { root, check } => coverage::coverage(root.as_deref(), check),
         Command::Fmt { paths, check, .. } => fmt::fmt(&paths, check),
         Command::Run { case, op, flags } => run::run(src, &case, &op, &flags),
@@ -276,6 +278,7 @@ pub fn dispatch(command: Command, src: &dyn Source) -> Outcome {
                 as_of,
                 known_at,
                 lib: library.lib,
+                cites: false,
             },
         ),
         Command::Import { inputs, out } => import::import(&inputs, &out),

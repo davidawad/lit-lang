@@ -1,0 +1,60 @@
+# Bowles v. Russell, 551 U.S. 205 (2007) (lg-fq2.5, ported to the expect
+# test format by lg-wvlf.1; public record, sources/change-corpus/rulings/
+# bowles-scotus-2007). The district court reopened the time to appeal on
+# February 10, 2004 and gave Bowles 17 days; he filed his notice of appeal
+# on February 26. FRAP 4(a)(6) allows 14 days from the order, so the notice
+# was due February 24 and is late (551 U.S. at 207). The world, ca6.world,
+# is the Sixth Circuit holding Thompson v. INS (1964) and Bowles v.
+# Russell, which overrules it from June 14, 2007: replayed on June 13,
+# Thompson is in force and the notice is late, as the Sixth Circuit held;
+# from June 14 Thompson is withdrawn and the notice is late, as the Supreme
+# Court held. Re-record with `litigate test tests/expect --bless`, and say
+# why in the commit.
+
+paths = [
+    "docs/litigate/examples/change",
+    "docs/litigate/validation",
+]
+
+[[run]]
+world = "ca6.world"
+as_of = "2007-06-13"
+known_at = "2007-06-13"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = [
+    "change-bowles-v-russell",
+    "change-thompson-v-ins",
+]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2008 ed.) 26(a)(2)"
+
+[[run]]
+world = "ca6.world"
+as_of = "2007-06-14"
+known_at = "2007-06-14"
+
+[run.expect.w1]
+verdict = "L4002"
+in_force = ["change-bowles-v-russell"]
+
+[run.expect.w1.outcome]
+notice = "late"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"
+due = "2004-02-24"
+status = "late"
+cite = "FRAP 4(a)(6)"
+counted_by = "FRAP (2008 ed.) 26(a)(2)"

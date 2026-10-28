@@ -7,9 +7,12 @@
 //! whose rows are each world's filing verdicts and deadlines, or a package
 //! (`package`), whose rows are its inline `expect` values. A world or value
 //! on one side only shows `-` on the other; a test on one side only is one
-//! `expect test` row. The report never fails on a change: it is for a
-//! reviewer to read what a branch moves.
-use super::{test, worlds};
+//! `expect test` row. A matter's own expect test directory
+//! (`tests/expect/<case>/`, SPEC §5.8, expect tests) is a forum of its own, its rows
+//! each world's values it records. The report never fails on a change: it
+//! is for a reviewer to read what a branch moves; `litigate test
+//! tests/expect` fails on one.
+use super::{expect, test, worlds};
 use crate::out::{Failure, Outcome, Report};
 use crate::ws::{self, Session};
 use litigate_sema::pkg::source::{MemoryTree, Source};
@@ -124,9 +127,18 @@ pub fn compare(base: &dyn Source, head: &dyn Source, lib: &[String]) -> Report {
     report
 }
 
-/// The rows of every expect test in `src`, by test.
+/// The rows of every expect test in `src`, by test: a matter's own
+/// directory (`tests/expect/<case>/expect.toml`) is its own forum.
 fn observe(src: &dyn Source, lib: &[String]) -> BTreeMap<Test, BTreeMap<Row, String>> {
     let mut tests = BTreeMap::new();
+    for dir in expect::dirs(src, Path::new(EXPECT_DIR)) {
+        let name = expect::name_of(&dir);
+        let rows = expect::observed(src, &dir, lib)
+            .into_iter()
+            .map(|((world, field), value)| ((name.clone(), world, field), value))
+            .collect();
+        tests.insert((name.clone(), name), rows);
+    }
     for (forum, name, path) in manifests(src) {
         let mut rows = BTreeMap::new();
         let mut put = |case: &str, world: &str, field: &str, value: String| {
@@ -154,7 +166,10 @@ fn manifests(src: &dyn Source) -> Vec<(String, String, PathBuf)> {
     let Ok(forums) = src.entries(Path::new(EXPECT_DIR)) else {
         return out;
     };
-    for dir in forums.into_iter().filter(|d| src.is_dir(d)) {
+    let forums = forums
+        .into_iter()
+        .filter(|d| src.is_dir(d) && !src.is_file(&d.join(expect::FILE)));
+    for dir in forums {
         let forum = name_of(&dir);
         for path in src.entries(&dir).unwrap_or_default() {
             if src.is_file(&path) && path.extension().is_some_and(|e| e == "toml") {
@@ -295,7 +310,6 @@ fn table(changes: &[Change], tests: usize) -> String {
         "{} change(s) across {tests} expect test(s)\n",
         changes.len()
     );
-    let header = ["case", "world", "field", "before", "after"];
     let mut forums: BTreeMap<&str, Vec<[&str; 5]>> = BTreeMap::new();
     for c in changes {
         forums
@@ -304,31 +318,42 @@ fn table(changes: &[Change], tests: usize) -> String {
             .push([&c.case, &c.world, &c.field, &c.before, &c.after]);
     }
     for (forum, rows) in forums {
-        let mut width = header.map(str::len);
-        for row in &rows {
-            for (w, cell) in width.iter_mut().zip(row) {
-                *w = (*w).max(cell.chars().count());
-            }
-        }
-        let _ = writeln!(out, "\n{forum}");
-        let line = |cells: &[&str; 5]| {
-            let mut s = String::new();
-            for (i, (cell, w)) in cells.iter().zip(width).enumerate() {
-                if i == 4 {
-                    s.push_str(cell);
-                } else {
-                    let _ = write!(s, "{cell:<w$} | ");
-                }
-            }
-            s.trim_end().to_owned() + "\n"
-        };
-        out.push_str(&line(&header));
-        out.push_str(&line(
-            &width.map(|w| "-".repeat(w)).each_ref().map(String::as_str),
+        out.push_str(&grid(
+            forum,
+            ["case", "world", "field", "before", "after"],
+            &rows,
         ));
-        for row in &rows {
-            out.push_str(&line(row));
+    }
+    out
+}
+
+/// `rows` under `header` as one aligned table titled `title`, after a
+/// blank line.
+pub(crate) fn grid(title: &str, header: [&str; 5], rows: &[[&str; 5]]) -> String {
+    let mut width = header.map(str::len);
+    for row in rows {
+        for (w, cell) in width.iter_mut().zip(row) {
+            *w = (*w).max(cell.chars().count());
         }
+    }
+    let mut out = format!("\n{title}\n");
+    let line = |cells: &[&str; 5]| {
+        let mut s = String::new();
+        for (i, (cell, w)) in cells.iter().zip(width).enumerate() {
+            if i == 4 {
+                s.push_str(cell);
+            } else {
+                let _ = write!(s, "{cell:<w$} | ");
+            }
+        }
+        s.trim_end().to_owned() + "\n"
+    };
+    out.push_str(&line(&header));
+    out.push_str(&line(
+        &width.map(|w| "-".repeat(w)).each_ref().map(String::as_str),
+    ));
+    for row in rows {
+        out.push_str(&line(row));
     }
     out
 }

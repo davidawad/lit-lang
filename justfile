@@ -280,8 +280,16 @@ nix-check:
 
 # The single CI entry point: fast, deterministic gates only. Coverage,
 # audit, and deny hit the network/build cache so they're last.
-ci: fmt-check lint cov-gate-test mirror-sync-test lit-sync-check tree-sitter-test test emacs-test ts-test doctest cov cov-litigate audit deny
+ci: fmt-check lint cov-gate-test mirror-sync-test lit-sync-check tree-sitter-test test expect emacs-test ts-test doctest cov cov-litigate audit deny
     @echo "ci: all gates passed"
+
+# The expect tests (SPEC §4.7.1): each matter under tests/expect/<case>/
+# replayed in its worlds; a verdict, outcome, deadline or cite that moved
+# from its expect.toml fails, naming case, world, field, expected and
+# actual. Re-record with `litigate test tests/expect --bless` and say why
+# in the commit.
+expect:
+    cargo run -q -p litigate-cli -- --format human test tests/expect
 
 # The per-bead gate (scripts/ci-scoped): global checks (fmt, typos,
 # lit-sync-check, tree-sitter-test when the grammar changed, cargo check

@@ -292,11 +292,13 @@ pub enum Command {
         #[command(flatten)]
         library: Library,
     },
-    /// Run inline `test` blocks, or (`--impact BASE`) the expect tests of
-    /// `tests/expect` at BASE and in the working tree, listing every
-    /// deadline, verdict and expectation that moved.
+    /// Run inline `test` blocks and the expect tests under a path
+    /// (`tests/expect/<case>/`, failing on a value that moved), or
+    /// (`--impact BASE`) the expect tests of `tests/expect` at BASE and in
+    /// the working tree, listing every deadline, verdict and expectation
+    /// that moved.
     Test {
-        /// Package directories or files.
+        /// Package directories or files, or directories of expect tests.
         #[arg(required_unless_present = "impact", conflicts_with = "impact")]
         paths: Vec<String>,
         /// Only tests whose name contains this text.
@@ -306,6 +308,11 @@ pub enum Command {
         /// tree (run from the repository root).
         #[arg(long, value_name = "BASE")]
         impact: Option<String>,
+        /// Record the values each expect test (`tests/expect/<case>/`) finds
+        /// in its `expect.toml`, in place of those it had; say why in the
+        /// commit (SPEC §5.8, expect tests).
+        #[arg(long, conflicts_with = "impact")]
+        bless: bool,
         /// Shared options.
         #[command(flatten)]
         library: Library,

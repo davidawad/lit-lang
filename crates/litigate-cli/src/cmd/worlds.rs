@@ -67,6 +67,11 @@ pub struct Args {
     pub known_at: Option<String>,
     /// Library directories.
     pub lib: Vec<String>,
+    /// Each deadline also names the `cite` of its version and the
+    /// `counted_by` cite of the counting version that counted it (`null`
+    /// when it has none): the expect tests record them (`litigate test
+    /// tests/expect`).
+    pub cites: bool,
 }
 
 /// How a filing fares in one world.
@@ -161,13 +166,44 @@ fn widen(
     Ok(())
 }
 
-/// A scheduled deadline as a world reports it.
-fn deadline(s: &Scheduled) -> Value {
+/// A scheduled deadline as a world reports it; with the packages `all`
+/// it is counted under, also the `cite` of the deadline's version that
+/// governs it and the `counted_by` cite of the counting rule's version
+/// that counted it.
+fn deadline(s: &Scheduled, all: Option<&[&hir::Package]>) -> Value {
     let due = ics::due_of(s).ok().map(Date::to_iso);
-    json!({
+    let mut out = json!({
         "deadline": s.deadline, "trigger": s.trigger, "trigger_date": s.trigger_date,
         "due": due, "status": ics::status_name(s),
-    })
+    });
+    if let Some(all) = all {
+        out["cite"] = json!(deadline_cite(all, s));
+        out["counted_by"] = json!(s.cite);
+    }
+    out
+}
+
+/// The `cite` of the version of `s`'s deadline that counted it (`id@from`;
+/// the first version of that id when none did).
+fn deadline_cite(all: &[&hir::Package], s: &Scheduled) -> Option<String> {
+    let (pack, id) = s.deadline.split_once("::")?;
+    let from = s.version.rsplit_once('@').map(|(_, from)| from);
+    let versions = all
+        .iter()
+        .filter(|p| p.manifest.name == pack)
+        .flat_map(|p| crate::hirx::declarations(p))
+        .filter_map(|d| match d {
+            hir::Declaration::Deadline(d) if d.meta.id == id => Some(d),
+            _ => None,
+        });
+    let mut first = None;
+    for d in versions {
+        if from.is_none_or(|f| d.meta.effective.from == f) {
+            return d.meta.cite.clone();
+        }
+        first.get_or_insert_with(|| d.meta.cite.clone());
+    }
+    first.flatten()
 }
 
 /// One filing: its source index, its key (its id, else `#index`), and
@@ -273,6 +309,7 @@ struct Query<'s> {
     as_of: String,
     known_at: Option<String>,
     at: At<'s>,
+    cites: bool,
 }
 
 impl Query<'_> {
@@ -335,7 +372,9 @@ impl Query<'_> {
             "limits": self.filings.iter().zip(&limits)
                 .filter_map(|(f, l)| Some((f.key.clone(), l.clone()?)))
                 .collect::<serde_json::Map<_, _>>(),
-            "deadlines": m.counted.iter().map(deadline).collect::<Vec<_>>(),
+            "deadlines": m.counted.iter()
+                .map(|s| deadline(s, self.cites.then_some(all.as_slice())))
+                .collect::<Vec<_>>(),
             "diagnostics": diagnostics,
         });
         Run {
@@ -507,6 +546,7 @@ pub fn worlds(src: &dyn Source, args: &Args) -> Outcome {
             as_of: args.as_of.as_deref(),
             known_at: args.known_at.as_deref(),
         },
+        cites: args.cites,
     };
     let alternates = choice::enumerate(
         &session.db,

@@ -12,7 +12,9 @@
 #   scripts/ci-scoped run [BASE]
 #       Every stage, one line each, then `GATE_SECONDS total=N stage=N ...`
 #       (also appended to target/gate-seconds.log) and
-#       `CI_SCOPED: pass|fail scope=...`; the impact stage also prints
+#       `CI_SCOPED: pass|fail scope=...`; the expect stage runs
+#       `litigate test tests/expect` (a value that moved fails), and the
+#       impact stage also prints
 #       `litigate test --impact BASE`. BASE defaults to the merge-base of
 #       HEAD with origin/main.
 #   scripts/ci-scoped nightly
@@ -354,6 +356,8 @@ run() {
   else
     skip ts-test "litigate-wasm, litigate-cli and packages/litigate-ts unchanged"
   fi
+  # The expect tests (lg-wvlf.1; SPEC §4.7.1): a value that moved fails.
+  stage expect cargo run -q -p litigate-cli -- --format human test tests/expect
   # The change impact report (lg-8fdj.3): every expect test under
   # tests/expect run at BASE and here, and each deadline, verdict and
   # expectation that moved, per forum, in the log for the reviewer. It

@@ -23,7 +23,16 @@ fn root_of(text: Option<&str>, diagnostics: &[Diagnostic]) -> Value {
 pub fn lock(dir: Option<&str>, locked: bool, root: bool) -> Outcome {
     let locked = locked || root;
     let dir = dir.unwrap_or(".").to_owned();
-    let targets = ws::discover(std::slice::from_ref(&dir))?;
+    let mut targets = ws::discover(std::slice::from_ref(&dir))?;
+    // An expect test's matter (SPEC §5.8, expect tests) resolves against the package
+    // directories its `expect.toml` names.
+    if Path::new(&dir).join(crate::cmd::expect::FILE).is_file() {
+        let (_, expect) =
+            crate::cmd::expect::read(&litigate_sema::pkg::source::Disk, Path::new(&dir))?;
+        targets
+            .packages
+            .extend(ws::discover(&expect.paths)?.packages);
+    }
     let session = Session::load(&targets, &[])?;
     if !Path::new(&dir).join("Lit.toml").is_file() && !session.cases.is_empty() {
         return matters(&session, &targets.cases, locked, root);

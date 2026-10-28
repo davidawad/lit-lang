@@ -302,7 +302,10 @@ fn matters(root: &Path) -> Result<BTreeMap<String, usize>, Failure> {
         let [forum, name] = relative.iter().collect::<Vec<_>>()[..] else {
             continue;
         };
-        if Path::new(name).extension().is_none_or(|e| e != "toml") {
+        // A matter's own expect test directory (SPEC §5.8, expect tests) names no package.
+        if Path::new(name).extension().is_none_or(|e| e != "toml")
+            || dir.join(forum).join(crate::cmd::expect::FILE).is_file()
+        {
             continue;
         }
         let shown = format!("{EXPECT_DIR}/{}", relative.to_string_lossy());

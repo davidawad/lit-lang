@@ -1,0 +1,12 @@
+# Replay before an overruling (lg-fq2.5; docs/litigate/VALIDATION.md §4):
+# Bowles's appeal at the Sixth Circuit, in the world holding Thompson v.
+# INS (1964) and Bowles v. Russell (2007), which overrules it from June 14,
+# 2007. `litigate worlds bowles.case --world bowles.world --as-of D
+# --known-at D` with D before that date replays the matter as the Sixth
+# Circuit decided it, Thompson in force; from that date Thompson is
+# withdrawn.
+layers = ["change-thompson-v-ins", "change-bowles-v-russell"]
+
+[location]
+family = "circuit-appellate"
+circuit = "ca6"

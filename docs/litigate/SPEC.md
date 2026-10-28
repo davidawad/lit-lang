@@ -2424,6 +2424,64 @@ lists each combination of the uncontested options with its worlds (each
 with `p`, the product of its contested branches' probabilities; 1 with no
 contested question) and each filing's probability of each outcome there.
 
+**Expect tests** (lg-wvlf.1). An expect test pins what a matter gives
+in each world it runs under, so that a change to the engine or to `lit/`
+that moves a value fails CI instead of passing unread. Each is one
+directory `tests/expect/<case>/` holding:
+
+- exactly one `.case` file, the matter (public record only), and the
+  `Lit.lock` beside it (`litigate lock tests/expect/<case>` resolves its
+  `uses` against the `paths` below; `just lit-sync` regenerates it);
+- one `.world` file per circuit or forum it runs under (§5.8);
+- `expect.toml`, the expectations block:
+
+```toml
+# Leading comment lines: what the matter is, its source, why each world.
+paths = ["docs/litigate/validation"]   # package directories, from the repository root
+
+[[run]]                      # one per world file and dates
+world = "ca6.world"          # in the test's directory
+as_of = "2007-06-13"         # optional: replaces the matter's as_of
+known_at = "2007-06-13"      # optional: replaces the matter's known_at
+
+[run.expect.w1]              # per world the file spans: its id, then " CHOICE=OPTION" per choice point
+verdict = "L4002"            # clean | the error codes of the world, space-separated | undetermined
+in_force = ["change-bowles-v-russell", "change-thompson-v-ins"]  # its layers in force
+
+[run.expect.w1.outcome]      # each filing's outcome (timely, late, unjudged, untimed, rejected, undetermined)
+notice = "late"
+
+[[run.expect.w1.deadlines]]  # each deadline the matter counted
+deadline = "change-validation::reopened-appeal"
+trigger = "2004-02-10"       # its trigger's date
+due = "2004-02-24"           # unknown when it cannot be counted
+status = "late"
+cite = "FRAP 4(a)(6)"        # the cite of the deadline's governing version (- when none)
+counted_by = "FRAP (2008 ed.) 26(a)(2)"  # the cite of the counting rule's version that counted it
+```
+
+Unknown keys are rejected. `litigate test PATH` runs every expect test at
+or under `PATH` (a directory holding `expect.toml`, or one above such
+directories); other paths name packages whose inline tests run. Each run
+is `litigate worlds CASE --world FILE --path P... [--as-of] [--known-at]`
+(above), and each world's values are compared field by field with the
+recorded ones: `verdict`, `in_force`, `outcome KEY`, and `deadline ID
+@TRIGGER due|status|cite|counted_by`. A value that differs, a world or
+field on one side only (`-` on the other), or a run that cannot be made
+(the matter, a package or the world file in error: field `error`) fails
+the test: one L5006 per value naming case, world (`FILE[@as_of] ID`),
+field, expected and actual, a table of the same rows in human output, and
+exit 2. `just ci` (recipe `expect`) and `just ci-scoped` (stage `expect`)
+run `litigate test tests/expect`.
+
+Re-recording takes `litigate test tests/expect --bless`: it rewrites each
+`expect.toml` whose values moved with the values found (its leading
+comment lines kept), reports the rows it changed, and exits 0. A blessed
+change is committed with the reason the values moved (the rule amendment,
+precedent or engine fix that moves them) in the commit message. The change
+impact report (`litigate test --impact BASE`) also reads each expect test
+directory, as a forum of its own whose rows are the values above.
+
 ### 5.9 Calibration sets
 
 A `calibration id: "Title" { ... }` declares a named set of values measured
@@ -3210,6 +3268,7 @@ All commands accept `--format json|human` (default `human` on a TTY, else
 | `compat` | `OLD NEW` (two package directories) | `{package, old:{version, semantic}, new:{version, semantic}, class, required, declared, ok, changes:[{class, kind, what, now?}]}` per §4.4; L1012 when the bump is too small |
 | `check` | `PATHS...` (packages, `.lit`, `.case`, `.world`), `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at` | `{profile, files, obligations:[Finding], packages, cases}`, and `worlds:[{path, world, layers}]` when a `.world` was checked (§5.8) |
 | `build` | `PKG_OR_CASE...`, `--profile dev\|strict` (default `dev`), `--as-of`, `--known-at`, `--out DIR`, `--pack-file ID=STEM` (repeatable) | `{outputs:{packs:[path], links:[path], clock:[path], calibration:[path], scenarios:[path], source_maps:[path], litigatables:[path]}, litigatable_hash, litigatables, obligations}` |
+| `test` | `PATHS...` (packages, or directories of expect tests), `--filter TEXT`, `--bless`, `--lib DIR`; or `--impact BASE` | `{passed, failed, tests:[{package, name, cite, span, passed, expectations}], expect:[{case, dir, passed, blessed, mismatches:[{case, world, field, expected, actual}]}]}`: the packages' inline `test` blocks and the expect tests under the paths (§5.8, expect tests), L5006 per failing assertion or moved value; `--bless` records the values found instead. `--impact BASE` runs every expect test of `tests/expect` at git revision BASE and in the working tree: `{tests, changed, changes:[{forum, case, world, field, before, after}], base}`, never failing on a change |
 | `fmt` | `PATHS...`, `--check`, `--stdin` | `{files:[{path, changed}]}`; `--check` reports L9004 instead of writing; `--stdin` prints standard input formatted, with no envelope (§10) |
 | `explain` | `CODE`, or `TARGET` with the op flags below | `{code, explanation, severity:{dev, strict}}`; given a path (`.case`, `.lit`, package directory), the engine's `explain` op on it as `run` returns it |
 | `run` | `TARGET` (`.case`, `.lit`, or package directory), `--op NAME\|JSON` (default `chain`), `--arg K=V`, `--set K=V`, `--no-links`, `--lib DIR` | the engine's response verbatim (`{ok, api_version, op, result, warnings, provenance, elapsed_ms}`); exit 2 when it is `ok: false`. A matter runs under its scenario (`--set` composes params onto it through `extends`); a package runs its pack under the default scenario with the `--set` params, and a links package (§8.4) the packs it composes. A target that fails its check is not run |

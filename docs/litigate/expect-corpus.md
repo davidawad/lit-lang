@@ -725,6 +725,11 @@ RECAP/PACER docket entries were not independently retrieved in this run;
 the expect files identify that provenance limitation rather than treating
 the docket as reviewed.
 
+NEW_BUG: Add a sourced historical FRCP 73(a)/Rule 6(a) deadline layer so
+Foman v. Davis can be encoded as an expect test; the current rule timeline
+begins after its 1960-61 filings. The other six non-encoded appellate cases
+have no dated filing interval this engine can currently assert.
+
 ## 4. Batches
 
 One bead per batch. Each takes about 10 `planned` cells, in matrix order

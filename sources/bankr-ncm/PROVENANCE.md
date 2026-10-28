@@ -10,5 +10,6 @@
 ### `bankr-ncm/ncm-local-rules-2026-01-30-sectioned.txt` — M.D.N.C. Local Bankruptcy Rules, sectioned
 
 - Derived in the pod (lg-u561.15) from `bankr-ncm/ncm-local-rules-2026-01-30.txt` (extract sha256 835b19fc554448a5000db51737a8dbb4735383744181eae6a9112aa41a4c7e5d); nothing fetched. One `## Rule <n>` line is inserted before each rule's own centered `LOCAL RULE <n>` heading line in the body of the rules (`LOCAL RULE 1001-1` through `LOCAL RULE 9072-1`, 51 rules, including 2007.1-1); the table of contents is unmarked, and a numbered subrule heading (`LOCAL RULE 5005-4(1)`) stays inside its rule's section. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Upstream: https://www.ncmb.uscourts.gov/sites/default/files/local_rules/Local%20Rules%201.30.26.pdf, retrieved 2026-10-28, as recorded on the `bankr-ncm/ncm-local-rules-2026-01-30.txt` entry this file is derived from.
 - Edition: as the extract, current as of January 30, 2026.
 - Sectioned sha256 abc83984f261d11af1531eef047133b095d2a2bd4d9683a8bc92ada2da464349 (the `path_sha256` pinned by `lit/bankr-ncm/Lit.toml`).

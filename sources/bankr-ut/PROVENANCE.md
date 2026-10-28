@@ -11,5 +11,6 @@
 ### `bankr-ut/utb-lbr-2025-12-01-sectioned.txt` — Bankr. D. Utah Local Rules of Practice, sectioned
 
 - Derived in the pod (lg-u561.27) from `bankr-ut/utb-lbr-2025-12-01.txt` (extract sha256 070598f0b265a2454b43477b1790314770ab59230b1f0aafd2c39381e2c251e5); nothing fetched. One `## LBR <n>` line is inserted before each rule's own heading line in the rules body (a line opening at the margin, after an optional form feed, with `RULE <nnnn>-<n>` or `RULE <nnnn>.<n>-<n>`), from `RULE 1001-1` through `RULE 9073-1`, 71 rules; the table of contents and the local forms after the rules are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Upstream: https://www.utb.uscourts.gov/sites/utb/files/2025_local_rules-apr26.pdf, retrieved 2026-10-28, as recorded on the `bankr-ut/utb-lbr-2025-12-01.txt` entry this file is derived from.
 - Edition: as the extract.
 - Sectioned sha256 18951a0cfb998a11252586f384d525ffe25bd8052b0c15e139975119253b5848 (the `path_sha256` pinned by `lit/bankr-ut/Lit.toml`).

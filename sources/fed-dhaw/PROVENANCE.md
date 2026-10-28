@@ -19,5 +19,6 @@
 ### `fed-dhaw/dhaw-local-rules-sectioned.txt` — D. Haw. Local Rules (civil and general), sectioned
 
 - Derived in the pod (lg-f3q8.42) from `fed-dhaw/dhaw-local-rules.txt` (extract sha256 47e02f2e80565f033be9dd7f0fd5b024f4fceb9fb625931b53d037b3d8a37681); nothing fetched. One `## LR <n>` line is inserted before each Local Rule's own heading line in the body (`LR1.1.` through `LR8009.1.`, 88 rules; `LR1070.1(a)` through `(e)` share the one marker `## LR 1070.1`); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LR /d'`) restores the extract byte for byte.
+- Upstream: https://www.hid.uscourts.gov/files/order532/2019_08_26_administrative_Order%20Amending%20the%20Local%20Rules%20eff%202019_09_01(1, retrieved 2026-10-27, as recorded on the `fed-dhaw/dhaw-local-rules.txt` entry this file is derived from.
 - Edition: as the extract, the Local Rules as amended by the administrative order of 2019-08-26, effective September 1, 2019.
 - Sectioned sha256 6fb5b0546e0094dae365ecdfdfa4fce3de96fd6b95c7bba9c22a4afa07d684f2 (the `path_sha256` pinned by `lit/hid/Lit.toml`).

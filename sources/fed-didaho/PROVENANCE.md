@@ -20,5 +20,6 @@
 ### `fed-didaho/didaho-local-civil-rules-packet-2026-10-27-sectioned.txt` — D. Idaho Local Civil Rules packet (printed October 27, 2026), sectioned
 
 - Derived in the pod (lg-f3q8.43) from `fed-didaho/didaho-local-civil-rules-packet-2026-10-27.txt` (extract sha256 8558c08009284fdf5967fa722a162e2160428cb2a102deffe631886265ea20b3); nothing fetched. One `## Loc. Civ. R. <n>` line is inserted right before each rule's own body heading line `District Local Rule Civ <n> (Civil)` (each led by a form feed): 58 markers, Loc. Civ. R. 1.1 through Loc. Civ. R. 83.8. The table of contents and the announcement page are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Loc\. Civ\. R\. /d'`) restores the extract byte for byte.
+- Upstream: https://www.id.uscourts.gov/content_fetcher/print_pdf_packet.cfml?Court_Unit=District&Content_Type=Rule&Content_Sub_Type=Civil, retrieved 2026-10-28, as recorded on the `fed-didaho/didaho-local-civil-rules-packet-2026-10-27.txt` entry this file is derived from.
 - Edition: as the extract; the packet's announcement page reads "Revised and adopted August 17, 2026".
 - Sectioned sha256 cd724975f097a38678edcd34535f4600ebf75163e12bb0d4e817c1a81c7194ec (the `path_sha256` pinned by `lit/idd/Lit.toml`).

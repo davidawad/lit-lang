@@ -13,5 +13,6 @@
 ### `mnd/local-rules-sectioned.txt` — Local Rules, D. Minn., sectioned
 
 - Derived in the pod (lg-f3q8.7) from `mnd/local-rules.txt` (extract sha256 0ec9d04835b62cfe8eb3311701377d6a42aaeba62d121912039c7dc88e6eb2e6); nothing fetched. One `## LR <n>` line is inserted before each rule's own heading line in the body (`LR 1.1 SCOPE OF THE RULES` through `LR 83.13 COURT APPOINTEES`, 60 rules, including abrogated and renumbered rules and the headings that follow a form feed); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LR /d'`) restores the extract byte for byte.
+- Upstream: https://www.mnd.uscourts.gov/sites/mnd/files/Local-Rules-Master.pdf, retrieved 2026-10-27, as recorded on the `mnd/local-rules.txt` entry this file is derived from.
 - Edition: as the extract, the complete set dated June 10, 2026.
 - Sectioned sha256 55de9589101301bed6b7ee7835d50d4f628b1dc51f9ce2c3365e845bfa1b50cf (the `path_sha256` pinned by `lit/mnd/Lit.toml` for source `mnd-lr`).

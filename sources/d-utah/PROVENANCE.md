@@ -19,5 +19,6 @@
 ### `d-utah/d-utah-local-civil-rules-2025-sectioned.txt` — D. Utah Local Civil Rules, sectioned
 
 - Derived in the pod (lg-f3q8.70) from `d-utah/d-utah-local-civil-rules-2025.txt` (extract sha256 d7f0564385374e8a15106883fea1bde84e80db45469b1f664e97c034627b5fbd); nothing fetched. One `## DUCivR <n>` line is inserted before each rule's own body heading line (`DUCivR 1-1` through `DUCivR 83-6.7`, 61 rules); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## DUCivR /d'`) restores the extract byte for byte. The extract drops the letters of some top-level subdivisions (e.g. `(a)` of DUCivR 7-1); cites name them as the rules' own cross-references do (`DUCivR 7-1(a)(4)`, `7-1(b)`, `7-1(e)(2)`).
+- Upstream: https://www.utd.uscourts.gov/sites/utd/files/Civil%20Rules%20Final%202025.pdf, retrieved 2026-10-27, as recorded on the `d-utah/d-utah-local-civil-rules-2025.txt` entry this file is derived from.
 - Edition: as the extract, "These rules are effective December 1, 2025" (DUCivR 1-1).
 - Sectioned sha256 aace2552f63987a4f3bdbfd6493f9303e7dbc4a0a292b93db1af985f44bf1ce8 (the `path_sha256` pinned by `lit/utd/Lit.toml`).

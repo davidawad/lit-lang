@@ -10,5 +10,6 @@
 ### `bankr-sc/sc-local-rules-2026-08-17-sectioned.txt` — D.S.C. Local Bankruptcy Rules, sectioned
 
 - Derived in the pod (lg-u561.15) from `bankr-sc/sc-local-rules-2026-08-17.txt` (extract sha256 2462a317bc86710f1ad141b3b1339bc36bfc1934be3e696b4395d7dbf97a45a8); nothing fetched. One `## Rule <n>` line is inserted before each rule's own `LOCAL RULE <n>: TITLE` heading line in the body of the rules (`LOCAL RULE 1001-1` through `LOCAL RULE 9075-1`, 60 rules; a heading that opens a page keeps its form feed); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Upstream: https://www.scb.uscourts.gov/pdf/Local_Rules/2026LocalRulesAugAmendments.pdf, retrieved 2026-10-28, as recorded on the `bankr-sc/sc-local-rules-2026-08-17.txt` entry this file is derived from.
 - Edition: as the extract, effective as of August 17, 2026.
 - Sectioned sha256 c21b3398d20b38b3fa0de301732d46bfd937918e567f83644195aa2a6106f493 (the `path_sha256` pinned by `lit/bankr-sc/Lit.toml`).

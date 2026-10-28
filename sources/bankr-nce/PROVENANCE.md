@@ -18,5 +18,6 @@
 ### `bankr-nce/nce-local-rules-2026-10-15-sectioned.txt` — E.D.N.C. Local Rules, sectioned
 
 - Derived in the pod (lg-u561.15) from `bankr-nce/nce-local-rules-2026-10-15.txt` (extract sha256 8fa48f0a1ec18a835158fdbe7ea1398b8ea84688079629f80288af4ffffa7b7e); nothing fetched. One `## Rule <n>` line is inserted before each rule's own centered heading line in the body of the rules (`Rule 1001-1` through `Rule 9074-1`, 77 rules); the table of contents is unmarked, and a numbered subrule heading (`Rule 5005-4(3)`, `Rule 9019-2(2)`) stays inside its rule's section. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Upstream: https://www.nceb.uscourts.gov/sites/nceb/files/NCEB%20Local%20Rules%20-%20Most%20Recent.pdf, retrieved 2026-10-28, as recorded on the `bankr-nce/nce-local-rules-2026-10-15.txt` entry this file is derived from.
 - Edition: as the extract, effective October 15, 2026.
 - Sectioned sha256 e63b0c4082551ea265e76a968c4f461f5f9988affea162220be0a0c716d7519d (the `path_sha256` pinned by `lit/bankr-nce/Lit.toml`).

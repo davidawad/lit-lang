@@ -27,11 +27,13 @@
 ### `ga-state-civil/gauscr-uniform-superior-court-rules-2026-04-09-sectioned.txt` — Uniform Superior Court Rules of Georgia, sectioned
 
 - Derived in the pod (lg-f3q8.15) from `ga-state-civil/gauscr-uniform-superior-court-rules-2026-04-09.txt` (extract sha256 84ba00bf9765d69c960f5c9e1f63fadcf4174371ad141e8b66e5fe43e5bf3818); nothing fetched. One `## Rule <n>` line is inserted before each rule's and sub-rule's own heading line in the body (`Rule 1. PREAMBLE` through `Rule 49. EMERGENCY DISPOSSESSORY`, 254 headings, the same set the table of contents lists). Every other line is the extract unchanged, so deleting the `## Rule` lines gives back the extract byte for byte.
+- Upstream: https://www.gasupreme.us/wp-content/uploads/2026/04/UNIFORM-SUPERIOR-COURT-RULES-2026_04_09.pdf, retrieved 2026-10-28, as recorded on the `ga-state-civil/gauscr-uniform-superior-court-rules-2026-04-09.txt` entry this file is derived from.
 - Edition: as the extract, the file dated April 9, 2026. The order of October 5, 2026 (`gauscr-order-2026-10-05.txt`) is not merged into it.
 - Sectioned sha256 45dfab2fe5405c78d8116551ace05b3af5702fef7bb2149cf19d75b20a9c7510 (the `path_sha256` pinned by `lit/ga-state-civil/Lit.toml`).
 
 ### `ga-state-civil/ocga-title-9-ch-11-sectioned.txt` — Georgia Civil Practice Act, sectioned
 
 - Derived in the pod (lg-f3q8.15) from `ga-state-civil/ocga-title-9-ch-11.txt` (extract sha256 9c1b147bc6a55908a124cc8ea820b4deae95c5db047c683c95c986fdfc767248); nothing fetched. One `## § <n>` line is inserted before each section's `===== O.C.G.A. § <n> =====` record line (§ 9-11-1 through § 9-11-133, 116 sections; `9-11-56, Part 1 of 2` is marked `## § 9-11-56`; the 5 structural article and appendix records are unmarked). Every other line is the extract unchanged, so deleting the `## §` lines gives back the extract byte for byte.
+- Upstream: https://advance.lexis.com/, retrieved 2026-10-28, as recorded on the `ga-state-civil/ocga-title-9-ch-11.txt` entry this file is derived from.
 - Edition: as the extract, "Current through the 2026 Special Session of the General Assembly."
 - Sectioned sha256 ae97d1b712c4d125c05172801e36d088c8e4577b9305098c2b83443b692c1531 (the `path_sha256` pinned by `lit/ga-state-civil/Lit.toml`).

@@ -10,5 +10,6 @@
 ### `nc-superior-civil/nc-rules-of-civil-procedure-ch1a-sectioned.txt` — N.C. Rules of Civil Procedure (Chapter 1A), sectioned
 
 - Derived in the pod (lg-f3q8.29) from `nc-superior-civil/nc-rules-of-civil-procedure-ch1a.txt` (extract sha256 5fa8a8a02f8f628a0fc6b03d3acd9e52c24762134c22ca779e1a430219ba0267); nothing fetched. One `## Rule <n>` line is inserted right before each rule's own heading line `Rule <n>. <title>` (some after a form feed): 71 markers, Rule 1 through Rule 84. In-body cross-references are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Upstream: https://www.ncleg.gov/EnactedLegislation/Statutes/PDF/ByChapter/Chapter_1A.pdf, retrieved 2026-10-27, as recorded on the `nc-superior-civil/nc-rules-of-civil-procedure-ch1a.txt` entry this file is derived from.
 - Edition: as the extract, Chapter 1A with changes through S.L. 2026-30 (PDF modified 2026-04-16).
 - Sectioned sha256 aef8620622f572b94dc6c132558bab3468f2f5fbd7012e958db8fc9349414452 (the `path_sha256` pinned by `lit/nc-superior-civil/Lit.toml`).

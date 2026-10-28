@@ -10,5 +10,6 @@
 ### `nv-district/nrcp-sectioned.txt` — Nevada Rules of Civil Procedure (amendments through October 31, 2025), sectioned
 
 - Derived in the pod (lg-f3q8.45) from `nv-district/nrcp.txt` (extract sha256 603927b1c1d9a6a9e24e2a1531569ce8fb44bc7cf1e0684de7f9e8c1b9a3bf11); nothing fetched. One `## NRCP <n>` line is inserted right before each rule's own heading line, `Rule<U+2002><n>.<U+2002><U+2002><title>` (the en spaces set the headings apart from in-text references to rules): 102 markers, NRCP 1 through NRCP 86. Rule text was not edited: deleting the marker lines (`sed '/^## NRCP /d'`) restores the extract byte for byte.
+- Upstream: https://www.leg.state.nv.us/Division/Legal/LawLibrary/CourtRules/NRCP.html, retrieved 2026-10-27, as recorded on the `nv-district/nrcp.txt` entry this file is derived from.
 - Edition: as the extract; "Effective January 1, 1953 and Including Amendments Through October 31, 2025".
 - Sectioned sha256 7748a9182674e4ec40e7136fa35430334397972a5331554a6114ec25e3cc303b (the `path_sha256` pinned by `lit/nv-district/Lit.toml`).

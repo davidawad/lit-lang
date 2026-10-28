@@ -14,5 +14,6 @@
 ### `ilcd/ilcd-local-rules-sectioned.txt` — C.D. Illinois Local Rules (civil rules), sectioned
 
 - Derived in the pod (lg-f3q8.54) from `ilcd/ilcd-local-rules.txt` (extract sha256 0960fbf4a9780f19ea31e898d70fe20888c3a337eb18fc376f0b995eadb145a9); nothing fetched. One `## Rule <n>` line is inserted before each civil rule's own heading line, between the table of contents and the `CRIMINAL RULES` heading (`Rule 1.1` through `Rule 83.16`, 57 rules); the criminal rules, whose numbers repeat civil ones, are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Upstream: https://www.ilcd.uscourts.gov/sites/ilcd/files/September%202026%20Version%20.pdf, retrieved 2026-10-27, as recorded on the `ilcd/ilcd-local-rules.txt` entry this file is derived from.
 - Edition: as the extract, effective September 3, 2026.
 - Sectioned sha256 2bdc7aa2fdba1320384af050e6ad4d271a1f466233eaa62537a912b68cfb7b26 (the `path_sha256` pinned by `lit/ilcd/Lit.toml`).

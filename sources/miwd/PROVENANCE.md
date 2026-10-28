@@ -25,5 +25,6 @@
 ### `miwd/miwd-local-civil-rules-sectioned.txt` — W.D. Mich. Local Civil Rules, sectioned
 
 - Derived in the pod (lg-f3q8.60) from `miwd/miwd-local-rules.txt` (extract sha256 e109f9bd7511adf428460db58bd09c120e5a68558bc2fdde4f604169ed3796f5); nothing fetched. One `## LCivR <n>` line is inserted right before each Local Civil Rule's numbered subrule line (`<n>  <title>`, e.g. `7.2   Dispositive motions`): 65 markers, LCivR 1.1 through LCivR 83.2. The table of contents, the Local General Rules and the Local Criminal Rules are unmarked (LCivR 83.2's section runs to the end of the file). Rule text was not edited: deleting the marker lines (`sed '/^## LCivR /d'`) restores the extract byte for byte.
+- Upstream: https://www.miwd.uscourts.gov/sites/miwd/files/MIWD_Local_Rules.pdf, retrieved 2026-10-27, as recorded on the `miwd/miwd-local-rules.txt` entry this file is derived from.
 - Edition: as the extract, the Local Rules as amended by Administrative Order 26-RL-067 (August 13, 2026), in force from October 12, 2026.
 - Sectioned sha256 b009aa700a37360e9ed6e024bc3e273546ea34423dd5c7cbe3fd6ea745f5ff2a (the `path_sha256` pinned by `lit/miwd/Lit.toml`).

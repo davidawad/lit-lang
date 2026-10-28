@@ -18,5 +18,6 @@
 ### `bankr-wy/wyb-lbr-2012-07-01-sectioned.txt` — Bankr. D. Wyo. Local Bankruptcy Rules, sectioned
 
 - Derived in the pod (lg-u561.27) from `bankr-wy/wyb-lbr-2012-07-01.txt` (extract sha256 7cfc43b7301b383dae0af2bffef3108072163de7b1d72f5084747918d288b638); nothing fetched. One `## LBR <n>` line is inserted before each rule's own centered heading line in the body (`Rule <nnnn>-<n>` alone on its line, after an optional form feed), from `Rule 1001-1` through `Rule 9074-2`, 64 rules; the table of contents and the Local Bankruptcy Forms after the rules are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte. General Order 14-02 is not merged into it; `lit/bankr-wy` binds it as its own source.
+- Upstream: https://www.wyb.uscourts.gov/sites/wyb/files/local-rules.pdf, retrieved 2026-10-28, as recorded on the `bankr-wy/wyb-lbr-2012-07-01.txt` entry this file is derived from.
 - Edition: as the extract.
 - Sectioned sha256 06ef861e253b0368bed366b7d7ec89366f967a91b2c796ec6c1c5f9a4c393dd8 (the `path_sha256` pinned by `lit/bankr-wy/Lit.toml`).

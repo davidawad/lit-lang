@@ -14,6 +14,7 @@
 ### `wv-appellate-civil/wv-rules-of-appellate-procedure-sectioned.txt` — West Virginia Rules of Appellate Procedure (base text), sectioned
 
 - Derived in the pod (lg-f3q8.32) from `wv-appellate-civil/wv-rules-of-appellate-procedure.txt` (extract sha256 185e5b05f866e0db8d1d41c81dd9a45a0b161d173ae9a6afaee5d55bf7feccf4); nothing fetched. Each of the 45 rule heading lines `## Rule <n>. <Title>` is split into a bare `## Rule <n>` marker followed by the unprefixed `Rule <n>. <Title>` line, so a cite's section number finds its heading. Rule text was not edited: `perl -0pe 's/^## Rule [0-9]+[A-Z]?\n(Rule )/## $1/mg'` restores the extract byte for byte.
+- Upstream: https://www.courtswv.gov/legal-community/court-rules/rules-appellate-procedure, retrieved 2026-10-28, as recorded on the `wv-appellate-civil/wv-rules-of-appellate-procedure.txt` entry this file is derived from.
 - Edition: as the extract. PM ruling 2026-10-28 (lg-f3q8.32): the page is the court's live text and is used as the current base despite the missing edition line, dated by Rule 1(e) (the 2022 Intermediate Court restructuring); the Rule 5 order of 2026-08-21 is applied over it as a separate dated layer.
 - Sectioned sha256 f84e006703f6dd8d74ec52c3684c0c4d845f6e2a452ab86a3251cbd1a0d44df9 (the `path_sha256` pinned by `lit/wv-appellate-civil/Lit.toml`).
 

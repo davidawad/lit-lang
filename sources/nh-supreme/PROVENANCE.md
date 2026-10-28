@@ -18,5 +18,6 @@
 ### `nh-supreme/supreme-court-rules-sectioned.txt` — NH Rules of the Supreme Court, sectioned
 
 - Derived in the pod (lg-f3q8.24) from `nh-supreme/supreme-court-rules.txt` (extract sha256 0a75ee011787ee0534bd65bd50a4bc75e501497194ba12ba8da456823a321f0d); nothing fetched. One `## Rule <n>` line is inserted right after each `## NH Supreme Court Rules Rule <n>. <title>` (or `RULE <n>.`) heading line, first occurrence only (88 rules, Rule 1 through Rule 61 with their lettered rules such as 1-A, 7-A, 12-D, 16-A, 21A and 37A). The Code of Judicial Conduct's decimal rules (`Rule 1.1` and the like) are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Upstream: https://www.courts.nh.gov/rules-supreme-court-state-new-hampshire, retrieved 2026-10-27, as recorded on the `nh-supreme/supreme-court-rules.txt` entry this file is derived from.
 - Edition: as the extract, as published on the court's rules page on 2026-10-27.
 - Sectioned sha256 e948076e1ebf4faea0ae9b3ac30a2fffad45f759c3617388c49a9890699c54a7 (the `path_sha256` pinned by `lit/nh-superior-civil/Lit.toml` and `lit/nh-supreme/Lit.toml` for source `nh-sup-r`).

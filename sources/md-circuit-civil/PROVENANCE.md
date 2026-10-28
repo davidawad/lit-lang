@@ -169,5 +169,6 @@
 ### `md-circuit-civil/md-circuit-civil-rules-sectioned.txt` — Maryland Rules Title 2, sectioned
 
 - Derived in the pod (lg-f3q8.28) from `md-circuit-civil/md-circuit-civil-rules-westlaw.txt` (extract sha256 47bf8fafde6006657db4f9d40cc31b2c2d69c33c1056c2981bc09389e8e73b1e); nothing fetched. After each page heading of a rule (`## Rule 2–322. Preliminary Motions`) one `## Rule <n>` line with an ASCII hyphen (`## Rule 2-322`) is inserted, so the rule's text sits under the marker; 143 markers (every rule page). Pages without a rule number (the Chapter 400 and Form Interrogatories notes, the Forms, the Appendix) are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule [0-9]-[0-9.]*$/d'`) restores the extract byte for byte.
+- Upstream: https://govt.westlaw.com/mdc/Index, retrieved 2026-10-28, as recorded on the `md-circuit-civil/md-circuit-civil-rules-westlaw.txt` entry this file is derived from.
 - Edition: as the extract; each page's own currentness line reads "Current with amendments received through September 1, 2026". CURRENCY UNCONFIRMED stands (no official edition date).
 - Sectioned sha256 dd23514114f46180658d6619ba45805da6da97afadb603b0b6f12278e05ba80b (the `path_sha256` pinned by `lit/md-circuit-civil/Lit.toml`).

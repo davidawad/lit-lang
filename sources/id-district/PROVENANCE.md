@@ -10,5 +10,6 @@
 ### `id-district/ircp-sectioned.txt` — Idaho Rules of Civil Procedure (page dated 2026-07-01), sectioned
 
 - Derived in the pod (lg-f3q8.43) from `id-district/ircp.txt` (extract sha256 3e2fe9d88270fd60b6c5cdfd1d1a04b5993afffb9a2da21cddfcedbc16341110); nothing fetched. One bare `## I.R.C.P. <n>` line is inserted right after each rule's titled heading line `## I.R.C.P. <n>. <title>`: 113 markers, I.R.C.P. 1 through the last rule of the extract. Rule text was not edited: deleting the marker lines (`sed -E '/^## I\.R\.C\.P\. [0-9.]+$/d'`) restores the extract byte for byte.
+- Upstream: https://isc.idaho.gov/rules-procedure/ircp, retrieved 2026-10-27, as recorded on the `id-district/ircp.txt` entry this file is derived from.
 - Edition: as the extract, page dated 2026-07-01.
 - Sectioned sha256 7a82de244c1ee2726e46e9276dc0c82dd080f5c934f79b25f016ee8d170eb762 (the `path_sha256` pinned by `lit/id-district/Lit.toml`).

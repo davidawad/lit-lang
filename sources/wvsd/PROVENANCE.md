@@ -12,6 +12,7 @@
 ### `wvsd/wvsd-local-rules-sectioned.txt` — S.D. W. Va. Local Rules of Procedure (amended through June 8, 2017), civil rules sectioned
 
 - Derived in the pod (lg-f3q8.32) from `wvsd/wvsd-local-rules.txt` (extract sha256 4028c62dee18a52a4ed478e96ccb0a3c5cef7602b3ca1b777ce19bfd20498a22); nothing fetched. One `## LR Civ P <n>` line is inserted right before each Local Rule of Civil Procedure's own body heading line `LR Civ P <n>. <title>` (some after a form feed; LR Civ P 26.5 has no period after its number): 86 markers, LR Civ P 3.1 through LR Civ P 83.15. The table of contents and the Local Rules of Criminal Procedure are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LR Civ P /d'`) restores the extract byte for byte.
+- Upstream: https://www.wvsd.uscourts.gov/sites/wvsd/files/LocalRulesofProcedure-June2017.pdf, retrieved 2026-10-27, as recorded on the `wvsd/wvsd-local-rules.txt` entry this file is derived from.
 - Edition: as the extract, effective December 1, 2009, amended through June 8, 2017 (cover list).
 - Sectioned sha256 7ec71571c36002fb45da41a13630daaeac73b03da54c33da50bc386bf8f9c535 (the `path_sha256` pinned by `lit/wvsd/Lit.toml`).
 

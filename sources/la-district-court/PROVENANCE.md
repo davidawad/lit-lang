@@ -83,5 +83,6 @@
 ### `la-district-court/la-district-court-rules-title-ii-sectioned.txt` — Louisiana District Court Rules, Title II, sectioned
 
 - Derived in the pod (lg-f3q8.18) from `la-district-court/la-district-court-rules-title-ii.txt` (extract sha256 983800770573ad23b6d0928311be213fb8c441efd64143440a8a4ef05fc6a9dd); nothing fetched. In the body (after the table of contents), one `## Rule <n>` line is inserted before each rule's own heading line (`Rule 9.0 Daily Order of Business` through `Rule 13.4 Parole Revocation Appeals [Renumbered]`, 32 rules). Every other line is the extract unchanged, so deleting the `## Rule` lines gives back the extract byte for byte.
+- Upstream: https://www.lasc.org/rules/dist.ct/Title_II.pdf, retrieved 2026-10-27, as recorded on the `la-district-court/la-district-court-rules-title-ii.txt` entry this file is derived from.
 - Edition: as the extract, "Includes Amendments through March 31, 2022".
 - Sectioned sha256 4e51890974b6ca32c45ff59142ccb4f8a353e151e4ef3a61bb2db4af453c13f2 (the `path_sha256` pinned by `lit/la-district-court/Lit.toml`).

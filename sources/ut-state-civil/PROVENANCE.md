@@ -11,5 +11,6 @@
 ### `ut-state-civil/utah-urcp-all-rules-sectioned.txt` — URCP, sectioned
 
 - Derived in the pod (lg-f3q8.70) from `ut-state-civil/utah-urcp-all-rules.txt` (sha256 42ad1e940bc69195dc060b0d20227a17bd1e0604cc9b9d651cf38eddcb7383af); nothing fetched. One `## URCP <n>` line is inserted before each rule's own `Rule <n>. <title>` line (the one followed by its "Rule printed on" line), 113 rules. The served page repeats Rule 26 verbatim; only its first copy is marked, so the second stays inside the `URCP 26` section. Rule text was not edited: deleting the marker lines (`sed '/^## URCP /d'`) restores the extract byte for byte.
+- Upstream: https://www.utcourts.gov/rules, retrieved 2026-10-27, as recorded on the `ut-state-civil/utah-urcp-all-rules.txt` entry this file is derived from.
 - Edition: as the extract, each rule as in force on October 26, 2026 with its own "Effective:" line.
 - Sectioned sha256 7672ae2cf0b3f9f360c4d6df1c80bcf8a5566437102fea4d4700352b75144dc9 (the `path_sha256` pinned by `lit/ut-state-civil/Lit.toml`).

@@ -20,5 +20,6 @@
 ### `laed/laed-local-civil-rules-sectioned.txt` — E.D. La. Local Civil Rules, sectioned
 
 - Derived in the pod (lg-f3q8.18) from `laed/laed-local-civil-rules.txt` (extract sha256 01ab2f682c80118c6cded012ee2a3ef043c57fc0cb77a866329783b9958938cf); nothing fetched. In the body (after the table of contents), one `## LR <n>` line is inserted before each local civil rule's own heading line (`LR3.1 Collateral Proceedings and Refiled Cases` through `LR 83.5.1 Cases Transferred to a District Court Outside of the Fifth Circuit`, 124 rules; the heading line of each rule's last occurrence, after the rule group's list of its rules). The Local Admiralty Rules (LAR) are not sectioned. Every other line is the extract unchanged, so deleting the `## LR` lines gives back the extract byte for byte.
+- Upstream: https://www.laed.uscourts.gov/sites/default/files/local_rules/2022%20CIVIL%20RULES%20LAED%20w%20Amendment%202%204%2025.pdf, retrieved 2026-10-27, as recorded on the `laed/laed-local-civil-rules.txt` entry this file is derived from.
 - Edition: as the extract, "EFFECTIVE March 1, 2022 (Revised February 4, 2025)".
 - Sectioned sha256 c2bf4474907de81650a8beebc324cf8ff031d80abdbf1243fc2580e09c34019a (the `path_sha256` pinned by `lit/laed/Lit.toml`).

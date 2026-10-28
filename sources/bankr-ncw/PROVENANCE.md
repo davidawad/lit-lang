@@ -10,5 +10,6 @@
 ### `bankr-ncw/ncw-local-rules-2021-09-01-sectioned.txt` — W.D.N.C. Local Rules, sectioned
 
 - Derived in the pod (lg-u561.15) from `bankr-ncw/ncw-local-rules-2021-09-01.txt` (extract sha256 df45ffb8ebddf7a9dee7ec50b6634ec3a5408a536dfff8f7a5d38c69fe785252); nothing fetched. One `## Rule <n>` line is inserted before each rule's own centered `Local Rule <n>` heading line in the body of the rules (`Local Rule 1002-2` through `Local Rule 9037-1`, 68 rules, including 3002.1-1; extract lines 140-3769); the table of contents and Appendices A-D are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Upstream: https://www.ncwb.uscourts.gov/sites/ncwb/files/WDNC%20Bankruptcy%20Local%20Rules%20Sept%202021.pdf, retrieved 2026-10-28, as recorded on the `bankr-ncw/ncw-local-rules-2021-09-01.txt` entry this file is derived from.
 - Edition: as the extract, revised effective September 1, 2021.
 - Sectioned sha256 e04946fbfc66347989f5f03a0bfb0289dc2a68b2628678ea9257a3445079ad58 (the `path_sha256` pinned by `lit/bankr-ncw/Lit.toml`).

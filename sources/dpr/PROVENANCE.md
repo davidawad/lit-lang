@@ -20,5 +20,6 @@
 ### `dpr/dpr-local-rules-2024-10-16-sectioned.txt` — D.P.R. Local Rules, civil rules sectioned
 
 - Derived in the pod (lg-f3q8.25) from `dpr/dpr-local-rules-2024-10-16.txt` (extract sha256 a32ae1fdfaf10bba8cbbb2f4e9645122b197805ea8cf019030b6bfb27be0ae1a); nothing fetched. One `## Rule <n>` line is inserted right after each Local Civil Rule's own body heading line `RULE <n>`: 46 markers, Rule 1 through Rule 83M. The table of contents, the Admiralty Rules and the Criminal Rules are unmarked. Rule text was not edited: deleting the marker lines (`## Rule <n>` plus its newline) restores the extract byte for byte.
+- Upstream: https://www.prd.uscourts.gov/sites/default/files/local_rules/Local%20Rules%2010-16-2024-amended-rule-83A.pdf, retrieved 2026-10-27, as recorded on the `dpr/dpr-local-rules-2024-10-16.txt` entry this file is derived from.
 - Edition: as the extract, the Local Rules with amendments through October 16, 2024.
 - Sectioned sha256 de899cedeabd0acaf69fd75bce7eecdccba923c8a175c0608bddab6df1b72a1a (the `path_sha256` pinned by `lit/prd/Lit.toml`).

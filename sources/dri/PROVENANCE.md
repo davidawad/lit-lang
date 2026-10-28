@@ -12,5 +12,6 @@
 ### `dri/dri-local-rules-civil-sectioned.txt` — D.R.I. Local Rules, civil rules sectioned
 
 - Derived in the pod (lg-f3q8.26) from `dri/dri-local-rules.txt` (extract sha256 f76a78f126cd994184efad9f82002456c6f464acb2e53885909ad861065dfa54); nothing fetched. One `## LR Cv <n>` line is inserted right after each Local Rule applicable to civil proceedings' own body heading line (`LR Cv <n> <TITLE>`): 34 markers, LR Cv 5 through LR Cv 81. The table of contents and the general, admiralty and criminal rules are unmarked (LR Cv 81's section runs to the end of the file). Rule text was not edited: deleting the marker lines (`sed '/^## LR Cv /d'`) restores the extract byte for byte.
+- Upstream: https://www.rid.uscourts.gov/sites/rid/files/documents/Approved%20Dec%202024%20Rules.pdf, retrieved 2026-10-27, as recorded on the `dri/dri-local-rules.txt` entry this file is derived from.
 - Edition: as the extract, "Effective January 1, 2006, As Amended through April 1, 2024"; the court's local-rules page lists that edition ("Local Rules for the District of Rhode Island - 4/1/2024") as current.
 - Sectioned sha256 d7336fb266673f689ca05837e781a88deb245825225c4e4e4f74b79be56d7abe (the `path_sha256` pinned by `lit/rid/Lit.toml`).

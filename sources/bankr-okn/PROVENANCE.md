@@ -11,5 +11,6 @@
 ### `bankr-okn/oknb-lbr-2025-03-21-sectioned.txt` — Bankr. N.D. Okla. Local Bankruptcy Rules, sectioned
 
 - Derived in the pod (lg-u561.27) from `bankr-okn/oknb-lbr-2025-03-21.txt` (extract sha256 4840d01f64572224b2972030081963708afdc8b369fac753a811b228f2344142); nothing fetched. One `## LBR <n>` line is inserted before each rule's own heading line in the rules body (a line opening at the margin, after an optional form feed, with `RULE <nnnn>-<n>` or `RULE <nnnn>.<n>-<n>`), from `RULE 1001-1.` through `RULE 9081-1.`, 84 rules; the table of contents, Appendix A (the CM/ECF Administrative Guide) and the appended general orders with their exhibits, which repeat rule headings, are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Upstream: https://www.oknb.uscourts.gov/sites/oknb/files/Local%20Rules.pdf, retrieved 2026-10-28, as recorded on the `bankr-okn/oknb-lbr-2025-03-21.txt` entry this file is derived from.
 - Edition: as the extract.
 - Sectioned sha256 ff4bf1da85d7603baa7c28912e69cbae440c5e696b92c48db2ca60ff176b0c43 (the `path_sha256` pinned by `lit/bankr-okn/Lit.toml`).

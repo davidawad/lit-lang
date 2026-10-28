@@ -27,5 +27,6 @@
 ### `d-neb/ne-civil-rules-sectioned.txt` — D. Neb. Civil Rules (NECivR), sectioned
 
 - Derived in the pod (lg-f3q8.9) from `d-neb/ne-civil-rules.txt` (extract sha256 903a924152c81694a3e69e2eb8aa7e4df2669c0b90bea71ecf73359d926c2bef); nothing fetched. One `## NECivR <n>` line is inserted before each rule's own heading line in the body after the table of contents (`NECivR 1.1` through `NECivR 85.1`, 62 rules, `NECivR 65.1.1` included). Rule text was not edited: deleting the marker lines (`sed '/^## NECivR /d'`) restores the extract byte for byte.
+- Upstream: https://www.ned.uscourts.gov/sites/default/files/documents/NECivR.2025.pdf, retrieved 2026-10-27, as recorded on the `d-neb/ne-civil-rules.txt` entry this file is derived from.
 - Edition: as the extract, effective December 1, 2025.
 - Sectioned sha256 cb0d2937e9bb6fa2e7fd65709557d84da6a61dfac80246b104b060e1895fb2cd (the `path_sha256` pinned by `lit/ned/Lit.toml`).

@@ -19,5 +19,6 @@
 ### `msnd/local-uniform-civil-rules-sectioned.txt` — N.D. and S.D. Miss. Local Uniform Civil Rules, sectioned
 
 - Derived in the pod (lg-f3q8.19) from `msnd/local-uniform-civil-rules.txt` (extract sha256 953f3a272cbcab3917a2e99beb95f13b8df0eb49dd281f265cd22c6a1a8b6087); nothing fetched. In the body (after the table of contents), one `## L.U. Civ. R. <n>` line is inserted before each rule's own heading line (`Rule 1.` through `Rule 83.8.`, 33 rules), one `## L.U. Adm. R. <letter>` line before each local admiralty rule heading (`Rule A.` through `Rule G.`), and one `## Official Forms` line before the forms. Every other line is the extract unchanged, so deleting the `## ` lines gives back the extract byte for byte.
+- Upstream: https://www.msnd.uscourts.gov/sites/msnd/files/forms/2024%20Local%20Civil%20Rules%20MSSD%20MSND_12.1.2024.pdf, retrieved 2026-10-27, as recorded on the `msnd/local-uniform-civil-rules.txt` entry this file is derived from.
 - Edition: as the extract, Local Uniform Civil Rules "CURRENT AS OF DECEMBER 1, 2024" (cover). The same extract is vendored as `mssd/mssd-uniform-local-civil-rules-2024-12-01.txt` (identical extract sha256); lit/msnd and lit/mssd both pin this sectioned copy.
 - Sectioned sha256 12c17e9935fa4522baf28e69db7c9878420bd5fa902cd4ba7a526b889a88f330 (the `path_sha256` pinned by `lit/msnd/Lit.toml`).

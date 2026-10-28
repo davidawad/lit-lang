@@ -19,5 +19,6 @@
 ### `vid/local-rules-civ-2026-02-01-sectioned.txt` — D.V.I. Local Rules of Civil Procedure, sectioned
 
 - Derived in the pod (lg-f3q8.76) from `vid/local-rules-civ-2026-02-01.txt` (extract sha256 e5369189343fab8d7e3538fd223fdbf2d9ae49fc4f71d07588c6667fec3e262e); nothing fetched. In the body (after each part's table of contents), one marker line `## LRCi <n>` is inserted before each rule's own heading line `Rule <n>. <title>` (LRCi 1.1 through LRCi 83.2, 54 rules). Every other line is the extract unchanged, so deleting the `## LRCi` lines (`sed '/^## LRCi /d'`) gives back the extract byte for byte.
+- Upstream: https://www.vid.uscourts.gov/sites/vid/files/local_rules/260130_Local%20Rules%20Civil%20Procedure_effective%202.1.26[ECF%2010-1].pdf, retrieved 2026-10-27, as recorded on the `vid/local-rules-civ-2026-02-01.txt` entry this file is derived from.
 - Edition: as the extract, "Effective February 1, 2026".
 - Sectioned sha256 f681ae577068a35019bb2203e10d01e771feaa11789e66b8ad2f6019e7eb4843 (the `path_sha256` pinned by `lit/vid/Lit.toml`).

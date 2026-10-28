@@ -26,5 +26,6 @@
 ### `ga-state-appellate/gacoa-rules-sectioned.txt` — Court of Appeals of Georgia Rules, sectioned
 
 - Derived in the pod (lg-f3q8.15) from `ga-state-appellate/gacoa-rules.txt` (extract sha256 530587a700a4ed8bc95b7133c8a308547177beda99c498833f4306608eaf57e6); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (`Rule 1. Clerk's Office Hours and Location.` through `Rule 46. Electronic Filing of Documents.`, 49 headings with Rules 33.1 to 33.3). Every other line is the extract unchanged, so deleting the `## Rule` lines gives back the extract byte for byte.
+- Upstream: https://www.gaappeals.gov/wp-content/uploads/2026/03/COA-Rules-Complete-Eff-26-March-26.pdf, retrieved 2026-10-27, as recorded on the `ga-state-appellate/gacoa-rules.txt` entry this file is derived from.
 - Edition: as the extract, rules "Effective March 26, 2026".
 - Sectioned sha256 1ba9ab5e9e3965f192d7beb21c38054173c2a31255ec4229a21213778f4895a8 (the `path_sha256` pinned by `lit/gactapp/Lit.toml`).

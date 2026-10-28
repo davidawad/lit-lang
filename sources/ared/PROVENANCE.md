@@ -13,5 +13,6 @@
 ### `ared/ared-arwd-local-rules-sectioned.txt` — Local Rules of the E.D. and W.D. Arkansas, sectioned
 
 - Derived in the pod (lg-f3q8.3) from `ared/ared-arwd-local-rules.txt` (extract sha256 0bc073ca4ceb05726d03a65d05a6294c20199591be8b23dc465ff14d724c8950); nothing fetched. One `## L.R. <n>` line is inserted before the first heading line `LOCAL RULE <n>` of each rule (`L.R. 4.1` through `L.R. 83.8`, 37 rules; the second and third `LOCAL RULE 83.6` headings, the rule's appendix forms, are unmarked). Rule text was not edited: deleting the marker lines (`sed '/^## L.R. /d'`) restores the extract byte for byte.
+- Upstream: https://www.are.uscourts.gov/sites/are/files/local_rules/All_LR.pdf, retrieved 2026-10-27, as recorded on the `ared/ared-arwd-local-rules.txt` entry this file is derived from.
 - Edition: as the extract, the "Complete Copy" last modified 2020-11-17 (newest amendment note: L.R. 5.1, November 5, 2020).
 - Sectioned sha256 9ffe4767e0a2f226a2c05119182219877a27b0c28c3edda6bd4442ab6c411cd4 (the `path_sha256` pinned by `lit/ared/Lit.toml` and `lit/arwd/Lit.toml`).

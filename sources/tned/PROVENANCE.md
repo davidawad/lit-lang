@@ -15,5 +15,6 @@
 ### `tned/tned-local-rules-sectioned.txt` — E.D. Tenn. Local Rules, sectioned
 
 - Derived in the pod (lg-f3q8.62) from `tned/tned-local-rules.txt` (extract sha256 7e9e572cc14452fa9ae9c89adef989bda22d38efad1915ce4533603ca40b096f); nothing fetched. One `## LR <n>` line is inserted before each rule's own heading line in the body (`LR 1.1` through `LR 83.13`, 69 rules; the table of contents and the LR16.5 appendix headings are unmarked). Rule text was not edited: deleting the marker lines (`sed '/^## LR /d'`) restores the extract byte for byte.
+- Upstream: https://www.tned.uscourts.gov/sites/tned/files/Local%20Rules_Active_2026.04.08%20to%20Present.pdf, retrieved 2026-10-27, as recorded on the `tned/tned-local-rules.txt` entry this file is derived from.
 - Edition: as the extract, "Effective: December 1, 2009; Revised: April 8, 2026".
 - Sectioned sha256 9b84efd66ff91cba7627f6a6e5644aaf8fccfd57c864d9b3ec296e4df3480ca9 (the `path_sha256` pinned by `lit/tned/Lit.toml`).

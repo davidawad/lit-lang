@@ -10,5 +10,6 @@
 ### `minnctapp/mnrcap-2025-04-01-sectioned.txt` — Minnesota Rules of Civil Appellate Procedure, sectioned
 
 - Derived in the pod (lg-f3q8.7) from `minnctapp/mnrcap-2025-04-01.txt` (extract sha256 5aca074e9b5e7d80cce977fb5ebca7230b452dc40d01e68699a14ae46dce5708); nothing fetched. One `## Rule <n>` line is inserted before the first line, after the table of contents and in its order, that heads each of the 171 rules and numbered subdivisions the table of contents lists (`Rule 101.` and `101.01.` through `Rule 147.`), including reserved rules. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Upstream: https://mncourts.gov/_media/migration/appellate/supreme-court/court-rules/rules-of-civil-app-proc-effective040125.pdf, retrieved 2026-10-28, as recorded on the `minnctapp/mnrcap-2025-04-01.txt` entry this file is derived from.
 - Edition: as the extract, amendments effective April 1, 2025.
 - Sectioned sha256 9351c7e8731c2e496ba1ddd3c038b61c25e310f361a27c178889aff43fc6dbfa (the `path_sha256` pinned by `lit/mn-district/Lit.toml` and `lit/minnctapp/Lit.toml` for source `mnrcap`).

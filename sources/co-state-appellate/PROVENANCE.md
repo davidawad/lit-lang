@@ -42,11 +42,13 @@
 ### `co-state-appellate/co-car-sectioned.txt` — C.A.R. (2023 compilation), rules sectioned
 
 - Derived in the pod (lg-f3q8.65) from `co-state-appellate/co-appellate-rules-crs2023.txt` (extract sha256 392045b94743b8554e8aee9a5bf50ab3fc8dd5874967c7ad0f65349e6a9d919e); nothing fetched. One `## C.A.R. <n>` line is inserted right before each rule's own body heading line (`Rule <n>. <Title>`): 68 markers, C.A.R. 1 through C.A.R. 58. The chapter analysis and an annotation line that begins with a case name (`Rule 37. Pet Inc. v. Goldberg`) are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## C\.A\.R\. /d'`) restores the extract byte for byte.
+- Upstream: https://content.leg.colorado.gov/sites/default/files/images/olls/crs2023-court-rules.pdf, retrieved 2026-10-28, as recorded on the `co-state-appellate/co-appellate-rules-crs2023.txt` entry this file is derived from.
 - Edition: as the extract, the 2023 compilation, whose latest recorded change is Rule Change 2023(13), effective July 20, 2023; STALE for later changes, which the dated Rule Change layers here carry.
 - Sectioned sha256 269e8ef5902216c04b7d7dd58312fbb4d1702b54b57f6e5691ed8676314c23bc (the `path_sha256` pinned by `lit/co-state-civil/Lit.toml` and `lit/co-state-appellate/Lit.toml`).
 
 ### `co-state-appellate/co-rule-change-2026-05-sectioned.txt` — Rule Change 2026(05), updated rule text sectioned
 
 - Derived in the pod (lg-f3q8.65) from `co-state-appellate/co-rule-change-2026-05.txt` (extract sha256 8a1693d71798d5b69a65e2ea0a82ef90a1a90f3901bd72fbfcd7fbb5a2fbd566); nothing fetched. The order shows its edits first and then the updated rule text; one `## Rule Change 2026(05) C.A.R. <n>` line is inserted right before each rule heading of the updated text only (C.A.R. 3.5, 10, 21, 40, 52 and 54; 6 markers). Rule text was not edited: deleting the marker lines (`sed '/^## Rule Change /d'`) restores the extract byte for byte.
+- Upstream: https://www.coloradojudicial.gov/sites/default/files/2026-03/Rule%20Change%202026%2805%29.pdf, retrieved 2026-10-28, as recorded on the `co-state-appellate/co-rule-change-2026-05.txt` entry this file is derived from.
 - Edition: as the extract, adopted March 26, 2026, effective immediately.
 - Sectioned sha256 6195206cfaa223a1e2a2aee33d17fbc46b509cb9fcbae81ddac8639370c6c147 (the `path_sha256` pinned by `lit/co-state-appellate/Lit.toml`).

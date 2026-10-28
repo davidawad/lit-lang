@@ -26,5 +26,6 @@
 ### `de-superior-civil/rules-civ-2026-03-sectioned.txt` — Delaware Superior Court Civil Rules, sectioned
 
 - Derived in the pod (lg-f3q8.73) from `de-superior-civil/rules-civ-2026-03.txt` (extract sha256 368f275e77064126652b54e31bc783955b9675043704e87dd56f1fb20d14a329); nothing fetched. One `## Del. Super. Ct. Civ. R. <n>` line is inserted right after each rule's own body heading line `Rule <n>. <title>` (136 markers, Rule 1 through Rule 140, including 58A-58C, 71A and 104A; decimal rules such as 16.1 and 54.1 are unmarked and fall within the preceding rule's section). Rule text was not edited: deleting the marker lines (`## Del. Super. Ct. Civ. R. <n>` plus its newline) restores the extract byte for byte.
+- Upstream: https://courts.delaware.gov/forms/download.aspx?id=304488, retrieved 2026-10-27, as recorded on the `de-superior-civil/rules-civ-2026-03.txt` entry this file is derived from.
 - Edition: as the extract, the consolidated rules of Mar. 2026. The amending orders of Mar. 13, 2026 (Rules 5(g), 37(e), 141-146) and Sept. 30, 2026 (Rule 26(b)) are not merged into it; `lit/de-superior-civil` cites none of the provisions they amend from this text.
 - Sectioned sha256 107f229c9ddead76c1d5c790c449ab610a4559cd7240fcccc4ef3ba0d2f6ff20 (the `path_sha256` pinned by `lit/de-superior-civil/Lit.toml`).

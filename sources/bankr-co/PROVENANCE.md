@@ -10,5 +10,6 @@
 ### `bankr-co/cob-local-rules-2021-12-01-sectioned.txt` — Bankr. D. Colo. Local Bankruptcy Rules, sectioned
 
 - Derived in the pod (lg-u561.27) from `bankr-co/cob-local-rules-2021-12-01.txt` (extract sha256 323fca7c875854e0702322e3e37fa461272a1b5820d9a08e48a546105d356990); nothing fetched. One `## LBR <n>` line is inserted before each rule's own heading line in the body (a line opening `L.B.R. <nnnn>-<n>` or `L.B.R. <nnnn>.<n>-<n>` followed by its title, after the table of contents; the commentary lines that open with a pinpoint such as `L.B.R. 9010-1(c)(1),` are unmarked), from `L.B.R. 1001-1.` through `L.B.R. 9070-1.`, 69 rules, the same set as the table of contents; the table of contents is unmarked. The HTML extract carries no subsection letters, so cites into it stop at the rule. Rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Upstream: https://www.cob.uscourts.gov/local-rules, retrieved 2026-10-28, as recorded on the `bankr-co/cob-local-rules-2021-12-01.txt` entry this file is derived from.
 - Edition: as the extract.
 - Sectioned sha256 b4f6b57ff1af5e4e5e38190f74c90ad7837900fb1587c4316c0787841f82e281 (the `path_sha256` pinned by `lit/bankr-co/Lit.toml`).

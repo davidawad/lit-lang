@@ -14,5 +14,6 @@
 ### `sd-ga/sdga-local-rules-sectioned.txt` — S.D. Ga. Local Rules, sectioned
 
 - Derived in the pod (lg-f3q8.15) from `sd-ga/sdga-local-rules.txt` (extract sha256 06f9f6b1c290e7be9b1c54d37496153f0cd001f0d6912024cc72a31a7053292b); nothing fetched. In the body (after the table of contents), one `## LR <Gen.|Civ.|Crim.> <n>` line is inserted before each rule's own heading line (`LR Gen. 1A. Scope, Effective Date, and Modification.` through `LR Crim. 58. Forfeiture of Collateral.`, 53 rules; the heading's trailing period is dropped in the marker). Every other line is the extract unchanged, so deleting the `## LR` lines gives back the extract byte for byte.
+- Upstream: https://www.gasd.uscourts.gov/sites/gasd/files/local_rules/SDGA_Local_Rules_Effective_10-07-2026.pdf, retrieved 2026-10-27, as recorded on the `sd-ga/sdga-local-rules.txt` entry this file is derived from.
 - Edition: as the extract, Local Rules "Effective 10-07-2026" (LR Gen. 1A: "These Local Rules take effect on October 7, 2026").
 - Sectioned sha256 6f5214a2bb86045dcae24edf5172748170dd920f2478c5c5f0240f4bd56c5f7b (the `path_sha256` pinned by `lit/gasd/Lit.toml`).

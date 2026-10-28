@@ -18,5 +18,6 @@
 ### `nh-superior-civil/superior-court-rules-sectioned.txt` — NH Rules of the Superior Court, sectioned
 
 - Derived in the pod (lg-f3q8.24) from `nh-superior-civil/superior-court-rules.txt` (extract sha256 0b947c2526348783bef150e83dc0f83e6092775bc9e12e56fa8e7d10233f2811); nothing fetched. One `## Rule <n>` line is inserted right after each `## NH Superior Court Rules Rule <n>. <title>` heading line (79 rules: Rule 1 through Rule 55 with 13A, 13B and 28A, Rules 201-208 and Rules 301-313). Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Upstream: https://www.courts.nh.gov/rules-superior-court-state-new-hampshire, retrieved 2026-10-27, as recorded on the `nh-superior-civil/superior-court-rules.txt` entry this file is derived from.
 - Edition: as the extract, as published on the court's rules page on 2026-10-27.
 - Sectioned sha256 c0f01d7c9a95400693c5b89c589570a15b0cc941d1d9e74667a19914d1553874 (the `path_sha256` pinned by `lit/nh-superior-civil/Lit.toml` for source `nh-super-r`).

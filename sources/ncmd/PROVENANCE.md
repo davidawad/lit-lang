@@ -19,6 +19,7 @@
 ### `ncmd/ncmd-local-civil-rules-sectioned.txt` — M.D.N.C. Local Civil Rules (effective June 1, 2026), sectioned
 
 - Derived in the pod (lg-f3q8.29) from `ncmd/ncmd-local-civil-rules.txt` (extract sha256 4e10d0ff97155d7c1bcf6e36dd90abc62b6ecaad0e4278ed4204242e54d2274f); nothing fetched. One `## LR <n>` line is inserted right before each rule's own body heading line `LR <n>  <TITLE>` (some after a form feed; from extract line 320 on): 79 markers, LR 1.1 through LR 83.12. The table of contents and the in-body cross-references are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LR /d'`) restores the extract byte for byte.
+- Upstream: https://www.ncmd.uscourts.gov/sites/ncmd/files/mdnc%20local%20civil%20rules%2020260601.pdf, retrieved 2026-10-27, as recorded on the `ncmd/ncmd-local-civil-rules.txt` entry this file is derived from.
 - Edition: as the extract, the Local Civil Rules effective June 1, 2026.
 - Sectioned sha256 7c67c21dbe347f03c46adc55f9b43edb79da8e5cf52919d9c00322dac37bf801 (the `path_sha256` pinned by `lit/ncmd/Lit.toml`).
 

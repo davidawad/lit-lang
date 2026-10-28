@@ -19,5 +19,6 @@
 ### `d-del/local-rules-2026-09-01-sectioned.txt` — D. Del. Local Rules of Civil Practice and Procedure, sectioned
 
 - Derived in the pod (lg-f3q8.73) from `d-del/local-rules-2026-09-01.txt` (extract sha256 5fff80527ba4ae3a38f0e3d377f193d260fa079099e091555e883aab32ae0ca4); nothing fetched. One `## Rule <n>` line is inserted right after each rule's own body heading line `RULE <n>. <title>.` (68 markers, Rule 1.1 through Rule 83.7; the table of contents is unmarked). Rule text was not edited: deleting the marker lines (`## Rule <n>` plus its newline) restores the extract byte for byte.
+- Upstream: https://www.ded.uscourts.gov/sites/ded/files/2026%20District%20of%20Delaware%20Revised%20Local%20Rules%20Effective%20September%201.pdf, retrieved 2026-10-27, as recorded on the `d-del/local-rules-2026-09-01.txt` entry this file is derived from.
 - Edition: as the extract, the Local Rules of Civil Practice and Procedure amended effective September 1, 2026.
 - Sectioned sha256 a8ac9b22563275310851fb21a4b43b82788a371e47869c64251ca6c1a837b967 (the `path_sha256` pinned by `lit/ded/Lit.toml`).

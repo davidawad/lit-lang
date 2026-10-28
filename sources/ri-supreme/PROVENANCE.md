@@ -10,5 +10,6 @@
 ### `ri-supreme/ri-supreme-article-i-appellate-procedure-sectioned.txt` — R.I. Supreme Court Rules, Article I, sectioned
 
 - Derived in the pod (lg-f3q8.26) from `ri-supreme/ri-supreme-article-i-appellate-procedure.txt` (extract sha256 4fd8e6536a471bd71754690978149e596583e3d8952e6ec341a03e5049eff749); nothing fetched. One `## Art. I Rule <n>` line is inserted before each rule's own heading line (`Rule <n>. <Title>.`, some after a form feed): 41 markers, Rule 1 through Rule 36 with 12A, 18A, 18B, 26A and 26B. A wrapped cross-reference that begins a line (`Rule 28. Nothing in this rule ...`, inside Rule 16(c)) is not a heading and is unmarked. The `Art. I` prefix keeps these headings apart from the Superior Court's `## Rule <n>`. Rule text was not edited: deleting the marker lines (`sed '/^## Art. I Rule /d'`) restores the extract byte for byte.
+- Upstream: https://www.courts.ri.gov/Courts/SupremeCourt/Documents/Supreme-Rules-Article1.pdf, retrieved 2026-10-27, as recorded on the `ri-supreme/ri-supreme-article-i-appellate-procedure.txt` entry this file is derived from.
 - Edition: as the extract; every page is footed "Revised February 17, 2026".
 - Sectioned sha256 b772b2aec643f4376e27912e04acb1c643d4714990851597fd4d8425f1df6e2f (the `path_sha256` pinned by `lit/ri-superior-civil/Lit.toml` and `lit/ri-supreme/Lit.toml`).

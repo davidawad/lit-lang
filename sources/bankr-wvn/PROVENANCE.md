@@ -10,5 +10,6 @@
 ### `bankr-wvn/wvn-local-rules-2019-10-01-sectioned.txt` — N.D.W. Va. Local Rules, sectioned
 
 - Derived in the pod (lg-u561.15) from `bankr-wvn/wvn-local-rules-2019-10-01.txt` (extract sha256 dceb9a179e32e19d64055a640ecb302eb8c8f0da87d083cf5139010ac234bb93); nothing fetched. One `## Rule <n>` line is inserted before each rule's own `<n>   TITLE` heading line in the body of the rules (`1001-1 CITATION` through `9070-1 EXHIBITS`, 70 rules, including 3015-3.1 and 7007.1-1; the heading `4001-1.` is keyed without its trailing period); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Upstream: https://www.wvnb.uscourts.gov/sites/wvnb/files/local_rules/Local%20Bankurptcy%20Rules%2018-mp-2%20-%20update%20RE%20GO%2020-6%20and%20LBR%207016.pdf, retrieved 2026-10-28, as recorded on the `bankr-wvn/wvn-local-rules-2019-10-01.txt` entry this file is derived from.
 - Edition: as the extract, effective October 1, 2019, updated for General Order 20-06.
 - Sectioned sha256 9f8dd0c8ed05ecdc9968fa80acb8fa10712448dc3e91830b45d18ee943445ce0 (the `path_sha256` pinned by `lit/bankr-wvn/Lit.toml`).

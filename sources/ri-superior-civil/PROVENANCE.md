@@ -10,5 +10,6 @@
 ### `ri-superior-civil/ri-superior-rules-civil-procedure-sectioned.txt` — R.I. Superior Court Rules of Civil Procedure, sectioned
 
 - Derived in the pod (lg-f3q8.26) from `ri-superior-civil/ri-superior-rules-civil-procedure.txt` (extract sha256 ae125faa41bba2587748ae3a258a4b0d4dd1715f234474dad3eb822e6b1e4f8f); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (`<n>. <Title>. — ...`, some after a form feed): 85 markers, Rule 1 through Rule 86 (Rules 73-76 are not in the text). Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Upstream: https://www.courts.ri.gov/Courts/superiorcourt/Documents/SuperiorCourtRulesOfCivilProcedure.pdf, retrieved 2026-10-27, as recorded on the `ri-superior-civil/ri-superior-rules-civil-procedure.txt` entry this file is derived from.
 - Edition: as the extract; every page is footed "February 2024" (the PDF was created 2024-04-10).
 - Sectioned sha256 0a2de5b753150babc82991dd7064124a011191ac8f61803d2a8b79c3cc1c8230 (the `path_sha256` pinned by `lit/ri-superior-civil/Lit.toml`).

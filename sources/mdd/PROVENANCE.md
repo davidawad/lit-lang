@@ -12,5 +12,6 @@
 ### `mdd/mdd-local-rules-sectioned.txt` — D. Md. Local Rules, sectioned
 
 - Derived in the pod (lg-f3q8.28) from `mdd/mdd-local-rules.txt` (extract sha256 4d55d4b343dd7975aebea4b9351b831f2a7ff7e050e72e1e36c490de7dcbacdd); nothing fetched. One `## Local Rule <n>` line is inserted before each rule's own heading line in the body (`R ULE 101. C OUNSEL` through `R ULE 806.`) and one `## Local Rule <n>.<m>` line before each numbered part of a rule (`2.       Filing Schedule` under Rule 105 is `## Local Rule 105.2`), 246 markers; the table of contents, the Local Admiralty Rules and the appendices are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Local Rule /d'`) restores the extract byte for byte.
+- Upstream: https://www.mdd.uscourts.gov/sites/mdd/files/LocalRules.pdf, retrieved 2026-10-27, as recorded on the `mdd/mdd-local-rules.txt` entry this file is derived from.
 - Edition: as the extract, Local Rules dated December 1, 2025.
 - Sectioned sha256 287ac2420ed78aaff0f6d8b3d6c081393df5111e19f4180b88a054b951e286b4 (the `path_sha256` pinned by `lit/mdd/Lit.toml`).

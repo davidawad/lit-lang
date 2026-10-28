@@ -19,5 +19,6 @@
 ### `nd-ga/ndga-civil-local-rules-sectioned.txt` — N.D. Ga. Civil Local Rules, sectioned
 
 - Derived in the pod (lg-f3q8.15) from `nd-ga/ndga-civil-local-rules.txt` (extract sha256 5275df22e495d46234c37192293e267716b99881711ad30162b33ea406b26ede); nothing fetched. One `## LR <n>` line is inserted before each rule's own heading line in the body (`LR 1.1 TITLE; EFFECTIVE DATE ...` through `LR 84.1 Appendix B ...`, 75 rules; the table of contents, the chapter headings such as `LR 3:` and the second heading numbered `LR 65.1:` are unmarked; `LR 16. 1` is marked `## LR 16.1`). Every other line is the extract unchanged, so deleting the `## LR` lines gives back the extract byte for byte.
+- Upstream: https://www.gand.uscourts.gov/sites/gand/files/local_rules/NDGARulesCV_4_0_26.pdf, retrieved 2026-10-27, as recorded on the `nd-ga/ndga-civil-local-rules.txt` entry this file is derived from.
 - Edition: as the extract, Civil Rules "Updated 8/10/2026".
 - Sectioned sha256 52d75f2de9281d261171b2938c6169b3f046895cb2c37a047d9210cd727d3c66 (the `path_sha256` pinned by `lit/gand/Lit.toml`).

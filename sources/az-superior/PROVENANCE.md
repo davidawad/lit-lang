@@ -151,5 +151,6 @@
 ### `az-superior/az-superior-rules-sectioned.txt` — Arizona Rules of Civil Procedure, sectioned
 
 - Derived in the pod (lg-f3q8.37) from `az-superior/az-superior-rules-westlaw-2026-10-01.txt` (extract sha256 d305d1ee9c84015ed9c3e22bb6636b169c8fb253cee0a6731418679637bd11ba); nothing fetched. One `## Rule <n>` line is inserted right after each rule page's own `## Rule <n>. <title>` heading (Rule 1 through Rule 84, 119 rules); the front matter, disposition table and Forms pages are unmarked. Rule text was not edited: deleting the marker lines (`sed -E '/^## Rule [0-9.]+$/d'`) restores the extract byte for byte.
+- Upstream: https://govt.westlaw.com/azrules/Index, retrieved 2026-10-28, as recorded on the `az-superior/az-superior-rules-westlaw-2026-10-01.txt` entry this file is derived from.
 - Edition: as the extract, current with amendments effective through October 1, 2026.
 - Sectioned sha256 ed23ddba2d8d71524c635ead3b0c74d46248b2fc903fc116579f51bff9b15de7 (the `path_sha256` pinned by `lit/az-superior/Lit.toml`).

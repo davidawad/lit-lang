@@ -71,5 +71,6 @@
 ### `md-appellate-civil/md-appellate-civil-rules-sectioned.txt` — Maryland Rules Title 8, sectioned
 
 - Derived in the pod (lg-f3q8.28) from `md-appellate-civil/md-appellate-civil-rules-westlaw.txt` (extract sha256 c2e1bb6eccafaed333ec769c18e0dd4566566224eaadc0cdcf81ba009d697a82); nothing fetched. After each page heading of a rule (`## Rule 8–202. Notice of Appeal — ...`) one `## Rule <n>` line with an ASCII hyphen (`## Rule 8-202`) is inserted, so the rule's text sits under the marker; 60 markers (Form 22 is unmarked). Rule text was not edited: deleting the marker lines (`sed '/^## Rule [0-9]-[0-9.]*$/d'`) restores the extract byte for byte.
+- Upstream: https://govt.westlaw.com/mdc/Index, retrieved 2026-10-28, as recorded on the `md-appellate-civil/md-appellate-civil-rules-westlaw.txt` entry this file is derived from.
 - Edition: as the extract; each page's own currentness line reads "Current with amendments received through September 1, 2026". CURRENCY UNCONFIRMED stands (no official edition date).
 - Sectioned sha256 0694de4a0728cf6eda3351cc4fe4b299d1993e5c462add44ef16969ccf35664f (the `path_sha256` pinned by `lit/md-circuit-civil/Lit.toml` and `lit/md-appellate-civil/Lit.toml`).

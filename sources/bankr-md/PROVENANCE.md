@@ -10,5 +10,6 @@
 ### `bankr-md/md-local-rules-2025-12-01-sectioned.txt` — D. Md. Local Bankruptcy Rules, sectioned
 
 - Derived in the pod (lg-u561.15) from `bankr-md/md-local-rules-2025-12-01.txt` (extract sha256 e44e5d8578af7325b06e5061f8df25a8f4e816f46ebf0523f03a91e267a54827); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body of the rules (`RULE 1001-1` through `RULE 9070-1`, 113 rules; extract lines 400-4399); the tables of contents and the appendices are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Upstream: https://www.mdb.uscourts.gov/files/localrules.pdf, retrieved 2026-10-28, as recorded on the `bankr-md/md-local-rules-2025-12-01.txt` entry this file is derived from.
 - Edition: as the extract, revised December 1, 2025 (Ver. 25.01).
 - Sectioned sha256 962e3f82aae1f665a15cbc6aca824d53179d05369f15e598db2687949de62a0e (the `path_sha256` pinned by `lit/bankr-md/Lit.toml`).

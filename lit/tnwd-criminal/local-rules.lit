@@ -1,0 +1,79 @@
+module tnwd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Western District of Tennessee's own criminal periods and limits,
+// counted under FRCrimP 45(a), which governs a period stated in a local
+// rule. The court may modify the sentencing periods for good cause, but
+// may shorten the 21 days of LCrR 32.1(d) only with the defendant's consent
+// (32.1(g)). The FRCrimP periods the rules repeat are lit/frcrimp's and are
+// not declared again: disclosure of the presentence report at least 35
+// days before sentencing (LCrR 32.1(b); FRCrimP 32(e)(2)), objections to
+// the probation officer within 14 days after receiving it (32.1(c);
+// FRCrimP 32(f)(1)) and the report and addendum at least 7 days before
+// sentencing (32.1(e); FRCrimP 32(g)). Stated in the rules but not
+// declared: the report "deemed to have been disclosed ... three days
+// after a copy is mailed" (32.1(b)), a deemed date; and the deadlines of
+// the court's scheduling order (17.1(d)), which the court sets.
+/// A memorandum in support of or in opposition to a motion: at most twenty
+/// pages without prior court approval (LCrR 12.1(d)).
+limit motion-memorandum {
+  pages <= 20 cite "W.D. Tenn. LCrR 12.1(d)"
+} cite "W.D. Tenn. LCrR 12.1(d)"
+
+/// A motion is received by the opposing party (LCrR 12.1(c)).
+event MotionReceived() paper motion-memorandum
+/// The defendant is arraigned (LCrR 16.1(a), 17.1(b)).
+event Arraigned()
+/// A written request for discovery is addressed to the United States
+/// Attorney and filed (LCrR 16.1(a), (b)).
+event DiscoveryRequestFiled()
+/// Trial is scheduled to begin (LCrR 16.1(c)).
+event TrialScheduled()
+/// A pretrial hearing is scheduled (LCrR 16.1(c)(2)).
+event PretrialHearingScheduled()
+/// A guilty plea, a plea of nolo contendere or a verdict of guilty is
+/// entered (LCrR 32.1(a)).
+event GuiltyPleaOrVerdict()
+/// The presentence investigation report is disclosed to the parties (LCrR
+/// 32.1(d)).
+event PresentenceReportDisclosed()
+
+/// LCrR 12.1(c): a party opposing a motion files a response, with a
+/// memorandum of law and facts, within 14 days after the motion is
+/// received; failure to respond waives any objection to the motion.
+deadline motion-response-period: 14.days after MotionReceived() counted_by frcrimp45 cite "W.D. Tenn. LCrR 12.1(c)"
+/// LCrR 16.1(a): within 7 days after arraignment any attorney seeking
+/// discovery makes a specific written request to the United States
+/// Attorney, filed with the clerk.
+deadline discovery-request-period: 7.days after Arraigned() counted_by frcrimp45 cite "W.D. Tenn. LCrR 16.1(a)"
+/// LCrR 16.1(b): the United States Attorney responds in writing to the
+/// request for discovery within 14 days.
+deadline discovery-response-period: 14.days after DiscoveryRequestFiled() counted_by frcrimp45 cite "W.D. Tenn. LCrR 16.1(b)"
+/// LCrR 16.1(c)(1): if the government requests reciprocal discovery and
+/// defense counsel has it, defense counsel responds in writing at least 14
+/// days before trial.
+deadline reciprocal-discovery-period: 14.days before TrialScheduled() counted_by frcrimp45 cite "W.D. Tenn. LCrR 16.1(c)"
+/// LCrR 16.1(c)(2), (3): a defendant who intends to call an expert witness
+/// at a pretrial hearing notifies the United States Attorney in writing at
+/// least 14 days before the hearing, with the expert's report or a summary.
+deadline pretrial-expert-notice-period: 14.days before PretrialHearingScheduled() counted_by frcrimp45 cite "W.D. Tenn. LCrR 16.1(c)"
+/// LCrR 16.1(c)(2), (3): a defendant who intends to call an expert witness
+/// at trial notifies the United States Attorney in writing at least 28
+/// days before trial.
+deadline trial-expert-notice-period: 28.days before TrialScheduled() counted_by frcrimp45 cite "W.D. Tenn. LCrR 16.1(c)"
+/// LCrR 17.1(b): the scheduling conference is held not less than 45 days
+/// after arraignment, unless the local speedy trial act plan requires
+/// otherwise; this is the earliest such date.
+deadline earliest-scheduling-conference: 45.days after Arraigned() counted_by frcrimp45 cite "W.D. Tenn. LCrR 17.1(b)"
+/// LCrR 32.1(a): the sentencing hearing is scheduled no earlier than 65
+/// days following the plea or verdict, unless good cause exists; this is
+/// the earliest such date.
+deadline earliest-sentencing-date: 65.days after GuiltyPleaOrVerdict() counted_by frcrimp45 cite "W.D. Tenn. LCrR 32.1(a)"
+/// LCrR 32.1(a): and no later than 90 days following it, unless good
+/// cause exists to schedule it at a different time.
+deadline latest-sentencing-date: 90.days after GuiltyPleaOrVerdict() counted_by frcrimp45 cite "W.D. Tenn. LCrR 32.1(a)"
+/// LCrR 32.1(d): within 21 days after disclosure of the presentence report
+/// counsel for the defendant and the government each file a "Position of
+/// Parties with Respect to Sentencing Factors".
+deadline sentencing-position-period: 21.days after PresentenceReportDisclosed() counted_by frcrimp45 cite "W.D. Tenn. LCrR 32.1(d)"

@@ -1,0 +1,49 @@
+# The United States District Court for the Western District of Tennessee's
+# Local Criminal Rules (LCrR) as a local-rule layer over lit/frcrimp (28
+# U.S.C. § 2071; FRCrimP 57(a)): it declares only the periods and limits the
+# Local Criminal Rules themselves state and re-encodes no FRCrimP, Speedy
+# Trial Act or FRAP 4(b) period. FRCrimP 45(a) computes a period stated in
+# a local rule. The rules are the criminal part of the Local Rules "Revised
+# November 17, 2025" (sources/tnwd). An appeal goes to the Sixth Circuit
+# under lit/frap and lit/ca6; federal habeas is lit/habeas.
+[package]
+name = "tnwd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "tnwd-criminal-local-rules"
+forum = "tnwd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Western District of Tennessee: Local Criminal Rules"
+description = "The Western District of Tennessee's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): motion responses and the memorandum page limit, the discovery request after arraignment and the government's response, the defense's reciprocal discovery response and expert notices before a pretrial hearing and trial, the earliest scheduling conference, the window for the sentencing hearing, and the parties' positions on sentencing factors."
+in_force = "2025-11-17"
+known_at = "2026-10-28"
+unknown_before = "2025-11-17"
+jurisdiction = "United States District Court, W.D. Tenn. (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "tnwd-lcrr"
+issuer = "United States District Court for the Western District of Tennessee"
+date = "2025-11-17"
+designation = "Local Criminal Rules (Local Rules revised November 17, 2025)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRCrimP periods; this package layers only the court's local criminal rules over them.
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.tnwd-lcrr]
+title = "Local Rules of the United States District Court for the Western District of Tennessee, Local Criminal Rules (revised November 17, 2025)"
+url = "https://www.tnwd.uscourts.gov/sites/tnwd/files/Local%20Rules%20%E2%80%93%20Revised%2011.17.%202025%20%28Addition%20of%20LR%2043.1%28h%29%29.pdf"
+path = "sources/tnwd/tnwd-local-criminal-rules-sectioned.txt"
+path_sha256 = "e634ec26e0ec4323a839d2370a53175695ffe089461184c2df366192db614cb7"
+sha256 = "a6dcdc4ae6458d0a3397f4063af24d6cfd7d00273ae8f4beb14906020078a958"
+as_of = "2025-11-17"
+cite_prefixes = ["W.D. Tenn. LCrR"]
+section_heading = "LCrR {n}"

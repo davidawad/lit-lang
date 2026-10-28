@@ -1,0 +1,47 @@
+# The Local Rules of Bankruptcy Procedure of the U.S. Bankruptcy Court for
+# the Eastern District of Missouri over lit/frbp (FRBP 9029(a); 28 U.S.C.
+# § 2075): it declares only the periods and page limit the rules state and
+# re-encodes no FRBP period. It is a base package, not a `kind =
+# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011 for
+# `bankr-moe`), as for lit/bankr-dc. Each period is counted under FRBP
+# 9006(a), the FRCP 6(a) method (core's frcp6).
+#
+# Layers: the rules as revised effective December 1, 2025 (the
+# consolidation). No amending order is vendored, so the consolidation is
+# the only layer. No earlier edition is vendored, so a query before
+# December 1, 2025 is a hole in the corpus.
+[package]
+name = "bankr-moe-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-moe-local-rules"
+forum = "bankr-moe"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Eastern District of Missouri: Local Rules of Bankruptcy Procedure"
+description = "The Bankr. E.D. Mo. Local Rules of Bankruptcy Procedure as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): the chapter 13 attorney fee election, filing fee installments, means test, payment advice and education account documents, amended matrices, dismissal responses and reinstatement, conversion schedules, document requests, Rule 2004 objections, trustee deposits, chapter 11 fee objections, attorney appearances and fees after dismissal, rejection, subchapter V and late-creditor claims, claim objection responses, plan surrender, objections and amendments, disclosure statements, subchapter V procedures, chapter 11 confirmation and final decrees, stay relief, stay continuation, lessor elections, co-debtor stay, discharge certifications, final reports, withdrawal of the reference, summons certificates, trial exchanges and settlement, discovery, adversary continuation after dismissal, summary judgment, motion practice and the 15-page memorandum (L.R. 9013-1), mediation, sealing and Negative Notice (L.R. 9061)."
+in_force = "2025-12-01"
+known_at = "2026-10-28"
+unknown_before = "2025-12-01"
+jurisdiction = "U.S. Bankruptcy Court for the Eastern District of Missouri"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.moeb-lbr]
+title = "Local Rules of Bankruptcy Procedure, U.S. Bankruptcy Court for the Eastern District of Missouri (as revised effective December 1, 2025)"
+url = "https://www.moeb.uscourts.gov/sites/moeb/files/Local_Rules_Dec_1_2025.pdf"
+path = "sources/bankr-moe/moeb-lbr-2025-12-01-sectioned.txt"
+path_sha256 = "c8851ef9fba86ea449c3902fae382fe61610983d7d055bf3c61a3193c7f2e729"
+sha256 = "abc43656a1d7c093087c2eb1e630d701b0ef14b1341f170cb82cbc4fdd823531"
+as_of = "2025-12-01"
+cite_prefixes = ["E.D. Mo. Bankr. L.R."]
+section_heading = "L.R. {n}"

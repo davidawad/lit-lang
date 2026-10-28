@@ -1,6 +1,21 @@
 version = 2
 
 [[package]]
+name = "bankr-ian-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:a2bd787e9114de2d7b5139a0320ce5af60539a343dd8f6cf920f3f3d3c65d64e"
+semantic = "sha256:35db75552d32d37cc64d239568b2bea200c5ed35bf01ce52705247e1a87c5b76"
+texts = [
+    "ianb-lbr sources/bankr-ian/ianb-lbr-2024-01-01-sectioned.txt sha256:d98b3fcff18400928eb7b005b69a1f805eb1089a1eaa2e0372cd4edada634945",
+    "ianb-so-26-03 sources/bankr-ian/ianb-standing-order-26-03-ch13-fees.txt sha256:e0bd949bdd7125afd17c515c6b08f28acb5a5b5785fdce75c2ae306a51662e80",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +59,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-ian"
-version = "0.0.1"
-language = 1
-source = "sha256:718a9cd6140f424edf8b8072e9a9b4e757ba3260786dfbc85c4c3138fa83e845"
-semantic = "sha256:01528e70299da551b4863d0dbdcdfca53d2ec7073f3a6bc67964b5949c929695"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

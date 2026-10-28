@@ -21,3 +21,9 @@
 - Derived in the pod (lg-f3q8.29) from `ncmd/ncmd-local-civil-rules.txt` (extract sha256 4e10d0ff97155d7c1bcf6e36dd90abc62b6ecaad0e4278ed4204242e54d2274f); nothing fetched. One `## LR <n>` line is inserted right before each rule's own body heading line `LR <n>  <TITLE>` (some after a form feed; from extract line 320 on): 79 markers, LR 1.1 through LR 83.12. The table of contents and the in-body cross-references are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LR /d'`) restores the extract byte for byte.
 - Edition: as the extract, the Local Civil Rules effective June 1, 2026.
 - Sectioned sha256 7c67c21dbe347f03c46adc55f9b43edb79da8e5cf52919d9c00322dac37bf801 (the `path_sha256` pinned by `lit/ncmd/Lit.toml`).
+
+### `ncmd/ncmd-local-criminal-rules-2026-06-01-sectioned.txt` — M.D.N.C. Local Rules of Criminal Practice (effective June 1, 2026), sectioned
+
+- Derived in the pod (lg-gddt.12) from `ncmd/ncmd-local-criminal-rules-2026-06-01.txt` (extract sha256 da180ab0f0c0c1af3d5c64a7240f97770a670c5bd2e0b89795de1fadb5b467e3); nothing fetched. One `## LCrR <n>` line is inserted right before each rule's own body heading line `LCrR<n>  <TITLE>` (from extract line 46 on): 15 markers, LCrR 6.1 through LCrR 58.1. The table of contents and the in-body cross-references are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LCrR /d'`) restores the extract byte for byte.
+- Edition: as the extract, effective June 1, 2026.
+- Sectioned sha256 55646e7386c5a6b04d720d6fb5bb8b87f13d74a84852dda8027da3aabe83b2ef (the `path_sha256` pinned by `lit/ncmd-criminal/Lit.toml`).

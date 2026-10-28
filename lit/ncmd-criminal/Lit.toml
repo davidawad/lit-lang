@@ -1,0 +1,59 @@
+# The Middle District of North Carolina's Local Rules of Criminal Practice
+# (LCrR) as a local-rule layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP
+# 57(a)): it declares only the periods the LCrR state, and those of the
+# Local Civil Rules LCrR 57.1 applies to criminal proceedings, and
+# re-encodes no FRCrimP, Speedy Trial Act or FRAP 4(b) period (those are
+# lit/frcrimp's). Each period is counted under FRCrimP 45(a), which governs
+# "any local rule". The rules are the LCrR and Local Civil Rules effective
+# June 1, 2026 (sources/ncmd). Federal habeas is lit/habeas's; an appeal to
+# the Fourth Circuit is lit/frcrimp's and lit/ca4's.
+[package]
+name = "ncmd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ncmd-criminal-local-rules"
+forum = "ncmd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Middle District of North Carolina: Local Rules of Criminal Practice"
+description = "The Middle District of North Carolina's Local Rules of Criminal Practice as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the draft presentence report, the position paper on sentencing factors and its response, and the sealing response and objection periods of the Local Civil Rules that LCrR 57.1 applies to criminal proceedings."
+in_force = "2026-06-01"
+known_at = "2026-10-28"
+unknown_before = "2026-06-01"
+jurisdiction = "United States District Court, M.D.N.C. (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ncmd-lcrr"
+issuer = "United States District Court for the Middle District of North Carolina"
+date = "2026-06-01"
+designation = "Local Rules of Criminal Practice (effective June 1, 2026)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.ncmd-lcrr]
+title = "Rules of Practice and Procedure of the United States District Court for the Middle District of North Carolina, Part Two, Local Rules of Criminal Practice (effective June 1, 2026)"
+url = "https://www.ncmd.uscourts.gov/sites/ncmd/files/mdnc%20local%20criminal%20rules%2020260601.pdf"
+path = "sources/ncmd/ncmd-local-criminal-rules-2026-06-01-sectioned.txt"
+path_sha256 = "55646e7386c5a6b04d720d6fb5bb8b87f13d74a84852dda8027da3aabe83b2ef"
+sha256 = "1c993d7ed91417d93af21ed75855f9e89facbe4d064a7d5d603772c608ab34dc"
+as_of = "2026-06-01"
+cite_prefixes = ["M.D.N.C. LCrR"]
+section_heading = "LCrR {n}"
+
+[sources.ncmd-lr]
+title = "Rules of Practice and Procedure of the United States District Court for the Middle District of North Carolina, Local Civil Rules (effective June 1, 2026)"
+url = "https://www.ncmd.uscourts.gov/sites/ncmd/files/mdnc%20local%20civil%20rules%2020260601.pdf"
+path = "sources/ncmd/ncmd-local-civil-rules-sectioned.txt"
+path_sha256 = "7c67c21dbe347f03c46adc55f9b43edb79da8e5cf52919d9c00322dac37bf801"
+sha256 = "038c3a7f8b990469ed768200dd2f0fc4ed321331b1cb29642b987ef25bb22018"
+as_of = "2026-06-01"
+cite_prefixes = ["M.D.N.C. LR"]
+section_heading = "LR {n}"

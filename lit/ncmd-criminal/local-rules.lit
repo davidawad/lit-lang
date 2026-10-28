@@ -1,0 +1,75 @@
+module ncmd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Middle District of North Carolina's own criminal periods. Stated in
+// the rules but not declared: the time for pretrial motions and responses,
+// which the Court sets at arraignment (LCrR 12.1(a)); sentencing scheduled
+// no earlier than 90 calendar days after a guilty plea or verdict (LCrR
+// 32.2(a)), a floor on the court's setting; the 14 days to notify the
+// probation officer and the other party of a dispute with the draft report
+// and the final report 7 days before sentencing (LCrR 32.2(c), (e)), which
+// restate FRCrimP 32(f)(1) and (g) and stay lit/frcrimp's; sentencing
+// memoranda and government sentencing motions three business days before
+// the hearing (LCrR 32.2(g)), counted in business days, which frcrimp45
+// does not count; and the Speedy Trial Act and CJA plans, which have the
+// force of local rules but are not reproduced in the rules (LCrR 44.1,
+// 50.1). Of the Local Civil Rules LCrR 57.1 applies, LR 5.4(c)'s sealing
+// periods are declared; LR 5.4(b)'s report runs on the civil LR 5.5 report
+// and LR 11.1(b)'s on a pro se plaintiff's returned mail, neither of which
+// a criminal case has, and the motion response and reply periods of LR
+// 7.3(f) and (h) are not among the rules LCrR 57.1 applies. The outline's
+// flow (arrest to judgment) is lit/frcrimp's; its decisions have no
+// vendored reporter text and are removed.
+/// Sentencing is scheduled (LCrR 32.2(b)).
+event SentencingScheduled()
+/// The draft presentence investigation report is disclosed, on docketing in
+/// CM/ECF, or for a sealed case or pro se defendant on delivery or three
+/// days after mailing (LCrR 32.2(b), (d)).
+event DraftReportDisclosed()
+/// A motion to seal is filed (LR 5.4(c), LCrR 57.1).
+event SealMotionFiled()
+/// The LR 5.4(c)(3) materials supporting sealing are filed (LR 5.4(c)(5),
+/// LCrR 57.1).
+event SealSupportFiled()
+
+/// LCrR 32.2(b): unless the defendant waives the minimum, the draft
+/// presentence investigation report, with the guideline computations and
+/// suggested supervised-release conditions, is completed and disclosed not
+/// less than 45 calendar days before the scheduled sentencing.
+deadline draft-report-period: 45.days before SentencingScheduled() counted_by frcrimp45 cite "M.D.N.C. LCrR 32.2(b)"
+{
+  forum frcrimp
+}
+
+/// LCrR 32.2(d): within 21 calendar days after disclosure of the draft
+/// report, a party maintaining an unresolved objection files a sealed
+/// "Position Paper Regarding Sentencing Factors" with a certificate of
+/// conference.
+deadline position-paper-period: 21.days after DraftReportDisclosed() counted_by frcrimp45 cite "M.D.N.C. LCrR 32.2(d)"
+{
+  forum frcrimp
+}
+
+/// LCrR 32.2(d): within 28 calendar days after disclosure of the draft
+/// report, the non-objecting party files a sealed response; a party's
+/// silence is reported and handled as no dispute.
+deadline position-response-period: 28.days after DraftReportDisclosed() counted_by frcrimp45 cite "M.D.N.C. LCrR 32.2(d)"
+{
+  forum frcrimp
+}
+
+/// LR 5.4(c)(4)b., applied by LCrR 57.1: when the filing party is not the
+/// party claiming confidentiality, the party claiming it files a response
+/// with the LR 5.4(c)(3) materials within 14 days of the motion to seal.
+deadline sealing-response-period: 14.days after SealMotionFiled() counted_by frcrimp45 cite "M.D.N.C. LR 5.4(c)"
+{
+  forum frcrimp
+}
+
+/// LR 5.4(c)(5), applied by LCrR 57.1: a party opposing sealing files its
+/// objection within 14 days of the filing of the supporting materials.
+deadline sealing-objection-period: 14.days after SealSupportFiled() counted_by frcrimp45 cite "M.D.N.C. LR 5.4(c)"
+{
+  forum frcrimp
+}

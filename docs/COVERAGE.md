@@ -57,7 +57,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | Kansas | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/kansas/state-appellate`, `outlines/tenth-circuit/kansas/state-civil` |
 | Kentucky | state | outline | 0 | 0 | 0 | 0 | `outlines/sixth-circuit/kentucky/state-appellate`, `outlines/sixth-circuit/kentucky/state-civil` |
 | Louisiana | state | outline | 0 | 0 | 0 | 0 | `outlines/fifth-circuit/louisiana/state-appellate`, `outlines/fifth-circuit/louisiana/state-civil` |
-| Maine | state | promoted | 0 | 0 | 0 | 0 | `lit/me-superior-civil` |
+| Maine | state | promoted | 0 | 0 | 0 | 0 | `lit/me-law-court`, `lit/me-superior-civil` |
 | Maryland | state | outline | 0 | 0 | 0 | 0 | `outlines/fourth-circuit/maryland/state-appellate`, `outlines/fourth-circuit/maryland/state-civil` |
 | Massachusetts | state | outline | 0 | 0 | 0 | 0 | `outlines/first-circuit/massachusetts/state-appellate`, `outlines/first-circuit/massachusetts/state-civil` |
 | Michigan | state | outline | 0 | 0 | 0 | 0 | `outlines/sixth-circuit/michigan/state-appellate`, `outlines/sixth-circuit/michigan/state-civil` |

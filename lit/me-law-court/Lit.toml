@@ -1,0 +1,39 @@
+# A civil appeal to the Maine Supreme Judicial Court sitting as the Law
+# Court under the Maine Rules of Appellate Procedure (including amendments
+# effective November 1, 2024, sources/me-law-court). Computation of time
+# is M.R. App. P. 1A: intermediate weekends, legal holidays and clerk's
+# office closures are excluded from periods of 6 days or fewer, and core
+# has no Maine counting rule or holiday calendar, so the rules' periods
+# are stated in notes, not encoded as counted deadlines. A civil action
+# in the Superior Court is lit/me-superior-civil.
+[package]
+name = "me-law-court-civil-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "me-law-court-civil-appeals"
+forum = "me-law-court"
+authority = "StateRule"
+title = "Maine Law Court, civil appeals"
+description = "A civil appeal to the Maine Supreme Judicial Court sitting as the Law Court under the Maine Rules of Appellate Procedure, as far as the vendored text states: notice, record, briefing, consideration, decision, reconsideration and mandate."
+in_force = "2024-11-01"
+known_at = "2026-10-27"
+unknown_before = "2024-11-01"
+jurisdiction = "Maine Supreme Judicial Court sitting as the Law Court (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.me-r-app-p]
+title = "Maine Rules of Appellate Procedure with advisory notes, including amendments effective November 1, 2024"
+url = "https://www.courts.maine.gov/rules/text/mr_app_p_plus_2024-11-01.pdf"
+path = "sources/me-law-court/rules-of-appellate-procedure-sectioned.txt"
+path_sha256 = "c0893d371ac23ed296d1a7b7c26b34e0fed0f5b82db4239c2f0aef64d93082b9"
+sha256 = "2f56aa30698a5b5978097fdd607f1a03f95c075728a5507bd507a2e3042fffb4"
+as_of = "2024-11-01"
+cite_prefixes = ["M.R. App. P."]
+section_heading = "Rule {n}"

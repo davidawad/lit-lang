@@ -1,0 +1,99 @@
+module me-law-court-civil-appeals.appeal
+
+/// A principal brief of any party: the greater of 40 pages or 10,000
+/// words without prior approval of the Law Court (M.R. App. P. 7A(f)(1)).
+/// The larger limits for an appellee's brief addressing a cross-appeal (50
+/// pages or 13,000 words) and an appellant's reply responding to one (30
+/// pages or 9,000 words) are not encoded.
+limit principal-brief {
+  pages <= 40 cite "M.R. App. P. 7A(f)"
+  words <= 10_000 cite "M.R. App. P. 7A(f)"
+} cite "M.R. App. P. 7A(f)"
+
+/// A reply brief: 15 pages or 4,500 words (M.R. App. P. 7A(f)(1)).
+limit reply-brief {
+  pages <= 15 cite "M.R. App. P. 7A(f)"
+  words <= 4_500 cite "M.R. App. P. 7A(f)"
+} cite "M.R. App. P. 7A(f)"
+
+/// The appellant's brief is filed (M.R. App. P. 7(b)).
+event AppellantBriefFiled() paper principal-brief
+/// The appellee's brief is filed (M.R. App. P. 7(b)).
+event AppelleeBriefFiled() paper principal-brief
+/// The appellant's reply brief is filed (M.R. App. P. 7(b)).
+event ReplyBriefFiled() paper reply-brief
+
+start notice
+
+decision notice: "Notice of appeal within 21 days of entry?" by applicant cite "M.R. App. P. 2B(c)"
+{
+  note "The appeal is commenced by filing a notice of appeal with the clerk of the trial court, served on the other parties (M.R. App. P. 2A(b)(1)), with the civil filing fee paid to the trial court clerk (M.R. App. P. 2A(c)); the fee amount is not stated in the vendored rules. The time to appeal in a civil case is 21 days after entry into the docket of the judgment or order appealed from, unless a shorter time is provided by law; after a timely motion under M.R. Civ. P. 50(b), 52(a) or (b), or 59, the notice may be filed up to 21 days after entry of the order on the motion (M.R. App. P. 2B(c)). For good cause the trial court may extend the time by up to 21 days, and by up to 140 days only where the clerk failed to send notice of the judgment and the party did not otherwise learn of it (M.R. App. P. 2B(d)). Another party may cross-appeal within 14 days after the first notice or within the 2B(c) time, whichever last expires (M.R. App. P. 2C(a)). No leading decision is named."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "M.R. App. P. 2B(c)" }
+  edge-notice-timely "Timely notice" -> record { authority cite "M.R. App. P. 3(a)" }
+}
+
+terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismissal] cite "M.R. App. P. 4(d)"
+{
+  note "The Law Court dismisses an appeal whenever it appears that it lacks jurisdiction (M.R. App. P. 4(d)). Outcome from the appellant's side."
+}
+
+state record: "Appeal docketed; record filed" by office cite "M.R. App. P. 6(a)"
+{
+  note "The trial court clerk transmits the notice and docket entries and the Clerk of the Law Court dockets the appeal (M.R. App. P. 3(a)). The appellant orders any transcript with the notice (M.R. App. P. 2A(d)) and makes satisfactory payment arrangements within 14 days after filing the notice and transcript order form (M.R. App. P. 5(b)). The trial court clerk transmits the record no earlier than 28 and no later than 35 days after the notice is filed, or, after a timely post-judgment motion filed in those 28 days, no later than 7 days after entry of the order on it (M.R. App. P. 6(a))."
+  edge-record-briefing "Record complete; briefing notice sent" -> briefing {
+    authority cite "M.R. App. P. 7(a)"
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite "M.R. App. P. 7(b)"
+{
+  note "In a Track B appeal (any civil appeal outside the Track A list of rule 7(b)(1)) the appellant's brief is due within 56 days after the record on appeal is complete, the appellee's within 105 days after it, and the reply within 21 days after the appellee's brief is filed; in a Track A appeal the periods are 28 days, 56 days and 14 days (M.R. App. P. 7(b)). Extensions are granted only on the grounds rule 7(b)(3) lists. Principal briefs are limited to the greater of 40 pages or 10,000 words and reply briefs to 15 pages or 4,500 words (M.R. App. P. 7A(f))."
+  edge-briefing-consideration "Briefing complete" -> consideration {
+    authority cite "M.R. App. P. 11"
+  }
+  edge-briefing-unperfected "Brief not filed within the time prescribed" -> dismissed-prosecution {
+    authority cite "M.R. App. P. 4(c)"
+  }
+}
+
+terminal dismissed-prosecution: "Appeal dismissed for want of prosecution" outcome [loss, dismissal] cite "M.R. App. P. 4(c)"
+{
+  note "If an appellant fails to comply with the rules within the times prescribed, the Law Court may dismiss the appeal for want of prosecution on motion or on its own initiative (M.R. App. P. 4(c))."
+}
+
+state consideration: "Oral argument or submission on briefs" by court cite "M.R. App. P. 11"
+{
+  note "Each side is allowed up to 15 minutes of argument, the appellant reserving up to 3 for rebuttal (M.R. App. P. 11(b)). When the Clerk gives notice that the case is set for consideration on briefs, a party may request oral argument within 7 days after the notice (M.R. App. P. 11(g)). No leading decision on the standard of review is named."
+  edge-consideration-decision "Submitted" -> decision { authority cite "M.R. App. P. 14(a)" }
+}
+
+decision decision: "Law Court decision" by court cite "M.R. App. P. 14(a)"
+{
+  note "The Clerk of the Law Court issues the mandate with the opinion or decision by transmitting an attested copy to the trial court (M.R. App. P. 14(a)). A motion for reconsideration, with the fee the Court Fees Schedule specifies, is filed within 14 days after the date of the decision (M.R. App. P. 14(b))."
+  edge-decision-affirmed "Affirmed" -> mandate-affirmed { authority cite "M.R. App. P. 14(a)" }
+  edge-decision-vacated "Vacated or reversed" -> mandate-vacated {
+    authority cite "M.R. App. P. 14(a)"
+  }
+}
+
+state mandate-affirmed: "Mandate issues: affirmed" by office cite "M.R. App. P. 14(a)"
+{
+  note "In a civil appeal other than the child protective, parental rights, guardianship, adoption, contempt and injunction matters of rule 14(a)(2), the mandate issues 14 days after the date of decision unless the Law Court shortens or enlarges the time; a motion to stay the mandate is filed within 14 days after the decision, and a timely motion for reconsideration filed before the mandate issues stays it until the motion is decided (M.R. App. P. 14(a)). A verified bill of costs is filed within 14 days after the mandate issues (M.R. App. P. 13(c)). Review in the Supreme Court of the United States is not modeled."
+  edge-mandate-affirmed-final "Mandate issued" -> affirmed { authority cite "M.R. App. P. 14(a)" }
+}
+
+state mandate-vacated: "Mandate issues: vacated or reversed" by office cite "M.R. App. P. 14(a)"
+{
+  note "The mandate issues as rule 14(a) provides, ordinarily 14 days after the date of decision in a civil appeal; a verified bill of costs is filed within 14 days after the mandate issues (M.R. App. P. 13(c)). Further proceedings in the trial court are not modeled."
+  edge-mandate-vacated-final "Mandate issued" -> vacated { authority cite "M.R. App. P. 14(a)" }
+}
+
+terminal affirmed: "Judgment affirmed" outcome [loss, judgment] cite "M.R. App. P. 14(a)"
+{
+  note "Outcome from the appellant's side."
+}
+
+terminal vacated: "Judgment vacated or reversed" outcome [win, judgment] cite "M.R. App. P. 14(a)"
+{
+  note "Outcome from the appellant's side."
+}

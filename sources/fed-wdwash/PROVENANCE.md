@@ -15,3 +15,11 @@
 - Source: as the extract `fed-wdwash/wdwash-local-civil-rules.txt`, https://www.wawd.uscourts.gov/sites/wawd/files/WAWD%20Local%20Civil%20Rules%20%282026%29%20-%20Clean.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, Local Civil Rules last revised effective January 13, 2026.
 - Sectioned sha256 6e36487f123d77750b4503501397b9ff436c3ee1667e22c19e1717f5523f9fc3 (the `path_sha256` pinned by `lit/wawd/Lit.toml`).
+
+### `fed-wdwash/wdwash-local-criminal-rules-2026.txt` — Western District of Washington Local Criminal Rules (131 pp)
+
+- Source: https://www.wawd.uscourts.gov/sites/wawd/files/Local%20Criminal%20Rules%20%282026%29%20WAWD%20Clean.pdf (official site; 131 pages, sha256 f85f0c63f6989ef8ce3e0ca71dad473c5fd2d1e5838753232ee1e680466411c0).
+- Edition: Western District of Washington Local Criminal Rules (CrR), "effective January 13, 2026" (CrR introduction), linked as "Local Criminal Rules" (Effective 1/13/2026) from https://www.wawd.uscourts.gov/local-rules-and-orders; PDF created 2026-02-06. www.wawd.uscourts.gov robots.txt read: no Disallow covering /sites/wawd/files/, Crawl-delay 10 honoured; tool: curl with the identifying User-Agent lit-lang-provenance/1.0 (angrybohr@proton.me). Criminal forum (lg-gddt): wawd-criminal.
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 4c3aa9f787afa7e951c3181734e9e860c3f79694831052e89015e8771e2e28c8. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `fed-wdwash/original/wdwash-local-criminal-rules-2026.pdf` as served (sha256 f85f0c63f6989ef8ce3e0ca71dad473c5fd2d1e5838753232ee1e680466411c0); extraction sha256 4c3aa9f787afa7e951c3181734e9e860c3f79694831052e89015e8771e2e28c8.

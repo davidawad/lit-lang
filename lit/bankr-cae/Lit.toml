@@ -1,0 +1,47 @@
+# The Local Rules of Practice of the U.S. Bankruptcy Court for the Eastern
+# District of California over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075):
+# it declares only the periods the Local Rules themselves state and
+# re-encodes no FRBP period. It is a base package, not a `kind =
+# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011, as
+# for lit/bankr-ak). Each period is counted under FRBP 9006(a), the FRCP
+# 6(a) method (core's frcp6). The rules are those "Effective April 2026"
+# (General Order 26-02; sources/bankr-cae binds the clean text, not the
+# reference-only redline). The edition states the month but not the day,
+# so the package is in force from April 30, 2026, the last day the cover
+# certainly covers; a query before then is a hole in the corpus. No
+# amending order is vendored, so there are no dated layers.
+[package]
+name = "bankr-cae-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-cae-local-rules"
+forum = "bankr-cae"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Eastern District of California: Local Rules of Practice"
+description = "The Bankr. E.D. Cal. Local Rules of Practice over the Federal Rules of Bankruptcy Procedure (lit/frbp): payment advices, joint-case consolidation, notice of death, monthly operating reports, chapter 13 retainers, appearances, chapter 11 and Subchapter V claims, surrogate claims, claim objections on 44 or 30 days' notice, the Notice of Filed Claims, chapter 13 plan objections, confirmation orders and default, discharge certifications, the FRCP 26(f) conference, summary judgment, motions on 28 or 14 days' notice and the notice of opportunity for hearing, contested-matter disclosures, trial declarations, exhibits and transcript redaction."
+in_force = "2026-04-30"
+known_at = "2026-10-28"
+unknown_before = "2026-04-30"
+jurisdiction = "U.S. Bankruptcy Court for the Eastern District of California"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.caeb-lbr]
+title = "Local Rules of Practice, U.S. Bankruptcy Court for the Eastern District of California (effective April 2026)"
+url = "https://www.caeb.uscourts.gov/documents/Forms/LocalRules/LBR%20April%202026%20FINAL%20FOR%20POSTING.pdf"
+path = "sources/bankr-cae/caeb-lbr-2026-04-sectioned.txt"
+path_sha256 = "5496409b273338dc562c166a6e21cdae172102a6c7a04f0eb1afcb50fd84efad"
+sha256 = "3dab727b0e668a8549549eaa3aff8a8b17ea594977712b6913a0c6ee01ba4445"
+as_of = "2026-04-30"
+cite_prefixes = ["Bankr. E.D. Cal. LBR"]
+section_heading = "LBR {n}"

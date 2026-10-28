@@ -1,0 +1,52 @@
+# The U.S. District Court for the District of Colorado's local criminal
+# rules (D.C.COLO.LCrR) as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods the local criminal
+# rules themselves state and re-encodes no FRCrimP, Speedy Trial Act or
+# FRAP 4(b) period (one source of truth: lit/frcrimp). Each period is
+# counted under FRCrimP 45(a), which governs "any local rule", so each
+# deadline names `forum frcrimp`. The rules are the Local Rules of Practice
+# effective December 1, 2025 (Section II, Criminal Rules; sources/d-colo),
+# the edition the court serves as current, so in_force is that date;
+# earlier editions are not vendored, so a query before it is a hole in the
+# corpus. An appeal goes to the Tenth Circuit under lit/frcrimp's FRAP
+# 4(b) period and lit/ca10.
+[package]
+name = "cod-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "cod-criminal-local-rules"
+forum = "cod-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of Colorado: Local Criminal Rules"
+description = "The U.S. District Court for the District of Colorado's local criminal rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the notice of disposition, the discovery conference memorandum, the sentencing statements, departure and variance motions and sentencing-related documents, notice of an unrepresented party's change of address, objection to the disposal of exhibits, and requests for disability accommodation."
+in_force = "2025-12-01"
+known_at = "2026-10-28"
+unknown_before = "2025-12-01"
+jurisdiction = "U.S. District Court for the District of Colorado (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "cod-lcrr"
+issuer = "U.S. District Court for the District of Colorado"
+date = "2025-12-01"
+designation = "Local Rules of Practice - Criminal"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.cod-lcrr]
+title = "Local Rules of Practice of the United States District Court for the District of Colorado - Criminal (Section II), effective December 1, 2025"
+url = "http://www.cod.uscourts.gov/Portals/0/Documents/LocalRules/2025_Final_Local_Rules.pdf"
+path = "sources/d-colo/d-colo-local-rules-criminal-sectioned.txt"
+path_sha256 = "c96bbca0c25694afda4b305217170deed75e758f450ac60c5b3b18ccc315bb32"
+sha256 = "7606869ea84c00157957ee77e6b1d6329ed785ce6723a54a1cfa412ccee2882d"
+as_of = "2025-12-01"
+cite_prefixes = ["D.C.COLO.LCrR"]
+section_heading = "D.C.COLO.LCrR {n}"

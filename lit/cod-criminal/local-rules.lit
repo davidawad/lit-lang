@@ -1,0 +1,176 @@
+module cod-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled, VerdictOrDischarge }
+
+// The District of Colorado's own criminal periods, counted under the
+// criminal rules (FRCrimP 45(a) governs "any local rule"). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here. Filing in CM/ECF is
+// service under FRCrimP 49 (D.C.COLO.LCrR 49.1(d)).
+//
+// Periods that are not counted from an event of the case stay in notes: a
+// pilot program or special project runs at most 18 months, extendable once
+// by six months (D.C.COLO.LCrR 1.1(h)(2)); the government gives a copy of
+// a plea agreement to chambers and the Probation Office no later than 48
+// hours before the change of plea hearing (D.C.COLO.LCrR 11.1(c)), an
+// hour-counted period the corpus models only in days; any person may object
+// to a motion to restrict no later than three court business days after
+// the court posts notice of it, and a document filed as restricted without
+// a motion to restrict keeps its restriction for 14 days (D.C.COLO.LCrR
+// 47.1(d), (e)); an order under 18 U.S.C. § 2703(d) is restricted for 90
+// days unless otherwise ordered (D.C.COLO.LCrR 47.1); and the clerk may
+// give notice of the disposal of exhibits only after 60 days of entry of
+// final judgment in a case in which no appeal is taken (D.C.COLO.LCrR
+// 55.1(b)(1)). The local criminal rules set no motion response or reply
+// period; the district judge sets the pretrial-motion deadlines and the
+// trial date (D.C.COLO.LCrR 17.1.1).
+//
+// The earlier D. Colo. criminal outline's FRCrimP flow and its decisions
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// The date the court sets for trial (D.C.COLO.LCrR 11.1(a); 57.5).
+event TrialScheduled()
+/// The date the court sets for a hearing (D.C.COLO.LCrR 57.5).
+event HearingScheduled()
+/// The defendant is arraigned (D.C.COLO.LCrR 17.1.1).
+event Arraigned()
+/// The attorney for the government files its sentencing statement
+/// (D.C.COLO.LCrR 32.1(a)(1)).
+event GovernmentSentencingStatementFiled()
+/// The name, mailing address or telephone number of an unrepresented
+/// prisoner or party changes (D.C.COLO.LCrR 49.1(c)).
+event UnrepresentedContactChanged()
+/// The clerk notifies counsel and any unrepresented party that it intends
+/// to dispose of conventionally submitted material or exhibits
+/// (D.C.COLO.LCrR 55.1(b)(1)).
+event ExhibitDisposalNoticed()
+
+/// D.C.COLO.LCrR 11.1(a): unless otherwise ordered, a notice of
+/// disposition is filed no later than 14 days before trial.
+deadline disposition-notice: 14.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.C.COLO.LCrR 11.1(a)"
+{
+  forum frcrimp
+}
+
+/// D.C.COLO.LCrR 17.1.1: a magistrate judge enters a Discovery Conference
+/// Memorandum and Order at the time of or no later than 14 days after the
+/// arraignment, and directs counsel to obtain the pretrial-motion
+/// deadlines and a trial date from the assigned district judge.
+deadline discovery-conference-order: 14.days after Arraigned() counted_by frcrimp45 cite "D.C.COLO.LCrR 17.1.1"
+{
+  forum frcrimp
+}
+
+/// D.C.COLO.LCrR 32.1(a)(1): no later than 30 days after a verdict of
+/// guilty is returned by a jury or the court, the attorney for the
+/// government files a sentencing statement analyzing the sentencing
+/// factors.
+deadline government-sentencing-statement: 30.days after VerdictOrDischarge(Verdict) counted_by frcrimp45 cite "D.C.COLO.LCrR 32.1(a)"
+{
+  forum frcrimp
+}
+
+/// D.C.COLO.LCrR 32.1(a)(2): no later than 14 days after the government
+/// files its sentencing statement, a defendant may file one.
+deadline defendant-sentencing-statement: 14.days after GovernmentSentencingStatementFiled() counted_by frcrimp45 cite "D.C.COLO.LCrR 32.1(a)"
+{
+  forum frcrimp
+}
+
+/// D.C.COLO.LCrR 32.1(c): a motion for departure or variance is filed, as
+/// a separate motion, no later than 14 days before sentencing.
+deadline departure-variance-motion: 14.days before SentencingScheduled() counted_by frcrimp45 cite "D.C.COLO.LCrR 32.1(c)"
+{
+  forum frcrimp
+}
+
+/// D.C.COLO.LCrR 32.1(c): a response to a motion for departure or
+/// variance may be filed no later than seven days before sentencing.
+deadline departure-variance-response: 7.days before SentencingScheduled() counted_by frcrimp45 cite "D.C.COLO.LCrR 32.1(c)"
+{
+  forum frcrimp
+}
+
+/// D.C.COLO.LCrR 32.1(e): unless otherwise ordered, correspondence and
+/// other sentencing-related documents pertaining to the defendant are
+/// provided to the probation office no later than 10 days before
+/// sentencing.
+deadline sentencing-documents-to-probation: 10.days before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.C.COLO.LCrR 32.1(e)"
+{
+  forum frcrimp
+}
+
+/// D.C.COLO.LCrR 32.1(e): the probation officer files those documents, at
+/// Level 2 restriction, no later than seven days before sentencing.
+deadline sentencing-documents-filed: 7.days before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.C.COLO.LCrR 32.1(e)"
+{
+  forum frcrimp
+}
+
+/// D.C.COLO.LCrR 49.1(c): notice of a change of name, mailing address or
+/// telephone number of an unrepresented prisoner or party is filed not
+/// later than five days after the change.
+deadline unrepresented-contact-notice: 5.days after UnrepresentedContactChanged() counted_by frcrimp45 cite "D.C.COLO.LCrR 49.1(c)"
+{
+  forum frcrimp
+}
+
+/// D.C.COLO.LCrR 55.1(b)(1): if no objection is filed within 14 days of
+/// the clerk's notice, the clerk may dispose of the conventionally
+/// submitted material or exhibit.
+deadline exhibit-disposal-objection: 14.days after ExhibitDisposalNoticed() counted_by frcrimp45 cite "D.C.COLO.LCrR 55.1(b)"
+{
+  forum frcrimp
+}
+
+/// D.C.COLO.LCrR 57.5: unless otherwise ordered, counsel or an
+/// unrepresented party notifies the court of an accommodation required
+/// under the Americans with Disabilities Act no later than seven days
+/// before a hearing or trial.
+deadline ada-accommodation-hearing: 7.days before HearingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.C.COLO.LCrR 57.5"
+{
+  forum frcrimp
+}
+
+/// D.C.COLO.LCrR 57.5: the same notice for trial.
+deadline ada-accommodation-trial: 7.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.C.COLO.LCrR 57.5"
+{
+  forum frcrimp
+}
+
+/// D.C.COLO.LCrR 57.5: a request for the services of an American Sign
+/// Language interpreter is made no later than 30 days before the hearing.
+deadline asl-interpreter-hearing: 30.days before HearingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.C.COLO.LCrR 57.5"
+{
+  forum frcrimp
+}
+
+/// D.C.COLO.LCrR 57.5: the same request for trial.
+deadline asl-interpreter-trial: 30.days before TrialScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.C.COLO.LCrR 57.5"
+{
+  forum frcrimp
+}

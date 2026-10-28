@@ -1,0 +1,58 @@
+module ohsd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Southern District of Ohio's own criminal periods, counted under
+// FRCrimP 45(a), which governs a period stated in a local rule. S.D. Ohio
+// Crim. R. 32.1 sets the district's presentence schedule, and the court may
+// modify its time frames and those of FRCrimP 32 for good cause (32.1(i));
+// FRCrimP 32(e)(2)'s 35 days and 32(f)(1)'s 14-day objection period stay
+// lit/frcrimp's. Stated in the rules but not declared: the Local Civil
+// Rules' periods, which apply in criminal actions unless excluded (Crim. R.
+// 1.2, 1.3) and are lit/ohsd's; the final report "deemed to have been
+// disclosed on the date" it is filed (32.1(j)), a deemed date; and the
+// judge's thirty days to send the report to the Sentencing Commission under
+// 28 U.S.C. § 994(w) (32.1(k)), which binds the court.
+/// A plea of guilty or nolo contendere, a signed consent to a presentence
+/// investigation before plea, or a verdict of guilty (S.D. Ohio Crim. R.
+/// 32.1(b)).
+event GuiltOrConsentEntered()
+/// The probation officer discloses (and files) the initial presentence
+/// investigation report (S.D. Ohio Crim. R. 32.1(b), (c), (h)).
+event InitialReportDisclosed()
+/// A conference with the probation officer on objections to the initial
+/// report is held (S.D. Ohio Crim. R. 32.1(d)).
+event ObjectionConferenceHeld()
+/// The probation officer files the final presentence investigation report
+/// (S.D. Ohio Crim. R. 32.1(e), (h)).
+event FinalReportFiled()
+
+/// S.D. Ohio Crim. R. 32.1(b): within forty-four days after the plea,
+/// consent or verdict the probation officer discloses the initial report
+/// to defense counsel and the assigned Assistant United States Attorney.
+deadline initial-report-disclosure-period: 44.days after GuiltOrConsentEntered() counted_by frcrimp45 cite "S.D. Ohio Crim. R. 32.1(b)"
+/// S.D. Ohio Crim. R. 32.1(c): within twenty-one days after disclosure of
+/// the initial report the parties communicate their objections to the
+/// probation officer and each other.
+deadline report-objection-period: 21.days after InitialReportDisclosed() counted_by frcrimp45 cite "S.D. Ohio Crim. R. 32.1(c)"
+/// S.D. Ohio Crim. R. 32.1(d): a conference a party seeks on an objection
+/// is held within thirty-one days following disclosure of the initial
+/// report.
+deadline objection-conference-period: 31.days after InitialReportDisclosed() counted_by frcrimp45 cite "S.D. Ohio Crim. R. 32.1(d)"
+/// S.D. Ohio Crim. R. 32.1(d): unresolved objections are memorialized in
+/// writing by the objecting party and provided to the probation officer
+/// within seven days after the conference.
+deadline unresolved-objection-period: 7.days after ObjectionConferenceHeld() counted_by frcrimp45 cite "S.D. Ohio Crim. R. 32.1(d)"
+/// S.D. Ohio Crim. R. 32.1(e): not later than forty-two days following
+/// disclosure of the initial report the probation officer files the final
+/// report, with its addendum of unresolved objections, and discloses it to
+/// the parties.
+deadline final-report-period: 42.days after InitialReportDisclosed() counted_by frcrimp45 cite "S.D. Ohio Crim. R. 32.1(e)"
+/// S.D. Ohio Crim. R. 32.1(h): the sentencing hearing is held not less than
+/// fourteen days after the court receives the final report; this is the
+/// earliest such date.
+deadline earliest-sentencing-after-final-report: 14.days after FinalReportFiled() counted_by frcrimp45 cite "S.D. Ohio Crim. R. 32.1(h)"
+/// S.D. Ohio Crim. R. 32.1(h): and only once thirty-five days have passed
+/// since the filing of the initial report, unless the defendant waives the
+/// time requirement; this is the earliest such date.
+deadline earliest-sentencing-after-initial-report: 35.days after InitialReportDisclosed() counted_by frcrimp45 cite "S.D. Ohio Crim. R. 32.1(h)"

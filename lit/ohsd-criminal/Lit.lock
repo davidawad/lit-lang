@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "ohsd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:f9bc29b7ee1c4631ba6202879a08ed758dcb2592ba3cc50e1f8091149afef0ae"
+semantic = "sha256:a29614693c5a3e3308b200d3ca2a26994388f544d7698a3a7781eae29571250b"
+texts = [
+    "ohsd-crim-r sources/ohsd/ohsd-local-criminal-rules-sectioned.txt sha256:1748818686a3757a0fbc17b3d62a18e176557adbbfedec6883b786fafd0171cf",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

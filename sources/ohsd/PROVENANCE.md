@@ -18,3 +18,8 @@
 - Source: as the extract `ohsd/ohsd-local-rules.txt`, https://www.ohsd.uscourts.gov/sites/ohsd/files//2024-10-21%20Local%20Rules.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, Local Civil and Criminal Rules dated October 21, 2024.
 - Sectioned sha256 a405583a3a8bc4312d0d697c948f1dcc0dc64f01847f4617208673316ed58732 (the `path_sha256` pinned by `lit/ohsd/Lit.toml`).
+
+### `ohsd/ohsd-local-criminal-rules-sectioned.txt` — S.D. Ohio Local Criminal Rules, sectioned
+- Derived in the pod (lg-gddt.16) from `ohsd/ohsd-local-rules.txt` (extract sha256 c585d5c074b5f98c949dcd687b8df331c46ab62984c6041bf1bc6c936e379118); nothing fetched. One `## S.D. Ohio Crim. R. <n>` line is inserted right after each Local Criminal Rule's own body heading line `<n> <title>` from the "LOCAL CRIMINAL RULES" part (extract line 1949) on: 13 markers, 1.1 through 83.4 (83.4's section runs to the end of the file). The table of contents and the Local Civil Rules are unmarked (the civil rules are sectioned separately in `ohsd-local-rules-sectioned.txt`). Rule text was not edited: deleting the marker lines (`sed '/^## S\.D\. Ohio Crim\. R\. /d'`) restores the extract byte for byte.
+- Edition: as the extract, Local Civil and Criminal Rules dated October 21, 2024; S.D. Ohio Crim. R. 1.1(b) states the criminal rules' effective date as May 26, 2022.
+- Sectioned sha256 1748818686a3757a0fbc17b3d62a18e176557adbbfedec6883b786fafd0171cf (the `path_sha256` pinned by `lit/ohsd-criminal/Lit.toml`).

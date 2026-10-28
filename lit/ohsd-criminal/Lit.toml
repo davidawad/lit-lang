@@ -1,0 +1,51 @@
+# The United States District Court for the Southern District of Ohio's
+# Local Criminal Rules as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods the Local Criminal
+# Rules themselves state and re-encodes no FRCrimP, Speedy Trial Act or
+# FRAP 4(b) period. FRCrimP 45(a) computes a period stated in a local rule.
+# The rules are the "LOCAL CRIMINAL RULES" part of the Local Civil and
+# Criminal Rules dated October 21, 2024 (sources/ohsd), the court's newest
+# edition; S.D. Ohio Crim. R. 1.1(b) states the criminal rules' own
+# effective date, May 26, 2022. An appeal goes to the Sixth Circuit under
+# lit/frap and lit/ca6; federal habeas is lit/habeas.
+[package]
+name = "ohsd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ohsd-criminal-local-rules"
+forum = "ohsd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Southern District of Ohio: Local Criminal Rules"
+description = "The Southern District of Ohio's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the presentence report schedule of S.D. Ohio Crim. R. 32.1, from disclosure of the initial report 44 days after a plea or verdict, through the parties' objections, the objection conference and the memorialized unresolved objections, to the final report and the earliest sentencing hearing."
+in_force = "2024-10-21"
+known_at = "2026-10-28"
+unknown_before = "2024-10-21"
+jurisdiction = "United States District Court, S.D. Ohio (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ohsd-crim-r"
+issuer = "United States District Court for the Southern District of Ohio"
+date = "2024-10-21"
+designation = "Local Criminal Rules (Local Civil and Criminal Rules, October 21, 2024)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRCrimP periods; this package layers only the court's local criminal rules over them.
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.ohsd-crim-r]
+title = "Local Criminal Rules of the United States District Court for the Southern District of Ohio (Local Civil and Criminal Rules, October 21, 2024)"
+url = "https://www.ohsd.uscourts.gov/sites/ohsd/files//2024-10-21%20Local%20Rules.pdf"
+path = "sources/ohsd/ohsd-local-criminal-rules-sectioned.txt"
+path_sha256 = "1748818686a3757a0fbc17b3d62a18e176557adbbfedec6883b786fafd0171cf"
+sha256 = "9e68d137b17d93a176c7d9d0834ad77affa2faa5621dd775590c23aeb5cc0bbf"
+as_of = "2024-10-21"
+cite_prefixes = ["S.D. Ohio Crim. R."]
+section_heading = "S.D. Ohio Crim. R. {n}"

@@ -14,7 +14,9 @@ import frcrimp.deadlines.{ SentencingScheduled }
 // here: the presentence report is filed thirty-five (35) days before the
 // sentencing hearing (CrimLR 32.1(a)(3)), FRCrimP 32(e)(2)'s period
 // (psr-disclosure); a defendant convicted by a magistrate judge appeals by
-// a timely notice under FRCrimP 58(g) (CrimLR 58.1(b)(1)).
+// a timely notice under FRCrimP 58(g) (CrimLR 58.1(b)(1)); counsel confer
+// on a Rule 16 disclosure timetable not later than fourteen (14) calendar
+// days after the arraignment (CrimLR 16.1.a), FRCrimP 16.1(a)'s period.
 //
 // Conditions that are not deadlines from an event stay in notes:
 // sentencing is normally set seventy-seven (77) days after conviction
@@ -44,9 +46,6 @@ limit motion-day-briefs {
 /// A magistrate judge enters findings and a recommendation on a felony
 /// guilty plea (S.D. Cal. CrimLR 11.1(d)).
 event PleaRecommendationEntered()
-/// The defendant is arraigned on an indictment or information (S.D. Cal.
-/// CrimLR 16.1.a).
-event Arraigned()
 /// The first motion hearing is scheduled (S.D. Cal. CrimLR 16.1.a).
 event FirstMotionHearingScheduled()
 /// The presentence report is filed later than thirty-five days before the
@@ -90,15 +89,6 @@ deadline plea-recommendation-objection: 14.days after PleaRecommendationEntered(
 /// provides a transcript of the Rule 11 allocution at least seven (7) days
 /// before the sentencing hearing.
 deadline allocution-transcript: 7.days before SentencingScheduled() counted_by frcrimp45 cite "S.D. Cal. CrimLR 11.1(f)"
-{
-  forum frcrimp
-}
-
-/// S.D. Cal. CrimLR 16.1.a: not later than fourteen (14) calendar days
-/// after the arraignment, defense counsel and the attorney for the
-/// government confer on a timetable and procedures for FRCrimP 16
-/// disclosure.
-deadline discovery-meet-and-confer: 14.days after Arraigned() counted_by frcrimp45 cite "S.D. Cal. CrimLR 16.1.a"
 {
   forum frcrimp
 }

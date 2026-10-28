@@ -11,8 +11,7 @@ module va-criminal-trial-court.criminal
 // the decisions the outline named, which are removed.
 start arrested
 
-state arrested: "Arrest and preliminary hearing" by applicant cite ?("Va. Code Title 19.2, arrest, bail and preliminary hearing (not vendored)")
-{
+state arrested: "Arrest and preliminary hearing" by applicant cite ?("Va. Code Title 19.2, arrest, bail and preliminary hearing (not vendored)") {
   note "Arrest, bail and the preliminary hearing in the district court are statutory (Title 19.2), and only Code § 19.2-243 is vendored, so this step's periods are holes."
   edge-arrested-probable-cause "Probable cause found in the district court" -> charged {
     authority cite ?("Va. Code § 19.2-243, CURRENCY UNCONFIRMED")
@@ -22,15 +21,12 @@ state arrested: "Arrest and preliminary hearing" by applicant cite ?("Va. Code T
   }
 }
 
-state charged: "Speedy-trial clock running" by office cite ?("Va. Code § 19.2-243, CURRENCY UNCONFIRMED")
-{
+state charged: "Speedy-trial clock running" by office cite ?("Va. Code § 19.2-243, CURRENCY UNCONFIRMED") {
   note "Where the district court has found probable cause that an adult committed a felony, the accused held continuously in custody is forever discharged if no trial is commenced in the circuit court within five months from that finding, and an accused recognized for appearance within nine months; without a preliminary hearing, or on its waiver, the periods run from the indictment or presentment, and for an accused not yet arrested on it, from the arrest; a trial de novo on appeal of a misdemeanor runs five or nine months from the conviction or certification. Delay caused by the seven exceptions the section lists (competency evaluations, absent Commonwealth witnesses, a severance the codefendant sought, a continuance on or without objection to a motion of the accused, statutory laboratory continuances, a hung jury, natural disaster) is excluded (Va. Code § 19.2-243). CURRENCY UNCONFIRMED: the values are the vendored text, unverified."
   edge-charged-motions "Pretrial motions" -> motions-ruling {
     authority cite "Va. Sup. Ct. R. 3A:9(c)"
   }
-  edge-charged-plea "Plea negotiations" -> plea-decision {
-    authority cite "Va. Sup. Ct. R. 3A:8"
-  }
+  edge-charged-plea "Plea negotiations" -> plea-decision { authority cite "Va. Sup. Ct. R. 3A:8" }
 }
 
 decision motions-ruling: "Ruling on pretrial motions" by court cite "Va. Sup. Ct. R. 3A:9(b)"
@@ -53,9 +49,7 @@ decision plea-decision: "Plea or trial" by applicant cite "Va. Sup. Ct. R. 3A:8"
   edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
     authority cite "Va. Sup. Ct. R. 3A:8"
   }
-  edge-plea-decision-trial "Trial" -> trial {
-    authority cite "Va. Sup. Ct. R. 3A:15"
-  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "Va. Sup. Ct. R. 3A:15" }
 }
 
 decision trial: "Verdict" by court cite "Va. Sup. Ct. R. 3A:15"
@@ -64,9 +58,7 @@ decision trial: "Verdict" by court cite "Va. Sup. Ct. R. 3A:15"
   edge-trial-acquittal "Not guilty, or evidence struck" -> acquitted {
     authority cite "Va. Sup. Ct. R. 3A:15(a)"
   }
-  edge-trial-guilty "Guilty; sentencing" -> sentencing {
-    authority cite "Va. Sup. Ct. R. 3A:15(b)"
-  }
+  edge-trial-guilty "Guilty; sentencing" -> sentencing { authority cite "Va. Sup. Ct. R. 3A:15(b)" }
 }
 
 state sentencing: "Sentence and final order" by court cite "Va. Sup. Ct. R. 1:1"
@@ -89,9 +81,7 @@ decision post-trial: "Motion to set aside the verdict" by court cite "Va. Sup. C
   edge-post-trial-new-trial "New trial granted" -> trial {
     authority cite "Va. Sup. Ct. R. 3A:15(c)"
   }
-  edge-post-trial-denied "Motion denied" -> judgment {
-    authority cite "Va. Sup. Ct. R. 5A:3(a)"
-  }
+  edge-post-trial-denied "Motion denied" -> judgment { authority cite "Va. Sup. Ct. R. 5A:3(a)" }
 }
 
 decision judgment: "Final judgment of conviction" by applicant cite "Va. Sup. Ct. R. 5A:6(a)"
@@ -100,13 +90,14 @@ decision judgment: "Final judgment of conviction" by applicant cite "Va. Sup. Ct
   edge-judgment-appeal "Notice of appeal within 30 days" -> appeal-taken {
     authority cite "Va. Sup. Ct. R. 5A:6(a)"
   }
-  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Va. Sup. Ct. R. 5A:6(a)" }
+  edge-judgment-no-appeal "No appeal" -> conviction-final {
+    authority cite "Va. Sup. Ct. R. 5A:6(a)"
+  }
 }
 
 terminal acquitted: "Acquitted" outcome [win] cite "Va. Sup. Ct. R. 3A:15(c)"
 
-terminal dismissed: "Discharged or charges dismissed" outcome [win, dismissal] cite ?("Va. Code § 19.2-243, CURRENCY UNCONFIRMED")
-{
+terminal dismissed: "Discharged or charges dismissed" outcome [win, dismissal] cite ?("Va. Code § 19.2-243, CURRENCY UNCONFIRMED") {
   note "A discharge under Code § 19.2-243 is forever (CURRENCY UNCONFIRMED); whether another dismissal bars refiling is a hole."
 }
 

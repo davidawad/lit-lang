@@ -1,6 +1,22 @@
 version = 2
 
 [[package]]
+name = "bankr-waw-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:da7d7b7041d1230cc39bc11cb113c2221917652d41d6d3a852eae25443324b1f"
+semantic = "sha256:f3ecbfb4b8918cfad4e2c7b734fd1edfc1ffd0aab292bc5347763c1160828bb6"
+texts = [
+    "wawb-go-2026-6 sources/bankr-waw/wawb-go-2026-6-adopting-lbr.txt sha256:0e56d4318b6453e637aac54d1c3aa86426c89b3bd3932922fc2e16169c31720b",
+    "wawb-lbr sources/bankr-waw/wawb-lbr-2023-12-01-sectioned.txt sha256:c7e3095d0a2ef4d2dee19b089e27751756a6b5c94f58c28e0415e88c95abc63d",
+    "wawb-lbr-2026 sources/bankr-waw/wawb-lbr-2026-12-01-sectioned.txt sha256:370f1e8a19506396da7f4e9a9a892a5597663596dd488cb407133c1f35f75e76",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +60,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-waw"
-version = "0.0.1"
-language = 1
-source = "sha256:df4e18f70ecc7a321bc02d9396c310108b4acf47c16efdcffc61e7d8d05ddf6e"
-semantic = "sha256:9c34f18cbb8ead582d1edd5407697042a1712acd28695825b24478e60840f572"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

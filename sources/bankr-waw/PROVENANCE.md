@@ -22,3 +22,15 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 0e56d4318b6453e637aac54d1c3aa86426c89b3bd3932922fc2e16169c31720b. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-waw/original/wawb-go-2026-6-adopting-lbr.pdf` as served (sha256 493d879a7a7a38486e52c60f02b1e0adca29e21a71247692d27529e9fafa8875); extraction sha256 0e56d4318b6453e637aac54d1c3aa86426c89b3bd3932922fc2e16169c31720b.
+
+### `bankr-waw/wawb-lbr-2023-12-01-sectioned.txt` — Bankr. W.D. Wash. Local Rules of Bankruptcy Procedure (effective December 1, 2023), sectioned
+
+- Derived in the pod (lg-u561.25) from `bankr-waw/wawb-lbr-2023-12-01.txt` (extract sha256 4bc5ba7de13e7e4203f75f23f8c333b4c3f3bc1e11e3f537252b9cca67b33108); nothing fetched. One `## LBR <n>` line is inserted before each rule's own heading line in the body (an indented line, after an optional form feed, opening with `RULE <nnnn>-<n>.`; the set is every such heading after the table of contents, from `1006-1` through `9083-1`, 73 rules); rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Edition: as the extract.
+- Sectioned sha256 c7e3095d0a2ef4d2dee19b089e27751756a6b5c94f58c28e0415e88c95abc63d (the `path_sha256` pinned by `lit/bankr-waw/Lit.toml`).
+
+### `bankr-waw/wawb-lbr-2026-12-01-sectioned.txt` — Bankr. W.D. Wash. Local Rules of Bankruptcy Procedure (effective December 1, 2026), sectioned
+
+- Derived in the pod (lg-u561.25) from `bankr-waw/wawb-lbr-2026-12-01.txt` (extract sha256 869c082565fbbd9ffe4151238e28a08867ba581c564ee04d8991db498b375baa); nothing fetched. One `## LBR <n>` line is inserted before each rule's own heading line in the body (an indented line, after an optional form feed, opening with `RULE <nnnn>-<n>.`; the set is every such heading after the table of contents, from `1006-1` through `9084-1`, 73 rules); rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Edition: as the extract.
+- Sectioned sha256 370f1e8a19506396da7f4e9a9a892a5597663596dd488cb407133c1f35f75e76 (the `path_sha256` pinned by `lit/bankr-waw/Lit.toml`).

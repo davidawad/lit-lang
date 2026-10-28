@@ -1,0 +1,65 @@
+# The Local Rules of Bankruptcy Procedure of the U.S. Bankruptcy Court for
+# the Western District of Washington over lit/frbp (FRBP 9029(a); 28
+# U.S.C. § 2075): it declares only the periods the Local Rules themselves
+# state and re-encodes no FRBP period. It is a base package, not a `kind
+# = "local-rule"` layer: lit/core has no bankruptcy forum family (L2011,
+# as for lit/bankr-ak). Each period is counted under FRBP 9006(a), the
+# FRCP 6(a) method (core's frcp6). The rules effective December 1, 2023
+# are the base; General Order 2026-6 (entered October 26, 2026) adopts
+# amended rules effective December 1, 2026, so each period is a dated
+# version over [2023-12-01, 2026-12-01) citing the 2023 text and one from
+# 2026-12-01 citing the 2026 text (sources/bankr-waw). A query before
+# December 1, 2023 is a hole in the corpus.
+[package]
+name = "bankr-waw-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-waw-local-rules"
+forum = "bankr-waw"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Western District of Washington: Local Rules of Bankruptcy Procedure"
+description = "The Bankr. W.D. Wash. Local Rules of Bankruptcy Procedure over the Federal Rules of Bankruptcy Procedure (lit/frbp), in the December 1, 2023 rules and the amended rules effective December 1, 2026 (General Order 2026-6): chapter 11 schedule amendments, the creditor list, debtor-in-possession tax returns, insurance and budget, chapter 13 fees, petition preparers, claim objections, chapter 13 plan service, confirmation replies and domestic support certifications, disclosure statements and confirmation objections, withdrawal of the reference, summons certificates, notices regarding final adjudication, pretrial statements and orders, motion timing, reconsideration, proposed orders, redaction, removal and mediation certification."
+in_force = "2023-12-01"
+known_at = "2026-10-28"
+unknown_before = "2023-12-01"
+jurisdiction = "U.S. Bankruptcy Court for the Western District of Washington"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.wawb-lbr]
+title = "Local Rules of Bankruptcy Procedure, U.S. Bankruptcy Court for the Western District of Washington (effective December 1, 2023)"
+url = "https://www.wawb.uscourts.gov/sites/wawb/files/attachments/2023_rules_clean_23_10_27_FINAL_w_ToC_Added_CSC_CLEAN.pdf"
+path = "sources/bankr-waw/wawb-lbr-2023-12-01-sectioned.txt"
+path_sha256 = "c7e3095d0a2ef4d2dee19b089e27751756a6b5c94f58c28e0415e88c95abc63d"
+sha256 = "45c415fd387d771d7004712d1e860efdf6348b2bcc67c5e3b5e8104c77c1cc3e"
+as_of = "2023-12-01"
+cite_prefixes = ["Bankr. W.D. Wash. LBR"]
+section_heading = "LBR {n}"
+
+[sources.wawb-go-2026-6]
+title = "General Order No. 2026-6, Amending Local Rules of Bankruptcy Procedure, Effective December 1, 2026 (entered October 26, 2026)"
+url = "https://www.wawb.uscourts.gov/sites/wawb/files/general-orders/GO%202026-6%2C%20adopting%20LBRs%20with%20attachments%20%28signed%29.pdf"
+path = "sources/bankr-waw/wawb-go-2026-6-adopting-lbr.txt"
+path_sha256 = "0e56d4318b6453e637aac54d1c3aa86426c89b3bd3932922fc2e16169c31720b"
+sha256 = "493d879a7a7a38486e52c60f02b1e0adca29e21a71247692d27529e9fafa8875"
+as_of = "2026-10-26"
+
+[sources.wawb-lbr-2026]
+title = "Local Rules of Bankruptcy Procedure, U.S. Bankruptcy Court for the Western District of Washington (effective December 1, 2026)"
+url = "https://www.wawb.uscourts.gov/sites/wawb/files/attachments/2026%20Rules%20Final.pdf"
+path = "sources/bankr-waw/wawb-lbr-2026-12-01-sectioned.txt"
+path_sha256 = "370f1e8a19506396da7f4e9a9a892a5597663596dd488cb407133c1f35f75e76"
+sha256 = "9d68bcfabdcab9d909f10261b24aca1ab2a8c78d0939c36b3afd2380abde2ad5"
+as_of = "2026-12-01"
+cite_prefixes = ["Bankr. W.D. Wash. LBR (Dec. 2026)"]
+section_heading = "LBR {n}"

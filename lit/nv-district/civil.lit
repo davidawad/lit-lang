@@ -1,0 +1,181 @@
+module nv-district-civil.civil
+
+// Civil actions in the Nevada district courts, from the applicant's
+// (plaintiff's) side. Every period below is stated in a note, not counted:
+// time is computed under NRCP 6(a), which excludes the trigger day, counts
+// every day and rolls a last day falling on a Saturday, Sunday or legal
+// holiday to the next day that is none of these, a legal holiday being any
+// day NRS 236.015 sets aside; lit/core has no counting rule for Nevada's
+// legal holidays. When a party may or must act within a time after being
+// served and service is made by mail, by leaving it with the clerk or by
+// other consented means, 3 days are added (Rule 6(d)). The parties may
+// extend a time by a stipulation the court approves, submitted before the
+// time expires, and the court for good cause, but no court may extend the
+// time to act under Rules 50(b) and (d), 52(b), 59(b), (d) and (e), and
+// 60(c)(1), or extend the time under Rule 54(d)(2) after it has expired
+// (Rule 6(b)). A written motion and notice of hearing are served at least
+// 21 days before the hearing unless a rule or order provides otherwise,
+// and opposing affidavits at least 7 days before it (Rule 6(c)). No filing
+// fee is stated in the rules. The earlier outline named Buzz Stew, LLC v.
+// City of North Las Vegas, 124 Nev. 224, 181 P.3d 670 (2008), on the
+// pleading standard and Wood v. Safeway, Inc., 121 Nev. 724, 121 P.3d 1026
+// (2005), on summary judgment; no reporter text for either is vendored, so
+// both are removed.
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "NRCP 3"
+{
+  note "A civil action is commenced by filing a complaint with the court (Rule 3). The summons and complaint must be served on a defendant no later than 120 days after the complaint is filed unless the court extends the time; if not, the court must dismiss the action without prejudice as to that defendant on motion or on its own order to show cause. A motion to extend made before the period expires gets an extension on good cause; one made after it must also show good cause for the late motion (Rule 4(e))."
+  edge-complaint-filed-served "Summons and complaint served" -> answer-due {
+    authority cite "NRCP 4"
+  }
+  edge-complaint-filed-unserved "Not served within 120 days" -> dismissed-unserved {
+    authority cite "NRCP 4(e)"
+  }
+}
+
+terminal dismissed-unserved: "Dismissed without prejudice for untimely service" outcome [loss, dismissal] cite "NRCP 4(e)"
+{
+  note "Outcome from the applicant's side: dismissal without prejudice as to the unserved defendant under Rule 4(e)(2)."
+}
+
+decision answer-due: "Answer, Rule 12 motion, or no response" by office cite "NRCP 12(a)"
+{
+  note "Unless another time is specified by Rule 4.2(c)(3)(E), Rule 12 or a statute, a defendant serves an answer within 21 days after being served with the summons and complaint or, if it timely waived service under Rule 4.1, within 60 days after the request for a waiver was sent (90 days if sent outside the United States) (Rule 12(a)(1)(A)). The State, its public entities and political subdivisions, and their officers and employees sued for acts relating to their public duties answer within 45 days after service, or after required service on the Attorney General if later (Rule 12(a)(2)). Lack of subject-matter or personal jurisdiction, insufficient process or service of process, failure to state a claim and failure to join a party under Rule 19 may be raised by motion made before pleading (Rule 12(b))."
+  edge-answer-due-answer "Answer served" -> answered { authority cite "NRCP 12(a)" }
+  edge-answer-due-motion "Rule 12(b) motion" -> dismissal-motion { authority cite "NRCP 12(b)" }
+  edge-answer-due-default "No pleading or defense: default" -> default-entered {
+    authority cite "NRCP 55(a)"
+  }
+}
+
+decision dismissal-motion: "Rule 12(b) motion decided" by court cite "NRCP 12(b)"
+{
+  note "Unless the court sets a different time, if the court denies the motion or postpones its disposition until trial, the responsive pleading is served within 14 days after notice of the court's action (Rule 12(a)(3)(A))."
+  edge-dismissal-motion-granted "Granted: complaint dismissed" -> dismissed-pleading {
+    authority cite "NRCP 12(b)"
+  }
+  edge-dismissal-motion-amend "Plaintiff amends the complaint" -> amended {
+    authority cite "NRCP 15(a)"
+  }
+  edge-dismissal-motion-denied "Denied: answer due 14 days after notice" -> answered {
+    authority cite "NRCP 12(a)"
+  }
+}
+
+state amended: "Amended pleading" by applicant cite "NRCP 15(a)"
+{
+  note "A party may amend its pleading once as a matter of course within 21 days after serving it or, if a responsive pleading is required, 21 days after service of a responsive pleading or of a motion under Rule 12(b), (e) or (f), whichever is earlier; otherwise only with the opposing party's written consent or the court's leave, which the court should freely give when justice so requires (Rule 15(a)(1), (2)). Unless the court orders otherwise, any required response to an amended pleading is made within the time remaining to respond to the original pleading or within 14 days after service of the amended pleading, whichever is later (Rule 15(a)(3))."
+  edge-amended-tested "Amended pleading met with a new Rule 12(b) motion" -> dismissal-motion {
+    authority cite "NRCP 12(b)"
+  }
+  edge-amended-answered "Amended pleading answered" -> answered { authority cite "NRCP 15(a)" }
+}
+
+terminal dismissed-pleading: "Dismissed on a Rule 12(b) motion" outcome [loss, dismissal] cite "NRCP 12(b)"
+{
+  note "Outcome from the applicant's side. A judgment includes any order from which an appeal lies (Rule 54(a)); the appeal is lit/nv-supreme."
+}
+
+state default-entered: "Default entered by the clerk" by court cite "NRCP 55(a)"
+{
+  note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend, and that is shown by affidavit or otherwise, the clerk must enter its default (Rule 55(a)). For a sum certain or one computation can make certain, the clerk on the plaintiff's request and affidavit enters judgment against a defendant defaulted for not appearing who is neither a minor nor an incapacitated person (Rule 55(b)(1)); in other cases the party applies to the court, and a party that has appeared is served with written notice of the application at least 7 days before the hearing (Rule 55(b)(2)). The court may set aside an entry of default for good cause (Rule 55(c))."
+  edge-default-entered-judgment "Default judgment entered" -> default-judgment {
+    authority cite "NRCP 55(b)"
+  }
+  edge-default-entered-set-aside "Default set aside for good cause" -> answered {
+    authority cite "NRCP 55(c)"
+  }
+}
+
+decision default-judgment: "Default judgment entered" by court cite "NRCP 55(b)"
+{
+  note "The court may set aside a final default judgment under Rule 60(b) (Rule 55(c)). A Rule 60(b) motion is made within a reasonable time, and for mistake, inadvertence, surprise or excusable neglect, newly discovered evidence, or fraud no more than 6 months after the proceeding or service of written notice of entry of the judgment, whichever is later; that time cannot be extended (Rule 60(c)(1)). On a motion filed within 6 months after written notice of entry of a default judgment is served, the court may set aside a default judgment against a defendant who was not personally served and has not appeared or waived service (Rule 60(d)(2))."
+  edge-default-judgment-stands "No relief sought: judgment stands" -> default-won {
+    authority cite "NRCP 55(b)"
+  }
+  edge-default-judgment-relieved "Default judgment set aside: defendant answers" -> answered {
+    authority cite "NRCP 60(b)"
+  }
+}
+
+terminal default-won: "Default judgment for applicant" outcome [win] cite "NRCP 55(b)"
+{
+  note "Outcome from the applicant's side: a default judgment under Rule 55(b), which must not differ in kind from, or exceed in amount, what the pleadings demand (Rule 54(c))."
+}
+
+state answered: "Answer served" by applicant cite "NRCP 12(a)"
+{
+  note "On any issue triable of right by a jury, a party demands a jury trial by serving a written demand at any time after commencement and no later than the entry of the order first setting the case for trial, filing it, and, unless the local rules provide otherwise, depositing the first day's jury fees with the clerk; a party that fails to file and serve a proper demand waives a jury trial (Rule 38(b), (d)). Another party may demand a jury on other issues within 14 days after being served with a demand limited to some issues (Rule 38(c))."
+  edge-answered-conference "Early case conference held" -> discovery {
+    authority cite "NRCP 16.1(b)"
+  }
+}
+
+state discovery: "Early case conference and discovery" by applicant cite "NRCP 16.1(b)"
+{
+  note "Unless the case is exempt, the parties who have filed a pleading hold an early case conference within 30 days after service of an answer by the first answering defendant (Rule 16.1(b)(2)(A)) and file a joint or individual case conference report within 30 days after it (Rule 16.1(c)(1)(A)); initial disclosures are made at or within 14 days after the conference unless a stipulation or order sets a different time (Rule 16.1(a)(1)(C)). If the conference is not held within 180 days after service of an answer, or the plaintiff files no case conference report within 240 days after it, the court may dismiss the case as to that defendant without prejudice (Rule 16.1(e)(1), (2)). Unless a local rule or order sets a different time, a party may move for summary judgment at any time until 30 days after the close of all discovery (Rule 56(b))."
+  edge-discovery-sj "Motion for summary judgment" -> summary-judgment {
+    authority cite "NRCP 56(a)"
+  }
+  edge-discovery-trial "Case reaches trial" -> trial { authority cite "NRCP 38" }
+  edge-discovery-unprosecuted "Not brought to trial: dismissed for want of prosecution" -> dismissed-unprosecuted {
+    authority cite "NRCP 41(e)"
+  }
+  edge-discovery-settled "Settlement: notice or stipulation of dismissal" -> settled {
+    authority cite "NRCP 41(a)"
+  }
+}
+
+terminal dismissed-unprosecuted: "Dismissed for want of prosecution" outcome [loss, dismissal] cite "NRCP 41(e)"
+{
+  note "The court may dismiss an action the plaintiff fails to bring to trial within 2 years after it was filed, and must dismiss it if not brought to trial within 5 years, or within 3 years after an order granting a new trial or after the remittitur is filed on an affirmance of that order or on a reversal remanding for a new trial; the parties may extend the time by written stipulation (Rule 41(e)(2)-(5)). Unless the order provides otherwise, the dismissal bars another action on the same claim against the same defendants (Rule 41(e)(6))."
+}
+
+decision summary-judgment: "Summary judgment decided" by court cite "NRCP 56(a)"
+{
+  note "The court shall grant summary judgment if the movant shows that there is no genuine dispute as to any material fact and that it is entitled to judgment as a matter of law, and should state on the record its reasons for granting or denying the motion (Rule 56(a))."
+  edge-summary-judgment-granted-applicant "Granted for applicant" -> judgment-entered {
+    authority cite "NRCP 56(a)"
+  }
+  edge-summary-judgment-granted-defense "Granted for defendant" -> judgment-entered {
+    authority cite "NRCP 56(a)"
+  }
+  edge-summary-judgment-denied "Denied or granted in part: trial" -> trial {
+    authority cite "NRCP 56(a)"
+  }
+}
+
+state trial: "Trial by jury or by the court" by court cite "NRCP 38"
+{
+  note "A motion for judgment as a matter of law may be made at any time before the case is submitted to the jury (Rule 50(a)(2)). A renewed motion, which may include an alternative request for a new trial, is filed no later than 28 days after service of written notice of entry of judgment, or 28 days after the jury was discharged if the motion addresses a jury issue not decided by a verdict; the time cannot be extended (Rule 50(b))."
+  edge-trial-verdict "Verdict or decision" -> judgment-entered { authority cite "NRCP 58" }
+  edge-trial-settled "Settlement during trial" -> settled { authority cite "NRCP 41(a)" }
+}
+
+decision judgment-entered: "Judgment entered" by court cite "NRCP 58"
+{
+  note "A judgment is approved and signed by the court and filed with the clerk, and its filing is its entry; entry is not delayed for taxing costs (Rule 58(b), (c)). Within 14 days after entry, the party the court designates serves written notice of entry with a copy of the judgment on each party not in default and files it; the judgment may not be executed on until that notice is served (Rule 58(e)). A judgment adjudicating fewer than all claims or parties is final only on an express determination that there is no just reason for delay (Rule 54(b)). A motion for a new trial, and a motion to alter or amend the judgment, is filed no later than 28 days after service of written notice of entry of judgment, and the time cannot be extended (Rule 59(b), (e), (f)). A motion for attorney fees is filed no later than 21 days after written notice of entry of judgment is served, unless a statute or order provides otherwise (Rule 54(d)(2)(B))."
+  edge-judgment-entered-new-trial "New trial granted" -> trial { authority cite "NRCP 59(a)" }
+  edge-judgment-entered-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "NRAP 4(a)"
+  }
+  edge-judgment-entered-final "No post-trial motion or appeal" -> final-no-appeal {
+    authority cite "NRCP 58"
+  }
+}
+
+terminal settled: "Settled: dismissal by stipulation or notice" outcome [settlement] cite "NRCP 41(a)"
+{
+  note "The plaintiff dismisses without a court order by notice before the opposing party serves an answer or a motion for summary judgment, or by a stipulation signed by all parties who have appeared; unless it states otherwise the dismissal is without prejudice, and unless otherwise stipulated the plaintiff repays the defendant's filing fees (Rule 41(a)(1))."
+}
+
+terminal appeal-taken: "Notice of appeal filed under the Nevada Rules of Appellate Procedure" outcome [appeal] cite "NRAP 4(a)"
+{
+  note "In a civil case, the notice of appeal is filed with the district court clerk no later than 30 days after written notice of entry of the judgment or order appealed from is served, unless a statute sets a different time (NRAP 4(a)(1)). A timely motion under NRCP 50(b), 52(b) or 59, or under NRCP 60 filed within 28 days after service of written notice of entry, runs the time from service of written notice of entry of the order disposing of the last such motion (NRAP 4(a)(5)). The appeal continues in lit/nv-supreme."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "NRCP 58"
+{
+  note "Judgment entered under Rule 58 and not appealed."
+}

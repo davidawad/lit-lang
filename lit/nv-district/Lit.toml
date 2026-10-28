@@ -1,0 +1,51 @@
+# Civil actions in the Nevada district courts under the Nevada Rules of
+# Civil Procedure, as far as the vendored text states: the rules
+# "Including Amendments Through October 31, 2025" as published by the
+# Nevada Legislature's law library (sources/nv-district). Time is computed
+# under NRCP 6(a), whose legal holidays are those NRS 236.015 sets aside,
+# not the federal ones; lit/core has no counting rule for them, so the
+# periods are stated in notes, not encoded as counted deadlines. Appeals
+# are governed by the Nevada Rules of Appellate Procedure
+# (sources/nv-supreme), encoded in lit/nv-supreme.
+[package]
+name = "nv-district-civil"
+version = "0.1.0"
+language = 1
+pack_id = "nv-district-civil"
+forum = "nv-district"
+authority = "StateRule"
+jurisdiction_id = "nevada"
+title = "Nevada District Court, civil"
+description = "Civil actions in the Nevada district courts under the Nevada Rules of Civil Procedure, as far as the vendored text states: commencement and the 120-day service limit, the time to answer and Rule 12 motions, amendment, default and default judgment, the early case conference and its report, summary judgment and its timing, the jury demand, want of prosecution, judgment and notice of its entry, renewed judgment as a matter of law, new trial and alteration of judgment, attorney fees, relief from judgment, and the notice of appeal under the Nevada Rules of Appellate Procedure."
+in_force = "2025-10-31"
+known_at = "2026-10-28"
+unknown_before = "2025-10-31"
+jurisdiction = "Nevada District Court (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.nv-nrcp]
+title = "Nevada Rules of Civil Procedure, effective January 1, 1953 and including amendments through October 31, 2025 (Nevada Legislature, Legal Division law library; Rev. 4/15/2026)"
+url = "https://www.leg.state.nv.us/Division/Legal/LawLibrary/CourtRules/NRCP.html"
+path = "sources/nv-district/nrcp-sectioned.txt"
+path_sha256 = "7748a9182674e4ec40e7136fa35430334397972a5331554a6114ec25e3cc303b"
+sha256 = "99812c5ef90fa83a0b5ded17bb4f1649316b2e1c3cc48c9e91eaca63e2479065"
+as_of = "2025-10-31"
+cite_prefixes = ["NRCP"]
+section_heading = "NRCP {n}"
+
+[sources.nv-nrap]
+title = "Nevada Rules of Appellate Procedure, effective July 1, 1973, including amendments through May 21, 2025 (Supreme Court of Nevada)"
+url = "https://nvcourts.gov/nevada_court_rules/nevada_appellate_court_rules2/nevada_rules_of_appellate_procedure"
+path = "sources/nv-supreme/nrap-sectioned.txt"
+path_sha256 = "da5766edaa2c73cdcc84090d1ffb4b9c8ed94bf19d19983a8d5fcc647a0b4ee5"
+sha256 = "7fae8b53b741809dbea22d8af492bc8571c51ea4c63280f488713086b358c020"
+as_of = "2025-05-21"
+cite_prefixes = ["NRAP"]
+section_heading = "NRAP {n}"

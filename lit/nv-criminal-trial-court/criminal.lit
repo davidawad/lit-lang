@@ -1,0 +1,142 @@
+module nv-district-court-criminal.criminal
+
+// Felony and gross misdemeanor prosecutions in the Nevada district courts
+// under NRS Title 14 (2025 edition, revised April 15, 2026;
+// sources/nv-criminal-trial-court). The periods are computed under NRS
+// 178.472 and stated in the notes; lit/core has no counting rule for them,
+// so none is encoded as a counted deadline. Post-conviction habeas (NRS
+// chapter 34) is not vendored. Outcomes are from the defendant's side. The
+// earlier outline's leading decisions (County of Riverside v. McLaughlin,
+// Gerstein v. Pugh, Gideon v. Wainwright, Brady v. Maryland, Mapp v. Ohio,
+// Barker v. Wingo, Boykin v. Alabama, Missouri v. Frye, Jackson v.
+// Virginia, Apprendi v. New Jersey, Roe v. Flores-Ortega, Garza v. Idaho)
+// are removed: no reporter text is vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "NRS 171.178"
+{
+  note "A peace officer making an arrest under a warrant issued on a complaint, or without a warrant, takes the arrested person without unnecessary delay before a magistrate (NRS 171.178(1), (2)). If the person is not brought before a magistrate within 72 hours after arrest, excluding nonjudicial days, the magistrate gives the prosecuting attorney an opportunity to explain the delay and may release the person if the delay was unnecessary (NRS 171.178(3)). When a person arrested without a warrant is brought before a magistrate, a complaint must be filed forthwith (NRS 171.178(4))."
+  edge-arrested-appearance "Appearance before the magistrate" -> initial-appearance {
+    authority cite "NRS 171.178"
+  }
+}
+
+decision initial-appearance: "Bail or release" by court cite "NRS 178.484"
+{
+  note "Except as the statute provides, a person arrested for an offense other than murder of the first degree must be admitted to bail, and a person arrested for first-degree murder may be admitted unless the proof is evident or the presumption great (NRS 178.484(1), (4)). The court imposes bail or conditions of release only as the least restrictive means necessary to protect the community or assure appearance, and a prosecutor's request for bail must be proved by clear and convincing evidence (NRS 178.4851(1), (2))."
+  edge-initial-appearance-detained "Held without bail or unable to post" -> probable-cause {
+    authority cite "NRS 178.484"
+  }
+  edge-initial-appearance-released "Admitted to bail or released on conditions" -> probable-cause {
+    authority cite "NRS 178.4851"
+  }
+}
+
+decision probable-cause: "Preliminary examination or grand jury" by court cite "NRS 171.196"
+{
+  note "An offense not triable in justice court is not pleaded there; if the defendant waives the preliminary examination the magistrate holds the defendant to answer in district court, and otherwise hears the evidence within 15 days unless for good cause the magistrate extends the time (NRS 171.196(1), (2)). If there is probable cause the magistrate holds the defendant to answer in district court; otherwise the defendant is discharged (NRS 171.206). Every public offense is prosecuted by indictment or information except offenses tried in justice or municipal court (NRS 172.015), and an indictment requires the concurrence of 12 or more grand jurors (NRS 172.255(1))."
+  edge-probable-cause-charged "Held to answer or indicted" -> charged {
+    authority cite "NRS 171.206"
+  }
+  edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
+    authority cite "NRS 171.206"
+  }
+}
+
+state charged: "Indictment or information" by office cite "NRS 173.035"
+{
+  note "An information may be filed against a person bound over after a preliminary examination or who waived it (NRS 173.035(1)). If no indictment is found or information filed within 15 days after the person has been held to answer, the court may dismiss the complaint (NRS 178.556(1))."
+  edge-charged-arraignment "Arraignment in district court" -> arraignment {
+    authority cite "NRS 174.015"
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "NRS 174.015"
+{
+  note "Arraignment is conducted in open court by reading the indictment or information or stating the substance of the charge and calling on the defendant to plead, after the defendant is given a copy (NRS 174.015(1)). A defendant may plead not guilty, guilty, guilty but mentally ill or, with the court's consent, nolo contendere (NRS 174.035(1)). If a defendant whose trial has not been postponed on the defendant's application is not brought to trial within 60 days after the arraignment on the indictment or information, the district court may dismiss it (NRS 178.556(1))."
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "NRS 174.235" }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "NRS 174.125"
+{
+  note "At the defendant's request the prosecuting attorney permits inspection and copying of the defendant's and witnesses' statements, examination and test reports, and the documents and objects the State intends to introduce (NRS 174.235(1)); a request may be made only within 30 days after arraignment or a reasonable later time the court permits, and must be complied with not less than 30 days before trial (NRS 174.285). Motions that would delay trial, including motions to suppress, must be made before trial: in a single-judge district in writing on not less than 10 days' notice, and in a district with two or more judges in writing not less than 15 days before the date set for trial (or within 5 days after the plea if fewer than 15 days intervene) (NRS 174.125(1)-(3)). Pleas other than those NRS 174.075 lists, demurrers and motions to quash are abolished and raised by motion (NRS 174.075(2))."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling { authority cite "NRS 174.125" }
+  edge-discovery-speedy "Motion to dismiss for delay" -> motions-ruling {
+    authority cite "NRS 178.556"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "NRS 174.035" }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "NRS 174.125"
+{
+  note "The district court may dismiss an indictment or information if the defendant is not brought to trial within 60 days after arraignment and trial was not postponed on the defendant's application (NRS 178.556(1)); except as NRS 174.085 provides, such a dismissal bars another prosecution for the same offense (NRS 178.562(1))."
+  edge-motions-ruling-speedy "Dismissed for unnecessary delay" -> dismissed {
+    authority cite "NRS 178.556"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "NRS 174.075"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "NRS 174.125"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "NRS 174.035"
+{
+  note "A written plea agreement must be substantially in the form NRS 174.063 prescribes, and an oral guilty or nolo contendere plea is accepted only after the court addresses the defendant personally and determines it is voluntary and understood (NRS 174.035(2)). Cases required to be tried by jury are so tried unless the defendant waives in writing with the court's approval and the prosecutor's consent; a capital defendant pleading not guilty must be tried by jury (NRS 175.011(1)). Juries consist of 12 jurors, or by written stipulation approved by the court not fewer than six (NRS 175.021(2))."
+  edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
+    authority cite "NRS 174.035"
+  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "NRS 175.011" }
+}
+
+decision trial: "Verdict" by court cite "NRS 175.481"
+{
+  note "The verdict must be unanimous and is returned to the judge in open court (NRS 175.481). After a guilty verdict the court may enter a judgment of acquittal if the evidence is insufficient; the motion must be made within 7 days after the jury is discharged or such further time as the court fixes during that period (NRS 175.381(2))."
+  edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
+    authority cite "NRS 175.381"
+  }
+  edge-trial-guilty "Guilty; post-verdict motions" -> post-trial { authority cite "NRS 176.515" }
+}
+
+decision post-trial: "Post-verdict motions" by court cite "NRS 176.515"
+{
+  note "A motion for a new trial on grounds other than newly discovered evidence must be made within 7 days after the verdict or finding of guilt or such further time as the court fixes during that period; on newly discovered evidence, within 2 years after the verdict or finding (NRS 176.515(3), (4)). A motion in arrest of judgment must be made within 7 days after the determination of guilt (NRS 176.525). A timely motion for acquittal, new trial or arrest of judgment postpones the notice of appeal to 30 days after the order disposing of the last such motion (NRAP 4(b)(3)(A))."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted { authority cite "NRS 175.381" }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "NRS 176.515" }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing { authority cite "NRS 176.015" }
+}
+
+state sentencing: "Presentence investigation and sentencing" by court cite "NRS 176.015"
+{
+  note "Sentence must be imposed without unreasonable delay, after counsel speaks for the defendant, the defendant is asked whether he or she wishes to make a statement, and the victim is afforded an opportunity to express views (NRS 176.015(1)-(3)). The Division of Parole and Probation makes a presentence investigation and report on each felony conviction unless waived by stipulation the court approves (NRS 176.135(1)). An illegal sentence may be corrected at any time (NRS 176.555)."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "NRAP 4(b)"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "NRAP 4(b)"
+{
+  note "The district court judge must enter a written judgment of conviction within 14 days after sentencing, and a judgment is entered when signed and filed with the clerk (NRAP 4(b)(5), (6)(A)). A defendant's notice of appeal must be filed with the district court clerk within 30 days after the later of entry of the judgment or order appealed from or the State's notice of appeal; a notice filed after announcement but before entry is treated as filed on the day of entry (NRAP 4(b)(1)(A), (2)). An appeal is taken by filing a notice of appeal with the clerk of the district court (NRS 177.075(1))."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "NRAP 4(b)" }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "NRAP 4(b)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "NRS 175.381"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty or a judgment of acquittal (NRS 175.381, 175.481)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "NRS 178.562"
+{
+  note "Outcome from the defendant's side. A dismissal under NRS 178.556 bars another prosecution for the same offense except as NRS 174.085 provides, and a discharge on preliminary examination bars another complaint but not an indictment or information (NRS 178.562)."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "NRS 177.015"
+{
+  note "The appeal continues before the Nevada Supreme Court or Court of Appeals under the Nevada Rules of Appellate Procedure (lit/nv-supreme)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("Nevada Revised Statutes chapter 34, post-conviction habeas: not vendored") {
+  note "Outcome from the defendant's side. State post-conviction habeas under NRS chapter 34 is not vendored; federal habeas belongs to lit/habeas."
+}

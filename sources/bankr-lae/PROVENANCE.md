@@ -6,3 +6,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 6d3b041e61bc10cdf90ffa9a38315453c46149c4b42ac8152c57dad1fe996ad6. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-lae/original/lae-local-rules-2013-05-01.pdf` as served (sha256 912a4b2cb2478c589b0b9f4daf308296a3cb3c3dd2fb7a482a5a2dfcc8f83f4e); extraction sha256 6d3b041e61bc10cdf90ffa9a38315453c46149c4b42ac8152c57dad1fe996ad6.
+
+### `bankr-lae/lae-local-rules-2013-05-01-sectioned.txt` — Bankr. E.D. La. Local Rules, sectioned
+
+- Derived in the pod (lg-u561.17) from `bankr-lae/lae-local-rules-2013-05-01.txt` (extract sha256 6d3b041e61bc10cdf90ffa9a38315453c46149c4b42ac8152c57dad1fe996ad6); nothing fetched. One `## LR <n>` line is inserted before each rule's own heading line in the body (a line opening, after an optional form feed, with `RULE <nnnn>-<n>`, from `RULE 1001-1` through `RULE 9037-1`, 61 rules, the same set as the table of contents); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LR /d'`) restores the extract byte for byte.
+- Edition: as the extract.
+- Sectioned sha256 bc80012ccbf9773a0d99fc39820d70e4d643cc80f71ea9ba3a29a1d1dbc24a69 (the `path_sha256` pinned by `lit/bankr-lae/Lit.toml`).

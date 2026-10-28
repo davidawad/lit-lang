@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-lae-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:e1fd4a7b2963efdf63d3567d8bb14e50a2dc92cf2982d5b49a0f1961dd06b636"
+semantic = "sha256:e5541dc12b51c8205229dd46759f9020c66a14d904d3359bf55dbd601c168900"
+texts = [
+    "laeb-lr sources/bankr-lae/lae-local-rules-2013-05-01-sectioned.txt sha256:bc80012ccbf9773a0d99fc39820d70e4d643cc80f71ea9ba3a29a1d1dbc24a69",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-lae"
-version = "0.0.1"
-language = 1
-source = "sha256:c55be6d619a8a4230ab8ea0c9dd9e2fbd4b5b69d495dcecf72bfb1d8cc4badea"
-semantic = "sha256:e3d3b16fbd32c265395d20ebda2873a017e9048862af6689d27d29b24378bfa0"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

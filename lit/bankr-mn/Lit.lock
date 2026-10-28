@@ -1,6 +1,21 @@
 version = 2
 
 [[package]]
+name = "bankr-mn-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:738733bab9ae13f389cb7212ebcab35cfd790b48c9c7871908a7407213f51969"
+semantic = "sha256:c992a33c639f27f858e8518cb8b98d42397f2c9d64ced6216e7be540d6232f30"
+texts = [
+    "mnb-en-banc-claims-review sources/bankr-mn/mnb-en-banc-order-claims-review-2026-02-11-sectioned.txt sha256:25946c9a75cd128ec52eb701308d93f9de0ff8d12f4f2cfecf8cfc674ba32870",
+    "mnb-lbr sources/bankr-mn/mnb-lbr-2025-09-03-sectioned.txt sha256:1603cdec27b6a6ea932debe1af7bd9c4c3c61440bfda275eecae52d2565065de",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +59,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-mn"
-version = "0.0.1"
-language = 1
-source = "sha256:b3e40189566a7947cceb8016e727f9d3b51526b32513cbd799cb2d67d8cc8a6a"
-semantic = "sha256:5a84740daabda7e2ed780e8178a359e26e1dae58adf0a9ad9a76bae8b7da0d3f"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

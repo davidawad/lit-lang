@@ -1,0 +1,219 @@
+module bankr-mn-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
+
+// The Bankr. D. Minn. court's own periods, counted under FRBP 9006(a): the
+// Local Rules and the Amended En Banc Order on Required Review of Claims
+// (February 11, 2026), which supplements LR 1007-3-1. The FRBP periods
+// (schedules, claims in chapter 7, 12 and 13 cases, discharge,
+// dischargeability, exemptions, the adversary answer and summons, appeals)
+// are lit/frbp's and are not declared again; the 21 days for responses to
+// a fee application is FRBP 2002(a)(6)'s notice (LR 2016-1(a)).
+//
+// Stated in the rules but not declared: the clock-time periods (the ballot
+// tabulation report 24 hours before the confirmation hearing, LR
+// 3020-1(b); the joint discovery stipulation 24 hours before the hearing,
+// LR 7037-1; a reply 48 hours before the hearing, LR 9006-1(c); expedited
+// moving documents 48 hours, and responses two hours, before the hearing,
+// LR 9006-1(d)); the clerk's own acts (no disbursement from the registry
+// until 14 days after the order allowing it, LR 7067-1(b)); and the
+// one-year periods that are conditions rather than deadlines (a former law
+// clerk or judge not appearing before the court, LR 9010-1(c)-(d); the
+// retention of signed originals after the case closes, LR 9011-1). The
+// rules state no page limit.
+/// A chapter 7, 9 or 11 petition states the debtor is a health care
+/// business (LR 1007-2(b)).
+event HealthCarePetitionFiled()
+/// The United States trustee receives an application to employ a
+/// professional (LR 2014-1(b)).
+event EmploymentApplicationReceived()
+/// The debtor's attorney in an adversary proceeding receives payment or
+/// agrees to represent the debtor (LR 2016-2).
+event AdversaryEngagement()
+/// A chapter 11 plan on which a group, committee or other entity required
+/// to file an FRBP 2019 statement will solicit votes is filed (LR 2019-1(a)).
+event PlanFiled()
+/// A motion to withdraw the reference is served (LR 5011-1(a)).
+event WithdrawalMotionServed()
+/// A chapter 7 trustee's motion under 11 U.S.C. § 554(c) that an asset is
+/// not abandoned upon case closing is filed (LR 6007-1).
+event RetentionMotionFiled()
+/// The hearing date on a summary judgment motion (LR 7056-1).
+event SummaryJudgmentHearing()
+/// The hearing date on a motion (LR 9006-1).
+event HearingScheduled()
+/// The clerk gives attorneys of record written notice to remove exhibits
+/// not filed in ECF after a case or proceeding closes (LR 9070-1).
+event ExhibitRemovalNoticed()
+/// The non-governmental entity claims bar date expires (Amended En Banc
+/// Order (a)(1)).
+event ClaimsBarDateExpired()
+
+/// D. Minn. Bankr. LR 1007-2(b): if a chapter 7, 9 or 11 petition states the
+/// debtor is a health care business, the debtor files a supplemental list
+/// of its licensing and regulating entities within 14 days of the petition.
+deadline health-care-list-period: 14.days after HealthCarePetitionFiled() counted_by frcp6 cite "D. Minn. Bankr. LR 1007-2(b)"
+{
+  forum frcp
+}
+
+/// D. Minn. Bankr. LR 2003-1(b): the meeting of creditors is deemed
+/// concluded on its first date unless the trustee files, within seven days
+/// after the meeting, a statement that it is not concluded and the date to
+/// which it is continued.
+deadline meeting-continuance-statement-period: 7.days after FirstMeetingDate() counted_by frcp6 cite "D. Minn. Bankr. LR 2003-1(b)"
+{
+  forum frcp
+}
+
+/// D. Minn. Bankr. LR 2014-1(b): within seven days after receiving an
+/// application to employ a professional, the United States trustee files a
+/// report supporting or opposing the employment.
+deadline employment-report-period: 7.days after EmploymentApplicationReceived() counted_by frcp6 cite "D. Minn. Bankr. LR 2014-1(b)"
+{
+  forum frcp
+}
+
+/// D. Minn. Bankr. LR 2016-2: a debtor's attorney in an adversary proceeding
+/// files a disclosure of compensation within 14 days after receiving payment
+/// or agreeing to represent the debtor, unless already disclosed.
+deadline adversary-compensation-disclosure-period: 14.days after AdversaryEngagement() counted_by frcp6 cite "D. Minn. Bankr. LR 2016-2"
+{
+  forum frcp
+}
+
+/// D. Minn. Bankr. LR 2019-1(a): a group, committee or other entity required
+/// to file an FRBP 2019 verified statement that intends to solicit votes on
+/// a plan files the statement within seven days of the filing of the plan.
+deadline solicitation-statement-period: 7.days after PlanFiled() counted_by frcp6 cite "D. Minn. Bankr. LR 2019-1(a)"
+{
+  forum frcp
+}
+
+/// D. Minn. Bankr. LR 3003-1: in a chapter 11 case a non-governmental
+/// entity's proof of claim is filed not later than 90 days after the first
+/// date set for the meeting of creditors (the bar date FRBP 3003(c)(3)
+/// leaves to the court).
+deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frcp6 cite "D. Minn. Bankr. LR 3003-1"
+{
+  forum frcp
+}
+
+/// D. Minn. Bankr. LR 3003-1: in a subchapter V case a non-governmental
+/// entity's proof of claim is filed not later than 70 days after the order
+/// for relief.
+deadline subchapter-v-claim-period: 70.days after OrderForReliefEntered() counted_by frcp6 cite "D. Minn. Bankr. LR 3003-1"
+{
+  forum frcp
+}
+
+/// D. Minn. Bankr. LR 4004-1(a)(2): in a chapter 7 case the debtor's
+/// certification regarding 11 U.S.C. § 522(q) (Local Form 4004-1) is filed
+/// with the petition or within 14 days thereafter.
+deadline chapter7-certification-period: 14.days after PetitionFiled() counted_by frcp6 cite "D. Minn. Bankr. LR 4004-1(a)"
+{
+  forum frcp
+}
+
+/// D. Minn. Bankr. LR 5011-1(a): any other party in interest may serve and
+/// file a response to a motion to withdraw the reference within 14 days
+/// after its service.
+deadline withdrawal-reference-response-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "D. Minn. Bankr. LR 5011-1(a)"
+{
+  forum frcp
+}
+
+/// D. Minn. Bankr. LR 6007-1: responses to a chapter 7 trustee's motion that
+/// an asset is not abandoned to the debtor upon case closing are due within
+/// 21 days of its filing.
+deadline retention-motion-response-period: 21.days after RetentionMotionFiled() counted_by frcp6 cite "D. Minn. Bankr. LR 6007-1"
+{
+  forum frcp
+}
+
+/// D. Minn. Bankr. LR 7056-1(a): moving documents for summary judgment in an
+/// adversary proceeding or contested matter are filed, served and noticed
+/// not later than 28 days before the hearing date.
+deadline summary-judgment-motion-period: 28.days before SummaryJudgmentHearing() counted_by frcp6 cite "D. Minn. Bankr. LR 7056-1(a)"
+{
+  forum frcp
+}
+
+/// D. Minn. Bankr. LR 7056-1(b): responsive documents on summary judgment
+/// are filed and served not later than 14 days before the hearing date.
+deadline summary-judgment-response-period: 14.days before SummaryJudgmentHearing() counted_by frcp6 cite "D. Minn. Bankr. LR 7056-1(b)"
+{
+  forum frcp
+}
+
+/// D. Minn. Bankr. LR 7056-1(c): reply documents on summary judgment are
+/// filed and served not later than seven days before the hearing date.
+deadline summary-judgment-reply-period: 7.days before SummaryJudgmentHearing() counted_by frcp6 cite "D. Minn. Bankr. LR 7056-1(c)"
+{
+  forum frcp
+}
+
+/// D. Minn. Bankr. LR 9006-1(a): unless the FRBP or these rules provide
+/// otherwise, moving documents are filed, served and noticed not later than
+/// 14 days before the hearing date.
+deadline moving-documents-period: 14.days before HearingScheduled() counted_by frcp6 cite "D. Minn. Bankr. LR 9006-1(a)"
+{
+  forum frcp
+}
+
+/// D. Minn. Bankr. LR 9006-1(b): responsive documents are filed, served and
+/// noticed not later than seven days before the hearing date.
+deadline responsive-documents-period: 7.days before HearingScheduled() counted_by frcp6 cite "D. Minn. Bankr. LR 9006-1(b)"
+{
+  forum frcp
+}
+
+/// D. Minn. Bankr. LR 9070-1: upon the closing of a case or proceeding, the
+/// clerk may require attorneys of record to remove exhibits not filed in ECF
+/// within 14 days after written notice, and may then dispose of them.
+deadline exhibit-removal-period: 14.days after ExhibitRemovalNoticed() counted_by frcp6 cite "D. Minn. Bankr. LR 9070-1"
+{
+  forum frcp
+}
+
+/// Amended En Banc Order (Feb. 11, 2026) (a)(1), supplementing LR
+/// 1007-3-1: not later than 21 days after the non-governmental claims bar
+/// date expires, the debtor's attorney in a chapter 7 or 13 case examines
+/// the claims register and all claims filed; in effect for claims filed on
+/// or after August 1, 2025 ((c)).
+deadline claims-review-period: 21.days after ClaimsBarDateExpired() counted_by frcp6 effective [2025-08-01, ..) known_at 2026-02-11 cite "D. Minn. Bankr. (Amended En Banc Order, Feb. 11, 2026) LR 1007-3-1"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Moving documents filed, served and noticed" by applicant cite "D. Minn. Bankr. LR 9006-1(a)"
+{
+  note "Unless the FRBP or the Local Rules provide otherwise, moving documents are filed, served and noticed not later than 14 days before the hearing (LR 9006-1(a)); 28 days for summary judgment (LR 7056-1(a)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-response "Responsive documents filed" -> responded {
+    authority cite "D. Minn. Bankr. LR 9006-1(b)"
+  }
+  edge-motion-filed-unopposed "No response; motion heard" -> ruling {
+    authority cite "D. Minn. Bankr. LR 9006-1(a)"
+  }
+}
+
+state responded: "Responsive documents filed" by opponent cite "D. Minn. Bankr. LR 9006-1(b)"
+{
+  note "Responsive documents are due not later than seven days before the hearing (LR 9006-1(b)); a reply is not required and, if filed, is due 48 hours before the hearing and limited to new matters (LR 9006-1(c))."
+  edge-responded-hearing "Hearing held" -> ruling { authority cite "D. Minn. Bankr. LR 9006-1(c)" }
+}
+
+decision ruling: "Motion decided" by court cite "D. Minn. Bankr. LR 9006-1(a)"
+{
+  note "The court rules on the motion at or after the hearing."
+  edge-ruling-granted "Granted" -> decided { authority cite "D. Minn. Bankr. LR 9006-1(a)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "D. Minn. Bankr. LR 9006-1(b)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "D. Minn. Bankr. LR 9029-1(a)"
+{
+  note "The Local Rules constitute an order of the court and govern practice and procedure in bankruptcy cases and proceedings in the District of Minnesota (LR 9029-1(a))."
+}

@@ -261,7 +261,14 @@ impl<'c> Citations<'c> {
                 .section_heading
                 .as_deref()
                 .map_or_else(|| "{}".to_owned(), |h| h.replace("{n}", "{}"));
-            if syntax.rules.iter().any(|r| r.heading == heading) {
+            // A heading another rule already reads also takes this
+            // source's prefixes, so its citations parse and are checked.
+            if let Some(rule) = syntax.rules.iter_mut().find(|r| r.heading == heading) {
+                for p in &s.cite_prefixes {
+                    if !rule.prefixes.iter().any(|q| q.eq_ignore_ascii_case(p)) {
+                        rule.prefixes.push(p.clone());
+                    }
+                }
                 shared.push((Family::Rules(heading), s.id.clone(), s.path.clone()));
             } else {
                 syntax.rules.push(CiteRuleForm {

@@ -1,0 +1,55 @@
+
+<html>
+  <head>
+	<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1">    
+    <title>OSCN Turnstile</title>
+	<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+	<style>
+		.form_container {
+			padding-top: 2rem;
+			width: 304px;
+			text-align: center;
+			margin: auto;
+		}	
+		.form_container input[type='submit'] {
+			padding: 0.75rem;
+			text-transform: uppercase;
+		}
+	</style>
+		<link rel="stylesheet" type="text/css" href="/wp-content/themes/oscn-theme/navigation-style.css?v=1.0.1">	
+		<link rel="stylesheet" type="text/css" href="/assets/css/oscn-navigation.css">	
+  </head>
+  <body>
+	<header id="masthead" class="site-header header" data-elastic-exclude style="">
+		<div class="nav_container">
+				<a class="oscn-brand" href="https://www.oscn.net/">
+					<div class="oscn-brand-container">
+						<div class="oscn-logo"><img src="https://www.oscn.net/static/supreme-court-seal-updated-color.svg"></div>
+						<div class="oscn-full-name"><span>OKLAHOMA <br>STATE <br>COURTS <br>NETWORK </span></div>
+						<div class="oscn-abbreviation"><span>OSCN</span></div>
+					</div>
+				</a>
+		</div>
+	</header>
+	<div class="form_container">
+    <form action="/applications/oscn/DeliverDocument.asp?CiteID=93649" method="POST">
+      <div class="cf-turnstile" data-sitekey="0x4AAAAAAALCm8WV5yi-wGy2"></div>
+      <br/>
+      <input type="submit" value="Submit">
+	  <input type='hidden' id='source_uri' name='source_uri' value='L2FwcGxpY2F0aW9ucy9vc2NuL0RlbGl2ZXJEb2N1bWVudC5hc3A/Q2l0ZUlEPTkzNjQ5'>
+	  
+    </form>
+		<div class="pagargraph" style="text-align:left;">
+		<p><strong>Why am I seeing this?</strong></p>
+		<p>To protect our site from automated traffic and ensure reliable access for all users, we sometimes ask visitors to verify they are human. This helps prevent abuse and keeps the site running smoothly.</p>
+		<p>If you do not complete the verification, your access may be <strong>temporarily restricted.</strong></p>
+		<p>Your IP address - 24.187.106.121</p>
+	</div>
+	</div>
+	<script>
+	document.querySelectorAll("form")[0].addEventListener('submit', function(e){
+		document.querySelectorAll("input[type=submit]")[0].disabled = true;
+	});
+	</script>
+  </body>
+</html>

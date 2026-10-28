@@ -1,0 +1,269 @@
+module in-appellate-civil.appeal
+
+// Civil appeals from the Indiana trial courts, from the applicant's
+// (appellant's) side. Every period below is stated in a note, not counted:
+// Appellate Rule 25(B) excludes the day of the triggering act and includes
+// the last day unless it is a non-business day, and excludes all
+// non-business days from a period of less than seven (7) days; lit/core
+// has no counting rule for Indiana's legal holidays. Three calendar days
+// are added to a response or reply period triggered by service by mail or
+// third-party commercial carrier, but not to periods such as the time to
+// petition for rehearing or transfer (App. R. 25(C)). A motion for an
+// extension of time is filed at least seven (7) days before the time
+// expires unless the movant was not then aware of its basis, and never
+// after it expires (App. R. 35(A)). The earlier outline named no Indiana
+// decision; none is cited. Its disposition, rehearing and mandate cites
+// (App. R. 58, 46) named the wrong rules: disposition is App. R. 66(C),
+// and Indiana certifies the decision to the trial court (App. R. 65(E))
+// rather than issuing a mandate.
+/// An appellant's or appellee's brief, or a reply brief serving as the
+/// cross-appellee's brief: thirty (30) pages, or, with a word count
+/// certificate, 14,000 words (App. R. 44(D), (E)). Cover information, the
+/// tables, signature block, certificates and the appealed judgment are
+/// excluded; headings and footnotes count (App. R. 44(C)).
+limit principal-brief {
+  pages <= 30 cite "Ind. Appellate Rule 44(D)"
+  words <= 14_000 cite "Ind. Appellate Rule 44(E)"
+  requires certificate word-count for [words] cite "Ind. Appellate Rule 44(E)"
+} cite "Ind. Appellate Rule 44"
+
+/// A reply brief: fifteen (15) pages, or 7,000 words with a word count
+/// certificate (App. R. 44(D), (E)).
+limit reply-brief {
+  pages <= 15 cite "Ind. Appellate Rule 44(D)"
+  words <= 7_000 cite "Ind. Appellate Rule 44(E)"
+  requires certificate word-count for [words] cite "Ind. Appellate Rule 44(E)"
+} cite "Ind. Appellate Rule 44"
+
+/// A Petition for Rehearing, a Petition to Transfer, and a brief in
+/// response to either: ten (10) pages, or 4,200 words with a word count
+/// certificate (App. R. 44(D), (E); 54(E); 57(F)).
+limit petition {
+  pages <= 10 cite "Ind. Appellate Rule 44(D)"
+  words <= 4_200 cite "Ind. Appellate Rule 44(E)"
+  requires certificate word-count for [words] cite "Ind. Appellate Rule 44(E)"
+} cite "Ind. Appellate Rule 44"
+
+/// A reply brief to a brief in response to a Petition seeking Transfer:
+/// three (3) pages, or 1,000 words with a word count certificate (App. R.
+/// 44(D), (E)).
+limit transfer-reply {
+  pages <= 3 cite "Ind. Appellate Rule 44(D)"
+  words <= 1_000 cite "Ind. Appellate Rule 44(E)"
+  requires certificate word-count for [words] cite "Ind. Appellate Rule 44(E)"
+} cite "Ind. Appellate Rule 44"
+
+/// The appellant's brief is filed (App. R. 45(B)(1)).
+event AppellantBriefFiled() paper principal-brief
+/// The appellee's brief is filed (App. R. 45(B)(2)).
+event AppelleeBriefFiled() paper principal-brief
+/// The appellant's reply brief is filed (App. R. 45(B)(3)).
+event ReplyBriefFiled() paper reply-brief
+/// A Petition for Rehearing is filed (App. R. 54(B)).
+event RehearingPetitionFiled() paper petition
+/// A Petition to Transfer is filed (App. R. 57(C)).
+event TransferPetitionFiled() paper petition
+/// A brief in response to a Petition to Transfer is filed (App. R. 57(D)).
+event TransferResponseFiled() paper petition
+/// A reply brief on transfer is filed (App. R. 57(E)).
+event TransferReplyFiled() paper transfer-reply
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed" by applicant cite "Ind. Appellate Rule 9(A)"
+{
+  note "A party initiates an appeal by filing a Notice of Appeal with the Clerk within thirty (30) days after the entry of a Final Judgment is noted in the Chronological Case Summary; if any party files a timely motion to correct error, within thirty (30) days after the ruling on it is noted or thirty (30) days after it is deemed denied under Trial Rule 53.3, whichever occurs first (App. R. 9(A)(1)). Unless the Notice of Appeal is timely filed, the right to appeal is forfeited except as provided by P.C.R. 2 (App. R. 9(A)(5)). The appellant pays the Clerk the $250 filing fee when the Notice of Appeal is filed, unless the appeal is in forma pauperis or for a governmental unit (App. R. 9(E)). An appellee may cross-appeal without a Notice of Appeal by raising cross-appeal issues in its brief (App. R. 9(D)). The Notice of Appeal designates the portions of the Transcript needed (App. R. 9(F)(5))."
+  edge-notice-filed-appealability "Notice timely filed" -> appealability {
+    authority cite "Ind. Appellate Rule 9(A)"
+  }
+  edge-notice-filed-forfeited "Notice not timely filed" -> dismissed-jurisdiction {
+    authority cite "Ind. Appellate Rule 9(A)"
+  }
+}
+
+decision appealability: "Final judgment or interlocutory appeal" by court cite "Ind. Appellate Rule 2(H)"
+{
+  note "A judgment is final if it disposes of all claims as to all parties, if the trial court expressly determines in writing under Trial Rule 54(B) or 56(C) that there is no just reason for delay and directs entry of judgment, if it is deemed final under Trial Rule 60(C), if it rules on a timely motion to correct error, or if it is otherwise deemed final by law (App. R. 2(H)). The Court of Appeals has jurisdiction of appeals from final judgments of circuit, superior, probate and county courts except as Rule 4 provides, and of interlocutory appeals under Rule 14 (App. R. 5(A), (B)). Interlocutory appeals of right are taken by filing a Notice of Appeal within thirty (30) days after the order is noted in the Chronological Case Summary; a discretionary interlocutory appeal needs a motion to certify filed in the trial court within thirty (30) days after the order is noted, then a motion in the Court of Appeals within thirty (30) days after the certification is noted, and a Notice of Appeal within fifteen (15) days of the order accepting jurisdiction (App. R. 14(A), (B)). An appellee may move to dismiss an appeal at any time for any reason provided by law, including lack of jurisdiction (App. R. 36(B))."
+  edge-appealability-record "Appealable: record assembled" -> record {
+    authority cite "Ind. Appellate Rule 2(H)"
+  }
+  edge-appealability-dismissed "Not appealable: dismissed" -> dismissed-jurisdiction {
+    authority cite "Ind. Appellate Rule 36(B)"
+  }
+}
+
+terminal dismissed-jurisdiction: "Appeal dismissed or forfeited" outcome [loss, dismissal] cite "Ind. Appellate Rule 9(A)"
+{
+  note "Outcome from the applicant's side: the right to appeal is forfeited without a timely Notice of Appeal (App. R. 9(A)(5)), or the appeal is dismissed for lack of jurisdiction (App. R. 36(B))."
+}
+
+state record: "Clerk's Record and Transcript" by office cite "Ind. Appellate Rule 10"
+{
+  note "Within thirty (30) days of the filing of the Notice of Appeal, the trial court clerk assembles the Clerk's Record and, on or before that deadline, files and serves a Notice of Completion of Clerk's Record stating whether the Transcript is completed, not completed or not requested (App. R. 10(B), (C)). The Court Reporter has forty-five (45) days after the Notice of Appeal is filed to file the Transcript (App. R. 11(B)); if it is filed after the Notice of Completion of Clerk's Record, the clerk files and serves a Notice of Completion of Transcript within five (5) days after it is filed (App. R. 10(D))."
+  edge-record-briefing "Notice of completion served: briefing begins" -> briefing {
+    authority cite "Ind. Appellate Rule 45(B)"
+  }
+}
+
+state briefing: "Briefing: appellant, appellee, reply" by applicant cite "Ind. Appellate Rule 45(B)"
+{
+  note "The appellant's brief is filed no later than thirty (30) days after the Notice of Completion of Clerk's Record is served if it reports the Transcript complete or not requested, and otherwise after the Notice of Completion of Transcript is served; the three-day mail extension does not apply to it. The appellee's brief is filed no later than thirty (30) days after service of the appellant's brief; any reply brief no later than fifteen (15) days after service of the appellee's brief, or thirty (30) days if it also serves as the cross-appellee's brief; any cross-appellant's reply brief no later than fifteen (15) days after service of the appellant's reply brief (App. R. 45(B)). The appellant's failure to file its brief timely may subject the appeal to summary dismissal, and the appellee's may result in reversal on a showing of prima facie error (App. R. 45(D)). A motion to file an oversized brief is filed at least fifteen (15) days before the brief is due and states the words requested (App. R. 44(B))."
+  edge-briefing-argument "Briefs filed" -> argument { authority cite "Ind. Appellate Rule 45(B)" }
+  edge-briefing-dismissed "Appellant's brief not timely filed: dismissed" -> dismissed-jurisdiction {
+    authority cite "Ind. Appellate Rule 45(D)"
+  }
+}
+
+state argument: "Oral argument or submission on the briefs" by court cite "Ind. Appellate Rule 52(A)"
+{
+  note "The Court may, in its discretion, set oral argument on its own or a party's motion (App. R. 52(A)). A party's motion for oral argument is filed no later than seven days after any reply brief would be due under Rule 45(B) (App. R. 52(B)); counsel file an acknowledgment of the order setting argument no later than fifteen (15) days after service of the order (App. R. 52(C))."
+  edge-argument-disposition "Argued or submitted" -> disposition {
+    authority cite "Ind. Appellate Rule 52(A)"
+  }
+}
+
+decision disposition: "Disposition" by court cite "Ind. Appellate Rule 66(C)"
+{
+  note "The Court may affirm or reverse the decision of the trial court, order a new trial, order entry of judgment for damages supported by the evidence, order a new trial subject to additur or remittitur, order entry of Final Judgment, or grant other relief (App. R. 66(C)). No error is ground for reversal where its probable impact is sufficiently minor so as not to affect the parties' substantial rights (App. R. 66(A))."
+  edge-disposition-affirmed "Affirmed" -> affirmed-entered {
+    authority cite "Ind. Appellate Rule 66(C)"
+  }
+  edge-disposition-reversed "Reversed" -> reversed-entered {
+    authority cite "Ind. Appellate Rule 66(C)"
+  }
+  edge-disposition-remanded "New trial or further proceedings ordered" -> remanded-entered {
+    authority cite "Ind. Appellate Rule 66(C)"
+  }
+}
+
+decision affirmed-entered: "Affirmed: rehearing or transfer election" by applicant cite "Ind. Appellate Rule 54(B)"
+{
+  note "A Petition for Rehearing is filed no later than thirty (30) days after the decision, with no extension (App. R. 54(B)). A Petition to Transfer is filed no later than forty-five (45) days after the adverse decision if rehearing was not sought, or thirty (30) days after disposition of the Petition for Rehearing, with no extension; the petitioner pays a $125 filing fee unless a governmental unit or in forma pauperis (App. R. 56(B), 57(C))."
+  edge-affirmed-entered-rehearing "Petition for rehearing" -> rehearing-affirmed {
+    authority cite "Ind. Appellate Rule 54(B)"
+  }
+  edge-affirmed-entered-transfer "Petition to transfer" -> transfer-affirmed {
+    authority cite "Ind. Appellate Rule 57(C)"
+  }
+  edge-affirmed-entered-final "No further review sought" -> affirmed-final {
+    authority cite "Ind. Appellate Rule 65(E)"
+  }
+}
+
+decision rehearing-affirmed: "Rehearing ruling (affirmed)" by court cite "Ind. Appellate Rule 54(A)"
+{
+  note "Rehearing may be sought from a published opinion, a memorandum decision or an order dismissing an appeal; no brief in response is required unless the Court requests one, due no later than fifteen (15) days after the Petition is served or the request issues, and reply briefs are prohibited (App. R. 54(A), (C), (D))."
+  edge-rehearing-affirmed-transfer "Denied: petition to transfer" -> transfer-affirmed {
+    authority cite "Ind. Appellate Rule 57(C)"
+  }
+  edge-rehearing-affirmed-final "Denied: no transfer sought" -> affirmed-final {
+    authority cite "Ind. Appellate Rule 65(E)"
+  }
+  edge-rehearing-affirmed-granted "Granted: decision revisited" -> disposition {
+    authority cite "Ind. Appellate Rule 54(A)"
+  }
+}
+
+decision transfer-affirmed: "Transfer ruling (affirmed)" by court cite "Ind. Appellate Rule 58"
+{
+  note "A party may file a brief in response no later than twenty (20) days after the Petition is served, and the petitioner a reply no later than ten (10) days after the response is served (App. R. 57(D), (E)). The grant of transfer is a matter of judicial discretion (App. R. 57(H)). If transfer is granted, the Court of Appeals' decision is vacated except as the Supreme Court adopts or summarily affirms it, and the Supreme Court has jurisdiction as if the appeal were originally filed there; denial terminates the litigation in the Supreme Court and no rehearing lies from it; an evenly divided Court denies transfer (App. R. 58)."
+  edge-transfer-affirmed-denied "Transfer denied" -> affirmed-final {
+    authority cite "Ind. Appellate Rule 58(B)"
+  }
+  edge-transfer-affirmed-granted "Transfer granted: Supreme Court decides" -> disposition {
+    authority cite "Ind. Appellate Rule 58(A)"
+  }
+}
+
+terminal affirmed-final: "Affirmed: final" outcome [loss] cite "Ind. Appellate Rule 65(E)"
+{
+  note "The Clerk certifies the decision to the trial court only after the time for all Petitions for Rehearing, Transfer or Review has expired, unless all parties request earlier certification; the trial court and parties take no action in reliance on it until it is certified (App. R. 65(E)). On a motion within sixty (60) days after the final decision the Clerk taxes costs, which the appellee recovers when the judgment is affirmed in whole (App. R. 67(A), (C)). Outcome from the applicant's side."
+}
+
+decision reversed-entered: "Reversed: rehearing or transfer election" by applicant cite "Ind. Appellate Rule 54(B)"
+{
+  note "The opponent may seek rehearing within thirty (30) days after the decision or transfer within forty-five (45) days, with no extension (App. R. 54(B), 57(C)). The applicant elects what to do while those periods run."
+  edge-reversed-entered-rehearing "Petition for rehearing" -> rehearing-reversed {
+    authority cite "Ind. Appellate Rule 54(B)"
+  }
+  edge-reversed-entered-transfer "Petition to transfer" -> transfer-reversed {
+    authority cite "Ind. Appellate Rule 57(C)"
+  }
+  edge-reversed-entered-final "No further review sought" -> reversed-final {
+    authority cite "Ind. Appellate Rule 65(E)"
+  }
+}
+
+decision rehearing-reversed: "Rehearing ruling (reversed)" by court cite "Ind. Appellate Rule 54(A)"
+{
+  note "As on rehearing of an affirmance (App. R. 54)."
+  edge-rehearing-reversed-transfer "Denied: petition to transfer" -> transfer-reversed {
+    authority cite "Ind. Appellate Rule 57(C)"
+  }
+  edge-rehearing-reversed-final "Denied: no transfer sought" -> reversed-final {
+    authority cite "Ind. Appellate Rule 65(E)"
+  }
+  edge-rehearing-reversed-granted "Granted: decision revisited" -> disposition {
+    authority cite "Ind. Appellate Rule 54(A)"
+  }
+}
+
+decision transfer-reversed: "Transfer ruling (reversed)" by court cite "Ind. Appellate Rule 58"
+{
+  note "As on transfer of an affirmance (App. R. 57, 58)."
+  edge-transfer-reversed-denied "Transfer denied" -> reversed-final {
+    authority cite "Ind. Appellate Rule 58(B)"
+  }
+  edge-transfer-reversed-granted "Transfer granted: Supreme Court decides" -> disposition {
+    authority cite "Ind. Appellate Rule 58(A)"
+  }
+}
+
+terminal reversed-final: "Reversed: final" outcome [win] cite "Ind. Appellate Rule 65(E)"
+{
+  note "Certified to the trial court after the time for rehearing and transfer expires (App. R. 65(E)). When a judgment is reversed in whole, the appellant recovers costs on a motion within sixty (60) days after the final decision (App. R. 67(A), (C)). Outcome from the applicant's side."
+}
+
+decision remanded-entered: "Remanded: rehearing or transfer election" by applicant cite "Ind. Appellate Rule 54(B)"
+{
+  note "Rehearing within thirty (30) days after the decision and transfer within forty-five (45) days, with no extension (App. R. 54(B), 57(C))."
+  edge-remanded-entered-rehearing "Petition for rehearing" -> rehearing-remanded {
+    authority cite "Ind. Appellate Rule 54(B)"
+  }
+  edge-remanded-entered-transfer "Petition to transfer" -> transfer-remanded {
+    authority cite "Ind. Appellate Rule 57(C)"
+  }
+  edge-remanded-entered-final "No further review sought" -> remanded-final {
+    authority cite "Ind. Appellate Rule 65(E)"
+  }
+}
+
+decision rehearing-remanded: "Rehearing ruling (remanded)" by court cite "Ind. Appellate Rule 54(A)"
+{
+  note "As on rehearing of an affirmance (App. R. 54)."
+  edge-rehearing-remanded-transfer "Denied: petition to transfer" -> transfer-remanded {
+    authority cite "Ind. Appellate Rule 57(C)"
+  }
+  edge-rehearing-remanded-final "Denied: no transfer sought" -> remanded-final {
+    authority cite "Ind. Appellate Rule 65(E)"
+  }
+  edge-rehearing-remanded-granted "Granted: decision revisited" -> disposition {
+    authority cite "Ind. Appellate Rule 54(A)"
+  }
+}
+
+decision transfer-remanded: "Transfer ruling (remanded)" by court cite "Ind. Appellate Rule 58"
+{
+  note "As on transfer of an affirmance (App. R. 57, 58)."
+  edge-transfer-remanded-denied "Transfer denied" -> remanded-final {
+    authority cite "Ind. Appellate Rule 58(B)"
+  }
+  edge-transfer-remanded-granted "Transfer granted: Supreme Court decides" -> disposition {
+    authority cite "Ind. Appellate Rule 58(A)"
+  }
+}
+
+terminal remanded-final: "Remanded: final" outcome [remand] cite "Ind. Appellate Rule 65(E)"
+{
+  note "Certified to the trial court after the time for rehearing and transfer expires; the trial court acts on it only once certified (App. R. 65(E)). The recovery of costs in other than a whole affirmance or reversal is in the Court's discretion (App. R. 67(C)). Proceedings continue in lit/in-trial."
+}

@@ -1,0 +1,42 @@
+# Civil appeals to the Indiana Court of Appeals and, on transfer, the
+# Indiana Supreme Court under the Indiana Rules of Appellate Procedure, as
+# far as the vendored text states: the rules as updated effective July 1,
+# 2026 (sources/indctapp). Time is computed under Appellate Rule 25, which
+# rolls a last day falling on a non-business day (a Saturday, Sunday, legal
+# holiday as defined by Indiana statute or day the Clerk's office is
+# closed) and excludes non-business days from a period of less than seven
+# days; lit/core has no counting rule for it, so the periods are stated in
+# notes, not encoded as counted deadlines. The brief length limits are
+# encoded. The trial court side is lit/in-trial.
+[package]
+name = "in-appellate-civil"
+version = "0.1.0"
+language = 1
+pack_id = "in-appellate-civil"
+forum = "indctapp"
+authority = "StateRule"
+jurisdiction_id = "indiana"
+title = "Indiana Court of Appeals and Indiana Supreme Court, civil appeals"
+description = "Civil appeals to the Indiana Court of Appeals and, on transfer, the Indiana Supreme Court under the Indiana Rules of Appellate Procedure, as far as the vendored text states: the notice of appeal, its forfeiture and its fee, final judgments and interlocutory appeals, the clerk's record and transcript, briefing times and page and word limits, oral argument, disposition, rehearing, the petition to transfer and its fee, certification of the decision, and costs."
+in_force = "2026-07-01"
+known_at = "2026-10-28"
+unknown_before = "2026-07-01"
+jurisdiction = "Indiana Court of Appeals; Indiana Supreme Court"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.in-appellate-rules]
+title = "Indiana Rules of Appellate Procedure (adopted effective January 1, 2001; updated, effective July 1, 2026)"
+url = "https://rules.incourts.gov/pdf/PDF%20-%20Appellate/appellate.pdf"
+path = "sources/indctapp/in-appellate-rules-sectioned.txt"
+path_sha256 = "2cf5535875cdf99f49b2f9f4754e75f420d21879303a03afb2c858fbdfa1856e"
+sha256 = "60c64f89d3831e2f6dc5fe0ec474ca663019d258ec4bdf5d8fb3e620649705bb"
+as_of = "2026-07-01"
+cite_prefixes = ["Ind. Appellate Rule"]
+section_heading = "Ind. Appellate Rule {n}"

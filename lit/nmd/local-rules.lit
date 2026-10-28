@@ -1,0 +1,179 @@
+module nmd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of New Mexico's own civil periods, computed under the
+// federal rules (D.N.M.LR-Civ. 7.4(a): the briefing periods "are computed
+// in accordance with FED. R. CIV. P. 6(a) and (d)"; FRCP 6(a) governs
+// "any local rule"). Agreed extensions of briefing time, the notice of
+// each, and the motion for an opposed extension within the fourteen-day
+// period are D.N.M.LR-Civ. 7.4(a); a surreply needs leave (7.4(b)); the
+// movant files a notice of completion of briefing (7.4(e)). Failing to
+// file a response in time is consent to grant the motion, and failing to
+// file a reply is consent that briefing is complete (7.1(b)). Objections
+// to a pre-trial magistrate judge's non-dispositive ruling follow 7.3,
+// 7.4 and 7.5 (72.1), so they take the motion periods and limits below.
+// Rules that state no period or limit stay out: the writing and conferral
+// requirement (7.1(a)), unopposed motions (7.2), the form of a motion
+// (7.3), oral argument (7.6), summary judgment procedure, whose filing
+// deadline is the scheduling order's (56.1), the duty to respond to
+// discovery in the time a compelling order sets (37.2), continuances
+// (40.1) and the Tenth Circuit appeal from a consent magistrate judge
+// (73.3). All exhibits to a motion, response or reply are limited to a
+// total of fifty pages unless all parties agree (10.5); no event carries
+// exhibits alone, so that limit stays in this note. Page limits also stay
+// in this note, because the rule states them as "double-spaced pages",
+// which the limit check cannot match: a motion, or a motion and its
+// supporting brief combined, is at most twenty-seven (27) double-spaced
+// pages, a response twenty-four (24) and a reply twelve (12); unless
+// otherwise ordered they apply to non-motion briefs too (7.5). The
+// earlier D.N.M. outline's FRCP flow and its decisions (Twombly, Iqbal,
+// and the Tenth Circuit's Robbins v. Oklahoma, 519 F.3d 1242) are FRCP
+// authority and belong to lit/frcp; they are removed here: no reporter
+// text is vendored.
+/// The body of a Notice of Supplemental Authorities, and any response to
+/// it: at most 350 words; no reply is permitted (D.N.M.LR-Civ. 7.8(c)).
+limit supplemental-authorities {
+  words <= 350 cite "D.N.M.LR-Civ. 7.8(c)"
+} cite "D.N.M.LR-Civ. 7.8(c)"
+
+/// A motion is served and filed (D.N.M.LR-Civ. 7.4(a)).
+event MotionFiled()
+/// A response to a motion is served and filed (D.N.M.LR-Civ. 7.4(a)).
+event ResponseFiled()
+/// A reply on a motion is served and filed (D.N.M.LR-Civ. 7.4(a)).
+event ReplyFiled()
+/// A Notice of Supplemental Authorities is filed (D.N.M.LR-Civ. 7.8).
+event SupplementalAuthoritiesNoticeFiled() paper supplemental-authorities
+/// A response to a Notice of Supplemental Authorities is filed
+/// (D.N.M.LR-Civ. 7.8(c)).
+event SupplementalAuthoritiesResponseFiled() paper supplemental-authorities
+/// The Clerk gives notice that a filed paper lacks a signature
+/// (D.N.M.LR-Civ. 10.3(b)).
+event SignatureOmissionNoticed()
+/// The Clerk gives written notice of a deficiency in a non-conforming
+/// document (D.N.M.LR-Civ. 10.3(c)).
+event DeficiencyNoticed()
+/// The scheduling conference is held (D.N.M.LR-Civ. 16.1).
+event SchedulingConference()
+/// An objection to an interrogatory, request for production or
+/// inspection, or request for admission is served (D.N.M.LR-Civ. 26.6).
+event DiscoveryObjectionServed()
+/// The scheduled deposition is taken (D.N.M.LR-Civ. 30.1).
+event DepositionScheduled()
+/// The Clerk gives written notice that an action with no steps taken for
+/// ninety days may be dismissed (D.N.M.LR-Civ. 41.1).
+event ProsecutionNoticeGiven()
+/// Judgment is entered (D.N.M.LR-Civ. 54.1, 54.5(a)).
+event JudgmentEntered()
+/// A prevailing party's proposed order or judgment is served on each
+/// party (D.N.M.LR-Civ. 58.2(a)).
+event ProposedOrderServed()
+/// A notice of removal is filed (D.N.M.LR-Civ. 81.1(a)).
+event NoticeOfRemovalFiled()
+
+/// D.N.M.LR-Civ. 7.4(a): a response is served and filed within fourteen
+/// calendar days after service of the motion; the period may be extended
+/// by agreement of all parties.
+deadline response-period: 14.days after MotionFiled() counted_by frcp6 cite "D.N.M.LR-Civ. 7.4(a)"
+{
+  forum frcp
+}
+
+/// D.N.M.LR-Civ. 7.4(a): a reply is served and filed within fourteen
+/// calendar days after service of the response.
+deadline reply-period: 14.days after ResponseFiled() counted_by frcp6 cite "D.N.M.LR-Civ. 7.4(a)"
+{
+  forum frcp
+}
+
+/// D.N.M.LR-Civ. 7.8(c): any response to a Notice of Supplemental
+/// Authorities is filed within seven days of the filing of the Notice.
+deadline supplemental-authorities-response-period: 7.days after SupplementalAuthoritiesNoticeFiled() counted_by frcp6 cite "D.N.M.LR-Civ. 7.8(c)"
+{
+  forum frcp
+}
+
+/// D.N.M.LR-Civ. 10.3(b): a paper filed without signature is stricken
+/// unless signed within fourteen days after the omission is called to the
+/// party's attention.
+deadline signature-cure-period: 14.days after SignatureOmissionNoticed() counted_by frcp6 cite "D.N.M.LR-Civ. 10.3(b)"
+{
+  forum frcp
+}
+
+/// D.N.M.LR-Civ. 10.3(c): failure to remedy a deficiency, or show good
+/// cause for non-compliance, within forty-five days from the date of the
+/// Clerk's notice may result in striking or dismissal without prejudice
+/// under D.N.M.LR-Civ. 41.2.
+deadline deficiency-cure-period: 45.days after DeficiencyNoticed() counted_by frcp6 cite "D.N.M.LR-Civ. 10.3(c)"
+{
+  forum frcp
+}
+
+/// D.N.M.LR-Civ. 16.1: after the FRCP 26(f) conference the parties file
+/// the completed Joint Status Report at least seven days before the
+/// scheduling conference, or as ordered by the Court.
+deadline joint-status-report-period: 7.days before SchedulingConference() counted_by frcp6 cite "D.N.M.LR-Civ. 16.1"
+{
+  forum frcp
+}
+
+/// D.N.M.LR-Civ. 26.6: a party served with an objection to an
+/// interrogatory, request for production or inspection, or request for
+/// admission proceeds under D.N.M.LR-Civ. 37.1 within twenty-one days of
+/// service of the objection (or, where the response says documents will
+/// be produced, of the production or inspection); failure to proceed in
+/// time is acceptance of the objection. The Court may change the period
+/// for good cause.
+deadline discovery-objection-motion-period: 21.days after DiscoveryObjectionServed() counted_by frcp6 cite "D.N.M.LR-Civ. 26.6"
+{
+  forum frcp
+}
+
+/// D.N.M.LR-Civ. 30.1: notice of a deposition under FRCP 30(b) is served
+/// at least fourteen days before the scheduled deposition, unless the
+/// parties agree or the Court orders a shorter time.
+deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frcp6 cite "D.N.M.LR-Civ. 30.1"
+{
+  forum frcp
+}
+
+/// D.N.M.LR-Civ. 41.1: a civil action in which no steps are taken for
+/// ninety days may be dismissed thirty days after the date of the Clerk's
+/// written notice, unless good cause is shown.
+deadline want-of-prosecution-period: 30.days after ProsecutionNoticeGiven() counted_by frcp6 cite "D.N.M.LR-Civ. 41.1"
+{
+  forum frcp
+}
+
+/// D.N.M.LR-Civ. 54.1: a motion to tax costs is filed and served within
+/// thirty days of entry of judgment; failure to do so waives the claim to
+/// costs.
+deadline costs-motion-period: 30.days after JudgmentEntered() counted_by frcp6 cite "D.N.M.LR-Civ. 54.1"
+{
+  forum frcp
+}
+
+/// D.N.M.LR-Civ. 54.5(a): a motion for attorney's fees not brought under
+/// 28 U.S.C. § 2412(d) is filed and served within thirty days after entry
+/// of judgment; failure to do so waives the claim to fees.
+deadline fee-motion-period: 30.days after JudgmentEntered() counted_by frcp6 cite "D.N.M.LR-Civ. 54.5(a)"
+{
+  forum frcp
+}
+
+/// D.N.M.LR-Civ. 58.2(a)(2): a prevailing party's proposed order or
+/// judgment is entered if not objected to within seven days of service.
+deadline proposed-order-objection-period: 7.days after ProposedOrderServed() counted_by frcp6 cite "D.N.M.LR-Civ. 58.2(a)"
+{
+  forum frcp
+}
+
+/// D.N.M.LR-Civ. 81.1(a): a party removing an action under 28 U.S.C.
+/// § 1446 files legible copies of the state-court records and proceedings
+/// within twenty-eight days after filing the notice of removal.
+deadline removal-record-period: 28.days after NoticeOfRemovalFiled() counted_by frcp6 cite "D.N.M.LR-Civ. 81.1(a)"
+{
+  forum frcp
+}

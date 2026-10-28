@@ -123,6 +123,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | mtd-local-rules | `lit/mtd` | 29 | 0 | 29 | 0 |
 | ndd-local-rules | `lit/ndd` | 19 | 0 | 0 | 0 |
 | njd-local-rules | `lit/njd` | 23 | 0 | 0 | 0 |
+| nmd-local-rules | `lit/nmd` | 13 | 0 | 0 | 0 |
 | nmid-local-rules | `lit/nmid` | 23 | 0 | 23 | 0 |
 | ohnd-local-rules | `lit/ohnd` | 14 | 0 | 14 | 0 |
 | ohsd-local-rules | `lit/ohsd` | 8 | 0 | 8 | 0 |

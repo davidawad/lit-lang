@@ -15,3 +15,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 ef23cfd806f842e7106ca2bebb85ca04f5d342a3934cbdb180517ac6ef84c003. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `d-nm/original/dnm-local-criminal-rules-2025-11-14.pdf` as served (sha256 9b4a610265e607a6627912064ad81560ab4a4b6f6cf8f08945ce9c883538f499); extraction sha256 ef23cfd806f842e7106ca2bebb85ca04f5d342a3934cbdb180517ac6ef84c003.
+
+### `d-nm/d-nm-local-civil-rules-2020-sectioned.txt` — D.N.M. Local Rules of Civil Procedure, sectioned
+
+- Derived in the pod (lg-f3q8.68) from `d-nm/d-nm-local-civil-rules-2020.txt` (extract sha256 80234cfdc5fba4e085b4a565af926793b1806893eefe436515c352bd006dff85); nothing fetched. One `## D.N.M.LR-Civ. <n>` line is inserted before each rule's own heading line in the body (`<n> <Title>`, after the table of contents), `D.N.M.LR-Civ. 1.1` through `D.N.M.LR-Civ. 83.13`, 83 rules. Rule text was not edited: deleting the marker lines (`perl -ne 'print unless /^## D\.N\.M\.LR-Civ\. /'`) restores the extract byte for byte.
+- Edition: as the extract (effective July 1, 2011, amended effective October 1, 2020).
+- Sectioned sha256 508c16043b626f4d2e39dd35346bb7af9bdc6ced9c5b4e428fdba667fc70ee6d (the `path_sha256` pinned by `lit/nmd/Lit.toml`).

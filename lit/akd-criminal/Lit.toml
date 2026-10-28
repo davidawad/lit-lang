@@ -1,0 +1,52 @@
+# The U.S. District Court for the District of Alaska's Local Criminal
+# Rules (L.Crim.R.) as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods and limits the
+# local criminal rules themselves state and re-encodes no FRCrimP, Speedy
+# Trial Act or FRAP 4(b) period (one source of truth: lit/frcrimp). Each
+# period is counted under FRCrimP 45(a), which governs "any local rule",
+# so each deadline names `forum frcrimp`. The rules are the 2025 Revised
+# Edition, effective October 15, 2025 (sources/fed-dak); the December 2020
+# edition it supersedes is not vendored, so a query before that date is a
+# hole in the corpus. The Local Civil Rules apply to criminal proceedings
+# where not inconsistent (L.Crim.R. 1.1(b)) and live in lit/akd. An appeal
+# goes to the Ninth Circuit under lit/frcrimp's FRAP 4(b) period.
+[package]
+name = "akd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "akd-criminal-local-rules"
+forum = "akd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of Alaska: Local Criminal Rules"
+description = "The District of Alaska's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the presentence interview after a change of plea, Rule 16 discovery after arraignment, sensitive exhibits, the draft and final presentence reports and sentencing memoranda, revocation proceedings, presentence-report disclosure motions, pretrial release services and travel requests, motion oppositions, reconsideration and its page limit, in camera filings, and objections to magistrate judge reports and recommendations."
+in_force = "2025-10-15"
+known_at = "2026-10-28"
+unknown_before = "2025-10-15"
+jurisdiction = "U.S. District Court for the District of Alaska (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "dak-lcrimr"
+issuer = "U.S. District Court for the District of Alaska"
+date = "2025-10-15"
+designation = "Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.dak-lcrimr]
+title = "Local Criminal Rules of the U.S. District Court for the District of Alaska, 2025 Revised Edition (effective October 15, 2025)"
+url = "https://www.akd.uscourts.gov/sites/akd/files/local_rules/Local_Criminal_Rules_10-2025_0.pdf"
+path = "sources/fed-dak/dak-local-criminal-rules-2025-10-15-sectioned.txt"
+path_sha256 = "602e11209821a43c38590b4fad2d1b28b87ef0d9e817d22e33df0e3e3d1061d4"
+sha256 = "c3f9e80d4ad5762414e7758715d179d982f0367ae258bedfba84fe0fbff809db"
+as_of = "2025-10-15"
+cite_prefixes = ["D. Alaska L.Crim.R."]
+section_heading = "L.Crim.R. {n}"

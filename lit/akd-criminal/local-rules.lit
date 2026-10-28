@@ -1,0 +1,301 @@
+module akd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The District of Alaska's own criminal periods, counted under the
+// criminal rules (FRCrimP 45(a) governs "any local rule"). The local
+// criminal rules supplement the Federal Rules of Criminal Procedure, the
+// Local Civil Rules and Local Magistrate Judge Rules apply where not
+// inconsistent, and the court may change, dispense with or waive any of
+// them in the interest of justice (L.Crim.R. 1.1(a), (b)). No trigger
+// carries a service method: FRCrimP 45(c)'s three added days follow the
+// manner of service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp: FRCrimP 32(e)(2)'s
+// 35-day presentence disclosure (psr-disclosure) is not restated; the
+// local draft and final report periods below are the court's own.
+//
+// Periods measured in business days or to a clock time stay in notes,
+// because the counting rule declares no business-day unit: the felony
+// plea agreement, and any unsigned superseding charging document, is due
+// by noon of the business day preceding the change-of-plea hearing
+// (L.Crim.R. 11.2(a)(2), (c)); drugs, cash, firearms or similar exhibits
+// require contacting the U.S. Marshal not later than 2 business days
+// before the item is brought to the courtroom (L.Crim.R. 23.1(a)); a
+// disposition memorandum in a revocation is due not less than 2 business
+// days before the disposition hearing (L.Crim.R. 32.1.1(e)(2)(B)); a
+// written request for other pretrial release services, and a proposed
+// third-party custodian's completed forms, are due not less than 4
+// business days before the hearing (L.Crim.R. 46.1(d)(1), (e)(3)).
+//
+// Conditions that are not deadlines from an event stay in notes: a
+// change of plea requires a Notice of Intent to Change Plea (L.Crim.R.
+// 11.1(a)); sentencing is scheduled "approximately 90 days" after a guilty
+// plea or verdict unless otherwise ordered (L.Crim.R. 32.1(a)), a target
+// rather than a deadline; expert reports follow the Order of Progression
+// (L.Crim.R. 16.1(a)); the court appoints CJA counsel when retained
+// counsel has not appeared within 7 days of the initial appearance
+// (L.Crim.R. 44.2(a)(1)), a condition of appointment rather than a party's
+// deadline; no reply to an opposition is filed unless the court orders
+// otherwise (L.Crim.R. 47.1(d)); chambers copies are required of every
+// filing over 25 pages (L.Crim.R. 49.1(a)(3)). A motion to continue states
+// the days remaining on the Speedy Trial Act clock (L.Crim.R. 47.1(a)),
+// whose period stays in lit/frcrimp. The district's Speedy Trial Plan and
+// CJA Plan are referred to (L.Crim.R. 44.2(b), 50.1(b)) but not vendored.
+//
+// The earlier D. Alaska criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Brady v. Maryland, and the other FRCrimP,
+// Speedy Trial Act and constitutional authority it named) belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+/// A motion for reconsideration, and a response or reply the court
+/// requests: at most 5 pages (D. Alaska L.Crim.R. 47.1(g)(2)-(4)).
+limit reconsideration-paper {
+  pages <= 5 cite "D. Alaska L.Crim.R. 47.1(g)"
+} cite "D. Alaska L.Crim.R. 47.1(g)"
+
+/// The defendant's proposed change of plea from not guilty to guilty
+/// (D. Alaska L.Crim.R. 11.1).
+event ChangeOfPleaProposed()
+/// The defendant is arraigned (D. Alaska L.Crim.R. 16.1(a)).
+event Arraigned()
+/// The date a blunt or edged weapon or similar exhibit is to be brought to
+/// the courtroom (D. Alaska L.Crim.R. 23.1(b)).
+event WeaponExhibitScheduled()
+/// A petition alleging a violation of probation or supervised release is
+/// filed while the person is in custody (D. Alaska L.Crim.R. 32.1.1(a)).
+event RevocationPetitionFiledInCustody()
+/// A magistrate judge announces on the record a report and
+/// recommendation after a referred revocation evidentiary hearing (D.
+/// Alaska L.Crim.R. 32.1.1(c)(2)).
+event RevocationRecommendationAnnounced()
+/// The disposition hearing on a revocation is scheduled (D. Alaska
+/// L.Crim.R. 32.1.1(e)).
+event DispositionHearingScheduled()
+/// A motion to authorize release or disclosure of a presentence report is
+/// filed (D. Alaska L.Crim.R. 32.1.2(e)).
+event PsrDisclosureMotionFiled()
+/// The date of a defendant's or defense witness's intended non-custodial
+/// travel (D. Alaska L.Crim.R. 46.2).
+event IntendedTravel()
+/// A pretrial motion is filed (D. Alaska L.Crim.R. 47.1(c)).
+event PretrialMotionFiled()
+/// A post-conviction motion, other than one under the habeas corpus local
+/// rules, is filed (D. Alaska L.Crim.R. 47.1(c)).
+event PostConvictionMotionFiled()
+/// An order is entered (D. Alaska L.Crim.R. 47.1(g)(2)(A)).
+event OrderEntered()
+/// New material facts are discovered or the law changes (D. Alaska
+/// L.Crim.R. 47.1(g)(2)(B)).
+event NewFactsOrLawChange()
+/// A motion for reconsideration is filed and served (D. Alaska L.Crim.R.
+/// 47.1(g)(2)).
+event ReconsiderationMotionFiled() paper reconsideration-paper
+/// The court enters an order requesting a response to a motion for
+/// reconsideration (D. Alaska L.Crim.R. 47.1(g)(3)).
+event ReconsiderationResponseRequested()
+/// The court orders a reply on a motion for reconsideration (D. Alaska
+/// L.Crim.R. 47.1(g)(4)).
+event ReconsiderationReplyRequested()
+/// A motion to submit a document for in camera review is granted (D.
+/// Alaska L.Crim.R. 47.1(j)(3)).
+event InCameraReviewGranted()
+/// A magistrate judge issues a report and recommendation (D. Alaska
+/// L.Crim.R. 59.1).
+event RecommendationIssued()
+/// Objections to a magistrate judge's report and recommendation are filed
+/// (D. Alaska L.Crim.R. 59.1).
+event RecommendationObjectionsFiled()
+
+/// D. Alaska L.Crim.R. 11.1(b): defense counsel arranges a presentence
+/// investigation interview to occur within 14 days following the proposed
+/// change of plea.
+deadline presentence-interview: 14.days after ChangeOfPleaProposed() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 11.1(b)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 16.1(a): the discovery materials FRCrimP 16 lists,
+/// exclusive of expert reports, are provided to the defense within 14
+/// calendar days after the arraignment.
+deadline rule16-discovery: 14.days after Arraigned() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 16.1(a)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 23.1(b): a party wishing to introduce blunt or
+/// edged weapons or similar items contacts the U.S. Marshal not later than
+/// 1 week before the date the item is to be brought to the courtroom.
+deadline weapon-exhibit-marshal-contact: 7.days before WeaponExhibitScheduled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 23.1(b)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 32.1(b): the draft presentence report is disclosed
+/// to counsel not less than 42 days before the sentencing date.
+deadline draft-psr-disclosure: 42.days before SentencingScheduled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1(b)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 32.1(c): the final presentence report is disclosed
+/// to counsel not less than 21 days before the sentencing date; the
+/// confidential sentencing recommendation is disclosed with it unless
+/// otherwise ordered (L.Crim.R. 32.1(d)).
+deadline final-psr-disclosure: 21.days before SentencingScheduled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1(c)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 32.1(e)(1): not less than 7 days before the
+/// sentencing hearing, each party files and serves a sentencing
+/// memorandum, with its sealed addendum (L.Crim.R. 32.1(f)); a motion for
+/// an evidentiary hearing is due with it (L.Crim.R. 32.1(h)).
+deadline sentencing-memorandum: 7.days before SentencingScheduled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1(e)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 32.1(e)(2): not less than 3 days before the
+/// sentencing hearing, each party may reply to the opposing sentencing
+/// memorandum.
+deadline sentencing-reply: 3.days before SentencingScheduled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1(e)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 32.1.1(a)(2)(A): if the person is in custody, the
+/// initial appearance on a revocation petition is held without
+/// unnecessary delay, and in no case more than 7 days after the petition
+/// is filed, absent extenuating circumstances.
+deadline revocation-initial-appearance: 7.days after RevocationPetitionFiledInCustody() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1.1(a)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 32.1.1(c)(2)(A): an objection to a magistrate
+/// judge's report and recommendation on a revocation violation is filed
+/// within 7 days of the date announced; without a timely objection the
+/// court may adopt it without further hearing (L.Crim.R. 32.1.1(c)(2)(B)).
+deadline revocation-recommendation-objection: 7.days after RevocationRecommendationAnnounced() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1.1(c)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 32.1.1(e)(2)(A): unless otherwise ordered, the
+/// Sentencing Recommendation for Violation Disposition is filed not less
+/// than 7 days before the disposition hearing.
+deadline violation-recommendation-filing: 7.days before DispositionHearingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Alaska L.Crim.R. 32.1.1(e)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 32.1.2(e)(2)(D): any interested party may file and
+/// serve an opposition to the release or disclosure of a presentence
+/// report within 14 days of the date the motion is filed.
+deadline psr-disclosure-opposition: 14.days after PsrDisclosureMotionFiled() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 32.1.2(e)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 46.2: a request for non-custodial travel of a
+/// federal defendant or a defense witness is filed at least 10 days in
+/// advance of the intended travel, except on a showing of good cause.
+deadline travel-request: 10.days before IntendedTravel() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 46.2"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 47.1(c): unless otherwise ordered, an opposition to
+/// a pretrial motion is filed within 7 days of the filing of the motion.
+deadline pretrial-opposition: 7.days after PretrialMotionFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Alaska L.Crim.R. 47.1(c)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 47.1(c): unless otherwise ordered, an opposition to
+/// a post-conviction motion (other than one under the habeas corpus local
+/// rules) is filed within 14 days of the filing of the motion.
+deadline post-conviction-opposition: 14.days after PostConvictionMotionFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Alaska L.Crim.R. 47.1(c)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 47.1(g)(2)(A): a motion for reconsideration for
+/// manifest error of law or fact is filed and served not later than 7
+/// days after the entry of the order.
+deadline reconsideration-manifest-error: 7.days after OrderEntered() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 47.1(g)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 47.1(g)(2)(B): a motion for reconsideration on new
+/// material facts or an intervening change in the law is filed and served
+/// within 14 days of the discovery or change in law.
+deadline reconsideration-new-facts: 14.days after NewFactsOrLawChange() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 47.1(g)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 47.1(g)(3): no response to a motion for
+/// reconsideration is filed unless the court requests one; unless
+/// otherwise ordered, it is filed within 7 days of entry of the order
+/// requesting it.
+deadline reconsideration-response: 7.days after ReconsiderationResponseRequested() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Alaska L.Crim.R. 47.1(g)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 47.1(g)(4): no reply is filed unless the court
+/// requests one; unless otherwise ordered, it is filed within 7 days of
+/// the order requesting it.
+deadline reconsideration-reply: 7.days after ReconsiderationReplyRequested() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Alaska L.Crim.R. 47.1(g)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 47.1(j)(3): if a motion to submit documents in
+/// camera is granted, the documents are filed through CM/ECF as an ex
+/// parte document within 7 days.
+deadline in-camera-filing: 7.days after InCameraReviewGranted() counted_by frcrimp45 cite "D. Alaska L.Crim.R. 47.1(j)"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 59.1: unless otherwise ordered, a party may file
+/// objections within 14 days after the issuance of a magistrate judge's
+/// report and recommendation; the district court then determines the
+/// matter under FRCrimP 59(b).
+deadline recommendation-objection: 14.days after RecommendationIssued() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Alaska L.Crim.R. 59.1"
+{
+  forum frcrimp
+}
+
+/// D. Alaska L.Crim.R. 59.1: the opposing party may respond to the
+/// objections within 7 days of their filing.
+deadline recommendation-objection-response: 7.days after RecommendationObjectionsFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Alaska L.Crim.R. 59.1"
+{
+  forum frcrimp
+}

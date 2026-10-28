@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "akd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:35a1fa703e46f2e8446dd427f32929ec5e7d06549d26fd3281941aabbab8077f"
+semantic = "sha256:90169e892ebb2e39a9d8d80dacea2a8ec465989a46ff124f59001ab3df042244"
+texts = [
+    "dak-lcrimr sources/fed-dak/dak-local-criminal-rules-2025-10-15-sectioned.txt sha256:602e11209821a43c38590b4fad2d1b28b87ef0d9e817d22e33df0e3e3d1061d4",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]

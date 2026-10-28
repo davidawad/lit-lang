@@ -139,59 +139,59 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 
 | Jurisdiction | Kind | Status | Rules | Precedents | Tests | Matters | Packages |
 |---|---|---|--:|--:|--:|--:|---|
-| Alabama | state | outline | 0 | 0 | 0 | 0 | `outlines/eleventh-circuit/alabama/state-appellate`, `outlines/eleventh-circuit/alabama/state-civil` |
+| Alabama | state | outline | 0 | 0 | 0 | 0 | `outlines/eleventh-circuit/alabama/court-of-criminal-appeals`, `outlines/eleventh-circuit/alabama/state-appellate`, `outlines/eleventh-circuit/alabama/state-civil`, `outlines/eleventh-circuit/alabama/state-criminal` |
 | Alaska | state | promoted | 0 | 0 | 0 | 0 | `lit/ak-superior`, `lit/ak-supreme` |
-| Arizona | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/arizona/state-appellate`, `outlines/ninth-circuit/arizona/state-civil` |
-| Arkansas | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/arkansas/state-appellate`, `outlines/eighth-circuit/arkansas/state-civil` |
+| Arizona | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/arizona/state-appellate`, `outlines/ninth-circuit/arizona/state-civil`, `outlines/ninth-circuit/arizona/state-criminal` |
+| Arkansas | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/arkansas/state-appellate`, `outlines/eighth-circuit/arkansas/state-civil`, `outlines/eighth-circuit/arkansas/state-criminal` |
 | California | state | promoted | 0 | 0 | 0 | 0 | `lit/ca-court-of-appeal`, `lit/ca-superior` |
-| Colorado | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/colorado/state-appellate`, `outlines/tenth-circuit/colorado/state-civil` |
-| Connecticut | state | outline | 0 | 0 | 0 | 0 | `outlines/second-circuit/connecticut/state-appellate`, `outlines/second-circuit/connecticut/state-civil` |
-| Delaware | state | outline | 0 | 0 | 0 | 0 | `outlines/third-circuit/delaware/state-appellate`, `outlines/third-circuit/delaware/state-civil` |
+| Colorado | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/colorado/state-appellate`, `outlines/tenth-circuit/colorado/state-civil`, `outlines/tenth-circuit/colorado/state-criminal` |
+| Connecticut | state | outline | 0 | 0 | 0 | 0 | `outlines/second-circuit/connecticut/state-appellate`, `outlines/second-circuit/connecticut/state-civil`, `outlines/second-circuit/connecticut/state-criminal` |
+| Delaware | state | outline | 0 | 0 | 0 | 0 | `outlines/third-circuit/delaware/state-appellate`, `outlines/third-circuit/delaware/state-civil`, `outlines/third-circuit/delaware/state-criminal` |
 | Florida | state | promoted | 0 | 0 | 0 | 0 | `lit/fl-state-appellate`, `lit/fl-state-civil` |
-| Georgia | state | outline | 0 | 0 | 0 | 0 | `outlines/eleventh-circuit/georgia/state-appellate`, `outlines/eleventh-circuit/georgia/state-civil` |
-| Hawaii | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/hawaii/state-appellate`, `outlines/ninth-circuit/hawaii/state-civil` |
-| Idaho | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/idaho/state-appellate`, `outlines/ninth-circuit/idaho/state-civil` |
-| Illinois | state | outline | 0 | 0 | 0 | 0 | `outlines/seventh-circuit/illinois/state-appellate`, `outlines/seventh-circuit/illinois/state-civil` |
-| Indiana | state | outline | 0 | 0 | 0 | 0 | `outlines/seventh-circuit/indiana/state-appellate`, `outlines/seventh-circuit/indiana/state-civil` |
-| Iowa | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/iowa/state-appellate`, `outlines/eighth-circuit/iowa/state-civil` |
+| Georgia | state | outline | 0 | 0 | 0 | 0 | `outlines/eleventh-circuit/georgia/state-appellate`, `outlines/eleventh-circuit/georgia/state-civil`, `outlines/eleventh-circuit/georgia/state-criminal` |
+| Hawaii | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/hawaii/state-appellate`, `outlines/ninth-circuit/hawaii/state-civil`, `outlines/ninth-circuit/hawaii/state-criminal` |
+| Idaho | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/idaho/state-appellate`, `outlines/ninth-circuit/idaho/state-civil`, `outlines/ninth-circuit/idaho/state-criminal` |
+| Illinois | state | outline | 0 | 0 | 0 | 0 | `outlines/seventh-circuit/illinois/state-appellate`, `outlines/seventh-circuit/illinois/state-civil`, `outlines/seventh-circuit/illinois/state-criminal` |
+| Indiana | state | outline | 0 | 0 | 0 | 0 | `outlines/seventh-circuit/indiana/state-appellate`, `outlines/seventh-circuit/indiana/state-civil`, `outlines/seventh-circuit/indiana/state-criminal` |
+| Iowa | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/iowa/state-appellate`, `outlines/eighth-circuit/iowa/state-civil`, `outlines/eighth-circuit/iowa/state-criminal` |
 | Kansas | state | promoted | 0 | 0 | 0 | 0 | `lit/ks-appellate`, `lit/ks-district` |
-| Kentucky | state | outline | 0 | 0 | 0 | 0 | `outlines/sixth-circuit/kentucky/state-appellate`, `outlines/sixth-circuit/kentucky/state-civil` |
-| Louisiana | state | outline | 0 | 0 | 0 | 0 | `outlines/fifth-circuit/louisiana/state-appellate`, `outlines/fifth-circuit/louisiana/state-civil` |
+| Kentucky | state | outline | 0 | 0 | 0 | 0 | `outlines/sixth-circuit/kentucky/state-appellate`, `outlines/sixth-circuit/kentucky/state-civil`, `outlines/sixth-circuit/kentucky/state-criminal` |
+| Louisiana | state | outline | 0 | 0 | 0 | 0 | `outlines/fifth-circuit/louisiana/state-appellate`, `outlines/fifth-circuit/louisiana/state-civil`, `outlines/fifth-circuit/louisiana/state-criminal` |
 | Maine | state | promoted | 0 | 0 | 0 | 0 | `lit/me-law-court`, `lit/me-superior-civil` |
-| Maryland | state | outline | 0 | 0 | 0 | 0 | `outlines/fourth-circuit/maryland/state-appellate`, `outlines/fourth-circuit/maryland/state-civil` |
+| Maryland | state | outline | 0 | 0 | 0 | 0 | `outlines/fourth-circuit/maryland/state-appellate`, `outlines/fourth-circuit/maryland/state-civil`, `outlines/fourth-circuit/maryland/state-criminal` |
 | Massachusetts | state | promoted | 0 | 0 | 0 | 0 | `lit/ma-appeals-sjc`, `lit/ma-superior-civil` |
-| Michigan | state | outline | 0 | 0 | 0 | 0 | `outlines/sixth-circuit/michigan/state-appellate`, `outlines/sixth-circuit/michigan/state-civil` |
-| Minnesota | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/minnesota/state-appellate`, `outlines/eighth-circuit/minnesota/state-civil` |
-| Mississippi | state | outline | 0 | 0 | 0 | 0 | `outlines/fifth-circuit/mississippi/state-appellate`, `outlines/fifth-circuit/mississippi/state-civil` |
-| Missouri | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/missouri/state-appellate`, `outlines/eighth-circuit/missouri/state-civil` |
+| Michigan | state | outline | 0 | 0 | 0 | 0 | `outlines/sixth-circuit/michigan/state-appellate`, `outlines/sixth-circuit/michigan/state-civil`, `outlines/sixth-circuit/michigan/state-criminal` |
+| Minnesota | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/minnesota/state-appellate`, `outlines/eighth-circuit/minnesota/state-civil`, `outlines/eighth-circuit/minnesota/state-criminal` |
+| Mississippi | state | outline | 0 | 0 | 0 | 0 | `outlines/fifth-circuit/mississippi/state-appellate`, `outlines/fifth-circuit/mississippi/state-civil`, `outlines/fifth-circuit/mississippi/state-criminal` |
+| Missouri | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/missouri/state-appellate`, `outlines/eighth-circuit/missouri/state-civil`, `outlines/eighth-circuit/missouri/state-criminal` |
 | Montana | state | promoted | 0 | 0 | 0 | 0 | `lit/mt-district`, `lit/mt-supreme` |
-| Nebraska | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/nebraska/state-appellate`, `outlines/eighth-circuit/nebraska/state-civil` |
-| Nevada | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/nevada/state-appellate`, `outlines/ninth-circuit/nevada/state-civil` |
-| New Hampshire | state | outline | 0 | 0 | 0 | 0 | `outlines/first-circuit/new-hampshire/state-appellate`, `outlines/first-circuit/new-hampshire/state-civil` |
-| New Jersey | state | outline | 0 | 0 | 0 | 0 | `outlines/third-circuit/new-jersey/state-appellate`, `outlines/third-circuit/new-jersey/state-civil` |
-| New Mexico | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/new-mexico/state-appellate`, `outlines/tenth-circuit/new-mexico/state-civil` |
-| New York | state | outline | 0 | 0 | 0 | 0 | `outlines/second-circuit/new-york/state-appellate`, `outlines/second-circuit/new-york/state-civil` |
-| North Carolina | state | outline | 0 | 0 | 0 | 0 | `outlines/fourth-circuit/north-carolina/state-appellate`, `outlines/fourth-circuit/north-carolina/state-civil` |
-| North Dakota | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/north-dakota/state-appellate`, `outlines/eighth-circuit/north-dakota/state-civil` |
+| Nebraska | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/nebraska/state-appellate`, `outlines/eighth-circuit/nebraska/state-civil`, `outlines/eighth-circuit/nebraska/state-criminal` |
+| Nevada | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/nevada/state-appellate`, `outlines/ninth-circuit/nevada/state-civil`, `outlines/ninth-circuit/nevada/state-criminal` |
+| New Hampshire | state | outline | 0 | 0 | 0 | 0 | `outlines/first-circuit/new-hampshire/state-appellate`, `outlines/first-circuit/new-hampshire/state-civil`, `outlines/first-circuit/new-hampshire/state-criminal` |
+| New Jersey | state | outline | 0 | 0 | 0 | 0 | `outlines/third-circuit/new-jersey/state-appellate`, `outlines/third-circuit/new-jersey/state-civil`, `outlines/third-circuit/new-jersey/state-criminal` |
+| New Mexico | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/new-mexico/state-appellate`, `outlines/tenth-circuit/new-mexico/state-civil`, `outlines/tenth-circuit/new-mexico/state-criminal` |
+| New York | state | outline | 0 | 0 | 0 | 0 | `outlines/second-circuit/new-york/state-appellate`, `outlines/second-circuit/new-york/state-civil`, `outlines/second-circuit/new-york/state-criminal` |
+| North Carolina | state | outline | 0 | 0 | 0 | 0 | `outlines/fourth-circuit/north-carolina/state-appellate`, `outlines/fourth-circuit/north-carolina/state-civil`, `outlines/fourth-circuit/north-carolina/state-criminal` |
+| North Dakota | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/north-dakota/state-appellate`, `outlines/eighth-circuit/north-dakota/state-civil`, `outlines/eighth-circuit/north-dakota/state-criminal` |
 | Ohio | state | promoted | 0 | 0 | 0 | 0 | `lit/oh-appellate`, `lit/oh-common-pleas` |
-| Oklahoma | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/oklahoma/state-appellate`, `outlines/tenth-circuit/oklahoma/state-civil` |
-| Oregon | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/oregon/state-appellate`, `outlines/ninth-circuit/oregon/state-civil` |
+| Oklahoma | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/oklahoma/court-of-criminal-appeals`, `outlines/tenth-circuit/oklahoma/state-appellate`, `outlines/tenth-circuit/oklahoma/state-civil`, `outlines/tenth-circuit/oklahoma/state-criminal` |
+| Oregon | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/oregon/state-appellate`, `outlines/ninth-circuit/oregon/state-civil`, `outlines/ninth-circuit/oregon/state-criminal` |
 | Pennsylvania | state | promoted | 0 | 0 | 0 | 0 | `lit/pa-appellate-civil`, `lit/pa-cp-civil` |
-| Rhode Island | state | outline | 0 | 0 | 0 | 0 | `outlines/first-circuit/rhode-island/state-appellate`, `outlines/first-circuit/rhode-island/state-civil` |
+| Rhode Island | state | outline | 0 | 0 | 0 | 0 | `outlines/first-circuit/rhode-island/state-appellate`, `outlines/first-circuit/rhode-island/state-civil`, `outlines/first-circuit/rhode-island/state-criminal` |
 | South Carolina | state | promoted | 0 | 0 | 0 | 0 | `lit/sc-appellate-civil`, `lit/sc-circuit-civil` |
 | South Dakota | state | promoted | 0 | 0 | 0 | 0 | `lit/sd`, `lit/sd-circuit` |
-| Tennessee | state | outline | 0 | 0 | 0 | 0 | `outlines/sixth-circuit/tennessee/state-appellate`, `outlines/sixth-circuit/tennessee/state-civil` |
-| Texas | state | outline | 0 | 0 | 0 | 0 | `outlines/fifth-circuit/texas/state-appellate`, `outlines/fifth-circuit/texas/state-civil` |
-| Utah | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/utah/state-appellate`, `outlines/tenth-circuit/utah/state-civil` |
+| Tennessee | state | outline | 0 | 0 | 0 | 0 | `outlines/sixth-circuit/tennessee/court-of-criminal-appeals`, `outlines/sixth-circuit/tennessee/state-appellate`, `outlines/sixth-circuit/tennessee/state-civil`, `outlines/sixth-circuit/tennessee/state-criminal` |
+| Texas | state | outline | 0 | 0 | 0 | 0 | `outlines/fifth-circuit/texas/court-of-criminal-appeals`, `outlines/fifth-circuit/texas/state-appellate`, `outlines/fifth-circuit/texas/state-civil`, `outlines/fifth-circuit/texas/state-criminal` |
+| Utah | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/utah/state-appellate`, `outlines/tenth-circuit/utah/state-civil`, `outlines/tenth-circuit/utah/state-criminal` |
 | Vermont | state | promoted | 0 | 0 | 0 | 0 | `lit/vt-superior-civil`, `lit/vt-supreme` |
 | Virginia | state | promoted | 0 | 0 | 0 | 0 | `lit/va-appellate-civil`, `lit/va-circuit-civil` |
-| Washington | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/washington/state-appellate`, `outlines/ninth-circuit/washington/state-civil` |
-| West Virginia | state | outline | 0 | 0 | 0 | 0 | `outlines/fourth-circuit/west-virginia/state-appellate`, `outlines/fourth-circuit/west-virginia/state-civil` |
+| Washington | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/washington/state-appellate`, `outlines/ninth-circuit/washington/state-civil`, `outlines/ninth-circuit/washington/state-criminal` |
+| West Virginia | state | outline | 0 | 0 | 0 | 0 | `outlines/fourth-circuit/west-virginia/state-appellate`, `outlines/fourth-circuit/west-virginia/state-civil`, `outlines/fourth-circuit/west-virginia/state-criminal` |
 | Wisconsin | state | promoted | 0 | 0 | 0 | 0 | `lit/wi-circuit`, `lit/wisctapp` |
-| Wyoming | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/wyoming/state-appellate`, `outlines/tenth-circuit/wyoming/state-civil` |
-| District of Columbia | district | outline | 0 | 0 | 0 | 0 | `outlines/dc-circuit/district-of-columbia/state-appellate`, `outlines/dc-circuit/district-of-columbia/state-civil` |
-| American Samoa | territory | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/american-samoa/state-appellate`, `outlines/ninth-circuit/american-samoa/state-civil` |
+| Wyoming | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/wyoming/state-appellate`, `outlines/tenth-circuit/wyoming/state-civil`, `outlines/tenth-circuit/wyoming/state-criminal` |
+| District of Columbia | district | outline | 0 | 0 | 0 | 0 | `outlines/dc-circuit/district-of-columbia/state-appellate`, `outlines/dc-circuit/district-of-columbia/state-civil`, `outlines/dc-circuit/district-of-columbia/state-criminal` |
+| American Samoa | territory | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/american-samoa/state-appellate`, `outlines/ninth-circuit/american-samoa/state-civil`, `outlines/ninth-circuit/american-samoa/state-criminal` |
 | Guam | territory | promoted | 0 | 0 | 0 | 0 | `lit/gu-superior`, `lit/gu-supreme` |
 | Northern Mariana Islands | territory | promoted | 0 | 0 | 0 | 0 | `lit/mp-supreme`, `lit/mp-trial` |
-| Puerto Rico | territory | outline | 0 | 0 | 0 | 0 | `outlines/first-circuit/puerto-rico/state-appellate`, `outlines/first-circuit/puerto-rico/state-civil` |
-| U.S. Virgin Islands | territory | outline | 0 | 0 | 0 | 0 | `outlines/third-circuit/virgin-islands/state-appellate`, `outlines/third-circuit/virgin-islands/state-civil` |
+| Puerto Rico | territory | outline | 0 | 0 | 0 | 0 | `outlines/first-circuit/puerto-rico/state-appellate`, `outlines/first-circuit/puerto-rico/state-civil`, `outlines/first-circuit/puerto-rico/state-criminal` |
+| U.S. Virgin Islands | territory | outline | 0 | 0 | 0 | 0 | `outlines/third-circuit/virgin-islands/state-appellate`, `outlines/third-circuit/virgin-islands/state-civil`, `outlines/third-circuit/virgin-islands/state-criminal` |

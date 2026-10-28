@@ -1,0 +1,187 @@
+// OUTLINE (unverified). The FRCrimP, Speedy Trial Act and FRAP 4(b) periods
+// are imported from lit/frcrimp and its cites are bound to the vendored rule
+// text; this package declares only the N.D. Okla. local criminal rule layer
+// (and the court's Speedy Trial Act plan under 18 U.S.C. § 3165), every cite
+// of which is ?(...) and every value ? until a fetch-first pass vendors the
+// local rules and a later pass verifies and promotes the package.
+module outline-oknd-criminal
+
+import frcrimp.deadlines.{
+  criminal-appeal,
+  indictment-period,
+  prelim-in-custody,
+  prelim-released,
+  rule29-period,
+  rule33-period,
+  rule35-period,
+  speedy-trial,
+}
+
+start arrested
+
+state arrested: "Arrest or summons on a complaint" by applicant cite "FRCrimP 5(a)(1)(A)"
+{
+  note "OUTLINE. Initial appearance without unnecessary delay (FRCrimP 5(a)(1)(A)). The court's duty-magistrate, after-hours and CJA appointment practice are holes (N.D. Okla. local criminal rules; verify numbering)."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance {
+    authority cite "FRCrimP 5(a)(1)(A)"
+  }
+  edge-arrested-appearance-local "Local initial-appearance and counsel-appointment practice" -> initial-appearance {
+    authority cite ?("N.D. Okla. local criminal rules, initial appearance and appointment of counsel (verify numbering)")
+  }
+}
+
+decision initial-appearance: "Detention or release" by court cite "FRCrimP 5(d)"
+{
+  note "OUTLINE. Release or detention under 18 U.S.C. § 3142 (verify). Local pretrial-services and detention-hearing practice is a hole. Key decision (verify): United States v. Salerno, 481 U.S. 739 (1987)."
+  edge-initial-appearance-custody "Detained; preliminary hearing" -> preliminary-hearing {
+    authority cite "FRCrimP 5.1(c)"
+    within prelim-in-custody
+  }
+  edge-initial-appearance-released "Released on conditions; preliminary hearing" -> preliminary-hearing {
+    authority cite "FRCrimP 5.1(c)"
+    within prelim-released
+  }
+  edge-initial-appearance-local "Local detention and release practice" -> preliminary-hearing {
+    authority cite ?("N.D. Okla. local criminal rules, release and detention (verify numbering)")
+  }
+}
+
+state preliminary-hearing: "Preliminary hearing or indictment" by court cite "FRCrimP 5.1(a)"
+{
+  note "OUTLINE. No preliminary hearing once the defendant is indicted (FRCrimP 5.1(a)(2)); the grand jury's local practice is a hole."
+  edge-preliminary-hearing-charge "Indictment or information filed" -> charged {
+    authority cite "18 U.S.C. § 3161(b)"
+    within indictment-period
+  }
+  edge-preliminary-hearing-no-cause "No probable cause; complaint dismissed" -> dismissed {
+    authority cite "FRCrimP 5.1(f)"
+  }
+}
+
+state charged: "Indictment or information" by office cite "FRCrimP 7(c)(1)"
+{
+  note "OUTLINE. The court's Speedy Trial Act plan (18 U.S.C. § 3165) and local case-assignment and related-case rules are holes."
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "FRCrimP 10(a)" }
+  edge-charged-plan "District Speedy Trial Act plan" -> arraignment {
+    authority cite ?("N.D. Okla. plan for prompt disposition of criminal cases under 18 U.S.C. § 3165 (verify)")
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "FRCrimP 10(a)"
+{
+  note "OUTLINE. Local arraignment, scheduling and standing discovery orders are holes. Key decision (verify): Brady v. Maryland, 373 U.S. 83 (1963)."
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "FRCrimP 16(a)(1)" }
+  edge-arraignment-discovery-local "Local discovery order or rule" -> discovery {
+    authority cite ?("N.D. Okla. local criminal rules, discovery and disclosure (verify numbering)")
+  }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "FRCrimP 12(b)(3)"
+{
+  note "OUTLINE. The pretrial-motion deadline is set by the court (FRCrimP 12(c)(1)); local motion, briefing and hearing practice is a hole. Key decisions (verify): Barker v. Wingo, 407 U.S. 514 (1972); Zedner v. United States, 547 U.S. 489 (2006)."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "FRCrimP 12(c)(1)"
+  }
+  edge-discovery-motions-local "Local motion practice" -> motions-ruling {
+    authority cite ?("N.D. Okla. local criminal rules, motions (verify numbering)")
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "FRCrimP 11(c)(1)" }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "FRCrimP 12(d)"
+{
+  note "OUTLINE. Speedy Trial Act dismissal (18 U.S.C. § 3162(a)(2)) and suppression rulings; local hearing practice is a hole."
+  edge-motions-ruling-dismissed "Charges dismissed" -> dismissed {
+    authority cite "18 U.S.C. § 3162(a)(2)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "FRCrimP 12(d)"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "FRCrimP 11(a)(1)"
+{
+  note "OUTLINE. Local change-of-plea and plea-agreement practice are holes. Key decisions (verify): Boykin v. Alabama, 395 U.S. 238 (1969); Missouri v. Frye, 566 U.S. 134 (2012)."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "FRCrimP 11(b)(1)" }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "18 U.S.C. § 3161(c)(1)"
+    within speedy-trial
+  }
+  edge-plea-decision-trial-local "Local trial-setting and pretrial-conference practice" -> trial {
+    authority cite ?("N.D. Okla. local criminal rules, pretrial conference and trial setting (verify numbering)")
+  }
+}
+
+decision trial: "Verdict" by court cite "FRCrimP 31(a)"
+{
+  note "OUTLINE. Local jury, exhibit and trial-conduct rules are holes. Key decision (verify): Jackson v. Virginia, 443 U.S. 307 (1979)."
+  edge-trial-acquittal "Not guilty" -> acquitted { authority cite "FRCrimP 31(a)" }
+  edge-trial-guilty "Guilty; post-verdict motions" -> post-verdict {
+    authority cite "FRCrimP 29(c)(1)"
+    within rule29-period
+  }
+}
+
+decision post-verdict: "Post-verdict motions" by court cite "FRCrimP 29(c)(1)"
+{
+  note "OUTLINE. Local post-trial motion practice is a hole."
+  edge-post-verdict-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite "FRCrimP 29(c)(2)"
+  }
+  edge-post-verdict-new-trial "New trial granted" -> trial {
+    authority cite "FRCrimP 33(b)(2)"
+    within rule33-period
+  }
+  edge-post-verdict-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "FRCrimP 32(b)(1)"
+  }
+}
+
+state sentencing: "Presentence report and sentencing" by court cite "FRCrimP 32(e)(2)"
+{
+  note "OUTLINE. The report is due at least 35 days before sentencing, counted back (lit/frcrimp psr-disclosure). Local presentence-report objection, sentencing-memorandum and disclosure practice are holes. Key decision (verify): United States v. Booker, 543 U.S. 220 (2005)."
+  edge-sentencing-psr "Presentence report disclosed; sentence imposed" -> judgment {
+    authority cite "FRCrimP 32(e)(2)"
+  }
+  edge-sentencing-local "Local presentence and sentencing procedure" -> judgment {
+    authority cite ?("N.D. Okla. local criminal rules, presentence reports and sentencing (verify numbering)")
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "FRCrimP 32(k)(1)"
+{
+  note "OUTLINE. Key decisions (verify): Roe v. Flores-Ortega, 528 U.S. 470 (2000); Garza v. Idaho, 586 U.S. 232 (2019)."
+  edge-judgment-correction "Sentence corrected for clear error" -> judgment-final {
+    authority cite "FRCrimP 35(a)"
+    within rule35-period
+  }
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "FRAP 4(b)(1)(A)"
+    within criminal-appeal
+  }
+  edge-judgment-no-appeal "No appeal" -> judgment-final { authority cite "FRAP 4(b)(1)(A)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "FRCrimP 29(c)(2)"
+{
+  note "OUTLINE. Payoff is a hole."
+  payoff ?
+}
+
+terminal dismissed: "Charges dismissed" outcome [win] cite "18 U.S.C. § 3162(a)(2)"
+{
+  note "OUTLINE. Dismissal with or without prejudice (18 U.S.C. § 3162(a)(2)); payoff is a hole."
+  payoff ?
+}
+
+terminal appeal-taken: "Appeal taken to the court of appeals" outcome [appeal] cite "FRAP 4(b)(1)(A)"
+{
+  note "OUTLINE. The appeal continues in the ca10 outline or package; payoff is a hole."
+  payoff ?
+}
+
+terminal judgment-final: "Conviction final" outcome [loss] cite "FRCrimP 32(k)(1)"
+{
+  note "OUTLINE. Collateral review under 28 U.S.C. § 2255 (verify); payoff is a hole."
+  payoff ?
+}

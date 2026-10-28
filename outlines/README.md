@@ -16,6 +16,9 @@ The layout mirrors formbook's `courts/<circuit>/<jurisdiction>/`.
     outlines/<circuit>/bankruptcy-appellate-panel/       each circuit's BAP (1st, 6th, 9th, 10th; the 8th is lit/bap8)
     outlines/<circuit>/<state>/state-civil/              state trial court of general jurisdiction, civil
     outlines/<circuit>/<state>/state-appellate/          state intermediate appellate and supreme court, civil appeals
+    outlines/<circuit>/<state>/state-criminal/           state trial courts of general criminal jurisdiction (every state, DC and territory)
+    outlines/<circuit>/<state>/court-of-criminal-appeals/  the TX, OK, AL and TN courts of criminal appeals
+    outlines/<circuit>/<state>/federal-<district>-criminal/  each U.S. district court's local criminal rules (uses lit/frcrimp)
     outlines/federal-circuit/<court>/, outlines/national/<court>/, outlines/military/<court>/,
     outlines/supreme-court-of-the-united-states/          one package per court
 
@@ -27,6 +30,13 @@ imports the FRBP periods from it with their cites bound to the vendored FRBP
 text, and declares only the court's local bankruptcy rule layer as `?(...)`
 cites and holes. It carries a `Lit.lock` (`litigate lock DIR`). Copy
 `outlines/third-circuit/new-jersey/bankruptcy-district/` as the template.
+
+A federal criminal outline (`federal-<district>-criminal`) differs the same
+way: it depends on `lit/frcrimp`, imports the FRCrimP, Speedy Trial Act and
+FRAP 4(b) periods from `frcrimp.deadlines`, and declares only the district's
+local criminal rules and Speedy Trial Act plan (18 U.S.C. § 3165) as `?(...)`
+cites and holes. It carries a `Lit.lock`. Copy
+`outlines/third-circuit/new-jersey/federal-district-criminal/` as the template.
 
 ## Rules for every outline
 

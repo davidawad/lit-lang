@@ -625,7 +625,13 @@ impl Session {
             .collect();
         let mut lock = LockFile::new(
             rows.into_iter()
-                .map(|r| if paths.contains(&r.name) { r.into_path() } else { r })
+                .map(|r| {
+                    if paths.contains(&r.name) {
+                        r.into_path()
+                    } else {
+                        r
+                    }
+                })
                 .collect(),
         );
         lock.packages.dedup();

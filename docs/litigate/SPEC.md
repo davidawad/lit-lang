@@ -2472,7 +2472,11 @@ field on one side only (`-` on the other), or a run that cannot be made
 the test: one L5006 per value naming case, world (`FILE[@as_of] ID`),
 field, expected and actual, a table of the same rows in human output, and
 exit 2. `just ci` (recipe `expect`) and `just ci-scoped` (stage `expect`)
-run `litigate test tests/expect`.
+run `scripts/expect-check`: `litigate test tests/expect`, then a must-fail
+check that moves the first recorded due date of
+`tests/expect/bowles-v-russell` one day later in a scratch copy and
+requires exit 2 and the row naming that case, its world, the `due` field,
+the shifted date as expected and the computed date as actual.
 
 Re-recording takes `litigate test tests/expect --bless`: it rewrites each
 `expect.toml` whose values moved with the values found (its leading

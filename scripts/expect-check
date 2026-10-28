@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# The expect-test gate (lg-wvlf.1; SPEC §5.8, expect tests), run by
+# `just expect` and the ci-scoped `expect` stage:
+#
+#   1. `litigate test tests/expect` must pass: no recorded verdict, outcome,
+#      deadline or cite moved.
+#   2. The must-fail check: a scratch copy of tests/expect/bowles-v-russell
+#      with its first recorded due date moved one day later must fail with
+#      exit 2 and a diff row naming the case, the world, the `due` field,
+#      the shifted (expected) date and the computed (actual) date. A suite
+#      that cannot see a one-day shift is no gate.
+#
+# Run from the repository root (an expect.toml's `paths` resolve from it).
+set -euo pipefail
+
+lit=(cargo run -q -p litigate-cli -- --format human)
+"${lit[@]}" test tests/expect
+
+case_dir=tests/expect/bowles-v-russell
+scratch="target/expect-must-fail"
+rm -rf "$scratch"
+mkdir -p "$scratch"
+trap 'rm -rf "$scratch"' EXIT
+cp -R "$case_dir" "$scratch/"
+toml="$scratch/bowles-v-russell/expect.toml"
+
+due="$(sed -n 's/^due = "\([0-9-]*\)"$/\1/p' "$toml" | head -n 1)"
+[ -n "$due" ] || { echo "expect-check: no recorded due date in $case_dir/expect.toml" >&2; exit 1; }
+shifted="$(date -u -d "$due + 1 day" +%F)"
+sed -i "0,/^due = \"$due\"\$/s//due = \"$shifted\"/" "$toml"
+
+rc=0
+out="$("${lit[@]}" test "$scratch" 2>&1)" || rc=$?
+if [ "$rc" -ne 2 ]; then
+  printf '%s\n' "$out"
+  echo "expect-check: must-fail: a due date moved $due -> $shifted exited $rc, not 2" >&2
+  exit 1
+fi
+row="^bowles-v-russell +\| ca6\.world@[0-9-]+ w1 +\| deadline [^|]* due +\| $shifted +\| $due *$"
+if ! grep -qE "$row" <<<"$out"; then
+  printf '%s\n' "$out"
+  echo "expect-check: must-fail: no diff row naming case, world, due, $shifted and $due" >&2
+  exit 1
+fi
+echo "expect-check: must-fail: a due date moved $due -> $shifted fails (exit 2), as it must"

@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-ks-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:17a18e92f8633c6ebb0cf4b585b952cea9c9e3c7eac242de1b68afd287d68466"
+semantic = "sha256:d5479a4c38b7ea53e5bb4e5023d63fd624f1279c516ce6682793b19ba9359ccd"
+texts = [
+    "ksb-lbr sources/bankr-ks/ksb-lbr-2024-12-01-sectioned.txt sha256:07d0a30338c5ccb3716b8f3db9b3006a5927cb965fc584bb9a574b7b9b9047f2",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-ks"
-version = "0.0.1"
-language = 1
-source = "sha256:fd8305cbf85f9058f0301d7a260d4749af97382cfe481b98d021dde60b8ca440"
-semantic = "sha256:e8a31d7c4542e58857b02e1f1e703bf567d53fcecc1d62d8265317b383f9e927"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

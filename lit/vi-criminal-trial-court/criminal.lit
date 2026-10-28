@@ -1,0 +1,158 @@
+module vi-superior-court-criminal.criminal
+
+// Criminal cases in the Superior Court of the Virgin Islands. The Virgin
+// Islands Rules of Criminal Procedure are CURRENCY UNCONFIRMED
+// (sources/vi-criminal-trial-court/PROVENANCE.md), so they are cited for
+// the structure of each step and no period, limit or amount is taken from
+// them: where a step has one, the note names the rule that sets it and
+// says that it is not stated. Title 5 of the Virgin Islands Code is not
+// vendored, so its provisions are holes. Outcomes are from the defendant's
+// side. The earlier outline's leading decisions (County of Riverside v.
+// McLaughlin, Gerstein v. Pugh, Gideon v. Wainwright, Brady v. Maryland,
+// Mapp v. Ohio, Barker v. Wingo, Boykin v. Alabama, Missouri v. Frye,
+// Jackson v. Virginia, Ramos v. Louisiana, Apprendi v. New Jersey, Roe v.
+// Flores-Ortega, Garza v. Idaho) are removed: no reporter text is
+// vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "V.I. R. Crim. P. 4"
+{
+  note "A felony is charged by an information signed by the Attorney General or an authorized representative, a misdemeanor by a complaint (V.I. R. Crim. P. 3(a)); a warrant or summons issues on an information as Rule 4 provides, and may be sought by telephone or other reliable electronic means (V.I. R. Crim. P. 4.1). An officer making an arrest takes the arrested person promptly and without unnecessary delay before the court, and after an arrest without a warrant a sworn statement supporting probable cause is filed (V.I. R. Crim. P. 5(a))."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance {
+    authority cite "V.I. R. Crim. P. 5(a)"
+  }
+}
+
+decision initial-appearance: "Probable cause and bail at the initial appearance" by court cite "V.I. R. Crim. P. 5(b)"
+{
+  note "At the initial appearance hearing the court considers the affidavit or information and examines the arresting officer or other witnesses under oath, with cross-examination; on probable cause the defendant is held to answer, and otherwise the proceeding is dismissed, the accused discharged and bail exonerated, without barring a later prosecution on additional facts (V.I. R. Crim. P. 5(b)). The court advises the defendant of the rights Rule 5(c) lists, sets bail consistent with Rule 5-1, and schedules arraignment within the periods Rule 5(d) sets for a defendant in custody and one not in custody, which are not stated here (currency unconfirmed). Subject to statute, before conviction all persons are bailable on conditions the court approves, on the least restrictive conditions that will reasonably protect the community, assure the accused's presence and the integrity of the process (V.I. R. Crim. P. 5-1(a), (b)); Rule 46(a) applies Rule 5-1 to pretrial release."
+  edge-initial-appearance-detained "Detained" -> charged {
+    authority cite ?("Virgin Islands Code, Title 5, pretrial detention provisions (not vendored)")
+  }
+  edge-initial-appearance-released "Released on bail or conditions" -> charged {
+    authority cite "V.I. R. Crim. P. 5-1(b)"
+  }
+  edge-initial-appearance-none "No probable cause; discharged" -> dismissed {
+    authority cite "V.I. R. Crim. P. 5(b)"
+  }
+}
+
+state charged: "Information" by office cite "V.I. R. Crim. P. 3"
+{
+  note "The information is a plain, concise and definite written statement of the essential facts constituting the offense, citing the provision of law allegedly violated; the court may strike surplusage, permit amendment before verdict unless an additional offense is charged or a substantial right prejudiced, and direct a bill of particulars (V.I. R. Crim. P. 3(b)-(e)). Joinder is governed by Rule 8."
+  edge-charged-arraignment "Arraignment" -> arraignment {
+    authority cite "V.I. R. Crim. P. 10(a)"
+  }
+}
+
+state arraignment: "Arraignment" by applicant cite "V.I. R. Crim. P. 10"
+{
+  note "Arraignment is conducted in open court: counsel enters an appearance, the court ensures the defendant has a copy of the information, reads it or states its substance unless reading is waived, and asks the defendant to plead (V.I. R. Crim. P. 10(a)); appearance may be waived in a written waiver signed by the defendant and counsel that affirms a plea of not guilty, and video teleconferencing may be used (V.I. R. Crim. P. 10(b), (c)). A defendant who refuses to plead is entered as pleading not guilty (V.I. R. Crim. P. 11(a)(4))."
+  edge-arraignment-discovery "Discovery" -> discovery {
+    authority cite "V.I. R. Crim. P. 16"
+  }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "V.I. R. Crim. P. 12(b)"
+{
+  note "Discovery and inspection are governed by Rule 16; notices of alibi, insanity and public-authority defenses by Rules 12.1 to 12.3. A defect in instituting the prosecution (including pre-information delay and a violation of the constitutional right to a speedy trial) or in the information, and requests for suppression, severance and discovery, must be raised before trial (V.I. R. Crim. P. 12(b)(3)); the time for pretrial motions and the effect of a failure to raise them are set by Rule 12 and are not stated here (currency unconfirmed). Motions follow Rule 47."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "V.I. R. Crim. P. 12(b)"
+  }
+  edge-discovery-speedy "Motion to dismiss for unnecessary delay" -> motions-ruling {
+    authority cite "V.I. R. Crim. P. 48(b)"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite "V.I. R. Crim. P. 11"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "V.I. R. Crim. P. 12"
+{
+  note "The court may dismiss an information if unnecessary delay occurs in filing it against a defendant or in bringing a defendant to trial (V.I. R. Crim. P. 48(b)); the rule states no period, and any statutory speedy-trial provision of Title 5 is not vendored."
+  edge-motions-ruling-speedy "Dismissed for unnecessary delay" -> dismissed {
+    authority cite "V.I. R. Crim. P. 48(b)"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "V.I. R. Crim. P. 12(b)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "V.I. R. Crim. P. 12"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "V.I. R. Crim. P. 11(a)"
+{
+  note "A defendant may plead not guilty, guilty or, with the court's consent, nolo contendere, and with the consent of the court and the government may enter a conditional plea reserving in writing appellate review of a specified pretrial motion (V.I. R. Crim. P. 11(a)). The court advises and questions the defendant before accepting a plea of guilty or nolo contendere as Rule 11(b) requires; plea agreements are governed by Rule 11(c). The government may file a dismissal or nolle prosequi of an information, without prejudice unless otherwise stated, but not during trial without the defendant's consent (V.I. R. Crim. P. 48(a))."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite "V.I. R. Crim. P. 11(b)"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "V.I. R. Crim. P. 23(a)"
+  }
+  edge-plea-decision-nolle "Government dismisses or enters a nolle prosequi" -> dismissed {
+    authority cite "V.I. R. Crim. P. 48(a)"
+  }
+}
+
+decision trial: "Verdict" by court cite "V.I. R. Crim. P. 31(a)"
+{
+  note "No person is denied a jury trial if demanded; absent a demand the case is tried by the judge unless the court orders a jury, and a jury may be waived in writing and orally in open court with the government's consent and the court's approval (V.I. R. Crim. P. 23(a), citing 5 V.I.C. § 3601, not vendored). The jury's size and the parties' stipulation to a smaller jury are set by Rule 23(b) and are not stated here (currency unconfirmed). After the government's evidence or all the evidence the court enters a judgment of acquittal of any offense on which the evidence is insufficient (V.I. R. Crim. P. 29(a)). The verdict is unanimous and returned to a judge in open court (V.I. R. Crim. P. 31(a)); a mistrial is governed by Rule 26.3."
+  edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
+    authority cite "V.I. R. Crim. P. 29(a)"
+  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
+    authority cite "V.I. R. Crim. P. 29(c)"
+  }
+}
+
+decision post-trial: "Post-trial motions" by court cite "V.I. R. Crim. P. 33(a)"
+{
+  note "After a guilty verdict or the jury's discharge a defendant may move for a judgment of acquittal (V.I. R. Crim. P. 29(c)); the court may vacate any judgment and grant a new trial if the interest of justice so requires (V.I. R. Crim. P. 33(a)); a motion to arrest judgment lies under Rule 34. The periods for these motions, set by Rules 29(c), 33(b) and 34, are not stated here (currency unconfirmed). A timely motion for judgment of acquittal or for a new trial on a ground other than newly discovered evidence extends the time to appeal (V.I. R. App. P. 5(b)(2))."
+  edge-post-trial-acquittal "Judgment of acquittal or arrest of judgment" -> acquitted {
+    authority cite "V.I. R. Crim. P. 29(c)"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "V.I. R. Crim. P. 33(a)"
+  }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "V.I. R. Crim. P. 32(b)"
+  }
+}
+
+state sentencing: "Sentencing" by court cite "V.I. R. Crim. P. 32(b)"
+{
+  note "Sentence is imposed immediately after a finding or plea of guilty unless the court postpones it for good cause or for a pre-sentence investigation, within limits Rule 32(b)(1) sets that are not stated here (currency unconfirmed); pending sentence the court may commit the defendant or continue or alter bail, and before sentence the defendant or counsel may make a statement and present information in mitigation (V.I. R. Crim. P. 32(b)(1)). A sentence may be corrected or reduced under Rule 35, within periods not stated here (currency unconfirmed); a stay of sentence is governed by Rule 38."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "V.I. R. Crim. P. 32"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "V.I. R. Crim. P. 32"
+{
+  note "In a criminal case a defendant files the notice of appeal in the Supreme Court within 30 days after entry of the judgment or order appealed from or of a notice of appeal by the Government; a notice filed after the announcement of a decision, sentence or order but before entry is treated as filed on and after entry (V.I. R. App. P. 5(b)(1)). After a timely motion for judgment of acquittal or for a new trial on a ground other than newly discovered evidence, the time runs until 30 days after entry of the order disposing of the last such motion (V.I. R. App. P. 5(b)(2)). lit/core has no counting rule for the Virgin Islands appellate rules, so the period is not encoded as a counted deadline; release pending appeal in a criminal case is governed by V.I. R. App. P. 8 and pretrial release review by V.I. R. App. P. 9."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "V.I. R. App. P. 5(b)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "V.I. R. App. P. 5(b)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "V.I. R. Crim. P. 29"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty, a judgment of acquittal, or an arrest of judgment (V.I. R. Crim. P. 29, 31, 34)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "V.I. R. Crim. P. 48"
+{
+  note "Outcome from the defendant's side. A government dismissal is without prejudice unless otherwise stated (V.I. R. Crim. P. 48(a)), and a discharge for want of probable cause does not preclude a later prosecution based on additional facts or evidence (V.I. R. Crim. P. 5(b)(2))."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "V.I. R. App. P. 5(b)"
+{
+  note "The appeal continues before the Supreme Court of the Virgin Islands under its Rules of Appellate Procedure (lit/vi-supreme-civil; sources/vi-supreme-civil/)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("Virgin Islands Code, Title 5, habeas corpus provisions (collateral attack; not vendored)")
+{
+  note "Outcome from the defendant's side. Local collateral attack by habeas corpus under Title 5 of the Virgin Islands Code is not vendored; federal habeas belongs to lit/habeas."
+}

@@ -1,0 +1,61 @@
+# Criminal cases in the Superior Court of the Virgin Islands under the
+# Virgin Islands Rules of Criminal Procedure (V.I. R. Crim. P.), as far as
+# the vendored text states. The base text is the PDF the Judiciary serves
+# (sources/vi-criminal-trial-court/), uploaded 2019-11 with no edition
+# date; later promulgation orders are not checked, and its PROVENANCE
+# entry records CURRENCY UNCONFIRMED, so in_force is the retrieval date
+# and an earlier query is a hole in the corpus. By the PM's standing ruling
+# of 2026-10-27 such a source yields holes, not values: this package cites
+# the rules only for the structure of the case (which rule governs which
+# step) and states no period, limit or amount from them. The rules' speedy
+# trial protection is Rule 48(b) (dismissal for unnecessary delay), which
+# states no period. Title 5 of the Virgin Islands Code (criminal procedure,
+# including the jury provisions §§ 3601-3602 the rules cite and habeas
+# corpus) and Part VI of the Superior Court Rules are not vendored; those
+# cites stay holes. The appeal hand-off cites V.I. R. App. P. 5(b), whose
+# vendored text is the consolidated Rules of Appellate Procedure (latest
+# amendment line March 1, 2017; sources/vi-supreme-civil/); lit/core has
+# no counting rule for the Virgin Islands appellate rules, so its period is
+# stated in a note, not encoded as a counted deadline.
+[package]
+name = "vi-superior-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "vi-superior-court-criminal"
+forum = "vi-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "virgin-islands"
+title = "Superior Court of the Virgin Islands, criminal"
+description = "Criminal cases in the Superior Court of the Virgin Islands under the Virgin Islands Rules of Criminal Procedure, as far as the vendored text states: the structure of the case from arrest and the initial appearance (with its probable-cause determination and bail) through the information, arraignment, pretrial motions, plea or trial, post-trial motions, sentence and judgment; no period from the currency-unconfirmed rules is stated. An appeal goes to the Supreme Court of the Virgin Islands under V.I. R. App. P. 5(b)."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Superior Court of the Virgin Islands (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.vi-crim]
+title = "Virgin Islands Rules of Criminal Procedure, PDF as served by the Virgin Islands Judiciary (uploaded 2019-11; no edition date; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://www.vicourts.org//UserFiles/DBFiles/server_9784218/201911/16185775/vi_rules_of_criminal_procedure.pdf"
+path = "sources/vi-criminal-trial-court/vi-rules-of-criminal-procedure-2019-sectioned.txt"
+path_sha256 = "8ad12401a485121583b4df7cc44b0c5e250a9daadaa0a4e028c981fb507bca88"
+sha256 = "3905a1850974d3414ae80978b1bf93042fbc9e9fa53b3818269600c263e485e9"
+as_of = "2026-10-28"
+cite_prefixes = ["V.I. R. Crim. P."]
+section_heading = "V.I. R. Crim. P. {n}"
+
+[sources.vi-virap]
+title = "Virgin Islands Rules of Appellate Procedure, consolidated PDF as served by the Virgin Islands Judiciary (no edition line; latest amendment line March 1, 2017; retrieved 2026-10-27)"
+url = "https://www.vicourts.org/common/pages/GetFile.ashx?key=pfn2AKwG"
+path = "sources/vi-supreme-civil/virap-sectioned.txt"
+path_sha256 = "7a209192ec9a54520dbf0a65f54a5662b58598c4a9bdfca9395cd28d63d18712"
+sha256 = "ddf6b6ea4a655d556b4ca18e9d013ea82389d1aa2fbde58464c6d90eb6df951b"
+as_of = "2017-03-01"
+cite_prefixes = ["V.I. R. App. P."]
+section_heading = "Rule {n}"

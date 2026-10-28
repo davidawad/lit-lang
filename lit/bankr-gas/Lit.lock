@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-gas-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:a112b109313f8954bd2d195f2856d3f54cab6b1eb9ec496c7deb2cb1be5c63e3"
+semantic = "sha256:1bd7ac5abff52a2e049c987691a78a8c0bef6f039238ab829bfa81977667e86e"
+texts = [
+    "gasb-lbr sources/bankr-gas/gasb-lbr.txt sha256:fe7ad8b2db5b12ef93968796268d9af554b0b0731794b834209920e635ab5241",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-gas"
-version = "0.0.1"
-language = 1
-source = "sha256:9f65345f099a14645561d45be1514945239569ad245dbeac8e0e4ac8d4ecf801"
-semantic = "sha256:e75d433339628e88a4c4e26786fa3faeeb95988878bc3e348c5dadafad2c637b"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

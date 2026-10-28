@@ -1,0 +1,68 @@
+module bankr-gas-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Bankr. S.D. Ga. court's own periods, counted under FRBP 9006(a). The
+// FRBP periods are lit/frbp's and are not declared again. Every period
+// below binds only to the CURRENCY UNCONFIRMED May 2017 text of the local
+// rules (sources/bankr-gas/PROVENANCE.md), so each has a hole cite naming
+// its pinpoint and the value is the vendored text's, unverified.
+//
+// Stated in the rules but not declared: the FRBP's own periods the rules
+// run on (the dismissal of a case whose lists, schedules and statements
+// are not filed within 14 days after the petition, LBR 1007-1, is FRBP
+// 1007(c)(1)'s period, the rule's "fifteen day period" for a motion to
+// extend notwithstanding; reaffirmation agreements filed before the time
+// to object to discharge expires, LBR 4004-1, FRBP 4004(a), 4008(a)); the
+// clock-time period (surrender of uninsured collateral within 72 hours of
+// service of an ex parte order, LBR 4001-1(c)(2)(C)); and proposed
+// findings and conclusions filed not later than the trial date and time
+// (LBR 9072-1(c)). The District Court Local Rules the Uniformity of
+// Practice section incorporates (among them LR 7.4, 16.3, 26.1 and 56.1)
+// are not vendored. The rules state no page limit.
+/// The order confirming a chapter 11 plan is entered (LBR 2015-1).
+event ConfirmationOrderEntered()
+
+/// LBR 2015-1(a): the trustee or debtor in possession files the report
+/// FRBP 2015(a)(5) requires within thirty days of the entry of the order of
+/// confirmation.
+deadline confirmation-report-period: 30.days after ConfirmationOrderEntered() counted_by frcp6 cite ?("S.D. Ga. LBR 2015-1(a), May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+/// LBR 2015-1(b): unless the court orders otherwise, the trustee or debtor in
+/// possession files an application for a final decree in the prescribed
+/// form within 180 days of the entry of the order of confirmation.
+deadline final-decree-application-period: 180.days after ConfirmationOrderEntered() counted_by frcp6 cite ?("S.D. Ga. LBR 2015-1(b), May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified") {
+  forum frcp
+}
+
+start plan-confirmed
+
+state plan-confirmed: "Chapter 11 plan confirmed" by court cite ?("S.D. Ga. LBR 2015-1(a), May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified") {
+  note "Within 30 days of the order of confirmation the trustee or debtor in possession files the FRBP 2015(a)(5) report (LBR 2015-1(a)); the value is the CURRENCY UNCONFIRMED text's."
+  edge-plan-confirmed-report "Post-confirmation report filed" -> reported {
+    authority cite ?("S.D. Ga. LBR 2015-1(a), May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified")
+  }
+}
+
+state reported: "Report filed; plan being consummated" by applicant cite ?("S.D. Ga. LBR 2015-1(b), May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified") {
+  note "Within 180 days of the order of confirmation, unless the court orders otherwise, the trustee or debtor in possession applies for a final decree in the form the court prescribes (LBR 2015-1(b))."
+  edge-reported-application "Application for a final decree filed" -> decree-ruling {
+    authority cite ?("S.D. Ga. LBR 2015-1(b), May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified")
+  }
+}
+
+decision decree-ruling: "Final decree" by court cite ?("S.D. Ga. LBR 2015-1(b), May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified") {
+  note "The court enters the final decree or orders otherwise."
+  edge-decree-ruling-entered "Final decree entered" -> closed {
+    authority cite ?("S.D. Ga. LBR 2015-1(b), May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified")
+  }
+  edge-decree-ruling-deferred "Court orders otherwise" -> closed {
+    authority cite ?("S.D. Ga. LBR 9029-1, May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified")
+  }
+}
+
+terminal closed: "Chapter 11 case administered: the case continues or closes under lit/frbp" outcome [procedural] cite ?("S.D. Ga. LBR 9029-1, May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified") {
+  note "The court may by General Order regulate its practice consistently with the rules and the District Court Local Rules (LBR 9029-1); where the rules conflict with the FRBP or are silent, the FRBP govern (Uniformity of Practice)."
+}

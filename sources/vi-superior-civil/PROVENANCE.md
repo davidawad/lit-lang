@@ -26,3 +26,15 @@
 - Retrieved 2026-10-28 in the pod (lg-w6fv) with curl; extracted with `pdftotext -layout` (poppler 25.03), unedited; text layer as served.
 - Extract sha256 7ef874bdf792d49f88a6396d517b4475f1c8c60173ca1d578c21cdec4db93028. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `vi-superior-civil/original/vircp-amendments-2023-09-01.pdf` as served (sha256 1ce71220627c01a68d2129788820b27781eb5a656c582a78616d119bd946466e); extraction sha256 7ef874bdf792d49f88a6396d517b4475f1c8c60173ca1d578c21cdec4db93028.
+
+### `vi-superior-civil/vircp-sectioned.txt` — Virgin Islands Rules of Civil Procedure, sectioned
+
+- Derived in the pod (lg-f3q8.76) from `vi-superior-civil/vircp.txt` (extract sha256 208c0e6784096abb781c0d77c80ba9a51e11d0b848b41b64b1fa1779f467d304); nothing fetched. One marker line `## Rule <n>` is inserted before the first heading line `Rule <n>. <Title>` of each rule (113 rules, Rule 1 through Rule 91, including hyphenated and decimal rules such as 6-1 and 7.1; a heading may begin with the form feed of a page break, and the marker goes before that line). Every other line is the extract unchanged, so deleting the `## Rule` lines (`sed '/^## Rule /d'`) gives back the extract byte for byte.
+- Edition: as the extract; CURRENCY UNCONFIRMED stands. `lit/vi-superior-civil` cites it for structure only and takes no value from it.
+- Sectioned sha256 874ffdca30fc2290a9d48eb34af507e5e1f8ff3d2609d087ad829a3dd17d1bdd (the `path_sha256` pinned by `lit/vi-superior-civil/Lit.toml`).
+
+### `vi-superior-civil/vircp-amendments-2023-09-01-sectioned.txt` — SCT-Prom-2023-0003, sectioned
+
+- Derived in the pod (lg-f3q8.76) from `vi-superior-civil/vircp-amendments-2023-09-01.txt` (extract sha256 7ef874bdf792d49f88a6396d517b4475f1c8c60173ca1d578c21cdec4db93028); nothing fetched. One marker line is inserted before each "ORDERED that Rule ... SHALL BE AMENDED" paragraph: `## Rule <n>` for the Rules of Civil Procedure (4, 6, 7.1, 15, 30, 90, 47-1) and `## V.I. R. Crim. P. <n>`, `## V.I. R. Evid. <n>`, `## V.I. R. App. P. 16` and `## V.I. E-Filing R. 7` for the other rule sets, which only bound the civil sections. Every other line is the extract unchanged, so deleting the `## ` marker lines (`sed '/^## /d'`) gives back the extract byte for byte.
+- Edition: as the extract (entered July 14, 2023; effective September 1, 2023).
+- Sectioned sha256 ead76ebf64f5880f2962f7f03638a28a89581799f85d029d650594efae8e1327 (the `path_sha256` pinned by `lit/vi-superior-civil/Lit.toml`).

@@ -1,0 +1,70 @@
+# Civil actions in the Superior Court of the Virgin Islands under the
+# Virgin Islands Rules of Civil Procedure (V.I. R. Civ. P.), as far as the
+# vendored text states. The base text is the PDF the Judiciary still
+# serves (sources/vi-superior-civil/vircp.txt; no edition line, PDF
+# created August 8, 2019, so in_force is that date), and its PROVENANCE
+# entry records CURRENCY UNCONFIRMED: the court's page shows no amendment
+# date and later amendments are not listed. By the PM's standing ruling of
+# 2026-10-27 such a source yields holes, not values: this package cites
+# the base only for the structure of the action (which rule governs which
+# step) and states no period, limit or amount from it. The promulgation
+# order SCT-Prom-2023-0003 (effective September 1, 2023) is a separate
+# dated layer, never merged into the base: its own source binding, cited
+# by versions of the service, amendment and mediation steps that supersede
+# the base's from its effective date; values it states are its own. It
+# also adds June 19 to the legal holidays of Rule 6(a); lit/core has no
+# counting rule for Rule 6, so no period here is counted. The Rules
+# Governing the Superior Court (also CURRENCY UNCONFIRMED) are not cited.
+# An appeal hands off to lit/vi-supreme-civil.
+[package]
+name = "vi-superior-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "vi-superior-court-civil"
+forum = "vi-superior-civil"
+authority = "StateRule"
+jurisdiction_id = "virgin-islands"
+title = "Superior Court of the Virgin Islands, civil"
+description = "Civil actions in the Superior Court of the Virgin Islands under the Virgin Islands Rules of Civil Procedure, as far as the vendored text states: the structure of the action from complaint through judgment, with the 2023 amendments to Rules 4, 15 and 90 as a dated layer; no period from the currency-unconfirmed base text is stated. An appeal hands off to the Supreme Court package (lit/vi-supreme-civil)."
+in_force = "2019-08-08"
+known_at = "2026-10-28"
+unknown_before = "2019-08-08"
+jurisdiction = "Superior Court of the Virgin Islands (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.vi-vircp]
+title = "Virgin Islands Rules of Civil Procedure, PDF as served by the Virgin Islands Judiciary (no edition line; PDF created August 8, 2019; retrieved 2026-10-27); CURRENCY UNCONFIRMED"
+url = "https://www.vicourts.org/common/pages/GetFile.ashx?key=wdHyAMwu"
+path = "sources/vi-superior-civil/vircp-sectioned.txt"
+path_sha256 = "874ffdca30fc2290a9d48eb34af507e5e1f8ff3d2609d087ad829a3dd17d1bdd"
+sha256 = "cc4692594bd05e1d1f6128a9d97355b4162b7a3b9930e606dcea95352fb366cd"
+as_of = "2019-08-08"
+cite_prefixes = ["V.I. R. Civ. P."]
+section_heading = "Rule {n}"
+
+[sources.vi-vircp-2023]
+title = "Supreme Court of the Virgin Islands, Promulgation Order SCT-Prom-2023-0003 (amendments to V.I. R. Civ. P. 4, 6(a), 7.1, 15(a)(1), 30(b)(5)(B), 47-1(b) and 90), entered July 14, 2023, effective September 1, 2023"
+url = "https://supreme.vicourts.org/UserFiles/Servers/Server_12810860/File/Administrative%20Services/PROMULGATION%20ORDER%202023-0003.pdf"
+path = "sources/vi-superior-civil/vircp-amendments-2023-09-01-sectioned.txt"
+path_sha256 = "ead76ebf64f5880f2962f7f03638a28a89581799f85d029d650594efae8e1327"
+sha256 = "1ce71220627c01a68d2129788820b27781eb5a656c582a78616d119bd946466e"
+as_of = "2023-09-01"
+cite_prefixes = ["V.I. R. Civ. P. (2023)"]
+section_heading = "Rule {n}"
+
+[sources.vi-virap]
+title = "Virgin Islands Rules of Appellate Procedure, consolidated PDF as served by the Virgin Islands Judiciary (no edition line; latest amendment line March 1, 2017; retrieved 2026-10-27)"
+url = "https://www.vicourts.org/common/pages/GetFile.ashx?key=pfn2AKwG"
+path = "sources/vi-supreme-civil/virap-sectioned.txt"
+path_sha256 = "7a209192ec9a54520dbf0a65f54a5662b58598c4a9bdfca9395cd28d63d18712"
+sha256 = "ddf6b6ea4a655d556b4ca18e9d013ea82389d1aa2fbde58464c6d90eb6df951b"
+as_of = "2017-03-01"
+cite_prefixes = ["V.I. R. App. P."]
+section_heading = "Rule {n}"

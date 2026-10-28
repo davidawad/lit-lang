@@ -1,0 +1,221 @@
+module vi-superior-court-civil.civil
+
+// Civil actions in the Superior Court of the Virgin Islands. The base text
+// of the V.I. Rules of Civil Procedure is CURRENCY UNCONFIRMED
+// (sources/vi-superior-civil/PROVENANCE.md), so it is cited for the
+// structure of each step and no period, limit or amount is taken from it:
+// where a step has one, the note names the rule that sets it and says that
+// it is not stated. The order SCT-Prom-2023-0003, effective September 1,
+// 2023, is a dated layer whose own text is bound and cited (V.I. R. Civ.
+// P. (2023) ...); it also amends Rule 6(a) to list the legal holidays,
+// adding June 19 (Juneteenth National Independence Day), and amends Rules
+// 7.1 (disclosure statement with the first appearance), 30(b)(5)(B) (the
+// conference with an organization deponent) and 47-1(b) (juror contact
+// until discharge), which no step here turns on. Outcomes are from the
+// plaintiff's side. The earlier outline named no leading decision for any
+// step.
+start complaint-filed
+
+/// Rule 4 as amended by SCT-Prom-2023-0003, effective September 1, 2023:
+/// a dated layer over the base text that supersedes the base version of
+/// this step from that date.
+state complaint-filed: "Complaint filed; summons served" by applicant effective [2023-09-01, ..) known_at 2026-10-28 supersedes complaint-filed@2019-08-08 cite "V.I. R. Civ. P. (2023) 4"
+{
+  note "A civil action is commenced by filing a complaint with the clerk of court (V.I. R. Civ. P. 3). From September 1, 2023, Rule 4(c)(1) refers to the service period of Rule 4(n) (formerly cited as 4(m)), Rule 4(e)(4)(A) refers to subparts (e)(1) to (e)(3), and Rule 4(m)(2) is replaced: service outside the Territory of the United States Virgin Islands must be proved as provided in 5 V.I.C. § 4911 (V.I. R. Civ. P. (2023) 4). The time limit for service is set by Rule 4(n) of the base text and is not stated here (currency unconfirmed)."
+  edge-complaint-filed-served "Defendant served" -> answer-due {
+    authority cite "V.I. R. Civ. P. 4(c)"
+  }
+  edge-complaint-filed-unserved "Service not made in time" -> dismissed-unserved {
+    authority cite "V.I. R. Civ. P. 4(n)"
+  }
+}
+
+state complaint-filed: "Complaint filed; summons served" by applicant effective [2019-08-08, 2023-09-01) known_at 2026-10-28 cite "V.I. R. Civ. P. 3"
+{
+  note "A civil action is commenced by filing a complaint with the clerk of court; filing fees are a matter of statute (4 V.I.C. §§ 511-513), not of the rules (V.I. R. Civ. P. 3). A summons is issued on presentation to the clerk and served with the complaint (V.I. R. Civ. P. 4(b), (c)); the manner of service depends on the defendant and on whether it is found within or outside the Virgin Islands (V.I. R. Civ. P. 4(e)-(k)), and proof of service is governed by Rule 4(m). The time limit for service is set by Rule 4(n) and is not stated here (currency unconfirmed)."
+  edge-complaint-filed-served "Defendant served" -> answer-due {
+    authority cite "V.I. R. Civ. P. 4(c)"
+  }
+  edge-complaint-filed-unserved "Service not made in time" -> dismissed-unserved {
+    authority cite "V.I. R. Civ. P. 4(n)"
+  }
+}
+
+terminal dismissed-unserved: "Dismissed for untimely service" outcome [loss, dismissal] cite "V.I. R. Civ. P. 4(n)"
+{
+  note "If a defendant is not served within the time Rule 4(n) sets, the court dismisses the action without prejudice against that defendant or orders that service be made within a specified time, extending it for good cause (V.I. R. Civ. P. 4(n)). The period is not stated here (currency unconfirmed)."
+}
+
+decision answer-due: "Answer, Rule 12 motion or default" by office cite "V.I. R. Civ. P. 12(a)"
+{
+  note "The time to serve a responsive pleading depends on where and how the defendant was served (within the Virgin Islands, personally outside it under 5 V.I.C. § 4911, or by publication or mail under 5 V.I.C. § 112(c)), on counterclaims, crossclaims and orders to reply, and on whether the defendant is the Government of the Virgin Islands, a public corporation or agency, or an officer or employee sued in an official capacity (V.I. R. Civ. P. 12(a)(1), (2)). The periods are not stated here (currency unconfirmed)."
+  edge-answer-due-answer "Answer served" -> discovery { authority cite "V.I. R. Civ. P. 12(a)" }
+  edge-answer-due-motion "Rule 12(b) motion" -> pleading-motion {
+    authority cite "V.I. R. Civ. P. 12(b)"
+  }
+  edge-answer-due-default "No answer or defense" -> default-entered {
+    authority cite "V.I. R. Civ. P. 55(a)"
+  }
+}
+
+decision pleading-motion: "Rule 12 motion decided" by court cite "V.I. R. Civ. P. 12(b)"
+{
+  note "Defenses listed in Rule 12(b) may be raised by motion before pleading (V.I. R. Civ. P. 12(b)); motion practice, supporting affidavits and the response and reply are governed by Rule 6-1, whose timing and length limits are not stated here (currency unconfirmed)."
+  edge-pleading-motion-granted "Granted" -> dismissed-pleading {
+    authority cite "V.I. R. Civ. P. 12(b)"
+  }
+  edge-pleading-motion-amend "Leave to amend" -> amend { authority cite "V.I. R. Civ. P. 15(a)" }
+  edge-pleading-motion-denied "Denied; answer due" -> discovery {
+    authority cite "V.I. R. Civ. P. 12(a)"
+  }
+}
+
+terminal dismissed-pleading: "Dismissed on the pleadings" outcome [loss, dismissal] cite "V.I. R. Civ. P. 12(b)"
+{
+  note "Outcome from the plaintiff's side. An appeal from a final judgment goes to the Supreme Court of the Virgin Islands (lit/vi-supreme-civil)."
+}
+
+/// Rule 15(a)(1) as amended by SCT-Prom-2023-0003, effective September 1,
+/// 2023: a dated layer over the base text that supersedes the base version
+/// of this step from that date.
+state amend: "Amended pleading" by applicant effective [2023-09-01, ..) known_at 2026-10-28 supersedes amend@2019-08-08 cite "V.I. R. Civ. P. (2023) 15"
+{
+  note "From September 1, 2023, Rule 15(a)(1) allows amendment once as a matter of course \"no later than\" (formerly \"within\") the periods it states after serving the pleading or after service of a responsive pleading or Rule 12(b), (e) or (f) motion (V.I. R. Civ. P. (2023) 15). The periods themselves are those of the base text and are not stated here (currency unconfirmed). Otherwise a party may amend only with the opposing party's written consent or the court's leave, freely given when justice so requires (V.I. R. Civ. P. 15(a)(2)); the form, filing and effect of an amendment are governed by Rule 15-1."
+  edge-amend-tested "Amended pleading tested again" -> pleading-motion {
+    authority cite "V.I. R. Civ. P. 12(b)"
+  }
+}
+
+state amend: "Amended pleading" by applicant effective [2019-08-08, 2023-09-01) known_at 2026-10-28 cite "V.I. R. Civ. P. 15(a)"
+{
+  note "A party may amend once as a matter of course within the periods Rule 15(a)(1) states, which are not stated here (currency unconfirmed); otherwise only with the opposing party's written consent or the court's leave, freely given when justice so requires (V.I. R. Civ. P. 15(a)(2)). The response to an amended pleading is governed by Rule 15(a)(3); the form, filing and effect of an amendment by Rule 15-1."
+  edge-amend-tested "Amended pleading tested again" -> pleading-motion {
+    authority cite "V.I. R. Civ. P. 12(b)"
+  }
+}
+
+decision default-entered: "Default" by court cite "V.I. R. Civ. P. 55(a)"
+{
+  note "When a party against whom a judgment for affirmative relief is sought has failed to plead or otherwise defend, the clerk enters its default (V.I. R. Civ. P. 55(a)); a default judgment is entered under Rule 55(b), with applications under Rule 55-1, and the court may set aside an entry of default or a default judgment under Rule 55(c). A default judgment against the United States Virgin Islands is governed by Rule 55(d)."
+  edge-default-entered-judgment "Default judgment entered" -> default-judgment {
+    authority cite "V.I. R. Civ. P. 55(b)"
+  }
+  edge-default-entered-set-aside "Default set aside" -> discovery {
+    authority cite "V.I. R. Civ. P. 55(c)"
+  }
+}
+
+terminal default-judgment: "Default judgment entered" outcome [win] cite "V.I. R. Civ. P. 55(b)"
+{
+  note "Outcome from the plaintiff's side. A default judgment must not differ in kind from what is demanded in the pleadings (V.I. R. Civ. P. 54(c))."
+}
+
+state discovery: "Disclosure, discovery and scheduling" by applicant cite "V.I. R. Civ. P. 26(b)"
+{
+  note "Required disclosures, the scope and limits of discovery, its timing and the parties' conference and discovery plan are governed by Rule 26(a), (b), (d) and (f), expert discovery also by Rule 26-1, and pretrial conferences and the scheduling order by Rule 16(a)-(b); their periods are not stated here (currency unconfirmed)."
+  edge-discovery-dispute "Discovery dispute" -> discovery-dispute {
+    authority cite "V.I. R. Civ. P. 37(a)"
+  }
+  edge-discovery-sj "Summary judgment motion" -> summary-judgment {
+    authority cite "V.I. R. Civ. P. 56(a)"
+  }
+  edge-discovery-mediation "Referred to mediation" -> mediation {
+    authority cite "V.I. R. Civ. P. 90(c)"
+  }
+  edge-discovery-settled "Voluntary dismissal or settlement" -> settled {
+    authority cite "V.I. R. Civ. P. 41(a)"
+  }
+}
+
+decision discovery-dispute: "Discovery dispute decided" by court cite "V.I. R. Civ. P. 37(a)"
+{
+  note "Before filing a discovery motion under Rules 26 through 37 (other than one about depositions under Rule 30), counsel and self-represented parties confer in good faith; the requesting party serves a letter identifying each issue and its position, arranges the conference, and mail or e-mail exchanges are not sufficient (V.I. R. Civ. P. 37-1(a)-(c)). The time to complete the conference is set by Rule 37-1(c)(3) and is not stated here (currency unconfirmed). A motion to compel lies under Rule 37(a); failure to comply with a discovery order may bring sanctions up to dismissal under Rule 37(b)."
+  edge-discovery-dispute-resolved "Dispute resolved; discovery continues" -> discovery {
+    authority cite "V.I. R. Civ. P. 37(a)"
+  }
+  edge-discovery-dispute-sanction "Dismissal as a sanction" -> dismissed-sanction {
+    authority cite "V.I. R. Civ. P. 37(b)"
+  }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "V.I. R. Civ. P. 37(b)"
+{
+  note "Outcome from the plaintiff's side, where the plaintiff is the party sanctioned."
+}
+
+/// Rule 90 as amended by SCT-Prom-2023-0003, effective September 1, 2023:
+/// a dated layer over the base text that supersedes the base version of
+/// this step from that date.
+decision mediation: "Mediation" by court effective [2023-09-01, ..) known_at 2026-10-28 supersedes mediation@2019-08-08 cite "V.I. R. Civ. P. (2023) 90"
+{
+  note "From September 1, 2023: the notice under Rule 90(d)(3) is notice to the Court; under new Rule 90(d)(3a) each party discloses to all other parties at least five days before the mediation the individual parties who will attend and the names and titles of the representatives of any entity, including insurer-representatives, on pain of sanctions for lack of good faith participation; mediation may be held by electronic meeting technology that lets each participant see and hear all others (Rule 90(d)(5)); and Rule 90(f) is replaced: each party appears by the party personally, an entity's representative with full authority to settle or to make a final recommendation, and for an insured party a carrier representative with the same authority, and if a party without good cause fails to appear by such a person or fails to participate in good faith, the court shall impose sanctions including mediator fees and expenses and other parties' attorney's fees and costs (V.I. R. Civ. P. (2023) 90). The five-day period is not counted here: lit/core has no counting rule for Rule 6. The other periods of Rule 90(d) are those of the base text and are not stated here (currency unconfirmed)."
+  edge-mediation-settled "Settled" -> settled { authority cite "V.I. R. Civ. P. 41(a)" }
+  edge-mediation-impasse "Not settled" -> pretrial { authority cite "V.I. R. Civ. P. 16(e)" }
+}
+
+decision mediation: "Mediation" by court effective [2019-08-08, 2023-09-01) known_at 2026-10-28 cite "V.I. R. Civ. P. 90(c)"
+{
+  note "Except in criminal actions, appeals from administrative agencies, forfeitures, habeas corpus and extraordinary writs, and matters a judge excludes, a judge may refer any matter to mediation, and the parties may stipulate to mediate any issue at any time (V.I. R. Civ. P. 90(b), (c)). The procedure, including the dates of the first conference and of the notice of the agreed mediator, is governed by Rule 90(d), whose periods are not stated here (currency unconfirmed); sanctions for failure to appear or to mediate in good faith by Rule 90(f)."
+  edge-mediation-settled "Settled" -> settled { authority cite "V.I. R. Civ. P. 41(a)" }
+  edge-mediation-impasse "Not settled" -> pretrial { authority cite "V.I. R. Civ. P. 16(e)" }
+}
+
+decision summary-judgment: "Summary judgment decided" by court cite "V.I. R. Civ. P. 56(a)"
+{
+  note "A party may move for summary judgment on a claim or defense or part of one; the time to file is governed by Rule 56(b) and the procedure by Rule 56(c), and facts unavailable to the nonmovant by Rule 56(d) (V.I. R. Civ. P. 56(a)-(d)). The periods are not stated here (currency unconfirmed)."
+  edge-summary-judgment-granted "Granted" -> judgment-entered {
+    authority cite "V.I. R. Civ. P. 56(a)"
+  }
+  edge-summary-judgment-denied "Denied" -> pretrial { authority cite "V.I. R. Civ. P. 56(a)" }
+}
+
+state pretrial: "Final pretrial conference and order" by court cite "V.I. R. Civ. P. 16(e)"
+{
+  note "The court may hold a final pretrial conference to formulate a trial plan, and its pretrial orders control the course of the action (V.I. R. Civ. P. 16(d), (e)); sanctions for noncompliance are governed by Rule 16(f). A jury trial is preserved by a demand under Rule 38(b), waived unless properly served and filed (V.I. R. Civ. P. 38(d)); the demand period is not stated here (currency unconfirmed)."
+  edge-pretrial-trial "Trial" -> trial { authority cite "V.I. R. Civ. P. 39" }
+  edge-pretrial-settled "Settled before trial" -> settled { authority cite "V.I. R. Civ. P. 41(a)" }
+}
+
+state trial: "Trial by jury or by the court" by court cite "V.I. R. Civ. P. 39"
+{
+  note "Trial by jury on a proper demand or by the court (V.I. R. Civ. P. 39). Judgment as a matter of law in a jury trial is governed by Rule 50; findings and conclusions by the court by Rule 52. From September 1, 2023, after a trial no attorney, party or witness may communicate with a juror until the jury is discharged without the court's permission (V.I. R. Civ. P. (2023) 47-1)."
+  edge-trial-judgment "Verdict or findings; judgment" -> judgment-entered {
+    authority cite "V.I. R. Civ. P. 58(b)"
+  }
+}
+
+decision judgment-entered: "Judgment entered" by office cite "V.I. R. Civ. P. 58(b)"
+{
+  note "Every judgment and amended judgment is set out in a separate document, and upon determination of an action the judge enters judgment (V.I. R. Civ. P. 58(a), (b)). Costs, including attorney's fees, are governed by Rule 54(d). A motion for a new trial or to alter or amend the judgment is governed by Rule 59(b) and (e), and relief from judgment by Rule 60; their periods are not stated here (currency unconfirmed). A notice of appeal is filed with the Clerk of the Supreme Court within the time Rule 5 of the Rules of Appellate Procedure allows (V.I. R. App. P. 4(a)); see lit/vi-supreme-civil."
+  edge-judgment-entered-post-trial "Post-trial motion" -> post-trial {
+    authority cite "V.I. R. Civ. P. 59(b)"
+  }
+  edge-judgment-entered-appeal "Notice of appeal" -> appeal-noticed {
+    authority cite "V.I. R. App. P. 4(a)"
+  }
+  edge-judgment-entered-final "No further action" -> judgment-final {
+    authority cite "V.I. R. Civ. P. 58(b)"
+  }
+}
+
+decision post-trial: "Post-trial motion decided" by court cite "V.I. R. Civ. P. 59(a)"
+{
+  note "The court may grant a new trial on all or some issues (V.I. R. Civ. P. 59(a)); the motion and affidavits are filed within the times Rule 59(b) and (c) set, a motion to alter or amend within the time Rule 59(e) sets, and a motion for relief from judgment within the time Rule 60(c) sets, none stated here (currency unconfirmed). A timely motion for judgment as a matter of law, to amend or make findings, for a new trial, to alter or amend, or (if filed within 28 days) for relief from the judgment extends the time to appeal until 30 days after entry of the order disposing of the last such motion (V.I. R. App. P. 5(a))."
+  edge-post-trial-new-trial "New trial ordered" -> trial { authority cite "V.I. R. Civ. P. 59(a)" }
+  edge-post-trial-denied "Denied" -> judgment-entered { authority cite "V.I. R. Civ. P. 59(a)" }
+}
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settle] cite "V.I. R. Civ. P. 41(a)"
+{
+  note "Voluntary dismissal by notice, stipulation or court order (V.I. R. Civ. P. 41(a))."
+}
+
+terminal judgment-final: "Judgment final in the Superior Court" outcome [final] cite "V.I. R. Civ. P. 58(b)"
+{
+  note "Final judgment ends the matter in the Superior Court."
+}
+
+terminal appeal-noticed: "Notice of appeal filed" outcome [appeal] cite "V.I. R. App. P. 4(a)"
+{
+  note "An appeal as of right is taken by filing a notice of appeal with the Clerk of the Supreme Court within the time Rule 5 allows (V.I. R. App. P. 4(a)): in a civil case 30 days after entry of the judgment or order, or 60 days if the Government of the Virgin Islands or the United States or an officer or agency of either is a party (V.I. R. App. P. 5(a)). The appeal continues in lit/vi-supreme-civil."
+}

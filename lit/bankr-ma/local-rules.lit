@@ -1,0 +1,917 @@
+module bankr-ma-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ CaseConverted, FirstMeetingDate, PetitionFiled }
+
+// The Bankr. D. Mass. court's own periods, counted under FRBP 9006(a): the
+// Massachusetts Local Bankruptcy Rules (MLBR) and, in chapter 13 cases, the
+// Chapter 13 Rules of MLBR Appendix 1 (MLBR 3015-1), which prevail over the
+// MLBR where they conflict (App. 1 Rule 13-1). The FRBP periods
+// (schedules, claims in chapter 7, 12 and 13 cases, discharge,
+// dischargeability, exemptions, the adversary answer and summons, appeals)
+// are lit/frbp's and are not declared again. Standing Order 2025-01
+// (September 12, 2025) adds MLBR 7016-1(d), on judges serving as neutrals,
+// which states no period; it changes no declaration here.
+//
+// Stated in the rules but not declared: the national 21-day notice of a
+// proposed sale (MLBR 6004-1(c)(5)(A), (d)(4)(A); FRBP 2002(a)(2)); the
+// court business-day and clock-time periods (Official Form 121 three court
+// business days after the petition, MLBR 1007-1(e); papers by 10:00 AM the
+// court business day before a hearing, MLBR 5001-1(g), 5071-1(b); a
+// response to an expedited motion by noon the business day before the
+// hearing, MLBR 9013-1(f)(3)(B); chapter 13 plan certificates of service
+// within three business days, App. 1 Rule 13-4(b)); the homestead evidence
+// due by the date of the § 341 meeting (MLBR 1007-1(g)) and a jury demand
+// due with the answer or opposition (MLBR 9015-1(b)), which run on other
+// dates; the 21 days within which a creditors' committee "may" advise
+// creditors (MLBR 2003-1(a)); the later-of periods (the chapter 13
+// trustee's proposed confirmation order within 21 days after the latest of
+// the order overruling objections, their withdrawal or the objection
+// deadline, App. 1 Rule 13-11(c)); the court's and clerk's own acts
+// (abandonment deemed 15 days after the notice is mailed, MLBR 6007-1(c);
+// the clerk's 45-day notices on impounded materials, MLBR 9018-1(e); a
+// final evidentiary hearing on stay relief within 60 days, App. 1 Rule
+// 13-16-1(g); a case deemed fully administered 60 days after confirmation,
+// MLBR 3022-1(a)); and the 25-request cap on requests for admission (MLBR
+// 7036-1(a)). The objection to confirmation of a chapter 13 plan is due by
+// the later of 30 days after the first § 341 meeting is held and 30 days
+// after service of an amended or modified plan (App. 1 Rule 13-8(a)): both
+// periods are declared and the later controls.
+/// A reply to an opposition to a motion (MLBR 9013-1(i)).
+limit motion-reply { pages <= 5 cite "MLBR 9013-1(i)" } cite "MLBR 9013-1(i)"
+
+/// The court enters its order denying an individual chapter 7 debtor's
+/// application to waive the filing fee (MLBR 1006-2(b)(2)).
+event FeeWaiverDenied()
+/// The date scheduled for the § 341 meeting of creditors (MLBR
+/// 1007-1(c)(1), 4002-1(b)).
+event MeetingOfCreditorsScheduled()
+/// The first § 341 meeting of creditors in a chapter 13 case is held (App.
+/// 1 Rule 13-8(a)).
+event MeetingOfCreditorsHeld()
+/// The court issues a notice of defective filing on a non-individual's
+/// petition lacking evidence of authority or an attorney's signature (MLBR
+/// 1007-1(f)).
+event DefectiveFilingNoticeIssued()
+/// A Notice of Death of the debtor is filed (MLBR 1016-1).
+event DeathNoticeFiled()
+/// A prospective movant serves a written request for a conference before
+/// moving to dismiss or convert a chapter 11 case (MLBR 1017-1(a)).
+event ConferenceRequested()
+/// A motion to dismiss or convert a chapter 11 case under 11 U.S.C. §
+/// 1112(b) is served (MLBR 1017-1(c)).
+event Chapter11DismissalMotionServed()
+/// The mailing address of the debtor or the debtor's attorney, or a pro se
+/// party's name, address, telephone number or email address, changes (MLBR
+/// 2002-4(a), 9010-1(b)(4)).
+event AddressChanged()
+/// The notice of appointment of a patient care ombudsman is served (MLBR
+/// 2007.2-1(d)).
+event OmbudsmanAppointmentServed()
+/// The later of the commencement of the case and the date a professional
+/// commenced rendering services (MLBR 2014-1(d)).
+event ProfessionalEngagementBegan()
+/// An order denying a motion for allowance of an 11 U.S.C. § 503(b)(9)
+/// administrative expense is entered (MLBR 3002-1(c)).
+event AdministrativeExpenseDenied()
+/// The date set for the hearing on objections to claims to which timely
+/// responses were filed (MLBR 3007-1(d)).
+event ClaimObjectionHearingScheduled()
+/// The trustee makes the final distribution in a chapter 7 or chapter 13
+/// case (MLBR 3011-1(a)).
+event FinalDistributionMade()
+/// A chapter 11 case becomes fully administered (MLBR 3022-1(a)-(b)).
+event CaseFullyAdministered()
+/// An order confirming a chapter 11 plan is entered (MLBR 3022-1(d)).
+event PlanConfirmed()
+/// A motion for relief from the automatic stay is served (MLBR
+/// 4001-1(a)(6)).
+event StayReliefMotionServed()
+/// A motion that a debtor file tax returns or transcripts with the court
+/// under 11 U.S.C. § 521 is served (MLBR 4002-1(c)).
+event TaxReturnMotionServed()
+/// The completed notice of a proposed private or public sale, or a motion
+/// to sell personally identifiable information, is served (MLBR
+/// 6004-1(c)(5)(B), (d)(4)(B), (f)(3)).
+event SaleNoticeServed()
+/// A consumer privacy ombudsman is appointed under 11 U.S.C. § 332 (MLBR
+/// 6004-1(f)(4)).
+event PrivacyOmbudsmanAppointed()
+/// A utility receives the tender of adequate assurance of payment (MLBR
+/// 6012-1).
+event AdequateAssuranceTendered()
+/// An order determining that objected-to interrogatories must be answered
+/// is entered (MLBR 7033-1(b)(2)).
+event AnswersOrdered()
+/// A party learns that its answer to an interrogatory on the identity and
+/// location of persons with knowledge is substantially incomplete (MLBR
+/// 7033-1(c)).
+event AnswerFoundIncomplete()
+/// An order determining that an objected-to request for admission is proper
+/// is entered (MLBR 7036-1(c)).
+event AdmissionRequestHeldProper()
+/// A party makes a written request for a discovery conference (MLBR
+/// 7037-1(a)).
+event DiscoveryConferenceRequested()
+/// The clerk issues a Notice of Inactivity and Proposed Dismissal in an
+/// adversary proceeding (MLBR 7041-1).
+event InactivityNoticeIssued()
+/// A motion for summary judgment is served (MLBR 7056-1(c)-(d)).
+event SummaryJudgmentMotionServed()
+/// An opposing party's Statement of Undisputed Facts of additional material
+/// facts is served (MLBR 7056-1(d)-(e)).
+event AdditionalFactsServed()
+/// The opposing party's response to a summary judgment motion is served
+/// (MLBR 7056-1(f)).
+event SummaryJudgmentResponseServed()
+/// An exhibit to a Statement of Undisputed Facts or response is filed (MLBR
+/// 7056-1(h)).
+event ExhibitFiled()
+/// The order determining a timely motion to extend the deadline for a
+/// discharge or dischargeability complaint or an objection to exemptions is
+/// entered (MLBR 9006-1).
+event ExtensionMotionDetermined()
+/// A mediation in which an attorney appeared for an otherwise pro se debtor
+/// for mediation purposes only concludes without resolving the matter (MLBR
+/// 9010-2(c)).
+event MediationConcluded()
+/// An order allowing the attorney for a client that is not an individual to
+/// withdraw is entered (MLBR 9010-3(d)).
+event WithdrawalOrderEntered()
+/// A motion is served with no response date set in the hearing notice (MLBR
+/// 9013-1(c)).
+event MotionServed()
+/// An order for ex parte relief is served (MLBR 9013-1(g)).
+event ExParteOrderServed()
+/// The date set for the hearing on a motion (MLBR 9013-1(i)).
+event HearingScheduled()
+/// The date established for completion of discovery in a case management
+/// order (MLBR 9015-1(d)).
+event DiscoveryCompletionDate()
+/// The date set for trial where no date is established for completion of
+/// discovery (MLBR 9015-1(d)).
+event TrialScheduled()
+/// A proceeding or matter is settled (MLBR 9019-1(c)).
+event MatterSettled()
+/// The court issues its notice setting a deadline for responses to a motion
+/// to approve a stipulation of settlement (MLBR 9019-1(d)(2)).
+event SettlementNoticeIssued()
+/// The clerk notifies the parties after trial that the exhibits should be
+/// removed (MLBR 9070-1).
+event ExhibitRemovalNoticeIssued()
+/// A reply to an opposition to a motion is filed (MLBR 9013-1(i)).
+event ReplyFiled() paper motion-reply
+/// A calendar quarter of a chapter 13 business debtor's case ends (App. 1
+/// Rule 13-2(a)(2)(C)).
+event QuarterEnded()
+/// A chapter 13 debtor's attorney's application for compensation is served
+/// (App. 1 Rule 13-7(h)).
+event FeeApplicationServed()
+/// An amended or modified chapter 13 plan is served before confirmation
+/// (App. 1 Rule 13-8(a)).
+event AmendedPlanServed()
+/// An objection to confirmation of a chapter 13 plan is served (App. 1 Rule
+/// 13-8(c)).
+event ConfirmationObjectionServed()
+/// A response to an objection to confirmation is filed (App. 1 Rule
+/// 13-8(e)).
+event ConfirmationObjectionResponseFiled()
+/// A Modification of Plan that does not adversely affect creditors is
+/// served before confirmation (App. 1 Rule 13-10(a)).
+event PlanModificationServed()
+/// The certificate of service of a motion to approve an amended plan
+/// adversely affecting creditors is filed (App. 1 Rule 13-10(b)).
+event AmendedPlanCertificateFiled()
+/// A motion to amend a confirmed chapter 13 plan is served (App. 1 Rule
+/// 13-12(d)).
+event PlanAmendmentMotionServed()
+/// The date set for the hearing on a motion to amend a confirmed plan and
+/// an objection to it (App. 1 Rule 13-12(d)).
+event PlanAmendmentHearingScheduled()
+/// The court allows a motion to amend a confirmed chapter 13 plan (App. 1
+/// Rule 13-12(e)).
+event PlanAmendmentAllowed()
+/// The deadline for filing proofs of claim in a chapter 13 case (the
+/// Initial Filing Deadline) passes (App. 1 Rule 13-13(b), (g)).
+event ClaimDeadlinePassed()
+/// The Surrogate Filing Deadline passes with no claim filed for a
+/// Designated Creditor the plan provides for (App. 1 Rule 13-13(b)).
+event SurrogateDeadlinePassed()
+/// A creditor files an amended proof of claim after a surrogate proof of
+/// claim (App. 1 Rule 13-13(b)).
+event AmendedClaimFiled()
+/// An objection to a proof of claim in a chapter 13 case is filed (App. 1
+/// Rule 13-13(e)).
+event ClaimObjectionFiled()
+/// A response to an objection to a proof of claim in a chapter 13 case is
+/// filed (App. 1 Rule 13-13(f)).
+event ClaimObjectionResponseFiled()
+/// An order approving a private sale of real estate of a chapter 13 estate
+/// is entered (App. 1 Rule 13-14(c)).
+event PrivateSaleApproved()
+/// A fully executed loan modification agreement is received (App. 1 Rule
+/// 13-15(c)).
+event ModificationAgreementReceived()
+/// The court approves a loan modification (App. 1 Rule 13-15(e)-(f)).
+event LoanModificationApproved()
+/// A motion for relief from stay in a chapter 13 case is filed (App. 1 Rule
+/// 13-16-1(a)).
+event StayReliefMotionFiled()
+/// A stipulation resolving a motion for relief from stay is served (App. 1
+/// Rule 13-16-2(b)).
+event StayReliefStipulationServed()
+/// An order granting a Designated Creditor relief from the automatic stay
+/// is entered (App. 1 Rule 13-16-3(c)).
+event StayReliefGranted()
+/// A motion to dismiss or convert a chapter 13 case is served (App. 1 Rule
+/// 13-17(a)).
+event Chapter13DismissalMotionServed()
+/// The court denies confirmation of the debtor's chapter 13 plan (App. 1
+/// Rule 13-17(c)).
+event ConfirmationDenied()
+/// A chapter 13 debtor's Motion for Entry of Discharge is served (App. 1
+/// Rule 13-19(b)).
+event DischargeMotionServed()
+
+/// MLBR 1006-2(b)(2): unless the court orders otherwise, payment in full or
+/// the first installment is due within 7 days of the order denying the fee
+/// waiver application.
+deadline fee-after-waiver-denial-period: 7.days after FeeWaiverDenied() counted_by frcp6 cite "MLBR 1006-2(b)"
+{
+  forum frcp
+}
+
+/// MLBR 1007-1(c)(1): an individual debtor provides the trustee copies of
+/// all payment advices at least 7 days before the § 341 meeting of
+/// creditors.
+deadline payment-advices-period: 7.days before MeetingOfCreditorsScheduled() counted_by frcp6 cite "MLBR 1007-1(c)"
+{
+  forum frcp
+}
+
+/// MLBR 1007-1(f)(3): a non-individual's petition without evidence of
+/// authority or an attorney's signature is dismissed within 7 days after
+/// the court issues a notice of defective filing.
+deadline defective-petition-cure-period: 7.days after DefectiveFilingNoticeIssued() counted_by frcp6 cite "MLBR 1007-1(f)"
+{
+  forum frcp
+}
+
+/// MLBR 1016-1(c): within 30 days after the Notice of Death is filed, the
+/// deceased debtor's attorney files a certification of authority from the
+/// Personal Representative or a statement that the attorney has none.
+deadline death-authority-certification-period: 30.days after DeathNoticeFiled() counted_by frcp6 cite "MLBR 1016-1(c)"
+{
+  forum frcp
+}
+
+/// MLBR 1016-1(d): within 45 days of the filing of the Notice of Death, the
+/// Personal Representative, or a relative asserting standing, files a
+/// motion to continue administration, suspend administration or dismiss the
+/// case.
+deadline proceeding-motion-period: 45.days after DeathNoticeFiled() counted_by frcp6 cite "MLBR 1016-1(d)"
+{
+  forum frcp
+}
+
+/// MLBR 1016-1(d): if no Personal Representative or relative files one, the
+/// trustee or the United States trustee files the Proceeding Motion within
+/// 60 days of the filing of the Notice of Death.
+deadline trustee-proceeding-motion-period: 60.days after DeathNoticeFiled() counted_by frcp6 cite "MLBR 1016-1(d)"
+{
+  forum frcp
+}
+
+/// MLBR 1017-1(a): unless the court relieves the parties, the conference
+/// before a motion to dismiss or convert a chapter 11 case takes place
+/// within 14 days of service of the written request for it.
+deadline dismissal-conference-period: 14.days after ConferenceRequested() counted_by frcp6 cite "MLBR 1017-1(a)"
+{
+  forum frcp
+}
+
+/// MLBR 1017-1(c): unless the court orders otherwise, an opposition to a
+/// motion to dismiss or convert a chapter 11 case is filed within 14 days
+/// after service of the motion.
+deadline chapter11-dismissal-opposition-period: 14.days after Chapter11DismissalMotionServed() counted_by frcp6 cite "MLBR 1017-1(c)"
+{
+  forum frcp
+}
+
+/// MLBR 2002-4(a): the debtor's attorney, or a pro se debtor, notifies the
+/// clerk, creditors and parties in interest of a change of the debtor's or
+/// attorney's mailing address within 14 days of the change.
+deadline address-change-notice-period: 14.days after AddressChanged() counted_by frcp6 cite "MLBR 2002-4(a)"
+{
+  forum frcp
+}
+
+/// MLBR 9010-1(b)(4): a party appearing pro se informs the clerk and all
+/// parties in writing of any change of name, address, telephone number or
+/// email address within 14 days of the change.
+deadline pro-se-contact-change-period: 14.days after AddressChanged() counted_by frcp6 cite "MLBR 9010-1(b)"
+{
+  forum frcp
+}
+
+/// MLBR 2007.2-1(d): an opposition to the appointment of a patient care
+/// ombudsman is filed within 7 days after service of the notice of
+/// appointment.
+deadline ombudsman-opposition-period: 7.days after OmbudsmanAppointmentServed() counted_by frcp6 cite "MLBR 2007.2-1(d)"
+{
+  forum frcp
+}
+
+/// MLBR 2014-1(d): an application to employ a professional filed within 14
+/// days from the later of case commencement or the start of services is
+/// approved effective from the date services were first rendered; otherwise
+/// approval runs from the filing of the application.
+deadline retroactive-employment-period: 14.days after ProfessionalEngagementBegan() counted_by frcp6 cite "MLBR 2014-1(d)"
+{
+  forum frcp
+}
+
+/// MLBR 3002-1(a)(1): unless the court orders otherwise, in a chapter 11
+/// case a motion for allowance of an 11 U.S.C. § 503(b)(9) administrative
+/// expense is filed within 70 days after the first date set for the § 341
+/// meeting.
+deadline chapter11-administrative-expense-period: 70.days after FirstMeetingDate() counted_by frcp6 cite "MLBR 3002-1(a)"
+{
+  forum frcp
+}
+
+/// MLBR 3002-1(c): if the § 503(b)(9) motion is denied, the request is
+/// deemed an informal proof of claim and the claimant has 30 days after the
+/// order denying it to file a proof of claim.
+deadline denied-administrative-expense-claim-period: 30.days after AdministrativeExpenseDenied() counted_by frcp6 cite "MLBR 3002-1(c)"
+{
+  forum frcp
+}
+
+/// MLBR 3007-1(d): if timely responses are filed, the objecting party files
+/// a Report and Hearing Agenda no later than 2 days prior to the hearing on
+/// the objections.
+deadline claim-objection-report-period: 2.days before ClaimObjectionHearingScheduled() counted_by frcp6 cite "MLBR 3007-1(d)"
+{
+  forum frcp
+}
+
+/// MLBR 3011-1(a): 150 days after final distribution in a chapter 7 or
+/// chapter 13 case, the trustee forwards to the clerk the list of
+/// unnegotiated checks and a check for the full amount.
+deadline unclaimed-funds-period: 150.days after FinalDistributionMade() counted_by frcp6 cite "MLBR 3011-1(a)"
+{
+  forum frcp
+}
+
+/// MLBR 3022-1(b): unless the plan or the court provides otherwise, the
+/// plan proponent's attorney files a motion for final decree within 60 days
+/// of the date the chapter 11 case is fully administered.
+deadline final-decree-motion-period: 60.days after CaseFullyAdministered() counted_by frcp6 cite "MLBR 3022-1(b)"
+{
+  forum frcp
+}
+
+/// MLBR 3022-1(d): if the plan proponent cannot file a motion for final
+/// decree on or before 75 days after the order confirming the plan, it
+/// files an interim report on administration progress by then.
+deadline administration-report-period: 75.days after PlanConfirmed() counted_by frcp6 cite "MLBR 3022-1(d)"
+{
+  forum frcp
+}
+
+/// MLBR 4001-1(a)(6): an opposition to a motion for relief from the
+/// automatic stay is filed within 14 days after service of the motion,
+/// inclusive of the three-day mailing period of FRBP 9006(f).
+deadline stay-relief-opposition-period: 14.days after StayReliefMotionServed() counted_by frcp6 cite "MLBR 4001-1(a)"
+{
+  forum frcp
+}
+
+/// MLBR 4001-1(b)(3): a motion to continue the automatic stay under 11
+/// U.S.C. § 362(c)(3)(B) or impose it under § 362(c)(4)(B) is filed as soon
+/// as possible but no later than 14 days from the filing of the most recent
+/// petition.
+deadline stay-continuation-motion-period: 14.days after PetitionFiled() counted_by frcp6 cite "MLBR 4001-1(b)"
+{
+  forum frcp
+}
+
+/// MLBR 4002-1(b): a creditor's written request for a copy of the debtor's
+/// federal tax return or transcript is made no fewer than 14 days before
+/// the § 341 meeting of creditors.
+deadline tax-return-request-period: 14.days before MeetingOfCreditorsScheduled() counted_by frcp6 cite "MLBR 4002-1(b)"
+{
+  forum frcp
+}
+
+/// MLBR 4002-1(b): a debtor who disputes that the requesting party is a
+/// creditor files an objection within 7 days prior to the § 341 meeting of
+/// creditors.
+deadline tax-return-request-objection-period: 7.days before MeetingOfCreditorsScheduled() counted_by frcp6 cite "MLBR 4002-1(b)"
+{
+  forum frcp
+}
+
+/// MLBR 4002-1(c): a debtor objecting to a motion concerning the filing of
+/// or access to tax returns files the objection within 7 days after service
+/// of the motion.
+deadline tax-return-motion-objection-period: 7.days after TaxReturnMotionServed() counted_by frcp6 cite "MLBR 4002-1(c)"
+{
+  forum frcp
+}
+
+/// MLBR 6004-1(c)(5)(B), (d)(4)(B) and (f)(3): unless the court sets a
+/// different deadline, the estate representative files a certificate of
+/// service no later than 7 days following service of the completed notice
+/// of sale.
+deadline sale-certificate-period: 7.days after SaleNoticeServed() counted_by frcp6 cite "MLBR 6004-1(c)"
+{
+  forum frcp
+}
+
+/// MLBR 6004-1(f)(4): except as the court orders otherwise, a consumer
+/// privacy ombudsman files a report with recommendations within 7 days of
+/// appointment.
+deadline privacy-ombudsman-report-period: 7.days after PrivacyOmbudsmanAppointed() counted_by frcp6 cite "MLBR 6004-1(f)"
+{
+  forum frcp
+}
+
+/// MLBR 6007-1(a): a creditor or interested party wishing notice of an
+/// intended abandonment files and serves a written request within 14 days
+/// from the date first scheduled for the § 341 meeting.
+deadline abandonment-notice-request-period: 14.days after FirstMeetingDate() counted_by frcp6 cite "MLBR 6007-1(a)"
+{
+  forum frcp
+}
+
+/// MLBR 6012-1: a tender of adequate assurance of payment is deemed
+/// satisfactory under 11 U.S.C. § 366(c)(2) unless the utility gives
+/// written notice that it is unsatisfactory within 14 days after receiving
+/// it.
+deadline utility-objection-period: 14.days after AdequateAssuranceTendered() counted_by frcp6 cite "MLBR 6012-1"
+{
+  forum frcp
+}
+
+/// MLBR 7033-1(b)(2): answers to interrogatories that were objected to and
+/// are then required to be answered are served within 14 days after the
+/// order, unless the court directs otherwise.
+deadline ordered-answers-period: 14.days after AnswersOrdered() counted_by frcp6 cite "MLBR 7033-1(b)"
+{
+  forum frcp
+}
+
+/// MLBR 7033-1(c): a party that learns its answer identifying persons with
+/// knowledge is substantially incomplete files a supplemental answer or
+/// objection within 7 days.
+deadline supplemental-answer-period: 7.days after AnswerFoundIncomplete() counted_by frcp6 cite "MLBR 7033-1(c)"
+{
+  forum frcp
+}
+
+/// MLBR 7036-1(c): when a request for admission is determined proper after
+/// objection, the matter is deemed admitted unless the party serves a
+/// denial or a statement why it cannot admit or deny within 14 days after
+/// the order.
+deadline admission-after-objection-period: 14.days after AdmissionRequestHeldProper() counted_by frcp6 cite "MLBR 7036-1(c)"
+{
+  forum frcp
+}
+
+/// MLBR 7037-1(a): unless the court orders otherwise, the discovery
+/// conference takes place within 14 days of a written request for it.
+deadline discovery-conference-period: 14.days after DiscoveryConferenceRequested() counted_by frcp6 cite "MLBR 7037-1(a)"
+{
+  forum frcp
+}
+
+/// MLBR 7037-1(a): failure to respond to a request for a discovery
+/// conference within 7 days of the request may be grounds for sanctions.
+deadline discovery-conference-response-period: 7.days after DiscoveryConferenceRequested() counted_by frcp6 cite "MLBR 7037-1(a)"
+{
+  forum frcp
+}
+
+/// MLBR 7041-1(b): a complaint is not dismissed for lack of prosecution if,
+/// within 30 days after the Notice of Inactivity, there are further
+/// proceedings, an opposition is filed or the court orders further
+/// proceedings.
+deadline inactivity-response-period: 30.days after InactivityNoticeIssued() counted_by frcp6 cite "MLBR 7041-1(b)"
+{
+  forum frcp
+}
+
+/// MLBR 7056-1(c): unless the court orders otherwise, an opposition to a
+/// motion for summary judgment is filed within 21 days after the motion is
+/// served.
+deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "MLBR 7056-1(c)"
+{
+  forum frcp
+}
+
+/// MLBR 7056-1(d): within 21 days after the motion is served, the opposing
+/// party may also request summary judgment in its favor on the issues the
+/// motion raises.
+deadline summary-judgment-cross-motion-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "MLBR 7056-1(d)"
+{
+  forum frcp
+}
+
+/// MLBR 7056-1(e): the original moving party files any response to the
+/// opposing party's additional Statement of Undisputed Facts within 14
+/// days.
+deadline additional-facts-response-period: 14.days after AdditionalFactsServed() counted_by frcp6 cite "MLBR 7056-1(e)"
+{
+  forum frcp
+}
+
+/// MLBR 7056-1(f): unless the court orders otherwise, the party seeking
+/// summary judgment may file a reply within 14 days after the response is
+/// served.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "MLBR 7056-1(f)"
+{
+  forum frcp
+}
+
+/// MLBR 7056-1(h): the court may assume an exhibit's authenticity unless a
+/// party objects in a responsive pleading or, in a reply, within 14 days of
+/// the filing of the exhibit.
+deadline exhibit-authenticity-objection-period: 14.days after ExhibitFiled() counted_by frcp6 cite "MLBR 7056-1(h)"
+{
+  forum frcp
+}
+
+/// MLBR 9006-1: if the court has not determined a timely motion to extend
+/// the deadline for a discharge or dischargeability complaint or an
+/// objection to exemptions, the deadline is automatically extended to 7
+/// days after the order determining the motion, unless the court orders
+/// otherwise.
+deadline extended-discharge-deadline-period: 7.days after ExtensionMotionDetermined() counted_by frcp6 cite "MLBR 9006-1"
+{
+  forum frcp
+}
+
+/// MLBR 9010-2(c): if the mediation is unsuccessful, the attorney appearing
+/// for mediation purposes elects within 14 days of its conclusion to
+/// withdraw or to file a further notice of appearance.
+deadline mediation-election-period: 14.days after MediationConcluded() counted_by frcp6 cite "MLBR 9010-2(c)"
+{
+  forum frcp
+}
+
+/// MLBR 9010-3(d): if the client is not an individual, a new attorney files
+/// a notice of appearance within 21 days from the date of the order
+/// allowing withdrawal, or a shorter period the court directs.
+deadline successor-appearance-period: 21.days after WithdrawalOrderEntered() counted_by frcp6 cite "MLBR 9010-3(d)"
+{
+  forum frcp
+}
+
+/// MLBR 9013-1(c): a party opposing a motion files a response by the
+/// response date in the hearing notice or, if none is set, within 14 days
+/// of service of the motion, inclusive of the three-day mailing period of
+/// FRBP 9006(f).
+deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "MLBR 9013-1(c)"
+{
+  forum frcp
+}
+
+/// MLBR 9013-1(g): an affected party may request a hearing on ex parte
+/// relief by a motion for review filed within 14 days of service of the
+/// order.
+deadline ex-parte-review-period: 14.days after ExParteOrderServed() counted_by frcp6 cite "MLBR 9013-1(g)"
+{
+  forum frcp
+}
+
+/// MLBR 9013-1(i): unless the court orders otherwise, a reply to an
+/// opposition, of no more than five pages, is filed no later than 3 days
+/// prior to the hearing.
+deadline reply-period: 3.days before HearingScheduled() counted_by frcp6 cite "MLBR 9013-1(i)"
+{
+  forum frcp
+}
+
+/// MLBR 9015-1(d): unless the court orders otherwise, the parties file a
+/// statement consenting to the court conducting a jury trial on or before
+/// 14 days after the date established for completion of discovery.
+deadline jury-consent-period: 14.days after DiscoveryCompletionDate() counted_by frcp6 cite "MLBR 9015-1(d)"
+{
+  forum frcp
+}
+
+/// MLBR 9015-1(d): if no date is established for completion of discovery,
+/// the consent statement is filed 30 days prior to any date set for trial.
+deadline jury-consent-before-trial-period: 30.days before TrialScheduled() counted_by frcp6 cite "MLBR 9015-1(d)"
+{
+  forum frcp
+}
+
+/// MLBR 9019-1(c): when a proceeding or matter is settled, the parties file
+/// a signed stipulation, agreement for judgment or other document the court
+/// directs within 7 days, or another time the court directs.
+deadline settlement-papers-period: 7.days after MatterSettled() counted_by frcp6 cite "MLBR 9019-1(c)"
+{
+  forum frcp
+}
+
+/// MLBR 9019-1(d)(2): the moving party files a certificate of service
+/// within 7 days of the issuance of the notice on a motion to approve a
+/// stipulation of settlement, or another time the court directs.
+deadline settlement-certificate-period: 7.days after SettlementNoticeIssued() counted_by frcp6 cite "MLBR 9019-1(d)"
+{
+  forum frcp
+}
+
+/// MLBR 9070-1: after the clerk's notice, the parties remove their trial
+/// exhibits within 30 days or the clerk may dispose of them.
+deadline exhibit-removal-period: 30.days after ExhibitRemovalNoticeIssued() counted_by frcp6 cite "MLBR 9070-1"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-2(a)(1): if the chapter 13 debtor does not file the
+/// evidence of insurance and the acknowledgement with the petition, the
+/// court may dismiss the case if they are not filed within 14 days from the
+/// commencement of the case.
+deadline chapter13-insurance-documents-period: 14.days after PetitionFiled() counted_by frcp6 cite "MLBR App. 1 Rule 13-2(a)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-2(a)(2)(A): a chapter 13 debtor engaged in business
+/// submits to the trustee evidence of business insurance and of debtor-in-
+/// possession accounts within 7 days after the commencement of the case.
+deadline business-insurance-period: 7.days after PetitionFiled() counted_by frcp6 cite "MLBR App. 1 Rule 13-2(a)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-2(a)(2)(B): a chapter 13 business debtor submits to the
+/// trustee the prior-year and year-to-date profit and loss statements
+/// within 14 days after the commencement of the case.
+deadline profit-and-loss-period: 14.days after PetitionFiled() counted_by frcp6 cite "MLBR App. 1 Rule 13-2(a)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-2(a)(2)(C): a chapter 13 business debtor submits to the
+/// trustee a statement of quarterly income and expenses within 30 days of
+/// the close of each quarter.
+deadline quarterly-statement-period: 30.days after QuarterEnded() counted_by frcp6 cite "MLBR App. 1 Rule 13-2(a)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-7(h): if no objections to a chapter 13 debtor's
+/// attorney's fee application are filed within 21 days of service, the
+/// court awards fees in its discretion.
+deadline fee-application-objection-period: 21.days after FeeApplicationServed() counted_by frcp6 cite "MLBR App. 1 Rule 13-7(h)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-8(a): unless the court orders otherwise, an objection to
+/// confirmation of a chapter 13 plan is filed on or before 30 days after
+/// the first § 341 meeting is held, or 30 days after service of an amended
+/// or modified plan if later.
+deadline confirmation-objection-period: 30.days after MeetingOfCreditorsHeld() counted_by frcp6 cite "MLBR App. 1 Rule 13-8(a)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-8(a): an objection to confirmation is filed on or before
+/// 30 days after service of an amended or modified plan, or 30 days after
+/// the first § 341 meeting is held if later.
+deadline amended-plan-objection-period: 30.days after AmendedPlanServed() counted_by frcp6 cite "MLBR App. 1 Rule 13-8(a)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-8(c): unless the court orders otherwise, a response to an
+/// objection to confirmation is filed within 14 days after service of the
+/// objection.
+deadline confirmation-objection-response-period: 14.days after ConfirmationObjectionServed() counted_by frcp6 cite "MLBR App. 1 Rule 13-8(c)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-8(e): no later than 21 days after the response to an
+/// objection to confirmation is filed, the objecting party files a
+/// certificate that the conference was held or why it was not.
+deadline confirmation-conference-certificate-period: 21.days after ConfirmationObjectionResponseFiled() counted_by frcp6 cite "MLBR App. 1 Rule 13-8(e)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-10(a): if no objections to a Modification of Plan are
+/// filed within 14 days after service, the court considers confirmation of
+/// the plan as amended.
+deadline plan-modification-objection-period: 14.days after PlanModificationServed() counted_by frcp6 cite "MLBR App. 1 Rule 13-10(a)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-10(b): if no objections to a motion to approve an amended
+/// plan, or to the amended plan, are filed within 30 days of the filing of
+/// the certificate of service, the court may allow the motion without a
+/// hearing.
+deadline amended-plan-motion-objection-period: 30.days after AmendedPlanCertificateFiled() counted_by frcp6 cite "MLBR App. 1 Rule 13-10(b)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-12(d): objections to an amended plan after confirmation
+/// are filed no later than 30 days from the date of service of the motion
+/// to amend.
+deadline confirmed-plan-amendment-objection-period: 30.days after PlanAmendmentMotionServed() counted_by frcp6 cite "MLBR App. 1 Rule 13-12(d)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-12(d): the objecting party serves notice of the hearing
+/// on a motion to amend a confirmed plan at least 7 days before the hearing
+/// date.
+deadline amendment-hearing-notice-period: 7.days before PlanAmendmentHearingScheduled() counted_by frcp6 cite "MLBR App. 1 Rule 13-12(d)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-12(e): the chapter 13 trustee submits a proposed order
+/// confirming an amended plan within 21 days after the court allows the
+/// motion to amend.
+deadline amended-confirmation-order-period: 21.days after PlanAmendmentAllowed() counted_by frcp6 cite "MLBR App. 1 Rule 13-12(e)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-13(b): if a Designated Creditor does not timely file a
+/// proof of claim, the debtor files a surrogate proof of claim under FRBP
+/// 3004 within 30 days after the Initial Filing Deadline (the Surrogate
+/// Filing Deadline).
+deadline surrogate-claim-period: 30.days after ClaimDeadlinePassed() counted_by frcp6 cite "MLBR App. 1 Rule 13-13(b)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-13(b): within 7 days of filing an amended proof of claim
+/// after a surrogate claim, the creditor files a certificate of service on
+/// the trustee and the debtor's attorney or pro se debtor.
+deadline amended-claim-certificate-period: 7.days after AmendedClaimFiled() counted_by frcp6 cite "MLBR App. 1 Rule 13-13(b)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-13(b): if no surrogate claim is filed for a Designated
+/// Creditor the plan pays, the chapter 13 trustee files an objection to
+/// confirmation or a motion to dismiss no later than 10 days after the
+/// Surrogate Filing Deadline.
+deadline trustee-unfiled-claim-period: 10.days after SurrogateDeadlinePassed() counted_by frcp6 cite "MLBR App. 1 Rule 13-13(b)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-13(e): in a chapter 13 case, a response to an objection
+/// to a proof of claim is filed within 30 days of the filing of the
+/// objection.
+deadline claim-objection-response-period: 30.days after ClaimObjectionFiled() counted_by frcp6 cite "MLBR App. 1 Rule 13-13(e)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-13(f): within 7 days after a response to a claim
+/// objection is filed, the objecting party confers with the claimant's
+/// counsel.
+deadline claim-objection-conference-period: 7.days after ClaimObjectionResponseFiled() counted_by frcp6 cite "MLBR App. 1 Rule 13-13(f)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-13(g): objections to claims are served and filed within
+/// 30 days after the deadline for filing proofs of claim, or additional
+/// time the court allows on motion for good cause.
+deadline chapter13-claim-objection-period: 30.days after ClaimDeadlinePassed() counted_by frcp6 cite "MLBR App. 1 Rule 13-13(g)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-14(c): within 45 days after the order approving a private
+/// sale of estate real estate, the debtor's attorney or unrepresented
+/// debtor files a Status Report Regarding Sale of Estate Property.
+deadline sale-status-report-period: 45.days after PrivateSaleApproved() counted_by frcp6 cite "MLBR App. 1 Rule 13-14(c)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-15(c): a motion to approve a loan modification is filed
+/// within 45 days of receipt of the fully executed modification agreement.
+deadline loan-modification-motion-period: 45.days after ModificationAgreementReceived() counted_by frcp6 cite "MLBR App. 1 Rule 13-15(c)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-15(e): within 30 days of court approval of a loan
+/// modification, the debtor files the amendments to the plan and schedules
+/// it requires.
+deadline modification-amendments-period: 30.days after LoanModificationApproved() counted_by frcp6 cite "MLBR App. 1 Rule 13-15(e)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-15(f): within 30 days of court approval of a loan
+/// modification, the creditor files an amended proof of claim for the
+/// modified unpaid principal balance.
+deadline modification-claim-period: 30.days after LoanModificationApproved() counted_by frcp6 cite "MLBR App. 1 Rule 13-15(f)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-16-1(a)(1): at least 7 days prior to filing a motion for
+/// relief from stay, the movant's counsel confers with the debtor's counsel
+/// or the pro se debtor.
+deadline stay-relief-conference-period: 7.days before StayReliefMotionFiled() counted_by frcp6 cite "MLBR App. 1 Rule 13-16-1(a)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-16-2(b): unless the court orders otherwise, an objection
+/// to a stipulation resolving a motion for relief from stay is filed within
+/// 14 days from the date of its service.
+deadline stay-stipulation-objection-period: 14.days after StayReliefStipulationServed() counted_by frcp6 cite "MLBR App. 1 Rule 13-16-2(b)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-16-3(c): within 30 days after an order granting a
+/// Designated Creditor relief from stay, the debtor files an amended plan,
+/// unless a motion to dismiss or convert is pending.
+deadline post-relief-amended-plan-period: 30.days after StayReliefGranted() counted_by frcp6 cite "MLBR App. 1 Rule 13-16-3(c)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-17(a): a party opposing a motion to dismiss or convert a
+/// chapter 13 case files a response within 21 days of service of the
+/// motion.
+deadline chapter13-dismissal-response-period: 21.days after Chapter13DismissalMotionServed() counted_by frcp6 cite "MLBR App. 1 Rule 13-17(a)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-17(c): if confirmation is denied, the case is dismissed
+/// without further notice unless within 14 days, or another time the court
+/// fixes, the debtor files an amended plan, moves to convert, obtains a
+/// stay pending reconsideration or appeal, or the court orders otherwise.
+deadline confirmation-denial-cure-period: 14.days after ConfirmationDenied() counted_by frcp6 cite "MLBR App. 1 Rule 13-17(c)"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-18: within 14 days after conversion of a case from
+/// chapter 11 or chapter 7 to chapter 13, the debtor files the documents
+/// Rule 13-2 requires and serves them on the chapter 13 trustee.
+deadline converted-chapter13-documents-period: 14.days after CaseConverted() counted_by frcp6 cite "MLBR App. 1 Rule 13-18"
+{
+  forum frcp
+}
+
+/// App. 1 Rule 13-19(b): objections to a chapter 13 debtor's Motion for
+/// Entry of Discharge are filed within 14 days after service.
+deadline discharge-motion-objection-period: 14.days after DischargeMotionServed() counted_by frcp6 cite "MLBR App. 1 Rule 13-19(b)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed and served" by applicant cite "MLBR 9013-1(a)"
+{
+  note "A request for an order is a written motion with numbered paragraphs stating its grounds with particularity, filed with the clerk with any supporting affidavits (MLBR 9013-1(a)-(b)) and served with a certificate of service; the movant serves the court's notice of hearing (MLBR 9013-3). The court may schedule a hearing or set an objection deadline (MLBR 9013-1(c)); a request for emergency or expedited determination is titled as such (MLBR 9013-1(f)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-response "Response filed" -> response {
+    authority cite "MLBR 9013-1(c)"
+    within response-period
+  }
+  edge-motion-filed-unopposed "No timely objection; acted on without a hearing" -> decided {
+    authority cite "MLBR 9013-1(d)"
+  }
+}
+
+state response: "Response filed" by opponent cite "MLBR 9013-1(h)"
+{
+  note "An opposition admits or denies each allegation of the motion, states any affirmative defense and says specifically why the relief should not be granted (MLBR 9013-1(h)). A reply of no more than five pages is filed no later than 3 days before the hearing (MLBR 9013-1(i)). Unless the notice says otherwise, the initial hearing is preliminary and nonevidentiary (MLBR 9013-1(c))."
+  edge-response-ruling "Hearing held" -> ruling { authority cite "MLBR 9013-1(c)" }
+}
+
+decision ruling: "Motion decided" by court cite "MLBR 9013-1(e)"
+{
+  note "The court may enter an appropriate order, which may be the movant's proposed order (MLBR 9013-1(e))."
+  edge-ruling-granted "Granted" -> decided { authority cite "MLBR 9013-1(e)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "MLBR 9013-1(e)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "MLBR 1001-1"
+{
+  note "The MLBR govern cases and proceedings before the court; in chapter 13 cases the Chapter 13 Rules of Appendix 1 prevail where they conflict (MLBR 3015-1; App. 1 Rule 13-1)."
+}

@@ -1,6 +1,22 @@
 version = 2
 
 [[package]]
+name = "bankr-ma-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:ca41ae92ddf8b021ec1e691d27cbc67dfec96c20692ed888a283cf0cc28049a8"
+semantic = "sha256:99f754a9b5eedc64d4bac6b2c726aaeda4612fcbe62ffe319cdfcbc140e0a21d"
+texts = [
+    "mab-ch13 sources/bankr-ma/ma-appendix-1-2025-05-01-sectioned.txt sha256:38b50cfbfc724cf37e05a507ed3376fedcbef414b04d8cd732f17de354fbcdbb",
+    "mab-mlbr sources/bankr-ma/ma-local-rules-2025-05-01-sectioned.txt sha256:7b5fe66f9b3fba169f89c2bb841d47cfd77e4907a96e8bc64255edc3981d688d",
+    "mab-so-2025-01 sources/bankr-ma/ma-so-2025-01.txt sha256:b99c540305508f963ae71a204886eae8f4da5dbd40195078cd2ed753c8b91a4e",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +60,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-ma"
-version = "0.0.1"
-language = 1
-source = "sha256:184e32ae9b15b91e8c546e561892882f299394dd71408fe1c745eae5c0442657"
-semantic = "sha256:7d0653a4db9e70f62966acae104ed9d292a1ef9b52749971a5579f09df0276e9"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

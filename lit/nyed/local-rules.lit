@@ -1,0 +1,333 @@
+module nyed-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Eastern District of New York's own periods under the Joint Local
+// Rules, computed under the federal rules (Local Civ. R. 6.1(a), (b): "In
+// computing periods of days, refer to Fed. R. Civ. P. 6"). The motion
+// periods of Local Civ. R. 6.1 apply "unless provided otherwise by statute
+// or rule, or by the court in a judge's individual practices or in a
+// direction in a particular case". Rules that state no period or limit
+// stay out: admission, appearances and discipline (Local Civ. R. 1.3-1.6),
+// electronic filing (5.2), orders on motions (6.2), motions in limine
+// (6.4), motion content and formatting (7.1(a), (b)), pro se authorities
+// (7.2), scheduling-order exemptions (16.1, 16.2), privilege logs and
+// discovery definitions (26.2-26.5), depositions (30.1-30.4), discovery
+// disputes (37.1, 37.2), summations and trial scheduling (39.2, 40.1),
+// default (55.1, 55.2), summary judgment statements (56.1, 56.2), consent
+// to a magistrate judge (73.1) and removal (81.1).
+// The clerk's transfer of a case upon the expiration of seven days (Local
+// Civ. R. 83.1) binds the clerk, not a party, and is not declared; nor
+// are the arbitration clerk's hearing date, approximately four months but no
+// later than 120 days after the answer, and the judge's designation order
+// 30 days before the hearing (Local Civ. R. 83.7(e)(1), (5)). Pro se page
+// limits are stated in notes: briefs that are handwritten or typewritten
+// by an unrepresented party may not exceed 25 pages and replies 10 pages
+// (Local Civ. R. 7.1(c); Local Soc. Sec. R. 5.1), or 10 and five pages on
+// reconsideration (Local Civ. R. 6.3).
+// Amounts in the rules are not declared (the $150,000.00 arbitration
+// ceiling and the arbitrators' compensation, 83.7(b), (d)). Court-annexed
+// mediation (83.8) states no period. The Southern District Only rules
+// (contention interrogatories, ADR and the police-misconduct plan, 33.3,
+// 83.9 and 83.10) are lit/nysd's. The earlier E.D.N.Y. outline's FRCP flow and its Supreme Court decisions
+// (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby) are FRCP authority
+// and belong to lit/frcp; they are removed here: no reporter text is
+// vendored.
+/// A brief in support of or in response to a motion, filed by an attorney
+/// or prepared with a computer: at most 8,750 words, excluding the caption,
+/// index, tables, signature blocks and required certificates (Local Civ. R.
+/// 7.1(c)).
+limit motion-brief {
+  words <= 8_750 cite "E.D.N.Y. Local Civ. R. 7.1(c)"
+} cite "E.D.N.Y. Local Civ. R. 7.1(c)"
+
+/// A reply brief on a motion, filed by an attorney or prepared with a
+/// computer: at most 3,500 words (Local Civ. R. 7.1(c)).
+limit reply-brief {
+  words <= 3_500 cite "E.D.N.Y. Local Civ. R. 7.1(c)"
+} cite "E.D.N.Y. Local Civ. R. 7.1(c)"
+
+/// A brief in support of or in response to a motion for reconsideration,
+/// filed by an attorney or prepared with a computer: at most 3,500 words
+/// unless the court provides otherwise (Local Civ. R. 6.3).
+limit reconsideration-brief {
+  words <= 3_500 cite "E.D.N.Y. Local Civ. R. 6.3"
+} cite "E.D.N.Y. Local Civ. R. 6.3"
+
+/// A reply brief on a motion for reconsideration, filed by an attorney or
+/// prepared with a computer: at most 1,750 words (Local Civ. R. 6.3).
+limit reconsideration-reply-brief {
+  words <= 1_750 cite "E.D.N.Y. Local Civ. R. 6.3"
+} cite "E.D.N.Y. Local Civ. R. 6.3"
+
+/// An initial or opposition brief in a Social Security action, filed by an
+/// attorney or prepared with a computer: at most 8,750 words absent leave
+/// requested at least seven days in advance (Local Soc. Sec. R. 5.1).
+limit social-security-brief {
+  words <= 8_750 cite "E.D.N.Y. Local Soc. Sec. R. 5.1"
+} cite "E.D.N.Y. Local Soc. Sec. R. 5.1"
+
+/// A plaintiff's reply brief in a Social Security action, filed by an
+/// attorney or prepared with a computer: at most 3,500 words (Local Soc.
+/// Sec. R. 5.1).
+limit social-security-reply-brief {
+  words <= 3_500 cite "E.D.N.Y. Local Soc. Sec. R. 5.1"
+} cite "E.D.N.Y. Local Soc. Sec. R. 5.1"
+
+/// Moving papers on a motion or application under FRCP 26 through 37 or
+/// 45(d)(3) are served (Local Civ. R. 6.1(a)).
+event DiscoveryMotionServed() paper motion-brief
+/// Opposing or response papers on a discovery motion are served (Local
+/// Civ. R. 6.1(a)).
+event DiscoveryOppositionServed() paper motion-brief
+/// Moving papers on any other civil motion, petition or application are
+/// served (Local Civ. R. 6.1(b)).
+event MotionServed() paper motion-brief
+/// Opposing or response papers on any other motion are served (Local Civ.
+/// R. 6.1(b)).
+event OppositionServed() paper motion-brief
+/// A reply is served (Local Civ. R. 6.1, 7.1(c)).
+event ReplyServed() paper reply-brief
+/// The court's order sought to be reconsidered is entered (Local Civ. R.
+/// 6.3).
+event OrderEntered()
+/// A notice of motion for reconsideration and its memorandum are served
+/// (Local Civ. R. 6.3).
+event ReconsiderationMotionServed() paper reconsideration-brief
+/// A reply memorandum on reconsideration is served (Local Civ. R. 6.3).
+event ReconsiderationReplyServed() paper reconsideration-reply-brief
+/// The information required in a disclosure statement changes (Local Civ.
+/// R. 7.1.1).
+event DisclosureInformationChanged()
+/// The court rules that a motion to dismiss or for judgment on the
+/// pleadings against a pro se party will be treated as one for summary
+/// judgment (Local Civ. R. 12.1).
+event ConversionRuled()
+/// The court grants a motion to amend or supplement a pleading under FRCP
+/// 15(a)(2) or (d) (Local Civ. R. 15.1(b)).
+event AmendmentGranted()
+/// The complaint in a prisoner pro se action is served on a named
+/// defendant (Local Civ. R. 33.2(d)).
+event PrisonerComplaintServed()
+/// A final decision is rendered and no appeal is taken (Local Civ. R.
+/// 39.1(b)(1)).
+event FinalDecisionRendered()
+/// The appeal is finally disposed of (Local Civ. R. 39.1(b)(2), 54.1(a)).
+event AppealDisposed()
+/// Final judgment is entered (Local Civ. R. 54.1(a)).
+event FinalJudgmentEntered()
+/// An objection to a magistrate judge's order on a nondispositive matter
+/// is served (Local Civ. R. 72.1(b)(1)).
+event MagistrateObjectionServed()
+/// The plaintiff's brief in a Social Security action is due under
+/// Supplemental Social Security Rule 6 (Local Soc. Sec. R. 7.1).
+event PlaintiffBriefDue()
+/// The Commissioner's brief is served on a pro se plaintiff (Local Soc.
+/// Sec. R. 8.1).
+event CommissionerBriefServed() paper social-security-brief
+/// A removed or transferred case is docketed in this district (Local Civ.
+/// R. 83.7(d)(3)(A)).
+event CaseDocketedHere()
+/// The arbitration clerk sends the notice of the arbitration hearing's
+/// date and time (Local Civ. R. 83.7(e)(1)).
+event ArbitrationNoticeSent()
+/// A party receives the notice of the arbitration hearing (Local Civ. R.
+/// 83.7(e)(2)).
+event ArbitrationNoticeReceived()
+/// A letter applying for exemption from compulsory arbitration is received
+/// (Local Civ. R. 83.7(e)(2)).
+event ExemptionLetterReceived()
+/// The arbitration hearing is held (Local Civ. R. 83.7(f)).
+event ArbitrationHearingHeld()
+/// The arbitration award is entered on the docket (Local Civ. R. 83.7(h)).
+event AwardEntered()
+
+/// Local Civ. R. 6.1(a): on a motion or application under FRCP 26 through
+/// 37 and 45(d)(3), opposing or response papers are served within seven
+/// days after service of the moving papers.
+deadline discovery-opposition-period: 7.days after DiscoveryMotionServed() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 6.1(a)"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 6.1(a): reply papers on such a motion are served within
+/// two days after service of the answering papers.
+deadline discovery-reply-period: 2.days after DiscoveryOppositionServed() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 6.1(a)"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 6.1(b): on any other civil motion, petition or
+/// application (other than a habeas corpus petition), opposing or response
+/// papers are served within 14 days after service of the moving papers.
+deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 6.1(b)"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 6.1(b): reply papers are served within seven days after
+/// service of the answering papers.
+deadline reply-period: 7.days after OppositionServed() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 6.1(b)"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 6.3: unless the court, a statute or a rule (such as FRCP
+/// 50, 52 and 59) provides otherwise, a notice of motion for
+/// reconsideration is served within 14 days after the entry of the order
+/// challenged; answering and reply memoranda follow Local Civ. R. 6.1(a)
+/// or (b).
+deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 6.3"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 7.1.1: for FRCP 7.1(b)(2), "promptly" means within 14
+/// days; a supplemental disclosure statement is filed within 14 days of
+/// any change in the required information.
+deadline supplemental-disclosure-period: 14.days after DisclosureInformationChanged() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 7.1.1"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 12.1: when the court treats a motion against a pro se
+/// party as one for summary judgment and the movant has not served the
+/// required notice, the movant serves and files the amended notice within
+/// 14 days of the ruling.
+deadline pro-se-notice-period: 14.days after ConversionRuled() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 12.1"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 15.1(b): unless the court orders otherwise, a represented
+/// moving party files the amended or supplemental pleading within seven
+/// days of the order granting the motion.
+deadline amended-pleading-period: 7.days after AmendmentGranted() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 15.1(b)"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 33.2(d): the standard prisoner pro se interrogatories and
+/// requests for production are answered within 120 days of service of the
+/// complaint on any named defendant, unless the court orders otherwise for
+/// good cause or a dispositive motion is pending.
+deadline prisoner-discovery-period: 120.days after PrisonerComplaintServed() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 33.2(d)"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 39.1(b)(1): filed trial and hearing exhibits are removed
+/// within 90 days after a final decision is rendered, if no appeal is
+/// taken.
+deadline exhibit-removal-period: 90.days after FinalDecisionRendered() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 39.1(b)"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 39.1(b)(2): if an appeal has been taken, filed exhibits
+/// are removed within 30 days after the final disposition of the appeal.
+deadline exhibit-removal-appeal-period: 30.days after AppealDisposed() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 39.1(b)"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 54.1(a): unless the court extends the period for good
+/// cause, a party seeking costs files a notice of taxation of costs within
+/// 30 days after the entry of final judgment; a party that does not is
+/// deemed to have waived costs.
+deadline taxation-notice-period: 30.days after FinalJudgmentEntered() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 54.1(a): in the case of an appeal by any party, the
+/// notice of taxation of costs is filed within 30 days after the final
+/// disposition of the appeal.
+deadline taxation-notice-appeal-period: 30.days after AppealDisposed() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 72.1(b)(1): a response to an objection to a magistrate
+/// judge's order on a nondispositive matter is served within 14 days after
+/// being served with the objection.
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionServed() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 72.1(b)"
+{
+  forum frcp
+}
+
+/// Local Soc. Sec. R. 7.1: if a pro se plaintiff files no brief within the
+/// time set by Supplemental Social Security Rule 6, the Commissioner files
+/// and serves a brief within 30 days after the plaintiff's brief was due.
+deadline commissioner-pro-se-brief-period: 30.days after PlaintiffBriefDue() counted_by frcp6 cite "E.D.N.Y. Local Soc. Sec. R. 7.1"
+{
+  forum frcp
+}
+
+/// Local Soc. Sec. R. 8.1: the pro se plaintiff's brief in opposition is
+/// filed and served within 14 days after service of the Commissioner's
+/// brief.
+deadline pro-se-opposition-period: 14.days after CommissionerBriefServed() counted_by frcp6 cite "E.D.N.Y. Local Soc. Sec. R. 8.1"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 83.7(d)(3)(A) (Eastern District only): in a case removed
+/// from state court or transferred from another district, plaintiff's
+/// counsel files the certification that damages exceed $150,000.00 within
+/// 30 days of the docketing of the case in this district, or the damages
+/// are presumed not to exceed that amount for compulsory arbitration.
+deadline arbitration-certification-period: 30.days after CaseDocketedHere() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 83.7(d)"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 83.7(e)(1): the notice of the arbitration hearing advises
+/// counsel that they have 90 days to complete discovery unless the
+/// assigned judge orders a shorter or longer period.
+deadline arbitration-discovery-period: 90.days after ArbitrationNoticeSent() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 83.7(e)"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 83.7(e)(2): a letter applying for exemption from
+/// compulsory arbitration, at most three pages, is submitted no later than
+/// 21 days after receipt of the notice of the arbitration hearing.
+deadline arbitration-exemption-period: 21.days after ArbitrationNoticeReceived() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 83.7(e)"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 83.7(e)(2): within four days of receiving the exemption
+/// letter, an opposing affected party may submit a responsive letter of at
+/// most three pages.
+deadline arbitration-exemption-response-period: 4.days after ExemptionLetterReceived() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 83.7(e)"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 83.7(f)(5): copies or photographs of all exhibits, except
+/// those intended solely for impeachment, are marked and delivered to
+/// adverse parties at least 14 days before the arbitration hearing.
+deadline arbitration-exhibit-period: 14.days before ArbitrationHearingHeld() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 83.7(f)"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 83.7(f)(5): the arbitrators receive exhibits without
+/// formal proof unless counsel is notified at least seven days before the
+/// hearing that the adverse party will challenge an exhibit's
+/// authenticity.
+deadline arbitration-authenticity-period: 7.days before ArbitrationHearingHeld() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 83.7(f)"
+{
+  forum frcp
+}
+
+/// Local Civ. R. 83.7(h)(1): within 30 days after the arbitration award is
+/// entered on the docket, any party may demand a trial de novo in writing;
+/// otherwise the award is entered as the court's judgment, which is not
+/// appealable (83.7(g)(1)).
+deadline trial-de-novo-period: 30.days after AwardEntered() counted_by frcp6 cite "E.D.N.Y. Local Civ. R. 83.7(h)"
+{
+  forum frcp
+}

@@ -103,31 +103,31 @@ state mandate-issued: "Mandate or Remittitur Issued" by court cite ?("A.S. R. Ap
 {
   note "Issuance timing is a hole. Verify."
   edge-mandate-issued-further-review "Review sought" -> further-review {
-    authority cite ?("28 U.S.C. § 1259")
+    authority cite ?("48 U.S.C. § 1661(c)")
   }
   edge-mandate-issued-final-appellate "No further review sought" -> final-appellate {
     authority cite ?("A.S. R. App. P. 41")
   }
 }
 
-decision further-review: "Further Review Petition" by applicant cite ?("28 U.S.C. § 1259")
+decision further-review: "Further Review Petition" by applicant cite ?("48 U.S.C. § 1661(c)")
 {
-  note "Petition period and grounds are holes. Verify."
+  note "No federal court has appellate jurisdiction over the Appellate Division of the High Court: 28 U.S.C. § 1259 is certiorari to the C.A.A.F., and no statute extends §§ 1257-1260 or the Ninth Circuit to American Samoa. Further review is Secretarial review by the Secretary of the Interior, who holds the territorial judicial power under 48 U.S.C. § 1661(c) and Exec. Order No. 10264 (see Corp. of Presiding Bishop v. Hodel, 830 F.2d 374 (D.C. Cir. 1987); verify). Request procedure, period and grounds are holes. Verify."
   edge-further-review-review-denied "Denied" -> review-denied {
-    authority cite ?("28 U.S.C. § 1259")
+    authority cite ?("48 U.S.C. § 1661(c)")
   }
   edge-further-review-review-granted "Granted" -> review-granted {
-    authority cite ?("28 U.S.C. § 1259")
+    authority cite ?("48 U.S.C. § 1661(c)")
   }
 }
 
-terminal review-denied: "Further review denied" outcome [loss] cite ?("28 U.S.C. § 1259")
+terminal review-denied: "Further review denied" outcome [loss] cite ?("48 U.S.C. § 1661(c)")
 {
   note "OUTLINE. Denial ends further review; finality of the appellate judgment is a hole."
   payoff ?
 }
 
-terminal review-granted: "Further review granted" outcome [appeal] cite ?("28 U.S.C. § 1259")
+terminal review-granted: "Further review granted" outcome [appeal] cite ?("48 U.S.C. § 1661(c)")
 {
   note "OUTLINE. Merits of further review are a hole."
   payoff ?

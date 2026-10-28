@@ -1,0 +1,80 @@
+module wvsd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Southern District of West Virginia's own criminal periods. Stated in
+// the rules but not declared: the pretrial hearing at least 14 days before
+// trial (LR Cr P 12.1(d)), which binds the court's setting; juror
+// questionnaires filed five business days before trial (LR Cr P 24.1(d)),
+// which binds the court and is counted in business days; the supervision
+// condition requiring 10 days' notice of a change of residence or
+// employment (LR Cr P 32.4), a term of a sentence rather than a period of
+// the case; and the visiting-attorney periods (LR Cr P 44.6), the fee
+// waiver motion among them, which the rule says "should" be filed within
+// 21 days. Jury instructions are due before trial or when the court orders
+// (LR Cr P 30.1), a time the rule does not count. The outline's flow
+// (arrest to judgment) is lit/frcrimp's; its decisions have no vendored
+// reporter text and are removed.
+/// The pretrial motions hearing the magistrate judge sets at arraignment
+/// (LR Cr P 12.1(a)).
+event PretrialMotionsHearing()
+/// The defendant files a pretrial motion (LR Cr P 12.1(c)).
+event PretrialMotionFiled()
+/// The scheduled commencement of a trial or other proceeding at which
+/// courtroom technology is required (LR Cr P 12.1(e)).
+event TechnologyProceeding()
+/// The Standard Discovery Request is made (LR Cr P 16.1(c)).
+event StandardDiscoveryRequested()
+/// The defendant receives the government's materials and its filed and
+/// served responses (LR Cr P 16.1(d)).
+event GovernmentDiscoveryReceived()
+/// The court approves a real-property bond (LR Cr P 46.1(c)).
+event RealPropertyBondApproved()
+
+/// LR Cr P 12.1(a): if the defendant does not elect the standard request
+/// for discovery, the magistrate judge sets the date for the defendant's
+/// pretrial motions 14 days before the pretrial motions hearing.
+deadline pretrial-motion-period: 14.days before PretrialMotionsHearing() counted_by frcrimp45 cite "S.D. W. Va. LR Cr P 12.1(a)"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 12.1(c): the government has 7 days to respond to the
+/// defendant's pretrial motions under LR Cr P 12.1(a) and (b), counted from
+/// the motion.
+deadline pretrial-response-period: 7.days after PretrialMotionFiled() counted_by frcrimp45 cite "S.D. W. Va. LR Cr P 12.1(c)"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 12.1(e): counsel needing courtroom technology files the
+/// certification that the technology staff has been notified no later than
+/// 7 days before the scheduled commencement of the trial or proceeding.
+deadline technology-certification-period: 7.days before TechnologyProceeding() counted_by frcrimp45 cite "S.D. W. Va. LR Cr P 12.1(e)"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 16.1(c): unless the parties agree or the court orders
+/// otherwise, within 14 days of the Standard Discovery Request the
+/// government provides the requested material and files a written response
+/// to each request.
+deadline standard-discovery-period: 14.days after StandardDiscoveryRequested() counted_by frcrimp45 cite "S.D. W. Va. LR Cr P 16.1(c)"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 16.1(d): the defendant provides all reciprocal discovery within
+/// 14 days of receiving the government's materials and responses.
+deadline reciprocal-discovery-period: 14.days after GovernmentDiscoveryReceived() counted_by frcrimp45 cite "S.D. W. Va. LR Cr P 16.1(d)"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 46.1(c)(2): within 14 days after the court approves a
+/// real-property bond, the surety files a copy of the notice of
+/// encumbrance it filed with the county recorder or registrar of titles.
+deadline encumbrance-notice-period: 14.days after RealPropertyBondApproved() counted_by frcrimp45 cite "S.D. W. Va. LR Cr P 46.1(c)(2)"
+{
+  forum frcrimp
+}

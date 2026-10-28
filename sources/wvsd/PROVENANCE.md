@@ -14,3 +14,9 @@
 - Derived in the pod (lg-f3q8.32) from `wvsd/wvsd-local-rules.txt` (extract sha256 4028c62dee18a52a4ed478e96ccb0a3c5cef7602b3ca1b777ce19bfd20498a22); nothing fetched. One `## LR Civ P <n>` line is inserted right before each Local Rule of Civil Procedure's own body heading line `LR Civ P <n>. <title>` (some after a form feed; LR Civ P 26.5 has no period after its number): 86 markers, LR Civ P 3.1 through LR Civ P 83.15. The table of contents and the Local Rules of Criminal Procedure are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LR Civ P /d'`) restores the extract byte for byte.
 - Edition: as the extract, effective December 1, 2009, amended through June 8, 2017 (cover list).
 - Sectioned sha256 7ec71571c36002fb45da41a13630daaeac73b03da54c33da50bc386bf8f9c535 (the `path_sha256` pinned by `lit/wvsd/Lit.toml`).
+
+### `wvsd/wvsd-local-criminal-rules-sectioned.txt` — S.D. W. Va. Local Rules of Procedure (amended through June 8, 2017), criminal rules sectioned
+
+- Derived in the pod (lg-gddt.12) from `wvsd/wvsd-local-rules.txt` (extract sha256 4028c62dee18a52a4ed478e96ccb0a3c5cef7602b3ca1b777ce19bfd20498a22); nothing fetched. One `## LR Cr P <n>` line is inserted right before each Local Rule of Criminal Procedure's own body heading line `LR Cr P <n>.  <title>` (from extract line 2822 on): 44 markers, LR Cr P 7.1 through LR Cr P 59.6 (with 32.1.1 and 49.1.1 as numbered). The table of contents and the civil rules are unmarked (the civil rules are sectioned separately in `wvsd/wvsd-local-rules-sectioned.txt`). Rule text was not edited: deleting the marker lines (`sed '/^## LR Cr P /d'`) restores the extract byte for byte.
+- Edition: as the extract, effective December 1, 2009, amended through June 8, 2017.
+- Sectioned sha256 bfb1d1fd78084aa5fe60495874d71a993895993586dead8752c0b80114753089 (the `path_sha256` pinned by `lit/wvsd-criminal/Lit.toml`).

@@ -1,0 +1,49 @@
+# The Southern District of West Virginia's Local Rules of Criminal
+# Procedure (LR Cr P) as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods the LR Cr P
+# themselves state and re-encodes no FRCrimP, Speedy Trial Act or FRAP
+# 4(b) period (those are lit/frcrimp's). Each period is counted under
+# FRCrimP 45(a), which governs "any local rule". The rules are the Local
+# Rules of Procedure effective December 1, 2009, amended through June 8,
+# 2017 (sources/wvsd). Federal habeas is lit/habeas's; an appeal to the
+# Fourth Circuit is lit/frcrimp's and lit/ca4's.
+[package]
+name = "wvsd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "wvsd-criminal-local-rules"
+forum = "wvsd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Southern District of West Virginia: Local Rules of Criminal Procedure"
+description = "The Southern District of West Virginia's Local Rules of Criminal Procedure as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): pretrial motions before the motions hearing and the government's response, the courtroom-technology certification, the government's response to the standard discovery request, reciprocal discovery, and the surety's notice of encumbrance on a real-property bond."
+in_force = "2017-06-08"
+known_at = "2026-10-28"
+unknown_before = "2017-06-08"
+jurisdiction = "United States District Court, S.D. W. Va. (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "wvsd-lrcrp"
+issuer = "United States District Court for the Southern District of West Virginia"
+date = "2017-06-08"
+designation = "Local Rules of Procedure (amended through June 8, 2017), Local Rules of Criminal Procedure"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.wvsd-lrcrp]
+title = "Local Rules of Procedure of the United States District Court for the Southern District of West Virginia (amended through June 8, 2017): Local Rules of Criminal Procedure"
+url = "https://www.wvsd.uscourts.gov/sites/wvsd/files/LocalRulesofProcedure-June2017.pdf"
+path = "sources/wvsd/wvsd-local-criminal-rules-sectioned.txt"
+path_sha256 = "bfb1d1fd78084aa5fe60495874d71a993895993586dead8752c0b80114753089"
+sha256 = "3309a2002517b83741b178802b7885eaa4c9d660fa267ba6d66dd2cbd5c91210"
+as_of = "2017-06-08"
+cite_prefixes = ["S.D. W. Va. LR Cr P"]
+section_heading = "LR Cr P {n}"

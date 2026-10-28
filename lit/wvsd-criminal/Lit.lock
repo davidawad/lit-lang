@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "wvsd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:e5ec6817e356fccb2260e3c53d53a7929dc56c0600ed20294769ed9aec5e152f"
+semantic = "sha256:533fbef01553d1c55a228812aa5d90a3248e5bf835ede48defcff4b15c4d8903"
+texts = [
+    "wvsd-lrcrp sources/wvsd/wvsd-local-criminal-rules-sectioned.txt sha256:bfb1d1fd78084aa5fe60495874d71a993895993586dead8752c0b80114753089",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

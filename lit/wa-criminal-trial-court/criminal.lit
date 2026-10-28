@@ -1,0 +1,140 @@
+module wa-superior-court-criminal.criminal
+
+// Criminal cases in the Washington superior courts. The Superior Court
+// Criminal Rules are CURRENCY UNCONFIRMED
+// (sources/wa-criminal-trial-court/PROVENANCE.md), so they are cited for
+// the structure of each step and no period, limit or amount is taken from
+// them: where a step has one, the note names the rule that sets it and
+// says that it is not stated. The Revised Code of Washington is not
+// vendored. The appeal period is stated from RAP 5.2, which has a stated
+// edition. Outcomes are from the defendant's side. The earlier outline's
+// leading decisions (County of Riverside v. McLaughlin, Gerstein v. Pugh,
+// Gideon v. Wainwright, Brady v. Maryland, Mapp v. Ohio, Barker v. Wingo,
+// Boykin v. Alabama, Missouri v. Frye, Jackson v. Virginia, Apprendi v.
+// New Jersey, Roe v. Flores-Ortega, Garza v. Idaho) are removed: no
+// reporter text is vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "CrR 2.2"
+{
+  note "A warrant of arrest or summons issues on an indictment, information or complaint (CrR 2.2). A person arrested without a warrant has a judicial determination of probable cause within the period CrR 3.2.1(a) sets, which is not stated here (currency unconfirmed), and a preliminary appearance under CrR 3.2.1."
+  edge-arrested-appearance "Preliminary appearance" -> initial-appearance {
+    authority cite "CrR 3.2.1"
+  }
+}
+
+decision initial-appearance: "Release or detention" by court cite "CrR 3.2"
+{
+  note "If probable cause is not found, the accused is released without conditions; otherwise release is presumed in noncapital cases, subject to the conditions and findings CrR 3.2 provides (CrR 3.2(a)). The right to and assignment of a lawyer follow CrR 3.1."
+  edge-initial-appearance-detained "Held on conditions not met or detained" -> probable-cause {
+    authority cite "CrR 3.2"
+  }
+  edge-initial-appearance-released "Released on personal recognizance or conditions" -> probable-cause {
+    authority cite "CrR 3.2(a)"
+  }
+}
+
+decision probable-cause: "Charge filed" by court cite "CrR 2.1"
+{
+  note "The State's initial pleading is an indictment or an information in all criminal proceedings filed by the prosecuting attorney (CrR 2.1(a)); the rules provide no preliminary hearing step separate from the probable cause determination (CrR 3.2.1)."
+  edge-probable-cause-charged "Information or indictment filed" -> charged {
+    authority cite "CrR 2.1(a)"
+  }
+  edge-probable-cause-none "No probable cause; released" -> dismissed { authority cite "CrR 3.2" }
+}
+
+state charged: "Indictment or information" by office cite "CrR 2.1"
+{
+  note "The indictment or information is a plain, concise and definite written statement of the essential facts constituting the offense (CrR 2.1(a)(1)). The defendant is arraigned within the periods CrR 4.1(a) sets for a defendant detained in jail and one not detained, which are not stated here (currency unconfirmed)."
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "CrR 4.1" }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "CrR 4.1"
+{
+  note "A defendant may plead not guilty, not guilty by reason of insanity, or guilty, and pleads separately to each count (CrR 4.2(a), (b)). The court is responsible for ensuring trial in accordance with CrR 3.3, under which the allowable time for trial, its commencement date, excluded periods and the consequence of a violation are set; the periods are not stated here (currency unconfirmed) (CrR 3.3(a))."
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "CrR 4.7" }
+}
+
+state discovery: "Discovery and the omnibus hearing" by applicant cite "CrR 4.5"
+{
+  note "Except as protective orders provide, the prosecuting attorney discloses the material CrR 4.7(a) lists, and the defendant the material CrR 4.7(b) lists, within the times the rule sets, not stated here (currency unconfirmed). Pretrial motions are heard at the omnibus hearing under CrR 4.5, and suppression hearings under CrR 3.6; confessions are tested under CrR 3.5."
+  edge-discovery-motions "Motion at the omnibus hearing" -> motions-ruling {
+    authority cite "CrR 4.5"
+  }
+  edge-discovery-speedy "Motion to dismiss under CrR 3.3" -> motions-ruling {
+    authority cite "CrR 3.3"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "CrR 4.2" }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "CrR 4.5"
+{
+  note "A charge not brought to trial within the CrR 3.3 time is dismissed as that rule provides, and the court may dismiss on the prosecution's written motion, or for arbitrary action or governmental misconduct prejudicing the defendant (CrR 3.3; 8.3(a), (b)); whether a dismissal is with prejudice is set by those rules and not stated here (currency unconfirmed)."
+  edge-motions-ruling-speedy "Dismissed under CrR 3.3" -> dismissed { authority cite "CrR 3.3" }
+  edge-motions-ruling-dismissed "Dismissed on another ground" -> dismissed {
+    authority cite "CrR 8.3"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "CrR 4.5"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "CrR 4.2"
+{
+  note "A guilty plea is accepted under CrR 4.2. Cases required to be tried by jury are so tried unless the defendant files a written waiver with the court's consent (CrR 6.1(a)); the number of jurors CrR 6.1(b) sets is not stated here (currency unconfirmed)."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing { authority cite "CrR 4.2" }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "CrR 6.1" }
+  edge-plea-decision-dismissed "Prosecutor's motion to dismiss granted" -> dismissed {
+    authority cite "CrR 8.3(a)"
+  }
+}
+
+decision trial: "Verdict" by court cite "CrR 6.16"
+{
+  note "Jury instructions are proposed and argued under CrR 6.15, and verdicts and findings returned under CrR 6.16. Judgment may be arrested on the defendant's motion for lack of jurisdiction, a charge that states no crime, or insufficiency of the proof (CrR 7.4(a))."
+  edge-trial-acquittal "Not guilty" -> acquitted { authority cite "CrR 6.16" }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial { authority cite "CrR 7.5" }
+}
+
+decision post-trial: "Post-trial motions" by court cite "CrR 7.5"
+{
+  note "The court may grant a new trial for the causes CrR 7.5(a) lists when a substantial right of the defendant was materially affected; the periods for a motion for new trial or arrest of judgment, set by CrR 7.4 and 7.5, are not stated here (currency unconfirmed). A notice of appeal of an order deciding a timely CrR 7.4 or 7.5 motion is filed within 30 days after entry of the order (RAP 5.2(e))."
+  edge-post-trial-arrest "Judgment arrested" -> acquitted { authority cite "CrR 7.4" }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "CrR 7.5" }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing { authority cite "CrR 7.1" }
+}
+
+state sentencing: "Presentence report and sentencing" by court cite "CrR 7.2"
+{
+  note "After a plea, finding or verdict of guilt of a felony the court may order a risk assessment or presentence investigation and report within the period CrR 7.1(a) sets, not stated here (currency unconfirmed). At sentencing the court states the precise terms of the sentence and ensures the record reflects all time in custody (CrR 7.2(a))."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "CrR 7.3"
+  }
+}
+
+decision judgment: "Judgment and sentence" by applicant cite "CrR 7.3"
+{
+  note "A notice of appeal must be filed in the trial court within the longer of 30 days after entry of the decision to be reviewed or the time RAP 5.2(e) provides (RAP 5.2(a)). Relief from a judgment or order, including for clerical mistakes, follows CrR 7.8."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "RAP 5.2" }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "RAP 5.2" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "CrR 6.16"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty, or judgment arrested for insufficiency of the proof (CrR 6.16; 7.4)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "CrR 8.3"
+{
+  note "Outcome from the defendant's side: a dismissal under CrR 3.3 or 8.3, or a release for want of probable cause (CrR 3.2)."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "RAP 5.2"
+{
+  note "The appeal continues before the Washington Court of Appeals under the Rules of Appellate Procedure (lit/wa-court-of-appeals)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "CrR 7.8"
+{
+  note "Outcome from the defendant's side. Relief from judgment proceeds under CrR 7.8 and, by personal restraint petition, under the Rules of Appellate Procedure; the time limits of the Revised Code of Washington are not vendored, and federal habeas belongs to lit/habeas."
+}

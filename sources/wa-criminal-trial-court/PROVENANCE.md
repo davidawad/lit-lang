@@ -73,3 +73,9 @@
 - Extraction sha256 3e0a711f9e4e47f56c0ce38ac61a841baeadc09524eccfda7d9716a25f98b547.
 
 - Note (lg-gddt): Courts of limited jurisdiction use CrRLJ (not vendored). Criminal appeals: Washington Rules of Appellate Procedure, covered by sources/wa-court-of-appeals/ if it carries them.
+
+### `wa-criminal-trial-court/wa-superior-court-criminal-rules-crr-sectioned.txt` — Washington Superior Court Criminal Rules (CrR), sectioned
+
+- Derived in the pod (lg-gddt.22) from `wa-criminal-trial-court/wa-superior-court-criminal-rules-crr.txt` (extract sha256 3e0a711f9e4e47f56c0ce38ac61a841baeadc09524eccfda7d9716a25f98b547); nothing fetched. One marker line `## CrR <n>` is inserted right after each rule page's own `## <Title>` line, taken from the centered `CrR <n>` line that opens the page (61 rules, CrR 1.1 through 8.10; the CrR 3.1 Standards for Indigent Defense page shares CrR 3.1 and is not marked again; the two Repealed pages are unmarked). Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Edition: as the extract; CURRENCY UNCONFIRMED stands. `lit/wa-criminal-trial-court` cites it for structure only and takes no value from it.
+- Sectioned sha256 a3c134dd9005e97e4c86f65bf0a11457c0bf4323a27e4365384d64657ba464d9 (the `path_sha256` pinned by `lit/wa-criminal-trial-court/Lit.toml`).

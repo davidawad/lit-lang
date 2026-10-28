@@ -1,0 +1,208 @@
+module nmd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The District of New Mexico's own criminal periods, counted under the
+// criminal rules: the motion periods are "computed in accordance with Rule
+// 45(a) thru (c)" (D.N.M.LR-Cr. 47.8(a)), and FRCrimP 45(a) governs "any
+// local rule". No trigger carries a service method: FRCrimP 45(c)'s three
+// added days follow the manner of service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: the probation officer files the initial presentence report on the
+// docket at least 35 days before the sentencing hearing (D.N.M.LR-Cr.
+// 32.C(1); FRCrimP 32(e)(2)) and the final report at least seven days
+// before it (D.N.M.LR-Cr. 32.C(4); FRCrimP 32(g)). If defense counsel does
+// not answer a request to schedule the presentence interview within seven
+// days, FRCrimP 32(e)(2)'s disclosure time limits are waived (D.N.M.LR-Cr.
+// 32.A). The court may alter every D.N.M.LR-Cr. 32.C time limit sua sponte
+// or for good cause (D.N.M.LR-Cr. 32.C(5)), and may waive any local rule
+// to meet unusual circumstances or avoid injustice (D.N.M.LR-Cr. 57.1).
+//
+// The Standard Discovery Order attached to the rules (D.N.M.LR-Cr. 16.1;
+// Local Form 1) is an order of the court in each case, not a rule; its
+// periods stay in this note: the defendant is deemed to request discovery
+// unless a signed waiver is filed within 7 days of the order's entry, the
+// government discloses its FRCrimP 16(a)(1) discovery within 14 days of
+// entry, the defendant produces reciprocal discovery within 14 days of the
+// government's compliance, the government discloses Fed. R. Evid. 404(b)
+// material at least 7 days before trial unless otherwise ordered, and
+// counsel confer about pretrial discovery no later than 14 days after
+// arraignment. A plea agreement is made known to the court sufficiently
+// in advance of trial to avoid assembling a jury panel unnecessarily
+// (D.N.M.LR-Cr. 11.1), no day count; a motion to continue trial addresses
+// 18 U.S.C. § 3161(h) with particularity (D.N.M.LR-Cr. 47.5), whose
+// exclusions stay in lit/frcrimp.
+//
+// The earlier D.N.M. criminal outline's FRCrimP flow and its decisions are
+// FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// A motion, or a motion with its supporting brief: at most 27
+/// double-spaced pages combined (D.N.M.LR-Cr. 47.9).
+limit motion-brief {
+  pages <= 27 cite "D.N.M.LR-Cr. 47.9"
+} cite "D.N.M.LR-Cr. 47.9"
+
+/// A response brief: at most 24 double-spaced pages (D.N.M.LR-Cr. 47.9).
+limit response-brief {
+  pages <= 24 cite "D.N.M.LR-Cr. 47.9"
+} cite "D.N.M.LR-Cr. 47.9"
+
+/// A reply brief: at most 12 double-spaced pages (D.N.M.LR-Cr. 47.9).
+limit reply-brief {
+  pages <= 12 cite "D.N.M.LR-Cr. 47.9"
+} cite "D.N.M.LR-Cr. 47.9"
+
+/// An appellant's brief on appeal from a magistrate judge's decision on a
+/// misdemeanor or petty offense: at most 20 double-spaced pages, exhibits
+/// at most 20 pages (D.N.M.LR-Cr. 58.2(d)).
+limit petty-appellant-brief {
+  pages <= 20 cite "D.N.M.LR-Cr. 58.2(d)"
+} cite "D.N.M.LR-Cr. 58.2(d)"
+
+/// The appellee's brief: at most 15 double-spaced pages (D.N.M.LR-Cr.
+/// 58.2(d)).
+limit petty-appellee-brief {
+  pages <= 15 cite "D.N.M.LR-Cr. 58.2(d)"
+} cite "D.N.M.LR-Cr. 58.2(d)"
+
+/// The reply brief: at most 10 double-spaced pages (D.N.M.LR-Cr.
+/// 58.2(d)).
+limit petty-reply-brief {
+  pages <= 10 cite "D.N.M.LR-Cr. 58.2(d)"
+} cite "D.N.M.LR-Cr. 58.2(d)"
+
+/// Defense counsel receives a request to schedule the presentence report
+/// interview (D.N.M.LR-Cr. 32.A).
+event PsrInterviewRequested()
+/// The probation officer files the initial presentence report on the
+/// docket (D.N.M.LR-Cr. 32.C(1)).
+event InitialPsrFiled()
+/// An unresolved objection to the presentence report or a motion for
+/// departure is filed (D.N.M.LR-Cr. 32.C(2)).
+event SentencingObjectionFiled()
+/// A response to an unresolved objection or a motion for departure is
+/// filed (D.N.M.LR-Cr. 32.C(2)).
+event SentencingResponseFiled()
+/// A motion is served (D.N.M.LR-Cr. 47.8(a)).
+event MotionServed() paper motion-brief
+/// A response is served (D.N.M.LR-Cr. 47.8(a)).
+event ResponseServed() paper response-brief
+/// A reply is served (D.N.M.LR-Cr. 47.8(a)).
+event ReplyServed() paper reply-brief
+/// A notice of appeal from a magistrate judge's decision on a misdemeanor
+/// or petty offense is filed (D.N.M.LR-Cr. 58.2(a)).
+event PettyAppealNoticed()
+/// The appellant's brief is filed and served (D.N.M.LR-Cr. 58.2(b)).
+event PettyAppellantBriefFiled() paper petty-appellant-brief
+/// The appellee's brief is filed and served (D.N.M.LR-Cr. 58.2(c)).
+event PettyAppelleeBriefFiled() paper petty-appellee-brief
+/// The reply brief is filed and served (D.N.M.LR-Cr. 58.2(c)).
+event PettyReplyBriefFiled() paper petty-reply-brief
+
+/// D.N.M.LR-Cr. 32.A: defense counsel is deemed to have requested notice
+/// of and a reasonable opportunity to attend the presentence interview;
+/// counsel who receives a request to schedule it must respond within seven
+/// days, or FRCrimP 32(e)(2)'s disclosure time limits are waived.
+deadline psr-interview-response: 7.days after PsrInterviewRequested() counted_by frcrimp45 cite "D.N.M.LR-Cr. 32.A"
+{
+  forum frcrimp
+}
+
+/// D.N.M.LR-Cr. 32.C(1): before filing formal objections to the
+/// presentence report, the parties confer with each other and the
+/// probation officer about them within 14 days after the report is filed.
+deadline psr-objection-conferral: 14.days after InitialPsrFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.N.M.LR-Cr. 32.C(1); D.N.M.LR-Cr. 32.C(5)"
+{
+  forum frcrimp
+}
+
+/// D.N.M.LR-Cr. 32.C(2): any unresolved objection to the presentence
+/// report or motion for departure is filed at least 14 days before the
+/// sentencing hearing.
+deadline unresolved-objection-or-departure: 14.days before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.N.M.LR-Cr. 32.C(2); D.N.M.LR-Cr. 32.C(5)"
+{
+  forum frcrimp
+}
+
+/// D.N.M.LR-Cr. 32.C(2): any response is filed seven days after the filing
+/// of the unresolved objection or motion for departure.
+deadline sentencing-objection-response: 7.days after SentencingObjectionFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.N.M.LR-Cr. 32.C(2); D.N.M.LR-Cr. 32.C(5)"
+{
+  forum frcrimp
+}
+
+/// D.N.M.LR-Cr. 32.C(2): any reply is filed three days after the filing of
+/// any response.
+deadline sentencing-objection-reply: 3.days after SentencingResponseFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.N.M.LR-Cr. 32.C(2); D.N.M.LR-Cr. 32.C(5)"
+{
+  forum frcrimp
+}
+
+/// D.N.M.LR-Cr. 32.C(3): parties with no objections or departure motions
+/// may still file a sentencing memorandum at least 14 days before the
+/// sentencing hearing.
+deadline sentencing-memorandum: 14.days before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D.N.M.LR-Cr. 32.C(3); D.N.M.LR-Cr. 32.C(5)"
+{
+  forum frcrimp
+}
+
+/// D.N.M.LR-Cr. 47.8(a): a response is served within 14 days after service
+/// of the motion; the Court may extend the period.
+deadline response-period: 14.days after MotionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op extend
+} cite "D.N.M.LR-Cr. 47.8(a)"
+{
+  forum frcrimp
+}
+
+/// D.N.M.LR-Cr. 47.8(a): a reply is served within 14 days after service of
+/// the response; the Court may extend the period. A surreply requires
+/// leave (D.N.M.LR-Cr. 47.8(b)).
+deadline reply-period: 14.days after ResponseServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op extend
+} cite "D.N.M.LR-Cr. 47.8(a)"
+{
+  forum frcrimp
+}
+
+/// D.N.M.LR-Cr. 58.2(a): the appellant's brief is filed and served within
+/// 14 days after the filing of the notice of appeal.
+deadline petty-appellant-brief-period: 14.days after PettyAppealNoticed() counted_by frcrimp45 cite "D.N.M.LR-Cr. 58.2(a)"
+{
+  forum frcrimp
+}
+
+/// D.N.M.LR-Cr. 58.2(b): the appellee's brief is filed and served within
+/// 14 days of the filing and service of the appellant's brief.
+deadline petty-appellee-brief-period: 14.days after PettyAppellantBriefFiled() counted_by frcrimp45 cite "D.N.M.LR-Cr. 58.2(b)"
+{
+  forum frcrimp
+}
+
+/// D.N.M.LR-Cr. 58.2(c): the appellant may file and serve a reply brief
+/// within seven days after the filing and service of the appellee's brief.
+deadline petty-reply-brief-period: 7.days after PettyAppelleeBriefFiled() counted_by frcrimp45 cite "D.N.M.LR-Cr. 58.2(c)"
+{
+  forum frcrimp
+}

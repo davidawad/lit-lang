@@ -1,0 +1,53 @@
+# The U.S. District Court for the District of New Mexico's Local Rules of
+# Criminal Procedure (D.N.M.LR-Cr.) as a local-rule layer over lit/frcrimp
+# (28 U.S.C. § 2071; FRCrimP 57(a)): it declares only the periods and
+# limits the local criminal rules themselves state and re-encodes no
+# FRCrimP, Speedy Trial Act or FRAP 4(b) period (one source of truth:
+# lit/frcrimp). Each period is counted under FRCrimP 45(a), which governs
+# "any local rule" and which D.N.M.LR-Cr. 47.8(a) names, so each deadline
+# names `forum frcrimp`. The rules are the edition the court serves as
+# current, adopted by Administrative Order 25-MC-00004-35 filed and
+# effective November 14, 2025 (amending D.N.M.LR-Cr. 32; sources/d-nm), so
+# in_force is that date; earlier editions are not vendored, so a query
+# before it is a hole in the corpus. An appeal goes to the Tenth Circuit
+# under lit/frcrimp's FRAP 4(b) period and lit/ca10.
+[package]
+name = "nmd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "nmd-criminal-local-rules"
+forum = "nmd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of New Mexico: Local Rules of Criminal Procedure"
+description = "The U.S. District Court for the District of New Mexico's Local Rules of Criminal Procedure as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the response to a presentence interview request, the presentence conferral, objections, departure motions and sentencing memoranda with their responses and replies, the motion response and reply periods and page limits, and the briefing of an appeal from a magistrate judge's misdemeanor or petty-offense decision."
+in_force = "2025-11-14"
+known_at = "2026-10-28"
+unknown_before = "2025-11-14"
+jurisdiction = "U.S. District Court for the District of New Mexico (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "dnm-lr-cr"
+issuer = "U.S. District Court for the District of New Mexico"
+date = "2025-11-14"
+designation = "Local Rules of Criminal Procedure"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.dnm-lr-cr]
+title = "Local Rules of Criminal Procedure of the United States District Court for the District of New Mexico (effective December 1, 2009, amended effective November 14, 2025; Administrative Order 25-MC-00004-35)"
+url = "https://www.nmd.uscourts.gov/sites/nmd/files/local_rules/Local%20Rules%20of%20Criminal%20Procedure%20Adopted%20November%2014%2C%202025.pdf"
+path = "sources/d-nm/dnm-local-criminal-rules-2025-11-14-sectioned.txt"
+path_sha256 = "b9c83e7a87ada9b8145dead5baf9945da51636d47c656d1bd79db70c7d7f3df0"
+sha256 = "9b4a610265e607a6627912064ad81560ab4a4b6f6cf8f08945ce9c883538f499"
+as_of = "2025-11-14"
+cite_prefixes = ["D.N.M.LR-Cr."]
+section_heading = "D.N.M.LR-Cr. {n}"

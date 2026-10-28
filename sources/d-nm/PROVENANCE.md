@@ -22,3 +22,9 @@
 - Source: as the extract `d-nm/d-nm-local-civil-rules-2020.txt`, https://www.nmd.uscourts.gov/sites/nmd/files/local_rules/Local%20Rules%20of%20Civil%20Procedure%20Adopted%20October%201%2C%202020_0.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract (effective July 1, 2011, amended effective October 1, 2020).
 - Sectioned sha256 508c16043b626f4d2e39dd35346bb7af9bdc6ced9c5b4e428fdba667fc70ee6d (the `path_sha256` pinned by `lit/nmd/Lit.toml`).
+
+### `d-nm/dnm-local-criminal-rules-2025-11-14-sectioned.txt` — D.N.M. Local Rules of Criminal Procedure, sectioned
+
+- Derived in the pod (lg-gddt.24) from `d-nm/dnm-local-criminal-rules-2025-11-14.txt` (extract sha256 ef23cfd806f842e7106ca2bebb85ca04f5d342a3934cbdb180517ac6ef84c003); nothing fetched. In the body (after the table of contents), one marker line `## D.N.M.LR-Cr. <n>` is inserted before each numbered rule's own first line (`<n> <Title>. ...`), D.N.M.LR-Cr. 1.1 through 58.2, 49 rules including the lettered 5.A-5.C and 32.A-32.E; the `RULE <n>` group headings carry no marker. The attached Standard Discovery Order (Local Form 1) and the other attachments fall in 58.2's section, which runs to the end of the file. Rule text was not edited: deleting the marker lines (each `## D.N.M.LR-Cr. ` line with its newline) restores the extract byte for byte.
+- Edition: as the extract (effective December 1, 2009, amended effective November 14, 2025).
+- Sectioned sha256 b9c83e7a87ada9b8145dead5baf9945da51636d47c656d1bd79db70c7d7f3df0 (the `path_sha256` pinned by `lit/nmd-criminal/Lit.toml`).

@@ -1,0 +1,326 @@
+module wvsd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Southern District of West Virginia's own civil periods and limits,
+// computed under FRCP 6(a), which governs a period stated in a local rule.
+// Rules that state no period this layer can count stay out: the window of
+// 30 to 45 days (60 to 75 abroad) the waiver request allows the defendant
+// to return it (LR Civ P 4.1), a range the plaintiff chooses; the
+// courtroom-technology certification 7 days before a hearing or trial (LR
+// Civ P 7.1(a)(9), 16.7(b)(11)), a technology request rather than a
+// litigation period; the court's own scheduling order timing (LR Civ P
+// 16.1(e)); the mediator's report within 7 days after mediation (LR Civ P
+// 16.6.8), a neutral's duty; the section 406(b) fee motion, due "promptly"
+// (LR Civ P 9.6); the surety's filings after a real-property bond (LR Civ P
+// 65.1.1); attorney admission, withdrawal and recusal practice (LR Civ P
+// 83.1-83.8); and the Local Rules of Criminal Procedure. The earlier S.D.
+// W. Va. outline's FRCP flow belongs to lit/frcp and lit/frap; its
+// decisions (Twombly, Iqbal, Foman v. Davis, Frow v. De La Vega, Celotex,
+// Anderson v. Liberty Lobby, Catlin, Bowles v. Russell, and in the Third
+// and Fourth Circuits Phillips v. County of Allegheny, Fowler v. UPMC
+// Shadyside, Poulis v. State Farm, Goines and Anderson v. Foundation for
+// Advancement) are FRCP authority, and no reporter text is vendored, so
+// they are removed here.
+// In a Social Security review, opening and responding briefs "shall not
+// exceed 20 double-spaced pages and the reply brief shall not exceed 10
+// double-spaced pages, except with leave of court" (LR Civ P 9.4(b)). The
+// rule states the count in a form the limit check does not read, so the
+// limits stay in this note.
+/// A memorandum supporting a motion, and any response or reply memorandum:
+/// at most 20 pages; a motion to exceed the limit is denied absent good
+/// cause (LR Civ P 7.1(a)(2)).
+limit memorandum {
+  pages <= 20 cite "S.D. W. Va. LR Civ P 7.1(a)"
+} cite "S.D. W. Va. LR Civ P 7.1(a)"
+
+/// The complaint is filed (LR Civ P 4.1).
+event ComplaintFiled()
+/// The defendant returns an executed waiver of service (LR Civ P 4.1).
+event WaiverReturned()
+/// A motion and its supporting memorandum are served (LR Civ P 7.1(a)).
+event MotionServed() paper memorandum
+/// The memorandum in response to a motion is served (LR Civ P 7.1(a)(7)).
+event ResponseServed() paper memorandum
+/// A reply memorandum is filed (LR Civ P 7.1(a)(7)).
+event ReplyFiled() paper memorandum
+/// The clerk provides the consent form in a Social Security appeal (LR Civ
+/// P 9.1(b)).
+event ConsentFormProvided()
+/// The plaintiff serves the summons and complaint in a Social Security
+/// review (LR Civ P 9.3(a), 9.5(a)).
+event SocialSecurityComplaintServed()
+/// The certified (or supplemental) administrative transcript is served (LR
+/// Civ P 9.4(a)).
+event TranscriptServed()
+/// The plaintiff's brief is served (LR Civ P 9.4(a)).
+event PlaintiffBriefServed()
+/// The Commissioner's brief is served (LR Civ P 9.4(a)).
+event CommissionerBriefServed()
+/// The plaintiff's reply brief is served (LR Civ P 9.4(a)).
+event SocialSecurityReplyServed()
+/// The final judgment is entered (LR Civ P 9.6, 54.1).
+event FinalJudgmentEntered()
+/// The date set for the scheduling conference (LR Civ P 16.1(b)-(c)).
+event SchedulingConference()
+/// A case-management conference in a complex case (LR Civ P 16.2(b)).
+event CaseManagementConference()
+/// The final pretrial conference (LR Civ P 16.7(a)-(b)).
+event FinalPretrialConference()
+/// The parties' Fed. R. Civ. P. 26(f) meeting (LR Civ P 26.1(a)).
+event PartiesMeeting()
+/// The discovery completion date (LR Civ P 26.1(b)).
+event DiscoveryCompletion()
+/// The court orders interrogatories answered over objection (LR Civ P
+/// 33.1(c)).
+event InterrogatoryAnswersOrdered()
+/// The court orders document requests answered over objection (LR Civ P
+/// 34.1(c)).
+event DocumentAnswersOrdered()
+/// The court rules a request for admission proper over objection (LR Civ P
+/// 36.1(b)).
+event AdmissionRequestHeldProper()
+/// The date a discovery response or disclosure was due (LR Civ P 37.1(c)).
+event DiscoveryResponseDue()
+/// The judicial officer gives notice that an action will be dismissed (LR
+/// Civ P 41.1).
+event DismissalNoticeGiven()
+/// The trial date (LR Civ P 51.1, 52.1).
+event TrialDate()
+/// The bill of costs is served (LR Civ P 54.1).
+event BillOfCostsServed()
+/// Objections to the bill of costs are served (LR Civ P 54.1).
+event CostsObjectionsServed()
+
+/// LR Civ P 4.1: a plaintiff who intends to obtain service under Fed. R.
+/// Civ. P. 4(d)(1) dispatches the notice and request, and files a copy,
+/// within 14 days of filing the complaint; otherwise service is made by
+/// other means unless otherwise ordered.
+deadline waiver-request-period: 14.days after ComplaintFiled() counted_by frcp6 cite "S.D. W. Va. LR Civ P 4.1"
+{
+  forum frcp
+}
+
+/// LR Civ P 4.1: the plaintiff files the waiver of service within 7 days
+/// after its return.
+deadline waiver-filing-period: 7.days after WaiverReturned() counted_by frcp6 cite "S.D. W. Va. LR Civ P 4.1"
+{
+  forum frcp
+}
+
+/// LR Civ P 7.1(a)(7): memoranda in response to a motion are filed and
+/// served within 14 days from service of the motion; the judicial officer
+/// may modify the time.
+deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "S.D. W. Va. LR Civ P 7.1(a)"
+{
+  forum frcp
+}
+
+/// LR Civ P 7.1(a)(7): a reply memorandum is filed and served within 7 days
+/// from service of the response. No surreply without leave.
+deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "S.D. W. Va. LR Civ P 7.1(a)"
+{
+  forum frcp
+}
+
+/// LR Civ P 9.1(b): in a Social Security appeal, the completed consent to
+/// proceed before a magistrate judge is returned within 21 days of the
+/// clerk's notice.
+deadline consent-form-period: 21.days after ConsentFormProvided() counted_by frcp6 cite "S.D. W. Va. LR Civ P 9.1(b)"
+{
+  forum frcp
+}
+
+/// LR Civ P 9.3(a), 9.5(a): no later than 60 days after the plaintiff
+/// serves the summons and complaint, the Commissioner files and serves an
+/// answer with the certified administrative transcript, or a motion to
+/// dismiss or remand with a supporting memorandum.
+deadline commissioner-response-period: 60.days after SocialSecurityComplaintServed() counted_by frcp6 cite "S.D. W. Va. LR Civ P 9.3(a)"
+{
+  forum frcp
+}
+
+/// LR Civ P 9.4(a): the plaintiff's brief is filed and served no later than
+/// 30 days after service of the certified (or supplemental) administrative
+/// transcript.
+deadline plaintiff-brief-period: 30.days after TranscriptServed() counted_by frcp6 cite "S.D. W. Va. LR Civ P 9.4(a)"
+{
+  forum frcp
+}
+
+/// LR Civ P 9.4(a): the Commissioner's brief is filed and served no later
+/// than 30 days after service of the plaintiff's brief.
+deadline commissioner-brief-period: 30.days after PlaintiffBriefServed() counted_by frcp6 cite "S.D. W. Va. LR Civ P 9.4(a)"
+{
+  forum frcp
+}
+
+/// LR Civ P 9.4(a): the plaintiff may file and serve a reply brief no later
+/// than 14 days after service of the Commissioner's brief. Responses and
+/// replies to a motion to dismiss or remand follow the same periods (LR
+/// Civ P 9.5(c)).
+deadline social-security-reply-period: 14.days after CommissionerBriefServed() counted_by frcp6 cite "S.D. W. Va. LR Civ P 9.4(a)"
+{
+  forum frcp
+}
+
+/// LR Civ P 9.6: the Fed. R. Civ. P. 54(d) limits do not apply; a motion for
+/// fees under the Equal Access to Justice Act is filed within 90 days of
+/// entry of final judgment.
+deadline eaja-fee-motion-period: 90.days after FinalJudgmentEntered() counted_by frcp6 cite "S.D. W. Va. LR Civ P 9.6"
+{
+  forum frcp
+}
+
+/// LR Civ P 16.1(b): at least 21 days before the date set for the
+/// scheduling conference, the parties meet to discuss and report on all
+/// Fed. R. Civ. P. 16 and 26(f) matters.
+deadline parties-meeting-period: 21.days before SchedulingConference() counted_by frcp6 cite "S.D. W. Va. LR Civ P 16.1(b)"
+{
+  forum frcp
+}
+
+/// LR Civ P 16.1(c): the parties jointly submit the written report on their
+/// meeting no later than 14 days before the date set for the scheduling
+/// conference.
+deadline meeting-report-period: 14.days before SchedulingConference() counted_by frcp6 cite "S.D. W. Va. LR Civ P 16.1(c)"
+{
+  forum frcp
+}
+
+/// LR Civ P 16.2(b): where the judicial officer requires counsel to confer
+/// before a case-management conference, their statement is filed no later
+/// than 7 days before the conference.
+deadline case-management-statement-period: 7.days before CaseManagementConference() counted_by frcp6 cite "S.D. W. Va. LR Civ P 16.2(b)"
+{
+  forum frcp
+}
+
+/// LR Civ P 16.7(a): unless the trial judge orders otherwise, counsel and
+/// unrepresented parties meet to negotiate settlement, and make the Fed.
+/// R. Civ. P. 26(a)(3) disclosures, no later than 21 days before the final
+/// pretrial conference.
+deadline pretrial-meeting-period: 21.days before FinalPretrialConference() counted_by frcp6 cite "S.D. W. Va. LR Civ P 16.7(a)"
+{
+  forum frcp
+}
+
+/// LR Civ P 16.7(b): unless the trial judge orders otherwise, the proposed
+/// pretrial order is filed no later than 7 days before the final pretrial
+/// conference.
+deadline proposed-pretrial-order-period: 7.days before FinalPretrialConference() counted_by frcp6 cite "S.D. W. Va. LR Civ P 16.7(b)"
+{
+  forum frcp
+}
+
+/// LR Civ P 26.1(a): unless ordered or stipulated otherwise, the Fed. R.
+/// Civ. P. 26(a)(1) disclosures are made no later than 30 days after the
+/// Fed. R. Civ. P. 26(f) meeting.
+deadline initial-disclosures-period: 30.days after PartiesMeeting() counted_by frcp6 cite "S.D. W. Va. LR Civ P 26.1(a)"
+{
+  forum frcp
+}
+
+/// LR Civ P 26.1(b)(1): unless ordered or stipulated otherwise, the party
+/// bearing the burden of proof on an issue makes its Fed. R. Civ. P.
+/// 26(a)(2)(A)-(B) disclosures no later than 60 days before the discovery
+/// completion date.
+deadline burden-expert-disclosure-period: 60.days before DiscoveryCompletion() counted_by frcp6 cite "S.D. W. Va. LR Civ P 26.1(b)"
+{
+  forum frcp
+}
+
+/// LR Civ P 26.1(b)(2): the party not bearing the burden of proof on an
+/// issue makes its expert disclosures no later than 30 days before the
+/// discovery completion date.
+deadline responding-expert-disclosure-period: 30.days before DiscoveryCompletion() counted_by frcp6 cite "S.D. W. Va. LR Civ P 26.1(b)"
+{
+  forum frcp
+}
+
+/// LR Civ P 26.1(b)(3): rebuttal expert disclosures are made no later than
+/// 14 days before the discovery completion date.
+deadline rebuttal-expert-disclosure-period: 14.days before DiscoveryCompletion() counted_by frcp6 cite "S.D. W. Va. LR Civ P 26.1(b)"
+{
+  forum frcp
+}
+
+/// LR Civ P 33.1(c): interrogatories ordered answered over objection are
+/// answered within 14 days of the order, unless the court directs or the
+/// parties stipulate otherwise.
+deadline interrogatory-answers-period: 14.days after InterrogatoryAnswersOrdered() counted_by frcp6 cite "S.D. W. Va. LR Civ P 33.1(c)"
+{
+  forum frcp
+}
+
+/// LR Civ P 34.1(c): document requests ordered answered over objection are
+/// answered within 14 days of the order, unless the court directs or the
+/// parties stipulate otherwise.
+deadline document-answers-period: 14.days after DocumentAnswersOrdered() counted_by frcp6 cite "S.D. W. Va. LR Civ P 34.1(c)"
+{
+  forum frcp
+}
+
+/// LR Civ P 36.1(b): when a request for admission is held proper over
+/// objection, the matter is deemed admitted unless the party served with it
+/// serves a denial or a statement why it cannot admit or deny within 14
+/// days of the order.
+deadline admission-statement-period: 14.days after AdmissionRequestHeldProper() counted_by frcp6 cite "S.D. W. Va. LR Civ P 36.1(b)"
+{
+  forum frcp
+}
+
+/// LR Civ P 37.1(c): a motion to compel or other motion in aid of discovery
+/// not filed within 30 days after the response or disclosure was due is
+/// waived; the court for good cause, or the parties by a stipulation filed
+/// under LR Civ P 11.2, may extend the period if the scheduling order is
+/// not disturbed.
+deadline motion-to-compel-period: 30.days after DiscoveryResponseDue() counted_by frcp6 cite "S.D. W. Va. LR Civ P 37.1(c)"
+{
+  forum frcp
+}
+
+/// LR Civ P 41.1: after notice that an action will be dismissed, good cause
+/// for retaining it on the docket is shown within 30 days after the date of
+/// the notice, or the judicial officer may dismiss it.
+deadline retention-cause-period: 30.days after DismissalNoticeGiven() counted_by frcp6 cite "S.D. W. Va. LR Civ P 41.1"
+{
+  forum frcp
+}
+
+/// LR Civ P 51.1: in jury cases, proposed jury instructions, special
+/// interrogatories and a verdict form are submitted to the judicial officer
+/// not less than 7 days before the trial date.
+deadline jury-instructions-period: 7.days before TrialDate() counted_by frcp6 cite "S.D. W. Va. LR Civ P 51.1"
+{
+  forum frcp
+}
+
+/// LR Civ P 52.1: in cases tried to the court, proposed findings of fact
+/// and conclusions of law are submitted to the judicial officer 14 days
+/// before trial.
+deadline proposed-findings-period: 14.days before TrialDate() counted_by frcp6 cite "S.D. W. Va. LR Civ P 52.1"
+{
+  forum frcp
+}
+
+/// LR Civ P 54.1: the prevailing party prepares a bill of costs within 30
+/// days after entry of the final judgment.
+deadline bill-of-costs-period: 30.days after FinalJudgmentEntered() counted_by frcp6 cite "S.D. W. Va. LR Civ P 54.1"
+{
+  forum frcp
+}
+
+/// LR Civ P 54.1: specific objections to the bill of costs are filed within
+/// 14 days after its service.
+deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "S.D. W. Va. LR Civ P 54.1"
+{
+  forum frcp
+}
+
+/// LR Civ P 54.1: a response to the objections is filed within 7 days of
+/// their service.
+deadline costs-objection-response-period: 7.days after CostsObjectionsServed() counted_by frcp6 cite "S.D. W. Va. LR Civ P 54.1"
+{
+  forum frcp
+}

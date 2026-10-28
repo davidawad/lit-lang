@@ -1,0 +1,148 @@
+module as-high-court-criminal.criminal
+
+// Felony prosecutions in the Trial Division of the High Court of American
+// Samoa. The Trial Court Rules of Criminal Procedure are UNOFFICIAL and
+// CURRENCY UNCONFIRMED (sources/as-criminal-trial-court/PROVENANCE.md), so
+// they are cited for the structure of each step and no period, limit or
+// amount is taken from them: where a step has one, the note names the rule
+// that sets it and says that it is not stated. The ACR 4(b) appeal periods
+// are stated under David's ruling of 2026-10-28 (lg-f3q8.77), with its
+// caveat that the ACR posting is unofficial and its currency unconfirmed.
+// The American Samoa Code Annotated and the Revised Constitution are not
+// vendored. Outcomes are from the defendant's side. The earlier outline's
+// leading decisions (County of Riverside v. McLaughlin, Gerstein v. Pugh,
+// Gideon v. Wainwright, Brady v. Maryland, Mapp v. Ohio, Barker v. Wingo,
+// Boykin v. Alabama, Missouri v. Frye, Jackson v. Virginia, Apprendi v. New
+// Jersey, Roe v. Flores-Ortega, Garza v. Idaho) are removed: no reporter
+// text is vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "TCRCrP 4"
+{
+  note "On a complaint made on oath before a district court judge or justice of the High Court, a warrant or summons issues on probable cause (TCRCrP 3; 4). An arrested person is taken without unnecessary delay before the next sitting of the district court, and after a warrantless arrest a complaint is filed forthwith (TCRCrP 5(a))."
+  edge-arrested-appearance "Initial appearance in the district court" -> initial-appearance {
+    authority cite "TCRCrP 5(a)"
+  }
+}
+
+decision initial-appearance: "Release or detention" by court cite "TCRCrP 46"
+{
+  note "A defendant charged with an offense not triable by a district court judge is not called upon to plead there (TCRCrP 5(c)). Eligibility for release before trial is governed by article I, section 6 of the Revised Constitution of American Samoa (not vendored), and subject to it a defendant may be released on recognizance at the trial judge's discretion (TCRCrP 46(a))."
+  edge-initial-appearance-detained "Detained" -> probable-cause { authority cite "TCRCrP 46" }
+  edge-initial-appearance-released "Released on recognizance or conditions" -> probable-cause {
+    authority cite "TCRCrP 46(a)"
+  }
+}
+
+decision probable-cause: "Preliminary examination" by court cite "TCRCrP 5.1"
+{
+  note "A defendant charged with an offense other than a misdemeanor to be tried by the High Court is entitled to a preliminary examination unless waived (TCRCrP 5(c)); its timing is set by Rule 5 and not stated here (currency unconfirmed). On probable cause the district court judge holds the defendant to answer in the High Court, and the finding may rest on hearsay (TCRCrP 5.1(a))."
+  edge-probable-cause-charged "Held to answer in the High Court" -> charged {
+    authority cite "TCRCrP 5.1(a)"
+  }
+  edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
+    authority cite "TCRCrP 5.1"
+  }
+}
+
+state charged: "Information" by office cite "TCRCrP 7(a)"
+{
+  note "All felony offenses are initiated in the High Court by the filing of an information (TCRCrP 7(a)); the Rules of Criminal Procedure state no grand jury procedure (Rule 6 is omitted)."
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "TCRCrP 10" }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "TCRCrP 10"
+{
+  note "Arraignment is conducted in open court by reading the complaint or information or stating its substance and calling on the defendant to plead, after the defendant is given a copy (TCRCrP 10). A defendant may plead not guilty, guilty or, with the court's consent, nolo contendere, and a refusal to plead is entered as not guilty (TCRCrP 11(a), (b))."
+  edge-arraignment-discovery "Discovery" -> discovery { authority cite "TCRCrP 16" }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "TCRCrP 12"
+{
+  note "On request the government permits inspection of the defendant's statements and the other material Rule 16(a) lists (TCRCrP 16(a)). The pleadings are the complaint, information and pleas, and defenses and objections are raised by motion (TCRCrP 12(a)); the motion periods Rule 12 sets are not stated here (currency unconfirmed)."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling { authority cite "TCRCrP 12" }
+  edge-discovery-speedy "Motion to dismiss for unnecessary delay" -> motions-ruling {
+    authority cite "TCRCrP 48(b)"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision { authority cite "TCRCrP 11" }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "TCRCrP 12"
+{
+  note "If there is unnecessary delay in filing an information against a defendant held to answer, or in bringing a defendant to trial, the court may dismiss (TCRCrP 48(b)). The Attorney General may by leave of court dismiss an information or complaint, but not during trial without the defendant's consent (TCRCrP 48(a))."
+  edge-motions-ruling-speedy "Dismissed for unnecessary delay" -> dismissed {
+    authority cite "TCRCrP 48(b)"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "TCRCrP 12"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "TCRCrP 12"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "TCRCrP 11"
+{
+  note "A guilty or nolo contendere plea is accepted under Rule 11. Cases required to be tried by jury are so tried unless the defendant waives in writing with the court's approval, and the rules set the size of the jury (TCRCrP 23(a), (b)); the number is not stated here (currency unconfirmed)."
+  edge-plea-decision-plea "Guilty or nolo contendere plea accepted" -> sentencing {
+    authority cite "TCRCrP 11"
+  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "TCRCrP 23" }
+  edge-plea-decision-dismissed "Attorney General dismisses by leave of court" -> dismissed {
+    authority cite "TCRCrP 48(a)"
+  }
+}
+
+decision trial: "Verdict" by court cite "TCRCrP 31"
+{
+  note "The verdict is unanimous and returned to the judge in open court (TCRCrP 31(a)). The court enters a judgment of acquittal if the evidence is insufficient (TCRCrP 29(a)); the period for a motion after the verdict is set by Rule 29 and not stated here (currency unconfirmed)."
+  edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
+    authority cite "TCRCrP 29"
+  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial { authority cite "TCRCrP 33" }
+}
+
+decision post-trial: "Post-trial motions" by court cite "TCRCrP 33"
+{
+  note "The court may grant a new trial in the interest of justice (TCRCrP 33), and arrests judgment if the information charges no offense or the court lacked jurisdiction (TCRCrP 34); the periods Rules 33 and 34 set are not stated here (currency unconfirmed). Under the Appellate Court Rules a defendant's motion for a new trial, as 43.0802 A.S.C.A. requires, is filed within 10 days after entry of the judgment or order appealed from (ACR 4(b); unofficial, currency unconfirmed, bound under lg-f3q8.77)."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted { authority cite "TCRCrP 29" }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "TCRCrP 33" }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "TCRCrP 32(a)"
+  }
+}
+
+state sentencing: "Sentencing" by court cite "TCRCrP 32(a)"
+{
+  note "Sentence is imposed without unreasonable delay, after counsel and the defendant are afforded an opportunity to speak (TCRCrP 32(a)(1)). The court may correct an illegal sentence at any time and reduce a sentence within the period Rule 35(b) sets, which is not stated here (currency unconfirmed) (TCRCrP 35)."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "TCRCrP 32"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "TCRCrP 32"
+{
+  note "In a criminal case the defendant's motion for a new trial is filed within 10 days after entry of the judgment, and the notice of appeal within 10 days after the denial of the motion for a new trial (ACR 4(b); unofficial, currency unconfirmed, bound under lg-f3q8.77). 43.0802 A.S.C.A. is not vendored."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken { authority cite "A.C.R. 4(b)" }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "A.C.R. 4(b)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "TCRCrP 29"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty or a judgment of acquittal (TCRCrP 29, 31)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "TCRCrP 48"
+{
+  note "Outcome from the defendant's side: a dismissal for unnecessary delay or by leave of court (TCRCrP 48), on a pretrial motion, or for want of probable cause (TCRCrP 5.1)."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "A.C.R. 4(b)"
+{
+  note "The appeal continues before the Appellate Division of the High Court under the Appellate Court Rules (lit/as-high-court-appellate)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "TCRCrP 35"
+{
+  note "Outcome from the defendant's side. A sentence may be corrected or reduced under Rule 35; American Samoa collateral relief statutes are not vendored, and federal habeas belongs to lit/habeas."
+}

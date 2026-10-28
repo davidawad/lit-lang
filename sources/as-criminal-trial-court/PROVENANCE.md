@@ -9,3 +9,9 @@
 - Extraction sha256 4f99b87f9ffa5e61582d2d7ae37b1aa3d181186b19d94e1b4cd8c28b16525151.
 
 - Note (lg-gddt): Criminal appeals: American Samoa Appellate Court Rules, covered by sources/as-high-court-appellate/ (UNOFFICIAL asbar.org posting). Statutory criminal procedure: A.S.C.A. Title 46 (not vendored).
+
+### `as-criminal-trial-court/as-trial-court-rules-of-criminal-procedure-asbar-sectioned.txt` — American Samoa Trial Court Rules of Criminal Procedure (asbar posting), sectioned
+
+- Derived in the pod (lg-gddt.22) from `as-criminal-trial-court/as-trial-court-rules-of-criminal-procedure-asbar.txt` (extract sha256 4f99b87f9ffa5e61582d2d7ae37b1aa3d181186b19d94e1b4cd8c28b16525151); nothing fetched. One marker line `## TCRCrP <n>` is inserted before each rule's own body heading line `RULE <n>.<TITLE>` (from extract line 130, after the posting's rule list; 60 rules, TCRCrP 1 through 52, including headings such as `RULE 17.1PRETRIAL CONFERENCE.` with no period after the number); the rule list carries no markers. Every other line is the extract unchanged, so deleting the marker lines gives back the extract byte for byte.
+- Edition: as the extract; UNOFFICIAL and CURRENCY UNCONFIRMED stand. `lit/as-criminal-trial-court` cites it for structure only and takes no value from it.
+- Sectioned sha256 081e404695685003fd50cbe82a5d5497f9cbd427c3898d93af9e0bf4ee495ed0 (the `path_sha256` pinned by `lit/as-criminal-trial-court/Lit.toml`).

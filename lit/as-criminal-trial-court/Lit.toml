@@ -1,0 +1,58 @@
+# Felony prosecutions in the Trial Division of the High Court of American
+# Samoa (with their district court preliminary stages) under the Trial
+# Court Rules of Criminal Procedure (TCRCrP), as far as the vendored text
+# states. The text is the American Samoa Bar Association's posting
+# (sources/as-criminal-trial-court), which is UNOFFICIAL (no official
+# publisher) and states no edition or effective date; its PROVENANCE
+# entry records CURRENCY UNCONFIRMED, so in_force is the retrieval date
+# and an earlier query is a hole in the corpus. By the PM's standing
+# ruling of 2026-10-27 such a source yields holes, not values: this
+# package cites the rules only for the structure of the case and states
+# no period, limit or amount from them. The appeal hand-off cites
+# Appellate Court Rule (ACR) 4(b), bound to the posting lit/as-high-court-
+# appellate binds (UNOFFICIAL, CURRENCY UNCONFIRMED, latest stated
+# effective date July 15, 1987), whose values David's ruling of
+# 2026-10-28 (lg-f3q8.77) allows to be bound with that caveat; the ACR
+# periods are therefore stated, with the caveat, in notes. The American
+# Samoa Code Annotated (A.S.C.A.; the new-trial statute 43.0802) and the
+# Revised Constitution are not vendored.
+[package]
+name = "as-high-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "as-high-court-criminal"
+forum = "as-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "american-samoa"
+title = "High Court of American Samoa, Trial Division, criminal"
+description = "Felony prosecutions in the Trial Division of the High Court of American Samoa under the Trial Court Rules of Criminal Procedure, as far as the vendored (unofficial, currency-unconfirmed) text states: the structure of the case from arrest and initial appearance in the district court through preliminary examination, information, arraignment, discovery, pretrial motions, dismissal for delay, plea or trial, post-trial motions and sentencing; no period from the rules is stated. An appeal goes to the Appellate Division under ACR 4(b)."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "High Court of American Samoa, Trial Division (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.as-tcrcrp]
+title = "American Samoa Trial Court Rules of Criminal Procedure (TCRCrP), American Samoa Bar Association posting as served 2026-10-28; UNOFFICIAL, CURRENCY UNCONFIRMED"
+url = "https://asbar.org/court-rule/rules-of-criminal-procedure/"
+path = "sources/as-criminal-trial-court/as-trial-court-rules-of-criminal-procedure-asbar-sectioned.txt"
+path_sha256 = "081e404695685003fd50cbe82a5d5497f9cbd427c3898d93af9e0bf4ee495ed0"
+as_of = "2026-10-28"
+cite_prefixes = ["TCRCrP"]
+section_heading = "TCRCrP {n}"
+
+[sources.as-acr]
+title = "American Samoa Appellate Court Rules (ACR), American Samoa Bar Association posting as served 2026-10-28 (page modified 2020-10-05); UNOFFICIAL, CURRENCY UNCONFIRMED (latest stated effective date July 15, 1987)"
+url = "https://asbar.org/?p=16557"
+path = "sources/as-high-court-appellate/as-appellate-rules-asbar-sectioned.txt"
+path_sha256 = "5ccb5f63c1073d2458993072050c3ec0a0cd3749b246851df72f52e796f94567"
+as_of = "1987-07-15"
+cite_prefixes = ["A.C.R."]
+section_heading = "Rule {n}"

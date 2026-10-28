@@ -764,10 +764,7 @@ fn section(
         .lookup_all(&s.heading)
         .iter()
         .any(|(file, _)| file == path);
-    if found
-        && unverified.is_none()
-        && subdivided(corpus, path, &s.heading, &s.pinpoint, text)
-    {
+    if found && unverified.is_none() && subdivided(corpus, path, &s.heading, &s.pinpoint, text) {
         return None;
     }
     let (why, fix) = unverified.unwrap_or_else(|| {

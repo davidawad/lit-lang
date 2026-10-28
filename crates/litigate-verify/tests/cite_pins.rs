@@ -57,6 +57,18 @@ fn an_unpinned_or_mismatched_file_is_unverified_text() {
     );
 }
 
+#[test]
+fn a_subpart_the_vendored_rule_does_not_write_does_not_resolve() {
+    let lit = BASE.replacen("FRCP 12(a)", "FRCP 12(zz)", 1);
+    let checked = under(PIN, PIN, &lit);
+    let messages = unresolved(&checked);
+    assert_eq!(messages.len(), 1, "{messages:?}");
+    assert!(
+        messages[0].contains("pinpoint the section does not write"),
+        "{messages:?}"
+    );
+}
+
 /// [`BASE`] with a default whose first version is in force until 2010
 /// and cited as `cite`; the open-ended second version cites the rule.
 fn dated(cite: &str) -> String {

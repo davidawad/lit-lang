@@ -1,0 +1,94 @@
+module vt-supreme-court-civil-appeals.appeal
+
+/// A principal brief: at most 9000 words, the statement of issues,
+/// tables, signature blocks and certificates excluded (V.R.A.P.
+/// 32(a)(4)). The 12,000-word limit for an appellee's principal brief in
+/// a cross-appeal is not encoded.
+limit principal-brief { words <= 9_000 cite "V.R.A.P. 32(a)" } cite "V.R.A.P. 32(a)"
+/// A reply brief: at most 4500 words (V.R.A.P. 32(a)(4)). The cross-appeal
+/// limits for reply briefs (6000 words for the appellant's, 3000 for the
+/// appellee's) are not encoded.
+limit reply-brief { words <= 4_500 cite "V.R.A.P. 32(a)" } cite "V.R.A.P. 32(a)"
+/// A brief supporting a motion for reargument: at most 3000 words
+/// (V.R.A.P. 40(b)).
+limit reargument-brief { words <= 3_000 cite "V.R.A.P. 40(b)" } cite "V.R.A.P. 40(b)"
+
+/// The appellant's brief is filed (V.R.A.P. 31(a)).
+event AppellantBriefFiled() paper principal-brief
+/// The appellee's brief is filed (V.R.A.P. 31(a)).
+event AppelleeBriefFiled() paper principal-brief
+/// The appellant's reply brief is filed (V.R.A.P. 31(a)).
+event ReplyBriefFiled() paper reply-brief
+/// A motion for reargument is filed with its supporting brief (V.R.A.P. 40).
+event ReargumentMotionFiled() paper reargument-brief
+
+start notice
+
+decision notice: "Notice of appeal within 30 days of entry?" by applicant cite "V.R.A.P. 4(a)"
+{
+  note "An appeal as of right is taken by filing a notice of appeal with the superior court clerk within the time Rule 4 allows; any entry fee required under 32 V.S.A. § 1431 is due at the time for filing the notice (V.R.A.P. 3(b)(1)); the fee statute is not vendored and the amount is not stated. The notice is filed within 30 days after entry of the judgment or order appealed from; another party may appeal within 14 days after the first notice or within the time otherwise prescribed, whichever ends later (V.R.A.P. 4(a)(1), (6)). A timely motion under V.R.C.P. 50(b), 52(b), 59 or the other motions Rule 4(b) lists restarts the full time from the order disposing of the last remaining motion (V.R.A.P. 4(b)). The superior court may extend the time on a motion filed no later than 30 days after it expires, on excusable neglect or good cause, by no more than 30 days after the original time or 14 days after the order, whichever is later (V.R.A.P. 4(d)), and may reopen it for 14 days for lack of notice of the judgment (V.R.A.P. 4(c)). The Supreme Court may not extend the time to file a notice of appeal unless law or these rules authorize it (V.R.A.P. 26(b)). No leading decision is named."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "V.R.A.P. 4(a)" }
+  edge-notice-timely "Timely notice" -> record { authority cite "V.R.A.P. 10(b)" }
+}
+
+terminal dismissed-untimely: "Appeal dismissed as untimely" outcome [loss, dismissal] cite "V.R.A.P. 4(a)"
+{
+  note "Only the timely filing of a notice of appeal is essential to the appeal's validity (V.R.A.P. 3(b)(1)(D)). Outcome from the appellant's side."
+}
+
+state record: "Appeal docketed; record complete" by office cite "V.R.A.P. 12(b)"
+{
+  note "Within 14 days after taking the appeal the appellant files a docketing statement (V.R.A.P. 3(e)), and within 14 days of filing the notice files a statement that no transcript is necessary or orders the transcript; failing to order one waives any issue that needs it (V.R.A.P. 10(b)(1)). The superior court clerk transmits the appeal within 14 days after the notice is filed (V.R.A.P. 11(b)(1)). The Supreme Court clerk dockets the appeal and, once each ordered transcript is complete or none is needed, notifies the parties that the record is complete; it is complete on the date that notification is docketed (V.R.A.P. 12(a), (b)). An appellee may move to dismiss if the appellant fails to order the transcript or pay any required entry fee (V.R.A.P. 12(d))."
+  edge-record-briefing "Record complete" -> briefing { authority cite "V.R.A.P. 31(a)" }
+}
+
+state briefing: "Briefs filed" by applicant cite "V.R.A.P. 31(a)"
+{
+  note "The appellant serves and files a brief within 40 days after the record on appeal is complete, the appellee within 30 days after the appellant's brief is served, and the appellant may reply within 21 days after service of the appellee's brief (V.R.A.P. 31(a)). The parties may stipulate once to extend each brief, by up to 40 days for the appellant's principal brief, 30 days for the appellee's and 21 days for a reply (V.R.A.P. 26(c)). A principal brief may not exceed 9000 words and a reply brief 4500 words (V.R.A.P. 32(a)(4))."
+  edge-briefing-argument "Briefing complete" -> argument { authority cite "V.R.A.P. 34(a)" }
+  edge-briefing-unperfected "Appellant's brief not filed in time" -> dismissed-prosecution {
+    authority cite "V.R.A.P. 31(b)"
+  }
+}
+
+terminal dismissed-prosecution: "Appeal dismissed for want of prosecution" outcome [loss, dismissal] cite "V.R.A.P. 31(b)"
+{
+  note "If the appellant does not file a brief within the time provided, or as extended, an appellee may move to dismiss (V.R.A.P. 31(b)); the Court may on its own motion dismiss any docketed case in which a party has not complied with a filing deadline (V.R.A.P. 42(b)). Outcome from the appellant's side."
+}
+
+state argument: "Oral argument or submission on the briefs" by court cite "V.R.A.P. 34(a)"
+{
+  note "A case is ready for the calendar after the appellee's principal brief is filed or its time has expired, and is heard or considered on the briefs at the next available term; if no party requests oral argument by the date the clerk sets, it is considered on the briefs unless the Court orders otherwise (V.R.A.P. 34(a)). If all members not disqualified agree, the Court may set a case before a panel of three justices, which must decide it unanimously or direct reargument before the full Court (V.R.A.P. 33.1). No leading decision on the standard of review is named."
+  edge-argument-decision "Submitted" -> decision { authority cite "V.R.A.P. 36" }
+}
+
+decision decision: "Supreme Court decision" by court cite "V.R.A.P. 36"
+{
+  note "A judgment is entered when it is noted on the docket (V.R.A.P. 36). A party may move for reargument within 14 days after entry of judgment, with a supporting brief of no more than 3000 words; no answer is permitted unless the Court requests one (V.R.A.P. 40). A verified bill of costs is filed within 14 days after entry of judgment (V.R.A.P. 39(d))."
+  edge-decision-affirmed "Affirmed" -> mandate-affirmed { authority cite "V.R.A.P. 41(a)" }
+  edge-decision-reversed "Reversed or vacated" -> mandate-reversed {
+    authority cite "V.R.A.P. 41(a)"
+  }
+}
+
+state mandate-affirmed: "Mandate issues: affirmed" by office cite "V.R.A.P. 41(a)"
+{
+  note "The mandate issues 21 days after entry of judgment or 7 days after entry of an order denying a timely motion for reargument, unless the Court orders otherwise; a timely reargument motion stays it until disposition, and a stay granted on motion may not exceed 30 days unless extended for good cause (V.R.A.P. 41(a), (c)). If a judgment is affirmed, costs are taxed against the appellant (V.R.A.P. 39(a))."
+  edge-mandate-affirmed-final "Mandate issued" -> affirmed { authority cite "V.R.A.P. 41(a)" }
+}
+
+state mandate-reversed: "Mandate issues: reversed or vacated" by office cite "V.R.A.P. 41(a)"
+{
+  note "The mandate issues as rule 41(a) provides; costs on a reversal follow V.R.A.P. 39(a)(3)-(5). Further proceedings in the superior court are not modeled."
+  edge-mandate-reversed-final "Mandate issued" -> reversed { authority cite "V.R.A.P. 41(a)" }
+}
+
+terminal affirmed: "Judgment affirmed" outcome [loss, judgment] cite "V.R.A.P. 41(a)"
+{
+  note "Outcome from the appellant's side. The earlier outline cited V.R.A.P. 15 for further review; Rule 15 is reserved, and review in the Supreme Court of the United States is not modeled."
+}
+
+terminal reversed: "Judgment reversed or vacated" outcome [win, judgment] cite "V.R.A.P. 41(a)"
+{
+  note "Outcome from the appellant's side."
+}

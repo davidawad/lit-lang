@@ -1,0 +1,50 @@
+# A civil appeal from the Vermont Superior Court to the Vermont Supreme
+# Court under the Vermont Rules of Appellate Procedure, current with rule
+# changes received through March 16, 2026 (sources/vt-supreme).
+# Computation of time is V.R.C.P. 6(a) (V.R.A.P. 26(a)), whose legal
+# holidays include any day the State of Vermont declares; core has no
+# Vermont holiday calendar, so the rules' periods are stated in notes, not
+# encoded as counted deadlines. The Supreme Court is Vermont's only
+# appellate court; review in the Supreme Court of the United States is not
+# modeled. A civil action in the Superior Court is lit/vt-superior-civil.
+[package]
+name = "vt-supreme-court-civil-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "vt-supreme-court-civil-appeals"
+forum = "vt-supreme"
+authority = "StateRule"
+title = "Vermont Supreme Court, civil appeals"
+description = "A civil appeal from the Vermont Superior Court to the Vermont Supreme Court under the Vermont Rules of Appellate Procedure, as far as the vendored text states: notice and timeliness, transcript and record, briefing and its word limits, argument or submission on the briefs, judgment, reargument and mandate."
+in_force = "2026-03-16"
+known_at = "2026-10-28"
+unknown_before = "2026-03-16"
+jurisdiction = "Vermont Supreme Court (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.vt-r-app-p]
+title = "Vermont Rules of Appellate Procedure, current with rule changes received through March 16, 2026"
+url = "https://advance.lexis.com/"
+path = "sources/vt-supreme/vrap-sectioned.txt"
+path_sha256 = "fb1c5b25a8a63cfa372f669dfbc78884b15a7fb681e3f081e553a7c120814b05"
+sha256 = "3d59c45082c9aaefa1489895bc461f8d4fe510374caeba1423b7ee7f93b8fa53"
+as_of = "2026-03-16"
+cite_prefixes = ["V.R.A.P."]
+section_heading = "Rule {n}"
+
+[sources.vt-r-civ-p]
+title = "Vermont Rules of Civil Procedure, current with rule changes received through March 16, 2026"
+url = "https://advance.lexis.com/"
+path = "sources/vt-superior-civil/vrcp-sectioned.txt"
+path_sha256 = "8583220322f0a9df87238db26261c190ade801d0ff4e6d0656b84fe20bb4c004"
+sha256 = "e6750c9690c20c1da0385432958b6407ce1a9669ab7009c4bc853bd7bf281f71"
+as_of = "2026-03-16"
+cite_prefixes = ["V.R.C.P."]
+section_heading = "Rule {n}"

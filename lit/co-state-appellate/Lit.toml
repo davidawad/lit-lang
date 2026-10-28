@@ -1,20 +1,20 @@
-# Civil appeals in the Colorado appellate courts under the Colorado
-# Appellate Rules, from the appellant's side: the appeal as of right to the
-# court of appeals and certiorari review in the supreme court. The base
-# text is Chapter 32 of the 2023 Colorado Revised Statutes court-rules
-# volume (OLLS; its latest recorded change is Rule Change 2023(13),
-# effective July 20, 2023, sources/co-state-appellate); the Supreme Court's
-# later Rule Change orders vendored beside it (2024(11), 2025(02),
-# 2025(11), 2026(05)) are applied on top in date order. Of the rules cited
-# here, only C.A.R. 52(b)(1) and 54(b) state values an order changed, and
-# Rule Change 2026(05) (March 26, 2026) restates both, so it is its own
-# source and those values cite it; the orders leave C.A.R. 1, 3, 4, 10(c)
-# and (d)(1), (3), 26, 28, 31, 34, 35, 36, 40(a), 41(b)(1) and 49 as the
-# compilation states them. Computation of time is C.A.R. 26(a), with the
-# legal holidays of C.A.R. 26(b), for which lit/core has no counting rule,
-# so the periods are stated in notes, not encoded as counted deadlines.
-# Review of the supreme court's judgment by certiorari belongs to
-# lit/scotus. The package is in force from Rule Change 2026(05).
+# Civil appeals in the Colorado Court of Appeals under the Colorado
+# Appellate Rules, from the appellant's side, up to the petition for
+# certiorari, which hands off to lit/co-supreme-court. The base text is
+# Chapter 32 of the 2023 Colorado Revised Statutes court-rules volume
+# (OLLS; its latest recorded change is Rule Change 2023(13), effective July
+# 20, 2023, sources/co-state-appellate); the Supreme Court's later Rule
+# Change orders vendored beside it (2024(11), 2025(02), 2025(11), 2026(05))
+# are applied on top in date order. Of the rules cited here, only C.A.R.
+# 52(b)(1) states a value an order changed, and Rule Change 2026(05)
+# (March 26, 2026) restates it, so it is its own source and that value
+# cites it; the orders leave C.A.R. 1, 3, 4, 10(c) and (d)(1), (3), 26, 28,
+# 31, 34, 35, 36, 40(a), 41(b)(1) and 52(a) as the compilation states
+# them. Computation of time is C.A.R. 26(a), with the legal holidays of
+# C.A.R. 26(b), for which lit/core has no counting rule, so the periods are
+# stated in notes, not encoded as counted deadlines. The trigger events the
+# graph binds are lit/co-rules'. The package is in force from Rule Change
+# 2026(05).
 [package]
 name = "co-appellate-civil"
 version = "0.1.0"
@@ -23,12 +23,13 @@ pack_id = "co-appellate-civil"
 forum = "co-state-appellate"
 authority = "StateRule"
 jurisdiction_id = "colorado"
-title = "Colorado Court of Appeals and Supreme Court, civil appeals"
-description = "Civil appeals in the Colorado appellate courts under the Colorado Appellate Rules, as far as the vendored text states: appealable judgments and orders, the notice of appeal and its time, the record and transcript designation, briefing periods and word limits, oral argument, determination and entry of judgment, rehearing, the mandate, and certiorari review in the supreme court with its time to petition."
+family = "state-civil"
+title = "Colorado Court of Appeals, civil appeals"
+description = "Civil appeals in the Colorado Court of Appeals under the Colorado Appellate Rules, as far as the vendored text states: appealable judgments and orders, the notice of appeal and its time, the record and transcript designation, briefing periods and word limits, oral argument, determination and entry of judgment, rehearing, the time to petition for certiorari, which hands off to the supreme court package (lit/co-supreme-court), and the mandate."
 in_force = "2026-03-26"
 known_at = "2026-10-28"
 unknown_before = "2026-03-26"
-jurisdiction = "Colorado Court of Appeals and Supreme Court (civil appeals)"
+jurisdiction = "Colorado Court of Appeals (civil appeals)"
 
 [package.roles]
 applicant = "self"
@@ -37,6 +38,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+co-state-rules = { version = "^0.1.0", path = "../co-rules" }
 
 [sources.car]
 title = "Colorado Appellate Rules, Colorado Revised Statutes 2023 court-rules volume, Chapter 32 (OLLS)"

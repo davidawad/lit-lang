@@ -1,0 +1,29 @@
+# The Colorado base library (lg-u561.5 pattern): the trigger events the
+# Colorado court packages route their graphs on: lit/co-state-civil,
+# lit/co-state-appellate, lit/co-supreme-court and
+# lit/co-industrial-claim-appeals-office. It declares no period: the
+# rules' periods (C.R.C.P. 6(a), C.A.R. 26, with Colorado's legal holidays,
+# for which lit/core has no counting rule) are stated in the court
+# packages' notes. No procedure of its own.
+[package]
+name = "co-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "co-state-rules"
+forum = "co-state-rules"
+authority = "StateRule"
+jurisdiction_id = "colorado"
+title = "Colorado state court rules (base library)"
+description = "The rule layer Colorado's court packages share: the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-03-26"
+known_at = "2026-10-28"
+unknown_before = "2026-03-26"
+jurisdiction = "Colorado state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

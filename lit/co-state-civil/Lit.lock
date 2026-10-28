@@ -4,14 +4,22 @@ version = 2
 name = "co-district-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:89f921718981c06d603c4532d31d75af490a531b1d457ebb65ac45c646b60fc1"
-semantic = "sha256:0dbfb2be282c5ce42bc8a1d579f98f72e98cbe9c8ea8f96890e92d7a1be85b83"
+source = "sha256:56f8d2d85ba352c4a06bcedd23d0d653c93747b1d7deaf11e09e513798fa3a6a"
+semantic = "sha256:e1e60b94026a5c0a5f92ca61801b414f63db5b127fc1cc1ad773ab2596d7ff33"
 texts = [
     "car sources/co-state-appellate/co-car-sectioned.txt sha256:269e8ef5902216c04b7d7dd58312fbb4d1702b54b57f6e5691ed8676314c23bc",
     "co-rc-2024-03 sources/co-state-civil/co-rule-change-2024-03-sectioned.txt sha256:7e58228ab5e1b8ba9d5e171d5062a7b0f015148c7213c66e29469a6188eb3f96",
     "co-rc-2024-08 sources/co-state-civil/co-rule-change-2024-08-sectioned.txt sha256:3ee2dc4348eee5ebeb41ea662909d76f8bfe7d3d622117227987a946b75fa6ad",
     "crcp sources/co-state-civil/co-crcp-sectioned.txt sha256:12b58d278bf2a00f3deebf83066c8168ef27f579bc5877bcb1fe03c88457d7e4",
 ]
+dependencies = [
+    "co-state-rules 0.1.0",
+    "core 1.0.0",
+]
+
+[[package]]
+name = "co-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

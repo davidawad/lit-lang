@@ -1,0 +1,61 @@
+module co-industrial-claim-appeals-office.review
+
+import co-state-rules.{ DecisionFiled, NoticeOfAppealFiled }
+
+// Review of an administrative law judge's workers' compensation order by
+// the Industrial Claim Appeals Office panel, and the appeal from the
+// panel's order to the court of appeals, from the petitioner's side. The
+// panel's procedure is statutory (C.R.S. title 8, article 43, part 3) and
+// not vendored: its cites and values are holes. Every period below is
+// stated in a note, not counted (C.A.R. 26(a)). The outline named no
+// leading decisions; the one kept is Hildreth v. Dir. of Div. of Labor, 30
+// Colo. App. 415, 497 P.2d 350 (1972), as the compilation's annotation to
+// C.A.R. 3.1 reports it.
+start petition
+
+decision petition: "Petition to review the ALJ's order?" by applicant cite ?("C.R.S. § 8-43-301, not vendored") {
+  note "Review by the Industrial Claim Appeals Office panel of an administrative law judge's order is sought by a petition to review under part 3 of article 43 of title 8, C.R.S. (the cross reference to C.A.R. 3.1). That statute is not vendored: the time for the petition, its form, the briefs before the panel and any fee are holes."
+  edge-petition-none "No petition: the ALJ's order stands" -> alj-order-final {
+    authority cite ?("C.R.S. § 8-43-301, not vendored")
+  }
+  edge-petition-filed "Petition to review filed" -> panel-review {
+    event NoticeOfAppealFiled()
+    authority cite ?("C.R.S. § 8-43-301, not vendored")
+  }
+}
+
+state panel-review: "Panel review and order" by court cite ?("C.R.S. § 8-43-301, not vendored") {
+  note "The panel reviews the order on the record before the administrative law judge and enters its own order. The statute governing the panel's review, the time for its order and the grounds for setting aside the judge's order is not vendored: they are holes."
+  edge-panel-review-order "Panel order entered" -> appeal-decision {
+    event DecisionFiled()
+    authority cite ?("C.R.S. § 8-43-301, not vendored")
+  }
+}
+
+decision appeal-decision: "Appeal to the court of appeals?" by applicant cite "Rule Change 2025(02), C.A.R. 3.1(a)"
+{
+  note "Appeals from orders and awards of the Industrial Claim Appeals Office are taken in the manner and within the time prescribed by statute; self-represented litigants in unemployment cases may use JDF 664 to file a combined notice of appeal and opening brief (Rule Change 2025(02), C.A.R. 3.1(a)). The statute (C.R.S. § 8-43-307) is not vendored: the time to appeal is a hole. The notice sets out a C.A.R. 32 caption with the agency case number, the nature of the case, the order appealed and the basis of jurisdiction, whether it resolved all issues and is final, the date of the certificate of mailing of the final order, an advisory listing of the issues, counsel, an appendix with the order and the agency's findings, and a certificate of service on the panel in workers' compensation cases and on every other party before the agency (C.A.R. 3.1(d), relettered (e) by Rule Change 2025(02), which leaves its items unchanged). The compilation's annotation to C.A.R. 3.1 reports that the procedural requirements for review of the commission's orders are mandatory and jurisdictional (Hildreth v. Dir. of Div. of Labor, 30 Colo. App. 415, 497 P.2d 350 (1972))."
+  edge-appeal-decision-none "No appeal: the panel's order stands" -> panel-order-final {
+    authority cite "Rule Change 2025(02), C.A.R. 3.1(a)"
+  }
+  edge-appeal-decision-taken "Notice of appeal filed" -> appeal-briefing {
+    event NoticeOfAppealFiled()
+    authority cite "Rule Change 2025(02), C.A.R. 3.1(a)"
+  }
+}
+
+state appeal-briefing: "Record and briefs in the court of appeals" by applicant cite "Rule Change 2025(02), C.A.R. 3.1(c)"
+{
+  note "The agency arranges the record of the proceedings in chronological order, properly paginated and fully indexed (Rule Change 2025(02), C.A.R. 3.1(b)). The appellant files an opening brief 14 days after the record is filed; the appellee may file an answer brief within 14 days after service of the opening brief; the appellant may reply within 7 days after service of the answer brief; where a self-represented litigant files a combined notice and opening brief, the answer brief is due 14 days after the record is filed; briefs comply with C.A.R. 28 and 32 (Rule Change 2025(02), C.A.R. 3.1(c)). These appeals have precedence over any civil cause of a different nature in the court of appeals and are determined as other appeals (Rule Change 2025(02), C.A.R. 3.1(d))."
+  edge-appeal-briefing-decided "Court of appeals decides" -> appeal-decided {
+    authority cite "Rule Change 2025(02), C.A.R. 3.1(d)"
+  }
+}
+
+terminal alj-order-final: "Final: the ALJ's order stands" outcome [final] cite ?("C.R.S. § 8-43-301, not vendored")
+terminal panel-order-final: "Final: the panel's order stands" outcome [final] cite "Rule Change 2025(02), C.A.R. 3.1(a)"
+
+terminal appeal-decided: "Decided by the court of appeals" outcome [appeal] cite "Rule Change 2024(11), C.A.R. 41(b)"
+{
+  note "In workers' compensation and unemployment insurance cases the court of appeals mandate issues no earlier than 28 days after entry of the judgment, or 14 days after the court denies a timely petition for rehearing, whichever is later (Rule Change 2024(11), C.A.R. 41(b)(1)(B)). A petition for writ of certiorari is filed within 28 days after the court of appeals opinion if no petition for rehearing is filed, or within 14 days after rehearing is denied (C.A.R. 52(b)(2)); review on certiorari is lit/co-supreme-court's, where merits briefs in workers' compensation cases are due 14 and 7 days (C.A.R. 57)."
+}

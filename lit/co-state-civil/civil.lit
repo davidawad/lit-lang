@@ -1,5 +1,7 @@
 module co-district-court-civil.civil
 
+import co-state-rules.{ JudgmentEntered, NoticeOfAppealFiled }
+
 // Civil actions in the Colorado district courts, from the defending side's
 // view of outcomes. Every period below is stated in a note, not counted:
 // computation is C.R.C.P. 6(a), with Colorado's legal holidays, for which
@@ -84,6 +86,7 @@ decision post-trial: "Post-trial motions decided" by court cite "C.R.C.P. 59(a)"
 {
   note "Within 14 days of entry of judgment, or such greater time as the court allows on a request made within that period, a party may move for a new trial, judgment notwithstanding the verdict, amendment of findings or amendment of judgment (C.R.C.P. 59(a)). On a motion supported by affidavit the opposing party has 21 days after service of the affidavit to file opposing affidavits (C.R.C.P. 59(d)). The court determines a post-trial motion within 63 days (9 weeks) of its filing; one not decided by then is deemed denied for all purposes, including C.A.R. 4(a) (C.R.C.P. 59(j))."
   edge-post-trial-judgment "Motions resolved or none filed" -> judgment-entered {
+    event JudgmentEntered()
     authority cite "C.R.C.P. 58(a)"
   }
 }
@@ -97,13 +100,16 @@ state judgment-entered: "Final judgment entered" by office cite "C.R.C.P. 58(a)"
 decision appeal-decision: "Notice of appeal within 49 days of entry?" by applicant cite "C.A.R. 4(a)"
 {
   note "The notice of appeal is filed with the appellate court, with an advisory copy served on the lower court, within 49 days after entry of the judgment; once a timely notice is filed any other party may file a notice within 14 days after it. A timely C.R.C.P. 59 motion terminates the running of the time for all parties, which runs from the order disposing of the last such motion or its deemed denial under C.R.C.P. 59(j). On a showing of excusable neglect the appellate court may extend the time by not more than 35 days. If notice of entry is transmitted by mail or E-Service, the time runs from the mailing or E-Service (C.A.R. 4(a))."
-  edge-appeal-decision-taken "Notice filed" -> appeal-taken { authority cite "C.A.R. 3(a)" }
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken {
+    event NoticeOfAppealFiled()
+    authority cite "C.A.R. 3(a)"
+  }
   edge-appeal-decision-none "No notice filed" -> final-no-appeal { authority cite "C.A.R. 4(a)" }
 }
 
 terminal appeal-taken: "Appeal taken: continue in the Colorado appellate package" outcome [appeal] cite "C.A.R. 3(a)"
 {
-  note "Hand-off to lit/co-state-appellate (co-appellate-civil)."
+  note "Hand-off to the Colorado Court of Appeals: lit/co-state-appellate (co-appellate-civil)."
 }
 
 terminal final-no-appeal: "Final: no appeal" outcome [final] cite "C.A.R. 4(a)"

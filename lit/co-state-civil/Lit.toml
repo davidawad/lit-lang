@@ -11,9 +11,10 @@
 # Computation of time is C.R.C.P. 6(a), with Colorado's legal holidays,
 # for which lit/core has no counting rule, so the periods are stated in
 # notes, not encoded as counted deadlines. An appeal hands off to
-# lit/co-state-appellate (C.A.R., sources/co-state-appellate). The package
-# is in force from the latest vendored C.R.C.P. order, Rule Change 2026(11)
-# of April 23, 2026.
+# lit/co-state-appellate (C.A.R., sources/co-state-appellate); the trigger
+# events the graph binds are lit/co-rules'. The package is in force from
+# the latest vendored C.R.C.P. order, Rule Change 2026(11) of April 23,
+# 2026.
 [package]
 name = "co-district-court-civil"
 version = "0.1.0"
@@ -22,6 +23,7 @@ pack_id = "co-district-court-civil"
 forum = "co-state-civil"
 authority = "StateRule"
 jurisdiction_id = "colorado"
+family = "state-civil"
 title = "Colorado District Courts, civil"
 description = "Civil actions in the Colorado district courts under the Colorado Rules of Civil Procedure, as far as the vendored text states: commencement and the time limit for service, the time to answer and its alteration by a Rule 12 motion, motion briefing under the statewide practice standards, default, summary judgment, the jury demand, trial and post-trial relief, entry of judgment, relief from judgment, and the notice of appeal, which hands off to the Colorado appellate package (lit/co-state-appellate)."
 in_force = "2026-04-23"
@@ -36,6 +38,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+co-state-rules = { version = "^0.1.0", path = "../co-rules" }
 
 [sources.crcp]
 title = "Colorado Rules of Civil Procedure, Colorado Revised Statutes 2023 court-rules volume (OLLS)"

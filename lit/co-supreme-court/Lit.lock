@@ -1,0 +1,29 @@
+version = 2
+
+[[package]]
+name = "co-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "co-supreme-court-civil"
+version = "0.1.0"
+language = 1
+source = "sha256:f9fe9b1173179ce2fbcd22e76bcd4494169a0117d2f2f1b1c69a9d05529fba94"
+semantic = "sha256:372e8c7b1e46722e33df97fda5807ecce0fe40d5d88f956e01c0747583dc512f"
+texts = [
+    "car sources/co-state-appellate/co-car-sectioned.txt sha256:269e8ef5902216c04b7d7dd58312fbb4d1702b54b57f6e5691ed8676314c23bc",
+    "co-rc-2024-11 sources/co-state-appellate/co-rule-change-2024-11-sectioned.txt sha256:75bb2f106223c1ba97aa2f89e6c4450478a6fdf1996731f98f5933f1a26ebbce",
+    "co-rc-2026-05 sources/co-state-appellate/co-rule-change-2026-05-sectioned.txt sha256:6195206cfaa223a1e2a2aee33d17fbc46b509cb9fcbae81ddac8639370c6c147",
+]
+dependencies = [
+    "co-state-rules 0.1.0",
+    "core 1.0.0",
+]
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []

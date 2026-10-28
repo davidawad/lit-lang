@@ -52,3 +52,17 @@
 - Upstream: https://www.coloradojudicial.gov/sites/default/files/2026-03/Rule%20Change%202026%2805%29.pdf, retrieved 2026-10-28, as recorded on the `co-state-appellate/co-rule-change-2026-05.txt` entry this file is derived from.
 - Edition: as the extract, adopted March 26, 2026, effective immediately.
 - Sectioned sha256 6195206cfaa223a1e2a2aee33d17fbc46b509cb9fcbae81ddac8639370c6c147 (the `path_sha256` pinned by `lit/co-state-appellate/Lit.toml`).
+
+### `co-state-appellate/co-rule-change-2025-02-sectioned.txt` — Rule Change 2025(02), updated rule text sectioned
+
+- Derived in the pod (lg-f3q8.92) from `co-state-appellate/co-rule-change-2025-02.txt` (extract sha256 e381ff1a0cb67f263f6bf3e10916a197702f8cbbbfc31ef67040bb5846d61c98); nothing fetched. The order shows its edits first and then the updated rule text; one `## Rule Change 2025(02) C.A.R. <n>` line is inserted right before each rule heading of the updated text only (C.A.R. 3.1, 3.4, 8.1, 9, 25, 27, 30, 39.1, 52 and 53; 10 markers). Rule text was not edited: deleting the marker lines (`sed '/^## Rule Change /d'`) restores the extract byte for byte.
+- Upstream: https://www.coloradojudicial.gov/sites/default/files/2025-01/Rule%20Change%202025%2802%29.pdf, retrieved 2026-10-28, as recorded on the `co-state-appellate/co-rule-change-2025-02.txt` entry this file is derived from.
+- Edition: as the extract, adopted January 9, 2025, effective immediately. Its C.A.R. 52 and 53 text is superseded in part by Rule Change 2025(11) and 2026(05).
+- Sectioned sha256 408b4529092d0489b165d9470142c61fa9138a60212f89cfdbd367e21c167a0d (the `path_sha256` pinned by `lit/co-industrial-claim-appeals-office/Lit.toml`).
+
+### `co-state-appellate/co-rule-change-2024-11-sectioned.txt` — Rule Change 2024(11), updated rule text sectioned
+
+- Derived in the pod (lg-f3q8.92) from `co-state-appellate/co-rule-change-2024-11.txt` (extract sha256 c0db7ff2acead6b88ca25fa8dfbe26370357acc00c63f8a7600fd1c988bccc41); nothing fetched. The order shows its edits first and then the updated rule text; one `## Rule Change 2024(11) C.A.R. <n>` line is inserted right before each rule heading of the updated text only (C.A.R. 2, 3.3, 3.4, 4.1, 5, 12, 21, 29, 32, 40 and 41; 11 markers). Rule text was not edited: deleting the marker lines (`sed '/^## Rule Change /d'`) restores the extract byte for byte.
+- Upstream: https://www.coloradojudicial.gov/sites/default/files/2024-05/Rule%20Change%202024%2811%29.pdf, retrieved 2026-10-28, as recorded on the `co-state-appellate/co-rule-change-2024-11.txt` entry this file is derived from.
+- Edition: as the extract, adopted May 16, 2024, effective immediately.
+- Sectioned sha256 75bb2f106223c1ba97aa2f89e6c4450478a6fdf1996731f98f5933f1a26ebbce (the `path_sha256` pinned by `lit/co-supreme-court/Lit.toml`).

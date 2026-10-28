@@ -1,0 +1,75 @@
+# Review on certiorari in the Colorado Supreme Court of a civil judgment of
+# the court of appeals (lg-u561.5), from the petitioner's side, from
+# lit/co-state-appellate: the petition and its time, the grant or denial,
+# merits briefing, decision, rehearing and the supreme court mandate, under
+# the Colorado Appellate Rules: Chapter 32 of the 2023 Colorado Revised
+# Statutes court-rules volume (OLLS, sources/co-state-appellate) with the
+# Supreme Court's later Rule Change orders applied on top in date order.
+# Of the rules cited here, Rule Change 2024(11) (May 16, 2024) restates
+# C.A.R. 41(b)(2) and Rule Change 2026(05) (March 26, 2026) C.A.R.
+# 40(c)(3), 52(b)(1) and 54(b); each is its own source and the values it
+# states cite it. Rule Change 2025(02) and 2025(11) change only C.A.R.
+# 53(d) and (h) of the rules cited, which are not stated; C.A.R. 34, 35,
+# 36, 40(a), 49, 53(a)-(c), (f), 54(a), 55, 56 and 57 are as the
+# compilation states them. Computation of time is C.A.R. 26(a), with the
+# legal holidays of C.A.R. 26(b), for which lit/core has no counting rule,
+# so the periods are stated in notes, not encoded as counted deadlines.
+# Certiorari before judgment (C.A.R. 50), review of district court
+# appellate judgments, direct appeals and original proceedings (C.A.R. 21)
+# are not modeled. The trigger events are lit/co-rules'. The package is in
+# force from Rule Change 2026(05).
+[package]
+name = "co-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "co-supreme-court-civil"
+forum = "co-supreme-court"
+authority = "StateRule"
+jurisdiction_id = "colorado"
+family = "state-civil"
+title = "Colorado Supreme Court, certiorari review of court of appeals civil judgments"
+description = "Review on certiorari of a Colorado Court of Appeals civil judgment under C.A.R. 49 to 57, as far as the vendored text states: the petition and its time, cross-petitions, opposition briefs and word limits, the grant or denial of the writ, merits briefing, decision, rehearing and the supreme court mandate."
+in_force = "2026-03-26"
+known_at = "2026-10-28"
+unknown_before = "2026-03-26"
+jurisdiction = "Colorado Supreme Court (certiorari, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+co-state-rules = { version = "^0.1.0", path = "../co-rules" }
+
+[sources.car]
+title = "Colorado Appellate Rules, Colorado Revised Statutes 2023 court-rules volume, Chapter 32 (OLLS)"
+url = "https://content.leg.colorado.gov/sites/default/files/images/olls/crs2023-court-rules.pdf"
+path = "sources/co-state-appellate/co-car-sectioned.txt"
+path_sha256 = "269e8ef5902216c04b7d7dd58312fbb4d1702b54b57f6e5691ed8676314c23bc"
+sha256 = "07a0129954b015ff26ed4774e5979408d05631a78fff9967ee0a56f5622347e7"
+as_of = "2023-07-20"
+cite_prefixes = ["C.A.R."]
+section_heading = "C.A.R. {n}"
+
+[sources.co-rc-2024-11]
+title = "Colorado Supreme Court Rule Change 2024(11), C.A.R. Rules 2, 3.3, 3.4, 4.1, 5, 12, 21, 29, 32, 40 and 41 (May 16, 2024, effective immediately)"
+url = "https://www.coloradojudicial.gov/sites/default/files/2024-05/Rule%20Change%202024%2811%29.pdf"
+path = "sources/co-state-appellate/co-rule-change-2024-11-sectioned.txt"
+path_sha256 = "75bb2f106223c1ba97aa2f89e6c4450478a6fdf1996731f98f5933f1a26ebbce"
+sha256 = "c2601ffab7a21d95558b9436991d37aa35e63d2c521b94637557d25b201d553a"
+as_of = "2024-05-16"
+cite_prefixes = ["Rule Change 2024(11), C.A.R."]
+section_heading = "Rule Change 2024(11) C.A.R. {n}"
+
+[sources.co-rc-2026-05]
+title = "Colorado Supreme Court Rule Change 2026(05), C.A.R. Rules 3.5, 10, 21, 40, 52 and 54 (March 26, 2026, effective immediately)"
+url = "https://www.coloradojudicial.gov/sites/default/files/2026-03/Rule%20Change%202026%2805%29.pdf"
+path = "sources/co-state-appellate/co-rule-change-2026-05-sectioned.txt"
+path_sha256 = "6195206cfaa223a1e2a2aee33d17fbc46b509cb9fcbae81ddac8639370c6c147"
+sha256 = "9cf97a0d84736cbbfd8265b81447813ce3736b4deeb278c83ae8f090d3fd76df"
+as_of = "2026-03-26"
+cite_prefixes = ["Rule Change 2026(05), C.A.R."]
+section_heading = "Rule Change 2026(05) C.A.R. {n}"

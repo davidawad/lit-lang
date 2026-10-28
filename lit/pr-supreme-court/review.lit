@@ -1,0 +1,79 @@
+module pr-supreme-court.review
+
+import pr-state-rules.{ DecisionFiled, ReviewPetitionFiled }
+
+// Certiorari in the Supreme Court of Puerto Rico from a civil judgment or
+// resolution of the Court of Appeals, from the petitioner's side. Every
+// period below is stated in a note, not counted: lit/core has no Puerto
+// Rico counting rule. The sources are in Spanish; the notes paraphrase them
+// in English. The Reglamento del Tribunal Supremo (4 LPRA Ap. XXI-B) and the
+// Ley de la Judicatura de 2003 are not vendored: what they alone govern
+// (the petition's form and length, the grant standard, merits briefing,
+// argument and reconsideration in the Supreme Court) is a hole. The earlier
+// outline named no leading decisions. Direct appeals, original proceedings
+// and the certification writ of P.R. R. Civ. P. 52.2(d) are not modeled.
+start petition
+
+decision petition: "Petition for certiorari?" by applicant cite "P.R. R. Civ. P. 52.2(b)"
+{
+  note "A petition for certiorari to the Supreme Court to review, in its discretion, a judgment or resolution of the Court of Appeals on an appeal is filed within the jurisdictional term of thirty days from the archivo en autos of a copy of the notice of the judgment or resolution; a petition to review the Court of Appeals' other final judgments or resolutions in discretionary recourses, or any interlocutory resolution of it, within thirty days from notice, a term of strict compliance extendable only for special circumstances stated in the petition (P.R. R. Civ. P. 52.2(b)). Where the Commonwealth, a municipality, their officers or a non-corporate instrumentality is a party, certiorari to review a Court of Appeals judgment or resolution on an appeal is filed within the jurisdictional term of sixty days; a term counted from the archivo en autos runs from the mailing of the notice where that date differs (P.R. R. Civ. P. 52.2(c)). A timely motion for reconsideration in the Court of Appeals interrupts the term, which runs anew from the archivo en autos of the notice of the ruling finally resolving it (P.R. R. Civ. P. 52.2(f); Regl. T.A. R. 84(A)), and the interruption benefits every other party (P.R. R. Civ. P. 52.2(h)). The petition's form, contents, length and fee are in the Reglamento del Tribunal Supremo, which is not vendored."
+  edge-petition-none "No petition: the Court of Appeals' decision stands" -> review-not-sought {
+    authority cite "Regl. T.A. R. 84(E)"
+  }
+  edge-petition-filed "Petition for certiorari filed" -> review-decision {
+    event ReviewPetitionFiled()
+    authority cite "P.R. R. Civ. P. 52.2(b)"
+  }
+}
+
+decision review-decision: "Writ granted or denied" by court cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
+{
+  note "Review by certiorari is discretionary (P.R. R. Civ. P. 52.2(b)). Filing the petition does not stay proceedings in the court below unless the Supreme Court orders otherwise on its own motion or a party's request (P.R. R. Civ. P. 52.3(b)). The grant standard and the procedure on the petition are in the Reglamento del Tribunal Supremo, which is not vendored: a hole."
+  edge-review-decision-denied "Writ denied" -> review-denied {
+    authority cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
+  }
+  edge-review-decision-granted "Writ granted" -> merits {
+    authority cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
+  }
+}
+
+state merits: "Merits briefing and submission" by applicant cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
+{
+  note "Merits briefing periods, form and length limits, and whether argument is heard, are in the Reglamento del Tribunal Supremo, which is not vendored: holes."
+  edge-merits-decision "Submitted for decision" -> decision {
+    authority cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
+  }
+}
+
+decision decision: "Court decides" by court cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
+{
+  note "The Supreme Court's decision on the merits. Reconsideration in the Supreme Court and the issuance of its mandate are in the Reglamento del Tribunal Supremo, which is not vendored: holes."
+  edge-decision-affirmed "Affirmed" -> affirmed {
+    event DecisionFiled()
+    authority cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
+  }
+  edge-decision-reversed "Reversed, modified or remanded" -> reversed {
+    event DecisionFiled()
+    authority cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
+  }
+}
+
+terminal review-not-sought: "Review not sought: the Court of Appeals' decision is final" outcome [final] cite "Regl. T.A. R. 84(E)"
+{
+  note "The Court of Appeals' clerk sends the mandate to the Court of First Instance ten business days after its decision becomes final and firm, or earlier if that court so orders for cause (Regl. T.A. R. 84(E))."
+}
+
+terminal review-denied: "Writ denied" outcome [final, loss] cite ?("Reglamento del Tribunal Supremo de Puerto Rico, 4 LPRA Ap. XXI-B: not vendored")
+{
+  note "Outcome from the petitioner's side. Denial leaves the Court of Appeals' decision in place. Review in the Supreme Court of the United States (28 U.S.C. § 1258) is outside this package."
+}
+
+terminal affirmed: "Affirmed" outcome [final, loss] cite "P.R. R. Civ. P. 44.1(c)"
+{
+  note "Outcome from the petitioner's side. The party in whose favor the appellate court rules files in the Court of First Instance division that decided the case, and serves, a sworn memorandum of the costs incurred in the Court of Appeals and the Supreme Court within the jurisdictional term of ten days from the return of the mandate (P.R. R. Civ. P. 44.1(c))."
+}
+
+terminal reversed: "Reversed, modified or remanded" outcome [final, win] cite "P.R. R. Civ. P. 44.1(c)"
+{
+  note "Outcome from the petitioner's side. Where the judgment of the Court of First Instance is reversed, the party in whose favor judgment is entered files its memorandum of costs, including those in the Court of Appeals and the Supreme Court, within ten days from the return of the mandate (P.R. R. Civ. P. 44.1(c))."
+}

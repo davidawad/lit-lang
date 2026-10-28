@@ -1,0 +1,26 @@
+# The Puerto Rico base library (lg-u561.5): the trigger events the Puerto
+# Rico court packages route their graphs on (lit/pr-supreme-court). It
+# declares no period: the rules' periods are stated in the court packages'
+# notes. No procedure of its own.
+[package]
+name = "pr-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "pr-state-rules"
+forum = "pr-state-rules"
+authority = "StateRule"
+jurisdiction_id = "puerto-rico"
+title = "Puerto Rico court rules (base library)"
+description = "The rule layer Puerto Rico's court packages share: the trigger events their graphs route on. No procedure of its own."
+in_force = "2025-12-19"
+known_at = "2026-10-28"
+unknown_before = "2025-12-19"
+jurisdiction = "Commonwealth of Puerto Rico courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

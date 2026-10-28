@@ -1,0 +1,142 @@
+module al-appellate-courts-civil-appeals.appeal
+
+/// A principal brief in a case in which the death penalty has not been
+/// imposed: at most 14,000 words, counted from the statement of the case,
+/// the cover, tables, statement of jurisdiction, certificates, signature
+/// block and appendices excluded (Ala. R. App. P. 28(j)(1)). The pro se
+/// page limits (70 pages; 35 for a reply) and the death-penalty limits of
+/// Rule 28(j)(2) are not encoded.
+limit principal-brief { words <= 14_000 cite "Ala. R. App. P. 28(j)" } cite "Ala. R. App. P. 28(j)"
+/// A reply brief: at most 7,000 words (Ala. R. App. P. 28(j)(1)).
+limit reply-brief { words <= 7_000 cite "Ala. R. App. P. 28(j)" } cite "Ala. R. App. P. 28(j)"
+/// An application for rehearing, and a brief in support of or in
+/// opposition to it: at most 3,000 words each, except in a death-penalty
+/// case (Ala. R. App. P. 28(j)(5), 40(f), (g)). The 15-page pro se limit
+/// is not encoded.
+limit rehearing-brief { words <= 3_000 cite "Ala. R. App. P. 40(g)" } cite "Ala. R. App. P. 40(g)"
+
+/// A petition for a writ of certiorari: at most 3,000 words, except in
+/// capital cases (Ala. R. App. P. 39(d)). The 15-page pro se limit is not
+/// encoded.
+limit certiorari-petition {
+  words <= 3_000 cite "Ala. R. App. P. 39(d)"
+} cite "Ala. R. App. P. 39(d)"
+
+/// The appellant's principal brief is filed (Ala. R. App. P. 28(a)).
+event AppellantBriefFiled() paper principal-brief
+/// The appellee's principal brief is filed (Ala. R. App. P. 28(b)).
+event AppelleeBriefFiled() paper principal-brief
+/// The appellant's reply brief is filed (Ala. R. App. P. 28(c)).
+event ReplyBriefFiled() paper reply-brief
+/// An application for rehearing is filed with its supporting brief (Ala.
+/// R. App. P. 40(a)(1)).
+event RehearingApplicationFiled() paper rehearing-brief
+/// A brief opposing an application for rehearing is filed (Ala. R. App.
+/// P. 40(f)).
+event RehearingOppositionFiled() paper rehearing-brief
+/// A petition for a writ of certiorari is filed in the Supreme Court (Ala.
+/// R. App. P. 39(b)(3)).
+event CertiorariPetitionFiled() paper certiorari-petition
+
+start threshold
+
+decision threshold: "Appealable judgment or order?" by applicant cite "Ala. R. App. P. 3(a)"
+{
+  note "In civil cases an appeal permitted by law as of right is taken by filing a notice of appeal with the clerk of the trial court within the time Rule 4 allows; an appeal by permission from an interlocutory order is taken under Rule 5, which is not vendored (Ala. R. App. P. 3(a)(1)). The rules do not extend or limit the appellate courts' jurisdiction as fixed by constitution or law (Ala. R. App. P. 1). No leading decision is named."
+  edge-threshold-no "Not appealable" -> dismissed-jurisdiction {
+    authority cite "Ala. R. App. P. 1"
+  }
+  edge-threshold-yes "Appealable" -> notice { authority cite "Ala. R. App. P. 3(a)" }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: no appellate jurisdiction" outcome [loss, dismissal, jurisdictional] cite "Ala. R. App. P. 1"
+{
+  note "Outcome from the appellant's side."
+}
+
+decision notice: "Notice of appeal within 42 days of entry?" by applicant cite "Ala. R. App. P. 4(a)"
+{
+  note "The notice of appeal is filed with the clerk of the trial court within 42 days (6 weeks) of the date of entry of the judgment or order appealed from, or within an extension under Ala. R. Civ. P. 77(d); an appeal from an interlocutory injunction or receivership order, an order on the right to public office, a judgment validating public obligations, or a final juvenile court order is taken within 14 days (2 weeks) (Ala. R. App. P. 4(a)(1)), and an appeal from an order granting or denying a motion to compel arbitration within 42 days (Ala. R. App. P. 4(d)). Another party may appeal within 14 days of the first notice or within the time otherwise prescribed, whichever is later (Ala. R. App. P. 4(a)(2)). A post-judgment motion under Ala. R. Civ. P. 50, 52, 55 or 59 suspends the time, which runs in full from the entry of the order granting or denying it, or from its denial by operation of law under Rule 59.1 (Ala. R. App. P. 4(a)(3)); a notice filed before the motions are disposed of is held in abeyance until the last of them is (Ala. R. App. P. 4(a)(5)). The notice names each party taking the appeal and each adverse party, designates the judgment or order and names the court to which the appeal is taken; naming the wrong appellate court is a clerical mistake to be corrected (Ala. R. App. P. 3(c)). The docketing statement accompanies the notice (Ala. R. App. P. 3(e)). A pro se inmate's notice is timely if deposited in the institution's mail system on or before the last day (Ala. R. App. P. 4(c)). No leading decision is named."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "Ala. R. App. P. 4(a)" }
+  edge-notice-timely "Timely notice" -> record { authority cite "Ala. R. App. P. 10(b)" }
+}
+
+terminal dismissed-untimely: "Dismissed: untimely notice" outcome [loss, dismissal] cite "Ala. R. App. P. 4(a)"
+{
+  note "Outcome from the appellant's side."
+}
+
+state record: "Record on appeal assembled" by office cite "Ala. R. App. P. 10(b)"
+{
+  note "In a civil case the record on appeal is the clerk's record and the reporter's transcript (Ala. R. App. P. 10(b)). Within 7 days (1 week) after filing the notice of appeal the appellant files and serves a written designation of the clerk's record, and the appellee may designate additional parts within 7 days after service of it (Ala. R. App. P. 10(b)(1)). Within 7 days after filing the notice the appellant pays the court reporter the estimated cost of the transcript and files Part I of Form 1A, and the appellee may order additional parts within 7 days after receipt of that order (Ala. R. App. P. 10(b)(2)). Where no report was made or a transcript is unavailable, the appellant serves a statement of the evidence within 28 days (4 weeks) after filing the notice; the appellee may object within 14 days after service; the statement is filed with the trial court within 21 days after service if no objection is made, or within 7 days after service of the objections; and the trial court rules within 21 days after the filing (Ala. R. App. P. 10(d)). On a motion to supplement or correct the record, the trial court rules within 14 days, failing which the motion is denied, and a dissatisfied party may seek relief in the appellate court within 7 days after (Ala. R. App. P. 10(f)). The transcript's completion and transmission times are Rule 11, not vendored."
+  edge-record-brief "Record filed" -> briefing { authority cite "Ala. R. App. P. 28(a)" }
+}
+
+state briefing: "Briefs filed" by applicant cite "Ala. R. App. P. 28(a)"
+{
+  note "The appellant's brief contains the statement regarding oral argument, tables, statement of jurisdiction, statement of the case and of the issues, statement of the facts, standard of review, summary of the argument, argument and conclusion (Ala. R. App. P. 28(a)); the appellant may reply (Ala. R. App. P. 28(c)). A principal brief may not exceed 14,000 words and a reply 7,000 words, except in a death-penalty case (16,000 and 8,000); a motion to exceed them shows good cause and is presented at least seven days before the brief is due (Ala. R. App. P. 28(j)). The briefing schedule is Rule 31, not vendored."
+  edge-briefing-argue "Briefing complete" -> argument { authority cite "Ala. R. App. P. 34(a)" }
+}
+
+state argument: "Oral argument or submission" by court cite "Ala. R. App. P. 34(a)"
+{
+  note "Oral argument is allowed when the court or panel determines from the briefs and record that it is desirable, and is not allowed if they unanimously agree that the appeal is frivolous, the dispositive issues were recently authoritatively decided, or the briefs and record adequately present the case; a party who wants argument puts \"ORAL ARGUMENT REQUESTED\" on its brief's cover (Ala. R. App. P. 34(a)). Each side has 30 minutes unless the court orders otherwise (Ala. R. App. P. 34(b))."
+  edge-argument-decide "Decision" -> decision { authority cite "Ala. R. App. P. 41(a)" }
+}
+
+state decision: "Decision issued; judgment entered" by court cite "Ala. R. App. P. 41(a)"
+{
+  note "The court affirms, reverses or remands; its certificate of judgment issues 18 days after the entry of judgment unless the time is shortened or enlarged by order (Ala. R. App. P. 41(a)). No leading decision is named."
+  edge-decision-issued "Opinion or judgment issued" -> rehearing-decision {
+    authority cite "Ala. R. App. P. 40(c)"
+  }
+}
+
+decision rehearing-decision: "Rehearing sought?" by applicant cite "Ala. R. App. P. 40(c)"
+{
+  note "A party who has not prevailed may apply for rehearing, filing a supporting brief with the application, only if it filed a brief on original submission (Ala. R. App. P. 40(a)). The application and brief are filed within 14 days (2 weeks) of the date the decision is issued (Ala. R. App. P. 40(c)); each is limited to 3,000 words except in death-penalty cases (Ala. R. App. P. 40(g)). In a civil case, rehearing in the Court of Civil Appeals is not a prerequisite to certiorari review (Ala. R. App. P. 40(d)(2))."
+  edge-rehearing-decision-none "No application" -> further-review {
+    authority cite "Ala. R. App. P. 39(b)"
+  }
+  edge-rehearing-decision-sought "Application filed" -> rehearing-order {
+    authority cite "Ala. R. App. P. 40(c)"
+  }
+}
+
+state rehearing-order: "Rehearing decided" by court cite "Ala. R. App. P. 40(f)"
+{
+  note "A brief opposing the application is optional and is filed within 14 days (2 weeks) after the application, limited to 3,000 words; no reply is permitted (Ala. R. App. P. 40(f)). A timely application stays the certificate of judgment until its disposition; in a court of appeals, if it is denied, the certificate issues 18 days after the order denying it, and in the Supreme Court immediately, unless the court substantially modified its decision on a first application (Ala. R. App. P. 41(a)(1), (2)). A second application is considered only if the first produced a reversal or substantial modification (Ala. R. App. P. 40(a)(3))."
+  edge-rehearing-order-decided "Rehearing decided" -> further-review {
+    authority cite "Ala. R. App. P. 39(b)"
+  }
+}
+
+decision further-review: "Certiorari to the Supreme Court sought?" by applicant cite "Ala. R. App. P. 39(b)"
+{
+  note "Certiorari review of a Court of Civil Appeals decision is discretionary and granted only for special and important reasons, on the grounds Rule 39(a)(1) lists (Ala. R. App. P. 39(a)). The petition is filed with the clerk of the Supreme Court within 14 days (2 weeks) after the release of the Court of Civil Appeals decision, or of its decision on an application for rehearing (Ala. R. App. P. 39(b)(3)), and is limited to 3,000 words (Ala. R. App. P. 39(d)). A timely petition stays the court of appeals' certificate of judgment until the Supreme Court's final disposition (Ala. R. App. P. 41(b))."
+  edge-further-review-none "No petition" -> final-decision {
+    authority cite "Ala. R. App. P. 41(a)"
+  }
+  edge-further-review-petition "Petition filed" -> review-decided {
+    authority cite "Ala. R. App. P. 39(f)"
+  }
+}
+
+state review-decided: "Petition decided" by court cite "Ala. R. App. P. 39(f)"
+{
+  note "If the Supreme Court on preliminary consideration finds a probability of merit, it orders the writ to issue and the record transmitted (Ala. R. App. P. 39(f)). The petitioner may then file a brief or a waiver within 28 days (4 weeks) after the clerk's notice that the writ has issued, the respondent within 21 days (3 weeks), and the petitioner a reply within 14 days (2 weeks) of the respondent's brief (Ala. R. App. P. 39(g)). On a denial, the court of appeals' certificate of judgment issues immediately (Ala. R. App. P. 41(b))."
+  edge-review-decided-denied "Denied" -> review-denied { authority cite "Ala. R. App. P. 41(b)" }
+  edge-review-decided-granted "Granted" -> review-granted { authority cite "Ala. R. App. P. 39(f)" }
+}
+
+terminal final-decision: "Final: decision stands" outcome [final] cite "Ala. R. App. P. 41(a)"
+{
+  note "The certificate of judgment issues 18 days after entry of judgment or of the order denying rehearing (Ala. R. App. P. 41(a))."
+}
+
+terminal review-denied: "Certiorari denied" outcome [final] cite "Ala. R. App. P. 41(b)"
+
+terminal review-granted: "Certiorari granted" outcome [neutral] cite "Ala. R. App. P. 39(f)"
+{
+  note "The merits of certiorari review are not modeled."
+}

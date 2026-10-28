@@ -1,0 +1,44 @@
+# A civil appeal from an Alabama circuit court to the Supreme Court of
+# Alabama or the Court of Civil Appeals under the Alabama Rules of
+# Appellate Procedure, as far as the vendored rules state (sources/
+# al-state-appellate: Rules 1, 3, 4, 10, 28, 34, 39, 40 and 41, current
+# through the amendments effective October 1, 2025). Computation of time
+# (Rule 26) and the briefing schedule (Rule 31) are not vendored, and core
+# has no Alabama holiday calendar, so the rules' periods are stated in
+# notes, not encoded as counted deadlines; the word limits are encoded as
+# filing limits. Rule 34 lacks only the Court Comment adopted in April
+# 2026, effective June 1, 2026 (no rule text change); the 2026 amendments
+# to Rules 29, 53 and 54 are not vendored and are not cited. Which court
+# hears an appeal is fixed by statute, not vendored. Review in the
+# Supreme Court of the United States is not modeled. A civil action in the
+# circuit court is lit/al-state-civil.
+[package]
+name = "al-appellate-courts-civil-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "al-appellate-courts-civil-appeals"
+forum = "al-state-appellate"
+authority = "StateRule"
+title = "Supreme Court of Alabama and Alabama Court of Civil Appeals, civil appeals"
+description = "A civil appeal from an Alabama circuit court under the Alabama Rules of Appellate Procedure, as far as the vendored text states: the notice of appeal and its timeliness, designation of the record and the transcript order, brief word limits, oral argument, rehearing, certiorari review in the Supreme Court of a Court of Civil Appeals decision, and the certificate of judgment."
+in_force = "2025-10-01"
+known_at = "2026-10-28"
+unknown_before = "2025-10-01"
+jurisdiction = "Supreme Court of Alabama and Alabama Court of Civil Appeals (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ala-r-app-p]
+title = "Alabama Rules of Appellate Procedure, Rules 1, 3, 4, 10, 28, 34, 39, 40 and 41 (per-rule PDFs, current through the amendments effective October 1, 2025)"
+url = "https://judicial.alabama.gov/library/AppellateProcedure"
+path = "sources/al-state-appellate/rules-cited.txt"
+path_sha256 = "27c571a08b388a5e8bebbdb95de13e325d6855381e8060dfbc4c970346535bd9"
+as_of = "2025-10-01"
+cite_prefixes = ["Ala. R. App. P."]
+section_heading = "Ala. R. App. P. {n}"

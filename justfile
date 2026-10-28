@@ -346,20 +346,16 @@ lit_build_dir := "target/lit-build"
 lit-sync: merge-drivers editor-queries
     #!/usr/bin/env bash
     set -euo pipefail
-    shopt -s globstar
     out="{{lit_build_dir}}"
     lit=(cargo run -q -p litigate-cli -- --format human)
-    for lockfile in lit/*/Lit.lock outlines/**/Lit.lock docs/litigate/examples/change/*/Lit.lock \
-      docs/litigate/examples/timelines/Lit.lock docs/litigate/examples/timelines/*/Lit.lock \
-      docs/litigate/validation/Lit.lock docs/litigate/validation/cases/replay/Lit.lock \
-      docs/litigate/validation/cases/reopen/Lit.lock docs/litigate/validation/cases/precedents/*/Lit.lock \
-      docs/litigate/validation/cases/Lit.lock docs/litigate/change/*/Lit.lock \
-      docs/litigate/change/Lit.lock crates/litigate-sema/tests/fixtures/erie/lit/*/Lit.lock \
-      crates/litigate-sema/tests/fixtures/erie/cases/Lit.lock \
-      crates/litigate-cli/tests/fixtures/e2e-ttab-short/Lit.lock; do
-      "${lit[@]}" lock "${lockfile%/Lit.lock}" > /dev/null
+    # Every Lit.lock in the tree, tracked or new (lg-310r), except the
+    # lock-format-1 fixture, which pins the superseded lock format.
+    mapfile -t lockfiles < <(git ls-files --cached --others --exclude-standard -- '*Lit.lock' \
+      | grep -v -x 'crates/litigate-cli/tests/fixtures/lock-format-1/Lit.lock')
+    for lockfile in "${lockfiles[@]}"; do
+      [ -e "$lockfile" ] || continue
+      "${lit[@]}" lock "$(dirname "$lockfile")" > /dev/null
     done
-    "${lit[@]}" lock cases > /dev/null
     core="$(mktemp -d)"
     trap 'rm -rf "$core"' EXIT
     "${lit[@]}" build lit/core --out "$core" > /dev/null

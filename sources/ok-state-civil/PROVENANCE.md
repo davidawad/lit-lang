@@ -259,3 +259,11 @@
 - Original: `ok-state-civil/original/oscn-title-12/cite455361.html` as served (sha256 3f07879ca0bcf511f9da51c94cae78112b6b1887dda02cd79f08e26171942064).
 - Original: `ok-state-civil/original/oscn-title-12/cite455362.html` as served (sha256 ecd8bda26ce2227567649404891bdede641d4fd918f2abc3d27657ab775ad719).
 - Extraction sha256 3c680f8a0788a17c913728cb857b9ccbe4e09a9e8ef43dbb6326edfc34205074.
+
+### `ok-state-civil/ok-district-court-rules-1-to-29-partial.txt` — Rules for District Courts of Oklahoma, Rules 1-29 (PARTIAL)
+
+- Source: https://www.oscn.net/applications/oscn/index.asp?ftdb=STOKRUCPDC&level=1 (official public-access publisher).
+- Edition: PARTIAL: Rules 1 through 29 (34 section documents); the index lists 39 rules. Stopped at Rule 30 by an OSCN Turnstile challenge; Rules 30 onward not retrieved, so promote them as holes. No edition or current-through statement on the section pages: CURRENCY UNCONFIRMED.
+- Retrieved 2026-10-28 on carbon by David's BrowserOS neo pass (Method: BrowserOS neo, OSCN section pages, David's explicit ruling 2026-10-28); the viewer's per-document records were captured as JSON (BrowserOS tool framing stripped, content unedited) and saved as the original; the extraction is the PM session's plain-text rendering of those records, in document order. No other served original exists for this text. Barrier: oscn.net WAF/Turnstile blocking automated access (lg-f3q8.77 row); fetched on David's explicit ruling 2026-10-28 despite robots/terms.
+- Extract sha256 cdf62b6c161b5173331ce7c0dc1388e46d3da4810132003fcc53f133c3019b1c.
+- Original: `ok-state-civil/original/ok-district-court-rules-1-to-29-partial.json` as served to the viewer (sha256 4c24eb054f190048d85c04fc3d9ff768987a0fc9e997b2ba3ae3f3cb6cf5a09d); extraction sha256 cdf62b6c161b5173331ce7c0dc1388e46d3da4810132003fcc53f133c3019b1c.

@@ -14,3 +14,11 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 7a0f29fc900b8f27cc1e467c1f73f5db1a9df803b2c35e803ce7020608cb77c0. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `ga-state-civil/original/gauscr-order-2026-10-05.pdf` as served (sha256 2aefaec10a59de906aa2f9e9098e138796a4464678bcbae6a1d9951501698947); extraction sha256 7a0f29fc900b8f27cc1e467c1f73f5db1a9df803b2c35e803ce7020608cb77c0.
+
+### `ga-state-civil/ocga-title-9-ch-11.txt` — Georgia Civil Practice Act, O.C.G.A. Title 9, Chapter 11 (§§ 9-11-1 to 9-11-133)
+
+- Source: https://advance.lexis.com/ (Georgia Code Revision Commission public access to the Official Code of Georgia Annotated) (official public-access publisher).
+- Edition: As the site states: "Current through the 2026 Special Session of the General Assembly." 116 sections plus 5 structural heading/appendix documents, in code order. Statutory text and history lines only.
+- Retrieved 2026-10-28 on carbon by David's BrowserOS neo pass (Method: BrowserOS neo, Lexis public-access viewer text, David's explicit ruling 2026-10-28; Lexis annotations excluded); the viewer's per-document records were captured as JSON (BrowserOS tool framing stripped, content unedited) and saved as the original; the extraction is the PM session's plain-text rendering of those records, in document order. No other served original exists for this text. Barrier: LexisNexis public access (reCAPTCHA on document pages; lg-f3q8.77 row); fetched on David's explicit ruling 2026-10-28 despite robots/terms.
+- Extract sha256 9c1b147bc6a55908a124cc8ea820b4deae95c5db047c683c95c986fdfc767248.
+- Original: `ga-state-civil/original/ocga-title-9-ch-11.json` as served to the viewer (sha256 833d33ee3970f491f9cbb032636d6969cc9fb6cb886848393849a651c3e924de); extraction sha256 9c1b147bc6a55908a124cc8ea820b4deae95c5db047c683c95c986fdfc767248.

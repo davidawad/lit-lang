@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "pawd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:096909034fd8c0c1f7f657cc555e27bdd591136227e95cabc6d64a98fec75963"
+semantic = "sha256:fad117b60c736eb2d3009c14e358fd035ffa8e43b1f6d4556b8c21ad329d881d"
+texts = [
+    "pawd-lcrr sources/pawd/local-rules-2016-11-01-sectioned.txt sha256:4d7c3a18135d31b9eee7dd49cd15bbfcc9eae31a801b782ccdf5193d5cef444b",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

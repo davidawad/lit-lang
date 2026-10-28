@@ -1,0 +1,53 @@
+# The U.S. District Court for the Western District of Pennsylvania's Local
+# Criminal Rules (LCrR) as a local-rule layer over lit/frcrimp (28 U.S.C. §
+# 2071; FRCrimP 57(a)): it declares only the periods the local criminal
+# rules themselves state and re-encodes no FRCrimP, Speedy Trial Act or
+# FRAP 4(b) period (one source of truth: lit/frcrimp). Each period is
+# counted under FRCrimP 45(a), which governs "any local rule", so each
+# deadline names `forum frcrimp`. The rules are the Local Rules of Court
+# effective November 1, 2016 (sources/pawd), so in_force is that date;
+# the proposed amendments of Administrative Order 2026-17 are not in force
+# and not vendored, and earlier editions are not vendored, so a query
+# before it is a hole in the corpus. Misdemeanor and petty-offense
+# procedure is in LCvR 72 (LCrR 58), encoded once in lit/pawd. An appeal
+# goes to the Third Circuit under lit/frcrimp's FRAP 4(b) period.
+[package]
+name = "pawd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "pawd-criminal-local-rules"
+forum = "pawd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Western District of Pennsylvania: Local Criminal Rules"
+description = "The Western District of Pennsylvania's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): pretrial motions after arraignment with their response and reply, the government's Rule 16 disclosure on request, and the guideline sentencing schedule (tentative presentence report, administrative resolution, report to the Court, the parties' positions and responses, the addendum, and supplemental memoranda)."
+in_force = "2016-11-01"
+known_at = "2026-10-28"
+unknown_before = "2016-11-01"
+jurisdiction = "U.S. District Court for the Western District of Pennsylvania (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "pawd-lcrr"
+issuer = "United States District Court for the Western District of Pennsylvania"
+date = "2016-11-01"
+designation = "Local Criminal Rules of Court (effective November 1, 2016)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.pawd-lcrr]
+title = "Local Rules of Court of the United States District Court for the Western District of Pennsylvania (effective November 1, 2016), Local Criminal Rules"
+url = "https://www.pawd.uscourts.gov/sites/pawd/files/lrmanual20181101.pdf"
+path = "sources/pawd/local-rules-2016-11-01-sectioned.txt"
+path_sha256 = "4d7c3a18135d31b9eee7dd49cd15bbfcc9eae31a801b782ccdf5193d5cef444b"
+sha256 = "2c19f7f9d8862a403a87f210a9f0dd8631ca2a9f24e6eec83b8dc750daeaa6fd"
+as_of = "2016-11-01"
+cite_prefixes = ["W.D. Pa. LCrR"]
+section_heading = "LCrR {n}"

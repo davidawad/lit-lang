@@ -1,0 +1,182 @@
+module pawd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The Western District of Pennsylvania's own criminal periods, counted
+// under the criminal rules (FRCrimP 45(a) governs "any local rule"). No
+// trigger carries a service method. The LCrR 32 sentencing procedures
+// apply in addition to FRCrimP 32, and the Court may modify any LCrR 32
+// time limit for good cause (LCrR 32.D).
+//
+// Conditions that are not deadlines from a party's event stay in notes:
+// on the defendant's written request the magistrate judge may set the
+// pretrial-motion date up to 45 days from arraignment and exclude the
+// extension from the Speedy Trial Act clock (LCrR 10), any other extension
+// going to the District Judge; a motion to extend the LCrR 12 limits
+// states its excludable-time effect (LCrR 12.E); the Court holds a status
+// conference approximately 30 days after arraignment (LCrR 16.F);
+// sentencing is scheduled no earlier than 14 weeks after a plea of guilty
+// or nolo contendere or a guilty verdict unless the Court orders otherwise
+// (LCrR 32.A), a window rather than a deadline; defense letters for the
+// Court's consideration at sentencing should be filed at least seven
+// calendar days before sentencing (LCrR 32.C.8), the same day as the
+// supplemental memoranda below. The government makes Rule 16 material
+// available at arraignment on request and gives notice of exculpatory
+// evidence then, subject to a continuing duty (LCrR 10, 16.B, 16.C).
+// Retained counsel's appearance is filed at or before counsel's first
+// appearance (LCrR 5.D). Misdemeanor and petty-offense procedure is in
+// LCvR 72 (LCrR 58), encoded in lit/pawd.
+//
+// The earlier W.D. Pa. criminal outline's FRCrimP flow and its decisions
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// The defendant is arraigned (W.D. Pa. LCrR 10).
+event Arraigned()
+/// A pretrial motion is served (W.D. Pa. LCrR 12.C).
+event MotionServed()
+/// A response to a pretrial motion is served (W.D. Pa. LCrR 12.D).
+event ResponseServed()
+/// A defendant who did not request discovery at arraignment requests Rule
+/// 16 material (W.D. Pa. LCrR 16.B).
+event DiscoveryRequested()
+/// The Probation Office discloses the tentative presentence report (W.D.
+/// Pa. LCrR 32.C.2).
+event TentativePsrDisclosed()
+
+/// W.D. Pa. LCrR 12.A: motions FRCrimP 12 requires before trial, motions
+/// under FRCrimP 41 and a motion for a bill of particulars are made within
+/// fourteen days after arraignment, unless the court extends the time at
+/// arraignment or on a written application made within those fourteen
+/// days; the court may for good cause permit a later motion.
+deadline pretrial-motions: 14.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Pa. LCrR 12"
+{
+  forum frcrimp
+}
+
+/// W.D. Pa. LCrR 12.C: a party opposing a motion may file and serve a
+/// response, with a memorandum or brief, within fourteen days after
+/// service of the motion, unless the Court extends the time.
+deadline motion-response: 14.days after MotionServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Pa. LCrR 12"
+{
+  forum frcrimp
+}
+
+/// W.D. Pa. LCrR 12.D: the movant may file and serve a reply memorandum
+/// within fourteen days after service of the response, unless the Court
+/// extends the time.
+deadline motion-reply: 14.days after ResponseServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Pa. LCrR 12"
+{
+  forum frcrimp
+}
+
+/// W.D. Pa. LCrR 16.B: if the defendant did not request discovery at
+/// arraignment, the government discloses the Rule 16 material within
+/// seven days of the defendant's request and files a receipt listing the
+/// categories and items provided.
+deadline rule16-disclosure: 7.days after DiscoveryRequested() counted_by frcrimp45 cite "W.D. Pa. LCrR 16"
+{
+  forum frcrimp
+}
+
+/// W.D. Pa. LCrR 32.C: no later than 7 weeks before the date set for
+/// sentencing, the Probation Office discloses the tentative presentence
+/// report to the defendant, defense counsel and the government. FRCrimP
+/// 32(e)(2)'s own period (lit/frcrimp psr-disclosure) is not restated.
+deadline tentative-psr-disclosure: 7.weeks before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Pa. LCrR 32"
+{
+  forum frcrimp
+}
+
+/// W.D. Pa. LCrR 32.C.2.a: a party disputing, or seeking to add, facts or
+/// factors material to sentencing pursues their administrative resolution
+/// with opposing counsel and the Probation Office within 2 weeks from the
+/// disclosure of the tentative report; by the same time the Probation
+/// Office notifies counsel which matters were resolved (LCrR 32.C.2.b).
+deadline administrative-resolution: 2.weeks after TentativePsrDisclosed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Pa. LCrR 32"
+{
+  forum frcrimp
+}
+
+/// W.D. Pa. LCrR 32.C.3: no later than 5 weeks before sentencing, the
+/// Probation Office discloses the report, as amended, to the Court, the
+/// defendant, defense counsel and the government.
+deadline psr-to-court: 5.weeks before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Pa. LCrR 32"
+{
+  forum frcrimp
+}
+
+/// W.D. Pa. LCrR 32.C.4: no later than 4 weeks before sentencing, each
+/// party files its "Position With Respect to Sentencing Factors", stating
+/// its objections to the report and any anticipated grounds for a
+/// departure or a sentence outside the advisory range, with a certificate
+/// that counsel conferred in good faith.
+deadline sentencing-position: 4.weeks before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Pa. LCrR 32"
+{
+  forum frcrimp
+}
+
+/// W.D. Pa. LCrR 32.C.5: a party may respond to the opposing party's
+/// position no later than 3 weeks prior to sentencing.
+deadline sentencing-position-response: 3.weeks before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Pa. LCrR 32"
+{
+  forum frcrimp
+}
+
+/// W.D. Pa. LCrR 32.C.6.a: no later than 2 weeks before sentencing, the
+/// Probation Office serves an addendum setting out the unresolved
+/// objections, their grounds, the responses and its comments.
+deadline psr-addendum: 2.weeks before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Pa. LCrR 32"
+{
+  forum frcrimp
+}
+
+/// W.D. Pa. LCrR 32.C.8: no later than 1 week before sentencing, a party
+/// may file supplemental information or a memorandum on sentencing and
+/// serve it on the Probation Office.
+deadline supplemental-memorandum: 1.weeks before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Pa. LCrR 32"
+{
+  forum frcrimp
+}
+
+/// W.D. Pa. LCrR 32.C.8: opposing counsel may respond to supplemental
+/// information or a memorandum no later than three days before sentencing.
+deadline supplemental-response: 3.days before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Pa. LCrR 32"
+{
+  forum frcrimp
+}

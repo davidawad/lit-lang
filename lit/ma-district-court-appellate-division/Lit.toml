@@ -1,0 +1,63 @@
+# Civil appeals from the District Court and the Boston Municipal Court to
+# their Appellate Division, and the further appeal to the Appeals Court,
+# from the appellant's side. The Appellate Division's own procedure is the
+# District/Municipal Courts Rules for Appellate Division Appeal
+# (Mass. R. Civ. P. 64(b)) and G.L. c. 231, §§ 108-109, neither vendored,
+# so its cites and periods stay holes. The further appeal, from the
+# appellate division as a "lower court" (Mass. R. A. P. 1(c)), is taken
+# under Mass. R. A. P. 3(a) and 4(a) (sources/ma-appeals-sjc).
+[package]
+name = "ma-district-court-appellate-division"
+version = "0.1.0"
+language = 1
+pack_id = "ma-district-court-appellate-division"
+forum = "ma-district-court-appellate-division"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "massachusetts"
+title = "Massachusetts District Court, Appellate Division"
+description = "Civil appeals and reports from the District Court and the Boston Municipal Court to the Appellate Division through its decision, and the further appeal to the Appeals Court under Mass. R. A. P. 3(a) and 4(a), as far as the vendored text states. The Dist./Mun. Cts. R. A. D. A. and G.L. c. 231, §§ 108-109 are not vendored and stay holes; the further appeal itself is lit/ma-appeals-court."
+in_force = "2026-09-01"
+known_at = "2026-10-28"
+unknown_before = "2026-09-01"
+jurisdiction = "Massachusetts District Court and Boston Municipal Court, Appellate Division"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+ma-state-rules = { version = "^0.1.0", path = "../ma-rules" }
+
+[sources.mass-r-civ-p]
+title = "Massachusetts Rules of Civil Procedure, Trial Court Law Libraries compilation including amendments effective March 10, 2025"
+url = "https://www.mass.gov/doc/massachusetts-rules-of-civil-procedure/download"
+path = "sources/ma-superior-civil/ma-rules-civil-procedure-sectioned.txt"
+path_sha256 = "3368e76c097f4f8dd3560ba731b88d6f6ca00fb93824103f2555d140a1952a1d"
+sha256 = "995d92caabfe01b72050a0d1f0960fc12be62795f57410a0824d9120a4aeae75"
+as_of = "2025-03-10"
+cite_prefixes = ["Mass. R. Civ. P."]
+section_heading = "Rule {n}"
+
+[sources.mass-r-a-p]
+title = "Massachusetts Rules of Appellate Procedure, Trial Court Law Libraries compilation including amendments effective September 1, 2026"
+url = "https://www.mass.gov/doc/massachusetts-rules-of-appellate-procedure/download"
+path = "sources/ma-appeals-sjc/ma-rules-appellate-procedure-sectioned.txt"
+path_sha256 = "1e933a8ddaecfe30dac949319d8f1f78f3a2ecc2a03e6815b10545072338eb5b"
+sha256 = "0811b8698254509d2830120cc2b1596e76d7d24d913603842617efd6ac391b34"
+as_of = "2026-09-01"
+cite_prefixes = ["Mass. R. A. P."]
+section_heading = "Rule {n}"
+
+[sources.mass-gen-laws]
+title = "General Laws of Massachusetts, NOT VENDORED: no statute text is under sources/; every cite naming it is a hole"
+url = "https://malegislature.gov/Laws/GeneralLaws"
+cite_prefixes = ["G.L. c."]
+
+[sources.dist-mun-cts-r-a-d-a]
+title = "District/Municipal Courts Rules for Appellate Division Appeal, NOT VENDORED: no text is under sources/; every cite naming it is a hole"
+url = "https://www.mass.gov/"
+cite_prefixes = ["Dist./Mun. Cts. R. A. D. A."]

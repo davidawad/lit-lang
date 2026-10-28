@@ -1,0 +1,84 @@
+module ma-district-court-appellate-division.appeal
+
+import ma-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled }
+
+// Civil appeals from the District Court and the Boston Municipal Court to
+// their Appellate Division, and the further appeal to the Appeals Court,
+// from the appellant's side. The Appellate Division's procedure is the
+// District/Municipal Courts Rules for Appellate Division Appeal and G.L.
+// c. 231, §§ 108-109, neither vendored, so those cites and every period,
+// form and fee stay holes. The further appeal is bound to Mass. R. A. P.
+// 3(a) and 4(a). The earlier outline named no decision and none is cited.
+start notice
+
+decision notice: "Notice of appeal to the Appellate Division within time?" by applicant cite ?("Dist./Mun. Cts. R. A. D. A. 4: the rules are not vendored") {
+  note "Review in the Appellate Division may be obtained by appeal or by report (Mass. R. A. P. 1(c) reporter's notes, 2021); a report of a case or a ruling to the Appellate Division is governed by Dist./Mun. Cts. R. A. D. A. 5 (Mass. R. Civ. P. 64(b)). The notice period, service and the filing fee are the Dist./Mun. Cts. R. A. D. A.'s, which are not vendored: they are holes. The Massachusetts Rules of Appellate Procedure do not govern the Appellate Division's notice-of-appeal fee (Mass. R. A. P. 4, reporter's notes)."
+  edge-notice-late "No timely notice" -> dismissed-untimely {
+    authority cite ?("Dist./Mun. Cts. R. A. D. A. 4: the rules are not vendored")
+  }
+  edge-notice-filed "Timely notice" -> record {
+    event NoticeOfAppealFiled()
+    authority cite ?("Dist./Mun. Cts. R. A. D. A. 4: the rules are not vendored")
+  }
+}
+
+state record: "Record prepared" by office cite ?("Dist./Mun. Cts. R. A. D. A. 8: the rules are not vendored") {
+  note "Record contents, the transcript and fees are holes."
+  edge-record-briefing "Record filed" -> briefing {
+    event RecordFiled()
+    authority cite ?("Dist./Mun. Cts. R. A. D. A. 8: the rules are not vendored")
+  }
+}
+
+state briefing: "Briefs filed" by applicant cite ?("Dist./Mun. Cts. R. A. D. A. 19: the rules are not vendored") {
+  note "Briefing periods, form and length are holes."
+  edge-briefing-argument "Argument or submission" -> argument {
+    authority cite ?("Dist./Mun. Cts. R. A. D. A. 22: the rules are not vendored")
+  }
+}
+
+state argument: "Argument or submission" by court cite ?("Dist./Mun. Cts. R. A. D. A. 22: the rules are not vendored") {
+  note "Whether argument is heard and its length are holes."
+  edge-argument-decision "Decision issued" -> decision {
+    authority cite ?("G.L. c. 231, § 108: the General Laws are not vendored")
+  }
+}
+
+chance decision: "Appellate Division decides" by court cite ?("G.L. c. 231, § 108: the General Laws are not vendored") {
+  note "Outcome probabilities are holes; the outcome is read from the appellant's side."
+  edge-decision-affirmed "Affirmed" -> post-decision p ?("no calibration yet") {
+    event DecisionFiled()
+  }
+  edge-decision-reversed "Reversed, vacated or remanded" -> post-decision p ?("no calibration yet") {
+    event DecisionFiled()
+  }
+}
+
+decision post-decision: "Appeal to the Appeals Court?" by applicant cite "Mass. R. A. P. 3(a)"
+{
+  note "An appeal permitted by law from a lower court, which includes a board, commission or appellate division (Mass. R. A. P. 1(c)), is taken by filing a notice of appeal with the clerk of the lower court within the time allowed by rule 4, with service upon all parties; failure to take any later step does not affect the validity of the appeal (Mass. R. A. P. 3(a)(1)). In a civil case, unless a statute provides otherwise, the notice is filed within 30 days of entry of the judgment, decree, appealable order or adjudication, or within 60 days if the Commonwealth or an officer or agency of it is a party (Mass. R. A. P. 4(a)(1)(A)). The clerk of the appellate division is the clerk of the trial court from which the action was appealed or reported (Mass. R. A. P. 1(c)). The statutory right of appeal and any different period (G.L. c. 231, § 109) and rehearing in the Appellate Division are holes: neither the General Laws nor the Dist./Mun. Cts. R. A. D. A. are vendored."
+  edge-post-mandate "No further appeal" -> mandate-issued {
+    event MandateIssued()
+    authority cite ?("Dist./Mun. Cts. R. A. D. A. 28: the rules are not vendored")
+  }
+  edge-post-further "Notice of appeal to the Appeals Court" -> further-appeal {
+    event NoticeOfAppealFiled()
+    authority cite "Mass. R. A. P. 3(a)"
+  }
+}
+
+terminal dismissed-untimely: "Dismissed: no timely notice" outcome [loss, dismissal] cite ?("Dist./Mun. Cts. R. A. D. A. 4: the rules are not vendored") {
+  note "Whether the time limit may be extended is a hole."
+  payoff ?("case-specific utility is not supplied by procedural authority")
+}
+
+terminal mandate-issued: "Case returned to the trial court" outcome [final] cite ?("Dist./Mun. Cts. R. A. D. A. 28: the rules are not vendored") {
+  note "The case returns to the court below; costs are holes."
+  payoff ?("case-specific utility is not supplied by procedural authority")
+}
+
+terminal further-appeal: "Appeal taken to the Appeals Court" outcome [appeal] cite "Mass. R. A. P. 3(a)"
+{
+  note "The appeal proceeds under the Massachusetts Rules of Appellate Procedure: lit/ma-appeals-court."
+  payoff ?("case-specific utility is not supplied by procedural authority")
+}

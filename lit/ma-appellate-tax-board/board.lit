@@ -1,0 +1,61 @@
+module ma-appellate-tax-board.board
+
+import ma-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeOfAppealFiled }
+
+// Proceedings before the Appellate Tax Board, and the appeal from its
+// decision, from the taxpayer's side. The board's own procedure (the
+// petition, the formal and informal procedures, the hearing and the
+// decision) is G.L. c. 58A, which is not vendored, so those cites and
+// every period, form and fee stay holes. The appeal is bound to Mass. R.
+// A. P. 3(a) and 4(a). The earlier outline named no decision and none is
+// cited.
+start filed
+
+state filed: "Petition for abatement filed with the board" by applicant cite ?("G.L. c. 58A, § 7: the General Laws are not vendored") {
+  note "The board hears abatement appeals from local assessors and the Commissioner of Revenue under its formal or informal procedure. The filing period, form and fee are G.L. c. 58A's, which is not vendored: they are holes."
+  edge-filed-hearing "Set for hearing" -> hearing {
+    event ActionCommenced()
+    authority cite ?("G.L. c. 58A, § 7: the General Laws are not vendored")
+  }
+}
+
+state hearing: "Hearing before the board" by court cite ?("G.L. c. 58A, § 7: the General Laws are not vendored") {
+  note "Hearing procedure, evidence and the record are G.L. c. 58A's (not vendored): holes."
+  edge-hearing-decision "Decision issued" -> decision {
+    authority cite ?("G.L. c. 58A, § 13: the General Laws are not vendored")
+  }
+}
+
+chance decision: "Board decides" by court cite ?("G.L. c. 58A, § 13: the General Laws are not vendored") {
+  note "Outcome probabilities are holes."
+  edge-decision-granted "Abatement granted" -> review p ?("no calibration yet") {
+    event DecisionFiled()
+  }
+  edge-decision-denied "Abatement denied" -> review p ?("no calibration yet") {
+    event DecisionFiled()
+  }
+}
+
+decision review: "Appeal from the board?" by applicant cite "Mass. R. A. P. 3(a)"
+{
+  note "An appeal permitted by law from a lower court, which includes a board, commission or appellate division (Mass. R. A. P. 1(c)), is taken by filing a notice of appeal with the clerk of the lower court within the time allowed by rule 4, with service upon all parties; failure to take any later step does not affect the validity of the appeal (Mass. R. A. P. 3(a)(1)). In a civil case, unless a statute provides otherwise, the notice is filed within 30 days of entry of the judgment, decree, appealable order or adjudication, or within 60 days if the Commonwealth or an officer or agency of it is a party (Mass. R. A. P. 4(a)(1)(A)). Which decisions are appealable, to which court, and whether the statute (G.L. c. 58A, § 13, not vendored) provides a different period are holes."
+  edge-review-none "No appeal" -> final-decision {
+    event JudgmentEntered()
+    authority cite ?("G.L. c. 58A, § 13: the General Laws are not vendored")
+  }
+  edge-review-sought "Notice of appeal filed with the clerk of the board" -> appeal-taken {
+    event NoticeOfAppealFiled()
+    authority cite "Mass. R. A. P. 3(a)"
+  }
+}
+
+terminal final-decision: "Board decision final" outcome [final] cite ?("G.L. c. 58A, § 13: the General Laws are not vendored") {
+  note "No appeal taken. Abatement, refund and payment are outside this package."
+  payoff ?("case-specific utility is not supplied by procedural authority")
+}
+
+terminal appeal-taken: "Appeal taken from the board" outcome [appeal] cite "Mass. R. A. P. 3(a)"
+{
+  note "The appeal proceeds under the Massachusetts Rules of Appellate Procedure: lit/ma-appeals-court."
+  payoff ?("case-specific utility is not supplied by procedural authority")
+}

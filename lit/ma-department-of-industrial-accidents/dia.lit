@@ -1,0 +1,59 @@
+module ma-department-of-industrial-accidents.dia
+
+import ma-state-rules.{ ActionCommenced, DecisionFiled, JudgmentEntered, NoticeOfAppealFiled }
+
+// Workers' compensation proceedings before the Department of Industrial
+// Accidents, and the appeal from its reviewing board, from the claimant's
+// side. The Department's procedure (the claim, conciliation, conference
+// and hearing before an administrative judge, and review by the reviewing
+// board) is G.L. c. 152, which is not vendored, so those cites and every
+// period, form and fee stay holes. The appeal is bound to Mass. R. A. P.
+// 3(a) and 4(a). The earlier outline named no decision and none is cited.
+start filed
+
+state filed: "Claim filed with the Department" by applicant cite ?("G.L. c. 152, § 10: the General Laws are not vendored") {
+  note "A claim proceeds through conciliation, conference and hearing before an administrative judge. The filing period, form and fee are G.L. c. 152's, which is not vendored: they are holes."
+  edge-filed-hearing "Set for conference and hearing" -> hearing {
+    event ActionCommenced()
+    authority cite ?("G.L. c. 152, § 11: the General Laws are not vendored")
+  }
+}
+
+state hearing: "Hearing before an administrative judge; review by the reviewing board" by court cite ?("G.L. c. 152, § 11: the General Laws are not vendored") {
+  note "Hearing procedure, evidence, the record and review by the reviewing board (G.L. c. 152, § 11C) are holes: the General Laws are not vendored."
+  edge-hearing-decision "Reviewing board decides" -> decision {
+    authority cite ?("G.L. c. 152, § 11C: the General Laws are not vendored")
+  }
+}
+
+chance decision: "Reviewing board decides" by court cite ?("G.L. c. 152, § 11C: the General Laws are not vendored") {
+  note "Outcome probabilities are holes."
+  edge-decision-granted "Relief granted" -> review p ?("no calibration yet") {
+    event DecisionFiled()
+  }
+  edge-decision-denied "Relief denied" -> review p ?("no calibration yet") { event DecisionFiled() }
+}
+
+decision review: "Appeal from the reviewing board?" by applicant cite "Mass. R. A. P. 3(a)"
+{
+  note "An appeal permitted by law from a lower court, which includes a board, commission or appellate division (Mass. R. A. P. 1(c)), is taken by filing a notice of appeal with the clerk of the lower court within the time allowed by rule 4, with service upon all parties; failure to take any later step does not affect the validity of the appeal (Mass. R. A. P. 3(a)(1)). In a civil case, unless a statute provides otherwise, the notice is filed within 30 days of entry of the judgment, decree, appealable order or adjudication, or within 60 days if the Commonwealth or an officer or agency of it is a party (Mass. R. A. P. 4(a)(1)(A)). Which decisions are appealable, to which court, and whether the statute (G.L. c. 152, § 12, not vendored) provides a different period are holes."
+  edge-review-none "No appeal" -> final-decision {
+    event JudgmentEntered()
+    authority cite ?("G.L. c. 152, § 12: the General Laws are not vendored")
+  }
+  edge-review-sought "Notice of appeal filed" -> appeal-taken {
+    event NoticeOfAppealFiled()
+    authority cite "Mass. R. A. P. 3(a)"
+  }
+}
+
+terminal final-decision: "Reviewing board decision final" outcome [final] cite ?("G.L. c. 152, § 12: the General Laws are not vendored") {
+  note "No appeal taken. Enforcement and payment are outside this package."
+  payoff ?("case-specific utility is not supplied by procedural authority")
+}
+
+terminal appeal-taken: "Appeal taken from the reviewing board" outcome [appeal] cite "Mass. R. A. P. 3(a)"
+{
+  note "The appeal proceeds under the Massachusetts Rules of Appellate Procedure: lit/ma-appeals-court."
+  payoff ?("case-specific utility is not supplied by procedural authority")
+}

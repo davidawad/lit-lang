@@ -1,0 +1,47 @@
+# Proceedings before the Massachusetts Appellate Tax Board, and the appeal
+# from its decision, from the taxpayer's side. The board's own procedure
+# (G.L. c. 58A) is not vendored, so its cites, periods and fees stay holes.
+# The appeal from the board, a "lower court" under Mass. R. A. P. 1(c), is
+# taken under Mass. R. A. P. 3(a) and 4(a) (sources/ma-appeals-sjc),
+# whose period applies unless a statute provides otherwise; the statute
+# (G.L. c. 58A, § 13) is not vendored, so the period is a hole.
+[package]
+name = "ma-appellate-tax-board"
+version = "0.1.0"
+language = 1
+pack_id = "ma-appellate-tax-board"
+forum = "ma-appellate-tax-board"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "massachusetts"
+title = "Massachusetts Appellate Tax Board"
+description = "Abatement appeals before the Massachusetts Appellate Tax Board through its decision, and the notice of appeal from the board under Mass. R. A. P. 3(a) and 4(a), as far as the vendored text states. The board's procedure and the statutory appeal period (G.L. c. 58A) are not vendored and stay holes; the appeal itself is lit/ma-appeals-court."
+in_force = "2026-09-01"
+known_at = "2026-10-28"
+unknown_before = "2026-09-01"
+jurisdiction = "Massachusetts Appellate Tax Board"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+ma-state-rules = { version = "^0.1.0", path = "../ma-rules" }
+
+[sources.mass-r-a-p]
+title = "Massachusetts Rules of Appellate Procedure, Trial Court Law Libraries compilation including amendments effective September 1, 2026"
+url = "https://www.mass.gov/doc/massachusetts-rules-of-appellate-procedure/download"
+path = "sources/ma-appeals-sjc/ma-rules-appellate-procedure-sectioned.txt"
+path_sha256 = "1e933a8ddaecfe30dac949319d8f1f78f3a2ecc2a03e6815b10545072338eb5b"
+sha256 = "0811b8698254509d2830120cc2b1596e76d7d24d913603842617efd6ac391b34"
+as_of = "2026-09-01"
+cite_prefixes = ["Mass. R. A. P."]
+section_heading = "Rule {n}"
+
+[sources.mass-gen-laws]
+title = "General Laws of Massachusetts, NOT VENDORED: no statute text is under sources/; every cite naming it is a hole"
+url = "https://malegislature.gov/Laws/GeneralLaws"
+cite_prefixes = ["G.L. c."]

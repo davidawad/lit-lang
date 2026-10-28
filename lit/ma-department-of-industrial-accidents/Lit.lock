@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "ma-department-of-industrial-accidents"
+version = "0.1.0"
+language = 1
+source = "sha256:4b2bde1026651f470431dc3ed609cb82bed50289393da86a6ae3759dfaeacea8"
+semantic = "sha256:a083911102a5084f0f0513aab4815a39cc27f0c844f57c6d71cf4fadc4b7e50b"
+texts = [
+    "mass-r-a-p sources/ma-appeals-sjc/ma-rules-appellate-procedure-sectioned.txt sha256:1e933a8ddaecfe30dac949319d8f1f78f3a2ecc2a03e6815b10545072338eb5b",
+]
+dependencies = [
+    "core 1.0.0",
+    "ma-state-rules 0.1.0",
+]
+
+[[package]]
+name = "ma-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]

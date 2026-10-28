@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "ma-appellate-tax-board"
+version = "0.1.0"
+language = 1
+source = "sha256:6192f2b3f85ba391ec479e51218a99ef1342d0d5638914bd2d924f0c5a699688"
+semantic = "sha256:347b46ccd4c52b3ccb7ed172919798b468202c5906aad2ef8ac6812b9aa24cde"
+texts = [
+    "mass-r-a-p sources/ma-appeals-sjc/ma-rules-appellate-procedure-sectioned.txt sha256:1e933a8ddaecfe30dac949319d8f1f78f3a2ecc2a03e6815b10545072338eb5b",
+]
+dependencies = [
+    "core 1.0.0",
+    "ma-state-rules 0.1.0",
+]
+
+[[package]]
+name = "ma-state-rules"
+version = "0.1.0"
+dependencies = [
+    "core 1.0.0",
+]

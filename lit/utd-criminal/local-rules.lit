@@ -1,0 +1,229 @@
+module utd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The District of Utah's own criminal periods, counted under the criminal
+// rules (FRCrimP 45(a) governs "any local rule"). No trigger carries a
+// service method: FRCrimP 45(c)'s three added days follow the manner of
+// service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: a party communicates objections to the initial presentence report
+// to the probation officer and the opposing party within 14 days after its
+// disclosure (DUCrimR 32-1(a)(1); FRCrimP 32(f)(1)), and probation files
+// the report with its addendum no fewer than 7 days before sentencing
+// (DUCrimR 32-1(b)(1); FRCrimP 32(g)).
+//
+// Duties of court staff and other conditions that are not a party's
+// deadline stay in notes: the courtroom deputy files documents the court
+// considered at a detention or sentencing hearing within 3 days after it
+// (DUCrimR 5-1; DUCrimR 32-1(b)(4), (5)); an unredacted transcript becomes
+// available on PACER 90 days after it is filed, and the court reporter
+// files the redacted transcript within 63 days after filing the original
+// (DUCrimR 49.1-1(b)(2), (c)(3)). On appeal from a magistrate judge's
+// misdemeanor or petty-offense order, an opening brief may not exceed 20
+// pages or 6,200 words and a reply brief 10 pages or 3,100 words, unless a
+// court order authorizes more (DUCrimR 58-2(c)); the corpus's limits are
+// conjunctive, so these alternative limits are not encoded. There are no
+// page limits for motions, memoranda, responses or replies (DUCrimR
+// 12-1). An objection to a magistrate judge's order is governed by DUCivR
+// 72-2 (DUCrimR 59-1), a civil rule this package does not bind.
+//
+// The earlier D. Utah criminal outline's FRCrimP flow and its decisions
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// A Notice of Supplemental Authority, or a response to one: at most 2
+/// pages (DUCrimR 12-1(e)).
+limit supplemental-authority {
+  pages <= 2 cite "DUCrimR 12-1(e)"
+} cite "DUCrimR 12-1(e)"
+
+/// The hearing at which a probation office report or document was
+/// considered (DUCrimR 5-1).
+event ReportHearingHeld()
+/// A motion is served (DUCrimR 12-1(b)).
+event MotionServed()
+/// The memorandum opposing a motion is served (DUCrimR 12-1(c)).
+event OppositionServed()
+/// A Notice of Supplemental Authority is served (DUCrimR 12-1(e)).
+event SupplementalAuthorityServed() paper supplemental-authority
+/// The date set for the final pretrial conference (DUCrimR 16-1(c)).
+event FinalPretrialConferenceScheduled()
+/// A victim is served with notice of a motion for a subpoena for the
+/// victim's personal or confidential information (DUCrimR 17-2(c)).
+event VictimSubpoenaNoticeServed()
+/// A party receives notice of an objection to the presentence report
+/// (DUCrimR 32-1(a)(3)).
+event PsrObjectionNoticed()
+/// The date a seal is set to expire (DUCrimR 41-1(b), (c); 49.1-1(a)(2)).
+event SealExpires()
+/// A party receives notice that the court reporter has filed an original
+/// transcript (DUCrimR 49.1-1(b), (c)).
+event TranscriptFilingNoticed()
+/// A magistrate judge's order in a misdemeanor or petty-offense case is
+/// entered (DUCrimR 58-2(a)).
+event PettyOrderEntered()
+/// A notice of appeal from that order is filed (DUCrimR 58-2(b)(1)).
+event PettyAppealNoticed()
+/// The appellant's brief is served (DUCrimR 58-2(b)(2)).
+event PettyAppellantBriefServed()
+/// The appellee's brief is served (DUCrimR 58-2(b)(3)).
+event PettyAppelleeBriefServed()
+
+/// DUCrimR 5-1: an unrepresented defendant returns the copy of a
+/// probation office report received to the probation officer within 7
+/// days after the hearing where the report or document was considered.
+deadline report-return: 7.days after ReportHearingHeld() counted_by frcrimp45 cite "DUCrimR 5-1"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 12-1(b): a response memorandum is filed within 14 days after
+/// service of the motion.
+deadline response-period: 14.days after MotionServed() counted_by frcrimp45 cite "DUCrimR 12-1(b)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 12-1(c): the movant may file a reply memorandum, limited to
+/// rebuttal, within 7 days after service of the memorandum opposing the
+/// motion.
+deadline reply-period: 7.days after OppositionServed() counted_by frcrimp45 cite "DUCrimR 12-1(c)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 12-1(e)(2): if the court has not ruled, a party may file a
+/// response of at most 2 pages within 7 days after service of a Notice of
+/// Supplemental Authority; the court may decide the motion without waiting
+/// for it.
+deadline supplemental-authority-response: 7.days after SupplementalAuthorityServed() counted_by frcrimp45 cite "DUCrimR 12-1(e)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 16-1(c): unless the court orders otherwise, the parties
+/// disclose case-in-chief experts 30 days before the final pretrial
+/// conference by filing a notice of intent to use an expert.
+deadline expert-disclosure: 30.days before FinalPretrialConferenceScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "DUCrimR 16-1(c)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 17-2(c): a victim may file a sealed motion to quash or modify,
+/// or otherwise object to, the subpoena within 14 days after service of
+/// the notice; if none is filed, the movant files a certificate of
+/// compliance and asks the court to direct issuance.
+deadline victim-subpoena-objection: 14.days after VictimSubpoenaNoticeServed() counted_by frcrimp45 cite "DUCrimR 17-2(c)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 32-1(a)(3): within 7 days after notice of an objection, the
+/// parties and probation make reasonable efforts to resolve it.
+deadline psr-objection-resolution: 7.days after PsrObjectionNoticed() counted_by frcrimp45 cite "DUCrimR 32-1(a)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 32-1(b)(2): no fewer than 7 days before sentencing, a party may
+/// file a sentencing memorandum or Position of Party with Respect to
+/// Sentencing Factors.
+deadline sentencing-memorandum: 7.days before SentencingScheduled() counted_by frcrimp45 cite "DUCrimR 32-1(b)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 32-1(b)(3): unless ordered otherwise, documents pertaining to
+/// the defendant are provided to probation no later than 10 days before
+/// the sentencing hearing.
+deadline sentencing-documents-to-probation: 10.days before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "DUCrimR 32-1(b)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 41-1(b): a motion to extend the seal of a FRCrimP 41 case and a
+/// proposed order are presented to a magistrate judge at least 10 days
+/// before the seal expires.
+deadline seal-extension-motion: 10.days before SealExpires() counted_by frcrimp45 cite "DUCrimR 41-1(b)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 41-1(c): at least 10 days before the seal expires, the
+/// government gives the Clerk's Office a copy of the FRCrimP 41 document
+/// redacted as FRCrimP 49.1 requires.
+deadline warrant-redacted-copy: 10.days before SealExpires() counted_by frcrimp45 cite "DUCrimR 41-1(c)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 49.1-1(a)(2): when a motion to unseal is granted or a seal is
+/// set to expire, the filing party gives the Clerk's Office a copy redacting
+/// the FRCrimP 49.1 personal identifiers at least 10 days before the seal
+/// expires.
+deadline unsealed-redacted-copy: 10.days before SealExpires() counted_by frcrimp45 cite "DUCrimR 49.1-1(a)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 49.1-1(b)(1): within 14 days after receiving notice that an
+/// original transcript has been filed, each party reviews its portions
+/// for personal identifiers.
+deadline transcript-review: 14.days after TranscriptFilingNoticed() counted_by frcrimp45 cite "DUCrimR 49.1-1(b)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 49.1-1(c)(1): if redaction is required, a party files a Notice
+/// of Intent to Request Redaction within 21 days after receiving notice
+/// that the transcript has been filed.
+deadline redaction-intent-notice: 21.days after TranscriptFilingNoticed() counted_by frcrimp45 cite "DUCrimR 49.1-1(c)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 49.1-1(c)(2): the Redaction Request, identifying page, line and
+/// redaction, is filed within 42 days after receiving that notice.
+deadline redaction-request: 42.days after TranscriptFilingNoticed() counted_by frcrimp45 cite "DUCrimR 49.1-1(c)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 58-2(a): a party appealing a magistrate judge's order in a
+/// misdemeanor or petty-offense case to a district judge files and serves
+/// a notice within 14 days after entry of the order.
+deadline petty-appeal-notice: 14.days after PettyOrderEntered() counted_by frcrimp45 cite "DUCrimR 58-2(a)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 58-2(b)(1): the appellant's brief is filed and served within 14
+/// days after filing the notice of appeal.
+deadline petty-appellant-brief: 14.days after PettyAppealNoticed() counted_by frcrimp45 cite "DUCrimR 58-2(b)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 58-2(b)(2): the appellee's brief is filed and served within 14
+/// days after service of the appellant's brief.
+deadline petty-appellee-brief: 14.days after PettyAppellantBriefServed() counted_by frcrimp45 cite "DUCrimR 58-2(b)"
+{
+  forum frcrimp
+}
+
+/// DUCrimR 58-2(b)(3): the appellant may file and serve a reply brief
+/// within 7 days after service of the appellee's brief.
+deadline petty-reply-brief: 7.days after PettyAppelleeBriefServed() counted_by frcrimp45 cite "DUCrimR 58-2(b)"
+{
+  forum frcrimp
+}

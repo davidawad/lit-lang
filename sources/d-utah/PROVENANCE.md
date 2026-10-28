@@ -22,3 +22,9 @@
 - Upstream: https://www.utd.uscourts.gov/sites/utd/files/Civil%20Rules%20Final%202025.pdf, retrieved 2026-10-27, as recorded on the `d-utah/d-utah-local-civil-rules-2025.txt` entry this file is derived from.
 - Edition: as the extract, "These rules are effective December 1, 2025" (DUCivR 1-1).
 - Sectioned sha256 aace2552f63987a4f3bdbfd6493f9303e7dbc4a0a292b93db1af985f44bf1ce8 (the `path_sha256` pinned by `lit/utd/Lit.toml`).
+
+### `d-utah/dutah-local-criminal-rules-2025-12-01-sectioned.txt` — D. Utah Local Rules of Criminal Practice, sectioned
+
+- Derived in the pod (lg-gddt.24) from `d-utah/dutah-local-criminal-rules-2025-12-01.txt` (extract sha256 fbc43db846d8439626a2e327e9cc446bb29bdbaf79b06707ca8121ea7b4e3ff2); nothing fetched. In the body (after the table of contents), one marker line `## DUCrimR <n>` is inserted before each rule's own heading line `DUCrimR <n> <TITLE>` (DUCrimR 1-1 through 59-1, 29 rules); indented in-text references to a rule carry no marker. Rule text was not edited: deleting the marker lines (each `## DUCrimR ` line with its newline) restores the extract byte for byte.
+- Edition: as the extract, "effective December 1, 2025" (DUCrimR 1-1).
+- Sectioned sha256 355e82f2024bf67901d9bc0ce600a47b48df5ade326427b68c13cb6f318ebfba (the `path_sha256` pinned by `lit/utd-criminal/Lit.toml`).

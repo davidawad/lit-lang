@@ -515,14 +515,18 @@ fn prefix_byte_len(s: &str, prefix: &str) -> Option<usize> {
     Some(si)
 }
 
-/// Parse `"12(b)(6)"` → `("12", ["b", "6"])`, `"1441"` → `("1441", [])`.
+/// Parse `"12(b)(6)"` → `("12", ["b", "6"])`, `"1441"` → `("1441", [])`,
+/// `"XX(b)"` → `("XX", ["b"])`. A section opens with a digit or is led by
+/// an upper-case roman numeral (`Part IV` of a body numbered by parts), so
+/// a roman-numbered citation is checked like any other rather than left
+/// out of scope.
 fn bare_number(s: &str) -> Option<(String, Vec<String>)> {
     let s = s.trim();
     if s.is_empty() {
         return None;
     }
     let first = s.chars().next()?;
-    if !(first.is_ascii_digit() || s.starts_with('(')) {
+    if !(first.is_ascii_digit() || s.starts_with('(') || leading_roman(s)) {
         return None;
     }
     if let Some(idx) = s.find('(') {
@@ -545,6 +549,72 @@ fn bare_number(s: &str) -> Option<(String, Vec<String>)> {
     } else {
         Some((s.to_string(), vec![]))
     }
+}
+
+/// `s` opens with a well-formed upper-case roman numeral (`IV`, `XX`,
+/// `XLII`) that ends the text or is followed by a subsection, a dotted
+/// part or a range dash — not a word that merely starts with one of the
+/// letters (`Appendix`, `MDL 2741`, `Civ.`).
+fn leading_roman(s: &str) -> bool {
+    let end = s
+        .find(|c: char| !matches!(c, 'I' | 'V' | 'X' | 'L' | 'C' | 'D' | 'M'))
+        .unwrap_or(s.len());
+    let numeral = &s[..end];
+    let delimited = s[end..]
+        .chars()
+        .next()
+        .is_none_or(|c| matches!(c, '(' | '.' | '-' | '\u{2013}' | '\u{2014}'));
+    !numeral.is_empty() && delimited && roman_value(numeral).is_some_and(|n| to_roman(n) == numeral)
+}
+
+/// The value of an upper-case roman numeral, read additively with
+/// subtractive pairs; `None` past 3999.
+fn roman_value(numeral: &str) -> Option<u32> {
+    let digit = |c: char| match c {
+        'I' => 1,
+        'V' => 5,
+        'X' => 10,
+        'L' => 50,
+        'C' => 100,
+        'D' => 500,
+        _ => 1000,
+    };
+    let values: Vec<u32> = numeral.chars().map(digit).collect();
+    let total = values.iter().enumerate().fold(0i64, |acc, (i, &v)| {
+        if values.get(i + 1).is_some_and(|&next| next > v) {
+            acc - i64::from(v)
+        } else {
+            acc + i64::from(v)
+        }
+    });
+    u32::try_from(total).ok().filter(|n| (1..4000).contains(n))
+}
+
+/// `n` (1..4000) as its canonical upper-case roman numeral.
+fn to_roman(mut n: u32) -> String {
+    const TABLE: [(u32, &str); 13] = [
+        (1000, "M"),
+        (900, "CM"),
+        (500, "D"),
+        (400, "CD"),
+        (100, "C"),
+        (90, "XC"),
+        (50, "L"),
+        (40, "XL"),
+        (10, "X"),
+        (9, "IX"),
+        (5, "V"),
+        (4, "IV"),
+        (1, "I"),
+    ];
+    let mut out = String::new();
+    for (value, glyphs) in TABLE {
+        while n >= value {
+            out.push_str(glyphs);
+            n -= value;
+        }
+    }
+    out
 }
 
 fn looks_like_case_citation(s: &str) -> bool {

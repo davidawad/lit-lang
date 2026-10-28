@@ -12,6 +12,7 @@ version = "0.1.0"
 language = 1
 pack_id = "ri-supreme-court-civil-appeals"
 forum = "ri-supreme"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "rhode-island"
 title = "Rhode Island Supreme Court, civil appeals"
@@ -28,6 +29,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+ri-state-rules = { version = "^0.1.0", path = "../ri-rules" }
 
 [sources.ri-sup-ct-art-i]
 title = "Rhode Island Supreme Court Rules, Article I, Appellate Procedure (revised February 17, 2026)"

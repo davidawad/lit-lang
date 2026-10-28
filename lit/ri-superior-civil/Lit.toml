@@ -14,6 +14,7 @@ version = "0.1.0"
 language = 1
 pack_id = "ri-superior-court-civil"
 forum = "ri-superior-civil"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "rhode-island"
 title = "Rhode Island Superior Court, civil"
@@ -30,6 +31,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+ri-state-rules = { version = "^0.1.0", path = "../ri-rules" }
 
 [sources.ri-super-r-civ-p]
 title = "Rhode Island Superior Court Rules of Civil Procedure (February 2024)"

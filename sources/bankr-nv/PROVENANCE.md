@@ -1,0 +1,8 @@
+
+### `bankr-nv/nvb-lbr-2021-03-02.txt` — Local Rules of Bankruptcy Practice, U.S. Bankruptcy Court for the District of Nevada (updated March 2, 2021)
+
+- Source: https://www.nvb.uscourts.gov/downloads/rules/local-rules-2021_final.pdf (official site; 80 pages, sha256 593752267d4ea8c0ea864f1c0e3ab62a97f6b0b6f0ab757ffdcab6a19a19a1d8).
+- Edition: Local Rules of Bankruptcy Practice 'Updated March 2, 2021' (cover), linked as 'Local Rules - Complete Set' from https://www.nvb.uscourts.gov/rules-forms/rules/local-rules/. The court's orders page (https://www.nvb.uscourts.gov/rules-forms/rules/administrative-orders/) lists Administrative Order 2021-04 (Order Amending Local Rule 9018, 03/02/2021) as the latest local-rule amendment, which is the date of this edition; no later one. no robots.txt is served (HTTP 200 with a 404 error page), and no privacy, terms or site-policy page is linked from the site; checked the site pages, nothing found that prohibits automated access, and so no prohibition of automated access was found. Fetched with curl and the identifying User-Agent lit-lang-provenance/1.0 (angrybohr@proton.me).
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 430465d1d24f8cada2f2dfa79d752d153307c08e0fd301d6673d6ce683e4e0fc. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `bankr-nv/original/nvb-lbr-2021-03-02.pdf` as served (sha256 593752267d4ea8c0ea864f1c0e3ab62a97f6b0b6f0ab757ffdcab6a19a19a1d8); extraction sha256 430465d1d24f8cada2f2dfa79d752d153307c08e0fd301d6673d6ce683e4e0fc.

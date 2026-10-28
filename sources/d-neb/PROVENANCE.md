@@ -30,3 +30,9 @@
 - Upstream: https://www.ned.uscourts.gov/sites/default/files/documents/NECivR.2025.pdf, retrieved 2026-10-27, as recorded on the `d-neb/ne-civil-rules.txt` entry this file is derived from.
 - Edition: as the extract, effective December 1, 2025.
 - Sectioned sha256 cb0d2937e9bb6fa2e7fd65709557d84da6a61dfac80246b104b060e1895fb2cd (the `path_sha256` pinned by `lit/ned/Lit.toml`).
+
+### `d-neb/dneb-necrimr-sectioned.txt` — D. Neb. Nebraska Criminal Rules (NECrimR), sectioned
+
+- Derived in the pod (lg-gddt.20) from `d-neb/dneb-necrimr-2025-12-01.txt` (extract sha256 5d4fb10fee85aaa9b8d248c0a679eeeed6a482658d855a5da289197d9c9f7556); nothing fetched. One `## NECrimR <n>` line is inserted before each rule's own heading line in the body after the table of contents (`NECrimR 1.1` through `NECrimR 61.1`, 72 rules, three-part numbers such as `NECrimR 26.2.1` and `NECrimR 49.1.1` included). Rule text was not edited: deleting the marker lines (`sed '/^## NECrimR /d'`) restores the extract byte for byte.
+- Edition: as the extract, effective December 1, 2025.
+- Sectioned sha256 0794fedb70dd6d707628320d0a3c2f51be63c3871a29b315d8ad206a11726ae3 (the `path_sha256` pinned by `lit/ned-criminal/Lit.toml`).

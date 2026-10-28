@@ -1,0 +1,396 @@
+module ned-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The District of Nebraska's own criminal periods, computed under FRCrimP
+// 45, which NECrimR 45.1 applies to "any period of time specified in these
+// rules". The magistrate judge sets the discovery and pretrial motion
+// deadlines at arraignment (NECrimR 12.3(a)), and a sentencing judge's
+// order displaces the NECrimR 32.1(b) schedule wherever it addresses a
+// step. Each step of that schedule runs from "the date set in" the step
+// before; the chain counts from that date as set, before any roll
+// (`.nominal`), and the probation officer's own steps (32.1(b)(3), (5)) are
+// declared as links of it. Stated in the rules but not declared: the
+// initial appearance within 48 hours of a warrantless arrest (NECrimR
+// 5.1(b)(1)), the plea papers 24 hours before a change of plea hearing
+// (11.1(d)), the hearing exhibits 24 hours before it (12.6(b)), the
+// interception drafts 24 hours before their consideration (41.2(a)) and
+// the sentencing materials 48 hours before sentencing (32.1(b)(10)), all
+// counted in hours; the earliest day a bill of costs may be filed, 14
+// days after trial (31.2), a floor, not a deadline; the CJA voucher's
+// good-cause letter from 45 days to one year after sentencing and the
+// summary denial after one year (44.3(a)), stated in years; the
+// probation officer's sentencing recommendation seven days before
+// sentencing (32.1(b)(8)), the judge's tentative findings (32.1(b)(7)),
+// the clerk's sealing of search warrant papers within 14 days (41.1(b))
+// and the informant and supervision periods of NECrimR 46.3 and 46.4,
+// which bind the court and its officers; the government's motion for a
+// sentencing date if none is set within 90 days of the plea or verdict
+// (32.1(b)(9)), due "promptly"; the retention of withdrawn exhibits until
+// 30 days after final disposition (55.1(g)(1)(B)), a retention condition
+// whose end depends on certiorari and § 2255 time; and the fourteen days
+// to object to a magistrate judge's order or findings and recommendations
+// (59.2(a)), FRCrimP 59(a) and 59(b)(2)'s. The earlier D. Neb. criminal
+// outline's FRCrimP flow and its decisions (Salerno, Brady, Barker v.
+// Wingo, Zedner, Boykin, Missouri v. Frye, Jackson v. Virginia, Booker,
+// Roe v. Flores-Ortega, Garza v. Idaho) are FRCrimP and constitutional
+// authority and belong to lit/frcrimp; no reporter text is vendored, so
+// they are removed here, and the court's Speedy Trial Act plan (NECrimR
+// 50.2; 18 U.S.C. § 3165) is not vendored.
+
+/// Where the marshal is to serve a subpoena or writ (NECrimR 17.1(a), (b)).
+enum ServiceArea { WithinDistrict, OutsideDistrict }
+/// What the marshal is to serve (NECrimR 17.1(a), (b)).
+enum Process { Subpoena, WritAdTestificandum }
+/// The kind of motion a response answers (NECrimR 12.3(c)(1)).
+enum MotionKind { Suppression, Other }
+/// A proceeding an interpreter is requested for (NECrimR 28.2(a)(2)).
+enum Proceeding { Trial, Hearing }
+
+/// The date a grand jury subpoena sets for a witness's appearance or the
+/// production of documents (NECrimR 6.2(b)(2)).
+event GrandJuryReturnDate()
+/// A change of plea hearing (NECrimR 11.1(c)).
+event ChangeOfPleaHearing()
+/// The transcript of a change of plea hearing before a magistrate judge is
+/// filed (NECrimR 11.2(c)).
+event PleaTranscriptFiled()
+/// A pretrial motion is filed (NECrimR 12.3(c)).
+event MotionFiled(kind: MotionKind)
+/// The arraignment (NECrimR 16.1).
+event Arraignment()
+/// The hearing or trial at which a witness is to testify (NECrimR 17.1).
+event WitnessHearing(area: ServiceArea, process: Process)
+/// Jury selection in a case with more than one defendant (NECrimR 24.2(c)).
+event JurySelection()
+/// The trial or hearing a court interpreter is needed for (NECrimR
+/// 28.2(a)(2)).
+event InterpretedProceeding(proceeding: Proceeding)
+/// The sentencing hearing (NECrimR 31.2).
+event Sentencing()
+/// The government receives the probation and pretrial services officer's
+/// written request for information (NECrimR 32.1(a)(1)).
+event ProbationRequestReceived()
+/// The presentence report is ordered (NECrimR 32.1(a)(2)).
+event PresentenceReportOrdered()
+/// A guilty plea is tendered or a guilty verdict filed (NECrimR 32.1(b)).
+event GuiltyPleaOrVerdict()
+/// A post-trial motion is filed (NECrimR 33.1).
+event PostTrialMotionFiled()
+/// The trial, in a case with intercepted communications (NECrimR 41.2(d)).
+event InterceptionTrial()
+/// The defendant's first court appearance in this district (NECrimR
+/// 44.1(b)).
+event FirstAppearance()
+/// An attorney's address, telephone, fax or e-mail changes (NECrimR
+/// 44.1(d)).
+event AttorneyContactChanged()
+/// Sentencing or dismissal of the case (NECrimR 44.3(a)).
+event SentencingOrDismissal()
+/// A motion to permit joint representation is filed (NECrimR 44.4(b)).
+event JointRepresentationMotionFiled()
+/// A party or nonfiling signatory receives the notice of electronic
+/// filing of a signed document (NECrimR 49.2(c)(1)).
+event NefReceived()
+/// An attorney receives a paper court file, exhibit, document or
+/// transcript checked out under a judge's order (NECrimR 55.1(d)).
+event FileCheckedOut()
+/// A verdict is rendered or a judgment entered (NECrimR 55.1(g)(1)).
+event VerdictOrJudgment()
+/// The case's final disposition as NECrimR 55.1(g)(1)(B) defines it
+/// (NECrimR 55.1(g)(2)).
+event FinalDisposition()
+/// A party is served with a statement of objections to a magistrate
+/// judge's order or findings and recommendations (NECrimR 59.2(a)).
+event ObjectionsServed()
+
+/// NECrimR 6.2(b)(2): absent good cause, a motion to quash or limit a
+/// grand jury subpoena is filed and served 7 days before the date in the
+/// subpoena for the appearance or production.
+deadline grand-jury-subpoena-motion-period: 7.days before GrandJuryReturnDate() counted_by frcrimp45 cite "NECrimR 6.2(b)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 11.1(c)(1): if a defendant needs an interpreter to consider or
+/// enter a change of plea, the government sends a request for interpreter
+/// form to the courtroom deputy at least 7 days before the hearing.
+deadline plea-interpreter-request-period: 7.days before ChangeOfPleaHearing() counted_by frcrimp45 cite "NECrimR 11.1(c)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 11.2(c): unless the judge extends or shortens the time, an
+/// objection to a magistrate judge's recommendation on a guilty plea is
+/// filed and served within 14 days after the filing of the plea
+/// transcript.
+deadline plea-recommendation-objection-period: 14.days after PleaTranscriptFiled() counted_by frcrimp45 cite "NECrimR 11.2(c)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 12.3(c)(1)(A): unless the court orders otherwise, a response to
+/// a motion to suppress is filed 14 days after the motion is filed.
+deadline suppression-response-period: 14.days after MotionFiled(Suppression) counted_by frcrimp45 cite "NECrimR 12.3(c)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 12.3(c)(1)(B): a response to any other motion is filed 7 days
+/// after the motion is filed, unless the court orders otherwise. A party's
+/// failure to brief an issue may be considered a waiver (12.3(c)(2)).
+deadline motion-response-period: 7.days after MotionFiled(Other) counted_by frcrimp45 cite "NECrimR 12.3(c)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 16.1(a)(1), (2): a defendant who does not request FRCrimP
+/// 16(a)(1) discovery, or requests only part of it, says so at the
+/// arraignment or files a notice within 2 days after it, unless the court
+/// orders otherwise.
+deadline discovery-notice-period: 2.days after Arraignment() counted_by frcrimp45 cite "NECrimR 16.1(a)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 16.1(a)(3): unless the court orders otherwise, the government
+/// provides FRCrimP 16 discovery no sooner than 2 but not later than 14
+/// days after the arraignment, then files a notice of compliance.
+deadline government-discovery-period: 14.days after Arraignment() counted_by frcrimp45 cite "NECrimR 16.1(a)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 16.1(b)(1): the defendant discloses reciprocal FRCrimP
+/// 16(b)(1)(A) and (B) discovery within 30 days after the arraignment or as
+/// the court orders.
+deadline defendant-discovery-period: 30.days after Arraignment() counted_by frcrimp45 cite "NECrimR 16.1(b)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 17.1(a): a subpoena the marshal is to serve within the
+/// district is delivered to the marshal at least 14 days before the
+/// hearing or trial; later service is not guaranteed.
+deadline subpoena-in-district-period: 14.days before WitnessHearing(WithinDistrict, Subpoena) counted_by frcrimp45 cite "NECrimR 17.1(a)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 17.1(a): one to be served outside the district, at least 21
+/// days before.
+deadline subpoena-out-of-district-period: 21.days before WitnessHearing(OutsideDistrict, Subpoena) counted_by frcrimp45 cite "NECrimR 17.1(a)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 17.1(b): a writ of habeas corpus ad testificandum to be served
+/// within the district is delivered to the marshal at least 14 days before
+/// the hearing or trial.
+deadline writ-in-district-period: 14.days before WitnessHearing(WithinDistrict, WritAdTestificandum) counted_by frcrimp45 cite "NECrimR 17.1(b)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 17.1(b): one to be served outside the district, at least 30
+/// days before.
+deadline writ-out-of-district-period: 30.days before WitnessHearing(OutsideDistrict, WritAdTestificandum) counted_by frcrimp45 cite "NECrimR 17.1(b)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 24.2(c): in a case with more than one defendant, a request for
+/// additional peremptory challenges is made in writing at least 14 days
+/// before jury selection.
+deadline peremptory-request-period: 14.days before JurySelection() counted_by frcrimp45 cite "NECrimR 24.2(c)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 28.2(a)(2)(A): the government's interpreter request for trial
+/// is submitted 14 days before trial or as soon as otherwise possible.
+deadline trial-interpreter-request-period: 14.days before InterpretedProceeding(Trial) counted_by frcrimp45 cite "NECrimR 28.2(a)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 28.2(a)(2)(B): for a hearing, 7 days before the hearing or as
+/// soon as otherwise possible.
+deadline hearing-interpreter-request-period: 7.days before InterpretedProceeding(Hearing) counted_by frcrimp45 cite "NECrimR 28.2(a)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 31.2: no costs are imposed unless the government timely files
+/// a verified bill of costs, no later than 30 days before sentencing.
+deadline bill-of-costs-period: 30.days before Sentencing() counted_by frcrimp45 cite "NECrimR 31.2"
+{
+  forum frcrimp
+}
+
+/// NECrimR 32.1(a)(1): within 7 days after receiving the probation and
+/// pretrial services officer's written request for information, the
+/// government responds and serves the defense with any material given
+/// that it does not already have.
+deadline probation-information-period: 7.days after ProbationRequestReceived() counted_by frcrimp45 cite "NECrimR 32.1(a)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 32.1(a)(2): a defense attorney who wishes to be present at the
+/// defendant's presentence interview advises the probation and pretrial
+/// services office within 2 days after the report is ordered.
+deadline interview-notice-period: 2.days after PresentenceReportOrdered() counted_by frcrimp45 cite "NECrimR 32.1(a)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 32.1(b)(1): absent a sentencing order addressing it, no later
+/// than 7 days after a guilty plea is tendered or a guilty verdict filed,
+/// the attorneys send their versions of the offense to the probation and
+/// pretrial services officer.
+deadline offense-version-period: 7.days after GuiltyPleaOrVerdict() counted_by frcrimp45 cite "NECrimR 32.1(b)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 32.1(b)(2): no later than 21 days after the date set in
+/// (b)(1), the attorneys send the officer the financial information,
+/// restitution proposals and chemical or mental health information they
+/// wish considered.
+deadline financial-information-period: 21.days after deadline(offense-version-period).nominal counted_by frcrimp45 cite "NECrimR 32.1(b)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 32.1(b)(3): no later than 14 days after the date set in
+/// (b)(2), the officer distributes the initial version of the presentence
+/// report (a link of the schedule; it binds the officer).
+deadline initial-report-period: 14.days after deadline(financial-information-period).nominal counted_by frcrimp45 cite "NECrimR 32.1(b)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 32.1(b)(4): no later than 14 days after the date set in
+/// (b)(3), the attorneys send the officer any objections to the initial
+/// version.
+deadline initial-report-objection-period: 14.days after deadline(initial-report-period).nominal counted_by frcrimp45 cite "NECrimR 32.1(b)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 32.1(b)(5): no later than 7 days after the date set in (b)(4),
+/// the officer sends the judge and the attorneys the final version with an
+/// addendum on the objections (a link of the schedule; it binds the
+/// officer).
+deadline final-report-period: 7.days after deadline(initial-report-objection-period).nominal counted_by frcrimp45 cite "NECrimR 32.1(b)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 32.1(b)(6): no later than 7 days after the date set in (b)(5),
+/// the attorneys file any alternative-sentence proposals, motions for
+/// departure, deviation or variance, and statements of position on or
+/// objections to the final report; objections not then filed may be
+/// considered waived.
+deadline sentencing-filings-period: 7.days after deadline(final-report-period).nominal counted_by frcrimp45 cite "NECrimR 32.1(b)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 33.1: a response to a post-trial motion is filed within 7 days
+/// after the filing of the motion.
+deadline post-trial-response-period: 7.days after PostTrialMotionFiled() counted_by frcrimp45 cite "NECrimR 33.1"
+{
+  forum frcrimp
+}
+
+/// NECrimR 41.2(d): the government's attorney tries to stipulate with the
+/// opposing attorney at least 60 days before trial on the use of
+/// intercepted communications at trial.
+deadline interception-stipulation-period: 60.days before InterceptionTrial() counted_by frcrimp45 cite "NECrimR 41.2(d)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 41.2(d): absent a stipulation, the government's attorney files,
+/// no later than 50 days before trial, a motion for an order instructing
+/// the parties on their use.
+deadline interception-motion-period: 50.days before InterceptionTrial() counted_by frcrimp45 cite "NECrimR 41.2(d)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 44.1(b): a defendant who does not request or is not eligible
+/// for appointed counsel informs the court of the retained attorney's
+/// name, or of the wish to appear pro se, within 14 days of the first
+/// court appearance in this district.
+deadline counsel-notice-period: 14.days after FirstAppearance() counted_by frcrimp45 cite "NECrimR 44.1(b)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 44.1(d): an attorney files and serves notice of a changed
+/// address, telephone, fax or e-mail within 30 days of the change.
+deadline contact-change-period: 30.days after AttorneyContactChanged() counted_by frcrimp45 cite "NECrimR 44.1(d)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 44.3(a): counsel appointed under the Criminal Justice Act
+/// submits the completed fee and expense voucher through eVoucher within
+/// 45 days after sentencing or dismissal.
+deadline cja-voucher-period: 45.days after SentencingOrDismissal() counted_by frcrimp45 cite "NECrimR 44.3(a)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 44.4(b): the government responds to a motion to permit joint
+/// representation within 14 days.
+deadline joint-representation-response-period: 14.days after JointRepresentationMotionFiled() counted_by frcrimp45 cite "NECrimR 44.4(b)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 49.2(c)(1)(A)(ii), (B)(ii), (C)(ii): a party or nonfiling
+/// signatory challenging the authenticity of an electronically filed
+/// document or signature files an objection within 7 days of receiving
+/// the NEF.
+deadline signature-objection-period: 7.days after NefReceived() counted_by frcrimp45 cite "NECrimR 49.2(c)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 55.1(d): an attorney returns a checked-out court file,
+/// exhibit, document or transcript when the judge directs or no later
+/// than 7 days.
+deadline file-return-period: 7.days after FileCheckedOut() counted_by frcrimp45 cite "NECrimR 55.1(d)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 55.1(g)(1): after trial or as soon as possible, but within 14
+/// days after a verdict is rendered or a judgment entered, the offering
+/// attorney withdraws all exhibits in the clerk's custody.
+deadline exhibit-withdrawal-period: 14.days after VerdictOrJudgment() counted_by frcrimp45 cite "NECrimR 55.1(g)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 55.1(g)(2): a party opposing the destruction of withdrawn
+/// exhibits, which the custodian may destroy without notice 30 days after
+/// the case's final disposition, files an objection before that period
+/// expires.
+deadline exhibit-destruction-objection-period: 30.days after FinalDisposition() counted_by frcrimp45 cite "NECrimR 55.1(g)"
+{
+  forum frcrimp
+}
+
+/// NECrimR 59.2(a): unless ordered otherwise, an opposing party may file
+/// an opposing brief within 14 days of being served with a statement of
+/// objections to a magistrate judge's order or findings and
+/// recommendations; no reply without leave.
+deadline objection-opposition-period: 14.days after ObjectionsServed() counted_by frcrimp45 cite "NECrimR 59.2(a)"
+{
+  forum frcrimp
+}

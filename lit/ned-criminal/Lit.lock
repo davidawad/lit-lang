@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "ned-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:9150895c745e7204da0538238980dec22e4a85d595ef580da9d36801ef04816c"
+semantic = "sha256:72f86c15a24880e0b04a424975ae5436235cbe8f609751245073fe01277d47b8"
+texts = [
+    "necrimr sources/d-neb/dneb-necrimr-sectioned.txt sha256:0794fedb70dd6d707628320d0a3c2f51be63c3871a29b315d8ad206a11726ae3",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

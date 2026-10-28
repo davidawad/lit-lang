@@ -515,14 +515,7 @@ pub fn verify(existing: Option<&str>, expected: &LockFile) -> Result<(), Report>
     for p in &expected.packages {
         match found.packages.iter().find(|f| f.name == p.name) {
             None => report = report.note(format!("`{}` is not locked", p.name)),
-            Some(f) if f != p => {
-                report = report.note(format!(
-                    "`{}` changed (locked {}, now {})",
-                    p.name,
-                    f.shown(),
-                    p.shown()
-                ));
-            }
+            Some(f) if f != p => report = report.note(changed(f, p)),
             Some(_) => {}
         }
     }
@@ -534,6 +527,60 @@ pub fn verify(existing: Option<&str>, expected: &LockFile) -> Result<(), Report>
         report = report.note(format!("`{}` is locked but no longer used", f.name));
     }
     Err(report)
+}
+
+/// The note for `name`, locked as `was` and now resolved as `now`: the
+/// version and content digest when either differs, then each other field
+/// that does, so the note always names what changed.
+fn changed(was: &LockedPackage, now: &LockedPackage) -> String {
+    let mut note = format!("`{}` changed", now.name);
+    if was.shown() != now.shown() {
+        let _ = write!(note, " (locked {}, now {})", was.shown(), now.shown());
+    }
+    let mut parts = Vec::new();
+    if was.language != now.language {
+        parts.push(format!(
+            "language (locked {}, now {})",
+            was.language, now.language
+        ));
+    }
+    // An unchecked row's content is its source digest, already shown.
+    let shown = |p: &LockedPackage| p.content() == p.source;
+    if was.source != now.source && !(shown(was) && shown(now)) {
+        parts.push(format!(
+            "source (locked {}, now {})",
+            was.source, now.source
+        ));
+    }
+    for (field, old, new) in [
+        ("texts", &was.texts, &now.texts),
+        ("dependencies", &was.dependencies, &now.dependencies),
+    ] {
+        let gone: Vec<String> = old
+            .iter()
+            .filter(|e| !new.contains(e))
+            .map(|e| format!("`{e}`"))
+            .collect();
+        let added: Vec<String> = new
+            .iter()
+            .filter(|e| !old.contains(e))
+            .map(|e| format!("`{e}`"))
+            .collect();
+        let mut diff = Vec::new();
+        if !gone.is_empty() {
+            diff.push(format!("drops {}", gone.join(", ")));
+        }
+        if !added.is_empty() {
+            diff.push(format!("adds {}", added.join(", ")));
+        }
+        if !diff.is_empty() {
+            parts.push(format!("{field} ({})", diff.join(", ")));
+        }
+    }
+    if !parts.is_empty() {
+        let _ = write!(note, ": {}", parts.join("; "));
+    }
+    note
 }
 
 #[cfg(test)]

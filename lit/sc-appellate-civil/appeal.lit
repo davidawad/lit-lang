@@ -1,0 +1,115 @@
+module sc-appellate-court-civil.appeal
+
+start notice-filed
+
+state notice-filed: "Notice of appeal served and filed" by applicant cite "S.C. App. Ct. R. 203(b)(1)"
+{
+  note "Appeal lies from any final judgment, appealable order or decision, by a party aggrieved (S.C. App. Ct. R. 201). From the court of common pleas the notice of appeal is served on all respondents within thirty days after receipt of written notice of entry of the order or judgment; a timely motion under SCRCP 50, 52 or 59 stays that time for all parties until receipt of written notice of entry of the order deciding it (S.C. App. Ct. R. 203(b)(1); S.C. R. Civ. P. 59(f)). A respondent may cross-appeal within five days after receipt of the appellant's notice or within the Rule 203(b) time, whichever expires last (S.C. App. Ct. R. 203(c)). The notice is filed with the lower court and the appellate court within ten days after service, with proof of service, the orders appealed and the filing fee, which footnote 1 to the rule records as set at $250 by order of October 9, 2018; an untimely notice or unpaid fee dismisses the appeal (S.C. App. Ct. R. 203(d)). The time to serve the notice of appeal may not be extended (S.C. App. Ct. R. 263(b)). Periods in this package are stated, not counted: Rule 263(a) computes them as SCRCP 6(a) does and adds no days for service by mail; no lit/core counting rule encodes it. The earlier outline named no leading decision."
+  edge-notice-filed-transcript "Transcript ordered" -> transcript {
+    authority cite "S.C. App. Ct. R. 207(a)"
+  }
+}
+
+state transcript: "Transcript ordered and delivered" by office cite "S.C. App. Ct. R. 207(a)"
+{
+  note "In appeals from the court of common pleas the transcript is ordered in writing from the court reporter within ten days after service of the notice of appeal, and the reporter delivers it no later than sixty days after the request; Court Administration may grant up to three extensions totalling up to ninety days (S.C. App. Ct. R. 207(a)(1)-(3))."
+  edge-transcript-briefs "Initial briefs" -> initial-briefs {
+    authority cite "S.C. App. Ct. R. 208(a)"
+  }
+}
+
+state initial-briefs: "Initial briefs and designations served" by applicant cite "S.C. App. Ct. R. 208(a)"
+{
+  note "The appellant serves and files its brief within thirty days after receiving the transcript (or after serving the notice of appeal if none is ordered), the respondent within thirty days after service of the appellant's brief, and any reply within ten days after service of the respondent's brief; if the appellant does not, the clerk dismisses the appeal (S.C. App. Ct. R. 208(a)). Principal briefs may not exceed fifty pages and reply briefs twenty-five, except in death cases or by leave (S.C. App. Ct. R. 208(b)(5)). Each party serves its designation of matter for the record with its initial brief (S.C. App. Ct. R. 209(a))."
+  edge-initial-briefs-record "Record on Appeal served" -> record {
+    authority cite "S.C. App. Ct. R. 210(a)"
+  }
+  edge-initial-briefs-dismissed "Appellant's brief not filed" -> dismissed-procedural {
+    authority cite "S.C. App. Ct. R. 208(a)(4)"
+  }
+}
+
+state record: "Record on Appeal and final briefs" by applicant cite "S.C. App. Ct. R. 210(a)"
+{
+  note "Within thirty days after service of the last brief the appellant serves the Record on Appeal and files it no later than the final briefs are due (S.C. App. Ct. R. 210(a), (b)); within twenty days after service of the Record each party serves and files its final brief, identical to the initial brief but for record references and typographical corrections (S.C. App. Ct. R. 211(a), (b)). The court considers no fact outside the Record on Appeal (S.C. App. Ct. R. 210(h))."
+  edge-record-submitted "Case ready for decision" -> argument {
+    authority cite "S.C. App. Ct. R. 211(a)"
+  }
+}
+
+decision argument: "Oral argument or submission on the briefs" by court cite "S.C. App. Ct. R. 215"
+{
+  note "The appellate court may decide any case without oral argument if argument would not aid it (S.C. App. Ct. R. 215). Cases for argument are listed not later than forty days, and rostered not later than fifteen days, before the term (S.C. App. Ct. R. 216); the appellant opens and closes, and the court sets the time (S.C. App. Ct. R. 218(a), (c))."
+  edge-argument-heard "Argued" -> decision { authority cite "S.C. App. Ct. R. 218(a)" }
+  edge-argument-submitted "Submitted on the briefs" -> decision {
+    authority cite "S.C. App. Ct. R. 215"
+  }
+}
+
+decision decision: "Court decides" by court cite "S.C. App. Ct. R. 220(a)"
+{
+  note "The court decides in writing by published or memorandum opinion, and may affirm, reverse, or modify the decision below or remand; it may affirm on any ground appearing in the Record on Appeal (S.C. App. Ct. R. 220(a), (c)). The earlier outline named no leading decision."
+  edge-decision-affirmed "Affirmed" -> post-decision { authority cite "S.C. App. Ct. R. 220(a)" }
+  edge-decision-reversed "Reversed, modified or remanded" -> post-decision {
+    authority cite "S.C. App. Ct. R. 220(a)"
+  }
+}
+
+decision post-decision: "Rehearing sought?" by applicant cite "S.C. App. Ct. R. 221(a)"
+{
+  note "A petition for rehearing must be actually received by the appellate court no later than fifteen days after the filing of the opinion, states with particularity the points overlooked or misapprehended, and may not exceed fifteen pages (S.C. App. Ct. R. 221(a)). A Court of Appeals decision is not final for certiorari until a petition for rehearing has been acted on (S.C. App. Ct. R. 242(c))."
+  edge-post-decision-rehearing "Petition for rehearing" -> rehearing {
+    authority cite "S.C. App. Ct. R. 221(a)"
+  }
+  edge-post-decision-none "No rehearing sought" -> remittitur {
+    authority cite "S.C. App. Ct. R. 221(b)"
+  }
+}
+
+decision rehearing: "Rehearing petition decided" by court cite "S.C. App. Ct. R. 221(a)"
+{
+  note "No return may be filed unless the court requests one, and rehearing is ordinarily not granted without that request (S.C. App. Ct. R. 221(a)). A suggestion for rehearing en banc in the Court of Appeals is made in the petition for rehearing and needs the vote of six judges (S.C. App. Ct. R. 219(a), (b)). The remittitur is held while the petition is pending (S.C. App. Ct. R. 221(b))."
+  edge-rehearing-granted "Rehearing granted" -> argument {
+    authority cite "S.C. App. Ct. R. 221(a)"
+  }
+  edge-rehearing-denied "Rehearing denied" -> certiorari-choice {
+    authority cite "S.C. App. Ct. R. 242(c)"
+  }
+}
+
+decision certiorari-choice: "Petition the Supreme Court for certiorari?" by applicant cite "S.C. App. Ct. R. 242(c)"
+{
+  note "A petition for a writ of certiorari is served and filed with the Clerks of the Court of Appeals and the Supreme Court within thirty days after the petition for rehearing is finally decided, with the filing fee; it may present only questions raised in the Court of Appeals and in the petition for rehearing, and may not exceed twenty-five pages (S.C. App. Ct. R. 242(c), (d)). After rehearing is denied, the remittitur waits until the time to petition has expired (S.C. App. Ct. R. 221(b))."
+  edge-certiorari-choice-petition "Petition for certiorari" -> certiorari {
+    authority cite "S.C. App. Ct. R. 242(c)"
+  }
+  edge-certiorari-choice-none "No petition" -> remittitur {
+    authority cite "S.C. App. Ct. R. 221(b)"
+  }
+}
+
+decision certiorari: "Certiorari decided" by court cite "S.C. App. Ct. R. 242(i)"
+{
+  note "Certiorari is not a matter of right but of sound judicial discretion, granted only for special and important reasons such as a novel question, a dissent below, or a conflict with a decision of the Supreme Court (S.C. App. Ct. R. 242(a), (b)). The return is served within thirty days after service of the petition and the reply within ten days after service of the return (S.C. App. Ct. R. 242(f), (g)). The petition is considered without oral argument; if it is granted, the petitioner serves and files its brief within thirty days (S.C. App. Ct. R. 242(i)). No rehearing lies from an order denying certiorari (S.C. App. Ct. R. 221(a))."
+  edge-certiorari-denied "Certiorari denied" -> remittitur {
+    authority cite "S.C. App. Ct. R. 221(b)"
+  }
+  edge-certiorari-granted "Certiorari granted" -> supreme-merits {
+    authority cite "S.C. App. Ct. R. 242(i)"
+  }
+}
+
+terminal remittitur: "Remittitur sent to the lower court" outcome [final] cite "S.C. App. Ct. R. 221(b)"
+{
+  note "Unless the court orders otherwise, the remittitur is not sent until fifteen days have elapsed since the filing of the decision finally disposing of the appeal, nor while a petition for rehearing or certiorari is pending (S.C. App. Ct. R. 221(b)). A motion for costs is served and filed within fifteen days of the remittitur (S.C. App. Ct. R. 222(d))."
+}
+
+terminal supreme-merits: "Certiorari granted: merits in the Supreme Court" outcome [final] cite "S.C. App. Ct. R. 242(i)"
+{
+  note "The Supreme Court reviews the questions the grant specifies on new briefs (S.C. App. Ct. R. 242(i)). Its outcome is outside this package."
+}
+
+terminal dismissed-procedural: "Appeal dismissed for failure to file the brief" outcome [loss, procedural-default] cite "S.C. App. Ct. R. 208(a)(4)"
+{
+  note "The clerk signs an order dismissing the appeal, which is not reinstated except as Rule 260 provides (S.C. App. Ct. R. 208(a)(4))."
+}

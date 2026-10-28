@@ -1,0 +1,46 @@
+# Certiorari review in the New Mexico Supreme Court of a civil decision of
+# the Court of Appeals, under the Rules of Appellate Procedure (NMRA Rule
+# Set 12) as published in the NMRA "Unannotated" collection on NMOneSource
+# and retrieved on October 27, 2026 (sources/nm-state-appellate; its latest
+# amendment notes are effective December 31, 2025). The appeal to the
+# Court of Appeals is lit/nm-state-appellate, which hands off here at the
+# petition. Computation of time is NMRA 12-308, which core does not model,
+# so the periods are stated in notes, not counted. Appeals taken directly
+# to the Supreme Court (NMRA 12-102(A)), writs of error (NMRA 12-503) and
+# other extraordinary writs (NMRA 12-504) are not modeled; nor is review in
+# the Supreme Court of the United States.
+[package]
+name = "nm-supreme-court-certiorari"
+version = "0.1.0"
+language = 1
+pack_id = "nm-supreme-court-certiorari"
+forum = "nm-supreme-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "new-mexico"
+title = "New Mexico Supreme Court, certiorari review of civil decisions"
+description = "Certiorari review in the New Mexico Supreme Court of a Court of Appeals decision under NMRA 12-502, as far as the vendored text states: the petition and its time, contents and length, the response and conditional cross-petition, grant or denial of the writ, merits briefing and its length limits, oral argument, decision, rehearing and mandate."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "New Mexico Supreme Court (certiorari review, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: its trigger events (lg-u561.5).
+nm-state-rules = { version = "^0.1.0", path = "../nm-rules" }
+
+[sources.nmra-12]
+title = "NMRA Rule Set 12, Rules of Appellate Procedure (unannotated), as published on NMOneSource on October 27, 2026"
+url = "https://nmonesource.com/nmos/nmra-unanno/en/18482/1/document.do"
+path = "sources/nm-state-appellate/nmra-rule-set-12-appellate-2026-sectioned.txt"
+path_sha256 = "12baf7cd64f0f6014d3dd4c81f1f90ab14141d570ab8ceccd99ff719b418bff7"
+sha256 = "53575fd821574077ab2dcf60f0840cf9324a8b8ddd4c24d0eadcc9836a5ef734"
+as_of = "2026-10-27"
+cite_prefixes = ["NMRA 12-"]
+section_heading = "NMRA 12-{n}"

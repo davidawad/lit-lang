@@ -65,6 +65,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | ttab-trademark-trial-and-appeal-board | `lit/ttab` | 21 | 0 | 30 | 0 |
 | vaed-local-rules | `lit/vaed` | 26 | 0 | 26 | 0 |
 | vawd-local-rules | `lit/vawd` | 16 | 0 | 16 | 0 |
+| wied-local-rules | `lit/wied` | 21 | 0 | 21 | 0 |
 | wiwd-local-rules | `lit/wiwd` | 1 | 0 | 1 | 0 |
 
 ## States, DC and territories

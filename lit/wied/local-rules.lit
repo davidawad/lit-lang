@@ -1,0 +1,405 @@
+module wied-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Eastern District of Wisconsin's own civil periods and limits,
+// computed under FRCP 6(a), which governs a period stated in a local rule.
+// Rules that state no period or limit, or state one this layer cannot
+// count, stay out: the clerk's return of exhibits within 30 days (60 when
+// the United States is a party) after the time for appeal elapses, on 14
+// days' notice to remove them (General L. R. 79(b)); the reinstatement
+// hearing within 30 days after a suspended attorney's request (General L.
+// R. 83); the early neutral evaluation session within 30 days of referral
+// and its four- and eight-hour compensation thresholds (Civil L. R. 16);
+// the 2-page summary in a pretrial report and the 5-page limit on reading
+// deposition designations (Civil L. R. 16(c)(1)(A), (F)); the court's 21
+// days' notice before dismissing for want of service, for want of an
+// answer within 6 months, or as frivolous (Civil L. R. 41(a), (b), (d));
+// the 150 and 100 numbered statements of fact on summary judgment (Civil
+// L. R. 56(b)(1)(C)(ii), (b)(2)(B)(ii)), counts, not paper limits; the
+// $250.00 security for costs (Civil L. R. 67(b)); the admiralty and
+// maritime periods (Civil L. R. 100); and the Criminal Local Rules. The
+// earlier E.D. Wis. outline's FRCP flow and its Supreme Court decisions
+// (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby) are FRCP authority
+// and belong to lit/frcp and lit/frap; its Seventh Circuit decisions
+// (Cracco v. Vitran Express, Inc.; Swanson v. Citibank, N.A.) are removed:
+// no reporter text is vendored. Seventh Circuit rules and operating
+// procedures are not vendored either.
+/// A principal memorandum supporting or opposing a motion: at most 30
+/// pages, excluding caption, cover page, tables and signature block, unless
+/// the court first grants leave (Civil L. R. 7(f)).
+limit motion-memorandum {
+  pages <= 30 cite "E.D. Wis. Civil L. R. 7(f)"
+} cite "E.D. Wis. Civil L. R. 7(f)"
+
+/// A reply brief on a motion: at most 15 pages on the same terms (Civil L.
+/// R. 7(f)).
+limit reply-brief {
+  pages <= 15 cite "E.D. Wis. Civil L. R. 7(f)"
+} cite "E.D. Wis. Civil L. R. 7(f)"
+
+/// A Civil L. R. 7(h) expedited non-dispositive motion: at most 3 pages
+/// excluding caption and signature block (Civil L. R. 7(h)(2)).
+limit expedited-motion {
+  pages <= 3 cite "E.D. Wis. Civil L. R. 7(h)"
+} cite "E.D. Wis. Civil L. R. 7(h)"
+
+/// The respondent's memorandum opposing an expedited non-dispositive
+/// motion: at most 3 pages (Civil L. R. 7(h)(2)).
+limit expedited-opposition {
+  pages <= 3 cite "E.D. Wis. Civil L. R. 7(h)"
+} cite "E.D. Wis. Civil L. R. 7(h)"
+
+/// A principal memorandum supporting or opposing summary judgment: at most
+/// 30 pages, excluding caption, cover page, tables and signature block,
+/// unless the court first grants leave (Civil L. R. 56(b)(8)).
+limit summary-judgment-memorandum {
+  pages <= 30 cite "E.D. Wis. Civil L. R. 56(b)"
+} cite "E.D. Wis. Civil L. R. 56(b)"
+
+/// A reply memorandum on summary judgment: at most 15 pages on the same
+/// terms (Civil L. R. 56(b)(8)).
+limit summary-judgment-reply {
+  pages <= 15 cite "E.D. Wis. Civil L. R. 56(b)"
+} cite "E.D. Wis. Civil L. R. 56(b)"
+
+/// The magistrate judge consent form is served on a party (General L. R.
+/// 3(a)(1)).
+event ConsentFormServed()
+/// An objection to a magistrate judge's determination is served, in a
+/// criminal case or a civil case without consent (General L. R. 72(c)).
+event MagistrateObjectionServed()
+/// A response to that objection is served (General L. R. 72(c)(3)).
+event MagistrateObjectionResponseServed()
+/// An objection is made to the designation of filed material as
+/// confidential (General L. R. 79(d)(7)).
+event ConfidentialityObjectionMade()
+/// A motion to reassign a case as related is filed (Civil L. R. 3(c)(2)).
+event ReassignmentMotionFiled()
+/// A judge files a referral asking whether a case is related to a
+/// lower-numbered case (Civil L. R. 3(c)(4)).
+event RelatednessReferralFiled()
+/// A motion other than for summary judgment or under Civil L. R. 7(h) is
+/// served (Civil L. R. 7(b)).
+event MotionServed() paper motion-memorandum
+/// The response memorandum to such a motion is served (Civil L. R. 7(c)).
+event ResponseServed() paper motion-memorandum
+/// The movant's reply is served (Civil L. R. 7(c)).
+event ReplyServed() paper reply-brief
+/// A Civil L. R. 7(h) expedited non-dispositive motion is served.
+event ExpeditedMotionServed() paper expedited-motion
+/// The respondent's memorandum opposing it is filed (Civil L. R. 7(h)(2)).
+event ExpeditedOppositionFiled() paper expedited-opposition
+/// A notice of removal is filed (Civil L. R. 7.1(b)(1)).
+event RemovalNoticeFiled()
+/// A complaint filed under a pseudonym is served (Civil L. R. 10(c)).
+event PseudonymousComplaintServed()
+/// The scheduled trial begins (Civil L. R. 16(c)(1), 26(c)).
+event TrialBegins()
+/// A scheduled final pretrial conference is held (Civil L. R. 16(c)(1)).
+event FinalPretrialConferenceHeld()
+/// Judgment is entered, or the order resolving a timely FRCP 59 motion
+/// (Civil L. R. 54(a)(1)).
+event JudgmentEntered()
+/// A bill of costs is served (Civil L. R. 54(a)(3)).
+event BillOfCostsServed()
+/// Objections to a bill of costs are served (Civil L. R. 54(a)(3)).
+event CostObjectionsServed()
+/// The claiming party's response to those objections is served (Civil L.
+/// R. 54(a)(3)).
+event CostResponseServed()
+/// The Clerk of Court taxes costs (Civil L. R. 54(c)).
+event CostsTaxed()
+/// A summary judgment motion and its Civil L. R. 56(b)(1) materials are
+/// served.
+event SummaryJudgmentMotionServed() paper summary-judgment-memorandum
+/// The opposing party's Civil L. R. 56(b)(2) materials are served.
+event SummaryJudgmentOppositionServed() paper summary-judgment-memorandum
+/// The movant's reply materials are filed (Civil L. R. 56(b)(3)).
+event SummaryJudgmentReplyFiled() paper summary-judgment-reply
+
+/// General L. R. 3(a)(1): each party files the completed magistrate judge
+/// consent form within 21 days after service of the form.
+deadline consent-form-period: 21.days after ConsentFormServed() counted_by frcp6 cite "E.D. Wis. General L. R. 3(a)"
+{
+  forum frcp
+}
+
+/// General L. R. 72(c)(2): any other party may serve and file a response
+/// to an objection to a magistrate judge's determination within 14 days
+/// from service of the objection, unless the court sets another deadline.
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionServed() counted_by frcp6 cite "E.D. Wis. General L. R. 72(c)"
+{
+  forum frcp
+}
+
+/// General L. R. 72(c)(3): the objecting party may serve and file a reply
+/// within 7 days from service of the response, unless the court sets
+/// another deadline.
+deadline magistrate-objection-reply-period: 7.days after MagistrateObjectionResponseServed() counted_by frcp6 cite "E.D. Wis. General L. R. 72(c)"
+{
+  forum frcp
+}
+
+/// General L. R. 79(d)(7): when a party objects to the confidential
+/// designation of filed material, the designating person may move to seal
+/// it within 21 days of the objection.
+deadline sealing-motion-period: 21.days after ConfidentialityObjectionMade() counted_by frcp6 cite "E.D. Wis. General L. R. 79(d)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 3(c)(2)(D): an objection to a motion to reassign a related
+/// case is filed within 7 days of the filing of the motion and served on
+/// all parties and on the judges of the affected cases.
+deadline reassignment-objection-period: 7.days after ReassignmentMotionFiled() counted_by frcp6 cite "E.D. Wis. Civil L. R. 3(c)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 3(c)(4)(A): the parties may file any opposition to or
+/// support for reassignment within 7 days of the filing of a judge's
+/// relatedness referral.
+deadline relatedness-referral-response-period: 7.days after RelatednessReferralFiled() counted_by frcp6 cite "E.D. Wis. Civil L. R. 3(c)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 7(b): for a motion other than for summary judgment or under
+/// Civil L. R. 7(h), any memorandum and papers in opposition are filed
+/// within 21 days of service of the motion; failing to respond may let the
+/// court decide without further input.
+deadline motion-response-period: 21.days after MotionServed() counted_by frcp6 cite "E.D. Wis. Civil L. R. 7(b)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 7(c): the movant may serve a reply memorandum within 14
+/// days from service of the response memorandum.
+deadline motion-reply-period: 14.days after ResponseServed() counted_by frcp6 cite "E.D. Wis. Civil L. R. 7(c)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 7(h)(2): the respondent files a memorandum opposing an
+/// expedited non-dispositive motion within 7 days of service of the motion
+/// unless the court orders otherwise; no reply is permitted absent leave.
+deadline expedited-opposition-period: 7.days after ExpeditedMotionServed() counted_by frcp6 cite "E.D. Wis. Civil L. R. 7(h)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 7.1(b)(1): when a case has been removed, the non-removing
+/// party files its disclosure statement within 14 days of the filing of
+/// the notice of removal.
+deadline removal-disclosure-period: 14.days after RemovalNoticeFiled() counted_by frcp6 cite "E.D. Wis. Civil L. R. 7.1(b)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 10(c): a party proceeding under a pseudonym files and serves
+/// a motion for permission to continue to do so within 21 days of service
+/// of the complaint.
+deadline pseudonym-motion-period: 21.days after PseudonymousComplaintServed() counted_by frcp6 cite "E.D. Wis. Civil L. R. 10(c)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 16(c)(1): unless otherwise ordered, each party files a
+/// pretrial report at least 14 days before the scheduled start of trial.
+deadline pretrial-report-before-trial: 14.days before TrialBegins() counted_by frcp6 cite "E.D. Wis. Civil L. R. 16(c)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 16(c)(1): if a final pretrial conference is scheduled, the
+/// pretrial report is due 7 days before the conference instead.
+deadline pretrial-report-before-conference: 7.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "E.D. Wis. Civil L. R. 16(c)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 26(c): unless the court orders otherwise, all discovery is
+/// completed 30 days before the date on which trial is scheduled.
+deadline discovery-completion: 30.days before TrialBegins() counted_by frcp6 cite "E.D. Wis. Civil L. R. 26(c)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 54(a)(1): the party claiming costs files and serves its
+/// bill of costs no later than 14 days after entry of judgment, or of the
+/// order resolving a timely FRCP 59 motion.
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "E.D. Wis. Civil L. R. 54(a)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 54(a)(3): unless the Clerk of Court determines otherwise,
+/// the non-claiming party serves objections with a short memorandum within
+/// 14 days of service of the bill of costs.
+deadline cost-objections-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "E.D. Wis. Civil L. R. 54(a)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 54(a)(3): the claiming party serves any response within 7
+/// days of service of the objections.
+deadline cost-response-period: 7.days after CostObjectionsServed() counted_by frcp6 cite "E.D. Wis. Civil L. R. 54(a)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 54(a)(3): the non-claiming party serves any reply within 7
+/// days of service of the response.
+deadline cost-reply-period: 7.days after CostResponseServed() counted_by frcp6 cite "E.D. Wis. Civil L. R. 54(a)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 54(c): a party may move for review of the clerk's taxation
+/// of costs under FRCP 54(d) within 7 days from taxation.
+deadline cost-review-motion-period: 7.days after CostsTaxed() counted_by frcp6 cite "E.D. Wis. Civil L. R. 54(c)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 56(b)(2): each party opposing summary judgment files its
+/// materials within 30 days of service of the motion and the movant's
+/// Civil L. R. 56(b)(1) materials.
+deadline summary-judgment-opposition-period: 30.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "E.D. Wis. Civil L. R. 56(b)"
+{
+  forum frcp
+}
+
+/// Civil L. R. 56(b)(3): the movant may file its reply materials within 14
+/// days of service of the opposing party's materials.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frcp6 cite "E.D. Wis. Civil L. R. 56(b)"
+{
+  forum frcp
+}
+
+test "consent form period: 21 days after service of the form" cite "E.D. Wis. General L. R. 3(a)"
+{
+  given ConsentFormServed() on 2026-11-02
+  expect deadline(consent-form-period) == 2026-11-23
+}
+
+test "magistrate objection response: 14 days after the objection" cite "E.D. Wis. General L. R. 72(c)"
+{
+  given MagistrateObjectionServed() on 2026-11-02
+  expect deadline(magistrate-objection-response-period) == 2026-11-16
+}
+
+test "magistrate objection reply: 7 days after the response" cite "E.D. Wis. General L. R. 72(c)"
+{
+  given MagistrateObjectionResponseServed() on 2026-11-02
+  expect deadline(magistrate-objection-reply-period) == 2026-11-09
+}
+
+test "sealing motion: 21 days after the objection" cite "E.D. Wis. General L. R. 79(d)"
+{
+  given ConfidentialityObjectionMade() on 2026-11-02
+  expect deadline(sealing-motion-period) == 2026-11-23
+}
+
+test "reassignment objection: 7 days after the motion" cite "E.D. Wis. Civil L. R. 3(c)"
+{
+  given ReassignmentMotionFiled() on 2026-11-02
+  expect deadline(reassignment-objection-period) == 2026-11-09
+}
+
+test "relatedness referral response: 7 days after the referral" cite "E.D. Wis. Civil L. R. 3(c)"
+{
+  given RelatednessReferralFiled() on 2026-11-02
+  expect deadline(relatedness-referral-response-period) == 2026-11-09
+}
+
+test "motion response: 21 days after service" cite "E.D. Wis. Civil L. R. 7(b)"
+{
+  given MotionServed() on 2026-11-02
+  expect deadline(motion-response-period) == 2026-11-23
+}
+
+test "motion reply: 14 days after the response" cite "E.D. Wis. Civil L. R. 7(c)"
+{
+  given ResponseServed() on 2026-11-02
+  expect deadline(motion-reply-period) == 2026-11-16
+}
+
+test "expedited opposition: 7 days after service" cite "E.D. Wis. Civil L. R. 7(h)"
+{
+  given ExpeditedMotionServed() on 2026-11-02
+  expect deadline(expedited-opposition-period) == 2026-11-09
+}
+
+test "removal disclosure statement: 14 days after the notice" cite "E.D. Wis. Civil L. R. 7.1(b)"
+{
+  given RemovalNoticeFiled() on 2026-11-02
+  expect deadline(removal-disclosure-period) == 2026-11-16
+}
+
+test "pseudonym motion: 21 days after service of the complaint" cite "E.D. Wis. Civil L. R. 10(c)"
+{
+  given PseudonymousComplaintServed() on 2026-11-02
+  expect deadline(pseudonym-motion-period) == 2026-11-23
+}
+
+test "pretrial report: 14 days before trial" cite "E.D. Wis. Civil L. R. 16(c)"
+{
+  given TrialBegins() on 2026-12-14
+  expect deadline(pretrial-report-before-trial) == 2026-11-30
+}
+
+test "pretrial report: 7 days before the final pretrial conference" cite "E.D. Wis. Civil L. R. 16(c)"
+{
+  given FinalPretrialConferenceHeld() on 2026-12-14
+  expect deadline(pretrial-report-before-conference) == 2026-12-07
+}
+
+test "discovery completion: 30 days before trial, back past a Friday" cite "E.D. Wis. Civil L. R. 26(c)"
+{
+  given TrialBegins() on 2026-12-14
+  expect deadline(discovery-completion) == 2026-11-13
+}
+
+test "bill of costs: 14 days after judgment" cite "E.D. Wis. Civil L. R. 54(a)"
+{
+  given JudgmentEntered() on 2026-11-02
+  expect deadline(bill-of-costs-period) == 2026-11-16
+}
+
+test "cost objections: 14 days after the bill" cite "E.D. Wis. Civil L. R. 54(a)"
+{
+  given BillOfCostsServed() on 2026-11-02
+  expect deadline(cost-objections-period) == 2026-11-16
+}
+
+test "cost response: 7 days after the objections" cite "E.D. Wis. Civil L. R. 54(a)"
+{
+  given CostObjectionsServed() on 2026-11-02
+  expect deadline(cost-response-period) == 2026-11-09
+}
+
+test "cost reply: 7 days after the response" cite "E.D. Wis. Civil L. R. 54(a)"
+{
+  given CostResponseServed() on 2026-11-02
+  expect deadline(cost-reply-period) == 2026-11-09
+}
+
+test "cost review motion: 7 days after taxation" cite "E.D. Wis. Civil L. R. 54(c)"
+{
+  given CostsTaxed() on 2026-11-02
+  expect deadline(cost-review-motion-period) == 2026-11-09
+}
+
+test "summary judgment opposition: 30 days after service" cite "E.D. Wis. Civil L. R. 56(b)"
+{
+  given SummaryJudgmentMotionServed() on 2026-11-02
+  expect deadline(summary-judgment-opposition-period) == 2026-12-02
+}
+
+test "summary judgment reply: 14 days after the opposition" cite "E.D. Wis. Civil L. R. 56(b)"
+{
+  given SummaryJudgmentOppositionServed() on 2026-11-02
+  expect deadline(summary-judgment-reply-period) == 2026-11-16
+}

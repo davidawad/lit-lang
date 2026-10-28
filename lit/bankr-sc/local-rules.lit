@@ -1,0 +1,403 @@
+module bankr-sc-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, PetitionFiled }
+
+// The Bankr. D.S.C. court's own periods, computed under FRBP 9006(a), which
+// states the FRCP 6(a) method. Every FRBP period (schedules, chapter 7, 12
+// and 13 claims, confirmation objections, discharge, dischargeability,
+// adversary answers, appeals) is lit/frbp's; a period the rules restate
+// from the FRBP or the Code is not declared again: the chapter 13 plan
+// notice and objection periods of FRBP 2002(a)(9), 2002(b) and 3015(f) (SC
+// LBR 3015-1(a)(1)), an updated FRBP 2016(b) disclosure within 14 days (SC
+// LBR 2016-1(b)), the subchapter V status report 14 days before the status
+// conference (SC LBR 2083-1, 11 U.S.C. § 1188(c)) and the 180-day
+// governmental claim period of § 502(b)(9) (SC LBR 3003-1); the objection
+// periods tabulated in Exhibits A and B to SC LBR 9013-4 follow the FRBP
+// and are not encoded. Stated in the rules but not declared: monthly
+// reports by the 21st of each month (SC LBR 2015-3(a)); the earliest dates
+// for chapter 11 interim fee applications (SC LBR 2016-1(a)); the chapter
+// 12 pre-confirmation conference at least 14 days before the hearing (SC
+// LBR 2082-1(d)); adequate-protection payments from 30 days after the order
+// for relief (SC LBR 3070-1); the business-day periods (SC LBR 4001-4,
+// 5005-4(d), 9013-2(b)-(c), 9070-1(b)), which frcp6 does not count; the
+// 14-day floor on shortened notice (SC LBR 9013-1(b), 9075-1); the self-
+// scheduled hearing window, not less than 7 days after the objection
+// deadline and not more than 60 days from service (SC LBR 9013-4(a)(2));
+// the later-of jury-trial statement (SC LBR 9015-1(b)); the earliest-of
+// election of mediation (SC LBR 9019-2(a)); and the retention periods for
+// signatures, sealed documents and exhibits (SC LBR 9011-4, 9018-1,
+// 9070-1(c)).
+/// The order confirming a chapter 11 plan of reorganization is entered (SC
+/// LBR 2015-3(c)).
+event Chapter11PlanConfirmed()
+/// The matter for which a chapter 13 debtor's attorney seeks additional
+/// fees or costs concludes (SC LBR 2016-1(b)(8)).
+event FeeMatterConcluded()
+/// The hearing on confirmation of a chapter 12 plan is held (SC LBR
+/// 2082-1(d)).
+event Chapter12ConfirmationHearingDate()
+/// The meeting of creditors is held (SC LBR 2082-1(e)).
+event MeetingOfCreditorsDate()
+/// The chapter 12 debtor serves the Certification of Plan Completion and
+/// Request for Discharge (SC LBR 2082-1(f)).
+event Chapter12CertificationServed()
+/// An application for unclaimed funds is served (SC LBR 3011-1(f)).
+event UnclaimedFundsApplicationServed()
+/// The original chapter 13 confirmation hearing is held (SC LBR 3015-4(b)).
+event OriginalConfirmationHearingDate()
+/// The chapter 13 debtor completes all payments due to the trustee under
+/// the plan (SC LBR 3015-5(a)(1)).
+event PlanPaymentsCompleted()
+/// The trustee serves the Notice to Debtor of Completion of All Payments
+/// Due to the Trustee (SC LBR 3015-5(a)(2)).
+event CompletionNoticeServed()
+/// A confirmed chapter 13 debtor acquires assets, obtains credit, uses cash
+/// collateral or insurance proceeds, or settles a matter, as SC LBR 3015-8
+/// describes (SC LBR 3015-8).
+event PostConfirmationTransaction()
+/// The hearing that results in denial of confirmation of a chapter 11 plan
+/// or of approval of a disclosure statement is held (SC LBR 3016-1(c)).
+event ConfirmationDenialHearing()
+/// The subchapter V debtor serves the Certification of Plan Completion and
+/// Request for Discharge under a non-consensual plan (SC LBR 4004-2(b)).
+event SubchapterVCertificationServed()
+/// A pro se individual submits a voluntary petition through eSR (SC LBR
+/// 5005-4(d)(2)(A)).
+event EsrPetitionSubmitted()
+/// The movant serves its designation of the record with a motion to
+/// withdraw the reference (SC LBR 5011-1(b)).
+event RecordDesignationServed()
+/// A motion to withdraw the reference is served (SC LBR 5011-1(c)).
+event WithdrawalMotionServed()
+/// A motion for a stay under FRBP 5011(d) is served (SC LBR 5011-1(e)).
+event StayPendingWithdrawalMotionServed()
+/// A pro se submission under SC LBR 5005-4(d) requiring a fee is made
+/// without it (SC LBR 5080-1(a)).
+event UnpaidSubmissionMade()
+/// The order denying an installment application for an unpaid fee in a
+/// previous case is entered (SC LBR 5080-1(c)).
+event InstallmentDenialForPriorFees()
+/// A sale of estate property closes (SC LBR 6004-1(c)).
+event SaleClosed()
+/// A request for a debtor's tax information is filed (SC LBR 6070-1(a)).
+event TaxInformationRequestFiled()
+/// The deadline for a response to the discovery at issue passes (SC LBR
+/// 7026-1(a)).
+event DiscoveryResponseDue()
+/// A motion in connection with discovery is served (SC LBR 7026-1(a)).
+event DiscoveryMotionServed()
+/// The court's order on a discovery motion is entered (SC LBR 7026-1(c)).
+event DiscoveryOrderEntered()
+/// The hearing on a contested matter is held (SC LBR 9013-2(a)).
+event ContestedHearingDate()
+/// A party delegated service of an order or notice serves it (SC LBR
+/// 9013-3(b)).
+event DelegatedServiceMade()
+/// The hearing to determine the existence of a right to jury trial is held
+/// (SC LBR 9015-1(c)).
+event JuryRightHearingDate()
+/// A settlement or compromise is reported to the court (SC LBR 9019-1).
+event SettlementReported()
+/// A motion for mediation is served (SC LBR 9019-2(a)).
+event MediationMotionServed()
+/// The order appointing a mediator is entered (SC LBR 9019-2(d)).
+event MediatorAppointed()
+/// Mediation concludes (SC LBR 9019-2(d)).
+event MediationConcluded()
+/// The mediator reports to the court whether an agreement was reached (SC
+/// LBR 9019-2(d)).
+event MediatorReportFiled()
+/// The time for appeal from the judgment or order expires (SC LBR
+/// 9070-1(c)).
+event AppealTimeExpired()
+
+/// SC LBR 2015-3(c): the debtor, trustee or plan proponent files a report
+/// of substantial consummation, a final report and an application for a
+/// final decree within 90 days after the confirmation order, unless the
+/// court or Code requires otherwise; not in a subchapter V case confirmed
+/// under § 1191(b) with trustee payments.
+deadline consummation-report-period: 90.days after Chapter11PlanConfirmed() counted_by frcp6 cite "SC LBR 2015-3(c)"
+{
+  forum frcp
+}
+
+/// SC LBR 2016-1(b)(8): a chapter 13 debtor's attorney files the Statement
+/// for additional fees or costs within 30 days after the matter concludes.
+deadline chapter13-fee-statement-period: 30.days after FeeMatterConcluded() counted_by frcp6 cite "SC LBR 2016-1(b)(8)"
+{
+  forum frcp
+}
+
+/// SC LBR 2082-1(d): an amended chapter 12 plan resulting from the pre-
+/// confirmation conference is filed and served at least 7 days before the
+/// confirmation hearing to be considered there.
+deadline chapter12-amended-plan-period: 7.days before Chapter12ConfirmationHearingDate() counted_by frcp6 cite "SC LBR 2082-1(d)"
+{
+  forum frcp
+}
+
+/// SC LBR 2082-1(e): a chapter 12 debtor serves the trustee a completed
+/// summary of operations at least 7 days before the meeting of creditors.
+deadline chapter12-operations-summary-period: 7.days before MeetingOfCreditorsDate() counted_by frcp6 cite "SC LBR 2082-1(e)"
+{
+  forum frcp
+}
+
+/// SC LBR 2082-1(f): a party objecting to a chapter 12 discharge under §
+/// 1228(a) serves and files its objection within 14 days after service of
+/// the certification.
+deadline chapter12-discharge-objection-period: 14.days after Chapter12CertificationServed() counted_by frcp6 cite "SC LBR 2082-1(f)"
+{
+  forum frcp
+}
+
+/// SC LBR 3003-1: in a chapter 11 case, proofs of claim or interest of
+/// nongovernmental entities are filed not later than 90 days after the
+/// first date set for the § 341 meeting, unless otherwise specified or
+/// ordered.
+deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frcp6 cite "SC LBR 3003-1"
+{
+  forum frcp
+}
+
+/// SC LBR 3011-1(f): a party objecting to an application for unclaimed
+/// funds serves and files its objection within 21 days after service of the
+/// application; otherwise the court may decide it without a hearing.
+deadline unclaimed-funds-objection-period: 21.days after UnclaimedFundsApplicationServed() counted_by frcp6 cite "SC LBR 3011-1(f)"
+{
+  forum frcp
+}
+
+/// SC LBR 3015-4(b): documents the chapter 13 trustee requests are provided
+/// at least 7 days before the original confirmation hearing.
+deadline trustee-documents-period: 7.days before OriginalConfirmationHearingDate() counted_by frcp6 cite "SC LBR 3015-4(b)"
+{
+  forum frcp
+}
+
+/// SC LBR 3015-5(a)(1): within 45 days after the debtor completes all plan
+/// payments, the chapter 13 trustee files the Report of Completion and
+/// serves the Notice to Debtor of Completion.
+deadline trustee-completion-report-period: 45.days after PlanPaymentsCompleted() counted_by frcp6 cite "SC LBR 3015-5(a)(1)"
+{
+  forum frcp
+}
+
+/// SC LBR 3015-5(a)(2): within 28 days after the trustee serves that
+/// notice, the debtor files and serves the Notice of Certification of Plan
+/// Completion and any Certificate of Completion of Financial Management
+/// Course.
+deadline completion-certification-period: 28.days after CompletionNoticeServed() counted_by frcp6 cite "SC LBR 3015-5(a)(2)"
+{
+  forum frcp
+}
+
+/// SC LBR 3015-8: a confirmed chapter 13 debtor files a report within 10
+/// days of a transaction that alters net property or debt by $25,000 or
+/// more or affects a claim the trustee pays.
+deadline post-confirmation-report-period: 10.days after PostConfirmationTransaction() counted_by frcp6 cite "SC LBR 3015-8"
+{
+  forum frcp
+}
+
+/// SC LBR 3016-1(c): if a chapter 11 plan is not confirmed or a disclosure
+/// statement not approved, the case may be dismissed or converted unless
+/// the proponent files a new plan and disclosure statement within 14 days
+/// after the hearing, or as ordered.
+deadline chapter11-new-plan-period: 14.days after ConfirmationDenialHearing() counted_by frcp6 cite "SC LBR 3016-1(c)"
+{
+  forum frcp
+}
+
+/// SC LBR 4004-2(b): a party objecting to a subchapter V discharge under a
+/// non-consensual plan serves and files its objection within 21 days after
+/// service of the certification.
+deadline subchapter-v-discharge-objection-period: 21.days after SubchapterVCertificationServed() counted_by frcp6 cite "SC LBR 4004-2(b)"
+{
+  forum frcp
+}
+
+/// SC LBR 5005-4(d)(2)(A): to complete an eSR petition, the pro se
+/// individual delivers the signed declaration, Statement About Your Social
+/// Security Numbers and photo identification within 3 days of submittal;
+/// the petition is filed when they are received.
+deadline esr-documents-period: 3.days after EsrPetitionSubmitted() counted_by frcp6 cite "SC LBR 5005-4(d)(2)(A)"
+{
+  forum frcp
+}
+
+/// SC LBR 5005-4(d)(3): electronic filing through EDSS is available to a
+/// pro se individual only for 14 days after the petition date.
+deadline pro-se-electronic-filing-period: 14.days after PetitionFiled() counted_by frcp6 cite "SC LBR 5005-4(d)(3)"
+{
+  forum frcp
+}
+
+/// SC LBR 5011-1(b): any other party may serve and file a designation of
+/// additional portions of the record within 14 days after service of the
+/// movant's designation.
+deadline additional-record-designation-period: 14.days after RecordDesignationServed() counted_by frcp6 cite "SC LBR 5011-1(b)"
+{
+  forum frcp
+}
+
+/// SC LBR 5011-1(c): opposing parties file and serve written responses to a
+/// motion to withdraw the reference within 14 days after being served.
+deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "SC LBR 5011-1(c)"
+{
+  forum frcp
+}
+
+/// SC LBR 5011-1(e): a motion for a stay under FRBP 5011(d) carries notice
+/// that the responding party has 14 days from its service to object or
+/// respond.
+deadline stay-pending-withdrawal-response-period: 14.days after StayPendingWithdrawalMotionServed() counted_by frcp6 cite "SC LBR 5011-1(e)"
+{
+  forum frcp
+}
+
+/// SC LBR 5080-1(a): a filing fee not delivered with a submission under SC
+/// LBR 5005-4(d) is remitted to the clerk within 7 days.
+deadline unpaid-submission-fee-period: 7.days after UnpaidSubmissionMade() counted_by frcp6 cite "SC LBR 5080-1(a)"
+{
+  forum frcp
+}
+
+/// SC LBR 5080-1(c): on denying installments to a debtor who left a prior
+/// case's fee unpaid, the court may allow up to 10 days from entry of the
+/// order to pay the entire fee.
+deadline prior-fee-full-payment-period: 10.days after InstallmentDenialForPriorFees() counted_by frcp6 cite "SC LBR 5080-1(c)"
+{
+  forum frcp
+}
+
+/// SC LBR 6004-1(c): the moving party files a report of sale within 14 days
+/// after the closing of any sale of estate property.
+deadline sale-report-period: 14.days after SaleClosed() counted_by frcp6 cite "SC LBR 6004-1(c)"
+{
+  forum frcp
+}
+
+/// SC LBR 6070-1(a): a request for tax information is considered after 14
+/// days from its filing, during which the debtor may object.
+deadline tax-information-objection-period: 14.days after TaxInformationRequestFiled() counted_by frcp6 cite "SC LBR 6070-1(a)"
+{
+  forum frcp
+}
+
+/// SC LBR 7026-1(a): a motion to compel discovery is filed no later than 14
+/// days following the deadline for the response to the discovery at issue.
+deadline discovery-motion-period: 14.days after DiscoveryResponseDue() counted_by frcp6 cite "SC LBR 7026-1(a)"
+{
+  forum frcp
+}
+
+/// SC LBR 7026-1(a): a response to a discovery motion is filed and served
+/// within 14 days after service of the motion.
+deadline discovery-motion-response-period: 14.days after DiscoveryMotionServed() counted_by frcp6 cite "SC LBR 7026-1(a)"
+{
+  forum frcp
+}
+
+/// SC LBR 7026-1(c): discovery the court requires on a discovery motion is
+/// completed within 14 days after entry of its order, unless otherwise
+/// ordered.
+deadline discovery-compliance-period: 14.days after DiscoveryOrderEntered() counted_by frcp6 cite "SC LBR 7026-1(c)"
+{
+  forum frcp
+}
+
+/// SC LBR 9013-2(a): a memorandum or brief is filed and served no later
+/// than 7 days before the hearing, unless otherwise ordered.
+deadline contested-memorandum-period: 7.days before ContestedHearingDate() counted_by frcp6 cite "SC LBR 9013-2(a)"
+{
+  forum frcp
+}
+
+/// SC LBR 9013-3(b): a party delegated service of an order or notice should
+/// file a certificate of service within 7 days.
+deadline delegated-service-certificate-period: 7.days after DelegatedServiceMade() counted_by frcp6 cite "SC LBR 9013-3(b)"
+{
+  forum frcp
+}
+
+/// SC LBR 9015-1(c): the parties demanding and opposing a jury trial file
+/// and serve memoranda no later than 7 days before the hearing on the right
+/// to a jury trial.
+deadline jury-right-memorandum-period: 7.days before JuryRightHearingDate() counted_by frcp6 cite "SC LBR 9015-1(c)"
+{
+  forum frcp
+}
+
+/// SC LBR 9019-1: notice of a settlement or compromise is filed and served
+/// within 10 days after the report of settlement to the court.
+deadline settlement-notice-period: 10.days after SettlementReported() counted_by frcp6 cite "SC LBR 9019-1"
+{
+  forum frcp
+}
+
+/// SC LBR 9019-2(a): a party opposing mediation has 14 days to file and
+/// serve an objection to the motion.
+deadline mediation-objection-period: 14.days after MediationMotionServed() counted_by frcp6 cite "SC LBR 9019-2(a)"
+{
+  forum frcp
+}
+
+/// SC LBR 9019-2(d): unless otherwise ordered, mediation is concluded
+/// within 30 days of the order appointing a mediator.
+deadline mediation-conclusion-period: 30.days after MediatorAppointed() counted_by frcp6 cite "SC LBR 9019-2(d)"
+{
+  forum frcp
+}
+
+/// SC LBR 9019-2(d): the mediator reports to the court in writing within 7
+/// days following the conclusion of mediation.
+deadline mediator-report-period: 7.days after MediationConcluded() counted_by frcp6 cite "SC LBR 9019-2(d)"
+{
+  forum frcp
+}
+
+/// SC LBR 9019-2(d): the proposed order, stipulation or notice of
+/// settlement is due within 14 days of the mediator's report.
+deadline mediated-order-period: 14.days after MediatorReportFiled() counted_by frcp6 cite "SC LBR 9019-2(d)"
+{
+  forum frcp
+}
+
+/// SC LBR 9070-1(c): exhibits admitted or marked are claimed by their
+/// proponent within 14 days after the time for appeal expires, unless the
+/// court directs otherwise.
+deadline exhibit-claim-period: 14.days after AppealTimeExpired() counted_by frcp6 cite "SC LBR 9070-1(c)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed and self-scheduled" by applicant cite "SC LBR 9013-4(a)"
+{
+  note "A represented movant selects a hearing date from the court's calendar not less than 7 days after the objection deadline and not more than 60 days from service, prepares the hearing notice, serves the parties entitled to notice and files the motion, notice and proposed order (SC LBR 9013-4(a)); passive motions (Exhibit A) are likely granted without a hearing if no objection is filed. The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-objection "Objection filed" -> objection { authority cite "SC LBR 9014-1" }
+  edge-motion-filed-unopposed "No objection to a passive motion" -> ruling {
+    authority cite "SC LBR 9013-4(a)"
+  }
+}
+
+state objection: "Objection filed" by opponent cite "SC LBR 9014-1"
+{
+  note "Memoranda are due 7 days before the hearing (SC LBR 9013-2(a)); counsel confer more than 3 business days before it and file a notice of contested proceeding by 10:00 a.m. 3 business days before it (SC LBR 9013-2(b)-(c))."
+  edge-objection-ruling "Matter heard" -> ruling { authority cite "SC LBR 9013-2" }
+}
+
+decision ruling: "Motion decided" by court cite "SC LBR 9013-4(a)"
+{
+  note "Resulting orders are served as SC LBR 9013-4 and its exhibits indicate, with a certificate of service within 7 days (SC LBR 9013-3(b))."
+  edge-ruling-granted "Granted" -> decided { authority cite "SC LBR 9013-4(a)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "SC LBR 9013-4(a)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "SC LBR 1001-1(a)"
+{
+  note "The local rules govern practice and procedure before the court and are construed consistently with the FRBP (SC LBR 1001-1)."
+}

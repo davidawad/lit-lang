@@ -1,0 +1,47 @@
+# The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the District
+# of South Carolina over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
+# declares only the periods the Local Rules themselves state and
+# re-encodes no FRBP period. It is a base package, not a `kind =
+# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011 for
+# `bankr-sc`), as for lit/bankr-md. Each period is counted under FRBP
+# 9006(a), the FRCP 6(a) method (core's frcp6). The rules are the clean
+# edition effective as of August 17, 2026, which carries the August 2026
+# amendments; no later amending order is vendored
+# (sources/bankr-sc/PROVENANCE.md), so the consolidation is the only
+# layer. The earlier editions are not vendored, so a query before August
+# 17, 2026 is a hole in the corpus.
+[package]
+name = "bankr-sc-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-sc-local-rules"
+forum = "bankr-sc"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the District of South Carolina: Local Bankruptcy Rules"
+description = "The Bankr. D.S.C. Local Bankruptcy Rules (SC LBR) as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): chapter 11 consummation reports, chapter 13 fee statements, chapter 12 amended plans, operations summaries and discharge objections, chapter 11 proofs of claim, unclaimed funds, chapter 13 trustee documents, discharge and post-confirmation reports, chapter 11 plans after denial, subchapter V discharge objections, eSR filings, withdrawal of the reference, fees, reports of sale, tax information requests, discovery motions, memoranda, certificates of service, jury-trial memoranda, settlements, mediation and exhibits."
+in_force = "2026-08-17"
+known_at = "2026-10-28"
+unknown_before = "2026-08-17"
+jurisdiction = "U.S. Bankruptcy Court for the District of South Carolina"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.scb-lbr]
+title = "District of South Carolina Local Bankruptcy Rules (effective as of August 17, 2026)"
+url = "https://www.scb.uscourts.gov/pdf/Local_Rules/2026LocalRulesAugAmendments.pdf"
+path = "sources/bankr-sc/sc-local-rules-2026-08-17-sectioned.txt"
+path_sha256 = "c21b3398d20b38b3fa0de301732d46bfd937918e567f83644195aa2a6106f493"
+sha256 = "c82f5b6043231885f736ca5648ec6d079f4638bf0cbf22c7d62376f7befb530f"
+as_of = "2026-08-17"
+cite_prefixes = ["SC LBR"]
+section_heading = "Rule {n}"

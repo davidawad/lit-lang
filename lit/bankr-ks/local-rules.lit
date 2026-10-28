@@ -187,6 +187,16 @@ deadline payee-change-notice-period: 45.days before PayeeChangeDate() counted_by
   forum frcp
 }
 
+/// D. Kan. LBR 3022.1(a): within 3 months after the court orders
+/// confirmation of a non-individual chapter 11 plan, the plan proponent
+/// files an application for a final decree or shows cause why it cannot be
+/// entered; otherwise it files a status report every 6 months until the
+/// final decree.
+deadline final-decree-application-period: 3.months after ConfirmationOrderEntered() counted_by frcp6 cite "D. Kan. LBR 3022.1(a)"
+{
+  forum frcp
+}
+
 /// D. Kan. LBR 4001(a).1(f): if the debtor disputes an alleged default
 /// under a Conditional Order Granting Stay Relief, the debtor may file a
 /// response within the time the order lists or within 14 days, whichever is

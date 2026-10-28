@@ -1,0 +1,165 @@
+module pr-criminal-trial-court.criminal
+
+// Criminal cases in the Puerto Rico Court of First Instance under the
+// Reglas de Procedimiento Criminal de 1963 (Spanish official text). The
+// rules are CURRENCY UNCONFIRMED (sources/pr-criminal-trial-court/
+// PROVENANCE.md), so they are cited for the structure of each step and no
+// period, limit or amount is taken from them: where a step has one, the
+// note names the rule that sets it and says that it is not stated. The
+// speedy-trial rule is Regla 64(n): a motion to dismiss lies when the
+// defendant was held, charged or not tried within the periods it sets,
+// unless just cause is shown or the delay was the defendant's; those
+// periods are not stated here. The Puerto Rico Constitution's bail and
+// speedy-trial clauses, the Código Penal and the Ley de la Judicatura are
+// not vendored. Outcomes are from the defendant's side. The earlier
+// outline's leading decisions (County of Riverside v. McLaughlin,
+// Gerstein v. Pugh, Gideon v. Wainwright, Brady v. Maryland, Mapp v. Ohio,
+// Barker v. Wingo, Boykin v. Alabama, Missouri v. Frye, Jackson v.
+// Virginia, Ramos v. Louisiana, Apprendi v. New Jersey, Roe v.
+// Flores-Ortega, Garza v. Idaho) are removed: no reporter text is
+// vendored.
+start arrested
+
+state arrested: "Complaint (denuncia), arrest or summons" by applicant cite "R. P. Crim. Regla 6"
+{
+  note "A criminal proceeding begins by a sworn complaint (denuncia) (R. P. Crim. Regla 5). If the sworn complaint or statements show probable cause, the magistrate issues an arrest warrant or a summons (R. P. Crim. Regla 6(a), (c)); arrest is defined and governed by Reglas 4 and 10 to 21. A person arrested, with or without a warrant, is brought without unnecessary delay before the nearest available magistrate, who informs the person of the complaint and of the right to counsel (R. P. Crim. Regla 22(a), (b))."
+  edge-arrested-appearance "Appearance before the magistrate" -> initial-appearance {
+    authority cite "R. P. Crim. Regla 22"
+  }
+}
+
+decision initial-appearance: "Bail or detention" by court cite "R. P. Crim. Regla 6.1"
+{
+  note "Bail until sentence is required as Regla 6.1 provides, and bail and its conditions are fixed and reviewed under Regla 218. The Puerto Rico Constitution's bail clause and its limit on preventive detention are not vendored; the periods Regla 6.1 and 218 set are not stated here (currency unconfirmed)."
+  edge-initial-appearance-detained "Detained for want of bail" -> probable-cause {
+    authority cite ?("P.R. Const. art. II, § 11 (bail and preventive detention; not vendored)")
+  }
+  edge-initial-appearance-released "Released on bail or conditions" -> probable-cause {
+    authority cite "R. P. Crim. Regla 218"
+  }
+}
+
+decision probable-cause: "Preliminary hearing (vista preliminar)" by court cite "R. P. Crim. Regla 23(a)"
+{
+  note "A preliminary hearing is held where Regla 23(a) requires it (a felony charge), within the time it sets, which is not stated here (currency unconfirmed); the person may waive it after being summoned (R. P. Crim. Regla 23(b)), and the hearing begins with the prosecution's evidence (R. P. Crim. Regla 23(c)). If probable cause is found, the record goes to the Court of First Instance for the filing of the accusation (R. P. Crim. Regla 24(b)); if it is not, the effects are those of Regla 24(c)."
+  edge-probable-cause-charged "Probable cause found; accusation filed" -> charged {
+    authority cite "R. P. Crim. Regla 24(b)"
+  }
+  edge-probable-cause-none "No probable cause found" -> dismissed {
+    authority cite "R. P. Crim. Regla 24(c)"
+  }
+}
+
+state charged: "Accusation (acusación)" by office cite "R. P. Crim. Regla 34"
+{
+  note "The accusation and the complaint are defined by Regla 34 and their contents by Regla 35. The time within which the accusation must be filed and the defendant tried bears on a Regla 64(n) motion to dismiss, whose periods are not stated here (currency unconfirmed)."
+  edge-charged-arraignment "Arraignment (lectura de acusación)" -> arraignment {
+    authority cite "R. P. Crim. Regla 52"
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "R. P. Crim. Regla 52"
+{
+  note "The accusation is read to the defendant as Reglas 52 to 58 provide, and the defendant answers it as Regla 61 provides; pleas (alegaciones) are governed by Regla 68 and following."
+  edge-arraignment-discovery "Discovery" -> discovery {
+    authority cite "R. P. Crim. Regla 95"
+  }
+}
+
+state discovery: "Discovery and motions to dismiss" by applicant cite "R. P. Crim. Regla 63"
+{
+  note "The prosecution's discovery in favor of the defendant is governed by Regla 95. Defenses and objections, when they are raised and their waiver, are governed by Regla 63, within times not stated here (currency unconfirmed); the grounds of a motion to dismiss are listed in Regla 64, among them the speedy-trial ground of Regla 64(n)."
+  edge-discovery-motions "Motion to dismiss filed" -> motions-ruling {
+    authority cite "R. P. Crim. Regla 64"
+  }
+  edge-discovery-speedy "Speedy-trial motion to dismiss" -> motions-ruling {
+    authority cite "R. P. Crim. Regla 64(n)"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite "R. P. Crim. Regla 68"
+  }
+}
+
+decision motions-ruling: "Ruling on motions to dismiss" by court cite "R. P. Crim. Regla 64"
+{
+  note "A motion to dismiss lies on the grounds of Regla 64; under Regla 64(n) the court dismisses when the defendant was held in jail, charged or not tried within the periods it sets, unless just cause for the delay is shown or the delay was at the defendant's request or with consent. An order granting a motion to dismiss does not bar a new proceeding for the same offense unless the defect or objection is incurable, or in a misdemeanor case dismissed on certain grounds (R. P. Crim. Regla 67)."
+  edge-motions-ruling-speedy "Dismissed under Regla 64(n)" -> dismissed {
+    authority cite "R. P. Crim. Regla 64(n)"
+  }
+  edge-motions-ruling-dismissed "Dismissed on another ground" -> dismissed {
+    authority cite "R. P. Crim. Regla 64"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "R. P. Crim. Regla 63"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "R. P. Crim. Regla 68"
+{
+  note "Pleas and plea agreements are governed by Regla 68 and following. A defendant has the right to a jury trial, which may be waived, as Regla 111 provides; the number of jurors and the verdict are governed by Regla 112 and are not stated here (currency unconfirmed). The presumption of innocence and reasonable doubt are stated in Regla 110."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite "R. P. Crim. Regla 68"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "R. P. Crim. Regla 111"
+  }
+}
+
+decision trial: "Verdict or judgment (fallo)" by court cite "R. P. Crim. Regla 145"
+{
+  note "The court may enter a peremptory acquittal (absolución perentoria) under Regla 135. The jury renders its verdict as Reglas 145 and 151 provide, and a bench trial ends in a judgment (fallo) pronounced as Regla 160 provides."
+  edge-trial-acquittal "Not guilty, or peremptory acquittal" -> acquitted {
+    authority cite "R. P. Crim. Regla 135"
+  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
+    authority cite "R. P. Crim. Regla 160"
+  }
+}
+
+decision post-trial: "New-trial motion" by court cite "R. P. Crim. Regla 188"
+{
+  note "A new trial is granted on the grounds of Regla 188 (newly discovered evidence, a verdict reached by chance, a verdict contrary to law or the evidence, misconduct, an unobtainable transcript) and as Regla 187 provides; a new trial on newly learned facts lies under Regla 192. The times for these motions are not stated here (currency unconfirmed). A timely new-trial motion under Reglas 188(e) and 192, or a reconsideration motion under Regla 194, extends the time to appeal (Regl. T.A. R. 23(A))."
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "R. P. Crim. Regla 188"
+  }
+  edge-post-trial-denied "Motion denied; sentencing" -> sentencing {
+    authority cite "R. P. Crim. Regla 162"
+  }
+}
+
+state sentencing: "Presentence report and sentence" by court cite "R. P. Crim. Regla 162"
+{
+  note "Sentence is defined, and the time within which it is pronounced is set, by Regla 162 (not stated here, currency unconfirmed); the presentence report is governed by Regla 162.1, the warnings before sentence by Regla 166, and evidence of mitigating or aggravating circumstances by Regla 171 (whose amendment the compilation itself flags as uncertain)."
+  edge-sentencing-judgment "Sentence pronounced" -> judgment {
+    authority cite "R. P. Crim. Regla 162"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "R. P. Crim. Regla 193"
+{
+  note "The defendant may appeal a final judgment to the Tribunal de Apelaciones, except that a conviction on a guilty plea is reviewable only by discretionary certiorari (R. P. Crim. Regla 193). The appeal of a final judgment in a criminal case is filed within thirty days after the judgment is pronounced; the term is jurisdictional, and a timely new-trial motion under Reglas 188(e) and 192 or a reconsideration motion under Regla 194 extends it to thirty days after notice of the order disposing of the motion (Regl. T.A. R. 23(A)). The prosecutor and the Solicitor General are notified within the same thirty days, a term of strict compliance (Regl. T.A. R. 23(B)). Correction or modification of sentence lies under Regla 185, and post-sentence relief under Regla 192.1; bail on appeal under Regla 198. lit/core has no counting rule for the Puerto Rico rules, so the 30-day period is not encoded as a counted deadline."
+  edge-judgment-appeal "Appeal filed" -> appeal-taken {
+    authority cite "Regl. T.A. R. 23"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Regl. T.A. R. 23" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "R. P. Crim. Regla 135"
+{
+  note "Outcome from the defendant's side: a verdict or judgment of not guilty, or a peremptory acquittal (R. P. Crim. Reglas 135, 145, 160)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "R. P. Crim. Regla 67"
+{
+  note "Outcome from the defendant's side: no probable cause (R. P. Crim. Regla 24(c)) or a dismissal under Regla 64; whether it bars a new proceeding follows Regla 67."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "Regl. T.A. R. 23"
+{
+  note "The appeal continues before the Tribunal de Apelaciones under its Reglamento (sources/pr-tribunal-apelaciones/)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "R. P. Crim. Regla 192.1"
+{
+  note "Outcome from the defendant's side. Post-sentence relief lies under Regla 192.1; federal habeas belongs to lit/habeas."
+}

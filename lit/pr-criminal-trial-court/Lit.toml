@@ -1,0 +1,59 @@
+# Criminal cases in the Puerto Rico Court of First Instance (Tribunal de
+# Primera Instancia) under the Reglas de Procedimiento Criminal de 1963,
+# as far as the vendored text states. The base text is the Spanish
+# official compilation the Judicial Branch serves
+# (sources/pr-criminal-trial-court/), with statutory amendments through
+# February 2020; its PROVENANCE entry records CURRENCY UNCONFIRMED (later
+# amendments are not confirmed), so in_force is the retrieval date and an
+# earlier query is a hole in the corpus. By the PM's standing ruling of
+# 2026-10-27 such a source yields holes, not values: this package cites
+# the rules only for the structure of the case and states no period,
+# limit or amount from them (Regla 64(n)'s speedy-trial periods
+# included). The appeal hand-off cites Regla 23(A) of the Reglamento del
+# Tribunal de Apelaciones (sources/pr-tribunal-apelaciones/, as amended
+# through December 19, 2025, the text lit/pr-tribunal-apelaciones
+# binds); core has no Puerto Rico counting rule, so its 30-day period is
+# stated in a note. The Código Penal, the Ley de la Judicatura and the
+# Constitution's bail and speedy-trial clauses are not vendored.
+[package]
+name = "pr-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "pr-criminal-trial-court"
+forum = "pr-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "puerto-rico"
+title = "Puerto Rico Court of First Instance, criminal"
+description = "Criminal cases in the Puerto Rico Court of First Instance under the Reglas de Procedimiento Criminal de 1963, as far as the vendored text states: the structure of the case from complaint (denuncia) and arrest through the probable-cause determination, bail, preliminary hearing, accusation, arraignment, motions to dismiss (the Regla 64(n) speedy-trial ground included), discovery, plea or trial, acquittal, verdict, judgment, sentence and new-trial motions; no period from the currency-unconfirmed rules is stated. An appeal goes to the Tribunal de Apelaciones within 30 days under Regla 23(A) of its Reglamento."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Puerto Rico Court of First Instance (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.pr-r-p-crim]
+title = "Reglas de Procedimiento Criminal de 1963 (según enmendadas), Spanish official compilation with statutory amendments through February 2020 (retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://poderjudicial.pr/Documentos/Leyes-Reglamentos/Reglamentos//Reglas-de-Procedimiento-Criminal.pdf"
+path = "sources/pr-criminal-trial-court/pr-reglas-de-procedimiento-criminal-1963-sectioned.txt"
+path_sha256 = "8abe43617cafa139f6cdfc2a94499941c5d658cf60cdbb7bc1613c7d67350259"
+sha256 = "af8b32598344091a1c63058ffe152312d0f2b4514e4c5dc8ed4c5f773238c8c4"
+as_of = "2026-10-28"
+cite_prefixes = ["R. P. Crim."]
+section_heading = "Regla {n}"
+
+[sources.pr-regl-ta]
+title = "Reglamento del Tribunal de Apelaciones (Resolución ER-2004-0010, según enmendado through ER-2025-0003 of December 19, 2025)"
+url = "https://poderjudicial.pr/documentos/Leyes-Reglamentos/Leyes/Apelaciones.pdf"
+path = "sources/pr-tribunal-apelaciones/pr-reglamento-tribunal-apelaciones-sectioned.txt"
+path_sha256 = "922270e4114d4ec335d784912470c8389fff7f9c3c2619ea9e61089b29f3930b"
+sha256 = "e4b748ed5a8719597d14b73e0fd278eb42628dd535b37ce2bf0a595d36b16ca3"
+as_of = "2025-12-19"
+cite_prefixes = ["Regl. T.A. R."]
+section_heading = "Regla {n}"

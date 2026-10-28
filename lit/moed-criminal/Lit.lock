@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "moed-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:5ef2e5e20d56ece0d2e96ef54905ea69a0160f8835cf3231deff44c30a402466"
+semantic = "sha256:ab14b51074ed7574a3deb6d1a2d6d798515c853519ac25c45d1f2cf75d190052"
+texts = [
+    "moed-lr sources/moed/local-rules-sectioned.txt sha256:10fa27fbd06ff35c764a88538b7038d18b8905881f8ccf015a63634f81683886",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

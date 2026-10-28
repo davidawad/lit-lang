@@ -1,0 +1,55 @@
+# The Eastern District of Missouri's Local Rules, as applied in its
+# criminal cases, as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods the Local Rules
+# themselves state for a criminal case and re-encodes no FRCrimP, Speedy
+# Trial Act or FRAP 4(b) period. The rules apply to the cases and
+# proceedings in the District Court (E.D. Mo. L.R. 1.02(A)) and have no
+# separate criminal part; the criminal provisions are L.R. 2.09(B), 3.05,
+# 9.03, 12.07(A), 13.01, 13.03 and 13.05(C), beside the general motion,
+# exhibit and sealing rules. The cover states no edition date; the
+# document's own revision table lists its latest revisions as effective
+# December 15, 2025 (L.R. 2.09, 3.01, 6.03, 12.01 and the Patent Rules;
+# sources/moed), so the package runs from that date and a query before it
+# is a hole in the corpus. No civil layer for the district is promoted
+# yet. Habeas (28 U.S.C. §§ 2254, 2255) is lit/habeas's; an appeal goes
+# to the Eighth Circuit under FRAP 4(b) (lit/frcrimp) and lit/ca8.
+[package]
+name = "moed-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "moed-criminal-local-rules"
+forum = "moed-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Eastern District of Missouri: Local Rules (criminal)"
+description = "The Eastern District of Missouri's Local Rules, as applied in its criminal cases, as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the criminal disclosure statement and its supplement, motion oppositions, replies and page limit, removal of exhibits after a bench trial, the sealing motion opposition, reply and stay of a denial, and the ex parte motion to seal warrant materials."
+in_force = "2025-12-15"
+known_at = "2026-10-28"
+unknown_before = "2025-12-15"
+jurisdiction = "United States District Court, E.D. Missouri (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "moed-lr"
+issuer = "United States District Court for the Eastern District of Missouri"
+date = "2025-12-15"
+designation = "Local Rules (revisions effective December 15, 2025)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.moed-lr]
+title = "Local Rules and Patent Rules of the United States District Court for the Eastern District of Missouri (revisions effective December 15, 2025)"
+url = "https://www.moed.uscourts.gov/sites/moed/files/CMECF_localrule.pdf"
+path = "sources/moed/local-rules-sectioned.txt"
+path_sha256 = "10fa27fbd06ff35c764a88538b7038d18b8905881f8ccf015a63634f81683886"
+sha256 = "f3039857f47617d8bf625a1f584428eaf59c914e7c14b63aadf129239465aa12"
+as_of = "2025-12-15"
+cite_prefixes = ["E.D. Mo. L.R."]
+section_heading = "L.R. {n}"

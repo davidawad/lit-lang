@@ -1,0 +1,140 @@
+module moed-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Eastern District of Missouri's own periods in a criminal case.
+// FRCrimP 45(a) computes a period "in any local rule" of a criminal case,
+// so these count under frcrimp45. For good cause the court may extend or
+// shorten any time limit the rules impose (L.R. 1.05). The disclosure and
+// pretrial motion deadlines are set by an order entered at or after
+// arraignment (L.R. 3.05), not by rule. Stated in the rules but not
+// declared: the redacted sealing material within three business days of a
+// motion for sealing (L.R. 13.05(A)(4)(c)), counted in business days,
+// which frcrimp45 does not count; the six months a granted warrant
+// sealing lasts before a motion to continue it (L.R. 13.05(C)(4)(c)) and
+// the Clerk's five years for pen register and similar originals (L.R.
+// 13.05(C)(2)), stated in months and years; the further 14 days a denial
+// of sealing stays after an appellate ruling affirms it (L.R.
+// 13.05(A)(4)(g)), which runs from a ruling of another court; the
+// summary judgment, fee and costs oppositions (L.R. 4.01(E), (F)) and the
+// civil unsealing periods (L.R. 13.05(B)), civil rules; and the
+// convicted defendant's counsel's notice of appeal or of the defendant's
+// decision not to appeal "within the time permitted for an appeal" (L.R.
+// 12.07(A)), which is FRAP 4(b)'s period, lit/frcrimp's. The earlier
+// E.D. Mo. criminal outline's FRCrimP flow and its decisions (Salerno,
+// Brady, Barker v. Wingo, Zedner, Boykin, Missouri v. Frye, Jackson v.
+// Virginia, Booker, Roe v. Flores-Ortega, Garza v. Idaho) are FRCrimP and
+// constitutional authority and belong to lit/frcrimp; no reporter text is
+// vendored, so they are removed here, and the court's Speedy Trial Act
+// plan (18 U.S.C. § 3165) is not vendored.
+
+/// A motion, memorandum or brief: at most fifteen numbered pages,
+/// exclusive of the table of contents, table of authorities, signature
+/// page and attachments, without leave of court (L.R. 4.01(D)).
+limit motion-paper { pages <= 15 cite "E.D. Mo. L.R. 4.01(D)" } cite "E.D. Mo. L.R. 4.01(D)"
+
+/// The defendant's initial appearance (L.R. 2.09(B)(2)).
+event InitialAppearance()
+/// Information a criminal Disclosure Statement must state changes (L.R.
+/// 2.09(B)(2)).
+event DisclosureInformationChanged()
+/// A motion is served (L.R. 4.01(B)).
+event MotionServed()
+/// A motion seeking an extension of time is served (L.R. 4.01(B)).
+event ExtensionMotionServed()
+/// A memorandum in opposition to a motion is served (L.R. 4.01(C)).
+event OppositionServed()
+/// The court's final decision after a non-jury trial (L.R. 7.02(C)).
+event BenchTrialDecision()
+/// A Motion for Sealing or Motion for Continued Sealing is filed (L.R.
+/// 13.05(A)(4)(d)).
+event SealingMotionFiled()
+/// A Memorandum Opposing Sealing is filed (L.R. 13.05(A)(4)(e)).
+event SealingOppositionFiled()
+/// An order denying a Motion for Sealing or for Continued Sealing is
+/// entered (L.R. 13.05(A)(4)(g)).
+event SealingDenied()
+/// The court receives an FRCrimP 41 warrant application, warrant or
+/// similar order, or a return under FRCrimP 41(f) (L.R. 13.05(C)(4)).
+event WarrantMaterialReceived()
+
+/// E.D. Mo. L.R. 2.09(B)(2): a party files the criminal Disclosure
+/// Statement (a nongovernmental corporate party's, and the government's
+/// identifying any organizational victim) within 28 days after the
+/// defendant's initial appearance.
+deadline disclosure-statement-period: 28.days after InitialAppearance() counted_by frcrimp45 cite "E.D. Mo. L.R. 2.09(B)(2)"
+{
+  forum frcrimp
+}
+
+/// E.D. Mo. L.R. 2.09(B)(2): a supplemental Disclosure Statement is filed
+/// within seven days after any change in the required information.
+deadline supplemental-disclosure-period: 7.days after DisclosureInformationChanged() counted_by frcrimp45 cite "E.D. Mo. L.R. 2.09(B)(2)"
+{
+  forum frcrimp
+}
+
+/// E.D. Mo. L.R. 4.01(B): except as the rules or an order provide
+/// otherwise, a party opposing a motion files a single memorandum within
+/// fourteen days after service of the motion.
+deadline opposition-period: 14.days after MotionServed() counted_by frcrimp45 cite "E.D. Mo. L.R. 4.01(B)"
+{
+  forum frcrimp
+}
+
+/// E.D. Mo. L.R. 4.01(B): an opposition to a motion seeking an extension
+/// of time is filed within seven days after service of the motion.
+deadline extension-opposition-period: 7.days after ExtensionMotionServed() counted_by frcrimp45 cite "E.D. Mo. L.R. 4.01(B)"
+{
+  forum frcrimp
+}
+
+/// E.D. Mo. L.R. 4.01(C): the moving party may file a reply memorandum
+/// within ten days after being served with the memorandum in opposition;
+/// further memoranda only with leave.
+deadline reply-period: 10.days after OppositionServed() counted_by frcrimp45 cite "E.D. Mo. L.R. 4.01(C)"
+{
+  forum frcrimp
+}
+
+/// E.D. Mo. L.R. 7.02(C): after a non-jury trial the parties who offered
+/// exhibits remove them from the Clerk's custody within thirty days of the
+/// court's final decision; an exhibit not timely removed after the Clerk's
+/// notice may be discarded.
+deadline exhibit-removal-period: 30.days after BenchTrialDecision() counted_by frcrimp45 cite "E.D. Mo. L.R. 7.02(C)"
+{
+  forum frcrimp
+}
+
+/// E.D. Mo. L.R. 13.05(A)(4)(d): within seven days from the filing of a
+/// Motion for Sealing, a party or non-party may file a Memorandum Opposing
+/// Sealing.
+deadline sealing-opposition-period: 7.days after SealingMotionFiled() counted_by frcrimp45 cite "E.D. Mo. L.R. 13.05(A)(4)(d)"
+{
+  forum frcrimp
+}
+
+/// E.D. Mo. L.R. 13.05(A)(4)(e): within seven days from the filing of a
+/// Memorandum Opposing Sealing, the movant may file a Reply Supporting
+/// Sealing.
+deadline sealing-reply-period: 7.days after SealingOppositionFiled() counted_by frcrimp45 cite "E.D. Mo. L.R. 13.05(A)(4)(e)"
+{
+  forum frcrimp
+}
+
+/// E.D. Mo. L.R. 13.05(A)(4)(g): an order denying sealing is stayed for
+/// 14 days after its entry, during which an appeal from it may be filed
+/// or the sealed material withdrawn before it becomes public.
+deadline sealing-denial-stay-period: 14.days after SealingDenied() counted_by frcrimp45 cite "E.D. Mo. L.R. 13.05(A)(4)(g)"
+{
+  forum frcrimp
+}
+
+/// E.D. Mo. L.R. 13.05(C)(4)(b): within fourteen days from the court's
+/// receipt of an FRCrimP 41 warrant application, warrant, similar order or
+/// return, received under temporary seal, the government or another person
+/// with a sufficient privacy interest may file an ex parte Motion to Seal.
+deadline warrant-seal-motion-period: 14.days after WarrantMaterialReceived() counted_by frcrimp45 cite "E.D. Mo. L.R. 13.05(C)(4)(b)"
+{
+  forum frcrimp
+}

@@ -1,0 +1,50 @@
+# A criminal appeal to the Alabama Court of Criminal Appeals under the
+# Alabama Rules of Appellate Procedure, which govern that court as well as
+# the Supreme Court and the Court of Civil Appeals (Ala. R. App. P. 1).
+# Rules 1, 3, 4, 10, 28, 34, 39, 40 and 41 are the per-rule texts current
+# through the October 1, 2025 amendments (sources/al-state-appellate); the
+# other rules are the per-rule PDFs served October 28, 2026
+# (sources/al-court-of-criminal-appeals). Computation of time (Ala. R.
+# App. P. 26) has no counting rule in core, so the periods are stated in
+# notes, not counted. Further review by certiorari continues in the Alabama
+# Supreme Court (Ala. R. App. P. 39), which is not modeled here.
+[package]
+name = "al-court-of-criminal-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "al-court-of-criminal-appeals"
+forum = "al-court-of-criminal-appeals"
+authority = "StateRule"
+jurisdiction_id = "alabama"
+title = "Alabama Court of Criminal Appeals"
+description = "A criminal appeal to the Alabama Court of Criminal Appeals under the Alabama Rules of Appellate Procedure: the notice of appeal and its time, the record and transcript, briefing and its length limits, submission, decision, rehearing, the certificate of judgment and the hand-off to certiorari review in the Alabama Supreme Court."
+in_force = "2025-10-01"
+known_at = "2026-10-28"
+unknown_before = "2025-10-01"
+jurisdiction = "Alabama Court of Criminal Appeals"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ala-r-app-p-cited]
+title = "Alabama Rules of Appellate Procedure, Rules 1, 3, 4, 10, 28, 34, 39, 40 and 41 (per-rule PDFs current through the October 1, 2025 amendments)"
+url = "https://judicial.alabama.gov/library/AppellateProcedure"
+path = "sources/al-state-appellate/rules-cited.txt"
+path_sha256 = "27c571a08b388a5e8bebbdb95de13e325d6855381e8060dfbc4c970346535bd9"
+as_of = "2025-10-01"
+cite_prefixes = ["Ala. R. App. P."]
+section_heading = "Ala. R. App. P. {n}"
+
+[sources.ala-r-app-p]
+title = "Alabama Rules of Appellate Procedure, the other rules (per-rule PDFs served October 28, 2026)"
+url = "https://judicial.alabama.gov/library/AppellateProcedure"
+path = "sources/al-court-of-criminal-appeals/arap-sectioned.txt"
+path_sha256 = "be4f968fbed3a2aa0e451e332fa7de73d58446ab2145f9a13327676d4d37050a"
+as_of = "2025-10-01"
+cite_prefixes = ["Ala. R. App. P."]
+section_heading = "Ala. R. App. P. {n}"

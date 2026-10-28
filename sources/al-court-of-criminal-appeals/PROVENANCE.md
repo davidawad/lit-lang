@@ -454,3 +454,10 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 fe323c2fe82c08f5398f6d9f37e4fe465787fe32f66d4851a8b036da6c8547fd. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `al-court-of-criminal-appeals/original/arap-57-formb.pdf` as served (sha256 39c96ac841c2feb001f50b2dc5b04370167a1d64ebc19fafa2c9f336d8dc4ade); extraction sha256 fe323c2fe82c08f5398f6d9f37e4fe465787fe32f66d4851a8b036da6c8547fd.
+
+### `al-court-of-criminal-appeals/arap-sectioned.txt` — Alabama Rules of Appellate Procedure, the per-rule extracts above, sectioned
+
+- Derived in the pod (lg-gddt.26) from the 55 per-rule extracts `al-court-of-criminal-appeals/arap-<n>.txt` above (Rules 2 through 57 with 25A, 28A, 28B, 33A, 35A, 45A and 45B; the Rule 57 forms are left out); nothing fetched. Each extract is copied whole, in rule order, under one `## Ala. R. App. P. <n>` line (25A for `arap-25-a.txt`, and so on); every extract ends in a form feed with no final newline, so one newline is appended to each. Rule text was not edited: the text between one marker line and the next, less that final newline, is the extract byte for byte.
+- Source: as the per-rule extracts, https://judicial.alabama.gov/library/AppellateProcedure, served 2026-10-28; the sectioning was done in the pod from the vendored extracts.
+- Edition: as the per-rule extracts.
+- Sectioned sha256 be4f968fbed3a2aa0e451e332fa7de73d58446ab2145f9a13327676d4d37050a (the `path_sha256` pinned by `lit/al-court-of-criminal-appeals/Lit.toml`).

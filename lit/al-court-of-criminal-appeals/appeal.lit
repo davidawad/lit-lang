@@ -1,0 +1,115 @@
+module al-court-of-criminal-appeals.appeal
+
+/// A principal brief in a case without a death sentence: at most 14,000
+/// words (70 pages pro se); 16,000 words in a death-penalty case (Ala. R.
+/// App. P. 28(j)(1), (2)).
+limit principal-brief { words <= 14000 cite "Ala. R. App. P. 28(j)" } cite "Ala. R. App. P. 28(j)"
+/// A reply brief in a case without a death sentence: at most 7,000 words
+/// (35 pages pro se); 8,000 words in a death-penalty case (Ala. R. App. P.
+/// 28(j)(1), (2)).
+limit reply-brief { words <= 7000 cite "Ala. R. App. P. 28(j)" } cite "Ala. R. App. P. 28(j)"
+
+/// An application for rehearing, and a brief supporting or opposing it:
+/// at most 3,000 words (15 pages pro se) (Ala. R. App. P. 32(b)(1)).
+limit rehearing-application {
+  words <= 3000 cite "Ala. R. App. P. 32(b)"
+} cite "Ala. R. App. P. 32(b)"
+
+/// The appellant's principal brief is filed (Ala. R. App. P. 31).
+event AppellantBriefFiled() paper principal-brief
+/// The appellee's brief is filed (Ala. R. App. P. 31).
+event AppelleeBriefFiled() paper principal-brief
+/// The appellant's reply brief is filed (Ala. R. App. P. 31).
+event ReplyBriefFiled() paper reply-brief
+/// An application for rehearing is filed (Ala. R. App. P. 40).
+event RehearingApplicationFiled() paper rehearing-application
+
+start sentence-pronounced
+
+state sentence-pronounced: "Sentence pronounced in the circuit court" by applicant cite "Ala. R. App. P. 4(b)"
+{
+  note "In a criminal case the defendant's notice of appeal is filed with the clerk of the trial court within 42 days (six weeks) after pronouncement of the sentence, and may be oral as Rule 3(a)(2) provides; a motion in arrest of judgment, for a new trial or for a judgment of acquittal filed within 30 days from pronouncement of the sentence carries the time to 42 days after its denial, or after it is deemed denied under Ala. R. Crim. P. 20.3(f) or 24.4 (Ala. R. App. P. 4(b)(1)). A pro se inmate's notice is timely if deposited in the institution's internal mail system by the last day (Ala. R. App. P. 4(c)). An appeal from a district or municipal court is as provided by law (Ala. R. App. P. 4(b)(2)). A state's pretrial appeal follows the time the rules of criminal procedure allow. The outline's decisions (Strickland v. Washington; Batson v. Kentucky; Jackson v. Virginia) are removed: no reporter text is vendored."
+  edge-sentence-pronounced-notice "Notice of appeal" -> notice-decision {
+    authority cite "Ala. R. App. P. 3"
+  }
+}
+
+decision notice-decision: "Notice of appeal within 42 days?" by applicant cite "Ala. R. App. P. 4(b)"
+{
+  note "An appeal is dismissed if the notice of appeal was not timely filed to invoke the appellate court's jurisdiction (Ala. R. App. P. 2(a)(1))."
+  edge-notice-decision-filed "Notice filed in time" -> record-preparation {
+    authority cite "Ala. R. App. P. 4(b)"
+  }
+  edge-notice-decision-none "No timely notice" -> conviction-final {
+    authority cite "Ala. R. App. P. 2(a)"
+  }
+}
+
+state record-preparation: "Transcript and record on appeal" by court cite "Ala. R. App. P. 11(b)"
+{
+  note "The court reporter files the transcript with the trial clerk within 56 days (8 weeks) from the notice of appeal; the trial clerk files the record on appeal with the appellate clerk within 7 days (1 week) after the transcript is filed, or with no transcript within 28 days (4 weeks) of the notice, with a certificate of completion served on the defendant and the Attorney General (Ala. R. App. P. 11(b)); extensions are limited (Ala. R. App. P. 11(c)). The record's content is Rule 10."
+  edge-record-preparation-complete "Record certified complete" -> appellant-brief {
+    authority cite "Ala. R. App. P. 11(b)"
+  }
+}
+
+decision appellant-brief: "Appellant's brief within 28 days?" by applicant cite "Ala. R. App. P. 31"
+{
+  note "In criminal cases the appellant serves and files a brief within 28 days (4 weeks) after the date on the certificate of completion of the record (Ala. R. App. P. 31). The brief's contents are Rule 28; a principal brief is limited to 14,000 words (Ala. R. App. P. 28(j)(1)). An appeal may be dismissed for failure to file a brief in time (Ala. R. App. P. 2(a)(2))."
+  edge-appellant-brief-filed "Brief filed" -> appellee-brief { authority cite "Ala. R. App. P. 31" }
+  edge-appellant-brief-none "No brief filed" -> appeal-dismissed {
+    authority cite "Ala. R. App. P. 2(a)"
+  }
+}
+
+state appellee-brief: "State's brief and reply" by office cite "Ala. R. App. P. 31"
+{
+  note "The appellee serves and files its brief within 21 days (3 weeks) after the appellant's brief is filed, and the appellant may reply within 14 days (2 weeks) after the appellee's brief (Ala. R. App. P. 31); a reply brief is limited to 7,000 words (Ala. R. App. P. 28(j)(1)). When a party has counsel, the clerk may not accept a brief from that party (Ala. R. App. P. 31)."
+  edge-appellee-brief-submitted "Case submitted" -> decision { authority cite "Ala. R. App. P. 34" }
+}
+
+decision decision: "Decision of the Court of Criminal Appeals" by court cite "Ala. R. App. P. 34"
+{
+  note "Oral argument is allowed when the court or panel finds it desirable from the briefs and record, and not if it unanimously agrees the appeal is frivolous, the issues were recently decided, or argument would not significantly aid decision (Ala. R. App. P. 34(a))."
+  edge-decision-affirmed "Affirmed" -> rehearing-decision { authority cite "Ala. R. App. P. 40" }
+  edge-decision-reversed "Reversed" -> conviction-reversed { authority cite "Ala. R. App. P. 41" }
+}
+
+decision rehearing-decision: "Application for rehearing within 14 days?" by applicant cite "Ala. R. App. P. 40"
+{
+  note "An application for rehearing is filed within 14 days (2 weeks) of the decision, or 7 days (1 week) in a state's pretrial appeal (Ala. R. App. P. 40); it and its brief are limited to 3,000 words (Ala. R. App. P. 32(b)(1)). In criminal cases other than a state's pretrial appeal, an application for rehearing in the Court of Criminal Appeals is a prerequisite to certiorari review in the Supreme Court (Ala. R. App. P. 39(c)(1), 40(d)(1))."
+  edge-rehearing-decision-filed "Rehearing applied for and overruled" -> certiorari-decision {
+    authority cite "Ala. R. App. P. 40"
+  }
+  edge-rehearing-decision-none "No application" -> conviction-final {
+    authority cite "Ala. R. App. P. 41"
+  }
+}
+
+decision certiorari-decision: "Petition for certiorari within 14 days?" by applicant cite "Ala. R. App. P. 39"
+{
+  note "The petition for a writ of certiorari is filed with the clerk of the Supreme Court within 14 days (2 weeks) of the Court of Criminal Appeals' decision on the application for rehearing, or in a state's pretrial appeal within 7 days (1 week) (Ala. R. App. P. 39(c)(2)); it is limited to 3,000 words except in capital cases (Ala. R. App. P. 39(d), 32(b)(2)). A death-penalty case follows Ala. R. App. P. 39(a)(2). When rehearing is denied, the certificate of judgment issues 18 days after the order denying it unless the time is shortened or enlarged by order (Ala. R. App. P. 41(a)(1))."
+  edge-certiorari-decision-filed "Petition filed" -> certiorari-petitioned {
+    authority cite "Ala. R. App. P. 39"
+  }
+  edge-certiorari-decision-none "No petition" -> conviction-final {
+    authority cite "Ala. R. App. P. 41"
+  }
+}
+
+terminal conviction-reversed: "Conviction reversed" outcome [win] cite "Ala. R. App. P. 41"
+{
+  note "The certificate of judgment issues 18 days after the entry of judgment unless the time is shortened or enlarged by order; a timely application for rehearing stays it (Ala. R. App. P. 41(a))."
+}
+
+terminal appeal-dismissed: "Appeal dismissed" outcome [loss, dismissal] cite "Ala. R. App. P. 2(a)"
+
+terminal certiorari-petitioned: "Certiorari sought in the Alabama Supreme Court" outcome [appeal] cite "Ala. R. App. P. 39"
+{
+  note "Review continues in the Alabama Supreme Court, which is not modeled here."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "Ala. R. App. P. 41"
+{
+  note "Collateral review under Ala. R. Crim. P. 32 is lit/al-criminal-trial-court's; federal habeas is lit/habeas."
+}

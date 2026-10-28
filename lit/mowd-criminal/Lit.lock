@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "mowd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:8abd021cf778174f2d76cdd46866c0b1fa32950be924e034a7400549df7c371f"
+semantic = "sha256:b67340eb8b016d9225b4f60c7d53f5f4365ba329ff3432c53d8970a459f817ba"
+texts = [
+    "mowd-lr sources/mowd/local-rules-sectioned.txt sha256:15fb1a9d0b6573ed350593a6765e760856defcf7958ed44733ec489b80662a4b",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]

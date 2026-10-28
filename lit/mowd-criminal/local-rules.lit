@@ -1,0 +1,124 @@
+module mowd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Western District of Missouri's own periods in a criminal case: the
+// Local Criminal Rules' and those of the Local Civil Rules L.R. 99.0
+// applies to criminal proceedings. FRCrimP 45(a) computes a period "in
+// any local rule" of a criminal case, so these count under frcrimp45.
+// Stated in the rules but not declared: the fourteen days to appeal a
+// magistrate judge's order and to object to findings, recommendations or
+// a report (L.R. 74.1(a)(2), (b)(2)), which are FRCrimP 59(a) and
+// 59(b)(2)'s, and the extension of the objection time by up to 21 days
+// for excusable neglect or good cause (L.R. 74.1(b)(2)), an extension of
+// that FRCrimP period; the misdemeanor defendant's notice of appeal from
+// a magistrate judge's judgment within 14 days (L.R. 74.1(d)), FRCrimP
+// 58(g)(2)'s; the objections to the preliminary presentence report within
+// 14 days after its disclosure (L.R. 99.8(e)), FRCrimP 32(f)(1)'s; the
+// probation officer's final report within 14 days (L.R. 99.8(g)), the
+// court reporter's redacted transcript within 31 days and the 90-day
+// public-inspection period (L.R. 80.1(a)(1), (4)), which bind the court's
+// officers; the summary judgment opposition (L.R. 7.0(c)(2)) and the
+// other civil-only rules. The court may modify the L.R. 99.8 times for
+// good cause (L.R. 99.8(k)). The earlier W.D. Mo. criminal outline's
+// FRCrimP flow and its decisions (Salerno, Brady, Barker v. Wingo,
+// Zedner, Boykin, Missouri v. Frye, Jackson v. Virginia, Booker, Roe v.
+// Flores-Ortega, Garza v. Idaho) are FRCrimP and constitutional authority
+// and belong to lit/frcrimp; no reporter text is vendored, so they are
+// removed here, and the court's Speedy Trial Act plan (18 U.S.C. § 3165)
+// is not vendored.
+
+/// Supporting or opposing suggestions: at most 15 pages unless the court
+/// orders otherwise; exhibits, signature blocks, certificates of service
+/// and statements of fact do not count, nor the table of contents and
+/// table of authorities suggestions over 10 pages must have (L.R. 7.0(d);
+/// L.R. 99.0).
+limit suggestions { pages <= 15 cite "W.D. Mo. L.R. 7.0(d)" } cite "W.D. Mo. L.R. 7.0(d)"
+/// Reply suggestions: at most 10 pages (L.R. 7.0(d)(1)(C); L.R. 99.0).
+limit reply-suggestions { pages <= 10 cite "W.D. Mo. L.R. 7.0(d)" } cite "W.D. Mo. L.R. 7.0(d)"
+
+/// A written motion is filed (L.R. 7.0(c)(2)).
+event MotionFiled()
+/// Opposing suggestions are filed (L.R. 7.0(c)(3)).
+event OpposingSuggestionsFiled()
+/// A party is served with another party's objections to a magistrate
+/// judge's proposed findings, recommendations or report (L.R. 74.1(b)(2)).
+event ObjectionsServed()
+/// A verdict is rendered or a judgment entered (L.R. 79.2(a)).
+event VerdictOrJudgment()
+/// A transcript is filed (L.R. 80.1(a)).
+event TranscriptFiled()
+/// A surety is served with a magistrate judge's order disqualifying it
+/// (L.R. 99.1(d)(2)).
+event SuretyDisqualificationServed()
+/// The probation officer submits the presentence investigation report
+/// under L.R. 99.8(g) (L.R. 99.8(i)).
+event PresentenceReportSubmitted()
+
+/// W.D. Mo. L.R. 7.0(c)(2), applied by L.R. 99.0: within 14 days after a
+/// motion is filed, each party opposing it files opposing suggestions.
+deadline opposing-suggestions-period: 14.days after MotionFiled() counted_by frcrimp45 cite "W.D. Mo. L.R. 7.0(c); W.D. Mo. L.R. 99.0"
+{
+  forum frcrimp
+}
+
+/// W.D. Mo. L.R. 7.0(c)(3), applied by L.R. 99.0: within 14 days after
+/// the opposing suggestions are filed, the moving party may file reply
+/// suggestions.
+deadline reply-suggestions-period: 14.days after OpposingSuggestionsFiled() counted_by frcrimp45 cite "W.D. Mo. L.R. 7.0(c); W.D. Mo. L.R. 99.0"
+{
+  forum frcrimp
+}
+
+/// W.D. Mo. L.R. 74.1(b)(2), applied by L.R. 99.0: a party may respond to
+/// another party's objections to a magistrate judge's proposed findings,
+/// recommendations or report within 14 days after being served with a
+/// copy.
+deadline objection-response-period: 14.days after ObjectionsServed() counted_by frcrimp45 cite "W.D. Mo. L.R. 74.1(b); W.D. Mo. L.R. 99.0"
+{
+  forum frcrimp
+}
+
+/// W.D. Mo. L.R. 79.2(a), applied by L.R. 99.0: after trial or as soon as
+/// possible, but no more than 14 days after a verdict is rendered or a
+/// judgment entered, the offering attorney withdraws any exhibits in the
+/// Clerk's custody and gives the Clerk a receipt.
+deadline exhibit-withdrawal-period: 14.days after VerdictOrJudgment() counted_by frcrimp45 cite "W.D. Mo. L.R. 79.2(a); W.D. Mo. L.R. 99.0"
+{
+  forum frcrimp
+}
+
+/// W.D. Mo. L.R. 80.1(a)(2), applied by L.R. 99.0: within 7 days after a
+/// transcript is filed, each party wishing to redact personal data
+/// identifiers under FRCrimP 49.1 files a Notice of Intent to Redact.
+deadline redaction-notice-period: 7.days after TranscriptFiled() counted_by frcrimp45 cite "W.D. Mo. L.R. 80.1(a); W.D. Mo. L.R. 99.0"
+{
+  forum frcrimp
+}
+
+/// W.D. Mo. L.R. 80.1(a)(3), applied by L.R. 99.0: within 21 days after the
+/// transcript is filed, a party that filed a Notice of Intent to Redact
+/// files a statement of the page and line numbers of the identifiers.
+deadline redaction-statement-period: 21.days after TranscriptFiled() counted_by frcrimp45 cite "W.D. Mo. L.R. 80.1(a); W.D. Mo. L.R. 99.0"
+{
+  forum frcrimp
+}
+
+/// W.D. Mo. L.R. 99.1(d)(2): within 14 days after being served with a
+/// magistrate judge's order disqualifying it, the surety may file a
+/// written specific objection, which the court en banc (or a designated
+/// district judge) determines de novo.
+deadline surety-objection-period: 14.days after SuretyDisqualificationServed() counted_by frcrimp45 cite "W.D. Mo. L.R. 99.1(d)"
+{
+  forum frcrimp
+}
+
+/// W.D. Mo. L.R. 99.8(i): within 7 days after the presentence
+/// investigation report is submitted under L.R. 99.8(g), defense counsel,
+/// a pro se defendant or the United States may submit to the court notice
+/// of any unresolved objection; at sentencing the court considers only
+/// objections raised under L.R. 99.8(e) absent good cause (L.R. 99.8(j)).
+deadline unresolved-objection-notice-period: 7.days after PresentenceReportSubmitted() counted_by frcrimp45 cite "W.D. Mo. L.R. 99.8(i)"
+{
+  forum frcrimp
+}

@@ -1,0 +1,54 @@
+# The Western District of Missouri's Local Rules, as applied in its
+# criminal cases, as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods the Local Rules
+# themselves state for a criminal case and re-encodes no FRCrimP, Speedy
+# Trial Act or FRAP 4(b) period. The Local Criminal Rules are L.R. 99.0 to
+# 99.10, and "all Local Civil Rules apply to criminal proceedings" unless
+# the context clearly indicates otherwise (L.R. 99.0), so the motion,
+# magistrate judge review, exhibit and transcript rules are declared here
+# too. The rules are those "Adopted by the Court, Effective July 9, 2026"
+# (sources/mowd), governing cases on and after that date; earlier
+# editions are not vendored, so a query before it is a hole in the
+# corpus. No civil layer for the district is promoted yet. Habeas (28
+# U.S.C. §§ 2254, 2255; L.R. 9.2) is lit/habeas's; an appeal goes to the
+# Eighth Circuit under FRAP 4(b) (lit/frcrimp) and lit/ca8.
+[package]
+name = "mowd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "mowd-criminal-local-rules"
+forum = "mowd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Western District of Missouri: Local Rules (criminal)"
+description = "The Western District of Missouri's Local Criminal Rules and the Local Civil Rules they apply to criminal proceedings, as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): opposing and reply suggestions and their page limits, the response to objections to a magistrate judge's recommendation, withdrawal of exhibits, transcript redaction notices and statements, a disqualified surety's objection, and notice of unresolved presentence report objections."
+in_force = "2026-07-09"
+known_at = "2026-10-28"
+unknown_before = "2026-07-09"
+jurisdiction = "United States District Court, W.D. Missouri (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "mowd-lr"
+issuer = "United States District Court for the Western District of Missouri"
+date = "2026-07-09"
+designation = "Local Rules (effective July 9, 2026)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.mowd-lr]
+title = "Local Rules of the United States District Court for the Western District of Missouri (adopted by the Court, effective July 9, 2026)"
+url = "https://www.mow.uscourts.gov/sites/mow/files/DC-Local_Rules.pdf"
+path = "sources/mowd/local-rules-sectioned.txt"
+path_sha256 = "15fb1a9d0b6573ed350593a6765e760856defcf7958ed44733ec489b80662a4b"
+sha256 = "fa1808ed362b08ed336b5d82a3da2e328d71a449b8a5cf66a43ec23d2b8c9e5c"
+as_of = "2026-07-09"
+cite_prefixes = ["W.D. Mo. L.R."]
+section_heading = "L.R. {n}"

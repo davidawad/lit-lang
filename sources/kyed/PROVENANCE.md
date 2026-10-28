@@ -14,6 +14,7 @@
 
 - Source: https://www.kyed.uscourts.gov/sites/kyed/files/KY_Amended_Criminal_Rules_August_2026.pdf (official site; 21 pages, sha256 87b3e8f92ce42c9385bd2bacf8b1daff81d1208ce3431e138279f2ee1259354b).
 - Edition: Joint Local Rules of Criminal Practice (LCrR), the PDF 'KY_Amended_Criminal_Rules_August_2026' linked as 'Criminal Rules' at https://www.kyed.uscourts.gov/local-rules (same text as the W.D. Ky. file). robots.txt of www.kyed.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): kyed-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 a719630de26b3872e11d0a69ab5135a0df7a9b010b35195da591d5aaaa45adb3. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `kyed/original/kyed-joint-local-criminal-rules-2026-08.pdf` as served (sha256 87b3e8f92ce42c9385bd2bacf8b1daff81d1208ce3431e138279f2ee1259354b); extraction sha256 a719630de26b3872e11d0a69ab5135a0df7a9b010b35195da591d5aaaa45adb3.

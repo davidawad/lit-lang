@@ -1,0 +1,120 @@
+module md-appellate-court-civil.appeal
+
+/// A principal brief of an appellant or appellee in the Appellate Court (Md.
+/// Rule 8-503(d)(1)): 9,100 words, excluding the table of contents and
+/// citations, the Rule 8-504(a)(10) information and the certification of
+/// word count. A portion on a motion to dismiss may add 2,600 words (Md.
+/// Rule 8-503(d)(2)); the cross-appeal limits of Rule 8-503(e) are not
+/// encoded.
+limit principal-brief { words <= 9_100 cite "Md. Rule 8-503(d)" } cite "Md. Rule 8-503(d)"
+/// A reply brief in the Appellate Court (Md. Rule 8-503(d)(3)): 3,900
+/// words.
+limit reply-brief { words <= 3_900 cite "Md. Rule 8-503(d)" } cite "Md. Rule 8-503(d)"
+
+/// A principal brief in the Supreme Court (Md. Rule 8-503(d)(1)): 13,000
+/// words.
+limit supreme-court-principal-brief {
+  words <= 13_000 cite "Md. Rule 8-503(d)"
+} cite "Md. Rule 8-503(d)"
+
+/// A reply brief in the Supreme Court (Md. Rule 8-503(d)(3)): 6,500 words.
+limit supreme-court-reply-brief { words <= 6_500 cite "Md. Rule 8-503(d)" } cite "Md. Rule 8-503(d)"
+/// A petition or cross-petition for a writ of certiorari (Md. Rule
+/// 8-303(b)(1)), or an answer to a petition (Md. Rule 8-303(e)(2)): 3,900
+/// words without the Supreme Court's permission.
+limit certiorari-petition { words <= 3_900 cite "Md. Rule 8-303(b)" } cite "Md. Rule 8-303(b)"
+/// A motion for reconsideration or a response to one (Md. Rule 8-605(c)):
+/// 3,900 words.
+limit reconsideration-motion { words <= 3_900 cite "Md. Rule 8-605(c)" } cite "Md. Rule 8-605(c)"
+
+/// The appellant's brief is filed in the Appellate Court (Md. Rule
+/// 8-502(a)(1)).
+event AppellantBriefFiled() paper principal-brief
+/// The appellee's brief is filed in the Appellate Court (Md. Rule
+/// 8-502(a)(2)).
+event AppelleeBriefFiled() paper principal-brief
+/// The appellant's reply brief is filed in the Appellate Court (Md. Rule
+/// 8-502(a)(3)).
+event ReplyBriefFiled() paper reply-brief
+/// A petition for a writ of certiorari is filed in the Supreme Court (Md.
+/// Rule 8-303(a)).
+event CertiorariPetitionFiled() paper certiorari-petition
+/// A motion for reconsideration is filed (Md. Rule 8-605(a)).
+event ReconsiderationMoved() paper reconsideration-motion
+
+start notice
+
+decision notice: "Notice of appeal within 30 days after entry?" by applicant cite "Md. Rule 8-202(a)"
+{
+  note "Except as provided in Rule 8-204, the only method of securing review by the Appellate Court is a notice of appeal filed with the clerk of the lower court within the time Rule 8-202 prescribes (Md. Rule 8-201(a)), with the filing fee (Md. Rule 8-201(b)) and a Civil Appeal Information Report (Md. Rule 8-205(b)). The notice is filed within 30 days after entry of the judgment or order appealed from (Md. Rule 8-202(a)); after a timely motion under Rule 2-532, 2-533, 2-534 or 11-218, within 30 days after entry of a notice withdrawing it or the order disposing of it (Md. Rule 8-202(c)). Any other party may note an appeal within ten days after the first notice or within any longer time the Rule allows (Md. Rule 8-202(e)). Entry occurs when the clerk enters a record on the docket of the electronic case management system (Md. Rule 8-202(f)). The Courts and Judicial Proceedings Article (final judgment, §§ 12-301 and 12-303) is not vendored. No leading decision is named."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "Md. Rule 8-602(b)" }
+  edge-notice-timely "Timely notice" -> record { authority cite "Md. Rule 8-202(a)" }
+}
+
+state record: "Transcript ordered and record transmitted" by office cite "Md. Rule 8-412(a)"
+{
+  note "In a civil action subject to Rule 8-205(a), the appellant orders the transcript within ten days after the Rule 8-206(c) order to proceed (Md. Rule 8-411(b)(2)), and the clerk of the lower court transmits the record within sixty days after that order (Md. Rule 8-412(a)(2)); in an expedited appeal under Rule 8-207(a), within thirty days after the first notice of appeal (Md. Rule 8-412(a)(1)). On docketing the record, the Clerk sends notice of the appellant's brief due date, no earlier than 40 days after the notice unless the Court orders otherwise (Md. Rule 8-412(c)). The appeal may be dismissed if the record is not transmitted in time, unless the failure was caused by a judge, a clerk, the court reporter or the appellee (Md. Rule 8-602(c)(3))."
+  edge-record-briefing "Record docketed" -> briefing { authority cite "Md. Rule 8-412(c)" }
+}
+
+state briefing: "Briefs filed" by applicant cite "Md. Rule 8-502(a)"
+{
+  note "The appellant's brief is filed by the date in the Clerk's Rule 8-412(c) notice; the appellee's within 30 days after the appellant's; a reply not later than the earlier of 20 days after the appellee's brief or ten days before the scheduled argument (Md. Rule 8-502(a)(1)-(3)). By joint stipulation the parties may extend a principal brief by no more than 30 days (Md. Rule 8-502(b)(2)(A)). The appellant files a record extract with its brief in every civil case (Md. Rule 8-501(a)). Principal briefs are limited to 9,100 words and a reply to 3,900 in the Appellate Court (Md. Rule 8-503(d)(1), (3)). An appeal may be dismissed when the appellant's brief or record extract is late (Md. Rule 8-602(c)(5)); a late appellee may not argue without permission (Md. Rule 8-502(d))."
+  edge-briefing-argument "Briefing complete" -> argument { authority cite "Md. Rule 8-522(a)" }
+}
+
+state argument: "Oral argument or consideration on brief" by court cite "Md. Rule 8-523(b)"
+{
+  note "Oral argument is limited to 20 minutes a side in the Appellate Court and 30 in the Supreme Court; a request for more time is made no later than ten days after the appellee's brief is filed (Md. Rule 8-522(a)). A party may submit on brief by notice at least ten days before argument (Md. Rule 8-523(a)(1)). If the panel directs consideration on brief, a party may request argument within ten days after the later of the Clerk's notice or the appellee's brief (Md. Rule 8-523(b))."
+  edge-argument-decision "Case submitted" -> decision { authority cite "Md. Rule 8-604(a)" }
+}
+
+state decision: "Appeal decided" by court cite "Md. Rule 8-604(a)"
+{
+  note "As to each party the Court dismisses, affirms, vacates or reverses, modifies, or remands, or combines these (Md. Rule 8-604(a)); a remand order states its purpose, and it and its opinion are conclusive as to the points decided (Md. Rule 8-604(d)(1)). Ordinarily the Court decides only an issue that plainly appears by the record to have been raised in or decided by the trial court (Md. Rule 8-131(a)); a judgment tried without a jury is set aside on the evidence only if clearly erroneous (Md. Rule 8-131(c)). No leading decision is named."
+  edge-decision-issued "Opinion filed" -> post-decision { authority cite "Md. Rule 8-605(a)" }
+}
+
+decision post-decision: "Reconsideration, certiorari or mandate" by applicant cite "Md. Rule 8-605(a)"
+{
+  note "A motion for reconsideration is filed before the mandate issues or within 30 days after the filing of the opinion, whichever is earlier; no response may be filed unless the Court requests one (Md. Rule 8-605(a)); it is limited to 3,900 words (Md. Rule 8-605(c)) and delays the mandate unless the Court orders otherwise (Md. Rule 8-605(e))."
+  edge-post-decision-reconsider "Reconsideration moved" -> reconsideration {
+    authority cite "Md. Rule 8-605(a)"
+  }
+  edge-post-decision-certiorari "Certiorari petition filed" -> certiorari {
+    authority cite "Md. Rule 8-302(a)"
+  }
+  edge-post-decision-mandate "No further review" -> mandate-issued {
+    authority cite "Md. Rule 8-606(b)"
+  }
+}
+
+state reconsideration: "Reconsideration decided" by court cite "Md. Rule 8-605(f)"
+{
+  note "A motion for reconsideration is granted only with the consent of at least half the judges who concurred in the opinion (Md. Rule 8-605(f)). If it is denied, or granted only to change the opinion without changing the principal decision, the mandate issues immediately on the order; if the principal decision changes, 30 days after the order (Md. Rule 8-606(b)(4))."
+  edge-reconsideration-decided "Motion decided" -> post-decision {
+    authority cite "Md. Rule 8-606(b)"
+  }
+}
+
+state certiorari: "Certiorari petition decided" by court cite "Md. Rule 8-303(g)"
+{
+  note "A petition for a writ of certiorari may be filed before or after the Appellate Court decides, but not later than the later of 15 days after the Appellate Court's mandate or 30 days after the filing of its opinion (Md. Rule 8-302(a)); another party may cross-petition within 15 days after the first timely petition (Md. Rule 8-302(c)). A petition is limited to 3,900 words (Md. Rule 8-303(b)(1)); an answer is due within 15 days after service (Md. Rule 8-303(e)(1)). The Court grants or denies without briefs or argument and may not grant with fewer than three affirmative votes (Md. Rule 8-303(g)). Review by the Supreme Court of the United States is not modeled."
+  edge-certiorari-denied "Denied" -> mandate-issued { authority cite "Md. Rule 8-303(g)" }
+  edge-certiorari-granted "Granted" -> certiorari-granted { authority cite "Md. Rule 8-303(g)" }
+}
+
+terminal dismissed-untimely: "Dismissed: notice not filed in time" outcome [loss, dismissal] cite "Md. Rule 8-602(b)"
+{
+  note "The Court shall dismiss an appeal whose notice was not filed with the lower court within the time Rule 8-202 prescribes (Md. Rule 8-602(b)(2))."
+}
+
+terminal mandate-issued: "Mandate issued" outcome [final] cite "Md. Rule 8-606(b)"
+{
+  note "Unless the Court orders otherwise, the Clerk issues the mandate on the expiration of 30 days after the filing of the opinion or entry of the order (Md. Rule 8-606(b)(1)); it contains the order assessing costs (Md. Rule 8-606(c)), and the lower court proceeds in accordance with its terms (Md. Rule 8-606(e))."
+}
+
+terminal certiorari-granted: "Certiorari granted: review in the Supreme Court" outcome [neutral] cite "Md. Rule 8-303(g)"
+{
+  note "On a grant the Court directs further proceedings, dismisses, affirms, vacates or reverses, modifies, or remands (Md. Rule 8-303(g)). The clerk transmits the record within 15 days after a writ directed to the Appellate Court (Md. Rule 8-412(b)); the merits are not modeled."
+}

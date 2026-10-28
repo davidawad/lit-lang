@@ -1,0 +1,38 @@
+# Civil appeals to the Appellate Court of Maryland under Title 8 of the
+# Maryland Rules (the Westlaw public-access text, sources/md-appellate-civil,
+# whose pages state "Current with amendments received through September 1,
+# 2026"; the PROVENANCE entry records CURRENCY UNCONFIRMED, as no official
+# edition date is on the pages; bound on the PM's release of 2026-10-28),
+# with certiorari review in the Supreme Court of Maryland. Computation of
+# time is governed by Md. Rule 1-203 (Title 1), which is not vendored, so
+# the rules' periods are stated in notes, not encoded as counted deadlines.
+[package]
+name = "md-appellate-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "md-appellate-court-civil"
+forum = "md-appellate-civil"
+authority = "StateRule"
+title = "Appellate Court of Maryland and Supreme Court of Maryland, civil appeals"
+description = "Civil appeals from the Maryland circuit courts to the Appellate Court of Maryland under Title 8 of the Maryland Rules, as far as the vendored text states, through reconsideration, mandate and certiorari in the Supreme Court of Maryland."
+in_force = "2026-09-01"
+known_at = "2026-10-28"
+unknown_before = "2026-09-01"
+jurisdiction = "Appellate Court of Maryland; Supreme Court of Maryland"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.md-rules-title-8]
+title = "Maryland Rules, Title 8 (Appellate Review in the Supreme Court and the Appellate Court), Westlaw public-access text current with amendments received through September 1, 2026 (CURRENCY UNCONFIRMED)"
+url = "https://govt.westlaw.com/mdc/Index"
+path = "sources/md-appellate-civil/md-appellate-civil-rules-sectioned.txt"
+path_sha256 = "0694de4a0728cf6eda3351cc4fe4b299d1993e5c462add44ef16969ccf35664f"
+as_of = "2026-09-01"
+cite_prefixes = ["Md. Rule"]
+section_heading = "Rule {n}"

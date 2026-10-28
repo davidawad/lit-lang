@@ -15,3 +15,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 d7b754294b86aec547fb4d55d49367664809e3f46e34b14955031ca674249abc. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `msnd/original/msnd-uniform-local-criminal-rules-2019-12-01.pdf` as served (sha256 9cc5d3ebfb0ea63ed87a35b4fe84f2cadf30580c3acfab79b84d8575e5a47619); extraction sha256 d7b754294b86aec547fb4d55d49367664809e3f46e34b14955031ca674249abc.
+
+### `msnd/local-uniform-civil-rules-sectioned.txt` — N.D. and S.D. Miss. Local Uniform Civil Rules, sectioned
+
+- Derived in the pod (lg-f3q8.19) from `msnd/local-uniform-civil-rules.txt` (extract sha256 953f3a272cbcab3917a2e99beb95f13b8df0eb49dd281f265cd22c6a1a8b6087); nothing fetched. In the body (after the table of contents), one `## L.U. Civ. R. <n>` line is inserted before each rule's own heading line (`Rule 1.` through `Rule 83.8.`, 33 rules), one `## L.U. Adm. R. <letter>` line before each local admiralty rule heading (`Rule A.` through `Rule G.`), and one `## Official Forms` line before the forms. Every other line is the extract unchanged, so deleting the `## ` lines gives back the extract byte for byte.
+- Edition: as the extract, Local Uniform Civil Rules "CURRENT AS OF DECEMBER 1, 2024" (cover). The same extract is vendored as `mssd/mssd-uniform-local-civil-rules-2024-12-01.txt` (identical extract sha256); lit/msnd and lit/mssd both pin this sectioned copy.
+- Sectioned sha256 12c17e9935fa4522baf28e69db7c9878420bd5fa902cd4ba7a526b889a88f330 (the `path_sha256` pinned by `lit/msnd/Lit.toml`).

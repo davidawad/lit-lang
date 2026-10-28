@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcp-civil-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "msnd-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:46cc775b17e23b862f402d000a451fdd7b8e54ca77328ab1859c4fb67ec6d1b9"
+semantic = "sha256:ab87671fea53851cba4cac1198f95316864bc05aee0d427fae34f5839a595b78"
+texts = [
+    "msnd-lucr sources/msnd/local-uniform-civil-rules-sectioned.txt sha256:12c17e9935fa4522baf28e69db7c9878420bd5fa902cd4ba7a526b889a88f330",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcp-civil-procedure 2024.12.0",
+]

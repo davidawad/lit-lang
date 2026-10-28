@@ -1,0 +1,436 @@
+module msnd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+/// The action is removed to this Court (L.U. Civ. R. 5(b)(1)).
+event Removed()
+/// The action is transferred to this District (L.U. Civ. R. 16(b)(2)).
+event Transferred()
+/// An order lifts the stay a remand, referral, arbitration, immunity or
+/// jurisdiction motion imposed (L.U. Civ. R. 16(b)(1)(C), 16(b)(3)(D)).
+event StayLifted()
+/// The attorneys hold the conference FRCP 26(f) requires (L.U. Civ. R.
+/// 16(c), (d)).
+event AttorneyConferenceHeld()
+/// The case management conference is held (L.U. Civ. R. 5(b)(1)).
+event CaseManagementConferenceHeld()
+/// The date set for the case management conference (L.U. Civ. R.
+/// 16(b)(3)(A), 16(d), 26(a)(1)(A)).
+event CaseManagementConference()
+/// A motion and its memorandum brief are served (L.U. Civ. R. 7(b)(4)).
+event MotionServed()
+/// The response and its memorandum brief are served (L.U. Civ. R.
+/// 7(b)(4)).
+event ResponseServed()
+/// A deposition is noticed (L.U. Civ. R. 7(b)(8)).
+event DepositionNoticed()
+/// A motion for leave to amend a pleading is granted (L.U. Civ. R. 15).
+event LeaveToAmendGranted()
+/// The discovery deadline the case management order sets (L.U. Civ. R.
+/// 7(b)(2)(D), 26(a)(3), 26(b)).
+event DiscoveryDeadline()
+/// The date set for a settlement conference (L.U. Civ. R. 16(g)(5)).
+event SettlementConference()
+/// The date set for the final pretrial conference (L.U. Civ. R.
+/// 7(b)(2)(E), 16(j)(2)).
+event PretrialConference()
+/// The date for which trial is set (L.U. Civ. R. 51(a)).
+event TrialDate()
+/// Final judgment allowing costs is entered (L.U. Civ. R. 54(c)).
+event JudgmentEntered()
+/// A party is served with a magistrate judge's ruling (L.U. Civ. R.
+/// 72(a)(1)(A)).
+event MagistrateRulingServed()
+/// Objections to a magistrate judge's ruling are served (L.U. Civ. R.
+/// 72(a)(1)(A)).
+event RulingObjectionsServed()
+/// A party is served with a magistrate judge's report and recommendation
+/// (L.U. Civ. R. 72(a)(3)).
+event ReportServed()
+/// Objections to a report and recommendation are served (L.U. Civ. R.
+/// 72(a)(3)).
+event ReportObjectionsServed()
+/// A party added after reference on consent appears (L.U. Civ. R. 73(e)).
+event AddedPartyAppeared()
+
+/// L.U. Civ. R. 5(b)(1): a removing defendant files a copy of the entire
+/// state court record no later than 14 days from the date of removal.
+deadline state-record-period: 14.days after Removed() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 5(b)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 5(b)(1): within 14 days after the case management
+/// conference, the parties file as separate docket items the unresolved
+/// state court motions they wish to advance.
+deadline state-motions-period: 14.days after CaseManagementConferenceHeld() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 5(b)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 7(b)(4): the respondent files a response and memorandum
+/// brief within 14 days after service of the movant's motion and
+/// memorandum brief. The movant's original and rebuttal briefs together
+/// may not exceed 35 pages, the respondent's brief 35 pages (L.U. Civ. R.
+/// 7(b)(5)); a motion itself may not exceed four pages (L.U. Civ. R.
+/// 7(b)(2)(B)).
+deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 7(b)(4): a movant may file a rebuttal within seven days
+/// after service of the response and memorandum brief.
+deadline rebuttal-period: 7.days after ResponseServed() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 7(b)(2)(D): unless the case management order provides
+/// otherwise, case-dispositive motions and motions challenging an opposing
+/// party's expert are filed no later than 14 calendar days after the
+/// discovery deadline.
+deadline dispositive-motion-period: 14.days after DiscoveryDeadline() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 7(b)(2)(E): motions in limine, other than motions
+/// challenging another party's expert, are filed no later than 21 calendar
+/// days before the pretrial conference.
+deadline limine-motion-period: 21.days before PretrialConference() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 7(b)(2)(E): responses to motions in limine are filed no
+/// later than 14 calendar days before the pretrial conference.
+deadline limine-response-period: 14.days before PretrialConference() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 7(b)(8): a motion for a protective order limiting or
+/// quashing a deposition is not considered urgent or necessitous unless it
+/// is filed within seven days of the date of the notice of deposition.
+deadline deposition-protective-order-period: 7.days after DepositionNoticed() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 15 (and 7(b)(2)): when leave to amend is granted, the
+/// movant files the amended pleading as a separately docketed item within
+/// seven days from entry of the order granting the motion.
+deadline amended-pleading-period: 7.days after LeaveToAmendGranted() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 15"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 16(b)(2): in a transferred action the parties hold the FRCP
+/// 26(f) conference, if not already held, within 14 days of the transfer.
+deadline transferred-conference-period: 14.days after Transferred() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 16(b)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 16(b)(1)(C), 16(b)(3)(D): within 14 days of the order
+/// lifting a stay the parties confer, and all other deadlines follow.
+deadline stay-lifted-conference-period: 14.days after StayLifted() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 16(b)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 16(b)(3)(A): a motion asserting lack of jurisdiction is
+/// filed at least seven days before the case management conference, or the
+/// movant may be deemed to have waived the automatic stay.
+deadline jurisdiction-motion-period: 7.days before CaseManagementConference() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 16(b)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 16(c): the magistrate judge may require a proposed case
+/// management order no later than 14 days after the attorney conference.
+deadline proposed-case-management-order-period: 14.days after AttorneyConferenceHeld() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 16(c)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 16(d): unless the court sets another time or a party
+/// objects, the FRCP 26(a) disclosures are made no later than 14 days after
+/// the attorney conference.
+deadline initial-disclosures-period: 14.days after AttorneyConferenceHeld() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 16(d)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 16(d), 26(a)(1)(A): in no event are the disclosures made
+/// later than seven days before the case management conference.
+deadline disclosures-outer-period: 7.days before CaseManagementConference() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 16(d)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 16(g)(5): at least seven days before the settlement
+/// conference each party submits a confidential memorandum of no more than
+/// three pages.
+deadline settlement-memorandum-period: 7.days before SettlementConference() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 16(g)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 16(j)(2): a request that the final pretrial conference be
+/// dispensed with is made not later than 14 days before the scheduled
+/// conference.
+deadline pretrial-excusal-request-period: 14.days before PretrialConference() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 16(j)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 26(a)(3): challenges to inadequate expert disclosure are
+/// made no later than 30 days before the discovery deadline or are deemed
+/// waived.
+deadline expert-disclosure-challenge-period: 30.days before DiscoveryDeadline() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 26(a)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 51(a): requests for jury instructions are submitted not
+/// later than 14 days before the date for which trial is set.
+deadline jury-instructions-period: 14.days before TrialDate() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 51(a)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 54(c): the prevailing party to whom costs are awarded files
+/// the bill of costs not later than 30 days after entry of judgment.
+deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 54(c)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 72(a)(1)(A): an appeal of a magistrate judge's ruling is
+/// perfected by serving and filing objections within 14 days after being
+/// served with the ruling.
+deadline ruling-objection-period: 14.days after MagistrateRulingServed() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 72(a)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 72(a)(1)(A): the opposing party responds, or gives notice
+/// that it will not, within 14 days of service of the objections.
+deadline ruling-objection-response-period: 14.days after RulingObjectionsServed() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 72(a)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 72(a)(3): each party has 14 days after service of a report
+/// and recommendation to serve and file written objections.
+deadline report-objection-period: 14.days after ReportServed() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 72(a)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 72(a)(3): within seven days of service of the objection the
+/// opposing party responds or gives notice that it will not.
+deadline report-objection-response-period: 7.days after ReportObjectionsServed() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 72(a)"
+{
+  forum frcp
+}
+
+/// L.U. Civ. R. 73(e): a party added after reference on consent that elects
+/// to consent files its consent within 21 days of its appearance.
+deadline added-party-consent-period: 21.days after AddedPartyAppeared() counted_by frcp6 cite "N.D. Miss. L.U. Civ. R. 73(e)"
+{
+  forum frcp
+}
+
+start motion-served
+
+state motion-served: "Motion and memorandum brief served" by applicant cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  note "Relief is sought by motion in the form L.U. Civ. R. 7(b) prescribes; the memorandum brief is filed as a separate docket item at the time the motion is served (L.U. Civ. R. 7(b)(2), (4)). Affirmative defenses are raised by separate motion (L.U. Civ. R. 7(b)(2)(A)). A non-dispositive motion states whether it is opposed (L.U. Civ. R. 7(b)(10)). Extensions are requested in writing from the judge who will decide the motion (L.U. Civ. R. 7(b)(4)). The motion's own periods under the Federal Rules are lit/frcp's."
+  edge-motion-served-response "Response served" -> response {
+    authority cite "N.D. Miss. L.U. Civ. R. 7(b)"
+    within response-period
+  }
+  edge-motion-served-unopposed "No timely response" -> ruling {
+    authority cite "N.D. Miss. L.U. Civ. R. 7(b)"
+    note "If a party fails to respond to a motion other than a dispositive motion within the time allotted, the court may grant it as unopposed (L.U. Civ. R. 7(b)(3)(E)); a dispositive motion is not granted on that ground alone."
+  }
+}
+
+state response: "Response and memorandum brief served" by opponent cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  edge-response-ruling "Rebuttal served or time to rebut elapsed" -> ruling {
+    authority cite "N.D. Miss. L.U. Civ. R. 7(b)"
+    within rebuttal-period
+  }
+}
+
+decision ruling: "Motion decided" by court cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  note "The court decides motions without a hearing unless it orders otherwise on its own motion or on a written request on the face of the motion or response (L.U. Civ. R. 7(b)(6)(A)). A ruling by a magistrate judge on a referred motion is appealed to the district judge by objections within the ruling-objection-period (L.U. Civ. R. 72(a)(1)(A))."
+  edge-ruling-granted "Granted" -> decided { authority cite "N.D. Miss. L.U. Civ. R. 7(b)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "N.D. Miss. L.U. Civ. R. 7(b)" }
+}
+
+terminal decided: "Motion decided: the action continues under lit/frcp" outcome [procedural] cite "N.D. Miss. L.U. Civ. R. 1"
+{
+  note "The rules of procedure are those of the laws of the United States and the Federal Rules of Civil Procedure, along with the local rules and the court's orders (L.U. Civ. R. 1(a))."
+}
+
+test "the state court record is due 14 days after removal" cite "N.D. Miss. L.U. Civ. R. 5(b)"
+{
+  given Removed() on 2026-10-13
+  expect deadline(state-record-period) == 2026-10-27
+}
+
+test "a response is due 14 days after service of the motion" cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  given MotionServed() on 2026-10-13
+  expect deadline(response-period) == 2026-10-27
+}
+
+test "a rebuttal is due 7 days after service of the response" cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  given ResponseServed() on 2026-10-27
+  expect deadline(rebuttal-period) == 2026-11-03
+}
+
+test "dispositive motions are due 14 days after the discovery deadline" cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  given DiscoveryDeadline() on 2026-11-02
+  expect deadline(dispositive-motion-period) == 2026-11-16
+}
+
+test "an amended pleading is filed 7 days after leave is granted" cite "N.D. Miss. L.U. Civ. R. 15"
+{
+  given LeaveToAmendGranted() on 2026-11-03
+  expect deadline(amended-pleading-period) == 2026-11-10
+}
+
+test "disclosures are due 14 days after the attorney conference" cite "N.D. Miss. L.U. Civ. R. 16(d)"
+{
+  given AttorneyConferenceHeld() on 2026-12-01
+  expect deadline(initial-disclosures-period) == 2026-12-15
+}
+
+test "a bill of costs is due 30 days after judgment" cite "N.D. Miss. L.U. Civ. R. 54(c)"
+{
+  given JudgmentEntered() on 2026-12-01
+  expect deadline(bill-of-costs-period) == 2026-12-31
+}
+
+test "report objections are due 14 days after service of the report" cite "N.D. Miss. L.U. Civ. R. 72(a)"
+{
+  given ReportServed() on 2026-12-15
+  expect deadline(report-objection-period) == 2026-12-29
+}
+
+test "a period ending on Thanksgiving runs to the next day" cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  given MotionServed() on 2026-11-12
+  expect deadline(response-period) == 2026-11-27
+}
+
+test "unresolved state court motions are filed 14 days after the case management conference" cite "N.D. Miss. L.U. Civ. R. 5(b)"
+{
+  given CaseManagementConferenceHeld() on 2027-03-01
+  expect deadline(state-motions-period) == 2027-03-15
+}
+
+test "motions in limine are due 21 days before the pretrial conference" cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  given PretrialConference() on 2027-03-25
+  expect deadline(limine-motion-period) == 2027-03-04
+}
+
+test "responses in limine are due 14 days before the pretrial conference" cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  given PretrialConference() on 2027-03-25
+  expect deadline(limine-response-period) == 2027-03-11
+}
+
+test "a deposition protective order motion is urgent only if filed within 7 days of the notice" cite "N.D. Miss. L.U. Civ. R. 7(b)"
+{
+  given DepositionNoticed() on 2027-03-02
+  expect deadline(deposition-protective-order-period) == 2027-03-09
+}
+
+test "a transferred action holds the attorney conference within 14 days" cite "N.D. Miss. L.U. Civ. R. 16(b)"
+{
+  given Transferred() on 2027-03-03
+  expect deadline(transferred-conference-period) == 2027-03-17
+}
+
+test "the parties confer within 14 days of the order lifting a stay" cite "N.D. Miss. L.U. Civ. R. 16(b)"
+{
+  given StayLifted() on 2027-03-04
+  expect deadline(stay-lifted-conference-period) == 2027-03-18
+}
+
+test "a jurisdiction motion is filed at least 7 days before the case management conference" cite "N.D. Miss. L.U. Civ. R. 16(b)"
+{
+  given CaseManagementConference() on 2027-04-08
+  expect deadline(jurisdiction-motion-period) == 2027-04-01
+}
+
+test "a proposed case management order may be required 14 days after the attorney conference" cite "N.D. Miss. L.U. Civ. R. 16(c)"
+{
+  given AttorneyConferenceHeld() on 2027-03-09
+  expect deadline(proposed-case-management-order-period) == 2027-03-23
+}
+
+test "disclosures are made no later than 7 days before the case management conference" cite "N.D. Miss. L.U. Civ. R. 16(d)"
+{
+  given CaseManagementConference() on 2027-04-15
+  expect deadline(disclosures-outer-period) == 2027-04-08
+}
+
+test "the settlement memorandum is due 7 days before the settlement conference" cite "N.D. Miss. L.U. Civ. R. 16(g)"
+{
+  given SettlementConference() on 2027-04-22
+  expect deadline(settlement-memorandum-period) == 2027-04-15
+}
+
+test "a request to dispense with the pretrial conference is due 14 days before it" cite "N.D. Miss. L.U. Civ. R. 16(j)"
+{
+  given PretrialConference() on 2027-04-29
+  expect deadline(pretrial-excusal-request-period) == 2027-04-15
+}
+
+test "an expert disclosure challenge is due 30 days before the discovery deadline" cite "N.D. Miss. L.U. Civ. R. 26(a)"
+{
+  given DiscoveryDeadline() on 2027-05-06
+  expect deadline(expert-disclosure-challenge-period) == 2027-04-06
+}
+
+test "jury instruction requests are due 14 days before trial" cite "N.D. Miss. L.U. Civ. R. 51(a)"
+{
+  given TrialDate() on 2027-05-13
+  expect deadline(jury-instructions-period) == 2027-04-29
+}
+
+test "objections to a magistrate judge's ruling are due 14 days after service" cite "N.D. Miss. L.U. Civ. R. 72(a)"
+{
+  given MagistrateRulingServed() on 2027-03-10
+  expect deadline(ruling-objection-period) == 2027-03-24
+}
+
+test "a response to ruling objections is due 14 days after service" cite "N.D. Miss. L.U. Civ. R. 72(a)"
+{
+  given RulingObjectionsServed() on 2027-03-11
+  expect deadline(ruling-objection-response-period) == 2027-03-25
+}
+
+test "a response to report objections is due 7 days after service" cite "N.D. Miss. L.U. Civ. R. 72(a)"
+{
+  given ReportObjectionsServed() on 2027-03-16
+  expect deadline(report-objection-response-period) == 2027-03-23
+}
+
+test "a later-added party consents within 21 days of appearing" cite "N.D. Miss. L.U. Civ. R. 73(e)"
+{
+  given AddedPartyAppeared() on 2027-03-17
+  expect deadline(added-party-consent-period) == 2027-04-07
+}

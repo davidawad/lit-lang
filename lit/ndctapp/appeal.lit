@@ -1,6 +1,6 @@
 module nd-appellate-civil.appeal
 
-import nd-state-rules.{ NoticeOfAppealFiled }
+import nd-state-rules.{ DecisionFiled, MandateIssued, NoticeOfAppealFiled, RecordFiled }
 
 /// A principal brief: at most 38 pages, excluding any addendum, footnotes
 /// and endnotes counted (N.D.R.App.P. 32(a)(8)(A)). An argument on the
@@ -57,6 +57,7 @@ state record: "Record and transcript" cite "N.D.R.App.P. 10"
 {
   note "Within seven days after an order for transcript is filed and any docket fee paid, the supreme court clerk transmits it to the district court clerk; the transcript is filed within 60 days after the order is transmitted to the district court staff, extendable by the district court for good cause to no more than 90 days, and beyond that only by the supreme court; the party obligated to pay advances the estimated cost within 14 days of being sent the estimate (N.D.R.App.P. 10). Except in expedited appeals, the district court clerk forwards the record, excluding the transcript, not less than 25 nor more than 30 days after the notice of appeal is filed (N.D.R.App.P. 11)."
   edge-record-briefing "Transcript filed, or none ordered" -> briefing {
+    event RecordFiled()
     authority cite "N.D.R.App.P. 31(a)"
   }
 }
@@ -87,12 +88,15 @@ decision disposition: "Disposition" by court cite "N.D.R.App.P. 35(a)"
 {
   note "The court may reverse, affirm, or modify the judgment or order, order a new trial, or remand for determination of untried issues, with or without retaining jurisdiction; unless otherwise ordered the district court decides within 30 days after remand (N.D.R.App.P. 35(a)). The court may affirm by summary opinion (N.D.R.App.P. 35.1). A judgment is entered when noted on the docket, and the clerk sends the parties the opinion and notice of the entry date (N.D.R.App.P. 36)."
   edge-disposition-affirmed-entered "Affirmed" -> affirmed-entered {
+    event DecisionFiled()
     authority cite "N.D.R.App.P. 35(a)"
   }
   edge-disposition-reversed-entered "Reversed or modified" -> reversed-entered {
+    event DecisionFiled()
     authority cite "N.D.R.App.P. 35(a)"
   }
   edge-disposition-remanded-entered "Remanded" -> remanded-entered {
+    event DecisionFiled()
     authority cite "N.D.R.App.P. 35(a)"
   }
 }
@@ -104,6 +108,7 @@ decision affirmed-entered: "Affirmed: rehearing election" by applicant cite "N.D
     authority cite "N.D.R.App.P. 40(a)"
   }
   edge-affirmed-entered-mandate-affirmed "No rehearing petition" -> mandate-affirmed {
+    event MandateIssued()
     authority cite "N.D.R.App.P. 41(b)"
   }
 }
@@ -112,6 +117,7 @@ decision rehearing-affirmed: "Rehearing ruling (affirmed)" by court cite "N.D.R.
 {
   note "If rehearing is granted the court may make a final disposition without reargument, restore the case for reargument or resubmission, or issue another order (N.D.R.App.P. 40(a)(4))."
   edge-rehearing-affirmed-mandate-affirmed "Rehearing denied" -> mandate-affirmed {
+    event MandateIssued()
     authority cite "N.D.R.App.P. 41(b)"
   }
   edge-rehearing-affirmed-disposition "Rehearing granted: re-decide" -> disposition {
@@ -142,6 +148,7 @@ decision reversed-entered: "Reversed or modified: rehearing election" by applica
     authority cite "N.D.R.App.P. 40(a)"
   }
   edge-reversed-entered-mandate-reversed "No rehearing petition" -> mandate-reversed {
+    event MandateIssued()
     authority cite "N.D.R.App.P. 41(b)"
   }
 }
@@ -149,6 +156,7 @@ decision reversed-entered: "Reversed or modified: rehearing election" by applica
 decision rehearing-reversed: "Rehearing ruling (reversed or modified)" by court cite "N.D.R.App.P. 40(a)"
 {
   edge-rehearing-reversed-mandate-reversed "Rehearing denied" -> mandate-reversed {
+    event MandateIssued()
     authority cite "N.D.R.App.P. 41(b)"
   }
   edge-rehearing-reversed-disposition "Rehearing granted: re-decide" -> disposition {
@@ -179,6 +187,7 @@ decision remanded-entered: "Remanded: rehearing election" by applicant cite "N.D
     authority cite "N.D.R.App.P. 40(a)"
   }
   edge-remanded-entered-mandate-remanded "No rehearing petition" -> mandate-remanded {
+    event MandateIssued()
     authority cite "N.D.R.App.P. 41(b)"
   }
 }
@@ -186,6 +195,7 @@ decision remanded-entered: "Remanded: rehearing election" by applicant cite "N.D
 decision rehearing-remanded: "Rehearing ruling (remanded)" by court cite "N.D.R.App.P. 40(a)"
 {
   edge-rehearing-remanded-mandate-remanded "Rehearing denied" -> mandate-remanded {
+    event MandateIssued()
     authority cite "N.D.R.App.P. 41(b)"
   }
   edge-rehearing-remanded-disposition "Rehearing granted: re-decide" -> disposition {

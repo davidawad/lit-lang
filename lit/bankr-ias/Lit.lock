@@ -1,6 +1,21 @@
 version = 2
 
 [[package]]
+name = "bankr-ias-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:c7043c5c18e6102202e18413817b38e5ef5e76207f3abfa2f6aff1e488d628ef"
+semantic = "sha256:64ea945a8eb59dba94995674b04a98fc7e2e6eafc36ef1e8c34da992bbd4b67d"
+texts = [
+    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
+    "iasb-rules-page sources/bankr-ias/iasb-bankruptcy-rules-page.txt sha256:5e771a2c0b13c90ec324f32a4d44e6f63297ac49ceaf350c2c86eb22e6aa8e64",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +59,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-ias"
-version = "0.0.1"
-language = 1
-source = "sha256:dae42e184f778225bccfab7c09b65a59611ed4b150c4a564a527e1b035599ba4"
-semantic = "sha256:2c527deb984fcf0ff952b1189c9c8349137dd4e4b9e48efd4bcbb8648506a110"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

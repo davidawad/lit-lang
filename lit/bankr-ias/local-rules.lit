@@ -1,0 +1,24 @@
+module bankr-ias-local-rules.local-rules
+
+// The Bankr. S.D. Iowa court has no local bankruptcy rules: "Effective
+// August 4, 2003, this court's local rules were abolished. Attorneys and
+// pro se parties shall consult the Federal Rules of Bankruptcy Procedure"
+// (the court's Bankruptcy Rules page, sources/bankr-ias). Every period,
+// page limit, filing and service rule in the court is therefore lit/frbp's
+// (and the Code's), and none is declared or restated here. The court's
+// standing and general orders, forms and chapter 13 trustee procedures are
+// not vendored; any period they state is a hole in the corpus.
+start case-pending
+
+state case-pending: "Case pending under the Federal Rules of Bankruptcy Procedure" by applicant cite "FRBP 1001"
+{
+  note "The court abolished its local rules effective August 4, 2003; attorneys and pro se parties consult the FRBP (the court's Bankruptcy Rules page). The case runs on lit/frbp's periods."
+  edge-case-pending-frbp "No local rule: the FRBP govern" -> governed {
+    authority cite "FRBP 9029(a)"
+  }
+}
+
+terminal governed: "Matter governed by the FRBP: the case continues under lit/frbp" outcome [procedural] cite "FRBP 9029(a)"
+{
+  note "A district court may authorize its bankruptcy judges to make local rules (FRBP 9029(a)); this court has none since August 4, 2003."
+}

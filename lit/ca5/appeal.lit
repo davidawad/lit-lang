@@ -1,0 +1,253 @@
+module ca5.appeal
+
+import core.frap26.{ frap26 }
+import frap.events.{ NoticeOfAppealFiled }
+import frap.filing.{ PrincipalBriefFiled }
+
+// The FRAP periods are lit/frap's: the notice-of-appeal periods of FRAP
+// 4(a)(1), the transcript-order period, the appellee and reply brief
+// periods of FRAP 31(a)(1), the rehearing periods of FRAP 40(d)(1), which
+// 5th Cir. R. 40.1.4 and 40.2.4 adopt unchanged, and the mandate period.
+// This package is the Fifth Circuit's layer over them: it declares the
+// circuit's own periods. The appellant's brief is due 40 days after the
+// clerk's briefing notice (5th Cir. R. 31.3), a trigger FRAP 31(a)(1) does
+// not have, so it is a period of its own rather than an override of
+// lit/frap's 40 days after the record is filed. The leading decisions on
+// appellate jurisdiction and the notice deadline are lit/frap's.
+/// The clerk of the court of appeals sends the record on appeal to the
+/// parties (5th Cir. R. 30.1).
+event RecordDispatched()
+/// The clerk's briefing notice (5th Cir. R. 31.3).
+event BriefingNoticed()
+/// The date a brief is due, the anchor of the periods that run backward
+/// from it (5th Cir. R. 31.4.1(a), 32.4).
+event BriefDue()
+/// The clerk returns nonconforming copies of a brief or record excerpts
+/// (5th Cir. R. 32.5).
+event BriefReturned()
+/// The clerk dismisses the appeal without prejudice to reinstatement on a
+/// motion to stay further proceedings (5th Cir. R. 42.4).
+event StayDismissal()
+
+/// The Notice of Appearance Form, which satisfies the FRAP 12(b)
+/// representation statement, is due within 30 days of filing the notice
+/// of appeal.
+deadline appearance-form-period: 30.days after NoticeOfAppealFiled() counted_by frap26 cite "5th Cir. R. 12"
+{
+  forum frap
+}
+
+/// Counsel and unrepresented parties review the record on appeal within
+/// 20 days of its dispatch from the clerk's office and report errors and
+/// omissions to both clerks.
+deadline record-review-period: 20.days after RecordDispatched() counted_by frap26 cite "5th Cir. R. 30.1"
+{
+  forum frap
+}
+
+/// The appellant sends its brief to the clerk not later than 40 days
+/// after the date of the briefing notice.
+deadline circuit-appellant-brief-period: 40.days after BriefingNoticed() counted_by frap26 cite "5th Cir. R. 31.3"
+{
+  forum frap
+}
+
+/// A motion for leave to file an amicus curiae brief is due within 7 days
+/// after the principal brief of the party the amicus supports.
+deadline amicus-motion-period: 7.days after PrincipalBriefFiled() counted_by frap26 cite "5th Cir. R. 29.1"
+{
+  forum frap
+}
+
+/// The brief of an intervenor or amicus curiae is due 7 days after the
+/// principal brief of the party it supports.
+deadline amicus-brief-period: 7.days after PrincipalBriefFiled() counted_by frap26 cite "5th Cir. R. 31.2"
+{
+  forum frap
+}
+
+/// The clerk must receive a request to extend the time for a brief at
+/// least 7 days before the due date, unless the movant shows the grounds
+/// did not exist or could not have been known earlier.
+deadline brief-extension-request-period: 7.days before BriefDue() counted_by frap26 cite "5th Cir. R. 31.4.1(a)"
+{
+  forum frap
+}
+
+/// A motion to file a brief over the page or word-volume limits is due at
+/// least 10 days in advance of the brief's due date.
+deadline extra-length-motion-period: 10.days before BriefDue() counted_by frap26 cite "5th Cir. R. 32.4"
+{
+  forum frap
+}
+
+/// A brief or record excerpts returned as nonconforming may be resubmitted
+/// in a conforming format within an extension of 10 days.
+deadline resubmission-period: 10.days after BriefReturned() counted_by frap26 cite "5th Cir. R. 32.5"
+{
+  forum frap
+}
+
+/// An appeal dismissed without prejudice on a stay of proceedings may be
+/// reinstated within 180 days from the date of dismissal.
+deadline reinstatement-period: 180.days after StayDismissal() counted_by frap26 cite "5th Cir. R. 42.4"
+{
+  forum frap
+}
+
+test "notice of appearance form is due 30 days after the notice of appeal" cite "5th Cir. R. 12"
+{
+  given NoticeOfAppealFiled() on 2026-08-03
+  expect deadline(appearance-form-period) == 2026-09-02
+}
+
+test "record review is due 20 days after dispatch, rolled past a Sunday" cite "5th Cir. R. 30.1"
+{
+  given RecordDispatched() on 2026-08-03
+  expect deadline(record-review-period) == 2026-08-24
+}
+
+test "appellant brief is due 40 days after the briefing notice, rolled past a Saturday" cite "5th Cir. R. 31.3"
+{
+  given BriefingNoticed() on 2026-08-03
+  expect deadline(circuit-appellant-brief-period) == 2026-09-14
+}
+
+test "amicus motion is due 7 days after the supported principal brief" cite "5th Cir. R. 29.1"
+{
+  given PrincipalBriefFiled() on 2026-08-03
+  expect deadline(amicus-motion-period) == 2026-08-10
+}
+
+test "amicus or intervenor brief is due 7 days after the supported principal brief" cite "5th Cir. R. 31.2"
+{
+  given PrincipalBriefFiled() on 2026-08-03
+  expect deadline(amicus-brief-period) == 2026-08-10
+}
+
+test "extension request is due 7 days before the brief, back past Labor Day" cite "5th Cir. R. 31.4.1(a)"
+{
+  given BriefDue() on 2026-09-14
+  expect deadline(brief-extension-request-period) == 2026-09-04
+}
+
+test "extra-length motion is due 10 days before the brief" cite "5th Cir. R. 32.4"
+{
+  given BriefDue() on 2026-09-14
+  expect deadline(extra-length-motion-period) == 2026-09-04
+}
+
+test "a nonconforming brief is resubmitted within 10 days of its return" cite "5th Cir. R. 32.5"
+{
+  given BriefReturned() on 2026-08-03
+  expect deadline(resubmission-period) == 2026-08-13
+}
+
+test "reinstatement is due 180 days after the dismissal, rolled past a Saturday" cite "5th Cir. R. 42.4"
+{
+  given StayDismissal() on 2026-08-03
+  expect deadline(reinstatement-period) == 2027-02-01
+}
+
+start threshold
+
+decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+{
+  note "A final decision of a district court is appealable under 28 U.S.C. § 1291; interlocutory routes are lit/frap's."
+  edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "28 U.S.C. § 1291" }
+  edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
+}
+
+decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)(A)"
+{
+  note "The notice is due 30 days after entry of judgment, or 60 days when the United States is a party (FRAP 4(a)(1)); lit/frap encodes both periods."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "FRAP 4(a)(1)(A)" }
+  edge-notice-timely "Timely notice" -> record {
+    authority cite "FRAP 3(a)(1); 5th Cir. R. 3"
+    cost 605.usd
+    note "The $605 fees established by 28 U.S.C. §§ 1913 and 1917 must be paid to the district court clerk when the notice of appeal is filed (5th Cir. R. 3)."
+  }
+}
+
+state record: "Record and Transcript Assembled" by office cite "FRAP 10; 5th Cir. R. 10.1, 11.3"
+{
+  note "The appellant orders the transcript on the clerk's form (5th Cir. R. 10.1). The district clerk sends the record within 15 days of the notice of appeal or of the transcript's filing, whichever is later, or asks for an extension (5th Cir. R. 11.3). The Notice of Appearance Form is due within 30 days of the notice of appeal (5th Cir. R. 12); the parties review the record within 20 days of its dispatch (5th Cir. R. 30.1)."
+  edge-record-brief "Briefing notice issued" -> briefing { authority cite "5th Cir. R. 31.3" }
+  edge-record-default "Appellant fails to order the transcript or file a brief" -> dismissed-prosecution {
+    authority cite "5th Cir. R. 42.3.2"
+  }
+}
+
+state briefing: "Briefs Filed" by applicant cite "FRAP 31(a)(1); 5th Cir. R. 31.3"
+{
+  note "The appellant's brief is due 40 days after the briefing notice (5th Cir. R. 31.3), with record excerpts in place of an appendix (5th Cir. R. 30.1, 30.1.2); the appellee's and reply briefs follow FRAP 31(a)(1). A request to extend is due at least 7 days before the due date (5th Cir. R. 31.4.1(a)); a motion for an extra-length brief at least 10 days before it (5th Cir. R. 32.4). Length is FRAP 32(a)(7)'s, and the certificate of interested persons does not count toward it (5th Cir. R. 32.2)."
+  edge-briefing-argue "Briefing complete" -> argument {
+    authority cite "FRAP 31(a)(1); 5th Cir. R. 31.3"
+  }
+  edge-briefing-default "Appellant fails to file a brief" -> dismissed-prosecution {
+    authority cite "5th Cir. R. 42.3.2"
+  }
+}
+
+state argument: "Oral Argument or Summary Calendar" by court cite "FRAP 34; 5th Cir. R. 34.2"
+{
+  note "Each principal brief states why oral argument would or would not help (5th Cir. R. 28.2.3); cases not set for oral argument are placed on the summary calendar for decision (5th Cir. R. 34.2)."
+  edge-argument-decide "Decision" -> decision { authority cite "FRAP 34" }
+}
+
+state decision: "Decision Issued" by court cite "FRAP 36"
+{
+  note "Judgment is entered on the opinion or order (FRAP 36); an opinion is published unless each member of the panel determines publication is neither required nor justified (5th Cir. R. 47.5.2), and a judgment may be affirmed without opinion in the cases 5th Cir. R. 47.6 lists."
+  edge-decision-issued "Opinion or judgment issued" -> rehearing-decision {
+    authority cite "FRAP 36"
+  }
+}
+
+decision rehearing-decision: "Rehearing Sought?" by applicant cite "FRAP 40(d)(1)"
+{
+  note "Separate petitions are required for panel and en banc rehearing (5th Cir. R. 40.1); the clerk must receive either within the time of FRAP 40(d)(1) (5th Cir. R. 40.1.4, 40.2.4), 14 days after entry of judgment or 45 days in a civil case with a United States party; lit/frap encodes both periods."
+  edge-rehearing-decision-none "No petition" -> mandate { authority cite "FRAP 41(b)" }
+  edge-rehearing-decision-sought "Petition filed" -> rehearing-order {
+    authority cite "FRAP 40(d)(1); 5th Cir. R. 40.1.4"
+  }
+}
+
+state rehearing-order: "Rehearing Order" by court cite "FRAP 40"
+{
+  note "Unless otherwise expressly provided, granting rehearing en banc vacates the panel opinion and judgment and stays the mandate (5th Cir. R. 41.3)."
+  edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
+}
+
+state mandate: "Mandate Issued" by office cite "FRAP 41(b)"
+{
+  note "The mandate issues 7 days after the time to petition for rehearing expires or 7 days after an order denying a timely petition (FRAP 41(b)); lit/frap encodes the period. Once issued it is not recalled except to prevent injustice (5th Cir. R. 41.2)."
+  edge-mandate-further "Mandate issued" -> further-review { authority cite "FRAP 41(b)" }
+}
+
+decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+{
+  note "Certiorari under 28 U.S.C. § 1254; its period is lit/frap's."
+  edge-further-review-none "No further review" -> final-decision {
+    authority cite "28 U.S.C. § 1254"
+  }
+  edge-further-review-petition "Petition for certiorari" -> review-decided {
+    authority cite "28 U.S.C. § 1254"
+  }
+}
+
+state review-decided: "Further Review Decided" by court cite "28 U.S.C. § 1254"
+{
+  edge-review-decided-denied "Denied" -> review-denied { authority cite "28 U.S.C. § 1254" }
+  edge-review-decided-granted "Granted" -> review-granted { authority cite "28 U.S.C. § 1254" }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: No Appellate Jurisdiction" outcome [loss, dismissal, jurisdictional] cite "28 U.S.C. § 1291"
+terminal dismissed-untimely: "Dismissed: Untimely Notice" outcome [loss, dismissal] cite "FRAP 4(a)(1)(A)"
+terminal dismissed-prosecution: "Dismissed: Want of Prosecution" outcome [loss, dismissal] cite "5th Cir. R. 42.3.2"
+terminal final-decision: "Final: Decision Stands" outcome [final] cite "FRAP 41(b)"
+terminal review-denied: "Further Review Denied" outcome [final] cite "28 U.S.C. § 1254"
+
+terminal review-granted: "Further Review Granted" outcome [neutral] cite "28 U.S.C. § 1254"
+{
+  note "Certiorari granted; the merits are not modeled."
+}

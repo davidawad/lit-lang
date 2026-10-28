@@ -1,0 +1,45 @@
+# The Local Bankruptcy Rules of the District Court for the Northern Mariana
+# Islands, Bankruptcy Division, over lit/frbp (FRBP 9029(a); 28 U.S.C. §
+# 2075): it declares only the periods the Local Bankruptcy Rules themselves
+# state and re-encodes no FRBP period. It is a base package, not a `kind =
+# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011, as
+# for lit/bankr-ak). Each period is counted under FRCP 6(a), which LBR
+# 9006-1(a) makes govern the Local Bankruptcy Rules (core's frcp6). The
+# rules are those "Effective April 15, 2019" (sources/bankr-mp). Motion
+# practice follows the District Court's LR 7.1 (LBR 9013-1(a); lit/nmid).
+# Appeals go under FRBP Part VIII (lit/frbp).
+[package]
+name = "bankr-mp-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-mp-local-rules"
+forum = "bankr-mp"
+authority = "LocalRule"
+title = "District Court for the Northern Mariana Islands, Bankruptcy Division: Local Bankruptcy Rules"
+description = "The D.N.M.I. Local Bankruptcy Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp): payment advices, amendments, conversion, responsible individuals, Rule 2004 examinations, trustee administrative expenses, chapter 13 trustee dismissal motions and business reports, attorney address changes, administrative expense requests, the chapter 11 claims bar date, substitute claims, claim objections, chapter 13 plan filing, service, modification and confirmation objections, chapter 11 disclosure statements, ballots and confirmation, final decrees, chapter 13 distributions and attorney fee reserves, stay relief, eviction certifications and stay extensions, discharge certifications, rejected filings, transcript redaction, small and leased-premises sales, dismissal of discharge objections, costs, default judgment, motion hearing notice, countermotions and reconsideration of interlocutory orders."
+in_force = "2019-04-15"
+known_at = "2026-10-28"
+unknown_before = "2019-04-15"
+jurisdiction = "District Court for the Northern Mariana Islands, Bankruptcy Division"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.nmib-lbr]
+title = "Local Bankruptcy Rules of the United States District Court for the Northern Mariana Islands (effective April 15, 2019)"
+url = "https://www.nmid.uscourts.gov/sites/nmid/files/documents/localrules/LBKR20190415.pdf"
+path = "sources/bankr-mp/nmid-lbkr-2019-04-15-sectioned.txt"
+path_sha256 = "ba8d528b40f75361b5dfad4dc4825a4d29e824f9f529e6600e98dbb7903aa98b"
+sha256 = "171604598760df24fb36c46c53f8d760e1f24a5c81f0510d9633747bc67738ca"
+as_of = "2019-04-15"
+cite_prefixes = ["D.N.M.I. LBR"]
+section_heading = "LBR {n}"

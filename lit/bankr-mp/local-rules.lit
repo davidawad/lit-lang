@@ -1,0 +1,1072 @@
+module bankr-mp-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, PetitionFiled }
+
+// The Local Bankruptcy Rules' own periods. LBR 9006-1(a) makes FRCP 6(a)
+// govern computation of time under them (core's frcp6, which FRBP 9006(a)
+// also follows). Each period applies "unless the court orders otherwise"
+// where the rule says so, and the court may enlarge or shorten any time
+// not fixed by statute or federal rule (LBR 9006-1(b)). Periods stated as
+// "the later of" or "whichever is earlier" are encoded as one deadline per
+// limb; the note says which governs. Rules that state no period this layer
+// can count stay out: the monthly operating report due on the 20th day of
+// the following month (LBR 2015-7(b)), the trustee's interim reports after
+// 2 years and yearly (LBR 2015-9(a)), the claim objection's 30 days'
+// notice of the response deadline (LBR 3007-1(b), a minimum notice, with
+// the 7-day response encoded), the 21 days' notice of a stay-relief
+// stipulation to the 20 largest unsecured creditors (LBR 4001-1(g)), the
+// landlord's 14-day objection deadline with no stated trigger (LBR
+// 4001-4(c)(2)), and the two business days for a remote appearance request
+// (LBR 9074-1). The FRBP periods stay in lit/frbp. The earlier outline's
+// FRBP flow belongs to lit/frbp, and its Supreme Court decisions (City of
+// Chicago v. Fulton, Taylor v. Freeland & Kronz, Kontrick v. Ryan, Ritzen
+// Group, Bullard, Till, Espinosa, Grogan v. Garner, Twombly, Iqbal, Stern
+// v. Marshall, Wellness International, Celotex, Anderson v. Liberty Lobby)
+// construe the Code and the FRBP: they are removed, no reporter text is
+// vendored. The District Court exercises bankruptcy jurisdiction under 48
+// U.S.C. § 1822 (LBR 1001-1(c)(2)); the statute is not vendored.
+/// An amended list, schedule or statement is filed electronically (LBR
+/// 1009-1(b)).
+event AmendmentFiledElectronically()
+/// A chapter 7 debtor's motion to convert the case under § 706(a) is filed (LBR
+/// 1017-1).
+event ConversionMotionFiled()
+/// A Motion for Rule 2004 Examination is filed (LBR 2004-1(b)).
+event Rule2004MotionFiled()
+/// The Rule 2004 examination order or subpoena issues, whichever is later (LBR
+/// 2004-1(b), (c)).
+event ExaminationOrderIssued()
+/// A subpoena for a personal examination following review of produced materials
+/// issues (LBR 2004-1(c)).
+event ExaminationSubpoenaIssued()
+/// The notice to file proofs of claim that describes the trustee's procedure
+/// for paying administrative expenses of $1,000 or less is sent (LBR
+/// 2015-1(a)(2)).
+event ClaimsNoticeSent()
+/// A Trustee's Motion to Approve Payment of Administrative Expense and Notice
+/// of Opportunity to Object is served (LBR 2015-1(b)).
+event AdminExpenseMotionServed()
+/// The trustee's Motion to Dismiss for Lack of Feasibility is filed (LBR
+/// 2083-1(e)(1)).
+event FeasibilityMotionFiled()
+/// The hearing on the trustee's motion to dismiss a chapter 13 case for failure
+/// to make plan payments or other cause is held (LBR 2083-1(e)(2)).
+event DismissalMotionHearingHeld()
+/// An attorney's business address or firm affiliation changes (LBR 2091-2(d)).
+event AttorneyAddressChanged()
+/// The plan confirmation hearing, or a continued one, is held (LBR 3001-1(c),
+/// 3015-1(g), 3015-3(a), 3018-1(c), 3020-1(b), (d)).
+event ConfirmationHearingHeld()
+/// The last event giving rise to an administrative expense occurs (LBR
+/// 3001-1(c)).
+event LastExpenseEventOccurred()
+/// The trustee or debtor in possession surrenders premises whose use gave rise
+/// to an administrative expense (LBR 3001-1(c)(2)(C)).
+event PremisesSurrendered()
+/// The notice of a proof of claim filed on a creditor's behalf under FRBP 3004
+/// or 3005 is served on the creditor (LBR 3004-1(b)).
+event SubstituteClaimNoticeServed()
+/// The hearing on an objection to claim is held (LBR 3007-1(c)).
+event ClaimObjectionHearingHeld()
+/// The clerk's order to satisfy the deficiency when no chapter 13 plan is filed
+/// issues (LBR 3015-1(b)).
+event PlanDeficiencyOrderIssued()
+/// The hearing on a motion to modify a confirmed chapter 13 plan is held (LBR
+/// 3015-2(b)).
+event PlanModificationHearingHeld()
+/// A chapter 13 plan, amended plan or plan motion is filed (LBR 3015-3(a)).
+event PlanFiled()
+/// An order denying confirmation of a chapter 13 plan is entered (LBR
+/// 3015-3(d)).
+event ConfirmationDenied()
+/// The hearing on approval of a chapter 11 disclosure statement, or a continued
+/// one, is held (LBR 3017-1).
+event DisclosureStatementHearingHeld()
+/// An application for a chapter 11 final decree is filed (LBR 3022-1).
+event FinalDecreeApplicationFiled()
+/// The latest claims deadline stated in FRBP 3002(c) arrives (LBR
+/// 3070-2(e)(1)).
+event Chapter13ClaimsDeadline()
+/// The chapter 13 plan confirmation order is entered (LBR 3070-2(e)(2),
+/// (j)(2)).
+event ConfirmationOrderEntered()
+/// The trustee's notice of filed claims and intent to make distributions is
+/// filed (LBR 3070-2(h)).
+event DistributionNoticeFiled()
+/// The hearing on a motion for relief from the automatic stay only (LBR
+/// 4001-1(e)(1)).
+event StayReliefHearingHeld()
+/// The hearing on a motion that includes a request for relief from the codebtor
+/// stay under § 1201 or 1301 (LBR 4001-1(e)(2)).
+event CodebtorStayReliefHearingHeld()
+/// The hearing on a motion to extend the stay under § 362(c)(3)(B) (LBR
+/// 4001-5(a)(3)).
+event StayExtensionHearingHeld()
+/// An individual chapter 11 debtor's certification and notice of completion of
+/// plan payments is filed (LBR 4004-3(b)(1)).
+event Chapter11CompletionCertificationFiled()
+/// The clerk serves the notice that objections to a chapter 12 or 13 debtor's
+/// discharge certification are due (LBR 4004-3(c)(1)).
+event DischargeCertificationNoticeServed()
+/// The chapter 12 or 13 trustee's final report and account is filed (LBR
+/// 4004-3(c)(1)).
+event TrusteeFinalReportFiled()
+/// The clerk gives notice rejecting a document for filing (LBR 5005-1(c)(3),
+/// (4)).
+event ClerkRejectionNoticed()
+/// A transcript is filed (LBR 5077-1(c), (f), (g)).
+event TranscriptFiled()
+/// The court grants a motion to redact additional information from a transcript
+/// (LBR 5077-1(g)).
+event RedactionMotionGranted()
+/// The clerk's general notice of intent to sell nonexempt property worth less
+/// than $2,500 is filed (LBR 6004-1(d)).
+event SmallSaleNoticeFiled()
+/// The hearing on a motion to sell personal property on leased premises (LBR
+/// 6004-1(e)).
+event LeasedPremisesSaleHearingHeld()
+/// The notice of a request to dismiss a complaint objecting to discharge is
+/// filed (LBR 7041-1(b)).
+event DischargeObjectionDismissalNoticeFiled()
+/// A proposed bill of costs is filed in an adversary proceeding (LBR
+/// 7054-1(d)).
+event BillOfCostsFiled()
+/// The hearing on a motion for default judgment in an adversary proceeding (LBR
+/// 7055-1(b)).
+event DefaultJudgmentHearingHeld()
+/// The hearing on a motion set for hearing under LBR 9013-1 (LBR 9013-1(c),
+/// (d)).
+event MotionHearingHeld()
+/// An interlocutory order is entered (LBR 9024-1(a)).
+event InterlocutoryOrderEntered()
+
+/// LBR 1007-1(b)(2): the debtor submits copies of payment advices, or other
+/// evidence of payment, to the trustee (the Office of the United States Trustee
+/// in chapter 11) not later than 7 days before the date first set for the § 341
+/// meeting, or 45 days after the petition is filed, whichever is earlier; the
+/// trustee may then move to dismiss under § 521(i)(2) (LBR 1007-1(b)(3)).
+deadline payment-advices-before-meeting: 7.days before FirstMeetingDate() counted_by frcp6 cite "D.N.M.I. LBR 1007-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 1007-1(b)(2): the other limb of the payment advices deadline, 45 days
+/// after the petition is filed; the earlier of the two governs.
+deadline payment-advices-after-petition: 45.days after PetitionFiled() counted_by frcp6 cite "D.N.M.I. LBR 1007-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 1009-1(b): when amendments are filed electronically, the debtor submits
+/// an originally signed declaration not later than 7 days after the date of
+/// electronic filing.
+deadline amendment-declaration-period: 7.days after AmendmentFiledElectronically() counted_by frcp6 cite "D.N.M.I. LBR 1009-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 1017-1: the notice of a chapter 7 debtor's motion to convert advises
+/// that the court may grant it without further notice or hearing if no
+/// objection is filed within 14 days after the motion was filed.
+deadline conversion-objection-period: 14.days after ConversionMotionFiled() counted_by frcp6 cite "D.N.M.I. LBR 1017-1"
+{
+  forum frcp
+}
+
+/// LBR 1074-1(b): a debtor that is an artificial entity files the designation
+/// of its responsible individual within 14 days after the petition is filed.
+deadline responsible-individual-period: 14.days after PetitionFiled() counted_by frcp6 cite "D.N.M.I. LBR 1074-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 2004-1(b)(2): when the parties cannot agree, the examination takes place
+/// on the moving party's date but no earlier than 14 days after the motion for
+/// an examination order is filed. The date is the earliest examination date.
+deadline examination-after-motion: 14.days after Rule2004MotionFiled() counted_by frcp6 cite "D.N.M.I. LBR 2004-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 2004-1(b)(2), (c): an examination requesting production, and a delivery
+/// deadline for documents or electronically stored information, is no earlier
+/// than 30 days after issuance of the examination order or subpoena, whichever
+/// is later. The date is the earliest.
+deadline examination-production-period: 30.days after ExaminationOrderIssued() counted_by frcp6 cite "D.N.M.I. LBR 2004-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 2004-1(c): a personal examination following review of produced materials
+/// is set not less than 14 days after the subpoena issues. The date is the
+/// earliest.
+deadline examination-after-subpoena: 14.days after ExaminationSubpoenaIssued() counted_by frcp6 cite "D.N.M.I. LBR 2004-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 2015-1(a)(2): creditors and parties in interest may file an objection
+/// and request a hearing on the trustee's procedure for paying administrative
+/// expenses not exceeding $1,000 within 28 days after the date of the notice.
+deadline admin-expense-procedure-objection-period: 28.days after ClaimsNoticeSent() counted_by frcp6 cite "D.N.M.I. LBR 2015-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 2015-1(b): a trustee's motion to approve administrative expenses
+/// exceeding $1,000 gives 14 days' notice of the deadline to object.
+deadline admin-expense-objection-period: 14.days after AdminExpenseMotionServed() counted_by frcp6 cite "D.N.M.I. LBR 2015-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 2083-1(e)(1): if the debtor does not file, within 28 days after the
+/// trustee's motion to dismiss for lack of feasibility is filed, a claim
+/// objection that would ensure feasibility or a motion to modify the confirmed
+/// plan, the court may dismiss the case without further notice or hearing.
+deadline feasibility-response-period: 28.days after FeasibilityMotionFiled() counted_by frcp6 cite "D.N.M.I. LBR 2083-1(e)"
+{
+  forum frcp
+}
+
+/// LBR 2083-1(e)(2)(A): the trustee's motion to dismiss a chapter 13 case is
+/// filed and served no later than 21 days before the hearing date.
+deadline trustee-dismissal-motion-period: 21.days before DismissalMotionHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 2083-1(e)"
+{
+  forum frcp
+}
+
+/// LBR 2083-1(e)(2)(B): the motion may provide for dismissal unless, within 21
+/// days after the hearing or other time agreeable to the trustee, the debtor
+/// cures the plan payment arrearage or other deficiency or files a notice of
+/// conversion.
+deadline dismissal-cure-period: 21.days after DismissalMotionHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 2083-1(e)"
+{
+  forum frcp
+}
+
+/// LBR 2083-1(f)(1): a chapter 13 debtor operating a business submits business
+/// reports to the trustee not later than 7 days before the meeting of
+/// creditors, if the trustee requests them or at least two of the rule's
+/// conditions exist (3 or more employees, monthly gross receipts over $10,000,
+/// net receipts 50% or more of the debtor's income).
+deadline business-reports-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "D.N.M.I. LBR 2083-1(f)"
+{
+  forum frcp
+}
+
+/// LBR 2091-2(d): an attorney files a Notice of Change of Address or Firm
+/// Affiliation within 14 days of the change, in each case and proceeding in
+/// which the attorney has appeared.
+deadline attorney-address-notice-period: 14.days after AttorneyAddressChanged() counted_by frcp6 cite "D.N.M.I. LBR 2091-2(d)"
+{
+  forum frcp
+}
+
+/// LBR 3001-1(c)(1)(A): unless the court sets a deadline, a request for payment
+/// of an administrative expense in a chapter 11, 12 or 13 case is timely if
+/// filed by the later of 28 days before the plan confirmation hearing and 28
+/// days after the last event giving rise to the expense.
+deadline admin-expense-request-before-confirmation: 28.days before ConfirmationHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 3001-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 3001-1(c)(1)(B), (2)(B): the 28 days after the last event giving rise to
+/// the expense, the later limb in chapter 11, 12 or 13 cases and one of the
+/// limbs in chapter 7 (with the claims bar date), the latest governing.
+deadline admin-expense-request-after-event: 28.days after LastExpenseEventOccurred() counted_by frcp6 cite "D.N.M.I. LBR 3001-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 3001-1(c)(2)(C): in chapter 7, a request for an expense arising from the
+/// use of premises is also timely by 28 days after the trustee or debtor in
+/// possession surrenders the premises, the latest limb governing.
+deadline admin-expense-request-after-surrender: 28.days after PremisesSurrendered() counted_by frcp6 cite "D.N.M.I. LBR 3001-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 3003-1: unless the court orders otherwise, proofs of claim or interest
+/// in a chapter 11 case under FRBP 3003 are filed within 90 days after the
+/// first date set for the § 341 meeting.
+deadline chapter11-claims-bar-date: 90.days after FirstMeetingDate() counted_by frcp6 cite "D.N.M.I. LBR 3003-1"
+{
+  forum frcp
+}
+
+/// LBR 3004-1(b): a creditor on whose behalf a claim was filed under FRBP 3004
+/// or 3005 may file an amended proof of claim within 30 days after service of
+/// the notice; unless the court orders otherwise it supersedes the other
+/// entity's claim.
+deadline amended-claim-period: 30.days after SubstituteClaimNoticeServed() counted_by frcp6 cite "D.N.M.I. LBR 3004-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3007-1(c): a response to an objection to claim is due 7 days before the
+/// scheduled hearing; the objection must give not less than 30 days' notice of
+/// that deadline (LBR 3007-1(b)), and on a sufficient notice and no timely
+/// response the court may sustain the objection by default.
+deadline claim-objection-response-period: 7.days before ClaimObjectionHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 3007-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 3015-1(b): the clerk's deficiency order may give notice that failure to
+/// file the chapter 13 plan within 14 days may result in dismissal without
+/// further notice, which may carry a 180-day refiling bar under § 109(g)(1).
+deadline plan-filing-period: 14.days after PlanDeficiencyOrderIssued() counted_by frcp6 cite "D.N.M.I. LBR 3015-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3015-1(g)(3)(B): the debtor serves the chapter 13 plan at least 28 days
+/// before the confirmation hearing.
+deadline plan-service-period: 28.days before ConfirmationHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 3015-1(g)"
+{
+  forum frcp
+}
+
+/// LBR 3015-1(g)(3)(B): the debtor files the certificate of service of the plan
+/// not later than 7 days before the confirmation hearing.
+deadline plan-service-certificate-period: 7.days before ConfirmationHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 3015-1(g)"
+{
+  forum frcp
+}
+
+/// LBR 3015-2(b)(1)(C), (2): an objection to a debtor's motion to modify a
+/// confirmed chapter 13 plan, and a response to a trustee's or creditor's
+/// motion to modify, is filed not later than 7 days before the motion's hearing
+/// date.
+deadline plan-modification-objection-period: 7.days before PlanModificationHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 3015-2(b)"
+{
+  forum frcp
+}
+
+/// LBR 3015-3(a)(1): an objection to confirmation of a chapter 13 plan or plan
+/// motion is filed by the later of 7 days before the confirmation hearing (or
+/// continued hearing) and 21 days after the plan is filed; LBR 3015-2(a)(3)(B)
+/// applies it to amended plans.
+deadline confirmation-objection-before-hearing: 7.days before ConfirmationHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 3015-3(a)"
+{
+  forum frcp
+}
+
+/// LBR 3015-3(a)(2): the other limb, 21 days after the plan, amended plan or
+/// plan motion is filed; the later of the two governs.
+deadline confirmation-objection-after-plan: 21.days after PlanFiled() counted_by frcp6 cite "D.N.M.I. LBR 3015-3(a)"
+{
+  forum frcp
+}
+
+/// LBR 3015-3(d)(1): an order denying confirmation may provide that the case
+/// may be dismissed unless, within 14 days after its entry, the debtor files an
+/// amended plan and any plan motions or converts the case.
+deadline denial-cure-period: 14.days after ConfirmationDenied() counted_by frcp6 cite "D.N.M.I. LBR 3015-3(d)"
+{
+  forum frcp
+}
+
+/// LBR 3017-1(a): except under LBR 3017-2, the plan proponent gives at least 28
+/// days' notice of the disclosure statement hearing to all parties in interest.
+deadline disclosure-statement-notice-period: 28.days before DisclosureStatementHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 3017-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 3017-1(b): an objection to approval of the disclosure statement is filed
+/// not later than 7 days before the hearing date.
+deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 3017-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3017-1(c): not later than 3 days before the hearing (and any continued
+/// hearing), the plan proponent advises the court by telephone or e-mail
+/// whether it intends to go forward.
+deadline disclosure-statement-intention-period: 3.days before DisclosureStatementHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 3017-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 3018-1(c): not later than 7 days before the confirmation hearing, the
+/// plan proponent files the ballot tabulation report.
+deadline ballot-report-period: 7.days before ConfirmationHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 3018-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 3020-1(b): unless the court orders otherwise, objections to confirmation
+/// of a chapter 11 plan are filed not later than 7 days before the confirmation
+/// hearing.
+deadline chapter11-confirmation-objection-period: 7.days before ConfirmationHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 3020-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3020-1(d): not later than 3 days before the confirmation hearing (and
+/// any continued hearing), the plan proponent advises the court whether it
+/// intends to go forward.
+deadline chapter11-confirmation-status-period: 3.days before ConfirmationHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 3020-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 3022-1: if no objection is filed within 30 days after the application
+/// for a final decree is filed, the clerk may enter the final decree without
+/// further notice or hearing.
+deadline final-decree-objection-period: 30.days after FinalDecreeApplicationFiled() counted_by frcp6 cite "D.N.M.I. LBR 3022-1"
+{
+  forum frcp
+}
+
+/// LBR 3070-2(e)(1): the chapter 13 trustee serves the notice of filed claims
+/// and intent to make distributions by the later of 28 days after the latest
+/// FRBP 3002(c) claims deadline and 60 days after the confirmation order.
+deadline distribution-notice-after-claims-deadline: 28.days after Chapter13ClaimsDeadline() counted_by frcp6 cite "D.N.M.I. LBR 3070-2(e)"
+{
+  forum frcp
+}
+
+/// LBR 3070-2(e)(2): the other limb, 60 days after entry of the plan
+/// confirmation order; the later of the two governs.
+deadline distribution-notice-after-confirmation: 60.days after ConfirmationOrderEntered() counted_by frcp6 cite "D.N.M.I. LBR 3070-2(e)"
+{
+  forum frcp
+}
+
+/// LBR 3070-2(h): to suspend distribution on a disputed claim, the debtor files
+/// and serves an objection not later than 28 days after the trustee's notice of
+/// filed claims; a later objection may still be made, but unless the court
+/// orders otherwise its sustaining refunds nothing already paid.
+deadline disputed-claim-objection-period: 28.days after DistributionNoticeFiled() counted_by frcp6 cite "D.N.M.I. LBR 3070-2(h)"
+{
+  forum frcp
+}
+
+/// LBR 3070-2(j)(2): if the debtor's attorney does not file an application for
+/// compensation within 60 days after entry of the confirmation order, the
+/// trustee distributes the 50% reserve to creditors under the plan.
+deadline attorney-fee-application-period: 60.days after ConfirmationOrderEntered() counted_by frcp6 cite "D.N.M.I. LBR 3070-2(j)"
+{
+  forum frcp
+}
+
+/// LBR 4001-1(e)(1)(A): an opposition to a motion for relief only from the
+/// automatic stay under § 362 is filed and served 14 days before the hearing
+/// date.
+deadline stay-relief-opposition-period: 14.days before StayReliefHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 4001-1(e)"
+{
+  forum frcp
+}
+
+/// LBR 4001-1(e)(1)(B): the moving party's reply on a motion for relief only
+/// from the automatic stay is filed and served 7 days before the hearing date.
+deadline stay-relief-reply-period: 7.days before StayReliefHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 4001-1(e)"
+{
+  forum frcp
+}
+
+/// LBR 4001-1(e)(2)(A): an opposition to a motion including relief from the
+/// codebtor stay under § 1201 or 1301 is filed and served 7 days before the
+/// hearing date.
+deadline codebtor-stay-opposition-period: 7.days before CodebtorStayReliefHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 4001-1(e)"
+{
+  forum frcp
+}
+
+/// LBR 4001-1(e)(2)(B): the moving party's reply on a codebtor stay motion is
+/// filed and served 3 days before the hearing date.
+deadline codebtor-stay-reply-period: 3.days before CodebtorStayReliefHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 4001-1(e)"
+{
+  forum frcp
+}
+
+/// LBR 4001-4(c)(1): a debtor who pays the entire amount of an eviction
+/// judgment under § 362(l) certifies full payment in Official Form 101B, filed
+/// within 30 days after the petition, and files a notice giving the landlord a
+/// 14-day objection deadline (LBR 4001-4(c)(2)).
+deadline eviction-payment-certification-period: 30.days after PetitionFiled() counted_by frcp6 cite "D.N.M.I. LBR 4001-4(c)"
+{
+  forum frcp
+}
+
+/// LBR 4001-5(a)(3)(A): a party seeking to extend the stay under § 362(c)(3)(B)
+/// obtains a hearing date not later than 30 days after the petition is filed.
+deadline stay-extension-hearing-period: 30.days after PetitionFiled() counted_by frcp6 cite "D.N.M.I. LBR 4001-5(a)"
+{
+  forum frcp
+}
+
+/// LBR 4001-5(a)(3)(A): no request to shorten time is required if the motion to
+/// extend the stay is filed and served not less than 14 days before the hearing
+/// date.
+deadline stay-extension-motion-period: 14.days before StayExtensionHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 4001-5(a)"
+{
+  forum frcp
+}
+
+/// LBR 4001-5(a)(3)(A): any response to a motion to extend the stay is filed
+/// and served not less than 7 days before the hearing date.
+deadline stay-extension-response-period: 7.days before StayExtensionHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 4001-5(a)"
+{
+  forum frcp
+}
+
+/// LBR 4001-5(a)(3)(A): the moving party may file a reply not less than 3 days
+/// before the hearing date.
+deadline stay-extension-reply-period: 3.days before StayExtensionHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 4001-5(a)"
+{
+  forum frcp
+}
+
+/// LBR 4004-3(b)(1): an objection to an individual chapter 11 debtor's
+/// certification of completion of plan payments and to the discharge is filed
+/// within 30 days after the certification and notice are filed.
+deadline chapter11-discharge-objection-period: 30.days after Chapter11CompletionCertificationFiled() counted_by frcp6 cite "D.N.M.I. LBR 4004-3(b)"
+{
+  forum frcp
+}
+
+/// LBR 4004-3(c)(1): an objection to a chapter 12 or 13 debtor's certification
+/// and the granting of a discharge is filed within 30 days after the date of
+/// the clerk's notice.
+deadline chapter13-discharge-objection-period: 30.days after DischargeCertificationNoticeServed() counted_by frcp6 cite "D.N.M.I. LBR 4004-3(c)"
+{
+  forum frcp
+}
+
+/// LBR 4004-3(c)(1): if a chapter 12 or 13 debtor does not file the Form B2830
+/// certification by 30 days after the trustee's final report and account is
+/// filed, the clerk may close the case without a discharge.
+deadline discharge-certification-period: 30.days after TrusteeFinalReportFiled() counted_by frcp6 cite "D.N.M.I. LBR 4004-3(c)"
+{
+  forum frcp
+}
+
+/// LBR 5005-1(c)(4): a party affected by the clerk's rejection of a document
+/// may move for judicial action within 7 days after the date of the rejection
+/// notice.
+deadline rejection-review-period: 7.days after ClerkRejectionNoticed() counted_by frcp6 cite "D.N.M.I. LBR 5005-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 5077-1(c): unless the court orders otherwise, a transcript is not made
+/// electronically available to the public until at least 90 days after it is
+/// filed.
+deadline transcript-restricted-access-period: 90.days after TranscriptFiled() counted_by frcp6 cite "D.N.M.I. LBR 5077-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 5077-1(f)(1), (2): a request for redaction of FRBP 9037(a) personal data
+/// identifiers, or a motion to redact other private or sensitive information,
+/// is filed not later than 21 days after the transcript is filed.
+deadline transcript-redaction-request-period: 21.days after TranscriptFiled() counted_by frcp6 cite "D.N.M.I. LBR 5077-1(f)"
+{
+  forum frcp
+}
+
+/// LBR 5077-1(g): on a timely request under LBR 5077-1(f)(1), the transcriber
+/// files a redacted transcript not later than 28 days after the original
+/// transcript is filed.
+deadline redacted-transcript-period: 28.days after TranscriptFiled() counted_by frcp6 cite "D.N.M.I. LBR 5077-1(g)"
+{
+  forum frcp
+}
+
+/// LBR 5077-1(g): on a timely motion under LBR 5077-1(f)(2), the transcriber
+/// files a redacted transcript not later than 14 days after the court grants
+/// the motion.
+deadline redacted-transcript-after-motion: 14.days after RedactionMotionGranted() counted_by frcp6 cite "D.N.M.I. LBR 5077-1(g)"
+{
+  forum frcp
+}
+
+/// LBR 6004-1(d): an objection to the clerk's general notice of intent to sell
+/// nonexempt property with an aggregate gross value under $2,500 is filed not
+/// later than 21 days after the notice is filed.
+deadline small-sale-objection-period: 21.days after SmallSaleNoticeFiled() counted_by frcp6 cite "D.N.M.I. LBR 6004-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 6004-1(e): a motion to sell personal property of the estate on leased
+/// premises may be heard on 7 days' notice without an order shortening time.
+deadline leased-premises-sale-notice-period: 7.days before LeasedPremisesSaleHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 6004-1(e)"
+{
+  forum frcp
+}
+
+/// LBR 7041-1(b)(3): the notice of a request to dismiss a complaint objecting
+/// to discharge advises that, absent an objection filed within 14 days after
+/// the notice is filed, the court may dismiss without further notice or
+/// hearing.
+deadline discharge-complaint-dismissal-objection-period: 14.days after DischargeObjectionDismissalNoticeFiled() counted_by frcp6 cite "D.N.M.I. LBR 7041-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 7054-1(d): an objection to a proposed bill of costs in an adversary
+/// proceeding is filed within 14 days after the bill is filed; absent a timely
+/// objection the clerk may tax the costs as proposed (LBR 7054-1(e)). The bill
+/// itself is due by the time for a notice of appeal under FRBP 8002 (LBR
+/// 7054-1(c)), lit/frbp's period.
+deadline bill-of-costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "D.N.M.I. LBR 7054-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 7055-1(b): unless the court orders otherwise, a default judgment for
+/// other than a sum certain is obtained only by motion and a prima facie
+/// showing at a hearing on notice of not less than 28 days to the defendant.
+deadline default-judgment-notice-period: 28.days before DefaultJudgmentHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 7055-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(c)(1): the filing party gives notice of a motion set for hearing
+/// not later than 34 days before the hearing, under LR 7.1 and the FRBP;
+/// responses and replies follow LR 7.1 (LBR 9013-1(c)(2)), the District Court's
+/// 14-day opposition and 7-day reply (lit/nmid).
+deadline motion-hearing-notice-period: 34.days before MotionHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 9013-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(d)(3): the party filing a countermotion may file a reply
+/// memorandum in support of it not later than 3 days before the hearing.
+deadline countermotion-reply-period: 3.days before MotionHearingHeld() counted_by frcp6 cite "D.N.M.I. LBR 9013-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 9024-1(a): a motion for reconsideration of an interlocutory order is
+/// filed no later than 14 days after its entry; reconsideration of a final
+/// judgment or order is governed by FRBP 9023 or 9024 (lit/frbp).
+deadline interlocutory-reconsideration-period: 14.days after InterlocutoryOrderEntered() counted_by frcp6 cite "D.N.M.I. LBR 9024-1(a)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed and noticed for hearing" by applicant cite "D.N.M.I. LBR 9013-1(c)"
+{
+  note "LR 7.1 applies in bankruptcy proceedings unless the court or LBR 9013-1 provides otherwise (LBR 9013-1(a)). A filing requiring a hearing states the hearing date on its first page and the filing party gives notice not later than 34 days before the hearing (LBR 9013-1(c)(1)). The opposition and reply periods are the District Court's LR 7.1(c) (lit/nmid); the motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-opposed "Response filed" -> opposed { authority cite "D.N.M.I. LBR 9013-1(c)" }
+  edge-motion-filed-unopposed "No timely response" -> unopposed {
+    authority cite "D.N.M.I. LBR 9013-1(c)"
+  }
+}
+
+state opposed: "Response filed" by opponent cite "D.N.M.I. LBR 9013-1(c)"
+{
+  note "Responses and replies are filed and served under LR 7.1 and the FRBP; no surreply or further briefing is permitted without leave, and the court may disregard an untimely memorandum (LBR 9013-1(c)(2)). A respondent may file a countermotion with its response on the same issues; its reply is due not later than 3 days before the hearing (LBR 9013-1(d))."
+  edge-opposed-ruling "Briefing closed" -> ruling { authority cite "D.N.M.I. LBR 9013-1(c)" }
+}
+
+state unopposed: "No response: declaration and proposed order" by applicant cite "D.N.M.I. LBR 9013-1(c)"
+{
+  note "If no one files a timely response, the moving party may file a Declaration and Request for Entry of Order and submit a proposed order; the court may cancel the hearing and enter the order or direct that the hearing be held (LBR 9013-1(c)(3)). The court generally will not cancel the hearing on dispositive adversary motions, FRBP 4001(b) or (c) motions, most motions to convert or dismiss, and substantive chapter 11 motions (LBR 9013-1(c)(4))."
+  edge-unopposed-ruling "Proposed order submitted" -> ruling {
+    authority cite "D.N.M.I. LBR 9013-1(c)"
+  }
+}
+
+decision ruling: "Motion decided" by court cite "D.N.M.I. LBR 9021-1"
+{
+  note "A motion for reconsideration of an interlocutory order is filed no later than 14 days after its entry; reconsideration of a final judgment or order is governed by FRBP 9023 or 9024 (LBR 9024-1(a))."
+  edge-ruling-granted "Granted" -> decided { authority cite "D.N.M.I. LBR 9021-1" }
+  edge-ruling-denied "Denied" -> decided { authority cite "D.N.M.I. LBR 9021-1" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "D.N.M.I. LBR 1001-1"
+
+test "payment advices before meeting: 7 days before the trigger" cite "D.N.M.I. LBR 1007-1(b)"
+{
+  given FirstMeetingDate() on 2027-03-02
+  expect deadline(payment-advices-before-meeting) == 2027-02-23
+}
+
+test "payment advices after petition: 45 days after the trigger" cite "D.N.M.I. LBR 1007-1(b)"
+{
+  given PetitionFiled() on 2026-11-02
+  expect deadline(payment-advices-after-petition) == 2026-12-17
+}
+
+test "amendment declaration period: 7 days after the trigger" cite "D.N.M.I. LBR 1009-1(b)"
+{
+  given AmendmentFiledElectronically() on 2026-11-02
+  expect deadline(amendment-declaration-period) == 2026-11-09
+}
+
+test "conversion objection period: 14 days after the trigger" cite "D.N.M.I. LBR 1017-1"
+{
+  given ConversionMotionFiled() on 2026-11-02
+  expect deadline(conversion-objection-period) == 2026-11-16
+}
+
+test "responsible individual period: 14 days after the trigger" cite "D.N.M.I. LBR 1074-1(b)"
+{
+  given PetitionFiled() on 2026-11-02
+  expect deadline(responsible-individual-period) == 2026-11-16
+}
+
+test "examination after motion: 14 days after the trigger" cite "D.N.M.I. LBR 2004-1(b)"
+{
+  given Rule2004MotionFiled() on 2026-11-02
+  expect deadline(examination-after-motion) == 2026-11-16
+}
+
+test "examination production period: 30 days after the trigger" cite "D.N.M.I. LBR 2004-1(b)"
+{
+  given ExaminationOrderIssued() on 2026-11-02
+  expect deadline(examination-production-period) == 2026-12-02
+}
+
+test "examination after subpoena: 14 days after the trigger" cite "D.N.M.I. LBR 2004-1(c)"
+{
+  given ExaminationSubpoenaIssued() on 2026-11-02
+  expect deadline(examination-after-subpoena) == 2026-11-16
+}
+
+test "admin expense procedure objection period: 28 days after the trigger" cite "D.N.M.I. LBR 2015-1(a)"
+{
+  given ClaimsNoticeSent() on 2026-11-02
+  expect deadline(admin-expense-procedure-objection-period) == 2026-11-30
+}
+
+test "admin expense objection period: 14 days after the trigger" cite "D.N.M.I. LBR 2015-1(b)"
+{
+  given AdminExpenseMotionServed() on 2026-11-02
+  expect deadline(admin-expense-objection-period) == 2026-11-16
+}
+
+test "feasibility response period: 28 days after the trigger" cite "D.N.M.I. LBR 2083-1(e)"
+{
+  given FeasibilityMotionFiled() on 2026-11-02
+  expect deadline(feasibility-response-period) == 2026-11-30
+}
+
+test "trustee dismissal motion period: 21 days before the trigger" cite "D.N.M.I. LBR 2083-1(e)"
+{
+  given DismissalMotionHearingHeld() on 2027-03-02
+  expect deadline(trustee-dismissal-motion-period) == 2027-02-09
+}
+
+test "dismissal cure period: 21 days after the trigger" cite "D.N.M.I. LBR 2083-1(e)"
+{
+  given DismissalMotionHearingHeld() on 2026-11-02
+  expect deadline(dismissal-cure-period) == 2026-11-23
+}
+
+test "business reports period: 7 days before the trigger" cite "D.N.M.I. LBR 2083-1(f)"
+{
+  given FirstMeetingDate() on 2027-03-02
+  expect deadline(business-reports-period) == 2027-02-23
+}
+
+test "attorney address notice period: 14 days after the trigger" cite "D.N.M.I. LBR 2091-2(d)"
+{
+  given AttorneyAddressChanged() on 2026-11-02
+  expect deadline(attorney-address-notice-period) == 2026-11-16
+}
+
+test "admin expense request before confirmation: 28 days before the trigger" cite "D.N.M.I. LBR 3001-1(c)"
+{
+  given ConfirmationHearingHeld() on 2027-03-02
+  expect deadline(admin-expense-request-before-confirmation) == 2027-02-02
+}
+
+test "admin expense request after event: 28 days after the trigger" cite "D.N.M.I. LBR 3001-1(c)"
+{
+  given LastExpenseEventOccurred() on 2026-11-02
+  expect deadline(admin-expense-request-after-event) == 2026-11-30
+}
+
+test "admin expense request after surrender: 28 days after the trigger" cite "D.N.M.I. LBR 3001-1(c)"
+{
+  given PremisesSurrendered() on 2026-11-02
+  expect deadline(admin-expense-request-after-surrender) == 2026-11-30
+}
+
+test "chapter11 claims bar date: 90 days after the trigger" cite "D.N.M.I. LBR 3003-1"
+{
+  given FirstMeetingDate() on 2026-11-02
+  expect deadline(chapter11-claims-bar-date) == 2027-02-01
+}
+
+test "amended claim period: 30 days after the trigger" cite "D.N.M.I. LBR 3004-1(b)"
+{
+  given SubstituteClaimNoticeServed() on 2026-11-02
+  expect deadline(amended-claim-period) == 2026-12-02
+}
+
+test "claim objection response period: 7 days before the trigger" cite "D.N.M.I. LBR 3007-1(c)"
+{
+  given ClaimObjectionHearingHeld() on 2027-03-02
+  expect deadline(claim-objection-response-period) == 2027-02-23
+}
+
+test "plan filing period: 14 days after the trigger" cite "D.N.M.I. LBR 3015-1(b)"
+{
+  given PlanDeficiencyOrderIssued() on 2026-11-02
+  expect deadline(plan-filing-period) == 2026-11-16
+}
+
+test "plan service period: 28 days before the trigger" cite "D.N.M.I. LBR 3015-1(g)"
+{
+  given ConfirmationHearingHeld() on 2027-03-02
+  expect deadline(plan-service-period) == 2027-02-02
+}
+
+test "plan service certificate period: 7 days before the trigger" cite "D.N.M.I. LBR 3015-1(g)"
+{
+  given ConfirmationHearingHeld() on 2027-03-02
+  expect deadline(plan-service-certificate-period) == 2027-02-23
+}
+
+test "plan modification objection period: 7 days before the trigger" cite "D.N.M.I. LBR 3015-2(b)"
+{
+  given PlanModificationHearingHeld() on 2027-03-02
+  expect deadline(plan-modification-objection-period) == 2027-02-23
+}
+
+test "confirmation objection before hearing: 7 days before the trigger" cite "D.N.M.I. LBR 3015-3(a)"
+{
+  given ConfirmationHearingHeld() on 2027-03-02
+  expect deadline(confirmation-objection-before-hearing) == 2027-02-23
+}
+
+test "confirmation objection after plan: 21 days after the trigger" cite "D.N.M.I. LBR 3015-3(a)"
+{
+  given PlanFiled() on 2026-11-02
+  expect deadline(confirmation-objection-after-plan) == 2026-11-23
+}
+
+test "denial cure period: 14 days after the trigger" cite "D.N.M.I. LBR 3015-3(d)"
+{
+  given ConfirmationDenied() on 2026-11-02
+  expect deadline(denial-cure-period) == 2026-11-16
+}
+
+test "disclosure statement notice period: 28 days before the trigger" cite "D.N.M.I. LBR 3017-1(a)"
+{
+  given DisclosureStatementHearingHeld() on 2027-03-02
+  expect deadline(disclosure-statement-notice-period) == 2027-02-02
+}
+
+test "disclosure statement objection period: 7 days before the trigger" cite "D.N.M.I. LBR 3017-1(b)"
+{
+  given DisclosureStatementHearingHeld() on 2027-03-02
+  expect deadline(disclosure-statement-objection-period) == 2027-02-23
+}
+
+test "disclosure statement intention period: 3 days before the trigger" cite "D.N.M.I. LBR 3017-1(c)"
+{
+  given DisclosureStatementHearingHeld() on 2027-03-02
+  expect deadline(disclosure-statement-intention-period) == 2027-02-26
+}
+
+test "ballot report period: 7 days before the trigger" cite "D.N.M.I. LBR 3018-1(c)"
+{
+  given ConfirmationHearingHeld() on 2027-03-02
+  expect deadline(ballot-report-period) == 2027-02-23
+}
+
+test "chapter11 confirmation objection period: 7 days before the trigger" cite "D.N.M.I. LBR 3020-1(b)"
+{
+  given ConfirmationHearingHeld() on 2027-03-02
+  expect deadline(chapter11-confirmation-objection-period) == 2027-02-23
+}
+
+test "chapter11 confirmation status period: 3 days before the trigger" cite "D.N.M.I. LBR 3020-1(d)"
+{
+  given ConfirmationHearingHeld() on 2027-03-02
+  expect deadline(chapter11-confirmation-status-period) == 2027-02-26
+}
+
+test "final decree objection period: 30 days after the trigger" cite "D.N.M.I. LBR 3022-1"
+{
+  given FinalDecreeApplicationFiled() on 2026-11-02
+  expect deadline(final-decree-objection-period) == 2026-12-02
+}
+
+test "distribution notice after claims deadline: 28 days after the trigger" cite "D.N.M.I. LBR 3070-2(e)"
+{
+  given Chapter13ClaimsDeadline() on 2026-11-02
+  expect deadline(distribution-notice-after-claims-deadline) == 2026-11-30
+}
+
+test "distribution notice after confirmation: 60 days after the trigger" cite "D.N.M.I. LBR 3070-2(e)"
+{
+  given ConfirmationOrderEntered() on 2026-11-02
+  expect deadline(distribution-notice-after-confirmation) == 2027-01-04
+}
+
+test "disputed claim objection period: 28 days after the trigger" cite "D.N.M.I. LBR 3070-2(h)"
+{
+  given DistributionNoticeFiled() on 2026-11-02
+  expect deadline(disputed-claim-objection-period) == 2026-11-30
+}
+
+test "attorney fee application period: 60 days after the trigger" cite "D.N.M.I. LBR 3070-2(j)"
+{
+  given ConfirmationOrderEntered() on 2026-11-02
+  expect deadline(attorney-fee-application-period) == 2027-01-04
+}
+
+test "stay relief opposition period: 14 days before the trigger" cite "D.N.M.I. LBR 4001-1(e)"
+{
+  given StayReliefHearingHeld() on 2027-03-02
+  expect deadline(stay-relief-opposition-period) == 2027-02-16
+}
+
+test "stay relief reply period: 7 days before the trigger" cite "D.N.M.I. LBR 4001-1(e)"
+{
+  given StayReliefHearingHeld() on 2027-03-02
+  expect deadline(stay-relief-reply-period) == 2027-02-23
+}
+
+test "codebtor stay opposition period: 7 days before the trigger" cite "D.N.M.I. LBR 4001-1(e)"
+{
+  given CodebtorStayReliefHearingHeld() on 2027-03-02
+  expect deadline(codebtor-stay-opposition-period) == 2027-02-23
+}
+
+test "codebtor stay reply period: 3 days before the trigger" cite "D.N.M.I. LBR 4001-1(e)"
+{
+  given CodebtorStayReliefHearingHeld() on 2027-03-02
+  expect deadline(codebtor-stay-reply-period) == 2027-02-26
+}
+
+test "eviction payment certification period: 30 days after the trigger" cite "D.N.M.I. LBR 4001-4(c)"
+{
+  given PetitionFiled() on 2026-11-02
+  expect deadline(eviction-payment-certification-period) == 2026-12-02
+}
+
+test "stay extension hearing period: 30 days after the trigger" cite "D.N.M.I. LBR 4001-5(a)"
+{
+  given PetitionFiled() on 2026-11-02
+  expect deadline(stay-extension-hearing-period) == 2026-12-02
+}
+
+test "stay extension motion period: 14 days before the trigger" cite "D.N.M.I. LBR 4001-5(a)"
+{
+  given StayExtensionHearingHeld() on 2027-03-02
+  expect deadline(stay-extension-motion-period) == 2027-02-16
+}
+
+test "stay extension response period: 7 days before the trigger" cite "D.N.M.I. LBR 4001-5(a)"
+{
+  given StayExtensionHearingHeld() on 2027-03-02
+  expect deadline(stay-extension-response-period) == 2027-02-23
+}
+
+test "stay extension reply period: 3 days before the trigger" cite "D.N.M.I. LBR 4001-5(a)"
+{
+  given StayExtensionHearingHeld() on 2027-03-02
+  expect deadline(stay-extension-reply-period) == 2027-02-26
+}
+
+test "chapter11 discharge objection period: 30 days after the trigger" cite "D.N.M.I. LBR 4004-3(b)"
+{
+  given Chapter11CompletionCertificationFiled() on 2026-11-02
+  expect deadline(chapter11-discharge-objection-period) == 2026-12-02
+}
+
+test "chapter13 discharge objection period: 30 days after the trigger" cite "D.N.M.I. LBR 4004-3(c)"
+{
+  given DischargeCertificationNoticeServed() on 2026-11-02
+  expect deadline(chapter13-discharge-objection-period) == 2026-12-02
+}
+
+test "discharge certification period: 30 days after the trigger" cite "D.N.M.I. LBR 4004-3(c)"
+{
+  given TrusteeFinalReportFiled() on 2026-11-02
+  expect deadline(discharge-certification-period) == 2026-12-02
+}
+
+test "rejection review period: 7 days after the trigger" cite "D.N.M.I. LBR 5005-1(c)"
+{
+  given ClerkRejectionNoticed() on 2026-11-02
+  expect deadline(rejection-review-period) == 2026-11-09
+}
+
+test "transcript restricted access period: 90 days after the trigger" cite "D.N.M.I. LBR 5077-1(c)"
+{
+  given TranscriptFiled() on 2026-11-02
+  expect deadline(transcript-restricted-access-period) == 2027-02-01
+}
+
+test "transcript redaction request period: 21 days after the trigger" cite "D.N.M.I. LBR 5077-1(f)"
+{
+  given TranscriptFiled() on 2026-11-02
+  expect deadline(transcript-redaction-request-period) == 2026-11-23
+}
+
+test "redacted transcript period: 28 days after the trigger" cite "D.N.M.I. LBR 5077-1(g)"
+{
+  given TranscriptFiled() on 2026-11-02
+  expect deadline(redacted-transcript-period) == 2026-11-30
+}
+
+test "redacted transcript after motion: 14 days after the trigger" cite "D.N.M.I. LBR 5077-1(g)"
+{
+  given RedactionMotionGranted() on 2026-11-02
+  expect deadline(redacted-transcript-after-motion) == 2026-11-16
+}
+
+test "small sale objection period: 21 days after the trigger" cite "D.N.M.I. LBR 6004-1(d)"
+{
+  given SmallSaleNoticeFiled() on 2026-11-02
+  expect deadline(small-sale-objection-period) == 2026-11-23
+}
+
+test "leased premises sale notice period: 7 days before the trigger" cite "D.N.M.I. LBR 6004-1(e)"
+{
+  given LeasedPremisesSaleHearingHeld() on 2027-03-02
+  expect deadline(leased-premises-sale-notice-period) == 2027-02-23
+}
+
+test "discharge complaint dismissal objection period: 14 days after the trigger" cite "D.N.M.I. LBR 7041-1(b)"
+{
+  given DischargeObjectionDismissalNoticeFiled() on 2026-11-02
+  expect deadline(discharge-complaint-dismissal-objection-period) == 2026-11-16
+}
+
+test "bill of costs objection period: 14 days after the trigger" cite "D.N.M.I. LBR 7054-1(d)"
+{
+  given BillOfCostsFiled() on 2026-11-02
+  expect deadline(bill-of-costs-objection-period) == 2026-11-16
+}
+
+test "default judgment notice period: 28 days before the trigger" cite "D.N.M.I. LBR 7055-1(b)"
+{
+  given DefaultJudgmentHearingHeld() on 2027-03-02
+  expect deadline(default-judgment-notice-period) == 2027-02-02
+}
+
+test "motion hearing notice period: 34 days before the trigger" cite "D.N.M.I. LBR 9013-1(c)"
+{
+  given MotionHearingHeld() on 2027-03-02
+  expect deadline(motion-hearing-notice-period) == 2027-01-27
+}
+
+test "countermotion reply period: 3 days before the trigger" cite "D.N.M.I. LBR 9013-1(d)"
+{
+  given MotionHearingHeld() on 2027-03-02
+  expect deadline(countermotion-reply-period) == 2027-02-26
+}
+
+test "interlocutory reconsideration period: 14 days after the trigger" cite "D.N.M.I. LBR 9024-1(a)"
+{
+  given InterlocutoryOrderEntered() on 2026-11-02
+  expect deadline(interlocutory-reconsideration-period) == 2026-11-16
+}

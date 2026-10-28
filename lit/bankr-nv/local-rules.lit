@@ -1,0 +1,386 @@
+module bankr-nv-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
+
+// The Bankr. D. Nev. court's own periods, counted under FRBP 9006(a). The
+// FRBP periods (schedules and their extension, the chapter 13 plan, claims
+// in chapter 7, 12 and 13 cases, exemptions, discharge, dischargeability,
+// the adversary answer and summons, new trial, appeals) are lit/frbp's and
+// are not declared again; LR 3015(c) only refers to FRBP 3015(b)'s 14 days
+// and LR 2015.3(c) to the FRBP 2015.3 reports, and neither is repeated.
+//
+// Stated in the rules but not declared: the business-day periods (the
+// initial installment fee payment, LR 1006(a); service of added creditors,
+// LR 1007(b); non-electronic service, LR 2002(a)(2); the stay relief
+// meet-and-confer, LR 4001(a); emergency filing motions, LR 5005(a);
+// oppositions and replies on shortened time, LR 9006(c), (e); trial
+// declarations and exhibits, LR 9017(d); approval of proposed orders, LR
+// 9021(b)); notice minimums a party gives (21 days of the notice of a
+// large chapter 9, 11 or 12 case, LR 2002(c); 14 days on a plan extension
+// motion, LR 3015(c); 30 days on an exemption objection hearing, LR
+// 4003(c); 21 and 28 days on a chapter 13 final account, LR 4007(a); 30
+// days on a hardship discharge, LR 4007(b); 21 days before withdrawing or
+// destroying exhibits, LR 5003(b); 28 days of a negative-notice hearing, LR
+// 9014.1(c)); the 14 days that let the clerk sign a Rule 2004 order, LR
+// 2004(b), 5075(a); the trustee's 45-day final account (LR 4007(a)); the
+// 180-day deemed administration of a chapter 11 case (LR 3022); the
+// discovery plan and completion periods measured from appearances or the
+// close of discovery (LR 7016(e), 7026); the 120-day trial date after a
+// limited exemption (LR 7026(a)); the 42-day minimum hearing date on
+// summary judgment (LR 7056(f)); the 270-day inactivity dismissal (LR
+// 7041); the subpoena production date more than 14 days after service (LR
+// 9016(b)); and the 35-day deemed withdrawal of a motion with no proposed
+// order (LR 9021(a)). The earlier outline's Supreme Court decisions
+// construe the Code and the FRBP, not these rules, and are removed here:
+// no reporter text is vendored.
+
+/// Prehearing and posthearing briefs and points and authorities on a
+/// motion: not more than 20 pages, including the motion but excluding
+/// exhibits, unless the court orders otherwise (Bankr. D. Nev. LR
+/// 9014(e)).
+limit brief { pages <= 20 cite "Bankr. D. Nev. LR 9014(e)" } cite "Bankr. D. Nev. LR 9014(e)"
+
+/// Reply briefs and points and authorities: not more than 15 pages (Bankr.
+/// D. Nev. LR 9014(e)).
+limit reply-brief { pages <= 15 cite "Bankr. D. Nev. LR 9014(e)" } cite "Bankr. D. Nev. LR 9014(e)"
+
+/// The time to answer an involuntary petition passes without an answer
+/// (Bankr. D. Nev. LR 1013(b)).
+event InvoluntaryDefault()
+/// An order for joint administration is entered (Bankr. D. Nev. LR
+/// 1015(g)).
+event JointAdministrationOrdered()
+/// A pleading, motion or other document required to be served is filed
+/// (Bankr. D. Nev. LR 2002(a), 7005(a)).
+event PaperFiled()
+/// An order confirming a chapter 11 plan is entered (Bankr. D. Nev. LR
+/// 3007.1).
+event ChapterElevenConfirmed()
+/// A chapter 11 status conference (Bankr. D. Nev. LR 3016).
+event StatusConferenceHearing()
+/// The hearing on confirmation of a chapter 11 plan (Bankr. D. Nev. LR
+/// 3020).
+event ConfirmationHearing()
+/// The chapter 13 trustee's notice of proposed distribution (Bankr. D. Nev.
+/// LR 3021).
+event DistributionNoticeDated()
+/// A creditor files an objection to the trustee's proposed distribution
+/// (Bankr. D. Nev. LR 3021).
+event DistributionObjectionFiled()
+/// A cash collateral or financing agreement or stipulation and its notice
+/// are filed and served (Bankr. D. Nev. LR 4001(c)).
+event StipulationNoticeServed()
+/// An order requesting a chapter 13 debtor to obtain a wage deduction is
+/// entered (Bankr. D. Nev. LR 4002(e)).
+event WageOrderEntered()
+/// The chapter 13 trustee directs the debtor in writing to obtain a wage
+/// order (Bankr. D. Nev. LR 4002(e)).
+event TrusteeWageDirective()
+/// An objection to the chapter 13 trustee's final account and report is
+/// filed (Bankr. D. Nev. LR 4007(a)).
+event FinalAccountObjectionFiled()
+/// The debtor receives the court's notice to file the chapter 13
+/// certificate of compliance (Bankr. D. Nev. LR 4007(a)).
+event CertificateNoticeReceived()
+/// The chapter 13 certificate of compliance is served (Bankr. D. Nev. LR
+/// 4007(a), (b)).
+event CertificateServed()
+/// The hearing for which daily transcripts are ordered (Bankr. D. Nev. LR
+/// 5007).
+event TranscriptHearing()
+/// An order granting a motion to amend a pleading is entered (Bankr. D.
+/// Nev. LR 7015(b)).
+event AmendmentGranted()
+/// The start of trial (Bankr. D. Nev. LR 7016(e)).
+event TrialStart()
+/// The summary judgment movant's points and authorities are served (Bankr.
+/// D. Nev. LR 7056(c)).
+event SummaryJudgmentServed()
+/// Opposition to summary judgment is served (Bankr. D. Nev. LR 7056(d)).
+event SummaryJudgmentOppositionServed()
+/// A motion is filed (Bankr. D. Nev. LR 9014(b)).
+event MotionFiled()
+/// The hearing date for a motion (Bankr. D. Nev. LR 9014(a), (d)).
+event MotionHearing()
+/// A paper bearing the negative notice legend is served (Bankr. D. Nev. LR
+/// 9014.1(b), (c)).
+event NegativeNoticeServed()
+/// The negative notice objection period expires (Bankr. D. Nev. LR
+/// 9014.1(e)).
+event ObjectionPeriodExpired()
+/// The date first set for trial (Bankr. D. Nev. LR 9015(a)).
+event TrialFirstSet()
+/// The hearing on a matter concludes (Bankr. D. Nev. LR 9021(a)).
+event HearingConcluded()
+
+/// Bankr. D. Nev. LR 1002(c): within 14 days after filing a petition, the
+/// debtor files a notice of the bankruptcy case in any proceeding where any
+/// claim or cause of action is pending against, or on behalf of, the
+/// debtor.
+deadline other-courts-notice-period: 14.days after PetitionFiled() counted_by frcp6 cite "Bankr. D. Nev. LR 1002(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 1013(b): if no answer is filed to an involuntary
+/// petition as FRBP 1011 requires, the petitioning creditors submit an
+/// order for relief within 7 days after the default.
+deadline involuntary-relief-order-period: 7.days after InvoluntaryDefault() counted_by frcp6 cite "Bankr. D. Nev. LR 1013(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 1015(g)(2): within 14 days of an order for joint
+/// administration, the party that obtained it files a combined mailing
+/// matrix.
+deadline combined-matrix-period: 14.days after JointAdministrationOrdered() counted_by frcp6 cite "Bankr. D. Nev. LR 1015(g)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 2002(a)(3), 7005(a): unless ordered otherwise, proof
+/// of service is filed within 7 days after the filing of the paper served.
+deadline proof-of-service-period: 7.days after PaperFiled() counted_by frcp6 cite "Bankr. D. Nev. LR 2002(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 3002(b): a claim arising from the rejection of an
+/// executory contract or unexpired lease under § 365(d) is filed not later
+/// than 90 days after the first date set for the meeting of creditors.
+deadline rejection-claim-period: 90.days after FirstMeetingDate() counted_by frcp6 cite "Bankr. D. Nev. LR 3002(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 3003(a): unless the court orders otherwise, a proof of
+/// claim in a chapter 11 case is filed within 90 days after the date first
+/// set for the § 341(a) meeting.
+deadline chapter-11-claim-period: 90.days after FirstMeetingDate() counted_by frcp6 cite "Bankr. D. Nev. LR 3003(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 3003(b): in a Subchapter V case, a proof of claim is
+/// filed not later than 70 days after the order for relief.
+deadline subchapter-v-claim-period: 70.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. D. Nev. LR 3003(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 3007.1: unless extended by court order, objections to
+/// claims in a chapter 11 case are filed within 60 days after entry of the
+/// order confirming the plan.
+deadline chapter-11-claim-objection-period: 60.days after ChapterElevenConfirmed() counted_by frcp6 cite "Bankr. D. Nev. LR 3007.1"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 3016: the debtor in possession and any trustee file a
+/// status report at least 7 days before the chapter 11 status conference.
+deadline status-report-period: 7.days before StatusConferenceHearing() counted_by frcp6 cite "Bankr. D. Nev. LR 3016"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 3020: declarations supporting or opposing confirmation
+/// of a chapter 11 plan are filed 14 days or more before the confirmation
+/// hearing.
+deadline confirmation-declaration-period: 14.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. D. Nev. LR 3020"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 3021: a creditor whose claim is missing or inaccurate
+/// files a written objection to the trustee's proposed distribution within
+/// 21 days of the date of the notice.
+deadline distribution-objection-period: 21.days after DistributionNoticeDated() counted_by frcp6 cite "Bankr. D. Nev. LR 3021"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 3021: within 21 days of filing the objection, the
+/// creditor schedules a hearing on it with 21 days' notice, or the
+/// objection is deemed withdrawn.
+deadline distribution-hearing-period: 21.days after DistributionObjectionFiled() counted_by frcp6 cite "Bankr. D. Nev. LR 3021"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 4001(c): the court may approve a cash collateral or
+/// financing agreement on a declaration that no objection was filed within
+/// 14 days of filing and service of the agreement and notice.
+deadline stipulation-objection-period: 14.days after StipulationNoticeServed() counted_by frcp6 cite "Bankr. D. Nev. LR 4001(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 4002(e): the order requests the debtor to obtain the
+/// wage deduction within 14 days of its entry.
+deadline wage-deduction-period: 14.days after WageOrderEntered() counted_by frcp6 cite "Bankr. D. Nev. LR 4002(e)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 4002(e): the debtor requests a wage order within 28
+/// days of the trustee's written directive.
+deadline wage-order-request-period: 28.days after TrusteeWageDirective() counted_by frcp6 cite "Bankr. D. Nev. LR 4002(e)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 4007(a)(2): within 21 days of filing an objection to
+/// the chapter 13 final account and report, the objecting party schedules a
+/// hearing on at least 21 days' notice.
+deadline final-account-hearing-period: 21.days after FinalAccountObjectionFiled() counted_by frcp6 cite "Bankr. D. Nev. LR 4007(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 4007(a)(4): a debtor seeking a § 1328 discharge files
+/// the certificate of compliance within 30 days after receiving the court's
+/// notice.
+deadline certificate-of-compliance-period: 30.days after CertificateNoticeReceived() counted_by frcp6 cite "Bankr. D. Nev. LR 4007(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 4007(a)(4)(A): if no objection is filed within 21 days
+/// after service of the certificate of compliance, a discharge may issue.
+deadline certificate-objection-period: 21.days after CertificateServed() counted_by frcp6 cite "Bankr. D. Nev. LR 4007(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 4007(b)(2)(B): on a hardship discharge, if no
+/// objection is filed within 14 days after service of the certificate of
+/// compliance, a discharge may issue.
+deadline hardship-certificate-objection-period: 14.days after CertificateServed() counted_by frcp6 cite "Bankr. D. Nev. LR 4007(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 5007: a party ordering daily transcripts notifies the
+/// clerk at least 7 days before the hearing.
+deadline daily-transcript-notice-period: 7.days before TranscriptHearing() counted_by frcp6 cite "Bankr. D. Nev. LR 5007"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 7015(b): the moving party files and serves the amended
+/// pleading within 14 days from entry of the order granting leave.
+deadline amended-pleading-period: 14.days after AmendmentGranted() counted_by frcp6 cite "Bankr. D. Nev. LR 7015(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 7016(e)(3): motions in limine are filed no later than
+/// 30 days before the start of trial.
+deadline motion-in-limine-period: 30.days before TrialStart() counted_by frcp6 cite "Bankr. D. Nev. LR 7016(e)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 7056(c): unless the court orders otherwise, an
+/// opposing party has 21 days after service of the movant's points and
+/// authorities to file and serve its opposition.
+deadline summary-judgment-opposition-period: 21.days after SummaryJudgmentServed() counted_by frcp6 cite "Bankr. D. Nev. LR 7056(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 7056(d): the movant has 14 days after service of the
+/// opposition to file and serve a reply.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frcp6 cite "Bankr. D. Nev. LR 7056(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 9014(a): motions required to be set for hearing are
+/// set so that at least 28 days' notice of the hearing is given.
+deadline hearing-notice-period: 28.days before MotionHearing() counted_by frcp6 cite "Bankr. D. Nev. LR 9014(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 9014(b): the notice of hearing and its proof of
+/// service are filed not more than 7 days after the motion is filed.
+deadline motion-notice-filing-period: 7.days after MotionFiled() counted_by frcp6 cite "Bankr. D. Nev. LR 9014(b)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 9014(d)(1): an opposition is filed and served no later
+/// than 14 days before the hearing.
+deadline motion-opposition-period: 14.days before MotionHearing() counted_by frcp6 cite "Bankr. D. Nev. LR 9014(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 9014(d)(2): any reply is filed and served no later
+/// than 7 days before the hearing.
+deadline motion-reply-period: 7.days before MotionHearing() counted_by frcp6 cite "Bankr. D. Nev. LR 9014(d)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 9014.1(c): objections to a motion on negative notice
+/// are made within 21 days from its service.
+deadline negative-notice-objection-period: 21.days after NegativeNoticeServed() counted_by frcp6 cite "Bankr. D. Nev. LR 9014.1(c)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 9014.1(e): absent objection, the movant submits the
+/// proposed order not later than 14 days after the objection period
+/// expires.
+deadline negative-notice-order-period: 14.days after ObjectionPeriodExpired() counted_by frcp6 cite "Bankr. D. Nev. LR 9014.1(e)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 9015(a): unless the court orders otherwise, consent to
+/// a jury trial before a bankruptcy judge is given at least 30 days before
+/// the date first set for trial.
+deadline jury-consent-period: 30.days before TrialFirstSet() counted_by frcp6 cite "Bankr. D. Nev. LR 9015(a)"
+{
+  forum frcp
+}
+
+/// Bankr. D. Nev. LR 9021(a)(3), (4): the proposed order is submitted
+/// promptly and no later than 28 days after the hearing concludes, after
+/// which any party may submit one.
+deadline proposed-order-period: 28.days after HearingConcluded() counted_by frcp6 cite "Bankr. D. Nev. LR 9021(a)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion served on negative notice" by applicant cite "Bankr. D. Nev. LR 9014.1(b)"
+{
+  note "A paper bearing the negative notice legend may be decided without a hearing unless a party in interest objects within 21 days from its service (LR 9014.1(b), (c)); a motion set for hearing gets at least 28 days' notice (LR 9014(a)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-opposed "Objection filed" -> opposed {
+    authority cite "Bankr. D. Nev. LR 9014.1(c)"
+    within negative-notice-objection-period
+  }
+  edge-motion-filed-unopposed "No timely objection" -> ruling {
+    authority cite "Bankr. D. Nev. LR 9014.1(d)"
+  }
+}
+
+state opposed: "Objection filed; hearing set by objector" by opponent cite "Bankr. D. Nev. LR 9014.1(c)"
+{
+  note "The objecting party schedules a hearing on at least 28 days' notice; replies are due 7 days before it. An objection not timely set for hearing is deemed withdrawn."
+  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Bankr. D. Nev. LR 9014.1(c)" }
+}
+
+decision ruling: "Motion decided" by court cite "Bankr. D. Nev. LR 9014.1(d)"
+{
+  note "Without a timely objection the court may consider the matter on the movant's proposed order, submitted within 14 days after the objection period (LR 9014.1(d), (e))."
+  edge-ruling-granted "Granted" -> decided { authority cite "Bankr. D. Nev. LR 9021(a)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "Bankr. D. Nev. LR 9021(a)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. D. Nev. LR 1001"

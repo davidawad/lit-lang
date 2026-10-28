@@ -6,3 +6,12 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 48ba8e4b326960b44e842fc14348918d3689aaa91cfd3ad52ec64e3da4936f82. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-ian/original/ianb-lbr-2024-01-01.pdf` as served (sha256 2998b2dcac4313c3e2472aa708cf6eb5cf2b73df5493f48e79ecc7308c86cabd); extraction sha256 48ba8e4b326960b44e842fc14348918d3689aaa91cfd3ad52ec64e3da4936f82.
+- Amending-order check (lg-u561.30): order page read 2026-10-27 (https://www.ianb.uscourts.gov/judicial-orders): the only order after the 2024-01-01 consolidation that touches the rules is Standing Order 26-03, vendored below as a layer; Administrative Orders 24-02 (vacates a COVID order), 24-03 and Standing Order 25-02 (court closures) do not amend the local rules and are not vendored.
+
+### `bankr-ian/ianb-standing-order-26-03-ch13-fees.txt` — N.D. Iowa Standing Order 26-03 (Chapter 13 attorney fee requests, LR 2016-1(b))
+
+- Source: https://www.ianb.uscourts.gov/sites/ianb/files/StandingOrder26-03.pdf (official site; 9 pages, sha256 82e2c32f51aea420285452b70b3dbc292d3ee0150c4eab0818f0c96c1cb11c37).
+- Edition: Chapter 13 Attorney Fee Requests, Standing Order No. 26-03, effective July 1, 2026 (listing date 07/01/26 on https://www.ianb.uscourts.gov/judicial-orders); it vacates and replaces Standing Order 25-01 and sets the NO-LOOK compensation amounts that LR 2016-1(b) refers to, so it supplements rather than rewrites the rule text. Apply on top of ianb-lbr-2024-01-01.txt from 2026-07-01. OCR, verify numbers (image scan). robots.txt (Crawl-delay 10 honored; no rule covering these paths) and the Privacy Policy and Redaction Requirements page and the website Privacy Policy checked: no prohibition of automated access. Fetched with curl and the identifying User-Agent lit-lang-provenance/1.0 (angrybohr@proton.me).
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with OCR (pdftoppm 300 dpi, tesseract 5.5.3, --psm 6) because the PDF is an image scan with no text layer; unedited OCR, so verify any quoted value against the PDF.
+- Extract sha256 e0bd949bdd7125afd17c515c6b08f28acb5a5b5785fdce75c2ae306a51662e80. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `bankr-ian/original/ianb-standing-order-26-03-ch13-fees.pdf` as served (sha256 82e2c32f51aea420285452b70b3dbc292d3ee0150c4eab0818f0c96c1cb11c37); extraction sha256 e0bd949bdd7125afd17c515c6b08f28acb5a5b5785fdce75c2ae306a51662e80.

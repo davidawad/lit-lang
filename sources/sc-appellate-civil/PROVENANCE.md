@@ -1,0 +1,341 @@
+
+### `sc-appellate-civil/scacr-rule-pages-2026-10-28.txt` — South Carolina Appellate Court Rules (SCACR), rule pages as served
+
+- Source: https://www.sccourts.org/resources/judicial-community/court-rules/appellate/ (rule pages linked from https://www.sccourts.org/resources/judicial-community/court-rules/) (277 pages, each fetched with one GET).
+- Edition: Current rule pages on the Court Rules section of sccourts.org retrieved 2026-10-28; each page carries its own 'Last amended by Order dated ...' line; rule-maintenance orders of 2026 are vendored separately as dated layers (their amendments may already be reflected on the pages). fetched on David's explicit ruling 2026-10-28 despite robots/terms (barrier: robots.txt 'User-agent: * / Disallow: /' with Crawl-delay 120000 on www.sccourts.org; tool: curl with the identifying UA lit-lang-provenance/1.0, about one request per 1.2 s).
+- Retrieved 2026-10-28 on carbon (lg-f3q8.77 override); fetched with curl and the identifying UA; extracted with `htmlx.py 1.0` (stdlib html.parser, mode sc, one `## <page>` block per page, unedited text).
+- Extract sha256 a941e3b0ca562919fe5fca279ab49c8e008b921d3c9897a9426c62c53bebb302. Raw extract, not yet sectioned into `## <ref>` form beyond the per-page blocks.
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-101.html` as served (sha256 101ae5b107e1c9a86af3b5f5e39052942bdea52a8bc6239e26674c5de8cb7250).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-102.html` as served (sha256 3867488d2aadfcb1f549700f9bdc205de98e6bb548213f5d16eab611fba7269a).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-201.html` as served (sha256 3adf357a0a58103935c2241ec7f66f02a668157ebbfa557824d55b82346c897f).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-202.html` as served (sha256 fecef904214eaee2e1f3deac85e41684d216b86fc13fe107fdd853d6776fe6b1).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-203.html` as served (sha256 ece02ba2eb1c0c8600cf042c87507357f50ed8cb2aaa35a93ce91ae8cdd8a487).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-204.html` as served (sha256 24edb11bf5bd62899779b186fae5140aa67bc5dbf592960a4be43f611baed019).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-205.html` as served (sha256 76ed819795b9447a38ad6dc45fc864190132c957d9195e63ab8dbce8be8c9b4f).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-206.html` as served (sha256 960e08e98043035b0069470f5b6127a182c1bff878268f01d0550714d72574b9).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-207.html` as served (sha256 e02115b3011eb4d4c164bad7ff77eb12bdbd24474a4c592ad6df7dd765cffbe1).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-208.html` as served (sha256 aa2f47331fc08518ce8ab412cd0500fbce48b7c08dae299b001c6d0752d6663d).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-209.html` as served (sha256 00eb88da497fd43fc4c958604d672f037836f622376504b0e9f410e62abdbf20).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-210.html` as served (sha256 0c29a0d9f6de937d9cc7279c449ab51c651574d4cb367912aba4b320a6220aa6).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-211.html` as served (sha256 cf88dfb08f431906411a6efee080f373d7d49a8b60fddb24ff8013a55fcc1890).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-212.html` as served (sha256 8e9f3e2ddb435f5cf2fe077e31dd79202f00c04609565327dbde515b6963a42c).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-213.html` as served (sha256 60908a77b9ab90f6b6084642f59dfbebf457b3803bf9018d1c27816bf51c2f76).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-214.html` as served (sha256 36d3d542724e989159df1b0a47814388bc8818f91e1949158c5889db1b9c2eda).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-215.html` as served (sha256 ad9757c04af0b3a7e0ee9c0faac42fa1265249f30aa994c8e0e8d49e61b62741).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-216.html` as served (sha256 6dbf99ed0158ef735db81a8052657054111749d86218dcd9454a2ef749e3b129).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-217.html` as served (sha256 2c2e1cc334bb3bcb21d4bd1a5fe93447e9ee12a8475f4b914198079f7c0e5cb4).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-218.html` as served (sha256 b1970f9f75b4ceb487dfa0113ba1660cbbbf4b9d866281799b8e6b3b53c453ea).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-219.html` as served (sha256 11662aa0a8ed0cc180b1a6c586bd2ab4d1583fe5d1dc0234e5d5798448c3cbe7).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-220.html` as served (sha256 73157f26d228c7a66023e23d18c14ca24914984bece0ad9e6bffd6c94996839d).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-221.html` as served (sha256 98fcdc8d1ec4262f576885f413cad70be72a9a8cf0919615a2d3f6bf0c5e77c3).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-222.html` as served (sha256 a238bde3511b3f70bf41e79dee780bc7acb35e7a8b366d0e4537950fc195fc4e).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-223.html` as served (sha256 e86f3f6ea9c15e2721b2933b79a25be2599379e1d07dcf0721a811accc1805b6).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-240.html` as served (sha256 111cc566714be5a3cbcd8a2d7eb496953cd0ff782b5ccb5f1ff92f99538b0f51).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-241.html` as served (sha256 52386f9d4dcbcc0b4178cfdb4e9f8aa660dc52e829ae7a57542e8704d7d5d2b8).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-242.html` as served (sha256 dda5c333c0ce0d746f8260aa27f8e6f55c8712514def621fe2716452d641d6af).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-243.html` as served (sha256 84e230cb94d606630fef0402b1d1c2f1b998460f90fbc328ced553c01aaa9613).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-244.html` as served (sha256 7899b51f9dbc16a76c42ff075bb98e85fc7c07f485c36a90dfe7961db8d476ce).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-245.html` as served (sha256 8aabefcd688678d1d24f1835cb8d893967a838e61eb57b71ed1abcd6452d430d).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-246.html` as served (sha256 e3166ce083a4a56e6fe7455ea6995f14c59f8db47570957b228ccfac9ac7ae9a).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-247.html` as served (sha256 33be3b13324987e4727456ef636027d05aabc1ff93f8dd528ff13946472b4163).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-260.html` as served (sha256 c52b8c789d960a06034c137657e0489ffd482a0d2252307fc034a64f21a952a2).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-261.html` as served (sha256 261474578cf3307c3e7aeed4611bac412dcaf8c8a1a17f10f19f1f44d794c238).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-262.html` as served (sha256 c170ca64900f0b9f7df93577e8f0be167aa6f5e7ea08d614d2eec983818760f9).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-263.html` as served (sha256 f8e50951456fcbad9ff6d333b4eabb03223b554470c1ec2061d1a12d58b7f012).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-264.html` as served (sha256 c3d0226ffd7250c9a797aeaec60897e3bde94b1c9a1049cb169f5e6a7109706c).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-265.html` as served (sha256 d623c9879938f73e19bc5b81de62d038a779f8389ccbdee3cf323f14c6d41102).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-266.html` as served (sha256 7ff280115d7d01acc467478a10e50f7851e6832abc485bc87f5d2cb63343e5ce).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-267.html` as served (sha256 9d0df4225dce2b42e5db3bfe69de01c2547277b392209c6bdbe26af49e01793b).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-268.html` as served (sha256 42a25def7f73a9dba427edc4ce08c0a5a92813c3efb601bbc069ee747eca70f3).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-269.html` as served (sha256 a64e7df08b07c7bc5396cb2854eb1f82c182e9e04f548981348d01ccb7065475).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-270.html` as served (sha256 0c59d490d3fcecca3136559dc865f340a079f51767c4d54f54a91096852eb3fb).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-401.html` as served (sha256 37bccc16ca5f5957d2e742af904020febda796dd23eaa85afd1580bcb5856511).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-402.html` as served (sha256 1cf15c85ff57661903eec34081b9724de33b19a4124c10c4eee01814a4b9368d).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-403.html` as served (sha256 8c7dda3653d2370687d4ce16db18a1285cab5db886c21e91db78beedce354622).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-404.html` as served (sha256 3bb28155032c2d96b2e695d1760efee513501cc270520a23f80b6c880c41a1c2).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-405.html` as served (sha256 ac9ea2a5b7c56a969c400edc5876c2e39994b64d0c8d2162c0da1b63be7aa68c).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-406.html` as served (sha256 7adeb9169db61b1e5b4441b66ea0bf924f3be04b44fbcb44db414667b8cae36a).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_preamble.html` as served (sha256 7e104d498929e740c84e9a6256e5e5aa5564b4e64b3b6042af98de70cb193d26).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_scope.html` as served (sha256 a6d2548a2c876ccca2ddb8d73686abb26177912d06c7f82492ec964042a1f17d).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-10.html` as served (sha256 f2c0f4d908b042f9e2d84dc6bc3638fff1ee7d9e5f8b74f00dd1f5d4a559dc7e).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-11.html` as served (sha256 d716e159a13ef6c67e5bb1d6c3caefd5192e431fa98646d43aa3985158978100).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-12.html` as served (sha256 9b8400a0725992882c6aafc6898d6bbd73686fca71a862cff99abcbdbef40fef).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-13.html` as served (sha256 d9c5b1445940ee4ad6eea511bd11a77c9d0309ad64fe9b22f99e7057f23730c9).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-14.html` as served (sha256 815cd3da2e986fb1f3dc2413e000e16996f7af537282ad3d857e637e54fadd3a).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-15.html` as served (sha256 0709c43dd14fe7976fa63c0e614eb72bfcb991664d2a5c0bc5cb779b3c22e5a9).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-16.html` as served (sha256 485af60e76afbcc86be49626226d522da6e611b05c2e55aa2b3cdbc5864b3b6d).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-17.html` as served (sha256 5b3df60922c3cdbfee720508d40775c2c787a9c231c50ef68ec02476937a06fd).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-18.html` as served (sha256 da0b28e2798cc375e43de803c367baa32238ad0a010dc8e6ea7c41cf6a5fc45f).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-19.html` as served (sha256 b99f6842cea199484bcb7b429df0971eacecea4a5c280e5021069950029b4313).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-110.html` as served (sha256 af2abf034a672ceb967132fa47a3470ac8bde730925b308129578cdd6beb7189).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-111.html` as served (sha256 7ec9f4b7ad5422c861503027bd1288b7c34f85eb201f33149d8d6fc9d7bf8346).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-112.html` as served (sha256 1f696d5d2b4b8b12ebbd15c340f3c438eec6baf86e2699b59a2a9fcd384fabb6).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-113.html` as served (sha256 7c7e820794b59e6d50cb48885b0074407f45429cd13b9be9ed4ad53a33a363aa).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-114.html` as served (sha256 fdaf1290562e1324825ff06b8a94eb8625553472bcb9b0bcd352f61a1ac1f506).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-115.html` as served (sha256 a057b4d84efc45c1741994f9000316bbbd4696221fe9c27ecb1675d54fce1dce).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-116.html` as served (sha256 6e9f6b35eb9c31872895117c88ce09c1fd322e412e8e3cda47ec5dc5a564b856).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-117.html` as served (sha256 83eaff425bf654c5774a4bf1a5fdef6e67578f3e10200b1bfe8f6da90c5ae9eb).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-118.html` as served (sha256 233c634b6769bea67307b8b7a3a0bb75ed69ecaec49f9f2f060b75e6a69c9a09).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-119.html` as served (sha256 e588e23a6060ec0bbb5397755f419be58f9ef1bcca5f5986b301abe9d3c8cba5).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-21.html` as served (sha256 8ef968c0dfd412b11e74d81259f48569e7d41d9146e5740b4b34f35774c22158).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-22.html` as served (sha256 cc02ab430d96372eaa07e5eee55b312c09e20710f6a892828a3b6b04d0563e17).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-23.html` as served (sha256 a78ee2ecd9c15a7bc8c47e6d653dc6bf11152d7ee295bed1ddc077d475b692ea).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-24.html` as served (sha256 5911ad1c6eec7e18824b9967b4b4a229c56188174b9e464af1a23250cae712fe).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-31.html` as served (sha256 3b1fabdae19bbe5a7addb041fc2e671fa840fcd4f2338a86d6fd00b5b8ee3f6c).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-32.html` as served (sha256 3441fc96a214872e1cab5875aedc26bd35755b5dfcfc60e8d4ea4d409066d99c).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-33.html` as served (sha256 cef4854a9ae392036fb5f785e853a54988345f42f42b7cace4729e456192b86e).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-34.html` as served (sha256 a1d67ef89d78f1fb25737d8037c5211dee9f9659791b2f625137fd775cd28044).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-35.html` as served (sha256 f8529cf687ea21ded10719c0554f84c89a649fa4a0d92dd089e4be70cbb9860e).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-36.html` as served (sha256 bc4803fc7b11ee2c9f448b6fae8b3cb32899d01baa497baa1b5946cbf99b4d91).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-37.html` as served (sha256 bc2f821112a7012e8406190fa0f74d6230a108633fd2068ce8a91736f90e98ac).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-38.html` as served (sha256 29bdf2ed1bf82c10ab765adca49b1592cadf1af57504d627e6e507abb1821240).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-39.html` as served (sha256 c73f950f222c941798528bbe6d68a3aa45af51bfb60bc73177e775cb8986ce70).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-41.html` as served (sha256 664f091e61ab3cf1cd622bf1481dde8a63560df1615bad388d26832c2c8686b1).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-42.html` as served (sha256 8b63b7e71d98fa8f305fd85c7d69668d6bb0098cd8abc1d5f1a6e3723da9d156).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-43.html` as served (sha256 4b4f86ca7a1183dbc9cbb1b4ffddfe9880c71e2560dc0520057cb8d058531a74).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-44.html` as served (sha256 8105e30f121c8aa88928047078f15b7f57c101fdaa1ebde7010182726f209b67).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-45.html` as served (sha256 f2b82b975e83887c4be77fc8d59443619da983e63a531dbf92c8e9402d192c47).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-51.html` as served (sha256 834a509e06edcc7cf0ee4f4b9dbf15bd6a43d867abe8c54049a7eee4408bc31f).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-52.html` as served (sha256 f33387d30886f36a36788d664c3cbb18cb5d613f439d68f44cc575efd09cd33b).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-53.html` as served (sha256 5d80250571ea15c680b5b1b286b67d96d97360b0724c98a7a4aea9aa7f0c4bf9).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-54.html` as served (sha256 522339b424ec6d2edb4942ee0ad0bb523b3022ec1177dad04bdf332ba43587e0).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-55.html` as served (sha256 2d868e678c7b103a359bfa745d6741cfa94304497df5d2f6ef64c74d321a1602).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-56.html` as served (sha256 7e211ebc05d8da2e375b90d86fcaf41713451e09e4bf8f63efc4b6ffc4434f11).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-57.html` as served (sha256 0567cbac1461b012944c9ab4e86614b2de041c135fef9fa447519c8caea4e3f8).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-61.html` as served (sha256 e6b6043913023f1a930d5927d036a0c6da50d45b2f2831e11caf662c38ffa793).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-62.html` as served (sha256 cd16d964d41e15deb14fd7ff6d689ed6576c4459d0649b93c8d6fd2625c52130).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-63.html` as served (sha256 e6b94b56e61f45d5846cef3911615344e44d8f8ba5212769f4624c19b591deae).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-64.html` as served (sha256 09c7019bd40e988ec36ac5a8cf5f479a1d2428034b0e8b5e428336b384249373).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-65.html` as served (sha256 89946e3f7e63fc224a15b79124d81b952e4aa63bee6c43c525d7a60706def8c2).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-71.html` as served (sha256 e717287d472c929eb45d5ba950bc8db507b502ae511f865fa0554fa3c39c5376).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-72.html` as served (sha256 ec365b5f34eb2f366a877d235046e917deb7e28c1623aa6883fd7c78ef03a4a2).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-73.html` as served (sha256 3cac83dc574ba5a4a895168f02e64916acab934eaed0aa0b7eb621fbf57b8128).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-74.html` as served (sha256 37d1e403776196c29f4c746ae0aea01fc334a180699db079dc30312b267e5a30).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-75.html` as served (sha256 45e11ef0a5e133160b787f3168950304523464c185f6e247fa8ecd967ee5f88d).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-81.html` as served (sha256 e8f3b65307d82d47d06f8a64e510118550808fa34c7f45797e64c771bc36fa9d).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-82.html` as served (sha256 2fa6d40a53a8cad426b8009839bac38d99df27d8a2de1e6ddb95ae6d560568f8).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-83.html` as served (sha256 bd418832380456ee57a4a2e975f391896093f7fe382f0e75ef86027c7bce0c64).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-84.html` as served (sha256 68d5589c86458d0aeeabbe8c04d9d155eaf458dbbde7be674583ae76b95dfe25).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-407_rule-85.html` as served (sha256 4f0bebe93f79dfbe7c0e6d8733b970b98a5de053ae833d513eab3ef6f3d8b421).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-408.html` as served (sha256 c77b6150a924e20c401fd8c8b84000fa640148ffb692e0a104ad8eaae276c64e).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-409.html` as served (sha256 bfbe730e22802f881ee7968dde1a45ee72718a6ff3f30b7c117b42f63e4bee25).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-410.html` as served (sha256 9d728063f7efc5f113f9392685bac4e5bfa147f1e2c8e5c2c7988a9fddc51935).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-411.html` as served (sha256 53dc4fb32dee7869e4d8965ebe18fde1680d13b4ddf3f53b6e009c94895f238b).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-412.html` as served (sha256 18d14307508c7f365cddf6d62200f6bb6437b608ebe3196d2b4b3af2ccaebc50).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-1.html` as served (sha256 7e6c243ba609950266813b52e2710ce4ab179a21ba944c40bab61ed10d205ec1).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-2.html` as served (sha256 069e0a11390cde4f56cf138e29e12fddecc8bab62155d75ff8c93258175b7c65).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-3.html` as served (sha256 756055ca474bcc3af38e0813bfce706e4da7f8d3d1b5ef592dc5337314d4bfa9).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-4.html` as served (sha256 d3d4d8ba5a7e5d14f4777c1140798bb7e77cbebf7ff484788a2954d3d6d0c549).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-5.html` as served (sha256 aa232c158899bf3d9cfbdc72ee3df9530a898da5197d4aa9a493990c865e9e05).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-6.html` as served (sha256 50e9893c3d379c232914dc7b413bd89a0716f188dc717fd490a7196f70121f6d).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-7.html` as served (sha256 e03666dba87467ec77d85ecf200ea2ce4677f9fc1bc33e0dcb3b43c001d3a5be).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-8.html` as served (sha256 c305ad823183f515543664810366db46d01c7041414be12668efed0bb7a03a8d).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-9.html` as served (sha256 0878179eff738cca504eb1f024a61b242336689f39ddd1833eca64c475b92cbb).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-10.html` as served (sha256 0aac7cf9098e2c0e82393effc00d7d04de80cfa5acf64a0fb82d14cd7c299b10).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-11.html` as served (sha256 9e435048744e3b0673ca85ca44dedc6dbf2ab880d6e4dc6e2743744798001042).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-12.html` as served (sha256 755bdb4f1a26df6dfec3060a8ece1f92b25dbaa9735b7b5aab92382e48c52af9).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-13.html` as served (sha256 c632e09498592ab1b9a6aa75cca6db556289822bc4c9a2090cc12de9da33d712).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-14.html` as served (sha256 c4de85a654b36858c76e64035b15e4866ab63407aa1cc07a1429a798bedccd8b).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-15.html` as served (sha256 5258d72eb543a92700d3af49402c69240b682a386dd1e27cb6b83aa8dfdfae61).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-16.html` as served (sha256 802b38e311db55c8177e0b6d0fb5fb29216f37950be311cd047d8e95cfcc0c1a).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-17.html` as served (sha256 2658af45c7226da6b291c6444b56f861a23f0928f3f0a07692dfd34c091dd47d).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-18.html` as served (sha256 da82702f30a6157e38960c9523ddd595e57bfe3c6cda7d48c4e151425f003e66).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-19.html` as served (sha256 4a4e4ae281fd8994cf1730fde0bf49e6a94e94d22ae162aa1bfdd8d354cb8b8d).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-20.html` as served (sha256 3f31626dbf09533a8acb8c115613af3c5e0b50885a206000d0c87d2ba13d074a).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-21.html` as served (sha256 b806ef10be33eb1a69e4fb66a6be0c4864750af7098ea4a42f05560328d42e73).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-22.html` as served (sha256 9210c428061d917c9d00585456997b2d32643f23484f3a55fe008dde70d677d2).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-23.html` as served (sha256 2cd0e3921419c8310f545a06223b0b203b2c6364bc4b18d3486b721860f0de04).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-24.html` as served (sha256 5dc8a483eec11a076e115a72427b677d77bd9078d6252bd6d98b39bd109919d5).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-25.html` as served (sha256 22c2e8ba961cdabba0abd7866f735e6fc1bd91216ce27ea55e7d5b8e004551af).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-26.html` as served (sha256 40c1bc1dfea9353358b5cce4480a0a83c215cca6f29790f2e758add0df1589ef).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-27.html` as served (sha256 8dfb375f3aaa0679b3c63636891c33ab7c9a1572200e168fbcb6984bfa1e430c).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-28.html` as served (sha256 6f3a46500b9d94d7c980e8994e3cc088dc795723afbb06aed0102941e0a2b498).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-29.html` as served (sha256 037c9d54ad88702c7da33a49ca14df85909109b707eeec12ebeed7106a69f08a).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-30.html` as served (sha256 f777b6b7e00da3ddb8c075fbb4348a4b67a0f7e03674955a1032683038b23499).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-31.html` as served (sha256 5bf925cf23c17434178aa55f6a34e4b2b889c38f4afb4beffce10f604dee0c2b).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-32.html` as served (sha256 2f5efa4ffd6ccfbd49e1ccb04b34de615745960c67f53f13a6cf39c850c4181b).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-33.html` as served (sha256 b30bc7027b57afffae8ada0cacc72a82cc57574504f307fb9562e56d98830c19).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-34.html` as served (sha256 e208bce4bc79299b0d6c1beea4d2f993a781cc8fad5a5f9a4ec16dbddc7104e5).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-413_rule-35.html` as served (sha256 b82fb413e566b706ecdd8af7bf39154ed3403a61afce3518d7363991bf1b78a8).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-414.html` as served (sha256 19b501b6d525bfa07fed52cb59a01d8b689ec4ab96f9b8dbf26717ea122d9115).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-415.html` as served (sha256 213ce3558bc998dcc866d6869206608c3bc4a2b9ffdd4b570411c849f43f2113).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-1.html` as served (sha256 c152eef56ff6dddc68998cc4b6d06620210d7fe409bdc870e28df7b2260ca231).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-2.html` as served (sha256 b811d3a7f78ebe1bf962b4f3776dc1875a78286865d8f6b2ebc7e4f7f349dc2a).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-3.html` as served (sha256 ca5a718eb1b4847d7e7610cef4a95f0fc1c8e983b4907ca1232ba7608842c4da).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-4.html` as served (sha256 4b73516d14e52d2e1b32aa96844b63ff4fd9d8f58c5377f3d5042acc8f8c92c5).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-5.html` as served (sha256 a87a957a08873acd1da44f54b3f96585fe92bbf3c1027ec8bf52523a5761b134).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-6.html` as served (sha256 54a6748abdfa6130f1c30f0f376b59e18b60c47555520ac5fbaaf7bb0011b078).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-7.html` as served (sha256 1abc0979dae850d89dcfd55226dd2593c9ca319a51a762cbc770c03a15b4d51c).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-8.html` as served (sha256 3fd56dc8474eaca9a5d6b49eab82b86c54fc7d8196010e2b719a7d625dc85978).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-9.html` as served (sha256 5494ee8c6efe430fe0ad838c9d18aaae6ed68f990bd1bcdb80a8fba2b75107ad).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-10.html` as served (sha256 eb57cdb8f7f9c5f68391be480e23cfe42246530a76966de59b7364ee6d122262).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-11.html` as served (sha256 90cdadaa9f491e6616f7af104ee01869c51a12a18949db691ef40c1a4a9bd1ba).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-12.html` as served (sha256 dc70f9f9e105f0468bd8682544d1c44cbd91e059377049c1a52a91f40f4f44fb).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-13.html` as served (sha256 8b01b6cb9ed38582ca6b1a311e53f8101e8bd4e72c3350ea092f8f49823e5489).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-14.html` as served (sha256 f1464cc058488f96a893a13a17acd962839834263fe3568ef467aa552683081a).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-15.html` as served (sha256 70e8e8a024b77fdb58d09d4dced07d66fb50920edbb68437989b8dc7559250dc).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-16.html` as served (sha256 bffb111b06cf936fcfc61235c1f32e8e9cee19ca80cbd600b8843591222e1037).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-17.html` as served (sha256 ab6ca837fa3f7963a9583f286a1b2eb13cb148f57dd1eed7ef5fb2186fcb4f86).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-18.html` as served (sha256 dfb16494a4a95c359077db1407efd078f02794427b18042e3c318a3d2490f325).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-19.html` as served (sha256 8e24f232d6cb059694481ddcc508df35441c98e9e2131743c4a52ab877fb97f1).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-20.html` as served (sha256 4749269d1b2aff6b878628bbfdae032d513238c2d8ea743627a9361cbb7cdd3d).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-21.html` as served (sha256 a94318e06123f64130b8e944660782174ae6e99e3c3a46947d96e662f29534ac).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-416_rule-22.html` as served (sha256 3319917a1e51b9903b5de614e04db8e1ecd1215534577fac2e38cb92c5426af5).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-417_rule-1.html` as served (sha256 228b9e8ed6e1bcdec9bc715264d5d7b14d3c2cfd5f7fd8d8700c429e69258e78).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-417_rule-2.html` as served (sha256 7e5daa5adbfb8887ab5490ae4a7cf24db12d2de9538d68f1bbcab9c79a022f0f).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-417_rule-3.html` as served (sha256 4766162265173bbbc0348f82c5cb9e75ff87e3324421076474054eec60a4cd29).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-417_rule-4.html` as served (sha256 20b28618cf97431e6d27d66e1be1d4ddd76d463b1dc6680535d790e3cbb41450).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-417_rule-5.html` as served (sha256 2e9bf5d8ea65c0f966c43aed887f97dc33020a2c3278f19d707831244abe2cd3).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-417_rule-6.html` as served (sha256 a8e034696f863bf263f1ed36b7fd79a2c30742e9f90626253cb04e26b080c7fc).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-418.html` as served (sha256 f5cef9292cbe3505ce1d8a67f9d5734e27377cf4f20cdfdd4c1a989183c0d9dc).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-419.html` as served (sha256 cd67dcbadccc215872c4a0f9aae089148164efe5b0916ae5589841cf1d6f1939).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-420.html` as served (sha256 bbacedcd523a7920f7687f88ba3ccb88d96026384a6f094fcfe84def695b8fd1).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-421.html` as served (sha256 7e720e64f5fd16f224c6acfb6a90591ea11c69951e0e62fab92530ea782e98c3).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-422.html` as served (sha256 16f4b206a27dee15326129ce4e44238f02bf19b40490c1d8a1f8ae63ed8288a4).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-423.html` as served (sha256 7dd4819e820731b7a799333985c25de2291827246dda1be2aa699cea99c00e29).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-424.html` as served (sha256 f6f49ac76b2c4efca0ae841098120177d26775eaee65e0ec889f70f988efdd0a).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-425.html` as served (sha256 f2a1bc540db504775d1849a60952e5dfc1e1e61bd4a7935b2f120bb10a289d66).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-426.html` as served (sha256 7bc01246524033d12c6a95a8936d2cae051c60bac09e00b393cbc7af1ff16398).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-427.html` as served (sha256 b99f6968b7bf9abfcdb6d0e992d946cdb614838195762efcdd4baea80beaa60b).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-428.html` as served (sha256 68f8223b7e8a608c8ebd917380836282748db3de02245afd39dd28cc2681e7c7).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-429.html` as served (sha256 65c5bf4f1032fe964210bc5ce193ddd893e1bcf334c38ad209cfa51a2a98c06f).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-430.html` as served (sha256 3b886b4a1cfc611606b6cf53b1a6ba185a154168cfea3b0cb3ea878dea2d2db9).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-501_preamble.html` as served (sha256 7599a244de640b82c442f1a022fde0959634ee674963d72b89be4441a2c4a25c).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-501_terminology.html` as served (sha256 aa01af1e1eb1f148bb96b89a17888a1bb41a1f098a250f71fc1940fac2edf26c).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-501_canon-1.html` as served (sha256 a11c3c0ed5a695499b0bc16cf7be1509bf26af55949c6a365f9850f0c52b7d2b).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-501_canon-2.html` as served (sha256 cfd428b79ee7dd8ba4bc13bf2f87e67cdfaf09a5ae5004051b1287aab0e75149).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-501_canon-3.html` as served (sha256 87a5e32b5d86d65c2f0a869d643fcca4905d210a6c324a8d0a1da8990d860fdf).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-501_canon-4.html` as served (sha256 c1195ec4a2a758f60e2194d9a5bdef9569661cfef44884160f349523a8b09421).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-501_canon-5.html` as served (sha256 e8a3e1a80ba9fb848f61fab6ca8185a1075bcae335a1967fb40cdc4ce526ba89).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-501_application.html` as served (sha256 3f913b4a6b8e476507bbdb794d3c74a7d91e91ca22795e3c605ecb0f2aef6a24).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-1.html` as served (sha256 1dfb9ab0b05c1cd3ac12bf84ac70da5cf200fcdbe74629f19deb43bfeabea727).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-2.html` as served (sha256 b150f61f13e9986b573e03ebe4b5ed5f1bcb5b22b6769a8ddaaf2e952b7285aa).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-3.html` as served (sha256 7413a6ab9b394a3370c03e2a32082a8166663bf740f6a72aac5ba74f036c1b03).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-4.html` as served (sha256 7d874a095961d7ffebb1852747e6ec312cafc81dfd82c26cbce30ef3b181b646).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-5.html` as served (sha256 11b6d172f5a509da7ea763271b2b0e8dcad5fd9e14ea03a2dbe66a514a3d39de).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-6.html` as served (sha256 8b7f8b6c8c344cd2b6da6768efacd7d56bb014b816b41d145d857e2178174bbd).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-7.html` as served (sha256 bc9f3ccd223d7be3b57bc3c14a52217992c1ecb072f354bd602639f412679f1e).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-8.html` as served (sha256 c4238ae9ea229d3244fa71b31925fbd096a5aca3eff1a9ae9520b49d8e4284d3).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-9.html` as served (sha256 c4f5c0bb086b35dff813b91ea8c23e29d0965ce15604b613ee0a20abf6423458).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-10.html` as served (sha256 401727857333cae97c53f9f25f29376f220e839024608dd810038baf8e835cfb).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-11.html` as served (sha256 8075761f9369bacfd5fefa118f691314d5423a184fcd5554f28e7a050aa9cd8f).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-12.html` as served (sha256 b9137a1c7ff8ae788cc6c504c616d83a065288c146abc248069f3feaec75051c).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-13.html` as served (sha256 f4cf0dea7280f989e037daca7d58bef9c0f46a416da1619880f661db3dd2b917).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-14.html` as served (sha256 d2eaf835fa4c2fa63ce642aaf2037a3fafe4199da6604092b870253231098f01).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-15.html` as served (sha256 3c9b5512d032a7a079b0ffe6ea88c0b805863e9c3fd3500fde90fa943cd5f08f).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-16.html` as served (sha256 f9bdb1029026d6876796755fd0a5b46b6ed44ca74d3684a0608839d0350d5749).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-17.html` as served (sha256 193cfc10f7161fe86843942a7ff6532c6fade6e392ff37c9495f7a6bcc36e842).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-18.html` as served (sha256 fe097982e0553d899c8e21b544a674072d78d3b896f28b28e5ad3b96b2190944).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-19.html` as served (sha256 a1c9d0d5a31780537514901e82b3c8ecd1b5704d648ba2617f20d22b7f9e2875).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-20.html` as served (sha256 28502a956ecd0c9047e4420286f71974baed8ee0e5d0ea37d03d096973b20c96).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-21.html` as served (sha256 9ee5e86f5a3d69a45cfc5a4f31b4dc83047178582168c8752b61cb54927c970b).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-22.html` as served (sha256 608b026b1062bf3b4604fb52d820109856ae1edd46054c31e7696d883033abba).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-23.html` as served (sha256 1d2da2963a3a69663cfbcb0ee04547c2562b145cd325147349d26dc00ce04390).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-24.html` as served (sha256 931260d19994015d9c4d1c9117ce3d5cbec6fa89de4b4e3c74445229071a38c9).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-25.html` as served (sha256 944bdba6aac7fe1598befe12e0891ab4067cdce6b671f45378b76b44d08d7719).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-26.html` as served (sha256 8dffc7aa4050b7fe61f4c16e76ab6e0fcbbb3a767a82069c193c988bec39d458).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-27.html` as served (sha256 2f83b09690ea8c3939e1f6ac97d2fb63d0d7ac1bb5bb08450e3eb98633154104).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-28.html` as served (sha256 b2bd11385b28b87e2bc7879526609b9b1b0a8a85bed42d6098cadf415d611ba9).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-502_rule-29.html` as served (sha256 3696d8de73735ff06072784a8bb42f401199f17c8040d78349b8032cd21b544e).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-5021.html` as served (sha256 1f5c8d6bf774501b00f5ac3ea0ca4b98787348c4009c18a3325b909684b563a4).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-503.html` as served (sha256 c0bc42f01775b5f90d2b6b764a998898d2fac90456a5d596c137f5757a45c5d0).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-504.html` as served (sha256 26d19904e65b94bbd0656d06a3dc28243be973d2fc7a2abf607f99e90ba53dfb).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-505.html` as served (sha256 f45743790dc3a90bbedd21f95be46e902b95544e52b641643124e1c216be19df).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-506_canon-1.html` as served (sha256 3d13fd2e2b20fc1db39161847f39a920e05635e95bba871bace05a75d13c3a8f).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-506_canon-2.html` as served (sha256 a79a51337b0b67a1c4a0382872809290998c80a1fdffbb1488ac0cde67cb3d20).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-506_canon-3.html` as served (sha256 fdb50ecfdf2a9bf2fcbb869b55da296a32ed912c5d7fed387222e94ee0c730ec).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-506_canon-4.html` as served (sha256 656fc85a42dbe38234ecf1bba2f95cc30ed6f9d54ba1acb98650a6104bc745d8).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-506_canon-5.html` as served (sha256 3d127c59b5cfa5e7adc712de6e5ec0786e023f22d5635214e8a883cece6df759).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-506_canon-6.html` as served (sha256 9544ff6b774bbece975bc09c975db6cd29b509a5c317235b4d566a930ec9cdf4).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-506_canon-7.html` as served (sha256 f4f700415fe66d4234860a88dd754190c302e2834becbe78a04bec026a66e989).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-506_canon-8.html` as served (sha256 ca70f84009a0b2e65e3cb54de74f07e0a2d1bff260e6852cb9309c92b59fbe0f).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-507.html` as served (sha256 6e53c796ff4749044426b48363471fb9fa6be263237378f9e0b27a2a347d6c20).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-508.html` as served (sha256 775e1b5dab081375889827d0e07c60ebb30a7e37f6f87277c390eb74afd0f69d).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-509.html` as served (sha256 12a23c71d8171ba7d685a5b7862c4a5ce37e4d0ff0c4bf4fd91040279878e1b6).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-510.html` as served (sha256 b5a32f4f3ca5c446198b993009f46f73eae5f402bd1023aac885a49e0fcc7182).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-511_preamble.html` as served (sha256 191d169b28f917f01cc40b116c414d1ca0a7d130405519ca55d5c0809ca27c7c).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-511_rule-1.html` as served (sha256 0c6dbd044b029e65d7322473557411334842ab618ce644ed472715fb13b818b7).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-511_rule-2.html` as served (sha256 41353376aa69fb5d83fcae49e84eb1ee33b03b6cbd2df5988e68e3aa2634596f).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-511_rule-3.html` as served (sha256 1205c0575a7a39b494d1317f88a3809d04e62680195e984c97ccb0eaf9d76f97).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-511_rule-4.html` as served (sha256 580f33377b31291ccca4a8eec679c68fa39c60335e939bb1bb343bc917bfb63e).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-511_rule-5.html` as served (sha256 bbaaf4688f5a8be8b20d0aac456c0ed881f4a3dae135055acc89a9723e7a4062).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-511_rule-6.html` as served (sha256 07ad223a8a3580149c9ecb2c053f3cdf488aa6c2fad805b1abce61f50e347745).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-511_rule-7.html` as served (sha256 587d7dd16a957a2bb06c443fd73281503657923aff3a89f93ca9e099f72a677c).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-511_rule-8.html` as served (sha256 52d3d0395a979c9e9a89930d197895bbb00d6854e8e708805a4ec9edf4bb10a7).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-511_rule-9.html` as served (sha256 41c42ff386afa6bd911455c3e9d3afcfea7e55dc86c238cf9c8785382f7bbec4).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-511_rule-10.html` as served (sha256 09a1ac7cbd156596814ea07dd4b6a79ddb06c2783d49183998fdf60eb6049e1e).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-512.html` as served (sha256 78588b1b4ae386cb98ec82556d56fc5ca6ded584e707f792e97c49ce10439ed2).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-601.html` as served (sha256 49e4fc0794cfb021fb3568cf18e68e28425ea348f2d08a15c1fcd3a2e0f35195).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-602.html` as served (sha256 5b6ec683c7a2549705960860d249215ceb4d4a5fcc75c580e903be4087715777).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-603.html` as served (sha256 181cb59b2697a01474b5614e83cecc4546afdcdb260b07ebae079017c95622b8).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-604.html` as served (sha256 98a070d8b6e25ddf527118b4ac0362e57664a7be9646fd5636bf57cfac870417).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-605.html` as served (sha256 d0ed77d7510a03660779fc7ccd7aafb2e02cb39f03f6f8e59df13576c373c194).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-606.html` as served (sha256 cfef96139703a3e99c7580f2fd0a57ce6d6b45181b9bf39a2ef9eb8e7ea4631b).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-607.html` as served (sha256 30050e4a50175156ea909b9b18ccc98e8e08cf16f481671e21c0b0488c3fc0a4).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-608.html` as served (sha256 e99e1eb14064eaeea502ff2a19b81586dd52e60df0de72fd8a10fe82bb827f48).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-609.html` as served (sha256 554863125e29a7149e013ff5f46d60744517906a9ed98cc51051c13e9f057a82).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-610.html` as served (sha256 3579203f8d5d0dbce498c9d7451d49bd17f34d57cd99fe083f596d54c497ec6d).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-611.html` as served (sha256 25077c5917297cc11b537573d4fb5603be1943968b340983f5b064f5e257e764).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-612.html` as served (sha256 c3d684e5dbe13f6257465e79215f50ecb1516d718f05992d8059ea4eaf3a970c).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-613.html` as served (sha256 b4d5c2903147280fd02ba530b68607b7bad51b62045304d565c993a95d81a8ce).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-614.html` as served (sha256 ab3689671387af9c0bacab254b9c5c6242ffe7dab63ae6e61c2395d0fdaa46d1).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_rule-615.html` as served (sha256 eb9b325563a3896800a2f193ec2b1cbe29f99f84dda56f0dbde1f4536ef5e336).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_part-6-appendix-a.html` as served (sha256 78724d04e2f77ffab13f219f05579d2835f25458ad1d94db70429ea012bc86c6).
+- Original: `sc-appellate-civil/original/sccourts-rule-pages/appellate_part-6-appendix-b.html` as served (sha256 b5342ebb5dcbdf7b1ab11f89331f81add32800c8e05bf2720135a9a431040df3).
+- Extraction sha256 a941e3b0ca562919fe5fca279ab49c8e008b921d3c9897a9426c62c53bebb302.
+
+### `sc-appellate-civil/scsc-order-2026-01-07-02.txt` — South Carolina Supreme Court order amending SCACR Rule 410(h)(1)(E) (January 7, 2026)
+
+- Source: https://www.sccourts.org/media/courtOrders/PDFs/2026-01-07-02.pdf (official site; 2 pages, sha256 5b58abf2b07cbb43b2e8d72fe09dfecc84f589229673d3bee52299d2fe0be21e).
+- Edition: Order of January 7, 2026, effective immediately. Listed under 2026 at https://www.sccourts.org/opinions-orders/court-orders/court-rule-maintenance/. The rule pages vendored beside it may already reflect it; apply by the order's effective date. fetched on David's explicit ruling 2026-10-28 despite robots/terms (barrier: robots.txt 'User-agent: * / Disallow: /' with Crawl-delay 120000 on www.sccourts.org; tool: curl with the identifying UA lit-lang-provenance/1.0).
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 046dece6a608617fb04be877035b522b3c4e8d835d0a82e17399696aefa0549b. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `sc-appellate-civil/original/scsc-order-2026-01-07-02.pdf` as served (sha256 5b58abf2b07cbb43b2e8d72fe09dfecc84f589229673d3bee52299d2fe0be21e); extraction sha256 046dece6a608617fb04be877035b522b3c4e8d835d0a82e17399696aefa0549b.
+
+### `sc-appellate-civil/scsc-order-2026-04-08-01.txt` — South Carolina Supreme Court order amending SCACR Rules 413 and 502 (April 8, 2026)
+
+- Source: https://www.sccourts.org/media/courtOrders/PDFs/2026-04-08-01.pdf (official site; 8 pages, sha256 935b7dae0e0f572fe182313de8a513cd887c39eb5b62ff1ebd3f02876ebcf42b).
+- Edition: Order of April 8, 2026 (Rules for Lawyer and Judicial Disciplinary Enforcement). Listed under 2026 at https://www.sccourts.org/opinions-orders/court-orders/court-rule-maintenance/. The rule pages vendored beside it may already reflect it; apply by the order's effective date. fetched on David's explicit ruling 2026-10-28 despite robots/terms (barrier: robots.txt 'User-agent: * / Disallow: /' with Crawl-delay 120000 on www.sccourts.org; tool: curl with the identifying UA lit-lang-provenance/1.0).
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 3e50fe701dbb1a86dd4918cfc59139edbc8a796293c04dc2d8306a6a881b63da. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `sc-appellate-civil/original/scsc-order-2026-04-08-01.pdf` as served (sha256 935b7dae0e0f572fe182313de8a513cd887c39eb5b62ff1ebd3f02876ebcf42b); extraction sha256 3e50fe701dbb1a86dd4918cfc59139edbc8a796293c04dc2d8306a6a881b63da.
+
+### `sc-appellate-civil/scsc-order-2026-05-19-02.txt` — South Carolina Supreme Court order amending SCACR Rule 509 (May 19, 2026)
+
+- Source: https://www.sccourts.org/media/courtOrders/PDFs/2026-05-19-02.pdf (official site; 4 pages, sha256 589ec6812abe1e15bee57b7f0d995a2f9cc4d14b2100f1717c066796cda86004).
+- Edition: Order of May 19, 2026, effective June 18, 2026. Listed under 2026 at https://www.sccourts.org/opinions-orders/court-orders/court-rule-maintenance/. The rule pages vendored beside it may already reflect it; apply by the order's effective date. fetched on David's explicit ruling 2026-10-28 despite robots/terms (barrier: robots.txt 'User-agent: * / Disallow: /' with Crawl-delay 120000 on www.sccourts.org; tool: curl with the identifying UA lit-lang-provenance/1.0).
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 912d65ce1d0a88cd0c25a07b08f7bcb61b4ad4c957f3597ce51f9d5580c7d25e. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `sc-appellate-civil/original/scsc-order-2026-05-19-02.pdf` as served (sha256 589ec6812abe1e15bee57b7f0d995a2f9cc4d14b2100f1717c066796cda86004); extraction sha256 912d65ce1d0a88cd0c25a07b08f7bcb61b4ad4c957f3597ce51f9d5580c7d25e.
+
+### `sc-appellate-civil/scsc-order-2026-06-04-01.txt` — South Carolina Supreme Court order amending Canon 3, Code of Judicial Conduct, SCACR Rule 501 (June 4, 2026)
+
+- Source: https://www.sccourts.org/media/courtOrders/PDFs/2026-06-04-01.pdf (official site; 5 pages, sha256 69a2f3619e0577ec6c216e6a289ad574649973554aed9b6e5153fbc604b1daf3).
+- Edition: Order of June 4, 2026, effective immediately. Listed under 2026 at https://www.sccourts.org/opinions-orders/court-orders/court-rule-maintenance/. The rule pages vendored beside it may already reflect it; apply by the order's effective date. fetched on David's explicit ruling 2026-10-28 despite robots/terms (barrier: robots.txt 'User-agent: * / Disallow: /' with Crawl-delay 120000 on www.sccourts.org; tool: curl with the identifying UA lit-lang-provenance/1.0).
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 961bcf6549a84fbc3e15e7a7a9b9cb787e65850cb08438b8ffcda6644800b893. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `sc-appellate-civil/original/scsc-order-2026-06-04-01.pdf` as served (sha256 69a2f3619e0577ec6c216e6a289ad574649973554aed9b6e5153fbc604b1daf3); extraction sha256 961bcf6549a84fbc3e15e7a7a9b9cb787e65850cb08438b8ffcda6644800b893.
+
+### `sc-appellate-civil/scsc-order-2026-08-26-02.txt` — South Carolina Supreme Court order correcting SCACR rules (August 26, 2026)
+
+- Source: https://www.sccourts.org/media/courtOrders/PDFs/2026-08-26-02.pdf (official site; 1 pages, sha256 c0576663618dbd97229c06e11862f34bed6904f035821ad5f9b690925f85aac1).
+- Edition: Order of August 26, 2026 (scrivener's and non-substantive corrections to several SCACR rules). Listed under 2026 at https://www.sccourts.org/opinions-orders/court-orders/court-rule-maintenance/. The rule pages vendored beside it may already reflect it; apply by the order's effective date. fetched on David's explicit ruling 2026-10-28 despite robots/terms (barrier: robots.txt 'User-agent: * / Disallow: /' with Crawl-delay 120000 on www.sccourts.org; tool: curl with the identifying UA lit-lang-provenance/1.0).
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 2e887eba9278c43ace77ee2958789716cc3e54d963990accdfc767d19a6681f5. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `sc-appellate-civil/original/scsc-order-2026-08-26-02.pdf` as served (sha256 c0576663618dbd97229c06e11862f34bed6904f035821ad5f9b690925f85aac1); extraction sha256 2e887eba9278c43ace77ee2958789716cc3e54d963990accdfc767d19a6681f5.
+
+### `sc-appellate-civil/scsc-order-2026-09-23-01.txt` — South Carolina Supreme Court order adopting SCACR Rule 615 (September 23, 2026)
+
+- Source: https://www.sccourts.org/media/courtOrders/PDFs/2026-09-23-01.pdf (official site; 1 pages, sha256 a92efc79b9ffef3453af102f525909bf994173cdd9a229bc2a5ee144e2a994e9).
+- Edition: Order of September 23, 2026, effective immediately. Listed under 2026 at https://www.sccourts.org/opinions-orders/court-orders/court-rule-maintenance/. The rule pages vendored beside it may already reflect it; apply by the order's effective date. fetched on David's explicit ruling 2026-10-28 despite robots/terms (barrier: robots.txt 'User-agent: * / Disallow: /' with Crawl-delay 120000 on www.sccourts.org; tool: curl with the identifying UA lit-lang-provenance/1.0).
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 e7755bee8a4069fb7cb87317f36f121a02e9ab9225a019eb773aec6083e56ca0. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `sc-appellate-civil/original/scsc-order-2026-09-23-01.pdf` as served (sha256 a92efc79b9ffef3453af102f525909bf994173cdd9a229bc2a5ee144e2a994e9); extraction sha256 e7755bee8a4069fb7cb87317f36f121a02e9ab9225a019eb773aec6083e56ca0.
+
+### `sc-appellate-civil/scsc-order-2026-09-23-02.txt` — South Carolina Supreme Court order amending Appendix H to Part IV, SCACR (September 23, 2026)
+
+- Source: https://www.sccourts.org/media/courtOrders/PDFs/2026-09-23-02.pdf (official site; 1 pages, sha256 41e53c55a0894e5665bb4cb1f9490b038b6d111a22a3b43bbc0c3a260239032d).
+- Edition: Order of September 23, 2026 (paralegal emeritus status). Listed under 2026 at https://www.sccourts.org/opinions-orders/court-orders/court-rule-maintenance/. The rule pages vendored beside it may already reflect it; apply by the order's effective date. fetched on David's explicit ruling 2026-10-28 despite robots/terms (barrier: robots.txt 'User-agent: * / Disallow: /' with Crawl-delay 120000 on www.sccourts.org; tool: curl with the identifying UA lit-lang-provenance/1.0).
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 319f83ddbcad218c6f6ae3d50da02cb07530ef16d829222e594c5df99353994b. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `sc-appellate-civil/original/scsc-order-2026-09-23-02.pdf` as served (sha256 41e53c55a0894e5665bb4cb1f9490b038b6d111a22a3b43bbc0c3a260239032d); extraction sha256 319f83ddbcad218c6f6ae3d50da02cb07530ef16d829222e594c5df99353994b.

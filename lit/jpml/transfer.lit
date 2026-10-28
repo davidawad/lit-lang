@@ -1,0 +1,142 @@
+module jpml.transfer
+
+/// A brief submitted with a motion, or a response to it (J.P.M.L. R.
+/// 3.2(a)(iii)): 20 pages, exclusive of exhibits, tables and signature
+/// blocks.
+limit motion-brief { pages <= 20 cite "J.P.M.L. R. 3.2(a)" } cite "J.P.M.L. R. 3.2(a)"
+/// A reply (J.P.M.L. R. 3.2(a)(iii)): 10 pages. A consolidated reply to
+/// more than one response in opposition may run 20 pages (J.P.M.L. R.
+/// 6.1(d)), which is not encoded.
+limit reply { pages <= 10 cite "J.P.M.L. R. 3.2(a)" } cite "J.P.M.L. R. 3.2(a)"
+/// A statement of reasons why oral argument should, or need not, be heard
+/// (J.P.M.L. R. 11.1(b)): 2 pages.
+limit oral-argument-statement { pages <= 2 cite "J.P.M.L. R. 11.1(b)" } cite "J.P.M.L. R. 11.1(b)"
+
+/// A motion to transfer and its brief are filed (J.P.M.L. R. 6.2(a)).
+event TransferMotionFiled() paper motion-brief
+/// A response to a motion is filed (J.P.M.L. R. 6.1(c)).
+event MotionResponseFiled() paper motion-brief
+/// The movant's reply is filed (J.P.M.L. R. 6.1(d)).
+event MotionReplyFiled() paper reply
+/// A statement on oral argument is filed (J.P.M.L. R. 11.1(b)).
+event OralArgumentStatementFiled() paper oral-argument-statement
+
+start actions-pending
+
+state actions-pending: "Civil actions with common fact questions pending in different districts" by applicant cite "J.P.M.L. R. 6.2(a)"
+{
+  note "A party to an action may initiate proceedings to transfer under 28 U.S.C. § 1407 by filing a motion (J.P.M.L. R. 6.2(a)); a potential tag-along action of an existing MDL may instead be conditionally transferred by the Clerk of the Panel (J.P.M.L. R. 7.1(b)). The statute is not vendored; the Panel Rules define the Panel, MDL and tag-along action by reference to it (J.P.M.L. R. 1.1). The pendency of a motion or conditional order does not affect or suspend orders and pretrial proceedings in the district court (J.P.M.L. R. 2.1(d))."
+  edge-actions-pending-initiated "Transfer motion or conditional transfer order" -> initiation {
+    authority cite "J.P.M.L. R. 6.2(a)"
+  }
+}
+
+decision initiation: "Motion to transfer or conditional transfer order" by applicant cite "J.P.M.L. R. 6.2(a)"
+{
+  note "A motion to transfer under J.P.M.L. R. 6.2 starts a full Panel proceeding; the Clerk issues a Notice of Filing of Motion to Transfer with the briefing schedule (J.P.M.L. R. 6.2(b)). For a potential tag-along action of an existing MDL the Clerk may enter a conditional transfer order (CTO) to the previously designated transferee district (J.P.M.L. R. 7.1(b)). Within 14 days of a Notice of Filing each party files a Notice of Appearance (J.P.M.L. R. 4.1(c), 6.2(c)) and each nongovernmental corporate party a disclosure statement (J.P.M.L. R. 5.1(b))."
+  edge-initiation-motion "Motion to transfer filed" -> motion-briefing {
+    authority cite "J.P.M.L. R. 6.2(a)"
+  }
+  edge-initiation-cto "CTO entered for a tag-along action" -> cto-stage {
+    authority cite "J.P.M.L. R. 7.1(b)"
+  }
+}
+
+state motion-briefing: "Motion practice: responses and replies" by applicant cite "J.P.M.L. R. 6.1(c)"
+{
+  note "Any other party may file a response within 21 days after filing of a motion; failure to respond is treated as acquiescence (J.P.M.L. R. 6.1(c)). The movant may reply within 7 days after the lapse of the response period, with a consolidated reply to more than one opposition limited to 20 pages (J.P.M.L. R. 6.1(d)). A brief with a motion and any response is limited to 20 pages and a reply to 10 pages (J.P.M.L. R. 3.2(a)(iii)). Interested Party Responses are due no later than 7 days before the hearing session, absent leave (J.P.M.L. R. 6.2(e)). The Clerk may shorten or enlarge the periods and page limits (J.P.M.L. R. 6.1(e)); miscellaneous relief is under J.P.M.L. R. 6.3."
+  edge-motion-briefing-hearing "Briefing closed" -> hearing-session {
+    authority cite "J.P.M.L. R. 6.2(g)"
+  }
+}
+
+decision cto-stage: "CTO opposed?" by applicant cite "J.P.M.L. R. 7.1(c)"
+{
+  note "The Clerk serves the CTO on each party but does not send it to the clerk of the transferee district until 7 days after its entry (J.P.M.L. R. 7.1(b)). A party opposing transfer files a notice of opposition within that 7-day period; the Clerk then withholds the order and issues a Notice of Filed Opposition with the briefing schedule (J.P.M.L. R. 7.1(c)). Within 14 days of that notice the opposing party files a motion to vacate the CTO and brief, which the Clerk sets for the next appropriate hearing session; failure to file is treated as withdrawal of the opposition (J.P.M.L. R. 7.1(g)). Failure to respond to a CTO is acquiescence (J.P.M.L. R. 7.1(d)). Absent exceptional circumstances the Panel will not extend the time to file a notice of opposition (J.P.M.L. R. 6.3(b))."
+  edge-cto-stage-opposed "Opposed: motion to vacate filed" -> show-cause-or-hearing {
+    authority cite "J.P.M.L. R. 7.1(g)"
+  }
+  edge-cto-stage-unopposed "No opposition, or opposition withdrawn" -> cto-final {
+    authority cite "J.P.M.L. R. 7.1(d)"
+  }
+}
+
+decision show-cause-or-hearing: "Opposed transfer heard or CTO vacated" by court cite "J.P.M.L. R. 11.1(c)"
+{
+  note "The Panel does not consider transfer of an action when a party timely opposes it without first holding a hearing session, though it may dispense with oral argument (J.P.M.L. R. 11.1(c)). When transfer is considered on the Panel's own initiative, the Clerk may enter an order to show cause why actions should not be transferred (J.P.M.L. R. 8.1(a)); responses are due within 21 days of the order and replies within 7 days after the response period lapses (J.P.M.L. R. 8.1(d), (e))."
+  edge-show-cause-hearing "Set for a hearing session" -> hearing-session {
+    authority cite "J.P.M.L. R. 11.1(c)"
+  }
+  edge-show-cause-cto-vacated "CTO vacated" -> denied-transfer {
+    authority cite "J.P.M.L. R. 7.1(g)"
+  }
+}
+
+state hearing-session: "Hearing session and oral argument" by court cite "J.P.M.L. R. 11.1(a)"
+{
+  note "The Chair sets the time, place and agenda of each hearing session (J.P.M.L. R. 11.1(a)). A party may file a statement of reasons why oral argument should or need not be heard, limited to 2 pages (J.P.M.L. R. 11.1(b)). Failure to file an oral argument notice is a waiver of argument (J.P.M.L. R. 11.1(d)). Barring exceptional circumstances the Panel allots a maximum of 20 minutes for argument on each motion for centralization (J.P.M.L. R. 11.1(f))."
+  edge-hearing-session-order "Matter heard or submitted" -> panel-order {
+    authority cite "J.P.M.L. R. 11.1(c)"
+  }
+}
+
+decision panel-order: "Panel order on transfer" by court cite "J.P.M.L. R. 2.1(d)"
+{
+  note "The Panel decides transfer under 28 U.S.C. § 1407 (not vendored; the convenience-and-justice standard and the selection of the transferee court are the statute's). An order to transfer is effective only upon its filing with the clerk of the transferee district court (J.P.M.L. R. 2.1(d)). The outline's Lexecon Inc. v. Milberg Weiss Bershad Hynes & Lerach is removed: no reporter text is vendored."
+  edge-panel-order-transfer "Transfer ordered" -> transferred {
+    authority cite "J.P.M.L. R. 2.1(d)"
+  }
+  edge-panel-order-denied "Transfer denied" -> denied-transfer {
+    authority cite "J.P.M.L. R. 11.1(c)"
+  }
+}
+
+state transferred: "Transferred to the transferee judge" by court cite "J.P.M.L. R. 9.1(a)"
+{
+  note "The Clerk of the Panel notifies the transferee clerk to file the transfer order; on receipt of a certified copy the transferor clerk transmits the record and, unless claims are retained for simultaneous remand, closes the action (J.P.M.L. R. 9.1(a), (b))."
+  edge-transferred-pretrial "Pretrial proceedings begin" -> pretrial {
+    authority cite "J.P.M.L. R. 9.1(c)"
+  }
+}
+
+state pretrial: "Coordinated or consolidated pretrial proceedings in the transferee court" by court cite "J.P.M.L. R. 10.1(a)"
+{
+  note "Pretrial proceedings run in the transferee court under its own rules (28 U.S.C. § 1407(b), not vendored); they are not modeled here. An action the transferee court terminates by valid order is not remanded (J.P.M.L. R. 10.1(a))."
+  edge-pretrial-remand "Termination or remand" -> remand-or-termination {
+    authority cite "J.P.M.L. R. 10.1(b)"
+  }
+}
+
+decision remand-or-termination: "Termination, conditional remand or motion to remand" by court cite "J.P.M.L. R. 10.1(b)"
+{
+  note "The Panel may remand an action or separable claim on the transferee court's suggestion, on its own initiative by show cause order or conditional remand order (CRO), or on motion of any party (J.P.M.L. R. 10.1(b)). A CRO is not sent to the transferee clerk for 7 days from entry; an opposing party files a notice of opposition within that 7-day period and a motion to vacate within 14 days of the Notice of Filed Opposition (J.P.M.L. R. 10.2(a), (b), (f)). A motion to remand must include an affidavit on the suggestion of remand, common discovery and compliance with transferee orders (J.P.M.L. R. 10.3(a)). On remand the parties furnish a designation of the record within 28 days or as the transferee court directs (J.P.M.L. R. 10.4(a))."
+  edge-remand-terminated "Action terminated in the transferee court" -> terminated {
+    authority cite "J.P.M.L. R. 10.1(a)"
+  }
+  edge-remand-remanded "Remanded to the transferor court" -> remanded {
+    authority cite "J.P.M.L. R. 10.1(b)"
+  }
+}
+
+state cto-final: "CTO becomes final; action transferred" by court cite "J.P.M.L. R. 7.1(i)"
+{
+  note "A CTO becomes effective (finalized) when it is filed with the clerk of the transferee district court (J.P.M.L. R. 7.1(i)); the transfer then proceeds as a Panel transfer."
+  edge-cto-final-transferred "Transfer effective" -> transferred {
+    authority cite "J.P.M.L. R. 7.1(i)"
+  }
+}
+
+terminal denied-transfer: "Transfer denied or CTO vacated" outcome [loss] cite "J.P.M.L. R. 11.1(c)"
+{
+  note "Outcome from the movant's side. The actions stay in their transferor courts."
+}
+
+terminal terminated: "Action terminated in the transferee court" outcome [decided] cite "J.P.M.L. R. 10.1(a)"
+{
+  note "The transferee clerk transmits the terminating order to the Clerk of the Panel; the transferee court retains the files unless the transferee judge or the Panel directs otherwise (J.P.M.L. R. 10.1(a))."
+}
+
+terminal remanded: "Remanded to the transferor court" outcome [remand] cite "J.P.M.L. R. 10.4(b)"
+{
+  note "The transferee district transmits the docket sheets, any final pretrial order and the designated record to the transferor clerk (J.P.M.L. R. 10.4(b)); trial and further proceedings there are not modeled."
+}

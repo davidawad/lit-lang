@@ -1,0 +1,38 @@
+# Proceedings before the United States Judicial Panel on Multidistrict
+# Litigation under its Rules of Procedure, Panel Rules effective February
+# 19, 2026 (sources/jpml). The Panel's rules state no computation-of-time
+# method and no counting rule in lit/core encodes one, so their periods
+# are stated in notes, not encoded as counted deadlines. 28 U.S.C. § 1407
+# is vendored nowhere in sources/, so the statute is named in notes and
+# every cite binds to the Panel Rules.
+[package]
+name = "jpml"
+version = "0.1.0"
+language = 1
+pack_id = "jpml"
+forum = "jpml"
+authority = "FederalRule"
+title = "United States Judicial Panel on Multidistrict Litigation"
+description = "Transfer of civil actions for coordinated or consolidated pretrial proceedings under the Rules of Procedure of the Judicial Panel on Multidistrict Litigation, as far as the vendored text states: motions to transfer, conditional transfer orders for tag-along actions, show cause orders, hearing sessions, transfer, and termination or remand."
+in_force = "2026-02-19"
+known_at = "2026-10-27"
+unknown_before = "2026-02-19"
+jurisdiction = "United States Judicial Panel on Multidistrict Litigation"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.jpml-rules]
+title = "Rules of Procedure of the United States Judicial Panel on Multidistrict Litigation, Panel Rules effective February 19, 2026"
+url = "https://www.jpml.uscourts.gov/sites/jpml/files/Panel%20Rules%20Effective%202-19-2026.pdf"
+path = "sources/jpml/jpml-rules-of-procedure.txt"
+path_sha256 = "d776756aadf20c7b0a9f5b17387627ec65d0c58b88e4a25189f7111600c79be3"
+sha256 = "c8de0185f1181ea38b2f62c5e73da15d26e541b16549eedc486b5ce3e3b32a62"
+as_of = "2026-02-19"
+cite_prefixes = ["J.P.M.L. R."]
+section_heading = "Local Rule {n}"

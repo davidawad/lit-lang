@@ -1,0 +1,47 @@
+# Criminal actions in the New York trial courts of general criminal
+# jurisdiction under the Criminal Procedure Law, as far as the vendored text
+# states. The vendored CPL is a targeted set, Article 30 (timeliness of
+# prosecutions and speedy trial) and Articles 450 and 460 (appeals), taken
+# from the NY Senate Open Legislation site, which shows the 2020-01-10
+# revision; its PROVENANCE entry records CURRENCY UNCONFIRMED (later
+# amendments are not reflected). By the PM's standing ruling of 2026-10-27 such a
+# source yields holes, not values: this package cites those sections only
+# for the structure of the case (which section governs which step) and
+# states no period, limit or amount from them. The rest of the CPL (arrest,
+# arraignment, securing order, grand jury and indictment, discovery,
+# pretrial motions, pleas, trial, post-verdict motions, sentencing) and the
+# Uniform Rules for the Trial Courts (22 NYCRR Part 200) are not vendored;
+# those cites stay holes. in_force is the retrieval date, so an earlier
+# query is a hole in the corpus. An appeal goes to the Appellate Division
+# or the Appellate Term (CPL 450.10, 460.10).
+[package]
+name = "ny-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "ny-criminal-trial-court"
+forum = "ny-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "new-york"
+title = "New York trial courts, criminal"
+description = "Criminal actions in the New York trial courts under the Criminal Procedure Law, as far as the vendored text states: the structure of the case from arrest and arraignment through the speedy-trial motion under CPL 30.30 and 30.20, plea or trial, sentencing and judgment, and the appeal as of right under CPL 450.10 and 460.10; no period is stated from the currency-unconfirmed CPL text, and the steps whose CPL articles are not vendored are holes."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "New York trial courts of general criminal jurisdiction"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ny-cpl]
+title = "New York Criminal Procedure Law, Articles 30, 450 and 460, as the NY Senate Open Legislation site shows them (2020-01-10 revision; retrieved 2026-10-28); CURRENCY UNCONFIRMED"
+url = "https://www.nysenate.gov/legislation/laws/CPL"
+path = "sources/ny-criminal-trial-court/ny-cpl-article-30-and-appeal-articles-450-460.txt"
+path_sha256 = "5b21134093bb575d7a1b6a9ac7e10527647b9c57bfb8c1fff9686b1990c2f501"
+as_of = "2020-01-10"
+cite_prefixes = ["CPL"]
+section_heading = "CPL {n}"

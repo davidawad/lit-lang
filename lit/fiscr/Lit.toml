@@ -1,11 +1,13 @@
-# Appeals to the Foreign Intelligence Surveillance Court of Review, as far
-# as the FISC Rules of Procedure, effective November 1, 2010
-# (sources/fisc, shared with lit/fisc), state them: the petition for
-# review, the record and notification (FISC R. 31, 44, 54-59). The Court
-# of Review's own procedure and 50 U.S.C. § 1803 are vendored nowhere in
-# sources/, so they are named in notes and every cite binds to the FISC
-# Rules. FISC R. 10 has no counting rule in lit/core, so periods are
-# stated in notes, not encoded as counted deadlines.
+# Appeals to the Foreign Intelligence Surveillance Court of Review: the
+# FISC side as the FISC Rules of Procedure, effective November 1, 2010
+# (sources/fisc, shared with lit/fisc), state it -- the petition for
+# review, the record and notification (FISC R. 31, 44, 54-59) -- and the
+# Court of Review side as its own Rules of Procedure, May 2018 edition
+# (sources/fiscr): the notice of appeal, the record, briefing, argument
+# and entry of judgment (FISCR R. 5-7, 16-18). 50 U.S.C. § 1803 is
+# vendored nowhere in sources/, so it is named in notes. FISC R. 10 and
+# FISCR R. 11 have no counting rule in lit/core, so periods are stated in
+# notes, not encoded as counted deadlines.
 [package]
 name = "fiscr"
 version = "0.1.0"
@@ -14,9 +16,9 @@ pack_id = "fiscr"
 forum = "fiscr"
 authority = "FederalRule"
 title = "Foreign Intelligence Surveillance Court of Review"
-description = "Appeals from the Foreign Intelligence Surveillance Court to the Court of Review, as far as the vendored FISC Rules of Procedure state: the petition for review and its 30-day period, the effect of en banc proceedings, the stay, the record and its transmission."
+description = "Appeals from the Foreign Intelligence Surveillance Court to the Court of Review under the vendored FISC Rules of Procedure and FISCR Rules of Procedure: the petition (notice of appeal) and its 30-day period, the effect of en banc proceedings, the stay, the record and its transmission, briefing, argument and entry of judgment."
 in_force = "2010-11-01"
-known_at = "2026-10-27"
+known_at = "2026-10-28"
 unknown_before = "2010-11-01"
 jurisdiction = "Foreign Intelligence Surveillance Court of Review"
 
@@ -36,4 +38,14 @@ path_sha256 = "52659378ae78d618d899e20d75b920fe1b503d69f6bab03f2c5588c3aa7e950e"
 sha256 = "f6cccb36e8711d7d5de9989ae1e3757f68c139d525117b9c18bac716c9abec15"
 as_of = "2010-11-01"
 cite_prefixes = ["FISC R."]
+section_heading = "Rule {n}"
+
+[sources.fiscr-rules]
+title = "Foreign Intelligence Surveillance Court of Review Rules of Procedure, May 2018 edition"
+url = "https://www.fisc.uscourts.gov/sites/default/files/Rules%20of%20Procedure.pdf"
+path = "sources/fiscr/fiscr-rules-of-procedure-sectioned.txt"
+path_sha256 = "d933dd55c95ab21917ee8bc38192ad8e764b02867fac8acc4cf5318a8fb63bbf"
+sha256 = "2e96f100311f861eae9349443a80ebeec1c35b23f8f6702166e33f6889f24da8"
+as_of = "2018-05-03"
+cite_prefixes = ["FISCR R."]
 section_heading = "Rule {n}"

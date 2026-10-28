@@ -1,0 +1,157 @@
+module ms-criminal-trial-court.criminal
+
+// Criminal cases in the Mississippi trial courts. The Mississippi Rules of
+// Criminal Procedure are CURRENCY UNCONFIRMED
+// (sources/ms-criminal-trial-court/PROVENANCE.md), so they are cited for
+// the structure of each step and no period, limit or amount is taken from
+// them: where a step has one, the note names the rule that sets it and
+// says that it is not stated. The M.R.A.P. have a stated edition and their
+// periods are stated in notes. Outcomes are from the defendant's side.
+// The earlier outline's leading decisions (County of Riverside v.
+// McLaughlin, Gerstein v. Pugh, Gideon v. Wainwright, Brady v. Maryland,
+// Mapp v. Ohio, Barker v. Wingo, Boykin v. Alabama, Missouri v. Frye,
+// Jackson v. Virginia, Ramos v. Louisiana, Apprendi v. New Jersey, Roe v.
+// Flores-Ortega, Garza v. Idaho) are removed: no reporter text is
+// vendored.
+start arrested
+
+state arrested: "Arrest" by applicant cite "MRCrP 5.1"
+{
+  note "A person arrested without a warrant may be released on personal recognizance or an appearance bond under Rule 8 or, if not released, is taken without unnecessary delay, and in no event later than the period MRCrP 5.1(b)(3) sets, before a judge for an initial appearance; if not, the person is released on the minimum bail Rule 8 specifies unless the offense is not bailable (MRCrP 5.1(b)). The period is not stated here (currency unconfirmed). A criminal proceeding is commenced by charging affidavit, indictment or bill of information (MRCrP 2.1(a)), and an arrest warrant or summons issues under Rule 3."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance {
+    authority cite "MRCrP 5.2"
+  }
+}
+
+decision initial-appearance: "Initial appearance and release" by court cite "MRCrP 5.2"
+{
+  note "At the initial appearance the judge ascertains the defendant's identity, informs the defendant of the charges, determines probable cause for a warrantless arrest (releasing the defendant if there was none), advises of the right to counsel and appoints counsel for an indigent defendant under Rules 7.2 and 7.3, and sets release conditions (MRCrP 5.2(a)). A defendant has the right to pretrial release on personal recognizance or bond except as Rule 8.2 provides, and release conditions are set, reviewed and revoked under Rules 8.4 to 8.6 (MRCrP 8.2)."
+  edge-initial-appearance-detained "Detained" -> preliminary-hearing {
+    authority cite "MRCrP 8.5"
+  }
+  edge-initial-appearance-released "Released on recognizance or bond" -> preliminary-hearing {
+    authority cite "MRCrP 8.2"
+  }
+}
+
+decision preliminary-hearing: "Preliminary hearing or indictment" by court cite "MRCrP 6.1"
+{
+  note "A defendant charged with a felony is entitled to a preliminary hearing on request, but not once indicted; the hearing is held within the period after the demand that MRCrP 6.1(a)(2) sets unless the affidavit is dismissed, the hearing is waived or postponed, or an indictment is returned, and if it is not timely commenced the defendant is released on recognizance, subject to the exceptions of MRCrP 6.1(c)(2). The period is not stated here (currency unconfirmed). At the hearing the judge determines probable cause and the conditions of release, with cross-examination and evidence limited to those questions (MRCrP 6.2(a))."
+  edge-preliminary-hearing-bound-over "Probable cause found; bound over to the grand jury" -> charged {
+    authority cite "MRCrP 6.2"
+  }
+  edge-preliminary-hearing-discharged "No probable cause; discharged" -> dismissed {
+    authority cite "MRCrP 6.2"
+  }
+}
+
+state charged: "Indictment" by office cite "MRCrP 14.1"
+{
+  note "The grand jury is governed by Rule 13. The indictment's nature and contents, joinder, severance and amendment are governed by Rules 14.1 to 14.4; a defendant may waive indictment and proceed by information as Rule 14.5 provides; dismissal is governed by Rule 14.6."
+  edge-charged-arraignment "Indictment served; arraignment" -> arraignment {
+    authority cite "MRCrP 15.1"
+  }
+}
+
+state arraignment: "Arraignment and trial setting" by applicant cite "MRCrP 15.1"
+{
+  note "A copy of the indictment is served before arraignment, which unless waived is held within the period after service that MRCrP 15.1(a) sets; at arraignment the court reads the charge, takes the plea, ensures counsel, reviews bond and sets reasonable deadlines for filing and hearing all pretrial motions (MRCrP 15.1). Within the period after arraignment that MRCrP 9(a) sets, the court enters an order setting trial, which is set no later than the period MRCrP 9(a) sets after arraignment; criminal trials have priority over civil trials, and a continuance needs good cause shown by written order (MRCrP 9). The periods are not stated here (currency unconfirmed). The statutory speedy-trial rule, Miss. Code Ann. § 99-17-1, is not vendored."
+  edge-arraignment-discovery "Discovery" -> discovery {
+    authority cite "MRCrP 17.1"
+  }
+}
+
+state discovery: "Disclosure, discovery and pretrial motions" by applicant cite "MRCrP 17.2"
+{
+  note "In felony cases and misdemeanor trials in circuit and county court, the prosecution's and the defendant's disclosures are governed by Rules 17.2 and 17.3, with the continuing duty to disclose and sanctions of Rules 17.8 and 17.9 (MRCrP 17.1). Pretrial motions are filed and heard within the deadlines the court sets at arraignment (MRCrP 15.1(b)); motions generally follow Rule 34. Mental examinations are governed by Rule 12."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "MRCrP 15.1"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite "MRCrP 15.4"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "MRCrP 14.6"
+{
+  note "The court rules on the pretrial motions; dismissal of an indictment or charge is governed by Rule 14.6. Whether a delay in bringing the defendant to trial requires dismissal under the statutory 270-day rule is a hole (Miss. Code Ann. § 99-17-1 is not vendored)."
+  edge-motions-ruling-speedy "Dismissed for delay in bringing to trial" -> dismissed {
+    authority cite ?("Miss. Code Ann. § 99-17-1 (statutory speedy-trial rule; not vendored)")
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "MRCrP 14.6"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "MRCrP 9"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "MRCrP 15.3"
+{
+  note "The entry of a plea of guilty or nolo contendere is governed by Rule 15.3; a defendant charged with a felony who wishes to plead guilty must plead personally (MRCrP 15.3(a)). Plea bargaining is governed by Rule 15.4. Trial by jury is governed by Rule 18.1, whose jury sizes and concurrence are not stated here (currency unconfirmed)."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite "MRCrP 15.3"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "MRCrP 18.1"
+  }
+}
+
+decision trial: "Verdict" by court cite "MRCrP 24.1"
+{
+  note "Trial by jury, its waiver and the selection of the jury follow Rule 18; the proceedings at trial and bifurcated trials follow Rule 19. After the prosecution rests, and again after the close of the evidence, the court may direct a verdict of not guilty where the evidence is insufficient; a defendant who fails to challenge sufficiency at the times and in the manner prescribed waives the point on appeal (MRCrP 21). Instructions follow Rule 22, deliberations Rule 23, and the time, form and types of verdict Rule 24."
+  edge-trial-directed "Directed verdict of not guilty, or not guilty" -> acquitted {
+    authority cite "MRCrP 21"
+  }
+  edge-trial-guilty "Guilty; sentencing" -> sentencing {
+    authority cite "MRCrP 24.1"
+  }
+}
+
+state sentencing: "Presentence report and sentencing" by court cite "MRCrP 26.2"
+{
+  note "On a determination of guilt the judgment is pronounced and entered together with the sentence; the court sets a sentencing date after receipt of any required presentence report, and sentence is imposed without unreasonable delay (MRCrP 26.2(b)). The presentence report and the sentencing hearing follow Rules 26.3 and 26.4; judgment and sentence are pronounced in open court and entered under Rules 26.5 and 26.8."
+  edge-sentencing-post-trial "Judgment of conviction entered" -> post-trial {
+    authority cite "MRCrP 26.8"
+  }
+}
+
+decision post-trial: "Post-trial motions" by court cite "MRCrP 25.1"
+{
+  note "On the defendant's written motion the court may vacate any judgment and grant a new trial on the grounds MRCrP 25.1(b) lists; a motion to vacate judgment and dismiss without prejudice, where the charge stated no offense or the court lacked jurisdiction, lies under Rule 25.2 within the period it sets. A motion for a new trial or to vacate judgment still pending after the period MRCrP 25.3 sets is deemed denied, unless continued by written agreement or order to a date within the further period the rule sets; the periods, and the time to file the motion, are not stated here (currency unconfirmed). A timely motion for judgment of acquittal notwithstanding the verdict or for a new trial under MRCrP 25.1 runs the time for appeal from the entry of the order denying it (M.R.A.P. 4(e))."
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "MRCrP 25.1"
+  }
+  edge-post-trial-denied "Motions denied or deemed denied" -> judgment {
+    authority cite "MRCrP 25.3"
+  }
+}
+
+decision judgment: "Appeal" by applicant cite "M.R.A.P. 4"
+{
+  note "The notice of appeal is filed with the clerk of the trial court within 30 days after the date of entry of the judgment or order appealed from (M.R.A.P. 4(a)); in a criminal case the 30 days run from the denial of a timely motion for judgment of acquittal notwithstanding the verdict or for a new trial, or from the imposition of sentence, whichever is later, and a notice filed before the motion is disposed of is ineffective until then (M.R.A.P. 4(e)). Any other party may file within 14 days after the first notice, or within the time otherwise prescribed, whichever is later (M.R.A.P. 4(c)). The trial court may extend the time on a motion filed not later than 30 days after the time expires, on good cause before expiry or excusable neglect after, by no more than 30 days past the prescribed time or 10 days from the order, whichever is later (M.R.A.P. 4(g)). Appeals from justice, municipal and county court follow MRCrP 29 and 30."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "M.R.A.P. 4"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "M.R.A.P. 4" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "MRCrP 21"
+{
+  note "Outcome from the defendant's side: a directed verdict or verdict of not guilty (MRCrP 21, 24)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "MRCrP 14.6"
+{
+  note "Outcome from the defendant's side. Whether a dismissal bars a new prosecution is not stated here."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "M.R.A.P. 4"
+{
+  note "The appeal continues before the Mississippi Supreme Court, which may assign it to the Court of Appeals, under the Mississippi Rules of Appellate Procedure (sources/ms-appellate)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "MRCrP 31"
+{
+  note "Outcome from the defendant's side. Applications for post-conviction collateral relief are governed by statute, as supplemented and modified by M.R.A.P. 22 (MRCrP 31); the statute is not vendored. Federal habeas belongs to lit/habeas."
+}

@@ -1,0 +1,388 @@
+module bankr-nys-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ OrderForReliefEntered, PetitionFiled }
+
+// The Bankr. S.D.N.Y. court's own periods, counted under FRBP 9006(a). The
+// FRBP periods (schedules, claims, discharge, dischargeability, exemption
+// objections, the adversary answer and summons, appeals) are lit/frbp's and
+// are not declared again.
+//
+// Stated in the rules but not declared: the service of a chapter 13 plan at
+// least 28 days before the confirmation hearing (LBR 3015-1(c)), the FRBP
+// 2002(b) notice and lit/frbp's; motions governed by FRBP 2002 or another
+// Bankruptcy Rule, served on that rule's time (LBR 9006-1(b)); the return
+// dates of stay-relief and lease motions, which track 11 U.S.C. § 362(e),
+// § 365(d)(1) and (4), § 1110 and § 1168 and the 210-day cap (LBR
+// 4001-1(a), 6006-1); the business-day and clock-time periods (the master
+// service list within 7 business days, LBR 2002-5(c); an appraisal by noon
+// the day before the sale, LBR 6004-1(b)(2); a pretrial-conference notice
+// within 48 hours, LBR 7016-2; a reply by 4:00 p.m. three days before the
+// return date, LBR 9006-1(c), declared as three days; a certificate of no
+// objection no sooner than 48 hours after the objection deadline, LBR
+// 9013-3(a)); the minimum notice a paper or order must give rather than a
+// deadline of its own (the 7 and 5 days' notice before a financing or cash
+// collateral default, and the 60 and 75 days a committee is given to
+// investigate, LBR 4001-2; an auctioneer's 7 days' notice of its
+// commission application, LBR 6005-1(g); the 2 days' notice of a settled
+// order and 1 day's notice of a counter-proposal, LBR 9074-1); the updates
+// of the master service list at least every 14 days and the
+// post-confirmation reports at least every six months (LBR 2002-5(c),
+// 3021-1(b)), recurring duties; the initial chapter 11 case conference
+// about 30 days after the petition (LBR 1007-2(e)), approximate and the
+// court's; the trustee's domestic support certification form, furnished
+// within the 30 days before the last plan payment (LBR 4004-2(b)), a
+// window rather than a deadline; the § 503(b)(9) request by the claims bar
+// date (LBR 3002-1), the bar date itself; the 14-day return date that
+// makes an extension motion automatic (LBR 9006-2), a condition; the
+// chapter 7 compensation application, which LBR 5009-1(a) restates from
+// LBR 2016-2 and is declared once; and the court's and the
+// Clerk's own acts (unsealing an appraisal after six months, LBR
+// 6004-1(b)(2); disposing of exhibits 30 days after notice, LBR
+// 9072-1(b)).
+/// A letter requesting a pre-motion conference before a summary judgment
+/// motion (LBR 7056-1(a)).
+limit pre-motion-letter { pages <= 2 cite "S.D.N.Y. LBR 7056-1(a)" } cite "S.D.N.Y. LBR 7056-1(a)"
+
+/// The date set for the hearing on a chapter 7 trustee's final account (LBR
+/// 2016-2, 5009-1(a)).
+event FinalAccountHearingScheduled()
+/// The first date set for the hearing on confirmation of a chapter 9 or 11
+/// plan (LBR 3018-1, 3020-1).
+event Chapter11ConfirmationHearingScheduled()
+/// An order confirming a chapter 11 plan is entered (LBR 3021-1(a)).
+event PlanConfirmed()
+/// The estate in a chapter 11 case is fully administered and any trustee is
+/// discharged (LBR 3022-1).
+event EstateFullyAdministered()
+/// The Clerk sends the lessor notice that the debtor has complied with LBR
+/// 4001-1.1(a) (LBR 4001-1.1(b)).
+event CureComplianceNoticed()
+/// The deadline the court fixes for objections to a final financing or cash
+/// collateral order (LBR 4001-2(c)).
+event FinalOrderObjectionDeadline()
+/// A party in interest serves its request for dismissal under § 521(i)(2)
+/// (LBR 4002-1(b)).
+event DismissalRequestServed()
+/// An amendment adding a creditor is served fewer than 30 days before, or
+/// after, the FRBP 4003(b) objection deadline (LBR 4003-1(b)).
+event CreditorAddedToSchedulesServed()
+/// A filing fee is incurred (LBR 5005-3(b)).
+event FilingFeeIncurred()
+/// The date of a sale of estate property of an aggregate gross value of no
+/// more than $10,000 (LBR 6004-1(a)).
+event SmallSaleDate()
+/// An auctioneer receives the proceeds of an item or lot sold (LBR
+/// 6004-1(e)).
+event AuctionProceedsReceived()
+/// The last date of an auction (LBR 6004-1(f)).
+event AuctionConcluded()
+/// All proceeds of an auction have been received after the report was due
+/// (LBR 6004-1(f)).
+event AllAuctionProceedsReceived()
+/// The discovery cut-off date (LBR 7033-1(c)).
+event DiscoveryCutoff()
+/// Answers to interrogatories that refer to documents are served (LBR
+/// 7033-1(f)).
+event InterrogatoryAnswersServed()
+/// The return date of a motion (LBR 9006-1).
+event ReturnDate()
+/// Motion or answering papers are served (LBR 9006-1(d)).
+event PapersServed()
+/// The date of presentment of a proposed order (LBR 9013-2(c)).
+event PresentmentDate()
+/// The last pleading directed to the issue for which a jury demand was made
+/// is served (LBR 9015-1).
+event LastPleadingServed()
+/// The court enters an order determining a motion, or a judgment (LBR
+/// 9023-1(a)).
+event MotionOrderEntered()
+/// A motion to redact a filed document or proof of claim is granted (LBR
+/// 9037-1(e)).
+event RedactionGranted()
+/// The record on appeal is returned to the Clerk (LBR 9072-1(b)).
+event RecordReturned()
+/// After a hearing or decision, the court directs a party to submit or
+/// settle an order, judgment or decree (LBR 9074-1).
+event OrderDirected()
+/// A pleading or other document is served (LBR 9078-1).
+event DocumentServed()
+
+/// LBR 1007-2(c): in an involuntary chapter 11 case, the debtor's affidavit
+/// is filed within 14 days after the order for relief or the filing of a
+/// consent to the petition.
+deadline involuntary-chapter11-affidavit-period: 14.days after OrderForReliefEntered() counted_by frcp6 cite "S.D.N.Y. LBR 1007-2(c)"
+{
+  forum frcp
+}
+
+/// LBR 2007.2-1: counsel for a health care business debtor schedules a case
+/// conference to occur no later than 14 days after the petition date.
+deadline health-care-conference-period: 14.days after PetitionFiled() counted_by frcp6 cite "S.D.N.Y. LBR 2007.2-1"
+{
+  forum frcp
+}
+
+/// LBR 2016-2, 5009-1(a): unless the court orders otherwise, an application
+/// for compensation in a chapter 7 case is filed and served not later than
+/// 21 days before the hearing on the trustee's final account.
+deadline final-compensation-application-period: 21.days before FinalAccountHearingScheduled() counted_by frcp6 cite "S.D.N.Y. LBR 2016-2"
+{
+  forum frcp
+}
+
+/// LBR 2016-2: the United States Trustee files any objection to the
+/// application at least 2 days before the hearing.
+deadline final-compensation-objection-period: 2.days before FinalAccountHearingScheduled() counted_by frcp6 cite "S.D.N.Y. LBR 2016-2"
+{
+  forum frcp
+}
+
+/// LBR 3018-1(a): at least 7 days before the confirmation hearing on a
+/// chapter 9 or 11 plan, the proponent or the balloting agent certifies the
+/// vote in writing.
+deadline vote-certification-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frcp6 cite "S.D.N.Y. LBR 3018-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 3018-1(b): the tabulator notifies a holder whose election is
+/// ineffective at least 7 days before the confirmation hearing.
+deadline ineffective-election-notice-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frcp6 cite "S.D.N.Y. LBR 3018-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3020-1: unless the court orders otherwise, objections to confirmation
+/// of a chapter 9 or 11 plan are filed not later than 7 days before the
+/// first date set for the hearing.
+deadline chapter11-confirmation-objection-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frcp6 cite "S.D.N.Y. LBR 3020-1"
+{
+  forum frcp
+}
+
+/// LBR 3021-1(a): within 14 days after the order confirming a chapter 11
+/// plan, the proponent submits on presentment a proposed order with a
+/// timetable for consummation.
+deadline consummation-timetable-period: 14.days after PlanConfirmed() counted_by frcp6 cite "S.D.N.Y. LBR 3021-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 3022-1: within 14 days after the estate is fully administered and any
+/// trustee discharged, the debtor, trustee or estate representative files
+/// and serves a closing report.
+deadline closing-report-period: 14.days after EstateFullyAdministered() counted_by frcp6 cite "S.D.N.Y. LBR 3022-1"
+{
+  forum frcp
+}
+
+/// LBR 4001-1.1(b): the lessor may, no later than 14 days after the Clerk's
+/// notice of compliance, consent to receive the check or object to the
+/// debtor's certification; silence is consent.
+deadline lessor-election-period: 14.days after CureComplianceNoticed() counted_by frcp6 cite "S.D.N.Y. LBR 4001-1.1(b)"
+{
+  forum frcp
+}
+
+/// LBR 4001-2(c): the proposed final financing or cash collateral order,
+/// with a redline against the interim order, is filed no later than three
+/// calendar days before the objection deadline.
+deadline final-order-redline-period: 3.days before FinalOrderObjectionDeadline() counted_by frcp6 cite "S.D.N.Y. LBR 4001-2(c)"
+{
+  forum frcp
+}
+
+/// LBR 4002-1(b)(2): a debtor's objection within 7 days of service of a
+/// § 521(i)(2) dismissal request is treated as a request for a hearing.
+deadline dismissal-request-objection-period: 7.days after DismissalRequestServed() counted_by frcp6 cite "S.D.N.Y. LBR 4002-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 4003-1(b): an added creditor has 30 days from service of the
+/// amendment to object to the property claimed as exempt.
+deadline added-creditor-exemption-objection-period: 30.days after CreditorAddedToSchedulesServed() counted_by frcp6 cite "S.D.N.Y. LBR 4003-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 5005-3(b): a filer whose fees are not paid within four days of the
+/// date incurred is locked out of CM/ECF until payment.
+deadline filing-fee-period: 4.days after FilingFeeIncurred() counted_by frcp6 cite "S.D.N.Y. LBR 5005-3(b)"
+{
+  forum frcp
+}
+
+/// LBR 6004-1(a): a trustee may sell estate property it reasonably believes
+/// worth no more than $10,000 in aggregate on 7 days' written notice.
+deadline small-sale-notice-period: 7.days before SmallSaleDate() counted_by frcp6 cite "S.D.N.Y. LBR 6004-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 6004-1(e): the auctioneer pays the gross proceeds less expenses to
+/// the trustee or debtor in possession no later than 14 days after
+/// receiving them.
+deadline auction-proceeds-period: 14.days after AuctionProceedsReceived() counted_by frcp6 cite "S.D.N.Y. LBR 6004-1(e)"
+{
+  forum frcp
+}
+
+/// LBR 6004-1(f): unless the court orders otherwise, within 21 days after the
+/// last date of the auction, the auctioneer files its report.
+deadline auction-report-period: 21.days after AuctionConcluded() counted_by frcp6 cite "S.D.N.Y. LBR 6004-1(f)"
+{
+  forum frcp
+}
+
+/// LBR 6004-1(f): if not all proceeds were received by then, a supplemental
+/// report within 14 days after all are received.
+deadline auction-supplemental-report-period: 14.days after AllAuctionProceedsReceived() counted_by frcp6 cite "S.D.N.Y. LBR 6004-1(f)"
+{
+  forum frcp
+}
+
+/// LBR 7033-1(c): contention interrogatories may be served at the conclusion
+/// of a party's discovery and at least 30 days before the discovery
+/// cut-off.
+deadline contention-interrogatory-period: 30.days before DiscoveryCutoff() counted_by frcp6 cite "S.D.N.Y. LBR 7033-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 7033-1(f)(4): documents referred to in answers to interrogatories are
+/// made available within 14 days after service of the answers, or on an
+/// agreed date.
+deadline records-inspection-period: 14.days after InterrogatoryAnswersServed() counted_by frcp6 cite "S.D.N.Y. LBR 7033-1(f)"
+{
+  forum frcp
+}
+
+/// LBR 9006-1(a): unless the court orders otherwise, discovery motion
+/// papers are served at least 7 days before the return date.
+deadline discovery-motion-service-period: 7.days before ReturnDate() counted_by frcp6 cite "S.D.N.Y. LBR 9006-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 9006-1(a): answering papers to a discovery motion are received not
+/// later than 3 days before the return date.
+deadline discovery-answering-papers-period: 3.days before ReturnDate() counted_by frcp6 cite "S.D.N.Y. LBR 9006-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 9006-1(c): all other motion papers are served at least 14 days
+/// before the return date.
+deadline motion-service-period: 14.days before ReturnDate() counted_by frcp6 cite "S.D.N.Y. LBR 9006-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 9006-1(c): answering papers are received not later than 7 days
+/// before the return date.
+deadline answering-papers-period: 7.days before ReturnDate() counted_by frcp6 cite "S.D.N.Y. LBR 9006-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 9006-1(c): reply papers are received not later than 4:00 p.m. three
+/// days before the return date, or by any agenda deadline a case
+/// management order sets.
+deadline reply-papers-period: 3.days before ReturnDate() counted_by frcp6 cite "S.D.N.Y. LBR 9006-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 9006-1(d): unless the court orders otherwise, motions and answering
+/// papers are filed not later than one day following service.
+deadline papers-filing-period: 1.days after PapersServed() counted_by frcp6 cite "S.D.N.Y. LBR 9006-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 9013-2(c): a written objection to an order noticed for presentment,
+/// with proof of service, is filed at least 3 days before the presentment
+/// date.
+deadline presentment-objection-period: 3.days before PresentmentDate() counted_by frcp6 cite "S.D.N.Y. LBR 9013-2(c)"
+{
+  forum frcp
+}
+
+/// LBR 9015-1: a statement of consent to a jury trial before a bankruptcy
+/// judge is filed not later than 14 days after service of the last pleading
+/// directed to the issue demanded.
+deadline jury-consent-period: 14.days after LastPleadingServed() counted_by frcp6 cite "S.D.N.Y. LBR 9015-1"
+{
+  forum frcp
+}
+
+/// LBR 9023-1(a): a motion for reargument is served within 14 days after the
+/// entry of the order determining the original motion, or of the judgment.
+deadline reargument-period: 14.days after MotionOrderEntered() counted_by frcp6 cite "S.D.N.Y. LBR 9023-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 9037-1(e): unless ordered otherwise, the party seeking redaction
+/// files a correctly redacted document or proof of claim within 21 days of
+/// the granting of the motion.
+deadline redacted-filing-period: 21.days after RedactionGranted() counted_by frcp6 cite "S.D.N.Y. LBR 9037-1(e)"
+{
+  forum frcp
+}
+
+/// LBR 9072-1(b): if an appeal has been taken, the responsible party removes
+/// its filed exhibits within 30 days after the record on appeal is returned
+/// to the Clerk.
+deadline exhibit-removal-period: 30.days after RecordReturned() counted_by frcp6 cite "S.D.N.Y. LBR 9072-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 9074-1: a party directed to submit or settle an order, judgment or
+/// decree delivers it to chambers within 14 days of the court's ruling.
+deadline proposed-order-period: 14.days after OrderDirected() counted_by frcp6 cite "S.D.N.Y. LBR 9074-1"
+{
+  forum frcp
+}
+
+/// LBR 9078-1: unless the court orders otherwise, a party serving a pleading
+/// or other document files proof of service by the earlier of 3 days after
+/// service and the hearing date.
+deadline proof-of-service-period: 3.days after DocumentServed() counted_by frcp6 cite "S.D.N.Y. LBR 9078-1"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion served and filed" by applicant cite "S.D.N.Y. LBR 9006-1(c)"
+{
+  note "Unless the court orders otherwise, motion papers are served at least 14 days before the return date (7 for discovery motions; a motion governed by FRBP 2002 on that rule's time) and filed not later than the day after service (LBR 9006-1(a)-(d)); proof of service is filed within 3 days of service (LBR 9078-1). Relief may instead be sought on presentment (LBR 9013-2). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-answer "Answering papers served" -> answered {
+    authority cite "S.D.N.Y. LBR 9006-1(c)"
+  }
+  edge-motion-filed-unopposed "No answering papers; matter heard or decided on the papers" -> ruling {
+    authority cite "S.D.N.Y. LBR 9006-1(c)"
+  }
+}
+
+state answered: "Answering papers served" by opponent cite "S.D.N.Y. LBR 9006-1(c)"
+{
+  note "Answering papers are received not later than 7 days before the return date and reply papers by 4:00 p.m. three days before it; untimely papers may be rejected (LBR 9006-1(c))."
+  edge-answered-hearing "Hearing held" -> ruling { authority cite "S.D.N.Y. LBR 9006-1(c)" }
+}
+
+decision ruling: "Motion decided" by court cite "S.D.N.Y. LBR 9074-1"
+{
+  note "A party directed to submit or settle an order, judgment or decree delivers it within 14 days of the ruling (LBR 9074-1); reargument is served within 14 days after the order's entry (LBR 9023-1(a))."
+  edge-ruling-granted "Granted" -> decided { authority cite "S.D.N.Y. LBR 9074-1" }
+  edge-ruling-denied "Denied" -> decided { authority cite "S.D.N.Y. LBR 9023-1(a)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "S.D.N.Y. LBR 1001-1"
+{
+  note "The Local Bankruptcy Rules apply to all cases in the district governed by the Bankruptcy Code (LBR 1001-1(b))."
+}

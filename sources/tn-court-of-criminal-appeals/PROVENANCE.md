@@ -84,3 +84,13 @@
 - Original: `tn-court-of-criminal-appeals/original/tncourts-trap/courts_rules-appellate-procedure_rules_rules-appellate-procedure-rules_rule-form-1-notice-appeal.html` as served (sha256 8b9e2fc08c2316bd7937a92d16a9c1d98cb18f9784d0ddeea6fbbdafc2da8355).
 - Original: `tn-court-of-criminal-appeals/original/tncourts-trap/courts_rules-appellate-procedure_rules_rules-appellate-procedure-rules_rule-form-2-petition-direct.html` as served (sha256 0a600200e5cffa3d0f93cde4f230f5ec6b63971e433c7e0cd199aebfbdc4d5b1).
 - Extraction sha256 faad0335d4432dd6514ec1c732578cc1397c7418bab1751ae3295a982c2adec4.
+
+### `tn-court-of-criminal-appeals/tn-cca-rules-2026-10-28-sectioned.txt` — Rules of the Tennessee Court of Criminal Appeals, sectioned
+- Derived in the pod (lg-gddt.16) from `tn-court-of-criminal-appeals/tn-cca-rules-2026-10-28.txt` (extract sha256 0268a6c4679bc2664ccf0ee0d3e3592d2d346acf15098e8962edea63fe1245d5); nothing fetched. One `## Tenn. Ct. Crim. App. R. <n>` line is inserted right after each page's own `## rule <n> ...` heading: 22 markers, Rules 1 through 22. Rule text was not edited: deleting the marker lines (`sed '/^## Tenn\. Ct\. Crim\. App\. R\. /d'`) restores the extract byte for byte.
+- Edition: as the extract, the rules as in force on the court's pages on 2026-10-28.
+- Sectioned sha256 7961c0732c562a5f5dae5358971a2d285430b9023792cb68cab097067e4a5018 (the `path_sha256` pinned by `lit/tn-court-of-criminal-appeals/Lit.toml`).
+
+### `tn-court-of-criminal-appeals/tn-rap-rule-pages-2026-10-28-sectioned.txt` — Tennessee Rules of Appellate Procedure rule pages, sectioned
+- Derived in the pod (lg-gddt.16) from `tn-court-of-criminal-appeals/tn-rap-rule-pages-2026-10-28.txt` (extract sha256 faad0335d4432dd6514ec1c732578cc1397c7418bab1751ae3295a982c2adec4); nothing fetched. One `## Tenn. R. App. P. <n>` line is inserted right after each rule page's own `## rule <n> ...` heading: 44 markers, Rules 1 through 49 except those vendored in `tn-appellate/tn-rap-cited.txt` (3, 4, 9, 11, 13, 24, 27, 39) and the absent pages; the 2025 and 2026 rules-package pages and the forms are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Tenn\. R\. App\. P\. /d'`) restores the extract byte for byte.
+- Edition: as the extract, each rule page as in force on 2026-10-28.
+- Sectioned sha256 a09bfdc47268c0e6a740939868490d1df2c0cbbcc57e0bfc8af01497ef2027bc (the `path_sha256` pinned by `lit/tn-court-of-criminal-appeals/Lit.toml`).

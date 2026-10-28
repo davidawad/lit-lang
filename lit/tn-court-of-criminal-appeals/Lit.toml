@@ -1,0 +1,60 @@
+# Criminal appeals in the Tennessee Court of Criminal Appeals under the
+# Tennessee Rules of Appellate Procedure and the Rules of the Court of
+# Criminal Appeals, each rule page as in force on the Tennessee courts'
+# pages: Rules 3, 4, 11, 13, 24, 27 and 39 on October 27, 2026
+# (sources/tn-appellate, the text lit/tn-appellate binds), the other
+# appellate rules and the court's own Rules 1-22 on October 28, 2026
+# (sources/tn-court-of-criminal-appeals). Computation of time is Tenn. R.
+# App. P. 21, and lit/core has no Tennessee counting rule or holiday
+# calendar, so the periods are stated in notes, not encoded as counted
+# deadlines. Further review is by permission of the Tennessee Supreme Court
+# (Tenn. R. App. P. 11); federal habeas is lit/habeas.
+[package]
+name = "tn-court-of-criminal-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "tn-court-of-criminal-appeals"
+forum = "tn-court-of-criminal-appeals"
+authority = "StateRule"
+jurisdiction_id = "tennessee"
+title = "Tennessee Court of Criminal Appeals"
+description = "Criminal appeals in the Tennessee Court of Criminal Appeals, as far as the vendored text states: the defendant's and the state's appeals as of right, the 30-day notice of appeal and its waiver in criminal cases, the record and transcript, briefing times and word limits, extensions and late filings, oral argument, the standard for setting aside a finding of guilt, memorandum opinions, rehearing, the application for permission to appeal to the Tennessee Supreme Court and the stay of the mandate."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Tennessee Court of Criminal Appeals"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.tn-rap-cited]
+title = "Tennessee Rules of Appellate Procedure, cited rules (3, 4, 9, 11, 13, 24, 27, 39), each as in force on October 27, 2026"
+url = "https://www.tncourts.gov/courts/court-rules/rules-appellate-procedure"
+path = "sources/tn-appellate/tn-rap-cited.txt"
+path_sha256 = "e200af46ea7e877b2e4f782d147c7534334b175009b4860470189b36b7a3895d"
+as_of = "2026-10-27"
+cite_prefixes = ["Tenn. R. App. P."]
+section_heading = "Tenn. R. App. P. {n}"
+
+[sources.tn-rap-pages]
+title = "Tennessee Rules of Appellate Procedure, the other rule pages, each as in force on October 28, 2026"
+url = "https://www.tncourts.gov/courts/court-rules/rules-appellate-procedure"
+path = "sources/tn-court-of-criminal-appeals/tn-rap-rule-pages-2026-10-28-sectioned.txt"
+path_sha256 = "a09bfdc47268c0e6a740939868490d1df2c0cbbcc57e0bfc8af01497ef2027bc"
+as_of = "2026-10-28"
+cite_prefixes = ["Tenn. R. App. P."]
+section_heading = "Tenn. R. App. P. {n}"
+
+[sources.tn-cca-r]
+title = "Rules of the Court of Criminal Appeals of Tennessee (Rules 1-22), as in force on October 28, 2026"
+url = "https://www.tncourts.gov/courts/court-criminal-appeals/rules/court-criminal-appeals-rules"
+path = "sources/tn-court-of-criminal-appeals/tn-cca-rules-2026-10-28-sectioned.txt"
+path_sha256 = "7961c0732c562a5f5dae5358971a2d285430b9023792cb68cab097067e4a5018"
+as_of = "2026-10-28"
+cite_prefixes = ["Tenn. Ct. Crim. App. R."]
+section_heading = "Tenn. Ct. Crim. App. R. {n}"

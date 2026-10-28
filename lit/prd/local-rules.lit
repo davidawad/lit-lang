@@ -1,0 +1,289 @@
+module prd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Puerto Rico's own civil periods and limits, computed under
+// FRCP 6(a), which governs a period stated in a local rule. Rules that state
+// no period this layer can count stay out: the Clerk's first extension of
+// time, of at most 30 days (L.Civ.R. 6), which lengthens another period
+// rather than stating one; the Commissioner's 30 days to respond to an EAJA
+// fee request (L.Civ.R. 9(b)(1)), whose trigger the text does not name; the
+// pretrial conference held at least 14 days before trial (L.Civ.R. 16(c)),
+// a court action; the 30 days before the pretrial conference that bound a
+// discovery stipulation (L.Civ.R. 16(i)(2)), a condition, not a filing
+// period; the withdrawal of exhibits within 30 days after the appeals are
+// exhausted (L.Civ.R. 39(b)(3)); the deposit check issued within 5 days
+// (L.Civ.R. 67); attorney admission, discipline and the pro bono program
+// (L.Civ.R. 83A-83L); the mediator's duty to hold the first session within
+// 30 days of the mediation order and the six-month mediation deadline
+// (L.Civ.R. 83J(d), (e)(1)), set by the court and the mediator; and the
+// Admiralty and Criminal Rules. The earlier D.P.R. outline's FRCP flow
+// belongs to lit/frcp and lit/frap; its decisions (Twombly, Iqbal, Celotex,
+// Anderson v. Liberty Lobby) are FRCP authority, and no reporter text is
+// vendored, so they are removed here.
+/// A motion to dismiss, for judgment on the pleadings, for summary judgment
+/// or for injunctive relief, or an appeal from a magistrate judge's
+/// decision: at most 25 pages without prior leave (L.Civ.R. 7(e)).
+limit dispositive-motion { pages <= 25 cite "D.P.R. L. Civ. R. 7(e)" } cite "D.P.R. L. Civ. R. 7(e)"
+
+/// A non-dispositive motion and its memoranda or oppositions: at most 15
+/// pages (L.Civ.R. 7(e)).
+limit non-dispositive-motion {
+  pages <= 15 cite "D.P.R. L. Civ. R. 7(e)"
+} cite "D.P.R. L. Civ. R. 7(e)"
+
+/// A reply, filed with prior leave of court: at most 10 pages (L.Civ.R.
+/// 7(c), 7(e)).
+limit reply { pages <= 10 cite "D.P.R. L. Civ. R. 7(c)" } cite "D.P.R. L. Civ. R. 7(c)"
+/// A surreply, if allowed: at most 10 pages (L.Civ.R. 7(d)).
+limit surreply { pages <= 10 cite "D.P.R. L. Civ. R. 7(d)" } cite "D.P.R. L. Civ. R. 7(d)"
+
+// A Mediation Statement may not exceed "ten (10) double-spaced pages", not
+// including exhibits (L.Civ.R. 83J(e)(2)). The rule states the count in a
+// form the limit check does not read, so the limit stays in this note.
+/// The Clerk issues a notice of defective filing for a petition or
+/// complaint not filed on the required form (L.Civ.R. 3(c)(3)).
+event DefectiveFilingNoticed()
+/// Counsel receives the notice that gives rise to a conflict between court
+/// appearances (L.Civ.R. 3A(c)(4)).
+event ConflictNoticeReceived()
+/// A motion is served (L.Civ.R. 7(b)).
+event MotionServed()
+/// An objection or opposition to a motion is served (L.Civ.R. 7(c)).
+event OppositionServed()
+/// A reply is filed (L.Civ.R. 7(c)).
+event ReplyFiled() paper reply
+/// A surreply is filed (L.Civ.R. 7(d)).
+event SurreplyFiled() paper surreply
+/// A dispositive motion is filed (L.Civ.R. 7(e)).
+event DispositiveMotionFiled() paper dispositive-motion
+/// A non-dispositive motion or opposition is filed (L.Civ.R. 7(e)).
+event NonDispositiveMotionFiled() paper non-dispositive-motion
+/// The judgment remanding a Social Security case to the Commissioner
+/// becomes final (L.Civ.R. 9(b)(1)).
+event RemandJudgmentFinal()
+/// Counsel receives the original, amended or corrected Notice of Award,
+/// whichever is latest (L.Civ.R. 9(b)(2)).
+event NoticeOfAwardReceived()
+/// The Commissioner receives a 42 U.S.C. § 406(b) fee request (L.Civ.R.
+/// 9(b)(2)).
+event SocialSecurityFeeRequestReceived()
+/// The date set for the pretrial conference (L.Civ.R. 16(c)).
+event PretrialConference()
+/// The court approves the final Pretrial Order (L.Civ.R. 16(e)).
+event PretrialOrderApproved()
+/// The date set for trial to commence (L.Civ.R. 51).
+event TrialCommences()
+/// Judgment is entered (L.Civ.R. 54(a)).
+event JudgmentEntered()
+/// A bill of costs is filed (L.Civ.R. 54(a)).
+event BillOfCostsFiled()
+/// The court of appeals issues its mandate (L.Civ.R. 54(a), (b)).
+event MandateIssued()
+/// The time for filing a timely appeal expires (L.Civ.R. 54(b)).
+event AppealTimeExpired()
+/// A party is served with a magistrate judge's order on a non-dispositive
+/// pretrial matter (L.Civ.R. 72(c)).
+event MagistrateOrderServed()
+/// A party is served with a magistrate judge's report of proposed findings
+/// and recommendations (L.Civ.R. 72(d)).
+event MagistrateReportServed()
+/// A judgment concluding a bankruptcy appeal before this court is entered
+/// (L.Civ.R. 83K(d)(2)).
+event BankruptcyAppealJudgmentEntered()
+/// The court gives notice that a case is referred to mediation (L.Civ.R.
+/// 83J(c)(4)(A)).
+event MediationReferralNoticed()
+/// A party learns of a mediator's potential conflict of interest or alleged
+/// misconduct (L.Civ.R. 83J(c)(7)).
+event MediatorConcernLearned()
+/// The court issues the mediation order (L.Civ.R. 83J(d)).
+event MediationOrderIssued()
+/// The first mediation session (L.Civ.R. 83J(e)(2)).
+event FirstMediationSession()
+/// A Mediation Statement is submitted (L.Civ.R. 83J(e)(2)).
+event MediationStatementSubmitted()
+
+/// L.Civ.R. 3(c)(3): a petition not filed on the appropriate form must be
+/// corrected within 30 days from the notice of defective filing, or the case
+/// is submitted for final disposition; the statute of limitations is tolled
+/// during that period.
+deadline form-correction-period: 30.days after DefectiveFilingNoticed() counted_by frcp6 cite "D.P.R. L. Civ. R. 3(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 3A(c)(4)(b): when court appearances conflict, counsel notify
+/// each judge in writing not later than seven days after receipt of the
+/// notice giving rise to the conflict.
+deadline calendar-conflict-notice-period: 7.days after ConflictNoticeReceived() counted_by frcp6 cite "D.P.R. L. Civ. R. 3A(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 7(b): unless the opposing party files a written opposition
+/// within 14 days after service of a motion, it is deemed to have waived
+/// any objection. Summary judgment practice follows the same period unless
+/// the court orders otherwise (L.Civ.R. 56(a)).
+deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "D.P.R. L. Civ. R. 7(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 7(c): with prior leave of court, the movant may file a reply
+/// within seven days of service of the objection, confined to new matters
+/// raised in it.
+deadline reply-period: 7.days after OppositionServed() counted_by frcp6 cite "D.P.R. L. Civ. R. 7(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 9(b)(1): a party seeking fees under the Equal Access to Justice
+/// Act, 28 U.S.C. § 2412, files its request within 30 days after the
+/// judgment remanding the case to the Commissioner becomes final; a late
+/// request is denied absent good cause (L.Civ.R. 9(b)(3)).
+deadline eaja-fee-request-period: 30.days after RemandJudgmentFinal() counted_by frcp6 cite "D.P.R. L. Civ. R. 9(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 9(b)(2): a party seeking fees under 42 U.S.C. § 406(b) files
+/// its request within 14 days after counsel's receipt of the latest Notice
+/// of Award.
+deadline social-security-fee-request-period: 14.days after NoticeOfAwardReceived() counted_by frcp6 cite "D.P.R. L. Civ. R. 9(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 9(b)(2): the Commissioner responds to a 42 U.S.C. § 406(b) fee
+/// request within 30 days after receiving it.
+deadline social-security-fee-response-period: 30.days after SocialSecurityFeeRequestReceived() counted_by frcp6 cite "D.P.R. L. Civ. R. 9(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16(c): at least 14 days before the pretrial conference, at
+/// plaintiff's counsel's initiative, counsel for each party meet to prepare
+/// the proposed Pretrial Order.
+deadline pretrial-meeting-period: 14.days before PretrialConference() counted_by frcp6 cite "D.P.R. L. Civ. R. 16(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16(c): the proposed Pretrial Order is filed at least seven days
+/// before the pretrial conference.
+deadline proposed-pretrial-order-period: 7.days before PretrialConference() counted_by frcp6 cite "D.P.R. L. Civ. R. 16(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 16(e): unless otherwise ordered, an objection to the final
+/// Pretrial Order is made within 14 days after court approval.
+deadline pretrial-order-objection-period: 14.days after PretrialOrderApproved() counted_by frcp6 cite "D.P.R. L. Civ. R. 16(e)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 51: each party files proposed jury instructions and voir dire
+/// questions at least seven days before trial commences, unless the court
+/// orders otherwise.
+deadline jury-instructions-period: 7.days before TrialCommences() counted_by frcp6 cite "D.P.R. L. Civ. R. 51"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 54(a): bills of costs, with supporting memoranda, are filed
+/// within 14 days of the entry of judgment.
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "D.P.R. L. Civ. R. 54(a)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 54(a): unless the opposing party files a written objection with
+/// a memorandum of law within 14 days after the bill of costs is filed, it
+/// waives objection and the clerk taxes the costs properly claimed.
+deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "D.P.R. L. Civ. R. 54(a)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 54(a): where an appeal is pending, the court may deny costs
+/// without prejudice to refiling within 14 days after the mandate issues.
+deadline costs-refiling-period: 14.days after MandateIssued() counted_by frcp6 cite "D.P.R. L. Civ. R. 54(a)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 54(b): in a case with contracted fees, or in which no notice of
+/// appeal has been filed, the application for attorneys' fees is filed
+/// within 14 days of the expiration of the time for a timely appeal.
+deadline fee-application-period: 14.days after AppealTimeExpired() counted_by frcp6 cite "D.P.R. L. Civ. R. 54(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 54(b): in all other cases the application for fees is filed
+/// within 14 days after the mandate issues; an application filed before the
+/// final disposition of an appeal has no effect.
+deadline post-mandate-fee-application-period: 14.days after MandateIssued() counted_by frcp6 cite "D.P.R. L. Civ. R. 54(b)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 72(c): a party appeals a magistrate judge's determination of a
+/// non-dispositive pretrial matter within 14 days after being served with
+/// the order, unless the magistrate judge or a district judge prescribes a
+/// different time.
+deadline magistrate-order-appeal-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "D.P.R. L. Civ. R. 72(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 72(d): a party objects to a magistrate judge's report of
+/// proposed findings and recommendations within 14 days after being served
+/// with a copy.
+deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6 cite "D.P.R. L. Civ. R. 72(d)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 83J(c)(4)(A): the parties notify the court of the mediator they
+/// selected, and file a written agreement with the mediator, within 14 days
+/// of the court's notice of referral to mediation; otherwise the court
+/// selects one (L.Civ.R. 83J(c)(4)(B)).
+deadline mediator-selection-period: 14.days after MediationReferralNoticed() counted_by frcp6 cite "D.P.R. L. Civ. R. 83J(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 83J(c)(7)(A)-(B): a party raises a mediator's conflict of
+/// interest or misconduct with the court in writing within 14 days of
+/// learning of it, or the objection is waived.
+deadline mediator-objection-period: 14.days after MediatorConcernLearned() counted_by frcp6 cite "D.P.R. L. Civ. R. 83J(c)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 83J(d): a party objects for good cause to court-ordered
+/// mediation by a written request for reconsideration within 14 days after
+/// the mediation order issues.
+deadline mediation-reconsideration-period: 14.days after MediationOrderIssued() counted_by frcp6 cite "D.P.R. L. Civ. R. 83J(d)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 83J(e)(2): at least seven days before the first mediation
+/// session, the parties submit their pleadings, motions and Mediation
+/// Statement to the mediator.
+deadline mediation-submission-period: 7.days before FirstMediationSession() counted_by frcp6 cite "D.P.R. L. Civ. R. 83J(e)"
+{
+  forum frcp
+}
+
+/// L.Civ.R. 83K(d)(2): the parties to a bankruptcy appeal heard by this
+/// court notify the bankruptcy court of the judgment concluding the appeal
+/// within 30 days of its entry.
+deadline bankruptcy-appeal-judgment-notice-period: 30.days after BankruptcyAppealJudgmentEntered() counted_by frcp6 cite "D.P.R. L. Civ. R. 83K(d)"
+{
+  forum frcp
+}

@@ -16,3 +16,9 @@
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 b615fdbfc4ae444bc33993764cedc76bc91b5fe61424d5666c2e426b41c60c42. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `dpr/original/dpr-order-2025-10-17-lcvr-83a.pdf` as served (sha256 71d9388f5b85e87f63172d745e5bb9a2c7934a6cd1b2e20a5a444778ebb3b932); extraction sha256 b615fdbfc4ae444bc33993764cedc76bc91b5fe61424d5666c2e426b41c60c42.
+
+### `dpr/dpr-local-rules-2024-10-16-sectioned.txt` — D.P.R. Local Rules, civil rules sectioned
+
+- Derived in the pod (lg-f3q8.25) from `dpr/dpr-local-rules-2024-10-16.txt` (extract sha256 a32ae1fdfaf10bba8cbbb2f4e9645122b197805ea8cf019030b6bfb27be0ae1a); nothing fetched. One `## Rule <n>` line is inserted right after each Local Civil Rule's own body heading line `RULE <n>`: 46 markers, Rule 1 through Rule 83M. The table of contents, the Admiralty Rules and the Criminal Rules are unmarked. Rule text was not edited: deleting the marker lines (`## Rule <n>` plus its newline) restores the extract byte for byte.
+- Edition: as the extract, the Local Rules with amendments through October 16, 2024.
+- Sectioned sha256 de899cedeabd0acaf69fd75bce7eecdccba923c8a175c0608bddab6df1b72a1a (the `path_sha256` pinned by `lit/prd/Lit.toml`).

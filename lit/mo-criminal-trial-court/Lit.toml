@@ -1,0 +1,43 @@
+# Criminal prosecutions in the Missouri circuit courts. The vendored text
+# is a PARTIAL set (sources/mo-criminal-trial-court): only the speedy
+# trial statute, RSMo 545.780, as the Revisor of Statutes serves it
+# ("Effective - 28 Aug 1986"; the page states no edition date, CURRENCY
+# UNCONFIRMED). The Missouri Supreme Court Rules of Criminal Procedure
+# (Rules 19-37) and the criminal appeal rules are not vendored: the
+# courts.mo.gov host refused every fetch (PROVENANCE). The package
+# therefore keeps the procedure's structure with every cite a hole: those
+# naming a rule topic carry no value, and the RSMo 545.780 cites carry the
+# statute's words, unverified. The package runs from the statute's stated
+# effective date. Postconviction relief and federal habeas (lit/habeas)
+# are not modelled.
+[package]
+name = "mo-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "mo-criminal-trial-court"
+forum = "mo-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "missouri"
+title = "Missouri Circuit Courts, criminal"
+description = "Criminal prosecutions in the Missouri circuit courts, every cite a hole: the Missouri Supreme Court Rules of Criminal Procedure and criminal appeal rules are not vendored (PARTIAL set), and the one vendored text, the speedy trial statute RSMo 545.780, is CURRENCY UNCONFIRMED. The structure runs from arrest through the request for a speedy trial, pretrial motions, plea or trial, post-trial motions, sentencing and appeal."
+in_force = "1986-08-28"
+known_at = "2026-10-28"
+unknown_before = "1986-08-28"
+jurisdiction = "Missouri circuit courts (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.rsmo-545-780]
+title = "Revised Statutes of Missouri § 545.780, Speedy trial (Revisor of Statutes; effective 28 Aug 1986; PARTIAL set, CURRENCY UNCONFIRMED)"
+url = "https://revisor.mo.gov/main/OneSection.aspx?section=545.780"
+path = "sources/mo-criminal-trial-court/mo-rsmo-545-780-speedy-trial.txt"
+path_sha256 = "253568235ac917eb3cd67275805c953e0e4d469bc71534585fd3c1f583f1d2ca"
+as_of = "1986-08-28"
+cite_prefixes = ["RSMo"]
+section_heading = "RSMo {n} Speedy trial"

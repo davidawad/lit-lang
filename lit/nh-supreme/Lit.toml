@@ -1,0 +1,40 @@
+# A civil appeal to the New Hampshire Supreme Court under the Rules of the
+# Supreme Court (sources/nh-supreme, as published on 2026-10-27).
+# Computation of time is Sup. Ct. R. 27(1): the last day of a period that
+# falls on a Saturday, Sunday, legal holiday or other day the clerk's
+# office is closed runs to the end of the next day that is none of them,
+# and core has no New Hampshire holiday or closure calendar, so the rules'
+# periods are stated in notes, not encoded as counted deadlines. A civil
+# action in the Superior Court is lit/nh-superior-civil.
+[package]
+name = "nh-supreme-court-civil-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "nh-supreme-court-civil-appeals"
+forum = "nh-supreme"
+authority = "StateRule"
+jurisdiction_id = "new-hampshire"
+title = "New Hampshire Supreme Court, civil appeals"
+description = "A civil appeal from a trial court decision on the merits to the New Hampshire Supreme Court under the Rules of the Supreme Court, as far as the vendored text states: notice of appeal, acceptance, scheduling and the record, briefing, oral argument or submission, decision, rehearing and mandate."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "New Hampshire Supreme Court (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.nh-sup-r]
+title = "Rules of the Supreme Court of the State of New Hampshire (as published on 2026-10-27)"
+url = "https://www.courts.nh.gov/rules-supreme-court-state-new-hampshire"
+path = "sources/nh-supreme/supreme-court-rules-sectioned.txt"
+path_sha256 = "e948076e1ebf4faea0ae9b3ac30a2fffad45f759c3617388c49a9890699c54a7"
+sha256 = "5407d14b908cd19b3bec97795f9bd9ec9437536d47ec7755df5ce4d372ccf2e9"
+as_of = "2026-10-27"
+cite_prefixes = ["N.H. Sup. Ct. R."]
+section_heading = "Rule {n}"

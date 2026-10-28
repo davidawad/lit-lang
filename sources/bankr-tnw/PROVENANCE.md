@@ -30,3 +30,10 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 d7662632fbbd2044264a61e0e6c70cb8d3e2c06ce692f66d447a629439ca79a5. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-tnw/original/tnw-lbr-3011-1-new.pdf` as served (sha256 5ee06fd011aee7a42d1cb70b8478b19cdd75b2d0da6d7a0cb62b8b46bfc9472d); extraction sha256 d7662632fbbd2044264a61e0e6c70cb8d3e2c06ce692f66d447a629439ca79a5.
+
+### `bankr-tnw/tnw-local-rules-2026-09-24-sectioned.txt` — W.D. Tenn. Local Bankruptcy Rules, sectioned
+
+- Derived in the pod (lg-u561.19) from `bankr-tnw/tnw-local-rules-2026-09-24.txt` (extract sha256 09a0cee04ecca61cc9d64d6bc9d4f61a26457530cfccb9e7ccb20b7e92964dcf); nothing fetched. One `## Rule <n>` line is inserted before each rule's own centered heading line in the body (a line holding only `TNWB LBR <n>`, `TNWB LBR 1001-1` through `TNWB LBR 9074-1`, including the headings that begin with a form feed and the new rules 2016-1 and 3011-1 the table of contents does not list; 32 sections); the title page and table of contents (extract lines 1-74) are unmarked, as is a cross-reference line beginning `TNWB LBR 9074-1 for`. Rule text was not edited: deleting the marker lines (`sed '/^## /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-tnw/tnw-local-rules-2026-09-24.txt`, https://www.tnwb.uscourts.gov/PDFs/BK/LocalRules.9.24.26.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
+- Edition: as the extract, the Local Rules effective September 24, 2026.
+- Sectioned sha256 67d6a06f70119954af6c8379c900ffe394c84d41780473910f240ec4b30fd25c (the `path_sha256` pinned by `lit/bankr-tnw/Lit.toml` for source `tnwb-lbr`).

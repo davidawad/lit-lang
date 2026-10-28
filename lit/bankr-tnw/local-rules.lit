@@ -1,0 +1,224 @@
+module bankr-tnw-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, PetitionFiled }
+
+// The Bankr. W.D. Tenn. court's own periods and page limit, counted under
+// FRBP 9006(a), the FRCP 6(a) method: the Local Rules effective September
+// 24, 2026, which already include TNWB LBR 2016-1 and 3011-1 as adopted by
+// General Order 26-0002 effective the same day (the order and the two new
+// rules are vendored separately and their text matches the consolidation),
+// so there is one layer. The FRBP periods (schedules, claims, the chapter
+// 13 plan, discharge, dischargeability, exemptions, the adversary answer,
+// appeals, including the 14-day appeal of an order on unclaimed funds, TNWB
+// LBR 3011-1) are lit/frbp's and are not declared again. Stated in the
+// rules but not declared: calendar-day deadlines (each later monthly
+// operating report by the 15th of the following month, 2081-1(c),
+// 2082-1(a)(3), 2083-1(a)(2)); hearing settings the Courtroom Deputy fixes
+// (objection dates in chapters 7, 11 and 12, 9013-1(b); a chapter 13
+// hearing on not less than 21 days' notice, 9013-1(c)); the mediator's own
+// scheduling on not less than 21 days' notice (9019-1(d)(2)); the ten days
+// counsel give opposing parties to approve an order before certifying
+// (9074-1(e)(2)), a condition on the certificate; the three business days
+// of that certificate; and an extension motion for the final decree due
+// within the same 60 days as the motion (2081-1(k)(2)(C)).
+/// A memorandum in an adversary proceeding, without prior approval of the
+/// court (TNWB LBR 7016-1(a)).
+limit adversary-memorandum { pages <= 25 cite "TNWB LBR 7016-1(a)" } cite "TNWB LBR 7016-1(a)"
+
+/// The Order Approving Disclosure Statement, with notice of the
+/// confirmation hearing, is entered (TNWB LBR 2081-1(g)).
+event DisclosureStatementApproved()
+/// The original chapter 11 confirmation hearing is scheduled to be held
+/// (TNWB LBR 2081-1(i)).
+event Chapter11ConfirmationHearingScheduled()
+/// The court rules that a chapter 11 plan may be confirmed (TNWB LBR
+/// 2081-1(j)(2)).
+event ConfirmationRuling()
+/// The order confirming a chapter 11 plan is entered (TNWB LBR
+/// 2081-1(k)(1)).
+event Chapter11PlanConfirmed()
+/// A chapter 11 plan is substantially consummated, § 1101(2), or an
+/// individual chapter 11 debtor completes all plan payments (TNWB LBR
+/// 2081-1(k)(2)).
+event SubstantialConsummation()
+/// A chapter 12 debtor files a tax return due during the case with the
+/// taxing authority (TNWB LBR 2082-1(d)).
+event Chapter12ReturnFiled()
+/// The chapter 13 confirmation hearing is scheduled to be held (TNWB LBR
+/// 2083-1(b)).
+event Chapter13ConfirmationHearingScheduled()
+/// An Application for Payment of Unclaimed Funds is filed and served (TNWB
+/// LBR 3011-1).
+event UnclaimedFundsApplicationServed()
+/// A motion for an order that no stay is in effect under §§ 362(b) or
+/// 362(c)(4) is served (TNWB LBR 4001-2).
+event NoStayMotionServed()
+/// A hearing at which a memorandum citing an opinion not on Westlaw or
+/// Lexis is used is scheduled to be held (TNWB LBR 7016-1(b)).
+event AdversaryHearingScheduled()
+/// The parties report to the mediator an agreement in principle reached
+/// after assignment to mediation (TNWB LBR 9019-1(d)).
+event AgreementInPrincipleReported()
+/// A contested matter or adversary proceeding is finally determined (TNWB
+/// LBR 9072-1).
+event ExhibitMatterDetermined()
+/// The chapter 12 or 13 trustee receives a proposed order for signature
+/// (TNWB LBR 9074-1(b)).
+event TrusteeReceivedProposedOrder()
+/// The court announces an oral ruling and directs a party to prepare a
+/// proposed order (TNWB LBR 9074-1(c)).
+event BenchRulingAnnounced()
+/// A memorandum is filed in an adversary proceeding (TNWB LBR 7016-1(a)).
+event AdversaryMemorandumFiled() paper adversary-memorandum
+
+/// TNWB LBR 2081-1(c): unless the court orders otherwise, the first chapter
+/// 11 monthly financial report is filed 30 days after the case is
+/// commenced.
+deadline chapter11-first-report-period: 30.days after PetitionFiled() counted_by frcp6 cite "TNWB LBR 2081-1(c)"
+{
+  forum frcp
+}
+
+/// TNWB LBR 2081-1(g): within 7 days after entry of the Order Approving
+/// Disclosure Statement, the plan proponent sends the ballot with the plan,
+/// disclosure statement and order.
+deadline ballot-mailing-period: 7.days after DisclosureStatementApproved() counted_by frcp6 cite "TNWB LBR 2081-1(g)"
+{
+  forum frcp
+}
+
+/// TNWB LBR 2081-1(i): not less than 7 days before the original
+/// confirmation hearing, the plan proponent files and serves the tally of
+/// ballots (Local Form 019F).
+deadline ballot-tally-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frcp6 cite "TNWB LBR 2081-1(i)"
+{
+  forum frcp
+}
+
+/// TNWB LBR 2081-1(j)(2): within 14 days of the court's ruling that the
+/// plan may be confirmed, the proponent prepares and presents the
+/// confirmation order.
+deadline confirmation-order-period: 14.days after ConfirmationRuling() counted_by frcp6 cite "TNWB LBR 2081-1(j)"
+{
+  forum frcp
+}
+
+/// TNWB LBR 2081-1(k)(1): within 60 days after entry of the confirmation
+/// order or such other date as the court sets, the plan proponent files and
+/// serves the Final Report (Local Form 015F).
+deadline chapter11-final-report-period: 60.days after Chapter11PlanConfirmed() counted_by frcp6 cite "TNWB LBR 2081-1(k)"
+{
+  forum frcp
+}
+
+/// TNWB LBR 2081-1(k)(2)(A): within 60 days after substantial consummation
+/// (or, for an individual debtor, completion of plan payments), the plan
+/// proponent files a Motion for Final Decree or a statement why it is
+/// premature.
+deadline final-decree-motion-period: 60.days after SubstantialConsummation() counted_by frcp6 cite "TNWB LBR 2081-1(k)"
+{
+  forum frcp
+}
+
+/// TNWB LBR 2082-1(a)(3): unless the court orders otherwise, the first
+/// chapter 12 monthly financial report is filed 30 days after the case is
+/// commenced.
+deadline chapter12-first-report-period: 30.days after PetitionFiled() counted_by frcp6 cite "TNWB LBR 2082-1(a)"
+{
+  forum frcp
+}
+
+/// TNWB LBR 2082-1(b): the completed summary is delivered to the chapter 12
+/// trustee and the United States Trustee at least 7 days before the first
+/// setting of the meeting of creditors.
+deadline chapter12-summary-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "TNWB LBR 2082-1(b)"
+{
+  forum frcp
+}
+
+/// TNWB LBR 2082-1(c): within 14 days after commencement of the case, the
+/// chapter 12 debtor provides the trustee and the United States Trustee
+/// evidence of fire and extended coverage.
+deadline chapter12-insurance-period: 14.days after PetitionFiled() counted_by frcp6 cite "TNWB LBR 2082-1(c)"
+{
+  forum frcp
+}
+
+/// TNWB LBR 2082-1(d): the chapter 12 debtor provides the trustee and the
+/// United States Trustee a copy of each tax return due during the case
+/// within 14 days after it is filed.
+deadline chapter12-tax-return-period: 14.days after Chapter12ReturnFiled() counted_by frcp6 cite "TNWB LBR 2082-1(d)"
+{
+  forum frcp
+}
+
+/// TNWB LBR 2083-1(a)(2): unless the court orders otherwise, the first
+/// chapter 13 business debtor's monthly report is filed 30 days after the
+/// case is commenced.
+deadline chapter13-first-report-period: 30.days after PetitionFiled() counted_by frcp6 cite "TNWB LBR 2083-1(a)"
+{
+  forum frcp
+}
+
+/// TNWB LBR 2083-1(b)(2): a written objection to confirmation of a chapter
+/// 13 plan is filed and served 7 days before the confirmation hearing, or
+/// may be deemed waived.
+deadline chapter13-confirmation-objection-period: 7.days before Chapter13ConfirmationHearingScheduled() counted_by frcp6 cite "TNWB LBR 2083-1(b)"
+{
+  forum frcp
+}
+
+/// TNWB LBR 3011-1: an objection to an Application for Payment of Unclaimed
+/// Funds is filed and served within 21 days after its filing and service;
+/// absent objection the court may order payment.
+deadline unclaimed-funds-objection-period: 21.days after UnclaimedFundsApplicationServed() counted_by frcp6 cite "TNWB LBR 3011-1"
+{
+  forum frcp
+}
+
+/// TNWB LBR 4001-2: an order that no stay is in effect may be signed
+/// without a hearing 14 days after service of the motion if no party in
+/// interest objects.
+deadline no-stay-objection-period: 14.days after NoStayMotionServed() counted_by frcp6 cite "TNWB LBR 4001-2"
+{
+  forum frcp
+}
+
+/// TNWB LBR 7016-1(b): counsel attaches, or provides the court, a copy of a
+/// cited opinion not available on Westlaw or Lexis at least 7 days before
+/// the hearing.
+deadline cited-opinion-copy-period: 7.days before AdversaryHearingScheduled() counted_by frcp6 cite "TNWB LBR 7016-1(b)"
+{
+  forum frcp
+}
+
+/// TNWB LBR 9019-1(d): as soon as practicable but no later than 30 days
+/// after reporting an agreement in principle, the parties confirm to the
+/// mediator that the settlement is finalized, or the mediation conference
+/// goes forward.
+deadline settlement-finalization-period: 30.days after AgreementInPrincipleReported() counted_by frcp6 cite "TNWB LBR 9019-1(d)"
+{
+  forum frcp
+}
+
+/// TNWB LBR 9072-1: after final determination of a contested matter or
+/// adversary proceeding, counsel have 30 days to withdraw exhibits.
+deadline exhibit-withdrawal-period: 30.days after ExhibitMatterDetermined() counted_by frcp6 cite "TNWB LBR 9072-1"
+{
+  forum frcp
+}
+
+/// TNWB LBR 9074-1(b)(1)-(2): the chapter 12 or 13 trustee approves or
+/// disapproves a proposed order within 7 days after receipt.
+deadline trustee-order-review-period: 7.days after TrusteeReceivedProposedOrder() counted_by frcp6 cite "TNWB LBR 9074-1(b)"
+{
+  forum frcp
+}
+
+/// TNWB LBR 9074-1(c): the approved proposed order on a bench ruling is
+/// presented to the court not more than 10 days after the ruling.
+deadline bench-ruling-order-period: 10.days after BenchRulingAnnounced() counted_by frcp6 cite "TNWB LBR 9074-1(c)"
+{
+  forum frcp
+}

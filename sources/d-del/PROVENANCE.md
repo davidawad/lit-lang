@@ -15,3 +15,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 049fe639690eae8dd3b9c46057c9c26f152a935d37fc15fea5cd406103eb3ace. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `d-del/original/ddel-lr-crim-speedy-trial-1987-amended-2011-05-02.pdf` as served (sha256 1f9ba30eb7afcbba8bfda7839b108a81851f8ec8613b509a3e3fe503ff3a63ff); extraction sha256 049fe639690eae8dd3b9c46057c9c26f152a935d37fc15fea5cd406103eb3ace.
+
+### `d-del/local-rules-2026-09-01-sectioned.txt` — D. Del. Local Rules of Civil Practice and Procedure, sectioned
+
+- Derived in the pod (lg-f3q8.73) from `d-del/local-rules-2026-09-01.txt` (extract sha256 5fff80527ba4ae3a38f0e3d377f193d260fa079099e091555e883aab32ae0ca4); nothing fetched. One `## Rule <n>` line is inserted right after each rule's own body heading line `RULE <n>. <title>.` (68 markers, Rule 1.1 through Rule 83.7; the table of contents is unmarked). Rule text was not edited: deleting the marker lines (`## Rule <n>` plus its newline) restores the extract byte for byte.
+- Edition: as the extract, the Local Rules of Civil Practice and Procedure amended effective September 1, 2026.
+- Sectioned sha256 a8ac9b22563275310851fb21a4b43b82788a371e47869c64251ca6c1a837b967 (the `path_sha256` pinned by `lit/ded/Lit.toml`).

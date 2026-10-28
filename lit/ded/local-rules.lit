@@ -1,0 +1,265 @@
+module ded-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Delaware's own civil periods and page limits, computed
+// under FRCP 6(a), which governs a period stated in a local rule (D. Del.
+// LR 7.1.2(b) says so for the motion schedule; LR 5.1(b) deems the Clerk's
+// Office inaccessible under FRCP 6(a)(3) while it is closed for inclement
+// weather). Rules that state no period, or one this layer cannot count,
+// stay out: the 3 months of inaction after which a case may be dismissed
+// for failure to prosecute (LR 41.1), which sets no filing period; the
+// voir dire questions, jury instructions and special verdict forms filed
+// at least 3 business days before the pretrial conference (LR 47.1(a)(2),
+// 51.1(a), (c)) and the juror costs for a case resolved less than 3 full
+// business days before jury selection (LR 54.2), which count business
+// days, a unit FRCP 6(a) does not; the consent orders extending the time
+// to file the record on appeal by not more than 21 days (LR 77.2(a)(6)),
+// which cap an extension rather than set a period; the Clerk's notice to
+// remove exhibits within 30 days (LR 79.1(b)(2)) and the Clerk's 7 days to
+// invest a deposit once the depository's collateral is verified (LR
+// 67.2(c)), which bind the Clerk or counsel's custody, not a filing; the judgment-by-confession procedure (LR 58.1.1,
+// 58.1.2); and attorney discipline (LR 83.6). The 5-page limit on a
+// petition to confirm, vacate or modify an arbitration award (LR
+// 3.3(b)(1)) is stated in a note, not declared. The earlier D. Del.
+// outline's FRCP flow belongs to lit/frcp and lit/frap; its decisions
+// (Twombly, Iqbal, Foman v. Davis, Celotex, Anderson v. Liberty Lobby, Frow
+// v. De La Vega, Catlin, Bowles v. Russell, and in the Third and Fourth
+// Circuits Phillips v. County of Allegheny, Fowler v. UPMC Shadyside,
+// Poulis v. State Farm, Goines and Anderson v. Foundation for Advancement)
+// are FRCP authority, and no reporter text is vendored, so they are removed
+// here.
+/// An opening or answering brief: at most 20 pages, exclusive of any table
+/// of contents or table of citations (LR 7.1.3(a)(4)).
+limit opening-or-answering-brief {
+  pages <= 20 cite "D. Del. LR 7.1.3(a)(4)"
+} cite "D. Del. LR 7.1.3(a)(4)"
+
+/// A reply brief: at most 10 pages, exclusive of any table of contents or
+/// table of citations (LR 7.1.3(a)(4)).
+limit reply-brief { pages <= 10 cite "D. Del. LR 7.1.3(a)(4)" } cite "D. Del. LR 7.1.3(a)(4)"
+/// A motion for reargument and any answer to it: at most 10 pages (LR
+/// 7.1.5(a)).
+limit reargument-paper { pages <= 10 cite "D. Del. LR 7.1.5(a)" } cite "D. Del. LR 7.1.5(a)"
+
+/// A response to a petition or motion to confirm, vacate or modify an
+/// arbitration award under 9 U.S.C. §§ 9-11 is served; the petition or
+/// motion itself may not exceed 5 pages, and the response is due within
+/// the FRCP 12 periods (LR 3.3(b)(1), (c)).
+event ArbitrationResponseServed()
+/// The plaintiff receives the return receipt for process served by mail on
+/// a nonresident defendant under 10 Del. C. § 3104 or § 3113 (LR 4.1(b)).
+event ReturnReceiptReceived()
+/// A motion is deemed served (LR 7.1.2(b)).
+event MotionServed() paper opening-or-answering-brief
+/// The responsive papers to a motion are deemed served (LR 7.1.2(b)).
+event ResponseServed() paper opening-or-answering-brief
+/// A reply brief is served (LR 7.1.4).
+event ReplyBriefServed() paper reply-brief
+/// The Court issues an opinion or decision (LR 7.1.5(a)).
+event OpinionIssued()
+/// A motion for reargument is filed (LR 7.1.5(a)).
+event ReargumentMotionFiled() paper reargument-paper
+/// Another party serves a written request for a statement of the amount
+/// of unliquidated damages claimed (LR 9.4(b)).
+event DamagesStatementRequested()
+/// The date on which the proposed pretrial order is to be filed with the
+/// Court (LR 16.3(d)(1), (2)).
+event PretrialOrderDue()
+/// The pretrial conference is held (LR 16.3(d)(4)).
+event PretrialConferenceHeld()
+/// A deposition under FRCP 30(b)(1) or 30(b)(6) is taken (LR 30.1).
+event DepositionTaken()
+/// The time for appeal expires without an appeal (LR 54.1(a)(1)).
+event AppealTimeExpired()
+/// The mandate of the appellate court issues (LR 54.1(a)(1)).
+event MandateIssued()
+/// A party serves a bill of costs (LR 54.1(a)(3)).
+event BillOfCostsServed()
+/// The Clerk serves the bill of costs as allowed (LR 54.1(a)(4), (d)).
+event CostsTaxedServed()
+/// The Court approves a settlement (LR 54.3(b)).
+event SettlementApproved()
+/// The parties execute a settlement agreement that is not submitted for
+/// Court approval (LR 54.3(b)).
+event SettlementExecuted()
+/// A case transferred or removed to this Court is filed with the Clerk (LR
+/// 81.2, 83.5(e)(2)).
+event TransferredOrRemovedCaseFiled()
+/// The first paper is filed on a party's behalf (LR 83.5(e)(1)).
+event FirstPaperFiled()
+/// A motion to withdraw an appearance is presented (LR 83.7).
+event WithdrawalMotionPresented()
+
+/// LR 3.3(c): in a proceeding to confirm, vacate or modify an arbitration
+/// award, any reply is filed within 7 days of service of a response.
+deadline arbitration-award-reply-period: 7.days after ArbitrationResponseServed() counted_by frcp6 cite "D. Del. LR 3.3(c)"
+{
+  forum frcp
+}
+
+/// LR 4.1(b): the affidavit that a nonresident defendant served by mail
+/// under 10 Del. C. § 3104 or § 3113 accepted or refused the statutory
+/// notice is filed, with the return receipt, within 14 days of the
+/// plaintiff's receipt of the return receipt.
+deadline mailing-affidavit-period: 14.days after ReturnReceiptReceived() counted_by frcp6 cite "D. Del. LR 4.1(b)"
+{
+  forum frcp
+}
+
+/// LR 7.1.2(b): unless otherwise ordered, the response to a motion is filed
+/// within 14 days after the motion is deemed served, calculated under FRCP
+/// 6(a) and the CM/ECF Procedures.
+deadline motion-response-period: 14.days after MotionServed() counted_by frcp6 cite "D. Del. LR 7.1.2(b)"
+{
+  forum frcp
+}
+
+/// LR 7.1.2(b): the moving party may file a reply within 7 days after the
+/// responsive papers are deemed served; no further papers without Court
+/// approval, except citations of subsequent authority.
+deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6 cite "D. Del. LR 7.1.2(b)"
+{
+  forum frcp
+}
+
+/// LR 7.1.4: a written application for oral argument on a motion is made
+/// no later than 7 days after service of a reply brief.
+deadline oral-argument-application-period: 7.days after ReplyBriefServed() counted_by frcp6 cite "D. Del. LR 7.1.4"
+{
+  forum frcp
+}
+
+/// LR 7.1.5(a): a motion for reargument, other than one under FRCP 59(e),
+/// is filed within 14 days after the Court issues its opinion or decision.
+/// Reargument of a Magistrate Judge's FRCP 72 ruling is not permitted (LR
+/// 7.1.5(b)).
+deadline reargument-period: 14.days after OpinionIssued() counted_by frcp6 cite "D. Del. LR 7.1.5(a)"
+{
+  forum frcp
+}
+
+/// LR 7.1.5(a): within 14 days after the filing of a motion for reargument
+/// the opposing party may file a brief answer to each ground; no reply
+/// unless the Court grants one.
+deadline reargument-answer-period: 14.days after ReargumentMotionFiled() counted_by frcp6 cite "D. Del. LR 7.1.5(a)"
+{
+  forum frcp
+}
+
+/// LR 9.4(b): within 14 days after service of another party's written
+/// request, the party pleading unliquidated damages furnishes a written
+/// statement of the amount claimed, not filed unless the Court orders.
+deadline damages-statement-period: 14.days after DamagesStatementRequested() counted_by frcp6 cite "D. Del. LR 9.4(b)"
+{
+  forum frcp
+}
+
+/// LR 16.3(d)(1): unless otherwise ordered or agreed and approved, the
+/// plaintiff provides a draft pretrial order to all other parties no less
+/// than 30 days before the pretrial order is to be filed.
+deadline draft-pretrial-order-period: 30.days before PretrialOrderDue() counted_by frcp6 cite "D. Del. LR 16.3(d)(1)"
+{
+  forum frcp
+}
+
+/// LR 16.3(d)(2): no less than 14 days before the pretrial order is to be
+/// filed, all other parties provide their responses to the plaintiff's
+/// draft.
+deadline pretrial-order-response-period: 14.days before PretrialOrderDue() counted_by frcp6 cite "D. Del. LR 16.3(d)(2)"
+{
+  forum frcp
+}
+
+/// LR 16.3(d)(4): unless otherwise ordered, at least 7 days before the
+/// pretrial conference the plaintiff files an executed copy of the proposed
+/// pretrial order.
+deadline proposed-pretrial-order-period: 7.days before PretrialConferenceHeld() counted_by frcp6 cite "D. Del. LR 16.3(d)(4)"
+{
+  forum frcp
+}
+
+/// LR 30.1: unless ordered or agreed otherwise, reasonable notice of a
+/// deposition under FRCP 30(b)(1) or 30(b)(6) is not less than 10 days.
+deadline deposition-notice-period: 10.days before DepositionTaken() counted_by frcp6 cite "D. Del. LR 30.1"
+{
+  forum frcp
+}
+
+/// LR 54.1(a)(1): unless the Court orders otherwise, the prevailing party
+/// files a bill of costs within 28 days after the time for appeal has
+/// expired, after first meeting and conferring; failure waives costs.
+deadline bill-of-costs-period: 28.days after AppealTimeExpired() counted_by frcp6 cite "D. Del. LR 54.1(a)(1)"
+{
+  forum frcp
+}
+
+/// LR 54.1(a)(1): after an appeal, the bill of costs is filed within 28
+/// days after the issuance of the appellate court's mandate.
+deadline bill-of-costs-after-mandate-period: 28.days after MandateIssued() counted_by frcp6 cite "D. Del. LR 54.1(a)(1)"
+{
+  forum frcp
+}
+
+/// LR 54.1(a)(3): within 14 days after service of a bill of costs, any
+/// other party may serve and file specific objections with detailed
+/// justification.
+deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "D. Del. LR 54.1(a)(3)"
+{
+  forum frcp
+}
+
+/// LR 54.1(d): under FRCP 54(d), the opposing party may move for review of
+/// the Clerk's taxation of costs within 7 days of service.
+deadline costs-review-period: 7.days after CostsTaxedServed() counted_by frcp6 cite "D. Del. LR 54.1(d)"
+{
+  forum frcp
+}
+
+/// LR 54.3(b), (c): an application for attorneys' fees in a settled case is
+/// filed no later than 21 days after the Court approves the settlement,
+/// unless a statute or regulation provides a different period.
+deadline settlement-fees-period: 21.days after SettlementApproved() counted_by frcp6 cite "D. Del. LR 54.3(b)"
+{
+  forum frcp
+}
+
+/// LR 54.3(b), (c): where Court approval is not sought, a motion for fees
+/// is filed no later than 21 days after the parties execute the settlement
+/// agreement.
+deadline unapproved-settlement-fees-period: 21.days after SettlementExecuted() counted_by frcp6 cite "D. Del. LR 54.3(b)"
+{
+  forum frcp
+}
+
+/// LR 81.2: within 45 days of the filing of a transferred or removed case
+/// with the Clerk, the parties submit a statement identifying all pending
+/// matters that require judicial action.
+deadline pending-matters-statement-period: 45.days after TransferredOrRemovedCaseFiled() counted_by frcp6 cite "D. Del. LR 81.2"
+{
+  forum frcp
+}
+
+/// LR 83.5(e)(1): a party not appearing pro se obtains, or has its counsel
+/// associate with, a member of the Bar of this Court within 30 days after
+/// the first paper filed on its behalf.
+deadline delaware-counsel-period: 30.days after FirstPaperFiled() counted_by frcp6 cite "D. Del. LR 83.5(e)"
+{
+  forum frcp
+}
+
+/// LR 83.5(e)(2): in a transferred or removed case, the same 30 days run
+/// from the filing of the case in this Court.
+deadline removed-case-delaware-counsel-period: 30.days after TransferredOrRemovedCaseFiled() counted_by frcp6 cite "D. Del. LR 83.5(e)"
+{
+  forum frcp
+}
+
+/// LR 83.7: unless withdrawal leaves a member of the Bar of this Court as
+/// counsel of record, a motion to withdraw is noticed to each party and
+/// served on the client by registered or certified mail at least 14 days
+/// before it is presented.
+deadline withdrawal-notice-period: 14.days before WithdrawalMotionPresented() counted_by frcp6 cite "D. Del. LR 83.7"
+{
+  forum frcp
+}

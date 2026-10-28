@@ -54,3 +54,14 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 919d4606fc2b25a5f5845e05aaf6dc233109d8144161608b5ff77a13dde8095d. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-ri/original/ri-go-2026-001.pdf` as served (sha256 e69e02ab57deaffc6d0ebf51d8f0768a5f0e4529cf876b2a43d5bdfed9b60753); extraction sha256 919d4606fc2b25a5f5845e05aaf6dc233109d8144161608b5ff77a13dde8095d.
+
+### `bankr-ri/ri-local-rules-2024-12-01-sectioned.txt` — D.R.I. Local Bankruptcy Rules, sectioned
+
+- Derived in the pod (lg-u561.9) from `bankr-ri/ri-local-rules-2024-12-01.txt` (extract sha256 af061b5c55be755545e263c79a21e1a8562d6215932142455b96262ccdb5521b); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (`RULE 1001-1` through `RULE 9074-1`, including `RULE 7016` and `Rule 9006-1`, 105 rules; extract lines 260-5672); the table of contents, the appendices and the forms are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, amended as of December 1, 2024.
+- Sectioned sha256 668edb7e46d1ba41e2f2cbbffb30dc9a44db96ed531b242bf774b56d3f8380ef (the `path_sha256` pinned by `lit/bankr-ri/Lit.toml`).
+
+### `bankr-ri/ri-amendments-2025-12-01-sectioned.txt` — D.R.I. LBR amendments of December 1, 2025, sectioned
+
+- Derived in the pod (lg-u561.9) from `bankr-ri/ri-amendments-2025-12-01.txt` (extract sha256 cfc9176e6e91c30ca2208462e67ebbb8c6948431e98b161bee6ead1d8aa551c3); nothing fetched. One `## December 2025 Rule <n>` line is inserted before each amended rule's heading line (R.I. LBR 1005-1, 3002-1, 3016-1); the forms are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## December 2025 Rule /d'`) restores the extract byte for byte.
+- Sectioned sha256 3e909aa63b1d6daa9013840af06e3f0626259566e4faf99db66ae831d228f883 (the `path_sha256` pinned by `lit/bankr-ri/Lit.toml`).

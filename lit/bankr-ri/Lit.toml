@@ -1,0 +1,103 @@
+# The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the District
+# of Rhode Island over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
+# only the periods and page limits the rules themselves state and
+# re-encodes no FRBP period. It is a base package, not a
+# `kind = "local-rule"` layer: lit/core has no bankruptcy forum family
+# (L2011 for `bankr-ri`), as for lit/bankr-dc. Each period is counted under
+# FRBP 9006(a), the FRCP 6(a) method (core's frcp6).
+#
+# Layers, in date order: the rules as amended December 1, 2024 (the
+# consolidation), then General Orders 2025-001 (June 3, 2025; R.I. LBR
+# 9010-1, no text posted), 2025-002 (July 21, 2025; R.I. LBR 1006-1, 5005-4,
+# 5079-1, clean text vendored), 2025-003 (December 1, 2025; R.I. LBR 1005-1,
+# 3002-1, 3016-1 and forms, clean text vendored) and 2026-001 (February 13,
+# 2026; R.I. LBR 1005-1, 5005-4, "5701-1" and Appendix III, no text
+# posted). A period an order changes or adds takes a dated version from the
+# order's effective date; where the order's text is not posted, that
+# version's cite is a hole (local-rules.lit). The earlier editions are not
+# vendored, so a query before December 1, 2024 is a hole in the corpus.
+[package]
+name = "bankr-ri-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-ri-local-rules"
+forum = "bankr-ri"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the District of Rhode Island: Local Bankruptcy Rules"
+description = "The Bankr. D.R.I. Local Bankruptcy Rules, with General Orders 2025-001 to 2026-001 as dated layers, as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): the seven-day petition documents, entity counsel, filing-fee installments, chapter 11 notices to disputed creditors, added creditors, dismissal for noncompliance, Rule 2004 examinations, professional employment and inventories, chapter 13 business debtors and fees, claims bar dates, supplements and objections, unclaimed funds, chapter 13 plans and confirmation, chapter 11 voting, confirmation and final reports, stay relief, cash collateral and borrowing, rent deposits, attorney addresses, exemptions, defective and late filings, electronic filing, interpreters, adversary jury consent, pretrial and discovery, extended discharge deadlines, expedited motions, sealing, removal, exhibits, proposed orders, the response times of R.I. LBR 1005-1(d), and the motion and reply page limits."
+in_force = "2024-12-01"
+known_at = "2026-10-28"
+unknown_before = "2024-12-01"
+jurisdiction = "U.S. Bankruptcy Court for the District of Rhode Island"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.rib-lbr]
+title = "Local Bankruptcy Rules and Forms of the United States Bankruptcy Court for the District of Rhode Island (amended as of December 1, 2024)"
+url = "https://www.rib.uscourts.gov/sites/default/files/general-ordes/December_1_2024_LBRs.PDF"
+path = "sources/bankr-ri/ri-local-rules-2024-12-01-sectioned.txt"
+path_sha256 = "668edb7e46d1ba41e2f2cbbffb30dc9a44db96ed531b242bf774b56d3f8380ef"
+sha256 = "818a2ed6f5b62969041eea4f5c5c15178e5487fb3ff884b9bab1c04e9a13e5bb"
+as_of = "2024-12-01"
+cite_prefixes = ["R.I. LBR"]
+section_heading = "Rule {n}"
+
+[sources.rib-go-2025-001]
+title = "General Order 2025-001, Amending Local Rules (R.I. LBR 9010-1, effective June 3, 2025)"
+url = "https://www.rib.uscourts.gov/sites/default/files/general-ordes/General%20Order%202025-001.pdf"
+path = "sources/bankr-ri/ri-go-2025-001.txt"
+path_sha256 = "a58ac639f83c481385fa7bf95bbb45ec8971532336779d2fda2e24bfa5040966"
+sha256 = "2580fd4e966acf5fad3575db56f126fa0459f1abf737883c4606286fd2316b5c"
+as_of = "2025-06-03"
+
+[sources.rib-go-2025-002]
+title = "General Order 2025-002, Amending Local Rules (R.I. LBR 1006-1, 5005-4, 5079-1, effective July 21, 2025)"
+url = "https://www.rib.uscourts.gov/sites/default/files/general-ordes/General_Order_25_002.pdf"
+path = "sources/bankr-ri/ri-go-2025-002.txt"
+path_sha256 = "132d7040c4a675eb9c4dc881a94536d08ff991803264c543685bbf480d20c84f"
+sha256 = "577508c2a2b3d99cb5e147f171cb26b1d44c2de926d1e2a6a8dd29490fc3967d"
+as_of = "2025-07-21"
+
+[sources.rib-amendments-2025-07]
+title = "Local Bankruptcy Rule amendments of July 2025, clean copy (General Order 2025-002)"
+url = "https://www.rib.uscourts.gov/sites/default/files/Rules/LBR_Amdmnts_July_2025_Clean_copy.pdf"
+path = "sources/bankr-ri/ri-amendments-2025-07-21.txt"
+path_sha256 = "e9380b876e97929f41f0c0bdca921bb57f79c3c83c200bca7bb216c2a822b6ba"
+sha256 = "dde6f46c55b5b956b84e85b97a69120383f205f5e37974df2ad5eaa8d8bb3eb0"
+as_of = "2025-07-21"
+
+[sources.rib-go-2025-003]
+title = "General Order 2025-003, Amending Local Rules and Forms (R.I. LBR 1005-1, 3002-1, 3016-1, effective December 1, 2025)"
+url = "https://www.rib.uscourts.gov/sites/default/files/general-ordes/General%20Order%202025-003.pdf"
+path = "sources/bankr-ri/ri-go-2025-003.txt"
+path_sha256 = "6387c5ed7a1c3ebbba0a1c0c4568791257d0281ef29e2f80134bea4c49c6af3c"
+sha256 = "f176667bb53be49370d69f9bb257f86c6bb8db35b27045df568f5427f880e90f"
+as_of = "2025-12-01"
+
+[sources.rib-amendments-2025-12]
+title = "Local Bankruptcy Rule amendments of December 1, 2025, clean copy (General Order 2025-003)"
+url = "https://www.rib.uscourts.gov/sites/default/files/Rules/General_Orders/LBR_amendments_Dec_1_2025_Clean_FINAL.pdf"
+path = "sources/bankr-ri/ri-amendments-2025-12-01-sectioned.txt"
+path_sha256 = "3e909aa63b1d6daa9013840af06e3f0626259566e4faf99db66ae831d228f883"
+sha256 = "83af071b8a9d23ca3bfbc39726e58775b3d45df595ffd5af9b26974b2ea1339e"
+as_of = "2025-12-01"
+cite_prefixes = ["R.I. LBR (Dec. 2025)"]
+section_heading = "December 2025 Rule {n}"
+
+[sources.rib-go-2026-001]
+title = "General Order 2026-001, Amending Local Rules and Appendix III (R.I. LBR 1005-1, 5005-4, 5701-1, effective February 13, 2026)"
+url = "https://www.rib.uscourts.gov/sites/default/files/Rules/General_Orders/General%20Order%202026-001.pdf"
+path = "sources/bankr-ri/ri-go-2026-001.txt"
+path_sha256 = "919d4606fc2b25a5f5845e05aaf6dc233109d8144161608b5ff77a13dde8095d"
+sha256 = "e69e02ab57deaffc6d0ebf51d8f0768a5f0e4529cf876b2a43d5bdfed9b60753"
+as_of = "2026-02-13"

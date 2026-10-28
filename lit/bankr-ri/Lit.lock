@@ -1,6 +1,26 @@
 version = 2
 
 [[package]]
+name = "bankr-ri-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:9eeea7ef681d26f3cb174c84ad23b764c7a77d8f32d8a440ac619d3fa9bc63cd"
+semantic = "sha256:2a93d5738f8eba596613a214051e8e4556357d577018dff175123613a1d0658e"
+texts = [
+    "rib-amendments-2025-07 sources/bankr-ri/ri-amendments-2025-07-21.txt sha256:e9380b876e97929f41f0c0bdca921bb57f79c3c83c200bca7bb216c2a822b6ba",
+    "rib-amendments-2025-12 sources/bankr-ri/ri-amendments-2025-12-01-sectioned.txt sha256:3e909aa63b1d6daa9013840af06e3f0626259566e4faf99db66ae831d228f883",
+    "rib-go-2025-001 sources/bankr-ri/ri-go-2025-001.txt sha256:a58ac639f83c481385fa7bf95bbb45ec8971532336779d2fda2e24bfa5040966",
+    "rib-go-2025-002 sources/bankr-ri/ri-go-2025-002.txt sha256:132d7040c4a675eb9c4dc881a94536d08ff991803264c543685bbf480d20c84f",
+    "rib-go-2025-003 sources/bankr-ri/ri-go-2025-003.txt sha256:6387c5ed7a1c3ebbba0a1c0c4568791257d0281ef29e2f80134bea4c49c6af3c",
+    "rib-go-2026-001 sources/bankr-ri/ri-go-2026-001.txt sha256:919d4606fc2b25a5f5845e05aaf6dc233109d8144161608b5ff77a13dde8095d",
+    "rib-lbr sources/bankr-ri/ri-local-rules-2024-12-01-sectioned.txt sha256:668edb7e46d1ba41e2f2cbbffb30dc9a44db96ed531b242bf774b56d3f8380ef",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +64,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-ri"
-version = "0.0.1"
-language = 1
-source = "sha256:9f9ae523716d2d95fb38b520f5ef26f15ee6fc77460d28bc2c7dcc921b71fda8"
-semantic = "sha256:69f224b8641d7c61ed24c13d9bd5918d4fe91fcbd716eb71a178a5e416b910ba"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

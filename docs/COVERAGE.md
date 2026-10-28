@@ -14,6 +14,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | bankr-ma-local-rules | `lit/bankr-ma` | 80 | 0 | 0 | 0 |
 | bankr-me-local-rules | `lit/bankr-me` | 17 | 0 | 0 | 0 |
 | bankr-nh-local-rules | `lit/bankr-nh` | 20 | 0 | 0 | 0 |
+| bankr-ri-local-rules | `lit/bankr-ri` | 88 | 0 | 0 | 0 |
 | eighth-circuit-bankruptcy-appellate-panel | `lit/bap8` | 5 | 0 | 16 | 0 |
 | bia | `lit/bia` | 0 | 0 | 0 | 0 |
 | first-circuit-court-of-appeals | `lit/ca1` | 0 | 1 | 9 | 0 |

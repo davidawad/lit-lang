@@ -195,14 +195,14 @@ deadline motion-objection-period: 8.days before MotionHearing() counted_by frbp9
 /// notwithstanding LR 9014-1(a)(1), for hearings on Mondays at 2:00 p.m.
 /// the deadline to file objections or responses is 11:59 p.m. on the prior
 /// Monday.
-deadline monday-hearing-objection-period: 7.days before MondayAfternoonHearing() counted_by frbp9006 effective [2025-11-25, ..) cite ?("no day count: the prior Monday, seven days before a Monday hearing, Bankr. M.D. La. LR (SO 2025-1) 9014-1; the order text is not vendored")
+deadline monday-hearing-objection-period: 7.days before MondayAfternoonHearing() counted_by frbp9006 effective [2025-11-25, ..) cite "Bankr. M.D. La. LR (SO 2025-1) 9014-1"
 
 /// Bankr. M.D. La. LR 9027-1: within seven days of removal, the party
 /// filing the notice of removal files a complete copy of all records of the
 /// court from which the cause was removed that relate to it.
 deadline removal-record-period: 7.days after RemovalNoticeFiled() counted_by frbp9006 cite "Bankr. M.D. La. LR 9027-1"
 
-test "a Monday afternoon hearing's objection deadline is the prior Monday" cite ?("the standing order is not vendored")
+test "a Monday afternoon hearing's objection deadline is the prior Monday" cite "Bankr. M.D. La. LR (SO 2025-1) 9014-1"
 {
   given MondayAfternoonHearing() on 2025-12-01
   expect deadline(monday-hearing-objection-period) == 2025-11-24

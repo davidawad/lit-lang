@@ -1,0 +1,408 @@
+module supreme-court-of-the-united-states.cert
+
+import core.supct30.{ sup-ct-30 }
+
+// Review on certiorari from the petitioner's (applicant's) side, under the
+// Rules adopted February 17, 2026, effective March 16, 2026. Periods are
+// counted by Sup. Ct. R. 30.1 (`core.supct30`): the day of the triggering
+// event is excluded and the last day included unless it is a Saturday,
+// Sunday, federal legal holiday or day the Court building is closed. The
+// word limits of Sup. Ct. R. 33.1(g) are a chart that writes each number
+// without the word "words", so they are stated in notes and not encoded as
+// filing limits. The earlier outline named Hohn v. United States, 524 U.S.
+// 236 (1998), as a leading decision; no reporter text of it is vendored,
+// so it is removed.
+/// Entry of the judgment or order sought to be reviewed: a judgment of a
+/// state court of last resort or a United States court of appeals, the
+/// order of a state court of last resort denying discretionary review of a
+/// lower state court's judgment (Sup. Ct. R. 13.1), or, after a timely
+/// petition for rehearing in the lower court, the denial of rehearing or
+/// the later judgment on rehearing (Sup. Ct. R. 13.3).
+event LowerCourtEntry()
+/// An application to a Justice to extend the time to file the petition
+/// (Sup. Ct. R. 13.5, 22, 30.2, 30.3).
+event PetitionExtensionApplied()
+/// A Justice's denial of the application: "Once denied, such an
+/// application may not be renewed" (Sup. Ct. R. 30.3).
+event PetitionExtensionDenied()
+/// The petition is placed on the docket (Sup. Ct. R. 12.3).
+event CaseDocketed()
+/// The order granting the petition is entered (Sup. Ct. R. 16.2).
+event CertGranted()
+/// The petitioner's brief on the merits is filed (Sup. Ct. R. 25.1).
+event PetitionerMeritsBriefFiled()
+/// The respondent's brief on the merits is filed (Sup. Ct. R. 25.2).
+event RespondentMeritsBriefFiled()
+/// The Court's judgment or decision on the merits is entered (Sup. Ct. R.
+/// 44.1).
+event MeritsJudgmentEntered()
+/// The order denying the petition is entered (Sup. Ct. R. 16.3).
+event CertDenied()
+
+/// The petition is timely when filed with the Clerk within 90 days after
+/// entry of the judgment (Sup. Ct. R. 13.1); in a civil case 28 U.S.C. §
+/// 2101(c) sets the same 90 days. The period runs from entry of the
+/// judgment, not from the mandate, and from the later entry after a timely
+/// rehearing petition below (Sup. Ct. R. 13.3), so it runs from the latest
+/// entry. Only a Justice may extend it, for good cause, by not more than
+/// 60 days (Sup. Ct. R. 13.5; 28 U.S.C. § 2101(c)); the application must
+/// be filed at least 10 days before the petition is due, and one filed
+/// later is granted only in the most extraordinary circumstances (Sup. Ct.
+/// R. 13.5, 30.2). Once denied, it may not be renewed (Sup. Ct. R. 30.3).
+deadline petition-period: 90.days after LowerCourtEntry() counted_by sup-ct-30 cite "Sup. Ct. R. 13.1"
+{
+  trigger latest
+  forum scotus
+  extend {
+    by justice
+    discretion GoodCause
+    max 60.days
+    on PetitionExtensionApplied()
+    within current_due - 10.days
+    unless PetitionExtensionDenied()
+  }
+  extend {
+    by justice
+    discretion ExtraordinaryCircumstances
+    max 60.days
+    on PetitionExtensionApplied()
+    within current_due
+    unless PetitionExtensionDenied()
+  }
+}
+
+/// A respondent's conditional cross-petition is due no more than 30 days
+/// after the case is placed on the docket; the time will not be extended
+/// (Sup. Ct. R. 12.5).
+deadline conditional-cross-petition-period: 30.days after CaseDocketed() counted_by sup-ct-30 cite "Sup. Ct. R. 12.5"
+{
+  forum scotus
+}
+
+/// A brief in opposition is due within 30 days after the case is placed on
+/// the docket, unless the Court or a Justice, or the Clerk under Rule
+/// 30.4, extends the time (Sup. Ct. R. 15.3).
+deadline opposition-period: 30.days after CaseDocketed() counted_by sup-ct-30 cite "Sup. Ct. R. 15.3"
+{
+  forum scotus
+}
+
+/// The petitioner's brief on the merits is due within 45 days of the order
+/// granting the writ (Sup. Ct. R. 25.1), extendable under Rule 30 (Sup.
+/// Ct. R. 25.5).
+deadline merits-brief-period: 45.days after CertGranted() counted_by sup-ct-30 cite "Sup. Ct. R. 25.1"
+{
+  forum scotus
+}
+
+/// The respondent's brief on the merits is due within 30 days after the
+/// petitioner's brief is filed (Sup. Ct. R. 25.2).
+deadline respondent-brief-period: 30.days after PetitionerMeritsBriefFiled() counted_by sup-ct-30 cite "Sup. Ct. R. 25.2"
+{
+  forum scotus
+}
+
+/// The petitioner's reply brief is due within 30 days after the
+/// respondent's brief is filed, and must also be received by the Clerk
+/// not later than 2 p.m. 10 days before oral argument (Sup. Ct. R. 25.3);
+/// the second limit is stated, not encoded.
+deadline reply-brief-period: 30.days after RespondentMeritsBriefFiled() counted_by sup-ct-30 cite "Sup. Ct. R. 25.3"
+{
+  forum scotus
+}
+
+/// A motion for additional argument time is due no later than 7 days after
+/// the respondent's brief on the merits is filed (Sup. Ct. R. 28.3).
+deadline argument-time-motion-period: 7.days after RespondentMeritsBriefFiled() counted_by sup-ct-30 cite "Sup. Ct. R. 28.3"
+{
+  forum scotus
+}
+
+/// A petition for rehearing of a judgment or decision on the merits is due
+/// within 25 days after its entry, unless the Court or a Justice shortens
+/// or extends the time (Sup. Ct. R. 44.1).
+deadline rehearing-period: 25.days after MeritsJudgmentEntered() counted_by sup-ct-30 cite "Sup. Ct. R. 44.1"
+{
+  forum scotus
+}
+
+/// A petition for rehearing of an order denying certiorari is due within
+/// 25 days after the date of the order; the time will not be extended
+/// (Sup. Ct. R. 44.2).
+deadline denial-rehearing-period: 25.days after CertDenied() counted_by sup-ct-30 cite "Sup. Ct. R. 44.2"
+{
+  forum scotus
+}
+
+test "a petition is due 90 days after entry of the judgment" cite "Sup. Ct. R. 13.1"
+{
+  given LowerCourtEntry() on 2026-04-01
+  expect deadline(petition-period) == 2026-06-30
+}
+
+test "a Sunday ninetieth day runs to Monday" cite "Sup. Ct. R. 30.1"
+{
+  given LowerCourtEntry() on 2026-04-06
+  expect deadline(petition-period) == 2026-07-06
+}
+
+test "denial of a timely rehearing petition below restarts the 90 days" cite "Sup. Ct. R. 13.3"
+{
+  given LowerCourtEntry() on 2026-04-01
+  given LowerCourtEntry() on 2026-05-01
+  expect deadline(petition-period) == 2026-07-30
+}
+
+test "a conditional cross-petition is due 30 days after docketing" cite "Sup. Ct. R. 12.5"
+{
+  given CaseDocketed() on 2026-04-01
+  expect deadline(conditional-cross-petition-period) == 2026-05-01
+}
+
+test "a brief in opposition is due 30 days after docketing" cite "Sup. Ct. R. 15.3"
+{
+  given CaseDocketed() on 2026-04-01
+  expect deadline(opposition-period) == 2026-05-01
+}
+
+test "the petitioner's merits brief is due 45 days after the grant" cite "Sup. Ct. R. 25.1"
+{
+  given CertGranted() on 2026-06-01
+  expect deadline(merits-brief-period) == 2026-07-16
+}
+
+test "a Saturday thirtieth day for the respondent's brief runs to Monday" cite "Sup. Ct. R. 25.2"
+{
+  given PetitionerMeritsBriefFiled() on 2026-07-16
+  expect deadline(respondent-brief-period) == 2026-08-17
+}
+
+test "the reply brief is due 30 days after the respondent's brief" cite "Sup. Ct. R. 25.3"
+{
+  given RespondentMeritsBriefFiled() on 2026-08-17
+  expect deadline(reply-brief-period) == 2026-09-16
+}
+
+test "a motion for more argument time is due 7 days after the respondent's brief" cite "Sup. Ct. R. 28.3"
+{
+  given RespondentMeritsBriefFiled() on 2026-08-17
+  expect deadline(argument-time-motion-period) == 2026-08-24
+}
+
+test "a merits rehearing petition is due 25 days after the judgment" cite "Sup. Ct. R. 44.1"
+{
+  given MeritsJudgmentEntered() on 2026-06-01
+  expect deadline(rehearing-period) == 2026-06-26
+}
+
+test "rehearing of a denial of certiorari is due 25 days after the order" cite "Sup. Ct. R. 44.2"
+{
+  given CertDenied() on 2026-10-05
+  expect deadline(denial-rehearing-period) == 2026-10-30
+}
+
+start judgment-below
+
+state judgment-below: "Judgment of a state court of last resort or a federal court of appeals" by court cite "Sup. Ct. R. 13.1"
+{
+  note "Cases in the courts of appeals may be reviewed by writ of certiorari granted on the petition of any party to any civil or criminal case, before or after rendition of judgment (28 U.S.C. § 1254(1)). The time to petition runs from entry of the judgment or order sought to be reviewed, not from the issuance of the mandate (Sup. Ct. R. 13.3). Certiorari before judgment in a court of appeals is granted only on a showing that the case is of such imperative public importance as to justify deviation from normal appellate practice (Sup. Ct. R. 11; 28 U.S.C. § 2101(e))."
+  edge-judgment-below-petition "Judgment entered; the petition period runs" -> petition-window {
+    authority cite "Sup. Ct. R. 13.1; 28 U.S.C. § 1254"
+  }
+}
+
+decision petition-window: "Petition filed within the Rule 13 period?" by applicant cite "Sup. Ct. R. 13.1"
+{
+  note "A petition is timely when filed with the Clerk within 90 days after entry of the judgment (Sup. Ct. R. 13.1; 28 U.S.C. § 2101(c) for a civil case); the Clerk will not file a petition that is jurisdictionally out of time (Sup. Ct. R. 13.2). Time is computed under Rule 30 (Sup. Ct. R. 30.1)."
+  edge-petition-window-filed "Petition filed in time" -> petition-docketed {
+    authority cite "Sup. Ct. R. 13.1"
+    within petition-period
+  }
+  edge-petition-window-extension "Extension applied for" -> extension-ruling {
+    authority cite "Sup. Ct. R. 13.5"
+  }
+  edge-petition-window-late "Out of time" -> dismissed-late { authority cite "Sup. Ct. R. 13.2" }
+}
+
+decision extension-ruling: "Extension of time granted or denied" by justice cite "Sup. Ct. R. 13.5"
+{
+  note "For good cause a Justice may extend the time to file the petition for a period not exceeding 60 days (Sup. Ct. R. 13.5; 28 U.S.C. § 2101(c)). The application sets out the basis for jurisdiction, identifies the judgment, includes the opinion and any order respecting rehearing, gives specific reasons, names each party for whom the extension is sought, and must be filed at least 10 days before the petition is due except in extraordinary circumstances; it is not favored (Sup. Ct. R. 13.5, 30.2). It is made to an individual Justice and presented and served under Rule 22, and once denied may not be renewed (Sup. Ct. R. 30.3)."
+  edge-extension-ruling-granted "Granted; petition filed within the extended time" -> petition-docketed {
+    authority cite "Sup. Ct. R. 13.5"
+  }
+  edge-extension-ruling-denied "Denied; the period runs out" -> dismissed-late {
+    authority cite "Sup. Ct. R. 30.3"
+  }
+}
+
+state petition-docketed: "Petition filed and placed on the docket" by applicant cite "Sup. Ct. R. 12.1"
+{
+  note "The petitioner files 40 copies of the petition prepared under Rule 33.1 and pays the Rule 38(a) docket fee (Sup. Ct. R. 12.1), $300 (Sup. Ct. R. 38). A petitioner proceeding in forma pauperis files an original and 10 copies prepared under Rule 33.2, with the motion for leave (Sup. Ct. R. 12.2). The petition complies with Rule 14 and is filed with proof of service; the case is then placed on the docket and the petitioner notifies all respondents (Sup. Ct. R. 12.3). A booklet-format petition is limited to 9,000 words on the chart of Sup. Ct. R. 33.1(g)(i); one on 8 1/2- by 11-inch paper to 40 pages (Sup. Ct. R. 33.2). A respondent may file a conditional cross-petition no more than 30 days after docketing (Sup. Ct. R. 12.5). An amicus curiae brief supporting the petitioner is due within 30 days after docketing or a call for a response, whichever is later (Sup. Ct. R. 37.2)."
+  edge-petition-docketed-response "Docketed; the opposition period runs" -> response-decision {
+    authority cite "Sup. Ct. R. 15.3"
+  }
+}
+
+decision response-decision: "Brief in opposition filed or waived" by respondent cite "Sup. Ct. R. 15.1"
+{
+  note "A brief in opposition is not mandatory except in a capital case or when requested by the Court (Sup. Ct. R. 15.1). It is due within 30 days after the case is placed on the docket unless extended (Sup. Ct. R. 15.3), may not exceed the limits of Rule 33 (Sup. Ct. R. 15.2): 9,000 words on the chart of Sup. Ct. R. 33.1(g)(ii), or 40 pages on 8 1/2- by 11-inch paper (Sup. Ct. R. 33.2), and must include any objection to jurisdiction; no motion to dismiss the petition may be filed (Sup. Ct. R. 15.4)."
+  edge-response-decision-bio "Brief in opposition filed" -> reply-brief {
+    authority cite "Sup. Ct. R. 15.3"
+    within opposition-period
+  }
+  edge-response-decision-waived "Express waiver, or the time lapses" -> distribution {
+    authority cite "Sup. Ct. R. 15.5"
+  }
+}
+
+state reply-brief: "Reply to the brief in opposition (optional)" by applicant cite "Sup. Ct. R. 15.6"
+{
+  note "The petitioner may file a reply addressed to new points raised in the brief in opposition, but distribution is not deferred pending its receipt (Sup. Ct. R. 15.6); it is limited to 3,000 words on the chart of Sup. Ct. R. 33.1(g)(iii), or 15 pages on 8 1/2- by 11-inch paper (Sup. Ct. R. 33.2). Any party may file a supplemental brief on new cases, legislation or other intervening matter while the petition is pending (Sup. Ct. R. 15.8)."
+  edge-reply-brief-distribution "Distribution after the waiting period" -> distribution {
+    authority cite "Sup. Ct. R. 15.5"
+  }
+}
+
+state distribution: "Petition distributed to the Court" by office cite "Sup. Ct. R. 15.5"
+{
+  note "The Clerk distributes the petition on an express waiver of the brief in opposition or, if none is filed, when the time for it expires; after a timely brief in opposition, the Clerk distributes the papers no less than 14 days after it is filed unless the petitioner expressly waives the 14-day waiting period (Sup. Ct. R. 15.5). Distribution is deferred while a docketed cross-petition is not yet due for distribution (Sup. Ct. R. 15.7)."
+  edge-distribution-disposition "Considered by the Court" -> disposition {
+    authority cite "Sup. Ct. R. 16.1"
+  }
+}
+
+decision disposition: "Order on the petition" by court cite "Sup. Ct. R. 16.1"
+{
+  note "After considering the documents distributed under Rule 15, the Court enters an appropriate order, which may be a summary disposition on the merits (Sup. Ct. R. 16.1). Review on certiorari is not a matter of right but of judicial discretion, granted only for compelling reasons; Rule 10 lists, as neither controlling nor fully measuring the Court's discretion, conflicts among the courts of appeals and state courts of last resort and important unsettled federal questions (Sup. Ct. R. 10)."
+  edge-disposition-granted "Granted" -> grant-order { authority cite "Sup. Ct. R. 16.2" }
+  edge-disposition-denied "Denied" -> denial-order { authority cite "Sup. Ct. R. 16.3" }
+  edge-disposition-summary "Summary disposition on the merits" -> summary-disposition {
+    authority cite "Sup. Ct. R. 16.1"
+  }
+}
+
+state grant-order: "Grant order entered; case scheduled for briefing and argument" by office cite "Sup. Ct. R. 16.2"
+{
+  note "The Clerk enters the order granting the petition, notifies counsel and the court below, and requests the record if it has not been filed; the case is scheduled for briefing and oral argument, and a formal writ does not issue unless specially directed (Sup. Ct. R. 16.2)."
+  edge-grant-order-merits "Briefing begins" -> petitioner-merits-brief {
+    authority cite "Sup. Ct. R. 25.1"
+  }
+}
+
+state petitioner-merits-brief: "Petitioner's brief on the merits" by applicant cite "Sup. Ct. R. 25.1"
+{
+  note "The petitioner files 40 copies of the brief on the merits within 45 days of the order granting the writ (Sup. Ct. R. 25.1). It complies with Rules 33.1 and 34, sets out the questions presented on the first page after the cover, and may not raise additional questions or change the substance of those presented in the petition (Sup. Ct. R. 24.1). It is limited to 13,000 words on the chart of Sup. Ct. R. 33.1(g)(v). An extension is not favored (Sup. Ct. R. 25.5)."
+  edge-petitioner-merits-brief-filed "Petitioner's brief filed" -> respondent-merits-brief {
+    authority cite "Sup. Ct. R. 25.1"
+    within merits-brief-period
+  }
+}
+
+state respondent-merits-brief: "Respondent's brief on the merits" by respondent cite "Sup. Ct. R. 25.2"
+{
+  note "The respondent files 40 copies of its brief on the merits within 30 days after the petitioner's brief is filed (Sup. Ct. R. 25.2), limited to 13,000 words on the chart of Sup. Ct. R. 33.1(g)(vi). An amicus curiae brief is due within 7 days after the brief of the party supported is filed, or, supporting neither party, within 7 days after the time allowed for the petitioner's brief; motions to extend that time are not entertained (Sup. Ct. R. 37.3). A motion for additional argument time is due no later than 7 days after the respondent's brief is filed (Sup. Ct. R. 28.3)."
+  edge-respondent-merits-brief-filed "Respondent's brief filed" -> reply-merits-brief {
+    authority cite "Sup. Ct. R. 25.2"
+    within respondent-brief-period
+  }
+}
+
+state reply-merits-brief: "Petitioner's reply brief on the merits" by applicant cite "Sup. Ct. R. 25.3"
+{
+  note "The petitioner files 40 copies of any reply brief within 30 days after the respondent's brief is filed, and it must actually be received by the Clerk not later than 2 p.m. 10 days before the date of oral argument (Sup. Ct. R. 25.3). It is limited to 6,000 words on the chart of Sup. Ct. R. 33.1(g)(vii)."
+  edge-reply-merits-brief-argument "Case calendared and argued" -> argument {
+    authority cite "Sup. Ct. R. 27.1"
+  }
+}
+
+state argument: "Oral argument" by court cite "Sup. Ct. R. 28.3"
+{
+  note "A case ordinarily will not be called for argument less than two weeks after the respondent's brief on the merits is due (Sup. Ct. R. 27.1). Unless the Court directs otherwise, each side is allowed one-half hour for argument; additional time is rarely accorded (Sup. Ct. R. 28.3). A joint appendix is prepared under Rule 26."
+  edge-argument-decision "Argued and submitted" -> merits-decision {
+    authority cite "Sup. Ct. R. 41"
+  }
+}
+
+decision merits-decision: "Opinion and judgment on the merits" by court cite "Sup. Ct. R. 41"
+{
+  note "Opinions of the Court are released by the Clerk on their announcement from the bench, or as the Court directs (Sup. Ct. R. 41). The Court may affirm, modify, vacate, set aside or reverse the judgment and remand the cause (28 U.S.C. § 2106)."
+  edge-merits-decision-affirmed "Judgment affirmed" -> rehearing-window {
+    authority cite "Sup. Ct. R. 41"
+  }
+  edge-merits-decision-reversed "Judgment reversed or vacated" -> reversed {
+    authority cite "Sup. Ct. R. 41"
+  }
+  edge-merits-decision-dismissed "Case dismissed by agreement or on the petitioner's motion" -> dismissed-merits {
+    authority cite "Sup. Ct. R. 46.1"
+  }
+}
+
+decision rehearing-window: "Petition for rehearing of the merits judgment?" by applicant cite "Sup. Ct. R. 44.1"
+{
+  note "A petition for rehearing of a judgment on the merits is due within 25 days after entry unless the Court or a Justice shortens or extends the time; it is accompanied by the Rule 38(b) fee, $200 (Sup. Ct. R. 38), and a certificate that it is presented in good faith and not for delay, is not argued, and is granted only by a majority at the instance of a Justice who concurred in the judgment (Sup. Ct. R. 44.1). It is limited to 3,000 words on the chart of Sup. Ct. R. 33.1(g)(xv), or 15 pages on 8 1/2- by 11-inch paper (Sup. Ct. R. 33.2). No response is filed unless the Court requests one, and rehearing is not granted without one absent extraordinary circumstances (Sup. Ct. R. 44.3)."
+  edge-rehearing-window-filed "Petition for rehearing filed" -> rehearing-decision {
+    authority cite "Sup. Ct. R. 44.1"
+    within rehearing-period
+  }
+  edge-rehearing-window-none "No petition" -> affirmed { authority cite "Sup. Ct. R. 45.2" }
+}
+
+decision rehearing-decision: "Rehearing granted or denied" by court cite "Sup. Ct. R. 44.1"
+{
+  note "A petition for rehearing stays the mandate until its disposition unless the Court orders otherwise; if it is denied, the mandate issues forthwith (Sup. Ct. R. 45.2)."
+  edge-rehearing-decision-denied "Denied" -> affirmed { authority cite "Sup. Ct. R. 45.2" }
+  edge-rehearing-decision-granted "Granted; case reconsidered" -> merits-decision {
+    authority cite "Sup. Ct. R. 44.1"
+  }
+}
+
+state denial-order: "Order denying certiorari entered" by office cite "Sup. Ct. R. 16.3"
+{
+  note "The Clerk enters the order of denial and notifies counsel and the court below; the order is not suspended pending a petition for rehearing except by order of the Court or a Justice (Sup. Ct. R. 16.3)."
+  edge-denial-order-rehearing "Petition for rehearing of the denial" -> denial-rehearing {
+    authority cite "Sup. Ct. R. 44.2"
+    within denial-rehearing-period
+  }
+  edge-denial-order-final "No petition for rehearing" -> denial-final {
+    authority cite "Sup. Ct. R. 16.3"
+  }
+}
+
+decision denial-rehearing: "Rehearing of the denial of certiorari" by court cite "Sup. Ct. R. 44.2"
+{
+  note "A petition for rehearing of an order denying certiorari is due within 25 days after the order and will not be extended; its grounds are limited to intervening circumstances of a substantial or controlling effect or other substantial grounds not previously presented, with a certificate to that effect (Sup. Ct. R. 44.2). The Clerk will not file consecutive petitions or petitions out of time (Sup. Ct. R. 44.4)."
+  edge-denial-rehearing-denied "Denied" -> denial-final { authority cite "Sup. Ct. R. 44.2" }
+  edge-denial-rehearing-granted "Granted; the petition is reconsidered" -> disposition {
+    authority cite "Sup. Ct. R. 44.2"
+  }
+}
+
+terminal dismissed-late: "Petition out of time; not filed" outcome [loss, dismissal, jurisdictional] cite "Sup. Ct. R. 13.2"
+{
+  note "The Clerk will not file a petition that is jurisdictionally out of time (Sup. Ct. R. 13.2; 28 U.S.C. § 2101(c))."
+}
+
+terminal summary-disposition: "Summary disposition on the merits" outcome [final] cite "Sup. Ct. R. 16.1"
+{
+  note "The order on the petition may be a summary disposition on the merits (Sup. Ct. R. 16.1)."
+}
+
+terminal affirmed: "Judgment affirmed; judgment or mandate issues" outcome [loss] cite "Sup. Ct. R. 45.2"
+{
+  note "In a case from a state court the mandate issues 32 days after entry of the judgment (Sup. Ct. R. 45.2); in a case from a court of the United States the Clerk sends the opinion and a certified copy of the judgment after the same 32 days (Sup. Ct. R. 45.3), unless the Court or a Justice shortens or extends the time or the parties stipulate otherwise."
+}
+
+terminal reversed: "Judgment reversed or vacated" outcome [win] cite "Sup. Ct. R. 45.2"
+{
+  note "The judgment or mandate issues to the court below under Sup. Ct. R. 45.2 and 45.3; further proceedings on remand are outside this package."
+}
+
+terminal dismissed-merits: "Case dismissed" outcome [final] cite "Sup. Ct. R. 46.1"
+{
+  note "When all parties file a written agreement to dismiss specifying the terms for costs and pay any fees due, the Clerk enters an order of dismissal (Sup. Ct. R. 46.1); a petitioner may also move to dismiss (Sup. Ct. R. 46.2)."
+}
+
+terminal denial-final: "Certiorari denied; the judgment below stands" outcome [loss] cite "Sup. Ct. R. 16.3"
+{
+  note "The order of denial stands."
+}

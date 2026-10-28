@@ -1,0 +1,50 @@
+# Civil actions in the Tennessee circuit and chancery courts under the
+# Tennessee Rules of Civil Procedure, each cited rule as in force on the
+# Tennessee courts' pages on October 27, 2026 (sources/tn-trial-court),
+# with its own amendment history. Computation of time is Tenn. R. Civ.
+# P. 6, which is not vendored, and core has no Tennessee holiday
+# calendar, so the rules' periods are stated in notes, not encoded as
+# counted deadlines. Only the cited rules are vendored (3, 4.01-4.09,
+# 12.01-12.03, 15.01, 26.02, 33, 34, 36, 37, 38, 39, 41.01-41.02, 50.02,
+# 54.02, 55.01-55.02, 56.04, 58, 59.04, 60.02); a rule outside that set
+# is named in a note at most. An appeal hands off to lit/tn-appellate.
+[package]
+name = "tn-trial-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "tn-trial-court-civil"
+forum = "tn-trial-court"
+authority = "StateRule"
+title = "Tennessee circuit and chancery courts, civil"
+description = "Civil actions in the Tennessee circuit and chancery courts under the Tennessee Rules of Civil Procedure, as far as the vendored text states: commencement and service, the time to answer, Rule 12 motions, amendment, default, discovery and sanctions, summary judgment, jury demand and trial, post-trial motions, entry of judgment, voluntary and involuntary dismissal, and the appeal (lit/tn-appellate)."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "Tennessee circuit and chancery courts (civil)"
+jurisdiction_id = "tennessee"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.tn-r-civ-p]
+title = "Tennessee Rules of Civil Procedure, cited rules, each as in force on October 27, 2026"
+url = "https://www.tncourts.gov/courts/supreme-court/rules/rules-civil-procedure"
+path = "sources/tn-trial-court/tn-rcp-cited.txt"
+path_sha256 = "7c751540ba51b24667c5d798df11a17ce6452d78973cc0d7f222581246c96554"
+as_of = "2026-10-27"
+cite_prefixes = ["Tenn. R. Civ. P."]
+section_heading = "Tenn. R. Civ. P. {n}"
+
+[sources.tn-r-app-p]
+title = "Tennessee Rules of Appellate Procedure, cited rules, each as in force on October 27, 2026"
+url = "https://www.tncourts.gov/courts/court-rules/rules-appellate-procedure"
+path = "sources/tn-appellate/tn-rap-cited.txt"
+path_sha256 = "e200af46ea7e877b2e4f782d147c7534334b175009b4860470189b36b7a3895d"
+as_of = "2026-10-27"
+cite_prefixes = ["Tenn. R. App. P."]
+section_heading = "Tenn. R. App. P. {n}"

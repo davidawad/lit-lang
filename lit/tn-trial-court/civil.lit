@@ -1,0 +1,180 @@
+module tn-trial-court-civil.civil
+
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "Tenn. R. Civ. P. 3"
+{
+  note "All civil actions are commenced by filing a complaint with the clerk of the court, and the action is commenced for any statute of limitations on that filing whether or not process is issued or served (Tenn. R. Civ. P. 3). Upon the filing the clerk promptly issues the summons and delivers it for service (Tenn. R. Civ. P. 4.01(1)). A plaintiff may instead request a waiver of service, allowing the defendant at least 30 days from the date the request is sent to return it (Tenn. R. Civ. P. 4.07(2)(f)). Periods in this package are stated, not counted: computation is Tenn. R. Civ. P. 6, not vendored. The earlier outline's decisions (Webb v. Nashville Area Habitat for Humanity, Inc., 346 S.W.3d 422 (Tenn. 2011); Rye v. Women's Care Center of Memphis, MPLLC, 477 S.W.3d 235 (Tenn. 2015)) are removed: no reporter text is vendored."
+  edge-complaint-filed-response-due "Summons served or service waived" -> response-due {
+    authority cite "Tenn. R. Civ. P. 4.03"
+  }
+  edge-complaint-filed-commencement-lost "Process not issued or served in time, nor reissued" -> commencement-lost {
+    authority cite "Tenn. R. Civ. P. 3"
+  }
+}
+
+state response-due: "Response due: answer or Rule 12 motion" cite "Tenn. R. Civ. P. 12.01"
+{
+  note "A defendant serves an answer within thirty (30) days after service of the summons and complaint; an answer to a cross-claim is due within thirty (30) days after its service, and the plaintiff's reply to a counterclaim within thirty (30) days after service of the answer (Tenn. R. Civ. P. 12.01). A defendant that, before being served, timely returns a requested waiver need not answer until 60 days after the date the request was sent (Tenn. R. Civ. P. 4.07(3)). The defenses listed in Rule 12.02, among them failure to state a claim upon which relief can be granted (12.02(6)), may be made by motion, before pleading if a further pleading is permitted (Tenn. R. Civ. P. 12.02). After the pleadings close, any party may move for judgment on the pleadings (Tenn. R. Civ. P. 12.03)."
+  edge-response-due-default-application "No timely answer or defense" -> default-application {
+    authority cite "Tenn. R. Civ. P. 55.01"
+  }
+  edge-response-due-pleading-ruling "Rule 12.02 motion filed" -> pleading-ruling {
+    authority cite "Tenn. R. Civ. P. 12.02"
+  }
+  edge-response-due-discovery "Answer served" -> discovery {
+    authority cite "Tenn. R. Civ. P. 12.01"
+  }
+}
+
+decision pleading-ruling: "Ruling on the Rule 12 motion" by court cite "Tenn. R. Civ. P. 12.02"
+{
+  note "If the court denies the motion or postpones its disposition until trial, the responsive pleading is served within fifteen (15) days after notice of the court's action; if it grants a motion for a more definite statement, within fifteen (15) days after service of that statement (Tenn. R. Civ. P. 12.01). If matters outside the pleading are presented on a Rule 12.02(6) motion and not excluded, the motion is treated as one for summary judgment under Rule 56 (Tenn. R. Civ. P. 12.02). A party may amend once as a matter of course before a responsive pleading is served, otherwise by written consent or by leave of court, freely given when justice so requires; a party pleads in response to an amended pleading within the time remaining for response to the original or within fifteen (15) days after service of the amended pleading, whichever is longer (Tenn. R. Civ. P. 15.01)."
+  edge-pleading-ruling-dismissed-on-merits "Dismissed on the merits" -> dismissed-on-merits {
+    authority cite "Tenn. R. Civ. P. 41.02"
+  }
+  edge-pleading-ruling-response-due "Amended pleading served" -> response-due {
+    authority cite "Tenn. R. Civ. P. 15.01"
+  }
+  edge-pleading-ruling-discovery "Denied: responsive pleading within fifteen days after notice" -> discovery {
+    authority cite "Tenn. R. Civ. P. 12.01"
+  }
+}
+
+decision default-application: "Application for default judgment" by court cite "Tenn. R. Civ. P. 55.01"
+{
+  note "The party entitled to a default judgment applies to the court; except where service was properly made by publication, every party against whom it is sought is served with written notice of the application at least five days before the hearing, whether or not that party has appeared (Tenn. R. Civ. P. 55.01). The court may hold hearings to determine damages (Tenn. R. Civ. P. 55.01). For good cause shown the court may set aside a judgment by default in accordance with Rule 60.02 (Tenn. R. Civ. P. 55.02). A defaulted defendant cannot raise on appeal the defense of failure to state a claim or failure to join a party under Rule 19 (Tenn. R. App. P. 13(f))."
+  edge-default-application-default-judgment "Default judgment entered" -> default-judgment {
+    authority cite "Tenn. R. Civ. P. 55.01"
+  }
+  edge-default-application-discovery "Default set aside for good cause" -> discovery {
+    authority cite "Tenn. R. Civ. P. 55.02"
+  }
+}
+
+state discovery: "Discovery" cite "Tenn. R. Civ. P. 26.02"
+{
+  note "Parties may obtain discovery of any matter, not privileged, relevant to the subject matter of the action (Tenn. R. Civ. P. 26.02(1)). Answers and objections to interrogatories are served within 30 days after service, except that a defendant may serve them within 45 days after service of the summons and complaint (Tenn. R. Civ. P. 33.01). A matter in a request for admission is admitted unless answered or objected to within 30 days after service of the request, but a defendant need not answer before 45 days after service of the summons and complaint (Tenn. R. Civ. P. 36.01). A party may move to compel discovery (Tenn. R. Civ. P. 37.01). A defendant may move for dismissal for failure of the plaintiff to prosecute or to comply with the rules or any order (Tenn. R. Civ. P. 41.02(1)). A jury demand is made in a pleading or by written demand filed within fifteen (15) days after service of the last pleading raising an issue of fact (Tenn. R. Civ. P. 38.02); in cases removed to the circuit or chancery court, within ten (10) days after the papers are filed with the clerk (Tenn. R. Civ. P. 38.03)."
+  edge-discovery-sj-ruling "Summary judgment motion" -> sj-ruling {
+    authority cite "Tenn. R. Civ. P. 56.04"
+  }
+  edge-discovery-sanction-dismissal "Order to provide discovery disobeyed" -> sanction-dismissal {
+    authority cite "Tenn. R. Civ. P. 37.02"
+  }
+  edge-discovery-dismissed-on-merits "Dismissed for failure to prosecute" -> dismissed-on-merits {
+    authority cite "Tenn. R. Civ. P. 41.02"
+  }
+  edge-discovery-settled "Settled" -> settled { authority cite "Tenn. R. Civ. P. 41.01" }
+  edge-discovery-nonsuit "Voluntary nonsuit" -> nonsuit { authority cite "Tenn. R. Civ. P. 41.01" }
+  edge-discovery-trial "Case set for trial" -> trial { authority cite "Tenn. R. Civ. P. 39.01" }
+}
+
+decision sj-ruling: "Summary judgment ruling" by court cite "Tenn. R. Civ. P. 56.04"
+{
+  note "The motion is served at least thirty (30) days before the time fixed for the hearing, and the adverse party may serve and file opposing affidavits not later than five days before the hearing. Judgment is rendered forthwith if there is no genuine issue as to any material fact and the moving party is entitled to a judgment as a matter of law; the court states the legal grounds for granting or denying the motion in its order; summary judgment may be rendered on liability alone (Tenn. R. Civ. P. 56.04). A plaintiff may not take a voluntary nonsuit while an adverse party's summary judgment motion is pending (Tenn. R. Civ. P. 41.01(1)). An order adjudicating fewer than all claims or parties is not final unless the court expressly determines there is no just reason for delay and directs entry of judgment (Tenn. R. Civ. P. 54.02(1))."
+  edge-sj-ruling-judgment-applicant "Granted for applicant" -> judgment-applicant {
+    authority cite "Tenn. R. Civ. P. 56.04"
+  }
+  edge-sj-ruling-judgment-opponent "Granted for opponent" -> judgment-opponent {
+    authority cite "Tenn. R. Civ. P. 56.04"
+  }
+  edge-sj-ruling-trial "Denied" -> trial { authority cite "Tenn. R. Civ. P. 56.04" }
+}
+
+state trial: "Trial (jury or bench)" cite "Tenn. R. Civ. P. 39.01"
+{
+  note "When a jury has been demanded under Rule 38 the action is designated a jury action and the demanded issues are tried by jury unless the parties stipulate to a bench trial or the court finds no right to a jury exists (Tenn. R. Civ. P. 39.01). In a bench trial the defendant may move for involuntary dismissal after the plaintiff's proof (Tenn. R. Civ. P. 41.02(2)). The plaintiff may take a voluntary nonsuit at any time before trial, by oral notice in open court during a bench trial, or in jury trials before the jury retires and before the court sustains a directed verdict motion (Tenn. R. Civ. P. 41.01(1))."
+  edge-trial-judgment-applicant "Verdict or findings for applicant" -> judgment-applicant {
+    authority cite "Tenn. R. Civ. P. 58"
+  }
+  edge-trial-judgment-opponent "Verdict or findings for opponent" -> judgment-opponent {
+    authority cite "Tenn. R. Civ. P. 58"
+  }
+  edge-trial-nonsuit "Voluntary nonsuit during trial" -> nonsuit {
+    authority cite "Tenn. R. Civ. P. 41.01"
+  }
+}
+
+state judgment-applicant: "Judgment for applicant entered" cite "Tenn. R. Civ. P. 58"
+{
+  note "Entry of a judgment is effective when a judgment containing the signatures required by Rule 58 is marked on its face by the clerk as filed for entry (Tenn. R. Civ. P. 58). The notice of appeal is filed with the clerk of the appellate court within 30 days after the date of entry of the judgment appealed from (Tenn. R. App. P. 4(a)). A motion to alter or amend is filed and served within thirty (30) days after entry of the judgment (Tenn. R. Civ. P. 59.04); a party who moved for a directed verdict may move for judgment in accordance with it within thirty (30) days after entry of judgment (Tenn. R. Civ. P. 50.02)."
+  edge-judgment-applicant-post-judgment-ruling "Post-judgment motion" -> post-judgment-ruling {
+    authority cite "Tenn. R. Civ. P. 59.04"
+  }
+  edge-judgment-applicant-appellate-review "Notice of appeal filed" -> appellate-review {
+    authority cite "Tenn. R. App. P. 4"
+  }
+  edge-judgment-applicant-final-win "No appeal within time" -> final-win {
+    authority cite "Tenn. R. App. P. 4"
+  }
+}
+
+state judgment-opponent: "Judgment for opponent entered" cite "Tenn. R. Civ. P. 58"
+{
+  note "Entry, post-judgment motions and the appeal time are as for a judgment for the applicant (Tenn. R. Civ. P. 50.02, 58, 59.04; Tenn. R. App. P. 4(a)). Every final judgment is appealable as of right (Tenn. R. App. P. 3(a)); in a jury case an issue predicated on trial error or another ground for a new trial is waived unless stated in a motion for a new trial (Tenn. R. App. P. 3(e))."
+  edge-judgment-opponent-post-judgment-ruling "Post-judgment motion" -> post-judgment-ruling {
+    authority cite "Tenn. R. Civ. P. 59.04"
+  }
+  edge-judgment-opponent-appellate-review "Notice of appeal filed" -> appellate-review {
+    authority cite "Tenn. R. App. P. 4"
+  }
+  edge-judgment-opponent-final-loss "No appeal within time" -> final-loss {
+    authority cite "Tenn. R. App. P. 4"
+  }
+}
+
+decision post-judgment-ruling: "Post-judgment motion ruling" by court cite "Tenn. R. Civ. P. 59.04"
+{
+  note "A timely motion under Rule 50.02, 52.02, 59.07 (new trial) or 59.04 runs the time for appeal for all parties from entry of the order denying a new trial or granting or denying the other motion (Tenn. R. App. P. 4(b)); Rules 52.02 and 59.07 are not vendored. A motion for relief from a final judgment under Rule 60.02 is made within a reasonable time, and for mistake, inadvertence, surprise or excusable neglect, or fraud, not more than one year after the judgment was entered; it does not affect the judgment's finality (Tenn. R. Civ. P. 60.02)."
+  edge-post-judgment-ruling-trial "Granted: new trial" -> trial {
+    authority cite "Tenn. R. Civ. P. 50.02"
+  }
+  edge-post-judgment-ruling-appellate-review "Denied: appeal time runs from the order" -> appellate-review {
+    authority cite "Tenn. R. App. P. 4"
+  }
+}
+
+terminal commencement-lost: "Original commencement lost for limitations" outcome [loss] cite "Tenn. R. Civ. P. 3"
+{
+  note "If process remains unissued for 90 days or is not served within 90 days from issuance, the plaintiff cannot rely on the original commencement to toll a statute of limitations unless new process issues within one year from issuance of the previous process or, if none issued, within one year of the filing of the complaint (Tenn. R. Civ. P. 3); an unserved summons is returned after 90 days (Tenn. R. Civ. P. 4.03(1)). Whether the claim is then time-barred is a matter fact. Outcome from the applicant's side."
+}
+
+terminal dismissed-on-merits: "Dismissed on the merits" outcome [loss] cite "Tenn. R. Civ. P. 41.02"
+{
+  note "Unless the order specifies otherwise, an involuntary dismissal, and any dismissal not provided for in Rule 41 other than one for lack of jurisdiction, improper venue or lack of an indispensable party, operates as an adjudication upon the merits (Tenn. R. Civ. P. 41.02(3)). Outcome from the applicant's side."
+}
+
+terminal default-judgment: "Default judgment against opponent" outcome [win] cite "Tenn. R. Civ. P. 55.01"
+{
+  note "Subject to setting aside for good cause under Rule 60.02 (Tenn. R. Civ. P. 55.02). Outcome from the applicant's side."
+}
+
+terminal sanction-dismissal: "Dismissed as a discovery sanction" outcome [loss] cite "Tenn. R. Civ. P. 37.02"
+{
+  note "For failure to obey an order to provide or permit discovery the court may dismiss the action or any part of it, or render a default judgment against the disobedient party (Tenn. R. Civ. P. 37.02(C)). Outcome from the applicant's side."
+}
+
+terminal settled: "Settled" outcome [settlement] cite "Tenn. R. Civ. P. 41.01"
+{
+  note "Settlement terms are matter facts."
+}
+
+terminal nonsuit: "Voluntary nonsuit" outcome [neutral] cite "Tenn. R. Civ. P. 41.01"
+{
+  note "A voluntary nonsuit dismisses the action without prejudice, but a notice of dismissal operates as an adjudication upon the merits when filed by a plaintiff who has twice dismissed an action based on the same claim (Tenn. R. Civ. P. 41.01(1), (2)). It must be followed by an order of voluntary dismissal signed by the court and entered by the clerk, whose date of entry governs the running of pertinent time periods (Tenn. R. Civ. P. 41.01(3))."
+}
+
+terminal final-win: "Final judgment for applicant, no appeal" outcome [win] cite "Tenn. R. App. P. 4"
+{
+  note "Final when the 30-day appeal time has run (Tenn. R. App. P. 4(a))."
+}
+
+terminal final-loss: "Final judgment for opponent, no appeal" outcome [loss] cite "Tenn. R. App. P. 4"
+{
+  note "Final when the 30-day appeal time has run (Tenn. R. App. P. 4(a))."
+}
+
+terminal appellate-review: "Appeal taken: continue in the Tennessee appellate package" cite "Tenn. R. App. P. 3"
+{
+  note "Hand-off to lit/tn-appellate. An interlocutory order may be appealed by permission on a motion filed within 30 days after its entry (Tenn. R. App. P. 9(b))."
+}

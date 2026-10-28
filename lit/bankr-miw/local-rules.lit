@@ -1,6 +1,6 @@
 module bankr-miw-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 import frbp.events.{ FirstMeetingDate, PetitionFiled }
 
 // The Bankr. W.D. Mich. court's own periods and page limits, counted under
@@ -134,324 +134,198 @@ event CaseEvaluationSummarySubmitted() paper case-evaluation-summary
 /// LBR 1007-2(d)(2): on an involuntary conversion to chapter 7, the debtor
 /// files the asset protection report within 7 days after entry of the
 /// conversion order.
-deadline conversion-asset-report-period: 7.days after InvoluntaryConversionOrdered() counted_by frcp6 cite "W.D. Mich. LBR 1007-2(d)"
-{
-  forum frcp
-}
+deadline conversion-asset-report-period: 7.days after InvoluntaryConversionOrdered() counted_by frbp9006 cite "W.D. Mich. LBR 1007-2(d)"
 
 /// LBR 1007-2(e)(2): in an individual chapter 7, 12 or 13 case, the debtor
 /// submits to the trustee the tax returns, account statements, titles,
 /// deeds, insurance declarations, retirement statements, divorce papers and
 /// domestic support information at least 7 days before the date first set
 /// for the meeting of creditors.
-deadline trustee-documents-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "W.D. Mich. LBR 1007-2(e)"
-{
-  forum frcp
-}
+deadline trustee-documents-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "W.D. Mich. LBR 1007-2(e)"
 
 /// LBR 1007-2(f)(1): a creditor's request for payment advices is timely if
 /// filed and served no later than 14 days before the date first set for the
 /// meeting of creditors.
-deadline payment-advices-request-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "W.D. Mich. LBR 1007-2(f)"
-{
-  forum frcp
-}
+deadline payment-advices-request-period: 14.days before FirstMeetingDate() counted_by frbp9006 cite "W.D. Mich. LBR 1007-2(f)"
 
 /// LBR 1007-2(g)(1): a creditor's § 521(e)(2)(A)(ii) request for pre-
 /// petition tax information is timely if filed and served no later than 14
 /// days before the date first set for the meeting of creditors.
-deadline tax-information-request-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "W.D. Mich. LBR 1007-2(g)"
-{
-  forum frcp
-}
+deadline tax-information-request-period: 14.days before FirstMeetingDate() counted_by frbp9006 cite "W.D. Mich. LBR 1007-2(g)"
 
 /// LBR 2014(b)(1)-(2): the United States Trustee may object to an
 /// application to employ a professional within 28 days from its entry;
 /// absent objection the applicant may certify no response.
-deadline employment-objection-period: 28.days after EmploymentApplicationEntered() counted_by frcp6 cite "W.D. Mich. LBR 2014(b)"
-{
-  forum frcp
-}
+deadline employment-objection-period: 28.days after EmploymentApplicationEntered() counted_by frbp9006 cite "W.D. Mich. LBR 2014(b)"
 
 /// LBR 2016-1(d): in chapter 12 and 13, no more than 21 days after the
 /// petition a professional seeking compensation as an administrative
 /// expense files the executed fee agreement and serves the trustee and the
 /// United States Trustee.
-deadline fee-agreement-period: 21.days after Chapter12Or13PetitionFiled() counted_by frcp6 cite "W.D. Mich. LBR 2016-1(d)"
-{
-  forum frcp
-}
+deadline fee-agreement-period: 21.days after Chapter12Or13PetitionFiled() counted_by frbp9006 cite "W.D. Mich. LBR 2016-1(d)"
 
 /// LBR 3015(b): a chapter 13 case filed without schedules, statements or a
 /// plan may be dismissed without further hearing unless the debtor files
 /// them, or moves to extend, within 14 days of the petition (or the case
 /// was converted to chapter 13).
-deadline chapter13-documents-period: 14.days after Chapter12Or13PetitionFiled() counted_by frcp6 cite "W.D. Mich. LBR 3015(b)"
-{
-  forum frcp
-}
+deadline chapter13-documents-period: 14.days after Chapter12Or13PetitionFiled() counted_by frbp9006 cite "W.D. Mich. LBR 3015(b)"
 
 /// LBR 3015(e)(5): an adversely affected creditor or party in interest that
 /// does not consent to a pre-confirmation plan amendment files an objection
 /// within 21 days of its service.
-deadline plan-amendment-objection-period: 21.days after PlanAmendmentServed() counted_by frcp6 cite "W.D. Mich. LBR 3015(e)"
-{
-  forum frcp
-}
+deadline plan-amendment-objection-period: 21.days after PlanAmendmentServed() counted_by frbp9006 cite "W.D. Mich. LBR 3015(e)"
 
 /// LBR 4001-2(c)(5)(A): an expedited cash collateral or credit order
 /// entered without a hearing provides that objections are due within 14
 /// days from its service.
-deadline financing-order-objection-period: 14.days after FinancingOrderServed() counted_by frcp6 cite "W.D. Mich. LBR 4001-2(c)"
-{
-  forum frcp
-}
+deadline financing-order-objection-period: 14.days after FinancingOrderServed() counted_by frbp9006 cite "W.D. Mich. LBR 4001-2(c)"
 
 /// LBR 4001-2(c)(5)(A): an unsecured creditors' committee may object within
 /// 14 days of its formation.
-deadline committee-financing-objection-period: 14.days after CommitteeFormed() counted_by frcp6 cite "W.D. Mich. LBR 4001-2(c)"
-{
-  forum frcp
-}
+deadline committee-financing-objection-period: 14.days after CommitteeFormed() counted_by frbp9006 cite "W.D. Mich. LBR 4001-2(c)"
 
 /// LBR 4001-5: a motion to extend the stay under § 362(c)(3) is filed
 /// within 7 days of the filing of the petition.
-deadline stay-extension-motion-period: 7.days after PetitionFiled() counted_by frcp6 cite "W.D. Mich. LBR 4001-5"
-{
-  forum frcp
-}
+deadline stay-extension-motion-period: 7.days after PetitionFiled() counted_by frbp9006 cite "W.D. Mich. LBR 4001-5"
 
 /// LBR 4004-1(c): a party objecting to the Clerk's action on a motion to
 /// defer discharge may move for judicial review within 21 days after the
 /// Clerk's order is entered on the docket.
-deadline discharge-delay-review-period: 21.days after ClerkDischargeDelayOrdered() counted_by frcp6 cite "W.D. Mich. LBR 4004-1(c)"
-{
-  forum frcp
-}
+deadline discharge-delay-review-period: 21.days after ClerkDischargeDelayOrdered() counted_by frbp9006 cite "W.D. Mich. LBR 4004-1(c)"
 
 /// LBR 5005-2(d): an entity affected by a notice of rejection or an order
 /// striking a document may move for judicial review within 14 days of its
 /// service.
-deadline clerk-action-review-period: 14.days after ClerkRejectionServed() counted_by frcp6 cite "W.D. Mich. LBR 5005-2(d)"
-{
-  forum frcp
-}
+deadline clerk-action-review-period: 14.days after ClerkRejectionServed() counted_by frbp9006 cite "W.D. Mich. LBR 5005-2(d)"
 
 /// LBR 5005-2(f): if a document LBR 1007-2 requires with the petition is
 /// not filed and the deficiency is not corrected within 14 days of service
 /// of the Clerk's notice, the case may be dismissed without further
 /// hearing.
-deadline missing-document-cure-period: 14.days after DeficiencyNoticeServed() counted_by frcp6 cite "W.D. Mich. LBR 5005-2(f)"
-{
-  forum frcp
-}
+deadline missing-document-cure-period: 14.days after DeficiencyNoticeServed() counted_by frbp9006 cite "W.D. Mich. LBR 5005-2(f)"
 
 /// LBR 5011(b): a motion to withdraw the reference of a contested matter is
 /// filed not later than 14 days after service of the motion, application or
 /// objection initiating it.
-deadline contested-withdrawal-period: 14.days after ContestedMatterInitiated() counted_by frcp6 cite "W.D. Mich. LBR 5011(b)"
-{
-  forum frcp
-}
+deadline contested-withdrawal-period: 14.days after ContestedMatterInitiated() counted_by frbp9006 cite "W.D. Mich. LBR 5011(b)"
 
 /// LBR 5011(b): a motion to withdraw the reference may still be filed
 /// within 14 days of the filing of the pleading or paper that first raises
 /// the reason for it.
-deadline late-withdrawal-period: 14.days after WithdrawalGroundsRaised() counted_by frcp6 cite "W.D. Mich. LBR 5011(b)"
-{
-  forum frcp
-}
+deadline late-withdrawal-period: 14.days after WithdrawalGroundsRaised() counted_by frbp9006 cite "W.D. Mich. LBR 5011(b)"
 
 /// LBR 5011(d): within 14 days after service of the movant's designation of
 /// record, any other party may designate additional portions.
-deadline withdrawal-designation-period: 14.days after WithdrawalDesignationServed() counted_by frcp6 cite "W.D. Mich. LBR 5011(d)"
-{
-  forum frcp
-}
+deadline withdrawal-designation-period: 14.days after WithdrawalDesignationServed() counted_by frbp9006 cite "W.D. Mich. LBR 5011(d)"
 
 /// LBR 5011(e): a party opposing withdrawal of the reference files and
 /// serves its objection within 14 days of service of the motion.
-deadline withdrawal-objection-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "W.D. Mich. LBR 5011(e)"
-{
-  forum frcp
-}
+deadline withdrawal-objection-period: 14.days after WithdrawalMotionServed() counted_by frbp9006 cite "W.D. Mich. LBR 5011(e)"
 
 /// LBR 5011(e): the movant may file and serve a reply within 14 days after
 /// service of the objection.
-deadline withdrawal-reply-period: 14.days after WithdrawalObjectionServed() counted_by frcp6 cite "W.D. Mich. LBR 5011(e)"
-{
-  forum frcp
-}
+deadline withdrawal-reply-period: 14.days after WithdrawalObjectionServed() counted_by frbp9006 cite "W.D. Mich. LBR 5011(e)"
 
 /// LBR 6004(b): a chapter 13 debtor who sells property provides the closing
 /// statement to the chapter 13 trustee within 14 days after closing.
-deadline closing-statement-period: 14.days after Chapter13SaleClosed() counted_by frcp6 cite "W.D. Mich. LBR 6004(b)"
-{
-  forum frcp
-}
+deadline closing-statement-period: 14.days after Chapter13SaleClosed() counted_by frbp9006 cite "W.D. Mich. LBR 6004(b)"
 
 /// LBR 7090: unless otherwise ordered, counsel submit the order disposing
 /// of a settled adversary proceeding within 14 days after notifying the
 /// Court of the settlement; failure may be cause for dismissal.
-deadline settlement-order-period: 14.days after SettlementNotified() counted_by frcp6 cite "W.D. Mich. LBR 7090"
-{
-  forum frcp
-}
+deadline settlement-order-period: 14.days after SettlementNotified() counted_by frbp9006 cite "W.D. Mich. LBR 7090"
 
 /// LBR 9010-3(c)-(d): the pro hac vice admission fee is paid to the Clerk
 /// within 14 days of entry of the order granting admission, or the
 /// privilege to appear is revoked.
-deadline pro-hac-vice-fee-period: 14.days after ProHacViceOrderEntered() counted_by frcp6 cite "W.D. Mich. LBR 9010-3(c)"
-{
-  forum frcp
-}
+deadline pro-hac-vice-fee-period: 14.days after ProHacViceOrderEntered() counted_by frbp9006 cite "W.D. Mich. LBR 9010-3(c)"
 
 /// LBR 9011: failure to submit Official Form 121 within 14 days from the
 /// date of the Notice to File Statement of Social Security Number(s)
 /// results in dismissal without further hearing.
-deadline ssn-statement-period: 14.days after SsnNoticeIssued() counted_by frcp6 cite "W.D. Mich. LBR 9011"
-{
-  forum frcp
-}
+deadline ssn-statement-period: 14.days after SsnNoticeIssued() counted_by frbp9006 cite "W.D. Mich. LBR 9011"
 
 /// LBR 9013(c)(1)(A): a party served with a notice-and-opportunity motion
 /// has 14 days from service to file and serve a response or request for
 /// hearing.
-deadline notice-motion-response-period: 14.days after NoticeMotionServed() counted_by frcp6 cite "W.D. Mich. LBR 9013(c)"
-{
-  forum frcp
-}
+deadline notice-motion-response-period: 14.days after NoticeMotionServed() counted_by frbp9006 cite "W.D. Mich. LBR 9013(c)"
 
 /// LBR 9013(c)(1)(A): 21 days from service for matters under FRBP 2002(a)
 /// and 2016.
-deadline fee-notice-motion-response-period: 21.days after FeeNoticeMotionServed() counted_by frcp6 cite "W.D. Mich. LBR 9013(c)"
-{
-  forum frcp
-}
+deadline fee-notice-motion-response-period: 21.days after FeeNoticeMotionServed() counted_by frbp9006 cite "W.D. Mich. LBR 9013(c)"
 
 /// LBR 9013(c)(1)(A): 28 days from service for motions under FRBP 3002.1(f)
 /// and (g).
-deadline mortgage-motion-response-period: 28.days after MortgageMotionServed() counted_by frcp6 cite "W.D. Mich. LBR 9013(c)"
-{
-  forum frcp
-}
+deadline mortgage-motion-response-period: 28.days after MortgageMotionServed() counted_by frbp9006 cite "W.D. Mich. LBR 9013(c)"
 
 /// LBR 9013(c)(1)(A): 30 days from service for objections to claims.
-deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frcp6 cite "W.D. Mich. LBR 9013(c)"
-{
-  forum frcp
-}
+deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frbp9006 cite "W.D. Mich. LBR 9013(c)"
 
 /// LBR 9013(d): the debtor files and serves on the chapter 13 trustee any
 /// response or request for hearing within 30 days of service of the
 /// trustee's motion to dismiss.
-deadline trustee-dismissal-response-period: 30.days after TrusteeDismissalMotionServed() counted_by frcp6 cite "W.D. Mich. LBR 9013(d)"
-{
-  forum frcp
-}
+deadline trustee-dismissal-response-period: 30.days after TrusteeDismissalMotionServed() counted_by frbp9006 cite "W.D. Mich. LBR 9013(d)"
 
 /// LBR 9013(e): the debtor files and serves on the United States Trustee
 /// any response or request for hearing within 30 days of service of a §
 /// 707(a) motion to dismiss for failure to file schedules and statements.
-deadline ust-dismissal-response-period: 30.days after UstDismissalMotionServed() counted_by frcp6 cite "W.D. Mich. LBR 9013(e)"
-{
-  forum frcp
-}
+deadline ust-dismissal-response-period: 30.days after UstDismissalMotionServed() counted_by frbp9006 cite "W.D. Mich. LBR 9013(e)"
 
 /// LBR 9013(f): absent good cause, a brief or response to a motion not
 /// filed under LBR 9013(c) is filed and served at least 7 days before the
 /// scheduled hearing.
-deadline contested-brief-period: 7.days before ContestedHearingScheduled() counted_by frcp6 cite "W.D. Mich. LBR 9013(f)"
-{
-  forum frcp
-}
+deadline contested-brief-period: 7.days before ContestedHearingScheduled() counted_by frbp9006 cite "W.D. Mich. LBR 9013(f)"
 
 /// LBR 9019-9(b): a party objecting to referral to the ADR Program may file
 /// an objection within 14 days of the order of referral.
-deadline referral-objection-period: 14.days after ReferralOrderEntered() counted_by frcp6 cite "W.D. Mich. LBR 9019-9(b)"
-{
-  forum frcp
-}
+deadline referral-objection-period: 14.days after ReferralOrderEntered() counted_by frbp9006 cite "W.D. Mich. LBR 9019-9(b)"
 
 /// LBR 9019-9(d): within 14 days after the order referring a matter to the
 /// Program, the parties agree on one mediator (or three Blue Ribbon case
 /// evaluators).
-deadline neutral-selection-period: 14.days after ReferralOrderEntered() counted_by frcp6 cite "W.D. Mich. LBR 9019-9(d)"
-{
-  forum frcp
-}
+deadline neutral-selection-period: 14.days after ReferralOrderEntered() counted_by frbp9006 cite "W.D. Mich. LBR 9019-9(d)"
 
 /// LBR 9019-11(a): unless otherwise ordered, no later than 14 days before
 /// the initial scheduling conference in an adversary proceeding, counsel
 /// confer and discuss ADR options.
-deadline adr-conference-period: 14.days before SchedulingConferenceSet() counted_by frcp6 cite "W.D. Mich. LBR 9019-11(a)"
-{
-  forum frcp
-}
+deadline adr-conference-period: 14.days before SchedulingConferenceSet() counted_by frbp9006 cite "W.D. Mich. LBR 9019-11(a)"
 
 /// LBR 9019-13(b): within 14 days of the telephone conference, the mediator
 /// gives notice of the time and place of the mediation.
-deadline mediation-notice-period: 14.days after MediatorTelephoneConferenceHeld() counted_by frcp6 cite "W.D. Mich. LBR 9019-13(b)"
-{
-  forum frcp
-}
+deadline mediation-notice-period: 14.days after MediatorTelephoneConferenceHeld() counted_by frbp9006 cite "W.D. Mich. LBR 9019-13(b)"
 
 /// LBR 9019-13(c): at the mediator's request, each party submits its
 /// Mediation Summary no later than seven days before the Mediation
 /// Conference.
-deadline mediation-summary-period: 7.days before MediationConferenceScheduled() counted_by frcp6 cite "W.D. Mich. LBR 9019-13(c)"
-{
-  forum frcp
-}
+deadline mediation-summary-period: 7.days before MediationConferenceScheduled() counted_by frbp9006 cite "W.D. Mich. LBR 9019-13(c)"
 
 /// LBR 9019-17(b): within 14 days following the conclusion of a Mediation
 /// Conference, the mediator files and serves a report.
-deadline mediator-report-period: 14.days after MediationConferenceConcluded() counted_by frcp6 cite "W.D. Mich. LBR 9019-17(b)"
-{
-  forum frcp
-}
+deadline mediator-report-period: 14.days after MediationConferenceConcluded() counted_by frbp9006 cite "W.D. Mich. LBR 9019-17(b)"
 
 /// LBR 9019-19(c): counsel and pro se parties pay the mediator's bills in
 /// full within 30 days of billing or as otherwise agreed.
-deadline mediator-bill-period: 30.days after MediatorBilled() counted_by frcp6 cite "W.D. Mich. LBR 9019-19(c)"
-{
-  forum frcp
-}
+deadline mediator-bill-period: 30.days after MediatorBilled() counted_by frbp9006 cite "W.D. Mich. LBR 9019-19(c)"
 
 /// LBR 9019-22(a)(2): each party pays the $300 case evaluation fee within
 /// 14 days of the notice of selection of the case evaluators.
-deadline case-evaluation-fee-period: 14.days after EvaluatorsSelectionNoticed() counted_by frcp6 cite "W.D. Mich. LBR 9019-22(a)"
-{
-  forum frcp
-}
+deadline case-evaluation-fee-period: 14.days after EvaluatorsSelectionNoticed() counted_by frbp9006 cite "W.D. Mich. LBR 9019-22(a)"
 
 /// LBR 9019-22(e), 9019-23(e): a party that does not file an acceptance or
 /// rejection of a case evaluation award within 14 days of its service is
 /// deemed to reject it.
-deadline case-evaluation-acceptance-period: 14.days after CaseEvaluationAwardServed() counted_by frcp6 cite "W.D. Mich. LBR 9019-22(e)"
-{
-  forum frcp
-}
+deadline case-evaluation-acceptance-period: 14.days after CaseEvaluationAwardServed() counted_by frbp9006 cite "W.D. Mich. LBR 9019-22(e)"
 
 /// LBR 9019-23(d): in an extraordinary case, the Blue Ribbon evaluators
 /// render their written evaluation no later than seven days after the
 /// hearing concludes.
-deadline blue-ribbon-award-period: 7.days after BlueRibbonHearingConcluded() counted_by frcp6 cite "W.D. Mich. LBR 9019-23(d)"
-{
-  forum frcp
-}
+deadline blue-ribbon-award-period: 7.days after BlueRibbonHearingConcluded() counted_by frbp9006 cite "W.D. Mich. LBR 9019-23(d)"
 
 /// LBR 9037-1(b)(1): a person wishing to redact personal identifiers files
 /// a Notice of Intent to Request Redaction and serves the transcriber
 /// within 7 days after the transcript is filed.
-deadline redaction-notice-period: 7.days after TranscriptFiled() counted_by frcp6 cite "W.D. Mich. LBR 9037-1(b)"
-{
-  forum frcp
-}
+deadline redaction-notice-period: 7.days after TranscriptFiled() counted_by frbp9006 cite "W.D. Mich. LBR 9037-1(b)"
 
 /// LBR 9037-1(b)(1): the Request for Redaction is submitted within 21 days
 /// of the transcript's filing.
-deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frcp6 cite "W.D. Mich. LBR 9037-1(b)"
-{
-  forum frcp
-}
+deadline redaction-request-period: 21.days after TranscriptFiled() counted_by frbp9006 cite "W.D. Mich. LBR 9037-1(b)"

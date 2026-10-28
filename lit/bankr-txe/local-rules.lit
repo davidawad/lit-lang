@@ -1,6 +1,6 @@
 module bankr-txe-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 import frbp.events.{ CaseConverted, FirstMeetingDate, OrderForReliefEntered }
 
 // The Bankr. E.D. Tex. court's own periods, counted under FRBP 9006(a).
@@ -147,421 +147,271 @@ event FinalDisposition()
 /// Bankr. E.D. Tex. LBR 1007-1(a)(1)(A): in an involuntary case, the master
 /// mailing list (matrix) is filed within 14 days after entry of the order
 /// for relief.
-deadline involuntary-matrix-period: 14.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 1007-1(a)"
-{
-  forum frcp
-}
+deadline involuntary-matrix-period: 14.days after OrderForReliefEntered() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 1007-1(a)"
 
 /// Bankr. E.D. Tex. LBR 1007-1(e)(1): an individual chapter 7 or 13 debtor
 /// provides payment advices for the 60 days before the petition to the
 /// trustee at least seven days before the first date set for the § 341
 /// meeting, rather than filing them.
-deadline payment-advices-trustee-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 1007-1(e)"
-{
-  forum frcp
-}
+deadline payment-advices-trustee-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 1007-1(e)"
 
 /// Bankr. E.D. Tex. LBR 1007-1(e)(2): the debtor provides payment advices
 /// to any creditor that serves a written request for them within seven days
 /// following the conclusion of the § 341 meeting.
-deadline payment-advices-request-period: 7.days after FirstMeetingConcluded() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 1007-1(e)"
-{
-  forum frcp
-}
+deadline payment-advices-request-period: 7.days after FirstMeetingConcluded() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 1007-1(e)"
 
 /// Bankr. E.D. Tex. LBR 1017-1(b)(3): a motion to dismiss (other than a
 /// trustee's with a designated hearing) carries 14-day negative notice: no
 /// hearing unless a written objection is filed and served within fourteen
 /// days from the date of service, or the motion is deemed unopposed.
-deadline dismissal-objection-period: 14.days after DismissalMotionServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 1017-1(b)"
-{
-  forum frcp
-}
+deadline dismissal-objection-period: 14.days after DismissalMotionServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 1017-1(b)"
 
 /// Bankr. E.D. Tex. LBR 1019-1: if a fee application is pending when a
 /// chapter 13 case is converted to chapter 7, the chapter 13 trustee's
 /// period to file a final report under FRBP 1019 is extended to 60 days,
 /// with further extensions on motion.
-deadline chapter-13-trustee-final-report-period: 60.days after CaseConverted() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 1019-1"
-{
-  forum frcp
-}
+deadline chapter-13-trustee-final-report-period: 60.days after CaseConverted() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 1019-1"
 
 /// Bankr. E.D. Tex. LBR 2002-1(d): after re-serving returned notices of the
 /// meeting of creditors, the debtor files a certificate of service within
 /// 14 days after the conclusion of the first meeting.
-deadline returned-notice-certificate-period: 14.days after FirstMeetingConcluded() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 2002-1(d)"
-{
-  forum frcp
-}
+deadline returned-notice-certificate-period: 14.days after FirstMeetingConcluded() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 2002-1(d)"
 
 /// Bankr. E.D. Tex. LBR 2004-1(a)(1): a motion for a Rule 2004 examination
 /// carries 14-day negative notice: an objection is filed and served within
 /// fourteen days from the date of service.
-deadline examination-objection-period: 14.days after ExaminationMotionServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 2004-1(a)"
-{
-  forum frcp
-}
+deadline examination-objection-period: 14.days after ExaminationMotionServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 2004-1(a)"
 
 /// Bankr. E.D. Tex. LBR 2004-1(a)(5): the motion provides a minimum of 28
 /// days' written notice of the proposed examination date to the examinee,
 /// counsel, any trustee, any committee's counsel and the United States
 /// Trustee.
-deadline examination-notice-period: 28.days before ExaminationDate() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 2004-1(a)"
-{
-  forum frcp
-}
+deadline examination-notice-period: 28.days before ExaminationDate() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 2004-1(a)"
 
 /// Bankr. E.D. Tex. LBR 2014-1(a)(1): an application to employ a
 /// professional carries 14-day negative notice: an objection is filed and
 /// served within fourteen days from the date of service.
-deadline employment-objection-period: 14.days after EmploymentApplicationServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 2014-1(a)"
-{
-  forum frcp
-}
+deadline employment-objection-period: 14.days after EmploymentApplicationServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 2014-1(a)"
 
 /// Bankr. E.D. Tex. LBR 2014-1(d): a professional applying more than 30
 /// days after employment and seeking approval from the employment date
 /// seeks it nunc pro tunc, with the additional content the rule requires.
-deadline contemporaneous-employment-period: 30.days after ProfessionalEmployed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 2014-1(d)"
-{
-  forum frcp
-}
+deadline contemporaneous-employment-period: 30.days after ProfessionalEmployed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 2014-1(d)"
 
 /// Bankr. E.D. Tex. LBR 2015-1(a): when a business is operated in a chapter
 /// 7, 11, 12 or 13 case, the monthly operating report is filed and served
 /// not later than the 21st day of the month following the month reported.
-deadline monthly-operating-report-period: 21.days after CalendarMonthEnded() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 2015-1(a)"
-{
-  forum frcp
-}
+deadline monthly-operating-report-period: 21.days after CalendarMonthEnded() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 2015-1(a)"
 
 /// Bankr. E.D. Tex. LBR 2015-1(c)(1)(A): in a non-Subchapter V chapter 11
 /// case of a non-individual debtor, the proponent of the confirmed plan
 /// files and serves a post-confirmation report within 60 days after the
 /// confirmation order.
-deadline post-confirmation-report-period: 60.days after ConfirmationOrderEntered() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 2015-1(c)"
-{
-  forum frcp
-}
+deadline post-confirmation-report-period: 60.days after ConfirmationOrderEntered() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 2015-1(c)"
 
 /// Bankr. E.D. Tex. LBR 2015-1(c)(1)(B): within 180 days after the
 /// confirmation order, the proponent files an application for a final
 /// decree or a further post-confirmation report explaining why a final
 /// decree is not yet appropriate.
-deadline final-decree-or-report-period: 180.days after ConfirmationOrderEntered() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 2015-1(c)"
-{
-  forum frcp
-}
+deadline final-decree-or-report-period: 180.days after ConfirmationOrderEntered() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 2015-1(c)"
 
 /// Bankr. E.D. Tex. LBR 2015-1(d)(1)(A): after consensual confirmation
 /// under § 1191(a) in a Subchapter V case, the debtor files and serves a
 /// post-confirmation report within 60 days after the confirmation order.
-deadline subchapter-v-post-confirmation-report-period: 60.days after ConfirmationOrderEntered() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 2015-1(d)"
-{
-  forum frcp
-}
+deadline subchapter-v-post-confirmation-report-period: 60.days after ConfirmationOrderEntered() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 2015-1(d)"
 
 /// Bankr. E.D. Tex. LBR 2016-1(g): if no objection to a motion for
 /// distribution of a retainer is filed within 14 days of its service, the
 /// professional may withdraw the interim compensation from the retainer
 /// without a formal order.
-deadline retainer-distribution-objection-period: 14.days after RetainerDistributionMotionServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 2016-1(g)"
-{
-  forum frcp
-}
+deadline retainer-distribution-objection-period: 14.days after RetainerDistributionMotionServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 2016-1(g)"
 
 /// Bankr. E.D. Tex. LBR 2016-1(h)(2): a chapter 13 debtor's attorney
 /// electing a formal fee application for the Benchmark Fee Period files it
 /// no later than 30 days after that period expires, or the award reverts to
 /// the benchmark fee.
-deadline benchmark-fee-application-period: 30.days after BenchmarkFeePeriodExpired() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 2016-1(h)"
-{
-  forum frcp
-}
+deadline benchmark-fee-application-period: 30.days after BenchmarkFeePeriodExpired() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 2016-1(h)"
 
 /// Bankr. E.D. Tex. LBR 3003-1(a): a proof of claim in a chapter 9 or 11
 /// case is timely if filed not later than 120 days after entry of the order
 /// for relief, unless the court sets a different bar date.
-deadline chapter-11-claims-bar-period: 120.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 3003-1(a)"
-{
-  forum frcp
-}
+deadline chapter-11-claims-bar-period: 120.days after OrderForReliefEntered() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 3003-1(a)"
 
 /// Bankr. E.D. Tex. LBR 3003-1(a)(1): in a Subchapter V case, a non-
 /// governmental creditor's proof of claim is timely if filed not later than
 /// 70 days after entry of the order for relief.
-deadline subchapter-v-claims-bar-period: 70.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 3003-1(a)"
-{
-  forum frcp
-}
+deadline subchapter-v-claims-bar-period: 70.days after OrderForReliefEntered() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 3003-1(a)"
 
 /// Bankr. E.D. Tex. LBR 3007-1(b): a claim objection using 30-day negative
 /// notice may be sustained without a hearing unless a response is filed
 /// within thirty days from the date of service.
-deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 3007-1(b)"
-{
-  forum frcp
-}
+deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 3007-1(b)"
 
 /// Bankr. E.D. Tex. LBR 3015-1(d)(2): in a chapter 12 case, an objection to
 /// confirmation is filed no later than seven days before confirmation;
 /// untimely objections may not be considered.
-deadline chapter-12-confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 3015-1(d)"
-{
-  forum frcp
-}
+deadline chapter-12-confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 3015-1(d)"
 
 /// Bankr. E.D. Tex. LBR 3015-1(d)(3): the chapter 12 trustee files and
 /// serves a confirmation recommendation and report at least seven days
 /// before the scheduled confirmation hearing.
-deadline chapter-12-trustee-report-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 3015-1(d)"
-{
-  forum frcp
-}
+deadline chapter-12-trustee-report-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 3015-1(d)"
 
 /// Bankr. E.D. Tex. LBR 3015-1(e)(2): an objection to confirmation of a
 /// chapter 13 plan by a party other than the trustee is filed no later than
 /// fourteen days before the scheduled confirmation hearing.
-deadline chapter-13-confirmation-objection-period: 14.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 3015-1(e)"
-{
-  forum frcp
-}
+deadline chapter-13-confirmation-objection-period: 14.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 3015-1(e)"
 
 /// Bankr. E.D. Tex. LBR 3015-1(e)(3): no later than seven days before the
 /// confirmation hearing, the debtor tenders a proposed confirmation order
 /// to the trustee and files the post-petition mortgage declaration.
-deadline chapter-13-debtor-confirmation-papers-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 3015-1(e)"
-{
-  forum frcp
-}
+deadline chapter-13-debtor-confirmation-papers-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 3015-1(e)"
 
 /// Bankr. E.D. Tex. LBR 3015-1(e)(4): no later than seven days before the
 /// confirmation hearing, the chapter 13 trustee files and serves any
 /// confirmation report setting out its objections, or uploads an approved
 /// confirmation order.
-deadline chapter-13-trustee-report-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 3015-1(e)"
-{
-  forum frcp
-}
+deadline chapter-13-trustee-report-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 3015-1(e)"
 
 /// Bankr. E.D. Tex. LBR 3015-1(e)(6), (f)(1): after confirmation of a plan
 /// is denied, or when an amended plan needs a new hearing, objections to
 /// the subsequently proposed or amended plan are filed no later than seven
 /// days before the hearing on it.
-deadline subsequent-plan-objection-period: 7.days before RescheduledConfirmationHearing() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 3015-1(e)"
-{
-  forum frcp
-}
+deadline subsequent-plan-objection-period: 7.days before RescheduledConfirmationHearing() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 3015-1(e)"
 
 /// Bankr. E.D. Tex. LBR 3015-1(g)(4): absent an order, the deadline in a
 /// chapter 13 case to object to a claim, move under FRBP 3012 to value
 /// collateral, or challenge a claimed security interest is the twenty-first
 /// day following service of the Trustee's Reconciliation Concerning Claims.
-deadline claims-challenge-period: 21.days after ReconciliationServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 3015-1(g)"
-{
-  forum frcp
-}
+deadline claims-challenge-period: 21.days after ReconciliationServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 3015-1(g)"
 
 /// Bankr. E.D. Tex. LBR 3015-1(h)(5): a motion to modify a confirmed
 /// chapter 12 or 13 plan carries 28-day negative notice: an objection is
 /// filed and served within twenty-eight days from the date of service.
-deadline plan-modification-objection-period: 28.days after PlanModificationServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 3015-1(h)"
-{
-  forum frcp
-}
+deadline plan-modification-objection-period: 28.days after PlanModificationServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 3015-1(h)"
 
 /// Bankr. E.D. Tex. LBR 3017.1-1(b): a small business plan proponent's
 /// motion to waive the disclosure statement carries 14-day negative notice:
 /// an objection is filed and served within fourteen days from the date of
 /// service.
-deadline disclosure-waiver-objection-period: 14.days after DisclosureWaiverMotionServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 3017.1-1(b)"
-{
-  forum frcp
-}
+deadline disclosure-waiver-objection-period: 14.days after DisclosureWaiverMotionServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 3017.1-1(b)"
 
 /// Bankr. E.D. Tex. LBR 3019-1(b): a motion to modify a confirmed chapter
 /// 11 plan carries 28-day negative notice: an objection is filed and served
 /// within twenty-eight days from the date of service.
-deadline chapter-11-modification-objection-period: 28.days after ChapterElevenModificationServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 3019-1(b)"
-{
-  forum frcp
-}
+deadline chapter-11-modification-objection-period: 28.days after ChapterElevenModificationServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 3019-1(b)"
 
 /// Bankr. E.D. Tex. LBR 4000-1(b)(1)(A): a debtor's petition-date
 /// certification of compliance on a residential lease under § 362(l)(1)
 /// carries 14-day negative notice to the lessor, who objects within
 /// fourteen days from the date of service.
-deadline petition-date-certification-objection-period: 14.days after PetitionDateCertificationServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 4000-1(b)"
-{
-  forum frcp
-}
+deadline petition-date-certification-objection-period: 14.days after PetitionDateCertificationServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 4000-1(b)"
 
 /// Bankr. E.D. Tex. LBR 4000-1(c)(1)(A): a debtor's post-petition
 /// certification of compliance on a residential lease under § 362(l)(2)
 /// carries 14-day negative notice to the lessor, who objects within
 /// fourteen days from the date of service.
-deadline post-petition-certification-objection-period: 14.days after PostPetitionCertificationServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 4000-1(c)"
-{
-  forum frcp
-}
+deadline post-petition-certification-objection-period: 14.days after PostPetitionCertificationServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 4000-1(c)"
 
 /// Bankr. E.D. Tex. LBR 4001-1(a): a motion for relief from the automatic
 /// stay carries 14-day negative notice: a response is filed and served
 /// within fourteen days from the date of service (sales and uses under §
 /// 363 carry 21-day notice instead).
-deadline stay-relief-objection-period: 14.days after StayReliefMotionServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 4001-1(a)"
-{
-  forum frcp
-}
+deadline stay-relief-objection-period: 14.days after StayReliefMotionServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 4001-1(a)"
 
 /// Bankr. E.D. Tex. LBR 4002-1(a): when the § 341 meeting is to be held by
 /// video conference, an individual debtor provides the presiding trustee an
 /// enlarged copy of photo identification and proof of social security
 /// number no later than seven days before the first date set for the
 /// meeting.
-deadline video-meeting-identification-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 4002-1(a)"
-{
-  forum frcp
-}
+deadline video-meeting-identification-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 4002-1(a)"
 
 /// Bankr. E.D. Tex. LBR 4003-1(c): an objection to a claim of exemption
 /// carries 21-day negative notice: a response is filed and served within
 /// twenty-one days from the date of service.
-deadline exemption-objection-response-period: 21.days after ExemptionObjectionServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 4003-1(c)"
-{
-  forum frcp
-}
+deadline exemption-objection-response-period: 21.days after ExemptionObjectionServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 4003-1(c)"
 
 /// Bankr. E.D. Tex. LBR 4004-1(c)(3): a Subchapter V debtor's motion for
 /// discharge after a non-consensual commitment period carries 28-day
 /// negative notice: an objection is filed and served within twenty-eight
 /// days from the date of service.
-deadline subchapter-v-discharge-objection-period: 28.days after SubchapterVDischargeMotionServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 4004-1(c)"
-{
-  forum frcp
-}
+deadline subchapter-v-discharge-objection-period: 28.days after SubchapterVDischargeMotionServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 4004-1(c)"
 
 /// Bankr. E.D. Tex. LBR 4004-1(d)(2): on the filing of the trustee's Notice
 /// of Plan Completion in a chapter 12 or 13 case, the Clerk gives all
 /// parties on the matrix a 60-day opportunity to object to entry of the
 /// discharge order.
-deadline plan-completion-discharge-objection-period: 60.days after PlanCompletionNoticeFiled() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 4004-1(d)"
-{
-  forum frcp
-}
+deadline plan-completion-discharge-objection-period: 60.days after PlanCompletionNoticeFiled() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 4004-1(d)"
 
 /// Bankr. E.D. Tex. LBR 4004-1(d)(3): within 30 days after the trustee
 /// files the Notice of Plan Completion, the debtor files the § 522(q)
 /// statement and the domestic support obligations certification.
-deadline plan-completion-statements-period: 30.days after PlanCompletionNoticeFiled() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 4004-1(d)"
-{
-  forum frcp
-}
+deadline plan-completion-statements-period: 30.days after PlanCompletionNoticeFiled() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 4004-1(d)"
 
 /// Bankr. E.D. Tex. LBR 4004-1(e): the order granting a chapter 13 hardship
 /// discharge fixes a date, not later than 60 days from its entry, by which
 /// a complaint under § 523(a)(6) must be filed.
-deadline hardship-dischargeability-period: 60.days after HardshipDischargeOrdered() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 4004-1(e)"
-{
-  forum frcp
-}
+deadline hardship-dischargeability-period: 60.days after HardshipDischargeOrdered() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 4004-1(e)"
 
 /// Bankr. E.D. Tex. LBR 5003-1(a): unless a challenge to the docketed image
 /// of a paper filing is communicated to the Clerk within 14 days of
 /// docketing, the document as presented is conclusively confirmed as the
 /// one submitted.
-deadline paper-filing-challenge-period: 14.days after PaperDocumentDocketed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 5003-1(a)"
-{
-  forum frcp
-}
+deadline paper-filing-challenge-period: 14.days after PaperDocumentDocketed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 5003-1(a)"
 
 /// Bankr. E.D. Tex. LBR 6004-1(b)(3): any objection to a motion to sell
 /// personally identifiable information is filed and served no later than
 /// seven days before the scheduled hearing.
-deadline pii-sale-objection-period: 7.days before PiiSaleHearing() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 6004-1(b)"
-{
-  forum frcp
-}
+deadline pii-sale-objection-period: 7.days before PiiSaleHearing() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 6004-1(b)"
 
 /// Bankr. E.D. Tex. LBR 6007-1(a)(2): an objection to a chapter 7 trustee's
 /// abandonment announced at the first meeting of creditors is filed and
 /// served no later than 14 days after the meeting, or the property is
 /// deemed abandoned.
-deadline meeting-abandonment-objection-period: 14.days after FirstMeetingConcluded() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 6007-1(a)"
-{
-  forum frcp
-}
+deadline meeting-abandonment-objection-period: 14.days after FirstMeetingConcluded() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 6007-1(a)"
 
 /// Bankr. E.D. Tex. LBR 6007-1(b)(3): a notice or motion to abandon
 /// property carries 14-day negative notice: an objection is filed and
 /// served within fourteen days from the date of service.
-deadline abandonment-objection-period: 14.days after AbandonmentNoticeServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 6007-1(b)"
-{
-  forum frcp
-}
+deadline abandonment-objection-period: 14.days after AbandonmentNoticeServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 6007-1(b)"
 
 /// Bankr. E.D. Tex. LBR 7007-1: a motion in an adversary proceeding (other
 /// than those the rule lists) carries 14-day negative notice: a response is
 /// filed and served within fourteen days from the date of service.
-deadline adversary-motion-objection-period: 14.days after AdversaryMotionServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 7007-1"
-{
-  forum frcp
-}
+deadline adversary-motion-objection-period: 14.days after AdversaryMotionServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 7007-1"
 
 /// Bankr. E.D. Tex. LBR 7016-1(c): a party's request for a pretrial hearing
 /// or conference is made no later than 28 days before the date scheduled
 /// for trial.
-deadline pretrial-conference-request-period: 28.days before TrialDate() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 7016-1(c)"
-{
-  forum frcp
-}
+deadline pretrial-conference-request-period: 28.days before TrialDate() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 7016-1(c)"
 
 /// Bankr. E.D. Tex. LBR 7016-1(d)(4): copies of all exhibits are provided
 /// to each party not less than 14 days before trial.
-deadline trial-exhibits-exchange-period: 14.days before TrialDate() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 7016-1(d)"
-{
-  forum frcp
-}
+deadline trial-exhibits-exchange-period: 14.days before TrialDate() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 7016-1(d)"
 
 /// Bankr. E.D. Tex. LBR 7016-1(g): unless the court sets otherwise, a
 /// pretrial order is due 14 days before trial; legal briefs are due by the
 /// same deadline (f).
-deadline pretrial-order-period: 14.days before TrialDate() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 7016-1(g)"
-{
-  forum frcp
-}
+deadline pretrial-order-period: 14.days before TrialDate() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 7016-1(g)"
 
 /// Bankr. E.D. Tex. LBR 7056-1(b): a response opposing a motion for summary
 /// judgment is filed within 28 days of the filing of the motion.
-deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionFiled() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 7056-1(b)"
-{
-  forum frcp
-}
+deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionFiled() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 7056-1(b)"
 
 /// Bankr. E.D. Tex. LBR 7056-1(c): a reply brief on an opposed summary
 /// judgment motion is filed within 14 days of the filing of the response;
 /// the court then considers the motion without a hearing (e).
-deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseFiled() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 7056-1(c)"
-{
-  forum frcp
-}
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseFiled() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 7056-1(c)"
 
 /// Bankr. E.D. Tex. LBR 9007-1(a): a pleading carrying 21-day negative
 /// notice is decided without a hearing unless a written response is filed
 /// and served within twenty-one days from the date of service.
-deadline negative-notice-response-period: 21.days after NegativeNoticePleadingServed() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 9007-1(a)"
-{
-  forum frcp
-}
+deadline negative-notice-response-period: 21.days after NegativeNoticePleadingServed() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 9007-1(a)"
 
 /// Bankr. E.D. Tex. LBR 9017-1: any exhibit not withdrawn 30 days after
 /// final disposition of the proceedings may be destroyed without further
 /// order or notice.
-deadline exhibit-withdrawal-period: 30.days after FinalDisposition() counted_by frcp6 cite "Bankr. E.D. Tex. LBR 9017-1"
-{
-  forum frcp
-}
+deadline exhibit-withdrawal-period: 30.days after FinalDisposition() counted_by frbp9006 cite "Bankr. E.D. Tex. LBR 9017-1"
 
 start motion-filed
 

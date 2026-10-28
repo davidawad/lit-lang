@@ -1,6 +1,6 @@
 module bap6.panel
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 
 import frbp.appeals.{
   appellant-brief-period,
@@ -50,10 +50,7 @@ event ClerkNoticeOfDefaultIssued()
 /// 6th Cir. BAP LBR 8003-1(a): the default is remedied within fourteen
 /// days of the panel clerk's notice, or the panel clerk enters an order
 /// dismissing the appeal or cross-appeal for non-prosecution.
-deadline default-cure-period: 14.days after ClerkNoticeOfDefaultIssued() counted_by frcp6 cite "6th Cir. BAP LBR 8003-1(a)"
-{
-  forum frcp
-}
+deadline default-cure-period: 14.days after ClerkNoticeOfDefaultIssued() counted_by frbp9006 cite "6th Cir. BAP LBR 8003-1(a)"
 
 test "a default is remedied within fourteen days of the clerk's notice" cite "6th Cir. BAP LBR 8003-1(a)"
 {

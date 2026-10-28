@@ -1,6 +1,6 @@
 module bankr-inn-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 import frbp.events.{ FirstMeetingDate, OrderForReliefEntered }
 
 // The Bankr. N.D. Ind. court's own periods, counted under FRBP 9006(a)
@@ -132,62 +132,41 @@ event ExhibitRemovalNoticed()
 /// natural person, within fourteen (14) days after the order for relief the
 /// debtor files and serves a verified Statement of Insider Compensation; no
 /// insider is compensated until it is filed (LBR B-1007-3(d)).
-deadline insider-compensation-period: 14.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 1007-3(a)"
-{
-  forum frcp
-}
+deadline insider-compensation-period: 14.days after OrderForReliefEntered() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 1007-3(a)"
 
 /// LBR B-1007-3(c): for an insider hired or employed after the petition, the
 /// debtor files and serves a supplemental statement within fourteen (14) days
 /// after the employment.
-deadline supplemental-insider-statement-period: 14.days after PostPetitionInsiderEmployed() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 1007-3(c)"
-{
-  forum frcp
-}
+deadline supplemental-insider-statement-period: 14.days after PostPetitionInsiderEmployed() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 1007-3(c)"
 
 /// LBR B-1007-4(b): on the request of a trustee or the United States trustee,
 /// a corporation or partnership is ordered, without notice or hearing, to
 /// file a schedule of income and expenditures within fourteen (14) days.
-deadline income-schedule-period: 14.days after IncomeScheduleOrdered() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 1007-4(b)"
-{
-  forum frcp
-}
+deadline income-schedule-period: 14.days after IncomeScheduleOrdered() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 1007-4(b)"
 
 /// LBR B-2002-2(b)(1): except as ordered, no less than fourteen (14) days'
 /// notice of the opportunity to object is given to motions to approve stay
 /// relief, adequate protection or use agreements, cash collateral agreements,
 /// motions for credit, chapter 7 stay relief motions and abandonment motions,
 /// measured from service of the notice.
-deadline objection-short-notice-period: 14.days after ObjectionNoticeServed() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 2002-2(b)"
-{
-  forum frcp
-}
+deadline objection-short-notice-period: 14.days after ObjectionNoticeServed() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 2002-2(b)"
 
 /// LBR B-2002-2(b)(2): no less than twenty-eight (28) days' notice of the
 /// opportunity to object is given to motions to determine status or final
 /// cure under FRBP 3002.1, measured from service of the notice.
-deadline objection-cure-notice-period: 28.days after ObjectionNoticeServed() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 2002-2(b)"
-{
-  forum frcp
-}
+deadline objection-cure-notice-period: 28.days after ObjectionNoticeServed() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 2002-2(b)"
 
 /// LBR B-2002-2(b)(3): no less than twenty-one (21) days' notice of the
 /// opportunity to object is given to the other motions subject to the rule
 /// (LBR B-2002-2(a)), measured from service of the notice; absent a timely
 /// objection the court may grant the relief without a hearing.
-deadline objection-notice-period: 21.days after ObjectionNoticeServed() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 2002-2(b)"
-{
-  forum frcp
-}
+deadline objection-notice-period: 21.days after ObjectionNoticeServed() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 2002-2(b)"
 
 /// LBR B-2002-2(d): the movant completes and serves the LBF-3 notice and
 /// makes proof of it within seven (7) days of the date the motion was filed,
 /// or waives any time limits on ruling on the motion, including those of 11
 /// U.S.C. § 362(e).
-deadline objection-notice-service-period: 7.days after NegativeNoticeMotionFiled() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 2002-2(d)"
-{
-  forum frcp
-}
+deadline objection-notice-service-period: 7.days after NegativeNoticeMotionFiled() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 2002-2(d)"
 
 /// LBR B-2014-1(c): unless objections to a debtor-in-possession's application
 /// to employ a professional are filed seven (7) days before the date first
@@ -195,266 +174,173 @@ deadline objection-notice-service-period: 7.days after NegativeNoticeMotionFiled
 /// of the application, whichever is later, the court may approve it without
 /// notice or hearing; a late objection is waived (this limb and the next; the
 /// later governs).
-deadline dip-employment-objection-meeting-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 2014-1(c)"
-{
-  forum frcp
-}
+deadline dip-employment-objection-meeting-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 2014-1(c)"
 
 /// LBR B-2014-1(c): the same objection deadline, measured from service of the
 /// application.
-deadline dip-employment-objection-service-period: 21.days after DipEmploymentApplicationServed() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 2014-1(c)"
-{
-  forum frcp
-}
+deadline dip-employment-objection-service-period: 21.days after DipEmploymentApplicationServed() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 2014-1(c)"
 
 /// LBR B-2014-2(b)(2): unless objections are filed within twenty-one (21)
 /// days following service of a trustee's application to employ after notice
 /// and of the notice of the opportunity to object, the court may approve the
 /// employment without further notice or hearing; a late objection is waived.
-deadline trustee-employment-objection-period: 21.days after TrusteeEmploymentApplicationServed() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 2014-2(b)"
-{
-  forum frcp
-}
+deadline trustee-employment-objection-period: 21.days after TrusteeEmploymentApplicationServed() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 2014-2(b)"
 
 /// LBR B-2015-1(a): every trustee, chapter 11 debtor in possession or other
 /// debtor operating a business files a monthly statement of cash receipts and
 /// disbursements no later than twenty-one (21) days after the end of the
 /// calendar month.
-deadline monthly-operating-report-period: 21.days after ReportingMonthEnded() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 2015-1(a)"
-{
-  forum frcp
-}
+deadline monthly-operating-report-period: 21.days after ReportingMonthEnded() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 2015-1(a)"
 
 /// LBR B-3006-1(a): absent an objection or other response within twenty-one
 /// (21) days after a request to withdraw a claim is filed, the court may
 /// allow the withdrawal without further notice or hearing.
-deadline claim-withdrawal-objection-period: 21.days after ClaimWithdrawalRequested() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 3006-1(a)"
-{
-  forum frcp
-}
+deadline claim-withdrawal-objection-period: 21.days after ClaimWithdrawalRequested() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 3006-1(a)"
 
 /// LBR B-3007-1(e): unless a response is filed within thirty (30) days
 /// following service of the notice of objection, the court may disallow or
 /// modify the claim as objected, without further hearing.
-deadline claim-objection-response-period: 30.days after ClaimObjectionNoticeServed() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 3007-1(e)"
-{
-  forum frcp
-}
+deadline claim-objection-response-period: 30.days after ClaimObjectionNoticeServed() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 3007-1(e)"
 
 /// LBR B-3011-1(e): absent an objection or other response from the United
 /// States Attorney, or the Owner of Record if applicable, within thirty (30)
 /// days of the date the motion is filed, the court may determine it without
 /// further notice or hearing.
-deadline unclaimed-funds-objection-period: 30.days after UnclaimedFundsApplicationFiled() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 3011-1(e)"
-{
-  forum frcp
-}
+deadline unclaimed-funds-objection-period: 30.days after UnclaimedFundsApplicationFiled() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 3011-1(e)"
 
 /// LBR B-3018-1(b), (c): unless the court orders otherwise, the plan
 /// proponent prepares, files and serves a verified report of the balloting no
 /// later than fourteen (14) days before the date set for the confirmation
 /// hearing.
-deadline ballot-report-period: 14.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 3018-1(b)"
-{
-  forum frcp
-}
+deadline ballot-report-period: 14.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 3018-1(b)"
 
 /// LBR B-3020-1(a): in a chapter 11 case other than under subchapter V, a
 /// proponent who would seek confirmation over a rejecting class under §
 /// 1129(b) files and serves a request no later than fourteen (14) days before
 /// the date set for the confirmation hearing.
-deadline cramdown-request-period: 14.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 3020-1(a)"
-{
-  forum frcp
-}
+deadline cramdown-request-period: 14.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 3020-1(a)"
 
 /// LBR B-3020-1(b): in a subchapter V case, a debtor who would seek
 /// confirmation under § 1191(b) over a rejecting class files and serves a
 /// motion not later than fourteen (14) days before the date set for the
 /// confirmation hearing.
-deadline subchapter-v-cramdown-motion-period: 14.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 3020-1(b)"
-{
-  forum frcp
-}
+deadline subchapter-v-cramdown-motion-period: 14.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 3020-1(b)"
 
 /// LBR B-3020-1(c): the plan proponent may be required to file an application
 /// to fix the amount of any confirmation deposit no less than fourteen (14)
 /// days before the date set for the confirmation hearing.
-deadline confirmation-deposit-period: 14.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 3020-1(c)"
-{
-  forum frcp
-}
+deadline confirmation-deposit-period: 14.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 3020-1(c)"
 
 /// LBR B-4001-1(b)(3): the deadline to object to a chapter 13 motion for
 /// relief from stay because the plan proposes to surrender property is no
 /// less than fourteen (14) days after service of the notice and no sooner
 /// than seven (7) days after the first date set for the § 341 meeting (this
 /// limb and the next; the later governs).
-deadline surrender-stay-objection-period: 14.days after SurrenderStayNoticeServed() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 4001-1(b)"
-{
-  forum frcp
-}
+deadline surrender-stay-objection-period: 14.days after SurrenderStayNoticeServed() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 4001-1(b)"
 
 /// LBR B-4001-1(b)(3): the same objection deadline, no sooner than seven (7)
 /// days after the first date set for the § 341 meeting.
-deadline surrender-stay-objection-meeting-period: 7.days after FirstMeetingDate() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 4001-1(b)"
-{
-  forum frcp
-}
+deadline surrender-stay-objection-meeting-period: 7.days after FirstMeetingDate() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 4001-1(b)"
 
 /// LBR B-4004-1(b), (c): a motion to extend the time to object to discharge
 /// or to determine dischargeability states that objections must be filed
 /// within fourteen (14) days of service; absent one the court may grant it
 /// without further notice or hearing.
-deadline discharge-extension-objection-period: 14.days after DischargeExtensionMotionServed() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 4004-1(c)"
-{
-  forum frcp
-}
+deadline discharge-extension-objection-period: 14.days after DischargeExtensionMotionServed() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 4004-1(c)"
 
 /// LBR B-4004-2(d), B-4004-3(b)(3): if a Verified Motion for Entry of
 /// Discharge is not filed within thirty (30) days after the filing of the
 /// trustee's final report in a chapter 12 or 13 case, or in a subchapter V
 /// case confirmed under § 1191(b), the court may close the case without a
 /// discharge.
-deadline discharge-motion-period: 30.days after TrusteeFinalReportFiled() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 4004-2(d)"
-{
-  forum frcp
-}
+deadline discharge-motion-period: 30.days after TrusteeFinalReportFiled() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 4004-2(d)"
 
 /// LBR B-9014-1(b), B-4004-3(a)(1): except as ordered, on a matter in which
 /// relief may be granted only after a hearing, an objection is filed and
 /// served no later than seven (7) days before the hearing; if the hearing is
 /// set on less than fourteen (14) days' notice, any time before or at the
 /// hearing.
-deadline hearing-objection-period: 7.days before ContestedHearing() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 9014-1(b)"
-{
-  forum frcp
-}
+deadline hearing-objection-period: 7.days before ContestedHearing() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 9014-1(b)"
 
 /// LBR B-5071-1(b): a request to continue, reschedule, postpone or cancel a
 /// matter because of a prior conflict describes the conflict and is filed no
 /// later than ten (10) days after the notice or order scheduling the matter
 /// issues.
-deadline conflict-continuance-period: 10.days after SchedulingNoticeIssued() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 5071-1(b)"
-{
-  forum frcp
-}
+deadline conflict-continuance-period: 10.days after SchedulingNoticeIssued() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 5071-1(b)"
 
 /// LBR B-6004-1(c): if a motion to sell outside the ordinary course is
 /// granted, the trustee or debtor-in-possession files the FRBP 6004(f)(1)
 /// report of sale within seven (7) days following the sale and serves it on
 /// the parties served with the motion and any objectors.
-deadline sale-report-period: 7.days after SaleCompleted() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 6004-1(c)"
-{
-  forum frcp
-}
+deadline sale-report-period: 7.days after SaleCompleted() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 6004-1(c)"
 
 /// LBR B-6007-1(a)(3): a trustee's or debtor-in-possession's notice of
 /// abandonment states an objection date no less than 14 days from the date
 /// the notice is served.
-deadline abandonment-objection-period: 14.days after AbandonmentNoticeServed() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 6007-1(a)"
-{
-  forum frcp
-}
+deadline abandonment-objection-period: 14.days after AbandonmentNoticeServed() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 6007-1(a)"
 
 /// LBR B-7007-1(a): unless the court orders otherwise, the opposing party has
 /// thirty (30) days after service of a motion and its initial brief in a
 /// contested matter or adversary proceeding to serve and file a response; a
 /// late response is waived.
-deadline motion-response-period: 30.days after MotionBriefServed() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 7007-1(a)"
-{
-  forum frcp
-}
+deadline motion-response-period: 30.days after MotionBriefServed() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 7007-1(a)"
 
 /// LBR B-7007-1(a): the moving party has fourteen (14) days after service of
 /// any response to serve and file a reply.
-deadline motion-reply-period: 14.days after MotionResponseServed() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 7007-1(a)"
-{
-  forum frcp
-}
+deadline motion-reply-period: 14.days after MotionResponseServed() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 7007-1(a)"
 
 /// LBR B-7016-1(d): exhibits listed in a pre-trial order are exchanged by the
 /// date it is filed; if no pre-trial order is required, exhibits are
 /// exchanged no later than fourteen (14) days before trial.
-deadline exhibit-exchange-period: 14.days before AdversaryTrial() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 7016-1(d)"
-{
-  forum frcp
-}
+deadline exhibit-exchange-period: 14.days before AdversaryTrial() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 7016-1(d)"
 
 /// LBR B-7023-1(b): unless not practicable under FRCP 23(c)(1), a person
 /// seeking class certification files the motion within ninety (90) days of
 /// the filing of a complaint brought as a class action.
-deadline class-certification-period: 90.days after ClassComplaintFiled() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 7023-1(b)"
-{
-  forum frcp
-}
+deadline class-certification-period: 90.days after ClassComplaintFiled() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 7023-1(b)"
 
 /// LBR B-7041-2(c): unless the United States trustee, the trustee or another
 /// entity seeks to intervene or be substituted, or objects to dismissal of a
 /// § 727 complaint, within twenty-one (21) days following service of the
 /// motion, the court may grant it without further notice or hearing.
-deadline discharge-dismissal-objection-period: 21.days after DischargeDismissalMotionServed() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 7041-2(c)"
-{
-  forum frcp
-}
+deadline discharge-dismissal-objection-period: 21.days after DischargeDismissalMotionServed() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 7041-2(c)"
 
 /// LBR B-7056-1(a): a party opposing summary judgment serves and files a
 /// Statement of Genuine Issues within thirty (30) days of the date the motion
 /// is served on it, separately or with its responsive brief.
-deadline genuine-issues-period: 30.days after MotionBriefServed() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 7056-1(a)"
-{
-  forum frcp
-}
+deadline genuine-issues-period: 30.days after MotionBriefServed() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 7056-1(a)"
 
 /// LBR B-7056-1(b): a surreply, permitted only if the reply cites new
 /// evidence or objects to the admissibility of the non-movant's evidence, is
 /// filed within 7 days after the movant serves the reply.
-deadline summary-judgment-surreply-period: 7.days after SummaryJudgmentReplyServed() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 7056-1(b)"
-{
-  forum frcp
-}
+deadline summary-judgment-surreply-period: 7.days after SummaryJudgmentReplyServed() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 7056-1(b)"
 
 /// LBR B-9010-2(f)(2): unless other counsel has appeared, an application to
 /// withdraw is accompanied by evidence that counsel told the client in
 /// writing of the reasons and the intention to withdraw at least seven (7)
 /// days before filing it.
-deadline withdrawal-client-notice-period: 7.days before WithdrawalApplicationFiled() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 9010-2(f)"
-{
-  forum frcp
-}
+deadline withdrawal-client-notice-period: 7.days before WithdrawalApplicationFiled() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 9010-2(f)"
 
 /// LBR B-9010-2(f)(3): unless the client has terminated counsel's services,
 /// the application states that any response, objection or comment should be
 /// filed within fourteen (14) days; the court may rule when that time
 /// expires.
-deadline withdrawal-response-period: 14.days after WithdrawalApplicationFiled() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 9010-2(f)"
-{
-  forum frcp
-}
+deadline withdrawal-response-period: 14.days after WithdrawalApplicationFiled() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 9010-2(f)"
 
 /// LBR B-9070-1(b): unless otherwise ordered, exhibits and other material in
 /// the clerk's custody are removed by the party offering them within ninety
 /// (90) days after the case is decided.
-deadline exhibit-removal-period: 90.days after CaseDecided() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 9070-1(b)"
-{
-  forum frcp
-}
+deadline exhibit-removal-period: 90.days after CaseDecided() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 9070-1(b)"
 
 /// LBR B-9070-1(b): where an appeal is taken, the items are removed within
 /// thirty (30) days after the mandate of the reviewing court is filed and the
 /// case is disposed of as to all issues.
-deadline exhibit-removal-appeal-period: 30.days after MandateFiled() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 9070-1(b)"
-{
-  forum frcp
-}
+deadline exhibit-removal-appeal-period: 30.days after MandateFiled() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 9070-1(b)"
 
 /// LBR B-9070-1(c): items not removed within thirty (30) days after notice
 /// from the clerk are sold by the United States Marshal or otherwise disposed
 /// of as the court directs.
-deadline exhibit-removal-notice-period: 30.days after ExhibitRemovalNoticed() counted_by frcp6 cite "Bankr. N.D. Ind. LBR 9070-1(c)"
-{
-  forum frcp
-}
+deadline exhibit-removal-notice-period: 30.days after ExhibitRemovalNoticed() counted_by frbp9006 cite "Bankr. N.D. Ind. LBR 9070-1(c)"
 
 start motion-noticed
 

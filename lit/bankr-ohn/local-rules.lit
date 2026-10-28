@@ -1,6 +1,6 @@
 module bankr-ohn-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 import frbp.events.{ PetitionFiled }
 
 // The Bankr. N.D. Ohio court's own periods and page limit, counted under
@@ -40,53 +40,32 @@ event MotionPaperFiled() paper motion-paper
 /// LBR 2016-2(c): a bankruptcy petition preparer seeking a determination
 /// that its services are worth more than the presumptive $125 files a
 /// motion requesting a hearing within 14 days after the petition is filed.
-deadline preparer-fee-motion-period: 14.days after PetitionFiled() counted_by frcp6 cite "N.D. Ohio LBR 2016-2(c)"
-{
-  forum frcp
-}
+deadline preparer-fee-motion-period: 14.days after PetitionFiled() counted_by frbp9006 cite "N.D. Ohio LBR 2016-2(c)"
 
 /// LBR 2091-1(c): unless otherwise ordered, an attorney of record may not
 /// withdraw within 21 days before a trial or hearing on any matter.
-deadline attorney-withdrawal-period: 21.days before TrialOrHearingScheduled() counted_by frcp6 cite "N.D. Ohio LBR 2091-1(c)"
-{
-  forum frcp
-}
+deadline attorney-withdrawal-period: 21.days before TrialOrHearingScheduled() counted_by frbp9006 cite "N.D. Ohio LBR 2091-1(c)"
 
 /// LBR 7026-1: unless otherwise ordered, no discovery dispute may be
 /// brought to a judge, and no motion to compel filed, more than 14 days
 /// after the discovery cut-off.
-deadline discovery-dispute-period: 14.days after DiscoveryCutoff() counted_by frcp6 cite "N.D. Ohio LBR 7026-1"
-{
-  forum frcp
-}
+deadline discovery-dispute-period: 14.days after DiscoveryCutoff() counted_by frbp9006 cite "N.D. Ohio LBR 7026-1"
 
 /// LBR 9013-1(a)-(b): unless the court orders otherwise, a response
 /// opposing a motion or application is filed within 14 days (or such other
 /// time as an FRBP, a statute or the court sets) from the date of service
 /// on the certificate of service, subject to FRBP 9006(f).
-deadline motion-response-period: 14.days after MotionServed() counted_by frcp6 cite "N.D. Ohio LBR 9013-1(b)"
-{
-  forum frcp
-}
+deadline motion-response-period: 14.days after MotionServed() counted_by frbp9006 cite "N.D. Ohio LBR 9013-1(b)"
 
 /// LBR 9013-1(c): subject to FRBP 9006(f), a reply may be filed within 7
 /// days after the date of service of the response.
-deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6 cite "N.D. Ohio LBR 9013-1(c)"
-{
-  forum frcp
-}
+deadline motion-reply-period: 7.days after ResponseServed() counted_by frbp9006 cite "N.D. Ohio LBR 9013-1(c)"
 
 /// LBR 9070-1(a)(6): unless otherwise ordered, the index of trial exhibits
 /// is filed and served no later than 7 days before the final pretrial.
-deadline exhibit-index-period: 7.days before FinalPretrialScheduled() counted_by frcp6 cite "N.D. Ohio LBR 9070-1(a)"
-{
-  forum frcp
-}
+deadline exhibit-index-period: 7.days before FinalPretrialScheduled() counted_by frbp9006 cite "N.D. Ohio LBR 9070-1(a)"
 
 /// LBR 9070-1(b)(2): counsel removes an exhibit held by the Clerk within 60
 /// days after final judgment or final judgment on appeal; the Clerk
 /// disposes of exhibits not removed.
-deadline exhibit-removal-period: 60.days after FinalJudgmentEntered() counted_by frcp6 cite "N.D. Ohio LBR 9070-1(b)"
-{
-  forum frcp
-}
+deadline exhibit-removal-period: 60.days after FinalJudgmentEntered() counted_by frbp9006 cite "N.D. Ohio LBR 9070-1(b)"

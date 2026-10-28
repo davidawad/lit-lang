@@ -16,7 +16,10 @@
 #
 # Counting: FRBP 9006(a) states the FRCP 6(a) method word for word
 # (backward-counted periods, the "last day" and "next day" definitions,
-# and the legal holidays), so the periods are counted by core's frcp6.
+# and the legal holidays) and 9006(f) adds FRCP 6(d)'s 3 days: core's
+# `frbp9006`, the rule of every bankruptcy forum and bankruptcy appellate
+# panel, so no bankruptcy period is counted by frcp6 as one of forum
+# `frcp`.
 [package]
 name = "frbp-bankruptcy-procedure"
 version = "0.1.0"
@@ -31,7 +34,7 @@ jurisdiction = "Federal Rules of Bankruptcy Procedure / U.S. Bankruptcy Courts, 
 in_force = "2025-12-01"
 known_at = "2025-12-01"
 unknown_before = "2025-12-01"
-counting = "frcp6"
+counting = "frbp9006"
 
 [package.roles]
 applicant = "self"
@@ -40,7 +43,7 @@ court = "nature"
 office = "nature"
 
 [dependencies]
-# Types, the authority lattice, and the FRCP 6 counting rule FRBP 9006(a) restates.
+# Types, the authority lattice, and the FRBP 9006 counting rule (frbp9006).
 core = { version = "^1.0.0", path = "../core" }
 
 [sources.frbp]

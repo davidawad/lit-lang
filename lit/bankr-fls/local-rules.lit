@@ -1,6 +1,6 @@
 module bankr-fls-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 import frbp.events.{ OrderForReliefEntered }
 
 // The Bankr. S.D. Fla. court's own periods, counted under FRBP 9006(a): the
@@ -171,439 +171,280 @@ event RedactionGranted()
 /// Local Rule 1009-1(a): to be considered at a confirmation hearing, an
 /// amended schedule or statement of financial affairs in a chapter 13 case is
 /// filed no later than 14 days before it.
-deadline ch13-amended-schedules-period: 14.days before Ch13ConfirmationHearing() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 1009-1(a)"
-{
-  forum frcp
-}
+deadline ch13-amended-schedules-period: 14.days before Ch13ConfirmationHearing() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 1009-1(a)"
 
 /// Local Rule 1017-1(c)(2)(B)-(C): a chapter 13 debtor cures a plan payment
 /// delinquency by making all past-due payments, and any falling due
 /// meanwhile, within 45 days after service of the notice of delinquency, or
 /// the case may be dismissed on the trustee's report.
-deadline delinquency-cure-period: 45.days after DelinquencyNoticeServed() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 1017-1(c)(2)(B)"
-{
-  forum frcp
-}
+deadline delinquency-cure-period: 45.days after DelinquencyNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 1017-1(c)(2)(B)"
 
 /// Local Rule 1017-1(f)(1): in a case dismissed before the date first set for
 /// the § 341 meeting and reinstated, the new deadline to move to dismiss or
 /// serve notice under FRBP 1017(e) is 60 days after the rescheduled meeting.
-deadline reinstated-abuse-dismissal-period: 60.days after MeetingRescheduled() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 1017-1(f)(1)"
-{
-  forum frcp
-}
+deadline reinstated-abuse-dismissal-period: 60.days after MeetingRescheduled() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 1017-1(f)(1)"
 
 /// Local Rule 1017-1(f)(2): in a case dismissed after the date first set for
 /// the § 341 meeting and reinstated, the new FRBP 1017(e) deadline is 60 days
 /// after entry of the order reinstating the case.
-deadline reinstated-abuse-dismissal-order-period: 60.days after ReinstatementOrdered() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 1017-1(f)(2)"
-{
-  forum frcp
-}
+deadline reinstated-abuse-dismissal-order-period: 60.days after ReinstatementOrdered() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 1017-1(f)(2)"
 
 /// Local Rule 1019-1(b)(1): in a case converted from chapter 11, 12 or 13 to
 /// chapter 7, a request for an administrative expense or a § 348(d) claim is
 /// filed no later than 70 days after conversion.
-deadline conversion-administrative-claim-period: 70.days after ConvertedToChapter7() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 1019-1(b)(1)"
-{
-  forum frcp
-}
+deadline conversion-administrative-claim-period: 70.days after ConvertedToChapter7() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 1019-1(b)(1)"
 
 /// Local Rule 2004-1(b)(1): unless agreed or ordered, the party noticing a
 /// Rule 2004 examination or requesting documents or ESI provides at least 14
 /// days' notice.
-deadline examination-notice-period: 14.days before ExaminationDate() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 2004-1(b)(1)"
-{
-  forum frcp
-}
+deadline examination-notice-period: 14.days before ExaminationDate() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 2004-1(b)(1)"
 
 /// Local Rule 2016-1(b)(2), (c)(1): unless the court orders otherwise, a
 /// final compensation application in a chapter 11 or 12 case is considered at
 /// the confirmation hearing and filed no later than 21 days before it.
-deadline final-compensation-application-period: 21.days before Ch11ConfirmationHearing() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 2016-1(b)(2)"
-{
-  forum frcp
-}
+deadline final-compensation-application-period: 21.days before Ch11ConfirmationHearing() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 2016-1(b)(2)"
 
 /// Local Rule 2016-1(d)(2): a pre-confirmation compensation application in a
 /// chapter 13 case, if required, is filed no later than 21 days before the
 /// confirmation hearing.
-deadline ch13-compensation-application-period: 21.days before Ch13ConfirmationHearing() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 2016-1(d)(2)"
-{
-  forum frcp
-}
+deadline ch13-compensation-application-period: 21.days before Ch13ConfirmationHearing() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 2016-1(d)(2)"
 
 /// Local Rule 2016-1(d)(3): a post-confirmation request for additional
 /// compensation to a chapter 13 debtor's attorney is filed with the plan
 /// modification no later than 21 days before the hearing on the modified
 /// plan.
-deadline ch13-additional-compensation-period: 21.days before ModificationHearing() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 2016-1(d)(3)"
-{
-  forum frcp
-}
+deadline ch13-additional-compensation-period: 21.days before ModificationHearing() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 2016-1(d)(3)"
 
 /// Local Rule 2016-1(d)(4): if a chapter 13 case is dismissed or converted
 /// before confirmation and the debtor's attorney seeks more than the
 /// Guidelines permit, the attorney files a compensation application no later
 /// than 14 days after entry of the order.
-deadline ch13-post-dismissal-compensation-period: 14.days after Ch13DismissedOrConverted() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 2016-1(d)(4)"
-{
-  forum frcp
-}
+deadline ch13-post-dismissal-compensation-period: 14.days after Ch13DismissedOrConverted() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 2016-1(d)(4)"
 
 /// Local Rule 3002-1(b)(1): in a voluntary chapter 7 or a chapter 12 or 13
 /// case where the parties were not given at least 21 days' notice by mail of
 /// the § 341 meeting, a proof of claim is timely if filed no later than 70
 /// days after timely service of that notice.
-deadline late-meeting-notice-claim-period: 70.days after MeetingNoticeServed() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 3002-1(b)(1)"
-{
-  forum frcp
-}
+deadline late-meeting-notice-claim-period: 70.days after MeetingNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 3002-1(b)(1)"
 
 /// Local Rule 3002-1(b)(2): in a chapter 7, 12 or 13 case dismissed before
 /// the claims deadline and then vacated, a proof of claim is timely if filed
 /// no later than 70 days after entry of the order vacating the dismissal.
-deadline vacated-dismissal-claim-period: 70.days after DismissalVacated() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 3002-1(b)(2)"
-{
-  forum frcp
-}
+deadline vacated-dismissal-claim-period: 70.days after DismissalVacated() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 3002-1(b)(2)"
 
 /// Local Rule 3002.1-1(b)(4): if Mortgage Modification Mediation does not
 /// modify the mortgage, the debtor has until 14 days after the mediator's
 /// final report to move under FRBP 3002.1(b)(4) on any payment change noticed
 /// during it.
-deadline mediation-payment-change-motion-period: 14.days after MediatorFinalReport() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 3002.1-1(b)(4)"
-{
-  forum frcp
-}
+deadline mediation-payment-change-motion-period: 14.days after MediatorFinalReport() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 3002.1-1(b)(4)"
 
 /// Local Rule 3003-1(a): unless the court orders otherwise and except as §
 /// 502(b)(9) provides, the time under FRBP 3003(c)(3) to file a proof of
 /// claim or interest in a chapter 9 or 11 case is 70 days after entry of the
 /// order for relief.
-deadline ch11-claim-period: 70.days after OrderForReliefEntered() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 3003-1(a)"
-{
-  forum frcp
-}
+deadline ch11-claim-period: 70.days after OrderForReliefEntered() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 3003-1(a)"
 
 /// Local Rule 3003-1(b)(1): in a chapter 9 or 11 case where the parties were
 /// not given at least 21 days' notice of the § 341 meeting, a proof of claim
 /// is timely if filed no later than 70 days after timely service of that
 /// notice.
-deadline ch11-late-meeting-notice-claim-period: 70.days after MeetingNoticeServed() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 3003-1(b)(1)"
-{
-  forum frcp
-}
+deadline ch11-late-meeting-notice-claim-period: 70.days after MeetingNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 3003-1(b)(1)"
 
 /// Local Rule 3003-1(b)(2): in a chapter 9 or 11 case dismissed before the
 /// claims deadline and then vacated, a proof of claim is timely if filed no
 /// later than 70 days after entry of the order vacating the dismissal.
-deadline ch11-vacated-dismissal-claim-period: 70.days after DismissalVacated() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 3003-1(b)(2)"
-{
-  forum frcp
-}
+deadline ch11-vacated-dismissal-claim-period: 70.days after DismissalVacated() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 3003-1(b)(2)"
 
 /// Local Rule 3007-1(d)(2): absent a timely response to an objection to claim
 /// served on negative notice, the objecting party uploads a proposed order no
 /// later than seven days after the negative notice period expires.
-deadline claim-objection-order-period: 7.days after NegativeNoticePeriodExpired() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 3007-1(d)(2)"
-{
-  forum frcp
-}
+deadline claim-objection-order-period: 7.days after NegativeNoticePeriodExpired() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 3007-1(d)(2)"
 
 /// Local Rule 3009-1(a): within 14 days after filing a Trustee's Final
 /// Report, a chapter 7 trustee files and serves the Notice of Trustee's Final
 /// Report and Applications for Compensation and the Trustee's Summary of
 /// Requested Fees and Expenses.
-deadline final-report-notice-period: 14.days after TrusteeFinalReportFiled() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 3009-1(a)"
-{
-  forum frcp
-}
+deadline final-report-notice-period: 14.days after TrusteeFinalReportFiled() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 3009-1(a)"
 
 /// Local Rule 3009-1(b): an objection to a chapter 7 trustee's final report
 /// or final compensation application is filed no later than 21 days after
 /// service of the Notice of Trustee's Final Report.
-deadline final-report-objection-period: 21.days after FinalReportNoticeServed() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 3009-1(b)"
-{
-  forum frcp
-}
+deadline final-report-objection-period: 21.days after FinalReportNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 3009-1(b)"
 
 /// Local Rule 3012-1(b)(1): a motion to determine the amount of a secured
 /// claim is filed and served at least 21 days before the hearing on it.
-deadline valuation-motion-period: 21.days before ValuationMotionHearing() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 3012-1(b)(1)"
-{
-  forum frcp
-}
+deadline valuation-motion-period: 21.days before ValuationMotionHearing() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 3012-1(b)(1)"
 
 /// Local Rule 3015-1(b): subject to (c)(2), an objection to confirmation of a
 /// chapter 13 plan is timely if filed at least 14 days before the
 /// confirmation hearing.
-deadline ch13-confirmation-objection-period: 14.days before Ch13ConfirmationHearing() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 3015-1(b)"
-{
-  forum frcp
-}
+deadline ch13-confirmation-objection-period: 14.days before Ch13ConfirmationHearing() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 3015-1(b)"
 
 /// Local Rule 3015-1(c)(1): to be considered at a scheduled confirmation
 /// hearing, an amended chapter 13 plan is filed and served at least 14 days
 /// before the hearing.
-deadline ch13-amended-plan-period: 14.days before Ch13ConfirmationHearing() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 3015-1(c)(1)"
-{
-  forum frcp
-}
+deadline ch13-amended-plan-period: 14.days before Ch13ConfirmationHearing() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 3015-1(c)(1)"
 
 /// Local Rule 3015-1(d)(2): a chapter 13 debtor files the Debtor Certificate
 /// of Compliance and Request for Confirmation no later than 14 days before
 /// the confirmation hearing.
-deadline ch13-confirmation-certificate-period: 14.days before Ch13ConfirmationHearing() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 3015-1(d)(2)"
-{
-  forum frcp
-}
+deadline ch13-confirmation-certificate-period: 14.days before Ch13ConfirmationHearing() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 3015-1(d)(2)"
 
 /// Local Rule 3017-1: an objection to a disclosure statement is timely if
 /// filed at least seven days before the hearing to consider its approval.
-deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearing() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 3017-1"
-{
-  forum frcp
-}
+deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearing() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 3017-1"
 
 /// Local Rule 3022-1(a), (c): unless the plan or confirmation order provides
 /// otherwise, the Final Report and Motion for Entry of Final Decree of a non-
 /// individual chapter 11 debtor, or a subchapter V debtor under a consensual
 /// plan, is filed no later than 60 days after the plan's effective date.
-deadline final-decree-motion-period: 60.days after PlanEffective() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 3022-1(a)"
-{
-  forum frcp
-}
+deadline final-decree-motion-period: 60.days after PlanEffective() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 3022-1(a)"
 
 /// Local Rule 3022-1(b), (d): an individual chapter 11 debtor's final report
 /// and motion for final decree, with its confirmation certificate (by the
 /// earlier of this date or a § 1141(d)(5) motion), or a nonconsensual
 /// subchapter V debtor's final report and motion, is filed no later than 60
 /// days after completion of all plan payments.
-deadline payments-final-decree-motion-period: 60.days after PlanPaymentsCompleted() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 3022-1(b)"
-{
-  forum frcp
-}
+deadline payments-final-decree-motion-period: 60.days after PlanPaymentsCompleted() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 3022-1(b)"
 
 /// Local Rule 4002-2(a): no later than 21 days after the non-governmental
 /// claims bar date, a chapter 13 debtor's attorney reviews all filed claims
 /// to decide whether to object, amend an unconfirmed plan or move to modify a
 /// confirmed one.
-deadline ch13-claims-review-period: 21.days after ClaimsBarDatePassed() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 4002-2(a)"
-{
-  forum frcp
-}
+deadline ch13-claims-review-period: 21.days after ClaimsBarDatePassed() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 4002-2(a)"
 
 /// Local Rule 4002-2(c): the trustee's notice of deficiency gives the
 /// debtor's attorney 21 days to comply with the claims review, or the case
 /// may be dismissed on the trustee's report.
-deadline ch13-claims-review-cure-period: 21.days after ClaimsReviewDeficiencyServed() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 4002-2(c)"
-{
-  forum frcp
-}
+deadline ch13-claims-review-cure-period: 21.days after ClaimsReviewDeficiencyServed() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 4002-2(c)"
 
 /// Local Rule 4004-1(a)(1), (b): in a reinstated case dismissed before the
 /// date first set for the § 341 meeting, or one whose meeting was rescheduled
 /// for want of 21 days' notice, the deadline under FRBP 4004(a)(1) or (a)(3)
 /// to object to discharge is 60 days after the rescheduled meeting.
-deadline reinstated-discharge-objection-period: 60.days after MeetingRescheduled() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 4004-1(a)(1)"
-{
-  forum frcp
-}
+deadline reinstated-discharge-objection-period: 60.days after MeetingRescheduled() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 4004-1(a)(1)"
 
 /// Local Rule 4004-1(a)(2): in a case dismissed after the date first set for
 /// the § 341 meeting and reinstated, the new deadline to object to discharge
 /// is 60 days after entry of the order reinstating the case.
-deadline reinstated-discharge-objection-order-period: 60.days after ReinstatementOrdered() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 4004-1(a)(2)"
-{
-  forum frcp
-}
+deadline reinstated-discharge-objection-order-period: 60.days after ReinstatementOrdered() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 4004-1(a)(2)"
 
 /// Local Rule 4004-2: no later than 30 days after the trustee files a final
 /// report, an individual chapter 12 debtor files and serves, on 21 days'
 /// negative notice, the certification regarding claimed exemptions and
 /// domestic support obligations.
-deadline ch12-discharge-certification-period: 30.days after TrusteeFinalReportFiled() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 4004-2"
-{
-  forum frcp
-}
+deadline ch12-discharge-certification-period: 30.days after TrusteeFinalReportFiled() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 4004-2"
 
 /// Local Rule 4007-1(a)(1), (b): in a reinstated case dismissed before the
 /// date first set for the § 341 meeting, or one whose meeting was rescheduled
 /// for want of 21 days' notice, the deadline under FRBP 4007(c) for a §
 /// 523(c) complaint is 60 days after the rescheduled meeting.
-deadline reinstated-dischargeability-period: 60.days after MeetingRescheduled() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 4007-1(a)(1)"
-{
-  forum frcp
-}
+deadline reinstated-dischargeability-period: 60.days after MeetingRescheduled() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 4007-1(a)(1)"
 
 /// Local Rule 4007-1(a)(2): in a case dismissed after the date first set for
 /// the § 341 meeting and reinstated, the new FRBP 4007(c) deadline is 60 days
 /// after entry of the order reinstating the case.
-deadline reinstated-dischargeability-order-period: 60.days after ReinstatementOrdered() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 4007-1(a)(2)"
-{
-  forum frcp
-}
+deadline reinstated-dischargeability-order-period: 60.days after ReinstatementOrdered() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 4007-1(a)(2)"
 
 /// Local Rule 5005-2(e)(1): a registered user filing a document with another
 /// person's electronic signature obtains the wet ink signature no later than
 /// 14 days after filing it.
-deadline wet-ink-signature-period: 14.days after ElectronicSignatureFiled() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 5005-2(e)(1)"
-{
-  forum frcp
-}
+deadline wet-ink-signature-period: 14.days after ElectronicSignatureFiled() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 5005-2(e)(1)"
 
 /// Local Rule 5011-1(d): a response to a motion to withdraw the reference is
 /// filed no later than 14 days after the motion is filed.
-deadline withdrawal-reference-response-period: 14.days after WithdrawalReferenceMotionFiled() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 5011-1(d)"
-{
-  forum frcp
-}
+deadline withdrawal-reference-response-period: 14.days after WithdrawalReferenceMotionFiled() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 5011-1(d)"
 
 /// Local Rule 5011-1(d): the movant may file a reply no later than seven days
 /// after a response is filed.
-deadline withdrawal-reference-reply-period: 7.days after WithdrawalReferenceResponseFiled() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 5011-1(d)"
-{
-  forum frcp
-}
+deadline withdrawal-reference-reply-period: 7.days after WithdrawalReferenceResponseFiled() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 5011-1(d)"
 
 /// Local Rule 6004-1(b)(1)-(2): a proposed use, sale or lease outside the
 /// ordinary course noticed or moved on negative notice may be approved
 /// without a hearing if no objection is filed within 21 days from service.
-deadline sale-objection-period: 21.days after SaleNoticeServed() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 6004-1(b)"
-{
-  forum frcp
-}
+deadline sale-objection-period: 21.days after SaleNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 6004-1(b)"
 
 /// Local Rule 6007-1(a): an objection to a chapter 7 trustee's abandonment at
 /// the § 341 meeting is filed no later than 14 days after the trustee's
 /// report of the property abandoned is filed.
-deadline abandonment-objection-period: 14.days after AbandonmentReportFiled() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 6007-1(a)"
-{
-  forum frcp
-}
+deadline abandonment-objection-period: 14.days after AbandonmentReportFiled() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 6007-1(a)"
 
 /// Local Rule 7026-2(b)(2): unless a clawback agreement provides otherwise,
 /// the receiving party returns ESI as to which the producing party gives
 /// notice of inadvertent production of privileged or protected material
 /// within 28 days of production.
-deadline esi-clawback-notice-period: 28.days after EsiProduced() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 7026-2(b)(2)"
-{
-  forum frcp
-}
+deadline esi-clawback-notice-period: 28.days after EsiProduced() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 7026-2(b)(2)"
 
 /// Local Rule 7030-1: unless agreed or ordered, 14 days is reasonable notice
 /// of a deposition under FRCP 30(b)(1); it applies in contested matters too
 /// (Local Rule 9014-1(a)(1)).
-deadline deposition-notice-period: 14.days before DepositionDate() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 7030-1"
-{
-  forum frcp
-}
+deadline deposition-notice-period: 14.days before DepositionDate() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 7030-1"
 
 /// Local Rule 7054-1(a): a bill of costs under FRBP 7054(b)(1) is filed
 /// within 14 days after entry of a judgment specifically awarding costs.
-deadline bill-of-costs-period: 14.days after CostsJudgmentEntered() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 7054-1(a)"
-{
-  forum frcp
-}
+deadline bill-of-costs-period: 14.days after CostsJudgmentEntered() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 7054-1(a)"
 
 /// Local Rule 7054-1(b): an objection to the clerk's taxing costs filed
 /// within 14 days after the bill of costs is filed is set for hearing and the
 /// court determines the costs.
-deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 7054-1(b)"
-{
-  forum frcp
-}
+deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 7054-1(b)"
 
 /// Local Rule 9013-3(a)(4): absent a timely response to a motion served on
 /// negative notice, the movant uploads the proposed order no later than seven
 /// days after the negative notice period expires.
-deadline negative-notice-order-period: 7.days after NegativeNoticePeriodExpired() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 9013-3(a)(4)"
-{
-  forum frcp
-}
+deadline negative-notice-order-period: 7.days after NegativeNoticePeriodExpired() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 9013-3(a)(4)"
 
 /// Local Rule 9013-3(b): a motion on 21 days' negative notice may be granted
 /// without further motion, notice or hearing if no written response or
 /// objection is filed and served within 21 days after its service.
-deadline negative-notice-response-period: 21.days after NegativeNoticeMotionServed() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 9013-3(b)"
-{
-  forum frcp
-}
+deadline negative-notice-response-period: 21.days after NegativeNoticeMotionServed() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 9013-3(b)"
 
 /// Local Rule 9013-3(c): a stay relief motion on 14 days' negative notice may
 /// be granted without further motion, notice or hearing if no written
 /// response or objection is filed and served within 14 days after its
 /// service.
-deadline stay-relief-negative-notice-period: 14.days after StayReliefNegativeNoticeServed() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 9013-3(c)"
-{
-  forum frcp
-}
+deadline stay-relief-negative-notice-period: 14.days after StayReliefNegativeNoticeServed() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 9013-3(c)"
 
 /// Local Rule 9014-1(a)(2): the time to respond to an FRCP 34(a) request in a
 /// contested matter is shortened to 14 days after its service.
-deadline contested-production-response-period: 14.days after ContestedProductionRequestServed() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 9014-1(a)(2)"
-{
-  forum frcp
-}
+deadline contested-production-response-period: 14.days after ContestedProductionRequestServed() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 9014-1(a)(2)"
 
 /// Local Rule 9014-2(c)(1): in a chapter 11 or 15 case, absent another
 /// deadline, a written objection or response is considered only if filed at
 /// least seven days before a hearing set on at least 21 days' notice.
-deadline ch11-hearing-objection-period: 7.days before Ch11NoticedHearing() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 9014-2(c)(1)"
-{
-  forum frcp
-}
+deadline ch11-hearing-objection-period: 7.days before Ch11NoticedHearing() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 9014-2(c)(1)"
 
 /// Local Rule 9019-2(c)(2)(B)(i): parties unable to agree on a mediator or
 /// settlement judge within 14 days of being ordered to mediation or a
 /// judicial settlement conference file a notice, and the clerk selects a
 /// mediator.
-deadline mediator-selection-period: 14.days after MediationOrdered() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 9019-2(c)(2)(B)"
-{
-  forum frcp
-}
+deadline mediator-selection-period: 14.days after MediationOrdered() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 9019-2(c)(2)(B)"
 
 /// Local Rule 9019-2(g): a mediator files the Report of Mediator no later
 /// than seven days after the mediation concludes.
-deadline mediator-report-period: 7.days after MediationConcluded() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 9019-2(g)"
-{
-  forum frcp
-}
+deadline mediator-report-period: 7.days after MediationConcluded() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 9019-2(g)"
 
 /// Local Rule 9021-2(a)(1), (3): a party directed at a hearing to submit a
 /// proposed order, or the proponent of relief resolved on the chapter 13
 /// consent calendar, submits it no later than seven days after the hearing,
 /// or the relief may be denied for lack of prosecution.
-deadline proposed-order-period: 7.days after ProposedOrderDirected() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 9021-2(a)"
-{
-  forum frcp
-}
+deadline proposed-order-period: 7.days after ProposedOrderDirected() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 9021-2(a)"
 
 /// Local Rule 9021-2(a)(2): a proposed order setting a deadline or further
 /// hearing on less than 14 days' notice is submitted no later than three days
 /// after the hearing.
-deadline short-notice-proposed-order-period: 3.days after ShortNoticeOrderDirected() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 9021-2(a)(2)"
-{
-  forum frcp
-}
+deadline short-notice-proposed-order-period: 3.days after ShortNoticeOrderDirected() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 9021-2(a)(2)"
 
 /// Local Rule 9027-1: except when based on lack of subject matter
 /// jurisdiction, a motion under 28 U.S.C. § 1452(b) to remand a removed claim
 /// or cause of action is made within 30 days after the notice of removal is
 /// filed.
-deadline remand-motion-period: 30.days after RemovalNoticeFiled() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 9027-1"
-{
-  forum frcp
-}
+deadline remand-motion-period: 30.days after RemovalNoticeFiled() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 9027-1"
 
 /// Local Rule 9037-1: when the court grants a motion under FRBP 9037(h), the
 /// movant files the redacted document within seven days of entry of the
 /// order.
-deadline redacted-document-period: 7.days after RedactionGranted() counted_by frcp6 cite "Bankr. S.D. Fla. Local Rule 9037-1"
-{
-  forum frcp
-}
+deadline redacted-document-period: 7.days after RedactionGranted() counted_by frbp9006 cite "Bankr. S.D. Fla. Local Rule 9037-1"
 
 start motion-served
 

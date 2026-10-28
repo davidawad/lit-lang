@@ -1,0 +1,60 @@
+module core.frbp9006
+
+import core.calendar.{ us-federal-holidays }
+
+/// FRBP 9006(a) as amended to December 1, 2025 (the vendored edition):
+/// every period "specified in these rules, in the Federal Rules of Civil
+/// Procedure, in any local rule or court order, or in any statute that does
+/// not specify a method of computing time", so the national rules', each
+/// bankruptcy court's local rules' and each bankruptcy appellate panel's
+/// periods. Its (a)(1)-(5) is FRCP 6(a)(1)-(5): exclude the trigger day,
+/// count every day, roll a last day off a Saturday, Sunday or legal
+/// holiday, count hours, extend past an inaccessible clerk's office, and
+/// roll a period counted back backward. 9006(f) adds 3 days after service
+/// by mail, by leaving it with the clerk (FRCP 5(b)(2)(D)) or by other
+/// means consented to (FRCP 5(b)(2)(F)); electronic service and personal
+/// delivery add nothing. Earlier versions (the amendment credits list 1987
+/// through 2024) are not vendored and stay undeclared, so a period before
+/// December 1, 2025 is a hole in the corpus. 9006(a)(6)(B)'s declared
+/// holidays and (C)'s state holidays are not counted here: no declaration
+/// or state calendar is vendored (a court whose local rule names its
+/// state's holidays declares its own rule, as lit/bankr-hi does). Rule
+/// 9006 is silent on periods stated in months, which end on the last day
+/// of a shorter month, as under core's frcp6.
+counting frbp9006 effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9006(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRBP 9006(f)"
+  holidays us-federal-holidays
+  forums [frbp, bankr-alm, bankr-aln, bankr-als, bankr-ak, bankr-az,
+    bankr-are, bankr-arw, bankr-cac, bankr-cae, bankr-can, bankr-cas,
+    bankr-co, bankr-ct, bankr-de, bankr-dc, bankr-flm, bankr-fln, bankr-fls,
+    bankr-gam, bankr-gan, bankr-gas, bankr-gu, bankr-hi, bankr-id,
+    bankr-ilc, bankr-iln, bankr-ils, bankr-inn, bankr-ins, bankr-ian,
+    bankr-ias, bankr-ks, bankr-kye, bankr-kyw, bankr-lae, bankr-lam,
+    bankr-law, bankr-me, bankr-md, bankr-ma, bankr-mie, bankr-miw, bankr-mn,
+    bankr-msn, bankr-mss, bankr-moe, bankr-mow, bankr-mt, bankr-ne,
+    bankr-nv, bankr-nh, bankr-nj, bankr-nm, bankr-nye, bankr-nyn, bankr-nys,
+    bankr-nyw, bankr-nce, bankr-ncm, bankr-ncw, bankr-nd, bankr-mp,
+    bankr-ohn, bankr-ohs, bankr-oke, bankr-okn, bankr-okw, bankr-or,
+    bankr-pae, bankr-pam, bankr-paw, bankr-pr, bankr-ri, bankr-sc, bankr-sd,
+    bankr-tne, bankr-tnm, bankr-tnw, bankr-txe, bankr-txn, bankr-txs,
+    bankr-txw, bankr-ut, bankr-vt, bankr-vi, bankr-vae, bankr-vaw,
+    bankr-wae, bankr-waw, bankr-wvn, bankr-wvs, bankr-wie, bankr-wiw,
+    bankr-wy, bap6, bap8, bap9, bap10]
+  allow_hours
+  end_of_month clamp
+}

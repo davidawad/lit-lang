@@ -1,6 +1,6 @@
 module bankr-are-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 
 // The Bankr. E.D. Ark. court's own periods, counted under FRBP 9006(a). The
 // FRBP periods are lit/frbp's and are not declared again. Every period
@@ -29,16 +29,14 @@ event ConsentOrderForwarded()
 /// E.D. Ark. Bankr. LR 2015-1 I.8: every claim under the chapter 13 trustee's
 /// Master Policy is made by sworn proof of loss delivered to the Insurer
 /// within 91 days after the insured loss.
-deadline proof-of-loss-period: 91.days after InsuredLossOccurred() counted_by frcp6 cite ?("E.D. Ark. Bankr. LR 2015-1 I.8, undated complete set: CURRENCY UNCONFIRMED (no edition or effective date on the document or the court's page); the value is the vendored text, unverified") {
-  forum frcp
+deadline proof-of-loss-period: 91.days after InsuredLossOccurred() counted_by frbp9006 cite ?("E.D. Ark. Bankr. LR 2015-1 I.8, undated complete set: CURRENCY UNCONFIRMED (no edition or effective date on the document or the court's page); the value is the vendored text, unverified") {
 }
 
 /// E.D. Ark. Bankr. LR 9019-1(c): the opposing attorney has 14 days from the
 /// mailing or transmission of a proposed consent order to object to its form
 /// or content; without a response in 14 days the order is a Consent Order
 /// the preparing party may submit.
-deadline consent-order-objection-period: 14.days after ConsentOrderForwarded() counted_by frcp6 cite ?("E.D. Ark. Bankr. LR 9019-1(c), undated complete set: CURRENCY UNCONFIRMED (no edition or effective date on the document or the court's page); the value is the vendored text, unverified") {
-  forum frcp
+deadline consent-order-objection-period: 14.days after ConsentOrderForwarded() counted_by frbp9006 cite ?("E.D. Ark. Bankr. LR 9019-1(c), undated complete set: CURRENCY UNCONFIRMED (no edition or effective date on the document or the court's page); the value is the vendored text, unverified") {
 }
 
 start order-forwarded

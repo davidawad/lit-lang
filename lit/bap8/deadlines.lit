@@ -1,7 +1,7 @@
 module bap8.deadlines
 
 import bap8.events.{ ClerkNoticeOfDefaultIssued, RehearingDenied, RehearingWindowExpired }
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 
 import frbp.appeals.{
   appellant-brief-period,
@@ -39,22 +39,13 @@ import frbp.events.{
 // appeal runs on.
 rule duty default-cure-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "L.R. BAP 8th Cir. 8005A(c)"
 {
-  deadline default-cure-period: 14.days after ClerkNoticeOfDefaultIssued() counted_by frcp6 cite "L.R. BAP 8th Cir. 8005A(c)"
-  {
-    forum frcp
-  }
+  deadline default-cure-period: 14.days after ClerkNoticeOfDefaultIssued() counted_by frbp9006 cite "L.R. BAP 8th Cir. 8005A(c)"
 }
 
 rule duty mandate-duty effective [2025-12-01, ..) known_at 2026-10-07 cite "L.R. BAP 8th Cir. 8024A"
 {
-  deadline mandate-after-window-period: 7.days after RehearingWindowExpired() counted_by frcp6 cite "L.R. BAP 8th Cir. 8024A(b)"
-  {
-    forum frcp
-  }
-  deadline mandate-after-denial-period: 7.days after RehearingDenied() counted_by frcp6 cite "L.R. BAP 8th Cir. 8024A(c)(1)"
-  {
-    forum frcp
-  }
+  deadline mandate-after-window-period: 7.days after RehearingWindowExpired() counted_by frbp9006 cite "L.R. BAP 8th Cir. 8024A(b)"
+  deadline mandate-after-denial-period: 7.days after RehearingDenied() counted_by frbp9006 cite "L.R. BAP 8th Cir. 8024A(c)(1)"
 }
 
 test "bankruptcy notice deadline is 14 days from entry" cite "FRBP 8002(a)(1)"

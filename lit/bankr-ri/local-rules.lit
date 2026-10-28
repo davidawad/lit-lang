@@ -1,6 +1,6 @@
 module bankr-ri-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 import frbp.events.{ FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
 
 // The Bankr. D.R.I. court's own periods, counted under FRBP 9006(a). The
@@ -247,673 +247,435 @@ event ContestedHearingScheduled()
 /// or waiver application are filed within 7 days of the bankruptcy filing,
 /// or the case is subject to automatic dismissal (R.I. LBR 1007-1(d),
 /// 1017-2).
-deadline seven-day-documents-period: 7.days after PetitionFiled() counted_by frcp6 cite "R.I. LBR 1007-1(b)"
-{
-  forum frcp
-}
+deadline seven-day-documents-period: 7.days after PetitionFiled() counted_by frbp9006 cite "R.I. LBR 1007-1(b)"
 
 /// R.I. LBR 1002-1(d)(3): a non-individual debtor not represented by
 /// counsel at filing obtains counsel within 7 days of the filing date or
 /// the case is automatically dismissed, unless relief under R.I. LBR
 /// 1017-2(b) was timely requested.
-deadline entity-counsel-period: 7.days after PetitionFiled() counted_by frcp6 cite "R.I. LBR 1002-1(d)"
-{
-  forum frcp
-}
+deadline entity-counsel-period: 7.days after PetitionFiled() counted_by frbp9006 cite "R.I. LBR 1002-1(d)"
 
 /// R.I. LBR 1002-1(d)(4): a petition listing a separate entity as a DBA or
 /// FKA is defective, and the debtor files a separate case for that entity
 /// within 7 days or the case is subject to automatic dismissal.
-deadline separate-entity-petition-period: 7.days after PetitionFiled() counted_by frcp6 cite "R.I. LBR 1002-1(d)"
-{
-  forum frcp
-}
+deadline separate-entity-petition-period: 7.days after PetitionFiled() counted_by frbp9006 cite "R.I. LBR 1002-1(d)"
 
 /// R.I. LBR 1006-1(d): an approvable installment schedule pays at least 25%
 /// of the fee at filing and continued 25% payments commencing within 30
 /// days of the petition date and every 28 days thereafter.
-deadline installment-period: 30.days after PetitionFiled() counted_by frcp6 cite "R.I. LBR 1006-1(d)"
-{
-  forum frcp
-}
+deadline installment-period: 30.days after PetitionFiled() counted_by frbp9006 cite "R.I. LBR 1006-1(d)"
 
 /// R.I. LBR 1006-1(g): if a fee waiver application is denied and treated as
 /// an installment application, the first installment is due within ten days
 /// of the order denying the waiver.
-deadline waiver-denied-installment-period: 10.days after FeeWaiverDenied() counted_by frcp6 cite "R.I. LBR 1006-1(g)"
-{
-  forum frcp
-}
+deadline waiver-denied-installment-period: 10.days after FeeWaiverDenied() counted_by frbp9006 cite "R.I. LBR 1006-1(g)"
 
 /// R.I. LBR 1006-1(h): if a chapter 7 case with a waived fee is converted,
 /// the debtor pays the full fee for the new chapter, or files an
 /// installment application, within 14 days of conversion.
-deadline converted-fee-period: 14.days after ConvertedFromWaivedChapter7() counted_by frcp6 cite "R.I. LBR 1006-1(h)"
-{
-  forum frcp
-}
+deadline converted-fee-period: 14.days after ConvertedFromWaivedChapter7() counted_by frbp9006 cite "R.I. LBR 1006-1(h)"
 
 /// R.I. LBR 1007-1(e): the chapter 11 debtor serves R.I. Local Form
 /// 1007-1.1 and the proof of claim form on each creditor scheduled as
 /// disputed, contingent or unliquidated within 14 days after filing the
 /// schedules of liabilities.
-deadline disputed-creditor-notice-period: 14.days after Chapter11SchedulesFiled() counted_by frcp6 cite "R.I. LBR 1007-1(e)"
-{
-  forum frcp
-}
+deadline disputed-creditor-notice-period: 14.days after Chapter11SchedulesFiled() counted_by frbp9006 cite "R.I. LBR 1007-1(e)"
 
 /// R.I. LBR 1007-1(e): the notice is served within 14 days of adding such a
 /// creditor to previously filed schedules.
-deadline added-disputed-creditor-notice-period: 14.days after DisputedCreditorAdded() counted_by frcp6 cite "R.I. LBR 1007-1(e)"
-{
-  forum frcp
-}
+deadline added-disputed-creditor-notice-period: 14.days after DisputedCreditorAdded() counted_by frbp9006 cite "R.I. LBR 1007-1(e)"
 
 /// R.I. LBR 1007-1(e): within 14 days of service of the notice, a
 /// certificate evidencing compliance is filed.
-deadline disputed-creditor-certificate-period: 14.days after DisputedCreditorNoticeServed() counted_by frcp6 cite "R.I. LBR 1007-1(e)"
-{
-  forum frcp
-}
+deadline disputed-creditor-certificate-period: 14.days after DisputedCreditorNoticeServed() counted_by frbp9006 cite "R.I. LBR 1007-1(e)"
 
 /// R.I. LBR 1009-1(c)(1)(C): an omitted creditor added by amendment may
 /// file complaints under 11 U.S.C. §§ 523 and 727 and objections to
 /// exemptions within 60 days of service of the notice, or within the time
 /// set for previously scheduled creditors, whichever is later.
-deadline added-creditor-objection-period: 60.days after AddedCreditorNoticeServed() counted_by frcp6 cite "R.I. LBR 1009-1(c)"
-{
-  forum frcp
-}
+deadline added-creditor-objection-period: 60.days after AddedCreditorNoticeServed() counted_by frbp9006 cite "R.I. LBR 1009-1(c)"
 
 /// R.I. LBR 1017-2(b): the court may dismiss for lack of compliance unless
 /// the debtor timely cures or a party requests a hearing within seven days
 /// of service of the order requiring compliance.
-deadline compliance-hearing-request-period: 7.days after ComplianceOrderServed() counted_by frcp6 cite "R.I. LBR 1017-2(b)"
-{
-  forum frcp
-}
+deadline compliance-hearing-request-period: 7.days after ComplianceOrderServed() counted_by frbp9006 cite "R.I. LBR 1017-2(b)"
 
 /// R.I. LBR 2004-1(b)(1): not less than 14 days' written notice of a
 /// proposed Rule 2004 examination is given to the examinee, its counsel and
 /// affected parties.
-deadline examination-notice-period: 14.days before ExaminationScheduled() counted_by frcp6 cite "R.I. LBR 2004-1(b)"
-{
-  forum frcp
-}
+deadline examination-notice-period: 14.days before ExaminationScheduled() counted_by frbp9006 cite "R.I. LBR 2004-1(b)"
 
 /// R.I. LBR 2004-1(b)(2): an objection or motion for protective order
 /// against a Rule 2004 examination is filed within 14 days of service of
 /// the motion if served electronically, plus 3 days under FRBP 9006(f) if
 /// served by mail.
-deadline examination-objection-period: 14.days after ExaminationMotionServed() counted_by frcp6 cite "R.I. LBR 2004-1(b)"
-{
-  forum frcp
-}
+deadline examination-objection-period: 14.days after ExaminationMotionServed() counted_by frbp9006 cite "R.I. LBR 2004-1(b)"
 
 /// R.I. LBR 2014-1(c): absent extraordinary circumstances nunc pro tunc
 /// applications are not considered; an application to employ a professional
 /// is timely if filed within 30 days of the later of the petition and the
 /// start of services.
-deadline employment-application-period: 30.days after ProfessionalEngagementBegan() counted_by frcp6 cite "R.I. LBR 2014-1(c)"
-{
-  forum frcp
-}
+deadline employment-application-period: 30.days after ProfessionalEngagementBegan() counted_by frbp9006 cite "R.I. LBR 2014-1(c)"
 
 /// R.I. LBR 2015-3(a): in chapter 7 and 11 cases other than subchapter V,
 /// the FRBP 2015(a)(1) inventory is served on the United States trustee
 /// within 30 days after the later of approval of the trustee's appointment
 /// and the commencement of the case.
-deadline inventory-period: 30.days after InventoryPeriodStarted() counted_by frcp6 cite "R.I. LBR 2015-3(a)"
-{
-  forum frcp
-}
+deadline inventory-period: 30.days after InventoryPeriodStarted() counted_by frbp9006 cite "R.I. LBR 2015-3(a)"
 
 /// R.I. LBR 2015-5(c): a chapter 13 business debtor files and serves on the
 /// trustee a statement of the quarter's income and expenses within 30 days
 /// of the close of each quarter.
-deadline quarterly-statement-period: 30.days after QuarterEnded() counted_by frcp6 cite "R.I. LBR 2015-5(c)"
-{
-  forum frcp
-}
+deadline quarterly-statement-period: 30.days after QuarterEnded() counted_by frbp9006 cite "R.I. LBR 2015-5(c)"
 
 /// R.I. LBR 2015-5(d): a chapter 13 business debtor submits evidence of
 /// business insurance to the trustee within 7 days after the commencement
 /// of the case.
-deadline business-insurance-period: 7.days after PetitionFiled() counted_by frcp6 cite "R.I. LBR 2015-5(d)"
-{
-  forum frcp
-}
+deadline business-insurance-period: 7.days after PetitionFiled() counted_by frbp9006 cite "R.I. LBR 2015-5(d)"
 
 /// R.I. LBR 2016-1(d)(2): a creditor's final application for the fees of
 /// professionals it employs is filed not later than 30 days after the
 /// Notice of Discharge.
-deadline creditor-final-fee-application-period: 30.days after DischargeNoticeIssued() counted_by frcp6 cite "R.I. LBR 2016-1(d)"
-{
-  forum frcp
-}
+deadline creditor-final-fee-application-period: 30.days after DischargeNoticeIssued() counted_by frbp9006 cite "R.I. LBR 2016-1(d)"
 
 /// R.I. LBR 2017-1(a)(1): a document preparer files a fee application
 /// within 21 days of any order requesting it.
-deadline preparer-fee-application-period: 21.days after FeeApplicationOrdered() counted_by frcp6 cite "R.I. LBR 2017-1(a)"
-{
-  forum frcp
-}
+deadline preparer-fee-application-period: 21.days after FeeApplicationOrdered() counted_by frbp9006 cite "R.I. LBR 2017-1(a)"
 
 /// R.I. LBR 2017-1(a)(2): a chapter 13 debtor's attorney whose fee exceeds
 /// the Appendix III amounts files a fee application within 60 days after
 /// the § 341 meeting is held.
-deadline chapter13-fee-application-period: 60.days after MeetingOfCreditorsHeld() counted_by frcp6 cite "R.I. LBR 2017-1(a)"
-{
-  forum frcp
-}
+deadline chapter13-fee-application-period: 60.days after MeetingOfCreditorsHeld() counted_by frbp9006 cite "R.I. LBR 2017-1(a)"
 
 /// R.I. LBR 2083-1: the debtor and counsel file R.I. Local Form 2083-1.1
 /// with the chapter 13 case or within 14 days thereafter.
-deadline chapter13-agreement-period: 14.days after PetitionFiled() counted_by frcp6 cite "R.I. LBR 2083-1"
-{
-  forum frcp
-}
+deadline chapter13-agreement-period: 14.days after PetitionFiled() counted_by frbp9006 cite "R.I. LBR 2083-1"
 
 /// R.I. LBR 3002-1(d)(3): a claimant secured by the debtor's principal
 /// residence may supplement a timely claim with the FRBP 3001(c)(1) and (d)
 /// attachments and Local Form 3002-1.1 not later than 120 days after the
 /// order for relief or any extension; the December 1, 2025 amendment
 /// restates it.
-deadline claim-supplement-period: 120.days after OrderForReliefEntered() counted_by frcp6 cite "R.I. LBR 3002-1(d)"
-{
-  forum frcp
-}
+deadline claim-supplement-period: 120.days after OrderForReliefEntered() counted_by frbp9006 cite "R.I. LBR 3002-1(d)"
 
 /// R.I. LBR 3003-1: unless the court orders otherwise, proofs of claim in
 /// chapter 11 cases are filed on or before 60 days from the date first set
 /// for the § 341 meeting; governmental units have the time of 11 U.S.C. §
 /// 502(b)(9).
-deadline chapter11-claim-period: 60.days after FirstMeetingDate() counted_by frcp6 cite "R.I. LBR 3003-1"
-{
-  forum frcp
-}
+deadline chapter11-claim-period: 60.days after FirstMeetingDate() counted_by frbp9006 cite "R.I. LBR 3003-1"
 
 /// R.I. LBR 3007-1(a): in chapter 13 cases, objections to claims are filed
 /// within 60 days after confirmation of the plan or the claims deadline,
 /// whichever is later.
-deadline confirmed-claim-objection-period: 60.days after Chapter13PlanConfirmed() counted_by frcp6 cite "R.I. LBR 3007-1(a)"
-{
-  forum frcp
-}
+deadline confirmed-claim-objection-period: 60.days after Chapter13PlanConfirmed() counted_by frbp9006 cite "R.I. LBR 3007-1(a)"
 
 /// R.I. LBR 3007-1(a): within 60 days after the deadline for filing proofs
 /// of claim or confirmation, whichever is later.
-deadline chapter13-claim-objection-period: 60.days after ClaimDeadlinePassed() counted_by frcp6 cite "R.I. LBR 3007-1(a)"
-{
-  forum frcp
-}
+deadline chapter13-claim-objection-period: 60.days after ClaimDeadlinePassed() counted_by frbp9006 cite "R.I. LBR 3007-1(a)"
 
 /// R.I. LBR 3007-1(a): an objection to a late filed claim is filed within
 /// 60 days after its filing.
-deadline late-claim-objection-period: 60.days after LateClaimFiled() counted_by frcp6 cite "R.I. LBR 3007-1(a)"
-{
-  forum frcp
-}
+deadline late-claim-objection-period: 60.days after LateClaimFiled() counted_by frbp9006 cite "R.I. LBR 3007-1(a)"
 
 /// R.I. LBR 3007-1(b): a response to an objection to a claim is filed
 /// within 14 days if served electronically, plus 3 days under FRBP 9006 if
 /// served by mail.
-deadline claim-objection-response-period: 14.days after ClaimObjectionServed() counted_by frcp6 cite "R.I. LBR 3007-1(b)"
-{
-  forum frcp
-}
+deadline claim-objection-response-period: 14.days after ClaimObjectionServed() counted_by frbp9006 cite "R.I. LBR 3007-1(b)"
 
 /// R.I. LBR 3011-1(b)(3): a 21-day deadline is fixed for objections to a
 /// petition for unclaimed funds if served electronically, plus 3 days if
 /// served by mail.
-deadline unclaimed-funds-objection-period: 21.days after UnclaimedFundsPetitionServed() counted_by frcp6 cite "R.I. LBR 3011-1(b)"
-{
-  forum frcp
-}
+deadline unclaimed-funds-objection-period: 21.days after UnclaimedFundsPetitionServed() counted_by frbp9006 cite "R.I. LBR 3011-1(b)"
 
 /// R.I. LBR 3015-1(b): a certificate of service of the chapter 13 plan is
 /// filed within 14 days after the plan is served.
-deadline plan-service-certificate-period: 14.days after PlanServed() counted_by frcp6 cite "R.I. LBR 3015-1(b)"
-{
-  forum frcp
-}
+deadline plan-service-certificate-period: 14.days after PlanServed() counted_by frbp9006 cite "R.I. LBR 3015-1(b)"
 
 /// R.I. LBR 3015-3(b)(1), 3015-1(c)(2) and 3015-2(b)(1): an objection to
 /// confirmation of a chapter 13 plan or a pre-confirmation amended plan,
 /// including any motion in it, is filed no later than 7 days before the
 /// confirmation hearing.
-deadline confirmation-objection-period: 7.days before ConfirmationHearingScheduled() counted_by frcp6 cite "R.I. LBR 3015-3(b)"
-{
-  forum frcp
-}
+deadline confirmation-objection-period: 7.days before ConfirmationHearingScheduled() counted_by frbp9006 cite "R.I. LBR 3015-3(b)"
 
 /// R.I. LBR 3015-1(c)(3): with a motion to modify a secured claim, the
 /// debtor files Supplemental Schedules I and J no later than 7 days prior
 /// to the confirmation hearing if allowing the motion changes income or
 /// expenses.
-deadline supplemental-schedules-period: 7.days before ConfirmationHearingScheduled() counted_by frcp6 cite "R.I. LBR 3015-1(c)"
-{
-  forum frcp
-}
+deadline supplemental-schedules-period: 7.days before ConfirmationHearingScheduled() counted_by frbp9006 cite "R.I. LBR 3015-1(c)"
 
 /// R.I. LBR 3015-2(b)(2)(D) and 1005-1(d)(2)(C): objections to an amended
 /// plan after confirmation are filed no later than 21 days from the date of
 /// service of the motion to amend.
-deadline confirmed-plan-amendment-objection-period: 21.days after PlanAmendmentMotionServed() counted_by frcp6 cite "R.I. LBR 3015-2(b)"
-{
-  forum frcp
-}
+deadline confirmed-plan-amendment-objection-period: 21.days after PlanAmendmentMotionServed() counted_by frbp9006 cite "R.I. LBR 3015-2(b)"
 
 /// R.I. LBR 3015-3(e): if confirmation is denied, the court may dismiss the
 /// case unless within 14 days after the order the debtor files an amended
 /// plan, moves to convert, moves for reconsideration, appeals, timely
 /// requests relief under R.I. LBR 1017-2(b), or the court orders otherwise.
-deadline confirmation-denial-cure-period: 14.days after ConfirmationDenied() counted_by frcp6 cite "R.I. LBR 3015-3(e)"
-{
-  forum frcp
-}
+deadline confirmation-denial-cure-period: 14.days after ConfirmationDenied() counted_by frbp9006 cite "R.I. LBR 3015-3(e)"
 
 /// R.I. LBR 3015-3(f)(3): the case closes without a discharge unless within
 /// 14 days the debtor documents to the trustee that all domestic support
 /// obligations are current.
-deadline support-obligation-documentation-period: 14.days after CloseWithoutDischargeNoticeIssued() counted_by frcp6 cite "R.I. LBR 3015-3(f)"
-{
-  forum frcp
-}
+deadline support-obligation-documentation-period: 14.days after CloseWithoutDischargeNoticeIssued() counted_by frbp9006 cite "R.I. LBR 3015-3(f)"
 
 /// R.I. LBR 3018-1(b): at least 7 days prior to the confirmation hearing,
 /// the plan proponent certifies the ballots on R.I. Local Form 3018-1.1.
-deadline ballot-certification-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frcp6 cite "R.I. LBR 3018-1(b)"
-{
-  forum frcp
-}
+deadline ballot-certification-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frbp9006 cite "R.I. LBR 3018-1(b)"
 
 /// R.I. LBR 3018-2: a motion to temporarily allow a claim for voting is
 /// filed with the ballot at least 14 days prior to confirmation.
-deadline temporary-allowance-motion-period: 14.days before Chapter11ConfirmationHearingScheduled() counted_by frcp6 cite "R.I. LBR 3018-2"
-{
-  forum frcp
-}
+deadline temporary-allowance-motion-period: 14.days before Chapter11ConfirmationHearingScheduled() counted_by frbp9006 cite "R.I. LBR 3018-2"
 
 /// R.I. LBR 3020-1(a)-(c): not less than 7 days prior to the confirmation
 /// hearing, the plan proponent provides the proposed order of distribution,
 /// confirmation worksheet, mailing certification, proposed order and § 1129
 /// certification (subchapter V: the documents of (b)), and any proof of
 /// deposit is filed.
-deadline confirmation-documents-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frcp6 cite "R.I. LBR 3020-1(a)"
-{
-  forum frcp
-}
+deadline confirmation-documents-period: 7.days before Chapter11ConfirmationHearingScheduled() counted_by frbp9006 cite "R.I. LBR 3020-1(a)"
 
 /// R.I. LBR 3020-1(a)(1): the proposed order of distribution, or a notice
 /// of its filing, is served on all creditors at least 14 days before the
 /// confirmation hearing.
-deadline distribution-order-service-period: 14.days before Chapter11ConfirmationHearingScheduled() counted_by frcp6 cite "R.I. LBR 3020-1(a)"
-{
-  forum frcp
-}
+deadline distribution-order-service-period: 14.days before Chapter11ConfirmationHearingScheduled() counted_by frbp9006 cite "R.I. LBR 3020-1(a)"
 
 /// R.I. LBR 3022-1(a): within six months of the order of confirmation, or
 /// sooner on substantial consummation and full administration, the plan
 /// proponent files a final report and request for final decree; otherwise a
 /// status report (R.I. LBR 3022-1(c)).
-deadline final-report-period: 6.months after Chapter11PlanConfirmed() counted_by frcp6 cite "R.I. LBR 3022-1(a)"
-{
-  forum frcp
-}
+deadline final-report-period: 6.months after Chapter11PlanConfirmed() counted_by frbp9006 cite "R.I. LBR 3022-1(a)"
 
 /// R.I. LBR 4001-1(d): an opposition to a motion for relief from stay is
 /// filed within 14 days if served electronically, or 17 days if served
 /// under FRBP 9006(f); before an expedited hearing, within 24 hours of it.
-deadline stay-relief-opposition-period: 14.days after StayReliefMotionServed() counted_by frcp6 cite "R.I. LBR 4001-1(d)"
-{
-  forum frcp
-}
+deadline stay-relief-opposition-period: 14.days after StayReliefMotionServed() counted_by frbp9006 cite "R.I. LBR 4001-1(d)"
 
 /// R.I. LBR 4001-1(i)(1): the movant delivers a draft joint pretrial
 /// statement to the respondent within 7 days of the conclusion of the
 /// preliminary hearing.
-deadline stay-pretrial-draft-period: 7.days after PreliminaryHearingConcluded() counted_by frcp6 cite "R.I. LBR 4001-1(i)"
-{
-  forum frcp
-}
+deadline stay-pretrial-draft-period: 7.days after PreliminaryHearingConcluded() counted_by frbp9006 cite "R.I. LBR 4001-1(i)"
 
 /// R.I. LBR 4001-2(c): unless the court orders a shorter period, objections
 /// to a motion to use cash collateral are filed within 7 days from service.
-deadline cash-collateral-objection-period: 7.days after CashCollateralMotionServed() counted_by frcp6 cite "R.I. LBR 4001-2(c)"
-{
-  forum frcp
-}
+deadline cash-collateral-objection-period: 7.days after CashCollateralMotionServed() counted_by frbp9006 cite "R.I. LBR 4001-2(c)"
 
 /// R.I. LBR 4001-3(b): a chapter 13 debtor files Supplemental Schedules I
 /// and J within 14 days of executing a borrowing, refinance or loan
 /// modification agreement that changes income or expenses.
-deadline borrowing-schedules-period: 14.days after BorrowingAgreementExecuted() counted_by frcp6 cite "R.I. LBR 4001-3(b)"
-{
-  forum frcp
-}
+deadline borrowing-schedules-period: 14.days after BorrowingAgreementExecuted() counted_by frbp9006 cite "R.I. LBR 4001-3(b)"
 
 /// R.I. LBR 4001-4(b): the lessor consents to receive the rent deposit or
 /// objects within 14 days of the clerk's notice; silence is consent.
-deadline lessor-election-period: 14.days after RentDepositNoticeSent() counted_by frcp6 cite "R.I. LBR 4001-4(b)"
-{
-  forum frcp
-}
+deadline lessor-election-period: 14.days after RentDepositNoticeSent() counted_by frbp9006 cite "R.I. LBR 4001-4(b)"
 
 /// R.I. LBR 4002-2: an attorney who changes address files the designation
 /// of cases not to be noticed to the new address within 21 days after the
 /// clerk's notice.
-deadline address-designation-period: 21.days after AddressChangeNoticeSent() counted_by frcp6 cite "R.I. LBR 4002-2"
-{
-  forum frcp
-}
+deadline address-designation-period: 21.days after AddressChangeNoticeSent() counted_by frbp9006 cite "R.I. LBR 4002-2"
 
 /// R.I. LBR 4003-1(b): an objection to an exemption carries the R.I. LBR
 /// 1005-1(d) notice language with a 14-day response time.
-deadline exemption-objection-response-period: 14.days after ExemptionObjectionServed() counted_by frcp6 cite "R.I. LBR 4003-1(b)"
-{
-  forum frcp
-}
+deadline exemption-objection-response-period: 14.days after ExemptionObjectionServed() counted_by frbp9006 cite "R.I. LBR 4003-1(b)"
 
 /// R.I. LBR 5005-5(a): a filer whose fee-paid document is terminated as
 /// nonconforming has 14 days to refile it corrected with the fee applied;
 /// later, a new fee is required.
-deadline corrected-document-period: 14.days after DocumentTerminated() counted_by frcp6 cite "R.I. LBR 5005-5(a)"
-{
-  forum frcp
-}
+deadline corrected-document-period: 14.days after DocumentTerminated() counted_by frbp9006 cite "R.I. LBR 5005-5(a)"
 
 /// R.I. LBR 5005-6(a)(2): a self-represented party transmits the original
 /// wet-signed Application and Declaration to the clerk within 14 days from
 /// the order approving it.
-deadline drop-box-signature-period: 14.days after DropBoxApplicationApproved() counted_by frcp6 cite "R.I. LBR 5005-6(a)"
-{
-  forum frcp
-}
+deadline drop-box-signature-period: 14.days after DropBoxApplicationApproved() counted_by frbp9006 cite "R.I. LBR 5005-6(a)"
 
 /// R.I. LBR 5007-1(c): a party needing an interpreter files written notice
 /// not later than 11 days prior to the proceeding.
-deadline interpreter-notice-period: 11.days before ProceedingScheduled() counted_by frcp6 cite "R.I. LBR 5007-1(c)"
-{
-  forum frcp
-}
+deadline interpreter-notice-period: 11.days before ProceedingScheduled() counted_by frbp9006 cite "R.I. LBR 5007-1(c)"
 
 /// R.I. LBR 7008-1(b): the parties consent to a jury trial before the
 /// bankruptcy judge by a joint statement no later than 30 days following
 /// the date the last responsive pleading is required to be filed.
-deadline jury-consent-period: 30.days after LastResponsivePleadingDue() counted_by frcp6 cite "R.I. LBR 7008-1(b)"
-{
-  forum frcp
-}
+deadline jury-consent-period: 30.days after LastResponsivePleadingDue() counted_by frbp9006 cite "R.I. LBR 7008-1(b)"
 
 /// R.I. LBR 7016(b): in adversary proceedings a joint pretrial statement is
 /// filed within 21 days after the close of discovery unless the court
 /// orders otherwise.
-deadline adversary-pretrial-statement-period: 21.days after DiscoveryClosed() counted_by frcp6 cite "R.I. LBR 7016(b)"
-{
-  forum frcp
-}
+deadline adversary-pretrial-statement-period: 21.days after DiscoveryClosed() counted_by frbp9006 cite "R.I. LBR 7016(b)"
 
 /// R.I. LBR 7026-1(b): the parties meet and confer under FRCP 26(f) within
 /// 21 days before the scheduling order is due.
-deadline discovery-conference-period: 21.days before SchedulingOrderDue() counted_by frcp6 cite "R.I. LBR 7026-1(b)"
-{
-  forum frcp
-}
+deadline discovery-conference-period: 21.days before SchedulingOrderDue() counted_by frbp9006 cite "R.I. LBR 7026-1(b)"
 
 /// R.I. LBR 7026-1(c): within 14 days of the parties' meeting, they file a
 /// discovery plan.
-deadline discovery-plan-period: 14.days after PartiesConferred() counted_by frcp6 cite "R.I. LBR 7026-1(c)"
-{
-  forum frcp
-}
+deadline discovery-plan-period: 14.days after PartiesConferred() counted_by frbp9006 cite "R.I. LBR 7026-1(c)"
 
 /// R.I. LBR 7026-1(d)(1): a plaintiff in default of the FRCP 26(f)
 /// requirements may have the dismissed matter reinstated only by motion
 /// filed within 14 days of the dismissal.
-deadline reinstatement-motion-period: 14.days after DismissedForWantOfProsecution() counted_by frcp6 cite "R.I. LBR 7026-1(d)"
-{
-  forum frcp
-}
+deadline reinstatement-motion-period: 14.days after DismissedForWantOfProsecution() counted_by frbp9006 cite "R.I. LBR 7026-1(d)"
 
 /// R.I. LBR 9006-1: if the court does not determine a timely motion to
 /// extend the deadline for a discharge or dischargeability complaint or an
 /// exemption objection, the deadline is extended to 7 days after the order
 /// determining it, unless the court orders otherwise.
-deadline extended-discharge-deadline-period: 7.days after ExtensionMotionDetermined() counted_by frcp6 cite "R.I. LBR 9006-1"
-{
-  forum frcp
-}
+deadline extended-discharge-deadline-period: 7.days after ExtensionMotionDetermined() counted_by frbp9006 cite "R.I. LBR 9006-1"
 
 /// R.I. LBR 9013-2(d)(1)(C) and 1005-1(d)(2)(G): written responses to a
 /// motion for expedited determination are required within seven days.
-deadline expedited-response-period: 7.days after ExpeditedMotionServed() counted_by frcp6 cite "R.I. LBR 9013-2(d)"
-{
-  forum frcp
-}
+deadline expedited-response-period: 7.days after ExpeditedMotionServed() counted_by frbp9006 cite "R.I. LBR 9013-2(d)"
 
 /// R.I. LBR 9014-1(c)(1): the opposing party submits comments or revisions
 /// on the draft Joint Pretrial Statement within 2 days.
-deadline pretrial-statement-comments-period: 2.days after PretrialStatementDraftServed() counted_by frcp6 cite "R.I. LBR 9014-1(c)"
-{
-  forum frcp
-}
+deadline pretrial-statement-comments-period: 2.days after PretrialStatementDraftServed() counted_by frbp9006 cite "R.I. LBR 9014-1(c)"
 
 /// R.I. LBR 9018-1(d)(2): if sealing is granted only in part, the filer
 /// files a redacted version on the public docket within 10 days of the Seal
 /// Order or the motion is deemed denied.
-deadline redacted-document-period: 10.days after PartialSealOrderEntered() counted_by frcp6 cite "R.I. LBR 9018-1(d)"
-{
-  forum frcp
-}
+deadline redacted-document-period: 10.days after PartialSealOrderEntered() counted_by frbp9006 cite "R.I. LBR 9018-1(d)"
 
 /// R.I. LBR 9027-1(a): within 7 days after filing a notice of removal, the
 /// removing party files copies of all pertinent papers and a certified copy
 /// of the docket entries of the removed action.
-deadline removal-papers-period: 7.days after RemovalNoticeFiled() counted_by frcp6 cite "R.I. LBR 9027-1(a)"
-{
-  forum frcp
-}
+deadline removal-papers-period: 7.days after RemovalNoticeFiled() counted_by frbp9006 cite "R.I. LBR 9027-1(a)"
 
 /// R.I. LBR 9070-1(c): the parties withdraw their exhibits within 30 days
 /// of the clerk's notice or the clerk may dispose of them.
-deadline exhibit-withdrawal-period: 30.days after ExhibitRemovalNoticeIssued() counted_by frcp6 cite "R.I. LBR 9070-1(c)"
-{
-  forum frcp
-}
+deadline exhibit-withdrawal-period: 30.days after ExhibitRemovalNoticeIssued() counted_by frbp9006 cite "R.I. LBR 9070-1(c)"
 
 /// R.I. LBR 9072-1(a) and 5005-5(b): unless otherwise ordered, the
 /// prevailing party prepares, submits and serves an order announced in open
 /// court within 7 days of the hearing; otherwise the court strikes the
 /// initiating document.
-deadline proposed-order-period: 7.days after HearingHeld() counted_by frcp6 cite "R.I. LBR 9072-1(a)"
-{
-  forum frcp
-}
+deadline proposed-order-period: 7.days after HearingHeld() counted_by frbp9006 cite "R.I. LBR 9072-1(a)"
 
 /// R.I. LBR 9072-1(b): if no objection to the form of a proposed order or
 /// judgment is received within 7 days of service, the court may enter it.
-deadline order-form-objection-period: 7.days after ProposedOrderServed() counted_by frcp6 cite "R.I. LBR 9072-1(b)"
-{
-  forum frcp
-}
+deadline order-form-objection-period: 7.days after ProposedOrderServed() counted_by frbp9006 cite "R.I. LBR 9072-1(b)"
 
 /// R.I. LBR 1005-1(d)(1): a response or objection to a motion, application,
 /// petition, objection to claim or objection to exemption is served and
 /// filed within 14 days after service if served electronically, plus 3 days
 /// under FRBP 9006(f) if served by mail; unopposed papers are granted. The
 /// December 1, 2025 amendment restates it.
-deadline response-period: 14.days after PaperServed() counted_by frcp6 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(d)"
-{
-  forum frcp
-}
+deadline response-period: 14.days after PaperServed() counted_by frbp9006 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(d)"
 
 /// R.I. LBR 1005-1(d)(1) from February 13, 2026: a hole (General Order
 /// 2026-001).
-deadline response-period: 14.days after PaperServed() counted_by frcp6 effective [2026-02-13, ..) supersedes response-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
-  forum frcp
+deadline response-period: 14.days after PaperServed() counted_by frbp9006 effective [2026-02-13, ..) supersedes response-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
 }
 
 /// R.I. LBR 1005-1(d)(2)(A): the response time on an application to
 /// compromise is 21 days.
-deadline compromise-response-period: 21.days after CompromiseApplicationServed() counted_by frcp6 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(d)"
-{
-  forum frcp
-}
+deadline compromise-response-period: 21.days after CompromiseApplicationServed() counted_by frbp9006 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(d)"
 
 /// R.I. LBR 1005-1(d)(2)(A) from February 13, 2026: a hole (General Order
 /// 2026-001).
-deadline compromise-response-period: 21.days after CompromiseApplicationServed() counted_by frcp6 effective [2026-02-13, ..) supersedes compromise-response-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
-  forum frcp
+deadline compromise-response-period: 21.days after CompromiseApplicationServed() counted_by frbp9006 effective [2026-02-13, ..) supersedes compromise-response-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
 }
 
 /// R.I. LBR 1005-1(d)(2)(B): the response time on a motion or notice of
 /// intended sale is 21 days.
-deadline sale-response-period: 21.days after SaleNoticeServed() counted_by frcp6 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(d)"
-{
-  forum frcp
-}
+deadline sale-response-period: 21.days after SaleNoticeServed() counted_by frbp9006 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(d)"
 
 /// R.I. LBR 1005-1(d)(2)(B) from February 13, 2026: a hole (General Order
 /// 2026-001).
-deadline sale-response-period: 21.days after SaleNoticeServed() counted_by frcp6 effective [2026-02-13, ..) supersedes sale-response-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
-  forum frcp
+deadline sale-response-period: 21.days after SaleNoticeServed() counted_by frbp9006 effective [2026-02-13, ..) supersedes sale-response-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
 }
 
 /// R.I. LBR 1005-1(d)(2)(D): the response time on a motion to modify a
 /// secured claim is 21 days.
-deadline secured-claim-response-period: 21.days after SecuredClaimMotionServed() counted_by frcp6 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(d)"
-{
-  forum frcp
-}
+deadline secured-claim-response-period: 21.days after SecuredClaimMotionServed() counted_by frbp9006 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(d)"
 
 /// R.I. LBR 1005-1(d)(2)(D) from February 13, 2026: a hole (General Order
 /// 2026-001).
-deadline secured-claim-response-period: 21.days after SecuredClaimMotionServed() counted_by frcp6 effective [2026-02-13, ..) supersedes secured-claim-response-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
-  forum frcp
+deadline secured-claim-response-period: 21.days after SecuredClaimMotionServed() counted_by frbp9006 effective [2026-02-13, ..) supersedes secured-claim-response-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
 }
 
 /// R.I. LBR 1005-1(d)(2)(E): the response time on an application or notice
 /// to abandon is 21 days.
-deadline abandonment-response-period: 21.days after AbandonmentNoticeServed() counted_by frcp6 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(d)"
-{
-  forum frcp
-}
+deadline abandonment-response-period: 21.days after AbandonmentNoticeServed() counted_by frbp9006 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(d)"
 
 /// R.I. LBR 1005-1(d)(2)(E) from February 13, 2026: a hole (General Order
 /// 2026-001).
-deadline abandonment-response-period: 21.days after AbandonmentNoticeServed() counted_by frcp6 effective [2026-02-13, ..) supersedes abandonment-response-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
-  forum frcp
+deadline abandonment-response-period: 21.days after AbandonmentNoticeServed() counted_by frbp9006 effective [2026-02-13, ..) supersedes abandonment-response-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
 }
 
 /// R.I. LBR 1005-1(d)(2)(F): the response time on an application for
 /// compensation is 21 days.
-deadline compensation-response-period: 21.days after CompensationApplicationServed() counted_by frcp6 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(d)"
-{
-  forum frcp
-}
+deadline compensation-response-period: 21.days after CompensationApplicationServed() counted_by frbp9006 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(d)"
 
 /// R.I. LBR 1005-1(d)(2)(F) from February 13, 2026: a hole (General Order
 /// 2026-001).
-deadline compensation-response-period: 21.days after CompensationApplicationServed() counted_by frcp6 effective [2026-02-13, ..) supersedes compensation-response-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
-  forum frcp
+deadline compensation-response-period: 21.days after CompensationApplicationServed() counted_by frbp9006 effective [2026-02-13, ..) supersedes compensation-response-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
 }
 
 /// R.I. LBR 1005-1(d)(2)(L): the response time on a motion to vacate an
 /// order or to reconsider is seven days.
-deadline reconsideration-response-period: 7.days after ReconsiderationMotionServed() counted_by frcp6 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(d)"
-{
-  forum frcp
-}
+deadline reconsideration-response-period: 7.days after ReconsiderationMotionServed() counted_by frbp9006 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(d)"
 
 /// R.I. LBR 1005-1(d)(2)(L) from February 13, 2026: a hole (General Order
 /// 2026-001).
-deadline reconsideration-response-period: 7.days after ReconsiderationMotionServed() counted_by frcp6 effective [2026-02-13, ..) supersedes reconsideration-response-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
-  forum frcp
+deadline reconsideration-response-period: 7.days after ReconsiderationMotionServed() counted_by frbp9006 effective [2026-02-13, ..) supersedes reconsideration-response-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
 }
 
 /// R.I. LBR 1005-1(d)(2)(M): the response time on a motion for relief from
 /// the co-debtor stay is 20 days.
-deadline codebtor-stay-response-period: 20.days after CodebtorStayMotionServed() counted_by frcp6 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(d)"
-{
-  forum frcp
-}
+deadline codebtor-stay-response-period: 20.days after CodebtorStayMotionServed() counted_by frbp9006 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(d)"
 
 /// R.I. LBR 1005-1(d)(2)(M) from February 13, 2026: a hole (General Order
 /// 2026-001).
-deadline codebtor-stay-response-period: 20.days after CodebtorStayMotionServed() counted_by frcp6 effective [2026-02-13, ..) supersedes codebtor-stay-response-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
-  forum frcp
+deadline codebtor-stay-response-period: 20.days after CodebtorStayMotionServed() counted_by frbp9006 effective [2026-02-13, ..) supersedes codebtor-stay-response-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
 }
 
 /// R.I. LBR 1005-1(e)(3)-(4): a stricken late document is revived, or a
 /// stricken defective one relates back, only if refiled (with a Motion to
 /// File Out of Time where late) within 3 calendar days of the entry
 /// striking it.
-deadline late-document-refile-period: 3.days after LateDocumentStricken() counted_by frcp6 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(e)"
-{
-  forum frcp
-}
+deadline late-document-refile-period: 3.days after LateDocumentStricken() counted_by frbp9006 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 1005-1(e)"
 
 /// R.I. LBR 1005-1(e)(3)-(4) from February 13, 2026: a hole (General Order
 /// 2026-001).
-deadline late-document-refile-period: 3.days after LateDocumentStricken() counted_by frcp6 effective [2026-02-13, ..) supersedes late-document-refile-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
-  forum frcp
+deadline late-document-refile-period: 3.days after LateDocumentStricken() counted_by frbp9006 effective [2026-02-13, ..) supersedes late-document-refile-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
 }
 
 /// R.I. LBR 1005-1(d)(2)(Q), added December 1, 2025 (General Order
 /// 2025-003): the response time on a motion to determine under FRBP
 /// 3002.1(f) or (g)(4) is 28 days.
-deadline mortgage-claim-motion-response-period: 28.days after MortgageClaimMotionServed() counted_by frcp6 effective [2025-12-01, 2026-02-13) cite "R.I. LBR (Dec. 2025) 1005-1(d)"
-{
-  forum frcp
-}
+deadline mortgage-claim-motion-response-period: 28.days after MortgageClaimMotionServed() counted_by frbp9006 effective [2025-12-01, 2026-02-13) cite "R.I. LBR (Dec. 2025) 1005-1(d)"
 
 /// R.I. LBR 1005-1(d)(2)(Q) from February 13, 2026: a hole (General Order
 /// 2026-001).
-deadline mortgage-claim-motion-response-period: 28.days after MortgageClaimMotionServed() counted_by frcp6 effective [2026-02-13, ..) supersedes mortgage-claim-motion-response-period@2025-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
-  forum frcp
+deadline mortgage-claim-motion-response-period: 28.days after MortgageClaimMotionServed() counted_by frbp9006 effective [2026-02-13, ..) supersedes mortgage-claim-motion-response-period@2025-12-01 cite ?("General Order 2026-001 amended R.I. LBR 1005-1 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
 }
 
 /// R.I. LBR 5005-4(c)(2): an attorney who conventionally files a first
 /// document under the one-time exemption registers as an Electronic Filer,
 /// or seeks an exemption, within 21 days thereafter. The July 21, 2025
 /// amendment restates it.
-deadline filer-registration-period: 21.days after FirstConventionalFiling() counted_by frcp6 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 5005-4(c)"
-{
-  forum frcp
-}
+deadline filer-registration-period: 21.days after FirstConventionalFiling() counted_by frbp9006 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 5005-4(c)"
 
 /// R.I. LBR 5005-4(c)(2) from February 13, 2026: a hole (General Order
 /// 2026-001).
-deadline filer-registration-period: 21.days after FirstConventionalFiling() counted_by frcp6 effective [2026-02-13, ..) supersedes filer-registration-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 5005-4 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
-  forum frcp
+deadline filer-registration-period: 21.days after FirstConventionalFiling() counted_by frbp9006 effective [2026-02-13, ..) supersedes filer-registration-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 5005-4 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
 }
 
 /// R.I. LBR 5005-4(q): a filing fee is due on the date of filing; if it is
 /// not paid within 7 days of filing, the document is stricken or
 /// terminated. The July 21, 2025 amendment restates it.
-deadline electronic-fee-period: 7.days after FeeBearingDocumentFiled() counted_by frcp6 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 5005-4(q)"
-{
-  forum frcp
-}
+deadline electronic-fee-period: 7.days after FeeBearingDocumentFiled() counted_by frbp9006 effective [2024-12-01, 2026-02-13) cite "R.I. LBR 5005-4(q)"
 
 /// R.I. LBR 5005-4(q) from February 13, 2026: a hole (General Order
 /// 2026-001).
-deadline electronic-fee-period: 7.days after FeeBearingDocumentFiled() counted_by frcp6 effective [2026-02-13, ..) supersedes electronic-fee-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 5005-4 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
-  forum frcp
+deadline electronic-fee-period: 7.days after FeeBearingDocumentFiled() counted_by frbp9006 effective [2026-02-13, ..) supersedes electronic-fee-period@2024-12-01 cite ?("General Order 2026-001 amended R.I. LBR 5005-4 effective February 13, 2026; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
 }
 
 /// R.I. LBR 9010-1(c): if a matter in which an attorney appears pro hac
 /// vice without local counsel is or becomes contested, local counsel enters
 /// an appearance at least seven days before the scheduled hearing.
-deadline local-counsel-appearance-period: 7.days before ContestedHearingScheduled() counted_by frcp6 effective [2024-12-01, 2025-06-03) cite "R.I. LBR 9010-1(c)"
-{
-  forum frcp
-}
+deadline local-counsel-appearance-period: 7.days before ContestedHearingScheduled() counted_by frbp9006 effective [2024-12-01, 2025-06-03) cite "R.I. LBR 9010-1(c)"
 
 /// R.I. LBR 9010-1(c) from June 3, 2025: a hole (General Order 2025-001).
-deadline local-counsel-appearance-period: 7.days before ContestedHearingScheduled() counted_by frcp6 effective [2025-06-03, ..) supersedes local-counsel-appearance-period@2024-12-01 cite ?("General Order 2025-001 amended R.I. LBR 9010-1 effective June 3, 2025; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
-  forum frcp
+deadline local-counsel-appearance-period: 7.days before ContestedHearingScheduled() counted_by frbp9006 effective [2025-06-03, ..) supersedes local-counsel-appearance-period@2024-12-01 cite ?("General Order 2025-001 amended R.I. LBR 9010-1 effective June 3, 2025; the court posted no text, so the period from that date is the earlier text carried forward, unverified") {
 }
 
 start motion-filed

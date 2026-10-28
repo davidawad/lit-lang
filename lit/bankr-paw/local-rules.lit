@@ -1,6 +1,6 @@
 module bankr-paw-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 import frbp.events.{ FirstMeetingDate, PetitionFiled }
 
 // The Bankr. W.D. Pa. court's own periods and page limits, counted under
@@ -207,571 +207,358 @@ event ExaminationNoticeServed()
 /// Complex Chapter 11 case, or as soon thereafter as reasonably possible, the
 /// debtor notifies the United States Trustee and provides drafts of the First
 /// Day Motions.
-deadline complex-case-prefiling-notice-period: 3.days before PetitionFiled() counted_by frcp6 cite "W.PA.LBR 1002-3"
-{
-  forum frcp
-}
+deadline complex-case-prefiling-notice-period: 3.days before PetitionFiled() counted_by frbp9006 cite "W.PA.LBR 1002-3"
 
 /// W.PA.LBR 1002-8(c)(7): the debtor notifies the Clerk's Office and the
 /// claims and noticing agent within seven days of an order of dismissal or
 /// conversion of the case.
-deadline claims-agent-order-notice-period: 7.days after DismissOrConvertEntered() counted_by frcp6 cite "W.PA.LBR 1002-8(c)"
-{
-  forum frcp
-}
+deadline claims-agent-order-notice-period: 7.days after DismissOrConvertEntered() counted_by frbp9006 cite "W.PA.LBR 1002-8(c)"
 
 /// W.PA.LBR 1006-1(b): whenever a case is dismissed before the filing fees
 /// are paid in full, the debtor remits the balance to the Clerk within
 /// fourteen days after entry of the order of dismissal.
-deadline dismissal-fee-balance-period: 14.days after DismissOrConvertEntered() counted_by frcp6 cite "W.PA.LBR 1006-1(b)"
-{
-  forum frcp
-}
+deadline dismissal-fee-balance-period: 14.days after DismissOrConvertEntered() counted_by frbp9006 cite "W.PA.LBR 1006-1(b)"
 
 /// W.PA.LBR 1007-4(b): each individual debtor (other than under subchapter V)
 /// reports to the trustee any source of income not listed on its payment
 /// advices not later than fourteen days before the date first set for the
 /// meeting of creditors.
-deadline other-income-report-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "W.PA.LBR 1007-4(b)"
-{
-  forum frcp
-}
+deadline other-income-report-period: 14.days before FirstMeetingDate() counted_by frbp9006 cite "W.PA.LBR 1007-4(b)"
 
 /// W.PA.LBR 1007-4(c), 2015-1(f)(2): a self-employed chapter 13 debtor
 /// submits Local Bankruptcy Form 5 (Chapter 13 Business Case Questionnaire)
 /// to the trustee at least fourteen days before the first scheduled meeting
 /// of creditors.
-deadline business-questionnaire-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "W.PA.LBR 1007-4(c)"
-{
-  forum frcp
-}
+deadline business-questionnaire-period: 14.days before FirstMeetingDate() counted_by frbp9006 cite "W.PA.LBR 1007-4(c)"
 
 /// W.PA.LBR 2002-1(a): an entity that serves a document in satisfaction of a
 /// notice requirement files a certificate of service within seven calendar
 /// days after the date of service (immediately in an expedited matter).
-deadline certificate-of-service-period: 7.days after NoticeServed() counted_by frcp6 cite "W.PA.LBR 2002-1(a)"
-{
-  forum frcp
-}
+deadline certificate-of-service-period: 7.days after NoticeServed() counted_by frbp9006 cite "W.PA.LBR 2002-1(a)"
 
 /// W.PA.LBR 2004-1(c): not less than twenty-eight days' written notice of a
 /// proposed Rule 2004 examination is given to the entity to be examined, its
 /// counsel and other affected parties.
-deadline examination-notice-period: 28.days before Examination() counted_by frcp6 cite "W.PA.LBR 2004-1(c)"
-{
-  forum frcp
-}
+deadline examination-notice-period: 28.days before Examination() counted_by frbp9006 cite "W.PA.LBR 2004-1(c)"
 
 /// W.PA.LBR 2004-1(c): the entity to be examined and other affected parties
 /// have fourteen days after service to respond or object to the proposed
 /// examination.
-deadline examination-objection-period: 14.days after ExaminationNoticeServed() counted_by frcp6 cite "W.PA.LBR 2004-1(c)"
-{
-  forum frcp
-}
+deadline examination-objection-period: 14.days after ExaminationNoticeServed() counted_by frbp9006 cite "W.PA.LBR 2004-1(c)"
 
 /// W.PA.LBR 2015-1(a): within sixty days of the initial filing of the
 /// petition, each debtor or debtor in possession files all federal, state and
 /// local tax returns due but unfiled as of the petition date.
-deadline unfiled-tax-returns-period: 60.days after PetitionFiled() counted_by frcp6 cite "W.PA.LBR 2015-1(a)"
-{
-  forum frcp
-}
+deadline unfiled-tax-returns-period: 60.days after PetitionFiled() counted_by frbp9006 cite "W.PA.LBR 2015-1(a)"
 
 /// W.PA.LBR 3002-1(a): if an amendment adding creditors is filed after the
 /// claims bar date has expired, or within thirty days before it expires, the
 /// affected creditors file proofs of claim within thirty days of the date
 /// notice of the amendment is sent.
-deadline added-creditor-claim-period: 30.days after AmendmentNoticeSent() counted_by frcp6 cite "W.PA.LBR 3002-1(a)"
-{
-  forum frcp
-}
+deadline added-creditor-claim-period: 30.days after AmendmentNoticeSent() counted_by frbp9006 cite "W.PA.LBR 3002-1(a)"
 
 /// W.PA.LBR 3002-3(e): all objections to an amended proof of claim in a
 /// chapter 13 case are filed and served within ninety days after it is filed
 /// and served.
-deadline amended-claim-objection-period: 90.days after AmendedClaimServed() counted_by frcp6 cite "W.PA.LBR 3002-3(e)"
-{
-  forum frcp
-}
+deadline amended-claim-objection-period: 90.days after AmendedClaimServed() counted_by frbp9006 cite "W.PA.LBR 3002-3(e)"
 
 /// W.PA.LBR 3002-3(g): within twenty-one days of placing funds on reserve,
 /// the chapter 13 trustee files a Notice of Funds on Reserve certifying its
 /// service.
-deadline funds-on-reserve-notice-period: 21.days after FundsReserved() counted_by frcp6 cite "W.PA.LBR 3002-3(g)"
-{
-  forum frcp
-}
+deadline funds-on-reserve-notice-period: 21.days after FundsReserved() counted_by frbp9006 cite "W.PA.LBR 3002-3(g)"
 
 /// W.PA.LBR 3002-4(b): within twenty-one days after a Notice of Mortgage
 /// Payment Change is filed, the chapter 13 debtor files an amended plan, a
 /// declaration that the existing plan suffices, or an objection to the
 /// notice.
-deadline payment-change-response-period: 21.days after PaymentChangeNoticeFiled() counted_by frcp6 cite "W.PA.LBR 3002-4(b)"
-{
-  forum frcp
-}
+deadline payment-change-response-period: 21.days after PaymentChangeNoticeFiled() counted_by frbp9006 cite "W.PA.LBR 3002-4(b)"
 
 /// W.PA.LBR 3002-5(b): within twenty-one days after a Notice of Postpetition
 /// Fees, Expenses, and Charges is filed, the debtor files an amended plan, a
 /// declaration that the existing plan suffices, or an objection.
-deadline postpetition-fees-response-period: 21.days after PostpetitionFeesNoticeFiled() counted_by frcp6 cite "W.PA.LBR 3002-5(b)"
-{
-  forum frcp
-}
+deadline postpetition-fees-response-period: 21.days after PostpetitionFeesNoticeFiled() counted_by frbp9006 cite "W.PA.LBR 3002-5(b)"
 
 /// W.PA.LBR 3003-1: the deadline for creditors other than governmental units
 /// to file proofs of claim in chapter 11 cases is ninety days after the first
 /// date set for the meeting of creditors.
-deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frcp6 cite "W.PA.LBR 3003-1"
-{
-  forum frcp
-}
+deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frbp9006 cite "W.PA.LBR 3003-1"
 
 /// W.PA.LBR 3011-1(d): objections to an application for unclaimed funds are
 /// filed within 21 days after service of the application; with none, the
 /// court may consider it without a hearing.
-deadline unclaimed-funds-objection-period: 21.days after UnclaimedFundsApplicationServed() counted_by frcp6 cite "W.PA.LBR 3011-1(d)"
-{
-  forum frcp
-}
+deadline unclaimed-funds-objection-period: 21.days after UnclaimedFundsApplicationServed() counted_by frbp9006 cite "W.PA.LBR 3011-1(d)"
 
 /// W.PA.LBR 3015-3(a): objections to the chapter 13 plan are filed at least 7
 /// days before the first date set for the meeting of creditors in the 341
 /// Notice.
-deadline chapter13-plan-objection-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "W.PA.LBR 3015-3(a)"
-{
-  forum frcp
-}
+deadline chapter13-plan-objection-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "W.PA.LBR 3015-3(a)"
 
 /// W.PA.LBR 3015-3(c): objections to holding the Initial Confirmation Hearing
 /// immediately after the meeting of creditors are filed at least 14 days
 /// before the first date set for the meeting.
-deadline hearing-objection-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "W.PA.LBR 3015-3(c)"
-{
-  forum frcp
-}
+deadline hearing-objection-period: 14.days before FirstMeetingDate() counted_by frbp9006 cite "W.PA.LBR 3015-3(c)"
 
 /// W.PA.LBR 3018-1(e): an amended summary of ballots, accounting for ballots
 /// cast with court approval after the voting deadline, is filed within two
 /// days after the plan hearing.
-deadline amended-ballot-summary-period: 2.days after PlanHearing() counted_by frcp6 cite "W.PA.LBR 3018-1(e)"
-{
-  forum frcp
-}
+deadline amended-ballot-summary-period: 2.days after PlanHearing() counted_by frbp9006 cite "W.PA.LBR 3018-1(e)"
 
 /// W.PA.LBR 3021-1(b): within ninety days of confirmation of a chapter 9 or
 /// 11 plan, and each ninety days thereafter until the case is closed, the
 /// disbursing agent files an accounting of sums received, disbursed and
 /// remaining.
-deadline first-accounting-period: 90.days after PlanConfirmed() counted_by frcp6 cite "W.PA.LBR 3021-1(b)"
-{
-  forum frcp
-}
+deadline first-accounting-period: 90.days after PlanConfirmed() counted_by frbp9006 cite "W.PA.LBR 3021-1(b)"
 
 /// W.PA.LBR 3021-1(c)(2): the chapter 13 debtor or debtor's attorney files
 /// objections to any disputed claims within ninety days after the claims bar
 /// date; later objections are untimely.
-deadline chapter13-claim-objection-period: 90.days after ClaimsBarDate() counted_by frcp6 cite "W.PA.LBR 3021-1(c)(2)"
-{
-  forum frcp
-}
+deadline chapter13-claim-objection-period: 90.days after ClaimsBarDate() counted_by frbp9006 cite "W.PA.LBR 3021-1(c)(2)"
 
 /// W.PA.LBR 3021-1(c)(2): objections to late filed or amended claims are
 /// filed within ninety days after they are filed and served.
-deadline late-claim-objection-period: 90.days after LateClaimServed() counted_by frcp6 cite "W.PA.LBR 3021-1(c)(2)"
-{
-  forum frcp
-}
+deadline late-claim-objection-period: 90.days after LateClaimServed() counted_by frbp9006 cite "W.PA.LBR 3021-1(c)(2)"
 
 /// W.PA.LBR 3022-1(a): the plan's administering agent (or the proponent)
 /// files and serves a motion for final decree within the time the
 /// confirmation order sets; if no confirmation order is issued, within ninety
 /// days after confirmation.
-deadline final-decree-motion-period: 90.days after PlanConfirmed() counted_by frcp6 cite "W.PA.LBR 3022-1(a)"
-{
-  forum frcp
-}
+deadline final-decree-motion-period: 90.days after PlanConfirmed() counted_by frbp9006 cite "W.PA.LBR 3022-1(a)"
 
 /// W.PA.LBR 4001-3(a): a rent deposit under § 362(l)(1)(B) by a debtor filing
 /// electronically is delivered to the Clerk within three days of the
 /// petition's filing date.
-deadline rent-deposit-period: 3.days after PetitionFiled() counted_by frcp6 cite "W.PA.LBR 4001-3(a)"
-{
-  forum frcp
-}
+deadline rent-deposit-period: 3.days after PetitionFiled() counted_by frbp9006 cite "W.PA.LBR 4001-3(a)"
 
 /// W.PA.LBR 4002-2: all chapter 13 debtors submit to the trustee proof of
 /// insurance on their motor vehicles, motor homes and improved real estate
 /// within 14 days after their initial plan is filed.
-deadline proof-of-insurance-period: 14.days after InitialPlanFiled() counted_by frcp6 cite "W.PA.LBR 4002-2"
-{
-  forum frcp
-}
+deadline proof-of-insurance-period: 14.days after InitialPlanFiled() counted_by frbp9006 cite "W.PA.LBR 4002-2"
 
 /// W.PA.LBR 4004-4: within ninety days after final distribution of all plan
 /// payments, an individual chapter 11 debtor files a combined motion to
 /// reopen and waive the fee and a motion for discharge with a final report
 /// and account.
-deadline chapter11-discharge-motion-period: 90.days after FinalPlanDistribution() counted_by frcp6 cite "W.PA.LBR 4004-4"
-{
-  forum frcp
-}
+deadline chapter11-discharge-motion-period: 90.days after FinalPlanDistribution() counted_by frbp9006 cite "W.PA.LBR 4004-4"
 
 /// W.PA.LBR 5005-7(d): the case is dismissed without prejudice if the
 /// debtor's signature declaration is not filed within fourteen days of the
 /// petition date.
-deadline signature-declaration-period: 14.days after PetitionFiled() counted_by frcp6 cite "W.PA.LBR 5005-7(d)"
-{
-  forum frcp
-}
+deadline signature-declaration-period: 14.days after PetitionFiled() counted_by frbp9006 cite "W.PA.LBR 5005-7(d)"
 
 /// W.PA.LBR 5005-10(b): if fees are not paid within four days of the date
 /// incurred, the Filing User is locked out of CM/ECF until full payment.
-deadline ecf-fee-payment-period: 4.days after FeesIncurred() counted_by frcp6 cite "W.PA.LBR 5005-10(b)"
-{
-  forum frcp
-}
+deadline ecf-fee-payment-period: 4.days after FeesIncurred() counted_by frbp9006 cite "W.PA.LBR 5005-10(b)"
 
 /// W.PA.LBR 5005-20(b): the Clerk's Office destroys a document filed under
 /// seal unless the submitting party retrieves it within one year after the
 /// case or proceeding closes.
-deadline sealed-document-retrieval-period: 1.years after CaseClosed() counted_by frcp6 cite "W.PA.LBR 5005-20(b)"
-{
-  forum frcp
-}
+deadline sealed-document-retrieval-period: 1.years after CaseClosed() counted_by frbp9006 cite "W.PA.LBR 5005-20(b)"
 
 /// W.PA.LBR 5005-20(c): if the motion to seal is denied, the Clerk's Office
 /// destroys the unredacted copy unless the filer retrieves it within fourteen
 /// days of the order.
-deadline unredacted-copy-retrieval-period: 14.days after SealDenied() counted_by frcp6 cite "W.PA.LBR 5005-20(c)"
-{
-  forum frcp
-}
+deadline unredacted-copy-retrieval-period: 14.days after SealDenied() counted_by frbp9006 cite "W.PA.LBR 5005-20(c)"
 
 /// W.PA.LBR 6002-1: a prior custodian files and serves on the United States
 /// trustee the required report and account within thirty days from acquiring
 /// knowledge of the commencement of the case.
-deadline custodian-account-period: 30.days after CustodianLearnedOfCase() counted_by frcp6 cite "W.PA.LBR 6002-1"
-{
-  forum frcp
-}
+deadline custodian-account-period: 30.days after CustodianLearnedOfCase() counted_by frbp9006 cite "W.PA.LBR 6002-1"
 
 /// W.PA.LBR 6004-1(c)(2): the sale advertisement is published no more than
 /// thirty nor less than fourteen calendar days before the scheduled date of
 /// sale.
-deadline sale-publication-period: 14.days before SaleDate() counted_by frcp6 cite "W.PA.LBR 6004-1(c)"
-{
-  forum frcp
-}
+deadline sale-publication-period: 14.days before SaleDate() counted_by frbp9006 cite "W.PA.LBR 6004-1(c)"
 
 /// W.PA.LBR 6004-1(c)(4): an itemized Report of Sale is filed within seven
 /// calendar days of the date of consummation of the sale.
-deadline report-of-sale-period: 7.days after SaleConsummated() counted_by frcp6 cite "W.PA.LBR 6004-1(c)"
-{
-  forum frcp
-}
+deadline report-of-sale-period: 7.days after SaleConsummated() counted_by frbp9006 cite "W.PA.LBR 6004-1(c)"
 
 /// W.PA.LBR 7008-1(d): unless the court directs otherwise, the response to a
 /// motion in an adversary proceeding is filed and served within fourteen days
 /// after service (plus three days under FRBP 9006(f) when service is by
 /// mail).
-deadline adversary-response-period: 14.days after AdversaryMotionServed() counted_by frcp6 cite "W.PA.LBR 7008-1(d)"
-{
-  forum frcp
-}
+deadline adversary-response-period: 14.days after AdversaryMotionServed() counted_by frbp9006 cite "W.PA.LBR 7008-1(d)"
 
 /// W.PA.LBR 7008-1(e): unless the court directs otherwise, optional briefs on
 /// an adversary motion, of no more than twenty pages, are due at least one
 /// week before the hearing date.
-deadline adversary-brief-period: 7.days before AdversaryMotionHearing() counted_by frcp6 cite "W.PA.LBR 7008-1(e)"
-{
-  forum frcp
-}
+deadline adversary-brief-period: 7.days before AdversaryMotionHearing() counted_by frbp9006 cite "W.PA.LBR 7008-1(e)"
 
 /// W.PA.LBR 7008-1(f): a motion for continuance of a trial date is considered
 /// only if filed and served at least seven calendar days before the scheduled
 /// trial.
-deadline trial-continuance-motion-period: 7.days before Trial() counted_by frcp6 cite "W.PA.LBR 7008-1(f)"
-{
-  forum frcp
-}
+deadline trial-continuance-motion-period: 7.days before Trial() counted_by frbp9006 cite "W.PA.LBR 7008-1(f)"
 
 /// W.PA.LBR 7008-2(b): a party objecting to proposed findings and conclusions
 /// arranges the transcription and files a Notice of Transcript Order within
 /// fourteen days of the date the objection is filed.
-deadline transcript-order-notice-period: 14.days after FindingsObjectionFiled() counted_by frcp6 cite "W.PA.LBR 7008-2(b)"
-{
-  forum frcp
-}
+deadline transcript-order-notice-period: 14.days after FindingsObjectionFiled() counted_by frbp9006 cite "W.PA.LBR 7008-2(b)"
 
 /// W.PA.LBR 7008-2(c): when the parties cannot agree, the objecting party
 /// moves to determine the portion of the record to be transcribed within
 /// fourteen days of the date the objection is filed.
-deadline transcript-portion-motion-period: 14.days after FindingsObjectionFiled() counted_by frcp6 cite "W.PA.LBR 7008-2(c)"
-{
-  forum frcp
-}
+deadline transcript-portion-motion-period: 14.days after FindingsObjectionFiled() counted_by frbp9006 cite "W.PA.LBR 7008-2(c)"
 
 /// W.PA.LBR 7008-2(c): the objecting party files the Notice of Transcript
 /// Order within seven days of the order on the motion.
-deadline transcript-after-order-period: 7.days after TranscriptOrderEntered() counted_by frcp6 cite "W.PA.LBR 7008-2(c)"
-{
-  forum frcp
-}
+deadline transcript-after-order-period: 7.days after TranscriptOrderEntered() counted_by frbp9006 cite "W.PA.LBR 7008-2(c)"
 
 /// W.PA.LBR 7014-1: the third-party plaintiff delivers to a newly joined
 /// third-party defendant the docket sheets and documents of record within
 /// fourteen days after its appearance or responsive pleading.
-deadline third-party-documents-period: 14.days after ThirdPartyAppeared() counted_by frcp6 cite "W.PA.LBR 7014-1"
-{
-  forum frcp
-}
+deadline third-party-documents-period: 14.days after ThirdPartyAppeared() counted_by frbp9006 cite "W.PA.LBR 7014-1"
 
 /// W.PA.LBR 7026-1(c): at least seven days before the first pretrial
 /// conference, the parties exchange the likely custodians of electronic
 /// materials and the other information listed.
-deadline ediscovery-exchange-period: 7.days before PretrialConference() counted_by frcp6 cite "W.PA.LBR 7026-1(c)"
-{
-  forum frcp
-}
+deadline ediscovery-exchange-period: 7.days before PretrialConference() counted_by frbp9006 cite "W.PA.LBR 7026-1(c)"
 
 /// W.PA.LBR 7026-1(g): within the first thirty days of discovery, each party
 /// outlines the steps it will take to segregate and preserve all relevant
 /// electronic documents.
-deadline preservation-outline-period: 30.days after DiscoveryCommenced() counted_by frcp6 cite "W.PA.LBR 7026-1(g)"
-{
-  forum frcp
-}
+deadline preservation-outline-period: 30.days after DiscoveryCommenced() counted_by frbp9006 cite "W.PA.LBR 7026-1(g)"
 
 /// W.PA.LBR 7026-1(h): within seven days of identifying the relevant
 /// custodians, the retention coordinators implement the procedures and
 /// counsel file a statement of compliance.
-deadline retention-compliance-period: 7.days after CustodiansIdentified() counted_by frcp6 cite "W.PA.LBR 7026-1(h)"
-{
-  forum frcp
-}
+deadline retention-compliance-period: 7.days after CustodiansIdentified() counted_by frbp9006 cite "W.PA.LBR 7026-1(h)"
 
 /// W.PA.LBR 7037-1(e): compliance with discovery orders is effected within
 /// fourteen days of the entry of the order.
-deadline discovery-order-compliance-period: 14.days after DiscoveryOrderEntered() counted_by frcp6 cite "W.PA.LBR 7037-1(e)"
-{
-  forum frcp
-}
+deadline discovery-order-compliance-period: 14.days after DiscoveryOrderEntered() counted_by frbp9006 cite "W.PA.LBR 7037-1(e)"
 
 /// W.PA.LBR 7056-1(b): within 30 days of service of a motion for summary
 /// judgment, the opposing party files its responsive concise statement, any
 /// additional facts, its appendix and its memorandum.
-deadline summary-judgment-opposition-period: 30.days after SummaryJudgmentServed() counted_by frcp6 cite "W.PA.LBR 7056-1(b)"
-{
-  forum frcp
-}
+deadline summary-judgment-opposition-period: 30.days after SummaryJudgmentServed() counted_by frbp9006 cite "W.PA.LBR 7056-1(b)"
 
 /// W.PA.LBR 7056-1(c): within 14 days of service of the opposition, the
 /// moving party replies in the same manner.
-deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frcp6 cite "W.PA.LBR 7056-1(c)"
-{
-  forum frcp
-}
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frbp9006 cite "W.PA.LBR 7056-1(c)"
 
 /// W.PA.LBR 8006-1(b): an appellant's request for a transcript is filed not
 /// later than two days after filing the designation of the record and
 /// statement of issues.
-deadline appellant-transcript-request-period: 2.days after RecordDesignationFiled() counted_by frcp6 cite "W.PA.LBR 8006-1(b)"
-{
-  forum frcp
-}
+deadline appellant-transcript-request-period: 2.days after RecordDesignationFiled() counted_by frbp9006 cite "W.PA.LBR 8006-1(b)"
 
 /// W.PA.LBR 8006-1(c): an appellee files any request for a transcript not
 /// later than two days after filing its designation of additional items.
-deadline appellee-transcript-request-period: 2.days after AppelleeDesignationFiled() counted_by frcp6 cite "W.PA.LBR 8006-1(c)"
-{
-  forum frcp
-}
+deadline appellee-transcript-request-period: 2.days after AppelleeDesignationFiled() counted_by frbp9006 cite "W.PA.LBR 8006-1(c)"
 
 /// W.PA.LBR 8006-1(d): an appellee as cross-appellant files any request for a
 /// transcript not later than two days after filing its statement of issues
 /// and designation on the cross-appeal.
-deadline cross-appellant-transcript-request-period: 2.days after CrossAppealIssuesFiled() counted_by frcp6 cite "W.PA.LBR 8006-1(d)"
-{
-  forum frcp
-}
+deadline cross-appellant-transcript-request-period: 2.days after CrossAppealIssuesFiled() counted_by frbp9006 cite "W.PA.LBR 8006-1(d)"
 
 /// W.PA.LBR 8006-1(e): a cross-appellee files any request for a transcript no
 /// later than two days after filing its designation of additional items on
 /// the cross-appeal.
-deadline cross-appellee-transcript-request-period: 2.days after CrossAppelleeDesignationFiled() counted_by frcp6 cite "W.PA.LBR 8006-1(e)"
-{
-  forum frcp
-}
+deadline cross-appellee-transcript-request-period: 2.days after CrossAppelleeDesignationFiled() counted_by frbp9006 cite "W.PA.LBR 8006-1(e)"
 
 /// W.PA.LBR 9013-7(c): within three days after the response deadline passes
 /// (or as soon as possible if the hearing is less than 48 hours after it),
 /// the party seeking relief files a CNO (Local Form 25) if no objection was
 /// filed or served.
-deadline certificate-of-no-objection-period: 3.days after ResponseDeadlinePassed() counted_by frcp6 cite "W.PA.LBR 9013-7(c)"
-{
-  forum frcp
-}
+deadline certificate-of-no-objection-period: 3.days after ResponseDeadlinePassed() counted_by frbp9006 cite "W.PA.LBR 9013-7(c)"
 
 /// W.PA.LBR 9014-1 (and 9006-1(b)): every responsive pleading in a contested
 /// matter is filed and served within fourteen days from the date the motion
 /// is filed (and served), with three more days for a motion served by mail.
-deadline contested-response-period: 14.days after MotionFiled() counted_by frcp6 cite "W.PA.LBR 9014-1"
-{
-  forum frcp
-}
+deadline contested-response-period: 14.days after MotionFiled() counted_by frbp9006 cite "W.PA.LBR 9014-1"
 
 /// W.PA.LBR 9015-1(a): the last date for any party to demand a jury trial is
 /// fourteen days after an answer, or a response to a motion or objection, is
 /// filed and served.
-deadline jury-demand-period: 14.days after JuryTriggeringResponseFiled() counted_by frcp6 cite "W.PA.LBR 9015-1(a)"
-{
-  forum frcp
-}
+deadline jury-demand-period: 14.days after JuryTriggeringResponseFiled() counted_by frbp9006 cite "W.PA.LBR 9015-1(a)"
 
 /// W.PA.LBR 9015-1(b): in a removed action, a demand for jury trial is made
 /// within thirty days after the notice of removal is filed.
-deadline removed-jury-demand-period: 30.days after RemovalNoticeFiled() counted_by frcp6 cite "W.PA.LBR 9015-1(b)"
-{
-  forum frcp
-}
+deadline removed-jury-demand-period: 30.days after RemovalNoticeFiled() counted_by frbp9006 cite "W.PA.LBR 9015-1(b)"
 
 /// W.PA.LBR 9015-1(c): within thirty days of filing the demand, the demanding
 /// party files and serves the parties' consents to a jury trial and final
 /// orders in the bankruptcy court, or a motion.
-deadline jury-consents-period: 30.days after JuryDemandFiled() counted_by frcp6 cite "W.PA.LBR 9015-1(c)"
-{
-  forum frcp
-}
+deadline jury-consents-period: 30.days after JuryDemandFiled() counted_by frbp9006 cite "W.PA.LBR 9015-1(c)"
 
 /// W.PA.LBR 9016-1(g): a subpoena the clerk signs for a self-represented
 /// party but not served is returned to the court within fourteen days.
-deadline unserved-subpoena-return-period: 14.days after SubpoenaIssued() counted_by frcp6 cite "W.PA.LBR 9016-1(g)"
-{
-  forum frcp
-}
+deadline unserved-subpoena-return-period: 14.days after SubpoenaIssued() counted_by frbp9006 cite "W.PA.LBR 9016-1(g)"
 
 /// W.PA.LBR 9019-4(b): unless the mediator directs otherwise, not less than
 /// seven calendar days before the mediation conference each party submits to
 /// the mediator the materials the mediator directs.
-deadline mediation-submission-period: 7.days before MediationConference() counted_by frcp6 cite "W.PA.LBR 9019-4(b)"
-{
-  forum frcp
-}
+deadline mediation-submission-period: 7.days before MediationConference() counted_by frbp9006 cite "W.PA.LBR 9019-4(b)"
 
 /// W.PA.LBR 9019-6(b): if a settlement is reached at a mediation, the party
 /// the mediator designates submits a fully executed stipulation and proposed
 /// order within seven calendar days after the end of the mediation.
-deadline mediated-settlement-stipulation-period: 7.days after MediationEnded() counted_by frcp6 cite "W.PA.LBR 9019-6(b)"
-{
-  forum frcp
-}
+deadline mediated-settlement-stipulation-period: 7.days after MediationEnded() counted_by frbp9006 cite "W.PA.LBR 9019-6(b)"
 
 /// W.PA.LBR 9020-2(a): a debtor may move for the LMP until thirty days after
 /// the first date originally scheduled for the first meeting of creditors (or
 /// at any time with the lender's consent).
-deadline loss-mitigation-motion-period: 30.days after FirstMeetingDate() counted_by frcp6 cite "W.PA.LBR 9020-2(a)"
-{
-  forum frcp
-}
+deadline loss-mitigation-motion-period: 30.days after FirstMeetingDate() counted_by frbp9006 cite "W.PA.LBR 9020-2(a)"
 
 /// W.PA.LBR 9020-2(d): the deadline to object to a Motion for Loss Mitigation
 /// is fourteen days from its service; with none, the court may enter a Loss
 /// Mitigation Order.
-deadline loss-mitigation-objection-period: 14.days after LossMitigationMotionServed() counted_by frcp6 cite "W.PA.LBR 9020-2(d)"
-{
-  forum frcp
-}
+deadline loss-mitigation-objection-period: 14.days after LossMitigationMotionServed() counted_by frbp9006 cite "W.PA.LBR 9020-2(d)"
 
 /// W.PA.LBR 9020-4(b): if not previously registered, the creditor registers
 /// and posts its Core LMP Package on the portal within fourteen days after
 /// the Loss Mitigation Order.
-deadline lmp-registration-period: 14.days after LossMitigationOrderEntered() counted_by frcp6 cite "W.PA.LBR 9020-4(b)"
-{
-  forum frcp
-}
+deadline lmp-registration-period: 14.days after LossMitigationOrderEntered() counted_by frbp9006 cite "W.PA.LBR 9020-4(b)"
 
 /// W.PA.LBR 9020-4(d): within fourteen days after the debtor submits its Core
 /// LMP Package, the creditor designates a single point of contact and
 /// acknowledges the package.
-deadline lmp-contact-designation-period: 14.days after CoreLmpPackageSubmitted() counted_by frcp6 cite "W.PA.LBR 9020-4(d)"
-{
-  forum frcp
-}
+deadline lmp-contact-designation-period: 14.days after CoreLmpPackageSubmitted() counted_by frbp9006 cite "W.PA.LBR 9020-4(d)"
 
 /// W.PA.LBR 9020-4(e): within sixty days after the Loss Mitigation Order, the
 /// debtor files and serves an LMP Status Report with the portal account
 /// history.
-deadline lmp-status-report-period: 60.days after LossMitigationOrderEntered() counted_by frcp6 cite "W.PA.LBR 9020-4(e)"
-{
-  forum frcp
-}
+deadline lmp-status-report-period: 60.days after LossMitigationOrderEntered() counted_by frbp9006 cite "W.PA.LBR 9020-4(e)"
 
 /// W.PA.LBR 9020-4(f): within seven days after the LMP Period concludes, the
 /// debtor files and serves an LMP Final Report, even if the case was later
 /// dismissed or converted.
-deadline lmp-final-report-period: 7.days after LmpPeriodConcluded() counted_by frcp6 cite "W.PA.LBR 9020-4(f)"
-{
-  forum frcp
-}
+deadline lmp-final-report-period: 7.days after LmpPeriodConcluded() counted_by frbp9006 cite "W.PA.LBR 9020-4(f)"
 
 /// W.PA.LBR 9020-4(g): the debtor files a proposed order approving an interim
 /// trial loan modification not less than fourteen days before the first
 /// modification payment is due (in chapter 13, before the trustee's preceding
 /// distribution date).
-deadline trial-modification-order-period: 14.days before TrialModificationPaymentDue() counted_by frcp6 cite "W.PA.LBR 9020-4(g)"
-{
-  forum frcp
-}
+deadline trial-modification-order-period: 14.days before TrialModificationPaymentDue() counted_by frbp9006 cite "W.PA.LBR 9020-4(g)"
 
 /// W.PA.LBR 9020-4(h): the debtor's counsel uploads to the portal any order
 /// relating to the LMP within seven days of its entry.
-deadline lmp-order-upload-period: 7.days after LmpOrderEntered() counted_by frcp6 cite "W.PA.LBR 9020-4(h)"
-{
-  forum frcp
-}
+deadline lmp-order-upload-period: 7.days after LmpOrderEntered() counted_by frbp9006 cite "W.PA.LBR 9020-4(h)"
 
 /// W.PA.LBR 9020-6(d)(1)-(2): in a chapter 13 case, a modified plan, and
 /// amended Schedules I and J if expenses change materially, are filed within
 /// fourteen days of the order approving the loan modification.
-deadline modified-plan-after-modification-period: 14.days after ModificationApproved() counted_by frcp6 cite "W.PA.LBR 9020-6(d)"
-{
-  forum frcp
-}
+deadline modified-plan-after-modification-period: 14.days after ModificationApproved() counted_by frbp9006 cite "W.PA.LBR 9020-6(d)"
 
 /// W.PA.LBR 9020-6(g): when the debtor satisfies a trial loan modification,
 /// the creditor offers a final loan modification within fourteen days of
 /// receiving the last interim payment.
-deadline final-modification-offer-period: 14.days after LastInterimPaymentReceived() counted_by frcp6 cite "W.PA.LBR 9020-6(g)"
-{
-  forum frcp
-}
+deadline final-modification-offer-period: 14.days after LastInterimPaymentReceived() counted_by frbp9006 cite "W.PA.LBR 9020-6(g)"
 
 /// W.PA.LBR 9037-1(b)(1)(A): within seven days of the filing of a transcript,
 /// a party intending to redact it files Local Bankruptcy Form 35 with a
 /// certificate of service.
-deadline transcript-redaction-notice-period: 7.days after TranscriptFiled() counted_by frcp6 cite "W.PA.LBR 9037-1(b)"
-{
-  forum frcp
-}
+deadline transcript-redaction-notice-period: 7.days after TranscriptFiled() counted_by frbp9006 cite "W.PA.LBR 9037-1(b)"
 
 /// W.PA.LBR 9037-1(b)(1)(B): the party requesting redaction serves Local
 /// Bankruptcy Form 36 (Transcript Redaction Request) within twenty-one days
 /// after the original transcript was filed.
-deadline transcript-redaction-request-period: 21.days after TranscriptFiled() counted_by frcp6 cite "W.PA.LBR 9037-1(b)"
-{
-  forum frcp
-}
+deadline transcript-redaction-request-period: 21.days after TranscriptFiled() counted_by frbp9006 cite "W.PA.LBR 9037-1(b)"
 
 /// W.PA.LBR 9070-1: exhibits, models and diagrams introduced at a trial or
 /// hearing are removed within fourteen calendar days after the later of the
 /// final judgment, order or other final disposition, or the Clerk destroys
 /// them.
-deadline exhibit-removal-period: 14.days after FinalDisposition() counted_by frcp6 cite "W.PA.LBR 9070-1"
-{
-  forum frcp
-}
+deadline exhibit-removal-period: 14.days after FinalDisposition() counted_by frbp9006 cite "W.PA.LBR 9070-1"
 
 start motion-filed
 

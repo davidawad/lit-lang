@@ -1,6 +1,6 @@
 module bankr-okw-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 import frbp.events.{ PetitionFiled }
 
 // The Bankr. W.D. Okla. court's own periods, counted under FRBP 9006(a).
@@ -149,348 +149,225 @@ event CompromiseMotionFiled()
 
 /// W.D. Okla. LBR 1006-1(F): a written application for a refund of an
 /// overpaid filing fee is submitted within thirty days of the overpayment.
-deadline fee-refund-period: 30.days after FeeOverpaid() counted_by frcp6 cite "W.D. Okla. LBR 1006-1(F)"
-{
-  forum frcp
-}
+deadline fee-refund-period: 30.days after FeeOverpaid() counted_by frbp9006 cite "W.D. Okla. LBR 1006-1(F)"
 
 /// W.D. Okla. LBR 1015-1(A): the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion to deconsolidate a joint
 /// case.
-deadline deconsolidation-response-period: 14.days after DeconsolidationMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 1015-1(A)"
-{
-  forum frcp
-}
+deadline deconsolidation-response-period: 14.days after DeconsolidationMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 1015-1(A)"
 
 /// W.D. Okla. LBR 1016-1: the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion concerning the death of
 /// a debtor.
-deadline death-motion-response-period: 14.days after DeathMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 1016-1"
-{
-  forum frcp
-}
+deadline death-motion-response-period: 14.days after DeathMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 1016-1"
 
 /// W.D. Okla. LBR 2003-2: an entity appointed to a committee files its
 /// ownership statement (Local Form 1007-1.B) within seven days of the
 /// appointment.
-deadline committee-ownership-statement-period: 7.days after CommitteeAppointed() counted_by frcp6 cite "W.D. Okla. LBR 2003-2"
-{
-  forum frcp
-}
+deadline committee-ownership-statement-period: 7.days after CommitteeAppointed() counted_by frbp9006 cite "W.D. Okla. LBR 2003-2"
 
 /// W.D. Okla. LBR 2004-1(A): the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion for leave to conduct a
 /// Rule 2004 examination.
-deadline examination-response-period: 14.days after ExaminationMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 2004-1(A)"
-{
-  forum frcp
-}
+deadline examination-response-period: 14.days after ExaminationMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 2004-1(A)"
 
 /// W.D. Okla. LBR 2014-1: the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a request to employ a
 /// professional.
-deadline employment-response-period: 14.days after EmploymentApplicationFiled() counted_by frcp6 cite "W.D. Okla. LBR 2014-1"
-{
-  forum frcp
-}
+deadline employment-response-period: 14.days after EmploymentApplicationFiled() counted_by frbp9006 cite "W.D. Okla. LBR 2014-1"
 
 /// W.D. Okla. LBR 2015-1(D): within fourteen days after the petition, a
 /// chapter 12 debtor files a report and summary of business operations for
 /// the calendar month preceding the month of filing.
-deadline chapter-12-business-report-period: 14.days after PetitionFiled() counted_by frcp6 cite "W.D. Okla. LBR 2015-1(D)"
-{
-  forum frcp
-}
+deadline chapter-12-business-report-period: 14.days after PetitionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 2015-1(D)"
 
 /// W.D. Okla. LBR 2016-1(C): the Notice of Opportunity for Hearing gives a
 /// flat 21 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion for compensation and
 /// reimbursement of expenses.
-deadline fee-motion-response-period: 21.days after FeeMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 2016-1(C)"
-{
-  forum frcp
-}
+deadline fee-motion-response-period: 21.days after FeeMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 2016-1(C)"
 
 /// W.D. Okla. LBR 3007-1(D): a response to a claim objection is filed and
 /// served within fourteen days after the objection is filed, a flat period
 /// regardless of the manner of service; absent one the objecting party
 /// uploads a proposed order (LBR 3007-1(C), (D)).
-deadline claim-objection-response-period: 14.days after ClaimObjectionFiled() counted_by frcp6 cite "W.D. Okla. LBR 3007-1(D)"
-{
-  forum frcp
-}
+deadline claim-objection-response-period: 14.days after ClaimObjectionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 3007-1(D)"
 
 /// W.D. Okla. LBR 3011-1: if no response or objection is filed within
 /// fourteen days from the filing of a sufficiently documented application
 /// for unclaimed funds, it may be approved without a hearing.
-deadline unclaimed-funds-objection-period: 14.days after UnclaimedFundsApplicationFiled() counted_by frcp6 cite "W.D. Okla. LBR 3011-1"
-{
-  forum frcp
-}
+deadline unclaimed-funds-objection-period: 14.days after UnclaimedFundsApplicationFiled() counted_by frbp9006 cite "W.D. Okla. LBR 3011-1"
 
 /// W.D. Okla. LBR 3012-1(A): the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a chapter 11 motion to value a
 /// secured claim.
-deadline valuation-response-period: 14.days after ValuationMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 3012-1(A)"
-{
-  forum frcp
-}
+deadline valuation-response-period: 14.days after ValuationMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 3012-1(A)"
 
 /// W.D. Okla. LBR 4001-1(H): the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion for relief from the
 /// automatic stay.
-deadline stay-relief-response-period: 14.days after StayReliefMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 4001-1(H)"
-{
-  forum frcp
-}
+deadline stay-relief-response-period: 14.days after StayReliefMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 4001-1(H)"
 
 /// W.D. Okla. LBR 4001-1(J): a motion to continue the automatic stay under
 /// 11 U.S.C. § 362(c)(3)(B) is filed within seven days of the filing of the
 /// petition.
-deadline stay-continuation-motion-period: 7.days after PetitionFiled() counted_by frcp6 cite "W.D. Okla. LBR 4001-1(J)"
-{
-  forum frcp
-}
+deadline stay-continuation-motion-period: 7.days after PetitionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 4001-1(J)"
 
 /// W.D. Okla. LBR 4001-1(J): the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion to continue the
 /// automatic stay.
-deadline stay-continuation-response-period: 14.days after StayContinuationMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 4001-1(J)"
-{
-  forum frcp
-}
+deadline stay-continuation-response-period: 14.days after StayContinuationMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 4001-1(J)"
 
 /// W.D. Okla. LBR 4001-1(K): a motion to impose the automatic stay under 11
 /// U.S.C. § 362(c)(4)(B) is filed within thirty days of the filing of the
 /// petition.
-deadline stay-imposition-motion-period: 30.days after PetitionFiled() counted_by frcp6 cite "W.D. Okla. LBR 4001-1(K)"
-{
-  forum frcp
-}
+deadline stay-imposition-motion-period: 30.days after PetitionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 4001-1(K)"
 
 /// W.D. Okla. LBR 4001-1(K): the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion to impose the automatic
 /// stay.
-deadline stay-imposition-response-period: 14.days after StayImpositionMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 4001-1(K)"
-{
-  forum frcp
-}
+deadline stay-imposition-response-period: 14.days after StayImpositionMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 4001-1(K)"
 
 /// W.D. Okla. LBR 4002-2: within fourteen days after filing the schedules
 /// and statements, an individual debtor with a domestic support obligation
 /// provides the trustee the claimants' names and addresses and current
 /// information on Local Form 4002-2.
-deadline support-obligation-information-period: 14.days after SchedulesFiled() counted_by frcp6 cite "W.D. Okla. LBR 4002-2"
-{
-  forum frcp
-}
+deadline support-obligation-information-period: 14.days after SchedulesFiled() counted_by frbp9006 cite "W.D. Okla. LBR 4002-2"
 
 /// W.D. Okla. LBR 4003-1(B): a response to an objection to a claim of
 /// exemption is filed within fourteen days after the objection was filed, a
 /// flat period; absent one the objecting party uploads a proposed order
 /// (LBR 4003-1(C)).
-deadline exemption-objection-response-period: 14.days after ExemptionObjectionFiled() counted_by frcp6 cite "W.D. Okla. LBR 4003-1(B)"
-{
-  forum frcp
-}
+deadline exemption-objection-response-period: 14.days after ExemptionObjectionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 4003-1(B)"
 
 /// W.D. Okla. LBR 4003-1(D): the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion to avoid a lien.
-deadline lien-avoidance-response-period: 14.days after LienAvoidanceMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 4003-1(D)"
-{
-  forum frcp
-}
+deadline lien-avoidance-response-period: 14.days after LienAvoidanceMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 4003-1(D)"
 
 /// W.D. Okla. LBR 5010-1: the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion to reopen a case.
-deadline reopening-response-period: 14.days after ReopeningMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 5010-1"
-{
-  forum frcp
-}
+deadline reopening-response-period: 14.days after ReopeningMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 5010-1"
 
 /// W.D. Okla. LBR 5011-1: a response to a motion to withdraw the reference
 /// is filed no later than 14 days from the date of filing of the motion, a
 /// flat period regardless of the manner of service.
-deadline withdrawal-response-period: 14.days after WithdrawalMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 5011-1"
-{
-  forum frcp
-}
+deadline withdrawal-response-period: 14.days after WithdrawalMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 5011-1"
 
 /// W.D. Okla. LBR 5011-2: the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion to abstain.
-deadline abstention-response-period: 14.days after AbstentionMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 5011-2"
-{
-  forum frcp
-}
+deadline abstention-response-period: 14.days after AbstentionMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 5011-2"
 
 /// W.D. Okla. LBR 6004-1(A): objections to a proposed use, sale or lease
 /// outside the ordinary course are filed and served not less than seven
 /// days before the date set for the proposed action.
-deadline sale-objection-period: 7.days before ProposedActionDate() counted_by frcp6 cite "W.D. Okla. LBR 6004-1(A)"
-{
-  forum frcp
-}
+deadline sale-objection-period: 7.days before ProposedActionDate() counted_by frbp9006 cite "W.D. Okla. LBR 6004-1(A)"
 
 /// W.D. Okla. LBR 6004-1(B): objections to a motion to sell free and clear
 /// of liens under FRBP 6004(c) are filed and served not more than
 /// twenty-one days after the motion is filed, a flat period regardless of
 /// the manner of service.
-deadline free-and-clear-objection-period: 21.days after SaleMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 6004-1(B)"
-{
-  forum frcp
-}
+deadline free-and-clear-objection-period: 21.days after SaleMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 6004-1(B)"
 
 /// W.D. Okla. LBR 6004-1(B): service of a motion to sell free and clear and
 /// its notice is accomplished within three days of their filing.
-deadline free-and-clear-service-period: 3.days after SaleMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 6004-1(B)"
-{
-  forum frcp
-}
+deadline free-and-clear-service-period: 3.days after SaleMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 6004-1(B)"
 
 /// W.D. Okla. LBR 6004-1(B): the certificate or affidavit of service of a
 /// motion to sell free and clear is filed no later than seven days prior to
 /// the hearing date.
-deadline free-and-clear-certificate-period: 7.days before SaleHearing() counted_by frcp6 cite "W.D. Okla. LBR 6004-1(B)"
-{
-  forum frcp
-}
+deadline free-and-clear-certificate-period: 7.days before SaleHearing() counted_by frbp9006 cite "W.D. Okla. LBR 6004-1(B)"
 
 /// W.D. Okla. LBR 6006-1: the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion to assume, reject or
 /// assign an executory contract or unexpired lease.
-deadline executory-contract-response-period: 14.days after ExecutoryContractMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 6006-1"
-{
-  forum frcp
-}
+deadline executory-contract-response-period: 14.days after ExecutoryContractMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 6006-1"
 
 /// W.D. Okla. LBR 6007-1(B): the time to object to a motion to abandon
 /// property under FRBP 6007(a) or (b) is fourteen days from the date of
 /// filing of the motion, a flat period regardless of the manner of service
 /// (LBR 6007-1(B), (C)).
-deadline abandonment-response-period: 14.days after AbandonmentMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 6007-1(B)"
-{
-  forum frcp
-}
+deadline abandonment-response-period: 14.days after AbandonmentMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 6007-1(B)"
 
 /// W.D. Okla. LBR 6008-1: the time to respond to a motion for redemption is
 /// fourteen days from the date of filing of the motion, a flat period
 /// regardless of the manner of service.
-deadline redemption-response-period: 14.days after RedemptionMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 6008-1"
-{
-  forum frcp
-}
+deadline redemption-response-period: 14.days after RedemptionMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 6008-1"
 
 /// W.D. Okla. LBR 7054-1: a prevailing party seeking costs under FRBP
 /// 7054(b) files a verified bill of costs (Official Form B2630) with a
 /// brief not more than fourteen days after entry of a judgment that
 /// specifically awards costs.
-deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frcp6 cite "W.D. Okla. LBR 7054-1"
-{
-  forum frcp
-}
+deadline bill-of-costs-period: 14.days after JudgmentEntered() counted_by frbp9006 cite "W.D. Okla. LBR 7054-1"
 
 /// W.D. Okla. LBR 7054-1: objections to a bill of costs, with a supporting
 /// brief, are filed within fourteen days from the date the bill of costs
 /// was filed.
-deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "W.D. Okla. LBR 7054-1"
-{
-  forum frcp
-}
+deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frbp9006 cite "W.D. Okla. LBR 7054-1"
 
 /// W.D. Okla. LBR 7055-1(C): the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion for default judgment.
-deadline default-judgment-response-period: 14.days after DefaultJudgmentMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 7055-1(C)"
-{
-  forum frcp
-}
+deadline default-judgment-response-period: 14.days after DefaultJudgmentMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 7055-1(C)"
 
 /// W.D. Okla. LBR 7056-1(C): a brief in response to a motion for summary
 /// judgment is filed within fourteen days after the filing of the brief in
 /// support, a flat period regardless of the manner of service (the notice,
 /// LBR 7056-1(A)).
-deadline summary-judgment-response-period: 14.days after SummaryJudgmentMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 7056-1(C)"
-{
-  forum frcp
-}
+deadline summary-judgment-response-period: 14.days after SummaryJudgmentMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 7056-1(C)"
 
 /// W.D. Okla. LBR 7056-1(D): the movant may file a reply brief addressing
 /// only new matters within fourteen days after the response brief was
 /// filed.
-deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseFiled() counted_by frcp6 cite "W.D. Okla. LBR 7056-1(D)"
-{
-  forum frcp
-}
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseFiled() counted_by frbp9006 cite "W.D. Okla. LBR 7056-1(D)"
 
 /// W.D. Okla. LBR 9010-1(C): the Notice of Opportunity for Hearing gives a
 /// flat 14 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion to withdraw as counsel.
-deadline counsel-withdrawal-response-period: 14.days after CounselWithdrawalMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 9010-1(C)"
-{
-  forum frcp
-}
+deadline counsel-withdrawal-response-period: 14.days after CounselWithdrawalMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 9010-1(C)"
 
 /// W.D. Okla. LBR 9013-1(C): a reply to a new matter raised in a response
 /// may be filed within five days after the response is filed.
-deadline reply-brief-period: 5.days after ResponseFiled() counted_by frcp6 cite "W.D. Okla. LBR 9013-1(C)"
-{
-  forum frcp
-}
+deadline reply-brief-period: 5.days after ResponseFiled() counted_by frbp9006 cite "W.D. Okla. LBR 9013-1(C)"
 
 /// W.D. Okla. LBR 9013-1(J): a file-stamped copy of a request for relief is
 /// served on parties not registered in the ECF System, or entitled to FRBP
 /// 7004 service, within two days of the filing date.
-deadline request-service-period: 2.days after RequestForReliefFiled() counted_by frcp6 cite "W.D. Okla. LBR 9013-1(J)"
-{
-  forum frcp
-}
+deadline request-service-period: 2.days after RequestForReliefFiled() counted_by frbp9006 cite "W.D. Okla. LBR 9013-1(J)"
 
 /// W.D. Okla. LBR 9013-1(J): the movant files a certificate or affidavit of
 /// service within three days after filing the request for relief, or the
 /// court may deny it without notice.
-deadline request-service-certificate-period: 3.days after RequestForReliefFiled() counted_by frcp6 cite "W.D. Okla. LBR 9013-1(J)"
-{
-  forum frcp
-}
+deadline request-service-certificate-period: 3.days after RequestForReliefFiled() counted_by frbp9006 cite "W.D. Okla. LBR 9013-1(J)"
 
 /// W.D. Okla. LBR 9013-1(L): if no objection or response is filed by the
 /// deadline, a proposed order is uploaded within thirty days after the
 /// deadline expires; an order not uploaded within thirty days of the
 /// response period's expiration may see the motion stricken.
-deadline proposed-order-upload-period: 30.days after ResponseDeadlinePassed() counted_by frcp6 cite "W.D. Okla. LBR 9013-1(L)"
-{
-  forum frcp
-}
+deadline proposed-order-upload-period: 30.days after ResponseDeadlinePassed() counted_by frbp9006 cite "W.D. Okla. LBR 9013-1(L)"
 
 /// W.D. Okla. LBR 9014-1: unless otherwise ordered, a party wishing to
 /// present evidence at a contested-matter hearing files and serves its
 /// notice of exhibits, witnesses, testimony and time no later than seven
 /// days after the initial response deadline for the motion.
-deadline evidence-notice-period: 7.days after InitialResponseDeadline() counted_by frcp6 cite "W.D. Okla. LBR 9014-1"
-{
-  forum frcp
-}
+deadline evidence-notice-period: 7.days after InitialResponseDeadline() counted_by frbp9006 cite "W.D. Okla. LBR 9014-1"
 
 /// W.D. Okla. LBR 9019-1: the Notice of Opportunity for Hearing gives a
 /// flat 21 days from the date of filing, regardless of the manner of
 /// service, to file a written response to a motion to approve a compromise
 /// or settlement.
-deadline compromise-response-period: 21.days after CompromiseMotionFiled() counted_by frcp6 cite "W.D. Okla. LBR 9019-1"
-{
-  forum frcp
-}
+deadline compromise-response-period: 21.days after CompromiseMotionFiled() counted_by frbp9006 cite "W.D. Okla. LBR 9019-1"
 
 start motion-filed
 

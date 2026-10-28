@@ -1,6 +1,6 @@
 module bankr-fln-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 import frbp.events.{ FirstMeetingDate, PetitionFiled }
 
 // The Bankr. N.D. Fla. court's own periods, counted under FRBP 9006(a): the
@@ -144,428 +144,263 @@ event ExhibitReclaimNoticed()
 
 /// LBR 1014-1(D): a party wishing a case transferred to another division
 /// files the motion with, or within 21 days of, the initial filing.
-deadline division-transfer-period: 21.days after PetitionFiled() counted_by frcp6 cite "N.D. Fla. LBR 1014-1(D)"
-{
-  forum frcp
-}
+deadline division-transfer-period: 21.days after PetitionFiled() counted_by frbp9006 cite "N.D. Fla. LBR 1014-1(D)"
 
 /// LBR 1019-1(B): within 14 days of conversion to chapter 7, an individual
 /// debtor files a current monthly income statement or a statement of
 /// exemption from filing one.
-deadline conversion-income-statement-period: 14.days after ConvertedToChapter7() counted_by frcp6 cite "N.D. Fla. LBR 1019-1(B)"
-{
-  forum frcp
-}
+deadline conversion-income-statement-period: 14.days after ConvertedToChapter7() counted_by frbp9006 cite "N.D. Fla. LBR 1019-1(B)"
 
 /// LBR 2002-2(C): unless the rules or an order specify otherwise, the
 /// negative notice legend gives 21 days to object.
-deadline negative-notice-objection-period: 21.days after NegativeNoticeServed() counted_by frcp6 cite "N.D. Fla. LBR 2002-2(C)"
-{
-  forum frcp
-}
+deadline negative-notice-objection-period: 21.days after NegativeNoticeServed() counted_by frbp9006 cite "N.D. Fla. LBR 2002-2(C)"
 
 /// LBR 2002-2(C)(2): absent objection, the movant submits a proposed order
 /// not later than 14 days after the objection period expires, or the relief
 /// may be denied for lack of prosecution.
-deadline negative-notice-order-period: 14.days after ObjectionPeriodExpired() counted_by frcp6 cite "N.D. Fla. LBR 2002-2(C)(2)"
-{
-  forum frcp
-}
+deadline negative-notice-order-period: 14.days after ObjectionPeriodExpired() counted_by frbp9006 cite "N.D. Fla. LBR 2002-2(C)(2)"
 
 /// LBR 2004-1(C): attendance and production may not be required less than 21
 /// days after service of the notice, and a request construed under FRBP 7034
 /// has its time to respond shortened to 21 days.
-deadline examination-production-period: 21.days after ExaminationNoticeServed() counted_by frcp6 cite "N.D. Fla. LBR 2004-1(C)"
-{
-  forum frcp
-}
+deadline examination-production-period: 21.days after ExaminationNoticeServed() counted_by frbp9006 cite "N.D. Fla. LBR 2004-1(C)"
 
 /// LBR 2015-1(C): monthly operating reports are filed no later than the 21st
 /// day of each month, for the transactions of the preceding month.
-deadline operating-report-period: 21.days after MonthEnded() counted_by frcp6 cite "N.D. Fla. LBR 2015-1(C)"
-{
-  forum frcp
-}
+deadline operating-report-period: 21.days after MonthEnded() counted_by frbp9006 cite "N.D. Fla. LBR 2015-1(C)"
 
 /// LBR 2015-1(F), 2082-1(A)(4): a chapter 12 debtor files the monthly cash
 /// receipts and disbursements report no later than the 21st day following the
 /// end of the month.
-deadline ch12-cash-report-period: 21.days after MonthEnded() counted_by frcp6 cite "N.D. Fla. LBR 2015-1(F)"
-{
-  forum frcp
-}
+deadline ch12-cash-report-period: 21.days after MonthEnded() counted_by frbp9006 cite "N.D. Fla. LBR 2015-1(F)"
 
 /// LBR 2015-3: except for patient records, a chapter 7 trustee gives 30 days'
 /// written notice to the debtor, debtor's attorney, the IRS and the United
 /// States trustee before destroying the debtor's books and records.
-deadline records-destruction-notice-period: 30.days before RecordsDestruction() counted_by frcp6 cite "N.D. Fla. LBR 2015-3"
-{
-  forum frcp
-}
+deadline records-destruction-notice-period: 30.days before RecordsDestruction() counted_by frbp9006 cite "N.D. Fla. LBR 2015-3"
 
 /// LBR 2016-1(A)(1)(a): final applications of professionals in a chapter 7
 /// case are filed not later than 21 days after service of the trustee's
 /// notification that the case is ready to close.
-deadline ch7-final-fee-application-period: 21.days after ReadyToCloseNotified() counted_by frcp6 cite "N.D. Fla. LBR 2016-1(A)(1)"
-{
-  forum frcp
-}
+deadline ch7-final-fee-application-period: 21.days after ReadyToCloseNotified() counted_by frbp9006 cite "N.D. Fla. LBR 2016-1(A)(1)"
 
 /// LBR 2016-1(A)(1)(b): in a case converted to chapter 7, final fee
 /// applications for the superseded case are filed within 90 days after the
 /// date of the order converting the case.
-deadline superseded-case-fee-application-period: 90.days after ConvertedToChapter7() counted_by frcp6 cite "N.D. Fla. LBR 2016-1(A)(1)"
-{
-  forum frcp
-}
+deadline superseded-case-fee-application-period: 90.days after ConvertedToChapter7() counted_by frbp9006 cite "N.D. Fla. LBR 2016-1(A)(1)"
 
 /// LBR 2016-1(B)(1): chapter 11 professionals' applications for compensation
 /// under § 503(b) should be filed no later than 21 days after entry of the
 /// order scheduling the confirmation hearing.
-deadline ch11-fee-application-period: 21.days after ConfirmationHearingScheduled() counted_by frcp6 cite "N.D. Fla. LBR 2016-1(B)(1)"
-{
-  forum frcp
-}
+deadline ch11-fee-application-period: 21.days after ConfirmationHearingScheduled() counted_by frbp9006 cite "N.D. Fla. LBR 2016-1(B)(1)"
 
 /// LBR 2081-1(B)(1), 2082-1(C): within 21 days after the hearing at which the
 /// plan is confirmed, the proponent's attorney submits the Order of
 /// Confirmation.
-deadline confirmation-order-submission-period: 21.days after PlanConfirmedAtHearing() counted_by frcp6 cite "N.D. Fla. LBR 2081-1(B)(1)"
-{
-  forum frcp
-}
+deadline confirmation-order-submission-period: 21.days after PlanConfirmedAtHearing() counted_by frbp9006 cite "N.D. Fla. LBR 2081-1(B)(1)"
 
 /// LBR 2081-1(B)(2)(b): where a plan pays a class over more than 180 days
 /// from confirmation, the instruments evidencing the debt are delivered
 /// within 30 days after all objections to claims in that class are resolved.
-deadline class-instrument-period: 30.days after ClassObjectionsResolved() counted_by frcp6 cite "N.D. Fla. LBR 2081-1(B)(2)"
-{
-  forum frcp
-}
+deadline class-instrument-period: 30.days after ClassObjectionsResolved() counted_by frbp9006 cite "N.D. Fla. LBR 2081-1(B)(2)"
 
 /// LBR 2081-1(B)(2)(b): if there are no objections to claims in any class,
 /// the instruments are delivered within 60 days after entry of the Order of
 /// Confirmation.
-deadline no-objection-instrument-period: 60.days after ConfirmationOrderEntered() counted_by frcp6 cite "N.D. Fla. LBR 2081-1(B)(2)"
-{
-  forum frcp
-}
+deadline no-objection-instrument-period: 60.days after ConfirmationOrderEntered() counted_by frbp9006 cite "N.D. Fla. LBR 2081-1(B)(2)"
 
 /// LBR 2082-1(A)(1)-(2): at least seven days before the first meeting of
 /// creditors, a chapter 12 debtor provides the trustee the summary of
 /// operations form and the income tax returns for the two preceding years.
-deadline ch12-operations-summary-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "N.D. Fla. LBR 2082-1(A)"
-{
-  forum frcp
-}
+deadline ch12-operations-summary-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "N.D. Fla. LBR 2082-1(A)"
 
 /// LBR 2082-1(A)(3): at least seven days before the confirmation hearing, a
 /// chapter 12 debtor files, and provides the trustee, the three-year
 /// projected disposable income plan and liquidation analysis.
-deadline ch12-plan-analysis-period: 7.days before Ch12ConfirmationHearing() counted_by frcp6 cite "N.D. Fla. LBR 2082-1(A)"
-{
-  forum frcp
-}
+deadline ch12-plan-analysis-period: 7.days before Ch12ConfirmationHearing() counted_by frbp9006 cite "N.D. Fla. LBR 2082-1(A)"
 
 /// LBR 2082-1(A)(5): within 60 days after the end of a calendar or fiscal
 /// year, a chapter 12 debtor provides the trustee IRS Schedule F and Form
 /// 4835 for the postpetition period.
-deadline ch12-farm-tax-period: 60.days after TaxYearEnded() counted_by frcp6 cite "N.D. Fla. LBR 2082-1(A)"
-{
-  forum frcp
-}
+deadline ch12-farm-tax-period: 60.days after TaxYearEnded() counted_by frbp9006 cite "N.D. Fla. LBR 2082-1(A)"
 
 /// LBR 2083-1(C): in a business chapter 13 case, the pre-confirmation
 /// statement is filed 21 days prior to the confirmation hearing.
-deadline ch13-business-statement-period: 21.days before Ch13ConfirmationHearing() counted_by frcp6 cite "N.D. Fla. LBR 2083-1(C)"
-{
-  forum frcp
-}
+deadline ch13-business-statement-period: 21.days before Ch13ConfirmationHearing() counted_by frbp9006 cite "N.D. Fla. LBR 2083-1(C)"
 
 /// LBR 3001-1(D): an objection to a transfer or assignment of claim is filed
 /// no more than 21 days from the filing of the notice of claim transfer, or
 /// the transferee is substituted without further notice or hearing.
-deadline claim-transfer-objection-period: 21.days after ClaimTransferNoticed() counted_by frcp6 cite "N.D. Fla. LBR 3001-1(D)"
-{
-  forum frcp
-}
+deadline claim-transfer-objection-period: 21.days after ClaimTransferNoticed() counted_by frbp9006 cite "N.D. Fla. LBR 3001-1(D)"
 
 /// LBR 3002-1(A)(1): upon confirmation of a chapter 13 plan surrendering
 /// personal property, the creditor has 60 days to amend a timely claim for
 /// any deficiency, or the claim is disallowed.
-deadline surrender-personal-deficiency-period: 60.days after Ch13SurrenderPlanConfirmed() counted_by frcp6 cite "N.D. Fla. LBR 3002-1(A)"
-{
-  forum frcp
-}
+deadline surrender-personal-deficiency-period: 60.days after Ch13SurrenderPlanConfirmed() counted_by frbp9006 cite "N.D. Fla. LBR 3002-1(A)"
 
 /// LBR 3002-1(A)(2): for surrendered real property, the creditor has 90 days
 /// from confirmation to amend a timely claim for any deficiency.
-deadline surrender-real-deficiency-period: 90.days after Ch13SurrenderPlanConfirmed() counted_by frcp6 cite "N.D. Fla. LBR 3002-1(A)"
-{
-  forum frcp
-}
+deadline surrender-real-deficiency-period: 90.days after Ch13SurrenderPlanConfirmed() counted_by frbp9006 cite "N.D. Fla. LBR 3002-1(A)"
 
 /// LBR 3002-1(B)(1): where the plan does not surrender the collateral, the
 /// secured creditor has 60 days from an order terminating the stay to amend a
 /// timely claim for a deficiency on personal property.
-deadline stay-relief-personal-deficiency-period: 60.days after StayTerminationOrdered() counted_by frcp6 cite "N.D. Fla. LBR 3002-1(B)"
-{
-  forum frcp
-}
+deadline stay-relief-personal-deficiency-period: 60.days after StayTerminationOrdered() counted_by frbp9006 cite "N.D. Fla. LBR 3002-1(B)"
 
 /// LBR 3002-1(B)(2): for real property, the secured creditor has 90 days from
 /// the order terminating the stay to amend a timely claim for a deficiency.
-deadline stay-relief-real-deficiency-period: 90.days after StayTerminationOrdered() counted_by frcp6 cite "N.D. Fla. LBR 3002-1(B)"
-{
-  forum frcp
-}
+deadline stay-relief-real-deficiency-period: 90.days after StayTerminationOrdered() counted_by frbp9006 cite "N.D. Fla. LBR 3002-1(B)"
 
 /// LBR 3007-1(E): in a chapter 13 case, unless extended, objections to timely
 /// filed claims are filed no later than 60 days after the applicable claims
 /// bar date.
-deadline ch13-claim-objection-period: 60.days after Ch13ClaimsBarDate() counted_by frcp6 cite "N.D. Fla. LBR 3007-1(E)"
-{
-  forum frcp
-}
+deadline ch13-claim-objection-period: 60.days after Ch13ClaimsBarDate() counted_by frbp9006 cite "N.D. Fla. LBR 3007-1(E)"
 
 /// LBR 3012-1(A)(1): values in a chapter 11 disclosure statement are deemed
 /// the values at confirmation unless, not less than seven days before the
 /// confirmation hearing, a party files an FRBP 3012 motion.
-deadline ch11-valuation-motion-period: 7.days before Ch11ConfirmationHearing() counted_by frcp6 cite "N.D. Fla. LBR 3012-1(A)"
-{
-  forum frcp
-}
+deadline ch11-valuation-motion-period: 7.days before Ch11ConfirmationHearing() counted_by frbp9006 cite "N.D. Fla. LBR 3012-1(A)"
 
 /// LBR 3012-1(B)(1): upon filing a chapter 12 or 13 plan or within seven days
 /// after, the debtor files and serves on each impaired secured creditor a
 /// notice of the value of its collateral.
-deadline valuation-notice-period: 7.days after Ch12Or13PlanFiled() counted_by frcp6 cite "N.D. Fla. LBR 3012-1(B)"
-{
-  forum frcp
-}
+deadline valuation-notice-period: 7.days after Ch12Or13PlanFiled() counted_by frbp9006 cite "N.D. Fla. LBR 3012-1(B)"
 
 /// LBR 3012-1(B)(2): the noticed value is deemed the value for confirmation
 /// unless a party files a motion to value or to determine secured status no
 /// later than 30 days after proper service of the notice.
-deadline valuation-challenge-period: 30.days after ValuationNoticeServed() counted_by frcp6 cite "N.D. Fla. LBR 3012-1(B)"
-{
-  forum frcp
-}
+deadline valuation-challenge-period: 30.days after ValuationNoticeServed() counted_by frbp9006 cite "N.D. Fla. LBR 3012-1(B)"
 
 /// LBR 3012-1(C): a party contesting a motion to value who wishes to be heard
 /// files an objection within 14 days from service of the motion.
-deadline valuation-objection-period: 14.days after ValuationMotionServed() counted_by frcp6 cite "N.D. Fla. LBR 3012-1(C)"
-{
-  forum frcp
-}
+deadline valuation-objection-period: 14.days after ValuationMotionServed() counted_by frbp9006 cite "N.D. Fla. LBR 3012-1(C)"
 
 /// LBR 3012-1(C)-(D): a contesting party files and serves its appraisal or
 /// other evidence of value, and a party presenting appraisal testimony on
 /// real property files the report and the appraiser's qualifications, no less
 /// than seven days before the hearing or trial.
-deadline valuation-evidence-period: 7.days before ValuationHearing() counted_by frcp6 cite "N.D. Fla. LBR 3012-1(C)"
-{
-  forum frcp
-}
+deadline valuation-evidence-period: 7.days before ValuationHearing() counted_by frbp9006 cite "N.D. Fla. LBR 3012-1(C)"
 
 /// LBR 3012-1(E): objections to the admissibility of an appraisal report or
 /// the appraiser's qualifications are filed and served no less than two days
 /// before the trial or hearing.
-deadline appraisal-objection-period: 2.days before ValuationHearing() counted_by frcp6 cite "N.D. Fla. LBR 3012-1(E)"
-{
-  forum frcp
-}
+deadline appraisal-objection-period: 2.days before ValuationHearing() counted_by frbp9006 cite "N.D. Fla. LBR 3012-1(E)"
 
 /// LBR 3012-2(A)(2)(c): the negative notice legend on a lien-stripping motion
 /// gives interested parties 30 days, rather than 21, to object.
-deadline lien-strip-objection-period: 30.days after LienStripMotionServed() counted_by frcp6 cite "N.D. Fla. LBR 3012-2(A)"
-{
-  forum frcp
-}
+deadline lien-strip-objection-period: 30.days after LienStripMotionServed() counted_by frbp9006 cite "N.D. Fla. LBR 3012-2(A)"
 
 /// LBR 3012-2(B): the movant submits a proposed order no later than 14 days
 /// after the 30-day objection period expires.
-deadline lien-strip-order-period: 14.days after LienStripObjectionPeriodExpired() counted_by frcp6 cite "N.D. Fla. LBR 3012-2(B)"
-{
-  forum frcp
-}
+deadline lien-strip-order-period: 14.days after LienStripObjectionPeriodExpired() counted_by frbp9006 cite "N.D. Fla. LBR 3012-2(B)"
 
 /// LBR 3017-1(C): objections to a proposed disclosure statement are filed and
 /// served at least seven days before the hearing on it, or are waived.
-deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearing() counted_by frcp6 cite "N.D. Fla. LBR 3017-1(C)"
-{
-  forum frcp
-}
+deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearing() counted_by frbp9006 cite "N.D. Fla. LBR 3017-1(C)"
 
 /// LBR 3018-1(A): ballots are sent to the plan proponent at least seven days
 /// before the confirmation hearing.
-deadline ballot-period: 7.days before Ch11ConfirmationHearing() counted_by frcp6 cite "N.D. Fla. LBR 3018-1(A)"
-{
-  forum frcp
-}
+deadline ballot-period: 7.days before Ch11ConfirmationHearing() counted_by frbp9006 cite "N.D. Fla. LBR 3018-1(A)"
 
 /// LBR 3018-1(A): no later than three days before the confirmation hearing,
 /// the plan proponent tabulates the ballots and files the tabulation form.
-deadline ballot-tabulation-period: 3.days before Ch11ConfirmationHearing() counted_by frcp6 cite "N.D. Fla. LBR 3018-1(A)"
-{
-  forum frcp
-}
+deadline ballot-tabulation-period: 3.days before Ch11ConfirmationHearing() counted_by frbp9006 cite "N.D. Fla. LBR 3018-1(A)"
 
 /// LBR 3020-1(A): objections to confirmation of a chapter 11 plan are filed
 /// and served not less than seven days before the confirmation hearing,
 /// unless the court orders otherwise.
-deadline ch11-confirmation-objection-period: 7.days before Ch11ConfirmationHearing() counted_by frcp6 cite "N.D. Fla. LBR 3020-1(A)"
-{
-  forum frcp
-}
+deadline ch11-confirmation-objection-period: 7.days before Ch11ConfirmationHearing() counted_by frbp9006 cite "N.D. Fla. LBR 3020-1(A)"
 
 /// LBR 4001-1(C): unless the motion was on negative notice, a party opposing
 /// stay relief files its objection with supporting appraisals and affidavits
 /// within 14 days after entry of the order and notice of preliminary hearing,
 /// or the motion may be granted without a hearing.
-deadline stay-relief-objection-period: 14.days after PreliminaryHearingNoticed() counted_by frcp6 cite "N.D. Fla. LBR 4001-1(C)"
-{
-  forum frcp
-}
+deadline stay-relief-objection-period: 14.days after PreliminaryHearingNoticed() counted_by frbp9006 cite "N.D. Fla. LBR 4001-1(C)"
 
 /// LBR 4001-1(E): not less than five days before the final hearing on stay
 /// relief, each party files and furnishes its witness list and copies of its
 /// exhibits.
-deadline stay-hearing-exhibits-period: 5.days before FinalStayHearing() counted_by frcp6 cite "N.D. Fla. LBR 4001-1(E)"
-{
-  forum frcp
-}
+deadline stay-hearing-exhibits-period: 5.days before FinalStayHearing() counted_by frbp9006 cite "N.D. Fla. LBR 4001-1(E)"
 
 /// LBR 4001-1(I), 4001-4(B): in a stay relief or co-debtor stay matter, the
 /// time to respond under FRBP 7033, 7034 and 7036 is reduced to 21 days
 /// unless the court directs otherwise.
-deadline stay-discovery-response-period: 21.days after StayDiscoveryServed() counted_by frcp6 cite "N.D. Fla. LBR 4001-1(I)"
-{
-  forum frcp
-}
+deadline stay-discovery-response-period: 21.days after StayDiscoveryServed() counted_by frbp9006 cite "N.D. Fla. LBR 4001-1(I)"
 
 /// LBR 4001-3: a motion to extend the automatic stay under § 362(c)(3) is
 /// filed within five days of the filing of the petition, with simultaneous
 /// service on all interested parties.
-deadline stay-extension-motion-period: 5.days after PetitionFiled() counted_by frcp6 cite "N.D. Fla. LBR 4001-3"
-{
-  forum frcp
-}
+deadline stay-extension-motion-period: 5.days after PetitionFiled() counted_by frbp9006 cite "N.D. Fla. LBR 4001-3"
 
 /// LBR 4003-1(D): the respondent has 21 days to file and serve on the debtor
 /// a response to a § 522(f) lien avoidance motion.
-deadline lien-avoidance-response-period: 21.days after LienAvoidanceMotionServed() counted_by frcp6 cite "N.D. Fla. LBR 4003-1(D)"
-{
-  forum frcp
-}
+deadline lien-avoidance-response-period: 21.days after LienAvoidanceMotionServed() counted_by frbp9006 cite "N.D. Fla. LBR 4003-1(D)"
 
 /// LBR 5007-1(C): within seven calendar days of the filing of the official
 /// transcript, each party files a notice of intent to request redaction and
 /// serves it on the transcriber.
-deadline transcript-redaction-notice-period: 7.days after TranscriptFiled() counted_by frcp6 cite "N.D. Fla. LBR 5007-1(C)"
-{
-  forum frcp
-}
+deadline transcript-redaction-notice-period: 7.days after TranscriptFiled() counted_by frbp9006 cite "N.D. Fla. LBR 5007-1(C)"
 
 /// LBR 5007-1(C): a party has 21 calendar days from the filing of the
 /// official transcript to file its request for redaction and serve it on the
 /// transcriber.
-deadline transcript-redaction-request-period: 21.days after TranscriptFiled() counted_by frcp6 cite "N.D. Fla. LBR 5007-1(C)"
-{
-  forum frcp
-}
+deadline transcript-redaction-request-period: 21.days after TranscriptFiled() counted_by frbp9006 cite "N.D. Fla. LBR 5007-1(C)"
 
 /// LBR 5011-1(A)(1): a motion to withdraw the reference of a case is filed no
 /// later than 30 days after the § 341(a) meeting of creditors is concluded.
-deadline case-withdrawal-motion-period: 30.days after MeetingConcluded() counted_by frcp6 cite "N.D. Fla. LBR 5011-1(A)(1)"
-{
-  forum frcp
-}
+deadline case-withdrawal-motion-period: 30.days after MeetingConcluded() counted_by frbp9006 cite "N.D. Fla. LBR 5011-1(A)(1)"
 
 /// LBR 5011-1(A)(1): a party in interest without notice or knowledge of the
 /// case may move to withdraw the reference not later than 21 days after
 /// acquiring actual knowledge of its pendency.
-deadline late-knowledge-withdrawal-period: 21.days after CaseKnowledgeAcquired() counted_by frcp6 cite "N.D. Fla. LBR 5011-1(A)(1)"
-{
-  forum frcp
-}
+deadline late-knowledge-withdrawal-period: 21.days after CaseKnowledgeAcquired() counted_by frbp9006 cite "N.D. Fla. LBR 5011-1(A)(1)"
 
 /// LBR 5011-1(A)(3), (B)(4): the debtor has 14 days after service of a motion
 /// to withdraw the reference of a case or proceeding to file a response.
-deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "N.D. Fla. LBR 5011-1(A)(3)"
-{
-  forum frcp
-}
+deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frbp9006 cite "N.D. Fla. LBR 5011-1(A)(3)"
 
 /// LBR 5011-1(B)(1): a motion to withdraw a proceeding may be filed within 21
 /// days after the bankruptcy court determines that it is a non-core matter.
-deadline non-core-withdrawal-period: 21.days after NonCoreDetermined() counted_by frcp6 cite "N.D. Fla. LBR 5011-1(B)(1)"
-{
-  forum frcp
-}
+deadline non-core-withdrawal-period: 21.days after NonCoreDetermined() counted_by frbp9006 cite "N.D. Fla. LBR 5011-1(B)(1)"
 
 /// LBR 5011-1(C)(3): all requests that the court abstain in a case are filed
 /// no later than 30 days after the § 341(a) meeting of creditors is
 /// concluded.
-deadline abstention-request-period: 30.days after MeetingConcluded() counted_by frcp6 cite "N.D. Fla. LBR 5011-1(C)(3)"
-{
-  forum frcp
-}
+deadline abstention-request-period: 30.days after MeetingConcluded() counted_by frbp9006 cite "N.D. Fla. LBR 5011-1(C)(3)"
 
 /// LBR 7008-1: if an FRBP 7008 issue is raised whether a proceeding is core,
 /// the party instituting it files a motion for a determination within 21 days
 /// after service of the pleading creating the issue.
-deadline core-determination-motion-period: 21.days after CoreIssuePleadingServed() counted_by frcp6 cite "N.D. Fla. LBR 7008-1"
-{
-  forum frcp
-}
+deadline core-determination-motion-period: 21.days after CoreIssuePleadingServed() counted_by frbp9006 cite "N.D. Fla. LBR 7008-1"
 
 /// LBR 9013-1(C)(1), 7007-1: a party objecting to a motion or application
 /// files and serves a response and memorandum within 14 days after its
 /// service; failure to respond is cause to grant it without further notice or
 /// hearing.
-deadline motion-response-period: 14.days after MotionServed() counted_by frcp6 cite "N.D. Fla. LBR 9013-1(C)(1)"
-{
-  forum frcp
-}
+deadline motion-response-period: 14.days after MotionServed() counted_by frbp9006 cite "N.D. Fla. LBR 9013-1(C)(1)"
 
 /// LBR 9013-1(E): a paper over 50 pages in a matter that becomes contested
 /// only on another's opposition is supplied to chambers in paper no fewer
 /// than seven days before the scheduled hearing.
-deadline lengthy-filing-copy-period: 7.days before LengthyFilingHearing() counted_by frcp6 cite "N.D. Fla. LBR 9013-1(E)"
-{
-  forum frcp
-}
+deadline lengthy-filing-copy-period: 7.days before LengthyFilingHearing() counted_by frbp9006 cite "N.D. Fla. LBR 9013-1(E)"
 
 /// LBR 9015-1(B): the adverse party files a statement of consent or non-
 /// consent to a jury trial before a bankruptcy judge within 21 days after the
 /// demand is made.
-deadline jury-consent-period: 21.days after JuryDemandMade() counted_by frcp6 cite "N.D. Fla. LBR 9015-1(B)"
-{
-  forum frcp
-}
+deadline jury-consent-period: 21.days after JuryDemandMade() counted_by frbp9006 cite "N.D. Fla. LBR 9015-1(B)"
 
 /// LBR 9070-1(C): no later than five calendar days before trial or a non-
 /// emergency evidentiary hearing, the parties mark, list, file and exchange
 /// their exhibits (stay relief hearings follow LBR 4001-1(E)).
-deadline exhibit-filing-period: 5.days before EvidentiaryHearing() counted_by frcp6 cite "N.D. Fla. LBR 9070-1(C)"
-{
-  forum frcp
-}
+deadline exhibit-filing-period: 5.days before EvidentiaryHearing() counted_by frbp9006 cite "N.D. Fla. LBR 9070-1(C)"
 
 /// LBR 9070-1(F): additional exhibits offered at the hearing or trial but not
 /// filed in CM/ECF are filed within seven days following its conclusion.
-deadline additional-exhibits-period: 7.days after EvidentiaryHearingConcluded() counted_by frcp6 cite "N.D. Fla. LBR 9070-1(F)"
-{
-  forum frcp
-}
+deadline additional-exhibits-period: 7.days after EvidentiaryHearingConcluded() counted_by frbp9006 cite "N.D. Fla. LBR 9070-1(F)"
 
 /// LBR 9070-1(I): the parties have 30 days from the clerk's notice to reclaim
 /// their exhibits or arrange to do so, or they are discarded.
-deadline exhibit-reclaim-period: 30.days after ExhibitReclaimNoticed() counted_by frcp6 cite "N.D. Fla. LBR 9070-1(I)"
-{
-  forum frcp
-}
+deadline exhibit-reclaim-period: 30.days after ExhibitReclaimNoticed() counted_by frbp9006 cite "N.D. Fla. LBR 9070-1(I)"
 
 start matter-served
 

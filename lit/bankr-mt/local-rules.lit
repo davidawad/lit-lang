@@ -1,6 +1,6 @@
 module bankr-mt-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 import frbp.events.{ CaseConverted, FirstMeetingDate, PetitionFiled }
 
 // The Bankr. D. Mont. court's own periods, counted under FRBP 9006(a).
@@ -149,358 +149,223 @@ event RemovalNoticeFiled()
 /// debtor, a certificate of service is filed no later than 14 days after
 /// the case has commenced, showing the petition and notice of the case were
 /// mailed to the non-signing debtor.
-deadline non-signing-debtor-service-certificate-period: 14.days after PetitionFiled() counted_by frcp6 cite "Mont. LBR 1002-1(d)"
-{
-  forum frcp
-}
+deadline non-signing-debtor-service-certificate-period: 14.days after PetitionFiled() counted_by frbp9006 cite "Mont. LBR 1002-1(d)"
 
 /// Mont. LBR 1006-1(b)(1): after the Clerk's notice of nonpayment, the
 /// installment must be paid within 14 days of the notice.
-deadline installment-payment-period: 14.days after InstallmentNonpaymentNoticed() counted_by frcp6 cite "Mont. LBR 1006-1(b)"
-{
-  forum frcp
-}
+deadline installment-payment-period: 14.days after InstallmentNonpaymentNoticed() counted_by frbp9006 cite "Mont. LBR 1006-1(b)"
 
 /// Mont. LBR 1006-1(b)(2): the case is dismissed without further notice or
 /// hearing if the payment is not received within 14 days of the date of the
 /// Notice of Pending Dismissal.
-deadline installment-dismissal-cure-period: 14.days after PendingDismissalNoticeEntered() counted_by frcp6 cite "Mont. LBR 1006-1(b)"
-{
-  forum frcp
-}
+deadline installment-dismissal-cure-period: 14.days after PendingDismissalNoticeEntered() counted_by frbp9006 cite "Mont. LBR 1006-1(b)"
 
 /// Mont. LBR 1007-1(d): if omitted petition documents are not received by
 /// the Deficiency Notice deadline, the case is dismissed without further
 /// notice or hearing unless the deficiency is cured within 14 days of the
 /// date of the Notice of Pending Dismissal.
-deadline deficiency-cure-period: 14.days after PendingDismissalNoticeEntered() counted_by frcp6 cite "Mont. LBR 1007-1(d)"
-{
-  forum frcp
-}
+deadline deficiency-cure-period: 14.days after PendingDismissalNoticeEntered() counted_by frbp9006 cite "Mont. LBR 1007-1(d)"
 
 /// Mont. LBR 1007-1(d)(1): if Official Form 121 is not filed with the
 /// petition, the case is dismissed without further notice or hearing
 /// unless it is received within seven days after the voluntary petition is
 /// filed.
-deadline ssn-statement-period: 7.days after PetitionFiled() counted_by frcp6 cite "Mont. LBR 1007-1(d)"
-{
-  forum frcp
-}
+deadline ssn-statement-period: 7.days after PetitionFiled() counted_by frbp9006 cite "Mont. LBR 1007-1(d)"
 
 /// Mont. LBR 1017-1(d): when a chapter 7 case is converted, the chapter 7
 /// trustee files an application for professional fees and costs within 30
 /// days following the conversion; a late application may be denied.
-deadline converted-trustee-fee-application-period: 30.days after CaseConverted() counted_by frcp6 cite "Mont. LBR 1017-1(d)"
-{
-  forum frcp
-}
+deadline converted-trustee-fee-application-period: 30.days after CaseConverted() counted_by frbp9006 cite "Mont. LBR 1017-1(d)"
 
 /// Mont. LBR 1019-1(a): within 14 days following conversion to another
 /// chapter, the debtor files revised schedules and statements reflecting
 /// changes since the original petition.
-deadline converted-schedules-period: 14.days after CaseConverted() counted_by frcp6 cite "Mont. LBR 1019-1(a)"
-{
-  forum frcp
-}
+deadline converted-schedules-period: 14.days after CaseConverted() counted_by frbp9006 cite "Mont. LBR 1019-1(a)"
 
 /// Mont. LBR 2002-4: the notice of an application for professional fees or
 /// expenses over $1,000.00 provides a notice period of 21 days within
 /// which a party in interest may object.
-deadline fee-application-objection-period: 21.days after FeeApplicationNoticeFiled() counted_by frcp6 cite "Mont. LBR 2002-4"
-{
-  forum frcp
-}
+deadline fee-application-objection-period: 21.days after FeeApplicationNoticeFiled() counted_by frbp9006 cite "Mont. LBR 2002-4"
 
 /// Mont. LBR 2003-4: a written application to the trustee to continue the
 /// meeting of creditors is made at least 14 days before the scheduled
 /// meeting; without a timely application a debtor's failure to appear may
 /// lead to dismissal or conversion (Mont. LBR 2003-7).
-deadline meeting-continuance-application-period: 14.days before CreditorsMeetingScheduled() counted_by frcp6 cite "Mont. LBR 2003-4"
-{
-  forum frcp
-}
+deadline meeting-continuance-application-period: 14.days before CreditorsMeetingScheduled() counted_by frbp9006 cite "Mont. LBR 2003-4"
 
 /// Mont. LBR 2003-4: if the continuance is granted, the debtor or debtor's
 /// attorney notifies all creditors and parties in interest at least seven
 /// days before the original date set for the meeting.
-deadline meeting-continuance-notice-period: 7.days before CreditorsMeetingScheduled() counted_by frcp6 cite "Mont. LBR 2003-4"
-{
-  forum frcp
-}
+deadline meeting-continuance-notice-period: 7.days before CreditorsMeetingScheduled() counted_by frbp9006 cite "Mont. LBR 2003-4"
 
 /// Mont. LBR 2003-5(b): unless the trustee agrees otherwise, the debtor
 /// provides the trustee the documents listed in Mont. LBF 33 at least 14
 /// days before the first date set for the meeting of creditors.
-deadline trustee-documents-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "Mont. LBR 2003-5(b)"
-{
-  forum frcp
-}
+deadline trustee-documents-period: 14.days before FirstMeetingDate() counted_by frbp9006 cite "Mont. LBR 2003-5(b)"
 
 /// Mont. LBR 2014-1(d): a fully executed listing agreement not filed with
 /// the employment application is filed within seven days after the Court
 /// approves the real estate agent's employment.
-deadline listing-agreement-period: 7.days after RealEstateAgentApproved() counted_by frcp6 cite "Mont. LBR 2014-1(d)"
-{
-  forum frcp
-}
+deadline listing-agreement-period: 7.days after RealEstateAgentApproved() counted_by frbp9006 cite "Mont. LBR 2014-1(d)"
 
 /// Mont. LBR 2016-1(d): within 30 days of dismissal of a case, all
 /// professionals file a final FRBP 2016(b) Disclosure of Compensation.
-deadline dismissed-case-disclosure-period: 30.days after CaseDismissed() counted_by frcp6 cite "Mont. LBR 2016-1(d)"
-{
-  forum frcp
-}
+deadline dismissed-case-disclosure-period: 30.days after CaseDismissed() counted_by frbp9006 cite "Mont. LBR 2016-1(d)"
 
 /// Mont. LBR 3002-1: a creditor sent notice of a late-filed claim in a
 /// chapter 12 or 13 case may file a response and request a hearing within
 /// 30 days of the notice date; otherwise the failure is deemed an admission
 /// and the claim is disallowed without further notice or hearing.
-deadline late-claim-response-period: 30.days after LateClaimNoticeSent() counted_by frcp6 cite "Mont. LBR 3002-1"
-{
-  forum frcp
-}
+deadline late-claim-response-period: 30.days after LateClaimNoticeSent() counted_by frbp9006 cite "Mont. LBR 3002-1"
 
 /// Mont. LBR 3003-1(a): under FRBP 3003(c)(3) and except as provided in
 /// subdivision (b), the last day to file proofs of claim in a chapter 11
 /// case is 90 days from the first date set for the meeting of creditors.
-deadline chapter-11-claims-bar-period: 90.days after FirstMeetingDate() counted_by frcp6 cite "Mont. LBR 3003-1(a)"
-{
-  forum frcp
-}
+deadline chapter-11-claims-bar-period: 90.days after FirstMeetingDate() counted_by frbp9006 cite "Mont. LBR 3003-1(a)"
 
 /// Mont. LBR 3014-1: in a subchapter V case, an election under 11 U.S.C. §
 /// 1111(b)(2) is made no later than 14 days following the filing of the
 /// debtor's initial plan, or within such other time as the court fixes.
-deadline section-1111b-election-period: 14.days after SubchapterVPlanFiled() counted_by frcp6 cite "Mont. LBR 3014-1"
-{
-  forum frcp
-}
+deadline section-1111b-election-period: 14.days after SubchapterVPlanFiled() counted_by frbp9006 cite "Mont. LBR 3014-1"
 
 /// Mont. LBR 3015-2(a): unless otherwise ordered, after a notice of intent
 /// to amend, all amended plans are filed no later than 14 days before the
 /// Court's next regularly scheduled hearing date in the division.
-deadline amended-plan-filing-period: 14.days before AmendedPlanHearing() counted_by frcp6 cite "Mont. LBR 3015-2(a)"
-{
-  forum frcp
-}
+deadline amended-plan-filing-period: 14.days before AmendedPlanHearing() counted_by frbp9006 cite "Mont. LBR 3015-2(a)"
 
 /// Mont. LBR 3015-2(a): objections to the amended plan are filed no later
 /// than seven days before the hearing on its confirmation.
-deadline amended-plan-objection-period: 7.days before AmendedPlanHearing() counted_by frcp6 cite "Mont. LBR 3015-2(a)"
-{
-  forum frcp
-}
+deadline amended-plan-objection-period: 7.days before AmendedPlanHearing() counted_by frbp9006 cite "Mont. LBR 3015-2(a)"
 
 /// Mont. LBR 3017-2: in a subchapter V case, unless otherwise ordered,
 /// amended plans are filed no later than 14 days before the Court's next
 /// regularly scheduled hearing date in the division.
-deadline subchapter-v-amended-plan-filing-period: 14.days before AmendedPlanHearing() counted_by frcp6 cite "Mont. LBR 3017-2"
-{
-  forum frcp
-}
+deadline subchapter-v-amended-plan-filing-period: 14.days before AmendedPlanHearing() counted_by frbp9006 cite "Mont. LBR 3017-2"
 
 /// Mont. LBR 3017-2: objections to a subchapter V amended plan are filed no
 /// later than seven days before the hearing on its confirmation.
-deadline subchapter-v-amended-plan-objection-period: 7.days before AmendedPlanHearing() counted_by frcp6 cite "Mont. LBR 3017-2"
-{
-  forum frcp
-}
+deadline subchapter-v-amended-plan-objection-period: 7.days before AmendedPlanHearing() counted_by frbp9006 cite "Mont. LBR 3017-2"
 
 /// Mont. LBR 3017-1: unless otherwise ordered, objections to a chapter 11
 /// disclosure statement or plan are filed and served not less than 14 days
 /// before the hearing on it.
-deadline disclosure-or-plan-objection-period: 14.days before DisclosureOrPlanHearing() counted_by frcp6 cite "Mont. LBR 3017-1"
-{
-  forum frcp
-}
+deadline disclosure-or-plan-objection-period: 14.days before DisclosureOrPlanHearing() counted_by frbp9006 cite "Mont. LBR 3017-1"
 
 /// Mont. LBR 3017-3: the proponent of a chapter 11 plan files an estimate
 /// of administrative expenses not less than seven days before the
 /// confirmation hearing.
-deadline chapter-11-admin-estimate-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Mont. LBR 3017-3"
-{
-  forum frcp
-}
+deadline chapter-11-admin-estimate-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Mont. LBR 3017-3"
 
 /// Mont. LBR 3018-1: not less than three days before the confirmation
 /// hearing, the plan proponent files the ballots and a written summary of
 /// them and serves the summary.
-deadline ballot-summary-period: 3.days before ConfirmationHearing() counted_by frcp6 cite "Mont. LBR 3018-1"
-{
-  forum frcp
-}
+deadline ballot-summary-period: 3.days before ConfirmationHearing() counted_by frbp9006 cite "Mont. LBR 3018-1"
 
 /// Mont. LBR 4002-1(a): on request, the debtor provides information on
 /// property in need of attention or protection within 21 days, unless the
 /// parties agree otherwise or the Court extends the time.
-deadline property-information-period: 21.days after PropertyInformationRequested() counted_by frcp6 cite "Mont. LBR 4002-1(a)"
-{
-  forum frcp
-}
+deadline property-information-period: 21.days after PropertyInformationRequested() counted_by frbp9006 cite "Mont. LBR 4002-1(a)"
 
 /// Mont. LBR 4002-1(e): within 14 days of commencing a case, the debtor
 /// files a domestic support obligation statement (Mont. LBF 30).
-deadline domestic-support-statement-period: 14.days after PetitionFiled() counted_by frcp6 cite "Mont. LBR 4002-1(e)"
-{
-  forum frcp
-}
+deadline domestic-support-statement-period: 14.days after PetitionFiled() counted_by frbp9006 cite "Mont. LBR 4002-1(e)"
 
 /// Mont. LBR 4002-3: a chapter 12 debtor in possession pays the trustee by
 /// cashier's or certified check at least 14 days before each plan payment
 /// date.
-deadline chapter-12-payment-certified-period: 14.days before PlanPaymentDate() counted_by frcp6 cite "Mont. LBR 4002-3"
-{
-  forum frcp
-}
+deadline chapter-12-payment-certified-period: 14.days before PlanPaymentDate() counted_by frbp9006 cite "Mont. LBR 4002-3"
 
 /// Mont. LBR 4002-3: a plan payment by the debtor's personal check is made
 /// at least 28 days before the payment date.
-deadline chapter-12-payment-personal-check-period: 28.days before PlanPaymentDate() counted_by frcp6 cite "Mont. LBR 4002-3"
-{
-  forum frcp
-}
+deadline chapter-12-payment-personal-check-period: 28.days before PlanPaymentDate() counted_by frbp9006 cite "Mont. LBR 4002-3"
 
 /// Mont. LBR 4002-4: a chapter 12 debtor files an estimate of
 /// administrative expenses at least 14 days before the confirmation
 /// hearing.
-deadline chapter-12-admin-estimate-period: 14.days before ConfirmationHearing() counted_by frcp6 cite "Mont. LBR 4002-4"
-{
-  forum frcp
-}
+deadline chapter-12-admin-estimate-period: 14.days before ConfirmationHearing() counted_by frbp9006 cite "Mont. LBR 4002-4"
 
 /// Mont. LBR 4002-5: a chapter 12 or 13 debtor engaged in business files a
 /// monthly financial report within 14 days following the end of each
 /// calendar month.
-deadline monthly-report-period: 14.days after CalendarMonthEnded() counted_by frcp6 cite "Mont. LBR 4002-5"
-{
-  forum frcp
-}
+deadline monthly-report-period: 14.days after CalendarMonthEnded() counted_by frbp9006 cite "Mont. LBR 4002-5"
 
 /// Mont. LBR 4002-6: at least 14 days before the meeting of creditors, the
 /// debtor files the payment advices and other proof of income for the 60
 /// days ending on the last day of the month before the case commenced.
-deadline income-documentation-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "Mont. LBR 4002-6"
-{
-  forum frcp
-}
+deadline income-documentation-period: 14.days before FirstMeetingDate() counted_by frbp9006 cite "Mont. LBR 4002-6"
 
 /// Mont. LBR 5005-4: the Clerk may dispose of a paper exhibit if the party
 /// does not arrange to obtain it within 30 days after the clerk's notice.
-deadline exhibit-pickup-period: 30.days after ExhibitPickupNoticed() counted_by frcp6 cite "Mont. LBR 5005-4"
-{
-  forum frcp
-}
+deadline exhibit-pickup-period: 30.days after ExhibitPickupNoticed() counted_by frbp9006 cite "Mont. LBR 5005-4"
 
 /// Mont. LBR 5009-1: within 30 days following an order of conversion or
 /// dismissal, the chapter 12 or 13 trustee files and serves a report and
 /// accounting of plan receipts and disbursements.
-deadline trustee-conversion-report-period: 30.days after ConversionOrDismissalOrdered() counted_by frcp6 cite "Mont. LBR 5009-1"
-{
-  forum frcp
-}
+deadline trustee-conversion-report-period: 30.days after ConversionOrDismissalOrdered() counted_by frbp9006 cite "Mont. LBR 5009-1"
 
 /// Mont. LBR 5009-1: in a completed chapter 12 or 13 case, the trustee
 /// reports within 30 days of the final distribution that the debtor has
 /// completed all payments.
-deadline trustee-completion-report-period: 30.days after FinalPlanDistribution() counted_by frcp6 cite "Mont. LBR 5009-1"
-{
-  forum frcp
-}
+deadline trustee-completion-report-period: 30.days after FinalPlanDistribution() counted_by frbp9006 cite "Mont. LBR 5009-1"
 
 /// Mont. LBR 5011-1(a): a response to a motion to withdraw the reference is
 /// filed and served no later than 14 days after service of the motion.
-deadline withdrawal-of-reference-response-period: 14.days after WithdrawalOfReferenceMotionServed() counted_by frcp6 cite "Mont. LBR 5011-1(a)"
-{
-  forum frcp
-}
+deadline withdrawal-of-reference-response-period: 14.days after WithdrawalOfReferenceMotionServed() counted_by frbp9006 cite "Mont. LBR 5011-1(a)"
 
 /// Mont. LBR 5011-1(a): a reply, if any, is filed no later than seven days
 /// after service of the response.
-deadline withdrawal-of-reference-reply-period: 7.days after WithdrawalOfReferenceResponseServed() counted_by frcp6 cite "Mont. LBR 5011-1(a)"
-{
-  forum frcp
-}
+deadline withdrawal-of-reference-reply-period: 7.days after WithdrawalOfReferenceResponseServed() counted_by frbp9006 cite "Mont. LBR 5011-1(a)"
 
 /// Mont. LBR 7026-1(d): an objection to any interrogatory, deposition,
 /// request or application under FRBP 7037 is filed within 30 days after its
 /// service unless otherwise ordered; it does not extend the time to answer
 /// anything not included in it.
-deadline discovery-objection-period: 30.days after DiscoveryServed() counted_by frcp6 cite "Mont. LBR 7026-1(d)"
-{
-  forum frcp
-}
+deadline discovery-objection-period: 30.days after DiscoveryServed() counted_by frbp9006 cite "Mont. LBR 7026-1(d)"
 
 /// Mont. LBR 7026-1(j): after a ruling on a discovery motion, any answer,
 /// production, designation, inspection or examination required is done
 /// within 14 days after entry of the order unless otherwise ordered.
-deadline discovery-order-compliance-period: 14.days after DiscoveryOrderEntered() counted_by frcp6 cite "Mont. LBR 7026-1(j)"
-{
-  forum frcp
-}
+deadline discovery-order-compliance-period: 14.days after DiscoveryOrderEntered() counted_by frbp9006 cite "Mont. LBR 7026-1(j)"
 
 /// Mont. LBR 7056-1(a)(2): an opposition to a motion for summary judgment,
 /// with a Statement of Genuine Issues, is filed within 14 days after the
 /// motion is served.
-deadline summary-judgment-opposition-period: 14.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "Mont. LBR 7056-1(a)"
-{
-  forum frcp
-}
+deadline summary-judgment-opposition-period: 14.days after SummaryJudgmentMotionServed() counted_by frbp9006 cite "Mont. LBR 7056-1(a)"
 
 /// Mont. LBR 7056-1(a)(3): the movant may file a reply brief within 14 days
 /// after the opposition is served.
-deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frcp6 cite "Mont. LBR 7056-1(a)"
-{
-  forum frcp
-}
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frbp9006 cite "Mont. LBR 7056-1(a)"
 
 /// Mont. LBR 9013-1(h): unless the Local Rules provide otherwise, an entity
 /// objecting to a motion files a response and requests a hearing within 14
 /// days of the motion's date; otherwise the Court may grant the relief, a
 /// failure to respond being deemed an admission.
-deadline motion-response-period: 14.days after MotionDated() counted_by frcp6 cite "Mont. LBR 9013-1(h)"
-{
-  forum frcp
-}
+deadline motion-response-period: 14.days after MotionDated() counted_by frbp9006 cite "Mont. LBR 9013-1(h)"
 
 /// Mont. LBR 9013-1(k)(3): a failure to file a certificate of no objection
 /// within 14 days of the expiration of the response or objection time
 /// results in denial of the motion without prejudice.
-deadline no-objection-certificate-period: 14.days after ResponsePeriodExpired() counted_by frcp6 cite "Mont. LBR 9013-1(k)"
-{
-  forum frcp
-}
+deadline no-objection-certificate-period: 14.days after ResponsePeriodExpired() counted_by frbp9006 cite "Mont. LBR 9013-1(k)"
 
 /// Mont. LBR 9013-1(m): a motion under FRBP 9023 or 9024 (or FRCP 59 or
 /// 60) is filed within 14 days from the date of the order; a motion to
 /// reconsider is treated as one for relief from a judgment or order.
-deadline vacate-or-amend-motion-period: 14.days after OrderDated() counted_by frcp6 cite "Mont. LBR 9013-1(m)"
-{
-  forum frcp
-}
+deadline vacate-or-amend-motion-period: 14.days after OrderDated() counted_by frbp9006 cite "Mont. LBR 9013-1(m)"
 
 /// Mont. LBR 9013-2(a): memoranda opposing a motion or objection are filed
 /// within 14 days after its service, or as the Court directs.
-deadline opposition-memorandum-period: 14.days after MotionOrObjectionServed() counted_by frcp6 cite "Mont. LBR 9013-2(a)"
-{
-  forum frcp
-}
+deadline opposition-memorandum-period: 14.days after MotionOrObjectionServed() counted_by frbp9006 cite "Mont. LBR 9013-2(a)"
 
 /// Mont. LBR 9015-1(b): parties consent to a jury trial by the Bankruptcy
 /// Court no later than 30 days after the date for demand; failure to
 /// consent is deemed a lack of consent.
-deadline jury-consent-period: 30.days after JuryDemandDate() counted_by frcp6 cite "Mont. LBR 9015-1(b)"
-{
-  forum frcp
-}
+deadline jury-consent-period: 30.days after JuryDemandDate() counted_by frbp9006 cite "Mont. LBR 9015-1(b)"
 
 /// Mont. LBR 9015-1(d): if all necessary pleadings were served at removal, a
 /// party entitled to a jury trial demands one within 21 days after the
 /// Notice of Removal is filed; otherwise within 21 days after service of
 /// notice of its filing.
-deadline removal-jury-demand-period: 21.days after RemovalNoticeFiled() counted_by frcp6 cite "Mont. LBR 9015-1(d)"
-{
-  forum frcp
-}
+deadline removal-jury-demand-period: 21.days after RemovalNoticeFiled() counted_by frbp9006 cite "Mont. LBR 9015-1(d)"
 
 start motion-filed
 

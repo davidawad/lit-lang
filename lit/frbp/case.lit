@@ -1,6 +1,6 @@
 module frbp.case
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 
 import frbp.events.{
   AdversaryRule12MotionDenied,
@@ -20,9 +20,9 @@ import frbp.events.{
 // the petition, when creditors claim and object, the adversary-proceeding
 // response periods, and the post-judgment and proposed-findings periods
 // in the bankruptcy court. Chapter-specific periods name their chapter;
-// which chapter a case is in is a matter fact. Counting: FRBP 9006(a)
-// states the FRCP 6(a) method word for word, so each period is counted by
-// core's frcp6 as a period of forum `frcp`.
+// which chapter a case is in is a matter fact. Counting: each
+// period is counted under FRBP 9006(a) (`frbp9006`), the FRCP 6(a) method
+// word for word, as a period of forum `frbp`.
 /// FRBP 1007: in a voluntary case the schedules, statement of financial
 /// affairs and the other (b)(1), (b)(4)-(6) documents are due with the
 /// petition or within 14 days after it (1007(c)(1)). In an involuntary
@@ -37,32 +37,17 @@ import frbp.events.{
 /// package has no target for.
 rule duty debtor-filings-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 1007"
 {
-  deadline schedules-period: 14.days after PetitionFiled() counted_by frcp6 cite "FRBP 1007(c)(1)"
-  {
-    forum frcp
-  }
-  deadline involuntary-creditor-list-period: 7.days after OrderForReliefEntered() counted_by frcp6 cite "FRBP 1007(a)(2)"
-  {
-    forum frcp
-  }
-  deadline involuntary-schedules-period: 14.days after OrderForReliefEntered() counted_by frcp6 cite "FRBP 1007(c)(2)"
-  {
-    forum frcp
-  }
-  deadline equity-holders-list-period: 14.days after OrderForReliefEntered() counted_by frcp6 cite "FRBP 1007(a)(3)"
-  {
-    forum frcp
-  }
+  deadline schedules-period: 14.days after PetitionFiled() counted_by frbp9006 cite "FRBP 1007(c)(1)"
+  deadline involuntary-creditor-list-period: 7.days after OrderForReliefEntered() counted_by frbp9006 cite "FRBP 1007(a)(2)"
+  deadline involuntary-schedules-period: 14.days after OrderForReliefEntered() counted_by frbp9006 cite "FRBP 1007(c)(2)"
+  deadline equity-holders-list-period: 14.days after OrderForReliefEntered() counted_by frbp9006 cite "FRBP 1007(a)(3)"
 }
 
 /// FRBP 1011(b): a defense or objection to an involuntary petition is
 /// filed and served within 21 days after the summons is served.
 rule duty involuntary-answer-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 1011(b)"
 {
-  deadline involuntary-answer-period: 21.days after InvoluntarySummonsServed() counted_by frcp6 cite "FRBP 1011(b)"
-  {
-    forum frcp
-  }
+  deadline involuntary-answer-period: 21.days after InvoluntarySummonsServed() counted_by frbp9006 cite "FRBP 1011(b)"
 }
 
 /// FRBP 1017(e)(2): except as § 704(b)(2) provides otherwise, a motion to
@@ -71,10 +56,7 @@ rule duty involuntary-answer-duty effective [2025-12-01, ..) known_at 2025-12-01
 /// period, the court may extend it for cause.
 rule duty abuse-dismissal-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 1017(e)(2)"
 {
-  deadline abuse-dismissal-period: 60.days after FirstMeetingDate() counted_by frcp6 cite "FRBP 1017(e)(2)"
-  {
-    forum frcp
-  }
+  deadline abuse-dismissal-period: 60.days after FirstMeetingDate() counted_by frbp9006 cite "FRBP 1017(e)(2)"
 }
 
 /// FRBP 3002(c): in a voluntary Chapter 7 case or a Chapter 12 or 13 case,
@@ -85,22 +67,10 @@ rule duty abuse-dismissal-duty effective [2025-12-01, ..) known_at 2025-12-01 ci
 /// (3002(c)(1); 11 U.S.C. § 502(b)(9)).
 rule duty proof-of-claim-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 3002(c)"
 {
-  deadline claim-period: 70.days after OrderForReliefEntered() counted_by frcp6 cite "FRBP 3002(c)"
-  {
-    forum frcp
-  }
-  deadline converted-claim-period: 70.days after CaseConverted() counted_by frcp6 cite "FRBP 3002(c)"
-  {
-    forum frcp
-  }
-  deadline involuntary-claim-period: 90.days after OrderForReliefEntered() counted_by frcp6 cite "FRBP 3002(c)"
-  {
-    forum frcp
-  }
-  deadline governmental-claim-period: 180.days after OrderForReliefEntered() counted_by frcp6 cite "FRBP 3002(c)(1)"
-  {
-    forum frcp
-  }
+  deadline claim-period: 70.days after OrderForReliefEntered() counted_by frbp9006 cite "FRBP 3002(c)"
+  deadline converted-claim-period: 70.days after CaseConverted() counted_by frbp9006 cite "FRBP 3002(c)"
+  deadline involuntary-claim-period: 90.days after OrderForReliefEntered() counted_by frbp9006 cite "FRBP 3002(c)"
+  deadline governmental-claim-period: 180.days after OrderForReliefEntered() counted_by frbp9006 cite "FRBP 3002(c)(1)"
 }
 
 /// FRBP 3015(b): a Chapter 13 plan is due with the petition or within 14
@@ -108,14 +78,8 @@ rule duty proof-of-claim-duty effective [2025-12-01, ..) known_at 2025-12-01 cit
 /// time is not extended except for cause and on notice as the court orders.
 rule duty chapter13-plan-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 3015(b)"
 {
-  deadline chapter13-plan-period: 14.days after PetitionFiled() counted_by frcp6 cite "FRBP 3015(b)(1)"
-  {
-    forum frcp
-  }
-  deadline converted-chapter13-plan-period: 14.days after CaseConverted() counted_by frcp6 cite "FRBP 3015(b)(2)"
-  {
-    forum frcp
-  }
+  deadline chapter13-plan-period: 14.days after PetitionFiled() counted_by frbp9006 cite "FRBP 3015(b)(1)"
+  deadline converted-chapter13-plan-period: 14.days after CaseConverted() counted_by frbp9006 cite "FRBP 3015(b)(2)"
 }
 
 /// FRBP 4003(b)(1): a party in interest may object to a claimed exemption
@@ -124,9 +88,8 @@ rule duty chapter13-plan-duty effective [2025-12-01, ..) known_at 2025-12-01 cit
 /// before the time expires, the court may extend it for cause.
 rule duty exemption-objection-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 4003(b)(1)"
 {
-  deadline exemption-objection-period: 30.days after ExemptionEventOccurred() counted_by frcp6 cite "FRBP 4003(b)(1)"
+  deadline exemption-objection-period: 30.days after ExemptionEventOccurred() counted_by frbp9006 cite "FRBP 4003(b)(1)"
   {
-    forum frcp
     trigger latest
   }
 }
@@ -138,22 +101,10 @@ rule duty exemption-objection-duty effective [2025-12-01, ..) known_at 2025-12-0
 /// § 523(c) (4007(c)), and a reaffirmation agreement (4008(a)).
 rule duty discharge-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 4004(a)"
 {
-  deadline discharge-objection-period: 60.days after FirstMeetingDate() counted_by frcp6 cite "FRBP 4004(a)(1)"
-  {
-    forum frcp
-  }
-  deadline chapter13-discharge-objection-period: 60.days after FirstMeetingDate() counted_by frcp6 cite "FRBP 4004(a)(3)"
-  {
-    forum frcp
-  }
-  deadline dischargeability-complaint-period: 60.days after FirstMeetingDate() counted_by frcp6 cite "FRBP 4007(c)"
-  {
-    forum frcp
-  }
-  deadline reaffirmation-period: 60.days after FirstMeetingDate() counted_by frcp6 cite "FRBP 4008(a)"
-  {
-    forum frcp
-  }
+  deadline discharge-objection-period: 60.days after FirstMeetingDate() counted_by frbp9006 cite "FRBP 4004(a)(1)"
+  deadline chapter13-discharge-objection-period: 60.days after FirstMeetingDate() counted_by frbp9006 cite "FRBP 4004(a)(3)"
+  deadline dischargeability-complaint-period: 60.days after FirstMeetingDate() counted_by frbp9006 cite "FRBP 4007(c)"
+  deadline reaffirmation-period: 60.days after FirstMeetingDate() counted_by frbp9006 cite "FRBP 4008(a)"
 }
 
 /// FRBP 7004(e), 7012(a): in an adversary proceeding the summons and
@@ -165,22 +116,10 @@ rule duty discharge-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FR
 /// after notice of that action (7012(a)(6)(A)).
 rule duty adversary-response-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 7012(a)"
 {
-  deadline summons-service-period: 7.days after SummonsIssued() counted_by frcp6 cite "FRBP 7004(e)(1)"
-  {
-    forum frcp
-  }
-  deadline adversary-answer-period: 30.days after SummonsIssued() counted_by frcp6 cite "FRBP 7012(a)(1)"
-  {
-    forum frcp
-  }
-  deadline adversary-us-answer-period: 35.days after SummonsIssued() counted_by frcp6 cite "FRBP 7012(a)(5)(A)"
-  {
-    forum frcp
-  }
-  deadline adversary-post-motion-answer-period: 14.days after AdversaryRule12MotionDenied() counted_by frcp6 cite "FRBP 7012(a)(6)(A)"
-  {
-    forum frcp
-  }
+  deadline summons-service-period: 7.days after SummonsIssued() counted_by frbp9006 cite "FRBP 7004(e)(1)"
+  deadline adversary-answer-period: 30.days after SummonsIssued() counted_by frbp9006 cite "FRBP 7012(a)(1)"
+  deadline adversary-us-answer-period: 35.days after SummonsIssued() counted_by frbp9006 cite "FRBP 7012(a)(5)(A)"
+  deadline adversary-post-motion-answer-period: 14.days after AdversaryRule12MotionDenied() counted_by frbp9006 cite "FRBP 7012(a)(6)(A)"
 }
 
 /// The bankruptcy court's post-judgment motions, each within 14 days after
@@ -190,22 +129,10 @@ rule duty adversary-response-duty effective [2025-12-01, ..) known_at 2025-12-01
 /// tolls the time to appeal (8002(b)(1)(D)).
 rule duty post-judgment-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9023(b)"
 {
-  deadline amend-findings-period: 14.days after BankruptcyOrderEntered() counted_by frcp6 cite "FRBP 7052"
-  {
-    forum frcp
-  }
-  deadline new-trial-period: 14.days after BankruptcyOrderEntered() counted_by frcp6 cite "FRBP 9023(b)"
-  {
-    forum frcp
-  }
-  deadline jury-renewed-motion-period: 14.days after BankruptcyOrderEntered() counted_by frcp6 cite "FRBP 9015(c)"
-  {
-    forum frcp
-  }
-  deadline tolling-relief-motion-period: 14.days after BankruptcyOrderEntered() counted_by frcp6 cite "FRBP 8002(b)(1)(D)"
-  {
-    forum frcp
-  }
+  deadline amend-findings-period: 14.days after BankruptcyOrderEntered() counted_by frbp9006 cite "FRBP 7052"
+  deadline new-trial-period: 14.days after BankruptcyOrderEntered() counted_by frbp9006 cite "FRBP 9023(b)"
+  deadline jury-renewed-motion-period: 14.days after BankruptcyOrderEntered() counted_by frbp9006 cite "FRBP 9015(c)"
+  deadline tolling-relief-motion-period: 14.days after BankruptcyOrderEntered() counted_by frbp9006 cite "FRBP 8002(b)(1)(D)"
 }
 
 /// FRBP 9033(b): in a non-core proceeding a party may object to the
@@ -214,14 +141,8 @@ rule duty post-judgment-duty effective [2025-12-01, ..) known_at 2025-12-01 cite
 /// served with them.
 rule duty proposed-findings-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 9033(b)"
 {
-  deadline findings-objection-period: 14.days after ProposedFindingsServed() counted_by frcp6 cite "FRBP 9033(b)(1)"
-  {
-    forum frcp
-  }
-  deadline findings-response-period: 14.days after FindingsObjectionsServed() counted_by frcp6 cite "FRBP 9033(b)(1)"
-  {
-    forum frcp
-  }
+  deadline findings-objection-period: 14.days after ProposedFindingsServed() counted_by frbp9006 cite "FRBP 9033(b)(1)"
+  deadline findings-response-period: 14.days after FindingsObjectionsServed() counted_by frbp9006 cite "FRBP 9033(b)(1)"
 }
 
 test "schedules period runs 14 days after petition filed" cite "FRBP 1007(c)(1)"

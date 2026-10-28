@@ -1,6 +1,6 @@
 module bap9.panel
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 
 import frbp.appeals.{
   appellant-brief-period,
@@ -59,57 +59,36 @@ event MemorandumOrOrderFiled()
 
 /// 9th Cir. BAP R. 8011(a)-2: within three days after a fax transmittal,
 /// the filing party files a signed original with the BAP.
-deadline fax-original-period: 3.days after FaxFilingTransmitted() counted_by frcp6 cite "9th Cir. BAP R. 8011(a)-2"
-{
-  forum frcp
-}
+deadline fax-original-period: 3.days after FaxFilingTransmitted() counted_by frbp9006 cite "9th Cir. BAP R. 8011(a)-2"
 
 /// 9th Cir. BAP R. 8013(e)-1: a clerk's order on a motion is subject to
 /// reconsideration by a judge if a written request for judicial review is
 /// received within 14 days of its entry.
-deadline clerk-order-review-period: 14.days after ClerkMotionOrderEntered() counted_by frcp6 cite "9th Cir. BAP R. 8013(e)-1"
-{
-  forum frcp
-}
+deadline clerk-order-review-period: 14.days after ClerkMotionOrderEntered() counted_by frbp9006 cite "9th Cir. BAP R. 8013(e)-1"
 
 /// 9th Cir. BAP R. 8018(a)-2: the clerk's dismissal order is subject to
 /// reconsideration by the Panel if a written request for judicial review
 /// is received within 14 days of its entry.
-deadline clerk-dismissal-review-period: 14.days after ClerkDismissalOrderEntered() counted_by frcp6 cite "9th Cir. BAP R. 8018(a)-2"
-{
-  forum frcp
-}
+deadline clerk-dismissal-review-period: 14.days after ClerkDismissalOrderEntered() counted_by frbp9006 cite "9th Cir. BAP R. 8018(a)-2"
 
 /// 9th Cir. BAP R. 8019-2(b)(2): any other party may file and serve a
 /// response to an en banc motion and brief not later than 14 days after
 /// the motion is filed; no reply is authorized.
-deadline en-banc-response-period: 14.days after EnBancMotionFiled() counted_by frcp6 cite "9th Cir. BAP R. 8019-2(b)(2)"
-{
-  forum frcp
-}
+deadline en-banc-response-period: 14.days after EnBancMotionFiled() counted_by frbp9006 cite "9th Cir. BAP R. 8019-2(b)(2)"
 
 /// 9th Cir. BAP R. 8019-2(d)(3): without the required affirmative vote
 /// within 14 days of the initial polling, the matter is not heard en banc.
-deadline en-banc-vote-period: 14.days after EnBancPollInitiated() counted_by frcp6 cite "9th Cir. BAP R. 8019-2(d)(3)"
-{
-  forum frcp
-}
+deadline en-banc-vote-period: 14.days after EnBancPollInitiated() counted_by frbp9006 cite "9th Cir. BAP R. 8019-2(d)(3)"
 
 /// 9th Cir. BAP R. 8024-1(b)(3)(A): two of the three assigned judges,
 /// including the author, may designate a disposition an Opinion when it is
 /// filed or within 28 days thereof.
-deadline opinion-designation-period: 28.days after DispositionFiled() counted_by frcp6 cite "9th Cir. BAP R. 8024-1(b)(3)(A)"
-{
-  forum frcp
-}
+deadline opinion-designation-period: 28.days after DispositionFiled() counted_by frbp9006 cite "9th Cir. BAP R. 8024-1(b)(3)(A)"
 
 /// 9th Cir. BAP R. 8024-1(b)(3)(B): a request that a Memorandum or Order
 /// be redesignated an Opinion and published must be received no later
 /// than 28 days after its filing.
-deadline publication-request-period: 28.days after MemorandumOrOrderFiled() counted_by frcp6 cite "9th Cir. BAP R. 8024-1(b)(3)(B)"
-{
-  forum frcp
-}
+deadline publication-request-period: 28.days after MemorandumOrOrderFiled() counted_by frbp9006 cite "9th Cir. BAP R. 8024-1(b)(3)(B)"
 
 test "a signed original follows a fax filing within three days" cite "9th Cir. BAP R. 8011(a)-2"
 {

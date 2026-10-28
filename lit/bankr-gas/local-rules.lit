@@ -1,6 +1,6 @@
 module bankr-gas-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 
 // The Bankr. S.D. Ga. court's own periods, counted under FRBP 9006(a). The
 // FRBP periods are lit/frbp's and are not declared again. Every period
@@ -26,15 +26,13 @@ event ConfirmationOrderEntered()
 /// LBR 2015-1(a): the trustee or debtor in possession files the report
 /// FRBP 2015(a)(5) requires within thirty days of the entry of the order of
 /// confirmation.
-deadline confirmation-report-period: 30.days after ConfirmationOrderEntered() counted_by frcp6 cite ?("S.D. Ga. LBR 2015-1(a), May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified") {
-  forum frcp
+deadline confirmation-report-period: 30.days after ConfirmationOrderEntered() counted_by frbp9006 cite ?("S.D. Ga. LBR 2015-1(a), May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified") {
 }
 
 /// LBR 2015-1(b): unless the court orders otherwise, the trustee or debtor in
 /// possession files an application for a final decree in the prescribed
 /// form within 180 days of the entry of the order of confirmation.
-deadline final-decree-application-period: 180.days after ConfirmationOrderEntered() counted_by frcp6 cite ?("S.D. Ga. LBR 2015-1(b), May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified") {
-  forum frcp
+deadline final-decree-application-period: 180.days after ConfirmationOrderEntered() counted_by frbp9006 cite ?("S.D. Ga. LBR 2015-1(b), May 2017 text: CURRENCY UNCONFIRMED (no edition or effective date; revised Local Rules effective October 7, 2026 not vendored); the value is the vendored text, unverified") {
 }
 
 start plan-confirmed

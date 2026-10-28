@@ -1,6 +1,6 @@
 module bankr-ks-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 import frbp.events.{ PetitionFiled }
 
 // The Bankr. D. Kan. court's own periods, counted under FRBP 9006(a). The
@@ -121,282 +121,180 @@ event JournalEntryServed()
 /// D. Kan. LBR 2002.1: within 7 days after the clerk's notification of
 /// undelivered notices, the debtor's attorney, or the debtor if
 /// unrepresented, files the corrected BNC Bypass Notice and serves it.
-deadline bnc-correction-period: 7.days after UndeliveredNoticeNotified() counted_by frcp6 cite "D. Kan. LBR 2002.1"
-{
-  forum frcp
-}
+deadline bnc-correction-period: 7.days after UndeliveredNoticeNotified() counted_by frbp9006 cite "D. Kan. LBR 2002.1"
 
 /// D. Kan. LBR 2004.1(b): attendance at a Rule 2004 examination and
 /// production of documents may not be required less than 14 days after
 /// actual delivery of the notice, except by agreement or court order; a
 /// request for production construed under FRBP 7034 is answered in 14 days.
-deadline examination-notice-period: 14.days before ExaminationDate() counted_by frcp6 cite "D. Kan. LBR 2004.1(b)"
-{
-  forum frcp
-}
+deadline examination-notice-period: 14.days before ExaminationDate() counted_by frbp9006 cite "D. Kan. LBR 2004.1(b)"
 
 /// D. Kan. LBR 3001.1(c): in chapter 7 a priority claim may be filed or
 /// amended on or before 14 days after the trustee mails the summary of the
 /// final report, or the date final distribution under § 726 commences,
 /// whichever is earlier.
-deadline priority-claim-amendment-period: 14.days after FinalReportSummaryMailed() counted_by frcp6 cite "D. Kan. LBR 3001.1(c)"
-{
-  forum frcp
-}
+deadline priority-claim-amendment-period: 14.days after FinalReportSummaryMailed() counted_by frbp9006 cite "D. Kan. LBR 3001.1(c)"
 
 /// D. Kan. LBR 3002.1.1(d): where the secured consumer debt is not modified
 /// or paid through a chapter 12 or 13 plan, the mortgage creditor sends its
 /// letter alleging default to the debtor and the debtor's attorney not less
 /// than 14 days before taking any step to modify the automatic stay.
-deadline mortgage-default-letter-period: 14.days before StayModificationStepTaken() counted_by frcp6 cite "D. Kan. LBR 3002.1.1(d)"
-{
-  forum frcp
-}
+deadline mortgage-default-letter-period: 14.days before StayModificationStepTaken() counted_by frbp9006 cite "D. Kan. LBR 3002.1.1(d)"
 
 /// D. Kan. LBR 3003.1(a): in a subchapter V case, unless otherwise ordered,
 /// the claims bar date is 70 days after the latest of the order for relief,
 /// conversion to subchapter V, or re-designation of the case.
-deadline subchapter-v-claims-bar-period: 70.days after SubchapterVCaseCommenced() counted_by frcp6 cite "D. Kan. LBR 3003.1(a)"
-{
-  forum frcp
-}
+deadline subchapter-v-claims-bar-period: 70.days after SubchapterVCaseCommenced() counted_by frbp9006 cite "D. Kan. LBR 3003.1(a)"
 
 /// D. Kan. LBR 3003.1(a): in a subchapter V case, unless otherwise ordered,
 /// the claims bar date for governmental units is 180 days after the latest
 /// of the order for relief, conversion to subchapter V, or re-designation
 /// of the case.
-deadline subchapter-v-governmental-bar-period: 180.days after SubchapterVCaseCommenced() counted_by frcp6 cite "D. Kan. LBR 3003.1(a)"
-{
-  forum frcp
-}
+deadline subchapter-v-governmental-bar-period: 180.days after SubchapterVCaseCommenced() counted_by frbp9006 cite "D. Kan. LBR 3003.1(a)"
 
 /// D. Kan. LBR 3015(b).2: a chapter 13 debtor completes the Mortgage
 /// Creditor Checklist and forwards it to the trustee (not the court) within
 /// 14 days of the filing of the petition.
-deadline mortgage-checklist-period: 14.days after PetitionFiled() counted_by frcp6 cite "D. Kan. LBR 3015(b).2"
-{
-  forum frcp
-}
+deadline mortgage-checklist-period: 14.days after PetitionFiled() counted_by frbp9006 cite "D. Kan. LBR 3015(b).2"
 
 /// D. Kan. LBR 3015(b).2: at least 45 days prior to a change of the real
 /// property creditor's payee name or payment address, the creditor notifies
 /// the trustee, the debtor and the debtor's attorney by a Notice of
 /// Transfer of Servicing and Claim or of Transfer of Claim.
-deadline payee-change-notice-period: 45.days before PayeeChangeDate() counted_by frcp6 cite "D. Kan. LBR 3015(b).2"
-{
-  forum frcp
-}
+deadline payee-change-notice-period: 45.days before PayeeChangeDate() counted_by frbp9006 cite "D. Kan. LBR 3015(b).2"
 
 /// D. Kan. LBR 3022.1(a): within 3 months after the court orders
 /// confirmation of a non-individual chapter 11 plan, the plan proponent
 /// files an application for a final decree or shows cause why it cannot be
 /// entered; otherwise it files a status report every 6 months until the
 /// final decree.
-deadline final-decree-application-period: 3.months after ConfirmationOrderEntered() counted_by frcp6 cite "D. Kan. LBR 3022.1(a)"
-{
-  forum frcp
-}
+deadline final-decree-application-period: 3.months after ConfirmationOrderEntered() counted_by frbp9006 cite "D. Kan. LBR 3022.1(a)"
 
 /// D. Kan. LBR 4001(a).1(f): if the debtor disputes an alleged default
 /// under a Conditional Order Granting Stay Relief, the debtor may file a
 /// response within the time the order lists or within 14 days, whichever is
 /// later; absent one the movant submits a final order.
-deadline conditional-order-default-response-period: 14.days after DefaultNoticeServed() counted_by frcp6 cite "D. Kan. LBR 4001(a).1(f)"
-{
-  forum frcp
-}
+deadline conditional-order-default-response-period: 14.days after DefaultNoticeServed() counted_by frbp9006 cite "D. Kan. LBR 4001(a).1(f)"
 
 /// D. Kan. LBR 4001(a).3(b): except for good cause shown in the motion, a
 /// motion under 11 U.S.C. § 362(c)(3) is filed within 7 days of the date
 /// the petition was filed.
-deadline stay-extension-motion-period: 7.days after PetitionFiled() counted_by frcp6 cite "D. Kan. LBR 4001(a).3(b)"
-{
-  forum frcp
-}
+deadline stay-extension-motion-period: 7.days after PetitionFiled() counted_by frbp9006 cite "D. Kan. LBR 4001(a).3(b)"
 
 /// D. Kan. LBR 4001(a).3(g): unless otherwise ordered, an objection to a
 /// motion to extend or impose the stay is filed within 14 days after
 /// service of the motion.
-deadline stay-motion-objection-period: 14.days after StayMotionServed() counted_by frcp6 cite "D. Kan. LBR 4001(a).3(g)"
-{
-  forum frcp
-}
+deadline stay-motion-objection-period: 14.days after StayMotionServed() counted_by frbp9006 cite "D. Kan. LBR 4001(a).3(g)"
 
 /// D. Kan. LBR 4002.1(b): the debtor files the most recent return that was
 /// not yet due at the petition when due and provides a signed copy to the
 /// trustee within 7 days of its filing.
-deadline filed-return-copy-period: 7.days after TaxReturnFiled() counted_by frcp6 cite "D. Kan. LBR 4002.1(b)"
-{
-  forum frcp
-}
+deadline filed-return-copy-period: 7.days after TaxReturnFiled() counted_by frbp9006 cite "D. Kan. LBR 4002.1(b)"
 
 /// D. Kan. LBR 4002.1(b): the debtor complies with the trustee's request
 /// for a copy of a signed, unfiled return due before the petition, the
 /// original filed with the taxing authority, within 28 days after the
 /// request.
-deadline requested-return-period: 28.days after TrusteeTaxReturnRequested() counted_by frcp6 cite "D. Kan. LBR 4002.1(b)"
-{
-  forum frcp
-}
+deadline requested-return-period: 28.days after TrusteeTaxReturnRequested() counted_by frbp9006 cite "D. Kan. LBR 4002.1(b)"
 
 /// D. Kan. LBR 4002.2(a): unless the court orders otherwise, a debtor
 /// complies with a written request for information by a trustee or the
 /// United States trustee within 14 days.
-deadline trustee-information-period: 14.days after TrusteeInformationRequested() counted_by frcp6 cite "D. Kan. LBR 4002.2(a)"
-{
-  forum frcp
-}
+deadline trustee-information-period: 14.days after TrusteeInformationRequested() counted_by frbp9006 cite "D. Kan. LBR 4002.2(a)"
 
 /// D. Kan. LBR 4004.1(b): if a subchapter V plan was confirmed under 11
 /// U.S.C. § 1191(a) as a consensual plan, the debtor files a motion for
 /// entry of discharge with a simple proposed order within 14 days of entry
 /// of the confirmation order.
-deadline subchapter-v-discharge-motion-period: 14.days after ConfirmationOrderEntered() counted_by frcp6 cite "D. Kan. LBR 4004.1(b)"
-{
-  forum frcp
-}
+deadline subchapter-v-discharge-motion-period: 14.days after ConfirmationOrderEntered() counted_by frbp9006 cite "D. Kan. LBR 4004.1(b)"
 
 /// D. Kan. LBR 6007.1(a): within 60 days from the conclusion of the meeting
 /// of creditors the chapter 7 trustee may file notice of intended
 /// abandonment under § 554 without further service.
-deadline abandonment-notice-period: 60.days after MeetingConcluded() counted_by frcp6 cite "D. Kan. LBR 6007.1(a)"
-{
-  forum frcp
-}
+deadline abandonment-notice-period: 60.days after MeetingConcluded() counted_by frbp9006 cite "D. Kan. LBR 6007.1(a)"
 
 /// D. Kan. LBR 6007.1(a): unless a creditor or interested party objects
 /// within 75 days after the conclusion of the meeting of creditors,
 /// property subject to an intended abandonment is deemed abandoned without
 /// further notice or order.
-deadline abandonment-objection-period: 75.days after MeetingConcluded() counted_by frcp6 cite "D. Kan. LBR 6007.1(a)"
-{
-  forum frcp
-}
+deadline abandonment-objection-period: 75.days after MeetingConcluded() counted_by frbp9006 cite "D. Kan. LBR 6007.1(a)"
 
 /// D. Kan. LBR 7012.1(b): a brief or memorandum in response to a motion to
 /// dismiss under FRBP 7012 is filed and served within 21 days of service of
 /// the motion.
-deadline dismissal-response-period: 21.days after DismissalMotionServed() counted_by frcp6 cite "D. Kan. LBR 7012.1(b)"
-{
-  forum frcp
-}
+deadline dismissal-response-period: 21.days after DismissalMotionServed() counted_by frbp9006 cite "D. Kan. LBR 7012.1(b)"
 
 /// D. Kan. LBR 7012.1(b): the moving party may file and serve a reply brief
 /// within 14 days of service of the response.
-deadline dismissal-reply-period: 14.days after DismissalResponseServed() counted_by frcp6 cite "D. Kan. LBR 7012.1(b)"
-{
-  forum frcp
-}
+deadline dismissal-reply-period: 14.days after DismissalResponseServed() counted_by frbp9006 cite "D. Kan. LBR 7012.1(b)"
 
 /// D. Kan. LBR 7026.1(c): the reasonable notice for taking a deposition
 /// under FRBP 7030 is 7 days; for good cause the court may enlarge or
 /// shorten it.
-deadline deposition-notice-period: 7.days before DepositionDate() counted_by frcp6 cite "D. Kan. LBR 7026.1(c)"
-{
-  forum frcp
-}
+deadline deposition-notice-period: 7.days before DepositionDate() counted_by frbp9006 cite "D. Kan. LBR 7026.1(c)"
 
 /// D. Kan. LBR 7026.1(d): a motion for protective order stays a properly
 /// noticed deposition only if filed and served within 14 days after service
 /// of the deposition notice and at least 48 hours before the deposition.
-deadline deposition-protective-motion-period: 14.days after DepositionNoticeServed() counted_by frcp6 cite "D. Kan. LBR 7026.1(d)"
-{
-  forum frcp
-}
+deadline deposition-protective-motion-period: 14.days after DepositionNoticeServed() counted_by frbp9006 cite "D. Kan. LBR 7026.1(d)"
 
 /// D. Kan. LBR 7041.1(b): if the trustee or the United States trustee
 /// objects to dismissal of a complaint objecting to discharge, it moves to
 /// intervene and be substituted as plaintiff within 14 days after notice
 /// under FRBP 7041.
-deadline trustee-intervention-period: 14.days after DischargeDismissalNoticed() counted_by frcp6 cite "D. Kan. LBR 7041.1(b)"
-{
-  forum frcp
-}
+deadline trustee-intervention-period: 14.days after DischargeDismissalNoticed() counted_by frbp9006 cite "D. Kan. LBR 7041.1(b)"
 
 /// D. Kan. LBR 7054.1(a): a party allowed costs under FRBP 7054(b) files a
 /// bill of costs (Form B2630) within 28 days after the time for appeal of a
 /// final order expires or the clerk receives an order terminating the
 /// action on appeal; failure to file timely waives costs.
-deadline bill-of-costs-period: 28.days after AppealTimeExpired() counted_by frcp6 cite "D. Kan. LBR 7054.1(a)"
-{
-  forum frcp
-}
+deadline bill-of-costs-period: 28.days after AppealTimeExpired() counted_by frbp9006 cite "D. Kan. LBR 7054.1(a)"
 
 /// D. Kan. LBR 7056.1(f): a party has 21 days to file and serve a response
 /// to a motion for summary judgment.
-deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "D. Kan. LBR 7056.1(f)"
-{
-  forum frcp
-}
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frbp9006 cite "D. Kan. LBR 7056.1(f)"
 
 /// D. Kan. LBR 7056.1(f): after service of the response, the moving party
 /// has 14 days to file and serve a reply memorandum.
-deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "D. Kan. LBR 7056.1(f)"
-{
-  forum frcp
-}
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frbp9006 cite "D. Kan. LBR 7056.1(f)"
 
 /// D. Kan. LBR 9004.1(c): unless the court directs otherwise, an order
 /// resulting from an actual hearing is due 14 days from the date of the
 /// hearing.
-deadline hearing-order-period: 14.days after HearingHeld() counted_by frcp6 cite "D. Kan. LBR 9004.1(c)"
-{
-  forum frcp
-}
+deadline hearing-order-period: 14.days after HearingHeld() counted_by frbp9006 cite "D. Kan. LBR 9004.1(c)"
 
 /// D. Kan. LBR 9004.1(c): an order resulting from the failure to object or
 /// respond to a notice with objection deadline is due 14 days after the
 /// deadline expires.
-deadline default-order-period: 14.days after ObjectionDeadlineExpired() counted_by frcp6 cite "D. Kan. LBR 9004.1(c)"
-{
-  forum frcp
-}
+deadline default-order-period: 14.days after ObjectionDeadlineExpired() counted_by frbp9006 cite "D. Kan. LBR 9004.1(c)"
 
 /// D. Kan. LBR 9011.3(a): unless the court orders otherwise, all parties
 /// respond within 14 days after the filing of an order to show cause why
 /// sanctions should not be imposed.
-deadline show-cause-response-period: 14.days after ShowCauseOrderFiled() counted_by frcp6 cite "D. Kan. LBR 9011.3(a)"
-{
-  forum frcp
-}
+deadline show-cause-response-period: 14.days after ShowCauseOrderFiled() counted_by frbp9006 cite "D. Kan. LBR 9011.3(a)"
 
 /// D. Kan. LBR 9013.2(b): except for good cause, a motion filed less than
 /// 14 days before its hearing may not be considered.
-deadline motion-filing-period: 14.days before MotionHearing() counted_by frcp6 cite "D. Kan. LBR 9013.2(b)"
-{
-  forum frcp
-}
+deadline motion-filing-period: 14.days before MotionHearing() counted_by frbp9006 cite "D. Kan. LBR 9013.2(b)"
 
 /// D. Kan. LBR 9019.2: the mediator files a report on the status of the
 /// alternative dispute resolution process within 45 days of the initial
 /// appointment.
-deadline mediator-report-period: 45.days after MediatorAppointed() counted_by frcp6 cite "D. Kan. LBR 9019.2"
-{
-  forum frcp
-}
+deadline mediator-report-period: 45.days after MediatorAppointed() counted_by frbp9006 cite "D. Kan. LBR 9019.2"
 
 /// D. Kan. LBR 9027.1(b): a motion to remand under FRBP 9027(d) is served
 /// within 21 days following the filing of the notice of removal.
-deadline remand-motion-period: 21.days after RemovalNoticeFiled() counted_by frcp6 cite "D. Kan. LBR 9027.1(b)"
-{
-  forum frcp
-}
+deadline remand-motion-period: 21.days after RemovalNoticeFiled() counted_by frbp9006 cite "D. Kan. LBR 9027.1(b)"
 
 /// D. Kan. LBR 9074.1(a): an attorney uploads within 14 days a journal
 /// entry or order when the court directs it to prepare one or the parties
 /// announce a settlement in court.
-deadline journal-entry-period: 14.days after RulingAnnounced() counted_by frcp6 cite "D. Kan. LBR 9074.1(a)"
-{
-  forum frcp
-}
+deadline journal-entry-period: 14.days after RulingAnnounced() counted_by frbp9006 cite "D. Kan. LBR 9074.1(a)"
 
 /// D. Kan. LBR 9074.1(b): attorneys and unrepresented parties file any
 /// objection to entry of a journal entry or order within 14 days after its
 /// service; absent a timely objection the court may enter it.
-deadline journal-entry-objection-period: 14.days after JournalEntryServed() counted_by frcp6 cite "D. Kan. LBR 9074.1(b)"
-{
-  forum frcp
-}
+deadline journal-entry-objection-period: 14.days after JournalEntryServed() counted_by frbp9006 cite "D. Kan. LBR 9074.1(b)"
 
 start motion-filed
 

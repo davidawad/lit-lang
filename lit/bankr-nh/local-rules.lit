@@ -1,6 +1,6 @@
 module bankr-nh-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 import frbp.events.{ PetitionFiled }
 
 // The Bankr. D.N.H. court's own periods, counted under FRBP 9006(a). The
@@ -72,159 +72,99 @@ event LastPlanPaymentMade()
 
 /// LBR 1006-1: a debtor paying the filing fee in installments pays no less
 /// than one-fourth of the total fee within 14 days of filing the petition.
-deadline first-installment-period: 14.days after PetitionFiled() counted_by frcp6 cite "Bankr. D.N.H. LBR 1006-1"
-{
-  forum frcp
-}
+deadline first-installment-period: 14.days after PetitionFiled() counted_by frbp9006 cite "Bankr. D.N.H. LBR 1006-1"
 
 /// LBR 1016-1: where the statement of a debtor's death says the chapter 11,
 /// 12 or 13 case should be dismissed, the motion to dismiss is filed within
 /// 14 days of the filing of the statement.
-deadline death-dismissal-motion-period: 14.days after DeathStatementFiled() counted_by frcp6 cite "Bankr. D.N.H. LBR 1016-1"
-{
-  forum frcp
-}
+deadline death-dismissal-motion-period: 14.days after DeathStatementFiled() counted_by frbp9006 cite "Bankr. D.N.H. LBR 1016-1"
 
 /// LBR 2016-4(b): a bankruptcy petition preparer seeking more than $150 in
 /// compensation files a motion requesting a hearing within 14 days after
 /// the filing of the petition.
-deadline preparer-fee-motion-period: 14.days after PetitionFiled() counted_by frcp6 cite "Bankr. D.N.H. LBR 2016-4(b)"
-{
-  forum frcp
-}
+deadline preparer-fee-motion-period: 14.days after PetitionFiled() counted_by frbp9006 cite "Bankr. D.N.H. LBR 2016-4(b)"
 
 /// LBR 2083-2: a chapter 13 debtor with improved real estate provides proof
 /// of value and insurance, and a business debtor proof of business
 /// insurance, at least 7 days prior to the 341 Meeting.
-deadline proof-of-value-period: 7.days before MeetingOfCreditorsHeld() counted_by frcp6 cite "Bankr. D.N.H. LBR 2083-2"
-{
-  forum frcp
-}
+deadline proof-of-value-period: 7.days before MeetingOfCreditorsHeld() counted_by frbp9006 cite "Bankr. D.N.H. LBR 2083-2"
 
 /// LBR 2090-1(b)(3): an attorney admitted pro hac vice secures CM/ECF
 /// access no later than 14 days after admission.
-deadline pro-hac-vice-filing-access-period: 14.days after ProHacViceAdmitted() counted_by frcp6 cite "Bankr. D.N.H. LBR 2090-1(b)"
-{
-  forum frcp
-}
+deadline pro-hac-vice-filing-access-period: 14.days after ProHacViceAdmitted() counted_by frbp9006 cite "Bankr. D.N.H. LBR 2090-1(b)"
 
 /// LBR 3012-1(c): a motion to determine secured status and void a wholly
 /// unsecured residential lien is served within 30 days of the concluded
 /// 341 Meeting.
-deadline residential-valuation-motion-period: 30.days after MeetingOfCreditorsConcluded() counted_by frcp6 cite "Bankr. D.N.H. LBR 3012-1(c)"
-{
-  forum frcp
-}
+deadline residential-valuation-motion-period: 30.days after MeetingOfCreditorsConcluded() counted_by frbp9006 cite "Bankr. D.N.H. LBR 3012-1(c)"
 
 /// LBR 3012-2(d): a motion to determine secured status and limit a claim
 /// secured by personal or non-residential real property is served within
 /// 30 days of the concluded 341 Meeting.
-deadline collateral-valuation-motion-period: 30.days after MeetingOfCreditorsConcluded() counted_by frcp6 cite "Bankr. D.N.H. LBR 3012-2(d)"
-{
-  forum frcp
-}
+deadline collateral-valuation-motion-period: 30.days after MeetingOfCreditorsConcluded() counted_by frbp9006 cite "Bankr. D.N.H. LBR 3012-2(d)"
 
 /// LBR 3015-3(a): an objection to confirmation of a chapter 13 plan is
 /// filed no later than 14 days before the confirmation hearing.
-deadline confirmation-objection-period: 14.days before ConfirmationHearingScheduled() counted_by frcp6 cite "Bankr. D.N.H. LBR 3015-3(a)"
-{
-  forum frcp
-}
+deadline confirmation-objection-period: 14.days before ConfirmationHearingScheduled() counted_by frbp9006 cite "Bankr. D.N.H. LBR 3015-3(a)"
 
 /// AO 3015-4(a): no later than 7 days prior to the initial confirmation
 /// hearing on a plan, amended plan or motion to modify, the chapter 13
 /// trustee files a recommendation whether it should be confirmed.
-deadline trustee-recommendation-period: 7.days before ConfirmationHearingScheduled() counted_by frcp6 cite "Bankr. D.N.H. AO 3015-4(a)"
-{
-  forum frcp
-}
+deadline trustee-recommendation-period: 7.days before ConfirmationHearingScheduled() counted_by frbp9006 cite "Bankr. D.N.H. AO 3015-4(a)"
 
 /// LBR 3015-5(b): an objection to modifying a chapter 13 plan is filed no
 /// later than 14 days before the hearing on the motion to modify.
-deadline modification-objection-period: 14.days before ModificationHearingScheduled() counted_by frcp6 cite "Bankr. D.N.H. LBR 3015-5(b)"
-{
-  forum frcp
-}
+deadline modification-objection-period: 14.days before ModificationHearingScheduled() counted_by frbp9006 cite "Bankr. D.N.H. LBR 3015-5(b)"
 
 /// LBR 3017-1: the objection date for a disclosure statement is 7 days
 /// prior to the disclosure statement hearing.
-deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearingScheduled() counted_by frcp6 cite "Bankr. D.N.H. LBR 3017-1"
-{
-  forum frcp
-}
+deadline disclosure-statement-objection-period: 7.days before DisclosureStatementHearingScheduled() counted_by frbp9006 cite "Bankr. D.N.H. LBR 3017-1"
 
 /// LBR 3022-1: unless the plan or confirmation order designates another, the
 /// plan proponent files the motion for final decree not later than 120 days
 /// following plan confirmation, unless the court extends the time for
 /// cause.
-deadline final-decree-motion-period: 120.days after PlanConfirmed() counted_by frcp6 cite "Bankr. D.N.H. LBR 3022-1"
-{
-  forum frcp
-}
+deadline final-decree-motion-period: 120.days after PlanConfirmed() counted_by frbp9006 cite "Bankr. D.N.H. LBR 3022-1"
 
 /// LBR 3022-1: for a subchapter V plan confirmed non-consensually under 11
 /// U.S.C. § 1191(b), the motion for final decree is filed not later than
 /// 120 days following the completion of all plan payments.
-deadline subchapter-v-final-decree-motion-period: 120.days after SubchapterVPlanPaymentsCompleted() counted_by frcp6 cite "Bankr. D.N.H. LBR 3022-1"
-{
-  forum frcp
-}
+deadline subchapter-v-final-decree-motion-period: 120.days after SubchapterVPlanPaymentsCompleted() counted_by frbp9006 cite "Bankr. D.N.H. LBR 3022-1"
 
 /// LBR 4003-2(c): to be valid, service of a § 522(f) lien avoidance motion is
 /// made at least 21 days prior to the hearing.
-deadline lien-avoidance-service-period: 21.days before LienAvoidanceHearingScheduled() counted_by frcp6 cite "Bankr. D.N.H. LBR 4003-2(c)"
-{
-  forum frcp
-}
+deadline lien-avoidance-service-period: 21.days before LienAvoidanceHearingScheduled() counted_by frbp9006 cite "Bankr. D.N.H. LBR 4003-2(c)"
 
 /// LBR 7016-1(a): at least 7 days prior to the pretrial conference, the
 /// parties meet and confer on a discovery plan and the dates for the
 /// pretrial order.
-deadline pretrial-confer-period: 7.days before PretrialConferenceScheduled() counted_by frcp6 cite "Bankr. D.N.H. LBR 7016-1(a)"
-{
-  forum frcp
-}
+deadline pretrial-confer-period: 7.days before PretrialConferenceScheduled() counted_by frbp9006 cite "Bankr. D.N.H. LBR 7016-1(a)"
 
 /// LBR 9013-1(d): unless the Bankruptcy Rules or LBRs provide otherwise, a
 /// motion and notice of hearing are served at least 14 days prior to the
 /// hearing date.
-deadline motion-service-period: 14.days before HearingScheduled() counted_by frcp6 cite "Bankr. D.N.H. LBR 9013-1(d)"
-{
-  forum frcp
-}
+deadline motion-service-period: 14.days before HearingScheduled() counted_by frbp9006 cite "Bankr. D.N.H. LBR 9013-1(d)"
 
 /// LBR 9013-1(g)(1) and 5071-1(b): a party objecting to a motion who wants
 /// it called files a written objection no later than 7 days prior to the
 /// scheduled hearing date; otherwise the court may grant the motion without
 /// a hearing.
-deadline objection-period: 7.days before HearingScheduled() counted_by frcp6 cite "Bankr. D.N.H. LBR 9013-1(g)"
-{
-  forum frcp
-}
+deadline objection-period: 7.days before HearingScheduled() counted_by frbp9006 cite "Bankr. D.N.H. LBR 9013-1(g)"
 
 /// LBR 9013-1(f)(3): a movant directed to submit a proposed order or
 /// judgment after a hearing or trial submits it within 7 days following
 /// the hearing or trial, or as the court directs.
-deadline proposed-order-period: 7.days after HearingHeld() counted_by frcp6 cite "Bankr. D.N.H. LBR 9013-1(f)"
-{
-  forum frcp
-}
+deadline proposed-order-period: 7.days after HearingHeld() counted_by frbp9006 cite "Bankr. D.N.H. LBR 9013-1(f)"
 
 /// LBR 9070-1: the offering party has 30 days after the conclusion of the
 /// proceeding to request the return of its exhibits; the clerk then
 /// disposes of them.
-deadline exhibit-return-period: 30.days after ProceedingConcluded() counted_by frcp6 cite "Bankr. D.N.H. LBR 9070-1"
-{
-  forum frcp
-}
+deadline exhibit-return-period: 30.days after ProceedingConcluded() counted_by frbp9006 cite "Bankr. D.N.H. LBR 9070-1"
 
 /// AO 3015-4(b): no later than 60 days following the last payment under the
 /// plan, the chapter 13 trustee certifies that all plan payments are
 /// complete.
-deadline plan-completion-certification-period: 60.days after LastPlanPaymentMade() counted_by frcp6 cite "Bankr. D.N.H. AO 3015-4(b)"
-{
-  forum frcp
-}
+deadline plan-completion-certification-period: 60.days after LastPlanPaymentMade() counted_by frbp9006 cite "Bankr. D.N.H. AO 3015-4(b)"
 
 start motion-filed
 

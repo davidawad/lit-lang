@@ -1,6 +1,6 @@
 module bankr-ut-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 import frbp.events.{ FirstMeetingDate, PetitionFiled }
 
 // The Bankr. D. Utah court's own periods, counted under FRBP 9006(a), with
@@ -157,367 +157,235 @@ event AppealPeriodExpired()
 /// joint debtor of the filed petition and the notice of the case and
 /// meeting of creditors is filed no later than 14 days after the case was
 /// commenced.
-deadline joint-petition-service-certificate-period: 14.days after PetitionFiled() counted_by frcp6 cite "Bankr. D. Utah LBR 1002-1"
-{
-  forum frcp
-}
+deadline joint-petition-service-certificate-period: 14.days after PetitionFiled() counted_by frbp9006 cite "Bankr. D. Utah LBR 1002-1"
 
 /// Bankr. D. Utah LBR 1007-1(b): a debtor may file the petition without,
 /// but must file no later than 2 days thereafter, the FRBP 1007(a)(1) list
 /// of creditors in the clerk's form, or the court may dismiss the case.
-deadline creditor-list-period: 2.days after PetitionFiled() counted_by frcp6 cite "Bankr. D. Utah LBR 1007-1(b)"
-{
-  forum frcp
-}
+deadline creditor-list-period: 2.days after PetitionFiled() counted_by frbp9006 cite "Bankr. D. Utah LBR 1007-1(b)"
 
 /// Bankr. D. Utah LBR 1007-1(d): on a written request after conversion, the
 /// debtor files within 21 days a declaration of no material changes or
 /// amended lists, schedules and statements.
-deadline conversion-documents-period: 21.days after ConversionDocumentsRequested() counted_by frcp6 cite "Bankr. D. Utah LBR 1007-1(d)"
-{
-  forum frcp
-}
+deadline conversion-documents-period: 21.days after ConversionDocumentsRequested() counted_by frbp9006 cite "Bankr. D. Utah LBR 1007-1(d)"
 
 /// Bankr. D. Utah LBR 1007-1(d): within 30 days after a joint chapter 13
 /// case is bifurcated and a co-debtor converts to chapter 7, the remaining
 /// chapter 13 debtor files the documents the rule requires.
-deadline bifurcation-documents-period: 30.days after JointCaseBifurcated() counted_by frcp6 cite "Bankr. D. Utah LBR 1007-1(d)"
-{
-  forum frcp
-}
+deadline bifurcation-documents-period: 30.days after JointCaseBifurcated() counted_by frbp9006 cite "Bankr. D. Utah LBR 1007-1(d)"
 
 /// Bankr. D. Utah LBR 2002-1(f): an entity noticed by the chapter 7 trustee
 /// before the final report may file an application for compensation and
 /// reimbursement within 14 days of service of the notice; a later one may
 /// be denied as untimely.
-deadline chapter-7-compensation-application-period: 14.days after CompensationNoticeServed() counted_by frcp6 cite "Bankr. D. Utah LBR 2002-1(f)"
-{
-  forum frcp
-}
+deadline chapter-7-compensation-application-period: 14.days after CompensationNoticeServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 2002-1(f)"
 
 /// Bankr. D. Utah LBR 2003-1(c): a debtor should file a motion to
 /// reschedule a § 341 meeting not later than 7 days prior to the scheduled
 /// meeting.
-deadline meeting-reschedule-motion-period: 7.days before MeetingDate() counted_by frcp6 cite "Bankr. D. Utah LBR 2003-1(c)"
-{
-  forum frcp
-}
+deadline meeting-reschedule-motion-period: 7.days before MeetingDate() counted_by frbp9006 cite "Bankr. D. Utah LBR 2003-1(c)"
 
 /// Bankr. D. Utah LBR 2081-1(a): not later than 7 days after filing a
 /// chapter 11 petition, the debtor provides the United States trustee
 /// evidence of its insurance policies.
-deadline chapter-11-insurance-period: 7.days after PetitionFiled() counted_by frcp6 cite "Bankr. D. Utah LBR 2081-1(a)"
-{
-  forum frcp
-}
+deadline chapter-11-insurance-period: 7.days after PetitionFiled() counted_by frbp9006 cite "Bankr. D. Utah LBR 2081-1(a)"
 
 /// Bankr. D. Utah LBR 2081-1(a): not later than 21 days after filing, a
 /// chapter 11 debtor other than a small business or subchapter V debtor
 /// provides the United States trustee an initial financial report.
-deadline chapter-11-initial-report-period: 21.days after PetitionFiled() counted_by frcp6 cite "Bankr. D. Utah LBR 2081-1(a)"
-{
-  forum frcp
-}
+deadline chapter-11-initial-report-period: 21.days after PetitionFiled() counted_by frbp9006 cite "Bankr. D. Utah LBR 2081-1(a)"
 
 /// Bankr. D. Utah LBR 2081-1(a): on the United States trustee's request, a
 /// chapter 11 debtor provides proof of required permits or licenses within
 /// 7 days.
-deadline chapter-11-permits-period: 7.days after PermitsRequested() counted_by frcp6 cite "Bankr. D. Utah LBR 2081-1(a)"
-{
-  forum frcp
-}
+deadline chapter-11-permits-period: 7.days after PermitsRequested() counted_by frbp9006 cite "Bankr. D. Utah LBR 2081-1(a)"
 
 /// Bankr. D. Utah LBR 2081-1(b): not later than 21 days after the end of
 /// each month the debtor in possession or trustee files a monthly financial
 /// report, until confirmation, conversion or dismissal; a chapter 12 debtor
 /// does the same (LBR 2082-1(a)).
-deadline chapter-11-monthly-report-period: 21.days after MonthEnded() counted_by frcp6 cite "Bankr. D. Utah LBR 2081-1(b)"
-{
-  forum frcp
-}
+deadline chapter-11-monthly-report-period: 21.days after MonthEnded() counted_by frbp9006 cite "Bankr. D. Utah LBR 2081-1(b)"
 
 /// Bankr. D. Utah LBR 2081-1(c): if the court orders, the reorganized
 /// debtor files a one-time post-confirmation summary report within 90 days
 /// after entry of the confirmation order.
-deadline post-confirmation-report-period: 90.days after ConfirmationOrderEntered() counted_by frcp6 cite "Bankr. D. Utah LBR 2081-1(c)"
-{
-  forum frcp
-}
+deadline post-confirmation-report-period: 90.days after ConfirmationOrderEntered() counted_by frbp9006 cite "Bankr. D. Utah LBR 2081-1(c)"
 
 /// Bankr. D. Utah LBR 2082-1(b): if an objection to the trustee's notice of
 /// failure to comply or motion to dismiss is not filed within 21 days after
 /// it is served, the clerk enters an order dismissing the case (also LBR
 /// 2083-1(f), (g) in chapter 13).
-deadline dismissal-notice-objection-period: 21.days after NonComplianceNoticeServed() counted_by frcp6 cite "Bankr. D. Utah LBR 2082-1(b)"
-{
-  forum frcp
-}
+deadline dismissal-notice-objection-period: 21.days after NonComplianceNoticeServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 2082-1(b)"
 
 /// Bankr. D. Utah LBR 2083-1(b): unless otherwise ordered, a chapter 13
 /// debtor files a Final Plan incorporating all amendments, modifications
 /// and stipulations no later than 14 days following a party's request.
-deadline final-plan-period: 14.days after FinalPlanRequested() counted_by frcp6 cite "Bankr. D. Utah LBR 2083-1(b)"
-{
-  forum frcp
-}
+deadline final-plan-period: 14.days after FinalPlanRequested() counted_by frbp9006 cite "Bankr. D. Utah LBR 2083-1(b)"
 
 /// Bankr. D. Utah LBR 2083-1(e): beyond the § 521 documents, a chapter 13
 /// debtor provides the case trustee the documents the rule lists at least 7
 /// days before the first date set for the § 341 meeting.
-deadline trustee-documents-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. D. Utah LBR 2083-1(e)"
-{
-  forum frcp
-}
+deadline trustee-documents-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. D. Utah LBR 2083-1(e)"
 
 /// Bankr. D. Utah LBR 2083-1(e): a chapter 13 debtor with self-employment
 /// or business income in the 60 days before filing provides the case
 /// trustee profit and loss and related documents at least 14 days before
 /// the first date set for the § 341 meeting.
-deadline business-documents-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. D. Utah LBR 2083-1(e)"
-{
-  forum frcp
-}
+deadline business-documents-period: 14.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. D. Utah LBR 2083-1(e)"
 
 /// Bankr. D. Utah LBR 2083-1(i): unless the court orders otherwise, a
 /// motion to dismiss a chapter 13 case under § 109(e) is filed and served
 /// not later than 7 days before the confirmation hearing date on the notice
 /// of the case.
-deadline eligibility-motion-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. D. Utah LBR 2083-1(i)"
-{
-  forum frcp
-}
+deadline eligibility-motion-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. D. Utah LBR 2083-1(i)"
 
 /// Bankr. D. Utah LBR 2083-1(j): an objection to the original chapter 13
 /// plan is filed and served not later than 7 days before the confirmation
 /// hearing date set on Official Form 309I.
-deadline confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Bankr. D. Utah LBR 2083-1(j)"
-{
-  forum frcp
-}
+deadline confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "Bankr. D. Utah LBR 2083-1(j)"
 
 /// Bankr. D. Utah LBR 2083-1(j): objections to an amended or modified
 /// chapter 13 plan are filed and served not later than 21 days after
 /// service of the plan or its notice.
-deadline amended-plan-objection-period: 21.days after AmendedPlanServed() counted_by frcp6 cite "Bankr. D. Utah LBR 2083-1(j)"
-{
-  forum frcp
-}
+deadline amended-plan-objection-period: 21.days after AmendedPlanServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 2083-1(j)"
 
 /// Bankr. D. Utah LBR 2083-1(j): the debtor responds to a creditor's
 /// confirmation objection relating to the value of collateral within 30
 /// days of its service.
-deadline valuation-objection-response-period: 30.days after ValuationObjectionServed() counted_by frcp6 cite "Bankr. D. Utah LBR 2083-1(j)"
-{
-  forum frcp
-}
+deadline valuation-objection-response-period: 30.days after ValuationObjectionServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 2083-1(j)"
 
 /// Bankr. D. Utah LBR 2083-1(k): by the objection deadline in the trustee's
 /// postconfirmation motion to dismiss, at least twenty-one days after
 /// service, the debtor objects, sets a hearing and serves notice of it, or
 /// the clerk enters an order of dismissal.
-deadline postconfirmation-dismissal-objection-period: 21.days after NonComplianceNoticeServed() counted_by frcp6 cite "Bankr. D. Utah LBR 2083-1(k)"
-{
-  forum frcp
-}
+deadline postconfirmation-dismissal-objection-period: 21.days after NonComplianceNoticeServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 2083-1(k)"
 
 /// Bankr. D. Utah LBR 2083-1(l): not later than 60 days following
 /// expiration of the governmental claims bar date, the debtor files and
 /// serves a declaration that all claims have been reviewed and objections
 /// filed.
-deadline claims-review-declaration-period: 60.days after GovernmentalBarDate() counted_by frcp6 cite "Bankr. D. Utah LBR 2083-1(l)"
-{
-  forum frcp
-}
+deadline claims-review-declaration-period: 60.days after GovernmentalBarDate() counted_by frbp9006 cite "Bankr. D. Utah LBR 2083-1(l)"
 
 /// Bankr. D. Utah LBR 2083-1(l): any objection to the Trustee's Report of
 /// Claims is filed within 21 days after its service; absent one it is
 /// deemed incorporated into the confirmation order.
-deadline troc-objection-period: 21.days after TrocServed() counted_by frcp6 cite "Bankr. D. Utah LBR 2083-1(l)"
-{
-  forum frcp
-}
+deadline troc-objection-period: 21.days after TrocServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 2083-1(l)"
 
 /// Bankr. D. Utah LBR 2083-1(m): debtor's counsel asserting unpaid fees
 /// objects to the Notice of Completion of Plan Payments, applies for the
 /// fees and notices a hearing within 21 days after its service, or waives
 /// them.
-deadline unpaid-fees-objection-period: 21.days after CompletionNoticeServed() counted_by frcp6 cite "Bankr. D. Utah LBR 2083-1(m)"
-{
-  forum frcp
-}
+deadline unpaid-fees-objection-period: 21.days after CompletionNoticeServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 2083-1(m)"
 
 /// Bankr. D. Utah LBR 2083-1(m): within 60 days after service of the Notice
 /// of Completion of Plan Payments, the chapter 13 debtor files and serves a
 /// Verification and Request for Discharge (Local Form 2083-1).
-deadline discharge-request-period: 60.days after CompletionNoticeServed() counted_by frcp6 cite "Bankr. D. Utah LBR 2083-1(m)"
-{
-  forum frcp
-}
+deadline discharge-request-period: 60.days after CompletionNoticeServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 2083-1(m)"
 
 /// Bankr. D. Utah LBR 2083-1(m): if no written objection to the
 /// Verification and Request for Discharge is filed within 21 days after its
 /// service, the court may enter the § 1328(a) discharge without further
 /// notice.
-deadline discharge-request-objection-period: 21.days after DischargeRequestServed() counted_by frcp6 cite "Bankr. D. Utah LBR 2083-1(m)"
-{
-  forum frcp
-}
+deadline discharge-request-objection-period: 21.days after DischargeRequestServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 2083-1(m)"
 
 /// Bankr. D. Utah LBR 2091-2(d): the action is stayed until 21 days after
 /// entry of an order permitting withdrawal, within which an individual
 /// files a pro se appearance or new counsel appears; an entity must appear
 /// through counsel.
-deadline post-withdrawal-appearance-period: 21.days after WithdrawalOrderEntered() counted_by frcp6 cite "Bankr. D. Utah LBR 2091-2(d)"
-{
-  forum frcp
-}
+deadline post-withdrawal-appearance-period: 21.days after WithdrawalOrderEntered() counted_by frbp9006 cite "Bankr. D. Utah LBR 2091-2(d)"
 
 /// Bankr. D. Utah LBR 3003-1(a): unless otherwise ordered, in a chapter 11
 /// case other than subchapter V a proof of claim or interest is timely if
 /// filed not later than 90 days after the first date set for the § 341
 /// meeting.
-deadline chapter-11-bar-period: 90.days after FirstMeetingDate() counted_by frcp6 cite "Bankr. D. Utah LBR 3003-1(a)"
-{
-  forum frcp
-}
+deadline chapter-11-bar-period: 90.days after FirstMeetingDate() counted_by frbp9006 cite "Bankr. D. Utah LBR 3003-1(a)"
 
 /// Bankr. D. Utah LBR 3003-1(a): unless otherwise ordered, in a subchapter
 /// V case the claims bar date is 70 days after the later of the order for
 /// relief, conversion to subchapter V, or re-designation.
-deadline subchapter-v-bar-period: 70.days after SubchapterVCaseCommenced() counted_by frcp6 cite "Bankr. D. Utah LBR 3003-1(a)"
-{
-  forum frcp
-}
+deadline subchapter-v-bar-period: 70.days after SubchapterVCaseCommenced() counted_by frbp9006 cite "Bankr. D. Utah LBR 3003-1(a)"
 
 /// Bankr. D. Utah LBR 3003-1(a): unless otherwise ordered, in a subchapter
 /// V case the bar date for governmental units is 180 days after the later
 /// of the order for relief, conversion to subchapter V, or re-designation.
-deadline subchapter-v-governmental-bar-period: 180.days after SubchapterVCaseCommenced() counted_by frcp6 cite "Bankr. D. Utah LBR 3003-1(a)"
-{
-  forum frcp
-}
+deadline subchapter-v-governmental-bar-period: 180.days after SubchapterVCaseCommenced() counted_by frbp9006 cite "Bankr. D. Utah LBR 3003-1(a)"
 
 /// Bankr. D. Utah LBR 3007-1(d): a response to an objection to a claim is
 /// filed and served within 30 days after notice of the claim objection is
 /// served; absent one the court may sustain the objection without a
 /// hearing.
-deadline claim-objection-response-period: 30.days after ClaimObjectionNoticeServed() counted_by frcp6 cite "Bankr. D. Utah LBR 3007-1(d)"
-{
-  forum frcp
-}
+deadline claim-objection-response-period: 30.days after ClaimObjectionNoticeServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 3007-1(d)"
 
 /// Bankr. D. Utah LBR 3022-1(b): an individual chapter 11 debtor seeks a
 /// final decree within 28 days after completion of all payments under the
 /// plan; a subchapter V debtor or trustee under a non-consensual plan does
 /// the same (LBR 3022-2(b)).
-deadline individual-final-decree-period: 28.days after PaymentsCompleted() counted_by frcp6 cite "Bankr. D. Utah LBR 3022-1(b)"
-{
-  forum frcp
-}
+deadline individual-final-decree-period: 28.days after PaymentsCompleted() counted_by frbp9006 cite "Bankr. D. Utah LBR 3022-1(b)"
 
 /// Bankr. D. Utah LBR 6005-1: within 21 days after service of an
 /// application to be a standing auctioneer, any party may object and set
 /// the objection for hearing.
-deadline auctioneer-objection-period: 21.days after AuctioneerApplicationServed() counted_by frcp6 cite "Bankr. D. Utah LBR 6005-1"
-{
-  forum frcp
-}
+deadline auctioneer-objection-period: 21.days after AuctioneerApplicationServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 6005-1"
 
 /// Bankr. D. Utah LBR 7026-1(a): the parties jointly file the Report of
 /// Parties' Planning Meeting no later than 7 days prior to the initial
 /// pretrial conference.
-deadline planning-report-period: 7.days before PretrialConference() counted_by frcp6 cite "Bankr. D. Utah LBR 7026-1(a)"
-{
-  forum frcp
-}
+deadline planning-report-period: 7.days before PretrialConference() counted_by frbp9006 cite "Bankr. D. Utah LBR 7026-1(a)"
 
 /// Bankr. D. Utah LBR 7052-1(a): except as the court directs, in non-jury
 /// proceedings each party's attorney submits proposed findings of fact and
 /// conclusions of law at least 2 days before trial.
-deadline proposed-findings-period: 2.days before TrialDate() counted_by frcp6 cite "Bankr. D. Utah LBR 7052-1(a)"
-{
-  forum frcp
-}
+deadline proposed-findings-period: 2.days before TrialDate() counted_by frbp9006 cite "Bankr. D. Utah LBR 7052-1(a)"
 
 /// Bankr. D. Utah LBR 7054-1(a): within 21 days after entry of final
 /// judgment, a party entitled to costs files and serves a verified bill of
 /// costs.
-deadline bill-of-costs-period: 21.days after FinalJudgmentEntered() counted_by frcp6 cite "Bankr. D. Utah LBR 7054-1(a)"
-{
-  forum frcp
-}
+deadline bill-of-costs-period: 21.days after FinalJudgmentEntered() counted_by frbp9006 cite "Bankr. D. Utah LBR 7054-1(a)"
 
 /// Bankr. D. Utah LBR 7054-1(b): a party objecting to a bill of costs files
 /// and serves its objection within 14 days after service of the bill of
 /// costs.
-deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "Bankr. D. Utah LBR 7054-1(b)"
-{
-  forum frcp
-}
+deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 7054-1(b)"
 
 /// Bankr. D. Utah LBR 7056-1(c): the Notice of Summary Judgment Motion and
 /// Notice of Hearing states an objection deadline at least 21 days after
 /// its service.
-deadline summary-judgment-objection-period: 21.days after SummaryJudgmentNoticeServed() counted_by frcp6 cite "Bankr. D. Utah LBR 7056-1(c)"
-{
-  forum frcp
-}
+deadline summary-judgment-objection-period: 21.days after SummaryJudgmentNoticeServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 7056-1(c)"
 
 /// Bankr. D. Utah LBR 7056-1(e): the moving party may file a reply
 /// memorandum no later than 7 days after the objection is served and in no
 /// case less than 4 days before the hearing.
-deadline summary-judgment-reply-period: 7.days after SummaryJudgmentObjectionServed() counted_by frcp6 cite "Bankr. D. Utah LBR 7056-1(e)"
-{
-  forum frcp
-}
+deadline summary-judgment-reply-period: 7.days after SummaryJudgmentObjectionServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 7056-1(e)"
 
 /// Bankr. D. Utah LBR 9006-1(b): unless otherwise ordered, objections to
 /// motions for relief from stay are filed and served within 14 days after
 /// notice of the motion is served.
-deadline stay-relief-objection-period: 14.days after StayReliefNoticeServed() counted_by frcp6 cite "Bankr. D. Utah LBR 9006-1(b)"
-{
-  forum frcp
-}
+deadline stay-relief-objection-period: 14.days after StayReliefNoticeServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 9006-1(b)"
 
 /// Bankr. D. Utah LBR 9006-1(b): in matters not governed by FRBP 2002, 3007
 /// or 4001 or another FRBP period, and unless the court orders otherwise,
 /// responses are filed and served within 14 days after notice is served.
-deadline response-period: 14.days after MotionNoticeServed() counted_by frcp6 cite "Bankr. D. Utah LBR 9006-1(b)"
-{
-  forum frcp
-}
+deadline response-period: 14.days after MotionNoticeServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 9006-1(b)"
 
 /// Bankr. D. Utah LBR 9006-1(c): replies to responses and objections may be
 /// filed no later than 7 days after the response or objection is served and
 /// in no case less than 4 days before the hearing.
-deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "Bankr. D. Utah LBR 9006-1(c)"
-{
-  forum frcp
-}
+deadline reply-period: 7.days after ResponseServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 9006-1(c)"
 
 /// Bankr. D. Utah LBR 9015-1: if a motion to withdraw the reference is
 /// filed after a jury demand, consent to a jury trial by the bankruptcy
 /// judge is filed within 7 days after service of the motion; failure to
 /// consent is an objection.
-deadline jury-consent-period: 7.days after ReferenceWithdrawalMotionServed() counted_by frcp6 cite "Bankr. D. Utah LBR 9015-1"
-{
-  forum frcp
-}
+deadline jury-consent-period: 7.days after ReferenceWithdrawalMotionServed() counted_by frbp9006 cite "Bankr. D. Utah LBR 9015-1"
 
 /// Bankr. D. Utah LBR 9021-1(g): objections to a proposed order or judgment
 /// are filed within 7 days from the date it is filed.
-deadline proposed-order-objection-period: 7.days after ProposedOrderFiled() counted_by frcp6 cite "Bankr. D. Utah LBR 9021-1(g)"
-{
-  forum frcp
-}
+deadline proposed-order-objection-period: 7.days after ProposedOrderFiled() counted_by frbp9006 cite "Bankr. D. Utah LBR 9021-1(g)"
 
 /// Bankr. D. Utah LBR 9070-1(c): with the clerk's permission, parties
 /// retrieve their exhibits within 30 days after the appeal period expires
 /// or the final reviewing court's mandate is filed.
-deadline exhibit-retrieval-period: 30.days after AppealPeriodExpired() counted_by frcp6 cite "Bankr. D. Utah LBR 9070-1(c)"
-{
-  forum frcp
-}
+deadline exhibit-retrieval-period: 30.days after AppealPeriodExpired() counted_by frbp9006 cite "Bankr. D. Utah LBR 9070-1(c)"
 
 start motion-filed
 

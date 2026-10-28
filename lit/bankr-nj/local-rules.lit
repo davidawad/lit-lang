@@ -1,6 +1,6 @@
 module bankr-nj-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 import frbp.events.{ OrderForReliefEntered, PetitionFiled }
 
 // The Bankr. D.N.J. court's own periods and page limit, counted under FRBP
@@ -127,344 +127,215 @@ event TranscriptFiled()
 /// with the petition; if the court denies it, a first installment of not less
 /// than 25 percent of the filing fee is paid not later than 14 days after
 /// filing the petition.
-deadline waiver-denied-installment-period: 14.days after PetitionFiled() counted_by frcp6 cite "D.N.J. LBR 1006-1(b)"
-{
-  forum frcp
-}
+deadline waiver-denied-installment-period: 14.days after PetitionFiled() counted_by frbp9006 cite "D.N.J. LBR 1006-1(b)"
 
 /// LBR 1016-1: within 30 days of learning of the debtor's death or a finding
 /// of incompetency, the debtor's attorney files Local Form Notice of Death or
 /// Finding of Incompetency of a Debtor.
-deadline death-notice-period: 30.days after DebtorDeathLearned() counted_by frcp6 cite "D.N.J. LBR 1016-1"
-{
-  forum frcp
-}
+deadline death-notice-period: 30.days after DebtorDeathLearned() counted_by frbp9006 cite "D.N.J. LBR 1016-1"
 
 /// LBR 1020-1(a): a debtor that did not elect subchapter V in its original
 /// voluntary petition may elect it by filing an amended petition within 14
 /// days after the date of filing; after that, it must move for permission
 /// (LBR 1020-1(b)).
-deadline subchapter-v-election-period: 14.days after PetitionFiled() counted_by frcp6 cite "D.N.J. LBR 1020-1(a)"
-{
-  forum frcp
-}
+deadline subchapter-v-election-period: 14.days after PetitionFiled() counted_by frbp9006 cite "D.N.J. LBR 1020-1(a)"
 
 /// LBR 1020-1(a): in an involuntary case, the debtor elects subchapter V by
 /// filing a statement within 14 days after entry of the order for relief.
-deadline involuntary-subchapter-v-election-period: 14.days after OrderForReliefEntered() counted_by frcp6 cite "D.N.J. LBR 1020-1(a)"
-{
-  forum frcp
-}
+deadline involuntary-subchapter-v-election-period: 14.days after OrderForReliefEntered() counted_by frbp9006 cite "D.N.J. LBR 1020-1(a)"
 
 /// LBR 2014-1(b)(2): if an application to employ a professional is filed
 /// after the initial 21-day period, an objection is filed and served within 7
 /// days after the filing of the application.
-deadline late-employment-objection-period: 7.days after LateEmploymentApplicationFiled() counted_by frcp6 cite "D.N.J. LBR 2014-1(b)(2)"
-{
-  forum frcp
-}
+deadline late-employment-objection-period: 7.days after LateEmploymentApplicationFiled() counted_by frbp9006 cite "D.N.J. LBR 2014-1(b)(2)"
 
 /// LBR 2016-2: if the court waived the auctioneer's fee application
 /// requirement, the auctioneer files Local Form Notice of Proposed Auctioneer
 /// Compensation not later than 21 days before payment of compensation.
-deadline auctioneer-compensation-notice-period: 21.days before AuctioneerCompensationPaid() counted_by frcp6 cite "D.N.J. LBR 2016-2"
-{
-  forum frcp
-}
+deadline auctioneer-compensation-notice-period: 21.days before AuctioneerCompensationPaid() counted_by frbp9006 cite "D.N.J. LBR 2016-2"
 
 /// LBR 2016-3(c): an objection to a monthly fee statement is filed and served
 /// on the professional and the LBR 2016-3(b)(1) parties not later than 14
 /// days after service of the statement.
-deadline monthly-fee-objection-period: 14.days after MonthlyFeeStatementServed() counted_by frcp6 cite "D.N.J. LBR 2016-3(c)"
-{
-  forum frcp
-}
+deadline monthly-fee-objection-period: 14.days after MonthlyFeeStatementServed() counted_by frbp9006 cite "D.N.J. LBR 2016-3(c)"
 
 /// LBR 2016-4: an application for final compensation and reimbursement of
 /// expenses in a chapter 11 case is filed not later than 90 days after entry
 /// of the order confirming the plan.
-deadline final-compensation-period: 90.days after ConfirmationOrderEntered() counted_by frcp6 cite "D.N.J. LBR 2016-4"
-{
-  forum frcp
-}
+deadline final-compensation-period: 90.days after ConfirmationOrderEntered() counted_by frbp9006 cite "D.N.J. LBR 2016-4"
 
 /// LBR 2016-5(c): a chapter 13 debtor's attorney who elects hourly billing
 /// files and serves a fee application under LBR 2016-1 not later than 7 days
 /// after the date of the order confirming the chapter 13 plan.
-deadline chapter13-hourly-fee-period: 7.days after ConfirmationOrderEntered() counted_by frcp6 cite "D.N.J. LBR 2016-5(c)"
-{
-  forum frcp
-}
+deadline chapter13-hourly-fee-period: 7.days after ConfirmationOrderEntered() counted_by frbp9006 cite "D.N.J. LBR 2016-5(c)"
 
 /// LBR 3002.1-1(b)(1): within 30 days of the date the automatic stay becomes
 /// applicable, the secured creditor files and serves a FRBP 3002.1(b) notice
 /// of payment change if the monthly payment changed while the stay was not in
 /// effect.
-deadline stay-payment-change-notice-period: 30.days after StayBecameApplicable() counted_by frcp6 cite "D.N.J. LBR 3002.1-1(b)"
-{
-  forum frcp
-}
+deadline stay-payment-change-notice-period: 30.days after StayBecameApplicable() counted_by frbp9006 cite "D.N.J. LBR 3002.1-1(b)"
 
 /// LBR 3002.1-1(b)(2): within 180 days of the date the automatic stay becomes
 /// applicable, the secured creditor files and serves a FRBP 3002.1(c) notice
 /// of fees, expenses and charges incurred while the stay was not in effect.
-deadline stay-fees-notice-period: 180.days after StayBecameApplicable() counted_by frcp6 cite "D.N.J. LBR 3002.1-1(b)"
-{
-  forum frcp
-}
+deadline stay-fees-notice-period: 180.days after StayBecameApplicable() counted_by frbp9006 cite "D.N.J. LBR 3002.1-1(b)"
 
 /// LBR 3003-1(a)(1): in a chapter 11 case, a creditor (other than a
 /// governmental unit) or equity security holder subject to FRBP 3003(c)(2)
 /// files a proof of claim or interest not later than 70 days after the date
 /// of the order for relief.
-deadline chapter11-claim-period: 70.days after OrderForReliefEntered() counted_by frcp6 cite "D.N.J. LBR 3003-1(a)"
-{
-  forum frcp
-}
+deadline chapter11-claim-period: 70.days after OrderForReliefEntered() counted_by frbp9006 cite "D.N.J. LBR 3003-1(a)"
 
 /// LBR 3011-1(c): an objection to an application for payment of unclaimed
 /// funds is filed and served within 21 days after the application is filed.
-deadline unclaimed-funds-objection-period: 21.days after UnclaimedFundsApplicationFiled() counted_by frcp6 cite "D.N.J. LBR 3011-1(c)"
-{
-  forum frcp
-}
+deadline unclaimed-funds-objection-period: 21.days after UnclaimedFundsApplicationFiled() counted_by frbp9006 cite "D.N.J. LBR 3011-1(c)"
 
 /// LBR 3018-1(a): ballots on a chapter 11 plan are sent to the plan
 /// proponent's attorney or an entity the court authorizes not later than 7
 /// days before the confirmation hearing.
-deadline ballot-return-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "D.N.J. LBR 3018-1(a)"
-{
-  forum frcp
-}
+deadline ballot-return-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "D.N.J. LBR 3018-1(a)"
 
 /// LBR 3018-1(b): the ballot recipient files Local Form Certification of
 /// Balloting not later than 3 days before the confirmation hearing and serves
 /// it on the debtor, trustee, United States trustee and any official
 /// committee.
-deadline balloting-certification-period: 3.days before ConfirmationHearing() counted_by frcp6 cite "D.N.J. LBR 3018-1(b)"
-{
-  forum frcp
-}
+deadline balloting-certification-period: 3.days before ConfirmationHearing() counted_by frbp9006 cite "D.N.J. LBR 3018-1(b)"
 
 /// LBR 3021-1(d): within 14 days after each distribution, until the case is
 /// closed, the disbursing agent files and serves Local Form Report of
 /// Distributions Under Confirmed Chapter 11 Plan.
-deadline distribution-report-period: 14.days after DistributionMade() counted_by frcp6 cite "D.N.J. LBR 3021-1(d)"
-{
-  forum frcp
-}
+deadline distribution-report-period: 14.days after DistributionMade() counted_by frbp9006 cite "D.N.J. LBR 3021-1(d)"
 
 /// LBR 3021-1(e)(1): unless the plan or an order provides otherwise,
 /// unclaimed security, money or other property is returned to the debtor or
 /// the entity acquiring its assets under the plan not later than 180 days
 /// from the date of distribution.
-deadline unclaimed-distribution-return-period: 180.days after DistributionMade() counted_by frcp6 cite "D.N.J. LBR 3021-1(e)"
-{
-  forum frcp
-}
+deadline unclaimed-distribution-return-period: 180.days after DistributionMade() counted_by frbp9006 cite "D.N.J. LBR 3021-1(e)"
 
 /// LBR 3022-1(b): in a case confirmed under § 1191(b), the court closes the
 /// case if the trustee has filed its final report and account and no
 /// objection is filed by the United States trustee or a party in interest
 /// within 30 days.
-deadline subchapter-v-final-report-objection-period: 30.days after SubchapterVFinalReportFiled() counted_by frcp6 cite "D.N.J. LBR 3022-1(b)"
-{
-  forum frcp
-}
+deadline subchapter-v-final-report-objection-period: 30.days after SubchapterVFinalReportFiled() counted_by frbp9006 cite "D.N.J. LBR 3022-1(b)"
 
 /// LBR 4001-1(b)(1): to oppose a motion for relief from stay or a chapter 13
 /// trustee's motion to dismiss, the chapter 13 debtor files and serves Local
 /// Form Chapter 13 Debtor's Certification in Opposition not later than 7 days
 /// before the hearing date.
-deadline chapter13-stay-opposition-period: 7.days before StayMotionHearing() counted_by frcp6 cite "D.N.J. LBR 4001-1(b)"
-{
-  forum frcp
-}
+deadline chapter13-stay-opposition-period: 7.days before StayMotionHearing() counted_by frbp9006 cite "D.N.J. LBR 4001-1(b)"
 
 /// LBR 4001-1(b)(2): to oppose a creditor's or the chapter 13 trustee's
 /// certification of default, the chapter 13 debtor files and serves Local
 /// Form Chapter 13 Debtor's Certification in Opposition not later than 14
 /// days after the certification is filed.
-deadline default-certification-opposition-period: 14.days after DefaultCertificationFiled() counted_by frcp6 cite "D.N.J. LBR 4001-1(b)"
-{
-  forum frcp
-}
+deadline default-certification-opposition-period: 14.days after DefaultCertificationFiled() counted_by frbp9006 cite "D.N.J. LBR 4001-1(b)"
 
 /// LBR 4001-4(c): an objection to a motion for an order confirming the
 /// automatic stay is not in effect is filed and served within 7 days after
 /// the motion is filed.
-deadline stay-status-objection-period: 7.days after StayStatusMotionFiled() counted_by frcp6 cite "D.N.J. LBR 4001-4(c)"
-{
-  forum frcp
-}
+deadline stay-status-objection-period: 7.days after StayStatusMotionFiled() counted_by frbp9006 cite "D.N.J. LBR 4001-4(c)"
 
 /// LBR 4002-1: upon completing chapter 12 plan payments or receiving the
 /// chapter 13 trustee's Plan Complete Letter, the debtor files Local Form
 /// Certification in Support of Discharge within 30 days.
-deadline discharge-certification-period: 30.days after PlanPaymentsCompleted() counted_by frcp6 cite "D.N.J. LBR 4002-1"
-{
-  forum frcp
-}
+deadline discharge-certification-period: 30.days after PlanPaymentsCompleted() counted_by frbp9006 cite "D.N.J. LBR 4002-1"
 
 /// LBR 5071-1(b): an adjournment request is made not later than 3 days before
 /// the hearing date.
-deadline adjournment-request-period: 3.days before MotionHearing() counted_by frcp6 cite "D.N.J. LBR 5071-1(b)"
-{
-  forum frcp
-}
+deadline adjournment-request-period: 3.days before MotionHearing() counted_by frbp9006 cite "D.N.J. LBR 5071-1(b)"
 
 /// LBR 6004-3(d): an auctioneer report is filed not later than 14 days after
 /// the conclusion of bidding.
-deadline auctioneer-report-period: 14.days after BiddingConcluded() counted_by frcp6 cite "D.N.J. LBR 6004-3(d)"
-{
-  forum frcp
-}
+deadline auctioneer-report-period: 14.days after BiddingConcluded() counted_by frbp9006 cite "D.N.J. LBR 6004-3(d)"
 
 /// LBR 6004-4(b): the liquidator files a report not later than 14 days after
 /// the conclusion of the sale.
-deadline liquidator-report-period: 14.days after LiquidatorSaleConcluded() counted_by frcp6 cite "D.N.J. LBR 6004-4(b)"
-{
-  forum frcp
-}
+deadline liquidator-report-period: 14.days after LiquidatorSaleConcluded() counted_by frbp9006 cite "D.N.J. LBR 6004-4(b)"
 
 /// LBR 7015-1(c): a motion to amend pleadings is filed not later than 30 days
 /// after the close of fact discovery.
-deadline amend-pleadings-period: 30.days after FactDiscoveryClosed() counted_by frcp6 cite "D.N.J. LBR 7015-1(c)"
-{
-  forum frcp
-}
+deadline amend-pleadings-period: 30.days after FactDiscoveryClosed() counted_by frbp9006 cite "D.N.J. LBR 7015-1(c)"
 
 /// LBR 7016-1(b): all parties appear at the pretrial conference unless they
 /// agree on dates and submit Local Form Joint Order Scheduling Pretrial
 /// Proceedings and Trial (and a Local Form Mediation Order when LBR 9019-2
 /// requires it) not later than 3 days before the conference.
-deadline joint-scheduling-order-period: 3.days before PretrialConference() counted_by frcp6 cite "D.N.J. LBR 7016-1(b)"
-{
-  forum frcp
-}
+deadline joint-scheduling-order-period: 3.days before PretrialConference() counted_by frbp9006 cite "D.N.J. LBR 7016-1(b)"
 
 /// LBR 7016-1(c): the parties exchange the FRCP 26(a)(1)(A) initial
 /// disclosures not later than 7 days before the scheduled pretrial
 /// conference.
-deadline initial-disclosures-period: 7.days before PretrialConference() counted_by frcp6 cite "D.N.J. LBR 7016-1(c)"
-{
-  forum frcp
-}
+deadline initial-disclosures-period: 7.days before PretrialConference() counted_by frbp9006 cite "D.N.J. LBR 7016-1(c)"
 
 /// LBR 7058-1(c): if the court's ruling differs from a proposed judgment, the
 /// prevailing party submits to chambers and serves a revised proposed
 /// judgment not later than 7 days after the ruling.
-deadline revised-judgment-period: 7.days after RulingIssued() counted_by frcp6 cite "D.N.J. LBR 7058-1(c)"
-{
-  forum frcp
-}
+deadline revised-judgment-period: 7.days after RulingIssued() counted_by frbp9006 cite "D.N.J. LBR 7058-1(c)"
 
 /// LBR 7058-1(d): an objection to a revised proposed judgment, with an
 /// alternative proposed judgment, is submitted to chambers and served not
 /// later than 7 days after its submission.
-deadline revised-judgment-objection-period: 7.days after RevisedJudgmentSubmitted() counted_by frcp6 cite "D.N.J. LBR 7058-1(d)"
-{
-  forum frcp
-}
+deadline revised-judgment-objection-period: 7.days after RevisedJudgmentSubmitted() counted_by frbp9006 cite "D.N.J. LBR 7058-1(d)"
 
 /// LBR 9013-2(a)(1): unless the rules specify otherwise, a motion is filed
 /// and served under FRBP 7004 not later than 21 days before the hearing date.
-deadline motion-filing-period: 21.days before MotionHearing() counted_by frcp6 cite "D.N.J. LBR 9013-2(a)"
-{
-  forum frcp
-}
+deadline motion-filing-period: 21.days before MotionHearing() counted_by frbp9006 cite "D.N.J. LBR 9013-2(a)"
 
 /// LBR 9013-2(a)(2): any opposition to a motion, or cross-motion, is filed
 /// and served not later than 7 days before the hearing date.
-deadline motion-opposition-period: 7.days before MotionHearing() counted_by frcp6 cite "D.N.J. LBR 9013-2(a)"
-{
-  forum frcp
-}
+deadline motion-opposition-period: 7.days before MotionHearing() counted_by frbp9006 cite "D.N.J. LBR 9013-2(a)"
 
 /// LBR 9013-2(a)(3): any reply, or opposition to a cross-motion, is filed and
 /// served not later than 4 days before the hearing date.
-deadline motion-reply-period: 4.days before MotionHearing() counted_by frcp6 cite "D.N.J. LBR 9013-2(a)"
-{
-  forum frcp
-}
+deadline motion-reply-period: 4.days before MotionHearing() counted_by frbp9006 cite "D.N.J. LBR 9013-2(a)"
 
 /// LBR 9013-4(e): an objection to an order submitted under LBR 9013-4(d),
 /// with an alternative proposed order, is submitted to chambers and served
 /// not later than 7 days after the order's submission.
-deadline proposed-order-objection-period: 7.days after ProposedOrderSubmitted() counted_by frcp6 cite "D.N.J. LBR 9013-4(e)"
-{
-  forum frcp
-}
+deadline proposed-order-objection-period: 7.days after ProposedOrderSubmitted() counted_by frbp9006 cite "D.N.J. LBR 9013-4(e)"
 
 /// LBR 9019-2(a)(3): a party intending to object to presumptive mediation at
 /// the pretrial conference notifies the court and all parties not later than
 /// 7 days before the pretrial conference.
-deadline mediation-objection-notice-period: 7.days before PretrialConference() counted_by frcp6 cite "D.N.J. LBR 9019-2(a)"
-{
-  forum frcp
-}
+deadline mediation-objection-notice-period: 7.days before PretrialConference() counted_by frbp9006 cite "D.N.J. LBR 9019-2(a)"
 
 /// LBR 9019-2(b)(3): if the court overrules a party's objection to mediation,
 /// the parties submit a Mediation Order not later than 14 days after the
 /// pretrial conference.
-deadline overruled-mediation-order-period: 14.days after PretrialConference() counted_by frcp6 cite "D.N.J. LBR 9019-2(b)"
-{
-  forum frcp
-}
+deadline overruled-mediation-order-period: 14.days after PretrialConference() counted_by frbp9006 cite "D.N.J. LBR 9019-2(b)"
 
 /// LBR 9019-2(e): mediation commences not later than 60 days after entry of
 /// the Mediation Order, unless extended by consent order or motion.
-deadline mediation-commencement-period: 60.days after MediationOrderEntered() counted_by frcp6 cite "D.N.J. LBR 9019-2(e)"
-{
-  forum frcp
-}
+deadline mediation-commencement-period: 60.days after MediationOrderEntered() counted_by frbp9006 cite "D.N.J. LBR 9019-2(e)"
 
 /// LBR 9019-2(f): the parties need not appear at the first scheduled pretrial
 /// conference if they submit the Mediation Order and the Joint Order
 /// Scheduling Pretrial Proceedings and Trial not later than 3 days before it.
-deadline mediation-pretrial-submission-period: 3.days before PretrialConference() counted_by frcp6 cite "D.N.J. LBR 9019-2(f)"
-{
-  forum frcp
-}
+deadline mediation-pretrial-submission-period: 3.days before PretrialConference() counted_by frbp9006 cite "D.N.J. LBR 9019-2(f)"
 
 /// LBR 9019-4(b): objections to an application for a consent order not
 /// related to a pending matter are filed not later than 7 days after the
 /// application is filed.
-deadline consent-order-objection-period: 7.days after ConsentOrderApplicationFiled() counted_by frcp6 cite "D.N.J. LBR 9019-4(b)"
-{
-  forum frcp
-}
+deadline consent-order-objection-period: 7.days after ConsentOrderApplicationFiled() counted_by frbp9006 cite "D.N.J. LBR 9019-4(b)"
 
 /// LBR 9027-1(b): not later than 7 days after service of a notice of removal,
 /// the removing party files Local Form Certification of Service.
-deadline removal-certification-period: 7.days after RemovalNoticeServed() counted_by frcp6 cite "D.N.J. LBR 9027-1(b)"
-{
-  forum frcp
-}
+deadline removal-certification-period: 7.days after RemovalNoticeServed() counted_by frbp9006 cite "D.N.J. LBR 9027-1(b)"
 
 /// LBR 9027-1(c): not later than 14 days after filing the notice of removal,
 /// the removing party files the docket sheet and all pleadings from the
 /// original court.
-deadline removal-record-period: 14.days after RemovalNoticeFiled() counted_by frcp6 cite "D.N.J. LBR 9027-1(c)"
-{
-  forum frcp
-}
+deadline removal-record-period: 14.days after RemovalNoticeFiled() counted_by frbp9006 cite "D.N.J. LBR 9027-1(c)"
 
 /// LBR 9037-1: an entity seeking to redact FRBP 9037(a) information from a
 /// filed transcript files Local Form Notice of Intent to Request Redaction
 /// not later than 7 days after the transcript is filed.
-deadline transcript-redaction-notice-period: 7.days after TranscriptFiled() counted_by frcp6 cite "D.N.J. LBR 9037-1"
-{
-  forum frcp
-}
+deadline transcript-redaction-notice-period: 7.days after TranscriptFiled() counted_by frbp9006 cite "D.N.J. LBR 9037-1"
 
 /// LBR 9037-1: the entity files and provides to the transcriber Local Form
 /// List of Items to be Redacted not later than 21 days after the transcript
 /// is filed.
-deadline transcript-redaction-list-period: 21.days after TranscriptFiled() counted_by frcp6 cite "D.N.J. LBR 9037-1"
-{
-  forum frcp
-}
+deadline transcript-redaction-list-period: 21.days after TranscriptFiled() counted_by frbp9006 cite "D.N.J. LBR 9037-1"
 
 start motion-filed
 

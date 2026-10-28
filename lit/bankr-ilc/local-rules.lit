@@ -1,6 +1,6 @@
 module bankr-ilc-local-rules.local-rules
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 import frbp.events.{ FirstMeetingDate }
 
 // The Bankr. C.D. Ill. court's own periods, counted under FRBP 9006(a). The
@@ -29,20 +29,14 @@ event DischargeDismissalMotionServed()
 /// other evidence of payment received within 60 days before the petition
 /// at least seven days before the first date set for the § 341 meeting; they
 /// are not filed unless ordered (LBR 1007-1(C)(1)).
-deadline payment-advices-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. C.D. Ill. LBR 1007-1(C)"
-{
-  forum frcp
-}
+deadline payment-advices-period: 7.days before FirstMeetingDate() counted_by frbp9006 cite "Bankr. C.D. Ill. LBR 1007-1(C)"
 
 /// LBR 7041-1(B): the court may dismiss a proceeding to deny or revoke a
 /// discharge without further notice or a hearing if the United States
 /// Trustee, the trustee or another party in interest does not object to
 /// dismissal or move to intervene or be substituted for the plaintiff within
 /// 21 days following the filing and service of the motion to dismiss.
-deadline discharge-dismissal-objection-period: 21.days after DischargeDismissalMotionServed() counted_by frcp6 cite "Bankr. C.D. Ill. LBR 7041-1(B)"
-{
-  forum frcp
-}
+deadline discharge-dismissal-objection-period: 21.days after DischargeDismissalMotionServed() counted_by frbp9006 cite "Bankr. C.D. Ill. LBR 7041-1(B)"
 
 start dismissal-moved
 

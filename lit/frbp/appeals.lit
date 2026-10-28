@@ -1,6 +1,6 @@
 module frbp.appeals
 
-import core.frcp6.{ frcp6 }
+import core.frbp9006.{ frbp9006 }
 
 import frbp.events.{
   AppealExtensionMoved,
@@ -40,8 +40,8 @@ import frbp.events.{
 // 8025(a)'s 14-day automatic stay of a judgment on appeal is a stay, not a
 // party's deadline, and is not declared.
 //
-// Counting: FRBP 9006(a) states the FRCP 6(a) method word for word, so
-// each period is counted by core's frcp6 as a period of forum `frcp`.
+// Counting: each period is counted under FRBP 9006(a) (`frbp9006`), the
+// FRCP 6(a) method word for word, as a period of forum `frbp`.
 /// FRBP 8002(a)(1): a notice of appeal is filed with the bankruptcy clerk
 /// within 14 days after the judgment, order, or decree is entered. 28
 /// U.S.C. § 158(c)(2) takes the appeal "in the time provided by Rule
@@ -58,9 +58,8 @@ import frbp.events.{
 /// statement, or confirms a plan; that turns on the order, a matter fact.
 rule duty appeal-notice-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8002(a)(1)"
 {
-  deadline notice-period: 14.days after BankruptcyOrderEntered() counted_by frcp6 cite "FRBP 8002(a)(1)"
+  deadline notice-period: 14.days after BankruptcyOrderEntered() counted_by frbp9006 cite "FRBP 8002(a)(1)"
   {
-    forum frcp
     characterization jurisdictional cite "28 U.S.C. § 158(c)(2)"
     trigger latest
     extend {
@@ -90,9 +89,8 @@ rule duty appeal-notice-duty effective [2025-12-01, ..) known_at 2025-12-01 cite
 /// notice period.
 rule duty cross-notice-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8002(a)(3)"
 {
-  deadline cross-notice-period: 14.days after NoticeOfAppealFiled() counted_by frcp6 cite "FRBP 8002(a)(3)"
+  deadline cross-notice-period: 14.days after NoticeOfAppealFiled() counted_by frbp9006 cite "FRBP 8002(a)(3)"
   {
-    forum frcp
     trigger later_of(notice-period)
     extend {
       by court
@@ -119,14 +117,8 @@ rule duty cross-notice-duty effective [2025-12-01, ..) known_at 2025-12-01 cite 
 /// order, unless the order provides otherwise (8004(d)(2)).
 rule duty leave-to-appeal-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8004"
 {
-  deadline leave-response-period: 14.days after LeaveToAppealMotionServed() counted_by frcp6 cite "FRBP 8004(b)(2)"
-  {
-    forum frcp
-  }
-  deadline leave-motion-period: 14.days after LeaveMotionOrdered() counted_by frcp6 cite "FRBP 8004(d)(2)"
-  {
-    forum frcp
-  }
+  deadline leave-response-period: 14.days after LeaveToAppealMotionServed() counted_by frbp9006 cite "FRBP 8004(b)(2)"
+  deadline leave-motion-period: 14.days after LeaveMotionOrdered() counted_by frbp9006 cite "FRBP 8004(d)(2)"
 }
 
 /// FRBP 8005 and 28 U.S.C. § 158(c)(1): where a BAP hears appeals, the
@@ -136,18 +128,9 @@ rule duty leave-to-appeal-duty effective [2025-12-01, ..) known_at 2025-12-01 ci
 /// election's validity is due within 14 days after the statement is filed.
 rule duty election-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8005"
 {
-  deadline appellant-election-period: 0.days after NoticeOfAppealFiled() counted_by frcp6 cite "28 U.S.C. § 158(c)(1)(A)"
-  {
-    forum frcp
-  }
-  deadline other-party-election-period: 30.days after NoticeOfAppealServed() counted_by frcp6 cite "28 U.S.C. § 158(c)(1)(B)"
-  {
-    forum frcp
-  }
-  deadline election-validity-period: 14.days after ElectionStatementFiled() counted_by frcp6 cite "FRBP 8005(c)"
-  {
-    forum frcp
-  }
+  deadline appellant-election-period: 0.days after NoticeOfAppealFiled() counted_by frbp9006 cite "28 U.S.C. § 158(c)(1)(A)"
+  deadline other-party-election-period: 30.days after NoticeOfAppealServed() counted_by frbp9006 cite "28 U.S.C. § 158(c)(1)(B)"
+  deadline election-validity-period: 14.days after ElectionStatementFiled() counted_by frbp9006 cite "FRBP 8005(c)"
 }
 
 /// FRBP 8006: a request to certify a direct appeal is due within 60 days
@@ -160,18 +143,9 @@ rule duty election-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRB
 /// (8006(f)(3)(B)): the earlier of the response and request periods.
 rule duty direct-review-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8006"
 {
-  deadline direct-certification-request-period: 60.days after BankruptcyOrderEntered() counted_by frcp6 cite "FRBP 8006(f)(1)"
-  {
-    forum frcp
-  }
-  deadline direct-certification-response-period: 14.days after DirectCertificationRequestServed() counted_by frcp6 cite "FRBP 8006(f)(3)(A)"
-  {
-    forum frcp
-  }
-  deadline direct-authorization-petition-period: 30.days after CertificationEffective() counted_by frcp6 cite "FRBP 8006(g)"
-  {
-    forum frcp
-  }
+  deadline direct-certification-request-period: 60.days after BankruptcyOrderEntered() counted_by frbp9006 cite "FRBP 8006(f)(1)"
+  deadline direct-certification-response-period: 14.days after DirectCertificationRequestServed() counted_by frbp9006 cite "FRBP 8006(f)(3)(A)"
+  deadline direct-authorization-petition-period: 30.days after CertificationEffective() counted_by frbp9006 cite "FRBP 8006(g)"
 }
 
 /// FRBP 8009: the appellant designates the record, states the issues, and
@@ -188,38 +162,14 @@ rule duty direct-review-duty effective [2025-12-01, ..) known_at 2025-12-01 cite
 /// to a statement of the evidence within 14 days after service (8009(c)(2)).
 rule duty record-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8009"
 {
-  deadline appellant-designation-period: 14.days after NoticeOfAppealEffective() counted_by frcp6 cite "FRBP 8009(a)(1)(B)"
-  {
-    forum frcp
-  }
-  deadline appellant-designation-leave-period: 14.days after LeaveToAppealGranted() counted_by frcp6 cite "FRBP 8009(a)(1)(B)"
-  {
-    forum frcp
-  }
-  deadline transcript-order-period: 14.days after NoticeOfAppealEffective() counted_by frcp6 cite "FRBP 8009(b)(1)"
-  {
-    forum frcp
-  }
-  deadline appellee-designation-period: 14.days after AppellantDesignationServed() counted_by frcp6 cite "FRBP 8009(a)(2)(A)"
-  {
-    forum frcp
-  }
-  deadline cross-appellee-designation-period: 14.days after CrossAppellantDesignationServed() counted_by frcp6 cite "FRBP 8009(a)(3)"
-  {
-    forum frcp
-  }
-  deadline cross-appellant-transcript-period: 14.days after AppellantTranscriptOrderFiled() counted_by frcp6 cite "FRBP 8009(b)(2)"
-  {
-    forum frcp
-  }
-  deadline appellee-transcript-period: 14.days after AppellantTranscriptOrderFiled() counted_by frcp6 cite "FRBP 8009(b)(3)"
-  {
-    forum frcp
-  }
-  deadline evidence-statement-objection-period: 14.days after EvidenceStatementServed() counted_by frcp6 cite "FRBP 8009(c)(2)"
-  {
-    forum frcp
-  }
+  deadline appellant-designation-period: 14.days after NoticeOfAppealEffective() counted_by frbp9006 cite "FRBP 8009(a)(1)(B)"
+  deadline appellant-designation-leave-period: 14.days after LeaveToAppealGranted() counted_by frbp9006 cite "FRBP 8009(a)(1)(B)"
+  deadline transcript-order-period: 14.days after NoticeOfAppealEffective() counted_by frbp9006 cite "FRBP 8009(b)(1)"
+  deadline appellee-designation-period: 14.days after AppellantDesignationServed() counted_by frbp9006 cite "FRBP 8009(a)(2)(A)"
+  deadline cross-appellee-designation-period: 14.days after CrossAppellantDesignationServed() counted_by frbp9006 cite "FRBP 8009(a)(3)"
+  deadline cross-appellant-transcript-period: 14.days after AppellantTranscriptOrderFiled() counted_by frbp9006 cite "FRBP 8009(b)(2)"
+  deadline appellee-transcript-period: 14.days after AppellantTranscriptOrderFiled() counted_by frbp9006 cite "FRBP 8009(b)(3)"
+  deadline evidence-statement-objection-period: 14.days after EvidenceStatementServed() counted_by frbp9006 cite "FRBP 8009(c)(2)"
 }
 
 /// FRBP 8013: unless the district court or BAP orders otherwise, a
@@ -229,18 +179,9 @@ rule duty record-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 
 /// vacate, or modify it within 7 days after it is served (8013(b)).
 rule duty appeal-motion-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8013"
 {
-  deadline motion-response-period: 7.days after AppealMotionServed() counted_by frcp6 cite "FRBP 8013(a)(3)(A)"
-  {
-    forum frcp
-  }
-  deadline motion-reply-period: 7.days after AppealMotionResponseServed() counted_by frcp6 cite "FRBP 8013(a)(3)(B)"
-  {
-    forum frcp
-  }
-  deadline procedural-order-reconsideration-period: 7.days after ProceduralOrderServed() counted_by frcp6 cite "FRBP 8013(b)"
-  {
-    forum frcp
-  }
+  deadline motion-response-period: 7.days after AppealMotionServed() counted_by frbp9006 cite "FRBP 8013(a)(3)(A)"
+  deadline motion-reply-period: 7.days after AppealMotionResponseServed() counted_by frbp9006 cite "FRBP 8013(a)(3)(B)"
+  deadline procedural-order-reconsideration-period: 7.days after ProceduralOrderServed() counted_by frbp9006 cite "FRBP 8013(b)"
 }
 
 /// FRBP 8018(a): unless the district court or BAP orders otherwise, the
@@ -257,30 +198,12 @@ rule duty appeal-motion-duty effective [2025-12-01, ..) known_at 2025-12-01 cite
 /// unless the court orders otherwise (8014(f)).
 rule duty briefing-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8018(a)"
 {
-  deadline appellant-brief-period: 30.days after RecordMadeAvailable() counted_by frcp6 cite "FRBP 8018(a)(1)"
-  {
-    forum frcp
-  }
-  deadline appellee-brief-period: 30.days after AppellantBriefServed() counted_by frcp6 cite "FRBP 8018(a)(2)"
-  {
-    forum frcp
-  }
-  deadline reply-brief-period: 14.days after AppelleeBriefServed() counted_by frcp6 cite "FRBP 8018(a)(3)"
-  {
-    forum frcp
-  }
-  deadline cross-appeal-reply-brief-period: 30.days after CrossAppealResponseBriefServed() counted_by frcp6 cite "FRBP 8016(e)(3)"
-  {
-    forum frcp
-  }
-  deadline cross-appeal-final-reply-period: 14.days after CrossAppealReplyBriefServed() counted_by frcp6 cite "FRBP 8016(e)(4)"
-  {
-    forum frcp
-  }
-  deadline supplemental-authorities-response-period: 7.days after SupplementalAuthoritiesServed() counted_by frcp6 cite "FRBP 8014(f)"
-  {
-    forum frcp
-  }
+  deadline appellant-brief-period: 30.days after RecordMadeAvailable() counted_by frbp9006 cite "FRBP 8018(a)(1)"
+  deadline appellee-brief-period: 30.days after AppellantBriefServed() counted_by frbp9006 cite "FRBP 8018(a)(2)"
+  deadline reply-brief-period: 14.days after AppelleeBriefServed() counted_by frbp9006 cite "FRBP 8018(a)(3)"
+  deadline cross-appeal-reply-brief-period: 30.days after CrossAppealResponseBriefServed() counted_by frbp9006 cite "FRBP 8016(e)(3)"
+  deadline cross-appeal-final-reply-period: 14.days after CrossAppealReplyBriefServed() counted_by frbp9006 cite "FRBP 8016(e)(4)"
+  deadline supplemental-authorities-response-period: 7.days after SupplementalAuthoritiesServed() counted_by frbp9006 cite "FRBP 8014(f)"
 }
 
 /// FRBP 8021(d): a party who wants costs taxed files and serves a bill of
@@ -289,14 +212,8 @@ rule duty briefing-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRB
 /// bankruptcy court extends the time.
 rule duty costs-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8021(d)"
 {
-  deadline bill-of-costs-period: 14.days after AppealJudgmentEntered() counted_by frcp6 cite "FRBP 8021(d)"
-  {
-    forum frcp
-  }
-  deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frcp6 cite "FRBP 8021(d)"
-  {
-    forum frcp
-  }
+  deadline bill-of-costs-period: 14.days after AppealJudgmentEntered() counted_by frbp9006 cite "FRBP 8021(d)"
+  deadline costs-objection-period: 14.days after BillOfCostsServed() counted_by frbp9006 cite "FRBP 8021(d)"
 }
 
 /// FRBP 8022(a)(1): unless shortened or extended by order or local rule, a
@@ -304,10 +221,7 @@ rule duty costs-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8
 /// after the judgment on appeal is entered.
 rule duty rehearing-duty effective [2025-12-01, ..) known_at 2025-12-01 cite "FRBP 8022(a)(1)"
 {
-  deadline rehearing-period: 14.days after AppealJudgmentEntered() counted_by frcp6 cite "FRBP 8022(a)(1)"
-  {
-    forum frcp
-  }
+  deadline rehearing-period: 14.days after AppealJudgmentEntered() counted_by frbp9006 cite "FRBP 8022(a)(1)"
 }
 
 test "notice period runs 14 days after bankruptcy order entered" cite "FRBP 8002(a)(1)"

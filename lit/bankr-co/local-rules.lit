@@ -1,53 +1,6 @@
 module bankr-co-local-rules.local-rules
 
-import core.calendar.{ us-federal-holidays }
-
-/// The Colorado legal holidays C.R.C.P. 6(a)(2) lists that are not § 6103(a)
-/// days: Frances Cabrini Day, the first Monday in October. Every other day
-/// on that list (New Year's, Martin Luther King, Washington-Lincoln,
-/// Memorial, Juneteenth, Independence, Labor, Veterans, Thanksgiving and
-/// Christmas Day) falls on a § 6103(a) day already in core's
-/// `us-federal-holidays`. C.R.C.P. 6(a)(2) restates the state's holiday
-/// statute, which is not vendored; the list is that of the 2023 edition,
-/// the vendored one, so it is a holiday here from that edition's date,
-/// July 20, 2023 (before it, the earlier date). Days the governor appoints,
-/// and the "any other day ... when the court is closed" clause, are not
-/// modeled (the earlier date).
-calendar colorado-legal-holidays cite "C.R.C.P. 6(a)(2)"
-{
-  frances-cabrini-day: nth(1, monday, 10) effective [2023-07-20, ..)
-}
-
-/// FRBP 9006(a), the FRCP 6(a) method (core's `frcp6@2023-12-01`), in the
-/// District of Colorado: FRBP 9006(a)(6)(C) makes a day the state declares
-/// a holiday a legal holiday for a period counted forward only ("for
-/// periods that are measured after an event"). Service adds 3 days as
-/// under FRCP 6(d) (FRBP 9006(f)). The package `recounts` lit/frbp, so in a
-/// matter in this court the FRBP periods are counted by this rule too, not
-/// by core's frcp6.
-counting bankr-co-9006 effective [2021-12-01, ..) known_at 2021-12-01 cite "FRBP 9006(a)"
-{
-  exclude_trigger_day
-  include_last_day
-  roll_forward_on [weekend, legal_holiday, inaccessible]
-  service_extension {
-    Personal: 0.days
-    Electronic: 0.days
-    Mail: 3.days
-    Clerk: 3.days
-    OtherConsented: 3.days
-    CommercialCarrier: unrecognized
-    PrisonMail: unrecognized
-    MailForeign: unrecognized
-    Express: unrecognized
-    ExpressForeign: unrecognized
-  } cite "FRBP 9006(f)"
-  holidays us-federal-holidays
-  forward_holidays colorado-legal-holidays cite "FRBP 9006(a)(6)(C)"
-  forums [frcp]
-  allow_hours
-  end_of_month clamp
-}
+import core.frbp9006.{ frbp9006 }
 
 // The Bankr. D. Colo. court's own periods, counted under FRBP 9006(a). The
 // FRBP periods (schedules, the chapter 13 plan within 14 days of L.B.R.
@@ -78,9 +31,7 @@ counting bankr-co-9006 effective [2021-12-01, ..) known_at 2021-12-01 cite "FRBP
 // and are removed here: no reporter text is vendored.
 /// A report identifying the discovery issues in dispute, filed before a
 /// discovery hearing: not more than two pages (D. Colo. L.B.R. 7026-1).
-limit discovery-dispute-report {
-  pages <= 2 cite "D. Colo. L.B.R. 7026-1"
-} cite "D. Colo. L.B.R. 7026-1"
+limit discovery-dispute-report { pages <= 2 cite "D. Colo. L.B.R. 7026-1" } cite "D. Colo. L.B.R. 7026-1"
 
 /// The date set for the meeting of creditors under 11 U.S.C. § 341,
 /// including a continued date (D. Colo. L.B.R. 2003-1, 3015-1).
@@ -170,276 +121,174 @@ event ContestedHearing()
 /// meeting of creditors, served on the trustee (not filed), must reach the
 /// trustee no later than seven days prior to the scheduled meeting (also
 /// L.B.R. 3015-1 for chapter 13).
-deadline meeting-continuance-request-period: 7.days before MeetingDate() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 2003-1"
-{
-  forum frcp
-}
+deadline meeting-continuance-request-period: 7.days before MeetingDate() counted_by frbp9006 cite "D. Colo. L.B.R. 2003-1"
 
 /// D. Colo. L.B.R. 2003-1: when a meeting of creditors is continued at the
 /// scheduled meeting, the chapter 7 or chapter 13 trustee files a notice of
 /// the continued meeting within seven days.
-deadline continued-meeting-notice-period: 7.days after MeetingContinued() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 2003-1"
-{
-  forum frcp
-}
+deadline continued-meeting-notice-period: 7.days after MeetingContinued() counted_by frbp9006 cite "D. Colo. L.B.R. 2003-1"
 
 /// D. Colo. L.B.R. 2004-1: unless the court orders otherwise for good
 /// cause, the date of a Rule 2004 examination or production is not less
 /// than 14 days after the movant serves the examination order on the party
 /// to whom it is directed.
-deadline examination-order-service-period: 14.days before ExaminationDate() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 2004-1"
-{
-  forum frcp
-}
+deadline examination-order-service-period: 14.days before ExaminationDate() counted_by frbp9006 cite "D. Colo. L.B.R. 2004-1"
 
 /// D. Colo. L.B.R. 2016-2: within 14 days from the end of the monthly
 /// billing cycle for which interim advance payments are sought, the
 /// professional prepares a detailed Monthly Statement; otherwise it awaits
 /// the next cycle or a formal fee application.
-deadline monthly-statement-period: 14.days after BillingCycleEnded() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 2016-2"
-{
-  forum frcp
-}
+deadline monthly-statement-period: 14.days after BillingCycleEnded() counted_by frbp9006 cite "D. Colo. L.B.R. 2016-2"
 
 /// D. Colo. L.B.R. 2016-2: Informal Objections to a Monthly Statement are
 /// submitted no later than 14 days after receiving notice of it.
-deadline informal-objection-period: 14.days after MonthlyStatementNoticed() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 2016-2"
-{
-  forum frcp
-}
+deadline informal-objection-period: 14.days after MonthlyStatementNoticed() counted_by frbp9006 cite "D. Colo. L.B.R. 2016-2"
 
 /// D. Colo. L.B.R. 2016-3: parties have 21 days from service of the notice
 /// of an LFFA or SUPFFA fee application to file an objection.
-deadline chapter-13-fee-objection-period: 21.days after FeeApplicationNoticeServed() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 2016-3"
-{
-  forum frcp
-}
+deadline chapter-13-fee-objection-period: 21.days after FeeApplicationNoticeServed() counted_by frbp9006 cite "D. Colo. L.B.R. 2016-3"
 
 /// D. Colo. L.B.R. 2016-3: an LFFA fee application is filed no sooner than
 /// entry of the order confirming the chapter 13 plan and no later than 28
 /// days after it.
-deadline lffa-application-period: 28.days after ConfirmationOrderEntered() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 2016-3"
-{
-  forum frcp
-}
+deadline lffa-application-period: 28.days after ConfirmationOrderEntered() counted_by frbp9006 cite "D. Colo. L.B.R. 2016-3"
 
 /// D. Colo. L.B.R. 2081-3: the court shortens the time to object to a
 /// motion to dismiss or convert a chapter 11 case to 14 days under FRBP
 /// 9006(c); the notice sets an objection and hearing request deadline at
 /// least 14 days after notice of the motion.
-deadline chapter-11-dismissal-objection-period: 14.days after DismissalMotionNoticed() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 2081-3"
-{
-  forum frcp
-}
+deadline chapter-11-dismissal-objection-period: 14.days after DismissalMotionNoticed() counted_by frbp9006 cite "D. Colo. L.B.R. 2081-3"
 
 /// D. Colo. L.B.R. 2082-1: the chapter 12 debtor files a copy of the plan
 /// notice with a certificate of service within three days after serving it;
 /// L.B.R. 3015-1 requires the same certificate within three days after
 /// notice and service of a chapter 13 plan or amended plan.
-deadline plan-notice-certificate-period: 3.days after PlanNoticeServed() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 2082-1"
-{
-  forum frcp
-}
+deadline plan-notice-certificate-period: 3.days after PlanNoticeServed() counted_by frbp9006 cite "D. Colo. L.B.R. 2082-1"
 
 /// D. Colo. L.B.R. 2082-1: objections to confirmation of a chapter 12 plan
 /// are filed and served at least seven days prior to the hearing, or within
 /// such other time as the court fixes.
-deadline chapter-12-confirmation-objection-period: 7.days before ConfirmationHearing() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 2082-1"
-{
-  forum frcp
-}
+deadline chapter-12-confirmation-objection-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "D. Colo. L.B.R. 2082-1"
 
 /// D. Colo. L.B.R. 3015-1: objections to a chapter 13 plan are filed no
 /// later than seven days after the Meeting Date.
-deadline chapter-13-plan-objection-period: 7.days after MeetingDate() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 3015-1"
-{
-  forum frcp
-}
+deadline chapter-13-plan-objection-period: 7.days after MeetingDate() counted_by frbp9006 cite "D. Colo. L.B.R. 3015-1"
 
 /// D. Colo. L.B.R. 3015-1: the debtor's Verification of confirmable plan is
 /// filed no earlier than ten days after the Meeting Date and no later than
 /// seven days prior to the confirmation hearing; an amended plan with a
 /// Confirmation Status Report, when needed, is filed in the same window.
-deadline confirmation-verification-period: 7.days before ConfirmationHearing() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 3015-1"
-{
-  forum frcp
-}
+deadline confirmation-verification-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "D. Colo. L.B.R. 3015-1"
 
 /// D. Colo. L.B.R. 3015-1: the debtor and each party objecting to a chapter
 /// 13 plan Meet and Confer no later than ten days prior to the confirmation
 /// hearing.
-deadline meet-and-confer-period: 10.days before ConfirmationHearing() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 3015-1"
-{
-  forum frcp
-}
+deadline meet-and-confer-period: 10.days before ConfirmationHearing() counted_by frbp9006 cite "D. Colo. L.B.R. 3015-1"
 
 /// D. Colo. L.B.R. 3015-1: when objections remain, the debtor files a
 /// Confirmation Status Report no later than seven days prior to the
 /// confirmation hearing, and any amended plan resolving them seven days
 /// prior or on the date the report states.
-deadline confirmation-status-report-period: 7.days before ConfirmationHearing() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 3015-1"
-{
-  forum frcp
-}
+deadline confirmation-status-report-period: 7.days before ConfirmationHearing() counted_by frbp9006 cite "D. Colo. L.B.R. 3015-1"
 
 /// D. Colo. L.B.R. 3015-1: within three days of entry of an order granting
 /// a motion to continue the confirmation hearing, the requesting party
 /// files and serves a Notice of Continued Dates (L.B.F. 3015-1.5) with a
 /// certificate of service.
-deadline continued-dates-notice-period: 3.days after ConfirmationContinued() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 3015-1"
-{
-  forum frcp
-}
+deadline continued-dates-notice-period: 3.days after ConfirmationContinued() counted_by frbp9006 cite "D. Colo. L.B.R. 3015-1"
 
 /// D. Colo. L.B.R. 3017.1-1 (Certificate of Service): on conditional
 /// approval of a small business disclosure statement, the debtor files a
 /// certificate of service as to the order, plan, disclosure statement and
 /// ballot within three days of service.
-deadline conditional-approval-service-certificate-period: 3.days after SmallBusinessPackageServed() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 3017.1-1 (Certificate of Service)"
-{
-  forum frcp
-}
+deadline conditional-approval-service-certificate-period: 3.days after SmallBusinessPackageServed() counted_by frbp9006 cite "D. Colo. L.B.R. 3017.1-1 (Certificate of Service)"
 
 /// D. Colo. L.B.R. 3017-2: for a combined small business plan and
 /// disclosure statement, the debtor files a certificate of service as to
 /// the order, plan and ballot within three days of service.
-deadline combined-plan-service-certificate-period: 3.days after SmallBusinessPackageServed() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 3017-2"
-{
-  forum frcp
-}
+deadline combined-plan-service-certificate-period: 3.days after SmallBusinessPackageServed() counted_by frbp9006 cite "D. Colo. L.B.R. 3017-2"
 
 /// D. Colo. L.B.R. 3022-1: if no objection is filed within 30 days of the
 /// filing of a chapter 11 final report and motion for final decree, the
 /// court presumes the estate fully administered and a final decree enters.
-deadline final-decree-objection-period: 30.days after FinalReportFiled() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 3022-1"
-{
-  forum frcp
-}
+deadline final-decree-objection-period: 30.days after FinalReportFiled() counted_by frbp9006 cite "D. Colo. L.B.R. 3022-1"
 
 /// D. Colo. L.B.R. 4001-1: the notice of a stay relief hearing sets an
 /// objection and hearing request deadline at least seven days prior to the
 /// hearing date (as for a co-debtor stay); absent a timely objection the
 /// relief may enter without a hearing.
-deadline stay-relief-objection-period: 7.days before StayReliefHearing() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 4001-1"
-{
-  forum frcp
-}
+deadline stay-relief-objection-period: 7.days before StayReliefHearing() counted_by frbp9006 cite "D. Colo. L.B.R. 4001-1"
 
 /// D. Colo. L.B.R. 4003-1: the notice of an objection to exemptions
 /// provides at least 14 days from the date of service for filing a
 /// response.
-deadline exemption-objection-response-period: 14.days after ExemptionObjectionServed() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 4003-1"
-{
-  forum frcp
-}
+deadline exemption-objection-response-period: 14.days after ExemptionObjectionServed() counted_by frbp9006 cite "D. Colo. L.B.R. 4003-1"
 
 /// D. Colo. L.B.R. 4003-2: the notice of a lien avoidance motion provides
 /// at least 14 days from the date of service for filing an objection.
-deadline lien-avoidance-objection-period: 14.days after LienAvoidanceMotionServed() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 4003-2"
-{
-  forum frcp
-}
+deadline lien-avoidance-objection-period: 14.days after LienAvoidanceMotionServed() counted_by frbp9006 cite "D. Colo. L.B.R. 4003-2"
 
 /// D. Colo. L.B.R. 5011-1: within 14 days after service of a motion to
 /// withdraw the reference, a party in interest may file and serve an
 /// objection with a designation of any additional portions of the record.
-deadline withdrawal-objection-period: 14.days after WithdrawalMotionServed() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 5011-1"
-{
-  forum frcp
-}
+deadline withdrawal-objection-period: 14.days after WithdrawalMotionServed() counted_by frbp9006 cite "D. Colo. L.B.R. 5011-1"
 
 /// D. Colo. L.B.R. 5011-1: the movant may file a reply within seven days of
 /// service of an objection to a motion to withdraw the reference.
-deadline withdrawal-reply-period: 7.days after WithdrawalObjectionServed() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 5011-1"
-{
-  forum frcp
-}
+deadline withdrawal-reply-period: 7.days after WithdrawalObjectionServed() counted_by frbp9006 cite "D. Colo. L.B.R. 5011-1"
 
 /// D. Colo. L.B.R. 7007-1: unless a statute, rule or order provides
 /// otherwise, a response to a motion in an adversary proceeding is filed
 /// and served within 14 days after service of the motion.
-deadline adversary-response-period: 14.days after AdversaryMotionServed() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 7007-1"
-{
-  forum frcp
-}
+deadline adversary-response-period: 14.days after AdversaryMotionServed() counted_by frbp9006 cite "D. Colo. L.B.R. 7007-1"
 
 /// D. Colo. L.B.R. 7007-1: a reply to a response to a motion may be filed
 /// within seven days of the filing of the response.
-deadline adversary-reply-period: 7.days after AdversaryResponseFiled() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 7007-1"
-{
-  forum frcp
-}
+deadline adversary-reply-period: 7.days after AdversaryResponseFiled() counted_by frbp9006 cite "D. Colo. L.B.R. 7007-1"
 
 /// D. Colo. L.B.R. 7026-1: unless the parties and deponent agree or the
 /// court orders otherwise, reasonable notice of a deposition or examination
 /// under FRBP 7030 is at least 14 days.
-deadline deposition-notice-period: 14.days before DepositionDate() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 7026-1"
-{
-  forum frcp
-}
+deadline deposition-notice-period: 14.days before DepositionDate() counted_by frbp9006 cite "D. Colo. L.B.R. 7026-1"
 
 /// D. Colo. L.B.R. 7026-1: no later than five days prior to a discovery
 /// hearing, each party files a report of the issues in dispute, not more
 /// than two pages.
-deadline discovery-dispute-report-period: 5.days before DiscoveryHearing() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 7026-1"
-{
-  forum frcp
-}
+deadline discovery-dispute-report-period: 5.days before DiscoveryHearing() counted_by frbp9006 cite "D. Colo. L.B.R. 7026-1"
 
 /// D. Colo. L.B.R. 7056-1: unless the court orders otherwise, a response to
 /// a motion for summary judgment is filed and served no later than 14 days
 /// from the date of service of the motion.
-deadline summary-judgment-response-period: 14.days after SummaryJudgmentMotionServed() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 7056-1"
-{
-  forum frcp
-}
+deadline summary-judgment-response-period: 14.days after SummaryJudgmentMotionServed() counted_by frbp9006 cite "D. Colo. L.B.R. 7056-1"
 
 /// D. Colo. L.B.R. 9010-1: when required, the debtor's attorney files and
 /// serves a Notice of Advisement (L.B.F. 9010-1.1) on or before three days
 /// prior to the objection deadline for the pending motion.
-deadline notice-of-advisement-period: 3.days before ObjectionDeadline() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 9010-1"
-{
-  forum frcp
-}
+deadline notice-of-advisement-period: 3.days before ObjectionDeadline() counted_by frbp9006 cite "D. Colo. L.B.R. 9010-1"
 
 /// D. Colo. L.B.R. 9010-4: the client or other parties in interest may
 /// object to an attorney's motion to withdraw within seven days after
 /// filing of the notice.
-deadline attorney-withdrawal-objection-period: 7.days after AttorneyWithdrawalNoticeFiled() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 9010-4"
-{
-  forum frcp
-}
+deadline attorney-withdrawal-objection-period: 7.days after AttorneyWithdrawalNoticeFiled() counted_by frbp9006 cite "D. Colo. L.B.R. 9010-4"
 
 /// D. Colo. L.B.R. 9013-1: a certificate of service should be filed with
 /// the served document, but not later than three days after its filing.
-deadline certificate-of-service-period: 3.days after ServedDocumentFiled() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 9013-1"
-{
-  forum frcp
-}
+deadline certificate-of-service-period: 3.days after ServedDocumentFiled() counted_by frbp9006 cite "D. Colo. L.B.R. 9013-1"
 
 /// D. Colo. L.B.R. 9013-1: where relief requires no specific notice and
 /// objection deadline, a party opposing it files a response or objection
 /// within 14 days from service of the motion.
-deadline presumptive-response-period: 14.days after MotionServed() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 9013-1"
-{
-  forum frcp
-}
+deadline presumptive-response-period: 14.days after MotionServed() counted_by frbp9006 cite "D. Colo. L.B.R. 9013-1"
 
 /// D. Colo. L.B.R. 9013-1: when the court grants relief ex parte, any
 /// interested party may move for reconsideration within 14 days from the
 /// date of the order, without the FRBP 9023 standard.
-deadline ex-parte-reconsideration-period: 14.days after ExParteOrderEntered() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 9013-1"
-{
-  forum frcp
-}
+deadline ex-parte-reconsideration-period: 14.days after ExParteOrderEntered() counted_by frbp9006 cite "D. Colo. L.B.R. 9013-1"
 
 /// D. Colo. L.B.R. 9070-1: parties intending to introduce evidence at a
 /// contested hearing file a list of witnesses and exhibits, and exchange
 /// marked exhibits, no later than five days prior to the hearing.
-deadline witness-exhibit-list-period: 5.days before ContestedHearing() counted_by bankr-co-9006 cite "D. Colo. L.B.R. 9070-1"
-{
-  forum frcp
-}
+deadline witness-exhibit-list-period: 5.days before ContestedHearing() counted_by frbp9006 cite "D. Colo. L.B.R. 9070-1"
 
 start motion-filed
 

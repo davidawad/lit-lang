@@ -1,0 +1,295 @@
+module innd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Northern District of Indiana's own periods, computed under the
+// federal rules (FRCP 6(a) governs "any local rule"). The court may
+// suspend or modify any rule in a particular case in the interest of
+// justice (N.D. Ind. L.R. 1-1(b)) and may extend the response- and
+// reply-brief deadlines for good cause (L.R. 7-1(d)(4)). Rules that state
+// no period or limit stay out, as do these: the automatic initial
+// extension of 28 or fewer days to respond to a pleading or a discovery
+// request on an extension notice (L.R. 6-1(b)), an extension grant on
+// FRCP periods and not a period of its own, unavailable where a party is
+// pro se (L.R. 6-1(c)(2)); the limit of 30 requests for admission on
+// another party, not counting authenticity requests, without a motion
+// (L.R. 26-1(c)), a count no `limit` field states; dismissal for failure
+// to prosecute after six months without activity and at least 28 days
+// after notice (L.R. 41-1), a power of the court and not a filing
+// deadline; the clerk's and the Marshal's 28- and 90-day periods for
+// unclaimed exhibits (L.R. 79-1(d)), court duties; the three-month
+// receiver reports after the first (L.R. 66-1(b)(2)), a recurring duty;
+// the bar on a reinstatement petition until five years after disbarment
+// or one year after a denial (L.R. 83-6.11), earliest dates and not
+// deadlines; and the seven days after an appeal deadline or appellate
+// proceedings within which the bankruptcy clerk transmits a record (L.R.
+// 200-1), a clerk's duty. Fines of up to $1,000 for formatting errors
+// (L.R. 1-3(a)(2)) and $1,500 for an audible device (L.R. 83-3) are
+// sanctions, not fees; the reinstatement fee equals the miscellaneous-case
+// filing fee (L.R. 83-6.11(e)), which the rules do not state. The earlier
+// N.D. Ind. outline's FRCP flow and its Supreme Court decisions (Twombly,
+// Iqbal, Celotex, Anderson v. Liberty Lobby) are FRCP authority and belong
+// to lit/frcp and lit/frap; its Seventh Circuit decisions (Cracco v.
+// Vitran Express, Inc.; Swanson v. Citibank, N.A.) are removed: no
+// reporter text is vendored.
+/// A supporting or response brief, excluding tables of contents, tables of
+/// authorities and appendices: ordinarily at most 25 pages; the court may
+/// allow more for extraordinary and compelling reasons, and a brief over
+/// 25 pages then needs a table of contents, an issue statement and a table
+/// of authorities (N.D. Ind. L.R. 7-1(e)). Social Security briefs are
+/// subject to the same limits (L.R. 7-3(e)).
+limit brief { pages <= 25 cite "N.D. Ind. L.R. 7-1(e)" } cite "N.D. Ind. L.R. 7-1(e)"
+/// A reply brief: at most 15 pages (N.D. Ind. L.R. 7-1(e)(1)).
+limit reply-brief { pages <= 15 cite "N.D. Ind. L.R. 7-1(e)" } cite "N.D. Ind. L.R. 7-1(e)"
+
+/// A pleading, written motion or other paper questioning the
+/// constitutionality of a federal or state statute is filed (N.D. Ind.
+/// L.R. 5.1-1(a)(2)).
+event ConstitutionalChallengeFiled()
+/// A motion under FRCP 12 is served, with its supporting brief (N.D. Ind.
+/// L.R. 7-1(b)(1), (d)(2)).
+event Rule12MotionServed() paper brief
+/// A motion other than a summary-judgment or FRCP 12 motion is served
+/// (N.D. Ind. L.R. 7-1(d)(3)).
+event MotionServed() paper brief
+/// A response brief to an FRCP 12 motion is served (N.D. Ind. L.R.
+/// 7-1(d)(2)(B)).
+event Rule12ResponseServed() paper brief
+/// A response brief to any other motion is served (N.D. Ind. L.R.
+/// 7-1(d)(3)(B)).
+event ResponseServed() paper brief
+/// The certified administrative record, the agency's answer, is filed in a
+/// Social Security appeal (N.D. Ind. L.R. 7-3(a), (b)).
+event AdministrativeRecordFiled()
+/// The claimant's opening brief is filed in a Social Security appeal (N.D.
+/// Ind. L.R. 7-3(c)).
+event SocialSecurityOpeningBriefFiled() paper brief
+/// The response brief is filed in a Social Security appeal (N.D. Ind. L.R.
+/// 7-3(d)).
+event SocialSecurityResponseFiled() paper brief
+/// A deposition is scheduled to be taken (N.D. Ind. L.R. 30-1(b)).
+event DepositionScheduled()
+/// The mandate for a new trial on remand is docketed (N.D. Ind. L.R.
+/// 40-1(g)(2)).
+event NewTrialMandateDocketed()
+/// Trial is set to begin (N.D. Ind. L.R. 47-3(b)).
+event TrialBegins()
+/// Final judgment is entered (N.D. Ind. L.R. 54-1(a)).
+event FinalJudgmentEntered()
+/// The moving party serves its motion for summary judgment (N.D. Ind. L.R.
+/// 56-1(b)).
+event SummaryJudgmentMotionServed() paper brief
+/// The opposing party's response on summary judgment is served (N.D. Ind.
+/// L.R. 56-1(c)).
+event SummaryJudgmentResponseServed() paper brief
+/// A court-appointed officer such as a receiver takes possession of an
+/// estate (N.D. Ind. L.R. 66-1(b)(1)).
+event EstatePossessionTaken()
+/// The court-appointed officer files the estate's inventory (N.D. Ind.
+/// L.R. 66-1(b)(2)).
+event EstateInventoryFiled()
+/// The court serves an order to show cause why identical discipline should
+/// not be imposed (N.D. Ind. L.R. 83-6.8(b)).
+event IdenticalDisciplineOrderServed()
+/// An attorney accepts the clerk's request to represent an indigent party
+/// (N.D. Ind. L.R. 83-7(c)).
+event AppointmentAccepted()
+/// Appointed counsel incurs an expense representing an indigent party
+/// (N.D. Ind. L.R. 83-7(e)(1)).
+event AppointmentExpenseIncurred()
+/// The case is removed or transferred to the court (N.D. Ind. L.R.
+/// 83-8(b)).
+event CaseRemovedOrTransferred()
+/// An attorney files a motion for leave to withdraw an appearance (N.D.
+/// Ind. L.R. 83-8(c)).
+event WithdrawalMotionFiled()
+/// The bankruptcy clerk serves a bankruptcy judge's proposed findings of
+/// fact and conclusions of law in a non-core proceeding heard without
+/// consent (N.D. Ind. L.R. 200-1(a)(3)(B)).
+event ProposedFindingsServed()
+
+/// N.D. Ind. L.R. 5.1-1(a): a party required to file a notice of
+/// constitutional question under FRCP 5.1 files it by the later of the day
+/// the parties tender their proposed case-management plan, if one is
+/// required, or 21 days after filing the paper questioning the statute's
+/// constitutionality. The period below is the 21-day branch; a later
+/// case-management plan tender moves the deadline to that day.
+deadline constitutional-question-notice-period: 21.days after ConstitutionalChallengeFiled() counted_by frcp6 cite "N.D. Ind. L.R. 5.1-1(a)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 7-1(d)(2)(A): a party files any response brief to a
+/// motion under FRCP 12 within 21 days after the motion is served, unless
+/// it is entitled to and first files an amended pleading as a matter of
+/// course under FRCP 15(a)(1).
+deadline rule12-response-period: 21.days after Rule12MotionServed() counted_by frcp6 cite "N.D. Ind. L.R. 7-1(d)(2)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 7-1(d)(2)(B): the moving party files any reply brief
+/// within 7 days after the response brief is served.
+deadline rule12-reply-period: 7.days after Rule12ResponseServed() counted_by frcp6 cite "N.D. Ind. L.R. 7-1(d)(2)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 7-1(d)(3)(A): a party files any response brief to any
+/// other motion within 14 days after the motion is served; summary-judgment
+/// motions follow L.R. 56-1(b) and (c) (L.R. 7-1(d)(1)). The court may
+/// rule summarily if no response is filed before the deadline (L.R.
+/// 7-1(d)(5)).
+deadline motion-response-period: 14.days after MotionServed() counted_by frcp6 cite "N.D. Ind. L.R. 7-1(d)(3)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 7-1(d)(3)(B): the moving party files any reply brief
+/// within 7 days after the response brief is served.
+deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6 cite "N.D. Ind. L.R. 7-1(d)(3)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 7-3(b): a person challenging an agency determination on
+/// entitlement to Social Security benefits files an opening brief within
+/// 42 days after the administrative record is filed.
+deadline social-security-opening-brief-period: 42.days after AdministrativeRecordFiled() counted_by frcp6 cite "N.D. Ind. L.R. 7-3(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 7-3(c): any response brief is filed within 42 days after
+/// the opening brief.
+deadline social-security-response-period: 42.days after SocialSecurityOpeningBriefFiled() counted_by frcp6 cite "N.D. Ind. L.R. 7-3(c)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 7-3(d): any reply brief is filed within 14 days after the
+/// response brief.
+deadline social-security-reply-period: 14.days after SocialSecurityResponseFiled() counted_by frcp6 cite "N.D. Ind. L.R. 7-3(d)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 30-1(b): attorneys schedule depositions with at least 14
+/// days' notice, unless opposing counsel agrees to shorter notice or the
+/// court orders otherwise.
+deadline deposition-notice-period: 14.days before DepositionScheduled() counted_by frcp6 cite "N.D. Ind. L.R. 30-1(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 40-1(g)(2): a case remanded for a new trial under Seventh
+/// Circuit Rule 36 is reassigned under L.R. 40-1(f) unless the remand order
+/// directs otherwise or, within 14 days after the mandate for a new trial
+/// is docketed, all parties file a request that the previously assigned
+/// judge retry it.
+deadline retrial-judge-request-period: 14.days after NewTrialMandateDocketed() counted_by frcp6 cite "N.D. Ind. L.R. 40-1(g)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 47-3(b): the court may not assess juror costs if, at
+/// least one full business day before the trial is set to begin, the clerk
+/// is notified of the circumstances causing delay.
+deadline jury-cost-notice-period: 1.court_days before TrialBegins() counted_by frcp6 cite "N.D. Ind. L.R. 47-3(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 54-1(a): to recover costs, a party files and serves a
+/// completed AO Form 133 within 14 days after final judgment is entered.
+/// The court may extend the 14 days for good cause if the party moves
+/// before the original deadline (L.R. 54-1(b)).
+deadline cost-bill-period: 14.days after FinalJudgmentEntered() counted_by frcp6 cite "N.D. Ind. L.R. 54-1(a)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 56-1(b): a party opposing summary judgment, within 28
+/// days after the moving party served the motion, separately files a
+/// response brief and a Response to Statement of Material Facts.
+deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "N.D. Ind. L.R. 56-1(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 56-1(c): the moving party may, within 14 days after a
+/// response is served, separately file a reply brief and a Reply to
+/// Statement of Additional Material Facts; additional briefs need leave of
+/// court (L.R. 56-1(d)).
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "N.D. Ind. L.R. 56-1(c)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 66-1(b)(1): within 28 days after taking possession of an
+/// estate, the court-appointed officer files an inventory and appraisal of
+/// the estate's property and assets and, on a separate schedule, an
+/// inventory of those held by others. The court may alter the deadline
+/// (L.R. 66-1(e)).
+deadline receiver-inventory-period: 28.days after EstatePossessionTaken() counted_by frcp6 cite "N.D. Ind. L.R. 66-1(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 66-1(b)(2): within 28 days after the inventory is filed,
+/// and every three months after that, the officer files a report of its
+/// acts and an accounting. The period below is the first report.
+deadline receiver-first-report-period: 28.days after EstateInventoryFiled() counted_by frcp6 cite "N.D. Ind. L.R. 66-1(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 83-6.8(b): the disciplined attorney shows cause within
+/// 30 days after the order is served why the court should not impose
+/// identical discipline (other than a fine).
+deadline identical-discipline-show-cause-period: 30.days after IdenticalDisciplineOrderServed() counted_by frcp6 cite "N.D. Ind. L.R. 83-6.8(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 83-7(c): an attorney who accepts a request to represent
+/// an indigent party enters an appearance for the party within 14 days
+/// after accepting the request.
+deadline appointed-appearance-period: 14.days after AppointmentAccepted() counted_by frcp6 cite "N.D. Ind. L.R. 83-7(c)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 83-7(e)(1): appointed counsel may seek reimbursement of
+/// reasonable expenses by petition filed before they are incurred or
+/// within 90 days after they were incurred.
+deadline appointed-expense-petition-period: 90.days after AppointmentExpenseIncurred() counted_by frcp6 cite "N.D. Ind. L.R. 83-7(e)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 83-8(b): attorneys who are not bar members comply with
+/// the court's admission policy (L.R. 83-5) within 21 days of removal or
+/// transfer.
+deadline removal-admission-period: 21.days after CaseRemovedOrTransferred() counted_by frcp6 cite "N.D. Ind. L.R. 83-8(b)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 83-8(c)(1): unless another attorney has appeared for the
+/// party, a motion to withdraw an appearance includes evidence that the
+/// attorney gave the party written notice of the intent to withdraw at
+/// least seven days before filing the motion.
+deadline withdrawal-notice-period: 7.days before WithdrawalMotionFiled() counted_by frcp6 cite "N.D. Ind. L.R. 83-8(c)"
+{
+  forum frcp
+}
+
+/// N.D. Ind. L.R. 200-1(a)(3)(B): within 14 days of service of a
+/// bankruptcy judge's proposed findings and conclusions, any party may file
+/// objections with the bankruptcy clerk; the district judge reviews de
+/// novo the matters timely and specifically objected to.
+deadline proposed-findings-objection-period: 14.days after ProposedFindingsServed() counted_by frcp6 cite "N.D. Ind. L.R. 200-1(a)"
+{
+  forum frcp
+}

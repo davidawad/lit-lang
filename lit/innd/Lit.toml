@@ -1,0 +1,49 @@
+# The United States District Court for the Northern District of Indiana's
+# Local Civil Rules as a local-rule layer over lit/frcp (28 U.S.C. § 2071;
+# FRCP 83(a)): it declares only the periods and limits the Local Rules
+# themselves state and re-encodes no FRCP deadline. FRCP 6(a) computes a
+# period stated in a local rule. The rules are those effective February 25,
+# 2022, the court's current edition, whose page lists no later adopted
+# amendment (sources/innd); the Local Criminal Rules (forum innd-criminal)
+# are out of scope. An appeal goes to the Seventh Circuit under lit/frap and
+# lit/ca7.
+[package]
+name = "innd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "innd-local-rules"
+forum = "innd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Northern District of Indiana: Local Civil Rules"
+description = "The Northern District of Indiana's Local Civil Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): notices of constitutional questions, motion response and reply periods and brief page limits, Social Security briefing, deposition notice, remand reassignment requests, cost bills, summary judgment response and reply periods, receivers' inventories and reports, appointed counsel's appearance and expense petitions, appearances after removal or transfer, notice before withdrawal, identical-discipline show cause, and objections to a bankruptcy judge's proposed findings."
+in_force = "2022-02-25"
+known_at = "2026-10-28"
+unknown_before = "2022-02-25"
+jurisdiction = "United States District Court, N.D. Indiana"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "innd-lr"
+issuer = "United States District Court for the Northern District of Indiana"
+date = "2022-02-25"
+designation = "Local Rules (effective February 25, 2022): Local Civil Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.innd-lr]
+title = "Local Rules of the United States District Court for the Northern District of Indiana (effective February 25, 2022): Local Civil Rules"
+url = "https://www.innd.uscourts.gov/sites/innd/files/CurrentLocalRules.pdf"
+path = "sources/innd/innd-local-rules-sectioned.txt"
+path_sha256 = "36c328d79f09abc98ab4ba2db6e38be53bdb8989d70326fd2559e566f9b753ea"
+sha256 = "380ac564b7712f1836d4d0b8a3b89fae0e7de750abb0658d524212dfb016e097"
+as_of = "2022-02-25"
+cite_prefixes = ["N.D. Ind. L.R."]
+section_heading = "N.D. Ind. L.R. {n}"

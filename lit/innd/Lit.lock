@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcp-civil-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "innd-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:02f2006cea9ef326123de2f47aa91799468a9f321df4ad01f5a6edb7202a0056"
+semantic = "sha256:464f3f70c759bab569d25dd4eeb1345f952bf3650885374099bc1da287a0d3eb"
+texts = [
+    "innd-lr sources/innd/innd-local-rules-sectioned.txt sha256:36c328d79f09abc98ab4ba2db6e38be53bdb8989d70326fd2559e566f9b753ea",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcp-civil-procedure 2024.12.0",
+]

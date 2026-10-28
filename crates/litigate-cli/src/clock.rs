@@ -238,23 +238,15 @@ pub fn method_of(
 }
 
 /// The engine's unit for `d`'s period.
-///
-/// # Errors
-/// Business days, which have no engine lowering.
-fn engine_unit(d: &hir::Deadline) -> Result<Unit, String> {
-    Ok(match d.unit {
+const fn engine_unit(d: &hir::Deadline) -> Unit {
+    match d.unit {
         DayUnit::Calendar => Unit::Calendar,
         DayUnit::Court => Unit::Court,
         DayUnit::Week => Unit::Week,
         DayUnit::Month => Unit::Month,
         DayUnit::Year => Unit::Year,
-        DayUnit::Business => {
-            return Err(format!(
-                "`{}` counts business days, which have no engine lowering",
-                d.meta.id
-            ))
-        }
-    })
+        DayUnit::Business => Unit::Business,
+    }
 }
 
 /// A computed due date with its trace.
@@ -288,9 +280,8 @@ pub struct Due {
 ///
 /// # Errors
 /// A message for an unknown deadline, one nothing governs on the event or
-/// whose trigger no event matches, an invalid date, business-day units (no
-/// engine lowering), a counting rule nothing governs on the event, or an
-/// engine refusal.
+/// whose trigger no event matches, an invalid date, a counting rule nothing
+/// governs on the event, or an engine refusal.
 pub fn due(
     clocks: &Clocks<'_>,
     world: &World<'_>,
@@ -429,7 +420,7 @@ impl Judged<'_, '_> {
         action: Option<&Expr>,
     ) -> Result<Due, String> {
         let (world, events, at, known_at) = (self.world, self.events, self.at, self.known_at);
-        let unit = engine_unit(d)?;
+        let unit = engine_unit(d);
         // A court that recounts `owner`'s periods counts them by its own rule.
         let counting_key = world
             .recounted(owner, &d.counting)

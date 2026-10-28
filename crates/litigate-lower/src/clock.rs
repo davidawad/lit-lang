@@ -246,7 +246,7 @@ fn service_method(name: &str) -> Option<ServiceMethod> {
 }
 
 /// The count step's periods: the short-period rule first (SPEC §5.3 step
-/// 3), then calendar and court days.
+/// 3), then calendar, court and business days.
 fn periods(sink: &mut Sink, c: &hir::Counting, cite: &str, span: Option<&Span>) -> Vec<Period> {
     let mut out = Vec::new();
     if let Some(short) = c.short_period {
@@ -288,6 +288,14 @@ fn periods(sink: &mut Sink, c: &hir::Counting, cite: &str, span: Option<&Span>) 
         count: CountUnit::Business,
         text: format!(
             "{cite}: count {{n}} court day(s) {{forward}}, skipping weekends and holidays -> {{date}}"
+        ),
+    });
+    out.push(Period {
+        unit: Some(Unit::Business),
+        below: None,
+        count: CountUnit::Business,
+        text: format!(
+            "{cite}: count {{n}} business day(s) {{forward}}, skipping weekends and holidays -> {{date}}"
         ),
     });
     out

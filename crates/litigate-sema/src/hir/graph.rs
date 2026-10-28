@@ -223,7 +223,7 @@ pub enum DeadlineWindow {
     Inline {
         /// Length in days.
         length: u64,
-        /// Unit (`business` has no litgraph lowering: L6001).
+        /// Unit.
         unit: DayUnit,
     },
 }

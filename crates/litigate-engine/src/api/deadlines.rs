@@ -77,12 +77,13 @@ fn unit_of(d: &PackDeadline) -> Result<Unit> {
     match d.unit.as_deref() {
         None | Some("calendar") => Ok(Unit::Calendar),
         Some("court") => Ok(Unit::Court),
+        Some("business") => Ok(Unit::Business),
         Some("week") => Ok(Unit::Week),
         Some("month") => Ok(Unit::Month),
         Some("year") => Ok(Unit::Year),
         Some(other) => Err(Error::Invalid(format!(
-            "deadline.unit {other:?}; expected \"calendar\", \"court\", \"week\", \"month\" \
-             or \"year\""
+            "deadline.unit {other:?}; expected \"calendar\", \"court\", \"business\", \"week\", \
+             \"month\" or \"year\""
         ))),
     }
 }

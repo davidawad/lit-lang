@@ -24,7 +24,7 @@ pub enum Direction {
 
 /// The unit a period is stated in, per `Deadline.unit` in `model::schema`
 /// (`docs/PACK_SCHEMA.md`). A counting rule's `count` step decides what
-/// calendar and court days mean (`clock::rule::Period`); a week is seven
+/// calendar, court and business days mean (`clock::rule::Period`); a week is seven
 /// calendar days; months and years are calendar months, counted by the
 /// rule's `months` provision (`clock::rule::Months`).
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Default, PartialEq, Eq, JsonSchema)]
@@ -33,9 +33,12 @@ pub enum Unit {
     /// Calendar days (the authored default).
     #[default]
     Calendar,
-    /// Court ("business") days: a pack-authored choice for a forum whose
-    /// own rule counts business days.
+    /// Court days: a pack-authored choice for a forum whose own rule
+    /// counts court days.
     Court,
+    /// Business days: a period the forum's own rule states in business
+    /// days, counted by the counting rule's own `business` period.
+    Business,
     /// Weeks of seven calendar days.
     Week,
     /// Calendar months.

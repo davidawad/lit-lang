@@ -1,0 +1,129 @@
+module fl-criminal-trial-court.criminal
+
+start arrested
+
+state arrested: "Arrest" by applicant cite "Fla. R. Crim. P. 3.130(a)"
+{
+  note "Every arrested person not lawfully released is taken before a judge, in person or by audio-video communication technology, within 24 hours of arrest (Fla. R. Crim. P. 3.130(a)). Periods in this package are stated, not counted: their computation is governed by Florida Rule of General Practice and Judicial Administration 2.514, which is not vendored. The outline's decisions (County of Riverside v. McLaughlin, Gerstein v. Pugh, Gideon, Brady, Mapp, Barker, Boykin, Frye, Jackson, Ramos, Apprendi, Flores-Ortega, Garza) are removed: no reporter text is vendored."
+  edge-arrested-first-appearance "First appearance" -> formal-charge {
+    authority cite "Fla. R. Crim. P. 3.130(a)"
+  }
+}
+
+decision formal-charge: "Formal charges filed in time?" by office cite "Fla. R. Crim. P. 3.134(a)"
+{
+  note "For a defendant in custody the state files formal charges by information or indictment, or for a misdemeanor by whatever documents constitute a formal charge, within 30 days from arrest or service of the capias; uncharged on the 30th day, the defendant is released on recognizance on the 33rd day, or on good cause the 40th, unless charged by then, and no defendant stays in custody beyond 40 days uncharged (Fla. R. Crim. P. 3.134(a)). Defendants on pretrial release are governed by Fla. R. Crim. P. 3.134(b)."
+  edge-formal-charge-filed "Information or indictment filed" -> arraignment {
+    authority cite "Fla. R. Crim. P. 3.140"
+  }
+  edge-formal-charge-none "Not charged in time: released on recognizance" -> released-uncharged {
+    authority cite "Fla. R. Crim. P. 3.134(a)"
+  }
+}
+
+state arraignment: "Arraignment" by court cite "Fla. R. Crim. P. 3.160(a)"
+{
+  note "The charge is read or its substance stated and the defendant is called on to plead (Fla. R. Crim. P. 3.160(a)). The speedy trial period runs from the formal charge: 90 days for a misdemeanor and 175 days for a felony, without demand (Fla. R. Crim. P. 3.191(a), (d))."
+  edge-arraignment-discovery "Notice of discovery and pretrial motions" -> pretrial {
+    authority cite "Fla. R. Crim. P. 3.220(a)"
+  }
+}
+
+decision pretrial: "Discovery, pretrial motions and speedy trial" by applicant cite "Fla. R. Crim. P. 3.220(a)"
+{
+  note "A defendant who files and serves a Notice of Discovery elects reciprocal discovery; the prosecutor serves the Discovery Exhibit within 15 days after service of the notice (Fla. R. Crim. P. 3.220(a), (b)(1)). A motion to suppress is filed before trial or before a deadline the judge sets unless there is good cause or the state does not object (Fla. R. Crim. P. 3.190(g)(4)). A defendant charged by indictment or information may file a Demand for Speedy Trial: the court holds a calendar call within 5 days and sets trial between 5 and 60 days from the demand, and a defendant not tried within 60 days of the demand is entitled to the remedy of subdivision (o) (Fla. R. Crim. P. 3.191(b)); the demand binds both sides (Fla. R. Crim. P. 3.191(g))."
+  edge-pretrial-plea "Plea negotiations" -> plea-decision {
+    authority cite "Fla. R. Crim. P. 3.171"
+  }
+  edge-pretrial-expired "Notice of expiration of speedy trial time" -> speedy-trial-hearing {
+    authority cite "Fla. R. Crim. P. 3.191(o)"
+  }
+  edge-pretrial-trial "Trial within the speedy trial period" -> trial {
+    authority cite "Fla. R. Crim. P. 3.191(c)"
+  }
+}
+
+decision speedy-trial-hearing: "Speedy trial recapture" by court cite "Fla. R. Crim. P. 3.191(o)"
+{
+  note "After the period expires the defendant may file a Notice of Expiration of Speedy Trial Time; no later than 5 days after it the court holds a hearing and, unless a subdivision (j) reason exists, orders trial within 30 days. A defendant not tried in that recapture period through no fault of the defendant is discharged on motion, without prejudice unless the constitutional speedy trial right was violated (Fla. R. Crim. P. 3.191(o)). Trial commences when the panel is sworn for voir dire or, without a jury, when the trial proceedings begin (Fla. R. Crim. P. 3.191(c))."
+  edge-speedy-trial-hearing-recaptured "Tried within the recapture period" -> trial {
+    authority cite "Fla. R. Crim. P. 3.191(o)"
+  }
+  edge-speedy-trial-hearing-discharged "Not tried within the recapture period: discharged" -> discharged {
+    authority cite "Fla. R. Crim. P. 3.191(o)"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Fla. R. Crim. P. 3.172(a)"
+{
+  note "Before accepting a plea of guilty or nolo contendere the judge determines that it is voluntary and has a factual basis (Fla. R. Crim. P. 3.172(a)); plea discussions and agreements are Fla. R. Crim. P. 3.171."
+  edge-plea-decision-plea "Plea accepted" -> sentencing {
+    authority cite "Fla. R. Crim. P. 3.172(a)"
+  }
+  edge-plea-decision-trial "Proceed to trial" -> trial {
+    authority cite "Fla. R. Crim. P. 3.191(c)"
+  }
+}
+
+decision trial: "Trial and verdict" by court cite "Fla. R. Crim. P. 3.380(a)"
+{
+  note "On insufficient evidence the court may, and on motion shall, enter a judgment of acquittal at the close of the state's evidence or of all the evidence (Fla. R. Crim. P. 3.380(a))."
+  edge-trial-acquitted "Judgment of acquittal or not guilty" -> acquitted {
+    authority cite "Fla. R. Crim. P. 3.380(a)"
+  }
+  edge-trial-guilty "Guilty: post-trial motions" -> post-trial {
+    authority cite "Fla. R. Crim. P. 3.590(a)"
+  }
+}
+
+decision post-trial: "Motion for new trial or in arrest of judgment" by court cite "Fla. R. Crim. P. 3.590(a)"
+{
+  note "In a case where the state does not seek death, a motion for new trial or in arrest of judgment is made orally or in writing within 10 days after the verdict or the court's finding (Fla. R. Crim. P. 3.590(a)); in a capital case, within 10 days after the written final judgment of conviction and sentence of life or death is filed (Fla. R. Crim. P. 3.590(b)). The grounds for a new trial are Fla. R. Crim. P. 3.600(a)."
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "Fla. R. Crim. P. 3.600(a)"
+  }
+  edge-post-trial-denied "Denied or none made: sentencing" -> sentencing {
+    authority cite "Fla. R. Crim. P. 3.720"
+  }
+}
+
+state sentencing: "Sentencing hearing" by court cite "Fla. R. Crim. P. 3.720"
+{
+  note "As soon as practicable after the determination of guilt and the examination of any presentence reports, the court orders a sentencing hearing (Fla. R. Crim. P. 3.720)."
+  edge-sentencing-appeal "Sentence imposed" -> appeal-decision {
+    authority cite "Fla. R. App. P. 9.140(b)"
+  }
+}
+
+decision appeal-decision: "Notice of appeal within 30 days of the sentence?" by applicant cite "Fla. R. App. P. 9.140(b)"
+{
+  note "The defendant files the notice prescribed by rule 9.110(d) with the clerk of the lower tribunal at any time between rendition of a final judgment and 30 days following rendition of a written order imposing sentence, served on the state attorney and attorney general; a cross-appeal is within 15 days of service of the state's notice (Fla. R. App. P. 9.140(b)(3), (4))."
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken {
+    authority cite "Fla. R. App. P. 9.140(b)"
+  }
+  edge-appeal-decision-none "No notice" -> conviction-final {
+    authority cite "Fla. R. App. P. 9.140(b)"
+  }
+}
+
+terminal released-uncharged: "Released uncharged" outcome [win] cite "Fla. R. Crim. P. 3.134(a)"
+{
+  note "Release on recognizance does not bar a later charge."
+}
+
+terminal discharged: "Discharged for a speedy trial violation" outcome [win, dismissal] cite "Fla. R. Crim. P. 3.191(o)"
+{
+  note "Without prejudice unless the constitutional speedy trial right was violated (Fla. R. Crim. P. 3.191(o))."
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Fla. R. Crim. P. 3.380(a)"
+
+terminal appeal-taken: "Appeal taken: continue in the Florida appellate package" outcome [appeal] cite "Fla. R. App. P. 9.140(b)"
+{
+  note "Hand-off to lit/fl-state-appellate."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "Fla. R. Crim. P. 3.850"
+{
+  note "A motion to vacate under Fla. R. Crim. P. 3.850 is filed no more than 2 years after the judgment and sentence become final, with stated exceptions; federal habeas is lit/habeas."
+}

@@ -1,0 +1,50 @@
+# Criminal cases in the Florida trial courts under the Florida Rules of
+# Criminal Procedure (the Florida Bar's October 1, 2026 edition,
+# sources/fl-criminal-trial-court), with the criminal appeal's notice under
+# the Florida Rules of Appellate Procedure (sources/fl-state-appellate).
+# Computation of time is governed by Florida Rule of General Practice and
+# Judicial Administration 2.514, which is not vendored, so the rules'
+# periods are stated in notes, not counted. The appeal hands off to
+# lit/fl-state-appellate.
+[package]
+name = "fl-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "fl-criminal-trial-court"
+forum = "fl-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "florida"
+title = "Florida trial courts, criminal"
+description = "Criminal cases in the Florida circuit and county courts under the Florida Rules of Criminal Procedure: first appearance, the time for formal charges, arraignment, discovery, pretrial motions, speedy trial (Rule 3.191), plea or trial, motions for new trial and in arrest of judgment, sentencing and the criminal notice of appeal (Fla. R. App. P. 9.140(b)(3))."
+in_force = "2026-10-01"
+known_at = "2026-10-28"
+unknown_before = "2026-10-01"
+jurisdiction = "Florida trial courts of general criminal jurisdiction"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.fla-r-crim-p]
+title = "Florida Rules of Criminal Procedure, the Florida Bar's October 1, 2026 edition"
+url = "https://www-media.floridabar.org/uploads/2026/10/2027_04-Oct-Criminal-Procedure-Rules-10-1-2026.pdf"
+path = "sources/fl-criminal-trial-court/fl-rules-of-criminal-procedure-2026-10-01-sectioned.txt"
+path_sha256 = "0bfe9f774dcd8e56e9bc17ef5adc1ac45d2d99c3ac89d2c5d601745832c0a300"
+sha256 = "9f6d0a95acf1ec480c9e89a0a68f875adb5a29db7721b0d52d9eb773dfc904aa"
+as_of = "2026-10-01"
+cite_prefixes = ["Fla. R. Crim. P."]
+section_heading = "Rule {n}"
+
+[sources.fla-r-app-p]
+title = "Florida Rules of Appellate Procedure, the Florida Bar's October 1, 2026 edition"
+url = "https://www-media.floridabar.org/uploads/2026/10/Appellate-Court-Rules-10-01-26.pdf"
+path = "sources/fl-state-appellate/fl-rules-appellate-procedure-2026-10-01-sectioned.txt"
+path_sha256 = "529ece835412697830636b5054b02b830048cf561f1f99edc4298967df7369d4"
+sha256 = "7b462cb689ec328b5138c6693c164c0a81adbe5914f02cd88f7bc7d87f1a7042"
+as_of = "2026-10-01"
+cite_prefixes = ["Fla. R. App. P."]
+section_heading = "Rule {n}"

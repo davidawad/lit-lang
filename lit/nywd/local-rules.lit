@@ -1,0 +1,319 @@
+module nywd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Western District of New York's own periods, computed under the
+// federal rules (FRCP 6(a) governs "any local rule"). The motion periods
+// of Loc. R. Civ. P. 7(b)(2) apply only if the Court does not set
+// deadlines by order. Rules that state no period or limit stay out: the
+// scope and definitions (1.1-1.3), the civil cover sheet and service
+// (3, 4), filing and pro se cases (5.1, 5.2), electronic filing and
+// discovery materials (5.4, 5.6), disclosure statements (7.1), the RICO
+// case statement, filed with the papers first asserting the claim (9),
+// form of papers (10), sanctions (11), class actions (23), discovery
+// rules other than privilege logs (26, 29), jury rules (47), default
+// (55), summary judgment statements (56), judgments (58), injunctions
+// (65), consent to a magistrate judge (73), removal and bankruptcy
+// appeals (81) and the admission, discipline, recording, ADR and
+// pro bono rules (83.1-83.9). Periods measured in months stay in notes
+// where they are conditions, not deadlines: a case pending more than six
+// months, or with no action taken in six months, may receive an order to
+// show cause within 30 days why it should not be dismissed (41(b)).
+// Business-day periods stay in notes, because lit/core counts calendar
+// days (83.8). The EAJA petition period runs from the judgment's becoming
+// final and not appealable, which the rule fixes at 60 days after entry
+// (5.5(f)); both periods are declared. Periods that bind the court or the
+// clerk are not declared: the final pretrial conference within 30 days of
+// the trial date (16(e)(1)). Amounts are not declared. The earlier
+// W.D.N.Y. outline's FRCP flow and its Supreme Court decisions (Twombly,
+// Iqbal, Celotex, Anderson v. Liberty Lobby) are FRCP authority and
+// belong to lit/frcp; they are removed here: no reporter text is
+// vendored.
+/// A memorandum in support of or in opposition to any motion: at most 25
+/// pages, tables excluded; leave to exceed is sought by letter at least 7
+/// days before the memorandum is due (Loc. R. Civ. P. 7(a)(2)(C)).
+limit memorandum {
+  pages <= 25 cite "W.D.N.Y. Loc. R. Civ. P. 7(a)"
+} cite "W.D.N.Y. Loc. R. Civ. P. 7(a)"
+
+/// A reply memorandum: at most 10 pages (Loc. R. Civ. P. 7(a)(2)(C)).
+limit reply-memorandum {
+  pages <= 10 cite "W.D.N.Y. Loc. R. Civ. P. 7(a)"
+} cite "W.D.N.Y. Loc. R. Civ. P. 7(a)"
+
+/// An opening brief in a Social Security action: at most 30 pages (Loc.
+/// R. Civ. P. 5.5(d)(3)).
+limit social-security-opening-brief {
+  pages <= 30 cite "W.D.N.Y. Loc. R. Civ. P. 5.5(d)"
+} cite "W.D.N.Y. Loc. R. Civ. P. 5.5(d)"
+
+/// A reply brief in a Social Security action: at most 10 pages (Loc. R.
+/// Civ. P. 5.5(d)(3)).
+limit social-security-reply-brief {
+  pages <= 10 cite "W.D.N.Y. Loc. R. Civ. P. 5.5(d)"
+} cite "W.D.N.Y. Loc. R. Civ. P. 5.5(d)"
+
+/// The Court denies a motion to seal, in whole or in part, a document
+/// designated in another filing (Loc. R. Civ. P. 5.3(g)).
+event SealingDenied()
+/// Judgment is entered in a Social Security action (Loc. R. Civ. P.
+/// 5.5(f)).
+event SocialSecurityJudgmentEntered()
+/// The judgment in a Social Security action becomes final and not
+/// appealable (Loc. R. Civ. P. 5.5(f)).
+event SocialSecurityJudgmentFinal()
+/// An EAJA petition is filed (Loc. R. Civ. P. 5.5(f)).
+event EajaPetitionFiled()
+/// A petition for fees under 42 U.S.C. § 406(b) is served (Loc. R. Civ.
+/// P. 5.5(g)).
+event FeePetitionServed()
+/// A memorandum is due under the briefing schedule (Loc. R. Civ. P.
+/// 7(a)(2)(C)).
+event MemorandumDue()
+/// A summary judgment motion is served (Loc. R. Civ. P. 7(b)(2)(A)).
+event SummaryJudgmentMotionServed() paper memorandum
+/// Responding papers to a summary judgment motion are served (Loc. R.
+/// Civ. P. 7(b)(2)(A)).
+event SummaryJudgmentResponseServed() paper memorandum
+/// A cross-motion for summary judgment is served (Loc. R. Civ. P.
+/// 7(b)(2)(A)).
+event CrossMotionServed() paper memorandum
+/// Responding papers in opposition to the cross-motion are served (Loc.
+/// R. Civ. P. 7(b)(2)(A)).
+event CrossMotionResponseServed() paper memorandum
+/// Any other motion is served (Loc. R. Civ. P. 7(b)(2)(B)).
+event MotionServed() paper memorandum
+/// Responding papers to any other motion are served (Loc. R. Civ. P.
+/// 7(b)(2)(B)).
+event ResponseServed() paper memorandum
+/// A reply is served (Loc. R. Civ. P. 7(b)).
+event ReplyServed() paper reply-memorandum
+/// The order granting leave to amend or supplement is entered (Loc. R.
+/// Civ. P. 15(c)).
+event AmendmentGranted()
+/// The first settlement conference is held (Loc. R. Civ. P. 16(c)(2)).
+event SettlementConferenceHeld()
+/// The final pretrial conference is held (Loc. R. Civ. P. 16(e)(2)).
+event FinalPretrialConferenceHeld()
+/// A claim of privilege is asserted during a deposition (Loc. R. Civ. P.
+/// 26(d)(3)).
+event PrivilegeAssertedAtDeposition()
+/// A deposition is taken on the date set for examination (Loc. R. Civ. P.
+/// 30(a), (b)).
+event DepositionHeld()
+/// Trial begins (Loc. R. Civ. P. 30(c)(4)).
+event TrialBegins()
+/// The case is settled (Loc. R. Civ. P. 41(a)).
+event CaseSettled()
+/// Final judgment is entered (Loc. R. Civ. P. 54(a)).
+event FinalJudgmentEntered()
+/// The verified bill of costs is served (Loc. R. Civ. P. 54(b)).
+event BillOfCostsServed()
+/// The memorandum opposing costs is served (Loc. R. Civ. P. 54(c)).
+event CostOppositionServed()
+/// A party is served with a magistrate judge's recommended disposition
+/// (Loc. R. Civ. P. 72(b)).
+event RecommendationServed()
+/// The Clerk gives notice to remove paper or physical exhibits (Loc. R.
+/// Civ. P. 79(c)).
+event ExhibitRemovalNoticeGiven()
+
+/// Loc. R. Civ. P. 5.3(g)(1), (2): where sealing of a designated document
+/// is denied, it is deemed withdrawn without prejudice unless an unsealed
+/// (or unredacted) version is filed within 14 days of the entry of the
+/// order denying the motion.
+deadline unsealed-filing-period: 14.days after SealingDenied() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 5.3(g)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 5.5(f): the judgment in a Social Security action is
+/// final and not appealable 60 days after entry; unless stipulated, an
+/// EAJA petition may not be filed before then.
+deadline social-security-judgment-final-period: 60.days after SocialSecurityJudgmentEntered() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 5.5(f): the plaintiff files the EAJA petition under 28
+/// U.S.C. § 2412 within 30 days of final judgment.
+deadline eaja-petition-period: 30.days after SocialSecurityJudgmentFinal() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 5.5(f): the defendant has 30 days to respond to the
+/// EAJA petition.
+deadline eaja-response-period: 30.days after EajaPetitionFiled() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 5.5(f)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 5.5(g)(4): within 30 days of service of a § 406(b)
+/// petition, the defendant files a response or notice of no response. The
+/// petition itself follows FRCP 54(d)(2)(B) and a decision of the Second
+/// Circuit (5.5(g)(1)), whose text is not vendored; its period is not
+/// declared.
+deadline fee-petition-response-period: 30.days after FeePetitionServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 5.5(g)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 7(a)(2)(C): a party seeking to exceed the page limit
+/// applies by letter at least 7 days before the date the memorandum must
+/// be filed.
+deadline page-extension-request-period: 7.days before MemorandumDue() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 7(a)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 7(b)(2)(A): absent a scheduling order, the party
+/// opposing a summary judgment motion has 28 days after service of the
+/// motion to file and serve responding papers.
+deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 7(b)(2)(A): the moving party has 14 days after service
+/// of the responding papers to file and serve reply papers.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 7(b)(2)(A): if the opposing party cross-moves, the
+/// moving party has 28 days after service of the cross-motion to respond.
+deadline cross-motion-response-period: 28.days after CrossMotionServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 7(b)(2)(A): the cross-moving party has 14 days after
+/// service of the responding papers to reply.
+deadline cross-motion-reply-period: 14.days after CrossMotionResponseServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 7(b)(2)(B): on all other motions, absent a scheduling
+/// order, the opposing party has 14 days after service of the motion to
+/// file and serve responding papers.
+deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 7(b)(2)(B): the moving party has 7 days after service
+/// of the responding papers to file and serve reply papers.
+deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 7(b)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 15(c): unless the order sets a different deadline, the
+/// moving party files and serves the amended pleading on the existing
+/// parties within 14 days of entry of the order granting leave.
+deadline amended-pleading-period: 14.days after AmendmentGranted() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 15(c)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 16(c)(2): the plaintiff provides a written settlement
+/// demand at least 14 days before the first settlement conference.
+deadline settlement-demand-period: 14.days before SettlementConferenceHeld() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 16(c)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 16(c)(2): the defendant responds to the demand in
+/// writing at least 7 days before the conference.
+deadline settlement-response-period: 7.days before SettlementConferenceHeld() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 16(c)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 16(e)(2): no later than 14 days before the final
+/// pretrial conference, or another date the Court sets, each party files
+/// and serves a pretrial statement.
+deadline pretrial-statement-period: 14.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 16(e)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 26(d)(3): where a privilege asserted at a deposition
+/// cannot be described then, the information is furnished in writing
+/// within 14 days after the privilege is asserted, unless the Court orders
+/// otherwise.
+deadline deposition-privilege-log-period: 14.days after PrivilegeAssertedAtDeposition() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 26(d)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 30(a): absent agreement or order, each deposition
+/// notice is served at least 21 days before the date set for examination.
+deadline deposition-notice-period: 21.days before DepositionHeld() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 30(a)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 30(b): a deposition at which documents are sought is
+/// scheduled to allow their production at least 7 calendar days before
+/// it.
+deadline deposition-documents-period: 7.days before DepositionHeld() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 30(b)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 30(c)(4): unresolved objections in a video deposition
+/// are submitted by motion in limine no later than 7 days before trial or
+/// any earlier deadline the Court sets.
+deadline video-objection-motion-period: 7.days before TrialBegins() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 30(c)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 41(a): when a case is settled, the parties file a
+/// stipulation of dismissal or other appropriate document within 14 days;
+/// otherwise the Judge may dismiss the case as settled, on the merits.
+deadline stipulation-of-dismissal-period: 14.days after CaseSettled() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 41(a)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 54(a): within 30 days after entry of final judgment, a
+/// party entitled to costs submits a verified Bill of Costs to the Clerk.
+deadline bill-of-costs-period: 30.days after FinalJudgmentEntered() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 54(a)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 54(b): the opposing party files any memorandum in
+/// opposition to costs within 21 days of service of the Bill of Costs.
+deadline cost-opposition-period: 21.days after BillOfCostsServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 54(b)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 54(c): the prevailing party files any reply within 21
+/// days of service of the opposing memorandum.
+deadline cost-reply-period: 21.days after CostOppositionServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 54(c)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 72(b): a party seeking more time to object to a
+/// magistrate judge's recommended disposition moves for an extension
+/// within 14 days after being served with it.
+deadline objection-extension-period: 14.days after RecommendationServed() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 72(b)"
+{
+  forum frcp
+}
+
+/// Loc. R. Civ. P. 79(c): a party that does not remove paper or physical
+/// exhibits within 30 days from the Clerk's notice may have them destroyed
+/// or otherwise disposed of.
+deadline exhibit-removal-period: 30.days after ExhibitRemovalNoticeGiven() counted_by frcp6 cite "W.D.N.Y. Loc. R. Civ. P. 79(c)"
+{
+  forum frcp
+}

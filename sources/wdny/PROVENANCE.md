@@ -22,3 +22,9 @@
 - Edition: as the extract, effective January 1, 2025, with the clerical corrections of order 26-4-7.
 - Upstream: https://www.nywd.uscourts.gov/sites/nywd/files/26-4-7%20CLERICAL%20CORRECTIONS%20TO%202024%20Local%20Rules%20of%20Criminal%20Procedure.docx%20-%20Signed.pdf, retrieved 2026-10-28, as recorded on `wdny/wdny-local-criminal-rules-2025-01-01.txt` above; sectioning was done from the vendored extract.
 - Sectioned sha256 26441fee7eab9c38b7b42ff48fa421cd60f2efd8c36c1657aaf8aef7c825c98c (the `path_sha256` pinned by `lit/nywd-criminal/Lit.toml`).
+
+### `wdny/local-rules-civil-sectioned.txt` — W.D.N.Y. Local Rules of Civil Procedure, sectioned
+
+- Derived in the pod (lg-f3q8.51) from `wdny/local-rules-civil.txt` (extract sha256 71035a3a7e65743f9ad110371cba9a7f2b0b2fbc81191bb37def455daedb1218), which was retrieved 2026-10-27 from https://www.nywd.uscourts.gov/sites/nywd/files/2025%20Local%20Rules%20of%20Civil%20Procedure%20FINAL%20-%20v3-1.pdf as recorded above; nothing fetched in the pod. Method: one `## Rule <n>` line is inserted before each rule's own centered `RULE <n>` heading line in the rules body (Rule 1.1 through Rule 83.9, 42 rules); the contents and the index (including its `RULE 81` entry) are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, effective January 15, 2026.
+- Sectioned sha256 90d2aa91d8cf9fd6c6a27fe53edd634878076d61f05627d8fbef71cb6281cc9d (the `path_sha256` pinned by `lit/nywd/Lit.toml`).

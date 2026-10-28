@@ -1,0 +1,256 @@
+module caed-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The Eastern District of California's own criminal periods, counted
+// under the criminal rules (FRCrimP 45(a) governs "any local rule"). No
+// trigger carries a service method: FRCrimP 45(c)'s three added days
+// follow the manner of service, which is not modeled here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: the proposed presentence report is made available not less than
+// thirty-five (35) days before sentencing (L.R. 461(a)), FRCrimP
+// 32(e)(2)'s period (psr-disclosure); a defendant appeals a magistrate
+// judge's conviction under FRCrimP 58(g)(2) (L.R. 422(a)); and the time
+// periods of L.R. 430.1 supersede those FRCrimP 47 prescribes for serving
+// notices of motion (L.R. 430.1(g)).
+//
+// Conditions that are not deadlines from an event stay in notes: interpreter
+// services may take up to one week to arrange, or three court days for
+// Spanish (L.R. 403(c)), an estimate rather than a deadline; the oral
+// argument on a misdemeanor appeal is set not less than sixty-three (63)
+// nor more than ninety-one (91) days after the Clerk's notice (L.R.
+// 422(d)), a window the Clerk sets; the trial confirmation hearing is set
+// approximately two (2) weeks before trial (L.R. 450); the government's
+// test and examination reports not in its possession are disclosed as
+// soon as reasonably possible after the 14-day period (L.R. 440(b)); a
+// complex case goes to the next available motion calendar for a status
+// conference (L.R. 430.2(b)).
+//
+// The earlier E.D. Cal. criminal outline's FRCrimP flow and its decisions
+// belong to lit/frcrimp; they are removed here: no reporter text is
+// vendored.
+/// A motion to reopen a detention hearing under 18 U.S.C. § 3142(f), and
+/// any opposition: at most five pages unless authorized by the Court
+/// (E.D. Cal. L.R. 429(a), (c)).
+limit bail-review-paper { pages <= 5 cite "E.D. Cal. L.R. 429(a)" } cite "E.D. Cal. L.R. 429"
+
+/// The date of a scheduled court proceeding, for which interpreter
+/// services were arranged, that is cancelled or rescheduled (E.D. Cal.
+/// L.R. 403(d)).
+event InterpretedHearingScheduled()
+/// A notice of appeal from a magistrate judge's conviction is filed (E.D.
+/// Cal. L.R. 422(b)).
+event MisdemeanorAppealNoticed()
+/// The transcript, or a certificate that no transcript will be ordered, is
+/// filed (E.D. Cal. L.R. 422(e)).
+event AppealTranscriptFiled()
+/// The appellant's brief is filed and served (E.D. Cal. L.R. 422(e)).
+event AppellantBriefServed()
+/// The appellee's brief is served (E.D. Cal. L.R. 422(e)).
+event AppelleeBriefServed()
+/// The Magistrate Judge serves notice that a Class A misdemeanor defendant
+/// has elected trial before a District Judge (E.D. Cal. L.R. 423(c)).
+event DistrictJudgeElectionNoticed()
+/// A motion to reopen a detention hearing is filed (E.D. Cal. L.R.
+/// 429(a)).
+event BailReviewMotionFiled() paper bail-review-paper
+/// The hearing on a motion to reopen a detention hearing is scheduled
+/// (E.D. Cal. L.R. 429(a), (c)).
+event BailReviewHearingScheduled()
+/// An opposition to a bail review motion is filed (E.D. Cal. L.R. 429(c)).
+event BailReviewOppositionFiled() paper bail-review-paper
+/// The hearing on a criminal motion is set (E.D. Cal. L.R. 430.1(e)).
+event MotionHearingScheduled()
+/// A noticed criminal motion is filed (E.D. Cal. L.R. 430.1(f)).
+event MotionFiled()
+/// The day an opposition to a noticed motion is due (E.D. Cal. L.R.
+/// 430.1(f)).
+event OppositionDue()
+/// A Magistrate Judge's final decision (E.D. Cal. L.R. 430.1(j)).
+event MagistrateDecision()
+/// The defendant is arraigned (E.D. Cal. L.R. 440(a)).
+event Arraigned()
+/// The trial confirmation or pretrial conference is scheduled (E.D. Cal.
+/// L.R. 440(b)).
+event TrialConfirmationScheduled()
+/// The government requests the discovery FRCrimP 16(b) requires of the
+/// defendant (E.D. Cal. L.R. 440(c)).
+event DefenseDiscoveryRequested()
+
+/// E.D. Cal. L.R. 403(d): if a scheduled court proceeding is cancelled or
+/// rescheduled, counsel notifies the staff court interpreter at least two
+/// court days before the scheduled hearing.
+deadline interpreter-cancellation-notice: 2.court_days before InterpretedHearingScheduled() counted_by frcrimp45 cite "E.D. Cal. L.R. 403(d)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 422(b): within fourteen (14) days after filing the
+/// notice of appeal, the appellant orders the official transcript or files
+/// a certificate that no transcript will be ordered.
+deadline misdemeanor-appeal-transcript: 14.days after MisdemeanorAppealNoticed() counted_by frcrimp45 cite "E.D. Cal. L.R. 422(b)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 422(e): the appellant's brief is served and filed within
+/// twenty-one (21) days after the filing of the transcript or certificate;
+/// the assigned Judge may alter the periods (L.R. 144).
+deadline misdemeanor-appellant-brief: 21.days after AppealTranscriptFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Cal. L.R. 422(e)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 422(e): the appellee's brief is served and filed within
+/// twenty-one (21) days after the filing and service of the appellant's
+/// brief.
+deadline misdemeanor-appellee-brief: 21.days after AppellantBriefServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Cal. L.R. 422(e)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 422(e): the appellant may serve and file a reply brief
+/// within seven (7) days after service of the appellee's brief.
+deadline misdemeanor-reply-brief: 7.days after AppelleeBriefServed() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Cal. L.R. 422(e)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 423(c): if the United States Attorney neither commences
+/// proceedings nor dismisses within ninety-one (91) days after service of
+/// the Magistrate Judge's notice of the defendant's election, the charge
+/// is dismissed with prejudice on motion of the Court or the defendant.
+deadline class-a-election-prosecution: 91.days after DistrictJudgeElectionNoticed() counted_by frcrimp45 cite "E.D. Cal. L.R. 423(c)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 429(a): a motion to reopen a detention hearing is
+/// noticed on the magistrate court duty calendar at least seven days
+/// before the hearing, unless a shorter schedule is ordered for good cause.
+deadline bail-review-notice: 7.days before BailReviewHearingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Cal. L.R. 429(a)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 429(c): any opposition is filed at least two days before
+/// the hearing date.
+deadline bail-review-opposition: 2.days before BailReviewHearingScheduled() counted_by frcrimp45 cite "E.D. Cal. L.R. 429(c)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 430.1(e): a criminal motion is filed for hearing not
+/// less than 14 days after its service or, if a hearing date is specially
+/// set, not less than 14 days before that date; the time may be shortened
+/// only with leave of Court for good cause.
+deadline motion-notice: 14.days before MotionHearingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Cal. L.R. 430.1(e)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 430.1(f): any opposition to a noticed motion, or a
+/// statement of non-opposition, is served and filed within 7 days after the
+/// motion is filed; a party that has not timely opposed is not heard in
+/// opposition at oral argument.
+deadline motion-opposition: 7.days after MotionFiled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Cal. L.R. 430.1(f)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 430.1(f): any reply is served and filed not more than 4
+/// days after the opposition is due.
+deadline motion-reply: 4.days after OppositionDue() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Cal. L.R. 430.1(f)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 430.1(j): an appeal from a final decision of the
+/// Magistrate Judge is served and filed within fourteen (14) days after the
+/// date of the decision.
+deadline magistrate-decision-appeal: 14.days after MagistrateDecision() counted_by frcrimp45 cite "E.D. Cal. L.R. 430.1(j)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 440(a): on the defendant's request and unless otherwise
+/// ordered, the government provides the discovery FRCrimP
+/// 16(a)(1)(A)-(E) and (G) requires within fourteen (14) days from the
+/// date of arraignment.
+deadline government-initial-disclosure: 14.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Cal. L.R. 440(a)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 440(b): in no event does the government fail to disclose
+/// reports of examinations or tests at least seven (7) days before the
+/// trial confirmation or pretrial conference.
+deadline examination-report-disclosure: 7.days before TrialConfirmationScheduled() counted_by frcrimp45 cite "E.D. Cal. L.R. 440(b)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 440(c): unless otherwise ordered, the defendant provides
+/// the discovery FRCrimP 16(b) requires within twenty-one (21) days from
+/// the request.
+deadline defense-discovery: 21.days after DefenseDiscoveryRequested() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "E.D. Cal. L.R. 440(c)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 461(b): not less than twenty-eight (28) days before the
+/// sentencing hearing, counsel for the defendant and the government each
+/// deliver to the probation officer, and exchange, a written statement of
+/// all objections to the presentence report.
+deadline psr-informal-objections: 28.days before SentencingScheduled() counted_by frcrimp45 cite "E.D. Cal. L.R. 461(b)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 461(c): not less than twenty-one (21) days before the
+/// sentencing hearing, the probation officer submits the presentence
+/// report to the sentencing Judge and makes it available to counsel.
+deadline psr-submission: 21.days before SentencingScheduled() counted_by frcrimp45 cite "E.D. Cal. L.R. 461(c)"
+{
+  forum frcrimp
+}
+
+/// E.D. Cal. L.R. 461(d): not less than fourteen (14) days before the
+/// sentencing hearing, counsel each file and serve all objections and facts
+/// in dispute to be resolved by the Court; except for good cause, only
+/// objections first made under L.R. 461(b), or to new information, may be
+/// raised (L.R. 461(e)).
+deadline psr-formal-objections: 14.days before SentencingScheduled() counted_by frcrimp45 cite "E.D. Cal. L.R. 461(d)"
+{
+  forum frcrimp
+}

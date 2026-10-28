@@ -1,0 +1,55 @@
+# The U.S. District Court for the Eastern District of California's
+# Criminal Rules (L.R. 400 to 480 of its Local Rules) as a local-rule
+# layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it declares
+# only the periods and limits the local criminal rules themselves state
+# and re-encodes no FRCrimP, Speedy Trial Act or FRAP 4(b) period (one
+# source of truth: lit/frcrimp). Each period is counted under FRCrimP
+# 45(a), which governs "any local rule", so each deadline names `forum
+# frcrimp`. The rules are the Local Rules effective February 23, 2026
+# (sources/fed-edcal), the sectioned file lit/caed already binds; earlier
+# editions are not vendored, so a query before that date is a hole in the
+# corpus. The general rules (L.R. 100 to 199 and 300 to 399) apply in
+# criminal actions absent a criminal rule on point (L.R. 400(a)) and live
+# in lit/caed. The court's Plan for Prompt Disposition of Criminal Actions
+# (L.R. 400(g)) is not vendored. An appeal goes to the Ninth Circuit under
+# lit/frcrimp's FRAP 4(b) period.
+[package]
+name = "caed-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "caed-criminal-local-rules"
+forum = "caed-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Eastern District of California: Criminal Rules"
+description = "The Eastern District of California's Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): interpreter cancellation notice, the appeal from a magistrate judge's misdemeanor conviction, the Class A misdemeanor election, bail review motions and their page limits, criminal motion notice, opposition and reply, appeals from magistrate judge rulings, Rule 16 discovery, and the presentence objection and submission schedule."
+in_force = "2026-02-23"
+known_at = "2026-10-28"
+unknown_before = "2026-02-23"
+jurisdiction = "U.S. District Court for the Eastern District of California (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "caed-rules"
+issuer = "U.S. District Court for the Eastern District of California"
+date = "2026-02-23"
+designation = "Local Rules, Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.caed-rules]
+title = "Local Rules of the United States District Court for the Eastern District of California (effective February 23, 2026), Criminal Rules"
+url = "https://www.caed.uscourts.gov/caednew/assets/File/EDCA%20LOCAL%20RULES%20EFF_%2002-23-26.pdf"
+path = "sources/fed-edcal/edcal-local-rules-sectioned.txt"
+path_sha256 = "2687cac2861239ae26dffd16fce684409b0c852691175126e9b9f709fbde344c"
+sha256 = "280a7078af778ed24ce067dd5a9ac0122347b62140c1eca71c49e9f72ffd75f5"
+as_of = "2026-02-23"
+cite_prefixes = ["E.D. Cal. L.R."]
+section_heading = "E.D. Cal. L.R. {n}"

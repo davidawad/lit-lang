@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "caed-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:47eb65f3a55edff1117ee8bb164344b5b16449dd6f582846dbfcc647c8d27901"
+semantic = "sha256:d9c4564ca9566bf8f740a32fc1ab21b9556e4f8b9146019b0c9e400427c5cc70"
+texts = [
+    "caed-rules sources/fed-edcal/edcal-local-rules-sectioned.txt sha256:2687cac2861239ae26dffd16fce684409b0c852691175126e9b9f709fbde344c",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]

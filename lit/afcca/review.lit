@@ -1,0 +1,175 @@
+module afcca.review
+
+// Review of an Air Force court-martial in the Air Force Court of Criminal
+// Appeals, from the accused's (appellant's) side. The JRAP and the AFCCA
+// Rules of Practice and Procedure (effective 29 June 2026; sources/afcca)
+// supply the Court's jurisdiction, record, briefing, motions, remand,
+// reconsideration and finality; the UCMJ and the Rules for Courts-Martial
+// are not vendored, so trial, post-trial processing, the judgment under
+// Article 60c, Article 69 review by the Judge Advocate General and review
+// by the Court of Appeals for the Armed Forces (CAAF, lit/caaf) are holes. Every
+// period is stated in a note: JRAP 15 counts over Saturdays, Sundays,
+// legal holidays and days the Court is closed, ending at 2359 Eastern
+// Time, for which lit/core has no counting rule. The earlier outline cited
+// United States v. Sales, 22 M.J. 305 (C.M.A. 1986), which the vendored
+// text does not cite and no reporter here verifies; it is dropped. United
+// States v. DuBay, 37 C.M.R. 411 (C.M.A. 1967), and United States v.
+// Grostefon, 12 M.J. 431 (C.M.A. 1982), are cited as the vendored rules
+// cite them (AFCCA R. 31.1; JRAP 18(b)).
+/// A brief, answer, reply or other filing: 50 pages, excluding indices,
+/// attachments and appendices, unless the Court authorizes more (AFCCA R.
+/// 17.3).
+limit filing { pages <= 50 cite "AFCCA R. 17.3" } cite "AFCCA R. 17.3"
+/// A Grostefon appendix to the assignments of error: 30 pages unless the
+/// Court grants leave for good cause (AFCCA R. 18.2(a)).
+limit grostefon-appendix { pages <= 30 cite "AFCCA R. 18.2" } cite "AFCCA R. 18.2"
+
+/// The case is docketed, or the Court receives the record of trial (JRAP
+/// 18(d); AFCCA R. 3.3(d), 15.1).
+event CaseDocketed()
+/// The appellant's brief (assignments of error) is filed (JRAP 18(a), (d)).
+event AppellantBriefFiled() paper filing
+/// The Court's decision is released (AFCCA R. 3.3(f)).
+event DecisionReleased()
+
+start trial-result
+
+state trial-result: "Court-martial findings and sentence" by office cite ?("UCMJ Articles 16, 60c: not vendored") {
+  note "General or special court-martial findings and sentence, and the judgment entered under Article 60c, UCMJ: trial and post-trial procedure are outside this package and the UCMJ and Rules for Courts-Martial are not vendored. The Court's jurisdiction is set by statute; the rules give only a synopsis and neither extend nor limit it (JRAP 5(a))."
+  edge-trial-result-route "Judgment entered: appellate route" -> appeal-route {
+    authority cite "JRAP 5(b)"
+  }
+  edge-trial-result-government-appeal "United States appeals a ruling under Article 62" -> government-appeal {
+    authority cite "JRAP 5(b)(4)"
+  }
+  edge-trial-result-writ "Petition for extraordinary relief" -> extraordinary-relief {
+    authority cite "JRAP 19(a)"
+  }
+}
+
+decision appeal-route: "Automatic review, direct appeal, Article 69 review or waiver" by applicant cite "JRAP 5(b)"
+{
+  note "Automatic review covers a sentence entered in the judgment under Article 60c that includes death, dismissal of a commissioned officer, cadet or midshipman, a dishonorable or bad-conduct discharge, or confinement for two years or more (JRAP 5(b)(1)). Other special and general courts-martial with a finding of guilty may be appealed by the accused under Article 66(b)(1) (JRAP 5(b)(2)): the appeal is timely if the Notice of Appeal is filed before the later of 90 days after the accused is given notice of appellate rights under Article 65(c) or a date the Court sets (JRAP 18(d)(2)); the notice states the dates and locations of the court-martial, the sentence entered, and the dates of the Government's notice of appellate rights, its mailing and its receipt (AFCCA R. 18.5). A notice filed after the 90 days may be accepted in the Court's discretion on good cause (AFCCA R. 18.6(b)), and an appellant may move to enlarge the Article 66(c)(1)(A) time (AFCCA R. 24.2(2)). Summary courts-martial reach the Court only after the Judge Advocate General acts under Article 69(c)(1) (JRAP 5(b)(3)). In all but death cases, a properly waived or withdrawn appeal is outside the Court's jurisdiction (JRAP 5(c))."
+  edge-appeal-route-automatic "Automatic review under Article 66(b)(3)" -> ccca-docketed {
+    event CaseDocketed()
+    authority cite "JRAP 5(b)(1)"
+  }
+  edge-appeal-route-direct "Timely notice of direct appeal under Article 66(b)(1)" -> ccca-docketed {
+    event CaseDocketed()
+    authority cite "JRAP 18(d)(2)"
+  }
+  edge-appeal-route-tjag "Summary court-martial: Judge Advocate General review" -> tjag-review {
+    authority cite "JRAP 5(b)(3)"
+  }
+  edge-appeal-route-waive "Waiver or withdrawal of appellate review" -> waived {
+    authority cite "JRAP 5(c)"
+  }
+}
+
+state tjag-review: "Review by the Judge Advocate General" by office cite ?("UCMJ Article 69: not vendored") {
+  note "Review by the Judge Advocate General under Article 69, and its request and periods, are holes (UCMJ not vendored). An application to the Court for review of a summary court-martial under Article 66(b)(1)(B) is filed no later than 60 days from the earlier of notice to the accused of the Judge Advocate General's decision or its deposit in the mail under Article 69(d)(2)(B)(ii), and states with particularity the substantial basis for concluding the action was prejudicial error; no further briefs are filed unless the Court orders (JRAP 18(d)(3))."
+  edge-tjag-review-application "Application for review granted by the Court" -> ccca-decision {
+    authority cite "JRAP 5(b)(3)"
+  }
+  edge-tjag-review-decided "No application, or application denied" -> tjag-decided {
+    authority cite ?("UCMJ Article 69: not vendored")
+  }
+}
+
+state ccca-docketed: "Docketed: assignments of error, answer and reply" by applicant cite "JRAP 18(d)"
+{
+  note "Notice of docketing, or the Court's acceptance of the record when a case is docketed without one under Article 66(b)(1)(A), starts the Rule 18 times (AFCCA R. 3.3(d)). The appellant's brief is due 60 days after the Court receives the record and dockets the case (automatic review, JRAP 18(d)(1)) or after the record is provided following a Notice of Appeal (direct appeal, JRAP 18(d)(2); AFCCA R. 18.5, 15.1). The United States answers within 30 days after the appellant's brief and the appellant may reply within 7 days after the answer; if no brief is filed for the accused, the United States may file within 30 days after the accused's time expires (JRAP 18(d)(1)-(2)). An appellant who declines counsel twice has 60 days from the notice of docketing, after which the case is reviewed on its merits (AFCCA R. 3.3(e)). Assignments of error follow Appendix A, merits briefs Appendix B (AFCCA R. 18.1); Grostefon issues are an assignment of error with the substance in the first appendix (JRAP 18(b); AFCCA R. 18.2). A motion for enlargement of time is due at least 7 calendar days before the due date, 3 for a reply; the appellant's first enlargement may be up to 60 days without good cause, the second up to 60 days on good cause shown with particularity, later ones up to 30 days on good cause (AFCCA R. 24.3(a)-(b)). A motion for oral argument is due by the reply brief's due date (JRAP 25); a suggestion for en banc consideration within 7 days after the answer or the reply (JRAP 27(b))."
+  edge-ccca-docketed-briefed "Briefing complete" -> ccca-decision {
+    event AppellantBriefFiled()
+    authority cite "JRAP 18(d)"
+  }
+  edge-ccca-docketed-withdrawn "Withdrawal of appellate review by motion" -> waived {
+    authority cite "JRAP 16"
+  }
+}
+
+decision ccca-decision: "Court of Criminal Appeals decision" by court cite ?("UCMJ Article 66: not vendored") {
+  note "The Court's powers on review under Article 66 are a hole (UCMJ not vendored). The Court may consider matters outside the record only as JRAP 6(b) allows, and may order correction of the record or an Article 66(f) proceeding (JRAP 6(c)). It may remand under Article 66(f)(3), retaining jurisdiction unless it expressly dismisses the appellate proceeding (JRAP 29(a)-(b)); a hearing under Article 66(f)(3) or United States v. DuBay, 37 C.M.R. 411 (C.M.A. 1967), is among the orders a party may move to reconsider (AFCCA R. 31.1). A motion for reconsideration is due no later than 30 days after the decision, the answer within 7 days (JRAP 31(b)-(c)); for a decision disposing of the case, within 30 days after its delivery to the appellate divisions or civilian counsel's place of business (AFCCA R. 31.2(a)). No extension runs past the deadline to petition CAAF (JRAP 31(e))."
+  edge-ccca-decision-affirmed "Findings and sentence affirmed" -> caaf-route {
+    event DecisionReleased()
+    authority cite "AFCCA R. 30.2"
+  }
+  edge-ccca-decision-relief "Findings set aside or sentence reassessed" -> ccca-relief {
+    event DecisionReleased()
+    authority cite ?("UCMJ Article 66: not vendored")
+  }
+  edge-ccca-decision-remanded "Remand under Article 66(f)" -> ccca-remanded {
+    authority cite "JRAP 29(a)"
+  }
+}
+
+decision caaf-route: "Petition to the Court of Appeals for the Armed Forces" by applicant cite "AFCCA R. 30.2"
+{
+  note "A decision resolving an appeal becomes final when the time to request reconsideration has expired and neither party has timely sought review by CAAF (AFCCA R. 30.2). CAAF jurisdiction vests when a petition or certificate is filed there (AFCCA R. 31.2(a)). Article 67 is not vendored here; the petition, its period and CAAF's grant and review are modeled in lit/caaf."
+  edge-caaf-route-petition "Petition for grant of review filed" -> caaf-review {
+    authority cite ?("UCMJ Article 67: not vendored")
+  }
+  edge-caaf-route-final "No petition: decision final" -> ccca-affirmed {
+    authority cite "AFCCA R. 30.2"
+  }
+}
+
+state caaf-review: "Review by the Court of Appeals for the Armed Forces" by court cite ?("UCMJ Article 67: not vendored") {
+  note "CAAF review is modeled in lit/caaf; Article 67 is not vendored. A case CAAF returns under Article 67(e) is docketed again on the regular docket (AFCCA R. 3.3(a))."
+  edge-caaf-review-decided "CAAF acts" -> caaf-decided {
+    authority cite ?("UCMJ Article 67: not vendored")
+  }
+}
+
+state government-appeal: "Government appeal under Article 62" by office cite "JRAP 20"
+{
+  note "Only a representative designated by the Judge Advocate General may file (JRAP 20(a)(1)); the appeal complies with R.C.M. 908 and includes its Notice of Appeal with the date and time of the ruling and of service on the military judge (JRAP 20(b)(1)). Trial counsel has 20 days from the Notice of Appeal to forward the appeal and record; the designee files the record within 5 days of receipt; the United States' brief is due 20 days after the appeal is filed with the Court, the appellee's answer 20 days after that brief, and the reply 7 days after the answer (JRAP 20(c)(1)). The parties give Article 62 appeals priority where practicable (JRAP 20(d)); the brief's contents are in AFCCA R. 20.1(b)."
+  edge-government-appeal-decided "Court of Criminal Appeals decides" -> government-appeal-decided {
+    authority cite "JRAP 20"
+  }
+}
+
+state extraordinary-relief: "Petition for extraordinary relief" by applicant cite "JRAP 19"
+{
+  note "A petition under 28 U.S.C. § 1651 or Article 6b is filed as soon as possible and no later than 20 days after the petitioner learns of the action complained of, except habeas corpus and error coram nobis, which may be filed at any time (JRAP 19(b)(1)); its contents and caption are in JRAP 19(b)(2)-(3). The Court may dismiss or deny without answer or order the respondent to show cause; an ordered answer is due within 20 days of the order and a reply within 7 days of the answer (JRAP 19(f)-(g); AFCCA R. 19.2(c))."
+  edge-extraordinary-relief-decided "Court acts on the petition" -> writ-decided {
+    authority cite "JRAP 19"
+  }
+}
+
+terminal waived: "Appellate review waived or withdrawn" outcome [decided] cite "JRAP 16"
+{
+  note "A valid waiver or withdrawal under R.C.M. 1115 bars review under Article 66; once a case is before the Court it is referred to the Court, which dismisses the appeal if it finds the waiver valid (JRAP 16). It is made by motion using DD Form 2330 (AFCCA R. 16.1, 23.3(i))."
+}
+
+terminal ccca-affirmed: "Findings and sentence affirmed; decision final" outcome [loss] cite "AFCCA R. 30.2"
+{
+  note "Affirmance final with no timely reconsideration or CAAF petition (AFCCA R. 30.2). Outcome from the appellant's side."
+}
+
+terminal ccca-relief: "Findings set aside or sentence reassessed" outcome [win] cite ?("UCMJ Article 66: not vendored") {
+  note "Relief on findings or sentence; the United States may seek CAAF review, a hole here. Outcome from the appellant's side."
+}
+
+terminal ccca-remanded: "Remanded under Article 66(f)" outcome [remand] cite "JRAP 29"
+{
+  note "A remand that does not dismiss the appellate proceeding leaves jurisdiction with the Court and its findings return to the Court; one that dismisses returns jurisdiction to the court-martial and states its scope (JRAP 29(b)). The convening authority or special trial counsel may find the proceeding impracticable (JRAP 29(c))."
+}
+
+terminal caaf-decided: "CAAF decision" outcome [decided] cite ?("UCMJ Article 67: not vendored") {
+  note "CAAF outcome; see lit/caaf."
+}
+
+terminal tjag-decided: "Judge Advocate General decision stands" outcome [decided] cite ?("UCMJ Article 69: not vendored") {
+  note "The Article 69 outcome is a hole."
+}
+
+terminal government-appeal-decided: "Government appeal decided" outcome [decided] cite "JRAP 20"
+{
+  note "The Court's ruling on the Article 62 appeal; the United States may withdraw it by motion (AFCCA R. 20.1(c))."
+}
+
+terminal writ-decided: "Petition for extraordinary relief decided" outcome [decided] cite "JRAP 19"
+{
+  note "The Court may grant or deny the relief on the pleadings or after argument, or make such other order as the circumstances require (JRAP 19(g))."
+}

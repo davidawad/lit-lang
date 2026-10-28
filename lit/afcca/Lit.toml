@@ -1,0 +1,52 @@
+# The United States Air Force Court of Criminal Appeals: review under
+# Article 66, UCMJ, of Air Force courts-martial, government appeals under
+# Article 62, applications after Judge Advocate General review under
+# Article 69, and extraordinary relief. Rule text is the AFCCA Rules of
+# Practice and Procedure, effective 29 June 2026, published with the Joint
+# Rules of Appellate Procedure for Courts of Criminal Appeals (JRAP, as
+# amended 17 May 2024, effective 27 May 2024; JRAP 4), sectioned in the pod
+# (sources/afcca). The UCMJ (10 U.S.C. ch. 47) and the Rules for
+# Courts-Martial are not vendored, so the statutory cites stay holes.
+# Periods are computed under JRAP 15 and AFCCA R. 15.1-15.3 (the Court's
+# closed days and 2359 Eastern Time), for which lit/core has no counting
+# rule, so every period is stated in a note, not encoded as a deadline.
+[package]
+name = "afcca"
+version = "0.1.0"
+language = 1
+pack_id = "afcca"
+forum = "afcca"
+family = "military-cca"
+authority = "FederalRule"
+title = "United States Air Force Court of Criminal Appeals"
+description = "Appellate review of Air Force courts-martial in the Air Force Court of Criminal Appeals under the JRAP and the AFCCA Rules of Practice and Procedure: automatic review and direct appeal under Article 66, applications after Article 69 review, waiver and withdrawal, assignments of error, the answer and reply and their page limits, enlargements of time, Article 66(f) remands, reconsideration, government appeals under Article 62 and petitions for extraordinary relief. The UCMJ and the Rules for Courts-Martial are not vendored and stay holes, as does review by the Court of Appeals for the Armed Forces."
+in_force = "2026-06-29"
+known_at = "2026-10-28"
+unknown_before = "2026-06-29"
+jurisdiction = "United States Air Force Court of Criminal Appeals"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.afcca-rules]
+title = "AFCCA Rules of Practice and Procedure (effective 29 June 2026) with the Joint Rules of Appellate Procedure for Courts of Criminal Appeals"
+url = "https://afcca.law.af.mil/afcca_data/cp/afcca_rules_of_practice_and_procedure_wjrap_29_jun_2026_2888395.pdf"
+path = "sources/afcca/afcca-rules-sectioned.txt"
+path_sha256 = "18fb2401db6acd46e11471a2b7c66c56b3d5bd4acd691517c118879c8f90b809"
+sha256 = "d0dc191c3b7948c196629c7422b051d451584da21ef3c1d77e1ec748a6be3c95"
+as_of = "2026-06-29"
+
+[[cite_syntax.rules]]
+prefixes = ["JRAP"]
+heading = "JRAP {}"
+source = "afcca-rules"
+
+[[cite_syntax.rules]]
+prefixes = ["AFCCA R."]
+heading = "AFCCA R. {}"
+source = "afcca-rules"

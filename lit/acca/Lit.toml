@@ -1,0 +1,54 @@
+# The United States Army Court of Criminal Appeals, promoted from
+# outlines/military/army-court-of-criminal-appeals (lg-f3q8.134).
+#
+# authority: the Joint Rules of Appellate Procedure for Courts of Criminal
+# Appeals are prescribed under Article 66(h), UCMJ, for all four service
+# Courts of Criminal Appeals (JRAP 1(a)(1), 2(a)), the FederalRule level of
+# lit/core's lattice. The JRAP are vendored only as published with the
+# Coast Guard Court's rules (sources/cgcca); the graph cites the Joint
+# Rules there, never the Coast Guard's own CCA rules. The Army Court's own
+# CCA rules (JRAP 3) are not vendored (lg-okuc/#21), so what they govern
+# (forms, page limits, the time set by Court rule or order) is a hole.
+# in_force: the JRAP as amended 17 May 2024, effective 27 May 2024 (JRAP 4).
+# Earlier amendments are not vendored, so a query before it is a hole.
+# 10 U.S.C. (the UCMJ) is not vendored: its sections stay hole cites.
+[package]
+name = "acca"
+version = "0.1.0"
+language = 1
+pack_id = "acca"
+forum = "acca"
+family = "military-cca"
+authority = "FederalRule"
+title = "United States Army Court of Criminal Appeals"
+description = "Review of an Army court-martial in the U.S. Army Court of Criminal Appeals under the Joint Rules of Appellate Procedure for Courts of Criminal Appeals, effective 27 May 2024: jurisdiction (JRAP 5), automatic review and the accused's appeal with their briefing periods (JRAP 18(d)(1), (2)), applications for review of a summary court-martial (JRAP 18(d)(3)), waiver or withdrawal of review (JRAP 5(c), 16), appeals by the United States under Article 62 and of a sentence under Article 56(d) (JRAP 20), Article 66(f) remands (JRAP 29), decisions (JRAP 30) and reconsideration (JRAP 31). The Army Court's own rules and the UCMJ are not vendored; what they govern is a hole."
+jurisdiction = "United States Army Court of Criminal Appeals"
+in_force = "2024-05-27"
+known_at = "2026-10-28"
+unknown_before = "2024-05-27"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.jrap]
+title = "Joint Rules of Appellate Procedure for Courts of Criminal Appeals, as amended 17 May 2024, effective 27 May 2024, as published with the CGCCA Rules of Appellate Procedure (Rev. 03/25)"
+url = "https://www.uscg.mil/Portals/0/Headquarters/Legal/cca/CGCCA%20Rules%20of%20Appellate%20Procedure%20with%20JRAP%20(March%202025).pdf"
+path = "sources/cgcca/cgcca-rules-jrap-2025-03-sectioned.txt"
+path_sha256 = "8f268f8fd8b83c513b99608e7e960366739e7f9cd138f90957e8aaf9bce82a92"
+sha256 = "8d4d0ee1e4d1c512a34530cd87e9e877611358088aa9ccd39fc8593d5b3d024e"
+as_of = "2024-05-27"
+cite_prefixes = ["JRAP"]
+section_heading = "JRAP {n}"
+
+# 10 U.S.C. (the UCMJ) is not vendored: this binding names the title's URL
+# only, and every cite through it is a hole.
+[sources.usc-10]
+title = "10 U.S.C. (Armed Forces, including the Uniform Code of Military Justice)"
+url = "https://www.law.cornell.edu/uscode/text/10"
+cite_prefixes = ["10 U.S.C."]
+section_heading = "10 U.S.C. § {n}"

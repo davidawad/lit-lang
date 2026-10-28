@@ -1,0 +1,194 @@
+module acca.review
+
+start court-martial
+
+state court-martial: "Army court-martial" by office cite "JRAP 5(b)"
+{
+  note "A general or special court-martial of the Army. The Army Court of Criminal Appeals is one of the four Courts of Criminal Appeals the Joint Rules govern (JRAP 1(a)(1), 2(a)); its jurisdiction is summarized in JRAP 5(b), and nothing in the Joint Rules extends or limits it (JRAP 5(a)). Trial procedure, post-trial processing and the entry of judgment under Article 60c, UCMJ, are outside this package; 10 U.S.C. (the UCMJ) is not vendored. The Army Court's own CCA rules (JRAP 3) are not vendored either (lg-okuc/#21). The outline's United States v. Sales, 22 M.J. 305 (C.M.A. 1986), and United States v. DuBay, 37 C.M.R. 411 (C.M.A. 1967), are removed: no reporter text is vendored. Outcomes are read from the accused's side."
+  edge-court-martial-automatic "Judgment subject to automatic review" -> docketed {
+    authority cite "JRAP 5(b)(1)"
+  }
+  edge-court-martial-appealable "Judgment with a finding of guilty, not subject to automatic review" -> appeal-election {
+    authority cite "JRAP 5(b)(2)"
+  }
+  edge-court-martial-summary "Summary court-martial acted on by the Judge Advocate General" -> summary-application {
+    authority cite "JRAP 5(b)(3)"
+  }
+  edge-court-martial-government "United States appeals a ruling under Article 62" -> government-appeal {
+    authority cite "JRAP 5(b)(4)"
+  }
+  edge-court-martial-sentence "United States appeals the sentence under Article 56(d)" -> sentence-appeal {
+    authority cite "JRAP 5(b)(6)"
+  }
+  edge-court-martial-waived "Appellate review waived or withdrawn before docketing" -> waived {
+    authority cite "JRAP 5(c)"
+  }
+}
+
+decision appeal-election: "Accused files a Notice of Appeal?" by applicant cite "JRAP 18(d)(2)"
+{
+  note "An appeal under Article 66(b)(1)(A), UCMJ, is timely if the accused files a Notice of Appeal with the Court, in such form as the Court may direct, before the later of 90 days after the accused is provided notice of appellate rights under Article 65(c), UCMJ, or the date the Court sets by rule or order (JRAP 18(d)(2)). The form and any later date are set by the Army Court's own rules or orders, which are not vendored (lg-okuc/#21): holes. Periods are computed under JRAP 15 (the day of the event excluded, the last day included unless a Saturday, Sunday, legal holiday or day the Court is closed; calendar days ending at 2359 Eastern Time); they are stated here, not counted."
+  edge-appeal-election-filed "Notice of Appeal filed in time" -> docketed {
+    authority cite "JRAP 18(d)(2)"
+  }
+  edge-appeal-election-none "No timely Notice of Appeal" -> no-appeal {
+    authority cite "JRAP 18(d)(2)"
+  }
+  edge-appeal-election-waived "Appellate review waived or withdrawn" -> waived {
+    authority cite "JRAP 5(c)"
+  }
+}
+
+state docketed: "Record received and case docketed" by applicant cite "JRAP 18(d)"
+{
+  note "On automatic review under Article 66(b)(3), UCMJ, the appellant's brief is due no later than 60 days after the Court has received the record of trial under Article 65(b), UCMJ, and docketed the case; on an appeal under Article 66(b)(1)(A), the government provides the Court a complete record, with a verbatim transcript, as soon as practicable after the Notice of Appeal, and the appellant's brief is due no later than 60 days thereafter. In both, the United States answers no later than 30 days after the appellant's brief and the appellant may reply no later than 7 days after the answer; on automatic review, if no brief is filed for the accused, the United States may file one within 30 days after the accused's time expires (JRAP 18(d)(1), (2)). Counsel may file assignments of error, each error set out separately, and Grostefon issues (United States v. Grostefon, 12 M.J. 431 (C.M.A. 1982), as JRAP 18(b) names it) comply with CCA rules (JRAP 18(a), (b)). Form, content and length of briefs are set by CCA rules (JRAP 17), not vendored for the Army Court (lg-okuc/#21). A suggestion for en banc consideration is due within 7 days after the answer or the reply (JRAP 27(b)). The Court may extend any time limit (JRAP 24). A waiver or withdrawal received after docketing is referred to the Court, which dismisses the appeal if it is valid (JRAP 16)."
+  edge-docketed-submitted "Briefing complete" -> ccca-decision { authority cite "JRAP 18(d)" }
+  edge-docketed-withdrawn "Withdrawal found valid" -> withdrawn { authority cite "JRAP 16" }
+}
+
+decision ccca-decision: "Court of Criminal Appeals decision" by court cite "JRAP 30"
+{
+  note "The Court serves its orders and decisions promptly, when rendered, on appellate counsel and the Judge Advocate General or designee (JRAP 30). What the Court may do on review under Article 66, UCMJ, is in 10 U.S.C. § 866, which is not vendored: the grounds and the relief are holes. The Court may order a remand under Article 66(f)(3), UCMJ, for further proceedings, retaining jurisdiction unless it expressly dismisses the appellate proceeding (JRAP 29(a), (b))."
+  edge-ccca-decision-affirmed "Findings and sentence affirmed" -> after-decision {
+    authority cite ?("10 U.S.C. § 866")
+  }
+  edge-ccca-decision-relief "Findings set aside or sentence reduced" -> ccca-relief {
+    authority cite ?("10 U.S.C. § 866")
+  }
+  edge-ccca-decision-remanded "Remanded under Article 66(f)" -> ccca-remanded {
+    authority cite "JRAP 29(a)"
+  }
+}
+
+decision after-decision: "Reconsideration, review by CAAF, or neither" by applicant cite "JRAP 31(b)"
+{
+  note "A motion for reconsideration is due no later than 30 days after the date of the order, decision or opinion, briefly stating its grounds and the facts showing jurisdiction; an answer is due no later than 7 days after receipt of the motion (JRAP 31(b), (c)). A suggestion for en banc reconsideration is due within the time for a motion for reconsideration (JRAP 27(b)). The Court may extend the time for good cause, but never beyond the deadline for a petition for review, certificate for review or writ appeal in the Court of Appeals for the Armed Forces (JRAP 31(e)). That deadline is in 10 U.S.C. § 867 and the CAAF rules (lit/caaf), not encoded here."
+  edge-after-decision-reconsider "Move for reconsideration" -> reconsideration {
+    authority cite "JRAP 31(b)"
+  }
+  edge-after-decision-caaf "Petition the Court of Appeals for the Armed Forces" -> caaf-petition {
+    authority cite ?("10 U.S.C. § 867")
+  }
+  edge-after-decision-accept "No further review sought" -> ccca-affirmed {
+    authority cite "JRAP 30"
+  }
+}
+
+decision reconsideration: "Motion for reconsideration decided" by court cite "JRAP 31(a)"
+{
+  note "The Court may reconsider any order, decision or opinion on motion or sua sponte (JRAP 31(a)). If it announces its intent to reconsider, no briefs or arguments are filed unless it so directs (JRAP 31(d)). The reconsidered decision is not modeled."
+  edge-reconsideration-granted "Reconsideration granted" -> reconsidered {
+    authority cite "JRAP 31(a)"
+  }
+  edge-reconsideration-denied-caaf "Denied; petition the Court of Appeals for the Armed Forces" -> caaf-petition {
+    authority cite ?("10 U.S.C. § 867")
+  }
+  edge-reconsideration-denied-final "Denied; no further review sought" -> ccca-affirmed {
+    authority cite "JRAP 31(a)"
+  }
+}
+
+state caaf-petition: "Petition for grant of review in CAAF" by applicant cite ?("10 U.S.C. § 867") {
+  note "Review by the Court of Appeals for the Armed Forces under 10 U.S.C. § 867, which is not vendored. The petition, its period and the review are lit/caaf; this package does not route into it."
+  edge-caaf-petition-decided "CAAF acts on the petition" -> caaf-decided {
+    authority cite ?("10 U.S.C. § 867")
+  }
+}
+
+decision summary-application: "Application for review of a summary court-martial?" by applicant cite "JRAP 18(d)(3)"
+{
+  note "An application for review of a summary court-martial under Article 66(b)(1)(B), UCMJ, is due no later than 60 days from the earlier of the date the accused is notified of the Judge Advocate General's decision or the date a copy of it is deposited in the mails under Article 69(d)(2)(B)(ii), UCMJ; it states with particularity the asserted substantial basis for concluding that the Judge Advocate General's action under Article 69(c) was prejudicial error. No further briefs are filed unless the Court orders them (JRAP 18(d)(3)). The Court reviews only if it grants a timely application (JRAP 5(b)(3)); the grant standard is in 10 U.S.C. § 869, not vendored."
+  edge-summary-application-filed "Application filed in time" -> summary-review {
+    authority cite "JRAP 18(d)(3)(A)"
+  }
+  edge-summary-application-none "No timely application" -> tjag-final {
+    authority cite "JRAP 18(d)(3)(A)"
+  }
+}
+
+state summary-review: "Application for review pending" by court cite "JRAP 5(b)(3)"
+{
+  note "The Court grants or denies the application; its standard and the relief on review are holes (10 U.S.C. § 869, not vendored)."
+  edge-summary-review-decided "Court acts on the application" -> summary-decided {
+    authority cite ?("10 U.S.C. § 869")
+  }
+}
+
+state government-appeal: "Appeal by the United States under Article 62" by office cite "JRAP 20(c)(1)"
+{
+  note "Only a representative of the United States designated by the Judge Advocate General may file the appeal, which complies with R.C.M. 908 and includes the Notice of Appeal of R.C.M. 908(b)(3), stating the date and time of the ruling and of service on the military judge (JRAP 20(a)(1), (b)(1)). The trial counsel has 20 days from the Notice of Appeal to forward the appeal and record to the designated representative, who files the original record with the Court within 5 days of receipt; appellate government counsel has 20 days from filing to file a supporting brief, the appellee 20 days from that brief to answer, and the United States 7 days from the answer to reply (JRAP 20(c)(1)). The appeal has priority over all other proceedings where practicable (JRAP 20(d)). The rulings appealable are listed in JRAP 5(b)(4); the R.C.M. are not vendored."
+  edge-government-appeal-decided "Court of Criminal Appeals decides" -> government-appeal-decided {
+    authority cite ?("10 U.S.C. § 862")
+  }
+  edge-government-appeal-withdrawn "United States withdraws the appeal" -> government-appeal-withdrawn {
+    authority cite "JRAP 20(c)(1)(A)"
+  }
+}
+
+state sentence-appeal: "Appeal of the sentence by the United States under Article 56(d)" by office cite "JRAP 20(c)(2)"
+{
+  note "Only the Judge Advocate General may approve the appeal (JRAP 20(a)(2); JRAP 5(b)(6)). It complies with R.C.M. 1117 and is filed within 60 days after the judgment of the court-martial is entered into the record (JRAP 20(b)(2), (c)(2)). The grounds and the relief are in 10 U.S.C. § 856, not vendored: holes."
+  edge-sentence-appeal-decided "Court of Criminal Appeals decides" -> sentence-appeal-decided {
+    authority cite ?("10 U.S.C. § 856")
+  }
+}
+
+terminal waived: "Appellate review waived or withdrawn" outcome [decided] cite "JRAP 5(c)"
+{
+  note "In a court-martial without a sentence of death, the Court has no jurisdiction over an appeal in which appellate review was properly waived or withdrawn. For cases reviewed under Article 65(d), UCMJ, the Judge Advocate General decides whether the waiver or withdrawal is valid and, if not, sends the case to the Court (JRAP 5(c))."
+}
+
+terminal no-appeal: "No timely appeal" outcome [decided] cite "JRAP 18(d)(2)"
+{
+  note "No Notice of Appeal before the later of the two dates JRAP 18(d)(2) sets. Review by the Judge Advocate General under Article 65(d) or 69, UCMJ, is not modeled."
+}
+
+terminal withdrawn: "Appeal dismissed on withdrawal" outcome [decided, dismissal] cite "JRAP 16"
+{
+  note "A valid waiver or withdrawal bars further review under Article 66 (Article 61(d), UCMJ, as JRAP 16 states); the Court dismisses the appeal and returns the record of trial to the Judge Advocate General (JRAP 16)."
+}
+
+terminal ccca-affirmed: "Findings and sentence affirmed; no further review" outcome [loss] cite "JRAP 30"
+{
+  note "The Court's decision stands."
+}
+
+terminal ccca-relief: "Findings set aside or sentence reduced" outcome [win] cite ?("10 U.S.C. § 866") {
+  note "Relief on the findings or the sentence. Its form under Article 66 is a hole."
+}
+
+terminal ccca-remanded: "Remanded under Article 66(f)" outcome [remand] cite "JRAP 29(b)"
+{
+  note "Where the Court retains jurisdiction, the remand is an appellate proceeding presided over by a military judge or magistrate, whose findings or recommendations return to the Court; where it dismisses the appellate proceeding, jurisdiction returns to the court-martial for the scope the remand states (JRAP 29(b)). A remand found impracticable is reported to the Court (JRAP 29(c)). Hearings follow JRAP 29(d). Proceedings on remand are not modeled."
+}
+
+terminal reconsidered: "Decision reconsidered" outcome [decided] cite "JRAP 31(a)"
+{
+  note "The outcome on reconsideration is not modeled."
+}
+
+terminal caaf-decided: "CAAF acts on the petition" outcome [decided] cite ?("10 U.S.C. § 867") {
+  note "The outcome in the Court of Appeals for the Armed Forces is lit/caaf's, not modeled here."
+}
+
+terminal tjag-final: "Judge Advocate General's action stands" outcome [decided] cite "JRAP 18(d)(3)(A)"
+{
+  note "No timely application for review of the summary court-martial."
+}
+
+terminal summary-decided: "Application for review decided" outcome [decided] cite ?("10 U.S.C. § 869") {
+  note "The outcome of review is a hole."
+}
+
+terminal government-appeal-decided: "Government appeal decided" outcome [decided] cite ?("10 U.S.C. § 862") {
+  note "The Court's outcome on an appeal by the United States under Article 62. Further proceedings are not modeled."
+}
+
+terminal government-appeal-withdrawn: "Government appeal withdrawn" outcome [win] cite "JRAP 20(c)(1)(A)"
+{
+  note "Appellate government counsel notifies the Court in writing (JRAP 20(c)(1)(A)). The ruling appealed stands."
+}
+
+terminal sentence-appeal-decided: "Sentence appeal decided" outcome [decided] cite ?("10 U.S.C. § 856") {
+  note "The outcome of the United States' sentence appeal is a hole."
+}

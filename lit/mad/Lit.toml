@@ -1,0 +1,46 @@
+# The District of Massachusetts's Local Rules as a local-rule layer over
+# lit/frcp (28 U.S.C. § 2071; FRCP 83(a)): it declares only the periods
+# the Local Rules themselves state and re-encodes no FRCP deadline. Each
+# period is counted under FRCP 6(a), which governs "any local rule". The
+# rules are the combined Local Rules including amendments through
+# September 8, 2026 (sources/dmass).
+[package]
+name = "mad-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "mad-local-rules"
+forum = "mad"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, District of Massachusetts: Local Rules (civil)"
+description = "The District of Massachusetts's Local Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): service of process, filing of served papers, motion and summary judgment briefing, adding parties, the scheduling and case management conferences, discovery sequence and disputes, the final pretrial conference, dismissal for want of prosecution, trial witnesses, settlement and removal."
+in_force = "2026-09-08"
+known_at = "2026-10-27"
+unknown_before = "2026-09-08"
+jurisdiction = "United States District Court, D. Massachusetts"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "dmass-lr"
+issuer = "United States District Court for the District of Massachusetts"
+date = "2026-09-08"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.dmass-lr]
+title = "Local Rules of the United States District Court for the District of Massachusetts (combined, including amendments through September 8, 2026)"
+url = "https://www.mad.uscourts.gov/general/pdf/local-rules/Combined%20Local%20Rules.pdf"
+path = "sources/dmass/dmass-local-rules-sectioned.txt"
+path_sha256 = "e0862acc529800fda4629e3067b1321f7edfec4585c778cb238e781bef47a8ba"
+sha256 = "1a8052b28e225059bc92a16420e9e4c637bd036c60f500b16861d339f888e1af"
+as_of = "2026-09-08"
+cite_prefixes = ["D. Mass. L.R."]
+section_heading = "Rule {n}"

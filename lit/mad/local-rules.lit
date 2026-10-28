@@ -1,0 +1,540 @@
+module mad-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Massachusetts's own periods, computed under the federal
+// rules (FRCP 6(a) governs "any local rule"). Absent leave, a memorandum
+// supporting or opposing a motion is limited to 20 pages, double-spaced
+// (Local Rule 7.1(b)(4)); any other paper, a reply included, needs leave,
+// except a summary judgment reply (Local Rule 56.1). Each side is limited
+// to 10 depositions, 25 interrogatories, 25 requests for admissions and 2
+// sets of requests for production unless the judicial officer orders
+// otherwise (Local Rule 26.1(c)). The judicial officer convenes the
+// scheduling conference within 60 days after a defendant appears and 90
+// days after a defendant is served, or within 60 days after removal or
+// transfer (Local Rule 16.1(a)); the final pretrial conference occurs
+// within 18 months after the complaint is filed (Local Rule 16.1(f)(9)).
+// A bond staying execution of a money judgment is the judgment plus 10%
+// plus $500 unless the court directs otherwise (Local Rule 62.2). The
+// earlier District of Massachusetts outline's leading decisions (Twombly,
+// Iqbal, Celotex, Anderson) are FRCP authority and belong to lit/frcp.
+/// A memorandum supporting or opposing a motion (Local Rule 7.1(b)(4)).
+limit motion-memorandum { pages <= 20 cite "D. Mass. L.R. 7.1(b)" } cite "D. Mass. L.R. 7.1(b)"
+
+/// The complaint is filed (Local Rule 4.1(a)).
+event ComplaintFiled()
+/// The 90-day period for returning a served summons expires without proof
+/// of service (Local Rule 4.1(b)).
+event ServicePeriodExpired()
+/// A document required to be served under FRCP 5(d) is served (Local Rule
+/// 5.1(b)).
+event PaperServed()
+/// A motion is served (Local Rule 7.1(b)(2)).
+event MotionServed() paper motion-memorandum
+/// A motion for summary judgment is served (Local Rules 7.1(b)(2), 56.1).
+event SummaryJudgmentMotionServed() paper motion-memorandum
+/// An opposition to a summary judgment motion is served (Local Rule 56.1).
+event SummaryJudgmentOppositionServed() paper motion-memorandum
+/// A motion to amend adding a new party is filed (Local Rule 15.1(b)).
+event AddPartyMotionFiled()
+/// The scheduling conference is held (Local Rule 16.1).
+event SchedulingConferenceHeld()
+/// A case management conference is held (Local Rule 16.3(b)).
+event CaseManagementConferenceHeld()
+/// The final pretrial conference is held (Local Rules 16.5, 26.4(a)).
+event FinalPretrialConferenceHeld()
+/// Trial commences (Local Rule 16.5(f)).
+event TrialCommenced()
+/// A party uses a witness's testimony at trial (Local Rule 43.1(b)(2)).
+event WitnessTestified()
+/// The parties hold the FRCP 26(f) meeting (Local Rule 26.2(a)).
+event PartiesConferred()
+/// An action is removed to or transferred into the court (Local Rules
+/// 26.2(d), 35.1(c)).
+event RemovedOrTransferred()
+/// A notice of removal is filed under 28 U.S.C. § 1446 (Local Rule 81.1).
+event RemovalNoticeFiled()
+/// An order remanding the case under 28 U.S.C. § 1447(c) is entered
+/// (Local Rule 81.1(d)).
+event RemandOrdered()
+/// Interrogatory answers referring to records are served (Local Rule
+/// 33.1(b)(4)).
+event InterrogatoryAnswersServed()
+/// It is determined that objected-to discovery must be answered, or that an
+/// objected-to request for admission is proper (Local Rules 33.1(d),
+/// 34.1(d), 36.1(b)).
+event ObjectionOverruled()
+/// Issue is joined by a responsive pleading on a personal injury claim
+/// (Local Rule 35.1(a)).
+event IssueJoined()
+/// A party requests a discovery conference (Local Rule 37.1(a)).
+event DiscoveryConferenceRequested()
+/// A discovery motion and supporting memorandum are served (Local Rule
+/// 37.1(c)).
+event DiscoveryMotionServed()
+/// The clerk serves notice that a case with no docketed proceeding for a
+/// year will be dismissed (Local Rule 41.1(a)).
+event ProsecutionNoticeServed()
+/// A dismissal-calendar hearing is held (Local Rule 41.1(b)).
+event DismissalHearingHeld()
+/// The case settles (Local Rule 68.2).
+event CaseSettled()
+
+/// Local Rule 4.1(a): a summons not returned with proof of service within
+/// 90 days of the filing of the complaint is deemed unserved for FRCP
+/// 4(m).
+deadline summons-return-period: 90.days after ComplaintFiled() counted_by frcp6 cite "D. Mass. L.R. 4.1(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 4.1(b): good cause for failing to serve is shown by a motion
+/// to enlarge time under FRCP 6(b) with an affidavit; if it is not shown
+/// by the 14th day after the 90-day period expires, the clerk enters an
+/// order of dismissal without further order.
+deadline service-good-cause-period: 14.days after ServicePeriodExpired() counted_by frcp6 cite "D. Mass. L.R. 4.1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 5.1(b): except as FRCP 33-36 provide, a document required to
+/// be served under FRCP 5(d) is filed electronically within 7 days after
+/// service, unless otherwise submitted to the court.
+deadline served-paper-filing-period: 7.days after PaperServed() counted_by frcp6 cite "D. Mass. L.R. 5.1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 7.1(b)(2): an opposition to a motion is filed within 14 days
+/// after the motion is served, unless another period is fixed by rule,
+/// statute or order; the 14 days include the civil rules' mailing time.
+deadline opposition-period: 14.days after MotionServed() counted_by frcp6 cite "D. Mass. L.R. 7.1(b)"
+{
+  forum frcp
+}
+
+/// Local Rules 7.1(b)(2) and 56.1: an opposition to a summary judgment
+/// motion is filed within 21 days after the motion is served, unless the
+/// court orders otherwise.
+deadline sj-opposition-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "D. Mass. L.R. 56.1"
+{
+  forum frcp
+}
+
+/// Local Rule 56.1: unless the court orders otherwise, the moving party
+/// may file a reply within 14 days after the response is served.
+deadline sj-reply-period: 14.days after SummaryJudgmentOppositionServed() counted_by frcp6 cite "D. Mass. L.R. 56.1"
+{
+  forum frcp
+}
+
+/// Local Rule 15.1(b): a motion to amend adding a new party is served on
+/// the proposed new party at least 14 days before it is filed, with a
+/// statement of the filing date.
+deadline add-party-notice-period: 14.days before AddPartyMotionFiled() counted_by frcp6 cite "D. Mass. L.R. 15.1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 16.1(b): unless otherwise ordered, counsel confer under FRCP
+/// 26(f) at least 21 days before the scheduling conference.
+deadline scheduling-conference-confer-period: 21.days before SchedulingConferenceHeld() counted_by frcp6 cite "D. Mass. L.R. 16.1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 16.1(c): unless otherwise ordered, the plaintiff presents
+/// written settlement proposals to all defendants no later than 14 days
+/// before the scheduling conference.
+deadline settlement-proposal-period: 14.days before SchedulingConferenceHeld() counted_by frcp6 cite "D. Mass. L.R. 16.1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 16.1(d): unless otherwise ordered, the joint statement with
+/// the proposed pretrial schedule is filed no later than 7 days before the
+/// scheduling conference.
+deadline joint-statement-period: 7.days before SchedulingConferenceHeld() counted_by frcp6 cite "D. Mass. L.R. 16.1(d)"
+{
+  forum frcp
+}
+
+/// Local Rule 16.3(b): a joint statement the judicial officer requires
+/// before a case management conference is filed no later than 7 days
+/// before it.
+deadline case-management-statement-period: 7.days before CaseManagementConferenceHeld() counted_by frcp6 cite "D. Mass. L.R. 16.3(b)"
+{
+  forum frcp
+}
+
+/// Local Rules 16.5(c) and 26.4(a): unless otherwise directed, the FRCP
+/// 26(a)(2) expert disclosure is made at least 90 days before the final
+/// pretrial conference.
+deadline expert-disclosure-period: 90.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "D. Mass. L.R. 26.4(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 16.5(c): the FRCP 26(a)(3) pretrial disclosures are made no
+/// later than 28 days before the pretrial conference.
+deadline pretrial-disclosure-period: 28.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "D. Mass. L.R. 16.5(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 16.5(d): unless otherwise ordered, counsel confer to prepare
+/// the pretrial memorandum no later than 14 days before the final pretrial
+/// conference.
+deadline pretrial-confer-period: 14.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "D. Mass. L.R. 16.5(d)"
+{
+  forum frcp
+}
+
+/// Local Rule 16.5(d): unless otherwise ordered, the joint pretrial
+/// memorandum is filed no later than 7 days before the pretrial
+/// conference.
+deadline pretrial-memorandum-period: 7.days before FinalPretrialConferenceHeld() counted_by frcp6 cite "D. Mass. L.R. 16.5(d)"
+{
+  forum frcp
+}
+
+/// Local Rule 16.5(f): each party files a trial brief, with requests for
+/// rulings or instructions, 7 days before the commencement of trial.
+deadline trial-brief-period: 7.days before TrialCommenced() counted_by frcp6 cite "D. Mass. L.R. 16.5(f)"
+{
+  forum frcp
+}
+
+/// Local Rule 43.1(b)(2): not later than 7 days before it seeks to use a
+/// witness's testimony, or on shorter notice for good cause, a party
+/// advises the judicial officer and the parties of the day.
+deadline witness-notice-period: 7.days before WitnessTestified() counted_by frcp6 cite "D. Mass. L.R. 43.1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 26.2(a): unless otherwise ordered, the FRCP 26(a)(1)
+/// disclosure is made at or within 14 days after the FRCP 26(f) meeting.
+deadline initial-disclosure-period: 14.days after PartiesConferred() counted_by frcp6 cite "D. Mass. L.R. 26.2(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 26.2(d): in a removed or transferred action in which
+/// discovery began before removal or transfer, the disclosure is made
+/// within 21 days of the date of removal or transfer.
+deadline removed-disclosure-period: 21.days after RemovedOrTransferred() counted_by frcp6 cite "D. Mass. L.R. 26.2(d)"
+{
+  forum frcp
+}
+
+/// Local Rule 33.1(b)(4): records referred to in interrogatory answers are
+/// made available for inspection and copying within 14 days after service
+/// of the answers, or at a date the parties agree.
+deadline interrogatory-records-period: 14.days after InterrogatoryAnswersServed() counted_by frcp6 cite "D. Mass. L.R. 33.1(b)"
+{
+  forum frcp
+}
+
+/// Local Rules 33.1(d) and 34.1(d): interrogatories and document requests
+/// that were objected to and must be answered are answered within 14 days
+/// after that is determined, unless the court directs otherwise.
+deadline answer-after-objection-period: 14.days after ObjectionOverruled() counted_by frcp6 cite "D. Mass. L.R. 33.1(d)"
+{
+  forum frcp
+}
+
+/// Local Rule 36.1(b): when an objection to a request for admission is
+/// overruled, the matter is deemed admitted unless the party serves a
+/// denial or a statement of why it cannot admit or deny within 14 days
+/// after the determination.
+deadline admission-after-objection-period: 14.days after ObjectionOverruled() counted_by frcp6 cite "D. Mass. L.R. 36.1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 35.1(a): within 14 days after issue is joined by a
+/// responsive pleading, a personal injury claimant serves the itemization
+/// of medical expenses and the medical-records statement.
+deadline medical-disclosure-period: 14.days after IssueJoined() counted_by frcp6 cite "D. Mass. L.R. 35.1(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 35.1(c): in a removed or transferred action, the personal
+/// injury claimant provides that information within 21 days after removal
+/// or transfer.
+deadline removed-medical-disclosure-period: 21.days after RemovedOrTransferred() counted_by frcp6 cite "D. Mass. L.R. 35.1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 37.1(a): opposing counsel's failure to respond to a request
+/// for a discovery conference within 7 days of the request is grounds for
+/// sanctions, which may include automatic allowance of the motion.
+deadline discovery-conference-response-period: 7.days after DiscoveryConferenceRequested() counted_by frcp6 cite "D. Mass. L.R. 37.1(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 37.1(b): a dissatisfied party may move if opposing counsel
+/// fails to attend a discovery conference within 14 calendar days of the
+/// request.
+deadline discovery-conference-period: 14.days after DiscoveryConferenceRequested() counted_by frcp6 cite "D. Mass. L.R. 37.1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 37.1(c): the opposing party may respond to the discovery
+/// memorandum within 14 calendar days after service.
+deadline discovery-motion-response-period: 14.days after DiscoveryMotionServed() counted_by frcp6 cite "D. Mass. L.R. 37.1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 41.1(a): a case with no docketed proceeding for one year is
+/// dismissed 28 days after the clerk's notice unless within that period an
+/// explanation is filed and the judicial officer orders that it not be
+/// dismissed.
+deadline prosecution-explanation-period: 28.days after ProsecutionNoticeServed() counted_by frcp6 cite "D. Mass. L.R. 41.1(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 41.1(b)(1): unless otherwise ordered, each party serves and
+/// files a status certificate not less than 14 days before the noticed
+/// dismissal-calendar hearing.
+deadline dismissal-calendar-certificate-period: 14.days before DismissalHearingHeld() counted_by frcp6 cite "D. Mass. L.R. 41.1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 68.2: when a case settles, the parties file a signed
+/// agreement for judgment or stipulation for dismissal within 28 days,
+/// unless the court otherwise orders.
+deadline settlement-filing-period: 28.days after CaseSettled() counted_by frcp6 cite "D. Mass. L.R. 68.2"
+{
+  forum frcp
+}
+
+/// Local Rules 81.1(a) and 5.4(f): within 28 days after filing a notice of
+/// removal, the removing party files certified or attested copies of the
+/// state court records, proceedings and docket entries.
+deadline state-record-period: 28.days after RemovalNoticeFiled() counted_by frcp6 cite "D. Mass. L.R. 81.1(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 81.1(b): if the clerk has not received the state court
+/// papers within 42 days of the notice of removal, the case is remanded
+/// unless the court directs otherwise.
+deadline state-record-remand-period: 42.days after RemovalNoticeFiled() counted_by frcp6 cite "D. Mass. L.R. 81.1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 81.1(d): absent a contrary order, the clerk remands the case
+/// to the state court no sooner than 30 days after an order of remand
+/// under 28 U.S.C. § 1447(c).
+deadline remand-transmittal-period: 30.days after RemandOrdered() counted_by frcp6 cite "D. Mass. L.R. 81.1(d)"
+{
+  forum frcp
+}
+
+test "summons return period: 90 days after the trigger" cite "D. Mass. L.R. 4.1(a)"
+{
+  given ComplaintFiled() on 2026-11-03
+  expect deadline(summons-return-period) == 2027-02-01
+}
+
+test "service good cause period: 14 days after the trigger" cite "D. Mass. L.R. 4.1(b)"
+{
+  given ServicePeriodExpired() on 2026-11-02
+  expect deadline(service-good-cause-period) == 2026-11-16
+}
+
+test "served paper filing period: 7 days after the trigger" cite "D. Mass. L.R. 5.1(b)"
+{
+  given PaperServed() on 2026-11-02
+  expect deadline(served-paper-filing-period) == 2026-11-09
+}
+
+test "opposition period: 14 days after the trigger" cite "D. Mass. L.R. 7.1(b)"
+{
+  given MotionServed() on 2026-11-02
+  expect deadline(opposition-period) == 2026-11-16
+}
+
+test "sj opposition period: 21 days after the trigger" cite "D. Mass. L.R. 56.1"
+{
+  given SummaryJudgmentMotionServed() on 2026-11-02
+  expect deadline(sj-opposition-period) == 2026-11-23
+}
+
+test "sj reply period: 14 days after the trigger" cite "D. Mass. L.R. 56.1"
+{
+  given SummaryJudgmentOppositionServed() on 2026-11-02
+  expect deadline(sj-reply-period) == 2026-11-16
+}
+
+test "add party notice period: 14 days before the trigger" cite "D. Mass. L.R. 15.1(b)"
+{
+  given AddPartyMotionFiled() on 2027-02-02
+  expect deadline(add-party-notice-period) == 2027-01-19
+}
+
+test "scheduling conference confer period: 21 days before the trigger" cite "D. Mass. L.R. 16.1(b)"
+{
+  given SchedulingConferenceHeld() on 2027-02-01
+  expect deadline(scheduling-conference-confer-period) == 2027-01-11
+}
+
+test "settlement proposal period: 14 days before the trigger" cite "D. Mass. L.R. 16.1(c)"
+{
+  given SchedulingConferenceHeld() on 2027-02-02
+  expect deadline(settlement-proposal-period) == 2027-01-19
+}
+
+test "joint statement period: 7 days before the trigger" cite "D. Mass. L.R. 16.1(d)"
+{
+  given SchedulingConferenceHeld() on 2027-02-01
+  expect deadline(joint-statement-period) == 2027-01-25
+}
+
+test "case management statement period: 7 days before the trigger" cite "D. Mass. L.R. 16.3(b)"
+{
+  given CaseManagementConferenceHeld() on 2027-02-01
+  expect deadline(case-management-statement-period) == 2027-01-25
+}
+
+test "expert disclosure period: 90 days before the trigger" cite "D. Mass. L.R. 26.4(a)"
+{
+  given FinalPretrialConferenceHeld() on 2027-02-01
+  expect deadline(expert-disclosure-period) == 2026-11-03
+}
+
+test "pretrial disclosure period: 28 days before the trigger" cite "D. Mass. L.R. 16.5(c)"
+{
+  given FinalPretrialConferenceHeld() on 2027-02-01
+  expect deadline(pretrial-disclosure-period) == 2027-01-04
+}
+
+test "pretrial confer period: 14 days before the trigger" cite "D. Mass. L.R. 16.5(d)"
+{
+  given FinalPretrialConferenceHeld() on 2027-02-02
+  expect deadline(pretrial-confer-period) == 2027-01-19
+}
+
+test "pretrial memorandum period: 7 days before the trigger" cite "D. Mass. L.R. 16.5(d)"
+{
+  given FinalPretrialConferenceHeld() on 2027-02-01
+  expect deadline(pretrial-memorandum-period) == 2027-01-25
+}
+
+test "trial brief period: 7 days before the trigger" cite "D. Mass. L.R. 16.5(f)"
+{
+  given TrialCommenced() on 2027-02-01
+  expect deadline(trial-brief-period) == 2027-01-25
+}
+
+test "witness notice period: 7 days before the trigger" cite "D. Mass. L.R. 43.1(b)"
+{
+  given WitnessTestified() on 2027-02-01
+  expect deadline(witness-notice-period) == 2027-01-25
+}
+
+test "initial disclosure period: 14 days after the trigger" cite "D. Mass. L.R. 26.2(a)"
+{
+  given PartiesConferred() on 2026-11-02
+  expect deadline(initial-disclosure-period) == 2026-11-16
+}
+
+test "removed disclosure period: 21 days after the trigger" cite "D. Mass. L.R. 26.2(d)"
+{
+  given RemovedOrTransferred() on 2026-11-02
+  expect deadline(removed-disclosure-period) == 2026-11-23
+}
+
+test "interrogatory records period: 14 days after the trigger" cite "D. Mass. L.R. 33.1(b)"
+{
+  given InterrogatoryAnswersServed() on 2026-11-02
+  expect deadline(interrogatory-records-period) == 2026-11-16
+}
+
+test "answer after objection period: 14 days after the trigger" cite "D. Mass. L.R. 33.1(d)"
+{
+  given ObjectionOverruled() on 2026-11-02
+  expect deadline(answer-after-objection-period) == 2026-11-16
+}
+
+test "admission after objection period: 14 days after the trigger" cite "D. Mass. L.R. 36.1(b)"
+{
+  given ObjectionOverruled() on 2026-11-02
+  expect deadline(admission-after-objection-period) == 2026-11-16
+}
+
+test "medical disclosure period: 14 days after the trigger" cite "D. Mass. L.R. 35.1(a)"
+{
+  given IssueJoined() on 2026-11-02
+  expect deadline(medical-disclosure-period) == 2026-11-16
+}
+
+test "removed medical disclosure period: 21 days after the trigger" cite "D. Mass. L.R. 35.1(c)"
+{
+  given RemovedOrTransferred() on 2026-11-02
+  expect deadline(removed-medical-disclosure-period) == 2026-11-23
+}
+
+test "discovery conference response period: 7 days after the trigger" cite "D. Mass. L.R. 37.1(a)"
+{
+  given DiscoveryConferenceRequested() on 2026-11-02
+  expect deadline(discovery-conference-response-period) == 2026-11-09
+}
+
+test "discovery conference period: 14 days after the trigger" cite "D. Mass. L.R. 37.1(b)"
+{
+  given DiscoveryConferenceRequested() on 2026-11-02
+  expect deadline(discovery-conference-period) == 2026-11-16
+}
+
+test "discovery motion response period: 14 days after the trigger" cite "D. Mass. L.R. 37.1(c)"
+{
+  given DiscoveryMotionServed() on 2026-11-02
+  expect deadline(discovery-motion-response-period) == 2026-11-16
+}
+
+test "prosecution explanation period: 28 days after the trigger" cite "D. Mass. L.R. 41.1(a)"
+{
+  given ProsecutionNoticeServed() on 2026-11-02
+  expect deadline(prosecution-explanation-period) == 2026-11-30
+}
+
+test "dismissal calendar certificate period: 14 days before the trigger" cite "D. Mass. L.R. 41.1(b)"
+{
+  given DismissalHearingHeld() on 2027-02-02
+  expect deadline(dismissal-calendar-certificate-period) == 2027-01-19
+}
+
+test "settlement filing period: 28 days after the trigger" cite "D. Mass. L.R. 68.2"
+{
+  given CaseSettled() on 2026-11-02
+  expect deadline(settlement-filing-period) == 2026-11-30
+}
+
+test "state record period: 28 days after the trigger" cite "D. Mass. L.R. 81.1(a)"
+{
+  given RemovalNoticeFiled() on 2026-11-02
+  expect deadline(state-record-period) == 2026-11-30
+}
+
+test "state record remand period: 42 days after the trigger" cite "D. Mass. L.R. 81.1(b)"
+{
+  given RemovalNoticeFiled() on 2026-11-02
+  expect deadline(state-record-remand-period) == 2026-12-14
+}
+
+test "remand transmittal period: 30 days after the trigger" cite "D. Mass. L.R. 81.1(d)"
+{
+  given RemandOrdered() on 2026-11-02
+  expect deadline(remand-transmittal-period) == 2026-12-02
+}

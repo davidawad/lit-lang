@@ -1,0 +1,454 @@
+module bankr-md-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
+
+// The Bankr. D. Md. court's own periods, computed under FRBP 9006(a),
+// which states the FRCP 6(a) method. Every FRBP period (schedules,
+// claims in chapter 7, 12 and 13 cases, discharge, dischargeability,
+// adversary answers, appeals) is lit/frbp's; a period the rules restate
+// from the FRBP, the Code or the district court is not declared again.
+// Stated in the rules but not declared: minimum settings a movant picks
+// from the Court Hearing Scheduler (more than 49 days after service for
+// a valuation, lien-avoidance or lien-stripping motion, LBR 3012-1(b),
+// 4003-2; more than 33 and less than 60 days for a post-confirmation
+// chapter 13 modification, 3015-5; more than 21 days for stay relief,
+// 4001-1(b); more than 14 days for credit or loan modification, 4001-4;
+// a confirmation hearing not less than 35 days after the plan,
+// 3015-2(b); an opposition date no less than 21 days after service of a
+// sale motion, 6004-1); the later-of claim periods for a creditor
+// affected by an amended chapter 9 or 11 schedule (the bar date or 30
+// days, in subchapter V, or 60 days from the notice, 1009-1(d)) and for
+// a rejection claim (the claims bar date or 30 days after the rejection
+// order or the rejection's effective date, 3002-1(a)); the 30-day
+// stipulated extension cap to plead (7012-2); the 75- and 60-day
+// investigation periods a cash collateral order must give (4001-5); the
+// consent-motion extensions to 60 and 10 days after a rescheduled
+// meeting of creditors, which run from the order (9013-7(d)(3)(B)); the
+// business-day periods for stay-relief practice (2 business days to
+// renotice a hearing, produce an appraisal or seek a continuance, 3
+// business days to confer, 4001-1); the 6-month wait for a subchapter V
+// discharge (3022-1(a)(3)); dismissal after 14 days' notice for missing
+// payment advices or tax returns, which the court gives (1007-4,
+// 1017-1); and the court-ordered settlement order (9019-1). The 70-day
+// subchapter V claim period runs from the order for relief like FRBP
+// 3002(c)'s but is the local rule's for chapter 11 (3003-1).
+/// The Clerk issues a notice of deficient petition, schedules or papers
+/// (LBR 1002-1(b)).
+event DeficiencyNoticeIssued()
+/// The meeting of creditors under 11 U.S.C. § 341 is conducted (LBR
+/// 1007-4).
+event MeetingOfCreditorsDate()
+/// A chapter 9 or chapter 11 debtor or trustee files an amendment
+/// changing the amount, nature, classification or characterization of a
+/// scheduled debt (LBR 1009-1(d)).
+event ScheduleAmendmentFiled()
+/// Notice of an amendment of chapter 9 or chapter 11 schedules is
+/// served on the affected creditor (LBR 1009-1(d)).
+event AmendmentNoticeServed()
+/// A petition is filed in a non-individual chapter 11 case (LBR
+/// 2015-1).
+event Chapter11PetitionFiled()
+/// The order granting relief from the automatic stay is entered or the
+/// property is surrendered, whichever occurs earlier (LBR 3002-1(b)).
+event StayReliefOrSurrender()
+/// An objection to a proof of claim is served, as dated on its
+/// certificate of service (LBR 3007-1(a)).
+event ClaimObjectionServed()
+/// An objection to the list of property claimed as exempt is served
+/// (LBR 4003-1).
+event ExemptionObjectionServed()
+/// The hearing on confirmation of a chapter 13 plan is held, or the
+/// continued hearing (LBR 3015-2, 3015-3).
+event ConfirmationHearingDate()
+/// The debtor files and serves the pre-confirmation adequate-protection
+/// and lease-payment affidavit (LBR 3015-3(a)).
+event AdequateProtectionAffidavitServed()
+/// The hearing on confirmation of a chapter 11 plan is held (LBR
+/// 3018-1).
+event Chapter11ConfirmationHearingDate()
+/// A confirmed chapter 11, subchapter V plan is substantially
+/// consummated (LBR 3022-1(a)(1)).
+event SubchapterVPlanConsummated()
+/// A confirmed chapter 11 plan not under subchapter V becomes effective
+/// (LBR 3022-1(b)(1)).
+event Chapter11PlanEffective()
+/// The order confirming a chapter 11 plan is entered (LBR 3022-1(a)(2),
+/// (b)(2)).
+event Chapter11PlanConfirmed()
+/// The chapter 12 or 13 trustee files the notice of completion of plan
+/// payments (LBR 4004-1).
+event PlanCompletionNoticeFiled()
+/// A sale of estate property is consummated (LBR 6004-5).
+event SaleConsummated()
+/// The judgment or order in an adversary proceeding is entered (LBR
+/// 7054-1, 7054-2).
+event AdversaryJudgmentEntered()
+/// The Clerk sends notice that an inactive adversary proceeding or
+/// matter will be dismissed or denied without prejudice (LBR 7055-1).
+event ProsecutionNoticeSent()
+/// The hearing on a motion is held (LBR 9006-1(a)).
+event MotionHearingDate()
+/// A motion is served (LBR 9006-1(a)).
+event MotionServed()
+/// A motion to dismiss a chapter 13 case is served (LBR 9006-1(b)).
+event Chapter13DismissalMotionServed()
+/// An attorney's motion to withdraw an appearance is filed (LBR
+/// 9010-4).
+event WithdrawalMotionFiled()
+/// A hearing or trial is scheduled to be held (LBR 9013-7(c)).
+event HearingDate()
+/// A rescheduled meeting of creditors is to be held (LBR 9013-7(d)(3)).
+event RescheduledMeetingDate()
+/// A notice of removal is filed (LBR 9027-2(c)).
+event RemovalNoticeFiled()
+/// The Clerk serves the Notice of Requirement to Review Transcript (LBR
+/// 9037-1(b)).
+event TranscriptReviewNoticeServed()
+
+/// LBR 1002-1(b): the Court may strike the petition, schedules or
+/// papers or dismiss the case if the deficiencies a notice of deficient
+/// filing specifies are not corrected within 14 days after the notice
+/// issues.
+deadline deficiency-cure-period: 14.days after DeficiencyNoticeIssued() counted_by frcp6 cite "D. Md. LBR 1002-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 1006-1(b): an approved installment plan pays at least the second
+/// quarter of the fees (in chapter 11, the second half) within 30 days
+/// after filing.
+deadline installment-first-period: 30.days after PetitionFiled() counted_by frcp6 cite "D. Md. LBR 1006-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 1006-1(b): in chapter 7, 12 and 13 cases the third quarter of
+/// the fees is paid within 60 days after filing.
+deadline installment-second-period: 60.days after PetitionFiled() counted_by frcp6 cite "D. Md. LBR 1006-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 1006-1(b): in chapter 7, 12 and 13 cases the last quarter of the
+/// fees is paid within 90 days after filing.
+deadline installment-final-period: 90.days after PetitionFiled() counted_by frcp6 cite "D. Md. LBR 1006-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 1007-4: the debtor gives the trustee, and any creditor who
+/// timely requests them, copies of the payment advices received within
+/// 60 days before the petition at least 7 days before the meeting of
+/// creditors.
+deadline payment-advices-period: 7.days before MeetingOfCreditorsDate() counted_by frcp6 cite "D. Md. LBR 1007-4"
+{
+  forum frcp
+}
+
+/// LBR 1007-4: a creditor's request for the payment advices is timely
+/// if the debtor receives it at least 14 days before the first date set
+/// for the meeting of creditors.
+deadline payment-advices-request-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "D. Md. LBR 1007-4"
+{
+  forum frcp
+}
+
+/// LBR 1009-1(d): within 14 days of filing an amendment of chapter 9 or
+/// 11 schedules, the debtor or trustee transmits notice of it to the
+/// affected creditor.
+deadline amendment-notice-period: 14.days after ScheduleAmendmentFiled() counted_by frcp6 cite "D. Md. LBR 1009-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 1009-1(d): the debtor or trustee files a certificate of service
+/// of the amendment notice within 7 days after service.
+deadline amendment-notice-certificate-period: 7.days after AmendmentNoticeServed() counted_by frcp6 cite "D. Md. LBR 1009-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 2016-2(a): if the debtor does not file them, the bankruptcy
+/// petition preparer signs and files Official Forms B2800 and B119
+/// within 14 days after the petition date.
+deadline preparer-forms-period: 14.days after PetitionFiled() counted_by frcp6 cite "D. Md. LBR 2016-2(a)"
+{
+  forum frcp
+}
+
+/// LBR 2015-1: the debtor in possession in a non-individual chapter 11
+/// case files the statement of insiders' duties and compensation within
+/// 21 days after the petition.
+deadline insider-compensation-statement-period: 21.days after Chapter11PetitionFiled() counted_by frcp6 cite "D. Md. LBR 2015-1"
+{
+  forum frcp
+}
+
+/// LBR 3002-1(b): an amended proof of claim for an unsecured deficiency
+/// on real property is filed within 180 days after the stay-relief
+/// order or the surrender, whichever is earlier.
+deadline real-property-deficiency-claim-period: 180.days after StayReliefOrSurrender() counted_by frcp6 cite "D. Md. LBR 3002-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3002-1(b): an amended proof of claim for an unsecured deficiency
+/// on personal property is filed within 60 days after the stay-relief
+/// order or the surrender, whichever is earlier.
+deadline personal-property-deficiency-claim-period: 60.days after StayReliefOrSurrender() counted_by frcp6 cite "D. Md. LBR 3002-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3003-1: in a chapter 11 case not under subchapter V, a proof of
+/// claim is timely if filed not later than 90 days after the first date
+/// set for the meeting of creditors, unless the Court fixes another
+/// date.
+deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frcp6 cite "D. Md. LBR 3003-1"
+{
+  forum frcp
+}
+
+/// LBR 3003-1: in a subchapter V case, a proof of claim is timely if
+/// filed not later than 70 days after the order for relief, unless the
+/// Court fixes another date.
+deadline subchapter-v-claim-period: 70.days after OrderForReliefEntered() counted_by frcp6 cite "D. Md. LBR 3003-1"
+{
+  forum frcp
+}
+
+/// LBR 3007-1(a): the claimant may file and serve a response to a claim
+/// objection within 30 days after the date on the objection's
+/// certificate of service.
+deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frcp6 cite "D. Md. LBR 3007-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 4003-1: an opposition to an objection to claimed exemptions is
+/// filed and served within 28 days after the objection was served.
+deadline exemption-objection-opposition-period: 28.days after ExemptionObjectionServed() counted_by frcp6 cite "D. Md. LBR 4003-1"
+{
+  forum frcp
+}
+
+/// LBR 3015-2(b): objections to a chapter 13 plan are filed and served
+/// no later than 7 days before the confirmation hearing.
+deadline chapter13-confirmation-objection-period: 7.days before ConfirmationHearingDate() counted_by frcp6 cite "D. Md. LBR 3015-2(b)"
+{
+  forum frcp
+}
+
+/// LBR 3015-2(c): the debtor files the Pre-Confirmation Certificate
+/// (Local Form O) within 7 days before the initial confirmation
+/// hearing, and an updated one before a continued hearing.
+deadline pre-confirmation-certificate-period: 7.days before ConfirmationHearingDate() counted_by frcp6 cite "D. Md. LBR 3015-2(c)"
+{
+  forum frcp
+}
+
+/// LBR 3015-3(a): no later than 14 days before a confirmation hearing,
+/// the debtor serves and files the affidavit of pre-confirmation
+/// adequate-protection and lease payments.
+deadline adequate-protection-affidavit-period: 14.days before ConfirmationHearingDate() counted_by frcp6 cite "D. Md. LBR 3015-3(a)"
+{
+  forum frcp
+}
+
+/// LBR 3015-3(b): objections to the affidavit's accuracy are filed no
+/// later than 7 days after its filing and service.
+deadline adequate-protection-objection-period: 7.days after AdequateProtectionAffidavitServed() counted_by frcp6 cite "D. Md. LBR 3015-3(b)"
+{
+  forum frcp
+}
+
+/// LBR 3018-1: the tally of ballots is filed no later than 7 days
+/// before the chapter 11 confirmation hearing.
+deadline ballot-tally-period: 7.days before Chapter11ConfirmationHearingDate() counted_by frcp6 cite "D. Md. LBR 3018-1"
+{
+  forum frcp
+}
+
+/// LBR 3022-1(a)(1): within 14 days after a subchapter V plan is
+/// substantially consummated, the debtor or plan administrator files
+/// and serves notice of it under 11 U.S.C. § 1183(c)(2).
+deadline substantial-consummation-notice-period: 14.days after SubchapterVPlanConsummated() counted_by frcp6 cite "D. Md. LBR 3022-1(a)(1)"
+{
+  forum frcp
+}
+
+/// LBR 3022-1(b)(1): within 14 days after a confirmed chapter 11 plan
+/// becomes effective, the debtor or plan administrator files and serves
+/// notice of the effective date.
+deadline effective-date-notice-period: 14.days after Chapter11PlanEffective() counted_by frcp6 cite "D. Md. LBR 3022-1(b)(1)"
+{
+  forum frcp
+}
+
+/// LBR 3022-1(a)(2), (b)(2): the first post-confirmation progress
+/// report is filed no later than 6 months after the confirmation order,
+/// and every 6 months thereafter until the final decree.
+deadline first-progress-report-period: 6.months after Chapter11PlanConfirmed() counted_by frcp6 cite "D. Md. LBR 3022-1(b)(2)"
+{
+  forum frcp
+}
+
+/// LBR 4004-1: in chapter 12 and 13 cases, the debtor files and serves
+/// the Affidavit Requesting Discharge (Local Form P) no later than 90
+/// days after the trustee files the notice of completion of plan
+/// payments.
+deadline discharge-affidavit-period: 90.days after PlanCompletionNoticeFiled() counted_by frcp6 cite "D. Md. LBR 4004-1"
+{
+  forum frcp
+}
+
+/// LBR 6004-5: the seller files the FRBP 6004(f) report of sale within
+/// 7 days after the sale is consummated.
+deadline sale-report-period: 7.days after SaleConsummated() counted_by frcp6 cite "D. Md. LBR 6004-5"
+{
+  forum frcp
+}
+
+/// LBR 7054-1: no costs beyond filing fees are allowed in an adversary
+/// proceeding unless the entitled party files a bill of costs within 21
+/// days after the judgment or order.
+deadline bill-of-costs-period: 21.days after AdversaryJudgmentEntered() counted_by frcp6 cite "D. Md. LBR 7054-1"
+{
+  forum frcp
+}
+
+/// LBR 7054-2: unless a statute or the Court fixes a longer period, a
+/// prevailing party's motion for attorney's fees is filed within 21
+/// days after the judgment or order.
+deadline attorney-fees-motion-period: 21.days after AdversaryJudgmentEntered() counted_by frcp6 cite "D. Md. LBR 7054-2"
+{
+  forum frcp
+}
+
+/// LBR 7055-1: within 30 days after the Clerk's notice of inactivity,
+/// the plaintiff or movant shows good cause in writing why dismissal or
+/// denial should not be ordered.
+deadline prosecution-cause-period: 30.days after ProsecutionNoticeSent() counted_by frcp6 cite "D. Md. LBR 7055-1"
+{
+  forum frcp
+}
+
+/// LBR 9006-1(a): unless the Court or a rule provides otherwise, a
+/// motion is served at least 21 days before the hearing date.
+deadline motion-service-period: 21.days before MotionHearingDate() counted_by frcp6 cite "D. Md. LBR 9006-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 9006-1(a): absent a response deadline the movant set (no earlier
+/// than 14 days after service and no later than 7 days before the
+/// hearing), a response and memorandum in opposition are filed within
+/// 14 days after service of the motion.
+deadline motion-response-period: 14.days after MotionServed() counted_by frcp6 cite "D. Md. LBR 9006-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 9006-1(b): a response to a motion to dismiss a chapter 13 case
+/// is filed within 21 days after service of the motion.
+deadline chapter13-dismissal-response-period: 21.days after Chapter13DismissalMotionServed() counted_by frcp6 cite "D. Md. LBR 9006-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 9010-4(a)(2)(B), (b)(2)(B): an attorney moving to withdraw
+/// certifies that written notice of the proposed withdrawal was served
+/// on the client at least 7 days before.
+deadline withdrawal-client-notice-period: 7.days before WithdrawalMotionFiled() counted_by frcp6 cite "D. Md. LBR 9010-4(a)"
+{
+  forum frcp
+}
+
+/// LBR 9010-4(b)(2): if a new attorney has not appeared for a client
+/// other than an individual within 21 days after the motion to withdraw
+/// is filed, the Court may dismiss its claims or enter a default
+/// against it.
+deadline substitute-counsel-period: 21.days after WithdrawalMotionFiled() counted_by frcp6 cite "D. Md. LBR 9010-4(b)"
+{
+  forum frcp
+}
+
+/// LBR 9013-7(c): a motion to postpone a hearing or trial for a prior
+/// conflicting engagement is filed at least 7 days before the hearing
+/// date.
+deadline conflicting-engagement-motion-period: 7.days before HearingDate() counted_by frcp6 cite "D. Md. LBR 9013-7(c)"
+{
+  forum frcp
+}
+
+/// LBR 9013-7(d)(3)(C): the debtor's attorney, or the debtor, files and
+/// serves notice of the rescheduled meeting of creditors, with the
+/// consent motion, at least 7 days before it.
+deadline rescheduled-meeting-notice-period: 7.days before RescheduledMeetingDate() counted_by frcp6 cite "D. Md. LBR 9013-7(d)"
+{
+  forum frcp
+}
+
+/// LBR 9027-2(c): not later than 14 days after filing the notice of
+/// removal, the removing party files a copy of the docket sheet and the
+/// papers from the removed action.
+deadline removal-docket-period: 14.days after RemovalNoticeFiled() counted_by frcp6 cite "D. Md. LBR 9027-2(c)"
+{
+  forum frcp
+}
+
+/// LBR 9037-1(b): an attorney or self-represented litigant files a
+/// Notice of Intent to Request Redaction within 14 days of the Notice
+/// of Requirement to Review Transcript.
+deadline redaction-intent-period: 14.days after TranscriptReviewNoticeServed() counted_by frcp6 cite "D. Md. LBR 9037-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 9037-1(b): a party files its Request for Redaction of Transcript
+/// within 21 days of the Notice of Requirement to Review Transcript.
+deadline redaction-request-period: 21.days after TranscriptReviewNoticeServed() counted_by frcp6 cite "D. Md. LBR 9037-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 9037-1(b): the redacted transcript is due 31 days from the
+/// Notice of Requirement to Review Transcript.
+deadline redacted-transcript-period: 31.days after TranscriptReviewNoticeServed() counted_by frcp6 cite "D. Md. LBR 9037-1(b)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed and served with its response deadline" by applicant cite "D. Md. LBR 9006-1(a)"
+{
+  note "Each motion is filed with a brief memorandum of fact and law or a statement that none will be filed (LBR 9013-2) and is served at least 21 days before the hearing, with a response deadline no earlier than 14 days after service and no later than 7 days before the hearing (LBR 9006-1(a)). A motion to dismiss a chapter 13 case gives 21 days (LBR 9006-1(b)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-response "Response and memorandum in opposition filed" -> response {
+    authority cite "D. Md. LBR 9006-1(a)"
+  }
+  edge-motion-filed-unopposed "No timely response" -> ruling {
+    authority cite "D. Md. LBR 9013-1(d)"
+  }
+}
+
+state response: "Response filed" by opponent cite "D. Md. LBR 9006-1(a)"
+{
+  note "The response deadline may be extended by agreement of the parties (LBR 9006-1(a)). When a party is served through CM/ECF, FRBP 9006(f)'s three added days do not apply to it (LBR 9006-1(c))."
+  edge-response-ruling "Matter heard or decided on the papers" -> ruling {
+    authority cite "D. Md. LBR 9013-1(b)"
+  }
+}
+
+decision ruling: "Motion decided" by court cite "D. Md. LBR 9013-1(b)"
+{
+  note "The Court may decide a motion on the papers, before the response deadline where responses would not aid decision, and without further notice or hearing if no timely response is filed (LBR 9013-1(b)-(d)). A postponement needs an order or the parties' consent (LBR 9013-7(a))."
+  edge-ruling-granted "Granted" -> decided { authority cite "D. Md. LBR 9013-1(b)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "D. Md. LBR 9013-1(b)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "D. Md. LBR 1001-1(b)"
+{
+  note "The Local Bankruptcy Rules govern cases and proceedings in the court and with the court's active administrative orders apply to all cases pending in the court, supplementing the FRBP (LBR 1001-1(b))."
+}

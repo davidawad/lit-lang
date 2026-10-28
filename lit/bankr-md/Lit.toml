@@ -1,0 +1,47 @@
+# The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the District
+# of Maryland over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
+# only the periods the Local Bankruptcy Rules themselves state and
+# re-encodes no FRBP period. It is a base package, not a `kind =
+# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011 for
+# `bankr-md`), as for lit/bankr-dc. Each period is counted under FRBP
+# 9006(a), the FRCP 6(a) method (core's frcp6). The rules are those as
+# revised December 1, 2025 (Ver. 25.01), which supersede all prior
+# versions; the court's administrative orders page lists no later order
+# amending them (sources/bankr-md/PROVENANCE.md), so the consolidation is
+# the only layer. The earlier editions are not vendored, so a query before
+# December 1, 2025 is a hole in the corpus.
+[package]
+name = "bankr-md-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-md-local-rules"
+forum = "bankr-md"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the District of Maryland: Local Bankruptcy Rules"
+description = "The Bankr. D. Md. Local Bankruptcy Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): deficient filings, installment fees, payment advices, amended-schedule notices, petition-preparer forms, chapter 11 insider compensation, rejection, deficiency and chapter 11 proofs of claim, claim and exemption objections, chapter 13 confirmation objections, certificates and adequate-protection affidavits, ballots, chapter 11 post-confirmation notices and reports, chapter 12 and 13 discharge affidavits, reports of sale, adversary costs, fees and prosecution, motion service and responses (LBR 9006-1), attorney withdrawal, postponements, removal and transcript redaction."
+in_force = "2025-12-01"
+known_at = "2026-10-28"
+unknown_before = "2025-12-01"
+jurisdiction = "U.S. Bankruptcy Court for the District of Maryland"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.mdb-lbr]
+title = "Local Bankruptcy Rules of the United States Bankruptcy Court for the District of Maryland (as revised December 1, 2025, Ver. 25.01)"
+url = "https://www.mdb.uscourts.gov/files/localrules.pdf"
+path = "sources/bankr-md/md-local-rules-2025-12-01-sectioned.txt"
+path_sha256 = "962e3f82aae1f665a15cbc6aca824d53179d05369f15e598db2687949de62a0e"
+sha256 = "a1cd5426d50d3eb9c59b8f4ccfdb7ed5f825e7a52cdadb3aa6a6078bafd66d8d"
+as_of = "2025-12-01"
+cite_prefixes = ["D. Md. LBR"]
+section_heading = "Rule {n}"

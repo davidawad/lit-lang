@@ -1,0 +1,183 @@
+module ded-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled, TrialClockEvent }
+
+// The District of Delaware's own criminal periods, from its Time Limits
+// and Procedures for Achieving Prompt Disposition of Criminal Cases (the
+// "Plan"), counted under the criminal rules (FRCrimP 45(a) governs "any
+// local rule"). The Plan was adopted under FRCrimP 50(b) and the Speedy
+// Trial Act, and Federal Rule of Criminal Procedure 32 governs any
+// sentencing matter it does not cover (Plan § 8(b)(10)). No trigger
+// carries a service method. The vendored text is a scan's text layer with
+// recognition errors in places (sources/d-del/PROVENANCE.md); every period
+// encoded here is legible in it, and the 2011 Section 8 periods are each
+// written both in words and in figures.
+//
+// Periods that are Speedy Trial Act or FRCrimP periods stay in lit/frcrimp
+// and are only named here: the indictment or information within 30 days
+// of arrest or service of a summons, extended by 30 days when no grand
+// jury sat (Plan § 3(a), (b); 18 U.S.C. § 3161(b)); trial within 70 days
+// of the last of the filing of the indictment or information, its
+// unsealing, or the first appearance (Plan § 6(a); 18 U.S.C. §
+// 3161(c)(1)), and on retrial within 70 days of the order occasioning it,
+// extendable to 180 days after an appeal or collateral attack (Plan §
+// 6(b); 18 U.S.C. § 3161(e)); trial of a detained or high-risk defendant
+// within 90 days (Plan § 7(a); 18 U.S.C. § 3164(b)); the 30-day minimum
+// for defense preparation (Plan § 9; 18 U.S.C. § 3161(c)(2)); the
+// excludable periods of Plan § 10 (18 U.S.C. § 3161(h)); objections to
+// the presentence report within 14 days after receiving it (Plan §
+// 8(b)(3); FRCrimP 32(f)(1)); and the juvenile trial and disposition
+// periods (Plan § 11; 18 U.S.C. §§ 5036, 5037).
+//
+// Conditions that are not deadlines from a party's event stay in notes:
+// sentencing occurs not less than 100 calendar days after a plea of guilty
+// or nolo contendere or a guilty finding unless the Court sets an earlier
+// date (Plan § 8(a)), and the probation officer discloses the presentence
+// report not more than 50 calendar days before the sentencing date, a
+// report being deemed disclosed when e-mailed to counsel at the address on
+// file with the Clerk (Plan § 8(b)(2)): both are windows, not deadlines.
+// The probation officer submits the report with its recommendation and
+// addendum to the Court no later than five days before the sentencing
+// hearing (Plan § 8(b)(8)); FRCrimP 32(g)'s seven days (lit/frcrimp) are
+// the longer national floor, so that period is not encoded here. The Court
+// schedules a motion not needing an evidentiary hearing for oral argument
+// within 10 days of filing, and holds argument or an evidentiary hearing
+// within ninety days of filing unless it finds a longer continuance in the
+// interest of justice (Plan § 5(d)(4), (5)); it sets each case for trial
+// within twenty days of arraignment (Plan § 6(g)(1)) and schedules
+// proceedings within ten days of the government's notice that a trial on
+// other charges is complete (Plan § 10(e)(4)): those are the Court's own
+// scheduling duties. The government advises the Court of the start of
+// custody awaiting trial at arraignment or within five days, whichever is
+// earlier (Plan § 7(d)(1)), which is at arraignment. Plea negotiations are
+// exhausted before the pretrial conference (Plan § 6(g)(4)).
+//
+// The earlier D. Del. criminal outline's FRCrimP flow and its decisions
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// The defendant is arraigned: a plea is taken or entered by the Court on
+/// the defendant's behalf (D. Del. Crim. Plan § 4(b)(2)).
+event Arraigned()
+/// The evidentiary hearing or argument on a pretrial motion concludes
+/// (D. Del. Crim. Plan § 5(d)(6)).
+event MotionProceedingConcluded()
+/// The Court enters its order setting the case for trial (D. Del. Crim.
+/// Plan § 6(g)(2)).
+event TrialSettingOrdered()
+/// A party learns that the circumstances justifying a continuance to a
+/// date not certain no longer exist (D. Del. Crim. Plan § 10(d)(3),
+/// (f)(3)).
+event ContinuanceGroundsEnded()
+/// An indictment or information is filed against a person the United
+/// States Attorney knows is serving a term of imprisonment in a penal
+/// institution (D. Del. Crim. Plan § 13).
+event PrisonerCharged()
+
+/// D. Del. Crim. Plan § 4(a): a defendant is arraigned within 10 days of
+/// the last to occur of the filing of the indictment or information in
+/// this District, the unsealing of a sealed indictment or information, or
+/// the defendant's first appearance before a judicial officer of this
+/// District. Time excludable under Plan § 10 is excluded (§ 10(a)).
+deadline arraignment-period: 10.days after TrialClockEvent() counted_by frcrimp45 cite "D. Del. Crim. Plan § 4(a)"
+{
+  forum frcrimp
+}
+
+/// D. Del. Crim. Plan § 5(a): unless the Court orders otherwise at
+/// arraignment, motions for a bill of particulars, on defects in the
+/// institution of the prosecution or in the charge, for relief from
+/// joinder, for a deposition, for discovery, for transfer, to suppress,
+/// for notice of the government's intended evidence, alibi demands and
+/// wiretap disclosure demands are filed on or before the tenth day
+/// following arraignment; an untimely motion or request is waived unless
+/// the Court grants relief (§ 5(b)).
+deadline pretrial-motions: 10.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Del. Crim. Plan § 5(a)"
+{
+  forum frcrimp
+}
+
+/// D. Del. Crim. Plan § 5(c): a defendant who intends to rely on an
+/// insanity defense or to introduce expert testimony of a mental
+/// condition bearing on guilt notifies the government in writing and
+/// files a copy with the Clerk on or before the tenth day following
+/// arraignment, unless the Court orders otherwise at arraignment; the
+/// Court may for cause allow late filing.
+deadline mental-condition-notice: 10.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Del. Crim. Plan § 5(c)"
+{
+  forum frcrimp
+}
+
+/// D. Del. Crim. Plan § 5(d)(6): all post-hearing submissions are filed no
+/// later than thirty days after the proceeding's conclusion, unless the
+/// Court finds a longer continuance in the interest of justice under 18
+/// U.S.C. § 3161(h).
+deadline post-hearing-submissions: 30.days after MotionProceedingConcluded() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Del. Crim. Plan § 5(d)"
+{
+  forum frcrimp
+}
+
+/// D. Del. Crim. Plan § 6(g)(2): a scheduling conflict of counsel is not a
+/// ground for continuance unless the Court receives notice of it and a
+/// motion to reschedule the trial within five days of the order setting
+/// trial; the Court may consider a later motion in the interest of
+/// justice.
+deadline reschedule-motion: 5.days after TrialSettingOrdered() counted_by frcrimp45 cite "D. Del. Crim. Plan § 6(g)"
+{
+  forum frcrimp
+}
+
+/// D. Del. Crim. Plan § 10(d)(3), (f)(3): when a continuance runs to a date
+/// not certain, a party informs the Court within five days of learning
+/// that the circumstances that justify it no longer exist.
+deadline continuance-grounds-notice: 5.days after ContinuanceGroundsEnded() counted_by frcrimp45 cite "D. Del. Crim. Plan § 10(d)"
+{
+  forum frcrimp
+}
+
+/// D. Del. Crim. Plan § 13: the United States Attorney, within twenty days
+/// of filing the indictment or information against a person known to be
+/// serving a term of imprisonment, seeks to obtain the prisoner's presence
+/// for trial or causes a detainer to be filed (18 U.S.C. § 3161(j)).
+deadline prisoner-presence: 20.days after PrisonerCharged() counted_by frcrimp45 cite "D. Del. Crim. Plan § 13"
+{
+  forum frcrimp
+}
+
+/// D. Del. Crim. Plan § 8(b)(5): no later than twenty calendar days before
+/// the sentencing hearing, the probation officer submits the final draft
+/// of the presentence report to the parties.
+deadline final-draft-psr: 20.days before SentencingScheduled() counted_by frcrimp45 cite "D. Del. Crim. Plan § 8(b)"
+{
+  forum frcrimp
+}
+
+/// D. Del. Crim. Plan § 8(b)(6): no later than fourteen calendar days
+/// before the sentencing hearing, a sentencing memorandum seeking a
+/// departure from the Sentencing Guidelines or raising a § 3553 variance
+/// claim is filed directly with the Court (under seal only with prior
+/// approval); a party that believes an objection to the presentence report
+/// needs a hearing notifies the Court in writing by the same day.
+deadline sentencing-memorandum: 14.days before SentencingScheduled() counted_by frcrimp45 cite "D. Del. Crim. Plan § 8(b)"
+{
+  forum frcrimp
+}
+
+/// D. Del. Crim. Plan § 8(b)(7): no later than eight days before the
+/// sentencing hearing, the opposing party files any response to a
+/// sentencing memorandum.
+deadline sentencing-memorandum-response: 8.days before SentencingScheduled() counted_by frcrimp45 cite "D. Del. Crim. Plan § 8(b)"
+{
+  forum frcrimp
+}

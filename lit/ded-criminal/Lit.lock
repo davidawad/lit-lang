@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "ded-criminal-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:ba8f5e7af217d56e1068f5a505e01e3ce922915d8269c51cf88401947988c7c3"
+semantic = "sha256:52584cf430594cbbb56d94196cb0abba44c0f44af8aa54744b21d3873807b5e3"
+texts = [
+    "ded-crim-plan sources/d-del/ddel-lr-crim-speedy-trial-1987-amended-2011-05-02-sectioned.txt sha256:5f79463467a60cc6c6e6e1f25d97b17d5667b2bcd0e223b6dbd571314d8f9319",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcrimp-criminal-procedure 2024.12.0",
+]
+
+[[package]]
+name = "frcrimp-criminal-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]

@@ -22,3 +22,9 @@
 - Upstream: https://www.ded.uscourts.gov/sites/ded/files/2026%20District%20of%20Delaware%20Revised%20Local%20Rules%20Effective%20September%201.pdf, retrieved 2026-10-27, as recorded on the `d-del/local-rules-2026-09-01.txt` entry this file is derived from.
 - Edition: as the extract, the Local Rules of Civil Practice and Procedure amended effective September 1, 2026.
 - Sectioned sha256 a8ac9b22563275310851fb21a4b43b82788a371e47869c64251ca6c1a837b967 (the `path_sha256` pinned by `lit/ded/Lit.toml`).
+
+### `d-del/ddel-lr-crim-speedy-trial-1987-amended-2011-05-02-sectioned.txt` — D. Del. Time Limits and Procedures for Achieving Prompt Disposition of Criminal Cases, sectioned
+
+- Derived in the pod (lg-gddt.10) from `d-del/ddel-lr-crim-speedy-trial-1987-amended-2011-05-02.txt` (extract sha256 049fe639690eae8dd3b9c46057c9c26f152a935d37fc15fea5cd406103eb3ace); nothing fetched. One marker line `## D. Del. Crim. Plan § <n>` is inserted before each section heading line `<n>. <Title>` of the 1987 plan (§§ 1 to 14). Section 8 is in the file three times: the 1987 text is marked `§ 8-1987`, the order of December 6, 1994 rewriting it is marked `§ 8-1994` (before the order's caption), and the order of May 2, 2011 rewriting it again, the text in force, is marked `§ 8` (before its caption). Every other line is the extract unchanged, so deleting the marker lines (`sed '/^## D. Del. Crim. Plan § /d'`) gives back the extract byte for byte.
+- Edition: as the extract, amended May 2, 2011. The PDF is a scan and its text layer has recognition errors in places (the 1987 § 8 and parts of the orders' captions are garbled); `lit/ded-criminal` takes only periods that are legible, and the 2011 § 8 periods are written both in words and in figures.
+- Sectioned sha256 5f79463467a60cc6c6e6e1f25d97b17d5667b2bcd0e223b6dbd571314d8f9319 (the `path_sha256` pinned by `lit/ded-criminal/Lit.toml`).

@@ -1,0 +1,55 @@
+# The U.S. District Court for the District of Delaware's criminal local
+# rules as a local-rule layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP
+# 57(a)). The court's only criminal local-rule document is its "Time Limits
+# and Procedures for Achieving Prompt Disposition of Criminal Cases"
+# (Section II of the District Plan under the Speedy Trial Act, effective
+# November 1, 1987, amended May 2, 2011; sources/d-del), whose Section 8
+# was rewritten by the orders of December 6, 1994 and May 2, 2011; the
+# vendored file carries all three texts and the 2011 text is the one in
+# force. The package declares only the periods the plan itself states and
+# re-encodes no FRCrimP, Speedy Trial Act or FRAP 4(b) period (one source
+# of truth: lit/frcrimp). Each period is counted under FRCrimP 45(a),
+# which governs "any local rule", so each deadline names `forum frcrimp`.
+# in_force is the 2011 amendment; earlier editions are not modeled, so a
+# query before it is a hole in the corpus. An appeal goes to the Third
+# Circuit under lit/frcrimp's FRAP 4(b) period.
+[package]
+name = "ded-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ded-criminal-local-rules"
+forum = "ded-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of Delaware: Criminal Time Limits and Procedures"
+description = "The District of Delaware's Time Limits and Procedures for Achieving Prompt Disposition of Criminal Cases as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the arraignment period, the pretrial-motion and mental-condition notice periods after arraignment, post-hearing submissions, a motion to reschedule trial, the government's notice that a continuance's circumstances have ended, the government's step to obtain a prisoner's presence, and the sentencing schedule (final draft presentence report, sentencing memorandum, hearing notice and response)."
+in_force = "2011-05-02"
+known_at = "2026-10-28"
+unknown_before = "2011-05-02"
+jurisdiction = "U.S. District Court for the District of Delaware (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ded-crim-plan"
+issuer = "U.S. District Court for the District of Delaware"
+date = "2011-05-02"
+designation = "Time Limits and Procedures for Achieving Prompt Disposition of Criminal Cases (amended May 2, 2011)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.ded-crim-plan]
+title = "U.S. District Court for the District of Delaware, Time Limits and Procedures for Achieving Prompt Disposition of Criminal Cases (Section II of the District Plan under the Speedy Trial Act), effective November 1, 1987, amended May 2, 2011"
+url = "https://www.ded.uscourts.gov/sites/ded/files/local-rules/LR-Crim.pdf"
+path = "sources/d-del/ddel-lr-crim-speedy-trial-1987-amended-2011-05-02-sectioned.txt"
+path_sha256 = "5f79463467a60cc6c6e6e1f25d97b17d5667b2bcd0e223b6dbd571314d8f9319"
+sha256 = "1f9ba30eb7afcbba8bfda7839b108a81851f8ec8613b509a3e3fe503ff3a63ff"
+as_of = "2011-05-02"
+cite_prefixes = ["D. Del. Crim. Plan §"]
+section_heading = "D. Del. Crim. Plan § {n}"

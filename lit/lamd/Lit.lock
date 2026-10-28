@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcp-civil-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "lamd-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:29dea9005352554fdd789dd97fa5f7e6bca73272bd7627250d92c5686d304750"
+semantic = "sha256:571d12a060229d15fbb401b7d354e01bfb2bc2bca1e99eb04022cafb454bb113"
+texts = [
+    "lamd-lr sources/lamd/lamd-local-rules-sectioned.txt sha256:f61e7174a7c38e7e7e54bc2c4e1d247325437212482383b45249c217d7297954",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcp-civil-procedure 2024.12.0",
+]

@@ -116,3 +116,65 @@ deadline proposed-findings-objections: 14.days after ProposedFindingsServed() co
   forum frcp cite "2254 Rule 12"
     quote "are not inconsistent with any statutory provisions or these rules,"
 }
+
+test "the § 2244(d)(1) year ends on the anniversary of finality" cite "28 U.S.C. § 2244(d)(1)(A)"
+{
+  given StateLimitationTrigger(StateJudgmentFinal) on 2024-03-04
+  expect deadline(state-petition-limitation) == 2025-03-04
+}
+
+test "the § 2244(d)(1) year runs from the latest of its dates" cite "28 U.S.C. § 2244(d)(1)"
+{
+  given StateLimitationTrigger(StateJudgmentFinal) on 2024-03-04
+  given StateLimitationTrigger(RightNewlyRecognized) on 2024-06-17
+  expect deadline(state-petition-limitation) == 2025-06-17
+}
+
+test "a § 2244(d)(1) year ending on Saturday rolls to Monday" cite "FRCP 6(a)(1)(C)"
+{
+  given StateLimitationTrigger(FactualPredicateDiscoverable) on 2024-03-08
+  expect deadline(state-petition-limitation) == 2025-03-10
+}
+
+test "the § 2255(f) year ends on the anniversary of finality" cite "28 U.S.C. § 2255(f)(1)"
+{
+  given FederalLimitationTrigger(ConvictionFinal) on 2024-01-16
+  expect deadline(federal-motion-limitation) == 2025-01-16
+}
+
+test "the § 2255(f) year runs from the latest of its dates" cite "28 U.S.C. § 2255(f)"
+{
+  given FederalLimitationTrigger(ConvictionFinal) on 2024-01-16
+  given FederalLimitationTrigger(FactsDiscoverable) on 2024-05-14
+  expect deadline(federal-motion-limitation) == 2025-05-14
+}
+
+test "a § 2255(f) year ending on Independence Day rolls to Monday" cite "FRCP 6(a)(6)(A)"
+{
+  given FederalLimitationTrigger(GovernmentImpedimentRemoved) on 2024-07-04
+  expect deadline(federal-motion-limitation) == 2025-07-07
+}
+
+test "the court of appeals' 30 days on a successive-application motion" cite "28 U.S.C. § 2244(b)(3)(D)"
+{
+  given SuccessiveAuthorizationMoved() on 2025-03-03
+  expect deadline(successive-authorization-ruling) == 2025-04-02
+}
+
+test "30 days ending on Sunday roll to Monday" cite "FRAP 26(a)(1)(C)"
+{
+  given SuccessiveAuthorizationMoved() on 2025-03-07
+  expect deadline(successive-authorization-ruling) == 2025-04-07
+}
+
+test "Rule 8(b) objections within 14 days of personal service" cite "2254 Rule 8(b)"
+{
+  given ProposedFindingsServed(Personal) on 2025-03-03
+  expect deadline(proposed-findings-objections) == 2025-03-17
+}
+
+test "service by mail adds three days to the Rule 8(b) period" cite "FRCP 6(d)"
+{
+  given ProposedFindingsServed(Mail) on 2025-03-03
+  expect deadline(proposed-findings-objections) == 2025-03-20
+}

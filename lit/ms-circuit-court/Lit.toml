@@ -1,0 +1,44 @@
+# A civil action in a Mississippi circuit court under the Mississippi Rules
+# of Civil Procedure (the courts.ms.gov file dated 2026-07-01, amendments in
+# the text through September 10, 2025; sources/ms-circuit-court). Computation
+# of time is M.R.C.P. 6(a), which counts by Mississippi legal holidays and
+# days the courthouse or clerk's office is closed; lit/core has no
+# Mississippi counting rule, so the rules' periods are stated in notes, not
+# encoded as counted deadlines. Appeals go to lit/ms-appellate. Chancery
+# jurisdiction rests on the Constitution and statute, which are not
+# vendored.
+[package]
+name = "ms-circuit-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ms-circuit-court-civil"
+forum = "ms-circuit-court"
+authority = "StateRule"
+jurisdiction_id = "mississippi"
+title = "Mississippi circuit courts, civil"
+description = "A civil action in a Mississippi circuit court under the Mississippi Rules of Civil Procedure, as far as the vendored text states: commencement, service and its 120-day limit, the answer and Rule 12 motions, amendment, default and setting it aside, discovery and sanctions, summary judgment, trial setting and jury trial, post-trial motions, judgment, and dismissal (voluntary, involuntary and on the clerk's motion for want of prosecution)."
+in_force = "2026-07-01"
+known_at = "2026-10-28"
+unknown_before = "2026-07-01"
+jurisdiction = "Mississippi circuit courts (civil; chancery courts are separate)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.mrcp]
+title = "Mississippi Rules of Civil Procedure with Advisory Committee Notes (file dated 2026-07-01; amendments through September 10, 2025)"
+url = "https://courts.ms.gov/research/rules/msrulesofcourt/2026-07-01%20Rules%20of%20Civil%20Procedure%20with%20Advisory%20Committee%20Notes%20(with%20Forms%206-8%20attached).pdf"
+path = "sources/ms-circuit-court/rules-of-civil-procedure-sectioned.txt"
+path_sha256 = "b18aa683d774d658c98456a49c6b8c6c228b72eaaa11c178582a491e441b7328"
+sha256 = "b85e6543980b7f3a7d2d3623d9ec538d9aabec651a30a6589c87424ea6116095"
+as_of = "2026-07-01"
+
+[[cite_syntax.rules]]
+prefixes = ["M.R.C.P."]
+heading = "M.R.C.P. {}"
+source = "mrcp"

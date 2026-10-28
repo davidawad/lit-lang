@@ -205,9 +205,6 @@
 
           devShells.default = pkgs.mkShell {
             packages = devTools;
-            # No LITGRAPH_PACKS: the packs are build outputs embedded in the
-            # binary (crates/litgraph-packs); `just lit-sync` writes a copy
-            # to target/lit-build/packs for `--packs-dir`.
           };
 
           checks = {

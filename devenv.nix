@@ -29,9 +29,6 @@
     # to run `just verify-kani`.
   ];
 
-  # No LITGRAPH_PACKS: the packs are build outputs embedded in the binary
-  # (crates/litgraph-packs); packs/ holds only the hand-authored clock library.
-
   scripts.fmt.exec = "just fmt";
   scripts.fmt-check.exec = "just fmt-check";
   scripts.lint.exec = "just lint";

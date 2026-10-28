@@ -57,9 +57,7 @@ RUN apt-get update && \
 
 COPY --from=builder /build/target/release/litgraph /usr/local/bin/litgraph
 COPY --from=builder /build/target/release/litgraph-mcp /usr/local/bin/litgraph-mcp
-COPY --from=builder /build/built-packs /usr/share/litgraph/packs
 
-ENV LITGRAPH_PACKS=/usr/share/litgraph/packs
 USER litgraph
 WORKDIR /home/litgraph
 

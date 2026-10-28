@@ -4,7 +4,7 @@
 //! `cases/` by the `litgraph-packs` crate, which hands them to
 //! [`Catalog::embedded`]; this crate embeds none.
 
-use std::path::{Path, PathBuf};
+use std::path::Path;
 
 use schemars::JsonSchema;
 use serde::Serialize;
@@ -100,25 +100,6 @@ fn json_files(dir: &Path, prefix: &str) -> Result<Vec<(String, String)>> {
         }
     }
     Ok(files)
-}
-
-/// The directory one half of a catalog comes from, with what chose it:
-/// `flag`'s value, else `$var` (empty counts as unset), else `None`.
-/// A chosen directory that does not exist is an error naming its chooser.
-fn source_dir(flag: &str, value: Option<&Path>, var: &str) -> Result<Option<(PathBuf, String)>> {
-    let chosen = match value {
-        Some(dir) => Some((dir.to_path_buf(), flag.to_string())),
-        None => std::env::var_os(var)
-            .filter(|d| !d.is_empty())
-            .map(|d| (PathBuf::from(d), format!("${var}"))),
-    };
-    match chosen {
-        Some((dir, by)) if !dir.is_dir() => Err(Error::Io(format!(
-            "{by}: {} is not a directory",
-            dir.display()
-        ))),
-        chosen => Ok(chosen),
-    }
 }
 
 impl Catalog {
@@ -299,53 +280,6 @@ impl Catalog {
             files.extend(json_files(&calibration, "calibration/")?);
         }
         Catalog::from_files(dir.display().to_string(), files)
-    }
-
-    /// `$LITGRAPH_PACKS` if set, else the embedded `packs`; independently,
-    /// `$LITGRAPH_SCENARIOS` if set, else the embedded `scenarios`
-    /// ([`Catalog::resolve`] with no flags).
-    ///
-    /// # Errors
-    /// As [`Catalog::resolve`].
-    pub fn default_source(packs: EmbeddedFiles, scenarios: EmbeddedFiles) -> Result<Catalog> {
-        Catalog::resolve(None, None, packs, scenarios)
-    }
-
-    /// The packs and the scenario library a binary serves, each half
-    /// resolved on its own: the flag (`--packs-dir`, `--scenarios-dir`),
-    /// else its variable (`$LITGRAPH_PACKS`, `$LITGRAPH_SCENARIOS`), else
-    /// the embedded `packs`/`scenarios`. A variable set to the empty string
-    /// counts as unset.
-    ///
-    /// # Errors
-    /// `Io` naming the flag or variable if its directory does not exist;
-    /// `Invalid` naming it if a packs directory holds no pack file (a
-    /// stale `LITGRAPH_PACKS=packs/`: the packs are built into
-    /// `target/lit-build/packs`); else as [`Catalog::load`] /
-    /// [`Catalog::with_scenarios_dir`].
-    pub fn resolve(
-        packs_dir: Option<&Path>,
-        scenarios_dir: Option<&Path>,
-        packs: EmbeddedFiles,
-        scenarios: EmbeddedFiles,
-    ) -> Result<Catalog> {
-        let catalog = match source_dir("--packs-dir", packs_dir, "LITGRAPH_PACKS")? {
-            Some((dir, by)) => {
-                let catalog = Catalog::load(&dir)?;
-                if catalog.packs.is_empty() && catalog.load_errors.is_empty() {
-                    return Err(Error::Invalid(format!(
-                        "{by}: {} holds no pack file",
-                        dir.display()
-                    )));
-                }
-                catalog
-            }
-            None => Catalog::from_files("embedded".into(), owned(packs))?,
-        };
-        match source_dir("--scenarios-dir", scenarios_dir, "LITGRAPH_SCENARIOS")? {
-            Some((dir, _)) => catalog.with_scenarios_dir(&dir),
-            None => catalog.with_embedded_scenarios(scenarios),
-        }
     }
 
     /// Resolve pack refs: id, forum key, file stem, or a path to a pack file.

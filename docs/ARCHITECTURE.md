@@ -51,8 +51,7 @@ its `Lit.lock`; `just lit-sync` writes the build to `target/lit-build/`.
 SPEC §9.4 lists exactly which files are generated and from what.
 
 The binaries hand `litgraph-packs`' embedded files to `Catalog::embedded`,
-so a released binary needs no `packs/` directory alongside it; point at a
-different set with `$LITGRAPH_PACKS` or `--packs-dir` (`Catalog::load`).
+so a released binary needs no `packs/` directory alongside it.
 
 - **L0 → L1a**: every cite in a `.lit` rule must resolve to a span of the
   vendored L0 text (a hole otherwise, an error under `--profile strict`), and

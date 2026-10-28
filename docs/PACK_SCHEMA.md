@@ -221,7 +221,7 @@ read.
 
 Fragments are embedded at build time (key `clock/<file>`; the embedded
 packs carry the shared library and the packages' fragments together) and read
-from `<packs dir>/clock/` by `--packs-dir`/`LITGRAPH_PACKS`; in-memory
+from `<packs dir>/clock/` by `Catalog::load`; in-memory
 catalogs (`Catalog::from_files`)
 take them as files named `clock/<file>.json`. A source with no `clock/`
 files gets the embedded hand-authored library (no generated fragment). Fragments merge in file-name order; a fragment that fails
@@ -585,8 +585,7 @@ needs, its sourced facts, and the engine scenario itself (rates, stakes,
 perspective, masks, payoffs, probabilities, policy, modeling modes — the same
 `scenario` object a request carries; `litgraph schema scenario` gives its
 full shape). It is embedded into the binary the same way packs are
-(`crates/litigate-engine/build.rs`); `$LITGRAPH_SCENARIOS` or `--scenarios-dir`
-override it at runtime, independently of `$LITGRAPH_PACKS`/`--packs-dir`.
+(`crates/litigate-engine/build.rs`); no environment variable overrides it.
 
 | field | type | notes |
 |---|---|---|
@@ -622,8 +621,7 @@ A request's `scenario` field is one of:
   the same "unknown field" error as an inline scenario, not a silent no-op.
 
 CLI: `--scenario <name|file.json|'{"inline":"json"}'>`; `--set k=v` composes
-onto a named `--scenario` via `extends` automatically. `--scenarios-dir` (or
-`$LITGRAPH_SCENARIOS`) points at a directory instead of the embedded library.
+onto a named `--scenario` via `extends` automatically.
 
 ## Authoring rules
 

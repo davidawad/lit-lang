@@ -154,16 +154,6 @@ fn catalog_load_of_missing_directory_is_io_error() {
     assert_eq!(err.code(), "io");
 }
 
-#[test]
-fn default_source_falls_back_to_embedded_without_the_env_var() {
-    // `LITGRAPH_PACKS` is not set in the test process, so this exercises the
-    // `None => embedded()` branch (the `Some` branch needs `set_var`, which
-    // is `unsafe` and this workspace forbids `unsafe_code` even in tests).
-    assert!(std::env::var_os("LITGRAPH_PACKS").is_none());
-    let cat = litgraph_packs::default_source().unwrap();
-    assert_eq!(cat.origin, "embedded");
-}
-
 // --- lint: every diagnostic code ---
 
 #[test]

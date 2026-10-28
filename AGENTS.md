@@ -9,8 +9,7 @@ this file is the operating manual.
 subcommand on a compiled matter or package, and `litigate engine` is the
 engine's raw JSON interface, the commands below (`litigate engine q ...`,
 `litigate engine describe`, ...); its packs and named scenarios are
-compiled from `lit/` and `cases/` unless `--packs-dir`/`$LITGRAPH_PACKS`
-(`--scenarios-dir`/`$LITGRAPH_SCENARIOS`) names a directory. The
+compiled from `lit/` and `cases/`. The
 `litgraph` binary is a deprecated shim for `litigate engine` with the
 packs built in; write new callers against `litigate`.
 
@@ -135,10 +134,8 @@ without a layer) at `--as-of`/`--known-at`, and lists per filing the
 worlds in which it is timely or late (docs/litigate/CHANGE.md §5.1).
 
 Packs are embedded in the binary at build time — no `packs/` directory is
-needed after install. Point at a different set with `LITGRAPH_PACKS=<dir>`
-or `--packs-dir <dir>`. The named scenario library (`scenarios/*.json`) is
-embedded the same way; override with `LITGRAPH_SCENARIOS=<dir>` or
-`--scenarios-dir <dir>`. See docs/PACK_SCHEMA.md's "Scenario library" section
+needed after install. The named scenario library is embedded the same
+way. See docs/PACK_SCHEMA.md's "Scenario library" section
 for the file shape and how a request composes a named scenario with
 overrides (`{"extends": "<id>", ...}`). The vendored L0 source corpus
 (`sources/*.txt`, see `sources/PROVENANCE.md`) is embedded the same way;

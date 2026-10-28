@@ -19,25 +19,3 @@ include!(concat!(env!("OUT_DIR"), "/embedded.rs"));
 pub fn catalog() -> Result<Catalog> {
     Catalog::embedded(PACKS, SCENARIOS)
 }
-
-/// [`Catalog::default_source`] over [`PACKS`] and [`SCENARIOS`]:
-/// `$LITGRAPH_PACKS` and `$LITGRAPH_SCENARIOS` override them independently.
-///
-/// # Errors
-/// As [`Catalog::default_source`].
-pub fn default_source() -> Result<Catalog> {
-    Catalog::default_source(PACKS, SCENARIOS)
-}
-
-/// [`Catalog::resolve`] over [`PACKS`] and [`SCENARIOS`]: each half from
-/// its flag (`--packs-dir`, `--scenarios-dir`), else its variable
-/// (`$LITGRAPH_PACKS`, `$LITGRAPH_SCENARIOS`), else embedded.
-///
-/// # Errors
-/// As [`Catalog::resolve`].
-pub fn resolve(
-    packs_dir: Option<&std::path::Path>,
-    scenarios_dir: Option<&std::path::Path>,
-) -> Result<Catalog> {
-    Catalog::resolve(packs_dir, scenarios_dir, PACKS, SCENARIOS)
-}

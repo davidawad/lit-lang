@@ -167,8 +167,7 @@ request.json`) sends one request envelope and prints one response
 envelope. Shorthand subcommands (`describe`, `packs`, `lint`, `explain
 --packs ... --arg node=...`) build the envelope for you. Its packs and
 scenario library are compiled from `lit/` and `cases/` (`--lib`,
-`--cases`) unless `--packs-dir`/`$LITGRAPH_PACKS` or
-`--scenarios-dir`/`$LITGRAPH_SCENARIOS` names a directory. `litigate
+`--cases`). `litigate
 engine schema <kind>` prints a document's JSON Schema; `litigate engine
 validate <file|->` checks a pack, `links.json`, scenario, or request file
 (kind auto-detected, or forced with `--kind`) and exits `2` if it's
@@ -200,8 +199,7 @@ and the manual are MCP resources: `litgraph://packs/<id>`,
 scenario), `litgraph://scenarios/<id>` (one full matter profile), and
 `litgraph://describe`. Every tool call returns the same JSON envelope as
 the CLI; an engine error (`ok: false`) comes back as a tool error carrying
-that envelope. `LITGRAPH_PACKS`/`--packs-dir` and
-`LITGRAPH_SCENARIOS`/`--scenarios-dir` work exactly as they do for the CLI.
+that envelope.
 The `litigate_describe`, `litigate_check`, `litigate_build`,
 `litigate_where`, `litigate_timeline`, `litigate_worlds` and `litigate_explain` tools drive the authoring language
 the packs are generated from (see [Packs](#packs)): they run the `litigate`
@@ -214,8 +212,6 @@ working directory (start it in a litgraph checkout to work on `lit/` and
 
 ```bash
 claude mcp add litgraph -- litgraph-mcp
-# with a packs directory instead of the embedded set:
-claude mcp add litgraph -e LITGRAPH_PACKS=/path/to/packs -- litgraph-mcp
 ```
 
 **Claude Desktop** — add to `claude_desktop_config.json`
@@ -234,12 +230,7 @@ macOS; `%APPDATA%\Claude\claude_desktop_config.json` on Windows;
 ```
 
 **Any other MCP client** that reads the same `mcpServers` stdio shape
-(Cursor, Windsurf, Zed, ...) uses the same block; add `"args":
-["--packs-dir", "/path/to/packs", "--scenarios-dir", "/path/to/scenarios"]`
-or `"env": {"LITGRAPH_PACKS": "/path/to/packs", "LITGRAPH_SCENARIOS":
-"/path/to/scenarios"}` to point at pack/scenario sets other than the ones
-embedded in the binary (each falls back to its own embedded set
-independently).
+(Cursor, Windsurf, Zed, ...) uses the same block.
 
 ### As the engine behind an application
 
@@ -267,12 +258,9 @@ writing a rule, testing it, writing a case and solving it;
 `links.json` (from `lit/links`) joins them into one composed graph (e.g. a CoFC judgment linking to a
 Federal Circuit appeal). They're compiled into the `litgraph` binary at
 build time, so `litgraph packs` works right after install with no
-`packs/` directory needed — point at a different set with
-`LITGRAPH_PACKS=<dir>` or `--packs-dir <dir>` (precedence: the flag, else
-the variable, else the embedded set; `just lit-sync` writes the repo's
-built packs to `target/lit-build/packs`). A flag or variable naming a
-directory that does not exist, or holds no pack, is an error that names it,
-never a silent fallback. Run `litgraph packs` for
+`packs/` directory needed; they come only from compiled `.lit` source
+(`just lit-sync` writes the repo's built packs to
+`target/lit-build/packs`). Run `litgraph packs` for
 live counts; schema is documented in
 [`docs/PACK_SCHEMA.md`](docs/PACK_SCHEMA.md). A pack (or `links.json`) that
 fails to parse is skipped, not fatal to the rest — `litgraph describe`'s
@@ -286,8 +274,7 @@ is embedded the same way, overridable with `LITGRAPH_SOURCES=<dir>`.
 Named matter profiles are JSON built from the `.case` matters in
 [`cases/`](cases/) (`just lit-sync` writes them to
 `target/lit-build/scenarios/`) (a matter's posture is derived by replaying its event
-history against the rules), and compiled into the binary at build time; point at a different set with
-`LITGRAPH_SCENARIOS=<dir>` or `--scenarios-dir <dir>`. Shape and request
+history against the rules), and compiled into the binary at build time. Shape and request
 composition (`{"scenario": "<id>"}` / `{"extends": "<id>", ...overrides}`)
 are documented in [`docs/PACK_SCHEMA.md`](docs/PACK_SCHEMA.md)'s "Scenario
 library" section.

@@ -1,0 +1,49 @@
+# The Middle District of North Carolina's Local Civil Rules as a
+# local-rule layer over lit/frcp (28 U.S.C. § 2071; FRCP 83(a)): it
+# declares only the periods and limits the Local Civil Rules themselves
+# state and re-encodes no FRCP deadline, except where LR 54.2 itself
+# modifies one (FRCP 54(d)(2)(B) permits it). FRCP 6(a) computes a period
+# stated in a local rule. The rules are the Rules of Practice and
+# Procedure (Local Civil Rules) effective June 1, 2026 (sources/ncmd). The
+# Local Criminal Rules are out of scope. An appeal goes to the Fourth
+# Circuit under lit/frap and lit/ca4.
+[package]
+name = "ncmd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ncmd-local-rules"
+forum = "ncmd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Middle District of North Carolina: Local Civil Rules"
+description = "The Middle District of North Carolina's Local Civil Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): the sealing report, response and objections, motion responses and replies with the brief word and page limits, the PSLRA lead-plaintiff response, the pro se address notice, the Rule 26(f) meeting, report and medical release, the class action determination motion, protective-order briefing, the trial brief and sealing at trial, the bill of costs, objections and review, the statutory attorneys' fee motion, and the dispositive-motion notice, filing and summary judgment briefing."
+in_force = "2026-06-01"
+known_at = "2026-10-28"
+unknown_before = "2026-06-01"
+jurisdiction = "United States District Court, M.D. North Carolina"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ncmd-lr"
+issuer = "United States District Court for the Middle District of North Carolina"
+date = "2026-06-01"
+designation = "Rules of Practice and Procedure (Local Civil Rules), effective June 1, 2026"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.ncmd-lr]
+title = "Rules of Practice and Procedure of the United States District Court for the Middle District of North Carolina, Local Civil Rules (effective June 1, 2026)"
+url = "https://www.ncmd.uscourts.gov/sites/ncmd/files/mdnc%20local%20civil%20rules%2020260601.pdf"
+path = "sources/ncmd/ncmd-local-civil-rules-sectioned.txt"
+path_sha256 = "7c67c21dbe347f03c46adc55f9b43edb79da8e5cf52919d9c00322dac37bf801"
+sha256 = "038c3a7f8b990469ed768200dd2f0fc4ed321331b1cb29642b987ef25bb22018"
+as_of = "2026-06-01"
+cite_prefixes = ["M.D.N.C. LR"]
+section_heading = "LR {n}"

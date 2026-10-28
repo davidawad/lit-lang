@@ -1,0 +1,290 @@
+module ncmd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Middle District of North Carolina's own civil periods and limits,
+// computed under FRCP 6(a), which governs a period stated in a local rule.
+// Rules that state no period this layer can count stay out: the notice of
+// a filing about a matter heard within the next three business days (LR
+// 5.2); the clerk's notice of oral argument, of the initial pretrial
+// conference and of the trial date (LR 7.3(c)(2), 16.1(b), 40.1(a)), court
+// actions, not filing periods; the LR 5.5 report due within 10 days after a
+// party learns it wrongly reported no sealed documents (LR 5.4(b)(1)), a
+// date the record does not fix; the retention motion within 10 days of an
+// LR 16.1(f) conference, which the parties may never hold; the clerk's
+// disposal of exhibits (LR 79.4(c)); mediation (LR 16.4, 83.9a-83.9f);
+// attorney admission and discipline (LR 83.1, 83.10a-83.10n); bankruptcy
+// matters (LR 83.11, 83.12); and the Local Criminal Rules. The earlier
+// M.D.N.C. outline's FRCP flow belongs to lit/frcp and lit/frap; its
+// decisions (Twombly, Iqbal, Foman v. Davis, Frow v. De La Vega, Celotex,
+// Anderson v. Liberty Lobby, Catlin, Bowles v. Russell, and in the Third
+// and Fourth Circuits Phillips v. County of Allegheny, Fowler v. UPMC
+// Shadyside, Poulis v. State Farm, Goines v. Valley Community Services
+// Board and Anderson v. Foundation for Advancement) are FRCP authority, and
+// no reporter text is vendored, so they are removed here.
+
+/// A brief supporting or responding to a motion, a trial brief, and
+/// objections and responses to a magistrate judge's recommendation or
+/// order: at most 6,250 words with a certificate of word count when
+/// prepared on a computer, 20 pages when typed or handwritten (LR 7.3(d),
+/// 40.1(c)(5), 56.1(c), 72.4).
+limit principal-brief {
+  words <= 6_250 cite "M.D.N.C. LR 7.3(d)"
+  pages <= 20 cite "M.D.N.C. LR 7.3(d)"
+  requires certificate compliance for [words] cite "M.D.N.C. LR 7.3(d)"
+} cite "M.D.N.C. LR 7.3(d)"
+
+/// A reply brief: at most 3,125 words with a certificate of word count when
+/// prepared on a computer, 10 pages when typed or handwritten (LR 7.3(d),
+/// 56.1(c)).
+limit reply-brief {
+  words <= 3_125 cite "M.D.N.C. LR 7.3(d)"
+  pages <= 10 cite "M.D.N.C. LR 7.3(d)"
+  requires certificate compliance for [words] cite "M.D.N.C. LR 7.3(d)"
+} cite "M.D.N.C. LR 7.3(d)"
+
+/// A motion to seal is filed (LR 5.4(b)(1), (c)(4)).
+event SealMotionFiled()
+/// The LR 5.4(c)(3) materials supporting sealing are filed (LR 5.4(c)(5)).
+event SealSupportFiled()
+/// A motion and its brief are served (LR 7.3(f)).
+event MotionServed() paper principal-brief
+/// A discovery-related motion is served (LR 37.1(c)).
+event DiscoveryMotionServed() paper principal-brief
+/// A motion for entry of a protective order is served (LR 26.2(d)).
+event ProtectiveOrderMotionServed() paper principal-brief
+/// A summary judgment motion and brief are served (LR 56.1(d), (e)).
+event SummaryJudgmentMotionServed() paper principal-brief
+/// A response brief is served (LR 7.3(h), 56.1(d), (e)).
+event ResponseServed() paper principal-brief
+/// A response to a discovery-related or protective-order motion is served
+/// (LR 26.2(d), 37.1(c)).
+event DiscoveryResponseServed() paper principal-brief
+/// A reply brief is filed (LR 7.3(h)).
+event ReplyFiled() paper reply-brief
+/// A motion to serve as lead plaintiff under the PSLRA is filed (LR
+/// 7.3(g)).
+event LeadPlaintiffMotionFiled()
+/// Mail from the clerk to a pro se plaintiff is returned by the Postal
+/// Service (LR 11.1(b)).
+event ProSeMailReturned()
+/// The initial pretrial conference the clerk schedules (LR 16.1(b)).
+event InitialPretrialConference()
+/// The parties' Rule 26(f) meeting (LR 16.1(b)).
+event RuleTwentySixFMeeting()
+/// The initial pretrial order under FRCP 16(b) and 26(f) is entered (LR
+/// 23.1(b)).
+event InitialPretrialOrderEntered()
+/// The discovery period closes (LR 56.1(a), (b)).
+event DiscoveryClosed()
+/// The trial date (LR 40.1(c), (d)).
+event TrialDate()
+/// The time allowed for appeal of a final judgment expires, or the clerk
+/// receives the mandate or other final decision terminating the action on
+/// appeal (LR 54.1(a)(1)).
+event CostsPeriodTriggered()
+/// A bill of costs is filed (LR 54.1(b)(1)).
+event BillOfCostsFiled()
+/// A motion for disallowance of costs is filed (LR 54.1(b)(1)).
+event CostsObjectionFiled()
+/// The clerk acts on the bill of costs (LR 54.1(b)(2)).
+event CostsTaxed()
+/// A judgment is entered (LR 54.2).
+event JudgmentEntered()
+
+/// LR 5.4(b)(1)b.: if a motion to seal is filed and no LR 5.5 Report has
+/// been filed, the parties meet and confer and file the report within 10
+/// days of the filing of the motion to seal.
+deadline sealing-report-period: 10.days after SealMotionFiled() counted_by frcp6 cite "M.D.N.C. LR 5.4(b)"
+{
+  forum frcp
+}
+
+/// LR 5.4(c)(4)b.: when the filing party is not the party claiming
+/// confidentiality, the party claiming it files a response with the LR
+/// 5.4(c)(3) materials within 14 days of the motion to seal.
+deadline sealing-response-period: 14.days after SealMotionFiled() counted_by frcp6 cite "M.D.N.C. LR 5.4(c)"
+{
+  forum frcp
+}
+
+/// LR 5.4(c)(5): a party opposing sealing files its objection within 14
+/// days of the filing of the LR 5.4(c)(3) supporting materials.
+deadline sealing-objection-period: 14.days after SealSupportFiled() counted_by frcp6 cite "M.D.N.C. LR 5.4(c)"
+{
+  forum frcp
+}
+
+/// LR 7.3(f): a respondent opposing a motion files a response brief within
+/// 21 days after service of the motion (30 for summary judgment, 14 for a
+/// discovery motion); the Court may shorten the time for good cause.
+deadline response-period: 21.days after MotionServed() counted_by frcp6 cite "M.D.N.C. LR 7.3(f)"
+{
+  forum frcp
+}
+
+/// LR 7.3(g): in a PSLRA case, briefs responding to a motion to serve as
+/// lead plaintiff are filed within seven calendar days of the filing of the
+/// motion; no reply briefs are permitted.
+deadline lead-plaintiff-response-period: 7.days after LeadPlaintiffMotionFiled() counted_by frcp6 cite "M.D.N.C. LR 7.3(g)"
+{
+  forum frcp
+}
+
+/// LR 7.3(h): a reply brief, limited to matters newly raised in the
+/// response, may be filed within 14 days after service of the response (7
+/// days on a discovery motion).
+deadline reply-period: 14.days after ResponseServed() counted_by frcp6 cite "M.D.N.C. LR 7.3(h)"
+{
+  forum frcp
+}
+
+/// LR 11.1(b): if mail from the clerk to a pro se plaintiff is returned and
+/// the plaintiff does not notify the Court and opposing parties of a
+/// current address within sixty-three days thereafter, the Court may
+/// dismiss the action without prejudice for failure to prosecute.
+deadline pro-se-address-period: 63.days after ProSeMailReturned() counted_by frcp6 cite "M.D.N.C. LR 11.1(b)"
+{
+  forum frcp
+}
+
+/// LR 16.1(b): the parties hold their FRCP 26(f) meeting at least 14 days
+/// before the scheduled initial pretrial conference.
+deadline rule-26f-meeting-period: 14.days before InitialPretrialConference() counted_by frcp6 cite "M.D.N.C. LR 16.1(b)"
+{
+  forum frcp
+}
+
+/// LR 16.1(b): the joint (LR 16.2) or separate (LR 16.3) Rule 26(f) Reports
+/// are filed within 10 days of the Rule 26(f) meeting.
+deadline rule-26f-report-period: 10.days after RuleTwentySixFMeeting() counted_by frcp6 cite "M.D.N.C. LR 16.1(b)"
+{
+  forum frcp
+}
+
+/// LR 16.1(b): a party claiming damages for medical or psychological
+/// injury provides an executed HIPAA-compliant release for each provider
+/// within 14 days after the Rule 26(f) conference.
+deadline medical-release-period: 14.days after RuleTwentySixFMeeting() counted_by frcp6 cite "M.D.N.C. LR 16.1(b)"
+{
+  forum frcp
+}
+
+/// LR 23.1(b): within 90 days after entry of the initial pretrial order,
+/// unless extended by court order, the plaintiff files a separate motion
+/// for a determination under FRCP 23(c)(1) whether the case may be
+/// maintained as a class action.
+deadline class-determination-period: 90.days after InitialPretrialOrderEntered() counted_by frcp6 cite "M.D.N.C. LR 23.1(b)"
+{
+  forum frcp
+}
+
+/// LR 26.2(d): a response to a motion for entry of a protective order is
+/// due within 14 days after service of the motion.
+deadline protective-order-response-period: 14.days after ProtectiveOrderMotionServed() counted_by frcp6 cite "M.D.N.C. LR 26.2(d)"
+{
+  forum frcp
+}
+
+/// LR 37.1(c): a response to a discovery-related motion is filed within 14
+/// days after service of the motion.
+deadline discovery-response-period: 14.days after DiscoveryMotionServed() counted_by frcp6 cite "M.D.N.C. LR 37.1(c)"
+{
+  forum frcp
+}
+
+/// LR 26.2(d), 37.1(c): a reply to a response on a protective-order or
+/// discovery-related motion is filed within 7 days after service of the
+/// response.
+deadline discovery-reply-period: 7.days after DiscoveryResponseServed() counted_by frcp6 cite "M.D.N.C. LR 37.1(c)"
+{
+  forum frcp
+}
+
+/// LR 40.1(c)(2)-(4): no later than 21 days before trial each party files a
+/// trial brief, with proposed findings and conclusions in a non-jury case
+/// or proposed jury instructions in a jury case.
+deadline trial-brief-period: 21.days before TrialDate() counted_by frcp6 cite "M.D.N.C. LR 40.1(c)"
+{
+  forum frcp
+}
+
+/// LR 40.1(d): a motion to seal trial testimony or exhibits, or to close
+/// the courtroom, is filed at least 7 days before trial.
+deadline trial-seal-motion-period: 7.days before TrialDate() counted_by frcp6 cite "M.D.N.C. LR 40.1(d)"
+{
+  forum frcp
+}
+
+/// LR 40.1(d): any other party may file a response at least 3 days before
+/// the scheduled trial date; no reply briefs are allowed.
+deadline trial-seal-response-period: 3.days before TrialDate() counted_by frcp6 cite "M.D.N.C. LR 40.1(d)"
+{
+  forum frcp
+}
+
+/// LR 54.1(a)(1), (3): a prevailing party files its bill of costs on form
+/// AO133 within 30 days after the time for appeal of a final judgment
+/// expires, or after the clerk receives the mandate or other final decision
+/// terminating the action on appeal, or as the Court directs; failure to
+/// file in time waives costs.
+deadline bill-of-costs-period: 30.days after CostsPeriodTriggered() counted_by frcp6 cite "M.D.N.C. LR 54.1(a)"
+{
+  forum frcp
+}
+
+/// LR 54.1(b)(1): an adverse party objects by a motion for disallowance
+/// with a supporting brief within fourteen days after the bill of costs is
+/// filed.
+deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "M.D.N.C. LR 54.1(b)"
+{
+  forum frcp
+}
+
+/// LR 54.1(b)(1): within seven days after the objection, the prevailing
+/// party may file a response; no reply is permitted.
+deadline costs-response-period: 7.days after CostsObjectionFiled() counted_by frcp6 cite "M.D.N.C. LR 54.1(b)"
+{
+  forum frcp
+}
+
+/// LR 54.1(b)(2): a party may request review of the clerk's ruling by
+/// motion within seven days after the clerk's action.
+deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "M.D.N.C. LR 54.1(b)"
+{
+  forum frcp
+}
+
+/// LR 54.2: within twenty-one days after entry of a judgment, the parties
+/// file a stipulation on statutory attorneys' fees or the moving party
+/// files the statement of consultation, the motion and its supporting
+/// materials; the 14-day deadline of FRCP 54(d)(2)(B)(i) is modified to 21
+/// days.
+deadline fee-motion-period: 21.days after JudgmentEntered() counted_by frcp6 cite "M.D.N.C. LR 54.2"
+{
+  forum frcp
+}
+
+/// LR 56.1(a): a party intending to file a motion for summary judgment or
+/// another dispositive motion files and serves notice of that intention
+/// within 14 days following the close of the discovery period.
+deadline dispositive-notice-period: 14.days after DiscoveryClosed() counted_by frcp6 cite "M.D.N.C. LR 56.1(a)"
+{
+  forum frcp
+}
+
+/// LR 56.1(b): all dispositive motions and supporting briefs are filed and
+/// served within 30 days following the close of the discovery period,
+/// subject to any LR 5.5 Order.
+deadline dispositive-motion-period: 30.days after DiscoveryClosed() counted_by frcp6 cite "M.D.N.C. LR 56.1(b)"
+{
+  forum frcp
+}
+
+/// LR 7.3(f), 56.1(d)-(e): the response brief to a summary judgment motion
+/// is filed within 30 days after service of the motion and brief; failing
+/// to respond may lead the Court to treat the motion as uncontested.
+deadline summary-judgment-response-period: 30.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "M.D.N.C. LR 56.1(d)"
+{
+  forum frcp
+}

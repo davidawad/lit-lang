@@ -1,0 +1,57 @@
+# The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the District
+# of Wyoming over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares
+# only the periods and limits the Local Bankruptcy Rules themselves state
+# and re-encodes no FRBP period. It is a base package, not a `kind =
+# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011, as
+# for lit/bankr-mt). Each period is counted under FRBP 9006(a), the FRCP
+# 6(a) method (core's frcp6). The rules are those effective July 1, 2012
+# (sources/bankr-wy). The one amending order, General Order 14-02 (filed
+# June 25, 2014 per its OCR'd stamp, so the date is to verify), only
+# replaces the list in LBR 1001-1(D) of the District Court local rules that
+# apply in the bankruptcy court; it states no period, page limit or filing
+# rule of its own, and its vendored text is OCR, so it adds no dated layer
+# of values and is bound below for the record only. The package runs from
+# July 1, 2012.
+[package]
+name = "bankr-wy-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-wy-local-rules"
+forum = "bankr-wy"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the District of Wyoming: Local Bankruptcy Rules"
+description = "The Bankr. D. Wyo. Local Bankruptcy Rules over the Federal Rules of Bankruptcy Procedure (lit/frbp): notice of added creditors, fee applications after conversion, notice and objection periods (LBR 2002-1), Rule 2004 examinations, chapter 11 fiduciary tax accounts, fee application objections, chapter 13 fee applications, new debt notices, claim objections, chapter 13 amended plans and notice, chapter 12 notice, ballot reports, final decrees and final fee applications, stay relief and stay continuation, exemption objection responses, IRS setoff notices, depositions and discovery motions, costs, motion practice and memoranda page limits (LBR 9013-1, 9013-2), certificates of service, settlements, witness and exhibit lists, proposed orders and video appearances."
+in_force = "2012-07-01"
+known_at = "2026-10-28"
+unknown_before = "2012-07-01"
+jurisdiction = "U.S. Bankruptcy Court for the District of Wyoming"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.wyb-lbr]
+title = "Local Bankruptcy Rules and Forms of the United States Bankruptcy Court for the District of Wyoming (effective July 1, 2012)"
+url = "https://www.wyb.uscourts.gov/sites/wyb/files/local-rules.pdf"
+path = "sources/bankr-wy/wyb-lbr-2012-07-01-sectioned.txt"
+path_sha256 = "06ef861e253b0368bed366b7d7ec89366f967a91b2c796ec6c1c5f9a4c393dd8"
+sha256 = "eb14b675b9369bb500bd0bc543ca1fd299947e237092caefd46789ef85b2ffe9"
+as_of = "2012-07-01"
+cite_prefixes = ["Wyoming LBR"]
+section_heading = "LBR {n}"
+
+[sources.wyb-go-14-02]
+title = "General Order 14-02, Order Revising Wyoming LBR 1001-1(D) (filed June 25, 2014; OCR of an image scan, verify numbers)"
+url = "https://www.wyb.uscourts.gov/sites/wyb/files/General%20Order%2014-02_0.pdf"
+path = "sources/bankr-wy/wyb-go-14-02-lbr-1001-1d.txt"
+path_sha256 = "ee16b6bf2820fda36f083d21b40ac141a43641634d09ff8da7512bea588c268a"
+sha256 = "f5f937594318b6d7884164c71d8540c3fb1226fcb843607c6cee5f1ce571e5ed"
+as_of = "2014-06-25"

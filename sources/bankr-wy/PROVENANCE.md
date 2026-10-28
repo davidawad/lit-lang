@@ -14,3 +14,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with OCR (pdftoppm 300 dpi, tesseract 5.5.3, --psm 6) because the PDF is an image scan with no text layer; OCR, verify numbers; unedited OCR, so verify any quoted value against the PDF.
 - Extract sha256 ee16b6bf2820fda36f083d21b40ac141a43641634d09ff8da7512bea588c268a. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-wy/original/wyb-go-14-02-lbr-1001-1d.pdf` as served (sha256 f5f937594318b6d7884164c71d8540c3fb1226fcb843607c6cee5f1ce571e5ed); extraction sha256 ee16b6bf2820fda36f083d21b40ac141a43641634d09ff8da7512bea588c268a.
+
+### `bankr-wy/wyb-lbr-2012-07-01-sectioned.txt` — Bankr. D. Wyo. Local Bankruptcy Rules, sectioned
+
+- Derived in the pod (lg-u561.27) from `bankr-wy/wyb-lbr-2012-07-01.txt` (extract sha256 7cfc43b7301b383dae0af2bffef3108072163de7b1d72f5084747918d288b638); nothing fetched. One `## LBR <n>` line is inserted before each rule's own centered heading line in the body (`Rule <nnnn>-<n>` alone on its line, after an optional form feed), from `Rule 1001-1` through `Rule 9074-2`, 64 rules; the table of contents and the Local Bankruptcy Forms after the rules are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte. General Order 14-02 is not merged into it; `lit/bankr-wy` binds it as its own source.
+- Edition: as the extract.
+- Sectioned sha256 06ef861e253b0368bed366b7d7ec89366f967a91b2c796ec6c1c5f9a4c393dd8 (the `path_sha256` pinned by `lit/bankr-wy/Lit.toml`).

@@ -1,0 +1,420 @@
+module bankr-wy-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ CaseConverted, PetitionFiled }
+
+// The Bankr. D. Wyo. court's own periods, counted under FRBP 9006(a); where
+// a rule's period includes the three days for mail service of FRBP 9006(f),
+// the stated total is declared. The FRBP periods are lit/frbp's and are not
+// declared again: the chapter 13 plan within 14 days of FRBP 3015(b) (LBR
+// 3015-3(A)) and the 30 days' notice of a claim objection hearing under
+// FRBP 3007, which LBR 3007-1(A) states as 33 days with mailing. The Code's
+// are not declared either: the chapter 12 confirmation hearing within 45
+// days (LBR 3015-4(C), § 1224) and the 30-day hearing of § 362(c)(3) within
+// which LBR 4001-1(B) sets a hearing within 28 days of the petition. Stated
+// in the rules but not declared: the 10 days' notice of a stay continuation
+// hearing (LBR 4001-1(B)); periods counted in hours or business days
+// (orders mailed within 24 hours and responses within three business days
+// on first-day motions, LBR 2081-1; telephone appearances 24 hours ahead,
+// LBR 9074-1); the court's 18 days before granting unopposed stay relief
+// (LBR 4001-1(A)); the court's dismissal for want of prosecution after
+// three months on 30 days' notice (LBR 7055-2); and the change General
+// Order 14-02 makes to the District Court rules listed in LBR 1001-1(D),
+// which states no period (its vendored text is OCR). The outline's Supreme
+// Court decisions construe the Code and the FRBP, not these rules, and are
+// removed here: no reporter text is vendored.
+/// A memorandum of law in a contested matter or adversary proceeding: not
+/// more than 20 pages, exclusive of the table of contents and exhibits,
+/// without prior permission (Wyoming LBR 9013-2).
+limit memorandum { pages <= 20 cite "Wyoming LBR 9013-2" } cite "Wyoming LBR 9013-2"
+
+/// An amendment adding a creditor is filed (Wyoming LBR 1009-1(C)).
+event CreditorAddedByAmendment()
+/// The date and time fixed for filing objections in a notice under FRBP
+/// 2002(a), or to confirmation of an amended chapter 13 plan (Wyoming LBR
+/// 2002-1(B), 3015-3(F)).
+event NoticeDeadline()
+/// The notice of a chapter 12 plan and its confirmation hearings is served
+/// (Wyoming LBR 3015-4(C)).
+event ChapterTwelveNoticeServed()
+/// A motion for which the FRBP set no objection period is served with
+/// notice of the opportunity to object (Wyoming LBR 2002-1(B)).
+event MotionServed()
+/// A Rule 2004 examination order is served on the party to whom it is
+/// directed (Wyoming LBR 2004-1).
+event ExaminationOrderServed()
+/// An order authorizing a trustee to operate a business is entered (Wyoming
+/// LBR 2015-3(A)).
+event TrusteeOperationAuthorized()
+/// A trust fund tax account is opened (Wyoming LBR 2015-3(C)).
+event TaxAccountOpened()
+/// A required fiduciary tax deposit is made (Wyoming LBR 2015-3(C)).
+event TaxDepositMade()
+/// A fee application and its notice are served (Wyoming LBR 2016-1(B)).
+event FeeApplicationServed()
+/// A chapter 13 plan is confirmed, or an order modifying a confirmed plan
+/// is entered (Wyoming LBR 2016-1(C)).
+event PlanConfirmed()
+/// A chapter 13 debtor incurs new debt in an emergency (Wyoming LBR
+/// 2083-1(B)).
+event NewDebtIncurred()
+/// The last day to file non-governmental claims in a chapter 13 case
+/// (Wyoming LBR 3007-1(B)).
+event NonGovernmentalBarDate()
+/// The scheduled hearing on confirmation of a plan (Wyoming LBR 3015-3(B),
+/// 3020-1(A)).
+event ConfirmationHearing()
+/// A chapter 13 debtor withdraws the initial plan (Wyoming LBR 3015-3(B)).
+event PlanWithdrawn()
+/// An order confirming a chapter 11 plan is entered (Wyoming LBR
+/// 3022-1(D)).
+event ChapterElevenConfirmed()
+/// The chapter 11 final report and motion for final decree are filed
+/// (Wyoming LBR 3022-1(A)).
+event FinalReportFiled()
+/// A motion for relief from stay is filed with its 17-day notice (Wyoming
+/// LBR 4001-1(A)).
+event StayReliefMotionFiled()
+/// The scheduled hearing on an objection to exemptions (Wyoming LBR
+/// 4003-1(B)).
+event ExemptionHearing()
+/// The Internal Revenue Service makes a setoff authorized by 11 U.S.C. §
+/// 362(b)(26) (Wyoming LBR 6070-1(A)).
+event SetoffMade()
+/// The scheduled date of a deposition under FRBP 7030 (Wyoming LBR
+/// 7026-1(B), (C)).
+event DepositionDate()
+/// A final judgment is entered (Wyoming LBR 7054-1).
+event FinalJudgmentEntered()
+/// A Certificate for Clerk to Tax Costs is served (Wyoming LBR 7054-1).
+event CostsCertificateServed()
+/// A non-dispositive motion is filed in an adversary proceeding (Wyoming
+/// LBR 9013-1(B)).
+event AdversaryMotionFiled()
+/// The scheduled hearing on a motion (Wyoming LBR 9013-2, 9070-1(A),
+/// 9074-2(A)).
+event MotionHearing() paper memorandum
+/// A movant's pleadings with a required memorandum are served (Wyoming LBR
+/// 9013-2).
+event MovantPleadingsServed()
+/// A document requiring a certificate of service is served (Wyoming LBR
+/// 9013-3).
+event DocumentServed()
+/// A hearing is vacated on a settlement or withdrawn objection (Wyoming LBR
+/// 9019-1(B)).
+event HearingVacated()
+/// A judgment or order prepared by an attorney is submitted to the court
+/// (Wyoming LBR 9072-1(B)).
+event ProposedOrderSubmitted()
+
+/// Wyoming LBR 1009-1(C): within seven days of filing an amendment adding a
+/// creditor, the filer serves the added creditor with each notice
+/// previously served on all creditors and files a certificate of service.
+deadline added-creditor-notice-period: 7.days after CreditorAddedByAmendment() counted_by frcp6 cite "Wyoming LBR 1009-1(C)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 1019-1(B): professionals entitled to fees for pre-conversion
+/// services in a case converted from chapter 11, 12 or 13 to chapter 7 file
+/// their applications within 40 days after entry of the order converting
+/// the case.
+deadline conversion-fee-application-period: 40.days after CaseConverted() counted_by frcp6 cite "Wyoming LBR 1019-1(B)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 2002-1(B): notice required to all creditors and interested
+/// parties under FRBP 2002(a) is served not less than 24 days, including
+/// three days for mailing, before the date and time fixed for filing
+/// objections.
+deadline notice-service-period: 24.days before NoticeDeadline() counted_by frcp6 cite "Wyoming LBR 2002-1(B)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 2002-1(B): where the FRBP set no period for a written
+/// objection before court action, the movant allows interested parties at
+/// least 17 days, including three days for mailing, to object.
+deadline objection-period: 17.days after MotionServed() counted_by frcp6 cite "Wyoming LBR 2002-1(B)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 2004-1: absent agreement, the date of a Rule 2004
+/// examination or production may not be sooner than 14 days after service
+/// of the order on the party to whom it is directed.
+deadline examination-order-period: 14.days after ExaminationOrderServed() counted_by frcp6 cite "Wyoming LBR 2004-1"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 2015-3(A): within 21 days of an order authorizing a trustee
+/// to operate a business, the trustee establishes a separate account for
+/// trust fund taxes.
+deadline trustee-tax-account-period: 21.days after TrusteeOperationAuthorized() counted_by frcp6 cite "Wyoming LBR 2015-3(A)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 2015-3(B): if applicable, within 21 days from the filing of
+/// a chapter 11 petition, the debtor in possession establishes a separate
+/// trust account for fiduciary tax deposits.
+deadline debtor-tax-account-period: 21.days after PetitionFiled() counted_by frcp6 cite "Wyoming LBR 2015-3(B)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 2015-3(C): written notice of the trust account's bank and
+/// number is mailed to the Internal Revenue Service and the United States
+/// trustee within seven days from the date the account is opened.
+deadline tax-account-notice-period: 7.days after TaxAccountOpened() counted_by frcp6 cite "Wyoming LBR 2015-3(C)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 2015-3(C): Form 6123, Verification of Fiduciary's Federal
+/// Tax Deposit, is filed with the Internal Revenue Service within two days
+/// of making the required deposits, with a copy to the United States
+/// trustee.
+deadline tax-deposit-verification-period: 2.days after TaxDepositMade() counted_by frcp6 cite "Wyoming LBR 2015-3(C)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 2016-1(B): the notice of a fee application, including one
+/// under § 506(b), sets a time for objections 24 days after the date the
+/// application is served.
+deadline fee-application-objection-period: 24.days after FeeApplicationServed() counted_by frcp6 cite "Wyoming LBR 2016-1(B)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 2016-1(C): all fee applications in chapter 13 cases are
+/// filed within 30 days after confirmation of the plan or entry of an order
+/// modifying it; untimely applications are summarily denied absent cause.
+deadline chapter-13-fee-application-period: 30.days after PlanConfirmed() counted_by frcp6 cite "Wyoming LBR 2016-1(C)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 2083-1(B): a chapter 13 debtor gives the trustee 14 days'
+/// written notice before incurring new debt, or in an emergency notice
+/// within 14 days after incurring it with an explanation.
+deadline emergency-debt-notice-period: 14.days after NewDebtIncurred() counted_by frcp6 cite "Wyoming LBR 2083-1(B)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 3007-1(B): claim objections in a chapter 13 case are filed
+/// and served within 21 days from the last day to file non-governmental
+/// claims, unless brought because the claim was untimely.
+deadline chapter-13-claim-objection-period: 21.days after NonGovernmentalBarDate() counted_by frcp6 cite "Wyoming LBR 3007-1(B)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 3015-3(B): an amended plan resolving objections with a
+/// motion to vacate the confirmation hearing, or a motion to vacate on
+/// withdrawing the initial plan, is filed and served not less than four
+/// days prior to the scheduled hearing.
+deadline plan-withdrawal-vacate-period: 4.days before ConfirmationHearing() counted_by frcp6 cite "Wyoming LBR 3015-3(B)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 3015-3(B): a debtor who withdraws the initial chapter 13
+/// plan files and serves an amended plan within five days of the
+/// withdrawal.
+deadline withdrawn-plan-amendment-period: 5.days after PlanWithdrawn() counted_by frcp6 cite "Wyoming LBR 3015-3(B)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 3015-3(F): notice of the opportunity to object to a chapter
+/// 13 plan after the clerk's initial notice (Local Bankruptcy Form D) is
+/// served so that all parties have not less than 31 days, including three
+/// days for mailing, before the date and time fixed for objections to
+/// confirmation.
+deadline amended-plan-notice-period: 31.days before NoticeDeadline() counted_by frcp6 cite "Wyoming LBR 3015-3(F)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 3015-4(C): the notice of a chapter 12 plan fixes a 31-day
+/// time for filing objections to confirmation and states the preliminary
+/// and final hearing dates.
+deadline chapter-12-plan-objection-period: 31.days after ChapterTwelveNoticeServed() counted_by frcp6 cite "Wyoming LBR 3015-4(C)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 3020-1(A): not less than seven days before the chapter 11
+/// confirmation hearing, the plan proponent files a ballot report tallying
+/// the ballots by class.
+deadline ballot-report-period: 7.days before ConfirmationHearing() counted_by frcp6 cite "Wyoming LBR 3020-1(A)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 3022-1(A): the movant gives the United States trustee a
+/// 21-day notice to object to the chapter 11 final report and motion for
+/// entry of a final decree.
+deadline final-decree-objection-period: 21.days after FinalReportFiled() counted_by frcp6 cite "Wyoming LBR 3022-1(A)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 3022-1(D): before the motion for a final decree, and no
+/// later than four months after entry of the confirmation order, the debtor
+/// or chapter 11 trustee ensures each professional files a final fee
+/// application.
+deadline final-fee-application-period: 4.months after ChapterElevenConfirmed() counted_by frcp6 cite "Wyoming LBR 3022-1(D)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 4001-1(A): the notice following a stay relief motion sets a
+/// 17-day time to object, including three days for mailing.
+deadline stay-relief-objection-period: 17.days after StayReliefMotionFiled() counted_by frcp6 cite "Wyoming LBR 4001-1(A)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 4003-1(B): a debtor opposing an objection to exemptions
+/// files a response at least seven days before the scheduled hearing.
+deadline exemption-response-period: 7.days before ExemptionHearing() counted_by frcp6 cite "Wyoming LBR 4003-1(B)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 6070-1(A): the Internal Revenue Service serves notice of a §
+/// 362(b)(26) setoff on the debtor, the debtor's attorney and the trustee
+/// within 40 days after the setoff.
+deadline setoff-notice-period: 40.days after SetoffMade() counted_by frcp6 cite "Wyoming LBR 6070-1(A)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 7026-1(B): notices of depositions under FRBP 7030 are served
+/// more than 14 days before the scheduled date.
+deadline deposition-notice-period: 14.days before DepositionDate() counted_by frcp6 cite "Wyoming LBR 7026-1(B)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 7026-1(C): a motion under FRBP 2004 or FRCP 26(c), 30(d) or
+/// 45(c), which stays the discovery, is filed and served no less than seven
+/// days before a scheduled deposition.
+deadline discovery-motion-period: 7.days before DepositionDate() counted_by frcp6 cite "Wyoming LBR 7026-1(C)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 7054-1: within 21 days after entry of a final judgment, a
+/// party entitled to costs may file a Certificate for Clerk to Tax Costs
+/// with an itemized statement and affidavit.
+deadline costs-certificate-period: 21.days after FinalJudgmentEntered() counted_by frcp6 cite "Wyoming LBR 7054-1"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 7054-1: if no objection is filed within 21 days of service
+/// of the certificate, the clerk taxes the costs properly claimed.
+deadline costs-objection-period: 21.days after CostsCertificateServed() counted_by frcp6 cite "Wyoming LBR 7054-1"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 9013-1(B): opposing parties respond to a non-dispositive
+/// motion in an adversary proceeding with a statement conceding it or an
+/// objection within 14 days of its filing.
+deadline adversary-motion-response-period: 14.days after AdversaryMotionFiled() counted_by frcp6 cite "Wyoming LBR 9013-1(B)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 9013-2: a memorandum of law is filed and served at least
+/// seven days before the scheduled hearing, except as the court allows or
+/// requires.
+deadline memorandum-period: 7.days before MotionHearing() counted_by frcp6 cite "Wyoming LBR 9013-2"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 9013-2: where the movant must submit a memorandum, the
+/// opposing party's responsive memorandum is filed within 14 days after
+/// service of the movant's pleadings.
+deadline responsive-memorandum-period: 14.days after MovantPleadingsServed() counted_by frcp6 cite "Wyoming LBR 9013-2"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 9013-3: a certificate of service is filed within seven days
+/// of service.
+deadline certificate-of-service-period: 7.days after DocumentServed() counted_by frcp6 cite "Wyoming LBR 9013-3"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 9019-1(B): a stipulated settlement of a contested matter or
+/// a withdrawal of an objection is filed within 14 days after the date and
+/// time of the vacated hearing.
+deadline settlement-pleadings-period: 14.days after HearingVacated() counted_by frcp6 cite "Wyoming LBR 9019-1(B)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 9070-1(A): unless otherwise ordered, in evidentiary hearings
+/// and adversary proceedings each party files and provides a list of
+/// witnesses and exhibits, and gives chambers two copies of its exhibits,
+/// no later than seven days prior to the hearing.
+deadline witness-exhibit-list-period: 7.days before MotionHearing() counted_by frcp6 cite "Wyoming LBR 9070-1(A)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 9072-1(B): approval of an attorney-prepared judgment or
+/// order may be deemed waived if it is personally served on all counsel at
+/// least seven days (10 if by mail) before it is submitted.
+deadline proposed-order-service-period: 7.days before ProposedOrderSubmitted() counted_by frcp6 cite "Wyoming LBR 9072-1(B)"
+{
+  forum frcp
+}
+
+/// Wyoming LBR 9074-2(A): a party requesting participation by video in a
+/// courtroom hearing files its motion at least ten days prior to the
+/// hearing.
+deadline video-appearance-motion-period: 10.days before MotionHearing() counted_by frcp6 cite "Wyoming LBR 9074-2(A)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion served with notice of opportunity to object" by applicant cite "Wyoming LBR 2002-1(B)"
+{
+  note "The notice (Official Form 20A) allows at least 17 days, including three for mailing, where the FRBP set no period, or the FRBP 2002(a) period with service 24 days before the deadline (LBR 2002-1(B)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-opposed "Objection filed" -> opposed {
+    authority cite "Wyoming LBR 2002-1(B)"
+    within objection-period
+  }
+  edge-motion-filed-unopposed "No objection; relief may be granted" -> ruling {
+    authority cite "Wyoming LBR 2002-1(B)"
+  }
+}
+
+state opposed: "Objection filed; hearing set" by opponent cite "Wyoming LBR 2002-1(B)"
+{
+  note "A party proposing or opposing a motion who fails to appear at a scheduled hearing is deemed to waive the motion or consent to the relief (LBR 9013-1(B)); memoranda are due seven days before the hearing (LBR 9013-2)."
+  edge-opposed-ruling "Hearing held" -> ruling { authority cite "Wyoming LBR 9013-1(B)" }
+}
+
+decision ruling: "Motion decided" by court cite "Wyoming LBR 2002-1(B)"
+{
+  note "The court rules on the motion, without hearing absent objection (LBR 2002-1(B), 9013-1)."
+  edge-ruling-granted "Granted" -> decided { authority cite "Wyoming LBR 2002-1(B)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "Wyoming LBR 2002-1(B)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Wyoming LBR 1001-1"

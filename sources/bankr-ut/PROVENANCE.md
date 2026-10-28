@@ -6,3 +6,4 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 070598f0b265a2454b43477b1790314770ab59230b1f0aafd2c39381e2c251e5. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-ut/original/utb-lbr-2025-12-01.pdf` as served (sha256 1ace00fb52224b5c08824c556d48a4890947a896f0a9599029ddcd6b986ae419); extraction sha256 070598f0b265a2454b43477b1790314770ab59230b1f0aafd2c39381e2c251e5.
+- Amending-order check (lg-u561.30): order page read 2026-10-27 (https://www.utb.uscourts.gov/local-rules-and-orders): no amending order after 2025-12-01; General Order 25-003 (Adoption of Amended Local Rules of the Bankruptcy Court) is the Dec 1, 2025 adoption itself. The vendored file is named 2025_local_rules-apr26 (a later posting), and no order or note on the page explains a post-December revision.

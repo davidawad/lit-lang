@@ -1,0 +1,166 @@
+module de-superior-court-criminal.criminal
+
+// Criminal cases in the Superior Court of the State of Delaware. The
+// Superior Court Rules of Criminal Procedure are CURRENCY UNCONFIRMED
+// (sources/de-criminal-trial-court/PROVENANCE.md), so they are cited for
+// the structure of each step and no period, limit or amount is taken from
+// them: where a step has one, the note names the rule that sets it and
+// says that it is not stated. Title 11 of the Delaware Code is not
+// vendored, so its release and detention provisions are holes. Outcomes
+// are from the defendant's side. The earlier outline's leading decisions
+// (County of Riverside v. McLaughlin, Gerstein v. Pugh, Gideon v.
+// Wainwright, Brady v. Maryland, Mapp v. Ohio, Barker v. Wingo, Boykin v.
+// Alabama, Missouri v. Frye, Jackson v. Virginia, Ramos v. Louisiana,
+// Apprendi v. New Jersey, Roe v. Flores-Ortega, Garza v. Idaho) are
+// removed: no reporter text is vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "Del. Super. Ct. Crim. R. 4"
+{
+  note "Proceedings may be instituted by indictment, by complaint, or when lawful by information or by arrest or summons without a warrant or complaint; the complaint is a written statement of the essential facts made on oath (Del. Super. Ct. Crim. R. 3). On a complaint showing probable cause a warrant issues, or in the committing magistrate's discretion a summons (Del. Super. Ct. Crim. R. 4(a)). An arrested person is taken without unreasonable delay before the nearest available committing magistrate, and a complaint showing probable cause is filed forthwith after an arrest without a warrant (Del. Super. Ct. Crim. R. 5(a))."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance {
+    authority cite "Del. Super. Ct. Crim. R. 5(a)"
+  }
+}
+
+decision initial-appearance: "Release or detention" by court cite "Del. Super. Ct. Crim. R. 5.2"
+{
+  note "A defendant eligible for pretrial release under 11 Del. C. § 2104 is released on a conditions of release bond, unsecured or secured, on the least restrictive conditions necessary to assure appearance, protect the community, victims and witnesses, avoid a specific risk of pretrial failure and maintain the integrity of the process (Del. Super. Ct. Crim. R. 5.2(a), (b)); conditions may be modified under Rule 5.3 and violations of pretrial supervision are heard under Rule 5.4. Counsel is assigned under Rule 44. The Delaware Code's release and detention provisions (Title 11) are not vendored."
+  edge-initial-appearance-detained "Detained" -> probable-cause {
+    authority cite ?("11 Del. C. § 2104 (pretrial release and detention; not vendored)")
+  }
+  edge-initial-appearance-released "Released on a conditions of release bond" -> probable-cause {
+    authority cite "Del. Super. Ct. Crim. R. 5.2(b)"
+  }
+}
+
+decision probable-cause: "Preliminary examination or indictment" by court cite "Del. Super. Ct. Crim. R. 5.1"
+{
+  note "If the evidence at the preliminary examination shows probable cause, the defendant is held to answer in Superior Court; the finding may rest on hearsay, the defendant may cross-examine and introduce evidence, and suppression motions go to the trial court under Rule 12 (Del. Super. Ct. Crim. R. 5.1(a)). Without probable cause the complaint is dismissed and the defendant discharged, which does not bar a later prosecution for the same offense (Del. Super. Ct. Crim. R. 5.1(b)). The grand jury is governed by Rule 6."
+  edge-probable-cause-charged "Held to answer; indictment or information filed" -> charged {
+    authority cite "Del. Super. Ct. Crim. R. 5.1(a)"
+  }
+  edge-probable-cause-none "No probable cause; complaint dismissed and defendant discharged" -> dismissed {
+    authority cite "Del. Super. Ct. Crim. R. 5.1(b)"
+  }
+}
+
+state charged: "Indictment or information" by office cite "Del. Super. Ct. Crim. R. 7(a)"
+{
+  note "A capital offense is prosecuted by indictment; an offense within the Superior Court's exclusive jurisdiction is prosecuted by indictment or, if the defendant waives indictment in writing or in open court, by information; any other offense by indictment or information, which may be filed without leave of court (Del. Super. Ct. Crim. R. 7(a), (b)). The indictment or information is a plain, concise and definite written statement of the essential facts (Del. Super. Ct. Crim. R. 7(c)). The court may dismiss for unnecessary delay in presenting the charge to a grand jury or filing an information against a defendant held to answer (Del. Super. Ct. Crim. R. 48(b)), which states no period."
+  edge-charged-arraignment "Arraignment" -> arraignment {
+    authority cite "Del. Super. Ct. Crim. R. 10(a)"
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "Del. Super. Ct. Crim. R. 10"
+{
+  note "Arraignment in open court consists of reading the indictment or information, or stating its substance, and calling on the defendant to plead, after giving the defendant a copy (Del. Super. Ct. Crim. R. 10(a)); an incarcerated defendant may be arraigned by closed-circuit television, and counsel may enter a written plea of not guilty in lieu of arraignment except on a charge of murder in the first degree (Del. Super. Ct. Crim. R. 10(b), (c)). A defendant who refuses to plead is entered as pleading not guilty (Del. Super. Ct. Crim. R. 11(a)(1))."
+  edge-arraignment-discovery "Discovery" -> discovery {
+    authority cite "Del. Super. Ct. Crim. R. 16"
+  }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "Del. Super. Ct. Crim. R. 12(b)"
+{
+  note "Discovery and inspection are governed by Rule 16; notices of alibi, insanity or mental-condition evidence and public-authority defenses by Rules 12.1 to 12.3; a pretrial conference by Rule 17.1. Defenses and objections based on defects in the institution of the prosecution or in the indictment or information must be raised before trial by motion (Del. Super. Ct. Crim. R. 12(b)); the time for pretrial motions and the effect of a failure to raise them are set by Rule 12 and are not stated here (currency unconfirmed)."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "Del. Super. Ct. Crim. R. 12(b)"
+  }
+  edge-discovery-speedy "Motion to dismiss for unnecessary delay" -> motions-ruling {
+    authority cite "Del. Super. Ct. Crim. R. 48(b)"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite "Del. Super. Ct. Crim. R. 11"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "Del. Super. Ct. Crim. R. 12"
+{
+  note "The court may dismiss an indictment, information or complaint for unnecessary delay in presenting the charge to a grand jury, in filing an information against a defendant held to answer, or in bringing the defendant to trial (Del. Super. Ct. Crim. R. 48(b)); the rule states no period, and the Delaware Code's speedy-trial provisions, if any, are not vendored."
+  edge-motions-ruling-speedy "Dismissed for unnecessary delay" -> dismissed {
+    authority cite "Del. Super. Ct. Crim. R. 48(b)"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "Del. Super. Ct. Crim. R. 12(b)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "Del. Super. Ct. Crim. R. 12"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Del. Super. Ct. Crim. R. 11(a)"
+{
+  note "A defendant may plead not guilty, guilty, nolo contendere or guilty but mentally ill; nolo contendere, or guilty without admitting the essential facts, only with the court's consent (Del. Super. Ct. Crim. R. 11(a), (b)). Before accepting a plea of guilty or nolo contendere the court addresses the defendant as Rule 11(c) requires; plea agreements are governed by Rule 11(e). The Attorney General may file a dismissal without leave of court, but not during trial without the defendant's consent or after conviction without leave (Del. Super. Ct. Crim. R. 48(a))."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite "Del. Super. Ct. Crim. R. 11(c)"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "Del. Super. Ct. Crim. R. 23(a)"
+  }
+  edge-plea-decision-nolle "Attorney General files a dismissal" -> dismissed {
+    authority cite "Del. Super. Ct. Crim. R. 48(a)"
+  }
+}
+
+decision trial: "Verdict" by court cite "Del. Super. Ct. Crim. R. 31(a)"
+{
+  note "Cases required to be tried by jury are so tried unless the defendant waives a jury in writing with the court's approval and the State's consent; the jury's size, and the parties' written stipulation to a smaller jury, are set by Rule 23(b) and are not stated here (currency unconfirmed) (Del. Super. Ct. Crim. R. 23). On the defendant's motion or its own the court enters a judgment of acquittal of any offense on which the evidence is insufficient (Del. Super. Ct. Crim. R. 29(a)). The verdict is unanimous and returned to the judge in open court (Del. Super. Ct. Crim. R. 31(a)); a mistrial is governed by Rule 26.3."
+  edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
+    authority cite "Del. Super. Ct. Crim. R. 29(a)"
+  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
+    authority cite "Del. Super. Ct. Crim. R. 29(c)"
+  }
+}
+
+decision post-trial: "Post-trial motions" by court cite "Del. Super. Ct. Crim. R. 33"
+{
+  note "After a guilty verdict or the jury's discharge a defendant may move for a judgment of acquittal (Del. Super. Ct. Crim. R. 29(c)); the court may grant a new trial in the interest of justice (Del. Super. Ct. Crim. R. 33) and must arrest judgment if the charge states no offense or the court lacked jurisdiction (Del. Super. Ct. Crim. R. 34). The periods for these motions, set by Rules 29(c), 33 and 34, are not stated here (currency unconfirmed)."
+  edge-post-trial-acquittal "Judgment of acquittal or arrest of judgment" -> acquitted {
+    authority cite "Del. Super. Ct. Crim. R. 29(c)"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "Del. Super. Ct. Crim. R. 33"
+  }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "Del. Super. Ct. Crim. R. 32(a)"
+  }
+}
+
+state sentencing: "Presentence investigation and sentencing" by court cite "Del. Super. Ct. Crim. R. 32(a)"
+{
+  note "Sentence is imposed without unnecessary delay, though the court may postpone it until a factor important to sentencing can be resolved; where there is a presentence investigation the court gives counsel the presentence officer's sentencing classifications and guideline range and lets both sides comment before sentence (Del. Super. Ct. Crim. R. 32(a)(1)). The presentence investigation and report are governed by Rule 32(c). A sentence may be corrected or reduced under Rule 35, within periods not stated here (currency unconfirmed)."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "Del. Super. Ct. Crim. R. 32"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "Del. Super. Ct. Crim. R. 37"
+{
+  note "The procedure on appeal is as the rules of the Supreme Court provide (Del. Super. Ct. Crim. R. 37(a)). A notice of appeal from a sentence in a direct appeal of a criminal conviction is filed in the office of the Clerk of the Supreme Court within 30 days after the sentence is imposed, and the State may cross-appeal within 30 days of the defendant's notice; a pro se inmate's late notice is deemed timely if deposited in the institution's internal mail on or before the last day (Del. Supr. Ct. R. 6(a)(iii), (b)(iii)). lit/core has no counting rule for the Delaware Supreme Court Rules, so the period is not encoded as a counted deadline. A stay of execution of the sentence pending appeal is governed by Rule 38."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "Del. Supr. Ct. R. 6(a)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Del. Supr. Ct. R. 6(a)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Del. Super. Ct. Crim. R. 29"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty, a judgment of acquittal, or an arrest of judgment (Del. Super. Ct. Crim. R. 29, 31, 34)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "Del. Super. Ct. Crim. R. 48"
+{
+  note "Outcome from the defendant's side. A discharge for want of probable cause does not bar a later prosecution for the same offense (Del. Super. Ct. Crim. R. 5.1(b)); whether a dismissal under Rule 48 bars reprosecution is not stated in the rule."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "Del. Supr. Ct. R. 6(a)"
+{
+  note "The appeal continues before the Delaware Supreme Court under its rules (sources/de-supreme-civil/)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "Del. Super. Ct. Crim. R. 61"
+{
+  note "Outcome from the defendant's side. A person in custody under a Superior Court sentence may seek to set aside the conviction by a motion for postconviction relief, the exclusive remedy, under Rule 61, whose filing period is not stated here (currency unconfirmed); an appeal from a postconviction order is filed within 30 days after its entry on the docket (Del. Supr. Ct. R. 6(a)(iii)). Federal habeas belongs to lit/habeas."
+}

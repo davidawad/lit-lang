@@ -14,3 +14,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 4b688a904a66abeb4a611d9c33b7b32ad3a637b329762cfbcd4846a75c53659c. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-can/original/canb-blr-9039-1-2026-05-04.pdf` as served (sha256 616aa2366afa9c935aa215d43dcc21d9e3b79591af7e4a8cef3481adf71b9948); extraction sha256 4b688a904a66abeb4a611d9c33b7b32ad3a637b329762cfbcd4846a75c53659c.
+
+### `bankr-can/canb-lbr-2026-05-04-sectioned.txt` — Bankr. N.D. Cal. Bankruptcy Local Rules, sectioned
+
+- Derived in the pod (lg-u561.25) from `bankr-can/canb-lbr-2026-05-04.txt` (extract sha256 3038da4e1a59bafc49b8d10ad6f70ff95269600a68c53d041c5a106c6558430c); nothing fetched. One `## LBR <n>` line is inserted before each rule's own heading line in the body (a line opening, after an optional form feed, with `<nnnn>-<n>.` (or `9039-1` without the period) and the rule title; the set is every such heading after the table of contents, from `1001-1` through `9050-1`, 84 rules); rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Edition: as the extract.
+- Sectioned sha256 9890827aa89ac873df67fc628251f787063d31aaeb8d44b112c98c8a569d434a (the `path_sha256` pinned by `lit/bankr-can/Lit.toml`).

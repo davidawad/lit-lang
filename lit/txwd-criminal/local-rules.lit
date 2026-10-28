@@ -1,0 +1,160 @@
+module txwd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The Western District of Texas's own criminal periods, computed under
+// FRCrimP 45 (Rule CR-45). No trigger carries a service method: FRCrimP
+// 45(c)'s three added days follow the manner of service, which is not
+// modeled here. Any judge may waive a requirement of these rules in the
+// interest of justice (CR-1(b)(2)).
+//
+// Periods stated only in a form the corpus cannot count stay in notes:
+// the government files its pretrial motions by the latest of 14 days
+// after receiving the defendant's motions, 21 days after the arraignment,
+// or 21 days after the latest scheduled arraignment date if arraignment
+// is waived (CR-12(b)), a "latest of" two periods from different events;
+// discovery for a release or detention hearing is due by the start of the
+// hearing (CR-16(b)(1)(A)). Two periods are counted in hours, which the
+// corpus's FRCrimP 45 counting rule does not allow: a detained material
+// witness is ordered released within 24 hours of the taking and the
+// certification, or waiver of certification, of the deposition, if that
+// comes before the 45-day deadline (CR-15B(c)(1)(A)), and discovery for a
+// pretrial hearing other than a release or detention hearing is due not
+// later than 48 hours before it (CR-16(b)(1)(B)). CR-32(b) sets its own
+// presentence schedule only where the defendant and the government waive
+// the FRCrimP 32 time limits (the report given at least 24 days before sentencing, the review
+// certificate and written objections within 10 days after it is given,
+// action on objections within 10 days, and the report submitted at least 4
+// days before sentencing); no trigger models that waiver, so those periods
+// stay in this note, and FRCrimP 32's own periods stay in lit/frcrimp. The
+// court may change a CR-32(b) limit for good cause, but the objection
+// period may be shortened only with the consent of the defendant, defense
+// counsel and the government (CR-32(c)).
+//
+// Conditions that are not deadlines stay in notes: the pretrial services
+// interview and report (CR-5A), the initial appearance of an undocumented
+// alien held as a material witness (CR-5B), the grand jury and the
+// division of presentment (CR-6A, 6B), depositions of other witnesses
+// (CR-15A), the marking of exhibits (CR-17.1, by CV-16(g)), the place of
+// trial (CR-18), trial jurors (CR-24), informants under pretrial
+// supervision (CR-46(a)), filing and format (CR-49) and petty offenses
+// before magistrate judges (CR-58). The parties exchange discovery
+// reasonably in advance of a material witness's deposition (CR-15B(b)(3)).
+//
+// The earlier W.D. Tex. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Brady v. Maryland, Barker v. Wingo, Zedner v.
+// United States, Boykin v. Alabama, Missouri v. Frye, Jackson v. Virginia,
+// United States v. Booker, Roe v. Flores-Ortega, Garza v. Idaho) are
+// FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// The arraignment or, if the defendant waived it, the latest scheduled
+/// arraignment date (W.D. Tex. Local Rule CR-12(a), CR-16(b)(1)(C)).
+event ArraignmentOrScheduledDate()
+/// A material witness described in Rule CR-15B(a) first appears before
+/// the court (W.D. Tex. Local Rule CR-15B(b)(2), (c)(1)).
+event MaterialWitnessAppeared()
+/// A Disclosure Agreement Checklist showing that a party refuses to
+/// disclose information is filed (W.D. Tex. Local Rule CR-16(a)(3)).
+event RefusalChecklistFiled()
+/// The verdict, or the entry of a guilty plea (W.D. Tex. Local Rule
+/// CR-32(a)).
+event VerdictOrPlea()
+/// The Pretrial Services Office receives a government report regarding
+/// detained witnesses under FRCrimP 46(h) (W.D. Tex. Local Rule
+/// CR-46(b)(2)).
+event DetainedWitnessReportReceived()
+/// A motion is served (W.D. Tex. Local Rule CR-47(b)).
+event MotionServed()
+/// The case is finally disposed of, including appeal and denial of, or
+/// expiry of the time to file, a petition for certiorari (W.D. Tex. Local
+/// Rule CR-55(b)(1)).
+event FinalDisposition()
+
+/// W.D. Tex. Local Rule CR-12(a): unless the court orders otherwise, the
+/// defendant files any pretrial motion within 14 days after arraignment
+/// or, if arraignment is waived, after the latest scheduled arraignment
+/// date.
+deadline defendant-pretrial-motions: 14.days after ArraignmentOrScheduledDate() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Tex. Local Rule CR-12(a)"
+{
+  forum frcrimp
+}
+
+/// W.D. Tex. Local Rule CR-15B(b)(2)(A): the court orders the deposition
+/// of a detained material witness taken not later than 35 days after the
+/// witness first appeared before the officer.
+deadline material-witness-deposition: 35.days after MaterialWitnessAppeared() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-15B(b)"
+{
+  forum frcrimp
+}
+
+/// W.D. Tex. Local Rule CR-15B(c)(1)(B): the material witness is ordered
+/// released from the custody of the U.S. Marshals Service within 45 days
+/// of the witness's first appearance before a court, if not earlier under
+/// CR-15B(c)(1)(A); the deposition cannot be continued past this deadline
+/// (CR-15B(b)(2)(B)).
+deadline material-witness-release: 45.days after MaterialWitnessAppeared() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-15B(c)"
+{
+  forum frcrimp
+}
+
+/// W.D. Tex. Local Rule CR-16(a)(3): if the Disclosure Agreement Checklist
+/// shows that a party refuses to disclose information, the other party may
+/// file motions about it within 14 days after the checklist is filed.
+deadline undisclosed-information-motion: 14.days after RefusalChecklistFiled() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-16(a)"
+{
+  forum frcrimp
+}
+
+/// W.D. Tex. Local Rule CR-16(b)(1)(C): unless the court orders or the
+/// parties agree otherwise in writing, discovery for trial is provided not
+/// later than 14 days after arraignment or, if arraignment is waived,
+/// after the latest scheduled arraignment date.
+deadline trial-discovery: 14.days after ArraignmentOrScheduledDate() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Tex. Local Rule CR-16(b)"
+{
+  forum frcrimp
+}
+
+/// W.D. Tex. Local Rule CR-32(a): except for good cause, the court should
+/// sentence the defendant within 60 days after the date of the verdict or
+/// entry of a guilty plea.
+deadline sentencing-time: 60.days after VerdictOrPlea() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "W.D. Tex. Local Rule CR-32(a)"
+{
+  forum frcrimp
+}
+
+/// W.D. Tex. Local Rule CR-46(b)(2): unless the court orders otherwise,
+/// the Pretrial Services Office gives its recommendation on each detained
+/// witness's continued detention or release within 7 days of receiving
+/// the government's report.
+deadline detained-witness-recommendation: 7.days after DetainedWitnessReportReceived() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-46(b)"
+{
+  forum frcrimp
+}
+
+/// W.D. Tex. Local Rule CR-47(b): a party opposing a motion files its
+/// response with the clerk and serves it on all parties within 11 days of
+/// service of the motion.
+deadline response-period: 11.days after MotionServed() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-47(b)"
+{
+  forum frcrimp
+}
+
+/// W.D. Tex. Local Rule CR-55(b): within 60 days after final disposition
+/// of the case, the party who offered an exhibit removes it from the
+/// clerk; an exhibit not removed may be destroyed or otherwise disposed
+/// of.
+deadline exhibit-removal: 60.days after FinalDisposition() counted_by frcrimp45 cite "W.D. Tex. Local Rule CR-55(b)"
+{
+  forum frcrimp
+}

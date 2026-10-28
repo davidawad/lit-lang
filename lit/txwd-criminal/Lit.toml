@@ -1,0 +1,52 @@
+# The U.S. District Court for the Western District of Texas's local
+# criminal rules (Rules CR-1 to CR-58) as a local-rule layer over
+# lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it declares only the
+# periods the local criminal rules themselves state and re-encodes no
+# FRCrimP, Speedy Trial Act or FRAP 4(b) period (one source of truth:
+# lit/frcrimp). Time is computed under FRCrimP 45 in every criminal case
+# (Rule CR-45), so each deadline names `forum frcrimp`. The rules are the
+# complete copy the court serves as current (cover "Effective: April 26,
+# 2023"; sources/txwd), so in_force is that date; earlier editions are not
+# vendored, so a query before it is a hole in the corpus. The court's
+# Speedy Trial Act plan (18 U.S.C. § 3165) is not vendored. An appeal goes
+# to the Fifth Circuit under lit/frcrimp's FRAP 4(b) period and lit/ca5.
+[package]
+name = "txwd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "txwd-criminal-local-rules"
+forum = "txwd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Western District of Texas: Local Criminal Rules"
+description = "The U.S. District Court for the Western District of Texas's local criminal rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the defendant's pretrial motions, the deposition and release of a detained material witness, discovery deadlines and motions on undisclosed information, the usual time of sentencing, the pretrial services recommendation on detained witnesses, the response to a motion, and the removal of exhibits."
+in_force = "2023-04-26"
+known_at = "2026-10-28"
+unknown_before = "2023-04-26"
+jurisdiction = "U.S. District Court for the Western District of Texas (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "txwd-cr"
+issuer = "U.S. District Court for the Western District of Texas"
+date = "2023-04-26"
+designation = "Local Court Rules, Section II: Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.txwd-cr]
+title = "Local Court Rules of the United States District Court for the Western District of Texas, Section II: Criminal Rules (complete copy, effective April 26, 2023)"
+url = "https://www.txwd.uscourts.gov/wp-content/uploads/2026/10/TXWD-Local-Rules-Full-Copy-081926.pdf"
+path = "sources/txwd/tx-wd-local-rules-sectioned.txt"
+path_sha256 = "779483d215e8dff84763bdb9bc9dd90205700f18340a960b635d1f885cc63fa6"
+sha256 = "475cd12040bc439f1f9041a6e17fe38845025076bba29546e8b67046ec52b647"
+as_of = "2023-04-26"
+cite_prefixes = ["W.D. Tex. Local Rule CR-", "Local Rule CR-"]
+section_heading = "CR-{n}"

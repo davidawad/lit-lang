@@ -1,0 +1,125 @@
+module ne-criminal-trial-court.criminal
+
+// A criminal prosecution in the Nebraska district court, from the
+// defendant's view of outcomes. Nebraska criminal procedure is statutory
+// (chapter 29). The speedy-trial, appeal and postconviction sections are
+// vendored CURRENCY UNCONFIRMED, so their cites are holes and their values
+// unverified; the other chapter 29 stages (arrest, bail, preliminary
+// hearing, arraignment, discovery, trial and new trial) are not vendored
+// and their cites are holes with no value. Only the notice of appeal (Neb.
+// Rev. Stat. § 25-1912) binds to vendored text. Every period is stated in a
+// note: lit/core has no Nebraska counting rule, and the six-month speedy
+// trial period is stated in months. The outline's decisions (Gerstein,
+// McLaughlin, Gideon, Brady, Barker v. Wingo, Boykin, Missouri v. Frye,
+// Jackson v. Virginia, Roe v. Flores-Ortega, Garza v. Idaho) are federal
+// constitutional authority with no reporter text vendored, so they are
+// removed here.
+start arrested
+
+state arrested: "Arrest" by applicant cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): arrest and first appearance")
+{
+  note "Arrest, the first appearance, bail and the preliminary hearing are chapter 29 sections that are not vendored; their periods are holes."
+  edge-arrested-appearance "First appearance and bail" -> charging {
+    authority cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): first appearance and bail")
+  }
+}
+
+decision charging: "Preliminary hearing; information or indictment" by court cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): preliminary hearing, information and indictment")
+{
+  note "The six-month speedy-trial period runs from the date the indictment is returned or the information filed (for a misdemeanor offense involving intimate partners, from the arrest on a complaint filed as part of a warrant) (Neb. Rev. Stat. § 29-1207(2); unverified, CURRENCY UNCONFIRMED)."
+  edge-charging-charged "Information filed or indictment returned" -> pretrial {
+    authority cite ?("Neb. Rev. Stat. 29-1207, CURRENCY UNCONFIRMED (the Legislature's pages state no edition date); the value is the vendored text, unverified")
+  }
+  edge-charging-none "No probable cause; discharged" -> discharged {
+    authority cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): preliminary hearing")
+  }
+}
+
+state pretrial: "Arraignment, discovery and pretrial motions" by applicant cite ?("Neb. Rev. Stat. 29-1207, CURRENCY UNCONFIRMED (the Legislature's pages state no edition date); the value is the vendored text, unverified")
+{
+  note "Every person indicted or informed against is brought to trial within six months, computed as § 29-1207 provides: a retrial runs from the mistrial, the order granting a new trial or the mandate on remand, and excluded are the delay from other proceedings concerning the defendant (including the time from filing to final disposition of the defendant's pretrial motions), continuances at the defendant's request or with consent (a defendant whose continuance carries the trial past six months is deemed to waive the right), certain continuances for the prosecution, and the defendant's absence or unavailability, among others (Neb. Rev. Stat. § 29-1207(1)-(4); unverified, CURRENCY UNCONFIRMED). The arraignment, discovery and pretrial motion sections are not vendored."
+  edge-pretrial-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): pretrial motions")
+  }
+  edge-pretrial-speedy "Six months run; motion for absolute discharge" -> motions-ruling {
+    authority cite ?("Neb. Rev. Stat. 29-1208, CURRENCY UNCONFIRMED (the Legislature's pages state no edition date); the value is the vendored text, unverified")
+  }
+  edge-pretrial-plea "Plea negotiations" -> plea-decision {
+    authority cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): pleas")
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite ?("Neb. Rev. Stat. 29-1208, CURRENCY UNCONFIRMED (the Legislature's pages state no edition date); the value is the vendored text, unverified")
+{
+  note "A defendant not brought to trial before the time in § 29-1207 runs, as extended by excluded periods, is entitled to absolute discharge from the offense charged and any other offense required by law to be joined with it (Neb. Rev. Stat. § 29-1208; unverified, CURRENCY UNCONFIRMED)."
+  edge-motions-ruling-speedy "Absolute discharge for want of a speedy trial" -> discharged {
+    authority cite ?("Neb. Rev. Stat. 29-1208, CURRENCY UNCONFIRMED (the Legislature's pages state no edition date); the value is the vendored text, unverified")
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): pretrial motions")
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): pleas")
+{
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): pleas")
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite ?("Neb. Rev. Stat. 29-1207, CURRENCY UNCONFIRMED (the Legislature's pages state no edition date); the value is the vendored text, unverified")
+  }
+}
+
+decision trial: "Verdict" by court cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): trial and verdict")
+{
+  edge-trial-acquittal "Not guilty" -> acquitted {
+    authority cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): trial and verdict")
+  }
+  edge-trial-guilty "Guilty; motion for new trial" -> post-trial {
+    authority cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): new trial")
+  }
+}
+
+decision post-trial: "Motion for new trial" by court cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): new trial")
+{
+  note "The criminal new-trial sections are not vendored; their periods are holes. A timely motion for a new trial terminates the running of the time for a notice of appeal, which then runs in full from the order ruling on it (Neb. Rev. Stat. § 25-1912(3), naming the civil new-trial section 25-1144.01)."
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): new trial")
+  }
+  edge-post-trial-denied "Motion denied; sentencing" -> sentencing {
+    authority cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): sentencing")
+  }
+}
+
+state sentencing: "Sentencing and judgment" by court cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): sentencing")
+{
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "Neb. Rev. Stat. § 25-1912(1)"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "Neb. Rev. Stat. § 25-1912(1)"
+{
+  note "Reversal, vacation or modification of a district court judgment, including judgments and sentences upon convictions for felonies and misdemeanors, is sought by filing in the office of the clerk of the district court, within thirty days after the entry of the judgment, a notice of intention to prosecute the appeal, with the docket fee; a notice filed after the decision is announced but before entry is treated as filed on the date of entry, and the appeal is perfected when the notice is filed and the fee deposited (Neb. Rev. Stat. § 25-1912(1), (2), (4)). A criminal defendant who applies within thirty days to proceed in forma pauperis pays no docket fee (§ 29-2306; unverified, CURRENCY UNCONFIRMED). On notice of intention to appeal, execution of the sentence is suspended until the appeal is determined (§ 29-2301; unverified)."
+  edge-judgment-appeal "Notice of appeal filed within 30 days" -> appeal-taken {
+    authority cite "Neb. Rev. Stat. § 25-1912(1)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final {
+    authority cite "Neb. Rev. Stat. § 25-1912(1)"
+  }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite ?("Neb. Rev. Stat. ch. 29, not vendored (PARTIAL set; only §§ 29-1201 to 29-1209, 29-2301 to 29-2308.01 and 29-3001 to 29-3005 are): trial and verdict")
+
+terminal discharged: "Discharged" outcome [win, dismissal] cite ?("Neb. Rev. Stat. 29-1208, CURRENCY UNCONFIRMED (the Legislature's pages state no edition date); the value is the vendored text, unverified")
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "Neb. Rev. Stat. § 25-1912(1)"
+{
+  note "The appeal continues before the Court of Appeals or Supreme Court (lit/nebctapp)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("Neb. Rev. Stat. 29-3001, CURRENCY UNCONFIRMED (the Legislature's pages state no edition date); the value is the vendored text, unverified")
+{
+  note "A one-year period of limitation applies to filing a verified motion for postconviction relief, running from the later of the dates § 29-3001(4) lists (Neb. Rev. Stat. § 29-3001(4); unverified, CURRENCY UNCONFIRMED)."
+}
+

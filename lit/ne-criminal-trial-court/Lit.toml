@@ -1,0 +1,66 @@
+# Felony and misdemeanor prosecutions in the Nebraska district courts.
+# Nebraska criminal procedure is statutory (Neb. Rev. Stat. chapter 29),
+# and only a targeted set is vendored (sources/ne-criminal-trial-court):
+# the speedy-trial sections 29-1201 to 29-1209 (a PARTIAL set) and the
+# criminal appeal and postconviction sections 29-2301 to 29-2308.01 and
+# 29-3001 to 29-3005, both as the Nebraska Legislature serves them with no
+# edition date: CURRENCY UNCONFIRMED. Their cites are holes naming the
+# section, each value the vendored text's, unverified; the rest of chapter
+# 29 (arrest, bail, preliminary hearing, discovery, new trial) is not
+# vendored, and its cites are holes with no value. The notice of appeal is
+# Neb. Rev. Stat. § 25-1912, which governs "judgments and sentences upon
+# convictions for felonies and misdemeanors", bound to the Legislature's
+# text the civil packages pin (sources/ne-district, current as of
+# 2026-10-27); the package runs from the criminal sections' retrieval,
+# 2026-10-28. Periods are stated in
+# notes: lit/core has no Nebraska counting rule. An appeal continues
+# before the Court of Appeals or Supreme Court (lit/nebctapp).
+[package]
+name = "ne-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "ne-criminal-trial-court"
+forum = "ne-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "nebraska"
+title = "Nebraska District Courts, criminal"
+description = "Criminal prosecutions in the Nebraska district courts, as far as the vendored statutes state: the six-month speedy-trial period and its exclusions and absolute discharge (Neb. Rev. Stat. §§ 29-1207, 29-1208; held as holes, CURRENCY UNCONFIRMED), the 30-day notice of appeal and its termination by post-trial motions (§ 25-1912), the suspension of sentence on notice of appeal (§ 29-2301), and the one-year limitation on postconviction motions (§ 29-3001; a hole). The rest of chapter 29 is not vendored and stays a hole."
+in_force = "2026-10-28"
+known_at = "2026-10-28"
+unknown_before = "2026-10-28"
+jurisdiction = "Nebraska district courts (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.neb-rev-stat]
+title = "Nebraska Revised Statutes, cited sections of chapters 24 and 25, as published by the Nebraska Legislature"
+url = "https://nebraskalegislature.gov/laws/statutes.php"
+path = "sources/ne-district/ne-statutes-cited.txt"
+path_sha256 = "ee8d4406776670b03de53049e86aba7991362cd6d20f6add41378ac1974c4e86"
+as_of = "2026-10-27"
+cite_prefixes = ["Neb. Rev. Stat. §"]
+section_heading = "Neb. Rev. Stat. § {n}"
+
+[sources.neb-rev-stat-29-12]
+title = "Nebraska Revised Statutes §§ 29-1201 to 29-1209, speedy trial, as published by the Nebraska Legislature (PARTIAL set; CURRENCY UNCONFIRMED)"
+url = "https://nebraskalegislature.gov/laws/statutes.php"
+path = "sources/ne-criminal-trial-court/ne-rev-stat-29-1201-to-29-1209-speedy-trial.txt"
+path_sha256 = "91fcb806601e6d39b6cd1cde92dae909523967e7bc8f146b4705312c17c834da"
+as_of = "2026-10-28"
+cite_prefixes = ["Neb. Rev. Stat. 29-12"]
+section_heading = "Neb. Rev. Stat. 29-12{n}"
+
+[sources.neb-rev-stat-29-23-30]
+title = "Nebraska Revised Statutes §§ 29-2301 to 29-2308.01, 29-3001 to 29-3005 and 25-1912, criminal appeals and postconviction, as published by the Nebraska Legislature (CURRENCY UNCONFIRMED)"
+url = "https://nebraskalegislature.gov/laws/statutes.php"
+path = "sources/ne-criminal-trial-court/ne-rev-stat-appeals-postconviction-25-1912.txt"
+path_sha256 = "1bdb17b79425d7cecd92b1918c4cb576437ee46ffa6707a85b2402a1676bcb12"
+as_of = "2026-10-28"
+cite_prefixes = ["Neb. Rev. Stat. 29-"]
+section_heading = "Neb. Rev. Stat. 29-{n}"

@@ -7,3 +7,9 @@
 - Extract sha256 4840d01f64572224b2972030081963708afdc8b369fac753a811b228f2344142. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-okn/original/oknb-lbr-2025-03-21.pdf` as served (sha256 7e7da309d70d1a74659e298dda3c0a132154e68457b117096e348010c459d0d5); extraction sha256 4840d01f64572224b2972030081963708afdc8b369fac753a811b228f2344142.
 - Amending-order check (lg-u561.30): order page read 2026-10-27, including the public 2026 page https://www.oknb.uscourts.gov/general-orders-2026 (the earlier link pointed at an internal-only address; the public page is at the same path) and https://www.oknb.uscourts.gov/general-orders-all: no amending order after 2025-03-21. The 2025-2026 orders are court closings, 25-GO-04 (terminates the 23-GO-01 wet-signature order), 26-GO-01 (establishes a Local Rules Committee), 26-GO-02 (sealed documents procedures, no mention of the local rules) and BNC outage orders; none amends the rule text.
+
+### `bankr-okn/oknb-lbr-2025-03-21-sectioned.txt` — Bankr. N.D. Okla. Local Bankruptcy Rules, sectioned
+
+- Derived in the pod (lg-u561.27) from `bankr-okn/oknb-lbr-2025-03-21.txt` (extract sha256 4840d01f64572224b2972030081963708afdc8b369fac753a811b228f2344142); nothing fetched. One `## LBR <n>` line is inserted before each rule's own heading line in the rules body (a line opening at the margin, after an optional form feed, with `RULE <nnnn>-<n>` or `RULE <nnnn>.<n>-<n>`), from `RULE 1001-1.` through `RULE 9081-1.`, 84 rules; the table of contents, Appendix A (the CM/ECF Administrative Guide) and the appended general orders with their exhibits, which repeat rule headings, are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Edition: as the extract.
+- Sectioned sha256 ff4bf1da85d7603baa7c28912e69cbae440c5e696b92c48db2ca60ff176b0c43 (the `path_sha256` pinned by `lit/bankr-okn/Lit.toml`).

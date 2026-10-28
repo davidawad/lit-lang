@@ -1,0 +1,364 @@
+module bankr-okn-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ CaseConverted, PetitionFiled }
+
+// The Bankr. N.D. Okla. court's own periods, counted under FRBP 9006(a);
+// where a rule's period 'includes the three (3) days for mailing' of FRBP
+// 9006(f), the stated total is declared, running from filing as the rule
+// says. The FRBP periods are lit/frbp's and are not declared again: payment
+// advices and the chapter 11 lists within 14 days (LBR 1007-1), the
+// schedule of post-petition debts after conversion (LBR 1019-1), the 14-day
+// stay of FRBP 4001(a)(3) (LBR 4001-1(B)) and the appeal dismissal periods
+// (LBR 8007-1). The Code's are not declared either: chapter 13 payments
+// within 30 days (LBR 3070-1, § 1326(a)(1)) and the 30-day stay hearing
+// (LBR 4001-1(A)). Stated in the rules but not declared: the statement that
+// no circumstances changed for a paper filed more than 14 days after the
+// debtor signed it (LBR 1008-1), a condition; the tax certification within
+// 14 days before confirmation (LBR 3015-3(B)), a window; depositions after
+// 7 days from a stay relief motion (LBR 4001-1(E)), a floor; continuances
+// and exhibits due by noon on the Friday or Monday before a hearing (LBR
+// 9006-1(B), 9070-1), a weekday rule; the 7 days' notice of conflicting
+// trial settings (LBR 9010-1), which the attorney gives; the clerk's first
+// extension of up to 14 days to answer (LBR 7012-1); the default response
+// time a moving party calculates by adding three mailing days to a
+// prescribed period (LBR 9013-1(B)); and the exhibit and transcript custody
+// periods (LBR 5003-1), the clerk's. The CM/ECF Administrative Guide
+// (Appendix A) and the appended general orders are not rules and are not
+// declared. The outline's Supreme Court decisions construe the Code and the
+// FRBP, not these rules, and are removed here: no reporter text is
+// vendored.
+/// A brief accompanying a motion, application or objection in an adversary
+/// proceeding, or a brief in opposition: not more than twenty pages,
+/// exclusive of attachments or appendices (N.D. Okla. LBR 7007-1(A)).
+limit adversary-brief { pages <= 20 cite "N.D. Okla. LBR 7007-1(A)" } cite "N.D. Okla. LBR 7007-1(A)"
+
+/// A reply brief to a brief in opposition in an adversary proceeding: not
+/// more than ten pages, exclusive of attachments or appendices (N.D. Okla.
+/// LBR 7007-1(A)).
+limit adversary-reply-brief { pages <= 10 cite "N.D. Okla. LBR 7007-1(A)" } cite "N.D. Okla. LBR 7007-1(A)"
+
+/// A brief in support of, or in response to, a motion for summary judgment:
+/// not more than twenty pages, exclusive of attachments or appendices (N.D.
+/// Okla. LBR 7056-1(A), (B)).
+limit summary-judgment-brief { pages <= 20 cite "N.D. Okla. LBR 7056-1(B)" } cite "N.D. Okla. LBR 7056-1(B)"
+
+/// A reply brief addressing new matters in a summary judgment response: not
+/// more than ten pages, exclusive of attachments or appendices (N.D. Okla.
+/// LBR 7056-1(C)).
+limit summary-judgment-reply { pages <= 10 cite "N.D. Okla. LBR 7056-1(C)" } cite "N.D. Okla. LBR 7056-1(C)"
+
+/// A corporation accepts appointment to a committee of creditors (N.D.
+/// Okla. LBR 2003-2).
+event CommitteeAppointed()
+/// An objection to a claim with its notice of opportunity for hearing is
+/// filed (N.D. Okla. LBR 3007-1(B)).
+event ClaimObjectionFiled()
+/// An Application for Payment of Unclaimed Funds is filed (N.D. Okla. LBR
+/// 3011-1).
+event UnclaimedFundsApplicationFiled()
+/// The hearing on confirmation of a plan (N.D. Okla. LBR 3018-1).
+event ConfirmationHearing()
+/// A Motion for Relief from Codebtor Stay with its notice is filed (N.D.
+/// Okla. LBR 4001-1(D)).
+event CodebtorMotionFiled()
+/// Discovery requests in connection with a motion for relief from stay are
+/// served (N.D. Okla. LBR 4001-1(E)).
+event StayDiscoveryServed()
+/// A party in interest files a request under 11 U.S.C. § 521(f) that the
+/// debtor file tax returns (N.D. Okla. LBR 4002-1(C)).
+event TaxReturnRequestFiled()
+/// The debtor files the § 522(q) statement and request for discharge (Local
+/// Form 4004-1) (N.D. Okla. LBR 4004-1(A)).
+event DischargeStatementFiled()
+/// The date set in a notice for a proposed use, sale or lease of property
+/// (N.D. Okla. LBR 6004-1(A)).
+event ProposedActionDate()
+/// The hearing on a motion to sell free and clear of liens and other
+/// interests (N.D. Okla. LBR 6004-1(B)).
+event SaleHearing()
+/// A motion to sell free and clear and its notice are filed (N.D. Okla. LBR
+/// 6004-1(B)).
+event SaleMotionFiled()
+/// The notice of a motion or proposed abandonment under FRBP 6007(a) or (b)
+/// is filed (N.D. Okla. LBR 6007-1(C)).
+event AbandonmentNoticeFiled()
+/// A motion to redeem property from a lien or sale is filed (N.D. Okla. LBR
+/// 6008-1).
+event RedemptionMotionFiled()
+/// A motion, application or objection with its brief is filed in an
+/// adversary proceeding (N.D. Okla. LBR 7007-1(A)).
+event AdversaryMotionFiled() paper adversary-brief
+/// A brief in opposition is filed in an adversary proceeding (N.D. Okla.
+/// LBR 7007-1(A)).
+event OppositionBriefFiled() paper adversary-reply-brief
+/// The pretrial conference in an adversary proceeding (N.D. Okla. LBR
+/// 7016-1(B)).
+event PretrialConference()
+/// A motion to dismiss a complaint objecting to discharge is filed (N.D.
+/// Okla. LBR 7041-1(B)).
+event DismissalMotionFiled()
+/// The brief in support of a motion for summary judgment is filed (N.D.
+/// Okla. LBR 7056-1(B)).
+event SummaryJudgmentBriefFiled() paper summary-judgment-brief
+/// A response brief to a motion for summary judgment is filed (N.D. Okla.
+/// LBR 7056-1(C)).
+event SummaryJudgmentResponseFiled() paper summary-judgment-reply
+/// A motion requesting relief with a notice of opportunity for hearing is
+/// filed (N.D. Okla. LBR 9013-1(B), (G)).
+event MotionFiled()
+/// The last date on which a timely jury demand may be made (N.D. Okla. LBR
+/// 9015-1(A)).
+event JuryDemandDeadline()
+/// A settlement conference (N.D. Okla. LBR 9019-2(H)).
+event SettlementConference()
+
+/// N.D. Okla. LBR 1017-1(C): within thirty days after conversion of a case
+/// to chapter 11, 12 or 13, the debtor provides the trustee, if one is
+/// appointed, the domestic support obligation information of LBR 4002-1(B)
+/// on Local Form 4002-1B.
+deadline conversion-support-information-period: 30.days after CaseConverted() counted_by frcp6 cite "N.D. Okla. LBR 1017-1(C)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 1019-1(B): within thirty days after conversion of a case
+/// to chapter 7, the debtor provides the trustee the domestic support
+/// obligation information of LBR 4002-1(B) on Local Form 4002-1B.
+deadline chapter-7-conversion-support-information-period: 30.days after CaseConverted() counted_by frcp6 cite "N.D. Okla. LBR 1019-1(B)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 2003-2: a corporation accepting appointment to a
+/// creditors' committee files its corporate ownership statement (Local Form
+/// 7007.1-1) within seven days of the appointment.
+deadline committee-ownership-statement-period: 7.days after CommitteeAppointed() counted_by frcp6 cite "N.D. Okla. LBR 2003-2"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 2015-2(A): within fourteen days after the petition, a
+/// chapter 12 or 13 debtor files a report and summary of business
+/// operations for the calendar month preceding the month of filing.
+deadline business-report-period: 14.days after PetitionFiled() counted_by frcp6 cite "N.D. Okla. LBR 2015-2(A)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 3007-1(B): the notice of opportunity for hearing on a
+/// claim objection provides a response time of thirty-three days, including
+/// three days for mailing under FRBP 9006(f).
+deadline claim-objection-response-period: 33.days after ClaimObjectionFiled() counted_by frcp6 cite "N.D. Okla. LBR 3007-1(B)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 3011-1: if no response or objection is filed within
+/// fourteen days from the filing of a sufficiently documented application
+/// for unclaimed funds, it may be approved without a hearing.
+deadline unclaimed-funds-objection-period: 14.days after UnclaimedFundsApplicationFiled() counted_by frcp6 cite "N.D. Okla. LBR 3011-1"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 3018-1: the person designated to receive ballots files a
+/// tabulation no later than five days before the confirmation hearing.
+deadline ballot-tabulation-period: 5.days before ConfirmationHearing() counted_by frcp6 cite "N.D. Okla. LBR 3018-1"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 4001-1(D): the notice of opportunity for hearing on a
+/// motion for relief from the codebtor stay provides a response time of 14
+/// days, including 3 days for mailing.
+deadline codebtor-stay-response-period: 14.days after CodebtorMotionFiled() counted_by frcp6 cite "N.D. Okla. LBR 4001-1(D)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 4001-1(E): in connection with a motion for relief from
+/// stay, the time to respond to discovery requests is shortened from 30 to
+/// 12 days.
+deadline stay-discovery-response-period: 12.days after StayDiscoveryServed() counted_by frcp6 cite "N.D. Okla. LBR 4001-1(E)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 4001-1(H): a motion to continue the automatic stay under
+/// 11 U.S.C. § 362(c)(3)(B) is filed within seven days of the filing of the
+/// petition.
+deadline stay-continuation-motion-period: 7.days after PetitionFiled() counted_by frcp6 cite "N.D. Okla. LBR 4001-1(H)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 4002-1(C): within seven days of the filing of a § 521(f)
+/// request, the debtor redacts and files the tax returns as a secure event.
+deadline tax-return-filing-period: 7.days after TaxReturnRequestFiled() counted_by frcp6 cite "N.D. Okla. LBR 4002-1(C)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 4004-1(A): the debtor's § 522(q) statement is served
+/// affording the trustee, creditors and parties requesting notice fourteen
+/// days, including three days for mailing, from its filing to object to the
+/// discharge.
+deadline discharge-statement-objection-period: 14.days after DischargeStatementFiled() counted_by frcp6 cite "N.D. Okla. LBR 4004-1(A)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 6004-1(A): objections to a proposed use, sale or lease
+/// outside the ordinary course are filed and served not less than seven
+/// days before the date set for the proposed action.
+deadline sale-objection-period: 7.days before ProposedActionDate() counted_by frcp6 cite "N.D. Okla. LBR 6004-1(A)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 6004-1(B): objections to a sale free and clear of liens
+/// are filed and served not less than seven days before the hearing; a
+/// certificate of service of the motion and notice is filed by the same
+/// day.
+deadline free-and-clear-objection-period: 7.days before SaleHearing() counted_by frcp6 cite "N.D. Okla. LBR 6004-1(B)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 6004-1(B): service of a motion to sell free and clear and
+/// its notice is accomplished within three days of their filing.
+deadline free-and-clear-service-period: 3.days after SaleMotionFiled() counted_by frcp6 cite "N.D. Okla. LBR 6004-1(B)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 6007-1(C): the time to file and serve an objection to an
+/// abandonment under FRBP 6007(a) or (b) is fourteen days from the filing
+/// of the notice, including three days for mailing.
+deadline abandonment-objection-period: 14.days after AbandonmentNoticeFiled() counted_by frcp6 cite "N.D. Okla. LBR 6007-1(C)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 6008-1: the time to object or respond to a motion for
+/// redemption is fourteen days, including three days for mailing.
+deadline redemption-objection-period: 14.days after RedemptionMotionFiled() counted_by frcp6 cite "N.D. Okla. LBR 6008-1"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 7007-1(A): a brief in opposition, if filed, is filed
+/// within fourteen days after the filing of the original motion,
+/// application or objection.
+deadline adversary-opposition-brief-period: 14.days after AdversaryMotionFiled() counted_by frcp6 cite "N.D. Okla. LBR 7007-1(A)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 7007-1(A): a reply brief, if filed, is filed within
+/// fourteen days after filing of the brief in opposition.
+deadline adversary-reply-brief-period: 14.days after OppositionBriefFiled() counted_by frcp6 cite "N.D. Okla. LBR 7007-1(A)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 7016-1(B): a motion to continue a pretrial conference is
+/// filed not later than seven days prior to the date set for it.
+deadline pretrial-continuance-period: 7.days before PretrialConference() counted_by frcp6 cite "N.D. Okla. LBR 7016-1(B)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 7041-1(B): responses to a motion to dismiss a complaint
+/// objecting to discharge are made within fourteen days of its filing,
+/// including three days for mailing.
+deadline discharge-dismissal-response-period: 14.days after DismissalMotionFiled() counted_by frcp6 cite "N.D. Okla. LBR 7041-1(B)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 7056-1(B): a response brief to a motion for summary
+/// judgment is filed within twenty-one days after the filing of the brief
+/// in support.
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentBriefFiled() counted_by frcp6 cite "N.D. Okla. LBR 7056-1(B)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 7056-1(C): the movant may file a reply brief addressing
+/// only new matters within fourteen days after the response brief was
+/// filed.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseFiled() counted_by frcp6 cite "N.D. Okla. LBR 7056-1(C)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 9013-1(B): where no statute, rule or order prescribes a
+/// response time, the response time in the notice of opportunity for
+/// hearing is fourteen days from filing, including three days for mailing.
+deadline motion-response-period: 14.days after MotionFiled() counted_by frcp6 cite "N.D. Okla. LBR 9013-1(B)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 9013-1(G): a file-stamped copy of a motion is served on
+/// parties not registered in the ECF System, or entitled to FRBP 7004
+/// service, within two days of the filing date.
+deadline motion-service-period: 2.days after MotionFiled() counted_by frcp6 cite "N.D. Okla. LBR 9013-1(G)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 9013-1(G): the movant files a certificate of service
+/// within seven days after filing the motion.
+deadline motion-service-certificate-period: 7.days after MotionFiled() counted_by frcp6 cite "N.D. Okla. LBR 9013-1(G)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 9015-1(A): the parties may consent to a jury trial by the
+/// bankruptcy judge by a statement filed no later than fourteen days after
+/// the last date for a timely jury demand.
+deadline jury-consent-period: 14.days after JuryDemandDeadline() counted_by frcp6 cite "N.D. Okla. LBR 9015-1(A)"
+{
+  forum frcp
+}
+
+/// N.D. Okla. LBR 9019-2(H): a governmental entity unable to send a
+/// representative with full settlement authority delivers (not files) its
+/// motion for leave to the settlement judge not later than 14 days prior to
+/// the conference.
+deadline limited-authority-motion-period: 14.days before SettlementConference() counted_by frcp6 cite "N.D. Okla. LBR 9019-2(H)"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed with notice of opportunity for hearing" by applicant cite "N.D. Okla. LBR 9013-1(B)"
+{
+  note "The notice states the response time the movant calculates: a prescribed period plus three mailing days, or fourteen days including them where none is prescribed (LBR 9013-1(B)); the motion is served within two days of filing (LBR 9013-1(G)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-opposed "Response or objection filed" -> opposed {
+    authority cite "N.D. Okla. LBR 9013-1(B)"
+    within motion-response-period
+  }
+  edge-motion-filed-unopposed "No timely response; relief granted without hearing" -> ruling {
+    authority cite "N.D. Okla. LBR 9013-1(B)"
+  }
+}
+
+state opposed: "Response filed; matter set for hearing" by opponent cite "N.D. Okla. LBR 9013-1(B)"
+{
+  note "A timely response or objection puts the request for relief to a hearing (LBR 9013-1(A)); untimely pleadings may be disregarded (LBR 9013-1(F))."
+  edge-opposed-ruling "Hearing held" -> ruling { authority cite "N.D. Okla. LBR 9013-1(A)" }
+}
+
+decision ruling: "Motion decided" by court cite "N.D. Okla. LBR 9013-1(B)"
+{
+  note "If no response or objection is timely filed, the court may grant the relief without a hearing or further notice (LBR 9013-1(B))."
+  edge-ruling-granted "Granted" -> decided { authority cite "N.D. Okla. LBR 9013-1(B)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "N.D. Okla. LBR 9013-1(B)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "N.D. Okla. LBR 1001-1"

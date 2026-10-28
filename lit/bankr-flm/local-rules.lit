@@ -1,0 +1,699 @@
+module bankr-flm-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, PetitionFiled }
+
+// The Bankr. M.D. Fla. court's own periods and page limits, counted under
+// FRBP 9006(a): the Local Rules effective August 15, 2025. The FRBP periods
+// (schedules, claims, the chapter 13 plan, discharge, dischargeability,
+// exemptions, the adversary answer, appeals) are lit/frbp's and are not
+// declared again, nor are the national and statutory periods the rules run
+// on: service of the summons within seven days after issuance (Local Rule
+// 7001-1(c), FRBP 7004(e)); the 14-day stay of FRBP 4001(a)(4) (Local Rule
+// 4001-1(c)(3)); credit sooner than 14 days after service of a financing
+// motion (Local Rule 2081-1(g)(2)(C), FRBP 4001(c)(2)); the 20-day codebtor
+// deadline of §§ 1201(d) and 1301(d) and the 30- and 60-day hearing periods
+// of § 362(e) that negative notice waives (Local Rule 4001-1(c)(2)(C),
+// (c)(10), 5071-1(d)); and the three added days when a paper is mailed (FRBP
+// 9006(f); Local Rules 2002-4(c), 2016-1(c), 9013-1(c)(1)). The rules' reset
+// deadlines in reinstated cases (Local Rules 3002-1(a), 4004-2, 4007-1) run
+// from new triggers and are declared.
+//
+// Stated in the rules but not declared: the business-day and clock-time
+// periods (the case management summary by the earlier of three business days
+// after the petition or the first motion, Local Rule 2081-1(b); first-day
+// motions heard within three business days, 2081-1(g); proposed orders
+// within three business days after a hearing or the response period,
+// 2002-4(e), 9072-1(c); opposition 48 hours before a hearing set on less than
+// 21 days' notice, 9013-1(c)(2); after-hours facsimile filings and the
+// original by noon the next business day, 5001-2(b); discovery conferral 24
+// hours before a motion, 7026-1(d)); the deadlines that are the later of
+// two dates (rejection damages claims, 3002-1(b); final decree motions,
+// 3022-1(a)-(b)(1); administrative expense applications, 3071-1); deadlines
+// that are an event itself (a motion on the bankruptcy court's authority to
+// enter final orders by the response date, 7001-1(k)(6); abstention by the
+// withdrawal deadline, 5011-2(a)); the court's, clerk's and court
+// reporter's own acts (the pretrial conference about 90 days after the
+// complaint, 7001-1(i); a redacted transcript within 28 days of the request
+// and the 90-day restriction, 5077-1(a), (h); scanned papers kept 60 days,
+// 5005-1(d)); and the conditions and caps (180 days' location for the
+// division, 1071-1(c); notice limits after 70 or 90 days, 2002-1(c)-(d); an
+// unanswered letter for 14 days, 2014-1(b); creditors' seven days' notice of
+// a fee hearing, 2016-1(c)(2)(C); unclaimed funds after 120 days, 3021-1(b);
+// a reaffirmation extension of up to 60 days, 4008-1(e); stay relief hearings
+// within 14 days of dismissal, 4001-1(c)(6); inspection on at least seven
+// days' notice, 4001-1(c)(7); retention of originals for two or four years,
+// 1001-2(h), 1007-1(a)(3), 1009-1(f)).
+/// The court enters an order or notice it directs an attorney or party to
+/// serve (Local Rules 2002-1(j), 9072-1(b)(7)).
+event OrderOrNoticeEntered()
+/// A motion, objection or other paper is served with the Local Rule 2002-4
+/// negative notice legend.
+event NegativeNoticeServed()
+/// The notice of a Rule 2004 examination is served (Local Rule 2004-1(c)).
+event ExaminationNoticeServed()
+/// The date of a scheduled Rule 2004 examination (Local Rule 2004-1(d)).
+event ExaminationDate()
+/// The date a chapter 7 trustee intends to destroy the debtor's books and
+/// records (Local Rule 2015-3).
+event RecordsDestruction()
+/// The notice of an application for compensation is served on negative notice
+/// (Local Rule 2016-1(c)).
+event FeeApplicationNoticeServed()
+/// The order converting a case to chapter 7 is entered (Local Rule
+/// 2016-1(c)(1)(B)).
+event ConversionOrderEntered()
+/// The hearing on confirmation of a chapter 11 plan (Local Rules
+/// 2016-1(c)(2)(C), 3018-1(d), 3020-1(b)).
+event Ch11ConfirmationHearing()
+/// The order confirming a chapter 11 plan is entered (Local Rules
+/// 2016-1(c)(2)(C), 3020-1(c)(2), (e)).
+event ConfirmationOrderEntered()
+/// An order conditionally approving a motion on adequate assurance for
+/// utility services is entered (Local Rule 2081-1(g)(7)(B)).
+event UtilityOrderEntered()
+/// The order suspending an attorney after discipline elsewhere is entered
+/// (Local Rule 2090-2(b)).
+event SuspensionOrderEntered()
+/// An attorney's motion for leave to withdraw is served on negative notice
+/// (Local Rule 2091-2(a)).
+event WithdrawalMotionServed()
+/// The order vacating the dismissal of a case and reinstating it is entered
+/// (Local Rules 3002-1(a), 4004-2(b), 4007-1(b)).
+event ReinstatementOrdered()
+/// The hearing on confirmation of a chapter 11 plan is held (Local Rule
+/// 3020-1(c)).
+event ConfirmationHearingHeld()
+/// All objections to claims in a class of general unsecured creditors paid
+/// pro rata from a fixed sum are resolved (Local Rule 3020-1(c)(1)(A)).
+event ClassObjectionsResolved()
+/// A confirmed chapter 11 plan's effective date occurs (Local Rule
+/// 3020-1(d)).
+event PlanEffective()
+/// All payments under an individual chapter 11 debtor's confirmed plan are
+/// completed (Local Rule 3022-1(b)(2)(C)).
+event PlanPaymentsCompleted()
+/// An individual chapter 11 debtor files the § 522(q) statement required
+/// before discharge (Local Rule 3022-1(b)(2)(C)).
+event DischargeStatementFiled()
+/// A discovery request under FRBP 7030, 7034 or 7036 is served in a stay
+/// relief matter (Local Rule 4001-1(c)(8)).
+event StayDiscoveryServed()
+/// The § 341 meeting as rescheduled in a case dismissed before the meeting
+/// was held and then reinstated (Local Rules 4004-2(a), 4007-1(a)).
+event MeetingRescheduled()
+/// The notice of the § 341 meeting of creditors under FRBP 2003(a) is dated
+/// (Local Rule 5011-1(b)).
+event MeetingNoticeIssued()
+/// A party in interest without notice of the case acquires actual knowledge
+/// of its pendency (Local Rule 5011-1(b)).
+event CaseKnowledgeAcquired()
+/// The initial pleading in an adversary proceeding or contested matter is
+/// served (Local Rule 5011-1(c)).
+event InitialPleadingServed()
+/// A motion to withdraw the reference is entered on the docket (Local Rule
+/// 5011-1(e)).
+event WithdrawalReferenceDocketed()
+/// A notice of removal of a claim or cause of action under 28 U.S.C. § 1452
+/// is filed (Local Rules 5011-2(b), 9027-1).
+event RemovalNoticeFiled()
+/// A transcript of a court proceeding is docketed and the clerk serves notice
+/// of its filing (Local Rule 5077-1(d), (f)).
+event TranscriptDocketed()
+/// A chapter 7 trustee's Report and Notice of Intention to Sell is served
+/// (Local Rule 6004-1(c)).
+event SaleReportServed()
+/// The complaint commencing an adversary proceeding is filed (Local Rules
+/// 7001-1(c), (f), 7055-2(a)).
+event ComplaintFiled()
+/// An additional party is named as a plaintiff or defendant in an adversary
+/// proceeding (Local Rule 7001-1(c)).
+event PartyAdded()
+/// The pretrial or status conference in an adversary proceeding (Local Rule
+/// 7001-1(h)).
+event PretrialConference()
+/// The date set for trial in an adversary proceeding (Local Rules
+/// 7001-1(j)-(n), 9070-1).
+event TrialDate()
+/// A motion in an adversary proceeding that must be served on negative notice
+/// is served (Local Rule 7001-1(k)(4)).
+event AdversaryMotionServed()
+/// A response to such a motion is filed (Local Rule 7001-1(k)(4)).
+event AdversaryResponseFiled()
+/// A party files and exchanges its witnesses and deposition designations
+/// (Local Rule 7001-1(l)).
+event WitnessDisclosureFiled()
+/// The date of a deposition upon oral examination (Local Rule 7030-1(a)).
+event DepositionDate()
+/// The bankruptcy court's order dismissing or conditionally dismissing an
+/// appeal is entered (Local Rule 8003-2).
+event AppealDismissalEntered()
+/// The hearing on a motion set for hearing (Local Rule 9013-1(c)(2)).
+event MotionHearing()
+/// A jury verdict is rendered (Local Rule 9015-1(c)).
+event VerdictRendered()
+/// The court orders a settled adversary proceeding dismissed (Local Rule
+/// 9019-1(b)).
+event SettlementDismissalOrdered()
+/// The mediator invoices the parties (Local Rule 9019-2(h)).
+event MediatorInvoiced()
+/// A trial concludes (Local Rule 9070-1(c)).
+event TrialConcluded()
+
+/// Local Rule 7001-1(k)(3): absent leave of court, all motions, responses,
+/// replies and supporting memoranda in an adversary proceeding (and a
+/// contested matter so ordered, 7001-1(a)) may not exceed ten pages; proofs
+/// of service, attached exhibits and the signature block are not counted.
+limit adversary-motion {
+  pages <= 10 cite "Bankr. M.D. Fla. Local Rule 7001-1(k)(3)"
+} cite "Bankr. M.D. Fla. Local Rule 7001-1(k)(3)"
+
+/// Local Rule 1007-1(c): the debtor provides payment advices to the trustee
+/// and, on request, to the United States Trustee and timely requesting
+/// creditors at least seven days before the § 341 meeting.
+deadline payment-advices-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 1007-1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 1007-1(c): a creditor's request for payment advices is timely
+/// if received at least 14 days before the first date set for the meeting of
+/// creditors.
+deadline payment-advices-request-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 1007-1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 2002-1(j), 9072-1(b)(7): an attorney or party the court directs
+/// to serve an order or notice serves it within three days of its entry and
+/// then promptly files proof of service.
+deadline order-service-period: 3.days after OrderOrNoticeEntered() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 2002-1(j)"
+{
+  forum frcp
+}
+
+/// Local Rule 2002-4(c): the response period placed in the negative notice
+/// legend is 21 days, except as the Negative Notice List provides, plus three
+/// days if any party was served by mail.
+deadline negative-notice-response-period: 21.days after NegativeNoticeServed() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 2002-4(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 2004-1(c): attendance and production may not be required less
+/// than 21 days after service of the notice, and a request construed under
+/// FRBP 7034 has its time to respond shortened to 21 days.
+deadline examination-production-period: 21.days after ExaminationNoticeServed() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 2004-1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 2004-1(d): a party in interest who wishes to attend files and
+/// serves a cross-notice of examination at least 14 days in advance of the
+/// scheduled examination.
+deadline cross-notice-period: 14.days before ExaminationDate() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 2004-1(d)"
+{
+  forum frcp
+}
+
+/// Local Rule 2015-3: except for patient records, a chapter 7 trustee gives
+/// 30 days' written notice to the debtor, debtor's attorney, the IRS and the
+/// United States Trustee before destroying the debtor's books and records.
+deadline records-destruction-notice-period: 30.days before RecordsDestruction() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 2015-3"
+{
+  forum frcp
+}
+
+/// Local Rule 2016-1(c): an objection to an application for compensation
+/// served on negative notice is filed within 21 days from the date of the
+/// proof of service, plus three days if mailed.
+deadline fee-application-objection-period: 21.days after FeeApplicationNoticeServed() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 2016-1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 2016-1(c)(1)(B): in a case converted to chapter 7, final
+/// applications of professionals for pre-conversion fees and expenses are
+/// filed within 90 days after entry of the order converting the case.
+deadline converted-case-fee-application-period: 90.days after ConversionOrderEntered() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 2016-1(c)(1)"
+{
+  forum frcp
+}
+
+/// Local Rule 2016-1(c)(2)(C): to be considered at the confirmation hearing,
+/// a professional fee application is filed 14 days before it unless the court
+/// orders otherwise.
+deadline ch11-final-fee-application-period: 14.days before Ch11ConfirmationHearing() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 2016-1(c)(2)"
+{
+  forum frcp
+}
+
+/// Local Rule 2016-1(c)(2)(C): if actual fees and costs through confirmation
+/// exceed the application's estimate, the application may be supplemented up
+/// to 14 days after entry of the confirmation order.
+deadline fee-estimate-supplement-period: 14.days after ConfirmationOrderEntered() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 2016-1(c)(2)"
+{
+  forum frcp
+}
+
+/// Local Rule 2081-1(g)(7)(B)-(C): an interested party who does not file and
+/// serve a written objection within 30 days after entry of the conditional
+/// utility order is deemed to consent, and the order becomes final.
+deadline utility-order-objection-period: 30.days after UtilityOrderEntered() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 2081-1(g)(7)"
+{
+  forum frcp
+}
+
+/// Local Rule 2090-2(b): a suspension order takes effect 14 days from its
+/// date; within that period the attorney may move, serving the United States
+/// Attorney, for relief from it, which stays the suspension.
+deadline suspension-relief-motion-period: 14.days after SuspensionOrderEntered() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 2090-2(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 2091-2(a): the negative notice legend on a motion for leave to
+/// withdraw provides a 14-day response period.
+deadline attorney-withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 2091-2(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 3002-1(a): if a case dismissed before the FRBP 3002(c) claims
+/// deadline is reinstated, a proof of claim is timely if filed no later than
+/// 70 days after entry of the order vacating the dismissal and reinstating
+/// the case.
+deadline reinstated-claim-period: 70.days after ReinstatementOrdered() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 3002-1(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 3018-1(d): the plan proponent's attorney files the ballot
+/// tabulation no later than two days prior to the confirmation hearing.
+deadline ballot-tabulation-period: 2.days before Ch11ConfirmationHearing() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 3018-1(d)"
+{
+  forum frcp
+}
+
+/// Local Rule 3020-1(b): unless the court orders otherwise, objections to
+/// confirmation in a chapter 11 case are filed and served seven days before
+/// the confirmation hearing.
+deadline ch11-confirmation-objection-period: 7.days before Ch11ConfirmationHearing() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 3020-1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 3020-1(c): the plan proponent submits the order of confirmation
+/// within 14 days after the hearing on confirmation.
+deadline confirmation-order-submission-period: 14.days after ConfirmationHearingHeld() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 3020-1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 3020-1(c)(1)(A): where a class of general unsecured creditors
+/// is paid pro rata from a fixed sum, the plan proponent files the
+/// Distribution Schedule no later than 30 days after all objections to claims
+/// in that class are resolved.
+deadline distribution-schedule-period: 30.days after ClassObjectionsResolved() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 3020-1(c)(1)"
+{
+  forum frcp
+}
+
+/// Local Rule 3020-1(c)(2): the plan proponent serves the conformed
+/// confirmation order and confirmed plan and files proof of service within 14
+/// days of the order's entry on the docket.
+deadline confirmation-order-service-period: 14.days after ConfirmationOrderEntered() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 3020-1(c)(2)"
+{
+  forum frcp
+}
+
+/// Local Rule 3020-1(d): the plan proponent files and serves a notice of the
+/// plan's effective date within seven days of its occurrence.
+deadline effective-date-notice-period: 7.days after PlanEffective() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 3020-1(d)"
+{
+  forum frcp
+}
+
+/// Local Rule 3020-1(e): unless the court orders otherwise, adversary
+/// proceedings and contested matters the chapter 11 plan contemplates, and
+/// objections to claims, are filed no later than 60 days after entry of the
+/// order of confirmation.
+deadline post-confirmation-litigation-period: 60.days after ConfirmationOrderEntered() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 3020-1(e)"
+{
+  forum frcp
+}
+
+/// Local Rule 3022-1(b)(2)(C): no later than 60 days after completion of all
+/// plan payments (or with a § 1141(d)(5) motion before completion), an
+/// individual chapter 11 debtor files the sworn § 522(q) statement.
+deadline ch11-discharge-statement-period: 60.days after PlanPaymentsCompleted() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 3022-1(b)(2)"
+{
+  forum frcp
+}
+
+/// Local Rule 3022-1(b)(2)(C): an interested party may file and serve a
+/// written objection within 14 days of the filing of the debtor's statement,
+/// or is deemed to consent to the discharge.
+deadline ch11-discharge-statement-objection-period: 14.days after DischargeStatementFiled() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 3022-1(b)(2)"
+{
+  forum frcp
+}
+
+/// Local Rule 4001-1(a): a motion to extend the automatic stay under §
+/// 362(c)(3) is filed and served on interested parties within seven days of
+/// the filing of the petition, on the court's mandatory form.
+deadline stay-extension-motion-period: 7.days after PetitionFiled() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 4001-1(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 4001-1(c)(8): in a stay relief matter, the time to respond to
+/// discovery under FRBP 7030, 7034 and 7036 is reduced to 21 days unless the
+/// court directs otherwise.
+deadline stay-discovery-response-period: 21.days after StayDiscoveryServed() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 4001-1(c)(8)"
+{
+  forum frcp
+}
+
+/// Local Rule 4004-2(a): in a case dismissed before the § 341 meeting is held
+/// and reinstated, the new deadline to object to discharge under § 727 or §
+/// 1328(f) is 60 days after the rescheduled meeting.
+deadline reinstated-discharge-objection-period: 60.days after MeetingRescheduled() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 4004-2(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 4004-2(b): in a case dismissed after the § 341 meeting is held
+/// and reinstated, the new deadline to object to discharge is 60 days from
+/// entry of the order reinstating the case.
+deadline reinstated-discharge-objection-order-period: 60.days after ReinstatementOrdered() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 4004-2(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 4007-1(a): in a case dismissed before the § 341 meeting is held
+/// and reinstated, the new deadline for objections to dischargeability under
+/// FRBP 4007(c) is 60 days after the rescheduled meeting.
+deadline reinstated-dischargeability-period: 60.days after MeetingRescheduled() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 4007-1(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 4007-1(b): in a case dismissed after the § 341 meeting is held
+/// and reinstated, the new deadline for objections to dischargeability is 60
+/// days from entry of the order reinstating the case.
+deadline reinstated-dischargeability-order-period: 60.days after ReinstatementOrdered() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 4007-1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 5011-1(b): a motion to withdraw the reference of a bankruptcy
+/// case is filed no later than 21 days after the date of the notice of the
+/// meeting of creditors.
+deadline case-withdrawal-motion-period: 21.days after MeetingNoticeIssued() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 5011-1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 5011-1(b): a party in interest without notice or knowledge of
+/// the case may move to withdraw the reference no later than 21 days after
+/// acquiring actual knowledge of its pendency.
+deadline late-knowledge-withdrawal-period: 21.days after CaseKnowledgeAcquired() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 5011-1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 5011-1(c): a motion to withdraw the reference of an adversary
+/// proceeding or contested matter is filed no later than 30 days after
+/// service of the initial pleading, unless the court orders otherwise.
+deadline proceeding-withdrawal-motion-period: 30.days after InitialPleadingServed() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 5011-1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 5011-1(c): the United States or its officer or agency moves to
+/// withdraw the reference no later than 35 days after service of the initial
+/// pleading.
+deadline united-states-withdrawal-motion-period: 35.days after InitialPleadingServed() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 5011-1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 5011-1(e): opposing parties have 14 days after the motion to
+/// withdraw the reference is entered on the docket to file a response and
+/// legal memorandum.
+deadline withdrawal-reference-response-period: 14.days after WithdrawalReferenceDocketed() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 5011-1(e)"
+{
+  forum frcp
+}
+
+/// Local Rule 5011-2(b): a motion to abstain from hearing a removed adversary
+/// proceeding is timely if filed no later than 21 days following the filing
+/// of the notice of removal.
+deadline removed-proceeding-abstention-period: 21.days after RemovalNoticeFiled() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 5011-2(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 5077-1(d): the clerk's notice of the filing of a transcript
+/// gives the parties a seven-day deadline to file a Notice of Intent to
+/// Request Redaction.
+deadline transcript-redaction-notice-period: 7.days after TranscriptDocketed() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 5077-1(d)"
+{
+  forum frcp
+}
+
+/// Local Rule 5077-1(f)-(g): a party that timely filed a Notice of Intent
+/// may, within 21 days of the date the transcript was docketed, file a
+/// Statement of Redaction Request, or a motion for additional redactions, and
+/// serve the court reporter.
+deadline transcript-redaction-request-period: 21.days after TranscriptDocketed() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 5077-1(f)"
+{
+  forum frcp
+}
+
+/// Local Rule 6004-1(c), (e): a chapter 7 trustee's Report and Notice of
+/// Intention to Sell states that the property will be sold without further
+/// notice or hearing unless an objection or request for hearing is filed and
+/// served within 21 days of its service.
+deadline sale-objection-period: 21.days after SaleReportServed() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 6004-1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 7001-1(c): the plaintiff serves all defendants with the
+/// summons, the complaint and the rule no later than 28 days after the
+/// complaint is filed.
+deadline adversary-service-period: 28.days after ComplaintFiled() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 7001-1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 7001-1(c): if an additional party is named, the plaintiff
+/// serves a copy of the rule on each additional party within seven days of
+/// the date it is named.
+deadline added-party-service-period: 7.days after PartyAdded() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 7001-1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 7001-1(f), 7055-2(a): absent a timely response, the plaintiff
+/// seeks a clerk's default and moves for judgment by default no later than 60
+/// days after the complaint is filed.
+deadline adversary-default-period: 60.days after ComplaintFiled() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 7001-1(f)"
+{
+  forum frcp
+}
+
+/// Local Rule 7001-1(h): at least 14 days prior to the pretrial or status
+/// conference, the parties meet to discuss claims and defenses, settlement,
+/// initial disclosures and a discovery plan.
+deadline meeting-of-parties-period: 14.days before PretrialConference() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 7001-1(h)"
+{
+  forum frcp
+}
+
+/// Local Rule 7001-1(j)(3): the parties complete discovery no later than
+/// seven days before the trial date, except that previously scheduled
+/// depositions may proceed up to trial.
+deadline adversary-discovery-period: 7.days before TrialDate() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 7001-1(j)(3)"
+{
+  forum frcp
+}
+
+/// Local Rule 7001-1(k)(4): the negative notice legend on the listed
+/// adversary motions provides a 14-day response period.
+deadline adversary-motion-response-period: 14.days after AdversaryMotionServed() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 7001-1(k)(4)"
+{
+  forum frcp
+}
+
+/// Local Rule 7001-1(k)(4): the moving party may file a reply no later than
+/// seven days after the response is filed.
+deadline adversary-motion-reply-period: 7.days after AdversaryResponseFiled() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 7001-1(k)(4)"
+{
+  forum frcp
+}
+
+/// Local Rule 7001-1(k)(7): unless the court orders otherwise, motions for
+/// summary judgment are filed no later than 60 days prior to trial.
+deadline summary-judgment-motion-period: 60.days before TrialDate() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 7001-1(k)(7)"
+{
+  forum frcp
+}
+
+/// Local Rule 7001-1(l): the parties file and exchange their witnesses'
+/// names, telephone numbers and addresses and any deposition designations at
+/// least 28 days before trial.
+deadline witness-disclosure-period: 28.days before TrialDate() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 7001-1(l)"
+{
+  forum frcp
+}
+
+/// Local Rule 7001-1(l): objections to the use of depositions are filed
+/// within 14 days of the disclosure.
+deadline deposition-use-objection-period: 14.days after WitnessDisclosureFiled() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 7001-1(l)"
+{
+  forum frcp
+}
+
+/// Local Rule 7001-1(m): the joint stipulation of undisputed facts and
+/// exhibits is filed no later than seven days before the trial date.
+deadline undisputed-facts-stipulation-period: 7.days before TrialDate() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 7001-1(m)"
+{
+  forum frcp
+}
+
+/// Local Rule 7001-1(n)(1), 9070-1(a)-(b), (e): the parties prepare their
+/// Exhibit Lists and file and exchange their exhibits no later than seven
+/// days before trial (paper copies to unrepresented parties by the same day).
+deadline adversary-exhibits-period: 7.days before TrialDate() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 7001-1(n)(1)"
+{
+  forum frcp
+}
+
+/// Local Rule 7001-1(n)(2): a party relying on FRE 902(11) or (12) self-
+/// authentication files and serves the written declaration and the records at
+/// least 28 days before trial.
+deadline business-records-declaration-period: 28.days before TrialDate() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 7001-1(n)(2)"
+{
+  forum frcp
+}
+
+/// Local Rule 7001-1(n)(3), 9070-1(f): a written objection to an exhibit for
+/// lack of authentication or as not a record of regularly conducted activity
+/// is filed before the close of business on the second day before trial, or
+/// is waived.
+deadline exhibit-objection-period: 2.days before TrialDate() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 7001-1(n)(3)"
+{
+  forum frcp
+}
+
+/// Local Rule 7030-1(a): unless the court orders otherwise, a deposition upon
+/// oral examination may be noticed on no less than 14 days' written notice to
+/// every other party and the deponent.
+deadline deposition-notice-period: 14.days before DepositionDate() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 7030-1(a)"
+{
+  forum frcp
+}
+
+/// Local Rule 8003-2: an aggrieved party may request review by the District
+/// Court within 14 days of entry of the bankruptcy court's order dismissing
+/// an appeal.
+deadline appeal-dismissal-review-period: 14.days after AppealDismissalEntered() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 8003-2"
+{
+  forum frcp
+}
+
+/// Local Rule 9013-1(c)(2): a party opposing a motion set for hearing should
+/// file written opposition no later than seven days prior to the hearing (48
+/// hours if the hearing is set on less than 21 days' notice).
+deadline motion-opposition-period: 7.days before MotionHearing() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 9013-1(c)(2)"
+{
+  forum frcp
+}
+
+/// Local Rule 9015-1(c): a motion for an order permitting a juror interview
+/// is served within 14 days after rendition of the verdict unless good cause
+/// is shown.
+deadline juror-interview-motion-period: 14.days after VerdictRendered() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 9015-1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 9019-1(b): when the court dismisses a settled adversary
+/// proceeding, any party may move within 14 days thereafter (or such other
+/// period as the court specifies) to enter a stipulated final order or
+/// judgment or to reopen the proceeding.
+deadline settlement-reopening-period: 14.days after SettlementDismissalOrdered() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 9019-1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 9019-2(h): absent agreement or order, the parties pay the
+/// mediator's charges equally within 30 days of invoicing.
+deadline mediator-payment-period: 30.days after MediatorInvoiced() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 9019-2(h)"
+{
+  forum frcp
+}
+
+/// Local Rule 9027-1(b): within seven days of filing the notice of removal,
+/// the removing party files the operative pleadings, substantive rulings and
+/// pending motions and responses, each as a separate docket entry.
+deadline removal-papers-period: 7.days after RemovalNoticeFiled() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 9027-1(b)"
+{
+  forum frcp
+}
+
+/// Local Rule 9027-1(c): opposing memoranda on motions pending in the state
+/// court at removal are filed no later than 14 days after removal.
+deadline removed-motion-opposition-period: 14.days after RemovalNoticeFiled() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 9027-1(c)"
+{
+  forum frcp
+}
+
+/// Local Rule 9027-1(d): motions for remand are filed no later than 30 days
+/// after removal.
+deadline remand-motion-period: 30.days after RemovalNoticeFiled() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 9027-1(d)"
+{
+  forum frcp
+}
+
+/// Local Rule 9070-1(c): exhibits offered at trial but not uploaded
+/// beforehand are filed through the Exhibit Upload no later than seven days
+/// following the conclusion of the trial.
+deadline additional-exhibits-period: 7.days after TrialConcluded() counted_by frcp6 cite "Bankr. M.D. Fla. Local Rule 9070-1(c)"
+{
+  forum frcp
+}
+
+start paper-served
+
+state paper-served: "Paper served with the negative notice legend" by applicant cite "Bankr. M.D. Fla. Local Rule 2002-4(b)"
+{
+  note "A paper on the Negative Notice List is served as the rules require, with proof of service, and the Local Rule 2002-4(b)(2) legend on its first page; the response period is 21 days unless the list provides otherwise, plus three days if mailed (Local Rule 2002-4(c))."
+  edge-paper-served-response "Response filed within the time permitted" -> responded {
+    authority cite "Bankr. M.D. Fla. Local Rule 2002-4(d)"
+  }
+  edge-paper-served-unopposed "No response: proposed order submitted" -> ruling {
+    authority cite "Bankr. M.D. Fla. Local Rule 2002-4(e)"
+  }
+}
+
+state responded: "Response filed" by opponent cite "Bankr. M.D. Fla. Local Rule 2002-4(d)"
+{
+  note "On a timely response the court may, but need not, schedule a hearing on notice to the movant's attorney, the objecting parties and others (Local Rule 2002-4(d))."
+  edge-responded-considered "Hearing held or response considered" -> ruling { authority cite "Bankr. M.D. Fla. Local Rule 2002-4(d)" }
+}
+
+decision ruling: "Matter decided" by court cite "Bankr. M.D. Fla. Local Rule 2002-4(e)"
+{
+  note "Absent a response, the court considers the matter in chambers on the movant's proposed order, submitted within three business days after the response period expires and reciting service, the absence of response and that the matter is unopposed (Local Rule 2002-4(e)); it may still hold a hearing (Local Rule 2002-4(f))."
+  edge-ruling-granted "Granted" -> decided { authority cite "Bankr. M.D. Fla. Local Rule 2002-4(e)" }
+  edge-ruling-denied "Denied or overruled" -> decided { authority cite "Bankr. M.D. Fla. Local Rule 2002-4(f)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "Bankr. M.D. Fla. Local Rule 1001-1(a)"
+{
+  note "The rules are promulgated under FRBP 9029 and apply to all cases under title 11 and civil proceedings in the court (Local Rule 1001-1(a)); they supplement the Bankruptcy Code and the FRBP (Local Rule 1001-1(b))."
+}

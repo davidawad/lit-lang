@@ -1,0 +1,49 @@
+# The Local Rules of the U.S. Bankruptcy Court for the Middle District of
+# Florida over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it declares only
+# the periods and page limits the rules themselves state and re-encodes no
+# FRBP period. It is a base package, not a `kind = "local-rule"` layer:
+# lit/core has no bankruptcy forum family (L2011 for `bankr-flm`), as for
+# lit/bankr-dc. Each period is counted under FRBP 9006(a), the FRCP 6(a)
+# method (core's frcp6).
+#
+# Layers: the Local Rules with amendments effective August 15, 2025 are the
+# only vendored text (sources/bankr-flm/PROVENANCE.md), a consolidation
+# whose Advisory Committee notes date each earlier amendment; no amending
+# order is vendored, so the consolidation is the only layer. No earlier
+# edition is vendored, so a query before August 15, 2025 is a hole in the
+# corpus.
+[package]
+name = "bankr-flm-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-flm-local-rules"
+forum = "bankr-flm"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Middle District of Florida: Local Rules"
+description = "The Bankr. M.D. Fla. Local Rules (effective August 15, 2025) as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): payment advices, service of orders, negative notice (Local Rule 2002-4), Rule 2004 examinations, trustee record destruction, professional compensation, utility orders, attorney discipline and withdrawal, claims in reinstated cases, ballots, chapter 11 confirmation and post-confirmation duties, final decrees, § 362(c)(3) motions, stay discovery, deadlines reset in reinstated cases, withdrawal of the reference and abstention, transcript redaction, sales, the adversary proceeding procedures and 10-page motion limit of Local Rule 7001-1, depositions, defaults, appeal dismissals, motion opposition (Local Rule 9013-1), juror interviews, settlements, mediation, removal and remand, and exhibits."
+in_force = "2025-08-15"
+known_at = "2026-10-28"
+unknown_before = "2025-08-15"
+jurisdiction = "U.S. Bankruptcy Court for the Middle District of Florida"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.flmb-lbr]
+title = "Local Rules of the United States Bankruptcy Court for the Middle District of Florida (with amendments effective August 15, 2025)"
+url = "https://www.flmb.uscourts.gov/localrules/Rules/localrules-FLMB.pdf"
+path = "sources/bankr-flm/flmb-lbr-2025-08-15-sectioned.txt"
+path_sha256 = "646ada77e4e62497d3005b16de4be86f4b21701344b561c67c1def00e876e31f"
+sha256 = "e96e57d2570509e6ca7b06b689d722ef2b66f7ec906a2eb9d715389d01854891"
+as_of = "2025-08-15"
+cite_prefixes = ["Bankr. M.D. Fla. Local Rule"]
+section_heading = "Rule {n}"

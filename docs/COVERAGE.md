@@ -24,6 +24,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | bankr-cas-local-rules | `lit/bankr-cas` | 47 | 0 | 0 | 0 |
 | bankr-ct-local-rules | `lit/bankr-ct` | 27 | 0 | 0 | 0 |
 | bankr-dc-local-rules | `lit/bankr-dc` | 54 | 0 | 0 | 0 |
+| bankr-flm-local-rules | `lit/bankr-flm` | 63 | 0 | 0 | 0 |
 | bankr-fln-local-rules | `lit/bankr-fln` | 55 | 0 | 0 | 0 |
 | bankr-fls-local-rules | `lit/bankr-fls` | 53 | 0 | 0 | 0 |
 | bankr-gam-local-rules | `lit/bankr-gam` | 27 | 0 | 0 | 0 |

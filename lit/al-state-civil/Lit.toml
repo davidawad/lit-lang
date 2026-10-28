@@ -17,6 +17,7 @@ version = "0.1.0"
 language = 1
 pack_id = "al-circuit-court-civil"
 forum = "al-state-civil"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "alabama"
 title = "Alabama Circuit Courts, civil"
@@ -33,6 +34,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+al-state-rules = { version = "^0.1.0", path = "../al-rules" }
 
 [sources.ala-r-civ-p]
 title = "Alabama Rules of Civil Procedure, Rules 3, 4, 12, 15, 16, 26, 38, 41, 50, 55, 56 and 58 (per-rule PDFs, current through the amendment of Rule 3 effective September 3, 2025)"

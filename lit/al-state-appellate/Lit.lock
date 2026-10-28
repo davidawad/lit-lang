@@ -4,11 +4,19 @@ version = 2
 name = "al-appellate-courts-civil-appeals"
 version = "0.1.0"
 language = 1
-source = "sha256:59ae258ca196d5340feafeaf447b218ef7ae053751354c9665d2da63dfc5c3ed"
-semantic = "sha256:fb1babeabe981ce68f3db9c2ee76a43336526228d5c6c2d4e2394dfa87d6bbaf"
+source = "sha256:c1fccdddf7feb0267df73968eb05701eb27985dcba20ce045a12a1bb2128eff5"
+semantic = "sha256:b844b78e7a93003bf4bcd43423fcb77373c22437e5c8db63eb7c86dc8f18dd57"
 texts = [
     "ala-r-app-p sources/al-state-appellate/rules-cited.txt sha256:27c571a08b388a5e8bebbdb95de13e325d6855381e8060dfbc4c970346535bd9",
 ]
+dependencies = [
+    "al-state-rules 0.1.0",
+    "core 1.0.0",
+]
+
+[[package]]
+name = "al-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

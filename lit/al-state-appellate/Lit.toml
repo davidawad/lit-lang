@@ -10,7 +10,9 @@
 # 2026, effective June 1, 2026 (no rule text change); the 2026 amendments
 # to Rules 29, 53 and 54 are not vendored and are not cited. Which court
 # hears an appeal is fixed by statute, not vendored. Review in the
-# Supreme Court of the United States is not modeled. A civil action in the
+# Supreme Court of the United States is not modeled. Certiorari review in
+# the Supreme Court of a Court of Civil Appeals decision continues in
+# lit/al-supreme-court. A civil action in the
 # circuit court is lit/al-state-civil.
 [package]
 name = "al-appellate-courts-civil-appeals"
@@ -18,6 +20,7 @@ version = "0.1.0"
 language = 1
 pack_id = "al-appellate-courts-civil-appeals"
 forum = "al-state-appellate"
+family = "state-civil"
 authority = "StateRule"
 jurisdiction_id = "alabama"
 title = "Supreme Court of Alabama and Alabama Court of Civil Appeals, civil appeals"
@@ -34,6 +37,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+al-state-rules = { version = "^0.1.0", path = "../al-rules" }
 
 [sources.ala-r-app-p]
 title = "Alabama Rules of Appellate Procedure, Rules 1, 3, 4, 10, 28, 34, 39, 40 and 41 (per-rule PDFs, current through the amendments effective October 1, 2025)"

@@ -1,0 +1,46 @@
+# Certiorari review in the Supreme Court of Alabama of a civil decision of
+# the Court of Civil Appeals, under the Alabama Rules of Appellate
+# Procedure as far as the vendored rules state (sources/al-state-appellate:
+# Rules 1, 3, 4, 10, 28, 34, 39, 40 and 41, current through the amendments
+# effective October 1, 2025). Computation of time (Rule 26) and the service
+# and filing of briefs (Rule 31) are not vendored, and core has no Alabama
+# holiday calendar, so the periods are stated in notes, not counted. Direct
+# civil appeals to the Supreme Court are lit/al-state-appellate, which
+# hands off here at the petition; certiorari to the Court of Criminal
+# Appeals (Rule 39(c)) and review of extraordinary writs (Rule 21(e)) are
+# not modeled. Review in the Supreme Court of the United States is not
+# modeled.
+[package]
+name = "al-supreme-court-certiorari"
+version = "0.1.0"
+language = 1
+pack_id = "al-supreme-court-certiorari"
+forum = "al-supreme-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "alabama"
+title = "Supreme Court of Alabama, certiorari review of civil decisions"
+description = "Certiorari review in the Supreme Court of Alabama of a Court of Civil Appeals decision under Ala. R. App. P. 39, as far as the vendored text states: the petition and its time and length, preliminary consideration and issuance of the writ, merits briefing and its word limits, oral argument or submission, decision, rehearing and the certificate of judgment."
+in_force = "2025-10-01"
+known_at = "2026-10-28"
+unknown_before = "2025-10-01"
+jurisdiction = "Supreme Court of Alabama (certiorari review, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+al-state-rules = { version = "^0.1.0", path = "../al-rules" }
+
+[sources.ala-r-app-p]
+title = "Alabama Rules of Appellate Procedure, Rules 1, 3, 4, 10, 28, 34, 39, 40 and 41 (per-rule PDFs, current through the amendments effective October 1, 2025)"
+url = "https://judicial.alabama.gov/library/AppellateProcedure"
+path = "sources/al-state-appellate/rules-cited.txt"
+path_sha256 = "27c571a08b388a5e8bebbdb95de13e325d6855381e8060dfbc4c970346535bd9"
+as_of = "2025-10-01"
+cite_prefixes = ["Ala. R. App. P."]
+section_heading = "Ala. R. App. P. {n}"

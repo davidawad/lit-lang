@@ -1,0 +1,129 @@
+module al-supreme-court-certiorari.certiorari
+
+import al-state-rules.{ DecisionFiled, MandateIssued, RecordFiled, ReviewPetitionFiled }
+
+// Certiorari review of a Court of Civil Appeals decision, from the
+// petitioner's side. Every period is stated in a note, not counted.
+/// The petitioner's brief on the merits once the writ issues, in the form
+/// Rule 28 prescribes: at most 14,000 words except in a death-penalty case
+/// (Ala. R. App. P. 39(g)(1), 28(j)(1)). The pro se page limits are not
+/// encoded.
+limit merits-brief { words <= 14_000 cite "Ala. R. App. P. 28(j)" } cite "Ala. R. App. P. 39(g)"
+/// The petitioner's reply brief: at most 7,000 words (Ala. R. App. P.
+/// 39(g)(3), 28(j)(1)).
+limit reply-brief { words <= 7_000 cite "Ala. R. App. P. 28(j)" } cite "Ala. R. App. P. 39(g)"
+/// An application for rehearing, and a brief in support of or in
+/// opposition to it: at most 3,000 words each, except in a death-penalty
+/// case (Ala. R. App. P. 40(f), (g)). The 15-page pro se limit is not
+/// encoded.
+limit rehearing-brief { words <= 3_000 cite "Ala. R. App. P. 40(g)" } cite "Ala. R. App. P. 40(g)"
+
+/// The petitioner's merits brief, or its waiver, is filed after the writ
+/// issues (Ala. R. App. P. 39(g)(1)).
+event PetitionerBriefFiled() paper merits-brief
+/// The respondent's brief, or its waiver, is filed (Ala. R. App. P.
+/// 39(g)(2)).
+event RespondentBriefFiled() paper merits-brief
+/// The petitioner's reply brief is filed (Ala. R. App. P. 39(g)(3)).
+event PetitionerReplyFiled() paper reply-brief
+/// An application for rehearing is filed with its supporting brief (Ala.
+/// R. App. P. 40(a)(1)).
+event RehearingApplicationFiled() paper rehearing-brief
+
+start petition
+
+decision petition: "Petition for a writ of certiorari within 14 days?" by applicant cite "Ala. R. App. P. 39(b)(3)"
+{
+  note "Certiorari review is not a matter of right but of judicial discretion, granted only for special and important reasons; in civil cases a petition is considered only from decisions initially holding valid or invalid a city ordinance or a state or federal statute or treaty, or initially construing a controlling provision of the Alabama or United States Constitution; affecting a class of constitutional, state or county officers; on a material question of first impression for the Supreme Court of Alabama; in conflict with prior decisions of the Supreme Court of the United States, the Supreme Court of Alabama or either court of appeals (quoting the conflicting parts); or seeking to overrule controlling Alabama Supreme Court cases the court of appeals followed (Ala. R. App. P. 39(a)(1)). The petition is filed with the clerk of the Supreme Court within 14 days (2 weeks) after the release of the Court of Civil Appeals decision or, if an application for rehearing was filed there, within 14 days of its decision on that application (Ala. R. App. P. 39(b)(3)); rehearing in the Court of Civil Appeals is not a prerequisite, but an application that was filed must have complied with Rule 40(e) (Ala. R. App. P. 39(b)(1), 40(d)(2)). The docket fee of Rule 35A(a)(3), which is not vendored, is paid on filing (Ala. R. App. P. 39(b)(2)). The petition may not exceed 3,000 words (15 pages pro se), and states the grounds, attaches the opinion or memorandum and any rehearing order, and may present a statement of the facts (Ala. R. App. P. 39(d)); the original is filed with the Supreme Court clerk, one copy with the clerk of the court of appeals and one served on each party (Ala. R. App. P. 39(e)). No brief is filed before the writ issues unless the Court orders (Ala. R. App. P. 39(b)(4)). A timely petition stays the court of appeals' certificate of judgment until final disposition (Ala. R. App. P. 41(b)). No leading decision on the grant standard is named."
+  edge-petition-none "No petition: the Court of Civil Appeals decision stands" -> review-not-sought {
+    authority cite "Ala. R. App. P. 41(a)"
+  }
+  edge-petition-filed "Petition filed" -> preliminary {
+    event ReviewPetitionFiled()
+    authority cite "Ala. R. App. P. 39(b)(3)"
+  }
+}
+
+decision preliminary: "Writ issued or petition denied?" by court cite "Ala. R. App. P. 39(f)"
+{
+  note "There is no oral argument on the preliminary examination of the petition (Ala. R. App. P. 39(h)). If the Supreme Court, on preliminary consideration, concludes there is a probability of merit and the writ should issue, it so orders; the clerk gives notice in the form of a writ of certiorari, which directs the court of appeals to deliver the record, and the order may limit the issues the parties address (Ala. R. App. P. 39(f)). On a denial, the court of appeals' certificate of judgment issues immediately upon the filing of a copy of the order (Ala. R. App. P. 41(b)), and no application for rehearing is received (Ala. R. App. P. 39(l))."
+  edge-preliminary-denied "Petition denied, quashed or stricken" -> review-denied {
+    authority cite "Ala. R. App. P. 41(b)"
+  }
+  edge-preliminary-granted "Writ issued; record transmitted" -> briefing {
+    event RecordFiled()
+    authority cite "Ala. R. App. P. 39(f)"
+  }
+}
+
+state briefing: "Merits briefs filed" by applicant cite "Ala. R. App. P. 39(g)"
+{
+  note "The petitioner may file, within 28 days (4 weeks) after the clerk's notice that the writ has issued, a brief on the merits or a waiver of it, which must contain every argument it wishes the court to consider; the respondent may file a brief in response, or must file a waiver, within 21 days (3 weeks), and may address whether the petition meets the grounds of Rule 39(a)(1); the petitioner may reply within 14 days (2 weeks) of the filing of the respondent's brief (Ala. R. App. P. 39(g)). The briefs take the form Rule 28 prescribes (Ala. R. App. P. 39(g)): a principal brief at most 14,000 words and a reply 7,000 (Ala. R. App. P. 28(j)). Service and filing follow Rule 31, which is not vendored."
+  edge-briefing-submit "Briefing complete" -> submission { authority cite "Ala. R. App. P. 39(i)" }
+}
+
+state submission: "Oral argument or submission on the briefs" by court cite "Ala. R. App. P. 39(i)"
+{
+  note "Either party may request oral argument in its brief, stating the reasons the Supreme Court should hear it (Ala. R. App. P. 39(h), 28(a)(1), 34(a)). If argument is requested and the Court, under the criteria of Rule 34, finds it necessary, the clerk sets it and notifies the parties; otherwise the clerk submits the case on the record and briefs once all briefs are filed (Ala. R. App. P. 39(i)). Each side has 30 minutes unless the court orders otherwise (Ala. R. App. P. 34(b))."
+  edge-submission-decide "Case argued or submitted" -> decision {
+    authority cite "Ala. R. App. P. 39(k)"
+  }
+}
+
+decision decision: "Supreme Court decision" by court cite "Ala. R. App. P. 39(k)"
+{
+  note "The review is that generally employed by certiorari, ordinarily limited to the facts stated in the court of appeals' opinion unless the petitioner enlarged or modified them under Rule 39(d)(5), and includes the application of the law to the stated facts (Ala. R. App. P. 39(k)). No leading decision is named."
+  edge-decision-affirmed "Court of Civil Appeals affirmed" -> rehearing {
+    event DecisionFiled()
+    authority cite "Ala. R. App. P. 39(k)"
+  }
+  edge-decision-reversed "Reversed or remanded" -> rehearing {
+    event DecisionFiled()
+    authority cite "Ala. R. App. P. 39(k)"
+  }
+}
+
+decision rehearing: "Rehearing sought?" by applicant cite "Ala. R. App. P. 40(c)"
+{
+  note "A party who has not prevailed, and who filed a brief on original submission, may apply for rehearing, stating with particularity the points of law or facts overlooked or misapprehended, with a supporting brief (Ala. R. App. P. 40(a), (b)). The application and brief are filed within 14 days (2 weeks) of the date the decision is issued (Ala. R. App. P. 40(c)), each at most 3,000 words (Ala. R. App. P. 40(g)). Without an application, the certificate of judgment issues 18 days after the entry of judgment unless the time is shortened or enlarged by order (Ala. R. App. P. 41(a))."
+  edge-rehearing-none "No application" -> certificate-issued {
+    event MandateIssued()
+    authority cite "Ala. R. App. P. 41(a)"
+  }
+  edge-rehearing-sought "Application filed" -> rehearing-order {
+    event RehearingApplicationFiled()
+    authority cite "Ala. R. App. P. 40(c)"
+  }
+}
+
+decision rehearing-order: "Rehearing decided" by court cite "Ala. R. App. P. 41(a)(2)"
+{
+  note "A brief opposing the application is optional, filed within 14 days (2 weeks) after the application, at most 3,000 words, with no reply permitted (Ala. R. App. P. 40(f)). A timely application stays the certificate of judgment until its disposition; if the Supreme Court denies it, the certificate issues immediately, unless on a first application the court substantially modified its decision, when it issues 18 days after the order denying the application unless a second application is filed (Ala. R. App. P. 41(a)(2)). A second application is considered only if the first produced a reversal or substantial modification (Ala. R. App. P. 40(a)(3))."
+  edge-rehearing-order-denied "Rehearing denied" -> certificate-issued {
+    event MandateIssued()
+    authority cite "Ala. R. App. P. 41(a)(2)"
+  }
+  edge-rehearing-order-granted "Rehearing granted" -> rehearing-granted {
+    authority cite "Ala. R. App. P. 40(a)"
+  }
+}
+
+terminal review-not-sought: "Review not sought: the Court of Civil Appeals decision is final" outcome [final] cite "Ala. R. App. P. 41(a)"
+{
+  note "The Court of Civil Appeals' certificate of judgment issues under Rule 41(a)."
+}
+
+terminal review-denied: "Certiorari denied" outcome [final, loss] cite "Ala. R. App. P. 41(b)"
+{
+  note "Denial leaves the Court of Civil Appeals decision in place; its certificate of judgment issues immediately (Ala. R. App. P. 41(b)). Federal certiorari (28 U.S.C. § 1257) is not vendored and not modeled."
+}
+
+terminal certificate-issued: "Certificate of judgment issued" outcome [final] cite "Ala. R. App. P. 41(a)"
+{
+  note "The case returns to the court below on the Supreme Court's certificate of judgment."
+}
+
+terminal rehearing-granted: "Rehearing granted" outcome [neutral] cite "Ala. R. App. P. 40(a)"
+{
+  note "Proceedings on rehearing are not modeled."
+}

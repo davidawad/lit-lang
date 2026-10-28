@@ -1,0 +1,163 @@
+module bankr-nyw-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Bankr. W.D.N.Y. court's own periods, counted under FRBP 9006(a). The
+// FRBP periods are lit/frbp's and are not declared again. Every period
+// below binds only to the CURRENCY UNCONFIRMED May 13, 1997 rules
+// (sources/bankr-nyw/PROVENANCE.md), so each has a hole cite naming its
+// pinpoint and the value is the vendored text's, unverified; the values
+// predate the 2009 FRBP time amendments and are likely superseded.
+//
+// Stated in the rules but not declared: the small business election within
+// 60 days after the order for relief (LBR 1020-1), former FRBP 1020(a);
+// the 10 days to move to resolve a disputed trustee election (LBR
+// 2007-1.1(C)), the FRBP 2007.1 period; the 5 days to move to retax costs
+// (LBR 7054-1(A)), the FRBP 7054(b) review; the computation of the 30 days
+// of 11 U.S.C. § 362(e) from service (LBR 4001-1(B)), the statute's; the
+// 30-day threshold for an ex parte employment order (LBR 2090-1(K)) and the
+// 10 days' notice on which an order permitting withdrawal takes effect (LBR
+// 2091-1(C)), conditions rather than deadlines. The rules state no page
+// limit.
+/// An order for joint administration is entered (LBR 1015-1(B)).
+event JointAdministrationOrdered()
+/// The calendar at which an application for compensation is to be
+/// considered (LBR 2016-1(B)).
+event FeeApplicationCalendar()
+/// The FRBP 2002(f)(9) notice of the trustee's final report is mailed
+/// (LBR 2016-2(A)).
+event FinalReportNoticeMailed()
+/// A Notice of Substitution of Attorney is filed (LBR 2091-1(B)).
+event SubstitutionNoticed()
+/// Notice of a statement of proposed sale is sent (LBR 6004-1(B)).
+event SaleStatementNoticed()
+/// Notice of a statement of proposed abandonment is sent (LBR
+/// 6007-1(B)).
+event AbandonmentStatementNoticed()
+/// A copy of a tax claim estimated for want of returns is served on the
+/// debtor (LBR 6070-1(B)).
+event EstimatedTaxClaimServed()
+/// The 180-day period for filing governmental claims closes (LBR
+/// 6070-1(B)).
+event GovernmentalClaimPeriodClosed()
+/// The last day to answer a complaint (LBR 7055-1(B)).
+event AnswerDeadline()
+/// The return date of a motion (LBR 9013-1(B)).
+event ReturnDate()
+/// The summary of a chapter 7 trustee's final report and account is sent
+/// (LBR 9014-1(A)).
+event FinalReportSummarySent()
+/// An adversary proceeding is settled (LBR 9071-1(B)).
+event AdversarySettled()
+
+/// W.D.N.Y. LBR 1015-1(B): the party that obtained the order for joint
+/// administration files a consolidated matrix within 10 days of its entry.
+deadline consolidated-matrix-period: 10.days after JointAdministrationOrdered() counted_by frcp6 cite ?("W.D.N.Y. LBR 1015-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
+  forum frcp
+}
+
+/// W.D.N.Y. LBR 2016-1(B): every application for compensation is filed at
+/// least 25 days before the calendar at which it is to be considered.
+deadline fee-application-period: 25.days before FeeApplicationCalendar() counted_by frcp6 cite ?("W.D.N.Y. LBR 2016-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
+  forum frcp
+}
+
+/// W.D.N.Y. LBR 2016-2(A): a debtor's attorney who does not apply for an
+/// allowance before 15 days after the mailing of the FRBP 2002(f)(9) notice
+/// of the trustee's final report waives it.
+deadline debtor-attorney-fee-application-period: 15.days after FinalReportNoticeMailed() counted_by frcp6 cite ?("W.D.N.Y. LBR 2016-2(A), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
+  forum frcp
+}
+
+/// W.D.N.Y. LBR 2091-1(B): a successor attorney files a Rule 2016 Statement
+/// of Compensation within 10 days of the Notice of Substitution of Attorney.
+deadline successor-attorney-statement-period: 10.days after SubstitutionNoticed() counted_by frcp6 cite ?("W.D.N.Y. LBR 2091-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
+  forum frcp
+}
+
+/// W.D.N.Y. LBR 6004-1(B): a creditor may obtain a hearing on a proposed sale
+/// by filing a written demand within 20 days of the notice date.
+deadline sale-hearing-demand-period: 20.days after SaleStatementNoticed() counted_by frcp6 cite ?("W.D.N.Y. LBR 6004-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
+  forum frcp
+}
+
+/// W.D.N.Y. LBR 6007-1(B): a creditor may obtain a hearing on a proposed
+/// abandonment by filing a written demand within 20 days of the notice date.
+deadline abandonment-hearing-demand-period: 20.days after AbandonmentStatementNoticed() counted_by frcp6 cite ?("W.D.N.Y. LBR 6007-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
+  forum frcp
+}
+
+/// W.D.N.Y. LBR 6070-1(B): the debtor objects to a tax claim estimated for
+/// want of returns within 30 days of service of a copy of the claim.
+deadline estimated-tax-claim-objection-period: 30.days after EstimatedTaxClaimServed() counted_by frcp6 cite ?("W.D.N.Y. LBR 6070-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
+  forum frcp
+}
+
+/// W.D.N.Y. LBR 6070-1(B): if the debtor is not served with the estimated
+/// claim, the objection is filed within 30 days after the 180-day period for
+/// governmental claims under § 502 closes.
+deadline unserved-tax-claim-objection-period: 30.days after GovernmentalClaimPeriodClosed() counted_by frcp6 cite ?("W.D.N.Y. LBR 6070-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
+  forum frcp
+}
+
+/// W.D.N.Y. LBR 7055-1(B): a plaintiff entitled to a default requests entry of
+/// default and judgment within 60 days after the last day to answer, or the
+/// proceeding is calendared for dismissal.
+deadline default-request-period: 60.days after AnswerDeadline() counted_by frcp6 cite ?("W.D.N.Y. LBR 7055-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
+  forum frcp
+}
+
+/// W.D.N.Y. LBR 9013-1(B): except as a rule or order provides, notices of
+/// motion with supporting papers are served and filed at least 5 days before
+/// the return date (8 days if served by mail).
+deadline motion-service-period: 5.days before ReturnDate() counted_by frcp6 cite ?("W.D.N.Y. LBR 9013-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
+  forum frcp
+}
+
+/// W.D.N.Y. LBR 9014-1(A), (C): an objection to a chapter 7 trustee's final
+/// report and account is filed and served on the United States Trustee
+/// within 15 days of the date the summary is sent; no dividend is paid until
+/// then.
+deadline final-report-objection-period: 15.days after FinalReportSummarySent() counted_by frcp6 cite ?("W.D.N.Y. LBR 9014-1(A), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
+  forum frcp
+}
+
+/// W.D.N.Y. LBR 9071-1(B): when an adversary proceeding is settled, the
+/// parties file a signed agreement for judgment or stipulation of dismissal
+/// within 30 days, or the court may dismiss it.
+deadline settlement-filing-period: 30.days after AdversarySettled() counted_by frcp6 cite ?("W.D.N.Y. LBR 9071-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion served and filed" by applicant cite ?("W.D.N.Y. LBR 9013-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
+  note "Except as a rule or order provides, a notice of motion with supporting papers is served and filed at least 5 days before the return date, 8 if served by mail (LBR 9013-1(B)); the value is the CURRENCY UNCONFIRMED 1997 text. The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-response "Discretionary response served" -> responded {
+    authority cite ?("W.D.N.Y. LBR 9013-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments")
+  }
+  edge-motion-filed-unopposed "No response; matter heard on the return date" -> ruling {
+    authority cite ?("W.D.N.Y. LBR 9013-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments")
+  }
+}
+
+state responded: "Response served" by opponent cite ?("W.D.N.Y. LBR 9013-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
+  note "Responses are discretionary under the 1997 text (LBR 9013-1(B)); its current form is unverified."
+  edge-responded-hearing "Hearing held on the return date" -> ruling {
+    authority cite ?("W.D.N.Y. LBR 9013-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments")
+  }
+}
+
+decision ruling: "Motion decided" by court cite ?("W.D.N.Y. LBR 9013-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
+  note "The court decides the motion on the return date (LBR 9013-1(B))."
+  edge-ruling-granted "Granted" -> decided {
+    authority cite ?("W.D.N.Y. LBR 9013-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments")
+  }
+  edge-ruling-denied "Denied" -> decided {
+    authority cite ?("W.D.N.Y. LBR 9013-1(B), May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments")
+  }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite ?("W.D.N.Y. LBR 1001-1, May 13, 1997 rules: CURRENCY UNCONFIRMED (no later edition date; the court's HTML rules not vendored); the value is the vendored text, unverified and predating the 2009 FRBP time amendments") {
+  note "The Local Rules of Bankruptcy Procedure govern all cases pending or filed in the district under title 11 (the adoption order and LBR 1001-1; the CURRENCY UNCONFIRMED 1997 text)."
+}

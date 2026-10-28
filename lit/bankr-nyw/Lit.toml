@@ -1,0 +1,50 @@
+# The Local Rules of Bankruptcy Procedure of the U.S. Bankruptcy Court for
+# the Western District of New York over lit/frbp (FRBP 9029(a); 28 U.S.C.
+# § 2075): it declares only the periods the rules themselves state and
+# re-encodes no FRBP period. It is a base package, not a `kind =
+# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011 for
+# `bankr-nyw`), as for lit/bankr-dc. Each period is counted under FRBP
+# 9006(a), the FRCP 6(a) method (core's frcp6).
+#
+# The only vendored text is the court's undated "Local Rules as one PDF",
+# which opens with the order adopting the rules effective May 13, 1997 and
+# carries no later edition date: CURRENCY UNCONFIRMED (sources/bankr-nyw/
+# PROVENANCE.md; the court's per-rule HTML pages are not vendored). Its
+# periods predate the 2009 FRBP time amendments (10, 15, 20 and 25 days), so
+# they are likely superseded. Every period therefore has a hole cite naming
+# its pinpoint, the value the vendored text's, unverified, as for the
+# CURRENCY UNCONFIRMED layer of lit/bankr-pr. The package runs from the
+# adoption date; a query before May 13, 1997 is a hole in the corpus.
+[package]
+name = "bankr-nyw-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-nyw-local-rules"
+forum = "bankr-nyw"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the Western District of New York: Local Rules of Bankruptcy Procedure"
+description = "The Bankr. W.D.N.Y. Local Rules of Bankruptcy Procedure as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp), every period a hole pending a current text (the vendored May 13, 1997 rules are CURRENCY UNCONFIRMED): joint-administration matrices, fee applications, a successor attorney's compensation statement, demands for a hearing on sales and abandonments, objections to estimated tax claims, default requests, motion practice (LBR 9013-1), objections to a chapter 7 trustee's final report and adversary settlements."
+in_force = "1997-05-13"
+known_at = "2026-10-28"
+unknown_before = "1997-05-13"
+jurisdiction = "U.S. Bankruptcy Court for the Western District of New York"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.nywb-lbr]
+title = "Local Rules of Bankruptcy Procedure of the United States Bankruptcy Court for the Western District of New York (adopted effective May 13, 1997; undated PDF; CURRENCY UNCONFIRMED)"
+url = "https://www.nywb.uscourts.gov/sites/nywb/files/Local%20Rules.pdf"
+path = "sources/bankr-nyw/nyw-local-rules.txt"
+path_sha256 = "09cf7d589970e4da57cf4daec206c0da7865a656c4729e0e89c17042d5216fdc"
+sha256 = "4fee661037c8b2c546e6943dbd2ebdb5aff2f6a7c007b916d51b1cf1d33b5bcf"
+as_of = "1997-05-13"

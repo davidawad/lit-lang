@@ -1,0 +1,50 @@
+# The Northern District of West Virginia's Local Rules of Criminal
+# Procedure (LR Cr P) as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods the LR Cr P
+# themselves state and re-encodes no FRCrimP, Speedy Trial Act or FRAP
+# 4(b) period (those are lit/frcrimp's). Each period is counted under
+# FRCrimP 45(a), which governs "any local rule". The rules are the Local
+# Rules effective March 2018, which the court presents as current
+# (sources/wvnd; an old edition, recorded as such in its PROVENANCE).
+# Federal habeas is lit/habeas's; an appeal to the Fourth Circuit is
+# lit/frcrimp's and lit/ca4's.
+[package]
+name = "wvnd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "wvnd-criminal-local-rules"
+forum = "wvnd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Northern District of West Virginia: Local Rules of Criminal Procedure"
+description = "The Northern District of West Virginia's Local Rules of Criminal Procedure as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): waiver of presence at arraignment, standard and reciprocal discovery, the complex-case conference and schedule, the conference on additional discovery, 404(b), Giglio and Roviaro disclosure, witness and exhibit lists, refusal of government disclosures, motions in limine, jury instructions and voir dire, pretrial motions and responses, and responses to post-trial motions."
+in_force = "2018-03-01"
+known_at = "2026-10-28"
+unknown_before = "2018-03-01"
+jurisdiction = "United States District Court, N.D. W. Va. (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "wvnd-lrcrp"
+issuer = "United States District Court for the Northern District of West Virginia"
+date = "2018-03-01"
+designation = "Local Rules (effective March 2018), Local Rules of Criminal Procedure"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.wvnd-lrcrp]
+title = "Local Rules of the United States District Court for the Northern District of West Virginia (effective March 2018): Local Rules of Criminal Procedure"
+url = "http://www.wvnd.uscourts.gov/sites/wvnd/files/NDWV%20Local%20Rules%202018%20MASTER.pdf"
+path = "sources/wvnd/wvnd-local-criminal-rules-2018-03-sectioned.txt"
+path_sha256 = "55d6bc315bba2c5352e0aa72b98de1e6cedf42281542ff02ddc0f3d7d3f99ffd"
+sha256 = "7b5520cb858b057cd98a1b54a6954b7e4a9ccf590a8f96934dfbc647abe249e9"
+as_of = "2018-03-01"
+cite_prefixes = ["N.D. W. Va. LR Cr P"]
+section_heading = "LR Cr P {n}"

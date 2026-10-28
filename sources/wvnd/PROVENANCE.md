@@ -13,3 +13,9 @@
 - Derived in the pod (lg-f3q8.32) from `wvnd/wvnd-local-rules-2018-03.txt` (extract sha256 2cb6b762a3f170542b33fa7adb251106a01ef5647b15365743aee6b471c02e64); nothing fetched. One `## LR Civ P <n>` line is inserted right before each Local Rule of Civil Procedure's own body heading line `LR Civ P <n>. <title>` (some after a form feed): 35 markers, LR Civ P 1.01 through LR Civ P 78.01. The table of contents and the General, Criminal and Prisoner Litigation rules are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LR Civ P /d'`) restores the extract byte for byte.
 - Edition: as the extract, effective March 2018.
 - Sectioned sha256 2ac98eb1735026721b26eb16aecdeef4cccd43ef801943ebb4b697180329fff5 (the `path_sha256` pinned by `lit/wvnd/Lit.toml`).
+
+### `wvnd/wvnd-local-criminal-rules-2018-03-sectioned.txt` — N.D. W. Va. Local Rules (March 2018), criminal rules sectioned
+
+- Derived in the pod (lg-gddt.12) from `wvnd/wvnd-local-rules-2018-03.txt` (extract sha256 2cb6b762a3f170542b33fa7adb251106a01ef5647b15365743aee6b471c02e64); nothing fetched. One `## LR Cr P <n>` line is inserted right before each Local Rule of Criminal Procedure's own body heading line `LR Cr P <n>. <title>` (from extract line 5121 on): 23 markers, LR Cr P 1.01 through LR Cr P 58.01. The table of contents, the in-body cross-references and the General, Civil and Prisoner Litigation rules are unmarked (the civil rules are sectioned separately in `wvnd/wvnd-local-rules-2018-03-sectioned.txt`). Rule text was not edited: deleting the marker lines (`sed '/^## LR Cr P /d'`) restores the extract byte for byte.
+- Edition: as the extract, effective March 2018 (OLD EDITION, presented by the court as current).
+- Sectioned sha256 55d6bc315bba2c5352e0aa72b98de1e6cedf42281542ff02ddc0f3d7d3f99ffd (the `path_sha256` pinned by `lit/wvnd-criminal/Lit.toml`).

@@ -1,0 +1,163 @@
+module wvnd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Northern District of West Virginia's own criminal periods. Stated in
+// the rules but not declared: the 14 days to give the probation officer
+// objections to the presentence report (LR Cr P 32.01(d)), which restate
+// FRCrimP 32(f)(1); post-trial motions within 14 days of the verdict (LR
+// Cr P 47.01(b)), which restate FRCrimP 29(c)(1), 33(b)(2) and 34(b);
+// sentencing memoranda received three days before the hearing, excluding
+// holidays and weekends (LR Cr P 32.01(f)), counted in business days,
+// which frcrimp45 does not count; and responses to motions in limine one
+// day before trial where no pretrial conference is held, which LR Cr P
+// 24.01 attributes to FRCrimP 47. LR Cr P 45.01 makes the deadlines of LR
+// Cr P 16.07, 16.08 and 47.01 deadlines for hand, fax or CM/ECF delivery
+// and moves a mailing three days earlier; the triggers below carry no
+// service method, so none is applied. The outline's flow (arrest to
+// judgment) is lit/frcrimp's; its decisions have no vendored reporter text
+// and are removed.
+/// The arraignment (LR Cr P 10.01(c), 16.03, 16.12).
+event Arraignment()
+/// Defense counsel requests standard discovery (LR Cr P 16.01(d)).
+event StandardDiscoveryRequested()
+/// The defendant receives discovery materials from the government (LR Cr P
+/// 16.01(e)).
+event GovernmentDiscoveryReceived()
+/// The Court designates the case as complex (LR Cr P 16.01(h)).
+event ComplexDesignation()
+/// The parties confer on a Proposed Complex Case Schedule (LR Cr P
+/// 16.01(h)).
+event ComplexConference()
+/// Trial (LR Cr P 16.06, 16.07, 16.08, 24.01).
+event Trial()
+/// The pretrial conference (LR Cr P 24.01).
+event PretrialConference()
+/// Defense counsel receives the LR Cr P 16.01 materials (LR Cr P 47.01(a)).
+event DiscoveryMaterialsReceived()
+/// A pretrial motion is served (LR Cr P 47.01(a)).
+event PretrialMotionServed()
+/// A post-trial motion is filed (LR Cr P 47.01(b)).
+event PostTrialMotionFiled()
+
+/// LR Cr P 10.01(c): a written waiver of the defendant's presence at
+/// arraignment, signed by the defendant, is submitted not later than four
+/// days before the arraignment.
+deadline arraignment-waiver-period: 4.days before Arraignment() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 10.01(c)"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 16.01(d): the government provides standard FRCrimP 16(a)
+/// discovery within seven days of the standard discovery request.
+deadline standard-discovery-period: 7.days after StandardDiscoveryRequested() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.01(d)"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 16.01(e): the defendant provides all reciprocal discovery within
+/// seven days of receiving the government's discovery.
+deadline reciprocal-discovery-period: 7.days after GovernmentDiscoveryReceived() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.01(e)"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 16.01(h)(2): in a case designated complex, the parties confer
+/// to develop a Proposed Complex Case Schedule not later than seven days
+/// after the designation.
+deadline complex-conference-period: 7.days after ComplexDesignation() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.01(h)"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 16.01(h)(3): the parties file the Proposed Complex Case
+/// Schedule no later than seven days after conferring.
+deadline complex-schedule-period: 7.days after ComplexConference() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.01(h)"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 16.03: if additional discovery or inspection is sought, defense
+/// counsel confers with the Assistant United States Attorney within 14
+/// days of the arraignment, or a later time the Court sets for pretrial
+/// motions.
+deadline additional-discovery-conference-period: 14.days after Arraignment() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.03"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 16.06: no later than 14 days before trial, the government
+/// discloses notice of Rule 404(b) evidence, Giglio material and Roviaro
+/// information.
+deadline impeachment-disclosure-period: 14.days before Trial() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.06"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 16.07: no later than 14 days before trial, each party files and
+/// serves a list of probable witnesses.
+deadline witness-list-period: 14.days before Trial() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.07"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 16.08: no later than 14 days before trial, each party files and
+/// serves a list of trial exhibits.
+deadline exhibit-list-period: 14.days before Trial() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.08"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 16.12: a government disclosure is treated as relief the
+/// defendant sought and the Court granted unless the defendant files,
+/// within five days of arraignment, a pleading refusing it.
+deadline disclosure-refusal-period: 5.days after Arraignment() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 16.12"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 24.01: motions in limine, jury instructions and voir dire are
+/// filed and served ten days before the pretrial conference.
+deadline limine-period: 10.days before PretrialConference() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 24.01"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 24.01: responses are filed at least one day before the pretrial
+/// conference.
+deadline limine-response-period: 1.days before PretrialConference() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 24.01"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 24.01: if no pretrial conference is held, motions in limine,
+/// jury instructions and voir dire are filed and served seven days before
+/// trial.
+deadline limine-no-conference-period: 7.days before Trial() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 24.01"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 47.01(a): unless otherwise ordered, all pretrial motions, a bill
+/// of particulars under FRCrimP 7(f) included, are filed within 14 days
+/// after defense counsel receives the LR Cr P 16.01 materials; an extension
+/// is sought by written application within the same period.
+deadline pretrial-motion-period: 14.days after DiscoveryMaterialsReceived() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 47.01(a)"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 47.01(a): the opposing party files a response within seven days
+/// of service of a pretrial motion.
+deadline pretrial-response-period: 7.days after PretrialMotionServed() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 47.01(a)"
+{
+  forum frcrimp
+}
+
+/// LR Cr P 47.01(b): unless the Court extends the time, the non-moving
+/// party files a response within 14 days following the filing of a
+/// post-trial motion.
+deadline post-trial-response-period: 14.days after PostTrialMotionFiled() counted_by frcrimp45 cite "N.D. W. Va. LR Cr P 47.01(b)"
+{
+  forum frcrimp
+}

@@ -17,6 +17,7 @@
 
 - Source: https://www.nmid.uscourts.gov/sites/nmid/files/documents/localrules/LCRR20040101.pdf (official site; 7 pages, sha256 fd8584adf4a4787abd2f2f79b11d49d8192fe7729b8a5f7c9a1b4c1d0404318f).
 - Edition: Criminal Local Rules 'Effective January 1, 2004' (Rev. 01/04, title page), the file LCRR20040101 linked at https://www.nmid.uscourts.gov/local-and-federal-rules. OLD EDITION: the court presents it as current. robots.txt of www.nmid.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): nmid-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 157e37d65f19be8b450358de65715524b3895693b12d3b0b99c5913bfbb1eb73. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `fed-dnmi/original/dnmi-criminal-local-rules-2004-01-01.pdf` as served (sha256 fd8584adf4a4787abd2f2f79b11d49d8192fe7729b8a5f7c9a1b4c1d0404318f); extraction sha256 157e37d65f19be8b450358de65715524b3895693b12d3b0b99c5913bfbb1eb73.

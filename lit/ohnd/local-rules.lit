@@ -1,0 +1,299 @@
+module ohnd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Northern District of Ohio's own civil periods and limits, computed
+// under FRCP 6(a), which governs a period stated in a local rule. Rules that
+// state no period or limit, or one this layer cannot count, stay out: the
+// court's aim to rule on a motion within 30 or 60 days of its coming at
+// issue (LR 7.3) and the Social Security report and decision targets of 285
+// and 105 days (LR 16.3.1(i), (j)), which bind no party; the case
+// management conference's general timing (LR 16.1(b)(2)), keyed to the
+// later of two events; the ADR, early neutral evaluation and mediation
+// periods (LR 16.4 to 16.6), which run from notices and sessions the
+// referring order sets; the videotape deposition periods (LR 32.1); the
+// receiver's inventory (LR 66.1); the consent notice (LR 73.1); attorney
+// admission and discipline (LR 83.5, 83.7); the pro hac vice fee of $120.00
+// (LR 83.5(h)), a fee the court may change by order; and the admiralty
+// supplemental rules. The earlier N.D. Ohio outline's FRCP flow and its
+// Supreme Court decisions (Twombly, Iqbal, Celotex, Anderson v. Liberty
+// Lobby, Matsushita, Frow v. De La Vega) are FRCP authority and belong to
+// lit/frcp and lit/frap; no reporter text is vendored, so they are removed
+// here.
+/// A memorandum relating to a dispositive motion in an expedited-track
+/// case: at most 10 pages without prior approval for good cause (LR
+/// 7.1(f)).
+limit dispositive-memorandum-expedited {
+  pages <= 10 cite "N.D. Ohio L.R. 7.1(f)"
+} cite "N.D. Ohio L.R. 7.1(f)"
+
+/// A memorandum relating to a dispositive motion in an administrative,
+/// standard or unassigned case: at most 20 pages (LR 7.1(f)).
+limit dispositive-memorandum {
+  pages <= 20 cite "N.D. Ohio L.R. 7.1(f)"
+} cite "N.D. Ohio L.R. 7.1(f)"
+
+/// A memorandum relating to a dispositive motion in a complex-track case:
+/// at most 30 pages (LR 7.1(f)).
+limit dispositive-memorandum-complex {
+  pages <= 30 cite "N.D. Ohio L.R. 7.1(f)"
+} cite "N.D. Ohio L.R. 7.1(f)"
+
+/// A memorandum relating to a dispositive motion in a mass tort case: at
+/// most 40 pages (LR 7.1(f)).
+limit dispositive-memorandum-mass-tort {
+  pages <= 40 cite "N.D. Ohio L.R. 7.1(f)"
+} cite "N.D. Ohio L.R. 7.1(f)"
+
+/// A memorandum relating to any other motion: at most 15 pages (LR
+/// 7.1(f)).
+limit non-dispositive-memorandum {
+  pages <= 15 cite "N.D. Ohio L.R. 7.1(f)"
+} cite "N.D. Ohio L.R. 7.1(f)"
+
+/// A pleading or other document filed by an unrepresented party or a
+/// prisoner, and the initial responsive pleading to it: at most 30 pages
+/// excluding attachments, cover pages, tables of content and certificates
+/// of service, absent leave (LR 3.16).
+limit unrepresented-party-filing {
+  pages <= 30 cite "N.D. Ohio L.R. 3.16"
+} cite "N.D. Ohio L.R. 3.16"
+
+/// The plaintiff's or the defendant's merits brief in a Social Security
+/// review: at most 25 pages (LR 16.3.1(e)(4)).
+limit social-security-brief {
+  pages <= 25 cite "N.D. Ohio L.R. 16.3.1(e)"
+} cite "N.D. Ohio L.R. 16.3.1(e)"
+
+/// The plaintiff's reply brief in a Social Security review: at most 10
+/// pages (LR 16.3.1(e)(4)).
+limit social-security-reply {
+  pages <= 10 cite "N.D. Ohio L.R. 16.3.1(e)"
+} cite "N.D. Ohio L.R. 16.3.1(e)"
+
+/// A dispositive motion is served (LR 7.1(d); LR 16.1(b)(5) defines the
+/// class).
+event DispositiveMotionServed() paper dispositive-memorandum
+/// A memorandum in opposition to a dispositive motion is served (LR
+/// 7.1(e)).
+event DispositiveOppositionServed() paper dispositive-memorandum
+/// A non-dispositive motion is served (LR 7.1(d)).
+event NonDispositiveMotionServed() paper non-dispositive-memorandum
+/// A memorandum in opposition to a non-dispositive motion is served (LR
+/// 7.1(e)).
+event NonDispositiveOppositionServed() paper non-dispositive-memorandum
+/// Service is perfected, or a FRCP 4(d) waiver request sent, in an action
+/// in which every defendant is in default of answer (LR 16.3(a)(2)).
+event ServicePerfectedAllInDefault()
+/// The Case Management Conference is held (LR 16.3(a)(4)).
+event CaseManagementConferenceHeld()
+/// The discovery cut-off date set by the court passes (LR 37.1(b)).
+event DiscoveryCutoff()
+/// The court sends notice by CM/ECF of a complaint for review of a
+/// decision of the Commissioner of Social Security (LR 16.3.1(b)).
+event SocialSecurityComplaintNoticed()
+/// The certified administrative record is filed (LR 16.3.1(e)(1)).
+event AdministrativeRecordFiled()
+/// The plaintiff's merits brief is filed (LR 16.3.1(e)(2)).
+event SocialSecurityPlaintiffBriefFiled() paper social-security-brief
+/// The Social Security Administration's opposition brief is filed (LR
+/// 16.3.1(e)(3)).
+event SocialSecurityDefendantBriefFiled() paper social-security-brief
+/// A magistrate judge's order determining a FRCP 72(a) matter is served
+/// (LR 72.3(a)).
+event MagistrateOrderServed()
+/// A magistrate judge's FRCP 72(b) proposed findings, recommendations or
+/// report is served (LR 72.3(b)).
+event MagistrateReportServed()
+/// Objections to a magistrate judge's report are served (LR 72.3(b)).
+event MagistrateObjectionsServed()
+
+/// LR 7.1(d): unless the judicial officer orders otherwise, a party
+/// opposing a dispositive motion serves and files its memorandum in
+/// opposition within thirty days after service of the motion.
+deadline dispositive-opposition-period: 30.days after DispositiveMotionServed() counted_by frcp6 cite "N.D. Ohio L.R. 7.1(d)"
+{
+  forum frcp
+}
+
+/// LR 7.1(d): the opposition to a non-dispositive motion is due within
+/// fourteen days after service of the motion.
+deadline non-dispositive-opposition-period: 14.days after NonDispositiveMotionServed() counted_by frcp6 cite "N.D. Ohio L.R. 7.1(d)"
+{
+  forum frcp
+}
+
+/// LR 7.1(e): the movant may serve and file a reply supporting a
+/// dispositive motion within fourteen days after service of the
+/// memorandum in opposition.
+deadline dispositive-reply-period: 14.days after DispositiveOppositionServed() counted_by frcp6 cite "N.D. Ohio L.R. 7.1(e)"
+{
+  forum frcp
+}
+
+/// LR 7.1(e): the reply supporting a non-dispositive motion is due within
+/// seven days after service of the memorandum in opposition.
+deadline non-dispositive-reply-period: 7.days after NonDispositiveOppositionServed() counted_by frcp6 cite "N.D. Ohio L.R. 7.1(e)"
+{
+  forum frcp
+}
+
+/// LR 16.3(a)(2): when every defendant is in default of answer, the
+/// plaintiff seeks default judgment within ninety days of perfection of
+/// service (or of sending a FRCP 4(d) waiver request), or shows cause why
+/// the action should not be dismissed for want of prosecution.
+deadline default-judgment-period: 90.days after ServicePerfectedAllInDefault() counted_by frcp6 cite "N.D. Ohio L.R. 16.3(a)"
+{
+  forum frcp
+}
+
+/// LR 16.3(a)(4): counsel for each party files and serves a proposed
+/// agenda at least seven days before the Case Management Conference.
+deadline case-management-agenda: 7.days before CaseManagementConferenceHeld() counted_by frcp6 cite "N.D. Ohio L.R. 16.3(a)"
+{
+  forum frcp
+}
+
+/// LR 37.1(b): no discovery dispute may be brought to the court's
+/// attention, and no motion to compel filed, more than ten days after the
+/// discovery cut-off date.
+deadline discovery-dispute-cutoff: 10.days after DiscoveryCutoff() counted_by frcp6 cite "N.D. Ohio L.R. 37.1(b)"
+{
+  forum frcp
+}
+
+/// LR 16.3.1(d): the certified administrative record, which serves as the
+/// agency's answer, is due sixty days after notice of the complaint is
+/// sent, unless a motion to dismiss is filed.
+deadline administrative-record-period: 60.days after SocialSecurityComplaintNoticed() counted_by frcp6 cite "N.D. Ohio L.R. 16.3.1(d)"
+{
+  forum frcp
+}
+
+/// LR 16.3.1(e)(1): the plaintiff's merits brief is due within 45 days of
+/// the filing of the administrative record.
+deadline social-security-plaintiff-brief-period: 45.days after AdministrativeRecordFiled() counted_by frcp6 cite "N.D. Ohio L.R. 16.3.1(e)"
+{
+  forum frcp
+}
+
+/// LR 16.3.1(e)(2): the Social Security Administration's opposition is due
+/// 45 days after the plaintiff's brief is filed.
+deadline social-security-defendant-brief-period: 45.days after SocialSecurityPlaintiffBriefFiled() counted_by frcp6 cite "N.D. Ohio L.R. 16.3.1(e)"
+{
+  forum frcp
+}
+
+/// LR 16.3.1(e)(3): the plaintiff's reply brief, if any, is due 14 days
+/// after the defendant's brief is filed.
+deadline social-security-reply-period: 14.days after SocialSecurityDefendantBriefFiled() counted_by frcp6 cite "N.D. Ohio L.R. 16.3.1(e)"
+{
+  forum frcp
+}
+
+/// LR 72.3(a): a party may appeal a magistrate judge's FRCP 72(a) order
+/// within fourteen days after service of the order.
+deadline magistrate-order-appeal-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "N.D. Ohio L.R. 72.3(a)"
+{
+  forum frcp
+}
+
+/// LR 72.3(b): a party may object to a magistrate judge's FRCP 72(b)
+/// proposed findings, recommendations or report within fourteen days after
+/// being served with it; failure to object in time waives subsequent
+/// review absent good cause.
+deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6 cite "N.D. Ohio L.R. 72.3(b)"
+{
+  forum frcp
+}
+
+/// LR 72.3(b): any party may respond to another party's objections within
+/// fourteen days after being served with them.
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionsServed() counted_by frcp6 cite "N.D. Ohio L.R. 72.3(b)"
+{
+  forum frcp
+}
+
+test "dispositive opposition: 30 days after service of the motion" cite "N.D. Ohio L.R. 7.1(d)"
+{
+  given DispositiveMotionServed() on 2026-11-02
+  expect deadline(dispositive-opposition-period) == 2026-12-02
+}
+
+test "non-dispositive opposition: 14 days after service of the motion" cite "N.D. Ohio L.R. 7.1(d)"
+{
+  given NonDispositiveMotionServed() on 2026-11-02
+  expect deadline(non-dispositive-opposition-period) == 2026-11-16
+}
+
+test "dispositive reply: 14 days after the opposition" cite "N.D. Ohio L.R. 7.1(e)"
+{
+  given DispositiveOppositionServed() on 2026-11-02
+  expect deadline(dispositive-reply-period) == 2026-11-16
+}
+
+test "non-dispositive reply: 7 days after the opposition" cite "N.D. Ohio L.R. 7.1(e)"
+{
+  given NonDispositiveOppositionServed() on 2026-11-02
+  expect deadline(non-dispositive-reply-period) == 2026-11-09
+}
+
+test "default judgment: 90 days after service, a Sunday rolls to Monday" cite "N.D. Ohio L.R. 16.3(a)"
+{
+  given ServicePerfectedAllInDefault() on 2026-11-02
+  expect deadline(default-judgment-period) == 2027-02-01
+}
+
+test "case management agenda: 7 days before the conference" cite "N.D. Ohio L.R. 16.3(a)"
+{
+  given CaseManagementConferenceHeld() on 2026-11-20
+  expect deadline(case-management-agenda) == 2026-11-13
+}
+
+test "discovery disputes: 10 days after the cut-off" cite "N.D. Ohio L.R. 37.1(b)"
+{
+  given DiscoveryCutoff() on 2026-11-02
+  expect deadline(discovery-dispute-cutoff) == 2026-11-12
+}
+
+test "administrative record: 60 days after notice, New Year's Day rolls to Monday" cite "N.D. Ohio L.R. 16.3.1(d)"
+{
+  given SocialSecurityComplaintNoticed() on 2026-11-02
+  expect deadline(administrative-record-period) == 2027-01-04
+}
+
+test "social security plaintiff brief: 45 days after the record" cite "N.D. Ohio L.R. 16.3.1(e)"
+{
+  given AdministrativeRecordFiled() on 2026-11-02
+  expect deadline(social-security-plaintiff-brief-period) == 2026-12-17
+}
+
+test "social security defendant brief: 45 days after the plaintiff's brief" cite "N.D. Ohio L.R. 16.3.1(e)"
+{
+  given SocialSecurityPlaintiffBriefFiled() on 2026-11-02
+  expect deadline(social-security-defendant-brief-period) == 2026-12-17
+}
+
+test "social security reply: 14 days after the defendant's brief" cite "N.D. Ohio L.R. 16.3.1(e)"
+{
+  given SocialSecurityDefendantBriefFiled() on 2026-11-02
+  expect deadline(social-security-reply-period) == 2026-11-16
+}
+
+test "magistrate order appeal: 14 days after service" cite "N.D. Ohio L.R. 72.3(a)"
+{
+  given MagistrateOrderServed() on 2026-11-02
+  expect deadline(magistrate-order-appeal-period) == 2026-11-16
+}
+
+test "magistrate report objections: 14 days after service" cite "N.D. Ohio L.R. 72.3(b)"
+{
+  given MagistrateReportServed() on 2026-11-02
+  expect deadline(magistrate-report-objection-period) == 2026-11-16
+}
+
+test "magistrate objection response: 14 days after service of the objections" cite "N.D. Ohio L.R. 72.3(b)"
+{
+  given MagistrateObjectionsServed() on 2026-11-02
+  expect deadline(magistrate-objection-response-period) == 2026-11-16
+}

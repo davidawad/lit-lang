@@ -31,12 +31,12 @@ state judgment-rcfc58-entered: "Judgment Entered (Separate Document)" cite "RCFC
   }
 }
 
-decision post-trial-motion-window: "File a RCFC 59 Motion?" by applicant cite "RCFC 59(a)-(b); 59(e)"
+decision post-trial-motion-window: "File a RCFC 59 Motion?" by applicant cite ?("RCFC 59(a)-(b), (e): the vendored sources/rcfc.txt sets RCFC 59(c)-(f) under its RCFC 58.1 heading, so it cannot show the subdivision")
 {
   group trial-post-trial-group
   note "A motion for a new trial or reconsideration (RCFC 59(a)(1)(A)/(B)), or upon a showing of fraud/wrong/injustice to the United States specifically (RCFC 59(a)(1)(C), which has NO FRCP counterpart and is a uniquely government-protective ground), or a motion to alter/amend the judgment (RCFC 59(e)), must be filed no later than 28 days after entry of judgment. RCFC 6(b) forbids the court from extending this deadline. A response may be filed only at the court's request (RCFC 59(f))."
   e-posttrialwindow-motion "File a RCFC 59 motion for new trial, reconsideration, or to alter/amend the judgment" -> rule59-motion-ruling {
-    authority cite "RCFC 59(a)-(b); 59(e)"
+    authority cite ?("RCFC 59(a)-(b), (e): the vendored sources/rcfc.txt sets RCFC 59(c)-(f) under its RCFC 58.1 heading, so it cannot show the subdivision")
     effort 50.hours
     cost 0.usd
     within post-judgment-motion-period {
@@ -50,7 +50,7 @@ decision post-trial-motion-window: "File a RCFC 59 Motion?" by applicant cite "R
   }
 }
 
-chance rule59-motion-ruling: "Court Rules on RCFC 59 Motion" by office discretion cite "RCFC 59(a); 59(d)"
+chance rule59-motion-ruling: "Court Rules on RCFC 59 Motion" by office discretion cite ?("RCFC 59(a), (d): the vendored sources/rcfc.txt sets RCFC 59(c)-(f) under its RCFC 58.1 heading, so it cannot show the subdivision")
 {
   group trial-post-trial-group
   note "Outcome distribution authored at 0.15 new-trial-granted / 0.10 judgment-amended / 0.75 denied -- TEACHING ESTIMATE, reflecting that post-trial motions to overturn the court's own recent findings face real institutional headwind. The court may also order a new trial ON ITS OWN within 28 days of judgment for any reason that would justify granting one on a party's motion (RCFC 59(d))."
@@ -60,7 +60,7 @@ chance rule59-motion-ruling: "Court Rules on RCFC 59 Motion" by office discretio
     tags [loop]
   }
   e-rule59-amend "Judgment amended" -> judgment-rcfc58-entered p 0.1 {
-    authority cite "RCFC 59(e)"
+    authority cite ?("RCFC 59(e): the vendored sources/rcfc.txt sets RCFC 59(c)-(f) under its RCFC 58.1 heading, so it cannot show the subdivision")
     note "TEACHING ESTIMATE, see sibling edge note."
     tags [loop]
   }

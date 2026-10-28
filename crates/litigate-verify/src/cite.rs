@@ -25,7 +25,7 @@ use crate::Context;
 use litigate_base::{Diagnostic, DiagnosticCode as C, Profile, Severity, Span};
 use litigate_engine::cite::{parse_cite_string, CiteGrammar, Family, SourceCorpus};
 use litigate_engine::model::Pack;
-use litigate_lower::source_map::{Citations, L0Section, Pin};
+use litigate_lower::source_map::{subdivided, Citations, L0Section, Pin};
 use litigate_sema::hir::DayUnit;
 use litigate_sema::Hole;
 use std::borrow::Cow;
@@ -764,11 +764,16 @@ fn section(
         .lookup_all(&s.heading)
         .iter()
         .any(|(file, _)| file == path);
-    if found && unverified.is_none() {
+    if found
+        && unverified.is_none()
+        && subdivided(corpus, path, &s.heading, &s.pinpoint, text)
+    {
         return None;
     }
     let (why, fix) = unverified.unwrap_or_else(|| {
-        let why = if corpus.has_file(path) {
+        let why = if found {
+            format!("`{text}` has a pinpoint the section does not write")
+        } else if corpus.has_file(path) {
             format!("`{path}` has no `## {}` heading", s.heading)
         } else {
             format!("`{path}` is not in the vendored source corpus")

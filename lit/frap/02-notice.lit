@@ -147,7 +147,7 @@ state notice-of-appeal-filed: "Notice of Appeal Filed" by office cite "FRAP 3(a)
     authority cite "FRAP 3(c); FRAP 3(e)"
   }
   edge-notice-of-appeal-filed-docketed-in-court-of-appeals "Notice complies — docketed" -> docketed-in-court-of-appeals {
-    authority cite "FRAP 3(d); FRAP 12(a); FRAP 12(b)(3)"
+    authority cite "FRAP 3(d); FRAP 12(a); FRAP 12(b)"
   }
 }
 
@@ -209,7 +209,7 @@ chance post-deadline-relief-motion: "Motion to Extend or Reopen Time" by examine
   }
 }
 
-state docketed-in-court-of-appeals: "Appeal Docketed" by applicant cite "FRAP 3(d); FRAP 12(a); FRAP 12(b)(3)"
+state docketed-in-court-of-appeals: "Appeal Docketed" by applicant cite "FRAP 3(d); FRAP 12(a); FRAP 12(b)"
 {
   group notice-group
   note "The district clerk transmits the notice to the court of appeals clerk, who dockets the appeal and assigns a case number. Docketing is ministerial; appellate jurisdiction attaches when the notice is filed in the district court, not when docketed in the appellate court."

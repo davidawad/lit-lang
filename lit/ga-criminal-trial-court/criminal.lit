@@ -1,0 +1,113 @@
+module ga-criminal-trial-court.criminal
+
+// Georgia's criminal procedure code, O.C.G.A. Title 17, is not vendored:
+// arrest and first appearance, commitment hearings, bail, indictment, the
+// statutory speedy-trial demand (O.C.G.A. §§ 17-7-170, 17-7-171), the
+// motion for new trial and sentencing (O.C.G.A. § 17-10-1, which Rule 35.2
+// names) are holes with cites to the code, not values. The criminal notice
+// of appeal (O.C.G.A. § 5-6-38) is not vendored either. The outline's
+// decisions (County of Riverside v. McLaughlin, Gerstein v. Pugh, Gideon,
+// Brady, Mapp, Barker, Boykin, Frye, Jackson, Ramos, Apprendi,
+// Flores-Ortega, Garza) are removed: no reporter text is vendored.
+start charged
+
+state charged: "Indictment or accusation" by office cite ?("O.C.G.A. Title 17 (not vendored): arrest, commitment, bail and indictment") {
+  note "Arrest, first appearance, commitment hearing, bail and the charge are O.C.G.A. Title 17's, which is not vendored; every period there is a hole."
+  edge-charged-arraignment "Arraignment set" -> arraignment {
+    authority cite "Ga. Unif. Super. Ct. R. 30.1"
+  }
+}
+
+state arraignment: "Arraignment" by court cite "Ga. Unif. Super. Ct. R. 30.2"
+{
+  note "The judge or designee sets the time of arraignment unless it is waived by the defendant or by operation of law, with notice to the clerk, counsel, defendants and bondsmen (Ga. Unif. Super. Ct. R. 30.1). Before arraignment the court inquires into counsel and appoints counsel for an indigent defendant who wants one; on the call the accused pleads guilty, not guilty or, with leave, nolo contendere, and a not-guilty plea joins issue (Ga. Unif. Super. Ct. R. 30.2). On request the district attorney furnishes defense counsel, in confidence, the addresses and telephone numbers of the state's witnesses (Ga. Unif. Super. Ct. R. 30.3). The defendant is not called on to plead before having the chance to retain or be appointed counsel (Ga. Unif. Super. Ct. R. 33.2)."
+  edge-arraignment-motions "Motions and notices" -> pretrial {
+    authority cite "Ga. Unif. Super. Ct. R. 31.1"
+  }
+}
+
+decision pretrial: "Motions, demurrers, special pleas and notices" by applicant cite "Ga. Unif. Super. Ct. R. 31.1"
+{
+  note "Motions, demurrers and special pleas are filed at or before the time set by law unless the judge extends it in writing before trial (Ga. Unif. Super. Ct. R. 31.1); the time set by law is O.C.G.A. Title 17's, a hole. Unless the law provides otherwise, the state's notice of child-victim hearsay, the defense's notice of insanity, mental illness or intellectual disability, and the defense's notice of the victim's specific acts of violence are given and filed at least 10 days before trial unless the judge shortens or lengthens the time (Ga. Unif. Super. Ct. R. 31.1, 31.5, 31.6(A)); the state's rebuttal notice to acts of violence within five days before trial (Ga. Unif. Super. Ct. R. 31.6(C)). Motions are generally heard at or after arraignment and before trial (Ga. Unif. Super. Ct. R. 31.2); the judge may hold a status conference before trial (Ga. Unif. Super. Ct. R. 31.7). The statutory speedy-trial demand and its discharge remedy (O.C.G.A. §§ 17-7-170, 17-7-171) are holes: the code is not vendored."
+  edge-pretrial-competency "Competency in question" -> competency {
+    authority cite "Ga. Unif. Super. Ct. R. 31.4"
+  }
+  edge-pretrial-sustained "Demurrer or special plea sustained" -> dismissed {
+    authority cite "Ga. Unif. Super. Ct. R. 31.1"
+  }
+  edge-pretrial-plea "Plea negotiations" -> plea-decision {
+    authority cite "Ga. Unif. Super. Ct. R. 33.3"
+  }
+  edge-pretrial-calendar "Set on the trial calendar" -> trial {
+    authority cite "Ga. Unif. Super. Ct. R. 32.1"
+  }
+}
+
+decision competency: "Mental competency to stand trial" by court cite "Ga. Unif. Super. Ct. R. 31.4"
+{
+  note "On a proper showing the judge may order a competency evaluation at public expense (Ga. Unif. Super. Ct. R. 31.4(A)). On a Plea of Mental Incompetency to Stand Trial the judge holds a bench trial unless the state or the defendant demands a special jury within twenty days of the plea's filing (Ga. Unif. Super. Ct. R. 31.4(B)). Commitment after a finding of incompetency is O.C.G.A. § 17-7-130, not vendored."
+  edge-competency-competent "Competent: case proceeds" -> plea-decision {
+    authority cite "Ga. Unif. Super. Ct. R. 31.4"
+  }
+  edge-competency-incompetent "Incompetent: committed for treatment" -> incompetent {
+    authority cite "Ga. Unif. Super. Ct. R. 31.4"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Ga. Unif. Super. Ct. R. 33.1"
+{
+  note "A defendant may plead guilty, not guilty or, in the judge's discretion, nolo contendere; a guilty or nolo plea is received from the defendant personally in open court (Ga. Unif. Super. Ct. R. 33.1). The judge determines the plea's voluntariness and accuracy and informs the defendant (Ga. Unif. Super. Ct. R. 33.7-33.9), and states any intention to reject a plea agreement (Ga. Unif. Super. Ct. R. 33.10)."
+  edge-plea-decision-plea "Plea accepted" -> sentenced {
+    authority cite "Ga. Unif. Super. Ct. R. 33.7"
+  }
+  edge-plea-decision-trial "Proceed to trial" -> trial {
+    authority cite "Ga. Unif. Super. Ct. R. 32.1"
+  }
+}
+
+decision trial: "Trial and verdict" by court cite "Ga. Unif. Super. Ct. R. 32.1"
+{
+  note "Indictments and special presentments are set for trial within a reasonable time after arraignment, with the trial calendar noticed to counsel, bondsman and defendant not less than 7 days before the trial date (Ga. Unif. Super. Ct. R. 32.1); only the judge removes a case from the calendar (Ga. Unif. Super. Ct. R. 32.2)."
+  edge-trial-acquitted "Not guilty" -> acquitted { authority cite "Ga. Unif. Super. Ct. R. 32.1" }
+  edge-trial-guilty "Guilty: sentence" -> sentenced {
+    authority cite "Ga. Unif. Super. Ct. R. 35.2"
+  }
+}
+
+state sentenced: "Sentence imposed" by court cite "Ga. Unif. Super. Ct. R. 35.2"
+{
+  note "Sentences are imposed and reviewed under O.C.G.A. § 17-10-1 et seq. (Ga. Unif. Super. Ct. R. 35.2), which is not vendored. After sentence the judge should allow withdrawal of a guilty or nolo plea on a timely motion proving manifest injustice; otherwise there is no withdrawal as of right (Ga. Unif. Super. Ct. R. 33.12). The clerk reports the disposition to the Georgia Crime Information Center not more than 30 days after it (Ga. Unif. Super. Ct. R. 35.1)."
+  edge-sentenced-appeal "Notice of appeal or motion for new trial" -> appeal-decision {
+    authority cite ?("O.C.G.A. § 5-6-38 (not vendored)")
+  }
+}
+
+decision appeal-decision: "Notice of appeal in time?" by applicant cite ?("O.C.G.A. § 5-6-38 (not vendored)") {
+  note "The criminal notice of appeal, its period and the effect of a motion for new trial are O.C.G.A. § 5-6-38 and Title 17's, not vendored: the period is a hole. Rule 34 (Unified Appeal) is only a publisher's note pointing to a separate document, which is not vendored."
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken {
+    authority cite ?("O.C.G.A. § 5-6-38 (not vendored)")
+  }
+  edge-appeal-decision-none "No notice" -> conviction-final {
+    authority cite ?("O.C.G.A. § 5-6-38 (not vendored)")
+  }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Ga. Unif. Super. Ct. R. 32.1"
+
+terminal dismissed: "Charge dismissed on a demurrer or special plea" outcome [win, dismissal] cite "Ga. Unif. Super. Ct. R. 31.1"
+{
+  note "Whether the state may re-indict is a hole (O.C.G.A. Title 17, not vendored)."
+}
+
+terminal incompetent: "Found incompetent to stand trial" outcome [final] cite "Ga. Unif. Super. Ct. R. 31.4"
+{
+  note "Commitment and later restoration are O.C.G.A. § 17-7-130, not vendored."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite ?("O.C.G.A. § 5-6-38 (not vendored)") {
+  note "The appeal continues in the Georgia Court of Appeals or Supreme Court (outlines/eleventh-circuit/georgia/state-appellate)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("O.C.G.A. § 5-6-38 (not vendored)") {
+  note "State habeas (O.C.G.A. § 9-14-40 et seq.) is not vendored; federal habeas is lit/habeas."
+}

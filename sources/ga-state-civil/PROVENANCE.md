@@ -37,3 +37,10 @@
 - Upstream: https://advance.lexis.com/, retrieved 2026-10-28, as recorded on the `ga-state-civil/ocga-title-9-ch-11.txt` entry this file is derived from.
 - Edition: as the extract, "Current through the 2026 Special Session of the General Assembly."
 - Sectioned sha256 ae97d1b712c4d125c05172801e36d088c8e4577b9305098c2b83443b692c1531 (the `path_sha256` pinned by `lit/ga-state-civil/Lit.toml`).
+
+### `ga-state-civil/gauscr-uniform-superior-court-rules-2026-04-09-criminal-sectioned.txt` — Uniform Superior Court Rules of Georgia (April 9, 2026), criminal practice rules sectioned
+
+- Derived in the pod (lg-gddt.26) from `ga-state-civil/gauscr-uniform-superior-court-rules-2026-04-09.txt` (extract sha256 84ba00bf9765d69c960f5c9e1f63fadcf4174371ad141e8b66e5fe43e5bf3818); nothing fetched. In the criminal practice rules only, one `## Rule <n>` line is inserted before each rule's and subrule's own heading line in the body (`Rule 30. ARRAIGNMENT` through `Rule 36.19.`, 52 headings, the same 52 the table of contents lists for Rules 30-36); every other rule, the table of contents and the specimen forms are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte. The order of October 5, 2026 (`gauscr-order-2026-10-05.txt`) amends none of Rules 30-36.
+- Source: as the extract, https://www.gasupreme.us/wp-content/uploads/2026/04/UNIFORM-SUPERIOR-COURT-RULES-2026_04_09.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
+- Edition: as the extract, the file dated April 9, 2026.
+- Sectioned sha256 7d305220bba230bd421fb293066a2de2ca8de17beb3f7ddc2e3729fc71780842 (the `path_sha256` pinned by `lit/ga-criminal-trial-court/Lit.toml`).

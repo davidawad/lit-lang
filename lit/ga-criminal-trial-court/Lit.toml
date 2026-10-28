@@ -1,0 +1,41 @@
+# Criminal cases in the Georgia superior courts under the criminal practice
+# rules of the Uniform Superior Court Rules (Rules 30-36, the April 9, 2026
+# file, sources/ga-state-civil). The Supreme Court's order of October 5,
+# 2026 amends Rules 4.3, 10.2 and 21 from November 5, 2026, none of them
+# cited here. Georgia's criminal procedure code, O.C.G.A. Title 17 (the
+# speedy-trial demand of §§ 17-7-170 and 17-7-171 included), and the
+# criminal notice of appeal of O.C.G.A. § 5-6-38 are not vendored, so
+# their periods are holes. The rules' own periods are stated in notes: the
+# Georgia computation of time (O.C.G.A. § 1-3-1) is not vendored either.
+[package]
+name = "ga-criminal-trial-court"
+version = "0.1.0"
+language = 1
+pack_id = "ga-criminal-trial-court"
+forum = "ga-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "georgia"
+title = "Georgia superior courts, criminal"
+description = "Criminal cases in the Georgia superior courts under the Uniform Superior Court Rules' criminal practice rules: arraignment, motions, demurrers and special pleas and the defense and state notices before trial, competency, the criminal trial calendar, pleas and plea withdrawal. The O.C.G.A. Title 17 speedy-trial demand and the O.C.G.A. § 5-6-38 notice of appeal are holes: the code is not vendored."
+in_force = "2026-04-09"
+known_at = "2026-10-28"
+unknown_before = "2026-04-09"
+jurisdiction = "Georgia trial courts of general criminal jurisdiction"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ga-uscr]
+title = "Uniform Superior Court Rules of Georgia (the April 9, 2026 file), criminal practice Rules 30-36"
+url = "https://www.gasupreme.us/wp-content/uploads/2026/04/UNIFORM-SUPERIOR-COURT-RULES-2026_04_09.pdf"
+path = "sources/ga-state-civil/gauscr-uniform-superior-court-rules-2026-04-09-criminal-sectioned.txt"
+path_sha256 = "7d305220bba230bd421fb293066a2de2ca8de17beb3f7ddc2e3729fc71780842"
+sha256 = "b9a6e2d7f13dc5315d7572419c938f6fafaefdc9497f67e0d41a200b238579bf"
+as_of = "2026-04-09"
+cite_prefixes = ["Ga. Unif. Super. Ct. R."]
+section_heading = "Rule {n}"

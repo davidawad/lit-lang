@@ -16,3 +16,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 8558c08009284fdf5967fa722a162e2160428cb2a102deffe631886265ea20b3. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `fed-didaho/original/didaho-local-civil-rules-packet-2026-10-27.pdf` as served (sha256 8e7e03dc3e8cb94999855f56aa707d3f7460d64f4b813d2c6d144f1bc48aeefc); extraction sha256 8558c08009284fdf5967fa722a162e2160428cb2a102deffe631886265ea20b3.
+
+### `fed-didaho/didaho-local-civil-rules-packet-2026-10-27-sectioned.txt` — D. Idaho Local Civil Rules packet (printed October 27, 2026), sectioned
+
+- Derived in the pod (lg-f3q8.43) from `fed-didaho/didaho-local-civil-rules-packet-2026-10-27.txt` (extract sha256 8558c08009284fdf5967fa722a162e2160428cb2a102deffe631886265ea20b3); nothing fetched. One `## Loc. Civ. R. <n>` line is inserted right before each rule's own body heading line `District Local Rule Civ <n> (Civil)` (each led by a form feed): 58 markers, Loc. Civ. R. 1.1 through Loc. Civ. R. 83.8. The table of contents and the announcement page are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Loc\. Civ\. R\. /d'`) restores the extract byte for byte.
+- Edition: as the extract; the packet's announcement page reads "Revised and adopted August 17, 2026".
+- Sectioned sha256 cd724975f097a38678edcd34535f4600ebf75163e12bb0d4e817c1a81c7194ec (the `path_sha256` pinned by `lit/idd/Lit.toml`).

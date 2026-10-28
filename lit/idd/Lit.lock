@@ -1,0 +1,27 @@
+version = 2
+
+[[package]]
+name = "core"
+version = "1.0.0"
+dependencies = []
+
+[[package]]
+name = "frcp-civil-procedure"
+version = "2024.12.0"
+dependencies = [
+    "core 1.0.0",
+]
+
+[[package]]
+name = "idd-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:672891e896f71349f918588e6380838863e04c8953cefbacd78267709ff52ce6"
+semantic = "sha256:1ea785a70c991d532f8af0ad8be6fa2d172fa96c84faab65fe34a348891b0cf4"
+texts = [
+    "idd-lr sources/fed-didaho/didaho-local-civil-rules-packet-2026-10-27-sectioned.txt sha256:cd724975f097a38678edcd34535f4600ebf75163e12bb0d4e817c1a81c7194ec",
+]
+dependencies = [
+    "core 1.0.0",
+    "frcp-civil-procedure 2024.12.0",
+]

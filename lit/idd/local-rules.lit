@@ -1,0 +1,409 @@
+module idd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Idaho's own periods, computed under the federal rules
+// (FRCP 6(a) governs "any local rule"). Most apply "unless otherwise
+// ordered" where the rule says so, and the court may shorten or extend any
+// of them for cause (Loc. Civ. R. 6.1). Rules that state no period or
+// limit stay out, as do these: the scheduling order within the earlier of
+// 90 days after service or 60 days after appearance (Loc. Civ. R. 16.1(a)),
+// which restates FRCP 16(b)(2) and binds the court; initial disclosures
+// within 14 days of the Rule 26(f) conference (Loc. Civ. R. 16.1(a)(1)),
+// FRCP 26(a)(1)(C)'s own period; the trial memorandum "within fourteen
+// (14) calendar days before the scheduled trial date" (Loc. Civ. R.
+// 16.3(b)), which reads as a window as well as a deadline and is left a
+// hole; the mediator's report within 7 days of the last session (Loc. Civ.
+// R. 16.4(b)(3)(F)), a mediator's duty; the attorney fee motion within 14
+// days after entry of judgment (Loc. Civ. R. 54.2(b)), which restates FRCP
+// 54(d)(2)(B) and is lit/frcp's (fees.lit); the two years after entry for
+// a joint acknowledgment of satisfaction (Loc. Civ. R. 58.2); execution
+// "after fourteen (14) days from the entry of a judgment" (Loc. Civ. R.
+// 62.1(c)), which yields to FRCP 62 and is an earliest date, not a
+// deadline; the 14 days' notice before summary judgment against a surety
+// (Loc. Civ. R. 65.1(a)), a term of the bond; the show-cause periods the
+// court sets by order on a felony conviction (Loc. Civ. R. 83.5(b)(2)(A),
+// (B)); the 14-day wind-up after reciprocal discipline (Loc. Civ. R.
+// 83.5(b)(3)(B)), a grace period and not a filing; the 21 days after a
+// withdrawal order in which no proceeding may affect the client (Loc. Civ.
+// R. 83.6(c)(4)), a stay rather than a deadline; and the capital habeas
+// brief lengths (Loc. Civ. R. 9.2(o)(3)), which the parties may change by
+// stipulation. No fee is stated. The earlier D. Idaho outline's FRCP flow
+// and its Supreme Court decisions (Twombly, Iqbal, Celotex, Anderson v.
+// Liberty Lobby, Reeves, Catlin, Bowles, Hamer) are FRCP and FRAP
+// authority and belong to lit/frcp and lit/frap; its Ninth Circuit
+// decisions (Eitel v. McCool; Lopez v. Smith) are removed: no reporter
+// text is vendored.
+/// A memorandum of points and authorities supporting or opposing a motion,
+/// including the separate brief that accompanies a motion and the response
+/// brief: at most 20 pages without express leave of court, granted only
+/// under unusual circumstances (Loc. Civ. R. 7.1(a)(2), (b)(1), (c)(1)).
+limit memorandum {
+  pages <= 20 cite "Dist. Idaho Loc. Civ. R. 7.1(a)(2)"
+} cite "Dist. Idaho Loc. Civ. R. 7.1(a)(2)"
+
+/// A reply brief: at most 10 pages (Loc. Civ. R. 7.1(a)(2), (b)(3)).
+limit reply-memorandum {
+  pages <= 10 cite "Dist. Idaho Loc. Civ. R. 7.1(a)(2)"
+} cite "Dist. Idaho Loc. Civ. R. 7.1(a)(2)"
+
+/// The separate statement of material facts the moving party contends are
+/// not in dispute, or the responding party contends are in dispute, on a
+/// motion for summary judgment: at most 10 pages (Loc. Civ. R. 7.1(b)(1),
+/// (c)(2)).
+limit statement-of-facts {
+  pages <= 10 cite "Dist. Idaho Loc. Civ. R. 7.1(b)(1)"
+} cite "Dist. Idaho Loc. Civ. R. 7.1(b)(1)"
+
+/// A notice of supplemental authority: at most two pages (Loc. Civ. R.
+/// 7.1(d)(2)).
+limit supplemental-authority-notice {
+  pages <= 2 cite "Dist. Idaho Loc. Civ. R. 7.1(d)"
+} cite "Dist. Idaho Loc. Civ. R. 7.1(d)"
+
+/// A trial memorandum: at most 20 pages (Loc. Civ. R. 16.3(b)).
+limit trial-memorandum {
+  pages <= 20 cite "Dist. Idaho Loc. Civ. R. 16.3(b)"
+} cite "Dist. Idaho Loc. Civ. R. 16.3(b)"
+
+/// A response to the opposing parties' trial memoranda: at most 10 pages
+/// (Loc. Civ. R. 16.3(c)).
+limit trial-response-memorandum {
+  pages <= 10 cite "Dist. Idaho Loc. Civ. R. 16.3(c)"
+} cite "Dist. Idaho Loc. Civ. R. 16.3(c)"
+
+/// Objections to a magistrate judge's order or report and recommendation,
+/// and a response to another party's objections: at most 20 pages (Loc.
+/// Civ. R. 72.1(b)(1), (2)).
+limit magistrate-objection {
+  pages <= 20 cite "Dist. Idaho Loc. Civ. R. 72.1(b)"
+} cite "Dist. Idaho Loc. Civ. R. 72.1(b)"
+
+/// The complaint is filed (Loc. Civ. R. 4.1).
+event ComplaintFiled()
+/// A party receives an electronically filed document, or notice of its
+/// filing, whichever first occurs (Loc. Civ. R. 5.1(e)).
+event ElectronicFilingReceived()
+/// The moving party's memorandum of points and authorities is served
+/// (Loc. Civ. R. 7.1(b)(1), (c)(1)).
+event MotionMemorandumServed() paper memorandum
+/// The responding party's memorandum is served on the moving party (Loc.
+/// Civ. R. 7.1(b)(3), (c)(1)).
+event ResponseMemorandumServed() paper memorandum
+/// The order granting a motion to amend or supplement a pleading under FRCP
+/// 15(a)(2) or (d) is entered (Loc. Civ. R. 15.1(b)).
+event AmendmentGranted()
+/// The Rule 16 scheduling conference is held at the time and date set
+/// (Loc. Civ. R. 16.1(a), 16.4(c)).
+event SchedulingConferenceHeld()
+/// Trial is scheduled to commence (Loc. Civ. R. 16.3(a), 47.1(a), 51.1,
+/// 54.3).
+event TrialBegins()
+/// The opposing parties' trial memoranda are served (Loc. Civ. R. 16.3(c)).
+event TrialMemorandumServed() paper trial-memorandum
+/// A judgment under which costs may be claimed is entered (Loc. Civ. R.
+/// 54.1(a)(1)).
+event JudgmentEntered()
+/// A party serves its cost bill (Loc. Civ. R. 54.1(a)(2)).
+event CostBillServed()
+/// The clerk taxes costs (Loc. Civ. R. 54.1(c)(1)).
+event CostsTaxed()
+/// A party receives a motion for allowance of attorney fees (Loc. Civ. R.
+/// 54.2(c)).
+event FeeMotionReceived() paper memorandum
+/// The moving party receives the response brief on a motion for attorney
+/// fees (Loc. Civ. R. 54.2(d)).
+event FeeResponseReceived() paper memorandum
+/// Counsel receives the last Notice of Award necessary to calculate the
+/// total amount of retroactive benefits (Loc. Civ. R. 54.4(a)).
+event LastNoticeOfAwardReceived()
+/// The claimant or the defendant receives a motion for attorney fees under
+/// 42 U.S.C. §§ 406(b) or 1383(d)(2) (Loc. Civ. R. 54.4(c)).
+event SocialSecurityFeeMotionReceived() paper memorandum
+/// A response brief on a motion for attorney fees under 42 U.S.C. §§ 406(b)
+/// or 1383(d)(2) is filed (Loc. Civ. R. 54.4(c)).
+event SocialSecurityFeeResponseFiled() paper memorandum
+/// A party is served with a magistrate judge's nondispositive order (Loc.
+/// Civ. R. 72.1(b)(1)).
+event MagistrateOrderServed()
+/// A party is served with a magistrate judge's report and recommendation
+/// (Loc. Civ. R. 72.1(b)(2)).
+event MagistrateReportServed()
+/// A party is served with another party's objections to a magistrate
+/// judge's order or report and recommendation (Loc. Civ. R. 72.1(b)).
+event MagistrateObjectionServed() paper magistrate-objection
+/// The notice of removal of a state court action is served (Loc. Civ. R.
+/// 81.1(b)).
+event RemovalNoticeServed()
+/// The notice of removal of a state court action is filed (Loc. Civ. R.
+/// 81.1(b)).
+event RemovalNoticeFiled()
+/// An attorney admitted to practice in the court is convicted of a felony
+/// or other serious crime (Loc. Civ. R. 83.5(b)(2)).
+event AttorneyConvicted()
+/// The court issues an order of discipline and conjoined order to show
+/// cause on reciprocal discipline (Loc. Civ. R. 83.5(b)(3)(A)).
+event ReciprocalDisciplineOrderIssued()
+/// The reviewing judge issues an order to show cause in an original
+/// disciplinary proceeding (Loc. Civ. R. 83.5(b)(4)(B)).
+event DisciplineShowCauseIssued()
+/// The reviewing judge's proposed determination is served on the attorney
+/// (Loc. Civ. R. 83.5(b)(4)(E)).
+event ProposedDeterminationServed()
+/// The withdrawing attorney files proof of service of the withdrawal order
+/// on the client (Loc. Civ. R. 83.6(c)(2)).
+event WithdrawalServiceProofFiled()
+
+/// Loc. Civ. R. 4.1: within 30 days of the filing of the complaint, the
+/// plaintiff files a status report on whether service of the summons and
+/// complaint has been effectuated or waived by each defendant, unless it
+/// has filed proof of service under FRCP 4(l) within those 30 days.
+deadline service-status-report-period: 30.days after ComplaintFiled() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 4.1"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 5.1(e): anyone who disputes the authenticity of a signature
+/// on an electronically filed document files an objection within ten days
+/// of receipt of the document or notice of its filing, whichever first
+/// occurs.
+deadline signature-objection-period: 10.days after ElectronicFilingReceived() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 5.1(e)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 7.1(c)(1): the responding party serves and files its
+/// response brief, with its supporting materials, within 21 days after
+/// service of the moving party's memorandum. A failure to respond may be
+/// deemed consent to the motion, except on summary judgment (Loc. Civ. R.
+/// 7.1(f)).
+deadline response-brief-period: 21.days after MotionMemorandumServed() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 7.1(c)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 7.1(b)(3): the moving party may submit a reply brief within
+/// 14 days after service of the responding party's memorandum.
+deadline reply-brief-period: 14.days after ResponseMemorandumServed() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 7.1(b)(3)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 15.1(b): unless the court orders otherwise, the moving
+/// party files and serves a complete clean copy of the amended or
+/// supplemental pleading within ten days of the order granting the motion.
+deadline amended-pleading-period: 10.days after AmendmentGranted() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 15.1(b)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 16.1(a): at least 21 days before the time and date set for
+/// the scheduling conference, counsel confer and discuss the items on the
+/// litigation plan and discovery plan forms.
+deadline litigation-plan-conference-period: 21.days before SchedulingConferenceHeld() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 16.1(a)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 16.4(c)(1)(A): unless otherwise ordered, no later than 5
+/// days before the Rule 16 scheduling conference, the parties meet and
+/// confer about ADR.
+deadline adr-conference-period: 5.days before SchedulingConferenceHeld() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 16.4(c)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 16.3(a): unless otherwise ordered, not less than 30
+/// calendar days before trial is scheduled to commence, each party provides
+/// to the others and files its witnesses, deposition designations and
+/// exhibits.
+deadline trial-submissions-period: 30.days before TrialBegins() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 16.3(a)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 16.3(c): within 7 days a party may file a response
+/// memorandum to the opposing parties' trial memoranda. The rule names no
+/// trigger; the period is read to run from service of the trial memorandum
+/// it answers.
+deadline trial-response-period: 7.days after TrialMemorandumServed() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 16.3(c)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 47.1(a): not less than 7 days before trial, attorneys may
+/// submit written requests for voir dire questions.
+deadline voir-dire-request-period: 7.days before TrialBegins() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 47.1(a)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 51.1(a): in a jury trial, written proposed jury
+/// instructions and any request for special interrogatories and special
+/// verdict forms are filed at least 14 days before trial; the court may
+/// receive additional requests during trial.
+deadline jury-instruction-period: 14.days before TrialBegins() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 51.1(a)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 51.1(b): the adverse party specifies its objections to the
+/// requested instructions at least one day before trial.
+deadline jury-instruction-objection-period: 1.days before TrialBegins() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 51.1(b)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 54.3: when a civil action has been settled or otherwise
+/// disposed of, counsel inform the clerk by 3 p.m. of the business day
+/// immediately before trial, or costs, including one day's juror fees, may
+/// be assessed.
+deadline jury-settlement-notice-period: 1.court_days before TrialBegins() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 54.3"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 54.1(a)(1): within 14 days after entry of a judgment under
+/// which costs may be claimed, the prevailing party serves and files a cost
+/// bill in the local form, after the parties have met and conferred.
+deadline cost-bill-period: 14.days after JudgmentEntered() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 54.1(a)(2): within 14 days after service of a cost bill,
+/// any other party may serve and file specific objections.
+deadline cost-objection-period: 14.days after CostBillServed() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 54.1(c)(1): review of the clerk's taxation is sought by a
+/// motion to retax served and filed not later than 7 days after the clerk
+/// taxes costs, under FRCP 54(d).
+deadline retax-motion-period: 7.days after CostsTaxed() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 54.1(c)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 54.2(c): within 21 days after receipt of a motion for
+/// allowance of attorney fees, any other party may serve and file a
+/// response brief stating specific grounds of objection.
+deadline fee-response-period: 21.days after FeeMotionReceived() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 54.2(c)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 54.2(d): within 14 days after receipt of a response brief,
+/// the moving party may submit a reply brief.
+deadline fee-reply-period: 14.days after FeeResponseReceived() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 54.2(d)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 54.4(a): a motion for attorney fees under 42 U.S.C. §§
+/// 406(b) or 1383(d)(2) is filed within 30 days of counsel's receipt of the
+/// last Notice of Award needed to calculate the retroactive benefits.
+deadline social-security-fee-motion-period: 30.days after LastNoticeOfAwardReceived() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 54.4(a)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 54.4(c): the claimant or the defendant may file a response
+/// brief within 21 days after receipt of the motion.
+deadline social-security-fee-response-period: 21.days after SocialSecurityFeeMotionReceived() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 54.4(c)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 54.4(c): claimant's counsel may submit a reply brief within
+/// 14 days of any response brief.
+deadline social-security-fee-reply-period: 14.days after SocialSecurityFeeResponseFiled() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 54.4(c)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 72.1(b)(1): under FRCP 72(a), a party may serve and file
+/// objections to a magistrate judge's nondispositive order within 14 days
+/// after being served with it, unless the magistrate judge or district
+/// judge sets a different period.
+deadline magistrate-order-objection-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 72.1(b)(1)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 72.1(b)(2): under FRCP 72(b), a party serves and files
+/// specific written objections to a magistrate judge's report and
+/// recommendation within 14 days after being served with it, unless the
+/// magistrate judge or district judge sets a different period.
+deadline magistrate-report-objection-period: 14.days after MagistrateReportServed() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 72.1(b)(2)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 72.1(b)(1), (2): a party may serve and file a response to
+/// another party's objections within 14 days after being served with them.
+deadline magistrate-objection-response-period: 14.days after MagistrateObjectionServed() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 72.1(b)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 81.1(b): in a removed action, if no response to a motion
+/// pending in the state court was filed there, the response is due 21 days
+/// after service of the notice of removal; the filing date of the notice is
+/// the filing date of every pending motion, unless otherwise ordered.
+deadline removed-motion-response-period: 21.days after RemovalNoticeServed() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 81.1(b)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 81.1(b): if a response was filed in the state court but no
+/// reply, the reply is due 14 days after the filing of the notice of
+/// removal.
+deadline removed-motion-reply-period: 14.days after RemovalNoticeFiled() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 81.1(b)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 83.5(b)(2): an attorney admitted to practice in the court
+/// who is convicted of a felony or other serious crime reports the
+/// conviction to the court within 14 days of its entry.
+deadline conviction-report-period: 14.days after AttorneyConvicted() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 83.5(b)(2)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 83.5(b)(3)(A): an attorney who contends that the discipline
+/// imposed by a supervising court should not be imposed here files a
+/// petition to set it aside, or to be reinstated, within 30 days of the
+/// court's order.
+deadline reciprocal-discipline-petition-period: 30.days after ReciprocalDisciplineOrderIssued() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 83.5(b)(3)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 83.5(b)(4)(B): an attorney against whom an order to show
+/// cause issues in an original disciplinary proceeding has 30 days from
+/// the date of the order to file a response; omitting a request for a
+/// hearing waives it.
+deadline discipline-response-period: 30.days after DisciplineShowCauseIssued() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 83.5(b)(4)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 83.5(b)(4)(E): the attorney has 10 days from service of the
+/// proposed determination to file a reply; absent a reply, the proposed
+/// determination is entered as the final order.
+deadline proposed-determination-reply-period: 10.days after ProposedDeterminationServed() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 83.5(b)(4)"
+{
+  forum frcp
+}
+
+/// Loc. Civ. R. 83.6(c)(2): the client has 21 days after the withdrawing
+/// attorney files proof of service of the withdrawal order to advise the
+/// court in writing how it will be represented; failing to appear within
+/// that period is grounds for default or dismissal with prejudice.
+deadline withdrawal-representation-period: 21.days after WithdrawalServiceProofFiled() counted_by frcp6 cite "Dist. Idaho Loc. Civ. R. 83.6(c)"
+{
+  forum frcp
+}

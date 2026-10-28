@@ -1,0 +1,49 @@
+# The United States District Court for the Southern District of Ohio's
+# Local Civil Rules as a local-rule layer over lit/frcp (28 U.S.C. § 2071;
+# FRCP 83(a)): it declares only the periods the Local Civil Rules
+# themselves state and re-encodes no FRCP deadline. FRCP 6(a) computes a
+# period stated in a local rule. The rules are the Local Civil and Criminal
+# Rules as amended October 21, 2024 (sources/ohsd), which the court's
+# local-rules page lists as the newest edition; the Local Criminal Rules
+# are out of scope. An appeal goes to the Sixth Circuit under lit/frap and
+# lit/ca6.
+[package]
+name = "ohsd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ohsd-local-rules"
+forum = "ohsd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court for the Southern District of Ohio: Local Civil Rules"
+description = "The Southern District of Ohio's Local Civil Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): motion opposition and reply periods, Social Security review (the administrative record as the answer, the statement of errors, the opposition and the reply), the bill of costs and the motion for attorney's fees."
+in_force = "2024-10-21"
+known_at = "2026-10-28"
+unknown_before = "2024-10-21"
+jurisdiction = "United States District Court, S.D. Ohio"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ohsd-civil"
+issuer = "United States District Court for the Southern District of Ohio"
+date = "2024-10-21"
+designation = "Local Civil Rules (as amended October 21, 2024)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.ohsd-civil]
+title = "Local Civil and Criminal Rules of the United States District Court for the Southern District of Ohio (October 21, 2024): Local Civil Rules"
+url = "https://www.ohsd.uscourts.gov/sites/ohsd/files//2024-10-21%20Local%20Rules.pdf"
+path = "sources/ohsd/ohsd-local-rules-sectioned.txt"
+path_sha256 = "a405583a3a8bc4312d0d697c948f1dcc0dc64f01847f4617208673316ed58732"
+sha256 = "9e68d137b17d93a176c7d9d0834ad77affa2faa5621dd775590c23aeb5cc0bbf"
+as_of = "2024-10-21"
+cite_prefixes = ["S.D. Ohio Civ. R."]
+section_heading = "S.D. Ohio Civ. R. {n}"

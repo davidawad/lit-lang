@@ -1,0 +1,147 @@
+module ohsd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Southern District of Ohio's own civil periods, computed under FRCP
+// 6(a), which governs a period stated in a local rule. Rules that state no
+// period or limit, or one this layer cannot count, stay out: the
+// twenty-page memorandum length is a preference that requires a table of
+// contents and a summary of at most five pages above it, not a limit (Civ.
+// R. 7.2(a)(3)); the stipulated extensions of time to plead, at most
+// twenty-one days in aggregate, change the FRCP response date rather than
+// set a period (Civ. R. 6.1); the sixty days for the United States to
+// elect to intervene in a False Claims Act action (Civ. R. 3.2); the
+// answer day endorsed on mailed process (Civ. R. 4.2); the Social Security
+// Act fee motion, due 45 days after the later of the judgment and the
+// notice of award (Civ. R. 54.2(b)), which runs from two events; and the
+// Local Criminal Rules. The court sets no Local Civil Rule period for
+// objections to a magistrate judge's ruling: FRCP 72 governs (lit/frcp).
+// The earlier S.D. Ohio outline's FRCP flow and its Supreme Court decisions
+// (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby, Matsushita, Frow v.
+// De La Vega) are FRCP authority and belong to lit/frcp and lit/frap; no
+// reporter text is vendored, so they are removed here.
+/// A motion or application is served with its supporting memorandum (Civ.
+/// R. 7.2(a)(1)).
+event MotionServed()
+/// A memorandum in opposition to the motion is served (Civ. R. 7.2(a)(2)).
+event OppositionServed()
+/// A complaint for review of a decision of the Commissioner of Social
+/// Security is served (Civ. R. 8.1(a)).
+event SocialSecurityComplaintServed()
+/// The certified administrative record is served (Civ. R. 8.1(b)).
+event AdministrativeRecordServed()
+/// The plaintiff's statement of errors is served (Civ. R. 8.1(c)).
+event StatementOfErrorsServed()
+/// The defendant's memorandum in opposition to the statement of errors is
+/// served (Civ. R. 8.1(c)).
+event SocialSecurityOppositionServed()
+/// Judgment is entered (Civ. R. 54.1, 54.2(a)).
+event JudgmentEntered()
+
+/// Civ. R. 7.2(a)(2): any memorandum in opposition is filed within
+/// twenty-one days after the date of service of the motion.
+deadline opposition-period: 21.days after MotionServed() counted_by frcp6 cite "S.D. Ohio Civ. R. 7.2(a)"
+{
+  forum frcp
+}
+
+/// Civ. R. 7.2(a)(2): any reply memorandum is filed within fourteen days
+/// after the date of service of the memorandum in opposition.
+deadline reply-period: 14.days after OppositionServed() counted_by frcp6 cite "S.D. Ohio Civ. R. 7.2(a)"
+{
+  forum frcp
+}
+
+/// Civ. R. 8.1(b): the defendant files and serves a certified copy of the
+/// administrative record, which serves as the answer, within sixty days
+/// after service of the complaint.
+deadline administrative-record-period: 60.days after SocialSecurityComplaintServed() counted_by frcp6 cite "S.D. Ohio Civ. R. 8.1(b)"
+{
+  forum frcp
+}
+
+/// Civ. R. 8.1(c): the plaintiff files and serves a statement of errors
+/// within forty-five days after service of the administrative record.
+deadline statement-of-errors-period: 45.days after AdministrativeRecordServed() counted_by frcp6 cite "S.D. Ohio Civ. R. 8.1(c)"
+{
+  forum frcp
+}
+
+/// Civ. R. 8.1(c): the defendant files and serves its memorandum in
+/// opposition within forty-five days following service of the statement of
+/// errors.
+deadline social-security-opposition-period: 45.days after StatementOfErrorsServed() counted_by frcp6 cite "S.D. Ohio Civ. R. 8.1(c)"
+{
+  forum frcp
+}
+
+/// Civ. R. 8.1(c): the plaintiff may file and serve a reply within fifteen
+/// days of service of the defendant's memorandum in opposition.
+deadline social-security-reply-period: 15.days after SocialSecurityOppositionServed() counted_by frcp6 cite "S.D. Ohio Civ. R. 8.1(c)"
+{
+  forum frcp
+}
+
+/// Civ. R. 54.1: a prevailing party that intends to file a bill of costs
+/// does so within forty-five days from the entry of judgment unless a
+/// statute or court order provides otherwise.
+deadline bill-of-costs-period: 45.days after JudgmentEntered() counted_by frcp6 cite "S.D. Ohio Civ. R. 54.1"
+{
+  forum frcp
+}
+
+/// Civ. R. 54.2(a): unless a statute or court order provides otherwise, a
+/// motion for attorney's fees under FRCP 54 is filed not later than
+/// forty-five days after the entry of judgment.
+deadline fee-motion-period: 45.days after JudgmentEntered() counted_by frcp6 cite "S.D. Ohio Civ. R. 54.2(a)"
+{
+  forum frcp
+}
+
+test "opposition: 21 days after service of the motion" cite "S.D. Ohio Civ. R. 7.2(a)"
+{
+  given MotionServed() on 2026-11-02
+  expect deadline(opposition-period) == 2026-11-23
+}
+
+test "reply: 14 days after service of the opposition" cite "S.D. Ohio Civ. R. 7.2(a)"
+{
+  given OppositionServed() on 2026-11-02
+  expect deadline(reply-period) == 2026-11-16
+}
+
+test "administrative record: 60 days after service, New Year's Day rolls to Monday" cite "S.D. Ohio Civ. R. 8.1(b)"
+{
+  given SocialSecurityComplaintServed() on 2026-11-02
+  expect deadline(administrative-record-period) == 2027-01-04
+}
+
+test "statement of errors: 45 days after the record" cite "S.D. Ohio Civ. R. 8.1(c)"
+{
+  given AdministrativeRecordServed() on 2026-11-02
+  expect deadline(statement-of-errors-period) == 2026-12-17
+}
+
+test "social security opposition: 45 days after the statement of errors" cite "S.D. Ohio Civ. R. 8.1(c)"
+{
+  given StatementOfErrorsServed() on 2026-11-02
+  expect deadline(social-security-opposition-period) == 2026-12-17
+}
+
+test "social security reply: 15 days after the opposition" cite "S.D. Ohio Civ. R. 8.1(c)"
+{
+  given SocialSecurityOppositionServed() on 2026-11-02
+  expect deadline(social-security-reply-period) == 2026-11-17
+}
+
+test "bill of costs: 45 days after judgment" cite "S.D. Ohio Civ. R. 54.1"
+{
+  given JudgmentEntered() on 2026-11-02
+  expect deadline(bill-of-costs-period) == 2026-12-17
+}
+
+test "fee motion: 45 days after judgment" cite "S.D. Ohio Civ. R. 54.2(a)"
+{
+  given JudgmentEntered() on 2026-11-02
+  expect deadline(fee-motion-period) == 2026-12-17
+}

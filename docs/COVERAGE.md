@@ -71,6 +71,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | mtd-local-rules | `lit/mtd` | 29 | 0 | 29 | 0 |
 | nmid-local-rules | `lit/nmid` | 23 | 0 | 23 | 0 |
 | ohnd-local-rules | `lit/ohnd` | 14 | 0 | 14 | 0 |
+| ohsd-local-rules | `lit/ohsd` | 8 | 0 | 8 | 0 |
 | ptab-patent-trial-appeal-board | `lit/ptab` | 28 | 0 | 41 | 0 |
 | supreme-court-of-the-united-states | `lit/scotus` | 9 | 0 | 11 | 0 |
 | sdd-civil-local-rules | `lit/sdd` | 11 | 0 | 12 | 0 |

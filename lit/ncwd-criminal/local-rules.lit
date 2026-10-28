@@ -1,0 +1,76 @@
+module ncwd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Western District of North Carolina's own criminal periods. Stated in
+// the rules but not declared: the "Presentence Completion Date" of
+// approximately 90 days after a plea is accepted or a verdict returned, and
+// sentencing ordinarily within 60 days of it (LCrR 32.5(a)), which the
+// Advisory Committee Notes call intentionally soft and no entitlement; the
+// officer's mailing of a violation notice to the CVB within three business
+// days (LCrR 58.2), counted in business days and binding the officer; and
+// the disposal of warrants unserved after eight months (LCrR 58.2), which
+// binds the clerk. Pretrial-motion deadlines are set by the presiding
+// judge's practice (LCrR 47.1(e)). The outline's flow (arrest to judgment)
+// is lit/frcrimp's; its decisions have no vendored reporter text and are
+// removed.
+/// The earlier of the hearing date and the first day of the term of Court
+/// for which a witness or prisoner is needed (LCrR 17.2, 17.3).
+event WitnessNeeded()
+/// The government submits its Statement of Relevant Conduct to the
+/// Probation Office on a plea or verdict of guilty (LCrR 32.4(a)).
+event RelevantConductSubmitted()
+/// The sentencing hearing (LCrR 32.5(c)).
+event SentencingHearing()
+/// A motion is served (LCrR 47.1(e)).
+event MotionServed()
+
+/// LCrR 17.2: a defense motion for service of subpoenas by the Marshal at
+/// government expense is filed at least 14 days before the hearing date or
+/// the first day of the term, whichever is earlier; a later request may be
+/// denied as untimely unless good cause is found.
+deadline subpoena-request-period: 14.days before WitnessNeeded() counted_by frcrimp45 cite "W.D.N.C. LCrR 17.2"
+{
+  forum frcrimp
+}
+
+/// LCrR 17.3(1): an application for a writ of habeas corpus ad prosequendum
+/// or ad testificandum for an out-of-district prisoner is filed at least 21
+/// days before the hearing date or the first day of the term, whichever is
+/// earlier.
+deadline writ-out-of-district-period: 21.days before WitnessNeeded() counted_by frcrimp45 cite "W.D.N.C. LCrR 17.3"
+{
+  forum frcrimp
+}
+
+/// LCrR 17.3(2): for a prisoner within the district, the application is
+/// filed at least 14 days before that date.
+deadline writ-in-district-period: 14.days before WitnessNeeded() counted_by frcrimp45 cite "W.D.N.C. LCrR 17.3"
+{
+  forum frcrimp
+}
+
+/// LCrR 32.4(b): the defendant may submit a response or objection to the
+/// government's Statement of Relevant Conduct within seven days; one not
+/// submitted raises no inference of concurrence and waives no later
+/// objection to the draft and final reports.
+deadline relevant-conduct-response-period: 7.days after RelevantConductSubmitted() counted_by frcrimp45 cite "W.D.N.C. LCrR 32.4(b)"
+{
+  forum frcrimp
+}
+
+/// LCrR 32.5(c): sentencing memoranda, supporting letters and other
+/// materials are filed not later than seven days before the sentencing
+/// hearing; the judge may accept late materials case by case.
+deadline sentencing-memoranda-period: 7.days before SentencingHearing() counted_by frcrimp45 cite "W.D.N.C. LCrR 32.5(c)"
+{
+  forum frcrimp
+}
+
+/// LCrR 47.1(e): unless the Court directs otherwise, a response to a motion
+/// is filed within seven days of the date the motion is served; no motions
+/// deadline entitles a party to a continuance of trial.
+deadline response-period: 7.days after MotionServed() counted_by frcrimp45 cite "W.D.N.C. LCrR 47.1(e)"
+{
+  forum frcrimp
+}

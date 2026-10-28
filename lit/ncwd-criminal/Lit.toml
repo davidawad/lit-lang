@@ -1,0 +1,48 @@
+# The Western District of North Carolina's Local Criminal Rules (LCrR) as a
+# local-rule layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it
+# declares only the periods the LCrR themselves state and re-encodes no
+# FRCrimP, Speedy Trial Act or FRAP 4(b) period (those are lit/frcrimp's).
+# Each period is counted under FRCrimP 45(a), which governs "any local
+# rule". The rules are the Local Rules, 2017 Edition as revised effective
+# December 1, 2022 (sources/ncwd). Federal habeas is lit/habeas's; an
+# appeal to the Fourth Circuit is lit/frcrimp's and lit/ca4's.
+[package]
+name = "ncwd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ncwd-criminal-local-rules"
+forum = "ncwd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Western District of North Carolina: Local Criminal Rules"
+description = "The Western District of North Carolina's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): requests for subpoenas at government expense, applications for writs of habeas corpus ad prosequendum and ad testificandum, the defendant's response to the government's statement of relevant conduct, sentencing memoranda, and responses to motions."
+in_force = "2022-12-01"
+known_at = "2026-10-28"
+unknown_before = "2022-12-01"
+jurisdiction = "United States District Court, W.D.N.C. (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ncwd-lcrr"
+issuer = "United States District Court for the Western District of North Carolina"
+date = "2022-12-01"
+designation = "Local Rules, 2017 Edition (revised effective December 1, 2022)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.ncwd-lcrr]
+title = "Rules of Practice and Procedure of the United States District Court for the Western District of North Carolina, 2017 Edition (as revised, effective December 1, 2022), Local Criminal Rules"
+url = "https://www.ncwd.uscourts.gov/sites/default/files/local_rules/Revised%20Local%20Rules%20120122.pdf"
+path = "sources/ncwd/ncwd-local-criminal-rules-sectioned.txt"
+path_sha256 = "84d0719b6fddb10043390d2043d684c13c148c108927f80e622a21eab44876ea"
+sha256 = "042bd955ca07cbc99ab0d52160e254a7d95221cb5408fc81d27f3daa712dc118"
+as_of = "2022-12-01"
+cite_prefixes = ["W.D.N.C. LCrR"]
+section_heading = "LCrR {n}"

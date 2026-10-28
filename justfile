@@ -402,6 +402,13 @@ lit-sync-check: lit-sync
     fi
     echo "lit-sync-check: Lit.lock files and the shared clock library are up to date; no generated file is committed"
 
+# Re-vendor formbook's court list (tests/fixtures/formbook-courts.json) at
+# SHA (default: formbook's HEAD) for the formbook parity test (lg-u561.1);
+# then map or allowlist any new court in tests/fixtures/formbook-forums.json
+# or formbook-missing.txt.
+formbook-courts SHA="HEAD":
+    scripts/formbook-courts {{SHA}}
+
 # Semantic diff (SPEC §8.6) of a fresh build against the last `lit-sync`
 # build in target/lit-build/, without writing: what changed since then.
 lit-diff:

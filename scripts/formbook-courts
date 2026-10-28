@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Vendor formbook's court list (lg-u561.1): every courts/**/court.json at
+# one pinned formbook commit, as tests/fixtures/formbook-courts.json
+# (`path` and `name` per court, sorted by path). Only the court.json
+# files are fetched (a sparse, blob-filtered clone of the public repo).
+# The parity test (crates/litgraph-packs/tests/formbook_parity.rs) reads
+# it with tests/fixtures/formbook-forums.json and formbook-missing.txt.
+#
+# Usage: scripts/formbook-courts [SHA]   (default: the remote's HEAD)
+set -euo pipefail
+repo_url="https://github.com/davidawad/formbook"
+root="$(git rev-parse --show-toplevel)"
+out="$root/tests/fixtures/formbook-courts.json"
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+git clone -q --filter=blob:none --no-checkout "$repo_url" "$tmp/formbook"
+cd "$tmp/formbook"
+sha="$(git rev-parse "${1:-HEAD}^{commit}")"
+git sparse-checkout set --no-cone '/courts/**/court.json'
+git checkout -q "$sha"
+find courts -name court.json -print0 | sort -z | xargs -0 jq -c '{path, name}' \
+  | jq -s --arg repo "$repo_url" --arg sha "$sha" \
+      '{formbook: {repo: $repo, sha: $sha}, courts: sort_by(.path)}' > "$out"
+echo "formbook-courts: $(jq '.courts | length' "$out") courts at $sha -> ${out#"$root"/}"

@@ -1,0 +1,143 @@
+module mn-criminal-trial-court.criminal
+
+// A felony or gross misdemeanor prosecution in the Minnesota district
+// court, from the defendant's view of outcomes. Every period below is
+// stated in a note, not counted: Minn. R. Crim. P. 34.01 computes them
+// with Minnesota's legal holidays, for which lit/core has no counting
+// rule, and the 36-hour and 48-hour arrest limits are computed under their
+// own rules (34.01 excepts them). Pretrial release (Rule 6.02: release on personal recognizance or
+// an unsecured bond unless the court determines otherwise) is summarised
+// only. The rule comments' case citations are the rules' commentary, not
+// vendored reporter text, and the outline's decisions (Gerstein,
+// McLaughlin, Gideon, Brady, Barker v. Wingo, Boykin, Missouri v. Frye,
+// Jackson v. Virginia, Blakely, Roe v. Flores-Ortega, Garza v. Idaho) are
+// federal constitutional authority with no reporter text vendored, so
+// they are removed here.
+start arrested
+
+state arrested: "Arrest" by applicant cite "Minn. R. Crim. P. 4.02"
+{
+  note "A defendant arrested with a warrant is taken before a judge as the warrant directs (Minn. R. Crim. P. 4.01). After a warrantless arrest, a person not released is brought before the nearest available judge of the county without unnecessary delay and not more than 36 hours after the arrest, exclusive of the day of arrest, Sundays and legal holidays, or as soon as a judge is available, and a complaint is presented to the judge before that appearance (4.02, subd. 5). A judge determines probable cause without unnecessary delay and in any event within 48 hours from the arrest, counting the day of arrest, Saturdays, Sundays and legal holidays; without it the person is released immediately (4.03, subd. 1)."
+  edge-arrested-appearance "First appearance (Rule 5)" -> first-appearance {
+    authority cite "Minn. R. Crim. P. 4.02"
+  }
+  edge-arrested-released "No probable cause found in time; released" -> dismissed {
+    authority cite "Minn. R. Crim. P. 4.03"
+  }
+}
+
+decision first-appearance: "First appearance" by court cite "Minn. R. Crim. P. 5.01"
+{
+  note "The court informs the defendant of the charges and of the defendant's rights, including appointed counsel if eligible, ensures the defendant has the charging document, and sets bail and other conditions of release under Rule 6.02 (Minn. R. Crim. P. 5.01)."
+  edge-first-appearance-detained "Held on bail or conditions" -> second-appearance {
+    authority cite "Minn. R. Crim. P. 5.01"
+  }
+  edge-first-appearance-released "Released on recognizance or conditions" -> second-appearance {
+    authority cite "Minn. R. Crim. P. 6.02"
+  }
+}
+
+state second-appearance: "Second appearance (Rule 8) and arraignment" by court cite "Minn. R. Crim. P. 8.01"
+{
+  note "At the Rule 8 hearing the court again advises the defendant of the charges and rights; the only plea the defendant may enter is guilty, and otherwise the arraignment is continued to the Omnibus Hearing (Minn. R. Crim. P. 8.01, 8.02, subd. 1). In a homicide to be presented to the grand jury, or an offense punishable by life imprisonment, no plea is taken, and presentation to the grand jury must commence within 14 days of the Rule 8 appearance (8.02, subd. 2). The Omnibus Hearing is scheduled for a date not later than 28 days after the Rule 8 appearance, extendable for good cause (8.04(c)); it must start within 42 days of the Rule 5 appearance if not combined with the Rule 8 hearing, or within 28 days if combined (11.01(a))."
+  edge-second-appearance-omnibus "No guilty plea; Omnibus Hearing" -> omnibus {
+    authority cite "Minn. R. Crim. P. 8.04"
+  }
+  edge-second-appearance-plea "Guilty plea at the Rule 8 hearing" -> sentencing {
+    authority cite "Minn. R. Crim. P. 8.02"
+  }
+}
+
+state omnibus: "Omnibus Hearing and pretrial motions" by applicant cite "Minn. R. Crim. P. 11.02"
+{
+  note "Defenses, objections, issues and requests that can be decided without trial are raised by pretrial motion including everything then available; omitting one waives it, except lack of jurisdiction or failure of the charge to state an offense, unless the court grants relief for good cause (Minn. R. Crim. P. 10.01, subd. 2). In felony and gross misdemeanor cases motions are made in writing and served no later than three days before the Omnibus Hearing unless the court permits later service for good cause, and a motion for privileged or confidential victim records no later than 10 days before its hearing (10.03, subd. 1). The court hears at the Omnibus Hearing the motions on probable cause, evidence, discovery, other-acts and relationship evidence, constitutional and procedural issues and aggravated sentence (11.02)."
+  edge-omnibus-motions "Motions heard" -> motions-ruling {
+    authority cite "Minn. R. Crim. P. 11.02"
+  }
+  edge-omnibus-plea "Plea negotiations" -> plea-decision {
+    authority cite "Minn. R. Crim. P. 11.09"
+  }
+}
+
+decision motions-ruling: "Omnibus rulings" by court cite "Minn. R. Crim. P. 11.02"
+{
+  note "A complaint may be dismissed for lack of probable cause (Minn. R. Crim. P. 11.02(a)); the court may dismiss the complaint, indictment or tab charge if the prosecutor has unnecessarily delayed bringing the defendant to trial (30.02); and the prosecutor may dismiss a complaint without, or an indictment with, the court's approval, stating the reasons (30.01)."
+  edge-motions-ruling-dismissed "Charge dismissed" -> dismissed {
+    authority cite "Minn. R. Crim. P. 11.02"
+  }
+  edge-motions-ruling-delay "Dismissed for the prosecutor's unnecessary delay" -> dismissed {
+    authority cite "Minn. R. Crim. P. 30.02"
+  }
+  edge-motions-ruling-denied "Motions denied; plea entered" -> plea-decision {
+    authority cite "Minn. R. Crim. P. 11.09"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Minn. R. Crim. P. 11.09"
+{
+  note "On a plea other than guilty a trial date is set and the defendant tried as soon as possible; on any party's demand after the plea, trial starts within 60 days unless the court finds good cause for a later date, and unless exigent circumstances exist a defendant not tried within 120 days from the plea and the demand is released on nonmonetary conditions (Minn. R. Crim. P. 11.09)."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite "Minn. R. Crim. P. 11.09"
+  }
+  edge-plea-decision-trial "Trial on demand within 60 days" -> trial {
+    authority cite "Minn. R. Crim. P. 11.09"
+  }
+}
+
+decision trial: "Verdict" by court cite "Minn. R. Crim. P. 26.03"
+{
+  note "After a guilty verdict or the jury's discharge without verdict, a motion for judgment of acquittal may be brought within 15 days after the jury is discharged, or within any further time the court fixes during those 15 days (Minn. R. Crim. P. 26.03, subd. 18(3))."
+  edge-trial-acquittal "Not guilty" -> acquitted {
+    authority cite "Minn. R. Crim. P. 26.03"
+  }
+  edge-trial-guilty "Guilty; post-verdict motions" -> post-verdict {
+    authority cite "Minn. R. Crim. P. 26.04"
+  }
+}
+
+decision post-verdict: "Post-verdict motions" by court cite "Minn. R. Crim. P. 26.04"
+{
+  note "Notice of a motion for new trial is served within 15 days after the verdict or finding of guilty and heard within 30 days of it unless the court extends the time for good cause (Minn. R. Crim. P. 26.04, subd. 1(3)); the opposing party has ten days to serve supporting documents, extendable for good cause (subd. 1(4)); the court may order a new trial on its own initiative, with the defendant's consent, within 15 days (subd. 2). A motion to vacate the judgment and dismiss, for a charge stating no offense or want of jurisdiction, is made within 15 days after the verdict, finding or guilty plea, or within a time the court sets during that period (subd. 3)."
+  edge-post-verdict-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite "Minn. R. Crim. P. 26.03"
+  }
+  edge-post-verdict-vacated "Judgment vacated; case dismissed" -> dismissed {
+    authority cite "Minn. R. Crim. P. 26.04"
+  }
+  edge-post-verdict-new-trial "New trial granted" -> trial {
+    authority cite "Minn. R. Crim. P. 26.04"
+  }
+  edge-post-verdict-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "Minn. R. Crim. P. 27.03"
+  }
+}
+
+state sentencing: "Sentencing" by court cite "Minn. R. Crim. P. 27.03"
+{
+  note "Sentencing hearings are held as provided by law, with the presentence and departure procedures of Minn. R. Crim. P. 27.03."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "Minn. R. Crim. P. 27.03"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "Minn. R. Crim. P. 28.02"
+{
+  note "In felony and gross misdemeanor cases the defendant's appeal is filed within 90 days after final judgment or entry of the order appealed from (30 days in misdemeanor cases, 60 days from an order denying postconviction relief); a notice filed after the decision is announced but before sentencing or judgment is treated as filed the same day as them; and a timely motion to vacate, for judgment of acquittal or for a new trial tolls the time until the order denying it (Minn. R. Crim. P. 28.02, subd. 4(3))."
+  edge-judgment-appeal "Appeal filed within 90 days" -> appeal-taken {
+    authority cite "Minn. R. Crim. P. 28.02"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final {
+    authority cite "Minn. R. Crim. P. 28.02"
+  }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Minn. R. Crim. P. 26.03"
+
+terminal dismissed: "Released or charge dismissed" outcome [win, dismissal] cite "Minn. R. Crim. P. 30.02"
+
+terminal appeal-taken: "Appeal to the Court of Appeals" outcome [appeal] cite "Minn. R. Crim. P. 28.02"
+{
+  note "The appeal continues before the Court of Appeals under Rule 28 and, where it is silent, the Rules of Civil Appellate Procedure (Minn. R. Crim. P. 28.01, subd. 2; lit/minnctapp)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "Minn. R. Crim. P. 28.02"

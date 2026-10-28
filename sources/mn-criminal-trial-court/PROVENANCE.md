@@ -56,3 +56,9 @@
 - Original: `mn-criminal-trial-court/original/mn-criminal-procedure-table-of-headnotes.pdf` as served (sha256 49b429d7d09be0931b4389e3635a49663de22718f2ffd698c38b97da0476e34f); extraction sha256 8bf2f2632dcc4bb0699be244c8e5ae13d32098cbba466c24846dfad117198a66.
 
 - Note (lg-gddt): Criminal appeals: Minnesota Rules of Criminal Procedure Rules 28-29 in this set and the Rules of Civil Appellate Procedure/appeal rules, covered by sources/minnctapp/ if it carries them.
+
+### `mn-criminal-trial-court/mn-rules-of-criminal-procedure-sectioned.txt` — Minnesota Rules of Criminal Procedure, subrules sectioned
+
+- Derived in the pod (lg-gddt.20) from `mn-criminal-trial-court/mn-rules-of-criminal-procedure.txt` (extract sha256 8b39f196661c031eb6dbca2a584b69df4284dd5cab683c36d1bd803e55732c4c); nothing fetched. The extract's own `## Rule <n>` page markers are kept; one `## Rule <n>.<m>` line is inserted before each subrule's own heading line (`1.01Scope and Application`, `Rule 28.02Appeal by Defendant` and the like, the subrule number run into its title as served): 176 subrules, `Rule 1.01` through `Rule 37.02`. Rule text was not edited: deleting the inserted marker lines (`sed -E '/^## Rule [0-9]+\.[0-9]+$/d'`) restores the extract byte for byte.
+- Edition: as the extract, amendments effective through July 1, 2026.
+- Sectioned sha256 d61a503d477412ffd5060110d5013b2bbcada62215ac1af47f14a01e7b5d4166 (the `path_sha256` pinned by `lit/mn-criminal-trial-court/Lit.toml`).

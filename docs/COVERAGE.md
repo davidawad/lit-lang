@@ -115,7 +115,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | Alaska | state | promoted | 0 | 0 | 0 | 0 | `lit/ak-superior`, `lit/ak-supreme` |
 | Arizona | state | outline | 0 | 0 | 0 | 0 | `outlines/ninth-circuit/arizona/state-appellate`, `outlines/ninth-circuit/arizona/state-civil` |
 | Arkansas | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/arkansas/state-appellate`, `outlines/eighth-circuit/arkansas/state-civil` |
-| California | state | promoted | 0 | 0 | 0 | 0 | `lit/ca-superior` |
+| California | state | promoted | 0 | 0 | 0 | 0 | `lit/ca-court-of-appeal`, `lit/ca-superior` |
 | Colorado | state | outline | 0 | 0 | 0 | 0 | `outlines/tenth-circuit/colorado/state-appellate`, `outlines/tenth-circuit/colorado/state-civil` |
 | Connecticut | state | outline | 0 | 0 | 0 | 0 | `outlines/second-circuit/connecticut/state-appellate`, `outlines/second-circuit/connecticut/state-civil` |
 | Delaware | state | outline | 0 | 0 | 0 | 0 | `outlines/third-circuit/delaware/state-appellate`, `outlines/third-circuit/delaware/state-civil` |

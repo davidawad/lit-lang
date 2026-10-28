@@ -1,0 +1,53 @@
+# A civil appeal from a California superior court to the Court of Appeal
+# under the California Rules of Court, Title 8, as far as the vendored
+# rules state (sources/ca-court-of-appeal: the Judicial Council's per-rule
+# pages, each as in force on 2026-10-27), with appealability under CCP
+# § 904.1 (sources/ca-superior). Computation of time (Cal. Rules of Court,
+# rule 1.10, and CCP §§ 12-12a) is not vendored and lit/core has no
+# California counting rule, so the periods are stated in notes, not encoded
+# as counted deadlines. The trial-court side is lit/ca-superior.
+[package]
+name = "ca-court-of-appeal"
+version = "0.1.0"
+language = 1
+pack_id = "ca-court-of-appeal"
+forum = "ca-court-of-appeal"
+authority = "StateRule"
+title = "California Courts of Appeal, civil appeals"
+description = "A civil appeal to a California Court of Appeal, as far as the vendored California Rules of Court state: the time to appeal and its bar on extension, appealability, the record, briefs, oral argument and submission, publication, rehearing, the petition for review in the Supreme Court, and the remittitur."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "California Courts of Appeal (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.crc-title8]
+title = "California Rules of Court, Title 8, cited rules (as in force 2026-10-27)"
+url = "https://courts.ca.gov/cms/rules/index/eight/rule8_104"
+path = "sources/ca-court-of-appeal/cal-rules-of-court-title8-cited.txt"
+path_sha256 = "616d23ce45fc69c4d0c6c6b2e5684681c36f8bfe5954e99ce40a766d0ed5e010"
+as_of = "2026-10-27"
+
+[sources.ccp]
+title = "California Code of Civil Procedure, cited chapters, as published on leginfo.legislature.ca.gov (in effect 2026-10-27)"
+url = "https://leginfo.legislature.ca.gov/faces/codesTOCSelected.xhtml?tocCode=CCP"
+path = "sources/ca-superior/ccp-cited-chapters-sectioned.txt"
+path_sha256 = "494bdb61129d96d2eee0776501204acb3bd5f1fd32641098efacd3558124e336"
+as_of = "2026-10-27"
+
+[[cite_syntax.rules]]
+prefixes = ["Cal. Rules of Court, rule"]
+heading = "Cal. Rules of Court, rule {}"
+source = "crc-title8"
+
+[[cite_syntax.rules]]
+prefixes = ["Cal. Code Civ. Proc. §"]
+heading = "Cal. Code Civ. Proc. § {}"
+source = "ccp"

@@ -1,0 +1,101 @@
+module vaed-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The Eastern District of Virginia's own criminal periods. Stated in the
+// rules but not declared: the clerk's delivery of exhibits 45 days after
+// the judgment becomes final (Local Criminal Rule 55(C)(3)), which binds
+// the clerk; requests for daily or expedited transcripts five business
+// days before the hearing or trial (Local Criminal Rule 57.3(E)), counted
+// in business days, which frcrimp45 does not count; and the attorney
+// admission and discipline periods (Local Criminal Rule 57.4). Local
+// Criminal Rule 47(F)(1) states that its response and reply periods are
+// not expanded by the mode of service, notwithstanding FRCrimP 45(c); the
+// triggers below carry no service method, so none is added. The outline's
+// flow (arrest to judgment) is lit/frcrimp's; its decisions have no
+// vendored reporter text and are removed.
+/// The arraignment (Local Criminal Rule 12(A)).
+event Arraigned()
+/// A pretrial motion is filed (Local Criminal Rule 12(A)).
+event PretrialMotionFiled()
+/// The date set for the commencement of trial (Local Criminal Rules 24(B),
+/// 30).
+event TrialDate()
+/// A motion is filed (Local Criminal Rule 47(E)).
+event MotionFiled()
+/// A motion and its brief are served (Local Criminal Rule 47(F)(1)).
+event MotionServed()
+/// The opposing party's response brief is served (Local Criminal Rule
+/// 47(F)(1)).
+event ResponseServed()
+/// A notice of appeal is filed (Local Criminal Rule 57.3(D)).
+event NoticeOfAppealFiled()
+
+/// Local Criminal Rule 12(A): within 14 calendar days from the date of
+/// arraignment, or another time the Court fixes, the parties file all
+/// pretrial motions: challenges to the charging document, venue and
+/// jurisdiction, discovery, suppression, mental examination, objections to
+/// evidence subject to pretrial ruling, and any other matter capable of
+/// pretrial determination.
+deadline pretrial-motion-period: 14.days after Arraigned() counted_by frcrimp45 cite "E.D. Va. Loc. Crim. R. 12(A)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 12(A): a response to a pretrial motion is filed
+/// within 14 calendar days after the motion is filed, or another time the
+/// Court fixes.
+deadline pretrial-response-period: 14.days after PretrialMotionFiled() counted_by frcrimp45 cite "E.D. Va. Loc. Crim. R. 12(A)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 24(B): in a multi-defendant case, a motion for more
+/// peremptory challenges is made at least 21 days before the date set for
+/// trial; an untimely motion is not entertained.
+deadline peremptory-challenge-motion-period: 21.days before TrialDate() counted_by frcrimp45 cite "E.D. Va. Loc. Crim. R. 24(B)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 30: except as a pretrial or scheduling order
+/// provides, in a jury case the parties file proposed instructions and
+/// voir dire questions at least seven days before the scheduled trial
+/// date.
+deadline jury-instructions-period: 7.days before TrialDate() counted_by frcrimp45 cite "E.D. Va. Loc. Crim. R. 30"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 47(E): unless otherwise ordered, a motion is deemed
+/// withdrawn if the movant does not set it for hearing, or arrange to
+/// submit it without one, within 30 days after it is filed.
+deadline motion-setting-period: 30.days after MotionFiled() counted_by frcrimp45 cite "E.D. Va. Loc. Crim. R. 47(E)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 47(F)(1): unless the Court directs otherwise, the
+/// opposing party files its response brief within 14 calendar days after
+/// service.
+deadline response-period: 14.days after MotionServed() counted_by frcrimp45 cite "E.D. Va. Loc. Crim. R. 47(F)(1)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 47(F)(1): the moving party may file a reply brief
+/// within six calendar days after service of the response; no further
+/// brief without leave of Court.
+deadline reply-period: 6.days after ResponseServed() counted_by frcrimp45 cite "E.D. Va. Loc. Crim. R. 47(F)(1)"
+{
+  forum frcrimp
+}
+
+/// Local Criminal Rule 57.3(D): unless the parties file a written
+/// stipulation designating the record on appeal within 21 days after the
+/// notice of appeal is filed, the Clerk certifies and forwards all original
+/// pleadings and orders.
+deadline record-stipulation-period: 21.days after NoticeOfAppealFiled() counted_by frcrimp45 cite "E.D. Va. Loc. Crim. R. 57.3(D)"
+{
+  forum frcrimp
+}

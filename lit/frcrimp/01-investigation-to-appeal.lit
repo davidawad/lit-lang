@@ -819,15 +819,15 @@ decision notice-of-appeal-window: "Notice of Appeal Window" by applicant delegab
   op set
 } cite ?("Fed. R. App. P. 4(b)(1), (b)(4)") effective [2024-12-01, ..) {
   group appeal-group
-  note "Defendant has 14 days from judgment entry to file. The district court may extend up to 30 additional days for excusable neglect or good cause — but only if the extension motion is itself made within the original 14-day window. Post-Bowles, this is jurisdictional with no equitable exceptions."
+  note "Defendant has 14 days from judgment entry to file. The district court may extend up to 30 additional days for excusable neglect or good cause, and may do so before or after the 14 days expire, with or without motion and notice (FRAP 4(b)(4)) — but never past 30 days from the original expiry. Post-Bowles, this is jurisdictional with no equitable exceptions."
   edge-notice-of-appeal-window-notice-of-appeal-filed "File notice of appeal" -> notice-of-appeal-filed {
     authority cite "Fed. R. App. P. 4(b)(1)"
     effort 3.hours
     cost 605.usd
     within criminal-appeal {
       extendable true
-      extension_authority "Fed. R. App. P. 4(b)(4) — the extension motion must itself be filed within the 14-day period, showing excusable neglect or good cause, for up to 30 additional days"
-      note "Missing both the original window and the extension-motion window forecloses direct appeal entirely."
+      extension_authority "Fed. R. App. P. 4(b)(4) — on a finding of excusable neglect or good cause, the court may extend before or after the 14 days expire, with or without motion and notice, for up to 30 days from the original expiry"
+      note "Missing both the original window and the 30-day extension period forecloses direct appeal entirely."
     }
     duration { min 2.1.days, mode 7.days, max 14.days }
     valence good

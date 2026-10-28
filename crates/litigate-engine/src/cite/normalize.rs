@@ -268,9 +268,15 @@ fn find_range_separator(s: &str) -> Option<(usize, usize)> {
 /// (`"42.120".."42.121"`, or `"42.120".."121"` — legal writing often drops
 /// the repeated prefix on the high side). The high end must exceed the low
 /// one: `3002.1-1` is the undivided local rule 3002.1-1, not a one-member
-/// range collapsing to `3002.1`.
+/// range collapsing to `3002.1`. Nor is a zero-padded side ever a range end:
+/// `NMRA 1-012` is the single state rule 1-012 (`<set>-<rule>` numbering),
+/// not Rules 1 through 12.
 fn range_members(lo: &str, hi: &str) -> Option<Vec<String>> {
     if let (Ok(a), Ok(b)) = (lo.parse::<u32>(), hi.parse::<u32>()) {
+        let padded = |s: &str| s.len() > 1 && s.starts_with('0');
+        if padded(lo) || padded(hi) {
+            return None;
+        }
         return (b > a && b - a < 100).then(|| (a..=b).map(|n| n.to_string()).collect());
     }
     let (prefix, lo_last) = lo.rsplit_once('.')?;

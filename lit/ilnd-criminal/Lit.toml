@@ -1,0 +1,53 @@
+# The U.S. District Court for the Northern District of Illinois's local
+# criminal rules (LCR) as a local-rule layer over lit/frcrimp (28 U.S.C.
+# § 2071; FRCrimP 57(a)): it declares only the periods the local criminal
+# rules themselves state and re-encodes no FRCrimP, Speedy Trial Act or
+# FRAP 4(b) period (one source of truth: lit/frcrimp). Each period is
+# counted under FRCrimP 45(a), which governs "any local rule", so each
+# deadline names `forum frcrimp`. The rules are the edition the court
+# serves as current ("effective September 1, 1999 with amendments through
+# May 4, 2026"; sources/ilnd), so in_force is that date; earlier editions
+# are not vendored, so a query before it is a hole in the corpus. The
+# court's Speedy Trial Act plan (18 U.S.C. § 3165) and its CJA plan are
+# not vendored. An appeal goes to the Seventh Circuit under lit/frcrimp's
+# FRAP 4(b) period and lit/ca7.
+[package]
+name = "ilnd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "ilnd-criminal-local-rules"
+forum = "ilnd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the Northern District of Illinois: Local Criminal Rules"
+description = "The U.S. District Court for the Northern District of Illinois's local criminal rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the pretrial-motion and additional-discovery motion periods, the discovery conference and declination of disclosure, the presentence interview, offense-conduct versions and sentencing position papers, the extension of a warrant sealing order and the filing of a search warrant return, the final CJA interim-payment voucher, and the answering and reply briefs on a motion."
+in_force = "2026-05-04"
+known_at = "2026-10-28"
+unknown_before = "2026-05-04"
+jurisdiction = "U.S. District Court for the Northern District of Illinois (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "ilnd-lcr"
+issuer = "U.S. District Court for the Northern District of Illinois"
+date = "2026-05-04"
+designation = "Local Criminal Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.ilnd-lcr]
+title = "Local Rules of the United States District Court for the Northern District of Illinois, criminal rules (LCR), effective September 1, 1999 with amendments through May 4, 2026"
+url = "https://www.ilnd.uscourts.gov/_assets/_documents/_rules/LRRULES.pdf"
+path = "sources/ilnd/ilnd-criminal-rules-sectioned.txt"
+path_sha256 = "1ecb8867d41368aa3227f340bcf12569960af6ede9d8b838039d87f3b8d618a5"
+sha256 = "033bacf6dd51b004d9869c1ed25a6dea2c620d8ae0d5c6370c88489b8d9ae96c"
+as_of = "2026-05-04"
+cite_prefixes = ["N.D. Ill. LCR"]
+section_heading = "LCR {n}"

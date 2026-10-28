@@ -1,0 +1,233 @@
+module ilnd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+import frcrimp.deadlines.{ SentencingScheduled }
+
+// The Northern District of Illinois's own criminal periods, counted under
+// the criminal rules (FRCrimP 45(a) governs "any local rule"). The local
+// criminal rules apply to criminal proceedings in the court, and the
+// court's other Local Rules apply insofar as they are applicable (N.D.
+// Ill. LCR 1.1, 1.2). No trigger carries a service method: FRCrimP 45(c)'s
+// three added days follow the manner of service, which is not modeled
+// here.
+//
+// Periods that are FRCrimP periods stay in lit/frcrimp and are only named
+// here: the presentence report is issued not later than 35 days before
+// sentencing (LCR 32.1(f); FRCrimP 32(e)(2), lit/frcrimp psr-disclosure).
+//
+// Periods counted in business days stay in notes: lit/core's FRCrimP 45(a)
+// rule counts calendar days, and LCR 32.1(b)(1) defines a business day as
+// any day other than a Saturday, Sunday or legal holiday. After an
+// indictment or information is filed the clerk sets the arraignment on or
+// before seven business days after the filing for a defendant not in
+// custody and not arrested on a warrant; no later than two business days
+// after the Marshal obtains custody of a defendant arrested on a warrant
+// or held by another custodian; and no later than five business days after
+// the filing for a defendant in the Marshal's custody; the assigned judge
+// may modify each schedule (LCR 10.1(A)-(D)). After a determination of
+// guilt the defendant and counsel report to the probation office
+// immediately or by 2:00 p.m. the next business day, and the courtroom
+// deputy forwards the presentence referral within one business day (LCR
+// 32.1(d)).
+//
+// Conditions that are not deadlines from an event stay in notes: the
+// sentencing hearing is set not less than 84 days after the determination
+// of guilt, and a motion to modify the LCR 32.1 time limits must be made
+// when the sentencing date is set (LCR 32.1(c)); a failure to submit the
+// defendant's version within 7 days of the government's may waive its
+// consideration in the report (LCR 32.1(e)); a position-paper objection
+// not filed in time is waived absent good cause (LCR 32.1(g)); a motion to
+// seal a search or seizure warrant must name an expiry date no more than
+// 90 days later (LCR 41(d)); an appointed CJA attorney incurs no single
+// expense over $500.00 without the Court's prior approval (LCR 44.1(8));
+// no party communicates with the petit jurors after trial without the
+// court's permission (LCR 31.1); a corporate defendant's plea other than
+// not guilty is entered by an authorized officer, director or managing
+// agent or by counsel so authorized (LCR 11.1); an appearance is filed
+// before or with the first filing or at the initial court appearance,
+// whichever is first (LCR 57.1). Grand jury supervision and records (LCR
+// 6.1 to 6.2.1), bail bonds and pretrial services (LCR 46.1 to 46.4),
+// case assignment and magistrate judge referrals and reviews (LCR 50.1 to
+// 50.4) and petty offenses (LCR 58.1) set no period and are not encoded.
+// A review of a duty magistrate judge's order is brought to the emergency
+// judge "as soon as practicable" (LCR 50.4(a)), which is not a counted
+// period.
+//
+// The earlier N.D. Ill. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Brady v. Maryland, and the others it named)
+// are FRCrimP, Speedy Trial Act or constitutional authority and belong to
+// lit/frcrimp; they are removed here: no reporter text is vendored.
+
+/// The defendant is arraigned (N.D. Ill. LCR 12.1(a), 16.1(a)).
+event Arraigned()
+/// The United States attorney and defendant's attorney hold the discovery
+/// conference (N.D. Ill. LCR 16.1(a)).
+event DiscoveryConferenceHeld()
+/// A determination of guilt: the entry of a judgment of conviction, by
+/// plea or after trial (N.D. Ill. LCR 32.1(b)(3)).
+event GuiltDetermined()
+/// The attorney for the government submits its version of the offense
+/// conduct to the probation officer (N.D. Ill. LCR 32.1(e)).
+event GovernmentVersionSubmitted()
+/// A co-defendant's attorney receives the co-defendants' versions of the
+/// offense conduct (N.D. Ill. LCR 32.1(e)).
+event CodefendantVersionsReceived()
+/// Defense counsel files objections to the presentence report and a
+/// sentencing memorandum (N.D. Ill. LCR 32.1(g)).
+event DefensePositionPaperFiled()
+/// The date a sealing order or delayed notice for a search or seizure
+/// warrant expires (N.D. Ill. LCR 41(d), (e)).
+event WarrantSealExpires()
+/// A search warrant is executed (N.D. Ill. LCR 41(f)).
+event WarrantExecuted()
+/// The representation by an attorney appointed under the Criminal Justice
+/// Act and approved for interim payments concludes (N.D. Ill. LCR 44.1).
+event CjaRepresentationConcluded()
+/// The opposing party receives the brief supporting a contested motion
+/// (N.D. Ill. LCR 47.1(b)).
+event SupportingBriefReceived()
+/// The moving party receives the answering brief (N.D. Ill. LCR 47.1(b)).
+event AnsweringBriefReceived()
+
+/// N.D. Ill. LCR 12.1(a): all pretrial motions and supporting briefs are
+/// filed within the time the court sets; if it sets none, within 21 days
+/// from the date of arraignment. Motions filed under LCR 12.1 are not
+/// subject to LCR 47.1 (LCR 47.1(c)(1)).
+deadline pretrial-motions: 21.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D. Ill. LCR 12.1(a)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ill. LCR 16.1(a): within 7 days after the arraignment the United
+/// States attorney and the defendant's attorney confer and attempt to agree
+/// on a timetable and procedures for Rule 16 disclosure, agents' notes,
+/// Rule 404(b) notice, a Santiago proffer and 18 U.S.C. § 3500 material.
+deadline discovery-conference: 7.days after Arraigned() counted_by frcrimp45 cite "N.D. Ill. LCR 16.1(a)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ill. LCR 16.1(b): a written declination of a requested Rule 16
+/// disclosure, signed personally by the United States attorney or first
+/// assistant or by defendant's counsel, is served on opposing counsel and
+/// filed within 5 days of the discovery conference.
+deadline disclosure-declination: 5.days after DiscoveryConferenceHeld() counted_by frcrimp45 cite "N.D. Ill. LCR 16.1(b)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ill. LCR 12.1(b): a motion for additional discovery or inspection
+/// after the LCR 16.1(a) conference is filed within 7 days of the
+/// conference or, if the court has set a later date for pretrial motions,
+/// by that later date; the motion states that the conference was held, its
+/// date, opposing counsel's name and that agreement could not be reached.
+deadline additional-discovery-motion: 7.days after DiscoveryConferenceHeld() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D. Ill. LCR 12.1(b)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ill. LCR 32.1(d): the defendant participates in an interview, if
+/// any, with the probation office within 14 days after the determination
+/// of guilt; failing to schedule it does not affect the other dates.
+deadline presentence-interview: 14.days after GuiltDetermined() counted_by frcrimp45 cite "N.D. Ill. LCR 32.1(d)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ill. LCR 32.1(e): not more than 14 days after the determination of
+/// guilt, the attorney for the government submits its version of the
+/// offense conduct to the probation officer and serves it on opposing
+/// counsel and any convicted co-defendant's attorney.
+deadline government-version: 14.days after GuiltDetermined() counted_by frcrimp45 cite "N.D. Ill. LCR 32.1(e)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ill. LCR 32.1(e): not more than 7 days after the government's
+/// submission, each defendant's attorney submits a version of the offense
+/// conduct to the probation officer.
+deadline defendant-version: 7.days after GovernmentVersionSubmitted() counted_by frcrimp45 cite "N.D. Ill. LCR 32.1(e)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ill. LCR 32.1(e): within 7 days after receiving the co-defendants'
+/// versions, each co-defendant's attorney submits and serves that
+/// defendant's version as it relates to the defendants' respective roles.
+deadline codefendant-role-version: 7.days after CodefendantVersionsReceived() counted_by frcrimp45 cite "N.D. Ill. LCR 32.1(e)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ill. LCR 32.1(g): not later than 14 days before sentencing,
+/// defense counsel files with the Court and the probation officer any
+/// objections to the presentence report and a sentencing memorandum. A
+/// motion to modify the LCR 32.1 time limits is made when the sentencing
+/// date is set (LCR 32.1(c)).
+deadline defense-position-paper: 14.days before SentencingScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D. Ill. LCR 32.1(g); N.D. Ill. LCR 32.1(c)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ill. LCR 32.1(g): the Government has leave to respond 7 days after
+/// the defense position paper.
+deadline government-position-response: 7.days after DefensePositionPaperFiled() counted_by frcrimp45 cite "N.D. Ill. LCR 32.1(g)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ill. LCR 41(e)(2): a motion to extend an order sealing a warrant
+/// or delaying notice is filed no later than three days before the seal or
+/// delayed notice expires.
+deadline seal-extension-motion: 3.days before WarrantSealExpires() counted_by frcrimp45 cite "N.D. Ill. LCR 41(e)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ill. LCR 41(f): the return of a search warrant, with a copy of the
+/// warrant, is filed electronically within 60 days after the warrant's
+/// execution, under seal if the application and warrant are sealed.
+deadline warrant-return-filing: 60.days after WarrantExecuted() counted_by frcrimp45 cite "N.D. Ill. LCR 41(f)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ill. LCR 44.1(6): within 45 days of the conclusion of the
+/// representation, CJA counsel approved for interim payments submits a
+/// final voucher for the 20 percent withheld and the final interim period.
+deadline cja-final-voucher: 45.days after CjaRepresentationConcluded() counted_by frcrimp45 cite "N.D. Ill. LCR 44.1"
+{
+  forum frcrimp
+}
+
+/// N.D. Ill. LCR 47.1(b): the opposing party files an answering brief
+/// within 14 days of receiving the supporting brief; the court may shorten
+/// or extend the time.
+deadline answering-brief: 14.days after SupportingBriefReceived() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D. Ill. LCR 47.1(b)"
+{
+  forum frcrimp
+}
+
+/// N.D. Ill. LCR 47.1(b): the moving party may file a reply brief within 7
+/// days of receipt of the answering brief; a reply not filed in time is
+/// waived, and the court may shorten or extend the time.
+deadline reply-brief: 7.days after AnsweringBriefReceived() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "N.D. Ill. LCR 47.1(b)"
+{
+  forum frcrimp
+}

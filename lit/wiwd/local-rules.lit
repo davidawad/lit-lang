@@ -1,0 +1,37 @@
+module wiwd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Western District of Wisconsin's own periods, computed under FRCP
+// 6(a), which governs a period stated in a local rule. The five Local
+// Rules state one period: the thirty days after the defendants' appearance
+// within which litigants consider alternative dispute resolution (L.R. 3,
+// the court's LR 16.6 CJ). The others state none: admission of lawyers and
+// reciprocal discipline (L.R. 1), the magistrate judges' designation (L.R.
+// 2), contacting jurors (L.R. 4) and electronic filing (L.R. 5). The
+// admission fee is "the prescribed fee" (L.R. 1(B), (C)) and is not stated
+// in the vendored text, so it stays out. The earlier W.D. Wis. outline's
+// FRCP flow and its Supreme Court decisions (Twombly, Iqbal, Celotex,
+// Anderson v. Liberty Lobby) are FRCP authority and belong to lit/frcp and
+// lit/frap; its Seventh Circuit decisions (Cracco v. Vitran Express, Inc.;
+// Swanson v. Citibank, N.A.) are removed: no reporter text is vendored.
+// Seventh Circuit rules and operating procedures are not vendored either.
+/// The defendants appear in a civil case that L.R. 3(D) does not exempt
+/// (L.R. 3(A)).
+event DefendantsAppeared()
+
+/// L.R. 3(A): litigants are to consider the use of alternative dispute
+/// resolution within thirty days of the defendants' appearance. Cases in
+/// which the plaintiff proceeds pro se, collection and United States
+/// mortgage foreclosure actions, Social Security appeals, and bankruptcy
+/// matters other than adversary proceedings are exempt (L.R. 3(D)).
+deadline adr-consideration-period: 30.days after DefendantsAppeared() counted_by frcp6 cite "W.D. Wis. L.R. 3"
+{
+  forum frcp
+}
+
+test "adr consideration period: 30 days after the defendants appear" cite "W.D. Wis. L.R. 3"
+{
+  given DefendantsAppeared() on 2026-11-02
+  expect deadline(adr-consideration-period) == 2026-12-02
+}

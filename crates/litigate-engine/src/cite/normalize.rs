@@ -530,9 +530,9 @@ fn prefix_byte_len(s: &str, prefix: &str) -> Option<usize> {
 /// `"XX(b)"` → `("XX", ["b"])`. A section opens with a digit or is led by
 /// an upper-case roman numeral (`Part IV` of a body numbered by parts), so
 /// a roman-numbered citation is checked like any other rather than left
-/// out of scope. A parenthetical a dotted part follows belongs to the rule
-/// number itself (D. Kan. `LBR 4001(a).3`, `LBR 3015(b).2(c)` →
-/// `("3015(b).2", ["c"])`).
+/// out of scope. A parenthetical a dotted or dashed part follows belongs
+/// to the rule number itself (D. Kan. `LBR 4001(a).3`, `LBR 3015(b).2(c)` →
+/// `("3015(b).2", ["c"])`; E.D. Va. `LBR 4001(a)-1`, `LBR 2015-(a)-1`).
 fn bare_number(s: &str) -> Option<(String, Vec<String>)> {
     let s = s.trim();
     if s.is_empty() {
@@ -565,8 +565,9 @@ fn bare_number(s: &str) -> Option<(String, Vec<String>)> {
 }
 
 /// Where the subsection chain of the rule number `s` opens: the first
-/// run of `(...)` groups that no `.<part>` follows. A run a dotted part
-/// does follow (`4001(a).3`) is part of the number.
+/// run of `(...)` groups that no `.<part>` or `-<part>` follows. A run a
+/// dotted or dashed part does follow (`4001(a).3`, `4001(a)-1`,
+/// `2015-(a)-1`) is part of the number.
 fn subsection_start(s: &str) -> Option<usize> {
     let mut from = 0;
     loop {
@@ -579,7 +580,9 @@ fn subsection_start(s: &str) -> Option<usize> {
             }
         }
         let tail = &s[end..];
-        if tail.starts_with('.') && tail[1..].starts_with(|c: char| c.is_ascii_alphanumeric()) {
+        if tail.starts_with(['.', '-'])
+            && tail[1..].starts_with(|c: char| c.is_ascii_alphanumeric())
+        {
             from = end + 1;
         } else {
             return Some(open);

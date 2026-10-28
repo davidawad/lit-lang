@@ -23,7 +23,7 @@ The layout mirrors formbook's `courts/<circuit>/<jurisdiction>/`.
     outlines/supreme-court-of-the-united-states/          one package per court
 
 Each directory holds `Lit.toml` plus `outline.lit`. Copy
-`outlines/third-circuit/new-jersey/state-civil/` as the template.
+`outlines/third-circuit/delaware/state-civil/` as the template.
 
 A bankruptcy-court outline differs: it depends on `lit/frbp` (and `lit/core`),
 imports the FRBP periods from it with their cites bound to the vendored FRBP

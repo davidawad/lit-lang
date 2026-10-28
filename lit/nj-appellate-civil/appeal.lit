@@ -1,0 +1,130 @@
+module nj-appellate-civil.appeal
+
+// Civil appeals from the Law Division to the Appellate Division of the New
+// Jersey Superior Court, and certification to the Supreme Court of New
+// Jersey, from the applicant's (appellant's) side. Every period below is
+// stated in a note, not counted: time is computed under R. 1:3-1, which is
+// not vendored, and lit/core has no counting rule for it. Only the rules
+// the earlier outline cited are vendored; the time to appeal and cross-
+// appeal (R. 2:4-1, 2:4-2), the briefing schedule and page limits of a
+// formal brief (R. 2:6-7, 2:6-11), the motion for leave to appeal (R.
+// 2:5-6) and the remittitur are not, so what they say stays out. The
+// outline cited R. 2:9-5 for the mandate; that rule governs stays, so it is
+// cited here for the stay, and the appeal ends at the judgment the opinion
+// enters (R. 2:11-3(b)). The earlier outline named no leading decisions.
+/// A letter brief filed in lieu of a formal brief: at most 20 pages (R.
+/// 2:6-2(b)).
+limit letter-brief { pages <= 20 cite "N.J. Ct. R. 2:6-2(b)" } cite "N.J. Ct. R. 2:6-2(b)"
+/// The optional preliminary statement in a brief: at most three pages,
+/// without footnotes and, so far as practicable, citations (R. 2:6-2(a)).
+limit preliminary-statement { pages <= 3 cite "N.J. Ct. R. 2:6-2(a)" } cite "N.J. Ct. R. 2:6-2(a)"
+
+/// A motion for reconsideration: at most 15 pages (R. 2:11-6(a)).
+limit reconsideration-motion {
+  pages <= 15 cite "N.J. Ct. R. 2:11-6(a)"
+} cite "N.J. Ct. R. 2:11-6(a)"
+
+/// A petition for certification: in the form of a brief, at most 20 pages
+/// exclusive of tables of contents and citations and the appendix (R.
+/// 2:12-7(a)).
+limit certification-petition {
+  pages <= 20 cite "N.J. Ct. R. 2:12-7(a)"
+} cite "N.J. Ct. R. 2:12-7(a)"
+
+start notice-filed
+
+state notice-filed: "Notice of appeal, transcript request and case information statement filed" by applicant cite "N.J. Ct. R. 2:5-1(a)"
+{
+  note "Appeals lie to the Appellate Division as of right from final judgments of the Superior Court trial divisions, final judgments being those that finally resolve all issues as to all parties, and from the orders R. 2:2-3(b) lists (R. 2:2-3(a), (b)). An appeal from a final judgment is taken by filing with the court below and the appellate court, and serving on all other parties who appeared, a notice of appeal, a transcript request form (or a certification under R. 2:5-3(c)) and a case information statement (R. 2:5-1(a), (b)); a copy goes to the trial judge, whose failure to receive it does not defeat jurisdiction (R. 2:5-1(c)). In a civil action the notice designates the judgment or part appealed from, the judge below and the courts from and to which the appeal is taken (R. 2:5-1(f)). Within 30 days of receipt of the notice the trial judge may file an amplification of a prior statement or opinion, and if there is none files a written opinion within 15 days (R. 2:5-1(d)). The respondent files a case information statement within 15 days after service of the notice of appeal (R. 2:5-1(e)). The time to appeal is in R. 2:4-1, which is not vendored."
+  edge-notice-filed-record "Transcript or statement of proceedings prepared" -> record {
+    authority cite "N.J. Ct. R. 2:5-3(e)"
+  }
+}
+
+state record: "Transcript or statement of proceedings prepared" by office cite "N.J. Ct. R. 2:5-3(e)"
+{
+  note "The appellant serves the transcript request no later than the filing and service of the notice of appeal (R. 2:5-1(g)). The transcript includes the entire proceedings below except openings, closings, voir dire and legal argument unless a question about them is raised (R. 2:5-3(b)); it may be abbreviated by written consent or by order on a motion filed no later than the notice of appeal, the request then served within 3 days after the order (R. 2:5-3(c)). Unless exempt, the appellant deposits the reporter's estimate or $500 for each day or fraction of trial or hearing (R. 2:5-3(d)). The reporter delivers the transcript to the Appellate Division transcript unit and notifies the parties (R. 2:5-3(e)). If no verbatim record was made, the appellant serves a statement of the proceedings within 14 days of filing the notice of appeal, the respondent may serve objections or amendments within 14 days after service, and the court below settles the statement within 14 days after they are filed (R. 2:5-3(f)). An appeal does not stay proceedings in a civil action; a stay may be ordered on motion, first to the court below before argument or submission, and a money judgment is stayed only on a supersedeas bond, other security or a cash deposit unless the court orders otherwise for good cause (R. 2:9-5(a), (b))."
+  edge-record-briefing "Briefs filed" -> briefing { authority cite "N.J. Ct. R. 2:6-2(a)" }
+}
+
+state briefing: "Briefs filed" by applicant cite "N.J. Ct. R. 2:6-2(a)"
+{
+  note "The appellant's formal brief contains, under distinctive titles, a table of contents with point headings each noting where in the record the ruling appears or that the issue was not raised below, a table of the judgments, orders and rulings appealed, a table of citations, a procedural history, a statement of facts, and the legal argument; an optional preliminary statement may not exceed three pages (R. 2:6-2(a)). The appellant may instead file a letter brief of no more than 20 pages (R. 2:6-2(b)). A respondent who cross-appeals files a single brief answering the appeal and addressing the cross-appeal (R. 2:6-2(d)). Briefing periods and formal brief lengths are in R. 2:6-7 and 2:6-11, which are not vendored."
+  edge-briefing-calendar "Appeal perfected and calendared" -> argument {
+    authority cite "N.J. Ct. R. 2:11-1(a)"
+  }
+}
+
+decision argument: "Argument or submission without argument" by court cite "N.J. Ct. R. 2:11-1(b)"
+{
+  note "The clerk dockets appeals in chronological order and they are argued or submitted in the order of perfection, with a preference for appeals on leave and certain orders appealable as of right (R. 2:11-1(a)). In the Appellate Division appeals are submitted without argument unless a party requests argument by a separate filing no later than 14 days after service of the respondent's brief, or the court deems it appropriate; a request may be withdrawn only with all other parties' consent (R. 2:11-1(b)). Each party has 15 minutes in the Appellate Division and 30 minutes in the Supreme Court unless the court allows more, and a party that filed or joined no brief may not argue (R. 2:11-1(c))."
+  edge-argument-argued "Argued orally" -> appellate-decision {
+    authority cite "N.J. Ct. R. 2:11-1(b)"
+  }
+  edge-argument-submitted "Submitted without argument" -> appellate-decision {
+    authority cite "N.J. Ct. R. 2:11-1(b)"
+  }
+}
+
+decision appellate-decision: "Appellate Division decides" by court cite "N.J. Ct. R. 2:11-3(b)"
+{
+  note "The court files a written opinion on the final determination of every appeal; the opinion includes the judgment, states whether the judgment below is affirmed, reversed or modified, and the date the opinion is filed is the date of entry of judgment; the clerk mails copies forthwith (R. 2:11-3(a)-(c)). In a civil appeal the Appellate Division may affirm without opinion, by an order quoting the applicable paragraph, where the findings are adequately supported, the evidence supports the verdict, the new trial ruling is no manifest denial of justice, or the arguments lack sufficient merit for a written opinion (R. 2:11-3(e)(1)). An error or omission is disregarded unless clearly capable of producing an unjust result, but plain error may be noticed in the interests of justice (R. 2:10-2). A motion to stay the appellate judgment is served and filed within 20 days of its entry unless enlarged by order (R. 2:11-3(d))."
+  edge-appellate-decision-affirmed "Affirmed" -> after-decision {
+    authority cite "N.J. Ct. R. 2:11-3(b)"
+  }
+  edge-appellate-decision-affirmed-without-opinion "Affirmed without opinion" -> after-decision {
+    authority cite "N.J. Ct. R. 2:11-3(e)"
+  }
+  edge-appellate-decision-reversed "Reversed or modified" -> reversed {
+    authority cite "N.J. Ct. R. 2:11-3(b)"
+  }
+}
+
+decision after-decision: "Reconsideration, certification, or neither" by applicant cite "N.J. Ct. R. 2:12-3(a)"
+{
+  note "Within ten days after entry of the judgment or order, unless enlarged by order, a party may move for reconsideration (R. 2:11-6(a)). To seek certification of a final judgment of the Appellate Division, the petitioner serves the notice of petition for certification on all affected parties and files it with the Clerk of the Supreme Court, with the fee, within 20 days after its entry (R. 2:12-3(a)); a notice of cross petition is served and filed within 10 days after the notice of petition (R. 2:12-3(b)). The petition itself is served and filed within 10 days after filing the notice of petition or 30 days after entry of the final judgment, whichever is later (R. 2:12-7(b))."
+  edge-after-decision-reconsideration "Motion for reconsideration" -> reconsideration {
+    authority cite "N.J. Ct. R. 2:11-6(a)"
+  }
+  edge-after-decision-certification "Notice of petition for certification" -> certification {
+    authority cite "N.J. Ct. R. 2:12-3(a)"
+  }
+  edge-after-decision-none "No further review" -> affirmed {
+    authority cite "N.J. Ct. R. 2:11-3(b)"
+  }
+}
+
+decision reconsideration: "Reconsideration decided" by court cite "N.J. Ct. R. 2:11-6(b)"
+{
+  note "The motion, of at most 15 pages, states the ground relied on with a good-faith certificate and annexes the opinion or order; no answer is filed unless the court requests one, then within ten days or the time fixed; the motion is not argued unless the court directs (R. 2:11-6(a)). It is granted only on the motion of a justice or judge who concurred in the judgment and a majority's determination; the movant, as appellant, files a brief within 30 days of the order granting it unless ordered otherwise, and the court may summarily re-determine the appeal or amend its opinion (R. 2:11-6(b), (c))."
+  edge-reconsideration-denied "Denied" -> after-decision { authority cite "N.J. Ct. R. 2:11-6(b)" }
+  edge-reconsideration-granted "Granted: appeal re-determined" -> appellate-decision {
+    authority cite "N.J. Ct. R. 2:11-6(c)"
+  }
+}
+
+decision certification: "Supreme Court of New Jersey: certification granted or denied" by court cite "N.J. Ct. R. 2:12-4"
+{
+  note "The petition is in the form of a brief of at most 20 pages exclusive of tables and appendix, with the matter involved, the question presented, the errors complained of, the reasons certification should be allowed and comments on the Appellate Division opinion, annexing the notice of petition and the opinions below, and certified as presenting a substantial question in good faith (R. 2:12-7(a)). If certification is granted the petitioner files additional copies within 10 days following receipt of the order (R. 2:12-7(b)). Certification is granted only if the appeal presents a question of general public importance not yet but which should be settled by the Supreme Court, the decision conflicts with another decision of the same or a higher court, it calls for the Court's supervision, or the interest of justice requires; it is not allowed on final judgments of the Appellate Division except for special reasons (R. 2:12-4)."
+  edge-certification-denied "Certification denied" -> affirmed {
+    authority cite "N.J. Ct. R. 2:12-4"
+  }
+  edge-certification-granted "Certification granted" -> review-granted {
+    authority cite "N.J. Ct. R. 2:12-4"
+  }
+}
+
+terminal affirmed: "Affirmed: judgment of the Appellate Division stands" outcome [loss] cite "N.J. Ct. R. 2:11-3(b)"
+{
+  note "Outcome from the appellant's side. The opinion is the judgment, entered on the date it is filed (R. 2:11-3(b))."
+}
+
+terminal reversed: "Reversed or modified" outcome [win] cite "N.J. Ct. R. 2:11-3(b)"
+{
+  note "Outcome from the appellant's side. The opinion may provide for final judgment dispositive of the action (R. 2:11-3(b)); the respondent may seek certification (R. 2:12-3(a))."
+}
+
+terminal review-granted: "Certification granted: merits review in the Supreme Court" outcome [appeal] cite "N.J. Ct. R. 2:12-4"
+{
+  note "Merits review in the Supreme Court of New Jersey, where appeals are argued orally unless the Court dispenses with argument (R. 2:11-1(b)). The outcome is outside this package."
+}

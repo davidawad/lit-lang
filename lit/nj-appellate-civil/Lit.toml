@@ -1,0 +1,38 @@
+# Civil appeals to the Appellate Division of the New Jersey Superior Court
+# and certification to the Supreme Court of New Jersey under Part II of
+# the New Jersey Rules of Court, as far as the vendored text states: the
+# rules the earlier outline cited, as published with amendments effective
+# on or before September 1, 2026 (sources/nj-appellate-civil). Computation
+# of time is governed by R. 1:3-1, which is not vendored, and lit/core has
+# no counting rule for it, so the periods are stated in notes, not encoded
+# as counted deadlines. The trial-court side is lit/nj-superior-law.
+[package]
+name = "nj-appellate-civil"
+version = "0.1.0"
+language = 1
+pack_id = "nj-appellate-civil"
+forum = "nj-appellate-civil"
+authority = "StateRule"
+title = "New Jersey Appellate Division and Supreme Court, civil appeals"
+description = "Civil appeals under Part II of the New Jersey Rules of Court, as far as the vendored text states: appeals as of right, the notice of appeal, transcript request and case information statement, the transcript and the statement of proceedings, stays, the appellant's brief and the letter brief limit, the calendar and oral argument, plain error, the opinion and judgment, affirmance without opinion, reconsideration, and the notice of petition, petition and grounds for certification."
+in_force = "2026-09-01"
+known_at = "2026-10-28"
+unknown_before = "2026-09-01"
+jurisdiction = "New Jersey Superior Court, Appellate Division; Supreme Court of New Jersey"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.nj-rules]
+title = "New Jersey Rules of Court (cited appellate rules), amendments effective on or before Sept. 1, 2026"
+url = "https://www.njcourts.gov/attorneys/rules-of-court"
+path = "sources/nj-appellate-civil/rules-of-court-cited-2026-09-01.txt"
+path_sha256 = "46f0f8e357d3d84e1625181279e8ae7e5dbf8d564b0bf1726f39cf778530af1f"
+as_of = "2026-09-01"
+cite_prefixes = ["N.J. Ct. R."]
+section_heading = "N.J. Ct. R. {n}"

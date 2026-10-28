@@ -1,6 +1,6 @@
 module core.frcp6
 
-import core.calendar.{ district-state-holidays, us-federal-holidays }
+import core.calendar.{ delaware-holidays, district-state-holidays, us-federal-holidays }
 
 /// FRCP 6(a) and 6(e) from the 1963 amendments (effective July 1, 1963):
 /// Saturdays join Sundays and legal holidays as days a period cannot end
@@ -240,6 +240,38 @@ counting frcp6 effective [2023-12-01, ..) known_at 2023-04-24 supersedes frcp6@2
   holidays us-federal-holidays
   forward_holidays district-state-holidays cite "FRCP 6(a)(6)(C)"
   forums [frcp]
+  allow_hours
+  end_of_month clamp
+}
+
+/// FRCP 6 in the District of Delaware: the 2023 text (`frcp6@2023-12-01`)
+/// with Delaware's legal holidays, which 6(a)(6)(C) ("any day declared a
+/// holiday by ... the state where the district court is located") makes
+/// legal holidays "for periods that are measured after an event" only. A
+/// D. Del. package names it as its `counting` rule; core's `frcp6` stays
+/// the federal-only count of every other district. Only the Delaware days
+/// the federal calendar lacks close here. It is in force from October 22,
+/// 2026, when core's `delaware-holidays` is, and counts no period before.
+counting frcp6-delaware effective [2026-10-22, ..) cite "FRCP 6(a)"
+{
+  exclude_trigger_day
+  include_last_day
+  roll_forward_on [weekend, legal_holiday, inaccessible]
+  service_extension {
+    Personal: 0.days
+    Electronic: 0.days
+    Mail: 3.days
+    Clerk: 3.days
+    OtherConsented: 3.days
+    CommercialCarrier: unrecognized
+    PrisonMail: unrecognized
+    MailForeign: unrecognized
+    Express: unrecognized
+    ExpressForeign: unrecognized
+  } cite "FRCP 6(d)"
+  holidays us-federal-holidays
+  forward_holidays delaware-holidays cite "FRCP 6(a)(6)(C)"
+  forums [frcp, d-del]
   allow_hours
   end_of_month clamp
 }

@@ -29,12 +29,14 @@ module core.calendar
 /// no fixed-date holiday here is observed on another day: a counting rule
 /// in force 1963-1971 sees only the holiday itself.
 ///
-/// Not modeled (FRCP 6(a)(6)(B), (C); FRAP 26(a)(6)(B), (C)): days the
+/// Not modeled here (FRCP 6(a)(6)(B), (C); FRAP 26(a)(6)(B), (C)): days the
 /// President or Congress declares a holiday, which no vendored source
 /// lists, and the holidays of the state where the district court sits,
 /// which belong to a district's own calendar and, from 2009, extend only
-/// forward-counted periods. Where a last day falls on such a day, the date
-/// computed here is the earlier one, never a later one.
+/// forward-counted periods: a state's calendar below (`delaware-holidays`)
+/// is read by its own counting rule as `forward_holidays`. Where a last day
+/// falls on a day no calendar lists, the date computed here is the earlier
+/// one, never a later one.
 ///
 /// The cite is today's § 6103 (2023 ed.), whose credits and amendment
 /// notes date each entry's window: a later text, cited for the whole
@@ -75,7 +77,8 @@ calendar us-federal-holidays cite "5 U.S.C. § 6103(a)" historical
 /// those districts, so this calendar deliberately has no dates; until a
 /// source is added, a date that depends on a state holiday remains an
 /// earlier-date result (the missing source is the district's state-holiday
-/// statute/rule).
+/// statute/rule). Delaware's are vendored: `delaware-holidays`, read by
+/// core's `frcp6-delaware` (the D. Del. count).
 calendar district-state-holidays cite "FRCP 6(a)(6)(C)"
 {
 }
@@ -135,6 +138,97 @@ calendar dc-federal-holidays effective [2013-12-18, ..) known_at 2026-01-01 cite
   veterans-day: fixed(11, 11) effective [1978-01-01, ..) observed nearest_weekday
   thanksgiving-day: nth(4, thursday, 11) effective [1941-12-26, ..)
   christmas-day: fixed(12, 25) effective [1894-06-28, ..) observed nearest_weekday
+}
+
+/// The legal holidays of Delaware (1 Del. C. § 501(a)) that `us-federal-holidays`
+/// does not already close: Good Friday, the Friday after Thanksgiving and the
+/// biennial General Election day. FRCP 6(a)(6)(C) makes them legal holidays of
+/// the District of Delaware for a period counted forward only, so they are
+/// read as `forward_holidays` (core's `frcp6-delaware`). The other § 501
+/// days are federal holidays too, observed on the same days (§ 501(b) moves a
+/// Saturday holiday to Friday and a Sunday one to Monday, as § 6103(b)(1)
+/// and Executive Order 11582 do; the three days here are never on a
+/// weekend); Saturdays (§ 501(a)(11)) are closed by `weekend`.
+///
+/// The engine has no Easter or "day after" rule, so each day is listed with
+/// `once`, from October 22, 2026, core's corpus date, to the end of 2050
+/// (the section's credits list no act after 83 Del. Laws, c. 257, of the
+/// 2021-2022 General Assembly, so the vendored text was in force then): a
+/// day before or after that span is not closed, so a last day on it is the
+/// earlier date, never a later one. The General Election is
+/// held on the federal election day of even years; the Title 15 section
+/// fixing it is not vendored. Not modeled: Return Day (§ 501(a)(13)), a
+/// holiday in Sussex County only and only after noon; the 2 floating
+/// holidays of § 501(e), which are leave for State employees, not days; and
+/// days the Governor appoints, which no vendored source lists.
+calendar delaware-holidays effective [2026-10-22, ..) cite "1 Del. C. § 501(a)"
+{
+  // § 501(a)(3). Good Friday 2026 (April 3) precedes the span.
+  good-friday-2027: once(2027-03-26) effective [2026-10-22, ..)
+  good-friday-2028: once(2028-04-14) effective [2026-10-22, ..)
+  good-friday-2029: once(2029-03-30) effective [2026-10-22, ..)
+  good-friday-2030: once(2030-04-19) effective [2026-10-22, ..)
+  good-friday-2031: once(2031-04-11) effective [2026-10-22, ..)
+  good-friday-2032: once(2032-03-26) effective [2026-10-22, ..)
+  good-friday-2033: once(2033-04-15) effective [2026-10-22, ..)
+  good-friday-2034: once(2034-04-07) effective [2026-10-22, ..)
+  good-friday-2035: once(2035-03-23) effective [2026-10-22, ..)
+  good-friday-2036: once(2036-04-11) effective [2026-10-22, ..)
+  good-friday-2037: once(2037-04-03) effective [2026-10-22, ..)
+  good-friday-2038: once(2038-04-23) effective [2026-10-22, ..)
+  good-friday-2039: once(2039-04-08) effective [2026-10-22, ..)
+  good-friday-2040: once(2040-03-30) effective [2026-10-22, ..)
+  good-friday-2041: once(2041-04-19) effective [2026-10-22, ..)
+  good-friday-2042: once(2042-04-04) effective [2026-10-22, ..)
+  good-friday-2043: once(2043-03-27) effective [2026-10-22, ..)
+  good-friday-2044: once(2044-04-15) effective [2026-10-22, ..)
+  good-friday-2045: once(2045-04-07) effective [2026-10-22, ..)
+  good-friday-2046: once(2046-03-23) effective [2026-10-22, ..)
+  good-friday-2047: once(2047-04-12) effective [2026-10-22, ..)
+  good-friday-2048: once(2048-04-03) effective [2026-10-22, ..)
+  good-friday-2049: once(2049-04-16) effective [2026-10-22, ..)
+  good-friday-2050: once(2050-04-08) effective [2026-10-22, ..)
+  // § 501(a)(9): the Friday after the fourth Thursday in November.
+  day-after-thanksgiving-2026: once(2026-11-27) effective [2026-10-22, ..)
+  day-after-thanksgiving-2027: once(2027-11-26) effective [2026-10-22, ..)
+  day-after-thanksgiving-2028: once(2028-11-24) effective [2026-10-22, ..)
+  day-after-thanksgiving-2029: once(2029-11-23) effective [2026-10-22, ..)
+  day-after-thanksgiving-2030: once(2030-11-29) effective [2026-10-22, ..)
+  day-after-thanksgiving-2031: once(2031-11-28) effective [2026-10-22, ..)
+  day-after-thanksgiving-2032: once(2032-11-26) effective [2026-10-22, ..)
+  day-after-thanksgiving-2033: once(2033-11-25) effective [2026-10-22, ..)
+  day-after-thanksgiving-2034: once(2034-11-24) effective [2026-10-22, ..)
+  day-after-thanksgiving-2035: once(2035-11-23) effective [2026-10-22, ..)
+  day-after-thanksgiving-2036: once(2036-11-28) effective [2026-10-22, ..)
+  day-after-thanksgiving-2037: once(2037-11-27) effective [2026-10-22, ..)
+  day-after-thanksgiving-2038: once(2038-11-26) effective [2026-10-22, ..)
+  day-after-thanksgiving-2039: once(2039-11-25) effective [2026-10-22, ..)
+  day-after-thanksgiving-2040: once(2040-11-23) effective [2026-10-22, ..)
+  day-after-thanksgiving-2041: once(2041-11-29) effective [2026-10-22, ..)
+  day-after-thanksgiving-2042: once(2042-11-28) effective [2026-10-22, ..)
+  day-after-thanksgiving-2043: once(2043-11-27) effective [2026-10-22, ..)
+  day-after-thanksgiving-2044: once(2044-11-25) effective [2026-10-22, ..)
+  day-after-thanksgiving-2045: once(2045-11-24) effective [2026-10-22, ..)
+  day-after-thanksgiving-2046: once(2046-11-23) effective [2026-10-22, ..)
+  day-after-thanksgiving-2047: once(2047-11-29) effective [2026-10-22, ..)
+  day-after-thanksgiving-2048: once(2048-11-27) effective [2026-10-22, ..)
+  day-after-thanksgiving-2049: once(2049-11-26) effective [2026-10-22, ..)
+  day-after-thanksgiving-2050: once(2050-11-25) effective [2026-10-22, ..)
+  // § 501(a)(12): the Tuesday after the first Monday in November of an
+  // even year.
+  general-election-2026: once(2026-11-03) effective [2026-10-22, ..)
+  general-election-2028: once(2028-11-07) effective [2026-10-22, ..)
+  general-election-2030: once(2030-11-05) effective [2026-10-22, ..)
+  general-election-2032: once(2032-11-02) effective [2026-10-22, ..)
+  general-election-2034: once(2034-11-07) effective [2026-10-22, ..)
+  general-election-2036: once(2036-11-04) effective [2026-10-22, ..)
+  general-election-2038: once(2038-11-02) effective [2026-10-22, ..)
+  general-election-2040: once(2040-11-06) effective [2026-10-22, ..)
+  general-election-2042: once(2042-11-04) effective [2026-10-22, ..)
+  general-election-2044: once(2044-11-08) effective [2026-10-22, ..)
+  general-election-2046: once(2046-11-06) effective [2026-10-22, ..)
+  general-election-2048: once(2048-11-03) effective [2026-10-22, ..)
+  general-election-2050: once(2050-11-08) effective [2026-10-22, ..)
 }
 
 /// The days the Patent and Trademark Office was officially closed for the

@@ -166,3 +166,21 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 29676428c4af4208328962d9194597c7fc78b8fc5ae990a758d584dab9da513b. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `co-state-civil/original/co-rule-change-2026-11.pdf` as served (sha256 7e0650992032c9a957e33885c4aefe365965d7ff2338c2178a94275950c938fd); extraction sha256 29676428c4af4208328962d9194597c7fc78b8fc5ae990a758d584dab9da513b.
+
+### `co-state-civil/co-crcp-sectioned.txt` — C.R.C.P. (2023 compilation), rules sectioned
+
+- Derived in the pod (lg-f3q8.65) from `co-state-civil/co-crs2023-court-rules.txt` (extract sha256 6df09373ea4e42c4526a8fdc60ae97463141684de5c356e1c46b19c70d8d9df3); nothing fetched. One `## Rule <n>` line is inserted right before each C.R.C.P. rule's own body heading line (`Rule <n>. <Title>`) in Chapters 1 to 17 (extract lines 649-37234): 115 markers, Rule 1 through Rule 120.1. The chapter analyses (tables of contents) are unmarked, as are Chapter 17A onward (Rule 120.1's section runs to the end of the file). Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, the 2023 Colorado Revised Statutes court-rules volume, whose latest recorded change is Rule Change 2023(13), effective July 20, 2023; STALE for later changes, which the dated Rule Change layers here carry.
+- Sectioned sha256 12b58d278bf2a00f3deebf83066c8168ef27f579bc5877bcb1fe03c88457d7e4 (the `path_sha256` pinned by `lit/co-state-civil/Lit.toml`).
+
+### `co-state-civil/co-rule-change-2024-03-sectioned.txt` — Rule Change 2024(03), updated rule text sectioned
+
+- Derived in the pod (lg-f3q8.65) from `co-state-civil/co-rule-change-2024-03.txt` (extract sha256 c410835562c374a848c95c6b8608e4203c28aee478f735a9844b60c0847cf94b); nothing fetched. The order shows its edits first and then the updated rule text; one `## Rule Change 2024(03) Rule <n>` line is inserted right before each rule heading of the updated text only (Rules 10, 16.2, 26 and 121; 4 markers). Rule text was not edited: deleting the marker lines (`sed '/^## Rule Change /d'`) restores the extract byte for byte.
+- Edition: as the extract, adopted January 11, 2024, effective immediately.
+- Sectioned sha256 7e58228ab5e1b8ba9d5e171d5062a7b0f015148c7213c66e29469a6188eb3f96 (the `path_sha256` pinned by `lit/co-state-civil/Lit.toml`).
+
+### `co-state-civil/co-rule-change-2024-08-sectioned.txt` — Rule Change 2024(08), updated rule text sectioned
+
+- Derived in the pod (lg-f3q8.65) from `co-state-civil/co-rule-change-2024-08.txt` (extract sha256 3329a96d227396ad987157118538e318f174d7839b0515d950c621a87962a909); nothing fetched. One `## Rule Change 2024(08) Rule <n>` line is inserted right before each rule heading of the updated text only (Rules 4, 12 and 16.5; 3 markers). Rule text was not edited: deleting the marker lines (`sed '/^## Rule Change /d'`) restores the extract byte for byte.
+- Edition: as the extract, adopted May 2, 2024, effective immediately.
+- Sectioned sha256 3ee2dc4348eee5ebeb41ea662909d76f8bfe7d3d622117227987a946b75fa6ad (the `path_sha256` pinned by `lit/co-state-civil/Lit.toml`).

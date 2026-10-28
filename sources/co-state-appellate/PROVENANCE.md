@@ -38,3 +38,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 8a1693d71798d5b69a65e2ea0a82ef90a1a90f3901bd72fbfcd7fbb5a2fbd566. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `co-state-appellate/original/co-rule-change-2026-05.pdf` as served (sha256 9cf97a0d84736cbbfd8265b81447813ce3736b4deeb278c83ae8f090d3fd76df); extraction sha256 8a1693d71798d5b69a65e2ea0a82ef90a1a90f3901bd72fbfcd7fbb5a2fbd566.
+
+### `co-state-appellate/co-car-sectioned.txt` — C.A.R. (2023 compilation), rules sectioned
+
+- Derived in the pod (lg-f3q8.65) from `co-state-appellate/co-appellate-rules-crs2023.txt` (extract sha256 392045b94743b8554e8aee9a5bf50ab3fc8dd5874967c7ad0f65349e6a9d919e); nothing fetched. One `## C.A.R. <n>` line is inserted right before each rule's own body heading line (`Rule <n>. <Title>`): 68 markers, C.A.R. 1 through C.A.R. 58. The chapter analysis and an annotation line that begins with a case name (`Rule 37. Pet Inc. v. Goldberg`) are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## C\.A\.R\. /d'`) restores the extract byte for byte.
+- Edition: as the extract, the 2023 compilation, whose latest recorded change is Rule Change 2023(13), effective July 20, 2023; STALE for later changes, which the dated Rule Change layers here carry.
+- Sectioned sha256 269e8ef5902216c04b7d7dd58312fbb4d1702b54b57f6e5691ed8676314c23bc (the `path_sha256` pinned by `lit/co-state-civil/Lit.toml` and `lit/co-state-appellate/Lit.toml`).

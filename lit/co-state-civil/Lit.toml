@@ -1,0 +1,78 @@
+# Civil actions in the Colorado district courts under the Colorado Rules of
+# Civil Procedure. The base text is the 2023 Colorado Revised Statutes
+# court-rules volume (OLLS; its notes cite Rule Change 2023(13), effective
+# July 20, 2023, as the latest, sources/co-state-civil); the Supreme
+# Court's later Rule Change orders vendored beside it are applied on top in
+# date order. Of the rules cited here, Rule Change 2024(08) (May 2, 2024)
+# amended C.R.C.P. 12(a)(1) and Rule Change 2024(03) (January 11, 2024)
+# C.R.C.P. 121 section 1-15; each is its own source and the values it
+# states cite it. No later order touches the other rules cited (C.R.C.P.
+# 3, 4(m), 38, 41, 50, 55(a)-(c), 56(a)-(d), 58, 59, 60; C.A.R. 3 and 4).
+# Computation of time is C.R.C.P. 6(a), with Colorado's legal holidays,
+# for which lit/core has no counting rule, so the periods are stated in
+# notes, not encoded as counted deadlines. An appeal hands off to
+# lit/co-state-appellate (C.A.R., sources/co-state-appellate). The package
+# is in force from the latest vendored C.R.C.P. order, Rule Change 2026(11)
+# of April 23, 2026.
+[package]
+name = "co-district-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "co-district-court-civil"
+forum = "co-state-civil"
+authority = "StateRule"
+jurisdiction_id = "colorado"
+title = "Colorado District Courts, civil"
+description = "Civil actions in the Colorado district courts under the Colorado Rules of Civil Procedure, as far as the vendored text states: commencement and the time limit for service, the time to answer and its alteration by a Rule 12 motion, motion briefing under the statewide practice standards, default, summary judgment, the jury demand, trial and post-trial relief, entry of judgment, relief from judgment, and the notice of appeal, which hands off to the Colorado appellate package (lit/co-state-appellate)."
+in_force = "2026-04-23"
+known_at = "2026-10-28"
+unknown_before = "2026-04-23"
+jurisdiction = "Colorado district courts (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.crcp]
+title = "Colorado Rules of Civil Procedure, Colorado Revised Statutes 2023 court-rules volume (OLLS)"
+url = "https://content.leg.colorado.gov/sites/default/files/images/olls/crs2023-court-rules.pdf"
+path = "sources/co-state-civil/co-crcp-sectioned.txt"
+path_sha256 = "12b58d278bf2a00f3deebf83066c8168ef27f579bc5877bcb1fe03c88457d7e4"
+sha256 = "07a0129954b015ff26ed4774e5979408d05631a78fff9967ee0a56f5622347e7"
+as_of = "2023-07-20"
+cite_prefixes = ["C.R.C.P."]
+section_heading = "Rule {n}"
+
+[sources.co-rc-2024-03]
+title = "Colorado Supreme Court Rule Change 2024(03), C.R.C.P. Rules 10, 16.2, 26, 121 §§ 1-15 and 1-26 (January 11, 2024, effective immediately)"
+url = "https://www.coloradojudicial.gov/sites/default/files/2024-01/Rule%20Change%202024%2803%29.pdf"
+path = "sources/co-state-civil/co-rule-change-2024-03-sectioned.txt"
+path_sha256 = "7e58228ab5e1b8ba9d5e171d5062a7b0f015148c7213c66e29469a6188eb3f96"
+sha256 = "af1cb17925def32801e0b6b8151c5e009f429f69c68ba924025248fea0d78a61"
+as_of = "2024-01-11"
+cite_prefixes = ["Rule Change 2024(03), C.R.C.P."]
+section_heading = "Rule Change 2024(03) Rule {n}"
+
+[sources.co-rc-2024-08]
+title = "Colorado Supreme Court Rule Change 2024(08), C.R.C.P. Rules 4, 12 and 16.5 (May 2, 2024, effective immediately)"
+url = "https://www.coloradojudicial.gov/sites/default/files/2024-05/Rule%20Change%202024%2808%29.pdf"
+path = "sources/co-state-civil/co-rule-change-2024-08-sectioned.txt"
+path_sha256 = "3ee2dc4348eee5ebeb41ea662909d76f8bfe7d3d622117227987a946b75fa6ad"
+sha256 = "54604116264f7d15be39a099500d2d3b2e76adda1bc3632039081493e94701b5"
+as_of = "2024-05-02"
+cite_prefixes = ["Rule Change 2024(08), C.R.C.P."]
+section_heading = "Rule Change 2024(08) Rule {n}"
+
+[sources.car]
+title = "Colorado Appellate Rules, Colorado Revised Statutes 2023 court-rules volume, Chapter 32 (OLLS)"
+url = "https://content.leg.colorado.gov/sites/default/files/images/olls/crs2023-court-rules.pdf"
+path = "sources/co-state-appellate/co-car-sectioned.txt"
+path_sha256 = "269e8ef5902216c04b7d7dd58312fbb4d1702b54b57f6e5691ed8676314c23bc"
+sha256 = "07a0129954b015ff26ed4774e5979408d05631a78fff9967ee0a56f5622347e7"
+as_of = "2023-07-20"
+cite_prefixes = ["C.A.R."]
+section_heading = "C.A.R. {n}"

@@ -1,0 +1,58 @@
+# The Western District of Virginia's Local Rules (Title I, General, and
+# Title II, Civil) as a local-rule layer over lit/frcp (28 U.S.C. § 2071;
+# FRCP 83(a)): it declares only the periods the Local Rules themselves
+# state and re-encodes no FRCP deadline. Each period is counted under FRCP
+# 6(a), which governs "any local rule". The rules are the Local Rules of
+# August 2013, revised October 25, 2025 (sources/vawd). The General and
+# Civil Rules number independently (each has a Rule 3 and a Rule 11), so
+# each title has its own binding over the one sectioned file.
+[package]
+name = "vawd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "vawd-local-rules"
+forum = "vawd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Western District of Virginia: Local Rules (general and civil)"
+description = "The Western District of Virginia's Local Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): Social Security review briefing, fee petitions and in forma pauperis objections, unsealing, exhibit removal, motion briefing, proposed jury instructions, and attorneys' fee motions."
+in_force = "2025-10-25"
+known_at = "2026-10-27"
+unknown_before = "2025-10-25"
+jurisdiction = "United States District Court, W.D. Virginia"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "vawd-civ"
+issuer = "United States District Court for the Western District of Virginia"
+date = "2025-10-25"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.vawd-gen]
+title = "Local Rules of the United States District Court for the Western District of Virginia, Title I: General (August 2013, revised October 25, 2025)"
+url = "https://www.vawd.uscourts.gov/sites/Public/assets/File/court/local_rules.pdf"
+path = "sources/vawd/vawd-local-rules-sectioned.txt"
+path_sha256 = "a97415133e7e9facfafb09ab53b48677b017ea3fe842af6d729159e8df9615bc"
+sha256 = "1ffd80a63eaaf3c4b3ab9e405b4365f43b56ab5d8f8410b58eefb61b707e971c"
+as_of = "2025-10-25"
+cite_prefixes = ["W.D. Va. Gen. R."]
+section_heading = "General Rule {n}"
+
+[sources.vawd-civ]
+title = "Local Rules of the United States District Court for the Western District of Virginia, Title II: Civil Rules (August 2013, revised October 25, 2025)"
+url = "https://www.vawd.uscourts.gov/sites/Public/assets/File/court/local_rules.pdf"
+path = "sources/vawd/vawd-local-rules-sectioned.txt"
+path_sha256 = "a97415133e7e9facfafb09ab53b48677b017ea3fe842af6d729159e8df9615bc"
+sha256 = "1ffd80a63eaaf3c4b3ab9e405b4365f43b56ab5d8f8410b58eefb61b707e971c"
+as_of = "2025-10-25"
+cite_prefixes = ["W.D. Va. Civ. R."]
+section_heading = "Civil Rule {n}"

@@ -1,0 +1,279 @@
+module vawd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Western District of Virginia's own periods, computed under the
+// federal rules (FRCP 6(a) governs "any local rule"). A scheduling order
+// governs any deadline it fixes that conflicts with these rules (Civil
+// Rule 16). The Local Rules state no page limit for briefs. The earlier
+// W.D. Va. outline's FRCP flow and its Supreme Court decisions (Twombly,
+// Iqbal, Foman, Frow, Celotex, Anderson v. Liberty Lobby, Catlin, Bowles)
+// are FRCP and FRAP authority and belong to lit/frcp and lit/frap; its
+// Third and Fourth Circuit decisions (Phillips; Fowler; Poulis; Goines v.
+// Valley Community Services Board; Anderson v. Foundation for Advancement,
+// Education and Employment of American Indians) are removed: no reporter
+// text is vendored.
+/// Notice is given of a magistrate judge's order denying in forma pauperis
+/// status in a Social Security appeal (General Rule 4(a)).
+event IfpDenialNoticed()
+/// The Notice of Award issues in a Social Security case (General Rule
+/// 4(b)(4)).
+event NoticeOfAwardIssued()
+/// A copy of the administrative record is served (General Rule 4(c)(1)).
+event AdministrativeRecordServed()
+/// The plaintiff's brief in a Social Security case is served (General
+/// Rule 4(c)(3)).
+event SsPlaintiffBriefServed()
+/// The Commissioner's brief is served (General Rule 4(c)(4)).
+event CommissionerBriefServed()
+/// The Commissioner's motion to remand is served (General Rule 4(c)(5)).
+event RemandMotionServed()
+/// A sealing order is entered (General Rule 9(d)(5)).
+event SealingOrderEntered()
+/// The court finally disposes of a civil case and no appeal is perfected
+/// (General Rule 12).
+event FinalDisposition()
+/// The judgment, other process or certificate disclosing an appellate
+/// court's disposition is received (General Rule 12).
+event AppellateDispositionReceived()
+/// The clerk notifies the parties that exhibits were not removed in time
+/// (General Rule 12).
+event ExhibitNoticeGiven()
+/// A motion and its supporting brief are served (Civil Rule 11(c)(1)).
+event MotionServed()
+/// The opposing party's brief is served (Civil Rule 11(c)(1)).
+event ResponsiveBriefServed()
+/// Trial commences on the date set (Civil Rule 51).
+event TrialCommenced()
+/// Judgment is entered (Civil Rule 54(a)(1)).
+event JudgmentEntered()
+/// A motion for attorneys' fees is served (Civil Rule 54(a)(1)).
+event FeeMotionServed()
+/// An opposition to a fee motion is served (Civil Rule 54(a)(1)).
+event FeeOppositionServed()
+
+/// General Rule 4(a): in a Social Security disability insurance or
+/// supplemental security income appeal, the petitioner may object to a
+/// magistrate judge's order denying in forma pauperis status, seeking review
+/// by the district judge, by filing a written objection within 14 days of
+/// notice of the order.
+deadline ifp-objection-period: 14.days after IfpDenialNoticed() counted_by frcp6 cite "W.D. Va. Gen. R. 4(a)"
+{
+  forum frcp
+}
+
+/// General Rule 4(b)(4): a petition for approval of attorneys' fees under
+/// 42 U.S.C. § 406(b) is filed within 30 days of the date of the Notice of
+/// Award, with a copy of the Notice of Award.
+deadline ss-fee-petition-period: 30.days after NoticeOfAwardIssued() counted_by frcp6 cite "W.D. Va. Gen. R. 4(b)"
+{
+  forum frcp
+}
+
+/// General Rule 4(c)(1): unless changed by the presiding judge, on review
+/// under 42 U.S.C. § 405(g) the plaintiff files its brief within 30 days of
+/// service of a copy of the administrative record.
+deadline ss-plaintiff-brief-period: 30.days after AdministrativeRecordServed() counted_by frcp6 cite "W.D. Va. Gen. R. 4(c)"
+{
+  forum frcp
+}
+
+/// General Rule 4(c)(3): a brief in response by the Commissioner is filed
+/// within 30 days after service of the plaintiff's brief.
+deadline ss-commissioner-brief-period: 30.days after SsPlaintiffBriefServed() counted_by frcp6 cite "W.D. Va. Gen. R. 4(c)"
+{
+  forum frcp
+}
+
+/// General Rule 4(c)(4): a reply brief by the plaintiff is filed within 14
+/// days after service of the Commissioner's brief.
+deadline ss-reply-brief-period: 14.days after CommissionerBriefServed() counted_by frcp6 cite "W.D. Va. Gen. R. 4(c)"
+{
+  forum frcp
+}
+
+/// General Rule 4(c)(5): the plaintiff files the grounds of any objection to
+/// the Commissioner's motion to remand within 14 days of its service, or the
+/// plaintiff is assumed to consent to remand.
+deadline ss-remand-objection-period: 14.days after RemandMotionServed() counted_by frcp6 cite "W.D. Va. Gen. R. 4(c)"
+{
+  forum frcp
+}
+
+/// General Rule 9(d)(5): unless the court orders otherwise, sealed documents
+/// not otherwise provided for are unsealed by the clerk 120 days from the
+/// date of entry of the sealing order, unless the sealing order provides
+/// otherwise.
+deadline unsealing-period: 120.days after SealingOrderEntered() counted_by frcp6 cite "W.D. Va. Gen. R. 9(d)"
+{
+  forum frcp
+}
+
+/// General Rule 12: in a civil case in which no appeal is perfected, the
+/// parties remove exhibits of unusual bulk or weight and physical exhibits
+/// within 60 days from the date of final disposition of the case by the
+/// court.
+deadline exhibit-removal-period: 60.days after FinalDisposition() counted_by frcp6 cite "W.D. Va. Gen. R. 12"
+{
+  forum frcp
+}
+
+/// General Rule 12: when an appeal is perfected and disposed of by the court
+/// of appeals, or the case is appealed to the Supreme Court, the exhibits
+/// are removed within 30 days after receipt of the judgment, other process
+/// or certificate disclosing that court's disposition.
+deadline exhibit-removal-after-appeal-period: 30.days after AppellateDispositionReceived() counted_by frcp6 cite "W.D. Va. Gen. R. 12"
+{
+  forum frcp
+}
+
+/// General Rule 12: if exhibits are not removed within the required time and
+/// the clerk notifies the parties, the clerk destroys exhibits the parties
+/// have not removed within 30 days from the date of that notice.
+deadline exhibit-removal-notice-period: 30.days after ExhibitNoticeGiven() counted_by frcp6 cite "W.D. Va. Gen. R. 12"
+{
+  forum frcp
+}
+
+/// Civil Rule 11(c)(1): unless otherwise directed by the court, the opposing
+/// party files a responsive brief and supporting documents within 14 days
+/// after service of the motion.
+deadline response-brief-period: 14.days after MotionServed() counted_by frcp6 cite "W.D. Va. Civ. R. 11(c)"
+{
+  forum frcp
+}
+
+/// Civil Rule 11(c)(1): the moving party may file a rebuttal brief within 7
+/// days after service of the opposing party's brief (the rule's "reply
+/// brief"); no further briefs (including letter briefs) are submitted
+/// without leave of court.
+deadline rebuttal-brief-period: 7.days after ResponsiveBriefServed() counted_by frcp6 cite "W.D. Va. Civ. R. 11(c)"
+{
+  forum frcp
+}
+
+/// Civil Rule 51: except as otherwise directed by the court, in a jury case
+/// any proposed instructions are filed at least 7 days before the scheduled
+/// trial date.
+deadline jury-instructions-period: 7.days before TrialCommenced() counted_by frcp6 cite "W.D. Va. Civ. R. 51"
+{
+  forum frcp
+}
+
+/// Civil Rule 54(a)(1): unless otherwise provided by statute, in Social
+/// Security cases, or as otherwise ordered, a motion for attorneys' fees is
+/// filed no later than 21 days after the entry of judgment.
+deadline fee-motion-period: 21.days after JudgmentEntered() counted_by frcp6 cite "W.D. Va. Civ. R. 54(a)"
+{
+  forum frcp
+}
+
+/// Civil Rule 54(a)(1): any opposition to a motion for attorneys' fees is
+/// filed within 21 days of service of the motion.
+deadline fee-opposition-period: 21.days after FeeMotionServed() counted_by frcp6 cite "W.D. Va. Civ. R. 54(a)"
+{
+  forum frcp
+}
+
+/// Civil Rule 54(a)(1): any reply is filed within 7 days of service of the
+/// opposition.
+deadline fee-reply-period: 7.days after FeeOppositionServed() counted_by frcp6 cite "W.D. Va. Civ. R. 54(a)"
+{
+  forum frcp
+}
+
+test "ifp objection period: 14 days after the trigger" cite "W.D. Va. Gen. R. 4(a)"
+{
+  given IfpDenialNoticed() on 2026-11-02
+  expect deadline(ifp-objection-period) == 2026-11-16
+}
+
+test "ss fee petition period: 30 days after the trigger" cite "W.D. Va. Gen. R. 4(b)"
+{
+  given NoticeOfAwardIssued() on 2026-11-02
+  expect deadline(ss-fee-petition-period) == 2026-12-02
+}
+
+test "ss plaintiff brief period: 30 days after the trigger" cite "W.D. Va. Gen. R. 4(c)"
+{
+  given AdministrativeRecordServed() on 2026-11-02
+  expect deadline(ss-plaintiff-brief-period) == 2026-12-02
+}
+
+test "ss commissioner brief period: 30 days after the trigger" cite "W.D. Va. Gen. R. 4(c)"
+{
+  given SsPlaintiffBriefServed() on 2026-11-02
+  expect deadline(ss-commissioner-brief-period) == 2026-12-02
+}
+
+test "ss reply brief period: 14 days after the trigger" cite "W.D. Va. Gen. R. 4(c)"
+{
+  given CommissionerBriefServed() on 2026-11-02
+  expect deadline(ss-reply-brief-period) == 2026-11-16
+}
+
+test "ss remand objection period: 14 days after the trigger" cite "W.D. Va. Gen. R. 4(c)"
+{
+  given RemandMotionServed() on 2026-11-02
+  expect deadline(ss-remand-objection-period) == 2026-11-16
+}
+
+test "unsealing period: 120 days after the trigger" cite "W.D. Va. Gen. R. 9(d)"
+{
+  given SealingOrderEntered() on 2026-11-02
+  expect deadline(unsealing-period) == 2027-03-02
+}
+
+test "exhibit removal period: 60 days after the trigger" cite "W.D. Va. Gen. R. 12"
+{
+  given FinalDisposition() on 2026-11-02
+  expect deadline(exhibit-removal-period) == 2027-01-04
+}
+
+test "exhibit removal after appeal period: 30 days after the trigger" cite "W.D. Va. Gen. R. 12"
+{
+  given AppellateDispositionReceived() on 2026-11-02
+  expect deadline(exhibit-removal-after-appeal-period) == 2026-12-02
+}
+
+test "exhibit removal notice period: 30 days after the trigger" cite "W.D. Va. Gen. R. 12"
+{
+  given ExhibitNoticeGiven() on 2026-11-02
+  expect deadline(exhibit-removal-notice-period) == 2026-12-02
+}
+
+test "response brief period: 14 days after the trigger" cite "W.D. Va. Civ. R. 11(c)"
+{
+  given MotionServed() on 2026-11-02
+  expect deadline(response-brief-period) == 2026-11-16
+}
+
+test "rebuttal brief period: 7 days after the trigger" cite "W.D. Va. Civ. R. 11(c)"
+{
+  given ResponsiveBriefServed() on 2026-11-02
+  expect deadline(rebuttal-brief-period) == 2026-11-09
+}
+
+test "jury instructions period: 7 days before the trigger" cite "W.D. Va. Civ. R. 51"
+{
+  given TrialCommenced() on 2027-02-02
+  expect deadline(jury-instructions-period) == 2027-01-26
+}
+
+test "fee motion period: 21 days after the trigger" cite "W.D. Va. Civ. R. 54(a)"
+{
+  given JudgmentEntered() on 2026-11-02
+  expect deadline(fee-motion-period) == 2026-11-23
+}
+
+test "fee opposition period: 21 days after the trigger" cite "W.D. Va. Civ. R. 54(a)"
+{
+  given FeeMotionServed() on 2026-11-02
+  expect deadline(fee-opposition-period) == 2026-11-23
+}
+
+test "fee reply period: 7 days after the trigger" cite "W.D. Va. Civ. R. 54(a)"
+{
+  given FeeOppositionServed() on 2026-11-02
+  expect deadline(fee-reply-period) == 2026-11-09
+}

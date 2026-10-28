@@ -1,0 +1,47 @@
+# The Vermont Local Bankruptcy Rules of the U.S. Bankruptcy Court for the
+# District of Vermont over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
+# declares only the periods the Local Bankruptcy Rules themselves state and
+# re-encodes no FRBP period. It is a base package, not a `kind =
+# "local-rule"` layer: lit/core has no bankruptcy forum family (L2011 for
+# `bankr-vt`), as for lit/bankr-dc. Each period is counted under FRBP
+# 9006(a), the FRCP 6(a) method (core's frcp6). The rules are the 2024
+# Local Bankruptcy Rules as revised December 1, 2024
+# (sources/bankr-vt/PROVENANCE.md); no amending order is vendored (the
+# appendices, forms and standing orders are not), so the consolidation is
+# the only layer. No earlier edition is vendored, so a query before
+# December 1, 2024 is a hole in the corpus.
+[package]
+name = "bankr-vt-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-vt-local-rules"
+forum = "bankr-vt"
+authority = "LocalRule"
+title = "U.S. Bankruptcy Court for the District of Vermont: Local Bankruptcy Rules"
+description = "The Bankr. D. Vt. Local Bankruptcy Rules as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): the involuntary chapter 11 affidavit and its waiver, joint administration and substantive consolidation, reinstatement after dismissal, conversion reports and refunds, operating report waivers, limited-scope representation, pro hac vice changes, mortgage payment changes, subchapter V claim objections and the § 1111(b) election, chapter 13 amended plans, conduit mortgage payments and confirmation postponements, cram down requests, substantial consummation, conditional stay relief, residential eviction cures, stay continuation, mortgage mediation, documents for the trustee and tax return requests, proof of insurance, sales and auctions, pre-trial statements, discovery, summary judgment, motion practice and memoranda (LBR 9013-2 to 9013-5), evidentiary hearings, reconsideration and removal."
+in_force = "2024-12-01"
+known_at = "2026-10-28"
+unknown_before = "2024-12-01"
+jurisdiction = "U.S. Bankruptcy Court for the District of Vermont"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.vtb-lbr]
+title = "Vermont Local Bankruptcy Rules, 2024 (revised December 1, 2024)"
+url = "https://www.vtb.uscourts.gov/sites/vtb/files/2024%20Local%20Rules%20Revised%2012.1.24.pdf"
+path = "sources/bankr-vt/vt-local-rules-2024-12-01-sectioned.txt"
+path_sha256 = "103f6cf0f60867b34a72ba7a8c7903dd76a1e13ca63fe91b0f7b5d7e16a2a855"
+sha256 = "c02cd77a4a3a92fcc4ea31a51053b292aa051ba822716d6f42e14ad2aa4ee01c"
+as_of = "2024-12-01"
+cite_prefixes = ["Vt. LBR"]
+section_heading = "LBR {n}"

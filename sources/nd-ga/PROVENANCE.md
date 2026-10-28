@@ -11,6 +11,7 @@
 
 - Source: https://www.gand.uscourts.gov/sites/gand/files/local_rules/NDGARulesCR_3.pdf (official site; 31 pages, sha256 7ef51f4faa42a6b3a298efaffddbd439a382b1d47ba1803d02f814447e74b8c8).
 - Edition: Criminal Local Rules (LCrR), listed as 'Criminal Rules, Updated 04/02/2024' at https://www.gand.uscourts.gov/court-info/local-rules-and-orders/local-rules; the PDF itself carries no edition date (LCrR 1.1 states the 1997 adoption). robots.txt of www.gand.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Criminal forum (lg-gddt): gand-criminal.
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 a9455b9e4ed98404f282c2cf03a64e073d943b83c890b0eaa4a4a9c8b1254954. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `nd-ga/original/ndga-criminal-local-rules-2024-04-02.pdf` as served (sha256 7ef51f4faa42a6b3a298efaffddbd439a382b1d47ba1803d02f814447e74b8c8); extraction sha256 a9455b9e4ed98404f282c2cf03a64e073d943b83c890b0eaa4a4a9c8b1254954.

@@ -343,3 +343,171 @@ deadline address-change-period: 14.days after AddressChanged() counted_by frcp6 
 {
   forum frcp
 }
+
+test "filing fee period: 30 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 3.2"
+{
+  given InFormaPauperisDenied() on 2026-11-02
+  expect deadline(filing-fee-period) == 2026-12-02
+}
+
+test "new appearance period: 21 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 5.2"
+{
+  given WithdrawalOrderEntered() on 2026-11-02
+  expect deadline(new-appearance-period) == 2026-11-23
+}
+
+test "state notice filing period: 7 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 5.3(a)"
+{
+  given NoticeOfRemovalFiled() on 2026-11-02
+  expect deadline(state-notice-filing-period) == 2026-11-09
+}
+
+test "removal appearance period: 14 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 5.3(b)"
+{
+  given NoticeOfRemovalFiled() on 2026-11-02
+  expect deadline(removal-appearance-period) == 2026-11-16
+}
+
+test "removed motion memorandum period: 14 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 5.3(c)"
+{
+  given NoticeOfRemovalFiled() on 2026-11-02
+  expect deadline(removed-motion-memorandum-period) == 2026-11-16
+}
+
+test "removed motion response period: 21 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 5.3(c)"
+{
+  given RemovedMotionMemorandumFiled() on 2026-11-02
+  expect deadline(removed-motion-response-period) == 2026-11-23
+}
+
+test "removed supported motion response period: 21 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 5.3(c)"
+{
+  given NoticeOfRemovalFiled() on 2026-11-02
+  expect deadline(removed-supported-motion-response-period) == 2026-11-23
+}
+
+test "removal disclosure period: 14 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 5.3(d)"
+{
+  given NoticeOfRemovalFiled() on 2026-11-02
+  expect deadline(removal-disclosure-period) == 2026-11-16
+}
+
+test "motions period: 30 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 7.1(a)"
+{
+  given DiscoveryClosed() on 2026-11-02
+  expect deadline(motions-period) == 2026-12-02
+}
+
+test "social security fee period: 65 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 7.1(d)"
+{
+  given LastNoticeOfAward() on 2026-11-02
+  expect deadline(social-security-fee-period) == 2027-01-06
+}
+
+test "response period: 21 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 7.1(f)"
+{
+  given MotionServed() on 2026-11-02
+  expect deadline(response-period) == 2026-11-23
+}
+
+test "discovery response period: 14 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 7.1(f)"
+{
+  given DiscoveryMotionServed() on 2026-11-02
+  expect deadline(discovery-response-period) == 2026-11-16
+}
+
+test "reply period: 14 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 7.1(g)"
+{
+  given ResponseServed() on 2026-11-02
+  expect deadline(reply-period) == 2026-11-16
+}
+
+test "translation objection period: 14 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 10.1"
+{
+  given TranslationFiled() on 2026-11-02
+  expect deadline(translation-objection-period) == 2026-11-16
+}
+
+test "pretrial disclosure period: 28 days before the trigger" cite "E.D.N.C. Loc. Civ. R. 16.1(b)"
+{
+  given PretrialConference() on 2027-03-02
+  expect deadline(pretrial-disclosure-period) == 2027-02-02
+}
+
+test "pretrial objection period: 21 days before the trigger" cite "E.D.N.C. Loc. Civ. R. 16.1(b)"
+{
+  given PretrialConference() on 2027-03-02
+  expect deadline(pretrial-objection-period) == 2027-02-09
+}
+
+test "pretrial order period: 7 days before the trigger" cite "E.D.N.C. Loc. Civ. R. 16.1(b)"
+{
+  given PretrialConference() on 2027-03-02
+  expect deadline(pretrial-order-period) == 2027-02-23
+}
+
+test "trial memorandum period: 7 days before the trigger" cite "E.D.N.C. Loc. Civ. R. 39.1(a)"
+{
+  given TrialSessionOpens() on 2027-03-02
+  expect deadline(trial-memorandum-period) == 2027-02-23
+}
+
+test "voir dire period: 7 days before the trigger" cite "E.D.N.C. Loc. Civ. R. 47.1(b)"
+{
+  given TrialSessionOpens() on 2027-03-02
+  expect deadline(voir-dire-period) == 2027-02-23
+}
+
+test "bill of costs period: 30 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 54.1(a)"
+{
+  given CostsPeriodTriggered() on 2026-11-02
+  expect deadline(bill-of-costs-period) == 2026-12-02
+}
+
+test "costs objection period: 14 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 54.1(b)"
+{
+  given BillOfCostsFiled() on 2026-11-02
+  expect deadline(costs-objection-period) == 2026-11-16
+}
+
+test "costs reply period: 7 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 54.1(b)"
+{
+  given CostsOppositionFiled() on 2026-11-02
+  expect deadline(costs-reply-period) == 2026-11-09
+}
+
+test "costs review period: 7 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 54.1(c)"
+{
+  given CostsTaxed() on 2026-11-02
+  expect deadline(costs-review-period) == 2026-11-09
+}
+
+test "magistrate appeal period: 14 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 72.4(a)"
+{
+  given MagistrateOrderServed() on 2026-11-02
+  expect deadline(magistrate-appeal-period) == 2026-11-16
+}
+
+test "magistrate appeal response period: 14 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 72.4(a)"
+{
+  given MagistrateAppealServed() on 2026-11-02
+  expect deadline(magistrate-appeal-response-period) == 2026-11-16
+}
+
+test "magistrate objection period: 14 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 72.4(b)"
+{
+  given MagistrateReportServed() on 2026-11-02
+  expect deadline(magistrate-objection-period) == 2026-11-16
+}
+
+test "magistrate objection response period: 14 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 72.4(b)"
+{
+  given MagistrateObjectionsServed() on 2026-11-02
+  expect deadline(magistrate-objection-response-period) == 2026-11-16
+}
+
+test "address change period: 14 days after the trigger" cite "E.D.N.C. Loc. Civ. R. 83.3"
+{
+  given AddressChanged() on 2026-11-02
+  expect deadline(address-change-period) == 2026-11-16
+}

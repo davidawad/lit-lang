@@ -178,3 +178,87 @@ deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "W
 {
   forum frcp
 }
+
+test "ncdps waiver response period: 60 days after the trigger" cite "W.D.N.C. LCvR 4.3(b)"
+{
+  given NcdpsWaiverRequestFiled() on 2026-11-02
+  expect deadline(ncdps-waiver-response-period) == 2027-01-04
+}
+
+test "ncdps answer period: 60 days after the trigger" cite "W.D.N.C. LCvR 4.3(c)"
+{
+  given NcdpsWaiverFiled() on 2026-11-02
+  expect deadline(ncdps-answer-period) == 2027-01-04
+}
+
+test "response period: 14 days after the trigger" cite "W.D.N.C. LCvR 7.1(e)"
+{
+  given MotionServed() on 2026-11-02
+  expect deadline(response-period) == 2026-11-16
+}
+
+test "reply period: 7 days after the trigger" cite "W.D.N.C. LCvR 7.1(e)"
+{
+  given ResponseServed() on 2026-11-02
+  expect deadline(reply-period) == 2026-11-09
+}
+
+test "social security reply period: 14 days after the trigger" cite "W.D.N.C. LCvR 7.2(g)"
+{
+  given CommissionerBriefSubmitted() on 2026-11-02
+  expect deadline(social-security-reply-period) == 2026-11-16
+}
+
+test "initial attorneys conference period: 14 days after the trigger" cite "W.D.N.C. LCvR 16.1(a)"
+{
+  given IssuesJoined() on 2026-11-02
+  expect deadline(initial-attorneys-conference-period) == 2026-11-16
+}
+
+test "iac certificate period: 7 days after the trigger" cite "W.D.N.C. LCvR 16.1(b)"
+{
+  given InitialAttorneysConference() on 2026-11-02
+  expect deadline(iac-certificate-period) == 2026-11-09
+}
+
+test "consent stipulation period: 7 days after the trigger" cite "W.D.N.C. LCvR 16.1(c)"
+{
+  given StayMotionRuled() on 2026-11-02
+  expect deadline(consent-stipulation-period) == 2026-11-09
+}
+
+test "pro se opt in period: 14 days after the trigger" cite "W.D.N.C. LCvR 16.4"
+{
+  given OptInNoticeReceived() on 2026-11-02
+  expect deadline(pro-se-opt-in-period) == 2026-11-16
+}
+
+test "subpoena notice period: 3 days before the trigger" cite "W.D.N.C. LCvR 45.2"
+{
+  given NonPartySubpoenaServed() on 2027-03-02
+  expect deadline(subpoena-notice-period) == 2027-02-26
+}
+
+test "bill of costs period: 30 days after the trigger" cite "W.D.N.C. LCvR 54.1(a)"
+{
+  given CostsPeriodTriggered() on 2026-11-02
+  expect deadline(bill-of-costs-period) == 2026-12-02
+}
+
+test "costs objection period: 14 days after the trigger" cite "W.D.N.C. LCvR 54.1(d)"
+{
+  given BillOfCostsFiled() on 2026-11-02
+  expect deadline(costs-objection-period) == 2026-11-16
+}
+
+test "costs response period: 7 days after the trigger" cite "W.D.N.C. LCvR 54.1(d)"
+{
+  given CostsObjectionFiled() on 2026-11-02
+  expect deadline(costs-response-period) == 2026-11-09
+}
+
+test "costs review period: 7 days after the trigger" cite "W.D.N.C. LCvR 54.1(e)"
+{
+  given CostsTaxed() on 2026-11-02
+  expect deadline(costs-review-period) == 2026-11-09
+}

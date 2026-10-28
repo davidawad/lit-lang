@@ -1,0 +1,58 @@
+# Criminal cases in the Indiana trial courts under the Indiana Rules of
+# Criminal Procedure, with the appeal hand-off under the Indiana Rules of
+# Appellate Procedure. The base text is the rules' official PDF, "Updated,
+# Effective January 1, 2025" (cover; sources/in-criminal-trial-court),
+# sectioned into one `## Ind. Crim. Rule <n>` per rule; amendment orders
+# after that edition, if any, were not checked when it was vendored, so a
+# later amendment is a dated layer still to come. in_force is the
+# edition's date; earlier editions are not vendored, so a query before it
+# is a hole in the corpus. The Appellate Rules are the copy sectioned for
+# lit/indctapp (effective July 1, 2026; sources/indctapp). Criminal Rule
+# 4.1 states how the Rule 4 periods are computed, but lit/core has no
+# counting rule for it or for the Appellate Rules, so every period below
+# is stated in a note, not encoded as a counted deadline. The Indiana
+# Code's criminal-procedure title (Ind. Code art. 35-33 to 35-38: arrest,
+# initial hearing advisements, bail, the omnibus date, motions to dismiss,
+# sentencing) is not vendored; those cites stay holes.
+[package]
+name = "in-trial-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "in-trial-court-criminal"
+forum = "in-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "indiana"
+title = "Indiana trial courts, criminal"
+description = "Criminal cases in the Indiana trial courts under the Indiana Rules of Criminal Procedure: charge, initial hearing and pretrial release, change of judge or venue, discovery, the Criminal Rule 4 speedy-trial periods, plea or trial, sentencing within thirty days, the motion to correct error and the thirty-day notice of appeal; periods are stated in notes."
+in_force = "2025-01-01"
+known_at = "2026-10-28"
+unknown_before = "2025-01-01"
+jurisdiction = "Indiana trial courts of general criminal jurisdiction"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.in-crim-rules]
+title = "Indiana Rules of Criminal Procedure (updated, effective January 1, 2025)"
+url = "https://rules.incourts.gov/pdf/PDF%20-%20Criminal/criminal.pdf"
+path = "sources/in-criminal-trial-court/in-rules-of-criminal-procedure-sectioned.txt"
+path_sha256 = "7db08ac4c67ad49564804a44f2ad60725cf0fe3eb6f3b8fa8a3b193081de8860"
+sha256 = "d4e812541e120c088465402e218bd8bb4ed1310e123069be11500125a98a083e"
+as_of = "2025-01-01"
+cite_prefixes = ["Ind. Crim. Rule"]
+section_heading = "Ind. Crim. Rule {n}"
+
+[sources.in-appellate-rules]
+title = "Indiana Rules of Appellate Procedure (adopted effective January 1, 2001; updated, effective July 1, 2026)"
+url = "https://rules.incourts.gov/pdf/PDF%20-%20Appellate/appellate.pdf"
+path = "sources/indctapp/in-appellate-rules-sectioned.txt"
+path_sha256 = "2cf5535875cdf99f49b2f9f4754e75f420d21879303a03afb2c858fbdfa1856e"
+sha256 = "60c64f89d3831e2f6dc5fe0ec474ca663019d258ec4bdf5d8fb3e620649705bb"
+as_of = "2026-07-01"
+cite_prefixes = ["Ind. Appellate Rule"]
+section_heading = "Ind. Appellate Rule {n}"

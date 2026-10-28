@@ -8,3 +8,9 @@
 - Original: `in-criminal-trial-court/original/in-rules-of-criminal-procedure.pdf` as served (sha256 d4e812541e120c088465402e218bd8bb4ed1310e123069be11500125a98a083e); extraction sha256 ad37354d3fc708c0a40b90dcfe1bfafa8f1a03936ad7305b0c8343435a5ec702.
 
 - Note (lg-gddt): Criminal appeals: Indiana Rules of Appellate Procedure, covered by sources/indctapp/ (in-appellate-rules-2026-07-01.txt).
+
+### `in-criminal-trial-court/in-rules-of-criminal-procedure-sectioned.txt` — Indiana Rules of Criminal Procedure, sectioned
+
+- Derived in the pod (lg-gddt.18) from `in-criminal-trial-court/in-rules-of-criminal-procedure.txt` (extract sha256 ad37354d3fc708c0a40b90dcfe1bfafa8f1a03936ad7305b0c8343435a5ec702); nothing fetched. After the table of contents, one marker line `## Ind. Crim. Rule <n>` is inserted before each rule's own heading line `Rule <n>. ...` (some open with a form feed; Rule 1.1 through Rule 6.2, 24 rules). The table of contents is unmarked. Every other line is the extract unchanged, so deleting the marker lines (`sed '/^## Ind. Crim. Rule /d'`) gives back the extract byte for byte.
+- Edition: as the extract, "Updated, Effective January 1, 2025".
+- Sectioned sha256 7db08ac4c67ad49564804a44f2ad60725cf0fe3eb6f3b8fa8a3b193081de8860 (the `path_sha256` pinned by `lit/in-criminal-trial-court/Lit.toml`).

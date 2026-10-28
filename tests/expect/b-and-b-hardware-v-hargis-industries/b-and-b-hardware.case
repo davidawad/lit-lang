@@ -1,0 +1,19 @@
+case b-and-b-hardware-v-hargis-industries
+uses change-certiorari-base ^1.0.0
+as_of 2015-03-24
+summary "B&B Hardware, Inc. v. Hargis Industries, Inc., 575 U.S. 138 (2015): the Eighth Circuit's judgment of May 1, 2013, rehearing denied June 20, 2013, and the petition for certiorari filed September 18, 2013."
+notes "Public record: the Supreme Court's docket No. 13-352 (https://www.supremecourt.gov/search.aspx?filename=/docketfiles/13-352.htm; sources/change-corpus/dockets/scotus-13-352.txt), its case header (lower court Nos. 10-3137, 11-1247 (8th Cir.), decided May 1, 2013 (716 F.3d 1020), rehearing denied June 20, 2013) and its Proceedings and Orders, whose rows (in the order the docket lists them, from 1) are the `docket` numbers below. Run under ca8.world (`litigate worlds`); the Court docketed the petition and granted it, so it was timely (Sup. Ct. R. 13.2: the Clerk will not file a petition that is jurisdictionally out of time)."
+source "Supreme Court of the United States, docket No. 13-352" { url "https://www.supremecourt.gov/search.aspx?filename=/docketfiles/13-352.htm", as_of 2026-10-28 }
+perspective b-and-b
+
+parties {
+  b-and-b: petitioner Corporation
+}
+
+events {
+  judgment: 2013-05-01 LowerCourtEntry() on b-and-b
+  rehearing-denied: 2013-06-20 LowerCourtEntry() on b-and-b
+  petition: 2013-09-18 docket 1 PetitionFiled() by b-and-b
+}
+
+stakes { change-certiorari-base::petition-filed: 0.usd, change-certiorari-base::judgment-stands: 0.usd }

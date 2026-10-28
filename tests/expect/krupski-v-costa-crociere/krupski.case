@@ -1,0 +1,18 @@
+case krupski-v-costa-crociere
+uses change-certiorari-base ^1.0.0
+as_of 2010-06-07
+summary "Krupski v. Costa Crociere S.p.A., 560 U.S. 538 (2010): the Eleventh Circuit's judgment of June 22, 2009 and the petition for certiorari filed September 15, 2009."
+notes "Public record: the Supreme Court's docket No. 09-337 (https://www.supremecourt.gov/search.aspx?filename=/docketfiles/09-337.htm; sources/change-corpus/dockets/scotus-09-337.txt), its case header (lower court No. 08-16569 (11th Cir.), decided June 22, 2009 (330 Fed. Appx. 892); no rehearing below) and its Proceedings and Orders, whose rows (in the order the docket lists them, from 1) are the `docket` numbers below. Run under ca11.world (`litigate worlds`); the Court docketed the petition and granted it, so it was timely (Sup. Ct. R. 13.2: the Clerk will not file a petition that is jurisdictionally out of time)."
+source "Supreme Court of the United States, docket No. 09-337" { url "https://www.supremecourt.gov/search.aspx?filename=/docketfiles/09-337.htm", as_of 2026-10-28 }
+perspective krupski
+
+parties {
+  krupski: petitioner Person
+}
+
+events {
+  judgment: 2009-06-22 LowerCourtEntry() on krupski
+  petition: 2009-09-15 docket 1 PetitionFiled() by krupski
+}
+
+stakes { change-certiorari-base::petition-filed: 0.usd, change-certiorari-base::judgment-stands: 0.usd }

@@ -32,6 +32,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Expect batch 2 (civil): the certiorari petitions of five cases the
+  library cites** (lg-wvlf.5). A base layer, `change-certiorari-base`
+  (docs/litigate/change/scotus-base), states the civil certiorari period
+  of the Rules of the Supreme Court effective 2005, 2007, 2010 and 2013
+  (Rule 13.1, 13.3, 13.5, 30.1; jurisdictional under 13.2), vendored as
+  served (sources/change-scotus-rules-2005-2013-cert-excerpt.txt). The
+  expect tests `tests/expect/krupski-v-costa-crociere`,
+  `john-r-sand-and-gravel-v-united-states`,
+  `united-states-v-tohono-oodham-nation`, `exxon-shipping-v-baker` and
+  `b-and-b-hardware-v-hargis-industries` replay each petition from the
+  Court's own docket (sources/change-corpus/dockets), the Tohono O'odham
+  petition through its two extensions: every one timely, as the Court
+  held in granting it.
+
 - **A version can be declared `repealed`** (lg-zpia; SPEC §5.4). A
   later edition that drops a declaration ends its last version with no
   successor, an undeclared trailing gap (L3002) unless something

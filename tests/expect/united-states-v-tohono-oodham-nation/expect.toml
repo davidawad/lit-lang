@@ -1,0 +1,51 @@
+# United States v. Tohono O'odham Nation, 563 U.S. 307 (2011) (lg-wvlf.5;
+# public record). The petition for certiorari against the base layer of
+# the 2005-2013 Rules of the Supreme Court
+# (docs/litigate/change/scotus-base), from the Court's docket No. 09-846
+# (https://www.supremecourt.gov/search.aspx?filename=/docketfiles/09-846.htm,
+# as served in sources/change-corpus/dockets/; the case's `docket N` is
+# the row of its Proceedings and Orders). The Federal Circuit decided the
+# appeal March 16, 2009 and denied rehearing August 18, 2009 (docket
+# header); the 90 days ran to Monday, November 16, 2009 (Rule 13.3, 2007
+# Rules). The United States applied on November 6 (row 1), ten days
+# before, and the Chief Justice extended the time to December 16 on
+# November 9 (row 2); it applied again on December 4 (row 3) and he
+# extended the time to January 15, 2010 the same day (row 4), the 60 days
+# of Rule 13.5. The petition was filed January 15, 2010 (row 5), the last
+# day. The Court granted it April 19, 2010 and reversed April 26, 2011.
+# The petition was docketed and granted, so the Court held it timely (Rule
+# 13.2). The merits holding edits no period the library models, so no
+# precedent layer is added. Re-record with `litigate test tests/expect
+# --bless`, and say why in the commit.
+
+paths = ["docs/litigate/change/scotus-base"]
+
+[[run]]
+world = "cafc.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = ["change-certiorari-base"]
+
+[run.expect.w1.outcome]
+first-application = "untimed"
+first-extension = "untimed"
+petition = "timely"
+second-application = "untimed"
+second-extension = "untimed"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-certiorari-base::petition-period"
+trigger = "2009-03-16"
+due = "2009-06-15"
+status = "superseded"
+cite = "Sup. Ct. R. (2007) 13.1"
+counted_by = "Sup. Ct. R. (2007) 30.1"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-certiorari-base::petition-period"
+trigger = "2009-08-18"
+due = "2010-01-15"
+status = "discharged"
+cite = "Sup. Ct. R. (2007) 13.1"
+counted_by = "Sup. Ct. R. (2007) 30.1"

@@ -1,0 +1,44 @@
+# John R. Sand & Gravel Co. v. United States, 552 U.S. 130 (2008) (lg-
+# wvlf.5; public record). The petition for certiorari against the base
+# layer of the 2005-2013 Rules of the Supreme Court
+# (docs/litigate/change/scotus-base), from the Court's docket No. 06-1164
+# (https://www.supremecourt.gov/search.aspx?filename=/docketfiles/06-
+# 1164.htm, as served in sources/change-corpus/dockets/; the case's
+# `docket N` is the row of its Proceedings and Orders). The Federal
+# Circuit decided the appeal August 9, 2006 and denied rehearing November
+# 30, 2006 (docket header); the petition was filed February 26, 2007 (row
+# 1). Rule 13.3 (2005 Rules) runs the 90 days from the denial of
+# rehearing: due Wednesday, February 28, 2007. The Court granted the
+# petition May 29, 2007 and affirmed January 8, 2008. The petition was
+# docketed and granted, so the Court held it timely (Rule 13.2). The
+# merits holding edits no period the library models, so no precedent layer
+# is added. Re-record with `litigate test tests/expect --bless`, and say
+# why in the commit.
+
+paths = ["docs/litigate/change/scotus-base"]
+
+[[run]]
+world = "cafc.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = ["change-certiorari-base"]
+
+[run.expect.w1.outcome]
+petition = "timely"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-certiorari-base::petition-period"
+trigger = "2006-08-09"
+due = "2006-11-07"
+status = "superseded"
+cite = "Sup. Ct. R. (2005) 13.1"
+counted_by = "Sup. Ct. R. (2005) 30.1"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-certiorari-base::petition-period"
+trigger = "2006-11-30"
+due = "2007-02-28"
+status = "discharged"
+cite = "Sup. Ct. R. (2005) 13.1"
+counted_by = "Sup. Ct. R. (2005) 30.1"

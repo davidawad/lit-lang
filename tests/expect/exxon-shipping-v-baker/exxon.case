@@ -1,0 +1,19 @@
+case exxon-shipping-v-baker
+uses change-certiorari-base ^1.0.0
+as_of 2008-06-25
+summary "Exxon Shipping Co. v. Baker, 554 U.S. 471 (2008): the Ninth Circuit's judgment of December 22, 2006, rehearing denied May 23, 2007, and the petition for certiorari filed August 20, 2007."
+notes "Public record: the Supreme Court's docket No. 07-219 (https://www.supremecourt.gov/search.aspx?filename=/docketfiles/07-219.htm; sources/change-corpus/dockets/scotus-07-219.txt), its case header (lower court No. 04-35183 (9th Cir.), decided December 22, 2006 (472 F.3d 600), rehearing denied May 23, 2007 (490 F.3d 1066)) and its Proceedings and Orders, whose rows (in the order the docket lists them, from 1) are the `docket` numbers below. Run under ca9.world (`litigate worlds`); the Court docketed the petition and granted it, so it was timely (Sup. Ct. R. 13.2: the Clerk will not file a petition that is jurisdictionally out of time)."
+source "Supreme Court of the United States, docket No. 07-219" { url "https://www.supremecourt.gov/search.aspx?filename=/docketfiles/07-219.htm", as_of 2026-10-28 }
+perspective exxon
+
+parties {
+  exxon: petitioner Corporation
+}
+
+events {
+  judgment: 2006-12-22 LowerCourtEntry() on exxon
+  rehearing-denied: 2007-05-23 LowerCourtEntry() on exxon
+  petition: 2007-08-20 docket 1 PetitionFiled() by exxon
+}
+
+stakes { change-certiorari-base::petition-filed: 0.usd, change-certiorari-base::judgment-stands: 0.usd }

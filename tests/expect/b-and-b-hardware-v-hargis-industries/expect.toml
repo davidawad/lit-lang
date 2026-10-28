@@ -1,0 +1,44 @@
+# B&B Hardware, Inc. v. Hargis Industries, Inc., 575 U.S. 138 (2015) (lg-
+# wvlf.5; public record). The petition for certiorari against the base
+# layer of the 2005-2013 Rules of the Supreme Court
+# (docs/litigate/change/scotus-base), from the Court's docket No. 13-352 (
+# https://www.supremecourt.gov/search.aspx?filename=/docketfiles/13-
+# 352.htm, as served in sources/change-corpus/dockets/; the case's `docket
+# N` is the row of its Proceedings and Orders). The Eighth Circuit decided
+# the appeals May 1, 2013 and denied rehearing June 20, 2013 (docket
+# header); the petition was filed September 18, 2013 (row 1), the last
+# day: Rule 13.3 runs the 90 days from the denial of rehearing, counted
+# under the 2010 Rules, in force on June 20 (the 2013 Rules took effect
+# July 1, 2013 and read the same). The Court granted the petition July 1,
+# 2014 and reversed March 24, 2015. The petition was docketed and granted,
+# so the Court held it timely (Rule 13.2). The merits holding edits no
+# period the library models, so no precedent layer is added. Re-record
+# with `litigate test tests/expect --bless`, and say why in the commit.
+
+paths = ["docs/litigate/change/scotus-base"]
+
+[[run]]
+world = "ca8.world"
+
+[run.expect.w1]
+verdict = "clean"
+in_force = ["change-certiorari-base"]
+
+[run.expect.w1.outcome]
+petition = "timely"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-certiorari-base::petition-period"
+trigger = "2013-05-01"
+due = "2013-07-30"
+status = "superseded"
+cite = "Sup. Ct. R. (2010) 13.1"
+counted_by = "Sup. Ct. R. (2010) 30.1"
+
+[[run.expect.w1.deadlines]]
+deadline = "change-certiorari-base::petition-period"
+trigger = "2013-06-20"
+due = "2013-09-18"
+status = "discharged"
+cite = "Sup. Ct. R. (2010) 13.1"
+counted_by = "Sup. Ct. R. (2010) 30.1"

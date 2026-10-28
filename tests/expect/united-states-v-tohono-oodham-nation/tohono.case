@@ -1,0 +1,24 @@
+case united-states-v-tohono-oodham-nation
+uses change-certiorari-base ^1.0.0
+as_of 2011-04-26
+summary "United States v. Tohono O'odham Nation, 563 U.S. 307 (2011): the Federal Circuit's judgment of March 16, 2009, rehearing denied August 18, 2009, two extensions by the Chief Justice (application 09A435) to January 15, 2010, and the petition filed that day."
+notes "Public record: the Supreme Court's docket No. 09-846 (https://www.supremecourt.gov/search.aspx?filename=/docketfiles/09-846.htm; sources/change-corpus/dockets/scotus-09-846.txt), its case header (lower court No. 2008-5043 (Fed. Cir.), decided March 16, 2009 (559 F.3d 1284), rehearing denied August 18, 2009) and its Proceedings and Orders, whose rows (in the order the docket lists them, from 1) are the `docket` numbers below. Run under cafc.world (`litigate worlds`); the Court docketed the petition and granted it, so it was timely (Sup. Ct. R. 13.2: the Clerk will not file a petition that is jurisdictionally out of time)."
+source "Supreme Court of the United States, docket No. 09-846" { url "https://www.supremecourt.gov/search.aspx?filename=/docketfiles/09-846.htm", as_of 2026-10-28 }
+perspective united-states
+
+parties {
+  united-states: petitioner Government
+  chief-justice: justice Person
+}
+
+events {
+  judgment: 2009-03-16 LowerCourtEntry() on united-states
+  rehearing-denied: 2009-08-18 LowerCourtEntry() on united-states
+  first-application: 2009-11-06 docket 1 PetitionExtensionApplied() by united-states
+  first-extension: 2009-11-09 docket 2 PetitionTimeExtended(2009-12-16) by chief-justice cite "Sup. Ct. R. (2007) 13.5"
+  second-application: 2009-12-04 docket 3 PetitionExtensionApplied() by united-states
+  second-extension: 2009-12-04 docket 4 PetitionTimeExtended(2010-01-15) by chief-justice cite "Sup. Ct. R. (2007) 13.5"
+  petition: 2010-01-15 docket 5 PetitionFiled() by united-states
+}
+
+stakes { change-certiorari-base::petition-filed: 0.usd, change-certiorari-base::judgment-stands: 0.usd }

@@ -1,0 +1,70 @@
+# The deadline domain's change files (lg-wvlf.5): the base layer of the
+# certiorari period in a civil case, as the Rules of the Supreme Court in
+# force from May 2, 2005 to November 13, 2017 state it (editions effective
+# May 2, 2005, October 1, 2007, February 16, 2010 and July 1, 2013, each
+# vendored in sources/change-scotus-rules-2005-2013-cert-excerpt.txt). The
+# petition is due 90 days after entry of the judgment below, or after the
+# denial of a timely rehearing petition there (Rule 13.1, 13.3), counted
+# under Rule 30.1; a Justice may extend it by not more than 60 days (Rule
+# 13.5). The expect tests of tests/expect/ replay the petitions of the
+# civil cases the library cites against it, from the Court's dockets
+# (sources/change-corpus/dockets).
+[package]
+name = "change-certiorari-base"
+version = "1.0.0"
+language = 1
+pack_id = "change-certiorari-base"
+forum = "scotus"
+authority = "FederalRule"
+title = "Deadline domain: the certiorari period in a civil case, 2005-2017 Rules of the Supreme Court (base)"
+in_force = "2005-05-02"
+known_at = "2026-10-28"
+
+[package.roles]
+petitioner = "self"
+respondent = "opponent"
+justice = "nature"
+court = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../../../../lit/core" }
+
+[sources.scotus-2005]
+title = "Rules of the Supreme Court of the United States (adopted March 14, 2005, effective May 2, 2005): Rules 13, 29.3, 30.1-30.3, 48.1"
+url = "https://www.supremecourt.gov/pdfs/rules/rules_2005.pdf"
+path = "sources/change-scotus-rules-2005-2013-cert-excerpt.txt"
+path_sha256 = "33505bc8ebd05499cfc4bbe8e501edff0bf6cfa8cebdef3f20d756a91642baad"
+sha256 = "ccd71fc9b01b2e70687e13d185f922aa1ca13316882fc901ea47c0645c71f1b2"
+as_of = "2005-05-02"
+cite_prefixes = ["Sup. Ct. R. (2005)"]
+section_heading = "Sup. Ct. R. (2005) {n}"
+
+[sources.scotus-2007]
+title = "Rules of the Supreme Court of the United States (adopted July 17, 2007, effective October 1, 2007): Rules 13, 29.3, 30.1-30.3, 48.1"
+url = "https://www.supremecourt.gov/pdfs/rules/rules_2007.pdf"
+path = "sources/change-scotus-rules-2005-2013-cert-excerpt.txt"
+path_sha256 = "33505bc8ebd05499cfc4bbe8e501edff0bf6cfa8cebdef3f20d756a91642baad"
+sha256 = "b7bad6e7d39c5aa0cc9e282aeb5005ee304ce51fc0aaa25cf1730d891fbbe552"
+as_of = "2007-10-01"
+cite_prefixes = ["Sup. Ct. R. (2007)"]
+section_heading = "Sup. Ct. R. (2007) {n}"
+
+[sources.scotus-2010]
+title = "Rules of the Supreme Court of the United States (adopted January 12, 2010, effective February 16, 2010): Rules 13, 29.3, 30.1-30.3, 48.1"
+url = "https://www.supremecourt.gov/pdfs/rules/rules_2010.pdf"
+path = "sources/change-scotus-rules-2005-2013-cert-excerpt.txt"
+path_sha256 = "33505bc8ebd05499cfc4bbe8e501edff0bf6cfa8cebdef3f20d756a91642baad"
+sha256 = "161f3acd66cc158c63c57abd790fc0aafcc897a1469baf8eb144f350cb75d696"
+as_of = "2010-02-16"
+cite_prefixes = ["Sup. Ct. R. (2010)"]
+section_heading = "Sup. Ct. R. (2010) {n}"
+
+[sources.scotus-2013]
+title = "Rules of the Supreme Court of the United States (adopted April 19, 2013, effective July 1, 2013): Rules 13, 29.3, 30.1-30.3, 48.1"
+url = "https://www.supremecourt.gov/pdfs/rules/rules_2013.pdf"
+path = "sources/change-scotus-rules-2005-2013-cert-excerpt.txt"
+path_sha256 = "33505bc8ebd05499cfc4bbe8e501edff0bf6cfa8cebdef3f20d756a91642baad"
+sha256 = "d21dcd33c469d211f8aa7765e8ade99b5ce78186b736b5e46d27ec4f567e8db2"
+as_of = "2013-07-01"
+cite_prefixes = ["Sup. Ct. R. (2013)"]
+section_heading = "Sup. Ct. R. (2013) {n}"

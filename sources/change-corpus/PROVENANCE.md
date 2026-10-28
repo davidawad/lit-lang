@@ -1308,3 +1308,47 @@ exact download time was not recorded.
 - Source: <https://www.courtlistener.com/opinion/1098/ultimate-appliance-cc-v-kirby-co/>.
 - Retrieved 2026-10-23. Downloaded as served from CourtListener storage; stored unedited.
 - sha256: `0f2e0a7cfeec30aff0e048c6c30a03de6dd113ac86489e0e4dfdc25624f3ec3c`.
+
+## Dockets: Supreme Court of the United States (`dockets/`)
+
+The Court's docket pages of the five certiorari cases of the lg-wvlf.5 expect batch (`tests/expect/`), the record their petition dates come from. Each `.txt` is the page's case header and "Proceedings and Orders" table, one line per field or cell, extracted from the as-served HTML with a script (tags dropped, entities decoded, whitespace runs collapsed, the counsel table left out); no wording changed. The HTML as served is beside it under `dockets/original/`.
+
+### `dockets/scotus-06-1164.txt`
+
+- Supreme Court docket No. 06-1164, John R. Sand & Gravel Co. v. United States.
+- Source: <https://www.supremecourt.gov/search.aspx?filename=/docketfiles/06-1164.htm>.
+- Retrieved 2026-10-28; fetched with curl, extracted from the HTML by script as above.
+- `dockets/scotus-06-1164.txt` sha256: `0e8d535e1f33af1f84f907baaba14c456640922968b61e5a56277ebceeb6b044`.
+- Original: `dockets/original/scotus-06-1164.html` as served (sha256 6b665a50bf6240527edf7db462552e3328c61408ab6f0070da5912afae889a91); extraction sha256 0e8d535e1f33af1f84f907baaba14c456640922968b61e5a56277ebceeb6b044. Served at https://www.supremecourt.gov/search.aspx?filename=/docketfiles/06-1164.htm; fetched with curl, retrieved 2026-10-28.
+
+### `dockets/scotus-07-219.txt`
+
+- Supreme Court docket No. 07-219, Exxon Shipping Co. v. Baker.
+- Source: <https://www.supremecourt.gov/search.aspx?filename=/docketfiles/07-219.htm>.
+- Retrieved 2026-10-28; fetched with curl, extracted from the HTML by script as above.
+- `dockets/scotus-07-219.txt` sha256: `49b22e89b0f4c1fee67e0cb5cf9d66c39aea028d13b0a6ed95819811adc9d633`.
+- Original: `dockets/original/scotus-07-219.html` as served (sha256 0fb884a0cc0af46af76328f2ff2cfeb7d41ebf15435dcb639a5b0138bd07eee4); extraction sha256 49b22e89b0f4c1fee67e0cb5cf9d66c39aea028d13b0a6ed95819811adc9d633. Served at https://www.supremecourt.gov/search.aspx?filename=/docketfiles/07-219.htm; fetched with curl, retrieved 2026-10-28.
+
+### `dockets/scotus-09-337.txt`
+
+- Supreme Court docket No. 09-337, Krupski v. Costa Crociere S.p.A..
+- Source: <https://www.supremecourt.gov/search.aspx?filename=/docketfiles/09-337.htm>.
+- Retrieved 2026-10-28; fetched with curl, extracted from the HTML by script as above.
+- `dockets/scotus-09-337.txt` sha256: `372597171e111dd553ece4058294254a2394af4089109276fd4a2e99f8bd2cae`.
+- Original: `dockets/original/scotus-09-337.html` as served (sha256 4dd29867e5e0d3131e4ffc186f213e7cc9b94e1155c3be214530e57867ab444c); extraction sha256 372597171e111dd553ece4058294254a2394af4089109276fd4a2e99f8bd2cae. Served at https://www.supremecourt.gov/search.aspx?filename=/docketfiles/09-337.htm; fetched with curl, retrieved 2026-10-28.
+
+### `dockets/scotus-09-846.txt`
+
+- Supreme Court docket No. 09-846, United States v. Tohono O'odham Nation.
+- Source: <https://www.supremecourt.gov/search.aspx?filename=/docketfiles/09-846.htm>.
+- Retrieved 2026-10-28; fetched with curl, extracted from the HTML by script as above.
+- `dockets/scotus-09-846.txt` sha256: `59f56051ad37510327a1ae0efe7b37de3dabe9b3b3bc0cd3e71a92a2e41f23c7`.
+- Original: `dockets/original/scotus-09-846.html` as served (sha256 2d5326045ec1d3dd36796fcb764a3b2ad502cc231d54d524d2de0d027e01129b); extraction sha256 59f56051ad37510327a1ae0efe7b37de3dabe9b3b3bc0cd3e71a92a2e41f23c7. Served at https://www.supremecourt.gov/search.aspx?filename=/docketfiles/09-846.htm; fetched with curl, retrieved 2026-10-28.
+
+### `dockets/scotus-13-352.txt`
+
+- Supreme Court docket No. 13-352, B&B Hardware, Inc. v. Hargis Industries, Inc.
+- Source: <https://www.supremecourt.gov/search.aspx?filename=/docketfiles/13-352.htm>.
+- Retrieved 2026-10-28; fetched with curl, extracted from the HTML by script as above.
+- `dockets/scotus-13-352.txt` sha256: `90e3b2814fab292013f952145bccca85640fc71a14e94ce72a509c8064ceb40a`.
+- Original: `dockets/original/scotus-13-352.html` as served (sha256 09a2afdc9954b6151a0c1dc3b2cfe982c92e1cf0ff0c1ed885a16f9cdcf4ac5f); extraction sha256 90e3b2814fab292013f952145bccca85640fc71a14e94ce72a509c8064ceb40a. Served at https://www.supremecourt.gov/search.aspx?filename=/docketfiles/13-352.htm; fetched with curl, retrieved 2026-10-28.

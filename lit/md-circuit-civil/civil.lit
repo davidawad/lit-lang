@@ -1,11 +1,14 @@
 module md-circuit-court-civil.civil
 
+import md-state-rules.{ ActionCommenced, JudgmentEntered, NoticeOfAppealFiled }
+
 start complaint-filed
 
 state complaint-filed: "Complaint filed" by applicant cite "Md. Rule 2-101(a)"
 {
   note "A civil action is commenced by filing a complaint with a court (Md. Rule 2-101(a)). An action dismissed by a United States District Court or a court of another state for lack of jurisdiction, because that court declines jurisdiction, or as time-barred under the law it applies, and refiled in a circuit court within 30 days after the order of dismissal, is treated as timely filed (Md. Rule 2-101(b)). Periods in this package are stated, not counted: their computation is governed by Md. Rule 1-203, which is not vendored."
   edge-complaint-filed-service "Summons issued and served" -> service-check {
+    event ActionCommenced()
     authority cite "Md. Rule 2-121(a)"
   }
 }
@@ -107,6 +110,7 @@ state trial: "Trial" by court cite "Md. Rule 2-511"
 {
   note "A party may move for judgment at the close of the evidence offered by an opposing party, and in a jury trial at the close of all the evidence (Md. Rule 2-519(a))."
   edge-trial-post "Verdict or decision; judgment entered" -> post-trial {
+    event JudgmentEntered()
     authority cite "Md. Rule 2-601(a)"
   }
 }
@@ -132,7 +136,10 @@ decision post-trial-ruling: "Post-judgment motion decided" by court cite "Md. Ru
 decision judgment-entered: "Notice of appeal within 30 days of entry?" by applicant cite "Md. Rule 8-202(a)"
 {
   note "A judgment is effective only when set forth on a separate document and entered on the docket of the electronic case management system; its date is the date of that entry (Md. Rule 2-601(a)(4), (b), (d)). The notice of appeal is filed with the clerk of the lower court within 30 days after entry of the judgment (Md. Rule 8-201(a), 8-202(a))."
-  edge-judgment-entered-appeal "Notice filed" -> appeal-taken { authority cite "Md. Rule 8-202(a)" }
+  edge-judgment-entered-appeal "Notice filed" -> appeal-taken {
+    event NoticeOfAppealFiled()
+    authority cite "Md. Rule 8-202(a)"
+  }
   edge-judgment-entered-none "No notice filed" -> final-no-appeal {
     authority cite "Md. Rule 8-202(a)"
   }

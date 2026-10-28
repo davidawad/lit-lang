@@ -9,11 +9,19 @@ dependencies = []
 name = "md-appellate-court-civil"
 version = "0.1.0"
 language = 1
-source = "sha256:77ce594797080d741ee8b3e204a075ba9645ebc10b848044563042c738205101"
-semantic = "sha256:8c385ae06dabb1d6ea1d87178562d2f03acb2c77a4a903297ce3bed3d349e589"
+source = "sha256:2f041309cbea7761207690f573188a3365b3af3c2f1aa98595e874f53b736d16"
+semantic = "sha256:9bf66a3b2304c428cfd180fe49633acf6a7c7239509a958978d672490dcdcd1b"
 texts = [
     "md-rules-title-8 sources/md-appellate-civil/md-appellate-civil-rules-sectioned.txt sha256:0694de4a0728cf6eda3351cc4fe4b299d1993e5c462add44ef16969ccf35664f",
 ]
+dependencies = [
+    "core 1.0.0",
+    "md-state-rules 0.1.0",
+]
+
+[[package]]
+name = "md-state-rules"
+version = "0.1.0"
 dependencies = [
     "core 1.0.0",
 ]

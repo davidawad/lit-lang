@@ -1,0 +1,45 @@
+# Review in the Supreme Court of Maryland (formerly the Court of Appeals)
+# by writ of certiorari, and the merits after a grant, under Title 8 of
+# the Maryland Rules (the Westlaw public-access text,
+# sources/md-appellate-civil, whose pages state "Current with amendments
+# received through September 1, 2026"; the PROVENANCE entry records
+# CURRENCY UNCONFIRMED; bound on the PM's release of 2026-10-28).
+# Computation of time is governed by Md. Rule 1-203 (Title 1), which is not
+# vendored, so the rules' periods are stated in notes, not encoded as
+# counted deadlines. Direct appeals (Md. Rule 8-306) and certified
+# questions (Md. Rule 8-305) are not modeled. The appeal in the Appellate
+# Court is lit/md-appellate-civil.
+[package]
+name = "md-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "md-supreme-court-civil"
+forum = "md-supreme-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "maryland"
+title = "Supreme Court of Maryland, certiorari review (civil)"
+description = "Review in the Supreme Court of Maryland by writ of certiorari under Title 8 of the Maryland Rules, as far as the vendored text states: the petition and its time, word limit and answer, the grant or denial, transmission of the record, briefing and argument, decision, reconsideration and the mandate."
+in_force = "2026-09-01"
+known_at = "2026-10-28"
+unknown_before = "2026-09-01"
+jurisdiction = "Supreme Court of Maryland"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+md-state-rules = { version = "^0.1.0", path = "../md-rules" }
+
+[sources.md-rules-title-8]
+title = "Maryland Rules, Title 8 (Appellate Review in the Supreme Court and the Appellate Court), Westlaw public-access text current with amendments received through September 1, 2026 (CURRENCY UNCONFIRMED)"
+url = "https://govt.westlaw.com/mdc/Index"
+path = "sources/md-appellate-civil/md-appellate-civil-rules-sectioned.txt"
+path_sha256 = "0694de4a0728cf6eda3351cc4fe4b299d1993e5c462add44ef16969ccf35664f"
+as_of = "2026-09-01"
+cite_prefixes = ["Md. Rule"]
+section_heading = "Rule {n}"

@@ -1,0 +1,101 @@
+module md-supreme-court-civil.review
+
+import md-state-rules.{ DecisionFiled, MandateIssued, RecordFiled, ReviewPetitionFiled }
+
+// Certiorari review in the Supreme Court of Maryland, from the
+// petitioner's side. Every period is stated in a note, not counted: Md.
+// Rule 1-203 is not vendored.
+start petition
+
+decision petition: "Petition for a writ of certiorari?" by applicant cite "Md. Rule 8-302(a)"
+{
+  note "Review by the Supreme Court may be obtained only by direct appeal where allowed by law, under the Maryland Uniform Certification of Questions of Law Act, by writ of certiorari on a petition under Rules 8-302 and 8-303, or by writ issued on the Court's own initiative (Md. Rule 8-301(a)); only the petition is modeled. After a notice of appeal to the Appellate Court, the petition may be filed before or after that court decides, but not later than the later of 15 days after its mandate or 30 days after the filing of its opinion (Md. Rule 8-302(a)); from a circuit court judgment on appeal to it, not later than 30 days after entry of the judgment (Md. Rule 8-302(b)). Any other party may cross-petition within 15 days after the first timely petition or any later time the Rule allows (Md. Rule 8-302(c)). The petition is filed with the Clerk of the Supreme Court with the filing fee unless waived (Md. Rule 8-303(a)). No leading decision on the grant standard is named."
+  edge-petition-none "No petition: the Appellate Court's decision stands" -> review-not-sought {
+    authority cite "Md. Rule 8-302(a)"
+  }
+  edge-petition-filed "Petition filed" -> review-decision {
+    event ReviewPetitionFiled()
+    authority cite "Md. Rule 8-303(a)"
+  }
+}
+
+decision review-decision: "Petition granted or denied" by court cite "Md. Rule 8-303(g)"
+{
+  note "A petition or cross-petition states the items of Md. Rule 8-303(b)(1)(A)-(J), including a particularized statement of why review is desirable and in the public interest, and may not exceed 3,900 words without the Court's permission (Md. Rule 8-303(b)(1)); the docket entry of the judgment, the opinions below and any Rule 2-602(b) order are submitted with it (Md. Rule 8-303(b)(2)). Failure to comply with section (b) is a sufficient reason for denial (Md. Rule 8-303(d)). Any other party may answer within 15 days after service, in no more than 3,900 words (Md. Rule 8-303(e)). Unless otherwise ordered the Court grants or denies without briefs or argument, and may not grant with fewer than three affirmative votes (Md. Rule 8-303(g)). The Court may stay the Appellate Court's mandate or the circuit court's judgment (Md. Rule 8-303(f))."
+  edge-review-decision-denied "Denied" -> review-denied { authority cite "Md. Rule 8-303(g)" }
+  edge-review-decision-summary "Granted and decided summarily" -> rehearing {
+    event DecisionFiled()
+    authority cite "Md. Rule 8-303(g)"
+  }
+  edge-review-decision-granted "Granted: further proceedings in the Supreme Court" -> record {
+    authority cite "Md. Rule 8-303(h)"
+  }
+}
+
+state record: "Record transmitted to the Supreme Court" by office cite "Md. Rule 8-412(b)"
+{
+  note "On a grant directing issuance of the writ, the Clerk issues it to the lower court (Md. Rule 8-303(h)). The clerk having the record transmits it within 15 days after entry of a writ directed to the Appellate Court, or within sixty days after a writ directed to another lower court (Md. Rule 8-412(b)). On docketing the record the Clerk sends notice of the appellant's brief due date, no earlier than 40 days after the notice unless the Court orders otherwise (Md. Rule 8-412(c))."
+  edge-record-briefing "Record docketed" -> briefing {
+    event RecordFiled()
+    authority cite "Md. Rule 8-412(c)"
+  }
+}
+
+state briefing: "Merits briefs filed" by applicant cite "Md. Rule 8-502(a)"
+{
+  note "The appellant's brief is filed by the date in the Clerk's Rule 8-412(c) notice; the appellee's within 30 days after the appellant's; a reply not later than the earlier of 20 days after the appellee's brief or ten days before the scheduled argument (Md. Rule 8-502(a)(1)-(3)). In the Supreme Court the time may be extended by joint stipulation if the principal briefs are filed at least 30 days, and any reply at least ten days, before argument, or by order (Md. Rule 8-502(b)(1)). Eight paper copies of each brief and record extract are filed (Md. Rule 8-502(c)(2)). Principal briefs are limited to 13,000 words and a reply to 6,500 in the Supreme Court (Md. Rule 8-503(d)(1), (3)); those limits are encoded in lit/md-appellate-civil."
+  edge-briefing-argument "Briefing complete" -> argument { authority cite "Md. Rule 8-522(a)" }
+}
+
+state argument: "Oral argument" by court cite "Md. Rule 8-522(a)"
+{
+  note "Except with permission of the Court, oral argument is limited to 30 minutes for each side in the Supreme Court; a request for more time is made by letter no later than ten days after the appellee's brief is filed (Md. Rule 8-522(a))."
+  edge-argument-decision "Opinion filed" -> rehearing {
+    event DecisionFiled()
+    authority cite "Md. Rule 8-604(a)"
+  }
+}
+
+decision rehearing: "Motion for reconsideration?" by applicant cite "Md. Rule 8-605(a)"
+{
+  note "As to each party the Court dismisses, affirms, vacates or reverses, modifies, or remands, or combines these (Md. Rule 8-604(a)). A motion for reconsideration of a decision disposing of the appeal is filed before the mandate issues or within 30 days after the filing of the opinion, whichever is earlier; no response may be filed unless one is requested, and there is no oral argument (Md. Rule 8-605(a)). The motion is limited to 3,900 words (Md. Rule 8-605(c)) and delays the mandate unless the Court orders otherwise (Md. Rule 8-605(e))."
+  edge-rehearing-none "No motion" -> mandate-issued {
+    event MandateIssued()
+    authority cite "Md. Rule 8-606(b)"
+  }
+  edge-rehearing-moved "Reconsideration moved" -> rehearing-decision {
+    authority cite "Md. Rule 8-605(a)"
+  }
+}
+
+decision rehearing-decision: "Reconsideration decided" by court cite "Md. Rule 8-605(f)"
+{
+  note "A motion for reconsideration is granted only with the consent of at least half the judges who concurred in the opinion; on a grant the Court may dispose of the appeal without reargument, restore it to the calendar, or modify or clarify its opinion (Md. Rule 8-605(f)). The Court ordinarily will not grant one, except to change the opinion without changing the decision, unless it has requested a response (Md. Rule 8-605(a))."
+  edge-rehearing-decision-denied "Denied" -> mandate-issued {
+    event MandateIssued()
+    authority cite "Md. Rule 8-606(b)"
+  }
+  edge-rehearing-decision-granted "Granted" -> reconsideration-granted {
+    authority cite "Md. Rule 8-605(f)"
+  }
+}
+
+terminal review-not-sought: "Review not sought: the Appellate Court's decision stands" outcome [final] cite "Md. Rule 8-302(a)"
+{
+  note "The Appellate Court's mandate issues under Md. Rule 8-606 (lit/md-appellate-civil)."
+}
+
+terminal review-denied: "Certiorari denied" outcome [final, loss] cite "Md. Rule 8-303(g)"
+{
+  note "The Clerk sends the order to the clerk of the lower court (Md. Rule 8-303(h)); the decision below stands. Review in the Supreme Court of the United States (28 U.S.C. § 1257) is not vendored and not modeled."
+}
+
+terminal mandate-issued: "Mandate issued" outcome [final] cite "Md. Rule 8-606(b)"
+{
+  note "Any disposition is evidenced by the mandate, which constitutes the judgment of the Court (Md. Rule 8-606(a)). Unless the Court orders otherwise, the Clerk issues it 30 days after the filing of the opinion or entry of the order (Md. Rule 8-606(b)(1)); it states the costs (Md. Rule 8-606(c)), and the lower court proceeds in accordance with its terms (Md. Rule 8-606(e))."
+}
+
+terminal reconsideration-granted: "Reconsideration granted" outcome [neutral] cite "Md. Rule 8-605(f)"
+{
+  note "Proceedings on reconsideration are not modeled."
+}

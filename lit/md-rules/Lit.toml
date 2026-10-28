@@ -1,0 +1,27 @@
+# The Maryland base library (lg-u561.5 pattern): the trigger events the
+# Maryland court packages route their graphs on: lit/md-circuit-civil,
+# lit/md-appellate-civil and lit/md-supreme-court. It declares no period:
+# the rules' periods are stated in the court packages' notes. No procedure
+# of its own.
+[package]
+name = "md-state-rules"
+version = "0.1.0"
+language = 1
+pack_id = "md-state-rules"
+forum = "md-state-rules"
+authority = "StateRule"
+jurisdiction_id = "maryland"
+title = "Maryland state court rules (base library)"
+description = "The rule layer Maryland's court packages share: the trigger events their graphs route on. No procedure of its own."
+in_force = "2026-09-01"
+known_at = "2026-10-28"
+unknown_before = "2026-09-01"
+jurisdiction = "Maryland state courts"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }

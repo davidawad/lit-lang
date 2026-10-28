@@ -12,7 +12,9 @@ version = "0.1.0"
 language = 1
 pack_id = "md-circuit-court-civil"
 forum = "md-circuit-civil"
+family = "state-civil"
 authority = "StateRule"
+jurisdiction_id = "maryland"
 title = "Maryland circuit courts, civil"
 description = "Civil actions in the Maryland circuit courts under Title 2 of the Maryland Rules, as far as the vendored text states. An appeal of a final judgment hands off to the Maryland appellate package (lit/md-appellate-civil)."
 in_force = "2026-09-01"
@@ -27,6 +29,8 @@ office = "nature"
 
 [dependencies]
 core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer (its trigger events).
+md-state-rules = { version = "^0.1.0", path = "../md-rules" }
 
 [sources.md-rules-title-2]
 title = "Maryland Rules, Title 2 (Civil Procedure--Circuit Court), Westlaw public-access text current with amendments received through September 1, 2026 (CURRENCY UNCONFIRMED)"

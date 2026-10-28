@@ -85,6 +85,8 @@ litigate calibrate-replay cases/dockets --id recap-replay --reviewed --out lit/f
 litigate diff lit/frcp --against target/lit-build/packs/frcp-civil-procedure.json   # semantic diff (SPEC §8.6)
 litigate compat old/lit/frcp lit/frcp      # compatibility class of a release + the bump it needs (SPEC §4.4)
 just lit-sync                               # regenerate every Lit.lock; build packs/, scenarios/ into target/lit-build/
+scripts/lit-regen                           # land-time regen of every Lit.lock + the clock json with a prebuilt litigate, no compile
+                                            # (LITIGATE_BIN or PATH; exit 3 LIT_REGEN_SKIPPED when the binary predates HEAD's crates/)
 just lit-sync-check                         # CI gate: fail on a stale Lit.lock or a committed generated file
 just coverage                               # write docs/COVERAGE.md locally (`litigate coverage`, gitignored): per-jurisdiction
                                             # rules, precedents, expect tests (inline and tests/expect) and package status

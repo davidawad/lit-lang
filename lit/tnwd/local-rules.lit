@@ -1,0 +1,263 @@
+module tnwd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Western District of Tennessee's own civil periods, computed under
+// FRCP 6 (LR 6.1(a)). Page limitations exclude captions, signature lines
+// and certificates of service or consultation (LR 7.1(d)). Periods that
+// restate a federal period are lit/frcp's and stay in notes: an appeal
+// from a magistrate judge's order on a pretrial matter is filed within 14
+// days after service of the order (LR 72.1(g)(1); FRCP 72(a)), and
+// objections to proposed findings and recommendations, and responses to
+// them, within 14 days after service (LR 72.1(g)(2); FRCP 72(b)(2)). The
+// differentiated case management tracks (LR 16.2) and the scheduling
+// conference periods they set are defaults for a scheduling order, not
+// periods running from a filing, and are not encoded. Rules that state no
+// period or limit stay out: the civil cover sheet, electronic filing and
+// division (LR 3.1-3.3), service (LR 4.1), pro se filing (LR 5.2),
+// revision of interlocutory orders (LR 7.3), signatures (LR 11.1), class
+// action designation (LR 23.1) and injunctions (LR 65.1). The earlier
+// W.D. Tenn. outline's FRCP flow and its decisions (Twombly, Iqbal, Frow
+// v. De La Vega, Celotex, Anderson v. Liberty Lobby and Matsushita) are
+// FRCP authority and belong to lit/frcp; they are removed here: no
+// reporter text is vendored.
+/// A memorandum in support of or in opposition to a motion: at most 20
+/// pages unless the court orders otherwise (LR 7.2(e)).
+limit memorandum { pages <= 20 cite "W.D. Tenn. L.R. 7.2(e)" } cite "W.D. Tenn. L.R. 7.2(e)"
+/// A reply memorandum, if permitted: at most 5 pages unless the court
+/// orders otherwise (LR 7.2(e)).
+limit reply-memorandum { pages <= 5 cite "W.D. Tenn. L.R. 7.2(e)" } cite "W.D. Tenn. L.R. 7.2(e)"
+
+/// A memorandum supporting or opposing a motion to dismiss under FRCP
+/// 12(b) or (c): at most 20 pages without prior court approval (LR
+/// 12.1(a), (b)).
+limit dismissal-memorandum {
+  pages <= 20 cite "W.D. Tenn. L.R. 12.1(a)"
+} cite "W.D. Tenn. L.R. 12.1(a)"
+
+/// A reply on a motion to dismiss: at most 10 pages without prior court
+/// approval (LR 12.1(c)).
+limit dismissal-reply { pages <= 10 cite "W.D. Tenn. L.R. 12.1(c)" } cite "W.D. Tenn. L.R. 12.1(c)"
+/// A trial memorandum of facts and law: at most 25 pages without prior
+/// court approval (LR 16.4).
+limit trial-memorandum { pages <= 25 cite "W.D. Tenn. L.R. 16.4" } cite "W.D. Tenn. L.R. 16.4"
+
+/// A memorandum supporting or opposing a summary judgment motion: at most
+/// 20 pages without prior court approval (LR 56.1(a), (b)).
+limit summary-judgment-memorandum {
+  pages <= 20 cite "W.D. Tenn. L.R. 56.1(a)"
+} cite "W.D. Tenn. L.R. 56.1(a)"
+
+/// The movant's separate statement of material facts: at most 10 pages
+/// without prior court approval (LR 56.1(a)).
+limit statement-of-facts {
+  pages <= 10 cite "W.D. Tenn. L.R. 56.1(a)"
+} cite "W.D. Tenn. L.R. 56.1(a)"
+
+/// A non-movant's statement of additional facts: at most 5 pages without
+/// prior court approval (LR 56.1(b)).
+limit additional-facts { pages <= 5 cite "W.D. Tenn. L.R. 56.1(b)" } cite "W.D. Tenn. L.R. 56.1(b)"
+
+/// The movant's summary judgment reply: at most 7 pages without prior
+/// court approval (LR 56.1(c)).
+limit summary-judgment-reply {
+  pages <= 7 cite "W.D. Tenn. L.R. 56.1(c)"
+} cite "W.D. Tenn. L.R. 56.1(c)"
+
+/// A sur-reply responding only to evidentiary objections first raised in
+/// a summary judgment reply: at most 4 pages (LR 56.1(e)).
+limit evidentiary-sur-reply {
+  pages <= 4 cite "W.D. Tenn. L.R. 56.1(e)"
+} cite "W.D. Tenn. L.R. 56.1(e)"
+
+/// A motion other than one under FRCP 12(b), (c) or 56 and its supporting
+/// memorandum are served (LR 7.2(a)).
+event MotionServed() paper memorandum
+/// The response to a motion is served (LR 7.2(a)(2), (c)).
+event ResponseServed() paper memorandum
+/// A reply memorandum is filed by leave of court (LR 7.2(c)).
+event ReplyFiled() paper reply-memorandum
+/// An action is removed to the court with pending motions on which no
+/// memoranda were submitted (LR 7.2(f)).
+event RemovedWithPendingMotions()
+/// The hearing or trial at which a prisoner is to testify begins (LR
+/// 7.2(g)).
+event PrisonerHearingBegins()
+/// The court enters an order granting a motion to amend or supplement a
+/// pleading (LR 15.1(c)).
+event AmendmentGranted()
+/// A motion to dismiss under FRCP 12(b) or (c) is served (LR 12.1).
+event DismissalMotionServed() paper dismissal-memorandum
+/// The response to a motion to dismiss is served (LR 12.1(b), (c)).
+event DismissalResponseServed() paper dismissal-memorandum
+/// The reply on a motion to dismiss is filed (LR 12.1(c)).
+event DismissalReplyFiled() paper dismissal-reply
+/// Trial begins on the date set (LR 16.4, 26.1(d)).
+event TrialBegins()
+/// A trial memorandum is filed (LR 16.4).
+event TrialMemorandumFiled() paper trial-memorandum
+/// A summary judgment motion is served, or, if later, the non-movant's
+/// responsive pleading comes due (LR 56.1(b)).
+event SummaryJudgmentMotionServed() paper summary-judgment-memorandum
+/// The response to a summary judgment motion is served (LR 56.1(c)).
+event SummaryJudgmentResponseServed() paper summary-judgment-memorandum
+/// A summary judgment reply raising evidentiary objections for the first
+/// time is served (LR 56.1(e)).
+event SummaryJudgmentReplyServed() paper summary-judgment-reply
+/// A sur-reply on evidentiary objections is filed (LR 56.1(e)).
+event EvidentiarySurReplyFiled() paper evidentiary-sur-reply
+/// Trial of a non-jury case concludes (LR 52.1).
+event NonJuryTrialConcludes()
+/// The case terminates (LR 54.1(a)).
+event CaseTerminated()
+/// The court's judgment becomes final (LR 54.1(b)).
+event JudgmentBecomesFinal()
+/// A motion for an award of attorney's fees is served (LR 54.1(b)).
+event FeeMotionServed()
+/// An appeal from a magistrate judge's order on a pretrial matter is
+/// served (LR 72.1(g)(1)).
+event MagistrateAppealServed()
+/// A notice of settlement is filed (LR 83.13(a), (b)).
+event SettlementNoticeFiled()
+
+/// LR 7.2(a)(2): the response to a motion, other than one under FRCP
+/// 12(b), (c) or 56, is filed within 14 days after service of the motion;
+/// failure to respond timely to a motion other than one requesting
+/// dismissal may be deemed good grounds for granting it.
+deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "W.D. Tenn. L.R. 7.2(a)(2)"
+{
+  forum frcp
+}
+
+/// LR 7.2(c): except under LR 12.1(c) and 56.1(c), a reply memorandum is
+/// filed only by leave of court, on a motion for leave filed within 7
+/// days of service of the response.
+deadline leave-to-reply-period: 7.days after ResponseServed() counted_by frcp6 cite "W.D. Tenn. L.R. 7.2(c)"
+{
+  forum frcp
+}
+
+/// LR 7.2(f): when an action is removed with pending motions on which
+/// memoranda have not been submitted, the moving party complies with the
+/// rules within 14 days after removal.
+deadline removed-motion-period: 14.days after RemovedWithPendingMotions() counted_by frcp6 cite "W.D. Tenn. L.R. 7.2(f)"
+{
+  forum frcp
+}
+
+/// LR 7.2(g): motions and orders to produce prisoners for testimony are
+/// filed at least 28 days prior to the date of the hearing or trial.
+deadline prisoner-production-period: 28.days before PrisonerHearingBegins() counted_by frcp6 cite "W.D. Tenn. L.R. 7.2(g)"
+{
+  forum frcp
+}
+
+/// LR 15.1(c): the moving party files and serves the amended or
+/// supplemental pleading within 7 days of entry of an order granting the
+/// motion unless the court directs otherwise.
+deadline amended-pleading-period: 7.days after AmendmentGranted() counted_by frcp6 cite "W.D. Tenn. L.R. 15.1(c)"
+{
+  forum frcp
+}
+
+/// LR 12.1(b): a party opposing a motion to dismiss files a response
+/// within 28 days after the motion is served.
+deadline dismissal-response-period: 28.days after DismissalMotionServed() counted_by frcp6 cite "W.D. Tenn. L.R. 12.1(b)"
+{
+  forum frcp
+}
+
+/// LR 12.1(c): no leave is required to reply to a response to a motion to
+/// dismiss; replies are filed within 14 days after the response is
+/// served.
+deadline dismissal-reply-period: 14.days after DismissalResponseServed() counted_by frcp6 cite "W.D. Tenn. L.R. 12.1(c)"
+{
+  forum frcp
+}
+
+/// LR 16.4: parties in civil cases may file a trial memorandum of facts
+/// and law not less than 14 days before the case is set for trial; the
+/// court may require one and set its own date.
+deadline trial-memorandum-period: 14.days before TrialBegins() counted_by frcp6 cite "W.D. Tenn. L.R. 16.4"
+{
+  forum frcp
+}
+
+/// LR 26.1(d): parties supplement disclosures and discovery responses as
+/// FRCP 26(e) requires no later than 30 days before the trial date.
+deadline supplementation-period: 30.days before TrialBegins() counted_by frcp6 cite "W.D. Tenn. L.R. 26.1(d)"
+{
+  forum frcp
+}
+
+/// LR 56.1(b): a party opposing a summary judgment motion files a
+/// response within 28 days after the motion is served or a responsive
+/// pleading is due, whichever is later; the event is that later date.
+deadline summary-judgment-response-period: 28.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "W.D. Tenn. L.R. 56.1(b)"
+{
+  forum frcp
+}
+
+/// LR 56.1(c): no leave is required to reply on summary judgment; replies
+/// are filed within 14 days after the response is served.
+deadline summary-judgment-reply-period: 14.days after SummaryJudgmentResponseServed() counted_by frcp6 cite "W.D. Tenn. L.R. 56.1(c)"
+{
+  forum frcp
+}
+
+/// LR 56.1(e): if an objection to evidentiary materials is first raised in
+/// the reply, the party opposing it may file a sur-reply within 7 days of
+/// service of the reply.
+deadline evidentiary-sur-reply-period: 7.days after SummaryJudgmentReplyServed() counted_by frcp6 cite "W.D. Tenn. L.R. 56.1(e)"
+{
+  forum frcp
+}
+
+/// LR 52.1: absent a contrary order, in non-jury cases each party may
+/// submit amended and supplemental proposed findings of fact and
+/// conclusions of law within 14 days after the conclusion of trial; for
+/// good cause the period may be lengthened or shortened.
+deadline post-trial-findings-period: 14.days after NonJuryTrialConcludes() counted_by frcp6 cite "W.D. Tenn. L.R. 52.1"
+{
+  forum frcp
+}
+
+/// LR 54.1(a): if counsel cannot agree on costs, a cost bill is filed with
+/// the clerk within thirty days from the termination of the case.
+deadline cost-bill-period: 30.days after CaseTerminated() counted_by frcp6 cite "W.D. Tenn. L.R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// LR 54.1(b): as FRCP 54(d)(2)(B) permits, a motion for attorney's fees
+/// and related non-taxable expenses may be filed within 14 days from the
+/// date the court's judgment becomes final.
+deadline fee-motion-period: 14.days after JudgmentBecomesFinal() counted_by frcp6 cite "W.D. Tenn. L.R. 54.1(b)"
+{
+  forum frcp
+}
+
+/// LR 54.1(b): within eleven days after service of the fee motion, the
+/// party against whom the award is requested responds with any
+/// objections and a memorandum.
+deadline fee-objections-period: 11.days after FeeMotionServed() counted_by frcp6 cite "W.D. Tenn. L.R. 54.1(b)"
+{
+  forum frcp
+}
+
+/// LR 72.1(g)(1): any other party may respond to an appeal from a
+/// magistrate judge's order on a pretrial matter within 14 days after
+/// being served with the appeal.
+deadline magistrate-appeal-response-period: 14.days after MagistrateAppealServed() counted_by frcp6 cite "W.D. Tenn. L.R. 72.1(g)"
+{
+  forum frcp
+}
+
+/// LR 83.13(b): after filing the notice of settlement the parties
+/// promptly file a notice or stipulation of dismissal and submit a
+/// proposed agreed order; if they fail to comply within 28 days of the
+/// filing of the notice, the court may dismiss the action.
+deadline settlement-dismissal-period: 28.days after SettlementNoticeFiled() counted_by frcp6 cite "W.D. Tenn. L.R. 83.13(b)"
+{
+  forum frcp
+}

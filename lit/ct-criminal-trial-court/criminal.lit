@@ -1,0 +1,145 @@
+module ct-superior-court-criminal.criminal
+
+// Criminal cases in the Connecticut Superior Court under Practice Book
+// Chapters 36 to 44 and the Rules of Appellate Procedure (2026 edition).
+// Connecticut's court holidays have no counting rule in lit/core, so each
+// period the rules state is given in the note of the step it governs, not
+// encoded as a counted deadline. The General Statutes are not vendored, so
+// the statutory speedy-trial, bail, new-trial petition and habeas
+// provisions are holes. Outcomes are from the defendant's side. The
+// earlier outline's leading decisions (County of Riverside v. McLaughlin,
+// Gerstein v. Pugh, Gideon v. Wainwright, Brady v. Maryland, Mapp v. Ohio,
+// Barker v. Wingo, Boykin v. Alabama, Missouri v. Frye, Jackson v.
+// Virginia, Ramos v. Louisiana, Apprendi v. New Jersey, Roe v.
+// Flores-Ortega, Garza v. Idaho) are removed: no reporter text is
+// vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "Practice Book § 36-1"
+{
+  note "A judicial authority may issue an arrest warrant on an application supported by affidavit showing probable cause (Practice Book §§ 36-1, 36-2), and a summons may issue instead (Practice Book §§ 36-7, 36-8). A defendant not released from custody sooner is brought before a judicial authority for arraignment no later than the first court day following arrest; a defendant not in custody appears at the time and place the summons or the terms of release specify (Practice Book § 37-1(a)). A hospitalized or incapacitated defendant is presented no later than the next court day after discharge, return to custody or recovery, or may be arraigned remotely for good cause (Practice Book § 37-1(b), (c)). Prosecution is by information (Practice Book §§ 36-11, 36-12)."
+  edge-arrested-arraignment "Arraignment" -> initial-appearance {
+    authority cite "Practice Book § 37-1(a)"
+  }
+}
+
+decision initial-appearance: "Probable cause and release" by court cite "Practice Book § 37-12"
+{
+  note "At arraignment the defendant is advised of the right to counsel and to remain silent and may be referred to the public defender (Practice Book §§ 37-3 to 37-6; 44-1). If the defendant was arrested without a warrant and is not released by or at the arraignment, the judicial authority, unless the defendant waives it, makes an independent probable cause determination no later than forty-eight hours following the arrest, in a nonadversary proceeding that may rest on affidavits; if no probable cause is found the defendant is released (Practice Book § 37-12(a)). An order sealing the supporting affidavits may not exceed two weeks from the probable cause determination unless extended on motion (Practice Book § 37-12(c)). Release is by the judicial authority under Practice Book § 38-4 and bail modification under §§ 38-13 to 38-18; the bail statutes those sections apply are not vendored."
+  edge-initial-appearance-no-cause "No probable cause; released from custody" -> pretrial {
+    authority cite "Practice Book § 37-12(a)"
+  }
+  edge-initial-appearance-detained "Held on bond" -> pretrial {
+    authority cite "Practice Book § 38-4"
+  }
+  edge-initial-appearance-released "Released on conditions" -> pretrial {
+    authority cite "Practice Book § 38-4"
+  }
+}
+
+state pretrial: "Plea of not guilty, discovery and pretrial motions" by applicant cite "Practice Book § 41-5"
+{
+  note "A defendant who pleads not guilty (Practice Book § 37-9) proceeds to discovery and pretrial motions. Unless the rules or a statute provide otherwise, all pretrial motions or requests are made not later than ten days after the first pretrial conference in the court where the case will be tried, or at a later time the judicial authority fixes; lack of jurisdiction and failure to charge an offense may be raised at any time (Practice Book § 41-5). On a written request filed under Section 41-5, the prosecuting authority discloses the listed items promptly, but no later than forty-five days from the filing of the request unless the judicial authority extends the time for good cause shown (Practice Book § 40-11(a)). Notices of a mental-disease defense and of alibi are governed by Practice Book §§ 40-17 to 40-25. A claim that the defendant has been denied a speedy trial is raised by a motion to dismiss (Practice Book § 41-8(7))."
+  edge-pretrial-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "Practice Book § 41-5"
+  }
+  edge-pretrial-speedy "Motion for speedy trial" -> motions-ruling {
+    authority cite "Practice Book § 43-41"
+  }
+  edge-pretrial-plea "Plea discussions" -> plea-decision {
+    authority cite "Practice Book § 39-1"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "Practice Book § 41-8"
+{
+  note "Trial commences within twelve months from the filing of the information or the arrest, whichever is later, for an offense charged on or after July 1, 1985, and within eight months if the defendant has been continuously incarcerated in a Connecticut correctional institution pending trial and is not subject to General Statutes § 54-82c (Practice Book § 43-39(c), (d)); the time excluded and included is set by Practice Book §§ 43-40 and 43-40A, and after a mistrial, new trial order, appeal or collateral attack the time runs from the date the order occasioning the retrial becomes final (Practice Book § 43-39(f)). If the defendant is not brought to trial within the applicable limit and, absent good cause, trial does not commence within thirty days of the defendant's motion for speedy trial filed after the limit has passed, the information is dismissed with prejudice on the defendant's motion filed after those thirty days; failing to move to dismiss before trial waives the dismissal (Practice Book § 43-41). The parallel statute, General Statutes § 54-82m, is not vendored."
+  edge-motions-ruling-speedy "Dismissed with prejudice for want of a speedy trial" -> dismissed {
+    authority cite "Practice Book § 43-41"
+  }
+  edge-motions-ruling-dismissed "Information dismissed on another ground" -> dismissed {
+    authority cite "Practice Book § 41-8"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "Practice Book § 41-7"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Practice Book § 39-19"
+{
+  note "Plea discussions and agreements are governed by Practice Book §§ 39-1 to 39-17. The judicial authority does not accept a plea of guilty or nolo contendere without first addressing the defendant personally and determining that the defendant understands the matters Practice Book § 39-19 lists, that the plea is voluntary (§ 39-20) and that it has a factual basis (§ 39-21); a plea may be withdrawn before sentence on the grounds of Practice Book §§ 39-26 and 39-27. The prosecuting authority may enter a nolle prosequi, which terminates the prosecution (Practice Book §§ 39-29, 39-31); the defendant may object and demand a trial or dismissal (Practice Book § 39-30)."
+  edge-plea-decision-plea "Plea of guilty or nolo contendere accepted" -> sentencing {
+    authority cite "Practice Book § 39-19"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "Practice Book § 42-1"
+  }
+  edge-plea-decision-nolle "Nolle prosequi entered" -> dismissed {
+    authority cite "Practice Book § 39-31"
+  }
+}
+
+decision trial: "Verdict" by court cite "Practice Book § 42-29"
+{
+  note "The right to a jury trial, and its waiver, are governed by Practice Book § 42-1; the parties may stipulate in writing, with the judicial authority's approval and the defendant's personal waiver, to a verdict by fewer jurors than the law prescribes (Practice Book § 42-3), the number prescribed by statute not being vendored. A motion for judgment of acquittal may be made at the close of the prosecution's case or of all the evidence (Practice Book §§ 42-40 to 42-42). The verdict is unanimous and announced in open court (Practice Book § 42-29); a deadlocked jury or a mistrial is governed by Practice Book §§ 42-43 to 42-45."
+  edge-trial-acquittal "Not guilty, or judgment of acquittal at trial" -> acquitted {
+    authority cite "Practice Book § 42-40"
+  }
+  edge-trial-guilty "Guilty; motions after verdict" -> post-trial {
+    authority cite "Practice Book § 42-51"
+  }
+}
+
+decision post-trial: "Motions after verdict" by court cite "Practice Book § 42-51"
+{
+  note "Unless the judicial authority in the interests of justice permits otherwise, a motion for judgment of acquittal is made within five days after a mistrial or a verdict, or within any further time the judicial authority allows during the five day period (Practice Book § 42-52), and a motion for a new trial within five days after a verdict or finding of guilty, or within any further time allowed during the five-day period (Practice Book § 42-54). A new trial on newly discovered evidence is sought by a petition under General Statutes § 52-270 (Practice Book § 42-55), which is not vendored. A motion in arrest of judgment is made before the imposition of sentence (Practice Book § 42-56)."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite "Practice Book § 42-51"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "Practice Book § 42-53"
+  }
+  edge-post-trial-arrest "Judgment arrested" -> dismissed {
+    authority cite "Practice Book § 42-56"
+  }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "Practice Book § 42-54"
+  }
+}
+
+state sentencing: "Presentence investigation and sentencing" by court cite "Practice Book § 43-10"
+{
+  note "If the defendant is convicted of a crime other than a capital felony punishable by imprisonment for more than one year, the judicial authority orders a presentence investigation, which a defendant not eligible for sentence review may waive with the consent of the sentencing judge and the prosecuting authority (Practice Book § 43-3); the judicial authority sets the sentencing date allowing for the time needed to complete the report (Practice Book § 43-6). Defense counsel may participate in the report's preparation and must be familiar with it (Practice Book §§ 43-5, 43-13). The sentencing hearing follows Practice Book § 43-10."
+  edge-sentencing-judgment "Sentence pronounced" -> judgment {
+    authority cite "Practice Book § 43-10"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "Practice Book § 63-1"
+{
+  note "After a conviction at trial the clerk advises the defendant in writing, immediately after sentence is pronounced, of the right to appeal, its time limits and the right of an indigent person to a fee waiver and appointed counsel (Practice Book § 43-30). Unless a statute provides a different period, an appeal is filed within twenty days of the date notice of the judgment is given; in a criminal case appealing a judgment of conviction, the appeal period begins when sentence is pronounced in open court, and a motion that would render the judgment ineffective, filed within the appeal period, may start a new twenty-day period (Practice Book § 63-1(a)-(c)); extensions are governed by Practice Book § 66-1(a). Where sentence review is available under General Statutes § 51-195, the defendant may apply for review by the review division within thirty days from the date sentence is imposed or a suspended sentence is revoked (Practice Book § 43-24). The judicial authority may correct an illegal sentence at any time (Practice Book § 43-22)."
+  edge-judgment-appeal "Appeal filed" -> appeal-taken {
+    authority cite "Practice Book § 63-1"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "Practice Book § 63-1" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Practice Book § 42-29"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty or a judgment of acquittal (Practice Book §§ 42-29, 42-40 to 42-52)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "Practice Book § 41-8"
+{
+  note "Outcome from the defendant's side. A speedy-trial dismissal under Practice Book § 43-41 is with prejudice; after a nolle prosequi a new prosecution must be initiated (Practice Book § 39-31)."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "Practice Book § 63-1"
+{
+  note "The appeal continues before the Appellate Court under the Rules of Appellate Procedure (lit/ct-appellate-supreme covers the civil appeal)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite ?("Conn. Gen. Stat. § 52-466 (habeas corpus; not vendored)")
+{
+  note "Outcome from the defendant's side. State habeas corpus under General Statutes § 52-466 is not vendored; federal habeas belongs to lit/habeas."
+}

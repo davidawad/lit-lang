@@ -1,0 +1,50 @@
+# Criminal cases in the Connecticut Superior Court under the Superior Court
+# criminal rules (Practice Book Chapters 36 to 44) and the Rules of
+# Appellate Procedure of the official 2026 Connecticut Practice Book
+# (Revision of 1998), whose own amendments take effect January 1, 2026
+# (sources/ct-superior-civil; its PROVENANCE entry names those chapters,
+# the speedy-trial rules Sections 43-39 to 43-43 included, as the
+# Connecticut criminal source). The Practice Book counts its periods from
+# events and Connecticut's court holidays, not the federal ones, govern;
+# lit/core has no counting rule for them, so the periods are stated in
+# notes, not encoded as counted deadlines. The dated layers vendored beside
+# the 2026 edition amend no section of Chapters 36 to 44 or Section 63-1:
+# the Superior Court amendments of June 11, 2026 touch none of them, and the
+# appellate amendments approved June 30, 2026 (effective January 1, 2027)
+# amend Section 63-7 among others, which this package does not cite. The
+# General Statutes (the speedy-trial statute § 54-82m, bail, the petition
+# for a new trial under § 52-270 and habeas corpus under § 52-466) are not
+# vendored; those cites stay holes. An appeal hands off to the Appellate
+# Court under Practice Book § 63-1.
+[package]
+name = "ct-superior-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "ct-superior-court-criminal"
+forum = "ct-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "connecticut"
+title = "Connecticut Superior Court, criminal"
+description = "Criminal cases in the Connecticut Superior Court under the 2026 Connecticut Practice Book, as far as the vendored text states: arraignment by the first court day after arrest, the 48-hour probable cause determination, pretrial release, pretrial motions within ten days after the first pretrial conference, discovery, plea or trial within the speedy-trial limits of Sections 43-39 to 43-41, the five-day motions for judgment of acquittal and new trial, sentencing, the thirty-day application for sentence review, and the twenty-day appeal from the pronouncement of sentence."
+in_force = "2026-01-01"
+known_at = "2026-10-28"
+unknown_before = "2026-01-01"
+jurisdiction = "Connecticut Superior Court (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ct-pb]
+title = "Official 2026 Connecticut Practice Book (Revision of 1998): Rules for the Superior Court (Chapters 36 to 44, Procedure in Criminal Matters) and Rules of Appellate Procedure"
+url = "https://www.jud.ct.gov/Publications/PracticeBook/PB.pdf"
+path = "sources/ct-superior-civil/ct-practice-book-2026-sectioned.txt"
+path_sha256 = "7a33d1bb397e575e0a7b5f010aab0cfc4d9afd70228a83544d187e51d0c1efac"
+sha256 = "bb406ab49314de7f6b49f5de43e1b2e354465bb70ce52ecc37412ec058db69d6"
+as_of = "2026-01-01"
+cite_prefixes = ["Practice Book §"]
+section_heading = "Practice Book § {n}"

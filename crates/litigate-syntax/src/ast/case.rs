@@ -265,7 +265,7 @@ impl CaseEvent {
 }
 
 impl CaseBlock {
-    /// Block keyword (`facts`, `stakes`, `beliefs`, `analysis`).
+    /// Block keyword (`facts`, `stakes`, `beliefs`, `opponents`, `analysis`).
     #[must_use]
     pub fn keyword(&self) -> Option<Token> {
         super::keyword(self.syntax())

@@ -56,18 +56,19 @@ pub const FIELDS: [&str; 17] = [
 ];
 
 /// `Scenario` fields with a dedicated `.case` block.
-pub const DEDICATED: [&str; 6] = [
+pub const DEDICATED: [&str; 7] = [
     "start",
     "perspective",
     "facts",
     "payoffs",
     "fee_shifts",
     "observe",
+    "opponent_models",
 ];
 
 /// `Scenario` fields that key engine nodes or edges by string, which a
 /// matter does not write.
-pub const UNTYPED: [&str; 3] = ["probabilities", "policy", "opponent_models"];
+pub const UNTYPED: [&str; 2] = ["probabilities", "policy"];
 
 impl R<'_, '_> {
     pub(super) fn analysis(&mut self, block: &SyntaxNode) -> Analysis {

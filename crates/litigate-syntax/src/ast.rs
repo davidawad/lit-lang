@@ -123,7 +123,7 @@ ast_node!(PartyDecl, PartyDecl);
 ast_node!(CaseEvent, CaseEvent);
 ast_node!(
     CaseBlock,
-    FactsBlock | StakesBlock | BeliefsBlock | AnalysisBlock
+    FactsBlock | StakesBlock | BeliefsBlock | OpponentsBlock | AnalysisBlock
 );
 // Additive W1 wrappers.
 ast_node!(ImportList, ImportList);

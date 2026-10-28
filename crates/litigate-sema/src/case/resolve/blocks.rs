@@ -1,8 +1,8 @@
-//! The `facts`, `stakes`, and `beliefs` blocks of a matter.
+//! The `facts`, `stakes`, `beliefs`, and `opponents` blocks of a matter.
 use super::{child, children, field_value, money, sig, R};
 use crate::db::parse::ref_path;
 use crate::db::span::{Report, TextRange};
-use crate::hir::{Observation, Prior, Rational, Stake};
+use crate::hir::{NodeKind, Observation, OpponentModel, Prior, Rational, Stake};
 use crate::types::rational;
 use litigate_base::{Applicability, DiagnosticCode as C};
 use litigate_syntax::{SyntaxKind as K, SyntaxNode};
@@ -223,5 +223,145 @@ impl R<'_, '_> {
             }
         }
         (observations, priors)
+    }
+
+    /// The `opponents` block: each decision's opponent model, its node a
+    /// declared decision and each edge one of that decision's own.
+    pub(super) fn opponents(&mut self, block: &SyntaxNode) -> BTreeMap<String, OpponentModel> {
+        let mut models = BTreeMap::new();
+        for decl in children(block, K::OpponentModelDecl) {
+            let Some(kw) = decl
+                .children_with_tokens()
+                .filter_map(rowan::NodeOrToken::into_token)
+                .map(|t| t.kind())
+                .find(|k| matches!(k, K::KwAdversarial | K::KwChance | K::KwOwnObjective))
+            else {
+                continue;
+            };
+            let Some(node_ref) = child(&decl, K::Ref).and_then(|r| ref_path(&r)) else {
+                continue;
+            };
+            let Some(node) = self.node(&node_ref) else {
+                continue;
+            };
+            if !self.is_decision(&node, node_ref.range) {
+                continue;
+            }
+            if models.contains_key(&node) {
+                self.out.push(Report::new(
+                    C::DuplicateName,
+                    node_ref.range,
+                    format!("`{node}` already has an opponent model"),
+                ));
+                continue;
+            }
+            let entries = self.model_entries(&node, &decl);
+            let model = match kw {
+                K::KwAdversarial => OpponentModel::Adversarial,
+                K::KwChance => OpponentModel::Chance {
+                    probabilities: entries
+                        .into_iter()
+                        .filter_map(|(edge, text, range)| {
+                            let p = rational::parse_decimal(&text)
+                                .ok()
+                                .filter(|r| rational::is_probability(*r));
+                            if p.is_none() {
+                                self.out.push(Report::new(
+                                    C::TypeMismatch,
+                                    range,
+                                    format!("{text} is not a probability in [0, 1]"),
+                                ));
+                            }
+                            Some((edge, p?))
+                        })
+                        .collect(),
+                },
+                _ => OpponentModel::OwnObjective {
+                    payoffs: entries
+                        .into_iter()
+                        .filter_map(|(edge, text, range)| {
+                            let m = super::money(&text);
+                            if m.is_none() {
+                                self.out.push(Report::new(
+                                    C::TypeMismatch,
+                                    range,
+                                    "expected the opponent's payoff as a money amount like `-2_000.usd`",
+                                ));
+                            }
+                            Some((edge, m?))
+                        })
+                        .collect(),
+                },
+            };
+            models.insert(node, model);
+        }
+        models
+    }
+
+    /// Whether qualified `node` is a `decision` (reported at `at` if not).
+    fn is_decision(&mut self, node: &str, at: TextRange) -> bool {
+        let Some(graph) = self.graph.as_ref() else {
+            return false;
+        };
+        let kinds: Vec<&NodeKind> = graph.node_versions(node).iter().map(|n| &n.kind).collect();
+        if kinds.is_empty() || kinds.iter().any(|k| matches!(k, NodeKind::Decision)) {
+            return true;
+        }
+        let kind = match kinds[0] {
+            NodeKind::State => "a state",
+            NodeKind::Chance { .. } => "a chance node",
+            NodeKind::Decision => "a decision",
+            NodeKind::Terminal { .. } => "a terminal",
+        };
+        self.out.push(
+            Report::new(
+                C::TypeMismatch,
+                at,
+                format!("`{node}` is {kind}, not a decision: an opponent model names a decision"),
+            )
+            .note(
+                "`opponents` says how the opponent decides at a `decision` where only they choose",
+            ),
+        );
+        false
+    }
+
+    /// A model's `{ edge: value }` entries: (qualified edge, value text,
+    /// value range), each edge one of `node`'s (L1002 otherwise).
+    fn model_entries(&mut self, node: &str, decl: &SyntaxNode) -> Vec<(String, String, TextRange)> {
+        let own: Vec<String> = self.graph.as_ref().map_or_else(Vec::new, |g| {
+            g.node_versions(node)
+                .into_iter()
+                .flat_map(|n| g.edges(node, n))
+                .filter_map(|(pack, e)| e.id.as_ref().map(|id| format!("{pack}::{id}")))
+                .collect()
+        });
+        let mut out = Vec::new();
+        let record = child(decl, K::RecordExpr);
+        for f in record.iter().flat_map(|r| children(r, K::RecordField)) {
+            let (Some(edge), Some(value)) = (child(&f, K::Ref), field_value(&f)) else {
+                continue;
+            };
+            let qualified = self.edge_of(node, &edge);
+            if !own.contains(&qualified) {
+                let local = qualified.split_once("::").map_or("", |(_, l)| l);
+                let mut r = Report::new(
+                    C::UnresolvedName,
+                    sig(&edge),
+                    format!("decision `{node}` has no edge `{local}`"),
+                );
+                let locals = own
+                    .iter()
+                    .filter_map(|e| e.split_once("::").map(|(_, l)| l));
+                if let Some(best) = crate::resolve::suggest::nearest(local, locals) {
+                    r = r.fix(sig(&edge), best, Applicability::MaybeIncorrect);
+                }
+                self.out.push(r);
+                continue;
+            }
+            let text: String = value.text().to_string().split_whitespace().collect();
+            out.push((qualified, text, sig(&value)));
+        }
+        out
     }
 }

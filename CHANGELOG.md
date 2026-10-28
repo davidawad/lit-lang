@@ -9,6 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **A matter declares per-decision opponent models** (lg-6wxa; SPEC
+  §3.2, §5.6, §8.3). A `.case`'s `opponents` block, between `beliefs` and
+  `analysis`, names a decision and how the opponent decides there:
+  `adversarial node`, `chance node: { edge: p }` (a calibrated response,
+  e.g. a stipulation's acceptance rate) or `own_objective node: { edge:
+  money }`. The node must be a `decision` (L2001) and each edge its own
+  (L1002); it lowers to `scenario.opponent_models`, which `analysis` no
+  longer rejects as untyped but as a dedicated block. A decision with no
+  entry keeps the default `opponent` mode.
 - **A faster land gate, and a post-land nightly** (lg-kuei). `just
   ci-scoped` runs its tests under the nextest `gate` profile: in parallel
   (one per CPU; the LSP tests stay serial), at `[profile.test]`

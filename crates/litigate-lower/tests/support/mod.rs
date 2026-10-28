@@ -321,6 +321,7 @@ pub fn acme() -> Case {
             (q("dismissed"), Stake::Value(usd(0))),
         ]),
         fee_shifts: BTreeMap::new(),
+        opponent_models: BTreeMap::new(),
         observations: vec![Observation {
             node: q("mtd-ruling"),
             outcomes: vec![(q("granted"), 3), (q("denied"), 1)],

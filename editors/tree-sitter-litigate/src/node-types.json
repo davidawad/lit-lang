@@ -1097,6 +1097,10 @@
           "named": true
         },
         {
+          "type": "opponents_block",
+          "named": true
+        },
+        {
           "type": "parties_block",
           "named": true
         },
@@ -3991,6 +3995,75 @@
     }
   },
   {
+    "type": "opponent_model",
+    "named": true,
+    "fields": {
+      "model": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "adversarial",
+            "named": false
+          },
+          {
+            "type": "chance",
+            "named": false
+          },
+          {
+            "type": "own_objective",
+            "named": false
+          }
+        ]
+      },
+      "node": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "ref",
+            "named": true
+          }
+        ]
+      },
+      "payoffs": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "payoff_map",
+            "named": true
+          }
+        ]
+      },
+      "probabilities": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "probability_map",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "opponents_block",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "opponent_model",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "outcome_clause",
     "named": true,
     "fields": {},
@@ -4182,6 +4255,47 @@
     }
   },
   {
+    "type": "payoff_entry",
+    "named": true,
+    "fields": {
+      "edge": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "ref",
+            "named": true
+          }
+        ]
+      },
+      "payoff": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "signed_money",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "payoff_map",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "payoff_entry",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "perspective_decl",
     "named": true,
     "fields": {
@@ -4259,34 +4373,22 @@
     "type": "probability_entry",
     "named": true,
     "fields": {
-      "key": {
+      "edge": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "identifier",
+            "type": "ref",
             "named": true
           }
         ]
       },
-      "value": {
+      "probability": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "fraction",
-            "named": true
-          },
-          {
-            "type": "hole",
-            "named": true
-          },
-          {
             "type": "number",
-            "named": true
-          },
-          {
-            "type": "parenthesized_expression",
             "named": true
           }
         ]
@@ -5595,6 +5697,10 @@
     "named": false
   },
   {
+    "type": "adversarial",
+    "named": false
+  },
+  {
     "type": "after",
     "named": false
   },
@@ -6070,6 +6176,10 @@
     "named": true
   },
   {
+    "type": "opponents",
+    "named": false
+  },
+  {
     "type": "or",
     "named": false
   },
@@ -6083,6 +6193,10 @@
   },
   {
     "type": "override",
+    "named": false
+  },
+  {
+    "type": "own_objective",
     "named": false
   },
   {

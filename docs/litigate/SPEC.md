@@ -351,7 +351,7 @@ CaseFile     = [ EditionDecl ], "case", Ident,
                "summary", String, [ "notes", String ], { SourceDecl },
                [ "start", Ref ], [ PerspectiveDecl ], [ PartiesBlock ],
                [ EventsBlock ], [ FactsBlock ], [ StakesBlock ], [ BeliefsBlock ],
-               [ AnalysisBlock ] ;
+               [ OpponentsBlock ], [ AnalysisBlock ] ;
 UsesDecl     = "uses", UseItem, { ",", UseItem } ;
 ForumDecl    = "forum", UseItem ;
 GoverningLawDecl = "governing_law", UseItem ;
@@ -369,6 +369,9 @@ StakesBlock  = "stakes", "{", { Ref, ":", ( (SignedMoney | "unvalued"), [ FeeShi
 FeeShift     = "fee_shift", Number ;
 BeliefsBlock = "beliefs", "{", { ("prior" | "observe"), Ref, ":", "{", { Ref, ":", Number, Sep },
                "}", Sep }, "}" ;
+OpponentsBlock = "opponents", "{", { ( "adversarial", Ref
+               | "chance", Ref, [ ":", "{", { Ref, ":", Number, Sep }, "}" ]
+               | "own_objective", Ref, ":", "{", { Ref, ":", SignedMoney, Sep }, "}" ), Sep }, "}" ;
 AnalysisBlock= "analysis", RecordExpr ;
 ```
 
@@ -2153,6 +2156,17 @@ Refinements (precedence bead, `litigate-sema/src/precedence`):
   anything else), each once, the node at most one prior, and the sum must
   stay exact (each L4006). Its total `Σα` is the node's strength, so
   `analysis.uncertainty.concentration` may not name the node too (L4006).
+- `opponents { ... }` says how the opponent decides at a decision where
+  only they choose: `adversarial node` (they minimize our value, even
+  under `analysis.opponent_objective`), `chance node: { edge: p }` (their
+  response is a draw: each named edge takes `p` in `[0, 1]`, the others
+  split the rest; with no record the authored probabilities stand), or
+  `own_objective node: { edge: money }` (they take the listed edge worth
+  most to them). The node must resolve (L1002) and be a `decision`
+  (L2001), each edge one of its own (L1002), each node named once
+  (L1001); a decision with no entry keeps the engine's `opponent` mode.
+  An entry at a decision where we also choose is the engine's
+  `opponent-model-unused` warning.
   An anonymous outcome edge cannot be named, so its node takes no prior.
 - `analysis`: litgraph `Scenario` fields that have no dedicated block (§8.3).
   Its `calibration` names calibration sets (§5.9) by id, applied in order.
@@ -2756,6 +2770,7 @@ loader (`ClockLibrary::from_json`), so an invalid one is L6001.
 | `stakes` | `scenario.payoffs` qualified terminal to major-unit number; a terminal without a stake keeps its pack-authored `payoff` (§5.6) and is not listed |
 | `stakes` entry `fee_shift f` | `scenario.fee_shifts` qualified terminal to `f` |
 | `beliefs` `observe` | `scenario.observe` qualified node to `{qualified edge: count}` |
+| `opponents` | `scenario.opponent_models` qualified node to `{model: adversarial}`, `{model: chance, probabilities: {qualified edge: p}}` or `{model: own-objective, payoffs: {qualified edge: major units}}` |
 | `beliefs` `prior node: { e: α }` | `scenario.probabilities` each outcome edge to its mean `α / Σα`, and `scenario.uncertainty.concentration` the node to `Σα` (L6004 when exact arithmetic overflows) |
 | the packs of the `uses` closure, as built at the matter's dates | `lowered.basis` `[{pointer: "/scenario", basis}]`: the join over every node's and edge's numbers (§5.1 "basis"), the probabilities of a node with a `prior` the matter's estimate; absent when the packs hold no number |
 | `Case.removals` (§5.6) | `scenario.remove_edges`: any `analysis.remove_edges` entries in order, then each removed edge not already listed; the source map has one entry per removed edge (`/scenario/remove_edges/i`) with the removing event's span and its cite located in L0 under the edge's package |
@@ -2781,9 +2796,10 @@ fix), and so is a field given twice:
 | `mixed`, `opponent`, `prob_fill`, `objective`, `fee_shift`, `uncertainty` | engine options: numbers, strings, booleans, records and lists |
 
 A value of the wrong shape is L4007 at the value. `start`, `perspective`,
-`facts`, `payoffs`, `fee_shifts`, and `observe` have dedicated blocks (L4007;
-`fee_shifts` is `stakes`' `fee_shift`).
-`probabilities`, `policy` and `opponent_models` would name engine nodes
+`facts`, `payoffs`, `fee_shifts`, `observe`, and `opponent_models` have
+dedicated blocks (L4007; `fee_shifts` is `stakes`' `fee_shift`,
+`opponent_models` is `opponents`).
+`probabilities` and `policy` would name engine nodes
 and edges by string, so a matter does not write them (L4007): it states
 what it knows with `facts` and `beliefs`. An engine option's type is the engine's own:
 the lowerer checks each option alone against `litgraph::scenario::Scenario`

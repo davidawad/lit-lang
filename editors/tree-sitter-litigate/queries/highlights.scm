@@ -14,8 +14,9 @@
   "chance" "terminal" "rule" "deadline" "counting" "calendar" "transition"
   "authority" "default" "exception" "test" "link" "instance" "event" "case"
   "uses" "as_of" "known_at" "summary" "notes" "source" "perspective" "parties"
-  "events" "facts" "stakes" "beliefs" "observe" "prior" "analysis" "edition"
-  "limit" "grant" "recharacterize" "invalidate" "governing_law" "calibration"
+  "events" "facts" "stakes" "beliefs" "observe" "prior" "opponents"
+  "adversarial" "own_objective" "analysis" "edition" "limit" "grant"
+  "recharacterize" "invalidate" "governing_law" "calibration"
 ] @keyword
 
 ; Clause and field keywords.

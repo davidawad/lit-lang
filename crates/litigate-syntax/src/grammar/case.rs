@@ -1,6 +1,8 @@
 //! `.case` files (SPEC §3.2): items in a fixed order.
 use super::fields::{field_list, stake_value, SOURCE_FIELDS};
-use super::values::{call, cite, date, number, record, reference, require, string, Key};
+use super::values::{
+    call, cite, date, number, record, reference, require, signed_money, string, Key,
+};
 use super::{delimited, Sep};
 use crate::error::SyntaxError;
 use crate::parser::{Parser, CASE_ITEM_KEYWORDS};
@@ -24,6 +26,7 @@ const ORDER: &[(SyntaxKind, SyntaxKind, bool)] = &[
     (KwFacts, FactsBlock, false),
     (KwStakes, StakesBlock, false),
     (KwBeliefs, BeliefsBlock, false),
+    (KwOpponents, OpponentsBlock, false),
     (KwAnalysis, AnalysisBlock, false),
 ];
 
@@ -95,7 +98,7 @@ fn order_error(p: &mut Parser<'_>, kw: SyntaxKind, repeated: bool) {
     } else {
         format!(
             "`{text}` is out of order: case items go forum, governing_law, uses, as_of, known_at, summary, notes, \
-             source, start, perspective, parties, events, facts, stakes, beliefs, analysis"
+             source, start, perspective, parties, events, facts, stakes, beliefs, opponents, analysis"
         )
     };
     let at = p.current_range();
@@ -147,6 +150,7 @@ fn case_item(p: &mut Parser<'_>, kw: SyntaxKind, kind: SyntaxKind) {
             require(p, |p| record(p, Key::Ref, stake_value), &[LBrace]);
         }
         KwBeliefs => block(p, Sep::Optional, &mut belief),
+        KwOpponents => block(p, Sep::Optional, &mut opponent),
         _ => {
             require(p, |p| record(p, Key::Ident, super::expr::expr), &[LBrace]);
         }
@@ -301,6 +305,33 @@ fn belief(p: &mut Parser<'_>) -> bool {
     p.bump_as(kw);
     if require(p, reference, &[Ident]) && p.expect(Colon) {
         require(p, |p| record(p, Key::Ref, number), &[LBrace]);
+    }
+    p.finish();
+    true
+}
+
+/// `adversarial Ref | chance Ref [":" { Ref: Number Sep }]
+/// | own_objective Ref ":" { Ref: Money Sep }`.
+fn opponent(p: &mut Parser<'_>) -> bool {
+    let Some(kw) = p.at_any_kw(&[KwAdversarial, KwChance, KwOwnObjective]) else {
+        return false;
+    };
+    p.start(OpponentModelDecl);
+    p.bump_as(kw);
+    if require(p, reference, &[Ident]) {
+        match kw {
+            KwAdversarial => {}
+            KwChance => {
+                if p.eat(Colon) {
+                    require(p, |p| record(p, Key::Ref, number), &[LBrace]);
+                }
+            }
+            _ => {
+                if p.expect(Colon) {
+                    require(p, |p| record(p, Key::Ref, signed_money), &[LBrace]);
+                }
+            }
+        }
     }
     p.finish();
     true

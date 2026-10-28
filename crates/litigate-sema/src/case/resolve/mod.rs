@@ -226,6 +226,8 @@ impl<'g> R<'_, 'g> {
             child(root, K::StakesBlock).map_or_else(Default::default, |b| self.stakes(&b, text));
         let (observations, priors) =
             child(root, K::BeliefsBlock).map_or_else(Default::default, |b| self.beliefs(&b));
+        let opponent_models =
+            child(root, K::OpponentsBlock).map_or_else(BTreeMap::new, |b| self.opponents(&b));
         let analysis =
             child(root, K::AnalysisBlock).map_or_else(Analysis::default, |b| self.analysis(&b));
         Some(Case {
@@ -245,6 +247,7 @@ impl<'g> R<'_, 'g> {
             fee_shifts,
             observations,
             priors,
+            opponent_models,
             analysis,
             removals: Vec::new(),
         })

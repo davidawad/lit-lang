@@ -42,6 +42,11 @@ pub struct Case {
     /// Declared priors the observations update (`beliefs { prior .. }`).
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub priors: Vec<Prior>,
+    /// Qualified decision to how the opponent decides there (`opponents`;
+    /// lowers to `scenario.opponent_models`). A decision with no entry
+    /// follows the engine's `opponent` mode.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub opponent_models: BTreeMap<String, OpponentModel>,
     /// Remaining litgraph `Scenario` fields.
     pub analysis: Analysis,
     /// Options removed by cited option-removing events, in replay order.
@@ -49,6 +54,27 @@ pub struct Case {
     /// checking replaces whatever is here.
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub removals: Vec<Removal>,
+}
+
+/// How the opponent decides at one decision (`opponents`; the engine's
+/// `OpponentModel`).
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(tag = "model", rename_all = "kebab-case")]
+pub enum OpponentModel {
+    /// `adversarial node`: the opponent minimizes our value there.
+    Adversarial,
+    /// `chance node: { edge: p }`: the response is a draw; each named
+    /// qualified edge takes its probability, the others split the rest.
+    Chance {
+        /// Qualified edge to probability in `[0, 1]`.
+        probabilities: BTreeMap<String, Rational>,
+    },
+    /// `own_objective node: { edge: money }`: the opponent takes the edge
+    /// worth most to them.
+    OwnObjective {
+        /// Qualified edge to the opponent's payoff.
+        payoffs: BTreeMap<String, Money>,
+    },
 }
 
 /// An option a replayed event removed (lowers to `scenario.remove_edges`).

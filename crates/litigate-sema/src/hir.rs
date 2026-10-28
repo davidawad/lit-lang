@@ -24,7 +24,7 @@ mod value;
 pub use calibration::{CalibratedValue, Calibration, CalibrationEntry, CalibrationSource};
 pub use case::{
     Analysis, Case, CaseSource, EngineExpr, EngineOption, Event, EventParty, Observation,
-    PackagePin, Param, Party, Perspective, Prior, Rate, RateUnit, Removal, Stake,
+    OpponentModel, PackagePin, Param, Party, Perspective, Prior, Rate, RateUnit, Removal, Stake,
 };
 pub use expr::{BinaryOp, Expr, ExprKind, Pattern, UnaryOp};
 pub use filing::{CertificateReq, Counts, Ecf, Exclusions, LengthBound, Limit, Measure, Verdict};

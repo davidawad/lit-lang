@@ -23,6 +23,7 @@ events {
 facts { time-barred: not-barred }
 stakes { judgment-entered: -2_000_000.usd, dismissed: 0.usd fee_shift 0.5 }
 beliefs { prior mtd-ruling: { granted: 1, denied: 3 }, observe mtd-ruling: { granted: 3, denied: 1 } }
+opponents { chance stipulation-offer: { accepted: 0.4 } }
 analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }
 "#;
 
@@ -60,7 +61,7 @@ const LIT: [(&str, &str, &str, &str); 31] = [
     ("version", "Effective intervals, corpus dates (`known_at`, `retracted`: transaction time), applicability (`commenced [from, to)`: proceedings commenced then), `unknown_before D` (earlier law not encoded: a hole, L3010), and relations on any rule-bearing declaration.", "deadline d: 20.days from Served(complaint) counted_by rule6 effective [2007-12-01, 2009-12-01) known_at 2007-04-30 supersedes d@1993-12-01", "only the version selected by --as-of/--known-at is emitted"),
 ];
 
-const CASE: [(&str, &str, &str, &str); 15] = [
+const CASE: [(&str, &str, &str, &str); 16] = [
     ("case", "Names the matter; the first line of every .case file.", "case acme-v-widget", "NamedScenario.id"),
     ("uses", "Pins the packages it uses; the first is primary.", "uses demo-rules ^0.1.0", "NamedScenario.packs"),
     ("as_of", "Selects the law in force (compile time only).", "as_of 2025-06-01", "provenance only"),
@@ -74,6 +75,7 @@ const CASE: [(&str, &str, &str, &str); 15] = [
     ("facts", "Resolved fact nodes: node to its edge.", "facts { time-barred: not-barred }", "scenario.facts"),
     ("stakes", "Terminal values; every reachable terminal needs one (L4004). An entry's `fee_shift` overrides the terminal's fee-shift fraction for this matter, and may stand alone.", "stakes { judgment-entered: -2_000_000.usd, dismissed: 0.usd fee_shift 0.5 }", "scenario.payoffs, scenario.fee_shifts"),
     ("beliefs", "The matter's priors over chance nodes (`prior`: Dirichlet pseudo-counts for every outcome, Beta for two) and the outcome counts observed since (`observe`), which update them.", "beliefs { prior mtd-ruling: { granted: 1, denied: 3 }, observe mtd-ruling: { granted: 3, denied: 1 } }", "scenario.probabilities + uncertainty.concentration (prior), scenario.observe"),
+    ("opponents", "How the opponent decides at named decisions where only they choose: `adversarial node` (minimizes our value), `chance node: { edge: p }` (a calibrated draw; named edges take p, the others split the rest; no record keeps the authored probabilities), or `own_objective node: { edge: money }` (the opponent takes the edge worth most to them). Each node a decision (L2001), each edge its own (L1002); a decision with no entry keeps the engine's `opponent` mode.", "opponents { chance stipulation-offer: { accepted: 0.4 } }", "scenario.opponent_models"),
     ("analysis", "The engine's Scenario fields with no block of their own, each typed: params (the Params record: rate and opp_rate are Rate<usd, Hours>, `650.usd / 1.hours`; carry_per_day a Rate<usd, CalendarDays>; others numbers), metrics/utilities/cost/utility/mask/probability_fn/opponent_objective (engine expression strings), calibration, discount_annual, remove_edges (EdgeRefs), and the engine options mixed, opponent, prob_fill, objective, fee_shift, uncertainty.", "analysis { params: { rate: 650.usd / 1.hours, opp_rate: 550.usd / 1.hours } }", "scenario.<field>"),
     ("start", "An asserted start (legacy imports); must agree with replay (L4008).", "start demo-rules::mtd-ruling", "scenario.start"),
 ];

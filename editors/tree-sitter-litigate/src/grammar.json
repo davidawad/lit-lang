@@ -4020,10 +4020,10 @@
       "members": [
         {
           "type": "FIELD",
-          "name": "key",
+          "name": "edge",
           "content": {
             "type": "SYMBOL",
-            "name": "identifier"
+            "name": "ref"
           }
         },
         {
@@ -4032,10 +4032,10 @@
         },
         {
           "type": "FIELD",
-          "name": "value",
+          "name": "probability",
           "content": {
             "type": "SYMBOL",
-            "name": "_prob_value"
+            "name": "number"
           }
         }
       ]
@@ -6657,6 +6657,18 @@
           "members": [
             {
               "type": "SYMBOL",
+              "name": "opponents_block"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
               "name": "analysis_block"
             },
             {
@@ -7593,6 +7605,219 @@
           "content": {
             "type": "SYMBOL",
             "name": "number"
+          }
+        }
+      ]
+    },
+    "opponents_block": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "opponents"
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "{"
+            },
+            {
+              "type": "REPEAT",
+              "content": {
+                "type": "SEQ",
+                "members": [
+                  {
+                    "type": "SYMBOL",
+                    "name": "opponent_model"
+                  },
+                  {
+                    "type": "CHOICE",
+                    "members": [
+                      {
+                        "type": "STRING",
+                        "value": ","
+                      },
+                      {
+                        "type": "BLANK"
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            {
+              "type": "STRING",
+              "value": "}"
+            }
+          ]
+        }
+      ]
+    },
+    "opponent_model": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "model",
+              "content": {
+                "type": "STRING",
+                "value": "adversarial"
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "node",
+              "content": {
+                "type": "SYMBOL",
+                "name": "ref"
+              }
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "model",
+              "content": {
+                "type": "STRING",
+                "value": "chance"
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "node",
+              "content": {
+                "type": "SYMBOL",
+                "name": "ref"
+              }
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": ":"
+                    },
+                    {
+                      "type": "FIELD",
+                      "name": "probabilities",
+                      "content": {
+                        "type": "SYMBOL",
+                        "name": "probability_map"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "model",
+              "content": {
+                "type": "STRING",
+                "value": "own_objective"
+              }
+            },
+            {
+              "type": "FIELD",
+              "name": "node",
+              "content": {
+                "type": "SYMBOL",
+                "name": "ref"
+              }
+            },
+            {
+              "type": "STRING",
+              "value": ":"
+            },
+            {
+              "type": "FIELD",
+              "name": "payoffs",
+              "content": {
+                "type": "SYMBOL",
+                "name": "payoff_map"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    "payoff_map": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "{"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "SYMBOL",
+                "name": "payoff_entry"
+              },
+              {
+                "type": "CHOICE",
+                "members": [
+                  {
+                    "type": "STRING",
+                    "value": ","
+                  },
+                  {
+                    "type": "BLANK"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "}"
+        }
+      ]
+    },
+    "payoff_entry": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "edge",
+          "content": {
+            "type": "SYMBOL",
+            "name": "ref"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ":"
+        },
+        {
+          "type": "FIELD",
+          "name": "payoff",
+          "content": {
+            "type": "SYMBOL",
+            "name": "signed_money"
           }
         }
       ]

@@ -10,7 +10,7 @@ use litigate_engine::scenario::{
 };
 use litigate_engine::Scenario;
 use litigate_sema::hir::{self, EventParty, Perspective, Stake};
-use serde_json::{Map, Value};
+use serde_json::{json, Map, Value};
 use std::collections::BTreeMap;
 
 /// `perspective`: a party makes its actor `self` and every other party's
@@ -230,6 +230,10 @@ fn scenario(
     if !observe.is_empty() {
         put("observe", Value::Object(observe));
     }
+    let models = opponent_models(sink, case);
+    if !models.is_empty() {
+        put("opponent_models", Value::Object(models));
+    }
     let (edges, at) = remove_edges(case);
     if !edges.is_empty() {
         put("remove_edges", Value::from(edges));
@@ -239,6 +243,34 @@ fn scenario(
     let mut scenario = serde_json::from_value::<Scenario>(Value::Object(object)).ok()?;
     priors(sink, case, &mut scenario);
     Some((scenario, at))
+}
+
+/// `scenario.opponent_models`: each `opponents` entry as the engine's
+/// `OpponentModel`, probabilities and payoffs as numbers.
+fn opponent_models(sink: &mut Sink, case: &hir::Case) -> Map<String, Value> {
+    case.opponent_models
+        .iter()
+        .map(|(node, model)| {
+            let value = match model {
+                hir::OpponentModel::Adversarial => json!({ "model": "adversarial" }),
+                hir::OpponentModel::Chance { probabilities } => {
+                    let p: Map<String, Value> = probabilities
+                        .iter()
+                        .filter_map(|(e, p)| Some((e.clone(), Value::from(sink.number(*p, None)?))))
+                        .collect();
+                    json!({ "model": "chance", "probabilities": p })
+                }
+                hir::OpponentModel::OwnObjective { payoffs } => {
+                    let p: Map<String, Value> = payoffs
+                        .iter()
+                        .filter_map(|(e, m)| Some((e.clone(), Value::from(sink.money(m, None)?))))
+                        .collect();
+                    json!({ "model": "own-objective", "payoffs": p })
+                }
+            };
+            (node.clone(), value)
+        })
+        .collect()
 }
 
 /// `scenario.remove_edges`: the `analysis` entries, then each edge the

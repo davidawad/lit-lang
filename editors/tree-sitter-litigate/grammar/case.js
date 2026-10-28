@@ -28,6 +28,7 @@ module.exports = {
     optional($.facts_block),
     optional($.stakes_block),
     optional($.beliefs_block),
+    optional($.opponents_block),
     optional($.analysis_block),
   ),
 
@@ -127,6 +128,27 @@ module.exports = {
   count_map: $ => braced($.count_entry),
 
   count_entry: $ => seq(field('edge', $.ref), ':', field('count', $.number)),
+
+  // Per-decision opponent models: how the opponent decides at a decision.
+  opponents_block: $ => seq('opponents', braced($.opponent_model)),
+
+  opponent_model: $ => choice(
+    seq(field('model', 'adversarial'), field('node', $.ref)),
+    seq(
+      field('model', 'chance'),
+      field('node', $.ref),
+      optional(seq(':', field('probabilities', $.probability_map))),
+    ),
+    seq(field('model', 'own_objective'), field('node', $.ref), ':', field('payoffs', $.payoff_map)),
+  ),
+
+  probability_map: $ => braced($.probability_entry),
+
+  probability_entry: $ => seq(field('edge', $.ref), ':', field('probability', $.number)),
+
+  payoff_map: $ => braced($.payoff_entry),
+
+  payoff_entry: $ => seq(field('edge', $.ref), ':', field('payoff', $.signed_money)),
 
   analysis_block: $ => seq('analysis', field('value', $.record_expression)),
 };

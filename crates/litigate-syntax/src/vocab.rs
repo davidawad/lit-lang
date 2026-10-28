@@ -57,6 +57,7 @@ pub const CASE_ITEM_KEYWORDS: &[SyntaxKind] = &[
     KwFacts,
     KwStakes,
     KwBeliefs,
+    KwOpponents,
     KwAnalysis,
 ];
 

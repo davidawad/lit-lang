@@ -191,6 +191,8 @@ syntax_kinds_with_keywords! {
         RecharacterizeDecl => "`recharacterize id: target characterization jurisdictional|claim_processing`: a new characterization of another package's deadline (additive).",
         InvalidateDecl => "`invalidate id: target`: withdraws another package's declaration from its window (additive).",
         CalibrationDecl => "`calibration id: \"Title\" { ... }`: a named set of measured values a matter opts into (additive).",
+        OpponentsBlock => "`opponents { ... }`: how the opponent decides at named decisions of a matter (additive).",
+        OpponentModelDecl => "`adversarial node`, `chance node [: { edge: p }]` or `own_objective node: { edge: money }`: one decision's opponent model (additive).",
     }
 }
 

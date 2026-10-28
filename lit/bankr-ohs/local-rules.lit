@@ -1,0 +1,446 @@
+module bankr-ohs-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, OrderForReliefEntered, PetitionFiled }
+
+// The Bankr. S.D. Ohio court's own periods and page limit, counted under
+// FRBP 9006(a), the FRCP 6(a) method: the Local Bankruptcy Rules with
+// amendments effective October 1, 2020. General Orders 50-1 (LBR
+// 2016-1(b)(2)(A), the chapter 13 no-look fee, cases filed on or after
+// February 24, 2021) and 59-1 (LBR 5081-1(b), manner of fee payment, July
+// 5, 2023) are vendored layers but change no period, so no period takes a
+// dated version. The FRBP periods (schedules, claims, the chapter 13 plan,
+// discharge, dischargeability, exemptions, the adversary answer, appeals)
+// are lit/frbp's and are not declared again, nor are the national periods
+// the rules repeat: the 21-day notice of a home-equity payment change (LBR
+// 3001-2, FRBP 3002.1(b)) and the 30-day § 523(a)(6) period after a
+// hardship discharge (LBR 4007-1(b), FRBP 4007(d)). Stated in the rules but
+// not declared: the business-day and working-day periods (the ballot
+// certification three business days before confirmation, LBR 3018-2;
+// perfection documents seven business days after a cash collateral motion,
+// 4001-2; closing statements one working day before and proceeds three
+// working days after a sale, 6004-1); the later-of period to object to an
+// amended chapter 13 plan (the later of 21 days after service and 14 days
+// after the § 341 meeting concludes, 3015-2(a), 3015-3(a)); the court's own
+// acts (the 30-day final decree notice a year after confirmation,
+// 3022-1(a); the clerk's transmittal seven days after withdrawal briefing
+// closes, 5011-1(d)); the cash collateral investigation windows of 75 and
+// 60 days, conditions on a financing order's terms (4001-2); the five days
+// after the petition within which a § 362(c)(3) or (c)(4) motion needs no
+// expedited hearing (4001-1(b)), and the seven days before the § 341
+// meeting before which an abandonment request may not be made (6007-1(c)),
+// bounds on when a paper may be filed rather than deadlines; and immediate
+// duties (notice of postpetition property, 4002-1(c)).
+/// A brief or memorandum, except upon leave of court for good cause shown
+/// (LBR 9013-2(a)).
+limit brief { pages <= 20 cite "S.D. Ohio LBR 9013-2(a)" } cite "S.D. Ohio LBR 9013-2(a)"
+
+/// A petition is filed without photo identification of the debtors (LBR
+/// 1002-1).
+event PetitionWithoutIdFiled()
+/// An order reopening a closed case so the debtor may amend the schedules
+/// to add a prepetition creditor is entered (LBR 1009-1(b)).
+event ReopeningOrderEntered()
+/// The chapter 7 trustee serves the Summary of the Trustee's Final Report
+/// and Applications for Compensation (LBR 2002-1(d)).
+event FinalReportSummaryServed()
+/// A motion to reschedule a § 341 meeting is served, as shown on its
+/// certificate of service (LBR 2003-1(b)).
+event RescheduleMotionServed()
+/// An order dismissing a chapter 13 case before confirmation is entered
+/// (LBR 2016-1(b)(5)).
+event Chapter13DismissalEntered()
+/// The debtor's attorney's legal representation in a chapter 13 case is
+/// discontinued (LBR 2016-1(b)(6)).
+event RepresentationDiscontinued()
+/// An official committee holds its first meeting (LBR 2071-1).
+event CommitteeFirstMeeting()
+/// A judge's order requiring an attorney to show cause why the attorney
+/// should not be disciplined is served (LBR 2090-2).
+event ShowCauseOrderServed()
+/// The chief district judge's interim disciplinary order is entered by the
+/// clerk of the district court (LBR 2090-2(d)(4)).
+event InterimDisciplineOrderEntered()
+/// A trial or hearing on any matter is scheduled to be held (LBR
+/// 2091-1(c)).
+event TrialOrHearingScheduled()
+/// An objection to a claim is served, as shown on its certificate of
+/// service (LBR 3007-1).
+event ClaimObjectionServed()
+/// The § 341 meeting of creditors is concluded (LBR 3012-1, 3015-3(a)).
+event MeetingConcluded()
+/// A motion to modify a confirmed chapter 13 plan is served (LBR
+/// 3015-2(c)).
+event PlanModificationMotionServed()
+/// An order granting a chapter 11 enlargement of time is served (LBR
+/// 3016-1(b)).
+event ExclusivityEnlargementServed()
+/// The chapter 11 confirmation hearing is scheduled to be held (LBR
+/// 3020-1).
+event ConfirmationHearingScheduled()
+/// The order setting the final hearing on a motion for relief from stay is
+/// entered, or the motion is served (LBR 4001-1(a)(8)).
+event StayHearingOrderEntered()
+/// The chapter 13 trustee files the Certification of Final Payment (LBR
+/// 4002-1(d)).
+event FinalPaymentCertified()
+/// The trustee serves a written request on the debtor for information or
+/// documents (LBR 4002-1(f)).
+event TrusteeRequestServed()
+/// A motion for withdrawal of the reference is served, as shown on its
+/// certificate of service (LBR 5011-1(b)).
+event WithdrawalMotionServed()
+/// A response to a motion for withdrawal of the reference is served (LBR
+/// 5011-1(c)).
+event WithdrawalResponseServed()
+/// A notice of a proposed use, sale or lease of estate property is served
+/// (LBR 6004-1(a)).
+event SaleNoticeServed()
+/// A sale of property not in the ordinary course of business is completed
+/// (LBR 6004-1(a)(2)).
+event SaleCompleted()
+/// A notice of abandonment is served (LBR 6007-1(a)).
+event AbandonmentNoticeServed()
+/// The trustee receives a party's written request for abandonment (LBR
+/// 6007-1(c)).
+event AbandonmentRequestReceived()
+/// The Order Governing Pretrial and Trial Procedures is entered (LBR
+/// 7016-1(a)).
+event PretrialOrderEntered()
+/// A motion for a protective order or to compel discovery is filed (LBR
+/// 7026-1).
+event DiscoveryMotionFiled()
+/// A memorandum in opposition to a discovery motion is filed (LBR 7026-1).
+event DiscoveryOppositionFiled()
+/// An individual appearing pro se changes mailing address or telephone
+/// number (LBR 9011-2(a)).
+event ProSeAddressChanged()
+/// A motion or application is served, as shown on its certificate of
+/// service (LBR 9013-1(b)).
+event MotionServed()
+/// A response memorandum to a motion or application is served (LBR
+/// 9013-1(c)).
+event ResponseServed()
+/// A hearing at which the standing trustee's financial records are offered
+/// is scheduled to be held (LBR 9070-1).
+event TrusteeRecordsHearingScheduled()
+/// The time to respond to a motion or application expires with no response
+/// (LBR 9072-1(e)).
+event ResponseTimeExpired()
+/// A hearing or trial is held (LBR 9072-1(f)).
+event HearingOrTrialHeld()
+/// The court is informed of the parties' resolution of a matter before a
+/// hearing or trial (LBR 9072-1(g)).
+event ResolutionReported()
+/// A brief or memorandum is filed (LBR 9013-2(a)).
+event BriefFiled() paper brief
+
+/// LBR 1002-1: if a petition is filed without photo identification, a copy
+/// is provided to the Clerk's Office for every debtor named, or a motion
+/// for waiver is made, within 14 days.
+deadline photo-id-period: 14.days after PetitionWithoutIdFiled() counted_by frcp6 cite "S.D. Ohio LBR 1002-1"
+{
+  forum frcp
+}
+
+/// LBR 1007-2(a): unless otherwise ordered, in an involuntary case the
+/// debtor files the mailing list of creditors and parties in interest not
+/// later than 7 days after entry of the order for relief.
+deadline involuntary-mailing-list-period: 7.days after OrderForReliefEntered() counted_by frcp6 cite "S.D. Ohio LBR 1007-2(a)"
+{
+  forum frcp
+}
+
+/// LBR 1009-1(b): after a closed case is reopened to add a prepetition
+/// creditor, the amendment is filed within 14 days of the entry date of the
+/// reopening order.
+deadline reopened-amendment-period: 14.days after ReopeningOrderEntered() counted_by frcp6 cite "S.D. Ohio LBR 1009-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 1074-1(d): no later than 14 days after a voluntary petition (or the
+/// order for relief in an involuntary case), the individual responsible for
+/// an entity debtor is identified by name and title in a paper filed with
+/// the clerk.
+deadline responsible-person-period: 14.days after PetitionFiled() counted_by frcp6 cite "S.D. Ohio LBR 1074-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 2002-1(d): the chapter 7 trustee serves the summary of the final
+/// report and fee applications with the thirty-day Notice of Deadline to
+/// Object.
+deadline final-report-objection-period: 30.days after FinalReportSummaryServed() counted_by frcp6 cite "S.D. Ohio LBR 2002-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 2003-1(b): a response to a motion to reschedule a § 341 meeting is
+/// filed within 7 days from the date of service on the certificate of
+/// service.
+deadline reschedule-response-period: 7.days after RescheduleMotionServed() counted_by frcp6 cite "S.D. Ohio LBR 2003-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 2016-1(b)(5): the fee application of the debtor’s attorney in a
+/// chapter 13 case dismissed before confirmation is filed no later than 21
+/// days after entry of the order of dismissal.
+deadline dismissed-case-fee-period: 21.days after Chapter13DismissalEntered() counted_by frcp6 cite "S.D. Ohio LBR 2016-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 2016-1(b)(6)(A): if the debtor's attorney withdraws, the fee
+/// application is filed no later than 21 days after legal representation is
+/// discontinued.
+deadline discontinued-representation-fee-period: 21.days after RepresentationDiscontinued() counted_by frcp6 cite "S.D. Ohio LBR 2016-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 2071-1: within 7 days of its first meeting, unless the United States
+/// trustee has filed it, an official committee files a report naming its
+/// chairperson and service designee.
+deadline committee-report-period: 7.days after CommitteeFirstMeeting() counted_by frcp6 cite "S.D. Ohio LBR 2071-1"
+{
+  forum frcp
+}
+
+/// LBR 2090-2: an attorney ordered to show cause why discipline should not
+/// be imposed responds within 30 days after service of the order.
+deadline show-cause-period: 30.days after ShowCauseOrderServed() counted_by frcp6 cite "S.D. Ohio LBR 2090-2"
+{
+  forum frcp
+}
+
+/// LBR 2090-2(d)(4): an attorney objecting to the chief district judge's
+/// interim disciplinary order files the objection and memorandum with the
+/// clerk of the district court within 14 days of its entry.
+deadline interim-discipline-objection-period: 14.days after InterimDisciplineOrderEntered() counted_by frcp6 cite "S.D. Ohio LBR 2090-2(d)"
+{
+  forum frcp
+}
+
+/// LBR 2091-1(c): unless the court orders otherwise, an attorney may not
+/// withdraw within 21 days before a trial or hearing on any matter.
+deadline attorney-withdrawal-period: 21.days before TrialOrHearingScheduled() counted_by frcp6 cite "S.D. Ohio LBR 2091-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 3007-1(a), (c): the claimant files and serves a response to an
+/// objection to its claim not later than 30 days after service of the
+/// objection.
+deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frcp6 cite "S.D. Ohio LBR 3007-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 3012-1(b): an objection to confirmation based on the value of
+/// personal property subject to a lien, or to the failure to list it as
+/// secured, is filed and served within 14 days after the § 341 meeting is
+/// concluded.
+deadline valuation-objection-period: 14.days after MeetingConcluded() counted_by frcp6 cite "S.D. Ohio LBR 3012-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3012-1(c)(2): the creditor files and serves its appraisal within 14
+/// days after the § 341 meeting of creditors.
+deadline appraisal-service-period: 14.days after MeetingConcluded() counted_by frcp6 cite "S.D. Ohio LBR 3012-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 3015-2(c): an objection to a motion to modify a confirmed chapter 13
+/// plan is filed and served within 21 days after its service, unless the
+/// trustee notices or the court orders otherwise.
+deadline modification-objection-period: 21.days after PlanModificationMotionServed() counted_by frcp6 cite "S.D. Ohio LBR 3015-2(c)"
+{
+  forum frcp
+}
+
+/// LBR 3015-3(a)(1): an objection to confirmation of an initial chapter 13
+/// plan is filed within 14 days after the § 341 meeting is concluded.
+deadline confirmation-objection-period: 14.days after MeetingConcluded() counted_by frcp6 cite "S.D. Ohio LBR 3015-3(a)"
+{
+  forum frcp
+}
+
+/// LBR 3016-1(b): an order granting a chapter 11 enlargement of time gives
+/// creditors and parties in interest 21 days from its service to object.
+deadline enlargement-objection-period: 21.days after ExclusivityEnlargementServed() counted_by frcp6 cite "S.D. Ohio LBR 3016-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3020-1: unless otherwise ordered, a party presenting witnesses or
+/// evidence at a chapter 11 confirmation hearing files and serves witness
+/// and exhibit lists not later than 7 days before it.
+deadline confirmation-witness-list-period: 7.days before ConfirmationHearingScheduled() counted_by frcp6 cite "S.D. Ohio LBR 3020-1"
+{
+  forum frcp
+}
+
+/// LBR 4001-1(a)(8): a request for a preliminary hearing on a motion for
+/// relief from stay is filed no later than 7 days after entry of the order
+/// setting the final hearing or service of the motion.
+deadline preliminary-stay-hearing-period: 7.days after StayHearingOrderEntered() counted_by frcp6 cite "S.D. Ohio LBR 4001-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 4002-1(b): payment advices for the 60 days before the petition are
+/// not filed but provided to the trustee and the United States trustee at
+/// least 7 days before the first date set for the § 341 meeting.
+deadline payment-advices-meeting-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "S.D. Ohio LBR 4002-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 4002-1(b): and not later than 45 days after the petition is filed.
+deadline payment-advices-outer-period: 45.days after PetitionFiled() counted_by frcp6 cite "S.D. Ohio LBR 4002-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 4002-1(d): a chapter 13 debtor eligible for a discharge files LBR
+/// Form 4002-1 within 21 days after the trustee's Certification of Final
+/// Payment, or the case may close without a discharge.
+deadline discharge-certification-period: 21.days after FinalPaymentCertified() counted_by frcp6 cite "S.D. Ohio LBR 4002-1(d)"
+{
+  forum frcp
+}
+
+/// LBR 4002-1(f)(1): absent a written extension, within 21 days after
+/// service of a trustee's written request the debtor serves the information
+/// or documents or moves for a protective order.
+deadline trustee-request-period: 21.days after TrusteeRequestServed() counted_by frcp6 cite "S.D. Ohio LBR 4002-1(f)"
+{
+  forum frcp
+}
+
+/// LBR 5011-1(b): a response to a motion for withdrawal of the reference is
+/// filed with the bankruptcy court within 14 days from service of the
+/// motion.
+deadline withdrawal-response-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "S.D. Ohio LBR 5011-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 5011-1(c): a reply memorandum may be filed within 7 days after
+/// service of the response.
+deadline withdrawal-reply-period: 7.days after WithdrawalResponseServed() counted_by frcp6 cite "S.D. Ohio LBR 5011-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 6004-1(a)(1)(F): a written objection to a noticed use, sale or
+/// lease, with a request for hearing, is filed and served not later than 21
+/// days from service of the notice unless the court shortens it.
+deadline sale-objection-period: 21.days after SaleNoticeServed() counted_by frcp6 cite "S.D. Ohio LBR 6004-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 6004-1(a)(2)(A): unless otherwise ordered, within 21 days after a
+/// sale outside the ordinary course and before disbursing proceeds, the
+/// trustee or debtor in possession files a report of sale.
+deadline sale-report-period: 21.days after SaleCompleted() counted_by frcp6 cite "S.D. Ohio LBR 6004-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 6007-1(a): an objection to a noticed abandonment is filed and served
+/// within 14 days of service of the notice, or the property is deemed
+/// abandoned.
+deadline abandonment-objection-period: 14.days after AbandonmentNoticeServed() counted_by frcp6 cite "S.D. Ohio LBR 6007-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 6007-1(c)(1): a trustee who finds the property burdensome or of
+/// inconsequential value executes and returns a notice of abandonment
+/// within 14 days of receiving the request.
+deadline abandonment-request-response-period: 14.days after AbandonmentRequestReceived() counted_by frcp6 cite "S.D. Ohio LBR 6007-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 7016-1(a): each party files and serves its Preliminary Pretrial
+/// Statement within 30 days of entry of the Order Governing Pretrial and
+/// Trial Procedures or other deadline the court sets.
+deadline pretrial-statement-period: 30.days after PretrialOrderEntered() counted_by frcp6 cite "S.D. Ohio LBR 7016-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 7026-1: opposition to a motion for a protective order or to compel
+/// discovery is filed within 7 days of the motion's filing.
+deadline discovery-opposition-period: 7.days after DiscoveryMotionFiled() counted_by frcp6 cite "S.D. Ohio LBR 7026-1"
+{
+  forum frcp
+}
+
+/// LBR 7026-1: a reply memorandum is filed within 7 days of the filing of
+/// the memorandum in opposition.
+deadline discovery-reply-period: 7.days after DiscoveryOppositionFiled() counted_by frcp6 cite "S.D. Ohio LBR 7026-1"
+{
+  forum frcp
+}
+
+/// LBR 9011-2(a): an individual appearing pro se files and serves notice of
+/// a change of mailing address or telephone number within 14 days from the
+/// change.
+deadline pro-se-address-period: 14.days after ProSeAddressChanged() counted_by frcp6 cite "S.D. Ohio LBR 9011-2(a)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(a)-(b): unless the court orders otherwise, a response
+/// memorandum opposing a motion or application is filed within 21 days from
+/// service on the certificate of service, the period of the 21-day notice.
+deadline motion-response-period: 21.days after MotionServed() counted_by frcp6 cite "S.D. Ohio LBR 9013-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 9013-1(c): a reply memorandum may be filed within 7 days after
+/// service of the response memorandum.
+deadline motion-reply-period: 7.days after ResponseServed() counted_by frcp6 cite "S.D. Ohio LBR 9013-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 9070-1: a party contesting the authenticity or accuracy of the
+/// standing trustee's financial records files and serves its witnesses,
+/// exhibits and reasons at least 7 days before the hearing.
+deadline trustee-records-challenge-period: 7.days before TrusteeRecordsHearingScheduled() counted_by frcp6 cite "S.D. Ohio LBR 9070-1"
+{
+  forum frcp
+}
+
+/// LBR 9072-1(e): if no response is filed in time, the movant submits a
+/// proposed order within 7 days of the expiration of the response period.
+deadline unopposed-order-period: 7.days after ResponseTimeExpired() counted_by frcp6 cite "S.D. Ohio LBR 9072-1(e)"
+{
+  forum frcp
+}
+
+/// LBR 9072-1(f): unless otherwise ordered, within 7 days after a hearing
+/// or trial the prevailing party submits a proposed order conforming to the
+/// decision.
+deadline post-hearing-order-period: 7.days after HearingOrTrialHeld() counted_by frcp6 cite "S.D. Ohio LBR 9072-1(f)"
+{
+  forum frcp
+}
+
+/// LBR 9072-1(g): unless otherwise ordered, within 7 days of informing the
+/// court of a resolution before hearing or trial, the party seeking relief
+/// submits a proposed order conforming to it.
+deadline agreed-order-period: 7.days after ResolutionReported() counted_by frcp6 cite "S.D. Ohio LBR 9072-1(g)"
+{
+  forum frcp
+}

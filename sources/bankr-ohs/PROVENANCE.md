@@ -22,3 +22,10 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 0ee06406df1f6ea66562641f715364d0ee0d0d58f66ad6cde723cd0389b10d5d. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-ohs/original/ohs-go-59-1.pdf` as served (sha256 70de08aa10dffa1f15da64df5b66b0c54aae895d23cf99d9360eaf99e09c9fdf); extraction sha256 0ee06406df1f6ea66562641f715364d0ee0d0d58f66ad6cde723cd0389b10d5d.
+
+### `bankr-ohs/ohs-local-rules-2020-10-01-sectioned.txt` — S.D. Ohio Local Bankruptcy Rules, Forms and Procedures, sectioned
+
+- Derived in the pod (lg-u561.19) from `bankr-ohs/ohs-local-rules-2020-10-01.txt` (extract sha256 fc47e4ae50dc12be2a3c8da1929407f9793754b02b5ab590fafe29dcf2f9a38c); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (`<n> <TITLE>` with the rule number written with an en dash, which the marker writes as a hyphen; `1002–1` through `9076–1`, including the reserved rules' headings; 224 sections, matching Parts A and B of the table of contents); the cover, table of contents and philosophy statement (extract lines 1-635) are unmarked, and the forms after the last rule fall within its section. Rule text was not edited: deleting the marker lines (`sed '/^## /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-ohs/ohs-local-rules-2020-10-01.txt`, https://www.ohsb.uscourts.gov/sites/ohsb/files/local_rules/Final%20Version%20of%20Amended%20LBRs_Effective%20Oct%201%202020.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
+- Edition: as the extract, the Local Bankruptcy Rules, Forms and Procedures with amendments effective October 1, 2020.
+- Sectioned sha256 81cf582820d6ab28fb81d5af157beecf696995d8a2967f4a60dd8587fb192552 (the `path_sha256` pinned by `lit/bankr-ohs/Lit.toml` for source `ohsb-lbr`).

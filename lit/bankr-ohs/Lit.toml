@@ -1,0 +1,71 @@
+# The Local Bankruptcy Rules of the U.S. Bankruptcy Court for the Southern
+# District of Ohio over lit/frbp (FRBP 9029(a); 28 U.S.C. § 2075): it
+# declares only the periods and page limit the rules themselves state and
+# re-encodes no FRBP period. Each period is counted under FRBP 9006(a), the
+# FRCP 6(a) method (core's frcp6).
+#
+# Layers, in date order: the Local Bankruptcy Rules, Forms and Procedures
+# with amendments effective October 1, 2020 (the consolidation), then
+# General Order 50-1 (LBR 2016-1(b)(2)(A), cases filed on or after February
+# 24, 2021) and General Order 59-1 (LBR 5081-1(b), effective July 5, 2023).
+# Neither order changes a period, so no period takes a dated version
+# (local-rules.lit). The earlier editions are not vendored, so a query
+# before October 1, 2020 is a hole in the corpus.
+[package]
+name = "bankr-ohs-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "bankr-ohs-local-rules"
+forum = "bankr-ohs"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. Bankruptcy Court for the Southern District of Ohio: Local Bankruptcy Rules"
+description = "The Bankr. S.D. Ohio Local Bankruptcy Rules (amendments effective October 1, 2020; General Orders 50-1 and 59-1 change no period) as a local-rule layer over the Federal Rules of Bankruptcy Procedure (lit/frbp): photo identification, the involuntary mailing list, amendments in reopened cases, the entity's responsible person, the chapter 7 final report objection notice, § 341 rescheduling, chapter 13 fee applications on dismissal or withdrawal, committee reports, attorney discipline, the withdrawal cutoff, claim objection responses, valuation objections and appraisals, chapter 13 plan modification and confirmation objections, chapter 11 enlargements and witness lists, preliminary stay hearings, payment advices, discharge certifications, trustee requests, withdrawal of the reference, sales by notice and reports of sale, abandonment, pretrial statements, discovery motions, pro se addresses, motion responses and replies (LBR 9013-1), trustee records, proposed orders, and the 20-page brief limit (LBR 9013-2)."
+in_force = "2020-10-01"
+known_at = "2026-10-28"
+unknown_before = "2020-10-01"
+jurisdiction = "U.S. Bankruptcy Court for the Southern District of Ohio"
+counting = "frcp6"
+
+[package.instrument]
+source = "ohsb-lbr"
+issuer = "United States Bankruptcy Court for the Southern District of Ohio"
+date = "2020-10-01"
+designation = "Local Bankruptcy Rules"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The FRBP periods; this package layers only the court's local bankruptcy rules over them.
+frbp-bankruptcy-procedure = { version = "^0.1.0", path = "../frbp" }
+
+[sources.ohsb-lbr]
+title = "Local Bankruptcy Rules, Forms and Procedures of the United States Bankruptcy Court for the Southern District of Ohio (amendments effective October 1, 2020)"
+url = "https://www.ohsb.uscourts.gov/sites/ohsb/files/local_rules/Final%20Version%20of%20Amended%20LBRs_Effective%20Oct%201%202020.pdf"
+path = "sources/bankr-ohs/ohs-local-rules-2020-10-01-sectioned.txt"
+path_sha256 = "81cf582820d6ab28fb81d5af157beecf696995d8a2967f4a60dd8587fb192552"
+sha256 = "3385857251fb2eaf4d11d8d006110d618b9ab0e409ea731786853cfc0b4905f8"
+as_of = "2020-10-01"
+cite_prefixes = ["S.D. Ohio LBR"]
+section_heading = "Rule {n}"
+
+[sources.ohsb-go-50-1]
+title = "General Order 50-1, Amending LBR 2016-1(b)(2)(A) (cases filed on or after February 24, 2021)"
+url = "https://www.ohsb.uscourts.gov/sites/ohsb/files/general-orders/General_Order_50-1.pdf"
+path = "sources/bankr-ohs/ohs-go-50-1.txt"
+path_sha256 = "6d11807fc81f214d146c4fef4728d69bb6ff2bc11add8f4b4cefd09a14488cae"
+sha256 = "dbfa88b2e9c470b1c2293176a1a06106ea522447d75228fda498e9e80abda4af"
+as_of = "2021-02-24"
+
+[sources.ohsb-go-59-1]
+title = "General Order 59-1, Amending LBR 5081-1(b) (entered June 9, 2023, effective July 5, 2023)"
+url = "https://www.ohsb.uscourts.gov/sites/ohsb/files/general-orders/General-Order-59-1.pdf"
+path = "sources/bankr-ohs/ohs-go-59-1.txt"
+path_sha256 = "0ee06406df1f6ea66562641f715364d0ee0d0d58f66ad6cde723cd0389b10d5d"
+sha256 = "70de08aa10dffa1f15da64df5b66b0c54aae895d23cf99d9360eaf99e09c9fdf"
+as_of = "2023-07-05"

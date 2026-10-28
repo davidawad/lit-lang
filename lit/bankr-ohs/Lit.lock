@@ -1,6 +1,22 @@
 version = 2
 
 [[package]]
+name = "bankr-ohs-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:d31c27f2fbbd430e26eb71be5c887f11d79a7803be18a7f801ce6dd568b1ff30"
+semantic = "sha256:74fc06f5f85fca240b178d4886cd41de3e267f2ab807df5c6b56112543b2f018"
+texts = [
+    "ohsb-go-50-1 sources/bankr-ohs/ohs-go-50-1.txt sha256:6d11807fc81f214d146c4fef4728d69bb6ff2bc11add8f4b4cefd09a14488cae",
+    "ohsb-go-59-1 sources/bankr-ohs/ohs-go-59-1.txt sha256:0ee06406df1f6ea66562641f715364d0ee0d0d58f66ad6cde723cd0389b10d5d",
+    "ohsb-lbr sources/bankr-ohs/ohs-local-rules-2020-10-01-sectioned.txt sha256:81cf582820d6ab28fb81d5af157beecf696995d8a2967f4a60dd8587fb192552",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +60,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-ohs"
-version = "0.0.1"
-language = 1
-source = "sha256:f7acfa3c6e9f7f67abc6d2c7ec440c968ff0b4b481c6e2dbab81531b0777e96d"
-semantic = "sha256:55b3ed3ad6db46cc2e6c577b2b04df6a3d7faae7cf2109e55d92eed5dca552d4"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

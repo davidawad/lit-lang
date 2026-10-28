@@ -14,3 +14,11 @@
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 e545892094f1cc4df67c7e25757cf62e7900c1ddbaefa940c2b876532fe27c04. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `d-neb/original/ne-general-rules.pdf` as served (sha256 7aeb14b6339776dd5d1a3b9815495c93f12c608b0b1d5c9629d0c22bc40fb361); extraction sha256 e545892094f1cc4df67c7e25757cf62e7900c1ddbaefa940c2b876532fe27c04.
+
+### `d-neb/dneb-necrimr-2025-12-01.txt` — D. Neb. Nebraska Criminal Rules (NECrimR, effective December 1, 2025)
+
+- Source: https://www.ned.uscourts.gov/sites/default/files/documents/NECrimR.2025.pdf (official site; 77 pages, sha256 7ad46d57cd1da95f8a135b8847b36ffe456cd0d64e23df25580b43ff996c7d69).
+- Edition: Nebraska Criminal Rules 'Effective December 1, 2025' (first page), NECrimR.2025 listed under 'In Effect on and after December 1, 2025' at https://www.ned.uscourts.gov/local-rules; the 2026 proposed rules on that page are not in force and not vendored. robots.txt of www.ned.uscourts.gov read (Crawl-delay 10 honored where stated; no Disallow covers the fetched path); the judiciary-wide Privacy & Security Policy (https://www.uscourts.gov/privacy-security-policy) read: no prohibition of automated access. Fetched with curl and the identifying UA lit-lang-provenance/1.0, at most 1 request per 10 s.
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
+- Extract sha256 5d4fb10fee85aaa9b8d248c0a679eeeed6a482658d855a5da289197d9c9f7556. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `d-neb/original/dneb-necrimr-2025-12-01.pdf` as served (sha256 7ad46d57cd1da95f8a135b8847b36ffe456cd0d64e23df25580b43ff996c7d69); extraction sha256 5d4fb10fee85aaa9b8d248c0a679eeeed6a482658d855a5da289197d9c9f7556.

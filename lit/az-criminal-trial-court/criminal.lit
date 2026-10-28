@@ -1,0 +1,159 @@
+module az-superior-court-criminal.criminal
+
+// Criminal cases in the Arizona Superior Court under the Arizona Rules of
+// Criminal Procedure, current through October 1, 2026
+// (sources/az-criminal-trial-court). The rules' periods are computed under
+// Rule 1.10 and stated in the notes; lit/core has no counting rule for
+// them, so none is encoded as a counted deadline. Statutes the rules
+// invoke (A.R.S. § 13-3961 on bail eligibility, the victims' rights
+// statutes) are not vendored. Outcomes are from the defendant's side. The
+// earlier outline's leading decisions (County of Riverside v. McLaughlin,
+// Gerstein v. Pugh, Gideon v. Wainwright, Brady v. Maryland, Mapp v. Ohio,
+// Barker v. Wingo, Boykin v. Alabama, Missouri v. Frye, Jackson v.
+// Virginia, Apprendi v. New Jersey, Roe v. Flores-Ortega, Garza v. Idaho)
+// are removed: no reporter text is vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "Ariz. R. Crim. P. 4.1"
+{
+  note "An arrested person must be promptly taken before a magistrate for an initial appearance; if it does not occur within 24 hours after arrest, the person must be immediately released from custody (Ariz. R. Crim. P. 4.1(a)). After an arrest without a warrant, a complaint must be promptly filed, and if it is not filed within 48 hours after the initial appearance the person must be released and any preliminary hearing dates vacated (Ariz. R. Crim. P. 4.1(b)(2)). Each presiding judge must make a magistrate available every day of the week for initial appearances (Ariz. R. Crim. P. 4.1(d))."
+  edge-arrested-appearance "Initial appearance" -> initial-appearance {
+    authority cite "Ariz. R. Crim. P. 4.1(a)"
+  }
+}
+
+decision initial-appearance: "Release or detention" by court cite "Ariz. R. Crim. P. 4.2"
+{
+  note "At the initial appearance the magistrate informs the defendant of the charges and of the rights to counsel and to remain silent, determines probable cause for purposes of release, appoints counsel under Rule 6, sets conditions of release under Rule 7.2(a) unless bail is prohibited, and for a felony charged by complaint sets the preliminary hearing unless waived (Ariz. R. Crim. P. 4.2(a), (b)). If the court finds the defendant not eligible for bail, it schedules a bail eligibility hearing in superior court: within 24 hours of the initial appearance on the State's oral motion under A.R.S. § 13-3961(E) (subject to the statute's continuances), otherwise as soon as practicable and no later than 7 days after the initial appearance (Ariz. R. Crim. P. 7.2(b)(4)). The court must determine no later than 10 days after the initial appearance whether to amend the conditions of release of a defendant held on bond for a misdemeanor (Ariz. R. Crim. P. 7.4(f)). A.R.S. § 13-3961 is not vendored."
+  edge-initial-appearance-detained "Held without bail" -> probable-cause {
+    authority cite "Ariz. R. Crim. P. 7.2(b)"
+  }
+  edge-initial-appearance-released "Released on conditions" -> probable-cause {
+    authority cite "Ariz. R. Crim. P. 7.2(a)"
+  }
+}
+
+decision probable-cause: "Preliminary hearing or grand jury" by court cite "Ariz. R. Crim. P. 5.1"
+{
+  note "A defendant charged in a complaint with a felony has a right to a preliminary hearing, which must commence no later than 10 days after the initial appearance if the defendant is in custody, or 20 days if not; an in-custody defendant whose hearing did not commence within 10 days and was not continued must be released unless charged with a non-bailable offense, and the magistrate may continue the hearing beyond 20 days only on written findings of extraordinary circumstances (Ariz. R. Crim. P. 5.1(a)). At the close of the State's case the magistrate states whether probable cause exists (Ariz. R. Crim. P. 5.3(a)(3)). A motion for a new probable cause finding must be filed no later than 25 days after the preliminary hearing is completed, and after a remand the case is dismissed unless a new hearing commences within 15 days (Ariz. R. Crim. P. 5.5(b), (d)). A felony may instead be charged by grand jury indictment (Ariz. R. Crim. P. 12; 13.1(b))."
+  edge-probable-cause-charged "Held to answer or indicted" -> charged {
+    authority cite "Ariz. R. Crim. P. 5.3(a)"
+  }
+  edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
+    authority cite "Ariz. R. Crim. P. 5.3(a)"
+  }
+}
+
+state charged: "Indictment or information" by office cite "Ariz. R. Crim. P. 13.1"
+{
+  note "An indictment is a written charge endorsed as a true bill and presented by a grand jury; an information is a written charge signed and presented by the State (Ariz. R. Crim. P. 13.1(b), (c)). The arraignment is held no later than 10 days after the filing of the indictment, information or complaint for a defendant in custody, or 30 days for a defendant not in custody (Ariz. R. Crim. P. 14.2)."
+  edge-charged-arraignment "Arraignment" -> arraignment { authority cite "Ariz. R. Crim. P. 14.2" }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "Ariz. R. Crim. P. 14.1"
+{
+  note "At arraignment the defendant is formally advised of the charges and rights, counsel is assured, a plea is entered and a trial date or later court date is set (Ariz. R. Crim. P. 14.1). The Rule 8 trial clock runs from arraignment: trial must begin no later than 150 days after arraignment for a defendant in custody, 180 days for a defendant released under Rule 7, 270 days in a complex case, and 24 months after the notice of intent to seek death in a capital case (Ariz. R. Crim. P. 8.2(a)); a retrial after a mistrial or new-trial order must begin no later than 60 days after the order, and after an appellate reversal no later than 90 days after the mandate (Ariz. R. Crim. P. 8.2(c)). Periods listed in Rule 8.4 are excluded, and a party may move no later than 25 days after arraignment to suspend Rule 8 for extraordinary circumstances (Ariz. R. Crim. P. 8.1(e)). A trial may be continued only on a showing of extraordinary circumstances (Ariz. R. Crim. P. 8.5(b))."
+  edge-arraignment-discovery "Disclosure" -> discovery { authority cite "Ariz. R. Crim. P. 15.1" }
+}
+
+state discovery: "Disclosure and pretrial motions" by applicant cite "Ariz. R. Crim. P. 15.1"
+{
+  note "In a felony case the State makes its initial reports available by the preliminary hearing or, if none is held, the arraignment, and its supplemental disclosures no later than 30 days after arraignment in superior court, unless the court orders otherwise (Ariz. R. Crim. P. 15.1(a), (c)). The defendant's disclosures are due in superior court 40 days after arraignment or 10 days after the State's supplemental disclosure, whichever is first (Ariz. R. Crim. P. 15.2). In a first-degree murder case the State gives notice whether it seeks death no later than 60 days after arraignment, extendable by stipulation (Ariz. R. Crim. P. 15.1(i)). All motions must be made no later than 20 days before trial, except lack of jurisdiction, and the court may modify motion deadlines (Ariz. R. Crim. P. 16.1(b)); a response is due no later than 10 days after service of a motion and a reply no later than 3 days after service of the response (Ariz. R. Crim. P. 1.9(b))."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "Ariz. R. Crim. P. 16.1(b)"
+  }
+  edge-discovery-speedy "Rule 8 speedy-trial motion" -> motions-ruling {
+    authority cite "Ariz. R. Crim. P. 8.6"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite "Ariz. R. Crim. P. 17.4(a)"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "Ariz. R. Crim. P. 16.1"
+{
+  note "If the court determines, after excluding applicable periods, that a Rule 8 time limit has been violated, it must dismiss the prosecution with or without prejudice (Ariz. R. Crim. P. 8.6). On the State's motion and for good cause the court may dismiss without prejudice if the dismissal is not to avoid Rule 8 limits, and on the defendant's motion it must dismiss a charge insufficient as a matter of law; a dismissal is without prejudice unless the interests of justice require otherwise (Ariz. R. Crim. P. 16.4)."
+  edge-motions-ruling-speedy "Dismissed for a Rule 8 violation" -> dismissed {
+    authority cite "Ariz. R. Crim. P. 8.6"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "Ariz. R. Crim. P. 16.4(b)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "Ariz. R. Crim. P. 16.1"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Ariz. R. Crim. P. 17.1"
+{
+  note "A plea agreement must be in writing, signed by the defendant, defense counsel and the prosecutor, and filed; any party may withdraw before the court accepts it, and the court is not bound by its sentencing terms (Ariz. R. Crim. P. 17.4(b), (d)). Before accepting the agreement the court confirms with the defendant that it contains all its terms and that the defendant understands and agrees to them (Ariz. R. Crim. P. 17.4(c)). The defendant may waive a jury only with the consent of the State and the court, in writing or on the record (Ariz. R. Crim. P. 18.1(b))."
+  edge-plea-decision-plea "Guilty or no-contest plea accepted" -> sentencing {
+    authority cite "Ariz. R. Crim. P. 17.4(d)"
+  }
+  edge-plea-decision-trial "Trial" -> trial { authority cite "Ariz. R. Crim. P. 18.1" }
+  edge-plea-decision-dismissed "State's dismissal granted" -> dismissed {
+    authority cite "Ariz. R. Crim. P. 16.4(a)"
+  }
+}
+
+decision trial: "Verdict" by court cite "Ariz. R. Crim. P. 19.1"
+{
+  note "The number of jurors is provided by law (Ariz. R. Crim. P. 18.1(a)), and the trial proceeds in the order Rule 19.1(b) sets. A defendant may make or renew a motion for judgment of acquittal no later than 10 days after any verdict is returned (Ariz. R. Crim. P. 20)."
+  edge-trial-acquittal "Not guilty, or judgment of acquittal" -> acquitted {
+    authority cite "Ariz. R. Crim. P. 20"
+  }
+  edge-trial-guilty "Guilty; post-verdict motions" -> post-trial {
+    authority cite "Ariz. R. Crim. P. 24.1"
+  }
+}
+
+decision post-trial: "Post-verdict motions" by court cite "Ariz. R. Crim. P. 24.1"
+{
+  note "A motion for a new trial must be filed no later than 10 days after return of the verdict; the deadline is jurisdictional and cannot be extended (Ariz. R. Crim. P. 24.1(b)). A motion to vacate judgment is due no later than 60 days after entry of judgment and sentence, or 15 days after the appellate clerk's notice that the record on appeal is filed (Ariz. R. Crim. P. 24.2(b)), and the court may correct an unlawful sentence within the same periods (Ariz. R. Crim. P. 24.3(a)). A new trial ordered after a mistrial or new-trial grant must begin within 60 days (Ariz. R. Crim. P. 8.2(c))."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite "Ariz. R. Crim. P. 20"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial { authority cite "Ariz. R. Crim. P. 24.1" }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "Ariz. R. Crim. P. 26.3(a)"
+  }
+}
+
+state sentencing: "Presentence report and sentencing" by court cite "Ariz. R. Crim. P. 26.3"
+{
+  note "In superior court the court must pronounce sentence no less than 15 nor more than 30 days after the determination of guilt, unless the defendant asks to be sentenced earlier, and may reset the date for a presentencing hearing or good cause, but the new date should be no later than 60 days after the determination of guilt (Ariz. R. Crim. P. 26.3(a)(1)(B), (b)). After a trial conviction, a defendant whose absence prevents sentencing within 90 days after the determination of guilt loses the right to direct appellate review (Ariz. R. Crim. P. 26.3(a)(1)(C)). The presentence report is delivered to the judge and counsel at least two days before sentencing (Ariz. R. Crim. P. 26.4(c))."
+  edge-sentencing-judgment "Sentence pronounced; judgment entered" -> judgment {
+    authority cite "Ariz. R. Crim. P. 26.10"
+  }
+}
+
+decision judgment: "Judgment and sentence" by applicant cite "Ariz. R. Crim. P. 26.10"
+{
+  note "A notice of appeal from a judgment of conviction and sentence must be filed no later than 20 days after the oral pronouncement of sentence, and a cross-appeal no later than 20 days after the notice of appeal; a death sentence is appealed automatically (Ariz. R. Crim. P. 31.2(a), (b)). Rule 1.10 governs computation in Rule 31, except that 5 days are not added for electronic service (Ariz. R. Crim. P. 31.3(d)). A notice of post-conviction relief for a claim under Rule 32.1(a) is due within 90 days after the oral pronouncement of sentence or 30 days after the mandate in the direct appeal, whichever is later; after a plea, Rule 33 applies and the notice is due within 90 days after the oral pronouncement of sentence (Ariz. R. Crim. P. 32.4(b)(3)(A); 33.4(b)(3)(A)). Federal habeas belongs to lit/habeas."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "Ariz. R. Crim. P. 31.2(a)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final {
+    authority cite "Ariz. R. Crim. P. 31.2(a)"
+  }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Ariz. R. Crim. P. 20"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty or a judgment of acquittal (Ariz. R. Crim. P. 20)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "Ariz. R. Crim. P. 16.4"
+{
+  note "Outcome from the defendant's side. A dismissal is without prejudice to another prosecution unless the court finds the interests of justice require dismissal with prejudice (Ariz. R. Crim. P. 16.4(d)); a Rule 8 dismissal may be with or without prejudice (Ariz. R. Crim. P. 8.6)."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "Ariz. R. Crim. P. 31.1"
+{
+  note "The appeal continues before the Arizona Court of Appeals, or the Supreme Court in a capital case, under Rule 31 of these rules."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "Ariz. R. Crim. P. 32.4"
+{
+  note "Outcome from the defendant's side. Post-conviction relief proceeds under Rule 32 (after trial) or Rule 33 (after a plea or admission); federal habeas belongs to lit/habeas."
+}

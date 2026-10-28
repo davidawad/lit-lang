@@ -1,0 +1,44 @@
+# Criminal cases in the Arizona Superior Court under the Arizona Rules of
+# Criminal Procedure (Ariz. R. Crim. P.), as served on the Westlaw
+# public-access site the Arizona courts link, "current with amendments
+# received and effective through October 1, 2026"
+# (sources/az-criminal-trial-court); in_force is that date and an earlier
+# query is a hole in the corpus. Rule 8 is the speedy-trial rule and Rule
+# 31 governs criminal appeals, both in the same set. Time is computed
+# under Rule 1.10, which excludes intermediate Saturdays, Sundays and
+# legal holidays from periods under 7 days and adds 5 calendar days after
+# certain kinds of service; lit/core has no counting rule for it, so the
+# rules' periods are stated in notes, not encoded as counted deadlines.
+# The Arizona Revised Statutes the rules cite (release under A.R.S.
+# § 13-3961, victims' rights) are not vendored and stay holes.
+[package]
+name = "az-superior-court-criminal"
+version = "0.1.0"
+language = 1
+pack_id = "az-superior-court-criminal"
+forum = "az-criminal-trial-court"
+authority = "StateRule"
+jurisdiction_id = "arizona"
+title = "Arizona Superior Court, criminal"
+description = "Criminal cases in the Arizona Superior Court under the Arizona Rules of Criminal Procedure: arrest and initial appearance, release, preliminary hearing or grand jury, arraignment, disclosure, pretrial motions and the Rule 8 speedy-trial limits, plea or trial, post-verdict motions, sentencing, and the Rule 31 notice of appeal, with every period stated in notes from the vendored rules."
+in_force = "2026-10-01"
+known_at = "2026-10-28"
+unknown_before = "2026-10-01"
+jurisdiction = "Arizona Superior Court (criminal)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.az-crim]
+title = "Arizona Rules of Criminal Procedure (Westlaw public-access site, current with amendments received and effective through October 1, 2026, as served on October 28, 2026)"
+url = "https://govt.westlaw.com/azrules/Index"
+path = "sources/az-criminal-trial-court/az-rules-of-criminal-procedure-westlaw-sectioned.txt"
+path_sha256 = "3fbf730558c30a80448b530812f443fe91895e72ed2ba61aa73b6965ec28a2a7"
+as_of = "2026-10-01"
+cite_prefixes = ["Ariz. R. Crim. P."]
+section_heading = "Rule {n}"

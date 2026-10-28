@@ -1,0 +1,48 @@
+# Civil actions in the Illinois circuit courts under the Code of Civil
+# Procedure, Article II (735 ILCS 5/2-101 et seq.), as the Illinois General
+# Assembly's ILCS database displayed it on 2026-10-27 (sources/il-circuit;
+# the page states no edition date), and the Illinois Supreme Court Rules
+# the outline cites, each as the court linked it on 2026-10-27
+# (sources/illappct). Computation of time is the Statute on Statutes (5
+# ILCS 70/1.11), which is not vendored and has no counting rule in
+# lit/core, so the periods are stated in notes, not encoded as counted
+# deadlines. An appeal hands off to lit/illappct.
+[package]
+name = "il-circuit-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "il-circuit-court-civil"
+forum = "il-circuit"
+authority = "StateRule"
+jurisdiction_id = "illinois"
+title = "Illinois circuit court, civil"
+description = "Civil actions in the Illinois circuit courts under the Code of Civil Procedure (735 ILCS 5/Art. II) and the Illinois Supreme Court Rules, as far as the vendored text states. An appeal hands off to the Illinois Appellate Court package (lit/illappct)."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction = "Illinois circuit court (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ilcs-735-5-art2]
+title = "Code of Civil Procedure, Article II (Civil Practice), 735 ILCS 5/ (Illinois General Assembly ILCS database, as displayed 2026-10-27)"
+url = "https://www.ilga.gov/legislation/ILCS/details?MajorTopic=&Chapter=&ActName=Code%20of%20Civil%20Procedure.&ActID=2017&ChapterID=56&ChapAct=735+ILCS+5%2F&SeqStart=1100000&SeqEnd=22400000"
+path = "sources/il-circuit/ilcs-735-5-art2-sectioned.txt"
+path_sha256 = "91de34e3946f909cd9f377bdb7fb9d1c1c660f0d605c617eae24a686bd492099"
+sha256 = "b0d82ef922bb9ff0a875f014a5f2bfee2e3717b2871696ebd9e5b617a8c83119"
+cite_prefixes = ["735 ILCS 5/2-"]
+section_heading = "735 ILCS 5/2-{n}"
+
+[sources.ill-sct-rules]
+title = "Illinois Supreme Court Rules (the rules the outlines cite, each as linked from the court's Supreme Court Rules page on 2026-10-27)"
+url = "https://www.illinoiscourts.gov/rules-law/supreme-court-rules"
+path = "sources/illappct/ill-sct-rules-cited.txt"
+path_sha256 = "3a70c5b53b40b924fa22edaf53095a4d8f92574093db11af7c463e176a287fb9"
+cite_prefixes = ["Ill. S. Ct. R."]
+section_heading = "Ill. S. Ct. R. {n}"

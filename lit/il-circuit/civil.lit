@@ -1,0 +1,148 @@
+module il-circuit-court-civil.civil
+
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "735 ILCS 5/2-201(a)"
+{
+  note "Every action, unless a statute expressly provides otherwise, is commenced by filing a complaint; the clerk issues summons on the plaintiff's request, and the form of summons and process and the service of pleadings follow the rules (735 ILCS 5/2-201(a)). A plaintiff wanting a jury files the demand with the clerk when the action is commenced; a defendant, not later than the filing of its answer; otherwise the party waives a jury (735 ILCS 5/2-1105(a), alike in the text with and without P.A. 98-1132, held unconstitutional). Periods in this package are stated, not counted: Illinois computes time under the Statute on Statutes (5 ILCS 70/1.11), which is not vendored. The earlier outline said Illinois is a fact-pleading state; no vendored text states it, and its leading decision on pleading (Marshall v. Burger King Corp.) is removed: no reporter text is vendored."
+  edge-complaint-filed-served "Summons served" -> response-due {
+    authority cite "735 ILCS 5/2-203(a)"
+  }
+}
+
+decision response-due: "Appearance, answer or motion" by court cite "Ill. S. Ct. R. 181(a)"
+{
+  note "When the summons requires appearance within 30 days after service, exclusive of the day of service, the period runs from the day the summons is left with the person the law designates, not from any mailing. A defendant may appear by filing a motion within the 30 days, and then answers within the time the order disposing of the motion directs; a defendant appearing otherwise files its answer or motion on or before the last day to appear (Ill. S. Ct. R. 181(a)). Service on an individual is by leaving the summons with the defendant personally or at the usual place of abode with a family member or resident aged 13 or older, with a copy mailed there (735 ILCS 5/2-203(a))."
+  edge-response-due-default "No appearance or plea" -> default-entered {
+    authority cite "735 ILCS 5/2-1301(d)"
+  }
+  edge-response-due-615 "Section 2-615 motion attacking the pleading" -> pleading-motion {
+    authority cite "735 ILCS 5/2-615"
+  }
+  edge-response-due-619 "Section 2-619 motion on affirmative matter" -> pleading-motion {
+    authority cite "735 ILCS 5/2-619(a)"
+  }
+  edge-response-due-answer "Answer filed" -> case-management {
+    authority cite "Ill. S. Ct. R. 181(a)"
+  }
+}
+
+decision pleading-motion: "Motion to dismiss decided" by court cite "735 ILCS 5/2-615"
+{
+  note "All objections to pleadings are raised by motion, which points out the defects specifically; a motion to dismiss for substantial insufficiency in law specifies wherein the pleading is insufficient, and after ruling the court may permit or require pleading over or amending, or terminate the litigation in whole or in part (735 ILCS 5/2-615(a), (b), (d)). Within the time for pleading, a defendant may move to dismiss on the grounds section 2-619(a) lists, among them lack of subject-matter jurisdiction, another action pending, a prior judgment, the limitations period, release, the Statute of Frauds and other affirmative matter, supported by affidavit when the ground does not appear on the face of the pleading (735 ILCS 5/2-619(a)). The motion does not preclude raising the same matter by answer unless it was disposed of on the merits (735 ILCS 5/2-619(d))."
+  edge-pleading-motion-dismissed "Dismissed, terminating the litigation" -> dismissed {
+    authority cite "735 ILCS 5/2-615(d)"
+  }
+  edge-pleading-motion-amend "Leave to plead over or amend" -> amend {
+    authority cite "735 ILCS 5/2-616(a)"
+  }
+  edge-pleading-motion-denied "Denied" -> case-management { authority cite "735 ILCS 5/2-615(d)" }
+}
+
+state amend: "Amended pleading" by applicant cite "735 ILCS 5/2-616(a)"
+{
+  note "At any time before final judgment, amendments may be allowed on just and reasonable terms, adding or dismissing parties, changing the cause of action or defense, or adding new ones (735 ILCS 5/2-616(a)). An amended claim arising from the same transaction or occurrence as the original pleading is not barred by a limitations period that had not expired when the original was filed (735 ILCS 5/2-616(b))."
+  edge-amend-tested "Amended pleading tested again" -> pleading-motion {
+    authority cite "735 ILCS 5/2-615"
+  }
+}
+
+terminal dismissed: "Dismissed on the pleadings" outcome [loss, dismissal] cite "735 ILCS 5/2-615(d)"
+{
+  note "Outcome from the applicant's (plaintiff's) side. A notice of appeal is filed within 30 days after entry of the final judgment (Ill. S. Ct. R. 303(a)(1))."
+}
+
+decision default-entered: "Default" by court cite "735 ILCS 5/2-1301(d)"
+{
+  note "Judgment by default may be entered for want of an appearance or for failure to plead, and the court may require proof of the allegations on which relief is sought (735 ILCS 5/2-1301(d)). Before final judgment the court may set aside any default in its discretion, and on motion filed within 30 days after entry it may set aside any final order or judgment on reasonable terms (735 ILCS 5/2-1301(e)). After 30 days, relief from a final judgment is by petition under section 2-1401, filed not later than 2 years after entry of the judgment, with the exceptions the section states (735 ILCS 5/2-1401(a), (c))."
+  edge-default-entered-judgment "Default judgment entered" -> default-judgment {
+    authority cite "735 ILCS 5/2-1301(d)"
+  }
+  edge-default-entered-set-aside "Default set aside" -> case-management {
+    authority cite "735 ILCS 5/2-1301(e)"
+  }
+}
+
+terminal default-judgment: "Default judgment for applicant" outcome [win] cite "735 ILCS 5/2-1301(d)"
+{
+  note "Outcome from the applicant's side."
+}
+
+state case-management: "Case management conference and order" by court cite "Ill. S. Ct. R. 218(a)"
+{
+  note "Except as an approved local circuit court rule provides, the court holds a case management conference within 35 days after the parties are at issue and in no event more than 182 days following the filing of the complaint; it considers the issues, amendments, admissions, limits on discovery and deadlines for disclosure of witnesses and completion of written discovery and depositions, settlement, alternative dispute resolution and the date the case should be ready for trial (Ill. S. Ct. R. 218(a)). The schedule ensures discovery is completed not later than 60 days before the date on which the trial court reasonably anticipates trial will commence, unless the parties agree otherwise (Ill. S. Ct. R. 218(c)). Standing orders of the circuits are not vendored."
+  edge-case-management-discovery "Case management order entered" -> discovery {
+    authority cite "Ill. S. Ct. R. 218(a)"
+  }
+}
+
+state discovery: "Discovery" by applicant cite "Ill. S. Ct. R. 201"
+{
+  note "The parties make reasonable attempts to resolve discovery differences, and every discovery motion states that trial counsel, after personal consultation and reasonable attempts, could not reach an accord, or that opposing counsel was unavailable or unreasonable (Ill. S. Ct. R. 201(k)). Interrogatories are answered within 28 days after service (Ill. S. Ct. R. 213(d)); a production request specifies a reasonable time, not less than 28 days after service (Ill. S. Ct. R. 214); each fact or document of which admission is requested is admitted unless a sworn denial or objection is served within 28 days after service of the request (Ill. S. Ct. R. 216(c)). On unreasonable failure to comply with the discovery rules or an order under them, the court may stay proceedings, bar pleadings, claims, defenses or witnesses, enter default judgment or dismiss the action with or without prejudice, among other just orders (Ill. S. Ct. R. 219(c))."
+  edge-discovery-sj "Summary judgment motion" -> summary-judgment {
+    authority cite "735 ILCS 5/2-1005(a)"
+  }
+  edge-discovery-sanction "Discovery sanction dismisses the action" -> dismissed-sanction {
+    authority cite "Ill. S. Ct. R. 219(c)"
+  }
+  edge-discovery-settled "Voluntary dismissal before trial" -> settled {
+    authority cite "735 ILCS 5/2-1009(a)"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Ill. S. Ct. R. 218(a)" }
+}
+
+terminal dismissed-sanction: "Dismissed as a discovery sanction" outcome [loss, dismissal] cite "Ill. S. Ct. R. 219(c)"
+{
+  note "Outcome from the applicant's side; the dismissal may be with or without prejudice (Ill. S. Ct. R. 219(c))."
+}
+
+decision summary-judgment: "Summary judgment decided" by court cite "735 ILCS 5/2-1005(c)"
+{
+  note "A plaintiff may move for summary judgment once the opposite party has appeared or its time to appear has expired; a defendant may move at any time (735 ILCS 5/2-1005(a), (b)). The opposite party may file counteraffidavits before or at the hearing, and judgment is rendered without delay if the pleadings, depositions, admissions and affidavits show no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law; summary judgment may go on liability alone (735 ILCS 5/2-1005(c)). The earlier outline's summary judgment decision (Adams v. Northern Illinois Gas Co.) is removed: no reporter text is vendored."
+  edge-summary-judgment-applicant "Granted for applicant" -> judgment-entered {
+    authority cite "735 ILCS 5/2-1005(c)"
+  }
+  edge-summary-judgment-opponent "Granted for opponent" -> judgment-entered {
+    authority cite "735 ILCS 5/2-1005(c)"
+  }
+  edge-summary-judgment-denied "Denied" -> trial { authority cite "735 ILCS 5/2-1005(c)" }
+}
+
+state trial: "Trial by jury or by the court" by court cite "735 ILCS 5/2-1105(a)"
+{
+  note "A party that did not timely demand a jury waives it (735 ILCS 5/2-1105(a)). After trial or hearing begins, the plaintiff may dismiss only on terms the court fixes, on a stipulation signed by the defendant or on a motion supported by affidavit (735 ILCS 5/2-1009(c))."
+  edge-trial-post-trial "Verdict or decision" -> post-trial {
+    authority cite "735 ILCS 5/2-1202(c)"
+  }
+}
+
+decision post-trial: "Post-trial motions" by applicant cite "735 ILCS 5/2-1202"
+{
+  note "In jury cases all relief after trial is sought in a single post-trial motion stating the points relied on and the relief desired, filed within 30 days after entry of judgment or discharge of a jury that reached no verdict, or within further time the court allows within the 30 days; a party failing to seek a new trial in it waives one (735 ILCS 5/2-1202(b), (c), (e)). In cases tried without a jury, a party may move for rehearing, retrial, modification or vacatur within 30 days after entry of judgment or further time allowed within the 30 days (735 ILCS 5/2-1203(a)). A post-trial motion filed in apt time stays enforcement of the judgment (735 ILCS 5/2-1202(d))."
+  edge-post-trial-resolved "Motions resolved or none filed" -> judgment-entered {
+    authority cite "735 ILCS 5/2-1202(c)"
+  }
+}
+
+decision judgment-entered: "Final judgment entered" by office cite "Ill. S. Ct. R. 303(a)"
+{
+  note "The notice of appeal is filed with the clerk of the circuit court within 30 days after entry of the final judgment or, if a timely posttrial motion is filed, within 30 days after entry of the order disposing of the last pending postjudgment motion; a request to reconsider a ruling on a postjudgment motion does not toll the time (Ill. S. Ct. R. 303(a)(1), (2)). A judgment is not final and appealable while a Rule 137 claim remains pending unless the court makes a Rule 304(a) finding (Ill. S. Ct. R. 303(a)(1))."
+  edge-judgment-entered-appeal "Notice of appeal within 30 days" -> appeal-taken {
+    authority cite "Ill. S. Ct. R. 303(a)"
+  }
+  edge-judgment-entered-final "No appeal" -> final-no-appeal {
+    authority cite "Ill. S. Ct. R. 303(a)"
+  }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Illinois Appellate Court package" outcome [appeal] cite "Ill. S. Ct. R. 303(a)"
+{
+  note "Another party may join, appeal separately or cross-appeal within 10 days after service of a timely notice, or within 30 days of the judgment or of the order disposing of the last pending postjudgment motion, whichever is later; the circuit clerk files the notice with the reviewing court's clerk within five days (Ill. S. Ct. R. 303(a)(3), (4)). Hand-off to lit/illappct (illappct-appellate-civil)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Ill. S. Ct. R. 303(a)"
+
+terminal settled: "Settled: voluntarily dismissed" outcome [settlement] cite "735 ILCS 5/2-1009(a)"
+{
+  note "Before trial or hearing begins, the plaintiff may dismiss the action or any part as to any defendant without prejudice, on notice to each party that has appeared and on payment of costs, by order filed in the cause; a dismissal does not dismiss a pending counterclaim or third-party complaint (735 ILCS 5/2-1009(a), (d))."
+}

@@ -54,3 +54,17 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 bea4d9b942283709336dcb80619e879b476e6dd15ce042dcbdef1079e8ab9ee1. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `bankr-mie/original/mie-ao-25-15.pdf` as served (sha256 edd74cf7fe8d8d9acadd8c5eb967771dd84109b5202a2295aede4dafbcef118c); extraction sha256 bea4d9b942283709336dcb80619e879b476e6dd15ce042dcbdef1079e8ab9ee1.
+
+### `bankr-mie/mie-local-rules-2018-12-10-sectioned.txt` — E.D. Mich. Local Bankruptcy Rules, sectioned
+
+- Derived in the pod (lg-u561.19) from `bankr-mie/mie-local-rules-2018-12-10.txt` (extract sha256 537b6c7fe27edfb9d915a4e65e0d6bfdf9252a727b5e66d9b4a94c6618ff3793); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (a line beginning `Rule <n>` followed by the capitalized rule title, `Rule 1002-1` through `Rule 9037-1 ABROGATED`, including `Rule 7007.1-1`; 100 sections, matching the table of contents); the title page and table of contents (extract lines 1-271) are unmarked, as are cross-references that begin a line with `Rule <n>` followed by lower-case text or punctuation. Rule text was not edited: deleting the marker lines (`sed '/^## /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-mie/mie-local-rules-2018-12-10.txt`, https://www.mieb.uscourts.gov/sites/mieb/files/Local%20Bankruptcy%20Rules.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
+- Edition: as the extract, the Local Rules including amendments through December 10, 2018 (title page).
+- Sectioned sha256 261f103da233fedb4b88d263748dfc9d3f60e09fe67ba97fed5546aaa124bda4 (the `path_sha256` pinned by `lit/bankr-mie/Lit.toml` for source `mieb-lbr`).
+
+### `bankr-mie/mie-ao-25-15-sectioned.txt` — E.D. Mich. Administrative Order 25-15, sectioned
+
+- Derived in the pod (lg-u561.19) from `bankr-mie/mie-ao-25-15.txt` (extract sha256 bea4d9b942283709336dcb80619e879b476e6dd15ce042dcbdef1079e8ab9ee1); nothing fetched. One `## AO 25-15 Rule 2015-3` line is inserted before the order's restated rule heading (`Rule 2015-3 Trustee's Procedures Upon Chapter 13 Plan Completion`, extract line 22); the caption and recitals are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-mie/mie-ao-25-15.txt`, https://www.mieb.uscourts.gov/sites/mieb/files/general-orders/Administrative%20Order%20%2325-15%20Reconciling%203002%281%29%20and%20LBR%202015-3.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
+- Edition: as the extract, Administrative Order 25-15, signed November 24, 2025.
+- Sectioned sha256 716957fe182e23413a9772a7e5309e0d5cb38354bc80bd34af5965aac4a446df (the `path_sha256` pinned by `lit/bankr-mie/Lit.toml` for source `mieb-ao-25-15`).

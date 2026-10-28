@@ -1,0 +1,624 @@
+module bankr-mie-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, PetitionFiled }
+
+// The Bankr. E.D. Mich. court's own periods and page limits, counted under
+// FRBP 9006(a), the FRCP 6(a) method: the Local Bankruptcy Rules as
+// vendored (title page: amendments through December 10, 2018), with
+// Administrative Order 25-15 (November 24, 2025, E.D. Mich. LBR
+// 2015-3(a)(5)) as a dated version of the one period it restates. The
+// vendored consolidation already shows the 2019 orders' changes (AO 19-03's
+// recusal reassignment in LBR 1073-1(a)(4), AO 19-10's abrogation of LBR
+// 1007-1(e) and AO 19-12's of LBR 9037-1); AO 24-13 (LBR 1071-1 divisions,
+// June 1, 2024) and AO 25-14 (LBR 2016-1(c) chapter 13 fee, October 6,
+// 2025) change no period. HOLE: the 14-day installment-application period
+// of the abrogated LBR 1007-1(e), in force until AO 19-10 (November 4,
+// 2019), is not declared: its text is not in the vendored consolidation and
+// AO 19-10's description of it is OCR (verify numbers). The FRBP periods
+// (schedules and the time limits LBR 1007-4(b)-(c) repeats from FRBP
+// 1007(c), claims, the chapter 13 plan, discharge, dischargeability,
+// exemptions, the adversary answer, appeals) are lit/frbp's and are not
+// declared again. Stated in the rules but not declared: the Business Day
+// and clock-time periods (objections to an extension motion three Business
+// Days after filing, LBR 9006-1(a); service of first day motions within 24
+// hours and of an expedited cash collateral order within 24 hours,
+// 9013-1(b), 4001-2; the ballot summary two Business Days before
+// confirmation, 3018-1; adjournment requests three Business Days before a
+// hearing, 5071-1; a reply brief three Business Days before the hearing,
+// 9014-1(f); trial exhibits three Business Days before trial, 7016-1;
+// hearing-notice follow-ups three Business Days after a § 362(l) or (m)
+// objection, 4001-4(c)-(d)); the later-of period for jury trial consent (14
+// days after the later of the jury demand and the answer deadline,
+// 9015-1(a)); recurring periods (the special service list every 14 days for
+// the first 56 days and every 28 days after, 2002-1(d); interim fee
+// applications every 120 days, 2016-2(c); six-month post-confirmation
+// reports, 3021-1(b)); periods without a stated trigger (the U.S. Trustee's
+// seven-day concurrence in an employment application, 2014-1(b); the five
+// days to resolve an interim fee objection, 2016-2(b)(4)); thresholds and
+// settings (an omitted creditor added more or less than 14 days before the
+// meeting, 1009-1(c)-(d); a claim objection hearing at least 30 days after
+// service, 3007-1(a); a prepackaged plan confirmation hearing within 90
+// days of the petition, 3016-1; the 18 days before the trustee pays a §
+// 1305 claim, 3015-2(c)(2); the 21-day effective date of a payment change,
+// 3001-2(c); a trustee's document request seven days before the meeting,
+// 2003-2(a)(8); the seven days a client has to review a fee application,
+// 2016-1(a)(10)); and permissions running from a date (record disposal 60
+// days after closing, 6007-1; tax refunds 60 days after the meeting,
+// 6007-2).
+/// A brief in support of or opposition to a motion LBR 9014-1(f) lists,
+/// including footnotes and signatures (LBR 9014-1(f)).
+limit motion-brief { pages <= 25 cite "E.D. Mich. LBR 9014-1(f)" } cite "E.D. Mich. LBR 9014-1(f)"
+/// A reply brief, including footnotes and signatures (LBR 9014-1(f)).
+limit motion-reply-brief { pages <= 7 cite "E.D. Mich. LBR 9014-1(f)" } cite "E.D. Mich. LBR 9014-1(f)"
+/// The brief in support of a motion for reconsideration (LBR 9024-1(a)(4)).
+limit reconsideration-brief { pages <= 25 cite "E.D. Mich. LBR 9024-1(a)" } cite "E.D. Mich. LBR 9024-1(a)"
+
+/// A chapter 13 petition is filed or a case is converted to chapter 13 (LBR
+/// 1007-1(c)).
+event Chapter13CaseStarted()
+/// A debtor's § 109(h)(3)(A) certification and motion for its approval are
+/// served (LBR 1007-3(a)).
+event CounselingCertificationServed()
+/// A notice of conversion of a chapter 13 case to chapter 7 is filed or an
+/// order converting it is entered (LBR 1017-1(a)).
+event ConvertedToChapter7()
+/// A converted case is dismissed for failure to file Official Form 122A-1
+/// (LBR 1017-1(a)).
+event StatementDismissalEntered()
+/// All checks clear in a chapter 13 case converted to another chapter (LBR
+/// 1017-1(b)).
+event ConvertedCaseChecksCleared()
+/// The § 521(e)(2)(A)(i) deadline to provide a tax return expires (LBR
+/// 1017-2).
+event TaxReturnDeadlineExpired()
+/// The trustee files a motion to dismiss for the debtor's failure to appear
+/// at the meeting of creditors (LBR 2003-1).
+event NonappearanceDismissalMotionFiled()
+/// A committee is appointed under § 1102 (LBR 2003-4).
+event CommitteeAppointed()
+/// A calendar quarter closes in the case of a chapter 13 debtor engaged in
+/// business (LBR 2015-2).
+event QuarterClosed()
+/// The chapter 13 debtor completes plan payments to the trustee (LBR
+/// 2015-3(a)).
+event PlanPaymentsCompleted()
+/// The chapter 13 trustee serves the notice of completion of plan payments
+/// (LBR 2015-3(a)).
+event CompletionNoticeServed()
+/// The chapter 13 trustee files the notice of completion of plan payments
+/// (LBR 2015-3(d), 4004-1).
+event CompletionNoticeFiled()
+/// The chapter 13 trustee serves the final report and account or its
+/// summary (LBR 2015-3(d)).
+event TrusteeFinalReportServed()
+/// A professional or committee serves an itemized monthly interim fee and
+/// expense statement (LBR 2016-2(b)).
+event InterimFeeStatementServed()
+/// A proposed change in a periodic payment on a § 1322(b)(5) or (b)(7)
+/// claim not governed by FRBP 3002.1 takes effect (LBR 3001-2(a)).
+event PaymentAdjustmentEffective()
+/// A creditor's LBR 3001-2(a) notice or an FRBP 3002.1(b) notice of
+/// mortgage payment change is served (LBR 3001-2(b)).
+event PaymentChangeNoticeServed()
+/// A creditor files a Notice of Inability To Comply With Local Rule
+/// 3001-2(a) Deadline (LBR 3001-2(d)).
+event InabilityNoticeFiled()
+/// The hearing on an objection to claim is scheduled to be held (LBR
+/// 3007-1(b)).
+event ClaimObjectionHearingScheduled()
+/// The first scheduled confirmation hearing in a case with a combined plan
+/// and disclosure statement is set to be held (LBR 3014-1).
+event CombinedConfirmationHearingScheduled()
+/// The debtor serves notice of the filing of a § 1305(a) postpetition claim
+/// (LBR 3015-2(c)).
+event PostpetitionClaimNoticeServed()
+/// A chapter 13 modified plan is served (LBR 3015-3(a)(4)).
+event ModifiedPlanServed()
+/// The order approving a chapter 11 disclosure statement is entered (LBR
+/// 3018-1).
+event DisclosureStatementApproved()
+/// An order confirming a chapter 11 plan in a Large Bankruptcy Case is
+/// entered (LBR 3021-1(a)).
+event LargeCaseConfirmationEntered()
+/// An interim order for the use of cash collateral or to obtain credit on
+/// an expedited basis is entered without a hearing (LBR 4001-2).
+event ExpeditedFinancingOrderEntered()
+/// An official committee is served with an entered interim financing order
+/// (LBR 4001-2).
+event CommitteeServedWithFinancingOrder()
+/// A chapter 13 plan is confirmed (LBR 4001-5(c)).
+event Chapter13PlanConfirmed()
+/// An order reopening a case so the debtor may file a missing certification
+/// is entered (LBR 5010-1(b)).
+event ReopeningOrderEntered()
+/// The trustee or debtor in possession serves notice of a proposed use,
+/// sale or lease of estate property (LBR 6004-1(a)).
+event SaleNoticeServed()
+/// The final pretrial conference (or, if none, the hearing or trial) is
+/// scheduled to be held (LBR 7016-1).
+event FinalPretrialConferenceScheduled()
+/// The court orders mediation, on its own initiative or otherwise (LBR
+/// 7016-2(a)).
+event MediationOrderEntered()
+/// A written mediation settlement agreement is fully executed (LBR
+/// 7016-2(a)(5)).
+event MediationAgreementExecuted()
+/// A mediation concludes (LBR 7016-2(a)(7)).
+event MediationConcluded()
+/// The plaintiff serves the joint statement of consideration for dismissing
+/// a § 727 action (LBR 7041-1).
+event DismissalStatementServed()
+/// A party is awarded attorney fees and related nontaxable costs under FRBP
+/// 7054(b) (LBR 7054-1(a)).
+event FeeAwardEntered()
+/// The application for allowance of awarded fees and costs is served (LBR
+/// 7054-1(b)).
+event FeeAwardApplicationServed()
+/// The clerk enters a party's default (LBR 7055-1).
+event DefaultEntered()
+/// A fixed hearing date in a Large Bankruptcy Case is scheduled to be held
+/// (LBR 9013-2(b)(4)).
+event FixedHearingDateScheduled()
+/// A motion is served (LBR 9014-1(b)).
+event MotionServed()
+/// A motion on a matter covered by FRBP 2002(a) is served (LBR 9014-1(b)).
+event NoticeMotionServed()
+/// A proceeding in which a timely jury demand was filed, or in which the
+/// state-law time to demand a jury has not expired, is removed from state
+/// court (LBR 9015-1(b)-(c)).
+event CaseRemoved()
+/// The attorneys state a settlement on the record at the date set for trial
+/// or hearing (LBR 9019-1).
+event SettlementStatedOnRecord()
+/// The prevailing party files a proposed order or judgment with notice that
+/// it will be submitted for entry (LBR 9021-1(a)(4)).
+event ProposedOrderNoticed()
+/// An order or judgment is entered (LBR 9024-1(a)).
+event OrderEntered()
+/// A brief under LBR 9014-1(f) is filed (LBR 9014-1(f)).
+event MotionBriefFiled() paper motion-brief
+/// A reply brief is filed (LBR 9014-1(f)).
+event MotionReplyBriefFiled() paper motion-reply-brief
+/// The brief in support of a motion for reconsideration is filed (LBR
+/// 9024-1(a)(4)).
+event ReconsiderationBriefFiled() paper reconsideration-brief
+
+/// LBR 1007-1(a): if the debtor neither timely files the initial documents
+/// nor timely moves to extend, the voluntary petition may be dismissed
+/// without a hearing unless, within 21 days after the petition is filed, a
+/// party requests a hearing.
+deadline dismissal-hearing-request-period: 21.days after PetitionFiled() counted_by frcp6 cite "E.D. Mich. LBR 1007-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 1007-1(b): a debtor not represented by an attorney files the
+/// Declaration Under Penalty of Perjury for Debtor(s) Without An Attorney
+/// within 14 days after the petition is filed.
+deadline pro-se-declaration-period: 14.days after PetitionFiled() counted_by frcp6 cite "E.D. Mich. LBR 1007-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 1007-1(c)(1), (3): within 14 days after filing a chapter 13 petition
+/// or converting to chapter 13, the debtor submits the proposed initial
+/// payment order(s), or by then moves or stipulates to be excused for good
+/// cause.
+deadline payment-order-period: 14.days after Chapter13CaseStarted() counted_by frcp6 cite "E.D. Mich. LBR 1007-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 1007-1(f): the § 521(a)(1)(B)(iv) payment advices are not filed but
+/// transmitted to the trustee at least seven days before the first date set
+/// for the meeting of creditors.
+deadline payment-advices-meeting-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "E.D. Mich. LBR 1007-1(f)"
+{
+  forum frcp
+}
+
+/// LBR 1007-1(f): and in any event not later than 45 days after the
+/// petition was filed.
+deadline payment-advices-outer-period: 45.days after PetitionFiled() counted_by frcp6 cite "E.D. Mich. LBR 1007-1(f)"
+{
+  forum frcp
+}
+
+/// LBR 1007-3(a): the deadline to respond to a § 109(h)(3)(A) certification
+/// and motion is 14 days after service; with no timely response the
+/// certification is deemed satisfactory.
+deadline counseling-certification-response-period: 14.days after CounselingCertificationServed() counted_by frcp6 cite "E.D. Mich. LBR 1007-3(a)"
+{
+  forum frcp
+}
+
+/// LBR 1017-1(a): a primarily-consumer debtor converting from chapter 13 to
+/// chapter 7 files Official Form 122A-1 within 14 days after the notice of
+/// conversion or the conversion order.
+deadline converted-means-test-period: 14.days after ConvertedToChapter7() counted_by frcp6 cite "E.D. Mich. LBR 1017-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 1017-1(a): a dismissal for failure to file the statement is without
+/// prejudice to a motion to reinstate under LBR 9024-1(c) within 14 days
+/// after entry of the dismissal order.
+deadline converted-reinstatement-period: 14.days after StatementDismissalEntered() counted_by frcp6 cite "E.D. Mich. LBR 1017-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 1017-1(b): in a case converted from chapter 13, the chapter 13
+/// trustee files a final report within 45 days of all checks clearing.
+deadline converted-trustee-report-period: 45.days after ConvertedCaseChecksCleared() counted_by frcp6 cite "E.D. Mich. LBR 1017-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 1017-2: a movant seeking a hearing on a § 521(e)(2)(B) or (C) motion
+/// before the meeting of creditors files it no later than three days after
+/// the § 521(e)(2)(A)(i) deadline expires.
+deadline tax-return-dismissal-motion-period: 3.days after TaxReturnDeadlineExpired() counted_by frcp6 cite "E.D. Mich. LBR 1017-2"
+{
+  forum frcp
+}
+
+/// LBR 1074-1: a debtor that is not an individual files the attested
+/// resolution or other document authorizing the filing within 14 days after
+/// the petition.
+deadline entity-resolution-period: 14.days after PetitionFiled() counted_by frcp6 cite "E.D. Mich. LBR 1074-1"
+{
+  forum frcp
+}
+
+/// LBR 2003-1(a)(2): a creditor's objection to dismissal for the debtor's
+/// failure to appear at the meeting of creditors is due 14 days after the
+/// motion is filed.
+deadline nonappearance-objection-period: 14.days after NonappearanceDismissalMotionFiled() counted_by frcp6 cite "E.D. Mich. LBR 2003-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 2003-1(b): the debtor's response to the motion to dismiss, with
+/// affidavits or declarations, is due 14 days after the motion is filed.
+deadline nonappearance-response-period: 14.days after NonappearanceDismissalMotionFiled() counted_by frcp6 cite "E.D. Mich. LBR 2003-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 2003-2(b): in a chapter 7 or 12 case or an individual chapter 11
+/// case, the debtor provides the listed documents to the trustee (in
+/// chapter 11, the U.S. Trustee) no later than seven days before the
+/// meeting of creditors.
+deadline meeting-documents-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "E.D. Mich. LBR 2003-2(b)"
+{
+  forum frcp
+}
+
+/// LBR 2003-2(c): in a chapter 13 case, the debtor provides the listed
+/// documents to the trustee no later than 14 days before the meeting of
+/// creditors.
+deadline chapter13-meeting-documents-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "E.D. Mich. LBR 2003-2(c)"
+{
+  forum frcp
+}
+
+/// LBR 2003-4: a § 1102 committee serves notice of its appointment on the
+/// creditors it represents within 45 days after appointment.
+deadline committee-notice-period: 45.days after CommitteeAppointed() counted_by frcp6 cite "E.D. Mich. LBR 2003-4"
+{
+  forum frcp
+}
+
+/// LBR 2015-2: a chapter 13 debtor engaged in business files a statement of
+/// income and expenses within 28 days of the close of each calendar
+/// quarter.
+deadline quarterly-statement-period: 28.days after QuarterClosed() counted_by frcp6 cite "E.D. Mich. LBR 2015-2"
+{
+  forum frcp
+}
+
+/// LBR 2015-3(a): within 30 days after completion of plan payments, the
+/// chapter 13 trustee files and serves the notice of completion.
+deadline completion-notice-period: 30.days after PlanPaymentsCompleted() counted_by frcp6 cite "E.D. Mich. LBR 2015-3(a)"
+{
+  forum frcp
+}
+
+/// LBR 2015-3(a)(5), as vendored: an objection to the trustee's notice of
+/// completion is due 21 days after service of the notice.
+deadline completion-objection-period: 21.days after CompletionNoticeServed() counted_by frcp6 effective [2018-12-10, 2025-11-24) cite "E.D. Mich. LBR 2015-3(a)"
+{
+  forum frcp
+}
+
+/// LBR 2015-3(a)(5) as amended by AO 25-15 (November 24, 2025) for the
+/// December 1, 2025 FRBP 3002.1 amendments: the objection deadline remains
+/// 21 days after service of the notice, and a timely objection, FRBP
+/// 3002.1(g) statement or final-cure motion delays the discharge.
+deadline completion-objection-period: 21.days after CompletionNoticeServed() counted_by frcp6 effective [2025-11-24, ..) supersedes completion-objection-period@2018-12-10 cite "E.D. Mich. LBR (AO 25-15) 2015-3"
+{
+  forum frcp
+}
+
+/// LBR 2015-3(d): within 120 days after filing the notice of completion,
+/// the chapter 13 trustee files and serves the final report and account.
+deadline chapter13-final-report-period: 120.days after CompletionNoticeFiled() counted_by frcp6 cite "E.D. Mich. LBR 2015-3(d)"
+{
+  forum frcp
+}
+
+/// LBR 2015-3(d)(2): an objection to the chapter 13 trustee's final report
+/// and account is due 30 days after service of the final report.
+deadline final-report-objection-period: 30.days after TrusteeFinalReportServed() counted_by frcp6 cite "E.D. Mich. LBR 2015-3(d)"
+{
+  forum frcp
+}
+
+/// LBR 2016-2(b)(3): an objection to an interim monthly fee statement is
+/// due 14 days from its service; absent objection the debtor may pay 80% of
+/// fees and 100% of expenses.
+deadline interim-fee-objection-period: 14.days after InterimFeeStatementServed() counted_by frcp6 cite "E.D. Mich. LBR 2016-2(b)"
+{
+  forum frcp
+}
+
+/// LBR 3001-2(a): a creditor whose § 1322(b)(5) or (b)(7) claim is not
+/// governed by FRBP 3002.1 files notice of a periodic payment change 21
+/// days before the adjustment takes effect.
+deadline payment-adjustment-notice-period: 21.days before PaymentAdjustmentEffective() counted_by frcp6 cite "E.D. Mich. LBR 3001-2(a)"
+{
+  forum frcp
+}
+
+/// LBR 3001-2(b): a party objecting to an LBR 3001-2(a) notice or an FRBP
+/// 3002.1(b) notice of mortgage payment change files a motion for a
+/// determination within 21 days after its service.
+deadline payment-change-motion-period: 21.days after PaymentChangeNoticeServed() counted_by frcp6 cite "E.D. Mich. LBR 3001-2(b)"
+{
+  forum frcp
+}
+
+/// LBR 3001-2(d): unless an objection is filed within 14 days of a Notice
+/// of Inability to Comply, the trustee effectuates the payment change it
+/// states.
+deadline inability-notice-objection-period: 14.days after InabilityNoticeFiled() counted_by frcp6 cite "E.D. Mich. LBR 3001-2(d)"
+{
+  forum frcp
+}
+
+/// LBR 3003-1: in a chapter 11 case, unless the court orders otherwise, a
+/// proof of claim or interest or a § 503(b)(9) motion is due 90 days after
+/// the first date set for the meeting of creditors.
+deadline chapter11-claim-period: 90.days after FirstMeetingDate() counted_by frcp6 cite "E.D. Mich. LBR 3003-1"
+{
+  forum frcp
+}
+
+/// LBR 3007-1(b): a creditor's response to an objection to its claim is due
+/// seven days before the date set for the hearing on the objection.
+deadline claim-objection-response-period: 7.days before ClaimObjectionHearingScheduled() counted_by frcp6 cite "E.D. Mich. LBR 3007-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 3014-1: with a combined plan and disclosure statement, a § 1111(b)
+/// election is due seven days before the first scheduled confirmation
+/// hearing.
+deadline section-1111b-election-period: 7.days before CombinedConfirmationHearingScheduled() counted_by frcp6 cite "E.D. Mich. LBR 3014-1"
+{
+  forum frcp
+}
+
+/// LBR 3015-2(c)(1): an objection to paying a § 1305(a) postpetition claim,
+/// or to the claim itself, is filed within 14 days of the debtor's notice
+/// or is waived.
+deadline postpetition-claim-objection-period: 14.days after PostpetitionClaimNoticeServed() counted_by frcp6 cite "E.D. Mich. LBR 3015-2(c)"
+{
+  forum frcp
+}
+
+/// LBR 3015-3(a)(4): an objection to confirmation of a chapter 13 modified
+/// plan is due 28 days after service of the modified plan.
+deadline modified-plan-objection-period: 28.days after ModifiedPlanServed() counted_by frcp6 cite "E.D. Mich. LBR 3015-3(a)"
+{
+  forum frcp
+}
+
+/// LBR 3018-1: within seven days after the order approving the disclosure
+/// statement, the plan proponent serves the order, plan, disclosure
+/// statement and ballot.
+deadline solicitation-service-period: 7.days after DisclosureStatementApproved() counted_by frcp6 cite "E.D. Mich. LBR 3018-1"
+{
+  forum frcp
+}
+
+/// LBR 3021-1(a): unless the court orders otherwise, within 14 days after
+/// confirmation in a Large Bankruptcy Case the plan proponent files a
+/// timetable for substantial consummation and the final decree.
+deadline consummation-timetable-period: 14.days after LargeCaseConfirmationEntered() counted_by frcp6 cite "E.D. Mich. LBR 3021-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 4001-2: an expedited interim cash collateral or financing order
+/// entered without a hearing provides that an objection is due 14 days from
+/// its entry.
+deadline expedited-financing-objection-period: 14.days after ExpeditedFinancingOrderEntered() counted_by frcp6 cite "E.D. Mich. LBR 4001-2"
+{
+  forum frcp
+}
+
+/// LBR 4001-2: an official committee may object within 14 days after it is
+/// served with the entered order.
+deadline committee-financing-objection-period: 14.days after CommitteeServedWithFinancingOrder() counted_by frcp6 cite "E.D. Mich. LBR 4001-2"
+{
+  forum frcp
+}
+
+/// LBR 4001-4(a): a motion to extend the stay under § 362(c)(3)(B), with
+/// its certificate of service, is filed and served within seven days after
+/// the petition is filed.
+deadline stay-extension-motion-period: 7.days after PetitionFiled() counted_by frcp6 cite "E.D. Mich. LBR 4001-4(a)"
+{
+  forum frcp
+}
+
+/// LBR 4001-5(c): within 28 days after confirmation, a creditor that
+/// received pre-confirmation payments files an amended proof of claim
+/// showing their application.
+deadline preconfirmation-amended-claim-period: 28.days after Chapter13PlanConfirmed() counted_by frcp6 cite "E.D. Mich. LBR 4001-5(c)"
+{
+  forum frcp
+}
+
+/// LBR 4004-1: within 28 days after the trustee files the notice of
+/// completion, the chapter 13 debtor files the Certification Regarding
+/// Domestic Support Obligations.
+deadline domestic-support-certification-period: 28.days after CompletionNoticeFiled() counted_by frcp6 cite "E.D. Mich. LBR 4004-1"
+{
+  forum frcp
+}
+
+/// LBR 5010-1(b): a debtor whose case is reopened to file a missing
+/// certification files it within 14 days after the reopening order, or the
+/// case is closed again.
+deadline reopened-missing-paper-period: 14.days after ReopeningOrderEntered() counted_by frcp6 cite "E.D. Mich. LBR 5010-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 6004-1(a): an objection to a noticed use, sale or lease of estate
+/// property is due 14 days from service of the notice, running with the
+/// 21-day notice of FRBP 2002(a)(2).
+deadline sale-notice-objection-period: 14.days after SaleNoticeServed() counted_by frcp6 cite "E.D. Mich. LBR 6004-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 7016-1: unless the court orders otherwise, the stipulation and
+/// proposed joint final pretrial order are due seven days before the final
+/// pretrial conference or, if none, the hearing or trial.
+deadline pretrial-order-period: 7.days before FinalPretrialConferenceScheduled() counted_by frcp6 cite "E.D. Mich. LBR 7016-1"
+{
+  forum frcp
+}
+
+/// LBR 7016-2(a): when the court orders mediation on its own initiative, a
+/// party may move under LBR 9014-1 objecting to mediation within seven
+/// days.
+deadline mediation-objection-period: 7.days after MediationOrderEntered() counted_by frcp6 cite "E.D. Mich. LBR 7016-2(a)"
+{
+  forum frcp
+}
+
+/// LBR 7016-2(a)(3): mediation is completed within 14 days after entry of
+/// the mediation order or such other time as the order fixes.
+deadline mediation-completion-period: 14.days after MediationOrderEntered() counted_by frcp6 cite "E.D. Mich. LBR 7016-2(a)"
+{
+  forum frcp
+}
+
+/// LBR 7016-2(a)(5): if necessary, the parties move for approval of a
+/// mediated settlement under FRBP 9019 within 14 days after the agreement
+/// is fully executed.
+deadline mediation-settlement-motion-period: 14.days after MediationAgreementExecuted() counted_by frcp6 cite "E.D. Mich. LBR 7016-2(a)"
+{
+  forum frcp
+}
+
+/// LBR 7016-2(a)(7): within seven days after the mediation concludes, the
+/// mediator files a certification of compliance and of whether a settlement
+/// was achieved.
+deadline mediator-certification-period: 7.days after MediationConcluded() counted_by frcp6 cite "E.D. Mich. LBR 7016-2(a)"
+{
+  forum frcp
+}
+
+/// LBR 7041-1: an objection to the dismissal of a § 727 action is due 14
+/// days after service of the joint statement of consideration.
+deadline discharge-dismissal-objection-period: 14.days after DismissalStatementServed() counted_by frcp6 cite "E.D. Mich. LBR 7041-1"
+{
+  forum frcp
+}
+
+/// LBR 7054-1(a): unless the court orders otherwise, a party awarded fees
+/// and nontaxable costs under FRBP 7054(b) files its application within 14
+/// days after the award.
+deadline fee-award-application-period: 14.days after FeeAwardEntered() counted_by frcp6 cite "E.D. Mich. LBR 7054-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 7054-1(b): a party opposing the fees and costs has 14 days from
+/// service of the application to object.
+deadline fee-award-objection-period: 14.days after FeeAwardApplicationServed() counted_by frcp6 cite "E.D. Mich. LBR 7054-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 7055-1: the application for a default judgment and the proposed
+/// judgment are due 14 days after the clerk enters the default.
+deadline default-judgment-period: 14.days after DefaultEntered() counted_by frcp6 cite "E.D. Mich. LBR 7055-1"
+{
+  forum frcp
+}
+
+/// LBR 9013-2(b)(4): debtor's counsel files and serves the list of matters
+/// for a fixed hearing date at least seven days before the hearing.
+deadline fixed-hearing-agenda-period: 7.days before FixedHearingDateScheduled() counted_by frcp6 cite "E.D. Mich. LBR 9013-2(b)"
+{
+  forum frcp
+}
+
+/// LBR 9014-1(b): except as the court or an applicable rule provides, the
+/// deadline to respond to a motion is 14 days after service.
+deadline motion-response-period: 14.days after MotionServed() counted_by frcp6 cite "E.D. Mich. LBR 9014-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 9014-1(b): for matters covered by FRBP 2002(a), the deadline to
+/// respond is 21 days after service.
+deadline notice-motion-response-period: 21.days after NoticeMotionServed() counted_by frcp6 cite "E.D. Mich. LBR 9014-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 9015-1(b): in a removed proceeding with a timely jury demand, a
+/// party is deemed to consent to a jury trial before the bankruptcy judge
+/// unless it files a statement of non-consent within 28 days after removal.
+deadline removed-jury-consent-period: 28.days after CaseRemoved() counted_by frcp6 cite "E.D. Mich. LBR 9015-1(b)"
+{
+  forum frcp
+}
+
+/// LBR 9015-1(c): in a removed proceeding in which the state-law time for a
+/// jury demand has not expired, the jury demand is due 28 days after
+/// removal.
+deadline removed-jury-demand-period: 28.days after CaseRemoved() counted_by frcp6 cite "E.D. Mich. LBR 9015-1(c)"
+{
+  forum frcp
+}
+
+/// LBR 9019-1: attorneys who state a settlement on the record submit a
+/// proposed order within 14 days; failure is cause for dismissal.
+deadline settlement-order-period: 14.days after SettlementStatedOnRecord() counted_by frcp6 cite "E.D. Mich. LBR 9019-1"
+{
+  forum frcp
+}
+
+/// LBR 9021-1(a)(4): written objections to a proposed order or judgment
+/// noticed for submission are due within seven days.
+deadline proposed-order-objection-period: 7.days after ProposedOrderNoticed() counted_by frcp6 cite "E.D. Mich. LBR 9021-1(a)"
+{
+  forum frcp
+}
+
+/// LBR 9024-1(a)(1): a motion for reconsideration of an order or judgment
+/// as erroneous in fact or law is due 14 days after its entry.
+deadline reconsideration-period: 14.days after OrderEntered() counted_by frcp6 cite "E.D. Mich. LBR 9024-1(a)"
+{
+  forum frcp
+}

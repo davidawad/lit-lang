@@ -1,6 +1,26 @@
 version = 2
 
 [[package]]
+name = "bankr-mie-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:5ae3ae85bfcdb79557e11e49d7286164c0117a6ad37b6daff6863805f0527645"
+semantic = "sha256:c963ef7f31b59707cd03ba22501773cb2dac9b1d142a574782b75c1ceff340ae"
+texts = [
+    "mieb-ao-19-03 sources/bankr-mie/mie-ao-19-03.txt sha256:0f899d2197e864954b7e31c809a64ad5a7200ceb17f859040b595060fe04e019",
+    "mieb-ao-19-10 sources/bankr-mie/mie-ao-19-10.txt sha256:db9a5126414617af3ee6c13e20b050f2992da5d63289f1b5179074ad7acae3a5",
+    "mieb-ao-19-12 sources/bankr-mie/mie-ao-19-12.txt sha256:efec9a646f59f73aca4cdfad1cdba3e1aadca0b82eb2a7e46dfac7391dc88433",
+    "mieb-ao-24-13 sources/bankr-mie/mie-ao-24-13.txt sha256:d04998d540164b8639976dfdf08d0138fb30652fa04cd87fa4a3e9b0c3ccad5d",
+    "mieb-ao-25-14 sources/bankr-mie/mie-ao-25-14.txt sha256:2036a15331b6315bc98aa38bad02c42108feddcbf8436c19e06205549abb2520",
+    "mieb-ao-25-15 sources/bankr-mie/mie-ao-25-15-sectioned.txt sha256:716957fe182e23413a9772a7e5309e0d5cb38354bc80bd34af5965aac4a446df",
+    "mieb-lbr sources/bankr-mie/mie-local-rules-2018-12-10-sectioned.txt sha256:261f103da233fedb4b88d263748dfc9d3f60e09fe67ba97fed5546aaa124bda4",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +64,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-mie"
-version = "0.0.1"
-language = 1
-source = "sha256:aa2b2881cfaf9b6d4368e3326b7792a7022a69290b2e369f7ecc61d32724cb16"
-semantic = "sha256:7ee491964c5ff2005e6bcde068fe9c06ea717b6bfcab5792f9164cf5cc14e065"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

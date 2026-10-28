@@ -24,6 +24,7 @@
 ### `mssd/mssd-uniform-local-criminal-rules-2019-12-01-sectioned.txt` — N.D. and S.D. Miss. Local Uniform Criminal Rules, sectioned
 
 - Derived in the pod (lg-gddt.14) from `mssd/mssd-uniform-local-criminal-rules-2019-12-01.txt` (extract sha256 18f5818ab4a7353146e64a1f20bfb12c48aedb7de73a877b26d16196eab4b8d7); nothing fetched. In the body (after the table of contents), one marker line `## U.L.Cr.R. <n>` (the citation form U.L.Cr.R. 60 gives) is inserted before each rule's own heading line (`Rule 1. SCOPE.` through `Rule 60. TITLE.`, 9 rules). Every other line is the extract unchanged, so deleting the `## U.L.Cr.R.` lines gives back the extract byte for byte.
+- Upstream: https://www.mssd.uscourts.gov/sites/mssd/files/2019MASTERCOPYCRIMINAL.pdf, retrieved 2026-10-28, as recorded on the `mssd/mssd-uniform-local-criminal-rules-2019-12-01.txt` entry this file is derived from.
 - Edition: as the extract, "EFFECTIVE December 1, 2019".
 - Criminal forum (lg-gddt): mssd-criminal.
 - Sectioned sha256 38ad73d73a2af11f55f48ca1036ebe00d2a89b768909f7ba0adf1b9c1fd35ece (the `path_sha256` pinned by `lit/mssd-criminal/Lit.toml`).

@@ -19,5 +19,6 @@
 ### `txnd/txnd-local-criminal-rules-2026-09-01-sectioned.txt` — N.D. Tex. Local Criminal Rules, sectioned
 
 - Derived in the pod (lg-gddt.14) from `txnd/txnd-local-criminal-rules-2026-09-01.txt` (extract sha256 800d8cb671875dff48e9ebcf252d2fb2e88a32c32d17298d10e441cce93472fd); nothing fetched. In the body (after the table of contents), one marker line `## LCrR <n>` is inserted before each rule's own heading line (`LCrR 1.1 Definitions.` through `LCrR 59.2 Briefing Practice ...`, 42 rules, repealed rules included). Every other line is the extract unchanged, so deleting the `## LCrR` lines gives back the extract byte for byte.
+- Upstream: https://www.txnd.uscourts.gov/sites/default/files/documents/CRIMRULES.pdf, retrieved 2026-10-28, as recorded on the `txnd/txnd-local-criminal-rules-2026-09-01.txt` entry this file is derived from.
 - Edition: as the extract, "Effective September 1, 2026".
 - Sectioned sha256 71c01d4ff9d104fc207dad508d798109df0e0a947033212ab1aed039dbfd789c (the `path_sha256` pinned by `lit/txnd-criminal/Lit.toml`).

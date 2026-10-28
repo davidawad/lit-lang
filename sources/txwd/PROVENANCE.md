@@ -12,5 +12,6 @@
 ### `txwd/tx-wd-local-rules-sectioned.txt` — W.D. Tex. Local Court Rules, criminal rules sectioned
 
 - Derived in the pod (lg-gddt.14) from `txwd/tx-wd-local-rules.txt` (extract sha256 51af4ff7a502bf528d3d5a37491cb8424747bbc71addfedc74956d0ca00e65ca); nothing fetched. In the body of Section II - Criminal Rules (after the table of contents, before Section III - Attorneys), one marker line `## CR-<n>` is inserted before each rule's own heading line `RULE CR-<n>. ...` (CR-1 through CR-58, 19 rules; the committee notes and appended forms stay in the rule they follow). The civil, attorney and other parts carry no markers. Every other line is the extract unchanged, so deleting the `## CR-` lines gives back the extract byte for byte.
+- Upstream: https://www.txwd.uscourts.gov/wp-content/uploads/2026/10/TXWD-Local-Rules-Full-Copy-081926.pdf, retrieved 2026-10-27, as recorded on the `txwd/tx-wd-local-rules.txt` entry this file is derived from.
 - Edition: as the extract (cover "Effective: April 26, 2023").
 - Sectioned sha256 779483d215e8dff84763bdb9bc9dd90205700f18340a960b635d1f885cc63fa6 (the `path_sha256` pinned by `lit/txwd-criminal/Lit.toml`).

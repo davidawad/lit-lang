@@ -1,0 +1,59 @@
+# Civil appeals in the Colorado appellate courts under the Colorado
+# Appellate Rules, from the appellant's side: the appeal as of right to the
+# court of appeals and certiorari review in the supreme court. The base
+# text is Chapter 32 of the 2023 Colorado Revised Statutes court-rules
+# volume (OLLS; its latest recorded change is Rule Change 2023(13),
+# effective July 20, 2023, sources/co-state-appellate); the Supreme Court's
+# later Rule Change orders vendored beside it (2024(11), 2025(02),
+# 2025(11), 2026(05)) are applied on top in date order. Of the rules cited
+# here, only C.A.R. 52(b)(1) and 54(b) state values an order changed, and
+# Rule Change 2026(05) (March 26, 2026) restates both, so it is its own
+# source and those values cite it; the orders leave C.A.R. 1, 3, 4, 10(c)
+# and (d)(1), (3), 26, 28, 31, 34, 35, 36, 40(a), 41(b)(1) and 49 as the
+# compilation states them. Computation of time is C.A.R. 26(a), with the
+# legal holidays of C.A.R. 26(b), for which lit/core has no counting rule,
+# so the periods are stated in notes, not encoded as counted deadlines.
+# Review of the supreme court's judgment by certiorari belongs to
+# lit/scotus. The package is in force from Rule Change 2026(05).
+[package]
+name = "co-appellate-civil"
+version = "0.1.0"
+language = 1
+pack_id = "co-appellate-civil"
+forum = "co-state-appellate"
+authority = "StateRule"
+jurisdiction_id = "colorado"
+title = "Colorado Court of Appeals and Supreme Court, civil appeals"
+description = "Civil appeals in the Colorado appellate courts under the Colorado Appellate Rules, as far as the vendored text states: appealable judgments and orders, the notice of appeal and its time, the record and transcript designation, briefing periods and word limits, oral argument, determination and entry of judgment, rehearing, the mandate, and certiorari review in the supreme court with its time to petition."
+in_force = "2026-03-26"
+known_at = "2026-10-28"
+unknown_before = "2026-03-26"
+jurisdiction = "Colorado Court of Appeals and Supreme Court (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.car]
+title = "Colorado Appellate Rules, Colorado Revised Statutes 2023 court-rules volume, Chapter 32 (OLLS)"
+url = "https://content.leg.colorado.gov/sites/default/files/images/olls/crs2023-court-rules.pdf"
+path = "sources/co-state-appellate/co-car-sectioned.txt"
+path_sha256 = "269e8ef5902216c04b7d7dd58312fbb4d1702b54b57f6e5691ed8676314c23bc"
+sha256 = "07a0129954b015ff26ed4774e5979408d05631a78fff9967ee0a56f5622347e7"
+as_of = "2023-07-20"
+cite_prefixes = ["C.A.R."]
+section_heading = "C.A.R. {n}"
+
+[sources.co-rc-2026-05]
+title = "Colorado Supreme Court Rule Change 2026(05), C.A.R. Rules 3.5, 10, 21, 40, 52 and 54 (March 26, 2026, effective immediately)"
+url = "https://www.coloradojudicial.gov/sites/default/files/2026-03/Rule%20Change%202026%2805%29.pdf"
+path = "sources/co-state-appellate/co-rule-change-2026-05-sectioned.txt"
+path_sha256 = "6195206cfaa223a1e2a2aee33d17fbc46b509cb9fcbae81ddac8639370c6c147"
+sha256 = "9cf97a0d84736cbbfd8265b81447813ce3736b4deeb278c83ae8f090d3fd76df"
+as_of = "2026-03-26"
+cite_prefixes = ["Rule Change 2026(05), C.A.R."]
+section_heading = "Rule Change 2026(05) C.A.R. {n}"

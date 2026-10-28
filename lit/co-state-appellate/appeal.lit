@@ -1,0 +1,100 @@
+module co-appellate-civil.appeal
+
+// Civil appeals in the Colorado appellate courts, from the appellant's
+// side. Every period below is stated in a note, not counted: computation
+// is C.A.R. 26(a), with the legal holidays of C.A.R. 26(b), for which
+// lit/core has no counting rule. The docket fee is set by C.A.R. 12 and
+// statute, which this package does not state. The outline named no
+// leading decisions.
+start threshold
+
+decision threshold: "Appealable judgment or order?" by applicant cite "C.A.R. 1(a)"
+{
+  note "An appeal may be taken from a final judgment of any district, probate or juvenile court; a water-rights judgment and decree or order; an order granting or denying a temporary injunction; or an order appointing or denying the appointment of a receiver, or sustaining or overruling a motion to discharge one (C.A.R. 1(a)). An appeal must be taken in accordance with these rules except for special proceedings in which a statute sets a different time (C.A.R. 1(b))."
+  edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "C.A.R. 1(a)" }
+  edge-threshold-yes "Appealable" -> notice { authority cite "C.A.R. 1(a)" }
+}
+
+decision notice: "Notice of appeal within 49 days?" by applicant cite "C.A.R. 4(a)"
+{
+  note "An appeal as of right is taken by filing a notice of appeal with the clerk of the appellate court within the time allowed by C.A.R. 4, with an advisory copy served on the lower court within the same time; content of the notice is not jurisdictional (C.A.R. 3(a)). The notice is filed within 49 days after entry of the judgment, decree or order; any other party may file within 14 days after the first notice; a timely C.R.C.P. 59 motion terminates the running of the time for all parties; on a showing of excusable neglect the appellate court may extend the time by not more than 35 days (C.A.R. 4(a)). The appellate court may not extend the time to file a notice of appeal beyond that C.A.R. 4(a) prescribes (C.A.R. 26(c))."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "C.A.R. 4(a)" }
+  edge-notice-timely "Timely notice" -> record { authority cite "C.A.R. 3(a)" }
+}
+
+state record: "Record and transcripts" by office cite "C.A.R. 10(c)"
+{
+  note "An appellant who intends to include transcripts files a designation of transcripts with the trial court, and an advisory copy with the appellate court, within 7 days of filing the notice of appeal; the appellee may file its own designation within 14 days after the notice of appeal is filed (C.A.R. 10(d)). The record is transmitted to the appellate court within 63 days (9 weeks) after the notice of appeal is filed unless the appellate court shortens or extends the time; on receipt the clerk files it and notifies the parties of the filing date (C.A.R. 10(c))."
+  edge-record-brief "Record filed" -> briefing { authority cite "C.A.R. 31(a)" }
+}
+
+state briefing: "Briefs" by applicant cite "C.A.R. 31(a)"
+{
+  note "The appellant serves and files the opening brief within 42 days after the record is filed; the appellee the answer brief within 35 days after service of the opening brief; the appellant may file a reply brief within 21 days after service of the answer brief. If an appellant fails to file a brief in time the court may dismiss the appeal (C.A.R. 31). An opening and an answer brief may contain no more than 9,500 words and a reply brief no more than 5,700 words; a motion to exceed the limit is filed with the brief (C.A.R. 28(g))."
+  edge-briefing-argue "Briefs closed" -> argument { authority cite "C.A.R. 34(a)" }
+}
+
+state argument: "Oral argument or submission" by court cite "C.A.R. 34(a)"
+{
+  note "Oral argument is at the court's discretion; a request for oral argument is filed as a separate document no later than 7 days after briefs are closed (C.A.R. 34(a))."
+  edge-argument-decide "Decision" -> decision { authority cite "C.A.R. 35(a)" }
+}
+
+state decision: "Decision issued" by court cite "C.A.R. 35(a)"
+{
+  note "The appellate court may dismiss the appeal or affirm, vacate, modify, reverse or set aside the judgment and remand; it must issue a written opinion when vacating, modifying, reversing, setting aside or remanding (C.A.R. 35(a)). An appellate judgment is entered when the court issues or announces its dispositive order or opinion, and the clerk serves it on all parties that day (C.A.R. 36)."
+  edge-decision-issued "Opinion or order entered" -> rehearing-decision {
+    authority cite "C.A.R. 36"
+  }
+}
+
+decision rehearing-decision: "Rehearing sought?" by applicant cite "C.A.R. 40(a)"
+{
+  note "Unless the time is shortened or extended by order, a petition for rehearing may be filed within 14 days after entry of judgment; it states with particularity each point of law or fact the court overlooked or misapprehended; no answer is permitted unless the court requests one, and no oral argument (C.A.R. 40(a))."
+  edge-rehearing-decision-none "No petition" -> mandate { authority cite "C.A.R. 41(b)" }
+  edge-rehearing-decision-sought "Petition filed" -> rehearing-order {
+    authority cite "C.A.R. 40(a)"
+  }
+}
+
+state rehearing-order: "Rehearing decided" by court cite "C.A.R. 40(a)"
+{
+  note "If the petition is granted the court may make a final disposition without reargument, restore the case for reargument or resubmission, or issue any other order (C.A.R. 40(a))."
+  edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "C.A.R. 41(b)" }
+}
+
+state mandate: "Time for certiorari; mandate" by office cite "C.A.R. 41(b)"
+{
+  note "Unless the court grants or removes a stay or otherwise changes the time, the court of appeals mandate issues no earlier than 42 days after entry of the judgment, and no earlier than 28 days after the court denies a petition for rehearing (C.A.R. 41(b))."
+  edge-mandate-further "Next step" -> further-review {
+    authority cite "Rule Change 2026(05), C.A.R. 52(b)"
+  }
+}
+
+decision further-review: "Petition for certiorari?" by applicant cite "Rule Change 2026(05), C.A.R. 52(b)"
+{
+  note "Review on certiorari is a matter of sound judicial discretion, granted only for special and important reasons, such as a decision probably not in accord with the supreme court's or in conflict with another division of the court of appeals (C.A.R. 49). A petition for writ of certiorari is filed within 42 days after entry of the final judgment on appeal if no petition for rehearing is filed, or within 28 days after the court of appeals denies rehearing or issues a new or modified opinion after granting it; no certiorari proceeding may be initiated until the time for rehearing has expired (Rule Change 2026(05), C.A.R. 52(b))."
+  edge-further-review-none "No petition" -> final-decision {
+    authority cite "Rule Change 2026(05), C.A.R. 52(b)"
+  }
+  edge-further-review-petition "Petition filed" -> review-decided { authority cite "C.A.R. 49" }
+}
+
+state review-decided: "Certiorari decided" by court cite "C.A.R. 49"
+{
+  note "Whenever the supreme court denies a petition for writ of certiorari the clerk issues an order to that effect and no mandate issues; no petition for rehearing may be filed after an order denying the petition, and jurisdiction returns immediately to the intermediate appellate court (Rule Change 2026(05), C.A.R. 54(b))."
+  edge-review-decided-denied "Denied" -> review-denied {
+    authority cite "Rule Change 2026(05), C.A.R. 54(b)"
+  }
+  edge-review-decided-granted "Granted" -> review-granted { authority cite "C.A.R. 49" }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: no appellate jurisdiction" outcome [loss, dismissal, jurisdictional] cite "C.A.R. 1(a)"
+terminal dismissed-untimely: "Dismissed: untimely notice of appeal" outcome [loss, dismissal] cite "C.A.R. 4(a)"
+terminal final-decision: "Final: decision of the court of appeals stands" outcome [final] cite "C.A.R. 41(b)"
+terminal review-denied: "Certiorari denied" outcome [final] cite "Rule Change 2026(05), C.A.R. 54(b)"
+
+terminal review-granted: "Certiorari granted" outcome [neutral] cite "C.A.R. 49"
+{
+  note "The merits of review on certiorari are not modeled."
+}

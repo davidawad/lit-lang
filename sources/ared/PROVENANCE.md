@@ -9,3 +9,9 @@
 - Retrieved 2026-10-27 on carbon (the court site refuses agent pods: lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 0bc073ca4ceb05726d03a65d05a6294c20199591be8b23dc465ff14d724c8950. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `ared/original/ared-arwd-local-rules.pdf` as served (sha256 9fc211b94a6b06e77953f28f1b88c5e61f8d567dc68d71a78a91eee7715fa459); extraction sha256 0bc073ca4ceb05726d03a65d05a6294c20199591be8b23dc465ff14d724c8950.
+
+### `ared/ared-arwd-local-rules-sectioned.txt` — Local Rules of the E.D. and W.D. Arkansas, sectioned
+
+- Derived in the pod (lg-f3q8.3) from `ared/ared-arwd-local-rules.txt` (extract sha256 0bc073ca4ceb05726d03a65d05a6294c20199591be8b23dc465ff14d724c8950); nothing fetched. One `## L.R. <n>` line is inserted before the first heading line `LOCAL RULE <n>` of each rule (`L.R. 4.1` through `L.R. 83.8`, 37 rules; the second and third `LOCAL RULE 83.6` headings, the rule's appendix forms, are unmarked). Rule text was not edited: deleting the marker lines (`sed '/^## L.R. /d'`) restores the extract byte for byte.
+- Edition: as the extract, the "Complete Copy" last modified 2020-11-17 (newest amendment note: L.R. 5.1, November 5, 2020).
+- Sectioned sha256 9ffe4767e0a2f226a2c05119182219877a27b0c28c3edda6bd4442ab6c411cd4 (the `path_sha256` pinned by `lit/ared/Lit.toml` and `lit/arwd/Lit.toml`).

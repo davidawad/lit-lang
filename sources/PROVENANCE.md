@@ -120,8 +120,10 @@ Entries live in the forum's own
   nav chrome) around the actual statute text. This port strips that
   boilerplate mechanically: keeps only the span from the `§NNNN. Title`
   heading line to the `[Excerpt ...]` marker the JSON's own author added.
-- sha256 (this file, post-cleanup): `5bbba22c27cd4f0957c799a8a1f48b6ba9d0670be03a9fec796a3c8ec394c1b3`
+- sha256 (this file): `3d8bc2f973ecf54ebe7efc00ccb9756f0ed1e438dee88663f4b6ea65ee32be2a`
+- Repair (lg-2vwt, 2026-10-28): the 35 U.S.C. § 41 excerpt stopped at (a)(7) and omitted § 41(b) (maintenance fees), which `lit/mpep` cites. § 41(b)(1)–(3) added after (a)(7), copied verbatim from GPO's govinfo (United States Code, 2024 Edition, current through January 6, 2025; headings kept in that print's case). No other section was changed.
 - Original: none as served (assembled from a port of the sibling project's uscfr-full.json (USPTO Consolidated Patent Laws/Rules, July 2025, and uscode.house.gov pages for the 28 U.S.C. sections)); see the sources listed above.
+- Original: `original/usc-35-41.html` as served, the source of § 41(b) only (sha256 3f9eff84f88989cb8f4c92f0d81902910a3c78bf671d3c7405e8ca19d6e9db65). Served at https://www.govinfo.gov/content/pkg/USCODE-2024-title35/html/USCODE-2024-title35-partI-chap4-sec41.htm (via https://www.govinfo.gov/link/uscode/35/41?link-type=html); fetched with curl (User-Agent lit-lang-provenance/1.0), retrieved 2026-10-28.
 
 ### `usc-19-1337.txt` — 19 U.S.C. § 1337 (ITC unfair-import-practices statute)
 

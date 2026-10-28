@@ -16,3 +16,7 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 953f3a272cbcab3917a2e99beb95f13b8df0eb49dd281f265cd22c6a1a8b6087. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `mssd/original/mssd-uniform-local-civil-rules-2024-12-01.pdf` as served (sha256 d19013c471bbe30a8cf1bb43dc3864c9d5cc030ad34f3edd9742f0c03e3faa58); extraction sha256 953f3a272cbcab3917a2e99beb95f13b8df0eb49dd281f265cd22c6a1a8b6087.
+
+### `mssd/mssd-uniform-local-civil-rules-2024-12-01.txt` — bound through the sectioned N.D. copy
+
+- lit/mssd (lg-f3q8.19) binds its cites to `msnd/local-uniform-civil-rules-sectioned.txt` (sectioned sha256 12c17e9935fa4522baf28e69db7c9878420bd5fa902cd4ba7a526b889a88f330; see sources/msnd/PROVENANCE.md): the Local Uniform Civil Rules are one joint document of both districts, and this extract and the N.D. extract are byte-identical (both sha256 953f3a272cbcab3917a2e99beb95f13b8df0eb49dd281f265cd22c6a1a8b6087), so one sectioned copy serves both packages. Nothing fetched.

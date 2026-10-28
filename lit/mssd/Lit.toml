@@ -1,0 +1,57 @@
+# The Southern District of Mississippi's Local Uniform Civil Rules over
+# lit/frcp (FRCP 83(a); L.U. Civ. R. 1(a): the rules of procedure are those
+# of the laws of the United States and the Federal Rules of Civil
+# Procedure, "along with these local rules"): a local-rule layer that
+# declares only the periods the local rules themselves state and
+# re-encodes no FRCP deadline. The Northern and Southern Districts share
+# one set of Local Uniform Civil Rules (current as of December 1, 2024);
+# lit/msnd is the same layer at the Northern District's forum, and both
+# pin the one sectioned copy under sources/msnd (the S.D. Miss. download,
+# sources/mssd/mssd-uniform-local-civil-rules-2024-12-01.txt, extracts to
+# the identical text). Each period
+# is counted under FRCP 6(a), which governs "any local rule", so each
+# deadline names `forum frcp` (lit/core's frcp6 computes frcp periods
+# only).
+[package]
+name = "mssd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "mssd-local-rules"
+forum = "mssd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Southern District of Mississippi: Local Uniform Civil Rules"
+description = "The Local Uniform Civil Rules of the Southern District of Mississippi as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): the state court record on removal, motion practice (response, rebuttal, dispositive and in limine motion deadlines), filing an amended pleading after leave, the attorney conference, disclosures and case management order, settlement conference memoranda, jury instructions, bills of costs, and objections to a magistrate judge's rulings and reports."
+in_force = "2024-12-01"
+known_at = "2026-10-28"
+unknown_before = "2024-12-01"
+jurisdiction = "United States District Court, S.D. Mississippi"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "mssd-lucr"
+issuer = "United States District Courts for the Northern and Southern Districts of Mississippi"
+date = "2024-12-01"
+designation = "Local Uniform Civil Rules, current as of December 1, 2024"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.mssd-lucr]
+title = "Local Uniform Civil Rules of the United States District Courts for the Northern District of Mississippi and the Southern District of Mississippi (current as of December 1, 2024)"
+url = "https://www.msnd.uscourts.gov/sites/msnd/files/forms/2024%20Local%20Civil%20Rules%20MSSD%20MSND_12.1.2024.pdf"
+path = "sources/msnd/local-uniform-civil-rules-sectioned.txt"
+path_sha256 = "12c17e9935fa4522baf28e69db7c9878420bd5fa902cd4ba7a526b889a88f330"
+sha256 = "e538403825e3f44c5112e6f929ce266b3f39e31387df9ce57823f76bf9df055d"
+as_of = "2024-12-01"
+
+[[cite_syntax.rules]]
+prefixes = ["S.D. Miss. L.U. Civ. R."]
+heading = "L.U. Civ. R. {}"
+source = "mssd-lucr"

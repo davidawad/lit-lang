@@ -1,0 +1,45 @@
+# The District of Maine's Local Rules as a local-rule layer over lit/frcp
+# (28 U.S.C. § 2071; FRCP 83(a)): it declares only the periods the Local
+# Rules themselves state and re-encodes no FRCP deadline. Each period is
+# counted under FRCP 6(a), which governs "any local rule". The rules are
+# the Local Rules effective April 1, 2025 (sources/dme).
+[package]
+name = "med-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "med-local-rules"
+forum = "med"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, District of Maine: Local Rules (civil)"
+description = "The District of Maine's Local Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): motion briefing and page limits, reconsideration, pseudonymous complaints, scheduling and final pretrial order objections, settlement papers, security for costs, attorneys' fees and bills of costs, summary judgment pre-filing, and magistrate judge objections."
+in_force = "2025-04-01"
+known_at = "2026-10-27"
+unknown_before = "2025-04-01"
+jurisdiction = "United States District Court, D. Maine"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "dme-lr"
+issuer = "United States District Court for the District of Maine"
+date = "2025-04-01"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.dme-lr]
+title = "Local Rules of the United States District Court for the District of Maine (current as of April 1, 2025)"
+url = "https://www.med.uscourts.gov/sites/med/files/LocalRules.pdf"
+path = "sources/dme/local-rules-sectioned.txt"
+path_sha256 = "82b0cb10a256f615971c8e76af39de5957a7be11dc2a302448ffede7efa5617b"
+sha256 = "131911bfe696ae77d1d4828385d2f8c83cbc533c2317a5128483d5049f152232"
+as_of = "2025-04-01"
+cite_prefixes = ["D. Me. Local R."]
+section_heading = "Rule {n}"

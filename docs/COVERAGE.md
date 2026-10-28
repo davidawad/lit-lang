@@ -29,6 +29,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | frcrimp-criminal-procedure | `lit/frcrimp` | 10 | 0 | 19 | 0 |
 | itc-337 | `lit/itc` | 22 | 3 | 33 | 0 |
 | links | `lit/links` | 2 | 0 | 3 | 0 |
+| med-local-rules | `lit/med` | 18 | 0 | 18 | 0 |
 | mpep-prosecution | `lit/mpep` | 19 | 6 | 42 | 0 |
 | ptab-patent-trial-appeal-board | `lit/ptab` | 28 | 0 | 41 | 0 |
 | sdd-civil-local-rules | `lit/sdd` | 11 | 0 | 12 | 0 |

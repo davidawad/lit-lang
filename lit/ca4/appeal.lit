@@ -1,0 +1,416 @@
+module ca4.appeal
+
+import core.frap26.{ frap26 }
+import frap.events.{ EnteredOnAppeal }
+
+// The FRAP periods are lit/frap's: the notice-of-appeal periods of FRAP
+// 4(a)(1), the transcript-order and transcript periods of FRAP 10(b)(1) and
+// 11(b)(1)(B), the civil brief periods of FRAP 31(a)(1), which run from the
+// briefing order rather than the record (4th Cir. R. 31(b)), the rehearing
+// periods of FRAP 40(d)(1), which 4th Cir. R. 40(c) restates, and the
+// mandate period of FRAP 41(b). This package is the Fourth Circuit's layer
+// over them: it declares the circuit's own periods. The leading decisions
+// on appellate jurisdiction and the notice deadline are lit/frap's.
+/// The appeal is docketed in the court of appeals (4th Cir. R. 3(b),
+/// 26.1(d), 46(c)).
+event AppealDocketed()
+/// A docketing statement is served on the opposing parties (4th Cir. R.
+/// 3(b)).
+event DocketingStatementServed()
+/// The court reporter receives the clerk's transcript order acknowledgment
+/// form (4th Cir. R. 11(a)).
+event TranscriptAcknowledgmentReceived()
+/// The court orders related appeals consolidated (4th Cir. R. 12(b), 28(a)).
+event ConsolidationOrdered()
+/// The clerk enters an order under 4th Cir. R. 27(b).
+event ClerkOrderEntered()
+/// A party designates material for the appendix (4th Cir. R. 30(a)).
+event AppendixDesignated()
+/// The briefing order is filed in a criminal appeal (4th Cir. R. 31(a)).
+event CriminalBriefingOrderFiled()
+/// The appellant's brief is served in a criminal appeal (4th Cir. R. 31(a)).
+event CriminalAppellantBriefServed()
+/// The appellee's brief is served in a criminal appeal (4th Cir. R. 31(a)).
+event CriminalAppelleeBriefServed()
+/// The date a brief is due (4th Cir. R. 32(b)).
+event BriefDue()
+/// The clerk serves notice that the appellant shall file an informal brief
+/// in a non-capital habeas or § 2255 appeal or a pro se appeal (4th Cir. R.
+/// 34(b)).
+event InformalBriefNoticeServed()
+/// The appellant's informal brief is served (4th Cir. R. 34(b)).
+event InformalBriefServed()
+/// The appellee's informal response brief is served (4th Cir. R. 34(b)).
+event InformalResponseServed()
+/// The clerk gives tentative notification of oral argument (4th Cir. R.
+/// 34(e)).
+event ArgumentTentativelyNoticed()
+/// The date of oral argument (4th Cir. I.O.P. 34.3).
+event ArgumentHeard()
+/// The clerk notifies the appellant, or its counsel, that a default will
+/// subject the appeal to dismissal (4th Cir. R. 45).
+event DefaultNoticeServed()
+
+/// Counsel filing a notice of appeal, petition for review or application
+/// for enforcement files a docketing statement within 14 days of docketing
+/// of the appeal.
+deadline docketing-statement-period: 14.days after AppealDocketed() counted_by frap26 cite "4th Cir. R. 3(b)"
+{
+  forum frap
+}
+
+/// An opposing party informs the clerk in writing of errors in the
+/// docketing statement within 10 days of its service.
+deadline docketing-statement-correction-period: 10.days after DocketingStatementServed() counted_by frap26 cite "4th Cir. R. 3(b)"
+{
+  forum frap
+}
+
+/// A party's disclosure statement is filed within 14 days of docketing of
+/// the appeal, unless earlier pleadings are submitted, in which case it is
+/// filed with them.
+deadline disclosure-statement-period: 14.days after AppealDocketed() counted_by frap26 cite "4th Cir. R. 26.1(d)"
+{
+  forum frap
+}
+
+/// Each attorney of record files a written appearance within 14 days after
+/// the appeal is docketed.
+deadline appearance-period: 14.days after AppealDocketed() counted_by frap26 cite "4th Cir. R. 46(c)"
+{
+  forum frap
+}
+
+/// A reporter who sees a problem with the transcript order returns the
+/// acknowledgment form within 7 days of receiving it, or within such
+/// further time as the court allows.
+deadline transcript-problem-period: 7.days after TranscriptAcknowledgmentReceived() counted_by frap26 cite "4th Cir. R. 11(a)"
+{
+  forum frap
+}
+
+/// The parties identify lead counsel for each side to the clerk in writing
+/// within 14 days of the consolidation order.
+deadline lead-counsel-period: 14.days after ConsolidationOrdered() counted_by frap26 cite "4th Cir. R. 12(b); 4th Cir. R. 28(a)"
+{
+  forum frap
+}
+
+/// A party adversely affected by a clerk's order may request
+/// reconsideration by the court within 14 days after entry of the order.
+deadline clerk-order-reconsideration-period: 14.days after ClerkOrderEntered() counted_by frap26 cite "4th Cir. R. 27(b)"
+{
+  forum frap
+}
+
+/// A party objects in writing to an unnecessary appendix designation within
+/// 14 days of the designation, a condition of a later sanctions motion.
+deadline appendix-objection-period: 14.days after AppendixDesignated() counted_by frap26 cite "4th Cir. R. 30(a)"
+{
+  forum frap
+}
+
+/// A motion for sanctions for unnecessary appendix designations is
+/// entertained only if filed within 14 days after entry of judgment.
+deadline appendix-sanctions-motion-period: 14.days after EnteredOnAppeal(Judgment) counted_by frap26 cite "4th Cir. R. 30(a)"
+{
+  forum frap
+}
+
+/// In a criminal appeal the appellant serves and files its brief and
+/// appendix within thirty-five days after the briefing order is filed.
+deadline criminal-appellant-brief-period: 35.days after CriminalBriefingOrderFiled() counted_by frap26 cite "4th Cir. R. 31(a)"
+{
+  forum frap
+}
+
+/// The criminal appellee's brief is due within twenty-one days after
+/// service of the appellant's brief.
+deadline criminal-appellee-brief-period: 21.days after CriminalAppellantBriefServed() counted_by frap26 cite "4th Cir. R. 31(a)"
+{
+  forum frap
+}
+
+/// The criminal appellant may serve and file a reply brief within ten days
+/// after service of the appellee's brief.
+deadline criminal-reply-brief-period: 10.days after CriminalAppelleeBriefServed() counted_by frap26 cite "4th Cir. R. 31(a)"
+{
+  forum frap
+}
+
+/// A motion to file a brief longer than FRAP 32(a)(7) or 28.1(e)(2) allows
+/// is made at least 10 days prior to the brief's due date.
+deadline longer-brief-motion-period: 10.days before BriefDue() counted_by frap26 cite "4th Cir. R. 32(b)"
+{
+  forum frap
+}
+
+/// The appellant files an informal brief within 21 days after service of
+/// the clerk's notice.
+deadline informal-brief-period: 21.days after InformalBriefNoticeServed() counted_by frap26 cite "4th Cir. R. 34(b)"
+{
+  forum frap
+}
+
+/// The appellee may file an informal response brief within 14 days after
+/// service of the appellant's informal brief.
+deadline informal-response-period: 14.days after InformalBriefServed() counted_by frap26 cite "4th Cir. R. 34(b)"
+{
+  forum frap
+}
+
+/// The appellant may file an informal reply brief within 10 days after
+/// service of the appellee's informal response brief.
+deadline informal-reply-period: 10.days after InformalResponseServed() counted_by frap26 cite "4th Cir. R. 34(b)"
+{
+  forum frap
+}
+
+/// A motion to submit the case on the briefs is filed upon completion of
+/// briefing or within 10 days of tentative notification of oral argument,
+/// whichever is earlier.
+deadline submit-on-briefs-motion-period: 10.days after ArgumentTentativelyNoticed() counted_by frap26 cite "4th Cir. R. 34(e)"
+{
+  forum frap
+}
+
+/// A motion to seal argument is filed on the public docket at least five
+/// days before oral argument.
+deadline seal-argument-motion-period: 5.days before ArgumentHeard() counted_by frap26 cite "4th Cir. I.O.P. 34.3"
+{
+  forum frap
+}
+
+/// The clerk may dismiss the appeal if the appellant fails to remedy a
+/// default within 15 days of notice that it will subject the appeal to
+/// dismissal.
+deadline default-remedy-period: 15.days after DefaultNoticeServed() counted_by frap26 cite "4th Cir. R. 45"
+{
+  forum frap
+}
+
+test "docketing statement is due 14 days after docketing" cite "4th Cir. R. 3(b)"
+{
+  given AppealDocketed() on 2026-11-02
+  expect deadline(docketing-statement-period) == 2026-11-16
+}
+
+test "docketing statement corrections are due 10 days after its service" cite "4th Cir. R. 3(b)"
+{
+  given DocketingStatementServed() on 2026-11-02
+  expect deadline(docketing-statement-correction-period) == 2026-11-12
+}
+
+test "disclosure statement is due 14 days after docketing" cite "4th Cir. R. 26.1(d)"
+{
+  given AppealDocketed() on 2026-11-02
+  expect deadline(disclosure-statement-period) == 2026-11-16
+}
+
+test "appearance of counsel is due 14 days after docketing" cite "4th Cir. R. 46(c)"
+{
+  given AppealDocketed() on 2026-11-02
+  expect deadline(appearance-period) == 2026-11-16
+}
+
+test "reporter returns a problem acknowledgment within 7 days" cite "4th Cir. R. 11(a)"
+{
+  given TranscriptAcknowledgmentReceived() on 2026-11-02
+  expect deadline(transcript-problem-period) == 2026-11-09
+}
+
+test "lead counsel is identified within 14 days of consolidation" cite "4th Cir. R. 12(b)"
+{
+  given ConsolidationOrdered() on 2026-11-02
+  expect deadline(lead-counsel-period) == 2026-11-16
+}
+
+test "reconsideration of a clerk's order is due 14 days after entry" cite "4th Cir. R. 27(b)"
+{
+  given ClerkOrderEntered() on 2026-11-02
+  expect deadline(clerk-order-reconsideration-period) == 2026-11-16
+}
+
+test "objection to an appendix designation is due 14 days after it" cite "4th Cir. R. 30(a)"
+{
+  given AppendixDesignated() on 2026-11-02
+  expect deadline(appendix-objection-period) == 2026-11-16
+}
+
+test "appendix sanctions motion is due 14 days after judgment" cite "4th Cir. R. 30(a)"
+{
+  given EnteredOnAppeal(Judgment) on 2026-11-02
+  expect deadline(appendix-sanctions-motion-period) == 2026-11-16
+}
+
+test "criminal appellant's brief is due 35 days after the briefing order, past Thanksgiving" cite "4th Cir. R. 31(a)"
+{
+  given CriminalBriefingOrderFiled() on 2026-10-22
+  expect deadline(criminal-appellant-brief-period) == 2026-11-27
+}
+
+test "criminal appellee's brief is due 21 days after the appellant's" cite "4th Cir. R. 31(a)"
+{
+  given CriminalAppellantBriefServed() on 2026-11-02
+  expect deadline(criminal-appellee-brief-period) == 2026-11-23
+}
+
+test "criminal reply brief is due 10 days after the appellee's" cite "4th Cir. R. 31(a)"
+{
+  given CriminalAppelleeBriefServed() on 2026-11-02
+  expect deadline(criminal-reply-brief-period) == 2026-11-12
+}
+
+test "motion for a longer brief is due 10 days before the brief" cite "4th Cir. R. 32(b)"
+{
+  given BriefDue() on 2026-11-20
+  expect deadline(longer-brief-motion-period) == 2026-11-10
+}
+
+test "informal brief is due 21 days after the clerk's notice" cite "4th Cir. R. 34(b)"
+{
+  given InformalBriefNoticeServed() on 2026-11-02
+  expect deadline(informal-brief-period) == 2026-11-23
+}
+
+test "informal response brief is due 14 days after the informal brief" cite "4th Cir. R. 34(b)"
+{
+  given InformalBriefServed() on 2026-11-02
+  expect deadline(informal-response-period) == 2026-11-16
+}
+
+test "informal reply brief is due 10 days after the informal response" cite "4th Cir. R. 34(b)"
+{
+  given InformalResponseServed() on 2026-11-02
+  expect deadline(informal-reply-period) == 2026-11-12
+}
+
+test "motion to submit on briefs is due 10 days after tentative notice of argument" cite "4th Cir. R. 34(e)"
+{
+  given ArgumentTentativelyNoticed() on 2026-11-02
+  expect deadline(submit-on-briefs-motion-period) == 2026-11-12
+}
+
+test "motion to seal argument is due 5 days before argument" cite "4th Cir. I.O.P. 34.3"
+{
+  given ArgumentHeard() on 2026-11-18
+  expect deadline(seal-argument-motion-period) == 2026-11-13
+}
+
+test "a default is remedied within 15 days of the clerk's notice" cite "4th Cir. R. 45"
+{
+  given DefaultNoticeServed() on 2026-11-02
+  expect deadline(default-remedy-period) == 2026-11-17
+}
+
+start threshold
+
+decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+{
+  note "A final decision of a district court is appealable under 28 U.S.C. § 1291; interlocutory routes, including permission to appeal under FRAP 5, are lit/frap's. A petition for permission to appeal is entered on the miscellaneous docket, with no docket fee unless it is granted (4th Cir. R. 5)."
+  edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "28 U.S.C. § 1291" }
+  edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
+}
+
+decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)(A)"
+{
+  note "The notice is due 30 days after entry of judgment, or 60 days when the United States is a party (FRAP 4(a)(1)); lit/frap encodes both periods."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "FRAP 4(a)(1)(A)" }
+  edge-notice-timely "Timely notice" -> docketed {
+    authority cite "FRAP 3(a)(1); 4th Cir. R. 3"
+    cost 605.usd
+    note "Upon filing the notice the appellant pays the district clerk $605: a $5 filing fee for the notice and a $600 fee for docketing the appeal (4th Cir. R. 3(a))."
+  }
+}
+
+state docketed: "Appeal Docketed" by office cite "FRAP 12(a); 4th Cir. R. 3(b)"
+{
+  note "Within 14 days of docketing, counsel files a docketing statement with any transcript order attached (4th Cir. R. 3(b)), each party its disclosure statement (4th Cir. R. 26.1(d)), and each attorney of record a written appearance (4th Cir. R. 46(c)); an opposing party reports errors in the docketing statement within 10 days of its service (4th Cir. R. 3(b)). Counseled civil and agency cases are reviewed by a circuit mediator after the docketing statements are filed; the conference does not toll the briefing time (4th Cir. R. 33)."
+  edge-docketed-record "Record and transcript" -> record {
+    authority cite "FRAP 10; 4th Cir. R. 10"
+  }
+  edge-docketed-default "Docketing statement not filed and default not remedied" -> dismissed-prosecution {
+    authority cite "4th Cir. R. 3(b); 4th Cir. R. 45"
+  }
+}
+
+state record: "Record and Transcript" by applicant cite "FRAP 10; 4th Cir. R. 10"
+{
+  note "The appellant orders the transcript on the court's form after making financial arrangements with the reporter (4th Cir. R. 10(c)(1)). When all parties are represented, the district clerk retains the record until a judge of the court asks for it (4th Cir. R. 10(a)). The clerk sends the reporter a transcript order acknowledgment with the due date computed under the district reporter management plan; a reporter who sees a problem returns it within 7 days (4th Cir. R. 11(a)). The court uses the plans' time limits in place of FRAP 11(b)(1)(B)'s (4th Cir. R. 11(b)); those limits are set outside the circuit rules, so lit/frap's FRAP period is not replaced here."
+  edge-record-brief "Briefing order issued" -> briefing { authority cite "4th Cir. R. 31(b)" }
+  edge-record-default "Appellant fails to order the transcript or pay the reporter" -> dismissed-prosecution {
+    authority cite "4th Cir. R. 10(c)(2); 4th Cir. R. 45"
+  }
+}
+
+state briefing: "Briefs Filed" by applicant cite "FRAP 31(a)(1); 4th Cir. R. 31(b)"
+{
+  note "A formal briefing schedule issues on receipt of the record or the clerk's finding that it is complete, and it, not FRAP 31(a)(1)'s receipt of the record, controls the appendix designation and brief dates (4th Cir. R. 31(b)). Extensions are granted only in extraordinary circumstances (4th Cir. R. 31(c)). Briefs may not exceed the FRAP 32(a)(7) and 28.1(e)(2) limits without advance permission, sought at least 10 days before the due date (4th Cir. R. 32(b)). Criminal appeals run on 4th Cir. R. 31(a)'s shortened periods; non-capital habeas, § 2255 and pro se appeals may be informally briefed (4th Cir. R. 34(b))."
+  edge-briefing-argue "Briefing complete" -> argument {
+    authority cite "FRAP 31(a)(1); 4th Cir. R. 31(b)"
+  }
+  edge-briefing-default "Appellant fails to file a brief and does not remedy the default" -> dismissed-prosecution {
+    authority cite "4th Cir. R. 45"
+  }
+}
+
+state argument: "Oral Argument or Submission" by court cite "FRAP 34; 4th Cir. R. 34"
+{
+  note "A panel may review any case before argument and, if all its judges agree argument is not to be allowed, decide it without argument (4th Cir. R. 34(a); 4th Cir. I.O.P. 34.2). Each side is normally allowed 20 minutes (4th Cir. R. 34(d)). A motion to submit on the briefs is due within 10 days of tentative notification of argument if that comes before briefing ends (4th Cir. R. 34(e)); a motion to seal argument at least five days before it (4th Cir. I.O.P. 34.3)."
+  edge-argument-decide "Decision" -> decision { authority cite "FRAP 34" }
+}
+
+state decision: "Decision Issued" by court cite "FRAP 36; 4th Cir. R. 36"
+{
+  note "Opinions are published only in fully briefed and argued cases that meet a 4th Cir. R. 36(a) standard; others are unpublished (4th Cir. R. 36(b)). A motion for sanctions for unnecessary appendix designations is due within 14 days after entry of judgment (4th Cir. R. 30(a))."
+  edge-decision-issued "Judgment entered" -> rehearing-decision { authority cite "FRAP 36" }
+}
+
+decision rehearing-decision: "Rehearing Sought?" by applicant cite "FRAP 40(d)(1)"
+{
+  note "The clerk denies as untimely a petition received later than 45 days after entry of judgment in a civil case with a United States party or 14 days after it in any other case, and extends the time only for death or serious illness or an extraordinary circumstance (4th Cir. R. 40(c)); lit/frap encodes the FRAP 40(d)(1) periods. A petition for rehearing en banc is made in the same document as the petition for rehearing (4th Cir. R. 40(a))."
+  edge-rehearing-decision-none "No petition" -> mandate { authority cite "FRAP 41(b)" }
+  edge-rehearing-decision-sought "Petition filed" -> rehearing-order {
+    authority cite "FRAP 40(d)(1); 4th Cir. R. 40"
+  }
+}
+
+state rehearing-order: "Rehearing Order" by court cite "FRAP 40; 4th Cir. R. 40"
+{
+  note "The clerk holds every petition until the time for all of them has run (4th Cir. I.O.P. 40.1). Granting rehearing en banc vacates the panel judgment and opinion (4th Cir. R. 40(e)); granting panel rehearing vacates the original judgment and opinion and the original panel rehears the case (4th Cir. I.O.P. 40.2)."
+  edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
+}
+
+state mandate: "Mandate Issued" by office cite "FRAP 41(b); 4th Cir. R. 41"
+{
+  note "The mandate issues under FRAP 41(b); lit/frap encodes the period. A motion to stay it pending certiorari must show a substantial question and good cause (4th Cir. R. 41). On issuance the clerk notifies the parties and the lower court that the judgment takes effect that day (4th Cir. I.O.P. 41.1)."
+  edge-mandate-further "Mandate issued" -> further-review { authority cite "FRAP 41(b)" }
+}
+
+decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+{
+  note "Certiorari under 28 U.S.C. § 1254; its period runs from the judgment or the denial of a timely rehearing petition, not from the mandate (4th Cir. I.O.P. 41.2), and is lit/frap's."
+  edge-further-review-none "No further review" -> final-decision {
+    authority cite "28 U.S.C. § 1254"
+  }
+  edge-further-review-petition "Petition for certiorari" -> review-decided {
+    authority cite "28 U.S.C. § 1254"
+  }
+}
+
+state review-decided: "Further Review Decided" by court cite "28 U.S.C. § 1254"
+{
+  edge-review-decided-denied "Denied" -> review-denied { authority cite "28 U.S.C. § 1254" }
+  edge-review-decided-granted "Granted" -> review-granted { authority cite "28 U.S.C. § 1254" }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: No Appellate Jurisdiction" outcome [loss, dismissal, jurisdictional] cite "28 U.S.C. § 1291"
+terminal dismissed-untimely: "Dismissed: Untimely Notice" outcome [loss, dismissal] cite "FRAP 4(a)(1)(A)"
+terminal dismissed-prosecution: "Dismissed: Failure to Prosecute" outcome [loss, dismissal] cite "4th Cir. R. 45"
+terminal final-decision: "Final: Decision Stands" outcome [final] cite "FRAP 41(b)"
+terminal review-denied: "Further Review Denied" outcome [final] cite "28 U.S.C. § 1254"
+
+terminal review-granted: "Further Review Granted" outcome [neutral] cite "28 U.S.C. § 1254"
+{
+  note "Certiorari granted; the merits are not modeled."
+}

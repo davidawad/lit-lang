@@ -1,0 +1,114 @@
+module vtd-criminal-local-rules.local-rules
+
+import core.authority.{ CaseOrder }
+import core.frcrimp45.{ frcrimp45 }
+
+// The District of Vermont's own criminal periods, counted under the
+// criminal rules (FRCrimP 45(a) governs "any local rule"). The criminal
+// Local Rules supplement the Federal Rules of Criminal Procedure, and the
+// court's other Local Rules and the Federal Rules of Civil Procedure
+// govern criminal procedures to the extent applicable directly or by
+// analogy, unless they conflict with a statute or a Federal Rule of
+// Criminal Procedure (D. Vt. L. Cr. R. 1). Which civil Local Rule periods
+// apply "by analogy" the rule does not say, so none is encoded here. No
+// trigger carries a service method: FRCrimP 45(c)'s three added days
+// follow the manner of service, which is not modeled here.
+//
+// Conditions that are not deadlines from an event stay in notes: the
+// court issues its standard Criminal Pretrial Order at arraignment (L. Cr.
+// R. 16; not vendored); a Speedy Trial Act continuance needs a motion or
+// stipulation stating the exclusion and a proposed order (L. Cr. R.
+// 16(g)); sentencing occurs without unnecessary delay under FRCrimP 32 and
+// the scheduling orders, whose time limits the court may change for good
+// cause (L. Cr. R. 32(a)); and on the day objections to the draft
+// presentence report are due (an FRCrimP 32(f)(1) period, in lit/frcrimp)
+// the parties exchange undisclosed sentencing information and witnesses
+// (L. Cr. R. 16(i)(2)).
+//
+// The earlier D. Vt. criminal outline's FRCrimP flow and its decisions
+// (United States v. Salerno, Barker v. Wingo, Zedner v. United States,
+// Brady v. Maryland and the others it named) are FRCrimP, Speedy Trial
+// Act or constitutional authority and belong to lit/frcrimp; they are
+// removed here: no reporter text is vendored.
+
+/// The defendant is arraigned; the court issues its standard Criminal
+/// Pretrial Order (D. Vt. L. Cr. R. 16).
+event Arraigned()
+/// The date set for the start of jury selection (D. Vt. L. Cr. R. 16(d)).
+event JurySelectionScheduled()
+/// The trial date (D. Vt. L. Cr. R. 16(h)).
+event TrialScheduled()
+/// The defendant's conviction or guilty plea (D. Vt. L. Cr. R. 32(b)).
+event ConvictionOrGuiltyPlea()
+
+/// D. Vt. L. Cr. R. 16(a): unless the court orders otherwise, the
+/// government makes available within 14 days of arraignment the FRCrimP
+/// 16(a) material with notice under FRCrimP 12(b)(4), Brady material, its
+/// case-in-chief witness list, and the search-warrant and electronic
+/// surveillance papers.
+deadline government-discovery: 14.days after Arraigned() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Vt. L. Cr. R. 16(a)"
+{
+  forum frcrimp
+}
+
+/// D. Vt. L. Cr. R. 16(b): a defendant who refuses the FRCrimP
+/// 16(a)(1)(E)-(G) materials does so in writing within 5 days of
+/// arraignment; otherwise the reciprocal disclosure below is owed.
+deadline reciprocal-discovery-refusal: 5.days after Arraigned() counted_by frcrimp45 cite "D. Vt. L. Cr. R. 16(b)"
+{
+  forum frcrimp
+}
+
+/// D. Vt. L. Cr. R. 16(b): unless the defendant refused in time, the
+/// defendant makes available within 21 days of arraignment all FRCrimP
+/// 16(b) material and the names, addresses and birth dates of its
+/// case-in-chief witnesses.
+deadline defense-discovery: 21.days after Arraigned() counted_by frcrimp45 cite "D. Vt. L. Cr. R. 16(b)"
+{
+  forum frcrimp
+}
+
+/// D. Vt. L. Cr. R. 16(c): within 21 days of arraignment, the defendant
+/// gives the written notices FRCrimP 12.1, 12.2 and 12.3 require.
+deadline defense-notices: 21.days after Arraigned() counted_by frcrimp45 cite "D. Vt. L. Cr. R. 16(c)"
+{
+  forum frcrimp
+}
+
+/// D. Vt. L. Cr. R. 16(d): unless the court orders otherwise for good
+/// cause, not less than 14 days before the start of jury selection the
+/// government provides Giglio material and notice of Federal Rule of
+/// Evidence 404(b) evidence in its case in chief.
+deadline government-pretrial-disclosure: 14.days before JurySelectionScheduled() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Vt. L. Cr. R. 16(d)"
+{
+  forum frcrimp
+}
+
+/// D. Vt. L. Cr. R. 16(h)(1): within 3 days of the trial date, counsel for
+/// each party exchange and file voir dire requests, requests to charge
+/// whose need was not apparent before trial, and a proposed exhibit list;
+/// read as 3 days before the trial date. Within the same 3 days counsel
+/// make every effort to stipulate facts and admissibility (L. Cr. R.
+/// 16(h)(2)).
+deadline pretrial-filings: 3.days before TrialScheduled() counted_by frcrimp45 cite "D. Vt. L. Cr. R. 16(h)"
+{
+  forum frcrimp
+}
+
+/// D. Vt. L. Cr. R. 32(b): defense counsel, entitled to attend the
+/// probation officer's interview of the defendant, must be available for
+/// it within 10 days after conviction or guilty plea unless the court
+/// grants an extension.
+deadline presentence-interview-availability: 10.days after ConvictionOrGuiltyPlea() counted_by frcrimp45 delegable {
+  to CaseOrder
+  op set
+} cite "D. Vt. L. Cr. R. 32(b)"
+{
+  forum frcrimp
+}

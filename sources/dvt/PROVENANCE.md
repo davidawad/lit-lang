@@ -15,3 +15,9 @@
 - Source: as the extract `dvt/local-rules.txt`, https://www.vtd.uscourts.gov/sites/vtd/files/LocalRules-20260420.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, April 20, 2026.
 - Sectioned sha256 b1e5dc3351b3b000ac8c3adc91725d483afcb0abd84262c2833cd8daeff90938 (the `path_sha256` pinned by `lit/vtd/Lit.toml`).
+
+### `dvt/local-rules-criminal-sectioned.txt` — D. Vt. Local Rules of Procedure, criminal rules sectioned
+
+- Derived in the pod (lg-gddt.8) from `dvt/local-rules.txt` (extract sha256 32fb779eee46f3f0a700856c56689ed4764fc01fe61df9cfa63de7103dda9e7d); nothing fetched. In Part II (`II. CRIMINAL RULES`, extract line 1911 on), one `## D. Vt. L. Cr. R. <n>` line is inserted before each criminal rule's own heading line `Rule <n>.` (6 rules: 1, 16, 32, 57.1, 57.2, 83.5; a heading after a page's form feed keeps its form feed on the rule line). The civil rules (Part I) are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## D\. Vt\. L\. Cr\. R\. /d'`) restores the extract byte for byte.
+- Edition: as the extract, April 20, 2026.
+- Sectioned sha256 5af2496ac0bef2782709140182645732f0d0e6592d262d9a5b1a909fdec9e98a (the `path_sha256` pinned by `lit/vtd-criminal/Lit.toml`).

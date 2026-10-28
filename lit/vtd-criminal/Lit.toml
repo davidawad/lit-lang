@@ -1,0 +1,53 @@
+# The U.S. District Court for the District of Vermont's criminal Local
+# Rules (Part II of the Local Rules of Procedure) as a local-rule layer
+# over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a); D. Vt. L. Cr. R.
+# 1(a): the rules "supplement the Federal Rules of Criminal Procedure"):
+# it declares only the periods the criminal rules themselves state and
+# re-encodes no FRCrimP, Speedy Trial Act or FRAP 4(b) period (one source
+# of truth: lit/frcrimp). Each period is counted under FRCrimP 45(a),
+# which governs "any local rule", so each deadline names `forum frcrimp`.
+# The rules are the edition dated April 20, 2026 (sources/dvt); earlier
+# editions are not vendored, so a query before that date is a hole in the
+# corpus. The standard Criminal Pretrial Order issued at arraignment (L.
+# Cr. R. 16) is not vendored. An appeal goes to the Second Circuit under
+# lit/frcrimp's FRAP 4(b) period and lit/ca2.
+[package]
+name = "vtd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "vtd-criminal-local-rules"
+forum = "vtd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "U.S. District Court for the District of Vermont: Local Criminal Rules"
+description = "The District of Vermont's criminal Local Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): the government's and the defendant's discovery and the defendant's defense notices counted from arraignment, the government's Giglio and Rule 404(b) disclosures before jury selection, the exchange of voir dire requests, requests to charge and exhibit lists before trial, and defense counsel's availability for the presentence interview."
+in_force = "2026-04-20"
+known_at = "2026-10-28"
+unknown_before = "2026-04-20"
+jurisdiction = "U.S. District Court for the District of Vermont (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "vtd-lcrr"
+issuer = "United States District Court for the District of Vermont"
+date = "2026-04-20"
+designation = "Local Rules of Procedure, Part II (Criminal Rules)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.vtd-lcrr]
+title = "Local Rules of Procedure of the United States District Court for the District of Vermont, Part II, Criminal Rules (April 20, 2026)"
+url = "https://www.vtd.uscourts.gov/sites/vtd/files/LocalRules-20260420.pdf"
+path = "sources/dvt/local-rules-criminal-sectioned.txt"
+path_sha256 = "5af2496ac0bef2782709140182645732f0d0e6592d262d9a5b1a909fdec9e98a"
+sha256 = "8048666fab25b6a7f9e35bd7fd8f486cca1041c9d5d047fd81c89338630300fa"
+as_of = "2026-04-20"
+cite_prefixes = ["D. Vt. L. Cr. R."]
+section_heading = "D. Vt. L. Cr. R. {n}"

@@ -1,0 +1,132 @@
+module ma-superior-court-civil.civil
+
+start complaint-filed
+
+state complaint-filed: "Complaint filed" by applicant cite "Mass. R. Civ. P. 3"
+{
+  note "A civil action is commenced by mailing the complaint and the entry fee to the clerk by certified or registered mail, filing them with the clerk, or submitting the complaint through the court's electronic filing system with electronic payment of the entry fee (Mass. R. Civ. P. 3); waiver of the fee for indigency is sought under G.L. c. 261, § 27C. Periods in this package are stated, not counted: Mass. R. Civ. P. 6(a) computes them, excluding intermediate Saturdays, Sundays and legal holidays from a period under 7 days, and no lit/core counting rule encodes it. The earlier outline's decisions (Iannacchino v. Ford Motor Co.; Kourouvacilis v. General Motors Corp.) are removed: no reporter text is vendored."
+  edge-complaint-filed-service "Summons and complaint served" -> service-check {
+    authority cite "Mass. R. Civ. P. 4(j)"
+  }
+}
+
+decision service-check: "Service within 90 days" by office cite "Mass. R. Civ. P. 4(j)"
+{
+  note "If the summons and complaint are not served on a defendant within 90 days after the complaint is filed and the plaintiff cannot show good cause, the action is dismissed as to that defendant without prejudice, on the court's own initiative with notice or on motion (Mass. R. Civ. P. 4(j))."
+  edge-service-check-served "Served" -> answer-due { authority cite "Mass. R. Civ. P. 12(a)" }
+  edge-service-check-unserved "Not served in time" -> dismissed-unserved {
+    authority cite "Mass. R. Civ. P. 4(j)"
+  }
+}
+
+decision answer-due: "Answer, motion or default" by office cite "Mass. R. Civ. P. 12(a)"
+{
+  note "A party served with a pleading requiring a response serves the responsive pleading within 20 days unless the court orders otherwise (Mass. R. Civ. P. 12(a)(1)). A motion under rule 12 alters the period: if the court denies the motion or postpones it to trial, the responsive pleading is due within 10 days after notice of the court's action; if it grants a more definite statement, within 10 days after service of that statement (Mass. R. Civ. P. 12(a)(2)). Three days are added after mail or electronic service (Mass. R. Civ. P. 6(d))."
+  edge-answer-due-default "No response" -> default-entered {
+    authority cite "Mass. R. Civ. P. 55(a)"
+  }
+  edge-answer-due-motion "Motion under rule 12(b) served" -> pleading-motion {
+    authority cite "Mass. R. Civ. P. 12(b)"
+  }
+  edge-answer-due-answer "Answer served" -> discovery { authority cite "Mass. R. Civ. P. 26(a)" }
+}
+
+decision pleading-motion: "Motion to dismiss decided" by court cite "Mass. R. Civ. P. 12(b)"
+{
+  note "The defenses that may be made by motion before pleading include failure to state a claim upon which relief can be granted (Mass. R. Civ. P. 12(b)(6)); a motion presenting it includes a short, concise statement of its grounds, and matters outside the pleading not excluded turn it into a summary judgment motion under rule 56. A party pleads to an amended pleading within the time remaining for the original or 10 days after service of the amendment, whichever is longer (Mass. R. Civ. P. 15(a)); the re-pleading loop is not modeled. Superior Court motion practice (Superior Court Rule 9A) is not vendored. No leading decision is named."
+  edge-pleading-motion-dismissed "Allowed with prejudice" -> dismissed-pleading {
+    authority cite "Mass. R. Civ. P. 12(b)"
+  }
+  edge-pleading-motion-leave "Allowed with leave to amend" -> discovery {
+    authority cite "Mass. R. Civ. P. 15(a)"
+  }
+  edge-pleading-motion-denied "Denied: responsive pleading within 10 days after notice" -> discovery {
+    authority cite "Mass. R. Civ. P. 12(a)"
+  }
+}
+
+terminal default-entered: "Default entered" outcome [loss] cite "Mass. R. Civ. P. 55(a)"
+{
+  note "When a party against whom affirmative relief is sought has failed to plead or otherwise defend and that is made to appear by affidavit or otherwise, the clerk enters the default (Mass. R. Civ. P. 55(a)). Judgment by default (Mass. R. Civ. P. 55(b)) and the special requirements of rule 55.1 are not modeled. Outcome from the defending side."
+}
+
+terminal dismissed-unserved: "Dismissed for failure to serve" outcome [loss, dismissal] cite "Mass. R. Civ. P. 4(j)"
+{
+  note "Dismissal is without prejudice as to the unserved defendant (Mass. R. Civ. P. 4(j))."
+}
+
+terminal dismissed-pleading: "Dismissed on the motion" outcome [win, dismissal] cite "Mass. R. Civ. P. 12(b)"
+
+state discovery: "Discovery and pretrial" by applicant cite "Mass. R. Civ. P. 26(a)"
+{
+  note "Discovery is by deposition, interrogatories, production, examinations and requests for admission, unlimited in frequency unless the court orders otherwise (Mass. R. Civ. P. 26(a)). The court may direct a pretrial conference and enter an order that controls the subsequent course of the action (Mass. R. Civ. P. 16). Superior Court tracking orders are not vendored."
+  edge-discovery-sj "Summary judgment motion served" -> sj-motion {
+    authority cite "Mass. R. Civ. P. 56(c)"
+  }
+  edge-discovery-trial "No dispositive motion" -> trial { authority cite "Mass. R. Civ. P. 38(b)" }
+  edge-discovery-settle "Settled or voluntarily dismissed" -> settled {
+    authority cite "Mass. R. Civ. P. 41(a)"
+  }
+}
+
+decision sj-motion: "Summary judgment decided" by court cite "Mass. R. Civ. P. 56(c)"
+{
+  note "A claimant may move at any time after 20 days from commencement or after service of the adverse party's motion (Mass. R. Civ. P. 56(a)); a defending party at any time (Mass. R. Civ. P. 56(b)). The motion is served at least 10 days before the hearing, and judgment is rendered forthwith if there is no genuine issue as to any material fact and the movant is entitled to judgment as a matter of law (Mass. R. Civ. P. 56(c)). The earlier outline's decision (Kourouvacilis) is removed: no reporter text is vendored."
+  edge-sj-motion-granted "Allowed" -> judgment-for-movant {
+    authority cite "Mass. R. Civ. P. 56(c)"
+  }
+  edge-sj-motion-denied "Denied or partly denied" -> trial {
+    authority cite "Mass. R. Civ. P. 56(d)"
+  }
+}
+
+terminal judgment-for-movant: "Judgment for the movant" outcome [win, judgment] cite "Mass. R. Civ. P. 56(c)"
+{
+  note "Partial summary judgment (Mass. R. Civ. P. 56(d)) is not modeled."
+}
+
+state trial: "Trial" by court cite "Mass. R. Civ. P. 38(b)"
+{
+  note "A party demands a jury by serving a written demand after commencement and not later than 10 days after service of the last pleading directed to the issue (Mass. R. Civ. P. 38(b)). A party may move for a directed verdict at the close of the opponent's evidence or of all the evidence, stating its specific grounds (Mass. R. Civ. P. 50(a))."
+  edge-trial-post "Verdict or decision" -> post-trial { authority cite "Mass. R. Civ. P. 50(b)" }
+}
+
+decision post-trial: "Post-trial motions decided" by court cite "Mass. R. Civ. P. 59(b)"
+{
+  note "A party who moved for a directed verdict may serve a motion for judgment notwithstanding the verdict not later than 10 days after entry of judgment, or within 10 days after the jury is discharged if no verdict was returned (Mass. R. Civ. P. 50(b)). A motion for a new trial, and a motion to alter or amend the judgment, are served not later than 10 days after entry of judgment (Mass. R. Civ. P. 59(b), (e)). The court may not extend these times (Mass. R. Civ. P. 6(b)). A timely motion under rule 50(b), 52(b) or 59 restarts the appeal period from the order disposing of the last of them (Mass. R. A. P. 4(a))."
+  edge-post-trial-judgment "Motions resolved or none served" -> judgment-entered {
+    authority cite "Mass. R. Civ. P. 58(a)"
+  }
+  edge-post-trial-jnov "Judgment notwithstanding the verdict" -> judgment-for-movant {
+    authority cite "Mass. R. Civ. P. 50(b)"
+  }
+}
+
+state judgment-entered: "Judgment entered" by office cite "Mass. R. Civ. P. 58(a)"
+{
+  note "Every judgment is set forth on a separate document and is effective only when so set forth and entered under rule 79(a); entry is not delayed for the taxing of costs (Mass. R. Civ. P. 58(a)). Relief for mistake, newly discovered evidence or fraud is sought within a reasonable time and not more than one year after the judgment (Mass. R. Civ. P. 60(b))."
+  edge-judgment-entered-appeal "Next step" -> appeal-decision {
+    authority cite "Mass. R. A. P. 4(a)"
+  }
+}
+
+decision appeal-decision: "Notice of appeal within 30 days of entry?" by applicant cite "Mass. R. A. P. 4(a)"
+{
+  note "In a civil case, unless a statute provides otherwise, the notice of appeal is filed with the clerk of the lower court within 30 days of entry of the judgment, or within 60 days if the Commonwealth or an officer or agency of it is a party (Mass. R. A. P. 4(a)(1)(A)); any other party may file within 14 days of the first notice (Mass. R. A. P. 4(a)(1)(C)). On excusable neglect the lower court may extend the time by not more than 30 days from its expiration (Mass. R. A. P. 4(c))."
+  edge-appeal-decision-taken "Notice filed" -> appeal-taken { authority cite "Mass. R. A. P. 4(a)" }
+  edge-appeal-decision-none "No notice filed" -> final-no-appeal {
+    authority cite "Mass. R. A. P. 4(a)"
+  }
+}
+
+terminal appeal-taken: "Appeal taken: continue in the Massachusetts appellate package" outcome [appeal] cite "Mass. R. A. P. 4(a)"
+{
+  note "Hand-off to lit/ma-appeals-sjc (ma-appeals-court)."
+}
+
+terminal final-no-appeal: "Final: no appeal" outcome [final] cite "Mass. R. A. P. 4(a)"
+
+terminal settled: "Settled or voluntarily dismissed" outcome [settlement] cite "Mass. R. Civ. P. 41(a)"
+{
+  note "A plaintiff may dismiss without order by notice before the adverse party serves an answer or a summary judgment motion, whichever first occurs, or by a stipulation signed by all parties who have appeared; unless stated otherwise the dismissal is without prejudice (Mass. R. Civ. P. 41(a)(1)). A filed agreement for judgment or stipulation of dismissal constitutes the judgment (Mass. R. Civ. P. 58(a))."
+}

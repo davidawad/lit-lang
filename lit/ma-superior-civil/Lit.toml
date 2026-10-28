@@ -1,0 +1,51 @@
+# Civil actions in the Massachusetts Superior Court under the
+# Massachusetts Rules of Civil Procedure (the Trial Court Law Libraries'
+# compilation including amendments effective March 10, 2025,
+# sources/ma-superior-civil). Computation of time is Mass. R. Civ. P. 6(a),
+# which excludes intermediate Saturdays, Sundays and legal holidays from
+# periods under 7 days and takes its legal holidays from G.L. c. 4, § 7;
+# no counting rule in lit/core encodes it, so the rules' periods are
+# stated in notes, not encoded as counted deadlines. The Superior Court's
+# own rules (Rule 9A motion practice and the standing orders) are not
+# vendored. An appeal hands off to lit/ma-appeals-sjc.
+[package]
+name = "ma-superior-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ma-superior-court-civil"
+forum = "ma-superior-civil"
+authority = "StateRule"
+title = "Massachusetts Superior Court, civil"
+description = "Civil actions in the Massachusetts Superior Court under the Massachusetts Rules of Civil Procedure, as far as the vendored text states. An appeal hands off to the Massachusetts appellate package (lit/ma-appeals-sjc)."
+in_force = "2025-03-10"
+known_at = "2026-10-27"
+unknown_before = "2025-03-10"
+jurisdiction = "Massachusetts Superior Court Department (civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.mass-r-civ-p]
+title = "Massachusetts Rules of Civil Procedure, Trial Court Law Libraries compilation including amendments effective March 10, 2025"
+url = "https://www.mass.gov/doc/massachusetts-rules-of-civil-procedure/download"
+path = "sources/ma-superior-civil/ma-rules-civil-procedure-sectioned.txt"
+path_sha256 = "3368e76c097f4f8dd3560ba731b88d6f6ca00fb93824103f2555d140a1952a1d"
+sha256 = "995d92caabfe01b72050a0d1f0960fc12be62795f57410a0824d9120a4aeae75"
+as_of = "2025-03-10"
+cite_prefixes = ["Mass. R. Civ. P."]
+section_heading = "Rule {n}"
+
+[sources.mass-r-a-p]
+title = "Massachusetts Rules of Appellate Procedure, Trial Court Law Libraries compilation including amendments effective September 1, 2026"
+url = "https://www.mass.gov/doc/massachusetts-rules-of-appellate-procedure/download"
+path = "sources/ma-appeals-sjc/ma-rules-appellate-procedure-sectioned.txt"
+path_sha256 = "00e9772f52d6b9f7b62e5b0d6090d20721f14377cd6434c4d7195ad4f3f673ff"
+sha256 = "0811b8698254509d2830120cc2b1596e76d7d24d913603842617efd6ac391b34"
+as_of = "2026-09-01"
+cite_prefixes = ["Mass. R. A. P."]
+section_heading = "Rule {n}"

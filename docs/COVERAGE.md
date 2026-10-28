@@ -60,7 +60,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | Louisiana | state | outline | 0 | 0 | 0 | 0 | `outlines/fifth-circuit/louisiana/state-appellate`, `outlines/fifth-circuit/louisiana/state-civil` |
 | Maine | state | promoted | 0 | 0 | 0 | 0 | `lit/me-law-court`, `lit/me-superior-civil` |
 | Maryland | state | outline | 0 | 0 | 0 | 0 | `outlines/fourth-circuit/maryland/state-appellate`, `outlines/fourth-circuit/maryland/state-civil` |
-| Massachusetts | state | outline | 0 | 0 | 0 | 0 | `outlines/first-circuit/massachusetts/state-appellate`, `outlines/first-circuit/massachusetts/state-civil` |
+| Massachusetts | state | promoted | 0 | 0 | 0 | 0 | `lit/ma-superior-civil` |
 | Michigan | state | outline | 0 | 0 | 0 | 0 | `outlines/sixth-circuit/michigan/state-appellate`, `outlines/sixth-circuit/michigan/state-civil` |
 | Minnesota | state | outline | 0 | 0 | 0 | 0 | `outlines/eighth-circuit/minnesota/state-appellate`, `outlines/eighth-circuit/minnesota/state-civil` |
 | Mississippi | state | outline | 0 | 0 | 0 | 0 | `outlines/fifth-circuit/mississippi/state-appellate`, `outlines/fifth-circuit/mississippi/state-civil` |

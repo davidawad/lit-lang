@@ -5,6 +5,7 @@
 - Edition: eCFR text current through 2026-10-23 (title 8 up_to_date_as_of 2026-10-23, latest_amended_on 2026-10-14, per https://www.ecfr.gov/api/versioner/v1/titles.json). The eCFR is an unofficial editorial compilation; the official edition is the annual CFR.
 - Retrieved 2026-10-27 on carbon (lg-f3q8 standing method); XML flattened to text, one `## 8 C.F.R. § N` heading per section (1046 paragraphs, 65 sections) by a short script, paragraph text unedited.
 - Extract sha256 73881d597138882b36b902474e2d6318a4a03ee09928e304dc1395e3c8f98d7f.
+- Original: `bia/original/cfr-8-part1003.xml` as served (sha256 5ef4b8a7f61596ef6dceed394a5605314a4d53235a39b169b2eeba13688707fb); extraction sha256 73881d597138882b36b902474e2d6318a4a03ee09928e304dc1395e3c8f98d7f. Re-fetched 2026-10-28 on carbon with curl --compressed from the same URL (the date-pinned versioner URL returned a byte-identical file); fetched on David's explicit ruling 2026-10-28 despite robots (eCFR robots.txt, User-agent *, `Disallow: /api/versioner/v1/full/`, which covers this URL), tool curl. Correction: the earlier statement in this entry that the eCFR robots.txt does not disallow /api/ was wrong; the 2026-10-23 fetch was within that robots Disallow, now covered retroactively by David's ruling 2026-10-28.
 
 ### `bia/cfr-8-part1003-sectioned.txt` — 8 C.F.R. Part 1003, sectioned
 

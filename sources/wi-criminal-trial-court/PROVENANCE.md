@@ -1,0 +1,23 @@
+
+### `wi-criminal-trial-court/wi-stat-chapters-967-979-criminal-procedure.txt` — Wisconsin Statutes chapters 967-979, Criminal Procedure (13 chapter PDFs; chapter 971 includes 971.10, speedy trial)
+
+- Source: https://docs.legis.wisconsin.gov/statutes/statutes (13 official PDFs, one GET each).
+- Edition: Wisconsin Statutes chapters 967 to 979 as the Wisconsin Legislature's chapter PDFs, each headed 'Updated 2023-24 Wis. Stats. Published and certified under s. 35.18' (the 2023-24 edition updated through the date printed on each chapter). docs.legis.wisconsin.gov robots.txt read; no Disallow covering this path; home page read: no terms or privacy link found; fetched on David's explicit ruling 2026-10-28 despite robots/terms; tool: curl with the identifying User-Agent lit-lang-provenance/1.0 (angrybohr@proton.me).
+- Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); each PDF extracted with `pdftotext -layout` (poppler 26.06), unedited, concatenated in order under one `## <heading>` per file.
+- Extract sha256 d0776dd98ebe1e64b017a61cdedd8b125fb1acf8500d990ab6a376357d2f6491. Raw extract, not yet sectioned into `## <ref>` form.
+- Original: `wi-criminal-trial-court/original/chapter-pdfs/0001.pdf` as served (sha256 ce380dfe70c2c4d20e029645e7cef1de357242ff3960b859ff7bc5f0e2c11c70). Served at https://docs.legis.wisconsin.gov/statutes/statutes/967.pdf.
+- Original: `wi-criminal-trial-court/original/chapter-pdfs/0002.pdf` as served (sha256 b55b76ae5af60be389a9e9de05f20cdca80c9bbee08f26124e11af700f5bec12). Served at https://docs.legis.wisconsin.gov/statutes/statutes/968.pdf.
+- Original: `wi-criminal-trial-court/original/chapter-pdfs/0003.pdf` as served (sha256 ea12b35accee3cc552b2058eb8a7a88de7e403affc028d70a41c67a89ddad58f). Served at https://docs.legis.wisconsin.gov/statutes/statutes/969.pdf.
+- Original: `wi-criminal-trial-court/original/chapter-pdfs/0004.pdf` as served (sha256 ba4a13c15690b935b50e0ee04aeaf89cf07a81f15c4bb896ce17b7efeaabe253). Served at https://docs.legis.wisconsin.gov/statutes/statutes/970.pdf.
+- Original: `wi-criminal-trial-court/original/chapter-pdfs/0005.pdf` as served (sha256 f57611a06ca7a3801251810c3847369b411a0d266ddc9096f0fb995f246ff719). Served at https://docs.legis.wisconsin.gov/statutes/statutes/971.pdf.
+- Original: `wi-criminal-trial-court/original/chapter-pdfs/0006.pdf` as served (sha256 4ffb1446a9138349b5de4af489bb5c7dbae1a133fa76533d6dc20db14fe61e8b). Served at https://docs.legis.wisconsin.gov/statutes/statutes/972.pdf.
+- Original: `wi-criminal-trial-court/original/chapter-pdfs/0007.pdf` as served (sha256 6f1eff27de37a9ad9b81e2d18720bce9fd4fef8b39c28b7ee8ffef80c83e04af). Served at https://docs.legis.wisconsin.gov/statutes/statutes/973.pdf.
+- Original: `wi-criminal-trial-court/original/chapter-pdfs/0008.pdf` as served (sha256 c42837735a0894326bc3ff17adba85b167acd05fddec0befdb74f138e4cbdaa4). Served at https://docs.legis.wisconsin.gov/statutes/statutes/974.pdf.
+- Original: `wi-criminal-trial-court/original/chapter-pdfs/0009.pdf` as served (sha256 cf82badd0063de3d4681cc15dcad88666e083ba7c67e1028903ebcfbda6de878). Served at https://docs.legis.wisconsin.gov/statutes/statutes/975.pdf.
+- Original: `wi-criminal-trial-court/original/chapter-pdfs/0010.pdf` as served (sha256 68b54362794b0ecb701948d75778e8b5471e6bc703b500497dcaf1d6a14487c9). Served at https://docs.legis.wisconsin.gov/statutes/statutes/976.pdf.
+- Original: `wi-criminal-trial-court/original/chapter-pdfs/0011.pdf` as served (sha256 39232a7c109f3d5abdc16931e7452a80db42ac87d3ef3eafa1fe77e0724fe4be). Served at https://docs.legis.wisconsin.gov/statutes/statutes/977.pdf.
+- Original: `wi-criminal-trial-court/original/chapter-pdfs/0012.pdf` as served (sha256 fe864a7c9fa9bab6df5e7442ccd2fc0afcfdf839c6e953d6788407ef112fcab0). Served at https://docs.legis.wisconsin.gov/statutes/statutes/978.pdf.
+- Original: `wi-criminal-trial-court/original/chapter-pdfs/0013.pdf` as served (sha256 19d632cd0e9a121e4028afd7565d226e930d8c927ee89e2b84c3633f2508b36c). Served at https://docs.legis.wisconsin.gov/statutes/statutes/979.pdf.
+- Extraction sha256 d0776dd98ebe1e64b017a61cdedd8b125fb1acf8500d990ab6a376357d2f6491.
+
+- Note (lg-gddt): Wisconsin criminal procedure is statutory (chapters 967-979). Criminal appeals: chapter 809 (Rules of Appellate Procedure) and chapter 974, covered by sources/wisctapp/ where vendored.

@@ -1,0 +1,652 @@
+module ksd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The District of Kansas's own civil periods and limits, computed under
+// FRCP 6(a), which governs a period stated in a local rule. Rules that
+// state no period this layer can count stay out: the pretrial order and
+// its objections at times the court sets (D. Kan. Rule 16.2(a)); the
+// 48 hours before a deposition by which a motion to quash must also be
+// served (D. Kan. Rule 30.2(b)(2)(B)), an hour-based period; the
+// receiver's inventory (D. Kan. Rule 66.1(b)); the MDL notice of related
+// case and its five-page papers (D. Kan. Rule 23-A); the plaintiff's
+// Social Security brief, due 30 days after the later of the answer and the
+// order on the last Supplemental Rule 4(c) motion (D. Kan. Rule 83.7.2(b)),
+// which runs from two events; and the criminal and bankruptcy rules. The
+// court sets no local period for objections to a magistrate judge's
+// civil order or recommendation: FRCP 72 governs (D. Kan. Rule 72.1.4;
+// lit/frcp). The earlier D. Kan. outline's FRCP flow and its decisions
+// (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby, Matsushita,
+// Unitherm, Bowles v. Russell, Hamer, Microsoft v. Baker; Robbins v.
+// Oklahoma (10th Cir.)) are FRCP and FRAP authority and belong to lit/frcp
+// and lit/frap; no reporter text is vendored, so they are removed here.
+/// A brief in support of or in response to a discovery-related motion: at
+/// most 10 pages unless the court orders otherwise (D. Kan. Rule
+/// 7.1(d)(1)).
+limit discovery-brief { pages <= 10 cite "D. Kan. Rule 7.1(d)" } cite "D. Kan. Rule 7.1(d)"
+/// A reply on a discovery-related motion: at most 3 pages (D. Kan. Rule
+/// 7.1(d)(1)).
+limit discovery-reply { pages <= 3 cite "D. Kan. Rule 7.1(d)" } cite "D. Kan. Rule 7.1(d)"
+/// A brief in support of or in response to a summary judgment or class
+/// certification motion, and a merits brief in a Social Security or
+/// bankruptcy appeal or a D. Kan. Rule 9.1(a) proceeding: at most 40 pages
+/// (D. Kan. Rule 7.1(d)(2)).
+limit summary-judgment-brief { pages <= 40 cite "D. Kan. Rule 7.1(d)" } cite "D. Kan. Rule 7.1(d)"
+/// A reply on a summary judgment or class certification motion: at most
+/// 15 pages (D. Kan. Rule 7.1(d)(2)).
+limit summary-judgment-reply { pages <= 15 cite "D. Kan. Rule 7.1(d)" } cite "D. Kan. Rule 7.1(d)"
+/// A brief in support of or in response to any other motion: at most 15
+/// pages (D. Kan. Rule 7.1(d)(3)).
+limit motion-brief { pages <= 15 cite "D. Kan. Rule 7.1(d)" } cite "D. Kan. Rule 7.1(d)"
+/// A reply on any other motion: at most 5 pages (D. Kan. Rule 7.1(d)(3)).
+limit motion-reply { pages <= 5 cite "D. Kan. Rule 7.1(d)" } cite "D. Kan. Rule 7.1(d)"
+
+/// The body of a notice of supplemental authority, and of any response to
+/// it: at most 350 words (D. Kan. Rule 7.1(f)).
+limit supplemental-authority-notice {
+  words <= 350 cite "D. Kan. Rule 7.1(f)"
+} cite "D. Kan. Rule 7.1(f)"
+
+/// A document is filed provisionally under seal (D. Kan. Rule 5.4.2(b)).
+event DocumentFiledProvisionallyUnderSeal()
+/// A Proponent's motion to seal or redact is served (D. Kan. Rule
+/// 5.4.2(c)).
+event SealMotionServed()
+/// A response to the motion to seal or redact is filed (D. Kan. Rule
+/// 5.4.2(c)).
+event SealResponseFiled()
+/// The time specified for an act expires (D. Kan. Rule 6.1(a)).
+event TimeForActExpires()
+/// A dispositive or similar motion listed in D. Kan. Rule 6.1(d)(1) is
+/// served.
+event DispositiveMotionServed()
+/// A response to a dispositive or similar motion is served (D. Kan. Rule
+/// 6.1(d)(1)).
+event DispositiveResponseServed()
+/// Any other motion is served (D. Kan. Rule 6.1(d)(4)).
+event MotionServed()
+/// A response to any other motion is served (D. Kan. Rule 6.1(d)(4)).
+event ResponseServed()
+/// A brief's filing deadline falls (D. Kan. Rule 7.1(d)(4)).
+event BriefDue()
+/// A notice of supplemental authority is filed (D. Kan. Rule 7.1(f)).
+event SupplementalAuthorityNoticeFiled() paper supplemental-authority-notice
+/// A court order is served (D. Kan. Rule 7.3).
+event OrderServed()
+/// The court files an order to show cause why sanctions should not be
+/// imposed (D. Kan. Rule 11.1(a)(1)).
+event ShowCauseOrderFiled()
+/// The court grants a motion to amend or for leave to file (D. Kan. Rule
+/// 15.1(b)).
+event LeaveToFileGranted()
+/// A deposition is taken at its noticed time (D. Kan. Rule 30.1).
+event DepositionTaken()
+/// A deposition notice is served (D. Kan. Rule 30.2(b)).
+event DepositionNoticeServed()
+/// The default, or service of the response, objection or disclosure, that
+/// is the subject of a discovery-related motion (D. Kan. Rule 37.1(c)).
+event DiscoveryResponseServed()
+/// Notice of the removal of an action (D. Kan. Rule 40.2(d)(2)).
+event RemovalNoticed()
+/// A notice of removal is filed (D. Kan. Rule 81.2) and the case is
+/// removed (D. Kan. Rule 5.1(d)(3)).
+event NoticeOfRemovalFiled()
+/// The time allowed for appeal of a final judgment or decree expires (D.
+/// Kan. Rule 54.1(a)(1)(A)).
+event AppealTimeExpired()
+/// The clerk receives an order terminating the action on appeal (D. Kan.
+/// Rule 54.1(a)(1)(B)).
+event AppellateTerminationReceived()
+/// The parties confer and resolve costs (D. Kan. Rule 54.1(a)(4)).
+event CostsConferenceHeld()
+/// A bill of costs is filed (D. Kan. Rule 54.1(b)(1)).
+event BillOfCostsFiled()
+/// A response objecting to the bill of costs is filed (D. Kan. Rule
+/// 54.1(b)(2)).
+event CostsObjectionFiled()
+/// The clerk taxes costs (D. Kan. Rule 54.1(c)).
+event CostsTaxed()
+/// A motion for statutory attorney's fees under FRCP 54(d)(2) is filed (D.
+/// Kan. Rule 54.2(c)).
+event FeeMotionFiled()
+/// The memorandum in support of the fee motion is filed (D. Kan. Rule
+/// 54.2(e)).
+event FeeMemorandumFiled()
+/// The court directs that a judgment be settled by journal entry (D. Kan.
+/// Rule 58.1).
+event JournalEntryDirected()
+/// The proposed journal entry is served on the other attorneys (D. Kan.
+/// Rule 58.1).
+event JournalEntryServed()
+/// The record on review of an agency order is filed (D. Kan. Rule
+/// 83.7.1(d)).
+event AgencyRecordFiled()
+/// The brief of the party seeking review of an agency order is served (D.
+/// Kan. Rule 83.7.1(d)).
+event AgencyOpeningBriefServed()
+/// The respondent's brief on review of an agency order is served (D. Kan.
+/// Rule 83.7.1(d)).
+event AgencyResponseBriefServed()
+/// The plaintiff's brief in a Social Security appeal is served (D. Kan.
+/// Rule 83.7.2(b)).
+event SocialSecurityPlaintiffBriefServed()
+/// The Commissioner's brief in a Social Security appeal is served (D. Kan.
+/// Rule 83.7.2(b)).
+event SocialSecurityCommissionerBriefServed()
+/// The Commissioner files the transcript after a sentence-six remand (D.
+/// Kan. Rule 83.7.3(a)).
+event RemandTranscriptFiled()
+/// The plaintiff's amended complaint after a sentence-six remand is filed
+/// (D. Kan. Rule 83.7.3(c)).
+event RemandAmendedComplaintFiled()
+
+/// D. Kan. Rule 5.4.2(c): a Proponent's motion to seal or redact is filed
+/// within 7 days after the document is filed provisionally under seal.
+deadline seal-motion-period: 7.days after DocumentFiledProvisionallyUnderSeal() counted_by frcp6 cite "D. Kan. Rule 5.4.2(c)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 5.4.2(c): any response to the motion to seal or redact is
+/// filed within 3 days after service of the motion.
+deadline seal-response-period: 3.days after SealMotionServed() counted_by frcp6 cite "D. Kan. Rule 5.4.2(c)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 5.4.2(c): any reply is filed within 1 day after the
+/// response.
+deadline seal-reply-period: 1.days after SealResponseFiled() counted_by frcp6 cite "D. Kan. Rule 5.4.2(c)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 6.1(a): a motion for an extension of time is filed as soon
+/// as practicable and in no event less than 3 days before the specified
+/// time.
+deadline extension-motion-period: 3.days before TimeForActExpires() counted_by frcp6 cite "D. Kan. Rule 6.1(a)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 6.1(d)(1): unless the court orders otherwise, a response
+/// to a motion to dismiss, for judgment on the pleadings, to remand, to
+/// transfer, to compel arbitration, to certify or decertify a class or
+/// collective action, for summary judgment, to exclude expert testimony,
+/// for default judgment, for a new trial, to alter or amend the judgment,
+/// or for judgment is filed within 21 days after the motion is served. If
+/// no response is filed by the deadline, the court decides the motion as
+/// uncontested and ordinarily grants it (D. Kan. Rule 7.1(c)).
+deadline dispositive-response-period: 21.days after DispositiveMotionServed() counted_by frcp6 cite "D. Kan. Rule 6.1(d)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 6.1(d)(1): a reply is filed within 14 days after the
+/// response is served.
+deadline dispositive-reply-period: 14.days after DispositiveResponseServed() counted_by frcp6 cite "D. Kan. Rule 6.1(d)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 6.1(d)(4): a response to any other motion is filed within
+/// 14 days after the motion is served. A motion for an extension of time
+/// or to exceed page limits may be decided without awaiting a response,
+/// and a motion to reconsider needs no response unless the court sets a
+/// deadline (D. Kan. Rule 6.1(d)(2), (3)).
+deadline response-period: 14.days after MotionServed() counted_by frcp6 cite "D. Kan. Rule 6.1(d)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 6.1(d)(4): a reply is filed within 7 days after the
+/// response is served.
+deadline reply-period: 7.days after ResponseServed() counted_by frcp6 cite "D. Kan. Rule 6.1(d)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 7.1(d)(4): a motion to exceed the page limits is filed at
+/// least 3 days before the brief's filing deadline.
+deadline page-limit-motion-period: 3.days before BriefDue() counted_by frcp6 cite "D. Kan. Rule 7.1(d)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 7.1(f): any response to a notice of supplemental
+/// authority is made within 5 days.
+deadline supplemental-authority-response-period: 5.days after SupplementalAuthorityNoticeFiled() counted_by frcp6 cite "D. Kan. Rule 7.1(f)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 7.3: except for motions under FRCP 59(e) or 60, a motion
+/// to reconsider a court order is filed within 14 days after the order is
+/// served unless the court extends the time.
+deadline reconsideration-period: 14.days after OrderServed() counted_by frcp6 cite "D. Kan. Rule 7.3"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 11.1(a)(1): unless otherwise ordered, all parties may
+/// respond within 14 days after the filing of an order to show cause why
+/// sanctions should not be imposed.
+deadline show-cause-response-period: 14.days after ShowCauseOrderFiled() counted_by frcp6 cite "D. Kan. Rule 11.1(a)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 15.1(b): when the court grants a motion to amend or for
+/// leave to file, the moving party files and serves the pleading or other
+/// document within 5 days of the order, or as the court otherwise directs.
+deadline amended-pleading-period: 5.days after LeaveToFileGranted() counted_by frcp6 cite "D. Kan. Rule 15.1(b)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 30.1: the reasonable notice FRCP 30(b)(1) requires for
+/// taking a deposition is 7 days; for good cause the court may enlarge or
+/// shorten it.
+deadline deposition-notice-period: 7.days before DepositionTaken() counted_by frcp6 cite "D. Kan. Rule 30.1"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 30.2(b)(2)(A): an objecting party's motion to quash or
+/// modify a deposition subpoena, or for special conditions, stays the
+/// deposition only if delivered within 14 days after service of the
+/// deposition notice (and at least 48 hours before the noticed time).
+deadline deposition-objection-period: 14.days after DepositionNoticeServed() counted_by frcp6 cite "D. Kan. Rule 30.2(b)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 37.1(c): a discovery-related motion is filed within 30
+/// days of the default or service of the response, objection or
+/// disclosure that is its subject (for other disputes, within 30 days
+/// after the movant knew or reasonably should have known of the dispute);
+/// the court may deny a later motion as untimely absent diligence.
+deadline discovery-motion-period: 30.days after DiscoveryResponseServed() counted_by frcp6 cite "D. Kan. Rule 37.1(c)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 40.2(d)(2): the plaintiff in a removed action files a
+/// request for place of trial within 14 days after notice of the removal.
+deadline place-of-trial-request-period: 14.days after RemovalNoticed() counted_by frcp6 cite "D. Kan. Rule 40.2(d)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 5.1(d)(3): within 21 days of the removal or transfer, an
+/// attorney not admitted in this court obtains admission, associates with
+/// admitted counsel who moves to admit, or moves to withdraw.
+deadline removed-attorney-admission-period: 21.days after NoticeOfRemovalFiled() counted_by frcp6 cite "D. Kan. Rule 5.1(d)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 81.2: within 21 days after filing the notice of removal,
+/// the removing party files a copy of all records and proceedings in the
+/// state court; the court may remand for failure to comply.
+deadline state-record-period: 21.days after NoticeOfRemovalFiled() counted_by frcp6 cite "D. Kan. Rule 81.2"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 54.1(a)(1)(A): the party entitled to costs files a bill of
+/// costs within 30 days after the time allowed for appeal of a final
+/// judgment expires; failure to file timely waives taxable costs (D. Kan.
+/// Rule 54.1(a)(3)).
+deadline bill-of-costs-period: 30.days after AppealTimeExpired() counted_by frcp6 cite "D. Kan. Rule 54.1(a)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 54.1(a)(1)(B): or within 30 days after the clerk receives
+/// an order terminating the action on appeal.
+deadline bill-of-costs-after-appeal-period: 30.days after AppellateTerminationReceived() counted_by frcp6 cite "D. Kan. Rule 54.1(a)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 54.1(a)(4): if the parties resolve costs, the party seeking
+/// costs files a stipulation of the amount within 14 days after the
+/// conference.
+deadline costs-stipulation-period: 14.days after CostsConferenceHeld() counted_by frcp6 cite "D. Kan. Rule 54.1(a)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 54.1(b)(1): a party objecting to any item in a bill of
+/// costs files a brief within 14 days from the date the bill was filed.
+deadline costs-objection-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "D. Kan. Rule 54.1(b)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 54.1(b)(2): the moving party may reply within 7 days from
+/// the date the response was filed.
+deadline costs-reply-period: 7.days after CostsObjectionFiled() counted_by frcp6 cite "D. Kan. Rule 54.1(b)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 54.1(c): under FRCP 54(d), a party may obtain review of the
+/// clerk's taxation by filing and serving a motion within 7 days of the
+/// date the clerk taxes costs.
+deadline costs-review-period: 7.days after CostsTaxed() counted_by frcp6 cite "D. Kan. Rule 54.1(c)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 54.2(c): if the parties cannot agree on statutory fees,
+/// the moving party files the statement of consultation and the supporting
+/// memorandum within 30 days of filing the FRCP 54(d)(2) motion.
+deadline fee-memorandum-period: 30.days after FeeMotionFiled() counted_by frcp6 cite "D. Kan. Rule 54.2(c)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 54.2(e): other parties have 14 days to respond to the fee
+/// memorandum.
+deadline fee-response-period: 14.days after FeeMemorandumFiled() counted_by frcp6 cite "D. Kan. Rule 54.2(e)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 58.1: attorneys preparing a journal entry the court
+/// directs serve copies on all other attorneys within 14 days, unless the
+/// court orders otherwise.
+deadline journal-entry-service-period: 14.days after JournalEntryDirected() counted_by frcp6 cite "D. Kan. Rule 58.1"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 58.1: the other attorneys serve any written objections
+/// within 14 days after service is made.
+deadline journal-entry-objection-period: 14.days after JournalEntryServed() counted_by frcp6 cite "D. Kan. Rule 58.1"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 83.7.1(d): the party seeking review of an agency order
+/// serves and files its brief within 45 days after the record is filed.
+deadline agency-opening-brief-period: 45.days after AgencyRecordFiled() counted_by frcp6 cite "D. Kan. Rule 83.7.1(d)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 83.7.1(d): the responding party serves and files its brief
+/// within 30 days after service of the opening brief.
+deadline agency-response-brief-period: 30.days after AgencyOpeningBriefServed() counted_by frcp6 cite "D. Kan. Rule 83.7.1(d)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 83.7.1(d): the party seeking review may serve and file a
+/// reply within 14 days after service of the respondent's brief.
+deadline agency-reply-brief-period: 14.days after AgencyResponseBriefServed() counted_by frcp6 cite "D. Kan. Rule 83.7.1(d)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 83.7.2(b): the Commissioner serves and files a brief within
+/// 30 days after service of the plaintiff's brief.
+deadline social-security-commissioner-brief-period: 30.days after SocialSecurityPlaintiffBriefServed() counted_by frcp6 cite "D. Kan. Rule 83.7.2(b)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 83.7.2(b): the plaintiff may file and serve a reply within
+/// 14 days after service of the Commissioner's brief.
+deadline social-security-reply-period: 14.days after SocialSecurityCommissionerBriefServed() counted_by frcp6 cite "D. Kan. Rule 83.7.2(b)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 83.7.3(b): after a sentence-six remand, a plaintiff who
+/// will not pursue the case files a stipulation of dismissal under FRCP
+/// 41(a)(1) within 14 days of the date the transcript is filed.
+deadline remand-dismissal-period: 14.days after RemandTranscriptFiled() counted_by frcp6 cite "D. Kan. Rule 83.7.3(b)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 83.7.3(c): a plaintiff who will pursue the case files an
+/// amended complaint within 14 days of the date the Commissioner files the
+/// transcript.
+deadline remand-amended-complaint-period: 14.days after RemandTranscriptFiled() counted_by frcp6 cite "D. Kan. Rule 83.7.3(c)"
+{
+  forum frcp
+}
+
+/// D. Kan. Rule 83.7.3(c): the Commissioner files an answer within 14 days
+/// of the date the amended complaint is filed; briefing then follows D.
+/// Kan. Rule 83.7.2(b).
+deadline remand-answer-period: 14.days after RemandAmendedComplaintFiled() counted_by frcp6 cite "D. Kan. Rule 83.7.3(c)"
+{
+  forum frcp
+}
+
+test "seal motion: 7 days after the trigger" cite "D. Kan. Rule 5.4.2(c)"
+{
+  given DocumentFiledProvisionallyUnderSeal() on 2026-11-02
+  expect deadline(seal-motion-period) == 2026-11-09
+}
+
+test "seal response: 3 days after the trigger" cite "D. Kan. Rule 5.4.2(c)"
+{
+  given SealMotionServed() on 2026-11-02
+  expect deadline(seal-response-period) == 2026-11-05
+}
+
+test "seal reply: 1 day after the trigger" cite "D. Kan. Rule 5.4.2(c)"
+{
+  given SealResponseFiled() on 2026-11-02
+  expect deadline(seal-reply-period) == 2026-11-03
+}
+
+test "extension motion: 3 days before the trigger" cite "D. Kan. Rule 6.1(a)"
+{
+  given TimeForActExpires() on 2026-11-02
+  expect deadline(extension-motion-period) == 2026-10-30
+}
+
+test "dispositive response: 21 days after the trigger" cite "D. Kan. Rule 6.1(d)"
+{
+  given DispositiveMotionServed() on 2026-11-02
+  expect deadline(dispositive-response-period) == 2026-11-23
+}
+
+test "dispositive reply: 14 days after the trigger" cite "D. Kan. Rule 6.1(d)"
+{
+  given DispositiveResponseServed() on 2026-11-02
+  expect deadline(dispositive-reply-period) == 2026-11-16
+}
+
+test "response: 14 days after the trigger" cite "D. Kan. Rule 6.1(d)"
+{
+  given MotionServed() on 2026-11-02
+  expect deadline(response-period) == 2026-11-16
+}
+
+test "reply: 7 days after the trigger" cite "D. Kan. Rule 6.1(d)"
+{
+  given ResponseServed() on 2026-11-02
+  expect deadline(reply-period) == 2026-11-09
+}
+
+test "page limit motion: 3 days before the trigger" cite "D. Kan. Rule 7.1(d)"
+{
+  given BriefDue() on 2026-11-02
+  expect deadline(page-limit-motion-period) == 2026-10-30
+}
+
+test "supplemental authority response: 5 days after the trigger" cite "D. Kan. Rule 7.1(f)"
+{
+  given SupplementalAuthorityNoticeFiled() on 2026-11-02
+  expect deadline(supplemental-authority-response-period) == 2026-11-09
+}
+
+test "reconsideration: 14 days after the trigger" cite "D. Kan. Rule 7.3"
+{
+  given OrderServed() on 2026-11-02
+  expect deadline(reconsideration-period) == 2026-11-16
+}
+
+test "show cause response: 14 days after the trigger" cite "D. Kan. Rule 11.1(a)"
+{
+  given ShowCauseOrderFiled() on 2026-11-02
+  expect deadline(show-cause-response-period) == 2026-11-16
+}
+
+test "amended pleading: 5 days after the trigger" cite "D. Kan. Rule 15.1(b)"
+{
+  given LeaveToFileGranted() on 2026-11-02
+  expect deadline(amended-pleading-period) == 2026-11-09
+}
+
+test "deposition notice: 7 days before the trigger" cite "D. Kan. Rule 30.1"
+{
+  given DepositionTaken() on 2026-11-02
+  expect deadline(deposition-notice-period) == 2026-10-26
+}
+
+test "deposition objection: 14 days after the trigger" cite "D. Kan. Rule 30.2(b)"
+{
+  given DepositionNoticeServed() on 2026-11-02
+  expect deadline(deposition-objection-period) == 2026-11-16
+}
+
+test "discovery motion: 30 days after the trigger" cite "D. Kan. Rule 37.1(c)"
+{
+  given DiscoveryResponseServed() on 2026-11-02
+  expect deadline(discovery-motion-period) == 2026-12-02
+}
+
+test "place of trial request: 14 days after the trigger" cite "D. Kan. Rule 40.2(d)"
+{
+  given RemovalNoticed() on 2026-11-02
+  expect deadline(place-of-trial-request-period) == 2026-11-16
+}
+
+test "removed attorney admission: 21 days after the trigger" cite "D. Kan. Rule 5.1(d)"
+{
+  given NoticeOfRemovalFiled() on 2026-11-02
+  expect deadline(removed-attorney-admission-period) == 2026-11-23
+}
+
+test "state record: 21 days after the trigger" cite "D. Kan. Rule 81.2"
+{
+  given NoticeOfRemovalFiled() on 2026-11-02
+  expect deadline(state-record-period) == 2026-11-23
+}
+
+test "bill of costs: 30 days after the trigger" cite "D. Kan. Rule 54.1(a)"
+{
+  given AppealTimeExpired() on 2026-11-02
+  expect deadline(bill-of-costs-period) == 2026-12-02
+}
+
+test "bill of costs after appeal: 30 days after the trigger" cite "D. Kan. Rule 54.1(a)"
+{
+  given AppellateTerminationReceived() on 2026-11-02
+  expect deadline(bill-of-costs-after-appeal-period) == 2026-12-02
+}
+
+test "costs stipulation: 14 days after the trigger" cite "D. Kan. Rule 54.1(a)"
+{
+  given CostsConferenceHeld() on 2026-11-02
+  expect deadline(costs-stipulation-period) == 2026-11-16
+}
+
+test "costs objection: 14 days after the trigger" cite "D. Kan. Rule 54.1(b)"
+{
+  given BillOfCostsFiled() on 2026-11-02
+  expect deadline(costs-objection-period) == 2026-11-16
+}
+
+test "costs reply: 7 days after the trigger" cite "D. Kan. Rule 54.1(b)"
+{
+  given CostsObjectionFiled() on 2026-11-02
+  expect deadline(costs-reply-period) == 2026-11-09
+}
+
+test "costs review: 7 days after the trigger" cite "D. Kan. Rule 54.1(c)"
+{
+  given CostsTaxed() on 2026-11-02
+  expect deadline(costs-review-period) == 2026-11-09
+}
+
+test "fee memorandum: 30 days after the trigger" cite "D. Kan. Rule 54.2(c)"
+{
+  given FeeMotionFiled() on 2026-11-02
+  expect deadline(fee-memorandum-period) == 2026-12-02
+}
+
+test "fee response: 14 days after the trigger" cite "D. Kan. Rule 54.2(e)"
+{
+  given FeeMemorandumFiled() on 2026-11-02
+  expect deadline(fee-response-period) == 2026-11-16
+}
+
+test "journal entry service: 14 days after the trigger" cite "D. Kan. Rule 58.1"
+{
+  given JournalEntryDirected() on 2026-11-02
+  expect deadline(journal-entry-service-period) == 2026-11-16
+}
+
+test "journal entry objection: 14 days after the trigger" cite "D. Kan. Rule 58.1"
+{
+  given JournalEntryServed() on 2026-11-02
+  expect deadline(journal-entry-objection-period) == 2026-11-16
+}
+
+test "agency opening brief: 45 days after the trigger" cite "D. Kan. Rule 83.7.1(d)"
+{
+  given AgencyRecordFiled() on 2026-11-02
+  expect deadline(agency-opening-brief-period) == 2026-12-17
+}
+
+test "agency response brief: 30 days after the trigger" cite "D. Kan. Rule 83.7.1(d)"
+{
+  given AgencyOpeningBriefServed() on 2026-11-02
+  expect deadline(agency-response-brief-period) == 2026-12-02
+}
+
+test "agency reply brief: 14 days after the trigger" cite "D. Kan. Rule 83.7.1(d)"
+{
+  given AgencyResponseBriefServed() on 2026-11-02
+  expect deadline(agency-reply-brief-period) == 2026-11-16
+}
+
+test "social security commissioner brief: 30 days after the trigger" cite "D. Kan. Rule 83.7.2(b)"
+{
+  given SocialSecurityPlaintiffBriefServed() on 2026-11-02
+  expect deadline(social-security-commissioner-brief-period) == 2026-12-02
+}
+
+test "social security reply: 14 days after the trigger" cite "D. Kan. Rule 83.7.2(b)"
+{
+  given SocialSecurityCommissionerBriefServed() on 2026-11-02
+  expect deadline(social-security-reply-period) == 2026-11-16
+}
+
+test "remand dismissal: 14 days after the trigger" cite "D. Kan. Rule 83.7.3(b)"
+{
+  given RemandTranscriptFiled() on 2026-11-02
+  expect deadline(remand-dismissal-period) == 2026-11-16
+}
+
+test "remand amended complaint: 14 days after the trigger" cite "D. Kan. Rule 83.7.3(c)"
+{
+  given RemandTranscriptFiled() on 2026-11-02
+  expect deadline(remand-amended-complaint-period) == 2026-11-16
+}
+
+test "remand answer: 14 days after the trigger" cite "D. Kan. Rule 83.7.3(c)"
+{
+  given RemandAmendedComplaintFiled() on 2026-11-02
+  expect deadline(remand-answer-period) == 2026-11-16
+}

@@ -65,6 +65,7 @@ Per package or jurisdiction, counted over its `.lit` modules: **rules** are `dea
 | gud-local-rules | `lit/gud` | 31 | 0 | 0 | 0 |
 | itc-337 | `lit/itc` | 22 | 3 | 33 | 0 |
 | jpml | `lit/jpml` | 0 | 0 | 0 | 0 |
+| ksd-local-rules | `lit/ksd` | 37 | 0 | 37 | 0 |
 | links | `lit/links` | 2 | 0 | 3 | 0 |
 | mad-local-rules | `lit/mad` | 33 | 0 | 33 | 0 |
 | med-local-rules | `lit/med` | 18 | 0 | 18 | 0 |

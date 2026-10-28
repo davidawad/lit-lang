@@ -1,0 +1,45 @@
+# Certiorari in the Supreme Court of Georgia to review a Court of Appeals
+# civil decision (lg-u561.5), under the Rules of the Supreme Court of
+# Georgia effective July 2, 2026 (sources/ga-state-appellate), from
+# lit/gactapp. Periods are stated in notes, not counted deadlines: Rule 11
+# counts calendar days and carries a due date falling on a weekend, a state
+# or federal holiday or a posted closing to the next business day, and
+# lit/core has no Georgia counting rule. The constitutional grant of the
+# Court's certiorari jurisdiction is not vendored. Direct appeals,
+# applications for discretionary and interlocutory appeal, and certified
+# questions are not modeled.
+[package]
+name = "ga-supreme-court-civil"
+version = "0.1.0"
+language = 1
+pack_id = "ga-supreme-court-civil"
+forum = "ga-supreme-court"
+family = "state-civil"
+authority = "StateRule"
+jurisdiction_id = "georgia"
+title = "Supreme Court of Georgia, certiorari to the Court of Appeals (civil)"
+description = "Certiorari in the Supreme Court of Georgia to review a Court of Appeals civil decision under the Court's rules effective July 2, 2026: the petition, response and reply, the grant or denial, briefing and mandatory argument on a grant, decision, reconsideration and the remittitur."
+in_force = "2026-07-02"
+known_at = "2026-10-28"
+unknown_before = "2026-07-02"
+jurisdiction = "Supreme Court of Georgia (certiorari to the Court of Appeals, civil)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+# The state's shared rule layer: the trigger events the court packages route on.
+ga-state-rules = { version = "^0.1.0", path = "../ga-rules" }
+
+[sources.gasc-rules]
+title = "Rules of the Supreme Court of Georgia (effective July 2, 2026)"
+url = "https://www.gasupreme.us/wp-content/uploads/2026/07/SupremeCourtRules_eff-July-2-2026.pdf"
+path = "sources/ga-state-appellate/gasc-rules-2026-07-02-sectioned.txt"
+path_sha256 = "48e0cd5114bb17c83582fda019b91a50445dd4c087fc107ca7666f51848d1439"
+sha256 = "6328e6ca9e24d8347faf4a03fa05aadcba4cb6224951bcc150856e642b337bf2"
+as_of = "2026-07-02"
+cite_prefixes = ["Ga. Sup. Ct. R."]
+section_heading = "Rule {n}"

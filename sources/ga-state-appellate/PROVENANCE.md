@@ -29,3 +29,10 @@
 - Upstream: https://www.gaappeals.gov/wp-content/uploads/2026/03/COA-Rules-Complete-Eff-26-March-26.pdf, retrieved 2026-10-27, as recorded on the `ga-state-appellate/gacoa-rules.txt` entry this file is derived from.
 - Edition: as the extract, rules "Effective March 26, 2026".
 - Sectioned sha256 1ba9ab5e9e3965f192d7beb21c38054173c2a31255ec4229a21213778f4895a8 (the `path_sha256` pinned by `lit/gactapp/Lit.toml`).
+
+### `ga-state-appellate/gasc-rules-2026-07-02-sectioned.txt` — Rules of the Supreme Court of Georgia (effective July 2, 2026), sectioned
+
+- Derived in the pod (lg-f3q8.111) from `ga-state-appellate/gasc-rules-2026-07-02.txt` (extract sha256 13f28f05adf6e0c3e35f91938ea5ca4eda0e0e2471382c0902450ed3c891d26e); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body, in the order of the table of contents (`Rule 1. CLERK’S OFFICE HOURS AND LOCATION.` through `Rule 122.`, 125 headings with Rules 11.1, 26.1 and 42.1). Every other line is the extract unchanged, so deleting the `## Rule` lines gives back the extract byte for byte.
+- Upstream: https://www.gasupreme.us/wp-content/uploads/2026/07/SupremeCourtRules_eff-July-2-2026.pdf, retrieved 2026-10-28, as recorded on the `ga-state-appellate/gasc-rules-2026-07-02.txt` entry this file is derived from.
+- Edition: as the extract, Rules of the Supreme Court of Georgia effective July 2, 2026.
+- Sectioned sha256 48e0cd5114bb17c83582fda019b91a50445dd4c087fc107ca7666f51848d1439 (the `path_sha256` pinned by `lit/ga-supreme-court/Lit.toml`).

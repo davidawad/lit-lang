@@ -1,0 +1,97 @@
+module ga-supreme-court-civil.review
+
+import ga-state-rules.{ DecisionFiled, MandateIssued, ReviewPetitionFiled }
+
+// Certiorari to the Court of Appeals, from the petitioner's side. Every
+// period is stated in a note, not counted (Rule 11).
+start petition
+
+decision petition: "Petition for certiorari?" by applicant cite "Ga. Sup. Ct. R. 38"
+{
+  note "Compliance with the certiorari timing rule is mandatory. The notice of intention to apply for certiorari is filed in the Court of Appeals under that court's rules, not in this Court (Rule 38(1)); the petition is filed with the Clerk of the Supreme Court within 20 days after the entry of the Court of Appeals' judgment or the disposition of the motion for reconsideration, if one is filed, with the filing fee Rule 5 requires (Rule 38(2)): $300 in a civil case (Rule 5(1)(b)). The Court of Appeals' decision, and its order on reconsideration if any, is attached (Rule 39). The petition states the questions presented under a separate heading at its beginning and argues why they meet the Rule 40 standard, not merely why the decision below was error (Rule 41(2), (3)); it is limited to 7,000 words, or 20 pages if typed or handwritten on paper (Rule 20(3)). A request to extend the time is filed far enough ahead of the due date to permit timely filing if it is denied (Rule 12(2))."
+  edge-petition-none "No petition: the Court of Appeals' decision stands" -> review-not-sought {
+    authority cite "Ga. Sup. Ct. R. 38"
+  }
+  edge-petition-filed "Petition for certiorari" -> certiorari {
+    event ReviewPetitionFiled()
+    authority cite "Ga. Sup. Ct. R. 38"
+  }
+}
+
+decision certiorari: "Certiorari decided" by court cite "Ga. Sup. Ct. R. 40"
+{
+  note "Review on certiorari is not a right: the writ is granted only in cases of great concern, gravity or importance to the public, such as a Court of Appeals decision on an important matter in conflict with other decisions of that court or of this Court, one faithfully applying precedent of this Court that warrants reconsideration, or an important, recurring and unsettled question of state law; it is generally not granted merely to correct an asserted error (Rule 40(1)). A response, filed within 20 days of the filing of the petition, is encouraged; failing to file one acknowledges, without binding the Court, that the requirements for a grant are met (Rule 42). A reply is permitted within ten days of the filing of the response, within 7,000 words or 20 pages; sur-replies are not permitted (Rule 42.1). The petition is considered without oral argument (Rule 41(4)). The Court of Appeals' Clerk transmits its opinion and judgment on docketing, and prepares the record on request or on a grant (Rule 43). No stay of the remittitur is granted from the denial of a petition (Rule 61)."
+  edge-certiorari-denied "Certiorari denied" -> review-denied {
+    authority cite "Ga. Sup. Ct. R. 40"
+  }
+  edge-certiorari-granted "Certiorari granted" -> briefing { authority cite "Ga. Sup. Ct. R. 45" }
+}
+
+state briefing: "Briefs on the questions posed by the grant" by applicant cite "Ga. Sup. Ct. R. 45"
+{
+  note "On a grant both parties brief only the questions the order granting certiorari poses, on the Rule 10 schedule counted from the date of that order (Rule 45): the appellant's principal brief within 20 days, the appellee's within 40 days or 20 days after the appellant's brief, whichever is later, and any reply within 50 days or ten days after the appellee's brief, whichever is later (Rule 10(1), (2)). Principal briefs are limited to 10,000 words and replies to 7,000 (Rule 20(1), (2)). Failing to comply with an order to file a brief may cause the appeal to be dismissed (Rule 10(5))."
+  edge-briefing-argument "Briefs filed" -> argument { authority cite "Ga. Sup. Ct. R. 50" }
+}
+
+state argument: "Oral argument" by court cite "Ga. Sup. Ct. R. 50"
+{
+  note "Unless the Court directs otherwise, oral argument is mandatory on a granted writ of certiorari, which is placed automatically on the argument calendar (Rule 50(2)(a)); the Clerk's Office releases the calendar not later than 20 days before the argument date (Rule 50(1)). The Court may require, refuse, expand or limit argument (Rule 50(4))."
+  edge-argument-decision "Argued and submitted" -> decision { authority cite "Ga. Sup. Ct. R. 58" }
+}
+
+decision decision: "Judgment" by court cite "Ga. Sup. Ct. R. 58"
+{
+  note "A civil case may be affirmed without opinion where the evidence supports the judgment, no harmful error of law appears, or the judgment below adequately explains the decision; such decisions have no precedential value (Rule 59)."
+  edge-decision-affirmed "Court of Appeals affirmed" -> reconsideration {
+    event DecisionFiled()
+    authority cite "Ga. Sup. Ct. R. 58"
+  }
+  edge-decision-reversed "Court of Appeals reversed or vacated" -> reconsideration {
+    event DecisionFiled()
+    authority cite "Ga. Sup. Ct. R. 58"
+  }
+}
+
+decision reconsideration: "Motion for reconsideration?" by applicant cite "Ga. Sup. Ct. R. 27"
+{
+  note "A motion for reconsideration must be received by the Clerk's Office or electronically filed within ten days from the date of the ruling, with the ruling attached; it is limited to 5,000 words, and no second motion by the same party is filed without permission (Rule 27(1), (2)). The Court may by special order shorten the period (Rule 27(3)). A motion to stay the remittitur to seek review in the Supreme Court of the United States is filed with the motion for reconsideration or, if none is filed, within the time for one (Rule 61). Extensions to file a motion for reconsideration are granted only in unusual circumstances, on a request filed before the deadline (Rule 12(1))."
+  edge-reconsideration-none "No motion" -> remittitur {
+    event MandateIssued()
+    authority cite "Ga. Sup. Ct. R. 60"
+  }
+  edge-reconsideration-filed "Motion for reconsideration" -> reconsideration-decision {
+    authority cite "Ga. Sup. Ct. R. 27"
+  }
+}
+
+decision reconsideration-decision: "Motion for reconsideration decided" by court cite "Ga. Sup. Ct. R. 27"
+{
+  note "No response is required; a party wishing to respond must do so expeditiously (Rule 27(2))."
+  edge-reconsideration-denied "Reconsideration denied" -> remittitur {
+    event MandateIssued()
+    authority cite "Ga. Sup. Ct. R. 60"
+  }
+  edge-reconsideration-granted "Reconsideration granted" -> reconsideration-granted {
+    authority cite "Ga. Sup. Ct. R. 27"
+  }
+}
+
+terminal review-not-sought: "Certiorari not sought: the Court of Appeals' decision stands" outcome [final] cite "Ga. Sup. Ct. R. 38"
+{
+  note "The Court of Appeals' remittitur issues under that court's rules (lit/gactapp, Ga. Ct. App. R. 39)."
+}
+
+terminal review-denied: "Certiorari denied" outcome [final, loss] cite "Ga. Sup. Ct. R. 40"
+{
+  note "Outcome from the petitioner's side. Denial leaves the Court of Appeals' decision in place, and no stay of the remittitur is granted from it (Rule 61). Notice of intention to petition the Supreme Court of the United States is filed in the Court of Appeals (Ga. Ct. App. R. 38(b)(1), lit/gactapp)."
+}
+
+terminal remittitur: "Remittitur transmitted to the Court of Appeals" outcome [final] cite "Ga. Sup. Ct. R. 60"
+{
+  note "The remittitur is transmitted to the court from which the case was received as soon as practicable after ten days following the entry of the judgment, or upon the denial of a motion for reconsideration, unless otherwise ordered (Rule 60(2)). A motion to stay it filed after transmittal is not accepted (Rule 61)."
+}
+
+terminal reconsideration-granted: "Reconsideration granted" outcome [final] cite "Ga. Sup. Ct. R. 27"
+{
+  note "Proceedings after a grant of reconsideration are outside this package."
+}

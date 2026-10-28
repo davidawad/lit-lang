@@ -1,0 +1,348 @@
+module ca10.appeal
+
+import core.frap26.{ frap26 }
+import frap.events.{ RehearingClosed }
+
+// The FRAP periods are lit/frap's: the notice-of-appeal periods of FRAP
+// 4(a)(1), the appellee's and reply brief periods of FRAP 31(a)(1), the
+// rehearing periods of FRAP 40(d)(1), and the mandate period of FRAP 41(b).
+// This package is the Tenth Circuit's layer over them: it declares the
+// circuit's own periods, most of which run from docketing in the court of
+// appeals rather than from the notice of appeal. The leading decisions on
+// appellate jurisdiction and the notice deadline are lit/frap's.
+/// The appeal is docketed in the court of appeals (10th Cir. R. 3.3(B),
+/// 3.4(A), 10.2, 10.3(A), 26.1(B), 27.3(A)(3), 46.1(A)).
+event AppealDocketed()
+/// The appellant serves a designation of record in an appeal with
+/// appointed counsel (10th Cir. R. 10.3(A)(2)).
+event DesignationServed()
+/// The district court clerk notifies the parties and the circuit clerk that
+/// the record is complete: the appellant certifies that no transcript will
+/// be ordered, or the transcript is filed (10th Cir. R. 11.1(A), 31.1(A)(1)).
+event RecordCompleteNoticed()
+/// In a review or enforcement proceeding, the certified list or the record
+/// is filed, whichever occurs first (10th Cir. R. 31.1(B)).
+event AgencyRecordFiled()
+/// A brief is due (10th Cir. R. 27.6(B)).
+event BriefDue()
+/// A motion for summary disposition under 10th Cir. R. 27.3 is served (10th
+/// Cir. R. 27.3(A)(4)).
+event SummaryMotionServed()
+/// The court disposes of all timely petitions for rehearing or rehearing en
+/// banc (10th Cir. R. 39.2(A)).
+event RehearingDisposed()
+/// A motion for appellate attorneys' fees is served (10th Cir. R. 39.2(C)).
+event FeeMotionServed()
+
+/// The appeal may be dismissed immediately if, within 14 days after it is
+/// docketed, a party fails to pay a required fee or move to extend the time
+/// to pay it or to proceed without prepayment. The rules do not state the
+/// fee amount, so no cost is encoded.
+deadline fee-period: 14.days after AppealDocketed() counted_by frap26 cite "10th Cir. R. 3.3(B)"
+{
+  forum frap
+}
+
+/// Within 14 days after the appeal is docketed, a counseled appellant files
+/// a docketing statement (not in pro se or FRAP 9 bail appeals).
+deadline docketing-statement-period: 14.days after AppealDocketed() counted_by frap26 cite "10th Cir. R. 3.4(A)"
+{
+  forum frap
+}
+
+/// Within 14 days after the appeal is docketed in this court, the appellant
+/// orders any necessary transcripts, or states on the transcript order form
+/// that none will be ordered (10th Cir. R. 10.2(A)(2)).
+deadline transcript-order-period: 14.days after AppealDocketed() counted_by frap26 cite "10th Cir. R. 10.2(B)(1)"
+{
+  forum frap
+}
+
+/// With appointed counsel, the appellant files a designation of record
+/// within 14 days after the appeal is docketed.
+deadline designation-period: 14.days after AppealDocketed() counted_by frap26 cite "10th Cir. R. 10.3(A)(1)"
+{
+  forum frap
+}
+
+/// The appellee may file an additional designation within 14 days after
+/// service of the appellant's designation.
+deadline appellee-designation-period: 14.days after DesignationServed() counted_by frap26 cite "10th Cir. R. 10.3(A)(2)"
+{
+  forum frap
+}
+
+/// The FRAP 26.1 disclosure statement is filed within 14 days after the
+/// appeal is docketed, or with the party's first motion, response, answer
+/// or amicus brief, whichever occurs first.
+deadline disclosure-statement-period: 14.days after AppealDocketed() counted_by frap26 cite "10th Cir. R. 26.1(B)"
+{
+  forum frap
+}
+
+/// A motion to dismiss the entire case for lack of appellate jurisdiction or
+/// under a claims-processing deadline is filed within 14 days after the
+/// appeal is docketed, unless good cause is shown for later filing.
+deadline jurisdiction-motion-period: 14.days after AppealDocketed() counted_by frap26 cite "10th Cir. R. 27.3(A)(3)(a)"
+{
+  forum frap
+}
+
+/// A response to a summary disposition motion is filed within 14 days after
+/// the motion is served.
+deadline summary-motion-response-period: 14.days after SummaryMotionServed() counted_by frap26 cite "10th Cir. R. 27.3(A)(4)"
+{
+  forum frap
+}
+
+/// Counsel for the parties file written appearances within 14 days after
+/// the appeal is docketed.
+deadline appearance-period: 14.days after AppealDocketed() counted_by frap26 cite "10th Cir. R. 46.1(A)"
+{
+  forum frap
+}
+
+/// When an appendix is required, the appellant files the opening brief and
+/// appendix within 40 days after the district court clerk's notice that the
+/// record is complete. With appointed counsel or pro se, FRAP 31(a) governs
+/// (10th Cir. R. 31.1(A)(2)).
+deadline opening-brief-period: 40.days after RecordCompleteNoticed() counted_by frap26 cite "10th Cir. R. 31.1(A)(1)"
+{
+  forum frap
+}
+
+/// In review or enforcement of an agency order, the petitioner's opening
+/// brief is filed within 40 days after the certified list or the record is
+/// filed, whichever occurs first.
+deadline agency-opening-brief-period: 40.days after AgencyRecordFiled() counted_by frap26 cite "10th Cir. R. 31.1(B)"
+{
+  forum frap
+}
+
+/// A motion to extend the time to file a brief is filed at least 3 days
+/// before the brief's due date, unless the reasons did not exist or were
+/// unknown earlier.
+deadline brief-extension-motion-period: 3.days before BriefDue() counted_by frap26 cite "10th Cir. R. 27.6(B)"
+{
+  forum frap
+}
+
+/// Absent a statute or order, a motion for appellate attorneys' fees is
+/// due 14 days after the time to petition for rehearing expires, when no
+/// timely petition was filed.
+deadline fee-motion-period: 14.days after RehearingClosed(TimeExpired) counted_by frap26 cite "10th Cir. R. 39.2(A)"
+{
+  forum frap
+}
+
+/// Or 14 days after the court disposes of all timely petitions for
+/// rehearing or rehearing en banc.
+deadline fee-motion-after-rehearing-period: 14.days after RehearingDisposed() counted_by frap26 cite "10th Cir. R. 39.2(A)"
+{
+  forum frap
+}
+
+/// A response to a motion for attorneys' fees is filed within 14 days after
+/// the motion is served; the reply period is FRAP 27(a)(4)'s.
+deadline fee-motion-response-period: 14.days after FeeMotionServed() counted_by frap26 cite "10th Cir. R. 39.2(C)"
+{
+  forum frap
+}
+
+test "fees are due 14 days after docketing" cite "10th Cir. R. 3.3(B)"
+{
+  given AppealDocketed() on 2026-08-03
+  expect deadline(fee-period) == 2026-08-17
+}
+
+test "docketing statement is due 14 days after docketing" cite "10th Cir. R. 3.4(A)"
+{
+  given AppealDocketed() on 2026-08-03
+  expect deadline(docketing-statement-period) == 2026-08-17
+}
+
+test "transcript order is due 14 days after docketing" cite "10th Cir. R. 10.2(B)(1)"
+{
+  given AppealDocketed() on 2026-08-03
+  expect deadline(transcript-order-period) == 2026-08-17
+}
+
+test "designation of record is due 14 days after docketing" cite "10th Cir. R. 10.3(A)(1)"
+{
+  given AppealDocketed() on 2026-08-03
+  expect deadline(designation-period) == 2026-08-17
+}
+
+test "appellee's designation is due 14 days after service of the appellant's" cite "10th Cir. R. 10.3(A)(2)"
+{
+  given DesignationServed() on 2026-08-03
+  expect deadline(appellee-designation-period) == 2026-08-17
+}
+
+test "disclosure statement is due 14 days after docketing" cite "10th Cir. R. 26.1(B)"
+{
+  given AppealDocketed() on 2026-08-03
+  expect deadline(disclosure-statement-period) == 2026-08-17
+}
+
+test "jurisdictional motion to dismiss is due 14 days after docketing" cite "10th Cir. R. 27.3(A)(3)(a)"
+{
+  given AppealDocketed() on 2026-08-03
+  expect deadline(jurisdiction-motion-period) == 2026-08-17
+}
+
+test "response to a summary disposition motion is due 14 days after service" cite "10th Cir. R. 27.3(A)(4)"
+{
+  given SummaryMotionServed() on 2026-08-03
+  expect deadline(summary-motion-response-period) == 2026-08-17
+}
+
+test "appearances are due 14 days after docketing" cite "10th Cir. R. 46.1(A)"
+{
+  given AppealDocketed() on 2026-08-03
+  expect deadline(appearance-period) == 2026-08-17
+}
+
+test "opening brief and appendix are due 40 days after the record-complete notice, rolled past the weekend" cite "10th Cir. R. 31.1(A)(1)"
+{
+  given RecordCompleteNoticed() on 2026-08-03
+  expect deadline(opening-brief-period) == 2026-09-14
+}
+
+test "agency opening brief is due 40 days after the certified list or record" cite "10th Cir. R. 31.1(B)"
+{
+  given AgencyRecordFiled() on 2026-08-03
+  expect deadline(agency-opening-brief-period) == 2026-09-14
+}
+
+test "brief extension motion is due 3 days before the brief" cite "10th Cir. R. 27.6(B)"
+{
+  given BriefDue() on 2026-09-14
+  expect deadline(brief-extension-motion-period) == 2026-09-11
+}
+
+test "fee motion is due 14 days after the rehearing time expires" cite "10th Cir. R. 39.2(A)"
+{
+  given RehearingClosed(TimeExpired) on 2026-08-03
+  expect deadline(fee-motion-period) == 2026-08-17
+}
+
+test "fee motion is due 14 days after rehearing is disposed of" cite "10th Cir. R. 39.2(A)"
+{
+  given RehearingDisposed() on 2026-08-03
+  expect deadline(fee-motion-after-rehearing-period) == 2026-08-17
+}
+
+test "fee motion response is due 14 days after service" cite "10th Cir. R. 39.2(C)"
+{
+  given FeeMotionServed() on 2026-08-03
+  expect deadline(fee-motion-response-period) == 2026-08-17
+}
+
+start threshold
+
+decision threshold: "Appealable Order or Judgment?" by applicant cite "28 U.S.C. § 1291"
+{
+  note "A final decision of a district court is appealable under 28 U.S.C. § 1291; interlocutory routes are lit/frap's. A motion to dismiss the entire case for lack of appellate jurisdiction is due within 14 days after docketing (10th Cir. R. 27.3(A)(3)(a))."
+  edge-threshold-no "Not appealable" -> dismissed-jurisdiction { authority cite "28 U.S.C. § 1291" }
+  edge-threshold-yes "Appealable" -> notice { authority cite "28 U.S.C. § 1291" }
+}
+
+decision notice: "Notice of Appeal Within Time?" by applicant cite "FRAP 4(a)(1)(A)"
+{
+  note "The notice is due 30 days after entry of judgment, or 60 days when the United States is a party (FRAP 4(a)(1)); lit/frap encodes both periods. Counsel or a pro se appellant signs the notice (10th Cir. R. 3.1), and the district clerk sends the preliminary record electronically (10th Cir. R. 3.2)."
+  edge-notice-late "Untimely notice" -> dismissed-untimely { authority cite "FRAP 4(a)(1)(A)" }
+  edge-notice-timely "Timely notice" -> record {
+    authority cite "FRAP 3(a)(1); 10th Cir. R. 3.3"
+    note "Within 14 days after docketing a party pays the fee or moves to extend or to proceed without prepayment (10th Cir. R. 3.3(B)); the rules do not state the fee, so no cost is encoded. Within the same 14 days the appellant files a docketing statement (10th Cir. R. 3.4(A)), each party files its disclosure statement (10th Cir. R. 26.1(B)) and counsel file appearances (10th Cir. R. 46.1(A))."
+  }
+  edge-notice-fees "Fees not paid within 14 days of docketing" -> dismissed-prosecution {
+    authority cite "10th Cir. R. 3.3(B)"
+  }
+}
+
+state record: "Record and Transcript" by applicant cite "FRAP 10; 10th Cir. R. 10"
+{
+  note "With retained counsel the record is an appendix filed with the opening brief; with appointed counsel the district court forwards a designated record; in pro se appeals the court prepares the record (10th Cir. R. 10.1). The appellant orders transcripts, or states that none will be ordered, within 14 days after docketing (10th Cir. R. 10.2). Appointed counsel designate the record within 14 days after docketing and the appellee may add to it within 14 days after service (10th Cir. R. 10.3(A)). The district clerk notifies the parties when the record is complete (10th Cir. R. 11.1(A)). The court need not remedy an inadequate record and may decline to consider an issue it does not support (10th Cir. R. 10.4(B))."
+  edge-record-brief "Record complete" -> briefing { authority cite "10th Cir. R. 11.1(A)" }
+  edge-record-default "Appellant fails to comply after notice" -> dismissed-prosecution {
+    authority cite "10th Cir. R. 42.1"
+  }
+}
+
+state briefing: "Briefs Filed" by applicant cite "FRAP 31(a)(1); 10th Cir. R. 31.1"
+{
+  note "When an appendix is required the opening brief and appendix are due 40 days after the record-complete notice; with appointed counsel or pro se, FRAP 31(a) governs (10th Cir. R. 31.1(A)); the appellee's and reply periods are lit/frap's. Mediation does not toll the briefing time (10th Cir. R. 33.1(F)). Extensions are disfavored and a motion is due at least 3 days before the brief (10th Cir. R. 27.6); a motion to exceed the word count filed within 14 days of the due date must show why earlier filing was not possible (10th Cir. R. 28.3(A)). The court accepts 13-point type (10th Cir. R. 32(A))."
+  edge-briefing-argue "Briefing complete" -> argument {
+    authority cite "FRAP 31(a)(1); 10th Cir. R. 31.1"
+  }
+  edge-briefing-default "Appellant fails to file a brief after notice" -> dismissed-prosecution {
+    authority cite "10th Cir. R. 42.1"
+  }
+}
+
+state argument: "Oral Argument or Submission" by court cite "FRAP 34; 10th Cir. R. 34.1"
+{
+  note "After the principal briefs a party may move to waive argument; a motion filed within 10 days of the argument date must show why it was not filed earlier. Except in an emergency a motion to postpone must be made more than 20 days before the argument date (10th Cir. R. 34.1(A)). The court advises the parties when a panel decides argument is not necessary, possibly with the decision (10th Cir. R. 34.1(G))."
+  edge-argument-decide "Decision" -> decision { authority cite "FRAP 34" }
+}
+
+state decision: "Decision Issued" by court cite "FRAP 36; 10th Cir. R. 36"
+{
+  note "The court does not publish every decision (10th Cir. R. 36.1); when a case is disposed of by order, the order serves as the judgment (10th Cir. R. 36.2)."
+  edge-decision-issued "Judgment entered" -> rehearing-decision { authority cite "FRAP 36" }
+}
+
+decision rehearing-decision: "Rehearing Sought?" by applicant cite "FRAP 40(d)(1)"
+{
+  note "The petition is due 14 days after entry of judgment, or 45 days in a civil case with a United States party (FRAP 40(d)(1)); lit/frap encodes both periods. Panel rehearing is not routine and en banc review is extraordinary (10th Cir. R. 40.1); an en banc petition says so on its cover and attaches the panel decision (10th Cir. R. 40.2). Only one petition per party is accepted and reconsideration of the ruling may not be sought (10th Cir. R. 40.4)."
+  edge-rehearing-decision-none "No petition" -> mandate { authority cite "FRAP 41(b)" }
+  edge-rehearing-decision-sought "Petition filed" -> rehearing-order {
+    authority cite "FRAP 40(d)(1); 10th Cir. R. 40"
+  }
+}
+
+state rehearing-order: "Rehearing Order" by court cite "FRAP 40; 10th Cir. R. 40.2"
+{
+  note "A majority of the active judges not disqualified may order rehearing en banc; the grant vacates the judgment, stays the mandate and restores the case as a pending appeal (10th Cir. R. 40.2(D), (E))."
+  edge-rehearing-order-mandate "Rehearing decided" -> mandate { authority cite "FRAP 41(b)" }
+}
+
+state mandate: "Mandate Issued" by office cite "FRAP 41(b); 10th Cir. R. 41"
+{
+  note "The mandate issues under FRAP 41(b); lit/frap encodes the period. A civil stay requires a substantial possibility that certiorari would be granted (10th Cir. R. 41.1(B)). The mandate is not delayed for a fee motion, which is due 14 days after the rehearing time expires or after the court disposes of all timely petitions (10th Cir. R. 39.2). Copy costs are taxable at no more than 20 cents per page (10th Cir. R. 39.1)."
+  edge-mandate-further "Mandate issued" -> further-review { authority cite "FRAP 41(b)" }
+}
+
+decision further-review: "Further Review Sought?" by applicant cite "28 U.S.C. § 1254"
+{
+  note "Certiorari under 28 U.S.C. § 1254; its period is lit/frap's. A petition for rehearing is not required before a petition for certiorari (10th Cir. R. 40.1(C))."
+  edge-further-review-none "No further review" -> final-decision {
+    authority cite "28 U.S.C. § 1254"
+  }
+  edge-further-review-petition "Petition for certiorari" -> review-decided {
+    authority cite "28 U.S.C. § 1254"
+  }
+}
+
+state review-decided: "Further Review Decided" by court cite "28 U.S.C. § 1254"
+{
+  edge-review-decided-denied "Denied" -> review-denied { authority cite "28 U.S.C. § 1254" }
+  edge-review-decided-granted "Granted" -> review-granted { authority cite "28 U.S.C. § 1254" }
+}
+
+terminal dismissed-jurisdiction: "Dismissed: No Appellate Jurisdiction" outcome [loss, dismissal, jurisdictional] cite "28 U.S.C. § 1291"
+terminal dismissed-untimely: "Dismissed: Untimely Notice" outcome [loss, dismissal] cite "FRAP 4(a)(1)(A)"
+
+terminal dismissed-prosecution: "Dismissed: Failure to Prosecute" outcome [loss, dismissal] cite "10th Cir. R. 42.1"
+{
+  note "The clerk's dismissal order issues as the mandate; a motion to reinstate must remedy the failure (10th Cir. R. 42.2)."
+}
+
+terminal final-decision: "Final: Decision Stands" outcome [final] cite "FRAP 41(b)"
+terminal review-denied: "Further Review Denied" outcome [final] cite "28 U.S.C. § 1254"
+
+terminal review-granted: "Further Review Granted" outcome [neutral] cite "28 U.S.C. § 1254"
+{
+  note "Certiorari granted; the merits are not modeled."
+}

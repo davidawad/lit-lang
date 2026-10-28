@@ -1,0 +1,57 @@
+[package]
+name = "tenth-circuit-court-of-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "tenth-circuit-court-of-appeals"
+forum = "ca10"
+authority = "LocalRule"
+title = "United States Court of Appeals for the Tenth Circuit"
+description = "A civil appeal in the Tenth Circuit: its circuit rules over the FRAP periods of lit/frap."
+jurisdiction = "United States Court of Appeals for the Tenth Circuit"
+in_force = "2026-01-01"
+known_at = "2026-10-27"
+unknown_before = "2026-01-01"
+counting = "frap26"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frap-appellate-procedure = { version = "^0.1.0", path = "../frap" }
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[sources.frap]
+title = "Federal Rules of Appellate Procedure, as amended to Dec. 1, 2024"
+url = "https://www.uscourts.gov/sites/default/files/2025-02/federal-rules-of-appellate-procedure-dec-1-2024_0.pdf"
+path = "sources/frap.txt"
+path_sha256 = "b370cc0558698ff88b62b6cec212742fde8afbdd2fe653a3b255d69dec893172"
+sha256 = "d61711eca8e1f65955d12f1b7d29d4cc453d9ee1e30c4fff6c54b23f113454f6"
+as_of = "2024-12-01"
+
+[sources.ca10-rules]
+title = "Tenth Circuit Rules (effective January 1, 2026), with FRAP (effective December 1, 2025)"
+url = "https://www.ca10.uscourts.gov/sites/ca10/files/clerk/2026Rules.pdf"
+path = "sources/ca10/ca10-rules-2026.txt"
+path_sha256 = "8e8a55b6873e547f519ca65a4f09cf5e5181efaf71838a8908ef0aebd065327a"
+sha256 = "5aced0c2e14322d1771308be6d14013b761e4a1ea922def3b2f83762218392c8"
+as_of = "2026-01-01"
+
+[sources.usc28]
+title = "28 U.S.C. §§ 1254, 1291 (vendored sections)"
+url = "https://www.law.cornell.edu/uscode/text/28/1291"
+path = "sources/usc-additional.txt"
+path_sha256 = "5dedd90ad2e3e67185a2ae4b1ddfa68f7d7695b092666521fb9478c5c23852d8"
+cite_prefixes = ["28 U.S.C."]
+section_heading = "28 U.S.C. § {n}"
+
+[[cite_syntax.rules]]
+prefixes = ["FRAP", "Fed. R. App. P."]
+heading = "FRAP {}"
+source = "frap"
+
+[[cite_syntax.rules]]
+prefixes = ["10th Cir. R."]
+heading = "10th Cir. R. {}"
+source = "ca10-rules"

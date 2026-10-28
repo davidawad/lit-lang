@@ -792,6 +792,7 @@ in_force_until = "2030-01-01"   # optional default effective end (exclusive)
 known_at = "2025-01-01"         # default corpus date
 unknown_before = "2009-12-01"   # optional; no declaration's law is encoded before (§5.4)
 counting = "frcp6"              # optional; Pack.counting (v3): a counting-rule id
+recounts = ["frbp-..."]         # optional; dependencies whose own-rule periods `counting` counts in a matter using this package (Pack.recounts)
 kind = "base"                   # optional; the instrument class (§5.7), default base
 law = "procedure"               # optional; procedure (default) | substantive (§5.6)
 
@@ -2723,7 +2724,15 @@ its cited trace `text`.
   **counting-rule library** (`lit/core`): its pack has no `counting`, and
   packages that import its rules name them in their own manifests. A
   manifest `counting` naming a rule the package does not declare, while it
-  declares some, is L6001. Lowering also emits one clock fragment holding
+  declares some, is L6001. A manifest `recounts = [dep, ...]` (each a
+  declared dependency, and only beside `counting`; L1004 otherwise)
+  lowers to `Pack.recounts`, the dependencies' pack ids: a period of `dep`
+  counted by `dep`'s own `counting` rule is counted by this package's
+  rule instead, in replay of a matter that uses this package and in the
+  engine wherever both packs are loaded. It states a court's rule over a
+  national rule set's: FRBP 9006(a)(6)(C) closes a forward-counted FRBP
+  period on the state holidays a district names (`lit/bankr-hi`
+  recounts `lit/frbp` under `bankr-hi-9006`). Lowering also emits one clock fragment holding
   every declared rule (the versions in force at the build dates) and, once
   each, the calendars they name, written beside the pack as
   `clock/<pack id>.json`. Library ids are global: a generated fragment

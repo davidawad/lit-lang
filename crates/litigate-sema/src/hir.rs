@@ -103,6 +103,14 @@ pub struct Manifest {
     /// Counting-rule id (`package.counting`, litgraph `Pack.counting`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub counting: Option<String>,
+    /// Dependencies (package names) whose periods counted by their own
+    /// package's `counting` rule are counted by this package's instead in a
+    /// matter that uses it (`package.recounts`, litgraph `Pack.recounts`):
+    /// a court whose rules close a forward-counted period on its state's
+    /// holidays (FRBP 9006(a)(6)(C)) counts the national rule set's
+    /// periods with them.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub recounts: Vec<String>,
     /// Citation syntax (`[[cite_syntax.*]]`, litgraph `Pack.citeSyntax`).
     #[serde(default, skip_serializing_if = "CiteSyntax::is_empty")]
     pub cite_syntax: CiteSyntax,

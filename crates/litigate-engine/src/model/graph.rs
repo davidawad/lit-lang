@@ -192,6 +192,7 @@ impl Graph {
             title: pack.title.clone(),
             forum: pack.forum.clone(),
             counting: pack.counting.clone(),
+            recounts: pack.recounts.clone(),
             jurisdiction: pack.jurisdiction.clone(),
             schema_version: pack.schema_version,
             start,

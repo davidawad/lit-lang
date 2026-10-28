@@ -184,6 +184,8 @@ pub struct PackMeta {
     pub forum: Option<String>,
     /// Authored deadline-counting rule id.
     pub counting: Option<String>,
+    /// Packs whose own-rule periods `counting` counts instead.
+    pub recounts: Vec<String>,
     /// Jurisdiction.
     pub jurisdiction: Option<String>,
     /// Schema version.

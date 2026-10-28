@@ -232,7 +232,10 @@ impl Judged<'_, '_> {
         start: Option<Start>,
     ) -> Due {
         let (graph, events, at, known_at) = (self.graph, self.events, self.at, self.known_at);
-        let qualified = graph.qualify(pack, &d.counting);
+        // A court that recounts `pack`'s periods counts them by its own rule.
+        let qualified = graph
+            .recounted(pack, &d.counting)
+            .unwrap_or_else(|| graph.qualify(pack, &d.counting));
         // Use the shared temporal query so replay observes the same version,
         // including known_at filtering, as test, lower, check, and the LSP.
         let counting = match graph.governing(&qualified, events, at, known_at) {

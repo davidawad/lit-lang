@@ -158,6 +158,14 @@ impl<'a> Graph<'a> {
         }
     }
 
+    /// The counting rule, qualified, that counts a period of `pack` written
+    /// `counted_by counting` when a package of the matter's law
+    /// `recounts` that pack's package ([`World::recounted`]).
+    pub fn recounted(&self, pack: &str, counting: &str) -> Option<String> {
+        let key = self.world.recounted(pack, counting)?;
+        Some(format!("{}::{}", key.pack, key.name))
+    }
+
     /// `name` (written in `from`'s view) respelled for `pack`'s view.
     fn respell_from(&self, from: &str, pack: &str, name: &str) -> String {
         let qualified = self.qualify(from, name);

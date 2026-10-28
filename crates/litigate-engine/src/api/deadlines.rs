@@ -33,9 +33,10 @@ struct Ctx {
 
 /// Resolve the counting rule of `e`'s deadline against the clock library:
 /// the deadline's own `counting` when it names one, else the one its pack
-/// names in its `counting` field. A cross-pack link edge is keyed by its
-/// origin node's pack. Nothing is inferred from the pack's forum or id: a
-/// deadline whose pack has no `counting` field and which names none, or one
+/// names in its `counting` field, unless a loaded pack `recounts` that
+/// pack, whose `counting` then counts it. A cross-pack link edge is keyed
+/// by its origin node's pack. Nothing is inferred from the pack's forum or
+/// id: a deadline whose pack has no `counting` field and which names none, or one
 /// naming a rule the library lacks, is an error the caller reports as a
 /// `deadline-uncomputable` warning.
 fn clock_for_edge<'a>(g: &Graph, lib: &'a ClockLibrary, e: EdgeIx) -> Result<Clock<'a>> {
@@ -46,12 +47,21 @@ fn clock_for_edge<'a>(g: &Graph, lib: &'a ClockLibrary, e: EdgeIx) -> Result<Clo
         &edge.pack
     };
     let own = edge.deadline.as_ref().and_then(|d| d.counting.as_deref());
+    let base = pack_id.split_once('@').map_or(pack_id, |(b, _)| b);
+    let recounted = || {
+        g.packs
+            .iter()
+            .find(|p| p.recounts.iter().any(|r| r == base))
+            .and_then(|p| p.counting.as_deref())
+    };
     let counting = own
         .or_else(|| {
-            g.packs
-                .iter()
-                .find(|p| p.id == pack_id)
-                .and_then(|p| p.counting.as_deref())
+            recounted().or_else(|| {
+                g.packs
+                    .iter()
+                    .find(|p| p.id == pack_id)
+                    .and_then(|p| p.counting.as_deref())
+            })
         })
         .ok_or_else(|| {
             Error::Invalid(format!(

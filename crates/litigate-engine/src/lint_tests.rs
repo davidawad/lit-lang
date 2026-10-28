@@ -14,6 +14,7 @@ fn pack_with_cite(sources: Vec<Source>, cite: &str) -> Pack {
         jurisdiction: None,
         forum: None,
         counting: None,
+        recounts: Vec::new(),
         start_node_id: "n1".into(),
         groups: vec![],
         roles: std::collections::BTreeMap::new(),

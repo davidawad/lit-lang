@@ -6,7 +6,9 @@
 # for lit/bankr-ak). Each period is counted under FRBP 9006(a), the FRCP
 # 6(a) method (core's frcp6) with the Hawaii state holidays of LBR
 # 9006-1(a) closing a forward-counted period (FRBP 9006(a)(6)(C);
-# `bankr-hi-9006`). The rules are those of December 1, 2025
+# `bankr-hi-9006`). FRBP 9006(a)(6)(C) closes a forward-counted FRBP
+# period in this district on those days too, so in a matter that uses this
+# package `bankr-hi-9006` also counts lit/frbp's periods (`recounts`). The rules are those of December 1, 2025
 # (sources/bankr-hi); no amending order is vendored, so there are no dated
 # layers and a query before December 1, 2025 is a hole in the corpus.
 [package]
@@ -23,6 +25,7 @@ known_at = "2026-10-28"
 unknown_before = "2025-12-01"
 jurisdiction = "U.S. Bankruptcy Court for the District of Hawaii"
 counting = "bankr-hi-9006"
+recounts = ["frbp-bankruptcy-procedure"]
 
 [package.roles]
 applicant = "self"

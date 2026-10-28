@@ -430,7 +430,10 @@ impl Judged<'_, '_> {
     ) -> Result<Due, String> {
         let (world, events, at, known_at) = (self.world, self.events, self.at, self.known_at);
         let unit = engine_unit(d)?;
-        let counting_key = world.target(owner, &d.counting).key;
+        // A court that recounts `owner`'s periods counts them by its own rule.
+        let counting_key = world
+            .recounted(owner, &d.counting)
+            .unwrap_or_else(|| world.target(owner, &d.counting).key);
         let version = governing(world, "counting rule", &counting_key, events, at, known_at)?
             .and_then(|i| match world.decls[i].decl {
                 Declaration::Counting(c) => Some((world.decls[i].decl, c)),

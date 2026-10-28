@@ -300,6 +300,17 @@ pub(crate) fn pack(
         jurisdiction: m.jurisdiction.clone(),
         forum: Some(m.forum.clone()),
         counting,
+        recounts: m
+            .recounts
+            .iter()
+            .map(|name| {
+                build
+                    .packages
+                    .iter()
+                    .find(|p| p.manifest.name == *name)
+                    .map_or_else(|| name.clone(), |p| p.manifest.pack_id.clone())
+            })
+            .collect(),
         start_node_id: pkg.start.clone(),
         groups: pkg
             .groups

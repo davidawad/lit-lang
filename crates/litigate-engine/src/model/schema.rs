@@ -509,6 +509,13 @@ pub struct Pack {
     /// forum name.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub counting: Option<String>,
+    /// Ids of the packs whose periods, counted by their own pack's
+    /// `counting`, this pack's `counting` counts instead when both are
+    /// loaded: a court's rule over a national rule set's (a bankruptcy
+    /// court whose local rule names the state holidays that close a
+    /// forward-counted FRBP period, FRBP 9006(a)(6)(C)).
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub recounts: Vec<String>,
     /// Where walks and default analyses begin.
     pub start_node_id: String,
     /// Node groups.

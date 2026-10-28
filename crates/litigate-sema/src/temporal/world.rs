@@ -49,6 +49,11 @@ pub struct PackInfo {
     pub authority: String,
     /// The package lifetime (`in_force` to `in_force_until`).
     pub lifetime: Window,
+    /// Its counting rule (`package.counting`).
+    pub counting: Option<String>,
+    /// The packages (names) whose own-rule periods its counting rule
+    /// counts instead (`package.recounts`).
+    pub recounts: Vec<String>,
 }
 
 /// One declaration with its context.
@@ -502,6 +507,31 @@ impl<'a> World<'a> {
         Target { key, version }
     }
 
+    /// The counting rule that counts a period of pack `pack` written
+    /// `counted_by counting` (a reference in `pack`) when a package of the
+    /// world `recounts` that pack's package (`package.recounts`): only a
+    /// period counted by its own package's `counting` rule, which the
+    /// court's own rule then counts (FRBP 9006(a)(6)(C) closes a
+    /// forward-counted FRBP period on the state holidays a district's
+    /// local rule names). `None` otherwise.
+    #[must_use]
+    pub fn recounted(&self, pack: &str, counting: &str) -> Option<Key> {
+        let base = pack.split_once('@').map_or(pack, |(b, _)| b);
+        let owner = self.packs.iter().find(|p| p.pack == base)?;
+        let named = self.target(pack, counting).key.name;
+        if owner.counting.as_deref() != Some(named.as_str()) {
+            return None;
+        }
+        let court = self
+            .packs
+            .iter()
+            .find(|p| p.recounts.contains(&owner.name))?;
+        Some(Key {
+            pack: court.pack.clone(),
+            name: court.counting.clone()?,
+        })
+    }
+
     /// The pack id of declaration `i`.
     #[must_use]
     pub fn pack_of(&self, i: usize) -> &str {
@@ -534,6 +564,8 @@ impl PackInfo {
             pack: m.pack_id.clone(),
             authority: m.authority.clone(),
             lifetime: Window::of(&m.in_force),
+            counting: m.counting.clone(),
+            recounts: m.recounts.clone(),
         }
     }
 }

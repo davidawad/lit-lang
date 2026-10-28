@@ -73,6 +73,9 @@ struct RawPackage {
     // The US state, DC or territory of a state-court pack (`litigate coverage`).
     jurisdiction_id: Option<Spanned<String>>,
     counting: Option<Spanned<String>>,
+    // Dependencies whose periods `counting` counts in a matter using this
+    // package (a court's own counting rule over a national rule set's).
+    recounts: Option<Spanned<Vec<String>>>,
     // Procedure (default) or substantive law (SPEC §4.1, §5.6).
     law: Option<Spanned<String>>,
     in_force: Spanned<String>,
@@ -238,6 +241,16 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
             )
         });
     }
+    if let Some(recounts) = &p.recounts {
+        c.check(p.counting.is_some(), range(recounts), || {
+            "`recounts` needs the package's own `counting` rule".to_owned()
+        });
+        for name in recounts.get_ref() {
+            c.check(dependencies.contains_key(name), range(recounts), || {
+                format!("`recounts` names `{name}`, which is not a dependency")
+            });
+        }
+    }
     let law = law(&mut c, p);
     let (kind, instrument) = kind(&mut c, p, &roles, &sources);
     let families = family::check(&mut c, p.name.get_ref(), &raw.family);
@@ -269,6 +282,11 @@ pub fn parse_manifest(text: &str) -> Result<ParsedManifest, Vec<Report>> {
         sources,
         dependencies,
         counting: text_of(&p.counting),
+        recounts: p
+            .recounts
+            .as_ref()
+            .map(|r| r.get_ref().clone())
+            .unwrap_or_default(),
         cite_syntax,
         links,
         kind,
@@ -374,6 +392,7 @@ fn identity(c: &mut Checker, text: &str, raw: &RawManifest) -> bool {
         ("jurisdiction", p.jurisdiction.as_ref().map(range)),
         ("jurisdiction_id", p.jurisdiction_id.as_ref().map(range)),
         ("counting", p.counting.as_ref().map(range)),
+        ("recounts", p.recounts.as_ref().map(range)),
         ("law", p.law.as_ref().map(range)),
         ("cite_syntax", raw.cite_syntax.as_ref().map(range)),
         ("sources", raw.sources.0.first().map(|(_, s)| range(s))),

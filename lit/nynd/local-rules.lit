@@ -1,0 +1,335 @@
+module nynd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Northern District of New York's own periods, computed under the
+// federal rules (L.R. 6.1). The motion periods of L.R. 7.1 apply "unless
+// otherwise ordered by the Court". Rules that state no period or limit
+// stay out: case assignment, cover sheets and venue (L.R. 3.1-3.6), fees
+// and in forma pauperis applications (5.1.2-5.1.4), privacy and sealing
+// (5.2, 5.3), form of papers (10.1), appearances (11.1), joinder and
+// parties (17.1-25.1), the discovery-document rules (26.1-37.1), trial
+// rules (38.1-53.3), default (55.1, 55.2), summary judgment statements
+// (56.1, 56.2), injunctions and deposits (65.1-67.5), consent to a
+// magistrate judge (73.1), the clerk's rules (77.1-80.1), removal (81.3,
+// 81.4) and the admission, discipline and mediation rules (83.1-83.10).
+// Periods the rules state in business days stay in notes, because
+// lit/core counts calendar days: an extension request on a dispositive
+// motion at least three business days before the deadline expires (L.R.
+// 7.1(j)) and a proposed civil case management plan of a party that
+// cannot agree at least fourteen business days before the conference
+// (L.R. 16.1). Periods measured in months stay in notes where they are
+// presumptions, not deadlines: four months without action is presumptive
+// evidence of lack of prosecution (L.R. 41.2(a)). The clerk's transfer of
+// a case fourteen days after the transfer order (L.R. 3.7) binds the
+// clerk, not a party, and is not declared. A motion for fees under 42
+// U.S.C. § 406(b) is due within fourteen days of notice of the final
+// award "or within the time frame set forth in" a decision of the Second
+// Circuit (L.R. 54.4); its period is not declared, because the decision's
+// text is not vendored. Amounts in the rules are not declared. The
+// earlier N.D.N.Y. outline's FRCP flow and its Supreme Court decisions
+// (Twombly, Iqbal, Celotex, Anderson v. Liberty Lobby) are FRCP authority
+// and belong to lit/frcp; they are removed here: no reporter text is
+// vendored.
+/// A memorandum of law: at most 25 pages, double-spaced, unless the judge
+/// hearing the motion grants leave before filing (L.R. 7.1(b)(1)); a
+/// combined cross-motion and opposition brief, or reply and opposition
+/// brief, is held to the same 25 pages, exclusive of exhibits (L.R.
+/// 7.1(c)).
+limit memorandum { pages <= 25 cite "N.D.N.Y. L.R. 7.1(b)" } cite "N.D.N.Y. L.R. 7.1(b)"
+/// A reply memorandum on a dispositive motion, or on a non-dispositive
+/// motion where leave to reply is granted: at most 10 pages (L.R.
+/// 7.1(a)(1), (2)).
+limit reply-memorandum { pages <= 10 cite "N.D.N.Y. L.R. 7.1(a)" } cite "N.D.N.Y. L.R. 7.1(a)"
+/// An amicus brief: at most 12 pages, double-spaced (L.R. 7.2(d)).
+limit amicus-brief { pages <= 12 cite "N.D.N.Y. L.R. 7.2(d)" } cite "N.D.N.Y. L.R. 7.2(d)"
+/// Objections to a magistrate judge's report and recommendation: at most
+/// 25 pages without the Court's prior approval (L.R. 72.1(c)).
+limit objections { pages <= 25 cite "N.D.N.Y. L.R. 72.1(c)" } cite "N.D.N.Y. L.R. 72.1(c)"
+
+/// An appellant's or appellee's brief on a bankruptcy appeal: at most 25
+/// pages (L.R. 81.2(b), (d)).
+limit bankruptcy-principal-brief {
+  pages <= 25 cite "N.D.N.Y. L.R. 81.2(b)"
+} cite "N.D.N.Y. L.R. 81.2(b)"
+
+/// An appellant's reply brief on a bankruptcy appeal: at most 10 pages
+/// (L.R. 81.2(b)).
+limit bankruptcy-reply-brief {
+  pages <= 10 cite "N.D.N.Y. L.R. 81.2(b)"
+} cite "N.D.N.Y. L.R. 81.2(b)"
+
+/// The complaint is filed (L.R. 4.1(b)).
+event ComplaintFiled()
+/// A waiver of service is requested of a defendant located within the
+/// United States, under FRCP 4(d) or N.Y. CPLR § 312-a (L.R. 4.1(d)).
+event WaiverRequestSent()
+/// A notice of removal of a New York action commenced by summons with
+/// notice under CPLR 305(b) is filed (L.R. 5.1(f)).
+event SummonsWithNoticeRemoved()
+/// The defendant serves its demand for a complaint (L.R. 5.1(f)).
+event ComplaintDemandServed()
+/// A dispositive motion is served (L.R. 7.1(a)(1)).
+event DispositiveMotionServed() paper memorandum
+/// The response papers to a dispositive motion are served (L.R.
+/// 7.1(a)(1)).
+event DispositiveResponseServed() paper memorandum
+/// A non-dispositive motion is served (L.R. 7.1(a)(2)).
+event NonDispositiveMotionServed() paper memorandum
+/// A reply is filed and served (L.R. 7.1(a)).
+event ReplyServed() paper reply-memorandum
+/// A cross-motion joined with the opposition is served (L.R. 7.1(c)).
+event CrossMotionServed() paper memorandum
+/// The principal brief of the party an amicus curiae supports, or of the
+/// moving party, is filed (L.R. 7.2(c)).
+event PrincipalBriefFiled()
+/// An amicus brief is submitted with the motion for leave (L.R. 7.2).
+event AmicusBriefSubmitted() paper amicus-brief
+/// A pleading asserting a RICO claim is filed (L.R. 9.2).
+event RicoPleadingFiled()
+/// The Court grants leave to amend (L.R. 15.1(c)).
+event AmendmentGranted()
+/// The discovery cut-off (L.R. 16.2).
+event DiscoveryCutoff()
+/// The parties notify the Court or Clerk that they have settled (L.R.
+/// 41.3).
+event SettlementNotified()
+/// Judgment is entered (L.R. 54.1(a), 60.1).
+event JudgmentEntered()
+/// The verified bill of costs is filed (L.R. 54.1(a)).
+event BillOfCostsFiled()
+/// Objections to the bill of costs are filed (L.R. 54.1(a)).
+event CostObjectionsFiled()
+/// The challenged judgment, order or decree is entered (L.R. 60.1).
+event ChallengedOrderEntered()
+/// A party is served with a magistrate judge's order on a non-dispositive
+/// matter (L.R. 72.1(b)).
+event MagistrateOrderServed()
+/// The appellant's brief on an appeal from a magistrate judge is filed
+/// (L.R. 72.1(b)).
+event MagistrateAppealBriefFiled()
+/// The appellee's opposition on an appeal from a magistrate judge is filed
+/// (L.R. 72.1(b)).
+event MagistrateAppealOppositionFiled()
+/// A party is served with a magistrate judge's report and recommendation
+/// (L.R. 72.1(c)).
+event RecommendationServed()
+/// A party is served with objections to a report and recommendation (L.R.
+/// 72.1(c)).
+event ObjectionsServed() paper objections
+/// The Court's bankruptcy appeal scheduling notice is filed (L.R.
+/// 81.2(b)).
+event BankruptcySchedulingNoticeFiled()
+/// The appellant's brief on a bankruptcy appeal is filed (L.R. 81.2(b)).
+event BankruptcyAppellantBriefFiled() paper bankruptcy-principal-brief
+/// The appellee's brief on a bankruptcy appeal is filed (L.R. 81.2(b)).
+event BankruptcyAppelleeBriefFiled() paper bankruptcy-principal-brief
+/// The appellant's reply brief on a bankruptcy appeal is filed (L.R.
+/// 81.2(b)).
+event BankruptcyReplyBriefFiled() paper bankruptcy-reply-brief
+
+/// L.R. 4.1(b): the Clerk issues General Order 25 on the filing of the
+/// complaint, which requires service of process on all defendants within
+/// 60 days of the filing; in no event is service completed after the time
+/// FRCP 4 specifies.
+deadline expedited-service-period: 60.days after ComplaintFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 4.1(b)"
+{
+  forum frcp
+}
+
+/// L.R. 4.1(d): a defendant within the United States whose waiver of
+/// service was properly requested has 60 days from the date the request
+/// was sent to answer or move to dismiss.
+deadline waiver-answer-period: 60.days after WaiverRequestSent() counted_by frcp6 cite "N.D.N.Y. L.R. 4.1(d)"
+{
+  forum frcp
+}
+
+/// L.R. 5.1(f): after removal of an action commenced by summons with
+/// notice, the defendant files a demand for a complaint within 14 days of
+/// filing the notice of removal, unless the Court excuses the requirement
+/// or extends the period.
+deadline complaint-demand-period: 14.days after SummonsWithNoticeRemoved() counted_by frcp6 cite "N.D.N.Y. L.R. 5.1(f)"
+{
+  forum frcp
+}
+
+/// L.R. 5.1(f): within 20 days of service of the demand, the plaintiff
+/// serves a complaint.
+deadline removed-complaint-period: 20.days after ComplaintDemandServed() counted_by frcp6 cite "N.D.N.Y. L.R. 5.1(f)"
+{
+  forum frcp
+}
+
+/// L.R. 7.1(a)(1): unless the Court orders otherwise, opposition papers to
+/// a dispositive motion are filed and served no more than 21 days after
+/// service of the motion; a party not opposing, or a movant not pursuing,
+/// gives notice within the same 21 days (L.R. 7.1(a)(3)).
+deadline dispositive-opposition-period: 21.days after DispositiveMotionServed() counted_by frcp6 cite "N.D.N.Y. L.R. 7.1(a)"
+{
+  forum frcp
+}
+
+/// L.R. 7.1(a)(1): the moving party's reply papers, if any, are filed and
+/// served no more than 7 days after service of the response papers; a
+/// surreply is not permitted.
+deadline dispositive-reply-period: 7.days after DispositiveResponseServed() counted_by frcp6 cite "N.D.N.Y. L.R. 7.1(a)"
+{
+  forum frcp
+}
+
+/// L.R. 7.1(a)(2): opposition papers to a non-dispositive motion are filed
+/// and served no more than 21 days after service of the motion; a reply
+/// needs the Court's prior permission.
+deadline nondispositive-opposition-period: 21.days after NonDispositiveMotionServed() counted_by frcp6 cite "N.D.N.Y. L.R. 7.1(a)"
+{
+  forum frcp
+}
+
+/// L.R. 7.1(c): a cross-motion is filed and served with the opposition,
+/// not more than 21 days after service of the original motion; the
+/// original movant's combined reply and opposition is filed and served
+/// not more than 7 days after service of the cross-motion.
+deadline cross-motion-reply-period: 7.days after CrossMotionServed() counted_by frcp6 cite "N.D.N.Y. L.R. 7.1(c)"
+{
+  forum frcp
+}
+
+/// L.R. 7.2(c): an amicus curiae files its motion for leave no later than
+/// 7 days after the principal brief of the party it supports (or, if it
+/// supports neither party, of the moving party) is filed, absent good
+/// cause.
+deadline amicus-period: 7.days after PrincipalBriefFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 7.2(c)"
+{
+  forum frcp
+}
+
+/// L.R. 9.2: a party asserting a RICO claim files a RICO statement within
+/// 30 days of the filing of the pleading containing the claim.
+deadline rico-statement-period: 30.days after RicoPleadingFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 9.2"
+{
+  forum frcp
+}
+
+/// L.R. 15.1(c): unless the Court orders otherwise, the moving party files
+/// and serves the original signed amended pleading within 14 days of the
+/// order granting leave.
+deadline amended-pleading-period: 14.days after AmendmentGranted() counted_by frcp6 cite "N.D.N.Y. L.R. 15.1(c)"
+{
+  forum frcp
+}
+
+/// L.R. 16.2: motions to compel discovery are filed and served no later
+/// than 14 days after the discovery cut-off.
+deadline motion-to-compel-period: 14.days after DiscoveryCutoff() counted_by frcp6 cite "N.D.N.Y. L.R. 16.2"
+{
+  forum frcp
+}
+
+/// L.R. 41.3: within 30 days after notifying the Court or Clerk of a
+/// settlement (within 90 days in an action involving a municipal
+/// defendant), the parties file a stipulation of dismissal; otherwise the
+/// judge may dismiss by reason of settlement under L.R. 68.1.
+deadline stipulation-of-dismissal-period: 30.days after SettlementNotified() counted_by frcp6 cite "N.D.N.Y. L.R. 41.3"
+{
+  forum frcp
+}
+
+/// L.R. 41.3: in an action involving a municipal defendant, the
+/// stipulation of dismissal is filed within 90 days of the notification.
+deadline municipal-stipulation-of-dismissal-period: 90.days after SettlementNotified() counted_by frcp6 cite "N.D.N.Y. L.R. 41.3"
+{
+  forum frcp
+}
+
+/// L.R. 54.1(a), (c): the party entitled to costs files a verified bill of
+/// costs within 30 days after entry of judgment; post-trial motions do not
+/// extend the time absent good cause or an order, and a late bill waives
+/// the taxable costs.
+deadline bill-of-costs-period: 30.days after JudgmentEntered() counted_by frcp6 cite "N.D.N.Y. L.R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// L.R. 54.1(a): an opposing party may file objections to the bill of
+/// costs within 14 days of its filing date.
+deadline cost-objections-period: 14.days after BillOfCostsFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// L.R. 54.1(a): the prevailing party may reply to the objections within 7
+/// days of their filing.
+deadline cost-reply-period: 7.days after CostObjectionsFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 54.1(a)"
+{
+  forum frcp
+}
+
+/// L.R. 60.1: unless the Court, a statute or a rule (such as FRCP 50, 52,
+/// 59 and 60) provides otherwise, a motion for reconsideration or
+/// reargument is filed and served no later than 14 days after the entry of
+/// the challenged judgment, order or decree.
+deadline reconsideration-period: 14.days after ChallengedOrderEntered() counted_by frcp6 cite "N.D.N.Y. L.R. 60.1"
+{
+  forum frcp
+}
+
+/// L.R. 72.1(b): an appeal from a magistrate judge's decision of a
+/// non-dispositive matter, its notice and the appellant's brief, is filed
+/// and served within 14 days after service of the order; there is no
+/// filing fee.
+deadline magistrate-appeal-period: 14.days after MagistrateOrderServed() counted_by frcp6 cite "N.D.N.Y. L.R. 72.1(b)"
+{
+  forum frcp
+}
+
+/// L.R. 72.1(b): opposition papers are due 14 days after the appellant's
+/// brief is filed.
+deadline magistrate-appeal-opposition-period: 14.days after MagistrateAppealBriefFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 72.1(b)"
+{
+  forum frcp
+}
+
+/// L.R. 72.1(b): the appellant's reply brief is due 7 days after the
+/// appellee's brief is filed.
+deadline magistrate-appeal-reply-period: 7.days after MagistrateAppealOppositionFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 72.1(b)"
+{
+  forum frcp
+}
+
+/// L.R. 72.1(c): objections to a magistrate judge's report and
+/// recommendation are filed and served within 14 days after service of a
+/// copy of it.
+deadline recommendation-objection-period: 14.days after RecommendationServed() counted_by frcp6 cite "N.D.N.Y. L.R. 72.1(c)"
+{
+  forum frcp
+}
+
+/// L.R. 72.1(c): the opposing party may file and serve its response within
+/// 14 days after service of the objections; the objecting party may not
+/// reply.
+deadline recommendation-response-period: 14.days after ObjectionsServed() counted_by frcp6 cite "N.D.N.Y. L.R. 72.1(c)"
+{
+  forum frcp
+}
+
+/// L.R. 81.2(b): on a bankruptcy appeal, the appellant's brief is due 40
+/// days from the filing of the Court's scheduling notice.
+deadline bankruptcy-appellant-brief-period: 40.days after BankruptcySchedulingNoticeFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 81.2(b)"
+{
+  forum frcp
+}
+
+/// L.R. 81.2(b): the appellee's brief is due 40 days from the filing of
+/// the appellant's brief.
+deadline bankruptcy-appellee-brief-period: 40.days after BankruptcyAppellantBriefFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 81.2(b)"
+{
+  forum frcp
+}
+
+/// L.R. 81.2(b): the appellant's reply brief is due 20 days from the
+/// filing of the appellee's brief.
+deadline bankruptcy-reply-brief-period: 20.days after BankruptcyAppelleeBriefFiled() counted_by frcp6 cite "N.D.N.Y. L.R. 81.2(b)"
+{
+  forum frcp
+}

@@ -1,6 +1,20 @@
 version = 2
 
 [[package]]
+name = "bankr-nm-local-rules"
+version = "0.1.0"
+language = 1
+source = "sha256:34f25ca00bfce519cdd860575153b5c640ef3a8ad42ac8446b915871d8b2820c"
+semantic = "sha256:5ef8a243fd336eaa6662327cee78f6bce1bb7460f1fdf8009edcb590ff3fe6f8"
+texts = [
+    "nmb-lbr sources/bankr-nm/nmb-lbr-2025-12-01-sectioned.txt sha256:3a845abd5aafea7c24e00b531ed679f79e5e10ddc6182ddeec81d68f0cc427da",
+]
+dependencies = [
+    "core 1.0.0",
+    "frbp-bankruptcy-procedure 0.1.0",
+]
+
+[[package]]
 name = "core"
 version = "1.0.0"
 language = 1
@@ -44,18 +58,4 @@ texts = [
 ]
 dependencies = [
     "core 1.0.0",
-]
-
-[[package]]
-name = "outline-bankr-nm"
-version = "0.0.1"
-language = 1
-source = "sha256:a9755ec602c199848e5e99b2aef6a2f310634c78485718105673e2cd125370be"
-semantic = "sha256:a58218de313299526240cac14939948e69d46cee392b0731bc90c2d73ef204ac"
-texts = [
-    "frbp sources/frbp.txt sha256:0c8e487aa7093bcee260d9037c459344f489b4096d3cdd91177ebb2d76c403d8",
-]
-dependencies = [
-    "core 1.0.0",
-    "frbp-bankruptcy-procedure 0.1.0",
 ]

@@ -1,0 +1,451 @@
+module bankr-nm-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+import frbp.events.{ FirstMeetingDate, PetitionFiled }
+
+// The Bankr. D.N.M. court's own periods, counted under FRBP 9006(a). The
+// FRBP periods (schedules, the chapter 13 plan and statement of current
+// monthly income within 14 days of NM LBR 1017-3, claims, the objection to
+// an amended Schedule C under FRBP 4003(b) (NM LBR 4003-1(e)), discharge,
+// the adversary answer, new trial and appeals) are lit/frbp's and are not
+// declared again; the 30 days of 11 U.S.C. § 1112(b)(3) and § 362(e) (NM
+// LBR 1017-1, 9013-2(c)(vii)) are the Code's, whose start the rules defer
+// to service of the hearing notice. Stated in the rules but not declared:
+// periods counted in business days (three business days to request a
+// chapter 12 or small business confirmation hearing, NM LBR 3015-1,
+// 3017-1); the clerk's and the court's own periods (registry disbursement
+// about 14 days after the order, NM LBR 7067-1(b); the court's 30-day
+// retention of exhibits, NM LBR 9070-1); the chapter 13 trustee's seven
+// days before a plan distribution (NM LBR 9013-2(c)(viii)); the three-month
+// and six-month limits on a stipulated plan modification and subchapter V
+// fee applications (NM LBR 3015-5, 2016-1(d)), which bound rather than
+// close; the 12 months of Schedules I and J and two months' delinquency (NM
+// LBR 3015-6, 3015-3(a)), definitions; and the shortened 14-day objection
+// deadline for chapter 11 stay relief, set by the court (NM LBR 9013-2(d)).
+// The rules state no page limit. The outline's Supreme Court decisions
+// construe the Code and the FRBP, not these rules, and are removed here: no
+// reporter text is vendored.
+/// The United States trustee serves a written request for the debtor's
+/// payment advices (NM LBR 1007-1).
+event UstAdviceRequestServed()
+/// An individual debtor files and mails a late verified statement of social
+/// security number (NM LBR 1007-2).
+event SsnStatementFiled()
+/// A motion to convert or dismiss a chapter 11 case under § 1112(b) is
+/// filed (NM LBR 1017-1).
+event ConversionMotionFiled()
+/// The notice of a motion's objection deadline is served (NM LBR 1017-1,
+/// 4001-2, 9013-2(c)).
+event NoticeServed()
+/// Notice of a chapter 13 debtor's motion to dismiss under § 1307(b) is
+/// given (NM LBR 1017-2).
+event VoluntaryDismissalNoticed()
+/// The scheduled date of a § 341 meeting (NM LBR 2003-1).
+event MeetingDate()
+/// The scheduled date of a Rule 2004 examination (NM LBR 2004-1(a)).
+event ExaminationDate()
+/// Substituted debtor's counsel's representation commences (NM LBR
+/// 2016-1(b)).
+event RepresentationCommenced()
+/// A subchapter V trustee's fee application period ends (NM LBR 2016-1(d)).
+event ApplicationPeriodEnded()
+/// A claim objection and its notice are served (NM LBR 3007-1).
+event ClaimObjectionServed()
+/// The meeting of creditors concludes (NM LBR 3015-2(c), 5011-2(a)).
+event MeetingConcluded()
+/// The chapter 13 debtor serves the plan and the notice of objection
+/// deadline and confirmation hearing (NM LBR 3015-2(e)).
+event PlanServed()
+/// A notice of mortgage payment change under FRBP 3002.1(b) is served (NM
+/// LBR 3015-3(d)).
+event PaymentChangeNoticeServed()
+/// A mortgagee's name or payment address changes (NM LBR 3015-3(e)).
+event MortgageeAddressChange()
+/// The court approves modification of a confirmed plan to require conduit
+/// payments (NM LBR 3015-3(e)).
+event ConduitModificationApproved()
+/// The chapter 13 trustee gives written approval of an application to incur
+/// new debt (NM LBR 3015-6(b)).
+event NewDebtApproved()
+/// A motion to continue or impose the stay and its notice are served (NM
+/// LBR 4001-1(c)).
+event StayMotionServed()
+/// A trustee serves a written request for information under § 521(a)(3) or
+/// (4) (NM LBR 4002-1).
+event TrusteeRequestServed()
+/// The debtor's mailing or street address changes (NM LBR 4002-4).
+event AddressChanged()
+/// A paper document is filed and scanned (NM LBR 5005-1).
+event PaperDocumentFiled()
+/// A notice of removal is filed (NM LBR 5011-2(b)).
+event RemovalNoticeFiled()
+/// An order denying a motion to abstain is entered (NM LBR 5011-2(b), (c)).
+event AbstentionDenied()
+/// An opposed motion, or the notice of its objection deadline, is served
+/// (NM LBR 7007-1, 9013-1(d)).
+event MotionServed()
+/// A response or objection to a motion is served (NM LBR 7007-1, 7056-1(c),
+/// 9013-1(d)).
+event ResponseServed()
+/// The scheduled date of a deposition (NM LBR 7030-1).
+event DepositionDate()
+/// A final judgment or order is entered in an adversary proceeding or
+/// contested matter (NM LBR 7054-1(a)).
+event FinalJudgmentEntered()
+/// Notice of a motion to tax costs is served (NM LBR 7054-1(b)).
+event CostsMotionNoticed()
+/// The clerk's order taxing costs is entered (NM LBR 7054-1(c)).
+event CostsTaxed()
+/// A motion for summary judgment is served (NM LBR 7056-1(c)).
+event SummaryJudgmentMotionServed()
+/// An attorney's motion to withdraw without the client's consent and its
+/// notice are served (NM LBR 9010-2(c)).
+event WithdrawalMotionServed()
+/// The clerk serves notice that a party's attorney has died or ceased to
+/// act (NM LBR 9010-2(e)).
+event AttorneyGoneNoticeServed()
+/// A matter in which exhibits were submitted at a trial or final hearing is
+/// finally disposed of (NM LBR 9070-1).
+event MatterFinallyDisposed()
+
+/// NM LBR 1007-1: the debtor does not file payment advices but provides
+/// them to the trustee, and to any creditor that asked in writing at least
+/// 14 days before, at least fourteen days before the first date set for the
+/// meeting of creditors.
+deadline payment-advices-period: 14.days before FirstMeetingDate() counted_by frcp6 cite "NM LBR 1007-1"
+{
+  forum frcp
+}
+
+/// NM LBR 1007-1: the debtor provides payment advices to the United States
+/// trustee not later than ten days after service of its written request.
+deadline ust-payment-advices-period: 10.days after UstAdviceRequestServed() counted_by frcp6 cite "NM LBR 1007-1"
+{
+  forum frcp
+}
+
+/// NM LBR 1007-2: within two days after filing and mailing a late statement
+/// of social security number, the debtor files a certificate of compliance.
+deadline ssn-certificate-period: 2.days after SsnStatementFiled() counted_by frcp6 cite "NM LBR 1007-2"
+{
+  forum frcp
+}
+
+/// NM LBR 1017-1: the movant files with a § 1112(b) motion, and serves
+/// within two days thereafter, a notice of the scheduling conference, final
+/// hearing and objection deadline.
+deadline conversion-notice-service-period: 2.days after ConversionMotionFiled() counted_by frcp6 cite "NM LBR 1017-1"
+{
+  forum frcp
+}
+
+/// NM LBR 1017-1: the objection deadline to a motion to convert or dismiss
+/// a chapter 11 case is ten days from the date of service of the notice (as
+/// for a motion under §§ 362(c)(4)(A)(ii) or 362(j), NM LBR 4001-2).
+deadline conversion-objection-period: 10.days after NoticeServed() counted_by frcp6 cite "NM LBR 1017-1"
+{
+  forum frcp
+}
+
+/// NM LBR 1017-2: a chapter 13 debtor's motion to dismiss under § 1307(b)
+/// requires notice to all electronic notice recipients with a minimum
+/// five-day deadline to object.
+deadline voluntary-dismissal-objection-period: 5.days after VoluntaryDismissalNoticed() counted_by frcp6 cite "NM LBR 1017-2"
+{
+  forum frcp
+}
+
+/// NM LBR 2003-1: requests to reschedule a § 341 meeting are made to the
+/// United States trustee (chapter 11) or the trustee (chapters 7, 12 and
+/// 13) at least seven days before the scheduled meeting.
+deadline meeting-reschedule-request-period: 7.days before MeetingDate() counted_by frcp6 cite "NM LBR 2003-1"
+{
+  forum frcp
+}
+
+/// NM LBR 2004-1(a): unless otherwise ordered, an order for a Rule 2004
+/// examination is served at least seven days before the scheduled
+/// examination.
+deadline examination-order-service-period: 7.days before ExaminationDate() counted_by frcp6 cite "NM LBR 2004-1(a)"
+{
+  forum frcp
+}
+
+/// NM LBR 2016-1(b): substituted debtor's counsel files a Rule 2016
+/// statement within fourteen days of the date representation commenced.
+deadline substituted-counsel-disclosure-period: 14.days after RepresentationCommenced() counted_by frcp6 cite "NM LBR 2016-1(b)"
+{
+  forum frcp
+}
+
+/// NM LBR 2016-1(d): each subchapter V trustee fee application is filed and
+/// noticed within twenty-eight days after the application period, or the
+/// debtor's authority to make interim payments is suspended.
+deadline subchapter-v-fee-application-period: 28.days after ApplicationPeriodEnded() counted_by frcp6 cite "NM LBR 2016-1(d)"
+{
+  forum frcp
+}
+
+/// NM LBR 3007-1: unless extended or shortened by the court, the time to
+/// respond to a claim objection is thirty days from service of the
+/// objection and notice.
+deadline claim-objection-response-period: 30.days after ClaimObjectionServed() counted_by frcp6 cite "NM LBR 3007-1"
+{
+  forum frcp
+}
+
+/// NM LBR 3015-2(c): the trustee and the United States trustee have an
+/// automatic extension of time to object to confirmation of a chapter 13
+/// plan until fourteen days after conclusion of the meeting of creditors.
+deadline trustee-plan-objection-period: 14.days after MeetingConcluded() counted_by frcp6 cite "NM LBR 3015-2(c)"
+{
+  forum frcp
+}
+
+/// NM LBR 3015-2(e): the debtor who serves the plan and notice of objection
+/// deadline and confirmation hearing files a certificate of service within
+/// three days thereafter.
+deadline plan-service-certificate-period: 3.days after PlanServed() counted_by frcp6 cite "NM LBR 3015-2(e)"
+{
+  forum frcp
+}
+
+/// NM LBR 3015-3(d): a notice under FRBP 3002.1(b) filed and served more
+/// than 21 days before the new payment's effective date is deemed allowed
+/// if no objection is filed within twenty-one days after its service.
+deadline payment-change-objection-period: 21.days after PaymentChangeNoticeServed() counted_by frcp6 cite "NM LBR 3015-3(d)"
+{
+  forum frcp
+}
+
+/// NM LBR 3015-3(e): at least forty-five days before any name or address
+/// change, the mortgagee sends the trustee notice on Official Form
+/// B2100A/B.
+deadline mortgagee-address-notice-period: 45.days before MortgageeAddressChange() counted_by frcp6 cite "NM LBR 3015-3(e)"
+{
+  forum frcp
+}
+
+/// NM LBR 3015-3(e): if a confirmed plan is modified to require conduit
+/// payments, the mortgagee files a supplemental proof of claim within
+/// twenty-one days after court approval of the modification.
+deadline conduit-supplemental-claim-period: 21.days after ConduitModificationApproved() counted_by frcp6 cite "NM LBR 3015-3(e)"
+{
+  forum frcp
+}
+
+/// NM LBR 3015-6(b): if the trustee approves an application to incur
+/// non-mortgage consumer debt, the debtor files a notice of the approval
+/// within ten days thereafter.
+deadline new-debt-notice-period: 10.days after NewDebtApproved() counted_by frcp6 cite "NM LBR 3015-6(b)"
+{
+  forum frcp
+}
+
+/// NM LBR 4001-1(b): a motion to continue or impose the stay is filed
+/// within seven days of the petition date; untimely motions may be denied.
+deadline stay-continuation-motion-period: 7.days after PetitionFiled() counted_by frcp6 cite "NM LBR 4001-1(b)"
+{
+  forum frcp
+}
+
+/// NM LBR 4001-1(c): unless the court orders otherwise, the deadline to
+/// object to a motion to continue or impose the stay is ten days from
+/// service of the motion and notice.
+deadline stay-continuation-objection-period: 10.days after StayMotionServed() counted_by frcp6 cite "NM LBR 4001-1(c)"
+{
+  forum frcp
+}
+
+/// NM LBR 4002-1: within fourteen days after service of a trustee's written
+/// request under § 521(a)(3) or (4), the debtor provides the information or
+/// files a written objection.
+deadline trustee-information-period: 14.days after TrusteeRequestServed() counted_by frcp6 cite "NM LBR 4002-1"
+{
+  forum frcp
+}
+
+/// NM LBR 4002-2: in a chapter 12 or 13 case the debtor provides the
+/// trustee income, tax and insurance documents, or a statement that none
+/// exist, at least seven days before the first date set for the meeting of
+/// creditors.
+deadline trustee-documents-period: 7.days before FirstMeetingDate() counted_by frcp6 cite "NM LBR 4002-2"
+{
+  forum frcp
+}
+
+/// NM LBR 4002-4: when the debtor's address changes, the debtor files the
+/// statement required by FRBP 4002(a)(5) within fourteen days of the
+/// change.
+deadline address-change-period: 14.days after AddressChanged() counted_by frcp6 cite "NM LBR 4002-4"
+{
+  forum frcp
+}
+
+/// NM LBR 5005-1: the filer of a paper document reviews its scanned image
+/// within fourteen days after filing; absent a correction request the image
+/// stands.
+deadline scanned-image-review-period: 14.days after PaperDocumentFiled() counted_by frcp6 cite "NM LBR 5005-1"
+{
+  forum frcp
+}
+
+/// NM LBR 5011-2(a): in a bankruptcy case a motion to abstain is timely if
+/// filed within thirty days after the conclusion of the meeting of
+/// creditors.
+deadline abstention-case-period: 30.days after MeetingConcluded() counted_by frcp6 cite "NM LBR 5011-2(a)"
+{
+  forum frcp
+}
+
+/// NM LBR 5011-2(b): in a removed adversary proceeding a motion to abstain
+/// is timely if filed within twenty-one days after the notice of removal
+/// was filed.
+deadline abstention-removal-period: 21.days after RemovalNoticeFiled() counted_by frcp6 cite "NM LBR 5011-2(b)"
+{
+  forum frcp
+}
+
+/// NM LBR 5011-2(b): if a motion to abstain is denied, the deadline to
+/// answer in the adversary proceeding, or to object in the contested matter
+/// (NM LBR 5011-2(c)), is extended until fourteen days after entry of the
+/// denial order.
+deadline abstention-denied-answer-period: 14.days after AbstentionDenied() counted_by frcp6 cite "NM LBR 5011-2(b)"
+{
+  forum frcp
+}
+
+/// NM LBR 7007-1: responses to motions in adversary proceedings, other than
+/// for summary judgment, are due within twenty-one days after service.
+deadline adversary-response-period: 21.days after MotionServed() counted_by frcp6 cite "NM LBR 7007-1"
+{
+  forum frcp
+}
+
+/// NM LBR 7007-1: optional replies are due within fourteen days after
+/// service of the response.
+deadline adversary-reply-period: 14.days after ResponseServed() counted_by frcp6 cite "NM LBR 7007-1"
+{
+  forum frcp
+}
+
+/// NM LBR 7030-1(a): unless otherwise agreed or ordered, notices of
+/// deposition are served at least ten days before the scheduled deposition.
+deadline deposition-notice-period: 10.days before DepositionDate() counted_by frcp6 cite "NM LBR 7030-1(a)"
+{
+  forum frcp
+}
+
+/// NM LBR 7030-1(b): a deponent's non-appearance may be sanctioned unless a
+/// motion for protective order and a notice of non-appearance are served at
+/// least three days before the scheduled deposition.
+deadline non-appearance-notice-period: 3.days before DepositionDate() counted_by frcp6 cite "NM LBR 7030-1(b)"
+{
+  forum frcp
+}
+
+/// NM LBR 7054-1(a): within fourteen days after entry of a final judgment
+/// or order, a party may file and serve a motion to tax costs with a
+/// verified bill of costs.
+deadline costs-motion-period: 14.days after FinalJudgmentEntered() counted_by frcp6 cite "NM LBR 7054-1(a)"
+{
+  forum frcp
+}
+
+/// NM LBR 7054-1(b): notice of a motion to tax costs gives adverse parties
+/// fourteen days to file and serve objections.
+deadline costs-objection-period: 14.days after CostsMotionNoticed() counted_by frcp6 cite "NM LBR 7054-1(b)"
+{
+  forum frcp
+}
+
+/// NM LBR 7054-1(c): a request for court review of the clerk's taxation of
+/// costs is filed within fourteen days after entry of the clerk's order.
+deadline costs-review-period: 14.days after CostsTaxed() counted_by frcp6 cite "NM LBR 7054-1(c)"
+{
+  forum frcp
+}
+
+/// NM LBR 7056-1(c): the deadline to respond to a summary judgment motion
+/// is twenty-one days after service; the optional reply is due fourteen
+/// days after service of the response.
+deadline summary-judgment-response-period: 21.days after SummaryJudgmentMotionServed() counted_by frcp6 cite "NM LBR 7056-1(c)"
+{
+  forum frcp
+}
+
+/// NM LBR 9010-2(c): the notice of a motion to withdraw without the
+/// client's consent specifies a 14-day objection deadline running from
+/// service of the motion and notice.
+deadline attorney-withdrawal-objection-period: 14.days after WithdrawalMotionServed() counted_by frcp6 cite "NM LBR 9010-2(c)"
+{
+  forum frcp
+}
+
+/// NM LBR 9010-2(e): if another attorney does not appear within twenty-one
+/// days from service of the clerk's notice, an individual proceeds pro se
+/// and a non-individual is deemed unrepresented.
+deadline new-appearance-period: 21.days after AttorneyGoneNoticeServed() counted_by frcp6 cite "NM LBR 9010-2(e)"
+{
+  forum frcp
+}
+
+/// NM LBR 9013-1(d): unless the rules provide otherwise or the court
+/// orders, the deadline to object to an opposed motion in a contested
+/// matter is twenty-one days from the date of service.
+deadline objection-deadline-period: 21.days after MotionServed() counted_by frcp6 cite "NM LBR 9013-1(d)"
+{
+  forum frcp
+}
+
+/// NM LBR 9013-1(d): the deadline to file an optional reply in a contested
+/// matter is fourteen days after service of the objection.
+deadline contested-reply-period: 14.days after ResponseServed() counted_by frcp6 cite "NM LBR 9013-1(d)"
+{
+  forum frcp
+}
+
+/// NM LBR 9013-2(c): in chapter 7 and 13, unless altered by court order,
+/// the objection deadline to a stay relief motion is twenty-one days from
+/// service of the notice.
+deadline stay-relief-objection-period: 21.days after NoticeServed() counted_by frcp6 cite "NM LBR 9013-2(c)"
+{
+  forum frcp
+}
+
+/// NM LBR 9070-1: the parties have thirty days after the final disposition
+/// of each matter to retrieve exhibits submitted on it; exhibits not
+/// retrieved may be destroyed.
+deadline exhibit-retrieval-period: 30.days after MatterFinallyDisposed() counted_by frcp6 cite "NM LBR 9070-1"
+{
+  forum frcp
+}
+
+start motion-filed
+
+state motion-filed: "Motion filed and served with notice of the objection deadline" by applicant cite "NM LBR 9013-1(d)"
+{
+  note "For opposed motions and motions requiring notice, the movant files and serves a notice complying with NM LBR 9004-1; the objection deadline is 21 days from service unless a rule or order provides otherwise (NM LBR 9013-1(d)). The motion's FRBP periods are lit/frbp's."
+  edge-motion-filed-opposed "Objection timely filed" -> opposed {
+    authority cite "NM LBR 9013-1(d)"
+    within objection-deadline-period
+  }
+  edge-motion-filed-unopposed "No objection; proposed order submitted" -> ruling {
+    authority cite "NM LBR 9013-1(d)"
+  }
+}
+
+state opposed: "Objection filed; hearing requested" by opponent cite "NM LBR 9013-1(d)"
+{
+  note "If an objection is timely filed, the movant contacts the courtroom deputy to request a hearing; an optional reply is due 14 days after service of the objection (NM LBR 9013-1(d), (f))."
+  edge-opposed-ruling "Hearing held" -> ruling { authority cite "NM LBR 9013-1(f)" }
+}
+
+decision ruling: "Motion decided" by court cite "NM LBR 9013-1(d)"
+{
+  note "If no objection is timely filed, the movant promptly submits a proposed order reciting the notice given (NM LBR 9013-1(e))."
+  edge-ruling-granted "Granted" -> decided { authority cite "NM LBR 9013-1(d)" }
+  edge-ruling-denied "Denied" -> decided { authority cite "NM LBR 9013-1(d)" }
+}
+
+terminal decided: "Matter decided: the case continues under lit/frbp" outcome [procedural] cite "NM LBR 1001-1"

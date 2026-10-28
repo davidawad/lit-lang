@@ -12,5 +12,6 @@
 ### `njd/local-rules-2026-10-21-sectioned.txt` — D.N.J. Local Civil and Criminal Rules, civil rules sectioned
 
 - Derived in the pod (lg-f3q8.74) from `njd/local-rules-2026-10-21.txt` (extract sha256 d4b254a8b2ae57299bba4bb8b0c850a0b83182536d9f11f51a5c85ca1157e8d5); nothing fetched. One `## Rule <n>` line is inserted right after each Local Civil Rule's own body heading line `Civ. RULE <n> <title>` (or `CIV. RULE`, some after a form feed; Rule 9.3's heading reads `L. Civ. R. 9.3`): 85 markers, Rule 1.1 through Rule 601.7. The table of contents and the Local Criminal Rules are unmarked. Rule text was not edited: deleting the marker lines (`## Rule <n>` plus its newline) restores the extract byte for byte.
+- Source: as the extract `njd/local-rules-2026-10-21.txt`, https://www.njd.uscourts.gov/sites/njd/files/CompleteLocalRules.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, the Local Civil and Criminal Rules with revisions as of October 21, 2026.
 - Sectioned sha256 ff006b6b5ab0362d1f503489e708d04de00299b28a6638ced97ea257128d1373 (the `path_sha256` pinned by `lit/njd/Lit.toml`).

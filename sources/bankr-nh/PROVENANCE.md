@@ -10,5 +10,6 @@
 ### `bankr-nh/nh-local-rules-2026-05-01-sectioned.txt` — D.N.H. Local Bankruptcy Rules, sectioned
 
 - Derived in the pod (lg-u561.9) from `bankr-nh/nh-local-rules-2026-05-01.txt` (extract sha256 b10dc56839874f3f9560f24bce0c7bd753f283e3f283eee0765275ef451708a0); nothing fetched. One `## LBR <n>`, `## IBR <n>` or `## AO <n>` line is inserted before each rule's or order's own heading line in the body (`LBR 1001-1` through `LBR 9074-2`, Interim Bankruptcy Rules 1007-1 and 5012, Administrative Order 3015-4; 74 sections; the interim rule's heading `IBR 1007-11` carries footnote marker 1 and is marked `## IBR 1007-1`); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## \(LBR\|IBR\|AO\) /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-nh/nh-local-rules-2026-05-01.txt`, https://www.nhb.uscourts.gov/sites/nhb/files/NHBLocalRulesEffective05.01.2026.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, effective February 1, 2026 as amended through May 1, 2026.
 - Sectioned sha256 b870a9750f71869ece7b0c434f089fe2649c9de40437c7a3cdd7c0309a87af13 (the `path_sha256` pinned by `lit/bankr-nh/Lit.toml` for sources `nhb-lbr` and `nhb-ao`).

@@ -51,5 +51,6 @@
 ### `pa-cp-civil/parcp-pa-code-title-231-part-i-2026-08-08-sectioned.txt` — Pennsylvania Rules of Civil Procedure, sectioned
 
 - Derived in the pod (lg-f3q8.75) from `pa-cp-civil/parcp-pa-code-title-231-part-i-2026-08-08.txt` (extract sha256 3d9273dc34bc27d730b21caff2cbd46461586551b6d96ff00f699cecea7a39f1); nothing fetched. One `## Pa.R.C.P. <n>` line is inserted right before the first line of the form `Rule <n>. <title>` for each rule number (1128 markers). A later line of that form for the same number (the Explanatory Comments of some chapters repeat rule headings) gets no marker and falls in the section open at that point. Rule text was not edited: deleting the marker lines (`sed '/^## Pa\.R\.C\.P\. /d'`) restores the extract byte for byte.
+- Source: as the extract `pa-cp-civil/parcp-pa-code-title-231-part-i-2026-08-08.txt`, https://www.pacodeandbulletin.gov/Display/pacode?file=/secure/pacode/data/231/partItoc.html&d=, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, Pa. Code Title 231 Part I effective through 56 Pa.B. 5370 (August 8, 2026).
 - Sectioned sha256 9257d95652b4d1ad36132bf7a4037c4e85a7fda9beedf1b292dc96fc38fa70d7 (the `path_sha256` pinned by `lit/pa-cp-civil/Lit.toml` and `lit/pa-appellate-civil/Lit.toml`).

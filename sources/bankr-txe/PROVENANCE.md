@@ -10,5 +10,6 @@
 ### `bankr-txe/txe-local-rules-2022-08-22-sectioned.txt` — Bankr. E.D. Tex. Local Rules of Bankruptcy Procedure, sectioned
 
 - Derived in the pod (lg-u561.17) from `bankr-txe/txe-local-rules-2022-08-22.txt` (extract sha256 48f55a499913430af1a3e9a9267ff87962d4c8012007f7847ca5635553e65e71); nothing fetched. One `## LBR <n>` line is inserted before each rule's own heading line in the body (a line opening, after an optional form feed, with `Local Rule of Bankruptcy Procedure <nnnn>-<n>.` or `<nnnn>.<n>-<n>.`; the edition has no table of contents, so the set is every such heading, from `1001-1` through `9027-1`, 63 rules); rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-txe/txe-local-rules-2022-08-22.txt`, https://www.txeb.uscourts.gov/sites/txeb/files/2022%20LOCAL%20RULES_rev%20as%20of%208-22-22.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract.
 - Sectioned sha256 7f5356644d3f66a359281f591b674b2aacfd903c796d81da92d7675261e0abc6 (the `path_sha256` pinned by `lit/bankr-txe/Lit.toml`).

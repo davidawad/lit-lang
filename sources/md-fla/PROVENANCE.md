@@ -12,5 +12,6 @@
 ### `md-fla/local-rules-sectioned.txt` — M.D. Fla. Local Rules, sectioned
 
 - Derived in the pod (lg-f3q8.14) from `md-fla/local-rules.txt` (extract sha256 92f710c73e85c36fb841a424b8d53a0752f04a473679da8909b83e6610bec4e1); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (`Rule 1.01 Purpose, Scope, and Definitions` through `Rule 7.03 Court's Registry`, 42 rules; the table of contents is unmarked). Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `md-fla/local-rules.txt`, https://www.flmd.uscourts.gov/sites/flmd/files/flmd-amended-local-rules-effective-november-01-2025.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, Local Rules dated November 1, 2025.
 - Sectioned sha256 ffd9c96a2e3ffded589f9a3034557cc7f9f916762b8c043e92a2b3cbdae4c583 (the `path_sha256` pinned by `lit/flmd/Lit.toml`).

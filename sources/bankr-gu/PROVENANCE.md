@@ -11,5 +11,6 @@
 ### `bankr-gu/gud-bklr-2023-11-20-sectioned.txt` — Bankruptcy Local Rules (BKLR), District Court of Guam, sectioned
 
 - Derived in the pod (lg-f3q8.41) from `bankr-gu/gud-bklr-2023-11-20.txt` (extract sha256 4025de1a7d3adf63ce1b7e4dcdf4e1a7ae380d9d23171653f2112bb76c5aaccf); nothing fetched. One `## BKLR <n>` line is inserted before each rule's own `BANKRUPTCY LOCAL RULE <n>` heading line (`1001-1` through `9073-1`, 57 rules); the title line and in-text references are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## BKLR /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-gu/gud-bklr-2023-11-20.txt`, https://www.gud.uscourts.gov/sites/gud/files/BK%20RULES%20FINAL%20rev%2011-20-2023.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, effective November 20, 2023.
 - Sectioned sha256 62558f05843d8a6b705ef9aa1c1619a55ee8ff22e0c672f249308c39e9b56f59 (the `path_sha256` pinned by `lit/bankr-gu/Lit.toml`).

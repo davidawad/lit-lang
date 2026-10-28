@@ -10,5 +10,6 @@
 ### `bankr-ne/neb-lbr-2026-01-01-sectioned.txt` — Nebraska Rules of Bankruptcy Procedure, sectioned
 
 - Derived in the pod (lg-u561.23) from `bankr-ne/neb-lbr-2026-01-01.txt` (extract sha256 230e0df295628e3ad2f41cb931bac74dcc049e2437bd56174c306f07d064df20); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (`Rule 1001-1.` through `Rule 9072-1.`, including the headings that follow a form feed; 48 sections, matching the table of contents; the wrapped body line `Rule 9013-1. If all bankruptcy judges ...` in Rule 5011-1 is not a heading and is unmarked), and one `## Appendix <X>` line before each appendix heading (`Appendix A` through `Appendix H`); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed -E '/^## (Rule|Appendix) /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-ne/neb-lbr-2026-01-01.txt`, https://www.neb.uscourts.gov/sites/neb/files/Local%20Rules%20Bankruptcy%20Court%202026%20FINAL%20AMENDED.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, the rules effective January 1, 2026, updated January 7, 2026.
 - Sectioned sha256 a7defdbf20ec08146c42ec3b6e885d09312e74f7ae7cf0f068fc14b83afb7939 (the `path_sha256` pinned by `lit/bankr-ne/Lit.toml` for source `neb-lbr`).

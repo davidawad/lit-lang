@@ -19,5 +19,6 @@
 ### `d-nm/d-nm-local-civil-rules-2020-sectioned.txt` — D.N.M. Local Rules of Civil Procedure, sectioned
 
 - Derived in the pod (lg-f3q8.68) from `d-nm/d-nm-local-civil-rules-2020.txt` (extract sha256 80234cfdc5fba4e085b4a565af926793b1806893eefe436515c352bd006dff85); nothing fetched. One `## D.N.M.LR-Civ. <n>` line is inserted before each rule's own heading line in the body (`<n> <Title>`, after the table of contents), `D.N.M.LR-Civ. 1.1` through `D.N.M.LR-Civ. 83.13`, 83 rules. Rule text was not edited: deleting the marker lines (`perl -ne 'print unless /^## D\.N\.M\.LR-Civ\. /'`) restores the extract byte for byte.
+- Source: as the extract `d-nm/d-nm-local-civil-rules-2020.txt`, https://www.nmd.uscourts.gov/sites/nmd/files/local_rules/Local%20Rules%20of%20Civil%20Procedure%20Adopted%20October%201%2C%202020_0.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract (effective July 1, 2011, amended effective October 1, 2020).
 - Sectioned sha256 508c16043b626f4d2e39dd35346bb7af9bdc6ced9c5b4e428fdba667fc70ee6d (the `path_sha256` pinned by `lit/nmd/Lit.toml`).

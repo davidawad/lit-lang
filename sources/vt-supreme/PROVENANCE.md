@@ -11,5 +11,6 @@
 ### `vt-supreme/vrap-sectioned.txt` — Vermont Rules of Appellate Procedure, sectioned
 
 - Derived in the pod (lg-f3q8.52) from `vt-supreme/vrap.txt` (extract sha256 3512d3500edbe1c72ad8d51add6578f91da26910588159c6eabcd1b448fbf9a4); nothing fetched. One `## Rule <n>` line is inserted before each `===== V.R.A.P. Rule <n> =====` record line (Rule 1 through Rule 49, 60 rules; the structural and appendix records are unmarked). Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `vt-supreme/vrap.txt`, https://advance.lexis.com/, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, current with rule changes received through March 16, 2026.
 - Sectioned sha256 fb1c5b25a8a63cfa372f669dfbc78884b15a7fb681e3f081e553a7c120814b05 (the `path_sha256` pinned by `lit/vt-supreme/Lit.toml` and `lit/vt-superior-civil/Lit.toml`).

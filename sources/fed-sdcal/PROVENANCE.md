@@ -12,5 +12,6 @@
 ### `fed-sdcal/casd-local-rules-2026-06-01-sectioned.txt` — S.D. Cal. Local Rules (revised June 1, 2026), sectioned
 
 - Derived in the pod (lg-f3q8.39) from `fed-sdcal/casd-local-rules-2026-06-01.txt` (extract sha256 4ad9cbadcc5f9a3bac8ec6a3c82c8a8c6de1b43c1e0169171c74ad16df3bcee7); nothing fetched. One `## S.D. Cal. CivLR <n>` line is inserted right before each civil rule's own body heading line (`Civil Rule <n>` or `Civil Local Rule <n>` at the left margin; 62 markers, 1.1 through 83.11, including 65.1.2). The table of contents and the criminal, magistrate and bankruptcy parts are unmarked (the last marker's section runs to the end of the file). Rule text was not edited: deleting the marker lines (each `## S.D. Cal. CivLR ` line with its newline) restores the extract byte for byte.
+- Source: as the extract `fed-sdcal/casd-local-rules-2026-06-01.txt`, https://www.casd.uscourts.gov/_assets/pdf/rules/2026.06.01%20Local%20Rules.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, Local Rules revised as of June 1, 2026.
 - Sectioned sha256 61112f367b39c26fdcc4ac0f66eeb5a5d438341d21ceb6f1449e25a226bb94c7 (the `path_sha256` pinned by `lit/casd/Lit.toml`).

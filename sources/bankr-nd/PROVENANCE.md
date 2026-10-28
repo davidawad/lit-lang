@@ -18,5 +18,6 @@
 ### `bankr-nd/ndb-lbr-2023-02-06-sectioned.txt` — D.N.D. Bankruptcy Local Rules, sectioned
 
 - Derived in the pod (lg-u561.23) from `bankr-nd/ndb-lbr-2023-02-06.txt` (extract sha256 2ffeeaad7d6e41a352fa89ca28cee4230d8c430cf6ec7b6d534ea2f10c563bda); nothing fetched. One `## L.R. <n>` line is inserted before each rule's own heading line (`BANKRUPTCY RULE 1001-1` through `BANKRUPTCY RULE 9022-1`, including the plural heading `BANKRUPTCY RULES 9013-2`; 41 sections). Rule text was not edited: deleting the marker lines (`sed '/^## L.R. /d'`) restores the extract byte for byte.
+- Source: as the extracts (`bankr-nd/ndb-lbr-2023-02-06.txt`, https://www.ndb.uscourts.gov/sites/default/files/local_rules/Official%20local%20rules%202023.pdf, retrieved 2026-10-28; `ndb-go-2023-lr-9013-2.txt`, https://www.ndb.uscourts.gov/sites/default/files/general-ordes/2023%20Order%20Adopting%20LR%209013-2.pdf, retrieved 2026-10-28); the sectioning was done in the pod from the vendored extracts.
 - Edition: as the extract, the rules effective February 6, 2023. The consolidation already prints L.R. 9013-2 in the words of the order adopting it effective April 3, 2023 (`ndb-go-2023-lr-9013-2.txt`).
 - Sectioned sha256 26644c7557d02067dbfc57c31e16c0002676c5c6da11b9a9010682cc41f552a4 (the `path_sha256` pinned by `lit/bankr-nd/Lit.toml` for source `ndb-lbr`).

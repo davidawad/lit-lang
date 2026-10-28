@@ -10,5 +10,6 @@
 ### `bankr-gam/gamb-lbr-2026-10-01-sectioned.txt` — M.D. Ga. Local Rules, sectioned
 
 - Derived in the pod (lg-u561.29) from `bankr-gam/gamb-lbr-2026-10-01.txt` (extract sha256 46080b307a110bf6a302943da8ac5d5d5b1cbe4bdb29383b49289e59b918c063); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (`LBR 1002-1. Petition – General.` through `LBR 9073-1. Hearings`, including `LBR 3002.1-1` and `3002.1-2`, the abrogated `7001-1` and `8010-1` and the headings without a closing period; 77 sections, matching the table of contents); the summary of changes and table of contents (extract lines 1-519) and extract lines 680, 1330 and 1633, cross-references to `LBR 9007-1` and `LBR 4070-1` that begin a line within other rules, are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-gam/gamb-lbr-2026-10-01.txt`, https://www.gamb.uscourts.gov/USCourts/sites/default/files/local_rules/Local_Rules_Oct_2026.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, the Local Rules as of October 1, 2026.
 - Sectioned sha256 91af8b23a9f2565c56725413de6afb23ee4386318a9782c3af20c38094c37cb0 (the `path_sha256` pinned by `lit/bankr-gam/Lit.toml` for source `gamb-lbr`).

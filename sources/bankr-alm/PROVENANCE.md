@@ -10,5 +10,6 @@
 ### `bankr-alm/almb-lbr-2024-04-01-sectioned.txt` — M.D. Ala. Local Rules, sectioned
 
 - Derived in the pod (lg-u561.29) from `bankr-alm/almb-lbr-2024-04-01.txt` (extract sha256 96c09d024434a7f8f869fac92ee723c2af88e77b492875343b8576eece3bebce); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (`RULE 1002-1 PETITION - GENERAL` through `RULE 9072-1 ORDERS - PROPOSED`, each following a form feed; 41 sections, matching the table of contents); the table of contents and the preamble (extract lines 1-75) are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-alm/almb-lbr-2024-04-01.txt`, https://www.almb.uscourts.gov/sites/almb/files/ALMB%20Local%20Rules%2C%20April%201%2C%202024.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, the Local Rules effective April 1, 2024.
 - Sectioned sha256 0bc752f4274dda1d3698f34834066fbba8316e42991da79d3dd814b332910fce (the `path_sha256` pinned by `lit/bankr-alm/Lit.toml` for source `almb-lbr`).

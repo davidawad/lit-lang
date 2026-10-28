@@ -10,5 +10,6 @@
 ### `bankr-ak/akb-lbr-2024-12-01-sectioned.txt` — Bankr. D. Alaska Local Bankruptcy Rules, sectioned
 
 - Derived in the pod (lg-f3q8.35) from `bankr-ak/akb-lbr-2024-12-01.txt` (extract sha256 aee511f7b3654b5a62707a6b9c8d00945155e71f596b328af079b6f71d36bd89); nothing fetched. One `## LBR <n>` line is inserted before each rule's own heading line in the body (`Rule 1001-1` through `Rule 9076-1`, 91 rules); the summary of amendments and the table of contents are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-ak/akb-lbr-2024-12-01.txt`, https://www.akb.uscourts.gov/sites/akb/files/2024%20-%20Local%20Bankruptcy%20Rules.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, as amended through December 1, 2024.
 - Sectioned sha256 4217d5b2b1b27b3958bad7eac8af0ecc961a40f8a4feece478265fb8fcda04f6 (the `path_sha256` pinned by `lit/bankr-ak/Lit.toml`).

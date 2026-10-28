@@ -10,5 +10,6 @@
 ### `bankr-nv/nvb-lbr-2021-03-02-sectioned.txt` — Bankr. D. Nev. Local Rules of Bankruptcy Practice, sectioned
 
 - Derived in the pod (lg-u561.25) from `bankr-nv/nvb-lbr-2021-03-02.txt` (extract sha256 430465d1d24f8cada2f2dfa79d752d153307c08e0fd301d6673d6ce683e4e0fc); nothing fetched. One `## LBR <n>` line is inserted before each rule's own heading line in the body (a line opening, after an optional form feed, with `LR <nnnn>.` or `LR <nnnn>.<n>` and the upper-case rule title, the marker carrying the rule number as written (`## LBR 9014.1`); the set is every such heading after the table of contents, from `1001` through `9037`, 106 rules); rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-nv/nvb-lbr-2021-03-02.txt`, https://www.nvb.uscourts.gov/downloads/rules/local-rules-2021_final.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract.
 - Sectioned sha256 074469c0dd5610978bb8baa25196f851d4ff268b9f0d1a7e5be802d9e489aaac (the `path_sha256` pinned by `lit/bankr-nv/Lit.toml`).

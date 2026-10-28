@@ -12,5 +12,6 @@
 ### `dmass/dmass-local-rules-sectioned.txt` — D. Mass. Local Rules, sectioned
 
 - Derived in the pod (lg-f3q8.23) from `dmass/dmass-local-rules.txt` (extract sha256 6e2e2a7c271b58941adb67ad32a82994121a7139b767d2a6acee6c8ce01f64c3); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (`RULE 1.1 TITLE` through `RULE 206`, 105 rules); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `dmass/dmass-local-rules.txt`, https://www.mad.uscourts.gov/general/pdf/local-rules/Combined%20Local%20Rules.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, including amendments through September 8, 2026.
 - Sectioned sha256 e0862acc529800fda4629e3067b1321f7edfec4585c778cb238e781bef47a8ba (the `path_sha256` pinned by `lit/mad/Lit.toml`).

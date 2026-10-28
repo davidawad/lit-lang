@@ -11,5 +11,6 @@
 ### `ia-district/iowa-rules-civil-procedure-sectioned.txt` — sectioned
 
 - Derived in the pod (lg-f3q8.6) from `ia-district/iowa-rules-civil-procedure.txt` (extract sha256 0ac112e11fe546759c5fe480c17f12e079b47f57da08a823aad6f154ebec15fc); nothing fetched. One `## Rule <n>` line is inserted before the first body heading line of each rule (`Rule 1.101` through `Rule 1.1901`, 309 rules; a heading after a page's form feed keeps its form feed on the heading line, after the marker). The table of contents and the repeated timeline and chart headings are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `ia-district/iowa-rules-civil-procedure.txt`, https://www.legis.iowa.gov/docs/ACO/CR/LINC/09-30-2026.chapter.1.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, Iowa Court Rules chapter 1 (running header July 2023) in the 09-30-2026 compilation.
 - Sectioned sha256 5f599c69732cc275e92ca4159c1ae015c5771c7179450bd4ff90de9050d2ee66.

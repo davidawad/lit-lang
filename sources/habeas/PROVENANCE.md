@@ -33,5 +33,6 @@
 ### `habeas/rules-2254-2255-sectioned.txt` — Rules Governing Section 2254 Cases and Section 2255 Proceedings, sectioned
 
 - Derived in the pod (lg-gddt.1) from `habeas/rules-2254-2255.txt` (extract sha256 290902f33c89cb227c92b4ebe995662582ef5dd695151843ce43f2d7d277ab9f); nothing fetched. One `## 2254 Rule <n>` line is inserted before each Section 2254 rule's own heading line (`Rule 1.` through `Rule 12.`) and one `## 2255 Rule <n>` line before each Section 2255 rule's; the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## 225[45] Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `habeas/rules-2254-2255.txt`, https://www.uscourts.gov/sites/default/files/rules_governing_section_2254_and_2255_cases_in_the_u.s._district_courts_-_dec_1_2019.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, as amended to Dec. 1, 2019.
 - Sectioned sha256 be083eed23c594c4a1abaaaed37e889cc6f95b54565ff5e75f21970bdf47d7a5 (the `path_sha256` pinned by `lit/habeas/Lit.toml`).

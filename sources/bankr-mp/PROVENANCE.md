@@ -10,5 +10,6 @@
 ### `bankr-mp/nmid-lbkr-2019-04-15-sectioned.txt` — Local Bankruptcy Rules, District Court for the Northern Mariana Islands, sectioned
 
 - Derived in the pod (lg-f3q8.46) from `bankr-mp/nmid-lbkr-2019-04-15.txt` (extract sha256 2a80b5499472e9f853a8438390c92f1c099d179a0e619a6b48032c3a60e525c5); nothing fetched. One `## LBR <n>` line is inserted before each Local Bankruptcy Rule's own heading line in the body (`LBR 1001-1` through `LBR 9074-1`, 92 rules, including the headings that follow a form feed); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-mp/nmid-lbkr-2019-04-15.txt`, https://www.nmid.uscourts.gov/sites/nmid/files/documents/localrules/LBKR20190415.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, Local Bankruptcy Rules effective April 15, 2019.
 - Sectioned sha256 ba8d528b40f75361b5dfad4dc4825a4d29e824f9f529e6600e98dbb7903aa98b (the `path_sha256` pinned by `lit/bankr-mp/Lit.toml`).

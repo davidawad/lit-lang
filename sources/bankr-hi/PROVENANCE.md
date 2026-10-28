@@ -10,5 +10,6 @@
 ### `bankr-hi/hib-lbr-2025-12-01-sectioned.txt` — Bankr. D. Haw. Local Bankruptcy Rules, sectioned
 
 - Derived in the pod (lg-u561.25) from `bankr-hi/hib-lbr-2025-12-01.txt` (extract sha256 dc1d1b881abae92b2be90a262ff1164daf8d670a10358a35c2fd1e0da581ffc7); nothing fetched. One `## LBR <n>` line is inserted before each rule's own heading line in the body (a line opening, after an optional form feed, with `LBR <nnnn>-<n>. `; the set is every such heading after the table of contents, from `1001-1` through `9074-1`, 109 rules); rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-hi/hib-lbr-2025-12-01.txt`, https://www.hib.uscourts.gov/sites/hib/files/documents/local-rules/LBR2025_dec01_rev2.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract.
 - Sectioned sha256 c726e7910c9e114feda5966d2636776815faa362ac33f03ca5392665d893f30f (the `path_sha256` pinned by `lit/bankr-hi/Lit.toml`).

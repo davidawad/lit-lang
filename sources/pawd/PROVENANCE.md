@@ -12,5 +12,6 @@
 ### `pawd/local-rules-2016-11-01-sectioned.txt` — W.D. Pa. Local Rules of Court, sectioned
 
 - Derived in the pod (lg-f3q8.75) from `pawd/local-rules-2016-11-01.txt` (extract sha256 1663a9e985ed9aaf8286d55a1a381dd5a89b62bc7da57d320c5ad181b8f56667); nothing fetched. One `## LCvR <n>` line is inserted right after each Local Civil Rule's own body heading line `LCvR <n>   <TITLE>` (49 markers, LCvR 1.1 through LCvR 2255; the table of contents before the first rule is unmarked). Rule text was not edited: deleting the marker lines (`## LCvR <n>` plus its newline) restores the extract byte for byte.
+- Source: as the extract `pawd/local-rules-2016-11-01.txt`, https://www.pawd.uscourts.gov/sites/pawd/files/lrmanual20181101.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, the Local Rules of Court effective November 1, 2016.
 - Sectioned sha256 23bcd5fc802d152052872156a53622c92185010294a4b0187855e37168f5f175 (the `path_sha256` pinned by `lit/pawd/Lit.toml`).

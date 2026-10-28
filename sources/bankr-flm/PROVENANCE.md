@@ -10,5 +10,6 @@
 ### `bankr-flm/flmb-lbr-2025-08-15-sectioned.txt` — M.D. Fla. Local Rules, sectioned
 
 - Derived in the pod (lg-u561.29) from `bankr-flm/flmb-lbr-2025-08-15.txt` (extract sha256 3eb5c661e839b370de92001a72be621b45d1d6fe62a674b92ff0b3186197592f); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (the `Rule <n>` line standing alone above the rule title, `Rule 1001-1` through `Rule 9072-1`, including `Rule 1004-1.1` and the headings that follow a form feed; 74 sections, matching the table of contents); the cover and table of contents (extract lines 1-222) and the appendices of forms after Rule 9072-1 are unmarked, as are cross-references that begin a line with `Rule <n>` followed by text. Rule text, including the Notes of Advisory Committee, was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-flm/flmb-lbr-2025-08-15.txt`, https://www.flmb.uscourts.gov/localrules/Rules/localrules-FLMB.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, the Local Rules with amendments effective August 15, 2025.
 - Sectioned sha256 646ada77e4e62497d3005b16de4be86f4b21701344b561c67c1def00e876e31f (the `path_sha256` pinned by `lit/bankr-flm/Lit.toml` for source `flmb-lbr`).

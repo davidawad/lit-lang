@@ -10,5 +10,6 @@
 ### `bankr-law/law-local-rules-2026-04-01-sectioned.txt` — Bankr. W.D. La. Local Bankruptcy Rules, sectioned
 
 - Derived in the pod (lg-u561.17) from `bankr-law/law-local-rules-2026-04-01.txt` (extract sha256 7f6c2c91dff05f6e361df6bd84fdff70bb6d0d674e496db028b7ba59d0b1dcc0); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (a line opening, after an optional form feed and indentation, with `LBR <nnnn>-<n>` or `LBR <nnnn>.<n>-<n>`; the appendices are unmarked, from `LBR 1001-1` through `LBR 9074-1`, 83 rules, the same set as the table of contents); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-law/law-local-rules-2026-04-01.txt`, https://www.lawb.uscourts.gov/sites/lawb/files/Local%20Bankruptcy%20Rules%20Revised%20as%20of%201%20April%202026%20with%20Appendices.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract.
 - Sectioned sha256 b0626bfa113ace875e65fc7ee7b9967f97bb05dabd51b5bfd8f792576d5ddf51 (the `path_sha256` pinned by `lit/bankr-law/Lit.toml`).

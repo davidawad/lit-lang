@@ -18,6 +18,7 @@
 ### `paed/local-rules-civ-2023-05-08-sectioned.txt` — E.D. Pa. Local Rules of Civil Procedure, sectioned
 
 - Derived in the pod (lg-f3q8.75) from `paed/local-rules-civ-2023-05-08.txt` (extract sha256 3fba58ffe4fd5c18b5366a6a403056b9bfa2034e91a1602d4d3e1d08808666fa); nothing fetched. One `## Rule <n>` line is inserted right after each rule's own body heading line `Rule <n> <title>` (43 markers, Rule 1.1 through Rule 83.6.1; the table of contents before the first rule is unmarked, and the headings of Rules 83.3 and 83.6, whose extracted lines carry stray characters, are unmarked). Rule text was not edited: deleting the marker lines (`## Rule <n>` plus its newline) restores the extract byte for byte.
+- Source: as the extracts (`paed/local-rules-civ-2023-05-08.txt`, https://www.paed.uscourts.gov/sites/paed/files/documents/locrules/civil/cvrules.pdf, retrieved 2026-10-27; `paed/lr-civ-40-1-amendment-2024-10-08.txt`, https://www.paed.uscourts.gov/sites/paed/files/documents/locrules/civil/Amendment%20of%20Local%20Civil%20Rule%2040.1.pdf, retrieved 2026-10-27); the sectioning was done in the pod from the vendored extracts.
 - Edition: as the extract, the consolidated Local Rules of Civil Procedure amended through May 8, 2023; the Oct. 8, 2024 order amending LR 40.1 (`paed/lr-civ-40-1-amendment-2024-10-08.txt`) is not merged into it.
 - Sectioned sha256 7959d81083b0ae9e32bab9e17cbfb0cc18160bdc53a982a6b94877095c8802e7 (the `path_sha256` pinned by `lit/paed/Lit.toml`).
 

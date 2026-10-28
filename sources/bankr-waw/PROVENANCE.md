@@ -26,11 +26,13 @@
 ### `bankr-waw/wawb-lbr-2023-12-01-sectioned.txt` — Bankr. W.D. Wash. Local Rules of Bankruptcy Procedure (effective December 1, 2023), sectioned
 
 - Derived in the pod (lg-u561.25) from `bankr-waw/wawb-lbr-2023-12-01.txt` (extract sha256 4bc5ba7de13e7e4203f75f23f8c333b4c3f3bc1e11e3f537252b9cca67b33108); nothing fetched. One `## LBR <n>` line is inserted before each rule's own heading line in the body (an indented line, after an optional form feed, opening with `RULE <nnnn>-<n>.`; the set is every such heading after the table of contents, from `1006-1` through `9083-1`, 73 rules); rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-waw/wawb-lbr-2023-12-01.txt`, https://www.wawb.uscourts.gov/sites/wawb/files/attachments/2023_rules_clean_23_10_27_FINAL_w_ToC_Added_CSC_CLEAN.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract.
 - Sectioned sha256 c7e3095d0a2ef4d2dee19b089e27751756a6b5c94f58c28e0415e88c95abc63d (the `path_sha256` pinned by `lit/bankr-waw/Lit.toml`).
 
 ### `bankr-waw/wawb-lbr-2026-12-01-sectioned.txt` — Bankr. W.D. Wash. Local Rules of Bankruptcy Procedure (effective December 1, 2026), sectioned
 
 - Derived in the pod (lg-u561.25) from `bankr-waw/wawb-lbr-2026-12-01.txt` (extract sha256 869c082565fbbd9ffe4151238e28a08867ba581c564ee04d8991db498b375baa); nothing fetched. One `## LBR <n>` line is inserted before each rule's own heading line in the body (an indented line, after an optional form feed, opening with `RULE <nnnn>-<n>.`; the set is every such heading after the table of contents, from `1006-1` through `9084-1`, 73 rules); rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-waw/wawb-lbr-2026-12-01.txt`, https://www.wawb.uscourts.gov/sites/wawb/files/attachments/2026%20Rules%20Final.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract.
 - Sectioned sha256 370f1e8a19506396da7f4e9a9a892a5597663596dd488cb407133c1f35f75e76 (the `path_sha256` pinned by `lit/bankr-waw/Lit.toml`).

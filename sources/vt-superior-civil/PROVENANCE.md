@@ -18,5 +18,6 @@
 ### `vt-superior-civil/vrcp-sectioned.txt` — Vermont Rules of Civil Procedure, sectioned
 
 - Derived in the pod (lg-f3q8.52) from `vt-superior-civil/vrcp.txt` (extract sha256 97c37263b450dad65df451e34be464d814ca7eb2390b10bdae1696d36375080f); nothing fetched. One `## Rule <n>` line is inserted before each `===== V.R.C.P. Rule <n> =====` record line (Rule 1 through Rule 86, 115 rules; the appendix of forms record is unmarked). Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `vt-superior-civil/vrcp.txt`, https://advance.lexis.com/, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, current with rule changes received through March 16, 2026. The October 6, 2026 Rule 55(a) promulgation order (effective January 1, 2027) is a separate dated document and is not merged into it.
 - Sectioned sha256 8583220322f0a9df87238db26261c190ade801d0ff4e6d0656b84fe20bb4c004 (the `path_sha256` pinned by `lit/vt-superior-civil/Lit.toml` and `lit/vt-supreme/Lit.toml`).

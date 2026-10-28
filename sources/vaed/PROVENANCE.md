@@ -12,5 +12,6 @@
 ### `vaed/vaed-local-rules-sectioned.txt` — E.D. Va. Local Rules, sectioned
 
 - Derived in the pod (lg-f3q8.31) from `vaed/vaed-local-rules.txt` (extract sha256 6e6029e9380ef2b8fcb6f6223feefceb534e396329adc40fe0a91431c52233e8); nothing fetched. One `## Civil Rule <n>` line is inserted before each Local Civil Rule's own heading line in the body (`LOCAL CIVIL RULE 1` through `LOCAL CIVIL RULE 83.6`, 29 rules); the table of contents and the criminal and admiralty rules are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Civil Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `vaed/vaed-local-rules.txt`, https://www.vaed.uscourts.gov/sites/vaed/files/Local%20Rules%20EDVA%20December%201%202024.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, effective December 1, 2024.
 - Sectioned sha256 3cd040ce347ecaff738f2a084443752f628dbe1a70b186113d16391e9ab11fcd (the `path_sha256` pinned by `lit/vaed/Lit.toml`).

@@ -10,5 +10,6 @@
 ### `bankr-mss/mss-uniform-local-rules-2026-03-01-sectioned.txt` — Uniform Local Rules (N.D. and S.D. Miss.), sectioned
 
 - Derived in the pod (lg-u561.17) from `bankr-mss/mss-uniform-local-rules-2026-03-01.txt` (extract sha256 15a4fc38f57592a7ec67418d78b4c4f7340a45ef6190d0a91c9ab11edee66ed9); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (a line opening, after an optional form feed, with `Rule <nnnn>-<n>` or `Rule <nnnn>.<n>-<n>` at the margin; indented cross-references and the appended forms are unmarked, from `Rule 1001-1.` through `Rule 9037-1.`, 58 rules, the same set as the table of contents); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-mss/mss-uniform-local-rules-2026-03-01.txt`, https://www.mssb.uscourts.gov/sites/mssb/files/RulesOrdersProcs/LocalRules/Final%20Uniform%20Local%20Rules%20%28Clean%20Version%29%20Eff.%203-1-2026.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract.
 - Sectioned sha256 a545c639410afef70780a2b42c6e86a191cbaa012518f504c50c90a432d55cdd (the `path_sha256` pinned by `lit/bankr-mss/Lit.toml`).

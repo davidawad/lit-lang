@@ -19,10 +19,12 @@
 ### `bankr-mn/mnb-lbr-2025-09-03-sectioned.txt` — D. Minn. Local Rules, sectioned
 
 - Derived in the pod (lg-u561.23) from `bankr-mn/mnb-lbr-2025-09-03.txt` (extract sha256 fa210ac35aa63edc3ec5160c96edb1986cd2690742d18e3cd37ade8c25ccf79f); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (`Rule 1002-1. [ABROGATED]` through `Rule 9070-1. Exhibits`, including the abrogated rules, `Rule 1007-3-1.` and the headings that follow a form feed; 96 sections, matching the table of contents); the table of contents (whose lines carry dot leaders) is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-mn/mnb-lbr-2025-09-03.txt`, https://www.mnb.uscourts.gov/sites/mnb/files/MNB%20Local%20Rules%20Complete.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, the Local Rules effective September 3, 2025.
 - Sectioned sha256 1603cdec27b6a6ea932debe1af7bd9c4c3c61440bfda275eecae52d2565065de (the `path_sha256` pinned by `lit/bankr-mn/Lit.toml` for source `mnb-lbr`).
 
 ### `bankr-mn/mnb-en-banc-order-claims-review-2026-02-11-sectioned.txt` — Amended En Banc Order (claims review), sectioned
 
 - Derived in the pod (lg-u561.23) from `bankr-mn/mnb-en-banc-order-claims-review-2026-02-11.txt` (extract sha256 5897edc9c836803c70e8e88c37860af82ea482ca95b3a35b9095d1e6a13d6c9d); nothing fetched. One line `## En Banc Order LR 1007-3-1` is inserted before `IT IS HEREBY ORDERED that:`, naming the rule the order supplements (its paragraph (b) is "To comply with Local Rule 1007-3-1"), so that cites to the order's paragraphs resolve. Order text was not edited: deleting the marker line (`sed '/^## En Banc Order /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-mn/mnb-en-banc-order-claims-review-2026-02-11.txt`, https://www.mnb.uscourts.gov/sites/mnb/files/En%20banc%20order%20re%20claims%20review%20-%202.11.26.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Sectioned sha256 25946c9a75cd128ec52eb701308d93f9de0ff8d12f4f2cfecf8cfc674ba32870 (the `path_sha256` pinned by `lit/bankr-mn/Lit.toml` for source `mnb-en-banc-claims-review`).

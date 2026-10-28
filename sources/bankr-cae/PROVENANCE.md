@@ -18,5 +18,6 @@
 ### `bankr-cae/caeb-lbr-2026-04-sectioned.txt` — Bankr. E.D. Cal. Local Rules of Practice (clean text), sectioned
 
 - Derived in the pod (lg-u561.25) from `bankr-cae/caeb-lbr-2026-04.txt` (extract sha256 5f93461fc33a319860d957e4530069c443ad27cb145ccdcfd977c62cbe319dac); nothing fetched. One `## LBR <n>` line is inserted before each rule's own heading line in the body (a line, after an optional form feed, holding only `LOCAL RULE <nnnn>-<n>` indented; the set is every such heading after the table of contents, from `1001-1` through `9037-1`, 56 rules); rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-cae/caeb-lbr-2026-04.txt`, https://www.caeb.uscourts.gov/documents/Forms/LocalRules/LBR%20April%202026%20FINAL%20FOR%20POSTING.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract.
 - Sectioned sha256 5496409b273338dc562c166a6e21cdae172102a6c7a04f0eb1afcb50fd84efad (the `path_sha256` pinned by `lit/bankr-cae/Lit.toml`).

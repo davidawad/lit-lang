@@ -12,5 +12,6 @@
 ### `fed-wdwash/wdwash-local-civil-rules-sectioned.txt` — W.D. Washington Local Civil Rules, sectioned
 
 - Derived in the pod (lg-f3q8.48) from `fed-wdwash/wdwash-local-civil-rules.txt` (extract sha256 26669aad3709b58b19c3d1ebbb1f90a2c94cd202294c33bac13d443847e08037); nothing fetched. One `## LCR <n>` line is inserted before each rule's own centered heading line in the body (a line holding only `LCR <n>` or `LCR <n>.<n>`, from `LCR 1` through `LCR 103`, 71 rules); the table of contents, the introduction, the reserved ranges headed `LCR <n> THROUGH <n>` or `LCR <n> AND <n>` and the appendices are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LCR /d'`) restores the extract byte for byte.
+- Source: as the extract `fed-wdwash/wdwash-local-civil-rules.txt`, https://www.wawd.uscourts.gov/sites/wawd/files/WAWD%20Local%20Civil%20Rules%20%282026%29%20-%20Clean.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, Local Civil Rules last revised effective January 13, 2026.
 - Sectioned sha256 6e36487f123d77750b4503501397b9ff436c3ee1667e22c19e1717f5523f9fc3 (the `path_sha256` pinned by `lit/wawd/Lit.toml`).

@@ -19,5 +19,6 @@
 ### `wa-court-of-appeals/wa-rap-cited-sectioned.txt` — Washington Rules of Appellate Procedure, cited subset, sectioned
 
 - Derived in the pod (lg-f3q8.48) from `wa-court-of-appeals/wa-rap-cited.txt` (extract sha256 75cb31f3e763abbc7d643cdc993299a4604ef20a6a770c867e3e2faca0f1e77f); nothing fetched. Each per-rule heading line `## RAP <n> <title>` is split in two: a `## RAP <n>` marker line, then the rule's heading text `RAP <n> <title>` without the `## `, 9 rules; rule text was not edited. `sed -E '/^## RAP [0-9.]+$/{N;s/^## [^\n]*\n/## /}'` restores the extract byte for byte.
+- Source: as the extract `wa-court-of-appeals/wa-rap-cited.txt`, https://www.courts.wa.gov/court_rules/?fa=court_rules.list&group=app&set=RAP, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, current per-rule text served 2026-10-27; the latest amendment of the 9 rules is effective September 1, 2026 (RAP 10.3, 12.5).
 - Sectioned sha256 37da82ba6f7d769642ccfd23037601cbf2b1b43fa2139c7d4d396e6affbc578a (the `path_sha256` pinned by `lit/wa-superior/Lit.toml` and `lit/wa-court-of-appeals/Lit.toml`).

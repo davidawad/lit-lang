@@ -10,5 +10,6 @@
 ### `nm-state-civil/nmra-rule-set-1-civil-2026-sectioned.txt` — NMRA Rule Set 1, sectioned
 
 - Derived in the pod (lg-f3q8.68) from `nm-state-civil/nmra-rule-set-1-civil-2026.txt` (extract sha256 40504a8c243d38d3d5babb3349bdb801cff172d83dee0e9117760359988bdbf4); nothing fetched. One `## NMRA <n>` line is inserted before each rule's own heading line (`<n>. <title>`, optionally after a form feed), `NMRA 1-001` through the last rule of the set, 175 rules. Rule text was not edited: deleting the marker lines (`perl -ne 'print unless /^## NMRA /'`) restores the extract byte for byte.
+- Source: as the extract `nm-state-civil/nmra-rule-set-1-civil-2026.txt`, https://nmonesource.com/nmos/nmra-unanno/en/18468/1/document.do, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract (NMRA "Unannotated" collection, retrieved 2026-10-27).
 - Sectioned sha256 3a0c71824c0bb61518f0e471fa352f041992926938eecc55b51b382b23622851 (the `path_sha256` pinned by `lit/nm-state-civil/Lit.toml`).

@@ -12,5 +12,6 @@
 ### `d-kan/d-kan-local-rules-2026-sectioned.txt` — D. Kan. Rules of Practice, sectioned
 
 - Derived in the pod (lg-f3q8.67) from `d-kan/d-kan-local-rules-2026.txt` (extract sha256 fad3f1414bc1e8663cc176e3c1be624325c6cea7164717a2c312a83bf4e68160); nothing fetched. One `## D. Kan. Rule <n>` line is inserted right after each civil rule's own body heading line `RULE <n>` (111 markers, 1.1 through 83.8.13, including 23-A and 71A.1). The table of rules, the criminal rules (CR) and the standing orders are unmarked. Rule text was not edited: deleting the marker lines (each `## D. Kan. Rule ` line with its newline) restores the extract byte for byte.
+- Source: as the extract `d-kan/d-kan-local-rules-2026.txt`, https://www.ksd.uscourts.gov/sites/ksd/files/MASTER%20COPY%20updated%204%2027%2026.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, Rules of Practice effective April 1, 2026.
 - Sectioned sha256 aa997f61649e526629529161843e01d98c8691d08fce5efbb564616e30266c19 (the `path_sha256` pinned by `lit/ksd/Lit.toml`).

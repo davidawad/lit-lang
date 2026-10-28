@@ -11,5 +11,6 @@
 ### `ca6-bap/bap-local-rules-sectioned.txt` — Sixth Circuit BAP Local Rules, sectioned
 
 - Derived in the pod (lg-f3q8.57) from `ca6-bap/bap-local-rules.txt` (extract sha256 c25a1aa073f84c22d575884b82b9600b321e5ec5234b7ae2adfa4c0de5898434); nothing fetched. One `## 6th Cir. BAP LBR <n>` line is inserted before each of the 14 rule heading lines (`RULE 8001 - 1.` ... `RULE 8090- 1.`). The marker writes the rule number without the spaces of the form Rule 8026-1 prescribes ("6th Cir. BAP LBR 8014 - 1(a)" is marked `## 6th Cir. BAP LBR 8014-1`), the heading the cite parser keys `6th Cir. BAP LBR 8014-1(b)` to. Rule text was not edited: deleting the marker lines (`sed '/^## 6th Cir. BAP LBR /d'`) restores the extract byte for byte.
+- Source: as the extract `ca6-bap/bap-local-rules.txt`, https://www.ca6.uscourts.gov/sites/ca6/files/documents/bap/BapLocalRules.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, "As Amended December 1, 2014".
 - Sectioned sha256 7d911dce19117a07e8727571daa8b04777289258f86d857bedb829ca177ee816 (the `path_sha256` pinned by `lit/bap6/Lit.toml`).

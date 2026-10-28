@@ -21,5 +21,6 @@
 ### `wa-superior/wa-cr-cited-sectioned.txt` — Washington Superior Court Civil Rules, cited subset, sectioned
 
 - Derived in the pod (lg-f3q8.48) from `wa-superior/wa-cr-cited.txt` (extract sha256 0e5f5cb741f8dcfee416ebce4e7ba9e7ca03d7e8009312a9a0ee344afffd83a3); nothing fetched. Each per-rule heading line `## CR <n> <title>` is split in two: a `## CR <n>` marker line, then the rule's heading text `CR <n> <title>` without the `## `, 11 rules; rule text was not edited. `sed -E '/^## CR [0-9.]+$/{N;s/^## [^\n]*\n/## /}'` restores the extract byte for byte.
+- Source: as the extract `wa-superior/wa-cr-cited.txt`, https://www.courts.wa.gov/court_rules/?fa=court_rules.list&group=sup&set=CR, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, current per-rule text served 2026-10-27; the latest amendment of the 11 rules is effective September 1, 2025 (CR 12).
 - Sectioned sha256 54f7050028dbecad2a01fadf6b11fd90031260ef3363e4c9450bb61c43902d23 (the `path_sha256` pinned by `lit/wa-superior/Lit.toml`).

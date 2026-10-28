@@ -11,5 +11,6 @@
 ### `fl-state-civil/fl-rules-civil-procedure-2026-10-01-sectioned.txt` — Florida Rules of Civil Procedure, sectioned
 
 - Derived in the pod (lg-f3q8.14) from `fl-state-civil/fl-rules-civil-procedure-2026-10-01.txt` (extract sha256 282ce6dd57b93e578abc272ded6759c9fe3e7c46230915ef3b314cf221f5d132); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (`RULE 1.010. SCOPE AND TITLE OF RULES` through `RULE 1.900. FORMS`, 94 rules; the table of contents is unmarked). Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `fl-state-civil/fl-rules-civil-procedure-2026-10-01.txt`, https://www-media.floridabar.org/uploads/2026/10/Civil-Procedure-Rules-10-01-26-1.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, the Florida Bar's October 1, 2026 edition.
 - Sectioned sha256 d769c6cb6d8b499bb1fe03349f3349e5c4fd8e315353fbce66e2337259a98f6d (the `path_sha256` pinned by `lit/fl-state-civil/Lit.toml`).

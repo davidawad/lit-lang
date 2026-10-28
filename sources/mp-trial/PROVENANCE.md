@@ -10,5 +10,6 @@
 ### `mp-trial/nmi-rcp-sectioned.txt` — Northern Mariana Islands Rules of Civil Procedure, sectioned
 
 - Derived in the pod (lg-f3q8.46) from `mp-trial/nmi-rcp.txt` (extract sha256 dad837e00ee658b54f70411460e43d17770b189055a503ee7d5b6430b9769a3d); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (`Rule 1.` through `Rule 86.`, 97 headings including the reserved rules); the errata order, adoption order and table of contents are unmarked. The extract drops the rules' subdivision letters, so cites bind at the rule level. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `mp-trial/nmi-rcp.txt`, https://cnmilaw.gov/docs/courtrules/R05.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, the rules adopted January 9, 2019 with the general errata order of February 25, 2019.
 - Sectioned sha256 61165fb072592880ebd21303aa0fb06a48bde993ec235ca01ed4c2fd1adab424 (the `path_sha256` pinned by `lit/mp-trial/Lit.toml`).

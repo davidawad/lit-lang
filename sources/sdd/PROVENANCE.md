@@ -10,6 +10,7 @@
 ### `sdd/civil-local-rules-sectioned.txt` — D.S.D. Civil Local Rules of Practice, sectioned
 
 - Derived in the pod (lg-f3q8.11) from `sdd/civil-local-rules.txt` (extract sha256 600322bebb8f15254d56f37d92bcfcbef81507abe8ebd4396c7fde305d6675b7); nothing fetched. One `## LR <n>` line is inserted before each rule's own heading line (`LR 1.1 SCOPE OF THE RULES` through `LR 83.12 FORMER LAW CLERKS`, 40 rules); every other line is the extract unchanged, so deleting the `## LR` lines gives back the extract plus a final newline.
+- Source: as the extract `sdd/civil-local-rules.txt`, https://www.sdd.uscourts.gov/sites/sdd/files/Civil%20Local%20Rules%20-%20final%2C%20approved.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, document dated 2/28/2025.
 - Sectioned sha256 3bfff7fb9b3f9e19f786c863e5971119bb06eeab9ffa41f569bfbd556a186575.
 

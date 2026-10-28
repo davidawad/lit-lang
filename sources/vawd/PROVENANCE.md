@@ -12,5 +12,6 @@
 ### `vawd/vawd-local-rules-sectioned.txt` — W.D. Va. Local Rules, sectioned
 
 - Derived in the pod (lg-f3q8.31) from `vawd/vawd-local-rules.txt` (extract sha256 0cfd1a6b7269d123f79fb9dfa757f09380c07795f76e89cd09cd75efdfe41fe0); nothing fetched. One `## General Rule <n>` line is inserted before each Title I rule's own heading line in the body (`Rule 1.` through `Rule 12.`, 12 rules) and one `## Civil Rule <n>` line before each Title II rule's (`Rule 3.` through `Rule 83.`, 11 rules); the two titles number independently. The table of contents and Title III (criminal) are unmarked. Rule text was not edited: deleting the marker lines (`sed -E '/^## (General|Civil) Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `vawd/vawd-local-rules.txt`, https://www.vawd.uscourts.gov/sites/Public/assets/File/court/local_rules.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, August 2013 (revised October 25, 2025).
 - Sectioned sha256 a97415133e7e9facfafb09ab53b48677b017ea3fe842af6d729159e8df9615bc (the `path_sha256` pinned by both bindings in `lit/vawd/Lit.toml`).

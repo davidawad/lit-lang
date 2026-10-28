@@ -10,5 +10,6 @@
 ### `bankr-dc/dc-local-rules-2026-02-01-sectioned.txt` — D.D.C. Bankruptcy Local Rules, sectioned
 
 - Derived in the pod (lg-u561.7) from `bankr-dc/dc-local-rules-2026-02-01.txt` (extract sha256 52303f1d7a7ae8b7a7c93e4c90653c0b76687206cd20201ffeecfb86c7b027ec); nothing fetched. One `## LBR <n>` line (the rule number with an ASCII hyphen, e.g. `## LBR 9013-1`) is inserted before each rule's own heading line in the body (`RULE 1001–1 Scope; Title; ...` through `RULE 9073–1 Hearings`, 98 rules; the table of contents is unmarked, and Appendices A-F fall under the last marker and are not cited). Rule text was not edited: deleting the marker lines (`sed '/^## LBR /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-dc/dc-local-rules-2026-02-01.txt`, https://www.dcb.uscourts.gov/sites/dcb/files/EFF%202-1-26_CLEAN%20LBR.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, the Local Bankruptcy Rules in effect as of February 1, 2026 (General Order 2026-01 incorporated); no later order amends them, so `lit/bankr-dc` has no dated amendment layer.
 - Sectioned sha256 a12e839bce3c8582facf5dc894dfde25db6c89412a1f9df664e0a6bd79f45410 (the `path_sha256` pinned by `lit/bankr-dc/Lit.toml`).

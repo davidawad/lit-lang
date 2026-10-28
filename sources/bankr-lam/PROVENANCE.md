@@ -26,10 +26,12 @@
 ### `bankr-lam/lam-local-rules-2022-01-01-sectioned.txt` — Bankr. M.D. La. Local Rules, sectioned
 
 - Derived in the pod (lg-u561.17) from `bankr-lam/lam-local-rules-2022-01-01.txt` (extract sha256 d256c677be3b20c249ab6dbf1d27bc319a17a6a84a94b90bb95c0e565b142813); nothing fetched. One `## LR <n>` line is inserted before each rule's own heading line in the body (a line opening, after an optional form feed, with the rule number `<nnnn>-<n>` and its title, from `1002-1` through `9037-1`, 70 rules, the same set as the table of contents); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## LR /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-lam/lam-local-rules-2022-01-01.txt`, https://www.lamb.uscourts.gov/sites/lamb/files/2022_Local_Rules.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract.
 - Sectioned sha256 07159974c25de67ec99d854575c712d2ef911b17bed2edd5c7249a697aed536e (the `path_sha256` pinned by `lit/bankr-lam/Lit.toml`).
 
 ### `bankr-lam/lam-so-2025-1-sectioned.txt` — M.D. La. Standing Order 2025-1, sectioned
 
 - Derived in the pod (lg-u561.17) from `bankr-lam/lam-so-2025-1.txt` (extract sha256 b616be57607029b006b9f6b9374c33061d954025ebf64216b4f8b63fd6481813); nothing fetched. One `## SO 2025-1 Rule 9014-1` line is inserted before the order's operative text (the line opening `Notwithstanding Local Rule 9014-1(a)(1)`), so a cite to the rule it displaces locates it. Text was not edited: deleting the marker line (`sed '/^## SO 2025-1 /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-lam/lam-so-2025-1.txt`, https://www.lamb.uscourts.gov/sites/lamb/files/Standing%20Order%202025-1.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Sectioned sha256 948a1d8b521f2eb08bcd54c8ce895322a5c1eb58c3d2514e68eab42635268975 (pinned by `lit/bankr-lam/Lit.toml`).

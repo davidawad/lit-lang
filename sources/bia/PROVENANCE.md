@@ -10,5 +10,6 @@
 ### `bia/cfr-8-part1003-sectioned.txt` — 8 C.F.R. Part 1003, sectioned
 
 - Derived in the pod (lg-f3q8.34) from `bia/cfr-8-part1003.txt` (extract sha256 73881d597138882b36b902474e2d6318a4a03ee09928e304dc1395e3c8f98d7f); nothing fetched. Each of the 65 `## 8 C.F.R. § N <title>` heading lines is split into a bare `## 8 C.F.R. § N` marker, which the cite corpus matches exactly, followed by the original heading text without `## ` (`8 C.F.R. § N <title>`). Section text was not edited: `sed -E '/^## 8 C\.F\.R\. § [0-9.]+$/{N;s/^## [^\n]*\n/## /}'` restores the extract byte for byte.
+- Source: as the extract `bia/cfr-8-part1003.txt`, https://www.ecfr.gov/api/versioner/v1/full/2026-10-23/title-8.xml?part=1003, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, eCFR text current through 2026-10-23.
 - Sectioned sha256 57f3f034cc4a081a1e70f39ee9f2e848a0fd0b3e58fdb281de21c7f38aed67ce (the `path_sha256` pinned by `lit/bia/Lit.toml`).

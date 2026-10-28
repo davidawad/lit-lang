@@ -58,10 +58,12 @@
 ### `bankr-ri/ri-local-rules-2024-12-01-sectioned.txt` — D.R.I. Local Bankruptcy Rules, sectioned
 
 - Derived in the pod (lg-u561.9) from `bankr-ri/ri-local-rules-2024-12-01.txt` (extract sha256 af061b5c55be755545e263c79a21e1a8562d6215932142455b96262ccdb5521b); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (`RULE 1001-1` through `RULE 9074-1`, including `RULE 7016` and `Rule 9006-1`, 105 rules; extract lines 260-5672); the table of contents, the appendices and the forms are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-ri/ri-local-rules-2024-12-01.txt`, https://www.rib.uscourts.gov/sites/default/files/general-ordes/December_1_2024_LBRs.PDF, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, amended as of December 1, 2024.
 - Sectioned sha256 668edb7e46d1ba41e2f2cbbffb30dc9a44db96ed531b242bf774b56d3f8380ef (the `path_sha256` pinned by `lit/bankr-ri/Lit.toml`).
 
 ### `bankr-ri/ri-amendments-2025-12-01-sectioned.txt` — D.R.I. LBR amendments of December 1, 2025, sectioned
 
 - Derived in the pod (lg-u561.9) from `bankr-ri/ri-amendments-2025-12-01.txt` (extract sha256 cfc9176e6e91c30ca2208462e67ebbb8c6948431e98b161bee6ead1d8aa551c3); nothing fetched. One `## December 2025 Rule <n>` line is inserted before each amended rule's heading line (R.I. LBR 1005-1, 3002-1, 3016-1); the forms are unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## December 2025 Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-ri/ri-amendments-2025-12-01.txt`, https://www.rib.uscourts.gov/sites/default/files/Rules/General_Orders/LBR_amendments_Dec_1_2025_Clean_FINAL.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Sectioned sha256 3e909aa63b1d6daa9013840af06e3f0626259566e4faf99db66ae831d228f883 (the `path_sha256` pinned by `lit/bankr-ri/Lit.toml`).

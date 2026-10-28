@@ -12,5 +12,6 @@
 ### `pamd/local-rules-2014-12-01-sectioned.txt` — M.D. Pa. Rules of Court, sectioned
 
 - Derived in the pod (lg-f3q8.75) from `pamd/local-rules-2014-12-01.txt` (extract sha256 400854aa7149685014178ca71c57d6f0a695ed9040a5a61bdbf890c4e64d2869); nothing fetched. One `## LR <n>` line is inserted right after each rule's own body heading line `LR <n> <title>.` (246 markers, LR 1.1 through LR 83.40.7; the table of contents before the first rule is unmarked). The extract repeats the heading of LR 83.8, so it carries two `## LR 83.8` markers. Rule text was not edited: deleting the marker lines (`## LR <n>` plus its newline) restores the extract byte for byte.
+- Source: as the extract `pamd/local-rules-2014-12-01.txt`, https://www.pamd.uscourts.gov/sites/pamd/files/LR120114.pdf, retrieved 2026-10-27; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract, the Rules of Court effective December 1, 2014.
 - Sectioned sha256 a4ff8b7c6353c56408da5112bcdc10880673ed744a877e5b2bc68c73190bae0f (the `path_sha256` pinned by `lit/pamd/Lit.toml`).

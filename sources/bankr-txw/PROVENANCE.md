@@ -10,5 +10,6 @@
 ### `bankr-txw/txw-local-rules-2025-02-03-sectioned.txt` — Bankr. W.D. Tex. Local Court Rules, sectioned
 
 - Derived in the pod (lg-u561.17) from `bankr-txw/txw-local-rules-2025-02-03.txt` (extract sha256 829fb913f83f0b6eeb89199bed3c91a55bf10bd2197f2898b0ec8106fe8143de); nothing fetched. One `## Rule <n>` line is inserted before each rule's own heading line in the body (a line opening at the margin, after an optional form feed, with `L. Rule <nnnn>-<n>` or `L. Rule <nnnn>.<n>-<n>` after the table of contents; indented cross-references, the adopting order and the appendices are unmarked, from `L. Rule 1001-1.` through `L. Rule 9073-1.`, 69 rules, the same set as the table of contents); the table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Source: as the extract `bankr-txw/txw-local-rules-2025-02-03.txt`, https://www.txwb.uscourts.gov/sites/txwb/files/3-7-2025-Order%20Adopting%20Local%20Rules%20with%20Attachment%20and%20Links.pdf, retrieved 2026-10-28; the sectioning was done in the pod from the vendored extract.
 - Edition: as the extract.
 - Sectioned sha256 72938470cc48619c36052e74350a997297cba29aacd7a2a10f7cb2787876297d (the `path_sha256` pinned by `lit/bankr-txw/Lit.toml`).

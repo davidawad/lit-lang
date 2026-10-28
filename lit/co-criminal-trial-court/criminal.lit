@@ -1,0 +1,167 @@
+module co-criminal-trial-court.criminal
+
+// Felony cases in the Colorado trial courts under the Colorado Rules of
+// Criminal Procedure (the 2023 compilation; the later Rule Change layers
+// amend no subdivision cited here for a value). lit/core has no counting
+// rule for Crim. P. 45, so every period is stated in a note, not encoded
+// as a counted deadline. Bail follows the Colorado statutes and
+// constitution (Crim. P. 46; article 4 of title 16, C.R.S., not vendored),
+// and the statutory speedy-trial counterpart, C.R.S. 18-1-405, is not
+// vendored; those are holes. Outcomes are from the defendant's side. The
+// earlier outline's leading decisions (County of Riverside v. McLaughlin,
+// Gerstein v. Pugh, Gideon v. Wainwright, Brady v. Maryland, Mapp v. Ohio,
+// Barker v. Wingo, Boykin v. Alabama, Missouri v. Frye, Jackson v.
+// Virginia, Ramos v. Louisiana, Apprendi v. New Jersey, Roe v.
+// Flores-Ortega, Garza v. Idaho) are removed: no reporter text is
+// vendored.
+start arrested
+
+state arrested: "Arrest or summons" by applicant cite "Crim. P. 4"
+{
+  note "A felony complaint (Crim. P. 3) supports a warrant or summons (Crim. P. 4). A person arrested with or without a warrant is taken without unnecessary delay before the nearest available county or district court, and a felony complaint, information or indictment is then filed without unnecessary delay in the proper court (Crim. P. 5(a)(1))."
+  edge-arrested-appearance "First appearance" -> initial-appearance {
+    authority cite "Crim. P. 5(a)"
+  }
+}
+
+decision initial-appearance: "Bail, release or detention" by court cite "Crim. P. 5(a)"
+{
+  note "At the first appearance the court informs the defendant of the right to remain silent, the right to counsel and, if indigent, to appointed counsel, and the other matters Crim. P. 5(a)(2) lists. In considering bail the court is governed by the statutes and constitution of Colorado and the United States Constitution (Crim. P. 46); the bail statutes (article 4 of title 16, C.R.S.) are not vendored and stay a hole."
+  edge-initial-appearance-detained "Held on bail not posted" -> probable-cause {
+    authority cite ?("C.R.S. title 16, article 4 (bail; not vendored)")
+  }
+  edge-initial-appearance-released "Released on bail" -> probable-cause {
+    authority cite "Crim. P. 46"
+  }
+}
+
+decision probable-cause: "Preliminary hearing or indictment" by court cite "Crim. P. 5(a)"
+{
+  note "A person accused by felony complaint of a class 1, 2 or 3 felony or a level 1 or 2 drug felony, and of certain class 4, 5 or 6 or level 3 or 4 drug felonies (mandatory sentencing, crimes of violence, sexual offenses), may demand a preliminary hearing to determine probable cause (Crim. P. 5(a)(4)). Within 7 days after the defendant is brought before the county court, the prosecutor or the defendant may request the hearing; the court sets it forthwith, and it is held within 35 days of the day of setting unless good cause for a continuance is shown (Crim. P. 5(a)(4)(I)). If neither requests a hearing within 7 days, the county court binds the defendant over to the court of record for trial (Crim. P. 5(a)(5)). A case may instead proceed by grand jury indictment (Crim. P. 6, 7(a))."
+  edge-probable-cause-charged "Probable cause found or bound over; information or indictment filed" -> charged {
+    authority cite "Crim. P. 5(a)"
+  }
+  edge-probable-cause-none "No probable cause; defendant discharged" -> dismissed {
+    authority cite "Crim. P. 5(a)"
+  }
+}
+
+state charged: "Indictment or information" by office cite "Crim. P. 7"
+{
+  note "An indictment is a written statement presented in open court by a grand jury to the district court charging a crime (Crim. P. 7(a)(1)); an information is filed by the prosecuting attorney (Crim. P. 7(b)). Arraignment follows the preliminary proceedings under Crim. P. 5, 7 and 12 (Crim. P. 10)."
+  edge-charged-arraignment "Arraignment" -> arraignment {
+    authority cite "Crim. P. 10"
+  }
+}
+
+state arraignment: "Arraignment and plea of not guilty" by applicant cite "Crim. P. 10"
+{
+  note "Arraignment is conducted in open court in the court having trial jurisdiction: the defendant is informed of the offense charged and required to plead (Crim. P. 10). For a felony, a class 1 misdemeanor, or an offense punishable by more than one year's imprisonment, the defendant must be present, though for good cause the court may accept a not-guilty plea by counsel (Crim. P. 10(a)). A defendant may plead guilty, not guilty, not guilty by reason of insanity, or with the court's consent nolo contendere (Crim. P. 11(a)). The Crim. P. 48(b) speedy-trial period runs from the entry of a plea of not guilty."
+  edge-arraignment-discovery "Discovery" -> discovery {
+    authority cite "Crim. P. 16"
+  }
+}
+
+state discovery: "Discovery and pretrial motions" by applicant cite "Crim. P. 12(b)"
+{
+  note "The prosecuting attorney makes the materials Crim. P. 16 Part I lists available to the defense (Crim. P. 16(a)(1)). A motion raising defenses and objections before trial is made within 21 days following arraignment (Crim. P. 12(b)(3)). A defendant not brought to trial within six months from the entry of a plea of not guilty is discharged and the charges dismissed with prejudice, unless a period is excluded or the time extended under Crim. P. 48(b)(2) to (6); to be entitled to that dismissal the defendant must move for it before trial or a guilty plea, and failure to move is a waiver (Crim. P. 48(b)(1), (5)). A defendant's continuance extends the period by six months from the date it was granted (Crim. P. 48(b)(3))."
+  edge-discovery-motions "Pretrial motion filed" -> motions-ruling {
+    authority cite "Crim. P. 12(b)"
+  }
+  edge-discovery-speedy "Motion to dismiss for want of a speedy trial" -> motions-ruling {
+    authority cite "Crim. P. 48(b)"
+  }
+  edge-discovery-plea "Plea negotiations" -> plea-decision {
+    authority cite "Crim. P. 11"
+  }
+}
+
+decision motions-ruling: "Ruling on pretrial motions" by court cite "Crim. P. 12(b)"
+{
+  note "If the defendant is not brought to trial within the Crim. P. 48(b) period, the pending charges are dismissed and the defendant may not again be indicted, informed against or committed for the same offense or another based on the same criminal episode (Crim. P. 48(b)(1)). Unnecessary delay in finding an indictment or filing an information against a defendant held to answer is also a ground of dismissal (Crim. P. 48(b)(1))."
+  edge-motions-ruling-speedy "Dismissed for want of a speedy trial" -> dismissed {
+    authority cite "Crim. P. 48(b)"
+  }
+  edge-motions-ruling-dismissed "Charges dismissed on another ground" -> dismissed {
+    authority cite "Crim. P. 12(b)"
+  }
+  edge-motions-ruling-denied "Motions denied; case proceeds" -> plea-decision {
+    authority cite "Crim. P. 12(b)"
+  }
+}
+
+decision plea-decision: "Plea or trial" by applicant cite "Crim. P. 11(b)"
+{
+  note "The court accepts a guilty or nolo contendere plea only after advising the defendant of the Crim. P. 5(a)(2) rights and determining that the defendant understands the charge, its elements and the effect of the plea, that the plea is voluntary, that the defendant waives a jury trial, and the possible penalties (Crim. P. 11(b)). The prosecuting attorney may dismiss or enter a nolle prosequi only on a motion in open court with the court's consent and a written statement of reasons, and not during trial without the defendant's consent (Crim. P. 48(a))."
+  edge-plea-decision-plea "Guilty plea accepted" -> sentencing {
+    authority cite "Crim. P. 11(b)"
+  }
+  edge-plea-decision-trial "Trial" -> trial {
+    authority cite "Crim. P. 23(a)"
+  }
+  edge-plea-decision-nolle "Dismissal or nolle prosequi with the court's consent" -> dismissed {
+    authority cite "Crim. P. 48(a)"
+  }
+}
+
+decision trial: "Verdict" by court cite "Crim. P. 31"
+{
+  note "A person accused of a felony has the right to a jury of twelve; before the jury is sworn the defendant may, except in class 1 felonies, elect a jury of fewer than twelve but no fewer than six with the court's consent (Crim. P. 23(a)(1)). The court submits written verdict forms to the jury (Crim. P. 31(a)). Peremptory challenges are governed by Crim. P. 24, as amended by Rule Change 2025(15) effective January 2, 2026."
+  edge-trial-acquittal "Not guilty" -> acquitted {
+    authority cite "Crim. P. 31"
+  }
+  edge-trial-guilty "Guilty; post-trial motions" -> post-trial {
+    authority cite "Crim. P. 29(c)"
+  }
+}
+
+decision post-trial: "Post-trial motions" by court cite "Crim. P. 29(c)"
+{
+  note "A motion for judgment of acquittal may be made or renewed within 14 days after the jury is discharged, or within further time the court fixes during that period (Crim. P. 29(c)); a motion for a new trial on a ground other than newly discovered evidence is filed within 14 days after verdict or finding of guilt, or additional time the court fixes during that period (Crim. P. 33(c)); a motion in arrest of judgment is made within 14 days after verdict or finding of guilt, or further time fixed during that period (Crim. P. 34). A timely motion in arrest of judgment, for judgment of acquittal, or for a new trial on a ground other than newly discovered evidence moves the time to appeal to 49 days after entry of the order denying it (C.A.R. 4(b)(2))."
+  edge-post-trial-acquittal "Judgment of acquittal" -> acquitted {
+    authority cite "Crim. P. 29(c)"
+  }
+  edge-post-trial-new-trial "New trial granted" -> trial {
+    authority cite "Crim. P. 33(c)"
+  }
+  edge-post-trial-denied "Motions denied; sentencing" -> sentencing {
+    authority cite "Crim. P. 32(b)"
+  }
+}
+
+state sentencing: "Presentence report and sentencing" by court cite "Crim. P. 32(a)"
+{
+  note "For a felony sentence the probation department's presentence report copies are provided at least 72 hours before the sentencing hearing, or at least 7 days before it if a party so requests of the court within 7 days of the time the court sets the hearing date; if probation cannot meet the 7 days, the court gives it more time and resets the hearing at least 7 days after the copies are provided (Crim. P. 32(a)). Sentence is imposed without unreasonable delay after the defendant and the state are heard (Crim. P. 32(b)(1)). A motion to withdraw a guilty or nolo contendere plea may be made only before sentence is imposed or suspended (Crim. P. 32(d))."
+  edge-sentencing-judgment "Sentence imposed; judgment entered" -> judgment {
+    authority cite "Crim. P. 32(b)"
+  }
+}
+
+decision judgment: "Judgment of conviction" by applicant cite "Crim. P. 32(c)"
+{
+  note "After a trial the court, on passing sentence, informs the defendant of the right to seek review and of the time limits for a notice of appeal (Crim. P. 32(c)(1)). The defendant's notice of appeal is filed in the appellate court, with an advisory copy served on the trial court, within 49 days after entry of the judgment or order appealed from (C.A.R. 4(b)(1)); on a showing of excusable neglect the appellate court may extend the time by up to 35 days from its expiry (C.A.R. 4(b)(3)). A judgment is entered when it is entered in the criminal docket (C.A.R. 4(b)(4)). A felony sentence may be reviewed once on appeal (C.A.R. 4(b)(5); C.R.S. 18-1-409, not vendored). lit/core has no counting rule for C.A.R. 26, so the period is not encoded as a counted deadline."
+  edge-judgment-appeal "Notice of appeal filed" -> appeal-taken {
+    authority cite "C.A.R. 4(b)"
+  }
+  edge-judgment-no-appeal "No appeal" -> conviction-final { authority cite "C.A.R. 4(b)" }
+}
+
+terminal acquitted: "Acquitted" outcome [win] cite "Crim. P. 29(c)"
+{
+  note "Outcome from the defendant's side: a verdict of not guilty or a judgment of acquittal (Crim. P. 29, 31)."
+}
+
+terminal dismissed: "Charges dismissed" outcome [win, dismissal] cite "Crim. P. 48"
+{
+  note "Outcome from the defendant's side. A Crim. P. 48(b) speedy-trial dismissal bars reprosecution for the same offense or criminal episode (Crim. P. 48(b)(1)); whether another dismissal bars refiling depends on its ground."
+}
+
+terminal appeal-taken: "Appeal taken" outcome [appeal] cite "C.A.R. 4(b)"
+{
+  note "The appeal continues before the Colorado Court of Appeals under the Colorado Appellate Rules (lit/co-state-appellate; sources/co-state-appellate)."
+}
+
+terminal conviction-final: "Conviction final" outcome [loss] cite "C.A.R. 4(b)"
+{
+  note "Outcome from the defendant's side. Postconviction remedies, including the reduction of sentence within 126 days (18 weeks) after it is imposed, are Crim. P. 35 as amended by Rule Change 2026(13) effective July 1, 2026 (sources/co-criminal-trial-court/co-rule-change-2026-13.txt), not encoded here; federal habeas belongs to lit/habeas."
+}

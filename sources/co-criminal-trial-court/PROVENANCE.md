@@ -48,3 +48,9 @@
 - Original: `co-criminal-trial-court/original/co-rule-change-2026-13.pdf` as served (sha256 32c2f35bf23cf501ee20d567cedc574eb266cd26a28767beebc160b05b35f833); extraction sha256 49aecb8d34f0f340331c05bfe36c52cd8ed37ea480c55fcbb6eec03f2a8fe702.
 
 - Note (lg-gddt): Criminal appeals: Colorado Appellate Rules, covered by sources/co-state-appellate/ (co-appellate-rules-crs2023.txt and its Rule Change layers).
+
+### `co-criminal-trial-court/co-crim-p-crs2023-sectioned.txt` — Crim. P. (2023 compilation), rules sectioned
+
+- Derived in the pod (lg-gddt.24) from `co-criminal-trial-court/co-crim-p-crs2023.txt` (extract sha256 17dd2a2bf6b56daa4bb198463b66c94b9f46dbd041e5650a067b53a1c8679fc7); nothing fetched. One `## Rule <n>` line is inserted right before each Crim. P. rule's own centered body heading line (`Rule <n>. <Title>`) in Chapter 29 (after its analysis, extract lines 140-18300): Rule 1 through Rule 60, matching the chapter's table of contents. The table of contents is unmarked, as are the traffic-violations-bureau and later rule sets that follow in the extract (Rule 60's section runs to the end of the file). Rule text was not edited: deleting the marker lines (`sed '/^## Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, the 2023 compilation (latest recorded change Rule Change 2023(13)); STALE for later changes, which the dated Rule Change layers here carry.
+- Sectioned sha256 ea775f2bbda771878ec671d45ffce4ebeec4547b661a65b828ebdefe0884b0b5 (the `path_sha256` pinned by `lit/co-criminal-trial-court/Lit.toml`).

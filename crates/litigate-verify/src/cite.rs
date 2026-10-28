@@ -288,11 +288,12 @@ impl Measure {
 /// up to [`COUNT_WORDS`] words before a measure (`14 days`, `fourteen (14)
 /// calendar days`, `one hundred eighty days`, `35days`), hyphened to it
 /// (`14-day`, `seven-day`), or an ordinal day (`the 21st day`, `the next
-/// day`); `the prior Monday` is a week. A page opening on a measure takes
-/// a count ending one of the previous page's last lines (`within 3`): the
-/// footer and running head a `pdftotext -layout` extract sets between
-/// them (`within 3` / `Page 38` / `days`, Bankr. S.D. Tex. BLR
-/// 9017-1(c)) are not the rule's words.
+/// day`); `the prior Monday` is a week. A page opening on a measure, under
+/// any running head, takes a count ending one of the previous page's last
+/// lines (`within 3`, `seven (7)`): the footer and running head a
+/// `pdftotext -layout` extract sets between them (`within 3` / `Page 38` /
+/// `days`, Bankr. S.D. Tex. BLR 9017-1(c); `seven (7)` / `[13]` / `days`,
+/// TNWB LBR 2083-1(b)(2)) are not the rule's words.
 fn counts(body: &str) -> Vec<(u64, Measure)> {
     let text: String = body
         .chars()
@@ -323,7 +324,7 @@ fn counts(body: &str) -> Vec<(u64, Measure)> {
             let from = i.saturating_sub(COUNT_WORDS + 3);
             for j in from..i {
                 for k in (j + 1)..=i {
-                    if k - j > 3 || i - k > COUNT_WORDS {
+                    if k - j > 3 || i - k > COUNT_WORDS || within_count(&words, j, k, i) {
                         continue;
                     }
                     if let Some(n) = number(&words[j..k].join(" ")) {
@@ -350,8 +351,11 @@ fn counts(body: &str) -> Vec<(u64, Measure)> {
         let Some(page) = line.strip_prefix('\u{c}') else {
             continue;
         };
-        let first = page.split_whitespace().next().unwrap_or_default();
-        let Some(m) = Measure::named(&first.to_lowercase()) else {
+        let head = lines[i + 1..lines.len().min(i + PAGE_FOOT)].iter();
+        let Some(m) = std::iter::once(&page)
+            .chain(head)
+            .find_map(|l| Measure::named(&l.split_whitespace().next()?.to_lowercase()))
+        else {
             continue;
         };
         out.extend(
@@ -360,14 +364,24 @@ fn counts(body: &str) -> Vec<(u64, Measure)> {
                 .filter_map(|l| {
                     let mut w = l.split_whitespace().rev();
                     let (count, before) = (w.next()?, w.next()?);
-                    INTRODUCING
-                        .contains(&before.to_lowercase().as_str())
-                        .then(|| number(count))?
+                    let count = count.trim_matches(['(', ')']);
+                    (INTRODUCING.contains(&before.to_lowercase().as_str())
+                        || number(&before.to_lowercase()) == number(count))
+                    .then(|| number(count))?
                 })
                 .map(|n| (n, m)),
         );
     }
     out
+}
+
+/// Whether `words[j..k]` is only part of a longer count before the
+/// measure at `i`: `one`, `one hundred` and `fifty` in `one hundred fifty
+/// (150) days` are not counts of their own.
+fn within_count(words: &[String], j: usize, k: usize, i: usize) -> bool {
+    (j.saturating_sub(3)..=j).any(|a| {
+        (k..=i.min(a + 3)).any(|b| (a, b) != (j, k) && number(&words[a..b].join(" ")).is_some())
+    })
 }
 
 /// The words that introduce a period's count (`within 3`, `at least 7`).

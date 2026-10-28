@@ -1,0 +1,49 @@
+# Civil appeals from the Nebraska district courts to the Nebraska Court of
+# Appeals and the Nebraska Supreme Court under Neb. Rev. Stat. §§ 24-1106,
+# 25-1902 and 25-1912 (sources/ne-district) and the cited sections of the
+# Nebraska Court Rules of Appellate Practice (sources/nebctapp: the court's
+# rule pages, retrieved 2026-10-27, which state no edition date; the
+# latest amendment they list is § 2-109(F), June 18, 2025). Computation of
+# time (Neb. Rev. Stat. § 25-2221) is not vendored and lit/core has no
+# Nebraska counting rule, so the periods are stated in notes, not encoded
+# as counted deadlines. The appeal comes from lit/ne-district.
+[package]
+name = "nebctapp-civil-appeals"
+version = "0.1.0"
+language = 1
+pack_id = "nebctapp-civil-appeals"
+forum = "nebctapp"
+authority = "StateRule"
+title = "Nebraska Court of Appeals and Supreme Court, civil appeals"
+description = "Civil appeals from the Nebraska district courts as far as the vendored statutes and rules state: the notice of appeal and docket fee, perfection and the transcript, the Court of Appeals or the Supreme Court and bypass, appealability and summary dismissal, the briefing schedule and word limits, submission with or without oral argument, and summary affirmance or reversal."
+in_force = "2026-10-27"
+known_at = "2026-10-28"
+unknown_before = "2026-10-27"
+jurisdiction_id = "nebraska"
+jurisdiction = "Nebraska Court of Appeals; Nebraska Supreme Court (civil appeals)"
+
+[package.roles]
+applicant = "self"
+court = "nature"
+office = "nature"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+
+[sources.ne-app-p]
+title = "Nebraska Court Rules of Appellate Practice (Neb. Ct. R. App. P., chapter 2, article 1), cited sections, as published by the Nebraska Supreme Court"
+url = "https://supremecourt.nebraska.gov/supreme-court-rules/chapter-2-appeals/article-1-nebraska-court-rules-appellate-practice"
+path = "sources/nebctapp/ne-app-p-cited.txt"
+path_sha256 = "c514b9b9b8ced5c87029eb56aeab76bc2f32c82b19c18f0d54113220c0876237"
+as_of = "2026-10-27"
+cite_prefixes = ["Neb. Ct. R. App. P. §"]
+section_heading = "Neb. Ct. R. App. P. § {n}"
+
+[sources.neb-rev-stat]
+title = "Nebraska Revised Statutes, cited sections of chapters 24 and 25, as published by the Nebraska Legislature"
+url = "https://nebraskalegislature.gov/laws/statutes.php"
+path = "sources/ne-district/ne-statutes-cited.txt"
+path_sha256 = "ee8d4406776670b03de53049e86aba7991362cd6d20f6add41378ac1974c4e86"
+as_of = "2026-10-27"
+cite_prefixes = ["Neb. Rev. Stat. §"]
+section_heading = "Neb. Rev. Stat. § {n}"

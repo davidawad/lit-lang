@@ -1,0 +1,90 @@
+module nebctapp-civil-appeals.appeal
+
+// A civil appeal from a Nebraska district court, from the appellant's side.
+// Every period below is stated in a note, not counted: computation of time
+// (Neb. Rev. Stat. § 25-2221) is not vendored. The sections vendored are
+// those the earlier outline cited (Neb. Ct. R. App. P. §§ 2-103, 2-107,
+// 2-109, 2-111, 2-115, 2-116; Neb. Rev. Stat. §§ 24-1106, 25-1902,
+// 25-1912). The rules on docketing, the bill of exceptions, opinions,
+// rehearing (§ 2-113), petitions to bypass and for further review, and the
+// mandate are not vendored, so the outline's rehearing, mandate and
+// further-review stages are named in notes, not modeled. The outline cited
+// § 2-115 for rehearing and § 2-116 for the mandate, but those sections
+// govern original actions and appellate records; § 2-107 does not govern
+// the record. Those cites are replaced. The outline named no leading
+// decisions.
+/// A brief in support of a motion, including a motion for rehearing, and an
+/// amicus curiae brief: at most 3,800 words, every portion of the brief
+/// counting except the certificate (Neb. Ct. R. App. P. § 2-103(C)(3)(b),
+/// (c), (4)).
+limit motion-brief {
+  words <= 3_800 cite "Neb. Ct. R. App. P. § 2-103(C)(3)"
+} cite "Neb. Ct. R. App. P. § 2-103(C)(3)"
+
+/// A brief in support of a motion is filed (Neb. Ct. R. App. P. §
+/// 2-103(C)(3)(b)).
+event MotionBriefFiled() paper motion-brief
+
+start notice-filed
+
+state notice-filed: "Notice of appeal filed and docket fee deposited" by applicant cite "Neb. Rev. Stat. § 25-1912(1)"
+{
+  note "The appellant files a notice of intention to prosecute the appeal with the clerk of the district court, and deposits the docket fee, within thirty days after entry of the judgment, decree or final order; a timely motion for new trial, to alter or amend or to set aside the verdict or judgment restarts the full time from entry of the order ruling on it (Neb. Rev. Stat. § 25-1912(1), (3)). The appeal is perfected when the notice is filed and the fee deposited; no other step is jurisdictional (§ 25-1912(4)). Within thirty days after the notice is filed, the district court clerk files the certified transcript with the Clerk of the Supreme Court (§ 25-1912(6)). The appeal goes to the Court of Appeals except in capital cases, cases where life imprisonment was imposed and cases involving the constitutionality of a statute (Neb. Rev. Stat. § 24-1106(1)); any party may petition the Supreme Court to bypass the Court of Appeals, on the procedure and time the court's rules provide, which are not vendored (§ 24-1106(2)), and the Supreme Court may remove a case from the Court of Appeals before decision (§ 24-1106(3))."
+  edge-notice-filed-docketed "Appeal docketed" -> appealability {
+    authority cite "Neb. Rev. Stat. § 25-1912(4)"
+  }
+}
+
+decision appealability: "Appellate jurisdiction" by court cite "Neb. Rev. Stat. § 25-1902(1)"
+{
+  note "Final orders are an order affecting a substantial right that in effect determines the action and prevents a judgment, one made in a special proceeding, one made on summary application after judgment, and an order denying summary judgment on sovereign or official immunity (Neb. Rev. Stat. § 25-1902(1)). A motion to dismiss for lack of jurisdiction may be filed any time after docketing, and the appellant may respond within 10 days from service of the motion (Neb. Ct. R. App. P. § 2-107(B)(1), (4)); when the court determines it lacks jurisdiction it dismisses the appeal (§ 2-107(A)(1)). The appellant's brief states the basis of appellate jurisdiction and the dates of entry, of any tolling motion and of the notice of appeal and docket fee (§ 2-109(D)(1)(c)). No leading decision is named."
+  edge-appealability-dismissed "Not appealable or untimely" -> dismissed-jurisdiction {
+    authority cite "Neb. Ct. R. App. P. § 2-107(A)(1)"
+  }
+  edge-appealability-briefing "Appealable order" -> briefing {
+    authority cite "Neb. Ct. R. App. P. § 2-109(A)(1)"
+  }
+}
+
+terminal dismissed-jurisdiction: "Appeal dismissed for lack of jurisdiction" outcome [loss, dismissal, jurisdictional] cite "Neb. Ct. R. App. P. § 2-107(A)(1)"
+{
+  note "\"APPEAL DISMISSED. See Neb. Ct. R. App. P. § 2-107(A)(1).\" Outcome from the appellant's side."
+}
+
+state briefing: "Briefing" by applicant cite "Neb. Ct. R. App. P. § 2-109(A)"
+{
+  note "The appellant's brief is served and filed 30 days from the date the transcript is filed in the appellate court if no bill of exceptions was requested, or 30 days after the bill of exceptions is due; the appellee's brief within 30 days after the appellant's; the appellant's reply brief within 10 days after the appellee's; 3 days are added when the brief being answered was served by mail (Neb. Ct. R. App. P. § 2-109(A)(1)-(3)). Leave to file an amicus brief is sought no later than 30 days before oral argument, and the brief is filed no later than 10 days before it (§ 2-109(A)(4)(b)). A party asserting that a Nebraska statute is unconstitutional files and serves notice with the Clerk before its brief (§ 2-109(E)). Briefs may not exceed 15,000 words in combined total per party on original submission, or 18,000 when the appellee cross-appeals; briefs supporting motions and amicus briefs, 3,800 words (§ 2-103(C)(3)). A motion to affirm on the ground that the questions are too unsubstantial to require argument may be filed after the appellant's brief is filed or its time has expired; it does not extend the briefing times (§ 2-107(B)(2), (8)). Extensions are under § 2-106(E), which is not vendored; none is allowed in advanced cases except for exceptional cause (§ 2-109(A))."
+  edge-briefing-submitted "Briefs complete" -> submission {
+    authority cite "Neb. Ct. R. App. P. § 2-111(A)"
+  }
+}
+
+state submission: "Submission with or without oral argument" by court cite "Neb. Ct. R. App. P. § 2-111(B)"
+{
+  note "A case is eligible for submission any time after the appellee's brief is filed (Neb. Ct. R. App. P. § 2-111(A)). The court may order submission without oral argument after the time for the reply brief expires; a party may move for oral argument within 7 days after the minute entry, and the other party may respond within 7 days (§ 2-111(B)(1)). Advanced cases are argued as soon as the appellee's brief is due; others in the order the appellee's briefs are filed (§ 2-111(B)(2)-(4)). Oral argument is at most 10 minutes per side in a civil case unless the court orders otherwise; a motion for more time is filed within 10 days after the proposed call issues (§ 2-111(E)(1), (2)). The parties may waive argument and submit on the briefs (§ 2-111(E)(6)). The Court of Appeals hears argument in panels of three judges (§ 2-111(F))."
+  edge-submission-decided "Submitted for decision" -> disposition {
+    authority cite "Neb. Ct. R. App. P. § 2-111(B)"
+  }
+}
+
+decision disposition: "Decision" by court cite "Neb. Ct. R. App. P. § 2-107(A)"
+{
+  note "The court may summarily affirm when the findings are not clearly erroneous, the verdict is supported, the judgment is supported by substantial evidence or no error of law appears, and a detailed opinion would have no precedential value (Neb. Ct. R. App. P. § 2-107(A)(2)); it may summarily reverse, or reverse and remand, only after an order to show cause (§ 2-107(A)(3)). The rules on opinions, rehearing (§ 2-113), further review and the mandate are not vendored; exhibits are returned to the trial court clerk after the mandate issues (§ 2-116(C)). Outcomes from the appellant's side."
+  edge-disposition-affirmed "Affirmed" -> affirmed-final {
+    authority cite "Neb. Ct. R. App. P. § 2-107(A)(2)"
+  }
+  edge-disposition-reversed "Reversed" -> reversed-final {
+    authority cite "Neb. Ct. R. App. P. § 2-107(A)(3)"
+  }
+  edge-disposition-remanded "Reversed and remanded" -> remanded-final {
+    authority cite "Neb. Ct. R. App. P. § 2-107(A)(3)"
+  }
+}
+
+terminal affirmed-final: "Affirmed" outcome [loss] cite "Neb. Ct. R. App. P. § 2-107(A)(2)"
+terminal reversed-final: "Reversed" outcome [win] cite "Neb. Ct. R. App. P. § 2-107(A)(3)"
+
+terminal remanded-final: "Reversed and remanded" outcome [remand] cite "Neb. Ct. R. App. P. § 2-107(A)(3)"
+{
+  note "The case returns to the district court (lit/ne-district) on the mandate; the mandate rule is not vendored."
+}

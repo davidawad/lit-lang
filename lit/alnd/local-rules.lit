@@ -1,0 +1,74 @@
+module alnd-local-rules.local-rules
+
+import core.frcp6.{ frcp6 }
+
+// The Northern District of Alabama's own periods, computed under the
+// federal rules (FRCP 6(a) governs "any local rule"). Rules that state no
+// period stay out: the civil cover sheet (LR 3.1), electronic filing and
+// service (LR 5.5, 5.6), pro se civil rights and habeas filings (LR 9.1),
+// scheduling orders and ADR (LR 16.1), class actions (LR 23.1), payment
+// of judgments (LR 58.1), magistrate judges (LR 72.1, 72.2), proceedings
+// to compel testimony, whose answer is due "within the time specified in
+// the show cause order" (LR 81.1(b)), and broadcasting (LR 83.2). Juror
+// contact before "the day following" release from jury service (LR 47.1)
+// is a bar, not a period, and stays in this note. The bar-roll renewal,
+// discipline and reinstatement periods of LR 83.1(a), (d)-(j) govern
+// attorneys, not a civil action, and are not encoded. The earlier N.D.
+// Ala. outline's FRCP and FRAP flow and its decisions (Twombly, Iqbal,
+// Celotex, Anderson v. Liberty Lobby, Matsushita, Unitherm, Bowles v.
+// Russell, Hamer, Microsoft v. Baker, and Khalik v. United Air Lines, a
+// Tenth Circuit decision it misattributed to this circuit) are FRCP and
+// FRAP authority and belong to lit/frcp and lit/frap; they are removed
+// here: no reporter text is vendored.
+/// The case is finally disposed of, including any appeal or the
+/// expiration of the time for any appeal (LR 5.3, 5.4).
+event FinalDisposition()
+/// Judgment is entered (LR 54.1).
+event JudgmentEntered()
+/// An attorney who is not a member of the bar of this court appears as
+/// counsel by filing a pleading or paper in a pending case (LR
+/// 83.1(b)(1)).
+event NonMemberAppeared()
+/// A judge approves the attorney's pro hac vice application (LR
+/// 83.1(b)(2)).
+event ProHacViceApproved()
+
+/// LR 5.3: counsel who noticed a deposition or served other non-filed
+/// discovery materials acts as the court's custodian of them and
+/// preserves them until 30 days after final disposition of the case.
+deadline discovery-custody-period: 30.days after FinalDisposition() counted_by frcp6 cite "N.D. Ala. LR 5.3"
+{
+  forum frcp
+}
+
+/// LR 5.4: except as a judge directs otherwise, exhibits received in
+/// evidence and not withdrawn within thirty days after final disposition
+/// may thereafter be destroyed or otherwise disposed of by the clerk.
+deadline exhibit-withdrawal-period: 30.days after FinalDisposition() counted_by frcp6 cite "N.D. Ala. LR 5.4"
+{
+  forum frcp
+}
+
+/// LR 54.1: requests for taxation of costs other than attorneys' fees
+/// under FRCP 54(d) are filed with the clerk within 21 days after entry of
+/// judgment.
+deadline costs-period: 21.days after JudgmentEntered() counted_by frcp6 cite "N.D. Ala. LR 54.1"
+{
+  forum frcp
+}
+
+/// LR 83.1(b)(1): an attorney who is not a member of the bar of this
+/// court and appears as counsel by filing any pleading or paper in a
+/// pending case applies to appear pro hac vice within ten days thereafter.
+deadline pro-hac-vice-period: 10.days after NonMemberAppeared() counted_by frcp6 cite "N.D. Ala. LR 83.1(b)(1)"
+{
+  forum frcp
+}
+
+/// LR 83.1(b)(2): the designated local counsel files a notice of
+/// appearance within ten days of the approval of the pro hac vice
+/// application.
+deadline local-counsel-appearance-period: 10.days after ProHacViceApproved() counted_by frcp6 cite "N.D. Ala. LR 83.1(b)(2)"
+{
+  forum frcp
+}

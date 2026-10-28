@@ -1,0 +1,48 @@
+# The Northern District of Alabama's Local Rules as a local-rule layer
+# over lit/frcp (28 U.S.C. § 2071; FRCP 83(a)): it declares only the
+# periods the Local Rules themselves state and re-encodes no FRCP
+# deadline. Each period is counted under FRCP 6(a), which governs "any
+# local rule". The rules are the edition effective December 4, 2019
+# (sources/nd-ala); earlier editions are not vendored, so a query before
+# that date is a hole in the corpus. An appeal goes to the Eleventh
+# Circuit under lit/frap.
+[package]
+name = "alnd-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "alnd-local-rules"
+forum = "alnd"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, Northern District of Alabama: Local Rules (civil)"
+description = "The Northern District of Alabama's Local Rules as a local-rule layer over the Federal Rules of Civil Procedure (lit/frcp): custody of non-filed discovery and withdrawal of exhibits after final disposition, the bill of costs, and the pro hac vice application and local counsel's appearance."
+in_force = "2019-12-04"
+known_at = "2026-10-28"
+unknown_before = "2019-12-04"
+jurisdiction = "United States District Court, N.D. Alabama"
+counting = "frcp6"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "alnd-lr"
+issuer = "United States District Court for the Northern District of Alabama"
+date = "2019-12-04"
+designation = "Local Rules"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcp-civil-procedure = { version = "^2024.12.0", path = "../frcp" }
+
+[sources.alnd-lr]
+title = "Local Rules of the United States District Court for the Northern District of Alabama (effective December 4, 2019)"
+url = "https://alnd.uscourts.gov/sites/alnd/files/ALND%20Local%20Rules%20Revised%2012-04-2019.pdf"
+path = "sources/nd-ala/local-rules-sectioned.txt"
+path_sha256 = "9bf70d789baa46d67301338f131242f182416f7f92dacf80830930067931e132"
+sha256 = "b9295a56444a7d46926807423bca614fae4ae5ce04f5c6031e82a7eb6870e4a2"
+as_of = "2019-12-04"
+cite_prefixes = ["N.D. Ala. LR"]
+section_heading = "LR {n}"

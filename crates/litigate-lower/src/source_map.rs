@@ -433,13 +433,7 @@ impl<'c> Citations<'c> {
         let path = bound.and_then(|b| b.path.as_ref());
         let section = self.corpus.zip(path).and_then(|(c, p)| {
             let (_, section) = c.lookup_all(&heading).iter().find(|(f, _)| f == p)?;
-            // The corpus indexed the heading from this file, so its line is there.
-            let text = c.files.get(p).map_or("", String::as_str);
-            let line = text
-                .lines()
-                .position(|l| l.strip_prefix("## ").is_some_and(|h| h.trim() == heading))
-                .map_or(0, |i| i + 1);
-            Some((u32::try_from(line).unwrap_or(u32::MAX), section))
+            Some((u32::try_from(section.line).unwrap_or(u32::MAX), section))
         });
         let verified = bound.is_some_and(|b| b.pin == Pin::Verified);
         L0Section {

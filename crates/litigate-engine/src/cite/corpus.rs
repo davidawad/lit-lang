@@ -18,6 +18,8 @@ include!(concat!(env!("OUT_DIR"), "/embedded_sources.rs"));
 pub struct Section {
     /// The canonical heading, e.g. `"Rule 12"`, `"28 U.S.C. § 1498"`.
     pub heading: String,
+    /// The 1-based line of the heading (`## <ref>` or `RULE N:`) in its file.
+    pub line: usize,
     /// Everything between this `## ` line and the next (or EOF).
     pub body: String,
 }
@@ -145,9 +147,9 @@ impl SourceCorpus {
 /// split on those alone: its `RULE N:` lines are body text.
 fn parse_sections(text: &str) -> Vec<Section> {
     let mut sections = vec![];
-    let mut current: Option<(String, String)> = None;
+    let mut current: Option<(String, usize, String)> = None;
     let rule_lines_are_headings = !text.lines().any(|line| line.starts_with("## "));
-    for line in text.lines() {
+    for (i, line) in text.lines().enumerate() {
         let rule_heading = line
             .trim()
             .strip_prefix("RULE ")
@@ -161,21 +163,23 @@ fn parse_sections(text: &str) -> Vec<Section> {
             .map(str::to_string)
             .or(rule_heading)
         {
-            if let Some((h, body)) = current.take() {
+            if let Some((h, at, body)) = current.take() {
                 sections.push(Section {
                     heading: h,
+                    line: at,
                     body: body.trim().to_string(),
                 });
             }
-            current = Some((heading.trim().to_string(), String::new()));
-        } else if let Some((_, body)) = current.as_mut() {
+            current = Some((heading.trim().to_string(), i + 1, String::new()));
+        } else if let Some((_, _, body)) = current.as_mut() {
             body.push_str(line);
             body.push('\n');
         }
     }
-    if let Some((h, body)) = current {
+    if let Some((h, at, body)) = current {
         sections.push(Section {
             heading: h,
+            line: at,
             body: body.trim().to_string(),
         });
     }

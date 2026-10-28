@@ -1,0 +1,159 @@
+module tx-court-of-criminal-appeals.review
+
+// Review in the Court of Criminal Appeals of Texas, from the applicant's
+// (defendant's) side. Every period below is stated in a note, not
+// counted: time is computed under Tex. R. App. P. 4.1, which excludes the
+// trigger day, includes the last day and rolls a last day falling on a
+// Saturday, Sunday or legal holiday to the next day that is none of these,
+// and extends a filing period while the clerk's office is closed or
+// inaccessible on its last day; lit/core has no counting rule for Texas's
+// legal holidays. Word limits apply to computer-generated documents, page
+// limits to others, and a court may on motion permit a longer document
+// (Tex. R. App. P. 9.4(i)). The earlier outline's leading decisions
+// (Hernandez v. State, Brooks v. State, Jackson v. Virginia) are removed:
+// no reporter text is vendored.
+start route
+
+decision route: "How the case reaches the Court of Criminal Appeals" by applicant cite "Tex. R. App. P. 66.1"
+{
+  note "The Court of Criminal Appeals may review a court of appeals' decision in a criminal case on its own initiative under Rule 67 or on a party's petition under Rule 68 (Tex. R. App. P. 66.1); discretionary review is not a matter of right (Tex. R. App. P. 66.2). A case in which the death penalty has been assessed under Code of Criminal Procedure article 37.071, or bail has been denied in a non-capital case under Article I, Section 11a of the Texas Constitution, is appealed directly to the Court (Tex. R. App. P. 71.1); a judgment of conviction and sentence of death is subject to automatic review (Tex. Code Crim. Proc. art. 37.071). After final conviction in a felony case the writ of habeas corpus is returnable to the Court (Tex. Code Crim. Proc. art. 11.07). An original petition for an extraordinary writ needs a motion for leave to file (Tex. R. App. P. 72.1); if five judges tentatively believe it should be filed and set, leave is granted, and a denial of leave admits no rehearing (Tex. R. App. P. 72.2)."
+  edge-route-pdr "Petition for discretionary review" -> petition-filed {
+    authority cite "Tex. R. App. P. 68.1"
+  }
+  edge-route-own-initiative "Review on the Court's own initiative" -> review-ruling {
+    authority cite "Tex. R. App. P. 67.1"
+  }
+  edge-route-direct "Direct appeal: death sentence or bail denial" -> direct-appeal {
+    authority cite "Tex. R. App. P. 71.1"
+  }
+  edge-route-habeas "Postconviction habeas application" -> habeas-application {
+    authority cite "Tex. R. App. P. 73.1"
+  }
+}
+
+state petition-filed: "Petition for discretionary review filed" by applicant cite "Tex. R. App. P. 68.2"
+{
+  note "The petition is filed with the clerk of the Court of Criminal Appeals (a petition mistakenly filed in the court of appeals is deemed filed the same day with the Court's clerk) (Tex. R. App. P. 68.3) within 30 days after the day the court of appeals' judgment was rendered or the day the last timely motion for rehearing or for en banc reconsideration was overruled (Tex. R. App. P. 68.2(a)); even after that time, a party may file within 10 days after the timely filing of another party's petition (Tex. R. App. P. 68.2(b)). The Court may extend the time on a motion complying with Rule 10.5(b) filed no later than 15 days after the last day for filing the petition (Tex. R. App. P. 68.2(c)). The petition must be as brief as possible and contain the items Rule 68.4 lists, including the grounds or questions for review and the court of appeals' opinion (Tex. R. App. P. 68.4); it may run 4,500 words if computer-generated and 15 pages if not (Tex. R. App. P. 9.4(i)(2)(E)). A nonconforming or unnecessarily lengthy petition may be struck, ordered redrawn or summarily refused (Tex. R. App. P. 68.6). Within 15 days of notice of the filing the court of appeals clerk sends the record to the Court's clerk (Tex. R. App. P. 68.7). The opposing party has 15 days after the timely filing of the petition to file a reply (Tex. R. App. P. 68.9), of 2,400 words or 8 pages (Tex. R. App. P. 9.4(i)(2)(H)); the petition or reply may be amended or supplemented at any time justice requires (Tex. R. App. P. 68.10). The reasons the Court considers in deciding whether to grant review are listed in Rule 66.3."
+  edge-petition-filed-ruling "Petition submitted for decision" -> review-ruling {
+    authority cite "Tex. R. App. P. 69.1"
+  }
+  edge-petition-filed-struck "Untimely or nonconforming petition refused or struck" -> review-refused {
+    authority cite "Tex. R. App. P. 68.6"
+  }
+}
+
+decision review-ruling: "Petition granted or refused" by court cite "Tex. R. App. P. 69.1"
+{
+  note "If four judges do not vote to grant a petition, the Court enters a docket notation that the petition is refused; if four vote to grant it, that discretionary review is granted (Tex. R. App. P. 69.1). Without a petition, at least four judges may grant review at any time before the court of appeals' mandate issues (Tex. R. App. P. 67.1); an order staying that mandate extends the time before it issues by an additional 45 days unless the order limits it, and if four judges do not agree to grant review within that time the mandate issues (Tex. R. App. P. 67.2, 67.3). A granted case is set for submission (Tex. R. App. P. 69.2). On refusal or dismissal the clerk keeps the papers for at least 15 days before sending the order to the court of appeals clerk (Tex. R. App. P. 69.4(a)). A motion for rehearing of an order granting review may not be filed; one of an order refusing a petition may rest only on substantial intervening or other significant circumstances, certified to be in good faith (Tex. R. App. P. 79.2(b), (c))."
+  edge-review-ruling-granted "Discretionary review granted" -> merits-briefing {
+    authority cite "Tex. R. App. P. 69.2"
+  }
+  edge-review-ruling-refused "Petition refused" -> review-refused {
+    authority cite "Tex. R. App. P. 69.1"
+  }
+}
+
+state merits-briefing: "Briefs on the merits" by applicant cite "Tex. R. App. P. 70.1"
+{
+  note "If review is granted, the petitioner (or, without a petition, the party who lost in the court of appeals) files a brief within 30 days after review is granted, and the opposing party files a brief within 30 days after the petitioner's brief is filed (Tex. R. App. P. 70.1, 70.2). Briefs comply with Rules 9 and 38 but need not contain the appendix (Tex. R. App. P. 70.3); a brief and response may run 15,000 words or 50 pages and a reply brief 7,500 words or 25 pages (Tex. R. App. P. 9.4(i)(2)(B), (C)). The Court may direct or permit other briefs (Tex. R. App. P. 70.4)."
+  edge-merits-briefing-submission "Briefs filed" -> submission {
+    authority cite "Tex. R. App. P. 69.2"
+  }
+}
+
+state direct-appeal: "Direct appeal: record and briefs" by applicant cite "Tex. R. App. P. 71.2"
+{
+  note "The appellate record is prepared and filed under Rules 31, 32, 34, 35 and 37, but in the Court of Criminal Appeals (Tex. R. App. P. 71.2). Briefs follow Rules 9 and 38, need no appendix, are filed in the Court of Criminal Appeals and include a statement on oral argument (Tex. R. App. P. 71.3); additional briefs need the Court's leave (Tex. R. App. P. 71.4). In a death-penalty direct appeal a brief and response may run 37,500 words or 125 pages (Tex. R. App. P. 9.4(i)(2)(A)). An article 11.071 habeas application in a death-penalty case is filed in the convicting court not later than the 180th day after the convicting court appoints counsel or the 45th day after the state's original brief is filed on direct appeal, whichever is later (Tex. Code Crim. Proc. art. 11.071)."
+  edge-direct-appeal-submission "Briefs filed" -> submission {
+    authority cite "Tex. R. App. P. 71.3"
+  }
+}
+
+state habeas-application: "Article 11.07 application in the convicting court" by applicant cite "Tex. R. App. P. 73.1"
+{
+  note "An article 11.07 application is filed with the clerk of the convicting court on the form the Court of Criminal Appeals prescribes, stating every ground and its supporting facts; each ground may take the two pages the form provides, and a separate memorandum may run 15,000 words if computer-generated or 50 pages if not (Tex. R. App. P. 73.1; Tex. Code Crim. Proc. art. 11.07). The state answers not later than the 30th day after it receives the application, and within 20 days after the time to answer expires the convicting court decides whether there are controverted, previously unresolved material facts and, if so, designates them by order (Tex. Code Crim. Proc. art. 11.07). The convicting court resolves designated issues within 180 days from the state's receipt of the application, and a motion to extend that time is filed in the Court of Criminal Appeals before the 180 days expire (Tex. R. App. P. 73.5); on the 181st day the district clerk forwards the writ record unless an extension was granted (Tex. R. App. P. 73.4(b)(5)). A party has ten days from receiving the trial court's findings of fact and conclusions of law to object (Tex. R. App. P. 73.4(b)(2)). A subsequent application is considered only on the showing article 11.07 requires (Tex. Code Crim. Proc. art. 11.07)."
+  edge-habeas-application-ruling "Record forwarded to the Court of Criminal Appeals" -> habeas-ruling {
+    authority cite "Tex. R. App. P. 73.4"
+  }
+}
+
+decision habeas-ruling: "Habeas relief granted or denied" by court cite "Tex. R. App. P. 73.6"
+{
+  note "The Court may deny relief on its own review of the application or issue other instructions or orders (Tex. R. App. P. 73.6); it may deny relief on the hearing judge's findings without docketing the cause, or docket and hear it, and enters judgment remanding the applicant to custody or ordering release (Tex. Code Crim. Proc. art. 11.07). New evidence after the application is forwarded follows Rule 73.7. A motion for rehearing of an order denying habeas relief or dismissing an article 11.07 or 11.071 application may not be filed, though the Court may reconsider on its own initiative (Tex. R. App. P. 79.2(d))."
+  edge-habeas-ruling-granted "Relief granted" -> conviction-reversed {
+    authority cite "Tex. R. App. P. 73.6"
+  }
+  edge-habeas-ruling-denied "Relief denied" -> conviction-affirmed {
+    authority cite "Tex. R. App. P. 79.2"
+  }
+}
+
+decision submission: "Oral argument or submission on the briefs" by court cite "Tex. R. App. P. 75.1"
+{
+  note "Oral argument is permitted only in cases the Court designates; the clerk notifies the parties of the date set for argument or for submission without argument (Tex. R. App. P. 75.1). Counsel in a case not designated for argument may petition for it within 30 days of the clerk's notice, stating specific reasons (Tex. R. App. P. 75.2). Unless extended, argument is limited to 20 minutes per side (Tex. R. App. P. 75.3). The Court sits en banc in direct appeals, discretionary review and habeas cases (Tex. R. App. P. 76). If, after granting review, five judges conclude it should not have been granted, the case is dismissed (Tex. R. App. P. 69.3)."
+  edge-submission-argued "Argued" -> judgment {
+    authority cite "Tex. R. App. P. 75.3"
+  }
+  edge-submission-briefs "Submitted on the briefs" -> judgment {
+    authority cite "Tex. R. App. P. 75.1"
+  }
+  edge-submission-improvident "Review dismissed as improvidently granted" -> review-refused {
+    authority cite "Tex. R. App. P. 69.3"
+  }
+}
+
+decision judgment: "Judgment" by court cite "Tex. R. App. P. 78.1"
+{
+  note "The Court hands down a written opinion in each case argued or submitted (Tex. R. App. P. 77.1); unpublished opinions have no precedential value (Tex. R. App. P. 77.3). It may affirm, modify and affirm, reverse and render, reverse and remand, vacate and dismiss, vacate and remand in light of changes in the law, or dismiss the appeal (Tex. R. App. P. 78.1), and on reversing a court of appeals' judgment may remand to the trial court in the interests of justice (Tex. R. App. P. 78.2)."
+  edge-judgment-affirmed "Conviction affirmed" -> after-judgment {
+    authority cite "Tex. R. App. P. 78.1"
+  }
+  edge-judgment-reversed "Reversed, rendered or remanded" -> conviction-reversed {
+    authority cite "Tex. R. App. P. 78.1"
+  }
+}
+
+decision after-judgment: "Rehearing or mandate" by applicant cite "Tex. R. App. P. 79.1"
+{
+  note "A motion for rehearing may be filed with the Court's clerk within 15 days from the date of the judgment or order; in exceptional cases the Court may shorten that time or deny the right to file (Tex. R. App. P. 79.1). It must briefly and distinctly state its grounds (Tex. R. App. P. 79.2(a)), may run 4,500 words or 15 pages (Tex. R. App. P. 9.4(i)(2)(E)), and may be amended before the filing period expires (Tex. R. App. P. 79.3). The Court may extend the time on a motion complying with Rule 10.5(b) filed within the time for filing the motion for rehearing (Tex. R. App. P. 79.6). The clerk issues the mandate ten days after the time has expired for filing a motion to extend time to file a motion for rehearing, if none is pending (Tex. R. App. P. 18.1(b)). A party may move to stay the mandate pending a petition for certiorari to the Supreme Court of the United States; in a criminal case the stay lasts no more than 90 days (Tex. R. App. P. 18.2)."
+  edge-after-judgment-rehearing "Motion for rehearing" -> rehearing {
+    authority cite "Tex. R. App. P. 79.1"
+  }
+  edge-after-judgment-certiorari "Mandate stayed; certiorari sought" -> further-review {
+    authority cite "Tex. R. App. P. 18.2"
+  }
+  edge-after-judgment-mandate "Mandate issues" -> conviction-affirmed {
+    authority cite "Tex. R. App. P. 18.1"
+  }
+}
+
+decision rehearing: "Rehearing ruling" by court cite "Tex. R. App. P. 79.4"
+{
+  note "If the Court grants rehearing, the case is set for submission and oral argument is normally not permitted (Tex. R. App. P. 79.4). No second motion for rehearing is considered after rehearing is denied; if rehearing is granted and an opinion on rehearing delivered, a party may file a further motion (Tex. R. App. P. 79.5)."
+  edge-rehearing-granted "Rehearing granted" -> submission {
+    authority cite "Tex. R. App. P. 79.4"
+  }
+  edge-rehearing-denied "Rehearing denied; mandate issues" -> conviction-affirmed {
+    authority cite "Tex. R. App. P. 79.5"
+  }
+}
+
+terminal review-refused: "Review refused or dismissed" outcome [loss] cite "Tex. R. App. P. 69.1"
+{
+  note "Outcome from the applicant's side: the court of appeals' judgment stands, and its mandate issues under Rule 18.1(a)."
+}
+
+terminal conviction-affirmed: "Conviction affirmed; mandate issued" outcome [loss] cite "Tex. R. App. P. 18.1"
+{
+  note "Outcome from the applicant's side. Federal habeas review belongs to lit/habeas."
+}
+
+terminal conviction-reversed: "Conviction reversed, rendered, remanded or relief granted" outcome [win] cite "Tex. R. App. P. 78.1"
+{
+  note "Outcome from the applicant's side; retrial or resentencing on remand belongs to the trial court."
+}
+
+terminal further-review: "Certiorari sought" outcome [appeal] cite "Tex. R. App. P. 18.2"
+{
+  note "A petition for a writ of certiorari to the Supreme Court of the United States (28 U.S.C. § 1257(a)) continues in lit/scotus; the statute is not vendored here."
+}

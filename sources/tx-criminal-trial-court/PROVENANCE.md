@@ -93,3 +93,9 @@
 - Extraction sha256 0c93a17dc25ff1c79e4a416906de05e2ce3d2fe0280746df5cb1aa13c6bf51ee.
 
 - Note (lg-gddt): Texas criminal appeals: Texas Rules of Appellate Procedure (including TRAP Rules 25 to 50 criminal provisions), covered by sources/tx-appellate/. The Texas Court of Criminal Appeals (forum tx-cca) uses the TRAP; no separate rules source.
+
+### `tx-criminal-trial-court/tx-code-of-criminal-procedure-sectioned.txt` — Texas Code of Criminal Procedure, sectioned by article
+
+- Derived in the pod (lg-gddt.14) from `tx-criminal-trial-court/tx-code-of-criminal-procedure.txt` (extract sha256 0c93a17dc25ff1c79e4a416906de05e2ce3d2fe0280746df5cb1aa13c6bf51ee); nothing fetched. One marker line `## Tex. Code Crim. Proc. art. <n>` is inserted before each article's own first line `Art. <n>. <TITLE>. ...` (2,253 markers over 2,252 article numbers; an article the site serves in two versions gets a marker before each). The extract's `## CHAPTER ...` page headings stay. Deleting the `## Tex. Code Crim. Proc. art.` lines gives back the extract byte for byte.
+- Edition: as the extract ("current through the 89th 2nd Called Legislative Session, 2025").
+- Sectioned sha256 423a47f1d8d791f7108bc8d3ba3770cdb7bdda206f58ac52a67dad30d4907c1a (the `path_sha256` pinned by `lit/tx-court-of-criminal-appeals/Lit.toml` and `lit/tx-criminal-trial-court/Lit.toml`).

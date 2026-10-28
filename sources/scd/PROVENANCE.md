@@ -22,3 +22,9 @@
 - Retrieved 2026-10-28 on carbon (lg-f3q8 standing method); extracted with `pdftotext -layout` (poppler 26.06), unedited.
 - Extract sha256 b7ea78cd12a7859d55c3b23640a9eb959e3efdbdc28d6c457b78226d5f65535e. Raw extract, not yet sectioned into `## <ref>` form.
 - Original: `scd/original/scd-local-criminal-rules-2019-07-17.pdf` as served (sha256 e9a5888b56e35227dfbf5dcd4e32839672029fab10a4177f7b8ab422c7445437); extraction sha256 b7ea78cd12a7859d55c3b23640a9eb959e3efdbdc28d6c457b78226d5f65535e.
+
+### `scd/scd-local-criminal-rules-2019-07-17-sectioned.txt` — D.S.C. Local Criminal Rules (revisions through July 17, 2019), sectioned
+
+- Derived in the pod (lg-gddt.12) from `scd/scd-local-criminal-rules-2019-07-17.txt` (extract sha256 b7ea78cd12a7859d55c3b23640a9eb959e3efdbdc28d6c457b78226d5f65535e); nothing fetched. One `## Local Crim. Rule <n>` line is inserted right before each rule's own body line `<n>: <title>` (some indented or after a form feed; from extract line 99 on): 45 markers, 1.01 through 58.01, the Rule 57 parts numbered as printed (`57.VI.02`). The table of contents is unmarked. Rule text was not edited: deleting the marker lines (`sed '/^## Local Crim. Rule /d'`) restores the extract byte for byte.
+- Edition: as the extract, revisions through July 17, 2019, republished November 23, 2020 (OLD EDITION, presented by the court as current).
+- Sectioned sha256 be2caffffa73574aa24a4914f3dd752fa83a157ab272d10bfd77ed1de1303b13 (the `path_sha256` pinned by `lit/scd-criminal/Lit.toml`).

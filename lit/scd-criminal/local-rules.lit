@@ -1,0 +1,68 @@
+module scd-criminal-local-rules.local-rules
+
+import core.frcrimp45.{ frcrimp45 }
+
+// The District of South Carolina's own criminal periods. Stated in the
+// rules but not declared: the alternative response deadline of one full
+// business day before the pretrial conference, whichever of the two is
+// earlier (Local Crim. Rule 12.05), counted in business days, which
+// frcrimp45 does not count; the memorandum page limits (Local Crim. Rule
+// 12.04); and the Plan for Achieving Prompt Disposition of Criminal Cases,
+// which the rules do not reproduce (Local Crim. Rule 57.V.01). The
+// outline's flow (arrest to judgment) is lit/frcrimp's; its decisions have
+// no vendored reporter text and are removed.
+/// A motion is served (Local Crim. Rule 12.05).
+event MotionServed()
+/// The Monday of the week in which the case is set for trial or hearing
+/// (Local Crim. Rule 17.01).
+event TrialWeekMonday()
+/// Jury selection (Local Crim. Rule 26.04(A)).
+event JurySelection()
+/// The beginning of trial (Local Crim. Rule 26.04(B)).
+event TrialBegins()
+/// The marshal notifies the United States Attorney and defense counsel of a
+/// state's request for custody of a defendant awaiting trial (Local Crim.
+/// Rule 57.VI.02(B)).
+event StateCustodyRequestNoticed()
+
+/// Local Crim. Rule 12.05: an opposing party's memorandum or response is
+/// filed as soon as possible but not later than 14 days after service of
+/// the motion, or one full business day before the pretrial conference if
+/// that is earlier, unless the court sets another deadline.
+deadline response-period: 14.days after MotionServed() counted_by frcrimp45 cite "D.S.C. Local Crim. Rule 12.05"
+{
+  forum frcrimp
+}
+
+/// Local Crim. Rule 17.01: witness subpoenas are delivered to the marshal
+/// or another qualified server at least 14 days before the Monday of the
+/// week the case is set for trial or hearing, unless the court orders
+/// otherwise; a subpoena delivered later and not served is no ground for a
+/// continuance.
+deadline subpoena-delivery-period: 14.days before TrialWeekMonday() counted_by frcrimp45 cite "D.S.C. Local Crim. Rule 17.01"
+{
+  forum frcrimp
+}
+
+/// Local Crim. Rule 26.04(A): proposed voir dire questions are submitted
+/// seven days before jury selection and served on opposing counsel.
+deadline voir-dire-period: 7.days before JurySelection() counted_by frcrimp45 cite "D.S.C. Local Crim. Rule 26.04(A)"
+{
+  forum frcrimp
+}
+
+/// Local Crim. Rule 26.04(B): proposed jury instructions are submitted
+/// seven days before trial begins; the defense's are held in camera until
+/// the testimony is concluded.
+deadline jury-instructions-period: 7.days before TrialBegins() counted_by frcrimp45 cite "D.S.C. Local Crim. Rule 26.04(B)"
+{
+  forum frcrimp
+}
+
+/// Local Crim. Rule 57.VI.02(B): the United States Attorney and defense
+/// counsel each have seven days from the marshal's notice of a state's
+/// request for custody to consent or object; the period may be waived.
+deadline state-custody-objection-period: 7.days after StateCustodyRequestNoticed() counted_by frcrimp45 cite "D.S.C. Local Crim. Rule 57.VI.02(B)"
+{
+  forum frcrimp
+}

@@ -1,0 +1,50 @@
+# The District of South Carolina's Local Criminal Rules as a local-rule
+# layer over lit/frcrimp (28 U.S.C. § 2071; FRCrimP 57(a)): it declares
+# only the periods the Local Criminal Rules themselves state and
+# re-encodes no FRCrimP, Speedy Trial Act or FRAP 4(b) period (those are
+# lit/frcrimp's). Each period is counted under FRCrimP 45, which Local
+# Crim. Rule 45.01 applies to these rules. The rules are the edition "with
+# revisions through July 17, 2019", republished November 23, 2020, which
+# the court's rules page presents as current (sources/scd; an old edition,
+# recorded as such in its PROVENANCE). Federal habeas is lit/habeas's; an
+# appeal to the Fourth Circuit is lit/frcrimp's and lit/ca4's.
+[package]
+name = "scd-criminal-local-rules"
+version = "0.1.0"
+language = 1
+pack_id = "scd-criminal-local-rules"
+forum = "scd-criminal"
+authority = "LocalRule"
+kind = "local-rule"
+title = "United States District Court, District of South Carolina: Local Criminal Rules"
+description = "The District of South Carolina's Local Criminal Rules as a local-rule layer over the Federal Rules of Criminal Procedure (lit/frcrimp): responses to motions, delivery of trial subpoenas, voir dire questions and jury instructions, and the parties' consent or objection to a state's request for custody of a defendant."
+in_force = "2019-07-17"
+known_at = "2026-10-28"
+unknown_before = "2019-07-17"
+jurisdiction = "United States District Court, D.S.C. (criminal)"
+counting = "frcrimp45"
+
+[package.roles]
+applicant = "self"
+opponent = "opponent"
+court = "nature"
+
+[package.instrument]
+source = "scd-lcrr"
+issuer = "United States District Court for the District of South Carolina"
+date = "2019-07-17"
+designation = "Local Criminal Rules (revisions through July 17, 2019)"
+
+[dependencies]
+core = { version = "^1.0.0", path = "../core" }
+frcrimp-criminal-procedure = { version = "^2024.12.0", path = "../frcrimp" }
+
+[sources.scd-lcrr]
+title = "Local Criminal Rules of the United States District Court for the District of South Carolina (revisions through July 17, 2019; republished November 23, 2020)"
+url = "https://www.scd.uscourts.gov/Rules/Criminal%20Rules%20-%20Current.pdf"
+path = "sources/scd/scd-local-criminal-rules-2019-07-17-sectioned.txt"
+path_sha256 = "be2caffffa73574aa24a4914f3dd752fa83a157ab272d10bfd77ed1de1303b13"
+sha256 = "e9a5888b56e35227dfbf5dcd4e32839672029fab10a4177f7b8ab422c7445437"
+as_of = "2019-07-17"
+cite_prefixes = ["D.S.C. Local Crim. Rule"]
+section_heading = "Local Crim. Rule {n}"
